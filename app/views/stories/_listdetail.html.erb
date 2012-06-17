@@ -1,0 +1,55 @@
+<li id="story_<%= story.short_id %>" class="story <%= story.vote == 1 ?
+	"upvoted" : (story.vote == -1 ? "downvoted" : "") %>
+  <%= story.is_expired? ? "expired" : "" %>">
+	<div class="voters">
+    <% if @user %>
+      <a class="upvoter" href="#"
+        onclick="Lobsters.upvote('<%= story.short_id %>'); return false;"
+        ></a>
+    <% else %>
+      <%= link_to "", login_url, :class => "upvoter" %>
+    <% end %>
+		<div class="score">
+			<%= story.upvotes %>
+		</div>
+    <% if @user %>
+      <a class="downvoter" href="#" id="story_downvoter_<%= story.short_id %>"
+        onclick="Lobsters.downvote('<%= story.short_id %>'); return false;"
+        ></a>
+    <% else %>
+      <%= link_to "", login_url, :class => "downvoter" %>
+    <% end %>
+	</div>
+	<div class="details">
+		<span class="link">
+			<%= link_to story.title, story.url_or_comments_url %>
+		</span>
+		<span class="tags">
+			<% story.taggings.each do |tagging| %>
+				<%= link_to tagging.tag.tag, tag_url(tagging.tag.tag),
+          :class => "tag tag_#{tagging.tag.tag}" %>
+			<% end %>
+		</span>
+		<span class="domain">
+			<%= story.domain %>
+		</span>
+		<div class="byline">
+			by <%= link_to story.user.username, :controller => "u",
+        :id => story.user.username %>
+			<%= time_ago_in_words(story.created_at).gsub(/^about /, "") %> ago
+
+			<% if story.is_editable_by_user? @user %>
+				|
+				<%= link_to "edit", :controller => "stories", :action => "edit",
+          :id => story.short_id %>
+        |
+				<%= link_to "delete", url_for({ :controller => "stories",
+          :action => "delete", :id => story.short_id }),
+          :confirm => "Are you sure you want to delete this story?" %>
+			<% end %>
+			|
+			<%= link_to((c = story.comment_count) == 0 ? "discuss" :
+        "#{c} comment#{c == 1 ? "" : "s"}", story.comments_url) %>
+		</div>
+	</div>
+</li>

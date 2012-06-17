@@ -1,0 +1,15 @@
+<div class="box">
+	<div class="legend">
+		Submit a Story
+	</div>
+
+	<%= form_for @story do |f| %>
+		<%= render :partial => "stories/form", :locals => { :story => @story,
+      :f => f } %>
+
+    <p></p>
+    <div class="box">
+      <%= submit_tag "Submit" %>
+    </div>
+	<% end %>
+</div>

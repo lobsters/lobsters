@@ -1,0 +1,36 @@
+<div class="box wide">
+	<div class="legend">
+		Login
+	</div>
+
+	<%= form_tag login_url do %>
+    <% if flash[:error] %>
+      <div class="flash-error"><%= flash[:error] %></div>
+    <% elsif flash[:success] %>
+      <div class="flash-success"><%= flash[:success] %></div>
+    <% end %>
+
+    <p>
+		<%= label_tag :email, "E-mail or Username:" %>
+		<%= text_field_tag :email, "", :size => 30 %>
+    <br />
+
+    <%= label_tag :password, "Password:" %>
+    <%= password_field_tag :password, "", :size => 30 %>
+		<br />
+    </p>
+
+		<p>
+		<%= submit_tag "Login" %>
+		</p>
+
+		<p>
+		Forgot your password? <%= link_to "Reset your password",
+			forgot_password_url %>.
+		</p>
+
+		<p>
+		Not signed up yet? <%= link_to "Signup", signup_url %>.
+		</p>
+	<% end %>
+</div>

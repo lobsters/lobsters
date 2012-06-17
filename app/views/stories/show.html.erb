@@ -1,0 +1,23 @@
+<ol class="stories">
+	<%= render :partial => "stories/listdetail",
+    :locals => { :story => @story } %>
+</ol>
+
+<div class="story_content">
+	<% if @story.url.blank? %>
+		<div class="story_text">
+			<%= raw @story.linkified_text %>
+		</div>
+	<% end %>
+
+  <p></p>
+  <% if @user %>
+    <%= render :partial => "stories/commentbox",
+      :locals => { :story => @story, :comment => @comment } %>
+  <% end %>
+</div>
+
+<ol class="comments">
+	<%= render :partial => "stories/comment", :locals => { :story => @story },
+    :collection => @story.comments %>
+</ol>

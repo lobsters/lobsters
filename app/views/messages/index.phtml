@@ -1,0 +1,13 @@
+<p>
+<strong>Inbox</strong>
+<?= $controller->render(array("partial" => "messages/list"),
+	array("messages" => $controller->incoming_messages,
+		"show_from" => true)); ?>
+</p>
+
+<p>
+<strong>Sent Messages</strong>
+<?= $controller->render(array("partial" => "messages/list"),
+	array("messages" => $controller->sent_messages,
+		"show_to" => true)); ?>
+</p>

@@ -1,0 +1,30 @@
+<table class="data" cellspacing=0 width="100%">
+<tr>
+	<? if (!empty($show_from)) { ?>
+		<th width="20%">From</th>
+	<? } ?>
+	<? if (!empty($show_to)) { ?>
+		<th width="20%">To</th>
+	<? } ?>
+	<th width="60%">Subject</th>
+	<th width="20%">Date</th>
+</tr>
+<? foreach ($messages as $message) { ?>
+	<tr <?= $message->has_been_read ? "" : "class=\"unread\"" ?>>
+		<? if ($show_from) { ?>
+			<td><?= $html->link_to(h($message->author->username),
+				array("controller" => "users", "action" => "show",
+					"id" => $message->author->username)); ?></td>
+		<? } ?>
+		<? if ($show_to) { ?>
+			<td><?= $html->link_to(h($message->recipient->username),
+				array("controller" => "users", "action" => "show",
+					"id" => $message->recipient->username)); ?></td>
+		<? } ?>
+		<td><strong><?= $html->link_to(h($message->subject),
+			array("controller" => "messages", "action" => "show",
+			"id" => $message->random_hash)); ?></strong></td>
+		<td><?= h($message->created_at->format("Y-m-d H:i:s")); ?></td>
+	</tr>
+<? } ?>
+</table>

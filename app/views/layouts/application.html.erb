@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title><%= @page_title ? "#{@page_title} | Lobsters" : "Lobsters" %></title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+  <script>
+    Lobsters.storyDownvoteReasons = { <%= raw Vote::STORY_REASONS.map{|k,v|
+      "#{k.inspect}: #{v.inspect}" }.join(", ") %> };
+    Lobsters.commentDownvoteReasons = { <%= raw Vote::COMMENT_REASONS.map{|k,v|
+      "#{k.inspect}: #{v.inspect}" }.join(", ") %> };
+  </script>
+</head>
+<body>
+	<div id="wrapper">
+		<%= render :partial => "global/header" %>
+  
+		<div id="inside">
+      <%= yield %>
+		</div>
+
+		<%= render :partial => "global/footer" %>
+	</div>
+</body>
+</html>

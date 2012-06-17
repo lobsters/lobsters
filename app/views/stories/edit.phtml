@@ -1,0 +1,13 @@
+<h1>Edit a Story</h1>
+
+<? $form->form_for($story, array("controller" => "stories",
+"action" => "update", "id" => $item->short_id), array(),
+function($f) use ($C) { ?>
+	<?= $C->render(array("partial" => "stories/form"),
+		array("f" => $f)); ?>
+
+	<div class="box_submitter">
+		<?= $f->submit_tag("Save Changes"); ?>
+	</div>
+<? }); ?>
+</div>

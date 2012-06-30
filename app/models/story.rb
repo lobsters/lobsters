@@ -16,7 +16,7 @@ class Story < ActiveRecord::Base
   MAX_EDIT_MINS = 30
 
   attr_accessor :vote, :story_type, :already_posted_story, :fetched_content
-  attr_accessor :tags_to_add, :tags_to_delete
+  attr_accessor :new_tags, :tags_to_add, :tags_to_delete
 
   after_save :deal_with_tags
   before_create :assign_short_id
@@ -35,7 +35,12 @@ class Story < ActiveRecord::Base
         errors.add(:url, "is not valid")
       end
     elsif self.description.to_s.strip == ""
-      self.errors(:description, "must contain text if no URL posted")
+      errors.add(:description, "must contain text if no URL posted")
+    end
+
+    if !(self.new_tags || []).reject{|t| t.to_s.strip == "" }.any?
+      errors.add(:base, "Must have at least one tag.  If no tags apply to " +
+        "your content, it probably doesn't belong here.")
     end
   end
 
@@ -138,6 +143,7 @@ class Story < ActiveRecord::Base
   def tags_a=(new_tags)
     self.tags_to_delete = []
     self.tags_to_add = []
+    self.new_tags = new_tags
 
     self.tags.each do |tag|
       if !new_tags.include?(tag.tag)

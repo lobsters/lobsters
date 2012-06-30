@@ -28,6 +28,11 @@ describe Story do
     expect { Story.make!(:title => ("hello" * 100)) }.to raise_error
   end
 
+  it "must have at least one tag" do
+    expect { Story.make!(:tags_a => nil) }.to raise_error
+    expect { Story.make!(:tags_a => [ "", " " ]) }.to raise_error
+  end
+
   it "checks for invalid urls" do
     expect { Story.make!(:title => "test", :url => "http://gooses.com/")
       }.to_not raise_error

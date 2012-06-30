@@ -116,33 +116,6 @@ class StoriesController < ApplicationController
     end
   end
 
-#  public function update() {
-#    if (!$this->user) {
-#      $this->add_flash_error("You must be logged in to edit an item.");
-#      return $this->redirect_to("/login");
-#    }
-#
-#    if ($this->user->is_admin)
-#      $this->item = Item::find_by_id($this->params["id"]);
-#    else
-#      $this->item = Item::find_by_user_id_and_id($this->user->id,
-#        $this->params["id"]);
-#
-#    if (!$this->item) {
-#      $this->add_flash_error("Could not find item or you are not "
-#        . "authorized to edit it.");
-#      return $this->redirect_to("/");
-#    }
-#
-#    $this->item->is_expired = false;
-#    if ($this->item->update_attributes($this->params["item"])) {
-#      $this->add_flash_notice("Successfully saved item changes.");
-#      return $this->redirect_to(array("controller" => "items",
-#        "action" => "show", "id" => $this->item->id));
-#    } else
-#      return $this->render(array("action" => "edit"));
-#  }
-#
   def unvote
     if !(story = Story.find_by_short_id(params[:story_id]))
       return render :text => "can't find story", :status => 400

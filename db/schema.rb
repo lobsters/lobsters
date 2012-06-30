@@ -20,12 +20,15 @@ ActiveRecord::Schema.define(:version => 0) do
     t.integer  "story_id",                                        :null => false
     t.integer  "user_id",                                         :null => false
     t.integer  "parent_comment_id"
+    t.integer  "thread_id"
     t.text     "comment",                                         :null => false
     t.integer  "upvotes",                         :default => 0,  :null => false
     t.integer  "downvotes",                       :default => 0,  :null => false
   end
 
+  add_index "comments", ["short_id"], :name => "short_id", :unique => true
   add_index "comments", ["story_id", "short_id"], :name => "story_id"
+  add_index "comments", ["thread_id"], :name => "thread_id"
 
   create_table "keystores", :primary_key => "key", :force => true do |t|
     t.integer "value", :null => false
@@ -38,7 +41,6 @@ ActiveRecord::Schema.define(:version => 0) do
     t.integer  "has_been_read",     :limit => 1,   :default => 0
     t.string   "subject",           :limit => 100
     t.text     "body"
-    t.integer  "item_id"
     t.string   "random_hash",       :limit => 30
   end
 
@@ -47,13 +49,14 @@ ActiveRecord::Schema.define(:version => 0) do
   create_table "stories", :force => true do |t|
     t.datetime "created_at"
     t.integer  "user_id"
-    t.string   "url",         :limit => 250, :default => ""
-    t.string   "title",       :limit => 100, :default => "", :null => false
+    t.string   "url",          :limit => 250, :default => ""
+    t.string   "title",        :limit => 150, :default => "", :null => false
     t.text     "description"
-    t.string   "short_id",    :limit => 6,   :default => "", :null => false
-    t.integer  "is_expired",  :limit => 1,   :default => 0,  :null => false
-    t.integer  "upvotes",                    :default => 0,  :null => false
-    t.integer  "downvotes",                  :default => 0,  :null => false
+    t.string   "short_id",     :limit => 6,   :default => "", :null => false
+    t.integer  "is_expired",   :limit => 1,   :default => 0,  :null => false
+    t.integer  "upvotes",                     :default => 0,  :null => false
+    t.integer  "downvotes",                   :default => 0,  :null => false
+    t.integer  "is_moderated", :limit => 1,   :default => 0,  :null => false
   end
 
   add_index "stories", ["url"], :name => "url"
@@ -63,7 +66,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.integer "tag_id",   :null => false
   end
 
-  add_index "taggings", ["story_id", "tag_id"], :name => "story_id2", :unique => true
+  add_index "taggings", ["story_id", "tag_id"], :name => "story_id", :unique => true
 
   create_table "tags", :force => true do |t|
     t.string "tag",         :limit => 25,  :default => "", :null => false
@@ -77,10 +80,11 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string   "email",                :limit => 100
     t.string   "password_digest",      :limit => 75
     t.datetime "created_at"
-    t.integer  "email_notifications",  :limit => 1,   :default => 1
+    t.integer  "email_notifications",  :limit => 1,   :default => 0
     t.integer  "is_admin",             :limit => 1,   :default => 0,  :null => false
     t.string   "password_reset_token", :limit => 75
     t.string   "session_token",        :limit => 75,  :default => "", :null => false
+    t.text     "about"
   end
 
   add_index "users", ["session_token"], :name => "session_hash", :unique => true

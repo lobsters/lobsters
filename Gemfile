@@ -23,6 +23,7 @@ gem "unicorn"
 gem "uglifier"
 
 gem "nokogiri"
+gem "htmlentities"
 
 group :test, :development do
   gem "rspec-rails", "~> 2.6"

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<% coder = HTMLEntities.new %>
+<rss version="2.0">
+  <channel>
+    <title>lobste.rs<%= @page_title ? ": " + h(@page_title) : "" %></title>
+    <description><%= @page_title %></description>
+    <link>http://lobste.rs/<%= @newest ? "newest" : "" %></link>
+
+    <% @stories.each do |story| %>
+      <item>
+        <title><%= raw coder.encode(story.title, :decimal) %></title>
+        <link><%= story.url_or_comments_url %></link>
+        <author><%= story.user.username %></author>
+        <pubDate><%= story.created_at.rfc2822 %></pubDate>
+        <comments><%= story.comments_url %></comments>
+        <description><%= raw coder.encode(story.linkified_text, :decimal)
+          %></description>
+        <% story.tags.each do |tag| %>
+          <category><%= tag.tag %></category>
+        <% end %>
+      </item>
+    <% end %>
+  </channel>
+</rss>

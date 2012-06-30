@@ -1,7 +1,7 @@
 Lobsters::Application.routes.draw do
   root :to => "home#index"
 
-  get "/newest" => "home#newest"
+  get "/newest(.format)" => "home#newest"
 
   get "/threads" => "comments#threads"
 
@@ -39,4 +39,6 @@ Lobsters::Application.routes.draw do
 
   get "/p/:id/(:title)" => "stories#show"
   get "/u/:id" => "users#show"
+
+  get "/rss" => "home#index", :format => "rss"
 end

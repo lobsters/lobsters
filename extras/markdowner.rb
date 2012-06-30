@@ -112,7 +112,7 @@ class Markdowner
 		out.gsub!(/<p>\n?<p>/, "\n<p>")
 		out.gsub!(/<\/p><p>/, "</p>\n<p>")
 
-		out.strip
+		out.strip.force_encoding("utf-8")
 	end
 
 	def self._linkify_text(chunk)

@@ -1,60 +1,50 @@
 class HomeController < ApplicationController
   def index
-    conds = [ "is_expired = 0 " ]
+    @stories = find_stories_for_user_and_tag_and_newest(@user, nil, false)
 
-    if @user && !@newest
-      # exclude downvoted items
-      conds[0] << "AND stories.id NOT IN (SELECT story_id FROM votes " <<
-        "WHERE user_id = ? AND vote < 0) "
-      conds.push @user.id
+    @rss_link ||= "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
+      "title=\"RSS 2.0\" href=\"/rss\" />"
+
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.rss { render :action => "rss", :layout => false }
     end
-
-    if @tag
-      conds[0] << "AND taggings.tag_id = ?"
-      conds.push @tag.id
-      @stories = Story.find(:all, :conditions => conds,
-        :include => [ :user, :taggings ], :joins => [ :user, :taggings ],
-        :limit => 30)
-
-      @title = @tag.description.blank?? @tag.tag : @tag.description
-      @title_url = tag_url(@tag.tag)
-    else
-      @stories = Story.find(:all, :conditions => conds,
-        :include => [ :user, :taggings ], :joins => [ :user ],
-        :limit => 30)
-    end
-
-    if @user
-      votes = Vote.votes_by_user_for_stories_hash(@user.id,
-        @stories.map{|s| s.id })
-
-      @stories.each do |s|
-        if votes[s.id]
-          s.vote = votes[s.id]
-        end
-      end
-    end
-
-    if @newest
-      # TODO: better algorithm here
-      @stories.sort_by!{|s| s.created_at }.reverse!
-    else
-      @stories.sort_by!{|s| s.hotness }
-    end
-
-    render :action => "index"
   end
 
   def newest
-    @newest = true
-    index
+    @stories = find_stories_for_user_and_tag_and_newest(@user, nil, true)
+
+    @page_title = "Newest Stories"
+
+    @rss_link = "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
+      "title=\"RSS 2.0 - Newest Items\" href=\"/newest.rss\" />"
+
+    @title = "Newest Stories"
+    @title_url = "/newest"
+
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.rss { render :action => "rss", :layout => false }
+    end
   end
 
   def tagged
-    if !(@tag = Tag.find_by_tag(params[:tag]))
-      raise ActionController::RoutingError.new("tag not found")
-    end
+    @tag = Tag.find_by_tag!(params[:tag])
+    @stories = find_stories_for_user_and_tag_and_newest(@user, @tag, false)
 
-    index
+    @page_title = @tag.description
+
+    @rss_link = "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
+      "title=\"RSS 2.0 - Tagged #{CGI.escape(@tag.tag)} " <<
+      "(#{CGI.escape(@tag.description)})\" href=\"/t/" +
+      "#{CGI.escape(@tag.tag)}.rss\" />"
+
+    @title = @tag.description.blank?? @tag.tag : @tag.description
+    @title_url = tag_url(@tag.tag)
+
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.rss { render :action => "rss", :layout => false }
+    end
   end
 end

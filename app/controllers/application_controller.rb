@@ -26,4 +26,49 @@ class ApplicationController < ActionController::Base
       return false
     end
   end
+
+  def find_stories_for_user_and_tag_and_newest(user, tag = nil, newest = false)
+    stories = []
+
+    conds = [ "is_expired = 0 " ]
+
+    if user && !newest
+      # exclude downvoted items
+      conds[0] << "AND stories.id NOT IN (SELECT story_id FROM votes " <<
+        "WHERE user_id = ? AND vote < 0) "
+      conds.push user.id
+    end
+
+    if tag
+      conds[0] << "AND taggings.tag_id = ?"
+      conds.push tag.id
+      stories = Story.find(:all, :conditions => conds,
+        :include => [ :user, :taggings ], :joins => [ :user, :taggings ],
+        :limit => 30)
+    else
+      stories = Story.find(:all, :conditions => conds,
+        :include => [ :user, :taggings ], :joins => [ :user ],
+        :limit => 30)
+    end
+
+    if user
+      votes = Vote.votes_by_user_for_stories_hash(user.id,
+        stories.map{|s| s.id })
+
+      stories.each do |s|
+        if votes[s.id]
+          s.vote = votes[s.id]
+        end
+      end
+    end
+
+    if newest
+      # TODO: better algorithm here
+      stories.sort_by!{|s| s.created_at }.reverse!
+    else
+      stories.sort_by!{|s| s.hotness }
+    end
+
+    stories
+  end
 end

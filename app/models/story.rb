@@ -80,7 +80,7 @@ class Story < ActiveRecord::Base
   end
 
   def comments_url
-    "/p/#{self.short_id}/#{self.title_as_url}"
+    "http://lobste.rs/p/#{self.short_id}/#{self.title_as_url}"
   end
 
   @_comment_count = nil

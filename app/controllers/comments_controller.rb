@@ -95,7 +95,7 @@ class CommentsController < ApplicationController
   def threads
     recent_threads = @user.recent_threads
 
- 		@threads = recent_threads.map{|r|
+    @threads = recent_threads.map{|r|
       Comment.ordered_for_story_or_thread_for_user(nil, r, @user.id) }
 
     # trim each thread to this user's first response

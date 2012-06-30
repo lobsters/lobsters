@@ -1,5 +1,5 @@
 class Comment < ActiveRecord::Base
-	belongs_to :user
+  belongs_to :user
   belongs_to :story
   has_many :votes,
     :dependent => :delete_all
@@ -13,42 +13,42 @@ class Comment < ActiveRecord::Base
   after_create :assign_votes
   after_destroy :unassign_votes
 
-	MAX_EDIT_MINS = 45
+  MAX_EDIT_MINS = 45
 
   validate do
-		self.comment.to_s.strip == "" &&
-			errors.add(:comment, "cannot be blank.")
+    self.comment.to_s.strip == "" &&
+      errors.add(:comment, "cannot be blank.")
 
-		self.user_id.blank? &&
+    self.user_id.blank? &&
       errors.add(:user_id, "cannot be blank.")
 
-		self.story_id.blank? &&
-		  errors.add(:story_id, "cannot be blank.")
-		
+    self.story_id.blank? &&
+      errors.add(:story_id, "cannot be blank.")
+    
     (m = self.comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
-		  errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
+      errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
   end
 
-	def assign_short_id_and_upvote
-		(1...10).each do |tries|
-			if tries == 10
-				raise "too many hash collisions"
+  def assign_short_id_and_upvote
+    (1...10).each do |tries|
+      if tries == 10
+        raise "too many hash collisions"
       end
 
-			if !Comment.find_by_short_id(self.short_id = Utils.random_str(6))
-				break
+      if !Comment.find_by_short_id(self.short_id = Utils.random_str(6))
+        break
       end
-		end
+    end
 
     self.upvotes = 1
-	end
+  end
 
   def assign_votes
-	  Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.story_id,
+    Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.story_id,
       self.id, self.user.id, nil, false)
 
-		self.story.update_comment_count!
-	end
+    self.story.update_comment_count!
+  end
 
   # http://evanmiller.org/how-not-to-sort-by-average-rating.html
   # https://github.com/reddit/reddit/blob/master/r2/r2/lib/db/_sorts.pyx
@@ -68,28 +68,28 @@ class Comment < ActiveRecord::Base
     return (left - right) / under
   end
 
-	def unassign_votes
-		self.story.update_comment_count!
-	end
-
-	def score
-		self.upvotes - self.downvotes
+  def unassign_votes
+    self.story.update_comment_count!
   end
 
-	def linkified_comment
-		Markdowner.markdown(self.comment)
-	end
+  def score
+    self.upvotes - self.downvotes
+  end
 
-	def upvote!(amount = 1)
-		Story.update_counters self.id, :upvotes => amount
-	end
+  def linkified_comment
+    Markdowner.markdown(self.comment)
+  end
 
-	def flag!
+  def upvote!(amount = 1)
+    Story.update_counters self.id, :upvotes => amount
+  end
+
+  def flag!
     Story.update_counters self.id, :flaggings => 1
   end
 
-	def self.ordered_for_story_or_thread_for_user(story_id, thread_id, user_id)
-		parents = {}
+  def self.ordered_for_story_or_thread_for_user(story_id, thread_id, user_id)
+    parents = {}
 
     if thread_id
       cs = [ "thread_id = ?", thread_id ]
@@ -118,13 +118,13 @@ class Comment < ActiveRecord::Base
     recursor.call(nil, 0)
 
     ordered
-	end
-	
+  end
+  
   def is_editable_by_user?(user)
-		if !user || user.id != self.user_id
+    if !user || user.id != self.user_id
       return false
     end
 
-		(Time.now.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
-	end
+    (Time.now.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
+  end
 end

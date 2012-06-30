@@ -1,47 +1,47 @@
 class Vote < ActiveRecord::Base
-	belongs_to :user
+  belongs_to :user
   belongs_to :story
 
   STORY_REASONS = {
-		"S" => "Spam",
-		"A" => "Already Posted",
-		"L" => "Poorly Titled",
-		"T" => "Poorly Tagged",
-		"O" => "Off-topic",
-		"" => "Cancel",
+    "S" => "Spam",
+    "A" => "Already Posted",
+    "L" => "Poorly Titled",
+    "T" => "Poorly Tagged",
+    "O" => "Off-topic",
+    "" => "Cancel",
   }
 
   COMMENT_REASONS = {
-		"O" => "Off-topic",
-		"I" => "Incorrect",
-		"M" => "Me-too",
-		"T" => "Troll",
-		"S" => "Spam",
-		"" => "Cancel",
-	}
+    "O" => "Off-topic",
+    "I" => "Incorrect",
+    "M" => "Me-too",
+    "T" => "Troll",
+    "S" => "Spam",
+    "" => "Cancel",
+  }
 
-	def self.votes_by_user_for_stories_hash(user, stories)
+  def self.votes_by_user_for_stories_hash(user, stories)
     votes = []
     Vote.where(:user_id => user, :story_id => stories,
     :comment_id => nil).each do |v|
-			votes[v.story_id] = v.vote
-    end
-
-		votes
-	end
-
-	def self.comment_votes_by_user_for_story_hash(user_id, story_id)
-		votes = {}
-
-    Vote.find(:all, :conditions => [ "user_id = ? AND story_id = ? AND " +
-    "comment_id IS NOT NULL", user_id, story_id ]).each do |v|
-			votes[v.comment_id] = { :vote => v.vote, :reason => v.reason }
+      votes[v.story_id] = v.vote
     end
 
     votes
   end
 
-	def self.vote_thusly_on_story_or_comment_for_user_because(vote, story_id,
+  def self.comment_votes_by_user_for_story_hash(user_id, story_id)
+    votes = {}
+
+    Vote.find(:all, :conditions => [ "user_id = ? AND story_id = ? AND " +
+    "comment_id IS NOT NULL", user_id, story_id ]).each do |v|
+      votes[v.comment_id] = { :vote => v.vote, :reason => v.reason }
+    end
+
+    votes
+  end
+
+  def self.vote_thusly_on_story_or_comment_for_user_because(vote, story_id,
   comment_id, user_id, reason, update_counters = true)
     v = if comment_id
       Vote.find_or_initialize_by_user_id_and_story_id_and_comment_id(user_id,

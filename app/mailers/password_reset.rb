@@ -5,7 +5,7 @@ class PasswordReset < ActionMailer::Base
     @user = user
     @ip = ip
 
-    mail(to: user.email, from: "Lobsters <nobody@lobste.rs",
+    mail(to: user.email, from: "Lobsters <nobody@lobste.rs>",
       subject: "[Lobsters] Reset your password")
   end
 end

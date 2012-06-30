@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-	has_many :stories,
+  has_many :stories,
     :include => :user
   has_secure_password
 
@@ -22,13 +22,13 @@ class User < ActiveRecord::Base
     end
   end
 
-	def unread_message_count
+  def unread_message_count
     0
-		#Message.where(:recipient_user_id => self.id, :has_been_read => 0).count
+    #Message.where(:recipient_user_id => self.id, :has_been_read => 0).count
   end
 
-	def karma
-		Keystore.value_for("user:#{self.id}:karma").to_i
+  def karma
+    Keystore.value_for("user:#{self.id}:karma").to_i
   end
 
   def stories_submitted_count
@@ -47,7 +47,7 @@ class User < ActiveRecord::Base
   end
 
   def linkified_about
-		Markdowner.markdown(self.about)
+    Markdowner.markdown(self.about)
   end
 
   def recent_threads(amount = 20)

@@ -8,7 +8,7 @@ class SignupController < ApplicationController
     @new_user = User.new(params[:user])
 
     if @new_user.save
-      session[:u] = @new_user.session_hash
+      session[:u] = @new_user.session_token
       return redirect_to "/"
     else
       render :action => "index"

@@ -14,14 +14,7 @@ gem "bcrypt-ruby", "3.0.0"
 
 gem "dynamic_form"
 
-group :test, :development do
-  gem "rspec-rails", "~> 2.6"
-  gem "machinist"
-  gem "sqlite3"
-end
-
-# To use Jbuilder templates for JSON
-# gem "jbuilder"
+gem "exception_notification"
 
 # Use unicorn as the app server
 gem "unicorn"
@@ -29,8 +22,8 @@ gem "unicorn"
 # for asset compilation
 gem "uglifier"
 
-# Deploy with Capistrano
-# gem "capistrano"
-
-# To use debugger
-# gem "ruby-debug19", :require => "ruby-debug"
+group :test, :development do
+  gem "rspec-rails", "~> 2.6"
+  gem "machinist"
+  gem "sqlite3"
+end

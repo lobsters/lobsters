@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(:version => 0) do
   end
 
   add_index "comments", ["short_id"], :name => "short_id", :unique => true
-  add_index "comments", ["story_id", "short_id"], :name => "story_id"
+  add_index "comments", ["story_id", "short_id"], :name => "story_id_short_id"
   add_index "comments", ["thread_id"], :name => "thread_id"
 
   create_table "keystores", :primary_key => "key", :force => true do |t|
@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.integer "tag_id",   :null => false
   end
 
-  add_index "taggings", ["story_id", "tag_id"], :name => "story_id", :unique => true
+  add_index "taggings", ["story_id", "tag_id"], :name => "story_id_tag_id", :unique => true
 
   create_table "tags", :force => true do |t|
     t.string "tag",         :limit => 25,  :default => "", :null => false
@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string  "reason",     :limit => 1
   end
 
-  add_index "votes", ["user_id", "comment_id"], :name => "user_id_2"
-  add_index "votes", ["user_id", "story_id"], :name => "user_id"
+  add_index "votes", ["user_id", "comment_id"], :name => "user_id_comment_id"
+  add_index "votes", ["user_id", "story_id"], :name => "user_id_story_id"
 
 end

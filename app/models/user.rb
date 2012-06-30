@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
 
   def check_session_token
     if self.session_token.blank?
-      self.session_token = Utils.random_key(60)
+      self.session_token = Utils.random_str(60)
     end
   end
 
@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   end
 
   def initiate_password_reset_for_ip(ip)
-    self.password_reset_token = Utils.random_key(60)
+    self.password_reset_token = Utils.random_str(60)
     self.save!
 
     PasswordReset.password_reset_link(self, ip).deliver

@@ -22,6 +22,8 @@ gem "unicorn"
 # for asset compilation
 gem "uglifier"
 
+gem "nokogiri"
+
 group :test, :development do
   gem "rspec-rails", "~> 2.6"
   gem "machinist"

@@ -54,6 +54,7 @@ GEM
     mime-types (1.18)
     multi_json (1.1.0)
     mysql2 (0.3.11)
+    nokogiri (1.5.4)
     polyglot (0.3.3)
     rack (1.4.1)
     rack-cache (1.2)
@@ -123,6 +124,7 @@ DEPENDENCIES
   jquery-rails
   machinist
   mysql2
+  nokogiri
   rails (= 3.2.2)
   rspec-rails (~> 2.6)
   sqlite3

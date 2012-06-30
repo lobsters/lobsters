@@ -1,6 +1,6 @@
 class Story < ActiveRecord::Base
-	belongs_to :user
-	has_many :taggings
+  belongs_to :user
+  has_many :taggings
   has_many :comments
   has_many :tags, :through => :taggings
 
@@ -12,10 +12,10 @@ class Story < ActiveRecord::Base
 
   attr_accessible :url, :title, :description, :story_type, :tags_a
 
-	# after this many minutes old, a story cannot be edited
-	MAX_EDIT_MINS = 30
+  # after this many minutes old, a story cannot be edited
+  MAX_EDIT_MINS = 30
 
-	attr_accessor :vote, :story_type, :already_posted_story
+  attr_accessor :vote, :story_type, :already_posted_story, :fetched_content
   attr_accessor :tags_to_add, :tags_to_delete
 
   after_save :deal_with_tags
@@ -25,7 +25,7 @@ class Story < ActiveRecord::Base
     if self.url.present?
       # URI.parse is not very lenient, so we can't use it
 
-      if self.url.match(/\Ahttps?:\/\/[^\.]+\.[a-z]+\//)
+      if self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/)
         if (s = Story.find_by_url(self.url)) &&
         (Time.now - s.created_at) < 30.days
           errors.add(:url, "has already been submitted recently")
@@ -34,20 +34,22 @@ class Story < ActiveRecord::Base
       else
         errors.add(:url, "is not valid")
       end
+    elsif self.description.to_s.strip == ""
+      self.errors(:description, "must contain text if no URL posted")
     end
   end
 
-	def assign_short_id
-		(1...10).each do |tries|
-			if tries == 10
-				raise "too many hash collisions"
+  def assign_short_id
+    (1...10).each do |tries|
+      if tries == 10
+        raise "too many hash collisions"
       end
 
-			self.short_id = Utils.random_str(6)
-			if !Story.find_by_short_id(self.short_id)
-				break
+      self.short_id = Utils.random_str(6)
+      if !Story.find_by_short_id(self.short_id)
+        break
       end
-		end
+    end
   end
 
   def deal_with_tags
@@ -72,27 +74,43 @@ class Story < ActiveRecord::Base
     self.tags_to_add = []
   end
 
-	def comments_url
-		"/p/#{self.short_id}/#{self.title_as_url}"
+  def comments_url
+    "/p/#{self.short_id}/#{self.title_as_url}"
   end
 
-	@_comment_count = nil
-	def comment_count
-		@_comment_count ||=
+  @_comment_count = nil
+  def comment_count
+    @_comment_count ||=
       Keystore.value_for("story:#{self.id}:comment_count").to_i
-	end
+  end
 
-	def domain
-		if self.url.blank?
-			nil
-		else
-			pu = URI.parse(self.url)
-			pu.host.gsub(/^www\d*\./, "")
+  def domain
+    if self.url.blank?
+      nil
+    else
+      pu = URI.parse(self.url)
+      pu.host.gsub(/^www\d*\./, "")
     end
   end
 
-  UP_RANGE = 400
-  DOWN_RANGE = 100
+  def fetched_title(for_remote_ip = nil)
+    doc = Nokogiri::HTML(fetched_content(for_remote_ip).to_s)
+    return doc.at_css("title").text  
+  end
+
+  def fetched_content(for_remote_ip = nil)
+    return @fetched_content if @fetched_content
+
+    begin
+      s = Sponge.new
+      s.timeout = 3
+      @fetched_content = s.fetch(self.url, :get, nil, nil,
+        { "User-agent" => "lobste.rs! for #{for_remote_ip}" }, 3)
+    rescue
+    end
+
+    @fetched_content
+  end
 
   def hotness
     score = upvotes - downvotes
@@ -109,13 +127,14 @@ class Story < ActiveRecord::Base
     return -(order + (sign * (seconds.to_f / 45000))).round(7)
   end
 
-	def linkified_text
-		Markdowner.markdown(self.description)
+  def linkified_text
+    Markdowner.markdown(self.description)
   end
 
   def tags_a
     tags.map{|t| t.tag }
   end
+
   def tags_a=(new_tags)
     self.tags_to_delete = []
     self.tags_to_add = []
@@ -140,41 +159,36 @@ class Story < ActiveRecord::Base
     self[:title] = t.strip
   end
 
-	def title_as_url
-		u = self.title.downcase.gsub(/[^a-z0-9_-]/, "_")
-		while self.title.match(/__/)
-			self.title.gsub!("__", "_")
+  def title_as_url
+    u = self.title.downcase.gsub(/[^a-z0-9_-]/, "_")
+    while u.match(/__/)
+      u.gsub!("__", "_")
     end
+    u
+  end
 
-		u
-	end
+  def url_or_comments_url
+    self.url.blank? ? self.comments_url : self.url
+  end
 
-	def url_or_comments_url
-		self.url.blank? ? self.comments_url : self.url
-	end
-
-	def is_editable_by_user?(user)
-		if !user || user.id != self.user_id
+  def is_editable_by_user?(user)
+    if !user || user.id != self.user_id
       return false
     end
 
-		(Time.now.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
-	end
-	
+    (Time.now.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
+  end
+  
   def is_undeletable_by_user?(user)
-		if !user || user.id != self.user_id
+    if !user || user.id != self.user_id
       return false
     end
 
     true
   end
 
-	def update_comment_count!
-		Keystore.put("story:#{self.id}:comment_count",
+  def update_comment_count!
+    Keystore.put("story:#{self.id}:comment_count",
       Comment.where(:story_id => self.id).count)
-	end
-
-	def flag!
-    Story.update_counters self.id, :flaggings => 1
   end
 end

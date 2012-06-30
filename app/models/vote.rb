@@ -4,6 +4,8 @@ class Vote < ActiveRecord::Base
 
   STORY_REASONS = {
 		"S" => "Spam",
+		"A" => "Already Posted",
+		"L" => "Poorly Titled",
 		"T" => "Poorly Tagged",
 		"O" => "Off-topic",
 		"" => "Cancel",
@@ -12,6 +14,7 @@ class Vote < ActiveRecord::Base
   COMMENT_REASONS = {
 		"O" => "Off-topic",
 		"I" => "Incorrect",
+		"M" => "Me-too",
 		"T" => "Troll",
 		"S" => "Spam",
 		"" => "Cancel",
@@ -19,7 +22,8 @@ class Vote < ActiveRecord::Base
 
 	def self.votes_by_user_for_stories_hash(user, stories)
     votes = []
-    Vote.where(:user_id => user, :story_id => stories).each do |v|
+    Vote.where(:user_id => user, :story_id => stories,
+    :comment_id => nil).each do |v|
 			votes[v.story_id] = v.vote
     end
 
@@ -31,18 +35,19 @@ class Vote < ActiveRecord::Base
 
     Vote.find(:all, :conditions => [ "user_id = ? AND story_id = ? AND " +
     "comment_id IS NOT NULL", user_id, story_id ]).each do |v|
-			votes[v.comment_id] = cv.vote
+			votes[v.comment_id] = { :vote => v.vote, :reason => v.reason }
     end
 
     votes
   end
 
 	def self.vote_thusly_on_story_or_comment_for_user_because(vote, story_id,
-  comment_id, user_id, reason)
-    v = if story_id
+  comment_id, user_id, reason, update_counters = true)
+    v = if comment_id
+      Vote.find_or_initialize_by_user_id_and_story_id_and_comment_id(user_id,
+        story_id, comment_id)
+    else
       Vote.find_or_initialize_by_user_id_and_story_id(user_id, story_id)
-    elsif comment_id
-      Vote.find_or_initialize_by_user_id_and_comment_id(user_id, comment_id)
     end
 
     if !v.new_record? && v.vote == vote
@@ -68,7 +73,7 @@ class Vote < ActiveRecord::Base
       # new vote or change vote
       else
         if v.new_record?
-          if v.vote == -1
+          if vote == -1
             downvote = 1
           else
             upvote = 1
@@ -88,12 +93,12 @@ class Vote < ActiveRecord::Base
         v.save!
       end
 
-      if downvote != 0 || upvote != 0
-        if v.story_id
-          Story.update_counters v.story_id, :downvotes => downvote,
-            :upvotes => upvote
-        elsif v.comment_id
+      if update_counters && (downvote != 0 || upvote != 0)
+        if v.comment_id
           Comment.update_counters v.comment_id, :downvotes => downvote,
+            :upvotes => upvote
+        else
+          Story.update_counters v.story_id, :downvotes => downvote,
             :upvotes => upvote
         end
       end

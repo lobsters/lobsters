@@ -4,6 +4,12 @@ class Story < ActiveRecord::Base
   has_many :comments
   has_many :tags, :through => :taggings
 
+  validates_length_of :title, :in => 3..150
+  validates_length_of :description, :maximum => (64 * 1024)
+  validates_format_of :url, :with => /\Ahttps?:\/\//i,
+    :allow_blank => true
+  validates_presence_of :user_id
+
   attr_accessible :url, :title, :description, :story_type, :tags_a
 
 	# after this many minutes old, a story cannot be edited
@@ -14,6 +20,7 @@ class Story < ActiveRecord::Base
 
   after_save :deal_with_tags
   before_create :assign_short_id
+  before_create :find_duplicate
 
 	def assign_short_id
 		(1...10).each do |tries|
@@ -28,8 +35,16 @@ class Story < ActiveRecord::Base
 		end
   end
 
+  def find_duplicate
+    if (s = Story.find_by_url(self.url)) &&
+    (Time.now - s.created_at) < 30.days
+      errors.add(:url, "has already been submitted recently")
+      self.already_posted_story = s
+    end
+	end
+
   def deal_with_tags
-    self.tags_to_delete.each do |t|
+    (self.tags_to_delete || []).each do |t|
       if t.is_a?(Tagging)
         t.destroy
       elsif t.is_a?(Tag)
@@ -37,7 +52,7 @@ class Story < ActiveRecord::Base
       end
     end
 
-    self.tags_to_add.each do |t|
+    (self.tags_to_add || []).each do |t|
       if t.is_a?(Tag)
         tg = Tagging.new
         tg.tag_id = t.id
@@ -51,8 +66,28 @@ class Story < ActiveRecord::Base
   end
 
 	def comments_in_order_for_user(user_id)
-		Comment.find_all_by_story_id(self.id)
-    # TODO
+		parents = {}
+    Comment.find_all_by_story_id(self.id).sort_by{|c| c.confidence }.each do |c|
+      (parents[c.parent_comment_id.to_i] ||= []).push c
+    end
+
+    # top-down list of comments, regardless of indent level
+    ordered = []
+
+    recursor = lambda{|comment,level|
+      if comment
+        comment.indent_level = level
+        ordered.push comment
+      end
+
+      # for each comment that is a child of this one, recurse with it
+      (parents[comment ? comment.id : 0] || []).each do |child|
+        recursor.call(child, level + 1)
+      end
+    }
+    recursor.call(nil, 0)
+
+    ordered
 	end
 
 	def comments_url
@@ -118,6 +153,11 @@ class Story < ActiveRecord::Base
     end
   end
 
+  def title=(t)
+    # change unicode whitespace characters into real spaces
+    self[:title] = t.strip
+  end
+
 	def title_as_url
 		u = self.title.downcase.gsub(/[^a-z0-9_-]/, "_")
 		while self.title.match(/__/)
@@ -138,46 +178,18 @@ class Story < ActiveRecord::Base
 
 		true #(Time.now.to_i - self.created_at.to_i < (60 * Story::MAX_EDIT_MINS))
 	end
+	
+  def is_undeletable_by_user?(user)
+		if !user || user.id != self.user_id
+      return false
+    end
+
+    true
+  end
 
 	def update_comment_count!
 		Keystore.put("story:#{self.id}:comment_count",
-      Comment.count_by_story_id(self.id))
-	end
-
-	def validate
-		if self.title.blank?
-			self.errors.add(:title, "cannot be blank.")
-    end
-
-#		if (strlen($this->title) > 100)
-#			$this->errors->add("title", "cannot be longer than 100 "
-#				. "characters.");
-#
-#		if ($this->story_type == "text") {
-#			$this->url = null;
-#
-#			if (trim($this->description) == "")
-#				$this->errors->add("description", "cannot be blank.");
-#			elseif (strlen($this->description) > (64 * 1024))
-#				$this->errors->add("description", "is too long.");
-#		}
-#		else {
-#			$this->description = null;
-#
-#			if (!preg_match("/^https?:\/\//i", $this->url))
-#				$this->errors->add("url", "does not look valid.");
-#
-#			$now = new DateTime("now");
-#			if (($old = Story::find_by_url($this->url)) &&
-#			($old->created_at->diff($now)->format("%s") < (60 * 60 * 30))) {
-#				$this->errors->add("url", "has already been posted in the "
-#					. "last 30 days.");
-#				$this->already_posted_story = $old;
-#			}
-#		}
-#
-#		if (empty($this->user_id))
-#			$this->errors->add("user_id", "cannot be blank.");
+      Comment.where(:story_id => self.id).count)
 	end
 
 	def flag!

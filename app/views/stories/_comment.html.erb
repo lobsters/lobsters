@@ -1,41 +1,56 @@
-<li id="comment_<%= comment.short_id %>" class="<%= comment.vote == 1 ?
-	"upvoted" : (comment.vote == -1 ? "downvoted" : "") %>
+<li id="comment_<%= comment.short_id %>" data-shortid="<%= comment.short_id %>"
+class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
+"upvoted" : "downvoted") : "" %>
 	<%= comment.score <= 0 ? "negative" : "" %>
 	<%= comment.score <= -3 ? "negative_3" : "" %>
 	<%= comment.score <= -5 ? "negative_5" : "" %>
-	<%= comment.score <= -7 ? "negative_7" : "" %>
-	">
+	<%= comment.score <= -7 ? "negative_7" : "" %>">
 	<div class="voters">
-    <a class="upvoter" href="#" onclick="<%= comment.id ?
-      "Lobsters.upvoteComment('#{comment.short_id}'); " : "" %>return false;"
-      ></a>
+    <a class="upvoter"></a>
 		<div class="score">
 			<%= comment.score %>
 		</div>
-    <a class="downvoter" id="comment_downvoter_<%= comment.short_id %>"
-      href="#" onclick="<%= comment.id ?
-      "Lobsters.downvoteComment('#{comment.short_id}'); " : "" %>return false;"
-      ></a>
+    <a class="downvoter"></a>
 	</div>
 	<div class="details">
 		<div class="byline">
-      <a href="/u/<%= comment.user.username %>"><%= comment.user.username
-        %></a>
-      <% if comment.created_at %>
-        <%= time_ago_in_words(comment.created_at).gsub(/^about /, "") %> ago
-      <% else %>
+      <% if comment.previewing %>
+        <a><%= comment.user.username %></a>
         just now
+        <span class="reason">(Preview)</span>
+      <% else %>
+        <a href="/u/<%= comment.user.username %>"><%= comment.user.username
+          %></a>
+        <%= time_ago_in_words(comment.created_at).gsub(/^about /, "") %> ago
+
+        <span class="reason"><%= comment.current_vote &&
+          comment.current_vote[:vote] == -1 ?
+          "(#{Vote::COMMENT_REASONS[comment.current_vote[:reason]]})" : ""
+          %></span>
       <% end %>
 		</div>
 		<div class="comment_text">
 			<%= raw comment.linkified_comment %>
 
 			<div class="comment_actions">
-        <a href="<%= story.comments_url %>/comments/<%= comment.short_id
-          %>">link</a>
-				&nbsp;
-				<%= link_to("reply") %>
+        <% if comment.previewing %>
+          <a>link</a>
+          &nbsp;
+          <a>reply</a>
+        <% else %>
+          <a href="<%= story.comments_url %>/comments/<%= comment.short_id
+            %>">link</a>
+          &nbsp;
+          <a class="comment_replier">reply</a>
+
+          <% if defined?(collapsable) && collapsable %>
+            &nbsp;
+            <a href="">collapse</a>
+          <% end %>
+        <% end %>
 			</div>
 		</div>
+
+    <div class="comment_reply"></div>
 	</div>
 </li>

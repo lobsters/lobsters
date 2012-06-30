@@ -11,24 +11,33 @@ class CommentsController < ApplicationController
     comment.comment = params[:comment].to_s
     comment.story_id = story.id
     comment.user_id = @user.id
-    comment.upvotes = 1
 
     if params[:parent_comment_short_id]
       if pc = Comment.find_by_story_id_and_short_id(story.id,
       params[:parent_comment_short_id])
         comment.parent_comment_id = pc.id
+        comment.parent_comment_short_id = pc.short_id
       else
         return render :json => { :error => "invalid parent comment",
           :status => 400 }
       end
     end
 
-    if comment.valid? && params[:preview].blank?
-      comment.save
-    end
+    if comment.valid? && !params[:preview].present? && comment.save
+      comment.current_vote = { :vote => 1 }
 
-    render :partial => "stories/commentbox", :layout => false,
-      :locals => { :story => story, :comment => comment }
+      render :partial => "stories/commentbox", :layout => false,
+        :content_type => "text/html", :locals => { :story => story,
+        :comment => Comment.new, :show_comment => comment }
+    else
+      comment.previewing = true
+      comment.upvotes = 1
+      comment.current_vote = { :vote => 1 }
+
+      render :partial => "stories/commentbox", :layout => false,
+        :content_type => "text/html", :locals => { :story => story,
+        :comment => comment, :show_comment => comment }
+    end
   end
 
   def preview

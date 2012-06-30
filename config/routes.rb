@@ -21,6 +21,7 @@ Lobsters::Application.routes.draw do
     post "upvote"
     post "downvote"
     post "unvote"
+    post "undelete"
   end
   post "/stories/fetch_url_title" => "stories#fetch_url_title"
   
@@ -29,7 +30,8 @@ Lobsters::Application.routes.draw do
     post "downvote"
     post "unvote"
   end
-  post "/comments/preview"
+  post "/comments/:story_id" => "comments#create"
+  post "/comments/preview/:story_id" => "comments#preview"
 
-  get "/p/:id/:title" => "stories#show"
+  get "/p/:id/(:title)" => "stories#show"
 end

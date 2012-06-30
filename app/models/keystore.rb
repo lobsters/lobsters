@@ -8,10 +8,9 @@ class Keystore < ActiveRecord::Base
   end
 
   def self.put(key, value)
-    Keystore.connection.query([ "INSERT INTO #{Keystore.table_name} (" +
-      "`key`, `value`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `count` = ?",
-      key, amount ])
-
+    Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" +
+      "`key`, `value`) VALUES (#{q(key)}, #{q(value)}) ON DUPLICATE KEY " +
+      "UPDATE `value` = #{q(value)}")
     true
   end
 
@@ -22,7 +21,7 @@ class Keystore < ActiveRecord::Base
   def self.incremented_value_for(key, amount = 1)
     new_value = nil
 
-    Keystore.connection.query([ "INSERT INTO #{Keystore.table_name} (" +
+    Keystore.connection.execute([ "INSERT INTO #{Keystore.table_name} (" +
       "`key`, `value`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `count` = " +
       "`count` + ?", key, amount, amount ])
 

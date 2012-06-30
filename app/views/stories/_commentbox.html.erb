@@ -1,23 +1,44 @@
-<%= form_tag({ :controller => "comments", :action => "create",
-:story_id => story.short_id }, :method => :post) do |f| %>
-	<%= text_area_tag "comment", comment.comment, :size => "100x5" %>
+<div class="form_container">
+<%= form_tag("/comments/#{story.short_id}", { :id => "comment_form" }) do |f| %>
+  <% if comment.parent_comment_short_id.present? %>
+    <%= hidden_field_tag "parent_comment_short_id",
+      comment.parent_comment_short_id %>
+  <% end %>
 
-	<p></p>
+  <div style="width: 100%; max-width: 650px;">
+    <%= text_area_tag "comment", comment.comment, :rows => 5,
+      :style => "width: 100%;" %>
 
-	<%= button_to_function "Post Comment",
-    "Lobsters.postComment($(this).parents('form').first()); return false;",
-    :type => "submit" %>
+    <p></p>
 
-	&nbsp;
-	
-  <%= button_to_function "Preview Comment",
-		"Lobsters.previewComment($(this).parents('form').first()); return false;"
-    %>
+    <div class="markdown_help_toggler">
+      <div class="markdown_help_label">
+        <span class="fakea">Limited Markdown formatting available</span>
+      </div>
 
-  <% if params[:preview].present? %>
-    <ol class="comments">
-      <%= render :partial => "stories/comment",
-        :locals => { :comment => comment, :story => story } %>
-    </ol>
+      <%= button_tag "Post Comment", :class => "comment-post",
+        :type => "button" %>
+      &nbsp;
+      <%= button_tag "Preview Comment", :class => "comment-preview",
+        :type => "button" %>
+
+      <div style="clear: both;"></div>
+
+      <%= render :partial => "global/markdownhelp" %>
+    </div>
+  </div>
+
+  <p></p>
+
+  <% if defined?(show_comment) %>
+    <% if show_comment.valid? %>
+      <ol class="comments comments1 preview">
+        <%= render :partial => "stories/comment",
+          :locals => { :comment => show_comment, :story => story } %>
+      </ol>
+    <% else %>
+      <%= errors_for comment %>
+    <% end %>
   <% end %>
 <% end %>
+</div>

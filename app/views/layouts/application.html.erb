@@ -7,12 +7,11 @@
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
-  <script>
-    Lobsters.storyDownvoteReasons = { <%= raw Vote::STORY_REASONS.map{|k,v|
-      "#{k.inspect}: #{v.inspect}" }.join(", ") %> };
-    Lobsters.commentDownvoteReasons = { <%= raw Vote::COMMENT_REASONS.map{|k,v|
-      "#{k.inspect}: #{v.inspect}" }.join(", ") %> };
-  </script>
+  <% if @user %>
+    <script>
+      Lobsters.curUser = '<%= @user.id %>';
+    </script>
+  <% end %>
 </head>
 <body>
 	<div id="wrapper">

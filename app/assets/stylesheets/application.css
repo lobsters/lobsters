@@ -11,7 +11,7 @@ html {
 	overflow: -moz-scrollbars-vertical !important;
 }
 
-body, textarea, input {
+body, textarea, input, button {
 	font-family: "helvetica neue", arial, sans-serif;
 	font-size: 10pt;
 	color: #333;
@@ -19,6 +19,7 @@ body, textarea, input {
 
 a {
 	color: #0855f1;
+	cursor: pointer;
 }
 
 a:visited {
@@ -55,14 +56,26 @@ a.tag {
 	vertical-align: text-top;
 }
 
+span.fakea {
+	cursor: pointer;
+	text-decoration: underline;
+	color: gray;
+}
+
 
 /* default form styling */
 
 input,
 select,
+button,
 textarea {
 	color: #555;
 	line-height: 1.2em;
+}
+input,
+button,
+select,
+textarea {
 	padding: 3px 5px;
 }
 input[type="text"],
@@ -86,6 +99,7 @@ textarea:focus {
 }
 
 body.mobile input,
+body.mobile button,
 body.mobile select,
 body.mobile textarea {
 	max-width: 275px;
@@ -158,7 +172,7 @@ div.field_with_errors input:focus {
 	border-color: rgba(255,0,0,.8);
 }
 
-input:disabled {
+input:disabled, button:disabled {
 	background-color: #e9e9e9; 
 	color: gray;
 }
@@ -270,7 +284,23 @@ ol.comments {
 }
 
 ol.comments {
-	margin-top: 3em;
+	margin-left: 19px;
+	margin-bottom: 0em;
+	padding-left: 6px;
+	border-left: 1px solid #ddd;
+}
+ol.comments1 {
+	margin-left: 0;
+	margin-top: 2em;
+	padding-left: 25px;
+}
+ol.comments.comments1 {
+	border-left-color: transparent;
+}
+
+ol.comments.preview {
+	margin: 1em 0 0 -15px;
+	padding: 0;
 }
 
 div.voters {
@@ -326,13 +356,13 @@ li.downvoted div.voters a.downvoter {
 ol.stories li,
 ol.comments li {
 	clear: both;
-	margin-bottom: 0.75em;
+	padding-top: 1em;
+}
+ol.stories li:first-child {
+	padding-top: 0.5em;
 }
 li div.details {
 	padding-top: 0.1em;
-}
-ol.stories li.downvoted {
-	opacity: 0.5;
 }
 
 ol.comments li.negative {
@@ -381,7 +411,6 @@ ol.stories li .byline {
 }
 ol.comments li .byline {
 	margin-top: -2px;
-	margin-bottom: -1px;
 }
 li .byline a {
 	color: #888;
@@ -426,6 +455,10 @@ div.comment_actions a {
 	text-decoration: none;
 }
 
+div.comment_reply form {
+	padding-top: 1em;
+}
+
 
 a.pagelink {
 	border: 1px solid #ddd;
@@ -444,6 +477,7 @@ a.pagelink.curpage {
 	width: 100px;
 	border: 1px solid #aaa;
 	border-bottom: 0;
+	z-index: 2;
 }
 #downvote_why a {
 	background-color: white;
@@ -455,6 +489,35 @@ a.pagelink.curpage {
 }
 #downvote_why a:hover {
 	background-color: #eee;
+}
+#downvote_why a.cancelreason {
+	background-color: #eee;
+	font-size: 8pt;
+}
+
+#downvote_why_shadow {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 1;
+}
+
+
+div.markdown_help {
+	background-color: #f4f4f4;
+	border: 1px solid #e0e0e0;
+	padding: 0 1em;
+	margin-top: 0.5em;
+}
+
+div.markdown_help_label {
+	float: right;
+	font-size: 9pt;
+	line-height: 2em;
 }
 
 /* data tables */
@@ -570,7 +633,8 @@ table.data tr.void td, table.data tr.void td a {
 .box label,
 .box span,
 .box select,
-.box br {
+.box br,
+.box div.d {
 	line-height: 2em;
 }
 .box br {
@@ -601,10 +665,6 @@ table.data tr.void td, table.data tr.void td a {
 	width: 7em;
 	line-height: 2em;
 	vertical-align: middle;
-}
-
-.box .d {
-	margin-left: 10em;
 }
 
 .box .label_holder label,

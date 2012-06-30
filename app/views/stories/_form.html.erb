@@ -3,10 +3,10 @@
 <div class="box">
   <div class="boxline">
 	<% if !f.object.new_record? && !f.object.url.blank? %>
-		<label>URL:</label>
-		<span class="d">
-		<%= f.object.url %>
-		</span>
+    <%= f.label :url, "URL:", :class => "required" %>
+    <div class="d">
+		<a href="<%= f.object.url %>"><%= f.object.url %></a>
+    </div>
 	<% elsif !f.object.id %>
     <%= f.label :url, "URL:", :class => "required" %>
 		<%= f.text_field :url, :style => "width: 475px;" %>
@@ -21,9 +21,10 @@
 	</div>
 
   <div class="boxline" style="margin-bottom: 2px;">
-	<%= f.label :tags_a, "Tags:", :class => "required" %>
-  <%= f.select "tags_a", options_for_select(Tag.order(:tag).map{|t|
-    [ "#{t.tag} - #{t.description}", t.tag ] }), {},
+	<%= f.label :tags_a, "Tags:", :class => "required",
+    :style => "line-height: 2.3em;" %>
+  <%= f.select "tags_a", Tag.order(:tag).map{|t|
+    [ "#{t.tag} - #{t.description}", t.tag ] }, {},
     { :multiple => true, :style => "width: 487px;" } %>
   </div>
 
@@ -33,52 +34,5 @@
       :placeholder => "optional, not recommended when submitting a link" %>
   </div>
 
-  <div class="hintblock" style="padding-bottom: 1em; font-style: normal;">
-    <a href="#" style="color: gray;"
-    onclick="$('#markdown_help').toggle(); return false;">
-      Limited Markdown formatting available
-    </a>
-    <div id="markdown_help"
-      style="display: none; padding-top: 0.5em;">
-      <table>
-      <tr>
-        <td width="125"><em>emphasized text</em></td>
-        <td>surround text with *asterisks*</td>
-      </tr>
-      <tr>
-        <td><u>underlined text</u></td>
-        <td>surround text with _underline_</td>
-      </tr>
-      <tr>
-        <td><strike>struck-through</strike></td>
-        <td>surround text with ~~two tildes~~</td>
-      </tr>
-      <tr>
-        <td><a href="http://example.com/"
-          style="color: inherit;">linked text</a></td>
-        <td>[linked text](http://example.com/) or just a bare URL
-          to create without a title</td>
-      </tr>
-      <tr>
-        <td><blockquote> quoted text</blockquote></td>
-        <td>prefix text with &gt;</td>
-      </tr>
-      <tr>
-        <td><pre style="margin: 0px;">pre
-   text</pre></td>
-        <td>prefix text with at least 3 spaces</td>
-      </tr>
-      </table>
-    </div>
-  </div>
+  <%= render :partial => "global/markdownhelp" %>
 </div>
-
-<script type="text/javascript">
-  $(document).ready(function() {
-    $("#story_tags_a").select2({
-      formatSelection: function(what) {
-        return what.id;
-      }
-    });
-  });
-</script>

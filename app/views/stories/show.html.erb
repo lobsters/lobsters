@@ -11,13 +11,28 @@
 	<% end %>
 
   <p></p>
-  <% if @user %>
+  <% if @user && !@story.is_expired? %>
     <%= render :partial => "stories/commentbox",
       :locals => { :story => @story, :comment => @comment } %>
   <% end %>
 </div>
 
-<ol class="comments">
-	<%= render :partial => "stories/comment", :locals => { :story => @story },
-    :collection => @story.comments %>
-</ol>
+<% indent_level = -1 %>
+<% @comments.each_with_index do |comment,x| %>
+  <% if comment.indent_level > indent_level %>
+    <ol class="comments comments<%= comment.indent_level %>">
+  <% elsif comment.indent_level < indent_level %>
+    <% (indent_level - comment.indent_level).times do %>
+      </ol>
+    <% end %>
+  <% end %>
+
+	<%= render :partial => "stories/comment", :locals => { :story => @story,
+    :comment => comment, :collapsable => (@comments[x + 1].
+    try(:parent_comment_id).to_i == comment.id) } %>
+
+  <% indent_level = comment.indent_level %>
+<% end %>
+<% indent_level.times do %>
+  </ol>
+<% end %>

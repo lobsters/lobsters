@@ -51,19 +51,12 @@ class StoriesController < ApplicationController
   end
 
   def fetch_url_title
-    begin
-      s = Sponge.new
-      s.timeout = 3
-      text = s.fetch(params[:fetch_url], :get, nil, nil,
-        { "User-agent" => "lobste.rs! via #{request.remote_ip}" }, 3)
+    s = Story.new
+    s.url = params[:fetch_url]
 
-      if m = text.match(/<\s*title\s*>([^<]+)<\/\s*title\s*>/i)
-        return render :json => { :title => m[1] }
-      else
-        raise "no title found"
-      end
-
-    rescue => e
+    if (title = s.fetched_title(request.remote_ip)).present?
+      return render :json => { :title => title }
+    else
       return render :json => "error"
     end
   end

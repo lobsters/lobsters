@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<meta name="description" content="B2G demo &amp; quick hack - Paul Rouget's Blog"/>
+<meta name="author" content="Paul Rouget"/>
+
+<meta charset="utf8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<link rel="alternate" type="application/atom+xml" href="/index.xml"/>
+
+<link rel="stylesheet" href="/css/mop.css">
+
+<title>B2G demo &amp; quick hack // by Paul Rouget</title>
+
+<body>
+<article>
+    <p>Very very quick demo of B2G followed by a quick hack of the homescreen:</p>
+<iframe style="max-width: 600px; width:100%;height:400px" src="http://www.youtube.com/embed/K_g29YeLzyg" frameborder="0" allowfullscreen>
+  <a href="http://www.youtube.com/watch?v=K_g29YeLzyg">Youtube video.</a>
+</iframe>
+<p>You can find the code of the UI of B2g (gaia) <a href="https://github.com/mozilla-b2g/gaia">on github</a>. Reminder:</p>
+
+<h2>What is <a href="https://wiki.mozilla.org/B2G">Boot To Gecko</a>:</h2>
+<ul>
+  <li>An Operating System;
+  <li>Linux Kernel + drivers from Android (so B2G can run on most of the phones that are capable of running Android). Works on ARMv7, will probably work on ARMv6;
+  <li>Gecko on top of it. The same version you'll find on a regular Firefox;
+  <li>Apps are written in HTML, JavaScript and CSS;
+  <li><strong>You don't need to be online to use the Apps</strong>;
+  <li>A set of new JavaScript APIs:
+    <ul>
+      <li><a href="http://wiki.mozilla.org/WebAPI">WebAPIs</a>, for bluetooth, sms, telephony, …
+      <li><a href="http://www.webrtc.org/">WebRTC</a>, for streaming, webcam, P2P, …
+    </ul>
+  <li>We are working on <a href="http://brendaneich.com/2012/02/mobile-web-api-evolution/">standardizing these APIs</a>;
+  <li>The homescreen/launcher is an HTML page. Mozilla's version is named <a href="http://wiki.mozilla.org/gaia">Gaia</a>;
+  <li>You can build your own homescreen/launcher;
+  <li>The name of the project will probably change;
+  <li>It's possible to implement Boot To Webkit too;
+  <li>It's Open Source;
+  <li>We (Mozilla) <a href="http://blog.mozilla.com/blog/2012/02/22/mozilla-marketplace-opening-for-app-submissions-soon/">are working on a MarketPlace</a>.
+</ul>
+</p>
+
+
+
+    <footer>
+      <span>11 Jun 2012</span>
+        / <a onclick="window.open('http://twitter.com/share?text=B2G demo &amp; quick hack&via=paulrouget&url=http%3A%2F%2Fpaulrouget.com%2Fe/b2ghack','','width=400,height=300,personalbar=0,toolbar=0,scrollbars=1,resizable=1'); return false;" href="http://twitter.com/share?text=B2G demo &amp; quick hack&via=paulrouget&url=http%3A%2F%2Fpaulrouget.com%2Fe/b2ghack" id="twitter" title="tweet this" target="_blank">
+            <span>tweet&nbsp;this</span>
+        </a>
+
+        
+    </footer>
+</article>
+
+
+
+</body>
+
+<aside>
+  <p><a href="http://paulrouget.com"><img id="avatar" src="http://paulrouget.com/assets/twitter_avatar.jpg"></a>Hi. I'm Paul Rouget (<a href="/s/contact">contact</a>). I work at <a href="http://mozilla.org">Mozilla</a>. I write <a href="https://wiki.mozilla.org/DevTools">code</a>. I give talks. I <a href="http://twitter.com/paulrouget">tweet</a>.
+  This is my blog (<a href="http://paulrouget.com/index.xml">rss</a>).
+  <hr>
+</aside>
+
+<!-- Analytics -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-22781000-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>

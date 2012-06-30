@@ -31,10 +31,28 @@ class User < ActiveRecord::Base
 		Keystore.value_for("user:#{self.id}:karma").to_i
   end
 
+  def stories_submitted_count
+    Keystore.get("user:#{self.id}:stories_submitted").to_i
+  end
+  
+  def comments_posted_count
+    Keystore.get("user:#{self.id}:comments_posted").to_i
+  end
+
   def initiate_password_reset_for_ip(ip)
     self.password_reset_token = Utils.random_key(60)
     self.save!
 
     PasswordReset.password_reset_link(self, ip).deliver
+  end
+
+  def linkified_about
+		Markdowner.markdown(self.about)
+  end
+
+  def recent_threads(amount = 20)
+    Comment.connection.select_all("SELECT DISTINCT " +
+      "thread_id FROM comments WHERE user_id = #{q(self.id)} ORDER BY " +
+      "created_at DESC LIMIT #{q(amount)}").map{|r| r.values.first }
   end
 end

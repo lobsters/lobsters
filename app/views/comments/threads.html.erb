@@ -1,0 +1,23 @@
+<% cur_story = nil %>
+<% indent_level = -1 %>
+<% @comments.each_with_index do |comment,x| %>
+  <% if !cur_story || comment.story_id != cur_story.id %>
+    <% cur_story = Story.find(comment.story_id) %>
+  <% end %>
+
+  <% if comment.indent_level > indent_level %>
+    <ol class="comments comments<%= comment.indent_level %>">
+  <% elsif comment.indent_level < indent_level %>
+    <% (indent_level - comment.indent_level).times do %>
+      </ol>
+    <% end %>
+  <% end %>
+
+	<%= render :partial => "comments/comment", :locals => { :story => cur_story,
+    :comment => comment, :show_story => (comment.indent_level == 1) } %>
+
+  <% indent_level = comment.indent_level %>
+<% end %>
+<% indent_level.times do %>
+  </ol>
+<% end %>

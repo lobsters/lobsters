@@ -13,6 +13,8 @@ class Comment < ActiveRecord::Base
   after_create :assign_votes
   after_destroy :unassign_votes
 
+	MAX_EDIT_MINS = 45
+
   validate do
 		self.comment.to_s.strip == "" &&
 			errors.add(:comment, "cannot be blank.")
@@ -85,4 +87,44 @@ class Comment < ActiveRecord::Base
 	def flag!
     Story.update_counters self.id, :flaggings => 1
   end
+
+	def self.ordered_for_story_or_thread_for_user(story_id, thread_id, user_id)
+		parents = {}
+
+    if thread_id
+      cs = [ "thread_id = ?", thread_id ]
+    else
+      cs = [ "story_id = ?", story_id ]
+    end
+
+    Comment.find(:all, :conditions => cs).sort_by{|c| c.confidence }.each do |c|
+      (parents[c.parent_comment_id.to_i] ||= []).push c
+    end
+
+    # top-down list of comments, regardless of indent level
+    ordered = []
+
+    recursor = lambda{|comment,level|
+      if comment
+        comment.indent_level = level
+        ordered.push comment
+      end
+
+      # for each comment that is a child of this one, recurse with it
+      (parents[comment ? comment.id : 0] || []).each do |child|
+        recursor.call(child, level + 1)
+      end
+    }
+    recursor.call(nil, 0)
+
+    ordered
+	end
+	
+  def is_editable_by_user?(user)
+		if !user || user.id != self.user_id
+      return false
+    end
+
+		(Time.now.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
+	end
 end

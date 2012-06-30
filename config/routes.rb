@@ -1,12 +1,16 @@
 Lobsters::Application.routes.draw do
   root :to => "home#index"
 
-  get "login" => "login#index"
-  post "login" => "login#login"
-  post "logout" => "login#logout"
+  get "/newest" => "home#newest"
 
-  get "signup" => "signup#index"
-  post "signup" => "signup#signup"
+  get "/threads" => "comments#threads"
+
+  get "/login" => "login#index"
+  post "/login" => "login#login"
+  post "/logout" => "login#logout"
+
+  get "/signup" => "signup#index"
+  post "/signup" => "signup#signup"
 
   match "/login/forgot_password" => "login#forgot_password",
     :as => "forgot_password"
@@ -34,4 +38,5 @@ Lobsters::Application.routes.draw do
   post "/comments/preview/:story_id" => "comments#preview"
 
   get "/p/:id/(:title)" => "stories#show"
+  get "/u/:id" => "users#show"
 end

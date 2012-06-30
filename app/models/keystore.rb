@@ -21,9 +21,9 @@ class Keystore < ActiveRecord::Base
   def self.incremented_value_for(key, amount = 1)
     new_value = nil
 
-    Keystore.connection.execute([ "INSERT INTO #{Keystore.table_name} (" +
-      "`key`, `value`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `count` = " +
-      "`count` + ?", key, amount, amount ])
+    Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" +
+      "`key`, `value`) VALUES (#{q(key)}, #{q(amount)}) ON DUPLICATE KEY " +
+      "UPDATE `value` = `value` + #{q(amount)}")
 
     return self.value_for(key)
   end

@@ -16,11 +16,13 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 		<div class="byline">
       <% if comment.previewing %>
         <a><%= comment.user.username %></a>
+        previewed
         just now
-        <span class="reason">(Preview)</span>
       <% else %>
         <a href="/u/<%= comment.user.username %>"><%= comment.user.username
           %></a>
+
+        <%= comment.updated_at ? "edited" : "" %>
         <%= time_ago_in_words(comment.created_at).gsub(/^about /, "") %> ago
 
         <span class="reason"><%= comment.current_vote &&
@@ -28,27 +30,32 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
           "(#{Vote::COMMENT_REASONS[comment.current_vote[:reason]]})" : ""
           %></span>
       <% end %>
+
+      <% if !comment.previewing %>
+        |
+
+        <a href="<%= story.comments_url %>/comments/<%= comment.short_id
+          %>">link</a>
+        |
+        <% if comment.is_editable_by_user?(@user) %>
+          <a class="comment_editor">edit</a>
+        <% else %>
+          <a class="comment_replier">reply</a>
+        <% end %>
+
+        <% if false && defined?(collapsable) && collapsable # XXX %>
+          |
+          <a href="">collapse</a>
+        <% end %>
+      <% end %>
+
+      <% if defined?(show_story) && show_story %>
+        | on 
+        <a href="<%= story.comments_url %>"><%= story.title %></a>
+      <% end %>
 		</div>
 		<div class="comment_text">
 			<%= raw comment.linkified_comment %>
-
-			<div class="comment_actions">
-        <% if comment.previewing %>
-          <a>link</a>
-          &nbsp;
-          <a>reply</a>
-        <% else %>
-          <a href="<%= story.comments_url %>/comments/<%= comment.short_id
-            %>">link</a>
-          &nbsp;
-          <a class="comment_replier">reply</a>
-
-          <% if defined?(collapsable) && collapsable %>
-            &nbsp;
-            <a href="">collapse</a>
-          <% end %>
-        <% end %>
-			</div>
 		</div>
 
     <div class="comment_reply"></div>

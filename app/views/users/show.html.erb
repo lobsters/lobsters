@@ -1,0 +1,42 @@
+<div class="box wide">
+	<div class="legend">
+		<%= @showing_user.username %>
+	</div>
+
+  <label class="required">Status:</label>
+  <span class="d">
+    Active <%= @showing_user.is_admin? ? "administrator" : "user" %>
+  </span>
+  <br>
+
+  <label class="required">Joined:</label>
+  <span class="d">
+    <%= time_ago_in_words(@user.created_at) %> ago
+      (<%= @user.created_at.strftime("%Y-%m-%d") %>)
+  </span>
+  <br>
+  
+  <label class="required">Karma:</label>
+  <span class="d">
+    <%= @showing_user.karma %>
+  </span>
+  <br>
+
+  <label class="required">Stories Submitted:</label>
+  <span class="d">
+    <%= @showing_user.stories_submitted_count %>
+  </span>
+  <br>
+  
+  <label class="required">Comments Posted:</label>
+  <span class="d">
+    <%= Keystore.get("user:#{@showing_user.id}:comments_posted").to_i %>
+  </span>
+  <br>
+  
+  <label class="required">About:</label>
+  <span class="d">
+    <%= @user.linkified_about %>
+  </span>
+  <br>
+</div>

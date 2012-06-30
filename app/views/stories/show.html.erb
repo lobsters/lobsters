@@ -12,7 +12,7 @@
 
   <p></p>
   <% if @user && !@story.is_expired? %>
-    <%= render :partial => "stories/commentbox",
+    <%= render :partial => "comments/commentbox",
       :locals => { :story => @story, :comment => @comment } %>
   <% end %>
 </div>
@@ -27,7 +27,7 @@
     <% end %>
   <% end %>
 
-	<%= render :partial => "stories/comment", :locals => { :story => @story,
+	<%= render :partial => "comments/comment", :locals => { :story => @story,
     :comment => comment, :collapsable => (@comments[x + 1].
     try(:parent_comment_id).to_i == comment.id) } %>
 

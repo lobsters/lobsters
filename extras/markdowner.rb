@@ -8,7 +8,7 @@ class Markdowner
   end
 
 	def self.markdown(string)
-		lines = string.rstrip.split(/\r?\n/)
+		lines = string.to_s.rstrip.split(/\r?\n/)
 
 		out = "<p>"
 		inpre = false

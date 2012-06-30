@@ -33,7 +33,7 @@
   <% if defined?(show_comment) %>
     <% if show_comment.valid? %>
       <ol class="comments comments1 preview">
-        <%= render :partial => "stories/comment",
+        <%= render :partial => "comments/comment",
           :locals => { :comment => show_comment, :story => story } %>
       </ol>
     <% else %>

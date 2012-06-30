@@ -97,9 +97,17 @@ class Vote < ActiveRecord::Base
         if v.comment_id
           Comment.update_counters v.comment_id, :downvotes => downvote,
             :upvotes => upvote
+
+          if (c = Comment.find(v.comment_id)) && c.user_id != user_id
+            Keystore.increment_value_for("user:#{c.user_id}:karma")
+          end
         else
           Story.update_counters v.story_id, :downvotes => downvote,
             :upvotes => upvote
+
+          if (s = Story.find(v.story_id)) && s.user_id != user_id
+            Keystore.increment_value_for("user:#{s.user_id}:karma")
+          end
         end
       end
     end

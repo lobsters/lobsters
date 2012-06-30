@@ -2,7 +2,7 @@ class HomeController < ApplicationController
 	def index
 		conds = [ "is_expired = 0 " ]
 
-		if @user
+		if @user && !@newest
 			# exclude downvoted items
 			conds[0] << "AND stories.id NOT IN (SELECT story_id FROM votes " <<
         "WHERE user_id = ? AND vote < 0) "
@@ -35,10 +35,20 @@ class HomeController < ApplicationController
       end
 		end
 
-    @stories.sort_by!{|s| s.hotness }
+    if @newest
+      # TODO: better algorithm here
+      @stories.sort_by!{|s| s.created_at }.reverse!
+    else
+      @stories.sort_by!{|s| s.hotness }
+    end
 
     render :action => "index"
 	end
+
+  def newest
+    @newest = true
+    index
+  end
 
   def tagged
     if !(@tag = Tag.find_by_tag(params[:tag]))

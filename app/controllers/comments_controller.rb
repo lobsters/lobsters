@@ -1,6 +1,7 @@
 class CommentsController < ApplicationController
   before_filter :require_logged_in_user_or_400,
     :only => [ :create, :preview, :upvote, :downvote, :unvote ]
+  before_filter :require_logged_in_user, :only => [ :threads ]
 
   def create
     if !(story = Story.find_by_short_id(params[:story_id]))
@@ -17,24 +18,33 @@ class CommentsController < ApplicationController
       params[:parent_comment_short_id])
         comment.parent_comment_id = pc.id
         comment.parent_comment_short_id = pc.short_id
+        comment.thread_id = pc.thread_id
       else
         return render :json => { :error => "invalid parent comment",
           :status => 400 }
       end
+    else
+      comment.thread_id = Keystore.incremented_value_for("thread_id")
     end
 
     if comment.valid? && !params[:preview].present? && comment.save
       comment.current_vote = { :vote => 1 }
 
-      render :partial => "stories/commentbox", :layout => false,
-        :content_type => "text/html", :locals => { :story => story,
-        :comment => Comment.new, :show_comment => comment }
+      if comment.parent_comment_id
+        render :partial => "postedreply", :layout => false,
+          :content_type => "text/html", :locals => { :story => story,
+          :show_comment => comment }
+      else
+        render :partial => "commentbox", :layout => false,
+          :content_type => "text/html", :locals => { :story => story,
+          :comment => Comment.new, :show_comment => comment }
+      end
     else
       comment.previewing = true
       comment.upvotes = 1
       comment.current_vote = { :vote => 1 }
 
-      render :partial => "stories/commentbox", :layout => false,
+      render :partial => "commentbox", :layout => false,
         :content_type => "text/html", :locals => { :story => story,
         :comment => comment, :show_comment => comment }
     end
@@ -80,5 +90,27 @@ class CommentsController < ApplicationController
       comment.id, @user.id, params[:reason])
 
     render :text => "ok"
+  end
+
+  def threads
+    recent_threads = @user.recent_threads
+
+ 		@threads = recent_threads.map{|r|
+      Comment.ordered_for_story_or_thread_for_user(nil, r, @user.id) }
+
+    # trim each thread to this user's first response
+    @threads.map!{|th|
+      th.each do |c|
+        if c.user_id == @user.id
+          break
+        else
+          th.shift
+        end
+      end
+
+      th
+    }
+
+    @comments = @threads.flatten
   end
 end

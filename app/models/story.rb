@@ -13,14 +13,29 @@ class Story < ActiveRecord::Base
   attr_accessible :url, :title, :description, :story_type, :tags_a
 
 	# after this many minutes old, a story cannot be edited
-	MAX_EDIT_MINS = 9999 # XXX 15
+	MAX_EDIT_MINS = 30
 
 	attr_accessor :vote, :story_type, :already_posted_story
   attr_accessor :tags_to_add, :tags_to_delete
 
   after_save :deal_with_tags
   before_create :assign_short_id
-  before_create :find_duplicate
+
+  validate do
+    if self.url.present?
+      # URI.parse is not very lenient, so we can't use it
+
+      if self.url.match(/\Ahttps?:\/\/[^\.]+\.[a-z]+\//)
+        if (s = Story.find_by_url(self.url)) &&
+        (Time.now - s.created_at) < 30.days
+          errors.add(:url, "has already been submitted recently")
+          self.already_posted_story = s
+        end
+      else
+        errors.add(:url, "is not valid")
+      end
+    end
+  end
 
 	def assign_short_id
 		(1...10).each do |tries|
@@ -34,14 +49,6 @@ class Story < ActiveRecord::Base
       end
 		end
   end
-
-  def find_duplicate
-    if (s = Story.find_by_url(self.url)) &&
-    (Time.now - s.created_at) < 30.days
-      errors.add(:url, "has already been submitted recently")
-      self.already_posted_story = s
-    end
-	end
 
   def deal_with_tags
     (self.tags_to_delete || []).each do |t|
@@ -64,31 +71,6 @@ class Story < ActiveRecord::Base
     self.tags_to_delete = []
     self.tags_to_add = []
   end
-
-	def comments_in_order_for_user(user_id)
-		parents = {}
-    Comment.find_all_by_story_id(self.id).sort_by{|c| c.confidence }.each do |c|
-      (parents[c.parent_comment_id.to_i] ||= []).push c
-    end
-
-    # top-down list of comments, regardless of indent level
-    ordered = []
-
-    recursor = lambda{|comment,level|
-      if comment
-        comment.indent_level = level
-        ordered.push comment
-      end
-
-      # for each comment that is a child of this one, recurse with it
-      (parents[comment ? comment.id : 0] || []).each do |child|
-        recursor.call(child, level + 1)
-      end
-    }
-    recursor.call(nil, 0)
-
-    ordered
-	end
 
 	def comments_url
 		"/p/#{self.short_id}/#{self.title_as_url}"
@@ -176,7 +158,7 @@ class Story < ActiveRecord::Base
       return false
     end
 
-		true #(Time.now.to_i - self.created_at.to_i < (60 * Story::MAX_EDIT_MINS))
+		(Time.now.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
 	end
 	
   def is_undeletable_by_user?(user)

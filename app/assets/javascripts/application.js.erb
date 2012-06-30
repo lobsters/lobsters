@@ -211,6 +211,9 @@ $(document).ready(function() {
       first();
     
     box.html($("#comment_form").clone());
+    box.find("ol").remove();
+    
+    box.find("textarea").focus();
 
     var el = $("<input type=\"hidden\" " +
       "name=\"parent_comment_short_id\" value=\"" +

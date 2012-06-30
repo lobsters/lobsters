@@ -1,16 +1,16 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gem 'rails', '3.2.2'
+gem "rails", "3.2.2"
 
 # Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+# gem "rails", :git => "git://github.com/rails/rails.git"
 
 gem "mysql2"
 
-gem 'jquery-rails'
+gem "jquery-rails"
 
 # To use ActiveModel has_secure_password
-gem 'bcrypt-ruby', '3.0.0'
+gem "bcrypt-ruby", "3.0.0"
 
 gem "dynamic_form"
 
@@ -21,13 +21,16 @@ group :test, :development do
 end
 
 # To use Jbuilder templates for JSON
-# gem 'jbuilder'
+# gem "jbuilder"
 
 # Use unicorn as the app server
-gem 'unicorn'
+gem "unicorn"
+
+# for asset compilation
+gem "uglifier"
 
 # Deploy with Capistrano
-# gem 'capistrano'
+# gem "capistrano"
 
 # To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
+# gem "ruby-debug19", :require => "ruby-debug"

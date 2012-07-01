@@ -14,13 +14,3 @@ class Utils
     return str
   end
 end
-
-class ActiveRecord::Base
-  def self.q(str)
-    ActiveRecord::Base.connection.quote(str)
-  end
-
-  def q(str)
-    ActiveRecord::Base.connection.quote(str)
-  end
-end

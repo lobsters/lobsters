@@ -33,10 +33,10 @@
     <%= Keystore.get("user:#{@showing_user.id}:comments_posted").to_i %>
   </span>
   <br>
-  
+
   <label class="required">About:</label>
-  <span class="d">
-    <%= raw @user.linkified_about %>
-  </span>
-  <br>
+
+  <div class="shorten_first_p" style="margin-left: 12em;">
+    <%= raw @showing_user.linkified_about %>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-<div class="box">
+<div class="box" id="story_box">
 	<div class="legend">
 		Submit a Story
 	</div>
@@ -8,8 +8,19 @@
       :f => f } %>
 
     <p></p>
+
     <div class="box">
-      <%= submit_tag "Submit" %>
+      <div class="boxline markdown_help_toggler">
+        <div class="markdown_help_label">
+          <span class="fakea">Limited Markdown formatting available</span>
+        </div>
+
+        <%= submit_tag "Submit" %>
+
+        <div style="clear: both;"></div>
+
+        <%= render :partial => "global/markdownhelp" %>
+      </div>
     </div>
 	<% end %>
 </div>

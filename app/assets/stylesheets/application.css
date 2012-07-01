@@ -519,6 +519,24 @@ div.markdown_help_label {
 	line-height: 2em;
 }
 
+
+div#story_box input#story_url {
+	width: 506px;
+}
+div#story_box input#story_title {
+	width: 600px;
+}
+div#story_box #story_tags_a {
+	width: 624px;
+}
+div#story_box textarea {
+	width: 600px;
+}
+div#story_box div.markdown_help_toggler {
+	margin-left: 7em;
+	width: 610px;
+}
+
 /* data tables */
 
 table.data caption {

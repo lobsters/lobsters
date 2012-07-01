@@ -33,11 +33,11 @@ class User < ActiveRecord::Base
   end
 
   def stories_submitted_count
-    Keystore.get("user:#{self.id}:stories_submitted").to_i
+    Keystore.value_for("user:#{self.id}:stories_submitted").to_i
   end
   
   def comments_posted_count
-    Keystore.get("user:#{self.id}:comments_posted").to_i
+    Keystore.value_for("user:#{self.id}:comments_posted").to_i
   end
 
   def initiate_password_reset_for_ip(ip)

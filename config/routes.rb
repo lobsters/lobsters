@@ -37,7 +37,7 @@ Lobsters::Application.routes.draw do
   post "/comments/:story_id" => "comments#create"
   post "/comments/preview/:story_id" => "comments#preview"
 
-  get "/p/:id/(:title)" => "stories#show"
+  get "/s/:id/(:title)" => "stories#show"
   get "/u/:id" => "users#show"
 
   get "/rss" => "home#index", :format => "rss"

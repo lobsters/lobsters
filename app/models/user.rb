@@ -41,7 +41,7 @@ class User < ActiveRecord::Base
   end
 
   def initiate_password_reset_for_ip(root_url, ip)
-    self.password_reset_token = Utils.random_str(45)
+    self.password_reset_token = Utils.random_str(40)
     self.save!
 
     PasswordReset.password_reset_link(root_url, self, ip).deliver

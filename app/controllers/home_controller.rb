@@ -21,6 +21,7 @@ class HomeController < ApplicationController
 
     @title = "Newest Stories"
     @title_url = "/newest"
+    @newest = true
 
     respond_to do |format|
       format.html { render :action => "index" }

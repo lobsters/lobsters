@@ -41,4 +41,10 @@ Lobsters::Application.routes.draw do
   get "/u/:id" => "users#show"
 
   get "/rss" => "home#index", :format => "rss"
+
+  get "/settings" => "settings#index"
+  post "/settings" => "settings#update"
+  
+  post "/invitations" => "invitations#create"
+  get "/invitations/:invitation_code" => "signup#invited"
 end

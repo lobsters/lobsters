@@ -21,7 +21,7 @@ class LoginController < ApplicationController
       return redirect_to "/"
     end
 
-    flash[:error] = "Invalid e-mail address and/or password."
+    flash.now[:error] = "Invalid e-mail address and/or password."
     index
   end
 
@@ -35,13 +35,14 @@ class LoginController < ApplicationController
       params[:email]).first
 
     if !@found_user
-      flash[:error] = "Invalid e-mail address or username."
+      flash.now[:error] = "Invalid e-mail address or username."
       return forgot_password
     end
 
     @found_user.initiate_password_reset_for_ip(request.remote_ip)
 
-    flash[:success] = "Password reset instructions have been e-mailed to you."
+    flash.now[:success] = "Password reset instructions have been e-mailed " <<
+      "to you."
     return index
   end
 
@@ -56,8 +57,10 @@ class LoginController < ApplicationController
     if !params[:password].blank?
       @reset_user.password = params[:password]
       @reset_user.password_confirmation = params[:password_confirmation]
-      @reset_user.session_token = nil
       @reset_user.password_reset_token = nil
+
+      # this will get reset upon save
+      @reset_user.session_token = nil
 
       if @reset_user.save
         session[:u] = @reset_user.session_token

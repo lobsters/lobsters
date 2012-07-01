@@ -57,3 +57,5 @@ module Lobsters
     config.assets.version = '1.0'
   end
 end
+
+Rails.application.routes.default_url_options[:host] = "lobste.rs"

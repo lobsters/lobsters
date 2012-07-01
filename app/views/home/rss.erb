@@ -4,7 +4,7 @@
   <channel>
     <title>lobste.rs<%= @page_title ? ": " + h(@page_title) : "" %></title>
     <description><%= @page_title %></description>
-    <link>http://lobste.rs/<%= @newest ? "newest" : "" %></link>
+    <link><%= root_url + (@newest ? "newest" : "") %></link>
 
     <% @stories.each do |story| %>
       <item>

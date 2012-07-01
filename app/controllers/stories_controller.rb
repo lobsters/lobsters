@@ -162,8 +162,8 @@ private
     end
 
     if !@story
-      flash[:error] = "Could not find story or you are not authorized to " <<
-        "manage it."
+      flash[:error] = "Could not find story or you are not authorized " <<
+        "to manage it."
       redirect_to "/"
       return false
     end

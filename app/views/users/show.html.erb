@@ -1,4 +1,10 @@
 <div class="box wide">
+  <% if @user && @user.id == @showing_user.id %>
+    <div style="float: right;">
+      <a href="/settings">Edit Settings</a>
+    </div>
+  <% end %>
+
 	<div class="legend">
 		<%= @showing_user.username %>
 	</div>

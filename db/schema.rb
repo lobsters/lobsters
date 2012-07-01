@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 20120701181319) do
 
   create_table "comments", :force => true do |t|
     t.datetime "created_at",                                      :null => false
@@ -27,8 +27,17 @@ ActiveRecord::Schema.define(:version => 0) do
   end
 
   add_index "comments", ["short_id"], :name => "short_id", :unique => true
-  add_index "comments", ["story_id", "short_id"], :name => "story_id_short_id"
+  add_index "comments", ["story_id", "short_id"], :name => "story_id"
   add_index "comments", ["thread_id"], :name => "thread_id"
+
+  create_table "invitations", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "email"
+    t.string   "code"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.text     "memo"
+  end
 
   create_table "keystores", :primary_key => "key", :force => true do |t|
     t.integer "value", :null => false
@@ -66,7 +75,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.integer "tag_id",   :null => false
   end
 
-  add_index "taggings", ["story_id", "tag_id"], :name => "story_id_tag_id", :unique => true
+  add_index "taggings", ["story_id", "tag_id"], :name => "story_id", :unique => true
 
   create_table "tags", :force => true do |t|
     t.string "tag",         :limit => 25,  :default => "", :null => false
@@ -81,10 +90,15 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string   "password_digest",      :limit => 75
     t.datetime "created_at"
     t.integer  "email_notifications",  :limit => 1,   :default => 0
-    t.integer  "is_admin",             :limit => 1,   :default => 0,  :null => false
+    t.integer  "is_admin",             :limit => 1,   :default => 0,     :null => false
     t.string   "password_reset_token", :limit => 75
-    t.string   "session_token",        :limit => 75,  :default => "", :null => false
+    t.string   "session_token",        :limit => 75,  :default => "",    :null => false
     t.text     "about"
+    t.integer  "invited_by_user_id"
+    t.boolean  "email_replies",                       :default => false
+    t.boolean  "pushover_replies",                    :default => false
+    t.string   "pushover_user_key"
+    t.string   "pushover_device"
   end
 
   add_index "users", ["session_token"], :name => "session_hash", :unique => true
@@ -98,7 +112,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string  "reason",     :limit => 1
   end
 
-  add_index "votes", ["user_id", "comment_id"], :name => "user_id_comment_id"
-  add_index "votes", ["user_id", "story_id"], :name => "user_id_story_id"
+  add_index "votes", ["user_id", "comment_id"], :name => "user_id_2"
+  add_index "votes", ["user_id", "story_id"], :name => "user_id"
 
 end

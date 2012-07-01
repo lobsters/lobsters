@@ -12,7 +12,8 @@ class User < ActiveRecord::Base
   validates_presence_of :password, :on => :create
 
   attr_accessible :username, :email, :password, :password_confirmation,
-    :email_notifications
+    :about, :email_replies, :pushover_replies, :pushover_user_key,
+    :pushover_device
 
   before_save :check_session_token
 
@@ -40,7 +41,7 @@ class User < ActiveRecord::Base
   end
 
   def initiate_password_reset_for_ip(ip)
-    self.password_reset_token = Utils.random_str(60)
+    self.password_reset_token = Utils.random_str(45)
     self.save!
 
     PasswordReset.password_reset_link(self, ip).deliver

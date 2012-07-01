@@ -24,7 +24,7 @@ class Comment < ActiveRecord::Base
 
     self.story_id.blank? &&
       errors.add(:story_id, "cannot be blank.")
-    
+
     (m = self.comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
       errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
   end
@@ -80,12 +80,12 @@ class Comment < ActiveRecord::Base
     Markdowner.markdown(self.comment)
   end
 
-  def upvote!(amount = 1)
-    Story.update_counters self.id, :upvotes => amount
-  end
-
   def flag!
     Story.update_counters self.id, :flaggings => 1
+  end
+
+  def has_been_edited?
+    self.updated_at && (self.updated_at - self.created_at > 1.minute)
   end
 
   def self.ordered_for_story_or_thread_for_user(story_id, thread_id, user_id)

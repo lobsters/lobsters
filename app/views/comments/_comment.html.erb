@@ -22,8 +22,9 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <a href="/u/<%= comment.user.username %>"><%= comment.user.username
           %></a>
 
-        <%= comment.updated_at ? "edited" : "" %>
-        <%= time_ago_in_words(comment.created_at).gsub(/^about /, "") %> ago
+        <%= comment.has_been_edited?? "edited" : "" %>
+        <%= time_ago_in_words(comment.has_been_edited?? comment.updated_at :
+          comment.created_at).gsub(/^about /, "") %> ago
 
         <span class="reason"><%= comment.current_vote &&
           comment.current_vote[:vote] == -1 ?

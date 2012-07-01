@@ -35,3 +35,5 @@ Lobsters::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 end
+
+Rails.application.routes.default_url_options[:host] = "lobsters.localhost:3000"

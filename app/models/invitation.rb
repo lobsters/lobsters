@@ -8,7 +8,6 @@ class Invitation < ActiveRecord::Base
   end
 
   before_create :create_code
-  after_create :send_email
 
   def create_code
     (1...10).each do |tries|
@@ -22,7 +21,7 @@ class Invitation < ActiveRecord::Base
     end
   end
 
-  def send_email
-    InvitationMailer.invitation(self).deliver
+  def send_email(root_url)
+    InvitationMailer.invitation(root_url, self).deliver
   end
 end

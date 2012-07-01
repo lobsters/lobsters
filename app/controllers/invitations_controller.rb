@@ -7,6 +7,7 @@ class InvitationsController < ApplicationController
     i.email = params[:email]
     i.memo = params[:memo]
     if i.save
+      i.send_email(root_url)
       flash[:success] = "Successfully e-mailed invitation to " <<
         params[:email]
     else

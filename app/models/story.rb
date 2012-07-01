@@ -20,6 +20,7 @@ class Story < ActiveRecord::Base
 
   after_save :deal_with_tags
   before_create :assign_short_id
+  after_create :mark_submitter
 
   validate do
     if self.url.present?
@@ -55,6 +56,10 @@ class Story < ActiveRecord::Base
         break
       end
     end
+  end
+
+  def mark_submitter
+    Keystore.increment_value_for("user:#{self.user_id}:stories_submitted")
   end
 
   def deal_with_tags

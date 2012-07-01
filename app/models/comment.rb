@@ -10,7 +10,7 @@ class Comment < ActiveRecord::Base
     :indent_level
 
   before_create :assign_short_id_and_upvote
-  after_create :assign_votes
+  after_create :assign_votes, :mark_submitter
   after_destroy :unassign_votes
 
   MAX_EDIT_MINS = 45
@@ -48,6 +48,10 @@ class Comment < ActiveRecord::Base
       self.id, self.user.id, nil, false)
 
     self.story.update_comment_count!
+  end
+
+  def mark_submitter
+    Keystore.increment_value_for("user:#{self.user_id}:comments_posted")
   end
 
   # http://evanmiller.org/how-not-to-sort-by-average-rating.html

@@ -25,6 +25,8 @@ gem "uglifier"
 gem "nokogiri"
 gem "htmlentities"
 
+gem "rdiscount"
+
 group :test, :development do
   gem "rspec-rails", "~> 2.6"
   gem "machinist"

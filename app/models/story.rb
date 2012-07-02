@@ -138,7 +138,8 @@ class Story < ActiveRecord::Base
   end
 
   def linkified_text
-    Markdowner.markdown(self.description)
+    RDiscount.new(self.description, :smart, :autolink, :safelink,
+      :filter_html).to_html
   end
 
   def tags_a

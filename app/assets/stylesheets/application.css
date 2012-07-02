@@ -441,10 +441,9 @@ div.story_text p {
 	margin: 0.75em 0;
 }
 blockquote {
-	display: inline;
 	font-style: italic;
-	margin: 0px;
-	padding: 0px 0px 0px 0.5em;
+	margin: 0 0 0 1em;
+	padding: 0 0 0 0.5em;
 	border-left: 2px solid gray;
 }
 

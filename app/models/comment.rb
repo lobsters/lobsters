@@ -81,7 +81,8 @@ class Comment < ActiveRecord::Base
   end
 
   def linkified_comment
-    Markdowner.markdown(self.comment)
+    RDiscount.new(self.comment, :smart, :autolink, :safelink,
+      :filter_html).to_html
   end
 
   def flag!

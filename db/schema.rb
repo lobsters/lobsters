@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(:version => 20120701181319) do
   end
 
   add_index "comments", ["short_id"], :name => "short_id", :unique => true
-  add_index "comments", ["story_id", "short_id"], :name => "story_id"
+  add_index "comments", ["story_id", "short_id"], :name => "story_id_short_id"
   add_index "comments", ["thread_id"], :name => "thread_id"
 
   create_table "invitations", :force => true do |t|
@@ -39,9 +39,12 @@ ActiveRecord::Schema.define(:version => 20120701181319) do
     t.text     "memo"
   end
 
-  create_table "keystores", :primary_key => "key", :force => true do |t|
-    t.integer "value", :null => false
+  create_table "keystores", :id => false, :force => true do |t|
+    t.string  "key",   :limit => 50, :default => "", :null => false
+    t.integer "value",                               :null => false
   end
+
+  add_index "keystores", ["key"], :name => "key", :unique => true
 
   create_table "messages", :force => true do |t|
     t.datetime "created_at"
@@ -75,7 +78,7 @@ ActiveRecord::Schema.define(:version => 20120701181319) do
     t.integer "tag_id",   :null => false
   end
 
-  add_index "taggings", ["story_id", "tag_id"], :name => "story_id", :unique => true
+  add_index "taggings", ["story_id", "tag_id"], :name => "story_id_tag_id", :unique => true
 
   create_table "tags", :force => true do |t|
     t.string "tag",         :limit => 25,  :default => "", :null => false
@@ -112,7 +115,7 @@ ActiveRecord::Schema.define(:version => 20120701181319) do
     t.string  "reason",     :limit => 1
   end
 
-  add_index "votes", ["user_id", "comment_id"], :name => "user_id_2"
-  add_index "votes", ["user_id", "story_id"], :name => "user_id"
+  add_index "votes", ["user_id", "comment_id"], :name => "user_id_comment_id"
+  add_index "votes", ["user_id", "story_id"], :name => "user_id_story_id"
 
 end

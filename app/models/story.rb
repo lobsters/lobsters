@@ -105,7 +105,11 @@ class Story < ActiveRecord::Base
 
   def fetched_title(for_remote_ip = nil)
     doc = Nokogiri::HTML(fetched_content(for_remote_ip).to_s)
-    return doc.at_css("title").text  
+    if doc
+      return doc.at_css("title").try(:text)
+    else
+      return ""
+    end
   end
 
   def fetched_content(for_remote_ip = nil)

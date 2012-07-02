@@ -8,7 +8,7 @@ class Keystore < ActiveRecord::Base
   end
 
   def self.put(key, value)
-    if Rails.env == "development"
+    if Rails.env == "test"
       Keystore.connection.execute("INSERT OR REPLACE INTO " <<
         "#{Keystore.table_name} (`key`, `value`) VALUES " <<
         "(#{q(key)}, #{q(value)})")
@@ -28,7 +28,7 @@ class Keystore < ActiveRecord::Base
   def self.incremented_value_for(key, amount = 1)
     new_value = nil
 
-    if Rails.env == "development"
+    if Rails.env == "test"
       # FIXME
       Keystore.connection.execute("INSERT OR REPLACE INTO " <<
         "#{Keystore.table_name} (`key`, `value`) VALUES " <<

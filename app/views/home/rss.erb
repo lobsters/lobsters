@@ -16,8 +16,8 @@
         <comments><%= story.comments_url(root_url) %></comments>
         <description><%= raw coder.encode(story.linkified_text, :decimal)
           %></description>
-        <% story.tags.each do |tag| %>
-          <category><%= tag.tag %></category>
+        <% story.taggings.each do |tagging| %>
+          <category><%= tagging.tag.tag %></category>
         <% end %>
       </item>
     <% end %>

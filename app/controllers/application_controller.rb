@@ -43,12 +43,10 @@ class ApplicationController < ActionController::Base
       conds[0] << "AND taggings.tag_id = ?"
       conds.push tag.id
       stories = Story.find(:all, :conditions => conds,
-        :include => [ :user, :taggings ], :joins => [ :user, :taggings ],
-        :limit => 30)
+        :include => [ :user, { :taggings => :tag } ], :limit => 30)
     else
       stories = Story.find(:all, :conditions => conds,
-        :include => [ :user, :taggings ], :joins => [ :user ],
-        :limit => 30)
+        :include => [ :user, { :taggings => :tag } ], :limit => 30)
     end
 
     if user

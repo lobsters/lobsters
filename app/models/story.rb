@@ -180,7 +180,7 @@ class Story < ActiveRecord::Base
     while u.match(/__/)
       u.gsub!("__", "_")
     end
-    u
+    u.gsub(/^_+/, "").gsub(/_+$/, "")
   end
 
   def url_or_comments_url(root_url = "/")

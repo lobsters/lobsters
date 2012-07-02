@@ -93,4 +93,9 @@ describe Story do
       "spec/fixtures/story_pages/2.html")
     s.fetched_title.should == "Google"
   end
+
+  it "has an underscored url from its title" do
+    s = Story.make(:title => "The One-second War (What Time Will You Die?) ")
+    s.title_as_url.should == "the_one-second_war_what_time_will_you_die"
+  end
 end

@@ -85,7 +85,11 @@ class Story < ActiveRecord::Base
   end
 
   def comments_url(root_url = "/")
-    root_url + "s/#{self.short_id}/#{self.title_as_url}"
+    "#{short_id_url(root_url)}/#{self.title_as_url}"
+  end
+  
+  def short_id_url(root_url = "/")
+    root_url + "s/#{self.short_id}"
   end
 
   @_comment_count = nil
@@ -142,7 +146,7 @@ class Story < ActiveRecord::Base
   end
 
   def linkified_text
-    RDiscount.new(self.description, :smart, :autolink, :safelink,
+    RDiscount.new(self.description.to_s, :smart, :autolink, :safelink,
       :filter_html).to_html
   end
 

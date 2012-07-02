@@ -1,8 +1,6 @@
 Hello <%= @invitation.email %>,
 
-The user <%= @invitation.user.username %> has invited you to the website Lobsters:
-
-   <%= @invitation.memo %>
+The user <%= @invitation.user.username %> has invited you to the website Lobsters<%= @invitation.memo.present? ? ":\n\n   #{@invitation.memo}" : "." %>
 
 To create an account, visit the URL below:
 

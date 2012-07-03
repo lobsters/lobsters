@@ -14,8 +14,8 @@ class Keystore < ActiveRecord::Base
         "(#{q(key)}, #{q(value)})")
     else
       Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" +
-      "`key`, `value`) VALUES (#{q(key)}, #{q(value)}) ON DUPLICATE KEY " +
-      "UPDATE `value` = #{q(value)}")
+        "`key`, `value`) VALUES (#{q(key)}, #{q(value)}) ON DUPLICATE KEY " +
+        "UPDATE `value` = #{q(value)}")
     end
 
     true

@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
       :filter_html).to_html
   end
 
-  def recent_threads(amount = 20)
+  def recent_threads(amount)
     Comment.connection.select_all("SELECT DISTINCT " +
       "thread_id FROM comments WHERE user_id = #{q(self.id)} ORDER BY " +
       "created_at DESC LIMIT #{q(amount)}").map{|r| r.values.first }

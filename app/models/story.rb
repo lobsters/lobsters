@@ -19,6 +19,7 @@ class Story < ActiveRecord::Base
   attr_accessor :new_tags, :tags_to_add, :tags_to_delete
 
   after_save :deal_with_tags
+
   before_create :assign_short_id
   after_create :mark_submitter
 
@@ -56,6 +57,16 @@ class Story < ActiveRecord::Base
         break
       end
     end
+  end
+
+  def give_upvote_or_downvote_and_recalculate_hotness!(upvote, downvote)
+    self.upvotes += upvote.to_i
+    self.downvotes += downvote.to_i
+
+    Story.connection.execute("UPDATE #{Story.table_name} SET " <<
+      "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " <<
+      "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " <<
+      "hotness = '#{self.calculated_hotness}' WHERE id = #{self.id.to_i}")
   end
 
   def mark_submitter
@@ -130,7 +141,7 @@ class Story < ActiveRecord::Base
     @fetched_content
   end
 
-  def hotness
+  def calculated_hotness
     score = upvotes - downvotes
     order = Math.log([ score.abs, 1 ].max, 10)
     if score > 0

@@ -43,11 +43,16 @@ class ApplicationController < ActionController::Base
       conds[0] << "AND taggings.tag_id = ?"
       conds.push tag.id
       stories = Story.find(:all, :conditions => conds,
-        :include => [ :user, { :taggings => :tag } ], :limit => 30)
+        :include => [ :user, { :taggings => :tag } ], :limit => 30,
+        :order => (newest ? "created_at DESC" : "hotness"))
     else
       stories = Story.find(:all, :conditions => conds,
-        :include => [ :user, { :taggings => :tag } ], :limit => 30)
+        :include => [ :user, { :taggings => :tag } ], :limit => 30,
+        :order => (newest ? "created_at DESC" : "hotness"))
     end
+
+    # TODO: figure out a better sorting algorithm for newest, including some
+    # older stories that got one or two votes
 
     if user
       votes = Vote.votes_by_user_for_stories_hash(user.id,
@@ -58,13 +63,6 @@ class ApplicationController < ActionController::Base
           s.vote = votes[s.id]
         end
       end
-    end
-
-    if newest
-      # TODO: better algorithm here
-      stories.sort_by!{|s| s.created_at }.reverse!
-    else
-      stories.sort_by!{|s| s.hotness }
     end
 
     stories

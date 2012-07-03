@@ -76,10 +76,21 @@ class Comment < ActiveRecord::Base
     rescue
     end
   end
+  
+  def give_upvote_or_downvote_and_recalculate_confidence!(upvote, downvote)
+    self.upvotes += upvote.to_i
+    self.downvotes += downvote.to_i
+
+    Comment.connection.execute("UPDATE #{Comment.table_name} SET " <<
+      "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " <<
+      "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " <<
+      "confidence = '#{self.calculated_confidence}' WHERE id = " <<
+      "#{self.id.to_i}")
+  end
 
   # http://evanmiller.org/how-not-to-sort-by-average-rating.html
   # https://github.com/reddit/reddit/blob/master/r2/r2/lib/db/_sorts.pyx
-  def confidence
+  def calculated_confidence
     n = (upvotes + downvotes).to_f
     if n == 0.0
       return 0
@@ -130,7 +141,7 @@ class Comment < ActiveRecord::Base
       cs = [ "story_id = ?", story_id ]
     end
 
-    Comment.find(:all, :conditions => cs).sort_by{|c| c.confidence }.each do |c|
+    Comment.find(:all, :conditions => cs, :order => "confidence").each do |c|
       (parents[c.parent_comment_id.to_i] ||= []).push c
     end
 

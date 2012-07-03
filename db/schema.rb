@@ -11,21 +11,23 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120701181319) do
+ActiveRecord::Schema.define(:version => 20120703184957) do
 
   create_table "comments", :force => true do |t|
-    t.datetime "created_at",                                      :null => false
+    t.datetime "created_at",                                                                      :null => false
     t.datetime "updated_at"
-    t.string   "short_id",          :limit => 10, :default => "", :null => false
-    t.integer  "story_id",                                        :null => false
-    t.integer  "user_id",                                         :null => false
+    t.string   "short_id",          :limit => 10,                                 :default => "", :null => false
+    t.integer  "story_id",                                                                        :null => false
+    t.integer  "user_id",                                                                         :null => false
     t.integer  "parent_comment_id"
     t.integer  "thread_id"
-    t.text     "comment",                                         :null => false
-    t.integer  "upvotes",                         :default => 0,  :null => false
-    t.integer  "downvotes",                       :default => 0,  :null => false
+    t.text     "comment",                                                                         :null => false
+    t.integer  "upvotes",                                                         :default => 0,  :null => false
+    t.integer  "downvotes",                                                       :default => 0,  :null => false
+    t.decimal  "confidence",                      :precision => 20, :scale => 17
   end
 
+  add_index "comments", ["confidence"], :name => "confidence_idx"
   add_index "comments", ["short_id"], :name => "short_id", :unique => true
   add_index "comments", ["story_id", "short_id"], :name => "story_id_short_id"
   add_index "comments", ["thread_id"], :name => "thread_id"
@@ -61,16 +63,18 @@ ActiveRecord::Schema.define(:version => 20120701181319) do
   create_table "stories", :force => true do |t|
     t.datetime "created_at"
     t.integer  "user_id"
-    t.string   "url",          :limit => 250, :default => ""
-    t.string   "title",        :limit => 150, :default => "", :null => false
+    t.string   "url",          :limit => 250,                                 :default => ""
+    t.string   "title",        :limit => 150,                                 :default => "", :null => false
     t.text     "description"
-    t.string   "short_id",     :limit => 6,   :default => "", :null => false
-    t.integer  "is_expired",   :limit => 1,   :default => 0,  :null => false
-    t.integer  "upvotes",                     :default => 0,  :null => false
-    t.integer  "downvotes",                   :default => 0,  :null => false
-    t.integer  "is_moderated", :limit => 1,   :default => 0,  :null => false
+    t.string   "short_id",     :limit => 6,                                   :default => "", :null => false
+    t.integer  "is_expired",   :limit => 1,                                   :default => 0,  :null => false
+    t.integer  "upvotes",                                                     :default => 0,  :null => false
+    t.integer  "downvotes",                                                   :default => 0,  :null => false
+    t.integer  "is_moderated", :limit => 1,                                   :default => 0,  :null => false
+    t.decimal  "hotness",                     :precision => 20, :scale => 10
   end
 
+  add_index "stories", ["hotness"], :name => "hotness_idx"
   add_index "stories", ["url"], :name => "url"
 
   create_table "taggings", :force => true do |t|

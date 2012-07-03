@@ -93,10 +93,22 @@ class CommentsController < ApplicationController
   end
 
   def threads
-    recent_threads = @user.recent_threads
+    recent_threads = @user.recent_threads(20)
 
     @threads = recent_threads.map{|r|
-      Comment.ordered_for_story_or_thread_for_user(nil, r, @user.id) }
+      cs = Comment.ordered_for_story_or_thread_for_user(nil, r, @user)
+
+      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,
+        cs.map{|c| c.story_id }.uniq)
+
+      cs.each do |c|
+        if @votes[c.id]
+          c.current_vote = @votes[c.id]
+        end
+      end
+
+      cs
+    }
 
     # trim each thread to this user's first response
     @threads.map!{|th|
@@ -110,7 +122,7 @@ class CommentsController < ApplicationController
 
       th
     }
-
+    
     @comments = @threads.flatten
   end
 end

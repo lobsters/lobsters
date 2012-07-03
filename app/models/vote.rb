@@ -95,19 +95,20 @@ class Vote < ActiveRecord::Base
 
       if update_counters && (downvote != 0 || upvote != 0)
         if v.comment_id
-          Comment.update_counters v.comment_id, :downvotes => downvote,
-            :upvotes => upvote
-
-          if (c = Comment.find(v.comment_id)) && c.user_id != user_id
+          c = Comment.find(v.comment_id)
+          if c.user_id != user_id
             Keystore.increment_value_for("user:#{c.user_id}:karma")
           end
-        else
-          Story.update_counters v.story_id, :downvotes => downvote,
-            :upvotes => upvote
 
-          if (s = Story.find(v.story_id)) && s.user_id != user_id
+          c.give_upvote_or_downvote_and_recalculate_confidence!(upvote,
+            downvote)
+        else
+          s = Story.find(v.story_id)
+          if s.user_id != user_id
             Keystore.increment_value_for("user:#{s.user_id}:karma")
           end
+
+          s.give_upvote_or_downvote_and_recalculate_hotness!(upvote, downvote)
         end
       end
     end

@@ -1,5 +1,6 @@
 Lobsters::Application.routes.draw do
-  root :to => "home#index", :protocol => "https://"
+  root :to => "home#index",
+    :protocol => (Rails.env == "production" ? "https://" : "http://")
 
   get "/newest(.format)" => "home#newest"
 

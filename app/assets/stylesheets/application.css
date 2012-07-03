@@ -393,7 +393,7 @@ li .link {
 }
 
 li .link a {
-	font-size: 12pt;
+	font-size: 11pt;
 	text-decoration: none;
 }
 
@@ -482,14 +482,14 @@ a.pagelink.curpage {
 #downvote_why {
 	position: absolute;
 	width: 100px;
-	border: 1px solid #aaa;
+	border: 1px solid #ccc;
 	border-bottom: 0;
 	z-index: 2;
 }
 #downvote_why a {
 	background-color: white;
 	color: #555;
-	border-bottom: 1px solid #aaa;
+	border-bottom: 1px solid #ccc;
 	display: block;
 	padding: 3px;
 	font-size: 9pt;

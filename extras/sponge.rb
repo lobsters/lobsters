@@ -87,6 +87,9 @@ class Sponge
           raise
         end
 
+        # reject ipv6 addresses
+        ips.reject!{|ip| ip.match(/:/) }
+
         # pick a random one
         tip = ips[rand(ips.length)]
         ip = IPAddr.new(tip)

@@ -9,11 +9,11 @@
     <% @stories.each do |story| %>
       <item>
         <title><%= raw coder.encode(story.title, :decimal) %></title>
-        <link><%= story.url_or_comments_url(root_url) %></link>
-        <guid><%= story.short_id_url(root_url) %></guid>
+        <link><%= story.url_or_comments_url %></link>
+        <guid><%= story.short_id_url %></guid>
         <author><%= story.user.username %></author>
         <pubDate><%= story.created_at.rfc2822 %></pubDate>
-        <comments><%= story.comments_url(root_url) %></comments>
+        <comments><%= story.comments_url %></comments>
         <description><%= raw coder.encode(story.linkified_text, :decimal)
           %></description>
         <% story.taggings.each do |tagging| %>

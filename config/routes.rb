@@ -1,5 +1,5 @@
 Lobsters::Application.routes.draw do
-  root :to => "home#index"
+  root :to => "home#index", :protocol => "https://"
 
   get "/newest(.format)" => "home#newest"
 

@@ -188,7 +188,7 @@ div#wrapper {
 	margin-left: auto;
 	margin-right: auto;
 	padding-bottom: 1em;
-	width: 900px;
+	width: 1100px;
 }
 div#inside {
 	margin-left: 0.25em;
@@ -441,6 +441,7 @@ div.story_content {
 div.story_text {
 	font-size: 10pt;
 	margin-bottom: 1.5em;
+	max-width: 700px;
 }
 div.story_text p {
 	margin: 0.75em 0;
@@ -450,6 +451,10 @@ blockquote {
 	margin: 0 0 0 1em;
 	padding: 0 0 0 0.5em;
 	border-left: 2px solid gray;
+}
+
+div.comment_text {
+	max-width: 700px;
 }
 
 div.comment_text p {
@@ -546,7 +551,7 @@ div#story_box div.markdown_help_toggler {
 }
 
 div.comment_form_container, div.comment_reply {
-	max-width: 500px;
+	max-width: 700px;
 }
 
 /* data tables */

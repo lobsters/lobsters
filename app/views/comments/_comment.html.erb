@@ -1,6 +1,7 @@
 <li id="comment_<%= comment.short_id %>" data-shortid="<%= comment.short_id %>"
 class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 "upvoted" : "downvoted") : "" %>
+  <%= comment.highlighted ? "highlighted" : "" %>
 	<%= comment.score <= 0 ? "negative" : "" %>
 	<%= comment.score <= -3 ? "negative_3" : "" %>
 	<%= comment.score <= -5 ? "negative_5" : "" %>

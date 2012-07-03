@@ -9,7 +9,7 @@ class Comment < ActiveRecord::Base
   attr_accessible :comment
 
   attr_accessor :parent_comment_short_id, :current_vote, :previewing,
-    :indent_level
+    :indent_level, :highlighted
 
   before_create :assign_short_id_and_upvote
   after_create :assign_votes, :mark_submitter, :email_reply
@@ -149,6 +149,8 @@ class Comment < ActiveRecord::Base
       end
     }
     recursor.call(nil, 0)
+
+    # TODO: handle deleted comments, show for user_id
 
     ordered
   end

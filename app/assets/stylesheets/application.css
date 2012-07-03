@@ -359,7 +359,8 @@ li.downvoted div.voters a.downvoter {
 ol.stories li,
 ol.comments li {
 	clear: both;
-	padding-top: 1em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
 }
 ol.stories li:first-child {
 	padding-top: 0.5em;
@@ -380,6 +381,10 @@ ol.comments li.negative_5 {
 }
 ol.comments li.negative_7 {
 	opacity: 0.2;
+}
+
+ol.comments li.highlighted {
+	background-color: #ffffbf;
 }
 
 li .link {
@@ -540,8 +545,8 @@ div#story_box div.markdown_help_toggler {
 	width: 610px;
 }
 
-div.comment_form_container {
-	max-width: 550px;
+div.comment_form_container, div.comment_reply {
+	max-width: 500px;
 }
 
 /* data tables */

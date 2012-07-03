@@ -76,27 +76,67 @@ class StoriesController < ApplicationController
     end
   end
 
-   def show
-     @story = Story.find_by_short_id!(params[:id])
+  def show
+    @story = Story.find_by_short_id!(params[:id])
 
     @page_title = @story.title
 
-     @comments = Comment.ordered_for_story_or_thread_for_user(
-      @story.id, nil, @user ? @user.id : nil)
+    @comments = Comment.ordered_for_story_or_thread_for_user(@story.id, nil,
+      @user ? @user.id : nil)
     @comment = Comment.new
 
-     if @user
-       if v = Vote.find_by_user_id_and_story_id(@user.id, @story.id)
-         @story.vote = v.vote
+    if @user
+      if v = Vote.find_by_user_id_and_story_id(@user.id, @story.id)
+        @story.vote = v.vote
       end
  
-       @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @story.id)
-       @comments.each do |c|
-         if @votes[c.id]
-           c.current_vote = @votes[c.id]
+      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @story.id)
+      @comments.each do |c|
+        if @votes[c.id]
+          c.current_vote = @votes[c.id]
         end
       end
-     end
+    end
+  end
+
+  def show_comment
+    @story = Story.find_by_short_id!(params[:id])
+
+    @page_title = @story.title
+
+    @showing_comment = Comment.find_by_short_id(params[:comment_short_id])
+
+    if !@showing_comment
+      flash[:error] = "Could not find comment.  It may have been deleted."
+      return redirect_to @story.comments_url
+    end
+
+    @comments = Comment.ordered_for_story_or_thread_for_user(@story.id,
+      @showing_comment.thread_id, @user ? @user.id : nil)
+
+    @comments.each do |c,x|
+      if c.id == @showing_comment.id
+        c.highlighted = true
+        break
+      end
+    end
+
+    @comment = Comment.new
+
+    if @user
+      if v = Vote.find_by_user_id_and_story_id(@user.id, @story.id)
+        @story.vote = v.vote
+      end
+ 
+      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @story.id)
+      @comments.each do |c|
+        if @votes[c.id]
+          c.current_vote = @votes[c.id]
+        end
+      end
+    end
+
+    render :action => "show"
   end
 
   def undelete

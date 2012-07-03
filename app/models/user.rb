@@ -40,11 +40,11 @@ class User < ActiveRecord::Base
     Keystore.value_for("user:#{self.id}:comments_posted").to_i
   end
 
-  def initiate_password_reset_for_ip(root_url, ip)
+  def initiate_password_reset_for_ip(ip)
     self.password_reset_token = Utils.random_str(40)
     self.save!
 
-    PasswordReset.password_reset_link(root_url, self, ip).deliver
+    PasswordReset.password_reset_link(self, ip).deliver
   end
 
   def linkified_about

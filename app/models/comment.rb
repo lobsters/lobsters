@@ -3,6 +3,8 @@ class Comment < ActiveRecord::Base
   belongs_to :story
   has_many :votes,
     :dependent => :delete_all
+  belongs_to :parent_comment,
+    :class_name => "Comment"
   
   attr_accessible :comment
 
@@ -10,7 +12,7 @@ class Comment < ActiveRecord::Base
     :indent_level
 
   before_create :assign_short_id_and_upvote
-  after_create :assign_votes, :mark_submitter
+  after_create :assign_votes, :mark_submitter, :email_reply
   after_destroy :unassign_votes
 
   MAX_EDIT_MINS = 45
@@ -54,6 +56,27 @@ class Comment < ActiveRecord::Base
     Keystore.increment_value_for("user:#{self.user_id}:comments_posted")
   end
 
+  def email_reply
+    begin
+      if self.parent_comment_id && u = self.parent_comment.try(:user)
+        if u.email_replies?
+          EmailReply.reply(self, u).deliver
+        end
+
+        if u.pushover_replies?
+          Pushover.push(u.pushover_user_key, u.pushover_device, {
+            :title => "Lobsters reply from #{self.user.username} on " <<
+              "#{self.story.title}",
+            :message => self.plaintext_comment,
+            :url => self.url,
+            :url_title => "Reply to #{self.user.username}",
+          })
+        end
+      end
+    rescue
+    end
+  end
+
   # http://evanmiller.org/how-not-to-sort-by-average-rating.html
   # https://github.com/reddit/reddit/blob/master/r2/r2/lib/db/_sorts.pyx
   def confidence
@@ -83,6 +106,11 @@ class Comment < ActiveRecord::Base
   def linkified_comment
     RDiscount.new(self.comment, :smart, :autolink, :safelink,
       :filter_html).to_html
+  end
+
+  def plaintext_comment
+    # TODO: linkify then strip tags and convert entities back
+    comment
   end
 
   def flag!
@@ -131,5 +159,9 @@ class Comment < ActiveRecord::Base
     end
 
     (Time.now.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
+  end
+
+  def url
+    self.story.comments_url + "/comments/#{self.short_id}"
   end
 end

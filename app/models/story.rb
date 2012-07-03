@@ -84,12 +84,12 @@ class Story < ActiveRecord::Base
     self.tags_to_add = []
   end
 
-  def comments_url(root_url = "/")
-    "#{short_id_url(root_url)}/#{self.title_as_url}"
+  def comments_url
+    "#{short_id_url}/#{self.title_as_url}"
   end
   
-  def short_id_url(root_url = "/")
-    root_url + "s/#{self.short_id}"
+  def short_id_url
+    Rails.application.routes.url_helpers.root_url + "s/#{self.short_id}"
   end
 
   @_comment_count = nil
@@ -187,8 +187,8 @@ class Story < ActiveRecord::Base
     u.gsub(/^_+/, "").gsub(/_+$/, "")
   end
 
-  def url_or_comments_url(root_url = "/")
-    self.url.blank? ? self.comments_url(root_url) : self.url
+  def url_or_comments_url
+    self.url.blank? ? self.comments_url : self.url
   end
 
   def is_editable_by_user?(user)

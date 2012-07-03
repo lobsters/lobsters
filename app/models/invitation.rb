@@ -21,7 +21,7 @@ class Invitation < ActiveRecord::Base
     end
   end
 
-  def send_email(root_url)
-    InvitationMailer.invitation(root_url, self).deliver
+  def send_email
+    InvitationMailer.invitation(self).deliver
   end
 end

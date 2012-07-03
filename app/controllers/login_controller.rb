@@ -39,7 +39,7 @@ class LoginController < ApplicationController
       return forgot_password
     end
 
-    @found_user.initiate_password_reset_for_ip(root_url, request.remote_ip)
+    @found_user.initiate_password_reset_for_ip(request.remote_ip)
 
     flash.now[:success] = "Password reset instructions have been e-mailed " <<
       "to you."

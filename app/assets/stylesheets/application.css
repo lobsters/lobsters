@@ -540,6 +540,10 @@ div#story_box div.markdown_help_toggler {
 	width: 610px;
 }
 
+div.comment_form_container {
+	max-width: 550px;
+}
+
 /* data tables */
 
 table.data caption {

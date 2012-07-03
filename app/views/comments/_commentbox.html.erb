@@ -1,4 +1,4 @@
-<div class="form_container">
+<div class="comment_form_container">
 <%= form_tag("/comments/#{story.short_id}", { :id => "comment_form" }) do |f| %>
   <% if comment.parent_comment_short_id.present? %>
     <%= hidden_field_tag "parent_comment_short_id",

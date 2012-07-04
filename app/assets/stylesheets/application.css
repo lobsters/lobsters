@@ -358,8 +358,8 @@ li.downvoted div.voters a.downvoter {
 	border-top-color: gray;
 }
 
-ol.stories li,
-ol.comments li {
+ol.stories li.story,
+ol.comments li.comment {
 	clear: both;
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
@@ -450,15 +450,24 @@ div.story_text {
 div.story_text p {
 	margin: 0.75em 0;
 }
-blockquote {
-	font-style: italic;
-	margin: 0 0 0 1em;
-	padding: 0 0 0 0.5em;
-	border-left: 2px solid gray;
-}
 
 div.comment_text {
 	max-width: 700px;
+}
+
+div.comment_text blockquote {
+	font-style: italic;
+	margin: 0.25em 0 0 0.5em;
+	padding: 0 0 0 1em;
+	border-left: 2px solid gray;
+}
+div.comment_text ol {
+	margin: 0;
+	padding: 0 1.5em;
+}
+div.comment_text ol li {
+	padding: 0 !important;
+	margin: 0 !important;
 }
 
 div.comment_text p {

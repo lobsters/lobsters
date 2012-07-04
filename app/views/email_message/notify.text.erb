@@ -1,0 +1,3 @@
+  <%= word_wrap(@comment.plaintext_body, :line_width => 72).gsub(/\n/, "\n  ") %>
+
+Reply at <%= @message.url %>

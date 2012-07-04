@@ -12,7 +12,7 @@ class Comment < ActiveRecord::Base
     :indent_level, :highlighted
 
   before_create :assign_short_id_and_upvote
-  after_create :assign_votes, :mark_submitter, :email_reply
+  after_create :assign_votes, :mark_submitter, :deliver_reply_notifications
   after_destroy :unassign_votes
 
   MAX_EDIT_MINS = 45
@@ -32,12 +32,14 @@ class Comment < ActiveRecord::Base
   end
 
   def assign_short_id_and_upvote
-    (1...10).each do |tries|
-      if tries == 10
+    10.times do |try|
+      if try == 10
         raise "too many hash collisions"
       end
 
-      if !Comment.find_by_short_id(self.short_id = Utils.random_str(6))
+      self.short_id = Utils.random_str(6)
+
+      if !Comment.find_by_short_id(self.short_id)
         break
       end
     end
@@ -56,14 +58,14 @@ class Comment < ActiveRecord::Base
     Keystore.increment_value_for("user:#{self.user_id}:comments_posted")
   end
 
-  def email_reply
+  def deliver_reply_notifications
     begin
       if self.parent_comment_id && u = self.parent_comment.try(:user)
         if u.email_replies?
           EmailReply.reply(self, u).deliver
         end
 
-        if u.pushover_replies?
+        if u.pushover_replies? && u.pushover_user_key.present?
           Pushover.push(u.pushover_user_key, u.pushover_device, {
             :title => "Lobsters reply from #{self.user.username} on " <<
               "#{self.story.title}",

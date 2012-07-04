@@ -1,4 +1,116 @@
 <div class="box wide">
+  <div class="legend right">
+		<a href="/u/<%= @user.username %>">View Profile</a>
+  </div>
+	<div class="legend">
+		Account Settings
+	</div>
+  
+  <%= form_for @edit_user, :url => settings_url, :method => :post do |f| %>
+    <%= error_messages_for f.object %>
+
+    <div class="boxline">
+      <%= f.label :username, "Username:", :class => "required" %>
+      <%= f.text_field :username, :size => 15 %>
+      <span class="hint">
+        <tt>[A-Za-z0-9][A-Za-z0-9_-]*</tt>
+      </span>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :password, "New Password:", :class => "required" %>
+      <%= f.password_field :password, :size => 40 %>
+    </div>
+    
+    <div class="boxline">
+      <%= f.label :password_confirmation, "Confirm Password:",
+        :class => "required" %>
+      <%= f.password_field :password_confirmation, :size => 40 %>
+    </div>
+    
+    <div class="boxline">
+      <%= f.label :email, "E-mail Address:", :class => "required" %>
+      <%= f.text_field :email, :size => 40 %>
+    </div>
+    
+    <div class="boxline">
+      <%= f.label :pushover_user_key,
+        raw("<a href=\"https://pushover.net/\">Pushover</a> User Key:"),
+        :class => "required" %>
+      <%= f.text_field :pushover_user_key, :size => 40 %>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :pushover_device, "Pushover Device:",
+        :class => "required" %>
+      <%= f.text_field :pushover_device, :placeholder => "optional",
+        :size => 15 %>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :about, "About:", :class => "required" %>
+      <%= f.text_area :about, :size => "100x5" %>
+    </div>
+
+    <div class="box">
+      <div class="boxline markdown_help_toggler" style="margin-left: 9em;">
+        <div class="markdown_help_label">
+          <span class="fakea">Limited Markdown formatting available</span>
+        </div>
+
+        <div style="clear: both;"></div>
+
+        <%= render :partial => "global/markdownhelp" %>
+      </div>
+    </div>
+  
+    <div class="legend">
+      Comment Reply Notification Settings
+    </div>
+
+    <div class="boxline">
+      <%= f.label :email_replies, "Receive E-mail:", :class => "required" %>
+      <%= f.check_box :email_replies %>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :pushover_replies,
+        raw("Receive <a href=\"https://pushover.net/\">Pushover</a> Alert:"),
+        :class => "required" %>
+      <%= f.check_box :pushover_replies %>
+      <span class="hint">
+        Requires user key entered above
+      </span>
+    </div>
+
+    <br>
+
+    <div class="legend">
+      Private Message Notification Settings
+    </div>
+
+    <div class="boxline">
+      <%= f.label :email_messages, "Receive E-mail:", :class => "required" %>
+      <%= f.check_box :email_messages %>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :pushover_messages,
+        raw("Receive <a href=\"https://pushover.net/\">Pushover</a> Alert:"),
+        :class => "required" %>
+      <%= f.check_box :pushover_replies %>
+      <span class="hint">
+        Requires user key entered above
+      </span>
+    </div>
+
+    <br>
+    <%= f.submit "Save All Settings" %>
+  <% end %>
+ 
+  <br>
+  <br>
+
   <div class="legend">
 		Invite a New User
 	</div>
@@ -18,87 +130,5 @@
       <p></p>
       <%= submit_tag "Send Invitation" %>
     </div>
-  <% end %>
-
-  <br>
-
-	<div class="legend">
-		Account Settings (<a href="/u/<%= @user.username %>">View Profile</a>)
-	</div>
-  
-  <%= form_for @edit_user, :url => settings_url, :method => :post do |f| %>
-    <%= error_messages_for f.object %>
-
-    <div class="boxline">
-      <%= f.label :username, "Username:", :class => "required" %>
-      <%= f.text_field :username %>
-      <span class="hint">
-        <tt>[A-Za-z0-9][A-Za-z0-9_-]*</tt>
-      </span>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :email, "E-mail Address:", :class => "required" %>
-      <%= f.text_field :email %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :password, "New Password:", :class => "required" %>
-      <%= f.password_field :password %>
-    </div>
-    
-    <div class="boxline">
-      <%= f.label :password_confirmation, "Confirm Password:",
-        :class => "required" %>
-      <%= f.password_field :password_confirmation %>
-    </div>
-    
-    <div class="boxline">
-      <%= f.label :about, "About:", :class => "required" %>
-      <%= f.text_area :about, :size => "100x5" %>
-    </div>
-
-    <div class="box">
-      <div class="boxline markdown_help_toggler" style="margin-left: 9em;">
-        <div class="markdown_help_label">
-          <span class="fakea">Limited Markdown formatting available</span>
-        </div>
-
-        <div style="clear: both;"></div>
-
-        <%= render :partial => "global/markdownhelp" %>
-      </div>
-    </div>
-  
-    <div class="legend">
-      Reply Notification Settings
-    </div>
-
-    <div class="boxline">
-      <%= f.label :email_replies, "E-mail:", :class => "required" %>
-      <%= f.check_box :email_replies %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :pushover_replies, raw("<a href=\"https://pushover.net/\">" +
-        "Pushover</a>:"), :class => "required" %>
-      <%= f.check_box :pushover_replies %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :pushover_user_key, "Pushover User Key:",
-        :class => "required" %>
-      <%= f.text_field :pushover_user_key, :size => 40 %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :pushover_device, "Pushover Device:",
-        :class => "required" %>
-      <%= f.text_field :pushover_device, :placeholder => "optional",
-        :size => 15 %>
-    </div>
-
-    <br>
-    <%= f.submit "Save All Settings" %>
   <% end %>
 </div>

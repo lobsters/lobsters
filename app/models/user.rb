@@ -1,6 +1,13 @@
 class User < ActiveRecord::Base
   has_many :stories,
     :include => :user
+  has_many :comments
+  has_many :authored_messages,
+    :class_name => "Message",
+    :foreign_key => "author_user_id"
+  has_many :received_messages,
+    :class_name => "Message",
+    :foreign_key => "recipient_user_id"
   has_secure_password
 
   validates_format_of :username, :with => /\A[A-Za-z0-9][A-Za-z0-9_-]*\Z/
@@ -13,7 +20,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :username, :email, :password, :password_confirmation,
     :about, :email_replies, :pushover_replies, :pushover_user_key,
-    :pushover_device
+    :pushover_device, :email_messages, :pushover_messages
 
   before_save :check_session_token
 
@@ -24,8 +31,13 @@ class User < ActiveRecord::Base
   end
 
   def unread_message_count
-    0
-    #Message.where(:recipient_user_id => self.id, :has_been_read => 0).count
+    Keystore.value_for("user:#{self.id}:unread_messages").to_i
+  end
+
+  def update_unread_message_count!
+    Keystore.put("user:#{self.id}:unread_messages",
+      Message.where(:recipient_user_id => self.id,
+        :has_been_read => false).count)
   end
 
   def karma

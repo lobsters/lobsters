@@ -1,16 +1,15 @@
 <div id="header">
 	<div id="headerright" class="<%= @user ? "loggedin" : "" %>">
 		<% if @user %>
-			<a href="/settings"><%= @user.username %> (<%= @user.karma %>)</a>
-
-<% if false %>
 			<% if (count = @user.unread_message_count) > 0 %>
 				<a href="/messages"><%= count %> New Message<%= count == 1 ? "" : "s"
           %></a>
 			<% else %>
 				<a href="/messages">Messages</a>
 			<% end %>
-<% end %>
+
+			<a href="/settings"><%= @user.username %> (<%= @user.karma %>)</a>
+
 			<%= link_to "Logout", { :controller => "login", :action => "logout" },
 				{ :confirm => "Are you sure you want to logout?",
           "method" => "post" } %>

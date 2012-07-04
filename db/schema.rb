@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120703184957) do
+ActiveRecord::Schema.define(:version => 20120704013019) do
 
   create_table "comments", :force => true do |t|
     t.datetime "created_at",                                                                      :null => false
@@ -52,13 +52,15 @@ ActiveRecord::Schema.define(:version => 20120703184957) do
     t.datetime "created_at"
     t.integer  "author_user_id"
     t.integer  "recipient_user_id"
-    t.integer  "has_been_read",     :limit => 1,   :default => 0
-    t.string   "subject",           :limit => 100
+    t.boolean  "has_been_read",                       :default => false
+    t.string   "subject",              :limit => 100
     t.text     "body"
-    t.string   "random_hash",       :limit => 30
+    t.string   "short_id",             :limit => 30
+    t.boolean  "deleted_by_author",                   :default => false
+    t.boolean  "deleted_by_recipient",                :default => false
   end
 
-  add_index "messages", ["random_hash"], :name => "random_hash", :unique => true
+  add_index "messages", ["short_id"], :name => "random_hash", :unique => true
 
   create_table "stories", :force => true do |t|
     t.datetime "created_at"
@@ -106,6 +108,8 @@ ActiveRecord::Schema.define(:version => 20120703184957) do
     t.boolean  "pushover_replies",                    :default => false
     t.string   "pushover_user_key"
     t.string   "pushover_device"
+    t.boolean  "email_messages",                      :default => true
+    t.boolean  "pushover_messages",                   :default => true
   end
 
   add_index "users", ["session_token"], :name => "session_hash", :unique => true

@@ -1,0 +1,66 @@
+<div class="box wide">
+  <div class="legend" style="float: right;">
+    <a href="/messages">Back to Messages</a>
+  </div>
+
+  <div class="legend">
+    <%= @message.subject %>
+
+    <div class="sublegend">
+      Sent from <a href="/u/<%= @message.author.username %>"><%=
+        @message.author.username %></a>
+      to
+      <a href="/u/<%= @message.recipient.username %>"><%=
+        @message.recipient.username %></a>
+      <%= time_ago_in_words(@message.created_at) %> ago
+    </div>
+	</div>
+
+  <div class="boxline">
+    <%= raw @message.linkified_body %>
+  </div>
+
+  <br>
+
+  <div class="boxline">
+    <div style="float: left;">
+      <%= form_tag message_url(@message.short_id), :method => :delete do %>
+        <%= submit_tag "Delete Message" %>
+      <% end %>
+    </div>
+    
+    <div style="float: left; padding-left: 1em;">
+      <%= form_tag message_url(@message.short_id) + "/keep_as_new",
+      :method => :post do %>
+        <%= submit_tag "Keep As New" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div style="clear: both;"></div>
+  
+  <br>
+
+  <div class="legend">
+    Compose Reply To <%= @new_message.recipient_username %>
+  </div>
+
+  <%= form_for @new_message, :method => :post do |f| %>
+    <%= f.hidden_field :recipient_username %>
+
+    <%= error_messages_for @new_message %>
+
+    <div class="boxline">
+      <%= f.text_field :subject, :style => "width: 500px;" %>
+    </div>
+
+    <div class="boxline">
+      <%= f.text_area :body, :style => "width: 500px;", :rows => 5 %>
+    </div>
+
+    <div class="boxline">
+      <p></p>
+      <%= submit_tag "Send Message" %>
+    </div>
+  <% end %>
+</div>

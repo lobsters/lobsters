@@ -18,10 +18,9 @@ class Story < ActiveRecord::Base
   attr_accessor :vote, :story_type, :already_posted_story, :fetched_content
   attr_accessor :new_tags, :tags_to_add, :tags_to_delete
 
-  after_save :deal_with_tags
-
   before_create :assign_short_id
   after_create :mark_submitter
+  after_save :deal_with_tags
 
   validate do
     if self.url.present?
@@ -47,12 +46,13 @@ class Story < ActiveRecord::Base
   end
 
   def assign_short_id
-    (1...10).each do |tries|
-      if tries == 10
+    10.times do |try|
+      if try == 10
         raise "too many hash collisions"
       end
 
       self.short_id = Utils.random_str(6)
+
       if !Story.find_by_short_id(self.short_id)
         break
       end

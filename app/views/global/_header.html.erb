@@ -1,6 +1,8 @@
 <div id="header">
 	<div id="headerright" class="<%= @user ? "loggedin" : "" %>">
 		<% if @user %>
+      <a href="/filters">Filters</a>
+
 			<% if (count = @user.unread_message_count) > 0 %>
 				<a href="/messages"><%= count %> New Message<%= count == 1 ? "" : "s"
           %></a>

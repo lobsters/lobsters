@@ -1,0 +1,32 @@
+<div class="box wide">
+  <div class="legend">
+		Filtered Tags
+	</div>
+
+  <p>
+  To hide stories tagged with certain tags, check them below.
+  </p>
+
+  <%= form_tag "/filters", :method => :post do %>
+    <table class="data zebra" cellspacing=0 width="75%">
+    <tr>
+      <th width="10%">Hide</th>
+      <th width="15%">Tag</th>
+      <th width="75%">Description</th>
+    </tr>
+    <% Tag.all(:order => :tag).each do |tag| %>
+      <tr>
+        <td><input type="checkbox" name="tag_<%= tag.tag %>" value=1
+          <%= @filtered_tags.map{|ft| ft.tag_id }.include?(tag.id) ?
+          "checked" : "" %>></td>
+        <td><a href="/t/<%= tag.tag %>" class="tag tag_<%= tag.tag %>"><%=
+          tag.tag %></a></td>
+        <td><%= tag.description %></td>
+      </tr>
+    <% end %>
+    </table>
+    <p>
+    <%= submit_tag "Save Filters" %>
+    </p>
+  <% end %>
+</div>

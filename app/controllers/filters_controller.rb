@@ -1,0 +1,36 @@
+class FiltersController < ApplicationController
+  before_filter :require_logged_in_user
+
+  def index
+    @filtered_tags = @user.tag_filters
+    render :action => "index"
+  end
+
+  def update
+    new_filters = []
+
+    params.each do |k,v|
+      if (m = k.match(/^tag_(.+)$/)) && v.to_i == 1 && Tag.find_by_tag(m[1])
+        new_filters.push m[1]
+      end
+    end
+
+    @user.tag_filters(:include => :tag).each do |tf|
+      if new_filters.include?(tf.tag.tag)
+        new_filters.reject!{|t| t == tf.tag.tag }
+      else
+        tf.destroy
+      end
+    end
+
+    new_filters.each do |t|
+      TagFilter.new({
+        :user_id => @user.id,
+        :tag_id => Tag.find_by_tag(t).id,
+      }).save
+    end
+
+    flash.now[:success] = "Your filters have been updated."
+    index
+  end
+end

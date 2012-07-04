@@ -44,11 +44,17 @@ class ApplicationController < ActionController::Base
       conds.push tag.id
       stories = Story.find(:all, :conditions => conds,
         :include => [ :user, { :taggings => :tag } ], :limit => 30,
-        :order => (newest ? "created_at DESC" : "hotness"))
+        :order => (newest ? "stories.created_at DESC" : "hotness"))
     else
+      if user
+        conds[0] += " AND taggings.tag_id NOT IN (SELECT tag_id FROM " <<
+          "tag_filters WHERE user_id = ?)"
+        conds.push @user.id
+      end
+
       stories = Story.find(:all, :conditions => conds,
         :include => [ :user, { :taggings => :tag } ], :limit => 30,
-        :order => (newest ? "created_at DESC" : "hotness"))
+        :order => (newest ? "stories.created_at DESC" : "hotness"))
     end
 
     # TODO: figure out a better sorting algorithm for newest, including some

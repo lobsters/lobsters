@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
   has_many :received_messages,
     :class_name => "Message",
     :foreign_key => "recipient_user_id"
+  has_many :tag_filters
+
   has_secure_password
 
   validates_format_of :username, :with => /\A[A-Za-z0-9][A-Za-z0-9_-]*\Z/

@@ -9,7 +9,7 @@
     </div>
 	<% elsif !f.object.id %>
     <%= f.label :url, "URL:", :class => "required" %>
-		<%= f.text_field :url %>
+		<%= f.text_field :url, :autocomplete => "off" %>
 		<%= button_to_function "Fetch Title",
       "Lobsters.fetchURLTitle($(this), $('#story_url'), $('#story_title'));" %>
 	<% end %>
@@ -17,7 +17,7 @@
 
   <div class="boxline">
     <%= f.label :title, "Title:", :class => "required" %>
-    <%= f.text_field :title, :maxlength => 100 %>
+    <%= f.text_field :title, :maxlength => 100, :autocomplete => "off"  %>
 	</div>
 
   <div class="boxline" style="margin-bottom: 2px;">
@@ -31,6 +31,7 @@
   <div class="boxline">
     <%= f.label :description, "Text:", :class => "required" %>
     <%= f.text_area :description, :rows => 15,
-      :placeholder => "optional when submitting a link" %>
+      :placeholder => "optional when submitting a link",
+      :autocomplete => "off" %>
   </div>
 </div>

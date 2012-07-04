@@ -1,6 +1,7 @@
 /*
- *= require_tree .
+ *= require select2
  *= require_self
+ *= require mobile
 */
 
 
@@ -188,6 +189,7 @@ div#wrapper {
 	margin-left: auto;
 	margin-right: auto;
 	padding-bottom: 1em;
+	min-width: 800px;
 	max-width: 1000px;
 }
 div#inside {
@@ -203,6 +205,10 @@ div#inside {
 	padding: 5px 42px 5px 10px;
 	margin-top: 1em;
 	margin-bottom: 0.75em;
+}
+
+#headerleft {
+	float: left;
 }
 
 #l_holder {
@@ -242,7 +248,7 @@ div#inside {
 	text-decoration: none;
 }
 
-#headerlinks a {
+.headerlinks a {
 	color: #666;
 	text-decoration: none;
 	padding-right: 0.75em;
@@ -254,12 +260,8 @@ div#inside {
 	text-align: right;
 }
 
-#headerright a {
-	color: #666;
-	text-decoration: none;
-}
-
-#headerright.loggedin a {
+#headerright .headerlinks a {
+	padding-right: 0;
 	padding-left: 0.75em;
 }
 
@@ -401,12 +403,14 @@ ol.stories a.tag {
 	vertical-align: middle;
 }
 
+li .tags {
+	margin-right: 0.25em;
+}
+
 li .domain {
 	color: #888;
 	font-style: italic;
 	font-size: 8.5pt;
-	margin-left: 0.5em;
-	margin-right: 0.25em;
 	vertical-align: middle;
 }
 

@@ -1,5 +1,28 @@
 <div id="header">
+  <div id="headerleft">
+    <div id="l_holder" class="boring">
+      <a href="/"><img src="/assets/l.png" width=16 height=16></a>
+    </div>
+
+    <% if @title %>
+      <span id="headertitle">
+        <a href="<%= @title_url %>"><%= @title %></a>
+      </span>
+    <% end %>
+
+    <span class="headerlinks">
+      <a href="/">Home</a>
+
+      <a href="/newest">Newest</a>
+      <% if @user %>
+        <a href="/threads">Your Threads</a>
+      <% end %>
+      <a href="/stories/new">Submit Story</a>
+    </span>
+  </div>
+
 	<div id="headerright" class="<%= @user ? "loggedin" : "" %>">
+    <span class="headerlinks">
 		<% if @user %>
       <a href="/filters">Filters</a>
 
@@ -18,27 +41,8 @@
 		<% else %>
 			<a href="/login">Login</a>
 		<% end %>
-	</div>
-
-  <div id="l_holder" class="boring">
-    <a href="/"><img src="/assets/l.png" width=16 height=16></a>
-  </div>
-
-  <% if @title %>
-    <span id="headertitle">
-      <a href="<%= @title_url %>"><%= @title %></a>
     </span>
-  <% end %>
-
-	<span id="headerlinks">
-		<a href="/">Home</a>
-
-		<a href="/newest">Newest</a>
-		<% if @user %>
-			<a href="/threads">Your Threads</a>
-		<% end %>
-		<a href="/stories/new">Submit Story</a>
-	</span>
+	</div>
 
 	<div class="clear"></div>
 </div>

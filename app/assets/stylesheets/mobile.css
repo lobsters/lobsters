@@ -1,0 +1,80 @@
+@media only screen and (max-device-width: 480px) {
+	html {
+		-webkit-text-size-adjust: none;
+	}
+
+	body {
+		margin: 0;
+		padding: 0;
+	}
+
+	div#header {
+		margin: 0 0 0.25em 0;
+		padding: 0.5em 0.4em;
+		background-color: #eee;
+		border-bottom: 1px solid #ccc;
+	}
+
+	div#wrapper {
+		padding: 0;
+		margin: 0;
+		min-width: 100%;
+		max-width: 100%;
+	}
+
+	div#headerleft {
+		float: none;
+	}
+	div#headerright {
+		float: none;
+		text-align: left;
+		margin-left: 34px;
+		margin-top: 0.25em;
+		clear: both;
+	}
+
+	.headerlinks a,
+	#headerright .headerlinks a {
+		padding-right: 0.25em;
+		padding-left: 0;
+	}
+
+	.box {
+		margin: 0 8px;
+	}
+
+	div.voters {
+		width: 30px;
+		margin-top: 0px;
+	}
+	div.voters a.upvoter {
+		margin-top: -5px;
+	}
+
+	div.voters a.upvoter,
+	div.voters a.downvoter {
+		margin-left: 5px;
+		border-width: 10px;
+	}
+
+	li div.details,
+	div.story_content {
+		margin-left: 35px;
+		margin-right: 20px;
+	}
+	li.story div.byline {
+		font-size: 10pt;
+	}
+
+	div.box label {
+		display: block;
+	}
+
+	div#story_box input,
+	div#story_box textarea,
+	div#story_box #story_tags_a,
+	div#story_box div.markdown_help_toggler {
+		margin: 0 !important;
+		width: 100% !important;
+	}
+}

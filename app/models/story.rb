@@ -203,11 +203,13 @@ class Story < ActiveRecord::Base
   end
 
   def is_editable_by_user?(user)
-    if !user || user.id != self.user_id
+    if user && user.is_admin?
+      true
+    elsif user && user.id == self.user_id
+      (Time.now.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
+    else
       return false
     end
-
-    (Time.now.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
   end
   
   def is_undeletable_by_user?(user)

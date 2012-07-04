@@ -88,7 +88,8 @@ class StoriesController < ApplicationController
     @comment = Comment.new
 
     if @user
-      if v = Vote.find_by_user_id_and_story_id(@user.id, @story.id)
+      if v = Vote.find_by_user_id_and_story_id_and_comment_id(@user.id,
+      @story.id, nil)
         @story.vote = v.vote
       end
  

@@ -10,7 +10,7 @@ class Story < ActiveRecord::Base
     :allow_blank => true
   validates_presence_of :user_id
 
-  attr_accessible :url, :title, :description, :story_type, :tags_a
+  attr_accessible :title, :description, :story_type, :tags_a
 
   # after this many minutes old, a story cannot be edited
   MAX_EDIT_MINS = 30
@@ -27,7 +27,7 @@ class Story < ActiveRecord::Base
       # URI.parse is not very lenient, so we can't use it
 
       if self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/)
-        if (s = Story.find_by_url(self.url)) &&
+        if self.new_record? && (s = Story.find_by_url(self.url)) &&
         (Time.now - s.created_at) < 30.days
           errors.add(:url, "has already been submitted recently")
           self.already_posted_story = s

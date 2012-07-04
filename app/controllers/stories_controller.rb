@@ -10,7 +10,9 @@ class StoriesController < ApplicationController
   def create
     @page_title = "Submit a New Story"
 
-    @story = Story.new(params[:story])
+    # we don't allow the url to be changed, so we have to set it manually
+    @story = Story.new(params[:story].reject{|k,v| k == "url" })
+    @story.url = params[:story][:url]
     @story.user_id = @user.id
 
     if @story.save

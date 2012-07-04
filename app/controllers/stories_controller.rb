@@ -27,7 +27,7 @@ class StoriesController < ApplicationController
         Vote.vote_thusly_on_story_or_comment_for_user_because(1,
           @story.already_posted_story.id, nil, @user.id, nil)
 
-        flash[:error] = "This URL has already been submitted recently"
+        flash[:success] = "This URL has already been submitted recently."
 
         return redirect_to @story.already_posted_story.comments_url
       end
@@ -47,7 +47,7 @@ class StoriesController < ApplicationController
     @page_title = "Edit Story"
 
     if !@story.is_editable_by_user?(@user)
-      flash[:error] = "You cannot edit that story"
+      flash[:error] = "You cannot edit that story."
       return redirect_to "/"
     end
   end

@@ -12,7 +12,7 @@ class MessagesController < ApplicationController
 
     if @new_message.save
       flash.now[:success] = "Your message has been sent to " <<
-        @new_message.recipient.username
+        @new_message.recipient.username.to_s << "."
 
       @new_message = Message.new
     end
@@ -48,7 +48,7 @@ class MessagesController < ApplicationController
 
     @message.save
 
-    flash[:success] = "Deleted message"
+    flash[:success] = "Deleted message."
     return redirect_to "/messages"
   end
 
@@ -64,7 +64,7 @@ private
     if @message = Message.find_by_short_id(params[:message_id ] || params[:id])
       if !(@message.author_user_id == @user.id ||
       @message.recipient_user_id == @user.id)
-        flash[:error] = "Could not find message"
+        flash[:error] = "Could not find message."
         redirect_to "/messages"
         return false
       end

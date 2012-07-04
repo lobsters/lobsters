@@ -9,7 +9,7 @@ class InvitationsController < ApplicationController
     if i.save
       i.send_email
       flash[:success] = "Successfully e-mailed invitation to " <<
-        params[:email]
+        params[:email].to_s << "."
     else
       flash[:error] = "Could not send invitation, verify the e-mail " <<
         "address is valid."

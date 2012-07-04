@@ -9,7 +9,7 @@ class SettingsController < ApplicationController
     @edit_user = @user.clone
 
     if @edit_user.update_attributes(params[:user])
-      flash.now[:success] = "Successfully updated settings"
+      flash.now[:success] = "Successfully updated settings."
       @user = @edit_user
     end
 

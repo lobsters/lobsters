@@ -29,7 +29,7 @@ class SignupController < ApplicationController
 
   def signup
     if !(@invitation = Invitation.find_by_code(params[:invitation_code]))
-      flash[:error] = "Invalid or expired invitation"
+      flash[:error] = "Invalid or expired invitation."
       return redirect_to "/signup"
     end
 
@@ -39,7 +39,7 @@ class SignupController < ApplicationController
     if @new_user.save
       @invitation.destroy
       session[:u] = @new_user.session_token
-      flash[:success] = "Welcome to Lobsters, #{@new_user.username}"
+      flash[:success] = "Welcome to Lobsters, #{@new_user.username}!"
       return redirect_to "/"
     else
       render :action => "invited"

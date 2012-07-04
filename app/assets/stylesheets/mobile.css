@@ -10,7 +10,7 @@
 
 	div#header {
 		margin: 0 0 0.25em 0;
-		padding: 0.5em 0.4em;
+		padding: 8px 5px;
 		background-color: #eee;
 		border-bottom: 1px solid #ccc;
 	}
@@ -44,7 +44,7 @@
 	}
 
 	div.voters {
-		width: 30px;
+		width: 31px;
 		margin-top: 0px;
 	}
 	div.voters a.upvoter {
@@ -53,13 +53,13 @@
 
 	div.voters a.upvoter,
 	div.voters a.downvoter {
-		margin-left: 5px;
-		border-width: 10px;
+		margin-left: 6px;
+		border-width: 9px;
 	}
 
 	li div.details,
 	div.story_content {
-		margin-left: 35px;
+		margin-left: 36px;
 		margin-right: 20px;
 	}
 	li.story div.byline {

@@ -1,7 +1,10 @@
 <div class="box wide">
-	<div class="legend">
-		<%= @showing_user.username %>
-	</div>
+  <div class="legend">
+    <%= @showing_user.username %>
+    <% if @user %>
+      (<a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>)
+    <% end %>
+  </div>
 
   <label class="required">Status:</label>
   <span class="d">

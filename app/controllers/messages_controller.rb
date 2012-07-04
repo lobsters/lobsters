@@ -4,6 +4,10 @@ class MessagesController < ApplicationController
 
   def index
     @new_message = Message.new
+
+    if params[:to]
+      @new_message.recipient_username = params[:to]
+    end
   end
 
   def create

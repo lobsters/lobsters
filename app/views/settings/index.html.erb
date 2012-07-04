@@ -1,8 +1,4 @@
 <div class="box wide">
-  <div style="float: right;">
-    <a href="/u/<%= @user.username %>">View Profile</a>
-  </div>
-	
   <div class="legend">
 		Invite a New User
 	</div>
@@ -27,7 +23,7 @@
   <br>
 
 	<div class="legend">
-		Account Settings
+		Account Settings (<a href="/u/<%= @user.username %>">View Profile</a>)
 	</div>
   
   <%= form_for @edit_user, :url => settings_url, :method => :post do |f| %>

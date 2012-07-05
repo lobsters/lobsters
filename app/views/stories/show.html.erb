@@ -4,9 +4,9 @@
 </ol>
 
 <div class="story_content">
-	<% if @story.description.present? %>
+	<% if @story.markeddown_description.present? %>
 		<div class="story_text">
-			<%= raw @story.linkified_text %>
+			<%= raw @story.markeddown_description %>
 		</div>
 	<% end %>
 

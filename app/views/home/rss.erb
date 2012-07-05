@@ -14,9 +14,9 @@
         <author><%= story.user.username %></author>
         <pubDate><%= story.created_at.rfc2822 %></pubDate>
         <comments><%= story.comments_url %></comments>
-        <% if story.description.present? %>
-          <description><%= raw coder.encode(story.linkified_text, :decimal)
-            %></description>
+        <% if story.markeddown_description.present? %>
+          <description><%= raw coder.encode(story.markeddown_description,
+            :decimal) %></description>
         <% end %>
         <% story.taggings.each do |tagging| %>
           <category><%= tagging.tag.tag %></category>

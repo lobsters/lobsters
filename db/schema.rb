@@ -11,20 +11,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120704025956) do
+ActiveRecord::Schema.define(:version => 20120705145520) do
 
   create_table "comments", :force => true do |t|
     t.datetime "created_at",                                                                       :null => false
     t.datetime "updated_at"
-    t.string   "short_id",          :limit => 10,                                 :default => "",  :null => false
+    t.string   "short_id",           :limit => 10,                                 :default => "", :null => false
     t.integer  "story_id",                                                                         :null => false
     t.integer  "user_id",                                                                          :null => false
     t.integer  "parent_comment_id"
     t.integer  "thread_id"
     t.text     "comment",                                                                          :null => false
-    t.integer  "upvotes",                                                         :default => 0,   :null => false
-    t.integer  "downvotes",                                                       :default => 0,   :null => false
-    t.decimal  "confidence",                      :precision => 20, :scale => 19, :default => 0.0, :null => false
+    t.integer  "upvotes",                                                          :default => 0,  :null => false
+    t.integer  "downvotes",                                                        :default => 0,  :null => false
+    t.decimal  "confidence",                       :precision => 20, :scale => 17
+    t.text     "markeddown_comment"
   end
 
   add_index "comments", ["confidence"], :name => "confidence_idx"
@@ -65,15 +66,16 @@ ActiveRecord::Schema.define(:version => 20120704025956) do
   create_table "stories", :force => true do |t|
     t.datetime "created_at"
     t.integer  "user_id"
-    t.string   "url",          :limit => 250,                                 :default => ""
-    t.string   "title",        :limit => 150,                                 :default => "",  :null => false
+    t.string   "url",                    :limit => 250,                                 :default => ""
+    t.string   "title",                  :limit => 150,                                 :default => "", :null => false
     t.text     "description"
-    t.string   "short_id",     :limit => 6,                                   :default => "",  :null => false
-    t.integer  "is_expired",   :limit => 1,                                   :default => 0,   :null => false
-    t.integer  "upvotes",                                                     :default => 0,   :null => false
-    t.integer  "downvotes",                                                   :default => 0,   :null => false
-    t.integer  "is_moderated", :limit => 1,                                   :default => 0,   :null => false
-    t.decimal  "hotness",                     :precision => 20, :scale => 10, :default => 0.0, :null => false
+    t.string   "short_id",               :limit => 6,                                   :default => "", :null => false
+    t.integer  "is_expired",             :limit => 1,                                   :default => 0,  :null => false
+    t.integer  "upvotes",                                                               :default => 0,  :null => false
+    t.integer  "downvotes",                                                             :default => 0,  :null => false
+    t.integer  "is_moderated",           :limit => 1,                                   :default => 0,  :null => false
+    t.decimal  "hotness",                               :precision => 20, :scale => 10
+    t.text     "markeddown_description"
   end
 
   add_index "stories", ["hotness"], :name => "hotness_idx"

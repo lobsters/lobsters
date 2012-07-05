@@ -156,9 +156,14 @@ class Story < ActiveRecord::Base
     return -(order + (sign * (seconds.to_f / 45000))).round(7)
   end
 
-  def linkified_text
+  def generated_markeddown_description
     RDiscount.new(self.description.to_s, :smart, :autolink, :safelink,
       :filter_html).to_html
+  end
+
+  def description=(desc)
+    self[:description] = desc.to_s.strip
+    self.markeddown_description = self.generated_markeddown_description
   end
 
   def tags_a

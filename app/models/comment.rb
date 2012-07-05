@@ -116,9 +116,14 @@ class Comment < ActiveRecord::Base
     self.upvotes - self.downvotes
   end
 
-  def linkified_comment
+  def generated_markeddown_comment
     RDiscount.new(self.comment, :smart, :autolink, :safelink,
       :filter_html).to_html
+  end
+    
+  def comment=(com)
+    self[:comment] = com.to_s.strip
+    self.markeddown_comment = self.generated_markeddown_comment
   end
 
   def plaintext_comment
@@ -143,7 +148,8 @@ class Comment < ActiveRecord::Base
       cs = [ "story_id = ?", story_id ]
     end
 
-    Comment.find(:all, :conditions => cs, :order => "confidence").each do |c|
+    Comment.find(:all, :conditions => cs, :order => "confidence",
+    :include => :user).each do |c|
       (parents[c.parent_comment_id.to_i] ||= []).push c
     end
 

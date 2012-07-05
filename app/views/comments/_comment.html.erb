@@ -59,7 +59,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% end %>
 		</div>
 		<div class="comment_text">
-			<%= raw comment.linkified_comment %>
+			<%= raw comment.markeddown_comment %>
 		</div>
 
     <div class="comment_reply"></div>

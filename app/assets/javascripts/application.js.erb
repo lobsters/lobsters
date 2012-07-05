@@ -145,8 +145,8 @@ var _Lobsters = Class.extend({
 	},
 
 	previewComment: function(form) {
-		$(form).parent().load($(form).attr("action").replace(/^\/comments/,
-			"/comments/preview"), $(form).serializeArray());
+		$(form).parent().load($(form).attr("action").replace(/(post|update)/,
+      "preview"), $(form).serializeArray());
 	},
 
 	fetchURLTitle: function(button, url_field, title_field) {
@@ -222,6 +222,12 @@ $(document).ready(function() {
     box.find("form").append(el);
 
     return false;
+  });
+
+  $("a.comment_editor").live("click", function() {
+		var li = $(this).parents("li.comment").first();
+    li.load("/comments/" + $(li).attr("data-shortid") + "/edit",
+      { "edit": 1 });
   });
 
   $("#story_tags_a").select2({

@@ -49,10 +49,61 @@ class CommentsController < ApplicationController
         :comment => comment, :show_comment => comment }
     end
   end
-
-  def preview
+  
+  def preview_new
     params[:preview] = true
     return create
+  end
+
+  def edit
+    if !((comment = Comment.find_by_short_id(params[:comment_id])) &&
+    comment.is_editable_by_user?(@user))
+      return render :text => "can't find comment", :status => 400
+    end
+
+    render :partial => "commentbox", :layout => false,
+      :content_type => "text/html", :locals => { :story => comment.story,
+      :comment => comment }
+  end
+
+  def update
+    if !((comment = Comment.find_by_short_id(params[:comment_id])) &&
+    comment.is_editable_by_user?(@user))
+      return render :text => "can't find comment", :status => 400
+    end
+
+    comment.comment = params[:comment]
+
+    if comment.save
+      # TODO: render the comment again properly, it's indented wrong
+
+      render :partial => "postedreply", :layout => false,
+        :content_type => "text/html", :locals => { :story => comment.story,
+        :show_comment => comment }
+    else
+      comment.previewing = true
+      comment.current_vote = { :vote => 1 }
+
+      render :partial => "commentbox", :layout => false,
+        :content_type => "text/html", :locals => { :story => comment.story,
+        :comment => comment, :show_comment => comment }
+    end
+  end
+
+  def preview
+    if !((comment = Comment.find_by_short_id(params[:comment_id])) &&
+    comment.is_editable_by_user?(@user))
+      return render :text => "can't find comment", :status => 400
+    end
+
+    comment.comment = params[:comment]
+
+    comment.previewing = true
+    comment.current_vote = { :vote => 1 }
+
+    render :partial => "commentbox", :layout => false,
+      :content_type => "text/html", :locals => { :story => comment.story,
+      :comment => comment, :show_comment => comment }
   end
 
   def unvote

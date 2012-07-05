@@ -29,14 +29,18 @@ Lobsters::Application.routes.draw do
     post "undelete"
   end
   post "/stories/fetch_url_title" => "stories#fetch_url_title"
-  
+
   resources :comments do
     post "upvote"
     post "downvote"
     post "unvote"
+
+    post "edit"
+    post "preview"
+    post "update"
   end
-  post "/comments/:story_id" => "comments#create"
-  post "/comments/preview/:story_id" => "comments#preview"
+  post "/comments/post_to/:story_id" => "comments#create"
+  post "/comments/preview_to/:story_id" => "comments#preview_new"
 
   resources :messages do
     post "keep_as_new"

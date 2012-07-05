@@ -1,5 +1,6 @@
 <div class="comment_form_container">
-<%= form_tag("/comments/#{story.short_id}", { :id => "comment_form" }) do |f| %>
+<%= form_tag((comment.new_record? ? "/comments/post_to/#{story.short_id}" :
+"/comments/#{comment.short_id}/update"), { :id => "comment_form" }) do |f| %>
   <% if comment.parent_comment_short_id.present? %>
     <%= hidden_field_tag "parent_comment_short_id",
       comment.parent_comment_short_id %>
@@ -16,8 +17,8 @@
         <span class="fakea">Markdown formatting available</span>
       </div>
 
-      <%= button_tag "Post Comment", :class => "comment-post",
-        :type => "button" %>
+      <%= button_tag "#{comment.new_record?? "Post" : "Update"} Comment",
+        :class => "comment-post", :type => "button" %>
       &nbsp;
       <%= button_tag "Preview Comment", :class => "comment-preview",
         :type => "button" %>

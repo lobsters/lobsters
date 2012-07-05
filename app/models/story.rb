@@ -204,20 +204,36 @@ class Story < ActiveRecord::Base
 
   def is_editable_by_user?(user)
     if user && user.is_admin?
-      true
+      return true
     elsif user && user.id == self.user_id
-      (Time.now.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
+      if self.is_moderated?
+        return false
+      else
+        return (Time.now.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
+      end
     else
       return false
     end
   end
   
   def is_undeletable_by_user?(user)
-    if !user || user.id != self.user_id
+    if user && (user.is_admin? || user.id == self.user_id)
+      return true
+    else
+      return false
+    end
+  end
+
+  def can_be_seen_by_user?(user)
+    if is_gone? && !(user && (user.is_admin? || user.id == self.user_id))
       return false
     end
 
     true
+  end
+
+  def is_gone?
+    is_expired? || is_moderated?
   end
 
   def update_comment_count!

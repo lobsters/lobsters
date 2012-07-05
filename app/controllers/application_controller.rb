@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
   def find_stories_for_user_and_tag_and_newest(user, tag = nil, newest = false)
     stories = []
 
-    conds = [ "is_expired = 0 " ]
+    conds = [ "is_expired = 0 AND is_moderated = 0 " ]
 
     if user && !newest
       # exclude downvoted items

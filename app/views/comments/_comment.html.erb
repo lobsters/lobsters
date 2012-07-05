@@ -35,14 +35,16 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
       <% if !comment.previewing %>
         |
-
         <a href="<%= story.comments_url %>/comments/<%= comment.short_id
           %>">link</a>
-        |
-        <% if comment.is_editable_by_user?(@user) %>
-          <a class="comment_editor">edit</a>
-        <% else %>
-          <a class="comment_replier">reply</a>
+
+        <% if !story.is_gone? %>
+          |
+          <% if comment.is_editable_by_user?(@user) %>
+            <a class="comment_editor">edit</a>
+          <% else %>
+            <a class="comment_replier">reply</a>
+          <% end %>
         <% end %>
 
         <% if false && defined?(collapsable) && collapsable # XXX %>

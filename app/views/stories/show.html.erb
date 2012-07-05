@@ -4,14 +4,14 @@
 </ol>
 
 <div class="story_content">
-	<% if @story.url.blank? %>
+	<% if @story.description.present? %>
 		<div class="story_text">
 			<%= raw @story.linkified_text %>
 		</div>
 	<% end %>
 
   <p></p>
-  <% if @user && !@story.is_expired? %>
+  <% if @user && !@story.is_gone? %>
     <%= render :partial => "comments/commentbox",
       :locals => { :story => @story, :comment => @comment } %>
   <% end %>

@@ -37,19 +37,29 @@ class StoriesController < ApplicationController
   end
 
   def destroy
-    @story.is_expired = true
+    if !@story.is_editable_by_user?(@user)
+      flash[:error] = "You cannot edit that story."
+      return redirect_to "/"
+    end
+
+    if @user.is_admin? && @user.id != @story.user_id
+      @story.is_moderated = true
+    else
+      @story.is_expired = true
+    end
+
     @story.save(:validate => false)
 
     redirect_to @story.comments_url
   end
   
   def edit
-    @page_title = "Edit Story"
-
     if !@story.is_editable_by_user?(@user)
       flash[:error] = "You cannot edit that story."
       return redirect_to "/"
     end
+
+    @page_title = "Edit Story"
   end
 
   def fetch_url_title
@@ -81,7 +91,11 @@ class StoriesController < ApplicationController
   def show
     @story = Story.find_by_short_id!(params[:id])
 
-    @page_title = @story.title
+    if @story.can_be_seen_by_user?(@user)
+      @page_title = @story.title
+    else
+      @page_title = "[Story removed]"
+    end
 
     @comments = Comment.ordered_for_story_or_thread_for_user(@story.id, nil,
       @user ? @user.id : nil)
@@ -143,13 +157,25 @@ class StoriesController < ApplicationController
   end
 
   def undelete
+    if !(@story.is_editable_by_user?(@user) &&
+    @story.is_undeletable_by_user?(@user))
+      flash[:error] = "You cannot edit that story."
+      return redirect_to "/"
+    end
+
     @story.is_expired = false
+    @story.is_moderated = false
     @story.save(:validate => false)
 
     redirect_to @story.comments_url
   end
 
   def update
+    if !@story.is_editable_by_user?(@user)
+      flash[:error] = "You cannot edit that story."
+      return redirect_to "/"
+    end
+
     @story.is_expired = false
 
     if @story.update_attributes(params[:story].except(:url))
@@ -199,9 +225,10 @@ class StoriesController < ApplicationController
 private
   def find_story
     if @user.is_admin?
-      @story = Story.find_by_short_id(params[:id])
+      @story = Story.find_by_short_id(params[:story_id] || params[:id])
     else
-      @story = Story.find_by_user_id_and_short_id(@user.id, params[:id])
+      @story = Story.find_by_user_id_and_short_id(@user.id,
+        (params[:story_id] || params[:id]))
     end
 
     if !@story

@@ -4,7 +4,7 @@ class CommentsController < ApplicationController
   before_filter :require_logged_in_user, :only => [ :threads ]
 
   def create
-    if !(story = Story.find_by_short_id(params[:story_id]))
+    if !(story = Story.find_by_short_id(params[:story_id])) || story.is_gone?
       return render :text => "can't find story", :status => 400
     end
 

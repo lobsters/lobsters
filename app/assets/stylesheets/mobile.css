@@ -17,6 +17,7 @@
 
 	div#wrapper {
 		padding: 0;
+		padding-bottom: 2em;
 		margin: 0;
 		min-width: 100%;
 		max-width: 100%;

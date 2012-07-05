@@ -188,7 +188,7 @@ input:disabled, button:disabled {
 div#wrapper {
 	margin-left: auto;
 	margin-right: auto;
-	padding-bottom: 1em;
+	padding-bottom: 5em;
 	min-width: 800px;
 	max-width: 1000px;
 }

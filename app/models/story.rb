@@ -161,7 +161,7 @@ class Story < ActiveRecord::Base
   end
 
   def description=(desc)
-    self[:description] = desc.to_s.strip
+    self[:description] = desc.to_s.rstrip
     self.markeddown_description = self.generated_markeddown_description
   end
 

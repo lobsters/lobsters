@@ -121,7 +121,7 @@ class Comment < ActiveRecord::Base
   end
     
   def comment=(com)
-    self[:comment] = com.to_s.strip
+    self[:comment] = com.to_s.rstrip
     self.markeddown_comment = self.generated_markeddown_comment
   end
 

@@ -23,7 +23,7 @@ Lobsters::Application.routes.draw do
   match "/login/set_new_password" => "login#set_new_password",
     :as => "set_new_password"
 
-  match "/t/:tag" => "home#tagged"
+  match "/t/:tag" => "home#tagged", :as => "tag"
   match "/t/:tag/page/:page" => "home#tagged"
 
   resources :stories do

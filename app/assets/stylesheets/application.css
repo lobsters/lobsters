@@ -361,8 +361,8 @@ li.downvoted div.voters a.downvoter {
 ol.stories li.story,
 ol.comments li.comment {
 	clear: both;
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
 }
 ol.stories li:first-child {
 	padding-top: 0.5em;

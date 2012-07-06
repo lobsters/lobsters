@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  STORIES_PER_PAGE = 20
+  STORIES_PER_PAGE = 25
 
   def index
     @stories = find_stories_for_user_and_tag_and_newest(@user, nil, false)

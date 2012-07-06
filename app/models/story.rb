@@ -157,8 +157,7 @@ class Story < ActiveRecord::Base
   end
 
   def generated_markeddown_description
-    RDiscount.new(self.description.to_s, :smart, :autolink, :safelink,
-      :filter_html).to_html
+    Markdowner.to_html(self.description)
   end
 
   def description=(desc)

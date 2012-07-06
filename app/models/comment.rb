@@ -117,8 +117,7 @@ class Comment < ActiveRecord::Base
   end
 
   def generated_markeddown_comment
-    RDiscount.new(self.comment, :smart, :autolink, :safelink,
-      :filter_html).to_html
+    Markdowner.to_html(self.comment)
   end
     
   def comment=(com)

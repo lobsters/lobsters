@@ -62,8 +62,7 @@ class User < ActiveRecord::Base
   end
 
   def linkified_about
-    RDiscount.new(self.about.to_s, :smart, :autolink, :safelink,
-      :filter_html).to_html
+    Markdowner.to_html(self.about)
   end
 
   def recent_threads(amount)

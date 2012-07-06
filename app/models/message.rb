@@ -78,8 +78,7 @@ class Message < ActiveRecord::Base
   end
   
   def linkified_body
-    RDiscount.new(self.body.to_s, :smart, :autolink, :safelink,
-      :filter_html).to_html
+    Markdowner.to_html(self.body)
   end
 
   def plaintext_body

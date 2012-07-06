@@ -97,6 +97,8 @@ class StoriesController < ApplicationController
       @page_title = "[Story removed]"
     end
 
+    @short_url = @story.short_id_url
+
     @comments = Comment.ordered_for_story_or_thread_for_user(@story.id, nil,
       @user ? @user.id : nil)
     @comment = Comment.new

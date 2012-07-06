@@ -442,6 +442,17 @@ div.story_content {
 	margin-right: 40px;
 }
 
+div.morelink {
+	margin-top: 1.5em;
+	margin-left: 40px;
+	font-size: 10pt;
+}
+div.morelink a {
+	color: #666;
+	font-weight: bold;
+	text-decoration: none;
+}
+
 div.story_text {
 	font-size: 10pt;
 	margin-bottom: 1.5em;

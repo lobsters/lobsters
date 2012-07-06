@@ -2,3 +2,19 @@
 	<%= render :partial => "stories/listdetail", :collection => @stories,
     :as => :story %>
 </ol>
+
+<div class="morelink">
+  <% if @page && @page > 1 %>
+    <a href="<%= @tag ? "/t/#{@tag.tag}" : (@newest ? "/newest" : "")
+      %><%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt; Page
+      <%= @page - 1 %></a>
+  <% end %>
+
+  <% if @show_more %>
+    <% if @page && @page > 1 %>
+      |
+    <% end %>
+    <a href="<%= @tag ? "/t/#{@tag.tag}" : (@newest ? "/newest" : "")
+      %>/page/<%= @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
+  </div>
+<% end %>

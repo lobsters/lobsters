@@ -2,7 +2,10 @@ Lobsters::Application.routes.draw do
   root :to => "home#index",
     :protocol => (Rails.env == "production" ? "https://" : "http://")
 
+  get "/page/:page" => "home#index"
+
   get "/newest(.format)" => "home#newest"
+  get "/newest/page/:page" => "home#newest"
 
   get "/threads" => "comments#threads"
 
@@ -20,7 +23,8 @@ Lobsters::Application.routes.draw do
   match "/login/set_new_password" => "login#set_new_password",
     :as => "set_new_password"
 
-  match "/t/:tag" => "home#tagged", :as => "tag"
+  match "/t/:tag" => "home#tagged"
+  match "/t/:tag/page/:page" => "home#tagged"
 
   resources :stories do
     post "upvote"

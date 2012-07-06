@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120705145520) do
+ActiveRecord::Schema.define(:version => 20120706221602) do
 
   create_table "comments", :force => true do |t|
     t.datetime "created_at",                                                                       :null => false
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(:version => 20120705145520) do
   end
 
   add_index "stories", ["hotness"], :name => "hotness_idx"
+  add_index "stories", ["is_expired", "is_moderated"], :name => "is_idxes"
   add_index "stories", ["url"], :name => "url"
 
   create_table "tag_filters", :force => true do |t|
@@ -87,6 +88,8 @@ ActiveRecord::Schema.define(:version => 20120705145520) do
     t.integer  "user_id"
     t.integer  "tag_id"
   end
+
+  add_index "tag_filters", ["user_id", "tag_id"], :name => "user_tag_idx"
 
   create_table "taggings", :force => true do |t|
     t.integer "story_id", :null => false

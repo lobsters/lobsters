@@ -52,6 +52,8 @@ Lobsters::Application.routes.draw do
 
   get "/s/:id/:title/comments/:comment_short_id" => "stories#show_comment"
   get "/s/:id/(:title)" => "stories#show"
+
+  get "/u" => "users#tree"
   get "/u/:id" => "users#show"
 
   get "/rss" => "home#index", :format => "rss"

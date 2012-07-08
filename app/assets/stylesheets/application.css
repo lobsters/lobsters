@@ -584,6 +584,21 @@ div.comment_form_container, div.comment_reply {
 	max-width: 700px;
 }
 
+ul.user_tree {
+	color: #aaa;
+	margin: 0;
+	list-style: none;
+	padding-left: 0;
+	line-height: 1.5em;
+}
+ul.user_tree li {
+	margin-left: 0.5em;
+	padding-left: 1em;
+}
+ul.user_tree ul.user_tree li {
+	border-left: 1px solid #aaa;
+}
+
 /* data tables */
 
 table.data caption {

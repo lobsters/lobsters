@@ -14,7 +14,7 @@ html {
 
 body, textarea, input, button {
 	font-family: "helvetica neue", arial, sans-serif;
-	font-size: 10pt;
+	font-size: 9.5pt;
 	color: #333;
 }
 
@@ -208,7 +208,7 @@ div#inside {
 	font-weight: bold;
 	padding: 5px 42px 5px 10px;
 	margin-top: 1em;
-	margin-bottom: 0.75em;
+	margin-bottom: 0.5em;
 }
 
 #headerleft {
@@ -313,15 +313,15 @@ ol.comments.preview {
 
 div.voters {
 	float: left;
-	margin-top: -5px;
+	margin-top: -4px;
 	width: 40px;
 }
 
 div.voters div.score {
 	color: #aaa;
 	font-size: 9pt;
-	margin-top: 1px;
-	margin-bottom: -2px;
+	margin-top: 0px;
+	margin-bottom: -3px;
 	text-align: center;
 }
 
@@ -445,10 +445,13 @@ div.story_content {
 	margin-right: 40px;
 }
 
+div.story_content {
+	margin-bottom: 3em;
+}
+
 div.morelink {
 	margin-top: 1.5em;
 	margin-left: 40px;
-	font-size: 10pt;
 }
 div.morelink a {
 	color: #666;
@@ -457,7 +460,6 @@ div.morelink a {
 }
 
 div.story_text {
-	font-size: 10pt;
 	margin-bottom: 1.5em;
 	max-width: 700px;
 }
@@ -674,7 +676,7 @@ table.data tr.void td, table.data tr.void td a {
 	font-size: 11pt;
 }
 .box .sublegend {
-	font-size: 10pt;
+	font-size: 9.5pt;
 	font-weight: normal;
 	font-style: italic;
 	color: gray;

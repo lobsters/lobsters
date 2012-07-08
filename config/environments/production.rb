@@ -14,8 +14,8 @@ Lobsters::Application.configure do
   # Compress JavaScripts and CSS
   config.assets.compress = true
 
-  # Don't fallback to assets pipeline if a precompiled asset is missed
-  config.assets.compile = true
+  # fallback to assets pipeline if a precompiled asset is missed
+  config.assets.compile = false
 
   # Generate digests for assets URLs
   config.assets.digest = true
@@ -25,7 +25,7 @@ Lobsters::Application.configure do
 
   # Specifies the header that your server uses for sending files
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
-  # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
+  config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true

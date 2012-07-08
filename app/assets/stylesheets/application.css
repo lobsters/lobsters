@@ -584,19 +584,33 @@ div.comment_form_container, div.comment_reply {
 	max-width: 700px;
 }
 
-ul.user_tree {
-	color: #aaa;
+ul.root {
+	list-style-type: none;
 	margin: 0;
-	list-style: none;
-	padding-left: 0;
-	line-height: 1.5em;
+	padding: 0 2px;
+}
+ul.user_tree, ul.user_tree ul {
+	list-style-type: none;
+	/* vline */
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAKAQMAAABPHKYJAAAAA1BMVEWIiIhYZW6zAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH1ggGExMZBky19AAAAAtJREFUCNdjYMAEAAAUAAHlhrBKAAAAAElFTkSuQmCC) repeat-y;
+	margin: 0;
+	padding: 0;
+}
+ul.root ul, ul.user_tree ul {
+	margin-left: 10px;
 }
 ul.user_tree li {
-	margin-left: 0.5em;
-	padding-left: 1em;
+	margin: 0;
+	padding: 0 12px;
+	line-height: 1.5em;
+	/* node */
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAUAQMAAACK1e4oAAAABlBMVEUAAwCIiIgd2JB2AAAAAXRSTlMAQObYZgAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9YIBhQIJYVaFGwAAAARSURBVAjXY2hgQIf/GTDFGgDSkwqATqpCHAAAAABJRU5ErkJggg==) no-repeat;
+	color: #888;
 }
-ul.user_tree ul.user_tree li {
-	border-left: 1px solid #aaa;
+
+ul.user_tree li:last-child {
+	/* lastnode */
+	background: white url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAUAQMAAACK1e4oAAAABlBMVEUAAwCIiIgd2JB2AAAAAXRSTlMAQObYZgAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9YIBhQIIhs+gc8AAAAQSURBVAjXY2hgQIf/GbAAAKCTBYBUjWvCAAAAAElFTkSuQmCC) no-repeat;
 }
 
 /* data tables */

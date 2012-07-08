@@ -1,14 +1,16 @@
 <div class="box wide">
-  <strong>User Tree</strong>
+  <strong>Users</strong>
   <p>
   <% prev_level = 0 %>
   <% @tree.each do |u| %>
     <% if u[:level] > prev_level %>
-      <ul class="user_tree">
+      <ul class="<%= u[:level] == 1 ? "root" : "user_tree" %>">
     <% elsif u[:level] < prev_level %>
       <% (prev_level - u[:level]).times do %>
         </ul>
       <% end %>
+    <% else %>
+      </li>
     <% end %>
 
     <li><a href="/u/<%= u[:username] %>"><%= u[:username] %></a>

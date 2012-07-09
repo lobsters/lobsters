@@ -473,6 +473,7 @@ div.story_text p {
 
 div.comment_text {
 	max-width: 700px;
+	line-height: 1.35em;
 }
 
 div.comment_text blockquote,

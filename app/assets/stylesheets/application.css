@@ -369,6 +369,11 @@ ol.comments li.comment {
 	padding-top: 0.4em;
 	padding-bottom: 0.4em;
 }
+ol.comments li.comment {
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+
 ol.stories li:first-child {
 	padding-top: 0.5em;
 }
@@ -425,9 +430,6 @@ li .byline {
 }
 ol.stories li .byline {
 	margin-top: 1px;
-}
-ol.comments li .byline {
-	margin-top: -2px;
 }
 li .byline a {
 	color: #888;
@@ -491,6 +493,9 @@ div.comment_text ol li {
 
 div.comment_text p {
 	margin: 0.5em 0;
+}
+div.comment_text p:first-child {
+	margin-top: 0.3em;
 }
 div.comment_actions a {
 	color: #888;

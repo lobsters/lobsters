@@ -31,6 +31,15 @@ class Comment < ActiveRecord::Base
       errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
   end
 
+  def self.regenerate_markdown
+    Comment.all.each do |c|
+      c.markeddown_comment = c.generated_markeddown_comment
+      Comment.record_timestamps = false
+      c.save(:validate => false)
+    end
+    nil
+  end
+
   def assign_short_id_and_upvote
     10.times do |try|
       if try == 10

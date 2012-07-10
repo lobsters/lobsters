@@ -568,6 +568,9 @@ div.markdown_help_label {
 	float: right;
 	font-size: 9pt;
 	line-height: 2em;
+	color: #aaa;
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 

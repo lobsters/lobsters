@@ -53,6 +53,27 @@ class HomeController < ApplicationController
 
 private
   def find_stories_for_user_and_tag_and_newest(user, tag = nil, newest = false)
+    @page = 1
+    if params[:page].to_i > 0
+      @page = params[:page].to_i
+    end
+
+    # guest views have caching, but don't bother for logged-in users
+    if user
+      stories, @show_more = _find_stories_for_user_and_tag_and_newest(user,
+        tag, newest)
+    else
+      stories, @show_more = Rails.cache.fetch("stories tag:" <<
+      "#{tag ? tag.tag : ""} new:#{newest} page:#{@page.to_i}",
+      :expires_in => 45) do
+        _find_stories_for_user_and_tag_and_newest(user, tag, newest)
+      end
+    end
+
+    stories
+  end
+
+  def _find_stories_for_user_and_tag_and_newest(user, tag = nil, newest = false)
     conds = [ "is_expired = 0 AND is_moderated = 0 " ]
 
     if user && !newest
@@ -72,11 +93,6 @@ private
       conds.push @user.id
     end
 
-    @page = 1
-    if params[:page].to_i > 0
-      @page = params[:page].to_i
-    end
-
     stories = Story.find(
       :all,
       :conditions => conds,
@@ -86,10 +102,10 @@ private
       :order => (newest ? "stories.created_at DESC" : "hotness")
     )
 
-    @show_more = false
+    show_more = false
 
     if stories.count > STORIES_PER_PAGE
-      @show_more = true
+      show_more = true
       stories.pop
     end
 
@@ -107,6 +123,19 @@ private
       end
     end
 
-    stories
+    # eager load comment counts
+    if stories.any?
+      comment_counts = {}
+      Keystore.find(:all, :conditions => stories.map{|s|
+      "`key` = 'story:#{s.id}:comment_count'" }.join(" OR ")).each do |ks|
+        comment_counts[ks.key[/\d+/].to_i] = ks.value
+      end
+
+      stories.each do |s|
+        s._comment_count = comment_counts[s.id].to_i
+      end
+    end
+
+    [ stories, show_more ]
   end
 end

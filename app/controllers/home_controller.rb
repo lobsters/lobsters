@@ -63,7 +63,8 @@ private
     end
 
     if tag
-      conds[0] << "AND taggings.tag_id = ?"
+      conds[0] << "AND stories.id IN (SELECT taggings.story_id FROM " <<
+        "taggings WHERE taggings.tag_id = ?)"
       conds.push tag.id
     elsif user
       conds[0] += " AND taggings.tag_id NOT IN (SELECT tag_id FROM " <<

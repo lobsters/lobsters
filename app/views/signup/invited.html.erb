@@ -19,7 +19,8 @@
     <p>
     <%= f.label :invitation, "Invited By:", :class => "required" %>
     <span class="d">
-      <%= @invitation.user.username %>
+      <a href="/u/<%= @invitation.user.username %>" target="_blank"><%=
+        @invitation.user.username %></a>
     </span>
     </p>
 

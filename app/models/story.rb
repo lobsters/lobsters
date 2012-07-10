@@ -10,13 +10,14 @@ class Story < ActiveRecord::Base
     :allow_blank => true
   validates_presence_of :user_id
 
-  attr_accessible :title, :description, :story_type, :tags_a
-
   # after this many minutes old, a story cannot be edited
   MAX_EDIT_MINS = 30
 
+  attr_accessor :_comment_count
   attr_accessor :vote, :story_type, :already_posted_story, :fetched_content
   attr_accessor :new_tags, :tags_to_add, :tags_to_delete
+
+  attr_accessible :title, :description, :story_type, :tags_a
 
   before_create :assign_short_id
   after_create :mark_submitter
@@ -103,7 +104,6 @@ class Story < ActiveRecord::Base
     Rails.application.routes.url_helpers.root_url + "s/#{self.short_id}"
   end
 
-  @_comment_count = nil
   def comment_count
     @_comment_count ||=
       Keystore.value_for("story:#{self.id}:comment_count").to_i

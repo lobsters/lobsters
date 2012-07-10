@@ -20,6 +20,8 @@ class Vote < ActiveRecord::Base
     "" => "Cancel",
   }
 
+  attr_accessible nil
+
   def self.votes_by_user_for_stories_hash(user, stories)
     votes = []
     Vote.where(:user_id => user, :story_id => stories,

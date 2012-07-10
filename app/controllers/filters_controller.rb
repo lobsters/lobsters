@@ -24,10 +24,10 @@ class FiltersController < ApplicationController
     end
 
     new_filters.each do |t|
-      TagFilter.new({
-        :user_id => @user.id,
-        :tag_id => Tag.find_by_tag(t).id,
-      }).save
+      tf = TagFilter.new
+      tf.user_id = @user.id
+      tf.tag_id = Tag.find_by_tag(t).id
+      tf.save
     end
 
     flash.now[:success] = "Your filters have been updated."

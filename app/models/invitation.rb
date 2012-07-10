@@ -1,6 +1,8 @@
 class Invitation < ActiveRecord::Base
   belongs_to :user
 
+  attr_accessible nil
+
   validate do
     if !email.to_s.match(/\A[^@]+@[^@]+\.[^@]+\z/)
       errors.add(:email, "is not valid")

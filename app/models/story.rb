@@ -153,7 +153,12 @@ class Story < ActiveRecord::Base
     end
 
     seconds = self.created_at.to_i - 398995200
-    return -(order + (sign * (seconds.to_f / 45000))).round(7)
+
+    # XXX: while we're slow, allow a window of 36 hours.  as the site grows,
+    # shrink this down to 12 or so.
+    window = 60 * 60 * 36
+
+    return -(order + (sign * (seconds.to_f / window))).round(7)
   end
 
   def generated_markeddown_description

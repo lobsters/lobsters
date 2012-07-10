@@ -29,8 +29,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
         <span class="reason"><%= comment.current_vote &&
           comment.current_vote[:vote] == -1 ?
-          "(#{Vote::COMMENT_REASONS[comment.current_vote[:reason]]})" : ""
-          %></span>
+          "(#{Vote::COMMENT_REASONS[comment.current_vote[:reason]].downcase})" :
+          "" %></span>
       <% end %>
 
       <% if !comment.previewing %>

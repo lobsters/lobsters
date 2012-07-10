@@ -45,12 +45,8 @@ class Vote < ActiveRecord::Base
 
   def self.vote_thusly_on_story_or_comment_for_user_because(vote, story_id,
   comment_id, user_id, reason, update_counters = true)
-    v = if comment_id
-      Vote.find_or_initialize_by_user_id_and_story_id_and_comment_id(user_id,
-        story_id, comment_id)
-    else
-      Vote.find_or_initialize_by_user_id_and_story_id(user_id, story_id)
-    end
+    v = Vote.find_or_initialize_by_user_id_and_story_id_and_comment_id(user_id,
+      story_id, comment_id)
 
     if !v.new_record? && v.vote == vote
       return

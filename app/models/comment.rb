@@ -156,7 +156,7 @@ class Comment < ActiveRecord::Base
       cs = [ "story_id = ?", story_id ]
     end
 
-    Comment.find(:all, :conditions => cs, :order => "confidence",
+    Comment.find(:all, :conditions => cs, :order => "confidence DESC",
     :include => :user).each do |c|
       (parents[c.parent_comment_id.to_i] ||= []).push c
     end

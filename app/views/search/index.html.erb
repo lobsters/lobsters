@@ -43,6 +43,14 @@
         <label for="search_order_points" class="normal">Points</label>
     </div>
   <% end %>
+
+  <% if !@search.q.present? %>
+    <script>
+      $(document).ready(function() {
+        $("#q").focus();
+      });
+    </script>
+  <% end %>
 </div>
 
 <% if @search.results.any? %>

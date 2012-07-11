@@ -28,8 +28,7 @@ class Story < ActiveRecord::Base
       # URI.parse is not very lenient, so we can't use it
 
       if self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/)
-        if self.new_record? && (s = Story.find_by_url(self.url)) &&
-        (Time.now - s.created_at) < 30.days
+        if self.new_record? && (s = Story.find_recent_similar_by_url(self.url))
           errors.add(:url, "has already been submitted recently")
           self.already_posted_story = s
         end
@@ -44,6 +43,25 @@ class Story < ActiveRecord::Base
       errors.add(:base, "Must have at least one tag.  If no tags apply to " +
         "your content, it probably doesn't belong here.")
     end
+  end
+
+  def self.find_recent_similar_by_url(url)
+    urls = [ url ]
+    urls.push url.gsub(/^http:\/\//, "https://")
+    urls.push url.gsub(/^https:\/\//, "http://")
+    urls.push url.gsub(/^http:\/\//, "https://").gsub(/\/+\z/, "")
+    urls.push url.gsub(/^https:\/\//, "http://").gsub(/\/+\z/, "")
+    urls.push url.gsub(/^http:\/\//, "https://") << "/"
+    urls.push url.gsub(/^https:\/\//, "http://") << "/"
+
+    urls.uniq.each do |url|
+      if s = Story.find(:first, :conditions => [ "created_at >= ? AND url = ?",
+      (Time.now - 30.days), url ])
+        return s
+      end
+    end
+
+    false
   end
 
   def assign_short_id
@@ -192,6 +210,19 @@ class Story < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def url=(u)
+    # strip out stupid google analytics parameters
+    if u && (m = u.match(/\A([^\?]+)\?(.+)\z/))
+      params = m[2].split("&")
+      params.reject!{|p|
+        p.match(/^utm_(source|medium|campaign|term|content)=/) }
+
+      u = m[1] << (params.any?? "?" << params.join("&") : "")
+    end
+
+    self[:url] = u
   end
 
   def title=(t)

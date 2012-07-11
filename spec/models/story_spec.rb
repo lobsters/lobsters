@@ -34,23 +34,52 @@ describe Story do
   end
 
   it "checks for invalid urls" do
-    expect { Story.make!(:title => "test", :url => "http://gooses.com/")
-      }.to_not raise_error
+    expect { Story.make!(:url => "http://gooses.com/") }.to_not raise_error
 
-    expect { Story.make!(:title => "test", url => "ftp://gooses/")
-      }.to raise_error
+    expect { Story.make!(:url => "ftp://gooses/") }.to raise_error
   end
 
-  it "checks for a previously posted story with same url" do
-    Story.count.should == 0
+  it "removes crap from urls" do
+    Story.make!(:url => "http://www.example.com/").
+      url.should == "http://www.example.com/"
+    Story.delete_all
 
-    Story.make!(:title => "flim flam", :url => "http://example.com/")
+    Story.make!(:url => "http://www.example.com/?utm_campaign=Spam").
+      url.should == "http://www.example.com/"
+    Story.delete_all
+    
+    Story.make!(:url => "http://www.example.com/?utm_campaign=Spam&hello=hi").
+      url.should == "http://www.example.com/?hello=hi"
+    Story.delete_all
+  end
+
+  it "finds similar urls" do
+    s = Story.make!(:url => "https://example.com/something")
     Story.count.should == 1
 
-    expect { Story.make!(:title => "flim flam 2",
-      :url => "http://example.com/") }.to raise_error
-
+    new_s = Story.make(:url => "http://example.com/something")
+    new_s.save.should == false
+    new_s.already_posted_story.should == s
+    
+    new_s = Story.make(:url => "http://example.com/something/")
+    new_s.save.should == false
+    new_s.already_posted_story.should == s
+    
+    new_s = Story.make(:url => "http://example.com/something/")
+    new_s.save.should == false
+    new_s.already_posted_story.should == s
+    
     Story.count.should == 1
+  end
+
+  it "ignores similar urls from long ago" do
+    new_s = Story.make(:created_at => 31.days.ago,
+      :url => "http://example.com/something")
+    new_s.save.should == true
+    Story.count.should == 1
+
+    new_s = Story.make(:url => "http://example.com/something")
+    new_s.save.should == true
   end
 
   it "parses domain properly" do

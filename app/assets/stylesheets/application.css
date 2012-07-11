@@ -575,7 +575,7 @@ div.markdown_help_label {
 
 
 div#story_box input#story_url {
-	width: 506px;
+	width: 508px;
 }
 div#story_box input#story_title {
 	width: 600px;
@@ -584,6 +584,7 @@ div#story_box #story_tags_a {
 	width: 624px;
 }
 div#story_box textarea {
+	line-height: 1.3em;
 	width: 600px;
 }
 div#story_box div.markdown_help_toggler {

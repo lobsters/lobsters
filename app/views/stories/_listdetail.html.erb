@@ -28,7 +28,8 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
 		</span>
     <% if story.can_be_seen_by_user?(@user) %>
       <span class="tags">
-        <% story.taggings.each do |tagging| %>
+        <% story.taggings.sort_by{|t| t.tag.tag }.sort_by{|t|
+        t.tag.tag == "pdf" ? -1 : 0 }.each do |tagging| %>
           <a href="<%= tag_url(tagging.tag.tag) %>" class="tag tag_<%=
             tagging.tag.tag %>"><%= tagging.tag.tag %></a>
         <% end %>

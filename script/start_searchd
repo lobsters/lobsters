@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /d/rails/lobsters
+sudo -u lobsters env RAILS_ENV=production bundle19 exec rake19 thinking_sphinx:start

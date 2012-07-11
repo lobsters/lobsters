@@ -5,8 +5,8 @@
 
 <div class="morelink">
   <% if @page && @page > 1 %>
-    <a href="<%= @tag ? "/t/#{@tag.tag}" : (@newest ? "/newest" : "")
-      %><%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt; Page
+    <a href="<%= @tag ? "/t/#{@tag.tag}" : (@newest ? "/newest" : "/")
+      %><%= @page == 2 ? "" : "page/#{@page - 1}" %>">&lt;&lt; Page
       <%= @page - 1 %></a>
   <% end %>
 

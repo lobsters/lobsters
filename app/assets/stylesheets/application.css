@@ -24,7 +24,7 @@ a {
 }
 
 a:visited {
-	color: #5980cc;
+	color: #6880CB; 
 }
 
 h1 {
@@ -55,6 +55,11 @@ a.tag {
     border-radius: 10px;
 	color: #555;
 	vertical-align: text-top;
+}
+
+a.tag_pdf {
+	background-color: #F5D1FA;
+	border-color: #A26DC8;
 }
 
 span.fakea {

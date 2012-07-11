@@ -131,7 +131,7 @@ var _Lobsters = Class.extend({
 
     if (action == "upvote" || action == "unvote")
       li.find(".reason").html("");
-    else if (action == "downvote")
+    else if (action == "downvote" && thingType == "comment")
       li.find(".reason").html("(" +
         Lobsters.commentDownvoteReasons[reason].toLowerCase() + ")");
 

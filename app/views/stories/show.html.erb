@@ -11,28 +11,30 @@
 	<% end %>
 
   <p></p>
-  <% if @user && !@story.is_gone? %>
+  <% if @user && !@story.is_gone? && !@story.previewing %>
     <%= render :partial => "comments/commentbox",
       :locals => { :story => @story, :comment => @comment } %>
   <% end %>
 </div>
 
-<% indent_level = -1 %>
-<% @comments.each_with_index do |comment,x| %>
-  <% if comment.indent_level > indent_level %>
-    <ol class="comments comments<%= comment.indent_level %>">
-  <% elsif comment.indent_level < indent_level %>
-    <% (indent_level - comment.indent_level).times do %>
-      </ol>
+<% if @comments %>
+  <% indent_level = -1 %>
+  <% @comments.each_with_index do |comment,x| %>
+    <% if comment.indent_level > indent_level %>
+      <ol class="comments comments<%= comment.indent_level %>">
+    <% elsif comment.indent_level < indent_level %>
+      <% (indent_level - comment.indent_level).times do %>
+        </ol>
+      <% end %>
     <% end %>
+
+    <%= render :partial => "comments/comment", :locals => { :story => @story,
+      :comment => comment, :collapsable => (@comments[x + 1].
+      try(:parent_comment_id).to_i == comment.id) } %>
+
+    <% indent_level = comment.indent_level %>
   <% end %>
-
-	<%= render :partial => "comments/comment", :locals => { :story => @story,
-    :comment => comment, :collapsable => (@comments[x + 1].
-    try(:parent_comment_id).to_i == comment.id) } %>
-
-  <% indent_level = comment.indent_level %>
-<% end %>
-<% indent_level.times do %>
-  </ol>
+  <% indent_level.times do %>
+    </ol>
+  <% end %>
 <% end %>

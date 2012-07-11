@@ -14,7 +14,7 @@ class Story < ActiveRecord::Base
   MAX_EDIT_MINS = 30
 
   attr_accessor :_comment_count
-  attr_accessor :vote, :already_posted_story, :fetched_content
+  attr_accessor :vote, :already_posted_story, :fetched_content, :previewing
   attr_accessor :new_tags, :tags_to_add, :tags_to_delete
 
   attr_accessible :title, :description, :tags_a
@@ -206,8 +206,9 @@ class Story < ActiveRecord::Base
     self.markeddown_description = self.generated_markeddown_description
   end
 
+  @_tags_a = []
   def tags_a
-    tags.map{|t| t.tag }
+    @_tags_a ||= tags.map{|t| t.tag }
   end
 
   def tags_a=(new_tags)
@@ -228,6 +229,8 @@ class Story < ActiveRecord::Base
         end
       end
     end
+
+    @_tags_a = new_tags
   end
 
   def url=(u)

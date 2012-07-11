@@ -35,6 +35,7 @@ Lobsters::Application.routes.draw do
     post "undelete"
   end
   post "/stories/fetch_url_title" => "stories#fetch_url_title"
+  post "/stories/preview" => "stories#preview"
 
   resources :comments do
     post "upvote"

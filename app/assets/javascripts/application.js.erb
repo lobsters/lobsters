@@ -148,6 +148,10 @@ var _Lobsters = Class.extend({
 		$(form).parent().load($(form).attr("action").replace(/(post|update)/,
       "preview"), $(form).serializeArray());
 	},
+	
+  previewStory: function(form) {
+		$("#inside").load("/stories/preview", $(form).serializeArray());
+	},
 
 	fetchURLTitle: function(button, url_field, title_field) {
 		if (url_field.val() == "")

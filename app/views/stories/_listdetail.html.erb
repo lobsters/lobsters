@@ -39,29 +39,36 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
       </span>
     <% end %>
 		<div class="byline">
-			by <a href="/u/<%= story.user.username %>"><%= story.user.username %></a>
-			<%= time_ago_in_words(story.created_at).gsub(/^about /, "") %> ago
+      <% if story.previewing %>
+        by <a><%= story.user.username %></a>
+        just now
+      <% else %>
+        by <a href="/u/<%= story.user.username %>"><%= story.user.username
+          %></a> <%= time_ago_in_words(story.created_at).gsub(/^about /, "")
+          %> ago
 
-			<% if story.is_editable_by_user?(@user) %>
-				|
-				<a href="<%= edit_story_url(story.short_id) %>">edit</a>
+        <% if story.is_editable_by_user?(@user) %>
+          |
+          <a href="<%= edit_story_url(story.short_id) %>">edit</a>
 
-        <% if story.is_gone? && story.is_undeletable_by_user?(@user) %>
-          |
-          <%= link_to "undelete", story_undelete_url(story.short_id),
-            :method => :post,
-            :confirm => "Are you sure you want to undelete this story?" %>
-        <% elsif !story.is_gone? %>
-          |
-          <%= link_to "delete", story_url(story.short_id), :method => :delete,
-            :confirm => "Are you sure you want to delete this story?" %>
+          <% if story.is_gone? && story.is_undeletable_by_user?(@user) %>
+            |
+            <%= link_to "undelete", story_undelete_url(story.short_id),
+              :method => :post, :data => {
+              :confirm => "Are you sure you want to undelete this story?" } %>
+          <% elsif !story.is_gone? %>
+            |
+            <%= link_to "delete", story_url(story.short_id),
+              :method => :delete, :data => {
+              :confirm => "Are you sure you want to delete this story?" } %>
+          <% end %>
         <% end %>
-			<% end %>
-      <% if !story.is_gone? %>
-        |
-        <a href="<%= story.comments_url %>"><%=
-          (c = story.comment_count) == 0 ? "discuss" :
-          "#{c} comment#{c == 1 ? "" : "s"}" %></a>
+        <% if !story.is_gone? %>
+          |
+          <a href="<%= story.comments_url %>"><%=
+            (c = story.comment_count) == 0 ? "discuss" :
+            "#{c} comment#{c == 1 ? "" : "s"}" %></a>
+        <% end %>
       <% end %>
 		</div>
 	</div>

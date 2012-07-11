@@ -612,6 +612,11 @@ div.markdown_help_label {
 }
 
 
+div#story_preview {
+	margin-top: 2em;
+	margin-left: 3.5em;
+}
+
 div#story_box input#story_url {
 	width: 508px;
 }

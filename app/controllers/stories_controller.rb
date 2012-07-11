@@ -1,6 +1,6 @@
 class StoriesController < ApplicationController
   before_filter :require_logged_in_user_or_400,
-    :only => [ :upvote, :downvote, :unvote ]
+    :only => [ :upvote, :downvote, :unvote, :preview ]
 
   before_filter :require_logged_in_user, :only => [ :delete, :create, :edit,
     :fetch_url_title, :new ]
@@ -87,6 +87,21 @@ class StoriesController < ApplicationController
         @story.title = params[:title]
       end
     end
+  end
+
+  def preview
+    # we don't allow the url to be changed, so we have to set it manually
+    @story = Story.new(params[:story].reject{|k,v| k == "url" })
+    @story.url = params[:story][:url]
+    @story.user_id = @user.id
+    @story.previewing = true
+
+    @story.vote = 1
+    @story.upvotes = 1
+
+    @story.valid?
+
+    return render :action => "new", :layout => false
   end
 
   def show

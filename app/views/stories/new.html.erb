@@ -1,32 +1,55 @@
 <div class="box" id="story_box">
-	<div class="legend">
-		Submit a Story
-	</div>
+  <div class="legend">
+    Submit a Story
+  </div>
 
-	<%= form_for @story do |f| %>
-		<%= render :partial => "stories/form", :locals => { :story => @story,
-      :f => f } %>
+  <div id="story_holder">
+    <%= form_for @story do |f| %>
+      <%= render :partial => "stories/form", :locals => { :story => @story,
+        :f => f } %>
 
-    <p></p>
+      <p></p>
 
-    <div class="box">
-      <div class="boxline markdown_help_toggler">
-        <div class="markdown_help_label">
-          Markdown formatting available
+      <div class="box">
+        <div class="boxline markdown_help_toggler">
+          <div class="markdown_help_label">
+            Markdown formatting available
+          </div>
+
+          <%= submit_tag "Submit" %>
+
+          &nbsp;
+          <button type="button" class="story-preview">Preview</button>
+
+          <div style="clear: both;"></div>
+
+          <%= render :partial => "global/markdownhelp" %>
         </div>
-
-        <%= submit_tag "Submit" %>
-
-        <div style="clear: both;"></div>
-
-        <%= render :partial => "global/markdownhelp" %>
       </div>
-    </div>
-	<% end %>
+    <% end %>
+  </div>
+</div>
+
+<div id="story_preview">
+  <% if @story.previewing && @story.valid? %>
+    <%= render :template => "stories/show" %>
+  <% end %>
 </div>
 
 <script>
   $(document).ready(function() {
-    $("#story_url").focus();
+    <% if @story.previewing %>
+      $("#story_tags_a").select2({
+        formatSelection: function(what) {
+          return what.id;
+        }
+      });
+    <% else %>
+      $("#story_url").focus();
+
+      $("button.story-preview").unbind().live("click", function() {
+        Lobsters.previewStory($(this).parents("form").first());
+      });
+    <% end %>
   });
 </script>

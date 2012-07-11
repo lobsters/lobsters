@@ -8,7 +8,8 @@ class StoriesController < ApplicationController
   before_filter :find_story, :only => [ :destroy, :edit, :undelete, :update ]
 
   def create
-    @page_title = "Submit a New Story"
+    @title = "Submit Story"
+    @cur_url = "/stories/new"
 
     # we don't allow the url to be changed, so we have to set it manually
     @story = Story.new(params[:story].reject{|k,v| k == "url" })
@@ -58,8 +59,8 @@ class StoriesController < ApplicationController
       flash[:error] = "You cannot edit that story."
       return redirect_to "/"
     end
-
-    @page_title = "Edit Story"
+    
+    @title = "Edit Story"
   end
 
   def fetch_url_title
@@ -74,10 +75,10 @@ class StoriesController < ApplicationController
   end
 
   def new
-    @page_title = "Submit a New Story"
+    @title = "Submit Story"
+    @cur_url = "/stories/new"
 
     @story = Story.new
-    @story.story_type = "link"
 
     if !params[:url].blank?
       @story.url = params[:url]

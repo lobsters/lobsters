@@ -9,7 +9,7 @@
     <link rev="canonical" rel="self alternate shorter shorturl shortlink"
       href="<%= @short_url %>" />
   <% end %>
-  <title><%= @page_title ? "#{@page_title} | Lobsters" : "Lobsters" %></title>
+  <title><%= @title.present? ? "#{@title} | Lobsters" : "Lobsters" %></title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>

@@ -144,6 +144,9 @@ class CommentsController < ApplicationController
   end
 
   def threads
+    @title = "Your Threads"
+    @cur_url = "/threads"
+
     @threads = @user.recent_threads(20).map{|r|
       cs = Comment.ordered_for_story_or_thread_for_user(nil, r, @user)
 

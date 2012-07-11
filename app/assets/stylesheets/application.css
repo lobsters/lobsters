@@ -260,20 +260,23 @@ div#inside {
 }
 
 .headerlinks a {
-	color: #666;
+	color: #777;
 	text-decoration: none;
 	padding-right: 0.75em;
 }
 
 #headerright {
 	float: right;
-	color: #888;
 	text-align: right;
 }
 
 #headerright .headerlinks a {
 	padding-right: 0;
 	padding-left: 0.75em;
+}
+
+#header a.cur_url {
+	color: #333;
 }
 
 

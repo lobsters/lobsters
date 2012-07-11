@@ -2,20 +2,24 @@
   <div id="headerleft">
     <a id="l_holder" class="boring" href="/"></a>
 
-    <% if @title %>
+    <% links = { "/" => "Home", "/newest" => "Newest Stories" } %>
+    <% if @user %>
+      <% links.merge!({ "/threads" => "Your Threads",
+        "/stories/new" => "Submit Story" }) %>
+    <% end %>
+    <% links.merge!({ "/search" => "Search" }) %>
+
+    <% if @cur_url.present? && !links.keys.include?(@cur_url) %>
       <span id="headertitle">
-        <a href="<%= @title_url %>"><%= @title %></a>
+        <a href="<%= @cur_url %>"><%= @title %></a>
       </span>
     <% end %>
 
     <span class="headerlinks">
-      <a href="/">Home</a>
-
-      <a href="/newest">Newest</a>
-      <% if @user %>
-        <a href="/threads">Your Threads</a>
+      <% links.each do |u,v| %>
+        <a href="<%= u %>" <%= u == @cur_url ? raw("class=\"cur_url\"") :
+          "" %>><%= v %></a>
       <% end %>
-      <a href="/stories/new">Submit Story</a>
     </span>
   </div>
 

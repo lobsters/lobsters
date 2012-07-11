@@ -38,8 +38,8 @@
 			<a href="/settings"><%= @user.username %> (<%= @user.karma %>)</a>
 
 			<%= link_to "Logout", { :controller => "login", :action => "logout" },
-				{ :confirm => "Are you sure you want to logout?",
-          "method" => "post" } %>
+				:data => { :confirm => "Are you sure you want to logout?" },
+        :method => "post" %>
 		<% else %>
 			<a href="/login">Login</a>
 		<% end %>

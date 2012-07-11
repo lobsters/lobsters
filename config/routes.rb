@@ -26,6 +26,8 @@ Lobsters::Application.routes.draw do
   match "/t/:tag" => "home#tagged", :as => "tag"
   match "/t/:tag/page/:page" => "home#tagged"
 
+  get "/search" => "search#index"
+
   resources :stories do
     post "upvote"
     post "downvote"

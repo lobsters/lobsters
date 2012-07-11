@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "3.2.2"
+gem "rails", "3.2.6"
 
 # Bundle edge Rails instead:
 # gem "rails", :git => "git://github.com/rails/rails.git"
@@ -26,6 +26,8 @@ gem "nokogiri"
 gem "htmlentities"
 
 gem "rdiscount"
+
+gem "thinking-sphinx", "2.0.12"
 
 group :test, :development do
   gem "rspec-rails", "~> 2.6"

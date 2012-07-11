@@ -14,14 +14,32 @@ class Story < ActiveRecord::Base
   MAX_EDIT_MINS = 30
 
   attr_accessor :_comment_count
-  attr_accessor :vote, :story_type, :already_posted_story, :fetched_content
+  attr_accessor :vote, :already_posted_story, :fetched_content
   attr_accessor :new_tags, :tags_to_add, :tags_to_delete
 
-  attr_accessible :title, :description, :story_type, :tags_a
+  attr_accessible :title, :description, :tags_a
 
   before_create :assign_short_id
   after_create :mark_submitter
   after_save :deal_with_tags
+  
+  define_index do
+    indexes url
+    indexes title
+    indexes description
+    indexes user.username, :as => :author
+    indexes tags(:tag), :as => :tags
+
+    has created_at, :sortable => true
+    has hotness, is_moderated, is_expired
+    has "(upvotes - downvotes)", :as => :score, :type => :integer,
+      :sortable => true
+
+    set_property :field_weights => {
+      :title => 10,
+      :tags => 5,
+    }
+  end
 
   validate do
     if self.url.present?

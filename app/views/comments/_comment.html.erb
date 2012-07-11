@@ -54,7 +54,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% end %>
 
       <% if defined?(show_story) && show_story %>
-        | on 
+        | on:
         <a href="<%= story.comments_url %>"><%= story.title %></a>
       <% end %>
 		</div>

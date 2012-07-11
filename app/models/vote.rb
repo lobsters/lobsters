@@ -23,7 +23,8 @@ class Vote < ActiveRecord::Base
   attr_accessible nil
 
   def self.votes_by_user_for_stories_hash(user, stories)
-    votes = []
+    votes = {}
+
     Vote.where(:user_id => user, :story_id => stories,
     :comment_id => nil).each do |v|
       votes[v.story_id] = v.vote
@@ -37,6 +38,48 @@ class Vote < ActiveRecord::Base
 
     Vote.find(:all, :conditions => [ "user_id = ? AND story_id = ? AND " +
     "comment_id IS NOT NULL", user_id, story_id ]).each do |v|
+      votes[v.comment_id] = { :vote => v.vote, :reason => v.reason }
+    end
+
+    votes
+  end
+  
+  def self.story_votes_by_user_for_story_ids_hash(user_id, story_ids)
+    if !story_ids.any?
+      return {}
+    end
+
+    votes = {}
+
+    cond = [ "user_id = ? AND comment_id IS NULL AND story_id IN (", user_id ]
+    story_ids.each_with_index do |s,x|
+      cond.push s
+      cond[0] += (x == 0 ? "" : ",") + "?"
+    end
+    cond[0] += ")"
+
+    Vote.find(:all, :conditions => cond).each do |v|
+      votes[v.story_id] = { :vote => v.vote, :reason => v.reason }
+    end
+
+    votes
+  end
+
+  def self.comment_votes_by_user_for_comment_ids_hash(user_id, comment_ids)
+    if !comment_ids.any?
+      return {}
+    end
+
+    votes = {}
+
+    cond = [ "user_id = ? AND comment_id IN (", user_id ]
+    comment_ids.each_with_index do |c,x|
+      cond.push c
+      cond[0] += (x == 0 ? "" : ",") + "?"
+    end
+    cond[0] += ")"
+
+    Vote.find(:all, :conditions => cond).each do |v|
       votes[v.comment_id] = { :vote => v.vote, :reason => v.reason }
     end
 

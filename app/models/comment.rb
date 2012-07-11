@@ -17,6 +17,16 @@ class Comment < ActiveRecord::Base
 
   MAX_EDIT_MINS = 45
 
+  define_index do
+    indexes comment
+    indexes user.username, :as => :author
+    
+    has "(upvotes - downvotes)", :as => :score, :type => :integer,
+      :sortable => true
+
+    has created_at
+  end
+
   validate do
     self.comment.to_s.strip == "" &&
       errors.add(:comment, "cannot be blank.")

@@ -297,7 +297,8 @@ div#footer a {
 /* stories */
 
 ol.stories,
-ol.comments {
+ol.comments,
+ol.search_results {
 	padding: 0;
 	list-style: none;
 	margin: 0;
@@ -319,6 +320,16 @@ ol.comments.comments1 {
 ol.comments.preview {
 	margin: 1em 0 0 -15px;
 	padding: 0;
+}
+
+ol.search_results {
+	margin-left: 20px;
+	margin-bottom: 0em;
+	padding-left: 6px;
+}
+
+ol.search_results li.story {
+	padding-bottom: 0.75em;
 }
 
 div.voters {
@@ -371,13 +382,13 @@ li.downvoted div.voters a.downvoter {
 	border-top-color: gray;
 }
 
-ol.stories li.story,
-ol.comments li.comment {
+li.story,
+li.comment {
 	clear: both;
 	padding-top: 0.4em;
 	padding-bottom: 0.4em;
 }
-ol.comments li.comment {
+li.comment {
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
 }
@@ -389,21 +400,21 @@ li div.details {
 	padding-top: 0.1em;
 }
 
-ol.comments li.negative {
+li.negative {
 	opacity: 0.7;
 	color: gray !important;
 }
-ol.comments li.negative_3 {
+li.negative_3 {
 	opacity: 0.4;
 }
-ol.comments li.negative_5 {
+li.negative_5 {
 	opacity: 0.3;
 }
-ol.comments li.negative_7 {
+li.negative_7 {
 	opacity: 0.2;
 }
 
-ol.comments li.highlighted {
+li.comment.highlighted {
 	background-color: #ffffbf;
 }
 
@@ -417,7 +428,7 @@ li .link a {
 	text-decoration: none;
 }
 
-ol.stories a.tag {
+li.story a.tag {
 	vertical-align: middle;
 }
 
@@ -436,7 +447,7 @@ li .byline {
 	color: #888;
 	font-size: 8.5pt;
 }
-ol.stories li .byline {
+li.story .byline {
 	margin-top: 1px;
 }
 li .byline a {
@@ -461,7 +472,8 @@ div.story_content {
 	margin-bottom: 3em;
 }
 
-div.morelink {
+div.morelink,
+div.page_link_buttons {
 	margin-top: 1.5em;
 	margin-left: 40px;
 }
@@ -470,6 +482,24 @@ div.morelink a {
 	font-weight: bold;
 	text-decoration: none;
 }
+div.page_link_buttons {
+	font-weight: bold;
+	margin-top: 2em;
+}
+div.page_link_buttons a {
+	color: #666;
+	border: 1px solid #d0d0d0;
+	background-color: #f3f3f3;
+	padding: 0.25em 0.5em;
+	font-weight: bold;
+	text-decoration: none;
+	margin-left: 0.5em;
+}
+div.page_link_buttons a.cur {
+	background-color: transparent;
+	border-color: transparent;
+}
+
 
 div.story_text {
 	margin-bottom: 1.5em;

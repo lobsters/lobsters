@@ -90,7 +90,7 @@ class Story < ActiveRecord::Base
         raise "too many hash collisions"
       end
 
-      self.short_id = Utils.random_str(6)
+      self.short_id = Utils.random_str(6).downcase
 
       if !Story.find_by_short_id(self.short_id)
         break

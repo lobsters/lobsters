@@ -57,8 +57,13 @@ class Search
 
     opts[:include] = [ :story, :user ]
 
+    # sphinx seems to interpret slashes as a regex(?) so escape them since
+    # nobody is probably using them, but don't just use Riddle.escape because
+    # it removes boolean suport
+    query = self.q.gsub(/\//, "\\/")
+
     # go go gadget search
-    @results = ThinkingSphinx.search @q, opts
+    @results = ThinkingSphinx.search query, opts
     @total_results = @results.total_entries
 
     # bind votes for both types

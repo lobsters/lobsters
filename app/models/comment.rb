@@ -120,6 +120,8 @@ class Comment < ActiveRecord::Base
 
     self.save(:validate => false)
     Comment.record_timestamps = true
+
+    self.story.update_comment_count!
   end
 
   def undelete_for_user(user)
@@ -130,6 +132,8 @@ class Comment < ActiveRecord::Base
 
     self.save(:validate => false)
     Comment.record_timestamps = true
+    
+    self.story.update_comment_count!
   end
 
   def give_upvote_or_downvote_and_recalculate_confidence!(upvote, downvote)

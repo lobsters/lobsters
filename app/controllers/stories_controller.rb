@@ -116,7 +116,7 @@ class StoriesController < ApplicationController
     @short_url = @story.short_id_url
 
     @comments = Comment.ordered_for_story_or_thread_for_user(@story.id, nil,
-      @user ? @user.id : nil)
+      @user ? @user : nil)
     @comment = Comment.new
 
     if @user
@@ -147,7 +147,7 @@ class StoriesController < ApplicationController
     end
 
     @comments = Comment.ordered_for_story_or_thread_for_user(@story.id,
-      @showing_comment.thread_id, @user ? @user.id : nil)
+      @showing_comment.thread_id, @user ? @user : nil)
 
     @comments.each do |c,x|
       if c.id == @showing_comment.id

@@ -66,6 +66,32 @@ class CommentsController < ApplicationController
       :comment => comment }
   end
 
+  def delete
+    if !((comment = Comment.find_by_short_id(params[:comment_id])) &&
+    comment.is_editable_by_user?(@user))
+      return render :text => "can't find comment", :status => 400
+    end
+
+    comment.delete_for_user(@user)
+
+    render :partial => "comment", :layout => false,
+      :content_type => "text/html", :locals => { :story => comment.story,
+      :comment => comment }
+  end
+
+  def undelete
+    if !((comment = Comment.find_by_short_id(params[:comment_id])) &&
+    comment.is_undeletable_by_user?(@user))
+      return render :text => "can't find comment", :status => 400
+    end
+
+    comment.undelete_for_user(@user)
+
+    render :partial => "comment", :layout => false,
+      :content_type => "text/html", :locals => { :story => comment.story,
+      :comment => comment }
+  end
+
   def update
     if !((comment = Comment.find_by_short_id(params[:comment_id])) &&
     comment.is_editable_by_user?(@user))

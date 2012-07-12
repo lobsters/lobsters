@@ -39,6 +39,8 @@ class Story < ActiveRecord::Base
       :title => 10,
       :tags => 5,
     }
+
+    where "is_moderated = 0 AND is_expired = 0"
   end
 
   validate do
@@ -278,7 +280,9 @@ class Story < ActiveRecord::Base
   end
   
   def is_undeletable_by_user?(user)
-    if user && (user.is_admin? || user.id == self.user_id)
+    if user && user.is_admin?
+      return true
+    elsif user && user.id == self.user_id && !self.is_moderated?
       return true
     else
       return false

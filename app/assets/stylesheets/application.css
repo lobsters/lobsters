@@ -68,6 +68,11 @@ span.fakea {
 	color: gray;
 }
 
+span.na {
+	color: gray;
+	font-style: italic;
+}
+
 div.shorten_first_p p:first-child {
 	margin-top: 0.5em;
 }

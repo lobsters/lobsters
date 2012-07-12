@@ -23,8 +23,11 @@ class Comment < ActiveRecord::Base
     
     has "(upvotes - downvotes)", :as => :score, :type => :integer,
       :sortable => true
-
+    
+    has is_moderated, is_deleted
     has created_at
+
+    where "is_moderated = 0 AND is_deleted = 0"
   end
 
   validate do
@@ -42,11 +45,15 @@ class Comment < ActiveRecord::Base
   end
 
   def self.regenerate_markdown
+    Comment.record_timestamps = false
+
     Comment.all.each do |c|
       c.markeddown_comment = c.generated_markeddown_comment
-      Comment.record_timestamps = false
       c.save(:validate => false)
     end
+
+    Comment.record_timestamps = true
+
     nil
   end
 
@@ -71,6 +78,10 @@ class Comment < ActiveRecord::Base
       self.id, self.user.id, nil, false)
 
     self.story.update_comment_count!
+  end
+  
+  def is_gone?
+    is_deleted? || is_moderated?
   end
 
   def mark_submitter
@@ -97,7 +108,30 @@ class Comment < ActiveRecord::Base
     rescue
     end
   end
-  
+
+  def delete_for_user(user)
+    Comment.record_timestamps = false
+
+    if user.is_admin? && user.id != self.user_id
+      self.is_moderated = true
+    else
+      self.is_deleted = true
+    end
+
+    self.save(:validate => false)
+    Comment.record_timestamps = true
+  end
+
+  def undelete_for_user(user)
+    Comment.record_timestamps = false
+
+    self.is_moderated = false
+    self.is_deleted = false
+
+    self.save(:validate => false)
+    Comment.record_timestamps = true
+  end
+
   def give_upvote_or_downvote_and_recalculate_confidence!(upvote, downvote)
     self.upvotes += upvote.to_i
     self.downvotes += downvote.to_i
@@ -157,7 +191,7 @@ class Comment < ActiveRecord::Base
     self.updated_at && (self.updated_at - self.created_at > 1.minute)
   end
 
-  def self.ordered_for_story_or_thread_for_user(story_id, thread_id, user_id)
+  def self.ordered_for_story_or_thread_for_user(story_id, thread_id, user)
     parents = {}
 
     if thread_id
@@ -187,17 +221,51 @@ class Comment < ActiveRecord::Base
     }
     recursor.call(nil, 0)
 
-    # TODO: handle deleted comments, show for user_id
+    # for deleted comments, if they have no children, they can be removed from
+    # the tree.  otherwise they have to stay and a "[deleted]" stub will be
+    # shown
+    new_ordered = []
+    ordered.each_with_index do |c,x|
+      if c.is_gone?
+        if ordered[x + 1] && (ordered[x + 1].indent_level > c.indent_level)
+          # we have child comments, so we must stay
+        elsif user && (user.is_admin? || c.user_id == user.id)
+          # admins and authors should be able to see their deleted comments
+        else
+          # drop this one
+          next
+        end
+      end
 
-    ordered
+      new_ordered.push c
+    end
+
+    new_ordered
   end
   
   def is_editable_by_user?(user)
-    if !user || user.id != self.user_id
+    if user && user.is_admin?
+      return true
+    elsif user && user.id == self.user_id
+      if self.is_moderated?
+        return false
+      else
+        return (Time.now.to_i - (self.updated_at ? self.updated_at.to_i :
+          self.created_at.to_i) < (60 * MAX_EDIT_MINS))
+      end
+    else
       return false
     end
-
-    (Time.now.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
+  end
+  
+  def is_undeletable_by_user?(user)
+    if user && user.is_admin?
+      return true
+    elsif user && user.id == self.user_id && !self.is_moderated?
+      return true
+    else
+      return false
+    end
   end
 
   def url

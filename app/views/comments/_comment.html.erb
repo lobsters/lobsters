@@ -6,13 +6,15 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 	<%= comment.score <= -3 ? "negative_3" : "" %>
 	<%= comment.score <= -5 ? "negative_5" : "" %>
 	<%= comment.score <= -7 ? "negative_7" : "" %>">
-	<div class="voters">
-    <a class="upvoter"></a>
-		<div class="score">
-			<%= comment.score %>
-		</div>
-    <a class="downvoter"></a>
-	</div>
+  <% if !comment.is_gone? %>
+    <div class="voters">
+      <a class="upvoter"></a>
+      <div class="score">
+        <%= comment.score %>
+      </div>
+      <a class="downvoter"></a>
+    </div>
+  <% end %>
 	<div class="details">
 		<div class="byline">
       <% if comment.previewing %>
@@ -38,13 +40,22 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <a href="<%= story.comments_url %>/comments/<%= comment.short_id
           %>">link</a>
 
-        <% if !story.is_gone? %>
+        <% if comment.is_editable_by_user?(@user) %>
           |
-          <% if comment.is_editable_by_user?(@user) %>
-            <a class="comment_editor">edit</a>
-          <% else %>
+          <a class="comment_editor">edit</a>
+        <% end %>
+
+        <% if comment.is_gone? && comment.is_undeletable_by_user?(@user) %>
+          |
+          <a class="comment_undeletor">undelete</a>
+        <% elsif !comment.is_gone? && comment.is_editable_by_user?(@user) %>
+          |
+          <a class="comment_deletor">delete</a>
+        <% end %>
+
+        <% if !story.is_gone? && !comment.is_gone? %>
+            |
             <a class="comment_replier">reply</a>
-          <% end %>
         <% end %>
 
         <% if false && defined?(collapsable) && collapsable # XXX %>
@@ -59,7 +70,16 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% end %>
 		</div>
 		<div class="comment_text">
-			<%= raw comment.markeddown_comment %>
+      <% if comment.is_gone? %>
+        <p>
+        <span class="na">
+        [Comment removed by <%= comment.is_deleted? ? "author" :
+          "moderator" %>]
+        </span>
+        </p>
+      <% else %>
+        <%= raw comment.markeddown_comment %>
+      <% end %>
 		</div>
 
     <div class="comment_reply"></div>

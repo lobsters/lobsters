@@ -45,6 +45,8 @@ Lobsters::Application.routes.draw do
     post "edit"
     post "preview"
     post "update"
+    post "delete"
+    post "undelete"
   end
   post "/comments/post_to/:story_id" => "comments#create"
   post "/comments/preview_to/:story_id" => "comments#preview_new"

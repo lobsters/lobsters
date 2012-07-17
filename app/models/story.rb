@@ -67,18 +67,38 @@ class Story < ActiveRecord::Base
 
   def self.find_recent_similar_by_url(url)
     urls = [ url ]
-    urls.push url.gsub(/^http:\/\//, "https://")
-    urls.push url.gsub(/^https:\/\//, "http://")
-    urls.push url.gsub(/^http:\/\//, "https://").gsub(/\/+\z/, "")
-    urls.push url.gsub(/^https:\/\//, "http://").gsub(/\/+\z/, "")
-    urls.push url.gsub(/^http:\/\//, "https://") << "/"
-    urls.push url.gsub(/^https:\/\//, "http://") << "/"
+    urls2 = [ url ]
 
-    urls.uniq.each do |url|
-      if s = Story.find(:first, :conditions => [ "created_at >= ? AND url = ?",
-      (Time.now - 30.days), url ])
-        return s
-      end
+    # https
+    urls.each do |u|
+      urls2.push u.gsub(/^http:\/\//i, "https://")
+      urls2.push u.gsub(/^https:\/\//i, "http://")
+    end
+    urls = urls2.clone
+
+    # trailing slash
+    urls.each do |u|
+      urls2.push u.gsub(/\/+\z/, "")
+      urls2.push (u << "/")
+    end
+    urls = urls2.clone
+
+    # www prefix
+    urls.each do |u|
+      urls2.push u.gsub(/^(https?:\/\/)www\d*\./i) {|_| $1 }
+      urls2.push u.gsub(/^(https?:\/\/)/i) {|_| "#{$1}www." }
+    end
+    urls = urls2.clone
+
+    conds = [ "created_at >= ? AND (", (Time.now - 30.days) ]
+    urls.uniq.each_with_index do |url,x|
+      conds[0] << (x == 0 ? "" : " OR ") << "url = ?"
+      conds.push url
+    end
+    conds[0] << ")"
+
+    if s = Story.find(:first, :conditions => conds)
+      return s
     end
 
     false

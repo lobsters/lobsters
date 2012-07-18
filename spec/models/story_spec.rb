@@ -103,4 +103,11 @@ describe Story do
     s = Story.make(:title => "The One-second War (What Time Will You Die?) ")
     s.title_as_url.should == "the_one-second_war_what_time_will_you_die"
   end
+
+  it "sets the url properly" do
+    s = Story.make(:title => "blah")
+    s.url = "https://factorable.net/"
+    s.valid?
+    s.url.should == "https://factorable.net/"
+  end
 end

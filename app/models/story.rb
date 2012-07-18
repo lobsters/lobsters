@@ -66,8 +66,8 @@ class Story < ActiveRecord::Base
   end
 
   def self.find_recent_similar_by_url(url)
-    urls = [ url ]
-    urls2 = [ url ]
+    urls = [ url.to_s ]
+    urls2 = [ url.to_s ]
 
     # https
     urls.each do |u|
@@ -79,7 +79,7 @@ class Story < ActiveRecord::Base
     # trailing slash
     urls.each do |u|
       urls2.push u.gsub(/\/+\z/, "")
-      urls2.push (u << "/")
+      urls2.push (u + "/")
     end
     urls = urls2.clone
 
@@ -91,9 +91,9 @@ class Story < ActiveRecord::Base
     urls = urls2.clone
 
     conds = [ "created_at >= ? AND (", (Time.now - 30.days) ]
-    urls.uniq.each_with_index do |url,x|
+    urls.uniq.each_with_index do |u,x|
       conds[0] << (x == 0 ? "" : " OR ") << "url = ?"
-      conds.push url
+      conds.push u
     end
     conds[0] << ")"
 

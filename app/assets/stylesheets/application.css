@@ -78,7 +78,7 @@ div.shorten_first_p p:first-child {
 }
 
 pre {
-	overflow-x: scroll;
+	overflow-x: auto;
 }
 
 

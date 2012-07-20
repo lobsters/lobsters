@@ -169,6 +169,26 @@ class CommentsController < ApplicationController
     render :text => "ok"
   end
 
+  def index
+    @title = "Newest Comments"
+    @cur_url = "/comments"
+
+    @comments = Comment.find(:all, :conditions => "is_deleted = 0 AND " +
+      "is_moderated = 0", :order => "created_at DESC", :limit => 20,
+      :include => [ :user, :story ])
+
+    if @user
+      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,
+        @comments.map{|c| c.story_id }.uniq)
+
+      @comments.each do |c|
+        if @votes[c.id]
+          c.current_vote = @votes[c.id]
+        end
+      end
+    end
+  end
+
   def threads
     @title = "Your Threads"
     @cur_url = "/threads"

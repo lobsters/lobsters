@@ -40,6 +40,9 @@ class SignupController < ApplicationController
       @invitation.destroy
       session[:u] = @new_user.session_token
       flash[:success] = "Welcome to Lobsters, #{@new_user.username}!"
+
+      Countinual.count!("lobsters.users.created", "+1")
+
       return redirect_to "/"
     else
       render :action => "invited"

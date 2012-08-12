@@ -91,6 +91,9 @@ textarea {
 	color: #555;
 	line-height: 1.2em;
 }
+textarea {
+	line-height: 1.35em;
+}
 input,
 button,
 select,
@@ -516,7 +519,6 @@ div.story_text p {
 
 div.comment_text {
 	max-width: 700px;
-	line-height: 1.35em;
 }
 
 div.comment_text blockquote,
@@ -632,7 +634,6 @@ div#story_box #story_tags_a {
 	width: 624px;
 }
 div#story_box textarea {
-	line-height: 1.3em;
 	width: 600px;
 }
 div#story_box div.markdown_help_toggler {

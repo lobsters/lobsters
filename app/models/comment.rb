@@ -272,6 +272,10 @@ class Comment < ActiveRecord::Base
     end
   end
 
+  def short_id_url
+    self.story.short_id_url + "/_/comments/#{self.short_id}"
+  end
+
   def url
     self.story.comments_url + "/comments/#{self.short_id}"
   end

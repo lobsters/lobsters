@@ -2,7 +2,7 @@ class FiltersController < ApplicationController
   before_filter :require_logged_in_user
 
   def index
-    @filtered_tags = @user.tag_filters
+    @filtered_tags = @user.tag_filters.reload
     render :action => "index"
   end
 

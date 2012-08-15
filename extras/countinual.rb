@@ -27,6 +27,8 @@ class Countinual
       sock.send(line, 0, COUNTINUAL_HOST, COUNTINUAL_PORT)
     rescue => e
       Rails.logger.info "Countinual error: #{e.message} (#{line.inspect})"
+    ensure
+      sock.close
     end
   end
 end

@@ -1,6 +1,7 @@
 <div id="header">
   <div id="headerleft">
-    <a id="l_holder" class="boring" href="/"></a>
+    <a id="l_holder" style="background-color: #<%= sprintf("%02x%02x%02x",
+    [ 255, (@traffic * 5).floor + 50.0 ].min, 0, 0) %>;" href="/"></a>
 
     <% links = { "/" => "Home", "/newest" => "Newest Stories" } %>
     <% if @user %>

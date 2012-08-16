@@ -239,12 +239,6 @@ div#inside {
 	margin-left: 4px;
 	margin-right: 11px;
 }
-#l_holder.dead {
-	background-color: black;
-}
-#l_holder.boring {
-	background-color: darkred;
-}
 
 #header h1 {
 	font-size: 11pt;

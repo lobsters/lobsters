@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120712174445) do
+ActiveRecord::Schema.define(:version => 20120816203248) do
 
   create_table "comments", :force => true do |t|
     t.datetime "created_at",                                                                          :null => false
@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(:version => 20120712174445) do
 
   create_table "keystores", :id => false, :force => true do |t|
     t.string  "key",   :limit => 50, :default => "", :null => false
-    t.integer "value",                               :null => false
+    t.integer "value", :limit => 8
   end
 
   add_index "keystores", ["key"], :name => "key", :unique => true

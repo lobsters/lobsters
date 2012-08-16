@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user
   before_filter :increase_traffic_counter
 
-  TRAFFIC_DECREMENTER = 0.1
+  TRAFFIC_DECREMENTER = 0.05
 
   def authenticate_user
     if session[:u]

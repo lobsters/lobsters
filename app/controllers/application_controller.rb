@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user
   before_filter :increase_traffic_counter
 
-  TRAFFIC_DECREMENTER = 0.05
+  TRAFFIC_DECREMENTER = 0.15
 
   def authenticate_user
     if session[:u]
@@ -28,6 +28,10 @@ class ApplicationController < ActionController::Base
       Keystore.put("traffic:date", Time.now.to_i)
       Keystore.put("traffic:hits", (@traffic * 100.0).to_i)
     end
+
+    Rails.logger.info "  Traffic level: #{@traffic}"
+
+    true
   end
 
   def require_logged_in_user

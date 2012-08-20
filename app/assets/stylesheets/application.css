@@ -310,6 +310,7 @@ ol.comments {
 	margin-left: 20px;
 	margin-bottom: 0em;
 	padding-left: 6px;
+	line-height: 1.35em;
 }
 ol.comments1 {
 	margin-left: 0;
@@ -393,6 +394,10 @@ li.comment {
 li.comment {
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
+}
+
+li.comment a {
+	color: #666;
 }
 
 ol.stories li:first-child {

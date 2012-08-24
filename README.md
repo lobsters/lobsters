@@ -9,7 +9,9 @@ This is the source code to the site operating at [https://lobste.rs](https://lob
 - Checkout the lobsters git tree from Github
 
     $ `git clone git://github.com/jcs/lobsters.git`
+   
     $ `cd lobsters`
+   
     lobsters$ 
 
 - Run Bundler to install/bundle gems needed by the project:
@@ -18,20 +20,20 @@ This is the source code to the site operating at [https://lobste.rs](https://lob
 
 - Create a MySQL (other DBs supported by ActiveRecord may work, only MySQL has been tested) database, username, and password and put them in a `config/database.yml` file:
 
-     development:
-       adapter: mysql2
-       encoding: utf8
-       reconnect: false
-       database: lobsters_dev
-       socket: /tmp/mysql.sock
-       username: *username*
-       password: *password*
-       
-     test:
-       adapter: sqlite3
-       database: db/test.sqlite3
-       pool: 5
-       timeout: 5000
+          development:
+            adapter: mysql2
+            encoding: utf8
+            reconnect: false
+            database: lobsters_dev
+            socket: /tmp/mysql.sock
+            username: *username*
+            password: *password*
+            
+          test:
+            adapter: sqlite3
+            database: db/test.sqlite3
+            pool: 5
+            timeout: 5000
 
 - Load the schema into the new database:
 
@@ -39,7 +41,7 @@ This is the source code to the site operating at [https://lobste.rs](https://lob
 
 - Create a `config/initializers/secret_token.rb` file:
 
-     Lobsters::Application.config.secret_token = '*some 128-bit hexadecimal secret*'
+          Lobsters::Application.config.secret_token = '*some 128-bit hexadecimal secret*'
 
 - (Optional, only needed for search engine) Install Sphinx.  Build Sphinx config and start server:
 

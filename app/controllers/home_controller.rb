@@ -79,7 +79,7 @@ private
     if user && !newest
       # exclude downvoted items
       conds[0] << "AND stories.id NOT IN (SELECT story_id FROM votes " <<
-        "WHERE user_id = ? AND vote < 0) "
+        "WHERE user_id = ? AND vote < 0 AND comment_id IS NULL) "
       conds.push user.id
     end
 

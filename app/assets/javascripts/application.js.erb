@@ -216,7 +216,10 @@ $(document).ready(function() {
     
     box.html($("#comment_form").clone());
     box.find("ol").remove();
-    
+
+    console.log(box.find('button.comment-preview'));
+    box.find('button.comment-preview').after('<a class="comment-cancel" href="#">Cancel</a>');
+
     box.find("textarea").focus();
 
     var el = $("<input type=\"hidden\" " +
@@ -226,6 +229,10 @@ $(document).ready(function() {
     box.find("form").append(el);
 
     return false;
+  });
+
+  $("a.comment-cancel").live("click", function() {
+    $(this).parents('div.comment_reply form').remove();
   });
 
   $("a.comment_editor").live("click", function() {

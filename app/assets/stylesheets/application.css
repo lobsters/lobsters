@@ -553,6 +553,14 @@ div.comment_reply form {
 	padding-top: 1em;
 }
 
+div.comment_reply a.comment-cancel {
+  margin-left: 15px;
+  color: #AC130D;
+}
+
+div.comment_reply a.comment-cancel:hover {
+  color: #DD4B3C;
+}
 
 a.pagelink {
 	border: 1px solid #ddd;

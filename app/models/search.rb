@@ -26,7 +26,7 @@ class Search
   end
 
   def to_url_params
-    [ :q, :what, :order ].map{|p| "#{p}=#{CGI.escape(self.send(p))}"
+    [ :q, :what, :order ].map{|p| "#{p}=#{CGI.escape(self.send(p).to_s)}"
       }.join("&amp;")
   end
 
@@ -63,8 +63,14 @@ class Search
     query = self.q.gsub(/\//, "\\/")
 
     # go go gadget search
-    @results = ThinkingSphinx.search query, opts
-    @total_results = @results.total_entries
+    @results = []
+    @total_results = 0
+    begin
+      @results = ThinkingSphinx.search query, opts
+      @total_results = @results.total_entries
+    rescue => e
+      Rails.logger.info "Error from Sphinx: #{e.inspect}"
+    end
 
     # bind votes for both types
 

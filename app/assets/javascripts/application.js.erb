@@ -217,8 +217,7 @@ $(document).ready(function() {
     box.html($("#comment_form").clone());
     box.find("ol").remove();
 
-    console.log(box.find('button.comment-preview'));
-    box.find('button.comment-preview').after('<a class="comment-cancel" href="#">Cancel</a>');
+    box.find("button.comment-preview").after("&nbsp;\n&nbsp;<button class=\"comment-cancel\" name=\"button\" type=\"button\">Cancel</button>");
 
     box.find("textarea").focus();
 
@@ -231,8 +230,8 @@ $(document).ready(function() {
     return false;
   });
 
-  $("a.comment-cancel").live("click", function() {
-    $(this).parents('div.comment_reply form').remove();
+  $("button.comment-cancel").live("click", function() {
+    $(this).parents("div.comment_reply form").remove();
   });
 
   $("a.comment_editor").live("click", function() {

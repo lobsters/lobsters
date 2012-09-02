@@ -626,7 +626,8 @@ div#story_preview {
 div#story_box input#story_url {
 	width: 508px;
 }
-div#story_box input#story_title {
+div#story_box input#story_title,
+div#story_box input#story_moderation_reason {
 	width: 600px;
 }
 div#story_box #story_tags_a {

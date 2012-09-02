@@ -48,7 +48,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <% if comment.is_gone? && comment.is_undeletable_by_user?(@user) %>
           |
           <a class="comment_undeletor">undelete</a>
-        <% elsif !comment.is_gone? && comment.is_editable_by_user?(@user) %>
+        <% elsif !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
           |
           <a class="comment_deletor">delete</a>
         <% end %>
@@ -73,8 +73,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% if comment.is_gone? %>
         <p>
         <span class="na">
-        [Comment removed by <%= comment.is_deleted? ? "author" :
-          "moderator" %>]
+        [Comment removed by <%= comment.is_moderated? ? "moderator" :
+          "author" %>]
         </span>
         </p>
       <% else %>

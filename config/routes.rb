@@ -71,4 +71,7 @@ Lobsters::Application.routes.draw do
   
   post "/invitations" => "invitations#create"
   get "/invitations/:invitation_code" => "signup#invited"
+  
+  get "/moderations" => "moderations#index"
+  get "/moderations/page/:page" => "moderations#index"
 end

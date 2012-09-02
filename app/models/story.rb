@@ -16,10 +16,12 @@ class Story < ActiveRecord::Base
   attr_accessor :_comment_count
   attr_accessor :vote, :already_posted_story, :fetched_content, :previewing
   attr_accessor :new_tags, :tags_to_add, :tags_to_delete
+  attr_accessor :editor_user_id, :moderation_reason
 
-  attr_accessible :title, :description, :tags_a
+  attr_accessible :title, :description, :tags_a, :moderation_reason
 
   before_create :assign_short_id
+  before_save :log_moderation
   after_create :mark_submitter
   after_save :deal_with_tags
   
@@ -31,7 +33,7 @@ class Story < ActiveRecord::Base
     indexes tags(:tag), :as => :tags
 
     has created_at, :sortable => true
-    has hotness, is_moderated, is_expired
+    has hotness, is_expired
     has "(upvotes - downvotes)", :as => :score, :type => :integer,
       :sortable => true
 
@@ -40,7 +42,7 @@ class Story < ActiveRecord::Base
       :tags => 5,
     }
 
-    where "is_moderated = 0 AND is_expired = 0"
+    where "is_expired = 0"
   end
 
   validate do
@@ -116,6 +118,37 @@ class Story < ActiveRecord::Base
         break
       end
     end
+  end
+
+  def log_moderation
+    if self.new_record? || self.editor_user_id == self.user_id
+      return
+    end
+
+    m = Moderation.new
+    m.moderator_user_id = self.editor_user_id
+    m.story_id = self.id
+
+    if self.changes["is_expired"] && self.is_expired?
+      m.action = "deleted story"
+    elsif self.changes["is_expired"] && !self.is_expired?
+      m.action = "undeleted story"
+    else
+      actions = self.changes.map{|k,v| "changed #{k} from #{v[0].inspect} " <<
+        "to #{v[1].inspect}" }
+
+      if (old_tags = self.tags.map{|t| t.tag }) != self.tags_a
+        actions.push "changed tags from \"#{old_tags.join(", ")}\" to " <<
+          "\"#{self.tags_a.join(", ")}\""
+      end
+
+      m.action = actions.join(", ")
+    end
+
+    m.reason = self.moderation_reason
+    m.save
+
+    self.is_moderated = true
   end
 
   def give_upvote_or_downvote_and_recalculate_hotness!(upvote, downvote)
@@ -236,7 +269,7 @@ class Story < ActiveRecord::Base
   def tags_a=(new_tags)
     self.tags_to_delete = []
     self.tags_to_add = []
-    self.new_tags = new_tags
+    self.new_tags = new_tags.reject{|t| t.blank? }
 
     self.tags.each do |tag|
       if !new_tags.include?(tag.tag)
@@ -252,7 +285,7 @@ class Story < ActiveRecord::Base
       end
     end
 
-    @_tags_a = new_tags
+    @_tags_a = self.new_tags
   end
 
   def url=(u)
@@ -286,7 +319,7 @@ class Story < ActiveRecord::Base
   end
 
   def is_editable_by_user?(user)
-    if user && user.is_admin?
+    if user && user.is_moderator?
       return true
     elsif user && user.id == self.user_id
       if self.is_moderated?
@@ -300,7 +333,7 @@ class Story < ActiveRecord::Base
   end
   
   def is_undeletable_by_user?(user)
-    if user && user.is_admin?
+    if user && user.is_moderator?
       return true
     elsif user && user.id == self.user_id && !self.is_moderated?
       return true
@@ -310,7 +343,7 @@ class Story < ActiveRecord::Base
   end
 
   def can_be_seen_by_user?(user)
-    if is_gone? && !(user && (user.is_admin? || user.id == self.user_id))
+    if is_gone? && !(user && (user.is_moderator? || user.id == self.user_id))
       return false
     end
 
@@ -318,12 +351,11 @@ class Story < ActiveRecord::Base
   end
 
   def is_gone?
-    is_expired? || is_moderated?
+    is_expired?
   end
 
   def update_comment_count!
     Keystore.put("story:#{self.id}:comment_count",
-      Comment.where(:story_id => self.id, :is_moderated => 0,
-      :is_deleted => 0).count)
+      Comment.where(:story_id => self.id, :is_deleted => 0).count)
   end
 end

@@ -6,7 +6,7 @@ class Comment < ActiveRecord::Base
   belongs_to :parent_comment,
     :class_name => "Comment"
   
-  attr_accessible :comment
+  attr_accessible :comment, :moderation_reason
 
   attr_accessor :parent_comment_short_id, :current_vote, :previewing,
     :indent_level, :highlighted
@@ -24,10 +24,10 @@ class Comment < ActiveRecord::Base
     has "(upvotes - downvotes)", :as => :score, :type => :integer,
       :sortable => true
     
-    has is_moderated, is_deleted
+    has is_deleted
     has created_at
 
-    where "is_moderated = 0 AND is_deleted = 0"
+    where "is_deleted = 0"
   end
 
   validate do
@@ -81,7 +81,7 @@ class Comment < ActiveRecord::Base
   end
   
   def is_gone?
-    is_deleted? || is_moderated?
+    is_deleted?
   end
 
   def mark_submitter
@@ -112,10 +112,16 @@ class Comment < ActiveRecord::Base
   def delete_for_user(user)
     Comment.record_timestamps = false
 
-    if user.is_admin? && user.id != self.user_id
+    self.is_deleted = true
+
+    if user.is_moderator? && user.id != self.user_id
       self.is_moderated = true
-    else
-      self.is_deleted = true
+
+      m = Moderation.new
+      m.comment_id = self.id
+      m.moderator_user_id = user.id
+      m.action = "deleted comment"
+      m.save
     end
 
     self.save(:validate => false)
@@ -127,8 +133,17 @@ class Comment < ActiveRecord::Base
   def undelete_for_user(user)
     Comment.record_timestamps = false
 
-    self.is_moderated = false
     self.is_deleted = false
+
+    if user.is_moderator? && user.id != self.user_id
+      self.is_moderated = true
+
+      m = Moderation.new
+      m.comment_id = self.id
+      m.moderator_user_id = user.id
+      m.action = "undeleted comment"
+      m.save
+    end
 
     self.save(:validate => false)
     Comment.record_timestamps = true
@@ -233,7 +248,7 @@ class Comment < ActiveRecord::Base
       if c.is_gone?
         if ordered[x + 1] && (ordered[x + 1].indent_level > c.indent_level)
           # we have child comments, so we must stay
-        elsif user && (user.is_admin? || c.user_id == user.id)
+        elsif user && (user.is_moderator? || c.user_id == user.id)
           # admins and authors should be able to see their deleted comments
         else
           # drop this one
@@ -248,9 +263,7 @@ class Comment < ActiveRecord::Base
   end
   
   def is_editable_by_user?(user)
-    if user && user.is_admin?
-      return true
-    elsif user && user.id == self.user_id
+    if user && user.id == self.user_id
       if self.is_moderated?
         return false
       else
@@ -262,8 +275,18 @@ class Comment < ActiveRecord::Base
     end
   end
   
+  def is_deletable_by_user?(user)
+    if user && user.is_moderator?
+      return true
+    elsif user && user.id == self.user_id
+      return true
+    else
+      return false
+    end
+  end
+
   def is_undeletable_by_user?(user)
-    if user && user.is_admin?
+    if user && user.is_moderator?
       return true
     elsif user && user.id == self.user_id && !self.is_moderated?
       return true

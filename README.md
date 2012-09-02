@@ -51,6 +51,7 @@ This is the source code to the site operating at [https://lobste.rs](https://lob
           Loading development environment (Rails 3.2.6)
           irb(main):001:0> u = User.new(:username => "test", :email => "test@example.com", :password => "test")
           irb(main):002:0> u.is_admin = true
+          irb(main):002:0> u.is_moderator = true
           irb(main):003:0> u.save
 
           irb(main):004:0> t = Tag.new

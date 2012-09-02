@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120816203248) do
+ActiveRecord::Schema.define(:version => 20120902143549) do
 
   create_table "comments", :force => true do |t|
     t.datetime "created_at",                                                                          :null => false
@@ -64,6 +64,17 @@ ActiveRecord::Schema.define(:version => 20120816203248) do
   end
 
   add_index "messages", ["short_id"], :name => "random_hash", :unique => true
+
+  create_table "moderations", :force => true do |t|
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "moderator_user_id"
+    t.integer  "story_id"
+    t.integer  "comment_id"
+    t.integer  "user_id"
+    t.text     "action"
+    t.text     "reason"
+  end
 
   create_table "stories", :force => true do |t|
     t.datetime "created_at"
@@ -124,6 +135,7 @@ ActiveRecord::Schema.define(:version => 20120816203248) do
     t.string   "pushover_device"
     t.boolean  "email_messages",                      :default => true
     t.boolean  "pushover_messages",                   :default => true
+    t.boolean  "is_moderator",                        :default => false
   end
 
   add_index "users", ["session_token"], :name => "session_hash", :unique => true

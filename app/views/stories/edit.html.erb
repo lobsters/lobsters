@@ -8,6 +8,16 @@
 		<%= render :partial => "stories/form", :locals => { :story => @story,
       :f => f } %>
 
+    <% if @story.user_id != @user.id %>
+      <div class="box">
+        <div class="boxline">
+          <%= f.label :moderation_reason, "Mod Reason:",
+            :class => "required" %>
+          <%= f.text_field :moderation_reason, :autocomplete => "off" %>
+        </div>
+      </div>
+    <% end %>
+
     <p></p>
     
     <div class="box">

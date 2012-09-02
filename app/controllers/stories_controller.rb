@@ -45,10 +45,10 @@ class StoriesController < ApplicationController
       return redirect_to "/"
     end
 
-    if @user.is_admin? && @user.id != @story.user_id
-      @story.is_moderated = true
-    else
-      @story.is_expired = true
+    @story.is_expired = true
+
+    if @user.is_moderator? && @user.id != @story.user_id
+      @story.editor_user_id = @user.id
     end
 
     @story.save(:validate => false)
@@ -184,7 +184,7 @@ class StoriesController < ApplicationController
     end
 
     @story.is_expired = false
-    @story.is_moderated = false
+    @story.editor_user_id = @user.id
     @story.save(:validate => false)
 
     redirect_to @story.comments_url
@@ -197,6 +197,7 @@ class StoriesController < ApplicationController
     end
 
     @story.is_expired = false
+    @story.editor_user_id = @user.id
 
     if @story.update_attributes(params[:story].except(:url))
       return redirect_to @story.comments_url
@@ -244,7 +245,7 @@ class StoriesController < ApplicationController
 
 private
   def find_story
-    if @user.is_admin?
+    if @user.is_moderator?
       @story = Story.find_by_short_id(params[:story_id] || params[:id])
     else
       @story = Story.find_by_user_id_and_short_id(@user.id,

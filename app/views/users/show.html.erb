@@ -8,7 +8,8 @@
 
   <label class="required">Status:</label>
   <span class="d">
-    Active <%= @showing_user.is_admin? ? "administrator" : "user" %>
+    Active <%= @showing_user.is_admin? ? "administrator" :
+      (@showing_user.is_moderator? ? "moderator" : "user") %>
   </span>
   <br>
 

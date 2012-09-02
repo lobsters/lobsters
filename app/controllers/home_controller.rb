@@ -74,7 +74,7 @@ private
   end
 
   def _find_stories_for_user_and_tag_and_newest(user, tag = nil, newest = false)
-    conds = [ "is_expired = 0 AND is_moderated = 0 " ]
+    conds = [ "is_expired = 0 " ]
 
     if user && !newest
       # exclude downvoted items

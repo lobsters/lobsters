@@ -70,7 +70,7 @@ class CommentsController < ApplicationController
 
   def delete
     if !((comment = Comment.find_by_short_id(params[:comment_id])) &&
-    comment.is_editable_by_user?(@user))
+    comment.is_deletable_by_user?(@user))
       return render :text => "can't find comment", :status => 400
     end
 
@@ -175,9 +175,8 @@ class CommentsController < ApplicationController
     @title = "Newest Comments"
     @cur_url = "/comments"
 
-    @comments = Comment.find(:all, :conditions => "is_deleted = 0 AND " +
-      "is_moderated = 0", :order => "created_at DESC", :limit => 20,
-      :include => [ :user, :story ])
+    @comments = Comment.find(:all, :conditions => "is_deleted = 0",
+      :order => "created_at DESC", :limit => 20, :include => [ :user, :story ])
 
     if @user
       @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id,

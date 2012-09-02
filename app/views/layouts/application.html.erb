@@ -27,7 +27,8 @@
     <div id="header">
       <div id="headerleft">
         <a id="l_holder" style="background-color: #<%= sprintf("%02x%02x%02x",
-        [ 255, (@traffic * 7).floor + 50.0 ].min, 0, 0) %>;" href="/"></a>
+        [ 255, (@traffic * 7).floor + 50.0 ].min, 0, 0) %>;" href="/"
+        title="Lobsters (<%= @traffic.to_i %>)"></a>
 
         <% links = { "/" => "Home", "/newest" => "Newest Stories" } %>
         <% if @user %>

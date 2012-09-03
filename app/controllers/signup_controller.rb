@@ -24,6 +24,8 @@ class SignupController < ApplicationController
     end
 
     @new_user = User.new
+    @new_user.email = @invitation.email
+
     render :action => "invited"
   end
 

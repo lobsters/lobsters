@@ -54,6 +54,12 @@ class User < ActiveRecord::Base
     Keystore.value_for("user:#{self.id}:comments_posted").to_i
   end
 
+  def undeleted_received_messages
+    received_messages.where([ "((recipient_user_id = ? AND " <<
+      "deleted_by_recipient = 0) OR (author_user_id = ? AND " <<
+      "deleted_by_author = 0))", self.id, self.id ])
+  end
+
   def initiate_password_reset_for_ip(ip)
     self.password_reset_token = Utils.random_str(40)
     self.save!

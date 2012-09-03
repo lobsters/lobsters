@@ -8,6 +8,7 @@ Lobsters::Application.routes.draw do
   get "/newest/page/:page" => "home#newest"
 
   get "/threads" => "comments#threads"
+  get "/threads/:user" => "comments#threads"
 
   get "/login" => "login#index"
   post "/login" => "login#login"

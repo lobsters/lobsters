@@ -33,7 +33,8 @@
   
   <label class="required">Comments Posted:</label>
   <span class="d">
-    <%= @showing_user.comments_posted_count %>
+    <a href="/threads/<%= @showing_user.username %>"><%=
+      @showing_user.comments_posted_count %></a>
   </span>
   <br>
 

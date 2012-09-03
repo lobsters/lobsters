@@ -1,7 +1,6 @@
 class CommentsController < ApplicationController
   before_filter :require_logged_in_user_or_400,
     :only => [ :create, :preview, :upvote, :downvote, :unvote ]
-  before_filter :require_logged_in_user, :only => [ :threads ]
 
   def create
     if !(story = Story.find_by_short_id(params[:story_id])) || story.is_gone?
@@ -191,19 +190,33 @@ class CommentsController < ApplicationController
   end
 
   def threads
-    @title = "Your Threads"
-    @cur_url = "/threads"
+    if params[:user]
+      @showing_user = User.find_by_username!(params[:user])
+      @title = "Threads for #{@showing_user.username}"
+      @cur_url = "/threads/#{@showing_user.username}"
+    elsif !@user
+      # TODO: show all recent threads
+      return redirect_to "/login"
+    else
+      @showing_user = @user
+      @title = "Your Threads"
+      @cur_url = "/threads"
+    end
 
-    @threads = @user.recent_threads(20).map{|r|
-      cs = Comment.ordered_for_story_or_thread_for_user(nil, r, @user)
+    @threads = @showing_user.recent_threads(20).map{|r|
+      cs = Comment.ordered_for_story_or_thread_for_user(nil, r, @showing_user)
 
-      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,
-        cs.map{|c| c.story_id }.uniq)
+      if @user && (@showing_user.id == @user.id)
+        @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,
+          cs.map{|c| c.story_id }.uniq)
 
-      cs.each do |c|
-        if @votes[c.id]
-          c.current_vote = @votes[c.id]
+        cs.each do |c|
+          if @votes[c.id]
+            c.current_vote = @votes[c.id]
+          end
         end
+      else
+        @votes = []
       end
 
       cs

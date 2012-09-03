@@ -344,7 +344,7 @@ div.voters {
 div.voters div.score {
 	color: #aaa;
 	font-size: 9pt;
-	margin-top: 0px;
+	margin-top: 1px;
 	margin-bottom: -3px;
 	text-align: center;
 }

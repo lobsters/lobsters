@@ -1478,7 +1478,6 @@
                 val = (val === null) ? [] : val;
                 this.setVal(val);
                 // val is a list of objects
-                                                                                                     st
                 $(val).each(function () { data.push(self.id(this)); });
                 this.setVal(data);
                 this.updateSelection(val);

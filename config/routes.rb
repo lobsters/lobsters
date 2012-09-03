@@ -6,6 +6,8 @@ Lobsters::Application.routes.draw do
 
   get "/newest(.format)" => "home#newest"
   get "/newest/page/:page" => "home#newest"
+  get "/newest/:user" => "home#newest_by_user"
+  get "/newest/:user/page/:page" => "home#newest_by_user"
 
   get "/threads" => "comments#threads"
   get "/threads/:user" => "comments#threads"

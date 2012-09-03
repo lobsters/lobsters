@@ -2,7 +2,8 @@ class HomeController < ApplicationController
   STORIES_PER_PAGE = 25
 
   def index
-    @stories = find_stories_for_user_and_tag_and_newest(@user, nil, false)
+    @stories = find_stories_for_user_and_tag_and_newest_and_by_user(@user,
+      nil, false, nil)
 
     @rss_link ||= "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
       "title=\"RSS 2.0\" href=\"/rss\" />"
@@ -17,7 +18,8 @@ class HomeController < ApplicationController
   end
 
   def newest
-    @stories = find_stories_for_user_and_tag_and_newest(@user, nil, true)
+    @stories = find_stories_for_user_and_tag_and_newest_and_by_user(@user,
+      nil, true, nil)
 
     @title = "Newest Stories"
     @cur_url = "/newest"
@@ -33,9 +35,25 @@ class HomeController < ApplicationController
     end
   end
 
+  def newest_by_user
+    for_user = User.find_by_username!(params[:user])
+
+    @stories = find_stories_for_user_and_tag_and_newest_and_by_user(@user,
+      nil, false, for_user.id)
+    
+    @title = "Newest Stories by #{for_user.username}"
+    @cur_url = "/newest/#{for_user.username}"
+
+    @newest = true
+    @for_user = for_user.username
+
+    render :action => "index"
+  end
+
   def tagged
     @tag = Tag.find_by_tag!(params[:tag])
-    @stories = find_stories_for_user_and_tag_and_newest(@user, @tag, false)
+    @stories = find_stories_for_user_and_tag_and_newest_and_by_user(@user,
+      @tag, false, nil)
 
     @title = @tag.description.blank?? @tag.tag : @tag.description
     @cur_url = tag_url(@tag.tag)
@@ -52,7 +70,8 @@ class HomeController < ApplicationController
   end
 
 private
-  def find_stories_for_user_and_tag_and_newest(user, tag = nil, newest = false)
+  def find_stories_for_user_and_tag_and_newest_and_by_user(user, tag = nil,
+  newest = false, by_user = nil)
     @page = 1
     if params[:page].to_i > 0
       @page = params[:page].to_i
@@ -60,23 +79,26 @@ private
 
     # guest views have caching, but don't bother for logged-in users
     if user
-      stories, @show_more = _find_stories_for_user_and_tag_and_newest(user,
-        tag, newest)
+      stories, @show_more =
+        _find_stories_for_user_and_tag_and_newest_and_by_user(user, tag,
+        newest, by_user)
     else
       stories, @show_more = Rails.cache.fetch("stories tag:" <<
-      "#{tag ? tag.tag : ""} new:#{newest} page:#{@page.to_i}",
+      "#{tag ? tag.tag : ""} new:#{newest} page:#{@page.to_i} by:#{by_user}",
       :expires_in => 45) do
-        _find_stories_for_user_and_tag_and_newest(user, tag, newest)
+        _find_stories_for_user_and_tag_and_newest_and_by_user(user, tag,
+          newest, by_user)
       end
     end
 
     stories
   end
 
-  def _find_stories_for_user_and_tag_and_newest(user, tag = nil, newest = false)
+  def _find_stories_for_user_and_tag_and_newest_and_by_user(user, tag = nil,
+  newest = false, by_user = nil)
     conds = [ "is_expired = 0 " ]
 
-    if user && !newest
+    if user && !(newest || by_user)
       # exclude downvoted items
       conds[0] << "AND stories.id NOT IN (SELECT story_id FROM votes " <<
         "WHERE user_id = ? AND vote < 0 AND comment_id IS NULL) "
@@ -87,6 +109,9 @@ private
       conds[0] << "AND stories.id IN (SELECT taggings.story_id FROM " <<
         "taggings WHERE taggings.tag_id = ?)"
       conds.push tag.id
+    elsif by_user
+      conds[0] << "AND stories.user_id = ?"
+      conds.push by_user
     elsif user
       conds[0] += " AND taggings.tag_id NOT IN (SELECT tag_id FROM " <<
         "tag_filters WHERE user_id = ?)"

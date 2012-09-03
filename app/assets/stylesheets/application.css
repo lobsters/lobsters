@@ -281,6 +281,10 @@ div#inside {
 	color: #333;
 }
 
+#header a.new_messages {
+	color: #ac130d;
+}
+
 
 /* footer */
 

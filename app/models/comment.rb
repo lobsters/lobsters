@@ -79,6 +79,16 @@ class Comment < ActiveRecord::Base
 
     self.story.update_comment_count!
   end
+
+  def downvote_summary
+    reasons = {}
+    Vote.where(:comment_id => self.id).each do |v|
+      reasons[v.reason] ||= 0
+      reasons[v.reason] += 1
+    end
+
+    reasons.map{|r,v| "#{Vote::COMMENT_REASONS[r]} (#{v})" }.join(", ")
+  end
   
   def is_gone?
     is_deleted?

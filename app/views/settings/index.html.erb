@@ -117,6 +117,14 @@
 	</div>
 
   <%= form_tag "/invitations", :method => :post do |f| %>
+    <p>
+    Invitations are used as a spam-control mechanism and are unlimited.
+    Persons you invite will be associated with your account in the <a
+    href="/u">user tree</a> and you may be responsible for them if they cause
+    problems.  Please use your discretion when inviting persons you don't
+    personally know.
+    </p>
+
     <div class="boxline">
       <%= label_tag :email, "E-mail Address:", :class => "required" %>
       <%= text_field_tag :email, "", :size => 30 %>

@@ -20,7 +20,8 @@
             <div style="float: right;">
             <a href="javascript:window.location=%22http://lobste.rs/stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title)"
             style="border: 1px solid #ddd; padding: 0.5em; background-color:
-            #f8f8f8; line-height: 1.5em; margin-left: 1em;">Submit to Lobste.rs</a>
+            #f8f8f8; line-height: 1.5em; margin-left: 1em;">Submit to
+            Lobste.rs</a>
             </div>
             <ul>
             
@@ -110,6 +111,16 @@
 
       $("button.story-preview").unbind().live("click", function() {
         Lobsters.previewStory($(this).parents("form").first());
+      });
+
+      /* if the url looks like a pdf, select the pdf tag */
+      $("#story_url").unbind().live("blur", function() {
+        if ($("#story_url").val().match(/\.pdf$/i)) {
+          var ta = $("#story_tags_a").data("select2");
+
+          if (ta.getVal().indexOf("pdf") < 0)
+            ta.addSelectedChoice({ id: "pdf" });
+        }
       });
     <% end %>
 

@@ -6,8 +6,6 @@ class Story < ActiveRecord::Base
 
   validates_length_of :title, :in => 3..150
   validates_length_of :description, :maximum => (64 * 1024)
-  validates_format_of :url, :with => /\Ahttps?:\/\//i,
-    :allow_blank => true
   validates_presence_of :user_id
 
   # after this many minutes old, a story cannot be edited

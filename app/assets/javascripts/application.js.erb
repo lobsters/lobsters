@@ -1,4 +1,5 @@
 //= require jquery
+//= require jquery.pjax
 //= require jquery_ujs
 //= require_tree .
 
@@ -274,4 +275,9 @@ $(document).ready(function() {
   $("button.comment-preview").live("click", function() {
     Lobsters.previewComment($(this).parents("form").first());
   });
+  
+  $(function() {
+    $('a:not([data-remote]):not([data-behavior]):not([data-skip-pjax])').pjax('[data-pjax-container]', fragment: "#header");
+  });
 });
+

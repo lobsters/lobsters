@@ -27,6 +27,8 @@ gem "htmlentities"
 
 gem "rdiscount"
 
+gem "pjax_rails"
+
 gem "thinking-sphinx", "2.0.12"
 
 group :test, :development do

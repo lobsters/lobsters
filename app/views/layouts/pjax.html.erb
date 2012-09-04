@@ -1,0 +1,16 @@
+<title><%= @title.present? ? "#{@title} | Lobsters" : "Lobsters" %></title>
+<div id="wrapper">
+  <%= render 'header' %>
+    
+  <div id="inside">
+    <% if flash[:error] %>
+      <div class="flash-error"><%= flash[:error] %></div>
+    <% elsif flash[:success] %>
+      <div class="flash-success"><%= flash[:success] %></div>
+    <% end %>
+      
+    <div data-pjax-container>
+      <%= yield %>
+    </div>
+  </div>
+</div>

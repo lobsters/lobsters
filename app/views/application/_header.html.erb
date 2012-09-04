@@ -1,0 +1,52 @@
+<div id="header">
+  <div id="headerleft">
+    <a id="l_holder" style="background-color: #<%= sprintf("%02x%02x%02x",
+    [ 255, (@traffic * 7).floor + 50.0 ].min, 0, 0) %>;" href="/"
+    title="Lobsters (<%= @traffic.to_i %>)"></a>
+
+    <% links = { "/" => "Home", "/newest" => "Newest Stories" } %>
+    <% if @user %>
+      <% links.merge!({ "/threads" => "Your Threads",
+        "/stories/new" => "Submit Story" }) %>
+    <% end %>
+    <% links.merge!({ "/search" => "Search" }) %>
+
+    <% if @cur_url.present? && !links.keys.include?(@cur_url) %>
+      <span id="headertitle">
+        <a href="<%= @cur_url %>"><%= @title %></a>
+      </span>
+    <% end %>
+
+    <span class="headerlinks">
+      <% links.each do |u,v| %>
+        <a href="<%= u %>" <%= u == @cur_url ? raw("class=\"cur_url\"") :
+          "" %>><%= v %></a>
+      <% end %>
+    </span>
+  </div>
+
+  <div id="headerright" class="<%= @user ? "loggedin" : "" %>">
+    <span class="headerlinks">
+    <% if @user %>
+      <a href="/filters">Filters</a>
+
+      <% if (count = @user.unread_message_count) > 0 %>
+        <a href="/messages" class="new_messages"><%= count %> New
+          Message<%= count == 1 ? "" : "s" %></a>
+      <% else %>
+        <a href="/messages">Messages</a>
+      <% end %>
+
+      <a href="/settings"><%= @user.username %> (<%= @user.karma %>)</a>
+
+      <%= link_to "Logout", { :controller => "login", :action => "logout" },
+        :data => { :confirm => "Are you sure you want to logout?" },
+        :method => "post" %>
+    <% else %>
+      <a href="/login">Login</a>
+    <% end %>
+    </span>
+  </div>
+
+  <div class="clear"></div>
+</div>

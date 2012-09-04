@@ -30,16 +30,15 @@
   </div>
 
   <p></p>
-
-  <% if defined?(show_comment) %>
-    <% if show_comment.valid? %>
-      <ol class="comments comments1 preview">
-        <%= render :partial => "comments/comment",
-          :locals => { :comment => show_comment, :story => story } %>
-      </ol>
-    <% else %>
-      <%= errors_for comment %>
-    <% end %>
+<% end %>
+<% if defined?(show_comment) %>
+  <% if show_comment.valid? %>
+    <ol class="comments comments1 preview">
+      <%= render :partial => "comments/comment",
+        :locals => { :comment => show_comment, :story => story } %>
+    </ol>
+  <% else %>
+    <%= errors_for comment %>
   <% end %>
 <% end %>
 </div>

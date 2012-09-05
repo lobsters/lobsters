@@ -1,5 +1,5 @@
 <div class="box wide">
-  <strong>Users</strong>
+  <strong><%= number_with_delimiter(@tree.count) %> Users (<%= number_with_delimiter(@new_users.count) %> new this week)</strong>
   <p>
   <% prev_level = 0 %>
   <% @tree.each do |u| %>

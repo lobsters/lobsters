@@ -29,15 +29,11 @@ class Keystore < ActiveRecord::Base
     new_value = nil
 
     if Rails.env == "test"
-      # Tries to do a new insert, if it's not new, it doesn't insert anything.
-      # Then update to increment by amount (it starts at 0).
       Keystore.connection.execute("INSERT OR IGNORE INTO " <<
         "#{Keystore.table_name} (`key`, `value`) VALUES " <<
         "(#{q(key)}, 0)")
       Keystore.connection.execute("UPDATE #{Keystore.table_name} " <<
-        "SET `value` = `value` + #{q(amount)} " <<
-        "WHERE `key` = #{q(key)}");
-      
+        "SET `value` = `value` + #{q(amount)} WHERE `key` = #{q(key)}")
     else
       Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" +
         "`key`, `value`) VALUES (#{q(key)}, #{q(amount)}) ON DUPLICATE KEY " +

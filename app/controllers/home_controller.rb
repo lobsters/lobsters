@@ -116,6 +116,11 @@ private
       conds[0] += " AND taggings.tag_id NOT IN (SELECT tag_id FROM " <<
         "tag_filters WHERE user_id = ?)"
       conds.push @user.id
+    else
+      # for logged-out users, filter defaults
+      conds[0] += " AND taggings.tag_id NOT IN (SELECT id FROM " <<
+        "tags WHERE filtered_by_default = ?)"
+      conds.push true
     end
 
     stories = Story.find(

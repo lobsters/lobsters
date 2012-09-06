@@ -66,12 +66,14 @@ class MessagesController < ApplicationController
 private
   def find_message
     if @message = Message.find_by_short_id(params[:message_id ] || params[:id])
-      if !(@message.author_user_id == @user.id ||
+      if (@message.author_user_id == @user.id ||
       @message.recipient_user_id == @user.id)
-        flash[:error] = "Could not find message."
-        redirect_to "/messages"
-        return false
+        return true
       end
     end
+
+    flash[:error] = "Could not find message."
+    redirect_to "/messages"
+    return false
   end
 end

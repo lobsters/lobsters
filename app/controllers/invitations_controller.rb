@@ -6,11 +6,16 @@ class InvitationsController < ApplicationController
     i.user_id = @user.id
     i.email = params[:email]
     i.memo = params[:memo]
-    if i.save
-      i.send_email
-      flash[:success] = "Successfully e-mailed invitation to " <<
-        params[:email].to_s << "."
-    else
+
+    begin
+      if i.save
+        i.send_email
+        flash[:success] = "Successfully e-mailed invitation to " <<
+          params[:email].to_s << "."
+      else
+        raise
+      end
+    rescue
       flash[:error] = "Could not send invitation, verify the e-mail " <<
         "address is valid."
     end

@@ -6,13 +6,18 @@ class InvitationsController < ApplicationController
     i.user_id = @user.id
     i.email = params[:email]
     i.memo = params[:memo]
-    if i.save
-      i.send_email
-      flash[:success] = "Successfully e-mailed invitation to " <<
-        params[:email].to_s << "."
+
+    unless User.find_by_email(params[:email])
+      if i.save
+        i.send_email
+        flash[:success] = "Successfully e-mailed invitation to " <<
+          params[:email].to_s << "."
+      else
+        flash[:error] = "Could not send invitation, verify the e-mail " <<
+          "address is valid."
+      end
     else
-      flash[:error] = "Could not send invitation, verify the e-mail " <<
-        "address is valid."
+      flash[:error] = "#{params[:email]} has already joined Lobsters"
     end
 
     return redirect_to "/settings"

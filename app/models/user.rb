@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
   validates_format_of :username, :with => /\A[A-Za-z0-9][A-Za-z0-9_-]*\Z/
   validates_uniqueness_of :username, :case_sensitive => false
 
-  validates_format_of :email, :with => /\A[^@]+@[^@]+\.[^@]+\Z/
+  validates_format_of :email, :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/
   validates_uniqueness_of :email, :case_sensitive => false
 
   validates_presence_of :password, :on => :create

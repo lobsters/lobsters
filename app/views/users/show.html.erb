@@ -21,7 +21,7 @@
   
   <label class="required">Karma:</label>
   <span class="d">
-    <%= @showing_user.karma %>
+    <%= @showing_user.karma %> (average <%= number_with_precision(@showing_user.average_karma, :precision => 2) %>)
   </span>
   <br>
 

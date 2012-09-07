@@ -557,8 +557,8 @@ div.comment_reply form {
 	padding-top: 1em;
 }
 
-div.comment_reply button.comment-cancel {
-  color: #AC130D;
+div.comment_reply button.comment-post {
+	font-weight: bold;
 }
 
 a.pagelink {

@@ -4,7 +4,7 @@ class Markdowner
       return ""
     else
       html = RDiscount.new(text.to_s, :smart, :autolink, :safelink,
-        :filter_styles, :filter_html).to_html
+        :filter_styles, :filter_html, :no_image).to_html
 
       # change <h1> headings to just emphasis tags
       html.gsub!(/<(\/)?h(\d)>/) {|_| "<#{$1}strong>" }

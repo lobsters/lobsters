@@ -5,6 +5,8 @@ class UsersController < ApplicationController
   end
 
   def tree
+    @new_users = User.where('DATE(created_at) between ? AND ?', Date.today.beginning_of_week(:sunday), Date.today)
+
     parents = {}
     karmas = {}
     User.all.each do |u|

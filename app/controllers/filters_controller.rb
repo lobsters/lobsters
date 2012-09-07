@@ -16,7 +16,7 @@ class FiltersController < ApplicationController
     end
 
     @user.tag_filters(:include => :tag).each do |tf|
-      if new_filters.include?(tf.tag.tag)
+      if tf.tag && new_filters.include?(tf.tag.tag)
         new_filters.reject!{|t| t == tf.tag.tag }
       else
         tf.destroy

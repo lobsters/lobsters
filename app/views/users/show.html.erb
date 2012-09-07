@@ -25,6 +25,12 @@
   </span>
   <br>
 
+  <label class="required">Average Karma:</label>
+  <span class="d">
+    <%= number_with_precision(@showing_user.average_karma, :precision => 2) %>
+  </span>
+  <br>
+
   <label class="required">Stories Submitted:</label>
   <span class="d">
     <a href="/newest/<%= @showing_user.username %>"><%=

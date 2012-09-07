@@ -10,7 +10,7 @@ class LoginController < ApplicationController
   end
 
   def index
-    @page_title = "Login"
+    @title = "Login"
     render :action => "index"
   end
 
@@ -26,7 +26,7 @@ class LoginController < ApplicationController
   end
 
   def forgot_password
-    @page_title = "Reset Password"
+    @title = "Reset Password"
     render :action => "forgot_password"
   end
 
@@ -47,6 +47,8 @@ class LoginController < ApplicationController
   end
 
   def set_new_password
+    @title = "Reset Password"
+
     if params[:token].blank? ||
     !(@reset_user = User.find_by_password_reset_token(params[:token]))
       flash[:error] = "Invalid reset token.  It may have already been " <<

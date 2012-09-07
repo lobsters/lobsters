@@ -8,7 +8,7 @@ class HomeController < ApplicationController
     @rss_link ||= "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
       "title=\"RSS 2.0\" href=\"/rss\" />"
 
-    @title = ""
+    @heading = @title = ""
     @cur_url = "/"
 
     respond_to do |format|
@@ -21,7 +21,7 @@ class HomeController < ApplicationController
     @stories = find_stories_for_user_and_tag_and_newest_and_by_user(@user,
       nil, true, nil)
 
-    @title = "Newest Stories"
+    @heading = @title = "Newest Stories"
     @cur_url = "/newest"
 
     @rss_link = "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
@@ -41,7 +41,7 @@ class HomeController < ApplicationController
     @stories = find_stories_for_user_and_tag_and_newest_and_by_user(@user,
       nil, false, for_user.id)
     
-    @title = "Newest Stories by #{for_user.username}"
+    @heading = @title = "Newest Stories by #{for_user.username}"
     @cur_url = "/newest/#{for_user.username}"
 
     @newest = true
@@ -55,7 +55,7 @@ class HomeController < ApplicationController
     @stories = find_stories_for_user_and_tag_and_newest_and_by_user(@user,
       @tag, false, nil)
 
-    @title = @tag.description.blank?? @tag.tag : @tag.description
+    @heading = @title = @tag.description.blank?? @tag.tag : @tag.description
     @cur_url = tag_url(@tag.tag)
 
     @rss_link = "<link rel=\"alternate\" type=\"application/rss+xml\" " <<

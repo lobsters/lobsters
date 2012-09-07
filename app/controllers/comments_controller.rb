@@ -171,7 +171,7 @@ class CommentsController < ApplicationController
   end
 
   def index
-    @title = "Newest Comments"
+    @heading = @title = "Newest Comments"
     @cur_url = "/comments"
 
     @comments = Comment.find(:all, :conditions => "is_deleted = 0",
@@ -192,14 +192,14 @@ class CommentsController < ApplicationController
   def threads
     if params[:user]
       @showing_user = User.find_by_username!(params[:user])
-      @title = "Threads for #{@showing_user.username}"
+      @heading = @title = "Threads for #{@showing_user.username}"
       @cur_url = "/threads/#{@showing_user.username}"
     elsif !@user
       # TODO: show all recent threads
       return redirect_to "/login"
     else
       @showing_user = @user
-      @title = "Your Threads"
+      @heading = @title = "Your Threads"
       @cur_url = "/threads"
     end
 

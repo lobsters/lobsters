@@ -110,9 +110,9 @@ class StoriesController < ApplicationController
     @story = Story.find_by_short_id!(params[:id])
 
     if @story.can_be_seen_by_user?(@user)
-      @page_title = @story.title
+      @title = @story.title
     else
-      @page_title = "[Story removed]"
+      @title = "[Story removed]"
     end
 
     @short_url = @story.short_id_url
@@ -139,7 +139,7 @@ class StoriesController < ApplicationController
   def show_comment
     @story = Story.find_by_short_id!(params[:id])
 
-    @page_title = @story.title
+    @title = @story.title
 
     @showing_comment = Comment.find_by_short_id(params[:comment_short_id])
 

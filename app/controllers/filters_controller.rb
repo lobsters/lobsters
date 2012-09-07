@@ -2,7 +2,11 @@ class FiltersController < ApplicationController
   before_filter :require_logged_in_user
 
   def index
+    @cur_url = "/filters"
+    @heading = @title = "Filtered Tags"
+
     @filtered_tags = @user.tag_filters.reload
+
     render :action => "index"
   end
 

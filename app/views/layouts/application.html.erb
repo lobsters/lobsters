@@ -37,9 +37,10 @@
         <% end %>
         <% links.merge!({ "/search" => "Search" }) %>
 
-        <% if @cur_url.present? && !links.keys.include?(@cur_url) %>
+        <% if @cur_url.present? && !links.keys.include?(@cur_url) &&
+        @heading.present? %>
           <span id="headertitle">
-            <a href="<%= @cur_url %>"><%= @title %></a>
+            <a href="<%= @cur_url %>"><%= @heading %></a>
           </span>
         <% end %>
 

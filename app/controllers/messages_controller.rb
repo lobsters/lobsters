@@ -3,6 +3,9 @@ class MessagesController < ApplicationController
   before_filter :find_message, :only => [ :show, :destroy, :keep_as_new ]
 
   def index
+    @cur_url = "/messages"
+    @title = "Messages"
+
     @new_message = Message.new
 
     if params[:to]
@@ -11,6 +14,9 @@ class MessagesController < ApplicationController
   end
 
   def create
+    @cur_url = "/messages"
+    @title = "Messages"
+
     @new_message = Message.new(params[:message])
     @new_message.author_user_id = @user.id
 
@@ -25,6 +31,9 @@ class MessagesController < ApplicationController
   end
 
   def show
+    @cur_url = "/messages"
+    @title = @message.subject
+
     @new_message = Message.new
     @new_message.recipient_username = (@message.author_user_id == @user.id ?
       @message.recipient.username : @message.author.username)

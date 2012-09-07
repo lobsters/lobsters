@@ -56,6 +56,14 @@ class User < ActiveRecord::Base
     Keystore.value_for("user:#{self.id}:karma").to_i
   end
 
+  def average_karma
+    if self.karma == 0
+      0
+    else
+      self.karma.to_f / (self.stories_submitted_count + self.comments_posted_count)
+    end
+  end
+
   def stories_submitted_count
     Keystore.value_for("user:#{self.id}:stories_submitted").to_i
   end

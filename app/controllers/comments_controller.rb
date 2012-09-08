@@ -207,6 +207,7 @@ class CommentsController < ApplicationController
       cs = Comment.ordered_for_story_or_thread_for_user(nil, r, @showing_user)
 
       if @user && (@showing_user.id == @user.id)
+        @user.reset_unread_reply_count!
         @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,
           cs.map{|c| c.story_id }.uniq)
 

@@ -101,6 +101,7 @@ class Comment < ActiveRecord::Base
   def deliver_reply_notifications
     begin
       if self.parent_comment_id && u = self.parent_comment.try(:user)
+        u.increment_unread_reply_count!
         if u.email_replies?
           EmailReply.reply(self, u).deliver
         end

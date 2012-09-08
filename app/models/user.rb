@@ -51,8 +51,7 @@ class User < ActiveRecord::Base
   end
 
   def increment_unread_reply_count!
-    count = Keystore.value_for("user:#{self.id}:unread_replies").to_i + 1
-    Keystore.put("user:#{self.id}:unread_replies", count)
+    count = Keystore.increment_value_for("user:#{self.id}:unread_replies")
   end
 
   def reset_unread_reply_count!

@@ -18,10 +18,10 @@
           <div id="story_guidelines" style="<%= @user &&
           @user.stories_submitted_count > 2 ? "display: none;" : "" %>">
             <div style="float: right;">
-            <a href="javascript:window.location=%22http://lobste.rs/stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title)"
+            <a href="javascript:window.location=%22<%= root_url %>stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title)"
             style="border: 1px solid #ddd; padding: 0.5em; background-color:
             #f8f8f8; line-height: 1.5em; margin-left: 1em;">Submit to
-            Lobste.rs</a>
+            Lobsters</a>
             </div>
             <ul>
             

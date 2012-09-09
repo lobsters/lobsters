@@ -6,6 +6,12 @@
     <% end %>
   </div>
 
+  <div style="float: right;">
+    <img src="https://secure.gravatar.com/avatar/<%=
+      Digest::MD5.hexdigest(@showing_user.email.strip.downcase) %>?r=pg&amp;
+      d=<%= CGI.escape(root_url + "images/1x1t.gif") %>&amp;s=100">
+  </div>
+
   <label class="required">Status:</label>
   <span class="d">
     Active <%= @showing_user.is_admin? ? "administrator" :

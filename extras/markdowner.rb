@@ -22,6 +22,15 @@ class Markdowner
       # make links have rel=nofollow
       html.gsub!(/<a href/, "<a rel=\"nofollow\" href")
 
+      # make @mentions into links to user profile
+      html.gsub!(/\B\@([\w\-]+)/) do |u|
+        if User.find_by_username(u[1..-1])
+          "<a href=\"/u/#{u[1..-1]}\">#{u}</a>"
+        else
+          u
+        end
+      end
+
       html
     end
   end

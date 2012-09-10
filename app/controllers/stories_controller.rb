@@ -46,11 +46,7 @@ class StoriesController < ApplicationController
     end
 
     @story.is_expired = true
-
-    if @user.is_moderator? && @user.id != @story.user_id
-      @story.editor_user_id = @user.id
-    end
-
+    @story.editor_user_id = @user.id
     @story.save(:validate => false)
 
     redirect_to @story.comments_url

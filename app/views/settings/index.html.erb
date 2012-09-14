@@ -90,6 +90,27 @@
     <br>
 
     <div class="legend">
+      Comment Mention Notification Settings
+    </div>
+
+    <div class="boxline">
+      <%= f.label :email_mentions, "Receive E-mail:", :class => "required" %>
+      <%= f.check_box :email_mentions %>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :pushover_mentions,
+        raw("Receive <a href=\"https://pushover.net/\">Pushover</a> Alert:"),
+        :class => "required" %>
+      <%= f.check_box :pushover_mentions %>
+      <span class="hint">
+        Requires user key entered above
+      </span>
+    </div>
+
+    <br>
+
+    <div class="legend">
       Private Message Notification Settings
     </div>
 

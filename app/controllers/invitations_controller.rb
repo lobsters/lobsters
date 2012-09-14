@@ -15,7 +15,8 @@ class InvitationsController < ApplicationController
       else
         raise
       end
-    rescue
+    rescue e =>
+      logger.info e
       flash[:error] = "Could not send invitation, verify the e-mail " <<
         "address is valid."
     end

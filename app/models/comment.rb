@@ -11,7 +11,7 @@ class Comment < ActiveRecord::Base
   attr_accessor :parent_comment_short_id, :current_vote, :previewing,
     :indent_level, :highlighted
 
-  before_create :assign_short_id_and_upvote
+  before_create :assign_short_id_and_upvote, :assign_initial_confidence
   after_create :assign_votes, :mark_submitter, :deliver_reply_notifications
   after_destroy :unassign_votes
 
@@ -188,6 +188,10 @@ class Comment < ActiveRecord::Base
     under = 1.0 + ((1.0 / n) * z * z)
 
     return (left - right) / under
+  end
+
+  def assign_initial_confidence
+    self.confidence = self.calculated_confidence
   end
 
   def unassign_votes

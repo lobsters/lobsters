@@ -1,6 +1,10 @@
 <div class="comment_form_container">
 <%= form_tag((comment.new_record? ? "/comments/post_to/#{story.short_id}" :
 "/comments/#{comment.short_id}/update"), { :id => "comment_form" }) do |f| %>
+  <% if comment && comment.errors.any? %>
+    <%= errors_for comment %>
+  <% end %>
+
   <% if comment.parent_comment_short_id.present? %>
     <%= hidden_field_tag "parent_comment_short_id",
       comment.parent_comment_short_id %>
@@ -31,14 +35,10 @@
 
   <p></p>
 <% end %>
-<% if defined?(show_comment) %>
-  <% if show_comment.valid? %>
-    <ol class="comments comments1 preview">
-      <%= render :partial => "comments/comment",
-        :locals => { :comment => show_comment, :story => story } %>
-    </ol>
-  <% else %>
-    <%= errors_for comment %>
-  <% end %>
+<% if defined?(show_comment) && show_comment.valid? %>
+  <ol class="comments comments1 preview">
+    <%= render :partial => "comments/comment",
+      :locals => { :comment => show_comment, :story => story } %>
+  </ol>
 <% end %>
 </div>

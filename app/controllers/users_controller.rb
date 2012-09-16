@@ -21,7 +21,8 @@ class UsersController < ApplicationController
     recursor = lambda{|user,level|
       if user
         @tree.push({ :level => level, :user_id => user.id,
-          :username => user.username, :karma => karmas[user.id].to_i })
+          :username => user.username, :karma => karmas[user.id].to_i,
+          :is_moderator => user.is_moderator?, :is_admin => user.is_admin? })
       end
 
       # for each user that was invited by this one, recurse with it

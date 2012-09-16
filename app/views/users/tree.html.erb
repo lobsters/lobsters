@@ -15,6 +15,11 @@
 
     <li><a href="/u/<%= u[:username] %>"><%= u[:username] %></a>
       (<%= u[:karma] %>)
+      <% if u[:is_admin] %>
+        (administrator)
+      <% elsif u[:is_moderator] %>
+        (moderator)
+      <% end %>
 
     <% prev_level = u[:level] %>
   <% end %>

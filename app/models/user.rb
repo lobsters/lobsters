@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
     :class_name => "Message",
     :foreign_key => "recipient_user_id"
   has_many :tag_filters
+  belongs_to :invited_by_user,
+    :class_name => "User"
 
   has_secure_password
 

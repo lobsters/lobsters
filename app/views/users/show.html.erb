@@ -21,7 +21,14 @@
 
   <label class="required">Joined:</label>
   <span class="d">
-    <%= time_ago_in_words(@showing_user.created_at) %> ago
+    <%= time_ago_in_words(@showing_user.created_at) %>
+    <% if @showing_user.invited_by_user %>
+      ago, invited by
+      <a href="/u/<%= @showing_user.invited_by_user.username %>"><%=
+        @showing_user.invited_by_user.username %></a>
+    <% else %>
+      ago
+    <% end %>
   </span>
   <br>
   

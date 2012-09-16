@@ -12,7 +12,7 @@ class Comment < ActiveRecord::Base
     :indent_level, :highlighted
 
   before_create :assign_short_id_and_upvote, :assign_initial_confidence
-  after_create :assign_votes, :mark_submitter, :deliver_reply_notifications
+  after_create :assign_votes, :mark_submitter, :deliver_reply_notifications, :deliver_mention_notifications
   after_destroy :unassign_votes
 
   MAX_EDIT_MINS = 45
@@ -96,6 +96,24 @@ class Comment < ActiveRecord::Base
 
   def mark_submitter
     Keystore.increment_value_for("user:#{self.user_id}:comments_posted")
+  end
+
+  def deliver_mention_notifications
+    self[:comment].gsub(/\B\@([\w\-]+)/) do |u|
+      if user = User.find_by_username(u[1..-1])
+        if user.email_mentions?
+          EmailReply.mention(self, user).deliver
+        end
+        if user.pushover_mentions? && user.pushover_user_key.present?
+          Pushover.push(user.pushover_user_key, user.pushover_device, {
+            :title => "Lobsters mention by #{self.user.username} on #{self.story.title}",
+            :message => self.plaintext_comment,
+            :url => self.url,
+            :url_title => "Reply to #{self.user.username}",
+          })
+        end
+      end
+    end
   end
 
   def deliver_reply_notifications

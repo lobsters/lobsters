@@ -6,7 +6,7 @@
     <% end %>
   </div>
 
-  <div style="float: right;">
+  <div id="gravatar">
     <img src="https://secure.gravatar.com/avatar/<%=
       Digest::MD5.hexdigest(@showing_user.email.strip.downcase) %>?r=pg&amp;
       d=<%= CGI.escape(root_url + "images/1x1t.gif") %>&amp;s=100">
@@ -27,7 +27,9 @@
   
   <label class="required">Karma:</label>
   <span class="d">
-    <%= @showing_user.karma %> (average <%= number_with_precision(@showing_user.average_karma, :precision => 2) %>)
+    <%= @showing_user.karma %>
+    (average <%= number_with_precision(@showing_user.average_karma,
+      :precision => 2) %>)
   </span>
   <br>
 
@@ -47,7 +49,7 @@
 
   <label class="required">About:</label>
 
-  <div class="shorten_first_p" style="margin-left: 12em;">
+  <div id="user_about" class="shorten_first_p">
     <%= raw @showing_user.linkified_about %>
   </div>
 </div>

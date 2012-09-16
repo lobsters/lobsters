@@ -44,6 +44,14 @@
 		margin: 0 8px;
 	}
 
+	ol.comments {
+		margin-left: 10px;
+	}
+	ol.comments1 {
+		margin-left: 0;
+		padding-left: 15px;
+	}
+
 	div.voters {
 		width: 31px;
 		margin-top: 0px;
@@ -70,15 +78,35 @@
 		font-size: 10pt;
 	}
 
-	div.box label {
+	div.box label,
+	div.boxline label {
 		display: block;
+		width: 100% !important;
+	}
+
+	div.boxline textarea,
+	div.boxline input[type="text"] {
+		max-width: 98%;
 	}
 
 	div#story_box input,
+	div#story_box button,
 	div#story_box textarea,
 	div#story_box #story_tags_a,
-	div#story_box div.markdown_help_toggler {
+	div.markdown_help_toggler {
 		margin: 0 !important;
 		width: 100% !important;
+	}
+
+	div#story_box #story_tags_a {
+		min-width: 305px !important;
+	}
+
+	div#gravatar {
+		float: none;
+	}
+
+	div#user_about {
+		margin-left: 0;
 	}
 }

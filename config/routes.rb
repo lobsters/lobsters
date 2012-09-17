@@ -63,6 +63,7 @@ Lobsters::Application.routes.draw do
 
   get "/u" => "users#tree"
   get "/u/:id" => "users#show"
+  get "/autocomplete/u" => "users#autocomplete", :format => "json"
 
   get "/rss" => "home#index", :format => "rss"
 

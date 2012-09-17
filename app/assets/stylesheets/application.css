@@ -1,5 +1,6 @@
 /*
  *= require select2
+ *= require jquery.ui.autocomplete
  *= require_self
  *= require mobile
 */

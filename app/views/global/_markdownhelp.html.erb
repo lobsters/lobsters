@@ -27,5 +27,14 @@
   text</pre></td>
     <td>prefix text with at least <tt>&nbsp;&nbsp;&nbsp;3 spaces</tt></td>
   </tr>
+
+  <% if defined?(allow_images) && allow_images %>
+    <tr>
+      <td>(inline image)</td>
+      <td><tt>![alt text](http://example.com/image.jpg)</tt> (only allowed in
+        story text</td>
+    </tr>
+  <% end %>
+
   </table>
 </div>

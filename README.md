@@ -71,3 +71,8 @@ You should define this in `/etc/hosts` (or through DNS) to point to
 `http://lobsters.localhost:3000` with your `test` user:
 
           lobsters$ rails server
+
+####Contributing bugfixes and new features
+
+Please see the [CONTRIBUTING](https://github.com/jcs/lobsters/blob/master/CONTRIBUTING.md)
+file.

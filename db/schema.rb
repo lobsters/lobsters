@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120910172514) do
+ActiveRecord::Schema.define(:version => 20120918152116) do
 
   create_table "comments", :force => true do |t|
     t.datetime "created_at",                                                                          :null => false
@@ -139,6 +139,7 @@ ActiveRecord::Schema.define(:version => 20120910172514) do
     t.boolean  "is_moderator",                        :default => false
     t.boolean  "email_mentions",                      :default => false
     t.boolean  "pushover_mentions",                   :default => false
+    t.string   "rss_token"
   end
 
   add_index "users", ["session_token"], :name => "session_hash", :unique => true

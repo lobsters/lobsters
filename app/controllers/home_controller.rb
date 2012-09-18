@@ -1,19 +1,29 @@
 class HomeController < ApplicationController
   STORIES_PER_PAGE = 25
 
+  # for rss feeds, load the user's tag filters if a token is passed
+  before_filter :find_user_from_rss_token, :only => [ :index, :newest ]
+
   def index
     @stories = find_stories_for_user_and_tag_and_newest_and_by_user(@user,
       nil, false, nil)
 
     @rss_link ||= "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
-      "title=\"RSS 2.0\" href=\"/rss\" />"
+      "title=\"RSS 2.0\" href=\"/rss" <<
+      (@user ? "?token=#{@user.rss_token}" : "") << "\" />"
 
     @heading = @title = ""
     @cur_url = "/"
 
     respond_to do |format|
       format.html { render :action => "index" }
-      format.rss { render :action => "rss", :layout => false }
+      format.rss {
+        if @user && params[:token].present?
+          @title = "Private feed for #{@user.username}"
+        end
+
+        render :action => "rss", :layout => false
+      }
     end
   end
 
@@ -25,13 +35,20 @@ class HomeController < ApplicationController
     @cur_url = "/newest"
 
     @rss_link = "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
-      "title=\"RSS 2.0 - Newest Items\" href=\"/newest.rss\" />"
+      "title=\"RSS 2.0 - Newest Items\" href=\"/newest.rss" <<
+      (@user ? "?token=#{@user.rss_token}" : "") << "\" />"
 
     @newest = true
 
     respond_to do |format|
       format.html { render :action => "index" }
-      format.rss { render :action => "rss", :layout => false }
+      format.rss {
+        if @user && params[:token].present?
+          @title += " - Private feed for #{@user.username}"
+        end
+
+        render :action => "rss", :layout => false
+      }
     end
   end
 
@@ -167,5 +184,11 @@ private
     end
 
     [ stories, show_more ]
+  end
+
+  def find_user_from_rss_token
+    if !@user && request[:format] == "rss" && params[:token].to_s.present?
+      @user = User.find_by_rss_token(params[:token])
+    end
   end
 end

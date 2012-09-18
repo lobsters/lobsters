@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
     :pushover_mentions
 
   before_save :check_session_token
-  after_create :create_default_tag_filters
+  after_create :create_default_tag_filters, :create_rss_token
 
   def check_session_token
     if self.session_token.blank?
@@ -42,6 +42,12 @@ class User < ActiveRecord::Base
       tf.tag_id = t.id
       tf.user_id = self.id
       tf.save
+    end
+  end
+
+  def create_rss_token
+    if self.rss_token.blank?
+      self.rss_token = Utils.random_str(60)
     end
   end
 

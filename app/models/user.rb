@@ -24,7 +24,8 @@ class User < ActiveRecord::Base
 
   attr_accessible :username, :email, :password, :password_confirmation,
     :about, :email_replies, :pushover_replies, :pushover_user_key,
-    :pushover_device, :email_messages, :pushover_messages, :email_mentions, :pushover_mentions
+    :pushover_device, :email_messages, :pushover_messages, :email_mentions,
+    :pushover_mentions
 
   before_save :check_session_token
   after_create :create_default_tag_filters
@@ -62,7 +63,8 @@ class User < ActiveRecord::Base
     if self.karma == 0
       0
     else
-      self.karma.to_f / (self.stories_submitted_count + self.comments_posted_count)
+      self.karma.to_f / (self.stories_submitted_count +
+        self.comments_posted_count)
     end
   end
 

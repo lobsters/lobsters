@@ -6,7 +6,7 @@
 	<%= form_tag login_url do %>
     <p>
 		<%= label_tag :email, "E-mail or Username:" %>
-		<%= text_field_tag :email, "", :size => 30 %>
+		<%= text_field_tag :email, "", :size => 30, :autofocus => "autofocus" %>
     <br />
 
     <%= label_tag :password, "Password:" %>
@@ -24,9 +24,3 @@
 		</p>
 	<% end %>
 </div>
-
-<script>
-  $(document).ready(function() {
-    $("#email").focus();
-  });
-</script>

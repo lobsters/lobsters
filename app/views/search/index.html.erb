@@ -5,7 +5,8 @@
 
   <%= form_tag "/search", :method => :get do %>
     <div class="boxline">
-      <%= text_field_tag "q", @search.q, :size => 40 %>
+      <%= text_field_tag "q", @search.q, { :size => 40 }.
+        merge(@search.q.present? ? {} : { :autofocus => "autofocus" }) %>
       <input type="submit" value="Search">
     </div>
 
@@ -42,14 +43,6 @@
       <%= radio_button_tag "order", "points", @search.order == "points" %>
         <label for="search_order_points" class="normal">Points</label>
     </div>
-  <% end %>
-
-  <% if !@search.q.present? %>
-    <script>
-      $(document).ready(function() {
-        $("#q").focus();
-      });
-    </script>
   <% end %>
 </div>
 

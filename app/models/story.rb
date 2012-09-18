@@ -20,7 +20,7 @@ class Story < ActiveRecord::Base
 
   before_create :assign_short_id
   before_save :log_moderation
-  after_create :mark_submitter
+  after_create :mark_submitter, :deliver_mention_notifications
   after_save :deal_with_tags
   
   define_index do
@@ -161,6 +161,31 @@ class Story < ActiveRecord::Base
 
   def mark_submitter
     Keystore.increment_value_for("user:#{self.user_id}:stories_submitted")
+  end
+
+  def deliver_mention_notifications
+    self.description.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
+      if u = User.find_by_username(mention)
+        begin
+          if u.email_mentions?
+            EmailReply.mention(self, u).deliver
+          end
+
+          if u.pushover_mentions? && u.pushover_user_key.present?
+            Pushover.push(u.pushover_user_key, u.pushover_device, {
+              :title => "Lobsters mention by #{self.user.username} on " <<
+                self.title,
+              :message => self.description,
+              :url => self.url,
+              :url_title => "Reply to #{self.user.username}",
+            })
+          end
+        rescue => e
+          Rails.logger.error "failed to deliver mention notification to " <<
+            "#{u.username}: #{e.message}"
+        end
+      end
+    end
   end
 
   def deal_with_tags

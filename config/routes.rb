@@ -51,6 +51,7 @@ Lobsters::Application.routes.draw do
     post "delete"
     post "undelete"
   end
+  get "/comments/page/:page" => "comments#index"
   post "/comments/post_to/:story_id" => "comments#create"
   post "/comments/preview_to/:story_id" => "comments#preview_new"
 

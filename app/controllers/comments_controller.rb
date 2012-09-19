@@ -1,4 +1,6 @@
 class CommentsController < ApplicationController
+  COMMENTS_PER_PAGE = 20
+
   before_filter :require_logged_in_user_or_400,
     :only => [ :create, :preview, :upvote, :downvote, :unvote ]
 
@@ -188,8 +190,18 @@ class CommentsController < ApplicationController
     @heading = @title = "Newest Comments"
     @cur_url = "/comments"
 
-    @comments = Comment.find(:all, :conditions => "is_deleted = 0",
-      :order => "created_at DESC", :limit => 20, :include => [ :user, :story ])
+    @page = 1
+    if params[:page].to_i > 0
+      @page = params[:page].to_i
+    end
+
+    @comments = Comment.find(
+      :all,
+      :conditions => "is_deleted = 0 AND is_moderated = 0",
+      :order => "created_at DESC",
+      :offset => ((@page - 1) * COMMENTS_PER_PAGE),
+      :limit => COMMENTS_PER_PAGE,
+      :include => [ :user, :story ])
 
     if @user
       @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id,

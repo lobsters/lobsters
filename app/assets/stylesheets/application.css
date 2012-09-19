@@ -1109,3 +1109,10 @@ div.modal_confirm_content div.modal_confirm_buttonbar input.default_button {
 	-o-box-shadow     : none;
 	box-shadow        : none;
 }
+
+.select2-container .select2-results li em {
+	background: none;
+	color: #aaa;
+	font-style: italic;
+	padding-left: 0.5em;
+}

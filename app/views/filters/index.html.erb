@@ -15,7 +15,7 @@
       <th width="15%">Tag</th>
       <th width="78%">Description</th>
     </tr>
-    <% Tag.all(:order => :tag).each do |tag| %>
+    <% Tag.order(:tag).accessible_to(@user).each do |tag| %>
       <tr>
         <td><input type="checkbox" name="tag_<%= tag.tag %>" value=1
           <%= @filtered_tags.map{|ft| ft.tag_id }.include?(tag.id) ?

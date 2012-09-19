@@ -642,6 +642,10 @@ div#story_preview {
 div#story_box input#story_url {
 	width: 508px;
 }
+div#story_box button#story_fetch_title {
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
 div#story_box input#story_title,
 div#story_box input#story_moderation_reason {
 	width: 600px;

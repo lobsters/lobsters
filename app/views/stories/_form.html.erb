@@ -10,8 +10,8 @@
 	<% elsif !f.object.id %>
     <%= f.label :url, "URL:", :class => "required" %>
 		<%= f.text_field :url, :autocomplete => "off" %>
-		<%= button_to_function "Fetch Title",
-      "Lobsters.fetchURLTitle($(this), $('#story_url'), $('#story_title'));" %>
+    <%= button_tag "Fetch Title", :id => "story_fetch_title",
+      :type => "button" %>
 	<% end %>
   </div>
 
@@ -40,3 +40,12 @@
       :autocomplete => "off" %>
   </div>
 </div>
+
+<script>
+  $(document).ready(function() {
+    $("#story_fetch_title").click(function() {
+      Lobsters.fetchURLTitle($(this), $("#story_url"), $("#story_title"));
+      return false;
+    });
+  });
+</script>

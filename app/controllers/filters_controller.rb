@@ -3,7 +3,7 @@ class FiltersController < ApplicationController
 
   def index
     @cur_url = "/filters"
-    @heading = @title = "Filtered Tags"
+    @title = "Filtered Tags"
 
     @filtered_tags = @user.tag_filters.reload
 

@@ -1,13 +1,8 @@
 class Tag < ActiveRecord::Base
   attr_accessor :filtered_count
 
-  # Scope to determine what tags a user can see
   scope :accessible_to, ->(user) do
-    if user.is_admin?
-      all
-    else
-      where(:privileged => false)
-    end
+    user.is_admin?? all : where(:privileged => false)
   end
 
   def self.all_with_filtered_counts_for(user)

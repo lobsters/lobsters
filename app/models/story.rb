@@ -166,7 +166,8 @@ class Story < ActiveRecord::Base
   def check_tags
     (self.tags_to_add || []).each do |t|
       if !t.valid_for?(self.user)
-        raise "#{self.user.username} does not have permissions to use privileged tags"
+        raise "#{self.user.username} does not have permission to use " <<
+          "privileged tag #{t.tag}"
       end
     end
   end

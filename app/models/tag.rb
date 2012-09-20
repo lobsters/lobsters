@@ -6,11 +6,11 @@ class Tag < ActiveRecord::Base
     if user.is_admin?
       all
     else
-      where(:private => false)
+      where(:privileged => false)
     end
   end
 
-  def self.all_with_filtered_counts(user)
+  def self.all_with_filtered_counts_for(user)
     counts = TagFilter.count(:group => "tag_id")
 
     Tag.order(:tag).accessible_to(user).map{|t|

@@ -115,7 +115,7 @@ ActiveRecord::Schema.define(:version => 20120919195401) do
     t.string  "tag",                 :limit => 25,  :default => "",    :null => false
     t.string  "description",         :limit => 100
     t.boolean "filtered_by_default",                :default => false
-    t.boolean "private",                            :default => false
+    t.boolean "privileged",                         :default => false
   end
 
   add_index "tags", ["tag"], :name => "tag", :unique => true

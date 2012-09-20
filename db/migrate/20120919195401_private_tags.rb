@@ -1,15 +1,15 @@
 class PrivateTags < ActiveRecord::Migration
   def up
-    add_column :tags, :private, :boolean, :default => false
+    add_column :tags, :privileged, :boolean, :default => false
 
     # All existing tags should be public by default
     Tag.all.each do |t|
-      t.private = false
+      t.privileged = false
       t.save
     end
   end
 
   def down
-    remove_column :tags, :private
+    remove_column :tags, :privileged
   end
 end

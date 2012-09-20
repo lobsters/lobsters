@@ -24,7 +24,7 @@
 	<%= f.label :tags_a, "Tags:", :class => "required",
     :style => "line-height: 2.3em;" %>
   <%= f.select "tags_a", options_for_select(
-    Tag.all_with_filtered_counts(@user).map{|t|
+    Tag.all_with_filtered_counts_for(@user).map{|t|
     [ "#{t.tag} - #{t.description}", t.tag, { "data-html" => raw("<strong>") +
       t.tag + raw("</strong> - ") + t.description.to_s +
       (t.filtered_count == 0 ? "" :

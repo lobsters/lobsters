@@ -252,9 +252,8 @@ class Story < ActiveRecord::Base
 
     seconds = self.created_at.to_i - 398995200
 
-    # XXX: while we're slow, allow a window of 36 hours.  as the site grows,
-    # shrink this down to 12 or so.
-    window = 60 * 60 * 36
+    # TODO: as the site grows, shrink this down to 12 or so.
+    window = 60 * 60 * 24
 
     return -(order + (sign * (seconds.to_f / window))).round(7)
   end

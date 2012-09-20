@@ -30,7 +30,7 @@
       (t.filtered_count == 0 ? "" :
       raw(" <em>") + "#{t.filtered_count} user" +
       (t.filtered_count == 1 ? "" : "s") + " filtering" +
-      raw("</em>")) } ]}), {}, { :multiple => true } %>
+      raw("</em>")) } ]}, f.object.tags_a), {}, { :multiple => true } %>
   </div>
 
   <div class="boxline">

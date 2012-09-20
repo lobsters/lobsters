@@ -19,7 +19,7 @@ class Story < ActiveRecord::Base
   attr_accessible :title, :description, :tags_a, :moderation_reason
 
   before_create :assign_short_id
-  before_save :log_moderation
+  before_save :log_moderation, :check_tags
   after_create :mark_submitter
   after_save :deal_with_tags
   
@@ -163,6 +163,14 @@ class Story < ActiveRecord::Base
     Keystore.increment_value_for("user:#{self.user_id}:stories_submitted")
   end
 
+  def check_tags
+    (self.tags_to_add || []).each do |t|
+      if !t.valid_for?(self.user)
+        raise "#{self.user.username} does not have permissions to use privileged tags"
+      end
+    end
+  end
+
   def deal_with_tags
     (self.tags_to_delete || []).each do |t|
       if t.is_a?(Tagging)
@@ -173,7 +181,7 @@ class Story < ActiveRecord::Base
     end
 
     (self.tags_to_add || []).each do |t|
-      if t.is_a?(Tag)
+      if t.is_a?(Tag) && t.valid_for?(self.user)
         tg = Tagging.new
         tg.tag_id = t.id
         tg.story_id = self.id

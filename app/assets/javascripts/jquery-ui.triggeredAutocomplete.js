@@ -3,7 +3,7 @@
  * triggeredAutocomplete (jQuery UI autocomplete widget)
  * 2012 by Hawkee.com (hawkee@gmail.com)
  *
- * Version 1.4.3
+ * Version 1.4.5
  * 
  * Requires jQuery 1.7 and jQuery UI 1.8
  *
@@ -18,7 +18,8 @@
     
     options: {
       trigger: "@",
-      allowDuplicates: true
+      allowDuplicates: true,
+      maxLength: 0
     },
 
     _create:function() {
@@ -81,12 +82,12 @@
         /** Places the caret right after the inserted item. */
         var index = start.length + self.options.trigger.length + ui.item.label.length + 2;
         if (this.createTextRange) {
-                var range = this.createTextRange();
-                range.move('character', index);
-                range.select();
-            } else if (this.setSelectionRange) {
-              this.setSelectionRange(index, index);
-            }
+          var range = this.createTextRange();
+          range.move('character', index);
+          range.select();
+        } else if (this.setSelectionRange) {
+          this.setSelectionRange(index, index);
+        }
         
         return false;
       };
@@ -138,6 +139,10 @@
       var cursorPos = this.getCursor();
       this.contents = contents;
       this.cursorPos = cursorPos;
+
+      // Include the character before the trigger and check that the trigger is not in the middle of a word
+      // This avoids trying to match in the middle of email addresses when '@' is used as the trigger
+
       var check_contents = contents.substring(contents.lastIndexOf(this.options.trigger) - 1, cursorPos);
       var regex = new RegExp('\\B\\'+this.options.trigger+'([\\w\\-]+)');
 
@@ -154,7 +159,7 @@
 
         if(this.stopIndex == contents.lastIndexOf(this.options.trigger) && term.length > this.stopLength) { term = ''; }
       
-        if(term.length > 0) {
+        if (term.length > 0 && (!this.options.maxLength || term.length <= this.options.maxLength)) {
           // Updates the hidden field to check if a name was removed so that we can put them back in the list.
           this.updateHidden();
           return this._search(term);
@@ -184,7 +189,7 @@
             data: request,
             dataType: 'json',
             success: function(data) {
-              if(data != null) {
+              if(data != null && data.length > 0) {
                 response($.map(data, function(item) {
                   if (typeof item === "string") {
                     label = item;

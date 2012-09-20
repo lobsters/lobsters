@@ -173,7 +173,7 @@ class Story < ActiveRecord::Base
     end
 
     (self.tags_to_add || []).each do |t|
-      if t.is_a?(Tag)
+      if t.is_a?(Tag) && t.valid_for?(self.user)
         tg = Tagging.new
         tg.tag_id = t.id
         tg.story_id = self.id

@@ -19,6 +19,14 @@ class Tag < ActiveRecord::Base
     }
   end
 
+  def valid_for?(user)
+    if self.privileged?
+      user.is_admin?
+    else
+      true
+    end
+  end
+
   def filtered_count
     @filtered_count ||= TagFilter.where(:tag_id => self.id).count
   end

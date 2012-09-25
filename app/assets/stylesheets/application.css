@@ -57,7 +57,7 @@ a.tag {
 	vertical-align: text-top;
 }
 
-a.tag_pdf {
+a.tag_pdf, a.tag_video {
 	background-color: #F5D1FA;
 	border-color: #A26DC8;
 }

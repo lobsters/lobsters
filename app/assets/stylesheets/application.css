@@ -23,8 +23,8 @@ a {
 	cursor: pointer;
 }
 
-a:visited {
-	color: #6880CB; 
+ol.stories li.story div.details span.link a:visited {
+	color: #7395d9;
 }
 
 h1 {

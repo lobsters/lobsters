@@ -59,7 +59,8 @@ class Story < ActiveRecord::Base
       errors.add(:description, "must contain text if no URL posted")
     end
 
-    if !(self.new_tags || []).reject{|t| t.to_s.strip == "" }.any?
+    if self.new_record? &&
+    !(self.new_tags || []).reject{|t| t.to_s.strip == "" }.any?
       errors.add(:base, "Must have at least one tag.  If no tags apply to " +
         "your content, it probably doesn't belong here.")
     end

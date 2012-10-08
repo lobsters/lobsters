@@ -251,12 +251,10 @@ class Story < ActiveRecord::Base
       sign = 0
     end
 
-    seconds = self.created_at.to_i - 398995200
-
     # TODO: as the site grows, shrink this down to 12 or so.
     window = 60 * 60 * 24
 
-    return -(order + (sign * (seconds.to_f / window))).round(7)
+    return -(order + (sign * (self.created_at.to_f / window))).round(7)
   end
 
   def generated_markeddown_description

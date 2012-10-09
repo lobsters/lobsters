@@ -244,10 +244,6 @@ class Comment < ActiveRecord::Base
     comment
   end
 
-  def flag!
-    Story.update_counters self.id, :flaggings => 1
-  end
-
   def has_been_edited?
     self.updated_at && (self.updated_at - self.created_at > 1.minute)
   end

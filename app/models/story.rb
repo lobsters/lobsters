@@ -105,6 +105,12 @@ class Story < ActiveRecord::Base
     false
   end
 
+  def self.recalculate_all_hotnesses!
+    Story.all.each do |s|
+      s.recalculate_hotness!
+    end
+  end
+
   def assign_short_id
     10.times do |try|
       if try == 10
@@ -242,6 +248,7 @@ class Story < ActiveRecord::Base
 
   def calculated_hotness
     score = upvotes - downvotes
+
     order = Math.log([ score.abs, 1 ].max, 10)
     if score > 0
       sign = 1
@@ -252,7 +259,7 @@ class Story < ActiveRecord::Base
     end
 
     # TODO: as the site grows, shrink this down to 12 or so.
-    window = 60 * 60 * 24
+    window = 60 * 60 * 48
 
     return -(order + (sign * (self.created_at.to_f / window))).round(7)
   end
@@ -357,6 +364,11 @@ class Story < ActiveRecord::Base
 
   def is_gone?
     is_expired?
+  end
+
+  def recalculate_hotness!
+    Story.connection.execute("UPDATE #{Story.table_name} SET " <<
+      "hotness = '#{self.calculated_hotness}' WHERE id = #{self.id.to_i}")
   end
 
   def update_comment_count!

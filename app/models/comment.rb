@@ -83,7 +83,7 @@ class Comment < ActiveRecord::Base
 
   def downvote_summary
     reasons = {}
-    Vote.where(:comment_id => self.id).each do |v|
+    Vote.where(:comment_id => self.id, :vote => -1).each do |v|
       reasons[v.reason] ||= 0
       reasons[v.reason] += 1
     end

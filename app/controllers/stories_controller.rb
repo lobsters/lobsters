@@ -117,19 +117,7 @@ class StoriesController < ApplicationController
       @user ? @user : nil)
     @comment = Comment.new
 
-    if @user
-      if v = Vote.find_by_user_id_and_story_id_and_comment_id(@user.id,
-      @story.id, nil)
-        @story.vote = v.vote
-      end
- 
-      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @story.id)
-      @comments.each do |c|
-        if @votes[c.id]
-          c.current_vote = @votes[c.id]
-        end
-      end
-    end
+    load_user_votes
   end
 
   def show_comment
@@ -155,19 +143,8 @@ class StoriesController < ApplicationController
     end
 
     @comment = Comment.new
-
-    if @user
-      if v = Vote.find_by_user_id_and_story_id(@user.id, @story.id)
-        @story.vote = v.vote
-      end
- 
-      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @story.id)
-      @comments.each do |c|
-        if @votes[c.id]
-          c.current_vote = @votes[c.id]
-        end
-      end
-    end
+  
+    load_user_votes
 
     render :action => "show"
   end
@@ -253,6 +230,22 @@ private
         "to manage it."
       redirect_to "/"
       return false
+    end
+  end
+
+  def load_user_votes
+    if @user
+      if v = Vote.find_by_user_id_and_story_id_and_comment_id(@user.id,
+      @story.id, nil)
+        @story.vote = v.vote
+      end
+ 
+      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @story.id)
+      @comments.each do |c|
+        if @votes[c.id]
+          c.current_vote = @votes[c.id]
+        end
+      end
     end
   end
 end

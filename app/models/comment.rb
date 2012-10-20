@@ -5,7 +5,7 @@ class Comment < ActiveRecord::Base
     :dependent => :delete_all
   belongs_to :parent_comment,
     :class_name => "Comment"
-  
+
   attr_accessible :comment, :moderation_reason
 
   attr_accessor :parent_comment_short_id, :current_vote, :previewing,
@@ -21,10 +21,10 @@ class Comment < ActiveRecord::Base
   define_index do
     indexes comment
     indexes user.username, :as => :author
-    
+
     has "(upvotes - downvotes)", :as => :score, :type => :integer,
       :sortable => true
-    
+
     has is_deleted
     has created_at
 
@@ -90,7 +90,7 @@ class Comment < ActiveRecord::Base
 
     reasons.map{|r,v| "#{Vote::COMMENT_REASONS[r]} (#{v})" }.join(", ")
   end
-  
+
   def is_gone?
     is_deleted?
   end
@@ -185,7 +185,7 @@ class Comment < ActiveRecord::Base
 
     self.save(:validate => false)
     Comment.record_timestamps = true
-    
+
     self.story.update_comment_count!
   end
 
@@ -233,7 +233,7 @@ class Comment < ActiveRecord::Base
   def generated_markeddown_comment
     Markdowner.to_html(self.comment)
   end
-    
+
   def comment=(com)
     self[:comment] = com.to_s.rstrip
     self.markeddown_comment = self.generated_markeddown_comment
@@ -299,7 +299,7 @@ class Comment < ActiveRecord::Base
 
     new_ordered
   end
-  
+
   def is_editable_by_user?(user)
     if user && user.id == self.user_id
       if self.is_moderated?
@@ -312,7 +312,7 @@ class Comment < ActiveRecord::Base
       return false
     end
   end
-  
+
   def is_deletable_by_user?(user)
     if user && user.is_moderator?
       return true

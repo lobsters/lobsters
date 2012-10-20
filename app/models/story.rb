@@ -22,7 +22,7 @@ class Story < ActiveRecord::Base
   before_save :log_moderation, :check_tags
   after_create :mark_submitter
   after_save :deal_with_tags
-  
+
   define_index do
     indexes url
     indexes title
@@ -204,7 +204,7 @@ class Story < ActiveRecord::Base
   def comments_url
     "#{short_id_url}/#{self.title_as_url}"
   end
-  
+
   def short_id_url
     Rails.application.routes.url_helpers.root_url + "s/#{self.short_id}"
   end
@@ -343,7 +343,7 @@ class Story < ActiveRecord::Base
       return false
     end
   end
-  
+
   def is_undeletable_by_user?(user)
     if user && user.is_moderator?
       return true

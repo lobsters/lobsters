@@ -29,7 +29,7 @@ Lobsters::Application.routes.draw do
   match "/t/:tag" => "home#tagged", :as => "tag"
   match "/t/:tag/page/:page" => "home#tagged"
 
-  get "/search" => "search#index"
+  get "/search" => "search#index" if defined?(ThinkingSphinx)
 
   resources :stories do
     post "upvote"
@@ -69,13 +69,13 @@ Lobsters::Application.routes.draw do
 
   get "/settings" => "settings#index"
   post "/settings" => "settings#update"
-  
+
   get "/filters" => "filters#index"
   post "/filters" => "filters#update"
-  
+
   post "/invitations" => "invitations#create"
   get "/invitations/:invitation_code" => "signup#invited"
-  
+
   get "/moderations" => "moderations#index"
   get "/moderations/page/:page" => "moderations#index"
 end

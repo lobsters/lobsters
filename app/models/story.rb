@@ -41,7 +41,7 @@ class Story < ActiveRecord::Base
     }
 
     where "is_expired = 0"
-  end
+  end if defined?(ThinkingSphinx)
 
   validate do
     if self.url.present?

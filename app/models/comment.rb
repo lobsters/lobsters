@@ -29,7 +29,7 @@ class Comment < ActiveRecord::Base
     has created_at
 
     where "is_deleted = 0"
-  end
+  end if defined?(ThinkingSphinx)
 
   validate do
     self.comment.to_s.strip == "" &&

@@ -29,7 +29,7 @@ Lobsters::Application.routes.draw do
   match "/t/:tag" => "home#tagged", :as => "tag"
   match "/t/:tag/page/:page" => "home#tagged"
 
-  get "/search" => "search#index"
+  get "/search" => "search#index" if defined?(ThinkingSphinx)
 
   resources :stories do
     post "upvote"

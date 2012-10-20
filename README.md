@@ -44,7 +44,7 @@ been tested) database, username, and password and put them in a
 
 * Create a `config/initializers/secret_token.rb` file:
 
-          Lobsters::Application.config.secret_token = 'some 128-bit hexadecimal secret here'
+          Lobsters::Application.config.secret_token = 'some 64-byte hexadecimal secret here'
 
 * (Optional, only needed for search engine) Install Sphinx.  Build Sphinx config and start server:
 

@@ -373,6 +373,7 @@ class Story < ActiveRecord::Base
 
   def update_comment_count!
     Keystore.put("story:#{self.id}:comment_count",
-      Comment.where(:story_id => self.id, :is_deleted => 0).count)
+      Comment.where(:story_id => self.id, :is_deleted => 0,
+      :is_moderated => 0).count)
   end
 end

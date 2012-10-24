@@ -28,7 +28,7 @@ class Comment < ActiveRecord::Base
     has is_deleted
     has created_at
 
-    where "is_deleted = 0"
+    where "is_deleted = 0 AND is_moderated = 0"
   end
 
   validate do
@@ -92,7 +92,7 @@ class Comment < ActiveRecord::Base
   end
   
   def is_gone?
-    is_deleted?
+    is_deleted? || is_moderated?
   end
 
   def mark_submitter

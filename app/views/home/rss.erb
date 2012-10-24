@@ -17,6 +17,8 @@
         <% if story.markeddown_description.present? %>
           <description><%= raw coder.encode(story.markeddown_description,
             :decimal) %></description>
+        <% else %>
+          <description><%= cdata_section(link_to("Comments", story.comments_url)) %></description>
         <% end %>
         <% story.taggings.each do |tagging| %>
           <category><%= tagging.tag.tag %></category>

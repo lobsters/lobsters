@@ -76,6 +76,16 @@ class Message < ActiveRecord::Base
       errors.add(:recipient_username, "is not a valid user")
     end
   end
+
+  # TODO: remove remove_mb4 hack
+  def body=(b)
+    self[:body] = b.to_s.remove_mb4
+  end
+  
+  # TODO: remove remove_mb4 hack
+  def subject=(s)
+    self[:subject] = s.to_s.remove_mb4
+  end
   
   def linkified_body
     Markdowner.to_html(self.body)

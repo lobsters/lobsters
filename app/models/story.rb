@@ -313,9 +313,15 @@ class Story < ActiveRecord::Base
     self[:url] = u
   end
 
+  # TODO: remove remove_mb4 hack
+  def description=(d)
+    self[:description] = d.to_s.remove_mb4
+  end
+
   def title=(t)
     # change unicode whitespace characters into real spaces
-    self[:title] = t.strip
+    # TODO: remove remove_mb4 hack
+    self[:title] = t.strip.remove_mb4
   end
 
   def title_as_url

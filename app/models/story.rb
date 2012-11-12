@@ -13,15 +13,15 @@ class Story < ActiveRecord::Base
 
   attr_accessor :_comment_count
   attr_accessor :vote, :already_posted_story, :fetched_content, :previewing
-  attr_accessor :new_tags, :tags_to_add, :tags_to_delete
+  attr_accessor :new_tag_names, :tags_to_add, :tags_to_delete
   attr_accessor :editor_user_id, :moderation_reason
 
   attr_accessible :title, :description, :tags_a, :moderation_reason
 
   before_create :assign_short_id
-  before_save :log_moderation, :check_tags
+  before_save :log_moderation
   after_create :mark_submitter
-  after_save :deal_with_tags
+  after_save :add_or_delete_tags
   
   define_index do
     indexes url
@@ -59,11 +59,7 @@ class Story < ActiveRecord::Base
       errors.add(:description, "must contain text if no URL posted")
     end
 
-    if self.new_record? &&
-    !(self.new_tags || []).reject{|t| t.to_s.strip == "" }.any?
-      errors.add(:base, "Must have at least one tag.  If no tags apply to " +
-        "your content, it probably doesn't belong here.")
-    end
+    check_tags
   end
 
   def self.find_recent_similar_by_url(url)
@@ -170,6 +166,8 @@ class Story < ActiveRecord::Base
     Keystore.increment_value_for("user:#{self.user_id}:stories_submitted")
   end
 
+  # this has to happen just before save rather than in tags_a= because we need
+  # to have a valid user_id
   def check_tags
     (self.tags_to_add || []).each do |t|
       if !t.valid_for?(self.user)
@@ -177,9 +175,14 @@ class Story < ActiveRecord::Base
           "privileged tag #{t.tag}"
       end
     end
+
+    if !(self.tags_to_add || []).reject{|t| t.is_media? }.any?
+      errors.add(:base, "Must have at least one non-media (PDF, video) tag. " <<
+        "If no tags apply to your content, it probably doesn't belong here.")
+    end
   end
 
-  def deal_with_tags
+  def add_or_delete_tags
     (self.tags_to_delete || []).each do |t|
       if t.is_a?(Tagging)
         t.destroy
@@ -278,18 +281,18 @@ class Story < ActiveRecord::Base
     @_tags_a ||= tags.map{|t| t.tag }
   end
 
-  def tags_a=(new_tags)
+  def tags_a=(new_tag_names)
     self.tags_to_delete = []
     self.tags_to_add = []
-    self.new_tags = new_tags.reject{|t| t.blank? }
+    self.new_tag_names = new_tag_names.reject{|t| t.blank? }
 
     self.tags.each do |tag|
-      if !new_tags.include?(tag.tag)
+      if !new_tag_names.include?(tag.tag)
         self.tags_to_delete.push tag
       end
     end
 
-    new_tags.each do |tag|
+    new_tag_names.each do |tag|
       if tag.to_s != "" && !self.tags.map{|t| t.tag }.include?(tag)
         if t = Tag.find_by_tag(tag)
           self.tags_to_add.push t
@@ -297,7 +300,7 @@ class Story < ActiveRecord::Base
       end
     end
 
-    @_tags_a = self.new_tags
+    @_tags_a = self.new_tag_names
   end
 
   def url=(u)

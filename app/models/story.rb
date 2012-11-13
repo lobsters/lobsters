@@ -272,7 +272,8 @@ class Story < ActiveRecord::Base
   end
 
   def description=(desc)
-    self[:description] = desc.to_s.rstrip
+    # TODO: remove remove_mb4 hack
+    self[:description] = desc.to_s.remove_mb4.rstrip
     self.markeddown_description = self.generated_markeddown_description
   end
 
@@ -314,11 +315,6 @@ class Story < ActiveRecord::Base
     end
 
     self[:url] = u
-  end
-
-  # TODO: remove remove_mb4 hack
-  def description=(d)
-    self[:description] = d.to_s.remove_mb4
   end
 
   def title=(t)

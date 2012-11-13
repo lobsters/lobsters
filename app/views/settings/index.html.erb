@@ -5,7 +5,7 @@
 	<div class="legend">
 		Account Settings
 	</div>
-  
+
   <%= form_for @edit_user, :url => settings_url, :method => :post do |f| %>
     <%= error_messages_for f.object %>
 
@@ -21,13 +21,13 @@
       <%= f.label :password, "New Password:", :class => "required" %>
       <%= f.password_field :password, :size => 40 %>
     </div>
-    
+
     <div class="boxline">
       <%= f.label :password_confirmation, "Confirm Password:",
         :class => "required" %>
       <%= f.password_field :password_confirmation, :size => 40 %>
     </div>
-    
+
     <div class="boxline">
       <%= f.label :email, "E-mail Address:", :class => "required" %>
       <%= f.text_field :email, :size => 40 %>
@@ -35,7 +35,7 @@
         <a href="http://www.gravatar.com/" target="_blank">Gravatar</a>'ized
       </span>
     </div>
-    
+
     <div class="boxline">
       <%= f.label :pushover_user_key,
         raw("<a href=\"https://pushover.net/\">Pushover</a> User Key:"),
@@ -67,7 +67,7 @@
         <%= render :partial => "global/markdownhelp" %>
       </div>
     </div>
-  
+
     <div class="legend">
       Comment Reply Notification Settings
     </div>
@@ -129,7 +129,7 @@
     <br>
     <%= f.submit "Save All Settings" %>
   <% end %>
- 
+
   <br>
   <br>
 
@@ -150,7 +150,7 @@
       <%= label_tag :email, "E-mail Address:", :class => "required" %>
       <%= text_field_tag :email, "", :size => 30 %>
     </div>
-    
+
     <div class="boxline">
       <%= label_tag :memo, "Memo to User:", :class => "required" %>
       <%= text_field_tag :memo, "", :size => 60 %>

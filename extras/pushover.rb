@@ -11,6 +11,10 @@ class Pushover
 
     params[:message] = params[:message].to_s.match(/.{0,512}/m).to_s
 
+    if params[:message] == ""
+      params[:message] = "(No message)"
+    end
+
     begin
       s = Sponge.new
       s.fetch("https://api.pushover.net/1/messages.json", :post, {

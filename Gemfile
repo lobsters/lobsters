@@ -30,12 +30,8 @@ group :test, :development do
   gem "sqlite3", "~> "
 
 
-gem "nokogiri"
-gem "htmlentities"
 
-gem "rdiscount"
 
-gem "thinking-sphinx", "2.0.12"
 
 group :assets do
   gem "uglifier"

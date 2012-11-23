@@ -10,6 +10,9 @@ gem "unicorn", "~> "
 gem "dynamic_form", "~> "
 
 gem "jquery-rails"
+# HTML Parsing
+gem "nokogiri", "~> "
+gem "htmlentities", "~> "
 
 # To use ActiveModel has_secure_password
 gem "bcrypt-ruby", "3.0.0"

@@ -13,6 +13,8 @@ gem "dynamic_form", "~> "
 gem "nokogiri", "~> "
 gem "htmlentities", "~> "
 
+# Rendering Engines
+gem "rdiscount", "~> "
 
 
 group :production do

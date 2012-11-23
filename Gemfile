@@ -7,13 +7,14 @@ gem "rails", "~> 3.2"
 gem "unicorn", "~> "
 
 gem "mysql2"
+# Helpers
+gem "dynamic_form", "~> "
 
 gem "jquery-rails"
 
 # To use ActiveModel has_secure_password
 gem "bcrypt-ruby", "3.0.0"
 
-gem "dynamic_form"
 
 gem "exception_notification"
 

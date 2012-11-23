@@ -6,7 +6,6 @@ gem "rails", "~> 3.2"
 # Servers
 gem "unicorn", "~> "
 
-gem "mysql2"
 # Helpers
 gem "dynamic_form", "~> "
 
@@ -16,7 +15,10 @@ gem "jquery-rails"
 gem "bcrypt-ruby", "3.0.0"
 
 
-gem "exception_notification"
+group :production do
+  gem "mysql2", "~> "
+  gem "exception_notification", "~> "
+end
 
 
 # for asset compilation

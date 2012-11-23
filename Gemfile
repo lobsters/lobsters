@@ -3,6 +3,8 @@ source "https://rubygems.org"
 # Frameworks
 gem "rails", "~> 3.2"
 
+# Servers
+gem "unicorn", "~> "
 
 gem "mysql2"
 
@@ -15,8 +17,6 @@ gem "dynamic_form"
 
 gem "exception_notification"
 
-# Use unicorn as the app server
-gem "unicorn"
 
 # for asset compilation
 gem "uglifier"

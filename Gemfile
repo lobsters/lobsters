@@ -9,7 +9,6 @@ gem "unicorn", "~> "
 # Helpers
 gem "dynamic_form", "~> "
 
-gem "jquery-rails"
 # HTML Parsing
 gem "nokogiri", "~> "
 gem "htmlentities", "~> "
@@ -24,8 +23,6 @@ group :production do
 end
 
 
-# for asset compilation
-gem "uglifier"
 
 gem "nokogiri"
 gem "htmlentities"
@@ -38,4 +35,7 @@ group :test, :development do
   gem "rspec-rails", "~> 2.6"
   gem "machinist"
   gem "sqlite3"
+group :assets do
+  gem "uglifier"
+  gem "jquery-rails"
 end

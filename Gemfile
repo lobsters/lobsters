@@ -24,6 +24,10 @@ group :production do
   gem "exception_notification", "~> "
 end
 
+group :test, :development do
+  gem "rspec-rails", "~> 2.6"
+  gem "machinist", "~> "
+  gem "sqlite3", "~> "
 
 
 gem "nokogiri"
@@ -33,10 +37,6 @@ gem "rdiscount"
 
 gem "thinking-sphinx", "2.0.12"
 
-group :test, :development do
-  gem "rspec-rails", "~> 2.6"
-  gem "machinist"
-  gem "sqlite3"
 group :assets do
   gem "uglifier"
   gem "jquery-rails"

@@ -16,6 +16,8 @@ gem "htmlentities", "~> "
 # Rendering Engines
 gem "rdiscount", "~> "
 
+# Search Engines
+gem "thinking-sphinx", "2.0.12"
 
 group :production do
   gem "mysql2", "~> "

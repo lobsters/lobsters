@@ -30,6 +30,7 @@ gem "rdiscount"
 gem "thinking-sphinx", "2.0.12"
 
 group :test, :development do
+  gem "dotenv", "~> 0.4"
   gem "rspec-rails", "~> 2.6"
   gem "machinist"
   gem "sqlite3"

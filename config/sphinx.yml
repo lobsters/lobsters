@@ -1,7 +1,7 @@
 production:
-  address: 127.0.0.1
-  port: 9313
-  min_infix_len: 2
+  address: <%= ENV["SPHINX_HOST"] %>
+  port: <%= ENV["SPHINX_PORT"] %>
+  min_infix_len: <%= ENV["SPHINX_MIN_INFIX"] %>
 
 development:
-  min_infix_len: 2
+  min_infix_len: <%= ENV["SPHINX_MIN_INFIX"] %>

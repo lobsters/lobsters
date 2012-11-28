@@ -17,9 +17,8 @@
         <description>
           <%= raw coder.encode(story.markeddown_description, :decimal) %>
           <% if story.url.present? %>
-            <p>
-            <%= raw link_to("Comments", story.comments_url) %>
-            </p>
+            <%= raw coder.encode("<p>" +
+              link_to("Comments", story.comments_url) + "</p>", :decimal) %>
           <% end %>
         </description>
         <% story.taggings.each do |tagging| %>

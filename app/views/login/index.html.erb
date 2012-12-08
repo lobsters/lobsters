@@ -1,26 +1,26 @@
 <div class="box wide">
-	<div class="legend">
-		Login
-	</div>
+  <div class="legend">
+    Login
+  </div>
 
-	<%= form_tag login_url do %>
-    <p>
-		<%= label_tag :email, "E-mail or Username:" %>
-		<%= text_field_tag :email, "", :size => 30, :autofocus => "autofocus" %>
+  <%= form_tag login_url do %>
+  <p>
+    <%= label_tag :email, "E-mail or Username:" %>
+    <%= text_field_tag :email, "", :size => 30, :autofocus => "autofocus" %>
     <br />
 
     <%= label_tag :password, "Password:" %>
     <%= password_field_tag :password, "", :size => 30 %>
-		<br />
+    <br />
     </p>
 
-		<p>
-		<%= submit_tag "Login" %>
-		</p>
+    <p>
+    <%= submit_tag "Login" %>
+    </p>
 
-		<p>
-		Forgot your password? <%= link_to "Reset your password",
-			forgot_password_url %>.
-		</p>
-	<% end %>
+    <p>
+    Forgot your password? <%= link_to "Reset your password",
+      forgot_password_url %>.
+    </p>
+  <% end %>
 </div>

@@ -45,6 +45,9 @@ GEM
     jquery-rails (2.0.2)
       railties (>= 3.2.0, < 5.0)
       thor (~> 0.14)
+    jquery-ui-rails (2.0.0)
+      jquery-rails
+      railties (>= 3.1.0)
     json (1.7.3)
     kgio (2.7.4)
     machinist (2.0)
@@ -130,6 +133,7 @@ DEPENDENCIES
   exception_notification
   htmlentities
   jquery-rails
+  jquery-ui-rails
   machinist
   mysql2
   nokogiri

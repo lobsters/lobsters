@@ -1,5 +1,6 @@
 //= require jquery
 //= require jquery_ujs
+//= require jquery.ui.autocomplete
 //= require_tree .
 
 "use strict";
@@ -279,5 +280,10 @@ $(document).ready(function() {
 
   $("button.comment-preview").live("click", function() {
     Lobsters.previewComment($(this).parents("form").first());
+  });
+
+  $('textarea#comment').triggeredAutocomplete({
+    trigger : '@',
+    source: '/autocomplete/u'
   });
 });

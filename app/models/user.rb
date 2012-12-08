@@ -104,4 +104,14 @@ class User < ActiveRecord::Base
       "thread_id FROM comments WHERE user_id = #{q(self.id)} ORDER BY " +
       "created_at DESC LIMIT #{q(amount)}").map{|r| r.values.first }
   end
+
+  def self.autocomplete(query)
+    if query.nil? || query.blank?
+      return []
+    end
+
+    query.downcase!
+    users = User.where(["LOWER(users.username) LIKE ?", "%#{query}%"])
+    users.order(:username)
+  end
 end

@@ -34,4 +34,13 @@ class UsersController < ApplicationController
 
     @tree
   end
+
+  def autocomplete
+    @json = User.autocomplete(params[:term]).inject([]) do |result, obj|
+      result << { :label => obj.username }
+      result
+    end
+
+    render :json => @json
+  end
 end

@@ -69,6 +69,13 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
             (c = story.comment_count) == 0 ? "discuss" :
             "#{c} comment#{c == 1 ? "" : "s"}" %></a>
         <% end %>
+
+        <% if defined?(single_story) && single_story %>
+          <% if story.downvotes > 0 &&
+          (story.user_id == @user.try(:id) || @user.try(:is_moderator?)) %>
+            | <%= story.vote_summary.downcase %>
+          <% end %>
+        <% end %>
       <% end %>
     </div>
   </div>

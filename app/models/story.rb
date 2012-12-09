@@ -245,6 +245,18 @@ class Story < ActiveRecord::Base
 
     return -(order + (sign * (self.created_at.to_f / window))).round(7)
   end
+  
+  def vote_summary
+    r_counts = {}
+    Vote.where(:story_id => self.id, :comment_id => nil).each do |v|
+      r_counts[v.reason.to_s] ||= 0
+      r_counts[v.reason.to_s] += v.vote
+    end
+
+    r_counts.keys.sort.map{|k|
+      k == "" ? "+#{r_counts[k]}" : "#{r_counts[k]} #{Vote::STORY_REASONS[k]}"
+    }.join(", ")
+  end
 
   def generated_markeddown_description
     Markdowner.to_html(self.description, allow_images = true)

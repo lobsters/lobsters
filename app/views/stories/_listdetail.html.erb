@@ -1,23 +1,23 @@
 <li id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
 class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
 "downvoted" : "") %> <%= story.is_expired? ? "expired" : "" %>">
-	<div class="voters">
+  <div class="voters">
     <% if @user %>
       <a class="upvoter"></a>
     <% else %>
       <%= link_to "", login_url, :class => "upvoter" %>
     <% end %>
-		<div class="score">
-			<%= story.upvotes - story.downvotes %>
-		</div>
+    <div class="score">
+      <%= story.upvotes - story.downvotes %>
+    </div>
     <% if @user %>
       <a class="downvoter"></a>
     <% else %>
       <%= link_to "", login_url, :class => "downvoter" %>
     <% end %>
-	</div>
-	<div class="details">
-		<span class="link">
+  </div>
+  <div class="details">
+    <span class="link">
       <% if story.can_be_seen_by_user?(@user) %>
         <a href="<%= story.url_or_comments_url %>"><%= story.title %></a>
       <% end %>
@@ -25,7 +25,7 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
         [Story removed by <%= story.is_moderated? ? "moderator" :
           "original submitter" %>]
       <% end %>
-		</span>
+    </span>
     <% if story.can_be_seen_by_user?(@user) %>
       <span class="tags">
         <% story.taggings.sort_by{|t| t.tag.tag }.sort_by{|t|
@@ -38,7 +38,7 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
         <%= story.domain %>
       </span>
     <% end %>
-		<div class="byline">
+    <div class="byline">
       <% if story.previewing %>
         by <a><%= story.user.username %></a>
         just now
@@ -70,6 +70,6 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
             "#{c} comment#{c == 1 ? "" : "s"}" %></a>
         <% end %>
       <% end %>
-		</div>
-	</div>
+    </div>
+  </div>
 </li>

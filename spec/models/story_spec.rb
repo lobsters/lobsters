@@ -112,4 +112,33 @@ describe Story do
     s.valid?
     s.url.should == "https://factorable.net/"
   end
+
+  it "calculates tag changes properly" do
+    s = Story.make!(:title => "blah", :tags_a => [ "tag1", "tag2" ])
+
+    s.tags_a = [ "tag2" ]
+    s.tagging_changes.should == { "tags" => [ "tag1 tag2", "tag2" ] }
+  end
+
+  it "logs moderations properly" do
+    mod = User.make!(:username => "mod", :is_moderator => true)
+
+    s = Story.make!(:title => "blah", :tags_a => [ "tag1", "tag2" ],
+      :description => "desc")
+
+    s.title = "changed title"
+    s.description = nil
+    s.tags_a = [ "tag1" ]
+
+    s.editor_user_id = mod.id
+    s.moderation_reason = "because i hate you"
+    s.save!
+
+    mod_log = Moderation.last
+    mod_log.moderator_user_id.should == mod.id
+    mod_log.story_id.should == s.id
+    mod_log.reason.should == "because i hate you"
+    mod_log.action.should match(/title from "blah" to "changed title"/)
+    mod_log.action.should match(/tags from "tag1 tag2" to "tag1"/)
+  end
 end

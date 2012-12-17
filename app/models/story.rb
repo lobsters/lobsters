@@ -138,24 +138,19 @@ class Story < ActiveRecord::Base
       return
     end
 
+    all_changes = self.changes.merge(self.tagging_changes)
+
     m = Moderation.new
     m.moderator_user_id = self.editor_user_id
     m.story_id = self.id
 
-    if self.changes["is_expired"] && self.is_expired?
+    if all_changes["is_expired"] && self.is_expired?
       m.action = "deleted story"
-    elsif self.changes["is_expired"] && !self.is_expired?
+    elsif all_changes["is_expired"] && !self.is_expired?
       m.action = "undeleted story"
     else
-      actions = self.changes.map{|k,v| "changed #{k} from #{v[0].inspect} " <<
-        "to #{v[1].inspect}" }
-
-      if (old_tags = self.tags.map{|t| t.tag }) != self.tags_a
-        actions.push "changed tags from \"#{old_tags.join(", ")}\" to " <<
-          "\"#{self.tags_a.join(", ")}\""
-      end
-
-      m.action = actions.join(", ")
+      m.action = all_changes.map{|k,v| "changed #{k} from #{v[0].inspect} " <<
+        "to #{v[1].inspect}" }.join(", ")
     end
 
     m.reason = self.moderation_reason
@@ -304,6 +299,19 @@ class Story < ActiveRecord::Base
           tg.tag_id = t.id
         end
       end
+    end
+  end
+  
+  def tagging_changes
+    old_tags_a = self.taggings.reject{|tg| tg.new_record? }.map{|tg|
+      tg.tag.tag }.join(" ")
+    new_tags_a = self.taggings.reject{|tg| tg.marked_for_destruction?
+      }.map{|tg| tg.tag.tag }.join(" ")
+
+    if old_tags_a == new_tags_a
+      {}
+    else
+      { "tags" => [ old_tags_a, new_tags_a ] }
     end
   end
 

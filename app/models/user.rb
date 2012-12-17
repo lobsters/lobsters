@@ -30,6 +30,24 @@ class User < ActiveRecord::Base
   before_save :check_session_token
   after_create :create_default_tag_filters, :create_rss_token
 
+  def as_json(options = {})
+    h = super(:only => [
+      :id,
+      :username,
+      :is_admin,
+      :is_moderator,
+    ])
+    h[:avatar_url] = avatar_url
+    h
+  end
+
+  def avatar_url
+    "https://secure.gravatar.com/avatar/" <<
+      Digest::MD5.hexdigest(self.email.strip.downcase) << "?r=pg&d=" <<
+      CGI.escape(Rails.application.routes.url_helpers.root_url +
+      "images/1x1t.gif") << "&s=100"
+  end
+
   def check_session_token
     if self.session_token.blank?
       self.session_token = Utils.random_str(60)

@@ -107,6 +107,18 @@ class Story < ActiveRecord::Base
     end
   end
 
+  def as_json(options = {})
+    h = super(:only => [
+      :short_id,
+      :title,
+      :url,
+      :comments_url,
+    ])
+    h[:submitter_user] = user
+    h[:description] = markeddown_description
+    h
+  end
+
   def assign_short_id
     10.times do |try|
       if try == 10
@@ -229,8 +241,6 @@ class Story < ActiveRecord::Base
   end
 
   def calculated_hotness
-    score = upvotes - downvotes
-
     order = Math.log([ score.abs, 1 ].max, 10)
     if score > 0
       sign = 1
@@ -244,6 +254,10 @@ class Story < ActiveRecord::Base
     window = 60 * 60 * 48
 
     return -(order + (sign * (self.created_at.to_f / window))).round(7)
+  end
+
+  def score
+    upvotes - downvotes
   end
   
   def vote_summary

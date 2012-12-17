@@ -94,8 +94,8 @@ private
       @page = params[:page].to_i
     end
 
-    # guest views have caching, but don't bother for logged-in users
-    if user
+    # guest views have caching, but don't bother for logged-in users (or dev)
+    if Rails.env == "development" || user
       stories, @show_more =
         _find_stories_for_user_and_tag_and_newest_and_by_user(user, tag,
         newest, by_user)

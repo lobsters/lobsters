@@ -31,6 +31,8 @@ describe Story do
   it "must have at least one tag" do
     expect { Story.make!(:tags_a => nil) }.to raise_error
     expect { Story.make!(:tags_a => [ "", " " ]) }.to raise_error
+    
+    expect { Story.make!(:tags_a => [ "", "tag1" ]) }.to_not raise_error
   end
 
   it "checks for invalid urls" do

@@ -16,6 +16,10 @@ class ApplicationController < ActionController::Base
   def increase_traffic_counter
     @traffic = 1.0
 
+    if user_is_spider?
+      return true
+    end
+
     Keystore.transaction do
       date = (Keystore.value_for("traffic:date") || Time.now.to_i)
       traffic = (Keystore.incremented_value_for("traffic:hits", 0).
@@ -49,5 +53,9 @@ class ApplicationController < ActionController::Base
       render :text => "not logged in", :status => 400
       return false
     end
+  end
+
+  def user_is_spider?
+    !!request.env["HTTP_USER_AGENT"].to_s.match(/Googlebot/)
   end
 end

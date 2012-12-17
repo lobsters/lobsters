@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   def increase_traffic_counter
     @traffic = 1.0
 
-    if user_is_spider?
+    if user_is_spider? || [ "json", "rss" ].include?(params[:format])
       return true
     end
 

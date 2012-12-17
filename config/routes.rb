@@ -1,6 +1,9 @@
 Lobsters::Application.routes.draw do
   root :to => "home#index",
     :protocol => (Rails.env == "production" ? "https://" : "http://")
+  
+  get "/rss" => "home#index", :format => "rss"
+  get "/hottest.json" => "home#index", :format => "json"
 
   get "/page/:page" => "home#index"
 
@@ -64,8 +67,6 @@ Lobsters::Application.routes.draw do
 
   get "/u" => "users#tree"
   get "/u/:id" => "users#show"
-
-  get "/rss" => "home#index", :format => "rss"
 
   get "/settings" => "settings#index"
   post "/settings" => "settings#update"

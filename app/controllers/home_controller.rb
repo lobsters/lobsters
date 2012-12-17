@@ -24,6 +24,7 @@ class HomeController < ApplicationController
 
         render :action => "rss", :layout => false
       }
+      format.json { render :json => @stories }
     end
   end
 
@@ -49,6 +50,7 @@ class HomeController < ApplicationController
 
         render :action => "rss", :layout => false
       }
+      format.json { render :json => @stories }
     end
   end
 

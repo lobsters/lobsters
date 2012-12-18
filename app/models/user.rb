@@ -33,6 +33,7 @@ class User < ActiveRecord::Base
   def as_json(options = {})
     h = super(:only => [
       :id,
+      :created_at,
       :username,
       :is_admin,
       :is_moderator,

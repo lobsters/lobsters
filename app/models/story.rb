@@ -110,6 +110,7 @@ class Story < ActiveRecord::Base
   def as_json(options = {})
     h = super(:only => [
       :short_id,
+      :created_at,
       :title,
       :url,
       :comments_url,

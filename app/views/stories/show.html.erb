@@ -21,7 +21,8 @@
   <% indent_level = -1 %>
   <% @comments.each_with_index do |comment,x| %>
     <% if comment.indent_level > indent_level %>
-      <ol class="comments comments<%= comment.indent_level %>">
+      <ol class="comments comments<%= comment.indent_level %> <%=
+      (x > 0 && @comments[x - 1].is_moderated?) ? "collapsed" : "" %>">
     <% elsif comment.indent_level < indent_level %>
       <% (indent_level - comment.indent_level).times do %>
         </ol>
@@ -29,8 +30,7 @@
     <% end %>
 
     <%= render :partial => "comments/comment", :locals => { :story => @story,
-      :comment => comment, :collapsable => (@comments[x + 1].
-      try(:parent_comment_id).to_i == comment.id) } %>
+      :comment => comment } %>
 
     <% indent_level = comment.indent_level %>
   <% end %>

@@ -54,11 +54,6 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
             <a class="comment_replier">reply</a>
         <% end %>
 
-        <% if false && defined?(collapsable) && collapsable # XXX %>
-          |
-          <a href="">collapse</a>
-        <% end %>
-
         <span class="reason">
           <% if comment.downvotes > 0 && comment.user_id == @user.try(:id) %>
             | <%= comment.vote_summary.downcase %>
@@ -78,8 +73,12 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% if comment.is_gone? %>
         <p>
         <span class="na">
-        [Comment removed by <%= comment.is_moderated? ? "moderator" :
-          "author" %>]
+        <% if comment.is_moderated? %>
+          [Thread removed by moderator <%= comment.moderation.try(:moderator).
+            try(:username) %>: <%= comment.moderation.try(:reason) %>]
+        <% else %>
+          [Comment removed by author]
+        <% end %>
         </span>
         </p>
       <% else %>

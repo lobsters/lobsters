@@ -337,6 +337,10 @@ ol.comments.preview {
 	margin: 1em 0 0 -15px;
 	padding: 0;
 }
+ol.comments.collapsed ol,
+ol.comments.collapsed li {
+	display: none;
+}
 
 ol.search_results {
 	margin-left: 20px;

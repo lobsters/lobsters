@@ -5,6 +5,8 @@ class Comment < ActiveRecord::Base
     :dependent => :delete_all
   belongs_to :parent_comment,
     :class_name => "Comment"
+  has_one :moderation,
+    :class_name => "Moderation"
   
   attr_accessible :comment, :moderation_reason
 
@@ -175,14 +177,16 @@ class Comment < ActiveRecord::Base
 
     self.is_deleted = false
 
-    if user.is_moderator? && user.id != self.user_id
-      self.is_moderated = true
+    if user.is_moderator?
+      self.is_moderated = false
 
-      m = Moderation.new
-      m.comment_id = self.id
-      m.moderator_user_id = user.id
-      m.action = "undeleted comment"
-      m.save
+      if user.id != self.user_id
+        m = Moderation.new
+        m.comment_id = self.id
+        m.moderator_user_id = user.id
+        m.action = "undeleted comment"
+        m.save
+      end
     end
 
     self.save(:validate => false)

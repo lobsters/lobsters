@@ -34,7 +34,7 @@ class Moderation < ActiveRecord::Base
       m.recipient_user_id = self.comment.user_id
       m.subject = "Your comment has been moderated"
       m.body = "Your comment on [#{self.comment.story.title}](" <<
-        "#{self.story.comments_url}) has been moderated:\n" <<
+        "#{self.comment.story.comments_url}) has been moderated:\n" <<
         "\n" <<
         "> *#{self.comment.comment}*"
 

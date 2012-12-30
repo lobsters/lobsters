@@ -2,7 +2,7 @@ class CommentsController < ApplicationController
   COMMENTS_PER_PAGE = 20
 
   before_filter :require_logged_in_user_or_400,
-    :only => [ :create, :preview, :upvote, :downvote, :unvote ]
+    :only => [ :create, :preview, :preview_new, :upvote, :downvote, :unvote ]
 
   def create
     if !(story = Story.find_by_short_id(params[:story_id])) || story.is_gone?

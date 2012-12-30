@@ -114,10 +114,20 @@ class StoriesController < ApplicationController
     @short_url = @story.short_id_url
 
     @comments = Comment.ordered_for_story_or_thread_for_user(@story.id, nil,
-      @user ? @user : nil)
-    @comment = Comment.new
+      @user)
 
-    load_user_votes
+    respond_to do |format|
+      format.html {
+        @comment = Comment.new
+
+        load_user_votes
+
+        render :action => "show"
+      }
+      format.json {
+        render :json => @story.as_json(:with_comments => @comments)
+      }
+    end
   end
 
   def show_comment

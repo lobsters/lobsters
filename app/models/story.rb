@@ -113,12 +113,17 @@ class Story < ActiveRecord::Base
       :created_at,
       :title,
       :url,
-      :comments_url,
     ])
     h[:score] = score
     h[:comment_count] = comment_count
     h[:description] = markeddown_description
+    h[:comments_url] = comments_url
     h[:submitter_user] = user
+
+    if options && options[:with_comments]
+      h[:comments] = options[:with_comments]
+    end
+
     h
   end
 

@@ -59,6 +59,28 @@ class Comment < ActiveRecord::Base
 
     nil
   end
+  
+  def as_json(options = {})
+    h = super(:only => [
+      :short_id,
+      :created_at,
+      :updated_at,
+      :is_deleted,
+      :is_moderated,
+    ])
+    h[:score] = score
+
+    if self.is_gone?
+      h[:comment] = "<em>#{self.gone_text}</em>"
+    else
+      h[:comment] = markeddown_comment
+    end
+
+    h[:url] = url
+    h[:indent_level] = indent_level
+    h[:commenting_user] = user
+    h
+  end
 
   def assign_short_id_and_upvote
     10.times do |try|

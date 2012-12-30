@@ -391,8 +391,10 @@ class Story < ActiveRecord::Base
   end
 
   def update_comment_count!
-    Keystore.put("story:#{self.id}:comment_count",
-      Comment.where(:story_id => self.id, :is_deleted => 0,
-      :is_moderated => 0).count)
+    # calculate count after removing deleted comments and threads
+    alive_count = Comment.ordered_for_story_or_thread_for_user(self.id, nil,
+      nil).select{|c| !c.is_gone? }.count
+
+    Keystore.put("story:#{self.id}:comment_count", alive_count)
   end
 end

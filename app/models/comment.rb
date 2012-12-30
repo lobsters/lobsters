@@ -99,6 +99,16 @@ class Comment < ActiveRecord::Base
     is_deleted? || is_moderated?
   end
 
+  def gone_text
+    if self.is_moderated?
+      "Thread removed by moderator " <<
+        self.moderation.try(:moderator).try(:username).to_s << ": " <<
+        (self.moderation.try(:reason) || "No reason given")
+    else
+      "Comment removed by author"
+    end
+  end
+
   def mark_submitter
     Keystore.increment_value_for("user:#{self.user_id}:comments_posted")
   end
@@ -304,9 +314,27 @@ class Comment < ActiveRecord::Base
       new_ordered.push c
     end
 
+    # for moderated threads, remove the entire sub-tree at the moderation point
+    do_reject = false
+    deleted_indent_level = 0
+    new_ordered.reject!{|c|
+      if do_reject && (c.indent_level > deleted_indent_level)
+        true
+      else
+        if c.is_moderated?
+          do_reject = true
+          deleted_indent_level = c.indent_level
+        else
+          do_reject = false
+        end
+
+        false
+      end
+    }
+
     new_ordered
   end
-  
+
   def is_editable_by_user?(user)
     if user && user.id == self.user_id
       if self.is_moderated?

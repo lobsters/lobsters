@@ -21,8 +21,7 @@
   <% indent_level = -1 %>
   <% @comments.each_with_index do |comment,x| %>
     <% if comment.indent_level > indent_level %>
-      <ol class="comments comments<%= comment.indent_level %> <%=
-      (x > 0 && @comments[x - 1].is_moderated?) ? "collapsed" : "" %>">
+      <ol class="comments comments<%= comment.indent_level %>">
     <% elsif comment.indent_level < indent_level %>
       <% (indent_level - comment.indent_level).times do %>
         </ol>

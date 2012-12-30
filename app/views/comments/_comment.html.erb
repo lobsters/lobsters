@@ -73,12 +73,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% if comment.is_gone? %>
         <p>
         <span class="na">
-        <% if comment.is_moderated? %>
-          [Thread removed by moderator <%= comment.moderation.try(:moderator).
-            try(:username) %>: <%= comment.moderation.try(:reason) %>]
-        <% else %>
-          [Comment removed by author]
-        <% end %>
+        [<%= comment.gone_text %>]
         </span>
         </p>
       <% else %>

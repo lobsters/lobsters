@@ -153,6 +153,40 @@ var _Lobsters = Class.extend({
 		$("#inside").load("/stories/preview", $(form).serializeArray());
 	},
 
+  moderateStory: function(link) {
+    var reason = prompt("Moderation reason:");
+    if (reason == null || reason == "")
+      return false;
+
+    var link = $(link);
+
+    /* $.rails.handleMethod() */
+    var href = $.rails.href(link),
+      method = link.data('method'),
+      target = link.attr('target'),
+      csrf_token = $("meta[name=csrf-token]").attr("content"),
+      csrf_param = $("meta[name=csrf-param]").attr("content"),
+      form = $("<form method=\"post\" action=\"" + href + "\"></form>"),
+      metadata_input = "<input name=\"_method\" value=\"" + method +
+        "\" type=\"hidden\" />";
+
+    if (csrf_param !== undefined && csrf_token !== undefined)
+      metadata_input += "<input name=\"" + csrf_param + "\" value=\"" +
+        csrf_token + "\" type=\"hidden\" />";
+
+    if (target)
+      form.attr("target", target);
+
+    var r = $("<input type=\"hidden\" name=\"reason\" />");
+    r.val(reason);
+    form.append(r);
+
+    form.hide().append(metadata_input).appendTo('body');
+    form.submit();
+
+    return false;
+  },
+
 	fetchURLTitle: function(button, url_field, title_field) {
 		if (url_field.val() == "")
 			return;
@@ -204,6 +238,10 @@ $(document).ready(function() {
 		Lobsters.upvote(this);
 		return false;
 	});
+
+  $("li.story a.mod_story_link").click(function() {
+    return Lobsters.moderateStory(this);
+  }),
 
   $("a.comment_replier").live("click", function() {
     if (!Lobsters.curUser) {

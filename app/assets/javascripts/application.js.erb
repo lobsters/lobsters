@@ -5,129 +5,129 @@
 "use strict";
 
 var _Lobsters = Class.extend({
-	curUser: null,
+  curUser: null,
 
-	storyDownvoteReasons: { <%= Vote::STORY_REASONS.map{|k,v|
+  storyDownvoteReasons: { <%= Vote::STORY_REASONS.map{|k,v|
       "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
-	commentDownvoteReasons: { <%= Vote::COMMENT_REASONS.map{|k,v|
+  commentDownvoteReasons: { <%= Vote::COMMENT_REASONS.map{|k,v|
       "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
 
-	upvote: function(voterEl) {
-		Lobsters.vote("story", voterEl, 1);
-	},
-	downvote: function(voterEl) {
-		Lobsters._showDownvoteWhyAt("story", voterEl, function(k) {
+  upvote: function(voterEl) {
+    Lobsters.vote("story", voterEl, 1);
+  },
+  downvote: function(voterEl) {
+    Lobsters._showDownvoteWhyAt("story", voterEl, function(k) {
       Lobsters.vote("story", voterEl, -1, k); });
-	},
+  },
 
-	upvoteComment: function(voterEl) {
-		Lobsters.vote("comment", voterEl, 1);
-	},
-	downvoteComment: function(voterEl) {
-		Lobsters._showDownvoteWhyAt("comment", voterEl, function(k) {
+  upvoteComment: function(voterEl) {
+    Lobsters.vote("comment", voterEl, 1);
+  },
+  downvoteComment: function(voterEl) {
+    Lobsters._showDownvoteWhyAt("comment", voterEl, function(k) {
       Lobsters.vote("comment", voterEl, -1, k); });
-	},
+  },
 
-	_showDownvoteWhyAt: function(thingType, voterEl, onChooseWhy) {
+  _showDownvoteWhyAt: function(thingType, voterEl, onChooseWhy) {
     if (!Lobsters.curUser)
       return Lobsters.bounceToLogin();
 
-		var li = $(voterEl).parents("li").first();
-		if (li.hasClass("downvoted")) {
-			/* already upvoted, neutralize */
+    var li = $(voterEl).parents("li").first();
+    if (li.hasClass("downvoted")) {
+      /* already upvoted, neutralize */
       Lobsters.vote(thingType, voterEl, -1, null);
       return;
     }
 
-		if ($("#downvote_why"))
-			$("#downvote_why").remove();
-		if ($("#downvote_why_shadow"))
-			$("#downvote_why_shadow").remove();
+    if ($("#downvote_why"))
+      $("#downvote_why").remove();
+    if ($("#downvote_why_shadow"))
+      $("#downvote_why_shadow").remove();
 
     var sh = $("<div id=\"downvote_why_shadow\"></div>");
-		$(voterEl).after(sh);
+    $(voterEl).after(sh);
     sh.click(function() {
       $("#downvote_why_shadow").remove();
       $("#downvote_why").remove();
     });
 
-		var d = $("<div id=\"downvote_why\"></div>");
+    var d = $("<div id=\"downvote_why\"></div>");
 
-		var reasons;
-		if (thingType == "comment")
-			reasons = Lobsters.commentDownvoteReasons;
-		else
-			reasons = Lobsters.storyDownvoteReasons;
+    var reasons;
+    if (thingType == "comment")
+      reasons = Lobsters.commentDownvoteReasons;
+    else
+      reasons = Lobsters.storyDownvoteReasons;
 
-		$.each(reasons, function(k, v) {
-			var a = $("<a href=\"#\"" + (k == "" ? " class=\"cancelreason\"" : "") +
+    $.each(reasons, function(k, v) {
+      var a = $("<a href=\"#\"" + (k == "" ? " class=\"cancelreason\"" : "") +
         ">" + v + "</a>");
 
-			a.click(function() {
-				$("#downvote_why").remove();
-				$("#downvote_why_shadow").remove();
+      a.click(function() {
+        $("#downvote_why").remove();
+        $("#downvote_why_shadow").remove();
 
-				if (k != "")
-					onChooseWhy(k);
+        if (k != "")
+          onChooseWhy(k);
 
-				return false;
-			});
+        return false;
+      });
 
-			d.append(a);
-		});
+      d.append(a);
+    });
 
-		$(voterEl).after(d);
+    $(voterEl).after(d);
 
-		d.position({
-			my: "left top",
-			at: "left bottom",
-			offset: "-2 -2",
-			of: $(voterEl),
-			collision: "none",
-		});
-	},
+    d.position({
+      my: "left top",
+      at: "left bottom",
+      offset: "-2 -2",
+      of: $(voterEl),
+      collision: "none",
+    });
+  },
 
-	vote: function(thingType, voterEl, point, reason) {
+  vote: function(thingType, voterEl, point, reason) {
     if (!Lobsters.curUser)
       return Lobsters.bounceToLogin();
 
-		var li = $(voterEl).parents("li").first();
-		var scoreDiv = li.find("div.score").get(0);
-		var score = parseInt(scoreDiv.innerHTML);
-		var action = "";
+    var li = $(voterEl).parents("li").first();
+    var scoreDiv = li.find("div.score").get(0);
+    var score = parseInt(scoreDiv.innerHTML);
+    var action = "";
 
-		if (li.hasClass("upvoted") && point > 0) {
-			/* already upvoted, neutralize */
-			li.removeClass("upvoted");
-			score--;
-			action = "unvote";
-		}
-		else if (li.hasClass("downvoted") && point < 0) {
-			/* already downvoted, neutralize */
-			li.removeClass("downvoted");
-			score++;
-			action = "unvote";
-		}
-		else if (point > 0) {
-			if (li.hasClass("downvoted"))
-				/* flip flop */
-				score++;
+    if (li.hasClass("upvoted") && point > 0) {
+      /* already upvoted, neutralize */
+      li.removeClass("upvoted");
+      score--;
+      action = "unvote";
+    }
+    else if (li.hasClass("downvoted") && point < 0) {
+      /* already downvoted, neutralize */
+      li.removeClass("downvoted");
+      score++;
+      action = "unvote";
+    }
+    else if (point > 0) {
+      if (li.hasClass("downvoted"))
+        /* flip flop */
+        score++;
 
-			li.removeClass("downvoted").addClass("upvoted");
-			score++;
-			action = "upvote";
-		}
-		else if (point < 0) {
-			if (li.hasClass("upvoted"))
-				/* flip flop */
-				score--;
+      li.removeClass("downvoted").addClass("upvoted");
+      score++;
+      action = "upvote";
+    }
+    else if (point < 0) {
+      if (li.hasClass("upvoted"))
+        /* flip flop */
+        score--;
 
-			li.removeClass("upvoted").addClass("downvoted");
-			score--;
-			action = "downvote";
-		}
+      li.removeClass("upvoted").addClass("downvoted");
+      score--;
+      action = "downvote";
+    }
 
-		scoreDiv.innerHTML = score;
+    scoreDiv.innerHTML = score;
 
     if (action == "upvote" || action == "unvote")
       li.find(".reason").html("");
@@ -135,23 +135,23 @@ var _Lobsters = Class.extend({
       li.find(".reason").html("(" +
         Lobsters.commentDownvoteReasons[reason].toLowerCase() + ")");
 
-		$.post("/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
+    $.post("/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
       $(voterEl).parents("li").first().attr("data-shortid") + "/" +
       action, { reason: reason });
-	},
+  },
 
-	postComment: function(form) {
-		$(form).parent().load($(form).attr("action"), $(form).serializeArray());
-	},
+  postComment: function(form) {
+    $(form).parent().load($(form).attr("action"), $(form).serializeArray());
+  },
 
-	previewComment: function(form) {
-		$(form).parent().load($(form).attr("action").replace(/(post|update)/,
+  previewComment: function(form) {
+    $(form).parent().load($(form).attr("action").replace(/(post|update)/,
       "preview"), $(form).serializeArray());
-	},
-	
+  },
+  
   previewStory: function(form) {
-		$("#inside").load("/stories/preview", $(form).serializeArray());
-	},
+    $("#inside").load("/stories/preview", $(form).serializeArray());
+  },
 
   moderateStory: function(link) {
     var reason = prompt("Moderation reason:");
@@ -187,30 +187,30 @@ var _Lobsters = Class.extend({
     return false;
   },
 
-	fetchURLTitle: function(button, url_field, title_field) {
-		if (url_field.val() == "")
-			return;
+  fetchURLTitle: function(button, url_field, title_field) {
+    if (url_field.val() == "")
+      return;
 
-		var old_value = button.val();
-		button.prop("disabled", true);
-		button.val("Fetching...");
+    var old_value = button.val();
+    button.prop("disabled", true);
+    button.val("Fetching...");
 
-		$.post("/stories/fetch_url_title", {
-			fetch_url: url_field.val(),
-		})
-		.success(function(data) {
-			if (data && data.title)
-				title_field.val(data.title.substr(0,
-					title_field.maxLength));
+    $.post("/stories/fetch_url_title", {
+      fetch_url: url_field.val(),
+    })
+    .success(function(data) {
+      if (data && data.title)
+        title_field.val(data.title.substr(0,
+          title_field.maxLength));
 
-			button.val(old_value);
-			button.prop("disabled", false);
-		})
-		.error(function() {
-			button.val(old_value);
-			button.prop("disabled", false);
-		});
-	},
+      button.val(old_value);
+      button.prop("disabled", false);
+    })
+    .error(function() {
+      button.val(old_value);
+      button.prop("disabled", false);
+    });
+  },
 
   bounceToLogin: function() {
     document.location = "/login?return=" +
@@ -221,23 +221,23 @@ var _Lobsters = Class.extend({
 var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
-	$("li.comment a.downvoter").click(function() {
-		Lobsters.downvoteComment(this);
-		return false;
-	});
-	$("li.comment a.upvoter").click(function() {
-		Lobsters.upvoteComment(this);
-		return false;
-	});
+  $("li.comment a.downvoter").click(function() {
+    Lobsters.downvoteComment(this);
+    return false;
+  });
+  $("li.comment a.upvoter").click(function() {
+    Lobsters.upvoteComment(this);
+    return false;
+  });
 
-	$("li.story a.downvoter").click(function() {
-		Lobsters.downvote(this);
-		return false;
-	});
-	$("li.story a.upvoter").click(function() {
-		Lobsters.upvote(this);
-		return false;
-	});
+  $("li.story a.downvoter").click(function() {
+    Lobsters.downvote(this);
+    return false;
+  });
+  $("li.story a.upvoter").click(function() {
+    Lobsters.upvote(this);
+    return false;
+  });
 
   $("li.story a.mod_story_link").click(function() {
     return Lobsters.moderateStory(this);
@@ -249,7 +249,7 @@ $(document).ready(function() {
       return false;
     }
 
-		var box = $(this).parents("li.comment").first().find("div.comment_reply").
+    var box = $(this).parents("li.comment").first().find("div.comment_reply").
       first();
     
     box.html($("#comment_form").clone());
@@ -273,7 +273,7 @@ $(document).ready(function() {
   });
 
   $("a.comment_editor").live("click", function() {
-		var li = $(this).parents("li.comment").first();
+    var li = $(this).parents("li.comment").first();
     li.load("/comments/" + $(li).attr("data-shortid") + "/edit",
       { "edit": 1 });
   });

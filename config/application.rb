@@ -60,6 +60,10 @@ module Lobsters
   end
 end
 
+silence_warnings do
+  ActionDispatch::ParamsParser::DEFAULT_PARSERS = {}
+end
+
 Rails.application.routes.default_url_options[:host] = "lobste.rs"
 
 require "#{Rails.root}/lib/monkey"

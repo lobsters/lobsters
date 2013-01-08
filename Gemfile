@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "3.2.10"
+gem "rails", "3.2.11"
 
 # Bundle edge Rails instead:
 # gem "rails", :git => "git://github.com/rails/rails.git"
@@ -14,7 +14,8 @@ gem "bcrypt-ruby", "3.0.0"
 
 gem "dynamic_form"
 
-gem "exception_notification"
+# use old version that doesn't have tinder bullshit
+gem "exception_notification", "2.6.1"
 
 # Use unicorn as the app server
 gem "unicorn"

@@ -3,6 +3,9 @@ class CommentsController < ApplicationController
 
   before_filter :require_logged_in_user_or_400,
     :only => [ :create, :preview, :preview_new, :upvote, :downvote, :unvote ]
+  
+  # for rss feeds, load the user's tag filters if a token is passed
+  before_filter :find_user_from_rss_token, :only => [ :index ]
 
   def create
     if !(story = Story.find_by_short_id(params[:story_id])) || story.is_gone?
@@ -187,6 +190,10 @@ class CommentsController < ApplicationController
   end
 
   def index
+    @rss_link ||= "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
+      "title=\"RSS 2.0\" href=\"/comments.rss" <<
+      (@user ? "?token=#{@user.rss_token}" : "") << "\" />"
+
     @heading = @title = "Newest Comments"
     @cur_url = "/comments"
 

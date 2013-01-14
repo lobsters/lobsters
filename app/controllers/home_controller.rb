@@ -187,10 +187,4 @@ private
 
     [ stories, show_more ]
   end
-
-  def find_user_from_rss_token
-    if !@user && request[:format] == "rss" && params[:token].to_s.present?
-      @user = User.find_by_rss_token(params[:token])
-    end
-  end
 end

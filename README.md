@@ -42,11 +42,11 @@ been tested) database, username, and password and put them in a
 
           lobsters$ rake db:schema:load
 
-* Create a `config/initializers/secret_token.rb` file:
+* Create a `config/initializers/secret_token.rb` file, using a randomly generated key from the output of `rake secret`:
 
-          Lobsters::Application.config.secret_token = 'some 64-byte hexadecimal secret here'
+          Lobsters::Application.config.secret_token = 'your random secret here'
 
-* (Optional, only needed for search engine) Install Sphinx.  Build Sphinx config and start server:
+* (Optional, only needed for the search engine) Install Sphinx.  Build Sphinx config and start server:
 
           lobsters$ rake thinking_sphinx:rebuild
 
@@ -56,12 +56,12 @@ been tested) database, username, and password and put them in a
           Loading development environment (Rails 3.2.6)
           irb(main):001:0> u = User.new(:username => "test", :email => "test@example.com", :password => "test")
           irb(main):002:0> u.is_admin = true
-          irb(main):002:0> u.is_moderator = true
-          irb(main):003:0> u.save
+          irb(main):003:0> u.is_moderator = true
+          irb(main):004:0> u.save
 
-          irb(main):004:0> t = Tag.new
-          irb(main):005:0> t.tag = "test"
-          irb(main):006:0> t.save
+          irb(main):005:0> t = Tag.new
+          irb(main):006:0> t.tag = "test"
+          irb(main):007:0> t.save
 
 * The default development hostname is defined as `lobsters.localhost:3000`.
 You should define this in `/etc/hosts` (or through DNS) to point to

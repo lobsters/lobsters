@@ -22,7 +22,7 @@ class Story < ActiveRecord::Base
   before_create :assign_short_id
   before_save :log_moderation
   after_create :mark_submitter
-  
+
   define_index do
     indexes url
     indexes title
@@ -128,17 +128,7 @@ class Story < ActiveRecord::Base
   end
 
   def assign_short_id
-    10.times do |try|
-      if try == 10
-        raise "too many hash collisions"
-      end
-
-      self.short_id = Utils.random_str(6).downcase
-
-      if !Story.find_by_short_id(self.short_id)
-        break
-      end
-    end
+    self.short_id = ShortId.new(self.class).generate
   end
 
   def log_moderation
@@ -201,7 +191,7 @@ class Story < ActiveRecord::Base
   def comments_url
     "#{short_id_url}/#{self.title_as_url}"
   end
-  
+
   def short_id_url
     Rails.application.routes.url_helpers.root_url + "s/#{self.short_id}"
   end
@@ -262,7 +252,7 @@ class Story < ActiveRecord::Base
   def score
     upvotes - downvotes
   end
-  
+
   def vote_summary
     r_counts = {}
     Vote.where(:story_id => self.id, :comment_id => nil).each do |v|
@@ -309,7 +299,7 @@ class Story < ActiveRecord::Base
       end
     end
   end
-  
+
   def tagging_changes
     old_tags_a = self.taggings.reject{|tg| tg.new_record? }.map{|tg|
       tg.tag.tag }.join(" ")
@@ -367,7 +357,7 @@ class Story < ActiveRecord::Base
       return false
     end
   end
-  
+
   def is_undeletable_by_user?(user)
     if user && user.is_moderator?
       return true

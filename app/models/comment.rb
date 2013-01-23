@@ -7,7 +7,7 @@ class Comment < ActiveRecord::Base
     :class_name => "Comment"
   has_one :moderation,
     :class_name => "Moderation"
-  
+
   attr_accessible :comment, :moderation_reason
 
   attr_accessor :parent_comment_short_id, :current_vote, :previewing,
@@ -23,10 +23,10 @@ class Comment < ActiveRecord::Base
   define_index do
     indexes comment
     indexes user.username, :as => :author
-    
+
     has "(upvotes - downvotes)", :as => :score, :type => :integer,
       :sortable => true
-    
+
     has is_deleted
     has created_at
 
@@ -59,7 +59,7 @@ class Comment < ActiveRecord::Base
 
     nil
   end
-  
+
   def as_json(options = {})
     h = super(:only => [
       :short_id,
@@ -83,18 +83,7 @@ class Comment < ActiveRecord::Base
   end
 
   def assign_short_id_and_upvote
-    10.times do |try|
-      if try == 10
-        raise "too many hash collisions"
-      end
-
-      self.short_id = Utils.random_str(6).downcase
-
-      if !Comment.find_by_short_id(self.short_id)
-        break
-      end
-    end
-
+    self.short_id = ShortId.new(self.class).generate
     self.upvotes = 1
   end
 
@@ -228,7 +217,7 @@ class Comment < ActiveRecord::Base
 
     self.save(:validate => false)
     Comment.record_timestamps = true
-    
+
     self.story.update_comment_count!
   end
 
@@ -276,7 +265,7 @@ class Comment < ActiveRecord::Base
   def generated_markeddown_comment
     Markdowner.to_html(self.comment)
   end
-    
+
   def comment=(com)
     # TODO: remove remove_mb4 hack
     self[:comment] = com.to_s.rstrip.remove_mb4
@@ -374,7 +363,7 @@ class Comment < ActiveRecord::Base
       return false
     end
   end
-  
+
   def is_deletable_by_user?(user)
     if user && user.is_moderator?
       return true

@@ -157,6 +157,8 @@ class Comment < ActiveRecord::Base
     if self.parent_comment_id && (u = self.parent_comment.try(:user)) &&
     u.id != self.user.id
       begin
+        u.increment_unread_reply_count!
+
         if u.email_replies?
           EmailReply.reply(self, u).deliver
         end

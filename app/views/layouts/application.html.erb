@@ -42,7 +42,7 @@
         } %>
 
         <% if @user %>
-          <% links.merge!({ "/threads" => "Your Threads",
+          <% links.merge!({ "/threads" => "Your Threads#{@user.unread_reply_count > 0 ? " (#{@user.unread_reply_count})" : "" }",
             "/stories/new" => "Submit Story" }) %>
         <% end %>
 

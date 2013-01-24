@@ -58,6 +58,7 @@ Lobsters::Application.routes.draw do
   post "/comments/post_to/:story_id" => "comments#create"
   post "/comments/preview_to/:story_id" => "comments#preview_new"
 
+  get "/messages/sent" => "messages#sent"
   resources :messages do
     post "keep_as_new"
   end

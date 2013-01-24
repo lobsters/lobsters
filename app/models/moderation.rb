@@ -14,6 +14,9 @@ class Moderation < ActiveRecord::Base
     m = Message.new
     m.author_user_id = self.moderator_user_id
 
+    # mark as deleted by author so they don't fill up moderator message boxes
+    m.deleted_by_author = true
+
     if self.story
       m.recipient_user_id = self.story.user_id
       m.subject = "Your story has been edited by a moderator"
@@ -50,8 +53,6 @@ class Moderation < ActiveRecord::Base
       return
     end
 
-    # so this will be deleted when the recipient deletes it
-    m.deleted_by_author = true
     m.save
   end
 end

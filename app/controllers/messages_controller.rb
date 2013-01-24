@@ -8,9 +8,24 @@ class MessagesController < ApplicationController
 
     @new_message = Message.new
 
+    @direction = :in
+    @messages = @user.undeleted_received_messages
+
     if params[:to]
       @new_message.recipient_username = params[:to]
     end
+  end
+
+  def sent
+    @cur_url = "/messages"
+    @title = "Messages Sent"
+
+    @direction = :out
+    @messages = @user.undeleted_sent_messages
+
+    @new_message = Message.new
+
+    render :action => "index"
   end
 
   def create
@@ -59,10 +74,15 @@ class MessagesController < ApplicationController
       @message.deleted_by_recipient = true
     end
 
-    @message.save
+    @message.save!
 
     flash[:success] = "Deleted message."
-    return redirect_to "/messages"
+
+    if @message.author_user_id == @user.id
+      return redirect_to "/messages/sent"
+    else
+      return redirect_to "/messages"
+    end
   end
 
   def keep_as_new

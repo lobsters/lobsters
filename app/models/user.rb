@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   has_many :stories,
     :include => :user
   has_many :comments
-  has_many :authored_messages,
+  has_many :sent_messages,
     :class_name => "Message",
     :foreign_key => "author_user_id"
   has_many :received_messages,
@@ -101,9 +101,11 @@ class User < ActiveRecord::Base
   end
 
   def undeleted_received_messages
-    received_messages.where([ "((recipient_user_id = ? AND " <<
-      "deleted_by_recipient = 0) OR (author_user_id = ? AND " <<
-      "deleted_by_author = 0))", self.id, self.id ])
+    received_messages.where(:deleted_by_recipient => false)
+  end
+  
+  def undeleted_sent_messages
+    sent_messages.where(:deleted_by_author => 0)
   end
 
   def initiate_password_reset_for_ip(ip)

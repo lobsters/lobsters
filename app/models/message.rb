@@ -18,15 +18,15 @@ class Message < ActiveRecord::Base
 
   before_create :assign_short_id
   after_create :deliver_reply_notifications
-  after_save :check_for_both_deleted
   after_save :update_unread_counts
+  after_save :check_for_both_deleted
 
   def assign_short_id
     self.short_id = ShortId.new(self.class).generate
   end
 
   def check_for_both_deleted
-    if self.deleted_by_author && self.deleted_by_recipient
+    if self.deleted_by_author? && self.deleted_by_recipient?
       self.destroy
     end
   end

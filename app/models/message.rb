@@ -15,24 +15,14 @@ class Message < ActiveRecord::Base
 
   validates_length_of :subject, :in => 1..150
   validates_length_of :body, :maximum => (64 * 1024)
-  
+
   before_create :assign_short_id
   after_create :deliver_reply_notifications
   after_save :check_for_both_deleted
   after_save :update_unread_counts
- 
+
   def assign_short_id
-    10.times do |try|
-      if try == 10
-        raise "too many hash collisions"
-      end
-
-      self.short_id = Utils.random_str(6)
-
-      if !Message.find_by_short_id(self.short_id)
-        break
-      end
-    end
+    self.short_id = ShortId.new(self.class).generate
   end
 
   def check_for_both_deleted
@@ -44,7 +34,7 @@ class Message < ActiveRecord::Base
   def update_unread_counts
     self.recipient.update_unread_message_count!
   end
-  
+
   def deliver_reply_notifications
     begin
       if self.recipient.email_messages?
@@ -81,12 +71,12 @@ class Message < ActiveRecord::Base
   def body=(b)
     self[:body] = b.to_s.remove_mb4
   end
-  
+
   # TODO: remove remove_mb4 hack
   def subject=(s)
     self[:subject] = s.to_s.remove_mb4
   end
-  
+
   def linkified_body
     Markdowner.to_html(self.body)
   end

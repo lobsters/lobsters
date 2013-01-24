@@ -22,3 +22,16 @@ Story.blueprint do
   url { "http://example.com/#{sn}" }
   tags_a { [ "tag1", "tag2" ] }
 end
+
+Comment.blueprint do
+  user_id { User.make!.id }
+  story_id { Story.make!.id }
+  comment { "comment text #{sn}" }
+end
+
+Message.blueprint do
+  recipient_user_id { User.make!.id }
+  author_user_id { User.make!.id }
+  subject { "message subject #{sn}" }
+  body { "message body #{sn}" }
+end

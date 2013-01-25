@@ -35,6 +35,8 @@ class MessagesController < ApplicationController
     @new_message = Message.new(params[:message])
     @new_message.author_user_id = @user.id
 
+    @messages = @user.undeleted_received_messages
+
     if @new_message.save
       flash.now[:success] = "Your message has been sent to " <<
         @new_message.recipient.username.to_s << "."

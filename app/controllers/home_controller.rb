@@ -124,6 +124,14 @@ private
       conds.push user.id
     end
 
+    filtered_tag_ids = []
+    if user
+      filtered_tag_ids = @user.tag_filters.map{|tf| tf.tag_id }
+    else
+      # for logged-out users, filter defaults
+      filtered_tag_ids = Tag.where(:filtered_by_default => true).map{|t| t.id }
+    end
+
     if tag
       conds[0] << "AND stories.id IN (SELECT taggings.story_id FROM " <<
         "taggings WHERE taggings.tag_id = ?)"
@@ -131,15 +139,11 @@ private
     elsif by_user
       conds[0] << "AND stories.user_id = ?"
       conds.push by_user
-    elsif user
-      conds[0] += " AND taggings.tag_id NOT IN (SELECT tag_id FROM " <<
-        "tag_filters WHERE user_id = ?)"
-      conds.push @user.id
-    else
-      # for logged-out users, filter defaults
-      conds[0] += " AND taggings.tag_id NOT IN (SELECT id FROM " <<
-        "tags WHERE filtered_by_default = ?)"
-      conds.push true
+    elsif filtered_tag_ids.any?
+      conds[0] += " AND stories.id NOT IN (SELECT taggings.story_id " <<
+        "FROM taggings WHERE taggings.tag_id IN (" <<
+        filtered_tag_ids.map{|t| "?" }.join(",") << "))"
+      conds += filtered_tag_ids
     end
 
     stories = Story.find(

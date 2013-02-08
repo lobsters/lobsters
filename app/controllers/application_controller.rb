@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   def authenticate_user
     if session[:u]
-      @user = User.find_by_session_token(session[:u])
+      @user = User.find_by_session_token(session[:u].to_s)
     end
 
     true

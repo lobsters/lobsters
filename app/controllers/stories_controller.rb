@@ -83,10 +83,10 @@ class StoriesController < ApplicationController
 
     @story = Story.new
 
-    if !params[:url].blank?
+    if params[:url].present?
       @story.url = params[:url]
 
-      if !params[:title].blank?
+      if params[:title].present?
         @story.title = params[:title]
       end
     end

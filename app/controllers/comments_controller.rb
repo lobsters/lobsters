@@ -17,7 +17,7 @@ class CommentsController < ApplicationController
     comment.story_id = story.id
     comment.user_id = @user.id
 
-    if params[:parent_comment_short_id]
+    if params[:parent_comment_short_id].present?
       if pc = Comment.find_by_story_id_and_short_id(story.id,
       params[:parent_comment_short_id])
         comment.parent_comment_id = pc.id

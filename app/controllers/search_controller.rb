@@ -5,12 +5,12 @@ class SearchController < ApplicationController
 
     @search = Search.new
 
-    if params[:q].present?
-      @search.q = params[:q]
+    if params[:q].to_s.present?
+      @search.q = params[:q].to_s
       @search.what = params[:what]
       @search.order = params[:order]
 
-      if params[:page]
+      if params[:page].present?
         @search.page = params[:page].to_i
       end
 

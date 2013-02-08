@@ -15,8 +15,9 @@ class LoginController < ApplicationController
   end
 
   def login
-    if (user = User.where("email = ? OR username = ?", params[:email],
-    params[:email]).first) && user.try(:authenticate, params[:password])
+    if (user = User.where("email = ? OR username = ?", params[:email].to_s,
+    params[:email].to_s).first) &&
+    user.try(:authenticate, params[:password].to_s)
       session[:u] = user.session_token
       return redirect_to "/"
     end
@@ -31,8 +32,8 @@ class LoginController < ApplicationController
   end
 
   def reset_password
-    @found_user = User.where("email = ? OR username = ?", params[:email],
-      params[:email]).first
+    @found_user = User.where("email = ? OR username = ?", params[:email].to_s,
+      params[:email].to_s).first
 
     if !@found_user
       flash.now[:error] = "Invalid e-mail address or username."
@@ -50,13 +51,13 @@ class LoginController < ApplicationController
     @title = "Reset Password"
 
     if params[:token].blank? ||
-    !(@reset_user = User.find_by_password_reset_token(params[:token]))
+    !(@reset_user = User.find_by_password_reset_token(params[:token].to_s))
       flash[:error] = "Invalid reset token.  It may have already been " <<
         "used or you may have copied it incorrectly."
       return redirect_to forgot_password_url
     end
 
-    if !params[:password].blank?
+    if params[:password].present?
       @reset_user.password = params[:password]
       @reset_user.password_confirmation = params[:password_confirmation]
       @reset_user.password_reset_token = nil

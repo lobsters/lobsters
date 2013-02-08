@@ -547,6 +547,10 @@ div.markdown_help blockquote {
 	padding: 0 0 0 1em;
 	border-left: 2px solid gray;
 }
+div.comment_text pre,
+div.markdown_help pre {
+	margin-left: 1em;
+}
 div.comment_text ol {
 	margin: 0;
 	padding: 0 1.5em;

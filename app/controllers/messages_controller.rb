@@ -35,16 +35,16 @@ class MessagesController < ApplicationController
     @new_message = Message.new(params[:message])
     @new_message.author_user_id = @user.id
 
+    @direction = :out
     @messages = @user.undeleted_received_messages
 
     if @new_message.save
-      flash.now[:success] = "Your message has been sent to " <<
+      flash[:success] = "Your message has been sent to " <<
         @new_message.recipient.username.to_s << "."
-
-      @new_message = Message.new
+      return redirect_to "/messages"
+    else
+      render :action => "index"
     end
-
-    render :action => "index"
   end
 
   def show

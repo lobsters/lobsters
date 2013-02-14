@@ -46,7 +46,7 @@ class Keystore < ActiveRecord::Base
 
     return new_value
   end
-  
+
   def self.decrement_value_for(key, amount = -1)
     self.increment_value_for(key, amount)
   end

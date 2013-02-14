@@ -3,7 +3,7 @@ class CommentsController < ApplicationController
 
   before_filter :require_logged_in_user_or_400,
     :only => [ :create, :preview, :preview_new, :upvote, :downvote, :unvote ]
-  
+
   # for rss feeds, load the user's tag filters if a token is passed
   before_filter :find_user_from_rss_token, :only => [ :index ]
 
@@ -57,7 +57,7 @@ class CommentsController < ApplicationController
           :content_type => "text/html", :locals => { :story => story,
           :comment => Comment.new, :show_comment => comment }
       end
-      
+
       Countinual.count!("lobsters.comments.submitted", "+1")
     else
       comment.previewing = true
@@ -69,7 +69,7 @@ class CommentsController < ApplicationController
         :comment => comment, :show_comment => comment }
     end
   end
-  
+
   def preview_new
     params[:preview] = true
     return create
@@ -178,7 +178,7 @@ class CommentsController < ApplicationController
     if !(comment = Comment.find_by_short_id(params[:comment_id]))
       return render :text => "can't find comment", :status => 400
     end
-    
+
     if !Vote::COMMENT_REASONS[params[:reason]]
       return render :text => "invalid reason", :status => 400
     end
@@ -270,7 +270,7 @@ if false
       th
     }
 end
-   
+
     @comments = @threads.flatten
   end
 end

@@ -71,7 +71,7 @@ class MessagesController < ApplicationController
     if @message.author_user_id == @user.id
       @message.deleted_by_author = true
     end
-    
+
     if @message.recipient_user_id == @user.id
       @message.deleted_by_recipient = true
     end

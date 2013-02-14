@@ -59,7 +59,7 @@ class HomeController < ApplicationController
 
     @stories = find_stories_for_user_and_tag_and_newest_and_by_user(@user,
       nil, false, for_user.id)
-    
+
     @heading = @title = "Newest Stories by #{for_user.username}"
     @cur_url = "/newest/#{for_user.username}"
 

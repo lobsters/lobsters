@@ -56,13 +56,13 @@ class StoriesController < ApplicationController
 
     redirect_to @story.comments_url
   end
-  
+
   def edit
     if !@story.is_editable_by_user?(@user)
       flash[:error] = "You cannot edit that story."
       return redirect_to "/"
     end
-    
+
     @title = "Edit Story"
   end
 
@@ -158,7 +158,7 @@ class StoriesController < ApplicationController
     end
 
     @comment = Comment.new
-  
+
     load_user_votes
 
     render :action => "show"
@@ -254,7 +254,7 @@ private
       @story.id, nil)
         @story.vote = v.vote
       end
- 
+
       @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @story.id)
       @comments.each do |c|
         if @votes[c.id]

@@ -2,7 +2,7 @@ class EmailReply < ActionMailer::Base
   default :from => "nobody@lobste.rs"
 
   def reply(comment, user)
-    @comment = comment 
+    @comment = comment
     @user = user
 
     mail(:to => user.email, :from => "Lobsters <nobody@lobste.rs>",
@@ -11,7 +11,7 @@ class EmailReply < ActionMailer::Base
   end
 
   def mention(comment, user)
-    @comment = comment 
+    @comment = comment
     @user = user
 
     mail(:to => user.email, :from => "Lobsters <nobody@lobste.rs>",

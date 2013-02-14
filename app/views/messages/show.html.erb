@@ -32,7 +32,7 @@
         <%= submit_tag "Delete Message" %>
       <% end %>
     </div>
-    
+
     <div style="float: left; padding-left: 1em;">
       <%= form_tag message_url(@message.short_id) + "/keep_as_new",
       :method => :post do %>
@@ -42,7 +42,7 @@
   </div>
 
   <div style="clear: both;"></div>
-  
+
   <br>
 
   <div class="legend">

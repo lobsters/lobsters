@@ -95,7 +95,7 @@ class User < ActiveRecord::Base
   def stories_submitted_count
     Keystore.value_for("user:#{self.id}:stories_submitted").to_i
   end
-  
+
   def comments_posted_count
     Keystore.value_for("user:#{self.id}:comments_posted").to_i
   end
@@ -103,7 +103,7 @@ class User < ActiveRecord::Base
   def undeleted_received_messages
     received_messages.where(:deleted_by_recipient => false)
   end
-  
+
   def undeleted_sent_messages
     sent_messages.where(:deleted_by_author => 0)
   end

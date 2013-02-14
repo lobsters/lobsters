@@ -43,7 +43,7 @@ class Vote < ActiveRecord::Base
 
     votes
   end
-  
+
   def self.story_votes_by_user_for_story_ids_hash(user_id, story_ids)
     if !story_ids.any?
       return {}

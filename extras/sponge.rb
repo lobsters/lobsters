@@ -195,7 +195,7 @@ class Sponge
         newuri.scheme = uri.scheme
         newuri.port = uri.port
         newuri.path = "/#{newuri.path}"
-        
+
         dputs "following relative redirection to " + newuri.to_s
       end
 

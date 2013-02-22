@@ -16,7 +16,7 @@
       to
       <a href="/u/<%= @message.recipient.username %>"><%=
         @message.recipient.username %></a>
-      <%= time_ago_in_words(@message.created_at) %> ago
+      <%= raw(time_ago_in_words_label(@message.created_at)) %> ago
     </div>
 	</div>
 

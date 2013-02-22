@@ -20,6 +20,10 @@ class InvitationsController < ApplicationController
         "address is valid."
     end
 
-    return redirect_to "/settings"
+    if params[:return_home]
+      return redirect_to "/"
+    else
+      return redirect_to "/settings"
+    end
   end
 end

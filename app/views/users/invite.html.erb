@@ -1,0 +1,21 @@
+<div class="box wide">
+  <div class="legend">
+    Pass Along an Invitation
+  </div>
+
+  <p>
+  This community can only grow when members invite new users, just as <a
+  href="/u/<%= @user.invited_by_user.try(:username) %>"><%=
+  @user.invited_by_user.try(:username) %></a> invited you.  Take a moment and
+  invite someone you know.
+  </p>
+
+  <%= render :partial => "users/invitationform",
+    :locals => { :return_home => true } %>
+
+  or
+
+  <p>
+  <%= button_to "Skip", "/" %>
+  </p>
+</div>

@@ -45,7 +45,7 @@ class SignupController < ApplicationController
 
       Countinual.count!("lobsters.users.created", "+1")
 
-      return redirect_to "/"
+      return redirect_to "/users/invite"
     else
       render :action => "invited"
     end

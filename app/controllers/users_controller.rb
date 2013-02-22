@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  before_filter :require_logged_in_user, :only => :invite
+
   def show
     @showing_user = User.find_by_username!(params[:id])
     @title = "User #{@showing_user.username}"
@@ -33,5 +35,9 @@ class UsersController < ApplicationController
     recursor.call(nil, 0)
 
     @tree
+  end
+
+  def invite
+    @title = "Pass Along an Invitation"
   end
 end

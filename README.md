@@ -5,6 +5,17 @@ This is the source code to the site operating at
 SQL (MySQL in production) backend for the database and Sphinx for the search
 engine.
 
+While you are free to fork this code and modify it (according to the [license](https://github.com/jcs/lobsters/blob/master/LICENSE))
+to run your own link aggregation website, this source code repository and bug
+tracker are only for the site operating at [lobste.rs](https://lobste.rs/).
+Please do not use the bug tracker for support related to operating your own
+site unless you are contributing code that will also benefit [lobste.rs](https://lobste.rs/).
+
+####Contributing bugfixes and new features
+
+Please see the [CONTRIBUTING](https://github.com/jcs/lobsters/blob/master/CONTRIBUTING.md)
+file.
+
 ####Initial setup
 
 * Install Ruby 1.9.3.
@@ -71,8 +82,3 @@ You should define this in `/etc/hosts` (or through DNS) to point to
 `http://lobsters.localhost:3000` with your `test` user:
 
           lobsters$ rails server
-
-####Contributing bugfixes and new features
-
-Please see the [CONTRIBUTING](https://github.com/jcs/lobsters/blob/master/CONTRIBUTING.md)
-file.

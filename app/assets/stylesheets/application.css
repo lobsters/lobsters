@@ -858,6 +858,13 @@ table.data tr.void td, table.data tr.void td a {
 	width: 75%;
 }
 
+.box label,
+.box .label_holder {
+	width: 7em;
+	line-height: 2em;
+	vertical-align: middle;
+}
+
 .box input.normal,
 .box label.normal {
 	display: inline;
@@ -865,11 +872,10 @@ table.data tr.void td, table.data tr.void td a {
 	vertical-align: middle;
 }
 
-.box label,
-.box .label_holder {
-	width: 7em;
-	line-height: 2em;
-	vertical-align: middle;
+.box span.d label {
+	display: inline;
+	float: none;
+	vertical-align: baseline;
 }
 
 .box .label_holder label,

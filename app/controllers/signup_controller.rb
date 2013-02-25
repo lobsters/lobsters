@@ -1,4 +1,6 @@
 class SignupController < ApplicationController
+  before_filter :require_logged_in_user, :only => :invite
+
   def index
     if @user
       flash[:error] = "You are already signed up."
@@ -45,7 +47,7 @@ class SignupController < ApplicationController
 
       Countinual.count!("lobsters.users.created", "+1")
 
-      return redirect_to "/users/invite"
+      return redirect_to "/signup/invite"
     else
       render :action => "invited"
     end

@@ -4,10 +4,9 @@
   </div>
 
   <p>
-  This community can only grow when members invite new users, just as <a
-  href="/u/<%= @user.invited_by_user.try(:username) %>"><%=
-  @user.invited_by_user.try(:username) %></a> invited you.  Take a moment and
-  invite someone you know.
+  This community can only grow when members invite new users, just as
+  <strong><%= @user.invited_by_user.try(:username) %></strong> invited you.
+  Take a moment and invite someone you know.
   </p>
 
   <%= render :partial => "users/invitationform",

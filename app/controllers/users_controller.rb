@@ -1,6 +1,4 @@
 class UsersController < ApplicationController
-  before_filter :require_logged_in_user, :only => :invite
-
   def show
     @showing_user = User.find_by_username!(params[:id])
     @title = "User #{@showing_user.username}"

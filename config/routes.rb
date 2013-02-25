@@ -21,6 +21,7 @@ Lobsters::Application.routes.draw do
 
   get "/signup" => "signup#index"
   post "/signup" => "signup#signup"
+  get "/signup/invite" => "signup#invite"
 
   match "/login/forgot_password" => "login#forgot_password",
     :as => "forgot_password"
@@ -68,8 +69,6 @@ Lobsters::Application.routes.draw do
 
   get "/u" => "users#tree"
   get "/u/:id" => "users#show"
-
-  get "/users/invite" => "users#invite"
 
   get "/settings" => "settings#index"
   post "/settings" => "settings#update"

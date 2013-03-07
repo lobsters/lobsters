@@ -33,6 +33,8 @@ Lobsters::Application.routes.draw do
   match "/t/:tag" => "home#tagged", :as => "tag"
   match "/t/:tag/page/:page" => "home#tagged"
 
+  match "/stories_voted_on", to: 'votes#stories_user_voted_on'
+
   get "/search" => "search#index"
 
   resources :stories do

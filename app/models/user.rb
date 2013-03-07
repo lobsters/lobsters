@@ -12,6 +12,9 @@ class User < ActiveRecord::Base
   belongs_to :invited_by_user,
     :class_name => "User"
 
+  has_many :votes
+  has_many :voted_stories, through: :votes, :source => :story
+
   has_secure_password
 
   validates_format_of :username, :with => /\A[A-Za-z0-9][A-Za-z0-9_-]*\Z/

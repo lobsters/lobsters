@@ -35,7 +35,7 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
         <% end %>
       </span>
       <span class="domain">
-        <%= story.domain unless story.is_expired == 1 %>
+        <%= story.domain %>
       </span>
     <% end %>
     <div class="byline">

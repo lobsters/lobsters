@@ -43,7 +43,8 @@
 
         <% if @user %>
           <% links.merge!({ "/threads" => "Your Threads",
-            "/stories/new" => "Submit Story" }) %>
+            "/stories/new" => "Submit Story",
+            "/stories_voted_on" => "Stories Voted On" }) %>
         <% end %>
 
         <% links.merge!({ "/search" => "Search" }) %>

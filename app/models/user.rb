@@ -11,6 +11,8 @@ class User < ActiveRecord::Base
   has_many :tag_filters
   belongs_to :invited_by_user,
     :class_name => "User"
+  has_many :votes
+  has_many :voted_stories, :through => :votes, :source => :story
 
   has_secure_password
 

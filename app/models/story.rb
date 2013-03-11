@@ -5,6 +5,8 @@ class Story < ActiveRecord::Base
     :autosave => true
   has_many :comments
   has_many :tags, :through => :taggings
+  has_many :votes 
+  has_many :voters, :through => :votes, :source => :users
 
   validates_length_of :title, :in => 3..150
   validates_length_of :description, :maximum => (64 * 1024)

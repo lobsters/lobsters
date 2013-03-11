@@ -11,6 +11,10 @@ class Story < ActiveRecord::Base
   has_many :comments,
     :inverse_of => :story
   has_many :tags, :through => :taggings
+  has_many :votes, -> { where(:comment_id => nil) }
+  has_many :voters, -> { where('votes.comment_id' => nil) },
+    :through => :votes,
+    :source => :user
 
   scope :unmerged, -> { where(:merged_story_id => nil) }
 

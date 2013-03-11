@@ -28,6 +28,9 @@ Lobsters::Application.routes.draw do
       get "/hidden" => "home#hidden"
       get "/hidden/page/:page" => "home#hidden"
 
+      get "/upvoted(.format)" => "home#upvoted"
+      get "/upvoted/page/:page" => "home#upvoted"
+
       get "/top" => "home#top"
       get "/top/page/:page" => "home#top"
       get "/top/:length" => "home#top"

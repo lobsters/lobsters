@@ -20,6 +20,14 @@ class User < ActiveRecord::Base
     :class_name => "User"
   has_many :invitations
   has_many :weblogs
+  has_many :votes
+  has_many :voted_stories, -> { where('votes.comment_id' => nil) },
+    :through => :votes,
+    :source => :story
+  has_many :upvoted_stories,
+    -> { where('votes.comment_id' => nil, 'votes.vote' => 1) },
+    :through => :votes,
+    :source => :story
 
   has_secure_password
 

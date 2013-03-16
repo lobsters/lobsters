@@ -313,6 +313,13 @@ div#user_about {
 div#gravatar {
 	float: right;
 }
+div#gravatar img {
+	width: 100px;
+	height: 100px;
+	border-radius: 50px;
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+}
 
 /* stories */
 
@@ -875,7 +882,8 @@ table.data tr.void td, table.data tr.void td a {
 }
 
 .box span.d label,
-.box td label {
+.box td label,
+.box .legend label {
 	display: inline;
 	float: none;
 	vertical-align: baseline;

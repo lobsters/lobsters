@@ -7,9 +7,7 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
     <% else %>
       <%= link_to "", login_url, :class => "upvoter" %>
     <% end %>
-    <div class="score">
-      <%= story.upvotes - story.downvotes %>
-    </div>
+    <div class="score"><%= story.upvotes - story.downvotes %></div>
     <% if @user %>
       <a class="downvoter"></a>
     <% else %>
@@ -34,9 +32,7 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
             tagging.tag.tag %>"><%= tagging.tag.tag %></a>
         <% end %>
       </span>
-      <span class="domain">
-        <%= story.domain %>
-      </span>
+      <span class="domain"><%= story.domain %></span>
     <% end %>
     <div class="byline">
       <% if story.previewing %>

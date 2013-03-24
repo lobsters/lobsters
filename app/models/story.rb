@@ -267,7 +267,7 @@ class Story < ActiveRecord::Base
   end
 
   def generated_markeddown_description
-    Markdowner.to_html(self.description, allow_images = true)
+    Markdowner.to_html(self.description, { :allow_images => true })
   end
 
   def description=(desc)

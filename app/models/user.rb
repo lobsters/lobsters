@@ -116,7 +116,9 @@ class User < ActiveRecord::Base
   end
 
   def linkified_about
-    Markdowner.to_html(self.about)
+    # most users are probably mentioning "@username" to mean a twitter url, not
+    # a link to a lobste.rs profile
+    Markdowner.to_html(self.about, { :disable_profile_links => true })
   end
 
   def recent_threads(amount)

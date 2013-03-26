@@ -314,19 +314,6 @@ class Story < ActiveRecord::Base
     end
   end
 
-  def url=(u)
-    # strip out stupid google analytics parameters
-    if u && (m = u.match(/\A([^\?]+)\?(.+)\z/))
-      params = m[2].split("&")
-      params.reject!{|p|
-        p.match(/^utm_(source|medium|campaign|term|content)=/) }
-
-      u = m[1] << (params.any?? "?" << params.join("&") : "")
-    end
-
-    self[:url] = u
-  end
-
   def title=(t)
     # change unicode whitespace characters into real spaces
     # TODO: remove remove_mb4 hack
@@ -341,8 +328,31 @@ class Story < ActiveRecord::Base
     u.gsub(/^_+/, "").gsub(/_+$/, "")
   end
 
+  def url=(u)
+    # strip out stupid google analytics parameters
+    if u && (m = u.match(/\A([^\?]+)\?(.+)\z/))
+      params = m[2].split("&")
+      params.reject!{|p|
+        p.match(/^utm_(source|medium|campaign|term|content)=/) }
+
+      u = m[1] << (params.any?? "?" << params.join("&") : "")
+    end
+
+    self[:url] = u
+  end
+
   def url_or_comments_url
     self.url.blank? ? self.comments_url : self.url
+  end
+
+  def url_is_editable_by_user?(user)
+    if self.new_record?
+      true
+    elsif user && user.is_moderator? && self.url.present?
+      true
+    else
+      false
+    end
   end
 
   def is_editable_by_user?(user)

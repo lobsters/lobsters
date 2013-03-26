@@ -187,7 +187,12 @@ class StoriesController < ApplicationController
     @story.is_expired = false
     @story.editor_user_id = @user.id
 
-    if @story.update_attributes(params[:story].except(:url))
+    @story.attributes = params[:story].except(:url)
+    if @story.url_is_editable_by_user?(@user)
+      @story.url = params[:story][:url]
+    end
+
+    if @story.save
       return redirect_to @story.comments_url
     else
       return render :action => "edit"

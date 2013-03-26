@@ -2,26 +2,26 @@
 
 <div class="box">
   <div class="boxline">
-	<% if !f.object.new_record? && !f.object.url.blank? %>
+  <% if f.object.url_is_editable_by_user?(@user) %>
     <%= f.label :url, "URL:", :class => "required" %>
-    <div class="d">
-		<a href="<%= f.object.url %>"><%= f.object.url %></a>
-    </div>
-	<% elsif !f.object.id %>
-    <%= f.label :url, "URL:", :class => "required" %>
-		<%= f.text_field :url, :autocomplete => "off" %>
+    <%= f.text_field :url, :autocomplete => "off" %>
     <%= button_tag "Fetch Title", :id => "story_fetch_title",
       :type => "button" %>
-	<% end %>
+  <% elsif !f.object.new_record? && !f.object.url.blank? %>
+    <%= f.label :url, "URL:", :class => "required" %>
+    <div class="d">
+    <a href="<%= f.object.url %>"><%= f.object.url %></a>
+    </div>
+  <% end %>
   </div>
 
   <div class="boxline">
     <%= f.label :title, "Title:", :class => "required" %>
     <%= f.text_field :title, :maxlength => 100, :autocomplete => "off"  %>
-	</div>
+  </div>
 
   <div class="boxline" style="margin-bottom: 2px;">
-	<%= f.label :tags_a, "Tags:", :class => "required",
+  <%= f.label :tags_a, "Tags:", :class => "required",
     :style => "line-height: 2.3em;" %>
   <%= f.select "tags_a", options_for_select(
     Tag.all_with_filtered_counts_for(@user).map{|t|

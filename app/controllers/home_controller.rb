@@ -79,7 +79,7 @@ class HomeController < ApplicationController
 
     @rss_link = "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
       "title=\"RSS 2.0 - Tagged #{CGI.escape(@tag.tag)} " <<
-      "(#{CGI.escape(@tag.description)})\" href=\"/t/" +
+      "(#{CGI.escape(@tag.description.to_s)})\" href=\"/t/" +
       "#{CGI.escape(@tag.tag)}.rss\" />"
 
     respond_to do |format|

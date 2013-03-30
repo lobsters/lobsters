@@ -1,4 +1,7 @@
 class Tag < ActiveRecord::Base
+  has_many :taggings,
+    :dependent => :delete_all
+
   attr_accessor :filtered_count
 
   scope :accessible_to, ->(user) do

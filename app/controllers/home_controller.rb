@@ -88,6 +88,29 @@ class HomeController < ApplicationController
     end
   end
 
+  def upvoted
+    @stories = @user.voted_stories.where("vote = '1'")
+
+    @heading = @title = "Upvoted"
+    @cur_url = "/upvoted"
+
+    @rss_link = "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
+      "title=\"RSS 2.0 - Upvoted Items\" href=\"/upvoted.rss" <<
+      (@user ? "?token=#{@user.rss_token}" : "") << "\" />"
+
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.rss {
+        if @user && params[:token].present?
+          @title += " - Private feed for #{@user.username}"
+        end
+
+        render :action => "rss", :layout => false
+      }
+      format.json { render :json => @stories }
+    end
+  end 
+
 private
   def find_stories_for_user_and_tag_and_newest_and_by_user(user, tag = nil,
   newest = false, by_user = nil)

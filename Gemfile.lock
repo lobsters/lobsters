@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/brianmario/mysql2.git
+  revision: 5ebf34171d30048ef1cc641120208b134ea401bd
+  specs:
+    mysql2 (0.3.12b6)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -54,7 +60,6 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.21)
     multi_json (1.7.1)
-    mysql2 (0.3.11)
     nokogiri (1.5.6)
     polyglot (0.3.3)
     rack (1.4.5)
@@ -130,9 +135,10 @@ DEPENDENCIES
   htmlentities
   jquery-rails
   machinist
-  mysql2
+  mysql2!
   nokogiri
   rails (= 3.2.13)
+  rake (= 10.0.3)
   rdiscount
   rspec-rails (~> 2.6)
   sqlite3

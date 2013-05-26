@@ -267,8 +267,7 @@ class Comment < ActiveRecord::Base
   end
 
   def comment=(com)
-    # TODO: remove remove_mb4 hack
-    self[:comment] = com.to_s.rstrip.remove_mb4
+    self[:comment] = com.to_s.rstrip
     self.markeddown_comment = self.generated_markeddown_comment
   end
 

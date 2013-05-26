@@ -271,8 +271,7 @@ class Story < ActiveRecord::Base
   end
 
   def description=(desc)
-    # TODO: remove remove_mb4 hack
-    self[:description] = desc.to_s.remove_mb4.rstrip
+    self[:description] = desc.to_s.rstrip
     self.markeddown_description = self.generated_markeddown_description
   end
 
@@ -316,8 +315,7 @@ class Story < ActiveRecord::Base
 
   def title=(t)
     # change unicode whitespace characters into real spaces
-    # TODO: remove remove_mb4 hack
-    self[:title] = t.strip.remove_mb4
+    self[:title] = t.strip
   end
 
   def title_as_url

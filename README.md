@@ -2,7 +2,7 @@
 
 This is the source code to the site operating at
 [https://lobste.rs](https://lobste.rs).  It is a Rails 3 codebase and uses a
-SQL (MySQL in production) backend for the database and Sphinx for the search
+SQL (MariaDB in production) backend for the database and Sphinx for the search
 engine.
 
 While you are free to fork this code and modify it (according to the [license](https://github.com/jcs/lobsters/blob/master/LICENSE))
@@ -30,8 +30,8 @@ file.
 
          lobsters$ bundle
 
-* Create a MySQL (other DBs supported by ActiveRecord may work, only MySQL has
-been tested) database, username, and password and put them in a
+* Create a MySQL (other DBs supported by ActiveRecord may work, only MySQL and
+MariaDB have been tested) database, username, and password and put them in a
 `config/database.yml` file:
 
           development:

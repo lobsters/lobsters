@@ -36,7 +36,7 @@ been tested) database, username, and password and put them in a
 
           development:
             adapter: mysql2
-            encoding: utf8
+            encoding: utf8mb4
             reconnect: false
             database: lobsters_dev
             socket: /tmp/mysql.sock

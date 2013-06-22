@@ -34,7 +34,8 @@ class User < ActiveRecord::Base
     :pushover_mentions
 
   before_save :check_session_token
-  after_create :create_default_tag_filters, :create_rss_token
+  after_create :create_default_tag_filters, :create_rss_token,
+    :create_mailing_list_token
 
   BANNED_USERNAMES = [ "admin", "administrator", "hostmaster", "mailer-daemon",
     "postmaster", "root", "security", "support", "webmaster", ]
@@ -75,6 +76,12 @@ class User < ActiveRecord::Base
   def create_rss_token
     if self.rss_token.blank?
       self.rss_token = Utils.random_str(60)
+    end
+  end
+
+  def create_mailing_list_token
+    if self.mailing_list_token.blank?
+      self.mailing_list_token = Utils.random_str(10)
     end
   end
 

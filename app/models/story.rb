@@ -132,7 +132,8 @@ class Story < ActiveRecord::Base
   end
 
   def log_moderation
-    if self.new_record? || self.editor_user_id == self.user_id
+    if self.new_record? || !self.editor_user_id ||
+    self.editor_user_id == self.user_id
       return
     end
 
@@ -232,6 +233,12 @@ class Story < ActiveRecord::Base
     end
 
     @fetched_content
+  end
+
+  def fetch_story_cache!
+    if self.url.present?
+      self.story_cache = StoryCacher.get_story_text(self.url)
+    end
   end
 
   def calculated_hotness

@@ -89,6 +89,7 @@ ActiveRecord::Schema.define(:version => 20130526164230) do
     t.integer  "is_moderated",           :limit => 1,                                        :default => 0,   :null => false
     t.decimal  "hotness",                                    :precision => 20, :scale => 10, :default => 0.0, :null => false
     t.text     "markeddown_description", :limit => 16777215
+    t.text     "story_cache"
   end
 
   add_index "stories", ["hotness"], :name => "hotness_idx"

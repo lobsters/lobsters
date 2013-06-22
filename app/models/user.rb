@@ -14,13 +14,19 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
-  validates_format_of :username, :with => /\A[A-Za-z0-9][A-Za-z0-9_-]*\Z/
-  validates_uniqueness_of :username, :case_sensitive => false
+  validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
+    :uniqueness => { :case_sensitive => false }
 
-  validates_format_of :email, :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/
-  validates_uniqueness_of :email, :case_sensitive => false
+  validates :password, :presence => true, :on => :create
 
-  validates_presence_of :password, :on => :create
+  validates :username, :format => { :with => /\A[A-Za-z0-9][A-Za-z0-9_-]*\Z/ },
+    :uniqueness => { :case_sensitive => false }
+
+  validates_each :username do |record,attr,value|
+    if BANNED_USERNAMES.include?(value.to_s.downcase)
+      record.errors.add(attr, "is not permitted")
+    end
+  end
 
   attr_accessible :username, :email, :password, :password_confirmation,
     :about, :email_replies, :pushover_replies, :pushover_user_key,
@@ -29,6 +35,9 @@ class User < ActiveRecord::Base
 
   before_save :check_session_token
   after_create :create_default_tag_filters, :create_rss_token
+
+  BANNED_USERNAMES = [ "admin", "administrator", "hostmaster", "mailer-daemon",
+    "postmaster", "root", "security", "support", "webmaster", ]
 
   def as_json(options = {})
     h = super(:only => [

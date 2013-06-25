@@ -2,4 +2,4 @@
 
 cd /d/rails/lobsters
 # rebuild does a start
-sudo -u lobsters env RAILS_ENV=production bundle19 exec rake19 thinking_sphinx:rebuild
+sudo -u lobsters -H env RAILS_ENV=production NO_TRIPWIRE=1 bundle19 exec rake19 thinking_sphinx:rebuild

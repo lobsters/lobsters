@@ -1,5 +1,16 @@
-# no caching
-User-agent: ia_archiver
+# block all spiders by default
+User-agent: *
 Disallow: /
-User-agent: archive.org_bot
+
+# but allow major ones
+User-agent: Googlebot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-Agent: msnbot
+Disallow: 
+
+User-agent: Baiduspider
 Disallow: /

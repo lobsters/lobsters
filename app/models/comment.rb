@@ -13,7 +13,8 @@ class Comment < ActiveRecord::Base
   attr_accessor :parent_comment_short_id, :current_vote, :previewing,
     :indent_level, :highlighted
 
-  before_create :assign_short_id_and_upvote, :assign_initial_confidence
+  before_create :assign_short_id_and_upvote, :assign_initial_confidence,
+    :assign_thread_id
   after_create :assign_votes, :mark_submitter, :deliver_reply_notifications,
     :deliver_mention_notifications
   after_destroy :unassign_votes
@@ -252,6 +253,14 @@ class Comment < ActiveRecord::Base
 
   def assign_initial_confidence
     self.confidence = self.calculated_confidence
+  end
+
+  def assign_thread_id
+    if self.parent_comment_id.present?
+      self.thread_id = self.parent_comment.thread_id
+    else
+      self.thread_id = Keystore.incremented_value_for("thread_id")
+    end
   end
 
   def unassign_votes

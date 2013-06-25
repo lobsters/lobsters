@@ -283,6 +283,10 @@ class Story < ActiveRecord::Base
     self.markeddown_description = self.generated_markeddown_description
   end
 
+  def mailing_list_message_id
+    "story.#{short_id}.#{created_at.to_i}@lobste.rs"
+  end
+
   @_tags_a = []
   def tags_a
     @_tags_a ||= self.taggings.map{|t| t.tag.tag }

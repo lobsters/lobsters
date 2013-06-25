@@ -280,13 +280,17 @@ class Comment < ActiveRecord::Base
     self.markeddown_comment = self.generated_markeddown_comment
   end
 
+  def has_been_edited?
+    self.updated_at && (self.updated_at - self.created_at > 1.minute)
+  end
+
+  def mailing_list_message_id
+    "comment.#{short_id}.#{created_at.to_i}@lobste.rs"
+  end
+
   def plaintext_comment
     # TODO: linkify then strip tags and convert entities back
     comment
-  end
-
-  def has_been_edited?
-    self.updated_at && (self.updated_at - self.created_at > 1.minute)
   end
 
   def self.ordered_for_story_or_thread_for_user(story_id, thread_id, user)

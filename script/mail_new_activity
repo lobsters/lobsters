@@ -1,0 +1,165 @@
+#!/usr/bin/env ruby
+
+ENV["RAILS_ENV"] ||= "production"
+
+APP_PATH = File.expand_path('../../config/application',  __FILE__)
+require File.expand_path('../../config/boot',  __FILE__)
+require APP_PATH
+Rails.application.require_environment!
+
+class String
+  def force_to_ascii
+    encode("us-ascii", :invalid => :replace, :undef => :replace,
+      :replace => "?")
+  end
+
+  # like ActionView::Helpers::TextHelper but preserve > and indentation when
+  # wrapping lines
+  def word_wrap(len)
+    split("\n").collect do |line|
+      if line.length <= len
+        line
+      elsif m = line.match(/^(> ?|   +)(.*)/)
+        ind = m[1]
+        if len - ind.length < 0
+          ind = "    "
+        end
+        m[2].gsub(/(.{1,#{len - ind.length}})(\s+|$)/, "#{ind}\\1\n").strip
+      else
+        line.gsub(/(.{1,#{len}})(\s+|$)/, "\\1\n").strip
+      end
+    end * "\n"
+  end
+end
+
+EMAIL_WIDTH = 72
+LAST_STORY_KEY = "mailing:last_story_id"
+LAST_COMMENT_KEY = "mailing:last_comment_id"
+
+mailing_list_users = User.where(:mailing_list_enabled => true)
+
+last_story_id = (Keystore.value_for(LAST_STORY_KEY) || Story.last.id).to_i
+
+Story.where("id > ?", last_story_id).order(:id).each do |s|
+  s.fetch_story_cache!
+  s.save
+ 
+  mailing_list_users.each do |u|
+    if (s.tags.map{|t| t.id } & u.tag_filters.map{|t| t.tag_id }).any?
+      next
+    end
+
+    IO.popen([ {}, "/usr/sbin/sendmail", "-i", "-f", "nobody@lobste.rs",
+    u.email ], "w") do |mail|
+      mail.puts "From: #{s.user.username} <#{s.user.username}@lobste.rs>"
+      mail.puts "Reply-To: lobsters-#{u.mailing_list_token}@lobste.rs"
+      mail.puts "To: lobsters-#{u.mailing_list_token}@lobste.rs"
+      mail.puts "X-BeenThere: lobsters-#{u.mailing_list_token}.lobste.rs"
+      mail.puts "List-Id: Lobsters <lobsters-#{u.mailing_list_token}.lobste.rs>"
+      mail.puts "List-Unsubscribe: <https://lobste.rs/settings>"
+      mail.puts "Precedence: list"
+      mail.puts "Content-Type: text/plain; charset=\"us-ascii\""
+      mail.puts "Message-ID: <#{s.mailing_list_message_id}>"
+      mail.puts "Date: " << s.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
+      mail.puts "Subject: #{s.title.force_to_ascii}" <<
+        s.tags.sort_by{|t| t.tag }.map{|t| " [#{t.tag}]" }.join
+
+      mail.puts ""
+
+      if s.description.present?
+        mail.puts s.description.to_s.force_to_ascii.word_wrap(EMAIL_WIDTH)
+      end
+
+      if s.url.present?
+        if s.description.present?
+          mail.puts ""
+        end
+
+        mail.puts "Via: #{s.url}"
+
+        if s.story_cache.present?
+          mail.puts ""
+          mail.puts s.story_cache.to_s.force_to_ascii.word_wrap(EMAIL_WIDTH)
+        end
+      end
+
+      mail.puts ""
+      mail.puts "-- "
+      mail.puts "Vote: #{s.short_id_url}"
+    end
+  end
+
+  last_story_id = s.id
+end
+
+Keystore.put(LAST_STORY_KEY, last_story_id)
+
+# repeat for comments
+
+last_comment_id = (Keystore.value_for(LAST_COMMENT_KEY) ||
+  Comment.last.id).to_i
+
+Comment.where("id > ?", last_comment_id).order(:id).each do |c|
+  mailing_list_users.each do |u|
+    if (c.story.tags.map{|t| t.id } & u.tag_filters.map{|t| t.tag_id }).any?
+      next
+    end
+
+    IO.popen([ {}, "/usr/sbin/sendmail", "-i", "-f", "nobody@lobste.rs",
+    u.email ], "w") do |mail|
+      mail.puts "From: #{c.user.username} <#{c.user.username}@lobste.rs>"
+      mail.puts "Reply-To: lobsters-#{u.mailing_list_token}@lobste.rs"
+      mail.puts "To: lobsters-#{u.mailing_list_token}@lobste.rs"
+      mail.puts "List-Id: Lobsters <lobsters-#{u.mailing_list_token}.lobste.rs>"
+      mail.puts "List-Unsubscribe: <https://lobste.rs/settings>"
+      mail.puts "Precedence: list"
+      mail.puts "Content-Type: text/plain; charset=\"us-ascii\""
+      mail.puts "Message-ID: <#{c.mailing_list_message_id}>"
+
+      refs = [ "<#{c.story.mailing_list_message_id}>" ]
+
+      if c.parent_comment_id
+        mail.puts "In-Reply-To: <#{c.parent_comment.mailing_list_message_id}>"
+
+        thread = []
+        indent_level = 0
+        Comment.ordered_for_story_or_thread_for_user(nil, c.thread_id,
+        nil).reverse.each do |cc|
+          if indent_level > 0 && cc.indent_level < indent_level
+            thread.unshift cc
+            indent_level = cc.indent_level
+          elsif cc.id == c.id
+            indent_level = cc.indent_level
+          end
+        end
+
+        thread.each do |cc|
+          refs.push "<#{cc.mailing_list_message_id}>"
+        end
+      else
+        mail.puts "In-Reply-To: <#{c.story.mailing_list_message_id}>"
+      end
+
+      mail.print "References:"
+      refs.each do |ref|
+        mail.puts " #{ref}"
+      end
+
+      mail.puts "Date: " << c.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
+      mail.puts "Subject: Re: #{c.story.title.force_to_ascii}" <<
+        c.story.tags.sort_by{|t| t.tag }.map{|t| " [#{t.tag}]" }.join
+
+      mail.puts ""
+
+      mail.puts c.comment.to_s.force_to_ascii.word_wrap(EMAIL_WIDTH)
+
+      mail.puts ""
+      mail.puts "-- "
+      mail.puts "Vote: #{c.short_id_url}"
+    end
+  end
+
+  last_comment_id = c.id
+end
+
+Keystore.put(LAST_COMMENT_KEY, last_comment_id)

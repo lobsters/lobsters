@@ -1,0 +1,158 @@
+div#wrapper {
+	background-color: #f6f6ef;
+	margin-bottom: 5px;
+}
+
+body, textarea, input, button {
+	font-family: verdana;
+	color: #828282;
+}
+textarea, input, button {
+	font-family: monospace;
+	color: black;
+}
+input[type="submit"], button {
+	padding: 2px 5px;
+	text-transform: lowercase;
+}
+a {
+	color: black;
+}
+span.headerlinks {
+	font-weight: normal;
+	text-transform: lowercase;
+}
+span.headerlinks a:after {
+	content: " |";
+}
+span.headerlinks a[href="/logout"]:after,
+span.headerlinks a[href="/search"]:after {
+	content: "";
+}
+span.headerlinks a {
+	padding-right: 3px !important;
+	padding-left: 0px !important;
+}
+div#header {
+	background-color: #ff6600;
+	padding: 3px 4px 2px 2px;
+}
+div#header a {
+	color: black;
+	font-size: 10pt;
+}
+a#l_holder {
+	background-color: transparent !important;
+	border: 1px solid white;
+	margin-top: -1px;
+}
+div#header a.cur_url {
+	color: white;
+}
+div#header span.headerlinks a[href="/"] {
+	font-weight: bold;
+	color: black !important;
+	font-size: 0px;
+}
+div#header span.headerlinks a[href="/"]:after {
+	content: "Lobsters";
+	text-transform: none;
+	font-size: 10pt;
+	padding-right: 10px;
+}
+
+ol.stories {
+	list-style: decimal;
+	padding-left: 32px;
+	font-size: 10pt;
+}
+
+li.story {
+	padding-bottom: 0px;
+	margin-top: -3px;
+}
+
+li.story div.details {
+	margin-left: 8px;
+}
+
+li.story .link a {
+	font-size: 10pt;
+	font-weight: normal;
+}
+ol.stories.list li.story div.details span.link a:visited {
+	color: #828282;
+}
+li.story .byline {
+	font-size: 7.5pt;
+	padding-left: 0px;
+}
+
+span.domain {
+	font-size: 8pt;
+	font-style: normal;
+}
+span.domain:before {
+	content: "(";
+}
+span.domain:after {
+	content: ")";
+}
+span.domain:empty:before {
+	content: "";
+}
+span.domain:empty:after {
+	content: "";
+}
+
+li.story div.voters {
+	width: 7px;
+	margin-left: -5px;
+}
+
+li.story div.voters div.score {
+	position: absolute;
+	margin-left: 13px;
+	margin-top: 5px;
+	font-size: 7.5pt;
+	margin-bottom: 0;
+	color: #888;
+}
+li.story div.voters div.score:after {
+	content: " points";
+}
+li.story div.voters a.upvoter {
+	border-width: 4px;
+	border-bottom-width: 8px;
+	display: block;
+	margin-left: 0px;
+	margin-top: 7px;
+	padding: 0;
+}
+li.story div.voters a.upvoter {
+	border-color: transparent transparent #999 transparent;
+}
+li.story div.voters a.upvoter:hover {
+	border-color: transparent transparent #999 transparent;
+}
+li.story.upvoted div.voters a.upvoter {
+    border-bottom-color: transparent;
+}
+
+
+li.story div.voters a.downvoter {
+	display: none;
+}
+
+div.comment_text {
+	color: black;
+	font-size: 9pt;
+}
+
+a.tag {
+	font-size: 7pt;
+}
+
+.box .legend {
+	background-color: transparent;
+}

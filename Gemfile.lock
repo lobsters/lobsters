@@ -135,6 +135,7 @@ DEPENDENCIES
   htmlentities
   jquery-rails
   machinist
+  mail
   mysql2!
   nokogiri
   rails (= 3.2.13)

@@ -127,6 +127,36 @@
     </div>
 
     <br>
+
+    <div class="legend">
+      Mailing List Settings
+    </div>
+
+    <p>
+    When enabled, you will receive all newly submitted stories and comments to
+    your e-mail address entered above, except those stories (and their
+    comments) filtered by your <a href="/filters">tag filters</a>.  All e-mail
+    messages will appear to be sent to your private list address shown below
+    which you can filter on, and e-mails you send to that address will be
+    posted under your account on this website.  You should keep your unique
+    list address private to prevent others from posting comments as you.
+    </p>
+
+    <div class="boxline">
+      <%= f.label :mailing_list_enabled, "Receive List E-mails:",
+        :class => "required" %>
+      <%= f.check_box :mailing_list_enabled%>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :pushover_messages, "List Address:",
+        :class => "required" %>
+      <span>
+      <tt>lobsters-<%= @edit_user.mailing_list_token %>@lobste.rs</tt>
+      </span>
+    </div>
+
+    <br>
     <%= f.submit "Save All Settings" %>
   <% end %>
 

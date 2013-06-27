@@ -151,7 +151,15 @@ Comment.where("id > ?", last_comment_id).order(:id).each do |c|
 
       mail.puts ""
 
-      mail.puts c.comment.to_s.force_to_ascii.word_wrap(EMAIL_WIDTH)
+      # if the comment has hard line breaks at <80, it likely came from an
+      # email, so don't re-wrap it at something shorter
+      com = c.comment.to_s.force_to_ascii
+      com_lines = com.split("\n")
+      if com_lines.length > 1 && com_lines.first.length < 80
+        mail.puts com.word_wrap(80)
+      else
+        mail.puts com.word_wrap(EMAIL_WIDTH)
+      end
 
       mail.puts ""
       mail.puts "-- "

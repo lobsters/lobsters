@@ -16,7 +16,7 @@ class Comment < ActiveRecord::Base
   before_create :assign_short_id_and_upvote, :assign_initial_confidence,
     :assign_thread_id
   after_create :assign_votes, :mark_submitter, :deliver_reply_notifications,
-    :deliver_mention_notifications
+    :deliver_mention_notifications, :log_to_countinual
   after_destroy :unassign_votes
 
   MAX_EDIT_MINS = 45
@@ -176,6 +176,10 @@ class Comment < ActiveRecord::Base
           "#{u.username}: #{e.message}"
       end
     end
+  end
+
+  def log_to_countinual
+    Countinual.count!("lobsters.comments.submitted", "+1")
   end
 
   def delete_for_user(user)

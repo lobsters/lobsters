@@ -55,8 +55,6 @@ class CommentsController < ApplicationController
           :content_type => "text/html", :locals => { :story => story,
           :comment => Comment.new, :show_comment => comment }
       end
-
-      Countinual.count!("lobsters.comments.submitted", "+1")
     else
       comment.previewing = true
       comment.upvotes = 1

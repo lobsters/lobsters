@@ -55,15 +55,33 @@ module Lobsters
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
-  
+
     config.cache_store = :memory_store
   end
 end
 
+# disable yaml/xml/whatever input parsing
 silence_warnings do
   ActionDispatch::ParamsParser::DEFAULT_PARSERS = {}
 end
 
-Rails.application.routes.default_url_options[:host] = "lobste.rs"
+# define site name and domain to be used globally, can be overridden in
+# config/initializers/production.rb
+class << Rails.application
+  def domain
+    "lobste.rs"
+  end
+
+  def name
+    "Lobsters"
+  end
+
+  # used as mailing list prefix and countinual prefix, cannot have spaces
+  def shortname
+    name.downcase.gsub(/[^a-z]/, "")
+  end
+end
+
+Rails.application.routes.default_url_options[:host] = Rails.application.domain
 
 require "#{Rails.root}/lib/monkey"

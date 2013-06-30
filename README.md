@@ -53,13 +53,30 @@ MariaDB have been tested) database, username, and password and put them in a
 
           lobsters$ rake db:schema:load
 
-* Create a `config/initializers/secret_token.rb` file, using a randomly generated key from the output of `rake secret`:
+* Create a `config/initializers/secret_token.rb` file, using a randomly
+generated key from the output of `rake secret`:
 
           Lobsters::Application.config.secret_token = 'your random secret here'
 
-* (Optional, only needed for the search engine) Install Sphinx.  Build Sphinx config and start server:
+* (Optional, only needed for the search engine) Install Sphinx.  Build Sphinx
+config and start server:
 
           lobsters$ rake thinking_sphinx:rebuild
+
+* Define your site's name and default domain, which are used in various places,
+in a `config/initializers/production.rb` or similar file:
+
+          class << Rails.application
+            def domain
+              "example.com"
+            end
+          
+            def name
+              "Example News"
+            end
+          end
+          
+          Rails.application.routes.default_url_options[:host] = Rails.application.domain
 
 * Create an initial administrator user and at least one tag:
 
@@ -74,11 +91,7 @@ MariaDB have been tested) database, username, and password and put them in a
           irb(main):006:0> t.tag = "test"
           irb(main):007:0> t.save
 
-* The default development hostname is defined as `lobsters.localhost:3000`.
-You should define this in `/etc/hosts` (or through DNS) to point to
-`127.0.0.1`.
-
 * Run the Rails server in development mode.  You should be able to login to
-`http://lobsters.localhost:3000` with your `test` user:
+`http://localhost:3000` with your new `test` user:
 
           lobsters$ rails server

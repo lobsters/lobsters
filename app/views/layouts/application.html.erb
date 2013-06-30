@@ -14,7 +14,8 @@
     <link rev="canonical" rel="self alternate shorter shorturl shortlink"
       href="<%= @short_url %>" />
   <% end %>
-  <title><%= @title.present? ? "#{@title} | Lobsters" : "Lobsters" %></title>
+  <title><%= @title.present? ? "#{@title} | " : "" %><%=
+    Rails.application.name %></title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
@@ -33,7 +34,7 @@
       <div id="headerleft">
         <a id="l_holder" style="background-color: #<%= sprintf("%02x%02x%02x",
         [ 255, (@traffic * 7).floor + 50.0 ].min, 0, 0) %>;" href="/"
-        title="Lobsters (<%= @traffic.to_i %>)"></a>
+        title="<%= Rails.application.name %> (<%= @traffic.to_i %>)"></a>
 
         <% links = {
           "/" => "Home",

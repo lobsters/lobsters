@@ -2,7 +2,8 @@
 <% coder = HTMLEntities.new %>
 <rss version="2.0">
   <channel>
-    <title>lobste.rs<%= @title.present? ? ": " + h(@title) : "" %></title>
+    <title><%= Rails.application.name %><%= @title.present? ?
+      ": " + h(@title) : "" %></title>
     <description><%= @title %></description>
     <link><%= root_url + (@newest ? "newest" : "") %></link>
 

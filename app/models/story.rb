@@ -229,7 +229,8 @@ class Story < ActiveRecord::Base
       s = Sponge.new
       s.timeout = 3
       @fetched_content = s.fetch(self.url, :get, nil, nil,
-        { "User-agent" => "lobste.rs! for #{for_remote_ip}" }, 3)
+        { "User-agent" => "#{Rails.application.domain} for #{for_remote_ip}" },
+        3)
     rescue
     end
 
@@ -284,7 +285,7 @@ class Story < ActiveRecord::Base
   end
 
   def mailing_list_message_id
-    "story.#{short_id}.#{created_at.to_i}@lobste.rs"
+    "story.#{short_id}.#{created_at.to_i}@#{Rails.application.domain}"
   end
 
   @_tags_a = []

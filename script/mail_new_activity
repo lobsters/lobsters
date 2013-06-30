@@ -43,20 +43,26 @@ last_story_id = (Keystore.value_for(LAST_STORY_KEY) || Story.last.id).to_i
 Story.where("id > ?", last_story_id).order(:id).each do |s|
   s.fetch_story_cache!
   s.save
- 
+
   mailing_list_users.each do |u|
     if (s.tags.map{|t| t.id } & u.tag_filters.map{|t| t.tag_id }).any?
       next
     end
 
-    IO.popen([ {}, "/usr/sbin/sendmail", "-i", "-f", "nobody@lobste.rs",
-    u.email ], "w") do |mail|
-      mail.puts "From: #{s.user.username} <#{s.user.username}@lobste.rs>"
-      mail.puts "Reply-To: lobsters-#{u.mailing_list_token}@lobste.rs"
-      mail.puts "To: lobsters-#{u.mailing_list_token}@lobste.rs"
-      mail.puts "X-BeenThere: lobsters-#{u.mailing_list_token}.lobste.rs"
-      mail.puts "List-Id: Lobsters <lobsters-#{u.mailing_list_token}.lobste.rs>"
-      mail.puts "List-Unsubscribe: <https://lobste.rs/settings>"
+    domain = Rails.application.domain
+    list = "#{Rails.application.shortname}-#{u.mailing_list_token}@" <<
+      Rails.application.domain
+
+    IO.popen([ {}, "/usr/sbin/sendmail", "-i", "-f",
+    "nobody@#{Rails.application.domain}", u.email ], "w") do |mail|
+      mail.puts "From: #{s.user.username} <#{s.user.username}@" <<
+        "#{Rails.application.domain}>"
+      mail.puts "Reply-To: #{list}"
+      mail.puts "To: #{list}"
+      mail.puts "X-BeenThere: #{list}"
+      mail.puts "List-Id: #{Rails.application.name} <#{list}>"
+      mail.puts "List-Unsubscribe: <" <<
+        "#{Rails.application.routes.url_helpers.root_url}settings>"
       mail.puts "Precedence: list"
       mail.puts "Content-Type: text/plain; charset=\"us-ascii\""
       mail.puts "Message-ID: <#{s.mailing_list_message_id}>"
@@ -105,13 +111,18 @@ Comment.where("id > ?", last_comment_id).order(:id).each do |c|
       next
     end
 
-    IO.popen([ {}, "/usr/sbin/sendmail", "-i", "-f", "nobody@lobste.rs",
-    u.email ], "w") do |mail|
-      mail.puts "From: #{c.user.username} <#{c.user.username}@lobste.rs>"
-      mail.puts "Reply-To: lobsters-#{u.mailing_list_token}@lobste.rs"
-      mail.puts "To: lobsters-#{u.mailing_list_token}@lobste.rs"
-      mail.puts "List-Id: Lobsters <lobsters-#{u.mailing_list_token}.lobste.rs>"
-      mail.puts "List-Unsubscribe: <https://lobste.rs/settings>"
+    domain = Rails.application.domain
+    list = "#{Rails.application.shortname}-#{u.mailing_list_token}@" <<
+      Rails.application.domain
+
+    IO.popen([ {}, "/usr/sbin/sendmail", "-i", "-f",
+    "nobody@#{domain}", u.email ], "w") do |mail|
+      mail.puts "From: #{c.user.username} <#{c.user.username}@#{domain}>"
+      mail.puts "Reply-To: #{list}"
+      mail.puts "To: #{list}"
+      mail.puts "List-Id: #{Rails.application.name} <#{list}>"
+      mail.puts "List-Unsubscribe: <" <<
+        "#{Rails.application.routes.url_helpers.root_url}settings>"
       mail.puts "Precedence: list"
       mail.puts "Content-Type: text/plain; charset=\"us-ascii\""
       mail.puts "Message-ID: <#{c.mailing_list_message_id}>"

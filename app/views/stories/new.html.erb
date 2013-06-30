@@ -21,16 +21,16 @@
             <a href="javascript:window.location=%22<%= root_url %>stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title)"
             style="border: 1px solid #ddd; padding: 0.5em; background-color:
             #f8f8f8; line-height: 1.5em; margin-left: 1em;">Submit to
-            Lobsters</a>
+            <%= Rails.application.name %></a>
             </div>
             <ul>
 
             <li>
             <p>
             To be able to easily submit a page you're viewing in your browser
-            to Lobsters, drag the bookmarklet to the right to your bookmark
-            bar.  You'll be taken to this page with the viewed page's URL and
-            title.
+            to <%= Rails.application.name %>, drag the bookmarklet to the right
+            to your bookmark bar.  You'll be taken to this page with the viewed
+            page's URL and title.
             </p>
 
             <li><p>

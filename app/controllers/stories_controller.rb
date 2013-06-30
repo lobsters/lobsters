@@ -20,7 +20,8 @@ class StoriesController < ApplicationController
       Vote.vote_thusly_on_story_or_comment_for_user_because(1, @story.id,
         nil, @user.id, nil)
 
-      Countinual.count!("lobsters.stories.submitted", "+1")
+      Countinual.count!("#{Rails.application.shortname}.stories.submitted",
+        "+1")
 
       return redirect_to @story.comments_url
 

@@ -152,7 +152,8 @@
       <%= f.label :pushover_messages, "List Address:",
         :class => "required" %>
       <span>
-      <tt>lobsters-<%= @edit_user.mailing_list_token %>@lobste.rs</tt>
+      <tt><%= Rails.application.shortname %>-<%=
+        @edit_user.mailing_list_token %>@<%= Rails.application.domain %></tt>
       </span>
     </div>
 

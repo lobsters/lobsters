@@ -139,8 +139,8 @@ class Comment < ActiveRecord::Base
 
           if u.pushover_mentions? && u.pushover_user_key.present?
             Pushover.push(u.pushover_user_key, u.pushover_device, {
-              :title => "Lobsters mention by #{self.user.username} on " <<
-                self.story.title,
+              :title => "#{Rails.application.name} mention by " <<
+                "#{self.user.username} on #{self.story.title}",
               :message => self.plaintext_comment,
               :url => self.url,
               :url_title => "Reply to #{self.user.username}",
@@ -164,8 +164,8 @@ class Comment < ActiveRecord::Base
 
         if u.pushover_replies? && u.pushover_user_key.present?
           Pushover.push(u.pushover_user_key, u.pushover_device, {
-            :title => "Lobsters reply from #{self.user.username} on " <<
-              "#{self.story.title}",
+            :title => "#{Rails.application.name} reply from " <<
+              "#{self.user.username} on #{self.story.title}",
             :message => self.plaintext_comment,
             :url => self.url,
             :url_title => "Reply to #{self.user.username}",
@@ -179,7 +179,7 @@ class Comment < ActiveRecord::Base
   end
 
   def log_to_countinual
-    Countinual.count!("lobsters.comments.submitted", "+1")
+    Countinual.count!("#{Rails.application.shortname}.comments.submitted", "+1")
   end
 
   def delete_for_user(user)
@@ -289,7 +289,7 @@ class Comment < ActiveRecord::Base
   end
 
   def mailing_list_message_id
-    "comment.#{short_id}.#{created_at.to_i}@lobste.rs"
+    "comment.#{short_id}.#{created_at.to_i}@#{Rails.application.domain}"
   end
 
   def plaintext_comment

@@ -45,8 +45,8 @@ class Message < ActiveRecord::Base
       self.recipient.pushover_user_key.present?
         Pushover.push(self.recipient.pushover_user_key,
           self.recipient.pushover_device, {
-          :title => "Lobsters message from #{self.author.username}: " <<
-            "#{self.subject}",
+          :title => "#{Rails.application.name} message from " <<
+            "#{self.author.username}: #{self.subject}",
           :message => self.plaintext_body,
           :url => self.url,
           :url_title => "Reply to #{self.author.username}",

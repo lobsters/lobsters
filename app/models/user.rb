@@ -114,6 +114,19 @@ class User < ActiveRecord::Base
     Markdowner.to_html(self.about, { :disable_profile_links => true })
   end
 
+  def most_common_story_tag
+    tag_id = Tagging.connection.select_one("SELECT tag_id, " <<
+      "COUNT(taggings.id) AS tag_count FROM taggings LEFT OUTER JOIN " <<
+      "stories ON stories.id = taggings.story_id WHERE stories.user_id = " <<
+      "#{q(self.id)} GROUP BY tag_id ORDER BY tag_count DESC LIMIT 1")
+
+    if tag_id && tag_id["tag_id"]
+      Tag.where(:id => tag_id["tag_id"]).first
+    else
+      nil
+    end
+  end
+
   def recent_threads(amount)
     Comment.connection.select_all("SELECT DISTINCT " +
       "thread_id FROM comments WHERE user_id = #{q(self.id)} ORDER BY " +

@@ -889,6 +889,10 @@ table.data tr.void td, table.data tr.void td a {
 	vertical-align: baseline;
 }
 
+.box span.d a.tag {
+	vertical-align: middle;
+}
+
 .box .label_holder label,
 .box .label_holder input {
 	line-height: 2.5em;

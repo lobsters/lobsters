@@ -42,6 +42,12 @@
   <span class="d">
     <a href="/newest/<%= @showing_user.username %>"><%=
       @showing_user.stories_submitted_count %></a>
+
+    <% if tag = @showing_user.most_common_story_tag %>
+      (most commonly tagged <a href="<%= tag_url(tag.tag) %>"
+        class="tag tag_<%= tag.tag %>" title="<%= tag.description %>"><%=
+        tag.tag %></a>)
+    <% end %>
   </span>
   <br>
 

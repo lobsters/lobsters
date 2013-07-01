@@ -19,34 +19,32 @@
 
   <label class="required">Joined:</label>
   <span class="d">
-    <%= raw(time_ago_in_words_label(@showing_user.created_at)) %>
+    <%= raw(time_ago_in_words_label(@showing_user.created_at)) %> ago
     <% if @showing_user.invited_by_user %>
-      ago, invited by
+      by invitation from
       <a href="/u/<%= @showing_user.invited_by_user.username %>"><%=
         @showing_user.invited_by_user.username %></a>
-    <% else %>
-      ago
     <% end %>
   </span>
   <br>
 
   <label class="required">Karma:</label>
   <span class="d">
-    <%= @showing_user.karma %>
-    (average <%= number_with_precision(@showing_user.average_karma,
-      :precision => 2) %>)
+    <%= @showing_user.karma %>, averaging <%=
+      number_with_precision(@showing_user.average_karma, :precision => 2) %>
+      per story/comment
   </span>
   <br>
 
   <label class="required">Stories Submitted:</label>
   <span class="d">
+    <% tag = @showing_user.most_common_story_tag %>
     <a href="/newest/<%= @showing_user.username %>"><%=
-      @showing_user.stories_submitted_count %></a>
-
-    <% if tag = @showing_user.most_common_story_tag %>
-      (most commonly tagged <a href="<%= tag_url(tag.tag) %>"
+      @showing_user.stories_submitted_count %></a><%= tag ? ", " : "" %>
+    <% if tag %>
+      most commonly tagged <a href="<%= tag_url(tag.tag) %>"
         class="tag tag_<%= tag.tag %>" title="<%= tag.description %>"><%=
-        tag.tag %></a>)
+        tag.tag %></a>
     <% end %>
   </span>
   <br>
@@ -61,6 +59,10 @@
   <label class="required">About:</label>
 
   <div id="user_about" class="shorten_first_p">
-    <%= raw @showing_user.linkified_about %>
+    <% if @showing_user.about.present? %>
+      <%= raw @showing_user.linkified_about %>
+    <% else %>
+      <span class="na">A mystery...</span>
+    <% end %>
   </div>
 </div>

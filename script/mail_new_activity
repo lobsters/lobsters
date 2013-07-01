@@ -9,6 +9,14 @@ Rails.application.require_environment!
 
 class String
   def force_to_ascii
+    # fixup some "smart" quotes and things instead of forcing them to "?" chars
+    gsub("\u201C", '"').
+    gsub("\u201D", '"').
+    gsub("\u2018", "'").
+    gsub("\u2019", "'").
+    gsub("\u2013", "-").
+    gsub("\u2014", "--").
+    gsub("\u2026", "...").
     encode("us-ascii", :invalid => :replace, :undef => :replace,
       :replace => "?")
   end

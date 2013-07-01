@@ -58,6 +58,14 @@ class User < ActiveRecord::Base
       "images/1x1t.gif") << "&s=100"
   end
 
+  def average_karma
+    if (k = self.karma) == 0
+      0
+    else
+      k.to_f / (self.stories_submitted_count + self.comments_posted_count)
+    end
+  end
+
   def check_session_token
     if self.session_token.blank?
       self.session_token = Utils.random_str(60)
@@ -73,55 +81,20 @@ class User < ActiveRecord::Base
     end
   end
 
-  def create_rss_token
-    if self.rss_token.blank?
-      self.rss_token = Utils.random_str(60)
-    end
-  end
-
   def create_mailing_list_token
     if self.mailing_list_token.blank?
       self.mailing_list_token = Utils.random_str(10)
     end
   end
 
-  def unread_message_count
-    Keystore.value_for("user:#{self.id}:unread_messages").to_i
-  end
-
-  def update_unread_message_count!
-    Keystore.put("user:#{self.id}:unread_messages",
-      Message.where(:recipient_user_id => self.id,
-        :has_been_read => false).count)
-  end
-
-  def karma
-    Keystore.value_for("user:#{self.id}:karma").to_i
-  end
-
-  def average_karma
-    if self.karma == 0
-      0
-    else
-      self.karma.to_f / (self.stories_submitted_count +
-        self.comments_posted_count)
+  def create_rss_token
+    if self.rss_token.blank?
+      self.rss_token = Utils.random_str(60)
     end
-  end
-
-  def stories_submitted_count
-    Keystore.value_for("user:#{self.id}:stories_submitted").to_i
   end
 
   def comments_posted_count
     Keystore.value_for("user:#{self.id}:comments_posted").to_i
-  end
-
-  def undeleted_received_messages
-    received_messages.where(:deleted_by_recipient => false)
-  end
-
-  def undeleted_sent_messages
-    sent_messages.where(:deleted_by_author => 0)
   end
 
   def initiate_password_reset_for_ip(ip)
@@ -129,6 +102,10 @@ class User < ActiveRecord::Base
     self.save!
 
     PasswordReset.password_reset_link(self, ip).deliver
+  end
+
+  def karma
+    Keystore.value_for("user:#{self.id}:karma").to_i
   end
 
   def linkified_about
@@ -141,5 +118,27 @@ class User < ActiveRecord::Base
     Comment.connection.select_all("SELECT DISTINCT " +
       "thread_id FROM comments WHERE user_id = #{q(self.id)} ORDER BY " +
       "created_at DESC LIMIT #{q(amount)}").map{|r| r.values.first }
+  end
+
+  def stories_submitted_count
+    Keystore.value_for("user:#{self.id}:stories_submitted").to_i
+  end
+
+  def undeleted_received_messages
+    received_messages.where(:deleted_by_recipient => false)
+  end
+
+  def undeleted_sent_messages
+    sent_messages.where(:deleted_by_author => 0)
+  end
+
+  def unread_message_count
+    Keystore.value_for("user:#{self.id}:unread_messages").to_i
+  end
+
+  def update_unread_message_count!
+    Keystore.put("user:#{self.id}:unread_messages",
+      Message.where(:recipient_user_id => self.id,
+        :has_been_read => false).count)
   end
 end

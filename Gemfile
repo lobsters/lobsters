@@ -26,6 +26,8 @@ gem "nokogiri"
 gem "htmlentities"
 gem "rdiscount"
 
+gem "oauth"
+
 gem "thinking-sphinx", "2.0.12"
 
 gem "mail"

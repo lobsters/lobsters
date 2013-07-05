@@ -120,9 +120,15 @@ select {
 }
 input:focus,
 textarea:focus {
-	border-color: #aaa;
+	border-color: #888;
 	color: #303030;
 	outline: 0;
+}
+
+input[type="submit"]:focus,
+button:focus {
+	border-color: #888;
+	outline: 1px solid #888;
 }
 
 body.mobile input,

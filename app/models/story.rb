@@ -350,7 +350,7 @@ class Story < ActiveRecord::Base
       u = m[1] << (params.any?? "?" << params.join("&") : "")
     end
 
-    self[:url] = u
+    self[:url] = u.to_s.strip
   end
 
   def url_or_comments_url

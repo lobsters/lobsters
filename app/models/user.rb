@@ -34,7 +34,10 @@ class User < ActiveRecord::Base
     :pushover_mentions, :mailing_list_enabled
 
   before_save :check_session_token
-  before_create :create_rss_token, :create_mailing_list_token
+  before_validation :on => :create do
+    self.create_rss_token
+    self.create_mailing_list_token
+  end
   after_create :create_default_tag_filters
 
   BANNED_USERNAMES = [ "admin", "administrator", "hostmaster", "mailer-daemon",

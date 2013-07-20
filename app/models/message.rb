@@ -16,7 +16,8 @@ class Message < ActiveRecord::Base
   validates_length_of :subject, :in => 1..150
   validates_length_of :body, :maximum => (64 * 1024)
 
-  before_create :assign_short_id
+  before_validation :assign_short_id,
+    :on => :create
   after_create :deliver_reply_notifications
   after_save :update_unread_counts
   after_save :check_for_both_deleted

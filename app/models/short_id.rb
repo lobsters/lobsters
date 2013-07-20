@@ -18,7 +18,7 @@ class ShortId
     CandidateId.new(klass)
   end
 
-  private
+private
   class CandidateId
     attr_accessor :klass, :id
 

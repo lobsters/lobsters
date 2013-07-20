@@ -9,7 +9,8 @@ class Invitation < ActiveRecord::Base
     end
   end
 
-  before_create :create_code
+  before_validation :create_code,
+    :on => :create
 
   def create_code
     (1...10).each do |tries|

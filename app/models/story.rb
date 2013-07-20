@@ -19,7 +19,8 @@ class Story < ActiveRecord::Base
 
   attr_accessible :title, :description, :tags_a, :moderation_reason
 
-  before_create :assign_short_id
+  before_validation :assign_short_id,
+    :on => :create
   before_save :log_moderation
   after_create :mark_submitter
 

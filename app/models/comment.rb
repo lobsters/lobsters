@@ -13,8 +13,11 @@ class Comment < ActiveRecord::Base
   attr_accessor :parent_comment_short_id, :current_vote, :previewing,
     :indent_level, :highlighted
 
-  before_create :assign_short_id_and_upvote, :assign_initial_confidence,
-    :assign_thread_id
+  before_validation :on => :create do
+    self.assign_short_id_and_upvote
+    self.assign_initial_confidence
+    self.assign_thread_id
+  end
   after_create :assign_votes, :mark_submitter, :deliver_reply_notifications,
     :deliver_mention_notifications, :log_to_countinual
   after_destroy :unassign_votes

@@ -87,6 +87,13 @@ class StoriesController < ApplicationController
     if params[:url].present?
       @story.url = params[:url]
 
+      # if this story was already submitted, don't bother the user filling out
+      # tags and stuff, just redirect them right away
+      if s = Story.find_recent_similar_by_url(@story.url)
+        flash[:success] = "This URL has already been submitted recently."
+        return redirect_to s.comments_url
+      end
+
       if params[:title].present?
         @story.title = params[:title]
       end

@@ -66,10 +66,9 @@
 
       <div id="headerright" class="<%= @user ? "loggedin" : "" %>">
         <span class="headerlinks">
+        <a href="/filters" <%= @cur_url == "/filters" ?
+          raw("class=\"cur_url\"") : "" %>>Filters</a>
         <% if @user %>
-          <a href="/filters" <%= @cur_url == "/filters" ?
-            raw("class=\"cur_url\"") : "" %>>Filters</a>
-
           <% if (count = @user.unread_message_count) > 0 %>
             <a href="/messages" class="new_messages <%= @cur_url == "/messages" ?
               "cur_url" : "" %>"><%= count %> New Message<%= count == 1 ? "" :

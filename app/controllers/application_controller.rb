@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
 
   TRAFFIC_DECREMENTER = 0.15
 
+  TAG_FILTER_COOKIE = :tag_filters
+
   def authenticate_user
     if session[:u]
       @user = User.find_by_session_token(session[:u].to_s)
@@ -53,6 +55,12 @@ class ApplicationController < ActionController::Base
       render :text => "not logged in", :status => 400
       return false
     end
+  end
+
+  @_tags_filtered = nil
+  def tags_filtered_by_cookie
+    @_tags_filtered ||= cookies[TAG_FILTER_COOKIE].to_s.split(",").map{|t|
+      Tag.find_by_tag(t) }.reject{|tf| !tf }
   end
 
   def user_is_spider?

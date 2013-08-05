@@ -5,7 +5,7 @@ class Tag < ActiveRecord::Base
   attr_accessor :filtered_count
 
   scope :accessible_to, ->(user) do
-    user.is_admin?? all : where(:privileged => false)
+    user && user.is_admin?? all : where(:privileged => false)
   end
 
   def self.all_with_filtered_counts_for(user)

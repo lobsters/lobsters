@@ -96,8 +96,9 @@ private
       @page = params[:page].to_i
     end
 
-    # guest views have caching, but don't bother for logged-in users (or dev)
-    if Rails.env == "development" || user
+    # guest views have caching, but don't bother for logged-in users or dev or
+    # when the user has tag filters
+    if Rails.env == "development" || user || tags_filtered_by_cookie.any?
       stories, @show_more =
         _find_stories_for_user_and_tag_and_newest_and_by_user(user, tag,
         newest, by_user)
@@ -129,7 +130,8 @@ private
       filtered_tag_ids = @user.tag_filters.map{|tf| tf.tag_id }
     else
       # for logged-out users, filter defaults
-      filtered_tag_ids = Tag.where(:filtered_by_default => true).map{|t| t.id }
+      filtered_tag_ids = Tag.where(:filtered_by_default => true).
+        map{|t| t.id } + tags_filtered_by_cookie.map{|t| t.id }
     end
 
     if tag

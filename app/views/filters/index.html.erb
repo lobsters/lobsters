@@ -20,7 +20,7 @@
         <td><input type="checkbox" name="tag_<%= tag.tag %>" value=1
           <%= @filtered_tags.map{|ft| ft.tag_id }.include?(tag.id) ?
           "checked" : "" %>></td>
-        <td><a href="/t/<%= tag.tag %>" class="tag tag_<%= tag.tag %>"><%=
+        <td><a href="/t/<%= tag.tag %>" class="<%= tag.css_class %>"><%=
           tag.tag %></a></td>
         <td><%= tag.description %>
           <% if tag.filtered_by_default? %>

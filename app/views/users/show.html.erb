@@ -43,7 +43,7 @@
       @showing_user.stories_submitted_count %></a><%= tag ? ", " : "" %>
     <% if tag %>
       most commonly tagged <a href="<%= tag_url(tag.tag) %>"
-        class="tag tag_<%= tag.tag %>" title="<%= tag.description %>"><%=
+        class="<%= tag.css_class %>" title="<%= tag.description %>"><%=
         tag.tag %></a>
     <% end %>
   </span>

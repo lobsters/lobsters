@@ -17,6 +17,10 @@ class Tag < ActiveRecord::Base
     }
   end
 
+  def css_class
+    "tag tag_#{self.tag}" << (self.is_media?? " tag_is_media" : "")
+  end
+
   def valid_for?(user)
     if self.privileged?
       user.is_admin?

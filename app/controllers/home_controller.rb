@@ -88,6 +88,26 @@ class HomeController < ApplicationController
     end
   end
 
+  def privacy
+    begin
+      render :action => "privacy"
+    rescue
+      render :text => "<div class=\"box wide\">" <<
+        "You apparently have no privacy." <<
+        "</div>", :layout => "application"
+    end
+  end
+
+  def about
+    begin
+      render :action => "about"
+    rescue
+      render :text => "<div class=\"box wide\">" <<
+        "A mystery." <<
+        "</div>", :layout => "application"
+    end
+  end
+
 private
   def find_stories_for_user_and_tag_and_newest_and_by_user(user, tag = nil,
   newest = false, by_user = nil)

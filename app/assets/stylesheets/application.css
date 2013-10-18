@@ -214,7 +214,7 @@ input:disabled, button:disabled {
 div#wrapper {
 	margin-left: auto;
 	margin-right: auto;
-	padding-bottom: 5em;
+	padding-bottom: 2em;
 	min-width: 800px;
 	max-width: 1000px;
 }
@@ -298,14 +298,15 @@ div#inside {
 /* footer */
 
 div#footer {
-	clear: both;
-	color: gray;
-	font-style: italic;
-	margin-bottom: 2em;
-	padding-top: 1em;
+	float: right;
+	font-weight: bold;
+	margin-top: 1.5em;
+	padding-right: 42px;
 }
 div#footer a {
-	color: gray;
+	color: #999;
+	text-decoration: none;
+	padding-left: 0.75em;
 }
 
 
@@ -513,6 +514,10 @@ div.story_content {
 
 div.story_content {
 	margin-bottom: 3em;
+}
+
+div.morelink {
+	float: left;
 }
 
 div.morelink,

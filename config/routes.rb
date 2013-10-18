@@ -88,4 +88,7 @@ Lobsters::Application.routes.draw do
 
   get "/moderations" => "moderations#index"
   get "/moderations/page/:page" => "moderations#index"
+
+  get "/privacy" => "home#privacy"
+  get "/about" => "home#about"
 end

@@ -102,6 +102,16 @@
       <% end %>
 
       <%= yield %>
+
+      <div id="footer">
+        <a href="/moderations">Moderation Log</a>
+        <% if @user %>
+          <a href="/invitations">Invitation Queue</a>
+        <% end %>
+        <a href="/privacy">Privacy</a>
+        <a href="/about">About</a>
+      </div>
+      <div class="clear"></div>
     </div>
   </div>
 </body>

@@ -1,7 +1,7 @@
 Lobsters::Application.routes.draw do
   root :to => "home#index",
     :protocol => (Rails.env == "production" ? "https://" : "http://")
-  
+
   get "/rss" => "home#index", :format => "rss"
   get "/hottest.json" => "home#index", :format => "json"
 
@@ -77,6 +77,13 @@ Lobsters::Application.routes.draw do
   post "/filters" => "filters#update"
 
   post "/invitations" => "invitations#create"
+  get "/invitations" => "invitations#index"
+  get "/invitations/request" => "invitations#build"
+  post "/invitations/create_by_request" => "invitations#create_by_request",
+    :as => "create_invitation_by_request"
+  get "/invitations/confirm/:code" => "invitations#confirm_email"
+  post "/invitations/send_for_request" => "invitations#send_for_request",
+    :as => "send_invitation_for_request"
   get "/invitations/:invitation_code" => "signup#invited"
 
   get "/moderations" => "moderations#index"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130622021035) do
+ActiveRecord::Schema.define(:version => 20131018201413) do
 
   create_table "comments", :force => true do |t|
     t.datetime "created_at",                                                                                :null => false
@@ -34,6 +34,17 @@ ActiveRecord::Schema.define(:version => 20130622021035) do
   add_index "comments", ["short_id"], :name => "short_id", :unique => true
   add_index "comments", ["story_id", "short_id"], :name => "story_id_short_id"
   add_index "comments", ["thread_id"], :name => "thread_id"
+
+  create_table "invitation_requests", :force => true do |t|
+    t.string   "code"
+    t.boolean  "is_verified", :default => false
+    t.string   "email"
+    t.string   "name"
+    t.text     "memo"
+    t.string   "ip_address"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
 
   create_table "invitations", :force => true do |t|
     t.integer  "user_id"

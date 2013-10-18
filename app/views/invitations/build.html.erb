@@ -1,0 +1,39 @@
+<div class="box wide">
+  <div class="legend">
+    Request an Invitation
+  </div>
+
+  <p>
+  If you don't know (or can't find) an <a href="/u/">existing user</a> from
+  which to request an invitiation, you can make a public request for one.  This
+  will display your name and memo to all other logged-in users who can then
+  send you an invitation if they recognize you.
+  </p>
+  <p>
+  Your e-mail address must be valid and confirmed by visiting a URL e-mailed to
+  you before your request will be displayed.  Your e-mail address will not be
+  shown to any other users.
+  </p>
+
+  <%= form_tag create_invitation_by_request_url do %>
+    <p>
+    <%= label_tag :name, "Name:" %>
+    <%= text_field_tag :name, "", :size => 30 %>
+    <br />
+
+    <%= label_tag :email, "E-mail Address:" %>
+    <%= text_field_tag :email, "", :size => 30 %>
+    <br />
+
+    <%= label_tag :memo, "Memo:" %>
+    <%= text_field_tag :memo, "", :size => 75 %>
+    <br />
+    <label></label>
+    <span class="na">URL to your website, Github account, etc.</span>
+    </p>
+
+    <p>
+    <%= submit_tag "Request Invitiation" %>
+    </p>
+  <% end %>
+</div>

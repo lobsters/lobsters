@@ -74,8 +74,7 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
         <% end %>
 
         <% if defined?(single_story) && single_story %>
-          <% if story.downvotes > 0 &&
-          (story.user_id == @user.try(:id) || @user.try(:is_moderator?)) %>
+          <% if story.downvotes > 0 %>
             | <%= story.vote_summary.downcase %>
           <% end %>
         <% end %>

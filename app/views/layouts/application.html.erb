@@ -106,7 +106,8 @@
       <div id="footer">
         <a href="/moderations">Moderation Log</a>
         <% if @user %>
-          <a href="/invitations">Invitation Queue</a>
+          <a href="/invitations">Invitation Queue<%= (iqc =
+          InvitationRequest.verified_count) == 0 ? "" : " (#{iqc})" %></a>
         <% end %>
         <a href="/privacy">Privacy</a>
         <a href="/about">About</a>

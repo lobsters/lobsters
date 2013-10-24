@@ -800,6 +800,13 @@ table.data tr.void td, table.data tr.void td a {
 	color: gray !important;
 }
 
+table.data td p:first-child {
+	margin-top: 0;
+}
+table.data td p:last-child {
+	margin-bottom: 0;
+}
+
 
 /* boxes */
 .box {

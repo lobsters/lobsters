@@ -11,8 +11,8 @@
 
   <table class="data" width="100%" cellspacing=0>
   <tr>
-    <th width="20%">Date/Time</th>
-    <th width="15%">Name</th>
+    <th width="15%">Date/Time</th>
+    <th width="20%">Name</th>
     <th width="50%">Memo</th>
     <th width="15%"></th>
   </tr>
@@ -21,7 +21,7 @@
     <tr class="row<%= bit %>">
       <td><%= ir.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
       <td><%= ir.name %></td>
-      <td><%= ir.memo %></td>
+      <td><%= raw ir.markeddown_memo %></td>
       <td><%= form_tag send_invitation_for_request_url, :confirm => "Are " <<
       "you sure you want to invite this person and remove this request?" do %>
         <%= hidden_field_tag "code", ir.code %>

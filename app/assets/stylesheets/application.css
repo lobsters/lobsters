@@ -7,9 +7,9 @@
 
 /* generics */
 
-/* force a vertical scrollbar on firefox to avoid page-shifting */
+/* force a vertical scrollbar to avoid page-shifting */
 html {
-	overflow: -moz-scrollbars-vertical !important;
+	overflow-y: scroll;
 }
 
 body, textarea, input, button {

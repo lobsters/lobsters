@@ -13,7 +13,9 @@
       </li>
     <% end %>
 
-    <li><a href="/u/<%= u[:username] %>"><%= u[:username] %></a>
+    <li><a href="/u/<%= u[:username] %>"
+      <%= (Time.now - u[:created] < 7.days ? raw("style=\"color: green;\"") :
+      "") %>><%= u[:username] %></a>
       (<%= u[:karma] %>)
       <% if u[:is_admin] %>
         (administrator)

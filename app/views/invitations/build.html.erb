@@ -9,6 +9,7 @@
   will display your name and memo to all other logged-in users who can then
   send you an invitation if they recognize you.
   </p>
+
   <p>
   Your e-mail address must be valid and confirmed by visiting a URL e-mailed to
   you before your request will be displayed.  Your e-mail address will not be
@@ -25,11 +26,12 @@
     <%= text_field_tag :email, "", :size => 30 %>
     <br />
 
-    <%= label_tag :memo, "Memo:" %>
-    <%= text_field_tag :memo, "", :size => 75 %>
+    <%= label_tag :memo, "URL:" %>
+    <%= text_field_tag :memo, "", :size => 30 %>
     <br />
     <label></label>
-    <span class="na">URL to your website, Github account, etc.</span>
+    <span class="na">URL to verify you (Personal website, Github account,
+      etc.)</span>
     </p>
 
     <p>

@@ -72,7 +72,7 @@ class InvitationsController < ApplicationController
       return redirect_to "/invitations"
     end
 
-    if ir.save
+    if ir
       i = Invitation.new
       i.user_id = @user.id
       i.email = ir.email

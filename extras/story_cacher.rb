@@ -11,6 +11,11 @@ class StoryCacher
       return
     end
 
+    # XXX: diffbot tries to read pdfs as text, so disable for now
+    if url.to_s.match(/\.pdf$/i)
+      return nil
+    end
+
     db_url = "#{DIFFBOT_API_URL}?token=#{@@DIFFBOT_API_KEY}&url=" <<
       CGI.escape(url)
 

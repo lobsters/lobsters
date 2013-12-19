@@ -61,6 +61,8 @@ Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each d
     if (s.tags.map{|t| t.id } & u.tag_filters.map{|t| t.tag_id }).any?
       next
     end
+    
+    next if s.user.username == u.username
 
     domain = Rails.application.domain
     list = "#{Rails.application.shortname}-#{u.mailing_list_token}@" <<

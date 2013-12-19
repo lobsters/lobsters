@@ -28,8 +28,8 @@ class Comment < ActiveRecord::Base
     indexes comment
     indexes user.username, :as => :author
 
-    has "(upvotes - downvotes)", :as => :score, :type => :integer,
-      :sortable => true
+    has "(cast(upvotes as signed) - cast(downvotes as signed))",
+      :as => :score, :type => :bigint, :sortable => true
 
     has is_deleted
     has created_at

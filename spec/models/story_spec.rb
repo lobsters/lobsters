@@ -13,7 +13,7 @@ describe Story do
 
     expect { Story.make!(:title => "hello", :description => "hi", :url => nil)
       }.to_not raise_error
-    
+
     expect { Story.make!(:title => "hello", :url => "http://ex.com/",
       :description => nil) }.to_not raise_error
   end
@@ -31,7 +31,7 @@ describe Story do
   it "must have at least one tag" do
     expect { Story.make!(:tags_a => nil) }.to raise_error
     expect { Story.make!(:tags_a => [ "", " " ]) }.to raise_error
-    
+
     expect { Story.make!(:tags_a => [ "", "tag1" ]) }.to_not raise_error
   end
 
@@ -53,7 +53,7 @@ describe Story do
       :url => "http://example.com/") }.to raise_error
 
     Story.count.should == 1
-    
+
     expect { Story.make!(:title => "flim flam 2",
       :url => "http://www.example.com/") }.to raise_error
 
@@ -74,7 +74,7 @@ describe Story do
   it "converts a title to a url properly" do
     s = Story.make!(:title => "Hello there, this is a title")
     s.title_as_url.should == "hello_there_this_is_a_title"
-    
+
     s = Story.make!(:title => "Hello _ underscore")
     s.title_as_url.should == "hello_underscore"
   end
@@ -83,10 +83,10 @@ describe Story do
     u = User.make!
 
     s = Story.make!(:user_id => u.id)
-	  s.is_editable_by_user?(u).should == true
+    s.is_editable_by_user?(u).should == true
 
     u = User.make!
-	  s.is_editable_by_user?(u).should == false
+    s.is_editable_by_user?(u).should == false
   end
 
   it "can fetch its title properly" do

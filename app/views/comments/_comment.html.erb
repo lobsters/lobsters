@@ -2,10 +2,10 @@
 class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 "upvoted" : "downvoted") : "" %>
   <%= comment.highlighted ? "highlighted" : "" %>
-	<%= comment.score <= 0 ? "negative" : "" %>
-	<%= comment.score <= -3 ? "negative_3" : "" %>
-	<%= comment.score <= -5 ? "negative_5" : "" %>
-	<%= comment.score <= -7 ? "negative_7" : "" %>">
+  <%= comment.score <= 0 ? "negative" : "" %>
+  <%= comment.score <= -3 ? "negative_3" : "" %>
+  <%= comment.score <= -5 ? "negative_5" : "" %>
+  <%= comment.score <= -7 ? "negative_7" : "" %>">
   <% if !comment.is_gone? %>
     <div class="voters">
       <a class="upvoter"></a>
@@ -15,8 +15,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <a class="downvoter"></a>
     </div>
   <% end %>
-	<div class="details">
-		<div class="byline">
+  <div class="details">
+    <div class="byline">
       <% if comment.previewing %>
         <a><%= comment.user.username %></a>
         previewed
@@ -68,8 +68,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         | on:
         <a href="<%= story.comments_url %>"><%= story.title %></a>
       <% end %>
-		</div>
-		<div class="comment_text">
+    </div>
+    <div class="comment_text">
       <% if comment.is_gone? %>
         <p>
         <span class="na">
@@ -79,8 +79,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% else %>
         <%= raw comment.markeddown_comment %>
       <% end %>
-		</div>
+    </div>
 
     <div class="comment_reply"></div>
-	</div>
+  </div>
 </li>

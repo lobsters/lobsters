@@ -13,7 +13,7 @@
     <% end %>
   <% end %>
 
-	<%= render :partial => "comments/comment", :locals => { :story => cur_story,
+  <%= render :partial => "comments/comment", :locals => { :story => cur_story,
     :comment => comment, :show_story => (comment.indent_level == 1) } %>
 
   <% indent_level = comment.indent_level %>

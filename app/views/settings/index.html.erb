@@ -1,10 +1,10 @@
 <div class="box wide">
   <div class="legend right">
-		<a href="/u/<%= @user.username %>">View Profile</a>
+    <a href="/u/<%= @user.username %>">View Profile</a>
   </div>
-	<div class="legend">
-		Account Settings
-	</div>
+  <div class="legend">
+    Account Settings
+  </div>
 
   <%= form_for @edit_user, :url => settings_url, :method => :post do |f| %>
     <%= error_messages_for f.object %>
@@ -166,8 +166,8 @@
 
   <a name="invite"></a>
   <div class="legend">
-		Invite a New User
-	</div>
+    Invite a New User
+  </div>
 
   <%= render :partial => "users/invitationform" %>
 </div>

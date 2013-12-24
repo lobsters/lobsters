@@ -16,7 +16,7 @@ class SignupController < ApplicationController
       return redirect_to "/"
     end
 
-    if !(@invitation = Invitation.find_by_code(params[:invitation_code].to_s))
+    if !(@invitation = Invitation.where(:code => params[:invitation_code].to_s).first)
       flash[:error] = "Invalid or expired invitation"
       return redirect_to "/signup"
     end
@@ -30,7 +30,7 @@ class SignupController < ApplicationController
   end
 
   def signup
-    if !(@invitation = Invitation.find_by_code(params[:invitation_code].to_s))
+    if !(@invitation = Invitation.where(:code => params[:invitation_code].to_s).first)
       flash[:error] = "Invalid or expired invitation."
       return redirect_to "/signup"
     end

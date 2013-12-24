@@ -10,7 +10,7 @@ class InvitationsController < ApplicationController
   end
 
   def confirm_email
-    if !(ir = InvitationRequest.find_by_code(params[:code].to_s))
+    if !(ir = InvitationRequest.where(:code => params[:code].to_s).first)
       flash[:error] = "Invalid or expired invitation request"
       return redirect_to "/invitations/request"
     end
@@ -67,7 +67,7 @@ class InvitationsController < ApplicationController
   end
 
   def send_for_request
-    if !(ir = InvitationRequest.find_by_code(params[:code].to_s))
+    if !(ir = InvitationRequest.where(:code => params[:code].to_s).first)
       flash[:error] = "Invalid or expired invitation request"
       return redirect_to "/invitations"
     end

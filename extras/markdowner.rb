@@ -33,7 +33,7 @@ class Markdowner
     if !opts[:disable_profile_links]
       # make @username link to that user's profile
       html.gsub!(/\B\@([\w\-]+)/) do |u|
-        if User.find_by_username(u[1 .. -1])
+        if User.exists?(:username => u[1 .. -1])
           "<a href=\"/u/#{u[1 .. -1]}\">#{u}</a>"
         else
           u

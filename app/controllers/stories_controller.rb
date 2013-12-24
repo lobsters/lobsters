@@ -5,7 +5,7 @@ class StoriesController < ApplicationController
   before_filter :require_logged_in_user, :only => [ :delete, :create, :edit,
     :fetch_url_title, :new ]
 
-  before_filter :find_story, :only => [ :destroy, :edit, :undelete, :update ]
+  before_filter :find_user_story, :only => [ :destroy, :edit, :undelete, :update ]
 
   def create
     @title = "Submit Story"
@@ -116,7 +116,7 @@ class StoriesController < ApplicationController
   end
 
   def show
-    @story = Story.find_by_short_id!(params[:id])
+    @story = Story.where(:short_id => params[:id]).first!
 
     if @story.can_be_seen_by_user?(@user)
       @title = @story.title
@@ -144,11 +144,11 @@ class StoriesController < ApplicationController
   end
 
   def show_comment
-    @story = Story.find_by_short_id!(params[:id])
+    @story = Story.where(:short_id => params[:id]).first!
 
     @title = @story.title
 
-    @showing_comment = Comment.find_by_short_id(params[:comment_short_id])
+    @showing_comment = Comment.where(:short_id => params[:comment_short_id]).first
 
     if !@showing_comment
       flash[:error] = "Could not find comment.  It may have been deleted."
@@ -208,7 +208,7 @@ class StoriesController < ApplicationController
   end
 
   def unvote
-    if !(story = Story.find_by_short_id(params[:story_id]))
+    if !(story = find_story)
       return render :text => "can't find story", :status => 400
     end
 
@@ -219,7 +219,7 @@ class StoriesController < ApplicationController
   end
 
   def upvote
-    if !(story = Story.find_by_short_id(params[:story_id]))
+    if !(story = find_story)
       return render :text => "can't find story", :status => 400
     end
 
@@ -230,7 +230,7 @@ class StoriesController < ApplicationController
   end
 
   def downvote
-    if !(story = Story.find_by_short_id(params[:story_id]))
+    if !(story = find_story)
       return render :text => "can't find story", :status => 400
     end
 
@@ -245,12 +245,17 @@ class StoriesController < ApplicationController
   end
 
 private
+
   def find_story
+    Story.where(:short_id => params[:story_id]).first
+  end
+
+  def find_user_story
     if @user.is_moderator?
-      @story = Story.find_by_short_id(params[:story_id] || params[:id])
+      @story = Story.where(:short_id => params[:story_id] || params[:id]).first
     else
-      @story = Story.find_by_user_id_and_short_id(@user.id,
-        (params[:story_id] || params[:id]))
+      @story = Story.where(:user_id => @user.id, :short_id =>
+        (params[:story_id] || params[:id])).first
     end
 
     if !@story
@@ -263,8 +268,8 @@ private
 
   def load_user_votes
     if @user
-      if v = Vote.find_by_user_id_and_story_id_and_comment_id(@user.id,
-      @story.id, nil)
+      if v = Vote.where(:user_id => @user.id, :story_id => @story.id,
+      :comment_id => nil).first
         @story.vote = v.vote
       end
 

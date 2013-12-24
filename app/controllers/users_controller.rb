@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def show
-    @showing_user = User.find_by_username!(params[:id])
+    @showing_user = User.where(:username => params[:id]).first!
     @title = "User #{@showing_user.username}"
   end
 
@@ -13,7 +13,7 @@ class UsersController < ApplicationController
       (parents[u.invited_by_user_id.to_i] ||= []).push u
     end
 
-    Keystore.find(:all, :conditions => "`key` like 'user:%:karma'").each do |k|
+    Keystore.where("key like 'user:%:karma'").each do |k|
       karmas[k.key[/\d+/].to_i] = k.value
     end
 

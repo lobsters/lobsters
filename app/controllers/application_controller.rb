@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
 
   def authenticate_user
     if session[:u]
-      @user = User.find_by_session_token(session[:u].to_s)
+      @user = User.where(:session_token => session[:u].to_s).first
     end
 
     true
@@ -59,8 +59,9 @@ class ApplicationController < ActionController::Base
 
   @_tags_filtered = nil
   def tags_filtered_by_cookie
-    @_tags_filtered ||= cookies[TAG_FILTER_COOKIE].to_s.split(",").map{|t|
-      Tag.find_by_tag(t) }.reject{|tf| !tf }
+    @_tags_filtered ||= Tag.where(
+      :tag => cookies[TAG_FILTER_COOKIE].to_s.split(",")
+    )
   end
 
   def user_is_spider?
@@ -69,7 +70,7 @@ class ApplicationController < ActionController::Base
 
   def find_user_from_rss_token
     if !@user && request[:format] == "rss" && params[:token].to_s.present?
-      @user = User.find_by_rss_token(params[:token].to_s)
+      @user = User.where(:rss_token => params[:token].to_s).first
     end
   end
 end

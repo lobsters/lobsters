@@ -51,7 +51,7 @@ class LoginController < ApplicationController
     @title = "Reset Password"
 
     if params[:token].blank? ||
-    !(@reset_user = User.find_by_password_reset_token(params[:token].to_s))
+    !(@reset_user = User.where(:password_reset_token => params[:token].to_s).first)
       flash[:error] = "Invalid reset token.  It may have already been " <<
         "used or you may have copied it incorrectly."
       return redirect_to forgot_password_url

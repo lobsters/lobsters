@@ -8,7 +8,7 @@ class CommentsController < ApplicationController
   before_filter :find_user_from_rss_token, :only => [ :index ]
 
   def create
-    if !(story = Story.find_by_short_id(params[:story_id])) || story.is_gone?
+    if !(story = Story.where(:short_id => params[:story_id]).first) || story.is_gone?
       return render :text => "can't find story", :status => 400
     end
 
@@ -18,8 +18,8 @@ class CommentsController < ApplicationController
     comment.user_id = @user.id
 
     if params[:parent_comment_short_id].present?
-      if pc = Comment.find_by_story_id_and_short_id(story.id,
-      params[:parent_comment_short_id])
+      if pc = Comment.where(:story_id => story.id, :short_id =>
+      params[:parent_comment_short_id]).first
         comment.parent_comment_id = pc.id
         # needed for carryng along in comment preview form
         comment.parent_comment_short_id = params[:parent_comment_short_id]
@@ -31,8 +31,8 @@ class CommentsController < ApplicationController
 
     # prevent double-clicks of the post button
     if !params[:preview].present? &&
-    (pc = Comment.find_by_story_id_and_user_id_and_parent_comment_id(story.id,
-    @user.id, comment.parent_comment_id))
+    (pc = Comment.where(:story_id => story.id, :user_id => @user.id,
+      :parent_comment_id => comment.parent_comment_id).first)
       if (Time.now - pc.created_at) < 5.minutes
         comment.errors.add(:comment, "^You have already posted a comment " <<
           "here recently.")
@@ -72,8 +72,7 @@ class CommentsController < ApplicationController
   end
 
   def edit
-    if !((comment = Comment.find_by_short_id(params[:comment_id])) &&
-    comment.is_editable_by_user?(@user))
+    if !((comment = find_comment) && comment.is_editable_by_user?(@user))
       return render :text => "can't find comment", :status => 400
     end
 
@@ -83,8 +82,7 @@ class CommentsController < ApplicationController
   end
 
   def delete
-    if !((comment = Comment.find_by_short_id(params[:comment_id])) &&
-    comment.is_deletable_by_user?(@user))
+    if !((comment = find_comment) && comment.is_deletable_by_user?(@user))
       return render :text => "can't find comment", :status => 400
     end
 
@@ -96,8 +94,7 @@ class CommentsController < ApplicationController
   end
 
   def undelete
-    if !((comment = Comment.find_by_short_id(params[:comment_id])) &&
-    comment.is_undeletable_by_user?(@user))
+    if !((comment = find_comment) && comment.is_undeletable_by_user?(@user))
       return render :text => "can't find comment", :status => 400
     end
 
@@ -109,8 +106,7 @@ class CommentsController < ApplicationController
   end
 
   def update
-    if !((comment = Comment.find_by_short_id(params[:comment_id])) &&
-    comment.is_editable_by_user?(@user))
+    if !((comment = find_comment) && comment.is_editable_by_user?(@user))
       return render :text => "can't find comment", :status => 400
     end
 
@@ -133,8 +129,7 @@ class CommentsController < ApplicationController
   end
 
   def preview
-    if !((comment = Comment.find_by_short_id(params[:comment_id])) &&
-    comment.is_editable_by_user?(@user))
+    if !((comment = find_comment) && comment.is_editable_by_user?(@user))
       return render :text => "can't find comment", :status => 400
     end
 
@@ -149,7 +144,7 @@ class CommentsController < ApplicationController
   end
 
   def unvote
-    if !(comment = Comment.find_by_short_id(params[:comment_id]))
+    if !(comment = find_comment)
       return render :text => "can't find comment", :status => 400
     end
 
@@ -160,7 +155,7 @@ class CommentsController < ApplicationController
   end
 
   def upvote
-    if !(comment = Comment.find_by_short_id(params[:comment_id]))
+    if !(comment = find_comment)
       return render :text => "can't find comment", :status => 400
     end
 
@@ -171,7 +166,7 @@ class CommentsController < ApplicationController
   end
 
   def downvote
-    if !(comment = Comment.find_by_short_id(params[:comment_id]))
+    if !(comment = find_comment)
       return render :text => "can't find comment", :status => 400
     end
 
@@ -198,13 +193,17 @@ class CommentsController < ApplicationController
       @page = params[:page].to_i
     end
 
-    @comments = Comment.find(
-      :all,
-      :conditions => "is_deleted = 0 AND is_moderated = 0",
-      :order => "created_at DESC",
-      :offset => ((@page - 1) * COMMENTS_PER_PAGE),
-      :limit => COMMENTS_PER_PAGE,
-      :include => [ :user, :story ])
+    @comments = Comment.where(
+      :is_deleted => false, :is_moderated => false
+    ).order(
+      "created_at DESC"
+    ).offset(
+      (@page - 1) * COMMENTS_PER_PAGE
+    ).limit(
+      COMMENTS_PER_PAGE
+    ).includes(
+      :user, :story
+    )
 
     if @user
       @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id,
@@ -220,7 +219,7 @@ class CommentsController < ApplicationController
 
   def threads
     if params[:user]
-      @showing_user = User.find_by_username!(params[:user])
+      @showing_user = User.where(:username => params[:user]).first!
       @heading = @title = "Threads for #{@showing_user.username}"
       @cur_url = "/threads/#{@showing_user.username}"
     elsif !@user
@@ -268,5 +267,11 @@ if false
 end
 
     @comments = @threads.flatten
+  end
+
+private
+
+  def find_comment
+    Comment.where(:short_id => params[:comment_id]).first
   end
 end

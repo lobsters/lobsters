@@ -70,9 +70,9 @@ end
 irt = email[:in_reply_to].to_s.gsub(/[^A-Za-z0-9@\.]/, "")
 
 if m = irt.match(/^comment\.([^\.]+)\.\d+@/)
-  parent = Comment.find_by_short_id(m[1])
+  parent = Comment.where(:short_id => m[1]).first
 elsif m = irt.match(/^story\.([^\.]+)\.\d+@/)
-  parent = Story.find_by_short_id(m[1])
+  parent = Story.where(:short_id => m[1]).first
 end
 
 if !parent

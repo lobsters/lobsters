@@ -13,7 +13,7 @@ class UsersController < ApplicationController
       (parents[u.invited_by_user_id.to_i] ||= []).push u
     end
 
-    Keystore.where("key like 'user:%:karma'").each do |k|
+    Keystore.where("`key` like 'user:%:karma'").each do |k|
       karmas[k.key[/\d+/].to_i] = k.value
     end
 

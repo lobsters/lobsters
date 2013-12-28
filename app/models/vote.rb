@@ -3,11 +3,12 @@ class Vote < ActiveRecord::Base
   belongs_to :story
 
   STORY_REASONS = {
-    "S" => "Spam",
-    "A" => "Already Posted",
-    "L" => "Poorly Titled",
-    "T" => "Poorly Tagged",
     "O" => "Off-topic",
+    "Q" => "Low Quality",
+    "A" => "Already Posted",
+    "T" => "Poorly Tagged",
+    "L" => "Poorly Titled",
+    "S" => "Spam",
     "" => "Cancel",
   }
 

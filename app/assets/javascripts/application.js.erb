@@ -243,7 +243,7 @@ $(document).ready(function() {
     return Lobsters.moderateStory(this);
   }),
 
-  $("a.comment_replier").live("click", function() {
+  $(document).on("click", "a.comment_replier", function() {
     if (!Lobsters.curUser) {
       Lobsters.bounceToLogin();
       return false;
@@ -268,17 +268,17 @@ $(document).ready(function() {
     return false;
   });
 
-  $("button.comment-cancel").live("click", function() {
+  $(document).on("click", "button.comment-cancel", function() {
     $(this).parents("div.comment_reply form").remove();
   });
 
-  $("a.comment_editor").live("click", function() {
+  $(document).on("click", "a.comment_editor", function() {
     var li = $(this).parents("li.comment").first();
     li.load("/comments/" + $(li).attr("data-shortid") + "/edit",
       { "edit": 1 });
   });
 
-  $("a.comment_deletor").live("click", function() {
+  $(document).on("click", "a.comment_deletor", function() {
     if (confirm("Are you sure you want to delete this comment?")) {
       var li = $(this).parents("li.comment").first();
       $.post("/comments/" + $(li).attr("data-shortid") + "/delete",
@@ -288,7 +288,7 @@ $(document).ready(function() {
     }
   });
 
-  $("a.comment_undeletor").live("click", function() {
+  $(document).on("click", "a.comment_undeletor", function() {
     if (confirm("Are you sure you want to undelete this comment?")) {
       var li = $(this).parents("li.comment").first();
       $.post("/comments/" + $(li).attr("data-shortid") + "/undelete",
@@ -307,18 +307,17 @@ $(document).ready(function() {
     }
   });
 
-  /* TODO: jquery says live() is slow and bad, what is supposed to be used? */
-  $("div.markdown_help_toggler .markdown_help_label").live("click",
+  $(document).on("click", "div.markdown_help_toggler .markdown_help_label",
   function() {
     $(this).parents("div.markdown_help_toggler").first().
       children(".markdown_help").toggle();
   });
 
-  $("button.comment-post").live("click", function() {
+  $(document).on("click", "button.comment-post", function() {
     Lobsters.postComment($(this).parents("form").first());
   });
 
-  $("button.comment-preview").live("click", function() {
+  $(document).on("click", "button.comment-preview", function() {
     Lobsters.previewComment($(this).parents("form").first());
   });
 });

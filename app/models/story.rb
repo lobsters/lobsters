@@ -96,7 +96,7 @@ class Story < ActiveRecord::Base
     end
     conds[0] << ")"
 
-    if s = Story.find(:first, :conditions => conds)
+    if s = Story.where(*conds).first
       return s
     end
 
@@ -302,8 +302,8 @@ class Story < ActiveRecord::Base
     end
 
     new_tag_names_a.each do |tag_name|
-      if tag_name.to_s != "" && !self.tags.map{|t| t.tag }.include?(tag_name)
-        if t = Tag.find_by_tag(tag_name)
+      if tag_name.to_s != "" && !self.tags.exists?(:tag => tag_name)
+        if t = Tag.where(:tag => tag_name).first
           # we can't lookup whether the user is allowed to use this tag yet
           # because we aren't assured to have a user_id by now; we'll do it in
           # the validation with check_tags

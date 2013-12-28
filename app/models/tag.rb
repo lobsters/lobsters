@@ -9,7 +9,7 @@ class Tag < ActiveRecord::Base
   end
 
   def self.all_with_filtered_counts_for(user)
-    counts = TagFilter.count(:group => "tag_id")
+    counts = TagFilter.group(:tag_id).count
 
     Tag.order(:tag).accessible_to(user).map{|t|
       t.filtered_count = counts[t.id].to_i

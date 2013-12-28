@@ -18,7 +18,8 @@ class Invitation < ActiveRecord::Base
         raise "too many hash collisions"
       end
 
-      if !Invitation.find_by_code(self.code = Utils.random_str(15))
+      self.code = Utils.random_str(15)
+      unless Invitation.exists?(:code => self.code)
         break
       end
     end

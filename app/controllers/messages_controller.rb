@@ -96,7 +96,7 @@ class MessagesController < ApplicationController
 
 private
   def find_message
-    if @message = Message.find_by_short_id(params[:message_id] || params[:id])
+    if @message = Message.where(:short_id => params[:message_id] || params[:id]).first
       if (@message.author_user_id == @user.id ||
       @message.recipient_user_id == @user.id)
         return true

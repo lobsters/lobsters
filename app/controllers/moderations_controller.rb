@@ -14,6 +14,6 @@ class ModerationsController < ApplicationController
     end
 
     @moderations = Moderation.order("id desc").limit(50).offset((@page - 1) *
-      50).all
+      50)
   end
 end

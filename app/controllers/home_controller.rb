@@ -55,7 +55,7 @@ class HomeController < ApplicationController
   end
 
   def newest_by_user
-    for_user = User.find_by_username!(params[:user])
+    for_user = User.where(:username => params[:user]).first!
 
     @stories = find_stories_for_user_and_tag_and_newest_and_by_user(@user,
       nil, false, for_user.id)
@@ -70,7 +70,7 @@ class HomeController < ApplicationController
   end
 
   def tagged
-    @tag = Tag.find_by_tag!(params[:tag])
+    @tag = Tag.where(:tag => params[:tag]).first!
     @stories = find_stories_for_user_and_tag_and_newest_and_by_user(@user,
       @tag, false, nil)
 
@@ -168,13 +168,16 @@ private
       conds += filtered_tag_ids
     end
 
-    stories = Story.find(
-      :all,
-      :conditions => conds,
-      :include => [ :user, { :taggings => :tag } ],
-      :limit => STORIES_PER_PAGE + 1,
-      :offset => ((@page - 1) * STORIES_PER_PAGE),
-      :order => (newest ? "stories.created_at DESC" : "hotness")
+    stories = Story.where(
+      *conds
+    ).includes(
+      :user, :taggings => :tag
+    ).limit(
+      STORIES_PER_PAGE + 1
+    ).offset(
+      (@page - 1) * STORIES_PER_PAGE
+    ).order(
+      newest ? "stories.created_at DESC" : "hotness"
     )
 
     show_more = false
@@ -201,7 +204,7 @@ private
     # eager load comment counts
     if stories.any?
       comment_counts = {}
-      Keystore.find(:all, :conditions => stories.map{|s|
+      Keystore.where(stories.map{|s|
       "`key` = 'story:#{s.id}:comment_count'" }.join(" OR ")).each do |ks|
         comment_counts[ks.key[/\d+/].to_i] = ks.value
       end

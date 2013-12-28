@@ -60,7 +60,7 @@ class Message < ActiveRecord::Base
   def recipient_username=(username)
     self.recipient_user_id = nil
 
-    if u = User.find_by_username(username)
+    if u = User.where(:username => username).first
       self.recipient_user_id = u.id
       @recipient_username = username
     else

@@ -130,7 +130,7 @@ class Comment < ActiveRecord::Base
 
   def deliver_mention_notifications
     self.plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
-      if u = User.find_by_username(mention)
+      if u = User.where(:username => mention).first
         if u.id == self.user.id
           next
         end
@@ -309,8 +309,7 @@ class Comment < ActiveRecord::Base
       cs = [ "story_id = ?", story_id ]
     end
 
-    Comment.find(:all, :conditions => cs, :order => "confidence DESC",
-    :include => :user).each do |c|
+    Comment.where(*cs).order("confidence DESC").includes(:user).each do |c|
       (parents[c.parent_comment_id.to_i] ||= []).push c
     end
 

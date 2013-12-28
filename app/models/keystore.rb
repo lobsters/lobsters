@@ -4,7 +4,7 @@ class Keystore < ActiveRecord::Base
   attr_accessible nil
 
   def self.get(key)
-    Keystore.find_by_key(key)
+    self.where(:key => key).first
   end
 
   def self.put(key, value)

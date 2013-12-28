@@ -36,8 +36,11 @@ class Vote < ActiveRecord::Base
   def self.comment_votes_by_user_for_story_hash(user_id, story_id)
     votes = {}
 
-    Vote.find(:all, :conditions => [ "user_id = ? AND story_id = ? AND " +
-    "comment_id IS NOT NULL", user_id, story_id ]).each do |v|
+    Vote.where(
+      :user_id => user_id, :story_id => story_id
+    ).where(
+      "comment_id IS NOT NULL"
+    ).each do |v|
       votes[v.comment_id] = { :vote => v.vote, :reason => v.reason }
     end
 
@@ -58,7 +61,7 @@ class Vote < ActiveRecord::Base
     end
     cond[0] += ")"
 
-    Vote.find(:all, :conditions => cond).each do |v|
+    Vote.where(*cond).each do |v|
       votes[v.story_id] = { :vote => v.vote, :reason => v.reason }
     end
 
@@ -79,7 +82,7 @@ class Vote < ActiveRecord::Base
     end
     cond[0] += ")"
 
-    Vote.find(:all, :conditions => cond).each do |v|
+    Vote.where(*cond).each do |v|
       votes[v.comment_id] = { :vote => v.vote, :reason => v.reason }
     end
 
@@ -88,8 +91,8 @@ class Vote < ActiveRecord::Base
 
   def self.vote_thusly_on_story_or_comment_for_user_because(vote, story_id,
   comment_id, user_id, reason, update_counters = true)
-    v = Vote.find_or_initialize_by_user_id_and_story_id_and_comment_id(user_id,
-      story_id, comment_id)
+    v = Vote.where(:user_id => user_id, :story_id => story_id,
+      :comment_id => comment_id).first_or_initialize
 
     if !v.new_record? && v.vote == vote
       return

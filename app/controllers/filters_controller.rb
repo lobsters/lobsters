@@ -23,7 +23,7 @@ class FiltersController < ApplicationController
 
     params.each do |k,v|
       if (m = k.match(/^tag_(.+)$/)) && v.to_i == 1 &&
-      (t = Tag.find_by_tag(m[1])) && t.valid_for?(@user)
+      (t = Tag.where(:tag => m[1]).first) && t.valid_for?(@user)
         new_filters.push m[1]
       end
     end
@@ -40,7 +40,7 @@ class FiltersController < ApplicationController
       new_filters.each do |t|
         tf = TagFilter.new
         tf.user_id = @user.id
-        tf.tag_id = Tag.find_by_tag(t).id
+        tf.tag_id = Tag.where(:tag => t).first.id
         tf.save!
       end
     else

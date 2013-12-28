@@ -134,6 +134,7 @@ body.strip!
 c = Comment.new
 c.user_id = sending_user.id
 c.comment = body
+c.is_from_email = true
 
 if parent.is_a?(Comment)
   c.story_id = parent.story_id

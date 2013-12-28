@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131018201413) do
+ActiveRecord::Schema.define(:version => 20131228175805) do
 
   create_table "comments", :force => true do |t|
     t.datetime "created_at",                                                                                :null => false
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(:version => 20131018201413) do
     t.text     "markeddown_comment", :limit => 16777215
     t.boolean  "is_deleted",                                                             :default => false
     t.boolean  "is_moderated",                                                           :default => false
+    t.boolean  "is_from_email",                                                          :default => false
   end
 
   add_index "comments", ["confidence"], :name => "confidence_idx"

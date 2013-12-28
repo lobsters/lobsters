@@ -245,7 +245,8 @@ class Story < ActiveRecord::Base
   end
 
   def calculated_hotness
-    order = Math.log([ score.abs, 1 ].max, 10)
+    # don't immediately kill stories at 0 by bumping up score by one
+    order = Math.log([ (score + 1).abs, 1 ].max, 10)
     if score > 0
       sign = 1
     elsif score < 0
@@ -257,7 +258,7 @@ class Story < ActiveRecord::Base
     # TODO: as the site grows, shrink this down to 12 or so.
     window = 60 * 60 * 48
 
-    return -(order + (sign * (self.created_at.to_f / window))).round(7)
+    return -((order * sign) + (self.created_at.to_f / window)).round(7)
   end
 
   def score

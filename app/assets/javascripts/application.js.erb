@@ -320,4 +320,34 @@ $(document).ready(function() {
   $(document).on("click", "button.comment-preview", function() {
     Lobsters.previewComment($(this).parents("form").first());
   });
+
+  $(document).on("click", "button.story-preview", function() {
+    Lobsters.previewStory($(this).parents("form").first());
+  });
+
+  $(document).on("blur", "#story_url", function() {
+    /* if the url looks like a pdf, assign the pdf tag */
+    if ($("#story_url").val().match(/\.pdf$/i)) {
+      var ta = $("#story_tags_a").data("select2");
+      if (ta.getVal().indexOf("pdf") < 0)
+        ta.addSelectedChoice({ id: "pdf" });
+    }
+    /* if the url looks like a video site url, assign the video tag */
+    else if ($("#story_url").val().match(/[\/\.]((youtube|vimeo)\.com|youtu\.be)\//i)) {
+      var ta = $("#story_tags_a").data("select2");
+      if (ta.getVal().indexOf("video") < 0)
+        ta.addSelectedChoice({ id: "video" });
+    }
+    /* if the url looks like a slide sharing site url, assign the slides tag */
+    else if ($("#story_url").val().match(/[\/\.](slideshare\.net)\//i)) {
+      var ta = $("#story_tags_a").data("select2");
+      if (ta.getVal().indexOf("slides") < 0)
+        ta.addSelectedChoice({ id: "slides" });
+    }
+  });
+
+  $(document).on("click", "#story_guidelines_toggler", function() {
+    $("#story_guidelines").toggle();
+    return false;
+  });
 });

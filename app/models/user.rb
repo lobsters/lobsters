@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   has_many :stories,
-    :include => :user
+    -> { includes :user }
   has_many :comments
   has_many :sent_messages,
     :class_name => "Message",

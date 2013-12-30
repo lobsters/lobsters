@@ -7,7 +7,7 @@ class AddInvitationRequests < ActiveRecord::Migration
       t.string :name
       t.text :memo
       t.string :ip_address
-      t.timestamps
+      t.timestamps :null => false
     end
   end
 

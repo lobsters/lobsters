@@ -196,7 +196,7 @@ private
       (@page - 1) * STORIES_PER_PAGE
     ).order(
       newest ? "stories.created_at DESC" : "hotness"
-    )
+    ).to_a
 
     show_more = false
 

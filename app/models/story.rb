@@ -405,8 +405,7 @@ class Story < ActiveRecord::Base
   end
 
   def recalculate_hotness!
-    Story.connection.execute("UPDATE #{Story.table_name} SET " <<
-      "hotness = '#{self.calculated_hotness}' WHERE id = #{self.id.to_i}")
+    update_column :hotness, calculated_hotness
   end
 
   def update_comment_count!

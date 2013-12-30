@@ -136,13 +136,23 @@ private
 
   def _find_stories_for_user_and_tag_and_newest_and_by_user(user, tag = nil,
   newest = false, by_user = nil)
-    conds = [ "is_expired = 0 " ]
+    stories = Story.where(:is_expired => false)
 
     if user && !(newest || by_user)
       # exclude downvoted items
-      conds[0] << "AND stories.id NOT IN (SELECT story_id FROM votes " <<
-        "WHERE user_id = ? AND vote < 0 AND comment_id IS NULL) "
-      conds.push user.id
+      stories = stories.where(
+        Story.arel_table[:id].not_in(
+          Vote.arel_table.where(
+            Vote.arel_table[:user_id].eq(user.id)
+          ).where(
+            Vote.arel_table[:vote].lt(0)
+          ).where(
+            Vote.arel_table[:comment_id].eq(nil)
+          ).project(
+            Vote.arel_table[:story_id]
+          )
+        )
+      )
     end
 
     filtered_tag_ids = []
@@ -155,22 +165,30 @@ private
     end
 
     if tag
-      conds[0] << "AND stories.id IN (SELECT taggings.story_id FROM " <<
-        "taggings WHERE taggings.tag_id = ?)"
-      conds.push tag.id
+      stories = stories.where(
+        Story.arel_table[:id].in(
+          Tagging.arel_table.where(
+            Tagging.arel_table[:tag_id].eq(tag.id)
+          ).project(
+            Tagging.arel_table[:story_id]
+          )
+        )
+      )
     elsif by_user
-      conds[0] << "AND stories.user_id = ?"
-      conds.push by_user
+      stories = stories.where(:user_id => by_user)
     elsif filtered_tag_ids.any?
-      conds[0] += " AND stories.id NOT IN (SELECT taggings.story_id " <<
-        "FROM taggings WHERE taggings.tag_id IN (" <<
-        filtered_tag_ids.map{|t| "?" }.join(",") << "))"
-      conds += filtered_tag_ids
+      stories = stories.where(
+        Story.arel_table[:id].not_in(
+          Tagging.arel_table.where(
+            Tagging.arel_table[:tag_id].in(filtered_tag_ids)
+          ).project(
+            Tagging.arel_table[:story_id]
+          )
+        )
+      )
     end
 
-    stories = Story.where(
-      *conds
-    ).includes(
+    stories = stories.includes(
       :user, :taggings => :tag
     ).limit(
       STORIES_PER_PAGE + 1

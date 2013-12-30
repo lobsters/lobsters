@@ -49,45 +49,34 @@ class Vote < ActiveRecord::Base
   end
 
   def self.story_votes_by_user_for_story_ids_hash(user_id, story_ids)
-    if !story_ids.any?
-      return {}
+    if story_ids.empty?
+      {}
+    else
+      votes = self.where(
+        :user_id    => user_id,
+        :comment_id => nil,
+        :story_id   => story_ids,
+      )
+      votes.inject({}) do |memo, v|
+        memo[v.story_id] = { :vote => v.vote, :reason => v.reason }
+        memo
+      end
     end
-
-    votes = {}
-
-    cond = [ "user_id = ? AND comment_id IS NULL AND story_id IN (", user_id ]
-    story_ids.each_with_index do |s,x|
-      cond.push s
-      cond[0] += (x == 0 ? "" : ",") + "?"
-    end
-    cond[0] += ")"
-
-    Vote.where(*cond).each do |v|
-      votes[v.story_id] = { :vote => v.vote, :reason => v.reason }
-    end
-
-    votes
   end
 
   def self.comment_votes_by_user_for_comment_ids_hash(user_id, comment_ids)
-    if !comment_ids.any?
-      return {}
+    if comment_ids.empty?
+      {}
+    else
+      votes = self.where(
+        :user_id    => user_id,
+        :comment_id => comment_ids,
+      )
+      votes.inject({}) do |memo, v|
+        memo[v.comment_id] = { :vote => v.vote, :reason => v.reason }
+        memo
+      end
     end
-
-    votes = {}
-
-    cond = [ "user_id = ? AND comment_id IN (", user_id ]
-    comment_ids.each_with_index do |c,x|
-      cond.push c
-      cond[0] += (x == 0 ? "" : ",") + "?"
-    end
-    cond[0] += ")"
-
-    Vote.where(*cond).each do |v|
-      votes[v.comment_id] = { :vote => v.vote, :reason => v.reason }
-    end
-
-    votes
   end
 
   def self.vote_thusly_on_story_or_comment_for_user_because(vote, story_id,

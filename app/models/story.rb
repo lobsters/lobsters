@@ -1,7 +1,6 @@
 class Story < ActiveRecord::Base
   belongs_to :user
   has_many :taggings,
-    :include => :tag,
     :autosave => true
   has_many :comments
   has_many :tags, :through => :taggings

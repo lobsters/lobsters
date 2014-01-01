@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131228175805) do
+ActiveRecord::Schema.define(version: 20140101202252) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -157,6 +157,7 @@ ActiveRecord::Schema.define(version: 20131228175805) do
     t.string   "rss_token",            limit: 75
     t.string   "mailing_list_token",   limit: 75
     t.boolean  "mailing_list_enabled",                  default: false
+    t.integer  "karma",                                 default: 0,     null: false
   end
 
   add_index "users", ["mailing_list_enabled"], name: "mailing_list_enabled", using: :btree

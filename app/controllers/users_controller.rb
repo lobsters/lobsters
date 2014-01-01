@@ -8,13 +8,8 @@ class UsersController < ApplicationController
     @title = "Users"
 
     parents = {}
-    karmas = {}
     User.all.each do |u|
       (parents[u.invited_by_user_id.to_i] ||= []).push u
-    end
-
-    Keystore.where("`key` like 'user:%:karma'").each do |k|
-      karmas[k.key[/\d+/].to_i] = k.value
     end
 
     @tree = []
@@ -24,7 +19,7 @@ class UsersController < ApplicationController
           :level => level,
           :user_id => user.id,
           :username => user.username,
-          :karma => karmas[user.id].to_i,
+          :karma => user.karma,
           :is_moderator => user.is_moderator?,
           :is_admin => user.is_admin?,
           :created => user.created_at,

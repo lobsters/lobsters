@@ -12,68 +12,6 @@
 
       <div class="box">
         <div class="boxline markdown_help_toggler">
-          <a href="#" id="story_guidelines_toggler">
-            Story submission guidelines
-          </a>
-          <div id="story_guidelines" style="<%= @user &&
-          @user.stories_submitted_count > 2 ? "display: none;" : "" %>">
-            <div style="float: right;">
-            <a href="javascript:window.location=%22<%= root_url %>stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title)"
-            style="border: 1px solid #ddd; padding: 0.5em; background-color:
-            #f8f8f8; line-height: 1.5em; margin-left: 1em;">Submit to
-            <%= Rails.application.name %></a>
-            </div>
-            <ul>
-
-            <li>
-            <p>
-            To be able to easily submit a page you're viewing in your browser
-            to <%= Rails.application.name %>, drag the bookmarklet to the right
-            to your bookmark bar.  You'll be taken to this page with the viewed
-            page's URL and title.
-            </p>
-
-            <li><p>
-              When submitting a URL, the text field is optional and should only
-              be used when additional context or explanation of the URL is
-              needed.  Commentary or opinion should be reserved for a comment,
-              so that it can be voted on separately from the story.
-              </p></li>
-
-            <li><p>
-              Do not editorialize story titles, but when the original story's
-              title has no context or is unclear, please change it.  Please
-              remove extraneous components from titles such as the name of the
-              site or section.
-              </p></li>
-
-            <li><p>
-              If no tags clearly apply to the story you are submitting, chances
-              are it does not belong here.  Do not overreach with tags if they
-              are not the primary focus of the story.
-              </p></li>
-
-            <li><p>
-              When the story being submitted is more than a year or so old,
-              please add the year the story was written to the post title in
-              parentheses.
-              </p></li>
-
-            <li><p>
-              If you submit a URL that matches one already posted within the
-              past 30 days, your submission will be turned into an upvote on
-              the previous story and you will be redirected to it.
-              </p>
-
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <p></p>
-
-      <div class="box">
-        <div class="boxline markdown_help_toggler">
           <div class="markdown_help_label">
             Markdown formatting available
           </div>

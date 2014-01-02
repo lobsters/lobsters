@@ -107,10 +107,6 @@ class User < ActiveRecord::Base
     PasswordReset.password_reset_link(self, ip).deliver
   end
 
-  def karma
-    Keystore.value_for("user:#{self.id}:karma").to_i
-  end
-
   def linkified_about
     # most users are probably mentioning "@username" to mean a twitter url, not
     # a link to a profile on this site

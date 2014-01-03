@@ -30,6 +30,10 @@ class Search
       }.join("&amp;")
   end
 
+  def page_count
+    (total_results.to_i - 1) / per_page.to_i + 1
+  end
+
   def search_for_user!(user)
     opts = {
       :match_mode => :extended,

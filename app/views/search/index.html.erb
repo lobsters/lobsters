@@ -73,10 +73,9 @@
     <div class="page_link_buttons">
       Page:
 
-      <% (@search.total_results.to_f / @search.per_page.to_f).ceil.
-      times do |p| %>
-        <a href="/search?<%= raw(@search.to_url_params) %>&amp;page=<%= p + 1
-          %>" class="<%= @search.page == p + 1 ? "cur" : "" %>"><%= p + 1
+      <% 1.upto(@search.page_count) do |p| %>
+        <a href="/search?<%= raw(@search.to_url_params) %>&amp;page=<%= p
+          %>" class="<%= @search.page == p ? "cur" : "" %>"><%= p
           %></a>
       <% end %>
     </div>

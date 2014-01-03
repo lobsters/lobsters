@@ -22,7 +22,7 @@ class Comment < ActiveRecord::Base
     :deliver_mention_notifications, :log_to_countinual
   after_destroy :unassign_votes
 
-  MAX_EDIT_MINS = 45
+  MAX_EDIT_MINS = 90
 
   define_index do
     indexes comment

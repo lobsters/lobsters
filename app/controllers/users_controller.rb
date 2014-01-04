@@ -7,33 +7,10 @@ class UsersController < ApplicationController
   def tree
     @title = "Users"
 
-    parents = {}
-    User.all.each do |u|
-      (parents[u.invited_by_user_id.to_i] ||= []).push u
-    end
+    users = User.order("id DESC").to_a
 
-    @tree = []
-    recursor = lambda{|user,level|
-      if user
-        @tree.push({
-          :level => level,
-          :user_id => user.id,
-          :username => user.username,
-          :karma => user.karma,
-          :is_moderator => user.is_moderator?,
-          :is_admin => user.is_admin?,
-          :created => user.created_at,
-        })
-      end
-
-      # for each user that was invited by this one, recurse with it
-      (parents[user ? user.id : 0] || []).each do |child|
-        recursor.call(child, level + 1)
-      end
-    }
-    recursor.call(nil, 0)
-
-    @tree
+    @user_count = users.length
+    @users_by_parent = users.group_by(&:invited_by_user_id)
   end
 
   def invite

@@ -1,31 +1,37 @@
 <div class="box wide">
-  <strong>Users (<%= User.count %>)</strong>
-  <p>
-  <% prev_level = 0 %>
-  <% @tree.each do |u| %>
-    <% if u[:level] > prev_level %>
-      <ul class="<%= u[:level] == 1 ? "root" : "user_tree" %>">
-    <% elsif u[:level] < prev_level %>
-      <% (prev_level - u[:level]).times do %>
-        </ul>
+  <p><strong>Users (<%= @user_count %>)</strong></p>
+
+  <ul class="root">
+
+    <% subtree = @users_by_parent[nil] %>
+    <% ancestors = [] %>
+
+    <% while subtree %>
+      <% if (user = subtree.pop) %>
+        <li>
+          <a href="/u/<%= user.username %>"
+            <%= (Time.now - user.created_at < 7.days ? raw("style=\"color: green;\"") :
+            "") %>><%= user.username %></a>&nbsp;(<%= user.karma %>)
+          <% if user.is_admin? %>
+            (administrator)
+          <% elsif user.is_moderator? %>
+            (moderator)
+          <% end %>
+          <% if (children = @users_by_parent[user.id]) %>
+            <% # drill down deeper in the tree %>
+            <% ancestors << subtree %>
+            <% subtree = children %>
+            <ul class="user_tree">
+          <% else %>
+            </li>
+          <% end %>
+      <% else %>
+        <% # climb back out %>
+        <% subtree = ancestors.pop %>
+        <% if subtree %>
+          </ul></li>
+        <% end %>
       <% end %>
-    <% else %>
-      </li>
     <% end %>
-
-    <li><a href="/u/<%= u[:username] %>"
-      <%= (Time.now - u[:created] < 7.days ? raw("style=\"color: green;\"") :
-      "") %>><%= u[:username] %></a>
-      (<%= u[:karma] %>)
-      <% if u[:is_admin] %>
-        (administrator)
-      <% elsif u[:is_moderator] %>
-        (moderator)
-      <% end %>
-
-    <% prev_level = u[:level] %>
-  <% end %>
-  <% prev_level.times do %>
-    </ul>
-  <% end %>
+  </ul>
 </div>

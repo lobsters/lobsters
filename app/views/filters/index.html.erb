@@ -30,10 +30,7 @@
           "checked" : "" %>></td>
         <td><a href="/t/<%= tag.tag %>" class="<%= tag.css_class %>"><%=
           tag.tag %></a></td>
-        <td><%= tag.description %>
-          <% if tag.filtered_by_default? %>
-            <em>(Filtered by default)</em>
-          <% end %></td>
+        <td><%= tag.description %></td>
       </tr>
     <% end %>
     </table>

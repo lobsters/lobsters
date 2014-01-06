@@ -159,9 +159,7 @@ private
     if user
       filtered_tag_ids = @user.tag_filters.map{|tf| tf.tag_id }
     else
-      # for logged-out users, filter defaults
-      filtered_tag_ids = Tag.where(:filtered_by_default => true).
-        map{|t| t.id } + tags_filtered_by_cookie.map{|t| t.id }
+      filtered_tag_ids = tags_filtered_by_cookie.map{|t| t.id }
     end
 
     if tag

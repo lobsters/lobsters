@@ -38,7 +38,6 @@ class User < ActiveRecord::Base
     self.create_rss_token
     self.create_mailing_list_token
   end
-  after_create :create_default_tag_filters
 
   BANNED_USERNAMES = [ "admin", "administrator", "hostmaster", "mailer-daemon",
     "postmaster", "root", "security", "support", "webmaster", ]
@@ -72,15 +71,6 @@ class User < ActiveRecord::Base
   def check_session_token
     if self.session_token.blank?
       self.session_token = Utils.random_str(60)
-    end
-  end
-
-  def create_default_tag_filters
-    Tag.where(:filtered_by_default => true).each do |t|
-      tf = TagFilter.new
-      tf.tag_id = t.id
-      tf.user_id = self.id
-      tf.save
     end
   end
 

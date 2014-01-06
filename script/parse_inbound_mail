@@ -35,6 +35,8 @@ while !STDIN.eof?
   message += STDIN.gets.to_s
 end
 
+message = message.forcibly_convert_to_utf8
+
 if message.match(/^X-BeenThere: #{Rails.application.shortname}-/i)
   # avoid looping
   exit

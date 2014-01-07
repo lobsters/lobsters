@@ -126,8 +126,7 @@ class StoriesController < ApplicationController
 
     @short_url = @story.short_id_url
 
-    @comments = Comment.ordered_for_story_or_thread_for_user(@story.id, nil,
-      @user)
+    @comments = @story.comments.includes(:user).arrange_for_user(@user)
 
     respond_to do |format|
       format.html {
@@ -155,8 +154,11 @@ class StoriesController < ApplicationController
       return redirect_to @story.comments_url
     end
 
-    @comments = Comment.ordered_for_story_or_thread_for_user(@story.id,
-      @showing_comment.thread_id, @user ? @user : nil)
+    @comments = @story.comments
+    if @showing_comment.thread_id
+      @comments = @comments.where(:thread_id => @showing_comment.thread_id)
+    end
+    @comments = @comments.includes(:user).arrange_for_user(@user)
 
     @comments.each do |c,x|
       if c.id == @showing_comment.id

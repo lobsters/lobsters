@@ -232,7 +232,13 @@ class CommentsController < ApplicationController
     end
 
     @threads = @showing_user.recent_threads(20).map{|r|
-      cs = Comment.ordered_for_story_or_thread_for_user(nil, r, @showing_user)
+      cs = Comment.where(
+        :thread_id => r
+      ).includes(
+        :user, :story
+      ).arrange_for_user(
+        @showing_user
+      )
 
       if @user && (@showing_user.id == @user.id)
         @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,

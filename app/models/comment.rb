@@ -1,6 +1,7 @@
 class Comment < ActiveRecord::Base
   belongs_to :user
-  belongs_to :story
+  belongs_to :story,
+    :inverse_of => :comments
   has_many :votes,
     :dependent => :delete_all
   belongs_to :parent_comment,
@@ -293,16 +294,10 @@ class Comment < ActiveRecord::Base
     comment
   end
 
-  def self.ordered_for_story_or_thread_for_user(story_id, thread_id, user)
+  def self.arrange_for_user(user)
     parents = {}
 
-    if thread_id
-      cs = [ "thread_id = ?", thread_id ]
-    else
-      cs = [ "story_id = ?", story_id ]
-    end
-
-    Comment.where(*cs).order("confidence DESC").includes(:user).each do |c|
+    self.order("confidence DESC").each do |c|
       (parents[c.parent_comment_id.to_i] ||= []).push c
     end
 

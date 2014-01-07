@@ -153,7 +153,7 @@ last_comment_id, false, false).order(:id).each do |c|
 
         thread = []
         indent_level = 0
-        Comment.ordered_for_story_or_thread_for_user(nil, c.thread_id,
+        Comment.where(:thread_id => c.thread_id).arrange_for_user(
         nil).reverse.each do |cc|
           if indent_level > 0 && cc.indent_level < indent_level
             thread.unshift cc

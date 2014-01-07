@@ -30,7 +30,7 @@ class Moderation < ActiveRecord::Base
         m.body << "\n" <<
           "The reason given:\n" <<
           "\n" <<
-          "> *#{self.reason}*"
+          "> *#{self.reason}*\n"
       end
 
     elsif self.comment
@@ -39,19 +39,22 @@ class Moderation < ActiveRecord::Base
       m.body = "Your comment on [#{self.comment.story.title}](" <<
         "#{self.comment.story.comments_url}) has been moderated:\n" <<
         "\n" <<
-        "> *#{self.comment.comment}*"
+        "> *#{self.comment.comment}*\n"
 
       if self.reason.present?
         m.body << "\n" <<
           "The reason given:\n" <<
           "\n" <<
-          "> *#{self.reason}*"
+          "> *#{self.reason}*\n"
       end
 
     else
       # no point in alerting deleted users, they can't login to read it
       return
     end
+
+    m.body << "\n" <<
+      "*This is an automated message.*"
 
     m.save
   end

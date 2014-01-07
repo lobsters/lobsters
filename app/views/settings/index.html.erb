@@ -19,13 +19,14 @@
 
     <div class="boxline">
       <%= f.label :password, "New Password:", :class => "required" %>
-      <%= f.password_field :password, :size => 40 %>
+      <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
     </div>
 
     <div class="boxline">
       <%= f.label :password_confirmation, "Confirm Password:",
         :class => "required" %>
-      <%= f.password_field :password_confirmation, :size => 40 %>
+      <%= f.password_field :password_confirmation, :size => 40,
+        :autocomplete => "off" %>
     </div>
 
     <div class="boxline">

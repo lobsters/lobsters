@@ -23,27 +23,6 @@ class Story < ActiveRecord::Base
   before_save :log_moderation
   after_create :mark_submitter
 
-  define_index do
-    indexes url
-    indexes title
-    indexes description
-    indexes user.username, :as => :author
-    indexes tags(:tag), :as => :tags
-
-    has created_at, :sortable => true
-    has hotness, is_expired
-    has "(cast(upvotes as signed) - cast(downvotes as signed))",
-      :as => :score, :type => :bigint, :sortable => true
-
-    set_property :field_weights => {
-      :upvotes => 15,
-      :title => 10,
-      :tags => 5,
-    }
-
-    where "is_expired = 0"
-  end
-
   validate do
     if self.url.present?
       # URI.parse is not very lenient, so we can't use it

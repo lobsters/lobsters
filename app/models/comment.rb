@@ -24,19 +24,6 @@ class Comment < ActiveRecord::Base
 
   MAX_EDIT_MINS = 45
 
-  define_index do
-    indexes comment
-    indexes user.username, :as => :author
-
-    has "(cast(upvotes as signed) - cast(downvotes as signed))",
-      :as => :score, :type => :bigint, :sortable => true
-
-    has is_deleted
-    has created_at
-
-    where "is_deleted = 0 AND is_moderated = 0"
-  end
-
   validate do
     self.comment.to_s.strip == "" &&
       errors.add(:comment, "cannot be blank.")

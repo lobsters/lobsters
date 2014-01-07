@@ -61,7 +61,7 @@ generated key from the output of `rake secret`:
 * (Optional, only needed for the search engine) Install Sphinx.  Build Sphinx
 config and start server:
 
-          lobsters$ rake thinking_sphinx:rebuild
+          lobsters$ rake ts:rebuild
 
 * Define your site's name and default domain, which are used in various places,
 in a `config/initializers/production.rb` or similar file:

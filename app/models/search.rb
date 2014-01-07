@@ -30,8 +30,19 @@ class Search
       }.join("&amp;")
   end
 
-  def page_count
+  # used by kaminari
+  def current_page
+    page
+  end
+
+  # used by kaminari
+  def total_pages
     (total_results.to_i - 1) / per_page.to_i + 1
+  end
+
+  # used by kaminari
+  def limit_value
+    per_page
   end
 
   def search_for_user!(user)

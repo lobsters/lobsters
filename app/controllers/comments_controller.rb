@@ -168,18 +168,13 @@ class CommentsController < ApplicationController
     @heading = @title = "Newest Comments"
     @cur_url = "/comments"
 
-    @page = 1
-    if params[:page].to_i > 0
-      @page = params[:page].to_i
-    end
-
     @comments = Comment.where(
       :is_deleted => false, :is_moderated => false
     ).order(
       "created_at DESC"
-    ).offset(
-      (@page - 1) * COMMENTS_PER_PAGE
-    ).limit(
+    ).page(
+      params[:page],
+    ).per(
       COMMENTS_PER_PAGE
     ).includes(
       :user, :story

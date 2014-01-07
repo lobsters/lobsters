@@ -31,6 +31,9 @@ gem "bcrypt-ruby", "~> 3.1.2"
 # Use unicorn as the app server
 gem "unicorn"
 
+# Use kaminari for pagination
+gem "kaminari"
+
 gem "nokogiri"
 gem "htmlentities"
 gem "rdiscount"

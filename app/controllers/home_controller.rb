@@ -111,27 +111,17 @@ class HomeController < ApplicationController
 private
   def find_stories_for_user_and_tag_and_newest_and_by_user(user, tag = nil,
   newest = false, by_user = nil)
-    @page = 1
-    if params[:page].to_i > 0
-      @page = params[:page].to_i
-    end
-
     # guest views have caching, but don't bother for logged-in users or dev or
     # when the user has tag filters
     if Rails.env == "development" || user || tags_filtered_by_cookie.any?
-      stories, @show_more =
-        _find_stories_for_user_and_tag_and_newest_and_by_user(user, tag,
+      _find_stories_for_user_and_tag_and_newest_and_by_user(user, tag,
         newest, by_user)
     else
-      stories, @show_more = Rails.cache.fetch("stories tag:" <<
-      "#{tag ? tag.tag : ""} new:#{newest} page:#{@page.to_i} by:#{by_user}",
-      :expires_in => 45) do
+      cache(request.fullpath, :expires_in => 45) do
         _find_stories_for_user_and_tag_and_newest_and_by_user(user, tag,
           newest, by_user)
       end
     end
-
-    stories
   end
 
   def _find_stories_for_user_and_tag_and_newest_and_by_user(user, tag = nil,
@@ -188,20 +178,17 @@ private
 
     stories = stories.includes(
       :user, :taggings => :tag
-    ).limit(
-      STORIES_PER_PAGE + 1
-    ).offset(
-      (@page - 1) * STORIES_PER_PAGE
     ).order(
       newest ? "stories.created_at DESC" : "hotness"
+    )
+
+    story_count = stories.count
+
+    stories = stories.page(
+      params[:page]
+    ).per(
+      STORIES_PER_PAGE
     ).to_a
-
-    show_more = false
-
-    if stories.count > STORIES_PER_PAGE
-      show_more = true
-      stories.pop
-    end
 
     # TODO: figure out a better sorting algorithm for newest, including some
     # older stories that got one or two votes
@@ -217,6 +204,12 @@ private
       end
     end
 
-    [ stories, show_more ]
+    Kaminari.paginate_array(
+      stories, :total_count => story_count
+    ).page(
+      params[:page]
+    ).per(
+      STORIES_PER_PAGE
+    )
   end
 end

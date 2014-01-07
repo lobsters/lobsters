@@ -531,38 +531,20 @@ div.story_content {
 	margin-bottom: 1em;
 }
 
-div.morelink {
+nav.pagination {
 	float: left;
-}
-
-div.morelink,
-div.page_link_buttons {
 	margin-top: 1.5em;
 	margin-left: 40px;
 }
-div.morelink a {
+nav.pagination a,
+nav.pagination span {
 	color: #666;
 	font-weight: bold;
 	text-decoration: none;
 }
-div.page_link_buttons {
-	font-weight: bold;
-	margin-top: 2em;
+nav.pagination .current {
+	color: #ac130d;
 }
-div.page_link_buttons a {
-	color: #666;
-	border: 1px solid #d0d0d0;
-	background-color: #f3f3f3;
-	padding: 0.25em 0.5em;
-	font-weight: bold;
-	text-decoration: none;
-	margin-left: 0.5em;
-}
-div.page_link_buttons a.cur {
-	background-color: transparent;
-	border-color: transparent;
-}
-
 
 div.story_text {
 	margin-bottom: 1.5em;

@@ -43,6 +43,9 @@ GEM
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.8.1)
+    kaminari (0.15.0)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     kgio (2.8.1)
     machinist (2.0)
     mail (2.5.4)
@@ -132,6 +135,7 @@ DEPENDENCIES
   exception_notification (= 2.6.1)
   htmlentities
   jquery-rails
+  kaminari
   machinist
   mail
   mysql2 (>= 0.3.14)

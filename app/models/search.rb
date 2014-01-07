@@ -36,30 +36,28 @@ class Search
 
   def search_for_user!(user)
     opts = {
-      :match_mode => :extended,
-      :rank_mode => :bm25,
-      :page => @page,
+      :ranker   => :bm25,
+      :page     => @page,
       :per_page => @per_page,
+      :include  => [ :story, :user ],
     }
 
     if order == "newest"
-      opts[:order] = :created_at
-      opts[:sort_mode] = :desc
+      opts[:order] = "created_at DESC"
     elsif order == "points"
-      opts[:order] = :score
-      opts[:sort_mode] = :desc
+      opts[:order] = "score DESC"
     end
 
-    opts[:classes] = []
-    if what == "all"
-      opts[:classes] = [ Story, Comment ]
-    elsif what == "comments"
-      opts[:classes] = [ Comment ]
-    elsif what == "stories"
-      opts[:classes] = [ Story ]
-    end
-
-    opts[:include] = [ :story, :user ]
+    opts[:classes] = case what
+      when "all"
+        [ Story, Comment ]
+      when what == "comments"
+        [ Comment ]
+      when what == "stories"
+        [ Story ]
+      else
+        []
+      end
 
     # sphinx seems to interpret slashes as a regex(?) so escape them since
     # nobody is probably using them, but don't just use Riddle.escape because

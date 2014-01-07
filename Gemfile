@@ -31,7 +31,7 @@ gem "rdiscount"
 
 gem "oauth"
 
-gem "thinking-sphinx", "2.0.12"
+gem "thinking-sphinx", "~> 3.0.6"
 
 gem "mail"
 

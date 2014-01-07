@@ -295,66 +295,52 @@ class Comment < ActiveRecord::Base
   end
 
   def self.arrange_for_user(user)
-    parents = {}
-
-    self.order("confidence DESC").each do |c|
-      (parents[c.parent_comment_id.to_i] ||= []).push c
-    end
+    parents = self.order("confidence DESC").group_by(&:parent_comment_id)
 
     # top-down list of comments, regardless of indent level
     ordered = []
 
-    recursor = lambda{|comment,level|
-      if comment
-        comment.indent_level = level
-        ordered.push comment
-      end
+    ancestors = [nil] # nil sentinel so indent_level starts at 1 without add op.
+    subtree = parents[nil]
 
-      # for each comment that is a child of this one, recurse with it
-      (parents[comment ? comment.id : 0] || []).each do |child|
-        recursor.call(child, level + 1)
-      end
-    }
-    recursor.call(nil, 0)
+    while subtree
+      if (node = subtree.shift)
+        children = parents[node.id]
 
-    # for deleted comments, if they have no children, they can be removed from
-    # the tree.  otherwise they have to stay and a "[deleted]" stub will be
-    # shown
-    new_ordered = []
-    ordered.each_with_index do |c,x|
-      if c.is_gone?
-        if ordered[x + 1] && (ordered[x + 1].indent_level > c.indent_level)
-          # we have child comments, so we must stay
-        elsif user && (user.is_moderator? || c.user_id == user.id)
+        # for deleted comments, if they have no children, they can be removed
+        # from the tree.  otherwise they have to stay and a "[deleted]" stub
+        # will be shown
+        if !node.is_gone?
+          # not deleted or moderated
+        elsif children
+          # we have child comments
+        elsif user && (user.is_moderator? || node.user_id == user.id)
           # admins and authors should be able to see their deleted comments
         else
           # drop this one
           next
         end
-      end
 
-      new_ordered.push c
+        node.indent_level = ancestors.length
+        ordered << node
+
+        # no children to recurse
+        next unless children
+
+        # for moderated threads, remove the entire sub-tree at the moderation
+        # point
+        next if node.is_moderated?
+
+        # drill down a level
+        ancestors << subtree
+        subtree = children
+      else
+        # climb back out
+        subtree = ancestors.pop
+      end
     end
 
-    # for moderated threads, remove the entire sub-tree at the moderation point
-    do_reject = false
-    deleted_indent_level = 0
-    new_ordered.reject!{|c|
-      if do_reject && (c.indent_level > deleted_indent_level)
-        true
-      else
-        if c.is_moderated?
-          do_reject = true
-          deleted_indent_level = c.indent_level
-        else
-          do_reject = false
-        end
-
-        false
-      end
-    }
-
-    new_ordered
+    ordered
   end
 
   def is_editable_by_user?(user)

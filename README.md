@@ -82,7 +82,7 @@ in a `config/initializers/production.rb` or similar file:
 
           lobsters$ rails console
           Loading development environment (Rails 3.2.6)
-          irb(main):001:0> u = User.new(:username => "test", :email => "test@example.com", :password => "test")
+          irb(main):001:0> u = User.new(:username => "test", :email => "test@example.com", :password => "test", :password_confirmation => "test")
           irb(main):002:0> u.is_admin = true
           irb(main):003:0> u.is_moderator = true
           irb(main):004:0> u.save

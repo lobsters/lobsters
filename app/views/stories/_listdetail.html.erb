@@ -66,11 +66,11 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
             <% end %>
           <% end %>
         <% end %>
-        <% if !story.is_gone? %>
+        <% if !story.is_gone? && (@user || story.comments_count > 0) %>
           |
-          <a href="<%= story.comments_url %>"><%=
-            (c = story.comments_count) == 0 ? "discuss" :
-            "#{c} comment#{c == 1 ? "" : "s"}" %></a>
+          <a href="<%= story.comments_url %>"><%= story.comments_count == 0 ?
+            "discuss" : "#{story.comments_count} comment" <<
+            (story.comments_count == 1 ? "" : "s") %></a>
         <% end %>
 
         <% if defined?(single_story) && single_story %>

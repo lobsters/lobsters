@@ -23,13 +23,13 @@
       <th width="15%">Tag</th>
       <th width="78%">Description</th>
     </tr>
-    <% Tag.order(:tag).accessible_to(@user).each do |tag| %>
+    <% @tags.each do |tag| %>
       <tr>
-        <td><input type="checkbox" name="tag_<%= tag.tag %>" value=1
-          <%= @filtered_tags.map{|ft| ft.tag_id }.include?(tag.id) ?
-          "checked" : "" %>></td>
-        <td><a href="/t/<%= tag.tag %>" class="<%= tag.css_class %>"><%=
-          tag.tag %></a></td>
+        <td>
+          <%= check_box_tag "tags[]", tag.tag, @filtered_tags.include?(tag) %>
+        </td>
+        <td>
+          <%= link_to tag.tag, tag_path(tag), :class => tag.css_class %>
         <td><%= tag.description %></td>
       </tr>
     <% end %>

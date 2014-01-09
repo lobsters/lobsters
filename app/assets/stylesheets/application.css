@@ -65,6 +65,11 @@ a.tag_ask, a.tag_project, a.tag_interview {
 	border-color: #f0b2b8;
 }
 
+a.tag_meta {
+	background-color: #eee;
+	border-color: #c8c8c8;
+}
+
 span.fakea {
 	cursor: pointer;
 	text-decoration: underline;

@@ -122,12 +122,16 @@ class Comment < ActiveRecord::Base
           next
         end
 
-        begin
-          if u.email_mentions?
+        if u.email_mentions?
+          begin
             EmailReply.mention(self, u).deliver
+          rescue => e
+            Rails.logger.error "error e-mailing #{u.email}: #{e}"
           end
+        end
 
-          if u.pushover_mentions? && u.pushover_user_key.present?
+        if u.pushover_mentions? && u.pushover_user_key.present?
+          begin
             Pushover.push(u.pushover_user_key, u.pushover_device, {
               :title => "#{Rails.application.name} mention by " <<
                 "#{self.user.username} on #{self.story.title}",
@@ -135,10 +139,9 @@ class Comment < ActiveRecord::Base
               :url => self.url,
               :url_title => "Reply to #{self.user.username}",
             })
+          rescue => e
+            Rails.logger.error "error sending to pushover: #{e}"
           end
-        rescue => e
-          Rails.logger.error "failed to deliver mention notification to " <<
-            "#{u.username}: #{e.message}"
         end
       end
     end
@@ -147,12 +150,16 @@ class Comment < ActiveRecord::Base
   def deliver_reply_notifications
     if self.parent_comment_id && (u = self.parent_comment.try(:user)) &&
     u.id != self.user.id
-      begin
-        if u.email_replies?
+      if u.email_replies?
+        begin
           EmailReply.reply(self, u).deliver
+        rescue => e
+          Rails.logger.error "error e-mailing #{u.email}: #{e}"
         end
+      end
 
-        if u.pushover_replies? && u.pushover_user_key.present?
+      if u.pushover_replies? && u.pushover_user_key.present?
+        begin
           Pushover.push(u.pushover_user_key, u.pushover_device, {
             :title => "#{Rails.application.name} reply from " <<
               "#{self.user.username} on #{self.story.title}",
@@ -160,10 +167,9 @@ class Comment < ActiveRecord::Base
             :url => self.url,
             :url_title => "Reply to #{self.user.username}",
           })
+        rescue => e
+          Rails.logger.error "error sending to pushover: #{e}"
         end
-      rescue => e
-        Rails.logger.error "failed to deliver reply notification to " <<
-          "#{u.username}: #{e.message}"
       end
     end
   end

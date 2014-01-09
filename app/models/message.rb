@@ -18,7 +18,7 @@ class Message < ActiveRecord::Base
 
   before_validation :assign_short_id,
     :on => :create
-  after_create :deliver_reply_notifications
+  after_create :deliver_email_notifications
   after_save :update_unread_counts
   after_save :check_for_both_deleted
 
@@ -36,14 +36,18 @@ class Message < ActiveRecord::Base
     self.recipient.update_unread_message_count!
   end
 
-  def deliver_reply_notifications
-    begin
-      if self.recipient.email_messages?
+  def deliver_email_notifications
+    if self.recipient.email_messages?
+      begin
         EmailMessage.notify(self, self.recipient).deliver
+      rescue => e
+        Rails.logger.error "error e-mailing #{self.recipient.email}: #{e}"
       end
+    end
 
-      if self.recipient.pushover_messages? &&
-      self.recipient.pushover_user_key.present?
+    if self.recipient.pushover_messages? &&
+    self.recipient.pushover_user_key.present?
+      begin
         Pushover.push(self.recipient.pushover_user_key,
           self.recipient.pushover_device, {
           :title => "#{Rails.application.name} message from " <<
@@ -52,8 +56,9 @@ class Message < ActiveRecord::Base
           :url => self.url,
           :url_title => "Reply to #{self.author.username}",
         })
+      rescue => e
+        Rails.logger.error "error sending to pushover: #{e}"
       end
-    rescue
     end
   end
 

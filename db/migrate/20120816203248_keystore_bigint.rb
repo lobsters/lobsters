@@ -1,6 +1,6 @@
 class KeystoreBigint < ActiveRecord::Migration
   def up
-    execute("ALTER TABLE keystores CHANGE value value BIGINT")
+    change_column :keystores, :value, :integer, :limit => 8
   end
 
   def down

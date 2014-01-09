@@ -12,7 +12,6 @@ class Story < ActiveRecord::Base
   # after this many minutes old, a story cannot be edited
   MAX_EDIT_MINS = 30
 
-  attr_accessor :_comment_count
   attr_accessor :vote, :already_posted_story, :fetched_content, :previewing
   attr_accessor :editor_user_id, :moderation_reason
 
@@ -95,7 +94,7 @@ class Story < ActiveRecord::Base
       :url,
     ])
     h[:score] = score
-    h[:comment_count] = comment_count
+    h[:comment_count] = comments_count
     h[:description] = markeddown_description
     h[:comments_url] = comments_url
     h[:submitter_user] = user
@@ -176,11 +175,6 @@ class Story < ActiveRecord::Base
 
   def short_id_url
     Rails.application.routes.url_helpers.root_url + "s/#{self.short_id}"
-  end
-
-  def comment_count
-    @_comment_count ||=
-      Keystore.value_for("story:#{self.id}:comment_count").to_i
   end
 
   def domain
@@ -386,11 +380,10 @@ class Story < ActiveRecord::Base
     update_column :hotness, calculated_hotness
   end
 
-  def update_comment_count!
+  def update_comments_count!
     # calculate count after removing deleted comments and threads
-    alive_count = Comment.ordered_for_story_or_thread_for_user(self.id, nil,
-      nil).select{|c| !c.is_gone? }.count
-
-    Keystore.put("story:#{self.id}:comment_count", alive_count)
+    self.update_column :comments_count,
+      Comment.ordered_for_story_or_thread_for_user(self.id, nil, nil).select{|c|
+      !c.is_gone? }.count
   end
 end

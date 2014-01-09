@@ -69,7 +69,7 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
         <% if !story.is_gone? %>
           |
           <a href="<%= story.comments_url %>"><%=
-            (c = story.comment_count) == 0 ? "discuss" :
+            (c = story.comments_count) == 0 ? "discuss" :
             "#{c} comment#{c == 1 ? "" : "s"}" %></a>
         <% end %>
 

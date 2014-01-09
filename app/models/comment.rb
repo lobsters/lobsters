@@ -82,7 +82,7 @@ class Comment < ActiveRecord::Base
     Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.story_id,
       self.id, self.user.id, nil, false)
 
-    self.story.update_comment_count!
+    self.story.update_comments_count!
   end
 
   def vote_summary
@@ -196,7 +196,7 @@ class Comment < ActiveRecord::Base
     self.save(:validate => false)
     Comment.record_timestamps = true
 
-    self.story.update_comment_count!
+    self.story.update_comments_count!
   end
 
   def undelete_for_user(user)
@@ -219,7 +219,7 @@ class Comment < ActiveRecord::Base
     self.save(:validate => false)
     Comment.record_timestamps = true
 
-    self.story.update_comment_count!
+    self.story.update_comments_count!
   end
 
   def give_upvote_or_downvote_and_recalculate_confidence!(upvote, downvote)
@@ -264,7 +264,7 @@ class Comment < ActiveRecord::Base
   end
 
   def unassign_votes
-    self.story.update_comment_count!
+    self.story.update_comments_count!
   end
 
   def score

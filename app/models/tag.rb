@@ -5,6 +5,7 @@ class Tag < ActiveRecord::Base
     :through => :taggings
 
   attr_accessor :filtered_count
+  attr_accessor :story_count
 
   scope :accessible_to, ->(user) do
     user && user.is_admin?? all : where(:privileged => false)
@@ -17,6 +18,15 @@ class Tag < ActiveRecord::Base
       t.filtered_count = counts[t.id].to_i
       t
     }
+  end
+
+  def self.all_with_story_counts()
+    counts = Tagging.group(:tag_id).count
+
+    Tag.order(:tag).map{|t|
+      t.story_count = counts[t.id].to_i
+      t
+    } 
   end
 
   def css_class

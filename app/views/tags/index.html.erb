@@ -1,0 +1,25 @@
+<div class="box wide">
+  <div class="legend">
+    Tags
+  </div>
+
+  <p>
+  All the tags are listed below.
+  </p>
+
+    <table class="data zebra" cellspacing=0 width="75%">
+    <tr>
+      <th width="15%">Story Count</th>
+      <th width="15%">Tag</th>
+      <th width="70%">Description</th>
+    </tr>
+    <% Tag.all_with_story_counts().each do |tag| %>
+      <tr>
+	<td><%= tag.story_count %></td>
+        <td><a href="/t/<%= tag.tag %>" class="<%= tag.css_class %>"><%=
+          tag.tag %></a></td>
+        <td><%= tag.description %></td>
+      </tr>
+    <% end %>
+    </table>
+</div>

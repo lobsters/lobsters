@@ -12,9 +12,12 @@
       Page <%= @page - 1 %></a>
   <% end %>
 
-  <% if @page && @page > 1 %>
-    |
-  <% end %>
+  <% if @comments.any? %>
+    <% if @page && @page > 1 %>
+      |
+    <% end %>
 
-  <a href="/comments/page/<%= @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
+    <a href="/comments/page/<%= @page + 1 %>">Page
+      <%= @page + 1 %> &gt;&gt;</a>
+  <% end %>
 </div>

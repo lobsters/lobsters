@@ -26,16 +26,24 @@ class ApplicationController < ActionController::Base
     end
 
     Keystore.transaction do
-      date = (Keystore.value_for("traffic:date") || Time.now.to_i)
-      traffic = (Keystore.incremented_value_for("traffic:hits", 0).
-        to_f / 100.0) + 1.0
+      now_i = Time.now.to_i
+      date_kv = Keystore.find_or_create_key_for_update("traffic:date", now_i)
+      traffic_kv = Keystore.find_or_create_key_for_update("traffic:hits", 0)
 
+      # increment traffic counter on each request
+      traffic = traffic_kv.value.to_i + 100
       # every second, decrement traffic by some amount
-      @traffic = [ 1.0, traffic.to_f -
-        ((Time.now.to_i - date) * TRAFFIC_DECREMENTER) ].max
+      traffic -= (100.0 * (now_i - date_kv.value) * TRAFFIC_DECREMENTER).to_i
+      # clamp
+      traffic = [ 100, traffic ].max
 
-      Keystore.put("traffic:date", Time.now.to_i)
-      Keystore.put("traffic:hits", (@traffic * 100.0).to_i)
+      @traffic = traffic * 0.01
+
+      traffic_kv.value = traffic
+      traffic_kv.save!
+
+      date_kv.value = now_i
+      date_kv.save!
     end
 
     Rails.logger.info "  Traffic level: #{@traffic}"

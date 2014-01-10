@@ -274,8 +274,7 @@ $(document).ready(function() {
 
   $(document).on("click", "a.comment_editor", function() {
     var li = $(this).parents("li.comment").first();
-    li.load("/comments/" + $(li).attr("data-shortid") + "/edit",
-      { "edit": 1 });
+    li.load("/comments/" + $(li).attr("data-shortid") + "/edit");
   });
 
   $(document).on("click", "a.comment_deletor", function() {

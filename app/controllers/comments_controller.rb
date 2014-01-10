@@ -272,6 +272,6 @@ end
 private
 
   def find_comment
-    Comment.where(:short_id => params[:comment_id]).first
+    Comment.where(:short_id => params[:id]).first
   end
 end

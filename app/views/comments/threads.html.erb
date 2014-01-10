@@ -1,3 +1,7 @@
+<div style="display:none">
+  <%= render "comments/commentbox", :comment => Comment.new, :story => nil %>
+</div>
+
 <% cur_story = nil %>
 <% indent_level = -1 %>
 <% @comments.each_with_index do |comment,x| %>

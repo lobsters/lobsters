@@ -50,15 +50,11 @@ Lobsters::Application.routes.draw do
       post "downvote"
       post "unvote"
 
-      post "preview"
-      post "update"
       post "delete"
       post "undelete"
     end
   end
   get "/comments/page/:page" => "comments#index"
-  post "/comments/post_to/:story_id" => "comments#create" # compatibility
-  post "/comments/preview_to/:story_id" => "comments#preview_new" # compatibility
 
   get "/messages/sent" => "messages#sent"
   resources :messages do

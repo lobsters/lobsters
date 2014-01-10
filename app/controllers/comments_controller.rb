@@ -2,7 +2,7 @@ class CommentsController < ApplicationController
   COMMENTS_PER_PAGE = 20
 
   before_filter :require_logged_in_user_or_400,
-    :only => [ :create, :preview, :preview_new, :upvote, :downvote, :unvote ]
+    :only => [ :create, :preview, :upvote, :downvote, :unvote ]
 
   # for rss feeds, load the user's tag filters if a token is passed
   before_filter :find_user_from_rss_token, :only => [ :index ]
@@ -14,24 +14,23 @@ class CommentsController < ApplicationController
 
     comment = Comment.new
     comment.comment = params[:comment].to_s
-    comment.story_id = story.id
+    comment.story = story
     comment.user_id = @user.id
 
     if params[:parent_comment_short_id].present?
       if pc = Comment.where(:story_id => story.id, :short_id =>
       params[:parent_comment_short_id]).first
-        comment.parent_comment_id = pc.id
-        # needed for carryng along in comment preview form
-        comment.parent_comment_short_id = params[:parent_comment_short_id]
+        comment.parent_comment = pc
       else
         return render :json => { :error => "invalid parent comment",
           :status => 400 }
       end
     end
 
+    return preview comment if params[:preview].present?
+
     # prevent double-clicks of the post button
-    if !params[:preview].present? &&
-    (pc = Comment.where(:story_id => story.id, :user_id => @user.id,
+    if (pc = Comment.where(:story_id => story.id, :user_id => @user.id,
       :parent_comment_id => comment.parent_comment_id).first)
       if (Time.now - pc.created_at) < 5.minutes
         comment.errors.add(:comment, "^You have already posted a comment " <<
@@ -43,7 +42,7 @@ class CommentsController < ApplicationController
       end
     end
 
-    if comment.valid? && !params[:preview].present? && comment.save
+    if comment.save
       comment.current_vote = { :vote => 1 }
 
       if comment.parent_comment_id
@@ -56,19 +55,9 @@ class CommentsController < ApplicationController
           :comment => Comment.new, :show_comment => comment }
       end
     else
-      comment.previewing = true
       comment.upvotes = 1
-      comment.current_vote = { :vote => 1 }
-
-      render :partial => "commentbox", :layout => false,
-        :content_type => "text/html", :locals => { :story => story,
-        :comment => comment, :show_comment => comment }
+      preview comment
     end
-  end
-
-  def preview_new
-    params[:preview] = true
-    return create
   end
 
   def edit
@@ -112,6 +101,8 @@ class CommentsController < ApplicationController
 
     comment.comment = params[:comment]
 
+    return preview(comment) if params[:preview].present?
+
     if comment.save
       # TODO: render the comment again properly, it's indented wrong
 
@@ -119,28 +110,8 @@ class CommentsController < ApplicationController
         :content_type => "text/html", :locals => { :story => comment.story,
         :show_comment => comment }
     else
-      comment.previewing = true
-      comment.current_vote = { :vote => 1 }
-
-      render :partial => "commentbox", :layout => false,
-        :content_type => "text/html", :locals => { :story => comment.story,
-        :comment => comment, :show_comment => comment }
+      preview comment
     end
-  end
-
-  def preview
-    if !((comment = find_comment) && comment.is_editable_by_user?(@user))
-      return render :text => "can't find comment", :status => 400
-    end
-
-    comment.comment = params[:comment]
-
-    comment.previewing = true
-    comment.current_vote = { :vote => 1 }
-
-    render :partial => "commentbox", :layout => false,
-      :content_type => "text/html", :locals => { :story => comment.story,
-      :comment => comment, :show_comment => comment }
   end
 
   def unvote
@@ -270,6 +241,15 @@ end
   end
 
 private
+
+  def preview(comment)
+    comment.previewing = true
+    comment.current_vote = { :vote => 1 }
+
+    render :partial => "commentbox", :layout => false,
+      :content_type => "text/html", :locals => { :story => comment.story,
+      :comment => comment, :show_comment => comment }
+  end
 
   def find_comment
     Comment.where(:short_id => params[:id]).first

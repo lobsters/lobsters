@@ -608,7 +608,7 @@ div.comment_reply form {
 	padding-top: 1em;
 }
 
-div.comment_reply button.comment-post {
+div.comment_reply .comment-post {
 	font-weight: bold;
 }
 

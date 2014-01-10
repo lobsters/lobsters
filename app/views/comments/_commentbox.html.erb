@@ -1,14 +1,13 @@
 <div class="comment_form_container">
-<%= form_tag((comment.new_record? ? "/comments/post_to/#{story.short_id}" :
-"/comments/#{comment.short_id}/update"), { :id => "comment_form" }) do |f| %>
-  <% if comment && comment.errors.any? %>
+<%= form_for comment, :remote => true,
+  :html => { :class => "comment_form" } do |f| %>
+  <% if comment.errors.present? %>
     <%= errors_for comment %>
   <% end %>
 
-  <% if comment.parent_comment_short_id.present? %>
-    <%= hidden_field_tag "parent_comment_short_id",
-      comment.parent_comment_short_id %>
-  <% end %>
+  <%= hidden_field_tag "story_id", story.try(:short_id), :id => nil %>
+  <%= hidden_field_tag "parent_comment_short_id",
+    comment.parent_comment.try(:short_id), :id => nil %>
 
   <div style="width: 100%;">
     <%= text_area_tag "comment", comment.comment, :rows => 5,
@@ -21,11 +20,11 @@
         Markdown formatting available
       </div>
 
-      <%= button_tag "#{comment.new_record?? "Post" : "Update"} Comment",
-        :class => "comment-post", :type => "button" %>
+      <%= submit_tag "#{comment.new_record?? "Post" : "Update"} Comment",
+        :class => "comment-post" %>
       &nbsp;
-      <%= button_tag "Preview Comment", :class => "comment-preview",
-        :type => "button" %>
+      <%= submit_tag "Preview Comment", :name => "preview",
+        :class => "comment-preview" %>
 
       <div style="clear: both;"></div>
 

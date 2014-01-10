@@ -17,15 +17,15 @@
   <title><%= @title.present? ? "#{@title} | " : "" %><%=
     Rails.application.name %></title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
-  <% if @rss_link %>
-    <%= raw(@rss_link) %>
-  <% end %>
   <% if @user %>
+    <%= javascript_include_tag "application" %>
     <script>
       Lobsters.curUser = '<%= @user.id %>';
     </script>
+  <% end %>
+  <%= csrf_meta_tags %>
+  <% if @rss_link %>
+    <%= raw(@rss_link) %>
   <% end %>
 </head>
 <body>

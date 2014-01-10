@@ -25,7 +25,7 @@ class Tag < ActiveRecord::Base
 
   def valid_for?(user)
     if self.privileged?
-      user.is_admin?
+      user.is_moderator?
     else
       true
     end

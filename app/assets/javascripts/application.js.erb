@@ -140,15 +140,6 @@ var _Lobsters = Class.extend({
       action, { reason: reason });
   },
 
-  postComment: function(form) {
-    $(form).parent().load($(form).attr("action"), $(form).serializeArray());
-  },
-
-  previewComment: function(form) {
-    $(form).parent().load($(form).attr("action").replace(/(post|update)/,
-      "preview"), $(form).serializeArray());
-  },
-  
   previewStory: function(form) {
     $("#inside").load("/stories/preview", $(form).serializeArray());
   },
@@ -249,21 +240,23 @@ $(document).ready(function() {
       return false;
     }
 
-    var box = $(this).parents("li.comment").first().find("div.comment_reply").
-      first();
+    var comment$ = $(this).closest("li.comment");
+    var box = comment$.find("div.comment_reply").first();
 
-    box.html($("#comment_form").clone());
+    box.empty().append( $(".comment_form").first().clone() );
     box.find("ol").remove();
 
-    box.find("button.comment-preview").after("&nbsp;\n&nbsp;<button class=\"comment-cancel\" name=\"button\" type=\"button\">Cancel</button>");
+    box.find(".comment-preview").after("&nbsp;\n&nbsp;<button class=\"comment-cancel\" name=\"button\" type=\"button\">Cancel</button>");
 
     box.find("textarea").focus();
 
-    var el = $("<input type=\"hidden\" " +
-      "name=\"parent_comment_short_id\" value=\"" +
-      $(this).parents("li.comment").first().attr("data-shortid") + "\">");
+    box.find("input[name=story_id]").val(
+      $(this).attr("data-story-id")
+    );
 
-    box.find("form").append(el);
+    box.find("input[name=parent_comment_short_id]").val(
+      comment$.attr("data-shortid")
+    );
 
     return false;
   });
@@ -274,8 +267,7 @@ $(document).ready(function() {
 
   $(document).on("click", "a.comment_editor", function() {
     var li = $(this).parents("li.comment").first();
-    li.load("/comments/" + $(li).attr("data-shortid") + "/edit",
-      { "edit": 1 });
+    li.load("/comments/" + $(li).attr("data-shortid") + "/edit");
   });
 
   $(document).on("click", "a.comment_deletor", function() {
@@ -313,12 +305,8 @@ $(document).ready(function() {
       children(".markdown_help").toggle();
   });
 
-  $(document).on("click", "button.comment-post", function() {
-    Lobsters.postComment($(this).parents("form").first());
-  });
-
-  $(document).on("click", "button.comment-preview", function() {
-    Lobsters.previewComment($(this).parents("form").first());
+  $(document).on("ajax:success", ".comment_form", function(ev, data) {
+    $(ev.target).parent().html(data);
   });
 
   $(document).on("click", "button.story-preview", function() {

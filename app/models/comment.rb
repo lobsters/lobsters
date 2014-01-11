@@ -10,7 +10,7 @@ class Comment < ActiveRecord::Base
 
   attr_accessible :comment, :moderation_reason
 
-  attr_accessor :parent_comment_short_id, :current_vote, :previewing,
+  attr_accessor :current_vote, :previewing,
     :indent_level, :highlighted
 
   before_validation :on => :create do
@@ -49,6 +49,10 @@ class Comment < ActiveRecord::Base
     Comment.record_timestamps = true
 
     nil
+  end
+
+  def to_param
+    self.short_id
   end
 
   def as_json(options = {})

@@ -68,7 +68,7 @@ Lobsters::Application.routes.draw do
   get "/s/:id/(:title)" => "stories#show"
 
   get "/u" => "users#tree"
-  get "/u/:id" => "users#show"
+  get "/u/:id" => "users#show", :as => "user"
 
   get "/settings" => "settings#index"
   post "/settings" => "settings#update"

@@ -11,8 +11,14 @@
   </div>
 
   <label class="required">Status:</label>
-  <span class="d">
-    Active <%= @showing_user.is_admin? ? "administrator" :
+  <span class="d"
+  <%= @showing_user.is_banned? ? raw("style=\"color: red;\"") : "" %>>
+    <% if @showing_user.is_banned? %>
+      Inactive
+    <% else %>
+      Active
+    <% end %>
+    <%= @showing_user.is_admin? ? "administrator" :
       (@showing_user.is_moderator? ? "moderator" : "user") %>
   </span>
   <br>
@@ -22,11 +28,24 @@
     <%= raw(time_ago_in_words_label(@showing_user.created_at)) %> ago
     <% if @showing_user.invited_by_user %>
       by invitation from
-      <a href="/u/<%= @showing_user.invited_by_user.username %>"><%=
-        @showing_user.invited_by_user.username %></a>
+      <%= link_to @showing_user.invited_by_user.try(:username),
+        @showing_user.invited_by_user %>
     <% end %>
   </span>
   <br>
+
+  <% if @showing_user.is_banned? %>
+    <label class="required">Banned:</label>
+    <span class="d">
+      <%= raw(time_ago_in_words_label(@showing_user.banned_at)) %> ago
+      <% if @showing_user.banned_by_user %>
+        by <%= link_to @showing_user.banned_by_user.try(:username),
+          @showing_user.banned_by_user %>:
+          <em><%= @showing_user.banned_reason %></em>
+      <% end %>
+    </span>
+    <br>
+  <% end %>
 
   <label class="required">Karma:</label>
   <span class="d">

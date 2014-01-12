@@ -11,6 +11,8 @@ class User < ActiveRecord::Base
   has_many :tag_filters
   belongs_to :invited_by_user,
     :class_name => "User"
+  belongs_to :banned_by_user,
+    :class_name => "User"
 
   has_secure_password
 
@@ -66,6 +68,25 @@ class User < ActiveRecord::Base
     else
       k.to_f / (self.stories_submitted_count + self.comments_posted_count)
     end
+  end
+
+  def ban_by_user_for_reason!(banner, reason)
+    self.banned_at = Time.now
+    self.banned_by_user_id = banner.id
+    self.banned_reason = reason
+
+    self.session_token = nil
+    self.check_session_token
+
+    self.save!
+
+    BanNotification.notify(self, banner, reason)
+
+    true
+  end
+
+  def is_banned?
+    banned_at?
   end
 
   def check_session_token
@@ -125,6 +146,13 @@ class User < ActiveRecord::Base
 
   def to_param
     username
+  end
+
+  def unban!
+    self.banned_at = nil
+    self.banned_by_user_id = nil
+    self.banned_reason = nil
+    self.save!
   end
 
   def undeleted_received_messages

@@ -10,8 +10,12 @@
       <% if (user = subtree.pop) %>
         <li>
           <a href="/u/<%= user.username %>"
-            <%= (Time.now - user.created_at < 7.days ? raw("style=\"color: green;\"") :
-            "") %>><%= user.username %></a>&nbsp;(<%= user.karma %>)
+            <% if user.is_banned? %>
+              style="color: gray; text-decoration: line-through;"
+            <% elsif Time.now - user.created_at < 7.days %>
+              style="color: green;"
+            <% end %>
+            ><%= user.username %></a>&nbsp;(<%= user.karma %>)
           <% if user.is_admin? %>
             (administrator)
           <% elsif user.is_moderator? %>

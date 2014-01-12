@@ -123,6 +123,10 @@ class User < ActiveRecord::Base
     Keystore.value_for("user:#{self.id}:stories_submitted").to_i
   end
 
+  def to_param
+    username
+  end
+
   def undeleted_received_messages
     received_messages.where(:deleted_by_recipient => false)
   end

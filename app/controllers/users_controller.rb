@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def show
-    @showing_user = User.where(:username => params[:id]).first!
+    @showing_user = User.where(:username => params[:username]).first!
     @title = "User #{@showing_user.username}"
   end
 

@@ -12,8 +12,7 @@
 
   <p></p>
   <% if @user && !@story.is_gone? && !@story.previewing %>
-    <%= render :partial => "comments/commentbox",
-      :locals => { :story => @story, :comment => @comment } %>
+    <%= render "comments/commentbox", :comment => @comment %>
   <% end %>
 </div>
 
@@ -28,8 +27,7 @@
       <% end %>
     <% end %>
 
-    <%= render :partial => "comments/comment", :locals => { :story => @story,
-      :comment => comment } %>
+    <%= render "comments/comment", :comment => comment %>
 
     <% indent_level = comment.indent_level %>
   <% end %>

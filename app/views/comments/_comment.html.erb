@@ -44,8 +44,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
       <% if !comment.previewing %>
         |
-        <a href="<%= story.comments_url %>/comments/<%= comment.short_id
-          %>">link</a>
+        <a href="<%= comment.url %>">link</a>
 
         <% if comment.is_editable_by_user?(@user) %>
           |
@@ -60,7 +59,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
           <a class="comment_deletor">delete</a>
         <% end %>
 
-        <% if @user && !story.is_gone? && !comment.is_gone? &&
+        <% if @user && !comment.story.is_gone? && !comment.is_gone? &&
         !(defined?(show_story) && show_story) %>
             |
             <a class="comment_replier">reply</a>
@@ -78,7 +77,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
       <% if defined?(show_story) && show_story %>
         | on:
-        <a href="<%= story.comments_url %>"><%= story.title %></a>
+        <a href="<%= comment.story.comments_url %>"><%= comment.story.title %></a>
       <% end %>
     </div>
     <div class="comment_text">

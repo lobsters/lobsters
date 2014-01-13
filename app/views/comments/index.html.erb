@@ -1,10 +1,9 @@
-<% @comments.each do |comment| %>
-  <ol class="comments comments1">
-    <%= render :partial => "comments/comment", :locals => { :story =>
-      comment.story, :comment => comment,
-      :show_story => true } %>
-  </ol>
-<% end %>
+<ol class="comments comments1">
+  <% @comments.each do |comment| %>
+    <%= render "comments/comment", :comment => comment,
+      :show_story => true %>
+  <% end %>
+</ol>
 
 <div class="morelink">
   <% if @page && @page > 1 %>

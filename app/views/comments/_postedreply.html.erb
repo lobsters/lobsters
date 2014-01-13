@@ -1,4 +1,3 @@
 <ol class="comments comments1 preview">
-  <%= render :partial => "comments/comment",
-    :locals => { :comment => show_comment, :story => story } %>
+  <%= render "comments/comment", :comment => comment %>
 </ol>

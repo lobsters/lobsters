@@ -63,7 +63,7 @@
           :locals => { :story => res } %>
       <% elsif res.class == Comment %>
         <%= render :partial => "comments/comment",
-          :locals => { :comment => res, :story => res.story,
+          :locals => { :comment => res,
           :show_story => true, :hide_voters => true } %>
       <% end %>
     <% end %>

@@ -51,9 +51,9 @@ class Search
     opts[:classes] = case what
       when "all"
         [ Story, Comment ]
-      when what == "comments"
+      when "comments"
         [ Comment ]
-      when what == "stories"
+      when "stories"
         [ Story ]
       else
         []

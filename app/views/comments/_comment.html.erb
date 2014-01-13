@@ -29,8 +29,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         just now
       <% else %>
         <a href="/u/<%= comment.user.username %>"
-        <% if comment.user.is_banned? %>
-          class="banned_user"
+        <% if !comment.user.is_active? %>
+          class="inactive_user"
         <% elsif comment.user.is_new? %>
           class="new_user"
         <% end %>

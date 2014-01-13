@@ -507,12 +507,12 @@ li .byline a {
 	color: #888;
 	text-decoration: none;
 }
-.new_user,
+span.new_user, a.new_user,
 li .byline a.new_user {
 	color: green;
 }
-.banned_user,
-li .byline a.banned_user {
+span.inactive_user, a.inactive_user,
+li .byline a.inactive_user {
 	color: gray;
 	text-decoration: line-through;
 }

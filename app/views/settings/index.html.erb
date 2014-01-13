@@ -165,6 +165,32 @@
   <br>
   <br>
 
+  <%= form_for @edit_user, :url => delete_account_url, :method => :post do |f| %>
+    <div class="legend">
+      Delete Account
+    </div>
+
+    <p>
+    To permanently delete your account, verify your current password below.
+    Your account will be put into a deleted state, your comments will be marked
+    as deleted and no longer readable by any other users, and your private
+    messages will be deleted.  Your submitted stories will not be deleted.
+    Your username will remain reserved and will not be available to use on any
+    other account.
+    </p>
+
+    <div class="boxline">
+      <%= f.label :password, "Verify Password:", :class => "required" %>
+      <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
+    </div>
+
+    <br>
+    <%= f.submit "Yes, Delete My Account" %>
+  <% end %>
+
+  <br>
+  <br>
+
   <a name="invite"></a>
   <div class="legend">
     Invite a New User

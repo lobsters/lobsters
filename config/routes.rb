@@ -72,6 +72,8 @@ Lobsters::Application.routes.draw do
 
   get "/settings" => "settings#index"
   post "/settings" => "settings#update"
+  post "/settings/delete_account" => "settings#delete_account",
+    :as => "delete_account"
 
   get "/filters" => "filters#index"
   post "/filters" => "filters#update"

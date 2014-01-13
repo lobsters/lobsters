@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   def authenticate_user
     if session[:u] &&
     (user = User.where(:session_token => session[:u].to_s).first) &&
-    !user.is_banned?
+    user.is_active?
       @user = user
       Rails.logger.info "  Logged in as user #{@user.id} (#{@user.username})"
     end

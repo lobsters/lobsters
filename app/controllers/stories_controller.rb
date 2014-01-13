@@ -2,10 +2,11 @@ class StoriesController < ApplicationController
   before_filter :require_logged_in_user_or_400,
     :only => [ :upvote, :downvote, :unvote, :preview ]
 
-  before_filter :require_logged_in_user, :only => [ :delete, :create, :edit,
+  before_filter :require_logged_in_user, :only => [ :destroy, :create, :edit,
     :fetch_url_title, :new ]
 
-  before_filter :find_user_story, :only => [ :destroy, :edit, :undelete, :update ]
+  before_filter :find_user_story, :only => [ :destroy, :edit, :undelete,
+    :update ]
 
   def create
     @title = "Submit Story"

@@ -7,6 +7,18 @@ class SettingsController < ApplicationController
     @edit_user = @user.dup
   end
 
+  def delete_account
+    if @user.try(:authenticate, params[:user][:password].to_s)
+      @user.delete!
+      reset_session
+      flash[:success] = "Your account has been deleted."
+      return redirect_to "/"
+    end
+
+    flash[:error] = "Your password could not be verified."
+    return redirect_to settings_url
+  end
+
   def update
     @edit_user = @user.clone
 

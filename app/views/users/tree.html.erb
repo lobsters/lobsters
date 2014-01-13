@@ -10,8 +10,8 @@
       <% if (user = subtree.pop) %>
         <li>
           <a href="/u/<%= user.username %>"
-            <% if user.is_banned? %>
-              class="banned_user"
+            <% if !user.is_active? %>
+              class="inactive_user"
             <% elsif user.is_new? %>
               class="new_user"
             <% end %>

@@ -1,19 +1,31 @@
 <div class="box wide">
   <div class="legend">
-    <%= @showing_user.username %>
+    <% if !@showing_user.is_active? %>
+      <span class="inactive_user">
+    <% elsif @showing_user.is_new? %>
+      <span class="new_user">
+    <% else %>
+      <span>
+    <% end %>
+      <%= @showing_user.username %>
+    </span>
     <% if @user %>
       (<a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>)
     <% end %>
   </div>
 
-  <div id="gravatar">
-    <img src="<%= @showing_user.avatar_url %>">
-  </div>
+  <% if @showing_user.is_active? %>
+    <div id="gravatar">
+      <img src="<%= @showing_user.avatar_url %>">
+    </div>
+  <% end %>
 
   <label class="required">Status:</label>
   <span class="d"
   <%= @showing_user.is_banned? ? raw("style=\"color: red;\"") : "" %>>
     <% if @showing_user.is_banned? %>
+      Banned
+    <% elsif !@showing_user.is_active? %>
       Inactive
     <% else %>
       Active
@@ -47,6 +59,14 @@
     <br>
   <% end %>
 
+  <% if @showing_user.deleted_at? %>
+    <label class="required">Left:</label>
+    <span class="d">
+      <%= raw(time_ago_in_words_label(@showing_user.deleted_at)) %> ago
+    </span>
+    <br>
+  <% end %>
+
   <label class="required">Karma:</label>
   <span class="d">
     <%= @showing_user.karma %>, averaging <%=
@@ -75,13 +95,15 @@
   </span>
   <br>
 
-  <label class="required">About:</label>
+  <% if @showing_user.is_active? %>
+    <label class="required">About:</label>
 
-  <div id="user_about" class="shorten_first_p">
-    <% if @showing_user.about.present? %>
-      <%= raw @showing_user.linkified_about %>
-    <% else %>
-      <span class="na">A mystery...</span>
-    <% end %>
-  </div>
+    <div id="user_about" class="shorten_first_p">
+      <% if @showing_user.about.present? %>
+        <%= raw @showing_user.linkified_about %>
+      <% else %>
+        <span class="na">A mystery...</span>
+      <% end %>
+    </div>
+  <% end %>
 </div>

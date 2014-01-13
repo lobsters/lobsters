@@ -2,7 +2,8 @@ class Story < ActiveRecord::Base
   belongs_to :user
   has_many :taggings,
     :autosave => true
-  has_many :comments
+  has_many :comments,
+    :inverse_of => :story
   has_many :tags, :through => :taggings
 
   validates_length_of :title, :in => 3..150
@@ -392,9 +393,9 @@ class Story < ActiveRecord::Base
   end
 
   def update_comments_count!
+    comments = self.comments.arrange_for_user(nil)
+
     # calculate count after removing deleted comments and threads
-    self.update_column :comments_count,
-      Comment.ordered_for_story_or_thread_for_user(self.id, nil, nil).select{|c|
-      !c.is_gone? }.count
+    self.update_column :comments_count, comments.count{|c| !c.is_gone? }
   end
 end

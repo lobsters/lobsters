@@ -9,6 +9,11 @@ class User < ActiveRecord::Base
     :class_name => "Message",
     :foreign_key => "recipient_user_id"
   has_many :tag_filters
+  has_many :tag_filter_tags,
+    :class_name => "Tag",
+    :through => :tag_filters,
+    :source => :tag,
+    :dependent => :delete_all
   belongs_to :invited_by_user,
     :class_name => "User"
   belongs_to :banned_by_user,

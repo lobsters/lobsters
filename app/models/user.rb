@@ -82,6 +82,13 @@ class User < ActiveRecord::Base
 
     BanNotification.notify(self, banner, reason)
 
+    m = Moderation.new
+    m.moderator_user_id = banner.id
+    m.user_id = self.id
+    m.action = "Banned"
+    m.reason = reason
+    m.save!
+
     true
   end
 

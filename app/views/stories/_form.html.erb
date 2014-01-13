@@ -1,5 +1,20 @@
 <%= error_messages_for f.object %>
 
+<% if !f.object.errors.any? && f.object.already_posted_story %>
+  <div class="flash-notice">
+  <h2>Note: This story was already submitted <%=
+    time_ago_in_words(f.object.already_posted_story.created_at) %> ago, but may
+    be submitted again.</h2>
+  <p>
+  Please view the <a href="<%= f.object.already_posted_story.comments_url %>"
+  target="_blank">previous discussion</a> for this story first.  If the content
+  has changed or warrants new discussion, you may submit it again.
+  </p>
+  </div>
+
+  <%= f.hidden_field :seen_previous %>
+<% end %>
+
 <div class="box">
   <div class="boxline">
   <% if f.object.url_is_editable_by_user?(@user) %>

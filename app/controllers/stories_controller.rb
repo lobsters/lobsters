@@ -16,28 +16,19 @@ class StoriesController < ApplicationController
     @story.url = params[:story][:url]
     @story.user_id = @user.id
 
-    if @story.save
-      Vote.vote_thusly_on_story_or_comment_for_user_because(1, @story.id,
-        nil, @user.id, nil)
+    if @story.valid? && !(@story.already_posted_story && !@story.seen_previous)
+      if @story.save
+        Vote.vote_thusly_on_story_or_comment_for_user_because(1, @story.id,
+          nil, @user.id, nil)
 
-      Countinual.count!("#{Rails.application.shortname}.stories.submitted",
-        "+1")
+        Countinual.count!("#{Rails.application.shortname}.stories.submitted",
+          "+1")
 
-      return redirect_to @story.comments_url
-
-    else
-      if @story.already_posted_story
-        # consider it an upvote
-        Vote.vote_thusly_on_story_or_comment_for_user_because(1,
-          @story.already_posted_story.id, nil, @user.id, nil)
-
-        flash[:success] = "This URL has already been submitted recently."
-
-        return redirect_to @story.already_posted_story.comments_url
+        return redirect_to @story.comments_url
       end
-
-      return render :action => "new"
     end
+
+    return render :action => "new"
   end
 
   def destroy
@@ -87,11 +78,16 @@ class StoriesController < ApplicationController
     if params[:url].present?
       @story.url = params[:url]
 
-      # if this story was already submitted, don't bother the user filling out
-      # tags and stuff, just redirect them right away
-      if s = Story.find_recent_similar_by_url(@story.url)
-        flash[:success] = "This URL has already been submitted recently."
-        return redirect_to s.comments_url
+      if s = Story.find_similar_by_url(@story.url)
+        if s.is_recent?
+          # user won't be able to submit this story as new, so just redirect
+          # them to the previous story
+          flash[:success] = "This URL has already been submitted recently."
+          return redirect_to s.comments_url
+        else
+          # user will see a warning like with preview screen
+          @story.already_posted_story = s
+        end
       end
 
       if params[:title].present?
@@ -111,6 +107,8 @@ class StoriesController < ApplicationController
     @story.upvotes = 1
 
     @story.valid?
+
+    @story.seen_previous = true
 
     return render :action => "new", :layout => false
   end

@@ -9,7 +9,8 @@
     <% end %>
       <%= @showing_user.username %>
     </span>
-    <% if @user %>
+
+    <% if @user && @showing_user.is_active? %>
       (<a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>)
     <% end %>
   </div>

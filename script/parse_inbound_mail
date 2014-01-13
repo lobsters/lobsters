@@ -45,7 +45,7 @@ end
 sending_user = User.where(:mailing_list_enabled => true,
   :mailing_list_token => user_token).first
 
-if !sending_user
+if !sending_user || !sending_user.is_active?
   STDERR.puts "no user with mailing list token #{user_token}"
 
   # if this looks like a user token but invalid, generate a bounce to be

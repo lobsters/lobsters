@@ -238,6 +238,10 @@ class StoriesController < ApplicationController
       return render :text => "invalid reason", :status => 400
     end
 
+    if !@user.can_downvote?
+      return render :text => "not permitted to downvote", :status => 400
+    end
+
     Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id,
       nil, @user.id, params[:reason])
 

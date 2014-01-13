@@ -92,8 +92,9 @@ class User < ActiveRecord::Base
     true
   end
 
-  def is_banned?
-    banned_at?
+  def can_downvote?
+    # TODO: maybe change this to require a certain level of karma
+    !is_new?
   end
 
   def check_session_token
@@ -123,6 +124,14 @@ class User < ActiveRecord::Base
     self.save!
 
     PasswordReset.password_reset_link(self, ip).deliver
+  end
+
+  def is_banned?
+    banned_at?
+  end
+
+  def is_new?
+    Time.now - self.created_at <= 7.days
   end
 
   def linkified_about

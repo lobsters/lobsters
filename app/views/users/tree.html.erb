@@ -11,9 +11,9 @@
         <li>
           <a href="/u/<%= user.username %>"
             <% if user.is_banned? %>
-              style="color: gray; text-decoration: line-through;"
-            <% elsif Time.now - user.created_at < 7.days %>
-              style="color: green;"
+              class="banned_user"
+            <% elsif user.is_new? %>
+              class="new_user"
             <% end %>
             ><%= user.username %></a>&nbsp;(<%= user.karma %>)
           <% if user.is_admin? %>

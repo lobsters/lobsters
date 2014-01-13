@@ -8,10 +8,10 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
       <%= link_to "", login_url, :class => "upvoter" %>
     <% end %>
     <div class="score"><%= story.upvotes - story.downvotes %></div>
-    <% if @user %>
+    <% if @user && @user.can_downvote? %>
       <a class="downvoter"></a>
     <% else %>
-      <%= link_to "", login_url, :class => "downvoter" %>
+      <span class="downvoter downvoter_stub"></span>
     <% end %>
   </div>
   <div class="details">

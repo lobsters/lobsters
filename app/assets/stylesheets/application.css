@@ -391,8 +391,8 @@ div.voters div.score {
 	text-align: center;
 }
 
-div.voters a.upvoter,
-div.voters a.downvoter {
+div.voters .upvoter,
+div.voters .downvoter {
 	border-color: transparent transparent #bbb transparent;
 	border-style: solid;
 	border-width: 6px;
@@ -405,16 +405,16 @@ div.voters a.downvoter {
 	display: block;
 }
 
-div.voters a.upvoter:hover,
-li.upvoted div.voters a.upvoter {
+div.voters .upvoter:hover,
+li.upvoted div.voters .upvoter {
 	border-bottom-color: #ac130d;
 }
 
-div.voters a.upvoter {
+div.voters .upvoter {
 	border-bottom-width: 11px;
 }
 
-div.voters a.downvoter {
+div.voters .downvoter {
 	border-color: #bbb transparent transparent transparent;
 	border-width: 5px;
 	margin-top: 4px;
@@ -422,9 +422,13 @@ div.voters a.downvoter {
 	margin-bottom: -5px;
 	border-top-width: 9px;
 }
-div.voters a.downvoter:hover,
-li.downvoted div.voters a.downvoter {
+div.voters .downvoter:hover,
+li.downvoted div.voters .downvoter {
 	border-top-color: gray;
+}
+
+div.voters .downvoter.downvoter_stub {
+	border-color: transparent;
 }
 
 li.story,
@@ -503,6 +507,16 @@ li .byline a {
 	color: #888;
 	text-decoration: none;
 }
+.new_user,
+li .byline a.new_user {
+	color: green;
+}
+.banned_user,
+li .byline a.banned_user {
+	color: gray;
+	text-decoration: line-through;
+}
+
 
 li.story.expired {
 	opacity: 0.6;

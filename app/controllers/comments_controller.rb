@@ -8,7 +8,8 @@ class CommentsController < ApplicationController
   before_filter :find_user_from_rss_token, :only => [ :index ]
 
   def create
-    if !(story = Story.where(:short_id => params[:story_id]).first) || story.is_gone?
+    if !(story = Story.where(:short_id => params[:story_id]).first) ||
+    story.is_gone?
       return render :text => "can't find story", :status => 400
     end
 
@@ -172,6 +173,10 @@ class CommentsController < ApplicationController
 
     if !Vote::COMMENT_REASONS[params[:reason]]
       return render :text => "invalid reason", :status => 400
+    end
+
+    if !@user.can_downvote?
+      return render :text => "not permitted to downvote", :status => 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(-1, comment.story_id,

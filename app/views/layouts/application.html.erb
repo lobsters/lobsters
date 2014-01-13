@@ -105,7 +105,8 @@
 
       <div id="footer">
         <a href="/moderations">Moderation Log</a>
-        <% if @user && (iqc = InvitationRequest.verified_count) > 0 %>
+        <% if @user && !@user.is_new? &&
+        (iqc = InvitationRequest.verified_count) > 0 %>
           <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
         <% end %>
         <a href="/privacy">Privacy</a>

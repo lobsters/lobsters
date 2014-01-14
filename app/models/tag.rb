@@ -7,7 +7,7 @@ class Tag < ActiveRecord::Base
   attr_accessor :filtered_count
 
   scope :accessible_to, ->(user) do
-    user && user.is_admin?? all : where(:privileged => false)
+    user && user.is_moderator?? all : where(:privileged => false)
   end
 
   def to_param

@@ -129,7 +129,7 @@ class StoriesController < ApplicationController
 
     respond_to do |format|
       format.html {
-        @comment = Comment.new
+        @comment = @story.comments.build
 
         load_user_votes
 
@@ -166,7 +166,7 @@ class StoriesController < ApplicationController
       end
     end
 
-    @comment = Comment.new
+    @comment = @story.comments.build
 
     load_user_votes
 

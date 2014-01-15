@@ -13,10 +13,9 @@ class CommentsController < ApplicationController
       return render :text => "can't find story", :status => 400
     end
 
-    comment = Comment.new
+    comment = story.comments.build
     comment.comment = params[:comment].to_s
-    comment.story_id = story.id
-    comment.user_id = @user.id
+    comment.user = @user
 
     if params[:parent_comment_short_id].present?
       if pc = Comment.where(:story_id => story.id, :short_id =>
@@ -39,8 +38,7 @@ class CommentsController < ApplicationController
           "here recently.")
 
         return render :partial => "commentbox", :layout => false,
-          :content_type => "text/html", :locals => { :story => story,
-          :comment => comment }
+          :content_type => "text/html", :locals => { :comment => comment }
       end
     end
 
@@ -49,12 +47,11 @@ class CommentsController < ApplicationController
 
       if comment.parent_comment_id
         render :partial => "postedreply", :layout => false,
-          :content_type => "text/html", :locals => { :story => story,
-          :show_comment => comment }
+          :content_type => "text/html", :locals => { :comment => comment }
       else
         render :partial => "commentbox", :layout => false,
-          :content_type => "text/html", :locals => { :story => story,
-          :comment => Comment.new, :show_comment => comment }
+          :content_type => "text/html", :locals => {
+          :comment => story.comments.build, :show_comment => comment }
       end
     else
       comment.previewing = true
@@ -62,7 +59,7 @@ class CommentsController < ApplicationController
       comment.current_vote = { :vote => 1 }
 
       render :partial => "commentbox", :layout => false,
-        :content_type => "text/html", :locals => { :story => story,
+        :content_type => "text/html", :locals => {
         :comment => comment, :show_comment => comment }
     end
   end
@@ -78,8 +75,7 @@ class CommentsController < ApplicationController
     end
 
     render :partial => "commentbox", :layout => false,
-      :content_type => "text/html", :locals => { :story => comment.story,
-      :comment => comment }
+      :content_type => "text/html", :locals => { :comment => comment }
   end
 
   def delete
@@ -90,8 +86,7 @@ class CommentsController < ApplicationController
     comment.delete_for_user(@user)
 
     render :partial => "comment", :layout => false,
-      :content_type => "text/html", :locals => { :story => comment.story,
-      :comment => comment }
+      :content_type => "text/html", :locals => { :comment => comment }
   end
 
   def undelete
@@ -102,8 +97,7 @@ class CommentsController < ApplicationController
     comment.undelete_for_user(@user)
 
     render :partial => "comment", :layout => false,
-      :content_type => "text/html", :locals => { :story => comment.story,
-      :comment => comment }
+      :content_type => "text/html", :locals => { :comment => comment }
   end
 
   def update
@@ -117,14 +111,13 @@ class CommentsController < ApplicationController
       # TODO: render the comment again properly, it's indented wrong
 
       render :partial => "postedreply", :layout => false,
-        :content_type => "text/html", :locals => { :story => comment.story,
-        :show_comment => comment }
+        :content_type => "text/html", :locals => { :comment => comment }
     else
       comment.previewing = true
       comment.current_vote = { :vote => 1 }
 
       render :partial => "commentbox", :layout => false,
-        :content_type => "text/html", :locals => { :story => comment.story,
+        :content_type => "text/html", :locals => {
         :comment => comment, :show_comment => comment }
     end
   end
@@ -140,7 +133,7 @@ class CommentsController < ApplicationController
     comment.current_vote = { :vote => 1 }
 
     render :partial => "commentbox", :layout => false,
-      :content_type => "text/html", :locals => { :story => comment.story,
+      :content_type => "text/html", :locals => {
       :comment => comment, :show_comment => comment }
   end
 

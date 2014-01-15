@@ -3,7 +3,7 @@ ThinkingSphinx::Index.define :comment, :with => :active_record do
   indexes comment
   indexes user.username, :as => :author
 
-  has "(cast(upvotes as signed) - cast(downvotes as signed))",
+  has "(cast(upvotes as integer) - cast(downvotes as integer))",
     :as => :score, :type => :bigint, :sortable => true
 
   has is_deleted

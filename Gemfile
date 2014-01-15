@@ -6,6 +6,12 @@ gem "rails", "4.0.2"
 # Use mysql2 as the database for Active Record
 gem "mysql2", ">= 0.3.14"
 
+# Use PostgreSQL as the database for Active Record
+# gem "pg"
+#
+# NOTE: If you use PostgreSQL, you must still leave enabled the above mysql2 gem
+#       for Sphinx full text search to function.
+
 # Use Rails3-style mass assignment security
 gem "protected_attributes"
 

@@ -1,5 +1,6 @@
+<% @threads.each do |thread| %>
 <% indent_level = -1 %>
-<% @comments.each_with_index do |comment,x| %>
+<% thread.each do |comment| %>
   <% if comment.indent_level > indent_level %>
     <ol class="comments comments<%= comment.indent_level %>">
   <% elsif comment.indent_level < indent_level %>
@@ -15,4 +16,5 @@
 <% end %>
 <% indent_level.times do %>
   </ol>
+<% end %>
 <% end %>

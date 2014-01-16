@@ -229,48 +229,41 @@ class CommentsController < ApplicationController
       @cur_url = "/threads"
     end
 
-    @threads = @showing_user.recent_threads(20).map{|r|
-      cs = Comment.where(
-        :thread_id => r
-      ).includes(
-        :user, :story
-      ).arrange_for_user(
-        @showing_user
-      )
+    thread_ids = @showing_user.recent_threads(20)
 
-      if @user && (@showing_user.id == @user.id)
-        @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,
-          cs.map{|c| c.story_id }.uniq)
+    comments = Comment.where(
+      :thread_id => thread_ids
+    ).includes(
+      :user, :story
+    ).arrange_for_user(
+      @showing_user
+    )
 
-        cs.each do |c|
-          if @votes[c.id]
-            c.current_vote = @votes[c.id]
-          end
+    comments_by_thread_id = comments.group_by(&:thread_id)
+    @threads = comments_by_thread_id.values_at(*thread_ids).compact
+
+    if @user && (@showing_user.id == @user.id)
+      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,
+        comments.map(&:story_id).uniq)
+
+      comments.each do |c|
+        if @votes[c.id]
+          c.current_vote = @votes[c.id]
         end
-      else
-        @votes = []
       end
-
-      cs
-    }
+    end
 
     # trim each thread to this user's first response
     # XXX: busted
-if false
-    @threads.map!{|th|
-      th.each do |c|
-        if c.user_id == @user.id
-          break
-        else
-          th.shift
-        end
-      end
-
-      th
-    }
-end
-
-    @comments = @threads.flatten
+    #@threads.each do |th|
+    #  th.each do |c|
+    #    if c.user_id == @user.id
+    #      break
+    #    else
+    #      th.shift
+    #    end
+    #  end
+    #end
   end
 
 private

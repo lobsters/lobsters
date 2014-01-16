@@ -32,7 +32,7 @@ var _Lobsters = Class.extend({
     if (!Lobsters.curUser)
       return Lobsters.bounceToLogin();
 
-    var li = $(voterEl).parents("li").first();
+    var li = $(voterEl).closest(".story, .comment");
     if (li.hasClass("downvoted")) {
       /* already upvoted, neutralize */
       Lobsters.vote(thingType, voterEl, -1, null);
@@ -91,7 +91,7 @@ var _Lobsters = Class.extend({
     if (!Lobsters.curUser)
       return Lobsters.bounceToLogin();
 
-    var li = $(voterEl).parents("li").first();
+    var li = $(voterEl).closest(".story, .comment");
     var scoreDiv = li.find("div.score").get(0);
     var score = parseInt(scoreDiv.innerHTML);
     var action = "";
@@ -136,7 +136,7 @@ var _Lobsters = Class.extend({
         Lobsters.commentDownvoteReasons[reason].toLowerCase() + ")");
 
     $.post("/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
-      $(voterEl).parents("li").first().attr("data-shortid") + "/" +
+      li.attr("data-shortid") + "/" +
       action, { reason: reason });
   },
 
@@ -225,11 +225,11 @@ var _Lobsters = Class.extend({
 var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
-  $("li.comment a.downvoter").click(function() {
+  $(".comment a.downvoter").click(function() {
     Lobsters.downvoteComment(this);
     return false;
   });
-  $("li.comment a.upvoter").click(function() {
+  $(".comment a.upvoter").click(function() {
     Lobsters.upvoteComment(this);
     return false;
   });
@@ -279,7 +279,7 @@ $(document).ready(function() {
 
   $(document).on("click", "a.comment_deletor", function() {
     if (confirm("Are you sure you want to delete this comment?")) {
-      var li = $(this).parents("li.comment").first();
+      var li = $(this).closest(".comment");
       $.post("/comments/" + $(li).attr("data-shortid") + "/delete",
       function(d) {
         $(li).replaceWith(d);
@@ -289,7 +289,7 @@ $(document).ready(function() {
 
   $(document).on("click", "a.comment_undeletor", function() {
     if (confirm("Are you sure you want to undelete this comment?")) {
-      var li = $(this).parents("li.comment").first();
+      var li = $(this).closest(".comment");
       $.post("/comments/" + $(li).attr("data-shortid") + "/undelete",
       function(d) {
         $(li).replaceWith(d);

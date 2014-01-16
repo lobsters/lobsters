@@ -1,4 +1,4 @@
-<li id="comment_<%= comment.short_id %>" data-shortid="<%= comment.short_id %>"
+<div id="comment_<%= comment.short_id %>" data-shortid="<%= comment.short_id %>"
 class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 "upvoted" : "downvoted") : "" %>
   <%= comment.highlighted ? "highlighted" : "" %>
@@ -92,7 +92,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% end %>
     </div>
   </div>
-</li>
+</div>
 
 <% if comment.highlighted %>
   <script>

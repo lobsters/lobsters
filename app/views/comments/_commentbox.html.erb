@@ -1,5 +1,4 @@
-<li class="comment">
-<div class="comment_form_container">
+<div class="comment comment_form_container">
 <%= form_tag comment.new_record? ?
   "/comments/post_to/#{comment.story.short_id}" :
   "/comments/#{comment.short_id}/update" do |f| %>
@@ -44,9 +43,8 @@
   <p></p>
 <% end %>
 <% if defined?(show_comment) && show_comment.valid? %>
-  <ol class="comments comments1 preview">
+  <div class="preview">
     <%= render "comments/comment", :comment => show_comment %>
-  </ol>
+  </div>
 <% end %>
 </div>
-</li>

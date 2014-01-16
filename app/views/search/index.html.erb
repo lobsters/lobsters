@@ -62,9 +62,8 @@
         <%= render :partial => "stories/listdetail",
           :locals => { :story => res } %>
       <% elsif res.class == Comment %>
-        <%= render :partial => "comments/comment",
-          :locals => { :comment => res,
-          :show_story => true, :hide_voters => true } %>
+        <li><%= render "comments/comment", :comment => res,
+          :show_story => true, :hide_voters => true %></li>
       <% end %>
     <% end %>
   </ol>

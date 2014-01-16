@@ -7,6 +7,7 @@
 
   <% while subtree %>
     <% if (comment = subtree.shift) %>
+      <li>
       <%= render "comments/comment", :comment => comment,
         :show_story => ancestors.empty? %>
 
@@ -15,10 +16,10 @@
         <% subtree = children %>
         <ol class="comments">
       <% else %>
-        <ol class="comments"></ol>
+        <ol class="comments"></ol></li>
       <% end %>
     <% elsif (subtree = ancestors.pop) %>
-      </ol>
+      </ol></li>
     <% end %>
   <% end %>
 </ol>

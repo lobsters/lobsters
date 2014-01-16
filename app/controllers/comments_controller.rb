@@ -20,9 +20,7 @@ class CommentsController < ApplicationController
     if params[:parent_comment_short_id].present?
       if pc = Comment.where(:story_id => story.id, :short_id =>
       params[:parent_comment_short_id]).first
-        comment.parent_comment_id = pc.id
-        # needed for carryng along in comment preview form
-        comment.parent_comment_short_id = params[:parent_comment_short_id]
+        comment.parent_comment = pc
       else
         return render :json => { :error => "invalid parent comment",
           :status => 400 }
@@ -45,14 +43,8 @@ class CommentsController < ApplicationController
     if comment.valid? && !params[:preview].present? && comment.save
       comment.current_vote = { :vote => 1 }
 
-      if comment.parent_comment_id
-        render :partial => "postedreply", :layout => false,
-          :content_type => "text/html", :locals => { :comment => comment }
-      else
-        render :partial => "commentbox", :layout => false,
-          :content_type => "text/html", :locals => {
-          :comment => story.comments.build, :show_comment => comment }
-      end
+      render :partial => "comments/postedreply", :layout => false,
+        :content_type => "text/html", :locals => { :comment => comment }
     else
       comment.previewing = true
       comment.upvotes = 1
@@ -76,6 +68,20 @@ class CommentsController < ApplicationController
 
     render :partial => "commentbox", :layout => false,
       :content_type => "text/html", :locals => { :comment => comment }
+  end
+
+  def reply
+    if !(parent_comment = find_comment)
+      return render :text => "can't find comment", :status => 400
+    end
+
+    comment = Comment.new
+    comment.story = parent_comment.story
+    comment.parent_comment = parent_comment
+
+    render :partial => "commentbox", :layout => false,
+      :content_type => "text/html", :locals => { :comment => comment,
+      :cancellable => true }
   end
 
   def delete
@@ -108,9 +114,11 @@ class CommentsController < ApplicationController
     comment.comment = params[:comment]
 
     if comment.save
-      # TODO: render the comment again properly, it's indented wrong
+      votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id,
+        [comment.id])
+      comment.current_vote = votes[comment.id]
 
-      render :partial => "postedreply", :layout => false,
+      render :partial => "comments/comment", :layout => false,
         :content_type => "text/html", :locals => { :comment => comment }
     else
       comment.previewing = true
@@ -269,6 +277,6 @@ class CommentsController < ApplicationController
 private
 
   def find_comment
-    Comment.where(:short_id => params[:comment_id]).first
+    Comment.where(:short_id => params[:id]).first
   end
 end

@@ -358,10 +358,6 @@ ol.comments.comments1 {
 	border-left-color: transparent;
 }
 
-ol.comments.preview {
-	margin: 1em 0 0 -15px;
-	padding: 0;
-}
 ol.comments.collapsed ol,
 ol.comments.collapsed li {
 	display: none;
@@ -532,7 +528,7 @@ div.story_content {
 }
 
 div.story_content {
-	margin-bottom: 3em;
+	margin-bottom: 1em;
 }
 
 div.morelink {
@@ -616,14 +612,6 @@ div.comment_actions a {
 	font-weight: bold;
 	font-size: 8.5pt;
 	text-decoration: none;
-}
-
-div.comment_reply form {
-	padding-top: 1em;
-}
-
-div.comment_reply button.comment-post {
-	font-weight: bold;
 }
 
 a.pagelink {
@@ -717,8 +705,12 @@ div#story_box div.markdown_help_toggler {
 	width: 610px;
 }
 
-div.comment_form_container, div.comment_reply {
+div.comment_form_container {
 	max-width: 700px;
+}
+
+div.comment_form_container form {
+	margin-left: 15px;
 }
 
 ul.root {

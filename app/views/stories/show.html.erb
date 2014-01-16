@@ -9,29 +9,30 @@
       <%= raw @story.markeddown_description %>
     </div>
   <% end %>
+</div>
 
-  <p></p>
+<ol class="comments comments1">
   <% if @user && !@story.is_gone? && !@story.previewing %>
     <%= render "comments/commentbox", :comment => @comment %>
   <% end %>
-</div>
 
-<% if @comments %>
-  <% indent_level = -1 %>
-  <% @comments.each_with_index do |comment,x| %>
-    <% if comment.indent_level > indent_level %>
-      <ol class="comments comments<%= comment.indent_level %>">
-    <% elsif comment.indent_level < indent_level %>
-      <% (indent_level - comment.indent_level).times do %>
-        </ol>
+  <% comments_by_parent = @comments.group_by(&:parent_comment_id) %>
+  <% subtree = comments_by_parent[nil] %>
+  <% ancestors = [] %>
+
+  <% while subtree %>
+    <% if (comment = subtree.shift) %>
+      <%= render "comments/comment", :comment => comment %>
+
+      <% if (children = comments_by_parent[comment.id]) %>
+        <% ancestors << subtree %>
+        <% subtree = children %>
+        <ol class="comments">
+      <% else %>
+        <ol class="comments"></ol>
       <% end %>
+    <% elsif (subtree = ancestors.pop) %>
+      </ol>
     <% end %>
-
-    <%= render "comments/comment", :comment => comment %>
-
-    <% indent_level = comment.indent_level %>
   <% end %>
-  <% indent_level.times do %>
-    </ol>
-  <% end %>
-<% end %>
+</ol>

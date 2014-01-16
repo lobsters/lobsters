@@ -1,20 +1,25 @@
+
 <% @threads.each do |thread| %>
-<% indent_level = -1 %>
-<% thread.each do |comment| %>
-  <% if comment.indent_level > indent_level %>
-    <ol class="comments comments<%= comment.indent_level %>">
-  <% elsif comment.indent_level < indent_level %>
-    <% (indent_level - comment.indent_level).times do %>
+<ol class="comments comments1">
+  <% comments_by_parent = thread.group_by(&:parent_comment_id) %>
+  <% subtree = comments_by_parent[nil] %>
+  <% ancestors = [] %>
+
+  <% while subtree %>
+    <% if (comment = subtree.shift) %>
+      <%= render "comments/comment", :comment => comment,
+        :show_story => ancestors.empty? %>
+
+      <% if (children = comments_by_parent[comment.id]) %>
+        <% ancestors << subtree %>
+        <% subtree = children %>
+        <ol class="comments">
+      <% else %>
+        <ol class="comments"></ol>
+      <% end %>
+    <% elsif (subtree = ancestors.pop) %>
       </ol>
     <% end %>
   <% end %>
-
-  <%= render :partial => "comments/comment", :locals => {
-    :comment => comment, :show_story => (comment.indent_level == 1) } %>
-
-  <% indent_level = comment.indent_level %>
-<% end %>
-<% indent_level.times do %>
-  </ol>
-<% end %>
+</ol>
 <% end %>

@@ -38,6 +38,10 @@ class Comment < ActiveRecord::Base
       errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
   end
 
+  def to_param
+    self.short_id
+  end
+
   def self.regenerate_markdown
     Comment.record_timestamps = false
 

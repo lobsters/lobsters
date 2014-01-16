@@ -1,10 +1,11 @@
 <div class="comment comment_form_container">
-<%= form_tag comment.new_record? ?
-  "/comments/post_to/#{comment.story.short_id}" :
-  "/comments/#{comment.short_id}/update" do |f| %>
+<%= form_for comment do |f| %>
   <% if comment.errors.any? %>
     <%= errors_for comment %>
   <% end %>
+
+  <%= hidden_field_tag "story_id",
+    comment.story.short_id %>
 
   <% if comment.parent_comment %>
     <%= hidden_field_tag "parent_comment_short_id",

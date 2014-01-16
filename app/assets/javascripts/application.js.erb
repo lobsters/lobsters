@@ -147,8 +147,9 @@ var _Lobsters = Class.extend({
   },
 
   previewComment: function(form) {
-    var action = $(form).attr("action").replace(/(post|update)/, "preview");
-    $.post(action, $(form).serializeArray(), function(data) {
+    var params = $(form).serializeArray();
+    params.push({"name": "preview", "value": "true"});
+    $.post($(form).attr("action"), params, function(data) {
       $(form).closest('.comment').replaceWith($.parseHTML(data));
     });
   },

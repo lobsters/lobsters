@@ -95,3 +95,13 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
     <div class="comment_reply"></div>
   </div>
 </li>
+
+<% if comment.highlighted %>
+  <script>
+    $(document).ready(function() {
+      $("html").animate({
+        scrollTop: $("#comment_<%= comment.short_id %>").offset().top
+      });
+    });
+  </script>
+<% end %>

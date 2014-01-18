@@ -28,4 +28,8 @@ describe User do
     u.authenticate("hunter2").should == u
     u.authenticate("hunteR2").should == false
   end
+
+  it "gets an error message after registering banned name" do
+    expect { User.make!(:username => "admin") }.to raise_error("Validation failed: Username is not permitted")
+  end
 end

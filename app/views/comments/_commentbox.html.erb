@@ -1,14 +1,15 @@
-<div class="comment_form_container">
-<%= form_tag comment.new_record? ?
-  "/comments/post_to/#{comment.story.short_id}" :
-  "/comments/#{comment.short_id}/update", :id => "comment_form" do |f| %>
+<div class="comment comment_form_container">
+<%= form_for comment do |f| %>
   <% if comment.errors.any? %>
     <%= errors_for comment %>
   <% end %>
 
-  <% if comment.parent_comment_short_id.present? %>
+  <%= hidden_field_tag "story_id",
+    comment.story.short_id %>
+
+  <% if comment.parent_comment %>
     <%= hidden_field_tag "parent_comment_short_id",
-      comment.parent_comment_short_id %>
+      comment.parent_comment.short_id %>
   <% end %>
 
   <div style="width: 100%;">
@@ -27,6 +28,12 @@
       &nbsp;
       <%= button_tag "Preview Comment", :class => "comment-preview",
         :type => "button" %>
+      <% if local_assigns[:cancellable] %>
+        &nbsp;
+        <%= button_tag "Cancel", :class => "comment-cancel",
+          :type => "button" %>
+      <% end %>
+
 
       <div style="clear: both;"></div>
 
@@ -37,8 +44,8 @@
   <p></p>
 <% end %>
 <% if defined?(show_comment) && show_comment.valid? %>
-  <ol class="comments comments1 preview">
+  <div class="preview">
     <%= render "comments/comment", :comment => show_comment %>
-  </ol>
+  </div>
 <% end %>
 </div>

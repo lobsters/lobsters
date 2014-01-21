@@ -32,7 +32,7 @@ var _Lobsters = Class.extend({
     if (!Lobsters.curUser)
       return Lobsters.bounceToLogin();
 
-    var li = $(voterEl).parents("li").first();
+    var li = $(voterEl).closest(".story, .comment");
     if (li.hasClass("downvoted")) {
       /* already upvoted, neutralize */
       Lobsters.vote(thingType, voterEl, -1, null);
@@ -91,7 +91,7 @@ var _Lobsters = Class.extend({
     if (!Lobsters.curUser)
       return Lobsters.bounceToLogin();
 
-    var li = $(voterEl).parents("li").first();
+    var li = $(voterEl).closest(".story, .comment");
     var scoreDiv = li.find("div.score").get(0);
     var score = parseInt(scoreDiv.innerHTML);
     var action = "";
@@ -136,19 +136,24 @@ var _Lobsters = Class.extend({
         Lobsters.commentDownvoteReasons[reason].toLowerCase() + ")");
 
     $.post("/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
-      $(voterEl).parents("li").first().attr("data-shortid") + "/" +
+      li.attr("data-shortid") + "/" +
       action, { reason: reason });
   },
 
   postComment: function(form) {
-    $(form).parent().load($(form).attr("action"), $(form).serializeArray());
+    $.post($(form).attr("action"), $(form).serializeArray(), function(data) {
+      $(form).closest('.comment').replaceWith($.parseHTML(data));
+    });
   },
 
   previewComment: function(form) {
-    $(form).parent().load($(form).attr("action").replace(/(post|update)/,
-      "preview"), $(form).serializeArray());
+    var params = $(form).serializeArray();
+    params.push({"name": "preview", "value": "true"});
+    $.post($(form).attr("action"), params, function(data) {
+      $(form).closest('.comment').replaceWith($.parseHTML(data));
+    });
   },
-  
+
   previewStory: function(form) {
     $("#inside").load("/stories/preview", $(form).serializeArray());
   },
@@ -221,11 +226,11 @@ var _Lobsters = Class.extend({
 var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
-  $("li.comment a.downvoter").click(function() {
+  $(".comment a.downvoter").click(function() {
     Lobsters.downvoteComment(this);
     return false;
   });
-  $("li.comment a.upvoter").click(function() {
+  $(".comment a.upvoter").click(function() {
     Lobsters.upvoteComment(this);
     return false;
   });
@@ -249,38 +254,33 @@ $(document).ready(function() {
       return false;
     }
 
-    var box = $(this).parents("li.comment").first().find("div.comment_reply").
-      first();
-
-    box.html($("#comment_form").clone());
-    box.find("ol").remove();
-
-    box.find("button.comment-preview").after("&nbsp;\n&nbsp;<button class=\"comment-cancel\" name=\"button\" type=\"button\">Cancel</button>");
-
-    box.find("textarea").focus();
-
-    var el = $("<input type=\"hidden\" " +
-      "name=\"parent_comment_short_id\" value=\"" +
-      $(this).parents("li.comment").first().attr("data-shortid") + "\">");
-
-    box.find("form").append(el);
+    var comment = $(this).closest(".comment");
+    var replies = comment.nextAll(".comments").first();
+    $.get("/comments/" + comment.attr("data-shortid") + "/reply",
+    function(data) {
+      var reply = $($.parseHTML(data));
+      replies.prepend(reply);
+      reply.find("textarea").focus();
+    });
 
     return false;
   });
 
   $(document).on("click", "button.comment-cancel", function() {
-    $(this).parents("div.comment_reply form").remove();
+    $(this).closest(".comment").remove();
   });
 
   $(document).on("click", "a.comment_editor", function() {
-    var li = $(this).parents("li.comment").first();
-    li.load("/comments/" + $(li).attr("data-shortid") + "/edit",
-      { "edit": 1 });
+    var comment = $(this).closest(".comment");
+    $.get("/comments/" + comment.attr("data-shortid") + "/edit",
+    function(data) {
+      comment.replaceWith($.parseHTML(data));
+    });
   });
 
   $(document).on("click", "a.comment_deletor", function() {
     if (confirm("Are you sure you want to delete this comment?")) {
-      var li = $(this).parents("li.comment").first();
+      var li = $(this).closest(".comment");
       $.post("/comments/" + $(li).attr("data-shortid") + "/delete",
       function(d) {
         $(li).replaceWith(d);
@@ -290,7 +290,7 @@ $(document).ready(function() {
 
   $(document).on("click", "a.comment_undeletor", function() {
     if (confirm("Are you sure you want to undelete this comment?")) {
-      var li = $(this).parents("li.comment").first();
+      var li = $(this).closest(".comment");
       $.post("/comments/" + $(li).attr("data-shortid") + "/undelete",
       function(d) {
         $(li).replaceWith(d);

@@ -1,7 +1,7 @@
 <ol class="comments comments1">
   <% @comments.each do |comment| %>
-    <%= render "comments/comment", :comment => comment,
-      :show_story => true %>
+    <li><%= render "comments/comment", :comment => comment,
+      :show_story => true %></li>
   <% end %>
 </ol>
 

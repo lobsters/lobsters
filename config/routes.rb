@@ -45,19 +45,17 @@ Lobsters::Application.routes.draw do
   post "/stories/preview" => "stories#preview"
 
   resources :comments do
-    post "upvote"
-    post "downvote"
-    post "unvote"
+    member do
+      get "reply"
+      post "upvote"
+      post "downvote"
+      post "unvote"
 
-    post "edit"
-    post "preview"
-    post "update"
-    post "delete"
-    post "undelete"
+      post "delete"
+      post "undelete"
+    end
   end
   get "/comments/page/:page" => "comments#index"
-  post "/comments/post_to/:story_id" => "comments#create"
-  post "/comments/preview_to/:story_id" => "comments#preview_new"
 
   get "/messages/sent" => "messages#sent"
   resources :messages do

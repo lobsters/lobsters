@@ -11,8 +11,7 @@ class Comment < ActiveRecord::Base
 
   attr_accessible :comment, :moderation_reason
 
-  attr_accessor :parent_comment_short_id, :current_vote, :previewing,
-    :indent_level, :highlighted
+  attr_accessor :current_vote, :previewing, :indent_level, :highlighted
 
   before_validation :on => :create do
     self.assign_short_id_and_upvote
@@ -37,6 +36,10 @@ class Comment < ActiveRecord::Base
 
     (m = self.comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
       errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
+  end
+
+  def to_param
+    self.short_id
   end
 
   def self.regenerate_markdown

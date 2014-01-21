@@ -69,10 +69,8 @@ class User < ActiveRecord::Base
   end
 
   def avatar_url
-    "https://secure.gravatar.com/avatar/" <<
-      Digest::MD5.hexdigest(self.email.strip.downcase) << "?r=pg&d=" <<
-      CGI.escape(Rails.application.routes.url_helpers.root_url +
-      "images/1x1t.gif") << "&s=100"
+    "https://secure.gravatar.com/avatar/" +
+      Digest::MD5.hexdigest(self.email.strip.downcase) + "?r=pg&d=mm&s=100"
   end
 
   def average_karma

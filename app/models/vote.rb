@@ -23,75 +23,58 @@ class Vote < ActiveRecord::Base
 
   attr_accessible nil
 
-  def self.votes_by_user_for_stories_hash(user, stories)
-    votes = {}
-
-    Vote.where(:user_id => user, :story_id => stories,
-    :comment_id => nil).each do |v|
-      votes[v.story_id] = v.vote
+  def self.map_by(&block)
+    self.all.to_a.inject({}) do |votes, vote|
+      votes[ block.call vote ] = vote
+      votes
     end
+  end
 
-    votes
+  def self.votes_by_user_for_stories_hash(user, stories)
+    self.where(
+      :user_id    => user,
+      :story_id   => stories,
+      :comment_id => nil,
+    ).map_by(&:story_id)
   end
 
   def self.comment_votes_by_user_for_story_hash(user_id, story_id)
-    votes = {}
-
-    Vote.where(
-      :user_id => user_id, :story_id => story_id
+    self.where(
+      :user_id  => user_id,
+      :story_id => story_id,
     ).where(
       "comment_id IS NOT NULL"
-    ).each do |v|
-      votes[v.comment_id] = { :vote => v.vote, :reason => v.reason }
-    end
-
-    votes
+    ).map_by(&:comment_id)
   end
 
   def self.story_votes_by_user_for_story_ids_hash(user_id, story_ids)
-    if story_ids.empty?
-      {}
-    else
-      votes = self.where(
-        :user_id    => user_id,
-        :comment_id => nil,
-        :story_id   => story_ids,
-      )
-      votes.inject({}) do |memo, v|
-        memo[v.story_id] = { :vote => v.vote, :reason => v.reason }
-        memo
-      end
-    end
+    self.where(
+      :user_id    => user_id,
+      :story_id   => story_ids,
+      :comment_id => nil,
+    ).map_by(&:story_id)
   end
 
   def self.comment_votes_by_user_for_comment_ids_hash(user_id, comment_ids)
-    if comment_ids.empty?
-      {}
-    else
-      votes = self.where(
-        :user_id    => user_id,
-        :comment_id => comment_ids,
-      )
-      votes.inject({}) do |memo, v|
-        memo[v.comment_id] = { :vote => v.vote, :reason => v.reason }
-        memo
-      end
-    end
+    self.where(
+      :user_id    => user_id,
+      :comment_id => comment_ids,
+    ).map_by(&:comment_id)
   end
 
-  def self.vote_thusly_on_story_or_comment_for_user_because(vote, story_id,
-  comment_id, user_id, reason, update_counters = true)
-    v = Vote.where(:user_id => user_id, :story_id => story_id,
-      :comment_id => comment_id).first_or_initialize
+  def self.vote_thusly_on_story_or_comment_for_user_because(vote, story,
+  comment, user_id, reason, update_counters = true)
+    v = self.where(:user_id => user_id, :story_id => story.try(:id),
+      :comment_id => comment.try(:id)).first_or_initialize
 
     if !v.new_record? && v.vote == vote
-      return
+      return v
     end
 
     upvote = 0
     downvote = 0
 
-    Vote.transaction do
+    self.transaction do
       # unvote
       if vote == 0
         if !v.new_record?
@@ -129,22 +112,23 @@ class Vote < ActiveRecord::Base
 
       if update_counters && (downvote != 0 || upvote != 0)
         if v.comment_id
-          c = Comment.find(v.comment_id)
-          if c.user_id != user_id
-            User.update_counters c.user_id, :karma => upvote - downvote
+          if comment.user_id != user_id
+            User.update_counters comment.user_id, :karma => upvote - downvote
           end
 
-          c.give_upvote_or_downvote_and_recalculate_confidence!(upvote,
+          comment.give_upvote_or_downvote_and_recalculate_confidence!(upvote,
             downvote)
         else
-          s = Story.find(v.story_id)
-          if s.user_id != user_id
-            User.update_counters s.user_id, :karma => upvote - downvote
+          if story.user_id != user_id
+            User.update_counters story.user_id, :karma => upvote - downvote
           end
 
-          s.give_upvote_or_downvote_and_recalculate_hotness!(upvote, downvote)
+          story.give_upvote_or_downvote_and_recalculate_hotness!(
+            upvote, downvote)
         end
       end
     end
+
+    return v unless v.destroyed?
   end
 end

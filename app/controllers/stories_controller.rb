@@ -19,7 +19,7 @@ class StoriesController < ApplicationController
 
     if @story.valid? && !(@story.already_posted_story && !@story.seen_previous)
       if @story.save
-        Vote.vote_thusly_on_story_or_comment_for_user_because(1, @story.id,
+        Vote.vote_thusly_on_story_or_comment_for_user_because(1, @story,
           nil, @user.id, nil)
 
         Countinual.count!("#{Rails.application.shortname}.stories.submitted",
@@ -213,7 +213,7 @@ class StoriesController < ApplicationController
       return render :text => "can't find story", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(0, story.id,
+    Vote.vote_thusly_on_story_or_comment_for_user_because(0, story,
       nil, @user.id, nil)
 
     render :text => "ok"
@@ -224,7 +224,7 @@ class StoriesController < ApplicationController
       return render :text => "can't find story", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, story.id,
+    Vote.vote_thusly_on_story_or_comment_for_user_because(1, story,
       nil, @user.id, nil)
 
     render :text => "ok"
@@ -243,7 +243,7 @@ class StoriesController < ApplicationController
       return render :text => "not permitted to downvote", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id,
+    Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story,
       nil, @user.id, params[:reason])
 
     render :text => "ok"

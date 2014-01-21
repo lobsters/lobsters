@@ -83,8 +83,8 @@ class Comment < ActiveRecord::Base
   end
 
   def assign_votes
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.story_id,
-      self.id, self.user.id, nil, false)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.story,
+      self, self.user.id, nil, false)
 
     self.story.update_comments_count!
   end

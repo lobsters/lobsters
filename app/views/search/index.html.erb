@@ -68,15 +68,5 @@
     <% end %>
   </ol>
 
-  <% if @search.total_results > @search.per_page %>
-    <div class="page_link_buttons">
-      Page:
-
-      <% 1.upto(@search.page_count) do |p| %>
-        <a href="/search?<%= raw(@search.to_url_params) %>&amp;page=<%= p
-          %>" class="<%= @search.page == p ? "cur" : "" %>"><%= p
-          %></a>
-      <% end %>
-    </div>
-  <% end %>
+  <%= paginate @search %>
 <% end %>

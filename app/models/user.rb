@@ -38,8 +38,8 @@ class User < ActiveRecord::Base
 
   attr_accessible :username, :email, :password, :password_confirmation,
     :about, :email_replies, :pushover_replies, :pushover_user_key,
-    :pushover_device, :email_messages, :pushover_messages, :email_mentions,
-    :pushover_mentions, :mailing_list_enabled, :delete_me
+    :pushover_device, :pushover_sound, :email_messages, :pushover_messages,
+    :email_mentions, :pushover_mentions, :mailing_list_enabled, :delete_me
 
   before_save :check_session_token
   before_validation :on => :create do
@@ -185,6 +185,13 @@ class User < ActiveRecord::Base
     ).order(
       'COUNT(*) desc'
     ).first
+  end
+
+  def pushover!(params)
+    if self.pushover_user_key.present?
+      Pushover.push(self.pushover_user_key, self.pushover_device,
+        params.merge({ :sound => self.pushover_sound.to_s }))
+    end
   end
 
   def recent_threads(amount)

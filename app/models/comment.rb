@@ -134,18 +134,14 @@ class Comment < ActiveRecord::Base
           end
         end
 
-        if u.pushover_mentions? && u.pushover_user_key.present?
-          begin
-            Pushover.push(u.pushover_user_key, u.pushover_device, {
-              :title => "#{Rails.application.name} mention by " <<
-                "#{self.user.username} on #{self.story.title}",
-              :message => self.plaintext_comment,
-              :url => self.url,
-              :url_title => "Reply to #{self.user.username}",
-            })
-          rescue => e
-            Rails.logger.error "error sending to pushover: #{e}"
-          end
+        if u.pushover_mentions?
+          u.pushover!({
+            :title => "#{Rails.application.name} mention by " <<
+              "#{self.user.username} on #{self.story.title}",
+            :message => self.plaintext_comment,
+            :url => self.url,
+            :url_title => "Reply to #{self.user.username}",
+          })
         end
       end
     end
@@ -162,18 +158,14 @@ class Comment < ActiveRecord::Base
         end
       end
 
-      if u.pushover_replies? && u.pushover_user_key.present?
-        begin
-          Pushover.push(u.pushover_user_key, u.pushover_device, {
-            :title => "#{Rails.application.name} reply from " <<
-              "#{self.user.username} on #{self.story.title}",
-            :message => self.plaintext_comment,
-            :url => self.url,
-            :url_title => "Reply to #{self.user.username}",
-          })
-        rescue => e
-          Rails.logger.error "error sending to pushover: #{e}"
-        end
+      if u.pushover_replies?
+        u.pushover!({
+          :title => "#{Rails.application.name} reply from " <<
+            "#{self.user.username} on #{self.story.title}",
+          :message => self.plaintext_comment,
+          :url => self.url,
+          :url_title => "Reply to #{self.user.username}",
+        })
       end
     end
   end

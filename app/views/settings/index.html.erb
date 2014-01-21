@@ -52,6 +52,12 @@
     </div>
 
     <div class="boxline">
+      <%= f.label :pushover_sound, "Pushover Sound:",
+        :class => "required" %>
+      <%= f.select :pushover_sound, Pushover.sounds.map{|k,v| [ v, k ] } %>
+    </div>
+
+    <div class="boxline">
       <%= f.label :about, "About:", :class => "required" %>
       <%= f.text_area :about, :size => "100x5", :style => "width: 600px;" %>
     </div>

@@ -50,6 +50,13 @@ class User < ActiveRecord::Base
   BANNED_USERNAMES = [ "admin", "administrator", "hostmaster", "mailer-daemon",
     "postmaster", "root", "security", "support", "webmaster", ]
 
+  def self.recalculate_all_karmas!
+    User.all.each do |u|
+      u.karma = u.stories.map(&:score).sum + u.comments.map(&:score).sum
+      u.save!
+    end
+  end
+
   def as_json(options = {})
     h = super(:only => [
       :username,

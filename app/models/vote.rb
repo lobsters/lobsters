@@ -131,7 +131,7 @@ class Vote < ActiveRecord::Base
         if v.comment_id
           c = Comment.find(v.comment_id)
           if c.user_id != user_id
-            User.update_counters user_id, :karma => upvote - downvote
+            User.update_counters c.user_id, :karma => upvote - downvote
           end
 
           c.give_upvote_or_downvote_and_recalculate_confidence!(upvote,

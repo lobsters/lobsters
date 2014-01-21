@@ -427,15 +427,15 @@ div.voters .downvoter.downvoter_stub {
 	border-color: transparent;
 }
 
-li.story,
-.comment {
+li.story {
 	clear: both;
 	padding-top: 0.4em;
 	padding-bottom: 0.4em;
 }
 .comment {
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
+	clear: both;
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
 }
 
 .comment a {

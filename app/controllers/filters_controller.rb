@@ -5,49 +5,28 @@ class FiltersController < ApplicationController
     @cur_url = "/filters"
     @title = "Filtered Tags"
 
-    if @user
-      @filtered_tags = @user.tag_filters.reload
-    else
-      @filtered_tags = tags_filtered_by_cookie.map{|t|
-        tf = TagFilter.new
-        tf.tag = t
-        tf
-      }
-    end
+    @tags = Tag.order(:tag).accessible_to(@user)
 
-    render :action => "index"
+    if @user
+      @filtered_tags = @user.tag_filter_tags.to_a
+    else
+      @filtered_tags = tags_filtered_by_cookie.to_a
+    end
   end
 
   def update
-    new_filters = []
-
-    params.each do |k,v|
-      if (m = k.match(/^tag_(.+)$/)) && v.to_i == 1 &&
-      (t = Tag.where(:tag => m[1]).first) && t.valid_for?(@user)
-        new_filters.push m[1]
-      end
-    end
+    tags_param = params.permit(:tags => [])[:tags]
+    new_tags = tags_param.blank? ? [] : Tag.where(:tag => tags_param).to_a
+    new_tags.keep_if {|t| t.valid_for? @user }
 
     if @user
-      @user.tag_filters(:include => :tag).each do |tf|
-        if tf.tag && new_filters.include?(tf.tag.tag)
-          new_filters.reject!{|t| t == tf.tag.tag }
-        else
-          tf.destroy
-        end
-      end
-
-      new_filters.each do |t|
-        tf = TagFilter.new
-        tf.user_id = @user.id
-        tf.tag_id = Tag.where(:tag => t).first.id
-        tf.save!
-      end
+      @user.tag_filter_tags = new_tags
     else
-      cookies.permanent[TAG_FILTER_COOKIE] = new_filters.join(",")
+      cookies.permanent[TAG_FILTER_COOKIE] = new_tags.map(&:tag).join(",")
     end
 
     flash[:success] = "Your filters have been updated."
-    return redirect_to "/filters"
+
+    redirect_to filters_path
   end
 end

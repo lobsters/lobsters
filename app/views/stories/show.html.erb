@@ -9,31 +9,33 @@
       <%= raw @story.markeddown_description %>
     </div>
   <% end %>
-
-  <p></p>
-  <% if @user && !@story.is_gone? && !@story.previewing %>
-    <%= render :partial => "comments/commentbox",
-      :locals => { :story => @story, :comment => @comment } %>
-  <% end %>
 </div>
 
-<% if @comments %>
-  <% indent_level = -1 %>
-  <% @comments.each_with_index do |comment,x| %>
-    <% if comment.indent_level > indent_level %>
-      <ol class="comments comments<%= comment.indent_level %>">
-    <% elsif comment.indent_level < indent_level %>
-      <% (indent_level - comment.indent_level).times do %>
-        </ol>
-      <% end %>
+<% if !@story.previewing %>
+  <ol class="comments comments1">
+    <% if @user && !@story.is_gone? && !@story.previewing %>
+      <li><%= render "comments/commentbox", :comment => @comment %></li>
     <% end %>
 
-    <%= render :partial => "comments/comment", :locals => { :story => @story,
-      :comment => comment } %>
+    <% comments_by_parent = @comments.group_by(&:parent_comment_id) %>
+    <% subtree = comments_by_parent[nil] %>
+    <% ancestors = [] %>
 
-    <% indent_level = comment.indent_level %>
-  <% end %>
-  <% indent_level.times do %>
-    </ol>
-  <% end %>
+    <% while subtree %>
+      <% if (comment = subtree.shift) %>
+        <li>
+        <%= render "comments/comment", :comment => comment %>
+
+        <% if (children = comments_by_parent[comment.id]) %>
+          <% ancestors << subtree %>
+          <% subtree = children %>
+          <ol class="comments">
+        <% else %>
+          <ol class="comments"></ol></li>
+        <% end %>
+      <% elsif (subtree = ancestors.pop) %>
+        </ol></li>
+      <% end %>
+    <% end %>
+  </ol>
 <% end %>

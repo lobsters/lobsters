@@ -2,7 +2,8 @@ class Story < ActiveRecord::Base
   belongs_to :user
   has_many :taggings,
     :autosave => true
-  has_many :comments
+  has_many :comments,
+    :inverse_of => :story
   has_many :tags, :through => :taggings
 
   validates_length_of :title, :in => 3..150
@@ -12,10 +13,15 @@ class Story < ActiveRecord::Base
   # after this many minutes old, a story cannot be edited
   MAX_EDIT_MINS = 30
 
-  attr_accessor :vote, :already_posted_story, :fetched_content, :previewing
+  # days a story is considered recent
+  RECENT_DAYS = 30
+
+  attr_accessor :vote, :already_posted_story, :fetched_content, :previewing,
+    :seen_previous
   attr_accessor :editor_user_id, :moderation_reason
 
-  attr_accessible :title, :description, :tags_a, :moderation_reason
+  attr_accessible :title, :description, :tags_a, :moderation_reason,
+    :seen_previous
 
   before_validation :assign_short_id,
     :on => :create
@@ -27,9 +33,12 @@ class Story < ActiveRecord::Base
       # URI.parse is not very lenient, so we can't use it
 
       if self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/)
-        if self.new_record? && (s = Story.find_recent_similar_by_url(self.url))
-          errors.add(:url, "has already been submitted recently")
+        if self.new_record? && (s = Story.find_similar_by_url(self.url))
           self.already_posted_story = s
+          if s.is_recent?
+            errors.add(:url, "has already been submitted within the past " <<
+              "#{RECENT_DAYS} days")
+          end
         end
       else
         errors.add(:url, "is not valid")
@@ -41,7 +50,11 @@ class Story < ActiveRecord::Base
     check_tags
   end
 
-  def self.find_recent_similar_by_url(url)
+  def to_param
+    self.short_id
+  end
+
+  def self.find_similar_by_url(url)
     urls = [ url.to_s ]
     urls2 = [ url.to_s ]
 
@@ -66,14 +79,13 @@ class Story < ActiveRecord::Base
     end
     urls = urls2.clone
 
-    conds = [ "created_at >= ? AND (", (Time.now - 30.days) ]
+    conds = [ "" ]
     urls.uniq.each_with_index do |u,x|
       conds[0] << (x == 0 ? "" : " OR ") << "url = ?"
       conds.push u
     end
-    conds[0] << ")"
 
-    if s = Story.where(*conds).first
+    if s = Story.where(*conds).order("id DESC").first
       return s
     end
 
@@ -376,14 +388,18 @@ class Story < ActiveRecord::Base
     is_expired?
   end
 
+  def is_recent?
+    self.created_at >= RECENT_DAYS.days.ago
+  end
+
   def recalculate_hotness!
     update_column :hotness, calculated_hotness
   end
 
   def update_comments_count!
+    comments = self.comments.arrange_for_user(nil)
+
     # calculate count after removing deleted comments and threads
-    self.update_column :comments_count,
-      Comment.ordered_for_story_or_thread_for_user(self.id, nil, nil).select{|c|
-      !c.is_gone? }.count
+    self.update_column :comments_count, comments.count{|c| !c.is_gone? }
   end
 end

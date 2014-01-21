@@ -7,6 +7,14 @@ User.blueprint do
   username { "username#{sn}" }
 end
 
+User.blueprint(:banned) do
+  email { "banned-#{sn}@example.com" }
+  password { "blah blah" }
+  password_confirmation { object.password }
+  username { "username#{sn}" }
+  banned_at { Time.now }
+end
+
 Tag.blueprint do
   tag { "tag-#{sn}" }
   description { "tag #{sn}" }

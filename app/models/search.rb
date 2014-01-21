@@ -51,18 +51,16 @@ class Search
     opts[:classes] = case what
       when "all"
         [ Story, Comment ]
-      when what == "comments"
+      when "comments"
         [ Comment ]
-      when what == "stories"
+      when "stories"
         [ Story ]
       else
         []
       end
 
-    # sphinx seems to interpret slashes as a regex(?) so escape them since
-    # nobody is probably using them, but don't just use Riddle.escape because
-    # it removes boolean suport
-    query = self.q.gsub(/\//, "\\/")
+    # escape sphinx special chars (using Riddle.escape removes boolean support)
+    query = self.q.gsub(/([\/~])/, '\\\\\1')
 
     # go go gadget search
     @results = []

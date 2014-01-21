@@ -1,6 +1,7 @@
 class Comment < ActiveRecord::Base
   belongs_to :user
-  belongs_to :story
+  belongs_to :story,
+    :inverse_of => :comments
   has_many :votes,
     :dependent => :delete_all
   belongs_to :parent_comment,
@@ -10,8 +11,7 @@ class Comment < ActiveRecord::Base
 
   attr_accessible :comment, :moderation_reason
 
-  attr_accessor :parent_comment_short_id, :current_vote, :previewing,
-    :indent_level, :highlighted
+  attr_accessor :current_vote, :previewing, :indent_level, :highlighted
 
   before_validation :on => :create do
     self.assign_short_id_and_upvote
@@ -36,6 +36,10 @@ class Comment < ActiveRecord::Base
 
     (m = self.comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
       errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
+  end
+
+  def to_param
+    self.short_id
   end
 
   def self.regenerate_markdown
@@ -130,18 +134,14 @@ class Comment < ActiveRecord::Base
           end
         end
 
-        if u.pushover_mentions? && u.pushover_user_key.present?
-          begin
-            Pushover.push(u.pushover_user_key, u.pushover_device, {
-              :title => "#{Rails.application.name} mention by " <<
-                "#{self.user.username} on #{self.story.title}",
-              :message => self.plaintext_comment,
-              :url => self.url,
-              :url_title => "Reply to #{self.user.username}",
-            })
-          rescue => e
-            Rails.logger.error "error sending to pushover: #{e}"
-          end
+        if u.pushover_mentions?
+          u.pushover!({
+            :title => "#{Rails.application.name} mention by " <<
+              "#{self.user.username} on #{self.story.title}",
+            :message => self.plaintext_comment,
+            :url => self.url,
+            :url_title => "Reply to #{self.user.username}",
+          })
         end
       end
     end
@@ -158,18 +158,14 @@ class Comment < ActiveRecord::Base
         end
       end
 
-      if u.pushover_replies? && u.pushover_user_key.present?
-        begin
-          Pushover.push(u.pushover_user_key, u.pushover_device, {
-            :title => "#{Rails.application.name} reply from " <<
-              "#{self.user.username} on #{self.story.title}",
-            :message => self.plaintext_comment,
-            :url => self.url,
-            :url_title => "Reply to #{self.user.username}",
-          })
-        rescue => e
-          Rails.logger.error "error sending to pushover: #{e}"
-        end
+      if u.pushover_replies?
+        u.pushover!({
+          :title => "#{Rails.application.name} reply from " <<
+            "#{self.user.username} on #{self.story.title}",
+          :message => self.plaintext_comment,
+          :url => self.url,
+          :url_title => "Reply to #{self.user.username}",
+        })
       end
     end
   end
@@ -293,73 +289,53 @@ class Comment < ActiveRecord::Base
     comment
   end
 
-  def self.ordered_for_story_or_thread_for_user(story_id, thread_id, user)
-    parents = {}
-
-    if thread_id
-      cs = [ "thread_id = ?", thread_id ]
-    else
-      cs = [ "story_id = ?", story_id ]
-    end
-
-    Comment.where(*cs).order("confidence DESC").includes(:user).each do |c|
-      (parents[c.parent_comment_id.to_i] ||= []).push c
-    end
+  def self.arrange_for_user(user)
+    parents = self.order("confidence DESC").group_by(&:parent_comment_id)
 
     # top-down list of comments, regardless of indent level
     ordered = []
 
-    recursor = lambda{|comment,level|
-      if comment
-        comment.indent_level = level
-        ordered.push comment
-      end
+    ancestors = [nil] # nil sentinel so indent_level starts at 1 without add op.
+    subtree = parents[nil]
 
-      # for each comment that is a child of this one, recurse with it
-      (parents[comment ? comment.id : 0] || []).each do |child|
-        recursor.call(child, level + 1)
-      end
-    }
-    recursor.call(nil, 0)
+    while subtree
+      if (node = subtree.shift)
+        children = parents[node.id]
 
-    # for deleted comments, if they have no children, they can be removed from
-    # the tree.  otherwise they have to stay and a "[deleted]" stub will be
-    # shown
-    new_ordered = []
-    ordered.each_with_index do |c,x|
-      if c.is_gone?
-        if ordered[x + 1] && (ordered[x + 1].indent_level > c.indent_level)
-          # we have child comments, so we must stay
-        elsif user && (user.is_moderator? || c.user_id == user.id)
+        # for deleted comments, if they have no children, they can be removed
+        # from the tree.  otherwise they have to stay and a "[deleted]" stub
+        # will be shown
+        if !node.is_gone?
+          # not deleted or moderated
+        elsif children
+          # we have child comments
+        elsif user && (user.is_moderator? || node.user_id == user.id)
           # admins and authors should be able to see their deleted comments
         else
           # drop this one
           next
         end
-      end
 
-      new_ordered.push c
+        node.indent_level = ancestors.length
+        ordered << node
+
+        # no children to recurse
+        next unless children
+
+        # for moderated threads, remove the entire sub-tree at the moderation
+        # point
+        next if node.is_moderated?
+
+        # drill down a level
+        ancestors << subtree
+        subtree = children
+      else
+        # climb back out
+        subtree = ancestors.pop
+      end
     end
 
-    # for moderated threads, remove the entire sub-tree at the moderation point
-    do_reject = false
-    deleted_indent_level = 0
-    new_ordered.reject!{|c|
-      if do_reject && (c.indent_level > deleted_indent_level)
-        true
-      else
-        if c.is_moderated?
-          do_reject = true
-          deleted_indent_level = c.indent_level
-        else
-          do_reject = false
-        end
-
-        false
-      end
-    }
-
-    new_ordered
+    ordered
   end
 
   def is_editable_by_user?(user)

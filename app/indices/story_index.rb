@@ -8,7 +8,7 @@ ThinkingSphinx::Index.define :story, :with => :active_record do
 
   has created_at, :sortable => true
   has hotness, is_expired
-  has "(cast(upvotes as signed) - cast(downvotes as signed))",
+  has "(cast(upvotes as integer) - cast(downvotes as integer))",
     :as => :score, :type => :bigint, :sortable => true
 
   set_property :field_weights => {

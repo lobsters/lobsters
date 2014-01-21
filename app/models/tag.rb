@@ -8,7 +8,11 @@ class Tag < ActiveRecord::Base
   attr_accessor :story_count
 
   scope :accessible_to, ->(user) do
-    user && user.is_admin?? all : where(:privileged => false)
+    user && user.is_moderator?? all : where(:privileged => false)
+  end
+
+  def to_param
+    self.tag
   end
 
   def self.all_with_filtered_counts_for(user)
@@ -35,7 +39,7 @@ class Tag < ActiveRecord::Base
 
   def valid_for?(user)
     if self.privileged?
-      user.is_admin?
+      user.is_moderator?
     else
       true
     end

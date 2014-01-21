@@ -1,0 +1,6 @@
+You have been banned from <%= Rails.application.name %> by <%= @banner.username %> for:
+
+  <%= word_wrap(@reason, :line_width => 72).gsub(/\n/, "\n  ") %>
+
+You are no longer allowed to login to the site.  If you wish, you can
+discuss this ban with the moderator by replying to this e-mail.

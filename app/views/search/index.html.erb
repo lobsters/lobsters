@@ -14,34 +14,34 @@
       <label class="required">Include:</label>
 
       <%= radio_button_tag "what", "all", @search.what == "all" %>
-        <label for="search_what_all" class="normal">All</label>
+        <label for="what_all" class="normal">All</label>
 
       &nbsp;
 
       <%= radio_button_tag "what", "stories", @search.what == "stories" %>
-        <label for="search_what_stories" class="normal">Stories</label>
+        <label for="what_stories" class="normal">Stories</label>
 
       &nbsp;
 
       <%= radio_button_tag "what", "comments", @search.what == "comments" %>
-        <label for="search_what_comments" class="normal">Comments</label>
+        <label for="what_comments" class="normal">Comments</label>
 
       <br>
 
       <label class="required">Order By:</label>
 
       <%= radio_button_tag "order", "relevance", @search.order == "relevance" %>
-        <label for="search_order_relevance" class="normal">Relevance</label>
+        <label for="order_relevance" class="normal">Relevance</label>
 
       &nbsp;
 
       <%= radio_button_tag "order", "newest", @search.order == "newest" %>
-        <label for="search_order_newest" class="normal">Newest</label>
+        <label for="order_newest" class="normal">Newest</label>
 
       &nbsp;
 
       <%= radio_button_tag "order", "points", @search.order == "points" %>
-        <label for="search_order_points" class="normal">Points</label>
+        <label for="order_points" class="normal">Points</label>
     </div>
   <% end %>
 </div>
@@ -62,9 +62,8 @@
         <%= render :partial => "stories/listdetail",
           :locals => { :story => res } %>
       <% elsif res.class == Comment %>
-        <%= render :partial => "comments/comment",
-          :locals => { :comment => res, :story => res.story,
-          :show_story => true, :hide_voters => true } %>
+        <li><%= render "comments/comment", :comment => res,
+          :show_story => true, :hide_voters => true %></li>
       <% end %>
     <% end %>
   </ol>

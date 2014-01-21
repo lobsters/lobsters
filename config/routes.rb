@@ -45,33 +45,33 @@ Lobsters::Application.routes.draw do
   post "/stories/preview" => "stories#preview"
 
   resources :comments do
-    post "upvote"
-    post "downvote"
-    post "unvote"
+    member do
+      get "reply"
+      post "upvote"
+      post "downvote"
+      post "unvote"
 
-    post "edit"
-    post "preview"
-    post "update"
-    post "delete"
-    post "undelete"
+      post "delete"
+      post "undelete"
+    end
   end
   get "/comments/page/:page" => "comments#index"
-  post "/comments/post_to/:story_id" => "comments#create"
-  post "/comments/preview_to/:story_id" => "comments#preview_new"
 
   get "/messages/sent" => "messages#sent"
   resources :messages do
     post "keep_as_new"
   end
 
-  get "/s/:id/:title/comments/:comment_short_id" => "stories#show_comment"
+  get "/s/:id/:title/comments/:comment_short_id" => "stories#show"
   get "/s/:id/(:title)" => "stories#show"
 
   get "/u" => "users#tree"
-  get "/u/:id" => "users#show"
+  get "/u/:username" => "users#show", :as => "user"
 
   get "/settings" => "settings#index"
   post "/settings" => "settings#update"
+  post "/settings/delete_account" => "settings#delete_account",
+    :as => "delete_account"
 
   get "/filters" => "filters#index"
   post "/filters" => "filters#update"

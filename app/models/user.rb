@@ -9,8 +9,16 @@ class User < ActiveRecord::Base
     :class_name => "Message",
     :foreign_key => "recipient_user_id"
   has_many :tag_filters
+  has_many :tag_filter_tags,
+    :class_name => "Tag",
+    :through => :tag_filters,
+    :source => :tag,
+    :dependent => :delete_all
   belongs_to :invited_by_user,
     :class_name => "User"
+  belongs_to :banned_by_user,
+    :class_name => "User"
+  has_many :invitations
 
   has_secure_password
 
@@ -30,8 +38,8 @@ class User < ActiveRecord::Base
 
   attr_accessible :username, :email, :password, :password_confirmation,
     :about, :email_replies, :pushover_replies, :pushover_user_key,
-    :pushover_device, :email_messages, :pushover_messages, :email_mentions,
-    :pushover_mentions, :mailing_list_enabled
+    :pushover_device, :pushover_sound, :email_messages, :pushover_messages,
+    :email_mentions, :pushover_mentions, :mailing_list_enabled, :delete_me
 
   before_save :check_session_token
   before_validation :on => :create do
@@ -41,6 +49,13 @@ class User < ActiveRecord::Base
 
   BANNED_USERNAMES = [ "admin", "administrator", "hostmaster", "mailer-daemon",
     "postmaster", "root", "security", "support", "webmaster", ]
+
+  def self.recalculate_all_karmas!
+    User.all.each do |u|
+      u.karma = u.stories.map(&:score).sum + u.comments.map(&:score).sum
+      u.save!
+    end
+  end
 
   def as_json(options = {})
     h = super(:only => [
@@ -54,10 +69,8 @@ class User < ActiveRecord::Base
   end
 
   def avatar_url
-    "https://secure.gravatar.com/avatar/" <<
-      Digest::MD5.hexdigest(self.email.strip.downcase) << "?r=pg&d=" <<
-      CGI.escape(Rails.application.routes.url_helpers.root_url +
-      "images/1x1t.gif") << "&s=100"
+    "https://secure.gravatar.com/avatar/" +
+      Digest::MD5.hexdigest(self.email.strip.downcase) + "?r=pg&d=mm&s=100"
   end
 
   def average_karma
@@ -66,6 +79,30 @@ class User < ActiveRecord::Base
     else
       k.to_f / (self.stories_submitted_count + self.comments_posted_count)
     end
+  end
+
+  def ban_by_user_for_reason!(banner, reason)
+    self.banned_at = Time.now
+    self.banned_by_user_id = banner.id
+    self.banned_reason = reason
+
+    self.delete!
+
+    BanNotification.notify(self, banner, reason)
+
+    m = Moderation.new
+    m.moderator_user_id = banner.id
+    m.user_id = self.id
+    m.action = "Banned"
+    m.reason = reason
+    m.save!
+
+    true
+  end
+
+  def can_downvote?
+    # TODO: maybe change this to require a certain level of karma
+    !is_new?
   end
 
   def check_session_token
@@ -90,11 +127,46 @@ class User < ActiveRecord::Base
     Keystore.value_for("user:#{self.id}:comments_posted").to_i
   end
 
+  def delete!
+    User.transaction do
+      self.comments.each{|c| c.delete_for_user(self) }
+
+      self.sent_messages.each do |m|
+        m.deleted_by_author = true
+        m.save
+      end
+      self.received_messages.each do |m|
+        m.deleted_by_recipient = true
+        m.save
+      end
+
+      self.invitations.destroy_all
+
+      self.session_token = nil
+      self.check_session_token
+
+      self.deleted_at = Time.now
+      self.save!
+    end
+  end
+
   def initiate_password_reset_for_ip(ip)
     self.password_reset_token = Utils.random_str(40)
     self.save!
 
     PasswordReset.password_reset_link(self, ip).deliver
+  end
+
+  def is_active?
+    !(deleted_at? || is_banned?)
+  end
+
+  def is_banned?
+    banned_at?
+  end
+
+  def is_new?
+    Time.now - self.created_at <= 7.days
   end
 
   def linkified_about
@@ -115,12 +187,31 @@ class User < ActiveRecord::Base
     ).first
   end
 
+  def pushover!(params)
+    if self.pushover_user_key.present?
+      Pushover.push(self.pushover_user_key, self.pushover_device,
+        params.merge({ :sound => self.pushover_sound.to_s }))
+    end
+  end
+
   def recent_threads(amount)
-    self.comments.order('created_at desc').limit(amount).uniq.pluck(:thread_id)
+    self.comments.group(:thread_id).order('MAX(created_at) DESC').limit(
+      amount).pluck(:thread_id)
   end
 
   def stories_submitted_count
     Keystore.value_for("user:#{self.id}:stories_submitted").to_i
+  end
+
+  def to_param
+    username
+  end
+
+  def unban!
+    self.banned_at = nil
+    self.banned_by_user_id = nil
+    self.banned_reason = nil
+    self.save!
   end
 
   def undeleted_received_messages

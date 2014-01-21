@@ -15,8 +15,13 @@ class LoginController < ApplicationController
   end
 
   def login
-    if (user = User.where("email = ? OR username = ?", params[:email].to_s,
-    params[:email].to_s).first) &&
+    if params[:email].to_s.match(/@/)
+      user = User.where(:email => params[:email]).first
+    else
+      user = User.where(:username => params[:email]).first
+    end
+
+    if user && user.is_active? &&
     user.try(:authenticate, params[:password].to_s)
       session[:u] = user.session_token
       return redirect_to "/"
@@ -65,7 +70,7 @@ class LoginController < ApplicationController
       # this will get reset upon save
       @reset_user.session_token = nil
 
-      if @reset_user.save
+      if @reset_user.save && @reset_user.is_active?
         session[:u] = @reset_user.session_token
         return redirect_to "/"
       end

@@ -2,27 +2,25 @@ class CommentsController < ApplicationController
   COMMENTS_PER_PAGE = 20
 
   before_filter :require_logged_in_user_or_400,
-    :only => [ :create, :preview, :preview_new, :upvote, :downvote, :unvote ]
+    :only => [ :create, :preview, :upvote, :downvote, :unvote ]
 
   # for rss feeds, load the user's tag filters if a token is passed
   before_filter :find_user_from_rss_token, :only => [ :index ]
 
   def create
-    if !(story = Story.where(:short_id => params[:story_id]).first) || story.is_gone?
+    if !(story = Story.where(:short_id => params[:story_id]).first) ||
+    story.is_gone?
       return render :text => "can't find story", :status => 400
     end
 
-    comment = Comment.new
+    comment = story.comments.build
     comment.comment = params[:comment].to_s
-    comment.story_id = story.id
-    comment.user_id = @user.id
+    comment.user = @user
 
     if params[:parent_comment_short_id].present?
       if pc = Comment.where(:story_id => story.id, :short_id =>
       params[:parent_comment_short_id]).first
-        comment.parent_comment_id = pc.id
-        # needed for carryng along in comment preview form
-        comment.parent_comment_short_id = params[:parent_comment_short_id]
+        comment.parent_comment = pc
       else
         return render :json => { :error => "invalid parent comment",
           :status => 400 }
@@ -30,7 +28,7 @@ class CommentsController < ApplicationController
     end
 
     # prevent double-clicks of the post button
-    if !params[:preview].present? &&
+    if params[:preview].blank? &&
     (pc = Comment.where(:story_id => story.id, :user_id => @user.id,
       :parent_comment_id => comment.parent_comment_id).first)
       if (Time.now - pc.created_at) < 5.minutes
@@ -38,37 +36,21 @@ class CommentsController < ApplicationController
           "here recently.")
 
         return render :partial => "commentbox", :layout => false,
-          :content_type => "text/html", :locals => { :story => story,
-          :comment => comment }
+          :content_type => "text/html", :locals => { :comment => comment }
       end
     end
 
-    if comment.valid? && !params[:preview].present? && comment.save
+    if comment.valid? && params[:preview].blank? && comment.save
       comment.current_vote = { :vote => 1 }
 
-      if comment.parent_comment_id
-        render :partial => "postedreply", :layout => false,
-          :content_type => "text/html", :locals => { :story => story,
-          :show_comment => comment }
-      else
-        render :partial => "commentbox", :layout => false,
-          :content_type => "text/html", :locals => { :story => story,
-          :comment => Comment.new, :show_comment => comment }
-      end
+      render :partial => "comments/postedreply", :layout => false,
+        :content_type => "text/html", :locals => { :comment => comment }
     else
-      comment.previewing = true
       comment.upvotes = 1
       comment.current_vote = { :vote => 1 }
 
-      render :partial => "commentbox", :layout => false,
-        :content_type => "text/html", :locals => { :story => story,
-        :comment => comment, :show_comment => comment }
+      preview comment
     end
-  end
-
-  def preview_new
-    params[:preview] = true
-    return create
   end
 
   def edit
@@ -77,8 +59,21 @@ class CommentsController < ApplicationController
     end
 
     render :partial => "commentbox", :layout => false,
-      :content_type => "text/html", :locals => { :story => comment.story,
-      :comment => comment }
+      :content_type => "text/html", :locals => { :comment => comment }
+  end
+
+  def reply
+    if !(parent_comment = find_comment)
+      return render :text => "can't find comment", :status => 400
+    end
+
+    comment = Comment.new
+    comment.story = parent_comment.story
+    comment.parent_comment = parent_comment
+
+    render :partial => "commentbox", :layout => false,
+      :content_type => "text/html", :locals => { :comment => comment,
+      :cancellable => true }
   end
 
   def delete
@@ -89,8 +84,7 @@ class CommentsController < ApplicationController
     comment.delete_for_user(@user)
 
     render :partial => "comment", :layout => false,
-      :content_type => "text/html", :locals => { :story => comment.story,
-      :comment => comment }
+      :content_type => "text/html", :locals => { :comment => comment }
   end
 
   def undelete
@@ -101,8 +95,7 @@ class CommentsController < ApplicationController
     comment.undelete_for_user(@user)
 
     render :partial => "comment", :layout => false,
-      :content_type => "text/html", :locals => { :story => comment.story,
-      :comment => comment }
+      :content_type => "text/html", :locals => { :comment => comment }
   end
 
   def update
@@ -112,35 +105,18 @@ class CommentsController < ApplicationController
 
     comment.comment = params[:comment]
 
-    if comment.save
-      # TODO: render the comment again properly, it's indented wrong
+    if params[:preview].blank? && comment.save
+      votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id,
+        [comment.id])
+      comment.current_vote = votes[comment.id]
 
-      render :partial => "postedreply", :layout => false,
-        :content_type => "text/html", :locals => { :story => comment.story,
-        :show_comment => comment }
+      render :partial => "comments/comment", :layout => false,
+        :content_type => "text/html", :locals => { :comment => comment }
     else
-      comment.previewing = true
       comment.current_vote = { :vote => 1 }
 
-      render :partial => "commentbox", :layout => false,
-        :content_type => "text/html", :locals => { :story => comment.story,
-        :comment => comment, :show_comment => comment }
+      preview comment
     end
-  end
-
-  def preview
-    if !((comment = find_comment) && comment.is_editable_by_user?(@user))
-      return render :text => "can't find comment", :status => 400
-    end
-
-    comment.comment = params[:comment]
-
-    comment.previewing = true
-    comment.current_vote = { :vote => 1 }
-
-    render :partial => "commentbox", :layout => false,
-      :content_type => "text/html", :locals => { :story => comment.story,
-      :comment => comment, :show_comment => comment }
   end
 
   def unvote
@@ -172,6 +148,10 @@ class CommentsController < ApplicationController
 
     if !Vote::COMMENT_REASONS[params[:reason]]
       return render :text => "invalid reason", :status => 400
+    end
+
+    if !@user.can_downvote?
+      return render :text => "not permitted to downvote", :status => 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(-1, comment.story_id,
@@ -231,47 +211,55 @@ class CommentsController < ApplicationController
       @cur_url = "/threads"
     end
 
-    @threads = @showing_user.recent_threads(20).map{|r|
-      cs = Comment.ordered_for_story_or_thread_for_user(nil, r, @showing_user)
+    thread_ids = @showing_user.recent_threads(20)
 
-      if @user && (@showing_user.id == @user.id)
-        @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,
-          cs.map{|c| c.story_id }.uniq)
+    comments = Comment.where(
+      :thread_id => thread_ids
+    ).includes(
+      :user, :story
+    ).arrange_for_user(
+      @showing_user
+    )
 
-        cs.each do |c|
-          if @votes[c.id]
-            c.current_vote = @votes[c.id]
-          end
+    comments_by_thread_id = comments.group_by(&:thread_id)
+    @threads = comments_by_thread_id.values_at(*thread_ids).compact
+
+    if @user && (@showing_user.id == @user.id)
+      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,
+        comments.map(&:story_id).uniq)
+
+      comments.each do |c|
+        if @votes[c.id]
+          c.current_vote = @votes[c.id]
         end
-      else
-        @votes = []
       end
-
-      cs
-    }
+    end
 
     # trim each thread to this user's first response
     # XXX: busted
-if false
-    @threads.map!{|th|
-      th.each do |c|
-        if c.user_id == @user.id
-          break
-        else
-          th.shift
-        end
-      end
-
-      th
-    }
-end
-
-    @comments = @threads.flatten
+    #@threads.each do |th|
+    #  th.each do |c|
+    #    if c.user_id == @user.id
+    #      break
+    #    else
+    #      th.shift
+    #    end
+    #  end
+    #end
   end
 
 private
 
+  def preview(comment)
+    comment.previewing = true
+    comment.is_deleted = false # show normal preview for deleted comments
+
+    render :partial => "comments/commentbox", :layout => false,
+      :content_type => "text/html", :locals => {
+      :comment => comment, :show_comment => comment }
+  end
+
   def find_comment
-    Comment.where(:short_id => params[:comment_id]).first
+    Comment.where(:short_id => params[:id]).first
   end
 end

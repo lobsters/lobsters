@@ -11,29 +11,31 @@
   <% end %>
 </div>
 
-<ol class="comments comments1">
-  <% if @user && !@story.is_gone? && !@story.previewing %>
-    <li><%= render "comments/commentbox", :comment => @comment %></li>
-  <% end %>
-
-  <% comments_by_parent = @comments.group_by(&:parent_comment_id) %>
-  <% subtree = comments_by_parent[nil] %>
-  <% ancestors = [] %>
-
-  <% while subtree %>
-    <% if (comment = subtree.shift) %>
-      <li>
-      <%= render "comments/comment", :comment => comment %>
-
-      <% if (children = comments_by_parent[comment.id]) %>
-        <% ancestors << subtree %>
-        <% subtree = children %>
-        <ol class="comments">
-      <% else %>
-        <ol class="comments"></ol></li>
-      <% end %>
-    <% elsif (subtree = ancestors.pop) %>
-      </ol></li>
+<% if !@story.previewing %>
+  <ol class="comments comments1">
+    <% if @user && !@story.is_gone? && !@story.previewing %>
+      <li><%= render "comments/commentbox", :comment => @comment %></li>
     <% end %>
-  <% end %>
-</ol>
+
+    <% comments_by_parent = @comments.group_by(&:parent_comment_id) %>
+    <% subtree = comments_by_parent[nil] %>
+    <% ancestors = [] %>
+
+    <% while subtree %>
+      <% if (comment = subtree.shift) %>
+        <li>
+        <%= render "comments/comment", :comment => comment %>
+
+        <% if (children = comments_by_parent[comment.id]) %>
+          <% ancestors << subtree %>
+          <% subtree = children %>
+          <ol class="comments">
+        <% else %>
+          <ol class="comments"></ol></li>
+        <% end %>
+      <% elsif (subtree = ancestors.pop) %>
+        </ol></li>
+      <% end %>
+    <% end %>
+  </ol>
+<% end %>

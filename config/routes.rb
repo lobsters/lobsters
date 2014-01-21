@@ -62,7 +62,7 @@ Lobsters::Application.routes.draw do
     post "keep_as_new"
   end
 
-  get "/s/:id/:title/comments/:comment_short_id" => "stories#show_comment"
+  get "/s/:id/:title/comments/:comment_short_id" => "stories#show"
   get "/s/:id/(:title)" => "stories#show"
 
   get "/u" => "users#tree"

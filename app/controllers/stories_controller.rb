@@ -127,6 +127,15 @@ class StoriesController < ApplicationController
 
     @comments = @story.comments.includes(:user).arrange_for_user(@user)
 
+    if params[:comment_short_id]
+      @comments.each do |c,x|
+        if c.short_id == params[:comment_short_id]
+          c.highlighted = true
+          break
+        end
+      end
+    end
+
     respond_to do |format|
       format.html {
         @comment = @story.comments.build
@@ -139,38 +148,6 @@ class StoriesController < ApplicationController
         render :json => @story.as_json(:with_comments => @comments)
       }
     end
-  end
-
-  def show_comment
-    @story = Story.where(:short_id => params[:id]).first!
-
-    @title = @story.title
-
-    @showing_comment = Comment.where(:short_id => params[:comment_short_id]).first
-
-    if !@showing_comment
-      flash[:error] = "Could not find comment.  It may have been deleted."
-      return redirect_to @story.comments_url
-    end
-
-    @comments = @story.comments
-    if @showing_comment.thread_id
-      @comments = @comments.where(:thread_id => @showing_comment.thread_id)
-    end
-    @comments = @comments.includes(:user).arrange_for_user(@user)
-
-    @comments.each do |c,x|
-      if c.id == @showing_comment.id
-        c.highlighted = true
-        break
-      end
-    end
-
-    @comment = @story.comments.build
-
-    load_user_votes
-
-    render :action => "show"
   end
 
   def undelete

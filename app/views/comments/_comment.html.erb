@@ -59,8 +59,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
           <a class="comment_deletor">delete</a>
         <% end %>
 
-        <% if @user && !comment.story.is_gone? && !comment.is_gone? &&
-        !(defined?(show_story) && show_story) %>
+        <% if @user && !comment.story.is_gone? && !comment.is_gone? %>
             |
             <a class="comment_replier">reply</a>
         <% end %>

@@ -219,7 +219,7 @@ class User < ActiveRecord::Base
   end
 
   def undeleted_sent_messages
-    sent_messages.where(:deleted_by_author => 0)
+    sent_messages.where(:deleted_by_author => false)
   end
 
   def unread_message_count

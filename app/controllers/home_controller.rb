@@ -1,6 +1,12 @@
 class HomeController < ApplicationController
   STORIES_PER_PAGE = 25
 
+  # how many points a story has to be bumped off the newest page
+  HOT_STORY_POINTS = 5
+
+  # how many days old a story can be to get on the bottom half of /newest
+  NEWEST_DAYS_OLD = 3
+
   # for rss feeds, load the user's tag filters if a token is passed
   before_filter :find_user_from_rss_token, :only => [ :index, :newest ]
 
@@ -186,6 +192,31 @@ private
       )
     end
 
+    if newest && @page == 1
+      # try to help recently-submitted stories that didn't gain traction
+
+      # grab the list of stories from the past n days, shifting out popular
+      # stories that did gain traction
+      story_ids = stories.select(:id, :upvotes, :downvotes).
+        where(Story.arel_table[:created_at].gt(NEWEST_DAYS_OLD.days.ago)).
+        order("stories.created_at DESC").
+        reject{|s| s.score > HOT_STORY_POINTS }
+
+      if story_ids.length > STORIES_PER_PAGE + 1
+        # keep the top half (newest stories)
+        keep_ids = story_ids[0 .. ((STORIES_PER_PAGE + 1) * 0.5)]
+        story_ids = story_ids[keep_ids.length - 1 ... story_ids.length]
+
+        # make the bottom half a random selection of older stories
+        while keep_ids.length <= STORIES_PER_PAGE + 1
+          story_ids.shuffle!
+          keep_ids.push story_ids.shift
+        end
+
+        stories = Story.where(:id => keep_ids)
+      end
+    end
+
     stories = stories.includes(
       :user, :taggings => :tag
     ).limit(
@@ -197,14 +228,10 @@ private
     ).to_a
 
     show_more = false
-
     if stories.count > STORIES_PER_PAGE
       show_more = true
       stories.pop
     end
-
-    # TODO: figure out a better sorting algorithm for newest, including some
-    # older stories that got one or two votes
 
     if user
       votes = Vote.votes_by_user_for_stories_hash(user.id,

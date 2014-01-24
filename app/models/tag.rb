@@ -4,7 +4,7 @@ class Tag < ActiveRecord::Base
   has_many :stories,
     :through => :taggings
 
-  attr_accessor :filtered_count
+  attr_accessor :filtered_count, :stories_count
 
   scope :accessible_to, ->(user) do
     user && user.is_moderator?? all : where(:privileged => false)
@@ -21,6 +21,15 @@ class Tag < ActiveRecord::Base
       t.filtered_count = counts[t.id].to_i
       t
     }
+  end
+
+  def self.all_with_story_counts_for(user)
+    counts = Tagging.group(:tag_id).count
+
+    Tag.order(:tag).accessible_to(user).map{|t|
+      t.stories_count = counts[t.id].to_i
+      t
+    } 
   end
 
   def css_class

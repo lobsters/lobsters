@@ -5,7 +5,7 @@ class FiltersController < ApplicationController
     @cur_url = "/filters"
     @title = "Filtered Tags"
 
-    @tags = Tag.order(:tag).accessible_to(@user)
+    @tags = Tag.all_with_story_counts_for(@user)
 
     if @user
       @filtered_tags = @user.tag_filter_tags.to_a

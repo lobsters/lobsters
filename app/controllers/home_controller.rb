@@ -1,11 +1,11 @@
 class HomeController < ApplicationController
   STORIES_PER_PAGE = 25
 
-  # how many points a story has to be bumped off the newest page
+  # how many points a story has to have to probably get on the front page
   HOT_STORY_POINTS = 5
 
-  # how many days old a story can be to get on the bottom half of /newest
-  NEWEST_DAYS_OLD = 3
+  # how many days old a story can be to get on the bottom half of /recent
+  RECENT_DAYS_OLD = 3
 
   # for rss feeds, load the user's tag filters if a token is passed
   before_filter :find_user_from_rss_token, :only => [ :index, :newest ]
@@ -71,6 +71,16 @@ class HomeController < ApplicationController
     render :action => "index"
   end
 
+  def recent
+    @stories = find_stories({ :recent => true })
+
+    @heading = @title = "Recent Stories"
+    @cur_url = "/recent"
+    @recent = true
+
+    render :action => "index"
+  end
+
   def tagged
     @tag = Tag.where(:tag => params[:tag]).first!
 
@@ -123,8 +133,8 @@ private
       stories, @show_more = _find_stories(how)
     else
       stories, @show_more = Rails.cache.fetch("stories " <<
-      "tag:#{how[:tag].try(:tag)} new:#{how[:newest]} page:#{@page.to_i} " <<
-      "by:#{how[:by_user].try(:id)}", :expires_in => 45) do
+      how.sort.map{|k,v| "#{k}=#{v.to_param}" }.join(" "),
+      :expires_in => 45) do
         _find_stories(how)
       end
     end
@@ -163,7 +173,7 @@ private
       stories = stories.where(
         Story.arel_table[:id].in(
           Tagging.arel_table.where(
-            Tagging.arel_table[:tag_id].eq(tag.id)
+            Tagging.arel_table[:tag_id].eq(how[:tag].id)
           ).project(
             Tagging.arel_table[:story_id]
           )
@@ -183,13 +193,13 @@ private
       )
     end
 
-    if how[:newest] && @page == 1
+    if how[:recent] && @page == 1
       # try to help recently-submitted stories that didn't gain traction
 
       # grab the list of stories from the past n days, shifting out popular
       # stories that did gain traction
       story_ids = stories.select(:id, :upvotes, :downvotes).
-        where(Story.arel_table[:created_at].gt(NEWEST_DAYS_OLD.days.ago)).
+        where(Story.arel_table[:created_at].gt(RECENT_DAYS_OLD.days.ago)).
         order("stories.created_at DESC").
         reject{|s| s.score > HOT_STORY_POINTS }
 
@@ -215,7 +225,7 @@ private
     ).offset(
       (@page - 1) * STORIES_PER_PAGE
     ).order(
-      how[:newest] ? "stories.created_at DESC" : "hotness"
+      (how[:newest] || how[:recent]) ? "stories.created_at DESC" : "hotness"
     ).to_a
 
     show_more = false

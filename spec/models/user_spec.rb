@@ -84,7 +84,6 @@ describe User do
 
   it "show the count of stories submitted" do
     u = User.make!
-
     s = Story.make!(:user_id => u.id)
     u.stories_submitted_count.should == 1
   end

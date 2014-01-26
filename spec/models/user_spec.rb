@@ -59,4 +59,34 @@ describe User do
     u.unban!.should be_true
   end
 
+  it "show a user can downvote" do
+    user = User.make!(:created_at => Time.now)
+    u = User.make!(:created_at => Time.now - 8.days)
+    user.can_downvote?.should == false
+    u.can_downvote?.should == true
+  end
+
+  it "can delete a user" do
+    u = User.make!
+    u.delete!
+    u.deleted_at.should be_true
+  end
+
+  it "username to params" do
+    u = User.make!
+    u.to_param.should == u.username
+  end
+
+  it "show about section without links" do
+    u = User.make!(:about => "@test http://www.example.com")
+    u.linkified_about.should == "<p>@test <a rel=\"nofollow\" href=\"http://www.example.com\">http://www.example.com</a></p>\n"
+  end
+
+  it "show the count of stories submitted" do
+    u = User.make!
+
+    s = Story.make!(:user_id => u.id)
+    u.stories_submitted_count.should == 1
+  end
+
 end

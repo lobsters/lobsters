@@ -77,9 +77,9 @@ describe User do
     u.to_param.should == u.username
   end
 
-  it "show about section without links" do
-    u = User.make!(:about => "@test http://www.example.com")
-    u.linkified_about.should == "<p>@test <a rel=\"nofollow\" href=\"http://www.example.com\">http://www.example.com</a></p>\n"
+  it "show a user's about section with links" do
+    u = User.make!(:about => "http://www.example.com")
+    u.linkified_about.should == "<a rel=\"nofollow\" href=\"http://www.example.com\">http://www.example.com</a></p>\n"
   end
 
   it "show the count of stories submitted" do

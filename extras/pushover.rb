@@ -7,7 +7,7 @@ class Pushover
   @@SOUNDS = {}
   def self.sounds
     if !@@API_KEY
-      return
+      return @@SOUNDS
     end
 
     if @@SOUNDS.length <= 1

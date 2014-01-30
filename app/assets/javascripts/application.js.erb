@@ -346,6 +346,16 @@ $(document).ready(function() {
     }
   });
 
+  $(document).on("blur", "#story_title", function() {
+    var m;
+    if (m = $("#story_title").val().match(/^(show|ask) lobste\.?rs:? (.+)$/i)) {
+      var ta = $("#story_tags_a").data("select2");
+      if (ta.getVal().indexOf(m[1].toLowerCase()) < 0)
+        ta.addSelectedChoice({ id: m[1].toLowerCase() });
+      $("#story_title").val(m[2]);
+    }
+  });
+
   $(document).on("click", "#story_guidelines_toggler", function() {
     $("#story_guidelines").toggle();
     return false;

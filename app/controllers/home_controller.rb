@@ -196,25 +196,30 @@ private
     if how[:recent] && @page == 1
       # try to help recently-submitted stories that didn't gain traction
 
-      # grab the list of stories from the past n days, shifting out popular
-      # stories that did gain traction
-      story_ids = stories.select(:id, :upvotes, :downvotes).
-        where(Story.arel_table[:created_at].gt(RECENT_DAYS_OLD.days.ago)).
-        order("stories.created_at DESC").
-        reject{|s| s.score > HOT_STORY_POINTS }
+      story_ids = []
 
-      if story_ids.length > STORIES_PER_PAGE + 1
-        # keep the top half (newest stories)
-        keep_ids = story_ids[0 .. ((STORIES_PER_PAGE + 1) * 0.5)]
-        story_ids = story_ids[keep_ids.length - 1 ... story_ids.length]
+      10.times do |x|
+        # grab the list of stories from the past n days, shifting out popular
+        # stories that did gain traction
+        story_ids = stories.select(:id, :upvotes, :downvotes).
+          where(Story.arel_table[:created_at].gt((RECENT_DAYS_OLD + x).days.ago)).
+          order("stories.created_at DESC").
+          reject{|s| s.score > HOT_STORY_POINTS }
 
-        # make the bottom half a random selection of older stories
-        while keep_ids.length <= STORIES_PER_PAGE + 1
-          story_ids.shuffle!
-          keep_ids.push story_ids.shift
+        if story_ids.length > STORIES_PER_PAGE + 1
+          # keep the top half (newest stories)
+          keep_ids = story_ids[0 .. ((STORIES_PER_PAGE + 1) * 0.5)]
+          story_ids = story_ids[keep_ids.length - 1 ... story_ids.length]
+
+          # make the bottom half a random selection of older stories
+          while keep_ids.length <= STORIES_PER_PAGE + 1
+            story_ids.shuffle!
+            keep_ids.push story_ids.shift
+          end
+
+          stories = Story.where(:id => keep_ids)
+          break
         end
-
-        stories = Story.where(:id => keep_ids)
       end
     end
 

@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+ENV["RAILS_ENV"] ||= "production"
+
+APP_PATH = File.expand_path('../../config/application',  __FILE__)
+require File.expand_path('../../config/boot',  __FILE__)
+require APP_PATH
+Rails.application.require_environment!
+
+LAST_STORY_KEY = "twitter:last_story_id"
+
+last_story_id = (Keystore.value_for(LAST_STORY_KEY) || Story.last.id).to_i
+
+Story.where("id > ? AND is_expired = ?", last_story_id, false).
+order(:id).each do |s|
+  if !s.tags.map(&:tag).include?("meta")
+    status = "\n" + (s.url.present?? s.url + "\n" : "") + s.short_id_url
+
+    tco_status = "\n" + (s.url.present?? ("X" * Twitter::TCO_LEN) + "\n" :
+      "") + ("X" * Twitter::TCO_LEN)
+
+    left_len = Twitter::MAX_TWEET_LEN - tco_status.length
+
+    title = s.title
+
+    if title.match(/^([dm] |@)/i)
+      # prevent these tweets from activating twitter shortcuts
+      # https://dev.twitter.com/docs/faq#tweeting
+      title = "- #{title}"
+    end
+
+    if title.bytesize > left_len
+      status = title[0, left_len - 3] + "..." + status
+    else
+      status = title + status
+    end
+
+    res = Twitter.oauth_request("/1.1/statuses/update.json", :post,
+      { "status" => status })
+
+    begin
+      if !res["id_str"].match(/\d+/)
+        raise
+      end
+    rescue => e
+      puts "failed posting story #{s.id} (#{status.inspect}): #{e.inspect}\n" +
+        "#{res.inspect}"
+      exit
+    end
+  end
+
+  Keystore.put(LAST_STORY_KEY, s.id)
+  sleep 2
+end

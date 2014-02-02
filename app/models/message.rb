@@ -11,8 +11,6 @@ class Message < ActiveRecord::Base
 
   attr_accessor :recipient_username
 
-  attr_accessible :recipient_username, :subject, :body
-
   validates_length_of :subject, :in => 1..150
   validates_length_of :body, :maximum => (64 * 1024)
 

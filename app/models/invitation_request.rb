@@ -1,6 +1,4 @@
 class InvitationRequest < ActiveRecord::Base
-  attr_accessible nil
-
   validates :name, :presence => true
   validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ }
   validates :memo, :format => { :with => /https?:\/\// }

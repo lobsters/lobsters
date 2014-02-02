@@ -12,9 +12,7 @@ class StoriesController < ApplicationController
     @title = "Submit Story"
     @cur_url = "/stories/new"
 
-    # we don't allow the url to be changed, so we have to set it manually
-    @story = Story.new(params[:story].reject{|k,v| k == "url" })
-    @story.url = params[:story][:url]
+    @story = Story.new(story_params)
     @story.user_id = @user.id
 
     if @story.valid? && !(@story.already_posted_story && !@story.seen_previous)
@@ -98,9 +96,7 @@ class StoriesController < ApplicationController
   end
 
   def preview
-    # we don't allow the url to be changed, so we have to set it manually
-    @story = Story.new(params[:story].reject{|k,v| k == "url" })
-    @story.url = params[:story][:url]
+    @story = Story.new(story_params)
     @story.user_id = @user.id
     @story.previewing = true
 
@@ -173,9 +169,10 @@ class StoriesController < ApplicationController
     @story.is_expired = false
     @story.editor_user_id = @user.id
 
-    @story.attributes = params[:story].except(:url)
     if @story.url_is_editable_by_user?(@user)
-      @story.url = params[:story][:url]
+      @story.attributes = story_params
+    else
+      @story.attributes = story_params.except(:url)
     end
 
     if @story.save
@@ -227,6 +224,13 @@ class StoriesController < ApplicationController
   end
 
 private
+
+  def story_params
+    params.require(:story).permit(
+      :title, :url, :description, :moderation_reason, :seen_previous,
+      :tags_a => []
+    )
+  end
 
   def find_story
     Story.where(:short_id => params[:story_id]).first

@@ -12,9 +12,6 @@ gem "mysql2", ">= 0.3.14"
 # NOTE: If you use PostgreSQL, you must still leave enabled the above mysql2 gem
 #       for Sphinx full text search to function.
 
-# Use Rails3-style mass assignment security
-gem "protected_attributes"
-
 # Use Uglifier as compressor for JavaScript assets
 gem "uglifier", ">= 1.3.0"
 

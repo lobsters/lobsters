@@ -20,9 +20,6 @@ class Story < ActiveRecord::Base
     :seen_previous
   attr_accessor :editor_user_id, :moderation_reason
 
-  attr_accessible :title, :description, :tags_a, :moderation_reason,
-    :seen_previous
-
   before_validation :assign_short_id,
     :on => :create
   before_save :log_moderation

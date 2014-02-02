@@ -36,11 +36,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  attr_accessible :username, :email, :password, :password_confirmation,
-    :about, :email_replies, :pushover_replies, :pushover_user_key,
-    :pushover_device, :pushover_sound, :email_messages, :pushover_messages,
-    :email_mentions, :pushover_mentions, :mailing_list_enabled, :delete_me
-
   before_save :check_session_token
   before_validation :on => :create do
     self.create_rss_token

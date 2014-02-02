@@ -6,8 +6,6 @@ class Moderation < ActiveRecord::Base
   belongs_to :comment
   belongs_to :user
 
-  attr_accessible nil
-
   after_create :send_message_to_moderated
 
   def send_message_to_moderated

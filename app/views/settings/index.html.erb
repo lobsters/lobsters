@@ -127,7 +127,7 @@
     <div class="boxline">
       <%= f.label :pushover_messages, "Receive Pushover Alert:",
         :class => "required" %>
-      <%= f.check_box :pushover_replies %>
+      <%= f.check_box :pushover_messages %>
       <span class="hint">
         Requires user key entered above
       </span>
@@ -156,8 +156,7 @@
     </div>
 
     <div class="boxline">
-      <%= f.label :pushover_messages, "List Address:",
-        :class => "required" %>
+      <label class="required">List Address:</label>
       <span>
       <tt><%= Rails.application.shortname %>-<%=
         @edit_user.mailing_list_token %>@<%= Rails.application.domain %></tt>

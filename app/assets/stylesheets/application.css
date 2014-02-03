@@ -464,7 +464,8 @@ li div.details {
 }
 
 .comment.highlighted {
-	background-color: #ffffbf;
+	background-color: #ffffef;
+	border-radius: 20px;
 }
 
 li .link {

@@ -102,8 +102,9 @@ class EmailParser
     # try to remove sig lines
     @body.gsub!(/^-- \n.+\z/m, "")
 
-    # TODO: try to strip out attribution line, followed by an optional blank
-    # line, and then lines prefixed with >
+    # try to strip out attribution line, followed by an optional blank line,
+    # and then lines prefixed with >
+    @body.gsub!(/^(On|on|at) .*\n\n?(>.*\n)+/, "")
 
     @body.strip!
   end

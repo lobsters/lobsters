@@ -58,4 +58,15 @@ describe EmailParser do
     parser.email.should_not == nil
     parser.body.should == "It hasn't decreased any measurable amount but since the traffic to\nthe site is increasing a bit each week, it's hard to tell."
   end
+
+  it "strips quoted lines with attribution" do
+    parser = EmailParser.new(
+      "user@example.com",
+      Rails.application.shortname +
+      "-#{@emailer.mailing_list_token}@example.org",
+      @emails["4"])
+
+    parser.email.should_not == nil
+    parser.body.should == "It hasn't decreased any measurable amount but since the traffic to\nthe site is increasing a bit each week, it's hard to tell."
+  end
 end

@@ -8,7 +8,7 @@
     <%= render :partial => "stories/form", :locals => { :story => @story,
       :f => f } %>
 
-    <% if @story.user_id != @user.id %>
+    <% if @user.is_moderator? && (@story.user_id != @user.id) %>
       <div class="box">
         <div class="boxline">
           <%= f.label :moderation_reason, "Mod Reason:",

@@ -226,9 +226,16 @@ class StoriesController < ApplicationController
 private
 
   def story_params
-    params.require(:story).permit(
-      :title, :url, :description, :seen_previous, :tags_a => []
+    p = params.require(:story).permit(
+      :title, :url, :description, :moderation_reason, :seen_previous,
+      :tags_a => [],
     )
+
+    if @user.is_moderator?
+      p
+    else
+      p.except(:moderation_reason)
+    end
   end
 
   def find_story

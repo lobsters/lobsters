@@ -1,0 +1,36 @@
+Return-Path: <nobody@lobste.rs>
+X-Original-To: jcs@jcs.org
+Delivered-To: superblock.net-jcs@filter
+Received: from vmail.superblock.net (localhost.superblock.net [127.0.0.1])
+        by vmail.superblock.net (Postfix) with ESMTP id 1657A391FB
+        for <jcs@jcs.org>; Tue, 16 Jul 2013 10:40:08 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=lobste.rs; h=from:reply-to
+        :to:list-id:list-unsubscribe:content-type:message-id:in-reply-to
+        :references:date:subject; s=20120304; bh=wfuy7M5Juh21GniDc9U1TGw
+        mqLo=; b=1UFXtiD7QtaaoXfqnVXFMperUlfxsPV8HbPVrkwiB8Yzi5L2AkRdlpD
+        hunv1x7u1U/VXhHI1eOkp0LkSUc6Zi7legiyPXnWvOye3cTbOmp29KUhLls9gjGD
+        7inNgqR52uRB6NTxdDtrMZYDjUXJtHZdlLwgvcB6BKj7WPtvWx/A=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=lobste.rs; h=from:reply-to
+        :to:list-id:list-unsubscribe:content-type:message-id:in-reply-to
+        :references:date:subject; q=dns; s=20120304; b=WGF2WkJDYzLWJ8jhS
+        TNERxmtU0qQRqI04yIuIJNHDsr0pwGR01phyvdoZfrJP+RJFDQ7SbTCl+qvXjdcJ
+        XRn+8zLEd1Mg8Hy2PzZuBVLMxXcJ+WGFTxUbArupByqp9qJnCPGusJmrCEIQCC+N
+        KqOAQotiWz9B5x5oFaBj97ZbSM=
+To: ##SHORTNAME##-##MAILING_LIST_TOKEN##@lobste.rs
+List-Id: Lobsters <##SHORTNAME##-##MAILING_LIST_TOKEN##@lobste.rs>
+List-Unsubscribe: <https://lobste.rs/settings>
+Precedence: list
+Content-Type: text/plain; charset="us-ascii"
+Message-ID: <comment.jow5ro.1373989038@lobste.rs>
+In-Reply-To: <comment.nh0wig.1373986371@lobste.rs>
+References: <story.jg3eet.1372275536@lobste.rs>
+        <comment.nh0wig.1373986371@lobste.rs>
+Date: Tue, 16 Jul 2013 10:37:18 -0500
+Subject: Re: Lobsters by mail [announce]
+X-BeenThere: ##SHORTNAME##-##MAILING_LIST_TOKEN##@lobste.rs
+
+It hasn't decreased any measurable amount but since the traffic to
+the site is increasing a bit each week, it's hard to tell.
+
+-- 
+Vote: https://lobste.rs/s/jg3eet/_/comments/jow5ro

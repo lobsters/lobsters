@@ -37,7 +37,7 @@ class SignupController < ApplicationController
 
     @title = "Signup"
 
-    @new_user = User.new(params[:user])
+    @new_user = User.new(user_params)
     @new_user.invited_by_user_id = @invitation.user_id
 
     if @new_user.save
@@ -52,5 +52,13 @@ class SignupController < ApplicationController
     else
       render :action => "invited"
     end
+  end
+
+private
+
+  def user_params
+    params.require(:user).permit(
+      :username, :email, :password, :password_confirmation, :about,
+    )
   end
 end

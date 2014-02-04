@@ -32,7 +32,7 @@ class MessagesController < ApplicationController
     @cur_url = "/messages"
     @title = "Messages"
 
-    @new_message = Message.new(params[:message])
+    @new_message = Message.new(message_params)
     @new_message.author_user_id = @user.id
 
     @direction = :out
@@ -95,6 +95,13 @@ class MessagesController < ApplicationController
   end
 
 private
+
+  def message_params
+    params.require(:message).permit(
+      :recipient_username, :subject, :body,
+    )
+  end
+
   def find_message
     if @message = Message.where(:short_id => params[:message_id] || params[:id]).first
       if (@message.author_user_id == @user.id ||

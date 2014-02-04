@@ -9,8 +9,6 @@ class Comment < ActiveRecord::Base
   has_one :moderation,
     :class_name => "Moderation"
 
-  attr_accessible :comment, :moderation_reason
-
   attr_accessor :current_vote, :previewing, :indent_level, :highlighted
 
   before_validation :on => :create do

@@ -129,7 +129,7 @@ private
 
     # guest views have caching, but don't bother for logged-in users or dev or
     # when the user has tag filters
-    if Rails.env == "development" || @user || tags_filtered_by_cookie.any?
+    if Rails.env.development? || @user || tags_filtered_by_cookie.any?
       stories, @show_more = _find_stories(how)
     else
       stories, @show_more = Rails.cache.fetch("stories " <<

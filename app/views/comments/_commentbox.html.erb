@@ -22,11 +22,15 @@
       <div class="markdown_help_label">
         Markdown formatting available
       </div>
+      <div class="markdown_help_label markdown_help_label_mobile"
+      style="display: none;">
+        [M&darr;]
+      </div>
 
-      <%= button_tag "#{comment.new_record?? "Post" : "Update"} Comment",
+      <%= button_tag "#{comment.new_record?? "Post" : "Update"}",
         :class => "comment-post", :type => "button" %>
       &nbsp;
-      <%= button_tag "Preview Comment", :class => "comment-preview",
+      <%= button_tag "Preview", :class => "comment-preview",
         :type => "button" %>
       <% if local_assigns[:cancellable] %>
         &nbsp;

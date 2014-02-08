@@ -66,6 +66,10 @@
 		margin-top: -5px;
 	}
 
+	div.comment_form_container form {
+		margin-left: 1.75em;
+	}
+
 	div.voters a.upvoter,
 	div.voters a.downvoter {
 		margin-left: 6px;
@@ -179,6 +183,14 @@
 	div.boxline input[type="text"],
 	div.comment textarea {
 		max-width: 90%;
+	}
+
+	div.markdown_help_label {
+		display: none;
+	}
+	div.markdown_help_label_mobile {
+		display: inline !important;
+		margin-right: 2em;
 	}
 
 	div#story_box input,

@@ -1,6 +1,7 @@
 <li id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
 class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
 "downvoted" : "") %> <%= story.is_expired? ? "expired" : "" %>">
+<div class="story_liner">
   <div class="voters">
     <% if @user %>
       <a class="upvoter"></a>
@@ -67,10 +68,12 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
           <% end %>
         <% end %>
         <% if !story.is_gone? && (@user || story.comments_count > 0) %>
-          |
-          <a href="<%= story.comments_url %>"><%= story.comments_count == 0 ?
-            "discuss" : "#{story.comments_count} comment" <<
-            (story.comments_count == 1 ? "" : "s") %></a>
+          <span class="comments_label">
+            |
+            <a href="<%= story.comments_url %>"><%= story.comments_count == 0 ?
+              "discuss" : "#{story.comments_count} comment" <<
+              (story.comments_count == 1 ? "" : "s") %></a>
+          </span>
         <% end %>
 
         <% if defined?(single_story) && single_story %>
@@ -81,4 +84,9 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
       <% end %>
     </div>
   </div>
+</div>
+<div class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>"
+style="display: none;">
+  <a href="<%= story.comments_url %>"><%= story.comments_count %></a>
+</div>
 </li>

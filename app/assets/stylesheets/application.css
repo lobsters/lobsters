@@ -134,13 +134,6 @@ button:focus {
 	outline: 1px solid #888;
 }
 
-body.mobile input,
-body.mobile button,
-body.mobile select,
-body.mobile textarea {
-	max-width: 275px;
-}
-
 /* these must be separate */
 ::-webkit-input-placeholder {
 	color: #aaa;
@@ -429,6 +422,8 @@ div.voters .downvoter.downvoter_stub {
 
 li.story {
 	clear: both;
+}
+li.story div.story_liner {
 	padding-top: 0.4em;
 	padding-bottom: 0.4em;
 }
@@ -442,7 +437,7 @@ li.story {
 	color: #666;
 }
 
-ol.stories li:first-child {
+ol.stories li:first-child div.story_liner {
 	padding-top: 0.5em;
 }
 li div.details {

@@ -1,5 +1,6 @@
 <div class="comment comment_form_container">
-<%= form_for comment do |f| %>
+<%= form_for comment,
+:html => { :id => "edit_comment_#{comment.short_id}" } do |f| %>
   <% if comment.errors.any? %>
     <%= errors_for comment %>
   <% end %>
@@ -37,7 +38,6 @@
         <%= button_tag "Cancel", :class => "comment-cancel",
           :type => "button" %>
       <% end %>
-
 
       <div style="clear: both;"></div>
 

@@ -4,7 +4,7 @@
   </div>
 
   <%= form_for @story, :url => story_url(@story.short_id),
-  :method => :put do |f| %>
+  :method => :put, :html => { :id => "edit_story" } do |f| %>
     <%= render :partial => "stories/form", :locals => { :story => @story,
       :f => f } %>
 

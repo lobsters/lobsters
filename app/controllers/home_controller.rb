@@ -122,9 +122,9 @@ class HomeController < ApplicationController
 
 private
   def find_stories(how = {})
-    @page = 1
+    @page = how[:page] = 1
     if params[:page].to_i > 0
-      @page = params[:page].to_i
+      @page = how[:page] = params[:page].to_i
     end
 
     # guest views have caching, but don't bother for logged-in users or dev or
@@ -193,7 +193,7 @@ private
       )
     end
 
-    if how[:recent] && @page == 1
+    if how[:recent] && how[:page] == 1
       # try to help recently-submitted stories that didn't gain traction
 
       story_ids = []
@@ -228,7 +228,7 @@ private
     ).limit(
       STORIES_PER_PAGE + 1
     ).offset(
-      (@page - 1) * STORIES_PER_PAGE
+      (how[:page] - 1) * STORIES_PER_PAGE
     ).order(
       (how[:newest] || how[:recent]) ? "stories.created_at DESC" : "hotness"
     ).to_a

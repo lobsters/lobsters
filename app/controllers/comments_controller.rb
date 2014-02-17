@@ -150,7 +150,7 @@ class CommentsController < ApplicationController
       return render :text => "invalid reason", :status => 400
     end
 
-    if !@user.can_downvote?
+    if !@user.can_downvote?(comment)
       return render :text => "not permitted to downvote", :status => 400
     end
 
@@ -260,6 +260,12 @@ private
   end
 
   def find_comment
-    Comment.where(:short_id => params[:id]).first
+    comment = Comment.where(:short_id => params[:id]).first
+    if @user && comment
+      comment.current_vote = Vote.where(:user_id => @user.id,
+        :story_id => comment.story_id, :comment_id => comment.id).first
+    end
+
+    comment
   end
 end

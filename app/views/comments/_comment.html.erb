@@ -14,7 +14,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <%= link_to "", login_url, :class => "upvoter" %>
       <% end %>
       <div class="score"><%= comment.score %></div>
-      <% if @user && @user.can_downvote? %>
+      <% if @user && @user.can_downvote?(comment) %>
         <a class="downvoter"></a>
       <% else %>
         <span class="downvoter downvoter_stub"></span>

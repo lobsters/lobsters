@@ -10,10 +10,12 @@ class Story < ActiveRecord::Base
   validates_length_of :description, :maximum => (64 * 1024)
   validates_presence_of :user_id
 
+  DOWNVOTABLE_DAYS = 14
+
   # after this many minutes old, a story cannot be edited
   MAX_EDIT_MINS = 30
 
-  # days a story is considered recent
+  # days a story is considered recent, for resubmitting
   RECENT_DAYS = 30
 
   attr_accessor :vote, :already_posted_story, :fetched_content, :previewing,
@@ -218,6 +220,14 @@ class Story < ActiveRecord::Base
       "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " <<
       "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " <<
       "hotness = '#{self.calculated_hotness}' WHERE id = #{self.id.to_i}")
+  end
+
+  def is_downvotable?
+    if self.created_at
+      Time.now - self.created_at <= DOWNVOTABLE_DAYS.days
+    else
+      false
+    end
   end
 
   def is_editable_by_user?(user)

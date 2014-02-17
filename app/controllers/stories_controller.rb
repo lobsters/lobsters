@@ -213,7 +213,7 @@ class StoriesController < ApplicationController
       return render :text => "invalid reason", :status => 400
     end
 
-    if !@user.can_downvote?
+    if !@user.can_downvote?(story)
       return render :text => "not permitted to downvote", :status => 400
     end
 
@@ -239,7 +239,13 @@ private
   end
 
   def find_story
-    Story.where(:short_id => params[:story_id]).first
+    story = Story.where(:short_id => params[:story_id]).first
+    if @user && story
+      story.vote = Vote.where(:user_id => @user.id,
+        :story_id => story.id, :comment_id => nil).first.try(:vote)
+    end
+
+    story
   end
 
   def find_user_story

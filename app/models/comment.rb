@@ -20,6 +20,9 @@ class Comment < ActiveRecord::Base
     :deliver_mention_notifications, :log_to_countinual
   after_destroy :unassign_votes
 
+  DOWNVOTABLE_DAYS = 7
+
+  # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = 90
 
   validate do
@@ -275,6 +278,14 @@ class Comment < ActiveRecord::Base
       return true
     else
       return false
+    end
+  end
+
+  def is_downvotable?
+    if self.created_at
+      Time.now - self.created_at <= DOWNVOTABLE_DAYS.days
+    else
+      false
     end
   end
 

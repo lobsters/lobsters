@@ -45,6 +45,9 @@ class User < ActiveRecord::Base
   BANNED_USERNAMES = [ "admin", "administrator", "hostmaster", "mailer-daemon",
     "postmaster", "root", "security", "support", "webmaster", ]
 
+  # days old accounts are considered new for
+  NEW_USER_DAYS = 7
+
   def self.recalculate_all_karmas!
     User.all.each do |u|
       u.karma = u.stories.map(&:score).sum + u.comments.map(&:score).sum
@@ -161,7 +164,7 @@ class User < ActiveRecord::Base
   end
 
   def is_new?
-    Time.now - self.created_at <= 7.days
+    Time.now - self.created_at <= NEW_USER_DAYS.days
   end
 
   def linkified_about

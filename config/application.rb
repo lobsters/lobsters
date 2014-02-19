@@ -47,7 +47,7 @@ class << Rails.application
   end
 
   def name
-    "Blueprint News"
+    "bpnews"
   end
 
   # used as mailing list prefix and countinual prefix, cannot have spaces

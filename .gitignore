@@ -29,6 +29,10 @@ app/views/home/about.*
 lib/tasks/deploy.rake
 config/initializers/production.rb
 config/database.yml
-config/initializers/secret_token.rb
 config/*.sphinx.conf
 config/unicorn.conf.rb
+
+# REMOVE  secret_token to allow heroku to run
+# config/initializers/secret_token.rb
+
+# ADD .env to set heroku env variables

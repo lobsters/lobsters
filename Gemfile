@@ -36,6 +36,8 @@ gem "rdiscount"
 
 gem "oauth"
 
+gem "foreman"
+
 gem "thinking-sphinx", "~> 3.0.6"
 
 gem "mail"

@@ -416,7 +416,7 @@ div.voters .downvoter {
 
 div.voters .upvoter:hover,
 .upvoted div.voters .upvoter {
-	border-bottom-color: #ac130d;
+	border-bottom-color: #1A75BC;
 }
 
 div.voters .upvoter {

@@ -3,6 +3,7 @@ class InvitationsController < ApplicationController
     :except => [ :build, :create_by_request, :confirm_email ]
 
   def build
+    @invitation_request = InvitationRequest.new
   end
 
   def index
@@ -30,13 +31,10 @@ class InvitationsController < ApplicationController
     i.memo = params[:memo]
 
     begin
-      if i.save
-        i.send_email
-        flash[:success] = "Successfully e-mailed invitation to " <<
-          params[:email].to_s << "."
-      else
-        raise
-      end
+      i.save!
+      i.send_email
+      flash[:success] = "Successfully e-mailed invitation to " <<
+        params[:email].to_s << "."
     rescue
       flash[:error] = "Could not send invitation, verify the e-mail " <<
         "address is valid."
@@ -50,16 +48,14 @@ class InvitationsController < ApplicationController
   end
 
   def create_by_request
-    ir = InvitationRequest.new
-    ir.name = params[:name]
-    ir.email = params[:email]
-    ir.memo = params[:memo]
+    @invitation_request = InvitationRequest.new(
+      params.require(:invitation_request).permit(:name, :email, :memo))
 
-    ir.ip_address = request.remote_ip
+    @invitation_request.ip_address = request.remote_ip
 
-    if ir.save
+    if @invitation_request.save
       flash[:success] = "You have been e-mailed a confirmation to " <<
-        params[:email].to_s << "."
+        params[:invitation_request][:email].to_s << "."
       return redirect_to "/invitations/request"
     else
       render :action => :build
@@ -72,17 +68,18 @@ class InvitationsController < ApplicationController
       return redirect_to "/invitations"
     end
 
-    if ir
-      i = Invitation.new
-      i.user_id = @user.id
-      i.email = ir.email
+    i = Invitation.new
+    i.user_id = @user.id
+    i.email = ir.email
 
-      if i.save
-        i.send_email
-        ir.destroy
-        flash[:success] = "Successfully e-mailed invitation to " <<
-          ir.name.to_s << "."
-      end
+    i.save!
+    i.send_email
+    ir.destroy!
+    flash[:success] = "Successfully e-mailed invitation to " <<
+      ir.name.to_s << "."
+
+    return redirect_to "/invitations"
+  end
 
       return redirect_to "/invitations"
     else

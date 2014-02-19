@@ -22,8 +22,8 @@ vendor/bundle
 public/assets
 
 # templates to be created per-site
-app/views/home/privacy.*
-app/views/home/about.*
+# app/views/home/privacy.*
+# app/views/home/about.*
 
 # files added in production
 lib/tasks/deploy.rake

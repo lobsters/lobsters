@@ -58,6 +58,16 @@ generated key from the output of `rake secret`:
 
           Lobsters::Application.config.secret_token = 'your random secret here'
 
+* For use with Heroku:
+
+          Lobsters::Application.config.secret_token = ENV['SECRET_TOKEN']
+
+    In order for the token to be used by local environment you will need to add it. Here we use [foreman gem](https://github.com/ddollar/foreman) along with a ```.env``` file that has a secret_token
+
+          SECRET_TOKEN=c4ff17f668c33c1...
+
+    Do not forget to add ```.env``` into ```.gitignore``` so that your source control does not have the secret_token.
+
 * (Optional, only needed for the search engine) Install Sphinx.  Build Sphinx
 config and start server:
 
@@ -95,3 +105,7 @@ in a `config/initializers/production.rb` or similar file:
 `http://localhost:3000` with your new `test` user:
 
           lobsters$ rails server
+
+    If you are using the foreman gem:
+
+          lobsters$ foreman run rails server

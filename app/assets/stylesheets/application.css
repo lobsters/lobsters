@@ -235,17 +235,37 @@ div#inside {
 	float: left;
 }
 
-#l_holder {
-	background: #ee0000 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAL0ALQAtZF7+HAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wCCBAuLt2rqugAAACMSURBVDjL1ZMxCsJQEERfRPEk9im9mGfxBpaCnaXmBraeQEidKsKz2eIb/peEIOLAwu4Ws7PMbsUAKlOwYCaWmd4aWCV1B4yXpR59R61SitwKDdBHfgPaSTsF8zOmHz5NLykAeCRqvuvCfxGcgP0YF3ZqHy7c1Yt6jfo8dCF3idvkQjcRRVQ/f6bZBC+RBoeZnlCyqwAAAABJRU5ErkJggg==) no-repeat;
+#gear_holder {
+	background: no-repeat;
 	background-position: center;
 	float: left;
 	display: block;
-	width: 16px;
-	height: 16px;
-	padding: 1px;
+	width: 18px;
+	height: 18px;
+	padding: 0px;
 	margin-left: 4px;
 	margin-right: 11px;
 }
+
+/*BP Custom*/
+
+#gear_holder .logo {
+	width: 18px;
+}
+
+.spin-logo {
+    -webkit-transition: -webkit-transform 0.5s ease-in-out;
+       -moz-transition:    -moz-transform 0.5s ease-in-out;
+         -o-transition:      -o-transform 0.5s ease-in-out;
+            transition:         transform 0.5s ease-in-out;
+}
+.spin-logo:hover {
+    -webkit-transform: rotate(360deg);
+       -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+         -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+}​
 
 #header h1 {
 	font-size: 11pt;
@@ -396,7 +416,7 @@ div.voters .downvoter {
 
 div.voters .upvoter:hover,
 .upvoted div.voters .upvoter {
-	border-bottom-color: #ac130d;
+	border-bottom-color: #1A75BC;
 }
 
 div.voters .upvoter {

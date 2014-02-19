@@ -53,10 +53,11 @@ GEM
     mini_portile (0.5.2)
     minitest (4.7.5)
     multi_json (1.8.2)
-    mysql2 (0.3.14)
+    mysql2 (0.3.15)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     oauth (0.4.7)
+    pg (0.17.1)
     polyglot (0.3.3)
     rack (1.5.2)
     rack-test (0.6.2)
@@ -135,6 +136,7 @@ DEPENDENCIES
   mysql2 (>= 0.3.14)
   nokogiri
   oauth
+  pg
   rails (= 4.0.2)
   rdiscount
   rspec-rails (~> 2.6)

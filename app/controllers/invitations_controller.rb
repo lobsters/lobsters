@@ -81,9 +81,20 @@ class InvitationsController < ApplicationController
     return redirect_to "/invitations"
   end
 
+  def delete_request
+    if !@user.is_moderator?
       return redirect_to "/invitations"
-    else
-      render :action => :build
     end
+
+    if !(ir = InvitationRequest.where(:code => params[:code].to_s).first)
+      flash[:error] = "Invalid or expired invitation request"
+      return redirect_to "/invitations"
+    end
+
+    ir.destroy!
+    flash[:success] = "Successfully deleted invitation request from " <<
+      ir.name.to_s << "."
+
+    return redirect_to "/invitations"
   end
 end

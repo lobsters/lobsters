@@ -23,7 +23,11 @@
   <% @invitation_requests.each do |ir| %>
     <tr class="row<%= bit %>">
       <td><%= ir.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
-      <td><%= ir.name %></td>
+      <td><%= ir.name %>
+        <% if @user.is_moderator? %>
+          <br>
+          <%= ir.email %>
+        <% end %></td>
       <td><%= raw ir.markeddown_memo %></td>
       <td><%= form_tag send_invitation_for_request_url do %>
         <%= hidden_field_tag "code", ir.code %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140121063641) do
+ActiveRecord::Schema.define(version: 20140219183804) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -156,7 +156,7 @@ ActiveRecord::Schema.define(version: 20140121063641) do
     t.boolean  "pushover_mentions",                     default: false
     t.string   "rss_token",            limit: 75
     t.string   "mailing_list_token",   limit: 75
-    t.boolean  "mailing_list_enabled",                  default: false
+    t.integer  "mailing_list_mode",                     default: 0
     t.integer  "karma",                                 default: 0,     null: false
     t.datetime "banned_at"
     t.integer  "banned_by_user_id"
@@ -165,7 +165,7 @@ ActiveRecord::Schema.define(version: 20140121063641) do
     t.string   "pushover_sound"
   end
 
-  add_index "users", ["mailing_list_enabled"], name: "mailing_list_enabled", using: :btree
+  add_index "users", ["mailing_list_mode"], name: "mailing_list_enabled", using: :btree
   add_index "users", ["mailing_list_token"], name: "mailing_list_token", unique: true, using: :btree
   add_index "users", ["password_reset_token"], name: "password_reset_token", unique: true, using: :btree
   add_index "users", ["rss_token"], name: "rss_token", unique: true, using: :btree

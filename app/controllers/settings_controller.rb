@@ -38,7 +38,7 @@ private
       :email_replies, :email_messages, :email_mentions,
       :pushover_replies, :pushover_messages, :pushover_mentions,
       :pushover_user_key, :pushover_device, :pushover_sound,
-      :mailing_list_enabled,
+      :mailing_list_mode,
     )
   end
 end

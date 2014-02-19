@@ -36,8 +36,6 @@ gem "rdiscount"
 
 gem "oauth"
 
-gem "foreman"
-
 gem "thinking-sphinx", "~> 3.0.6"
 
 gem "mail"
@@ -46,4 +44,5 @@ group :test, :development do
   gem "rspec-rails", "~> 2.6"
   gem "machinist"
   gem "sqlite3"
+  gem "foreman"
 end

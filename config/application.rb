@@ -43,11 +43,11 @@ end
 # config/initializers/production.rb
 class << Rails.application
   def domain
-    "bpnews.herokuapp.com"
+    "news.calblueprint.org"
   end
 
   def name
-    "bpnews"
+    "BP News"
   end
 
   # used as mailing list prefix and countinual prefix, cannot have spaces

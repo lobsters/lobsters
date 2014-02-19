@@ -87,6 +87,31 @@ class MessagesController < ApplicationController
     end
   end
 
+  def batch_delete
+    deleted = 0
+
+    params.each do |k,v|
+      if v.to_s == "1" && m = k.match(/^delete_(.+)$/)
+        if (message = Message.where(:short_id => m[1]).first)
+          if message.author_user_id == @user.id
+            message.deleted_by_author = true
+          elsif message.recipient_user_id == @user.id
+            message.deleted_by_recipient = true
+          else
+            next
+          end
+
+          message.save!
+          deleted += 1
+        end
+      end
+    end
+
+    flash[:success] = "Deleted #{deleted} message#{deleted == 1 ? "" : "s"}."
+
+    return redirect_to "/messages"
+  end
+
   def keep_as_new
     @message.has_been_read = false
     @message.save

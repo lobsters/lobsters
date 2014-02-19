@@ -61,6 +61,8 @@ Lobsters::Application.routes.draw do
     get "/comments/page/:page" => "comments#index"
 
     get "/messages/sent" => "messages#sent"
+    post "/messages/batch_delete" => "messages#batch_delete",
+      :as => "batch_delete_messages"
     resources :messages do
       post "keep_as_new"
     end

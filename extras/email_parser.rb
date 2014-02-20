@@ -32,8 +32,8 @@ class EmailParser
   def sending_user
     return @sending_user if @sending_user
 
-    if (user = User.where(:mailing_list_enabled => true,
-    :mailing_list_token => user_token).first) && user.is_active?
+    if (user = User.where("mailing_list_mode > 0 AND mailing_list_token = ?",
+    user_token).first) && user.is_active?
       @sending_user = user
       return user
     end

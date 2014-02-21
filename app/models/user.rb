@@ -191,7 +191,7 @@ class User < ActiveRecord::Base
   end
 
   def most_common_story_tag
-    Tag.joins(
+    Tag.active.joins(
       :stories
     ).where(
       :stories => { :user_id => self.id }

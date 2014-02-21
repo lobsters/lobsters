@@ -149,6 +149,9 @@ class Story < ActiveRecord::Base
       if !t.tag.valid_for?(self.user)
         raise "#{self.user.username} does not have permission to use " <<
           "privileged tag #{t.tag.tag}"
+      elsif t.tag.inactive? && !t.new_record?
+        # stories can have inactive tags as long as they existed before
+        raise "#{self.user.username} cannot add inactive tag #{t.tag.tag}"
       end
     end
 
@@ -336,7 +339,7 @@ class Story < ActiveRecord::Base
 
     new_tag_names_a.each do |tag_name|
       if tag_name.to_s != "" && !self.tags.exists?(:tag => tag_name)
-        if t = Tag.where(:tag => tag_name).first
+        if t = Tag.active.where(:tag => tag_name).first
           # we can't lookup whether the user is allowed to use this tag yet
           # because we aren't assured to have a user_id by now; we'll do it in
           # the validation with check_tags

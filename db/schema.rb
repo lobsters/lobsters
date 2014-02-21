@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140219183804) do
+ActiveRecord::Schema.define(version: 20140221164400) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -107,6 +107,7 @@ ActiveRecord::Schema.define(version: 20140219183804) do
 
   add_index "stories", ["hotness"], name: "hotness_idx", using: :btree
   add_index "stories", ["is_expired", "is_moderated"], name: "is_idxes", using: :btree
+  add_index "stories", ["short_id"], name: "short_id", unique: true, using: :btree
   add_index "stories", ["url"], name: "url", length: {"url"=>191}, using: :btree
 
   create_table "tag_filters", force: true do |t|
@@ -130,6 +131,7 @@ ActiveRecord::Schema.define(version: 20140219183804) do
     t.string  "description", limit: 100
     t.boolean "privileged",              default: false
     t.boolean "is_media",                default: false
+    t.boolean "inactive",                default: false
   end
 
   add_index "tags", ["tag"], name: "tag", unique: true, using: :btree

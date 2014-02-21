@@ -10,6 +10,8 @@ class Tag < ActiveRecord::Base
     user && user.is_moderator?? all : where(:privileged => false)
   end
 
+  scope :active, -> { where(:inactive => false) }
+
   def to_param
     self.tag
   end
@@ -17,7 +19,7 @@ class Tag < ActiveRecord::Base
   def self.all_with_filtered_counts_for(user)
     counts = TagFilter.group(:tag_id).count
 
-    Tag.order(:tag).accessible_to(user).map{|t|
+    Tag.active.order(:tag).accessible_to(user).map{|t|
       t.filtered_count = counts[t.id].to_i
       t
     }
@@ -26,7 +28,7 @@ class Tag < ActiveRecord::Base
   def self.all_with_story_counts_for(user)
     counts = Tagging.group(:tag_id).count
 
-    Tag.order(:tag).accessible_to(user).map{|t|
+    Tag.active.order(:tag).accessible_to(user).map{|t|
       t.stories_count = counts[t.id].to_i
       t
     } 

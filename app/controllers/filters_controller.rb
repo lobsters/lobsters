@@ -5,7 +5,7 @@ class FiltersController < ApplicationController
     @cur_url = "/filters"
     @title = "Filtered Tags"
 
-    @tags = Tag.all_with_story_counts_for(@user)
+    @tags = Tag.active.all_with_story_counts_for(@user)
 
     if @user
       @filtered_tags = @user.tag_filter_tags.to_a
@@ -16,7 +16,8 @@ class FiltersController < ApplicationController
 
   def update
     tags_param = params[:tags]
-    new_tags = tags_param.blank? ? [] : Tag.where(:tag => tags_param).to_a
+    new_tags = tags_param.blank? ? [] :
+      Tag.active.where(:tag => tags_param).to_a
     new_tags.keep_if {|t| t.valid_for? @user }
 
     if @user

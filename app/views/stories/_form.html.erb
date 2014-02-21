@@ -60,7 +60,7 @@
       Story submission guidelines
     </a>
     <div id="story_guidelines" style="<%= @user &&
-      @user.stories_submitted_count > 2 ? "display: none;" : "" %>">
+      @user.stories_submitted_count > 5 ? "display: none;" : "" %>">
         <div style="float: right;">
         <a href="javascript:window.location=%22<%= root_url %>stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title)"
         style="border: 1px solid #ddd; padding: 0.5em; background-color:
@@ -85,9 +85,9 @@
 
         <li><p>
         Do not editorialize story titles, but when the original story's
-        title has no context or is unclear, please change it.  Please
+        title has no context or is unclear, please change it.  <strong>Please
         remove extraneous components from titles such as the name of the
-        site or section.
+        site or section.</strong>
         </p></li>
 
         <li><p>
@@ -100,12 +100,6 @@
         When the story being submitted is more than a year or so old,
         please add the year the story was written to the post title in
         parentheses.
-        </p></li>
-
-        <li><p>
-        If you submit a URL that matches one already posted within the
-        past 30 days, your submission will be turned into an upvote on
-        the previous story and you will be redirected to it.
         </p></li>
 
       </ul>

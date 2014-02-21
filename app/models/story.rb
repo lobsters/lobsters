@@ -401,15 +401,25 @@ class Story < ActiveRecord::Base
     self.url.blank? ? self.comments_url : self.url
   end
 
-  def vote_summary
+  def vote_summary_for(user)
     r_counts = {}
+    r_whos = {}
     Vote.where(:story_id => self.id, :comment_id => nil).each do |v|
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += v.vote
+      if user && user.is_moderator?
+        r_whos[v.reason.to_s] ||= []
+        r_whos[v.reason.to_s].push v.user.username
+      end
     end
 
     r_counts.keys.sort.map{|k|
-      k == "" ? "+#{r_counts[k]}" : "#{r_counts[k]} #{Vote::STORY_REASONS[k]}"
+      if k == ""
+        "+#{r_counts[k]}"
+      else
+        "#{r_counts[k]} #{Vote::STORY_REASONS[k]}" +
+          (user && user.is_moderator?? " (#{r_whos[k].join(", ")})" : "")
+      end
     }.join(", ")
   end
 end

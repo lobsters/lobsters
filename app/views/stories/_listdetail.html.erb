@@ -78,7 +78,7 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
 
         <% if defined?(single_story) && single_story %>
           <% if story.downvotes > 0 %>
-            | <%= story.vote_summary.downcase %>
+            | <%= story.vote_summary_for(@user).downcase %>
           <% end %>
         <% end %>
       <% end %>

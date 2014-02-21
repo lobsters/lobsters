@@ -1,6 +1,15 @@
-<%= error_messages_for f.object %>
-
-<% if !f.object.errors.any? && f.object.already_posted_story %>
+<% if f.object.errors.count == 1 && f.object.already_posted_story %>
+  <div class="flash-error">
+  <h2>Error: This story was already submitted <%=
+    time_ago_in_words(f.object.already_posted_story.created_at) %> ago</h2>
+  <p>
+  Please view the <a href="<%= f.object.already_posted_story.comments_url %>"
+  target="_blank">previous discussion</a> for this story.
+  </p>
+  </div>
+<% elsif f.object.errors.any? %>
+  <%= error_messages_for f.object %>
+<% elsif !f.object.errors.any? && f.object.already_posted_story %>
   <div class="flash-notice">
   <h2>Note: This story was already submitted <%=
     time_ago_in_words(f.object.already_posted_story.created_at) %> ago, but may

@@ -31,7 +31,7 @@
       <td><%= raw ir.markeddown_memo %></td>
       <td><%= form_tag send_invitation_for_request_url do %>
         <%= hidden_field_tag "code", ir.code %>
-        <%= submit_tag "Send Invitiation", :data => { :confirm => "Are " <<
+        <%= submit_tag "Send Invitation", :data => { :confirm => "Are " <<
         "you sure you want to invite this person and remove this request?" } %>
       <% end %></td>
       <% if @user.is_moderator? %>

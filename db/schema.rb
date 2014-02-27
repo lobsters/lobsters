@@ -107,7 +107,7 @@ ActiveRecord::Schema.define(version: 20140221164400) do
 
   add_index "stories", ["hotness"], name: "hotness_idx", using: :btree
   add_index "stories", ["is_expired", "is_moderated"], name: "is_idxes", using: :btree
-  add_index "stories", ["short_id"], name: "short_id", unique: true, using: :btree
+  add_index "stories", ["short_id"], name: "unique_short_id", unique: true, using: :btree
   add_index "stories", ["url"], name: "url", length: {"url"=>191}, using: :btree
 
   create_table "tag_filters", force: true do |t|

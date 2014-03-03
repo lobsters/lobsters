@@ -7,35 +7,40 @@
 var _Lobsters = Class.extend({
   curUser: null,
 
-  storyDownvoteReasons: { <%= Vote::STORY_REASONS.map{|k,v|
-      "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
   commentDownvoteReasons: { <%= Vote::COMMENT_REASONS.map{|k,v|
       "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
 
-  upvote: function(voterEl) {
+  upvoteStory: function(voterEl) {
     Lobsters.vote("story", voterEl, 1);
   },
-  downvote: function(voterEl) {
-    Lobsters._showDownvoteWhyAt("story", voterEl, function(k) {
-      Lobsters.vote("story", voterEl, -1, k); });
+  hideStory: function(hiderEl) {
+    if (!Lobsters.curUser)
+      return Lobsters.bounceToLogin();
+
+    var li = $(hiderEl).closest(".story, .comment");
+    var act;
+
+    if (li.hasClass("hidden")) {
+      act = "unhide";
+      li.removeClass("hidden");
+      hiderEl.innerHTML = "hide";
+    } else {
+      act = "hide";
+      li.addClass("hidden");
+      hiderEl.innerHTML = "unhide";
+    }
+
+    $.post("/stories/" + li.attr("data-shortid") + "/" + act);
   },
 
   upvoteComment: function(voterEl) {
     Lobsters.vote("comment", voterEl, 1);
   },
   downvoteComment: function(voterEl) {
-    Lobsters._showDownvoteWhyAt("comment", voterEl, function(k) {
-      Lobsters.vote("comment", voterEl, -1, k); });
-  },
-
-  _showDownvoteWhyAt: function(thingType, voterEl, onChooseWhy) {
-    if (!Lobsters.curUser)
-      return Lobsters.bounceToLogin();
-
     var li = $(voterEl).closest(".story, .comment");
     if (li.hasClass("downvoted")) {
       /* already upvoted, neutralize */
-      Lobsters.vote(thingType, voterEl, -1, null);
+      Lobsters.vote("comment", voterEl, -1, null);
       return;
     }
 
@@ -53,13 +58,7 @@ var _Lobsters = Class.extend({
 
     var d = $("<div id=\"downvote_why\"></div>");
 
-    var reasons;
-    if (thingType == "comment")
-      reasons = Lobsters.commentDownvoteReasons;
-    else
-      reasons = Lobsters.storyDownvoteReasons;
-
-    $.each(reasons, function(k, v) {
+    $.each(Lobsters.commentDownvoteReasons, function(k, v) {
       var a = $("<a href=\"#\"" + (k == "" ? " class=\"cancelreason\"" : "") +
         ">" + v + "</a>");
 
@@ -68,7 +67,7 @@ var _Lobsters = Class.extend({
         $("#downvote_why_shadow").remove();
 
         if (k != "")
-          onChooseWhy(k);
+          Lobsters.vote("comment", voterEl, -1, k);
 
         return false;
       });
@@ -205,8 +204,7 @@ var _Lobsters = Class.extend({
     })
     .success(function(data) {
       if (data && data.title)
-        title_field.val(data.title.substr(0,
-          title_field.maxLength));
+        title_field.val(data.title.substr(0, title_field.maxLength));
 
       button.val(old_value);
       button.prop("disabled", false);
@@ -220,6 +218,7 @@ var _Lobsters = Class.extend({
   bounceToLogin: function() {
     document.location = "/login?return=" +
       encodeURIComponent(document.location);
+    return false;
   },
 });
 
@@ -235,12 +234,12 @@ $(document).ready(function() {
     return false;
   });
 
-  $("li.story a.downvoter").click(function() {
-    Lobsters.downvote(this);
+  $("li.story a.upvoter").click(function() {
+    Lobsters.upvoteStory(this);
     return false;
   });
-  $("li.story a.upvoter").click(function() {
-    Lobsters.upvote(this);
+  $("li.story a.hider").click(function() {
+    Lobsters.hideStory(this);
     return false;
   });
 

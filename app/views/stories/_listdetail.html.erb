@@ -1,6 +1,7 @@
 <li id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
-class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
-"downvoted" : "") %> <%= story.is_expired? ? "expired" : "" %>">
+class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
+"downvoted" : "" %> <%= story.vote == 0 ? "hidden" : "" %> <%= story.is_expired? ?
+"expired" : "" %>">
 <div class="story_liner">
   <div class="voters">
     <% if @user %>
@@ -8,12 +9,7 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
     <% else %>
       <%= link_to "", login_url, :class => "upvoter" %>
     <% end %>
-    <div class="score"><%= story.upvotes - story.downvotes %></div>
-    <% if @user && @user.can_downvote?(story) %>
-      <a class="downvoter"></a>
-    <% else %>
-      <span class="downvoter downvoter_stub"></span>
-    <% end %>
+    <div class="score"><%= story.score %></div>
   </div>
   <div class="details">
     <span class="link">
@@ -67,6 +63,15 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
             <% end %>
           <% end %>
         <% end %>
+        <% if !story.is_gone? && @user %>
+          <% if story.vote == 0 %>
+            | <%= link_to "unhide", story_unhide_url(story.short_id),
+              :class => "hider" %>
+          <% else %>
+            | <%= link_to "hide", story_hide_url(story.short_id),
+              :class => "hider" %>
+          <% end %>
+        <% end %>
         <% if !story.is_gone? && (@user || story.comments_count > 0) %>
           <span class="comments_label">
             |
@@ -74,12 +79,6 @@ class="story <%= story.vote == 1 ? "upvoted" : (story.vote == -1 ?
               "discuss" : "#{story.comments_count} comment" <<
               (story.comments_count == 1 ? "" : "s") %></a>
           </span>
-        <% end %>
-
-        <% if defined?(single_story) && single_story %>
-          <% if story.downvotes > 0 %>
-            | <%= story.vote_summary_for(@user).downcase %>
-          <% end %>
         <% end %>
       <% end %>
     </div>

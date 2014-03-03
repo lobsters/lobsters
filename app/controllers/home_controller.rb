@@ -10,6 +10,15 @@ class HomeController < ApplicationController
   # for rss feeds, load the user's tag filters if a token is passed
   before_filter :find_user_from_rss_token, :only => [ :index, :newest ]
 
+  def hidden
+    @stories = find_stories({ :hidden => true })
+
+    @heading = @title = "Hidden Stories"
+    @cur_url = "/hidden"
+
+    render :action => "index"
+  end
+
   def index
     @stories = find_stories
 
@@ -38,7 +47,6 @@ class HomeController < ApplicationController
 
     @heading = @title = "Newest Stories"
     @cur_url = "/newest"
-    @newest = true
 
     @rss_link = "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
       "title=\"RSS 2.0 - Newest Items\" href=\"/newest.rss" <<
@@ -76,7 +84,6 @@ class HomeController < ApplicationController
 
     @heading = @title = "Recent Stories"
     @cur_url = "/recent"
-    @recent = true
 
     render :action => "index"
   end
@@ -145,14 +152,28 @@ private
   def _find_stories(how)
     stories = Story.where(:is_expired => false)
 
-    if @user && !(how[:newest] || how[:by_user])
-      # exclude downvoted items
+    if @user && !how[:by_user] && !how[:hidden]
+      # exclude downvoted and hidden items
       stories = stories.where(
         Story.arel_table[:id].not_in(
           Vote.arel_table.where(
             Vote.arel_table[:user_id].eq(@user.id)
           ).where(
-            Vote.arel_table[:vote].lt(0)
+            Vote.arel_table[:vote].lteq(0)
+          ).where(
+            Vote.arel_table[:comment_id].eq(nil)
+          ).project(
+            Vote.arel_table[:story_id]
+          )
+        )
+      )
+    elsif @user && how[:hidden]
+      stories = stories.where(
+        Story.arel_table[:id].in(
+          Vote.arel_table.where(
+            Vote.arel_table[:user_id].eq(@user.id)
+          ).where(
+            Vote.arel_table[:vote].eq(0)
           ).where(
             Vote.arel_table[:comment_id].eq(nil)
           ).project(

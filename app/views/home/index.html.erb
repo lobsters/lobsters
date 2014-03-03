@@ -1,21 +1,20 @@
-<ol class="stories list">
+<ol class="stories list <%= @cur_url == "/hidden" ? "show_hidden" : "" %>">
   <%= render :partial => "stories/listdetail", :collection => @stories,
     :as => :story %>
 </ol>
 
 <div class="morelink">
   <% if @page && @page > 1 %>
-    <a href="<%= @tag ? "/t/#{@tag.tag}" : (@newest ? "/newest" +
-      (@for_user ? "/#{@for_user}" : "") : "") %><%= @page == 2 ? "/" :
-      "/page/#{@page - 1}" %>">&lt;&lt; Page <%= @page - 1 %></a>
+    <a href="<%= @cur_url %><%= @cur_url == "/" ? "" : "/" %><%=
+      @page == 2 ? "" : "page/#{@page - 1}" %>">&lt;&lt; Page
+      <%= @page - 1 %></a>
   <% end %>
 
   <% if @show_more %>
     <% if @page && @page > 1 %>
       |
     <% end %>
-    <a href="<%= @tag ? "/t/#{@tag.tag}" : (@newest ? "/newest" +
-      (@for_user ? "/#{@for_user}" : "") : "") %>/page/<%= @page + 1 %>">Page
-      <%= @page + 1 %> &gt;&gt;</a>
+    <a href="<%= @cur_url %><%= @cur_url == "/" ? "" : "/" %>page/<%=
+      @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
   <% end %>
 </div>

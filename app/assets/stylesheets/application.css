@@ -509,6 +509,12 @@ li .byline a.inactive_user {
 	text-decoration: line-through;
 }
 
+li.story.hidden {
+	opacity: 0.25;
+}
+ol.show_hidden li.story.hidden {
+	opacity: 1.0 !important;
+}
 
 li.story.expired {
 	opacity: 0.6;

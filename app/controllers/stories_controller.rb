@@ -1,6 +1,6 @@
 class StoriesController < ApplicationController
   before_filter :require_logged_in_user_or_400,
-    :only => [ :upvote, :downvote, :unvote, :preview ]
+    :only => [ :upvote, :unvote, :hide, :unhide, :preview ]
 
   before_filter :require_logged_in_user, :only => [ :destroy, :create, :edit,
     :fetch_url_title, :new ]
@@ -201,21 +201,24 @@ class StoriesController < ApplicationController
     render :text => "ok"
   end
 
-  def downvote
+  def hide
     if !(story = find_story)
       return render :text => "can't find story", :status => 400
     end
 
-    if !Vote::STORY_REASONS[params[:reason]]
-      return render :text => "invalid reason", :status => 400
+    Vote.vote_thusly_on_story_or_comment_for_user_because(0, story.id,
+      nil, @user.id, "H")
+
+    render :text => "ok"
+  end
+
+  def unhide
+    if !(story = find_story)
+      return render :text => "can't find story", :status => 400
     end
 
-    if !@user.can_downvote?(story)
-      return render :text => "not permitted to downvote", :status => 400
-    end
-
-    Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id,
-      nil, @user.id, params[:reason])
+    Vote.vote_thusly_on_story_or_comment_for_user_because(0, story.id,
+      nil, @user.id, nil)
 
     render :text => "ok"
   end

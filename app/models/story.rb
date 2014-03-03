@@ -22,10 +22,10 @@ class Story < ActiveRecord::Base
     :seen_previous
   attr_accessor :editor_user_id, :moderation_reason
 
-  before_validation :assign_short_id,
+  before_validation :assign_short_id_and_upvote,
     :on => :create
   before_save :log_moderation
-  after_create :mark_submitter
+  after_create :mark_submitter, :record_initial_upvote
 
   validate do
     if self.url.present?
@@ -113,8 +113,9 @@ class Story < ActiveRecord::Base
     h
   end
 
-  def assign_short_id
+  def assign_short_id_and_upvote
     self.short_id = ShortId.new(self.class).generate
+    self.upvotes = 1
   end
 
   def calculated_hotness
@@ -302,6 +303,11 @@ class Story < ActiveRecord::Base
 
   def recalculate_hotness!
     update_column :hotness, calculated_hotness
+  end
+
+  def record_initial_upvote
+    Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.id, nil,
+      self.user_id, nil, false)
   end
 
   def short_id_url

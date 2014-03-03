@@ -16,8 +16,9 @@ class Comment < ActiveRecord::Base
     self.assign_initial_confidence
     self.assign_thread_id
   end
-  after_create :assign_votes, :mark_submitter, :deliver_reply_notifications,
-    :deliver_mention_notifications, :log_to_countinual
+  after_create :record_initial_upvote, :mark_submitter,
+    :deliver_reply_notifications, :deliver_mention_notifications,
+    :log_to_countinual
   after_destroy :unassign_votes
 
   DOWNVOTABLE_DAYS = 7
@@ -138,13 +139,6 @@ class Comment < ActiveRecord::Base
     else
       self.thread_id = Keystore.incremented_value_for("thread_id")
     end
-  end
-
-  def assign_votes
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.story_id,
-      self.id, self.user.id, nil, false)
-
-    self.story.update_comments_count!
   end
 
   # http://evanmiller.org/how-not-to-sort-by-average-rating.html
@@ -331,6 +325,13 @@ class Comment < ActiveRecord::Base
   def plaintext_comment
     # TODO: linkify then strip tags and convert entities back
     comment
+  end
+
+  def record_initial_upvote
+    Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.story_id,
+      self.id, self.user_id, nil, false)
+
+    self.story.update_comments_count!
   end
 
   def score

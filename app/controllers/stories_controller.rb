@@ -17,9 +17,6 @@ class StoriesController < ApplicationController
 
     if @story.valid? && !(@story.already_posted_story && !@story.seen_previous)
       if @story.save
-        Vote.vote_thusly_on_story_or_comment_for_user_because(1, @story.id,
-          nil, @user.id, nil)
-
         Countinual.count!("#{Rails.application.shortname}.stories.submitted",
           "+1")
 

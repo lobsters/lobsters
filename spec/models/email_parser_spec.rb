@@ -8,7 +8,7 @@ describe EmailParser do
     @commentor = User.make!
     @comment = Comment.make!(:story => @story, :user => @commentor)
 
-    @emailer = User.make!(:mailing_list_enabled => true)
+    @emailer = User.make!(:mailing_list_mode => 1)
 
     @emails = {}
     Dir.glob("#{Rails.root}/spec/fixtures/inbound_emails/*.eml").

@@ -368,7 +368,6 @@ ol.search_results li.story {
 
 div.voters {
 	float: left;
-	margin-top: -4px;
 	width: 40px;
 }
 
@@ -424,8 +423,8 @@ li.story {
 	clear: both;
 }
 li.story div.story_liner {
-	padding-top: 0.4em;
-	padding-bottom: 0.4em;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
 }
 .comment {
 	clear: both;

@@ -18,7 +18,7 @@ class Story < ActiveRecord::Base
 
   attr_accessor :vote, :already_posted_story, :fetched_content, :previewing,
     :seen_previous
-  attr_accessor :editor_user_id, :moderation_reason
+  attr_accessor :editor, :moderation_reason
 
   before_validation :assign_short_id_and_upvote,
     :on => :create
@@ -143,13 +143,15 @@ class Story < ActiveRecord::Base
   # this has to happen just before save rather than in tags_a= because we need
   # to have a valid user_id
   def check_tags
+    u = self.editor || self.user
+
     self.taggings.each do |t|
-      if !t.tag.valid_for?(self.user)
-        raise "#{self.user.username} does not have permission to use " <<
-          "privileged tag #{t.tag.tag}"
+      if !t.tag.valid_for?(u)
+        raise "#{u.username} does not have permission to use privileged " <<
+          "tag #{t.tag.tag}"
       elsif t.tag.inactive? && !t.new_record?
         # stories can have inactive tags as long as they existed before
-        raise "#{self.user.username} cannot add inactive tag #{t.tag.tag}"
+        raise "#{u.username} cannot add inactive tag #{t.tag.tag}"
       end
     end
 
@@ -256,15 +258,14 @@ class Story < ActiveRecord::Base
   end
 
   def log_moderation
-    if self.new_record? || !self.editor_user_id ||
-    self.editor_user_id == self.user_id
+    if self.new_record? || !self.editor || self.editor.id == self.user_id
       return
     end
 
     all_changes = self.changes.merge(self.tagging_changes)
 
     m = Moderation.new
-    m.moderator_user_id = self.editor_user_id
+    m.moderator_user_id = self.editor.try(:id)
     m.story_id = self.id
 
     if all_changes["is_expired"] && self.is_expired?

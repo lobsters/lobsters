@@ -109,6 +109,8 @@ class MessagesController < ApplicationController
 
     flash[:success] = "Deleted #{deleted} message#{deleted == 1 ? "" : "s"}."
 
+    @user.update_unread_message_count!
+
     return redirect_to "/messages"
   end
 
@@ -120,7 +122,6 @@ class MessagesController < ApplicationController
   end
 
 private
-
   def message_params
     params.require(:message).permit(
       :recipient_username, :subject, :body,
@@ -128,7 +129,8 @@ private
   end
 
   def find_message
-    if @message = Message.where(:short_id => params[:message_id] || params[:id]).first
+    if @message = Message.where(:short_id => params[:message_id] ||
+    params[:id]).first
       if (@message.author_user_id == @user.id ||
       @message.recipient_user_id == @user.id)
         return true

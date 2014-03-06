@@ -244,7 +244,7 @@ class User < ActiveRecord::Base
 
   def update_unread_message_count!
     Keystore.put("user:#{self.id}:unread_messages",
-      Message.where(:recipient_user_id => self.id,
-        :has_been_read => false).count)
+      Message.where("recipient_user_id = ? AND (has_been_read = ? AND " <<
+      "deleted_by_recipient = ?)", self.id, false, false).count)
   end
 end

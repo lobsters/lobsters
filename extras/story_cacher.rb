@@ -27,8 +27,7 @@ class StoryCacher
       if res.present?
         j = JSON.parse(res)
 
-        # turn newlines into double newlines, so they become paragraphs
-        return j["text"].gsub("\n", "\n\n")
+        return j["text"]
       end
 
     rescue => e

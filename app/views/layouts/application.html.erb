@@ -25,7 +25,8 @@
   <% end %>
   <%= csrf_meta_tags %>
   <% if @rss_link %>
-    <%= raw(@rss_link) %>
+    <link rel="alternate" type="application/rss+xml"
+      title="<%= @rss_link[:title] %>" href="<%= @rss_link[:href] %>" />
   <% end %>
 </head>
 <body>

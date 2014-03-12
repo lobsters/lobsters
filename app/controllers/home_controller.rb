@@ -22,9 +22,8 @@ class HomeController < ApplicationController
   def index
     @stories = find_stories
 
-    @rss_link ||= "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
-      "title=\"RSS 2.0\" href=\"/rss" <<
-      (@user ? "?token=#{@user.rss_token}" : "") << "\" />"
+    @rss_link ||= { :title => "RSS 2.0",
+      :href => "/rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
 
     @heading = @title = ""
     @cur_url = "/"
@@ -48,9 +47,8 @@ class HomeController < ApplicationController
     @heading = @title = "Newest Stories"
     @cur_url = "/newest"
 
-    @rss_link = "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
-      "title=\"RSS 2.0 - Newest Items\" href=\"/newest.rss" <<
-      (@user ? "?token=#{@user.rss_token}" : "") << "\" />"
+    @rss_link = { :title => "RSS 2.0 - Newest Items",
+      :href => "/newest.rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
 
     respond_to do |format|
       format.html { render :action => "index" }
@@ -85,6 +83,10 @@ class HomeController < ApplicationController
     @heading = @title = "Recent Stories"
     @cur_url = "/recent"
 
+    # our content changes every page load, so point at /newest.rss to be stable
+    @rss_link = { :title => "RSS 2.0 - Newest Items",
+      :href => "/newest.rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
+
     render :action => "index"
   end
 
@@ -96,10 +98,8 @@ class HomeController < ApplicationController
     @heading = @title = @tag.description.blank?? @tag.tag : @tag.description
     @cur_url = tag_url(@tag.tag)
 
-    @rss_link = "<link rel=\"alternate\" type=\"application/rss+xml\" " <<
-      "title=\"RSS 2.0 - Tagged #{CGI.escape(@tag.tag)} " <<
-      "(#{CGI.escape(@tag.description.to_s)})\" href=\"/t/" +
-      "#{CGI.escape(@tag.tag)}.rss\" />"
+    @rss_link = { :title => "RSS 2.0 - Tagged #{@tag.tag} (#{@tag.description})",
+      :href => "/t/#{@tag.tag}.rss" }
 
     respond_to do |format|
       format.html { render :action => "index" }

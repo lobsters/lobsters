@@ -338,7 +338,7 @@ $(document).ready(function() {
         ta.addSelectedChoice({ id: "video" });
     }
     /* if the url looks like a slide sharing site url, assign the slides tag */
-    else if ($("#story_url").val().match(/[\/\.](slideshare\.net)\//i)) {
+    else if ($("#story_url").val().match(/[\/\.](slideshare\.net|speakerdeck\.com)\//i)) {
       var ta = $("#story_tags_a").data("select2");
       if (ta.getVal().indexOf("slides") < 0)
         ta.addSelectedChoice({ id: "slides" });

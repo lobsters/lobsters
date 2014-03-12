@@ -68,15 +68,15 @@
     <a href="#" id="story_guidelines_toggler">
       Story submission guidelines
     </a>
-    <div id="story_guidelines" style="<%= @user &&
-      @user.stories_submitted_count > 5 ? "display: none;" : "" %>">
-        <div style="float: right;">
-        <a href="javascript:window.location=%22<%= root_url %>stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title)"
-        style="border: 1px solid #ddd; padding: 0.5em; background-color:
-        #f8f8f8; line-height: 1.5em; margin-left: 1em;">Submit to
-        <%= Rails.application.name %></a>
-        </div>
-        <ul>
+    <div id="story_guidelines" style="<%= show_guidelines?? "" :
+    "display: none;" %>">
+      <div style="float: right;">
+      <a href="javascript:window.location=%22<%= root_url %>stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title)"
+      style="border: 1px solid #ddd; padding: 0.5em; background-color:
+      #f8f8f8; line-height: 1.5em; margin-left: 1em;">Submit to
+      <%= Rails.application.name %></a>
+      </div>
+      <ul>
 
         <li><p>
         To be able to easily submit a page you're viewing in your browser

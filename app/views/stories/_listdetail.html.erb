@@ -71,6 +71,9 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
             | <%= link_to "hide", story_hide_url(story.short_id),
               :class => "hider" %>
           <% end %>
+          <% if defined?(single_story) && single_story && story.hider_count > 0 %>
+            (hidden by <%= pluralize(story.hider_count, "user") %>)
+          <% end %>
         <% end %>
         <% if !story.is_gone? && (@user || story.comments_count > 0) %>
           <span class="comments_label">

@@ -225,6 +225,11 @@ class Story < ActiveRecord::Base
       "hotness = '#{self.calculated_hotness}' WHERE id = #{self.id.to_i}")
   end
 
+  def hider_count
+    @hider_count ||= Vote.where(:story_id => self.id, :comment_id => nil,
+      :vote => 0).count
+  end
+
   def is_editable_by_user?(user)
     if user && user.is_moderator?
       return true

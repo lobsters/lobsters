@@ -130,7 +130,7 @@ describe Story do
     s.description = nil
     s.tags_a = [ "tag1" ]
 
-    s.editor_user_id = mod.id
+    s.editor = mod
     s.moderation_reason = "because i hate you"
     s.save!
 

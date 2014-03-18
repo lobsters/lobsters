@@ -27,7 +27,9 @@ class StoryCacher
       if res.present?
         j = JSON.parse(res)
 
-        return j["text"]
+        while j["text"].match("\n\n\n")
+          j["text"].gsub!("\n\n\n", "\n\n")
+        end
       end
 
     rescue => e

@@ -27,7 +27,8 @@ class User < ActiveRecord::Base
 
   validates :password, :presence => true, :on => :create
 
-  validates :username, :format => { :with => /\A[A-Za-z0-9][A-Za-z0-9_-]*\Z/ },
+  validates :username,
+    :format => { :with => /\A[A-Za-z0-9][A-Za-z0-9_-]{0,24}\Z/ },
     :uniqueness => { :case_sensitive => false }
 
   validates_each :username do |record,attr,value|
@@ -54,6 +55,12 @@ class User < ActiveRecord::Base
       u.karma = u.stories.map(&:score).sum + u.comments.map(&:score).sum
       u.save!
     end
+  end
+
+  def self.username_regex
+    User.validators_on(:username).select{|v|
+      v.class == ActiveModel::Validations::FormatValidator }.first.
+      options[:with].inspect
   end
 
   def as_json(options = {})

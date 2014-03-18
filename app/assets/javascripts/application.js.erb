@@ -7,11 +7,17 @@
 var _Lobsters = Class.extend({
   curUser: null,
 
+  storyDownvoteReasons: { <%= Vote::STORY_REASONS.map{|k,v|
+      "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
   commentDownvoteReasons: { <%= Vote::COMMENT_REASONS.map{|k,v|
       "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
 
   upvoteStory: function(voterEl) {
     Lobsters.vote("story", voterEl, 1);
+  },
+  downvoteStory: function(voterEl) {
+    Lobsters._showDownvoteWhyAt("story", voterEl, function(k) {
+      Lobsters.vote("story", voterEl, -1, k); });
   },
   hideStory: function(hiderEl) {
     if (!Lobsters.curUser)
@@ -37,10 +43,17 @@ var _Lobsters = Class.extend({
     Lobsters.vote("comment", voterEl, 1);
   },
   downvoteComment: function(voterEl) {
+    Lobsters._showDownvoteWhyAt("comment", voterEl, function(k) {
+      Lobsters.vote("comment", voterEl, -1, k); });
+  },
+  _showDownvoteWhyAt: function(thingType, voterEl, onChooseWhy) {
+    if (!Lobsters.curUser)
+      return Lobsters.bounceToLogin();
+
     var li = $(voterEl).closest(".story, .comment");
     if (li.hasClass("downvoted")) {
       /* already upvoted, neutralize */
-      Lobsters.vote("comment", voterEl, -1, null);
+      Lobsters.vote(thingType, voterEl, -1, null);
       return;
     }
 
@@ -58,7 +71,13 @@ var _Lobsters = Class.extend({
 
     var d = $("<div id=\"downvote_why\"></div>");
 
-    $.each(Lobsters.commentDownvoteReasons, function(k, v) {
+    var reasons;
+    if (thingType == "comment")
+      reasons = Lobsters.commentDownvoteReasons;
+    else
+      reasons = Lobsters.storyDownvoteReasons;
+
+    $.each(reasons, function(k, v) {
       var a = $("<a href=\"#\"" + (k == "" ? " class=\"cancelreason\"" : "") +
         ">" + v + "</a>");
 
@@ -67,7 +86,7 @@ var _Lobsters = Class.extend({
         $("#downvote_why_shadow").remove();
 
         if (k != "")
-          Lobsters.vote("comment", voterEl, -1, k);
+          onChooseWhy(k);
 
         return false;
       });
@@ -234,6 +253,10 @@ $(document).ready(function() {
     return false;
   });
 
+  $("li.story a.downvoter").click(function() {
+    Lobsters.downvoteStory(this);
+    return false;
+  });
   $("li.story a.upvoter").click(function() {
     Lobsters.upvoteStory(this);
     return false;

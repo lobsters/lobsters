@@ -58,8 +58,9 @@
 	}
 
 	div.voters {
-		width: 31px;
 		margin-left: 0.25em;
+		margin-top: 0px;
+		width: 31px;
 	}
 	div.voters a.upvoter {
 		margin-top: -5px;
@@ -133,7 +134,7 @@
 		color: #333;
 		display: block;
 		font-size: 9pt;
-		margin: -0.5em 0.5em 0 0.5em;
+		margin: 0 0.5em;
 		padding: 2px;
 		position: relative;
 		text-align: center;

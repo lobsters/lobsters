@@ -10,6 +10,8 @@ class Story < ActiveRecord::Base
   validates_length_of :description, :maximum => (64 * 1024)
   validates_presence_of :user_id
 
+  DOWNVOTABLE_DAYS = 14
+
   # after this many minutes old, a story cannot be edited
   MAX_EDIT_MINS = 30
 
@@ -117,7 +119,8 @@ class Story < ActiveRecord::Base
   end
 
   def calculated_hotness
-    order = Math.log([ score.abs, 1 ].max, 10)
+    # don't immediately kill stories at 0 by bumping up score by one
+    order = Math.log([ (score + 1).abs, 1 ].max, 10)
     if score > 0
       sign = 1
     elsif score < 0
@@ -228,6 +231,14 @@ class Story < ActiveRecord::Base
   def hider_count
     @hider_count ||= Vote.where(:story_id => self.id, :comment_id => nil,
       :vote => 0).count
+  end
+
+  def is_downvotable?
+    if self.created_at
+      Time.now - self.created_at <= DOWNVOTABLE_DAYS.days
+    else
+      false
+    end
   end
 
   def is_editable_by_user?(user)
@@ -400,5 +411,28 @@ class Story < ActiveRecord::Base
 
   def url_or_comments_url
     self.url.blank? ? self.comments_url : self.url
+  end
+
+  def vote_summary_for(user)
+    r_counts = {}
+    r_whos = {}
+    Vote.where(:story_id => self.id, :comment_id => nil).each do |v|
+      r_counts[v.reason.to_s] ||= 0
+      r_counts[v.reason.to_s] += v.vote
+      if user && user.is_moderator?
+        r_whos[v.reason.to_s] ||= []
+        r_whos[v.reason.to_s].push v.user.username
+      end
+    end
+
+    r_counts.keys.sort.map{|k|
+      if k == ""
+        "+#{r_counts[k]}"
+      else
+        "#{r_counts[k]} " +
+          (Vote::STORY_REASONS[k] || Vote::OLD_STORY_REASONS[k]) +
+          (user && user.is_moderator?? " (#{r_whos[k].join(", ")})" : "")
+      end
+    }.join(", ")
   end
 end

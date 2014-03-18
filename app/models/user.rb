@@ -103,8 +103,12 @@ class User < ActiveRecord::Base
     if is_new?
       return false
     elsif obj.is_a?(Story)
-      # user can unvote
-      return obj.vote == -1
+      if obj.is_downvotable?
+        return true
+      elsif obj.vote == -1
+        # user can unvote
+        return true
+      end
     elsif obj.is_a?(Comment)
       if obj.is_downvotable?
         return true

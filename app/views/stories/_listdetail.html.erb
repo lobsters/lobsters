@@ -10,6 +10,11 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
       <%= link_to "", login_url, :class => "upvoter" %>
     <% end %>
     <div class="score"><%= story.score %></div>
+    <% if @user && @user.can_downvote?(story) %>
+      <a class="downvoter"></a>
+    <% else %>
+      <span class="downvoter downvoter_stub"></span>
+    <% end %>
   </div>
   <div class="details">
     <span class="link">
@@ -82,6 +87,12 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
               "discuss" : "#{story.comments_count} comment" <<
               (story.comments_count == 1 ? "" : "s") %></a>
           </span>
+        <% end %>
+
+        <% if defined?(single_story) && single_story %>
+          <% if story.downvotes > 0 %>
+            | <%= story.vote_summary_for(@user).downcase %>
+          <% end %>
         <% end %>
       <% end %>
     </div>

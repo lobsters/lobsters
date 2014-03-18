@@ -42,6 +42,7 @@ Lobsters::Application.routes.draw do
 
     resources :stories do
       post "upvote"
+      post "downvote"
       post "unvote"
       post "undelete"
       post "hide"

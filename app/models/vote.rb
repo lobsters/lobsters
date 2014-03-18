@@ -11,6 +11,18 @@ class Vote < ActiveRecord::Base
     "" => "Cancel",
   }
 
+  STORY_REASONS = {
+    "O" => "Off-topic",
+    "A" => "Already Posted",
+    "T" => "Poorly Tagged",
+    "L" => "Poorly Titled",
+    "S" => "Spam",
+    "" => "Cancel",
+  }
+  OLD_STORY_REASONS = {
+    "Q" => "Low Quality",
+  }
+
   def self.votes_by_user_for_stories_hash(user, stories)
     votes = {}
 

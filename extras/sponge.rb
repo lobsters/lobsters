@@ -114,6 +114,7 @@ class Sponge
     end
 
     host = Net::HTTP.new(ip.to_s, uri.port)
+    host.read_timeout = self.timeout
     if self.debug
       host.set_debug_output $stdout
     end
@@ -161,12 +162,10 @@ class Sponge
     end
 
     res = nil
-    Timeout.timeout(self.timeout) do
-      if method == :post
-        res = host.post(path, post_data, headers)
-      else
-        res = host.get(path, headers)
-      end
+    if method == :post
+      res = host.post(path, post_data, headers)
+    else
+      res = host.get(path, headers)
     end
 
     if res.get_fields("Set-Cookie")

@@ -93,20 +93,16 @@ pre {
 /* default form styling */
 
 input,
-select,
 button,
+select,
 textarea {
 	color: #555;
 	line-height: 1.2em;
+	padding: 3px 5px;
 }
 textarea {
 	line-height: 1.35em;
-}
-input,
-button,
-select,
-textarea {
-	padding: 3px 5px;
+	resize: vertical;
 }
 input[type="text"],
 input[type="search"],

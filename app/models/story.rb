@@ -416,7 +416,7 @@ class Story < ActiveRecord::Base
   def vote_summary_for(user)
     r_counts = {}
     r_whos = {}
-    Vote.where(:story_id => self.id, :comment_id => nil).each do |v|
+    Vote.where(:story_id => self.id, :comment_id => nil).where("vote != 0").each do |v|
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += v.vote
       if user && user.is_moderator?
@@ -430,7 +430,7 @@ class Story < ActiveRecord::Base
         "+#{r_counts[k]}"
       else
         "#{r_counts[k]} " +
-          (Vote::STORY_REASONS[k] || Vote::OLD_STORY_REASONS[k]) +
+          (Vote::STORY_REASONS[k] || Vote::OLD_STORY_REASONS[k] || k) +
           (user && user.is_moderator?? " (#{r_whos[k].join(", ")})" : "")
       end
     }.join(", ")

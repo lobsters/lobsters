@@ -60,6 +60,13 @@ Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each d
 
   mailing_list_users.each do |u|
     if (s.tags.map{|t| t.id } & u.tag_filters.map{|t| t.tag_id }).any?
+      # story has tags this user has filtered out
+      next
+    end
+
+    if Vote.where(:user_id => u.id, :story_id => s.id, :comment_id => nil,
+    :vote => 0).first
+      # user has hidden this story
       next
     end
 
@@ -133,6 +140,13 @@ last_comment_id, false, false).order(:id).each do |c|
     end
 
     if (c.story.tags.map{|t| t.id } & u.tag_filters.map{|t| t.tag_id }).any?
+      # story has tags this user has filtered out
+      next
+    end
+
+    if Vote.where(:user_id => u.id, :story_id => c.story_id,
+    :comment_id => nil, :vote => 0).first
+      # user has hidden this story
       next
     end
 

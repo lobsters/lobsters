@@ -74,13 +74,7 @@ class Story < ActiveRecord::Base
     end
     urls = urls2.clone
 
-    conds = [ "" ]
-    urls.uniq.each_with_index do |u,x|
-      conds[0] << (x == 0 ? "" : " OR ") << "url = ?"
-      conds.push u
-    end
-
-    if s = Story.where(*conds).order("id DESC").first
+    if s = Story.where(:url => urls, :is_expired => false).order("id DESC").first
       return s
     end
 

@@ -13,9 +13,7 @@
 /db/sphinx
 
 # Ignore all logfiles and tempfiles.
-/log/*.log
-/log/*.pid
-/log/*.gz
+/log
 /tmp
 
 vendor/bundle

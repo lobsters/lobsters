@@ -13,7 +13,7 @@ class Story < ActiveRecord::Base
   DOWNVOTABLE_DAYS = 14
 
   # after this many minutes old, a story cannot be edited
-  MAX_EDIT_MINS = 30
+  MAX_EDIT_MINS = 90
 
   # days a story is considered recent, for resubmitting
   RECENT_DAYS = 30

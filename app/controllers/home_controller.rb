@@ -10,6 +10,16 @@ class HomeController < ApplicationController
   # for rss feeds, load the user's tag filters if a token is passed
   before_filter :find_user_from_rss_token, :only => [ :index, :newest ]
 
+  def about
+    begin
+      render :action => "about"
+    rescue
+      render :text => "<div class=\"box wide\">" <<
+        "A mystery." <<
+        "</div>", :layout => "application"
+    end
+  end
+
   def hidden
     @stories = find_stories({ :hidden => true })
 
@@ -77,6 +87,16 @@ class HomeController < ApplicationController
     render :action => "index"
   end
 
+  def privacy
+    begin
+      render :action => "privacy"
+    rescue
+      render :text => "<div class=\"box wide\">" <<
+        "You apparently have no privacy." <<
+        "</div>", :layout => "application"
+    end
+  end
+
   def recent
     @stories = find_stories({ :recent => true })
 
@@ -104,26 +124,6 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.html { render :action => "index" }
       format.rss { render :action => "rss", :layout => false }
-    end
-  end
-
-  def privacy
-    begin
-      render :action => "privacy"
-    rescue
-      render :text => "<div class=\"box wide\">" <<
-        "You apparently have no privacy." <<
-        "</div>", :layout => "application"
-    end
-  end
-
-  def about
-    begin
-      render :action => "about"
-    rescue
-      render :text => "<div class=\"box wide\">" <<
-        "A mystery." <<
-        "</div>", :layout => "application"
     end
   end
 

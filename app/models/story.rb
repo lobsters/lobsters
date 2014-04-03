@@ -99,6 +99,7 @@ class Story < ActiveRecord::Base
     h[:description] = markeddown_description
     h[:comments_url] = comments_url
     h[:submitter_user] = user
+    h[:tags] = self.tags.map{|t| t.tag }.sort
 
     if options && options[:with_comments]
       h[:comments] = options[:with_comments]

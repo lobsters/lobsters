@@ -127,6 +127,30 @@ class HomeController < ApplicationController
     end
   end
 
+  TOP_INTVS = { "d" => "Day", "w" => "Week", "m" => "Month", "y" => "Year" }
+  def top
+    @cur_url = "/top"
+    length = { :dur => 1, :intv => "Week" }
+
+    if m = params[:length].to_s.match(/\A(\d+)([#{TOP_INTVS.keys.join}])\z/)
+      length[:dur] = m[1].to_i
+      length[:intv] = TOP_INTVS[m[2]]
+
+      @cur_url << "/#{params[:length]}"
+    end
+
+    @stories = find_stories({ :top => true, :length => length })
+
+    if length[:dur] > 1
+      @heading = @title = "Top Stories of the Past #{length[:dur]} " <<
+        length[:intv] << "s"
+    else
+      @heading = @title = "Top Stories of the Past " << length[:intv]
+    end
+
+    render :action => "index"
+  end
+
 private
   def find_stories(how = {})
     @page = how[:page] = 1
@@ -242,6 +266,16 @@ private
           break
         end
       end
+    elsif how[:top] && how[:length]
+      stories = stories.where("created_at >= (NOW() - INTERVAL " <<
+        "#{how[:length][:dur]} #{how[:length][:intv].upcase})")
+    end
+
+    order = "hotness"
+    if how[:newest] || how[:recent]
+      order = "stories.created_at DESC"
+    elsif how[:top]
+      order = "(CAST(upvotes AS integer) - CAST(downvotes AS integer)) DESC"
     end
 
     stories = stories.includes(
@@ -251,7 +285,7 @@ private
     ).offset(
       (how[:page] - 1) * STORIES_PER_PAGE
     ).order(
-      (how[:newest] || how[:recent]) ? "stories.created_at DESC" : "hotness"
+      order
     ).to_a
 
     show_more = false

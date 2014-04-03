@@ -17,6 +17,11 @@ Lobsters::Application.routes.draw do
     get "/hidden" => "home#hidden"
     get "/hidden/page/:page" => "home#hidden"
 
+    get "/top" => "home#top"
+    get "/top/page/:page" => "home#top"
+    get "/top/:length" => "home#top"
+    get "/top/:length/page/:page" => "home#top"
+
     get "/threads" => "comments#threads"
     get "/threads/:user" => "comments#threads"
 

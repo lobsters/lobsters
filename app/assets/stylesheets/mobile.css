@@ -8,11 +8,15 @@
 		padding: 0;
 	}
 
-	div#header {
+	div#header,
+	div#leader {
 		margin: 0;
 		padding: 8px 5px;
 		background-color: #eee;
 		border-bottom: 1px solid #ccc;
+	}
+	div#leader {
+		padding: 8px;
 	}
 
 	div#wrapper {
@@ -47,6 +51,10 @@
 
 	.box {
 		margin: 0 8px;
+	}
+
+	div.legend {
+		margin-top: 0.5em;
 	}
 
 	ol.comments {

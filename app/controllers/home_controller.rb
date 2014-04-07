@@ -30,7 +30,7 @@ class HomeController < ApplicationController
   end
 
   def index
-    @stories = find_stories
+    @stories = find_stories({ :hottest => true })
 
     @rss_link ||= { :title => "RSS 2.0",
       :href => "/rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
@@ -176,42 +176,27 @@ private
   def _find_stories(how)
     stories = Story.where(:is_expired => false)
 
-    if @user && !how[:by_user] && !how[:hidden]
-      # exclude downvoted and hidden items
-      stories = stories.where(
-        Story.arel_table[:id].not_in(
-          Vote.arel_table.where(
-            Vote.arel_table[:user_id].eq(@user.id)
-          ).where(
-            Vote.arel_table[:vote].lteq(0)
-          ).where(
-            Vote.arel_table[:comment_id].eq(nil)
-          ).project(
-            Vote.arel_table[:story_id]
-          )
-        )
+    if @user
+      hidden_arel = Vote.arel_table.where(
+        Vote.arel_table[:user_id].eq(@user.id)
+      ).where(
+        Vote.arel_table[:vote].lteq(0)
+      ).where(
+        Vote.arel_table[:comment_id].eq(nil)
+      ).project(
+        Vote.arel_table[:story_id]
       )
-    elsif @user && how[:hidden]
-      stories = stories.where(
-        Story.arel_table[:id].in(
-          Vote.arel_table.where(
-            Vote.arel_table[:user_id].eq(@user.id)
-          ).where(
-            Vote.arel_table[:vote].eq(0)
-          ).where(
-            Vote.arel_table[:comment_id].eq(nil)
-          ).project(
-            Vote.arel_table[:story_id]
-          )
-        )
-      )
+    
+      if how[:hidden]
+        stories = stories.where(Story.arel_table[:id].in(hidden_arel))
+      elsif !how[:by_user]
+        stories = stories.where(Story.arel_table[:id].not_in(hidden_arel))
+      end
     end
 
-    filtered_tag_ids = []
-    if @user
-      filtered_tag_ids = @user.tag_filters.map{|tf| tf.tag_id }
-    else
-      filtered_tag_ids = tags_filtered_by_cookie.map{|t| t.id }
+    if how[:tag] || how[:hottest]
+      stories = stories.where("(CAST(upvotes AS integer) - " <<
+        "CAST(downvotes AS integer)) >= -2")
     end
 
     if how[:tag]
@@ -226,16 +211,25 @@ private
       )
     elsif how[:by_user]
       stories = stories.where(:user_id => how[:by_user].id)
-    elsif filtered_tag_ids.any?
-      stories = stories.where(
-        Story.arel_table[:id].not_in(
-          Tagging.arel_table.where(
-            Tagging.arel_table[:tag_id].in(filtered_tag_ids)
-          ).project(
-            Tagging.arel_table[:story_id]
+    else
+      filtered_tag_ids = []
+      if @user
+        filtered_tag_ids = @user.tag_filters.map{|tf| tf.tag_id }
+      else
+        filtered_tag_ids = tags_filtered_by_cookie.map{|t| t.id }
+      end
+    
+      if filtered_tag_ids.any?
+        stories = stories.where(
+          Story.arel_table[:id].not_in(
+            Tagging.arel_table.where(
+              Tagging.arel_table[:tag_id].in(filtered_tag_ids)
+            ).project(
+              Tagging.arel_table[:story_id]
+            )
           )
         )
-      )
+      end
     end
 
     if how[:recent] && how[:page] == 1

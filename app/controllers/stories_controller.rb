@@ -52,6 +52,10 @@ class StoriesController < ApplicationController
     end
 
     @title = "Edit Story"
+
+    if @story.merged_into_story
+      @story.merge_story_short_id = @story.merged_into_story.short_id
+    end
   end
 
   def fetch_url_title
@@ -110,6 +114,11 @@ class StoriesController < ApplicationController
   def show
     @story = Story.where(:short_id => params[:id]).first!
 
+    if @story.merged_into_story
+      flash[:success] = "\"#{@story.title}\" has been merged into this story."
+      return redirect_to @story.merged_into_story.comments_url
+    end
+
     if @story.can_be_seen_by_user?(@user)
       @title = @story.title
     else
@@ -118,7 +127,8 @@ class StoriesController < ApplicationController
 
     @short_url = @story.short_id_url
 
-    @comments = @story.comments.includes(:user).arrange_for_user(@user)
+    @comments = @story.merged_comments.includes(:user,
+      :story).arrange_for_user(@user)
 
     if params[:comment_short_id]
       @comments.each do |c,x|
@@ -247,13 +257,13 @@ private
   def story_params
     p = params.require(:story).permit(
       :title, :url, :description, :moderation_reason, :seen_previous,
-      :tags_a => [],
+      :merge_story_short_id, :tags_a => [],
     )
 
     if @user.is_moderator?
       p
     else
-      p.except(:moderation_reason)
+      p.except(:moderation_reason, :merge_story_short_id)
     end
   end
 

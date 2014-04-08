@@ -174,7 +174,7 @@ private
   end
 
   def _find_stories(how)
-    stories = Story.where(:is_expired => false)
+    stories = Story.unmerged.where(:is_expired => false)
 
     if @user
       hidden_arel = Vote.arel_table.where(
@@ -186,7 +186,7 @@ private
       ).project(
         Vote.arel_table[:story_id]
       )
-    
+
       if how[:hidden]
         stories = stories.where(Story.arel_table[:id].in(hidden_arel))
       elsif !how[:by_user]
@@ -218,7 +218,7 @@ private
       else
         filtered_tag_ids = tags_filtered_by_cookie.map{|t| t.id }
       end
-    
+
       if filtered_tag_ids.any?
         stories = stories.where(
           Story.arel_table[:id].not_in(

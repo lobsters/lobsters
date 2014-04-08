@@ -1,10 +1,18 @@
 class Story < ActiveRecord::Base
   belongs_to :user
+  belongs_to :merged_into_story,
+    :class_name => "Story",
+    :foreign_key => "merged_story_id"
+  has_many :merged_stories,
+    :class_name => "Story",
+    :foreign_key => "merged_story_id"
   has_many :taggings,
     :autosave => true
   has_many :comments,
     :inverse_of => :story
   has_many :tags, :through => :taggings
+
+  scope :unmerged, -> { where(:merged_story_id => nil) }
 
   validates_length_of :title, :in => 3..150
   validates_length_of :description, :maximum => (64 * 1024)
@@ -20,12 +28,13 @@ class Story < ActiveRecord::Base
 
   attr_accessor :vote, :already_posted_story, :fetched_content, :previewing,
     :seen_previous
-  attr_accessor :editor, :moderation_reason
+  attr_accessor :editor, :moderation_reason, :merge_story_short_id
 
   before_validation :assign_short_id_and_upvote,
     :on => :create
   before_save :log_moderation
   after_create :mark_submitter, :record_initial_upvote
+  after_save :update_merged_into_story_comments
 
   validate do
     if self.url.present?
@@ -284,8 +293,18 @@ class Story < ActiveRecord::Base
     elsif all_changes["is_expired"] && !self.is_expired?
       m.action = "undeleted story"
     else
-      m.action = all_changes.map{|k,v| "changed #{k} from #{v[0].inspect} " <<
-        "to #{v[1].inspect}" }.join(", ")
+      m.action = all_changes.map{|k,v|
+        if k == "merged_story_id"
+          if v[1]
+            "merged into #{self.merged_into_story.short_id} " <<
+              "(#{self.merged_into_story.title})"
+          else
+            "unmerged from another story"
+          end
+        else
+          "changed #{k} from #{v[0].inspect} to #{v[1].inspect}"
+        end
+      }.join(", ")
     end
 
     m.reason = self.moderation_reason
@@ -300,6 +319,22 @@ class Story < ActiveRecord::Base
 
   def mark_submitter
     Keystore.increment_value_for("user:#{self.user_id}:stories_submitted")
+  end
+
+  def merge_into_story!(story)
+    self.merged_story_id = story.id
+    self.save!
+  end
+
+  def merged_comments
+    # TODO: make this a normal has_many?
+    Comment.where(:story_id => Story.select(:id).
+      where(:merged_story_id => self.id) + [ self.id ])
+  end
+
+  def merge_story_short_id=(sid)
+    self.merged_story_id = sid.present??
+      Story.where(:short_id => sid).first.id : nil
   end
 
   def recalculate_hotness!
@@ -375,10 +410,16 @@ class Story < ActiveRecord::Base
   end
 
   def update_comments_count!
-    comments = self.comments.arrange_for_user(nil)
+    comments = self.merged_comments.arrange_for_user(nil)
 
     # calculate count after removing deleted comments and threads
     self.update_column :comments_count, comments.count{|c| !c.is_gone? }
+  end
+
+  def update_merged_into_story_comments
+    if self.merged_into_story
+      self.merged_into_story.update_comments_count!
+    end
   end
 
   def url=(u)

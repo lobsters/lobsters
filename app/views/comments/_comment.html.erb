@@ -23,6 +23,9 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
   <% end %>
   <div class="details">
     <div class="byline">
+      <% if defined?(was_merged) && was_merged %>
+        <span class="merge"></span>
+      <% end %>
       <% if comment.previewing %>
         <a><%= comment.user.username %></a>
         previewed

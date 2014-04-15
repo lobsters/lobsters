@@ -55,25 +55,29 @@ class LoginController < ApplicationController
   def set_new_password
     @title = "Reset Password"
 
-    if params[:token].blank? ||
-    !(@reset_user = User.where(:password_reset_token => params[:token].to_s).first)
+    if (m = params[:token].to_s.match(/^(\d+)-/)) &&
+    (Time.now - Time.at(m[1].to_i)) < 24.hours
+      @reset_user = User.where(:password_reset_token => params[:token].to_s).first
+    end
+
+    if @reset_user
+      if params[:password].present?
+        @reset_user.password = params[:password]
+        @reset_user.password_confirmation = params[:password_confirmation]
+        @reset_user.password_reset_token = nil
+
+        # this will get reset upon save
+        @reset_user.session_token = nil
+
+        if @reset_user.save && @reset_user.is_active?
+          session[:u] = @reset_user.session_token
+          return redirect_to "/"
+        end
+      end
+    else
       flash[:error] = "Invalid reset token.  It may have already been " <<
         "used or you may have copied it incorrectly."
       return redirect_to forgot_password_url
-    end
-
-    if params[:password].present?
-      @reset_user.password = params[:password]
-      @reset_user.password_confirmation = params[:password_confirmation]
-      @reset_user.password_reset_token = nil
-
-      # this will get reset upon save
-      @reset_user.session_token = nil
-
-      if @reset_user.save && @reset_user.is_active?
-        session[:u] = @reset_user.session_token
-        return redirect_to "/"
-      end
     end
   end
 end

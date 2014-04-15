@@ -5,8 +5,7 @@
     <%= errors_for comment %>
   <% end %>
 
-  <%= hidden_field_tag "story_id",
-    comment.story.short_id %>
+  <%= hidden_field_tag "story_id", comment.story.short_id %>
 
   <% if comment.parent_comment %>
     <%= hidden_field_tag "parent_comment_short_id",
@@ -15,24 +14,29 @@
 
   <div style="width: 100%;">
     <%= text_area_tag "comment", comment.comment, :rows => 5,
-      :style => "width: 100%;", :autocomplete => "off" %>
+      :style => "width: 100%;", :autocomplete => "off", :disabled => !@user,
+      :placeholder => (@user ? "" : "You must be logged in to leave a comment.")
+      %>
 
     <p></p>
 
     <div class="markdown_help_toggler">
-      <div class="markdown_help_label">
-        Markdown formatting available
-      </div>
-      <div class="markdown_help_label markdown_help_label_mobile"
-      style="display: none;">
-        [M&darr;]
-      </div>
+      <% if @user %>
+        <div class="markdown_help_label">
+          Markdown formatting available
+        </div>
+        <div class="markdown_help_label markdown_help_label_mobile"
+        style="display: none;">
+          [M&darr;]
+        </div>
+      <% end %>
 
       <%= button_tag "#{comment.new_record?? "Post" : "Update"}",
-        :class => "comment-post", :type => "button" %>
+        :class => "comment-post", :type => "button",
+        :disabled => !@user %>
       &nbsp;
       <%= button_tag "Preview", :class => "comment-preview",
-        :type => "button" %>
+        :type => "button", :disabled => !@user %>
       <% if local_assigns[:cancellable] %>
         &nbsp;
         <%= button_tag "Cancel", :class => "comment-cancel",
@@ -41,7 +45,9 @@
 
       <div style="clear: both;"></div>
 
-      <%= render :partial => "global/markdownhelp" %>
+      <% if @user %>
+        <%= render :partial => "global/markdownhelp" %>
+      <% end %>
     </div>
   </div>
 

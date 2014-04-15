@@ -13,7 +13,7 @@
 
 <% if !@story.previewing %>
   <ol class="comments comments1">
-    <% if @user && !@story.is_gone? && !@story.previewing %>
+    <% if !@story.is_gone? && !@story.previewing %>
       <li><%= render "comments/commentbox", :comment => @comment %></li>
     <% end %>
 

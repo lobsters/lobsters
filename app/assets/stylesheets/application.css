@@ -422,7 +422,7 @@ div.voters .downvoter.downvoter_stub {
 li.story {
 	clear: both;
 }
-li.story div.story_liner {
+ol.stories.list li.story div.story_liner {
 	padding-top: 0.4em;
 	padding-bottom: 0.4em;
 }

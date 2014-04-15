@@ -123,6 +123,10 @@ textarea:focus {
 	color: #303030;
 	outline: 0;
 }
+textarea:disabled {
+	background-color: #f0f0f0;
+}
+
 
 input[type="submit"]:focus,
 button:focus {

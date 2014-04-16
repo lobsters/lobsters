@@ -195,8 +195,8 @@ private
     end
 
     if how[:tag] || how[:hottest]
-      stories = stories.where("(CAST(upvotes AS integer) - " <<
-        "CAST(downvotes AS integer)) >= -2")
+      stories = stories.where("(CAST(upvotes AS unsigned) - " <<
+        "CAST(downvotes AS unsigned)) >= -2")
     end
 
     if how[:tag]
@@ -269,7 +269,7 @@ private
     if how[:newest] || how[:recent]
       order = "stories.created_at DESC"
     elsif how[:top]
-      order = "(CAST(upvotes AS integer) - CAST(downvotes AS integer)) DESC"
+      order = "(CAST(upvotes AS unsigned) - CAST(downvotes AS unsigned)) DESC"
     end
 
     stories = stories.includes(

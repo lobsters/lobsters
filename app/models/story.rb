@@ -40,7 +40,7 @@ class Story < ActiveRecord::Base
     if self.url.present?
       # URI.parse is not very lenient, so we can't use it
 
-      if self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/)
+      if self.url.match(/\A(http|ftp)s?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/)
         if self.new_record? && (s = Story.find_similar_by_url(self.url))
           self.already_posted_story = s
           if s.is_recent?

@@ -7,10 +7,15 @@ class UsersController < ApplicationController
   def tree
     @title = "Users"
 
-    users = User.order("id DESC").to_a
-
-    @user_count = users.length
-    @users_by_parent = users.group_by(&:invited_by_user_id)
+    if params[:by].to_s == "karma"
+      @users = User.order("karma DESC, id ASC").to_a
+      @user_count = @users.length
+      render :action => "list"
+    else
+      users = User.order("id DESC").to_a
+      @user_count = users.length
+      @users_by_parent = users.group_by(&:invited_by_user_id)
+    end
   end
 
   def invite

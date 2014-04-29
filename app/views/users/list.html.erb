@@ -1,0 +1,22 @@
+<div class="box wide">
+  <p><strong>Users (<%= @user_count %>)</strong></p>
+
+  <ul class="user_tree">
+  <% @users.each do |user| %>
+    <li>
+      <a href="/u/<%= user.username %>"
+        <% if !user.is_active? %>
+          class="inactive_user"
+        <% elsif user.is_new? %>
+          class="new_user"
+        <% end %>
+        ><%= user.username %></a>&nbsp;(<%= user.karma %>)
+      <% if user.is_admin? %>
+        (administrator)
+      <% elsif user.is_moderator? %>
+        (moderator)
+      <% end %>
+    </li>
+  <% end %>
+  </ul>
+</div>

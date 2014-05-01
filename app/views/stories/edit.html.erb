@@ -8,7 +8,7 @@
     <%= render :partial => "stories/form", :locals => { :story => @story,
       :f => f } %>
 
-    <% if @user.is_moderator? && (@story.user_id != @user.id) %>
+    <% if @user.is_moderator? %>
       <div class="box">
         <div class="boxline">
           <%= f.label :merge_story_short_id, "Merge Into:",
@@ -17,11 +17,13 @@
             :placeholder => "Short id of story into which this story " <<
             "be merged" %>
         </div>
-        <div class="boxline">
-          <%= f.label :moderation_reason, "Mod Reason:",
-            :class => "required" %>
-          <%= f.text_field :moderation_reason, :autocomplete => "off" %>
-        </div>
+        <% if @story.user_id != @user.id %>
+          <div class="boxline">
+            <%= f.label :moderation_reason, "Mod Reason:",
+              :class => "required" %>
+            <%= f.text_field :moderation_reason, :autocomplete => "off" %>
+          </div>
+        <% end %>
       </div>
     <% end %>
 

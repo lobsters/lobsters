@@ -91,7 +91,7 @@ class Story < ActiveRecord::Base
   end
 
   def self.recalculate_all_hotnesses!
-    Story.all.each do |s|
+    Story.all.order("id DESC").each do |s|
       s.recalculate_hotness!
     end
   end
@@ -124,7 +124,7 @@ class Story < ActiveRecord::Base
 
   def calculated_hotness
     # don't immediately kill stories at 0 by bumping up score by one
-    order = Math.log([ (score + 1).abs, 1 ].max, 10)
+    order = Math.log([ (score + 1).abs + comments_count, 1 ].max, 10)
     if score > 0
       sign = 1
     elsif score < 0
@@ -413,7 +413,10 @@ class Story < ActiveRecord::Base
     comments = self.merged_comments.arrange_for_user(nil)
 
     # calculate count after removing deleted comments and threads
-    self.update_column :comments_count, comments.count{|c| !c.is_gone? }
+    self.update_column :comments_count,
+      (self.comments_count = comments.count{|c| !c.is_gone? })
+
+    self.recalculate_hotness!
   end
 
   def update_merged_into_story_comments

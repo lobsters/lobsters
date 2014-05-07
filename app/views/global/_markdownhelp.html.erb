@@ -13,6 +13,10 @@
     <td>surround text with <tt>~~two tilde characters~~</tt></td>
   </tr>
   <tr>
+    <td><tt>fixed width</tt></td>
+    <td>surround text with <tt>`backticks`</tt></td>
+  </tr>
+  <tr>
     <td><a href="http://example.com/"
       style="color: inherit;">linked text</a></td>
     <td><tt>[linked text](http://example.com/)</tt> or just a bare URL
@@ -27,7 +31,6 @@
   text</pre></td>
     <td>prefix text with at least<tt>&nbsp;&nbsp;&nbsp;&nbsp;4 spaces</tt></td>
   </tr>
-
   <% if defined?(allow_images) && allow_images %>
     <tr>
       <td>(inline image)</td>
@@ -35,6 +38,5 @@
         story text</td>
     </tr>
   <% end %>
-
   </table>
 </div>

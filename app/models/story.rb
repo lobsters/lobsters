@@ -183,8 +183,12 @@ class Story < ActiveRecord::Base
     if self.url.blank?
       nil
     else
-      pu = URI.parse(self.url)
-      pu.host.gsub(/^www\d*\./, "")
+      # URI.parse is not very lenient, so we can't use it
+      self.url.
+        gsub(/^[^:]+:\/\//, ""). # proto
+        gsub(/\/.*/, "").        # path
+        gsub(/:\d+$/, "").       # possible port
+        gsub(/^www\d*\./, "")    # possible "www3." in host
     end
   end
 

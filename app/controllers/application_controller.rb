@@ -76,7 +76,8 @@ class ApplicationController < ActionController::Base
   end
 
   def user_is_spider?
-    !!request.env["HTTP_USER_AGENT"].to_s.match(/Googlebot/)
+    ua = request.env["HTTP_USER_AGENT"].to_s
+    (ua == "" || ua.match(/(Google|bing)bot/))
   end
 
   def find_user_from_rss_token

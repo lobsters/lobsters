@@ -60,7 +60,7 @@ class Search
       end
 
     # escape sphinx special chars (using Riddle.escape removes boolean support)
-    query = self.q.gsub(/([\/~])/, '\\\\\1')
+    query = self.q.gsub(/([\/~"])/, '\\\\\1')
 
     # go go gadget search
     @results = []

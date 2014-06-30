@@ -266,7 +266,7 @@ private
     end
 
     order = "hotness"
-    if how[:newest] || how[:recent]
+    if how[:newest] || how[:recent] || how[:tag]
       order = "stories.created_at DESC"
     elsif how[:top]
       order = "(CAST(upvotes AS integer) - CAST(downvotes AS integer)) DESC"

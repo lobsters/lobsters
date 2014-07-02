@@ -94,6 +94,7 @@ class Story < ActiveRecord::Base
     Story.all.order("id DESC").each do |s|
       s.recalculate_hotness!
     end
+    true
   end
 
   def as_json(options = {})

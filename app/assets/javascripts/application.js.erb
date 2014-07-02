@@ -7,7 +7,7 @@
 var _Lobsters = Class.extend({
   curUser: null,
 
-  storyDownvoteReasons: { <%= Vote::STORY_REASONS.map{|k,v|
+  storyFlagReasons: { <%= Vote::STORY_REASONS.map{|k,v|
       "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
   commentDownvoteReasons: { <%= Vote::COMMENT_REASONS.map{|k,v|
       "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
@@ -15,7 +15,7 @@ var _Lobsters = Class.extend({
   upvoteStory: function(voterEl) {
     Lobsters.vote("story", voterEl, 1);
   },
-  downvoteStory: function(voterEl) {
+  flagStory: function(voterEl) {
     Lobsters._showDownvoteWhyAt("story", voterEl, function(k) {
       Lobsters.vote("story", voterEl, -1, k); });
   },
@@ -30,7 +30,8 @@ var _Lobsters = Class.extend({
       act = "unhide";
       li.removeClass("hidden");
       hiderEl.innerHTML = "hide";
-    } else {
+    }
+    else {
       act = "hide";
       li.addClass("hidden");
       hiderEl.innerHTML = "unhide";
@@ -75,7 +76,7 @@ var _Lobsters = Class.extend({
     if (thingType == "comment")
       reasons = Lobsters.commentDownvoteReasons;
     else
-      reasons = Lobsters.storyDownvoteReasons;
+      reasons = Lobsters.storyFlagReasons;
 
     $.each(reasons, function(k, v) {
       var a = $("<a href=\"#\"" + (k == "" ? " class=\"cancelreason\"" : "") +
@@ -103,6 +104,10 @@ var _Lobsters = Class.extend({
       of: $(voterEl),
       collision: "none",
     });
+
+    /* XXX: why is this needed? */
+    if (thingType == "story")
+      d.css("left", $(voterEl).position().left);
   },
 
   vote: function(thingType, voterEl, point, reason) {
@@ -147,11 +152,17 @@ var _Lobsters = Class.extend({
 
     scoreDiv.innerHTML = score;
 
-    if (action == "upvote" || action == "unvote")
+    if (action == "upvote" || action == "unvote") {
       li.find(".reason").html("");
+
+      if (action == "unvote" && thingType == "story" && point < 0)
+        li.find(".flagger").text("flag");
+    }
     else if (action == "downvote" && thingType == "comment")
-      li.find(".reason").html("(" +
-        Lobsters.commentDownvoteReasons[reason].toLowerCase() + ")");
+      li.find(".reason").html("| " +
+        Lobsters.commentDownvoteReasons[reason].toLowerCase());
+    else if (action == "downvote" && thingType == "story")
+      li.find(".flagger").text("unflag");
 
     $.post("/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
       li.attr("data-shortid") + "/" +
@@ -253,8 +264,8 @@ $(document).ready(function() {
     return false;
   });
 
-  $("li.story a.downvoter").click(function() {
-    Lobsters.downvoteStory(this);
+  $("li.story a.flagger").click(function() {
+    Lobsters.flagStory(this);
     return false;
   });
   $("li.story a.upvoter").click(function() {

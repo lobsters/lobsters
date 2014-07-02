@@ -371,7 +371,7 @@ ol.search_results li.story {
 
 div.voters {
 	float: left;
-	margin-top: -4px;
+	margin-top: 0px;
 	width: 40px;
 }
 
@@ -381,6 +381,11 @@ div.voters div.score {
 	margin-top: 1px;
 	margin-bottom: -3px;
 	text-align: center;
+}
+
+li.story div.voters div.score {
+	font-size: 9.5pt;
+	margin-top: 2px;
 }
 
 div.voters .upvoter,

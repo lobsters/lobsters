@@ -124,23 +124,25 @@ class Sponge
       host.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
 
+    send_headers = headers.dup
+
     path = (uri.path == "" ? "/" : uri.path)
     if uri.query
       path += "?" + uri.query
     elsif method == :get && raw_post_data
       path += "?" + URI.encode(raw_post_data)
-      headers["Content-type"] = "application/x-www-form-urlencoded"
+      send_headers["Content-type"] = "application/x-www-form-urlencoded"
     end
 
     if method == :post
       if raw_post_data
         post_data = raw_post_data
-        headers["Content-type"] = "application/x-www-form-urlencoded"
+        send_headers["Content-type"] = "application/x-www-form-urlencoded"
       else
         post_data = fields.map{|k,v| "#{k}=#{v}" }.join("&")
       end
 
-      headers["Content-Length"] = post_data.length.to_s
+      send_headers["Content-Length"] = post_data.length.to_s
     end
 
     path.gsub!(/^\/\//, "/")
@@ -149,23 +151,23 @@ class Sponge
       uri.user + "/" + ("*" * uri.password.length) + " " : "") +
       "by #{method} with cookies #{cookies(uri.host)}"
 
-    headers = {
+    send_headers = {
       "Host" => uri.host,
       "Cookie" => cookies(uri.host),
       "Referer" => url.to_s,
       "User-Agent" => "Mozilla/5.0 (compatible)",
-    }.merge(headers || {})
+    }.merge(send_headers || {})
 
     if uri.user
-      headers["Authorization"] = "Basic " +
+      send_headers["Authorization"] = "Basic " +
         ["#{uri.user}:#{uri.password}"].pack('m').delete("\r\n")
     end
 
     res = nil
     if method == :post
-      res = host.post(path, post_data, headers)
+      res = host.post(path, post_data, send_headers)
     else
-      res = host.get(path, headers)
+      res = host.get(path, send_headers)
     end
 
     if res.get_fields("Set-Cookie")

@@ -1,3 +1,4 @@
+<a name="c_<%= comment.short_id %>"></a>
 <div id="comment_<%= comment.short_id %>" data-shortid="<%= comment.short_id %>"
 class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 "upvoted" : "downvoted") : "" %>
@@ -50,7 +51,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
       <% if !comment.previewing %>
         |
-        <a href="<%= comment.url %>">link</a>
+        <a href="<%= comment.url %>#c_<%= comment.short_id %>">link</a>
 
         <% if comment.is_editable_by_user?(@user) %>
           |
@@ -99,13 +100,3 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
     </div>
   </div>
 </div>
-
-<% if comment.highlighted %>
-  <script>
-    $(document).ready(function() {
-      $("html").animate({
-        scrollTop: $("#comment_<%= comment.short_id %>").offset().top
-      });
-    });
-  </script>
-<% end %>

@@ -21,6 +21,7 @@ Tag.blueprint do
 end
 
 # these need to exist for stories to use them
+Tag.destroy_all
 Tag.make!(:tag => "tag1")
 Tag.make!(:tag => "tag2")
 

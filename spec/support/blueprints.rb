@@ -44,3 +44,9 @@ Message.blueprint do
   subject { "message subject #{sn}" }
   body { "message body #{sn}" }
 end
+
+Vote.blueprint do
+  story
+  user
+  vote { 1 }
+end

@@ -195,8 +195,8 @@ private
     end
 
     if how[:tag] || how[:hottest]
-      stories = stories.where("(CAST(upvotes AS integer) - " <<
-        "CAST(downvotes AS integer)) >= -2")
+      stories = stories.where("(CAST(upvotes AS signed) - " <<
+        "CAST(downvotes AS signed)) >= -2")
     end
 
     if how[:tag]

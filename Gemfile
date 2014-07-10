@@ -42,4 +42,5 @@ group :test, :development do
   gem "rspec-rails", "~> 2.6"
   gem "machinist"
   gem "sqlite3"
+  gem "faker"
 end

@@ -379,6 +379,25 @@ $(document).ready(function() {
     }
   });
 
+  $(document).on("change", "#story_url", function() {
+    var $field = $(this);
+
+    if ($field.val().length > 0) {
+      $.get('/stories/by_url.json?url=' + $("#story_url").val(), function(response) {
+        var story = response.story;
+        var $parent = $field.parent();
+        
+        if (story && story['is_recent?']) {
+          $parent.addClass('field_with_errors');
+          $parent.append('<p class="inline-error">URL already exists</p>');
+        } else {
+          $parent.removeClass('field_with_errors');
+          $('.inline-error', $parent).remove();
+        }
+      });
+    }
+  });
+
   $(document).on("blur", "#story_title", function() {
     var m;
     if (m = $("#story_title").val().match(/^(show|ask) lobste\.?rs:? (.+)$/i)) {

@@ -1121,3 +1121,8 @@ div.fieldWithErrors {
 	font-style: italic;
 	padding-left: 0.5em;
 }
+
+.inline-error {
+	margin-left: 7em;
+	color: #c43c35;
+}

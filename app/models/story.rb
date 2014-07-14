@@ -98,12 +98,12 @@ class Story < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    h = super(:only => [
+    h = super(options.merge(:only => [
       :short_id,
       :created_at,
       :title,
       :url,
-    ])
+    ]))
     h[:score] = score
     h[:comment_count] = comments_count
     h[:description] = markeddown_description

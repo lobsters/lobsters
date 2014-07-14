@@ -153,6 +153,13 @@ class StoriesController < ApplicationController
     end
   end
 
+  def by_url
+    story = Story.find_similar_by_url params[:url]
+    respond_to do |format|
+      format.json { render json: { story: story ? story.as_json(:methods => :is_recent?) : nil } }
+    end
+  end
+
   def undelete
     if !(@story.is_editable_by_user?(@user) &&
     @story.is_undeletable_by_user?(@user))

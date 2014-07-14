@@ -52,6 +52,7 @@ Lobsters::Application.routes.draw do
       post "undelete"
       post "hide"
       post "unhide"
+      get "by_url", :on => :collection, :format => :json
     end
     post "/stories/fetch_url_title", :format => "json"
     post "/stories/preview" => "stories#preview"

@@ -44,3 +44,11 @@ group :test, :development do
   gem "sqlite3"
   gem "faker"
 end
+
+group :test do
+  gem "cucumber-rails", :require => false
+  gem "database_cleaner"
+  gem "capybara"
+  gem "capybara-webkit", '~> 1.2.0'
+  gem "launchy"
+end

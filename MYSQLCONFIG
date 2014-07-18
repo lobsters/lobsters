@@ -1,0 +1,3 @@
+https://mariadb.com/kb/en/mariadb/mariadb-documentation/data-types/string-data-types/data-types-character-sets-and-collations/setting-character-sets-and-collations/
+Charset: utf8
+Collation: utf8_general_ci

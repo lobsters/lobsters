@@ -1,0 +1,6 @@
+development:
+        adapter: mysql2
+        database: lobsters
+        username: lobsters
+        password: l0B5t3r5
+        encoding: utf8

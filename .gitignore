@@ -33,3 +33,5 @@ config/unicorn.conf.rb
 
 *~
 config/secrets.yml
+config/configuration.yml
+.rvmrc

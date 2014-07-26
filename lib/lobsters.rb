@@ -1,0 +1,1 @@
+require 'lobsters/config.rb'

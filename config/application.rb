@@ -38,24 +38,3 @@ end
 silence_warnings do
   ActionDispatch::ParamsParser::DEFAULT_PARSERS = {}
 end
-
-# define site name and domain to be used globally, can be overridden in
-# config/initializers/production.rb
-class << Rails.application
-  def domain
-    "lobste.rs"
-  end
-
-  def name
-    "Lobsters"
-  end
-
-  # used as mailing list prefix and countinual prefix, cannot have spaces
-  def shortname
-    name.downcase.gsub(/[^a-z]/, "")
-  end
-end
-
-Rails.application.routes.default_url_options[:host] = Rails.application.domain
-
-require "#{Rails.root}/lib/monkey"

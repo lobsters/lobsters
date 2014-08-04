@@ -56,7 +56,7 @@ MariaDB have been tested) database, username, and password and put them in a
 * Create a `config/initializers/secret_token.rb` file, using a randomly
 generated key from the output of `rake secret`:
 
-          Lobsters::Application.config.secret_token = 'your random secret here'
+          Lobsters::Application.config.secret_key_base = 'your random secret here'
 
 * (Optional, only needed for the search engine) Install Sphinx.  Build Sphinx
 config and start server:

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140408160306) do
+ActiveRecord::Schema.define(version: 20140804005415) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -167,6 +167,7 @@ ActiveRecord::Schema.define(version: 20140408160306) do
     t.string   "banned_reason",        limit: 200
     t.datetime "deleted_at"
     t.string   "pushover_sound"
+    t.string   "weblog_feed_url"
   end
 
   add_index "users", ["mailing_list_mode"], name: "mailing_list_enabled", using: :btree
@@ -186,5 +187,20 @@ ActiveRecord::Schema.define(version: 20140408160306) do
 
   add_index "votes", ["user_id", "comment_id"], name: "user_id_comment_id", using: :btree
   add_index "votes", ["user_id", "story_id"], name: "user_id_story_id", using: :btree
+
+  create_table "weblogs", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+    t.string   "title",      limit: 512
+    t.string   "url",        limit: 512
+    t.string   "site_title", limit: 512
+    t.string   "site_url",   limit: 512
+    t.text     "content",    limit: 16777215
+    t.text     "tags"
+    t.string   "uuid",       limit: 200
+  end
+
+  add_index "weblogs", ["user_id", "uuid"], name: "user_and_uuid", unique: true, using: :btree
 
 end

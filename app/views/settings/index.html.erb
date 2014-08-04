@@ -38,11 +38,16 @@
       </span>
     </div>
 
+    <br>
+
     <div class="boxline">
       <%= f.label :pushover_user_key,
         raw("<a href=\"https://pushover.net/\">Pushover</a> User Key:"),
         :class => "required" %>
       <%= f.text_field :pushover_user_key, :size => 40 %>
+      <span class="hint">
+        For optional comment and message notifications below
+      </span>
     </div>
 
     <div class="boxline">
@@ -57,6 +62,20 @@
         :class => "required" %>
       <%= f.select :pushover_sound, Pushover.sounds.map{|k,v| [ v, k ] } %>
     </div>
+
+    <br>
+
+    <div class="boxline">
+      <%= f.label :weblog_feed_url, "Weblog Feed URL:",
+        :class => "required" %>
+      <%= f.text_field :weblog_feed_url, :placeholder => "optional",
+        :size => 40 %>
+      <span class="hint">
+        For RSS/Atom feed aggregation; restrict to a technical feed if possible
+      </span>
+    </div>
+
+    <br>
 
     <div class="boxline">
       <%= f.label :about, "About:", :class => "required" %>

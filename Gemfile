@@ -32,6 +32,10 @@ gem "oauth"
 # for parsing incoming mail
 gem "mail"
 
+# for planet rss aggregation
+gem "feed-normalizer"
+gem "loofah"
+
 group :test, :development do
   gem "rspec-rails", "~> 2.6"
   gem "machinist"

@@ -1,0 +1,44 @@
+<ol class="stories list">
+<% @weblogs.each do |weblog| %>
+  <li class="story">
+  <div class="story_liner">
+    <div class="details">
+      <span class="link">
+        <a href="<%= weblog.url %>"><%= weblog.title %></a>
+      </span>
+      <span class="tags">
+        <% weblog.tags.map{|t| t.downcase }.sort.each do |tag| %>
+          <a href="<%= main_root_url %>t/<%= tag %>" class="tag"><%= tag %></a>
+        <% end %>
+      </span>
+      <span class="domain">
+        <a href="<%= weblog.site_url %>"><%= weblog.site_title %></a>
+      </span>
+      <div class="byline">
+        by <a href="<%= main_root_url %>u/<%= weblog.user.username %>"><%=
+          weblog.user.username %></a>
+        <%= raw(time_ago_in_words_label(weblog.created_at).
+          gsub(/^about /, "")) %> ago
+      </div>
+    </div>
+  </div>
+  <div class="story_content weblog_content shorten_first_p">
+    <%= weblog.sanitized_content %>
+  </div>
+  </li>
+<% end %>
+</ol>
+
+<div class="morelink">
+  <% if @page && @page > 1 %>
+    <a href="/<%= @page == 2 ? "" : "page/#{@page - 1}" %>">&lt;&lt; Page
+      <%= @page - 1 %></a>
+  <% end %>
+
+  <% if @show_more %>
+    <% if @page && @page > 1 %>
+      |
+    <% end %>
+    <a href="/page/<%= @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
+  <% end %>
+</div>

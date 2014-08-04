@@ -16,4 +16,8 @@ module ApplicationHelper
     label_tag(nil, time_ago_in_words(*args),
       :title => args.first.strftime("%F %T %z"))
   end
+
+  def main_root_url
+    Rails.application.routes.url_helpers.root_url
+  end
 end

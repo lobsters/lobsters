@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   belongs_to :banned_by_user,
     :class_name => "User"
   has_many :invitations
+  has_many :weblogs
 
   has_secure_password
 
@@ -30,6 +31,10 @@ class User < ActiveRecord::Base
   validates :username,
     :format => { :with => /\A[A-Za-z0-9][A-Za-z0-9_-]{0,24}\Z/ },
     :uniqueness => { :case_sensitive => false }
+
+  validates :weblog_feed_url,
+    :format => { :with => /\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/ },
+    :allow_blank => true
 
   validates_each :username do |record,attr,value|
     if BANNED_USERNAMES.include?(value.to_s.downcase)

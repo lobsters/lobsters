@@ -24,7 +24,9 @@ class HomeController < ApplicationController
   end
 
   def hidden
-    @stories, @show_more = get_from_cache(hidden: true) { paginate stories.hidden }
+    @stories, @show_more = get_from_cache(hidden: true) {
+      paginate stories.hidden
+    }
 
     @heading = @title = "Hidden Stories"
     @cur_url = "/hidden"
@@ -33,7 +35,9 @@ class HomeController < ApplicationController
   end
 
   def index
-    @stories, @show_more = get_from_cache(hottest: true) { paginate stories.hottest }
+    @stories, @show_more = get_from_cache(hottest: true) {
+      paginate stories.hottest
+    }
 
     @rss_link ||= { :title => "RSS 2.0",
       :href => "/rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
@@ -55,7 +59,9 @@ class HomeController < ApplicationController
   end
 
   def newest
-    @stories, @show_more = get_from_cache(newest: true) { paginate stories.newest }
+    @stories, @show_more = get_from_cache(newest: true) {
+      paginate stories.newest
+    }
 
     @heading = @title = "Newest Stories"
     @cur_url = "/newest"
@@ -79,7 +85,9 @@ class HomeController < ApplicationController
   def newest_by_user
     by_user = User.where(:username => params[:user]).first!
 
-    @stories, @show_more = get_from_cache(by_user: by_user) { paginate stories.by_user(by_user) }
+    @stories, @show_more = get_from_cache(by_user: by_user) {
+      paginate stories.by_user(by_user)
+    }
 
     @heading = @title = "Newest Stories by #{by_user.username}"
     @cur_url = "/newest/#{by_user.username}"
@@ -91,14 +99,14 @@ class HomeController < ApplicationController
   end
 
   def recent
-    @stories, @show_more = get_from_cache(recent: true) do
+    @stories, @show_more = get_from_cache(recent: true) {
       scope = if page == 1
         stories.recent
       else
         stories.newest
       end
       paginate scope
-    end
+    }
 
     @heading = @title = "Recent Stories"
     @cur_url = "/recent"
@@ -113,7 +121,9 @@ class HomeController < ApplicationController
   def tagged
     @tag = Tag.where(:tag => params[:tag]).first!
 
-    @stories, @show_more = get_from_cache(tag: @tag) { paginate stories.tagged(@tag) }
+    @stories, @show_more = get_from_cache(tag: @tag) {
+      paginate stories.tagged(@tag)
+    }
 
     @heading = @title = @tag.description.blank?? @tag.tag : @tag.description
     @cur_url = tag_url(@tag.tag)
@@ -139,7 +149,9 @@ class HomeController < ApplicationController
       @cur_url << "/#{params[:length]}"
     end
 
-    @stories, @show_more = get_from_cache(top: true, length: length) { paginate stories.top(length) }
+    @stories, @show_more = get_from_cache(top: true, length: length) {
+      paginate stories.top(length)
+    }
 
     if length[:dur] > 1
       @heading = @title = "Top Stories of the Past #{length[:dur]} " <<
@@ -152,7 +164,6 @@ class HomeController < ApplicationController
   end
 
 private
-
   def filtered_tag_ids
     if @user
       @user.tag_filters.map{|tf| tf.tag_id }
@@ -177,7 +188,8 @@ private
     if Rails.env.development? || @user || tags_filtered_by_cookie.any?
       yield
     else
-      key = opts.merge(page: page).sort.map{|k,v| "#{k}=#{v.to_param}" }.join(" ")
+      key = opts.merge(page: page).sort.map{|k,v| "#{k}=#{v.to_param}"
+        }.join(" ")
       Rails.cache.fetch("stories #{key}", :expires_in => 45, &block)
     end
   end

@@ -17,14 +17,18 @@ class StoryRepository
 
   def hidden
     hidden = base_scope
-    hidden = hidden.where(Story.arel_table[:id].in(hidden_arel)) if @user
-    hidden = filter_tags hidden, @params[:exclude_tags] if @params[:exclude_tags].try(:any?)
-    hidden.order('hotness')
+    if @user
+      hidden = hidden.where(Story.arel_table[:id].in(hidden_arel))
+    end
+    if @params[:exclude_tags].try(:any?)
+      hidden = filter_tags hidden, @params[:exclude_tags]
+    end
+    hidden.order("hotness")
   end
 
   def newest
     newest = filter_downvoted_and_tags base_scope
-    newest.order('stories.created_at DESC')
+    newest.order("stories.created_at DESC")
   end
 
   def by_user(user)
@@ -47,7 +51,8 @@ class StoryRepository
 
       if story_ids.length > StoriesPaginator::STORIES_PER_PAGE + 1
         # keep the top half (newest stories)
-        keep_ids = story_ids[0 .. ((StoriesPaginator::STORIES_PER_PAGE + 1) * 0.5)]
+        keep_ids = story_ids[0 .. ((StoriesPaginator::STORIES_PER_PAGE + 1) *
+          0.5)]
         story_ids = story_ids[keep_ids.length - 1 ... story_ids.length]
 
         # make the bottom half a random selection of older stories
@@ -61,7 +66,7 @@ class StoryRepository
       end
     end
 
-    stories.order('stories.created_at DESC')
+    stories.order("stories.created_at DESC")
   end
 
   def tagged(tag)
@@ -75,23 +80,27 @@ class StoryRepository
         )
       )
     )
-    tagged.order('stories.created_at DESC')
+    tagged.order("stories.created_at DESC")
   end
 
   def top(length)
-    top = base_scope.where("created_at >= (NOW() - INTERVAL #{length[:dur]} #{length[:intv].upcase})")
-    top.order '(CAST(upvotes AS integer) - CAST(downvotes AS integer)) DESC'
+    top = base_scope.where("created_at >= (NOW() - INTERVAL " <<
+      "#{length[:dur]} #{length[:intv].upcase})")
+    top.order("(CAST(upvotes AS integer) - CAST(downvotes AS integer)) DESC")
   end
 
-  private
-
+private
   def base_scope
     Story.unmerged.where(is_expired: false)
   end
 
   def filter_downvoted_and_tags(scope)
-    scope = filter_downvoted scope if @user
-    scope = filter_tags scope, @params[:exclude_tags] if @params[:exclude_tags].try(:any?)
+    if @user
+      scope = filter_downvoted scope
+    end
+    if @params[:exclude_tags].try(:any?)
+      scope = filter_tags scope, @params[:exclude_tags]
+    end
     scope
   end
 

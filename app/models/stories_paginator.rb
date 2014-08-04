@@ -13,8 +13,7 @@ class StoriesPaginator
       .includes(:user, :taggings => :tag)
   end
 
-  private
-
+private
   def with_pagination_info(scope)
     scope = scope.to_a
     show_more = scope.count > STORIES_PER_PAGE

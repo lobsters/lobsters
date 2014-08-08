@@ -24,7 +24,13 @@ class LoginController < ApplicationController
     if user && user.is_active? &&
     user.try(:authenticate, params[:password].to_s)
       session[:u] = user.session_token
-      return redirect_to "/"
+
+      if (rd = session[:redirect_to]).present?
+        session.delete(:redirect_to)
+        return redirect_to rd
+      else
+        return redirect_to "/"
+      end
     end
 
     flash.now[:error] = "Invalid e-mail address and/or password."

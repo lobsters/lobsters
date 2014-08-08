@@ -55,6 +55,10 @@ class ApplicationController < ActionController::Base
     if @user
       true
     else
+      if request.get?
+        session[:redirect_to] = request.original_fullpath
+      end
+
       redirect_to "/login"
     end
   end

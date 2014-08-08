@@ -11,6 +11,7 @@ class LoginController < ApplicationController
 
   def index
     @title = "Login"
+    @referer ||= request.referer
     render :action => "index"
   end
 
@@ -28,12 +29,22 @@ class LoginController < ApplicationController
       if (rd = session[:redirect_to]).present?
         session.delete(:redirect_to)
         return redirect_to rd
-      else
-        return redirect_to "/"
+      elsif params[:referer].present?
+        begin
+          ru = URI.parse(params[:referer])
+          if ru.host == Rails.application.domain
+            return redirect_to ru.to_s
+          end
+        rescue => e
+          Rails.logger.error "error parsing referer: #{e}"
+        end
       end
+
+      return redirect_to "/"
     end
 
     flash.now[:error] = "Invalid e-mail address and/or password."
+    @referer = params[:referer]
     index
   end
 

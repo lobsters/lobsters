@@ -29,5 +29,9 @@
     ask them for an invitation or <a href="/invitations/request">request one
     publicly</a>.
     </p>
+
+    <% if @referer.present? %>
+      <%= hidden_field_tag :referer, @referer %>
+    <% end %>
   <% end %>
 </div>

@@ -13,7 +13,7 @@
   <% end %>
 
   <div style="width: 100%;">
-    <%= text_area_tag "comment", comment.comment, :rows => 5,
+    <%= text_area_tag "comment", comment.comment, :rows => 15,
       :style => "width: 100%;", :autocomplete => "off", :disabled => !@user,
       :placeholder => (@user ? "" : "You must be logged in to leave a comment.")
       %>

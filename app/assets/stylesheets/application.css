@@ -1,3 +1,4 @@
+/* vim: set ts=2 noexpandtab */
 /*
  *= require select2
  *= require_self
@@ -12,10 +13,15 @@ html {
 	overflow-y: scroll;
 }
 
-body, textarea, input, button {
+html, input, button {
 	font-family: "helvetica neue", arial, sans-serif;
-	font-size: 9.5pt;
+	font-size: 12pt;
 	color: #333;
+}
+
+textarea, code {
+	font-size: 0.9rem;
+	font-family: Menlo, Consolas, monospace;
 }
 
 a {
@@ -85,8 +91,20 @@ div.shorten_first_p p:first-child {
 	margin-top: 0.5em;
 }
 
+code {
+	background-color: #fffede;
+}
+
+pre code {
+	background-color: transparent;
+}
+
 pre {
 	overflow-x: auto;
+	overflow-y: hidden;
+	border-left: 2px solid #003a5e;
+	line-height: 1;
+	padding-left: 5px;
 }
 
 
@@ -213,8 +231,8 @@ div#wrapper {
 	margin-left: auto;
 	margin-right: auto;
 	padding-bottom: 2em;
-	min-width: 800px;
-	max-width: 1000px;
+	min-width: 1000px;
+	max-width: 1500px;
 }
 div#inside {
 	margin-left: 0.25em;
@@ -248,7 +266,7 @@ div#inside {
 }
 
 #header h1 {
-	font-size: 11pt;
+	font-size: 1.2rem;
 	margin: 0px;
 	margin-left: 22px;
 	margin-right: 1em;
@@ -476,7 +494,7 @@ li .link {
 }
 
 li .link a {
-	font-size: 11pt;
+	font-size: 1.2rem;
 	text-decoration: none;
 }
 
@@ -491,7 +509,7 @@ li .tags {
 li .domain {
 	color: #888;
 	font-style: italic;
-	font-size: 8.5pt;
+	font-size: 1rem;
 	vertical-align: middle;
 }
 li .domain a {
@@ -510,7 +528,7 @@ li .domain a {
 
 li .byline {
 	color: #888;
-	font-size: 8.5pt;
+	font-size: 1rem;
 }
 li.story .byline {
 	margin-top: 1px;
@@ -588,7 +606,7 @@ div.page_link_buttons a.cur {
 
 div.story_text {
 	margin-bottom: 1.5em;
-	max-width: 700px;
+	max-width: 1500px;
 	line-height: 1.4em;
 }
 div.story_text p {
@@ -600,7 +618,7 @@ div.story_text img {
 }
 
 div.comment_text {
-	max-width: 700px;
+	max-width: 1500px;
 }
 
 div.comment_text blockquote,
@@ -632,7 +650,7 @@ div.comment_text p:first-child {
 div.comment_actions a {
 	color: #888;
 	font-weight: bold;
-	font-size: 8.5pt;
+	font-size: 1rem;
 	text-decoration: none;
 }
 
@@ -729,6 +747,10 @@ div#story_box textarea {
 div#story_box div.markdown_help_toggler {
 	margin-left: 7em;
 	width: 610px;
+}
+
+div.comment_form_container {
+	max-width: 1000px;
 }
 
 div.comment_form_container form {
@@ -863,7 +885,7 @@ table.data td p:last-child {
 	margin-bottom: 1em;
 	padding: 0;
 	font-weight: bold;
-	font-size: 11pt;
+	font-size: 1.2rem;
 }
 .box .sublegend {
 	font-size: 9.5pt;

@@ -105,6 +105,7 @@
       <%= yield %>
 
       <div id="footer">
+        <a href="/invitations/request">Sign Up</a>
         <a href="/moderations">Moderation Log</a>
         <% if @user && !@user.is_new? &&
         (iqc = InvitationRequest.verified_count) > 0 %>

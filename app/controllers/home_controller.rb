@@ -43,8 +43,8 @@ class HomeController < ApplicationController
     @rss_link ||= { :title => "RSS 2.0",
       :href => "/rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
 
-    @heading = @title = ""
-    @cur_url = "/"
+    @heading = @title = "Spiciest Stories"
+    @cur_url = "/hottest"
 
     respond_to do |format|
       format.html { render :action => "index" }
@@ -64,8 +64,8 @@ class HomeController < ApplicationController
       paginate stories.newest
     }
 
-    @heading = @title = "Newest Stories"
-    @cur_url = "/newest"
+    @heading = @title = ""
+    @cur_url = "/"
 
     @rss_link = { :title => "RSS 2.0 - Newest Items",
       :href => "/newest.rss#{@user ? "?token=#{@user.rss_token}" : ""}" }

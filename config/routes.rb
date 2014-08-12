@@ -10,14 +10,14 @@ Lobsters::Application.routes.draw do
 
   constraints do
     scope :format => "html" do
-      root :to => "home#index",
+      root :to => "home#newest",
         :protocol => (Rails.env == "production" ? "https://" : "http://"),
         :as => "root"
 
       get "/rss" => "home#index", :format => "rss"
-      get "/hottest" => "home#index", :format => "json"
+      get "/hottest" => "home#index", :format => "html"
 
-      get "/page/:page" => "home#index"
+      get "/page/:page" => "home#newest"
 
       get "/newest" => "home#newest", :format => /html|json|rss/
       get "/newest/page/:page" => "home#newest"

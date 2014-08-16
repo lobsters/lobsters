@@ -70,7 +70,7 @@ describe HomeController do
     let(:scope) { double 'Newest By User Scope' }
     let(:user) { User.make! }
 
-    before { StoryRepository.any_instance.should_receive(:by_user).with(user) }
+    before { StoryRepository.any_instance.should_receive(:newest_by_user).with(user) }
     before { get 'newest_by_user', user: user.username }
 
     context 'assigns' do

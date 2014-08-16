@@ -31,8 +31,8 @@ class StoryRepository
     newest.order("stories.created_at DESC")
   end
 
-  def by_user(user)
-    base_scope.where(user_id: user.id)
+  def newest_by_user(user)
+    base_scope.where(user_id: user.id).order("stories.id DESC")
   end
 
   def recent

@@ -53,13 +53,24 @@ class CommentsController < ApplicationController
     end
   end
 
+  def show
+    if !((comment = find_comment) && comment.is_editable_by_user?(@user))
+      return render :text => "can't find comment", :status => 400
+    end
+
+    render :partial => "comment", :layout => false,
+      :content_type => "text/html", :locals => { :comment => comment,
+      :cancellable => true }
+  end
+
   def edit
     if !((comment = find_comment) && comment.is_editable_by_user?(@user))
       return render :text => "can't find comment", :status => 400
     end
 
     render :partial => "commentbox", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+      :content_type => "text/html", :locals => { :comment => comment,
+      :cancellable => true }
   end
 
   def reply

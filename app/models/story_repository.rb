@@ -28,7 +28,7 @@ class StoryRepository
 
   def newest
     newest = filter_downvoted_and_tags base_scope
-    newest.order("stories.created_at DESC")
+    newest.order("stories.id DESC")
   end
 
   def newest_by_user(user)

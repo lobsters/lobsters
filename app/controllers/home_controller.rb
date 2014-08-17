@@ -86,7 +86,7 @@ class HomeController < ApplicationController
     by_user = User.where(:username => params[:user]).first!
 
     @stories, @show_more = get_from_cache(by_user: by_user) {
-      paginate stories.by_user(by_user)
+      paginate stories.newest_by_user(by_user)
     }
 
     @heading = @title = "Newest Stories by #{by_user.username}"

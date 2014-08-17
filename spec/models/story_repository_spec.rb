@@ -87,17 +87,17 @@ describe StoryRepository do
     end
   end
 
-  describe '#by_user' do
+  describe '#newest_by_user' do
     let(:another_user) { User.make! }
 
-    subject { stories.by_user(another_user) }
+    subject { stories.newest_by_user(another_user) }
 
-    it 'orders by created_at' do
+    it 'orders by id descending' do
       story1 = Story.make! user_id: another_user.id
       story2 = Story.make!
       story3 = Story.make! user_id: another_user.id
 
-      expect(subject).to eq [story1, story3]
+      expect(subject).to eq [story3, story1]
     end
   end
 

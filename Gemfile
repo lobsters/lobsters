@@ -20,7 +20,7 @@ gem "dynamic_form"
 
 gem "exception_notification"
 
-gem "bcrypt-ruby", "~> 3.1.2"
+gem "bcrypt", "~> 3.1.2"
 
 gem "nokogiri", "= 1.6.1"
 gem "htmlentities"

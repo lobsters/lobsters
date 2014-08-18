@@ -69,6 +69,7 @@ Lobsters::Application.routes.draw do
       end
       post "/stories/fetch_url_title", :format => "json"
       post "/stories/preview" => "stories#preview"
+      post "/stories/guess" => "stories#guess"
 
       resources :comments do
         member do

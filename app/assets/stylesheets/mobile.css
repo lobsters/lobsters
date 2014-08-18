@@ -19,6 +19,14 @@
 		padding: 8px;
 	}
 
+    div#leader.guess input[type="submit"] {
+        display: none;
+    }
+
+    div#leader.guess input[type="input"] {
+        width: 100%;
+    }
+
 	div#wrapper {
 		padding: 0;
 		padding-bottom: 2em;

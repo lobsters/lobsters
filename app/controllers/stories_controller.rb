@@ -27,6 +27,22 @@ class StoriesController < ApplicationController
     return render :action => "new"
   end
 
+  def guess
+    @title = "Submit Story"
+    @cur_url = "/stories/new"
+    text = params.require(:text)
+
+    if text.start_with? "http://"
+      story = Story.new(:url => text)
+      story.title = story.fetched_title(request.remote_ip)
+      @story = story
+    else
+      @story = Story.new(:title => text)
+    end
+
+    return render :action => "new"
+  end
+
   def destroy
     if !@story.is_editable_by_user?(@user)
       flash[:error] = "You cannot edit that story."

@@ -5,6 +5,15 @@
   </div>
 <% end %>
 
+<% if @cur_url == "/" %>
+  <div class="box guess" id="leader">
+    <form method="post" action="/stories/guess">
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+      <input type="input" placeholder="e.g. <%= rand(2) == 0 ? "http://www.reddit.com/r/ArtisanVideos/" : "Ask Barnacles: What's tsking vs. whisking?" %>" name="text" tabindex="1"><input type="submit" value="Submit Story" tabindex="2">
+    </form>
+  </div>
+<% end %>
+
 <ol class="stories list <%= @cur_url == "/hidden" ? "show_hidden" : "" %>">
   <%= render :partial => "stories/listdetail", :collection => @stories,
     :as => :story %>

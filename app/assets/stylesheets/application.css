@@ -314,6 +314,19 @@ div#leader {
 	padding: 4px 0px;
 }
 
+div#leader.guess input[type="submit"] {
+    width: 8em;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+div#leader.guess input[type="input"] {
+    width: calc(100% - 9em);
+    margin-right: 1em;
+    box-sizing: border-box;
+    text-align: left;
+}
+
 /* footer */
 
 div#footer {

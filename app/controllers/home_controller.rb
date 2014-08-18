@@ -2,7 +2,7 @@ class HomeController < ApplicationController
   # for rss feeds, load the user's tag filters if a token is passed
   before_filter :find_user_from_rss_token, :only => [ :index, :newest ]
   before_filter { @page = page }
-  before_filter :require_logged_in_user, :only => [:upvoted]
+  before_filter :require_logged_in_user, :only => [ :upvoted ]
 
   def about
     begin
@@ -169,10 +169,10 @@ class HomeController < ApplicationController
       paginate @user.upvoted_stories.order('votes.id DESC')
     }
 
-    @heading = @title = "Upvoted"
+    @heading = @title = "Your Upvoted Stories"
     @cur_url = "/upvoted"
 
-    @rss_link = { :title => "RSS 2.0 - Upvoted Items",
+    @rss_link = { :title => "RSS 2.0 - Your Upvoted Stories",
       :href => "/upvoted.rss#{(@user ? "?token=#{@user.rss_token}" : "")}" }
 
     respond_to do |format|

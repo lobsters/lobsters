@@ -1,6 +1,10 @@
 describe HomeController do
   before { Rails.cache.clear }
-  before { StoriesPaginator.any_instance.should_receive(:get).and_return [scope, true] }
+  before {
+    unless example.metadata[:skip_before]
+      StoriesPaginator.any_instance.should_receive(:get).and_return [scope, true]
+    end
+  }
 
   describe 'GET index' do
     let(:scope) { double 'Hottest Scope' }
@@ -126,5 +130,10 @@ describe HomeController do
         it { should eq scope }
       end
     end
+  end
+
+  describe 'GET upvoted', skip_before: true do
+    before { get 'upvoted' }
+    it { should redirect_to(login_path) }
   end
 end

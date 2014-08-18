@@ -300,14 +300,22 @@ $(document).ready(function() {
   });
 
   $(document).on("click", "button.comment-cancel", function() {
-    $(this).closest(".comment").remove();
+    var comment = $(this).closest(".comment[data-shortid]");
+    if (comment.length) {
+      $.get("/comments/" + comment.attr("data-shortid"),
+      function(data) {
+        comment.replaceWith($.parseHTML(data));
+      });
+    } else {
+      $(this).closest(".comment").remove();
+    }
   });
 
   $(document).on("click", "a.comment_editor", function() {
     var comment = $(this).closest(".comment");
     $.get("/comments/" + comment.attr("data-shortid") + "/edit",
     function(data) {
-      comment.replaceWith($.parseHTML(data));
+      comment.html($.parseHTML(data));
     });
   });
 

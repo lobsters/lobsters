@@ -32,7 +32,7 @@ class StoriesController < ApplicationController
     @cur_url = "/stories/new"
     text = params.require(:text)
 
-    if text.start_with? "http://"
+    if text.start_with? "http://" or text.start_with? "https://"
       story = Story.new(:url => text)
       story.title = story.fetched_title(request.remote_ip)
       @story = story

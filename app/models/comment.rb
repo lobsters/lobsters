@@ -185,12 +185,19 @@ class Comment < ActiveRecord::Base
     self.story.update_comments_count!
   end
 
+  def mentions
+    self.plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq
+  end
+
   def deliver_mention_notifications
-    self.plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
+    self.mentions.each do |mention|
       if u = User.where(:username => mention).first
         if u.id == self.user.id
           next
         end
+
+        n = Notification.new(:user => u, :comment => self, :unread => true)
+        n.save
 
         if u.email_mentions?
           begin

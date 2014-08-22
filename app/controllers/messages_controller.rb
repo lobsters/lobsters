@@ -10,6 +10,9 @@ class MessagesController < ApplicationController
 
     @direction = :in
     @messages = @user.undeleted_received_messages
+    @notifications = Notification.where(user: @user).order(created_at: :desc)
+
+    @notifications.update_all({ :unread => false })
 
     if params[:to]
       @new_message.recipient_username = params[:to]

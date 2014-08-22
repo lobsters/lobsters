@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140804005415) do
+ActiveRecord::Schema.define(version: 20140822042606) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -87,6 +87,16 @@ ActiveRecord::Schema.define(version: 20140804005415) do
     t.text     "action",            limit: 16777215
     t.text     "reason",            limit: 16777215
   end
+
+  create_table "notifications", force: true do |t|
+    t.integer  "user_id",    null: false
+    t.string   "comment_id", null: false
+    t.boolean  "unread",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "notifications", ["user_id", "comment_id"], name: "unique_notification_id", using: :btree
 
   create_table "stories", force: true do |t|
     t.datetime "created_at"

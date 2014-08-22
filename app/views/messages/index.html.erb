@@ -7,6 +7,20 @@
   });
 </script>
 
+<div class="notifications">
+  <div class="legend">Mentions [experimental]</div>
+  <% if @notifications.any? %>
+    <ol class="comments">
+      <% @notifications.each do |n| %>
+        <li>
+          <%= render "comments/comment", :comment => n.comment, :show_story => true  %>
+        </li>
+    <% end %>
+  </ol>
+  <% end %>
+  <br>
+</div>
+
 <div class="box wide">
   <div class="legend" style="float: right;">
     <% if @direction == :out %>

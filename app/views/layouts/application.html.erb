@@ -70,14 +70,13 @@
         <a href="/filters" <%= @cur_url == "/filters" ?
           raw("class=\"cur_url\"") : "" %>>Filters</a>
         <% if @user %>
-          <% if (count = @user.unread_message_count) > 0 %>
-            <a href="/messages" class="new_messages <%= @cur_url == "/messages" ?
-              "cur_url" : "" %>"><%= count %> New Message<%= count == 1 ? "" :
-              "s" %></a>
-          <% else %>
-            <a href="/messages" <%= @cur_url == "/messages" ?
-              raw("class=\"cur_url\"") : "" %>>Messages</a>
-          <% end %>
+          <% cur_url = @cur_url == "/messages" ? "cur_url" : "" %>
+          <% notification_count = Notification.where(:user => @user, :unread => true).count %>
+          <% new_messages = (@user.unread_message_count > 0 or notification_count > 0) ? "new_messages" : "" %>
+          <% title = notification_count > 0 ? "You have new messages!" : "All quiet on the message front." %>
+          <a href="/messages" class="<%= cur_url.length > 0 ? cur_url : new_messages %>" title="<%= title %>">
+            Messages
+          </a>
 
           <a href="/settings" <%= @cur_url == "/settings" ?
             raw("class=\"cur_url\"") : "" %>><%= @user.username %>

@@ -307,7 +307,16 @@ div#inside {
 }
 
 #header a.new_messages {
-	color: #ac130d;
+	-webkit-animation: glow 3s ease-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+	from {
+	    text-shadow: 0px 0px 10px #17B2FF;
+	}
+	to {
+	    text-shadow: 0px 0px 30px #17B2FF;
+	}
 }
 
 div#leader {
@@ -315,16 +324,16 @@ div#leader {
 }
 
 div#leader.guess input[type="submit"] {
-    width: 8em;
-    text-align: center;
-    box-sizing: border-box;
+	width: 8em;
+	text-align: center;
+	box-sizing: border-box;
 }
 
 div#leader.guess input[type="input"] {
-    width: calc(100% - 9em);
-    margin-right: 1em;
-    box-sizing: border-box;
-    text-align: left;
+	width: calc(100% - 9em);
+	margin-right: 1em;
+	box-sizing: border-box;
+	text-align: left;
 }
 
 /* footer */
@@ -878,11 +887,16 @@ table.data td p:last-child {
 
 
 /* boxes */
-.box {
+.box, .notifications {
 	border: 0;
 	margin: 0 40px;
 	padding: 0;
 }
+
+.notifications .comments {
+	margin-left: 0;
+}
+
 .box_submitter {
 	border: 1px solid #cacaca;
 	border-top: 0px;
@@ -893,7 +907,7 @@ table.data td p:last-child {
 	width: 10em;
 }
 
-.box .legend {
+.box .legend, .notifications .legend {
 	background-color: white;
 	margin-bottom: 1em;
 	padding: 0;
@@ -1093,8 +1107,8 @@ div.errorExplanation h2 {
 }
 
 div#flasher {
-    position: fixed;
-    top: -40px;
+	position: fixed;
+	top: -40px;
 	right: 0px;
 	left: 325px;
 	text-align: center;

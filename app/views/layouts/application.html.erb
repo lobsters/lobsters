@@ -43,11 +43,6 @@
           "/comments" => "Talk of the Town"
         } %>
 
-        <% if @user %>
-          <% links.merge!({ "/threads" => "Your Threads",
-            "/stories/new" => "Submit Story" }) %>
-        <% end %>
-
         <% links.merge!({ "/search" => "Search" }) %>
 
         <% if @cur_url.present? && !links.keys.include?(@cur_url) &&

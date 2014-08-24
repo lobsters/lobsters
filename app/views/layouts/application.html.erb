@@ -67,8 +67,6 @@
 
       <div id="headerright">
         <span class="headerlinks">
-        <a href="/filters" <%= @cur_url == "/filters" ?
-          raw("class=\"cur_url\"") : "" %>>Filters</a>
         <% if @user %>
           <% cur_url = @cur_url == "/messages" ? "cur_url" : "" %>
           <% notification_count = Notification.where(:user => @user, :unread => true).count %>

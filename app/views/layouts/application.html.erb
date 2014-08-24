@@ -67,8 +67,13 @@
           <% notification_count = Notification.where(:user => @user, :unread => true).count %>
           <% new_messages = (@user.unread_message_count > 0 or notification_count > 0) ? "new_messages" : "" %>
           <% title = notification_count > 0 ? "You have new messages!" : "All quiet on the message front." %>
+
+          <a href="/threads">
+            Your Replies
+          </a>
+
           <a href="/messages" class="<%= cur_url.length > 0 ? cur_url : new_messages %>" title="<%= title %>">
-            Messages
+            Your Messages
           </a>
 
           <a href="/settings" <%= @cur_url == "/settings" ?

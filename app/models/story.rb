@@ -128,8 +128,13 @@ class Story < ActiveRecord::Base
   end
 
   def calculated_hotness
+    base = 10
+    self.tags.select{|t| t.hotness_mod != 0 }.each do |t|
+      base -= t.hotness_mod
+    end
+
     # don't immediately kill stories at 0 by bumping up score by one
-    order = Math.log([ (score + 1).abs + comments_count, 1 ].max, 10)
+    order = Math.log([ (score + 1).abs + comments_count, 1 ].max, base)
     if score > 0
       sign = 1
     elsif score < 0

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140804005415) do
+ActiveRecord::Schema.define(version: 20140825225915) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -134,6 +134,7 @@ ActiveRecord::Schema.define(version: 20140804005415) do
     t.boolean "privileged",              default: false
     t.boolean "is_media",                default: false
     t.boolean "inactive",                default: false
+    t.integer "hotness_mod",             default: 0
   end
 
   add_index "tags", ["tag"], name: "tag", unique: true, using: :btree

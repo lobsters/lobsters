@@ -123,7 +123,7 @@ private
   end
 
   def positive_ranked(scope)
-    scope.where("(CAST(upvotes AS integer) - CAST(downvotes AS integer)) >= -2")
+    scope.where("(CAST(upvotes AS integer) - CAST(downvotes AS integer)) >= -1")
   end
 
   def filter_tags(scope, tags)

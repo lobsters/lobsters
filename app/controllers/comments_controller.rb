@@ -219,6 +219,9 @@ class CommentsController < ApplicationController
       @showing_user = @user
       @heading = @title = "Your Threads"
       @cur_url = "/threads"
+
+      reply_markers = ReplyMarker.where(:user => @user, :unread => true)
+      reply_markers.update_all({ :unread => false })
     end
 
     thread_ids = @showing_user.recent_threads(20)

@@ -221,8 +221,17 @@ class Comment < ActiveRecord::Base
   end
 
   def deliver_reply_notifications
-    if self.parent_comment_id && (u = self.parent_comment.try(:user)) &&
-    u.id != self.user.id
+    if self.parent_comment_id && (u = self.parent_comment.try(:user)) && u.id != self.user.id
+      reply_marker = ReplyMarker.where(:user => u, :unread => true).order(date: :desc).first
+      unless reply_marker
+        reply_marker = ReplyMarker.new
+        reply_marker.user = u
+        reply_marker.unread = true
+      end
+
+      reply_marker.date = DateTime.current.utc
+      reply_marker.save
+
       if u.email_replies?
         begin
           EmailReply.reply(self, u).deliver

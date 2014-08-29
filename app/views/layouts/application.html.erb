@@ -66,9 +66,11 @@
           <% cur_url = @cur_url == "/messages" ? "cur_url" : "" %>
           <% notification_count = Notification.where(:user => @user, :unread => true).count %>
           <% new_messages = (@user.unread_message_count > 0 or notification_count > 0) ? "new_messages" : "" %>
+          <% new_replies = ReplyMarker.where(:user => @user, :unread => true).any? ? "new_messages" : "" %>
+          <% new_replies_title = new_replies ? "You have new replies!" : "All quiet on the replies front." %>
           <% title = notification_count > 0 ? "You have new messages!" : "All quiet on the message front." %>
 
-          <a href="/threads">
+          <a href="/threads" class="<%= new_replies %>" title="<%= new_replies_title %>">
             Your Replies
           </a>
 

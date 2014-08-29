@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140822042606) do
+ActiveRecord::Schema.define(version: 20140829173747) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -97,6 +97,16 @@ ActiveRecord::Schema.define(version: 20140822042606) do
   end
 
   add_index "notifications", ["user_id", "comment_id"], name: "unique_notification_id", using: :btree
+
+  create_table "reply_markers", force: true do |t|
+    t.integer  "user_id",    null: false
+    t.datetime "date",       null: false
+    t.boolean  "unread",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "reply_markers", ["user_id", "date"], name: "unique_reply_marker_id", using: :btree
 
   create_table "stories", force: true do |t|
     t.datetime "created_at"

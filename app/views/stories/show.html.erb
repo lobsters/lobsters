@@ -3,14 +3,6 @@
     :locals => { :story => @story, :single_story => true } %>
 </ol>
 
-<div class="story_content">
-  <% if @story.markeddown_description.present? %>
-    <div class="story_text">
-      <%= raw @story.markeddown_description %>
-    </div>
-  <% end %>
-</div>
-
 <% if !@story.previewing %>
   <ol class="comments comments1">
     <% if !@story.is_gone? && !@story.previewing %>

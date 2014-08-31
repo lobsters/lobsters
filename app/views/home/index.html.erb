@@ -14,7 +14,7 @@
   </div>
 <% end %>
 
-<ol class="stories list <%= @cur_url == "/hidden" ? "show_hidden" : "" %>">
+<ol class="home stories list <%= @cur_url == "/hidden" ? "show_hidden" : "" %>">
   <%= render :partial => "stories/listdetail", :collection => @stories,
     :as => :story %>
 </ol>

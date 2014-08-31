@@ -119,4 +119,11 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
 style="display: none;">
   <a href="<%= story.comments_url %>"><%= story.comments_count %></a>
 </div>
+<div class="story_content">
+  <% if story.markeddown_description.present? %>
+    <div class="story_text">
+      <%= raw story.markeddown_description %>
+    </div>
+  <% end %>
+</div>
 </li>

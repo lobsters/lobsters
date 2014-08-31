@@ -19,13 +19,13 @@
 		padding: 8px;
 	}
 
-    div#leader.guess input[type="submit"] {
-        display: none;
-    }
+	div#leader.guess input[type="submit"] {
+	    display: none;
+	}
 
-    div#leader.guess input[type="input"] {
-        width: 100%;
-    }
+	div#leader.guess input[type="input"] {
+	    width: 100%;
+	}
 
 	div#wrapper {
 		padding: 0;
@@ -182,6 +182,11 @@
 		margin-left: 36px;
 		margin-right: 20px;
 	}
+
+	.home .story_content {
+		display: none;
+	}
+
 	div.morelink {
 		margin-left: 36px;
 	}

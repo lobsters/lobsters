@@ -66,18 +66,6 @@
     <br>
 
     <div class="boxline">
-      <%= f.label :weblog_feed_url, "Weblog Feed URL:",
-        :class => "required" %>
-      <%= f.text_field :weblog_feed_url, :placeholder => "optional",
-        :size => 40 %>
-      <span class="hint">
-        For RSS/Atom feed aggregation; restrict to a technical feed if possible
-      </span>
-    </div>
-
-    <br>
-
-    <div class="boxline">
       <%= f.label :about, "About:", :class => "required" %>
       <%= f.text_area :about, :size => "100x5", :style => "width: 600px;" %>
     </div>

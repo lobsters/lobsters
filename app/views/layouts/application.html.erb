@@ -7,6 +7,7 @@
   <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon.png" />
   <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-144.png" />
   <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144.png" />
+  <link rel="shortcut icon" href="/favicon.ico?v=2" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noarchive,noodp,noydir" />
   <meta name="referrer" content="always" />
@@ -33,8 +34,7 @@
   <div id="wrapper">
     <div id="header">
       <div id="headerleft">
-        <a id="l_holder" style="background-color: #<%= sprintf("%02x%02x%02x",
-        [ 255, (@traffic * 7).floor + 50.0 ].min, 0, 0) %>;" href="/"
+        <a id="l_holder" href="/"
         title="<%= Rails.application.name %> (<%= @traffic.to_i %>)"></a>
 
         <% links = {

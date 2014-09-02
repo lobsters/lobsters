@@ -2,10 +2,15 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :authenticate_user
   before_filter :increase_traffic_counter
+  helper_method :url_for
 
   TRAFFIC_DECREMENTER = 0.25
 
   TAG_FILTER_COOKIE = :tag_filters
+
+  def default_url_options(options = nil)
+    { :protocol => 'https' }
+  end
 
   def authenticate_user
     if session[:u] &&

@@ -1,10 +1,11 @@
 
 ThinkingSphinx::Index.define :story, :with => :active_record do
-  indexes url
-  indexes title
   indexes description
-  indexes user.username, :as => :author
+  indexes short_id
   indexes tags(:tag), :as => :tags
+  indexes title
+  indexes url
+  indexes user.username, :as => :author
 
   has created_at, :sortable => true
   has hotness, is_expired

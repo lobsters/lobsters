@@ -97,10 +97,10 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
             (hidden by <%= pluralize(story.hider_count, "user") %>)
           <% end %>
         <% end %>
-        <% if !story.is_gone? && (@user || story.comments_count > 0) %>
+        <% if !story.is_gone? %>
           <span class="comments_label">
             |
-            <a href="<%= story.comments_url %>"><%= story.comments_count == 0 ?
+            <a href="<%= @user ? story.comments_url : login_url %>"><%= story.comments_count == 0 ?
               "discuss" : "#{story.comments_count} comment" <<
               (story.comments_count == 1 ? "" : "s") %></a>
           </span>

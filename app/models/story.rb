@@ -133,8 +133,11 @@ class Story < ActiveRecord::Base
       base -= t.hotness_mod
     end
 
+    # prevent the submitter's own comments from affecting the score
+    ccount = self.comments.where("user_id != ?", self.user_id).count
+
     # don't immediately kill stories at 0 by bumping up score by one
-    order = Math.log([ (score + 1).abs + comments_count, 1 ].max, base)
+    order = Math.log([ (score + 1).abs + ccount, 1 ].max, base)
     if score > 0
       sign = 1
     elsif score < 0

@@ -38,6 +38,8 @@ gem "thinking-sphinx", "~> 3.0.6"
 
 gem "mail"
 
+gem "pushover"
+
 group :test, :development do
   gem "rspec-rails", "~> 2.6"
   gem "machinist"

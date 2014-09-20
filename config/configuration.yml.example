@@ -1,3 +1,5 @@
 :domain: "lobste.rs"
 :protocol: "https"
 :name: "Lobsters"
+:pushover:
+  :api_token: " azGDORePK8gMaC0QOYAMyEEuzJnyUi"

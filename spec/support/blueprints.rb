@@ -5,6 +5,7 @@ User.blueprint do
   password { "blah blah" }
   password_confirmation { object.password }
   username { "username#{sn}" }
+  about { nil }
 end
 
 User.blueprint(:banned) do

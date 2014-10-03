@@ -1,6 +1,8 @@
 require "spec_helper"
 
 describe User do
+  let(:week_ago) { Time.now - 8.days }
+
   it "has a valid username" do
     expect { User.make!(:username => nil) }.to raise_error
     expect { User.make!(:username => "") }.to raise_error
@@ -49,7 +51,7 @@ describe User do
 
   it "shows a user is recent or not" do
     user = User.make!(:created_at => Time.now)
-    u = User.make!(:created_at => Time.now - 8.days)
+    u = User.make!(:created_at => week_ago)
     user.is_new?.should == true
     u.is_new?.should == false
   end
@@ -57,6 +59,35 @@ describe User do
   it "unbans a user" do
     u = User.make!(:banned)
     u.unban!.should be_true
+  end
+
+  it "show a user can downvote" do
+    user = User.make!(:created_at => Time.now)
+    u = User.make!(:created_at => week_ago)
+    user.can_downvote?.should == false
+    u.can_downvote?.should == true
+  end
+
+  it "can delete a user" do
+    u = User.make!
+    u.delete!
+    u.deleted_at.should be_true
+  end
+
+  it "username to params" do
+    u = User.make!
+    u.to_param.should == u.username
+  end
+
+  it "show a user's about section with links" do
+    u = User.make!(:about => "http://www.example.com")
+    u.linkified_about.should == "<p><a rel=\"nofollow\" href=\"http://www.example.com\">http://www.example.com</a></p>\n"
+  end
+
+  it "show the count of stories submitted" do
+    u = User.make!
+    s = Story.make!(:user_id => u.id)
+    u.stories_submitted_count.should == 1
   end
 
 end

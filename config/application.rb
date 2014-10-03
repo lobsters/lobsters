@@ -47,11 +47,11 @@ class << Rails.application
   end
 
   def domain
-    "lobste.rs"
+    "example.com"
   end
 
   def name
-    "Lobsters"
+    "Example News"
   end
 
   # used as mailing list prefix and countinual prefix, cannot have spaces

@@ -38,7 +38,7 @@
         title="<%= Rails.application.name %> (<%= @traffic.to_i %>)"></a>
 
         <% links = {
-          "/" => "Home",
+          "/" => @cur_url == "/" ? Rails.application.name : "Home",
           "/recent" => "Recent",
           "/comments" => "Comments"
         } %>

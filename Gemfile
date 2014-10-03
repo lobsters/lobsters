@@ -5,7 +5,7 @@ gem "rails", "4.0.8"
 gem "unicorn"
 
 gem "mysql2", ">= 0.3.14"
-
+gem "sidekiq"
 # uncomment to use PostgreSQL
 # gem "pg"
 #

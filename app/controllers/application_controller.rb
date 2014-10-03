@@ -14,41 +14,16 @@ class ApplicationController < ActionController::Base
       @user = user
       Rails.logger.info "  Logged in as user #{@user.id} (#{@user.username})"
     end
-
     true
   end
 
   def increase_traffic_counter
     @traffic = 1.0
-
-    if user_is_spider? || [ "json", "rss" ].include?(params[:format])
-      return true
+    unless user_is_spider? || [ "json", "rss" ].include?(params[:format])
+      TrafficCounterWorker.perform_async(TRAFFIC_DECREMENTER)
+    else
+      Rails.logger.info "  Traffic level: #{@traffic}"
     end
-
-    Keystore.transaction do
-      now_i = Time.now.to_i
-      date_kv = Keystore.find_or_create_key_for_update("traffic:date", now_i)
-      traffic_kv = Keystore.find_or_create_key_for_update("traffic:hits", 0)
-
-      # increment traffic counter on each request
-      traffic = traffic_kv.value.to_i + 100
-      # every second, decrement traffic by some amount
-      traffic -= (100.0 * (now_i - date_kv.value) * TRAFFIC_DECREMENTER).to_i
-      # clamp
-      traffic = [ 100, traffic ].max
-
-      @traffic = traffic * 0.01
-
-      traffic_kv.value = traffic
-      traffic_kv.save!
-
-      date_kv.value = now_i
-      date_kv.save!
-    end
-
-    Rails.logger.info "  Traffic level: #{@traffic}"
-
-    true
   end
 
   def require_logged_in_user

@@ -30,6 +30,9 @@ GEM
     bcrypt-ruby (3.1.5)
       bcrypt (>= 3.1.3)
     builder (3.1.4)
+    celluloid (0.15.2)
+      timers (~> 1.1.0)
+    connection_pool (2.0.0)
     diff-lcs (1.2.5)
     dynamic_form (1.1.4)
     erubis (2.7.0)
@@ -81,6 +84,9 @@ GEM
     raindrops (0.13.0)
     rake (10.3.2)
     rdiscount (2.1.7.1)
+    redis (3.1.0)
+    redis-namespace (1.5.1)
+      redis (~> 3.0, >= 3.0.4)
     riddle (1.5.11)
     rspec-collection_matchers (1.0.0)
       rspec-expectations (>= 2.99.0.beta1)
@@ -97,6 +103,12 @@ GEM
       rspec-core (~> 2.99.0)
       rspec-expectations (~> 2.99.0)
       rspec-mocks (~> 2.99.0)
+    sidekiq (3.2.5)
+      celluloid (= 0.15.2)
+      connection_pool (>= 2.0.0)
+      json
+      redis (>= 3.0.6)
+      redis-namespace (>= 1.3.1)
     sprockets (2.12.1)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -116,6 +128,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
+    timers (1.1.0)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -146,6 +159,7 @@ DEPENDENCIES
   rails (= 4.0.8)
   rdiscount
   rspec-rails (~> 2.6)
+  sidekiq
   sqlite3
   thinking-sphinx (~> 3.0.6)
   uglifier (>= 1.3.0)

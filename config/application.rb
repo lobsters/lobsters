@@ -31,6 +31,11 @@ module Lobsters
     config.action_controller.action_on_unpermitted_parameters = :raise
 
     config.cache_store = :file_store, "#{config.root}/tmp/cache/"
+
+    config.after_initialize do
+      Rails.application.routes.default_url_options[:host] =
+        Rails.application.domain
+    end
   end
 end
 
@@ -59,7 +64,5 @@ class << Rails.application
     name.downcase.gsub(/[^a-z]/, "")
   end
 end
-
-Rails.application.routes.default_url_options[:host] = Rails.application.domain
 
 require "#{Rails.root}/lib/monkey"

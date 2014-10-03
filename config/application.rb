@@ -42,6 +42,10 @@ end
 # define site name and domain to be used globally, can be overridden in
 # config/initializers/production.rb
 class << Rails.application
+  def allow_invitation_requests?
+    true
+  end
+
   def domain
     "lobste.rs"
   end

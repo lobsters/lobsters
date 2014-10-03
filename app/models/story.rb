@@ -101,6 +101,10 @@ class Story < ActiveRecord::Base
     true
   end
 
+  def self.votes_cast_type
+    Story.connection.adapter_name.match(/mysql/i) ? "signed" : "integer"
+  end
+
   def as_json(options = {})
     h = super(:only => [
       :short_id,

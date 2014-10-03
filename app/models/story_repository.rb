@@ -86,7 +86,8 @@ class StoryRepository
   def top(length)
     top = base_scope.where("created_at >= (NOW() - INTERVAL " <<
       "#{length[:dur]} #{length[:intv].upcase})")
-    top.order("(CAST(upvotes AS integer) - CAST(downvotes AS integer)) DESC")
+    top.order("(CAST(upvotes AS #{Story.votes_cast_type}) - " <<
+      "CAST(downvotes AS #{Story.votes_cast_type})) DESC")
   end
 
 private
@@ -123,7 +124,8 @@ private
   end
 
   def positive_ranked(scope)
-    scope.where("(CAST(upvotes AS integer) - CAST(downvotes AS integer)) >= -1")
+    scope.where("(CAST(upvotes AS #{Story.votes_cast_type}) - " <<
+      "CAST(downvotes AS #{Story.votes_cast_type})) >= -1")
   end
 
   def filter_tags(scope, tags)

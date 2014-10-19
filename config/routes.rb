@@ -3,7 +3,7 @@ Lobsters::Application.routes.draw do
     root :to => "weblogs#index",
       :subdomain => "planet",
       :as => "weblogs_root",
-      :protocol => (Rails.env == "production" ? "https://" : "http://")
+      :protocol => (Rails.application.config.force_ssl ? "https://" : "http://")
 
     get "/page/:page" => "weblogs#index"
   end
@@ -11,7 +11,7 @@ Lobsters::Application.routes.draw do
   constraints do
     scope :format => "html" do
       root :to => "home#newest",
-        :protocol => (Rails.env == "production" ? "https://" : "http://"),
+        :protocol => (Rails.application.config.force_ssl ? "https://" : "http://"),
         :as => "root"
 
       get "/rss" => "home#index", :format => "rss"
@@ -42,7 +42,6 @@ Lobsters::Application.routes.draw do
       get "/login" => "login#index"
       post "/login" => "login#login"
       post "/logout" => "login#logout"
-
       get "/signup" => "signup#index"
       post "/signup" => "signup#signup"
       get "/signup/invite" => "signup#invite"

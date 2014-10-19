@@ -1,7 +1,7 @@
 Lobsters::Application.routes.draw do
   scope :format => "html" do
     root :to => "home#index",
-      :protocol => (Rails.env == "production" ? "https://" : "http://"),
+      :protocol => (Rails.application.config.force_ssl ? "https://" : "http://"),
       :as => "root"
 
     get "/rss" => "home#index", :format => "rss"

@@ -27,19 +27,23 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% if defined?(was_merged) && was_merged %>
         <span class="merge"></span>
       <% end %>
+
+      <a href="/u/<%= comment.user.username %>"
+      <% if !comment.user.is_active? %>
+        class="inactive_user"
+      <% elsif comment.user.is_new? %>
+        class="new_user"
+      <% end %>
+      ><%= comment.user.username %></a>
+
+      <% if comment.hat %>
+        <%= comment.hat.to_html_label %>
+      <% end %>
+
       <% if comment.previewing %>
-        <a><%= comment.user.username %></a>
         previewed
         just now
       <% else %>
-        <a href="/u/<%= comment.user.username %>"
-        <% if !comment.user.is_active? %>
-          class="inactive_user"
-        <% elsif comment.user.is_new? %>
-          class="new_user"
-        <% end %>
-        ><%= comment.user.username %></a>
-
         <% if comment.has_been_edited? %>
           edited
         <% elsif comment.is_from_email? %>

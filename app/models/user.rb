@@ -27,6 +27,7 @@ class User < ActiveRecord::Base
     -> { where('votes.comment_id' => nil, 'votes.vote' => 1) },
     :through => :votes,
     :source => :story
+  has_many :hats
 
   has_secure_password
 

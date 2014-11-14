@@ -17,6 +17,10 @@ class CommentsController < ApplicationController
     comment.comment = params[:comment].to_s
     comment.user = @user
 
+    if params[:hat_id] && @user.hats.where(:id => params[:hat_id])
+      comment.hat_id = params[:hat_id]
+    end
+
     if params[:parent_comment_short_id].present?
       if pc = Comment.where(:story_id => story.id, :short_id =>
       params[:parent_comment_short_id]).first
@@ -115,6 +119,10 @@ class CommentsController < ApplicationController
     end
 
     comment.comment = params[:comment]
+    comment.hat_id = nil
+    if params[:hat_id] && @user.hats.where(:id => params[:hat_id])
+      comment.hat_id = params[:hat_id]
+    end
 
     if params[:preview].blank? && comment.save
       votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id,

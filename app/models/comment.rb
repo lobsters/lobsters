@@ -8,6 +8,7 @@ class Comment < ActiveRecord::Base
     :class_name => "Comment"
   has_one :moderation,
     :class_name => "Moderation"
+  belongs_to :hat
 
   attr_accessor :current_vote, :previewing, :indent_level, :highlighted
 

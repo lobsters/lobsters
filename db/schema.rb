@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140901013149) do
+ActiveRecord::Schema.define(version: 20141114184921) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -29,12 +29,22 @@ ActiveRecord::Schema.define(version: 20140901013149) do
     t.boolean  "is_deleted",                                                    default: false
     t.boolean  "is_moderated",                                                  default: false
     t.boolean  "is_from_email",                                                 default: false
+    t.integer  "hat_id"
   end
 
   add_index "comments", ["confidence"], name: "confidence_idx", using: :btree
   add_index "comments", ["short_id"], name: "short_id", unique: true, using: :btree
   add_index "comments", ["story_id", "short_id"], name: "story_id_short_id", using: :btree
   add_index "comments", ["thread_id"], name: "thread_id", using: :btree
+
+  create_table "hats", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+    t.integer  "granted_by_user_id"
+    t.string   "hat"
+    t.string   "link"
+  end
 
   create_table "invitation_requests", force: true do |t|
     t.string   "code"

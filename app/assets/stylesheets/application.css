@@ -70,6 +70,27 @@ a.tag_meta {
 	border-color: #c8c8c8;
 }
 
+span.hat {
+	border-bottom: 6px solid #bbb;
+	border-radius: 4px;
+	padding: 1px 8px;
+}
+span.hat span.crown {
+	background-color: #ddd;
+	border: 1px solid #eee;
+	border-bottom: 0;
+	border-radius: 5px 5px 0px 0px;
+	font-size: 7.5pt;
+	padding: 3px 5px 2px 5px;
+	text-decoration: none;
+	vertical-align: text-top;
+}
+
+span.hat span.crown, span.hat a {
+	color: #777;
+	text-decoration: none;
+}
+
 span.fakea {
 	cursor: pointer;
 	text-decoration: underline;

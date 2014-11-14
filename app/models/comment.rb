@@ -339,7 +339,7 @@ class Comment < ActiveRecord::Base
   end
 
   def short_id_url
-    self.story.short_id_url + "/_/comments/#{self.short_id}"
+    self.story.short_id_url + "/_/comments/#{self.short_id}#c_#{self.short_id}"
   end
 
   def to_param
@@ -351,7 +351,7 @@ class Comment < ActiveRecord::Base
   end
 
   def url
-    self.story.comments_url + "/comments/#{self.short_id}"
+    self.story.comments_url + "/comments/#{self.short_id}#c_#{self.short_id}"
   end
 
   def vote_summary

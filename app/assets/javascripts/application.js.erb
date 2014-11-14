@@ -174,8 +174,12 @@ var _Lobsters = Class.extend({
       if ($(form).find('#parent_comment_short_id').length) {
         $(form).closest('.comment').replaceWith($.parseHTML(data));
       } else {
-        $(form).closest('.comment').after($.parseHTML(data));
-        $(form).find('textarea').val('');
+        if ($(form).attr("id").match(/^edit_comment_.+$/)) {
+          $(form).parent(".comment").replaceWith($.parseHTML(data));
+        } else {
+          $(form).closest('.comment').after($.parseHTML(data));
+          $(form).find('textarea').val('');
+        }
       }
     });
   },
@@ -313,7 +317,7 @@ $(document).ready(function() {
     if (comment.length) {
       $.get("/comments/" + comment.attr("data-shortid"),
       function(data) {
-        comment.replaceWith($.parseHTML(data));
+        comment.html($.parseHTML(data));
       });
     } else {
       $(this).closest(".comment").remove();
@@ -324,7 +328,7 @@ $(document).ready(function() {
     var comment = $(this).closest(".comment");
     $.get("/comments/" + comment.attr("data-shortid") + "/edit",
     function(data) {
-      comment.html($.parseHTML(data));
+      comment.replaceWith($.parseHTML(data));
     });
   });
 

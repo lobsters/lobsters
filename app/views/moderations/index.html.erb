@@ -7,7 +7,7 @@
   <tr>
     <th width="15%">Date/Time</th>
     <th width="10%">Moderator</th>
-    <th width="75%">Story/Comment/User, Changes, Reason</th>
+    <th width="75%">Story/Comment/User, Action, Reason</th>
   </tr>
   <% bit = 0 %>
   <% @moderations.each do |mod| %>
@@ -21,8 +21,13 @@
         <% elsif mod.comment %>
           <a href="<%= mod.comment.url %>">Comment on <%=
             mod.comment.story.title %></a>
-        <% elsif mod.user %>
-          User <%= mod.user.try(:username) %>
+        <% elsif mod.user_id %>
+          <% if mod.user %>
+            <a href="/u/<%= mod.user.username %>">User
+              <%= mod.user.username %></a>
+          <% else %>
+            User <%= mod.user_id %> (Deleted)
+          <% end %>
         <% end %></td>
     </tr>
     <tr class="row<%= bit %> <%= mod.reason.present?? "nobottom" : "" %>">

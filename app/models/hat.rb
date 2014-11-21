@@ -9,18 +9,26 @@ class Hat < ActiveRecord::Base
   after_create :log_moderation
 
   def to_html_label
+    hl = (self.link.present? && self.link.match(/^https?:\/\//))
+
     h = "<span class=\"hat\" title=\"Granted by " <<
       "#{self.granted_by_user.username} on " <<
-      "#{self.created_at.strftime("%Y-%m-%d")}\">" <<
+      "#{self.created_at.strftime("%Y-%m-%d")}"
+    
+    if !hl && self.link.present?
+      h << " - #{self.link}"
+    end
+
+    h << "\">" <<
       "<span class=\"crown\">"
 
-    if self.link.present?
+    if hl
       h << "<a href=\"#{self.link}\" target=\"_blank\">"
     end
 
     h << self.hat
 
-    if self.link.present?
+    if hl
       h << "</a>"
     end
 

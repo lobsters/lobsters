@@ -1,0 +1,9 @@
+[Unit]
+Description=barnacles indexer dot timer
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1min
+
+[Install]
+WantedBy=timers.target

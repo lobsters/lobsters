@@ -1,0 +1,12 @@
+[Unit]
+Description=barnacles indexer
+
+[Service]
+Type=simple
+User=hao
+WorkingDirectory=/data/lobsters/
+Environment="RAILS_ENV=production"
+ExecStart=/usr/bin/rake ts:index
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,34 @@
+ol.stories.list li.story div.story_liner {
+	padding-top: 1rem;
+	padding-bottom: 0.4rem;
+}
+
+li .domain {
+    padding-left: 10px;
+}
+
+span.tags {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+}
+
+a.tag, span.tags::before {
+    display: inline-block;
+    margin: 3px 0;
+}
+
+a.tag {
+    padding: 3px 5px;
+}
+
+span.tags::before {
+    content: '✝';
+}
+
+li .domain::before {
+    content: '[';
+}
+
+li .domain::after {
+    content: ']';
+}

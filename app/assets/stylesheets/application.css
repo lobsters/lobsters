@@ -3,6 +3,7 @@
  *= require select2
  *= require_self
  *= require mobile
+ *= require spacing
 */
 
 
@@ -14,8 +15,8 @@ html {
 }
 
 html, input, button {
-	font-family: "helvetica neue", arial, sans-serif;
-	font-size: 12pt;
+	font-family: "helvetica", arial, sans-serif;
+	font-size: 15px;
 	color: #333;
 }
 
@@ -27,10 +28,6 @@ textarea, code {
 a {
 	color: #2562dc;
 	cursor: pointer;
-}
-
-ol.stories.list li.story div.details span.link a:visited {
-	color: #7395d9;
 }
 
 h1 {
@@ -50,15 +47,11 @@ div.s {
 }
 
 a.tag {
-	background-color: #fffcd7;
-	border: 1px solid #d5d458;
-	border-radius: 10px;
-	color: #555;
-	font-size: 7.5pt;
-	margin-left: 0.25em;
-	padding: 0px 0.5em 1px 0.5em;
+    font-family: 'Ubuntu Mono', monospace;
+    font-size: 12px;
+    background-color: aqua;
 	text-decoration: none;
-	vertical-align: text-top;
+    color: black;
 }
 
 a.tag_is_media {
@@ -231,7 +224,7 @@ div#wrapper {
 	margin-left: auto;
 	margin-right: auto;
 	padding-bottom: 2em;
-	max-width: 1500px;
+	max-width: 1000px;
 	width: 100%;
 }
 div#inside {
@@ -472,10 +465,6 @@ div.voters .downvoter.downvoter_stub {
 li.story {
 	clear: both;
 }
-ol.stories.list li.story div.story_liner {
-	padding-top: 0.4em;
-	padding-bottom: 0.4em;
-}
 .comment {
 	clear: both;
 	padding-top: 0.4em;
@@ -517,23 +506,20 @@ li .link {
 }
 
 li .link a {
-	font-size: 1.2rem;
+	font-size: 20px;
 	text-decoration: none;
+    font-family: Charter, Times, serif;
+    letter-spacing: -0.5px;
 }
 
 li.story a.tag {
 	vertical-align: middle;
 }
 
-li .tags {
-	margin-right: 0.25em;
-}
-
 li .domain {
 	color: #888;
-	font-style: italic;
-	font-size: 1rem;
 	vertical-align: middle;
+    font-family: 'Ubuntu Mono', monospace;
 }
 li .domain a {
 	color: #888;
@@ -559,6 +545,12 @@ li.story .byline {
 li .byline a {
 	color: #888;
 	text-decoration: none;
+}
+li .byline a.comments_link {
+    color: green;
+}
+li .byline a.comments_link.active {
+    font-weight: bold;
 }
 span.new_user, a.new_user,
 li .byline a.new_user {

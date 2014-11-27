@@ -12,15 +12,18 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
     <div class="score"><%= story.score %></div>
   </div>
   <div class="details">
-    <span class="link">
-      <% if story.can_be_seen_by_user?(@user) %>
-        <a href="<%= story.url_or_comments_url %>"><%= story.title %></a>
-      <% end %>
-      <% if story.is_gone? %>
-        [Story removed by <%= story.is_moderated? ? "moderator" :
-          "original submitter" %>]
-      <% end %>
-    </span>
+    <div>
+      <span class="link">
+        <% if story.can_be_seen_by_user?(@user) %>
+          <a href="<%= story.url_or_comments_url %>"><%= story.title %></a>
+        <% end %>
+        <% if story.is_gone? %>
+          [Story removed by <%= story.is_moderated? ? "moderator" :
+            "original submitter" %>]
+        <% end %>
+      </span>
+      <span class="domain"><%= story.domain || '._.' %></span>
+    </div>
     <% if story.can_be_seen_by_user?(@user) %>
       <span class="tags">
         <% story.taggings.sort_by{|t| t.tag.tag }.sort_by{|t|
@@ -30,7 +33,6 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
             title="<%= tagging.tag.description %>"><%= tagging.tag.tag %></a>
         <% end %>
       </span>
-      <span class="domain"><%= story.domain %></span>
 
       <% if defined?(single_story) && single_story %>
         <% story.merged_stories.each do |ms| %>
@@ -56,21 +58,20 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
         by <a><%= story.user.username %></a>
         just now
       <% else %>
-        by <a href="/u/<%= story.user.username %>"><%= story.user.username
-          %></a> <%= raw(time_ago_in_words_label(story.created_at).
-          gsub(/^about /, "")) %> ago
+        by <a href="/u/<%= story.user.username %>"><%= story.user.username %></a>
+        <%= raw(time_ago_in_words_label(story.created_at).gsub(/about /, "")) %> ago
 
         <% if story.is_editable_by_user?(@user) %>
-          |
+          &bull;
           <a href="<%= edit_story_url(story.short_id) %>">edit</a>
 
           <% if story.is_gone? && story.is_undeletable_by_user?(@user) %>
-            |
+            &bull;
             <%= link_to "undelete", story_undelete_url(story.short_id),
               :method => :post, :data => {
               :confirm => "Are you sure you want to undelete this story?" } %>
           <% elsif !story.is_gone? %>
-            |
+            &bull;
             <% if story.user_id != @user.try(:id) &&
             @user.try(:is_moderator?) %>
               <%= link_to "delete", story_url(story.short_id),
@@ -84,13 +85,13 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
         <% end %>
         <% if !story.is_gone? && @user %>
           <% if @user && @user.can_downvote?(story) %>
-            | <a class="flagger">flag</a>
+            &bull; <a class="flagger">flag</a>
           <% end %>
           <% if story.vote == 0 %>
-            | <%= link_to "unhide", story_unhide_url(story.short_id),
+            &bull; <%= link_to "unhide", story_unhide_url(story.short_id),
               :class => "hider" %>
           <% else %>
-            | <%= link_to "hide", story_hide_url(story.short_id),
+            &bull; <%= link_to "hide", story_hide_url(story.short_id),
               :class => "hider" %>
           <% end %>
           <% if defined?(single_story) && single_story && story.hider_count > 0 %>
@@ -99,16 +100,20 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
         <% end %>
         <% if !story.is_gone? %>
           <span class="comments_label">
-            |
-            <a href="<%= @user ? story.comments_url : login_url %>"><%= story.comments_count == 0 ?
-              "discuss" : "#{story.comments_count} comment" <<
-              (story.comments_count == 1 ? "" : "s") %></a>
+            &bull;
+            <a class="comments_link <%= story.comments_count > 0 ? 'active' : '' %>" href="<%= @user ? story.comments_url : login_url %>">
+              <% if story.comments_count == 0 %>
+              all quiet on the commenting front
+              <% else %>
+              <%= story.comments_count %> <%= 'comment'.pluralize(story.comments_count) %>
+              <% end %>
+            </a>
           </span>
         <% end %>
 
         <% if defined?(single_story) && single_story %>
           <% if story.downvotes > 0 %>
-            | <%= story.vote_summary_for(@user).downcase %>
+            &bull; <%= story.vote_summary_for(@user).downcase %>
           <% end %>
         <% end %>
       <% end %>

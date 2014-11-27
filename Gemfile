@@ -44,3 +44,5 @@ group :test, :development do
 end
 
 gem "thin"
+gem "world-flags"
+gem "typogruby"

@@ -16,8 +16,8 @@ var _Lobsters = Class.extend({
     Lobsters.vote("story", voterEl, 1);
   },
   flagStory: function(voterEl) {
-    Lobsters._showDownvoteWhyAt("story", voterEl, function(k) {
-      Lobsters.vote("story", voterEl, -1, k); });
+      debugger;
+    $(voterEl).siblings('.f32').show();
   },
   hideStory: function(hiderEl) {
     if (!Lobsters.curUser)

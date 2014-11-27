@@ -12,19 +12,26 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
     <div class="score"><%= story.score %></div>
   </div>
   <div class="details">
-    <div>
-      <span class="link">
-        <% if story.can_be_seen_by_user?(@user) %>
-          <a href="<%= story.url_or_comments_url %>"><%= story.title %></a>
-        <% end %>
-        <% if story.is_gone? %>
-          [Story removed by <%= story.is_moderated? ? "moderator" :
-            "original submitter" %>]
-        <% end %>
-      </span>
-      <span class="domain"><%= story.domain || '._.' %></span>
+    <div class="link">
+      <% if story.can_be_seen_by_user?(@user) %>
+        <a href="<%= story.url_or_comments_url %>">
+          <%= raw(Typogruby.improve(story.title.gsub('<', '&lt;').gsub('>', '&gt;'))) %>
+        </a>
+      <% end %>
+      <% if story.is_gone? %>
+        [Story removed by <%= story.is_moderated? ? "moderator" :
+          "original submitter" %>]
+      <% end %>
     </div>
+    <% if story.markeddown_description.present? %>
+    <div class="story_content">
+        <div class="story_text">
+          <%= raw story.markeddown_description %>
+        </div>
+    </div>
+    <% end %>
     <% if story.can_be_seen_by_user?(@user) %>
+    <div class="meta">
       <span class="tags">
         <% story.taggings.sort_by{|t| t.tag.tag }.sort_by{|t|
         t.tag.is_media?? -1 : 0 }.each do |tagging| %>
@@ -33,6 +40,8 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
             title="<%= tagging.tag.description %>"><%= tagging.tag.tag %></a>
         <% end %>
       </span>
+      <span class="domain"><%= story.domain || '._.' %></span>
+    </div>
 
       <% if defined?(single_story) && single_story %>
         <% story.merged_stories.each do |ms| %>
@@ -55,10 +64,10 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
     <% end %>
     <div class="byline">
       <% if story.previewing %>
-        by <a><%= story.user.username %></a>
+        <a><%= story.user.username %></a>
         just now
       <% else %>
-        by <a href="/u/<%= story.user.username %>"><%= story.user.username %></a>
+        <a href="/u/<%= story.user.username %>"><%= story.user.username %></a>
         <%= raw(time_ago_in_words_label(story.created_at).gsub(/about /, "")) %> ago
 
         <% if story.is_editable_by_user?(@user) %>
@@ -83,21 +92,14 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
             <% end %>
           <% end %>
         <% end %>
-        <% if !story.is_gone? && @user %>
-          <% if @user && @user.can_downvote?(story) %>
-            &bull; <a class="flagger">flag</a>
-          <% end %>
-          <% if story.vote == 0 %>
-            &bull; <%= link_to "unhide", story_unhide_url(story.short_id),
-              :class => "hider" %>
-          <% else %>
-            &bull; <%= link_to "hide", story_hide_url(story.short_id),
-              :class => "hider" %>
-          <% end %>
-          <% if defined?(single_story) && single_story && story.hider_count > 0 %>
-            (hidden by <%= pluralize(story.hider_count, "user") %>)
-          <% end %>
-        <% end %>
+
+        <% code, place = RandomFlags.one %>
+        &bull; <a class="flagger">flag</a>
+        <span class="f32">
+            <span class="flag <%= code %>"></span>
+            <span><%= place %></span>
+        </span>
+
         <% if !story.is_gone? %>
           <span class="comments_label">
             &bull;
@@ -123,12 +125,5 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
 <div class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>"
 style="display: none;">
   <a href="<%= story.comments_url %>"><%= story.comments_count %></a>
-</div>
-<div class="story_content">
-  <% if story.markeddown_description.present? %>
-    <div class="story_text">
-      <%= raw story.markeddown_description %>
-    </div>
-  <% end %>
 </div>
 </li>

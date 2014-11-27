@@ -1,28 +1,40 @@
 ol.stories.list li.story div.story_liner {
-	padding-top: 1rem;
-	padding-bottom: 0.4rem;
+	padding-bottom: 3rem;
 }
 
-li .domain {
+.details {
+	margin-left: 40px;
+	margin-right: 40px;
+}
+
+.details .domain {
     padding-left: 10px;
+    display: inlineblock;
 }
 
-span.tags {
-    padding-top: 0.4rem;
-    padding-bottom: 0.4rem;
+.details .tags {
+    display: inline-block;
+    margin-left: -3px;
 }
 
 a.tag, span.tags::before {
     display: inline-block;
-    margin: 3px 0;
+    margin: 4px 0;
 }
 
 a.tag {
     padding: 3px 5px;
 }
 
-span.tags::before {
-    content: '✝';
+.f32 {
+    float: right;
+    display: none;
+}
+
+.f32 .flag {
+    display: block;
+    width: 32px;
+    height: 32px;
 }
 
 li .domain::before {
@@ -31,4 +43,25 @@ li .domain::before {
 
 li .domain::after {
     content: ']';
+}
+
+.story_text {
+	line-height: 1.4;
+    padding-bottom: 0.5rem;
+}
+
+.story_text p {
+	margin: 0.75rem 0;
+	line-height: 1.4rem;
+}
+
+.link .dquo {
+    margin-left: -8px;
+}
+
+.amp {
+    font-family: Baskerville, "Goudy Old Style", serif;
+    font-style: italic;
+    font-weight: normal;
+    font-size: 0.8em;
 }

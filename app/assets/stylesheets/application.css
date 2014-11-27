@@ -4,6 +4,8 @@
  *= require_self
  *= require mobile
  *= require spacing
+ *= require flags/basic
+ *= require flags/flags32
 */
 
 
@@ -48,10 +50,10 @@ div.s {
 
 a.tag {
     font-family: 'Ubuntu Mono', monospace;
-    font-size: 12px;
-    background-color: aqua;
+    font-size: 13px;
+    background-color: lightcyan;
 	text-decoration: none;
-    color: black;
+    color: #333;
 }
 
 a.tag_is_media {
@@ -506,7 +508,7 @@ li .link {
 }
 
 li .link a {
-	font-size: 20px;
+	font-size: 23px;
 	text-decoration: none;
     font-family: Charter, Times, serif;
     letter-spacing: -0.5px;
@@ -576,16 +578,6 @@ li.story.expired a {
 	color: gray !important;
 }
 
-li div.details,
-div.story_content {
-	margin-left: 40px;
-	margin-right: 40px;
-}
-
-div.story_content {
-	margin-bottom: 1em;
-}
-
 div.morelink {
 	float: left;
 }
@@ -619,15 +611,6 @@ div.page_link_buttons a.cur {
 }
 
 
-div.story_text {
-	margin-bottom: 1.5em;
-	max-width: 1500px;
-	line-height: 1.4em;
-}
-div.story_text p {
-	margin: 0.75em 0;
-	line-height: 1.4em;
-}
 div.story_text img {
 	max-width: 100%;
 }

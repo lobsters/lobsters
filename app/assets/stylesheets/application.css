@@ -4,6 +4,7 @@
  *= require_self
  *= require mobile
  *= require spacing
+ *= require has-fancy-underline
  *= require flags/basic
  *= require flags/flags32
 */
@@ -24,7 +25,7 @@ html, input, button {
 
 textarea, code {
 	font-size: 0.9rem;
-	font-family: Menlo, Consolas, monospace;
+	font-family: 'Ubuntu Mono', Menlo, Consolas, monospace;
 }
 
 a {
@@ -49,7 +50,7 @@ div.s {
 }
 
 a.tag {
-    font-family: 'Ubuntu Mono', monospace;
+	font-family: 'Ubuntu Mono', Menlo, Consolas, monospace;
     font-size: 13px;
     background-color: lightcyan;
 	text-decoration: none;
@@ -521,7 +522,7 @@ li.story a.tag {
 li .domain {
 	color: #888;
 	vertical-align: middle;
-    font-family: 'Ubuntu Mono', monospace;
+	font-family: 'Ubuntu Mono', Menlo, Consolas, monospace;
 }
 li .domain a {
 	color: #888;

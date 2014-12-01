@@ -12,7 +12,7 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
     <div class="score"><%= story.score %></div>
   </div>
   <div class="details">
-    <div class="link">
+    <div class="link has-fancy-underline">
       <% if story.can_be_seen_by_user?(@user) %>
         <a href="<%= story.url_or_comments_url %>">
           <%= raw(Typogruby.improve(story.title.gsub('<', '&lt;').gsub('>', '&gt;'))) %>
@@ -24,7 +24,7 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
       <% end %>
     </div>
     <% if story.markeddown_description.present? %>
-    <div class="story_content">
+    <div class="story_content has-fancy-underline">
         <div class="story_text">
           <%= raw story.markeddown_description %>
         </div>

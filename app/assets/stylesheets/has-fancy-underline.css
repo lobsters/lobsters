@@ -1,0 +1,27 @@
+.has-fancy-underline.link a {
+    text-decoration: none;
+    background-size: 1px 1px;
+    background-position: 0 88%;
+    background-repeat: repeat-x;
+    text-shadow: 2px 0 white, 1px 0 white, -1px 0 white, -2px 0 white;
+
+    color: #0074d9;
+    background-image: linear-gradient(to bottom, transparent 49%, #0074d9 50%);
+}
+
+.has-fancy-underline.story_content a, .has-fancy-underline.comment_text a {
+    text-decoration: none;
+    background-size: 1px 1px;
+    background-position: 0 93%;
+    background-repeat: repeat-x;
+    text-shadow: 2px 0 white, 1px 0 white, -1px 0 white, -2px 0 white;
+
+    color: #0074d9;
+    background-image: linear-gradient(to bottom, transparent 49%, #5ca0ff 50%);
+}
+
+*::selection {
+    background: black !important;
+    color: chartreuse !important;
+    text-shadow: none !important;
+}

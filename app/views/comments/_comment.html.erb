@@ -87,7 +87,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <a href="<%= comment.story.comments_url %>"><%= comment.story.title %></a>
       <% end %>
     </div>
-    <div class="comment_text">
+    <div class="comment_text has-fancy-underline">
       <% if comment.is_gone? %>
         <p>
         <span class="na">

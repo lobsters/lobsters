@@ -138,10 +138,12 @@ class Story < ActiveRecord::Base
     end
 
     # prevent the submitter's own comments from affecting the score
-    ccount = self.comments.where("user_id != ?", self.user_id).count
+    cpoints = self.comments.where("user_id <> ?",
+      self.user_id).select(:upvotes, :downvotes).map{|c|
+      c.upvotes - c.downvotes }.inject(&:+).to_i
 
     # don't immediately kill stories at 0 by bumping up score by one
-    order = Math.log([ (score + 1).abs + ccount, 1 ].max, base)
+    order = Math.log([ (score + 1).abs + cpoints, 1 ].max, base)
     if score > 0
       sign = 1
     elsif score < 0

@@ -250,6 +250,8 @@ class Comment < ActiveRecord::Base
       "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " <<
       "confidence = '#{self.calculated_confidence}' WHERE id = " <<
       "#{self.id.to_i}")
+
+    self.story.recalculate_hotness!
   end
 
   def gone_text

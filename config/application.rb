@@ -23,9 +23,6 @@ module Lobsters
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    # Future Rails version will disable implicit joins, so we'll be prepared.
-    config.active_record.disable_implicit_join_references = true
-
     # Raise an exception when using mass assignment with unpermitted attributes
     config.action_controller.action_on_unpermitted_parameters = :raise
 

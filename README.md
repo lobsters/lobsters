@@ -81,15 +81,9 @@ in a `config/initializers/production.rb` or similar file:
 * Create an initial administrator user and at least one tag:
 
           lobsters$ rails console
-          Loading development environment (Rails 3.2.6)
-          irb(main):001:0> u = User.new(:username => "test", :email => "test@example.com", :password => "test", :password_confirmation => "test")
-          irb(main):002:0> u.is_admin = true
-          irb(main):003:0> u.is_moderator = true
-          irb(main):004:0> u.save
-
-          irb(main):005:0> t = Tag.new
-          irb(main):006:0> t.tag = "test"
-          irb(main):007:0> t.save
+          Loading development environment (Rails 4.1.8)
+          irb(main):001:0> User.create(:username => "test", :email => "test@example.com", :password => "test", :password_confirmation => "test", :is_admin => true, :is_moderator => true)
+          irb(main):002:0> Tag.create(:tag => "test")
 
 * Run the Rails server in development mode.  You should be able to login to
 `http://localhost:3000` with your new `test` user:

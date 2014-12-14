@@ -1,4 +1,5 @@
-<div class="comment comment_form_container">
+<div class="comment comment_form_container"
+data-shortid="<%= comment.short_id if comment.persisted? %>">
 <%= form_for comment,
 :html => { :id => "edit_comment_#{comment.short_id}" } do |f| %>
   <% if comment.errors.any? %>
@@ -37,7 +38,7 @@
       &nbsp;
       <%= button_tag "Preview", :class => "comment-preview",
         :type => "button", :disabled => !@user %>
-      <% if local_assigns[:cancellable] %>
+      <% if comment.persisted? || comment.parent_comment_id %>
         &nbsp;
         <%= button_tag "Cancel", :class => "comment-cancel",
           :type => "button" %>

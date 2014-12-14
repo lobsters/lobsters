@@ -63,8 +63,7 @@ class CommentsController < ApplicationController
     end
 
     render :partial => "comment", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment,
-      :cancellable => true }
+      :content_type => "text/html", :locals => { :comment => comment }
   end
 
   def edit
@@ -73,8 +72,7 @@ class CommentsController < ApplicationController
     end
 
     render :partial => "commentbox", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment,
-      :cancellable => true }
+      :content_type => "text/html", :locals => { :comment => comment }
   end
 
   def reply
@@ -87,8 +85,7 @@ class CommentsController < ApplicationController
     comment.parent_comment = parent_comment
 
     render :partial => "commentbox", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment,
-      :cancellable => true }
+      :content_type => "text/html", :locals => { :comment => comment }
   end
 
   def delete

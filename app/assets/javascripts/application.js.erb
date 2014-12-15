@@ -313,14 +313,14 @@ $(document).ready(function() {
   });
 
   $(document).on("click", "button.comment-cancel", function() {
-    var comment = $(this).closest(".comment[data-shortid]");
-    if (comment.length) {
-      $.get("/comments/" + comment.attr("data-shortid"),
-      function(data) {
-        comment.html($.parseHTML(data));
+    var comment = $(this).closest(".comment");
+    var comment_id = comment.attr("data-shortid");
+    if (comment_id != null && comment_id !== '') {
+      $.get("/comments/" + comment_id, function(data) {
+        comment.replaceWith($.parseHTML(data));
       });
     } else {
-      $(this).closest(".comment").remove();
+      comment.remove();
     }
   });
 

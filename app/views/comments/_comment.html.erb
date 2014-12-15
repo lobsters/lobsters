@@ -1,5 +1,5 @@
-<a name="c_<%= comment.short_id %>"></a>
-<div id="comment_<%= comment.short_id %>" data-shortid="<%= comment.short_id %>"
+<div id="comment_<%= comment.short_id %>"
+data-shortid="<%= comment.short_id if comment.persisted? %>"
 class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 "upvoted" : "downvoted") : "" %>
   <%= comment.highlighted ? "highlighted" : "" %>
@@ -24,6 +24,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
   <% end %>
   <div class="details">
     <div class="byline">
+      <a name="c_<%= comment.short_id %>"></a>
+
       <% if defined?(was_merged) && was_merged %>
         <span class="merge"></span>
       <% end %>

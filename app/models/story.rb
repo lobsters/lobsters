@@ -137,10 +137,11 @@ class Story < ActiveRecord::Base
       base -= t.hotness_mod
     end
 
-    # prevent the submitter's own comments from affecting the score
-    cpoints = self.comments.where("user_id <> ?",
-      self.user_id).select(:upvotes, :downvotes).map{|c|
-      c.upvotes - c.downvotes }.inject(&:+).to_i
+    # give a story's comment votes some weight, but ignore the story
+    # submitter's own comments
+    cpoints = self.comments.where("user_id <> ?", self.user_id).
+      select(:upvotes, :downvotes).map{|c| c.upvotes + 1 - c.downvotes }.
+      inject(&:+).to_i
 
     # don't immediately kill stories at 0 by bumping up score by one
     order = Math.log([ (score + 1).abs + cpoints, 1 ].max, base)

@@ -15,14 +15,18 @@ Our tech stack is:
 You can constribute by installing Barnacles. If you're on Linux, this
 is pretty simple:
 
-* `sudo pacman -Syu`
+* `sudo pacman -Syu` (You use Arch, right?)
+* `sudo pacman -S ruby mariadb`
 * `git clone git@github.com:hlian/barnacles.git`
 * `cd barnacles`
 * `bundle --jobs=4`
+* `./jazz.sh`
+
+`jazz.sh` creates some files for Rails.
 
 If you're on OS X, this is considerably more involved:
 
-* `brew install ruby`
+* `brew install ruby mariadb`
 * `sudo ln -s /usr/local/bin/ruby /usr/bin/ruby`
 * `sudo ln -s /usr/local/bin/gem /usr/bin/gem`
 * reinstall all your preexisting system gems
@@ -36,14 +40,21 @@ you use an OS that comes with packages but not a package manager.)
 * `git clone git@github.com:hlian/barnacles.git`
 * `cd barnacles`
 * `bundle --jobs=4`
+* `./jazz.sh`
 
 This concludes the Barnacles-specific part of the README. I'm going to
 hand it over to Lobsters now. (We forked from Lobsters.)
 
+Before I go: You'll want to run `mysqld` in a separate tab. You'll
+want to create a database too:
+
+* `mysql -u root`
+* `create database lobsters_dev;`
+* `^D`
+
 ## Goodbye!
 
-* Create a MySQL (other DBs supported by ActiveRecord may work, only MySQL and
-MariaDB have been tested) database, username, and password and put them in a
+* Create a MariaDB database, username, and password and put them in a
 `config/database.yml` file:
 
           development:
@@ -65,30 +76,10 @@ MariaDB have been tested) database, username, and password and put them in a
 
           lobsters$ rake db:schema:load
 
-* Create a `config/initializers/secret_token.rb` file, using a randomly
-generated key from the output of `rake secret`:
-
-          Lobsters::Application.config.secret_key_base = 'your random secret here'
-
 * (Optional, only needed for the search engine) Install Sphinx.  Build Sphinx
 config and start server:
 
           lobsters$ rake ts:rebuild
-
-* Define your site's name and default domain, which are used in various places,
-in a `config/initializers/production.rb` or similar file:
-
-          class << Rails.application
-            def domain
-              "example.com"
-            end
-
-            def name
-              "Example News"
-            end
-          end
-
-          Rails.application.routes.default_url_options[:host] = Rails.application.domain
 
 * Create an initial administrator user and at least one tag:
 

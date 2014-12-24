@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   TAG_FILTER_COOKIE = :tag_filters
 
   def default_url_options(options = nil)
-    { :protocol => 'https' }
+    { :protocol => false }
   end
 
   def authenticate_user

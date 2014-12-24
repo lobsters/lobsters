@@ -1,7 +1,9 @@
 ### Barnacles
 
 is a way for Jack to talk to Trello people about Haskell. It's since
-evolved into something weirder and better.
+evolved into something weirder and better. See it here:
+
+https://barnacles.blackfriday
 
 Our tech stack is:
 

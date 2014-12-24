@@ -2,15 +2,15 @@
 
 set -e
 
-PRODUCTION_TEMPLATE="config/initializers/production_template.rb"
+PRODUCTION_TEMPLATE="config/initializer_templates/production.rb"
 PRODUCTION="config/initializers/production.rb"
 
-SECRET_TEMPLATE="config/initializers/secret_token_template.rb"
+SECRET_TEMPLATE="config/initializer_templates/secret_token.rb"
 SECRET="config/initializers/secret_token.rb"
 
 pushd $(dirname $0) >> /dev/null
 
-if [[ ! -f "$PRODUCTION"2 ]]; then
+if [[ ! -f "$PRODUCTION" ]]; then
     ANSWER1=hello
     ANSWER2=hello
     echo "+ Creating $PRODUCTION"
@@ -21,7 +21,7 @@ if [[ ! -f "$PRODUCTION"2 ]]; then
         sed "s/whisk me away/$ANSWER2/" > $PRODUCTION
 fi
 
-if [[ ! -f "$SECRET"2 ]]; then
+if [[ ! -f "$SECRET" ]]; then
     echo "+ Creating $SECRET (this takes a while because bundler)"
     cat $SECRET_TEMPLATE | \
         sed "s/whisk me away/$(./script/rake secret)/" > $SECRET

@@ -1,34 +1,44 @@
-###Lobsters Rails Project
+### Barnacles
 
-This is the source code to the site operating at
-[https://lobste.rs](https://lobste.rs).  It is a Rails 4 codebase and uses a
-SQL (MariaDB in production) backend for the database and Sphinx for the search
-engine.
+is a way for Jack to talk to Trello people about Haskell. It's since
+evolved into something weirder and better.
 
-While you are free to fork this code and modify it (according to the [license](https://github.com/jcs/lobsters/blob/master/LICENSE))
-to run your own link aggregation website, this source code repository and bug
-tracker are only for the site operating at [lobste.rs](https://lobste.rs/).
-Please do not use the bug tracker for support related to operating your own
-site unless you are contributing code that will also benefit [lobste.rs](https://lobste.rs/).
+Our tech stack is:
 
-####Contributing bugfixes and new features
+* MariaDB
+* Rails
 
-Please see the [CONTRIBUTING](https://github.com/jcs/lobsters/blob/master/CONTRIBUTING.md)
-file.
+### Please constribute
 
-####Initial setup
+You can constribute by installing Barnacles. If you're on Linux, this
+is pretty simple:
 
-* Install Ruby. Supported Ruby versions include 1.9.3, 2.0.0 and 2.1.0.
+* `sudo pacman -Syu`
+* `git clone git@github.com:hlian/barnacles.git`
+* `cd barnacles`
+* `bundle --jobs=4`
 
-* Checkout the lobsters git tree from Github
+If you're on OS X, this is considerably more involved:
 
-         $ git clone git://github.com/jcs/lobsters.git
-         $ cd lobsters
-         lobsters$ 
+* `brew install ruby`
+* `sudo ln -s /usr/local/bin/ruby /usr/bin/ruby`
+* `sudo ln -s /usr/local/bin/gem /usr/bin/gem`
+* reinstall all your preexisting system gems
 
-* Run Bundler to install/bundle gems needed by the project:
+(You can skip this part, but you better make sure your PATH is set up
+correctly from now until the end of time. This is what happens when
+you use an OS that comes with packages but not a package manager.)
 
-         lobsters$ bundle
+* `gem update`
+* `gem install bundler`
+* `git clone git@github.com:hlian/barnacles.git`
+* `cd barnacles`
+* `bundle --jobs=4`
+
+This concludes the Barnacles-specific part of the README. I'm going to
+hand it over to Lobsters now. (We forked from Lobsters.)
+
+## Goodbye!
 
 * Create a MySQL (other DBs supported by ActiveRecord may work, only MySQL and
 MariaDB have been tested) database, username, and password and put them in a
@@ -42,7 +52,7 @@ MariaDB have been tested) database, username, and password and put them in a
             socket: /tmp/mysql.sock
             username: *username*
             password: *password*
-            
+
           test:
             adapter: sqlite3
             database: db/test.sqlite3
@@ -70,12 +80,12 @@ in a `config/initializers/production.rb` or similar file:
             def domain
               "example.com"
             end
-          
+
             def name
               "Example News"
             end
           end
-          
+
           Rails.application.routes.default_url_options[:host] = Rails.application.domain
 
 * Create an initial administrator user and at least one tag:
@@ -95,3 +105,10 @@ in a `config/initializers/production.rb` or similar file:
 `http://localhost:3000` with your new `test` user:
 
           lobsters$ rails server
+
+## Postscript from Barnacles
+
+If you want the search to work, you should set up a systemd-timer that
+runs `bundle exec rake ts:rebuild`. See `etc/` for an example (an
+incorrect example that doesn't `bundle exec` -- sorry guys, I'm
+learning Ruby as I go along).

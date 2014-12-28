@@ -70,6 +70,8 @@ GEM
     oauth (0.4.7)
     polyglot (0.3.5)
     rack (1.5.2)
+    rack-reverse-proxy (0.4.4)
+      rack (>= 1.0.0)
     rack-test (0.6.2)
       rack (>= 1.0)
     rails (4.0.8)
@@ -163,6 +165,7 @@ DEPENDENCIES
   mysql2 (>= 0.3.14)
   nokogiri (= 1.6.1)
   oauth
+  rack-reverse-proxy
   rails (= 4.0.8)
   rdiscount
   rspec-rails (~> 2.6)

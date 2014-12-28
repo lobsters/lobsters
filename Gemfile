@@ -46,3 +46,4 @@ end
 gem "thin"
 gem "world-flags"
 gem "typogruby"
+gem "rack-reverse-proxy"

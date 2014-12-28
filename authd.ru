@@ -22,7 +22,7 @@ class Authd
   def call(env)
     request = ActionDispatch::Request.new(env)
     data = request.cookie_jar['lobster_trap']
-    maybe = Authd.new.maybe_db_session_token_of(data)
+    maybe = maybe_db_session_token_of(data)
     if maybe
       env['HTTP_X_FROM_AUTHD'] = maybe
     end

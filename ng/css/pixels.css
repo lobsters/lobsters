@@ -1,0 +1,20 @@
+.typ-user-article {
+    width: 670px;
+    margin-left: 325px;
+}
+
+.typ-user-header {
+    width: 670px;
+    margin-left: 325px;
+}
+
+.typ-user-meta {
+    float: left;
+    width: 300px;
+    margin-left: 10px;
+}
+
+.typ-user-meta ul {
+    list-style-type: none;
+    display: inline-block;
+}

@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "4.0.8"
+gem "rails", "4.1.8"
 
 gem "unicorn"
 
@@ -12,7 +12,7 @@ gem "mysql2", ">= 0.3.14"
 # NOTE: If you use PostgreSQL, you must still leave enabled the above mysql2
 # gem for Sphinx full text search to function.
 
-gem "thinking-sphinx", "~> 3.0.6"
+gem "thinking-sphinx", "~> 3.1.2"
 
 gem "uglifier", ">= 1.3.0"
 gem "jquery-rails"

@@ -646,6 +646,11 @@ div.comment_text p {
 div.comment_text p:first-child {
 	margin-top: 0.3em;
 }
+
+div.comment_text code {
+	line-height: 1.2em;
+}
+
 div.comment_actions a {
 	color: #888;
 	font-weight: bold;

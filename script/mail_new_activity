@@ -83,7 +83,7 @@ Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each d
       mail.puts "X-BeenThere: #{list}"
       mail.puts "List-Id: #{Rails.application.name} <#{list}>"
       mail.puts "List-Unsubscribe: <" <<
-        "#{Rails.application.routes.url_helpers.root_url}settings>"
+        "#{Rails.application.root_url}settings>"
       mail.puts "Precedence: list"
       mail.puts "Content-Type: text/plain; charset=\"us-ascii\""
       mail.puts "Message-ID: <#{s.mailing_list_message_id}>"
@@ -161,7 +161,7 @@ last_comment_id, false, false).order(:id).each do |c|
       mail.puts "To: #{list}"
       mail.puts "List-Id: #{Rails.application.name} <#{list}>"
       mail.puts "List-Unsubscribe: <" <<
-        "#{Rails.application.routes.url_helpers.root_url}settings>"
+        "#{Rails.application.root_url}settings>"
       mail.puts "Precedence: list"
       mail.puts "Content-Type: text/plain; charset=\"us-ascii\""
       mail.puts "Message-ID: <#{c.mailing_list_message_id}>"

@@ -190,6 +190,10 @@ class Story < ActiveRecord::Base
     end
   end
 
+  def comments_path
+    "#{short_id_path}/#{self.title_as_url}"
+  end
+
   def comments_url
     "#{short_id_url}/#{self.title_as_url}"
   end
@@ -370,8 +374,12 @@ class Story < ActiveRecord::Base
       self.user_id, nil, false)
   end
 
+  def short_id_path
+    Rails.application.routes.url_helpers.root_path + "s/#{self.short_id}"
+  end
+
   def short_id_url
-    Rails.application.routes.url_helpers.root_url + "s/#{self.short_id}"
+    Rails.application.root_url + "s/#{self.short_id}"
   end
 
   def score
@@ -470,6 +478,10 @@ class Story < ActiveRecord::Base
     else
       false
     end
+  end
+
+  def url_or_comments_path
+    self.url.blank? ? self.comments_path : self.url
   end
 
   def url_or_comments_url

@@ -7,14 +7,14 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
     <% if @user %>
       <a class="upvoter"></a>
     <% else %>
-      <%= link_to "", login_url, :class => "upvoter" %>
+      <%= link_to "", login_path, :class => "upvoter" %>
     <% end %>
     <div class="score"><%= story.score %></div>
   </div>
   <div class="details">
     <span class="link">
       <% if story.can_be_seen_by_user?(@user) %>
-        <a href="<%= story.url_or_comments_url %>"><%= story.title %></a>
+        <a href="<%= story.url_or_comments_path %>"><%= story.title %></a>
       <% end %>
       <% if story.is_gone? %>
         [Story removed by <%= story.is_moderated? ? "moderator" :
@@ -25,7 +25,7 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
       <span class="tags">
         <% story.taggings.sort_by{|t| t.tag.tag }.sort_by{|t|
         t.tag.is_media?? -1 : 0 }.each do |tagging| %>
-          <a href="<%= tag_url(tagging.tag.tag) %>"
+          <a href="<%= tag_path(tagging.tag.tag) %>"
             class="<%= tagging.tag.css_class %>"
             title="<%= tagging.tag.description %>"><%= tagging.tag.tag %></a>
         <% end %>
@@ -37,12 +37,12 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
           <br>
           <span class="merge"></span>
           <span class="link">
-            <a href="<%= ms.url_or_comments_url %>"><%= ms.title %></a>
+            <a href="<%= ms.url_or_comments_path %>"><%= ms.title %></a>
           </span>
           <span class="tags">
             <% ms.taggings.sort_by{|t| t.tag.tag }.sort_by{|t|
             t.tag.tag == "pdf" ? -1 : 0 }.each do |tagging| %>
-              <a href="<%= tag_url(tagging.tag.tag) %>"
+              <a href="<%= tag_path(tagging.tag.tag) %>"
                 class="<%= tagging.tag.css_class %>"
                 title="<%= tagging.tag.description %>"><%= tagging.tag.tag %></a>
             <% end %>
@@ -75,21 +75,21 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
 
         <% if story.is_editable_by_user?(@user) %>
           |
-          <a href="<%= edit_story_url(story.short_id) %>">edit</a>
+          <a href="<%= edit_story_path(story.short_id) %>">edit</a>
 
           <% if story.is_gone? && story.is_undeletable_by_user?(@user) %>
             |
-            <%= link_to "undelete", story_undelete_url(story.short_id),
+            <%= link_to "undelete", story_undelete_path(story.short_id),
               :method => :post, :data => {
               :confirm => "Are you sure you want to undelete this story?" } %>
           <% elsif !story.is_gone? %>
             |
             <% if story.user_id != @user.try(:id) &&
             @user.try(:is_moderator?) %>
-              <%= link_to "delete", story_url(story.short_id),
+              <%= link_to "delete", story_path(story.short_id),
                 :method => :delete, :class => "mod_story_link" %>
             <% else %>
-              <%= link_to "delete", story_url(story.short_id),
+              <%= link_to "delete", story_path(story.short_id),
                 :method => :delete, :data => {
                 :confirm => "Are you sure you want to delete this story?" } %>
             <% end %>
@@ -100,10 +100,10 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
             | <a class="flagger">flag</a>
           <% end %>
           <% if story.vote == 0 %>
-            | <%= link_to "unhide", story_unhide_url(story.short_id),
+            | <%= link_to "unhide", story_unhide_path(story.short_id),
               :class => "hider" %>
           <% else %>
-            | <%= link_to "hide", story_hide_url(story.short_id),
+            | <%= link_to "hide", story_hide_path(story.short_id),
               :class => "hider" %>
           <% end %>
           <% if defined?(single_story) && single_story && story.hider_count > 0 %>
@@ -113,7 +113,7 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
         <% if !story.is_gone? && (@user || story.comments_count > 0) %>
           <span class="comments_label">
             |
-            <a href="<%= story.comments_url %>"><%= story.comments_count == 0 ?
+            <a href="<%= story.comments_path %>"><%= story.comments_count == 0 ?
               "discuss" : "#{story.comments_count} comment" <<
               (story.comments_count == 1 ? "" : "s") %></a>
           </span>
@@ -130,6 +130,6 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
 </div>
 <div class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>"
 style="display: none;">
-  <a href="<%= story.comments_url %>"><%= story.comments_count %></a>
+  <a href="<%= story.comments_path %>"><%= story.comments_count %></a>
 </div>
 </li>

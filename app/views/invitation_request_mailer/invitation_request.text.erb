@@ -10,6 +10,6 @@ Someone at <%= @invitation_request.ip_address %> has submitted an invitation req
 If this is you, visit the URL below to confirm your request and
 display it to other logged-in users.
 
-  <%= root_url %>invitations/confirm/<%= @invitation_request.code %>
+  <%= Rails.application.root_url %>invitations/confirm/<%= @invitation_request.code %>
 
 If this is not you, you can delete this message.

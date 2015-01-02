@@ -3,7 +3,7 @@
     Create an Account
   </div>
 
-  <%= form_for @new_user, { :url => signup_url,
+  <%= form_for @new_user, { :url => signup_path,
   :autocomplete => "off" } do |f| %>
     <%= hidden_field_tag "invitation_code", @invitation.code %>
 

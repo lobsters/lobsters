@@ -27,11 +27,6 @@ module Lobsters
     config.action_controller.action_on_unpermitted_parameters = :raise
 
     config.cache_store = :file_store, "#{config.root}/tmp/cache/"
-
-    config.after_initialize do
-      Rails.application.routes.default_url_options[:host] =
-        Rails.application.domain
-    end
   end
 end
 
@@ -40,8 +35,8 @@ silence_warnings do
   ActionDispatch::ParamsParser::DEFAULT_PARSERS = {}
 end
 
-# define site name and domain to be used globally, can be overridden in
-# config/initializers/production.rb
+# define site name and domain to be used globally, should be overridden in a
+# local file such as config/initializers/production.rb
 class << Rails.application
   def allow_invitation_requests?
     true
@@ -55,9 +50,22 @@ class << Rails.application
     "Example News"
   end
 
+  def root_url
+    Rails.application.routes.url_helpers.root_url({
+      :host => Rails.application.domain,
+      :protocol => Rails.application.ssl? ? "https" : "http",
+    })
+  end
+
   # used as mailing list prefix and countinual prefix, cannot have spaces
   def shortname
     name.downcase.gsub(/[^a-z]/, "")
+  end
+
+  # whether absolute URLs should include https (does not require that
+  # config.force_ssl be on)
+  def ssl?
+    true
   end
 end
 

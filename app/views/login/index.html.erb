@@ -3,7 +3,7 @@
     Login
   </div>
 
-  <%= form_tag login_url do %>
+  <%= form_tag login_path do %>
   <p>
     <%= label_tag :email, "E-mail or Username:" %>
     <%= text_field_tag :email, "", :size => 30, :autofocus => "autofocus" %>
@@ -20,7 +20,7 @@
 
     <p>
     Forgot your password? <%= link_to "Reset your password",
-      forgot_password_url %>.
+      forgot_password_path %>.
     </p>
 
     <p>

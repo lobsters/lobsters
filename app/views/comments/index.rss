@@ -5,7 +5,7 @@
     <title><%= Rails.application.name %><%= @title.present? ?
       ": " + h(@title) : "" %></title>
     <description><%= @title %></description>
-    <link><%= root_url %>comments</link>
+    <link><%= Rails.application.root_url %>comments</link>
 
     <% @comments.each do |comment| %>
       <item>

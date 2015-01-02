@@ -12,7 +12,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% if @user %>
         <a class="upvoter"></a>
       <% else %>
-        <%= link_to "", login_url, :class => "upvoter" %>
+        <%= link_to "", login_path, :class => "upvoter" %>
       <% end %>
       <div class="score"><%= comment.score %></div>
       <% if @user && @user.can_downvote?(comment) %>
@@ -90,7 +90,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
       <% if defined?(show_story) && show_story %>
         | on:
-        <a href="<%= comment.story.comments_url %>"><%= comment.story.title %></a>
+        <a href="<%= comment.story.comments_path %>"><%= comment.story.title
+          %></a>
       <% end %>
     </div>
     <div class="comment_text">

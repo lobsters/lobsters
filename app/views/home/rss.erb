@@ -5,7 +5,7 @@
     <title><%= Rails.application.name %><%= @title.present? ?
       ": " + h(@title) : "" %></title>
     <description><%= @title %></description>
-    <link><%= root_url + (@newest ? "newest" : "") %></link>
+    <link><%= Rails.application.root_url + (@newest ? "newest" : "") %></link>
 
     <% @stories.each do |story| %>
       <item>

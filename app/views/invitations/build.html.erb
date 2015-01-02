@@ -17,7 +17,7 @@
   </p>
 
   <%= form_for @invitation_request,
-  :url => create_invitation_by_request_url do |f| %>
+  :url => create_invitation_by_request_path do |f| %>
     <p>
     <%= f.label :name, "Name:" %>
     <%= f.text_field :name, :size => 30 %>

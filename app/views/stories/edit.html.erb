@@ -3,7 +3,7 @@
     Edit Story
   </div>
 
-  <%= form_for @story, :url => story_url(@story.short_id),
+  <%= form_for @story, :url => story_path(@story.short_id),
   :method => :put, :html => { :id => "edit_story" } do |f| %>
     <%= render :partial => "stories/form", :locals => { :story => @story,
       :f => f } %>
@@ -36,7 +36,7 @@
         </div>
 
         <%= submit_tag "Save" %>
-        &nbsp;or <a href="<%= story_url(@story.short_id) %>">cancel
+        &nbsp;or <a href="<%= story_path(@story.short_id) %>">cancel
           editing</a>
 
         <div style="clear: both;"></div>

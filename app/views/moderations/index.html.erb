@@ -16,7 +16,7 @@
       <td><a href="/messages?to=<%= mod.moderator.try(:username) %>"><%=
         mod.moderator.try(:username) %></a></td>
       <td><% if mod.story %>
-          <a href="<%= mod.story.comments_url %>">Story: <%= mod.story.title
+          <a href="<%= mod.story.comments_path %>">Story: <%= mod.story.title
             %></a>
         <% elsif mod.comment %>
           <a href="<%= mod.comment.url %>">Comment on <%=

@@ -6,7 +6,7 @@
     Account Settings
   </div>
 
-  <%= form_for @edit_user, :url => settings_url, :method => :post,
+  <%= form_for @edit_user, :url => settings_path, :method => :post,
   :html => { :id => "edit_user" } do |f| %>
     <%= error_messages_for f.object %>
 
@@ -179,7 +179,7 @@
   <br>
   <br>
 
-  <%= form_for @edit_user, :url => delete_account_url, :method => :post,
+  <%= form_for @edit_user, :url => delete_account_path, :method => :post,
   :html => { :id => "delete_user" } do |f| %>
     <div class="legend">
       Delete Account

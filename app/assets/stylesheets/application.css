@@ -532,6 +532,9 @@ li .byline {
 li.story .byline {
 	margin-top: 1px;
 }
+li.story span.byline {
+	margin-left: 0.5em;
+}
 li .byline a {
 	color: #888;
 	text-decoration: none;

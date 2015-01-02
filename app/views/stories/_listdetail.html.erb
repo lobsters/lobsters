@@ -48,6 +48,15 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
             <% end %>
           </span>
           <span class="domain"><%= ms.domain %></span>
+          <span class="byline">
+            by <a href="/u/<%= ms.user.username %>"
+            <% if ms.user.is_new? %>
+              class="new_user"
+            <% end %>><%= ms.user.username %></a>
+
+            <%= raw(time_ago_in_words_label(ms.created_at).gsub(/^about /, ""))
+              %> ago
+          </span>
         <% end %>
       <% end %>
     <% end %>

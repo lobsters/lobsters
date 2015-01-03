@@ -20,7 +20,7 @@ class StoriesController < ApplicationController
         Countinual.count!("#{Rails.application.shortname}.stories.submitted",
           "+1")
 
-        return redirect_to @story.comments_url
+        return redirect_to @story.comments_path
       end
     end
 
@@ -42,7 +42,7 @@ class StoriesController < ApplicationController
 
     @story.save(:validate => false)
 
-    redirect_to @story.comments_url
+    redirect_to @story.comments_path
   end
 
   def edit
@@ -83,7 +83,7 @@ class StoriesController < ApplicationController
           # user won't be able to submit this story as new, so just redirect
           # them to the previous story
           flash[:success] = "This URL has already been submitted recently."
-          return redirect_to s.comments_url
+          return redirect_to s.comments_path
         else
           # user will see a warning like with preview screen
           @story.already_posted_story = s
@@ -116,7 +116,7 @@ class StoriesController < ApplicationController
 
     if @story.merged_into_story
       flash[:success] = "\"#{@story.title}\" has been merged into this story."
-      return redirect_to @story.merged_into_story.comments_url
+      return redirect_to @story.merged_into_story.comments_path
     end
 
     if @story.can_be_seen_by_user?(@user)
@@ -164,7 +164,7 @@ class StoriesController < ApplicationController
     @story.editor = @user
     @story.save(:validate => false)
 
-    redirect_to @story.comments_url
+    redirect_to @story.comments_path
   end
 
   def update
@@ -183,7 +183,7 @@ class StoriesController < ApplicationController
     end
 
     if @story.save
-      return redirect_to @story.comments_url
+      return redirect_to @story.comments_path
     else
       return render :action => "edit"
     end

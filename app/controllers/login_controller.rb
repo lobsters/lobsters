@@ -94,7 +94,7 @@ class LoginController < ApplicationController
     else
       flash[:error] = "Invalid reset token.  It may have already been " <<
         "used or you may have copied it incorrectly."
-      return redirect_to forgot_password_url
+      return redirect_to forgot_password_path
     end
   end
 end

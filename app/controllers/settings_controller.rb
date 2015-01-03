@@ -16,7 +16,7 @@ class SettingsController < ApplicationController
     end
 
     flash[:error] = "Your password could not be verified."
-    return redirect_to settings_url
+    return redirect_to settings_path
   end
 
   def update

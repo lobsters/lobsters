@@ -195,11 +195,20 @@ last_comment_id, false, false).order(:id).each do |c|
         mail.puts " #{ref}"
       end
 
+      if c.hat
+        mail.puts "X-Hat: #{c.hat.hat}"
+      end
+
       mail.puts "Date: " << c.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
       mail.puts "Subject: Re: #{c.story.title.force_to_ascii}" <<
         c.story.tags.sort_by{|t| t.tag }.map{|t| " [#{t.tag}]" }.join
 
       mail.puts ""
+
+      if c.hat
+        mail.puts "[ Posted while wearing #{c.hat.hat} hat ]"
+        mail.puts ""
+      end
 
       # if the comment has hard line breaks at <80, it likely came from an
       # email, so don't re-wrap it at something shorter

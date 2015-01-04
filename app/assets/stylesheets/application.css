@@ -56,11 +56,11 @@ a.tag {
 }
 
 a.tag_is_media {
-	background-color: #f5d1fa;
-	border-color: #a26dc8;
+	background-color: #ddebf9;
+	border-color: #b2ccf0;
 }
 
-a.tag_ask, a.tag_show, a.tag_interview {
+a.tag_announce, a.tag_ask, a.tag_show, a.tag_interview {
 	background-color: #f9ddde;
 	border-color: #f0b2b8;
 }

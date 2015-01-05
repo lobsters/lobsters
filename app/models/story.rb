@@ -387,6 +387,10 @@ class Story < ActiveRecord::Base
       self.user_id, nil, false)
   end
 
+  def score
+    upvotes - downvotes
+  end
+
   def short_id_path
     Rails.application.routes.url_helpers.root_path + "s/#{self.short_id}"
   end
@@ -395,8 +399,8 @@ class Story < ActiveRecord::Base
     Rails.application.root_url + "s/#{self.short_id}"
   end
 
-  def score
-    upvotes - downvotes
+  def sorted_taggings
+    self.taggings.sort_by{|t| t.tag.tag }.sort_by{|t| t.tag.is_media?? -1 : 0 }
   end
 
   def tagging_changes

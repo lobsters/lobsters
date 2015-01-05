@@ -14,15 +14,24 @@ last_story_id = (Keystore.value_for(LAST_STORY_KEY) || Story.last.id).to_i
 Story.where("id > ? AND is_expired = ?", last_story_id, false).
 order(:id).each do |s|
   if !s.tags.map(&:tag).include?("meta")
-    status = "\n" + (s.url.present?? s.url + "\n" : "") + s.short_id_url
+    tags = ""
+    s.sorted_taggings.each do |tagging|
+      tags += ' #' + tagging.tag.tag
+    end
 
-    tco_status = "\n" + (s.url.present?? ("X" * Twitter::TCO_LEN) + "\n" :
-      "") + ("X" * Twitter::TCO_LEN)
+    tco_status = "\n" +
+      (s.url.present?? ("X" * Twitter::TCO_LEN) + "\n" : "") +
+      ("X" * Twitter::TCO_LEN) +
+      tags
+
+    status = "\n" +
+      (s.url.present?? s.url + "\n" : "") +
+      s.short_id_url +
+      tags
 
     left_len = Twitter::MAX_TWEET_LEN - tco_status.length
 
     title = s.title
-
     if title.match(/^([dm] |@)/i)
       # prevent these tweets from activating twitter shortcuts
       # https://dev.twitter.com/docs/faq#tweeting

@@ -29,7 +29,12 @@
         <td><%= check_box_tag "tags[]", tag.tag,
           @filtered_tags.include?(tag) %></td>
         <td><%= link_to tag.tag, tag_path(tag), :class => tag.css_class %></td>
-        <td><%= tag.description %></td>
+        <td><%= tag.description %>
+          <% if tag.hotness_mod != 0 %>
+            &nbsp;
+            <em>(hotness mod <%= tag.hotness_mod > 0 ? "+" : ""%><%=
+              tag.hotness_mod %>)</em>
+          <% end %></td>
         <td style="text-align: right; padding-right: 1em;"><%=
           tag.stories_count %></td>
       </tr>

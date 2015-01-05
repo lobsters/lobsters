@@ -49,12 +49,18 @@
     :style => "line-height: 2.3em;" %>
   <%= f.select "tags_a", options_for_select(
     Tag.all_with_filtered_counts_for(@user).map{|t|
-    [ "#{t.tag} - #{t.description}", t.tag, { "data-html" => raw("<strong>") +
-      t.tag + raw("</strong> - ") + t.description.to_s +
-      (t.filtered_count == 0 ? "" :
-      raw(" <em>") + "#{t.filtered_count} user" +
-      (t.filtered_count == 1 ? "" : "s") + " filtering" +
-      raw("</em>")) } ]}, f.object.tags_a), {}, { :multiple => true } %>
+      html = "<strong>#{h(t.tag)}</strong> - #{h(t.description.to_s)}"
+
+      if t.hotness_mod != 0
+        html << " (hotness mod #{t.hotness_mod > 0 ? "+" : ""}#{t.hotness_mod})"
+      end
+      if t.filtered_count > 0
+        html << " <em>#{t.filtered_count} user" <<
+          (t.filtered_count == 1 ? "" : "s") << " filtering</em>"
+      end
+
+      [ "#{t.tag} - #{t.description}", t.tag, { "data-html" => raw(html) } ]},
+    f.object.tags_a), {}, { :multiple => true } %>
   </div>
 
   <div class="boxline">

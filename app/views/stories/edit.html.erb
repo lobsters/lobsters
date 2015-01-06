@@ -17,6 +17,13 @@
             :placeholder => "Short id of story into which this story " <<
             "be merged" %>
         </div>
+        <div class="boxline">
+          <%= f.label :unavailable_at, "Unavailable:",
+            :class => "required" %>
+          <%= f.check_box :is_unavailable %>
+          <%= f.label :unavailable_at, "Source URL is unavailable, " <<
+            "enable display of cached text", :class => "normal" %>
+        </div>
         <% if @story.user_id != @user.id %>
           <div class="boxline">
             <%= f.label :moderation_reason, "Mod Reason:",

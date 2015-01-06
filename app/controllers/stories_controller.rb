@@ -257,13 +257,13 @@ private
   def story_params
     p = params.require(:story).permit(
       :title, :url, :description, :moderation_reason, :seen_previous,
-      :merge_story_short_id, :tags_a => [],
+      :merge_story_short_id, :is_unavailable, :tags_a => [],
     )
 
     if @user.is_moderator?
       p
     else
-      p.except(:moderation_reason, :merge_story_short_id)
+      p.except(:moderation_reason, :merge_story_short_id, :is_unavailable)
     end
   end
 

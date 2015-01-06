@@ -5,6 +5,7 @@ ThinkingSphinx::Index.define :story, :with => :active_record do
   indexes title
   indexes url
   indexes user.username, :as => :author
+  indexes story_cache
 
   has created_at, :sortable => true
   has hotness, is_expired
@@ -15,6 +16,7 @@ ThinkingSphinx::Index.define :story, :with => :active_record do
   set_property :field_weights => {
     :upvotes => 15,
     :title => 10,
+    :story_cache => 10,
     :tags => 5,
   }
 

@@ -619,16 +619,27 @@ div.story_text img {
 	max-width: 100%;
 }
 
+div#collapsed_story_text {
+	display: none;
+}
+a#story_text_expander {
+	display: block;
+}
+
 div.comment_text {
 	max-width: 700px;
 }
 
 div.comment_text blockquote,
-div.markdown_help blockquote {
+div.markdown_help blockquote,
+div.story_text blockquote {
 	font-style: italic;
 	margin: 0.25em 0 0 0.5em;
 	padding: 0 0 0 1em;
 	border-left: 2px solid gray;
+}
+div#collapsed_story_text div.story_text blockquote {
+	font-style: normal;
 }
 div.comment_text pre,
 div.markdown_help pre {

@@ -295,6 +295,14 @@ class Story < ActiveRecord::Base
     self.created_at >= RECENT_DAYS.days.ago
   end
 
+  def is_unavailable
+    self.unavailable_at != nil
+  end
+  def is_unavailable=(what)
+    self.unavailable_at = (what.to_i == 1 && !self.is_unavailable ?
+      Time.now : nil)
+  end
+
   def is_undeletable_by_user?(user)
     if user && user.is_moderator?
       return true
@@ -311,6 +319,11 @@ class Story < ActiveRecord::Base
     end
 
     all_changes = self.changes.merge(self.tagging_changes)
+    all_changes.delete("unavailable_at")
+
+    if !all_changes.any?
+      return
+    end
 
     m = Moderation.new
     m.moderator_user_id = self.editor.try(:id)
@@ -439,6 +452,14 @@ class Story < ActiveRecord::Base
 
   def to_param
     self.short_id
+  end
+
+  def update_availability
+    if self.is_unavailable && !self.unavailable_at
+      self.unavailable_at = Time.now
+    elsif self.unavailable_at && !self.is_unavailable
+      self.unavailable_at = nil
+    end
   end
 
   def update_comments_count!

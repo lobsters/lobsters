@@ -9,6 +9,31 @@
       <%= raw @story.markeddown_description %>
     </div>
   <% end %>
+
+  <% if @story.is_unavailable && @story.story_cache.present? %>
+    <a id="story_text_expander">Source URL considered unavailable as of <%=
+    time_ago_in_words_label(@story.unavailable_at) %> ago, cached text
+    available</a>
+    <div id="collapsed_story_text">
+      <p>
+      <em>All story content copyright of its respective owner.</em>
+      </p>
+
+      <div class="story_text">
+        <blockquote>
+          <%= simple_format(@story.story_cache) %>
+        </blockquote>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("story_text_expander").addEventListener("click",
+        function() {
+          document.getElementById("collapsed_story_text").style.display = "block";
+          return false;
+        });
+    </script>
+  <% end %>
 </div>
 
 <% if !@story.previewing %>

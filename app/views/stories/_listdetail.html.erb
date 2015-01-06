@@ -54,8 +54,8 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
               class="new_user"
             <% end %>><%= ms.user.username %></a>
 
-            <%= raw(time_ago_in_words_label(ms.created_at).gsub(/^about /, ""))
-              %> ago
+            <%= time_ago_in_words_label(ms.created_at, :strip_about => true) %>
+              ago
           </span>
         <% end %>
       <% end %>
@@ -70,8 +70,8 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
           class="new_user"
         <% end %>><%= story.user.username %></a>
 
-        <%= raw(time_ago_in_words_label(story.created_at).gsub(/^about /, ""))
-          %> ago
+        <%= time_ago_in_words_label(story.created_at, :strip_about => true) %>
+          ago
 
         <% if story.is_editable_by_user?(@user) %>
           |

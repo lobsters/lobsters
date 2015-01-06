@@ -12,8 +12,14 @@ module ApplicationHelper
     raw(html)
   end
 
-  def time_ago_in_words_label(*args)
-    label_tag(nil, time_ago_in_words(*args),
-      :title => args.first.strftime("%F %T %z"))
+  def time_ago_in_words_label(time, options = {})
+    strip_about = options.delete(:strip_about)
+    ago = time_ago_in_words(time, options)
+
+    if strip_about
+      ago.gsub!(/^about /, "")
+    end
+
+    raw(label_tag(nil, ago, :title => time.strftime("%F %T %z")))
   end
 end

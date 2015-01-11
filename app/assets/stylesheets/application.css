@@ -591,18 +591,22 @@ div.page_link_buttons {
 	font-weight: bold;
 	margin-top: 2em;
 }
-div.page_link_buttons a {
-	color: #666;
+div.page_link_buttons a,
+div.page_link_buttons span {
 	border: 1px solid #d0d0d0;
 	background-color: #f3f3f3;
+	color: #666;
 	padding: 0.25em 0.5em;
 	font-weight: bold;
 	text-decoration: none;
 	margin-left: 0.5em;
 }
-div.page_link_buttons a.cur {
+div.page_link_buttons a.cur,
+div.page_link_buttons span {
 	background-color: transparent;
 	border-color: transparent;
+	margin-left: 0.25em;
+	padding-right: 0.25em;
 }
 
 

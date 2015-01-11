@@ -72,10 +72,14 @@
     <div class="page_link_buttons">
       Page:
 
-      <% 1.upto(@search.page_count) do |p| %>
-        <a href="/search?<%= raw(@search.to_url_params) %>&amp;page=<%= p
-          %>" class="<%= @search.page == p ? "cur" : "" %>"><%= p
-          %></a>
+      <% page_numbers_for_pagination(@search.page_count, @search.page).each do |p| %>
+        <% if p.is_a?(Integer) %>
+          <a href="/search?<%= raw(@search.to_url_params) %>&amp;page=<%= p
+            %>" class="<%= @search.page == p ? "cur" : "" %>"><%= p
+            %></a>
+        <% else %>
+          <span>...</span>
+        <% end %>
       <% end %>
     </div>
   <% end %>

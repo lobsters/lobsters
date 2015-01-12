@@ -118,6 +118,7 @@ button,
 select,
 textarea {
 	color: #555;
+	background-color: white;
 	line-height: 1.2em;
 	padding: 3px 5px;
 }
@@ -142,6 +143,7 @@ input:focus,
 textarea:focus {
 	border-color: #888;
 	color: #303030;
+	background-color: white;
 	outline: 0;
 }
 textarea:disabled {

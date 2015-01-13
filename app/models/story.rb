@@ -36,6 +36,7 @@ class Story < ActiveRecord::Base
 
   before_validation :assign_short_id_and_upvote,
     :on => :create
+  before_create :assign_initial_hotness
   before_save :log_moderation
   after_create :mark_submitter, :record_initial_upvote
   after_save :update_merged_into_story_comments
@@ -126,6 +127,10 @@ class Story < ActiveRecord::Base
     h
   end
 
+  def assign_initial_hotness
+    self.hotness = self.calculated_hotness
+  end
+
   def assign_short_id_and_upvote
     self.short_id = ShortId.new(self.class).generate
     self.upvotes = 1
@@ -154,9 +159,10 @@ class Story < ActiveRecord::Base
     end
 
     # TODO: as the site grows, shrink this down to 12 or so.
-    window = 60 * 60 * 24
+    window = 60 * 60 * 48
 
-    return -((order * sign) + base + (self.created_at.to_f / window)).round(7)
+    return -((order * sign) + base +
+      ((self.created_at || Time.now).to_f / window)).round(7)
   end
 
   def can_be_seen_by_user?(user)

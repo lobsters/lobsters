@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150106195555) do
+ActiveRecord::Schema.define(version: 20150115172138) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -164,7 +164,6 @@ ActiveRecord::Schema.define(version: 20150106195555) do
     t.boolean  "email_replies",                         default: false
     t.boolean  "pushover_replies",                      default: false
     t.string   "pushover_user_key"
-    t.string   "pushover_device"
     t.boolean  "email_messages",                        default: true
     t.boolean  "pushover_messages",                     default: true
     t.boolean  "is_moderator",                          default: false
@@ -178,7 +177,6 @@ ActiveRecord::Schema.define(version: 20150106195555) do
     t.integer  "banned_by_user_id"
     t.string   "banned_reason",        limit: 200
     t.datetime "deleted_at"
-    t.string   "pushover_sound"
   end
 
   add_index "users", ["mailing_list_mode"], name: "mailing_list_enabled", using: :btree

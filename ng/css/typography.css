@@ -15,12 +15,22 @@ body {
 
 .typ-nav ul {
     display: inline-block;
-    padding-right: 17px;
+    padding-right: 29px;
 }
 
 .typ-nav li {
     display: inline-block;
-    padding-right: 10px;
+    padding-right: 15px;
+    text-decoration: none;
+    color: #999;
+    font-weight: bold;
+    font-size: 15px;
+    margin-top: 1em;
+}
+
+.typ-nav a {
+    color: inherit;
+    text-decoration: inherit;
 }
 
 .typ-user-header {
@@ -30,6 +40,7 @@ body {
     font-size: 23px;
     font-weight: bold;
     letter-spacing: -0.3px;
+    margin-bottom: 0.5em;
 }
 
 .typ-user-header h2 {

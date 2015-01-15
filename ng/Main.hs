@@ -33,8 +33,7 @@ header =
           headerright)
   where
     headerleft =
-      ul_ (do favicon
-              link "/" "Home"
+      ul_ (do link "/" "Home"
               link "/hottest" "Spiciest"
               link "/comments" "Talk of the Town"
               link "/search" "Search")
@@ -43,8 +42,6 @@ header =
               link "/messages" "Your Messages"
               link "/settinsg" "hao (155)"
               link "/logout" "^D")
-    favicon =
-      li_ (p_ "[barn]")
     link path text =
       li_ (with a_ [href_ path] text)
 

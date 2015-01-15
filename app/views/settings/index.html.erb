@@ -38,33 +38,6 @@
       </span>
     </div>
 
-    <br>
-
-    <div class="boxline">
-      <%= f.label :pushover_user_key,
-        raw("<a href=\"https://pushover.net/\">Pushover</a> User Key:"),
-        :class => "required" %>
-      <%= f.text_field :pushover_user_key, :size => 40 %>
-      <span class="hint">
-        For optional comment and message notifications below
-      </span>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :pushover_device, "Pushover Device:",
-        :class => "required" %>
-      <%= f.text_field :pushover_device, :placeholder => "optional",
-        :size => 15 %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :pushover_sound, "Pushover Sound:",
-        :class => "required" %>
-      <%= f.select :pushover_sound, Pushover.sounds.map{|k,v| [ v, k ] } %>
-    </div>
-
-    <br>
-
     <div class="boxline">
       <%= f.label :about, "About:", :class => "required" %>
       <%= f.text_area :about, :size => "100x5", :style => "width: 600px;" %>
@@ -82,6 +55,31 @@
         <%= render :partial => "global/markdownhelp" %>
       </div>
     </div>
+
+    <p>
+    <%= f.submit "Save Account Settings" %>
+    </p>
+
+    <br>
+
+    <div class="legend">
+      Notification Settings
+    </div>
+
+    <div class="boxline">
+      <%= f.label :pushover_user_key,
+        raw("<a href=\"https://pushover.net/\">Pushover</a>:"),
+        :class => "required" %>
+      <%= link_to((f.object.pushover_user_key.present??
+        "Manage Pushover Subscription" : "Subscribe With Pushover"),
+        "/settings/pushover", :class => "pushover_button", :method => :post) %>
+      <span class="hint">
+        For optional comment and message notifications below
+      </span>
+    </div>
+
+    <br>
+
 
     <div class="legend">
       Comment Reply Notification Settings
@@ -171,6 +169,7 @@
         @edit_user.mailing_list_token %>@<%= Rails.application.domain %></tt>
       </span>
     </div>
+
 
     <br>
     <%= f.submit "Save All Settings" %>

@@ -221,8 +221,7 @@ class User < ActiveRecord::Base
 
   def pushover!(params)
     if self.pushover_user_key.present?
-      Pushover.push(self.pushover_user_key, self.pushover_device,
-        params.merge({ :sound => self.pushover_sound.to_s }))
+      Pushover.push(self.pushover_user_key, params)
     end
   end
 

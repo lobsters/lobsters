@@ -74,6 +74,7 @@ span.hat {
 	border-bottom: 6px solid #bbb;
 	border-radius: 4px;
 	padding: 1px 8px;
+	vertical-align: super;
 }
 span.hat span.crown {
 	background-color: #ddd;

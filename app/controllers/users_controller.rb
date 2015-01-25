@@ -16,6 +16,8 @@ class UsersController < ApplicationController
       @user_count = users.length
       @users_by_parent = users.group_by(&:invited_by_user_id)
     end
+
+    @newest = User.order("id DESC").limit(10)
   end
 
   def invite

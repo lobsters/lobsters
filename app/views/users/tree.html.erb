@@ -1,5 +1,14 @@
 <div class="box wide">
-  <p><strong>Users (<%= @user_count %>)</strong></p>
+  <p>
+  <strong>Users (<%= @user_count %>)</strong>
+  </p>
+
+  <p>
+  Newest users:
+  <%= raw @newest.map{|u| "<a href=\"/u/#{u.username}\" class=\"" <<
+    (u.is_new?? "new_user" : "") << "\">#{u.username}</a> " <<
+    "(#{u.karma})" }.join(", ") %>
+  </p>
 
   <ul class="root">
 

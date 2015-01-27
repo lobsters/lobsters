@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150115172138) do
+ActiveRecord::Schema.define(version: 20150127180326) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -115,12 +115,14 @@ ActiveRecord::Schema.define(version: 20150115172138) do
     t.integer  "comments_count",                                                    default: 0,   null: false
     t.integer  "merged_story_id"
     t.datetime "unavailable_at"
+    t.string   "twitter_id",             limit: 20
   end
 
   add_index "stories", ["hotness"], name: "hotness_idx", using: :btree
   add_index "stories", ["is_expired", "is_moderated"], name: "is_idxes", using: :btree
   add_index "stories", ["merged_story_id"], name: "index_stories_on_merged_story_id", using: :btree
   add_index "stories", ["short_id"], name: "unique_short_id", unique: true, using: :btree
+  add_index "stories", ["twitter_id"], name: "index_stories_on_twitter_id", using: :btree
   add_index "stories", ["url"], name: "url", length: {"url"=>191}, using: :btree
 
   create_table "tag_filters", force: true do |t|

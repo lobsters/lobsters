@@ -48,7 +48,9 @@ order(:id).each do |s|
       { "status" => status })
 
     begin
-      if !res["id_str"].match(/\d+/)
+      if res["id_str"].match(/\d+/)
+        s.update_column("twitter_id", res["id_str"])
+      else
         raise
       end
     rescue => e

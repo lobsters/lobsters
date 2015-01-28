@@ -102,6 +102,11 @@ class Story < ActiveRecord::Base
     true
   end
 
+  def self.score_sql
+    "(CAST(upvotes AS #{votes_cast_type}) - " <<
+      "CAST(downvotes AS #{votes_cast_type}))"
+  end
+
   def self.votes_cast_type
     Story.connection.adapter_name.match(/mysql/i) ? "signed" : "integer"
   end

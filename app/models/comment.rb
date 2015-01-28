@@ -103,6 +103,11 @@ class Comment < ActiveRecord::Base
     nil
   end
 
+  def self.score_sql
+    "(CAST(upvotes AS #{Story.votes_cast_type}) - " <<
+      "CAST(downvotes AS #{Story.votes_cast_type}))"
+  end
+
   def as_json(options = {})
     h = super(:only => [
       :short_id,

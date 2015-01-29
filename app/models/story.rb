@@ -227,6 +227,10 @@ class Story < ActiveRecord::Base
     end
   end
 
+  def domain_search_url
+    "/search?q=domain:#{self.domain}&order=newest"
+  end
+
   def fetch_story_cache!
     if self.url.present?
       self.story_cache = StoryCacher.get_story_text(self.url)

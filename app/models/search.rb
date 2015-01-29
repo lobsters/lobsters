@@ -58,6 +58,30 @@ class Search
       opts[:order] = "score DESC"
     end
 
+    # extract domain query since it must be done separately
+    domain = nil
+    words = self.q.to_s.split(" ").reject{|w|
+      if m = w.match(/^domain:(.+)$/)
+        domain = m[1]
+      end
+    }.join(" ")
+
+    if domain.present?
+      self.what = "stories"
+      story_ids = Story.select(:id).where("`url` REGEXP '//([^/]*\.)?" +
+        ActiveRecord::Base.connection.quote_string(domain) + "/'").
+        collect(&:id)
+
+      if story_ids.any?
+        opts[:with] = { :story_id => story_ids }
+      else
+        self.results = []
+        self.total_results = 0
+        self.page = 0
+        return false
+      end
+    end
+
     opts[:classes] = case what
       when "all"
         [ Story, Comment ]
@@ -70,7 +94,7 @@ class Search
       end
 
     # escape sphinx special chars (using Riddle.escape removes boolean support)
-    query = self.q.gsub(/([\/~"])/, '\\\\\1')
+    query = words.gsub(/([\/~"])/, '\\\\\1')
 
     # go go gadget search
     self.results = []

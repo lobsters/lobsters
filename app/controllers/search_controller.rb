@@ -7,9 +7,13 @@ class SearchController < ApplicationController
 
     if params[:q].to_s.present?
       @search.q = params[:q].to_s
-      @search.what = params[:what]
-      @search.order = params[:order]
 
+      if params[:what].present?
+        @search.what = params[:what]
+      end
+      if params[:order].present?
+        @search.order = params[:order]
+      end
       if params[:page].present?
         @search.page = params[:page].to_i
       end

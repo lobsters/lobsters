@@ -29,7 +29,10 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
             title="<%= tagging.tag.description %>"><%= tagging.tag.tag %></a>
         <% end %>
       </span>
-      <span class="domain"><%= story.domain %></span>
+      <% if story.domain.present? %>
+        <a class="domain" href="<%= story.domain_search_url %>"><%=
+          story.domain %></a>
+      <% end %>
 
       <% if defined?(single_story) && single_story %>
         <% story.merged_stories.each do |ms| %>
@@ -45,7 +48,10 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
                 title="<%= tagging.tag.description %>"><%= tagging.tag.tag %></a>
             <% end %>
           </span>
-          <span class="domain"><%= ms.domain %></span>
+          <% if ms.domain.present? %>
+            <a class="domain" href="<%= ms.domain_search_url %>"><%=
+              ms.domain %></a>
+          <% end %>
           <span class="byline">
             by <a href="/u/<%= ms.user.username %>"
             <% if ms.user.is_new? %>

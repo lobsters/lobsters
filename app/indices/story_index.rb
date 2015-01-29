@@ -11,6 +11,10 @@ ThinkingSphinx::Index.define :story, :with => :active_record do
   has hotness, is_expired
   has Story.score_sql, :as => :score, :type => :bigint, :sortable => true
 
+  # opts[:with] = { :id => ... } doesn't seem to work when sphinx searches on
+  # story_core, so give this column a different name to restrict on
+  has id, :as => :story_id
+
   set_property :field_weights => {
     :upvotes => 15,
     :title => 10,

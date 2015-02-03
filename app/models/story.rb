@@ -253,12 +253,34 @@ class Story < ActiveRecord::Base
   end
 
   def fetched_title(for_remote_ip = nil)
-    doc = Nokogiri::HTML(fetched_content(for_remote_ip).to_s)
-    if doc
-      return doc.at_css("title").try(:text)
-    else
-      return ""
+    title = ""
+
+    if !(doc = Nokogiri::HTML(fetched_content(for_remote_ip).to_s))
+      return title
     end
+
+    # try <meta property="og:title"> first, it probably won't have the site
+    # name
+    begin
+      title = doc.at_css("meta[property='og:title']").
+        attributes["content"].text
+    rescue
+    end
+
+    # then try <meta name="title">
+    if title.to_s == ""
+      begin
+        title = doc.at_css("meta[name='title']").attributes["content"].text
+      rescue
+      end
+    end
+
+    # then try plain old <title>
+    if title.to_s == ""
+      title = doc.at_css("title").try(:text).to_s
+    end
+
+    return title
   end
 
   def generated_markeddown_description

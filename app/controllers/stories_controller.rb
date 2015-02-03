@@ -90,7 +90,9 @@ class StoriesController < ApplicationController
         end
       end
 
-      if params[:title].present?
+      # ignore what the user brought unless we need it as a fallback
+      @story.title = @story.fetched_title(request.remote_ip)
+      if !@story.title.present? && params[:title].present?
         @story.title = params[:title]
       end
     end

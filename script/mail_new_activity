@@ -21,6 +21,21 @@ class String
       :replace => "?")
   end
 
+  def quoted_printable(encoded_word = false)
+    s = ""
+    if encoded_word
+      s << "=?UTF-8?Q?"
+    end
+
+    s << [ self ].pack("M")
+
+    if encoded_word
+      s << "?="
+    end
+
+    s
+  end
+
   # like ActionView::Helpers::TextHelper but preserve > and indentation when
   # wrapping lines
   def word_wrap(len)
@@ -85,34 +100,39 @@ Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each d
       mail.puts "List-Unsubscribe: <" <<
         "#{Rails.application.root_url}settings>"
       mail.puts "Precedence: list"
-      mail.puts "Content-Type: text/plain; charset=\"us-ascii\""
+      mail.puts "Content-Type: text/plain; charset=\"utf-8\""
+      mail.puts "Content-Transfer-Encoding: quoted-printable"
       mail.puts "Message-ID: <#{s.mailing_list_message_id}>"
       mail.puts "Date: " << s.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
-      mail.puts "Subject: #{s.title.force_to_ascii}" <<
+      mail.puts "Subject: " << s.title.force_to_ascii <<
         s.tags.sort_by{|t| t.tag }.map{|t| " [#{t.tag}]" }.join
 
       mail.puts ""
 
+      body = []
+
       if s.description.present?
-        mail.puts s.description.to_s.force_to_ascii.word_wrap(EMAIL_WIDTH)
+        body.push s.description.to_s.word_wrap(EMAIL_WIDTH)
       end
 
       if s.url.present?
         if s.description.present?
-          mail.puts ""
+          body.push ""
         end
 
-        mail.puts "Via: #{s.url}"
+        body.push "Via: #{s.url}"
 
         if s.story_cache.present?
-          mail.puts ""
-          mail.puts s.story_cache.to_s.force_to_ascii.word_wrap(EMAIL_WIDTH)
+          body.push ""
+          body.push s.story_cache.to_s.word_wrap(EMAIL_WIDTH)
         end
       end
 
-      mail.puts ""
-      mail.puts "-- "
-      mail.puts "Vote: #{s.short_id_url}"
+      body.push ""
+      body.push "-- "
+      body.push "Vote: #{s.short_id_url}"
+
+      mail.puts body.join("\n").quoted_printable
     end
   end
 
@@ -163,7 +183,8 @@ last_comment_id, false, false).order(:id).each do |c|
       mail.puts "List-Unsubscribe: <" <<
         "#{Rails.application.root_url}settings>"
       mail.puts "Precedence: list"
-      mail.puts "Content-Type: text/plain; charset=\"us-ascii\""
+      mail.puts "Content-Type: text/plain; charset=\"utf-8\""
+      mail.puts "Content-Transfer-Encoding: quoted-printable"
       mail.puts "Message-ID: <#{c.mailing_list_message_id}>"
 
       refs = [ "<#{c.story.mailing_list_message_id}>" ]
@@ -200,29 +221,33 @@ last_comment_id, false, false).order(:id).each do |c|
       end
 
       mail.puts "Date: " << c.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
-      mail.puts "Subject: Re: #{c.story.title.force_to_ascii}" <<
+      mail.puts "Subject: Re: " << c.story.title.force_to_ascii <<
         c.story.tags.sort_by{|t| t.tag }.map{|t| " [#{t.tag}]" }.join
 
       mail.puts ""
 
+      body = []
+
       if c.hat
-        mail.puts "[ Posted while wearing #{c.hat.hat} hat ]"
-        mail.puts ""
+        body.push "[ Posted while wearing #{c.hat.hat} hat ]"
+        body.push ""
       end
 
       # if the comment has hard line breaks at <80, it likely came from an
       # email, so don't re-wrap it at something shorter
-      com = c.comment.to_s.force_to_ascii
+      com = c.comment.to_s
       com_lines = com.split("\n")
       if com_lines.length > 1 && com_lines.first.length < 80
-        mail.puts com.word_wrap(80)
+        body.push com.word_wrap(80)
       else
-        mail.puts com.word_wrap(EMAIL_WIDTH)
+        body.push com.word_wrap(EMAIL_WIDTH)
       end
 
-      mail.puts ""
-      mail.puts "-- "
-      mail.puts "Vote: #{c.short_id_url}"
+      body.push ""
+      body.push "-- "
+      body.push "Vote: #{c.short_id_url}"
+
+      mail.puts body.join("\n").quoted_printable
     end
   end
 

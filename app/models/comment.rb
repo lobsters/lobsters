@@ -39,6 +39,9 @@ class Comment < ActiveRecord::Base
 
     (m = self.comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
       errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
+
+    self.comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
+      errors.add(:base, "Wow!  A blue car!")
   end
 
   def self.arrange_for_user(user)

@@ -1,7 +1,8 @@
 <li id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
-class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
-"downvoted" : "" %> <%= story.vote == 0 ? "hidden" : "" %> <%= story.is_expired? ?
-"expired" : "" %>">
+class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
+<%= story.vote && story.vote[:vote] == -1 ? "downvoted" : "" %>
+<%= story.is_hidden_by_cur_user ? "hidden" : "" %>
+<%= story.is_expired? ? "expired" : "" %>">
 <div class="story_liner">
   <div class="voters">
     <% if @user %>
@@ -100,10 +101,13 @@ class="story <%= story.vote == 1 ? "upvoted" : "" %> <%= story.vote == -1 ?
           <% end %>
         <% end %>
         <% if !story.is_gone? && @user %>
-          <% if @user && @user.can_downvote?(story) %>
+          <% if @user && story.vote && story.vote[:vote] == -1 %>
+            | <a class="flagger">unflag (<%=
+              Vote::STORY_REASONS[story.vote[:reason]].to_s.downcase %>)</a>
+          <% elsif @user && @user.can_downvote?(story) %>
             | <a class="flagger">flag</a>
           <% end %>
-          <% if story.vote == 0 %>
+          <% if story.is_hidden_by_cur_user %>
             | <%= link_to "unhide", story_unhide_path(story.short_id),
               :class => "hider" %>
           <% else %>

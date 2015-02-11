@@ -31,7 +31,7 @@ class Story < ActiveRecord::Base
   RECENT_DAYS = 30
 
   attr_accessor :vote, :already_posted_story, :fetched_content, :previewing,
-    :seen_previous
+    :seen_previous, :is_hidden_by_cur_user
   attr_accessor :editor, :moderation_reason, :merge_story_short_id
 
   before_validation :assign_short_id_and_upvote,
@@ -298,11 +298,11 @@ class Story < ActiveRecord::Base
   end
 
   def hider_count
-    @hider_count ||= Vote.where(:story_id => self.id, :comment_id => nil,
-      :vote => 0).count
+    @hider_count ||= HiddenStory.where(:story_id => self.id).count
   end
 
   def is_downvotable?
+    return true
     if self.created_at
       Time.now - self.created_at <= DOWNVOTABLE_DAYS.days
     else
@@ -326,6 +326,10 @@ class Story < ActiveRecord::Base
 
   def is_gone?
     is_expired?
+  end
+
+  def is_hidden_by_user?(user)
+    !!HiddenStory.where(:user_id => user.id, :story_id => self.id).first
   end
 
   def is_recent?

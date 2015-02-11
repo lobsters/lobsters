@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150127180326) do
+ActiveRecord::Schema.define(version: 20150211170052) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -45,6 +45,13 @@ ActiveRecord::Schema.define(version: 20150127180326) do
     t.string   "hat"
     t.string   "link"
   end
+
+  create_table "hidden_stories", force: true do |t|
+    t.integer "user_id"
+    t.integer "story_id"
+  end
+
+  add_index "hidden_stories", ["user_id", "story_id"], name: "index_hidden_stories_on_user_id_and_story_id", unique: true, using: :btree
 
   create_table "invitation_requests", force: true do |t|
     t.string   "code"

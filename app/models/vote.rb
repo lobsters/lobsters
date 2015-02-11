@@ -28,7 +28,7 @@ class Vote < ActiveRecord::Base
 
     Vote.where(:user_id => user, :story_id => stories,
     :comment_id => nil).each do |v|
-      votes[v.story_id] = v.vote
+      votes[v.story_id] = { :vote => v.vote, :reason => v.reason }
     end
 
     votes
@@ -84,7 +84,7 @@ class Vote < ActiveRecord::Base
     v = Vote.where(:user_id => user_id, :story_id => story_id,
       :comment_id => comment_id).first_or_initialize
 
-    if !v.new_record? && v.vote == vote && vote != 0
+    if !v.new_record? && v.vote == vote
       return
     end
 
@@ -93,7 +93,7 @@ class Vote < ActiveRecord::Base
 
     Vote.transaction do
       # unvote
-      if vote == 0 && reason == nil
+      if vote == 0
         # neutralize previous vote
         upvote = (v.vote == 1 ? -1 : 0)
         downvote = (v.vote == -1 ? -1 : 0)

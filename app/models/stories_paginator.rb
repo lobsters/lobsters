@@ -26,9 +26,15 @@ private
     if @user
       votes = Vote.votes_by_user_for_stories_hash(@user.id, scope.map(&:id))
 
+      hs = HiddenStory.where(:user_id => @user.id, :story_id =>
+        scope.map(&:id)).map(&:story_id)
+
       scope.each do |s|
         if votes[s.id]
           s.vote = votes[s.id]
+        end
+        if hs.include?(s.id)
+          s.is_hidden_by_cur_user = true
         end
       end
     end

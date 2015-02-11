@@ -237,8 +237,7 @@ class StoriesController < ApplicationController
       return render :text => "can't find story", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(0, story.id,
-      nil, @user.id, "H")
+    HiddenStory.hide_story_for_user(story.id, @user.id)
 
     render :text => "ok"
   end
@@ -248,8 +247,7 @@ class StoriesController < ApplicationController
       return render :text => "can't find story", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(0, story.id,
-      nil, @user.id, nil)
+    HiddenStory.where(:user_id => @user.id, :story_id => story.id).delete_all
 
     render :text => "ok"
   end
@@ -299,8 +297,10 @@ private
     if @user
       if v = Vote.where(:user_id => @user.id, :story_id => @story.id,
       :comment_id => nil).first
-        @story.vote = v.vote
+        @story.vote = { :vote => v.vote, :reason => v.reason }
       end
+
+      @story.is_hidden_by_cur_user = @story.is_hidden_by_user?(@user)
 
       @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @story.id)
       @comments.each do |c|

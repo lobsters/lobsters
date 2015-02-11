@@ -11,7 +11,7 @@ class StoryRepository
 
   def hottest
     hottest = positive_ranked base_scope
-    hottest = filter_downvoted_and_tags hottest
+    hottest = filter_hidden_and_tags hottest
     hottest.order('hotness')
   end
 
@@ -27,7 +27,7 @@ class StoryRepository
   end
 
   def newest
-    newest = filter_downvoted_and_tags base_scope
+    newest = filter_hidden_and_tags base_scope
     newest.order("stories.id DESC")
   end
 
@@ -94,9 +94,9 @@ private
     Story.unmerged.where(is_expired: false)
   end
 
-  def filter_downvoted_and_tags(scope)
+  def filter_hidden_and_tags(scope)
     if @user
-      scope = filter_downvoted scope
+      scope = filter_hidden scope
     end
     if @params[:exclude_tags].try(:any?)
       scope = filter_tags scope, @params[:exclude_tags]
@@ -104,20 +104,16 @@ private
     scope
   end
 
-  def filter_downvoted(scope)
+  def filter_hidden(scope)
     scope.where(Story.arel_table[:id].not_in(hidden_arel))
   end
 
   def hidden_arel
     if @user
-      hidden_arel = Vote.arel_table.where(
-        Vote.arel_table[:user_id].eq(@user.id)
-      ).where(
-        Vote.arel_table[:vote].lteq(0)
-      ).where(
-        Vote.arel_table[:comment_id].eq(nil)
+      hidden_arel = HiddenStory.arel_table.where(
+        HiddenStory.arel_table[:user_id].eq(@user.id)
       ).project(
-        Vote.arel_table[:story_id]
+        HiddenStory.arel_table[:story_id]
       )
     end
   end

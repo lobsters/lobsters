@@ -129,7 +129,7 @@ class Search
 
       self.results.each do |r|
         if r.class == Story && votes[r.id]
-          r.vote = votes[r.id][:vote]
+          r.vote = votes[r.id]
         end
       end
     end

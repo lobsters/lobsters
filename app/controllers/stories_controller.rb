@@ -103,7 +103,7 @@ class StoriesController < ApplicationController
     @story.user_id = @user.id
     @story.previewing = true
 
-    @story.vote = 1
+    @story.vote = Vote.new(:vote => 1)
     @story.upvotes = 1
 
     @story.valid?

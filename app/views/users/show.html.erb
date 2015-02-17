@@ -109,12 +109,62 @@
   <% if @showing_user.is_active? %>
     <label class="required">About:</label>
 
-    <div id="user_about" class="shorten_first_p">
+    <div class="d shorten_first_p">
       <% if @showing_user.about.present? %>
         <%= raw @showing_user.linkified_about %>
       <% else %>
         <span class="na">A mystery...</span>
       <% end %>
     </div>
+  <% end %>
+
+  <% if @user && @user.is_admin? && !@showing_user.is_moderator? %>
+    <div style="clear: both;"></div>
+    <br>
+
+    <p>
+    <div class="legend">
+      Administrative Information
+    </div>
+    </p>
+
+    <label class="required">E-Mail:</label>
+    <span class="d">
+      <%= @showing_user.email %>
+    </span>
+    <br>
+
+    <label class="required">Recent Votes:</label>
+    <div class="d shorten_first_p">
+      <% @showing_user.votes_for_others.limit(10).each do |v| %>
+        <p>
+        <% if v.vote == 1 %>
+          +1
+        <% else %>
+          <%= v.vote %>
+          <% if v.comment_id %>
+            (<%= Vote::COMMENT_REASONS[v.reason] %>)
+          <% else %>
+            (<%= Vote::STORY_REASONS[v.reason] %>)
+          <% end %>
+        <% end %>
+        on
+        <% if v.comment_id %>
+          <a href="<%= v.comment.short_id_url %>">comment</a>
+          by
+          <a href="/u/<%= v.comment.user.try(:username) %>"><%= 
+            v.comment.user.try(:username) %></a>
+          on
+          <a href="<%= v.story.short_id_url %>"><%= v.story.title %></a>
+        <% elsif v.story_id && !v.comment_id %>
+          <a href="<%= v.story.short_id_url %>"><%= v.story.title %></a>
+          by
+          <a href="/u/<%= v.story.user.try(:username) %>"><%=
+            v.story.user.try(:username) %></a>
+        <% end %>
+        </p>
+      <% end %>
+    </div>
+    <br>
   <% end %>
 </div>

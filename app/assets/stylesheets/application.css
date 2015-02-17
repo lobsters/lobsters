@@ -337,10 +337,6 @@ div#footer a {
 
 
 /* other specifics */
-div#user_about {
-	margin-left: 12em;
-}
-
 div#gravatar {
 	border: 2px solid #fff;
 	border-radius: 100% 100%;
@@ -945,8 +941,7 @@ table.data td p:last-child {
 .box label,
 .box span,
 .box select,
-.box br,
-.box div.d {
+.box br {
 	line-height: 2em;
 }
 .box br {
@@ -971,6 +966,9 @@ table.data td p:last-child {
 	line-height: 2em;
 	vertical-align: middle;
 }
+.box div.d {
+	margin-left: 7em;
+}
 
 .box input.normal,
 .box label.normal {
@@ -981,7 +979,8 @@ table.data td p:last-child {
 
 .box span.d label,
 .box td label,
-.box .legend label {
+.box .legend label,
+.box div.d label {
 	display: inline;
 	float: none;
 	vertical-align: baseline;
@@ -1016,7 +1015,9 @@ table.data td p:last-child {
 .box.wide .hintblock {
 	margin-left: 12em;
 }
-
+.box.wide div.d {
+	margin-left: 12em;
+}
 
 
 /* for flash_notices() and flash_errors() */

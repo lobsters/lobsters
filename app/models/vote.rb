@@ -1,6 +1,7 @@
 class Vote < ActiveRecord::Base
   belongs_to :user
   belongs_to :story
+  belongs_to :comment
 
   COMMENT_REASONS = {
     "O" => "Off-topic",

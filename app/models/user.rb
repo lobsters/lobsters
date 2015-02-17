@@ -262,4 +262,11 @@ class User < ActiveRecord::Base
       Message.where("recipient_user_id = ? AND (has_been_read = ? AND " <<
       "deleted_by_recipient = ?)", self.id, false, false).count)
   end
+
+  def votes_for_others
+    self.votes.joins(:story, :comment).
+      where("comments.user_id <> votes.user_id AND " <<
+        "stories.user_id <> votes.user_id").
+      order("id DESC")
+  end
 end

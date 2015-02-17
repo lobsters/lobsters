@@ -8,6 +8,16 @@ class Hat < ActiveRecord::Base
 
   after_create :log_moderation
 
+  def destroy_by_user_with_reason(user, reason)
+    m = Moderation.new
+    m.user_id = self.user_id
+    m.moderator_user_id = user.id
+    m.action = "Revoked hat \"#{self.hat}\": #{reason}"
+    m.save!
+
+    self.destroy
+  end
+
   def to_html_label
     hl = (self.link.present? && self.link.match(/^https?:\/\//))
 

@@ -48,6 +48,7 @@ Lobsters::Application.routes.draw do
     get "/t/:tag/page/:page" => "home#tagged"
 
     get "/search" => "search#index"
+    get "/search/:q" => "search#index"
 
     resources :stories do
       post "upvote"

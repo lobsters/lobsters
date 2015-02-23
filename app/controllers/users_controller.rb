@@ -10,14 +10,20 @@ class UsersController < ApplicationController
     if params[:by].to_s == "karma"
       @users = User.order("karma DESC, id ASC").to_a
       @user_count = @users.length
+      @title << " By Karma"
+      render :action => "list"
+    elsif params[:moderators]
+      @users = User.where("is_admin = 1 OR is_moderator = 1").
+        order("id ASC").to_a
+      @user_count = @users.length
+      @title = "Moderators and Administrators"
       render :action => "list"
     else
       users = User.order("id DESC").to_a
       @user_count = users.length
       @users_by_parent = users.group_by(&:invited_by_user_id)
+      @newest = User.order("id DESC").limit(10)
     end
-
-    @newest = User.order("id DESC").limit(10)
   end
 
   def invite

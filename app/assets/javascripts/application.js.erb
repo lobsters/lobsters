@@ -242,8 +242,17 @@ var _Lobsters = Class.extend({
       fetch_url: url_field.val(),
     })
     .success(function(data) {
-      if (data && data.title)
-        title_field.val(data.title.substr(0, title_field.maxLength));
+      if (data && data.title){
+        var title = data.title.substr(0, title_field.maxLength);
+        var regex = /(.+) (—|-|\|) (.+)$/; // Detect titles that end in " - Site" or " | Site"
+        var matches = regex.exec(title);
+        if (matches != null) {
+          if (window.confirm("It seems like your title has some extraneous components. Such as the name of the site or section. Would you like us to try and remove them?")) {
+            title = matches[1];
+          }
+        }
+        title_field.val(title);
+      }
 
       button.val(old_value);
       button.prop("disabled", false);

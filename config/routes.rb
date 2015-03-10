@@ -58,7 +58,7 @@ Lobsters::Application.routes.draw do
       post "hide"
       post "unhide"
     end
-    post "/stories/fetch_url_title", :format => "json"
+    post "/stories/fetch_url_attributes", :format => "json"
     post "/stories/preview" => "stories#preview"
 
     resources :comments do

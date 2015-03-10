@@ -58,15 +58,22 @@ class StoriesController < ApplicationController
     end
   end
 
-  def fetch_url_title
+  def fetch_url_attributes
     s = Story.new
+    s.fetching_ip = request.remote_ip
     s.url = params[:fetch_url]
 
-    if (title = s.fetched_title(request.remote_ip)).present?
-      return render :json => { :title => title }
-    else
-      return render :json => "error"
+    oattrs = { :url => params[:fetch_url], :title => nil }
+
+    if (title = s.fetched_title).present?
+      oattrs[:title] = title
     end
+
+    if (cu = s.fetched_canonical_url).present?
+      oattrs[:url] = cu
+    end
+
+    return render :json => oattrs
   end
 
   def new
@@ -74,9 +81,16 @@ class StoriesController < ApplicationController
     @cur_url = "/stories/new"
 
     @story = Story.new
+    @story.fetching_ip = request.remote_ip
 
     if params[:url].present?
       @story.url = params[:url]
+
+      if (cu = @story.fetched_canonical_url).present? && @story.url != cu
+        flash.now[:notice] = "Note: URL has been changed to fetched " <<
+          "canonicalized version"
+        @story.url = cu
+      end
 
       if s = Story.find_similar_by_url(@story.url)
         if s.is_recent?
@@ -91,7 +105,7 @@ class StoriesController < ApplicationController
       end
 
       # ignore what the user brought unless we need it as a fallback
-      @story.title = @story.fetched_title(request.remote_ip)
+      @story.title = @story.fetched_title
       if !@story.title.present? && params[:title].present?
         @story.title = params[:title]
       end

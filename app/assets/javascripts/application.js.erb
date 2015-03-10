@@ -238,12 +238,16 @@ var _Lobsters = Class.extend({
     button.prop("disabled", true);
     button.val("Fetching...");
 
-    $.post("/stories/fetch_url_title", {
+    $.post("/stories/fetch_url_attributes", {
       fetch_url: url_field.val(),
     })
     .success(function(data) {
-      if (data && data.title)
-        title_field.val(data.title.substr(0, title_field.maxLength));
+      if (data) {
+        if (data.title)
+          title_field.val(data.title.substr(0, title_field.maxLength));
+        if (data.url)
+          url_field.val(data.url);
+      }
 
       button.val(old_value);
       button.prop("disabled", false);

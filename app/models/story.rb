@@ -30,9 +30,10 @@ class Story < ActiveRecord::Base
   # days a story is considered recent, for resubmitting
   RECENT_DAYS = 30
 
-  attr_accessor :vote, :already_posted_story, :fetched_content, :previewing,
-    :seen_previous, :is_hidden_by_cur_user
+  attr_accessor :vote, :already_posted_story, :previewing, :seen_previous,
+    :is_hidden_by_cur_user
   attr_accessor :editor, :moderation_reason, :merge_story_short_id
+  attr_accessor :fetching_ip
 
   before_validation :assign_short_id_and_upvote,
     :on => :create
@@ -235,52 +236,6 @@ class Story < ActiveRecord::Base
     if self.url.present?
       self.story_cache = StoryCacher.get_story_text(self.url)
     end
-  end
-
-  def fetched_content(for_remote_ip = nil)
-    return @fetched_content if @fetched_content
-
-    begin
-      s = Sponge.new
-      s.timeout = 3
-      @fetched_content = s.fetch(self.url, :get, nil, nil,
-        { "User-agent" => "#{Rails.application.domain} for #{for_remote_ip}" },
-        3)
-    rescue
-    end
-
-    @fetched_content
-  end
-
-  def fetched_title(for_remote_ip = nil)
-    title = ""
-
-    if !(doc = Nokogiri::HTML(fetched_content(for_remote_ip).to_s))
-      return title
-    end
-
-    # try <meta property="og:title"> first, it probably won't have the site
-    # name
-    begin
-      title = doc.at_css("meta[property='og:title']").
-        attributes["content"].text
-    rescue
-    end
-
-    # then try <meta name="title">
-    if title.to_s == ""
-      begin
-        title = doc.at_css("meta[name='title']").attributes["content"].text
-      rescue
-      end
-    end
-
-    # then try plain old <title>
-    if title.to_s == ""
-      title = doc.at_css("title").try(:text).to_s
-    end
-
-    return title
   end
 
   def generated_markeddown_description
@@ -575,5 +530,74 @@ class Story < ActiveRecord::Base
           (user && user.is_moderator?? " (#{r_whos[k].join(", ")})" : "")
       end
     }.join(", ")
+  end
+
+  def fetched_content
+    return @fetched_content if @fetched_content
+
+    begin
+      s = Sponge.new
+      s.timeout = 3
+      @fetched_content = s.fetch(self.url, :get, nil, nil,
+        { "User-agent" => "#{Rails.application.domain} for #{self.fetching_ip}" },
+        3)
+    rescue
+    end
+
+    @fetched_content
+  end
+
+  def parsed_content
+    return @parsed_content if @parsed_content
+
+    @parsed_content = Nokogiri::HTML(self.fetched_content.to_s)
+  end
+
+  def fetched_title
+    title = ""
+
+    if !(doc = self.parsed_content)
+      return title
+    end
+
+    # try <meta property="og:title"> first, it probably won't have the site
+    # name
+    begin
+      title = doc.at_css("meta[property='og:title']").
+        attributes["content"].text
+    rescue
+    end
+
+    # then try <meta name="title">
+    if title.to_s == ""
+      begin
+        title = doc.at_css("meta[name='title']").attributes["content"].text
+      rescue
+      end
+    end
+
+    # then try plain old <title>
+    if title.to_s == ""
+      title = doc.at_css("title").try(:text).to_s
+    end
+
+    return title
+  end
+
+  def fetched_canonical_url
+    return @fetched_canonical_url if @fetched_canonical_url
+
+    if doc = self.parsed_content
+      begin
+        if (cu = doc.at_css("link[rel='canonical']").attributes["href"].
+        text).present? && (ucu = URI.parse(cu)) && ucu.scheme.present? &&
+        ucu.host.present?
+          return cu
+        end
+      rescue
+      end
+    end
+
+    return self.url
   end
 end

@@ -94,7 +94,7 @@ class Search
       end
 
     # escape sphinx special chars (using Riddle.escape removes boolean support)
-    query = words.gsub(/([\/~"@])/, '\\\\\1')
+    query = words.gsub(/(['\/~"@])/, '\\\\\1')
 
     # go go gadget search
     self.results = []

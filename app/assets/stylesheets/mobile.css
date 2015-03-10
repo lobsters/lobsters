@@ -186,6 +186,10 @@
 		display: block;
 		width: 100% !important;
 	}
+	div.box div.d,
+	div.box.wide div.d {
+		margin-left: 0;
+	}
 
 	div.boxline textarea,
 	div.boxline input[type="text"],

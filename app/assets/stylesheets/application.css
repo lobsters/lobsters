@@ -527,8 +527,17 @@ li .domain {
 }
 
 li .byline {
+	margin-bottom: -5px;
 	color: #888;
 	font-size: 8.5pt;
+}
+li .byline img.avatar {
+	border-radius: 8px;
+	height: 16px;
+	margin-bottom: 2px;
+	margin-right: 2px;
+	vertical-align: middle;
+	width: 16px;
 }
 li.story .byline {
 	margin-top: 1px;

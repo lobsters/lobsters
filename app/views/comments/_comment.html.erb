@@ -30,6 +30,10 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <span class="merge"></span>
       <% end %>
 
+      <% if @user && @user.show_avatars? %>
+        <img src="<%= comment.user.avatar_url(16) %>" class="avatar">
+      <% end %>
+
       <a href="/u/<%= comment.user.username %>"
       <% if !comment.user.is_active? %>
         class="inactive_user"

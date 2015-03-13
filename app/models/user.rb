@@ -83,9 +83,9 @@ class User < ActiveRecord::Base
     h
   end
 
-  def avatar_url
+  def avatar_url(size = 100)
     "https://secure.gravatar.com/avatar/" +
-      Digest::MD5.hexdigest(self.email.strip.downcase) + "?r=pg&d=mm&s=100"
+      Digest::MD5.hexdigest(self.email.strip.downcase) + "?r=pg&d=mm&s=#{size}"
   end
 
   def average_karma

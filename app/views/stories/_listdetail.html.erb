@@ -54,7 +54,11 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
               ms.domain %></a>
           <% end %>
           <span class="byline">
-            by <a href="/u/<%= ms.user.username %>"
+            by
+            <% if @user && @user.show_avatars? %>
+              <img src="<%= ms.user.avatar_url(16) %>" class="avatar">
+            <% end %>
+            <a href="/u/<%= ms.user.username %>"
             <% if ms.user.is_new? %>
               class="new_user"
             <% end %>><%= ms.user.username %></a>
@@ -67,10 +71,18 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
     <% end %>
     <div class="byline">
       <% if story.previewing %>
-        by <a><%= story.user.username %></a>
+        by
+        <% if @user && @user.show_avatars? %>
+          <img src="<%= story.user.avatar_url(16) %>" class="avatar">
+        <% end %>
+        <a><%= story.user.username %></a>
         just now
       <% else %>
-        by <a href="/u/<%= story.user.username %>"
+        <% if @user && @user.show_avatars? %>
+          <img src="<%= story.user.avatar_url(16) %>" class="avatar">
+        <% end %>
+        by
+        <a href="/u/<%= story.user.username %>"
         <% if story.user.is_new? %>
           class="new_user"
         <% end %>><%= story.user.username %></a>

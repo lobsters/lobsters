@@ -369,7 +369,7 @@ ol.comments {
 }
 ol.comments1 {
 	margin-left: 0;
-	padding-left: 25px;
+	padding-left: 0;
 }
 ol.comments.comments1 {
 	border-left-color: transparent;
@@ -527,9 +527,11 @@ li .domain {
 }
 
 li .byline {
-	margin-bottom: -5px;
 	color: #888;
 	font-size: 8.5pt;
+}
+li .byline > img.avatar {
+	margin-bottom: -5px;
 }
 li .byline img.avatar {
 	border-radius: 8px;
@@ -782,7 +784,7 @@ div#story_box div.markdown_help_toggler {
 }
 
 div.comment_form_container form {
-	margin-left: 15px;
+	margin-left: 40px;
 	max-width: 700px;
 }
 

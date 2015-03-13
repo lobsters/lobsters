@@ -62,7 +62,7 @@
 	}
 	ol.comments1 {
 		margin-left: 0;
-		padding-left: 15px;
+		padding-left: 0;
 	}
 
 	div.voters {
@@ -75,7 +75,7 @@
 	}
 
 	div.comment_form_container form {
-		margin-left: 1.75em;
+		margin-left: 35px;
 	}
 
 	div.voters a.upvoter,

@@ -237,8 +237,8 @@ div#wrapper {
 	margin-left: auto;
 	margin-right: auto;
 	padding-bottom: 2em;
-	min-width: 800px;
-	max-width: 1000px;
+	min-width: 600px;
+	max-width: 900px;
 }
 div#inside {
 	margin-left: 0.25em;
@@ -250,7 +250,7 @@ div#inside {
 
 #header {
 	font-weight: bold;
-	padding: 5px 42px 5px 10px;
+	padding: 5px 10px;
 	margin-top: 1em;
 	margin-bottom: 0.5em;
 	line-height: 18px;
@@ -327,7 +327,7 @@ div#footer {
 	float: right;
 	font-weight: bold;
 	margin-top: 1.5em;
-	padding-right: 42px;
+	padding-right: 10px;
 }
 div#footer a {
 	color: #999;

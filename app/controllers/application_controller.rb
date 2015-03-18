@@ -24,21 +24,23 @@ class ApplicationController < ActionController::Base
   # speed hax
   @@_css_link_header = nil
   def send_css_link_header
-    begin
-      if !@@_css_link_header
-        # is there a better way to find this?
-        j = JSON.parse(File.read(Dir.glob(
-          "#{Rails.root}/public/assets/manifest-*.json").first))
+    if !Rails.env.development?
+      begin
+        if !@@_css_link_header
+          # is there a better way to find this?
+          j = JSON.parse(File.read(Dir.glob(
+            "#{Rails.root}/public/assets/manifest-*.json").first))
 
-        @@_css_link_header = "</assets/" << j["assets"]["application.css"] <<
-          ">; rel=stylesheet"
+          @@_css_link_header = "</assets/" << j["assets"]["application.css"] <<
+            ">; rel=stylesheet"
+        end
+      rescue => e
+        Rails.logger.error e.inspect
       end
-    rescue => e
-      Rails.logger.error e.inspect
-    end
 
-    if @@_css_link_header
-      response.headers["Link"] = @@_css_link_header
+      if @@_css_link_header
+        response.headers["Link"] = @@_css_link_header
+      end
     end
   end
 

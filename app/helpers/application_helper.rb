@@ -1,6 +1,16 @@
 module ApplicationHelper
   MAX_PAGES = 15
 
+  def break_long_words(str, len = 30)
+    safe_join(str.split(" ").map{|w|
+      if w.length > len
+        safe_join(w.split(/(.{#{len}})/), "<wbr>".html_safe)
+      else
+        w
+      end
+    }, " ")
+  end
+
   def errors_for(object, message=nil)
     html = ""
     unless object.errors.blank?
@@ -12,17 +22,6 @@ module ApplicationHelper
     end
 
     raw(html)
-  end
-
-  def time_ago_in_words_label(time, options = {})
-    strip_about = options.delete(:strip_about)
-    ago = time_ago_in_words(time, options)
-
-    if strip_about
-      ago.gsub!(/^about /, "")
-    end
-
-    raw(label_tag(nil, ago, :title => time.strftime("%F %T %z")))
   end
 
   def page_numbers_for_pagination(max, cur)
@@ -59,5 +58,16 @@ module ApplicationHelper
     end
 
     pages
+  end
+
+  def time_ago_in_words_label(time, options = {})
+    strip_about = options.delete(:strip_about)
+    ago = time_ago_in_words(time, options)
+
+    if strip_about
+      ago.gsub!(/^about /, "")
+    end
+
+    raw(label_tag(nil, ago, :title => time.strftime("%F %T %z")))
   end
 end

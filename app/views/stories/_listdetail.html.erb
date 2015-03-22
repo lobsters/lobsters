@@ -15,7 +15,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
   <div class="details">
     <span class="link">
       <% if story.can_be_seen_by_user?(@user) %>
-        <a href="<%= story.url_or_comments_path %>"><%= story.title %></a>
+        <a href="<%= story.url_or_comments_path %>"><%=
+          break_long_words(story.title) %></a>
       <% end %>
       <% if story.is_gone? %>
         [Story removed by <%= story.is_moderated? ? "moderator" :
@@ -32,7 +33,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       </span>
       <% if story.domain.present? %>
         <a class="domain" href="<%= story.domain_search_url %>"><%=
-          story.domain %></a>
+          break_long_words(story.domain) %></a>
       <% end %>
 
       <% if defined?(single_story) && single_story %>
@@ -40,7 +41,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           <br>
           <span class="merge"></span>
           <span class="link">
-            <a href="<%= ms.url_or_comments_path %>"><%= ms.title %></a>
+            <a href="<%= ms.url_or_comments_path %>"><%=
+              break_long_words(ms.title) %></a>
           </span>
           <span class="tags">
             <% ms.sorted_taggings.each do |tagging| %>
@@ -51,7 +53,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           </span>
           <% if ms.domain.present? %>
             <a class="domain" href="<%= ms.domain_search_url %>"><%=
-              ms.domain %></a>
+              break_long_words(ms.domain) %></a>
           <% end %>
           <span class="byline">
             by

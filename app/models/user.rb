@@ -54,7 +54,7 @@ class User < ActiveRecord::Base
 
   BANNED_USERNAMES = [ "admin", "administrator", "hostmaster", "mailer-daemon",
     "postmaster", "root", "security", "support", "webmaster", "moderator",
-    "moderators", "help", "contact", "fraud", ]
+    "moderators", "help", "contact", "fraud", "guest", "nobody", ]
 
   # days old accounts are considered new for
   NEW_USER_DAYS = 7

@@ -66,6 +66,14 @@ class CommentsController < ApplicationController
       :content_type => "text/html", :locals => { :comment => comment }
   end
 
+  def redirect_from_short_id
+    if comment = find_comment
+      return redirect_to comment.url
+    else
+      return render :text => "can't find comment", :status => 400
+    end
+  end
+
   def edit
     if !((comment = find_comment) && comment.is_editable_by_user?(@user))
       return render :text => "can't find comment", :status => 400

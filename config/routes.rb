@@ -84,6 +84,8 @@ Lobsters::Application.routes.draw do
     get "/s/:id/:title/comments/:comment_short_id" => "stories#show"
     get "/s/:id/(:title)" => "stories#show", :format => /html|json/
 
+    get "/c/:id" => "comments#redirect_from_short_id"
+
     get "/u" => "users#tree"
     get "/u/:username" => "users#show", :as => "user"
 

@@ -117,6 +117,8 @@ Lobsters::Application.routes.draw do
     get "/privacy" => "home#privacy"
     get "/about" => "home#about"
 
-    get "/resettraffic" => "home#resettraffic"
+    if defined?(BbsController) || Rails.env.development?
+      get "/bbs" => "bbs#index"
+    end
   end
 end

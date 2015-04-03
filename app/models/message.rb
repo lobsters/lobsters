@@ -14,6 +14,9 @@ class Message < ActiveRecord::Base
   validates_length_of :subject, :in => 1..150
   validates_length_of :body, :maximum => (64 * 1024)
 
+  scope :unread, -> { where(:has_been_read => false,
+    :deleted_by_recipient => false) }
+
   before_validation :assign_short_id,
     :on => :create
   after_create :deliver_email_notifications
@@ -35,6 +38,8 @@ class Message < ActiveRecord::Base
   end
 
   def deliver_email_notifications
+    return if Rails.env.development?
+
     if self.recipient.email_messages?
       begin
         EmailMessage.notify(self, self.recipient).deliver

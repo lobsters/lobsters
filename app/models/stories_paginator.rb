@@ -1,22 +1,25 @@
 class StoriesPaginator
+  attr_accessor :per_page
+
   STORIES_PER_PAGE = 25
 
   def initialize(scope, page, user)
     @scope = scope
     @page = page
     @user = user
+    @per_page = STORIES_PER_PAGE
   end
 
   def get
-    with_pagination_info @scope.limit(STORIES_PER_PAGE + 1)
-      .offset((@page - 1) * STORIES_PER_PAGE)
+    with_pagination_info @scope.limit(per_page + 1)
+      .offset((@page - 1) * per_page)
       .includes(:user, :taggings => :tag)
   end
 
 private
   def with_pagination_info(scope)
     scope = scope.to_a
-    show_more = scope.count > STORIES_PER_PAGE
+    show_more = scope.count > per_page
     scope.pop if show_more
 
     [cache_votes(scope), show_more]

@@ -2,6 +2,11 @@ class UsersController < ApplicationController
   def show
     @showing_user = User.where(:username => params[:username]).first!
     @title = "User #{@showing_user.username}"
+
+    respond_to do |format|
+      format.html { render :action => "show" }
+      format.json { render :json => @showing_user }
+    end
   end
 
   def tree

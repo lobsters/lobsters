@@ -87,7 +87,7 @@ Lobsters::Application.routes.draw do
     get "/c/:id" => "comments#redirect_from_short_id"
 
     get "/u" => "users#tree"
-    get "/u/:username" => "users#show", :as => "user"
+    get "/u/:username" => "users#show", :as => "user", :format => /html|json/
 
     get "/settings" => "settings#index"
     post "/settings" => "settings#update"

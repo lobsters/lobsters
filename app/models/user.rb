@@ -78,6 +78,8 @@ class User < ActiveRecord::Base
       :created_at,
       :is_admin,
       :is_moderator,
+      :karma,
+      :about,
     ])
     h[:avatar_url] = avatar_url
     h

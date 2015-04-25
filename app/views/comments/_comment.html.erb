@@ -52,6 +52,11 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         |
         <a href="<%= comment.url %>">link</a>
 
+        <% if @user %>
+          |
+          <a class="comment_folder">fold</a>
+        <% end %>
+
         <% if comment.is_editable_by_user?(@user) %>
           |
           <a class="comment_editor">edit</a>

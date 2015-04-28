@@ -23,7 +23,7 @@ a {
 	cursor: pointer;
 }
 
-ol.stories.list li.story div.details span.link a:visited {
+li.story div.details span.link a:visited {
 	color: #7395d9;
 }
 

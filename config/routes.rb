@@ -73,6 +73,7 @@ Lobsters::Application.routes.draw do
       end
     end
     get "/comments/page/:page" => "comments#index"
+    get "/comments" => "comments#index", :format => /html|rss/
 
     get "/messages/sent" => "messages#sent"
     post "/messages/batch_delete" => "messages#batch_delete",

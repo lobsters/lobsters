@@ -1,6 +1,8 @@
 class CommentsController < ApplicationController
   COMMENTS_PER_PAGE = 20
 
+  # for rss feeds, load the user's tag filters if a token is passed
+  before_filter :find_user_from_rss_token, :only => [ :index ]
   before_filter :require_logged_in_user_or_400,
     :only => [ :create, :preview, :upvote, :downvote, :unvote ]
 
@@ -220,6 +222,17 @@ class CommentsController < ApplicationController
           c.current_vote = @votes[c.id]
         end
       end
+    end
+
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.rss {
+        if @user && params[:token].present?
+          @title = "Private comments feed for #{@user.username}"
+        end
+
+        render :action => "index.rss", :layout => false
+      }
     end
   end
 

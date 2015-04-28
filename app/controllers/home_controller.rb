@@ -42,6 +42,8 @@ class HomeController < ApplicationController
 
     @rss_link ||= { :title => "RSS 2.0",
       :href => "/rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
+    @comments_rss_link ||= { :title => "Comments - RSS 2.0",
+      :href => "/comments.rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
 
     @heading = @title = ""
     @cur_url = "/"

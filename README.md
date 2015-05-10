@@ -78,12 +78,11 @@ in a `config/initializers/production.rb` or similar file:
           
           Rails.application.routes.default_url_options[:host] = Rails.application.domain
 
-* Create an initial administrator user and at least one tag:
+* Seed the database to create an initial administrator user and at least one tag:
 
-          lobsters$ rails console
-          Loading development environment (Rails 4.1.8)
-          irb(main):001:0> User.create(:username => "test", :email => "test@example.com", :password => "test", :password_confirmation => "test", :is_admin => true, :is_moderator => true)
-          irb(main):002:0> Tag.create(:tag => "test")
+          lobsters$ rake db:seed
+          created user: test, password: test
+          created tag: test
 
 * Run the Rails server in development mode.  You should be able to login to
 `http://localhost:3000` with your new `test` user:

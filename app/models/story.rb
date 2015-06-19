@@ -153,7 +153,7 @@ class Story < ActiveRecord::Base
     # submitter's own comments
     cpoints = self.comments.where("user_id <> ?", self.user_id).
       select(:upvotes, :downvotes).map{|c| c.upvotes + 1 - c.downvotes }.
-      inject(&:+).to_i
+      inject(&:+).to_f * 0.5
 
     # don't immediately kill stories at 0 by bumping up score by one
     order = Math.log([ (score + 1).abs + cpoints, 1 ].max, 10)

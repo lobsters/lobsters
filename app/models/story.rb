@@ -39,6 +39,7 @@ class Story < ActiveRecord::Base
     :on => :create
   before_create :assign_initial_hotness
   before_save :log_moderation
+  before_save :fix_bogus_chars
   after_create :mark_submitter, :record_initial_upvote
   after_save :update_merged_into_story_comments
 
@@ -381,6 +382,18 @@ class Story < ActiveRecord::Base
   def record_initial_upvote
     Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.id, nil,
       self.user_id, nil, false)
+  end
+
+  def fix_bogus_chars
+    self.title = self.title.to_s.split("").map{|chr|
+      if chr.ord == 160
+        " "
+      else
+        chr
+      end
+    }.join("")
+
+    true
   end
 
   def score

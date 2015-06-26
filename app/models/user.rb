@@ -241,11 +241,19 @@ class User < ActiveRecord::Base
     username
   end
 
-  def unban!
+  def unban_by_user!(unbanner)
     self.banned_at = nil
     self.banned_by_user_id = nil
     self.banned_reason = nil
     self.save!
+
+    m = Moderation.new
+    m.moderator_user_id = unbanner.id
+    m.user_id = self.id
+    m.action = "Unbanned"
+    m.save!
+
+    true
   end
 
   def undeleted_received_messages

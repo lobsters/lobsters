@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  before_filter :require_logged_in_moderator, :only => [ :ban, :unban ]
+
   def show
     @showing_user = User.where(:username => params[:username]).first!
     @title = "User #{@showing_user.username}"
@@ -33,5 +35,36 @@ class UsersController < ApplicationController
 
   def invite
     @title = "Pass Along an Invitation"
+  end
+
+  def ban
+    buser = User.where(:username => params[:username]).first
+    if !buser
+      flash[:error] = "Invalid user."
+      return redirect_to "/"
+    end
+
+    if !params[:reason].present?
+      flash[:error] = "You must give a reason for the ban."
+      return redirect_to user_path(:user => buser.username)
+    end
+
+    buser.ban_by_user_for_reason!(@user, params[:reason])
+
+    flash[:success] = "User has been banned."
+    return redirect_to user_path(:user => buser.username)
+  end
+
+  def unban
+    buser = User.where(:username => params[:username]).first
+    if !buser
+      flash[:error] = "Invalid user."
+      return redirect_to "/"
+    end
+
+    buser.unban_by_user!(@user)
+
+    flash[:success] = "User has been unbanned."
+    return redirect_to user_path(:user => buser.username)
   end
 end

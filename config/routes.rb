@@ -90,6 +90,9 @@ Lobsters::Application.routes.draw do
     get "/u" => "users#tree"
     get "/u/:username" => "users#show", :as => "user", :format => /html|json/
 
+    post "/users/:username/ban" => "users#ban", :as => "user_ban"
+    post "/users/:username/unban" => "users#unban", :as => "user_unban"
+
     get "/settings" => "settings#index"
     post "/settings" => "settings#update"
     post "/settings/pushover" => "settings#pushover"

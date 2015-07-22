@@ -20,6 +20,7 @@ class Story < ActiveRecord::Base
 
   validates_length_of :title, :in => 3..150
   validates_length_of :description, :maximum => (64 * 1024)
+  validates_length_of :url, :maximum => 250, :allow_nil => true
   validates_presence_of :user_id
 
   DOWNVOTABLE_DAYS = 14

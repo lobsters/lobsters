@@ -154,7 +154,7 @@ ActiveRecord::Schema.define(version: 20150313040930) do
     t.boolean "privileged",              default: false
     t.boolean "is_media",                default: false
     t.boolean "inactive",                default: false
-    t.integer "hotness_mod",             default: 0
+    t.float   "hotness_mod", limit: 24,  default: 0.0
   end
 
   add_index "tags", ["tag"], name: "tag", unique: true, using: :btree

@@ -564,6 +564,14 @@ li .byline a {
 	color: #888;
 	text-decoration: none;
 }
+/* preserve selection made elsewhere when clicking */
+li .byline a.comment_replier {
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
 span.new_user, a.new_user,
 li .byline a.new_user {
 	color: green;

@@ -167,7 +167,7 @@ class Story < ActiveRecord::Base
     end
 
     # TODO: as the site grows, shrink this down to 12 or so.
-    window = 60 * 60 * 36
+    window = 60 * 60 * 24
 
     return -((order * sign) + base +
       ((self.created_at || Time.now).to_f / window)).round(7)

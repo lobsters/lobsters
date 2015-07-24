@@ -6,10 +6,6 @@ class Tag < ActiveRecord::Base
 
   attr_accessor :filtered_count, :stories_count
 
-  scope :accessible_to, ->(user) do
-    user && user.is_moderator?? all : where(:privileged => false)
-  end
-
   scope :active, -> { where(:inactive => false) }
 
   def to_param
@@ -19,7 +15,7 @@ class Tag < ActiveRecord::Base
   def self.all_with_filtered_counts_for(user)
     counts = TagFilter.group(:tag_id).count
 
-    Tag.active.order(:tag).accessible_to(user).map{|t|
+    Tag.active.order(:tag).select{|t| t.valid_for?(user) }.map{|t|
       t.filtered_count = counts[t.id].to_i
       t
     }
@@ -28,10 +24,10 @@ class Tag < ActiveRecord::Base
   def self.all_with_story_counts_for(user)
     counts = Tagging.group(:tag_id).count
 
-    Tag.active.order(:tag).accessible_to(user).map{|t|
+    Tag.active.order(:tag).select{|t| t.valid_for?(user) }.map{|t|
       t.stories_count = counts[t.id].to_i
       t
-    } 
+    }
   end
 
   def css_class
@@ -40,7 +36,7 @@ class Tag < ActiveRecord::Base
 
   def valid_for?(user)
     if self.privileged?
-      user.is_moderator?
+      !!user.try(:is_moderator?)
     else
       true
     end

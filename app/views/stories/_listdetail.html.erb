@@ -1,6 +1,9 @@
 <li id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
 class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 <%= story.vote && story.vote[:vote] == -1 ? "downvoted" : "" %>
+<%= story.score <= -1 ? "negative_1" : "" %>
+<%= story.score <= -3 ? "negative_3" : "" %>
+<%= story.score <= -5 ? "negative_5" : "" %>
 <%= story.is_hidden_by_cur_user ? "hidden" : "" %>
 <%= story.is_expired? ? "expired" : "" %>">
 <div class="story_liner">

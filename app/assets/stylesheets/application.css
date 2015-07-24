@@ -134,6 +134,10 @@ input[type="email"],
 textarea {
 	border: 1px solid #ccc;
 }
+input:focus, textarea:focus {
+	outline-style: solid;
+	outline-width: 2px;
+}
 input[type="checkbox"] {
 	margin-top: 0.5em;
 }

@@ -188,7 +188,10 @@ var _Lobsters = Class.extend({
     var params = $(form).serializeArray();
     params.push({"name": "preview", "value": "true"});
     $.post($(form).attr("action"), params, function(data) {
-      $(form).closest('.comment').replaceWith($.parseHTML(data));
+      var da = $.parseHTML(data);
+      var ta = $(da).find("textarea");
+      $(form).closest(".comment").replaceWith(da);
+      autosize(ta);
     });
   },
 
@@ -343,7 +346,9 @@ $(document).ready(function() {
       var reply = $($.parseHTML(data));
       reply.attr("id", "reply_form_" + comment.attr("id"));
       replies.prepend(reply);
-      reply.find("textarea").focus().text(sel);
+      var ta = reply.find("textarea");
+      ta.focus().text(sel);
+      autosize(ta);
     });
 
     return false;

@@ -10,6 +10,10 @@ class SignupController < ApplicationController
     @title = "Signup"
   end
 
+  def invite
+    @title = "Pass Along an Invitation"
+  end
+
   def invited
     if @user
       flash[:error] = "You are already signed up."
@@ -55,7 +59,6 @@ class SignupController < ApplicationController
   end
 
 private
-
   def user_params
     params.require(:user).permit(
       :username, :email, :password, :password_confirmation, :about,

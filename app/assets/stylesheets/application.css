@@ -526,6 +526,18 @@ li .domain {
 	vertical-align: middle;
 }
 
+li .comment_folder:before,
+li .comment_unfolder:before {
+	font-size: 9pt;
+	letter-spacing: 0.1em;
+}
+li .comment_folder:before {
+	content: "[-]";
+}
+li .comment_unfolder:before {
+	content: "[+]";
+}
+
 li .byline {
 	color: #888;
 	font-size: 8.5pt;

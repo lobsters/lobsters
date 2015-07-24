@@ -26,6 +26,10 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
     <div class="byline">
       <a name="c_<%= comment.short_id %>"></a>
 
+      <% if @user %>
+        <a class="comment_folder"></a>
+      <% end %>
+
       <% if defined?(was_merged) && was_merged %>
         <span class="merge"></span>
       <% end %>
@@ -62,11 +66,6 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% if !comment.previewing %>
         |
         <a href="<%= comment.url %>">link</a>
-
-        <% if @user %>
-          |
-          <a class="comment_folder">fold</a>
-        <% end %>
 
         <% if comment.is_editable_by_user?(@user) %>
           |

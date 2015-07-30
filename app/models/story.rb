@@ -63,6 +63,10 @@ class Story < ActiveRecord::Base
       errors.add(:description, "must contain text if no URL posted")
     end
 
+    if !errors.any? && self.url.blank?
+      self.user_is_author = true
+    end
+
     check_tags
   end
 
@@ -256,6 +260,19 @@ class Story < ActiveRecord::Base
 
   def hider_count
     @hider_count ||= HiddenStory.where(:story_id => self.id).count
+  end
+
+  def html_class_for_user(u = nil)
+    c = []
+    if !self.user.is_active?
+      c.push "inactive_user"
+    elsif self.user.is_new?
+      c.push "new_user"
+    elsif self.user_is_author?
+      c.push "user_is_author"
+    end
+
+    c.join("")
   end
 
   def is_downvotable?

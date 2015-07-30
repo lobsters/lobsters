@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150313040930) do
+ActiveRecord::Schema.define(version: 20150730215915) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -109,20 +109,21 @@ ActiveRecord::Schema.define(version: 20150313040930) do
     t.datetime "created_at"
     t.integer  "user_id"
     t.string   "url",                    limit: 250,                                default: ""
-    t.string   "title",                  limit: 150,                                default: "",  null: false
+    t.string   "title",                  limit: 150,                                default: "",    null: false
     t.text     "description",            limit: 16777215
-    t.string   "short_id",               limit: 6,                                  default: "",  null: false
-    t.integer  "is_expired",             limit: 1,                                  default: 0,   null: false
-    t.integer  "upvotes",                                                           default: 0,   null: false
-    t.integer  "downvotes",                                                         default: 0,   null: false
-    t.integer  "is_moderated",           limit: 1,                                  default: 0,   null: false
-    t.decimal  "hotness",                                 precision: 20, scale: 10, default: 0.0, null: false
+    t.string   "short_id",               limit: 6,                                  default: "",    null: false
+    t.integer  "is_expired",             limit: 1,                                  default: 0,     null: false
+    t.integer  "upvotes",                                                           default: 0,     null: false
+    t.integer  "downvotes",                                                         default: 0,     null: false
+    t.integer  "is_moderated",           limit: 1,                                  default: 0,     null: false
+    t.decimal  "hotness",                                 precision: 20, scale: 10, default: 0.0,   null: false
     t.text     "markeddown_description", limit: 16777215
     t.text     "story_cache",            limit: 16777215
-    t.integer  "comments_count",                                                    default: 0,   null: false
+    t.integer  "comments_count",                                                    default: 0,     null: false
     t.integer  "merged_story_id"
     t.datetime "unavailable_at"
     t.string   "twitter_id",             limit: 20
+    t.boolean  "user_is_author",                                                    default: false
   end
 
   add_index "stories", ["hotness"], name: "hotness_idx", using: :btree

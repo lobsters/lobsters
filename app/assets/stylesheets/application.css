@@ -585,6 +585,10 @@ li .byline a.inactive_user {
 	color: gray;
 	text-decoration: line-through;
 }
+span.user_is_author, a.user_is_author,
+li .byline a.user_is_author{
+	color: blue;
+}
 
 li.story.hidden {
 	opacity: 0.25;

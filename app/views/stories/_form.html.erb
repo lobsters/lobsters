@@ -121,6 +121,16 @@
     </div>
   </div>
 </div>
+<div class="box">
+  <div class="boxline">
+    <%= f.label :user_is_author, "Author:", :class => "required" %>
+    <%= f.check_box :user_is_author %>
+    <%= f.label :user_is_author,
+      (f.object.id && f.object.user_id != @user.id ? "Submitter is" : "I am") +
+      " the author of the story at this URL (or this text)",
+      :class => "normal" %>
+  </div>
+</div>
 
 <script>
   $(document).ready(function() {

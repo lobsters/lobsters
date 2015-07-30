@@ -59,6 +59,9 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
               break_long_words(ms.domain) %></a>
           <% end %>
           <span class="byline">
+            <% if story.user_is_author? %>
+              authored
+            <% end %>
             by
             <a href="/u/<%= ms.user.username %>"
             <% if ms.user.is_new? %>
@@ -76,19 +79,21 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
     <% end %>
     <div class="byline">
+      <% if story.user_is_author? %>
+        authored
+      <% end %>
       <% if story.previewing %>
         by
-        <a><%= story.user.username %></a>
+        <a class="<%= story.html_class_for_user(@user) %>"><%=
+          story.user.username %></a>
         <% if @user && @user.show_avatars? %>
           <img src="<%= story.user.avatar_url(16) %>" class="avatar">
         <% end %>
         just now
       <% else %>
         by
-        <a href="/u/<%= story.user.username %>"
-        <% if story.user.is_new? %>
-          class="new_user"
-        <% end %>><%= story.user.username %></a>
+        <a href="/u/<%= story.user.username %>" class="<%=
+          story.html_class_for_user(@user) %>"><%= story.user.username %></a>
 
         <% if @user && @user.show_avatars? %>
           <img src="<%= story.user.avatar_url(16) %>" class="avatar">

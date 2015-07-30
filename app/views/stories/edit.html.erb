@@ -9,6 +9,7 @@
       :f => f } %>
 
     <% if @user.is_moderator? %>
+      <br />
       <div class="box">
         <div class="boxline">
           <%= f.label :merge_story_short_id, "Merge Into:",

@@ -613,6 +613,14 @@ div.story_content {
 div.story_content {
 	margin-bottom: 1em;
 }
+ol.stories.list div.story_content {
+	color: #777;
+	max-height: 3.9em;
+	line-height: 1.3em;
+	margin: 0.25em 0;
+	overflow: hidden;
+	text-overflow: clip;
+}
 
 div.morelink {
 	float: left;

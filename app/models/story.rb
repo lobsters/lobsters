@@ -221,6 +221,14 @@ class Story < ActiveRecord::Base
     self.markeddown_description = self.generated_markeddown_description
   end
 
+  def description_or_story_cache
+    if self.description.present?
+      self.markeddown_description.gsub(/<[^>]*>/, "")
+    else
+      self.story_cache
+    end
+  end
+
   def domain
     if self.url.blank?
       nil

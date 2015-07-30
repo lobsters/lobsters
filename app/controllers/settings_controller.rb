@@ -81,7 +81,7 @@ private
       :username, :email, :password, :password_confirmation, :about,
       :email_replies, :email_messages, :email_mentions,
       :pushover_replies, :pushover_messages, :pushover_mentions,
-      :mailing_list_mode, :show_avatars
+      :mailing_list_mode, :show_avatars, :show_story_previews
     )
   end
 end

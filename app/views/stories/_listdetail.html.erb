@@ -78,6 +78,16 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
       <% end %>
     <% end %>
+
+    <% if !(defined?(single_story) && single_story) && @user &&
+    @user.show_story_previews? %>
+      <% if (sc = story.description_or_story_cache).present? %>
+        <div class="story_content">
+          <%= break_long_words(sc[0, 500]) %>
+        </div>
+      <% end %>
+    <% end %>
+
     <div class="byline">
       <% if story.user_is_author? %>
         authored

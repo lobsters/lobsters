@@ -221,12 +221,19 @@ class Story < ActiveRecord::Base
     self.markeddown_description = self.generated_markeddown_description
   end
 
-  def description_or_story_cache
-    if self.description.present?
+  def description_or_story_cache(chars = 0)
+    s = if self.description.present?
       self.markeddown_description.gsub(/<[^>]*>/, "")
     else
       self.story_cache
     end
+
+    if chars > 0
+      # remove last truncated word
+      s = s.to_s[0, chars].gsub(/ [^ ]*$/, "")
+    end
+
+    HTMLEntities.new.decode(s.to_s)
   end
 
   def domain

@@ -30,6 +30,10 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <a class="comment_folder"></a>
       <% end %>
 
+      <% if @user && @user.show_avatars? %>
+        <img src="<%= comment.user.avatar_url(16) %>" class="avatar">
+      <% end %>
+
       <% if defined?(was_merged) && was_merged %>
         <span class="merge"></span>
       <% end %>
@@ -41,10 +45,6 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         class="new_user"
       <% end %>
       ><%= comment.user.username %></a>
-
-      <% if @user && @user.show_avatars? %>
-        <img src="<%= comment.user.avatar_url(16) %>" class="avatar">
-      <% end %>
 
       <% if comment.hat %>
         <%= comment.hat.to_html_label %>

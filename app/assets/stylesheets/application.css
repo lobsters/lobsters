@@ -534,10 +534,12 @@ li .domain {
 	vertical-align: middle;
 }
 
-li .comment_folder:before,
-li .comment_unfolder:before {
+li .comment_folder,
+li .comment_unfolder {
+	display: inline-block;
 	font-size: 9pt;
 	letter-spacing: 0.1em;
+	width: 1.4em;
 }
 li .comment_folder:before {
 	content: "[-]";

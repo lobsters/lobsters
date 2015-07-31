@@ -383,6 +383,10 @@ ol.comments.collapsed ol,
 ol.comments.collapsed li {
 	display: none;
 }
+div.comment.collapsed div.comment_text,
+div.comment.collapsed div.voters {
+	display: none;
+}
 
 ol.search_results {
 	margin-left: 20px;

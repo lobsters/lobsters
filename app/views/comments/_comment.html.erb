@@ -31,7 +31,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% end %>
 
       <% if @user && @user.show_avatars? %>
-        <img src="<%= comment.user.avatar_url(16) %>" class="avatar">
+        <a href="/u/<%= comment.user.username %>"><img
+          src="<%= comment.user.avatar_url(16) %>" class="avatar"></a>
       <% end %>
 
       <% if defined?(was_merged) && was_merged %>

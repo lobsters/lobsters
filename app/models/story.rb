@@ -230,7 +230,7 @@ class Story < ActiveRecord::Base
 
     if chars > 0
       # remove last truncated word
-      s = s.to_s[0, chars].gsub(/ [^ ]*$/, "")
+      s = s.to_s[0, chars].gsub(/ [^ ]*\z/, "")
     end
 
     HTMLEntities.new.decode(s.to_s)

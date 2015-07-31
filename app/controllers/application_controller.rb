@@ -28,14 +28,18 @@ class ApplicationController < ActionController::Base
       begin
         if !@@_css_link_header
           # is there a better way to find this?
-          j = JSON.parse(File.read(Dir.glob(
-            "#{Rails.root}/public/assets/manifest-*.json").first))
+          if fi = Dir.glob("#{Rails.root}/public/assets/.sprockets-manifest-*.json").first
+            j = JSON.parse(File.read(fi))
 
-          @@_css_link_header = "</assets/" << j["assets"]["application.css"] <<
-            ">; rel=stylesheet"
+            @@_css_link_header = "</assets/" <<
+              j["assets"]["application.css"] << ">; rel=stylesheet"
+          else
+            Rails.logger.error "no assets manifest json"
+          end
         end
       rescue => e
         Rails.logger.error e.inspect
+        Rails.logger.error e.backtrace.join("\n")
       end
 
       if @@_css_link_header

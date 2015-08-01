@@ -73,14 +73,20 @@ class User < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    h = super(:only => [
+    attrs = [
       :username,
       :created_at,
       :is_admin,
       :is_moderator,
-      :karma,
-      :about,
-    ])
+    ]
+
+    if !self.is_admin?
+      attrs.push :karma
+    end
+
+    attrs.push :about
+
+    h = super(:only => attrs)
     h[:avatar_url] = avatar_url
     h
   end

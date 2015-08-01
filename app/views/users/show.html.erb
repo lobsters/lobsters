@@ -78,13 +78,15 @@
     <br>
   <% end %>
 
-  <label class="required">Karma:</label>
-  <span class="d">
-    <%= @showing_user.karma %>, averaging <%=
-      number_with_precision(@showing_user.average_karma, :precision => 2) %>
-      per story/comment
-  </span>
-  <br>
+  <% if !@showing_user.is_admin? %>
+    <label class="required">Karma:</label>
+    <span class="d">
+      <%= @showing_user.karma %>, averaging <%=
+        number_with_precision(@showing_user.average_karma, :precision => 2) %>
+        per story/comment
+    </span>
+    <br>
+  <% end %>
 
   <label class="required">Stories Submitted:</label>
   <span class="d">

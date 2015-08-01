@@ -175,7 +175,7 @@
 		margin-right: 20px;
 	}
 	ol.stories.list div.story_content {
-		max-height: 10.4em;
+		margin-right: 0;
 	}
 	div.morelink {
 		margin-left: 36px;

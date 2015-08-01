@@ -620,9 +620,9 @@ div.story_content {
 }
 ol.stories.list div.story_content {
 	color: #777;
-	max-height: 3.9em;
+	max-height: 2.6em;
 	line-height: 1.3em;
-	margin: 0.25em 0;
+	margin: 0.25em 40px 0.25em 0;
 	overflow: hidden;
 	text-overflow: clip;
 }

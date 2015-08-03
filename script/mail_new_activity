@@ -79,8 +79,7 @@ Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each d
       next
     end
 
-    if Vote.where(:user_id => u.id, :story_id => s.id, :comment_id => nil,
-    :vote => 0).first
+    if s.is_hidden_by_user?(u)
       # user has hidden this story
       next
     end
@@ -164,8 +163,7 @@ last_comment_id, false, false).order(:id).each do |c|
       next
     end
 
-    if Vote.where(:user_id => u.id, :story_id => c.story_id,
-    :comment_id => nil, :vote => 0).first
+    if c.story.is_hidden_by_user?(u)
       # user has hidden this story
       next
     end

@@ -116,6 +116,9 @@
         (iqc = InvitationRequest.verified_count) > 0 %>
           <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
         <% end %>
+        <% if defined?(BbsController) %>
+          <a href="/bbs">BBS</a>
+        <% end %>
         <a href="/privacy">Privacy</a>
         <a href="/about">About</a>
       </div>

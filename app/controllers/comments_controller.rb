@@ -68,6 +68,14 @@ class CommentsController < ApplicationController
       :content_type => "text/html", :locals => { :comment => comment }
   end
 
+  def show_short_id
+    if !(comment = find_comment)
+      return render :text => "can't find comment", :status => 400
+    end
+
+    render :json => comment.as_json
+  end
+
   def redirect_from_short_id
     if comment = find_comment
       return redirect_to comment.url

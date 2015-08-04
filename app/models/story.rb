@@ -119,24 +119,40 @@ class Story < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    h = super(:only => [
+    h = [
       :short_id,
+      :short_id_url,
       :created_at,
       :title,
       :url,
-    ])
-    h[:score] = score
-    h[:comment_count] = comments_count
-    h[:description] = markeddown_description
-    h[:comments_url] = comments_url
-    h[:submitter_user] = user
-    h[:tags] = self.tags.map{|t| t.tag }.sort
+      :score,
+      :upvotes,
+      :downvotes,
+      { :comment_count => :comments_count },
+      { :description => :markeddown_description },
+      :comments_url,
+      { :submitter_user => :user },
+      { :tags => self.tags.map{|t| t.tag }.sort },
+    ]
 
     if options && options[:with_comments]
-      h[:comments] = options[:with_comments]
+      h.push({ :comments => options[:with_comments] })
     end
 
-    h
+    js = {}
+    h.each do |k|
+      if k.is_a?(Symbol)
+        js[k] = self.send(k)
+      elsif k.is_a?(Hash)
+        if k.values.first.is_a?(Symbol)
+          js[k.keys.first] = self.send(k.values.first)
+        else
+          js[k.keys.first] = k.values.first
+        end
+      end
+    end
+
+    js
   end
 
   def assign_initial_hotness

@@ -112,25 +112,37 @@ class Comment < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    h = super(:only => [
+    h = [
       :short_id,
+      { :short_id_url => Rails.application.root_url + "c/#{self.short_id}" },
       :created_at,
       :updated_at,
       :is_deleted,
       :is_moderated,
-    ])
-    h[:score] = score
+      :score,
+      :upvotes,
+      :downvotes,
+      { :comment => (self.is_gone? ? "<em>#{self.gone_text}</em>" :
+        :markeddown_comment) },
+      :url,
+      :indent_level,
+      { :commenting_user => :user },
+    ]
 
-    if self.is_gone?
-      h[:comment] = "<em>#{self.gone_text}</em>"
-    else
-      h[:comment] = markeddown_comment
+    js = {}
+    h.each do |k|
+      if k.is_a?(Symbol)
+        js[k] = self.send(k)
+      elsif k.is_a?(Hash)
+        if k.values.first.is_a?(Symbol)
+          js[k.keys.first] = self.send(k.values.first)
+        else
+          js[k.keys.first] = k.values.first
+        end
+      end
     end
 
-    h[:url] = url
-    h[:indent_level] = indent_level
-    h[:commenting_user] = user
-    h
+    js
   end
 
   def assign_initial_confidence

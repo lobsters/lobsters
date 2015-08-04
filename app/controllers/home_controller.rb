@@ -137,6 +137,7 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.html { render :action => "index" }
       format.rss { render :action => "rss", :layout => false }
+      format.json { render :json => @stories }
     end
   end
 

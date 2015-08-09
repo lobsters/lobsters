@@ -258,10 +258,11 @@ class Story < ActiveRecord::Base
     else
       # URI.parse is not very lenient, so we can't use it
       self.url.
-        gsub(/^[^:]+:\/\//, ""). # proto
-        gsub(/\/.*/, "").        # path
-        gsub(/:\d+$/, "").       # possible port
-        gsub(/^www\d*\./, "")    # possible "www3." in host
+        gsub(/^[^:]+:\/\//, "").        # proto
+        gsub(/\/.*/, "").               # path
+        gsub(/:\d+$/, "").              # possible port
+        gsub(/^www\d*\.(.+\..+)/, '\1') # possible "www3." in host unless
+                                        # it's the only non-TLD
     end
   end
 

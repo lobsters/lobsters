@@ -1,10 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :authenticate_user
-  before_filter :send_css_link_header
   before_filter :increase_traffic_counter
-
-  @@_css_link_header = nil
 
   TRAFFIC_DECREMENTER = 0.30
 
@@ -19,33 +16,6 @@ class ApplicationController < ActionController::Base
     end
 
     true
-  end
-
-  # speed hax
-  @@_css_link_header = nil
-  def send_css_link_header
-    if !Rails.env.development?
-      begin
-        if !@@_css_link_header
-          # is there a better way to find this?
-          if fi = Dir.glob("#{Rails.root}/public/assets/.sprockets-manifest-*.json").first
-            j = JSON.parse(File.read(fi))
-
-            @@_css_link_header = "</assets/" <<
-              j["assets"]["application.css"] << ">; rel=stylesheet"
-          else
-            Rails.logger.error "no assets manifest json"
-          end
-        end
-      rescue => e
-        Rails.logger.error e.inspect
-        Rails.logger.error e.backtrace.join("\n")
-      end
-
-      if @@_css_link_header
-        response.headers["Link"] = @@_css_link_header
-      end
-    end
   end
 
   def increase_traffic_counter

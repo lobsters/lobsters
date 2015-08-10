@@ -157,10 +157,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           </span>
         <% end %>
 
-        <% if defined?(single_story) && single_story %>
-          <% if story.downvotes > 0 %>
-            | <%= story.vote_summary_for(@user).downcase %>
-          <% end %>
+        <% if defined?(single_story) && single_story && story.downvotes >= 3 %>
+          | <%= story.vote_summary_for(@user).downcase %>
         <% end %>
       <% end %>
     </div>

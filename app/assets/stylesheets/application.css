@@ -591,8 +591,8 @@ li .byline a.inactive_user {
 	text-decoration: line-through;
 }
 span.user_is_author, a.user_is_author,
-li .byline a.user_is_author{
-	color: blue;
+li .byline a.user_is_author {
+	color: #6081bd;
 }
 
 li.story.hidden {

@@ -7,7 +7,8 @@ class Markdowner
       return ""
     end
 
-    args = [ :smart, :autolink, :safelink, :filter_styles, :filter_html ]
+    args = [ :smart, :autolink, :safelink, :filter_styles, :filter_html,
+      :strict ]
     if !opts[:allow_images]
       args.push :no_image
     end

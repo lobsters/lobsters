@@ -77,7 +77,7 @@ class LoginController < ApplicationController
       @reset_user = User.where(:password_reset_token => params[:token].to_s).first
     end
 
-    if @reset_user
+    if @reset_user && !@reset_user.is_banned?
       if params[:password].present?
         @reset_user.password = params[:password]
         @reset_user.password_confirmation = params[:password_confirmation]
@@ -86,9 +86,15 @@ class LoginController < ApplicationController
         # this will get reset upon save
         @reset_user.session_token = nil
 
+        if !@reset_user.is_active? && !@reset_user.is_banned?
+          @reset_user.deleted_at = nil
+        end
+
         if @reset_user.save && @reset_user.is_active?
           session[:u] = @reset_user.session_token
           return redirect_to "/"
+        else
+          flash[:error] = "Could not reset password."
         end
       end
     else

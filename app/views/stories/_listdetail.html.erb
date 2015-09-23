@@ -72,7 +72,6 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
               ms.html_class_for_user(@user) %>"><%= ms.user.username %></a>
 
             <%= time_ago_in_words_label(ms.created_at, :strip_about => true) %>
-              ago
           </span>
         <% end %>
       <% end %>
@@ -106,7 +105,6 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           story.html_class_for_user(@user) %>"><%= story.user.username %></a>
 
         <%= time_ago_in_words_label(story.created_at, :strip_about => true) %>
-          ago
 
         <% if story.is_editable_by_user?(@user) %>
           |

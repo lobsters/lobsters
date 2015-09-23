@@ -12,7 +12,7 @@
 
   <% if @story.is_unavailable && @story.story_cache.present? %>
     <a id="story_text_expander">Source URL considered unavailable as of <%=
-    time_ago_in_words_label(@story.unavailable_at) %> ago, cached text
+    time_ago_in_words_label(@story.unavailable_at) %>, cached text
     available</a>
     <div id="collapsed_story_text">
       <p>

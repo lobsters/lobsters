@@ -38,7 +38,7 @@
 
   <label class="required">Joined:</label>
   <span class="d">
-    <%= time_ago_in_words_label(@showing_user.created_at) %> ago
+    <%= time_ago_in_words_label(@showing_user.created_at) %>
     <% if @showing_user.invited_by_user %>
       by invitation from
       <%= link_to @showing_user.invited_by_user.try(:username),
@@ -50,7 +50,7 @@
   <% if @showing_user.is_banned? %>
     <label class="required">Banned:</label>
     <span class="d">
-      <%= time_ago_in_words_label(@showing_user.banned_at) %> ago
+      <%= time_ago_in_words_label(@showing_user.banned_at) %>
       <% if @showing_user.banned_by_user %>
         by <%= link_to @showing_user.banned_by_user.try(:username),
           @showing_user.banned_by_user %>:
@@ -73,7 +73,7 @@
   <% if @showing_user.deleted_at? %>
     <label class="required">Left:</label>
     <span class="d">
-      <%= time_ago_in_words_label(@showing_user.deleted_at) %> ago
+      <%= time_ago_in_words_label(@showing_user.deleted_at) %>
     </span>
     <br>
   <% end %>

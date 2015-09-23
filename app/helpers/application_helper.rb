@@ -68,6 +68,6 @@ module ApplicationHelper
       ago.gsub!(/^about /, "")
     end
 
-    raw(label_tag(nil, ago, :title => time.strftime("%F %T %z")))
+    raw(label_tag(nil, "#{ago} ago", :title => time.strftime("%F %T %z")))
   end
 end

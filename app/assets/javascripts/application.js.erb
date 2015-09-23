@@ -297,24 +297,6 @@ $(document).ready(function() {
     return Lobsters.moderateStory(this);
   }),
 
-  $(document).on("click", "a.comment_folder", function() {
-    $(this).addClass("comment_unfolder").removeClass("comment_folder");
-    var comment = $(this).closest(".comment");
-    comment.addClass("collapsed");
-    comment.nextAll(".comments").each(function() {
-      $(this).addClass("collapsed");
-    });
-  });
-
-  $(document).on("click", "a.comment_unfolder", function() {
-    $(this).addClass("comment_folder").removeClass("comment_unfolder");
-    var comment = $(this).closest(".comment");
-    comment.removeClass("collapsed");
-    comment.nextAll(".comments").each(function() {
-      $(this).removeClass("collapsed");
-    });
-  });
-
   $(document).on("click", "a.comment_replier", function() {
     if (!Lobsters.curUser) {
       Lobsters.bounceToLogin();

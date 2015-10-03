@@ -34,6 +34,9 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             title="<%= tagging.tag.description %>"><%= tagging.tag.tag %></a>
         <% end %>
       </span>
+      <% if story.markdown_description.present? %>
+        <span class="description_present">&para;</span>
+      <% end %>
       <% if story.domain.present? %>
         <a class="domain" href="<%= story.domain_search_url %>"><%=
           break_long_words(story.domain) %></a>

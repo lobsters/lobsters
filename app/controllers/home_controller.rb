@@ -14,6 +14,10 @@ class HomeController < ApplicationController
     end
   end
 
+  def chat
+    render :action => "chat"
+  end
+
   def privacy
     begin
       render :action => "privacy"

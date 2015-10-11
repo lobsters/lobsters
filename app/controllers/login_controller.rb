@@ -26,6 +26,11 @@ class LoginController < ApplicationController
     user.try(:authenticate, params[:password].to_s)
       session[:u] = user.session_token
 
+      if !user.password_digest.to_s.match(/^\$2a\$#{BCrypt::Engine::DEFAULT_COST}\$/)
+        user.password = user.password_confirmation = params[:password].to_s
+        user.save!
+      end
+
       if (rd = session[:redirect_to]).present?
         session.delete(:redirect_to)
         return redirect_to rd

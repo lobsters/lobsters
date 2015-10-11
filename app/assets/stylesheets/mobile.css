@@ -84,6 +84,15 @@
 		border-width: 9px;
 	}
 
+	/* explicitly reset color when not upvoted, since previously-upvoted arrow
+	 * will still be triggering :hover until next tap */
+	div.voters .upvoter:hover {
+		border-bottom-color: #bbb;
+	}
+	.upvoted div.voters .upvoter {
+		border-bottom-color: #ac130d;
+	}
+
 	ol.stories.list {
 		margin-top: 0;
 	}
@@ -179,6 +188,7 @@
 	}
 	div.morelink {
 		margin-left: 36px;
+		float: none;
 	}
 	li.story div.byline {
 		font-size: 10pt;
@@ -227,5 +237,11 @@
 
 	div#user_about {
 		margin-left: 0;
+	}
+
+	div#footer {
+		text-align: center;
+		float: none;
+		padding-left: 10px;
 	}
 }

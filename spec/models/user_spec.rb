@@ -56,7 +56,6 @@ describe User do
 
   it "unbans a user" do
     u = User.make!(:banned)
-    u.unban!.should be_true
+    u.unban_by_user!(User.first).should be_true
   end
-
 end

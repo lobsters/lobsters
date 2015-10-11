@@ -35,6 +35,7 @@ class Story < ActiveRecord::Base
     :is_hidden_by_cur_user
   attr_accessor :editor, :moderation_reason, :merge_story_short_id
   attr_accessor :fetching_ip
+  attr_writer :fetched_content
 
   before_validation :assign_short_id_and_upvote,
     :on => :create

@@ -45,7 +45,7 @@ class Story < ActiveRecord::Base
   before_save :log_moderation
   before_save :fix_bogus_chars
   after_create :mark_submitter, :record_initial_upvote
-  after_save :update_merged_into_story_comments
+  after_save :update_merged_into_story_comments, :recalculate_hotness!
 
   validate do
     if self.url.present?

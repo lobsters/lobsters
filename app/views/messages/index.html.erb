@@ -36,8 +36,12 @@
         <tr class="<%= message.has_been_read? ? "" : "bold" %>">
           <td><%= check_box_tag "delete_#{message.short_id}" %></td>
           <td><% if @direction == :in %>
-              <a href="/u/<%= message.author.username %>"><%=
-                message.author.username %></a>
+              <% if message.author %>
+                <a href="/u/<%= message.author.username %>"><%=
+                  message.author.username %></a>
+              <% else %>
+                <%= message.author_username %>
+              <% end %>
             <% else %>
               <a href="/u/<%= message.recipient.username %>"><%=
                 message.recipient.username %></a>

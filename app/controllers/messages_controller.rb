@@ -51,19 +51,21 @@ class MessagesController < ApplicationController
     @cur_url = "/messages"
     @title = @message.subject
 
-    @new_message = Message.new
-    @new_message.recipient_username = (@message.author_user_id == @user.id ?
-      @message.recipient.username : @message.author.username)
+    if @message.author
+      @new_message = Message.new
+      @new_message.recipient_username = (@message.author_user_id == @user.id ?
+        @message.recipient.username : @message.author.username)
+
+      if @message.subject.match(/^re:/i)
+        @new_message.subject = @message.subject
+      else
+        @new_message.subject = "Re: #{@message.subject}"
+      end
+    end
 
     if @message.recipient_user_id == @user.id
       @message.has_been_read = true
       @message.save
-    end
-
-    if @message.subject.match(/^re:/i)
-      @new_message.subject = @message.subject
-    else
-      @new_message.subject = "Re: #{@message.subject}"
     end
   end
 

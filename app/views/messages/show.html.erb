@@ -11,12 +11,17 @@
     <%= @message.subject %>
 
     <div class="sublegend">
-      Sent from <a href="/u/<%= @message.author.username %>"><%=
-        @message.author.username %></a>
-      <% if @message.author.is_admin? %>
-        (administrator)
-      <% elsif @message.author.is_moderator? %>
-        (moderator)
+      Sent from
+      <% if @message.author %>
+        <a href="/u/<%= @message.author.username %>"><%=
+          @message.author.username %></a>
+        <% if @message.author.is_admin? %>
+          (administrator)
+        <% elsif @message.author.is_moderator? %>
+          (moderator)
+        <% end %>
+      <% else %>
+        <%= @message.author_username %>
       <% end %>
       to
       <a href="/u/<%= @message.recipient.username %>"><%=
@@ -51,27 +56,35 @@
   <br>
 
   <div class="legend">
-    Compose Reply To <%= @new_message.recipient_username %>
+    Compose Reply
+    <% if @new_message %>
+      To <%= @new_message.recipient_username %>
+    <% end %>
   </div>
 
-  <%= form_for @new_message, :method => :post do |f| %>
-    <%= f.hidden_field :recipient_username %>
+  <% if @new_message %>
+    <%= form_for @new_message, :method => :post do |f| %>
+      <%= f.hidden_field :recipient_username %>
 
-    <%= error_messages_for @new_message %>
+      <%= error_messages_for @new_message %>
 
-    <div class="boxline">
-      <%= f.text_field :subject, :style => "width: 500px;",
-        :autocomplete => "off" %>
-    </div>
+      <div class="boxline">
+        <%= f.text_field :subject, :style => "width: 500px;",
+          :autocomplete => "off" %>
+      </div>
 
-    <div class="boxline">
-      <%= f.text_area :body, :style => "width: 500px;", :rows => 5,
-        :autocomplete => "off" %>
-    </div>
+      <div class="boxline">
+        <%= f.text_area :body, :style => "width: 500px;", :rows => 5,
+          :autocomplete => "off" %>
+      </div>
 
-    <div class="boxline">
-      <p></p>
-      <%= submit_tag "Send Message" %>
-    </div>
+      <div class="boxline">
+        <p></p>
+        <%= submit_tag "Send Message" %>
+      </div>
+    <% end %>
+  <% else %>
+    This message cannot be replied to.  Please contact a moderator for
+    assistance.
   <% end %>
 </div>

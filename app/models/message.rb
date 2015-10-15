@@ -7,7 +7,6 @@ class Message < ActiveRecord::Base
     :foreign_key => "author_user_id"
 
   validates_presence_of :recipient
-  validates_presence_of :author
 
   attr_accessor :recipient_username
 
@@ -25,6 +24,14 @@ class Message < ActiveRecord::Base
 
   def assign_short_id
     self.short_id = ShortId.new(self.class).generate
+  end
+
+  def author_username
+    if self.author
+      self.author.username
+    else
+      "System"
+    end
   end
 
   def check_for_both_deleted
@@ -51,10 +58,11 @@ class Message < ActiveRecord::Base
     if self.recipient.pushover_messages?
       self.recipient.pushover!({
         :title => "#{Rails.application.name} message from " <<
-          "#{self.author.username}: #{self.subject}",
+          "#{self.author_username}: #{self.subject}",
         :message => self.plaintext_body,
         :url => self.url,
-        :url_title => "Reply to #{self.author.username}",
+        :url_title => (self.author ? "Reply to #{self.author_username}" :
+          "View message"),
       })
     end
   end

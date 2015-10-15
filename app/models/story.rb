@@ -204,6 +204,18 @@ class Story < ActiveRecord::Base
     true
   end
 
+  def can_have_suggestions_from_user?(user)
+    if user
+      if self.user.is_moderator?
+        return false
+      end
+
+      return true
+    else
+      return false
+    end
+  end
+
   # this has to happen just before save rather than in tags_a= because we need
   # to have a valid user_id
   def check_tags

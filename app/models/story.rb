@@ -33,9 +33,13 @@ class Story < ActiveRecord::Base
   # days a story is considered recent, for resubmitting
   RECENT_DAYS = 30
 
+  # users needed to make similar suggestions go live
+  SUGGESTION_QUORUM = 4
+
   attr_accessor :vote, :already_posted_story, :previewing, :seen_previous,
     :is_hidden_by_cur_user
-  attr_accessor :editor, :moderation_reason, :merge_story_short_id
+  attr_accessor :editor, :moderation_reason, :merge_story_short_id,
+    :editing_from_suggestions
   attr_accessor :fetching_ip
   attr_writer :fetched_content
 
@@ -376,7 +380,9 @@ class Story < ActiveRecord::Base
   end
 
   def log_moderation
-    if self.new_record? || !self.editor || self.editor.id == self.user_id
+    if self.new_record? ||
+    (!self.editing_from_suggestions &&
+    (!self.editor || self.editor.id == self.user_id))
       return
     end
 
@@ -388,7 +394,11 @@ class Story < ActiveRecord::Base
     end
 
     m = Moderation.new
-    m.moderator_user_id = self.editor.try(:id)
+    if self.editing_from_suggestions
+      m.is_from_suggestions = true
+    else
+      m.moderator_user_id = self.editor.try(:id)
+    end
     m.story_id = self.id
 
     if all_changes["is_expired"] && self.is_expired?
@@ -544,7 +554,34 @@ class Story < ActiveRecord::Base
       end
     end
 
-    # TODO: promote suggested tags to real one when count reaches something
+    # if enough users voted on the same set of replacement tags, do it
+    tag_votes = {}
+    self.suggested_taggings.group_by(&:user_id).each do |u,stg|
+      stg.each do |st|
+        tag_votes[st.tag.tag] ||= 0
+        tag_votes[st.tag.tag] += 1
+      end
+    end
+
+    final_tags = []
+    tag_votes.each do |k,v|
+      if v >= SUGGESTION_QUORUM
+        final_tags.push k
+      end
+    end
+
+    if final_tags.any? && (final_tags.sort != self.tags_a.sort)
+      Rails.logger.info "[s#{self.id}] promoting suggested tags " <<
+        "#{final_tags.inspect} instead of #{self.tags_a.inspect}"
+      self.editor = nil
+      self.editing_from_suggestions = true
+      self.moderation_reason = "Automatically changed from user suggestions"
+      self.tags_a = final_tags.sort
+      if !self.save
+        Rails.logger.error "[s#{self.id}] failed auto promoting: " <<
+          self.errors.inspect
+      end
+    end
   end
 
   def save_suggested_title_for_user!(title, user)

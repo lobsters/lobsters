@@ -17,10 +17,11 @@ class Moderation < ActiveRecord::Base
 
     if self.story
       m.recipient_user_id = self.story.user_id
-      m.subject = "Your story has been edited by a moderator"
+      m.subject = "Your story has been edited by " <<
+        (self.is_from_suggestions? ? "user suggestions" : "a moderator")
       m.body = "Your story [#{self.story.title}](" <<
-        "#{self.story.comments_url}) has been edited by a moderator with " <<
-        "the following changes:\n" <<
+        "#{self.story.comments_url}) has been edited with the following " <<
+          "changes:\n" <<
         "\n" <<
         "> *#{self.action}*\n"
 

@@ -25,19 +25,21 @@
 <% end %>
 
 <div class="box">
-  <div class="boxline">
-  <% if f.object.url_is_editable_by_user?(@user) %>
-    <%= f.label :url, "URL:", :class => "required" %>
-    <%= f.text_field :url, :autocomplete => "off" %>
-    <%= button_tag "Fetch Title", :id => "story_fetch_title",
-      :type => "button" %>
-  <% elsif !f.object.new_record? && !f.object.url.blank? %>
-    <%= f.label :url, "URL:", :class => "required" %>
-    <div class="d">
-    <a href="<%= f.object.url %>"><%= f.object.url %></a>
+  <% unless defined?(suggesting) %>
+    <div class="boxline">
+    <% if f.object.url_is_editable_by_user?(@user) %>
+      <%= f.label :url, "URL:", :class => "required" %>
+      <%= f.text_field :url, :autocomplete => "off" %>
+      <%= button_tag "Fetch Title", :id => "story_fetch_title",
+        :type => "button" %>
+    <% elsif !f.object.new_record? && !f.object.url.blank? %>
+      <%= f.label :url, "URL:", :class => "required" %>
+      <div class="d">
+      <a href="<%= f.object.url %>"><%= f.object.url %></a>
+      </div>
+    <% end %>
     </div>
   <% end %>
-  </div>
 
   <div class="boxline">
     <%= f.label :title, "Title:", :class => "required" %>
@@ -63,80 +65,84 @@
     f.object.tags_a), {}, { :multiple => true } %>
   </div>
 
-  <div class="boxline">
-    <%= f.label :description, "Text:", :class => "required" %>
-    <%= f.text_area :description, :rows => 15,
-      :placeholder => "Optional when submitting a URL; please see guidelines",
-      :autocomplete => "off" %>
-  </div>
+  <% unless defined?(suggesting) %>
+    <div class="boxline">
+      <%= f.label :description, "Text:", :class => "required" %>
+      <%= f.text_area :description, :rows => 15,
+        :placeholder => "Optional when submitting a URL; please see guidelines",
+        :autocomplete => "off" %>
+    </div>
 
-  <div class="boxline markdown_help_toggler">
-    <a href="#" id="story_guidelines_toggler">
-      Story submission guidelines
-    </a>
-    <div id="story_guidelines" style="<%= show_guidelines?? "" :
-    "display: none;" %>">
-      <div style="float: right;">
-      <a href="javascript:window.location=%22<%= Rails.application.root_url %>stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title)"
-      style="border: 1px solid #ddd; padding: 0.5em; background-color:
-      #f8f8f8; line-height: 1.5em; margin-left: 1em;">Submit to
-      <%= Rails.application.name %></a>
+    <div class="boxline actions markdown_help_toggler">
+      <a href="#" id="story_guidelines_toggler">
+        Story submission guidelines
+      </a>
+      <div id="story_guidelines" style="<%= show_guidelines?? "" :
+      "display: none;" %>">
+        <div style="float: right;">
+        <a href="javascript:window.location=%22<%= Rails.application.root_url %>stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title)"
+        style="border: 1px solid #ddd; padding: 0.5em; background-color:
+        #f8f8f8; line-height: 1.5em; margin-left: 1em;">Submit to
+        <%= Rails.application.name %></a>
+        </div>
+        <ul>
+
+          <li><p>
+          To be able to easily submit a page you're viewing in your browser
+          to <%= Rails.application.name %>, drag the bookmarklet to the right
+          to your bookmark bar.  You'll be taken to this page with the viewed
+          page's URL and title.
+          </p></li>
+
+          <li><p>
+          When submitting a URL, the text field is optional and should only
+          be used when additional context or explanation of the URL is
+          needed.  Commentary or opinion should be reserved for a comment,
+          so that it can be voted on separately from the story.
+          </p></li>
+
+          <li><p>
+          Do not editorialize story titles, but when the original story's
+          title has no context or is unclear, please change it.  <strong>Please
+          remove extraneous components from titles such as the name of the
+          site or section.</strong>
+          </p></li>
+
+          <li><p>
+          If no tags clearly apply to the story you are submitting, chances
+          are it does not belong here.  Do not overreach with tags if they
+          are not the primary focus of the story.
+          </p></li>
+
+          <li><p>
+          When the story being submitted is more than a year or so old,
+          please add the year the story was written to the post title in
+          parentheses.
+          </p></li>
+
+        </ul>
       </div>
-      <ul>
-
-        <li><p>
-        To be able to easily submit a page you're viewing in your browser
-        to <%= Rails.application.name %>, drag the bookmarklet to the right
-        to your bookmark bar.  You'll be taken to this page with the viewed
-        page's URL and title.
-        </p></li>
-
-        <li><p>
-        When submitting a URL, the text field is optional and should only
-        be used when additional context or explanation of the URL is
-        needed.  Commentary or opinion should be reserved for a comment,
-        so that it can be voted on separately from the story.
-        </p></li>
-
-        <li><p>
-        Do not editorialize story titles, but when the original story's
-        title has no context or is unclear, please change it.  <strong>Please
-        remove extraneous components from titles such as the name of the
-        site or section.</strong>
-        </p></li>
-
-        <li><p>
-        If no tags clearly apply to the story you are submitting, chances
-        are it does not belong here.  Do not overreach with tags if they
-        are not the primary focus of the story.
-        </p></li>
-
-        <li><p>
-        When the story being submitted is more than a year or so old,
-        please add the year the story was written to the post title in
-        parentheses.
-        </p></li>
-
-      </ul>
+    </div>
+  <% end %>
+</div>
+<% unless defined?(suggesting) %>
+  <div class="box">
+    <div class="boxline">
+      <%= f.label :user_is_author, "Author:", :class => "required" %>
+      <%= f.check_box :user_is_author %>
+      <%= f.label :user_is_author,
+        (f.object.id && f.object.user_id != @user.id ? "Submitter is" : "I am") +
+        " the author of the story at this URL (or this text)",
+        :class => "normal" %>
     </div>
   </div>
-</div>
-<div class="box">
-  <div class="boxline">
-    <%= f.label :user_is_author, "Author:", :class => "required" %>
-    <%= f.check_box :user_is_author %>
-    <%= f.label :user_is_author,
-      (f.object.id && f.object.user_id != @user.id ? "Submitter is" : "I am") +
-      " the author of the story at this URL (or this text)",
-      :class => "normal" %>
-  </div>
-</div>
 
-<script>
-  $(document).ready(function() {
-    $("#story_fetch_title").click(function() {
-      Lobsters.fetchURLTitle($(this), $("#story_url"), $("#story_title"));
-      return false;
+  <script>
+    $(document).ready(function() {
+      $("#story_fetch_title").click(function() {
+        Lobsters.fetchURLTitle($(this), $("#story_url"), $("#story_title"));
+        return false;
+      });
     });
-  });
-</script>
+  </script>
+<% end %>

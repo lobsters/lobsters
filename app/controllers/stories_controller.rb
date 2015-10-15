@@ -1,12 +1,11 @@
 class StoriesController < ApplicationController
   before_filter :require_logged_in_user_or_400,
     :only => [ :upvote, :downvote, :unvote, :hide, :unhide, :preview ]
-
   before_filter :require_logged_in_user, :only => [ :destroy, :create, :edit,
-    :fetch_url_title, :new ]
-
+    :fetch_url_title, :new, :suggest ]
   before_filter :find_user_story, :only => [ :destroy, :edit, :undelete,
     :update ]
+  before_filter :find_story!, :only => [ :suggest, :submit_suggestions ]
 
   def create
     @title = "Submit Story"
@@ -169,6 +168,33 @@ class StoriesController < ApplicationController
     end
   end
 
+  def suggest
+    if (st = @story.suggested_taggings.where(:user_id => @user.id)).any?
+      @story.tags_a = st.map{|st| st.tag.tag }
+    end
+    if tt = @story.suggested_titles.where(:user_id => @user.id).first
+      @story.title = tt.title
+    end
+  end
+
+  def submit_suggestions
+    ostory = @story.dup
+
+    @story.title = params[:story][:title]
+    if @story.valid?
+      if @story.title != ostory.title
+        @story.save_suggested_title_for_user!(@story.title, @user)
+      end
+      if @story.tags_a.sort != params[:story][:tags_a].sort
+        @story.save_suggested_tags_a_for_user!(params[:story][:tags_a], @user)
+      end
+      flash[:success] = "Your suggested changes have been noted."
+      redirect_to ostory.comments_path
+    else
+      render :action => "suggest"
+    end
+  end
+
   def undelete
     if !(@story.is_editable_by_user?(@user) &&
     @story.is_undeletable_by_user?(@user))
@@ -289,6 +315,13 @@ private
     end
 
     story
+  end
+
+  def find_story!
+    @story = find_story
+    if !@story
+      raise ActiveRecord::RecordNotFound
+    end
   end
 
   def find_user_story

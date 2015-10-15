@@ -127,6 +127,9 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
                 :confirm => "Are you sure you want to delete this story?" } %>
             <% end %>
           <% end %>
+        <% elsif @user %>
+          | <%= link_to "suggest", story_suggest_path(story.short_id),
+            :class => "suggester" %>
         <% end %>
         <% if !story.is_gone? && @user %>
           <% if @user && story.vote && story.vote[:vote] == -1 %>

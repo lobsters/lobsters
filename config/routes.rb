@@ -57,6 +57,8 @@ Lobsters::Application.routes.draw do
       post "undelete"
       post "hide"
       post "unhide"
+      get "suggest"
+      post "suggest", :action => "submit_suggestions"
     end
     post "/stories/fetch_url_attributes", :format => "json"
     post "/stories/preview" => "stories#preview"

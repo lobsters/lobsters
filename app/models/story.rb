@@ -8,6 +8,8 @@ class Story < ActiveRecord::Base
     :foreign_key => "merged_story_id"
   has_many :taggings,
     :autosave => true
+  has_many :suggested_taggings
+  has_many :suggested_titles
   has_many :comments,
     :inverse_of => :story
   has_many :tags, :through => :taggings
@@ -478,7 +480,8 @@ class Story < ActiveRecord::Base
 
   @_tags_a = []
   def tags_a
-    @_tags_a ||= self.taggings.map{|t| t.tag.tag }
+    @_tags_a ||= self.taggings.reject{|t| t.marked_for_destruction?
+      }.map{|t| t.tag.tag }
   end
 
   def tags_a=(new_tag_names_a)
@@ -499,6 +502,47 @@ class Story < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def save_suggested_tags_a_for_user!(new_tag_names_a, user)
+    st = self.suggested_taggings.where(:user_id => user.id)
+
+    st.each do |tagging|
+      if !new_tag_names_a.include?(tagging.tag.tag)
+        tagging.destroy
+      end
+    end
+
+    st.reload
+
+    new_tag_names_a.each do |tag_name|
+      # XXX: AR bug? st.exists?(:tag => tag_name) does not work
+      if tag_name.to_s != "" && !st.map{|x| x.tag.tag }.include?(tag_name)
+        if (t = Tag.active.where(:tag => tag_name).first) &&
+        t.valid_for?(user)
+          tg = self.suggested_taggings.build
+          tg.user_id = user.id
+          tg.tag_id = t.id
+          tg.save!
+
+          st.reload
+        else
+          next
+        end
+      end
+    end
+
+    # TODO: promote suggested tags to real one when count reaches something
+  end
+
+  def save_suggested_title_for_user!(title, user)
+    st = self.suggested_titles.where(:user_id => user.id).first
+    if !st
+      st = self.suggested_titles.build
+      st.user_id = user.id
+    end
+    st.title = title
+    st.save!
   end
 
   def title=(t)

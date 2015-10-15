@@ -222,7 +222,7 @@
 	div#story_box button,
 	div#story_box textarea,
 	div#story_box #story_tags_a,
-	div.markdown_help_toggler {
+	div.actions {
 		margin: 0 !important;
 		width: 100% !important;
 	}

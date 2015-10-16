@@ -188,6 +188,7 @@ class StoriesController < ApplicationController
       if @story.tags_a.sort != params[:story][:tags_a].sort
         @story.save_suggested_tags_a_for_user!(params[:story][:tags_a], @user)
       end
+      ostory.reload
       flash[:success] = "Your suggested changes have been noted."
       redirect_to ostory.comments_path
     else

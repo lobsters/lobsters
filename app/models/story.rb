@@ -592,6 +592,30 @@ class Story < ActiveRecord::Base
     end
     st.title = title
     st.save!
+
+    # if enough users voted on the same exact title, save it
+    title_votes = {}
+    self.suggested_titles.each do |st|
+      title_votes[st.title] ||= 0
+      title_votes[st.title] += 1
+    end
+
+    title_votes.sort_by{|k,v| v }.reverse.each do |kv|
+      if kv[1] >= SUGGESTION_QUORUM
+        Rails.logger.info "[s#{self.id}] promoting suggested title " <<
+          "#{kv[0].inspect} instead of #{self.title.inspect}"
+        self.editor = nil
+        self.editing_from_suggestions = true
+        self.moderation_reason = "Automatically changed from user suggestions"
+        self.title = kv[0]
+        if !self.save
+          Rails.logger.error "[s#{self.id}] failed auto promoting: " <<
+            self.errors.inspect
+        end
+
+        break
+      end
+    end
   end
 
   def title=(t)

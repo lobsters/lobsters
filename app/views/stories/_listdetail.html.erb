@@ -160,7 +160,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 
         <% if defined?(single_story) && single_story &&
         ((story.downvotes > 0 && @user && @user.is_moderator?) ||
-        (story.downvotes >= 3)) %>
+        (story.downvotes >= 3 || story.score <= 0)) %>
           | <%= story.vote_summary_for(@user).downcase %>
         <% end %>
       <% end %>

@@ -41,12 +41,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% end %>
 
       <a href="/u/<%= comment.user.username %>"
-      <% if !comment.user.is_active? %>
-        class="inactive_user"
-      <% elsif comment.user.is_new? %>
-        class="new_user"
-      <% end %>
-      ><%= comment.user.username %></a>
+        class="<%= comment.html_class_for_user %>"><%=
+        comment.user.username %></a>
 
       <% if comment.hat %>
         <%= comment.hat.to_html_label %>

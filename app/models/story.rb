@@ -313,7 +313,7 @@ class Story < ActiveRecord::Base
     @hider_count ||= HiddenStory.where(:story_id => self.id).count
   end
 
-  def html_class_for_user(u = nil)
+  def html_class_for_user
     c = []
     if !self.user.is_active?
       c.push "inactive_user"

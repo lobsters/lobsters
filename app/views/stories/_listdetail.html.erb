@@ -69,7 +69,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             <% end %>
             by
             <a href="/u/<%= ms.user.username %>" class="<%=
-              ms.html_class_for_user(@user) %>"><%= ms.user.username %></a>
+              ms.html_class_for_user %>"><%= ms.user.username %></a>
 
             <%= time_ago_in_words_label(ms.created_at, :strip_about => true) %>
           </span>
@@ -96,13 +96,13 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
       <% if story.previewing %>
         by
-        <a class="<%= story.html_class_for_user(@user) %>"><%=
+        <a class="<%= story.html_class_for_user %>"><%=
           story.user.username %></a>
         just now
       <% else %>
         by
         <a href="/u/<%= story.user.username %>" class="<%=
-          story.html_class_for_user(@user) %>"><%= story.user.username %></a>
+          story.html_class_for_user %>"><%= story.user.username %></a>
 
         <%= time_ago_in_words_label(story.created_at, :strip_about => true) %>
 

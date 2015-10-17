@@ -178,7 +178,7 @@ class StoriesController < ApplicationController
   end
 
   def submit_suggestions
-    ostory = @story.dup
+    ostory = @story.clone
 
     @story.title = params[:story][:title]
     if @story.valid?

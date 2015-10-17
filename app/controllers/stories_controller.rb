@@ -182,14 +182,22 @@ class StoriesController < ApplicationController
 
     @story.title = params[:story][:title]
     if @story.valid?
+      dsug = false
       if @story.title != ostory.title
         @story.save_suggested_title_for_user!(@story.title, @user)
+        dsug = true
       end
-      if @story.tags_a.sort != params[:story][:tags_a].sort
-        @story.save_suggested_tags_a_for_user!(params[:story][:tags_a], @user)
+
+      sugtags = params[:story][:tags_a].reject{|t| t.to_s.strip == "" }.sort
+      if @story.tags_a.sort != sugtags
+        @story.save_suggested_tags_a_for_user!(sugtags, @user)
+        dsug = true
       end
-      ostory.reload
-      flash[:success] = "Your suggested changes have been noted."
+
+      if dsug
+        ostory.reload
+        flash[:success] = "Your suggested changes have been noted."
+      end
       redirect_to ostory.comments_path
     else
       render :action => "suggest"

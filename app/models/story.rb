@@ -209,15 +209,19 @@ class Story < ActiveRecord::Base
   end
 
   def can_have_suggestions_from_user?(user)
-    if user
-      if self.user.is_moderator?
-        return false
-      end
-
-      return true
-    else
+    if !user
       return false
     end
+
+    if user.id == self.user_id
+      return false
+    end
+
+    if self.tags.select{|t| t.privileged? }.any?
+      return false
+    end
+
+    return true
   end
 
   # this has to happen just before save rather than in tags_a= because we need

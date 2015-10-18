@@ -178,7 +178,7 @@ class StoriesController < ApplicationController
   end
 
   def submit_suggestions
-    ostory = @story.clone
+    ostory = @story.dup
 
     @story.title = params[:story][:title]
     if @story.valid?
@@ -195,7 +195,7 @@ class StoriesController < ApplicationController
       end
 
       if dsug
-        ostory.reload
+        ostory = @story.reload
         flash[:success] = "Your suggested changes have been noted."
       end
       redirect_to ostory.comments_path

@@ -28,7 +28,7 @@ class StoryCacher
         j = JSON.parse(res)
 
         # turn newlines into double newlines, so they become paragraphs
-        j["text"].gsub!("\n", "\n\n")
+        j["text"] = j["text"].to_s.gsub("\n", "\n\n")
 
         while j["text"].match("\n\n\n")
           j["text"].gsub!("\n\n\n", "\n\n")

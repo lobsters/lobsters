@@ -406,23 +406,21 @@ $(document).ready(function() {
   });
 
   $(document).on("blur", "#story_url", function() {
-    /* if the url looks like a pdf, assign the pdf tag */
-    if ($("#story_url").val().match(/\.pdf$/i)) {
-      var ta = $("#story_tags_a").data("select2");
-      if (ta.getVal().indexOf("pdf") < 0)
-        ta.addSelectedChoice({ id: "pdf" });
-    }
-    /* if the url looks like a video site url, assign the video tag */
-    else if ($("#story_url").val().match(/[\/\.]((youtube|vimeo)\.com|youtu\.be)\//i)) {
-      var ta = $("#story_tags_a").data("select2");
-      if (ta.getVal().indexOf("video") < 0)
-        ta.addSelectedChoice({ id: "video" });
-    }
-    /* if the url looks like a slide sharing site url, assign the slides tag */
-    else if ($("#story_url").val().match(/[\/\.](slideshare\.net|speakerdeck\.com)\//i)) {
-      var ta = $("#story_tags_a").data("select2");
-      if (ta.getVal().indexOf("slides") < 0)
-        ta.addSelectedChoice({ id: "slides" });
+    var url_tags = {
+      "\.pdf$": "pdf",
+      "[\/\.]((youtube|vimeo)\.com|youtu\.be)\/": "video",
+      "[\/\.](slideshare\.net|speakerdeck\.com)\/": "slides",
+      "[\/\.](soundcloud\.com)\/": "audio",
+    };
+
+    for (var u in url_tags) {
+      var tag = url_tags[u];
+
+      if ($("#story_url").val().match(new RegExp(u, "i"))) {
+        var ta = $("#story_tags_a").data("select2");
+        if (ta.getVal().indexOf(tag) < 0)
+          ta.addSelectedChoice({ id: tag });
+      }
     }
   });
 

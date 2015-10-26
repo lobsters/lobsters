@@ -370,6 +370,7 @@ ol.comments {
 	margin-bottom: 0em;
 	padding-left: 6px;
 	line-height: 1.35em;
+	border-left: 1px dotted #bbb;
 }
 ol.comments1 {
 	margin-left: 0;

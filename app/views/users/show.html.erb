@@ -17,7 +17,8 @@
 
   <% if @showing_user.is_active? %>
     <div id="gravatar">
-      <img src="<%= @showing_user.avatar_url %>">
+      <img src="<%= @showing_user.avatar_url(100) %>"
+        srcset="<%= @showing_user.avatar_url(200) %> 200w">
     </div>
   <% end %>
 

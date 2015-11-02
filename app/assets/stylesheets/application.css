@@ -276,6 +276,14 @@ div#inside {
 	margin-right: 11px;
 }
 
+@media screen and (min-resolution: 2dppx) {
+	#l_holder {
+		background: #ee0000 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QAAAD/AAauuCqnAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wsCAS8I72AnqAAAACZpVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVAgb24gYSBNYWOV5F9bAAABE0lEQVRYw+2WMUoEMRSG34uDs4jaW1go2HgBvYOdjb3VnsDKSvAAdh7BM4i9LNiJsJ3gtDMqKDOzZOaLjcIimXUZd3dE8kGa5Cf5XlLkiQQCHaNNC1VVHRhjLqbZBOhHUXTTRiCasFZ+jh1VXfYFnHNvIjJ0zo3mdkVlWW4D7+4bwGOWZWsLeSfg2iNwOYu9zZS5Z8/c6yIF5kYQCAJB4H8LAGfAeScCRVFsisipiBx2IhDHcV9VVUTqWQise+ZWmsLW2n0ROflqLX5VSZqmq0Dq+Q2HeZ5vjGeTJOnVdX0MvIzl7lodbK3dA66AJ9cAUAEPwC1wD4w8mUGrjsgYs6WqRxP7OdUlEdn9oZZKAoHAX+YDqSbY/ekOWr0AAAAASUVORK5CYII=) no-repeat;
+		background-size: 16px;
+		background-position: 1px 1px;
+	}
+}
+
 #header h1 {
 	font-size: 11pt;
 	margin: 0px;

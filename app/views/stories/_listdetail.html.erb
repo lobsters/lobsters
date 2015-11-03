@@ -65,7 +65,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             <% if @user && @user.show_avatars? %>
               <a href="/u/<%= ms.user.username %>"><img
                 src="<%= ms.user.avatar_url(16) %>"
-                srcset="<%= ms.user.avatar_url(32) %> 32w" class="avatar"></a>
+                srcset="<%= ms.user.avatar_url(16) %> 1x,
+                <%= ms.user.avatar_url(32) %> 2x" class="avatar"></a>
             <% end %>
 
             <% if story.user_is_author? %>
@@ -94,7 +95,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% if @user && @user.show_avatars? %>
         <a href="/u/<%= story.user.username %>"><img
           src="<%= story.user.avatar_url(16) %>"
-          srcset="<%= story.user.avatar_url(32) %> 32w" class="avatar"></a>
+          srcset="<%= story.user.avatar_url(16) %> 1x,
+          <%= story.user.avatar_url(32) %> 2x" class="avatar"></a>
       <% end %>
       <% if story.user_is_author? %>
         authored

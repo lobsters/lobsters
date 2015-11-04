@@ -26,6 +26,9 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           "original submitter" %>]
       <% end %>
     </span>
+    <% if story.markeddown_description.present? %>
+      <span class="description_present">&#FE19;</span>
+    <% end %>
     <% if story.can_be_seen_by_user?(@user) %>
       <span class="tags">
         <% story.sorted_taggings.each do |tagging| %>
@@ -34,9 +37,6 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             title="<%= tagging.tag.description %>"><%= tagging.tag.tag %></a>
         <% end %>
       </span>
-      <% if story.markeddown_description.present? %>
-        <span class="description_present">&para;</span>
-      <% end %>
       <% if story.domain.present? %>
         <a class="domain" href="<%= story.domain_search_url %>"><%=
           break_long_words(story.domain) %></a>

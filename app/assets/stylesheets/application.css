@@ -508,6 +508,12 @@ li .link a {
 	text-decoration: none;
 }
 
+li.story .description_present {
+	font-weight: bold;
+	color: gray;
+	padding-left: 0.25em;
+}
+
 li.story a.tag {
 	vertical-align: middle;
 }

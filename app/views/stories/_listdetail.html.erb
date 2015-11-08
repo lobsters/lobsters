@@ -158,7 +158,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             (hidden by <%= pluralize(story.hider_count, "user") %>)
           <% end %>
         <% end %>
-        <% if !story.is_gone? && (@user || story.comments_count > 0) %>
+        <% if !story.is_gone? %>
           <span class="comments_label">
             |
             <a href="<%= story.comments_path %>"><%= story.comments_count == 0 ?

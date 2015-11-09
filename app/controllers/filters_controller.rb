@@ -3,7 +3,7 @@ class FiltersController < ApplicationController
 
   def index
     @cur_url = "/filters"
-    @title = "Filtered Tags"
+    @title = "Tag Filters"
 
     @tags = Tag.active.all_with_story_counts_for(@user)
 

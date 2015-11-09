@@ -106,6 +106,7 @@ Lobsters::Application.routes.draw do
     get "/filters" => "filters#index"
     post "/filters" => "filters#update"
 
+    get "/tags" => "tags#index"
     get "/tags.json" => "tags#index", :format => "json"
 
     post "/invitations" => "invitations#create"

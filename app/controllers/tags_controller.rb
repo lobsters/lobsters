@@ -1,5 +1,10 @@
 class TagsController < ApplicationController
   def index
-    return render :json => Tag.active.all
+    @tags = Tag.all_with_story_counts_for(nil)
+
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.json { render :json => @tags }
+    end
   end
 end

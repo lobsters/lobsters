@@ -18,6 +18,10 @@ body, textarea, input, button {
 	color: #333;
 }
 
+body {
+	background-color: #fefefe;
+}
+
 a {
 	color: #2562dc;
 	cursor: pointer;
@@ -509,9 +513,9 @@ li .link a {
 }
 
 li.story .description_present {
-	font-weight: bold;
 	color: gray;
 	padding-left: 0.25em;
+	vertical-align: middle;
 }
 
 li.story a.tag {

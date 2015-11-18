@@ -22,8 +22,25 @@ class LoginController < ApplicationController
       user = User.where(:username => params[:email]).first
     end
 
-    if user && user.is_active? &&
-    user.try(:authenticate, params[:password].to_s)
+    begin
+      if !user
+        raise "no user"
+      end
+
+      if !user.try(:authenticate, params[:password].to_s)
+        raise "authentication failed"
+      end
+
+      if user.is_banned?
+        raise "user is banned"
+      end
+
+      if !user.is_active?
+        user.undelete!
+        flash[:success] = "Your account has been reactivated and your " <<
+          "unmoderated comments have been undeleted."
+      end
+
       session[:u] = user.session_token
 
       if !user.password_digest.to_s.match(/^\$2a\$#{BCrypt::Engine::DEFAULT_COST}\$/)
@@ -46,6 +63,7 @@ class LoginController < ApplicationController
       end
 
       return redirect_to "/"
+    rescue
     end
 
     flash.now[:error] = "Invalid e-mail address and/or password."

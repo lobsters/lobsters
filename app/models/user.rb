@@ -191,6 +191,24 @@ class User < ActiveRecord::Base
     end
   end
 
+  def undelete!
+    User.transaction do
+      self.comments.each{|c| c.undelete_for_user(self) }
+
+      self.sent_messages.each do |m|
+        m.deleted_by_author = false
+        m.save
+      end
+      self.received_messages.each do |m|
+        m.deleted_by_recipient = false
+        m.save
+      end
+
+      self.deleted_at = nil
+      self.save!
+    end
+  end
+
   def initiate_password_reset_for_ip(ip)
     self.password_reset_token = "#{Time.now.to_i}-#{Utils.random_str(30)}"
     self.save!

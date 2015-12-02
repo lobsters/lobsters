@@ -717,38 +717,34 @@ class Story < ActiveRecord::Base
     }.join(", ")
   end
 
-  def fetched_content
-    return @fetched_content if @fetched_content
+  def fetched_attributes
+    if @fetched_attributes
+      return @fetched_attributes
+    end
+
+    @fetched_attributes = {
+      :url => self.url,
+      :title => "",
+    }
 
     begin
       s = Sponge.new
       s.timeout = 3
-      @fetched_content = s.fetch(self.url, :get, nil, nil,
-        { "User-agent" => "#{Rails.application.domain} for #{self.fetching_ip}" },
-        3)
+      @fetched_attributes[:content] = s.fetch(self.url, :get, nil, nil, {
+        "User-agent" => "#{Rails.application.domain} for #{self.fetching_ip}"
+      }, 3)
     rescue
+      return @fetched_attributes
     end
 
-    @fetched_content
-  end
+    parsed = Nokogiri::HTML(@fetched_attributes[:content].to_s)
 
-  def parsed_content
-    return @parsed_content if @parsed_content
-
-    @parsed_content = Nokogiri::HTML(self.fetched_content.to_s)
-  end
-
-  def fetched_title
-    title = ""
-
-    if !(doc = self.parsed_content)
-      return title
-    end
-
+    # parse best title from html tags
     # try <meta property="og:title"> first, it probably won't have the site
     # name
+    title = ""
     begin
-      title = doc.at_css("meta[property='og:title']").
+      title = parsed.at_css("meta[property='og:title']").
         attributes["content"].text
     rescue
     end
@@ -756,33 +752,29 @@ class Story < ActiveRecord::Base
     # then try <meta name="title">
     if title.to_s == ""
       begin
-        title = doc.at_css("meta[name='title']").attributes["content"].text
+        title = parsed.at_css("meta[name='title']").attributes["content"].text
       rescue
       end
     end
 
     # then try plain old <title>
     if title.to_s == ""
-      title = doc.at_css("title").try(:text).to_s
+      title = parsed.at_css("title").try(:text).to_s
     end
 
-    return title
-  end
+    @fetched_attributes[:title] = title
 
-  def fetched_canonical_url
-    return @fetched_canonical_url if @fetched_canonical_url
-
-    if doc = self.parsed_content
-      begin
-        if (cu = doc.at_css("link[rel='canonical']").attributes["href"].
-        text).present? && (ucu = URI.parse(cu)) && ucu.scheme.present? &&
-        ucu.host.present?
-          return cu
-        end
-      rescue
+    # now get canonical version of url (though some cms software puts incorrect
+    # urls here, hopefully the user will notice)
+    begin
+      if (cu = parsed.at_css("link[rel='canonical']").attributes["href"].
+      text).present? && (ucu = URI.parse(cu)) && ucu.scheme.present? &&
+      ucu.host.present?
+        @fetched_attributes[:url] = cu
       end
+    rescue
     end
 
-    return self.url
+    @fetched_attributes
   end
 end

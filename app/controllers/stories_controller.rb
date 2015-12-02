@@ -2,7 +2,7 @@ class StoriesController < ApplicationController
   before_filter :require_logged_in_user_or_400,
     :only => [ :upvote, :downvote, :unvote, :hide, :unhide, :preview ]
   before_filter :require_logged_in_user, :only => [ :destroy, :create, :edit,
-    :fetch_url_title, :new, :suggest ]
+    :fetch_url_attributes, :new, :suggest ]
   before_filter :find_user_story, :only => [ :destroy, :edit, :undelete,
     :update ]
   before_filter :find_story!, :only => [ :suggest, :submit_suggestions ]
@@ -62,17 +62,10 @@ class StoriesController < ApplicationController
     s.fetching_ip = request.remote_ip
     s.url = params[:fetch_url]
 
-    oattrs = { :url => params[:fetch_url], :title => nil }
+    sattrs = s.fetched_attributes
+    sattrs.delete(:content)
 
-    if (title = s.fetched_title).present?
-      oattrs[:title] = title
-    end
-
-    if (cu = s.fetched_canonical_url).present?
-      oattrs[:url] = cu
-    end
-
-    return render :json => oattrs
+    return render :json => sattrs
   end
 
   def new
@@ -85,10 +78,12 @@ class StoriesController < ApplicationController
     if params[:url].present?
       @story.url = params[:url]
 
-      if (cu = @story.fetched_canonical_url).present? && @story.url != cu
+      sattrs = @story.fetched_attributes
+
+      if sattrs[:url].present? && @story.url != sattrs[:url]
         flash.now[:notice] = "Note: URL has been changed to fetched " <<
           "canonicalized version"
-        @story.url = cu
+        @story.url = sattrs[:url]
       end
 
       if s = Story.find_similar_by_url(@story.url)
@@ -104,7 +99,7 @@ class StoriesController < ApplicationController
       end
 
       # ignore what the user brought unless we need it as a fallback
-      @story.title = @story.fetched_title
+      @story.title = sattrs[:title]
       if !@story.title.present? && params[:title].present?
         @story.title = params[:title]
       end

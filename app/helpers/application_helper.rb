@@ -61,13 +61,29 @@ module ApplicationHelper
   end
 
   def time_ago_in_words_label(time, options = {})
-    strip_about = options.delete(:strip_about)
-    ago = time_ago_in_words(time, options)
-
-    if strip_about
-      ago.gsub!(/^about /, "")
+    ago = ""
+    secs = (Time.now - time).to_i
+    if secs <= 5
+      ago = "just now"
+    elsif secs < 60
+      ago = "less than a minute ago"
+    elsif secs < (60 * 60)
+      mins = (secs / 60.0).floor
+      ago = "#{mins} minute#{mins == 1 ? "" : "s"} ago"
+    elsif secs < (60 * 60 * 48)
+      hours = (secs / 60.0 / 60.0).floor
+      ago = "#{hours} hour#{hours == 1 ? "" : "s"} ago"
+    elsif secs < (60 * 60 * 24 * 30)
+      days = (secs / 60.0 / 60.0 / 24.0).floor
+      ago = "#{days} day#{days == 1 ? "" : "s"} ago"
+    elsif secs < (60 * 60 * 24 * 365)
+      months = (secs / 60.0 / 60.0 / 24.0 / 30.0).floor
+      ago = "#{months} month#{months == 1 ? "" : "s"} ago"
+    else
+      years = (secs / 60.0 / 60.0 / 24.0 / 365.0).floor
+      ago = "#{years} year#{years == 1 ? "" : "s"} ago"
     end
 
-    raw(label_tag(nil, "#{ago} ago", :title => time.strftime("%F %T %z")))
+    raw(label_tag(nil, ago, :title => time.strftime("%F %T %z")))
   end
 end

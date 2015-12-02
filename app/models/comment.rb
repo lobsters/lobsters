@@ -356,7 +356,12 @@ class Comment < ActiveRecord::Base
   end
 
   def mailing_list_message_id
-    "comment.#{short_id}.#{created_at.to_i}@#{Rails.application.domain}"
+    [
+      "comment",
+      self.short_id,
+      self.is_from_email ? "email" : nil,
+      created_at.to_i
+    ].reject{|p| !p }.join(".") << "@" << Rails.application.domain
   end
 
   def path

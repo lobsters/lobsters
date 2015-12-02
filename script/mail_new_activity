@@ -174,7 +174,13 @@ last_comment_id, false, false).order(:id).each do |c|
 
     IO.popen([ {}, "/usr/sbin/sendmail", "-i", "-f",
     "nobody@#{domain}", u.email ], "w") do |mail|
-      mail.puts "From: #{c.user.username} <#{c.user.username}@#{domain}>"
+      from = "From: \"#{c.user.username}"
+      if c.hat
+        from << " (#{c.hat.hat})"
+      end
+      from << "\" <#{c.user.username}@#{domain}>"
+      mail.puts from
+
       mail.puts "Reply-To: #{list}"
       mail.puts "To: #{list}"
       mail.puts "List-Id: #{Rails.application.name} <#{list}>"
@@ -212,10 +218,6 @@ last_comment_id, false, false).order(:id).each do |c|
       mail.print "References:"
       refs.each do |ref|
         mail.puts " #{ref}"
-      end
-
-      if c.hat
-        mail.puts "X-Hat: #{c.hat.hat}"
       end
 
       mail.puts "Date: " << c.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")

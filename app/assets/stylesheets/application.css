@@ -515,6 +515,7 @@ li .link a {
 li.story .description_present {
 	color: gray;
 	padding-left: 0.25em;
+	text-decoration: none;
 	vertical-align: middle;
 }
 

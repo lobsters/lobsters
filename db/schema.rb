@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151015011231) do
+ActiveRecord::Schema.define(version: 20151015143959) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -95,14 +95,15 @@ ActiveRecord::Schema.define(version: 20151015011231) do
   add_index "messages", ["short_id"], name: "random_hash", unique: true, using: :btree
 
   create_table "moderations", force: true do |t|
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
     t.integer  "moderator_user_id"
     t.integer  "story_id"
     t.integer  "comment_id"
     t.integer  "user_id"
-    t.text     "action",            limit: 16777215
-    t.text     "reason",            limit: 16777215
+    t.text     "action",              limit: 16777215
+    t.text     "reason",              limit: 16777215
+    t.boolean  "is_from_suggestions",                  default: false
   end
 
   create_table "stories", force: true do |t|

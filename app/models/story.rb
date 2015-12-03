@@ -727,17 +727,19 @@ class Story < ActiveRecord::Base
       :title => "",
     }
 
-    begin
-      s = Sponge.new
-      s.timeout = 3
-      @fetched_attributes[:content] = s.fetch(self.url, :get, nil, nil, {
-        "User-agent" => "#{Rails.application.domain} for #{self.fetching_ip}"
-      }, 3)
-    rescue
-      return @fetched_attributes
+    if !@fetched_content
+      begin
+        s = Sponge.new
+        s.timeout = 3
+        @fetched_content = s.fetch(self.url, :get, nil, nil, {
+          "User-agent" => "#{Rails.application.domain} for #{self.fetching_ip}"
+        }, 3)
+      rescue
+        return @fetched_attributes
+      end
     end
 
-    parsed = Nokogiri::HTML(@fetched_attributes[:content].to_s)
+    parsed = Nokogiri::HTML(@fetched_content.to_s)
 
     # parse best title from html tags
     # try <meta property="og:title"> first, it probably won't have the site

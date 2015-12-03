@@ -93,12 +93,12 @@ describe Story do
     s = Story.make
     s.fetched_content = File.read(Rails.root +
       "spec/fixtures/story_pages/1.html")
-    s.fetched_title.should == "B2G demo & quick hack // by Paul Rouget"
+    s.fetched_attributes[:title].should == "B2G demo & quick hack // by Paul Rouget"
 
     s = Story.make
     s.fetched_content = File.read(Rails.root +
       "spec/fixtures/story_pages/2.html")
-    s.fetched_title.should == "Google"
+    s.fetched_attributes[:title].should == "Google"
   end
 
   it "has an underscored url from its title" do

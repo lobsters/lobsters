@@ -62,10 +62,7 @@ class StoriesController < ApplicationController
     s.fetching_ip = request.remote_ip
     s.url = params[:fetch_url]
 
-    sattrs = s.fetched_attributes
-    sattrs.delete(:content)
-
-    return render :json => sattrs
+    return render :json => s.fetched_attributes
   end
 
   def new

@@ -34,7 +34,7 @@ class Story < ActiveRecord::Base
   RECENT_DAYS = 30
 
   # users needed to make similar suggestions go live
-  SUGGESTION_QUORUM = 4
+  SUGGESTION_QUORUM = 3
 
   attr_accessor :vote, :already_posted_story, :previewing, :seen_previous,
     :is_hidden_by_cur_user

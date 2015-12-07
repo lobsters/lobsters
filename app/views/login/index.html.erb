@@ -26,11 +26,11 @@
     <p>
     Not a user yet?  Signup is by invitation only to combat spam and increase
     accountability.  If you know <a href="/u/">a current user</a> of the site,
-    ask them for an
+    ask them for an invitation or
     <% if Rails.application.allow_invitation_requests? %>
-      invitation or <a href="/invitations/request">request one publicly</a>.
+      <a href="/invitations/request">request one publicly</a>.
     <% else %>
-      invitation.
+      request one in <a href="/chat">chat</a>.
     <% end %>
     </p>
 

@@ -80,7 +80,6 @@
 
     <br>
 
-
     <div class="legend">
       Comment Reply Notification Settings
     </div>
@@ -137,6 +136,18 @@
       <span class="hint">
         Requires Pushover subscription above
       </span>
+    </div>
+
+    <br>
+
+    <div class="legend">
+      Submitted Story Comment Settings
+    </div>
+
+    <div class="boxline">
+      <%= f.label :show_submitted_story_threads,
+        "Show in Your Threads:", :class => "required" %>
+      <%= f.check_box :show_submitted_story_threads %>
     </div>
 
     <br>

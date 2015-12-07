@@ -253,8 +253,18 @@ class User < ActiveRecord::Base
   end
 
   def recent_threads(amount)
-    self.comments.group(:thread_id).order('MAX(created_at) DESC').limit(
-      amount).pluck(:thread_id)
+    thread_ids = self.comments.group(:thread_id).order('MAX(created_at) DESC').
+      limit(amount).pluck(:thread_id)
+
+    if self.show_submitted_story_threads
+      thread_ids += Comment.joins(:story).
+        where(:stories => { :user_id => self.id }).group(:thread_id).
+        order("MAX(comments.created_at) DESC").limit(amount).pluck(:thread_id)
+
+      thread_ids = thread_ids.uniq.sort.reverse[0, amount]
+    end
+
+    thread_ids
   end
 
   def stories_submitted_count

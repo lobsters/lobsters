@@ -25,7 +25,7 @@ class Comment < ActiveRecord::Base
   DOWNVOTABLE_DAYS = 7
 
   # after this many minutes old, a comment cannot be edited
-  MAX_EDIT_MINS = (60 * 4)
+  MAX_EDIT_MINS = (60 * 6)
 
   validate do
     self.comment.to_s.strip == "" &&

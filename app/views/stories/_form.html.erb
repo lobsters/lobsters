@@ -182,15 +182,6 @@
         Lobsters.fetchURLTitle($(this), $("#story_url"), $("#story_title"));
         return false;
       });
-
-      $("#story_tags_a").select2({
-        formatSelection: function(what) {
-          return what.id;
-        },
-        matcher: function(term, text, opt) {
-          return (text.toLowerCase().indexOf(term.toLowerCase()) >= 0);
-        },
-      });
     });
   </script>
 <% end %>

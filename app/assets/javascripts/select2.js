@@ -496,6 +496,10 @@
                             data.results.push({id: e.attr("value"), text: (e.attr("data-html") == undefined ? text : e.attr("data-html")) });
                         }
                     });
+
+                    if (opts.sortResults)
+                        data.results = opts.sortResults(data.results, element, query);
+
                     query.callback(data);
                 });
                 // this is needed because inside val() we construct choices from options and there id is hardcoded

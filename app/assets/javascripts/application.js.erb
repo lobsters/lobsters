@@ -383,7 +383,34 @@ $(document).ready(function() {
       return what.id;
     },
     matcher: function(term, text) {
-      return text.toUpperCase().indexOf(term.toUpperCase()) == 0;
+      return text.toUpperCase().indexOf(term.toUpperCase()) >= 0;
+    },
+    sortResults: function(results, container, query) {
+        if (query.term) {
+          var tmatches = [];
+          var dmatches = [];
+
+          /* prefer tag matches first, then description matches */
+          for (var x in results) {
+            var r = results[x];
+
+            if (r.id.toUpperCase().indexOf(query.term.toUpperCase()) == 0)
+              tmatches.push(r);
+            else
+              dmatches.push(r);
+          }
+
+          tmatches = tmatches.sort(function(a, b) {
+            return a.text.localeCompare(b.text);
+          });
+          dmatches = dmatches.sort(function(a, b) {
+            return a.text.localeCompare(b.text);
+          });
+
+          return tmatches.concat(dmatches);
+        }
+
+        return results;
     }
   });
 

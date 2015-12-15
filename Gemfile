@@ -27,7 +27,10 @@ gem "bcrypt", "~> 3.1.2"
 gem "nokogiri", "= 1.6.1"
 gem "htmlentities"
 gem "rdiscount"
-gem "elasticsearch-ruby" 
+
+gem "elasticsearch-ruby"
+gem "elasticsearch-model"
+gem 'kaminari'
 
 # for twitter-posting bot
 gem "oauth"

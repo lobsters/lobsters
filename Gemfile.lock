@@ -52,9 +52,21 @@ GEM
     concurrent-ruby (1.0.0)
     diff-lcs (1.2.5)
     dynamic_form (1.1.4)
+    elasticsearch (1.0.15)
+      elasticsearch-api (= 1.0.15)
+      elasticsearch-transport (= 1.0.15)
+    elasticsearch-api (1.0.15)
+      multi_json
+    elasticsearch-model (0.1.8)
+      activesupport (> 3)
+      elasticsearch (> 0.4)
+      hashie
     elasticsearch-ruby (0.0.4)
       activesupport (>= 3.0.0)
       thrift
+    elasticsearch-transport (1.0.15)
+      faraday
+      multi_json
     erubis (2.7.0)
     exception_notification (4.1.2)
       actionmailer (~> 4.0)
@@ -62,8 +74,11 @@ GEM
     execjs (2.6.0)
     faker (1.6.1)
       i18n (~> 0.5)
+    faraday (0.9.2)
+      multipart-post (>= 1.2, < 3)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
+    hashie (3.4.3)
     htmlentities (4.3.4)
     i18n (0.7.0)
     innertube (1.1.0)
@@ -74,6 +89,9 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (1.8.3)
+    kaminari (0.16.3)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     machinist (2.0)
@@ -84,6 +102,8 @@ GEM
     mime-types (2.99)
     mini_portile (0.5.3)
     minitest (5.8.3)
+    multi_json (1.11.2)
+    multipart-post (2.0.0)
     mysql2 (0.4.2)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
@@ -178,11 +198,13 @@ DEPENDENCIES
   bcrypt (~> 3.1.2)
   better_errors
   dynamic_form
+  elasticsearch-model
   elasticsearch-ruby
   exception_notification
   faker
   htmlentities
   jquery-rails
+  kaminari
   machinist
   mail
   mysql2

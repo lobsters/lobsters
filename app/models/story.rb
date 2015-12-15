@@ -172,16 +172,17 @@ class Story < ActiveRecord::Base
   end
 
   def calculated_hotness
-    base = 0
-    self.tags.select{|t| t.hotness_mod != 0 }.each do |t|
-      base += t.hotness_mod
-    end
+    base = self.tags.map{|t| t.hotness_mod }.sum
 
-    # give a story's comment votes some weight, but ignore the story
-    # submitter's own comments
-    cpoints = self.comments.where("user_id <> ?", self.user_id).
-      select(:upvotes, :downvotes).map{|c| c.upvotes + 1 - c.downvotes }.
-      inject(&:+).to_f * 0.5
+    # give a story's comment votes some weight (unless the hotness mod is
+    # negative), but ignore the story submitter's own comments
+    if base < 0
+      cpoints = 0
+    else
+      cpoints = self.comments.where("user_id <> ?", self.user_id).
+        select(:upvotes, :downvotes).map{|c| c.upvotes + 1 - c.downvotes }.
+        inject(&:+).to_f * 0.5
+    end
 
     # don't immediately kill stories at 0 by bumping up score by one
     order = Math.log([ (score + 1).abs + cpoints, 1 ].max, 10)

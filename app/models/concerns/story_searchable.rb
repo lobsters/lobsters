@@ -4,13 +4,12 @@ module StorySearchable
 
   included do
     include Elasticsearch::Model
-   include Elasticsearch::Model::Callbacks
+    include Elasticsearch::Model::Callbacks
 
     include Searchable
-    belongs_to :user
 
     settings do
-      mapping do
+      mappings dynamic: false do
         indexes :user do
           indexes :name , :as => :author
         end
@@ -44,49 +43,47 @@ module StorySearchable
 
   end
 
+  def as_indexed_json(options={})
+    indexed_json = {}
 
+    indexed_json[:description] = send(:description)
+    indexed_json["tags"] = tags.map { |tag| tag.name }.join(" ")
+    indexed_json.as_json
+  end
 
-  # def as_indexed_json(options={})
-  #   # indexed_json = {}
-  #      {
-  #        name: name,
-  #        sensory_tags: sensory_tags,
-  #        notes: notes,
-  #        name_suggest: {
-  #          input: name.split(/\b/),
-  #          output: name,
-  #          payload: {
-  #            resource_id: id,
-  #            color: color
-  #          }
-  #        }
-  #      }
-  #   # NOT_ANALYZE_INDEXES.each do |index_name, index_type|
-  #   #   indexed_json[index_name] = send(index_name)
-  #   # end
-  #   #
-  #   # ANALYZE_INDEXES.each do |index_name|
-  #   #   indexed_json[index_name] = send(index_name)
-  #   # end
-  #   #
-  #   # indexed_json["tags"] = tags.map { |tag| tag.name }.join(" ")
-  #   #
-  #   # indexed_json.as_json
-  # end
 
   module ClassMethods
-    # def fulltext_search(search_word)
-    #
-    #   search_definition = {
-    #     query: {
-    #       multi_match: {
-    #         fields: ANALYZE_INDEXES.map { |index_name| index_name },
-    #         query: search_word
-    #       }
-    #     }
-    #   }
-    #
-    #   search(search_definition)
-    # end
+      # def fulltext_search(search_word)
+      #
+      #   search_definition = {
+      #     query: {
+      #       multi_match: {
+      #         fields: ANALYZE_INDEXES.map { |index_name| index_name },
+      #         query: search_word
+      #       }
+      #     }
+      #   }
+      #
+      #   search(search_definition)
+      # end
+      # fields = %w(message^10 sha^5 author.name^2 author.email^2 committer.name committer.email).map {|i| "commit.#{i}"}
+
+      def trigram_search(query)
+        search_definition = {
+          query: {
+            multi_match: {
+              query: query
+              # fields: %w(name)
+            }
+          }
+        }
+        __elasticsearch__.search search_definition
+      end
+
+
+    def self.included(base)
+      base.extend ClassMethods
+    end
+
   end
 end

@@ -258,7 +258,8 @@ class CommentsController < ApplicationController
       @cur_url = "/threads"
     end
 
-    thread_ids = @showing_user.recent_threads(20)
+    thread_ids = @showing_user.recent_threads(20,
+      include_submitted_stories = !!(@user && @user.id == @showing_user.id))
 
     comments = Comment.where(
       :thread_id => thread_ids

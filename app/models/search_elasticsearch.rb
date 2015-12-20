@@ -105,8 +105,7 @@ class SearchElasticsearch
                                               query: { match: {_all: query}}
                                               # highlight: { fields: { content: {}, title:{}, name:{}}},
                                               # sort: [{title: {order: "desc"}}]
-                                              }, [ Story], {explain: :yaml}).results
-      byebug
+                                              }, [ Story], {explain: :yaml}).records
       self.total_results = self.results.count
 
     rescue => e

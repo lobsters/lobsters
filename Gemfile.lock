@@ -49,7 +49,10 @@ GEM
       erubis (>= 2.6.6)
       rack (>= 0.9.0)
     builder (3.2.2)
+    byebug (5.0.0)
+      columnize (= 0.9.0)
     coderay (1.1.0)
+    columnize (0.9.0)
     concurrent-ruby (1.0.0)
     diff-lcs (1.2.5)
     domain_name (0.5.25)
@@ -219,6 +222,7 @@ DEPENDENCIES
   aws-ses
   bcrypt (~> 3.1.2)
   better_errors
+  byebug
   dynamic_form
   elasticsearch-model
   elasticsearch-ruby

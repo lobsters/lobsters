@@ -22,7 +22,7 @@ class SearchElasticsearch
   end
 
   def max_matches
-    ThinkingSphinx::Configuration.instance.settings["max_matches"] || 1000
+     1000
   end
 
   def persisted?
@@ -100,10 +100,17 @@ class SearchElasticsearch
     self.results = []
     self.total_results = 0
     begin
-      self.results = ThinkingSphinx.search query, opts
-      self.total_results = self.results.total_entries
+      #self.results = ThinkingSphinx.search query, opts
+      self.results =   Elasticsearch::Model.search({
+                                              query: { match: {_all: query}}
+                                              # highlight: { fields: { content: {}, title:{}, name:{}}},
+                                              # sort: [{title: {order: "desc"}}]
+                                              }, [ Story], {explain: :yaml}).results
+      byebug
+      self.total_results = self.results.count
+
     rescue => e
-      Rails.logger.info "Error from Sphinx: #{e.inspect}"
+      Rails.logger.info "Error from Elasticsearch: #{e.inspect}"
     end
 
     if self.page > self.page_count

@@ -32,6 +32,7 @@ gem "elasticsearch-ruby"
 gem "elasticsearch-model"
 gem "tire"
 gem 'kaminari'
+gem "byebug"
 
 # for twitter-posting bot
 gem "oauth"

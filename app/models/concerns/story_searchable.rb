@@ -5,15 +5,19 @@ module StorySearchable
   included do
     include Elasticsearch::Model
     include Elasticsearch::Model::Callbacks
+    #include Elasticsearch::Persistence::Model
+     #attribute :taken_at, Date
+     #attribute :description, String, mapping: { type: 'string', analyzer: 'en_analyzer', copy_to: 'bigram' }
 
     include Searchable
 
     settings do
       mappings dynamic: false do
-        indexes :user do
-          indexes :name , :as => :author
-        end
-        indexes :description
+        # indexes :user do
+        #   indexes :name ,  :copy_to => 'author'#, :as => :author
+        # end
+        indexes :name ,  :copy_to => 'author'#, :as => :author
+        indexes :description, :boost => 10
         indexes :short_id
         indexes :title
         indexes :url
@@ -22,11 +26,11 @@ module StorySearchable
           indexes :tag, boost: 10
           indexes :sort, analyzer: 'sortable'
         end
-        indexes :created_at
-        indexes :id, :as => :story_id
-        indexes :hotness
-        indexes :is_expired
-        indexes :score_sql, :as => :score, :type => :long
+        indexes :created_at, index: :not_analyzed
+        indexes :id, :type => 'long' , :copy_to => 'story_id' #, index: :not_analyzed
+        indexes :hotness, index: :not_analyzed
+        indexes :is_expired, index: :not_analyzed
+        indexes :score_sql , :copy_to => 'score', :type => :long, :index => :not_analyzed #, :as => :score, :type => :long, index: :not_analyzed
 
         # indexes :city, type: 'multi_field' do
         #   indexes :city, boost: 10
@@ -40,6 +44,7 @@ module StorySearchable
       end
     end
 
+    __elasticsearch__.create_index!
 
   end
 
@@ -47,7 +52,17 @@ module StorySearchable
     indexed_json = {}
 
     indexed_json[:description] = send(:description)
-    indexed_json["tags"] = tags.map { |tag| tag.name }.join(" ")
+    indexed_json[:id] = send(:id)
+    indexed_json[:short_id] = send(:short_id)
+    indexed_json[:title] = send(:title)
+    indexed_json[:url] = send(:url)
+    indexed_json[:story_cache] = send(:story_cache)
+    indexed_json[:created_at] = send(:created_at)
+    indexed_json[:hotness] = send(:hotness)
+    indexed_json[:is_expired] = send(:is_expired)
+    indexed_json[:score_sql] = send(:upvotes) - send(:downvotes)
+    indexed_json[:user] = send(:user).username
+    #indexed_json["tags"] = tags.map { |tag| tag.name }.join(" ")
     indexed_json.as_json
   end
 

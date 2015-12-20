@@ -30,6 +30,7 @@ gem "rdiscount"
 
 gem "elasticsearch-ruby"
 gem "elasticsearch-model"
+gem "tire"
 gem 'kaminari'
 
 # for twitter-posting bot

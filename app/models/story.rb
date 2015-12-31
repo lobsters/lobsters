@@ -184,6 +184,9 @@ class Story < ActiveRecord::Base
         inject(&:+).to_f * 0.5
     end
 
+    # mix in any stories this one cannibalized
+    cpoints += self.merged_stories.map{|s| s.score }.inject(&:+).to_f
+
     # don't immediately kill stories at 0 by bumping up score by one
     order = Math.log([ (score + 1).abs + cpoints, 1 ].max, 10)
     if score > 0

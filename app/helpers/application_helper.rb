@@ -84,6 +84,6 @@ module ApplicationHelper
       ago = "#{years} year#{years == 1 ? "" : "s"} ago"
     end
 
-    raw(label_tag(nil, ago, :title => time.strftime("%F %T %z")))
+    raw(content_tag(:span, ago, :title => time.strftime("%F %T %z")))
   end
 end

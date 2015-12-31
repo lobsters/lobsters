@@ -11,6 +11,11 @@
   <meta name="robots" content="noarchive,noodp,noydir" />
   <meta name="referrer" content="always" />
   <meta name="theme-color" content="#AC130D" />
+  <% if @meta_tags %>
+    <% @meta_tags.each do |k,v| %>
+      <meta name="<%= k %>" content="<%= v %>" />
+    <% end %>
+  <% end %>
   <link rel="shortcut icon" href="/favicon.ico" />
   <% if @short_url %>
     <link rev="canonical" rel="self alternate shorter shorturl shortlink"

@@ -150,6 +150,14 @@ class StoriesController < ApplicationController
       format.html {
         @comment = @story.comments.build
 
+        @meta_tags = {
+          "twitter:card" => "summary",
+          "twitter:site" => "@lobsters",
+          "twitter:title" => @story.title,
+          "twitter:description" => "#{@story.comments_count} comment" <<
+            "#{@story.comments_count == 1 ? "" : "s"}",
+        }
+
         load_user_votes
 
         render :action => "show"

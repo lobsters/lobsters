@@ -8,19 +8,6 @@ require APP_PATH
 Rails.application.require_environment!
 
 class String
-  def force_to_ascii
-    # fixup some "smart" quotes and things instead of forcing them to "?" chars
-    gsub("\u201C", '"').
-    gsub("\u201D", '"').
-    gsub("\u2018", "'").
-    gsub("\u2019", "'").
-    gsub("\u2013", "-").
-    gsub("\u2014", "--").
-    gsub("\u2026", "...").
-    encode("us-ascii", :invalid => :replace, :undef => :replace,
-      :replace => "?")
-  end
-
   def quoted_printable(encoded_word = false)
     s = ""
     if encoded_word
@@ -103,7 +90,7 @@ Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each d
       mail.puts "Content-Transfer-Encoding: quoted-printable"
       mail.puts "Message-ID: <#{s.mailing_list_message_id}>"
       mail.puts "Date: " << s.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
-      mail.puts "Subject: " << s.title.force_to_ascii <<
+      mail.puts "Subject: " << s.title.quoted_printable <<
         s.tags.sort_by{|t| t.tag }.map{|t| " [#{t.tag}]" }.join
 
       mail.puts ""
@@ -221,7 +208,7 @@ last_comment_id, false, false).order(:id).each do |c|
       end
 
       mail.puts "Date: " << c.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
-      mail.puts "Subject: Re: " << c.story.title.force_to_ascii <<
+      mail.puts "Subject: Re: " << c.story.title.quoted_printable <<
         c.story.tags.sort_by{|t| t.tag }.map{|t| " [#{t.tag}]" }.join
 
       mail.puts ""

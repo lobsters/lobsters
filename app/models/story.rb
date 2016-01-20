@@ -468,6 +468,8 @@ class Story < ActiveRecord::Base
   end
 
   def fix_bogus_chars
+    # this is needlessly complicated to work around character encoding issues
+    # that arise when doing just self.title.to_s.gsub(160.chr, "")
     self.title = self.title.to_s.split("").map{|chr|
       if chr.ord == 160
         " "

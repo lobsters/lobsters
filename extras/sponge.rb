@@ -3,6 +3,34 @@ require "net/https"
 require "resolv"
 require "ipaddr"
 
+module Net
+  class HTTP
+    attr_accessor :address, :custom_conn_address, :skip_close
+
+    def start  # :yield: http
+      if block_given? && !skip_close
+        begin
+          do_start
+          return yield(self)
+        ensure
+          do_finish
+        end
+      end
+      do_start
+      self
+    end
+
+  private
+    def conn_address
+      if self.custom_conn_address.to_s != ""
+        self.custom_conn_address
+      else
+        address
+      end
+    end
+  end
+end
+
 class Sponge
   MAX_TIME = 60
   MAX_DNS_TIME = 5
@@ -121,6 +149,8 @@ class Sponge
 
     if uri.scheme == "https"
       host.use_ssl = true
+      host.address = uri.host
+      host.custom_conn_address = ip.to_s
       host.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
 

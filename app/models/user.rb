@@ -209,6 +209,27 @@ class User < ActiveRecord::Base
     end
   end
 
+  def grant_moderatorship_by_user!(user)
+    User.transaction do
+      self.is_moderator = true
+      self.save!
+
+      m = Moderation.new
+      m.moderator_user_id = user.id
+      m.user_id = self.id
+      m.action = "Granted moderator status"
+      m.save!
+
+      h = Hat.new
+      h.user_id = self.id
+      h.granted_by_user_id = user.id
+      h.hat = "Sysop"
+      h.save!
+    end
+
+    true
+  end
+
   def initiate_password_reset_for_ip(ip)
     self.password_reset_token = "#{Time.now.to_i}-#{Utils.random_str(30)}"
     self.save!

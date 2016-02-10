@@ -24,7 +24,7 @@ class Hat < ActiveRecord::Base
     h = "<span class=\"hat\" title=\"Granted by " <<
       "#{self.granted_by_user.username} on " <<
       "#{self.created_at.strftime("%Y-%m-%d")}"
-    
+
     if !hl && self.link.present?
       h << " - #{self.link}"
     end

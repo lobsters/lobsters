@@ -163,6 +163,11 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             (hidden by <%= pluralize(story.hider_count, "user") %>)
           <% end %>
         <% end %>
+        <% if story.url.present? %>
+          |
+          <a href="https://archive.is/<%= story.url %>" rel="nofollow"
+            target="_new">cached</a>
+        <% end %>
         <% if !story.is_gone? %>
           <span class="comments_label">
             |

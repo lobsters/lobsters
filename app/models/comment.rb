@@ -284,6 +284,8 @@ class Comment < ActiveRecord::Base
       "Thread removed by moderator " <<
         self.moderation.try(:moderator).try(:username).to_s << ": " <<
         (self.moderation.try(:reason) || "No reason given")
+    elsif self.user.is_banned?
+      "Comment from banned user removed"
     else
       "Comment removed by author"
     end

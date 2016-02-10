@@ -23,8 +23,10 @@
           <a href="<%= mod.story.comments_path %>">Story: <%= mod.story.title
             %></a>
         <% elsif mod.comment %>
-          <a href="<%= mod.comment.url %>">Comment on <%=
-            mod.comment.story.title %></a>
+          <a href="<%= mod.comment.url %>">Comment by
+            <%= mod.comment.user.username %>
+            on
+            <%= mod.comment.story.title %></a>
         <% elsif mod.user_id %>
           <% if mod.user %>
             <a href="/u/<%= mod.user.username %>">User

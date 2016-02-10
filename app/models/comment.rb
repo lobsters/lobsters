@@ -404,18 +404,29 @@ class Comment < ActiveRecord::Base
     self.story.comments_url + "/comments/#{self.short_id}#c_#{self.short_id}"
   end
 
-  def vote_summary
+  def vote_summary_for_user(u)
     r_counts = {}
-    Vote.where(:comment_id => self.id).each do |v|
+    r_users = {}
+    self.votes.includes(:user).each do |v|
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += v.vote
+
+      r_users[v.reason.to_s] ||= []
+      r_users[v.reason.to_s].push v.user.username
     end
 
     r_counts.keys.sort.map{|k|
-      k == "" ? "+#{r_counts[k]}" : "#{r_counts[k]} #{Vote::COMMENT_REASONS[k]}"
+      if k == ""
+        "+#{r_counts[k]}"
+      else
+        o = "#{r_counts[k]} #{Vote::COMMENT_REASONS[k]}"
+        if u && u.is_moderator? && self.user_id != u.id
+          o << " (#{r_users[k].join(", ")})"
+        end
+        o
+      end
     }.join(", ")
   end
-
 
   def undelete_for_user(user)
     Comment.record_timestamps = false

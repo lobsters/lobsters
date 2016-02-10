@@ -111,7 +111,7 @@ class CommentsController < ApplicationController
       return render :text => "can't find comment", :status => 400
     end
 
-    comment.delete_for_user(@user)
+    comment.delete_for_user(@user, params[:reason])
 
     render :partial => "comment", :layout => false,
       :content_type => "text/html", :locals => { :comment => comment }

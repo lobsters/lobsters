@@ -185,7 +185,7 @@ class Comment < ActiveRecord::Base
     self.markeddown_comment = self.generated_markeddown_comment
   end
 
-  def delete_for_user(user)
+  def delete_for_user(user, reason = nil)
     Comment.record_timestamps = false
 
     self.is_deleted = true
@@ -197,6 +197,11 @@ class Comment < ActiveRecord::Base
       m.comment_id = self.id
       m.moderator_user_id = user.id
       m.action = "deleted comment"
+
+      if reason.present?
+        m.reason = reason
+      end
+
       m.save
     end
 

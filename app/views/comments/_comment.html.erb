@@ -75,7 +75,11 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
           <a class="comment_undeletor">undelete</a>
         <% elsif !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
           |
-          <a class="comment_deletor">delete</a>
+          <% if @user && @user.is_moderator? && @user.id != comment.user_id %>
+            <a class="comment_moderator">delete</a>
+          <% else %>
+            <a class="comment_deletor">delete</a>
+          <% end %>
         <% end %>
 
         <% if @user && !comment.story.is_gone? && !comment.is_gone? %>

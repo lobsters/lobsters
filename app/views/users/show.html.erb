@@ -180,7 +180,7 @@
     </div>
     </p>
 
-    <% if @user.is_banned? %>
+    <% if @showing_user.is_banned? %>
       <%= form_tag user_unban_path, :method => :post do %>
         <p>
         <%= submit_tag "Unban User" %>

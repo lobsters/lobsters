@@ -25,6 +25,10 @@ class Markdowner
       h[:rel] = "nofollow"
     end
 
+    # XXX: t.replace(tx) unescapes HTML, so disable for now.  this probably
+    # needs to split text into separate nodes and then replace the @username
+    # with a proper 'a' node
+if false
     unless opts[:disable_profile_links]
       # make @username link to that user's profile
       ng.search("//text()").each do |t|
@@ -44,6 +48,7 @@ class Markdowner
         t.replace(tx)
       end
     end
+end
 
     ng.at_css("body").inner_html
   end

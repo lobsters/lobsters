@@ -8,20 +8,6 @@
 </script>
 
 <div class="box wide">
-  <div class="legend" style="float: right;">
-    <% if @direction == :out %>
-      <a href="/messages">View Received</a>
-    <% else %>
-      <a href="/messages/sent">View Sent</a>
-    <% end %>
-  </div>
-  <div class="legend">
-    Private Messages
-    <% if @direction == :out %>
-      Sent
-    <% end %>
-  </div>
-  
   <div class="legend">
     Compose Message
   </div>
@@ -54,6 +40,20 @@
   <% end %>
 
   <br>
+  
+  <div class="legend" style="float: right;">
+    <% if @direction == :out %>
+      <a href="/messages">View Received</a>
+    <% else %>
+      <a href="/messages/sent">View Sent</a>
+    <% end %>
+  </div>
+  <div class="legend">
+    Private Messages
+    <% if @direction == :out %>
+      Sent
+    <% end %>
+  </div>
 
   <% if @messages.any? %>
     <%= form_tag batch_delete_messages_path do %>

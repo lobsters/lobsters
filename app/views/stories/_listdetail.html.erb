@@ -173,11 +173,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             |
             <a href="<%= story.comments_path %>">
             <% if story.comments_count == 0 %>
-              <% if @user %>
-                discuss
-              <% else %>
-                no comments
-              <% end %>
+              no comments
             <% else %>
               <%= story.comments_count %>
                 comment<%= story.comments_count == 1 ? "" : "s" %>

@@ -39,7 +39,7 @@ GEM
     execjs (2.2.1)
     faker (1.4.2)
       i18n (~> 0.5)
-    htmlentities (4.3.2)
+    htmlentities (4.3.4)
     i18n (0.7.0)
     innertube (1.1.0)
     joiner (0.3.4)

@@ -146,7 +146,8 @@
 
     <div class="boxline">
       <%= f.label :show_submitted_story_threads,
-        "Show in Your Threads:", :class => "required" %>
+        raw("Show in <a href=\"/threads\">Your Threads</a>:"),
+        :class => "required" %>
       <%= f.check_box :show_submitted_story_threads %>
     </div>
 
@@ -158,12 +159,12 @@
 
     <p>
     When enabled, you will receive all newly submitted stories and comments to
-    your e-mail address entered above, except those stories (and their
-    comments) filtered by your <a href="/filters">tag filters</a>.  All e-mail
-    messages will appear to be sent to your private list address shown below
-    which you can filter on, and e-mails you send to that address will be
-    posted under your account on this website.  You should keep your unique
-    list address private to prevent others from posting comments as you.
+    your e-mail address entered above, except the stories and comments filtered
+    by your <a href="/filters">tag filters</a>.
+    All e-mail messages will appear to be sent to your private list address
+    shown below which you can filter on, and e-mails you send to that address
+    will be posted under your account on this website.  You should keep your
+    unique list address private to prevent others from posting comments as you.
     </p>
 
     <div class="boxline">
@@ -206,6 +207,16 @@
   <br>
   <br>
 
+  <a name="invite"></a>
+  <div class="legend">
+    Invite a New User
+  </div>
+
+  <%= render :partial => "users/invitationform" %>
+
+  <br>
+  <br>
+
   <%= form_for @edit_user, :url => delete_account_path, :method => :post,
   :html => { :id => "delete_user" } do |f| %>
     <div class="legend">
@@ -216,9 +227,10 @@
     To permanently delete your account, verify your current password below.
     Your account will be put into a deleted state, your comments will be marked
     as deleted and no longer readable by any other users, and your private
-    messages will be deleted.  Your submitted stories will not be deleted.
-    Your username will remain reserved and will not be available to use on any
-    other account.
+    messages will be deleted.
+    Your submitted stories will not be deleted.
+    Your username will remain reserved and will not be available to be used on
+    any other account.
     </p>
 
     <div class="boxline">
@@ -229,14 +241,4 @@
     <br>
     <%= f.submit "Yes, Delete My Account" %>
   <% end %>
-
-  <br>
-  <br>
-
-  <a name="invite"></a>
-  <div class="legend">
-    Invite a New User
-  </div>
-
-  <%= render :partial => "users/invitationform" %>
 </div>

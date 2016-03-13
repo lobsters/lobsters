@@ -65,7 +65,7 @@
         <th width="17%"><%= @direction == :in ? "Received" : "Sent" %></th>
         <th width="60%">Subject</th>
       </tr>
-      <% @messages.reverse.includes(:author, :recipient).each do |message| %>
+      <% @messages.includes(:author, :recipient).each do |message| %>
         <tr class="<%= message.has_been_read? ? "" : "bold" %>">
           <td><%= check_box_tag "delete_#{message.short_id}" %></td>
           <td><% if @direction == :in %>

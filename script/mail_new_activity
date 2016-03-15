@@ -12,7 +12,8 @@ class String
     s = [ self ].pack("M")
 
     if encoded_word
-      s.split(/\r?\n/).map{|l| "=?UTF-8?Q?#{l.gsub(/=*$/, "")}?=" }.join("\n\t")
+      s.split(/\r?\n/).map{|l| "=?UTF-8?Q?" <<
+        l.gsub(/=*$/, "").gsub(" ", "_") << "?=" }.join("\n\t")
     else
       s
     end

@@ -21,19 +21,22 @@ class ApplicationController < ActionController::Base
   def increase_traffic_counter
     @traffic = 1.0
 
-    if user_is_spider? || [ "json", "rss" ].include?(params[:format])
-      return true
-    end
-
     Keystore.transaction do
       now_i = Time.now.to_i
       date_kv = Keystore.find_or_create_key_for_update("traffic:date", now_i)
       traffic_kv = Keystore.find_or_create_key_for_update("traffic:hits", 0)
 
-      # increment traffic counter on each request
-      traffic = traffic_kv.value.to_i + 100
+      traffic = traffic_kv.value.to_i
+
+      # don't increase traffic counter for bots or api requests
+      unless agent_is_spider? || agent_via_tor? ||
+      [ "json", "rss" ].include?(params[:format])
+        traffic += 100
+      end
+
       # every second, decrement traffic by some amount
       traffic -= (100.0 * (now_i - date_kv.value) * TRAFFIC_DECREMENTER).to_i
+
       # clamp to 100, 1000
       traffic = [ [ 100, traffic ].max, 10000 ].min
 
@@ -45,7 +48,7 @@ class ApplicationController < ActionController::Base
       date_kv.value = now_i
       date_kv.save!
 
-      Rails.logger.info "  Traffic level: #{@traffic} (#{traffic})"
+      Rails.logger.info "  Traffic level: #{@traffic.to_i}"
     end
 
     true
@@ -92,9 +95,13 @@ class ApplicationController < ActionController::Base
     )
   end
 
-  def user_is_spider?
+  def agent_is_spider?
     ua = request.env["HTTP_USER_AGENT"].to_s
     (ua == "" || ua.match(/(Google|bing)bot/))
+  end
+
+  def agent_via_tor?
+    request.remote_ip == "127.0.0.1"
   end
 
   def find_user_from_rss_token

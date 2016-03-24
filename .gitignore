@@ -23,6 +23,7 @@ public/assets
 app/views/home/privacy.*
 app/views/home/about.*
 app/views/home/chat.*
+app/assets/stylesheets/local/*
 
 # files added in production
 lib/tasks/deploy.rake

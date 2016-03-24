@@ -2,6 +2,7 @@
  *= require select2
  *= require_self
  *= require mobile
+ *= require_tree ./local
 */
 
 

@@ -44,10 +44,6 @@ div.clear {
 	clear: both;
 }
 
-div.s {
-	height: 1px;
-}
-
 a.tag {
 	background-color: #fffcd7;
 	border: 1px solid #d5d458;
@@ -63,11 +59,6 @@ a.tag {
 a.tag_is_media {
 	background-color: #ddebf9;
 	border-color: #b2ccf0;
-}
-
-a.tag_announce, a.tag_ask, a.tag_show, a.tag_interview {
-	background-color: #f9ddde;
-	border-color: #f0b2b8;
 }
 
 a.tag_meta {
@@ -267,28 +258,6 @@ div#inside {
 
 #headerleft {
 	float: left;
-}
-
-#l_holder {
-	background: #ee0000 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAL0ALQAtZF7+HAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wCCBAuLt2rqugAAACMSURBVDjL1ZMxCsJQEERfRPEk9im9mGfxBpaCnaXmBraeQEidKsKz2eIb/peEIOLAwu4Ws7PMbsUAKlOwYCaWmd4aWCV1B4yXpR59R61SitwKDdBHfgPaSTsF8zOmHz5NLykAeCRqvuvCfxGcgP0YF3ZqHy7c1Yt6jfo8dCF3idvkQjcRRVQ/f6bZBC+RBoeZnlCyqwAAAABJRU5ErkJggg==) no-repeat;
-	background-position: center;
-	float: left;
-	display: block;
-	width: 16px;
-	height: 16px;
-	padding: 1px;
-	margin-left: 4px;
-	margin-right: 11px;
-}
-
-@media
-only screen and (min-resolution: 2dppx),
-only screen and (-webkit-min-device-pixel-ratio: 2) {
-	#l_holder {
-		background: #ee0000 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QAAAD/AAauuCqnAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wsCAS8I72AnqAAAACZpVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVAgb24gYSBNYWOV5F9bAAABE0lEQVRYw+2WMUoEMRSG34uDs4jaW1go2HgBvYOdjb3VnsDKSvAAdh7BM4i9LNiJsJ3gtDMqKDOzZOaLjcIimXUZd3dE8kGa5Cf5XlLkiQQCHaNNC1VVHRhjLqbZBOhHUXTTRiCasFZ+jh1VXfYFnHNvIjJ0zo3mdkVlWW4D7+4bwGOWZWsLeSfg2iNwOYu9zZS5Z8/c6yIF5kYQCAJB4H8LAGfAeScCRVFsisipiBx2IhDHcV9VVUTqWQise+ZWmsLW2n0ROflqLX5VSZqmq0Dq+Q2HeZ5vjGeTJOnVdX0MvIzl7lodbK3dA66AJ9cAUAEPwC1wD4w8mUGrjsgYs6WqRxP7OdUlEdn9oZZKAoHAX+YDqSbY/ekOWr0AAAAASUVORK5CYII=) no-repeat;
-		background-size: 16px;
-		background-position: 1px 1px;
-	}
 }
 
 #header h1 {

@@ -63,7 +63,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
       <% if !comment.previewing %>
         |
-        <a href="<%= comment.url %>">link</a>
+        <a href="<%= comment.short_id_url %>">link</a>
 
         <% if comment.is_editable_by_user?(@user) %>
           |

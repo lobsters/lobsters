@@ -114,7 +114,7 @@ class Comment < ActiveRecord::Base
   def as_json(options = {})
     h = [
       :short_id,
-      { :short_id_url => Rails.application.root_url + "c/#{self.short_id}" },
+      :short_id_url,
       :created_at,
       :updated_at,
       :is_deleted,
@@ -392,11 +392,11 @@ class Comment < ActiveRecord::Base
   end
 
   def short_id_path
-    self.story.short_id_path + "/_/comments/#{self.short_id}#c_#{self.short_id}"
+    self.story.short_id_path + "/c/#{self.short_id}"
   end
 
   def short_id_url
-    self.story.short_id_url + "/_/comments/#{self.short_id}#c_#{self.short_id}"
+    Rails.application.root_url + "c/#{self.short_id}"
   end
 
   def to_param

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Exit if any subcommand fails
+set -e
+
+# Set up Ruby dependencies via Bundler
+gem install bundler --conservative
+bundle check || bundle install
+
+# Create a secret key
+echo 'Lobsters::Application.config.secret_key_base = "'$(bundle exec rake secret)'"'
+
+# Setup the database
+cp config/database.example.yml config/database.yml
+bundle exec rake db:reset

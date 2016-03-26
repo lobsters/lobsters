@@ -1,0 +1,12 @@
+development:
+  adapter: mysql2
+  encoding: utf8mb4
+  reconnect: false
+  database: lobsters_dev
+  socket: /tmp/mysql.sock
+
+test:
+  adapter: sqlite3
+  database: db/test.sqlite3
+  pool: 5
+  timeout: 5000

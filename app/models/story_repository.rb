@@ -119,7 +119,7 @@ private
   end
 
   def positive_ranked(scope)
-    scope.where("#{Story.score_sql} >= -1")
+    scope.where("#{Story.score_sql} >= 0")
   end
 
   def filter_tags(scope, tags)

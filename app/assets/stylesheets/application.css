@@ -273,6 +273,17 @@ div#inside {
 	text-decoration: none;
 }
 
+#l_holder {
+	background-position: center;
+	float: left;
+	display: block;
+	width: 16px;
+	height: 16px;
+	padding: 1px;
+	margin-left: 4px;
+	margin-right: 11px;
+}
+
 #headertitle {
 	padding-right: 0.75em;
 }

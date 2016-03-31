@@ -78,6 +78,8 @@ in a `config/initializers/production.rb` or similar file:
           
           Rails.application.routes.default_url_options[:host] = Rails.application.domain
 
+* Put your site's custom CSS in `app/assets/stylesheets/local`.
+
 * Seed the database to create an initial administrator user and at least one tag:
 
           lobsters$ rake db:seed

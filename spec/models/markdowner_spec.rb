@@ -6,16 +6,6 @@ describe Markdowner do
       "<p>hello there <em>italics</em> and <strong>bold</strong>!</p>"
   end
 
-  it "turns @username into a link if @username exists" do
-    User.make!(:username => "blahblah")
-
-    Markdowner.to_html("hi @blahblah test").should ==
-      "<p>hi <a href=\"/u/blahblah\">@blahblah</a> test</p>"
-
-    Markdowner.to_html("hi @flimflam test").should ==
-      "<p>hi @flimflam test</p>"
-  end
-
   # bug#209
   it "keeps punctuation inside of auto-generated links when using brackets" do
     Markdowner.to_html("hi <http://example.com/a.> test").should ==

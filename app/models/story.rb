@@ -785,4 +785,5 @@ class Story < ActiveRecord::Base
 
     @fetched_attributes
   end
+  include StorySearchable
 end

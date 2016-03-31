@@ -1,6 +1,6 @@
 class InvitationMailer < ActionMailer::Base
-  default :from => "#{Rails.application.name} " <<
-    "<nobody@#{Rails.application.domain}>"
+  default :from => "#{DATABASE['mailer']['name']} " <<
+    "<#{DATABASE['mailer']['email']}>"
 
   def invitation(invitation)
     @invitation = invitation

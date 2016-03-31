@@ -1,10 +1,12 @@
 source "https://rubygems.org"
 
-gem "rails", "4.1.12"
+gem "rails"
 
-gem "unicorn"
+gem "puma"
 
-gem "mysql2", ">= 0.3.14"
+gem "mysql2"
+gem "pg"
+gem 'aws-ses'
 
 # uncomment to use PostgreSQL
 # gem "pg"
@@ -26,6 +28,12 @@ gem "nokogiri", "= 1.6.1"
 gem "htmlentities"
 gem "rdiscount"
 
+gem "elasticsearch-ruby"
+gem "elasticsearch-model"
+gem "tire"
+gem 'kaminari'
+gem "byebug"
+
 # for twitter-posting bot
 gem "oauth"
 
@@ -35,6 +43,9 @@ gem "mail"
 group :test, :development do
   gem "rspec-rails", "~> 2.6"
   gem "machinist"
-  gem "sqlite3"
   gem "faker"
+  gem "better_errors"
+  gem 'pry'
+  gem 'pry-rails'
+  gem 'pry-doc'
 end

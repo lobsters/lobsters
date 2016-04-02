@@ -8,6 +8,39 @@
 </script>
 
 <div class="box wide">
+  <div class="legend">
+    Compose Message
+  </div>
+
+  <%= form_for @new_message, :method => :post do |f| %>
+    <%= error_messages_for @new_message %>
+
+    <div class="boxline">
+      <%= f.label :recipient_username, "To:", :class => "required" %>
+      <%= f.text_field :recipient_username, :size => 20,
+        :autocomplete => "off" %>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :subject, "Subject:", :class => "required" %>
+      <%= f.text_field :subject, :style => "width: 500px;",
+        :autocomplete => "off" %>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :body, "Message:", :class => "required" %>
+      <%= f.text_area :body, :style => "width: 500px;", :rows => 5,
+        :autocomplete => "off" %>
+    </div>
+
+    <div class="boxline">
+      <p></p>
+      <%= submit_tag "Send Message" %>
+    </div>
+  <% end %>
+
+  <br>
+  
   <div class="legend" style="float: right;">
     <% if @direction == :out %>
       <a href="/messages">View Received</a>
@@ -63,36 +96,4 @@
     </p>
   <% end %>
 
-  <br>
-
-  <div class="legend">
-    Compose Message
-  </div>
-
-  <%= form_for @new_message, :method => :post do |f| %>
-    <%= error_messages_for @new_message %>
-
-    <div class="boxline">
-      <%= f.label :recipient_username, "To:", :class => "required" %>
-      <%= f.text_field :recipient_username, :size => 20,
-        :autocomplete => "off" %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :subject, "Subject:", :class => "required" %>
-      <%= f.text_field :subject, :style => "width: 500px;",
-        :autocomplete => "off" %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :body, "Message:", :class => "required" %>
-      <%= f.text_area :body, :style => "width: 500px;", :rows => 5,
-        :autocomplete => "off" %>
-    </div>
-
-    <div class="boxline">
-      <p></p>
-      <%= submit_tag "Send Message" %>
-    </div>
-  <% end %>
 </div>

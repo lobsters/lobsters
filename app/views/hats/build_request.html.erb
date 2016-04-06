@@ -1,0 +1,46 @@
+<div class="box wide">
+  <div class="legend">
+    Request a Hat
+  </div>
+
+  <p>
+  A hat is a formal, verified, way of posting a comment while speaking for a
+  project, organization, or company.  Each user may have multiple hats, one of
+  which may be worn at any time when posting a comment or sending a private
+  message.
+  </p>
+  <p>
+  To request a hat for your account, provide a short description of the hat
+  (e.g., "OpenBSD Developer"), a public link that will be shown when hovering
+  over the hat that users can see, such as your e-mail address at that project
+  or company, or a link to a company website showing your employment, and
+  private comments that will be seen only by moderators during approval.
+  </p>
+  <p>
+  Once your hat is requested, a moderator will verify your request by e-mailing
+  the address you submitted as the link, or doing some other manual
+  verification of project association.
+  </p>
+
+  <%= form_for @hat_request, :url => create_hat_request_path do |f| %>
+    <p>
+    <%= f.label :hat, "Hat:" %>
+    <%= f.text_field :hat, :size => 20,
+      :placeholder => "XYZ Project Member" %>
+    <br />
+
+    <%= f.label :link, "Link:" %>
+    <%= f.text_field :link, :size => 50,
+      :placeholder => "user@project.org, or a URL to an employment page" %>
+    <br />
+
+    <%= f.label :comment, "Comment:" %>
+    <%= f.text_area :comment, :rows => 4,
+      :placeholder => "Will only be shown to moderators during approval" %>
+    </p>
+
+    <p>
+    <%= submit_tag "Request Hat" %>
+    </p>
+  <% end %>
+</div>

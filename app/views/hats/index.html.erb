@@ -1,0 +1,45 @@
+<div class="box wide">
+  <% if @user %>
+    <div class="legend right">
+      <a href="<%= request_hat_url %>">Request Hat</a>
+    </div>
+  <% end %>
+  <div class="legend">
+    Hats
+  </div>
+
+  <p>
+  A hat is a formal, verified, way of posting a comment while speaking for a
+  project, organization, or company.  Each user may have multiple hats, one of
+  which may be selected to be worn when posting a comment or sending a private
+  message.
+  </p>
+
+  <table class="data" width="100%" cellspacing=0>
+  <tr>
+    <th style="width: 130px;">User</th>
+    <th>Hat</th>
+    <th>Link</th>
+  </tr>
+  <% bit = 0 %>
+  <% @hat_groups.keys.sort.each do |hg| %>
+    <% @hat_groups[hg].sort_by{|hh| hh.user.username }.each do |hh| %>
+      <tr class="row<%= bit %>">
+        <td><a href="/u/<%= hh.user.username %>"><%= hh.user.username
+          %></a></td>
+        <td><%= hh.to_html_label %></td>
+        <td>
+          <% if hh.link.to_s.match(/^http/) %>
+            <a href="<%= hh.link %>" rel="nofollow"><%= hh.link %></a>
+          <% elsif hh.link.blank? %>
+            <span class="na">None</span>
+          <% else %>
+            <%= hh.link %>
+          <% end %>
+        </td>
+      </tr>
+      <% bit = (bit == 1 ? 0 : 1) %>
+    <% end %>
+  <% end %>
+  </table>
+</div>

@@ -217,7 +217,8 @@ div.field_with_errors {
 
 div.field_with_errors input[type="text"],
 div.field_with_errors input[type="email"],
-div.field_with_errors input[type="password"] {
+div.field_with_errors input[type="password"],
+div.field_with_errors textarea {
 	border: 1px solid red;
 }
 div.field_with_errors input:focus {

@@ -121,6 +121,17 @@ Lobsters::Application.routes.draw do
     post "/invitations/delete_request" => "invitations#delete_request",
       :as => "delete_invitation_request"
 
+    get "/hats" => "hats#index"
+    get "/hats/build_request" => "hats#build_request",
+      :as => "request_hat"
+    post "/hats/create_request" => "hats#create_request",
+      :as => "create_hat_request"
+    get "/hats/requests" => "hats#requests_index"
+    post "/hats/approve_request/:id" => "hats#approve_request",
+      :as => "approve_hat_request"
+    post "/hats/reject_request/:id" => "hats#reject_request",
+      :as => "reject_hat_request"
+
     get "/moderations" => "moderations#index"
     get "/moderations/page/:page" => "moderations#index"
 

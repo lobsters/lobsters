@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151207180050) do
+ActiveRecord::Schema.define(version: 20160406160019) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -36,6 +36,15 @@ ActiveRecord::Schema.define(version: 20151207180050) do
   add_index "comments", ["short_id"], name: "short_id", unique: true, using: :btree
   add_index "comments", ["story_id", "short_id"], name: "story_id_short_id", using: :btree
   add_index "comments", ["thread_id"], name: "thread_id", using: :btree
+
+  create_table "hat_requests", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+    t.string   "hat"
+    t.string   "link"
+    t.text     "comment"
+  end
 
   create_table "hats", force: true do |t|
     t.datetime "created_at"

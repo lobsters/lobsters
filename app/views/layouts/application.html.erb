@@ -122,6 +122,10 @@
         (iqc = InvitationRequest.verified_count) > 0 %>
           <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
         <% end %>
+        <% if @user && @user.is_moderator? &&
+        (hrc = HatRequest.count) > 0 %>
+          <a href="/hats/requests">Hat Requests (<%= hrc %>)</a>
+        <% end %>
         <a href="/chat">Chat</a>
         <% if defined?(BbsController) %>
           <a href="/bbs">BBS</a>

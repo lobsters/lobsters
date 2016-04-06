@@ -1,0 +1,58 @@
+<div class="box wide">
+  <div class="legend">
+    Requested Hats
+  </div>
+
+  <% if @hat_requests.count == 0 %>
+    No hat requests.
+  <% else %>
+    <% @hat_requests.each_with_index do |hr,x| %>
+      <% if x > 0 %>
+        <hr>
+      <% end %>
+
+      <%= form_for hr, :url => approve_hat_request_url(:id => hr),
+      :method => :post do |f| %>
+        <p>
+        <div class="boxline">
+          <%= f.label :user_id, "User:", :class => "required" %>
+          <a href="/u/<%= hr.user.username %>"><%= hr.user.username %></a>
+        </div>
+
+        <div class="boxline">
+          <%= f.label :hat, "Hat:", :class => "required" %>
+          <%= f.text_field "hat", :size => 25 %>
+        </div>
+
+        <div class="boxline">
+          <%= f.label :link, "Link:", :class => "required" %>
+          <%= f.text_field "link", :size => 25 %>
+        </div>
+
+        <div class="boxline">
+          <%= f.label :link, "Comment:", :class => "required" %>
+          <div class="d">
+            <%= raw(h(hr.comment.to_s).gsub(/\n/, "<br>")) %>
+          </div>
+        </div>
+
+        <p>
+        <%= submit_tag "Approve Hat Request" %>
+        </p>
+      <% end %>
+      <p>
+      or
+      </p>
+      <%= form_for hr, :url => reject_hat_request_url(:id => hr),
+      :method => :post do |f| %>
+        <div class="boxline">
+          <%= f.label :link, "Reason:", :class => "required" %>
+          <%= f.text_area :rejection_comment, :rows => 4 %>
+        </div>
+        <p>
+        <%= submit_tag "Reject Hat Request" %>
+        </p>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

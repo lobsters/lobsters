@@ -97,7 +97,7 @@ class ApplicationController < ActionController::Base
 
   def agent_is_spider?
     ua = request.env["HTTP_USER_AGENT"].to_s
-    (ua == "" || ua.match(/(Google|bing)bot/))
+    (ua == "" || ua.match(/(Google|bing)bot|Slurp|crawler/))
   end
 
   def agent_via_tor?

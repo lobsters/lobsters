@@ -71,6 +71,7 @@ span.hat {
 	border-radius: 4px;
 	padding: 1px 8px;
 	vertical-align: super;
+	white-space: nowrap;
 }
 span.hat span.crown {
 	background-color: #ddd;

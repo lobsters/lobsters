@@ -22,8 +22,8 @@
     <th>Link</th>
   </tr>
   <% bit = 0 %>
-  <% @hat_groups.keys.sort.each do |hg| %>
-    <% @hat_groups[hg].sort_by{|hh| hh.user.username }.each do |hh| %>
+  <% @hat_groups.keys.sort_by{|a| a.downcase }.each do |hg| %>
+    <% @hat_groups[hg].sort_by{|hh| hh.user.username.downcase }.each do |hh| %>
       <tr class="row<%= bit %>">
         <td><a href="/u/<%= hh.user.username %>"><%= hh.user.username
           %></a></td>

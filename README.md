@@ -18,7 +18,8 @@ file.
 
 ####Initial setup
 
-* Install Ruby. Supported Ruby versions include 1.9.3, 2.0.0 and 2.1.0.
+* Install Ruby.  This code has been tested with Ruby versions 1.9.3, 2.0.0, 2.1.0,
+and 2.3.0.
 
 * Checkout the lobsters git tree from Github
 

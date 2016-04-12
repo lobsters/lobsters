@@ -4,6 +4,8 @@ class HatsController < ApplicationController
     :except => [ :build_request, :index, :create_request ]
 
   def build_request
+    @title = "Request a Hat"
+
     @hat_request = HatRequest.new
   end
 

@@ -36,6 +36,9 @@ class Story < ActiveRecord::Base
   # users needed to make similar suggestions go live
   SUGGESTION_QUORUM = 2
 
+  # let a hot story linger for this many seconds
+  HOTNESS_WINDOW = 60 * 60 * 22
+
   attr_accessor :vote, :already_posted_story, :previewing, :seen_previous,
     :is_hidden_by_cur_user
   attr_accessor :editor, :moderation_reason, :merge_story_short_id,
@@ -197,11 +200,8 @@ class Story < ActiveRecord::Base
       sign = 0
     end
 
-    # TODO: as the site grows, shrink this down to 12 or so.
-    window = 60 * 60 * 24
-
     return -((order * sign) + base +
-      ((self.created_at || Time.now).to_f / window)).round(7)
+      ((self.created_at || Time.now).to_f / HOTNESS_WINDOW)).round(7)
   end
 
   def can_be_seen_by_user?(user)

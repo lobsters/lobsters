@@ -15,7 +15,13 @@ class HomeController < ApplicationController
   end
 
   def chat
-    render :action => "chat"
+    begin
+      render :action => "chat"
+    rescue
+      render :text => "<div class=\"box wide\">" <<
+        "Keep it on-site" <<
+        "</div>", :layout => "application"
+    end
   end
 
   def privacy

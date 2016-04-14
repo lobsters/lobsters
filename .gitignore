@@ -34,8 +34,3 @@ config/database.yml
 config/initializers/secret_token.rb
 config/*.sphinx.conf
 config/unicorn.conf.rb
-
-# bbs symlinks into ../lobsters-bbs
-app/controllers/bbs_controller.rb
-app/views/layouts/bbs.*
-public/bbs

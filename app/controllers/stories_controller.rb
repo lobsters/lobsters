@@ -156,6 +156,8 @@ class StoriesController < ApplicationController
           "twitter:title" => @story.title,
           "twitter:description" => "#{@story.comments_count} comment" <<
             "#{@story.comments_count == 1 ? "" : "s"}",
+          "twitter:image" => Rails.application.root_url +
+            "apple-touch-icon-144.png",
         }
 
         load_user_votes

@@ -91,3 +91,6 @@ in a `config/initializers/production.rb` or similar file:
 `http://localhost:3000` with your new `test` user:
 
           lobsters$ rails server
+
+* In production, set up crontab or another scheduler to run the jobs specified
+in the example `crontab` file.

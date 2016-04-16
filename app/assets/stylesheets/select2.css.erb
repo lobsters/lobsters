@@ -72,7 +72,7 @@ Version: @@ver@@ Timestamp: @@timestamp@@
   width: 12px;
   height: 12px;
   font-size: 1px;
-  background: url(select2.png) right top no-repeat;
+  background: url(<%= asset_path 'select2.png' %>) right top no-repeat;
   cursor: pointer;
   text-decoration: none;
   border:0;
@@ -127,7 +127,7 @@ Version: @@ver@@ Timestamp: @@timestamp@@
 }
 
 .select2-container .select2-choice div b {
-    background: url('select2.png') no-repeat 0 1px;
+    background: url('<%= asset_path 'select2.png' %>') no-repeat 0 1px;
     display: block;
     width: 100%;
     height: 100%;
@@ -151,13 +151,13 @@ Version: @@ver@@ Timestamp: @@timestamp@@
 }
 
 .select2-container .select2-search input {
-    background: #fff url('select2.png') no-repeat 100% -22px;
-    background: url('select2.png') no-repeat 100% -22px, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, white), color-stop(0.99, #eeeeee));
-    background: url('select2.png') no-repeat 100% -22px, -webkit-linear-gradient(center bottom, white 85%, #eeeeee 99%);
-    background: url('select2.png') no-repeat 100% -22px, -moz-linear-gradient(center bottom, white 85%, #eeeeee 99%);
-    background: url('select2.png') no-repeat 100% -22px, -o-linear-gradient(bottom, white 85%, #eeeeee 99%);
-    background: url('select2.png') no-repeat 100% -22px, -ms-linear-gradient(top, #ffffff 85%, #eeeeee 99%);
-    background: url('select2.png') no-repeat 100% -22px, linear-gradient(top, #ffffff 85%, #eeeeee 99%);
+    background: #fff url('<%= asset_path 'select2.png' %>') no-repeat 100% -22px;
+    background: url('<%= asset_path 'select2.png' %>') no-repeat 100% -22px, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, white), color-stop(0.99, #eeeeee));
+    background: url('<%= asset_path 'select2.png' %>') no-repeat 100% -22px, -webkit-linear-gradient(center bottom, white 85%, #eeeeee 99%);
+    background: url('<%= asset_path 'select2.png' %>') no-repeat 100% -22px, -moz-linear-gradient(center bottom, white 85%, #eeeeee 99%);
+    background: url('<%= asset_path 'select2.png' %>') no-repeat 100% -22px, -o-linear-gradient(bottom, white 85%, #eeeeee 99%);
+    background: url('<%= asset_path 'select2.png' %>') no-repeat 100% -22px, -ms-linear-gradient(top, #ffffff 85%, #eeeeee 99%);
+    background: url('<%= asset_path 'select2.png' %>') no-repeat 100% -22px, linear-gradient(top, #ffffff 85%, #eeeeee 99%);
     padding: 4px 20px 4px 5px;
     outline: 0;
     border: 1px solid #aaa;
@@ -412,7 +412,7 @@ disabled look for already selected choices in the results dropdown
   width: 12px;
   height: 13px;
   font-size: 1px;
-  background: url(select2.png) right top no-repeat;
+  background: url(<%= asset_path 'select2.png' %>) right top no-repeat;
   outline: none;
 }
 

@@ -20,7 +20,7 @@ class UsersController < ApplicationController
       @title << " By Karma"
       render :action => "list"
     elsif params[:moderators]
-      @users = User.where("is_admin = 1 OR is_moderator = 1").
+      @users = User.where("is_admin = ? OR is_moderator = ?", true, true).
         order("id ASC").to_a
       @user_count = @users.length
       @title = "Moderators and Administrators"

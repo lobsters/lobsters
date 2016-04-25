@@ -25,6 +25,12 @@ class Story < ActiveRecord::Base
   validates_length_of :url, :maximum => 250, :allow_nil => true
   validates_presence_of :user_id
 
+  validates_each :merged_story_id do |record,attr,value|
+    if value.to_i == record.id
+      record.errors.add(:merge_story_short_id, "id cannot be itself.")
+    end
+  end
+
   DOWNVOTABLE_DAYS = 14
 
   # after this many minutes old, a story cannot be edited
@@ -440,11 +446,6 @@ class Story < ActiveRecord::Base
 
   def mark_submitter
     Keystore.increment_value_for("user:#{self.user_id}:stories_submitted")
-  end
-
-  def merge_into_story!(story)
-    self.merged_story_id = story.id
-    self.save!
   end
 
   def merged_comments

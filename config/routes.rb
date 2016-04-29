@@ -11,7 +11,7 @@ Lobsters::Application.routes.draw do
 
     get "/newest" => "home#newest", :format => /html|json|rss/
     get "/newest/page/:page" => "home#newest"
-    get "/newest/:user" => "home#newest_by_user"
+    get "/newest/:user" => "home#newest_by_user", :format => /html|json|rss/
     get "/newest/:user/page/:page" => "home#newest_by_user"
     get "/recent" => "home#recent"
     get "/recent/page/:page" => "home#recent"

@@ -108,7 +108,13 @@ class HomeController < ApplicationController
     @newest = true
     @for_user = by_user.username
 
-    render :action => "index"
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.rss {
+        render :action => "rss", :layout => false
+      }
+      format.json { render :json => @stories }
+    end
   end
 
   def recent

@@ -50,6 +50,9 @@ MariaDB have been tested) database, username, and password and put them in a
             pool: 5
             timeout: 5000
 
+* Create the new database:
+         lobsters$ rake db:create
+
 * Load the schema into the new database:
 
           lobsters$ rake db:schema:load

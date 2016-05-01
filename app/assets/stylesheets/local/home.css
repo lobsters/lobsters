@@ -1,0 +1,16 @@
+li .link a {
+  font-size: 1.3em;
+  color: #003f1e;
+}
+
+li.story div.details span.link a:visited {
+  color: #003f1e; 
+}
+
+li .byline a {
+    color: #00a54d;
+}
+
+#headerright .headerlinks a {
+    color: #00a54d;
+}

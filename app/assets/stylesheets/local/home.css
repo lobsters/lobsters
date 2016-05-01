@@ -1,5 +1,5 @@
 li .link a {
-  font-size: 1.3em;
+  font-size: 1.35em;
   color: #003f1e;
 }
 
@@ -13,4 +13,20 @@ li .byline a {
 
 #headerright .headerlinks a {
     color: #00a54d;
+}
+
+#header a.cur_url {
+ color: #00a54f;
+ font-size: 1.44em; 
+}
+
+body {
+    background-image: url("/white_wall_hash.png");
+    height: 100%;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+
+.wrapper {
+  margin-top: 0px;
 }

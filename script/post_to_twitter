@@ -46,8 +46,12 @@ Time.now - 1.days).order(:id).each_with_index do |s,x|
 
   # if there are any urls in the title, they should be sized (at least) to a
   # twitter t.co url
-  left_len -= (title.scan(/[^ ]\..{2,10}/i).map{|u| [ 0,
+  left_len -= (title.scan(/[^ ]\.[a-z]{2,10}/i).map{|u| [ 0,
     Twitter::TCO_LEN ].max }.inject(:+)).to_i
+
+  if left_len < -3
+    left_len = -3
+  end
 
   if title.bytesize > left_len
     status = title[0, left_len - 3] + "..." + status

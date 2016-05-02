@@ -6,6 +6,7 @@ class HomeController < ApplicationController
 
   def about
     begin
+      @title = "About"
       render :action => "about"
     rescue
       render :text => "<div class=\"box wide\">" <<
@@ -16,6 +17,7 @@ class HomeController < ApplicationController
 
   def chat
     begin
+      @title = "Chat"
       render :action => "chat"
     rescue
       render :text => "<div class=\"box wide\">" <<
@@ -26,6 +28,7 @@ class HomeController < ApplicationController
 
   def privacy
     begin
+      @title = "Privacy"
       render :action => "privacy"
     rescue
       render :text => "<div class=\"box wide\">" <<

@@ -219,11 +219,7 @@ class Story < ActiveRecord::Base
   end
 
   def can_have_suggestions_from_user?(user)
-    if !user
-      return false
-    end
-
-    if user.id == self.user_id
+    if !user || (user.id == self.user_id) || !user.can_offer_suggestions?
       return false
     end
 

@@ -171,6 +171,11 @@ class StoriesController < ApplicationController
   end
 
   def suggest
+    if !@story.can_have_suggestions_from_user?(@user)
+      flash[:error] = "You are not allowed to offer suggestions on that story."
+      return redirect_to @story.comments_path
+    end
+
     if (st = @story.suggested_taggings.where(:user_id => @user.id)).any?
       @story.tags_a = st.map{|st| st.tag.tag }
     end
@@ -180,6 +185,11 @@ class StoriesController < ApplicationController
   end
 
   def submit_suggestions
+    if !@story.can_have_suggestions_from_user?(@user)
+      flash[:error] = "You are not allowed to offer suggestions on that story."
+      return redirect_to @story.comments_path
+    end
+
     ostory = @story.dup
 
     @story.title = params[:story][:title]

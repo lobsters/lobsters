@@ -59,6 +59,7 @@ GEM
     mini_portile (0.5.3)
     minitest (5.7.0)
     mysql2 (0.3.20)
+    newrelic_rpm (3.15.2.317)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     oauth (0.4.7)
@@ -150,6 +151,7 @@ DEPENDENCIES
   machinist
   mail
   mysql2 (>= 0.3.14)
+  newrelic_rpm
   nokogiri (= 1.6.1)
   oauth
   pry-rails

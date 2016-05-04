@@ -631,11 +631,29 @@ class Story < ActiveRecord::Base
   end
 
   def title_as_url
-    u = self.title.downcase.gsub(/[^a-z0-9_-]/, "_")
-    while u.match(/__/)
-      u.gsub!("__", "_")
+    max_len = 35
+    wl = 0
+    words = []
+
+    self.title.downcase.gsub(/[,'`\"]/, "").gsub(/[^a-z0-9]/, "_").split("_").
+    reject{|z| [ "", "a", "an", "and", "but", "in", "of", "or", "that", "the",
+    "to" ].include?(z) }.each do |w|
+      if wl + w.length <= max_len
+        words.push w
+        wl += w.length
+      else
+        if wl == 0
+          words.push w[0, max_len]
+        end
+        break
+      end
     end
-    u.gsub(/^_+/, "").gsub(/_+$/, "")
+
+    if !words.any?
+      words.push "_"
+    end
+
+    words.join("_").gsub(/_-_/, "-")
   end
 
   def to_param

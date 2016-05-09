@@ -1,4 +1,5 @@
 source "https://rubygems.org"
+ruby "2.3.0"
 
 gem "rails", "4.1.12"
 
@@ -22,6 +23,8 @@ gem "exception_notification"
 
 gem "bcrypt", "~> 3.1.2"
 
+gem 'pry-rails'
+
 gem "nokogiri", "= 1.6.1"
 gem "htmlentities"
 gem "rdiscount"
@@ -37,4 +40,9 @@ group :test, :development do
   gem "machinist"
   gem "sqlite3"
   gem "faker"
+end
+
+group :production, :staging do
+  gem 'rails_12factor'
+  gem 'newrelic_rpm'
 end

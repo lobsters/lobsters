@@ -73,10 +73,16 @@ describe Story do
 
   it "converts a title to a url properly" do
     s = Story.make!(:title => "Hello there, this is a title")
-    s.title_as_url.should == "hello_there_this_is_a_title"
+    s.title_as_url.should == "hello_there_this_is_title"
 
     s = Story.make!(:title => "Hello _ underscore")
     s.title_as_url.should == "hello_underscore"
+
+    s = Story.make!(:title => "Hello, underscore")
+    s.title_as_url.should == "hello_underscore"
+
+    s = Story.make(:title => "The One-second War (What Time Will You Die?) ")
+    s.title_as_url.should == "one_second_war_what_time_will_you_die"
   end
 
   it "is not editable by another non-admin user" do
@@ -99,11 +105,6 @@ describe Story do
     s.fetched_content = File.read(Rails.root +
       "spec/fixtures/story_pages/2.html")
     s.fetched_attributes[:title].should == "Google"
-  end
-
-  it "has an underscored url from its title" do
-    s = Story.make(:title => "The One-second War (What Time Will You Die?) ")
-    s.title_as_url.should == "the_one-second_war_what_time_will_you_die"
   end
 
   it "sets the url properly" do

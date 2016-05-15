@@ -18,6 +18,8 @@ class User < ActiveRecord::Base
     :class_name => "User"
   belongs_to :banned_by_user,
     :class_name => "User"
+  belongs_to :disabled_invite_by_user,
+    :class_name => "User"
   has_many :invitations
   has_many :votes
   has_many :voted_stories, -> { where('votes.comment_id' => nil) },
@@ -106,6 +108,25 @@ class User < ActiveRecord::Base
     else
       k.to_f / (self.stories_submitted_count + self.comments_posted_count)
     end
+  end
+
+  def disable_invite_by_user_for_reason!(disabler, reason)
+    self.disabled_invite_at = Time.now
+    self.disabled_invite_by_user_id = disabler.id
+    self.disabled_invite_reason = reason
+
+    self.delete!
+
+    DisableInviteNotification.notify(self, disabler, reason)
+
+    m = Moderation.new
+    m.moderator_user_id = disabler.id
+    m.user_id = self.id
+    m.action = "Disabled invitations"
+    m.reason = reason
+    m.save!
+
+    true
   end
 
   def ban_by_user_for_reason!(banner, reason)
@@ -252,6 +273,10 @@ class User < ActiveRecord::Base
     banned_at?
   end
 
+  def can_invite?
+    !disabled_invite_at?
+  end
+
   def is_new?
     Time.now - self.created_at <= NEW_USER_DAYS.days
   end
@@ -313,6 +338,21 @@ class User < ActiveRecord::Base
     m.moderator_user_id = unbanner.id
     m.user_id = self.id
     m.action = "Unbanned"
+    m.save!
+
+    true
+  end
+
+  def enable_invite_by_user!(mod)
+    self.disabled_invite_at = nil
+    self.disabled_invite_by_user_id = nil
+    self.disabled_invite_reason = nil
+    self.save!
+
+    m = Moderation.new
+    m.moderator_user_id = mod.id
+    m.user_id = self.id
+    m.action = "Enabled invitations"
     m.save!
 
     true

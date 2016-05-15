@@ -35,6 +35,9 @@
     <% end %>
     <%= @showing_user.is_admin? ? "administrator" :
       (@showing_user.is_moderator? ? "moderator" : "user") %>
+    <% if !@showing_user.can_invite? %>
+      with invites disabled
+    <% end %>
   </span>
   <br>
 
@@ -187,11 +190,11 @@
         </p>
       <% end %>
     <% else %>
-      <%= form_tag user_ban_path, :method => :post do %>
         <p>
-        Banning a user will send an e-mail to the user with the reason below,
+        Banning or disabling invites for a user will send an e-mail to the user with the reason below,
         with your e-mail address as the Reply-To so the user can respond.
         </p>
+      <%= form_tag user_ban_path, :method => :post do %>
         <p>
 
         <div class="boxline">
@@ -201,6 +204,27 @@
 
         <p>
         <%= submit_tag "Ban User" %>
+        </p>
+      <% end %>
+    <% end %>
+
+    <% if !@showing_user.can_invite? %>
+      <%= form_tag user_enable_invite_path, :method => :post do %>
+        <p>
+        <%= submit_tag "Enable invitations for User" %>
+        </p>
+      <% end %>
+    <% else %>
+      <%= form_tag user_disable_invite_path, :method => :post do %>
+        <p>
+
+        <div class="boxline">
+          <%= label_tag :reason, "Reason:", :class => "required" %>
+          <%= text_field_tag :reason, "", :size => 40 %>
+        </div>
+
+        <p>
+        <%= submit_tag "Disable invites" %>
         </p>
       <% end %>
     <% end %>

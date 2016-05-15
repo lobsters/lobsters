@@ -30,6 +30,12 @@ class InvitationsController < ApplicationController
   end
 
   def create
+    if !@user.can_invite?
+      flash[:error] = "Your account cannot send invitations"
+      redirect_to "/settings"
+      return
+    end
+
     i = Invitation.new
     i.user_id = @user.id
     i.email = params[:email]

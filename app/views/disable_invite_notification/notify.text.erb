@@ -1,0 +1,6 @@
+Invitations have been disabled for you on <%= Rails.application.name %> by <%= @mod.username %> for:
+
+  <%= word_wrap(@reason, :line_width => 72).gsub(/\n/, "\n  ") %>
+
+You can no longer allowed send invites. If you wish, you can discuss this with
+the moderator by replying to this e-mail.

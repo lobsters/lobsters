@@ -43,26 +43,26 @@ class UsersController < ApplicationController
     target = User.where(:username => params[:username]).first
     if !target
       flash[:error] = "Invalid user."
-      return redirect_to "/"
+      redirect_to "/"
+    else
+      target.disable_invite_by_user_for_reason!(@user, params[:reason])
+
+      flash[:success] = "User has had invite capability disabled."
+      redirect_to user_path(:user => target.username)
     end
-
-    target.disable_invite_by_user_for_reason!(@user, params[:reason])
-
-    flash[:success] = "User has had invite capability disabled."
-    return redirect_to user_path(:user => target.username)
   end
 
   def enable_invitation
     target = User.where(:username => params[:username]).first
     if !target
       flash[:error] = "Invalid user."
-      return redirect_to "/"
+      redirect_to "/"
+    else
+      target.enable_invite_by_user!(@user)
+
+      flash[:success] = "User has had invite capability enabled."
+      redirect_to user_path(:user => target.username)
     end
-
-    target.enable_invite_by_user!(@user)
-
-    flash[:success] = "User has had invite capability enabled."
-    return redirect_to user_path(:user => target.username)
   end
 
   def ban

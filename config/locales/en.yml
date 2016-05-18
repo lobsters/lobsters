@@ -2,4 +2,24 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  layouts:
+    application:
+      homelink: "Home"
+      recentlink: "Recents"
+      commentslink: "Comments"
+      yourthreadslink: "Your Threads"
+      submitstorylink: "Submit Story"
+      searchlink: "Search"
+      filterslink: "Filters"
+      newmessagelink: "New Message"
+      messageslink: "Messages"
+      loginlink: "Login"
+      logoutlink: "Logout"
+      confirmlogoutlink: "Are you sure you want to logout?"
+      moderationloglink: "Moderation Log"
+      invitationqueuelink: "Invitation Queue"
+      chatlink: "Chat"
+      hatrequest: "Hats Requests"
+      bbslink: "BBS"
+      privacylink: "Privacy"
+      aboutlink: "About"

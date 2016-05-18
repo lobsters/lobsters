@@ -1,0 +1,25 @@
+# Sample localization file for French. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+fr:
+  layouts:
+    application:
+      homelink: "Accueil"
+      recentlink: "Récents"
+      commentslink: "Commentaires"
+      yourthreadslink: "Vos sujets"
+      submitstorylink: "Soumettre une info"
+      searchlink: "Recherche"
+      filterslink: "Filtres"
+      newmessagelink: "Nouveau message"
+      messageslink: "Messages"
+      loginlink: "Se connecter"
+      logoutlink: "Se déconnecter"
+      confirmlogoutlink: "Êtes-vous sûr de vouloir vous déconnecter?"
+      moderationloglink: "Journal de modération"
+      invitationqueuelink: "File d'invitation"
+      chatlink: "Chat"
+      hatrequest: "Porter le chapeau"
+      bbslink: "BBS"
+      privacylink: "Confidentialité"
+      aboutlink: "À propos"

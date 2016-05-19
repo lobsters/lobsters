@@ -115,8 +115,6 @@ class User < ActiveRecord::Base
     self.disabled_invite_by_user_id = disabler.id
     self.disabled_invite_reason = reason
 
-    self.delete!
-
     DisableInviteNotification.notify(self, disabler, reason)
 
     m = Moderation.new

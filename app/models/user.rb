@@ -115,7 +115,17 @@ class User < ActiveRecord::Base
     self.disabled_invite_by_user_id = disabler.id
     self.disabled_invite_reason = reason
 
-    DisableInviteNotification.notify(self, disabler, reason)
+    msg = Message.new
+    msg.deleted_by_author = true
+    msg.author_user_id = disabler.id
+    msg.recipient_user_id = self.id
+    msg.subject = "Your invite privileges have been revoked"
+    msg.body = "The reason given:\n" <<
+      "\n" <<
+      "> *#{reason}*\n" <<
+      "\n" <<
+      "*This is an automated message.*"
+    msg.save
 
     m = Moderation.new
     m.moderator_user_id = disabler.id

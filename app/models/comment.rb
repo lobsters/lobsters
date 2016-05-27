@@ -457,4 +457,5 @@ class Comment < ActiveRecord::Base
 
     self.story.update_comments_count!
   end
+  include CommentSearchable
 end

@@ -6,8 +6,13 @@ gem "unicorn"
 
 gem "mysql2", ">= 0.3.14"
 
+gem "elasticsearch-ruby"
+gem "elasticsearch-model"
+gem "tire"
+gem 'kaminari'
+
 # uncomment to use PostgreSQL
-# gem "pg"
+gem "pg"
 #
 # NOTE: If you use PostgreSQL, you must still leave enabled the above mysql2
 # gem for Sphinx full text search to function.
@@ -35,6 +40,5 @@ gem "mail"
 group :test, :development do
   gem "rspec-rails", "~> 2.6"
   gem "machinist"
-  gem "sqlite3"
   gem "faker"
 end

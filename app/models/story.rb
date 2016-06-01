@@ -239,7 +239,7 @@ class Story < ActiveRecord::Base
       if !t.tag.valid_for?(u)
         raise "#{u.username} does not have permission to use privileged " <<
           "tag #{t.tag.tag}"
-      elsif t.tag.inactive? && !t.new_record? && !t.marked_for_destruction?
+      elsif t.tag.inactive? && t.new_record? && !t.marked_for_destruction?
         # stories can have inactive tags as long as they existed before
         raise "#{u.username} cannot add inactive tag #{t.tag.tag}"
       end

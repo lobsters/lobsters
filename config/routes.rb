@@ -49,6 +49,8 @@ Lobsters::Application.routes.draw do
 
     get "/search" => "search#index"
     get "/search/:q" => "search#index"
+    get "/search_elastic" => "search#elastic"
+    get "/search_elastic/:q" => "search#elastic" 
 
     resources :stories do
       post "upvote"

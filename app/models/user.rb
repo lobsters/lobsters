@@ -340,6 +340,7 @@ class User < ActiveRecord::Base
     self.banned_at = nil
     self.banned_by_user_id = nil
     self.banned_reason = nil
+    self.deleted_at = nil
     self.save!
 
     m = Moderation.new

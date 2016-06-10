@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
-  before_filter :require_logged_in_moderator, :only => [ :ban, :unban ]
+  before_filter :require_logged_in_moderator, :only => [ :enable_invitation,
+                                                         :disable_invitation,
+                                                         :ban, :unban ]
 
   def show
     @showing_user = User.where(:username => params[:username]).first!
@@ -35,6 +37,32 @@ class UsersController < ApplicationController
 
   def invite
     @title = "Pass Along an Invitation"
+  end
+
+  def disable_invitation
+    target = User.where(:username => params[:username]).first
+    if !target
+      flash[:error] = "Invalid user."
+      redirect_to "/"
+    else
+      target.disable_invite_by_user_for_reason!(@user, params[:reason])
+
+      flash[:success] = "User has had invite capability disabled."
+      redirect_to user_path(:user => target.username)
+    end
+  end
+
+  def enable_invitation
+    target = User.where(:username => params[:username]).first
+    if !target
+      flash[:error] = "Invalid user."
+      redirect_to "/"
+    else
+      target.enable_invite_by_user!(@user)
+
+      flash[:success] = "User has had invite capability enabled."
+      redirect_to user_path(:user => target.username)
+    end
   end
 
   def ban

@@ -212,7 +212,11 @@
     Invite a New User
   </div>
 
-  <%= render :partial => "users/invitationform" %>
+  <% if @user.can_invite? %>
+    <%= render :partial => "users/invitationform" %>
+  <% else %>
+      You cannot send invitations.
+  <% end %>
 
   <br>
   <br>

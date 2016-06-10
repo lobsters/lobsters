@@ -80,15 +80,15 @@
       <div id="headerright">
         <span class="headerlinks">
         <a href="/filters" <%= @cur_url == "/filters" ?
-          raw("class=\"cur_url\"") : "" %>><%= t '.filterslink' %></a>
+          raw("class=\"cur_url\"") : "" %>><%= t('.filterslink') %></a>
         <% if @user %>
           <% if (count = @user.unread_message_count) > 0 %>
             <a href="/messages" class="new_messages <%= @cur_url == "/messages" ?
-              "cur_url" : "" %>"><%= count %><%= t '.newmessagelink' %><<%= count == 1 ? "" :
-              "s" %></a>
+              "cur_url" : "" %>"><%= count %><%= t('.newmessagelink')%><<%=
+              count == 1 ? "" : "s" %></a>
           <% else %>
             <a href="/messages" <%= @cur_url == "/messages" ?
-              raw("class=\"cur_url\"") : "" %>><%= t '.messageslink' %></a>
+              raw("class=\"cur_url\"") : "" %>><%= t('.messageslink') %></a>
           <% end %>
 
           <a href="/settings" <%= @cur_url == "/settings" ?
@@ -99,7 +99,7 @@
             :data => { :confirm => t('.confirmlogoutlink') },
             :method => "post" %>
         <% else %>
-          <a href="/login"><%= t '.loginlink' %></a>
+          <a href="/login"><%= t('.loginlink') %></a>
         <% end %>
         </span>
       </div>
@@ -117,21 +117,18 @@
       <%= yield %>
 
       <div id="footer">
-        <a href="/moderations"><%= t '.moderationloglink' %></a>
+        <a href="/moderations"><%= t('.moderationloglink') %></a>
         <% if @user && !@user.is_new? &&
         (iqc = InvitationRequest.verified_count) > 0 %>
-          <a href="/invitations"><%= t '.invitationqueuelink' %>(<%= iqc %>)</a>
+          <a href="/invitations"><%= t('.invitationqueuelink') %>(<%= iqc %>)</a>
         <% end %>
         <% if @user && @user.is_moderator? &&
         (hrc = HatRequest.count) > 0 %>
-          <a href="/hats/requests"><%= t '.hatrequestlink' %>(<%= hrc %>)</a>
+          <a href="/hats/requests"><%= t('.hatrequestlink') %>(<%= hrc %>)</a>
         <% end %>
-        <a href="/chat"><%= t '.chatlink' %></a>
-        <% if defined?(BbsController) %>
-          <a href="/bbs"><%= t '.bbslink' %></a>
-        <% end %>
-        <a href="/privacy"><%= t '.privacylink' %></a>
-        <a href="/about"><%= t '.aboutlink' %></a>
+        <a href="/chat"><%= t('.chatlink') %></a>
+        <a href="/privacy"><%= t('.privacylink') %></a>
+        <a href="/about"><%= t('.aboutlink') %></a>
       </div>
       <div class="clear"></div>
     </div>

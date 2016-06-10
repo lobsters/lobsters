@@ -5,7 +5,7 @@ en:
   layouts:
     application:
       homelink: "Home"
-      recentlink: "Recents"
+      recentlink: "Recent"
       commentslink: "Comments"
       yourthreadslink: "Your Threads"
       submitstorylink: "Submit Story"
@@ -20,6 +20,5 @@ en:
       invitationqueuelink: "Invitation Queue"
       chatlink: "Chat"
       hatrequest: "Hats Requests"
-      bbslink: "BBS"
       privacylink: "Privacy"
       aboutlink: "About"

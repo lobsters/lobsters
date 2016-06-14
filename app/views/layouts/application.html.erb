@@ -84,8 +84,8 @@
         <% if @user %>
           <% if (count = @user.unread_message_count) > 0 %>
             <a href="/messages" class="new_messages <%= @cur_url == "/messages" ?
-              "cur_url" : "" %>"><%= count %><%= t('.newmessagelink')%><<%=
-              count == 1 ? "" : "s" %></a>
+              "cur_url" : "" %>"><%= t(".newmessagelink", :count => count)
+              %></a>
           <% else %>
             <a href="/messages" <%= @cur_url == "/messages" ?
               raw("class=\"cur_url\"") : "" %>><%= t('.messageslink') %></a>

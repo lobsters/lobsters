@@ -11,7 +11,9 @@ en:
       submitstorylink: "Submit Story"
       searchlink: "Search"
       filterslink: "Filters"
-      newmessagelink: "New Message"
+      newmessagelink:
+        one: "1 New Message"
+        other: "%{count} New Messages"
       messageslink: "Messages"
       loginlink: "Login"
       logoutlink: "Logout"

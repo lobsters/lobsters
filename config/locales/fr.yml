@@ -12,6 +12,8 @@ fr:
       searchlink: "Recherche"
       filterslink: "Filtres"
       newmessagelink: "Nouveau message"
+        one: "Nouveau message"
+        other: "%{count} Nouveau message"
       messageslink: "Messages"
       loginlink: "Se connecter"
       logoutlink: "Se déconnecter"

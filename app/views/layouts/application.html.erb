@@ -45,9 +45,9 @@
   <div id="wrapper">
     <div id="header">
       <div id="headerleft">
-        <a id="l_holder" style="background-color: #<%= sprintf("%02x%02x%02x",
-        [ 255, (@traffic * 7).floor + 50.0 ].min, 0, 0) %>;" href="/"
-        title="<%= Rails.application.name %> (Current traffic: <%= @traffic.to_i %>)"></a>
+        <a id="l_holder" style="background-color: #<%= @traffic_color %>;"
+          href="/" title="<%= Rails.application.name %> (Current traffic: <%=
+          @traffic.to_i %>)"></a>
 
         <% links = {
           "/" => @cur_url == "/" ? Rails.application.name : t('.homelink'),

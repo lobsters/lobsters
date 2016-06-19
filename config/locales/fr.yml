@@ -11,7 +11,7 @@ fr:
       submitstorylink: "Soumettre une info"
       searchlink: "Recherche"
       filterslink: "Filtres"
-      newmessagelink: "Nouveau message"
+      newmessagelink:
         one: "Nouveau message"
         other: "%{count} Nouveau message"
       messageslink: "Messages"

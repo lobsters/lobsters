@@ -3,6 +3,7 @@ class StoriesController < ApplicationController
     :only => [ :upvote, :downvote, :unvote, :hide, :unhide, :preview ]
   before_filter :require_logged_in_user, :only => [ :destroy, :create, :edit,
     :fetch_url_attributes, :new, :suggest ]
+  before_filter :verify_user_can_submit_stories, :only => [ :new, :create ]
   before_filter :find_user_story, :only => [ :destroy, :edit, :undelete,
     :update ]
   before_filter :find_story!, :only => [ :suggest, :submit_suggestions ]
@@ -376,6 +377,13 @@ private
           c.current_vote = @votes[c.id]
         end
       end
+    end
+  end
+
+  def verify_user_can_submit_stories
+    if !@user.can_submit_stories?
+      flash[:error] = "You are not allowed to submit new stories."
+      return redirect_to "/"
     end
   end
 end

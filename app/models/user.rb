@@ -64,6 +64,9 @@ class User < ActiveRecord::Base
   # minimum karma required to be able to offer title/tag suggestions
   MIN_KARMA_TO_SUGGEST = 10
 
+  # minimum karma required to be able to submit new stories
+  MIN_KARMA_TO_SUBMIT_STORIES = -4
+
   def self.recalculate_all_karmas!
     User.all.each do |u|
       u.karma = u.stories.map(&:score).sum + u.comments.map(&:score).sum
@@ -178,8 +181,16 @@ class User < ActiveRecord::Base
     false
   end
 
+  def can_invite?
+    !disabled_invite_at? && self.can_submit_stories?
+  end
+
   def can_offer_suggestions?
     !self.is_new? && (self.karma >= MIN_KARMA_TO_SUGGEST)
+  end
+
+  def can_submit_stories?
+    self.karma >= MIN_KARMA_TO_SUBMIT_STORIES
   end
 
   def check_session_token
@@ -279,10 +290,6 @@ class User < ActiveRecord::Base
 
   def is_banned?
     banned_at?
-  end
-
-  def can_invite?
-    !disabled_invite_at?
   end
 
   def is_new?

@@ -55,7 +55,7 @@
           "/comments" => t('.commentslink')
         } %>
 
-        <% if @user %>
+        <% if @user && @user.can_submit_stories? %>
           <% links.merge!({ "/threads" => t('.yourthreadslink'),
             "/stories/new" => t('.submitstorylink') }) %>
         <% end %>

@@ -86,6 +86,12 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
             <a class="comment_replier" unselectable="on">reply</a>
         <% end %>
 
+        <% if defined?(show_story) && show_story %>
+          | on:
+          <a href="<%= comment.story.comments_path %>"><%= comment.story.title
+            %></a>
+        <% end %>
+
         <span class="reason">
           <% if comment.downvotes > 0 &&
           ((comment.score <= 0 && comment.user_id == @user.try(:id)) ||
@@ -96,12 +102,6 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
             <%= Vote::COMMENT_REASONS[comment.current_vote[:reason]].downcase %>
           <% end %>
         </span>
-      <% end %>
-
-      <% if defined?(show_story) && show_story %>
-        | on:
-        <a href="<%= comment.story.comments_path %>"><%= comment.story.title
-          %></a>
       <% end %>
     </div>
     <div class="comment_text">

@@ -94,5 +94,5 @@ in a `config/initializers/production.rb` or similar file:
 
 * In production, set up crontab or another scheduler to run regular jobs:
 
-          */20 * * * * cd /path/to/lobsters && env RAILS_ENV=production bundle19 exec rake ts:index > /dev/null
-          */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle19 exec ruby script/mail_new_activity; bundle19 exec ruby script/post_to_twitter'
+          */20 * * * * cd /path/to/lobsters && env RAILS_ENV=production bundle exec rake ts:index > /dev/null
+          */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/post_to_twitter'

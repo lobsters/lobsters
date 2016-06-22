@@ -111,7 +111,11 @@ class Story < ActiveRecord::Base
     end
     urls = urls2.clone
 
-    if s = Story.where(:url => urls, :is_expired => false).order("id DESC").first
+    # if a previous submission was moderated, return it to block it from being
+    # submitted again
+    if s = Story.where(:url => urls).
+    where("is_expired = ? OR is_moderated = ?", false, true).
+    order("id DESC").first
       return s
     end
 

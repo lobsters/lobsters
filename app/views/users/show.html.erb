@@ -36,7 +36,11 @@
     <%= @showing_user.is_admin? ? "administrator" :
       (@showing_user.is_moderator? ? "moderator" : "user") %>
     <% if !@showing_user.can_invite? %>
-      with invites disabled
+      with invites
+      <% if !@showing_user.can_submit_stories? %>
+        and story submissions
+      <% end %>
+      disabled
     <% end %>
   </span>
   <br>

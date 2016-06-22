@@ -159,6 +159,10 @@ class User < ActiveRecord::Base
     true
   end
 
+  def banned_from_inviting?
+    disabled_invite_at?
+  end
+
   def can_downvote?(obj)
     if is_new?
       return false
@@ -182,7 +186,7 @@ class User < ActiveRecord::Base
   end
 
   def can_invite?
-    !disabled_invite_at? && self.can_submit_stories?
+    !banned_from_inviting? && self.can_submit_stories?
   end
 
   def can_offer_suggestions?

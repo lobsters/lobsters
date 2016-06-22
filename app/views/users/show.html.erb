@@ -212,7 +212,7 @@
       <% end %>
     <% end %>
 
-    <% if !@showing_user.can_invite? %>
+    <% if @showing_user.banned_from_inviting? %>
       <%= form_tag user_enable_invite_path, :method => :post do %>
         <p>
         <%= submit_tag "Enable invitations for User" %>

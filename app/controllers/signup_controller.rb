@@ -51,6 +51,8 @@ class SignupController < ApplicationController
         "#{@new_user.username}!"
 
       Countinual.count!("#{Rails.application.shortname}.users.created", "+1")
+      Countinual.count!("#{Rails.application.shortname}.users.total",
+        User.count)
 
       return redirect_to "/signup/invite"
     else

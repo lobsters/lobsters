@@ -212,9 +212,9 @@ ActiveRecord::Schema.define(version: 20160515162433) do
     t.boolean  "show_avatars",                                  default: false
     t.boolean  "show_story_previews",                           default: false
     t.boolean  "show_submitted_story_threads",                  default: true
-    t.datetime disabled_invite_at
-    t.integer  disabled_invite_by_user_id
-    t.string   disabled_invite_reason,       limit: 200
+    t.datetime "disabled_invite_at"
+    t.integer  "disabled_invite_by_user_id"
+    t.string   "disabled_invite_reason",       limit: 200
   end
 
   add_index "users", ["mailing_list_mode"], name: "mailing_list_enabled", using: :btree

@@ -2,9 +2,19 @@ source "https://rubygems.org"
 
 gem "rails", "4.1.12"
 
+gem 'html-pipeline', '~> 1.11.0'
+
 gem "unicorn"
 
-gem "mysql2", ">= 0.3.14"
+
+gem 'github-markdown'
+gem 'gemojione'
+gem 'md_emoji'
+gem 'easy-emoji'
+gem 'redcarpet'
+gem 'rumoji', '~> 0.5.0'
+
+gem 'mysql2', "0.3.18"
 
 # uncomment to use PostgreSQL
 # gem "pg"
@@ -15,7 +25,9 @@ gem "mysql2", ">= 0.3.14"
 gem "thinking-sphinx", "~> 3.1.2"
 
 gem "uglifier", ">= 1.3.0"
-gem "jquery-rails"
+gem 'jquery-atwho-rails', '~> 1.3.2'
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem "dynamic_form"
 
 gem "exception_notification"
@@ -37,4 +49,6 @@ group :test, :development do
   gem "machinist"
   gem "sqlite3"
   gem "faker"
+  gem "pry"
+  gem "byebug"
 end

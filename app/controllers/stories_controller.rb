@@ -91,7 +91,7 @@ class StoriesController < ApplicationController
           flash[:success] = "This URL has already been submitted recently."
           return redirect_to s.comments_path
         else
-          # user will see a warning like with preview screen
+          # user will see a warning like with preview screenon
           @story.already_posted_story = s
         end
       end

@@ -1,3 +1,5 @@
+require 'html/pipeline'
+
 class Markdowner
   # opts[:allow_images] allows <img> tags
   # opts[:disable_profile_links] disables @username -> /u/username links
@@ -15,6 +17,14 @@ class Markdowner
 
     ng = Nokogiri::HTML(RDiscount.new(text.to_s, *args).to_html)
 
+    if !opts[:allow_images]
+      :no_image
+    end
+
+#    ng = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, smart: true, safelink: true,
+ #     filter_styles: true, filter_html: true, strict: true)
+
+
     # change <h1>, <h2>, etc. headings to just bold tags
     ng.css("h1, h2, h3, h4, h5, h6").each do |h|
       h.name = "strong"
@@ -28,28 +38,30 @@ class Markdowner
     # XXX: t.replace(tx) unescapes HTML, so disable for now.  this probably
     # needs to split text into separate nodes and then replace the @username
     # with a proper 'a' node
-if false
-    unless opts[:disable_profile_links]
-      # make @username link to that user's profile
-      ng.search("//text()").each do |t|
-        if t.parent && t.parent.name.downcase == "a"
-          # don't replace inside <a>s
-          next
-        end
+    if false
+        unless opts[:disable_profile_links]
+          # make @username link to that user's profile
+          ng.search("//text()").each do |t|
+            if t.parent && t.parent.name.downcase == "a"
+              # don't replace inside <a>s
+              next
+            end
 
-        tx = t.text.gsub(/\B\@([\w\-]+)/) do |u|
-          if User.exists?(:username => u[1 .. -1])
-            "<a href=\"/u/#{u[1 .. -1]}\">#{u}</a>"
-          else
-            u
+            tx = t.text.gsub(/\B\@([\w\-]+)/) do |u|
+              if User.exists?(:username => u[1 .. -1])
+                "<a href=\"/u/#{u[1 .. -1]}\">#{u}</a>"
+              else
+                u
+              end
+            end
+
+            t.replace(tx)
           end
         end
-
-        t.replace(tx)
-      end
     end
-end
-
     ng.at_css("body").inner_html
+
+     markdown = Redcarpet::Markdown.new(MdEmoji::Render, :no_intra_emphasis => true)
+     markdown.render(text)
   end
 end

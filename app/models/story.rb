@@ -272,6 +272,10 @@ class Story < ActiveRecord::Base
     "#{short_id_url}/#{self.title_as_url}"
   end
 
+  def contains_emoji_only?
+    note =~ /\A#{Filter::EmojiFilter.emoji_pattern}\s?\Z/
+  end
+
   def description=(desc)
     self[:description] = desc.to_s.rstrip
     self.markeddown_description = self.generated_markeddown_description

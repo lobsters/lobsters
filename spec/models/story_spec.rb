@@ -49,15 +49,16 @@ describe Story do
     Story.make!(:title => "flim flam", :url => "http://example.com/")
     Story.count.should == 1
 
-    expect { Story.make!(:title => "flim flam 2",
-      :url => "http://example.com/") }.to raise_error
+    expect {Story.make!(:title => "flim flam 2",
+      :url => "http://example.com/")}.to raise_error
 
     Story.count.should == 1
 
-    expect { Story.make!(:title => "flim flam 2",
-      :url => "http://www.example.com/") }.to raise_error
+    expect {Story.make!(:title => "flim flam 2",
+      :url => "http://www.example.com/")}.to raise_error
 
     Story.count.should == 1
+
   end
 
   it "parses domain properly" do

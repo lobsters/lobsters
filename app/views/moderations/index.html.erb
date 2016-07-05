@@ -1,49 +1,49 @@
 <div class="box wide">
   <div class="legend">
-    Moderation Log
+    <%= t('.moderationlogtitle') %>
   </div>
 
   <table class="data" width="100%" cellspacing=0>
   <tr>
-    <th style="min-width: 130px;">Date/Time</th>
-    <th>Moderator</th>
-    <th>Story/Comment/User, Action, Reason</th>
+    <th style="min-width: 130px;"><%= t('.datecolumn') %></th>
+    <th><%= t('.moderatorcolumn') %></th>
+    <th><%= t('.reasoncolumn') %></th>
   </tr>
   <% bit = 0 %>
   <% @moderations.each do |mod| %>
     <tr class="row<%= bit %> nobottom">
-      <td><%= mod.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+      <td><%= l mod.created_at %></td>
       <td><% if mod.moderator %>
         <a href="/messages?to=<%= mod.moderator.try(:username) %>"><%=
           mod.moderator.try(:username) %></a>
         <% elsif mod.is_from_suggestions? %>
-          <em>(users)</em>
+          <em>(<%= t('.users') %>)</em>
         <% end %></td>
       <td><% if mod.story %>
-          <a href="<%= mod.story.comments_path %>">Story: <%= mod.story.title
+          <a href="<%= mod.story.comments_path %>"><%= t('.storyline') %>: <%= mod.story.title
             %></a>
         <% elsif mod.comment %>
-          <a href="<%= mod.comment.url %>">Comment by
+          <a href="<%= mod.comment.url %>"><%= t('.commentline') %>
             <%= mod.comment.user.username %>
-            on
+            <%= t('.commenton') %>
             <%= mod.comment.story.title %></a>
         <% elsif mod.user_id %>
           <% if mod.user %>
-            <a href="/u/<%= mod.user.username %>">User
+            <a href="/u/<%= mod.user.username %>"><%= t('.user') %>
               <%= mod.user.username %></a>
           <% else %>
-            User <%= mod.user_id %> (Deleted)
+            <%= t('.user') %> <%= mod.user_id %> (<%= t('.deleted') %>)
           <% end %>
         <% end %></td>
     </tr>
     <tr class="row<%= bit %> <%= mod.reason.present?? "nobottom" : "" %>">
       <td colspan=2></td>
-      <td>Action: <em><%= mod.action %></em></td>
+      <td><%= t('.actionline') %>: <em><%= mod.action %></em></td>
     </tr>
     <% if mod.reason.present? %>
       <tr class="row<%= bit %>">
         <td colspan=2></td>
-        <td>Reason: <em><%= mod.reason %></em></td>
+        <td><%= t('.reasonline') %>: <em><%= mod.reason %></em></td>
       </tr>
     <% end %>
     <% bit = (bit == 1 ? 0 : 1) %>
@@ -53,7 +53,7 @@
 
 <div class="morelink">
   <% if @page > 1 %>
-    <a href="/moderations/page/<%= @page - 1 %>">&lt;&lt; Page
+    <a href="/moderations/page/<%= @page - 1 %>">&lt;&lt; <%= t('.page') %>
       <%= @page - 1 %></a>
   <% end %>
 
@@ -61,7 +61,7 @@
     <% if @page > 1 %>
       |
     <% end %>
-    <a href="/moderations/page/<%= @page + 1 %>">Page <%= @page + 1
+    <a href="/moderations/page/<%= @page + 1 %>"><%= t('.page') %> <%= @page + 1
       %> &gt;&gt;</a>
   <% end %>
 </div>

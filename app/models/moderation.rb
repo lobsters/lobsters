@@ -17,32 +17,29 @@ class Moderation < ActiveRecord::Base
 
     if self.story
       m.recipient_user_id = self.story.user_id
-      m.subject = "Your story has been edited by " <<
-        (self.is_from_suggestions? ? "user suggestions" : "a moderator")
-      m.body = "Your story [#{self.story.title}](" <<
-        "#{self.story.comments_url}) has been edited with the following " <<
-          "changes:\n" <<
+      m.subject = I18n.t('models.moderation.storyeditedby') <<
+        (self.is_from_suggestions? ? I18n.t('models.moderation.usersuggestions') : I18n.t('models.moderation.amoderator'))
+      m.body = I18n.t('models.moderation.storyeditedfor', :title=> "#{self.story.title}", :url=>  "#{self.story.comments_url}") <<
         "\n" <<
         "> *#{self.action}*\n"
 
       if self.reason.present?
         m.body << "\n" <<
-          "The reason given:\n" <<
+          I18n.t('models.moderation.reasongiven') <<
           "\n" <<
           "> *#{self.reason}*\n"
       end
 
     elsif self.comment
       m.recipient_user_id = self.comment.user_id
-      m.subject = "Your comment has been moderated"
-      m.body = "Your comment on [#{self.comment.story.title}](" <<
-        "#{self.comment.story.comments_url}) has been moderated:\n" <<
+      m.subject = I18n.t('models.moderation.commentmoderated')
+      m.body = I18n.t('models.moderation.commentmoderatedwhy', :title=> "#{self.comment.story.title}", :url=> "#{self.comment.story.comments_url}") <<
         "\n" <<
         "> *#{self.comment.comment}*\n"
 
       if self.reason.present?
         m.body << "\n" <<
-          "The reason given:\n" <<
+          I18n.t('models.moderation.reasongiven') <<
           "\n" <<
           "> *#{self.reason}*\n"
       end
@@ -53,7 +50,7 @@ class Moderation < ActiveRecord::Base
     end
 
     m.body << "\n" <<
-      "*This is an automated message.*"
+      I18n.t('models.moderation.automatedmessage')
 
     m.save
   end

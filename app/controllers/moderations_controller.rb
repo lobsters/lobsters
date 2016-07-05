@@ -1,6 +1,6 @@
 class ModerationsController < ApplicationController
   def index
-    @title = "Moderation Log"
+    @title = t('.moderationlogtitle')
 
     @page = params[:page] ? params[:page].to_i : 0
     @pages = (Moderation.count / 50).ceil

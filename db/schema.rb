@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160515162433) do
+ActiveRecord::Schema.define(version: 20160704022756) do
 
   create_table "comments", force: true do |t|
     t.datetime "created_at",                                                                    null: false
@@ -122,10 +122,10 @@ ActiveRecord::Schema.define(version: 20160515162433) do
     t.string   "title",                  limit: 150,                                default: "",    null: false
     t.text     "description",            limit: 16777215
     t.string   "short_id",               limit: 6,                                  default: "",    null: false
-    t.integer  "is_expired",             limit: 1,                                  default: 0,     null: false
+    t.boolean  "is_expired",                                                        default: false, null: false
     t.integer  "upvotes",                                                           default: 0,     null: false
     t.integer  "downvotes",                                                         default: 0,     null: false
-    t.integer  "is_moderated",           limit: 1,                                  default: 0,     null: false
+    t.boolean  "is_moderated",                                                      default: false, null: false
     t.decimal  "hotness",                                 precision: 20, scale: 10, default: 0.0,   null: false
     t.text     "markeddown_description", limit: 16777215
     t.text     "story_cache",            limit: 16777215

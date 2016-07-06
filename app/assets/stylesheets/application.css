@@ -240,7 +240,7 @@ div#wrapper {
 	margin-right: auto;
 	padding-bottom: 2em;
 	min-width: 600px;
-	max-width: 900px;
+	max-width: 950px;
 }
 div#inside {
 	margin-left: 0.25em;
@@ -260,6 +260,11 @@ div#inside {
 
 #headerleft {
 	float: left;
+}
+
+span.search{
+	float: right;
+	margin-top: -3px;
 }
 
 #header h1 {

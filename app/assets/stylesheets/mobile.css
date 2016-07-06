@@ -31,7 +31,7 @@
 		display: inline;
 		float: none;
 	}
-	div#headerright {
+	div#headerright, span.search{
 		display: inline;
 		float: none;
 		text-align: left;
@@ -40,7 +40,7 @@
 	}
 
 	.headerlinks a,
-	#headerright .headerlinks a {
+	#headerright .headerlinks a, span.search{
 		padding-right: 0.25em;
 		padding-left: 0;
 	}

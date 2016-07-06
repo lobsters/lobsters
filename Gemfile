@@ -33,6 +33,7 @@ gem "oauth"
 gem "mail"
 
 group :test, :development do
+  gem "pry"
   gem "rspec-rails", "~> 2.6"
   gem "machinist"
   gem "sqlite3"

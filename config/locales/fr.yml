@@ -2,6 +2,18 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 fr:
+  activerecord:
+    errors:
+      template:
+        body: 'Veuillez vérifier les champs suivants : '
+        header:
+          one: 'Impossible d''enregistrer ce(tte) %{model} : 1 erreur'
+          other: 'Impossible d''enregistrer ce(tte) %{model} : %{count} erreurs'
+      models:
+        user:
+          attributes:
+            password_confirmation:
+              confirmation: "La confirmation et le mot de passe ne correspondent pas"
   time:
     formats:
       default: "%d-%m-%Y %H:%M:%S"
@@ -52,3 +64,63 @@ fr:
       actionline: "Action"
       reasonline: "Raison"
       page: "Page"
+  settings:
+    delete_account:
+      deleteaccountflash: "Votre compte a été supprimé."
+      verifypasswordflash: "Votre mot de passe n'a pas pu être vérifié."
+    index:
+      viewprofile: "Voir le profil"
+      accountsettings: "Paramètres du compte"
+      username: "Utilisateur :"
+      password: "Nouveau mot de passe :"
+      confirmpassword: "Confirmer le mot de passe :"
+      emailaddress: "Adresse e-mail :"
+      gravatarized: "<a href=\"http://www.gravatar.com/\" target=\"_blank\">Gravatar</a>isé"
+      about: "À propos :"
+      markdownformattingavailable: "Formatage Markdown possible"
+      saveaccountsettings: "Sauver les paramètres du compte"
+      notificationsettings: "Paramètres de notification"
+      pushover: "<a href=\"https://pushover.net/\">Pushover</a> :"
+      managepushoversubscription: "Gérer l'abonnement au Pushover"
+      subscribewithpushover: "S'abonner au Pushover"
+      foroptionalcomment: "Pour les notifications de commentaires et de messages ci-dessous"
+      commentreplynotificationsettings: "Paramètres de notification de réponse à un commentaire"
+      receiveemail: "Recevoir un e-mail :"
+      receivepushover: "Recevoir une alerte Pushover :"
+      requirepushover: "Requière un abonnement Pushover ci-dessus"
+      commentmentionnotificationsettings: "Paramètres de notification de mention d'un commentaire"
+      privatemessagenotificationsettings: "Paramètres de notification de message privé" 
+      submittedstorycommentsettings: "Paramètres de commentaires relatifs à vos infos"
+      showyourthreads: "Montrer dans <a href=\"/threads\">vos sujets</a>:"
+      mailinglistsettings: "Paramètres des listes de diffusion"
+      mailinglisttext: "Si activé, vous recevrez toutes les nouvelles récemment soumises et les commentaires à votre adresse e-mail ci-dessus, à l'exception de ces nouvelles et leurs commentaires filtrés à partir de vos <a href=\"/filters\">filtres de marques</a>. Tous les e-mails seront envoyés à votre adresse de liste privée affichée ci-dessous à partir de laquelle vous pouvez filtrer, et les e-mails que vous envoyez à cette adresse seront postés sous ce compte sur le site web. You devrez garder cette adresse de liste privée pour éviter que d'autres ne postent des commentaires pour vous."
+      receivelistemails: "Recevoir les e-mails de la liste :"
+      listemailoption1: "pas d'e-mails"
+      listemailoption2: "Toutes les infos et les commentaires"
+      listemailoption3: "Seulement les infos"
+      listaddress: "Adresse de la liste :"
+      miscsettings: "Paramètres variés"
+      storypreview: "Montrer les aperçus des infos: "
+      useravatars: "Montrer les avatars des utilisateurs :"
+      saveallsettings: "Sauver tous les paramètres"
+      inviteuser: "Inviter un nouvel utilisateur"
+      cannotsendinvitations: "Vous ne pouvez pas envoyer d'invitations."
+      deleteaccount: "Supprimer le compte"
+      deleteaccounttext: "Pour supprimer définitivement votre compte, vérifiez votre mot de passe actuel ci-dessous. Votre compte sera passé en état supprimé, vos commentaires seront marqués comme supprimés et ne seront plus lisibles par les autres utilisateurs, vos messages privés seront également supprimés. Vos infos proposées ne seront pas supprimées. Votre nom d'utilisateur restera réservé et ne sera pas disponible pour un autre compte."
+      verifypassword: "Vérification du mot de passe :"
+      deleteaccountconfirmation: "Oui, supprimez mon compte"
+    pushover:
+      pushovernotconfigured: "Ce site n'est pas configuré pour le Pushover"
+    pushover_callback:
+      pushovernorandomtokensession: "Pas de jeton alétoire présent dans cette session"
+      pushovernorandomtokenurl: "Pas de jeton alétoire présent dans l'url"
+      accountsetuppushover: "Votre compte est maintenant configuré pour les notifications Pushover."
+      accountnolongersetuppushover: "Votre compte n'est plus configuré pour les notifications Pushover."
+    update:
+      updatesettingsflash: "Paramètres mis à jour avec succès."
+  users:
+    invitationform:
+      invitationtext: "Le nombre d'invitations est illimité, mais les personnes que vous invitez sont associées à votre compte dans <a href=\"/u\">l'arbre des utilisateurs</a> et vous pourriez être tenu pour responsable s'ils causent des problèmes. Merci d'évaluer le fait d'inviter des gens que vous ne connaissez pas personnellement."
+      emailaddress: "Adresse e-mail :"
+      memouser: "Message à l'utilisateur :"
+      sendinvitation: "Envoyer l'invitation"

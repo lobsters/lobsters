@@ -210,15 +210,8 @@ class Story < ActiveRecord::Base
       sign = 0
     end
 
-    # if any newer stories were merged into us, use the newest created_at to
-    # take its place on the front page
-    tcreated_at = (self.created_at || Time.now).to_f
-    if (mtca = self.merged_stories.map{|ts| ts.created_at.to_f }.max) &&
-    mtca > tcreated_at
-      tcreated_at = mtca
-    end
-
-    return -((order * sign) + base + (tcreated_at / HOTNESS_WINDOW)).round(7)
+    return -((order * sign) + base +
+      ((self.created_at || Time.now).to_f / HOTNESS_WINDOW)).round(7)
   end
 
   def can_be_seen_by_user?(user)

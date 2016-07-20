@@ -2,4 +2,4 @@
 
 cd /d/rails/lobsters
 # rebuild does a start
-sudo -u lobsters -H env RAILS_ENV=production NO_TRIPWIRE=1 bundle19 exec rake19 ts:rebuild
+sudo -u lobsters -H env RAILS_ENV=production NO_TRIPWIRE=1 bundle exec rake ts:rebuild

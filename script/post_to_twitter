@@ -63,8 +63,13 @@ Time.now - 1.days).order(:id).each_with_index do |s,x|
     { "status" => status })
 
   begin
-    if res["id_str"].match(/\d+/)
+    if res["id_str"].to_s.match(/\d+/)
       s.update_column("twitter_id", res["id_str"])
+    elsif res["errors"].select{|e| e["code"] == 226 }.any?
+      # twitter is rejecting the content of this message, skip it
+      s.update_column("twitter_id", 0)
+      puts "skipping: failed posting story #{s.id} (#{status.inspect}): " +
+        "#{res.inspect}\n"
     else
       raise
     end

@@ -22,6 +22,8 @@ class Comment < ActiveRecord::Base
     :log_to_countinual
   after_destroy :unassign_votes
 
+  scope :active, -> { where(:is_deleted => false, :is_moderated => false) }
+
   DOWNVOTABLE_DAYS = 7
 
   # after this many minutes old, a comment cannot be edited
@@ -209,6 +211,7 @@ class Comment < ActiveRecord::Base
     Comment.record_timestamps = true
 
     self.story.update_comments_count!
+    self.user.update_comments_posted_count!
   end
 
   def deliver_mention_notifications
@@ -456,5 +459,6 @@ class Comment < ActiveRecord::Base
     Comment.record_timestamps = true
 
     self.story.update_comments_count!
+    self.user.update_comments_posted_count!
   end
 end

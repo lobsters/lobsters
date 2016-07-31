@@ -219,6 +219,10 @@ class User < ActiveRecord::Base
     Keystore.value_for("user:#{self.id}:comments_posted").to_i
   end
 
+  def update_comments_posted_count!
+    Keystore.put("user:#{self.id}:comments_posted", self.comments.active.count)
+  end
+
   def delete!
     User.transaction do
       self.comments.each{|c| c.delete_for_user(self) }

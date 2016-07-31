@@ -201,9 +201,11 @@ class CommentsController < ApplicationController
     @heading = @title = "Newest Comments"
     @cur_url = "/comments"
 
-    @page = 1
-    if params[:page].to_i > 0
-      @page = params[:page].to_i
+    @page = params[:page].to_i
+    if @page == 0
+      @page = 1
+    elsif @page < 0 || @page > (2 ** 32)
+      raise ActionController::RoutingError.new("page out of bounds")
     end
 
     @comments = Comment.where(

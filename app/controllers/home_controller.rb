@@ -224,7 +224,13 @@ private
   end
 
   def page
-    params[:page].to_i > 0 ? params[:page].to_i : 1
+    p = params[:page].to_i
+    if p == 0
+      p = 1
+    elsif p < 0 || p > (2 ** 32)
+      raise ActionController::RoutingError.new("page out of bounds")
+    end
+    p
   end
 
   def paginate(scope)

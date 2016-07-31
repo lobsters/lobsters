@@ -2,13 +2,12 @@ class ModerationsController < ApplicationController
   def index
     @title = t('.moderationlogtitle')
 
-    @page = params[:page] ? params[:page].to_i : 0
     @pages = (Moderation.count / 50).ceil
-
-    if @page < 1
+    @page = params[:page].to_i
+    if @page == 0
       @page = 1
-    elsif @page > @pages
-      @page = @pages
+    elsif @page < 0 || @page > (2 ** 32) || @page > @pages
+      raise ActionController::RoutingError.new("page out of bounds")
     end
 
     @moderations = Moderation.order("id desc").limit(50).offset((@page - 1) *

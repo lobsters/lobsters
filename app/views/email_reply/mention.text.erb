@@ -1,4 +1,4 @@
-<%= @comment.user.username %> has mention you in a comment:
+<%= @comment.user.username %> mentioned you in a comment:
 
   <%= word_wrap(@comment.plaintext_comment, :line_width => 72).gsub(/\n/, "\n  ") %>
 

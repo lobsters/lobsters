@@ -15,7 +15,7 @@ html {
 
 body, textarea, input, button {
 	font-family: "helvetica neue", arial, sans-serif;
-	font-size: 9.5pt;
+	font-size: 10pt;
 	color: #333;
 }
 
@@ -49,7 +49,7 @@ a.tag {
 	border: 1px solid #d5d458;
 	border-radius: 10px;
 	color: #555;
-	font-size: 7.5pt;
+	font-size: 8pt;
 	margin-left: 0.25em;
 	padding: 0px 0.5em 1px 0.5em;
 	text-decoration: none;
@@ -78,7 +78,7 @@ span.hat span.crown {
 	border: 1px solid #eee;
 	border-bottom: 0;
 	border-radius: 5px 5px 0px 0px;
-	font-size: 7.5pt;
+	font-size: 8pt;
 	padding: 3px 5px 2px 5px;
 	text-decoration: none;
 	vertical-align: text-top;
@@ -449,8 +449,8 @@ li.story {
 	clear: both;
 }
 ol.stories li.story div.story_liner {
-	padding-top: 0.4em;
-	padding-bottom: 0.4em;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
 }
 .comment {
 	clear: both;
@@ -515,7 +515,7 @@ li .tags {
 li .domain {
 	color: #888;
 	font-style: italic;
-	font-size: 8.5pt;
+	font-size: 9pt;
 	text-decoration: none;
 	vertical-align: middle;
 }
@@ -557,7 +557,7 @@ li .comment_folder_button:checked ~ ol.comments li {
 
 li .byline {
 	color: #888;
-	font-size: 8.5pt;
+	font-size: 9pt;
 }
 li .byline > img.avatar {
 	margin-bottom: -5px;

@@ -174,12 +174,8 @@ class User < ActiveRecord::Base
         return true
       end
     elsif obj.is_a?(Comment)
-      if obj.is_downvotable?
-        return true
-      elsif obj.current_vote.try(:vote).to_i == -1
-        # user can unvote
-        return true
-      end
+      # XXX
+      return false
     end
 
     false

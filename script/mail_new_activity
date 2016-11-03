@@ -219,11 +219,6 @@ last_comment_id, false, false).order(:id).each do |c|
 
       body = []
 
-      if c.hat
-        body.push "[ Posted while wearing #{c.hat.hat} hat ]"
-        body.push ""
-      end
-
       # if the comment has hard line breaks at <80, it likely came from an
       # email, so don't re-wrap it at something shorter
       com = c.comment.to_s

@@ -64,6 +64,9 @@ class User < ActiveRecord::Base
   # minimum karma required to be able to offer title/tag suggestions
   MIN_KARMA_TO_SUGGEST = 10
 
+  # minimum karma required to be able to downvote comments
+  MIN_KARMA_TO_DOWNVOTE = 100
+
   # minimum karma required to be able to submit new stories
   MIN_KARMA_TO_SUBMIT_STORIES = -4
 
@@ -174,8 +177,7 @@ class User < ActiveRecord::Base
         return true
       end
     elsif obj.is_a?(Comment)
-      # XXX
-      return false
+      return !self.is_new? && (self.karma >= MIN_KARMA_TO_DOWNVOTE)
     end
 
     false

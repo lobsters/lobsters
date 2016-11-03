@@ -29,8 +29,7 @@ class ApplicationController < ActionController::Base
       traffic = traffic_kv.value.to_i
 
       # don't increase traffic counter for bots or api requests
-      unless agent_is_spider? || agent_via_tor? ||
-      [ "json", "rss" ].include?(params[:format])
+      unless agent_is_spider? || [ "json", "rss" ].include?(params[:format])
         traffic += 100
       end
 
@@ -105,11 +104,7 @@ class ApplicationController < ActionController::Base
 
   def agent_is_spider?
     ua = request.env["HTTP_USER_AGENT"].to_s
-    (ua == "" || ua.match(/(Google|bing)bot|Slurp|crawler/))
-  end
-
-  def agent_via_tor?
-    request.remote_ip == "127.0.0.1"
+    (ua == "" || ua.match(/(Google|bing|Slack|Twitter)bot|Slurp|crawler|Feedly|FeedParser|RSS/))
   end
 
   def find_user_from_rss_token

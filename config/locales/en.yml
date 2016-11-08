@@ -37,6 +37,16 @@ en:
       hatrequestlink: "Hat Requests"
       privacylink: "Privacy"
       aboutlink: "About"
+  filters:
+    index:
+      filteredtags: "Filtered Tags"
+      filteredtagsdesc: "To hide stories from the home page that have been tagged with certain <a href=\"/tags\">tags</a>, check them below."
+      filteredtagsnotloggedindesc: "Since you are not logged in, your filters will be stored in a long-lasting browser cookie.  To permanently store your tag filters and have them work across browsers, <a href=\"/login\">login</a> to your account."
+      filteredhide: "Hide"
+      filteredtag: "Tag"
+      filtereddesc: "Description"
+      filteredstories: "Stories"
+      filteredsave: "Save Filters"
   moderations:
     index:
       moderationlogtitle: "Moderation Log"

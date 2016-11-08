@@ -1,28 +1,25 @@
 <div class="box wide">
   <div class="legend">
-    Filtered Tags
+    <%= t('.filteredtags') %>
   </div>
 
   <p>
-  To hide stories from the home page that have been tagged with certain <a
-  href="/tags">tags</a>, check them below.
+  <%=raw(t('.filteredtagsdesc')) %>
   </p>
 
   <% if !@user %>
     <p>
-    Since you are not logged in, your filters will be stored in a long-lasting
-    browser cookie.  To permanently store your tag filters and have them work
-    across browsers, <a href="/login">login</a> to your account.
+    <%=raw(t('.filteredtagsnotloggedindesc')) %>
     </p>
   <% end %>
 
   <%= form_tag "/filters", :method => :post do %>
     <table class="data zebra" cellspacing=0 width="75%">
     <tr>
-      <th width="7%">Hide</th>
-      <th width="13%">Tag</th>
-      <th width="65%">Description</th>
-      <th width="5%" style="text-align: right; padding-right: 1em;">Stories</th>
+      <th width="7%"><%=t('.filteredhide') %></th>
+      <th width="13%"><%=t('.filteredtag') %></th>
+      <th width="65%"><%=t('.filtereddesc') %></th>
+      <th width="5%" style="text-align: right; padding-right: 1em;"><%=t('.filteredstories') %></th>
     </tr>
     <% @tags.each do |tag| %>
       <tr>
@@ -41,7 +38,7 @@
     <% end %>
     </table>
     <p>
-    <%= submit_tag "Save Filters" %>
+    <%= submit_tag t('.filteredsave') %>
     </p>
   <% end %>
 </div>

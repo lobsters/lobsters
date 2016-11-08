@@ -49,6 +49,16 @@ fr:
       hatrequestlink: "Porter le chapeau"
       privacylink: "Confidentialité"
       aboutlink: "À propos"
+  filters:
+    index:
+      filteredtags: "Marques filtrées"
+      filteredtagsdesc: "Pour cacher des infos de la page d'accueil qui ont été marquées avec une certaine <a href=\"/tags\">marque</a>, sélectionnez-les ci-dessous."
+      filteredtagsnotloggedindesc: "Puisque vous n'êtes pas connecté, vos filtres seront enregistrés dans un cookie doté d'une longue durée de vie. Pour enregistrer définitivement vos filtres de marques et qu'ils fonctionnent donc quelque soit le navigateur web, <a href=\"/login\">connectez-vous</a> à votre compte."
+      filteredhide: "Cacher"
+      filteredtag: "Marque"
+      filtereddesc: "Description"
+      filteredstories: "Infos"
+      filteredsave: "Sauver les filtres"
   moderations:
     index:
       moderationlogtitle: "Journal de modération"

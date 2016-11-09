@@ -77,6 +77,18 @@ fr:
       actionline: "Action"
       reasonline: "Raison"
       page: "Page"
+  search:
+    index:
+      search: "Rechercher"
+      searchbutton: "Rechercher"
+      include: "Inclus :"
+      orderby: "Ordonné par :"
+      all: "Tous"
+      stories: "Infos"
+      comments: "Commentaires"
+      newest: "Le plus récent"
+      relevance: "Pertinence"
+      points: "Score"
   settings:
     delete_account:
       deleteaccountflash: "Votre compte a été supprimé."

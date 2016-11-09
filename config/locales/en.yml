@@ -65,6 +65,18 @@ en:
       actionline: "Action"
       reasonline: "Reason"
       page: "Page"
+  search:
+    index:
+      search: "Search"
+      searchbutton: "Search"
+      include: "Include:"
+      orderby: "Order By:"
+      all: "All"
+      stories: "Stories"
+      comments: "Comments"
+      newest: "Newest"
+      relevance: "Relevance"
+      points: "Points"
   settings:
     delete_account:
       deleteaccountflash: "Your account has been deleted."

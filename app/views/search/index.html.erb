@@ -1,47 +1,47 @@
 <div class="box">
   <div class="legend">
-    Search
+    <%= t('.search') %>
   </div>
 
   <%= form_tag "/search", :method => :get do %>
     <div class="boxline">
       <%= text_field_tag "q", @search.q, { :size => 40 }.
         merge(@search.q.present? ? {} : { :autofocus => "autofocus" }) %>
-      <input type="submit" value="Search">
+      <input type="submit" value=<%= t('.searchbutton') %>
     </div>
 
     <div class="boxline">
-      <label class="required">Include:</label>
+      <label class="required"><%= t('.include') %></label>
 
       <%= radio_button_tag "what", "all", @search.what == "all" %>
-        <label for="what_all" class="normal">All</label>
+        <label for="what_all" class="normal"><%= t('.all') %></label>
 
       &nbsp;
 
       <%= radio_button_tag "what", "stories", @search.what == "stories" %>
-        <label for="what_stories" class="normal">Stories</label>
+        <label for="what_stories" class="normal"><%= t('.stories') %></label>
 
       &nbsp;
 
       <%= radio_button_tag "what", "comments", @search.what == "comments" %>
-        <label for="what_comments" class="normal">Comments</label>
+        <label for="what_comments" class="normal"><%= t('.comments') %></label>
 
       <br>
 
-      <label class="required">Order By:</label>
+      <label class="required"><%= t('.orderby') %></label>
 
       <%= radio_button_tag "order", "relevance", @search.order == "relevance" %>
-        <label for="order_relevance" class="normal">Relevance</label>
+        <label for="order_relevance" class="normal"><%= t('.relevance') %></label>
 
       &nbsp;
 
       <%= radio_button_tag "order", "newest", @search.order == "newest" %>
-        <label for="order_newest" class="normal">Newest</label>
+        <label for="order_newest" class="normal"><%= t('.newest') %></label>
 
       &nbsp;
 
       <%= radio_button_tag "order", "points", @search.order == "points" %>
-        <label for="order_points" class="normal">Points</label>
+        <label for="order_points" class="normal"><%= t('.points') %></label>
     </div>
   <% end %>
 </div>

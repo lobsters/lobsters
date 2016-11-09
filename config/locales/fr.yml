@@ -149,3 +149,9 @@ fr:
       emailaddress: "Adresse e-mail :"
       memouser: "Message à l'utilisateur :"
       sendinvitation: "Envoyer l'invitation"
+  stories:
+    new:
+      markdown: "Utilisation du Markdown possible"
+      preview: "Aperçu"
+      submit: "Soumettre une info"
+      submitbutton: "Soumettre"

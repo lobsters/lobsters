@@ -137,3 +137,9 @@ en:
       emailaddress: "E-mail Address:"
       memouser: "Memo to User:"
       sendinvitation: "Send Invitation"
+  stories:
+    new:
+      markdown: "Markdown formatting available"
+      preview: "Preview"
+      submit: "Submit a Story"
+      submitbutton: "Submit"

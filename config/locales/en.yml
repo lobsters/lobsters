@@ -47,6 +47,9 @@ en:
       filtereddesc: "Description"
       filteredstories: "Stories"
       filteredsave: "Save Filters"
+  home:
+    index:
+      homerecentsdesc: "<em>The <a href=\"/newest\">newest</a> stories with a random sampling of recently submitted stories that have not yet reached the front page.</em>"
   moderations:
     index:
       moderationlogtitle: "Moderation Log"

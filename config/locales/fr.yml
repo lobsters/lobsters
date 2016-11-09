@@ -49,6 +49,9 @@ fr:
       hatrequestlink: "Porter le chapeau"
       privacylink: "Confidentialité"
       aboutlink: "À propos"
+  home:
+    index:
+      homerecentsdesc: "<em>Les <a href=\"/newest\">plus récentes</a> infos avec un panaché aléatoire des infos récentes soumises qui n'ont pas encore atteint la page principale.</em>"
   filters:
     index:
       filteredtags: "Marques filtrées"

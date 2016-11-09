@@ -47,6 +47,15 @@ en:
       filtereddesc: "Description"
       filteredstories: "Stories"
       filteredsave: "Save Filters"
+  comments:
+    commentbox:
+      mustbelogged: "You must be logged in to leave a comment."
+      markdown: "Markdown formatting available"
+      post: "Post"
+      update: "Update"
+      preview: "Preview"
+      cancel: "Cancel"
+      putonhat: "Put on hat:"
   home:
     index:
       homerecentsdesc: "<em>The <a href=\"/newest\">newest</a> stories with a random sampling of recently submitted stories that have not yet reached the front page.</em>"

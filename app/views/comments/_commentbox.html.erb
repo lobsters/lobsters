@@ -16,7 +16,7 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
   <div style="width: 100%;">
     <%= text_area_tag "comment", comment.comment, :rows => 5,
       :style => "width: 100%;", :autocomplete => "off", :disabled => !@user,
-      :placeholder => (@user ? "" : "You must be logged in to leave a comment.")
+      :placeholder => (@user ? "" : t('.mustbelogged'))
       %>
 
     <p></p>
@@ -24,7 +24,7 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
     <div class="markdown_help_toggler">
       <% if @user %>
         <div class="markdown_help_label">
-          Markdown formatting available
+          <%= t('.markdown') %>
         </div>
         <div class="markdown_help_label markdown_help_label_mobile"
         style="display: none;">
@@ -32,21 +32,21 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
         </div>
       <% end %>
 
-      <%= button_tag "#{comment.new_record?? "Post" : "Update"}",
+      <%= button_tag "#{comment.new_record?? t('.post') : t('.update')}",
         :class => "comment-post", :type => "button",
         :disabled => !@user %>
       &nbsp;
-      <%= button_tag "Preview", :class => "comment-preview",
+      <%= button_tag t('.preview'), :class => "comment-preview",
         :type => "button", :disabled => !@user %>
       <% if comment.persisted? || comment.parent_comment_id %>
         &nbsp;
-        <%= button_tag "Cancel", :class => "comment-cancel",
+        <%= button_tag t('.cancel'), :class => "comment-cancel",
           :type => "button" %>
       <% end %>
 
       <% if @user && @user.hats.any? %>
         <div style="display: inline-block; margin-left: 1em;">
-        Put on hat:
+        <%= t('.putonhat') %>
         <%= select_tag "hat_id",
           options_from_collection_for_select(@user.hats, "id", "hat",
           comment.hat_id), :include_blank => true %>

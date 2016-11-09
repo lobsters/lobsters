@@ -49,6 +49,15 @@ fr:
       hatrequestlink: "Porter le chapeau"
       privacylink: "Confidentialité"
       aboutlink: "À propos"
+  comments:
+    commentbox:
+      mustbelogged: "Vous devez être connecté pour laisser un commentaire."
+      markdown: "Utilisation du Markdown possible"
+      post: "Poster"
+      update: "Mettre à jour"
+      preview: "Aperçu"
+      cancel: "Annuler"
+      putonhat: "Mettre son chapeau : "
   home:
     index:
       homerecentsdesc: "<em>Les <a href=\"/newest\">plus récentes</a> infos avec un panaché aléatoire des infos récentes soumises qui n'ont pas encore atteint la page principale.</em>"

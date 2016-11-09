@@ -48,46 +48,45 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% end %>
 
       <% if comment.previewing %>
-        previewed
-        just now
+        <%= t('.previewed') %>
       <% else %>
         <% if comment.has_been_edited? %>
-          edited
+          <%= t('.edited') %>
         <% elsif comment.is_from_email? %>
-          e-mailed
+          <%= t('.emailed') %>
         <% end %>
-        <%= time_ago_in_words_label((comment.has_been_edited? ?
-          comment.updated_at : comment.created_at), :strip_about => true) %>
+        <%= distance_of_time_in_words((comment.has_been_edited? ?
+          comment.updated_at : comment.created_at), Time.now, :strip_about => true) %>
       <% end %>
 
       <% if !comment.previewing %>
         |
-        <a href="<%= comment.short_id_url %>">link</a>
+        <a href="<%= comment.short_id_url %>"><%= t('.link') %></a>
 
         <% if comment.is_editable_by_user?(@user) %>
           |
-          <a class="comment_editor">edit</a>
+          <a class="comment_editor"><%= t('.edit') %></a>
         <% end %>
 
         <% if comment.is_gone? && comment.is_undeletable_by_user?(@user) %>
           |
-          <a class="comment_undeletor">undelete</a>
+          <a class="comment_undeletor"><%= t('.undelete') %></a>
         <% elsif !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
           |
           <% if @user && @user.is_moderator? && @user.id != comment.user_id %>
-            <a class="comment_moderator">delete</a>
+            <a class="comment_moderator"><%= t('.delete') %></a>
           <% else %>
-            <a class="comment_deletor">delete</a>
+            <a class="comment_deletor"><%= t('.delete') %></a>
           <% end %>
         <% end %>
 
         <% if @user && !comment.story.is_gone? && !comment.is_gone? %>
             |
-            <a class="comment_replier" unselectable="on">reply</a>
+            <a class="comment_replier" unselectable="on"><%= t('.reply') %></a>
         <% end %>
 
         <% if defined?(show_story) && show_story %>
-          | on:
+          | <%= t('.on') %>
           <a href="<%= comment.story.comments_path %>"><%= comment.story.title
             %></a>
         <% end %>

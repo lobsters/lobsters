@@ -56,6 +56,16 @@ en:
       preview: "Preview"
       cancel: "Cancel"
       putonhat: "Put on hat:"
+    comment:
+      previewed: "previewed just now"
+      edited: "edited"
+      emailed: "e-mailed"
+      link: "link"
+      edit: "edit"
+      undelete: "undelete"
+      delete: "delete"
+      reply: "reply"
+      on: "on:"
   home:
     index:
       homerecentsdesc: "<em>The <a href=\"/newest\">newest</a> stories with a random sampling of recently submitted stories that have not yet reached the front page.</em>"

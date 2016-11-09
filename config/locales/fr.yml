@@ -58,6 +58,16 @@ fr:
       preview: "Aperçu"
       cancel: "Annuler"
       putonhat: "Mettre son chapeau : "
+    comment:
+      previewed: "prévisualisé à l'instant"
+      edited: "édité"
+      emailed: "envoyé par e-mail"
+      link: "lien"
+      edit: "éditer"
+      undelete: "désupprimer"
+      delete: "supprimer"
+      reply: "répondre"
+      on: "sur :"
   home:
     index:
       homerecentsdesc: "<em>Les <a href=\"/newest\">plus récentes</a> infos avec un panaché aléatoire des infos récentes soumises qui n'ont pas encore atteint la page principale.</em>"
@@ -242,6 +252,12 @@ fr:
     - :year
   datetime:
     distance_in_words:
+      about_x_seconds:
+        one: environ une seconde
+        other: environ %{count} seconds
+      about_x_minutes:
+        one: environ une minute
+        other: environ %{count} minutes
       about_x_hours:
         one: environ une heure
         other: environ %{count} heures

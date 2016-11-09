@@ -1,23 +1,18 @@
 <% if f.object.errors.count == 1 && f.object.already_posted_story %>
   <div class="flash-error">
-  <h2>Error: This story was already submitted <%=
-    time_ago_in_words_label(f.object.already_posted_story.created_at) %></h2>
+  <h2><%= t('.alreadysubmitted') %><%=
+    time_ago_in_words(f.object.already_posted_story.created_at) %></h2>
   <p>
-  Please view the <a href="<%= f.object.already_posted_story.comments_path %>"
-  target="_blank">previous discussion</a> for this story.
+  <%= raw(t('.previousdiscussion', :storypath => "#{f.object.already_posted_story.comments_path}")) %>
   </p>
   </div>
 <% elsif f.object.errors.any? %>
   <%= error_messages_for f.object %>
 <% elsif !f.object.errors.any? && f.object.already_posted_story %>
   <div class="flash-notice">
-  <h2>Note: This story was already submitted <%=
-    time_ago_in_words_label(f.object.already_posted_story.created_at) %>, but
-    may be submitted again.</h2>
+  <h2><%= t('.alreadysubmittedflash', :timeago => "{time_ago_in_words(f.object.already_posted_story.created_at)}") %></h2>
   <p>
-  Please view the <a href="<%= f.object.already_posted_story.comments_path %>"
-  target="_blank">previous discussion</a> for this story first.  If the content
-  has changed or warrants new discussion, you may submit it again.
+  <%= raw(t('.previousexpireddiscussion', :storypath => "#{f.object.already_posted_story.comments_path}")) %>
   </p>
   </div>
 
@@ -28,12 +23,12 @@
   <% unless defined?(suggesting) %>
     <div class="boxline">
     <% if f.object.url_is_editable_by_user?(@user) %>
-      <%= f.label :url, "URL:", :class => "required" %>
+      <%= f.label :url, t('.url'), :class => "required" %>
       <%= f.text_field :url, :autocomplete => "off" %>
-      <%= button_tag "Fetch Title", :id => "story_fetch_title",
+      <%= button_tag t('.fetchtitle'), :id => "story_fetch_title",
         :type => "button" %>
     <% elsif !f.object.new_record? && !f.object.url.blank? %>
-      <%= f.label :url, "URL:", :class => "required" %>
+      <%= f.label :url, t('.url'), :class => "required" %>
       <div class="d">
       <a href="<%= f.object.url %>"><%= f.object.url %></a>
       </div>
@@ -42,7 +37,7 @@
   <% end %>
 
   <div class="boxline">
-    <%= f.label :title, "Title:", :class => "required" %>
+    <%= f.label :title, t('.title'), :class => "required" %>
     <%= f.text_field :title, :maxlength => 100, :autocomplete => "off"  %>
   </div>
 
@@ -55,7 +50,7 @@
     <% title_votes.delete(f.object.title) %>
     <% if title_votes.any? %>
       <div class="boxline actions">
-        Users have suggested changing this story's title to:
+        <%= t('.changetitle') %>
         <br>
         <% title_votes.each do |ti,c| %>
           <%= h(ti) %><%= c == 1 ? "" : " (#{c} votes)" %><br>
@@ -65,7 +60,7 @@
   <% end %>
 
   <div class="boxline" style="margin-bottom: 2px;">
-  <%= f.label :tags_a, "Tags:", :class => "required",
+  <%= f.label :tags_a, t('.tags'), :class => "required",
     :style => "line-height: 2.3em;" %>
   <%= f.select "tags_a", options_for_select(
     Tag.all_with_filtered_counts_for(@user).map{|t|
@@ -93,7 +88,7 @@
     <% tag_votes.delete(f.object.tags_a.sort.join(", ")) %>
     <% if tag_votes.any? %>
       <div class="boxline actions">
-        Users have suggested changing this story's tags to:
+        <%= t('.changetags') %>
         <br>
         <% tag_votes.each do |ts,c| %>
           <%= ts %><%= c == 1 ? "" : " (#{c} votes)" %><br>
@@ -104,55 +99,38 @@
 
   <% unless defined?(suggesting) %>
     <div class="boxline">
-      <%= f.label :description, "Text:", :class => "required" %>
+      <%= f.label :description, t('.text'), :class => "required" %>
       <%= f.text_area :description, :rows => 15,
-        :placeholder => "Optional when submitting a URL; please see guidelines",
+        :placeholder => t('.placeholdertext'),
         :autocomplete => "off" %>
     </div>
 
     <div class="boxline actions markdown_help_toggler">
       <a href="#" id="story_guidelines_toggler">
-        Story submission guidelines
+        <%= t('.storysubmissionguidelines') %>
       </a>
       <div id="story_guidelines" style="<%= show_guidelines?? "" :
       "display: none;" %>">
         <ul>
 
           <li><p>
-          Do not editorialize story titles, but when the original story's
-          title has no context or is unclear, please change it.  <strong>Please
-          remove extraneous components from titles such as the name of the
-          site or section.</strong>
+          <%= raw(t('.guidelinespart1')) %>
           </p></li>
 
           <li><p>
-          When the story being submitted is more than a year or so old,
-          please add the year the story was written to the post title in
-          parentheses.
+          <%= t('.guidelinespart2') %>
           </p></li>
 
           <li><p>
-          When submitting a URL, the text field is optional and should only
-          be used when additional context or explanation of the URL is
-          needed.  Commentary or opinion should be reserved for a comment,
-          so that it can be voted on separately from the story.
+          <%= t('.guidelinespart3') %>
           </p></li>
 
           <li><p>
-          If no tags clearly apply to the story you are submitting, chances
-          are it does not belong here.  Do not overreach with tags if they
-          are not the primary focus of the story.
+          <%= raw(t('.guidelinespart4')) %>
           </p></li>
 
           <li><p>
-          To be able to easily submit a page you're viewing in your browser
-          to <%= Rails.application.name %>, drag this bookmarklet to your
-          bookmark bar:
-          [<a href="javascript:{window.open(%22<%= Rails.application.root_url
-          %>stories/new?url=%22+encodeURIComponent(document.location)+<%
-          %>%22&title=%22+encodeURIComponent(document.title));%20void(0);}<%
-          %>">Submit to <%= Rails.application.name %></a>].
-          You'll be taken to this page with the viewed page's URL and title.
+          <%= raw(t('.guidelinespart5', :rooturl => "#{Rails.application.root_url}", :appname => "#{Rails.application.name}")) %>
           </p></li>
 
         </ul>
@@ -163,11 +141,11 @@
 <% unless defined?(suggesting) %>
   <div class="box">
     <div class="boxline">
-      <%= f.label :user_is_author, "Author:", :class => "required" %>
+      <%= f.label :user_is_author, t('.author'), :class => "required" %>
       <%= f.check_box :user_is_author %>
       <%= f.label :user_is_author,
-        (f.object.id && f.object.user_id != @user.id ? "Submitter is" : "I am") +
-        " the author of the story at this URL (or this text)",
+        (f.object.id && f.object.user_id != @user.id ? t('.submitter') : t('.iamauthor')) +
+        t('.authorownership'),
         :class => "normal" %>
     </div>
   </div>

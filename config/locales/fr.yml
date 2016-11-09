@@ -150,8 +150,129 @@ fr:
       memouser: "Message à l'utilisateur :"
       sendinvitation: "Envoyer l'invitation"
   stories:
+    form:
+      alreadysubmitted: "Erreur : Cette info a déjà été proposée "
+      alreadysubmittedflash: "Note: Cette info a déjà été proposée %{timeago} mais peut être de nouveau reproposée."
+      previousdiscussion: "Merci de consulter <a href=\"%{storypath}\" target=\"_blank\"> la discussion précédente</a> pour cette info."
+      previousexpireddiscution: "Merci de consulter <a href=\"%{storypath}\" \"target=_blank\">la discussion précédente</a> pour la première proposition de cette info.  Si le contenu a changé ou génère de nouvelles discussions, vous pouvez la proposer de nouveau."
+      fetchtitle: "Prendre le titre"
+      url: "URL :"
+      title: "Titre :"
+      changetitle: "Les utilisateurs ont proposé de changer le titre de l'info par :"
+      tags: "Marque :"
+      changetags: "Les utilisateurs ont proposé de changer les marques de l'info par :"
+      text: "Texte :"
+      placeholdertext: "Optionnel quand vous proposez une URL; se référer au mode d'emploi"
+      storysubmissionguidelines: "Lignes directrices de la proposition d'une info"
+      guidelinespart1: "Ne pas éditer les titres des infos, mais quand le titre original n'a pas de contexte ou est peu clair, changez-le. <strong>Merci de supprimer du titre le nom du site ou la section.</strong>"
+      guidelinespart2: "Quand l'info proposée a plus d'un an, merci d'ajouter en fin de titre entre parenthèse la date de publication."
+      guidelinespart3: "Quand une URL est proposée, le champ texte est optionnel et doit être utilisé seulement si du contexte ou des explications sur l'info proposée est nécessaire. Un commentaire ou une opinion doit faire l'objet d'un commentaire, afin qu'il reçoive un vote autre que celui de l'info. "
+      guidelinespart4: "Si aucune marque ne s'applique à l'info, il y a de fortes chances qu'elle ne corresponde pas aux <a href=\"/about\" \"target=_blank\">sujets couverts</a>. Ne pas entrer une marque ne s'appliquant pas à l'info."
+      guidelinespart5: "Pour proposer facilement une page que vous visionnez dans votre navigateur au %{appname}, cliquez-glissez ce bookmarklet vers votre barre de navigation: [<a href=\"javascript:{window.open(%22%{rooturl}stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title));%20void(0);}\">Soumettre au %{appname}</a>]. Vous serez redirigé vers la page actuelle avec l'URL et le titre de la page d'info."
+      submitter: "L'auteur est"
+      author: "Auteur :"
+      iamauthor: "Je suis"
+      authorownership: " l'auteur de l'info à cette URL (ou de ce texte)"
     new:
       markdown: "Utilisation du Markdown possible"
       preview: "Aperçu"
       submit: "Soumettre une info"
       submitbutton: "Soumettre"
+  date:
+    abbr_day_names:
+    - dim
+    - lun
+    - mar
+    - mer
+    - jeu
+    - ven
+    - sam
+    abbr_month_names:
+    -
+    - jan.
+    - fév.
+    - mar.
+    - avr.
+    - mai
+    - juin
+    - juil.
+    - août
+    - sept.
+    - oct.
+    - nov.
+    - déc.
+    day_names:
+    - dimanche
+    - lundi
+    - mardi
+    - mercredi
+    - jeudi
+    - vendredi
+    - samedi
+    formats:
+      default: "%d/%m/%Y"
+      short: "%e %b"
+      long: "%e %B %Y"
+    month_names:
+    -
+    - janvier
+    - février
+    - mars
+    - avril
+    - mai
+    - juin
+    - juillet
+    - août
+    - septembre
+    - octobre
+    - novembre
+    - décembre
+    order:
+    - :day
+    - :month
+    - :year
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: environ une heure
+        other: environ %{count} heures
+      about_x_months:
+        one: environ un mois
+        other: environ %{count} mois
+      about_x_years:
+        one: environ un an
+        other: environ %{count} ans
+      almost_x_years:
+        one: presqu'un an
+        other: presque %{count} ans
+      half_a_minute: une demi-minute
+      less_than_x_minutes:
+        zero: moins d'une minute
+        one: moins d'une minute
+        other: moins de %{count} minutes
+      less_than_x_seconds:
+        zero: moins d'une seconde
+        one: moins d'une seconde
+        other: moins de %{count} secondes
+      over_x_years:
+        one: plus d'un an
+        other: plus de %{count} ans
+      x_days:
+        one: 1 jour
+        other: "%{count} jours"
+      x_minutes:
+        one: 1 minute
+        other: "%{count} minutes"
+      x_months:
+        one: 1 mois
+        other: "%{count} mois"
+      x_seconds:
+        one: 1 seconde
+        other: "%{count} secondes"
+    prompts:
+      day: Jour
+      hour: Heure
+      minute: Minute
+      month: Mois
+      second: Seconde
+      year: Année

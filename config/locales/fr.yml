@@ -169,6 +169,16 @@ fr:
       memouser: "Message à l'utilisateur :"
       sendinvitation: "Envoyer l'invitation"
   stories:
+    edit:
+      edit: "Éditer l'info"
+      merge: "Fusionner :"
+      shortid: "ID courte de l'info dans laquelle cette info sera fusionnée"
+      unavailable: "Non dispo :"
+      unavailableat: "URL source non disponible, active l'affichage du texte en cache"
+      modreason: "Raison de la modération :"
+      markdown: "Utilisation du Markdown possible"
+      save: "Sauver"
+      cancel: "Annuler l'édition"
     form:
       alreadysubmitted: "Erreur : Cette info a déjà été proposée "
       alreadysubmittedflash: "Note: Cette info a déjà été proposée %{timeago} mais peut être de nouveau reproposée."

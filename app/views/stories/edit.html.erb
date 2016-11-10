@@ -1,6 +1,6 @@
 <div class="box" id="story_box">
   <div class="legend">
-    Edit Story
+    <%= t('.edit') %>
   </div>
 
   <%= form_for @story, :url => story_path(@story.short_id),
@@ -12,22 +12,20 @@
       <br />
       <div class="box">
         <div class="boxline">
-          <%= f.label :merge_story_short_id, "Merge Into:",
+          <%= f.label :merge_story_short_id, t('.merge'),
             :class => "required" %>
           <%= f.text_field :merge_story_short_id, :autocomplete => "off",
-            :placeholder => "Short id of story into which this story " <<
-            "be merged" %>
+            :placeholder => t('.shortid') %>
         </div>
         <div class="boxline">
-          <%= f.label :unavailable_at, "Unavailable:",
+          <%= f.label :unavailable_at, t('.unavailable'),
             :class => "required" %>
           <%= f.check_box :is_unavailable %>
-          <%= f.label :unavailable_at, "Source URL is unavailable, " <<
-            "enable display of cached text", :class => "normal" %>
+          <%= f.label :unavailable_at, t('.unavailableat'), :class => "normal" %>
         </div>
         <% if @story.user_id != @user.id %>
           <div class="boxline">
-            <%= f.label :moderation_reason, "Mod Reason:",
+            <%= f.label :moderation_reason, t('.modreason'),
               :class => "required" %>
             <%= f.text_field :moderation_reason, :autocomplete => "off" %>
           </div>
@@ -43,9 +41,8 @@
           Markdown formatting available
         </div>
 
-        <%= submit_tag "Save" %>
-        &nbsp;or <a href="<%= story_path(@story.short_id) %>">cancel
-          editing</a>
+        <%= submit_tag t('.save') %>
+        &nbsp;or <a href="<%= story_path(@story.short_id) %>"><%= t('.cancel') %></a>
 
         <div style="clear: both;"></div>
 

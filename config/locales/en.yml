@@ -157,6 +157,16 @@ en:
       memouser: "Memo to User:"
       sendinvitation: "Send Invitation"
   stories:
+    edit:
+      edit: "Edit Story"
+      merge: "Merge Into:"
+      shortid: "Short id of story into which this story be merged"
+      unavailable: "Unavailable:"
+      unavailableat: "Source URL is unavailable, enable display of cached text"
+      modreason: "Mod Reason:"
+      markdown: "Markdown formatting available"
+      save: "Save"
+      cancel: "cancel editing"
     form:
       alreadysubmitted: "Error: This story was already submitted "
       alreadysubmittedflash: "Note: This story was already submitted %{timeago} but may be submitted again."

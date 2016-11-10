@@ -65,7 +65,7 @@ en:
       undelete: "undelete"
       delete: "delete"
       reply: "reply"
-      on: "on:"
+      about: "on:"
   home:
     index:
       homerecentsdesc: "<em>The <a href=\"/newest\">newest</a> stories with a random sampling of recently submitted stories that have not yet reached the front page.</em>"

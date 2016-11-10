@@ -69,6 +69,18 @@ en:
   home:
     index:
       homerecentsdesc: "<em>The <a href=\"/newest\">newest</a> stories with a random sampling of recently submitted stories that have not yet reached the front page.</em>"
+  login:
+    index:
+      login: "Login"
+      email: "E-mail or Username:"
+      password: "Password:"
+      login: "Login"
+      forgotdeleted: "Forgot your password or deleted your account? "
+      resetpassword: "Reset your password"
+      notuseryet: "Not a user yet?  Signup is by invitation only to combat spam and increase accountability.  If you know <a href=\"/u/\">%{acurrentuser}</a> of the site, ask them for an invitation or" 
+      acurrentuser: "a current user"
+      request: "request one publicly"
+      requestinchat: "request one in <a href=\"/chat\">chat</a>."
   moderations:
     index:
       moderationlogtitle: "Moderation Log"

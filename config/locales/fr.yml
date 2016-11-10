@@ -71,6 +71,18 @@ fr:
   home:
     index:
       homerecentsdesc: "<em>Les <a href=\"/newest\">plus récentes</a> infos avec un panaché aléatoire des infos récentes soumises qui n'ont pas encore atteint la page principale.</em>"
+  login:
+    index:
+      login: "Se connecter"
+      email: "E-mail ou utilisateur :"
+      password: "Mot de passe :"
+      login: "Connexion"
+      forgotdeleted: "Oubli du mot de passe ou suppression du compte ? "
+      resetpassword: "Changer de mot de passe"
+      notuseryet: "Pas encore utilisateur ? L'inscription est seulement par invitation pour lutter contre le spam  et améliorer la traçabilité. Si vous connaissez <a href=\"/u/\">%{acurrentuser}</a> du site, demandez-lui une invitation ou"
+      acurrentuser: "un utilisateur"
+      request: "demandez-en une publiquement"
+      requestinchat: "dans le <a href=\"/chat\">chat</a>."
   filters:
     index:
       filteredtags: "Marques filtrées"

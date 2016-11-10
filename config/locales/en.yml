@@ -86,6 +86,12 @@ en:
       resetinstructions: "If you've forgotten your password, enter your e-mail address or username below and instructions will be e-mailed to you."
       email: "E-mail or Username:"
       reset: "Reset Password"
+    set_new_password:
+      setnewpassword: "Set New Password"
+      user: "Username:"
+      password: "New Password:"
+      again: "(Again):"
+      setpassbutton: "Set New Password"
   moderations:
     index:
       moderationlogtitle: "Moderation Log"

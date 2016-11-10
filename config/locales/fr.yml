@@ -88,6 +88,12 @@ fr:
       resetinstructions: "Si vous avez oublié votre mot de passe, entrez votre adresse e-mail ou votre utilisateur pour recevoir par e-mail les instructions de changement."
       email: "E-mail ou utilisateur :"
       reset: "Changer mot de passe"
+    set_new_password:
+      setnewpassword: "Définir le nouveau mot de passe"
+      user: "Utilisateur :"
+      password: "Mot de passe :"
+      again: "(encore):"
+      setpassbutton: "Changer le mot de passe"
   filters:
     index:
       filteredtags: "Marques filtrées"

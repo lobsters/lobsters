@@ -192,6 +192,27 @@ fr:
       author: "Auteur :"
       iamauthor: "Je suis"
       authorownership: " l'auteur de l'info à cette URL (ou de ce texte)"
+    listdetail:
+      storyremovedby: "[Info supprimée par %{user}]"
+      moderator: "le modérateur"
+      originalsubmitter: "le contributeur d'origine"
+      authoredby: "écrit par"
+      via: "via"
+      justnow: "à l'instant"
+      edit: "éditer"
+      delete: "supprimer"
+      confirmundelete: "Êtes-vous sûr de vouloir désupprimer cette info ?"
+      undelete: "désupprimer"
+      confirmdelete: "Êtes-vous sûr de vouloir supprimer cette info ?"
+      suggest: "suggérer"
+      unflag: "désindiquer"
+      flag: "indiquer"
+      hide: "cacher"
+      unhide: "décacher"
+      cached: "en cache"
+      nocomment: "pas de commentaire"
+      commentsingular: "commentaire"
+      commentplurial: "commentaires"
     new:
       markdown: "Utilisation du Markdown possible"
       preview: "Aperçu"
@@ -253,20 +274,20 @@ fr:
   datetime:
     distance_in_words:
       about_x_seconds:
-        one: environ une seconde
-        other: environ %{count} seconds
+        one: il y a une seconde
+        other: il y a %{count} seconds
       about_x_minutes:
-        one: environ une minute
-        other: environ %{count} minutes
+        one: il y a une minute
+        other: il y a %{count} minutes
       about_x_hours:
-        one: environ une heure
-        other: environ %{count} heures
+        one: il y a une heure
+        other: il y a %{count} heures
       about_x_months:
-        one: environ un mois
-        other: environ %{count} mois
+        one: il y a un mois
+        other: il y a %{count} mois
       about_x_years:
-        one: environ un an
-        other: environ %{count} ans
+        one: il y a un an
+        other: il y a %{count} ans
       almost_x_years:
         one: presqu'un an
         other: presque %{count} ans
@@ -283,17 +304,17 @@ fr:
         one: plus d'un an
         other: plus de %{count} ans
       x_days:
-        one: 1 jour
-        other: "%{count} jours"
+        one: il y a 1 jour
+        other: "il y a %{count} jours"
       x_minutes:
-        one: 1 minute
-        other: "%{count} minutes"
+        one: il y a 1 minute
+        other: "il y a %{count} minutes"
       x_months:
-        one: 1 mois
-        other: "%{count} mois"
+        one: il y a 1 mois
+        other: "il y a %{count} mois"
       x_seconds:
-        one: 1 seconde
-        other: "%{count} secondes"
+        one: il y a 1 seconde
+        other: "il y a %{count} secondes"
     prompts:
       day: Jour
       hour: Heure

@@ -81,6 +81,11 @@ en:
       acurrentuser: "a current user"
       request: "request one publicly"
       requestinchat: "request one in <a href=\"/chat\">chat</a>."
+    forgot_password:
+      resetpassword: "Reset Password"
+      resetinstructions: "If you've forgotten your password, enter your e-mail address or username below and instructions will be e-mailed to you."
+      email: "E-mail or Username:"
+      reset: "Reset Password"
   moderations:
     index:
       moderationlogtitle: "Moderation Log"

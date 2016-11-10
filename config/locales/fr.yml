@@ -83,6 +83,11 @@ fr:
       acurrentuser: "un utilisateur"
       request: "demandez-en une publiquement"
       requestinchat: "dans le <a href=\"/chat\">chat</a>."
+    forgot_password:
+      resetpassword: "Changer le mot de passe"
+      resetinstructions: "Si vous avez oublié votre mot de passe, entrez votre adresse e-mail ou votre utilisateur pour recevoir par e-mail les instructions de changement."
+      email: "E-mail ou utilisateur :"
+      reset: "Changer mot de passe"
   filters:
     index:
       filteredtags: "Marques filtrées"

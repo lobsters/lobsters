@@ -332,6 +332,8 @@ fr:
     comments_controller:
       commentstitle: "Derniers commentaires"
       threadstitle: "Vos sujets"
+    filters_controller:
+      filterstitle: "Filtres"
     home_controller:
       recenttitle: "Infos récentes"
       abouttitle: "À propos"

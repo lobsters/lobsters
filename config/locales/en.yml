@@ -320,6 +320,8 @@ en:
     comments_controller:
       commentstitle: "Newest Comments"
       threadstitle: "Your Threads"
+    filters_controller:
+      filterstitle: "Tag Filters"
     home_controllers:
       recenttitle: "Recent Stories"
       abouttitle: "About"

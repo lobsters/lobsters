@@ -326,3 +326,6 @@ en:
       rssforstoriestitle: "RSS 2.0"
       rssforcommentstitle: "Comments - RSS 2.0"
       neweststoriestitle: "Newest Stories"
+    stories_controller:
+      submitstorytitle: "Submit Story"
+      editstorytitle: "Edit Story"

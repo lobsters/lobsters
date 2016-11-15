@@ -338,6 +338,9 @@ fr:
       rssforstoriestitle: "RSS 2.0"
       rssforcommentstitle: "Commentaires - RSS 2.0"
       neweststoriestitle: "Dernières infos"
+    stories_controller:
+      submitstorytitle: "Soumettre une info"
+      editstorytitle: "Éditer une info"
   date:
     abbr_day_names:
     - dim

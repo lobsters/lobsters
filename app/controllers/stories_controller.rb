@@ -9,7 +9,7 @@ class StoriesController < ApplicationController
   before_filter :find_story!, :only => [ :suggest, :submit_suggestions ]
 
   def create
-    @title = "Submit Story"
+    @title = I18n.t 'controllers.home_controller.submitstorytitle'
     @cur_url = "/stories/new"
 
     @story = Story.new(story_params)
@@ -51,7 +51,7 @@ class StoriesController < ApplicationController
       return redirect_to "/"
     end
 
-    @title = "Edit Story"
+    @title = I18n.t 'controllers.home_controller.submitstorytitle'
 
     if @story.merged_into_story
       @story.merge_story_short_id = @story.merged_into_story.short_id
@@ -67,7 +67,7 @@ class StoriesController < ApplicationController
   end
 
   def new
-    @title = "Submit Story"
+    @title = I18n.t 'controllers.home_controller.submitstorytitle'
     @cur_url = "/stories/new"
 
     @story = Story.new

@@ -6,7 +6,7 @@ class HomeController < ApplicationController
 
   def about
     begin
-      @title = "About"
+      @title = I18n.t 'controllers.home_controller.abouttitle'
       render :action => "about"
     rescue
       render :text => "<div class=\"box wide\">" <<
@@ -17,7 +17,7 @@ class HomeController < ApplicationController
 
   def chat
     begin
-      @title = "Chat"
+      @title = I18n.t 'controllers.home_controller.chattitle'
       render :action => "chat"
     rescue
       render :text => "<div class=\"box wide\">" <<
@@ -28,7 +28,7 @@ class HomeController < ApplicationController
 
   def privacy
     begin
-      @title = "Privacy"
+      @title = I18n.t 'controllers.home_controller.privacytitle'
       render :action => "privacy"
     rescue
       render :text => "<div class=\"box wide\">" <<
@@ -42,7 +42,7 @@ class HomeController < ApplicationController
       paginate stories.hidden
     }
 
-    @heading = @title = "Hidden Stories"
+    @heading = @title = I18n.t 'controllers.home_controller.hiddenstoriestitle'
     @cur_url = "/hidden"
 
     render :action => "index"
@@ -79,7 +79,7 @@ class HomeController < ApplicationController
       paginate stories.newest
     }
 
-    @heading = @title = "Newest Stories"
+    @heading = @title = I18n.t 'controllers.home_controller.neweststoriestitle'
     @cur_url = "/newest"
 
     @rss_link = { :title => "RSS 2.0 - Newest Items",
@@ -130,7 +130,7 @@ class HomeController < ApplicationController
       paginate scope
     }
 
-    @heading = @title = "Recent Stories"
+    @heading = @title = I18n.t 'controllers.home_controller.recenttitle'
     @cur_url = "/recent"
 
     # our content changes every page load, so point at /newest.rss to be stable

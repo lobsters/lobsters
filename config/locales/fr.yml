@@ -327,6 +327,17 @@ fr:
   emailaddress: "Adresse e-mail :"
   memouser: "Message à l'utilisateur :"
   sendinvitation: "Envoyer l'invitation"
+# controllers
+  controllers:
+    home_controller:
+      recenttitle: "Infos récentes"
+      abouttitle: "À propos"
+      chattitle: "Chat"
+      privacytitle: "Confidentialité"
+      hiddenstoriestitle: "Infos cachées"
+      rssforstoriestitle: "RSS 2.0"
+      rssforcommentstitle: "Commentaires - RSS 2.0"
+      neweststoriestitle: "Dernières infos"
   date:
     abbr_day_names:
     - dim

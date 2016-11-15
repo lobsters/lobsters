@@ -122,6 +122,7 @@ en:
       composereply: "Compose Reply"
       toupper: "To"
       sendmessage: "Send Message"
+      cantreply: "This message cannot be replied to.  Please contact a moderator for assistance."
   moderations:
     index:
       moderationlogtitle: "Moderation Log"
@@ -314,3 +315,14 @@ en:
   emailaddress: "E-mail Address:"
   memouser: "Memo to User:"
   sendinvitation: "Send Invitation"
+# controllers
+  controllers:
+    home_controllers:
+      recenttitle: "Recent Stories"
+      abouttitle: "About"
+      chattitle: "Chat"
+      privacytitle: "Privacy"
+      hiddenstoriestitle: "Hidden Stories"
+      rssforstoriestitle: "RSS 2.0"
+      rssforcommentstitle: "Comments - RSS 2.0"
+      neweststoriestitle: "Newest Stories"

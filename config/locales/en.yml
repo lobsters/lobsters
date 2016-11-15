@@ -92,6 +92,24 @@ en:
       password: "New Password:"
       again: "(Again):"
       setpassbutton: "Set New Password"
+  messages:
+    index:
+      viewreceived: "View Received"
+      viewsent: "View Sent"
+      subjectlabel: "Subject"
+      privatemessages: "Private Messages"
+      sent: "Sent"
+      from: "From"
+      tomsg: "To"
+      received: "Received"
+      deleteselected: "Delete Selected"
+      donothavemessages: "You do not have any %{from} private messages."
+      sentlower: "sent"
+      composemessage: "Compose Message"
+      tomsglabel: "To:"
+      subject: "Subject:"
+      message: "Message:"
+      sendmessage: "Send Message"
   moderations:
     index:
       moderationlogtitle: "Moderation Log"

@@ -10,15 +10,15 @@
 <div class="box wide">
   <div class="legend" style="float: right;">
     <% if @direction == :out %>
-      <a href="/messages">View Received</a>
+      <a href="/messages"><%= t('.viewreceived') %></a>
     <% else %>
-      <a href="/messages/sent">View Sent</a>
+      <a href="/messages/sent"><%= t('.viewsent') %></a>
     <% end %>
   </div>
   <div class="legend">
-    Private Messages
+    <%= t('.privatemessages') %>
     <% if @direction == :out %>
-      Sent
+      <%= t('.sent') %>
     <% end %>
   </div>
 
@@ -28,9 +28,9 @@
       <tr>
         <th width="3%"><%= check_box_tag "delete_all",
           :id => "delete_all" %></th>
-        <th width="15%"><%= @direction == :in ? "From" : "To" %></th>
-        <th width="17%"><%= @direction == :in ? "Received" : "Sent" %></th>
-        <th width="60%">Subject</th>
+        <th width="15%"><%= @direction == :in ? t('.from') : t('.tomsg') %></th>
+        <th width="17%"><%= @direction == :in ? t('.received') : t('.sent') %></th>
+        <th width="60%"><%= t('.subjectlabel') %></th>
       </tr>
       <% @messages.includes(:author, :recipient).each do |message| %>
         <tr class="<%= message.has_been_read? ? "" : "bold" %>">
@@ -46,53 +46,52 @@
               <a href="/u/<%= message.recipient.username %>"><%=
                 message.recipient.username %></a>
             <% end %></td>
-          <td><%= time_ago_in_words_label(message.created_at) %></td>
+          <td><%= distance_of_time_in_words(message.created_at, Time.now) %></td>
           <td><a href="/messages/<%= message.short_id %>"><%= message.subject
             %></a></td>
         </tr>
       <% end %>
       </table>
       <p>
-      <%= submit_tag "Delete Selected" %>
+      <%= submit_tag t('.deleteselected') %>
       </p>
     <% end %>
   <% else %>
     <p>
-    You do not have any <%= @direction == :in ? "" : "sent" %> private
-      messages.
+    <%= t('.donothavemessages', :from => :in ? "" : t('.sentlower') )%>
     </p>
   <% end %>
 
   <br>
 
   <div class="legend">
-    Compose Message
+    <%= t('.composemessage') %>
   </div>
 
   <%= form_for @new_message, :method => :post do |f| %>
     <%= error_messages_for @new_message %>
 
     <div class="boxline">
-      <%= f.label :recipient_username, "To:", :class => "required" %>
+      <%= f.label :recipient_username, t('.tomsglabel'), :class => "required" %>
       <%= f.text_field :recipient_username, :size => 20,
         :autocomplete => "off" %>
     </div>
 
     <div class="boxline">
-      <%= f.label :subject, "Subject:", :class => "required" %>
+      <%= f.label :subject, t('.subject'), :class => "required" %>
       <%= f.text_field :subject, :style => "width: 500px;",
         :autocomplete => "off" %>
     </div>
 
     <div class="boxline">
-      <%= f.label :body, "Message:", :class => "required" %>
+      <%= f.label :body, t('.message'), :class => "required" %>
       <%= f.text_area :body, :style => "width: 500px;", :rows => 5,
         :autocomplete => "off" %>
     </div>
 
     <div class="boxline">
       <p></p>
-      <%= submit_tag "Send Message" %>
+      <%= submit_tag t('.sendmessage') %>
     </div>
   <% end %>
 </div>

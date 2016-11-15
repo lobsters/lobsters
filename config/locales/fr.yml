@@ -104,6 +104,24 @@ fr:
       filtereddesc: "Description"
       filteredstories: "Infos"
       filteredsave: "Sauver les filtres"
+  messages:
+    index:
+      viewreceived: "Voir messages reçus"
+      viewsent: "Voir messages envoyés"
+      subjectlabel: "Sujet"
+      privatemessages: "Messages privés"
+      sent: "Envoyés"
+      from: "De"
+      tomsg: "À"
+      received: "Reçus"
+      deleteselected: "Supprimer ceux sélectionnés"
+      donothavemessages: "Vous n'avez pas de %{from} messages privés."
+      sentlower: "sent"
+      composemessage: "Écrire un message"
+      tomsglabel: "À :"
+      subject: "Sujet :"
+      message: "Message :"
+      sendmessage: "Envoyer le message"
   moderations:
     index:
       moderationlogtitle: "Journal de modération"

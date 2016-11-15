@@ -185,12 +185,6 @@ fr:
       accountnolongersetuppushover: "Votre compte n'est plus configuré pour les notifications Pushover."
     update:
       updatesettingsflash: "Paramètres mis à jour avec succès."
-  users:
-    invitationform:
-      invitationtext: "Le nombre d'invitations est illimité, mais les personnes que vous invitez sont associées à votre compte dans <a href=\"/u\">l'arbre des utilisateurs</a> et vous pourriez être tenu pour responsable s'ils causent des problèmes. Merci d'évaluer le fait d'inviter des gens que vous ne connaissez pas personnellement."
-      emailaddress: "Adresse e-mail :"
-      memouser: "Message à l'utilisateur :"
-      sendinvitation: "Envoyer l'invitation"
   stories:
     edit:
       edit: "Éditer l'info"
@@ -251,6 +245,57 @@ fr:
       preview: "Aperçu"
       submit: "Soumettre une info"
       submitbutton: "Soumettre"
+  users:
+    list:
+      administrator: "administrateur"
+      moderator: "modérateur"
+    show:
+      status: "Statut :"
+      sendmessage: "Envoyer un message"
+      banned: "Utilisateur banni"
+      inactive: "Utilisateur inactif"
+      active: "actif "
+      administrator: "administrateur"
+      moderator: "modérateur"
+      user: "utilisateur"
+      withinvites: "avec invitations"
+      storysubmissions: "avec propositions d'infos"
+      disabled: "désactivé"
+      joined: "Joint :"
+      byinvitationfrom: "par invitation de"
+      banneduser: "Banni :"
+      bannedby: "par"
+      hats: "Chapeaux :"
+      left: "Parti :"
+      karma: "Karma :"
+      karmaaverage: ", en moyenne "
+      karmaperstorycomment: "par info/commentaire"
+      storiessubmitted: "Infos soumises :"
+      postedcomments: "Commentaires postés :"
+      mostcommonlytagged: "le plus couramment marquées "
+      about: "À propos :"
+      aboutdefault: "Un mystère..."
+      administrativeinfo: "Informations administratives"
+      email: "E-mail :"
+      recentvotes: "Votes récents :"
+      commentlinktext: "comment"
+      administrativeactions: "Actions administratives"
+      unbanuser: "Unban User"
+      banningdescription: "Bannir ou désactiver les invitations pour un utilisateur enverra un e-mail à l'utilisateur avec la raison ci-dessous avec l'adresse e-mail dans le champ Reply-To afin qu'il puisse répondre."
+      banningreason: "Raison :"
+      banuserbutton: "Bannir l'utilisateur"
+      enableinvitesforuser: "Activer les invitations pour l'utilisateur"
+      disableinvitesreason: "Raison :"
+      disableinvitesbutton: "Désactiver les invitations"
+    tree:
+      newestusers: "Plus récents utilisateurs"
+      administrator: "(administrateur)"
+      moderator: "(modérateur)"
+# data for users/invitationform which is a partial view
+  invitationtext: "Le nombre d'invitations est illimité, mais les personnes que vous invitez sont associées à votre compte dans <a href=\"/u\">l'arbre des utilisateurs</a> et vous pourriez être tenu pour responsable s'ils causent des problèmes. Merci d'évaluer le fait d'inviter des gens que vous ne connaissez pas personnellement."
+  emailaddress: "Adresse e-mail :"
+  memouser: "Message à l'utilisateur :"
+  sendinvitation: "Envoyer l'invitation"
   date:
     abbr_day_names:
     - dim

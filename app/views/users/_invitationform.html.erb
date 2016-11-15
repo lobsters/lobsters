@@ -1,5 +1,5 @@
 <p>
-<%= raw(t('.invitationtext')) %>
+<%=raw(t(:invitationtext)) %>
 </p>
 
 <%= form_tag "/invitations", :method => :post do |f| %>
@@ -8,18 +8,18 @@
   <% end %>
 
   <div class="boxline">
-    <%= label_tag :email, t('.emailaddress'), :class => "required" %>
+    <%= label_tag :email, t(:emailaddress), :class => "required" %>
     <%= text_field_tag :email, "", :size => 30, :autocomplete => "off" %>
   </div>
 
   <div class="boxline">
-    <%= label_tag :memo, t('.memouser'), :class => "required" %>
+    <%= label_tag :memo, t(:memouser), :class => "required" %>
     <%= text_field_tag :memo, "", :size => 60 %>
   </div>
 
   <div class="boxline">
     <p></p>
-    <%= submit_tag t('.sendinvitation') %>
+    <%= submit_tag t(:sendinvitation) %>
   </div>
 <% end %>
 

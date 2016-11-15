@@ -11,7 +11,7 @@
     </span>
 
     <% if @user && @showing_user.is_active? %>
-      (<a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>)
+      (<a href="/messages?to=<%= @showing_user.username %>"><%= t('.sendmessage') %></a>)
     <% end %>
   </div>
 
@@ -23,33 +23,33 @@
     </div>
   <% end %>
 
-  <label class="required">Status:</label>
+  <label class="required"><%= t('.status') %></label>
   <span class="d"
   <%= @showing_user.is_banned? ? raw("style=\"color: red;\"") : "" %>>
     <% if @showing_user.is_banned? %>
-      Banned user
+      <%= t('.banneduser') %>
     <% elsif !@showing_user.is_active? %>
-      Inactive user
+      <%= t('.inactiveuser') %>
     <% else %>
-      Active
-      <%= @showing_user.is_admin? ? "administrator" :
-        (@showing_user.is_moderator? ? "moderator" : "user") %>
+      <%= t('.active') %>
+      <%= @showing_user.is_admin? ? t('.administrator') :
+        (@showing_user.is_moderator? ? t('.moderator') : t('.user')) %>
       <% if !@showing_user.can_invite? %>
-        with invites
+        <%= t('.withinvites') %>
         <% if !@showing_user.can_submit_stories? %>
-          and story submissions
+          <%= t('.storysubmissions') %>
         <% end %>
-        disabled
+        <%= t('.disabled') %>
       <% end %>
     <% end %>
   </span>
   <br>
 
-  <label class="required">Joined:</label>
+  <label class="required"><%= t('.joined') %></label>
   <span class="d">
-    <%= time_ago_in_words_label(@showing_user.created_at) %>
+    <%= distance_of_time_in_words(@showing_user.created_at, Time.now) %>
     <% if @showing_user.invited_by_user %>
-      by invitation from
+      <%= t('.byinvitationfrom') %>
       <%= link_to @showing_user.invited_by_user.try(:username),
         @showing_user.invited_by_user %>
     <% end %>
@@ -57,11 +57,11 @@
   <br>
 
   <% if @showing_user.is_banned? %>
-    <label class="required">Banned:</label>
+    <label class="required"><%= t('.banneduser') %></label>
     <span class="d">
-      <%= time_ago_in_words_label(@showing_user.banned_at) %>
+      <%= distance_of_time_in_words(@showing_user.banned_at, Time.now) %>
       <% if @showing_user.banned_by_user %>
-        by <%= link_to @showing_user.banned_by_user.try(:username),
+        <%= t('.bannedby') %><%= link_to @showing_user.banned_by_user.try(:username),
           @showing_user.banned_by_user %>:
           <em><%= @showing_user.banned_reason %></em>
       <% end %>
@@ -70,7 +70,7 @@
   <% end %>
 
   <% if @showing_user.hats.any? %>
-    <label class="required">Hats:</label>
+    <label class="required"><%= t('.hats') %></label>
     <span class="d">
     <% @showing_user.hats.each do |hat| %>
       <%= hat.to_html_label %>
@@ -80,37 +80,37 @@
   <% end %>
 
   <% if @showing_user.deleted_at? %>
-    <label class="required">Left:</label>
+    <label class="required"><% t('.left') %></label>
     <span class="d">
-      <%= time_ago_in_words_label(@showing_user.deleted_at) %>
+      <%= distance_of_time_in_words(@showing_user.deleted_at, Time.now) %>
     </span>
     <br>
   <% end %>
 
   <% if !@showing_user.is_admin? %>
-    <label class="required">Karma:</label>
+    <label class="required"><%= t('.karma') %></label>
     <span class="d">
-      <%= @showing_user.karma %>, averaging <%=
+      <%= @showing_user.karma %><%= t('.karmaaverage') %><%=
         number_with_precision(@showing_user.average_karma, :precision => 2) %>
-        per story/comment
+        <%= t('.karmaperstorycomment') %>
     </span>
     <br>
   <% end %>
 
-  <label class="required">Stories Submitted:</label>
+  <label class="required"><%= t('.storiessubmitted') %></label>
   <span class="d">
     <% tag = @showing_user.most_common_story_tag %>
     <a href="/newest/<%= @showing_user.username %>"><%=
       @showing_user.stories_submitted_count %></a><%= tag ? ", " : "" %>
     <% if tag %>
-      most commonly tagged <a href="<%= tag_path(tag.tag) %>"
+      <%= t('.mostcommonlytagged') %><a href="<%= tag_path(tag.tag) %>"
         class="<%= tag.css_class %>" title="<%= tag.description %>"><%=
         tag.tag %></a>
     <% end %>
   </span>
   <br>
 
-  <label class="required">Comments Posted:</label>
+  <label class="required"><%= t('.postedcomments') %></label>
   <span class="d">
     <a href="/threads/<%= @showing_user.username %>"><%=
       @showing_user.comments_posted_count %></a>
@@ -118,13 +118,13 @@
   <br>
 
   <% if @showing_user.is_active? %>
-    <label class="required">About:</label>
+    <label class="required"><%= t('.about') %></label>
 
     <div class="d shorten_first_p">
       <% if @showing_user.about.present? %>
         <%= raw @showing_user.linkified_about %>
       <% else %>
-        <span class="na">A mystery...</span>
+        <span class="na"><%= t('.aboutdefault') %></span>
       <% end %>
     </div>
   <% end %>
@@ -135,17 +135,17 @@
 
     <p>
     <div class="legend">
-      Administrative Information
+      <%= t('.administrativeinfo') %>
     </div>
     </p>
 
-    <label class="required">E-Mail:</label>
+    <label class="required"><%= t('.email') %></label>
     <span class="d">
       <%= @showing_user.email %>
     </span>
     <br>
 
-    <label class="required">Recent Votes:</label>
+    <label class="required"><%= t('.recentvotes') %></label>
     <div class="d shorten_first_p">
       <% @showing_user.votes_for_others.limit(10).each do |v| %>
         <p>
@@ -161,7 +161,7 @@
         <% end %>
         on
         <% if v.comment_id %>
-          <a href="<%= v.comment.short_id_url %>">comment</a>
+          <a href="<%= v.comment.short_id_url %>"><%= t('.commentlinktext') %></a>
           by
           <a href="/u/<%= v.comment.user.try(:username) %>"><%= 
             v.comment.user.try(:username) %></a>
@@ -183,31 +183,30 @@
 
     <p>
     <div class="legend">
-      Administrative Actions
+      <%= t('.administrativeactions') %>
     </div>
     </p>
 
     <% if @showing_user.is_banned? %>
       <%= form_tag user_unban_path, :method => :post do %>
         <p>
-        <%= submit_tag "Unban User" %>
+        <%= submit_tag t('unbanuser') %>
         </p>
       <% end %>
     <% else %>
         <p>
-        Banning or disabling invites for a user will send an e-mail to the user with the reason below,
-        with your e-mail address as the Reply-To so the user can respond.
+        <%= t('.banningdescription') %>
         </p>
       <%= form_tag user_ban_path, :method => :post do %>
         <p>
 
         <div class="boxline">
-          <%= label_tag :reason, "Reason:", :class => "required" %>
+          <%= label_tag :reason, t('.banningreason'), :class => "required" %>
           <%= text_field_tag :reason, "", :size => 40 %>
         </div>
 
         <p>
-        <%= submit_tag "Ban User" %>
+        <%= submit_tag t('.banuserbutton') %>
         </p>
       <% end %>
     <% end %>
@@ -215,7 +214,7 @@
     <% if @showing_user.banned_from_inviting? %>
       <%= form_tag user_enable_invite_path, :method => :post do %>
         <p>
-        <%= submit_tag "Enable invitations for User" %>
+        <%= submit_tag t('.enableinvitesforuser') %>
         </p>
       <% end %>
     <% else %>
@@ -223,12 +222,12 @@
         <p>
 
         <div class="boxline">
-          <%= label_tag :reason, "Reason:", :class => "required" %>
+          <%= label_tag :reason, t('.disableinvitesreason'), :class => "required" %>
           <%= text_field_tag :reason, "", :size => 40 %>
         </div>
 
         <p>
-        <%= submit_tag "Disable invites" %>
+        <%= submit_tag t('.disableinvitesbutton') %>
         </p>
       <% end %>
     <% end %>

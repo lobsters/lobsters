@@ -4,7 +4,7 @@ class MessagesController < ApplicationController
 
   def index
     @cur_url = "/messages"
-    @title = "Messages"
+    @title = I18n.t 'controllers.messages_controller.messagestitle'
 
     @new_message = Message.new
 

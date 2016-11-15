@@ -343,6 +343,8 @@ fr:
       rssforstoriestitle: "RSS 2.0"
       rssforcommentstitle: "Commentaires - RSS 2.0"
       neweststoriestitle: "Dernières infos"
+    messages_controller:
+      messagestitle: "Messages"
     search_controller:
       searchtitle: "Rechercher"
     stories_controller:

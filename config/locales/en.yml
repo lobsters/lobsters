@@ -317,6 +317,9 @@ en:
   sendinvitation: "Send Invitation"
 # controllers
   controllers:
+    comments_controller:
+      commentstitle: "Newest Comments"
+      threadstitle: "Your Threads"
     home_controllers:
       recenttitle: "Recent Stories"
       abouttitle: "About"
@@ -329,3 +332,4 @@ en:
     stories_controller:
       submitstorytitle: "Submit Story"
       editstorytitle: "Edit Story"
+

@@ -329,6 +329,9 @@ fr:
   sendinvitation: "Envoyer l'invitation"
 # controllers
   controllers:
+    comments_controller:
+      commentstitle: "Derniers commentaires"
+      threadstitle: "Vos sujets"
     home_controller:
       recenttitle: "Infos récentes"
       abouttitle: "À propos"

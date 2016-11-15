@@ -122,6 +122,19 @@ fr:
       subject: "Sujet :"
       message: "Message :"
       sendmessage: "Envoyer le message"
+    show:
+      backtosentmessages: "Retour aux messages envoyés"
+      backtomessages: "Retour aux messages"
+      sentfrom: "Envoyé depuis"
+      tomsg: "à"
+      administrator: "(administrateur)"
+      moderator: "(modérateur)"
+      deletemessage: "Supprimer le message"
+      keepasnew: "Garder comme non-lu"
+      composereply: "Écrire une réponse"
+      toupper: "À"
+      sendmessage: "Envoyer le message"
+      cantreply: "Il n'est pas possible de répondre à ce message. Merci de contacter un modérateur pour assistance."
   moderations:
     index:
       moderationlogtitle: "Journal de modération"

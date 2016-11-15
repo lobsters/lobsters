@@ -1,9 +1,9 @@
 <div class="box wide">
   <div class="legend" style="float: right;">
     <% if @message.author_user_id == @user.id %>
-      <a href="/messages/sent">Back to Sent Messages</a>
+      <a href="/messages/sent"><%= t('.backtosentmessages') %></a>
     <% else %>
-      <a href="/messages">Back to Messages</a>
+      <a href="/messages"><%= t('.backtomessages') %></a>
     <% end %>
   </div>
 
@@ -11,22 +11,22 @@
     <%= @message.subject %>
 
     <div class="sublegend">
-      Sent from
+      <%= t('.sentfrom') %>
       <% if @message.author %>
         <a href="/u/<%= @message.author.username %>"><%=
           @message.author.username %></a>
         <% if @message.author.is_admin? %>
-          (administrator)
+          <%= t('.administrator') %>
         <% elsif @message.author.is_moderator? %>
-          (moderator)
+          <%= t('.moderator') %>
         <% end %>
       <% else %>
         <%= @message.author_username %>
       <% end %>
-      to
+      <%= t('.tomsg') %>
       <a href="/u/<%= @message.recipient.username %>"><%=
         @message.recipient.username %></a>
-      <%= time_ago_in_words_label(@message.created_at) %>
+      <%= distance_of_time_in_words(@message.created_at, Time.now) %>
     </div>
   </div>
 
@@ -39,14 +39,14 @@
   <div class="boxline">
     <div style="float: left;">
       <%= form_tag message_path(@message.short_id), :method => :delete do %>
-        <%= submit_tag "Delete Message" %>
+        <%= submit_tag t('.deletemessage') %>
       <% end %>
     </div>
 
     <div style="float: left; padding-left: 1em;">
       <%= form_tag message_path(@message.short_id) + "/keep_as_new",
       :method => :post do %>
-        <%= submit_tag "Keep As New" %>
+        <%= submit_tag t('.keepasnew') %>
       <% end %>
     </div>
   </div>
@@ -56,9 +56,9 @@
   <br>
 
   <div class="legend">
-    Compose Reply
+    <%= t('.composereply') %>
     <% if @new_message %>
-      To <%= @new_message.recipient_username %>
+      <%= t('.toupper') %> <%= @new_message.recipient_username %>
     <% end %>
   </div>
 
@@ -80,11 +80,10 @@
 
       <div class="boxline">
         <p></p>
-        <%= submit_tag "Send Message" %>
+        <%= submit_tag t('.sendmessage') %>
       </div>
     <% end %>
   <% else %>
-    This message cannot be replied to.  Please contact a moderator for
-    assistance.
+    <%= t('.cantreply') %>
   <% end %>
 </div>

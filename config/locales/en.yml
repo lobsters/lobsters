@@ -110,6 +110,18 @@ en:
       subject: "Subject:"
       message: "Message:"
       sendmessage: "Send Message"
+    show:
+      backtosentmessages: "Back to Sent Messages"
+      backtomessages: "Back to Messages"
+      sentfrom: "Sent From"
+      administrator: "(administrator)"
+      moderator: "(moderator)"
+      tomsg: "to"
+      deletemessage: "Delete Message"
+      keepasnew: "Keep As New"
+      composereply: "Compose Reply"
+      toupper: "To"
+      sendmessage: "Send Message"
   moderations:
     index:
       moderationlogtitle: "Moderation Log"

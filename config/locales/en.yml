@@ -37,6 +37,9 @@ en:
       hatrequestlink: "Hat Requests"
       privacylink: "Privacy"
       aboutlink: "About"
+      blog: "Blog"
+      twitter: "Twitter"
+      diaspora: "Diaspora*"
   filters:
     index:
       filteredtags: "Filtered Tags"

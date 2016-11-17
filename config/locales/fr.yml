@@ -49,6 +49,9 @@ fr:
       hatrequestlink: "Porter le chapeau"
       privacylink: "Confidentialité"
       aboutlink: "À propos"
+      blog: "Blog"
+      twitter: "Twitter"
+      diaspora: "Diaspora*"
   comments:
     commentbox:
       mustbelogged: "Vous devez être connecté pour laisser un commentaire."

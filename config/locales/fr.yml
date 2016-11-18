@@ -117,7 +117,7 @@ fr:
       from: "De"
       tomsg: "À"
       received: "Reçus"
-      deleteselected: "Supprimer ceux sélectionnés"
+      deleteselected: "Supprimer les messages sélectionnés"
       donothavemessages: "Vous n'avez pas de %{from} messages privés."
       sentlower: "sent"
       composemessage: "Écrire un message"

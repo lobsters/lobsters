@@ -315,7 +315,7 @@ fr:
       commentlinktext: "comment"
       administrativeactions: "Actions administratives"
       unbanuser: "Unban User"
-      banningdescription: "Bannir ou désactiver les invitations pour un utilisateur enverra un e-mail à l'utilisateur avec la raison ci-dessous avec l'adresse e-mail dans le champ Reply-To afin qu'il puisse répondre."
+      banningdescription: "Bannir ou désactiver les invitations pour un utilisateur lui enverra un e-mail avec la raison ci-dessous, et votre adresse e-mail dans le champ Reply-To afin qu'il puisse répondre."
       banningreason: "Raison :"
       banuserbutton: "Bannir l'utilisateur"
       enableinvitesforuser: "Activer les invitations pour l'utilisateur"

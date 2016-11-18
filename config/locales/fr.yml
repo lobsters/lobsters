@@ -348,6 +348,7 @@ fr:
       neweststoriestitle: "Dernières infos"
     messages_controller:
       messagestitle: "Messages"
+      messagessenttitle: "Messages envoyés"
     search_controller:
       searchtitle: "Rechercher"
     stories_controller:

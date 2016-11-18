@@ -18,7 +18,7 @@ class MessagesController < ApplicationController
 
   def sent
     @cur_url = "/messages"
-    @title = "Messages Sent"
+    @title = I18n.t 'controllers.messages_controller.messagessenttitle'
 
     @direction = :out
     @messages = @user.undeleted_sent_messages

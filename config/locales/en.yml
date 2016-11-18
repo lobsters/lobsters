@@ -336,6 +336,7 @@ en:
       neweststoriestitle: "Newest Stories"
     messages_controller:
       messagestitle: "Messages"
+      messagessenttitle: "Messages Sent"
     search_controller:
       searchtitle: "Search"
     stories_controller:

@@ -1,12 +1,12 @@
 <div class="markdown_help" style="display: none; padding-top: 0.5em;">
   <table>
   <tr>
-    <td width="125"><em>emphasized text</em></td>
-    <td>surround text with <tt>*asterisks*</tt></td>
+    <td width="125"><em><%= t('.emphasizedtext') %></em></td>
+    <td><%= raw t('.emphasizedtextdesc') %></td>
   </tr>
   <tr>
-    <td><strong>strong text</strong></td>
-    <td>surround text with <tt>**two asterisks**</tt></td>
+    <td><strong><%= t('.strongtext') %></strong></td>
+    <td><%= raw t('.strongtextdesc') %></td>
   </tr>
   <!--
   <tr>
@@ -15,29 +15,26 @@
   </tr>
   -->
   <tr>
-    <td><tt>fixed width</tt></td>
-    <td>surround text with <tt>`backticks`</tt></td>
+    <td><tt><%= t('.fixedwidth') %></tt></td>
+    <td><%= raw t('.fixedwidthdesc') %></td>
   </tr>
   <tr>
     <td><a href="http://example.com/"
-      style="color: inherit;">linked text</a></td>
-    <td><tt>[linked text](http://example.com/)</tt> or just a bare URL
-      to create without a title</td>
+      style="color: inherit;"><%= t('.linkedtext') %></a></td>
+    <td><%= raw t('.linkedtextdesc') %></td>
   </tr>
   <tr>
-    <td><blockquote> quoted text</blockquote></td>
-    <td>prefix text with <tt>&gt;</tt></td>
+    <td><blockquote> <%= t('.quotedtext') %></blockquote></td>
+    <td><%= raw t('.quotedtextdesc') %></td>
   </tr>
   <tr>
-    <td><pre style="margin: 0px;">pre
-  text</pre></td>
-    <td>prefix text with at least<tt>&nbsp;&nbsp;&nbsp;&nbsp;4 spaces</tt></td>
+    <td><pre style="margin: 0px;"><%= t('.pretext') %></pre></td>
+    <td><%= raw t('.pretextdesc') %></td>
   </tr>
   <% if defined?(allow_images) && allow_images %>
     <tr>
-      <td>(inline image)</td>
-      <td><tt>![alt text](http://example.com/image.jpg)</tt> (only allowed in
-        story text</td>
+      <td><%= t('.inlineimage') %></td>
+      <td><tt><%= raw t('.inlineimagedesc') %></td>
     </tr>
   <% end %>
   </table>

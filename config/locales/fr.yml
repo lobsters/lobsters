@@ -71,6 +71,22 @@ fr:
       delete: "supprimer"
       reply: "répondre"
       about: "sur :"
+  global:
+    markdownhelp:
+      emphasizedtext: "italique"
+      emphasizedtextdesc: "encadrer le texte avec des <tt>*astérisques*</tt>"
+      strongtext: "gras"
+      strongtextdesc: "<tt>encadrer le texte avec <tt>**deux astérisques**</tt>"
+      fixedwidth: "chasse fixe"
+      fixedwidthdesc: "<tt>encadrer le texte avec <tt>`accent grave (backquote)`</tt>"
+      linkedtext: "lien"
+      linkedtextdesc: "<tt>[texte du lien](http://example.com/)</tt> ou bien l'url seule sans titre"
+      quotedtext: "citation"
+      quotedtextdesc: "précéder le texte avec <tt>&gt;</tt>"
+      pretext: "texte tabulé"
+      pretextdesc: "précéder le texte avec au moins <tt>&nbsp;&nbsp;&nbsp;&nbsp;4 spaces</tt>"
+      inlineimage: "(image en ligne)"
+      inlineimagedesc: "![texte de substitution](http://example.com/image.jpg)</tt> (autorisé seulement dans les articles)"
   home:
     index:
       homerecentsdesc: "<em>Les <a href=\"/newest\">plus récentes</a> infos avec un panaché aléatoire des infos récentes soumises qui n'ont pas encore atteint la page principale.</em>"

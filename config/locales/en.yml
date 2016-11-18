@@ -69,6 +69,21 @@ en:
       delete: "delete"
       reply: "reply"
       about: "on:"
+  global:
+    markdownhelp:
+      emphasizedtext: "emphasized text"
+      emphasizedtextdesc: "surround text with <tt>*asterisks*</tt>"
+      strongtext: "strong text"
+      strongtextdesc: "<tt>surround text with <tt>**two asterisks**</tt>"
+      fixedwidth: "fixed width"
+      fixedwidthdesc: "<tt>surround text with <tt>`backticks`</tt>"
+      linkedtext: "linked text"
+      linkedtextdesc: "<tt>[linked text](http://example.com/)</tt> or just a bare URL to create without a title"
+      quotedtext: "quoted text"
+      quotedtextdesc: "prefix text with <tt>&gt;</tt>"
+      pretextdesc: "prefix text with at least<tt>&nbsp;&nbsp;&nbsp;&nbsp;4 spaces</tt>"
+      inlineimage: "(inline image)"
+      inlineimagedesc: "![alt text](http://example.com/image.jpg)</tt> (only allowed in story text)"
   home:
     index:
       homerecentsdesc: "<em>The <a href=\"/newest\">newest</a> stories with a random sampling of recently submitted stories that have not yet reached the front page.</em>"

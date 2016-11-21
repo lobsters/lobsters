@@ -84,7 +84,7 @@ fr:
       quotedtext: "citation"
       quotedtextdesc: "précéder le texte avec <tt>&gt;</tt>"
       pretext: "texte tabulé"
-      pretextdesc: "précéder le texte avec au moins <tt>&nbsp;&nbsp;&nbsp;&nbsp;4 spaces</tt>"
+      pretextdesc: "précéder le texte avec au moins <tt>&nbsp;&nbsp;&nbsp;&nbsp;4 espaces</tt>"
       inlineimage: "(image en ligne)"
       inlineimagedesc: "![texte de substitution](http://example.com/image.jpg)</tt> (autorisé seulement dans les articles)"
   home:

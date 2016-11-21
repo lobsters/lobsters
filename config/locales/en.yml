@@ -263,7 +263,7 @@ en:
       authoredby: "authored by"
       via: "via"
       justnow: "just now"
-      edit: "éditer"
+      edit: "edit"
       delete: "delete"
       confirmundelete: "Are you sure you want to undelete this story?"
       undelete: "undelete"
@@ -357,4 +357,10 @@ en:
     stories_controller:
       submitstorytitle: "Submit Story"
       editstorytitle: "Edit Story"
-
+      flashnotallowedsuggestion: "You are not allowed to offer suggestions on that story."
+      flashallowedsuggestion: "Your suggested changes have been noted."
+  # views.stories.suggest scop, unable to get it, I don't know why
+  suggeststorychanges: "Suggest Story Changes"
+  suggestchangesbutton: "Suggest Changes"
+  suggestor: "or"
+  suggestcancel: "Cancel"

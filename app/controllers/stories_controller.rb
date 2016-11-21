@@ -173,7 +173,7 @@ class StoriesController < ApplicationController
 
   def suggest
     if !@story.can_have_suggestions_from_user?(@user)
-      flash[:error] = "You are not allowed to offer suggestions on that story."
+      flash[:error] = I18n.t 'controllers.stories_controller.flashnotallowedsuggestion'
       return redirect_to @story.comments_path
     end
 
@@ -187,7 +187,7 @@ class StoriesController < ApplicationController
 
   def submit_suggestions
     if !@story.can_have_suggestions_from_user?(@user)
-      flash[:error] = "You are not allowed to offer suggestions on that story."
+      flash[:error] = I18n.t 'controllers.stories_controller.flashnotallowedsuggestion'
       return redirect_to @story.comments_path
     end
 
@@ -209,7 +209,7 @@ class StoriesController < ApplicationController
 
       if dsug
         ostory = @story.reload
-        flash[:success] = "Your suggested changes have been noted."
+        flash[:success] = I18n.t 'controllers.stories_controller.flashallowedsuggestion'
       end
       redirect_to ostory.comments_path
     else

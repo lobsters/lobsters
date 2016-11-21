@@ -370,6 +370,13 @@ fr:
     stories_controller:
       submitstorytitle: "Soumettre une info"
       editstorytitle: "Éditer une info"
+      flashnotallowedsuggestion: "Vous n'êtes pas autorisé à offrir des suggestions pour cette info."
+      flashallowedsuggestion: "Les changements que vous avez suggérés ont été notés."
+  # suggest.stories scope, unable to get it so global, I don't know why
+  suggeststorychanges: "Suggérer des changements à l'info"
+  suggestchangesbutton: "Suggérer des changements"
+  suggestor: "ou"
+  suggestcancel: "Annuler"
   date:
     abbr_day_names:
     - dim

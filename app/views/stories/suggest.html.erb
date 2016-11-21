@@ -1,6 +1,6 @@
 <div class="box" id="story_box">
   <div class="legend">
-    Suggest Story Changes
+    <%= t :suggeststorychanges %>
   </div>
 
   <%= form_for @story, :url => story_suggest_path(@story.short_id),
@@ -12,8 +12,8 @@
 
     <div class="box">
       <div class="boxline actions">
-        <%= submit_tag "Suggest Changes" %>
-        &nbsp;or <a href="<%= story_path(@story.short_id) %>">cancel</a>
+        <%= submit_tag t :suggestchangesbutton %>
+        &nbsp;<%= t :suggestor %> <a href="<%= story_path(@story.short_id) %>"><%= t :suggestcancel %></a>
       </div>
     </div>
   <% end %>

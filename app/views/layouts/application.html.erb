@@ -47,8 +47,7 @@
     <div id="header">
       <div id="headerleft">
         <a id="l_holder" style="background-color: #<%= @traffic_color %>;"
-          href="/" title="<%= Rails.application.name %> (Current traffic: <%=
-          @traffic.to_i %>)"></a>
+          href="/" title="<%= Rails.application.name %> <%= raw t('.currenttraffic', :usernb => "#{@traffic.to_i}") %>"></a>
 
         <% links = {
           "/" => @cur_url == "/" ? Rails.application.name : t('.homelink'),

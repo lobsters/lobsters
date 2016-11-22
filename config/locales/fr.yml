@@ -52,6 +52,7 @@ fr:
       blog: "Blog"
       twitter: "Twitter"
       diaspora: "Diaspora*"
+      currenttraffic: "(Fréquentation actuelle : %{usernb})"
   comments:
     commentbox:
       mustbelogged: "Vous devez être connecté pour laisser un commentaire."

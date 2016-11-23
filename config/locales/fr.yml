@@ -224,7 +224,7 @@ fr:
       inviteuser: "Inviter un nouvel utilisateur"
       cannotsendinvitations: "Vous ne pouvez pas envoyer d'invitations."
       deleteaccount: "Supprimer le compte"
-      deleteaccounttext: "Pour supprimer définitivement votre compte, vérifiez votre mot de passe actuel ci-dessous. Votre compte sera passé en état supprimé, vos commentaires seront marqués comme supprimés et ne seront plus lisibles par les autres utilisateurs, vos messages privés seront également supprimés. Vos infos proposées ne seront pas supprimées. Votre nom d'utilisateur restera réservé et ne sera pas disponible pour un autre compte."
+      deleteaccounttext: "Pour supprimer définitivement votre compte, vérifiez votre mot de passe actuel ci-dessous. Votre compte sera passé à l'état supprimé, vos commentaires seront marqués comme supprimés et ne seront plus lisibles par les autres utilisateurs, vos messages privés seront également supprimés. Vos infos proposées ne seront pas supprimées. Votre nom d'utilisateur restera réservé et ne sera pas disponible pour un autre compte."
       verifypassword: "Vérification du mot de passe :"
       deleteaccountconfirmation: "Oui, supprimez mon compte"
     pushover:

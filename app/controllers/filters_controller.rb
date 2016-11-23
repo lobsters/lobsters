@@ -26,7 +26,7 @@ class FiltersController < ApplicationController
       cookies.permanent[TAG_FILTER_COOKIE] = new_tags.map(&:tag).join(",")
     end
 
-    flash[:success] = "Your filters have been updated."
+    flash[:success] = I18n.t 'controllers.filters_controller.flashfilterupdate'
 
     redirect_to filters_path
   end

@@ -341,6 +341,7 @@ en:
       threadstitle: "Your Threads"
     filters_controller:
       filterstitle: "Tag Filters"
+      flashfilterupdate: "Your filters have been updated."
     home_controller:
       recenttitle: "Recent Stories"
       abouttitle: "About"

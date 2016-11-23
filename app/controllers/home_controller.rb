@@ -31,9 +31,7 @@ class HomeController < ApplicationController
       @title = I18n.t 'controllers.home_controller.privacytitle'
       render :action => "privacy"
     rescue
-      render :text => "<div class=\"box wide\">" <<
-        "Toutes les actions sur le site sont publiques à l'exception des messages privés entre utilisateurs. Les actions de modération peuvent être consultées via le <a href=\"/moderations\">Journal de modération</a>.<br/><a rel=\"license\" href=\"http://creativecommons.org/licenses/by/4.0/\"><img alt=\"Licence Creative Commons\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by/4.0/88x31.png\" /></a><br /><span xmlns:dct=\"http://purl.org/dc/terms/\" property=\"dct:title\">Le Journal du hacker</span> est mis à disposition selon les termes de la <a rel=\"license\" href=\"http://creativecommons.org/licenses/by/4.0/\">licence Creative Commons Attribution 4.0 International</a>." <<
-        "</div>", :layout => "application"
+      render :text => I18n.t('controllers.home_controller.licensetext'), :layout => "application"
     end
   end
 

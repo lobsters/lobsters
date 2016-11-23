@@ -341,7 +341,7 @@ en:
       threadstitle: "Your Threads"
     filters_controller:
       filterstitle: "Tag Filters"
-    home_controllers:
+    home_controller:
       recenttitle: "Recent Stories"
       abouttitle: "About"
       chattitle: "Chat"
@@ -350,6 +350,7 @@ en:
       rssforstoriestitle: "RSS 2.0"
       rssforcommentstitle: "Comments - RSS 2.0"
       neweststoriestitle: "Newest Stories"
+      licensetext: "<div class=\"box wide\">You have no privacy.</div>"
     messages_controller:
       messagestitle: "Messages"
       messagessenttitle: "Messages Sent"

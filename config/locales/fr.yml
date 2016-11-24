@@ -378,6 +378,8 @@ fr:
     messages_controller:
       messagestitle: "Messages"
       messagessenttitle: "Messages envoyés"
+      flashdelmsg: "%{nbmsg} message%{plural} supprimé%{plural}."
+      pluralmsg: "s"
     search_controller:
       searchtitle: "Rechercher"
     stories_controller:

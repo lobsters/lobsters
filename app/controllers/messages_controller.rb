@@ -113,7 +113,7 @@ class MessagesController < ApplicationController
       end
     end
 
-    flash[:success] = "Deleted #{deleted} message#{deleted == 1 ? "" : "s"}."
+    flash[:success] = I18n.t 'controllers.messages_controller.flashdelmsg',  :nbmsg => "#{deleted}", :plural => "#{deleted == 1 ? "" : "s"}"
 
     @user.update_unread_message_count!
 

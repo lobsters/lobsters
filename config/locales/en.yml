@@ -365,6 +365,8 @@ en:
     messages_controller:
       messagestitle: "Messages"
       messagessenttitle: "Messages Sent"
+      flashdelmsg: "Deleted %{nbmsg} message%{plural}."
+      pluralmsg: "s"
     search_controller:
       searchtitle: "Search"
     stories_controller:

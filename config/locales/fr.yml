@@ -286,7 +286,7 @@ fr:
       unflag: "désindiquer"
       flag: "indiquer"
       hide: "cacher"
-      unhide: "décacher"
+      unhide: "révéler"
       cached: "en cache"
       nocomment: "pas de commentaire"
       commentsingular: "commentaire"

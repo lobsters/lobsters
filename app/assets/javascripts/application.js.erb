@@ -27,14 +27,14 @@ var _Lobsters = Class.extend({
     var act;
 
     if (li.hasClass("hidden")) {
-      act = "unhide";
+      act = "révéler";
       li.removeClass("hidden");
-      hiderEl.innerHTML = "hide";
+      hiderEl.innerHTML = "cacher";
     }
     else {
-      act = "hide";
+      act = "cacher";
       li.addClass("hidden");
-      hiderEl.innerHTML = "unhide";
+      hiderEl.innerHTML = "révéler";
     }
 
     $.post("/stories/" + li.attr("data-shortid") + "/" + act);

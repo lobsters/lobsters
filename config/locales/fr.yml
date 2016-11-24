@@ -211,7 +211,7 @@ fr:
       submittedstorycommentsettings: "Paramètres de commentaires relatifs à vos infos"
       showyourthreads: "Montrer dans <a href=\"/threads\">vos sujets</a>:"
       mailinglistsettings: "Paramètres des listes de diffusion"
-      mailinglisttext: "Si activé, vous recevrez toutes les nouvelles récemment soumises et les commentaires à votre adresse e-mail ci-dessus, à l'exception de ces nouvelles et leurs commentaires filtrés à partir de vos <a href=\"/filters\">filtres de marques</a>. Tous les e-mails seront envoyés à votre adresse de liste privée affichée ci-dessous à partir de laquelle vous pouvez filtrer, et les e-mails que vous envoyez à cette adresse seront postés sous ce compte sur le site web. You devrez garder cette adresse de liste privée pour éviter que d'autres ne postent des commentaires pour vous."
+      mailinglisttext: "Si activé, vous recevrez toutes les nouvelles récemment soumises et les commentaires à votre adresse e-mail ci-dessus, à l'exception de ces nouvelles et leurs commentaires filtrés à partir de vos <a href=\"/filters\">filtres de marques</a>. Tous les e-mails seront envoyés à votre adresse de liste privée affichée ci-dessous à partir de laquelle vous pouvez filtrer, et les e-mails que vous envoyez à cette adresse seront postés sous ce compte sur le site web. Vous devrez garder cette adresse de liste privée pour éviter que d'autres ne postent des commentaires pour vous."
       receivelistemails: "Recevoir les e-mails de la liste :"
       listemailoption1: "pas d'e-mails"
       listemailoption2: "Toutes les infos et les commentaires"

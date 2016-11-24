@@ -96,6 +96,15 @@ en:
   home:
     index:
       homerecentsdesc: "<em>The <a href=\"/newest\">newest</a> stories with a random sampling of recently submitted stories that have not yet reached the front page.</em>"
+  invitations:
+    build:
+      buildinvtitle: "Request an Invitation" 
+      buildinvtext: "<p>If you don't know (or can't find) an <a href=\"/u/\">existing user</a> from whom to request an invitation, you can make a public request for one.  This will display your name and memo to all other logged-in users who can then send you an invitation if they recognize you.</p><p>Your e-mail address must be valid and confirmed by visiting a URL e-mailed to you before your request will be displayed.  Your e-mail address will not be shown to any other users (except moderators).</p>"
+      buildinvname: "Name:"
+      buildinvemail: "E-mail Address:"
+      buildinvurl: "URL:"
+      buildinvverificationurl: "URL to verify you (Personal website, Github account, etc.)"
+      buildinvrequest: "Request Invitation"
   login:
     index:
       login: "Login"

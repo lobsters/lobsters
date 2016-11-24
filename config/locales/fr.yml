@@ -99,6 +99,15 @@ fr:
   home:
     index:
       homerecentsdesc: "<em>Les <a href=\"/newest\">plus récentes</a> infos avec un panaché aléatoire des infos récentes soumises qui n'ont pas encore atteint la page principale.</em>"
+  invitations:
+    build:
+      buildinvtitle: "Demander une invitation"
+      buildinvtext: "<p>Si vous ne connaissez pas ou ne pouvez trouver un <a href=\"/u/\">utilisateur existant</a> auquel vous pourriez demander une invitation, vous pouvez le faire publiquement. Vous receverez directement l'invitation si elle vous est envoyée.</p><p>Votre adresse e-mail doit être valide et confirmée en visitant l'url qui vous est envoyée par e-mail avant que votre demande soit affichée. Votre adresse e-mail ne sera pas visible par les autres, à l'exception des modérateurs. </p>"
+      buildinvname: "Nom :"
+      buildinvemail: "Adresse e-mail :"
+      buildinvurl: "URL :"
+      buildinvverificationurl: "URL permettant la vérification (site web personnel, compte Github, etc.)"
+      buildinvrequest: "Demande d'invitation"
   login:
     index:
       login: "Se connecter"

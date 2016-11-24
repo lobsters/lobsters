@@ -1,42 +1,30 @@
 <div class="box wide">
   <div class="legend">
-    Request an Invitation
+  <%= t('.buildinvtitle') %>
   </div>
 
-  <p>
-  If you don't know (or can't find) an <a href="/u/">existing user</a> from
-  whom to request an invitation, you can make a public request for one.  This
-  will display your name and memo to all other logged-in users who can then
-  send you an invitation if they recognize you.
-  </p>
-
-  <p>
-  Your e-mail address must be valid and confirmed by visiting a URL e-mailed to
-  you before your request will be displayed.  Your e-mail address will not be
-  shown to any other users (except moderators).
-  </p>
+  <%= raw t('.buildinvtext') %>
 
   <%= form_for @invitation_request,
   :url => create_invitation_by_request_path do |f| %>
     <p>
-    <%= f.label :name, "Name:" %>
+    <%= f.label :name, t('.buildinvname') %>
     <%= f.text_field :name, :size => 30 %>
     <br />
 
-    <%= f.label :email, "E-mail Address:" %>
+    <%= f.label :email, t('.buildinvemail') %>
     <%= f.text_field :email, :size => 30 %>
     <br />
 
-    <%= f.label :memo, "URL:" %>
+    <%= f.label :memo, t('.buildinvurl') %>
     <%= f.text_field :memo, :size => 30 %>
     <br />
     <label></label>
-    <span class="na">URL to verify you (Personal website, Github account,
-      etc.)</span>
+    <span class="na"><%= t('.buildinvverificationurl') %></span>
     </p>
 
     <p>
-    <%= submit_tag "Request Invitation" %>
+    <%= submit_tag t('.buildinvrequest') %>
     </p>
   <% end %>
 </div>

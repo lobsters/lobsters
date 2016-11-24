@@ -377,6 +377,8 @@ en:
       editstorytitle: "Edit Story"
       flashnotallowedsuggestion: "You are not allowed to offer suggestions on that story."
       flashallowedsuggestion: "Your suggested changes have been noted."
+    users_controller:
+      usertitle: "Users"
   # views.stories.suggest scop, unable to get it, I don't know why
   suggeststorychanges: "Suggest Story Changes"
   suggestchangesbutton: "Suggest Changes"

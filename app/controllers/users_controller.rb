@@ -14,7 +14,7 @@ class UsersController < ApplicationController
   end
 
   def tree
-    @title = "Users"
+    @title = I18n.t 'controllers.users_controller.usertitle'
 
     if params[:by].to_s == "karma"
       @users = User.order("karma DESC, id ASC").to_a

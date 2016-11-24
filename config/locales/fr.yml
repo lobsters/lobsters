@@ -390,6 +390,8 @@ fr:
       editstorytitle: "Éditer une info"
       flashnotallowedsuggestion: "Vous n'êtes pas autorisé à offrir des suggestions pour cette info."
       flashallowedsuggestion: "Les changements que vous avez suggérés ont été notés."
+    users_controller:
+      usertitle: "Utilisateurs"
   # suggest.stories scope, unable to get it so global, I don't know why
   suggeststorychanges: "Suggérer des changements à l'info"
   suggestchangesbutton: "Suggérer des changements"

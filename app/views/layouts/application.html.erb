@@ -43,11 +43,9 @@
 </head>
 <body>
   <div id="wrapper">
-    <a href="/"><%= image_tag "logo-journal-du-hacker-middle.png" %></a>
+        <a href="/" title="<%= Rails.application.name %> <%= raw t('.currenttraffic', :usernb => "#{@traffic.to_i}") %>"><%= image_tag "logo-journal-du-hacker-middle.png" %></a>
     <div id="header">
       <div id="headerleft">
-        <a id="l_holder" style="background-color: #<%= @traffic_color %>;"
-          href="/" title="<%= Rails.application.name %> <%= raw t('.currenttraffic', :usernb => "#{@traffic.to_i}") %>"></a>
 
         <% links = {
           "/" => @cur_url == "/" ? Rails.application.name : t('.homelink'),

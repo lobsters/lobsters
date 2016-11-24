@@ -381,6 +381,7 @@ fr:
       flashdelmsg: "%{nbmsg} message%{plural} supprimé%{plural}."
       pluralmsg: "s"
       flashcannotfindmsg: "Message non trouvé."
+      flashmsgsentto: "Votre message a été envoyé à %{user}."
     search_controller:
       searchtitle: "Rechercher"
     stories_controller:

@@ -368,6 +368,7 @@ en:
       flashdelmsg: "Deleted %{nbmsg} message%{plural}."
       pluralmsg: "s"
       flashcannotfindmsg: "Could not find message."
+      flashmsgsentto: "Your message has been sent to %{user}."
     search_controller:
       searchtitle: "Search"
     stories_controller:

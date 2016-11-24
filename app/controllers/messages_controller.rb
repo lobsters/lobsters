@@ -39,8 +39,7 @@ class MessagesController < ApplicationController
     @messages = @user.undeleted_received_messages
 
     if @new_message.save
-      flash[:success] = "Your message has been sent to " <<
-        @new_message.recipient.username.to_s << "."
+      flash[:success] = I18n.t 'controllers.messages_controller.flashmsgsentto', :user => "#{@new_message.recipient.username.to_s}"
       return redirect_to "/messages"
     else
       render :action => "index"

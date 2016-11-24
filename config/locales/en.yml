@@ -353,6 +353,7 @@ en:
       rssforcommentstitle: "Comments - RSS 2.0"
       neweststoriestitle: "Newest Stories"
       licensetext: "<div class=\"box wide\">You have no privacy.</div>"
+      abouttext: "To complete..."
     invitations_controller:
       flashpublicinvitnotallowed: "Public invitation requests are not allowed."
       flashsuccessinvitrequest: "Your invitation request has been validated and will now be shown to other logged-in users."

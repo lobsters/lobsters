@@ -379,6 +379,8 @@ fr:
       flashrequestconfirmation: "Un e-mail de confirmation vous a été envoyé à %{email}."
       flashinvalidinvitation: "Invitation invalide ou expirée"
       flashsuccessdeleteinvit: "Demande d'invitation de %{name} supprimée avec succès"
+    login_controller:
+      flashlogininvalid: "Adresse e-mail et/ou mot de passe invalide."
     messages_controller:
       messagestitle: "Messages"
       messagessenttitle: "Messages envoyés"

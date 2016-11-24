@@ -66,7 +66,7 @@ class LoginController < ApplicationController
     rescue
     end
 
-    flash.now[:error] = "Invalid e-mail address and/or password."
+    flash.now[:error] = I18n.t 'controllers.login_controller.flashlogininvalid'
     @referer = params[:referer]
     index
   end

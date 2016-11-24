@@ -278,6 +278,7 @@ en:
       nocomment: "no comment"
       commentsingular: "comment"
       commentplurial: "comments"
+      additionaltext: "Additional text available"
     new:
       markdown: "Markdown formatting available"
       preview: "Preview"
@@ -352,6 +353,8 @@ en:
       rssforcommentstitle: "Comments - RSS 2.0"
       neweststoriestitle: "Newest Stories"
       licensetext: "<div class=\"box wide\">You have no privacy.</div>"
+    invitations_controller:
+      flashsuccessinvit: "Successfully e-mailed invitation to %{guest}."
     messages_controller:
       messagestitle: "Messages"
       messagessenttitle: "Messages Sent"

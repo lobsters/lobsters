@@ -44,8 +44,7 @@ class InvitationsController < ApplicationController
     begin
       i.save!
       i.send_email
-      flash[:success] = "Successfully e-mailed invitation to " <<
-        params[:email].to_s << "."
+      flash[:success] = I18n.t 'controllers.invitations_controller.flashsuccessinvit', :guest => "#{params[:email].to_s}"
     rescue
       flash[:error] = "Could not send invitation, verify the e-mail " <<
         "address is valid."

@@ -15,6 +15,14 @@ en:
       commentmoderated: "Your comment has been moderated"
       commentmoderatedwhy: "Your comment on [%{title}](%{url}) has been moderated:\n"
       automatedmessage: "*This is an automated message.*"
+    vote:
+      offtopicvote: "Off-topic"
+      incorrectvote: "Incorrect"
+      metoovote: "Me-too"
+      trollvote: "Troll"
+      alreadypostedvote: "Already Posted"
+      cancel: "Cancel"
+      spamvote: "Spam"
   layouts:
     application:
       homelink: "Home"

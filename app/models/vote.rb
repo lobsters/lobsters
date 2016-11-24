@@ -4,19 +4,19 @@ class Vote < ActiveRecord::Base
   belongs_to :comment
 
   COMMENT_REASONS = {
-    "O" => "Off-topic",
-    "I" => "Incorrect",
-    "M" => "Me-too",
-    "T" => "Troll",
-    "S" => "Spam",
-    "" => "Cancel",
+    "O" => I18n.t('models.vote.offtopicvote'),
+    "I" => I18n.t('models.vote.incorrectvote'),
+    "M" => I18n.t('models.vote.metoovote'),
+    "T" => I18n.t('models.vote.trollvote'),
+    "S" => I18n.t('models.vote.spamvote'),
+    "" => I18n.t('models.vote.cancel')
   }
 
   STORY_REASONS = {
-    "O" => "Off-topic",
-    "A" => "Already Posted",
-    "S" => "Spam",
-    "" => "Cancel",
+    "O" => I18n.t('models.vote.offtopicvote'),
+    "A" => I18n.t('models.vote.alreadypostedvote'),
+    "S" => I18n.t('models.vote.spamvote'),
+    "" => I18n.t('models.vote.cancel')
   }
   OLD_STORY_REASONS = {
     "Q" => "Low Quality",

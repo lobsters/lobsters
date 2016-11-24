@@ -27,6 +27,14 @@ fr:
       commentmoderated: "Votre commentaire a été modéré"
       commentmoderatedwhy: "Votre commentaire sur [%{title}](%{url}) a été modéré :\n"
       automatedmessage: "*Ceci est un message automatique.*"
+    vote:
+      offtopicvote: "Hors-sujet"
+      incorrectvote: "Incorrecte"
+      metoovote: "Moi aussi"
+      trollvote: "Troll"
+      alreadypostedvote: "Déjà postée"
+      cancel: "Annuler"
+      spamvote: "Spam"
   layouts:
     application:
       homelink: "Accueil"

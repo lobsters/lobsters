@@ -367,7 +367,14 @@ fr:
       neweststoriestitle: "Dernières infos"
       licensetext: "<div class=\"box wide\">Toutes les actions sur le site sont publiques à l'exception des messages privés entre utilisateurs. Les actions de modération peuvent être consultées via le <a href=\"/moderations\">Journal de modération</a>.<br/><a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.fr\"><img alt=\"Licence Creative Commons\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by/4.0/88x31.png\" /></a><br /><span xmlns:dct=\"http://purl.org/dc/terms/\" property=\"dct:title\">Le Journal du hacker</span> est mis à disposition selon les termes de la <a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.fr\">licence Creative Commons Attribution 4.0 International</a>.</div>"
     invitations_controller:
+      flashpublicinvitnotallowed: "Demandes publiques d'invitation non-autorisées."
+      flashsuccessinvitrequest: "Votre demande d'invitation a été validée et sera maintenant affichée aux utilisateurs connectés."
+      flashaccountnotinvit: "Votre compte ne peut pas envoyer d'invitations"
       flashsuccessinvit: "Invitation envoyée par e-mail avec succès à %{guest}."
+      flasherrorssinvit: "L'invitation n'a pas pu être envoyée, merci de vérifier l'adresse e-mail."
+      flashrequestconfirmation: "Un e-mail de confirmation vous a été envoyé à %{email}."
+      flashinvalidinvitation: "Invitation invalide ou expirée"
+      flashsuccessdeleteinvit: "Demande d'invitation de %{name} supprimée avec succès"
     messages_controller:
       messagestitle: "Messages"
       messagessenttitle: "Messages envoyés"

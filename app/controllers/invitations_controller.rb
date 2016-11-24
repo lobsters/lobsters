@@ -6,7 +6,7 @@ class InvitationsController < ApplicationController
     if Rails.application.allow_invitation_requests?
       @invitation_request = InvitationRequest.new
     else
-      flash[:error] = "Public invitation requests are not allowed."
+      flash[:error] = I18n.t 'controllers.invitations_controller.flashpublicinvitnotallowed'
       return redirect_to "/login"
     end
   end
@@ -17,21 +17,20 @@ class InvitationsController < ApplicationController
 
   def confirm_email
     if !(ir = InvitationRequest.where(:code => params[:code].to_s).first)
-      flash[:error] = "Invalid or expired invitation request"
+      flash[:error] = I18n.t 'controllers.invitations_controller.flashrequestconfirmation'
       return redirect_to "/invitations/request"
     end
 
     ir.is_verified = true
     ir.save!
 
-    flash[:success] = "Your invitation request has been validated and " <<
-      "will now be shown to other logged-in users."
+    flash[:success] = I18n.t 'controllers.invitations_controller.flashsuccessinvitrequest'
     return redirect_to "/invitations/request"
   end
 
   def create
     if !@user.can_invite?
-      flash[:error] = "Your account cannot send invitations"
+      flash[:error] = I18n.t 'controllers.invitations_controller.flashaccountnotinvit'
       redirect_to "/settings"
       return
     end
@@ -46,8 +45,7 @@ class InvitationsController < ApplicationController
       i.send_email
       flash[:success] = I18n.t 'controllers.invitations_controller.flashsuccessinvit', :guest => "#{params[:email].to_s}"
     rescue
-      flash[:error] = "Could not send invitation, verify the e-mail " <<
-        "address is valid."
+      flash[:error] = I18n.t 'controllers.invitations_controller.flasherrorssinvit'
     end
 
     if params[:return_home]
@@ -65,8 +63,7 @@ class InvitationsController < ApplicationController
       @invitation_request.ip_address = request.remote_ip
 
       if @invitation_request.save
-        flash[:success] = "You have been e-mailed a confirmation to " <<
-          params[:invitation_request][:email].to_s << "."
+        flash[:success] = I18n.t 'controllers.invitations_controller.flashrequestconfirmation', :email => "#{params[:invitation_request][:email].to_s}"
         return redirect_to "/invitations/request"
       else
         render :action => :build
@@ -78,7 +75,7 @@ class InvitationsController < ApplicationController
 
   def send_for_request
     if !(ir = InvitationRequest.where(:code => params[:code].to_s).first)
-      flash[:error] = "Invalid or expired invitation request"
+      flash[:error] = I18n.t 'controllers.invitations_controller.flashinvalidinvitation'
       return redirect_to "/invitations"
     end
 
@@ -89,9 +86,7 @@ class InvitationsController < ApplicationController
     i.save!
     i.send_email
     ir.destroy!
-    flash[:success] = "Successfully e-mailed invitation to " <<
-      ir.name.to_s << "."
-
+    flash[:success] = I18n.t 'controllers.invitations_controller.flashsuccessinvit', :guest => "#{ir.name.to_s}"
     return redirect_to "/invitations"
   end
 
@@ -101,14 +96,12 @@ class InvitationsController < ApplicationController
     end
 
     if !(ir = InvitationRequest.where(:code => params[:code].to_s).first)
-      flash[:error] = "Invalid or expired invitation request"
+      flash[:error] = I18n.t 'controllers.invitations_controller.flashrequestconfirmation'
       return redirect_to "/invitations"
     end
 
     ir.destroy!
-    flash[:success] = "Successfully deleted invitation request from " <<
-      ir.name.to_s << "."
-
+    flash[:success] = I18n.t 'controllers.invitations_controller.flashsuccessdeleteinvit', :name => "#{ir.name.to_s}"
     return redirect_to "/invitations"
   end
 end

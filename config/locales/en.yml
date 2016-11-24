@@ -354,7 +354,14 @@ en:
       neweststoriestitle: "Newest Stories"
       licensetext: "<div class=\"box wide\">You have no privacy.</div>"
     invitations_controller:
+      flashpublicinvitnotallowed: "Public invitation requests are not allowed."
+      flashsuccessinvitrequest: "Your invitation request has been validated and will now be shown to other logged-in users."
+      flashaccountnotinvit: "Your account cannot send invitations"
       flashsuccessinvit: "Successfully e-mailed invitation to %{guest}."
+      flasherrorssinvit: "Could not send invitation, verify the e-mail address is valid."
+      flashrequestconfirmation: "You have been e-mailed a confirmation to %{email}."
+      flashinvalidinvitation: "Invalid or expired invitation request"
+      flashsuccessdeleteinvit: "Successfully deleted invitation request from %{name}"
     messages_controller:
       messagestitle: "Messages"
       messagessenttitle: "Messages Sent"

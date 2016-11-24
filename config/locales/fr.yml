@@ -380,6 +380,7 @@ fr:
       messagessenttitle: "Messages envoyés"
       flashdelmsg: "%{nbmsg} message%{plural} supprimé%{plural}."
       pluralmsg: "s"
+      flashcannotfindmsg: "Message non trouvé."
     search_controller:
       searchtitle: "Rechercher"
     stories_controller:

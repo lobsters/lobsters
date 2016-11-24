@@ -143,7 +143,7 @@ private
       end
     end
 
-    flash[:error] = "Could not find message."
+    flash[:error] = I18n.t 'controllers.messages_controller.flashcannotfindmsg'
     redirect_to "/messages"
     return false
   end

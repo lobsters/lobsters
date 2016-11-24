@@ -330,6 +330,9 @@ en:
       newestusers: "Newest users:"
       administrator: "(administrator)"
       moderator: "(moderator)"
+  tags:
+    index:
+      tagstitle: "Tags"
 # data for users/invitationform which is a partial view
   invitationtext: "Invitations are unlimited, but persons you invite will be associated with your account in the <a href=\"/u\">user tree</a> and you may be responsible for them if they cause problems.  Please use your discretion when inviting persons you don't personally know."
   emailaddress: "E-mail Address:"
@@ -377,6 +380,8 @@ en:
       editstorytitle: "Edit Story"
       flashnotallowedsuggestion: "You are not allowed to offer suggestions on that story."
       flashallowedsuggestion: "Your suggested changes have been noted."
+    tags_controller:
+      tagstitle: "Tags"
     users_controller:
       usertitle: "Users"
   # views.stories.suggest scop, unable to get it, I don't know why

@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
     :through => :votes,
     :source => :story
   has_many :hats
+  has_many :blocked_users
 
   has_secure_password
 

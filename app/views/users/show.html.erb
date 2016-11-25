@@ -127,6 +127,10 @@
         <span class="na">A mystery...</span>
       <% end %>
     </div>
+
+    <div class="block-user-form">
+      <button class="block-user">Block</button>
+    </div>
   <% end %>
 
   <% if @user && @user.is_admin? && !@showing_user.is_moderator? %>
@@ -163,7 +167,7 @@
         <% if v.comment_id %>
           <a href="<%= v.comment.short_id_url %>">comment</a>
           by
-          <a href="/u/<%= v.comment.user.try(:username) %>"><%= 
+          <a href="/u/<%= v.comment.user.try(:username) %>"><%=
             v.comment.user.try(:username) %></a>
           on
           <a href="<%= v.story.short_id_url %>"><%= v.story.title %></a>

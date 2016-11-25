@@ -80,7 +80,7 @@ describe User do
       end
 
       it 'returns true if  a user is on the block list' do
-        user.privately_block user_2
+        user.block user_2
         expect(user.has_blocked?(user_2)).to be_truthy
       end
 
@@ -89,13 +89,13 @@ describe User do
       end
     end
 
-    describe '#privately_block_user' do
+    describe '#block' do
       it 'takes one argument only' do
-        expect { user.privately_block }.to raise_error
+        expect { user.block }.to raise_error
       end
 
       it 'adds another user to a blocked user list' do
-        user.privately_block(user_2)
+        user.block(user_2)
 
         result = !!user.blocked_users.find do |o|
           o.blocked_user_id == user_2.id
@@ -111,7 +111,7 @@ describe User do
       end
 
       it 'removes a user from the blocked user list' do
-        user.privately_block(user_2)
+        user.block(user_2)
         expect(user.has_blocked?(user_2)).to be_truthy
 
         user.unblock(user_2)

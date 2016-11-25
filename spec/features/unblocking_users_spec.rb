@@ -5,7 +5,7 @@ feature 'Unblocking users' do
     @user_1 = User.create(username: 'user_1', email: 'user@mail.com', password: '1234567', password_confirmation: '1234567')
     @user_2 = User.create(username: 'user_2', email: 'user2@mail.com', password: '1234567', password_confirmation: '1234567')
     # Block user 2
-    @user_1.privately_block(@user_2)
+    @user_1.block(@user_2)
   end
 
   context 'a user unblocks another user' do

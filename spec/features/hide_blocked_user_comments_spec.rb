@@ -12,7 +12,7 @@ feature 'Hiding comments from blocked users' do
     @user_1.stories.first.comments.create(user: @user_2, comment: 'Leaving a comment')
 
     # Block user 2
-    @user_1.privately_block(@user_2)
+    @user_1.block(@user_2)
   end
 
   context 'a user views a comment thread' do

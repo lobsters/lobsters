@@ -405,7 +405,7 @@ class User < ActiveRecord::Base
       order("id DESC")
   end
 
-  def privately_block(other_user)
+  def block(other_user)
     blocked_users.find_or_create_by(blocked_user_id: other_user.id)
   end
 

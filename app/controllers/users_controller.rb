@@ -100,7 +100,7 @@ class UsersController < ApplicationController
     user_to_be_blocked = User.where(username: params.require(:username)).first
 
     if user_to_be_blocked
-      @user.privately_block user_to_be_blocked
+      @user.block user_to_be_blocked
       flash[:success] = "User has been blocked"
       redirect_to :back
     else

@@ -404,4 +404,16 @@ class User < ActiveRecord::Base
         "stories.user_id <> votes.user_id").
       order("id DESC")
   end
+
+  def privately_block(other_user)
+    blocked_users.find_or_create_by(blocked_user_id: other_user.id)
+  end
+
+  def has_blocked?(other_user)
+    !!blocked_users.find { |record| record.blocked_user_id == other_user.id }
+  end
+
+  def unblock(other_user)
+    blocked_users.find_by(blocked_user_id: other_user.id).try(:destroy)
+  end
 end

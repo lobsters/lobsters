@@ -58,4 +58,65 @@ describe User do
     u = User.make!(:banned)
     u.unban_by_user!(User.first).should == true
   end
+
+  describe 'Blocking users' do
+    subject(:user) do
+      User.create(username: 'user_1',
+                  email: 'user@mail.com',
+                  password: '12345678',
+                  password_confirmation: '12345678')
+    end
+
+    subject(:user_2) do
+      User.create(username: 'user_2',
+                           email: 'user2@mail.com',
+                           password: '12345678',
+                           password_confirmation: '12345678')
+    end
+
+    describe '#has_blocked?' do
+      it 'takes one argument only' do
+        expect { user.has_blocked? }.to raise_error
+      end
+
+      it 'returns true if  a user is on the block list' do
+        user.privately_block user_2
+        expect(user.has_blocked?(user_2)).to be_truthy
+      end
+
+      it 'returns false if a user is not on the block list' do
+        expect(user.has_blocked?(user_2)).to be_falsey
+      end
+    end
+
+    describe '#privately_block_user' do
+      it 'takes one argument only' do
+        expect { user.privately_block }.to raise_error
+      end
+
+      it 'adds another user to a blocked user list' do
+        user.privately_block(user_2)
+
+        result = !!user.blocked_users.find do |o|
+          o.blocked_user_id == user_2.id
+        end
+
+        expect(result).to be_truthy
+      end
+    end
+
+    describe '#unblock' do
+      it 'takes one argument only' do
+        expect { user.unblock }.to raise_error
+      end
+
+      it 'removes a user from the blocked user list' do
+        user.privately_block(user_2)
+        expect(user.has_blocked?(user_2)).to be_truthy
+
+        user.unblock(user_2)
+        expect(user.reload.has_blocked?(user_2)).to be_falsey
+      end
+    end
+  end
 end

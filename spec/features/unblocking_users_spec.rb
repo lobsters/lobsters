@@ -1,13 +1,15 @@
 require 'spec_helper'
 
-feature 'Blocking users' do
+feature 'Unblocking users' do
   background do
     @user_1 = User.create(username: 'user_1', email: 'user@mail.com', password: '1234567', password_confirmation: '1234567')
     @user_2 = User.create(username: 'user_2', email: 'user2@mail.com', password: '1234567', password_confirmation: '1234567')
+    # Block user 2
+    @user_1.privately_block(@user_2)
   end
 
-  context 'a user tries to block another user' do
-    scenario 'it adds a user to the block list' do
+  context 'a user unblocks another user' do
+    scenario 'it removes a user from the block list' do
       visit '/login'
       fill_in 'email', with: 'user@mail.com'
       fill_in 'password', with: '1234567'
@@ -20,8 +22,8 @@ feature 'Blocking users' do
       visit '/u/user_2'
       expect(page).to have_content('user_2')
 
-      find('.block-user').click
-      expect(page).to have_content('User has been blocked')
+      find('.unblock-user').click
+      expect(page).to have_content('User has been unblocked')
     end
   end
 end

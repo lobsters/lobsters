@@ -128,9 +128,21 @@
       <% end %>
     </div>
 
-    <div class="block-user-form">
-      <button class="block-user">Block</button>
-    </div>
+    <% unless @user == @showing_user %>
+      <p>
+        <div class="legend">User Actions</div>
+      </p>
+
+      <% if @user.has_blocked?(@showing_user) %>
+        <%= form_tag unblock_user_path, method: :post do %>
+          <%= button_tag "Unblock user", class: 'unblock-user' %>
+        <% end %>
+      <% else %>
+        <%= form_tag block_user_path, method: :post do %>
+          <%= button_tag "Block user", class: 'block-user' %>
+        <% end %>
+      <% end %>
+    <% end %>
   <% end %>
 
   <% if @user && @user.is_admin? && !@showing_user.is_moderator? %>

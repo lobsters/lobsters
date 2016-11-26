@@ -17,6 +17,9 @@ fr:
   time:
     formats:
       default: "%d-%m-%Y %H:%M:%S"
+  mailers:
+    invitation_mailer:
+      subject: "[%{appname}] Vous avez été invité au %{appname}"
   models:
     moderation:
       storyeditedby: "Votre info a été éditée par "

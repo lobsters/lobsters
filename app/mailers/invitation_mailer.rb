@@ -7,8 +7,7 @@ class InvitationMailer < ActionMailer::Base
 
     mail(
       :to => invitation.email,
-      subject: "[#{Rails.application.name}] You have been invited to " <<
-        Rails.application.name
+      subject: I18n.t 'mailers.invitation_mailer.subject', :appname => "#{Rails.application.name}"
     )
   end
 end

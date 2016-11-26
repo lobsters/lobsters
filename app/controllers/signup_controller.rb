@@ -3,7 +3,7 @@ class SignupController < ApplicationController
 
   def index
     if @user
-      flash[:error] = "You are already signed up."
+      flash[:error] = I18n.t 'controllers.signup_controller.signedup'
       return redirect_to "/"
     end
 
@@ -16,12 +16,12 @@ class SignupController < ApplicationController
 
   def invited
     if @user
-      flash[:error] = "You are already signed up."
+      flash[:error] = I18n.t 'controllers.signup_controller.invalidinv'
       return redirect_to "/"
     end
 
     if !(@invitation = Invitation.where(:code => params[:invitation_code].to_s).first)
-      flash[:error] = "Invalid or expired invitation"
+      flash[:error] = I18n.t 'controllers.signup_controller.invalidinv'
       return redirect_to "/signup"
     end
 
@@ -35,7 +35,7 @@ class SignupController < ApplicationController
 
   def signup
     if !(@invitation = Invitation.where(:code => params[:invitation_code].to_s).first)
-      flash[:error] = "Invalid or expired invitation."
+      flash[:error] = I18n.t 'controllers.signup_controller.invalidinv'
       return redirect_to "/signup"
     end
 

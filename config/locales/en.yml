@@ -412,6 +412,9 @@ en:
       tagstitle: "Tags"
     users_controller:
       usertitle: "Users"
+    signup_controller:
+      signedup: "You are already signed up."
+      invalidinv: "Invalid or expired invitation."
   # views.stories.suggest scop, unable to get it, I don't know why
   suggeststorychanges: "Suggest Story Changes"
   suggestchangesbutton: "Suggest Changes"

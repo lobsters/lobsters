@@ -425,6 +425,9 @@ fr:
       tagstitle: "Marques"
     users_controller:
       usertitle: "Utilisateurs"
+    signup_controller:
+      signedup: "Vous êtes déja inscrit."
+      invalidinv: "Invitation invalide ou expirée."
   # suggest.stories scope, unable to get it so global, I don't know why
   suggeststorychanges: "Suggérer des changements à l'info"
   suggestchangesbutton: "Suggérer des changements"

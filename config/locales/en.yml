@@ -105,6 +105,11 @@ en:
       buildinvurl: "URL:"
       buildinvverificationurl: "URL to verify you (Personal website, Github account, etc.)"
       buildinvrequest: "Request Invitation"
+  invitation_mailer:
+    invitation.text:
+      title: "Hello %{email},"
+      invitedto: "The user %{user} has invited you to %{appname}"
+      createaccount: "To accept this invitation and create an account, visit the URL below:"
   login:
     index:
       login: "Login"

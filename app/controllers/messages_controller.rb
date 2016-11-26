@@ -79,7 +79,7 @@ class MessagesController < ApplicationController
 
     @message.save!
 
-    flash[:success] = "Deleted message."
+    flash[:success] = I18n.t 'controllers.messages_controller.flashdeletedmessage'
 
     if @message.author_user_id == @user.id
       return redirect_to "/messages/sent"

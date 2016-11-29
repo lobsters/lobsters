@@ -26,6 +26,9 @@ class Comment < ActiveRecord::Base
 
   DOWNVOTABLE_DAYS = 7
 
+  # the lowest a score can go, which makes it collapsed by default
+  DOWNVOTABLE_MIN_SCORE = -5
+
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
@@ -323,7 +326,7 @@ class Comment < ActiveRecord::Base
   end
 
   def is_downvotable?
-    if self.created_at
+    if self.created_at && self.score >= DOWNVOTABLE_MIN_SCORE
       Time.now - self.created_at <= DOWNVOTABLE_DAYS.days
     else
       false

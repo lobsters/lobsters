@@ -1,13 +1,14 @@
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
-  <%= comment.score <= -1 ? "checked" : "" %>>
+  <%= comment.score <= Comment::DOWNVOTABLE_MIN_SCORE ? "checked" : "" %>>
 <div id="comment_<%= comment.short_id %>"
 data-shortid="<%= comment.short_id if comment.persisted? %>"
 class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 "upvoted" : "downvoted") : "" %>
   <%= comment.highlighted ? "highlighted" : "" %>
-  <%= comment.score <= 0 ? "negative" : "" %>
-  <%= comment.score <= -1 ? "negative_1" : "" %>">
+  <%= comment.score <= -1 ? "negative_1" : "" %>
+  <%= comment.score <= -3 ? "negative_3" : "" %>
+  <%= comment.score <= -5 ? "negative_5" : "" %>">
   <% if !comment.is_gone? %>
     <div class="voters">
       <% if @user %>

@@ -125,6 +125,8 @@
         <% if @user && @user.is_moderator? &&
         (hrc = HatRequest.count) > 0 %>
           <a href="/hats/requests"><%= t('.hatrequestlink') %> (<%= hrc %>)</a>
+        <% else %>
+          <a href="/hats"><%= t('.hatslink') %></a>
         <% end %>
         <a href="/chat"><%= t('.chatlink') %></a>
         <a href="/privacy"><%= t('.privacylink') %></a>

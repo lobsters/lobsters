@@ -35,6 +35,7 @@ en:
       invitationqueuelink: "Invitation Queue"
       chatlink: "Chat"
       hatrequestlink: "Hat Requests"
+      hatslink: "Hats"
       privacylink: "Privacy"
       aboutlink: "About"
   moderations:

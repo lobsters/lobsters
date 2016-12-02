@@ -69,7 +69,6 @@ GEM
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     oauth (0.4.7)
-    pg (0.19.0)
     public_suffix (2.0.4)
     rack (1.5.5)
     rack-test (0.6.3)
@@ -152,7 +151,6 @@ DEPENDENCIES
   mysql2 (>= 0.3.14)
   nokogiri (= 1.6.1)
   oauth
-  pg
   rails (= 4.1.12)
   rdiscount
   rspec-rails (~> 2.6)

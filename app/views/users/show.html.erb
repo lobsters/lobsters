@@ -49,7 +49,7 @@
   <span class="d">
     <%= time_ago_in_words_label(@showing_user.created_at) %>
     <% if @showing_user.invited_by_user %>
-      by invitation from
+      by <a href="/u#<%= @showing_user.username %>">invitation</a> from
       <%= link_to @showing_user.invited_by_user.try(:username),
         @showing_user.invited_by_user %>
     <% end %>

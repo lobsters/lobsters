@@ -18,7 +18,7 @@
     <% while subtree %>
       <% if (user = subtree.pop) %>
         <li>
-          <a href="/u/<%= user.username %>"
+          <a name="<%= user.username %>" href="/u/<%= user.username %>"
             <% if !user.is_active? %>
               class="inactive_user"
             <% elsif user.is_new? %>

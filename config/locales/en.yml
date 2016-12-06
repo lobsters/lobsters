@@ -18,6 +18,12 @@ en:
       commentmoderated: "Your comment has been moderated"
       commentmoderatedwhy: "Your comment on [%{title}](%{url}) has been moderated:\n"
       automatedmessage: "*This is an automated message.*"
+    story:
+      deletedstory: "deleted story"
+      undeletedstory: "undeleted story"
+      mergedinto: "merged into %{shortid} (%{title})"
+      unmerged: "unmerged from another story"
+      changedfromto: "changed %{story} from %{stfrom} to %{stto}"
     vote:
       offtopicvote: "Off-topic"
       incorrectvote: "Incorrect"
@@ -408,6 +414,7 @@ en:
       editstorytitle: "Edit Story"
       flashnotallowedsuggestion: "You are not allowed to offer suggestions on that story."
       flashallowedsuggestion: "Your suggested changes have been noted."
+      flashmergedinto: "%{mergedstory} has been merged into this story."
     tags_controller:
       tagstitle: "Tags"
     users_controller:

@@ -30,6 +30,12 @@ fr:
       commentmoderated: "Votre commentaire a été modéré"
       commentmoderatedwhy: "Votre commentaire sur [%{title}](%{url}) a été modéré :\n"
       automatedmessage: "*Ceci est un message automatique.*"
+    story:
+      deletedstory: "info effacée"
+      undeletedstory: "info rétablie"
+      mergedinto: "mergée avec %{shortid} (%{title})"
+      unmerged: "dé-fusionnée depuis une autre info"
+      changedfromto: "%{story} changée de %{stfrom} à %{stto}"
     vote:
       offtopicvote: "Hors-sujet"
       incorrectvote: "Incorrecte"
@@ -421,6 +427,7 @@ fr:
       editstorytitle: "Éditer une info"
       flashnotallowedsuggestion: "Vous n'êtes pas autorisé à offrir des suggestions pour cette info."
       flashallowedsuggestion: "Les changements que vous avez suggérés ont été notés."
+      flashmergedinto: "%{mergedstory} a été fusionnée dans cette info."
     tags_controller:
       tagstitle: "Marques"
     users_controller:

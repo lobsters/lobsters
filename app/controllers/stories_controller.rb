@@ -123,7 +123,7 @@ class StoriesController < ApplicationController
     @story = Story.where(:short_id => params[:id]).first!
 
     if @story.merged_into_story
-      flash[:success] = "\"#{@story.title}\" has been merged into this story."
+      flash[:success] = I18n.t('controllers.stories_controller.flashmergedinto', :mergedstory => "#{@story.title}")
       return redirect_to @story.merged_into_story.comments_path
     end
 

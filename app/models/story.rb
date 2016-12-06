@@ -416,20 +416,19 @@ class Story < ActiveRecord::Base
     m.story_id = self.id
 
     if all_changes["is_expired"] && self.is_expired?
-      m.action = "deleted story"
+      m.action = I18n.t('models.story.deletedstory')
     elsif all_changes["is_expired"] && !self.is_expired?
-      m.action = "undeleted story"
+      m.action = I18n.t('models.story.undeletedstory')
     else
       m.action = all_changes.map{|k,v|
         if k == "merged_story_id"
           if v[1]
-            "merged into #{self.merged_into_story.short_id} " <<
-              "(#{self.merged_into_story.title})"
+            I18n.t('models.story.mergedinto', :shortid => "#{self.merged_into_story.short_id}", :title => "#{self.merged_into_story.title}")
           else
-            "unmerged from another story"
+            I18n.t('models.story.unmerged')
           end
         else
-          "changed #{k} from #{v[0].inspect} to #{v[1].inspect}"
+          I18n.t('models.story.changedfromto', :story => "#{k}", :stfrom => "#{v[0].inspect}", :stto => "#{v[1].inspect}")
         end
       }.join(", ")
     end

@@ -319,7 +319,7 @@ fr:
       suggest: "suggérer"
       unflag: "désindiquer"
       flag: "indiquer"
-      hide: "cacher"
+      hide: "masquer"
       unhide: "révéler"
       cached: "en cache"
       nocomment: "pas de commentaire"

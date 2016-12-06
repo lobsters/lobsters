@@ -9,6 +9,9 @@ en:
     invitation_mailer:
       subject: "[%{appname}] You have been invited to %{appname}"
   models:
+    comment:
+      deletedcomment: "deleted comment"
+      threadremovedby: "Thread removed by moderator %{modoname} : %{modreason}" 
     moderation:
       storyeditedby: "Your story has been edited by "
       usersuggestions: "user suggestions"

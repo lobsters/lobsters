@@ -198,7 +198,7 @@ class Comment < ActiveRecord::Base
       m = Moderation.new
       m.comment_id = self.id
       m.moderator_user_id = user.id
-      m.action = "deleted comment"
+      m.action = I18n.t('models.comment.deletedcomment')
 
       if reason.present?
         m.reason = reason
@@ -284,9 +284,7 @@ class Comment < ActiveRecord::Base
 
   def gone_text
     if self.is_moderated?
-      "Thread removed by moderator " <<
-        self.moderation.try(:moderator).try(:username).to_s << ": " <<
-        (self.moderation.try(:reason) || "No reason given")
+      I18n.t('models.comment.threadremovedby', :modoname => "#{self.moderation.try(:moderator).try(:username).to_s}", :modreason => "#{(self.moderation.try(:reason) || "No reason given")}")
     elsif self.user.is_banned?
       "Comment from banned user removed"
     else

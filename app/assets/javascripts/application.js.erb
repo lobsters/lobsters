@@ -241,7 +241,7 @@ var _Lobsters = Class.extend({
   },
 
   moderateStory: function(link) {
-    var reason = prompt("Moderation reason:");
+    var reason = prompt("Raison de la modération :");
     if (reason == null || reason == "")
       return false;
 
@@ -410,7 +410,7 @@ $(document).ready(function() {
   });
 
   $(document).on("click", "a.comment_moderator", function() {
-    var reason = prompt("Moderation reason:");
+    var reason = prompt("Raison de la modération :");
     if (reason == null || reason == "")
       return false;
 

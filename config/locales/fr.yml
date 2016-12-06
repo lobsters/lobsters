@@ -21,6 +21,9 @@ fr:
     invitation_mailer:
       subject: "[%{appname}] Vous avez été invité au %{appname}"
   models:
+    comment:
+      deletedcomment: "commentaire supprimé"
+      threadremovedby: "Fil supprimé par le modérateur %{modoname} : %{modreason}"
     moderation:
       storyeditedby: "Votre info a été éditée par "
       usersuggestions: "suggestions d'utilisateur"

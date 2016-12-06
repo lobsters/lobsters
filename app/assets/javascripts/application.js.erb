@@ -400,7 +400,7 @@ $(document).ready(function() {
   });
 
   $(document).on("click", "a.comment_deletor", function() {
-    if (confirm("Are you sure you want to delete this comment?")) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce commentaires ?")) {
       var li = $(this).closest(".comment");
       $.post("/comments/" + $(li).attr("data-shortid") + "/delete",
       function(d) {
@@ -422,7 +422,7 @@ $(document).ready(function() {
   });
 
   $(document).on("click", "a.comment_undeletor", function() {
-    if (confirm("Are you sure you want to undelete this comment?")) {
+    if (confirm("Êtes-vous sûr de vouloir dé-supprimer ce commentaire ?")) {
       var li = $(this).closest(".comment");
       $.post("/comments/" + $(li).attr("data-shortid") + "/undelete",
       function(d) {

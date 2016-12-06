@@ -193,7 +193,7 @@ fr:
     index:
       moderationlogtitle: "Journal de modération"
       datecolumn: "Date/Heure"
-      moderatorcolumn: "Moderateur"
+      moderatorcolumn: "Modérateur"
       reasoncolumn: "Histoire/Commentaire/Utilisateur, Action, Raison"
       storyline: "Info"
       commentline: "Commentaire par"

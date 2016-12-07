@@ -206,6 +206,8 @@ en:
       newest: "Newest"
       relevance: "Relevance"
       points: "Points"
+      searchresults : "%{searchnumber} result%{plural} for \"%{query}\""
+      searchplural: "s"
   settings:
     delete_account:
       deleteaccountflash: "Your account has been deleted."

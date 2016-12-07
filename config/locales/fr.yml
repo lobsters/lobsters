@@ -56,7 +56,7 @@ fr:
       recentlink: "Récents"
       commentslink: "Commentaires"
       yourthreadslink: "Vos sujets"
-      submitstorylink: "Soumettre une info"
+      submitstorylink: "Soumettre"
       searchlink: "Recherche"
       filterslink: "Filtres"
       newmessagelink:
@@ -219,6 +219,8 @@ fr:
       newest: "Le plus récent"
       relevance: "Pertinence"
       points: "Score"
+      searchresults : "%{searchnumber} résultat%{plural} pour \"%{query}\""
+      searchplural: "s"
   settings:
     delete_account:
       deleteaccountflash: "Votre compte a été supprimé."

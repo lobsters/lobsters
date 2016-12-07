@@ -50,8 +50,7 @@
   <div class="box">
     <p>
     <div class="legend">
-      <%= @search.total_results %> result<%= @search.total_results == 1 ? "" :
-        "s" %> for "<%= @search.q %>"
+      <%= t '.searchresults', :searchnumber => "#{@search.total_results}", :plural => "#{@search.total_results == 1 ? "" : t('.searchplural')}", :query => "#{@search.q}" %>
     </div>
     </p>
   </div>

@@ -321,7 +321,7 @@ fr:
       confirmdelete: "Êtes-vous sûr de vouloir supprimer cette info ?"
       suggest: "suggérer"
       unflag: "désindiquer"
-      flag: "indiquer"
+      flag: "drapeau"
       hide: "masquer"
       unhide: "révéler"
       cached: "en cache"

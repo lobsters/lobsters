@@ -166,7 +166,7 @@ fr:
       viewreceived: "Voir messages reçus"
       viewsent: "Voir messages envoyés"
       subjectlabel: "Sujet"
-      privatemessages: "Messages privés"
+      privatemessages: "Messages privés reçus"
       sent: "Envoyés"
       from: "De"
       tomsg: "À"

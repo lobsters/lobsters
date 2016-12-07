@@ -10,6 +10,9 @@ en:
       subject: "[%{appname}] You have been invited to %{appname}"
   models:
     comment:
+      commentcannotbeblank: "A comment cannot be blank."
+      useridcannotbeblank: "A user ID cannot be blank."
+      storyidcannotbeblank: "A story ID cannot be blank."
       deletedcomment: "deleted comment"
       threadremovedby: "Thread removed by moderator %{modoname} : %{modreason}" 
     moderation:

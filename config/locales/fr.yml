@@ -22,6 +22,9 @@ fr:
       subject: "[%{appname}] Vous avez été invité au %{appname}"
   models:
     comment:
+      commentcannotbeblank: "Un commentaire ne peut pas être vide."
+      useridcannotbeblank: "Un ID utilisateur ne peut pas être vide."
+      storyidcannotbeblank: "Un ID d'info ne peut pas être vide."
       deletedcomment: "commentaire supprimé"
       threadremovedby: "Fil supprimé par le modérateur %{modoname} : %{modreason}"
     moderation:

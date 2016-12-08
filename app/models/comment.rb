@@ -326,7 +326,7 @@ class Comment < ActiveRecord::Base
   end
 
   def is_downvotable?
-    if self.created_at && self.score >= DOWNVOTABLE_MIN_SCORE
+    if self.created_at && self.score > DOWNVOTABLE_MIN_SCORE
       Time.now - self.created_at <= DOWNVOTABLE_DAYS.days
     else
       false

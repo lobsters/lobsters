@@ -50,7 +50,8 @@ class Comment < ActiveRecord::Base
   end
 
   def self.arrange_for_user(user)
-    parents = self.order("confidence DESC").group_by(&:parent_comment_id)
+    parents = self.order("(upvotes - downvotes) < 0 ASC, confidence DESC").
+      group_by(&:parent_comment_id)
 
     # top-down list of comments, regardless of indent level
     ordered = []

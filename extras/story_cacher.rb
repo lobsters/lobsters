@@ -44,7 +44,7 @@ class StoryCacher
     begin
       s = Sponge.new
       s.timeout = 45
-      s.fetch("https://archive.is/#{db_url}")
+      s.fetch("https://web.archive.org/save/#{db_url}")
     rescue => e
       Rails.logger.error "error caching #{db_url}: #{e.message}"
     end

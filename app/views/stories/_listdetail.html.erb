@@ -165,8 +165,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
         <% if story.url.present? %>
           |
-          <a href="https://archive.is/<%= story.url %>" rel="nofollow"
-            target="_new">cached</a>
+          <a href="https://web.archive.org/web/<%= story.url %>" rel="nofollow"
+            target="_blank">cached</a>
         <% end %>
         <% if !story.is_gone? %>
           <span class="comments_label">

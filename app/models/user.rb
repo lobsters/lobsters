@@ -54,9 +54,9 @@ class User < ActiveRecord::Base
     self.create_mailing_list_token
   end
 
-  BANNED_USERNAMES = [ "admin", "administrator", "hostmaster", "mailer-daemon",
-    "postmaster", "root", "security", "support", "webmaster", "moderator",
-    "moderators", "help", "contact", "fraud", "guest", "nobody", ]
+  BANNED_USERNAMES = [ "admin", "administrator", "contact", "fraud", "guest",
+    "help", "hostmaster", "mailer-daemon", "moderator", "moderators", "nobody",
+    "postmaster", "root", "security", "support", "sysop", "webmaster" ]
 
   # days old accounts are considered new for
   NEW_USER_DAYS = 7

@@ -15,7 +15,7 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
 
   <div style="width: 100%;">
     <%= text_area_tag "comment", comment.comment, :rows => 5,
-      :style => "width: 100%;", :autocomplete => "off", :disabled => !@user,
+      :autocomplete => "off", :disabled => !@user,
       :placeholder => (@user ? "" : "You must be logged in to leave a comment.")
       %>
 

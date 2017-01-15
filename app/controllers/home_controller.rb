@@ -49,6 +49,7 @@ class HomeController < ApplicationController
   end
 
   def index
+    @search = Search.new
     @stories, @show_more = get_from_cache(hottest: true) {
       paginate stories.hottest
     }

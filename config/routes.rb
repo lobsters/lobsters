@@ -47,7 +47,7 @@ Lobsters::Application.routes.draw do
     get "/t/:tag" => "home#tagged", :as => "tag", :format => /html|rss|json/
     get "/t/:tag/page/:page" => "home#tagged"
 
-    get "/search" => "search#index"
+    get"/search" => "search#index"
     get "/search/:q" => "search#index"
 
     resources :stories do

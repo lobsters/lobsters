@@ -59,8 +59,6 @@
             "/stories/new" => t('.submitstorylink') }) %>
         <% end %>
 
-        <% links.merge!({ "/search" => t('.searchlink') }) %>
-
         <% if @cur_url.present? && !links.keys.include?(@cur_url) &&
         @heading.present? %>
           <span id="headertitle">
@@ -72,6 +70,15 @@
           <% links.each do |u,v| %>
             <a href="<%= u %>" <%= u == @cur_url ? raw("class=\"cur_url\"") :
               "" %>><%= v %></a>
+          <% end %>
+        </span>
+        <span class = "search">
+          <% if @cur_url == "/" %>
+            <%= form_tag "/search", :method => :get do %>
+                  Search
+                <%= text_field_tag "q", @search.q%>
+                </form>
+            <% end %>
           <% end %>
         </span>
       </div>

@@ -49,6 +49,7 @@ Lobsters::Application.routes.draw do
 
     get "/search" => "search#index"
     get "/search/:q" => "search#index"
+    resources :emoji
 
     resources :stories do
       post "upvote"
@@ -60,6 +61,7 @@ Lobsters::Application.routes.draw do
       get "suggest"
       post "suggest", :action => "submit_suggestions"
     end
+
     post "/stories/fetch_url_attributes", :format => "json"
     post "/stories/preview" => "stories#preview"
 
@@ -69,7 +71,6 @@ Lobsters::Application.routes.draw do
         post "upvote"
         post "downvote"
         post "unvote"
-
         post "delete"
         post "undelete"
       end

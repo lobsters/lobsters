@@ -3,7 +3,7 @@ class EmailMessage < ActionMailer::Base
     "<nobody@#{Rails.application.domain}>"
 
   def notify(message, user)
-    @message = message
+    @message = Rumoji.encode(message)
     @user = user
 
     mail(

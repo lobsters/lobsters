@@ -19,8 +19,6 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
       :placeholder => (@user ? "" : "You must be logged in to leave a comment.")
       %>
 
-    <p></p>
-
     <div class="markdown_help_toggler">
       <% if @user %>
         <div class="markdown_help_label">

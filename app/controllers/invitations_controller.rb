@@ -39,7 +39,7 @@ class InvitationsController < ApplicationController
     i = Invitation.new
     i.user_id = @user.id
     i.email = params[:email]
-    i.memo = params[:memo]
+    i.memo = Rumoji.encode(params[:memo].to_s)
 
     begin
       i.save!

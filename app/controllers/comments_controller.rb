@@ -16,7 +16,7 @@ class CommentsController < ApplicationController
     end
 
     comment = story.comments.build
-    comment.comment = params[:comment].to_s
+    comment.comment = Rumoji.encode(params[:comment].to_s)
     comment.user = @user
 
     if params[:hat_id] && @user.hats.where(:id => params[:hat_id])

@@ -3,7 +3,7 @@ class EmailReply < ActionMailer::Base
     "<nobody@#{Rails.application.domain}>"
 
   def reply(comment, user)
-    @comment = comment
+    @comment = Rumoji.encode(comment)
     @user = user
 
     mail(
@@ -14,7 +14,7 @@ class EmailReply < ActionMailer::Base
   end
 
   def mention(comment, user)
-    @comment = comment
+    @comment = Rumoji.encode(comment)
     @user = user
 
     mail(

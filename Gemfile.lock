@@ -21,6 +21,8 @@ GEM
       activemodel (= 4.1.12)
       activesupport (= 4.1.12)
       arel (~> 5.0.0)
+    activerecord-typedstore (0.6.1)
+      activerecord (>= 3.2, < 5)
     activesupport (4.1.12)
       i18n (~> 0.6, >= 0.6.9)
       json (~> 1.7, >= 1.7.7)
@@ -127,6 +129,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-typedstore
   bcrypt (~> 3.1.2)
   dynamic_form
   exception_notification
@@ -147,4 +150,4 @@ DEPENDENCIES
   unicorn
 
 BUNDLED WITH
-   1.11.2
+   1.13.6

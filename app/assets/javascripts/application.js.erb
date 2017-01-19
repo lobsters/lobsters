@@ -484,4 +484,23 @@ $(document).ready(function() {
     $("#story_guidelines").toggle();
     return false;
   });
+
+  $(document).on("focus", "textarea#comment", function() {
+    var trigger = false;
+
+    $(".comment_form_container").on("keydown", function(e) {
+      // left cmd - 91 / right cmd - 93 / left ctrl - 17
+      if(e.keyCode === 91 || e.keyCode === 93 || e.keyCode === 17) {
+        trigger = true;
+        setTimeout(function(){
+          trigger = false;
+        }, 250);
+      }
+
+      if(trigger && e.keyCode === 13) {
+        $("button.comment-post").click();
+      }
+    });
+  });
+
 });

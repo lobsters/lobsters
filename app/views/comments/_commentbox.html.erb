@@ -69,28 +69,3 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
   </div>
 <% end %>
 </div>
-
-<script type="text/javascript">
-(function() {
-  //  Submit comment with ctrl+enter or cmd+enter
-  var trigger = false;
-  var commentBox = document.querySelector('.comment_form_container');
-
-  commentBox.onkeydown = function (e) {
-    // left cmd - 91
-    // right cmd - 93
-    // left ctr - 17
-    if(e.keyCode === 91 || e.keyCode === 93 || e.keyCode === 17) {
-      trigger = true;
-      setTimeout(function(){
-        trigger = false;
-      }, 250);
-    }
-
-    if(trigger && e.keyCode === 13) {
-      document.querySelector("button.comment-post").click();
-    }
-
-  }
-})();
-</script>

@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
     :through => :votes,
     :source => :story
   has_many :hats
+  has_many :blocked_users
 
   has_secure_password
 
@@ -402,5 +403,17 @@ class User < ActiveRecord::Base
       where("comments.user_id <> votes.user_id AND " <<
         "stories.user_id <> votes.user_id").
       order("id DESC")
+  end
+
+  def block(other_user)
+    blocked_users.find_or_create_by(blocked_user_id: other_user.id)
+  end
+
+  def has_blocked?(other_user)
+    !!blocked_users.find { |record| record.blocked_user_id == other_user.id }
+  end
+
+  def unblock(other_user)
+    blocked_users.find_by(blocked_user_id: other_user.id).try(:destroy)
   end
 end

@@ -114,6 +114,10 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         [<%= comment.gone_text %>]
         </span>
         </p>
+      <% elsif @user.has_blocked? comment.user %>
+        <span class="na">
+          [Comment hidden because you have this user on your blocked list]
+        </span>
       <% else %>
         <%= raw comment.markeddown_comment %>
       <% end %>

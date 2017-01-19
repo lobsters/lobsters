@@ -106,4 +106,30 @@ class UsersController < ApplicationController
     flash[:success] = "User has been unbanned."
     return redirect_to user_path(:user => buser.username)
   end
+
+  def block
+    user_to_be_blocked = User.where(username: params.require(:username)).first
+
+    if user_to_be_blocked
+      @user.block user_to_be_blocked
+      flash[:success] = "User has been blocked"
+      redirect_to :back
+    else
+      flash[:error] = "Invalid user"
+      redirect_to :back
+    end
+  end
+
+  def unblock
+    user_to_be_unblocked = User.where(username: params.require(:username)).first
+
+    if user_to_be_unblocked
+      @user.unblock user_to_be_unblocked
+      flash[:success] = "User has been unblocked"
+      redirect_to :back
+    else
+      flash[:error] = "Invalid user"
+      redirect_to :back
+    end
+  end
 end

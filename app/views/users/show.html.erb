@@ -127,6 +127,22 @@
         <span class="na">A mystery...</span>
       <% end %>
     </div>
+
+    <% unless @user == @showing_user %>
+      <p>
+        <div class="legend">User Actions</div>
+      </p>
+
+      <% if @user.has_blocked?(@showing_user) %>
+        <%= form_tag unblock_user_path, method: :post do %>
+          <%= button_tag "Unblock user", class: 'unblock-user' %>
+        <% end %>
+      <% else %>
+        <%= form_tag block_user_path, method: :post do %>
+          <%= button_tag "Block user", class: 'block-user' %>
+        <% end %>
+      <% end %>
+    <% end %>
   <% end %>
 
   <% if @user && @user.is_admin? && !@showing_user.is_moderator? %>
@@ -163,7 +179,7 @@
         <% if v.comment_id %>
           <a href="<%= v.comment.short_id_url %>">comment</a>
           by
-          <a href="/u/<%= v.comment.user.try(:username) %>"><%= 
+          <a href="/u/<%= v.comment.user.try(:username) %>"><%=
             v.comment.user.try(:username) %></a>
           on
           <a href="<%= v.story.short_id_url %>"><%= v.story.title %></a>

@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20170119172852) do
     t.boolean  "is_moderated",                                                  default: false
     t.boolean  "is_from_email",                                                 default: false
     t.integer  "hat_id"
+    t.boolean  "is_dragon",                                                     default: false
   end
 
   add_index "comments", ["confidence"], name: "confidence_idx", using: :btree
@@ -152,7 +153,7 @@ ActiveRecord::Schema.define(version: 20170119172852) do
   create_table "suggested_titles", force: true do |t|
     t.integer "story_id"
     t.integer "user_id"
-    t.string  "title",    limit: 150, null: false
+    t.string  "title",    limit: 150, default: "", null: false
   end
 
   create_table "tag_filters", force: true do |t|

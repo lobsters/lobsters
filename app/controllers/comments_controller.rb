@@ -128,6 +128,26 @@ class CommentsController < ApplicationController
       :content_type => "text/html", :locals => { :comment => comment }
   end
 
+  def dragon
+    if !((comment = find_comment) && @user.is_moderator?)
+      return render :text => "can't find comment", :status => 400
+    end
+
+    comment.become_dragon_for_user(@user)
+
+    render :text => "ok"
+  end
+
+  def undragon
+    if !((comment = find_comment) && @user.is_moderator?)
+      return render :text => "can't find comment", :status => 400
+    end
+
+    comment.remove_dragon_for_user(@user)
+
+    render :text => "ok"
+  end
+
   def update
     if !((comment = find_comment) && comment.is_editable_by_user?(@user))
       return render :text => "can't find comment", :status => 400

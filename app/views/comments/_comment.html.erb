@@ -84,6 +84,15 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
           <% end %>
         <% end %>
 
+        <% if !comment.parent_comment_id && @user && @user.is_moderator? %>
+          |
+          <% if comment.is_dragon? %>
+            <a class="comment_undragon">undragon</a>
+          <% else %>
+            <a class="comment_dragon">dragon</a>
+          <% end %>
+        <% end %>
+
         <% if @user && !comment.story.is_gone? && !comment.is_gone? %>
             |
             <a class="comment_replier" unselectable="on">reply</a>

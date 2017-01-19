@@ -45,9 +45,22 @@
     <% comments_by_parent = @comments.group_by(&:parent_comment_id) %>
     <% subtree = comments_by_parent[nil] %>
     <% ancestors = [] %>
+    <% dragons = false %>
 
     <% while subtree %>
       <% if (comment = subtree.shift) %>
+        <% if comment.is_dragon? && !dragons %>
+          <div class="dragons">
+            <div class="dragon_text">
+              <a class="toggle_dragons">
+              &mdash; here be dragons &mdash;
+              </a>
+            </div>
+            <div class="dragon_threads <%= @user && @user.hide_dragons? ?
+              "hidden" : "" %>">
+          <% dragons = true %>
+        <% end %>
+
         <li>
         <%= render "comments/comment", :comment => comment,
           :show_story => (comment.story_id != @story.id),
@@ -63,6 +76,11 @@
       <% elsif (subtree = ancestors.pop) %>
         </ol></li>
       <% end %>
+    <% end %>
+
+    <% if dragons %>
+        </div>
+      </div>
     <% end %>
   </ol>
 <% end %>

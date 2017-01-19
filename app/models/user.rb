@@ -44,6 +44,7 @@ class User < ActiveRecord::Base
     s.boolean :show_avatars, :default => true
     s.boolean :show_story_previews, :default => false
     s.boolean :show_submitted_story_threads, :default => false
+    s.boolean :hide_dragons, :default => false
   end
 
   validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },

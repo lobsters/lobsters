@@ -512,4 +512,11 @@ $(document).ready(function() {
     $("#story_guidelines").toggle();
     return false;
   });
+
+
+  $('textarea#comment').keydown(function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
+      $("button.comment-post").click();
+    }
+  });
 });

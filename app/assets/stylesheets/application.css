@@ -675,6 +675,7 @@ div.story_text {
 	margin-bottom: 1.5em;
 	max-width: 700px;
 	line-height: 1.4em;
+	word-wrap: break-word;
 }
 div.story_text p {
 	margin: 0.75em 0;
@@ -693,6 +694,7 @@ a#story_text_expander {
 
 div.comment_text {
 	max-width: 700px;
+	word-wrap: break-word;
 }
 
 div.comment_text blockquote,

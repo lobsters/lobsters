@@ -95,6 +95,9 @@ en:
       delete: "delete"
       reply: "reply"
       about: "on:"
+  email_message:
+    notification.text:
+      replyat: "Reply at "
   global:
     markdownhelp:
       emphasizedtext: "emphasized text"

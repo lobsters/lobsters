@@ -97,6 +97,9 @@ fr:
       delete: "supprimer"
       reply: "répondre"
       about: "sur :"
+  email_message:
+    notification.text:
+      replyat: "Répondre à "
   global:
     markdownhelp:
       emphasizedtext: "italique"

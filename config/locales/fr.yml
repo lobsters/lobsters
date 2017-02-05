@@ -20,6 +20,8 @@ fr:
   mailers:
     invitation_mailer:
       subject: "[%{appname}] Vous avez été invité au %{appname}"
+    email_message:
+      subject: "[%{appname}] Message privé de %{author} : %{subject}"
   models:
     comment:
       commentcannotbeblank: "Un commentaire ne peut pas être vide."
@@ -123,6 +125,17 @@ fr:
       buildinvurl: "URL :"
       buildinvverificationurl: "URL permettant la vérification (site web personnel, compte Github, etc.)"
       buildinvrequest: "Demande d'invitation"
+    index:
+      requestedinvtitle: "Demandes d'invitations"
+      requestedinvsummary: "Ces personnes ont demandé une invitation et ont confirmé leur adresse e-mail. Si vous reconnaissez quelqu'un, n'hésitez pas à lui envoyer une invitation et à supprimer la demande. Les spams seront nettoyés par un modérateur."
+      requestedinvdate: "Date/Heure"
+      requestedinvname: "Nom"
+      requestedinvmemo: "Note"
+      sendinvitation: "Envoyer l'invitation"
+      confirminvitation: "Êtes-vous sûr de vouloir inviter cette personne et de supprimer la requête ?"
+      deleteinvitation: "Supprimer"
+      confirmdelete: "Êtes-vous sûr de vouloir supprimer cette demande ?"
+      noinvitation: "Pas d'invitation"
   invitation_mailer:
     invitation:
       title: "Bonjour %{email},"

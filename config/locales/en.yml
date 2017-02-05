@@ -8,6 +8,8 @@ en:
   mailers:
     invitation_mailer:
       subject: "[%{appname}] You have been invited to %{appname}"
+    email_message:
+      subject: "[%{appname}] Private Message from %{author}: %{subject}"
   models:
     comment:
       commentcannotbeblank: "A comment cannot be blank."
@@ -120,6 +122,17 @@ en:
       buildinvurl: "URL:"
       buildinvverificationurl: "URL to verify you (Personal website, Github account, etc.)"
       buildinvrequest: "Request Invitation"
+    index:
+      requestedinvtitle: "Requested Invitations"
+      requestedinvsummary: "These persons have requested invitations and confirmed their e-mail addresses. If you recognize anyone, feel free to send them an invitation and remove their request.  Spam will be cleared out by a moderator."
+      requestedinvdate: "Date/Time"
+      requestedinvname: "Nom"
+      requestedinvname: "Memo"
+      sendinvitation: "Send Invitation"
+      confirminvitation: "Are you sure you want to invite this person and remove this request?"
+      deleteinvitation: "Delete"
+      confirmdelete: "Are you sure you want to delete this request?"
+      noinvitation: "No invitation"
   invitation_mailer:
     invitation:
       title: "Hello %{email},"

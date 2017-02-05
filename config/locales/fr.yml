@@ -97,9 +97,6 @@ fr:
       delete: "supprimer"
       reply: "répondre"
       about: "sur :"
-  email_message:
-    notification.text:
-      replyat: "Répondre à "
   global:
     markdownhelp:
       emphasizedtext: "italique"
@@ -464,6 +461,8 @@ fr:
   suggestchangesbutton: "Suggérer des changements"
   suggestor: "ou"
   suggestcancel: "Annuler"
+  # reply at in views/email_message/notification.text.erb
+  replyat: "Répondre à "
   date:
     abbr_day_names:
     - dim

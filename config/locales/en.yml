@@ -451,3 +451,5 @@ en:
   suggestchangesbutton: "Suggest Changes"
   suggestor: "or"
   suggestcancel: "Cancel"
+  # reply at in views/email_message/notification.text.erb
+  emailreplyat: "Reply at "

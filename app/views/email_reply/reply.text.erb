@@ -1,4 +1,4 @@
-<%= t(:emailreplyat, :author => "#{@comment.user.username}" %>
+<%= t(:emailreplyat, :author => "#{@comment.user.username}") %>
 
   <%= word_wrap(@comment.plaintext_comment, :line_width => 72).gsub(/\n/, "\n  ") %>
 

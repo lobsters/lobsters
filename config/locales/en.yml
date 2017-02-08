@@ -461,3 +461,6 @@ en:
   # reply at in views/email_reply/reply.text.erb
   emailreplyat: "%{author} has replied to you:"
   emailcontinueto: "Continue this discussion at "
+  # reply at in views/email_reply/mention.text.erb
+  emailmentionreplyat: "%{author} mentioned you in a comment:"
+  emailmentioncontinueto: "Continue this discussion at "

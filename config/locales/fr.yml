@@ -471,6 +471,9 @@ fr:
   # reply at in views/email_reply/reply.text.erb
   emailreplyat: "%{author} vous a répondu : "
   emailcontinueto: "Continuer cette discussion à "
+  # reply at in views/email_reply/mention.text.erb
+  emailmentionreplyat: "%{author} vous a mentionné dans un commentaire : "
+  emailmentioncontinueto: "Continuer cette discussion à "
   date:
     abbr_day_names:
     - dim

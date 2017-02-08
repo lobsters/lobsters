@@ -458,3 +458,6 @@ en:
   suggestcancel: "Cancel"
   # reply at in views/email_message/notification.text.erb
   emailreplyat: "Reply at "
+  # reply at in views/email_reply/reply.text.erb
+  emailreplyat: "%{author} has replied to you:"
+  emailcontinueto: "Continue this discussion at "

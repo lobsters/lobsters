@@ -468,6 +468,9 @@ fr:
   suggestcancel: "Annuler"
   # reply at in views/email_message/notification.text.erb
   replyat: "Répondre à "
+  # reply at in views/email_reply/reply.text.erb
+  emailreplyat: "%{author} vous a répondu : "
+  emailcontinueto: "Continuer cette discussion à "
   date:
     abbr_day_names:
     - dim

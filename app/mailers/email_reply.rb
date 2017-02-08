@@ -8,8 +8,7 @@ class EmailReply < ActionMailer::Base
 
     mail(
       :to => user.email,
-      :subject => "[#{Rails.application.name}] Reply from " <<
-        "#{comment.user.username} on #{comment.story.title}"
+      :subject =>  I18n.t('mailers.email_reply.replysubject', :appname => "#{Rails.application.name}", :author => "#{comment.user.username}", :story => "#{comment.story.title}")
     )
   end
 
@@ -19,8 +18,7 @@ class EmailReply < ActionMailer::Base
 
     mail(
       :to => user.email,
-      :subject => "[#{Rails.application.name}] Mention from " <<
-        "#{comment.user.username} on #{comment.story.title}"
+      :subject =>  I18n.t('mailers.email_reply.mentionsubject', :appname => "#{Rails.application.name}", :author => "#{comment.user.username}", :story => "#{comment.story.title}")
     )
   end
 end

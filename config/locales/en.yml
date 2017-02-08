@@ -6,10 +6,13 @@ en:
     formats:
       default: "%Y-%m-%d %H:%M:%S"
   mailers:
-    invitation_mailer:
-      subject: "[%{appname}] You have been invited to %{appname}"
     email_message:
       subject: "[%{appname}] Private Message from %{author}: %{subject}"
+    email_reply:
+      replysubject: "[%{appname}] Reply from %{author} on %{story}"
+      mentionsubject: "[%{appname}] Mention from %{author} on %{story}"
+    invitation_mailer:
+      subject: "[%{appname}] You have been invited to %{appname}"
   models:
     comment:
       commentcannotbeblank: "A comment cannot be blank."

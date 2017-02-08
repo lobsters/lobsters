@@ -18,10 +18,13 @@ fr:
     formats:
       default: "%d-%m-%Y %H:%M:%S"
   mailers:
-    invitation_mailer:
-      subject: "[%{appname}] Vous avez été invité au %{appname}"
     email_message:
       subject: "[%{appname}] Message privé de %{author} : %{subject}"
+    email_reply:
+      replysubject: "[%{appname}] Réponse de %{author} sur %{story}"
+      mentionsubject: "[%{appname}] %{author} vous a mentionné dans %{story}"
+    invitation_mailer:
+      subject: "[%{appname}] Vous avez été invité au %{appname}"
   models:
     comment:
       commentcannotbeblank: "Un commentaire ne peut pas être vide."

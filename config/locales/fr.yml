@@ -303,7 +303,7 @@ fr:
       alreadysubmitted: "Erreur : Cette info a déjà été proposée "
       alreadysubmittedflash: "Note: Cette info a déjà été proposée %{timeago} mais peut être de nouveau reproposée."
       previousdiscussion: "Merci de consulter <a href=\"%{storypath}\" target=\"_blank\"> la discussion précédente</a> pour cette info."
-      previousexpireddiscution: "Merci de consulter <a href=\"%{storypath}\" \"target=_blank\">la discussion précédente</a> pour la première proposition de cette info.  Si le contenu a changé ou génère de nouvelles discussions, vous pouvez la proposer de nouveau."
+      previousexpireddiscussion: "Merci de consulter <a href=\"%{storypath}\" \"target=_blank\">la discussion précédente</a> pour la première proposition de cette info.  Si le contenu a changé ou génère de nouvelles discussions, vous pouvez la proposer de nouveau."
       fetchtitle: "Prendre le titre"
       url: "URL :"
       title: "Titre :"

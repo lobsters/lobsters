@@ -10,7 +10,7 @@
   <%= error_messages_for f.object %>
 <% elsif !f.object.errors.any? && f.object.already_posted_story %>
   <div class="flash-notice">
-  <h2><%= t('.alreadysubmittedflash', :timeago => "{time_ago_in_words(f.object.already_posted_story.created_at)}") %></h2>
+  <h2><%= t('.alreadysubmittedflash', :timeago => "#{time_ago_in_words(f.object.already_posted_story.created_at)}") %></h2>
   <p>
   <%= raw(t('.previousexpireddiscussion', :storypath => "#{f.object.already_posted_story.comments_path}")) %>
   </p>

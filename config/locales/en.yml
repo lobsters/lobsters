@@ -293,7 +293,7 @@ en:
       alreadysubmitted: "Error: This story was already submitted "
       alreadysubmittedflash: "Note: This story was already submitted %{timeago} but may be submitted again."
       previousdiscussion: "Please view the <a href=\"%{storypath}\" target=\"_blank\">previous discussion</a> for this story."
-      previousexpireddiscution: "Please view the <a href=\"%{storypath}\" \"target=_blank\">previous discussion</a> for this story first.  If the content has changed or warrants new discussion, you may submit it again."
+      previousexpireddiscussion: "Please view the <a href=\"%{storypath}\" \"target=_blank\">previous discussion</a> for this story first.  If the content has changed or warrants new discussion, you may submit it again."
       fetchtitle: "Fetch Title"
       url: "URL:"
       title: "Title:"

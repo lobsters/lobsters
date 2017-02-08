@@ -79,8 +79,7 @@ class StoriesController < ApplicationController
       sattrs = @story.fetched_attributes
 
       if sattrs[:url].present? && @story.url != sattrs[:url]
-        flash.now[:notice] = "Note: URL has been changed to fetched " <<
-          "canonicalized version"
+        flash.now[:notice] = I18n.t 'controllers.stories_controller.flashcanonicalversion'
         @story.url = sattrs[:url]
       end
 
@@ -88,7 +87,7 @@ class StoriesController < ApplicationController
         if s.is_recent?
           # user won't be able to submit this story as new, so just redirect
           # them to the previous story
-          flash[:success] = "This URL has already been submitted recently."
+          flash[:success] = I18n.t 'controllers.stories_controller.flashalreadyposted'
           return redirect_to s.comments_path
         else
           # user will see a warning like with preview screen

@@ -449,6 +449,8 @@ fr:
       flashnotallowedsuggestion: "Vous n'êtes pas autorisé à offrir des suggestions pour cette info."
       flashallowedsuggestion: "Les changements que vous avez suggérés ont été notés."
       flashmergedinto: "%{mergedstory} a été fusionnée dans cette info."
+      flashalreadyposted: "Cette URL a déjà été soumise récemment."
+      flashcanonicalversion: "Note: l'URL a été changée pour avoir la version canonique"
     tags_controller:
       tagstitle: "Marques"
     users_controller:

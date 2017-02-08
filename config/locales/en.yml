@@ -439,6 +439,8 @@ en:
       flashnotallowedsuggestion: "You are not allowed to offer suggestions on that story."
       flashallowedsuggestion: "Your suggested changes have been noted."
       flashmergedinto: "%{mergedstory} has been merged into this story."
+      flashalreadyposted: "This URL has already been submitted recently."
+      flashcanonicalversion: "Note: URL has been changed to fetched canonicalized version"
     tags_controller:
       tagstitle: "Tags"
     users_controller:

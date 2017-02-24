@@ -1,6 +1,8 @@
 class SettingsController < ApplicationController
   before_filter :require_logged_in_user
 
+  TOTP_SESSION_TIMEOUT = (60 * 15)
+
   def index
     @title = "Account Settings"
 
@@ -72,6 +74,88 @@ class SettingsController < ApplicationController
     end
 
     render :action => "index"
+  end
+
+  def twofa
+    @title = "Two-Factor Authentication"
+  end
+
+  def twofa_auth
+    if @user.authenticate(params[:user][:password].to_s)
+      session[:last_authed] = Time.now.to_i
+      session.delete(:totp_secret)
+
+      if @user.has_2fa?
+        @user.disable_2fa!
+        flash[:success] = "Two-Factor Authentication has been disabled."
+        return redirect_to "/settings"
+      else
+        return redirect_to twofa_enroll_url
+      end
+    else
+      flash[:error] = "Your password was not correct."
+      return redirect_to twofa_url
+    end
+  end
+
+  def twofa_enroll
+    @title = "Two-Factor Authentication"
+
+    if (Time.now.to_i - session[:last_authed].to_i) > TOTP_SESSION_TIMEOUT
+      flash[:error] = "Your enrollment period timed out."
+      return redirect_to twofa_url
+    end
+
+    if !session[:totp_secret]
+      session[:totp_secret] = ROTP::Base32.random_base32
+    end
+
+    totp = ROTP::TOTP.new(session[:totp_secret],
+      :issuer => Rails.application.name)
+    totp_url = totp.provisioning_uri(@user.email)
+
+    # no option for inline svg, so just strip off leading <?xml> tag
+    qrcode = RQRCode::QRCode.new(totp_url)
+    qr = qrcode.as_svg(:offset => 0, color: "000", :module_size => 5,
+      :shape_rendering => "crispEdges").gsub(/^<\?xml.*>/, "")
+
+    @qr_svg = "<a href=\"#{totp_url}\">#{qr}</a>"
+  end
+
+  def twofa_verify
+    @title = "Two-Factor Authentication"
+
+    if ((Time.now.to_i - session[:last_authed].to_i) > TOTP_SESSION_TIMEOUT) ||
+    !session[:totp_secret]
+      flash[:error] = "Your enrollment period timed out."
+      return redirect_to twofa_url
+    end
+  end
+
+  def twofa_update
+    if ((Time.now.to_i - session[:last_authed].to_i) > TOTP_SESSION_TIMEOUT) ||
+    !session[:totp_secret]
+      flash[:error] = "Your enrollment period timed out."
+      return redirect_to twofa_url
+    end
+
+    @user.totp_secret = session[:totp_secret]
+    if @user.authenticate_totp(params[:totp_code])
+      # re-roll, just in case
+      @user.session_token = nil
+      @user.save!
+
+      session[:u] = @user.session_token
+
+      flash[:success] = "Two-Factor Authentication has been enabled on " <<
+        "your account."
+      session.delete(:totp_secret)
+      return redirect_to "/settings"
+    else
+      flash[:error] = "Your TOTP code was invalid, please verify the " <<
+        "current code in your TOTP application."
+      return redirect_to twofa_verify_url
+    end
   end
 
 private

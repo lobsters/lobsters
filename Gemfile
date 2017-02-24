@@ -21,6 +21,8 @@ gem "dynamic_form"
 gem "exception_notification"
 
 gem "bcrypt", "~> 3.1.2"
+gem "rotp"
+gem "rqrcode"
 
 gem "nokogiri", "= 1.6.1"
 gem "htmlentities"

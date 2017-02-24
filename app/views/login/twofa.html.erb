@@ -1,0 +1,23 @@
+<div class="box wide">
+  <div class="legend">
+    Login - Two Factor Authentication
+  </div>
+
+  <%= form_tag twofa_login_url do %>
+    <p>
+    Enter the current TOTP code from your TOTP application:
+    </p>
+
+    <p>
+    <%= label_tag :totp_code, "TOTP Code:" %>
+    <%= text_field_tag :totp_code, "", :size => 10, :type => "number",
+      :autofocus => "autofocus" %>
+    <br />
+    </p>
+
+    <p>
+    <%= submit_tag "Login" %>
+    </p>
+  <% end %>
+</div>
+

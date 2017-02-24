@@ -41,12 +41,17 @@ class LoginController < ApplicationController
           "unmoderated comments have been undeleted."
       end
 
-      session[:u] = user.session_token
-
       if !user.password_digest.to_s.match(/^\$2a\$#{BCrypt::Engine::DEFAULT_COST}\$/)
         user.password = user.password_confirmation = params[:password].to_s
         user.save!
       end
+
+      if user.has_2fa?
+        session[:twofa_u] = user.session_token
+        return redirect_to "/login/2fa"
+      end
+
+      session[:u] = user.session_token
 
       if (rd = session[:redirect_to]).present?
         session.delete(:redirect_to)
@@ -124,6 +129,34 @@ class LoginController < ApplicationController
       flash[:error] = "Invalid reset token.  It may have already been " <<
         "used or you may have copied it incorrectly."
       return redirect_to forgot_password_path
+    end
+  end
+
+  def twofa
+    if tmpu = find_twofa_user
+      Rails.logger.info "  Authenticated as user #{tmpu.id} " <<
+        "(#{tmpu.username}), verifying TOTP"
+    else
+      reset_session
+      return redirect_to "/login"
+    end
+  end
+
+  def twofa_verify
+    if (tmpu = find_twofa_user) && tmpu.authenticate_totp(params[:totp_code])
+      session[:u] = tmpu.session_token
+      session.delete(:twofa_u)
+      return redirect_to "/"
+    else
+      flash[:error] = "Your TOTP code did not match.  Please try again."
+      return redirect_to "/login/2fa"
+    end
+  end
+
+private
+  def find_twofa_user
+    if session[:twofa_u].present?
+      return User.where(:session_token => session[:twofa_u]).first
     end
   end
 end

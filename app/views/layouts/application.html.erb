@@ -49,17 +49,17 @@
           @traffic.to_i %>)"></a>
 
         <% links = {
-          "/" => @cur_url == "/" ? Rails.application.name : t('.homelink'),
-          "/recent" => t('.recentlink'),
-          "/comments" => t('.commentslink')
+          "/" => @cur_url == "/" ? Rails.application.name : "Home",
+          "/recent" => "Recent",
+          "/comments" => "Comments",
         } %>
 
         <% if @user && @user.can_submit_stories? %>
-          <% links.merge!({ "/threads" => t('.yourthreadslink'),
-            "/stories/new" => t('.submitstorylink') }) %>
+          <% links.merge!({ "/threads" => "Your Threads",
+            "/stories/new" => "Submit Story" }) %>
         <% end %>
 
-        <% links.merge!({ "/search" => t('.searchlink') }) %>
+        <% links.merge!({ "/search" => "Search" }) %>
 
         <% if @cur_url.present? && !links.keys.include?(@cur_url) &&
         @heading.present? %>
@@ -79,26 +79,26 @@
       <div id="headerright">
         <span class="headerlinks">
         <a href="/filters" <%= @cur_url == "/filters" ?
-          raw("class=\"cur_url\"") : "" %>><%= t('.filterslink') %></a>
+          raw("class=\"cur_url\"") : "" %>>Filters</a>
         <% if @user %>
           <% if (count = @user.unread_message_count) > 0 %>
             <a href="/messages" class="new_messages <%= @cur_url == "/messages" ?
-              "cur_url" : "" %>"><%= t(".newmessagelink", :count => count)
-              %></a>
+              "cur_url" : "" %>"><%= count %> New Message<%= count == 1 ? "" :
+              "s" %></a>
           <% else %>
             <a href="/messages" <%= @cur_url == "/messages" ?
-              raw("class=\"cur_url\"") : "" %>><%= t('.messageslink') %></a>
+              raw("class=\"cur_url\"") : "" %>>Messages</a>
           <% end %>
 
           <a href="/settings" <%= @cur_url == "/settings" ?
             raw("class=\"cur_url\"") : "" %>><%= @user.username %>
             (<%= @user.karma %>)</a>
 
-          <%= link_to t('.logoutlink'), { :controller => "login", :action => "logout" },
-            :data => { :confirm => t('.confirmlogoutlink') },
+          <%= link_to "Logout", { :controller => "login", :action => "logout" },
+            :data => { :confirm => "Are you sure you want to logout?" },
             :method => "post" %>
         <% else %>
-          <a href="/login"><%= t('.loginlink') %></a>
+          <a href="/login">Login</a>
         <% end %>
         </span>
       </div>
@@ -116,20 +116,20 @@
       <%= yield %>
 
       <div id="footer">
-        <a href="/moderations"><%= t('.moderationloglink') %></a>
+        <a href="/moderations">Moderation Log</a>
         <% if @user && !@user.is_new? &&
         (iqc = InvitationRequest.verified_count) > 0 %>
-          <a href="/invitations"><%= t('.invitationqueuelink') %>(<%= iqc %>)</a>
+          <a href="/invitations">Invitation Queue(<%= iqc %>)</a>
         <% end %>
         <% if @user && @user.is_moderator? &&
         (hrc = HatRequest.count) > 0 %>
-          <a href="/hats/requests"><%= t('.hatrequestlink') %> (<%= hrc %>)</a>
+          <a href="/hats/requests">Hat Requests (<%= hrc %>)</a>
         <% else %>
-          <a href="/hats"><%= t('.hatslink') %></a>
+          <a href="/hats">Hats</a>
         <% end %>
-        <a href="/chat"><%= t('.chatlink') %></a>
-        <a href="/privacy"><%= t('.privacylink') %></a>
-        <a href="/about"><%= t('.aboutlink') %></a>
+        <a href="/chat">Chat</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/about">About</a>
       </div>
       <div class="clear"></div>
     </div>

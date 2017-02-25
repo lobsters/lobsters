@@ -14,8 +14,8 @@
 
     <div class="boxline">
       <%= label_tag :totp_code, "TOTP Code:", :class => "required" %>
-      <%= text_field_tag :totp_code, "", :size => 10, :autocomplete => "off",
-        :type => "number", :autofocus => "autofocus" %>
+      <%= number_field_tag :totp_code, "", :size => 10, :autocomplete => "off",
+          :autofocus => true %>
     </div>
 
     <p>

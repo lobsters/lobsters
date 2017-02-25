@@ -11,7 +11,7 @@
     <p>
     <%= label_tag :totp_code, "TOTP Code:" %>
     <%= number_field_tag :totp_code, "", :size => 10, :autocomplete => "off",
-        :autofocus => true %>
+        :autofocus => true, :class => "totp_code" %>
     <br />
     </p>
 

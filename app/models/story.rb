@@ -187,15 +187,20 @@ class Story < ActiveRecord::Base
   def calculated_hotness
     base = self.tags.map{|t| t.hotness_mod }.sum
 
-    # give a story's comment votes some weight (unless the hotness mod is
-    # negative), but ignore the story submitter's own comments
-    if base < 0
-      cpoints = 0
-    else
-      cpoints = self.comments.where("user_id <> ?", self.user_id).
-        select(:upvotes, :downvotes).map{|c| c.upvotes + 1 - c.downvotes }.
-        inject(&:+).to_f * 0.5
-    end
+    # give a story's comment votes some weight, ignoring submitter's comments
+    cpoints = self.comments.
+      where("user_id <> ?", self.user_id).
+      select(:upvotes, :downvotes).
+      map{|c|
+        if base < 0
+          # in stories already starting out with a bad hotness mod, only look
+          # at the downvotes to find out if this tire fire needs to be put out
+          c.downvotes * -0.5
+        else
+          c.upvotes + 1 - c.downvotes
+        end
+      }.
+      inject(&:+).to_f * 0.5
 
     # mix in any stories this one cannibalized
     cpoints += self.merged_stories.map{|s| s.score }.inject(&:+).to_f

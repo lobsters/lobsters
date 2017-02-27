@@ -68,9 +68,14 @@ class SettingsController < ApplicationController
   def update
     @edit_user = @user.clone
 
-    if @edit_user.update_attributes(user_params)
-      flash.now[:success] = "Successfully updated settings."
-      @user = @edit_user
+    if params[:user][:password].empty? ||
+    @user.authenticate(params[:current_password].to_s)
+      if @edit_user.update_attributes(user_params)
+        flash.now[:success] = "Successfully updated settings."
+        @user = @edit_user
+      end
+    else
+      flash[:error] = "Your password was not correct."
     end
 
     render :action => "index"

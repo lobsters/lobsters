@@ -5,7 +5,9 @@ This is the source code of the website operating at
 SQL (MariaDB in production) backend for the database and Sphinx for the search
 engine.
 
-This code is forked from the [lobste.rs](https://lobster.rs) engine, authored by Joshua Stein previously licensed under the 3-BSD license. The code is [available here](https://github.com/lobsters/).
+This code is forked from the [lobste.rs](https://lobster.rs) engine, authored by Joshua Stein © 2012-2016 (until commit 335e1fd0c43313c0ead7f3499b22e081f93e6c28 Nov 3 2016) licensed under the 3-BSD license. The current code is [available here](https://github.com/lobsters/). See the license/LICENSE.lobsters for the original license and copyright.
+
+The new code is Carl Chenet © 2016-2017 (starting commit cee4920216cb1b24d0180c5c4d2da87e96475b19 Nov 8 2016). See the license/LICENSE.journalduhacker for the full license.
 
 ####Contributing bugfixes and new features
 

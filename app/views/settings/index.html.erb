@@ -19,6 +19,12 @@
     </div>
 
     <div class="boxline">
+      <%= label_tag :current_password, "Current Password:",
+        :class => "required" %>
+      <%= password_field_tag :current_password, nil, :size => 40 %>
+    </div>
+
+    <div class="boxline">
       <%= f.label :password, "New Password:", :class => "required" %>
       <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
     </div>

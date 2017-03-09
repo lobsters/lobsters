@@ -607,6 +607,9 @@ span.user_is_author, a.user_is_author,
 li .byline a.user_is_author {
 	color: #6081bd;
 }
+li .byline a.story_has_suggestions {
+	color: #6081bd;
+}
 
 li.story.hidden {
 	opacity: 0.25;

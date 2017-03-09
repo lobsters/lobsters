@@ -121,7 +121,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 
         <% if story.is_editable_by_user?(@user) %>
           |
-          <a href="<%= edit_story_path(story.short_id) %>">edit</a>
+          <a href="<%= edit_story_path(story.short_id) %>" class="<%=
+            story.has_suggestions? ? "story_has_suggestions" : "" %>">edit</a>
 
           <% if story.is_gone? && story.is_undeletable_by_user?(@user) %>
             |

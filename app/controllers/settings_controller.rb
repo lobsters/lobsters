@@ -75,7 +75,7 @@ class SettingsController < ApplicationController
         @user = @edit_user
       end
     else
-      flash[:error] = "Your password was not correct."
+      flash[:error] = "Your current password was not entered correctly."
     end
 
     render :action => "index"

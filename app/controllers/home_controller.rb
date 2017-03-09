@@ -243,7 +243,12 @@ private
     else
       key = opts.merge(page: page).sort.map{|k,v| "#{k}=#{v.to_param}"
         }.join(" ")
-      Rails.cache.fetch("stories #{key}", :expires_in => 45, &block)
+      begin
+        Rails.cache.fetch("stories #{key}", :expires_in => 45, &block)
+      rescue Errno::ENOENT => e
+        Rails.logger.error "error fetching stories #{key}: #{e}"
+        yield
+      end
     end
   end
 end

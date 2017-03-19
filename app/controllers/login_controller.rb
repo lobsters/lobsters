@@ -47,33 +47,62 @@ class LoginController < ApplicationController
       end
 
       if user.has_2fa?
-        session[:twofa_u] = user.session_token
-        return redirect_to "/login/2fa"
-      end
-
-      session[:u] = user.session_token
-
-      if (rd = session[:redirect_to]).present?
-        session.delete(:redirect_to)
-        return redirect_to rd
-      elsif params[:referer].present?
-        begin
-          ru = URI.parse(params[:referer])
-          if ru.host == Rails.application.domain
-            return redirect_to ru.to_s
+        if params[:totp].present?
+          if !user.authenticate_totp(params[:totp])
+            raise "invalid TOTP code"
           end
-        rescue => e
-          Rails.logger.error "error parsing referer: #{e}"
+        else
+          return respond_to do |format|
+            format.html {
+              session[:twofa_u] = user.session_token
+              redirect_to "/login/2fa"
+            }
+            format.json {
+              render :json => { :status => 0,
+                :error => "must supply totp parameter" }
+            }
+          end
         end
       end
 
-      return redirect_to "/"
+      return respond_to do |format|
+        format.html {
+          session[:u] = user.session_token
+
+          if (rd = session[:redirect_to]).present?
+            session.delete(:redirect_to)
+            return redirect_to rd
+          elsif params[:referer].present?
+            begin
+              ru = URI.parse(params[:referer])
+              if ru.host == Rails.application.domain
+                return redirect_to ru.to_s
+              end
+            rescue => e
+              Rails.logger.error "error parsing referer: #{e}"
+            end
+          end
+
+          redirect_to "/"
+        }
+        format.json {
+          render :json => { :status => 1, :username => user.username }
+        }
+      end
     rescue
     end
 
-    flash.now[:error] = "Invalid e-mail address and/or password."
-    @referer = params[:referer]
-    index
+    respond_to do |format|
+      format.html {
+        flash.now[:error] = "Invalid e-mail address and/or password."
+        @referer = params[:referer]
+        index
+      }
+      format.json {
+        render :json => { :status => 0,
+          :error => "invalid 'email' and/or 'password' parameter" }
+      }
+    end
   end
 
   def forgot_password

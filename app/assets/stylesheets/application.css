@@ -128,6 +128,7 @@ input[type="text"],
 input[type="search"],
 input[type="password"],
 input[type="email"],
+input[type="number"],
 textarea {
 	border: 1px solid #ccc;
 }

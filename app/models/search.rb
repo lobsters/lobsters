@@ -68,8 +68,14 @@ class Search
 
     if domain.present?
       self.what = "stories"
-      story_ids = Story.select(:id).where("`url` REGEXP '//([^/]*\.)?" +
-        ActiveRecord::Base.connection.quote_string(domain) + "/'").
+      begin
+        reg = Regexp.new("//([^/]*\.)?#{domain}/")
+      rescue RegexpError
+        return false
+      end
+
+      story_ids = Story.select(:id).where("`url` REGEXP '" +
+        ActiveRecord::Base.connection.quote_string(reg.source) + "'").
         collect(&:id)
 
       if story_ids.any?

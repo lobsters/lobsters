@@ -1,6 +1,15 @@
 module ApplicationHelper
   MAX_PAGES = 15
 
+  def avatar_img(user, size)
+    image_tag(user.avatar_url(size), {
+      :srcset => "#{user.avatar_url(size)} 1x, " <<
+        "#{user.avatar_url(size * 2)} 2x",
+      :class => "avatar",
+      :size => "#{size}x#{size}",
+      :alt => "#{user.username} avatar" })
+  end
+
   def break_long_words(str, len = 30)
     safe_join(str.split(" ").map{|w|
       if w.length > len

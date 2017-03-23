@@ -21,7 +21,7 @@ body, textarea, input, button {
 
 body {
 	background-color: #fefefe;
-	line-height: 1.4em;
+	line-height: 1.45em;
 }
 
 a {
@@ -454,8 +454,8 @@ li.story {
 	clear: both;
 }
 ol.stories li.story div.story_liner {
-	padding-top: 0.3em;
-	padding-bottom: 0.3em;
+	padding-top: 0.25em;
+	padding-bottom: 0.25em;
 }
 .comment {
 	clear: both;

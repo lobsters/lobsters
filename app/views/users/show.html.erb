@@ -115,6 +115,16 @@
   </span>
   <br>
 
+  <% if @showing_user.github_username.present? %>
+    <label class="required">GitHub:</label>
+
+    <span class="d">
+      <a href="https://github.com/<%= h(@showing_user.github_username)
+        %>">https://github.com/<%= h(@showing_user.github_username) %></a>
+    </span>
+    <br>
+  <% end %>
+
   <% if @showing_user.is_active? %>
     <label class="required">About:</label>
 

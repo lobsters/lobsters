@@ -88,24 +88,6 @@
     <br>
 
     <div class="legend">
-      Notification Settings
-    </div>
-
-    <div class="boxline">
-      <%= f.label :pushover_user_key,
-        raw("<a href=\"https://pushover.net/\">Pushover</a>:"),
-        :class => "required" %>
-      <%= link_to((f.object.pushover_user_key.present??
-        "Manage Pushover Subscription" : "Subscribe With Pushover"),
-        "/settings/pushover", :class => "pushover_button", :method => :post) %>
-      <span class="hint">
-        For optional comment and message notifications below
-      </span>
-    </div>
-
-    <br>
-
-    <div class="legend">
       Comment Reply Notification Settings
     </div>
 
@@ -119,7 +101,7 @@
         :class => "required" %>
       <%= f.check_box :pushover_replies %>
       <span class="hint">
-        Requires Pushover subscription above
+        Requires Pushover subscription below
       </span>
     </div>
 
@@ -139,7 +121,7 @@
         :class => "required" %>
       <%= f.check_box :pushover_mentions %>
       <span class="hint">
-        Requires Pushover subscription above
+        Requires Pushover subscription below
       </span>
     </div>
 
@@ -159,7 +141,7 @@
         :class => "required" %>
       <%= f.check_box :pushover_messages %>
       <span class="hint">
-        Requires Pushover subscription above
+        Requires Pushover subscription below
       </span>
     </div>
 
@@ -231,6 +213,43 @@
 
     <br>
     <%= f.submit "Save All Settings" %>
+  <% end %>
+
+  <br>
+  <br>
+
+  <div class="legend">
+    External Accounts
+  </div>
+
+  <% if Pushover.enabled? %>
+    <div class="boxline">
+      <%= label_tag :pushover_user_key,
+        raw("<a href=\"https://pushover.net/\">Pushover</a>:"),
+        :class => "required" %>
+      <%= link_to((@edit_user.pushover_user_key.present??
+        "Manage Pushover Subscription" : "Subscribe With Pushover"),
+        "/settings/pushover_auth", :class => "pushover_button",
+        :method => :post) %>
+      <span class="hint">
+        For optional comment and message notifications above
+      </span>
+    </div>
+  <% end %>
+
+  <% if Github.enabled? %>
+    <div class="boxline">
+      <%= label_tag :github_username, "GitHub:", :class => "required" %>
+      <% if @edit_user.github_username.present? %>
+        Linked to
+        <strong><a href="https://github.com/<%= h(@edit_user.github_username)
+          %>"><%= h(@edit_user.github_username) %></a></strong>
+          (<%= link_to "Disconnect", "/settings/github_disconnect",
+            :method => :post %>)
+      <% else %>
+        <a href="/settings/github_auth">Connect</a>
+      <% end %>
+    </div>
   <% end %>
 
   <br>

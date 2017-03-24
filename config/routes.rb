@@ -105,8 +105,6 @@ Lobsters::Application.routes.draw do
 
     get "/settings" => "settings#index"
     post "/settings" => "settings#update"
-    post "/settings/pushover" => "settings#pushover"
-    get "/settings/pushover_callback" => "settings#pushover_callback"
     post "/settings/delete_account" => "settings#delete_account",
       :as => "delete_account"
     get "/settings/2fa" => "settings#twofa", :as => "twofa"
@@ -117,6 +115,12 @@ Lobsters::Application.routes.draw do
       :as => "twofa_verify"
     post "/settings/2fa_update" => "settings#twofa_update",
       :as => "twofa_update"
+
+    post "/settings/pushover_auth" => "settings#pushover_auth"
+    get "/settings/pushover_callback" => "settings#pushover_callback"
+    get "/settings/github_auth" => "settings#github_auth"
+    get "/settings/github_callback" => "settings#github_callback"
+    post "/settings/github_disconnect" => "settings#github_disconnect"
 
     get "/filters" => "filters#index"
     post "/filters" => "filters#update"

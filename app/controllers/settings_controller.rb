@@ -21,50 +21,6 @@ class SettingsController < ApplicationController
     return redirect_to settings_path
   end
 
-  def pushover
-    if !Pushover.SUBSCRIPTION_CODE
-      flash[:error] = "This site is not configured for Pushover"
-      return redirect_to "/settings"
-    end
-
-    session[:pushover_rand] = SecureRandom.hex
-
-    return redirect_to Pushover.subscription_url({
-      :success => "#{Rails.application.root_url}settings/pushover_callback?" <<
-        "rand=#{session[:pushover_rand]}",
-      :failure => "#{Rails.application.root_url}settings/",
-    })
-  end
-
-  def pushover_callback
-    if !session[:pushover_rand].to_s.present?
-      flash[:error] = "No random token present in session"
-      return redirect_to "/settings"
-    end
-
-    if !params[:rand].to_s.present?
-      flash[:error] = "No random token present in URL"
-      return redirect_to "/settings"
-    end
-
-    if params[:rand].to_s != session[:pushover_rand].to_s
-      raise "rand param #{params[:rand].inspect} != " <<
-        session[:pushover_rand].inspect
-    end
-
-    @user.pushover_user_key = params[:pushover_user_key].to_s
-    @user.save!
-
-    if @user.pushover_user_key.present?
-      flash[:success] = "Your account is now setup for Pushover notifications."
-    else
-      flash[:success] = "Your account is no longer setup for Pushover " <<
-        "notifications."
-    end
-
-    return redirect_to "/settings"
-  end
-
   def update
     @edit_user = @user.clone
 
@@ -161,6 +117,88 @@ class SettingsController < ApplicationController
         "current code in your TOTP application."
       return redirect_to twofa_verify_url
     end
+  end
+
+  # external services
+
+  def pushover_auth
+    if !Pushover.SUBSCRIPTION_CODE
+      flash[:error] = "This site is not configured for Pushover"
+      return redirect_to "/settings"
+    end
+
+    session[:pushover_rand] = SecureRandom.hex
+
+    return redirect_to Pushover.subscription_url({
+      :success => "#{Rails.application.root_url}settings/pushover_callback?" <<
+        "rand=#{session[:pushover_rand]}",
+      :failure => "#{Rails.application.root_url}settings/",
+    })
+  end
+
+  def pushover_callback
+    if !session[:pushover_rand].to_s.present?
+      flash[:error] = "No random token present in session"
+      return redirect_to "/settings"
+    end
+
+    if !params[:rand].to_s.present?
+      flash[:error] = "No random token present in URL"
+      return redirect_to "/settings"
+    end
+
+    if params[:rand].to_s != session[:pushover_rand].to_s
+      raise "rand param #{params[:rand].inspect} != " <<
+        session[:pushover_rand].inspect
+    end
+
+    @user.pushover_user_key = params[:pushover_user_key].to_s
+    @user.save!
+
+    if @user.pushover_user_key.present?
+      flash[:success] = "Your account is now setup for Pushover notifications."
+    else
+      flash[:success] = "Your account is no longer setup for Pushover " <<
+        "notifications."
+    end
+
+    return redirect_to "/settings"
+  end
+
+  def github_auth
+    session[:github_state] = SecureRandom.hex
+    return redirect_to Github.oauth_auth_url(session[:github_state])
+  end
+
+  def github_callback
+    if !session[:github_state].present? || !params[:code].present? ||
+    (params[:state].to_s != session[:github_state].to_s)
+      flash[:error] = "No OAuth state"
+      return redirect_to "/settings"
+    end
+
+    session.delete(:github_state)
+
+    tok, username = Github.token_and_user_from_code(params[:code])
+    if tok.present? && username.present?
+      @user.github_oauth_token = tok
+      @user.github_username = username
+      @user.save!
+      flash[:success] = "Your account has been linked to GitHub user " <<
+        "#{username}."
+    else
+      return github_disconnect
+    end
+
+    return redirect_to "/settings"
+  end
+
+  def github_disconnect
+    @user.github_oauth_token = nil
+    @user.github_username = nil
+    @user.save!
+    flash[:success] = "Your GitHub association has been removed."
+    return redirect_to "/settings"
   end
 
 private

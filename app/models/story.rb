@@ -315,6 +315,20 @@ class Story < ActiveRecord::Base
     end
   end
 
+  def fix_bogus_chars
+    # this is needlessly complicated to work around character encoding issues
+    # that arise when doing just self.title.to_s.gsub(160.chr, "")
+    self.title = self.title.to_s.split("").map{|chr|
+      if chr.ord == 160
+        " "
+      else
+        chr
+      end
+    }.join("")
+
+    true
+  end
+
   def generated_markeddown_description
     Markdowner.to_html(self.description, { :allow_images => true })
   end
@@ -475,20 +489,6 @@ class Story < ActiveRecord::Base
   def record_initial_upvote
     Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.id, nil,
       self.user_id, nil, false)
-  end
-
-  def fix_bogus_chars
-    # this is needlessly complicated to work around character encoding issues
-    # that arise when doing just self.title.to_s.gsub(160.chr, "")
-    self.title = self.title.to_s.split("").map{|chr|
-      if chr.ord == 160
-        " "
-      else
-        chr
-      end
-    }.join("")
-
-    true
   end
 
   def score

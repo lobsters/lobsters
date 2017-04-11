@@ -74,20 +74,17 @@
 
     <div class="boxline">
       <%= f.label :recipient_username, "To:", :class => "required" %>
-      <%= f.text_field :recipient_username, :size => 20,
-        :autocomplete => "off" %>
+      <%= f.text_field :recipient_username, :size => 20 %>
     </div>
 
     <div class="boxline">
       <%= f.label :subject, "Subject:", :class => "required" %>
-      <%= f.text_field :subject, :style => "width: 500px;",
-        :autocomplete => "off" %>
+      <%= f.text_field :subject, :style => "width: 500px;" %>
     </div>
 
     <div class="boxline">
       <%= f.label :body, "Message:", :class => "required" %>
-      <%= f.text_area :body, :style => "width: 500px;", :rows => 5,
-        :autocomplete => "off" %>
+      <%= f.text_area :body, :style => "width: 500px;", :rows => 5 %>
     </div>
 
     <div class="boxline">

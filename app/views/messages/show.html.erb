@@ -69,13 +69,11 @@
       <%= error_messages_for @new_message %>
 
       <div class="boxline">
-        <%= f.text_field :subject, :style => "width: 500px;",
-          :autocomplete => "off" %>
+        <%= f.text_field :subject, :style => "width: 500px;" %>
       </div>
 
       <div class="boxline">
-        <%= f.text_area :body, :style => "width: 500px;", :rows => 5,
-          :autocomplete => "off" %>
+        <%= f.text_area :body, :style => "width: 500px;", :rows => 5 %>
       </div>
 
       <div class="boxline">

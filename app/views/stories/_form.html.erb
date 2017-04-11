@@ -43,7 +43,7 @@
 
   <div class="boxline">
     <%= f.label :title, "Title:", :class => "required" %>
-    <%= f.text_field :title, :maxlength => 100, :autocomplete => "off"  %>
+    <%= f.text_field :title, :maxlength => 100 %>
   </div>
 
   <% if f.object.id && !defined?(suggesting) %>
@@ -106,8 +106,7 @@
     <div class="boxline">
       <%= f.label :description, "Text:", :class => "required" %>
       <%= f.text_area :description, :rows => 15,
-        :placeholder => "Optional when submitting a URL; please see guidelines",
-        :autocomplete => "off" %>
+        :placeholder => "Optional when submitting a URL; please see guidelines" %>
     </div>
 
     <div class="boxline actions markdown_help_toggler">

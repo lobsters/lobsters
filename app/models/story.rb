@@ -138,6 +138,10 @@ class Story < ActiveRecord::Base
     Story.connection.adapter_name.match(/mysql/i) ? "signed" : "integer"
   end
 
+  def archive_url
+    "https://archive.is/#{CGI.escape(self.url)}"
+  end
+
   def as_json(options = {})
     h = [
       :short_id,
@@ -311,7 +315,7 @@ class Story < ActiveRecord::Base
 
   def fetch_story_cache!
     if self.url.present?
-      self.story_cache = StoryCacher.get_story_text(self.url)
+      self.story_cache = StoryCacher.get_story_text(self)
     end
   end
 

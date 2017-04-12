@@ -7,17 +7,17 @@ class Markdowner
       return ""
     end
 
-    args = [ :smart, :autolink, :safelink, :filter_styles, :filter_html,
-      :strict ]
-    if !opts[:allow_images]
-      args.push :no_image
-    end
-
-    ng = Nokogiri::HTML(RDiscount.new(text.to_s, *args).to_html)
+    exts = [:tagfilter, :autolink]
+    root = CommonMarker.render_doc(text.to_s, [:SMART], exts)
+    ng = Nokogiri::HTML(root.to_html([:SAFE], exts))
 
     # change <h1>, <h2>, etc. headings to just bold tags
     ng.css("h1, h2, h3, h4, h5, h6").each do |h|
       h.name = "strong"
+    end
+
+    if !opts[:allow_images]
+      ng.css("img").remove
     end
 
     # make links have rel=nofollow

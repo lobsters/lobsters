@@ -27,7 +27,7 @@ class Markdowner
 
     # make links have rel=nofollow
     ng.css("a").each do |h|
-      h[:rel] = "nofollow" unless URI.parse(h[:href]).host.nil?
+      h[:rel] = "nofollow" unless (URI.parse(h[:href]).host.nil? rescue false)
     end
 
     ng.at_css("body").inner_html

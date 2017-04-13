@@ -25,12 +25,18 @@ Time.now - 1.days).order(:id).each_with_index do |s,x|
     tags += ' #' + tagging.tag.tag
   end
 
-  tco_status = "\n" +
+  via = ""
+  if s.user.twitter_username.present?
+    via = "\n" + (s.user_is_author? ? "by" : "via") +
+      " @#{s.user.twitter_username}"
+  end
+
+  tco_status = via + "\n" +
     (s.url.present?? ("X" * Twitter::TCO_LEN) + "\n" : "") +
     ("X" * Twitter::TCO_LEN) +
     tags
 
-  status = "\n" +
+  status = via + "\n" +
     (s.url.present?? s.url + "\n" : "") +
     s.short_id_url +
     tags

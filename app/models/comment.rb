@@ -451,7 +451,8 @@ class Comment < ActiveRecord::Base
   def vote_summary_for_user(u)
     r_counts = {}
     r_users = {}
-    self.votes.includes(:user).each do |v|
+    # don't includes(:user) here and assume the caller did this already
+    self.votes.each do |v|
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += v.vote
 

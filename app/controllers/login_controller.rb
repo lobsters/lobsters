@@ -55,7 +55,7 @@ class LoginController < ApplicationController
         user.save!
       end
 
-      if user.has_2fa?
+      if user.has_2fa? && !Rails.env.development?
         if params[:totp].present?
           if user.authenticate_totp(params[:totp])
             # ok, fall through

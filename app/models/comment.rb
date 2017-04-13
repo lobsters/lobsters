@@ -47,6 +47,9 @@ class Comment < ActiveRecord::Base
 
     self.comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
       errors.add(:base, "Wow!  A blue car!")
+
+    self.comment.to_s.strip.match(/\Ame too.?\z/i) &&
+      errors.add(:base, "Please just upvote the parent post instead.")
   end
 
   def self.arrange_for_user(user)

@@ -44,7 +44,7 @@ class Markdowner
 
   def self.postprocess_text_node(node)
     while node
-      return unless node.string_content =~ /\B(@[\w\-]+)/
+      return unless node.string_content =~ /\B(@#{User::VALID_USERNAME})/
       before, user, after = $`, $1, $'
 
       node.string_content = before

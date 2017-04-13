@@ -231,7 +231,7 @@ class CommentsController < ApplicationController
     @comments = Comment.where(
       :is_deleted => false, :is_moderated => false
     ).order(
-      "created_at DESC"
+      "id DESC"
     ).offset(
       (@page - 1) * COMMENTS_PER_PAGE
     ).limit(

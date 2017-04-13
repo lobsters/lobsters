@@ -48,6 +48,9 @@ class User < ActiveRecord::Base
     s.string :totp_secret
     s.string :github_oauth_token
     s.string :github_username
+    s.string :twitter_oauth_token
+    s.string :twitter_oauth_token_secret
+    s.string :twitter_username
   end
 
   validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
@@ -119,6 +122,10 @@ class User < ActiveRecord::Base
 
     if self.github_username.present?
       h[:github_username] = self.github_username
+    end
+
+    if self.twitter_username.present?
+      h[:twitter_username] = self.twitter_username
     end
 
     h

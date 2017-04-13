@@ -252,6 +252,21 @@
     </div>
   <% end %>
 
+  <% if Twitter.enabled? %>
+    <div class="boxline">
+      <%= label_tag :twitter_username, "Twitter:", :class => "required" %>
+      <% if @edit_user.twitter_username.present? %>
+        Linked to
+        <strong><a href="https://twitter.com/<%= h(@edit_user.twitter_username)
+          %>">@<%= h(@edit_user.twitter_username) %></a></strong>
+          (<%= link_to "Disconnect", "/settings/twitter_disconnect",
+            :method => :post %>)
+      <% else %>
+        <a href="/settings/twitter_auth">Connect</a>
+      <% end %>
+    </div>
+  <% end %>
+
   <br>
   <br>
 

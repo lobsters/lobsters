@@ -7,9 +7,9 @@ require File.expand_path('../../config/boot',  __FILE__)
 require APP_PATH
 Rails.application.require_environment!
 
-MIN_STORY_SCORE = 2
+MIN_STORY_SCORE = 3
 
-Story.where("is_expired = ? AND #{Story.score_sql} > ? AND " <<
+Story.where("is_expired = ? AND #{Story.score_sql} >= ? AND " <<
 "twitter_id IS NULL AND created_at >= ?", false, MIN_STORY_SCORE,
 Time.now - 1.days).order(:id).each_with_index do |s,x|
   if s.tags.map(&:tag).include?("meta")

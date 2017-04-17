@@ -30,6 +30,8 @@ module Lobsters
 
     config.cache_store = :file_store, "#{config.root}/tmp/cache/"
 
+    config.exceptions_app = self.routes
+
     config.after_initialize do
       require "#{Rails.root}/lib/monkey.rb"
     end

@@ -4,11 +4,23 @@ class HomeController < ApplicationController
   before_filter { @page = page }
   before_filter :require_logged_in_user, :only => [ :upvoted ]
 
+  def four_oh_four
+    begin
+      @title = "Resource Not Found"
+      render :action => "404", :status => 404
+    rescue ActionView::MissingTemplate
+      render :text => "<div class=\"box wide\">" <<
+        "<div class=\"legend\">404</div>" <<
+        "Resource not found" <<
+        "</div>", :layout => "application"
+    end
+  end
+
   def about
     begin
       @title = "About"
       render :action => "about"
-    rescue
+    rescue ActionView::MissingTemplate
       render :text => "<div class=\"box wide\">" <<
         "A mystery." <<
         "</div>", :layout => "application"
@@ -19,8 +31,9 @@ class HomeController < ApplicationController
     begin
       @title = "Chat"
       render :action => "chat"
-    rescue
+    rescue ActionView::MissingTemplate
       render :text => "<div class=\"box wide\">" <<
+        "<div class=\"legend\">Chat</div>" <<
         "Keep it on-site" <<
         "</div>", :layout => "application"
     end
@@ -30,7 +43,7 @@ class HomeController < ApplicationController
     begin
       @title = "Privacy"
       render :action => "privacy"
-    rescue
+    rescue ActionView::MissingTemplate
       render :text => "<div class=\"box wide\">" <<
         "You apparently have no privacy." <<
         "</div>", :layout => "application"

@@ -127,12 +127,11 @@ class StoriesController < ApplicationController
       return redirect_to @story.merged_into_story.comments_path
     end
 
-    if @story.can_be_seen_by_user?(@user)
-      @title = @story.title
-    else
-      @title = "[Story removed]"
+    if !@story.can_be_seen_by_user?(@user)
+      raise ActionController::RoutingError.new("story gone")
     end
 
+    @title = @story.title
     @short_url = @story.short_id_url
 
     @comments = @story.merged_comments.includes(:user, :story, :hat,

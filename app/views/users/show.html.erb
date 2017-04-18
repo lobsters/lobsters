@@ -69,12 +69,12 @@
 
   <% if @showing_user.hats.any? %>
     <label class="required">Hats:</label>
-    <span class="d">
+    <div class="d">
     <% @showing_user.hats.each do |hat| %>
       <%= hat.to_html_label %>
     <% end %>
-    </span>
-    <br>
+    </div>
+    <div style="clear: both;"></div>
   <% end %>
 
   <% if @showing_user.deleted_at? %>

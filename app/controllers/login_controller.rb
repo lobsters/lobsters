@@ -159,8 +159,13 @@ class LoginController < ApplicationController
         end
 
         if @reset_user.save && @reset_user.is_active?
-          session[:u] = @reset_user.session_token
-          return redirect_to "/"
+          if @reset_user.has_2fa?
+            flash[:success] = "Your password has been reset."
+            return redirect_to "/login"
+          else
+            session[:u] = @reset_user.session_token
+            return redirect_to "/"
+          end
         else
           flash[:error] = "Could not reset password."
         end

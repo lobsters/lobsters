@@ -15,11 +15,10 @@
         ><%= user.username %></a>
       <% if user.is_admin? %>
         (administrator)
+      <% elsif user.is_moderator? %>
+        (moderator)
       <% else %>
         (<%= user.karma %>)
-        <% if user.is_moderator? %>
-          (moderator)
-        <% end %>
       <% end %>
     </li>
   <% end %>

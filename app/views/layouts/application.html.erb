@@ -90,9 +90,11 @@
               raw("class=\"cur_url\"") : "" %>>Messages</a>
           <% end %>
 
-          <a href="/settings" <%= @cur_url == "/settings" ?
-            raw("class=\"cur_url\"") : "" %>><%= @user.username %>
+          <a href="/u/<%= @user.username %>"><%= @user.username %>
             (<%= @user.karma %>)</a>
+            
+          <a href="/settings" <%= @cur_url == "/settings" ?
+            raw("class=\"cur_url\"") : "" %>>Settings</a>
 
           <%= link_to "Logout", { :controller => "login", :action => "logout" },
             :data => { :confirm => "Are you sure you want to logout?" },

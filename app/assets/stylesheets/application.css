@@ -911,6 +911,12 @@ div.comment_form_container textarea {
 	height: auto;
 }
 
+li.noparent:before,
+ul.noparent:before {
+	border-top: 0 !important;
+	border-left: 0 !important;
+}
+
 ul.user_tree {
 	color: #888;
 }

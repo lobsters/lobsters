@@ -19,6 +19,37 @@
 		padding: 8px;
 	}
 
+	#l_holder {
+		width:32px;
+		height:32px;
+	}
+
+	#headermenu {
+		display:block;
+	}
+
+	.headerlinks {
+		display:none;
+	}
+
+	.headerlinks.mobile {
+		display:block;
+		margin-top:42px;
+		text-align:right;
+		margin-right:4px;
+	}
+
+	#headerright .headerlinks.mobile {
+		margin-top:0;
+	}
+
+	.headerlinks.mobile a {
+		width:100%;
+		display:block;
+		font-size:12pt;
+		padding:5px 0;
+	}
+
 	div#wrapper {
 		padding: 0;
 		padding-bottom: 2em;

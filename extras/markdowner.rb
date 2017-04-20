@@ -1,6 +1,5 @@
 class Markdowner
   # opts[:allow_images] allows <img> tags
-  # opts[:disable_profile_links] disables @username -> /u/username links
 
   def self.to_html(text, opts = {})
     if text.blank?
@@ -10,9 +9,7 @@ class Markdowner
     exts = [:tagfilter, :autolink, :strikethrough]
     root = CommonMarker.render_doc(text.to_s, [:SMART], exts)
 
-    unless opts[:disable_profile_links]
-      walk_text_nodes(root) {|n| postprocess_text_node(n)}
-    end
+    walk_text_nodes(root){|n| postprocess_text_node(n) }
 
     ng = Nokogiri::HTML(root.to_html([:SAFE], exts))
 

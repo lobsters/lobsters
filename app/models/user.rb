@@ -346,9 +346,7 @@ class User < ActiveRecord::Base
   end
 
   def linkified_about
-    # most users are probably mentioning "@username" to mean a twitter url, not
-    # a link to a profile on this site
-    Markdowner.to_html(self.about, { :disable_profile_links => true })
+    Markdowner.to_html(self.about)
   end
 
   def most_common_story_tag

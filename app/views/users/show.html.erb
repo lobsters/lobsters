@@ -67,16 +67,6 @@
     <br>
   <% end %>
 
-  <% if @showing_user.hats.any? %>
-    <label class="required">Hats:</label>
-    <div class="d">
-    <% @showing_user.hats.each do |hat| %>
-      <%= hat.to_html_label %>
-    <% end %>
-    </div>
-    <div style="clear: both;"></div>
-  <% end %>
-
   <% if @showing_user.deleted_at? %>
     <label class="required">Left:</label>
     <span class="d">
@@ -114,6 +104,16 @@
       @showing_user.comments_posted_count %></a>
   </span>
   <br>
+
+  <% if @showing_user.hats.any? %>
+    <label class="required">Hats:</label>
+    <div class="d">
+    <% @showing_user.hats.each do |hat| %>
+      <%= hat.to_html_label %>
+    <% end %>
+    </div>
+    <div style="clear: both;"></div>
+  <% end %>
 
   <% if @showing_user.github_username.present? %>
     <label class="required">GitHub:</label>

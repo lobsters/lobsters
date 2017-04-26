@@ -802,6 +802,24 @@ class Story < ActiveRecord::Base
       title = parsed.at_css("title").try(:text).to_s
     end
 
+    # see if the site name is available, so we can strip it out in case it was
+    # present in the fetched title
+    begin
+      site_name = parsed.at_css("meta[property='og:site_name']").
+        attributes["content"].text
+
+      if site_name.present? && site_name.length < title.length &&
+      title[-(site_name.length), site_name.length] == site_name
+        title = title[0, title.length - site_name.length]
+
+        # remove title/site name separator
+        if title.match(/ [ \-\|\u2013] $/)
+          title = title[0, title.length - 3]
+        end
+      end
+    rescue
+    end
+
     @fetched_attributes[:title] = title
 
     # now get canonical version of url (though some cms software puts incorrect

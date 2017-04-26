@@ -137,18 +137,6 @@ class StoriesController < ApplicationController
     @comments = @story.merged_comments.includes(:user, :story, :hat,
       :votes => :user).arrange_for_user(@user)
 
-    @force_show_thread_id = nil
-
-    if params[:comment_short_id]
-      @comments.each do |c,x|
-        if c.short_id == params[:comment_short_id]
-          c.highlighted = true
-          @force_show_thread_id = c.thread_id
-          break
-        end
-      end
-    end
-
     respond_to do |format|
       format.html {
         @comment = @story.comments.build

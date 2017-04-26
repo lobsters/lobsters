@@ -91,11 +91,13 @@ Lobsters::Application.routes.draw do
       post "keep_as_new"
     end
 
-    get "/s/:id/:title/comments/:comment_short_id" => "stories#show"
-    get "/s/:id/(:title)" => "stories#show", :format => /html|json/
-
     get "/c/:id" => "comments#redirect_from_short_id"
     get "/c/:id.json" => "comments#show_short_id", :format => "json"
+
+    # deprecated
+    get "/s/:story_id/:title/comments/:id" => "comments#redirect_from_short_id"
+
+    get "/s/:id/(:title)" => "stories#show", :format => /html|json/
 
     get "/u" => "users#tree"
     get "/u/:username" => "users#show", :as => "user", :format => /html|json/

@@ -487,7 +487,7 @@ li div.details {
 	opacity: 0.5;
 }
 
-.comment.highlighted {
+.comment:target {
 	background-color: #fffcd7;
 	border-radius: 20px;
 }
@@ -558,6 +558,12 @@ li .comment_folder_button:checked ~ ol.comments ol,
 li .comment_folder_button:checked ~ ol.comments div.comment,
 li .comment_folder_button:checked ~ ol.comments li {
  	display: none;
+}
+
+/* try to force a highlighted comment to stay visible */
+li .comment_folder_button:checked ~ div.comment div.comment_text,
+li .comment_folder_button:checked ~ div.comment div.voters {
+	display: block;
 }
 
 li .byline {

@@ -1,13 +1,10 @@
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
-  <%= comment.score <= Comment::DOWNVOTABLE_MIN_SCORE &&
-  !(@force_show_thread_id && @force_show_thread_id == comment.thread_id) ?
-  "checked" : "" %>>
-<div id="comment_<%= comment.short_id %>"
+  <%= comment.score <= Comment::DOWNVOTABLE_MIN_SCORE ? "checked" : "" %>>
+<div id="c_<%= comment.short_id %>"
 data-shortid="<%= comment.short_id if comment.persisted? %>"
 class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 "upvoted" : "downvoted") : "" %>
-  <%= comment.highlighted ? "highlighted" : "" %>
   <%= comment.score <= -1 ? "negative_1" : "" %>
   <%= comment.score <= -3 ? "negative_3" : "" %>
   <%= comment.score <= -5 ? "negative_5" : "" %>">
@@ -65,7 +62,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
       <% if !comment.previewing %>
         |
-        <a href="<%= comment.short_id_url %>">link</a>
+        <a href="<%= comment.url %>">link</a>
 
         <% if comment.is_editable_by_user?(@user) %>
           |

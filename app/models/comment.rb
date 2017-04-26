@@ -10,7 +10,7 @@ class Comment < ActiveRecord::Base
     :class_name => "Moderation"
   belongs_to :hat
 
-  attr_accessor :current_vote, :previewing, :indent_level, :highlighted
+  attr_accessor :current_vote, :previewing, :indent_level
 
   before_validation :on => :create do
     self.assign_short_id_and_upvote
@@ -431,10 +431,6 @@ class Comment < ActiveRecord::Base
     self.upvotes - self.downvotes
   end
 
-  def short_id_path
-    self.story.short_id_path + "/c/#{self.short_id}"
-  end
-
   def short_id_url
     Rails.application.root_url + "c/#{self.short_id}"
   end
@@ -448,7 +444,7 @@ class Comment < ActiveRecord::Base
   end
 
   def url
-    self.story.comments_url + "/comments/#{self.short_id}#c_#{self.short_id}"
+    self.story.comments_path + "#c_#{self.short_id}"
   end
 
   def vote_summary_for_user(u)

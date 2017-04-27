@@ -63,6 +63,7 @@ fr:
       yourthreadslink: "Vos sujets"
       submitstorylink: "Soumettre"
       searchlink: "Recherche"
+      invitationlink: "Demander une invitation"
       filterslink: "Filtres"
       newmessagelink:
         one: "Nouveau message"

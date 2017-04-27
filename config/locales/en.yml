@@ -69,6 +69,7 @@ en:
       blog: "Blog"
       twitter: "Twitter"
       diaspora: "Diaspora*"
+      mastodon: "Mastodon"
       currenttraffic: "(Current traffic: %{usernb})"
   filters:
     index:

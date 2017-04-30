@@ -444,7 +444,7 @@ class Comment < ActiveRecord::Base
   end
 
   def url
-    self.story.comments_path + "#c_#{self.short_id}"
+    self.story.comments_url + "#c_#{self.short_id}"
   end
 
   def vote_summary_for_user(u)

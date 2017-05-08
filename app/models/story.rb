@@ -227,7 +227,7 @@ class Story < ActiveRecord::Base
       return false
     end
 
-    if self.tags.select{|t| t.privileged? }.any?
+    if self.taggings.select{|t| t.tag && t.tag.privileged? }.any?
       return false
     end
 

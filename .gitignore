@@ -18,6 +18,7 @@
 
 vendor/bundle
 public/assets
+upstream-patches
 
 # templates to be created per-site
 app/views/home/privacy.*

@@ -116,20 +116,24 @@
       <%= yield %>
 
       <div id="footer">
-        <a href="/moderations">Moderation Log</a>
-        <% if @user && !@user.is_new? &&
-        (iqc = InvitationRequest.verified_count) > 0 %>
-          <a href="/invitations">Invitation Queue(<%= iqc %>)</a>
-        <% end %>
-        <% if @user && @user.is_moderator? &&
-        (hrc = HatRequest.count) > 0 %>
-          <a href="/hats/requests">Hat Requests (<%= hrc %>)</a>
+        <% if lookup_context.template_exists?("footer", "layouts", true) %>
+          <%= render :partial => "layouts/footer" %>
         <% else %>
-          <a href="/hats">Hats</a>
+          <a href="/moderations">Moderation Log</a>
+          <% if @user && !@user.is_new? &&
+          (iqc = InvitationRequest.verified_count) > 0 %>
+            <a href="/invitations">Invitation Queue(<%= iqc %>)</a>
+          <% end %>
+          <% if @user && @user.is_moderator? &&
+          (hrc = HatRequest.count) > 0 %>
+            <a href="/hats/requests">Hat Requests (<%= hrc %>)</a>
+          <% else %>
+            <a href="/hats">Hats</a>
+          <% end %>
+          <a href="/chat">Chat</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/about">About</a>
         <% end %>
-        <a href="/chat">Chat</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/about">About</a>
       </div>
       <div class="clear"></div>
     </div>

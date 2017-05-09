@@ -93,10 +93,6 @@
           <a href="/settings" <%= @cur_url == "/settings" ?
             raw("class=\"cur_url\"") : "" %>><%= @user.username %>
             (<%= @user.karma %>)</a>
-
-          <%= link_to "Logout", { :controller => "login", :action => "logout" },
-            :data => { :confirm => "Are you sure you want to logout?" },
-            :method => "post" %>
         <% else %>
           <a href="/login">Login</a>
         <% end %>

@@ -33,6 +33,9 @@ class Story < ActiveRecord::Base
 
   DOWNVOTABLE_DAYS = 14
 
+  # the lowest a score can go
+  DOWNVOTABLE_MIN_SCORE = -5
+
   # after this many minutes old, a story cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
@@ -381,7 +384,7 @@ class Story < ActiveRecord::Base
   end
 
   def is_downvotable?
-    if self.created_at && self.score >= -5
+    if self.created_at && self.score >= DOWNVOTABLE_MIN_SCORE
       Time.now - self.created_at <= DOWNVOTABLE_DAYS.days
     else
       false

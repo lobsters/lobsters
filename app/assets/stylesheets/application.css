@@ -487,6 +487,10 @@ li div.details {
 	opacity: 0.5;
 }
 
+.comment.bad {
+	opacity: 0.7;
+}
+
 .comment:target {
 	background-color: #fffcd7;
 	border-radius: 20px;

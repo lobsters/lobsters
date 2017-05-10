@@ -32,6 +32,8 @@ class Comment < ActiveRecord::Base
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
+  SCORE_RANGE_TO_HIDE = (-2 .. 4)
+
   validate do
     self.comment.to_s.strip == "" &&
       errors.add(:comment, "cannot be blank.")
@@ -429,6 +431,16 @@ class Comment < ActiveRecord::Base
 
   def score
     self.upvotes - self.downvotes
+  end
+
+  def score_for_user(user)
+    if (user && user.is_moderator?) ||
+    (self.created_at && self.created_at < 24.hours.ago) ||
+    !SCORE_RANGE_TO_HIDE.include?(score)
+      score
+    else
+      "-"
+    end
   end
 
   def short_id_url

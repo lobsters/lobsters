@@ -146,6 +146,15 @@ fr:
       title: "Bonjour %{email},"
       invitedto: "L'utilisateur %{user} vous a invité au %{appname}"
       createaccount: "Pour accepter cette invitation et créer votre compte, merci de cliquer sur le lien ci-dessous :"
+  invitation_request_mailer:
+    invitation_request:
+      title: "Bonjour %{email},"
+      invitedto: "Quelqu'un avec l'ip %{userip} a demandé une invitation au %{appname}."
+      name: "Name: %{name}"
+      email: "Email: %{email} (ne sera pas montré aux autres utilisateurs)"
+      memo: "Memo: %{memo}"
+      warning: "Si c'est bien vous, suivez l'URL suivante pour confirmer votre demande et l'afficher aux autres utilisateurs."
+      deletemessage: "S'il ne s'agit pas de vous, vous pouvez effacer ce message."
   login:
     index:
       login: "Se connecter"

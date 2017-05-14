@@ -146,6 +146,15 @@ en:
       title: "Hello %{email},"
       invitedto: "The user %{user} has invited you to %{appname}"
       createaccount: "To accept this invitation and create an account, visit the URL below:"
+  invitation_request_mailer:
+    invitation_request:
+      title: "Hello %{email},"
+      invitedto: "Someone at %{userip} has submitted an invitation request to %{appname}."
+      name: "Name: %{name}"
+      email: "Email: %{email} (won't be displayed to other users)"
+      memo: "Memo: %{memo}"
+      warning: "If this is you, visit the URL below to confirm your request and display it to other logged-in users."
+      deletemessage: "If this is not you, you can delete this message."
   login:
     index:
       login: "Login"

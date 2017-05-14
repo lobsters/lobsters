@@ -433,10 +433,8 @@ class Comment < ActiveRecord::Base
     self.upvotes - self.downvotes
   end
 
-  def score_for_user(user)
-    if (user && user.is_moderator?) ||
-    (self.created_at && self.created_at < 24.hours.ago) ||
-    !SCORE_RANGE_TO_HIDE.include?(score)
+  def score_for_user(u)
+    if self.showing_downvotes_for_user?(u)
       score
     else
       "-"
@@ -445,6 +443,12 @@ class Comment < ActiveRecord::Base
 
   def short_id_url
     Rails.application.root_url + "c/#{self.short_id}"
+  end
+
+  def showing_downvotes_for_user?(u)
+    return (u && u.is_moderator?) ||
+      (self.created_at && self.created_at < 36.hours.ago) ||
+      !SCORE_RANGE_TO_HIDE.include?(self.score)
   end
 
   def to_param

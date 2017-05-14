@@ -101,8 +101,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
         <span class="reason">
           <% if comment.downvotes > 0 &&
-          ((comment.score <= 0 && comment.user_id == @user.try(:id)) ||
-          @user.try("is_moderator?")) %>
+          comment.showing_downvotes_for_user?(@user) &&
+          (comment.user_id == @user.try(:id) || @user.try("is_moderator?")) %>
             | <%= comment.vote_summary_for_user(@user).downcase %>
           <% elsif comment.current_vote && comment.current_vote[:vote] == -1 %>
             | -1

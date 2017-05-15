@@ -54,7 +54,10 @@ class ApplicationController < ActionController::Base
     end
 
     intensity = (@traffic * 7).floor + 50.0
-    color = rand(2000000) == 1 ? "0000%02x" : "%02x0000"
+    if (blue = (rand(2000000) == 1)) && @user
+      Rails.logger.info "  User #{@user.id} (#{@user.username}) saw blue logo"
+    end
+    color = (blue ? "0000%02x" : "%02x0000")
     @traffic_color = sprintf(color, intensity > 255 ? 255 : intensity)
 
     true

@@ -1,3 +1,8 @@
+class LoginBannedError < StandardError; end
+class LoginDeletedError < StandardError; end
+class LoginTOTPFailedError < StandardError; end
+class LoginFailedError < StandardError; end
+
 class LoginController < ApplicationController
   before_filter :authenticate_user
 
@@ -22,9 +27,11 @@ class LoginController < ApplicationController
       user = User.where(:username => params[:email]).first
     end
 
+    fail_reason = nil
+
     begin
       if !user
-        raise "no user"
+        raise LoginFailedError
       end
 
       if !user.authenticate(params[:password].to_s)
@@ -36,18 +43,16 @@ class LoginController < ApplicationController
           params[:password] = m[1]
           params[:totp] = m[2]
         else
-          raise "authentication failed"
+          raise LoginFailedError
         end
       end
 
       if user.is_banned?
-        raise "user is banned"
+        raise LoginBannedError
       end
 
       if !user.is_active?
-        user.undelete!
-        flash[:success] = "Your account has been reactivated and your " <<
-          "unmoderated comments have been undeleted."
+        raise LoginDeletedError
       end
 
       if !user.password_digest.to_s.match(/^\$2a\$#{BCrypt::Engine::DEFAULT_COST}\$/)
@@ -60,7 +65,7 @@ class LoginController < ApplicationController
           if user.authenticate_totp(params[:totp])
             # ok, fall through
           else
-            raise "invalid TOTP code"
+            raise LoginTOTPFailedError
           end
         else
           return respond_to do |format|
@@ -100,18 +105,24 @@ class LoginController < ApplicationController
           render :json => { :status => 1, :username => user.username }
         }
       end
-    rescue
+    rescue LoginBannedError
+      fail_reason = "Your account has been banned."
+    rescue LoginDeletedError
+      fail_reason = "Your account has been deleted."
+    rescue LoginTOTPFailedError
+      fail_reason = "Your TOTP code was invalid."
+    rescue LoginFailedError
+      fail_reason = "Invalid e-mail address and/or password."
     end
 
     respond_to do |format|
       format.html {
-        flash.now[:error] = "Invalid e-mail address and/or password."
+        flash.now[:error] = fail_reason
         @referer = params[:referer]
         index
       }
       format.json {
-        render :json => { :status => 0,
-          :error => "invalid 'email' and/or 'password' parameter" }
+        render :json => { :status => 0, :error => fail_reason }
       }
     end
   end

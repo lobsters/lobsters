@@ -372,7 +372,7 @@ fr:
       storysubmissions: "avec propositions d'infos"
       disabled: "désactivé"
       joined: "Inscrit :"
-      byinvitationfrom: "par invitation de"
+      byinvitationfrom: "par <a href=\"/u/%{user}\">invitation</a> de"
       banneduser: "Banni :"
       bannedby: "par"
       hats: "Chapeaux :"

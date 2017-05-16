@@ -362,7 +362,7 @@ en:
       storysubmissions: "with story submissions"
       disabled: "disabled"
       joined: "Joined:"
-      byinvitationfrom: "by invitation from"
+      byinvitationfrom: "by <a href=\"/u/%{user}\">invitation</a> from"
       banneduser: "Banned:"
       bannedby: "by"
       hats: "Hats:"

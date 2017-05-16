@@ -49,7 +49,7 @@
   <span class="d">
     <%= distance_of_time_in_words(@showing_user.created_at, Time.now) %>
     <% if @showing_user.invited_by_user %>
-      <%= t('.byinvitationfrom') %>
+      <%= raw(t('.byinvitationfrom', :user => @showing_user.username)) %>
       <%= link_to @showing_user.invited_by_user.try(:username),
         @showing_user.invited_by_user %>
     <% end %>

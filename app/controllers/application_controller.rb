@@ -50,13 +50,9 @@ class ApplicationController < ActionController::Base
       Rails.logger.info "  Traffic level: #{@traffic.to_i}"
     end
 
-    if rand(2000000) == 1
-      @traffic_color = sprintf("%02x%02x%02x",
-        0, 0, [ 255, (@traffic * 7).floor + 50.0 ].min)
-    else
-      @traffic_color = sprintf("%02x%02x%02x",
-        [ 255, (@traffic * 7).floor + 50.0 ].min, 0, 0)
-    end
+    intensity = (@traffic * 7).floor + 50.0
+    color = rand(2000000) == 1 ? "0000%02x" : "%02x0000"
+    @traffic_color = sprintf(color, intensity > 255 ? 255 : intensity)
 
     true
   end

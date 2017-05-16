@@ -25,6 +25,8 @@ fr:
       mentionsubject: "[%{appname}] %{author} vous a mentionné dans %{story}"
     invitation_mailer:
       subject: "[%{appname}] Vous avez été invité au %{appname}"
+    invitation_request_mailer:
+      subject: "[%{appname}] Confirmez votre demande d'invitation au %{appname}"
   models:
     comment:
       commentcannotbeblank: "Un commentaire ne peut pas être vide."

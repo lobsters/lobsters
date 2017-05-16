@@ -7,8 +7,7 @@ class InvitationRequestMailer < ActionMailer::Base
 
     mail(
       :to => invitation_request.email,
-      subject: "[#{Rails.application.name}] Confirm your invitation " <<
-        "request to " << Rails.application.name
+      subject: I18n.t('mailers.invitation_request_mailer.subject', :appname => "#{Rails.application.name}")
     )
   end
 end

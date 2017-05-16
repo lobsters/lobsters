@@ -13,6 +13,8 @@ en:
       mentionsubject: "[%{appname}] Mention from %{author} on %{story}"
     invitation_mailer:
       subject: "[%{appname}] You have been invited to %{appname}"
+    invitation_request_mailer:
+      subject: "[%{appname}] Confirm your invitation request to  %{appname}"
   models:
     comment:
       commentcannotbeblank: "A comment cannot be blank."

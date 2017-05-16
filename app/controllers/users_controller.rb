@@ -19,13 +19,14 @@ class UsersController < ApplicationController
     newest_user = User.last.id
 
     if params[:by].to_s == "karma"
-      render :text => Rails.cache.fetch("users_by_karma_#{newest_user}",
+      content = Rails.cache.fetch("users_by_karma_#{newest_user}",
       :expires_in => (60 * 60 * 24)) {
         @users = User.order("karma DESC, id ASC").to_a
         @user_count = @users.length
         @title << " By Karma"
-        render_to_string :action => "list"
+        render_to_string :action => "list", :layout => nil
       }
+      render :text => content, :layout => "application"
     elsif params[:moderators]
       @users = User.where("is_admin = ? OR is_moderator = ?", true, true).
         order("id ASC").to_a
@@ -33,14 +34,15 @@ class UsersController < ApplicationController
       @title = "Moderators and Administrators"
       render :action => "list"
     else
-      render :text => Rails.cache.fetch("users_tree_#{newest_user}",
+      content = Rails.cache.fetch("users_tree_#{newest_user}",
       :expires_in => (60 * 60 * 24)) {
         users = User.order("id DESC").to_a
         @user_count = users.length
         @users_by_parent = users.group_by(&:invited_by_user_id)
         @newest = User.order("id DESC").limit(10)
-        render_to_string :action => "tree"
+        render_to_string :action => "tree", :layout => nil
       }
+      render :text => content, :layout => "application"
     end
   end
 

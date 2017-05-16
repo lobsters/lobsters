@@ -274,7 +274,7 @@ class CommentsController < ApplicationController
     comments_by_thread_id = comments.group_by(&:thread_id)
     @threads = comments_by_thread_id.values_at(*thread_ids).compact
 
-    if @user && (@showing_user.id == @user.id)
+    if @user
       @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,
         comments.map(&:story_id).uniq)
 

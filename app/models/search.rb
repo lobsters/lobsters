@@ -96,14 +96,9 @@ class Search
     query = Riddle.escape(words)
 
     # go go gadget search
-    self.results = []
-    self.total_results = 0
-    begin
-      self.results = ThinkingSphinx.search query, opts
-      self.total_results = self.results.total_entries
-    rescue => e
-      Rails.logger.info "Error from Sphinx: #{e.inspect}"
-    end
+    self.total_results = -1
+    self.results = ThinkingSphinx.search query, opts
+    self.total_results = self.results.total_entries
 
     if self.page > self.page_count
       self.page = self.page_count
@@ -132,5 +127,10 @@ class Search
         end
       end
     end
+
+  rescue ThinkingSphinx::ConnectionError => e
+    self.results = []
+    self.total_results = -1
+    raise e
   end
 end

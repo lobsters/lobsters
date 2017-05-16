@@ -439,6 +439,7 @@ en:
       flashdeletedmessage: "Deleted message."
     search_controller:
       searchtitle: "Search"
+      flasherrorsearchcontroller: "Sorry, but the search engine is currently out of order"
     stories_controller:
       submitstorytitle: "Submit Story"
       editstorytitle: "Edit Story"

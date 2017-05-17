@@ -148,7 +148,7 @@ class LoginController < ApplicationController
       session.delete(:twofa_u)
       return redirect_to "/"
     else
-      flash[:error] = "Your TOTP code did not match.  Please try again."
+      flash[:error] = t('.totpcodenotmatch')
       return redirect_to "/login/2fa"
     end
   end

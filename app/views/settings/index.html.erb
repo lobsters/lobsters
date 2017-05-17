@@ -71,7 +71,7 @@
       <span>
       <% if @edit_user.totp_secret.present? %>
         <span style="color: green; font-weight: bold;">
-          <%= t('.enrolled2fa') %>
+          <%= t('.enabled2fa') %>
         </span> (<a href="/settings/2fa"><%= t('.disable2fa') %></a>)
       <% else %>
         <%= t('.disabled2fa') %> (<a href="/settings/2fa"><%= t('.enroll2fa') %></a>)

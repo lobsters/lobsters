@@ -76,7 +76,7 @@ class SettingsController < ApplicationController
   end
 
   def twofa
-    @title = "Two-Factor Authentication"
+    @title = t('.title')
   end
 
   def twofa_auth
@@ -86,22 +86,22 @@ class SettingsController < ApplicationController
 
       if @user.has_2fa?
         @user.disable_2fa!
-        flash[:success] = "Two-Factor Authentication has been disabled."
+        flash[:success] = t('.2fahasbeendisabled')
         return redirect_to "/settings"
       else
         return redirect_to twofa_enroll_url
       end
     else
-      flash[:error] = "Your password was not correct."
+      flash[:error] = t('.2fapassnotcorrect')
       return redirect_to twofa_url
     end
   end
 
   def twofa_enroll
-    @title = "Two-Factor Authentication"
+    @title = t('.title')
 
     if (Time.now.to_i - session[:last_authed].to_i) > TOTP_SESSION_TIMEOUT
-      flash[:error] = "Your enrollment period timed out."
+      flash[:error] = t('.enrollmenttimeout')
       return redirect_to twofa_url
     end
 
@@ -122,11 +122,11 @@ class SettingsController < ApplicationController
   end
 
   def twofa_verify
-    @title = "Two-Factor Authentication"
+    @title = t('.title')
 
     if ((Time.now.to_i - session[:last_authed].to_i) > TOTP_SESSION_TIMEOUT) ||
     !session[:totp_secret]
-      flash[:error] = "Your enrollment period timed out."
+      flash[:error] = t('.enrollmenttimeout')
       return redirect_to twofa_url
     end
   end
@@ -134,7 +134,7 @@ class SettingsController < ApplicationController
   def twofa_update
     if ((Time.now.to_i - session[:last_authed].to_i) > TOTP_SESSION_TIMEOUT) ||
     !session[:totp_secret]
-      flash[:error] = "Your enrollment period timed out."
+      flash[:error] = t('.enrollmenttimeout')
       return redirect_to twofa_url
     end
 
@@ -146,13 +146,11 @@ class SettingsController < ApplicationController
 
       session[:u] = @user.session_token
 
-      flash[:success] = "Two-Factor Authentication has been enabled on " <<
-        "your account."
+      flash[:success] = t('.2fahasbeenenabled')
       session.delete(:totp_secret)
       return redirect_to "/settings"
     else
-      flash[:error] = "Your TOTP code was invalid, please verify the " <<
-        "current code in your TOTP application."
+      flash[:error] = t('.totpinvalid')
       return redirect_to twofa_verify_url
     end
   end

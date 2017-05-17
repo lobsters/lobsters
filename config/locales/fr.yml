@@ -293,8 +293,8 @@ fr:
       twofactorauth: "Authentification à deux facteurs :"
       disable2fa: "Désactiver"
       enroll2fa: "Activer"
-      disabled2fa: "Désactivé"
-      enabled2fa: "Activé"
+      disabled2fa: "Désactivée"
+      enabled2fa: "Activée"
     pushover:
       pushovernotconfigured: "Ce site n'est pas configuré pour le Pushover"
     pushover_callback:
@@ -302,6 +302,33 @@ fr:
       pushovernorandomtokenurl: "Pas de jeton alétoire présent dans l'url"
       accountsetuppushover: "Votre compte est maintenant configuré pour les notifications Pushover."
       accountnolongersetuppushover: "Votre compte n'est plus configuré pour les notifications Pushover."
+    twofa:
+      title: "Authentification à deux facteurs"
+      backtosettings: "Retour aux paramètres"
+      disable2fa: "Désactiver l'authentification à deux facteurs"
+      continue: "Continuer"
+      currentpassword: "Mot de passe actuel :"
+      turnoff: "Pour désactiver l'authentification à deux facteurs, entrez votre mot de passe actuel :"
+      turnon: "Pour activer l'authentification à deux facteurs pour votre compte, entrez votre mot de passe actuel :"
+    twofa_auth:
+      2fahasbeendisabled: "L'authentification à deux facteurs a été désactivée sur votre compte"
+      2fapassnotcorrect: "Mot de passe incorrect"
+    twofa_enroll:
+      title: "Authentification à deux facteurs"
+      backtosettings: "Retour aux paramètres"
+      enrollmenttimeout: "Le délai d'attente est dépassé"
+      scanqrcode: "Scannez le QR code ci-dessous ou cliquez dessus pour l'ouvrir dans l'application <a href=\"https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\" target=\"_blank\">TOTP</a> de votre choix :"
+      registring: "Une fois le processus d'enregistrement de vos applications TOTP achevé, passez à l'écran suivant pour vérifier et activer l'authentification à deux facteurs pour votre compte."
+      verifyenable: "Vérifier et Activer"
+    twofa_update:
+      enrollmenttimeout: "Le délai d'attente est dépassé"
+      2fahasbeenenabled: "L'authentification à deux facteurs a été activée sur votre compte"
+      totpinvalid: "Votre code TOTP est invalide, merci de vérifier le code actuellement affiché par votre application TOTP"
+    twofa_verify:
+      title: "Authentification à deux facteurs"
+      enrollmenttimeout: "Le délai d'attente est dépassé"
+      enablecode: "Afin d'activer l'authentification à deux facteurs pour votre compte en utilisant votre nouveau secret TOTP, entrez le code à 6 chiffres de votre application :"
+      verifyenable: "Vérifier et Activer"
     update:
       updatesettingsflash: "Paramètres mis à jour avec succès."
   stories:

@@ -8,8 +8,7 @@
 
   <%= form_tag twofa_update_url do %>
     <p>
-    To enable Two-Factor Authentication on your account using your new TOTP
-    secret, enter the six-digit code from your TOTP application:
+    <%= t('.enablecode') %>
     </p>
 
     <div class="boxline">
@@ -19,6 +18,6 @@
     </div>
 
     <p>
-    <%= submit_tag "Verify and Enable" %>
+    <%= submit_tag t('.verifyenable') %>
   <% end %>
 </div>

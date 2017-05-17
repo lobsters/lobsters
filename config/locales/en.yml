@@ -292,6 +292,33 @@ en:
       pushovernorandomtokenurl: "No random token present in URL"
       accountsetuppushover: "Your account is now setup for Pushover notifications."
       accountnolongersetuppushover: "Your account is no longer setup for Pushover notifications."
+    twofa:
+      title: "Two-Factor Authentication"
+      backtosettings: "Back to Settings"
+      disable2fa: "Disable Two-Factor Authentication"
+      continue: "Continue"
+      currentpassword: "Current Password:"
+      turnoff: "To turn off two-factor authentication for your account, enter your current password:"
+      turnon: "To begin the two-factor authentication enrollment for your account, enter your current password:"
+    twofa_auth:
+      2fahasbeendisabled: "Two-Factor Authentication has been disabled on your account."
+      2fapassnotcorrect: "Your password was not correct."
+    twofa_enroll:
+      title: "Two-Factor Authentication"
+      backtosettings: "Back to Settings"
+      enrollmenttimeout: "Your enrollment period timed out."
+      scanqrcode: "Scan the QR code below or click on it to open in your <a href=\"https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\" target=\"_blank\">TOTP</a> application of choice:"
+      registring: "Once you have finished registering with your TOTP application, proceed to the next screen to verify your current TOTP code and actually enable Two-Factor Authentication on your account."
+      verifyenable: "Verify and Enable"
+    twofa_update:
+      enrollmenttimeout: "Your enrollment period timed out."
+      2fahasbeenenabled: "Two-Factor Authentication has been enabled on your account."
+      totpinvalid: "Your TOTP code was invalid, please verify the current code in your TOTP application."
+    twofa_verify:
+      title: "Two-Factor Authentication"
+      enrollmenttimeout: "Your enrollment period timed out."
+      enablecode: "To enable Two-Factor Authentication on your account using your new TOTP secret, enter the six-digit code from your TOTP application:"
+      verifyenable: "Verify and Enable"
     update:
       updatesettingsflash: "Successfully updated settings."
   stories:

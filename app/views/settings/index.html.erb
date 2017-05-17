@@ -63,18 +63,18 @@
     <br>
 
     <div class="legend">
-      Security Settings
+      <%= t('.securitysettings') %>
     </div>
 
     <div class="boxline">
-      <%= f.label :twofa, "Two-Factor Auth:", :class => "required" %>
+      <%= f.label :twofa, t('.twofactorauth'), :class => "required" %>
       <span>
       <% if @edit_user.totp_secret.present? %>
         <span style="color: green; font-weight: bold;">
-          Enabled
-        </span> (<a href="/settings/2fa">Disable</a>)
+          <%= t('.enrolled2fa') %>
+        </span> (<a href="/settings/2fa"><%= t('.disable2fa') %></a>)
       <% else %>
-        Disabled (<a href="/settings/2fa">Enroll</a>)
+        <%= t('.disabled2fa') %> (<a href="/settings/2fa"><%= t('.enroll2fa') %></a>)
       <% end %>
       </span>
     </div>

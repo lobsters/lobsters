@@ -289,6 +289,12 @@ fr:
       deleteaccounttext: "Pour supprimer définitivement votre compte, vérifiez votre mot de passe actuel ci-dessous. Votre compte sera passé à l'état supprimé, vos commentaires seront marqués comme supprimés et ne seront plus lisibles par les autres utilisateurs, vos messages privés seront également supprimés. Vos infos proposées ne seront pas supprimées. Votre nom d'utilisateur restera réservé et ne sera pas disponible pour un autre compte."
       verifypassword: "Vérification du mot de passe :"
       deleteaccountconfirmation: "Oui, supprimez mon compte"
+      securitysettings: "Paramètres de sécurité"
+      twofactorauth: "Authentification à deux facteurs :"
+      disable2fa: "Désactiver"
+      enroll2fa: "Activer"
+      disabled2fa: "Désactivé"
+      enabled2fa: "Activé"
     pushover:
       pushovernotconfigured: "Ce site n'est pas configuré pour le Pushover"
     pushover_callback:

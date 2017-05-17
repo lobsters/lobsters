@@ -279,6 +279,12 @@ en:
       deleteaccounttext: "To permanently delete your account, verify your current password below. Your account will be put into a deleted state, your comments will be marked as deleted and no longer readable by any other users, and your private messages will be deleted. Your submitted stories will not be deleted. Your username will remain reserved and will not be available to be used on any other account."
       verifypassword: "Verify Password:"
       deleteaccountconfirmation: "Yes, Delete My Account"
+      securitysettings: "Security Settings"
+      twofactorauth: "Two-Factor Auth:"
+      disable2fa: "Disable"
+      enroll2fa: "Enroll"
+      disabled2fa: "Disabled"
+      enabled2fa: "Enabled"
     pushover:
       pushovernotconfigured: "This site is not configured for Pushover"
     pushover_callback:

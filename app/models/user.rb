@@ -45,6 +45,7 @@ class User < ActiveRecord::Base
     s.boolean :show_story_previews, :default => false
     s.boolean :show_submitted_story_threads, :default => false
     s.boolean :hide_dragons, :default => false
+    s.string :totp_secret
   end
 
   validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
@@ -114,6 +115,11 @@ class User < ActiveRecord::Base
     h = super(:only => attrs)
     h[:avatar_url] = avatar_url
     h
+  end
+
+  def authenticate_totp(code)
+    totp = ROTP::TOTP.new(self.totp_secret)
+    totp.verify(code)
   end
 
   def avatar_url(size = 100)
@@ -276,6 +282,11 @@ class User < ActiveRecord::Base
     end
   end
 
+  def disable_2fa!
+    self.totp_secret = nil
+    self.save!
+  end
+
   def grant_moderatorship_by_user!(user)
     User.transaction do
       self.is_moderator = true
@@ -302,6 +313,10 @@ class User < ActiveRecord::Base
     self.save!
 
     PasswordReset.password_reset_link(self, ip).deliver
+  end
+
+  def has_2fa?
+    self.totp_secret.present?
   end
 
   def is_active?

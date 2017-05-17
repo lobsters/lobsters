@@ -32,6 +32,8 @@ Lobsters::Application.routes.draw do
     get "/login" => "login#index"
     post "/login" => "login#login"
     post "/logout" => "login#logout"
+    get "/login/2fa" => "login#twofa"
+    post "/login/2fa_verify" => "login#twofa_verify", :as => "twofa_login"
 
     get "/signup" => "signup#index"
     post "/signup" => "signup#signup"
@@ -107,6 +109,14 @@ Lobsters::Application.routes.draw do
     get "/settings/pushover_callback" => "settings#pushover_callback"
     post "/settings/delete_account" => "settings#delete_account",
       :as => "delete_account"
+    get "/settings/2fa" => "settings#twofa", :as => "twofa"
+    post "/settings/2fa_auth" => "settings#twofa_auth", :as => "twofa_auth"
+    get "/settings/2fa_enroll" => "settings#twofa_enroll",
+      :as => "twofa_enroll"
+    get "/settings/2fa_verify" => "settings#twofa_verify",
+      :as => "twofa_verify"
+    post "/settings/2fa_update" => "settings#twofa_update",
+      :as => "twofa_update"
 
     get "/filters" => "filters#index"
     post "/filters" => "filters#update"

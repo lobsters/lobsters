@@ -1,0 +1,25 @@
+<div class="box wide">
+  <div class="legend right">
+    <a href="/settings">Back to Settings</a>
+  </div>
+  <div class="legend">
+    <%= @title %>
+  </div>
+
+  <p>
+  Scan the QR code below or click on it to open in your <a
+  href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm"
+  target="_blank">TOTP</a> application of choice:
+  </p>
+
+  <%= raw @qr_svg %>
+
+  <p>
+  Once you have finished registering with your TOTP application, proceed to
+  the next screen to verify your current TOTP code and actually enable
+  Two-Factor Authentication on your account.
+  </p>
+
+  <p>
+  <%= button_to "Verify and Enable", twofa_verify_url, :method => :get %>
+</div>

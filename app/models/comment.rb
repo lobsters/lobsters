@@ -176,7 +176,7 @@ class Comment < ActiveRecord::Base
     m = Moderation.new
     m.comment_id = self.id
     m.moderator_user_id = user.id
-    m.action = "turned into a dragon"
+    m.action = I18n.t('models.comment.turnedintodragon')
     m.save
 
     self.save(:validate => false)
@@ -191,7 +191,7 @@ class Comment < ActiveRecord::Base
     m = Moderation.new
     m.comment_id = self.id
     m.moderator_user_id = user.id
-    m.action = "slayed dragon"
+    m.action = I18n.t('models.comment.slayeddragon')
     m.save
 
     self.save(:validate => false)

@@ -32,6 +32,8 @@ fr:
       storyidcannotbeblank: "Un ID d'info ne peut pas être vide."
       deletedcomment: "commentaire supprimé"
       threadremovedby: "Fil supprimé par le modérateur %{modoname} : %{modreason}"
+      turnedintodragon: "transformé en dragon"
+      slayeddragon: "le dragon a été terrassé"
     moderation:
       storyeditedby: "Votre info a été éditée par "
       usersuggestions: "suggestions d'utilisateur"

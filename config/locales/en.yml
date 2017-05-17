@@ -20,6 +20,8 @@ en:
       storyidcannotbeblank: "A story ID cannot be blank."
       deletedcomment: "deleted comment"
       threadremovedby: "Thread removed by moderator %{modoname} : %{modreason}" 
+      turnedintodragon: "turned into a dragon"
+      slayeddragon: "slayed dragon"
     moderation:
       storyeditedby: "Your story has been edited by "
       usersuggestions: "user suggestions"

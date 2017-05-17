@@ -232,6 +232,12 @@ button:disabled {
 	color: gray;
 }
 
+.totp_code::-webkit-inner-spin-button,
+.totp_code::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 
 /* outliners */
 

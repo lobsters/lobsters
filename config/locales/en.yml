@@ -250,6 +250,7 @@ en:
       accountsettings: "Account Settings"
       username: "Username:"
       password: "New Password:"
+      currentpassword: "Current Password:"
       confirmpassword: "Confirm Password:"
       emailaddress: "E-mail Address:"
       gravatarized: "<a href=\"http://www.gravatar.com/\" target=\"_blank\">Gravatar</a>'ized"
@@ -328,6 +329,7 @@ en:
       verifyenable: "Verify and Enable"
     update:
       updatesettingsflash: "Successfully updated settings."
+      passwordnotcorrect: "Your password was not correct."
   stories:
     edit:
       edit: "Edit Story"

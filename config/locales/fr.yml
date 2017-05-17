@@ -260,6 +260,7 @@ fr:
       accountsettings: "Paramètres du compte"
       username: "Utilisateur :"
       password: "Nouveau mot de passe :"
+      currentpassword: "Mot de passe actuel :"
       confirmpassword: "Confirmer le mot de passe :"
       emailaddress: "Adresse e-mail :"
       gravatarized: "<a href=\"http://www.gravatar.com/\" target=\"_blank\">Gravatar</a>isé"
@@ -338,6 +339,7 @@ fr:
       verifyenable: "Vérifier et Activer"
     update:
       updatesettingsflash: "Paramètres mis à jour avec succès."
+      passwordnotcorrect: "Le mot de passe est incorrect."
   stories:
     edit:
       edit: "Éditer l'info"

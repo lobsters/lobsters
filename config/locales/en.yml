@@ -101,6 +101,8 @@ en:
       delete: "delete"
       reply: "reply"
       about: "on:"
+      dragon: "dragon"
+      undragon: "undragon"
   email_message:
     notification.text:
       replyat: "Reply at "
@@ -345,6 +347,8 @@ en:
       preview: "Preview"
       submit: "Submit a Story"
       submitbutton: "Submit"
+    show:
+      toggledragons: "&mdash; here be dragons &mdash;"
   users:
     list:
       administrator: "administrator"

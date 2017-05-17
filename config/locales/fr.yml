@@ -103,6 +103,8 @@ fr:
       delete: "supprimer"
       reply: "répondre"
       about: "sur :"
+      dragon: "dragon"
+      undragon: "non-dragon"
   global:
     markdownhelp:
       emphasizedtext: "italique"
@@ -355,6 +357,8 @@ fr:
       preview: "Aperçu"
       submit: "Soumettre une info"
       submitbutton: "Soumettre"
+    show:
+      toggledragons: "&mdash; voici les dragons &mdash;"
   users:
     list:
       administrator: "administrateur"

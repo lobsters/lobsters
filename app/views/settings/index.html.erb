@@ -38,7 +38,7 @@
 
     <div class="boxline">
       <%= f.label :email, t('.emailaddress'), :class => "required" %>
-      <%= f.text_field :email, :size => 40 %>
+      <%= f.email_field :email, :size => 40 %>
       <span class="hint">
         <%= raw(t('.gravatarized')) %>
       </span>

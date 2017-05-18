@@ -328,6 +328,10 @@ class Story < ActiveRecord::Base
       "hotness = '#{self.calculated_hotness}' WHERE id = #{self.id.to_i}")
   end
 
+  def has_suggestions?
+    self.suggested_taggings.any? || self.suggested_titles.any?
+  end
+
   def hider_count
     @hider_count ||= HiddenStory.where(:story_id => self.id).count
   end

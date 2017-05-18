@@ -339,7 +339,7 @@ fr:
       verifyenable: "Vérifier et Activer"
     update:
       updatesettingsflash: "Paramètres mis à jour avec succès."
-      passwordnotcorrect: "Le mot de passe est incorrect."
+      passwordnotcorrect: "Le mot de passe courant n'a pas été entré correctement."
   stories:
     edit:
       edit: "Éditer l'info"

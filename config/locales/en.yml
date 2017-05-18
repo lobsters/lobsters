@@ -329,7 +329,7 @@ en:
       verifyenable: "Verify and Enable"
     update:
       updatesettingsflash: "Successfully updated settings."
-      passwordnotcorrect: "Your password was not correct."
+      passwordnotcorrect: "Your current password was not entered correctly."
   stories:
     edit:
       edit: "Edit Story"

@@ -498,7 +498,7 @@ li .link {
 }
 
 li .link a {
-	font-size: 11pt;
+	font-size: 11.5pt;
 	text-decoration: none;
 }
 
@@ -562,7 +562,7 @@ li .comment_folder_button:checked ~ ol.comments li {
 
 li .byline {
 	color: #888;
-	font-size: 9pt;
+	font-size: 9.5pt;
 }
 li .byline > img.avatar {
 	margin-bottom: -5px;
@@ -698,6 +698,7 @@ a#story_text_expander {
 }
 
 div.comment_text {
+	font-size: 10.5pt;
 	max-width: 700px;
 	word-wrap: break-word;
 }
@@ -735,13 +736,6 @@ div.comment_text p:first-child {
 
 div.comment_text code {
 	line-height: 1.2em;
-}
-
-div.comment_actions a {
-	color: #888;
-	font-weight: bold;
-	font-size: 8.5pt;
-	text-decoration: none;
 }
 
 div.dragons {

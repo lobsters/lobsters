@@ -27,8 +27,17 @@ class LoginController < ApplicationController
         raise "no user"
       end
 
-      if !user.try(:authenticate, params[:password].to_s)
-        raise "authentication failed"
+      if !user.authenticate(params[:password].to_s)
+        # if the user has 2fa enabled and the password looks like it has a totp
+        # code attached, separate them
+        if user.has_2fa? &&
+        (m = params[:password].to_s.match(/\A(.+):(\d+)\z/)) &&
+        user.authenticate(m[1])
+          params[:password] = m[1]
+          params[:totp] = m[2]
+        else
+          raise "authentication failed"
+        end
       end
 
       if user.is_banned?
@@ -48,7 +57,9 @@ class LoginController < ApplicationController
 
       if user.has_2fa?
         if params[:totp].present?
-          if !user.authenticate_totp(params[:totp])
+          if user.authenticate_totp(params[:totp])
+            # ok, fall through
+          else
             raise "invalid TOTP code"
           end
         else

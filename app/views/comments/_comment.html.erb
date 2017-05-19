@@ -38,8 +38,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% end %>
 
       <% if (@user && @user.show_avatars?) || !@user %>
-        <a href="/u/<%= comment.user.username %>"><img
-          src="<%= comment.user.avatar_url(16) %>" class="avatar"></a>
+        <a href="/u/<%= comment.user.username %>"><%=
+          avatar_img(comment.user, 16) %></a>
       <% end %>
 
       <a href="/u/<%= comment.user.username %>"

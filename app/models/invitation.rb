@@ -24,6 +24,6 @@ class Invitation < ActiveRecord::Base
   end
 
   def send_email
-    InvitationMailer.invitation(self).deliver
+    InvitationMailer.invitation(self).deliver_now
   end
 end

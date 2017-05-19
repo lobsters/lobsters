@@ -257,7 +257,7 @@ class Comment < ActiveRecord::Base
 
         if u.email_mentions?
           begin
-            EmailReply.mention(self, u).deliver
+            EmailReply.mention(self, u).deliver_now
           rescue => e
             Rails.logger.error "error e-mailing #{u.email}: #{e}"
           end
@@ -281,7 +281,7 @@ class Comment < ActiveRecord::Base
     u.id != self.user.id
       if u.email_replies?
         begin
-          EmailReply.reply(self, u).deliver
+          EmailReply.reply(self, u).deliver_now
         rescue => e
           Rails.logger.error "error e-mailing #{u.email}: #{e}"
         end

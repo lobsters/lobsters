@@ -123,6 +123,41 @@ en:
       pretextdesc: "prefix text with at least<tt>&nbsp;&nbsp;&nbsp;&nbsp;4 spaces</tt>"
       inlineimage: "(inline image)"
       inlineimagedesc: "![alt text](http://example.com/image.jpg)</tt> (only allowed in story text)"
+  hats:
+    build_request:
+      title: "Request a Hat"
+      description: "<p>A hat is a formal, verified, way of posting a comment while speaking for a project, organization, or company.  Each user may have multiple hats, one of which may be worn at any time when posting a comment or sending a private message.</p><p>Hats are intended for core project developers and company employees that are authorized to make comments on behalf of those organizations, and are usually reserved for notable projects and organizations.  Hats are not intended to list every contribution a person has made to any software project.</p><p>Hats will not be authorized for occasional contributors to projects, developers of projects which are not widely known, past employees of companies, or other situations where it cannot be verified that one is authorized to represent that organization.  In general, unless one has an e-mail address at a compay domain or have commit access to a project, a hat will not be authorized.</p><p>To request a hat for your account, provide a short description of the hat (e.g., \"OpenBSD Developer\"), a public link that will be shown when hovering over the hat that users can see, such as your e-mail address at that project or company, or a link to a company website showing your employment, and private comments that will be seen only by moderators during approval.</p><p>Once your hat is requested, a moderator will verify your request by e-mailing the address you submitted as the link, or doing some other manual verification of project association.</p>"
+      hat: "Hat:"
+      hatplaceholder: "XYZ Project Member"
+      link: "Link:"
+      linkplaceholder: "user@project.org, or a URL to an employment page"
+      comment: "Comment:"
+      commentplaceholder: "Will only be shown to moderators during approval"
+      requesthatbutton: "Request Hat"
+    create_request:
+      submittedhatrequest: "Successfully submitted hat request."
+    index:
+      title: "Hats"
+      description: "A hat is a formal, verified, way of posting a comment while speaking for a project, organization, or company.  Each user may have multiple hats, one of which may be selected to be worn when posting a comment or sending a private message."
+      request: "Request Hat"
+      user: "User"
+      hat: "Hat"
+      link: "Link"
+    reject_request:
+      requestedhatrequest: "Successfully rejected hat request."
+    requests_index:
+      title: "Requested Hats"
+      nohatrequests: "No hat requests."
+      user: "User:"
+      hat: "Hat:"
+      link: "Link:"
+      comment: "Comment:"
+      approve: Approve Hat Request"
+      reason: "Reason:"
+      reject: "Reject Hat Request"
+      hator: "or"
+    approve_request:
+      approvedhatrequest: "Successfully approved hat request."
   home:
     index:
       homerecentsdesc: "<em>The <a href=\"/newest\">newest</a> stories with a random sampling of recently submitted stories that have not yet reached the front page.</em>"

@@ -28,7 +28,7 @@ class HatsController < ApplicationController
     @hat_request.comment = params[:hat_request][:comment]
 
     if @hat_request.save
-      flash[:success] = "Successfully submitted hat request."
+      flash[:success] = t('.submittedhatrequest')
       return redirect_to "/hats"
     end
 
@@ -47,7 +47,7 @@ class HatsController < ApplicationController
       permit(:hat, :link))
     @hat_request.approve_by_user!(@user)
 
-    flash[:success] = "Successfully approved hat request."
+    flash[:success] = t('.approvedhatrequest')
 
     return redirect_to "/hats/requests"
   end
@@ -57,7 +57,7 @@ class HatsController < ApplicationController
     @hat_request.reject_by_user_for_reason!(@user,
       params[:hat_request][:rejection_comment])
 
-    flash[:success] = "Successfully rejected hat request."
+    flash[:success] = t('.rejectedhatrequest')
 
     return redirect_to "/hats/requests"
   end

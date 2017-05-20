@@ -3,8 +3,12 @@ class Pushover
   cattr_accessor :API_TOKEN
   cattr_accessor :SUBSCRIPTION_CODE
 
+  def self.enabled?
+    self.API_TOKEN.present?
+  end
+
   def self.push(user, params)
-    if !@@API_TOKEN
+    if !self.enabled?
       return
     end
 
@@ -15,7 +19,7 @@ class Pushover
 
       s = Sponge.new
       s.fetch("https://api.pushover.net/1/messages.json", :post, {
-        :token => @@API_TOKEN,
+        :token => self.API_TOKEN,
         :user => user,
       }.merge(params))
     rescue => e
@@ -24,7 +28,7 @@ class Pushover
   end
 
   def self.subscription_url(params)
-    u = "https://pushover.net/subscribe/#{@@SUBSCRIPTION_CODE}"
+    u = "https://pushover.net/subscribe/#{self.SUBSCRIPTION_CODE}"
     u << "?success=#{CGI.escape(params[:success])}"
     u << "&failure=#{CGI.escape(params[:failure])}"
     u

@@ -300,7 +300,7 @@ en:
       commentreplynotificationsettings: "Comment Reply Notification Settings"
       receiveemail: "Receive E-mail:"
       receivepushover: "Receive Pushover Alert:"
-      requirepushover: "Requires Pushover subscription above"
+      requirepushover: "Requires Pushover subscription below"
       commentmentionnotificationsettings: "Comment Mention Notification Settings"
       privatemessagenotificationsettings: "Private Message Notification Settings"
       submittedstorycommentsettings: "Submitted Story Comment Settings"

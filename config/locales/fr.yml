@@ -310,7 +310,7 @@ fr:
       commentreplynotificationsettings: "Paramètres de notification de réponse à un commentaire"
       receiveemail: "Recevoir un e-mail :"
       receivepushover: "Recevoir une alerte Pushover :"
-      requirepushover: "Requière un abonnement Pushover ci-dessus"
+      requirepushover: "Requière un abonnement Pushover ci-dessous"
       commentmentionnotificationsettings: "Paramètres de notification de mention d'un commentaire"
       privatemessagenotificationsettings: "Paramètres de notification de message privé" 
       submittedstorycommentsettings: "Paramètres de commentaires relatifs à vos infos"

@@ -185,7 +185,8 @@ class Story < ActiveRecord::Base
   end
 
   def calculated_hotness
-    base = self.tags.map{|t| t.hotness_mod }.sum
+    base = self.tags.map{|t| t.hotness_mod }.sum +
+      (self.user_is_author ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
     cpoints = self.comments.

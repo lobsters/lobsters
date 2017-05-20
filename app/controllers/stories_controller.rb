@@ -134,8 +134,8 @@ class StoriesController < ApplicationController
 
     @short_url = @story.short_id_url
 
-    @comments = @story.merged_comments.includes(:user, :story,
-      :hat).arrange_for_user(@user)
+    @comments = @story.merged_comments.includes(:user, :story, :hat,
+      :votes => :user).arrange_for_user(@user)
 
     @force_show_thread_id = nil
 

@@ -286,7 +286,7 @@ class CommentsController < ApplicationController
     comments = Comment.where(
       :thread_id => thread_ids
     ).includes(
-      :user, :story
+      :user, :story, :hat, :votes => :user
     ).arrange_for_user(
       @showing_user
     )

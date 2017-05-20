@@ -7,7 +7,7 @@ class Markdowner
       return ""
     end
 
-    exts = [:tagfilter, :autolink]
+    exts = [:tagfilter, :autolink, :strikethrough]
     root = CommonMarker.render_doc(text.to_s, [:SMART], exts)
 
     unless opts[:disable_profile_links]

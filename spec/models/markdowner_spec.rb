@@ -35,4 +35,17 @@ describe Markdowner do
       "<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"nofollow\">" <<
         "test</a></p>"
   end
+
+  it "correctly adds nofollow" do
+    Markdowner.to_html("[ex](http://example.com)").should ==
+      "<p><a href=\"http://example.com\" rel=\"nofollow\">" <<
+        "ex</a></p>"
+
+    Markdowner.to_html("[ex](//example.com)").should ==
+      "<p><a href=\"//example.com\" rel=\"nofollow\">" <<
+        "ex</a></p>"
+
+    Markdowner.to_html("[ex](/u/abc)").should ==
+      "<p><a href=\"/u/abc\">ex</a></p>"
+  end
 end

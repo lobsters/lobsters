@@ -88,24 +88,6 @@
     <br>
 
     <div class="legend">
-      <%= t('.notificationsettings') %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :pushover_user_key,
-        raw(t(".pushover")),
-        :class => "required" %>
-      <%= link_to((f.object.pushover_user_key.present??
-         t('.managepushoversubscription') : t('.subscribewithpushover')),
-        "/settings/pushover", :class => "pushover_button", :method => :post) %>
-      <span class="hint">
-        <%= t('.foroptionalcomment') %>
-      </span>
-    </div>
-
-    <br>
-
-    <div class="legend">
       <%= t('.commentreplynotificationsettings') %>
     </div>
 

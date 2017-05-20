@@ -26,7 +26,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
     </span>
     <% if story.markeddown_description.present? %>
-      <a class="description_present" title="<%= t '.additionaltext' %>" href="<%= story.comments_path %>">&#x2636;</a>
+      <a class="description_present" title="<%= truncate(story.description,
+        :length => 500) %>" href="<%= story.comments_path %>">&#x2636;</a>
     <% end %>
     <% if story.can_be_seen_by_user?(@user) %>
       <span class="tags">

@@ -8,6 +8,9 @@ class ApplicationController < ActionController::Base
   TAG_FILTER_COOKIE = :tag_filters
 
   def authenticate_user
+    # eagerly evaluate, in case this triggers an IpSpoofAttackError
+    request.remote_ip
+
     if session[:u] &&
     (user = User.where(:session_token => session[:u].to_s).first) &&
     user.is_active?

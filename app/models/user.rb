@@ -115,7 +115,13 @@ class User < ActiveRecord::Base
     attrs.push :about
 
     h = super(:only => attrs)
-    h[:avatar_url] = avatar_url
+
+    h[:avatar_url] = self.avatar_url
+
+    if self.github_username.present?
+      h[:github_username] = self.github_username
+    end
+
     h
   end
 

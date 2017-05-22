@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170413161450) do
+ActiveRecord::Schema.define(version: 20170522144135) do
 
   create_table "comments", force: :cascade do |t|
     t.datetime "created_at",                                                                    null: false
@@ -30,7 +30,6 @@ ActiveRecord::Schema.define(version: 20170413161450) do
     t.boolean  "is_moderated",                                                  default: false
     t.boolean  "is_from_email",                                                 default: false
     t.integer  "hat_id",             limit: 4
-    t.boolean  "is_dragon",                                                     default: false
   end
 
   add_index "comments", ["confidence"], name: "confidence_idx", using: :btree

@@ -748,23 +748,6 @@ div.comment_text code {
 	line-height: 1.2em;
 }
 
-div.dragons {
-}
-.dragon_text {
-	background-color: #f8f8f8;
-	color: gray;
-	font-style: italic;
-	margin: 1em;
-	padding: 2em 0 2.5em 0;
-	text-align: center;
-}
-.dragon_text a {
-	color: gray;
-}
-.dragon_threads.hidden {
-	display: none;
-}
-
 a.pagelink {
 	border: 1px solid #ddd;
 	background-color: #fbfbfb;

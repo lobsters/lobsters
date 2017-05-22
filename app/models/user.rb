@@ -44,7 +44,6 @@ class User < ActiveRecord::Base
     s.boolean :show_avatars, :default => true
     s.boolean :show_story_previews, :default => false
     s.boolean :show_submitted_story_threads, :default => false
-    s.boolean :hide_dragons, :default => false
     s.string :totp_secret
     s.string :github_oauth_token
     s.string :github_username

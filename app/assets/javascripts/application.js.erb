@@ -339,16 +339,6 @@ $(document).ready(function() {
     return Lobsters.moderateStory(this);
   }),
 
-  $(".toggle_dragons").click(function(a) {
-    var c = $(".dragon_threads").first();
-    if (c) {
-      if (c.hasClass("hidden"))
-        c.removeClass("hidden");
-      else
-        c.addClass("hidden");
-    }
-  }),
-
   $(document).on("click", "a.comment_replier", function() {
     if (!Lobsters.curUser) {
       Lobsters.bounceToLogin();
@@ -425,25 +415,6 @@ $(document).ready(function() {
       $.post("/comments/" + $(li).attr("data-shortid") + "/undelete",
       function(d) {
         $(li).replaceWith(d);
-      });
-    }
-  });
-
-  $(document).on("click", "a.comment_dragon", function() {
-    if (confirm("Are you sure you want to mark this thread?")) {
-      var li = $(this).closest(".comment");
-      $.post("/comments/" + $(li).attr("data-shortid") + "/dragon",
-      function(d) {
-        window.location.reload();
-      });
-    }
-  });
-  $(document).on("click", "a.comment_undragon", function() {
-    if (confirm("Are you sure you want to unmark this thread?")) {
-      var li = $(this).closest(".comment");
-      $.post("/comments/" + $(li).attr("data-shortid") + "/undragon",
-      function(d) {
-        window.location.reload();
       });
     }
   });

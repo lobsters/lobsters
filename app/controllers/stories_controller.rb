@@ -163,6 +163,10 @@ class StoriesController < ApplicationController
             "apple-touch-icon-144.png",
         }
 
+        if @story.user.twitter_username.present?
+          @meta_tags["twitter:creator"] = "@" + @story.user.twitter_username
+        end
+
         load_user_votes
 
         render :action => "show"

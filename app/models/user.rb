@@ -69,6 +69,8 @@ class User < ActiveRecord::Base
     end
   end
 
+  scope :active, -> { where(:banned_at => nil, :deleted_at => nil) }
+
   before_save :check_session_token
   before_validation :on => :create do
     self.create_rss_token

@@ -210,6 +210,9 @@ fr:
       password: "Mot de passe :"
       again: "(encore):"
       setpassbutton: "Changer le mot de passe"
+      passwordreset: "Votre mot de passe a été changé"
+      couldnotresetpassword: "Le mot de passe n'a pas pu être changé."
+      invalidresettoken: "Jeton de changement invalide. Il a pu déjà être utilisé ou mal copié."
     twofa:
       login2fa: "Identification par authentification à deux facteurs"
       logintotpcode: "Entrez le code TOTP affiché par votre application :"

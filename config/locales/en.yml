@@ -210,6 +210,9 @@ en:
       password: "New Password:"
       again: "(Again):"
       setpassbutton: "Set New Password"
+      passwordreset: "Your password has been reset."
+      couldnotresetpassword: "Could not reset password."
+      invalidresettoken: "Invalid reset token. It may have already been used or you may have copied it incorrectly."
     twofa:
       login2fa: "Login - Two Factor Authentication"
       logintotpcode: "Enter the current TOTP code from your TOTP application:"

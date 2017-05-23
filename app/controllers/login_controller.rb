@@ -159,15 +159,19 @@ class LoginController < ApplicationController
         end
 
         if @reset_user.save && @reset_user.is_active?
-          session[:u] = @reset_user.session_token
-          return redirect_to "/"
+          if @reset_user.has_2fa?
+            flash[:success] = t('.passwordreset')
+            return redirect_to "/login"
+          else
+            session[:u] = @reset_user.session_token
+            return redirect_to "/"
+          end
         else
-          flash[:error] = "Could not reset password."
+          flash[:error] = t('.couldnotresetpassword')
         end
       end
     else
-      flash[:error] = "Invalid reset token.  It may have already been " <<
-        "used or you may have copied it incorrectly."
+      flash[:error] = t(.invalidresettoken')
       return redirect_to forgot_password_path
     end
   end

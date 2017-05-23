@@ -34,6 +34,7 @@ fr:
       threadremovedby: "Fil supprimé par le modérateur %{modoname} : %{modreason}"
       turnedintodragon: "transformé en dragon"
       slayeddragon: "le dragon a été terrassé"
+      metooerror: "Merci de voter pour le commentaire à la place."
     moderation:
       storyeditedby: "Votre info a été éditée par "
       usersuggestions: "suggestions d'utilisateur"

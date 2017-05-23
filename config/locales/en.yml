@@ -22,6 +22,7 @@ en:
       threadremovedby: "Thread removed by moderator %{modoname} : %{modreason}" 
       turnedintodragon: "turned into a dragon"
       slayeddragon: "slayed dragon"
+      metooerror: "Please just upvote the parent post instead."
     moderation:
       storyeditedby: "Your story has been edited by "
       usersuggestions: "user suggestions"

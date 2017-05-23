@@ -48,11 +48,11 @@ div.clear {
 a.tag {
 	background-color: #fffcd7;
 	border: 1px solid #d5d458;
-	border-radius: 10px;
+	border-radius: 5px;
 	color: #555;
 	font-size: 8pt;
 	margin-left: 0.25em;
-	padding: 0px 0.5em 1px 0.5em;
+	padding: 0px 0.4em 1px 0.4em;
 	text-decoration: none;
 	vertical-align: text-top;
 }

@@ -1,6 +1,10 @@
 <div class="box wide">
   <div class="legend right">
     <a href="/u/<%= @user.username %>"><%= t('.viewprofile') %></a>
+     |
+     <%= link_to t('.logoutlink'), { :controller => "login", :action => "logout" },
+       :data => { :confirm => t('.confirmlogoutlink') },
+       :method => "post" %>
   </div>
   <div class="legend">
     <%= t('.accountsettings') %>

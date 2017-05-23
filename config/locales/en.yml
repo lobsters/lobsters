@@ -285,6 +285,7 @@ en:
       deleteaccountflash: "Your account has been deleted."
       verifypasswordflash: "Your password could not be verified."
     index:
+      logoutlink: "Logout"
       viewprofile: "View Profile"
       accountsettings: "Account Settings"
       username: "Username:"

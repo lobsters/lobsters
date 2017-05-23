@@ -95,9 +95,6 @@
             raw("class=\"cur_url\"") : "" %>><%= @user.username %>
             (<%= @user.karma %>)</a>
 
-          <%= link_to t('.logoutlink'), { :controller => "login", :action => "logout" },
-            :data => { :confirm => t('.confirmlogoutlink') },
-            :method => "post" %>
         <% else %>
           <a href="/login"><%= t('.loginlink') %></a>
         <% end %>

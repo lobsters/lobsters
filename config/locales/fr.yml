@@ -295,6 +295,7 @@ fr:
       deleteaccountflash: "Votre compte a été supprimé."
       verifypasswordflash: "Votre mot de passe n'a pas pu être vérifié."
     index:
+      logoutlink: "Se déconnecter"
       viewprofile: "Voir le profil"
       accountsettings: "Paramètres du compte"
       username: "Utilisateur :"

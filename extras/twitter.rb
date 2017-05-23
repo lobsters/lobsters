@@ -4,6 +4,9 @@ class Twitter
   # these need to be overridden in config/initializers/production.rb
   @@CONSUMER_KEY = nil
   @@CONSUMER_SECRET = nil
+
+  # these are set for the account used to post updates in
+  # script/post_to_twitter (needs read/write access)
   @@AUTH_TOKEN = nil
   @@AUTH_SECRET = nil
 
@@ -11,6 +14,10 @@ class Twitter
 
   # https://t.co/eyW1U2HLtP
   TCO_LEN = 23
+
+  def self.enabled?
+    self.CONSUMER_KEY.present?
+  end
 
   def self.oauth_consumer
     OAuth::Consumer.new(self.CONSUMER_KEY, self.CONSUMER_SECRET,
@@ -46,5 +53,29 @@ class Twitter
         end
       end
     end
+  end
+
+  def self.token_secret_and_user_from_token_and_verifier(tok, verifier)
+    rt = OAuth::RequestToken.from_hash(self.oauth_consumer,
+      { :oauth_token => tok })
+    at = rt.get_access_token({ :oauth_verifier => verifier })
+
+    res = at.get("/1.1/account/verify_credentials.json")
+    js = JSON.parse(res.body)
+
+    if !js["screen_name"].present?
+      return nil
+    end
+
+    [ at.token, at.secret, js["screen_name"] ]
+  end
+
+  def self.oauth_request_token(state)
+    self.oauth_consumer.get_request_token(:oauth_callback =>
+      Rails.application.root_url + "settings/twitter_callback?state=#{state}")
+  end
+
+  def self.oauth_auth_url(state)
+    self.oauth_request_token(state).authorize_url
   end
 end

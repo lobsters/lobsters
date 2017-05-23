@@ -4,6 +4,8 @@ Lobsters::Application.routes.draw do
       :protocol => (Rails.application.config.force_ssl ? "https://" : "http://"),
       :as => "root"
 
+    get "/404" => "home#four_oh_four", :via => :all
+
     get "/rss" => "home#index", :format => "rss"
     get "/hottest" => "home#index", :format => "json"
 

@@ -117,23 +117,27 @@
       <%= yield %>
 
       <div id="footer">
-        <a href="/moderations"><%= t('.moderationloglink') %></a>
-        <% if @user && !@user.is_new? &&
-        (iqc = InvitationRequest.verified_count) > 0 %>
-          <a href="/invitations"><%= t('.invitationqueuelink') %>(<%= iqc %>)</a>
-        <% end %>
-        <% if @user && @user.is_moderator? &&
-        (hrc = HatRequest.count) > 0 %>
-          <a href="/hats/requests"><%= t('.hatrequestlink') %> (<%= hrc %>)</a>
+        <% if lookup_context.template_exists?("footer", "layouts", true) %>
+          <%= render :partial => "layouts/footer" %>
         <% else %>
-          <a href="/hats"><%= t('.hatslink') %></a>
+          <a href="/moderations">Moderation Log</a>
+          <% if @user && !@user.is_new? &&
+          (iqc = InvitationRequest.verified_count) > 0 %>
+            <a href="/invitations">Invitation Queue(<%= iqc %>)</a>
+          <% end %>
+          <% if @user && @user.is_moderator? &&
+          (hrc = HatRequest.count) > 0 %>
+            <a href="/hats/requests">Hat Requests (<%= hrc %>)</a>
+          <% else %>
+            <a href="/hats"><%= t('.hatslink') %></a>
+          <% end %>
+          <a href="/privacy"><%= t('.privacylink') %></a>
+          <a href="/about"><%= t('.aboutlink') %></a>
+          <a href="https://blog.journalduhacker.net"><%= t('.blog') %></a>
+          <a href="https://twitter.com/journalduhacker"><%= t('.twitter') %></a>
+          <a href="https://framasphere.org/people/2aaaaba0110c0133c7ea2a0000053625"><%= t('.diaspora') %></a>
+          <a href="https://framapiaf.org/@journalduhacker"><%= t('.mastodon') %></a>
         <% end %>
-        <a href="/privacy"><%= t('.privacylink') %></a>
-        <a href="/about"><%= t('.aboutlink') %></a>
-        <a href="https://blog.journalduhacker.net"><%= t('.blog') %></a>
-        <a href="https://twitter.com/journalduhacker"><%= t('.twitter') %></a>
-        <a href="https://framasphere.org/people/2aaaaba0110c0133c7ea2a0000053625"><%= t('.diaspora') %></a>
-        <a href="https://framapiaf.org/@journalduhacker"><%= t('.mastodon') %></a>
       </div>
       <div class="clear"></div>
     </div>

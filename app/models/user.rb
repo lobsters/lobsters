@@ -95,10 +95,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.username_regex
-    User.validators_on(:username).select{|v|
-      v.class == ActiveModel::Validations::FormatValidator }.first.
-      options[:with].inspect
+  def self.username_regex_s
+    "/^" + VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, "") + "$/"
   end
 
   def as_json(options = {})

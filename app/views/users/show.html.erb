@@ -119,8 +119,19 @@
     <label class="required">GitHub:</label>
 
     <span class="d">
-      <a href="https://github.com/<%= h(@showing_user.github_username)
-        %>">https://github.com/<%= h(@showing_user.github_username) %></a>
+      <a href="https://github.com/<%= h(@showing_user.github_username) %>"
+        rel="nofollow">https://github.com/<%= h(@showing_user.github_username)
+        %></a>
+    </span>
+    <br>
+  <% end %>
+
+  <% if @showing_user.twitter_username.present? %>
+    <label class="required">Twitter:</label>
+
+    <span class="d">
+      <a href="https://twitter.com/<%= h(@showing_user.twitter_username) %>"
+        rel="nofollow">@<%= h(@showing_user.twitter_username) %></a>
     </span>
     <br>
   <% end %>

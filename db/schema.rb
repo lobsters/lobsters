@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170225201811) do
+ActiveRecord::Schema.define(version: 20170413161450) do
 
   create_table "comments", force: :cascade do |t|
     t.datetime "created_at",                                                                    null: false
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20170225201811) do
   add_index "comments", ["short_id"], name: "short_id", unique: true, using: :btree
   add_index "comments", ["story_id", "short_id"], name: "story_id_short_id", using: :btree
   add_index "comments", ["thread_id"], name: "thread_id", using: :btree
+  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
   create_table "hat_requests", force: :cascade do |t|
     t.datetime "created_at"
@@ -100,7 +101,6 @@ ActiveRecord::Schema.define(version: 20170225201811) do
     t.string   "short_id",             limit: 30
     t.boolean  "deleted_by_author",                     default: false
     t.boolean  "deleted_by_recipient",                  default: false
-    t.integer  "hat_id",               limit: 4
   end
 
   add_index "messages", ["short_id"], name: "random_hash", unique: true, using: :btree
@@ -138,8 +138,11 @@ ActiveRecord::Schema.define(version: 20170225201811) do
     t.boolean  "user_is_author",                                                    default: false
   end
 
+  add_index "stories", ["created_at"], name: "index_stories_on_created_at", using: :btree
   add_index "stories", ["hotness"], name: "hotness_idx", using: :btree
   add_index "stories", ["is_expired", "is_moderated"], name: "is_idxes", using: :btree
+  add_index "stories", ["is_expired"], name: "index_stories_on_is_expired", using: :btree
+  add_index "stories", ["is_moderated"], name: "index_stories_on_is_moderated", using: :btree
   add_index "stories", ["merged_story_id"], name: "index_stories_on_merged_story_id", using: :btree
   add_index "stories", ["short_id"], name: "unique_short_id", unique: true, using: :btree
   add_index "stories", ["twitter_id"], name: "index_stories_on_twitter_id", using: :btree
@@ -225,6 +228,7 @@ ActiveRecord::Schema.define(version: 20170225201811) do
     t.string  "reason",     limit: 1
   end
 
+  add_index "votes", ["comment_id"], name: "index_votes_on_comment_id", using: :btree
   add_index "votes", ["user_id", "comment_id"], name: "user_id_comment_id", using: :btree
   add_index "votes", ["user_id", "story_id"], name: "user_id_story_id", using: :btree
 

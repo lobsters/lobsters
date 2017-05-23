@@ -62,7 +62,6 @@ en:
       messageslink: "Messages"
       loginlink: "Login"
       logoutlink: "Logout"
-      confirmlogoutlink: "Are you sure you want to logout?"
       moderationloglink: "Moderation Log"
       invitationqueuelink: "Invitation Queue"
       chatlink: "Chat"
@@ -286,6 +285,7 @@ en:
       verifypasswordflash: "Your password could not be verified."
     index:
       logoutlink: "Logout"
+      confirmlogoutlink: "Are you sure you want to logout?"
       viewprofile: "View Profile"
       accountsettings: "Account Settings"
       username: "Username:"
@@ -517,6 +517,9 @@ en:
       flashsuccessdeleteinvit: "Successfully deleted invitation request from %{name}"
     login_controller:
       flashlogininvalid: "Invalid e-mail address and/or password."
+      totpinvalid: "Your TOTP code was invalid."
+      deletedaccount: "Your account has been deleted."
+      bannedaccount: "Your account has been banned."
     messages_controller:
       messagestitle: "Messages"
       messagessenttitle: "Messages Sent"

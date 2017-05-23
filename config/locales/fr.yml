@@ -296,6 +296,7 @@ fr:
       verifypasswordflash: "Votre mot de passe n'a pas pu être vérifié."
     index:
       logoutlink: "Se déconnecter"
+      confirmlogoutlink: "Êtes-vous sûr de vouloir vous déconnecter?"
       viewprofile: "Voir le profil"
       accountsettings: "Paramètres du compte"
       username: "Utilisateur :"
@@ -527,6 +528,10 @@ fr:
       flashsuccessdeleteinvit: "Demande d'invitation de %{name} supprimée avec succès"
     login_controller:
       flashlogininvalid: "Adresse e-mail et/ou mot de passe invalide."
+      flashlogininvalid: "Adresse e-mail et/ou mot de passe invalide."
+      totpinvalid: "Votre code TOTP est invalide."
+      deletedaccount: "Votre compte a été supprimé."
+      bannedaccount: "Votre compte a été banni."
     messages_controller:
       messagestitle: "Messages"
       messagessenttitle: "Messages envoyés"

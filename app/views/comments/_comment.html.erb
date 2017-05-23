@@ -5,9 +5,7 @@
 data-shortid="<%= comment.short_id if comment.persisted? %>"
 class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 "upvoted" : "downvoted") : "" %>
-  <%= comment.score <= -1 ? "negative_1" : "" %>
-  <%= comment.score <= -3 ? "negative_3" : "" %>
-  <%= comment.score <= -5 ? "negative_5" : "" %>">
+  <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>">
   <% if !comment.is_gone? %>
     <div class="voters">
       <% if @user %>
@@ -15,7 +13,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% else %>
         <%= link_to "", login_path, :class => "upvoter" %>
       <% end %>
-      <div class="score"><%= comment.score %></div>
+      <div class="score"><%= comment.score_for_user(@user) %></div>
       <% if @user && @user.can_downvote?(comment) %>
         <a class="downvoter"></a>
       <% else %>

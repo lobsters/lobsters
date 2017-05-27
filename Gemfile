@@ -15,7 +15,7 @@ gem "mysql2", ">= 0.3.14"
 gem "thinking-sphinx", "~> 3.1.2"
 
 gem "uglifier", ">= 1.3.0"
-gem "jquery-rails"
+gem "jquery-rails", "~> 3.1.3"
 gem "dynamic_form"
 
 gem "exception_notification"
@@ -24,7 +24,7 @@ gem "bcrypt", "~> 3.1.2"
 gem "rotp"
 gem "rqrcode"
 
-gem "nokogiri", "= 1.6.1"
+gem "nokogiri", ">= 1.7.2"
 gem "htmlentities"
 gem "commonmarker", "~> 0.14"
 

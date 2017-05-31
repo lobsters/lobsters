@@ -167,7 +167,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% if story.url.present? %>
           |
           <a href="<%= story.archive_url %>" rel="nofollow"
-            target="_new">cached</a>
+            target="_blank">cached</a>
         <% end %>
         <% if !story.is_gone? %>
           <span class="comments_label">

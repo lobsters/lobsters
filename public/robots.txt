@@ -1,2 +1,8 @@
 User-agent: *
 Disallow: /search
+
+User-agent: *
+Disallow: /page/
+
+User-agent: *
+Disallow: /comments/page/

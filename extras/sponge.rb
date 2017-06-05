@@ -194,10 +194,17 @@ class Sponge
     end
 
     res = nil
-    if method == :post
-      res = host.post(path, post_data, send_headers)
-    else
-      res = host.get(path, send_headers)
+    begin
+      Timeout.timeout(self.timeout) do
+        if method == :post
+          res = host.post(path, post_data, send_headers)
+        else
+          res = host.get(path, send_headers)
+        end
+      end
+    rescue Timeout::Error => e
+      dputs "timed out during #{method}"
+      return nil
     end
 
     if res.get_fields("Set-Cookie")

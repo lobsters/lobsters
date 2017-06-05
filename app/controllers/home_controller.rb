@@ -77,11 +77,15 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.html { render :action => "index" }
       format.rss {
-        if @user && params[:token].present?
+        if @user
           @title = "Private feed for #{@user.username}"
+          render :action => "rss", :layout => false
+        else
+          content = Rails.cache.fetch("rss", :expires_in => (60 * 2)) {
+            render_to_string :action => "rss", :layout => false
+          }
+          render :text => content, :layout => false
         end
-
-        render :action => "rss", :layout => false
       }
       format.json { render :json => @stories }
     end

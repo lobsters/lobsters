@@ -92,6 +92,9 @@ class User < ActiveRecord::Base
   # minimum karma required to be able to submit new stories
   MIN_KARMA_TO_SUBMIT_STORIES = -4
 
+  # minimum karma required to process invitation requests
+  MIN_KARMA_FOR_INVITATION_REQUESTS = MIN_KARMA_TO_DOWNVOTE
+
   def self.recalculate_all_karmas!
     User.all.each do |u|
       u.karma = u.stories.map(&:score).sum + u.comments.map(&:score).sum
@@ -224,6 +227,10 @@ class User < ActiveRecord::Base
 
   def can_offer_suggestions?
     !self.is_new? && (self.karma >= MIN_KARMA_TO_SUGGEST)
+  end
+
+  def can_see_invitation_requests?
+    can_invite? && (self.karma >= MIN_KARMA_FOR_INVITATION_REQUESTS)
   end
 
   def can_submit_stories?

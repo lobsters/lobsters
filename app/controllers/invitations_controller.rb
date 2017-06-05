@@ -12,6 +12,12 @@ class InvitationsController < ApplicationController
   end
 
   def index
+    if !@user.can_see_invitation_requests?
+      flash[:error] = "Your account is not permitted to view invitation " <<
+        "requests."
+      return redirect_to "/"
+    end
+
     @invitation_requests = InvitationRequest.where(:is_verified => true)
   end
 
@@ -78,6 +84,12 @@ class InvitationsController < ApplicationController
   end
 
   def send_for_request
+    if !@user.can_see_invitation_requests?
+      flash[:error] = "Your account is not permitted to view invitation " <<
+        "requests."
+      return redirect_to "/"
+    end
+
     if !(ir = InvitationRequest.where(:code => params[:code].to_s).first)
       flash[:error] = "Invalid or expired invitation request"
       return redirect_to "/invitations"
@@ -86,7 +98,6 @@ class InvitationsController < ApplicationController
     i = Invitation.new
     i.user_id = @user.id
     i.email = ir.email
-
     i.save!
     i.send_email
     ir.destroy!

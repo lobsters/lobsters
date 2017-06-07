@@ -6,7 +6,7 @@ class Countinual
   # this needs to be overridden in config/initializers/production.rb
   @@API_KEY = nil
 
-  COUNTINUAL_HOST = "207.158.15.115"
+  COUNTINUAL_HOST = "170.130.139.180"
   COUNTINUAL_PORT = 1025
 
   def self.count!(counter, value, time = nil)

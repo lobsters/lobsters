@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170522144135) do
+ActiveRecord::Schema.define(version: 20170607153224) do
 
   create_table "comments", force: :cascade do |t|
     t.datetime "created_at",                                                                    null: false
@@ -146,6 +146,7 @@ ActiveRecord::Schema.define(version: 20170522144135) do
   add_index "stories", ["short_id"], name: "unique_short_id", unique: true, using: :btree
   add_index "stories", ["twitter_id"], name: "index_stories_on_twitter_id", using: :btree
   add_index "stories", ["url"], name: "url", length: {"url"=>191}, using: :btree
+  add_index "stories", ["user_id"], name: "index_stories_on_user_id", using: :btree
 
   create_table "suggested_taggings", force: :cascade do |t|
     t.integer "story_id", limit: 4

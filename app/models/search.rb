@@ -84,18 +84,22 @@ class Search
         end
       end
 
-      base.where!(
-        "(MATCH(title) AGAINST('#{qwords}' IN BOOLEAN MODE) OR " +
-        "MATCH(description) AGAINST('#{qwords}' IN BOOLEAN MODE) OR " +
-        "MATCH(story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE))"
-      )
+      if qwords.present?
+        base.where!(
+          "(MATCH(title) AGAINST('#{qwords}' IN BOOLEAN MODE) OR " +
+          "MATCH(description) AGAINST('#{qwords}' IN BOOLEAN MODE) OR " +
+          "MATCH(story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE))"
+        )
 
-      self.results = base.select(
-        "stories.*, " +
-        "MATCH(title) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_title, " +
-        "MATCH(description) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_description, " +
-        "MATCH(story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_story_cache"
-      )
+        self.results = base.select(
+          "stories.*, " +
+          "MATCH(title) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_title, " +
+          "MATCH(description) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_description, " +
+          "MATCH(story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_story_cache"
+        )
+      else
+        self.results = base
+      end
 
       case self.order
       when "relevance"

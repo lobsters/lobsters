@@ -7,15 +7,12 @@ require File.expand_path('../../config/boot',  __FILE__)
 require APP_PATH
 Rails.application.require_environment!
 
-MIN_STORY_SCORE = 3
-
-Story.where("is_expired = ? AND #{Story.score_sql} >= ? AND " <<
-"twitter_id IS NULL AND created_at >= ?", false, MIN_STORY_SCORE,
-Time.now - 1.days).order(:id).each_with_index do |s,x|
-  if s.tags.map(&:tag).include?("meta")
-    next
-  end
-
+# don't where(:twitter_id => nil) here because we just want the first page as
+# the web would see it, not just the first group of stories with no twitter ids
+# which would just keep walking through pages
+StoriesPaginator.new(StoryRepository.new.hottest).get.first.
+reject{|s| s.twitter_id.present? || s.tags.map(&:tag).include?("meta") }.
+each_with_index do |s,x|
   if x > 0
     sleep 2
   end

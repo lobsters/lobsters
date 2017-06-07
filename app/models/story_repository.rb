@@ -4,7 +4,7 @@ class StoryRepository
   # how many points a story has to have to probably get on the front page
   HOT_STORY_POINTS = 5
 
-  def initialize(user, params = {})
+  def initialize(user = nil, params = {})
     @user = user
     @params = params
   end

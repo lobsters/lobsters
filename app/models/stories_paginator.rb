@@ -3,7 +3,7 @@ class StoriesPaginator
 
   STORIES_PER_PAGE = 25
 
-  def initialize(scope, page, user)
+  def initialize(scope, page = 1, user = nil)
     @scope = scope
     @page = page
     @user = user

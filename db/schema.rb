@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170607153224) do
+ActiveRecord::Schema.define(version: 20170607170604) do
 
   create_table "comments", force: :cascade do |t|
     t.datetime "created_at",                                                                    null: false
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20170607153224) do
     t.integer  "hat_id",             limit: 4
   end
 
+  add_index "comments", ["comment"], name: "index_comments_on_comment", type: :fulltext
   add_index "comments", ["confidence"], name: "confidence_idx", using: :btree
   add_index "comments", ["short_id"], name: "short_id", unique: true, using: :btree
   add_index "comments", ["story_id", "short_id"], name: "story_id_short_id", using: :btree
@@ -138,12 +139,15 @@ ActiveRecord::Schema.define(version: 20170607153224) do
   end
 
   add_index "stories", ["created_at"], name: "index_stories_on_created_at", using: :btree
+  add_index "stories", ["description"], name: "index_stories_on_description", type: :fulltext
   add_index "stories", ["hotness"], name: "hotness_idx", using: :btree
   add_index "stories", ["is_expired", "is_moderated"], name: "is_idxes", using: :btree
   add_index "stories", ["is_expired"], name: "index_stories_on_is_expired", using: :btree
   add_index "stories", ["is_moderated"], name: "index_stories_on_is_moderated", using: :btree
   add_index "stories", ["merged_story_id"], name: "index_stories_on_merged_story_id", using: :btree
   add_index "stories", ["short_id"], name: "unique_short_id", unique: true, using: :btree
+  add_index "stories", ["story_cache"], name: "index_stories_on_story_cache", type: :fulltext
+  add_index "stories", ["title"], name: "index_stories_on_title", type: :fulltext
   add_index "stories", ["twitter_id"], name: "index_stories_on_twitter_id", using: :btree
   add_index "stories", ["url"], name: "url", length: {"url"=>191}, using: :btree
   add_index "stories", ["user_id"], name: "index_stories_on_user_id", using: :btree

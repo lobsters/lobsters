@@ -11,7 +11,7 @@ class Search
 
   def initialize
     @q = ""
-    @what = "all"
+    @what = "stories"
     @order = "relevance"
 
     @page = 1
@@ -22,7 +22,7 @@ class Search
   end
 
   def max_matches
-    ThinkingSphinx::Configuration.instance.settings["max_matches"] || 1000
+    100
   end
 
   def persisted?
@@ -44,19 +44,18 @@ class Search
     ((total - 1) / self.per_page.to_i) + 1
   end
 
-  def search_for_user!(user)
-    opts = {
-      :ranker   => :bm25,
-      :page     => [ self.page, self.page_count ].min,
-      :per_page => self.per_page,
-      :include  => [ :story, :user ],
-    }
-
-    if order == "newest"
-      opts[:order] = "created_at DESC"
-    elsif order == "points"
-      opts[:order] = "score DESC"
+  def what
+    case @what
+    when "comments"
+      "comments"
+    else
+      "stories"
     end
+  end
+
+  def search_for_user!(user)
+    self.results = []
+    self.total_results = 0
 
     # extract domain query since it must be done separately
     domain = nil
@@ -66,77 +65,107 @@ class Search
       end
     }.join(" ")
 
-    if domain.present?
-      self.what = "stories"
-      begin
-        reg = Regexp.new("//([^/]*\.)?#{domain}/")
-      rescue RegexpError
-        return false
+    qwords = ActiveRecord::Base.connection.quote_string(words)
+
+    base = nil
+
+    case self.what
+    when "stories"
+      base = Story.unmerged.where(:is_expired => false).
+        includes({ :taggings => :tag }, :user)
+
+      if domain.present?
+        begin
+          reg = Regexp.new("//([^/]*\.)?#{domain}/")
+          base = base.where("`url` REGEXP '" +
+            ActiveRecord::Base.connection.quote_string(reg.source) + "'")
+        rescue RegexpError
+          return false
+        end
       end
 
-      story_ids = Story.select(:id).where("`url` REGEXP '" +
-        ActiveRecord::Base.connection.quote_string(reg.source) + "'").
-        collect(&:id)
+      base.where!(
+        "(MATCH(title) AGAINST('#{qwords}' IN BOOLEAN MODE) OR " +
+        "MATCH(description) AGAINST('#{qwords}' IN BOOLEAN MODE) OR " +
+        "MATCH(story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE))"
+      )
 
-      if story_ids.any?
-        opts[:with] = { :story_id => story_ids }
-      else
-        self.results = []
-        self.total_results = 0
-        self.page = 0
-        return false
+      self.results = base.select(
+        "stories.*, " +
+        "MATCH(title) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_title, " +
+        "MATCH(description) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_description, " +
+        "MATCH(story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_story_cache"
+      )
+
+      case self.order
+      when "relevance"
+        self.results.order!(
+          "(rel_title * 2) DESC, " +
+          "(rel_description * 1.5) DESC, " +
+          "(rel_story_cache) DESC"
+        )
+      when "newest"
+        self.results.order!("created_at DESC")
+      when "points"
+        self.results.order!("#{Story.score_sql} DESC")
+      end
+
+    when "comments"
+      base = Comment.active.where(
+        "MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE)"
+      ).includes(:user, :story)
+
+      self.results = base.select(
+        "comments.*, " +
+        "MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_comment"
+      )
+
+      case self.order
+      when "relevance"
+        self.results.order!("rel_comment DESC")
+      when "newest"
+        self.results.order!("created_at DESC")
+      when "points"
+        self.results.order!("#{Comment.score_sql} DESC")
       end
     end
 
-    opts[:classes] = case what
-      when "all"
-        [ Story, Comment ]
-      when "comments"
-        [ Comment ]
-      when "stories"
-        [ Story ]
-      else
-        []
-      end
-
-    query = Riddle.escape(words)
-
-    # go go gadget search
-    self.total_results = -1
-    self.results = ThinkingSphinx.search query, opts
-    self.total_results = self.results.total_entries
+    self.total_results = base.count
 
     if self.page > self.page_count
       self.page = self.page_count
     end
+    if self.page < 1
+      self.page = 1
+    end
 
-    # bind votes for both types
+    self.results = self.results.
+      limit(self.per_page).
+      offset((self.page - 1) * self.per_page)
 
-    if opts[:classes].include?(Comment) && user
-      votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id,
-        self.results.select{|r| r.class == Comment }.map{|c| c.id })
+    # if a user is logged in, fetch their votes for what's on the page
+    if user
+      case what
+      when "stories"
+        votes = Vote.story_votes_by_user_for_story_ids_hash(user.id,
+          self.results.map{|s| s.id })
 
-      self.results.each do |r|
-        if r.class == Comment && votes[r.id]
-          r.current_vote = votes[r.id]
+        self.results.each do |r|
+          if votes[r.id]
+            r.vote = votes[r.id]
+          end
+        end
+
+      when "comments"
+        votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id,
+          self.results.map{|c| c.id })
+
+        self.results.each do |r|
+          if votes[r.id]
+            r.current_vote = votes[r.id]
+          end
         end
       end
     end
-
-    if opts[:classes].include?(Story) && user
-      votes = Vote.story_votes_by_user_for_story_ids_hash(user.id,
-        self.results.select{|r| r.class == Story }.map{|s| s.id })
-
-      self.results.each do |r|
-        if r.class == Story && votes[r.id]
-          r.vote = votes[r.id]
-        end
-      end
-    end
-
-  rescue ThinkingSphinx::ConnectionError => e
-    self.results = []
-    self.total_results = -1
-    raise e
   end
 end

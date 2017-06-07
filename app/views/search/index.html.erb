@@ -11,12 +11,7 @@
     </div>
 
     <div class="boxline">
-      <label class="required">Include:</label>
-
-      <%= radio_button_tag "what", "all", @search.what == "all" %>
-        <label for="what_all" class="normal">All</label>
-
-      &nbsp;
+      <label class="required">Search:</label>
 
       <%= radio_button_tag "what", "stories", @search.what == "stories" %>
         <label for="what_stories" class="normal">Stories</label>

@@ -2,8 +2,7 @@
 
 This is the source code to the site operating at
 [https://lobste.rs](https://lobste.rs).  It is a Rails 4 codebase and uses a
-SQL (MariaDB in production) backend for the database and Sphinx for the search
-engine.
+SQL (MariaDB in production) backend for the database.
 
 While you are free to fork this code and modify it (according to the [license](https://github.com/jcs/lobsters/blob/master/LICENSE))
 to run your own link aggregation website, this source code repository and bug
@@ -58,11 +57,6 @@ generated key from the output of `rake secret`:
 
           Lobsters::Application.config.secret_key_base = 'your random secret here'
 
-* (Optional, only needed for the search engine) Install Sphinx.  Build Sphinx
-config and start server:
-
-          lobsters$ rake ts:rebuild
-
 * Define your site's name and default domain, which are used in various places,
 in a `config/initializers/production.rb` or similar file:
 
@@ -93,5 +87,4 @@ in a `config/initializers/production.rb` or similar file:
 
 * In production, set up crontab or another scheduler to run regular jobs:
 
-          */20 * * * * cd /path/to/lobsters && env RAILS_ENV=production bundle exec rake ts:index > /dev/null
           */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/post_to_twitter'

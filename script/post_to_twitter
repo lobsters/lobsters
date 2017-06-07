@@ -29,14 +29,12 @@ each_with_index do |s,x|
   end
 
   tco_status = via + "\n" +
-    (s.url.present?? ("X" * Twitter::TCO_LEN) + "\n" : "") +
-    ("X" * Twitter::TCO_LEN) +
-    tags
+    ("X" * Twitter::TCO_LEN) + tags +
+    (s.url.present?? "\n" + ("X" * Twitter::TCO_LEN) : "")
 
   status = via + "\n" +
-    (s.url.present?? s.url + "\n" : "") +
-    s.short_id_url +
-    tags
+    s.short_id_url + tags +
+    (s.url.present?? "\n" + s.url : "")
 
   left_len = Twitter::MAX_TWEET_LEN - tco_status.length
 

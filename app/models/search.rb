@@ -103,11 +103,15 @@ class Search
 
       case self.order
       when "relevance"
-        self.results.order!(
-          "(rel_title * 2) DESC, " +
-          "(rel_description * 1.5) DESC, " +
-          "(rel_story_cache) DESC"
-        )
+        if qwords.present?
+          self.results.order!(
+            "(rel_title * 2) DESC, " +
+            "(rel_description * 1.5) DESC, " +
+            "(rel_story_cache) DESC"
+          )
+        else
+          self.results.order!("created_at DESC")
+        end
       when "newest"
         self.results.order!("created_at DESC")
       when "points"
@@ -171,5 +175,10 @@ class Search
         end
       end
     end
+
+  rescue ActiveRecord::StatementInvalid => e
+    # this is most likely bad boolean chars
+    self.results = []
+    self.total_results = -1
   end
 end

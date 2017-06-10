@@ -7,12 +7,11 @@ class EmailParser
     @email_text = email_text.forcibly_convert_to_utf8
 
     @email = nil
+
     begin
-      # the mail gem stupidly spams STDERR while parsing e-mail, so silence
-      # that stream to avoid anything getting back to postfix
-      Utils.silence_stream(STDERR) do
-        @email = Mail.read_from_string(email_text)
-      end
+    Utils.silence_stream(STDERR) do
+      @email = Mail.read_from_string(email_text)
+    end
     rescue
     end
 

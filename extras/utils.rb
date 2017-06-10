@@ -14,7 +14,7 @@ class Utils
     return str
   end
 
-  def silence_stream(*streams)
+  def self.silence_stream(*streams)
     on_hold = streams.collect {|stream| stream.dup }
     streams.each do |stream|
       stream.reopen("/dev/null")

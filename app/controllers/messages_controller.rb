@@ -1,6 +1,6 @@
 class MessagesController < ApplicationController
-  before_filter :require_logged_in_user
-  before_filter :find_message, :only => [ :show, :destroy, :keep_as_new ]
+  before_action :require_logged_in_user
+  before_action :find_message, :only => [ :show, :destroy, :keep_as_new ]
 
   def index
     @cur_url = "/messages"

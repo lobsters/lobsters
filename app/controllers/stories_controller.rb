@@ -1,12 +1,12 @@
 class StoriesController < ApplicationController
-  before_filter :require_logged_in_user_or_400,
+  before_action :require_logged_in_user_or_400,
     :only => [ :upvote, :downvote, :unvote, :hide, :unhide, :preview ]
-  before_filter :require_logged_in_user, :only => [ :destroy, :create, :edit,
+  before_action :require_logged_in_user, :only => [ :destroy, :create, :edit,
     :fetch_url_attributes, :new, :suggest ]
-  before_filter :verify_user_can_submit_stories, :only => [ :new, :create ]
-  before_filter :find_user_story, :only => [ :destroy, :edit, :undelete,
+  before_action :verify_user_can_submit_stories, :only => [ :new, :create ]
+  before_action :find_user_story, :only => [ :destroy, :edit, :undelete,
     :update ]
-  before_filter :find_story!, :only => [ :suggest, :submit_suggestions ]
+  before_action :find_story!, :only => [ :suggest, :submit_suggestions ]
 
   def create
     @title = "Submit Story"
@@ -249,63 +249,63 @@ class StoriesController < ApplicationController
 
   def unvote
     if !(story = find_story)
-      return render :text => "can't find story", :status => 400
+      return render :plain => "can't find story", :status => 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(0, story.id,
       nil, @user.id, nil)
 
-    render :text => "ok"
+    render :plain => "ok"
   end
 
   def upvote
     if !(story = find_story)
-      return render :text => "can't find story", :status => 400
+      return render :plain => "can't find story", :status => 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(1, story.id,
       nil, @user.id, nil)
 
-    render :text => "ok"
+    render :plain => "ok"
   end
 
   def downvote
     if !(story = find_story)
-      return render :text => "can't find story", :status => 400
+      return render :plain => "can't find story", :status => 400
     end
 
     if !Vote::STORY_REASONS[params[:reason]]
-      return render :text => "invalid reason", :status => 400
+      return render :plain => "invalid reason", :status => 400
     end
 
     if !@user.can_downvote?(story)
-      return render :text => "not permitted to downvote", :status => 400
+      return render :plain => "not permitted to downvote", :status => 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id,
       nil, @user.id, params[:reason])
 
-    render :text => "ok"
+    render :plain => "ok"
   end
 
   def hide
     if !(story = find_story)
-      return render :text => "can't find story", :status => 400
+      return render :plain => "can't find story", :status => 400
     end
 
     HiddenStory.hide_story_for_user(story.id, @user.id)
 
-    render :text => "ok"
+    render :plain => "ok"
   end
 
   def unhide
     if !(story = find_story)
-      return render :text => "can't find story", :status => 400
+      return render :plain => "can't find story", :status => 400
     end
 
     HiddenStory.where(:user_id => @user.id, :story_id => story.id).delete_all
 
-    render :text => "ok"
+    render :plain => "ok"
   end
 
 private

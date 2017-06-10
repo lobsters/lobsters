@@ -1,5 +1,5 @@
 class SettingsController < ApplicationController
-  before_filter :require_logged_in_user
+  before_action :require_logged_in_user
 
   TOTP_SESSION_TIMEOUT = (60 * 15)
 

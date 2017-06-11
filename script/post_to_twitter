@@ -11,7 +11,7 @@ Rails.application.require_environment!
 # the web would see it, not just the first group of stories with no twitter ids
 # which would just keep walking through pages
 StoriesPaginator.new(StoryRepository.new.hottest).get.first.
-reject{|s| s.twitter_id.present? || s.tags.map(&:tag).include?("meta") }.
+reject{|s| s.twitter_id.present? || s.score < 2 || s.tags.map(&:tag).include?("meta") }.
 each_with_index do |s,x|
   if x > 0
     sleep 2

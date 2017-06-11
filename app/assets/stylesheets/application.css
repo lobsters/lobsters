@@ -565,9 +565,9 @@ li .comment_folder_button:checked ~ ol.comments li {
 }
 
 /* try to force a highlighted comment to stay visible */
-li .comment_folder_button:checked ~ div.comment div.comment_text,
-li .comment_folder_button:checked ~ div.comment div.voters {
-	display: block;
+div.comment:target div.comment_text,
+div.comment:target div.voters {
+	display: block !important;
 }
 
 li .byline {

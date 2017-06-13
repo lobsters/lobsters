@@ -23,10 +23,10 @@ describe User do
   it "authenticates properly" do
     u = User.make!(:password => "hunter2")
 
-    u.password_digest.length.should > 20
+    expect(u.password_digest.length).to be > 20
 
-    u.authenticate("hunter2").should == u
-    u.authenticate("hunteR2").should == false
+    expect(u.authenticate("hunter2")).to eq(u)
+    expect(u.authenticate("hunteR2")).to be false
   end
 
   it "gets an error message after registering banned name" do
@@ -36,26 +36,26 @@ describe User do
   it "shows a user is banned or not" do
     u = User.make!(:banned)
     user = User.make!
-    u.is_banned?.should == true
-    user.is_banned?.should == false
+    expect(u.is_banned?).to be true
+    expect(user.is_banned?).to be false
   end
 
   it "shows a user is active or not" do
     u = User.make!(:banned)
     user = User.make!
-    u.is_active?.should == false
-    user.is_active?.should == true
+    expect(u.is_active?).to be false
+    expect(user.is_active?).to be true
   end
 
   it "shows a user is recent or not" do
     user = User.make!(:created_at => Time.now)
     u = User.make!(:created_at => Time.now - 8.days)
-    user.is_new?.should == true
-    u.is_new?.should == false
+    expect(user.is_new?).to be true
+    expect(u.is_new?).to be false
   end
 
   it "unbans a user" do
     u = User.make!(:banned)
-    u.unban_by_user!(User.first).should == true
+    expect(u.unban_by_user!(User.first)).to be true
   end
 end

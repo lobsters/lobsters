@@ -18,6 +18,9 @@
 
 vendor/bundle
 public/assets
+node_modules/
+yarn-error.log
+yarn.lock
 
 # templates to be created per-site
 app/views/home/privacy.*

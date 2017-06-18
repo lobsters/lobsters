@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :require_logged_in_moderator,
+  before_action :require_logged_in_moderator,
     :only => [ :enable_invitation, :disable_invitation, :ban, :unban ]
 
   def show
@@ -25,7 +25,7 @@ class UsersController < ApplicationController
         @title << " By Karma"
         render_to_string :action => "list", :layout => nil
       }
-      render :text => content, :layout => "application"
+      render :plain => content, :layout => "application"
     elsif params[:moderators]
       @users = User.where("is_admin = ? OR is_moderator = ?", true, true).
         order("id ASC").to_a
@@ -41,7 +41,7 @@ class UsersController < ApplicationController
         @newest = User.order("id DESC").limit(10)
         render_to_string :action => "tree", :layout => nil
       }
-      render :text => content, :layout => "application"
+      render :plain => content, :layout => "application"
     end
   end
 

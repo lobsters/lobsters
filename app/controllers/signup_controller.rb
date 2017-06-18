@@ -1,5 +1,5 @@
 class SignupController < ApplicationController
-  before_filter :require_logged_in_user, :only => :invite
+  before_action :require_logged_in_user, :only => :invite
 
   def index
     if @user

@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :authenticate_user
-  before_filter :increase_traffic_counter
+  before_action :authenticate_user
+  before_action :increase_traffic_counter
 
   TRAFFIC_DECREMENTER = 0.40
 
@@ -92,7 +92,7 @@ class ApplicationController < ActionController::Base
     if @user
       true
     else
-      render :text => "not logged in", :status => 400
+      render :plain => "not logged in", :status => 400
       return false
     end
   end

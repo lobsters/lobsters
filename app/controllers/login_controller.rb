@@ -4,7 +4,7 @@ class LoginTOTPFailedError < StandardError; end
 class LoginFailedError < StandardError; end
 
 class LoginController < ApplicationController
-  before_filter :authenticate_user
+  before_action :authenticate_user
 
   def logout
     if @user

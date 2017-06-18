@@ -1,6 +1,6 @@
 class HatsController < ApplicationController
-  before_filter :require_logged_in_user, :except => [ :index ]
-  before_filter :require_logged_in_moderator,
+  before_action :require_logged_in_user, :except => [ :index ]
+  before_action :require_logged_in_moderator,
     :except => [ :build_request, :index, :create_request ]
 
   def build_request

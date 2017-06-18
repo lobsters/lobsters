@@ -501,6 +501,10 @@ class Story < ActiveRecord::Base
       Story.where(:short_id => sid).first.id : nil
   end
 
+  def merge_story_short_id
+    self.merged_story_id ? self.merged_into_story.try(:short_id) : nil
+  end
+
   def recalculate_hotness!
     update_column :hotness, calculated_hotness
   end

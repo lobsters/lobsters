@@ -268,7 +268,7 @@ class CommentsController < ApplicationController
     ).includes(
       :user, :story, :hat, :votes => :user
     ).arrange_for_user(
-      @showing_user
+      @user
     )
 
     comments_by_thread_id = comments.group_by(&:thread_id)

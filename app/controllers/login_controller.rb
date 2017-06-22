@@ -57,7 +57,7 @@ class LoginController < ApplicationController
 
       if !user.password_digest.to_s.match(/^\$2a\$#{BCrypt::Engine::DEFAULT_COST}\$/)
         user.password = user.password_confirmation = params[:password].to_s
-        user.save!
+        user.save
       end
 
       if user.has_2fa? && !Rails.env.development?

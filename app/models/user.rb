@@ -231,7 +231,8 @@ class User < ActiveRecord::Base
   end
 
   def can_see_invitation_requests?
-    can_invite? && (self.karma >= MIN_KARMA_FOR_INVITATION_REQUESTS)
+    can_invite? && (self.is_moderator? ||
+      (self.karma >= MIN_KARMA_FOR_INVITATION_REQUESTS))
   end
 
   def can_submit_stories?

@@ -302,7 +302,7 @@ class Story < ActiveRecord::Base
       self.story_cache
     end
 
-    if chars > 0
+    if chars > 0 && s.to_s.length > chars
       # remove last truncated word
       s = s.to_s[0, chars].gsub(/ [^ ]*\z/, "")
     end

@@ -104,11 +104,14 @@ class InvitationsController < ApplicationController
     flash[:success] = "Successfully e-mailed invitation to " <<
       ir.name.to_s << "."
 
+    Rails.logger.info "[u#{@user.id}] sent invitiation for request " <<
+      ir.inspect
+
     return redirect_to "/invitations"
   end
 
   def delete_request
-    if !@user.is_moderator?
+    if !@user.can_see_invitation_requests?
       return redirect_to "/invitations"
     end
 
@@ -120,6 +123,9 @@ class InvitationsController < ApplicationController
     ir.destroy!
     flash[:success] = "Successfully deleted invitation request from " <<
       ir.name.to_s << "."
+
+    Rails.logger.info "[u#{@user.id}] deleted invitation request " <<
+      "from #{ir.inspect}"
 
     return redirect_to "/invitations"
   end

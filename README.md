@@ -1,8 +1,10 @@
 ### Lobsters Rails Project
 
-This is the source code to the site operating at
-[https://lobste.rs](https://lobste.rs).  It is a Rails 4 codebase and uses a
-SQL (MariaDB in production) backend for the database.
+This is the 
+[quite sad](https://www.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)
+source code to the site operating at
+[https://lobste.rs](https://lobste.rs).
+It is a Rails 5 codebase and uses a SQL (MariaDB in production) backend for the database.
 
 While you are free to fork this code and modify it (according to the [license](https://github.com/jcs/lobsters/blob/master/LICENSE))
 to run your own link aggregation website, this source code repository and bug

@@ -320,6 +320,7 @@ en:
       miscsettings: "Miscellaneous Settings"
       storypreview: "Show Story Previews:"
       useravatars: "Show User Avatars:"
+      hidedragons: "Hide Dragons:"
       saveallsettings: "Save All Settings"
       inviteuser: "Invite a New User"
       cannotsendinvitations: "You cannot send invitations."

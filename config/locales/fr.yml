@@ -331,6 +331,7 @@ fr:
       miscsettings: "Paramètres variés"
       storypreview: "Montrer les aperçus des infos: "
       useravatars: "Montrer les avatars des utilisateurs :"
+      hidedragons: "Cacher les dragons :"
       saveallsettings: "Sauver tous les paramètres"
       inviteuser: "Inviter un nouvel utilisateur"
       cannotsendinvitations: "Vous ne pouvez pas envoyer d'invitations."

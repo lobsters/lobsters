@@ -142,7 +142,7 @@ class User < ActiveRecord::Base
   end
 
   def avatar_url(size = 100)
-    "https://secure.gravatar.com/avatar/" +
+    "https://www.gravatar.com/avatar/" +
       Digest::MD5.hexdigest(self.email.strip.downcase) +
       "?r=pg&d=identicon&s=#{size}"
   end

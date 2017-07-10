@@ -10,7 +10,7 @@ class Message < ActiveRecord::Base
 
   attr_accessor :recipient_username
 
-  validates_length_of :subject, :in => 1..150
+  validates_length_of :subject, :in => 1..100
   validates_length_of :body, :maximum => (64 * 1024)
 
   scope :unread, -> { where(:has_been_read => false,

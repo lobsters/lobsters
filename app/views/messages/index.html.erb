@@ -79,7 +79,8 @@
 
     <div class="boxline">
       <%= f.label :subject, "Subject:", :class => "required" %>
-      <%= f.text_field :subject, :style => "width: 500px;" %>
+      <%= f.text_field :subject, :style => "width: 500px;",
+        :maxlength => 100 %>
     </div>
 
     <div class="boxline">

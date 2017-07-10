@@ -69,7 +69,8 @@
       <%= error_messages_for @new_message %>
 
       <div class="boxline">
-        <%= f.text_field :subject, :style => "width: 500px;" %>
+        <%= f.text_field :subject, :style => "width: 500px;",
+          :maxlength => 100 %>
       </div>
 
       <div class="boxline">

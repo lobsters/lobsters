@@ -1,3 +1,3 @@
-Welcome to the lobsters wiki!
+Welcome to the (lobsters)[https://lobste.rs/) wiki!
 
 * chat on [IRC](IRC)

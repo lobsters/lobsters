@@ -15,9 +15,7 @@
     <th width="20%">Name</th>
     <th width="40%">Memo</th>
     <th width="15%"></th>
-    <% if @user.is_moderator? %>
-      <th></th>
-    <% end %>
+    <th width="10%"></th>
   </tr>
   <% bit = 0 %>
   <% @invitation_requests.each do |ir| %>

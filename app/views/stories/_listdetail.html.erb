@@ -123,24 +123,6 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           |
           <a href="<%= edit_story_path(story.short_id) %>" class="<%=
             story.has_suggestions? ? "story_has_suggestions" : "" %>">edit</a>
-
-          <% if story.is_gone? && story.is_undeletable_by_user?(@user) %>
-            |
-            <%= link_to "undelete", story_undelete_path(story.short_id),
-              :method => :post, :data => {
-              :confirm => "Are you sure you want to undelete this story?" } %>
-          <% elsif !story.is_gone? %>
-            |
-            <% if story.user_id != @user.try(:id) &&
-            @user.try(:is_moderator?) %>
-              <%= link_to "delete", story_path(story.short_id),
-                :method => :delete, :class => "mod_story_link" %>
-            <% else %>
-              <%= link_to "delete", story_path(story.short_id),
-                :method => :delete, :data => {
-                :confirm => "Are you sure you want to delete this story?" } %>
-            <% end %>
-          <% end %>
         <% end %>
         <% if story.can_have_suggestions_from_user?(@user) %>
           | <%= link_to "suggest", story_suggest_path(story.short_id),

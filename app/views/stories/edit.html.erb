@@ -44,8 +44,25 @@
         </div>
 
         <%= submit_tag "Save" %>
-        &nbsp;or <a href="<%= story_path(@story.short_id) %>">cancel
-          editing</a>
+
+        <% if @story.is_gone? && @story.is_undeletable_by_user?(@user) %>
+          &nbsp; | &nbsp;
+          <%= link_to "Undelete", story_undelete_path(@story.short_id),
+            :method => :post, :data => {
+            :confirm => "Are you sure you want to undelete this story?" },
+            :class => "button" %>
+        <% elsif !@story.is_gone? %>
+          &nbsp; | &nbsp;
+          <% if @story.user_id != @user.id && @user.is_moderator? %>
+            <%= link_to "Delete", story_path(@story.short_id),
+              :method => :delete, :class => "button mod_story_link" %>
+          <% else %>
+            <%= link_to "Delete", story_path(@story.short_id),
+              :method => :delete, :data => {
+              :confirm => "Are you sure you want to delete this story?" },
+              :class => "button" %>
+          <% end %>
+        <% end %>
 
         <div style="clear: both;"></div>
 

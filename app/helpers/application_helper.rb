@@ -52,7 +52,10 @@ module ApplicationHelper
       })
     end
 
-    @header_links.merge!({ "/search" => { :title => "Search" } })
+    @header_links.merge!({
+      "/saved" => { :title => "Saved" },
+      "/search" => { :title => "Search" },
+    })
 
     @header_links.each do |k,v|
       v[:class] ||= []
@@ -68,9 +71,7 @@ module ApplicationHelper
   def right_header_links
     return @right_header_links if @right_header_links
 
-    @right_header_links = {
-      "/filters" => { :title => "Filters" },
-    }
+    @right_header_links = {}
 
     if @user
       if (count = @user.unread_message_count) > 0

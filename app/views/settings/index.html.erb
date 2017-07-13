@@ -1,13 +1,13 @@
 <div class="box wide">
   <div class="legend right">
-    <a href="/u/<%= @user.username %>">View Profile</a>
+    <a href="/saved">Saved Stories</a>
     |
     <%= link_to "Logout", { :controller => "login", :action => "logout" },
       :data => { :confirm => "Are you sure you want to logout?" },
       :method => "post" %>
   </div>
   <div class="legend">
-    Account Settings
+    Account Settings (<a href="/u/<%= @user.username %>">View Profile</a>)
   </div>
 
   <%= form_for @edit_user, :url => settings_path, :method => :post,

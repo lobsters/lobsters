@@ -5,6 +5,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 <%= story.score <= -3 ? "negative_3" : "" %>
 <%= story.score <= -5 ? "negative_5" : "" %>
 <%= story.is_hidden_by_cur_user ? "hidden" : "" %>
+<%= story.is_saved_by_cur_user ? "saved" : "" %>
 <%= story.is_expired? ? "expired" : "" %>">
 <div class="story_liner">
   <div class="voters">
@@ -141,6 +142,13 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           <% else %>
             | <%= link_to "hide", story_hide_path(story.short_id),
               :class => "hider" %>
+          <% end %>
+          <% if story.is_saved_by_cur_user %>
+            | <%= link_to "unsave", story_unsave_path(story.short_id),
+              :class => "saver" %>
+          <% else %>
+            | <%= link_to "save", story_save_path(story.short_id),
+              :class => "saver" %>
           <% end %>
           <% if defined?(single_story) && single_story && story.hider_count > 0 %>
             (hidden by <%= pluralize(story.hider_count, "user") %>)

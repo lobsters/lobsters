@@ -39,6 +39,26 @@ var _Lobsters = Class.extend({
 
     $.post("/stories/" + li.attr("data-shortid") + "/" + act);
   },
+  saveStory: function(saverEl) {
+    if (!Lobsters.curUser)
+      return Lobsters.bounceToLogin();
+
+    var li = $(saverEl).closest(".story, .comment");
+    var act;
+
+    if (li.hasClass("saved")) {
+      act = "unsave";
+      li.removeClass("saved");
+      saverEl.innerHTML = "save";
+    }
+    else {
+      act = "save";
+      li.addClass("saved");
+      saverEl.innerHTML = "unsave";
+    }
+
+    $.post("/stories/" + li.attr("data-shortid") + "/" + act);
+  },
 
   upvoteComment: function(voterEl) {
     Lobsters.vote("comment", voterEl, 1);
@@ -332,6 +352,10 @@ $(document).ready(function() {
   });
   $("li.story a.hider").click(function() {
     Lobsters.hideStory(this);
+    return false;
+  });
+  $("li.story a.saver").click(function() {
+    Lobsters.saveStory(this);
     return false;
   });
 

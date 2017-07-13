@@ -32,6 +32,8 @@ private
 
       hs = HiddenStory.where(:user_id => @user.id, :story_id =>
         scope.map(&:id)).map(&:story_id)
+      ss = SavedStory.where(:user_id => @user.id, :story_id =>
+        scope.map(&:id)).map(&:story_id)
 
       scope.each do |s|
         if votes[s.id]
@@ -39,6 +41,9 @@ private
         end
         if hs.include?(s.id)
           s.is_hidden_by_cur_user = true
+        end
+        if ss.include?(s.id)
+          s.is_saved_by_cur_user = true
         end
       end
     end

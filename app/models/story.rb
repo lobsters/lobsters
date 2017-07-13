@@ -49,7 +49,7 @@ class Story < ActiveRecord::Base
   HOTNESS_WINDOW = 60 * 60 * 22
 
   attr_accessor :vote, :already_posted_story, :previewing, :seen_previous,
-    :is_hidden_by_cur_user
+    :is_hidden_by_cur_user, :is_saved_by_cur_user
   attr_accessor :editor, :moderation_reason, :merge_story_short_id,
     :editing_from_suggestions
   attr_accessor :fetching_ip
@@ -415,6 +415,10 @@ class Story < ActiveRecord::Base
 
   def is_recent?
     self.created_at >= RECENT_DAYS.days.ago
+  end
+
+  def is_saved_by_user?(user)
+    !!SavedStory.where(:user_id => user.id, :story_id => self.id).first
   end
 
   def is_unavailable

@@ -69,6 +69,17 @@ class StoryRepository
     stories.order("stories.created_at DESC")
   end
 
+  def saved
+    saved = base_scope
+    if @user
+      saved = saved.where(Story.arel_table[:id].in(saved_arel))
+    end
+    if @params[:exclude_tags].try(:any?)
+      saved = filter_tags saved, @params[:exclude_tags]
+    end
+    saved.order("hotness")
+  end
+
   def tagged(tag)
     tagged = positive_ranked base_scope.where(
       Story.arel_table[:id].in(
@@ -109,7 +120,7 @@ private
 
   def hidden_arel
     if @user
-      hidden_arel = HiddenStory.arel_table.where(
+      HiddenStory.arel_table.where(
         HiddenStory.arel_table[:user_id].eq(@user.id)
       ).project(
         HiddenStory.arel_table[:story_id]
@@ -119,6 +130,16 @@ private
 
   def positive_ranked(scope)
     scope.where("#{Story.score_sql} >= 0")
+  end
+
+  def saved_arel
+    if @user
+      SavedStory.arel_table.where(
+        SavedStory.arel_table[:user_id].eq(@user.id)
+      ).project(
+        SavedStory.arel_table[:story_id]
+      )
+    end
   end
 
   def filter_tags(scope, tags)

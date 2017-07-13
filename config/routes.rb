@@ -19,6 +19,8 @@ Lobsters::Application.routes.draw do
     get "/recent/page/:page" => "home#recent"
     get "/hidden" => "home#hidden"
     get "/hidden/page/:page" => "home#hidden"
+    get "/saved" => "home#saved", :format => /html|rss|json/
+    get "/saved/page/:page" => "home#saved"
 
     get "/upvoted(.format)" => "home#upvoted"
     get "/upvoted/page/:page" => "home#upvoted"
@@ -61,6 +63,8 @@ Lobsters::Application.routes.draw do
       post "undelete"
       post "hide"
       post "unhide"
+      post "save"
+      post "unsave"
       get "suggest"
       post "suggest", :action => "submit_suggestions"
     end

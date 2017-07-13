@@ -628,6 +628,9 @@ li.story.hidden {
 ol.show_hidden li.story.hidden {
 	opacity: 1.0 !important;
 }
+li.story.saved a.saver {
+	color: green;
+}
 
 li.story.expired {
 	opacity: 0.6;

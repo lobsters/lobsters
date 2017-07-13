@@ -1,6 +1,7 @@
 class StoriesController < ApplicationController
   before_action :require_logged_in_user_or_400,
-    :only => [ :upvote, :downvote, :unvote, :hide, :unhide, :preview ]
+    :only => [ :upvote, :downvote, :unvote, :hide, :unhide, :preview,
+    :save, :unsave ]
   before_action :require_logged_in_user, :only => [ :destroy, :create, :edit,
     :fetch_url_attributes, :new, :suggest ]
   before_action :verify_user_can_submit_stories, :only => [ :new, :create ]
@@ -308,6 +309,26 @@ class StoriesController < ApplicationController
     render :plain => "ok"
   end
 
+  def save
+    if !(story = find_story)
+      return render :plain => "can't find story", :status => 400
+    end
+
+    SavedStory.save_story_for_user(story.id, @user.id)
+
+    render :plain => "ok"
+  end
+
+  def unsave
+    if !(story = find_story)
+      return render :plain => "can't find story", :status => 400
+    end
+
+    SavedStory.where(:user_id => @user.id, :story_id => story.id).delete_all
+
+    render :plain => "ok"
+  end
+
 private
 
   def story_params
@@ -364,6 +385,7 @@ private
       end
 
       @story.is_hidden_by_cur_user = @story.is_hidden_by_user?(@user)
+      @story.is_saved_by_cur_user = @story.is_saved_by_user?(@user)
 
       @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @story.id)
       @comments.each do |c|

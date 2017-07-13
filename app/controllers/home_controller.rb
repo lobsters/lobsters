@@ -157,6 +157,31 @@ class HomeController < ApplicationController
     render :action => "index"
   end
 
+  def saved
+    @stories, @show_more = get_from_cache(hidden: true) {
+      paginate stories.saved
+    }
+
+    @rss_link ||= { :title => "RSS 2.0",
+      :href => "/saved.rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
+
+    @heading = @title = "Saved Stories"
+    @cur_url = "/saved"
+
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.rss {
+        if @user
+          @title = "Private feed of saved stories for #{@user.username}"
+          render :action => "rss", :layout => false
+        else
+          render :action => "rss", :layout => false
+        end
+      }
+      format.json { render :json => @stories }
+    end
+  end
+
   def tagged
     @tag = Tag.where(:tag => params[:tag]).first!
 

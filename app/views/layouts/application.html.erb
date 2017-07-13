@@ -48,20 +48,7 @@
           href="/" title="<%= Rails.application.name %> (Current traffic: <%=
           @traffic.to_i %>)"></a>
 
-        <% links = {
-          "/" => @cur_url == "/" ? Rails.application.name : "Home",
-          "/recent" => "Recent",
-          "/comments" => "Comments",
-        } %>
-
-        <% if @user && @user.can_submit_stories? %>
-          <% links.merge!({ "/threads" => "Your Threads",
-            "/stories/new" => "Submit Story" }) %>
-        <% end %>
-
-        <% links.merge!({ "/search" => "Search" }) %>
-
-        <% if @cur_url.present? && !links.keys.include?(@cur_url) &&
+        <% if @cur_url.present? && !header_links.keys.include?(@cur_url) &&
         @heading.present? %>
           <span id="headertitle">
             <a href="<%= @cur_url %>"><%= @heading %></a>
@@ -69,33 +56,19 @@
         <% end %>
 
         <span class="headerlinks">
-          <% links.each do |u,v| %>
-            <a href="<%= u %>" <%= u == @cur_url ? raw("class=\"cur_url\"") :
-              "" %>><%= v %></a>
+          <% header_links.each do |u,v| %>
+            <a href="<%= u %>" class="<%= v[:class].join(" ") %>"><%=
+              v[:title] %></a>
           <% end %>
         </span>
       </div>
 
       <div id="headerright">
         <span class="headerlinks">
-        <a href="/filters" <%= @cur_url == "/filters" ?
-          raw("class=\"cur_url\"") : "" %>>Filters</a>
-        <% if @user %>
-          <% if (count = @user.unread_message_count) > 0 %>
-            <a href="/messages" class="new_messages <%= @cur_url == "/messages" ?
-              "cur_url" : "" %>"><%= count %> New Message<%= count == 1 ? "" :
-              "s" %></a>
-          <% else %>
-            <a href="/messages" <%= @cur_url == "/messages" ?
-              raw("class=\"cur_url\"") : "" %>>Messages</a>
+          <% right_header_links.each do |u,v| %>
+            <a href="<%= u %>" class="<%= v[:class].join(" ") %>"><%=
+              v[:title] %></a>
           <% end %>
-
-          <a href="/settings" <%= @cur_url == "/settings" ?
-            raw("class=\"cur_url\"") : "" %>><%= @user.username %>
-            (<%= @user.karma %>)</a>
-        <% else %>
-          <a href="/login">Login</a>
-        <% end %>
         </span>
       </div>
 

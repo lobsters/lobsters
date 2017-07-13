@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   # for rss feeds, load the user's tag filters if a token is passed
-  before_action :find_user_from_rss_token, :only => [ :index, :newest ]
+  before_action :find_user_from_rss_token, :only => [ :index, :newest, :saved ]
   before_action { @page = page }
   before_action :require_logged_in_user, :only => [ :upvoted ]
 

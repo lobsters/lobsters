@@ -3,6 +3,6 @@ Welcome to the [lobsters](https://lobste.rs/) wiki! Check the [about page](https
 ## Community
 
 * chat on [IRC](IRC)
-* [Downvote guidelines](Downvote guidelines), from angersock
+* [Downvote guidelines](DownvoteGuidelines), from angersock
 
 ## Codebase

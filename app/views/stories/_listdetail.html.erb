@@ -143,15 +143,15 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             | <%= link_to "hide", story_hide_path(story.short_id),
               :class => "hider" %>
           <% end %>
+          <% if defined?(single_story) && single_story && story.hider_count > 0 %>
+            (hidden by <%= pluralize(story.hider_count, "user") %>)
+          <% end %>
           <% if story.is_saved_by_cur_user %>
             | <%= link_to "unsave", story_unsave_path(story.short_id),
               :class => "saver" %>
           <% else %>
             | <%= link_to "save", story_save_path(story.short_id),
               :class => "saver" %>
-          <% end %>
-          <% if defined?(single_story) && single_story && story.hider_count > 0 %>
-            (hidden by <%= pluralize(story.hider_count, "user") %>)
           <% end %>
         <% end %>
         <% if story.url.present? %>

@@ -52,8 +52,13 @@ module ApplicationHelper
       })
     end
 
+    if @user
+      @header_links.merge!({
+        "/saved" => { :title => "Saved" },
+      })
+    end
+
     @header_links.merge!({
-      "/saved" => { :title => "Saved" },
       "/search" => { :title => "Search" },
     })
 

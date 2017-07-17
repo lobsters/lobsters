@@ -1,6 +1,6 @@
 ### Lobsters Rails Project
 
-This is the 
+This is the
 [quite sad](https://www.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)
 source code to the site operating at
 [https://lobste.rs](https://lobste.rs).
@@ -25,7 +25,7 @@ file.
 
          $ git clone git://github.com/jcs/lobsters.git
          $ cd lobsters
-         lobsters$ 
+         lobsters$
 
 * Run Bundler to install/bundle gems needed by the project:
 
@@ -33,7 +33,8 @@ file.
 
 * Create a MySQL (other DBs supported by ActiveRecord may work, only MySQL and
 MariaDB have been tested) database, username, and password and put them in a
-`config/database.yml` file:
+`config/database.yml` file.  You will also want a separate database for
+running tests:
 
           development:
             adapter: mysql2
@@ -41,14 +42,17 @@ MariaDB have been tested) database, username, and password and put them in a
             reconnect: false
             database: lobsters_dev
             socket: /tmp/mysql.sock
-            username: *username*
-            password: *password*
+            username: *dev_username*
+            password: *dev_password*
             
           test:
-            adapter: sqlite3
-            database: db/test.sqlite3
-            pool: 5
-            timeout: 5000
+            adapter: mysql2
+            encoding: utf8mb4
+            reconnect: false
+            database: lobsters_test
+            socket: /tmp/mysql.sock
+            username: *test_username*
+            password: *test_password*
 
 * Load the schema into the new database:
 

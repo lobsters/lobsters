@@ -159,6 +159,7 @@ class User < ActiveRecord::Base
     self.disabled_invite_at = Time.now
     self.disabled_invite_by_user_id = disabler.id
     self.disabled_invite_reason = reason
+    self.save!
 
     msg = Message.new
     msg.deleted_by_author = true

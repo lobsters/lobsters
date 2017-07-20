@@ -276,7 +276,7 @@
   <% if @user.can_invite? %>
     <%= render :partial => "users/invitationform" %>
   <% else %>
-      You cannot send invitations.
+      You cannot send invitations: <%= @user.disabled_invite_reason %>
   <% end %>
 
   <br>

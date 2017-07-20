@@ -106,6 +106,8 @@ Lobsters::Application.routes.draw do
     get "/u" => "users#tree"
     get "/u/:username" => "users#show", :as => "user", :format => /html|json/
 
+    get "/avatars/:username_size.png" => "avatars#show"
+
     post "/users/:username/ban" => "users#ban", :as => "user_ban"
     post "/users/:username/unban" => "users#unban", :as => "user_unban"
     post "/users/:username/disable_invitation" => "users#disable_invitation", :as => "user_disable_invite"

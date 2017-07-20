@@ -142,9 +142,7 @@ class User < ActiveRecord::Base
   end
 
   def avatar_url(size = 100)
-    "https://www.gravatar.com/avatar/" +
-      Digest::MD5.hexdigest(self.email.strip.downcase) +
-      "?r=pg&d=identicon&s=#{size}"
+    Rails.application.root_url + "avatars/#{self.username}-#{size}.png"
   end
 
   def average_karma
@@ -264,6 +262,25 @@ class User < ActiveRecord::Base
 
   def comments_posted_count
     Keystore.value_for("user:#{self.id}:comments_posted").to_i
+  end
+
+  def fetched_avatar(size = 100)
+    gravatar_url = "https://www.gravatar.com/avatar/" <<
+      Digest::MD5.hexdigest(self.email.strip.downcase) <<
+      "?r=pg&d=identicon&s=#{size}"
+
+    begin
+      s = Sponge.new
+      s.timeout = 3
+      res = s.fetch(gravatar_url)
+      if res.present?
+        return res
+      end
+    rescue => e
+      Rails.logger.error "error fetching #{gravatar_url}: #{e.message}"
+    end
+
+    nil
   end
 
   def update_comments_posted_count!

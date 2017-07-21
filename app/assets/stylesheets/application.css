@@ -17,11 +17,11 @@ body, textarea, input, button {
 	font-family: "helvetica neue", arial, sans-serif;
 	font-size: 10pt;
 	color: #333;
+	line-height: 1.45em;
 }
 
 body {
 	background-color: #fefefe;
-	line-height: 1.45em;
 }
 
 a {

@@ -406,8 +406,10 @@ class Comment < ActiveRecord::Base
   def score_for_user(u)
     if self.showing_downvotes_for_user?(u)
       score
+    elsif u && u.can_downvote?(self)
+      "~"
     else
-      "-"
+      "&nbsp;".html_safe
     end
   end
 

@@ -136,12 +136,12 @@ var _Lobsters = Class.extend({
 
     var li = $(voterEl).closest(".story, .comment");
     var scoreDiv = li.find("div.score").get(0);
-    var score = 0;
     var showScore = true;
-    if (scoreDiv.innerHTML == "-")
+    var score = parseInt(scoreDiv.innerHTML);
+    if (isNaN(score)) {
       showScore = false;
-    else
-      score = parseInt(scoreDiv.innerHTML);
+      score = 0;
+    }
     var action = "";
 
     if (li.hasClass("upvoted") && point > 0) {

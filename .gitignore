@@ -18,6 +18,7 @@
 
 vendor/bundle
 public/assets
+public/avatars
 node_modules/
 yarn-error.log
 yarn.lock

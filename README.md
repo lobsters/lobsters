@@ -27,6 +27,12 @@ file.
          $ cd lobsters
          lobsters$
 
+* Install Nodejs, needed (or other execjs) for uglifier
+
+         Fedora: sudo yum install nodejs
+         Ubuntu: sudo apt-get install nodejs
+         OSX: brew install nodejs
+
 * Run Bundler to install/bundle gems needed by the project:
 
          lobsters$ bundle

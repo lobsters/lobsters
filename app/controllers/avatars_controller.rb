@@ -1,7 +1,29 @@
 class AvatarsController < ApplicationController
+  before_action :require_logged_in_user, :only => [ :expire ]
+
   ALLOWED_SIZES = [ 16, 32, 100, 200 ]
 
   CACHE_DIR = "#{Rails.root}/public/avatars/"
+
+  def expire
+    expired = 0
+
+    Dir.entries(CACHE_DIR).select{|f|
+      f.match(/\A#{@user.username}-(\d+)\.png\z/)
+    }.each do |f|
+      begin
+        Rails.logger.debug "Expiring #{f}"
+        File.unlink("#{CACHE_DIR}/#{f}")
+        expired += 1
+      rescue => e
+        Rails.logger.error "Failed expiring #{f}: #{e}"
+      end
+    end
+
+    flash[:success] = "Your avatar cache has been purged of #{expired} " <<
+      "file#{expired == 1 ? "" : "s"}"
+    return redirect_to "/settings"
+  end
 
   def show
     username, size = params[:username_size].to_s.scan(/\A(.+)-(\d+)\z/).first

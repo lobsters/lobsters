@@ -43,9 +43,6 @@
     <div class="boxline">
       <%= f.label :email, "E-mail Address:", :class => "required" %>
       <%= f.email_field :email, :size => 40 %>
-      <span class="hint">
-        <a href="http://www.gravatar.com/" target="_blank">Gravatar</a>'ized
-      </span>
     </div>
 
     <div class="boxline">
@@ -76,11 +73,23 @@
       External Accounts
     </div>
 
+    <div class="boxline">
+      <%= label_tag :gravatar,
+        raw("<a href=\"https://gravatar.com/\">Gravatar</a>:"),
+        :class => "required" %>
+      <span>
+        Your avatar will be cached from the Gravatar icon for your e-mail
+        address above.
+        (<%= link_to "Expire cache", "/avatars/expire", :method => :post %>)
+      </span>
+    </div>
+
     <% if Pushover.enabled? %>
       <div class="boxline">
         <%= label_tag :pushover_user_key,
           raw("<a href=\"https://pushover.net/\">Pushover</a>:"),
           :class => "required" %>
+        <span>
         <%= link_to((@edit_user.pushover_user_key.present??
           "Manage Pushover Subscription" : "Subscribe With Pushover"),
           "/settings/pushover_auth", :class => "pushover_button",
@@ -88,12 +97,16 @@
         <span class="hint">
           For optional comment and message notifications below
         </span>
+        </span>
       </div>
     <% end %>
 
     <% if Github.enabled? %>
       <div class="boxline">
-        <%= label_tag :github_username, "GitHub:", :class => "required" %>
+        <span>
+        <%= label_tag :github_username,
+          raw("<a href=\"https://github.com/\">GitHub</a>:"),
+          :class => "required" %>
         <% if @edit_user.github_username.present? %>
           Linked to
           <strong><a href="https://github.com/<%= h(@edit_user.github_username)
@@ -103,12 +116,16 @@
         <% else %>
           <a href="/settings/github_auth">Connect</a>
         <% end %>
+        </span>
       </div>
     <% end %>
 
     <% if Twitter.enabled? %>
       <div class="boxline">
-        <%= label_tag :twitter_username, "Twitter:", :class => "required" %>
+        <%= label_tag :twitter_username,
+          raw("<a href=\"https://twitter.com/\">Twitter</a>:"),
+          :class => "required" %>
+        <span>
         <% if @edit_user.twitter_username.present? %>
           Linked to
           <strong><a href="https://twitter.com/<%= h(@edit_user.twitter_username)
@@ -118,6 +135,7 @@
         <% else %>
           <a href="/settings/twitter_auth">Connect</a>
         <% end %>
+        </span>
       </div>
     <% end %>
 

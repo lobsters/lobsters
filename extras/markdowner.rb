@@ -27,7 +27,11 @@ class Markdowner
       h[:rel] = "nofollow" unless (URI.parse(h[:href]).host.nil? rescue false)
     end
 
-    ng.at_css("body").inner_html
+    if ng.at_css("body")
+      ng.at_css("body").inner_html
+    else
+      ""
+    end
   end
 
   def self.walk_text_nodes(node, &block)

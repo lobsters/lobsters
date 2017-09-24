@@ -371,7 +371,7 @@ ol.search_results {
 }
 
 ol.comments {
-	margin-left: 20px;
+	margin-left: 2.05em;
 	margin-bottom: 0em;
 	padding-left: 6px;
 }
@@ -547,9 +547,10 @@ li input.comment_folder_button {
 li .comment_folder {
 	display: inline-block;
 	font-size: 9pt;
+	font-family: monospace;
+	color: #aaa;
 	letter-spacing: 0.1em;
 	width: 40px;
-	margin-right: -1px;
  	cursor: pointer;
 	float: left;
 	text-align: right;

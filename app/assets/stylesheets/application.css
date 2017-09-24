@@ -376,7 +376,7 @@ ol.comments {
 	padding-left: 6px;
 }
 ol.comments1 {
-	margin-left: 0;
+	margin-left: -20px;
 	padding-left: 0;
 }
 ol.comments.comments1 {
@@ -463,6 +463,7 @@ ol.stories li.story div.story_liner {
 	clear: both;
 	padding-top: 0.4em;
 	padding-bottom: 0.4em;
+	padding-left: 20px;
 }
 
 .comment a {
@@ -547,8 +548,11 @@ li .comment_folder {
 	display: inline-block;
 	font-size: 9pt;
 	letter-spacing: 0.1em;
-	width: 1.4em;
+	width: 40px;
+	margin-right: -1px;
  	cursor: pointer;
+	float: left;
+	text-align: right;
 }
 li .comment_folder:before {
 	content: "[-]";
@@ -556,9 +560,12 @@ li .comment_folder:before {
 li .comment_folder_button:checked ~ .comment .comment_folder:before {
 	content: "[+]";
 }
-li .comment_folder_button:checked ~ div.comment div.comment_text,
-li .comment_folder_button:checked ~ div.comment div.voters {
+li .comment_folder_button:checked ~ div.comment div.comment_text {
  	display: none;
+}
+li .comment_folder_button:checked ~ div.comment div.voters {
+	visibility: hidden;
+	margin-bottom: -15px;
 }
 li .comment_folder_button:checked ~ ol.comments ol,
 li .comment_folder_button:checked ~ ol.comments div.comment,
@@ -716,6 +723,7 @@ div.comment_text {
 	font-size: 10.5pt;
 	max-width: 700px;
 	word-wrap: break-word;
+	float: left;
 }
 
 div.comment_text blockquote,
@@ -817,7 +825,7 @@ div.markdown_help_label {
 }
 
 .comment .preview {
-	padding-left: 25px;
+	padding-left: 12px;
 }
 
 div#story_preview {

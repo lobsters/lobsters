@@ -13,13 +13,14 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
   <% if !comment.is_gone? %>
     <% can_downvote = @user && @user.can_downvote?(comment) %>
+    <% score_display = comment.score_for_user(@user) %>
     <div class="voters">
       <% if @user %>
         <a class="upvoter"></a>
       <% else %>
         <%= link_to "", login_path, :class => "upvoter" %>
       <% end %>
-      <div class="score"><%= comment.score_for_user(@user) %></div>
+      <div class="score"><%= score_display %></div>
       <% if can_downvote %>
         <a class="downvoter"></a>
       <% else %>
@@ -29,6 +30,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
     <% if defined?(children) && children %>
       <% if can_downvote %>
         <div class="comment_parent_tree_line can_downvote"></div>
+      <% elsif score_display != "&nbsp;" %>
+        <div class="comment_parent_tree_line score_shown"></div>
       <% else %>
         <div class="comment_parent_tree_line"></div>
       <% end %>

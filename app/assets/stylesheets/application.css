@@ -586,6 +586,9 @@ li .comment_parent_tree_line {
 	left: 80px;
 	height: 100%;
 	border-left: 1px dotted #bbb;
+	top: 30px;
+}
+li .comment_parent_tree_line.score_shown {
 	top: 44px;
 }
 li .comment_parent_tree_line.can_downvote {

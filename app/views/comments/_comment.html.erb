@@ -25,6 +25,9 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <span class="downvoter downvoter_stub"></span>
       <% end %>
     </div>
+    <% if defined?(children) && children %>
+      <div class="comment_parent_tree_line"></div>
+    <% end %>
   <% end %>
   <div class="details">
     <div class="byline">

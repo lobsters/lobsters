@@ -588,6 +588,9 @@ li .comment_parent_tree_line {
 	border-left: 1px dotted #bbb;
 	top: 44px;
 }
+li .comment_parent_tree_line.can_downvote {
+	top: 56px;
+}
 li .comment_siblings_tree_line {
 	position: absolute;
 	left: 47px;

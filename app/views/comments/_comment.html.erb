@@ -12,6 +12,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
     class="comment_folder"></label>
 
   <% if !comment.is_gone? %>
+    <% can_downvote = @user && @user.can_downvote?(comment) %>
     <div class="voters">
       <% if @user %>
         <a class="upvoter"></a>
@@ -19,14 +20,18 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <%= link_to "", login_path, :class => "upvoter" %>
       <% end %>
       <div class="score"><%= comment.score_for_user(@user) %></div>
-      <% if @user && @user.can_downvote?(comment) %>
+      <% if can_downvote %>
         <a class="downvoter"></a>
       <% else %>
         <span class="downvoter downvoter_stub"></span>
       <% end %>
     </div>
     <% if defined?(children) && children %>
-      <div class="comment_parent_tree_line"></div>
+      <% if can_downvote %>
+        <div class="comment_parent_tree_line can_downvote"></div>
+      <% else %>
+        <div class="comment_parent_tree_line"></div>
+      <% end %>
     <% end %>
   <% end %>
   <div class="details">

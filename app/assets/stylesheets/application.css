@@ -382,6 +382,9 @@ ol.comments1 {
 ol.comments.comments1 {
 	border-left-color: transparent;
 }
+ol.comments1 > li.comments_subtree {
+	margin-left: 11px;
+}
 
 ol.search_results {
 	margin-left: 20px;

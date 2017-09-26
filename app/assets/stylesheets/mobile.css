@@ -68,6 +68,9 @@
 		margin-left: 0;
 		padding-left: 0;
 	}
+	ol.comments1 > li.comments_subtree {
+		margin-left: 0;
+	}
 
 	li .comment_folder {
 		display: none;

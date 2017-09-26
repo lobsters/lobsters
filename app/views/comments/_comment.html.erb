@@ -64,24 +64,24 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
         <% if comment.is_editable_by_user?(@user) %>
           |
-          <a class="comment_editor">edit</a>
+          <a tabindex="0" class="comment_editor">edit</a>
         <% end %>
 
         <% if comment.is_gone? && comment.is_undeletable_by_user?(@user) %>
           |
-          <a class="comment_undeletor">undelete</a>
+          <a tabindex="0" class="comment_undeletor">undelete</a>
         <% elsif !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
           |
           <% if @user && @user.is_moderator? && @user.id != comment.user_id %>
-            <a class="comment_moderator">delete</a>
+            <a tabindex="0" class="comment_moderator">delete</a>
           <% else %>
-            <a class="comment_deletor">delete</a>
+            <a tabindex="0" class="comment_deletor">delete</a>
           <% end %>
         <% end %>
 
         <% if @user && !comment.story.is_gone? && !comment.is_gone? %>
             |
-            <a class="comment_replier" unselectable="on">reply</a>
+            <a tabindex="0" class="comment_replier" unselectable="on">reply</a>
         <% end %>
 
         <% if defined?(show_story) && show_story %>

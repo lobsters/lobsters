@@ -604,7 +604,7 @@ li .comment_siblings_tree_line {
 	border-left: 1px dotted #bbb;
 	top: 2em;
 }
-li:last-child .comment_siblings_tree_line {
+li:last-child > .comment_siblings_tree_line {
 	border-left-color: transparent;
 }
 

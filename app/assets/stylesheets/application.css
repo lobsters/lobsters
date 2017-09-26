@@ -561,6 +561,13 @@ li .comment_folder {
 }
 li .comment_folder.comment_folder_inline {
 	display: none;
+	color: inherit;
+	width: 1.4em;
+	float: none;
+	margin-right: 0;
+}
+li .comment_folder.comment_folder_inline.force_inline {
+	display: inline;
 }
 li .comment_folder:before {
 	content: "[-]";

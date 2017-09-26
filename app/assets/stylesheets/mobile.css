@@ -81,10 +81,6 @@
 	}
 	li .comment_folder.comment_folder_inline {
 		display: inline;
-		color: inherit;
-		width: 1.4em;
-		float: none;
-		margin-right: 0;
 	}
 
 	li .comment_parent_tree_line,

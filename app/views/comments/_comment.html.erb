@@ -8,8 +8,10 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 "upvoted" : "downvoted") : "" %>
   <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>">
 
-  <label for="comment_folder_<%= comment.short_id %>"
-    class="comment_folder"></label>
+  <% if defined?(show_tree_lines) && show_tree_lines %>
+    <label for="comment_folder_<%= comment.short_id %>"
+      class="comment_folder"></label>
+  <% end %>
 
   <% if !comment.is_gone? %>
     <% can_downvote = @user && @user.can_downvote?(comment) %>
@@ -41,8 +43,13 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
     <div class="byline">
       <a name="c_<%= comment.short_id %>"></a>
 
-      <label for="comment_folder_<%= comment.short_id %>"
-        class="comment_folder comment_folder_inline"></label>
+      <% if defined?(show_tree_lines) && show_tree_lines %>
+        <label for="comment_folder_<%= comment.short_id %>"
+          class="comment_folder comment_folder_inline"></label>
+      <% else %>
+        <label for="comment_folder_<%= comment.short_id %>"
+          class="comment_folder comment_folder_inline force_inline"></label>
+      <% end %>
 
       <% if defined?(was_merged) && was_merged %>
         <span class="merge"></span>

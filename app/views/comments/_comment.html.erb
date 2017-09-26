@@ -1,32 +1,55 @@
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
   <%= comment.score <= Comment::DOWNVOTABLE_MIN_SCORE ? "checked" : "" %>>
+
 <div id="c_<%= comment.short_id %>"
 data-shortid="<%= comment.short_id if comment.persisted? %>"
 class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 "upvoted" : "downvoted") : "" %>
   <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>">
+
+  <% if defined?(show_tree_lines) && show_tree_lines %>
+    <label for="comment_folder_<%= comment.short_id %>"
+      class="comment_folder"></label>
+  <% end %>
+
   <% if !comment.is_gone? %>
+    <% can_downvote = @user && @user.can_downvote?(comment) %>
+    <% score_display = comment.score_for_user(@user) %>
     <div class="voters">
       <% if @user %>
         <a class="upvoter"></a>
       <% else %>
         <%= link_to "", login_path, :class => "upvoter" %>
       <% end %>
-      <div class="score"><%= comment.score_for_user(@user) %></div>
-      <% if @user && @user.can_downvote?(comment) %>
+      <div class="score"><%= score_display %></div>
+      <% if can_downvote %>
         <a class="downvoter"></a>
       <% else %>
         <span class="downvoter downvoter_stub"></span>
       <% end %>
     </div>
+    <% if defined?(children) && children %>
+      <% if can_downvote %>
+        <div class="comment_parent_tree_line can_downvote"></div>
+      <% elsif score_display != "&nbsp;" %>
+        <div class="comment_parent_tree_line score_shown"></div>
+      <% else %>
+        <div class="comment_parent_tree_line"></div>
+      <% end %>
+    <% end %>
   <% end %>
   <div class="details">
     <div class="byline">
       <a name="c_<%= comment.short_id %>"></a>
 
-      <label for="comment_folder_<%= comment.short_id %>"
-        class="comment_folder"></label>
+      <% if defined?(show_tree_lines) && show_tree_lines %>
+        <label for="comment_folder_<%= comment.short_id %>"
+          class="comment_folder comment_folder_inline"></label>
+      <% else %>
+        <label for="comment_folder_<%= comment.short_id %>"
+          class="comment_folder comment_folder_inline force_inline"></label>
+      <% end %>
 
       <% if defined?(was_merged) && was_merged %>
         <span class="merge"></span>

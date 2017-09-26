@@ -57,12 +57,35 @@
 		margin-top: 0.5em;
 	}
 
+	.comment {
+		padding-left: 0;
+	}
+
+	.comment .preview {
+		padding-left: 25px;
+	}
+
 	ol.comments {
 		margin-left: 10px;
 	}
 	ol.comments1 {
 		margin-left: 0;
 		padding-left: 0;
+	}
+	ol.comments1 > li.comments_subtree {
+		margin-left: 0;
+	}
+
+	li .comment_folder {
+		display: none;
+	}
+	li .comment_folder.comment_folder_inline {
+		display: inline-block;
+	}
+
+	li .comment_parent_tree_line,
+	li .comment_siblings_tree_line {
+		border-left-color: transparent;
 	}
 
 	div.voters {
@@ -72,6 +95,10 @@
 	}
 	div.voters a.upvoter {
 		margin-top: -5px;
+	}
+
+	div.comment_form_container {
+		margin-left: 0;
 	}
 
 	div.comment_form_container form {

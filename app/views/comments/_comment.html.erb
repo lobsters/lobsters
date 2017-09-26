@@ -41,6 +41,9 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
     <div class="byline">
       <a name="c_<%= comment.short_id %>"></a>
 
+      <label for="comment_folder_<%= comment.short_id %>"
+        class="comment_folder comment_folder_inline"></label>
+
       <% if defined?(was_merged) && was_merged %>
         <span class="merge"></span>
       <% end %>

@@ -557,6 +557,9 @@ li .comment_folder {
 	text-align: center;
 	margin-right: -0.3em;
 }
+li .comment_folder.comment_folder_inline {
+	display: none;
+}
 li .comment_folder:before {
 	content: "[-]";
 }

@@ -404,11 +404,14 @@ private
     end
   end
 
+  # stub out story enough that it can be previewed safely
   def ensure_preview
     stub = {story: { title: '', description: '', tags_a: ['']}}
     return params.merge!(stub) unless params[:story]
     %i(title description tags_a).each do |attribute|
-      stub[:story].store(attribute, params[:story][attribute]) if params[:story][attribute]
+      if params[:story][attribute]
+        stub[:story].store(attribute, params[:story][attribute])
+      end
     end
     params.merge!(stub)
   end

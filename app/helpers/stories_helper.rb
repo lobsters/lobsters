@@ -10,7 +10,7 @@ module StoriesHelper
 
     if Moderation.joins(:story).
     where("stories.user_id = ? AND moderations.created_at > ?", @user.id,
-    5.days.ago).count > 0
+    5.days.ago).exists?
       return true
     end
 

@@ -376,11 +376,14 @@ ol.comments {
 	padding-left: 6px;
 }
 ol.comments1 {
-	margin-left: 0;
+	margin-left: -20px;
 	padding-left: 0;
 }
 ol.comments.comments1 {
 	border-left-color: transparent;
+}
+ol.comments1 > li.comments_subtree {
+	margin-left: 11px;
 }
 
 ol.search_results {
@@ -463,6 +466,9 @@ ol.stories li.story div.story_liner {
 	clear: both;
 	padding-top: 0.4em;
 	padding-bottom: 0.4em;
+	padding-left: 20px;
+	position: relative;
+	overflow: hidden;
 }
 
 .comment a {
@@ -546,9 +552,16 @@ li input.comment_folder_button {
 li .comment_folder {
 	display: inline-block;
 	font-size: 9pt;
+	color: #aaa;
 	letter-spacing: 0.1em;
-	width: 1.4em;
+	width: 1.5em;
  	cursor: pointer;
+	float: left;
+	text-align: center;
+	margin-right: -0.3em;
+}
+li .comment_folder.comment_folder_inline {
+	display: none;
 }
 li .comment_folder:before {
 	content: "[-]";
@@ -556,14 +569,46 @@ li .comment_folder:before {
 li .comment_folder_button:checked ~ .comment .comment_folder:before {
 	content: "[+]";
 }
-li .comment_folder_button:checked ~ div.comment div.comment_text,
-li .comment_folder_button:checked ~ div.comment div.voters {
+li .comment_folder_button:checked ~ div.comment div.comment_text {
  	display: none;
+}
+li .comment_folder_button:checked ~ div.comment div.voters {
+	visibility: hidden;
+	margin-bottom: -15px;
 }
 li .comment_folder_button:checked ~ ol.comments ol,
 li .comment_folder_button:checked ~ ol.comments div.comment,
 li .comment_folder_button:checked ~ ol.comments li {
  	display: none;
+}
+
+li.comments_subtree {
+	position: relative;
+	overflow: hidden;
+}
+
+li .comment_parent_tree_line {
+	position: absolute;
+	left: 54px;
+	height: 100%;
+	border-left: 1px dotted #bbb;
+	top: 30px;
+}
+li .comment_parent_tree_line.score_shown {
+	top: 44px;
+}
+li .comment_parent_tree_line.can_downvote {
+	top: 56px;
+}
+li .comment_siblings_tree_line {
+	position: absolute;
+	left: 28px;
+	height: 100%;
+	border-left: 1px dotted #bbb;
+	top: 2em;
+}
+li:last-child > .comment_siblings_tree_line {
+	border-left-color: transparent;
 }
 
 /* try to force a highlighted comment to stay visible */
@@ -716,6 +761,7 @@ div.comment_text {
 	font-size: 10.5pt;
 	max-width: 700px;
 	word-wrap: break-word;
+	float: left;
 }
 
 div.comment_text blockquote,
@@ -817,7 +863,7 @@ div.markdown_help_label {
 }
 
 .comment .preview {
-	padding-left: 25px;
+	padding-left: 12px;
 }
 
 div#story_preview {

@@ -97,6 +97,10 @@
 		margin-top: -5px;
 	}
 
+	div.comment_form_container {
+		margin-left: 0;
+	}
+
 	div.comment_form_container form {
 		margin-left: 35px;
 	}

@@ -61,6 +61,10 @@
 		padding-left: 0;
 	}
 
+	.comment .preview {
+		padding-left: 25px;
+	}
+
 	ol.comments {
 		margin-left: 10px;
 	}

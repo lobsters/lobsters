@@ -217,7 +217,7 @@ var _Lobsters = Class.extend({
   },
 
   previewStory: function(form) {
-    $("#inside").load("/stories/preview", $(form).serializeArray(),
+    $("#submission_preview").load("/stories/preview", $(form).serializeArray(),
     function() {
       Lobsters.runSelect2();
     });
@@ -471,8 +471,17 @@ $(document).ready(function() {
     Lobsters.previewComment($(this).parents("form").first());
   });
 
+  var box_height = $('#submission_builder').height();
+  $('#submission_preview').css('height', box_height)
   $(document).on("click", "button.story-preview", function() {
-    Lobsters.previewStory($(this).parents("form").first());
+    Lobsters.previewStory($(this).siblings('form').first());
+    $('#submission_preview').show();
+    $('#submission_builder').hide();
+  });
+
+  $(document).on("click", "button.story-write", function() {
+    $('#submission_builder').show();
+    $('#submission_preview').hide();
   });
 
   $(document).on("blur", "#story_url", function() {

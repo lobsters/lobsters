@@ -1,31 +1,9 @@
-<% if f.object.errors.count == 1 && f.object.already_posted_story %>
-  <div class="flash-error">
-  <h2>Error: This story was already submitted <%=
-    time_ago_in_words_label(f.object.already_posted_story.created_at) %></h2>
-  <p>
-  Please view the <a href="<%= f.object.already_posted_story.comments_path %>"
-  target="_blank">previous discussion</a> for this story.
-  </p>
-  </div>
-<% elsif f.object.errors.any? %>
-  <%= error_messages_for f.object %>
-<% elsif !f.object.errors.any? && f.object.already_posted_story %>
-  <div class="flash-notice">
-  <h2>Note: This story was already submitted <%=
-    time_ago_in_words_label(f.object.already_posted_story.created_at) %>, but
-    may be submitted again.</h2>
-  <p>
-  Please view the <a href="<%= f.object.already_posted_story.comments_path %>"
-  target="_blank">previous discussion</a> for this story first.  If the content
-  has changed or warrants new discussion, you may submit it again.
-  </p>
-  </div>
-
-  <%= f.hidden_field :seen_previous %>
-<% end %>
+<% locales = { :f => f } %>
+<%= render :partial => 'stories/error', :locals => locales %>
 
 <div class="box">
-  <% unless defined?(suggesting) %>
+  <div id="submission_preview"></div>
+  <div id="submission_builder">
     <div class="boxline">
     <% if f.object.url_is_editable_by_user?(@user) %>
       <%= f.label :url, "URL:", :class => "required" %>
@@ -39,144 +17,120 @@
       </div>
     <% end %>
     </div>
-  <% end %>
 
-  <div class="boxline">
-    <%= f.label :title, "Title:", :class => "required" %>
-    <%= f.text_field :title, :maxlength => 100 %>
-  </div>
+    <%= render :partial => 'stories/title', :locals => { :f => f } %>
 
-  <% if f.object.id && !defined?(suggesting) %>
-    <% title_votes = {} %>
-    <% f.object.suggested_titles.each do |st| %>
-      <% title_votes[st.title] ||= 0 %>
-      <% title_votes[st.title] += 1 %>
+    <% if f.object.id %>
+      <% title_votes = {} %>
+      <% f.object.suggested_titles.each do |st| %>
+        <% title_votes[st.title] ||= 0 %>
+        <% title_votes[st.title] += 1 %>
+      <% end %>
+      <% title_votes.delete(f.object.title) %>
+      <% if title_votes.any? %>
+        <div class="boxline actions">
+          Users have suggested changing this story's title to:
+          <br>
+          <% title_votes.each do |ti,c| %>
+            <%= h(ti) %><%= c == 1 ? "" : " (#{c} votes)" %><br>
+          <% end %>
+        </div>
+      <% end %>
     <% end %>
-    <% title_votes.delete(f.object.title) %>
-    <% if title_votes.any? %>
-      <div class="boxline actions">
-        Users have suggested changing this story's title to:
-        <br>
-        <% title_votes.each do |ti,c| %>
-          <%= h(ti) %><%= c == 1 ? "" : " (#{c} votes)" %><br>
-        <% end %>
-      </div>
+
+    <%= render :partial => 'stories/tags', :locals => locales %>
+
+    <% if f.object.id %>
+      <% tag_votes = {} %>
+      <% f.object.suggested_taggings.group_by(&:user_id).each do |u,stg| %>
+        <% tl = stg.map{|st| st.tag.tag }.sort.join(", ") %>
+        <% tag_votes[tl] ||= 0 %>
+        <% tag_votes[tl] += 1 %>
+      <% end %>
+      <% tag_votes.delete(f.object.tags_a.sort.join(", ")) %>
+      <% if tag_votes.any? %>
+        <div class="boxline actions">
+          Users have suggested changing this story's tags to:
+          <br>
+          <% tag_votes.each do |ts,c| %>
+            <%= ts %><%= c == 1 ? "" : " (#{c} votes)" %><br>
+          <% end %>
+        </div>
+      <% end %>
     <% end %>
-  <% end %>
 
-  <div class="boxline" style="margin-bottom: 2px;">
-  <%= f.label :tags_a, "Tags:", :class => "required",
-    :style => "line-height: 2.3em;" %>
-  <%= f.select "tags_a", options_for_select(
-    Tag.all_with_filtered_counts_for(@user).map{|t|
-      html = "<strong>#{h(t.tag)}</strong> - #{h(t.description.to_s)}"
-
-      if t.hotness_mod != 0
-        html << " (hotness mod #{t.hotness_mod > 0 ? "+" : ""}#{t.hotness_mod})"
-      end
-      if t.filtered_count > 0
-        html << " <em>#{t.filtered_count} user" <<
-          (t.filtered_count == 1 ? "" : "s") << " filtering</em>"
-      end
-
-      [ "#{t.tag} - #{t.description}", t.tag, { "data-html" => raw(html) } ]},
-    f.object.tags_a), {}, { :multiple => true } %>
-  </div>
-
-  <% if f.object.id && !defined?(suggesting) %>
-    <% tag_votes = {} %>
-    <% f.object.suggested_taggings.group_by(&:user_id).each do |u,stg| %>
-      <% tl = stg.map{|st| st.tag.tag }.sort.join(", ") %>
-      <% tag_votes[tl] ||= 0 %>
-      <% tag_votes[tl] += 1 %>
-    <% end %>
-    <% tag_votes.delete(f.object.tags_a.sort.join(", ")) %>
-    <% if tag_votes.any? %>
-      <div class="boxline actions">
-        Users have suggested changing this story's tags to:
-        <br>
-        <% tag_votes.each do |ts,c| %>
-          <%= ts %><%= c == 1 ? "" : " (#{c} votes)" %><br>
-        <% end %>
-      </div>
-    <% end %>
-  <% end %>
-
-  <% unless defined?(suggesting) %>
     <div class="boxline">
       <%= f.label :description, "Text:", :class => "required" %>
       <%= f.text_area :description, :rows => 15,
         :placeholder => "Optional when submitting a URL; please see guidelines" %>
     </div>
-
-    <div class="boxline actions markdown_help_toggler">
-      <a href="#" id="story_guidelines_toggler">
-        Story submission guidelines
-      </a>
-      <div id="story_guidelines" style="<%= show_guidelines?? "" :
-      "display: none;" %>">
-        <ul>
-
-          <li><p>
-          Do not editorialize story titles, but when the original story's
-          title has no context or is unclear, please change it.  <strong>Please
-          remove extraneous components from titles such as the name of the
-          site or section.</strong>
-          </p></li>
-
-          <li><p>
-          When the story being submitted is more than a year or so old,
-          please add the year the story was written to the post title in
-          parentheses.
-          </p></li>
-
-          <li><p>
-          When submitting a URL, the text field is optional and should only
-          be used when additional context or explanation of the URL is
-          needed.  Commentary or opinion should be reserved for a comment,
-          so that it can be voted on separately from the story.
-          </p></li>
-
-          <li><p>
-          If no tags clearly apply to the story you are submitting, chances
-          are it does not belong here.  Do not overreach with tags if they
-          are not the primary focus of the story.
-          </p></li>
-
-          <li><p>
-          To be able to easily submit a page you're viewing in your browser
-          to <%= Rails.application.name %>, drag this bookmarklet to your
-          bookmark bar:
-          [<a href="javascript:{window.open(%22<%= Rails.application.root_url
-          %>stories/new?url=%22+encodeURIComponent(document.location)+<%
-          %>%22&title=%22+encodeURIComponent(document.title));%20void(0);}<%
-          %>">Submit to <%= Rails.application.name %></a>].
-          You'll be taken to this page with the viewed page's URL and title.
-          </p></li>
-
-        </ul>
-      </div>
-    </div>
-  <% end %>
-</div>
-<% unless defined?(suggesting) %>
-  <div class="box">
-    <div class="boxline">
-      <%= f.label :user_is_author, "Author:", :class => "required" %>
-      <%= f.check_box :user_is_author %>
-      <%= f.label :user_is_author,
-        (f.object.id && f.object.user_id != @user.id ? "Submitter is" : "I am") +
-        " the author of the story at this URL (or this text)",
-        :class => "normal" %>
-    </div>
   </div>
 
-  <script>
-    $(document).ready(function() {
-      $("#story_fetch_title").click(function() {
-        Lobsters.fetchURLTitle($(this), $("#story_url"), $("#story_title"));
-        return false;
-      });
+  <div class="boxline actions markdown_help_toggler">
+    <a href="#" id="story_guidelines_toggler">
+      Story submission guidelines
+    </a>
+    <div id="story_guidelines" style="<%= show_guidelines?? "" :
+    "display: none;" %>">
+      <ul>
+
+        <li><p>
+        Do not editorialize story titles, but when the original story's
+        title has no context or is unclear, please change it.  <strong>Please
+        remove extraneous components from titles such as the name of the
+        site or section.</strong>
+        </p></li>
+
+        <li><p>
+        When the story being submitted is more than a year or so old,
+        please add the year the story was written to the post title in
+        parentheses.
+        </p></li>
+
+        <li><p>
+        When submitting a URL, the text field is optional and should only
+        be used when additional context or explanation of the URL is
+        needed.  Commentary or opinion should be reserved for a comment,
+        so that it can be voted on separately from the story.
+        </p></li>
+
+        <li><p>
+        If no tags clearly apply to the story you are submitting, chances
+        are it does not belong here.  Do not overreach with tags if they
+        are not the primary focus of the story.
+        </p></li>
+
+        <li><p>
+        To be able to easily submit a page you're viewing in your browser
+        to <%= Rails.application.name %>, drag this bookmarklet to your
+        bookmark bar:
+        [<a href="javascript:{window.open(%22<%= Rails.application.root_url
+        %>stories/new?url=%22+encodeURIComponent(document.location)+<%
+        %>%22&title=%22+encodeURIComponent(document.title));%20void(0);}<%
+        %>">Submit to <%= Rails.application.name %></a>].
+        You'll be taken to this page with the viewed page's URL and title.
+        </p></li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="box">
+  <div class="boxline">
+    <%= f.label :user_is_author, "Author:", :class => "required" %>
+    <%= f.check_box :user_is_author %>
+    <%= f.label :user_is_author,
+      (f.object.id && f.object.user_id != @user.id ? "Submitter is" : "I am") +
+      " the author of the story at this URL (or this text)",
+      :class => "normal" %>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $("#story_fetch_title").click(function() {
+      Lobsters.fetchURLTitle($(this), $("#story_url"), $("#story_title"));
+      return false;
     });
-  </script>
-<% end %>
+  });
+</script>

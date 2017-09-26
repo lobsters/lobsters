@@ -5,8 +5,8 @@
 
   <%= form_for @story, :url => story_suggest_path(@story.short_id),
   :method => :post, :html => { :id => "edit_story" } do |f| %>
-    <%= render :partial => "stories/form", :locals => { :story => @story,
-      :f => f, :suggesting => true } %>
+    <%= render :partial => "stories/suggestions", :locals => { :story => @story,
+      :f => f } %>
 
     <p></p>
 

@@ -106,6 +106,7 @@ class StoriesController < ApplicationController
   end
 
   def preview
+    ensure_preview
     @story = Story.new(story_params)
     @story.user_id = @user.id
     @story.previewing = true
@@ -117,7 +118,7 @@ class StoriesController < ApplicationController
 
     @story.seen_previous = true
 
-    return render :action => "new", :layout => false
+    render 'stories/show', :layout => false
   end
 
   def show
@@ -401,5 +402,14 @@ private
       flash[:error] = "You are not allowed to submit new stories."
       return redirect_to "/"
     end
+  end
+
+  def ensure_preview
+    stub = {story: { title: '', description: '', tags_a: ['']}}
+    return params.merge!(stub) unless params[:story]
+    %i(title description tags_a).each do |attribute|
+      stub[:story].store(attribute, params[:story][attribute]) if params[:story][attribute]
+    end
+    params.merge!(stub)
   end
 end

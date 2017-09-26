@@ -761,7 +761,7 @@ div.comment_text {
 	font-size: 10.5pt;
 	max-width: 700px;
 	word-wrap: break-word;
-	float: left;
+	overflow: hidden;
 }
 
 div.comment_text blockquote,

@@ -80,7 +80,7 @@
 		display: none;
 	}
 	li .comment_folder.comment_folder_inline {
-		display: inline;
+		display: inline-block;
 	}
 
 	li .comment_parent_tree_line,

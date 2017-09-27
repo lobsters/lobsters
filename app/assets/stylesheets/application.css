@@ -564,10 +564,11 @@ li .comment_folder.comment_folder_inline {
 	color: inherit;
 	width: 1.4em;
 	float: none;
+	text-align: left;
 	margin-right: 0;
 }
 li .comment_folder.comment_folder_inline.force_inline {
-	display: inline;
+	display: inline-block;
 }
 li .comment_folder:before {
 	content: "[-]";

@@ -19,7 +19,7 @@ file.
 
 #### Initial setup
 
-* Install Ruby 2.3.
+* Install the version of Ruby listed in `.ruby-verison`.
 
 * Checkout the lobsters git tree from Github
 

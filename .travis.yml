@@ -1,2 +1,6 @@
 ---
 language: ruby
+services:
+  - mysql
+before_script:
+  - ./bin/rails db:setup

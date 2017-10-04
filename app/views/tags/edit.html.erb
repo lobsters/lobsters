@@ -1,0 +1,40 @@
+<div class="box wide">
+  <div class="legend">
+    Tag Edit
+  </div>
+
+  <div class="boxline">
+    <%= link_to "Filter By Tag #{@tag.tag}", tag_path(@tag) %>
+  </div>
+
+  <%= form_for @tag, url: update_tag_path, method: :post do |f| %>
+    <div class="boxline">
+      <%= f.label :tag, 'Name:', class: 'required' %>
+      <%= f.text_field :tag  %>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :description, 'Description:' %>
+      <%= f.text_field :description %>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :privileged, 'Privileged:' %>
+      <%= f.check_box :privileged %>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :inactive, 'Inactive:' %>
+      <%= f.check_box :inactive %>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :hotness_mod, 'Hotness Mod:' %>
+      <%= f.number_field :hotness_mod, step: 0.01 %>
+    </div>
+
+    <div class="boxline">
+      <%= f.submit 'Update Tag' %>
+    </div>
+  <% end %>
+</div>

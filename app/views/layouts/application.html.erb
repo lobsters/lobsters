@@ -88,6 +88,9 @@
         <% if lookup_context.template_exists?("footer", "layouts", true) %>
           <%= render :partial => "layouts/footer" %>
         <% else %>
+          <% if @user && @user.is_admin? %>
+            <%= link_to 'Tag Manager', tags_path %>
+          <% end %>
           <a href="/moderations">Moderation Log</a>
           <% if @user && @user.can_see_invitation_requests? &&
           (iqc = InvitationRequest.verified_count) > 0 %>

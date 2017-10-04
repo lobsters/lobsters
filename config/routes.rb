@@ -141,6 +141,10 @@ Lobsters::Application.routes.draw do
 
     get "/tags" => "tags#index"
     get "/tags.json" => "tags#index", :format => "json"
+    get "/tags/new" => "tags#new", :as => "new_tag"
+    get "/tags/:id/edit" => "tags#edit", :as => "edit_tag"
+    post "/tags" => "tags#create"
+    post "/tags/:id" => "tags#update", :as => "update_tag"
 
     post "/invitations" => "invitations#create"
     get "/invitations" => "invitations#index"

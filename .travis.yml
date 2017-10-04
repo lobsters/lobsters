@@ -2,5 +2,7 @@
 language: ruby
 services:
   - mysql
+env:
+ - DATABASE_URL=mysql2://root:@localhost/lobsters_test
 before_script:
   - ./bin/rails db:setup

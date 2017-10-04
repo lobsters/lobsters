@@ -6,7 +6,7 @@ describe User do
     expect { User.make!(:username => "") }.to raise_error
     expect { User.make!(:username => "*") }.to raise_error
 
-    User.make!(:username => "test")
+    User.make!(:username => "test") unless User.find_by(username: 'test')
     expect { User.make!(:username => "test") }.to raise_error
   end
 

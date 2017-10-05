@@ -223,6 +223,14 @@ var _Lobsters = Class.extend({
     });
   },
 
+  checkStoryDuplicate: function(form) {
+    var params = $(form).serializeArray();
+    $.post("/stories/check_url_dupe", params, function(data) {
+      var da = $.parseHTML(data);
+      $(form).find(".form_errors_header").replaceWith(da);
+    });
+  },
+
   runSelect2: function() {
     $("#story_tags_a").select2({
     formatSelection: function(what) {
@@ -491,6 +499,10 @@ $(document).ready(function() {
         if (ta.getVal().indexOf(tag) < 0)
           ta.addSelectedChoice({ id: tag });
       }
+    }
+
+    if ($("#story_url").val().length > 0) {
+      Lobsters.checkStoryDuplicate($(this).parents("form").first());
     }
   });
 

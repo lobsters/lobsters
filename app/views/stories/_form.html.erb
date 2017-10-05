@@ -1,28 +1,5 @@
-<% if f.object.errors.count == 1 && f.object.already_posted_story %>
-  <div class="flash-error">
-  <h2>Error: This story was already submitted <%=
-    time_ago_in_words_label(f.object.already_posted_story.created_at) %></h2>
-  <p>
-  Please view the <a href="<%= f.object.already_posted_story.comments_path %>"
-  target="_blank">previous discussion</a> for this story.
-  </p>
-  </div>
-<% elsif f.object.errors.any? %>
-  <%= error_messages_for f.object %>
-<% elsif !f.object.errors.any? && f.object.already_posted_story %>
-  <div class="flash-notice">
-  <h2>Note: This story was already submitted <%=
-    time_ago_in_words_label(f.object.already_posted_story.created_at) %>, but
-    may be submitted again.</h2>
-  <p>
-  Please view the <a href="<%= f.object.already_posted_story.comments_path %>"
-  target="_blank">previous discussion</a> for this story first.  If the content
-  has changed or warrants new discussion, you may submit it again.
-  </p>
-  </div>
-
-  <%= f.hidden_field :seen_previous %>
-<% end %>
+<%= render :partial => "stories/formerrors", :locals => {
+  :story => f.object } %>
 
 <div class="box">
   <% unless defined?(suggesting) %>

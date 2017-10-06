@@ -92,6 +92,7 @@ class Story < ActiveRecord::Base
     end
   end
 
+  # returns a story or nil
   def self.find_similar_by_url(url)
     urls = [ url.to_s ]
     urls2 = [ url.to_s ]
@@ -119,13 +120,10 @@ class Story < ActiveRecord::Base
 
     # if a previous submission was moderated, return it to block it from being
     # submitted again
-    if s = Story.where(:url => urls).
-    where("is_expired = ? OR is_moderated = ?", false, true).
-    order("id DESC").first
-      return s
-    end
-
-    false
+    Story
+      .where(:url => urls)
+      .where("is_expired = ? OR is_moderated = ?", false, true)
+      .order("id DESC").first
   end
 
   def self.recalculate_all_hotnesses!

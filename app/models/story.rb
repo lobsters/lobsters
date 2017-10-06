@@ -125,7 +125,7 @@ class Story < ActiveRecord::Base
       return s
     end
 
-    false
+    nil
   end
 
   def self.recalculate_all_hotnesses!

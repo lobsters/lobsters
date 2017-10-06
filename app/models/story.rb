@@ -65,11 +65,9 @@ class Story < ActiveRecord::Base
 
   validate do
     if self.url.present?
+      check_already_posted
       # URI.parse is not very lenient, so we can't use it
-
-      if self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/i)
-        check_already_posted
-      else
+      unless self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/i)
         errors.add(:url, "is not valid")
       end
     elsif self.description.to_s.strip == ""
@@ -84,12 +82,13 @@ class Story < ActiveRecord::Base
   end
 
   def check_already_posted
-    if self.new_record? && (s = Story.find_similar_by_url(self.url))
-      self.already_posted_story = s
-      if s.is_recent?
-        errors.add(:url, "has already been submitted within the past " <<
-          "#{RECENT_DAYS} days")
-      end
+    return unless self.url.present? && self.new_record?
+
+    self.already_posted_story = Story.find_similar_by_url(self.url)
+
+    if self.already_posted_story&.is_recent?
+      errors.add(:url, "has already been submitted within the past " <<
+        "#{RECENT_DAYS} days")
     end
   end
 

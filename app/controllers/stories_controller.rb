@@ -331,10 +331,7 @@ class StoriesController < ApplicationController
 
   def check_url_dupe
     @story = Story.new(story_params)
-
-    if @story.url.present?
-      @story.check_already_posted
-    end
+    @story.check_already_posted
 
     return render :partial => "stories/form_errors", :layout => false,
       :content_type => "text/html", :locals => { :story => @story }

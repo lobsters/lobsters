@@ -225,9 +225,8 @@ var _Lobsters = Class.extend({
 
   checkStoryDuplicate: function(form) {
     var params = $(form).serializeArray();
-    $.post("/stories/check_url_dupe", params, function(data) {
-      var da = $.parseHTML(data);
-      $(form).find(".form_errors_header").replaceWith(da);
+    $.post("/stories/check_url_dupe", params, function(formErrorsHtml) {
+      $(form).find(".form_errors_header").html(formErrorsHtml);
     });
   },
 

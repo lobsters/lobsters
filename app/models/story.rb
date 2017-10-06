@@ -68,13 +68,7 @@ class Story < ActiveRecord::Base
       # URI.parse is not very lenient, so we can't use it
 
       if self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/i)
-        if self.new_record? && (s = Story.find_similar_by_url(self.url))
-          self.already_posted_story = s
-          if s.is_recent?
-            errors.add(:url, "has already been submitted within the past " <<
-              "#{RECENT_DAYS} days")
-          end
-        end
+        check_already_posted
       else
         errors.add(:url, "is not valid")
       end
@@ -87,6 +81,16 @@ class Story < ActiveRecord::Base
     end
 
     check_tags
+  end
+
+  def check_already_posted
+    if self.new_record? && (s = Story.find_similar_by_url(self.url))
+      self.already_posted_story = s
+      if s.is_recent?
+        errors.add(:url, "has already been submitted within the past " <<
+          "#{RECENT_DAYS} days")
+      end
+    end
   end
 
   def self.find_similar_by_url(url)

@@ -70,6 +70,7 @@ Lobsters::Application.routes.draw do
     end
     post "/stories/fetch_url_attributes", :format => "json"
     post "/stories/preview" => "stories#preview"
+    post "/stories/check_url_dupe" => "stories#check_url_dupe"
 
     resources :comments do
       member do

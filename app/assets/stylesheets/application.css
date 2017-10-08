@@ -922,6 +922,11 @@ div.comment_form_container textarea {
 	width: 100%;
 }
 
+span.comment_unread {
+    color: red;
+    font-weight: 600;
+}
+
 /* trees */
 
 .tree,

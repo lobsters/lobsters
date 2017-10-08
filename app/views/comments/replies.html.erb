@@ -1,0 +1,27 @@
+<ol class="comments comments1">
+  <% @replies.each do |comment| %>
+  <li class="comments_subtree">
+    <%= render "comments/comment",
+	comment: comment,
+	show_story: true,
+	is_unread: (comment.created_at > @last_read_at) %>
+    <ol class="comments"></ol>
+  </li>
+  <% end %>
+</ol>
+
+<div class="morelink">
+  <% if @page && @page > 1 %>
+    <a href="/replies<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt; 
+      Page <%= @page - 1 %></a>
+  <% end %>
+
+  <% if @replies.any? %>
+    <% if @page && @page > 1 %>
+      |
+    <% end %>
+
+    <a href="/replies/page/<%= @page + 1 %>">Page
+      <%= @page + 1 %> &gt;&gt;</a>
+  <% end %>
+</div>

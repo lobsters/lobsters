@@ -54,6 +54,7 @@ class User < ActiveRecord::Base
     s.string :twitter_oauth_token
     s.string :twitter_oauth_token_secret
     s.string :twitter_username
+    s.datetime :last_read_replies, default: DateTime.new(1970, 1, 1)
   end
 
   validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
@@ -503,6 +504,13 @@ class User < ActiveRecord::Base
   def update_unread_message_count!
     Keystore.put("user:#{self.id}:unread_messages",
       self.received_messages.unread.count)
+  end
+
+  def unread_replies_count
+    Comment
+      .replies_to_user(self.id)
+      .where('comments.created_at > ?', self.settings['last_read_replies'])
+      .count 
   end
 
   def votes_for_others

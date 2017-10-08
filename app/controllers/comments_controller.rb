@@ -4,7 +4,7 @@ class CommentsController < ApplicationController
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, :only => [ :index ]
   before_action :require_logged_in_user_or_400,
-    :only => [ :create, :preview, :upvote, :downvote, :unvote ]
+    :only => [ :create, :preview, :upvote, :downvote, :unvote, :replies ]
 
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, :only => [ :index ]
@@ -297,6 +297,27 @@ class CommentsController < ApplicationController
     #    end
     #  end
     #end
+  end
+
+  def replies
+    @heading = @title = "Your Replies"
+
+    @page = params[:page].to_i
+    if @page == 0
+      @page = 1
+    elsif @page < 0 || @page > (2 ** 32)
+      raise ActionController::RoutingError.new("page out of bounds")
+    end
+
+    @replies = Comment
+                 .replies_to_user(@user.id)
+                 .order(created_at: :desc)
+                 .offset((@page - 1) * COMMENTS_PER_PAGE)
+                 .limit(COMMENTS_PER_PAGE)
+
+    @last_read_at = @user.settings['last_read_replies']
+    @user.settings['last_read_replies'] = DateTime.now
+    @user.save!
   end
 
 private

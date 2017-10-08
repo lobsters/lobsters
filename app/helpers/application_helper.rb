@@ -79,6 +79,17 @@ module ApplicationHelper
     @right_header_links = {}
 
     if @user
+      if (count = @user.unread_replies_count) > 0
+        @right_header_links.merge!({ "/replies" => {
+          :class => [ "new_messages" ],
+          :title => "Replies (#{count})",
+        } })
+      else
+        @right_header_links.merge!({
+          "/replies" => { :title => "Replies" }
+        })
+      end
+
       if (count = @user.unread_message_count) > 0
         @right_header_links.merge!({ "/messages" => {
           :class => [ "new_messages" ],
@@ -170,6 +181,12 @@ module ApplicationHelper
       ago = "#{years} year#{years == 1 ? "" : "s"} ago"
     end
 
-    raw(content_tag(:span, ago, :title => time.strftime("%F %T %z")))
+    span_class = ''
+
+    if options[:mark_unread]
+      span_class += 'comment_unread'
+    end
+
+    raw(content_tag(:span, ago, title: time.strftime("%F %T %z"), class: span_class))
   end
 end

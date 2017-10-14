@@ -115,7 +115,10 @@ var _Lobsters = Class.extend({
       d.append(a);
     });
 
-    $(voterEl).after(d);
+    if (thingType == "story")
+      li.after(d);
+    else
+      $(voterEl).after(d);
 
     d.position({
       my: "left top",

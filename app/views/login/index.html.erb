@@ -3,39 +3,45 @@
     Login
   </div>
 
-  <%= form_tag login_path do %>
-  <p>
-    <%= label_tag :email, "E-mail or Username:" %>
-    <%= text_field_tag :email, "", :size => 30, :autofocus => "autofocus" %>
-    <br />
-
-    <%= label_tag :password, "Password:" %>
-    <%= password_field_tag :password, "", :size => 30 %>
-    <br />
-    </p>
-
+  <% if Rails.application.read_only? %>
     <p>
-    <%= submit_tag "Login" %>
+    The site is currently in read-only mode for maintenance.
     </p>
-
+  <% else %>
+    <%= form_tag login_path do %>
     <p>
-    Forgot your password or deleted your account?
-      <%= link_to "Reset your password", forgot_password_path %>.
-    </p>
+      <%= label_tag :email, "E-mail or Username:" %>
+      <%= text_field_tag :email, "", :size => 30, :autofocus => "autofocus" %>
+      <br />
 
-    <p>
-    Not a user yet?  Signup is by invitation only to combat spam and increase
-    accountability.  If you know <a href="/u/">a current user</a> of the site,
-    ask them for an invitation or
-    <% if Rails.application.allow_invitation_requests? %>
-      <a href="/invitations/request">request one publicly</a>.
-    <% else %>
-      request one in <a href="/chat">chat</a>.
-    <% end %>
-    </p>
+      <%= label_tag :password, "Password:" %>
+      <%= password_field_tag :password, "", :size => 30 %>
+      <br />
+      </p>
 
-    <% if @referer.present? %>
-      <%= hidden_field_tag :referer, @referer %>
+      <p>
+      <%= submit_tag "Login" %>
+      </p>
+
+      <p>
+      Forgot your password or deleted your account?
+        <%= link_to "Reset your password", forgot_password_path %>.
+      </p>
+
+      <p>
+      Not a user yet?  Signup is by invitation only to combat spam and increase
+      accountability.  If you know <a href="/u/">a current user</a> of the site,
+      ask them for an invitation or
+      <% if Rails.application.allow_invitation_requests? %>
+        <a href="/invitations/request">request one publicly</a>.
+      <% else %>
+        request one in <a href="/chat">chat</a>.
+      <% end %>
+      </p>
+
+      <% if @referer.present? %>
+        <%= hidden_field_tag :referer, @referer %>
+      <% end %>
     <% end %>
   <% end %>
 </div>

@@ -1,7 +1,7 @@
 ### Licensing
 
 The `lobsters` codebase is under a [3-clause BSD
-license](https://github.com/jcs/lobsters/blob/master/LICENSE).  All code
+license](https://github.com/lobsters/lobsters/blob/master/LICENSE).  All code
 submitted must be licensed under these or more-permissive terms (2-clause BSD,
 MIT, ISC, etc.).
 
@@ -11,14 +11,19 @@ While this project's license allows for modification and use to run your own
 website, this source code repository is for the code running the website at
 [lobste.rs](https://lobste.rs/).
 
+If you're new to contributing, issues tagged `good-first-pr` require little
+knowledge of the codebase or community. Please don't hesitate to ask questions
+in the issue or in [our chat room](https://lobste.rs), we'd love to help you
+get involved.
+
 Not all changes or new features submitted will be accepted.  Please discuss
 your proposed changes on [/t/meta](https://lobste.rs/t/meta) or as a
-[Github issue](https://github.com/jcs/lobsters/issues) before working on them
+[Github issue](https://github.com/lobsters/lobsters/issues) before working on them
 to avoid wasted efforts.
 
 ### Making Changes
 
-* Fork [jcs/lobsters](https://github.com/jcs/lobsters) on Github.
+* Fork [lobsters/lobsters](https://github.com/lobsters/lobsters) on Github.
 
 * (Optional) Create a branch to house your changes.
 
@@ -45,4 +50,4 @@ been broken by your changes.
 * Push your changes to your fork of the repository (to your branch if you
 created one).
 
-* Submit a pull request to [jcs/lobsters](https://github.com/jcs/lobsters).
+* Submit a pull request to [lobsters/lobsters](https://github.com/lobsters/lobsters).

@@ -868,8 +868,12 @@ div.markdown_help_label {
 	cursor: pointer;
 }
 
-.comment .preview {
+.comment {
 	padding-left: 17px;
+}
+
+#preview {
+	min-height: 112px;
 }
 
 div#submission_preview {
@@ -884,6 +888,7 @@ div#edit_toggle {
 	padding-left: 3em;
 	margin-bottom: 10px;
 }
+
 div#edit_toggle > button {
 	margin: 0;
 	margin-right: 10px;

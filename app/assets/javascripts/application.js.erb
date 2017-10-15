@@ -478,6 +478,12 @@ $(document).ready(function() {
     Lobsters.previewComment($(this).parents("form").first());
   });
 
+  $(document).on("click", "button.comment-write", function() {
+    $(this).parent().siblings('#comment').show();
+    $(this).parent().siblings('#preview').hide();
+    $(this).nextUntil('.comment-preview, .comment-write').toggleClass("active");
+  });
+
   var box_height = $('#submission_builder').height();
   $('#submission_preview').css('height', box_height)
   $(document).on("click", "button.story-preview", function() {

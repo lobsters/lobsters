@@ -1,3 +1,6 @@
+<%= render :partial => "stories/form_errors", :locals => {
+  :story => f.object } %>
+
 <div class="box">
   <% unless defined?(suggesting) %>
     <div id="submission_preview"></div>

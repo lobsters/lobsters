@@ -65,17 +65,9 @@ class Story < ActiveRecord::Base
 
   validate do
     if self.url.present?
+      check_already_posted
       # URI.parse is not very lenient, so we can't use it
-
-      if self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/i)
-        if self.new_record? && (s = Story.find_similar_by_url(self.url))
-          self.already_posted_story = s
-          if s.is_recent?
-            errors.add(:url, "has already been submitted within the past " <<
-              "#{RECENT_DAYS} days")
-          end
-        end
-      else
+      unless self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/i)
         errors.add(:url, "is not valid")
       end
     elsif self.description.to_s.strip == ""
@@ -89,6 +81,18 @@ class Story < ActiveRecord::Base
     check_tags
   end
 
+  def check_already_posted
+    return unless self.url.present? && self.new_record?
+
+    self.already_posted_story = Story.find_similar_by_url(self.url)
+
+    if self.already_posted_story&.is_recent?
+      errors.add(:url, "has already been submitted within the past " <<
+        "#{RECENT_DAYS} days")
+    end
+  end
+
+  # returns a story or nil
   def self.find_similar_by_url(url)
     urls = [ url.to_s ]
     urls2 = [ url.to_s ]
@@ -116,13 +120,10 @@ class Story < ActiveRecord::Base
 
     # if a previous submission was moderated, return it to block it from being
     # submitted again
-    if s = Story.where(:url => urls).
-    where("is_expired = ? OR is_moderated = ?", false, true).
-    order("id DESC").first
-      return s
-    end
-
-    false
+    Story
+      .where(:url => urls)
+      .where("is_expired = ? OR is_moderated = ?", false, true)
+      .order("id DESC").first
   end
 
   def self.recalculate_all_hotnesses!

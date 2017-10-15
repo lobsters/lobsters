@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   belongs_to :disabled_invite_by_user,
     :class_name => "User"
   has_many :invitations
+  has_many :moderations, :inverse_of => :moderator
   has_many :votes
   has_many :voted_stories, -> { where('votes.comment_id' => nil) },
     :through => :votes,
@@ -69,6 +70,10 @@ class User < ActiveRecord::Base
   end
 
   scope :active, -> { where(:banned_at => nil, :deleted_at => nil) }
+  scope :moderators, -> { where('
+      is_moderator = True OR
+      users.id IN (select distinct moderator_user_id from moderations)
+  ') }
 
   before_save :check_session_token
   before_validation :on => :create do

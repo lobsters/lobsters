@@ -1,0 +1,71 @@
+#!/usr/bin/env ruby
+
+ENV["RAILS_ENV"] ||= "production"
+
+APP_PATH = File.expand_path('../../config/application',  __FILE__)
+require File.expand_path('../../config/boot',  __FILE__)
+require APP_PATH
+Rails.application.require_environment!
+
+TWITTER_LIST = "users"
+
+# find the id of our list name
+res = Twitter.oauth_request("/1.1/lists/list.json", :get)
+our_list = res.select{|l| l["name"] == TWITTER_LIST }.first
+if !our_list.present?
+  raise "can't find list #{TWITTER_LIST.inspect} in #{res.inspect}"
+end
+list_id = our_list["id_str"]
+
+# fetch its member list
+res = Twitter.oauth_request("/1.1/lists/members.json?list_id=#{list_id}" <<
+  "&count=5000&skip_status=true", :get)
+their_users = res["users"].map{|u| [ u["screen_name"].downcase, true ] }.to_h
+
+if their_users.count >= 5000
+  STDERR.puts "need to implement paging for list members"
+end
+
+# fetch our active users that have a linked twitter account
+our_users = User.active.where("settings LIKE '%twitter_username:%'").
+  select{|u| u.twitter_username.present? }.
+  map{|u| [ u.twitter_username.downcase, true ] }.to_h
+
+# ignore users that have previously been determined to have protected accounts,
+# which cannot be added to a public list
+Keystore.where("`key` LIKE 'user:%:twitter_private'").each do |ks|
+  our_users.reject! do |k,v|
+    k.downcase == ks.key.scan(/:(.+):/).first.first.downcase
+  end
+end
+
+# diff
+to_add = our_users.keys.reject{|u| their_users[u] }
+to_del = their_users.keys.reject{|u| our_users[u] }
+
+to_add.each_slice(100) do |g|
+  # lookup and remove any protected users
+  Twitter.oauth_request("/1.1/users/lookup.json?screen_name=#{g.join(",")}").
+  select{|u| u["protected"] }.each do |u|
+    puts "user #{u["screen_name"]} protected, ignoring"
+    Keystore.put("user:#{u["screen_name"]}:twitter_private", 1)
+
+    g.reject!{|tu| tu.downcase == u["screen_name"].downcase }
+  end
+
+  if !g.any?
+    next
+  end
+
+  puts "adding: #{g.inspect}"
+
+  Twitter.oauth_request("/1.1/lists/members/create_all.json", :post,
+    { "list_id" => list_id, "screen_name" => g.join(",") })
+end
+
+to_del.each_slice(100) do |g|
+  puts "deleting: #{g.inspect}"
+
+  Twitter.oauth_request("/1.1/lists/members/destroy_all.json", :post,
+    { "list_id" => list_id, "screen_name" => g.join(",") })
+end

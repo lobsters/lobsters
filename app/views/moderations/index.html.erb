@@ -3,6 +3,17 @@
     Moderation Log
   </div>
 
+  <%= form_tag(moderations_path, :method => :get) do |f| %>
+    <label class="normal" for="moderator">Moderator:</label>
+    <%= select_tag 'moderator', options_for_select(@moderators, @moderator) %>
+    <% @what.each do |type, checked| %>
+      <%= check_box_tag "what[#{type}]", type, checked %>
+      <label class="normal" for="what_<%= type %>"><%= type.to_s.titlecase %></label>
+    <% end %>
+
+    <input type="submit" value="Filter">
+  <% end %><br>
+
   <table class="data" width="100%" cellspacing=0>
   <tr>
     <th style="min-width: 150px;">Date/Time</th>
@@ -53,15 +64,12 @@
 
 <div class="morelink">
   <% if @page > 1 %>
-    <a href="/moderations/page/<%= @page - 1 %>">&lt;&lt; Page
-      <%= @page - 1 %></a>
+    <%= link_to "<< Page #{@page - 1}", request.query_parameters.merge({:page => @page - 1}) %>
   <% end %>
-
   <% if @pages > 1 && @page < @pages %>
     <% if @page > 1 %>
       |
     <% end %>
-    <a href="/moderations/page/<%= @page + 1 %>">Page <%= @page + 1 %>
-      &gt;&gt;</a>
+    <%= link_to "Page #{@page + 1} >>", request.query_parameters.merge({:page => @page + 1}) %>
   <% end %>
 </div>

@@ -61,6 +61,10 @@
 		padding-left: 0;
 	}
 
+	.comment .preview {
+		padding-left: 25px;
+	}
+
 	ol.comments {
 		margin-left: 10px;
 	}
@@ -76,11 +80,7 @@
 		display: none;
 	}
 	li .comment_folder.comment_folder_inline {
-		display: inline;
-		color: inherit;
-		width: 1.4em;
-		float: none;
-		margin-right: 0;
+		display: inline-block;
 	}
 
 	li .comment_parent_tree_line,
@@ -95,6 +95,10 @@
 	}
 	div.voters a.upvoter {
 		margin-top: -5px;
+	}
+
+	div.comment_form_container {
+		margin-left: 0;
 	}
 
 	div.comment_form_container form {

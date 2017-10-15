@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user
   before_action :increase_traffic_counter
 
-  TRAFFIC_DECREMENTER = 0.40
+  TRAFFIC_DECREMENTER = 0.50
 
   TAG_FILTER_COOKIE = :tag_filters
 

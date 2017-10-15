@@ -400,8 +400,8 @@ class User < ActiveRecord::Base
   end
 
   def recent_threads(amount, include_submitted_stories = false)
-    thread_ids = self.comments.group(:thread_id).order('MAX(created_at) DESC').
-      limit(amount).pluck(:thread_id)
+    thread_ids = self.comments.active.group(:thread_id).
+      order('MAX(created_at) DESC').limit(amount).pluck(:thread_id)
 
     if include_submitted_stories && self.show_submitted_story_threads
       thread_ids += Comment.joins(:story).

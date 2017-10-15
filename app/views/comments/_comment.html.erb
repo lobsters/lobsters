@@ -1,32 +1,48 @@
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
   <%= comment.score <= Comment::DOWNVOTABLE_MIN_SCORE ? "checked" : "" %>>
+
 <div id="c_<%= comment.short_id %>"
 data-shortid="<%= comment.short_id if comment.persisted? %>"
 class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 "upvoted" : "downvoted") : "" %>
   <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>">
+
+  <label for="comment_folder_<%= comment.short_id %>"
+    class="comment_folder"></label>
+
   <% if !comment.is_gone? %>
+    <% can_downvote = @user && @user.can_downvote?(comment) %>
+    <% score_display = comment.score_for_user(@user) %>
     <div class="voters">
       <% if @user %>
         <a class="upvoter"></a>
       <% else %>
         <%= link_to "", login_path, :class => "upvoter" %>
       <% end %>
-      <div class="score"><%= comment.score_for_user(@user) %></div>
-      <% if @user && @user.can_downvote?(comment) %>
+      <div class="score"><%= score_display %></div>
+      <% if can_downvote %>
         <a class="downvoter"></a>
       <% else %>
         <span class="downvoter downvoter_stub"></span>
       <% end %>
     </div>
+    <% if defined?(children) && children %>
+      <% if can_downvote %>
+        <div class="comment_parent_tree_line can_downvote"></div>
+      <% elsif score_display != "&nbsp;" %>
+        <div class="comment_parent_tree_line score_shown"></div>
+      <% else %>
+        <div class="comment_parent_tree_line"></div>
+      <% end %>
+    <% end %>
   <% end %>
   <div class="details">
     <div class="byline">
       <a name="c_<%= comment.short_id %>"></a>
 
       <label for="comment_folder_<%= comment.short_id %>"
-        class="comment_folder"></label>
+        class="comment_folder comment_folder_inline"></label>
 
       <% if defined?(was_merged) && was_merged %>
         <span class="merge"></span>
@@ -64,24 +80,24 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
         <% if comment.is_editable_by_user?(@user) %>
           |
-          <a class="comment_editor">edit</a>
+          <a tabindex="0" class="comment_editor">edit</a>
         <% end %>
 
         <% if comment.is_gone? && comment.is_undeletable_by_user?(@user) %>
           |
-          <a class="comment_undeletor">undelete</a>
+          <a tabindex="0" class="comment_undeletor">undelete</a>
         <% elsif !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
           |
           <% if @user && @user.is_moderator? && @user.id != comment.user_id %>
-            <a class="comment_moderator">delete</a>
+            <a tabindex="0" class="comment_moderator">delete</a>
           <% else %>
-            <a class="comment_deletor">delete</a>
+            <a tabindex="0" class="comment_deletor">delete</a>
           <% end %>
         <% end %>
 
         <% if @user && !comment.story.is_gone? && !comment.is_gone? %>
             |
-            <a class="comment_replier" unselectable="on">reply</a>
+            <a tabindex="0" class="comment_replier" unselectable="on">reply</a>
         <% end %>
 
         <% if defined?(show_story) && show_story %>

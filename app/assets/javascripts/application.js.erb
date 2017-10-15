@@ -474,14 +474,16 @@ $(document).ready(function() {
   var box_height = $('#submission_builder').height();
   $('#submission_preview').css('height', box_height)
   $(document).on("click", "button.story-preview", function() {
-    Lobsters.previewStory($(this).siblings('form').first());
+    Lobsters.previewStory($(this).parent().next('form'));
     $('#submission_preview').show();
     $('#submission_builder').hide();
+    $('.story-preview, .story-write').toggleClass("active");
   });
 
   $(document).on("click", "button.story-write", function() {
     $('#submission_builder').show();
     $('#submission_preview').hide();
+    $('.story-preview, .story-write').toggleClass("active");
   });
 
   $(document).on("blur", "#story_url", function() {

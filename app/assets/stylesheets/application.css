@@ -886,6 +886,10 @@ div#edit_toggle > button {
 	border-bottom: 1px solid #fafafa;
 }
 
+div#edit_toggle > button.active {
+	background-color: #e6e6e6;
+}
+
 div#story_box input#story_url {
 	width: 508px;
 }

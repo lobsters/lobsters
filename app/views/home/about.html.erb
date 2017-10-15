@@ -1,0 +1,248 @@
+<div class="box wide">
+  <div class="legend">
+    About
+  </div>
+
+  <div class="story_text">
+  <p>
+  Lobsters is a technology-focused community centered around link aggregation
+  and discussion.
+  Launched on July 3rd, 2012, it was created by <a href="/u/jcs">joshua
+  stein</a> with some specific design goals in mind to avoid problems faced by
+  other link aggregation sites:
+  </p>
+
+  <ul>
+  <li>a <a href="#tagging">tagging</a> system to categorize and filter
+    submissions,
+  <li>a user <a href="#invitations">invitation tree</a> to combat spam,
+  <li><a href="#downvotes">downvote explanations</a> to curb reflexive
+    downvoting,
+  <li>a strong commitment to <a href="#transparency">transparency</a>,
+  <li>and <a href="#features">many other features</a> that have been added over
+  the years.
+  </ul>
+
+  <p id="tagging">
+  <strong>Tagging</strong>
+  <br>
+  When links/stories are submitted, they must be tagged by the submitter from a
+  list of predefined <a href="/tags">tags</a>.  Users can choose to <a
+  href="/filters">filter</a> out all submissions with particular tags, but
+  rather than use rigidly segmented sub-forums that users must each subscribe
+  to, all users see all stories by default.  The reason for this is threefold:
+  </p>
+
+  <ul>
+  <li><p>
+  It keeps the site on-topic by only allowing a predefined list of tags.
+  These tags represent what most of the users of the site want to read, so
+  content that does not fit into any of those categories should not be
+  submitted.  It also keeps stories organized and more easily searchable.
+  </p></li>
+
+  <li><p>
+  It promotes discussion.  On a site with separate forums, a Ruby programmer
+  would probably subscribe to a Ruby forum, but not a Python one.  When a link
+  is posted to the Python forum, that Ruby programmer would probably never see
+  it, even though they may have something useful to say about it (perhaps the
+  link is about a Python library which does the same thing as a Ruby library
+  which that Ruby programmer created).  On this site, the link would get posted
+  with a <a href="/t/python" class="tag">python</a> tag and shown to everyone,
+  encouraging the Ruby programmer to read and comment on it (unless that Ruby
+  programmer disliked Python enough to <a href="/filters">filter</a> it out).
+  </p></li>
+
+  <li><p>
+  It keeps the conversation centralized.  Often stories contain discussion
+  about more than one topic, yet on other sites they are confined to a single
+  category/forum, limiting the exposure.  The link could be submitted to more
+  than one forum, but then each conversation would remain separate and users
+  would rarely interact with users from other forums.  On this site, the story
+  would simply be tagged with multiple tags and all users would see all
+  discussion about the story in a single location.
+  </p></li>
+  </ul>
+
+  <p>
+  Creating new tags and retiring old tags is done by the community by
+  submitting, discussing, and voting on
+  <a href="/t/meta" class="tag">meta</a>-tagged requests about them.
+  </p>
+
+  <p id="invitations">
+  <strong>Invitation Tree</strong><br />
+  Invitations are used as a mechanism for spam-control and to encourage users
+  to "be nice".  New users must be invited by a current user, though there is
+  no vetting process and invitations are not intended to promote exclusivity.
+  The most efficient way to receive an invitation is to talk to someone you
+  recognize from the site or
+  <% if Rails.application.allow_invitation_requests? %>
+    <a href="/invitations/request">request one publicly</a>.
+  <% else %>
+    request one in <a href="/chat">chat</a>.
+  <% end %>
+  Invitations are unlimited unless scaling problems temporarily prevent new
+  accounts.  If spammers are invited to the site and banned, the user that
+  invited them may also be banned, going up the chain of invitations as needed.
+  </p>
+
+  <p>
+  The full <a href="/u">user tree</a> is made public and each user's profile
+  shows who invited them.  This provides some degree of accountability and can
+  act as a tool to help identify voting rings.
+  </p>
+
+  <p id="downvotes">
+  <strong>Downvote Explanations</strong><br />
+  Often on other sites, a user would have his or her comment downvoted without
+  explanation and then edit their comment to ask why they were downvoted.  On
+  this site, voters must choose a reason before downvoting comments and those
+  votes are tallied and shown to the original commenter.
+  </p>
+  <p>
+  For submitted stories, downvoting is done through flagging (also requiring a
+  valid reason) and these flag summaries are shown to all users.
+  </p>
+
+  <p id="transparency">
+  <strong>Transparency Policy</strong><br>
+  All <a href="/moderations">moderator actions</a> on this site are visible to
+  everyone and the identities of those moderators are <a
+  href="/u?moderators=1">made public</a>.  While the individual actions of a
+  moderator may cause debate, there should be no question about which moderator
+  it was or whether they had an ulterior motive for those actions.
+  </p>
+
+  <p>
+  All user voting and story ranking on this site uses a universal algorithm and
+  does not <a
+  href="http://www.righto.com/2013/11/how-hacker-news-ranking-really-works.html"
+  rel="nofollow">artificially penalize</a> or prioritize users or domains.
+  Per-tag <a href="/filters">hotness modifiers</a> do affect all stories with
+  those tags, but these modifiers are made public and usually used to shorten
+  the life of meta-discussions.  If certain domains have to be banned from
+  being submitted due to spam, the list will be made publicly available.
+  </p>
+
+  <p>
+  If users are disruptive enough to warrant banning, they will be banned
+  absolutely, given notice of their banning, and their disabled user profile
+  will indicate which moderator banned them and why.  There will be no hidden,
+  antisocial "shadow banning" or "hellbanning" of users.
+  </p>
+
+  <p>
+  The <a href="https://github.com/jcs/lobsters">source code to this site</a> is
+  made available under a 3-clause BSD license for viewing, auditing, forking,
+  or contributing to.
+  Public stats are available for
+  <a href="http://countinual.com/jcs/counters/lobsters.requests">site
+  requests</a>,
+  <a href="http://countinual.com/jcs/counters/lobsters.comments.submitted">comments
+  submitted</a>,
+  <a href="http://countinual.com/jcs/counters/lobsters.stories.submitted">stories
+  submitted</a>,
+  <a href="http://countinual.com/jcs/counters/lobsters.users.total">total
+  users</a>, and
+  <a href="http://countinual.com/jcs/counters/lobsters.users.created">users
+  created per day</a>.
+  </p>
+
+  <p id="features">
+  <strong>Other Technical Features</strong>
+  </p>
+  <ul>
+  <li><p>
+  <strong><a href="/s/jg3eet">Mailing list mode</a></strong> can be enabled
+  per-user to receive all new stories (including their plain-text content as
+  fetched and extracted by <a href="http://diffbot.com/">Diffbot</a>) and user
+  comments as e-mails, mirroring discussion threads offline.  This makes it
+  easy and efficient to read new stories as well as keep track of new comments
+  on old threads or stories, just like technical mailing lists or Usenet of
+  yore.  Each user is assigned a private mailing list address at this domain
+  which allows them to reply to stories or comments directly in their e-mail
+  client.  These e-mails are then converted and submitted to the website as
+  comments, just as if the comment was posted through a web browser.
+  </p>
+
+  <li><p>
+  <strong>Private messaging</strong> enables users to communicate privately
+  without having to publicly disclose an e-mail address, and users can receive
+  e-mail and <a href="https://pushover.net/">Pushover</a> notifications of new
+  private messages.
+  </p></li>
+
+  <li><p>
+  <strong>Responsive design</strong> enhances functionality on smaller screens
+  such as phones and tablets without having to use a separate URL, 3rd party
+  (often read-only) websites, or proprietary mobile applications.
+  </p></li>
+
+  <li><p>
+  <strong><a href="/search">Integrated search engine</a></strong> covers all
+  submitted stories and comments, including full-text caches of all submitted
+  story contents.  Searching for a keyword will often bring up relevant stories
+  that don't even mention that keyword in the URL or title.
+  </p></li>
+
+  <li><p>
+  <strong><a href="/s/cqq0kg/story_merging">Story merging</a></strong> combats
+  the problem of multiple stories at different URLs being submitted in a short
+  timeframe about the same news subject.  Rather than have multiple stories on
+  the front page with fragmented discussions, all similar stories can be merged
+  into one.  An <a href="/s/klkmey">example</a> of a story having been merged
+  into a previous one, combining all comments on one page.
+  </p></li>
+
+  <li><p>
+  <strong>Fuzzy-matching of submitted story URLs</strong> to avoid duplicate
+  submissions of similar URLs that differ only in <tt>http</tt> vs.
+  <tt>https</tt>, trailing slashes, useless analytics parameters, etc.  When
+  using the story submission bookmarklet, story URLs are automatically
+  converted to use the page's canonical URL (if available) to present the best
+  URL to represent the story, as defined by the story's author or publisher.
+  </p></li>
+
+  <li><p>
+  <strong><a href="/s/z2dczs">User-suggested titles and tags</a></strong> can
+  be automatically applied to a story when a quorum of users agrees on a new
+  title (such as removing a site's name, or appending the story's year of
+  publication) or set of tags, without any moderator action required.
+  </p></li>
+
+  <li><p>
+  <strong><a href="/hats">Hats</a></strong> are a more formal process of
+  allowing users to post comments while "wearing <em>such and such</em> hat" to
+  give their words more authority (such as an employee speaking for the
+  company, or an open source developer speaking for the project).
+  </p></li>
+
+  <li><p>
+  <strong><a href="/rss">Per-tag and site-wide RSS feeds</a></strong> are
+  available to the public and logged-in users have private RSS feeds that
+  filter out each user's <a href="/filters">filtered tags</a>.
+  </p></li>
+
+  <li><p>
+  <strong><a href="https://twitter.com/lobsters">Official Twitter
+  mirror</a></strong> posts all stories that have reached the front page to
+  the <a href="https://twitter.com/lobsters">@lobsters</a> account on Twitter
+  for easy following, retweeting/sharing, or archiving.
+  </p></li>
+
+  <% if false %>
+  <li><p>
+  <strong><a href="http://lobsters3ik6yqwj.onion/">Tor onion/hidden
+  service</a></strong> for anonymous access to the site.
+  </p></li>
+  <% end %>
+
+  <li><p>
+  <strong><a href="/s/zykwh8/lobsters_stickers">Stickers</a></strong> are
+  available to show your support for the site.
+  </p></li>
+  </ul>
+
+  </div>
+</div>

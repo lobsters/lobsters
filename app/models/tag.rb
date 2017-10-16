@@ -6,6 +6,10 @@ class Tag < ActiveRecord::Base
 
   attr_accessor :filtered_count, :stories_count
 
+  validates :tag, length: { maximum: 25 }, presence: true, uniqueness: true
+  validates :description, length: { maximum: 100 }
+  validates :hotness_mod, inclusion: { in: 0..10 }
+
   scope :active, -> { where(:inactive => false) }
 
   def to_param

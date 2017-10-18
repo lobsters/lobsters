@@ -19,9 +19,14 @@ class TagsController < ApplicationController
   end
 
   def create
-    tag = Tag.create!(params.require(:tag).permit(:tag, :description, :privileged, :is_media, :inactive, :hotness_mod))
-    flash[:success] = "Tag #{tag.tag} has been created"
-    redirect_to tags_path
+    tag = Tag.create(params.require(:tag).permit(:tag, :description, :privileged, :is_media, :inactive, :hotness_mod))
+    if tag.valid?
+      flash[:success] = "Tag #{tag.tag} has been created"
+      redirect_to tags_path
+    else
+      flash[:error] = "New tag not created: #{tag.errors.full_messages.join(', ')}"
+      redirect_to new_tag_path
+    end
   end
 
   def edit
@@ -31,8 +36,13 @@ class TagsController < ApplicationController
 
   def update
     attrs = params.require(:tag).permit(:tag, :description, :privileged, :inactive, :hotness_mod)
-    Tag.find(params[:id]).update!(attrs)
-    flash[:success] = "Tag #{attrs[:tag]} has been updated"
-    redirect_to tags_path
+    tag = Tag.find(params[:id])
+    if tag.update(attrs)
+      flash[:success] = "Tag #{attrs[:tag]} has been updated"
+      redirect_to tags_path
+    else
+      flash[:error] = "Tag not updated: #{tag.errors.full_messages.join(', ')}"
+      redirect_to edit_tag_path
+    end
   end
 end

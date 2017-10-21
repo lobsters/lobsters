@@ -8,7 +8,7 @@ class Tag < ActiveRecord::Base
 
   validates :tag, length: { maximum: 25 }, presence: true, uniqueness: true
   validates :description, length: { maximum: 100 }
-  validates :hotness_mod, inclusion: { in: 0..10 }
+  validates :hotness_mod, inclusion: { in: -10..10 }
 
   scope :active, -> { where(:inactive => false) }
 

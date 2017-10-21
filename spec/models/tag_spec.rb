@@ -23,7 +23,7 @@ describe Tag do
     end
 
     it 'does not allow a tag with a hotness_mod too low to be saved' do
-      expect(Tag.create(tag: 'tag_name', hotness_mod: -1)).not_to be_valid
+      expect(Tag.create(tag: 'tag_name', hotness_mod: -15)).not_to be_valid
     end
 
     it 'does not allow a tag with a description too long to be saved' do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180124143340) do
+ActiveRecord::Schema.define(version: 20171018192832) do
 
   create_table "comments", id: :integer, unsigned: true, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
     t.datetime "created_at", null: false
@@ -51,10 +51,8 @@ ActiveRecord::Schema.define(version: 20180124143340) do
     t.datetime "updated_at"
     t.integer "user_id"
     t.integer "granted_by_user_id"
-    t.string "hat", null: false
+    t.string "hat", collation: "utf8mb4_general_ci"
     t.string "link", collation: "utf8mb4_general_ci"
-    t.boolean "modlog_use", default: false
-    t.datetime "doffed_at"
   end
 
   create_table "hidden_stories", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -112,7 +110,16 @@ ActiveRecord::Schema.define(version: 20180124143340) do
     t.text "action", limit: 16777215
     t.text "reason", limit: 16777215
     t.boolean "is_from_suggestions", default: false
-    t.index ["created_at"], name: "index_moderations_on_created_at"
+  end
+
+  create_table "read_ribbons", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.boolean "is_following", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.bigint "story_id"
+    t.index ["story_id"], name: "index_read_ribbons_on_story_id"
+    t.index ["user_id"], name: "index_read_ribbons_on_user_id"
   end
 
   create_table "saved_stories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

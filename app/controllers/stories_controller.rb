@@ -8,6 +8,7 @@ class StoriesController < ApplicationController
   before_action :find_user_story, :only => [ :destroy, :edit, :undelete,
     :update ]
   before_action :find_story!, :only => [ :suggest, :submit_suggestions ]
+  around_action :track_story_reads, only: [ :show ], if: -> { @user.present? }
 
   def create
     @title = "Submit Story"
@@ -406,5 +407,13 @@ private
       flash[:error] = "You are not allowed to submit new stories."
       return redirect_to "/"
     end
+  end
+
+  def track_story_reads
+    story = Story.where(short_id: params[:id]).first!
+    @ribbon = ReadRibbon.where(user_id: @user.id, story_id: story.id).first_or_create
+    yield
+    @ribbon.updated_at = Time.now
+    @ribbon.save
   end
 end

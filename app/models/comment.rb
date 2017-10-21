@@ -23,10 +23,6 @@ class Comment < ActiveRecord::Base
   after_destroy :unassign_votes
 
   scope :active, -> { where(:is_deleted => false, :is_moderated => false) }
-  scope :replies_to_user, ->(user_id) do
-    joins('LEFT JOIN comments parent_comments ON comments.parent_comment_id = parent_comments.id')
-      .where('comments.user_id != ? AND (parent_comments.user_id = ? OR (comments.parent_comment_id IS NULL AND comments.story_id IN (SELECT id FROM stories WHERE user_id = ?)))', user_id, user_id, user_id)
-  end
 
   DOWNVOTABLE_DAYS = 7
 

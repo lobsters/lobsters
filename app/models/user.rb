@@ -54,7 +54,6 @@ class User < ActiveRecord::Base
     s.string :twitter_oauth_token
     s.string :twitter_oauth_token_secret
     s.string :twitter_username
-    s.datetime :last_read_replies, default: DateTime.new(1970, 1, 1)
   end
 
   validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },

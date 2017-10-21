@@ -507,10 +507,7 @@ class User < ActiveRecord::Base
   end
 
   def unread_replies_count
-    Comment
-      .replies_to_user(self.id)
-      .where('comments.created_at > ?', self.settings['last_read_replies'])
-      .count 
+    ReplyingComment.where(user_id: self.id, is_unread: true).count
   end
 
   def votes_for_others

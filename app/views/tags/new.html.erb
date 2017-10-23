@@ -3,39 +3,5 @@
     Tag Create
   </div>
 
-  <%= form_for @tag, url: tags_path, method: :post do |f| %>
-    <div class="boxline">
-      <%= f.label :tag, 'Name:', class: 'required' %>
-      <%= f.text_field :tag  %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :description, 'Description:' %>
-      <%= f.text_field :description %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :privileged, 'Privileged:' %>
-      <%= f.check_box :privileged %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :is_media, 'Is Media:' %>
-      <%= f.check_box :is_media %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :inactive, 'Inactive:' %>
-      <%= f.check_box :inactive %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :hotness_mod, 'Hotness Mod:' %>
-      <%= f.number_field :hotness_mod, step: 0.01 %>
-    </div>
-
-    <div class="boxline">
-      <%= f.submit 'Create Tag' %>
-    </div>
-  <% end %>
+  <%= render partial: 'form' %>
 </div>

@@ -394,10 +394,7 @@ class User < ActiveRecord::Base
     if total_count < MIN_STORIES_CHECK_SELF_PROMOTION
       false
     else
-      authored = Story.where(
-        { :user_id => self.id, :user_is_author => true }
-      ).count
-
+      authored = self.stories.where(:user_is_author => true).count
       authored.to_f / total_count >= HEAVY_SELF_PROMOTER_PROPORTION
     end
   end

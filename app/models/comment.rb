@@ -71,9 +71,9 @@ class Comment < ActiveRecord::Base
         # for deleted comments, if they have no children, they can be removed
         # from the tree.  otherwise they have to stay and a "[deleted]" stub
         # will be shown
-        if node.is_gone? and # deleted or moderated
-          !children.present? and # no have child comments
-          (user && (user.is_moderator? || node.user_id == user.id))
+        if node.is_gone? && # deleted or moderated
+          !children.present? && # don't have child comments
+          (!user || (!user.is_moderator? && node.user_id != user.id))
           # admins and authors should be able to see their deleted comments
           next
         end

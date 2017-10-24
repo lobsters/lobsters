@@ -29,14 +29,15 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <span class="downvoter downvoter_stub"></span>
       <% end %>
     </div>
-    <% if defined?(children) && children %>
-      <% if can_downvote %>
-        <div class="comment_parent_tree_line can_downvote"></div>
-      <% elsif score_display != "&nbsp;" %>
-        <div class="comment_parent_tree_line score_shown"></div>
-      <% else %>
-        <div class="comment_parent_tree_line"></div>
-      <% end %>
+  <% end %>
+
+  <% if defined?(children) && children %>
+    <% if can_downvote %>
+      <div class="comment_parent_tree_line can_downvote"></div>
+    <% elsif score_display != "&nbsp;" %>
+      <div class="comment_parent_tree_line score_shown"></div>
+    <% else %>
+      <div class="comment_parent_tree_line"></div>
     <% end %>
   <% end %>
   <div class="details">

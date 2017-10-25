@@ -58,4 +58,30 @@ describe User do
     u = User.make!(:banned)
     expect(u.unban_by_user!(User.first)).to be true
   end
+
+  it "tells if a user is a heavy self promoter" do
+    u = User.make!
+
+    expect(u.is_heavy_self_promoter?).to be false
+
+    Story.make!(:title => "ti1", :url => "https://a.com/1", :user_id => u.id,
+      :user_is_author => true)
+    # require at least 2 stories to be considered heavy self promoter
+    expect(u.is_heavy_self_promoter?).to be false
+
+    Story.make!(:title => "ti2", :url => "https://a.com/2", :user_id => u.id,
+      :user_is_author => true)
+    # 100% of 2 stories
+    expect(u.is_heavy_self_promoter?).to be true
+
+    Story.make!(:title => "ti3", :url => "https://a.com/3", :user_id => u.id,
+      :user_is_author => false)
+    # 66.7% of 3 stories
+    expect(u.is_heavy_self_promoter?).to be true
+
+    Story.make!(:title => "ti4", :url => "https://a.com/4", :user_id => u.id,
+      :user_is_author => false)
+    # 50% of 4 stories
+    expect(u.is_heavy_self_promoter?).to be false
+  end
 end

@@ -84,10 +84,6 @@ class Comment < ActiveRecord::Base
         # no children to recurse
         next unless children
 
-        # for moderated threads, remove the entire sub-tree at the moderation
-        # point
-        next if node.is_moderated?
-
         # drill down a level
         ancestors << subtree
         subtree = children

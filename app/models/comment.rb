@@ -19,7 +19,7 @@ class Comment < ActiveRecord::Base
   end
   after_create :record_initial_upvote, :mark_submitter,
     :deliver_reply_notifications, :deliver_mention_notifications,
-    :log_to_countinual
+    :log_to_countinual, :log_hat_use
   after_destroy :unassign_votes
 
   scope :active, -> { where(:is_deleted => false, :is_moderated => false) }
@@ -356,6 +356,17 @@ class Comment < ActiveRecord::Base
     else
       return false
     end
+  end
+
+  def log_hat_use
+    return unless self.hat && self.hat.modlog_use
+
+    m = Moderation.new
+    m.created_at = self.created_at
+    m.comment_id = self.id
+    m.moderator_user_id = user.id
+    m.action = "used #{self.hat.hat} hat"
+    m.save!
   end
 
   def log_to_countinual

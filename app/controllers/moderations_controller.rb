@@ -42,7 +42,7 @@ class ModerationsController < ApplicationController
 
     @moderations = @moderations
                     .offset((@page - 1) * ENTRIES_PER_PAGE)
-                    .order("moderations.id desc")
+                    .order("moderations.created_at desc")
                     .limit(ENTRIES_PER_PAGE)
   end
 end

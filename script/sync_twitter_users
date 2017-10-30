@@ -47,7 +47,7 @@ to_add.each_slice(100) do |g|
   # lookup and remove any protected users
   Twitter.oauth_request("/1.1/users/lookup.json?screen_name=#{g.join(",")}").
   select{|u| u["protected"] }.each do |u|
-    puts "user #{u["screen_name"]} protected, ignoring"
+    #puts "user #{u["screen_name"]} protected, ignoring"
     Keystore.put("user:#{u["screen_name"]}:twitter_private", 1)
 
     g.reject!{|tu| tu.downcase == u["screen_name"].downcase }
@@ -57,14 +57,14 @@ to_add.each_slice(100) do |g|
     next
   end
 
-  puts "adding: #{g.inspect}"
+  #puts "adding: #{g.inspect}"
 
   Twitter.oauth_request("/1.1/lists/members/create_all.json", :post,
     { "list_id" => list_id, "screen_name" => g.join(",") })
 end
 
 to_del.each_slice(100) do |g|
-  puts "deleting: #{g.inspect}"
+  #puts "deleting: #{g.inspect}"
 
   Twitter.oauth_request("/1.1/lists/members/destroy_all.json", :post,
     { "list_id" => list_id, "screen_name" => g.join(",") })

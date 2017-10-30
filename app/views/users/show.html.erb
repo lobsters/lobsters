@@ -148,6 +148,27 @@
     </div>
   <% end %>
 
+  <% if @user && @user.is_moderator? && !@showing_user.is_moderator? %>
+    <div style="clear: both;"></div>
+    <br>
+
+    <p>
+    <div class="legend">
+      Moderation Information
+    </div>
+    </p>
+
+    <label class="required">Self Promoter:</label>
+    <span class="d">
+      <% if @showing_user.is_heavy_self_promoter? %>
+        <strong>Yes</strong>
+      <% else %>
+        No
+      <% end %>
+    </span>
+    <br>
+  <% end %>
+
   <% if @user && @user.is_admin? && !@showing_user.is_moderator? %>
     <div style="clear: both;"></div>
     <br>

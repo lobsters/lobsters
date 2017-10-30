@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   belongs_to :disabled_invite_by_user,
     :class_name => "User"
   has_many :invitations
+  has_many :moderations, :inverse_of => :moderator
   has_many :votes
   has_many :voted_stories, -> { where('votes.comment_id' => nil) },
     :through => :votes,
@@ -69,6 +70,10 @@ class User < ActiveRecord::Base
   end
 
   scope :active, -> { where(:banned_at => nil, :deleted_at => nil) }
+  scope :moderators, -> { where('
+      is_moderator = True OR
+      users.id IN (select distinct moderator_user_id from moderations)
+  ') }
 
   before_save :check_session_token
   before_validation :on => :create do
@@ -95,6 +100,12 @@ class User < ActiveRecord::Base
 
   # minimum karma required to process invitation requests
   MIN_KARMA_FOR_INVITATION_REQUESTS = MIN_KARMA_TO_DOWNVOTE
+
+  # proportion of posts authored by user to consider as heavy self promoter
+  HEAVY_SELF_PROMOTER_PROPORTION = 0.51
+
+  # minimum number of submitted stories before checking self promotion
+  MIN_STORIES_CHECK_SELF_PROMOTION = 2
 
   def self.recalculate_all_karmas!
     User.all.each do |u|
@@ -375,6 +386,17 @@ class User < ActiveRecord::Base
 
   def is_new?
     Time.now - self.created_at <= NEW_USER_DAYS.days
+  end
+
+  def is_heavy_self_promoter?
+    total_count = self.stories_submitted_count
+
+    if total_count < MIN_STORIES_CHECK_SELF_PROMOTION
+      false
+    else
+      authored = self.stories.where(:user_is_author => true).count
+      authored.to_f / total_count >= HEAVY_SELF_PROMOTER_PROPORTION
+    end
   end
 
   def linkified_about

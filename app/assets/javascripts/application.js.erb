@@ -115,7 +115,10 @@ var _Lobsters = Class.extend({
       d.append(a);
     });
 
-    $(voterEl).after(d);
+    if (thingType == "story")
+      li.after(d);
+    else
+      $(voterEl).after(d);
 
     d.position({
       my: "left top",
@@ -220,6 +223,13 @@ var _Lobsters = Class.extend({
     $("#inside").load("/stories/preview", $(form).serializeArray(),
     function() {
       Lobsters.runSelect2();
+    });
+  },
+
+  checkStoryDuplicate: function(form) {
+    var params = $(form).serializeArray();
+    $.post("/stories/check_url_dupe", params, function(formErrorsHtml) {
+      $(form).find(".form_errors_header").html(formErrorsHtml);
     });
   },
 
@@ -491,6 +501,10 @@ $(document).ready(function() {
         if (ta.getVal().indexOf(tag) < 0)
           ta.addSelectedChoice({ id: tag });
       }
+    }
+
+    if ($("#story_url").val().length > 0) {
+      Lobsters.checkStoryDuplicate($(this).parents("form").first());
     }
   });
 

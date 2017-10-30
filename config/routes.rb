@@ -70,6 +70,7 @@ Lobsters::Application.routes.draw do
     end
     post "/stories/fetch_url_attributes", :format => "json"
     post "/stories/preview" => "stories#preview"
+    post "/stories/check_url_dupe" => "stories#check_url_dupe"
 
     resources :comments do
       member do
@@ -88,7 +89,8 @@ Lobsters::Application.routes.draw do
     get "/comments/page/:page" => "comments#index"
     get "/comments" => "comments#index", :format => /html|rss/
 
-    get "/messages/sent" => "messages#sent"
+    get "/messages/sent" => "messages#sent", :format => /html|json/
+    get "/messages" => "messages#index", :format => /html|json/
     post "/messages/batch_delete" => "messages#batch_delete",
       :as => "batch_delete_messages"
     resources :messages do

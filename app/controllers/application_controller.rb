@@ -11,6 +11,10 @@ class ApplicationController < ActionController::Base
     # eagerly evaluate, in case this triggers an IpSpoofAttackError
     request.remote_ip
 
+    if Rails.application.read_only?
+      return true
+    end
+
     if session[:u] &&
     (user = User.where(:session_token => session[:u].to_s).first) &&
     user.is_active?
@@ -21,7 +25,20 @@ class ApplicationController < ActionController::Base
     true
   end
 
+  def check_for_read_only_mode
+    if Rails.application.read_only?
+      flash.now[:error] = "Site is currently in read-only mode."
+      return redirect_to "/"
+    end
+
+    true
+  end
+
   def increase_traffic_counter
+    if Rails.application.read_only?
+      return true
+    end
+
     @traffic = 1.0
 
     Keystore.transaction do

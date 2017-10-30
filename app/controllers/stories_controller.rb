@@ -329,6 +329,14 @@ class StoriesController < ApplicationController
     render :plain => "ok"
   end
 
+  def check_url_dupe
+    @story = Story.new(story_params)
+    @story.check_already_posted
+
+    return render :partial => "stories/form_errors", :layout => false,
+      :content_type => "text/html", :locals => { :story => @story }
+  end
+
 private
 
   def story_params

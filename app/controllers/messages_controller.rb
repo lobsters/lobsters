@@ -3,29 +3,45 @@ class MessagesController < ApplicationController
   before_action :find_message, :only => [ :show, :destroy, :keep_as_new ]
 
   def index
-    @cur_url = "/messages"
-    @title = "Messages"
-
-    @new_message = Message.new
-
-    @direction = :in
     @messages = @user.undeleted_received_messages
 
-    if params[:to]
-      @new_message.recipient_username = params[:to]
+    respond_to do |format|
+      format.html {
+        @cur_url = "/messages"
+        @title = "Messages"
+
+        @new_message = Message.new
+
+        @direction = :in
+
+        if params[:to]
+          @new_message.recipient_username = params[:to]
+        end
+      }
+      format.json {
+        render :json => @messages
+      }
     end
   end
 
   def sent
-    @cur_url = "/messages"
-    @title = "Messages Sent"
-
-    @direction = :out
     @messages = @user.undeleted_sent_messages
 
-    @new_message = Message.new
+    respond_to do |format|
+      format.html {
+        @cur_url = "/messages"
+        @title = "Messages Sent"
 
-    render :action => "index"
+        @direction = :out
+
+        @new_message = Message.new
+
+        render :action => "index"
+      }
+      format.json {
+        render :json => @messages
+      }
+    end
   end
 
   def create

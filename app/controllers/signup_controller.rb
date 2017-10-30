@@ -1,5 +1,6 @@
 class SignupController < ApplicationController
   before_action :require_logged_in_user, :only => :invite
+  before_action :check_for_read_only_mode
 
   def index
     if @user

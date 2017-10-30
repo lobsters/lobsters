@@ -19,7 +19,7 @@ class Comment < ActiveRecord::Base
   end
   after_create :record_initial_upvote, :mark_submitter,
     :deliver_reply_notifications, :deliver_mention_notifications,
-    :log_to_countinual
+    :log_to_countinual, :log_hat_use
   after_destroy :unassign_votes
 
   scope :active, -> { where(:is_deleted => false, :is_moderated => false) }
@@ -71,14 +71,10 @@ class Comment < ActiveRecord::Base
         # for deleted comments, if they have no children, they can be removed
         # from the tree.  otherwise they have to stay and a "[deleted]" stub
         # will be shown
-        if !node.is_gone?
-          # not deleted or moderated
-        elsif children
-          # we have child comments
-        elsif user && (user.is_moderator? || node.user_id == user.id)
+        if node.is_gone? && # deleted or moderated
+          !children.present? && # don't have child comments
+          (!user || (!user.is_moderator? && node.user_id != user.id))
           # admins and authors should be able to see their deleted comments
-        else
-          # drop this one
           next
         end
 
@@ -87,10 +83,6 @@ class Comment < ActiveRecord::Base
 
         # no children to recurse
         next unless children
-
-        # for moderated threads, remove the entire sub-tree at the moderation
-        # point
-        next if node.is_moderated?
 
         # drill down a level
         ancestors << subtree
@@ -293,7 +285,7 @@ class Comment < ActiveRecord::Base
 
   def gone_text
     if self.is_moderated?
-      "Thread removed by moderator " <<
+      "Comment removed by moderator " <<
         self.moderation.try(:moderator).try(:username).to_s << ": " <<
         (self.moderation.try(:reason) || "No reason given")
     elsif self.user.is_banned?
@@ -364,6 +356,17 @@ class Comment < ActiveRecord::Base
     else
       return false
     end
+  end
+
+  def log_hat_use
+    return unless self.hat && self.hat.modlog_use
+
+    m = Moderation.new
+    m.created_at = self.created_at
+    m.comment_id = self.id
+    m.moderator_user_id = user.id
+    m.action = "used #{self.hat.hat} hat"
+    m.save!
   end
 
   def log_to_countinual

@@ -22,6 +22,25 @@ class Message < ActiveRecord::Base
   after_save :update_unread_counts
   after_save :check_for_both_deleted
 
+  def as_json(options = {})
+    attrs = [
+      :short_id,
+      :created_at,
+      :has_been_read,
+      :subject,
+      :body,
+      :deleted_by_author,
+      :deleted_by_recipient,
+    ]
+
+    h = super(:only => attrs)
+
+    h[:author_username] = self.author.try(:username)
+    h[:recipient_username] = self.recipient.try(:username)
+
+    h
+  end
+
   def assign_short_id
     self.short_id = ShortId.new(self.class).generate
   end

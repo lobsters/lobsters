@@ -50,6 +50,6 @@ class TagsController < ApplicationController
   def tag_params
     params.require(:tag).permit(
       :tag, :description, :privileged, :inactive, :hotness_mod, action_name == 'create' ? :is_media : nil
-    )
+    ).merge(edit_user_id: @user.id)
   end
 end

@@ -1,7 +1,12 @@
 require "spec_helper"
 
 describe TagsController do
-  before { allow(controller).to receive(:require_logged_in_admin) }
+  let(:user_id) { 5 }
+  before do
+    allow(controller).to receive(:require_logged_in_admin)
+    allow(controller).to receive(:session).and_return(u: 'asdf')
+    allow(User).to receive(:where).and_return(double(first: double(id: user_id, is_active?: true, username: 'name')))
+  end
 
   context 'create' do
     it 'creates new tags' do
@@ -26,6 +31,11 @@ describe TagsController do
       expect(tag.hotness_mod).to eq 1.5
       expect(tag.privileged).to be true
       expect(tag.inactive).to be true
+    end
+
+    it 'creates a moderation with the expected user_id' do
+      post :create, params: { tag: { tag: 'my tag' } }
+      expect(Moderation.order(id: :desc).first.moderator_user_id).to eq user_id
     end
   end
 
@@ -59,6 +69,11 @@ describe TagsController do
       expect(new_tag.hotness_mod).to eq 1.5
       expect(new_tag.privileged).to be true
       expect(new_tag.inactive).to be true
+    end
+
+    it 'creates a moderation with the expected user_id' do
+      post :update, params: { id: tag.id, tag: { tag: 'modified_tag' } }
+      expect(Moderation.order(id: :desc).first.moderator_user_id).to eq user_id
     end
   end
 end

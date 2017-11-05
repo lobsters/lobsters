@@ -4,7 +4,9 @@ class Tag < ActiveRecord::Base
   has_many :stories,
     :through => :taggings
 
-  attr_accessor :filtered_count, :stories_count
+  before_save :log_modifications
+
+  attr_accessor :filtered_count, :stories_count, :edit_user_id
 
   validates :tag, length: { maximum: 25 }, presence: true, uniqueness: true
   validates :description, length: { maximum: 100 }
@@ -48,5 +50,17 @@ class Tag < ActiveRecord::Base
 
   def filtered_count
     @filtered_count ||= TagFilter.where(:tag_id => self.id).count
+  end
+
+  def log_modifications
+    Moderation.create do |m|
+      if self.new_record?
+        m.action = 'Created new tag '  + self.changes.map { |f, c| "with #{f} '#{c[1]}'" } .join(', ')
+      else
+        m.action = "Updating tag #{self.tag}, " +
+          self.changes.map { |f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" } .join(', ')
+      end
+      m.moderator_user_id = @edit_user_id
+    end
   end
 end

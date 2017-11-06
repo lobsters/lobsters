@@ -130,11 +130,10 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% if comment.is_gone? %>
         <p>
         <span class="na">
-        [<%= comment.gone_text %>]
+          [<%= comment.gone_text %><% if @user && @user.is_moderator? %> Visible to moderator:<% end %>]
         </span>
         </p>
         <% if @user && @user.is_moderator? %>
-          <p>[Original visible to moderator:]</p>
           <%= raw comment.markeddown_comment %>
         <% end %>
       <% else %>

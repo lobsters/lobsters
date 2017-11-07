@@ -27,7 +27,7 @@ end
 desc 'Generates fake data for testing purposes'
 task fake_data: :environment do
   fail "It's not intended to be run outside development environment" unless Rails.env.development?
-  unless (User.count + Tag.count + Story.count) == 0
+  unless User.count == 1 and Tag.count == 1 and Story.count == 0
     fail "Please ensure that you're running it on clean database because it will destroy all data"
   end
 

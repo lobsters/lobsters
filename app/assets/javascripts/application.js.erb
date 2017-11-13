@@ -115,22 +115,25 @@ var _Lobsters = Class.extend({
       d.append(a);
     });
 
-    if (thingType == "story")
-      li.after(d);
-    else
+    if (thingType == "story") {
       $(voterEl).after(d);
-
-    d.position({
-      my: "left top",
-      at: "left bottom",
-      offset: "-2 -2",
-      of: $(voterEl),
-      collision: "none",
-    });
-
-    /* XXX: why is this needed? */
-    if (thingType == "story")
+      d.position({
+        my: "left top",
+        at: "left bottom",
+        offset: "-2 -2",
+        of: $(voterEl),
+        collision: "none",
+      });
       d.css("left", $(voterEl).position().left);
+    } else {
+      // place downvote menu outside of the comment to avoid inheriting opacity
+      var voterPos = $(voterEl).position();
+      d.appendTo($(voterEl).closest(".comments_subtree"));
+      d.css({
+        left: voterPos.left,
+        top: voterPos.top + $(voterEl).outerHeight()
+      });
+    }
   },
 
   vote: function(thingType, voterEl, point, reason) {

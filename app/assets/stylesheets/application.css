@@ -822,7 +822,7 @@ a.pagelink.curpage {
 	width: 100px;
 	border: 1px solid #ccc;
 	border-bottom: 0;
-	z-index: 2;
+	z-index: 15;
 }
 #downvote_why a {
 	background-color: white;

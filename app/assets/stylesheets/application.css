@@ -107,6 +107,12 @@ div.shorten_first_p p:first-child {
 
 pre {
 	overflow-x: auto;
+	padding: 4px 8px;
+}
+
+pre, code {
+	background-color: #eee;
+	border-radius: 2px;
 }
 
 

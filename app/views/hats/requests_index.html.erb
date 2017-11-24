@@ -27,6 +27,9 @@
         <div class="boxline">
           <%= f.label :link, "Link:", :class => "required" %>
           <%= f.text_field "link", :size => 75 %>
+          <% if hh.link.to_s.match(/^http/) %>
+            <br><a href="<%= hh.link %>" rel="nofollow"><%= hh.link %></a>
+          <% end %>
         </div>
 
         <div class="boxline">

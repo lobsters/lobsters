@@ -36,16 +36,7 @@ class LoginController < ApplicationController
       end
 
       if !user.authenticate(params[:password].to_s)
-        # if the user has 2fa enabled and the password looks like it has a totp
-        # code attached, separate them
-        if user.has_2fa? &&
-        (m = params[:password].to_s.match(/\A(.+):(\d+)\z/)) &&
-        user.authenticate(m[1])
-          params[:password] = m[1]
-          params[:totp] = m[2]
-        else
-          raise LoginFailedError
-        end
+        raise LoginFailedError
       end
 
       if user.is_banned?
@@ -62,50 +53,27 @@ class LoginController < ApplicationController
       end
 
       if user.has_2fa? && !Rails.env.development?
-        if params[:totp].present?
-          if user.authenticate_totp(params[:totp])
-            # ok, fall through
-          else
-            raise LoginTOTPFailedError
+        session[:twofa_u] = user.session_token
+        redirect_to "/login/2fa"
+      end
+
+      session[:u] = user.session_token
+
+      if (rd = session[:redirect_to]).present?
+        session.delete(:redirect_to)
+        return redirect_to rd
+      elsif params[:referer].present?
+        begin
+          ru = URI.parse(params[:referer])
+          if ru.host == Rails.application.domain
+            return redirect_to ru.to_s
           end
-        else
-          return respond_to do |format|
-            format.html {
-              session[:twofa_u] = user.session_token
-              redirect_to "/login/2fa"
-            }
-            format.json {
-              render :json => { :status => 0,
-                :error => "must supply totp parameter" }
-            }
-          end
+        rescue => e
+          Rails.logger.error "error parsing referer: #{e}"
         end
       end
 
-      return respond_to do |format|
-        format.html {
-          session[:u] = user.session_token
-
-          if (rd = session[:redirect_to]).present?
-            session.delete(:redirect_to)
-            return redirect_to rd
-          elsif params[:referer].present?
-            begin
-              ru = URI.parse(params[:referer])
-              if ru.host == Rails.application.domain
-                return redirect_to ru.to_s
-              end
-            rescue => e
-              Rails.logger.error "error parsing referer: #{e}"
-            end
-          end
-
-          redirect_to "/"
-        }
-        format.json {
-          render :json => { :status => 1, :username => user.username }
-        }
-      end
+      return redirect_to "/"
     rescue LoginBannedError
       fail_reason = "Your account has been banned."
     rescue LoginDeletedError
@@ -116,16 +84,9 @@ class LoginController < ApplicationController
       fail_reason = "Invalid e-mail address and/or password."
     end
 
-    respond_to do |format|
-      format.html {
-        flash.now[:error] = fail_reason
-        @referer = params[:referer]
-        index
-      }
-      format.json {
-        render :json => { :status => 0, :error => fail_reason }
-      }
-    end
+    flash.now[:error] = fail_reason
+    @referer = params[:referer]
+    index
   end
 
   def forgot_password

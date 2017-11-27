@@ -34,7 +34,7 @@ Lobsters::Application.routes.draw do
     get "/threads/:user" => "comments#threads"
 
     get "/login" => "login#index"
-    post "/login" => "login#login", :format => /html|json/
+    post "/login" => "login#login"
     post "/logout" => "login#logout"
     get "/login/2fa" => "login#twofa"
     post "/login/2fa_verify" => "login#twofa_verify", :as => "twofa_login"

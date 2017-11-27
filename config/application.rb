@@ -74,7 +74,7 @@ class << Rails.application
     })
   end
 
-  # used as mailing list prefix and countinual prefix, cannot have spaces
+  # used as mailing list prefix, cannot have spaces
   def shortname
     name.downcase.gsub(/[^a-z]/, "")
   end

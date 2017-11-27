@@ -18,9 +18,6 @@ class StoriesController < ApplicationController
 
     if @story.valid? && !(@story.already_posted_story && !@story.seen_previous)
       if @story.save
-        Countinual.count!("#{Rails.application.shortname}.stories.submitted",
-          "+1")
-
         return redirect_to @story.comments_path
       end
     end

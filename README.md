@@ -22,81 +22,99 @@ file.
 * Install Ruby 2.3.
 
 * Checkout the lobsters git tree from Github
-
-         $ git clone git://github.com/lobsters/lobsters.git
-         $ cd lobsters
-         lobsters$
+    ```sh
+    $ git clone git://github.com/lobsters/lobsters.git
+    $ cd lobsters
+    lobsters$
+    ```
 
 * Install Nodejs, needed (or other execjs) for uglifier
-
-         Fedora: sudo yum install nodejs
-         Ubuntu: sudo apt-get install nodejs
-         OSX: brew install nodejs
+    ```sh
+    Fedora: sudo yum install nodejs
+    Ubuntu: sudo apt-get install nodejs
+    OSX: brew install nodejs
+    ```
 
 * Run Bundler to install/bundle gems needed by the project:
 
-         lobsters$ bundle
+    ```sh
+    lobsters$ bundle
+    ```
 
 * Create a MySQL (other DBs supported by ActiveRecord may work, only MySQL and
 MariaDB have been tested) database, username, and password and put them in a
 `config/database.yml` file.  You will also want a separate database for
 running tests:
 
-          development:
-            adapter: mysql2
-            encoding: utf8mb4
-            reconnect: false
-            database: lobsters_dev
-            socket: /tmp/mysql.sock
-            username: *dev_username*
-            password: *dev_password*
-            
-          test:
-            adapter: mysql2
-            encoding: utf8mb4
-            reconnect: false
-            database: lobsters_test
-            socket: /tmp/mysql.sock
-            username: *test_username*
-            password: *test_password*
+    ```yaml
+    development:
+      adapter: mysql2
+      encoding: utf8mb4
+      reconnect: false
+      database: lobsters_dev
+      socket: /tmp/mysql.sock
+      username: *dev_username*
+      password: *dev_password*
+      
+    test:
+      adapter: mysql2
+      encoding: utf8mb4
+      reconnect: false
+      database: lobsters_test
+      socket: /tmp/mysql.sock
+      username: *test_username*
+      password: *test_password*
+    ```
 
 * Load the schema into the new database:
 
-          lobsters$ rake db:schema:load
+    ```sh
+    lobsters$ rake db:schema:load
+    ```
 
 * Create a `config/initializers/secret_token.rb` file, using a randomly
 generated key from the output of `rake secret`:
 
-          Lobsters::Application.config.secret_key_base = 'your random secret here'
+    ```sh
+    Lobsters::Application.config.secret_key_base = 'your random secret here'
+    ```
 
 * Define your site's name and default domain, which are used in various places,
 in a `config/initializers/production.rb` or similar file:
 
-          class << Rails.application
-            def domain
-              "example.com"
-            end
-          
-            def name
-              "Example News"
-            end
-          end
-          
-          Rails.application.routes.default_url_options[:host] = Rails.application.domain
+    ```ruby
+    class << Rails.application
+      def domain
+        "example.com"
+      end
+
+      def name
+        "Example News"
+      end
+    end
+
+    Rails.application.routes.default_url_options[:host] = Rails.application.domain
+    ```
 
 * Put your site's custom CSS in `app/assets/stylesheets/local`.
 
 * Seed the database to create an initial administrator user and at least one tag:
 
-          lobsters$ rake db:seed
-          created user: test, password: test
-          created tag: test
+    ```sh
+    lobsters$ rake db:seed
+    created user: test, password: test
+    created tag: test
+    ```
 
 * Run the Rails server in development mode.  You should be able to login to
 `http://localhost:3000` with your new `test` user:
 
-          lobsters$ rails server
+    ```sh
+    lobsters$ rails server
+    ```
 
 * In production, set up crontab or another scheduler to run regular jobs:
 
-          */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/post_to_twitter'
+    ```
+    */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/post_to_twitter'
+    ```

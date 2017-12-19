@@ -59,9 +59,12 @@ class Search
 
     # extract domain query since it must be done separately
     domain = nil
+    tag_scope = nil
     words = self.q.to_s.split(" ").reject{|w|
       if m = w.match(/^domain:(.+)$/)
         domain = m[1]
+      elsif m = w.match(/^tag:(.+)$/)
+        tag_scope = m[1]
       end
     }.join(" ")
 
@@ -84,18 +87,26 @@ class Search
         end
       end
 
+      if tag_scope.present?
+        base.where!(:tags => { :tag => tag_scope })
+      end
+
+      title_match_sql = "MATCH(stories.title) AGAINST('#{qwords}' IN BOOLEAN MODE)"
+      description_match_sql = "MATCH(stories.description) AGAINST('#{qwords}' IN BOOLEAN MODE)"
+      story_cache_match_sql = "MATCH(stories.story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE)"
+
       if qwords.present?
         base.where!(
-          "(MATCH(title) AGAINST('#{qwords}' IN BOOLEAN MODE) OR " +
-          "MATCH(description) AGAINST('#{qwords}' IN BOOLEAN MODE) OR " +
-          "MATCH(story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE))"
+          "(#{title_match_sql} OR " +
+          "#{description_match_sql} OR " +
+          "#{story_cache_match_sql})"
         )
 
         self.results = base.select(
           "stories.*, " +
-          "MATCH(title) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_title, " +
-          "MATCH(description) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_description, " +
-          "MATCH(story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_story_cache"
+          "#{title_match_sql}, " +
+          "#{description_match_sql}, " +
+          "#{story_cache_match_sql}"
         )
       else
         self.results = base
@@ -105,15 +116,15 @@ class Search
       when "relevance"
         if qwords.present?
           self.results.order!(
-            "(rel_title * 2) DESC, " +
-            "(rel_description * 1.5) DESC, " +
-            "(rel_story_cache) DESC"
+            "((#{title_match_sql}) * 2) DESC, " +
+            "((#{description_match_sql}) * 1.5) DESC, " +
+            "(#{story_cache_match_sql}) DESC"
           )
         else
-          self.results.order!("created_at DESC")
+          self.results.order!("stories.created_at DESC")
         end
       when "newest"
-        self.results.order!("created_at DESC")
+        self.results.order!("stories.created_at DESC")
       when "points"
         self.results.order!("#{Story.score_sql} DESC")
       end

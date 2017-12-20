@@ -58,7 +58,9 @@
           :was_merged => (comment.story_id != @story.id),
           :children => children %>
 
-        <div class="comment_siblings_tree_line"></div>
+        <% if ancestors.present? %>
+          <div class="comment_siblings_tree_line"></div>
+        <% end %>
 
         <% if children %>
           <% ancestors << subtree %>

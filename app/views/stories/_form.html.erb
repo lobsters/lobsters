@@ -1,5 +1,5 @@
 <%= render :partial => "stories/form_errors", :locals => {
-  :story => f.object } %>
+  :f => f, :story => f.object } %>
 
 <div class="box">
   <% unless defined?(suggesting) %>

@@ -203,9 +203,13 @@ var _Lobsters = Class.extend({
 
   postComment: function(form) {
     $.post($(form).attr("action"), $(form).serializeArray(), function(data) {
-      if ($(form).find('#parent_comment_short_id').length) {
-        $(form).closest('.comment').replaceWith($.parseHTML(data));
+      if ($(form).find("#parent_comment_short_id").length) {
+        // reply to comment
+        $(form).closest(".comments_subtree")
+          .find(".comment_parent_tree_line:first").removeClass("no_children");
+        $(form).closest(".comment").replaceWith($.parseHTML(data));
       } else {
+        // reply to story
         $(form).parent(".comment").replaceWith($.parseHTML(data));
       }
     });

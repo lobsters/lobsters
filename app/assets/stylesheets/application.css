@@ -868,13 +868,37 @@ div.markdown_help_label {
 	cursor: pointer;
 }
 
-.comment .preview {
+.comment {
 	padding-left: 17px;
 }
 
-div#story_preview {
-	margin-top: 2em;
+#preview {
+	min-height: 112px;
+}
+
+div#submission_preview {
 	margin-left: 3.5em;
+	margin-bottom: 7px;
+	overflow-y: scroll;
+	display: none;
+}
+
+div#edit_toggle {
+	border-bottom: 1px solid #ccc;
+	padding-left: 3em;
+	margin-bottom: 10px;
+}
+
+div#edit_toggle > button {
+	margin: 0;
+	margin-right: 10px;
+	top: 1px;
+	position: relative;
+	border-bottom: 1px solid #fafafa;
+}
+
+div#edit_toggle > button.active {
+	background-color: #e6e6e6;
 }
 
 div#story_box input#story_url {

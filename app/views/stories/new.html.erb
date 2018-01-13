@@ -4,6 +4,11 @@
   </div>
 
   <div id="story_holder">
+    <div id="edit_toggle">
+      <button type="button" class="story-write active">Edit</button>
+      <button type="button" class="story-preview">Preview</button>
+    </div>
+
     <%= form_for @story do |f| %>
       <%= render :partial => "stories/form", :locals => { :story => @story,
         :f => f } %>
@@ -18,9 +23,6 @@
 
           <%= submit_tag "Submit" %>
 
-          &nbsp;
-          <button type="button" class="story-preview">Preview</button>
-
           <div style="clear: both;"></div>
 
           <%= render :partial => "global/markdownhelp",
@@ -30,17 +32,3 @@
     <% end %>
   </div>
 </div>
-
-<div id="story_preview">
-  <% if @story.previewing && @story.valid? %>
-    <%= render :template => "stories/show" %>
-  <% end %>
-</div>
-
-<script>
-  $(document).ready(function() {
-    <% if !@story.previewing %>
-      $("#story_url").focus();
-    <% end %>
-  });
-</script>

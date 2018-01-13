@@ -223,7 +223,7 @@ var _Lobsters = Class.extend({
   },
 
   previewStory: function(form) {
-    $("#inside").load("/stories/preview", $(form).serializeArray(),
+    $("#submission_preview").load("/stories/preview", $(form).serializeArray(),
     function() {
       Lobsters.runSelect2();
     });
@@ -484,8 +484,25 @@ $(document).ready(function() {
     Lobsters.previewComment($(this).parents("form").first());
   });
 
+  $(document).on("click", "button.comment-write", function() {
+    $(this).parent().siblings('#comment').show();
+    $(this).parent().siblings('#preview').hide();
+    $(this).nextUntil('.comment-preview, .comment-write').toggleClass("active");
+  });
+
+  var box_height = $('#submission_builder').height();
+  $('#submission_preview').css('height', box_height)
   $(document).on("click", "button.story-preview", function() {
-    Lobsters.previewStory($(this).parents("form").first());
+    Lobsters.previewStory($(this).parent().next('form'));
+    $('#submission_preview').show();
+    $('#submission_builder').hide();
+    $('.story-preview, .story-write').toggleClass("active");
+  });
+
+  $(document).on("click", "button.story-write", function() {
+    $('#submission_builder').show();
+    $('#submission_preview').hide();
+    $('.story-preview, .story-write').toggleClass("active");
   });
 
   $(document).on("blur", "#story_url", function() {

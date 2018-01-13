@@ -1,5 +1,6 @@
 <div class="comment comment_form_container"
 data-shortid="<%= comment.short_id if comment.persisted? %>">
+
 <%= form_for comment,
 :html => { :id => "edit_comment_#{comment.short_id}" } do |f| %>
   <% if comment.errors.any? %>
@@ -14,11 +15,22 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
   <% end %>
 
   <div style="width: 100%;">
+    <% preview = defined?(show_comment) && show_comment.valid? %>
+    <div id="edit_toggle" style="padding-left: 10px;">
+      <button type="button" class="comment-write  <%= "active" unless preview %>">Edit</button>
+      <button type="button" class="comment-preview <%= "active" if preview %>">Preview</button>
+    </div>
+
+    <% if preview %>
+      <div id="preview">
+        <%= render "comments/comment", :comment => show_comment %>
+      </div>
+    <% end %>
     <%= text_area_tag "comment", comment.comment, :rows => 5,
       :disabled => !@user,
-      :placeholder => (@user ? "" : "You must be logged in to leave a comment.")
+      :placeholder => (@user ? nil : "You must be logged in to leave a comment."),
+      :style => "display:" + (preview ? "none;" : "block;")
       %>
-
     <p></p>
 
     <div class="markdown_help_toggler">
@@ -35,14 +47,6 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
       <%= button_tag "#{comment.new_record?? "Post" : "Update"}",
         :class => "comment-post", :type => "button",
         :disabled => !@user %>
-      &nbsp;
-      <%= button_tag "Preview", :class => "comment-preview",
-        :type => "button", :disabled => !@user %>
-      <% if comment.persisted? || comment.parent_comment_id %>
-        &nbsp;
-        <%= button_tag "Cancel", :class => "comment-cancel",
-          :type => "button" %>
-      <% end %>
 
       <% if @user && @user.hats.any? %>
         <div style="display: inline-block; margin-left: 1em;">
@@ -63,9 +67,5 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
 
   <p></p>
 <% end %>
-<% if defined?(show_comment) && show_comment.valid? %>
-  <div class="preview">
-    <%= render "comments/comment", :comment => show_comment %>
-  </div>
-<% end %>
+
 </div>

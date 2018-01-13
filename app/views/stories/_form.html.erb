@@ -3,6 +3,8 @@
 
 <div class="box">
   <% unless defined?(suggesting) %>
+    <div id="submission_preview"></div>
+    <div id="submission_builder">
     <div class="boxline">
     <% if f.object.url_is_editable_by_user?(@user) %>
       <%= f.label :url, "URL:", :class => "required" %>
@@ -85,7 +87,8 @@
       <%= f.text_area :description, :rows => 15,
         :placeholder => "Optional when submitting a URL; please see guidelines" %>
     </div>
-
+  </div>
+  
     <div class="boxline actions markdown_help_toggler">
       <a href="#" id="story_guidelines_toggler">
         Story submission guidelines

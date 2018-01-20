@@ -12,3 +12,4 @@ Other sites using the Lobsters codebase:
 * [Barnacles](https://www.barnacl.es)
 * [Le Journal du Hacker](https://www.journalduhacker.net/)
 * [Write.Narwhal.Space](https://write.narwhal.space)
+* [Barnaclad](https://barnacles.blackfriday/)

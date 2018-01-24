@@ -19,7 +19,7 @@ class CommentsController < ApplicationController
     comment.comment = params[:comment].to_s
     comment.user = @user
 
-    if params[:hat_id] && @user.hats.where(:id => params[:hat_id])
+    if params[:hat_id] && @user.wearable_hats.where(:id => params[:hat_id])
       comment.hat_id = params[:hat_id]
     end
 
@@ -135,7 +135,7 @@ class CommentsController < ApplicationController
 
     comment.comment = params[:comment]
     comment.hat_id = nil
-    if params[:hat_id] && @user.hats.where(:id => params[:hat_id])
+    if params[:hat_id] && @user.wearable_hats.where(:id => params[:hat_id])
       comment.hat_id = params[:hat_id]
     end
 

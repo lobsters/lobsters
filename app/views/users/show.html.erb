@@ -110,6 +110,9 @@
     <div class="d">
     <% @showing_user.hats.each do |hat| %>
       <%= hat.to_html_label %>
+      <% if hat.doffed_at? %>
+        doffed <%= time_ago_in_words_label(hat.doffed_at) %>
+      <% end %>
     <% end %>
     </div>
     <div style="clear: both;"></div>

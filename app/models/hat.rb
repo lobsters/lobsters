@@ -3,10 +3,21 @@ class Hat < ActiveRecord::Base
   belongs_to :granted_by_user,
     :class_name => "User"
 
-  validates :user, :presence => true
+  validates :user, :hat, :presence => true
   validates :granted_by_user, :presence => true
 
   after_create :log_moderation
+
+  def doff_by_user_with_reason(user, reason)
+    m = Moderation.new
+    m.user_id = self.user_id
+    m.moderator_user_id = user.id
+    m.action = "Doffed hat \"#{self.hat}\": #{reason}"
+    m.save!
+
+    self.doffed_at = Time.now
+    self.save!
+  end
 
   def destroy_by_user_with_reason(user, reason)
     m = Moderation.new

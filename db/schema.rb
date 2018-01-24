@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171025072230) do
+ActiveRecord::Schema.define(version: 20180124143340) do
 
   create_table "comments", id: :integer, unsigned: true, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
     t.datetime "created_at", null: false
@@ -51,9 +51,10 @@ ActiveRecord::Schema.define(version: 20171025072230) do
     t.datetime "updated_at"
     t.integer "user_id"
     t.integer "granted_by_user_id"
-    t.string "hat", collation: "utf8mb4_general_ci"
+    t.string "hat", null: false
     t.string "link", collation: "utf8mb4_general_ci"
     t.boolean "modlog_use", default: false
+    t.datetime "doffed_at"
   end
 
   create_table "hidden_stories", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

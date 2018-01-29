@@ -407,7 +407,7 @@ class Story < ActiveRecord::Base
   end
 
   def is_gone?
-    is_expired? || self.user.is_banned?
+    is_expired? || (self.user.is_banned? && score < 0)
   end
 
   def is_hidden_by_user?(user)

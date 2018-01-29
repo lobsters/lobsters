@@ -98,12 +98,10 @@ in a `config/initializers/production.rb` or similar file:
 
 * Put your site's custom CSS in `app/assets/stylesheets/local`.
 
-* Seed the database to create an initial administrator user and at least one tag:
+* Seed the database to create an initial administrator user, the `inactive-user`, and at least one tag:
 
     ```sh
     lobsters$ rake db:seed
-    created user: test, password: test
-    created tag: test
     ```
 
 * Run the Rails server in development mode.  You should be able to login to

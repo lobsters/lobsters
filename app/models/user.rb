@@ -85,9 +85,9 @@ class User < ActiveRecord::Base
   end
 
   BANNED_USERNAMES = [ "admin", "administrator", "contact", "fraud", "guest",
-    "help", "hostmaster", "mailer-daemon", "moderator", "moderators", "nobody",
-    "postmaster", "root", "security", "support", "sysop", "webmaster",
-    "enable", "new", "signup", ]
+    "help", "hostmaster", "inactive-user", "mailer-daemon", "moderator",
+    "moderators", "nobody", "postmaster", "root", "security", "support",
+    "sysop", "webmaster", "enable", "new", "signup", ]
 
   # days old accounts are considered new for
   NEW_USER_DAYS = 7
@@ -342,6 +342,11 @@ class User < ActiveRecord::Base
       self.deleted_at = nil
       self.save!
     end
+  end
+
+  def disown_comments!
+    inactive_user = User.find_by!(:username => 'inactive-user')
+    self.comments.update_all(:user_id => inactive_user.id)
   end
 
   def disable_2fa!

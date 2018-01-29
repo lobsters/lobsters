@@ -12,6 +12,9 @@ class SettingsController < ApplicationController
   def delete_account
     if @user.try(:authenticate, params[:user][:password].to_s)
       @user.delete!
+      if params[:disown].present?
+        @user.disown_comments!
+      end
       reset_session
       flash[:success] = "Your account has been deleted."
       return redirect_to "/"

@@ -234,6 +234,11 @@ button:disabled {
 	color: gray;
 }
 
+input.deletion {
+  color: darkred;
+  border: 1px solid darkred;
+}
+
 .totp_code::-webkit-inner-spin-button,
 .totp_code::-webkit-outer-spin-button {
   -webkit-appearance: none;

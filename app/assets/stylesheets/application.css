@@ -611,6 +611,9 @@ li .comment_parent_tree_line.score_shown {
 li .comment_parent_tree_line.can_downvote {
 	top: 56px;
 }
+li .comment_parent_tree_line.no_children {
+	border-left-color: transparent;
+}
 li .comment_siblings_tree_line {
 	position: absolute;
 	left: 28px;

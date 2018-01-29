@@ -347,6 +347,7 @@ class User < ActiveRecord::Base
   def disown_comments!
     inactive_user = User.find_by!(:username => 'inactive-user')
     self.comments.update_all(:user_id => inactive_user.id)
+    inactive-user.update_comments_posted_count!
   end
 
   def disable_2fa!

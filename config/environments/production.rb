@@ -32,6 +32,11 @@ Lobsters::Application.configure do
   # Generate digests for assets URLs.
   config.assets.digest = true
 
+  # Specify how the assets should be cached by the browser
+  config.public_file_server.headers = {
+    'Cache-Control' => 'public, max-age=31536000'
+  }
+  
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
   # Specifies the header that your server uses for sending files.

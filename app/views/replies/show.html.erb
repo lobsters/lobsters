@@ -14,30 +14,31 @@
 
 <ol class="comments comments1">
   <% @replies.each do |reply| %>
-  <li class="comments_subtree">
-    <%= render "comments/comment",
-	comment: reply.comment,
-	show_story: true,
-	is_unread: reply.is_unread %>
-    <ol class="comments"></ol>
-  </li>
+    <li class="comments_subtree">
+      <%= render "comments/comment",
+  	  comment: reply.comment,
+          show_story: true,
+	  is_unread: reply.is_unread,
+          show_tree_lines: false %>
+      <ol class="comments"></ol>
+    </li>
   <% end %>
 </ol>
 
-<% @filter != 'unread' && if @replies.count > RepliesController::REPLIES_PER_PAGE %>
+<%  if @replies.count > RepliesController::REPLIES_PER_PAGE && @filter != 'unread'%>
 <div class="morelink">
   <% if @page && @page > 1 %>
-  <a href="/replies<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt; 
-    Page <%= @page - 1 %></a>
+    <a href="/replies<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt;
+      Page <%= @page - 1 %></a>
   <% end %>
 
   <% if @replies.any? %>
-  <% if @page && @page > 1 %>
-  |
-  <% end %>
+    <% if @page && @page > 1 %>
+      |
+    <% end %>
 
-  <a href="/replies/page/<%= @page + 1 %>">Page
-    <%= @page + 1 %> &gt;&gt;</a>
+    <a href="/replies/page/<%= @page + 1 %>">Page
+      <%= @page + 1 %> &gt;&gt;</a>
   <% end %>
 </div>
 <% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171021133037) do
+ActiveRecord::Schema.define(version: 20180130235553) do
 
   create_table "comments", id: :integer, unsigned: true, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
     t.datetime "created_at", null: false
@@ -51,8 +51,10 @@ ActiveRecord::Schema.define(version: 20171021133037) do
     t.datetime "updated_at"
     t.integer "user_id"
     t.integer "granted_by_user_id"
-    t.string "hat", collation: "utf8mb4_general_ci"
+    t.string "hat", null: false
     t.string "link", collation: "utf8mb4_general_ci"
+    t.boolean "modlog_use", default: false
+    t.datetime "doffed_at"
   end
 
   create_table "hidden_stories", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -110,6 +112,7 @@ ActiveRecord::Schema.define(version: 20171021133037) do
     t.text "action", limit: 16777215
     t.text "reason", limit: 16777215
     t.boolean "is_from_suggestions", default: false
+    t.index ["created_at"], name: "index_moderations_on_created_at"
   end
 
   create_table "read_ribbons", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -245,7 +248,7 @@ ActiveRecord::Schema.define(version: 20171021133037) do
 
 
   create_view "replying_comments",  sql_definition: <<-SQL
-      select `lobsters_dev`.`read_ribbons`.`user_id` AS `user_id`,`lobsters_dev`.`comments`.`id` AS `comment_id`,`lobsters_dev`.`read_ribbons`.`story_id` AS `story_id`,`lobsters_dev`.`comments`.`parent_comment_id` AS `parent_comment_id`,`lobsters_dev`.`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`lobsters_dev`.`comments`.`user_id` AS `comment_author_id`,`lobsters_dev`.`stories`.`user_id` AS `story_author_id`,(`lobsters_dev`.`read_ribbons`.`updated_at` < `lobsters_dev`.`comments`.`created_at`) AS `is_unread` from (((`lobsters_dev`.`read_ribbons` join `lobsters_dev`.`comments` on((`lobsters_dev`.`comments`.`story_id` = `lobsters_dev`.`read_ribbons`.`story_id`))) join `lobsters_dev`.`stories` on((`lobsters_dev`.`stories`.`id` = `lobsters_dev`.`comments`.`story_id`))) left join `lobsters_dev`.`comments` `parent_comments` on((`parent_comments`.`id` = `lobsters_dev`.`comments`.`parent_comment_id`))) where ((`lobsters_dev`.`read_ribbons`.`is_following` = 1) and (`lobsters_dev`.`comments`.`user_id` <> `lobsters_dev`.`read_ribbons`.`user_id`) and ((`parent_comments`.`user_id` = `lobsters_dev`.`read_ribbons`.`user_id`) or (isnull(`parent_comments`.`user_id`) and (`lobsters_dev`.`stories`.`user_id` = `lobsters_dev`.`read_ribbons`.`user_id`))))
+      select `lobsters_dev`.`read_ribbons`.`user_id` AS `user_id`,`lobsters_dev`.`comments`.`id` AS `comment_id`,`lobsters_dev`.`read_ribbons`.`story_id` AS `story_id`,`lobsters_dev`.`comments`.`parent_comment_id` AS `parent_comment_id`,`lobsters_dev`.`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`lobsters_dev`.`comments`.`user_id` AS `comment_author_id`,`lobsters_dev`.`stories`.`user_id` AS `story_author_id`,(`lobsters_dev`.`read_ribbons`.`updated_at` < `lobsters_dev`.`comments`.`created_at`) AS `is_unread` from (((`lobsters_dev`.`read_ribbons` join `lobsters_dev`.`comments` on((`lobsters_dev`.`comments`.`story_id` = `lobsters_dev`.`read_ribbons`.`story_id`))) join `lobsters_dev`.`stories` on((`lobsters_dev`.`stories`.`id` = `lobsters_dev`.`comments`.`story_id`))) left join `lobsters_dev`.`comments` `parent_comments` on((`parent_comments`.`id` = `lobsters_dev`.`comments`.`parent_comment_id`))) where ((`lobsters_dev`.`read_ribbons`.`is_following` = 1) and (`lobsters_dev`.`comments`.`user_id` <> `lobsters_dev`.`read_ribbons`.`user_id`) and ((`parent_comments`.`user_id` = `lobsters_dev`.`read_ribbons`.`user_id`) or (isnull(`parent_comments`.`user_id`) and (`lobsters_dev`.`stories`.`user_id` = `lobsters_dev`.`read_ribbons`.`user_id`))) and ((`lobsters_dev`.`comments`.`upvotes` - `lobsters_dev`.`comments`.`downvotes`) < 0) and ((`parent_comments`.`upvotes` - `parent_comments`.`downvotes`) < 0))
   SQL
 
 end

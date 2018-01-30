@@ -20,6 +20,8 @@ WHERE
     read_ribbons.is_following = 1
     AND comments.user_id != read_ribbons.user_id
     AND
-	    (parent_comments.user_id = read_ribbons.user_id
-	     OR (parent_comments.user_id IS NULL
-	         AND stories.user_id = read_ribbons.user_id));
+        (parent_comments.user_id = read_ribbons.user_id
+         OR (parent_comments.user_id IS NULL
+         AND stories.user_id = read_ribbons.user_id))
+    AND (comments.upvotes - comments.downvotes) < 0
+    AND (parent_comments.upvotes - parent_comments.downvotes) < 0;

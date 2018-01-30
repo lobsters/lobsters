@@ -676,7 +676,7 @@ class Story < ActiveRecord::Base
     wl = 0
     words = []
 
-    self.title.downcase.gsub(/[,'`\"]/, "").gsub(/[^a-z0-9]/, "_").split("_").
+    self.title.parameterize.gsub(/[^a-z0-9]/, "_").split("_").
     reject{|z| [ "", "a", "an", "and", "but", "in", "of", "or", "that", "the",
     "to" ].include?(z) }.each do |w|
       if wl + w.length <= max_len

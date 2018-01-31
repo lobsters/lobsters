@@ -923,7 +923,7 @@ div.comment_form_container textarea {
 }
 
 span.comment_unread {
-    color: red;
+    color: #ac130d;
     font-weight: 600;
 }
 

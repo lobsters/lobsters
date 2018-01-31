@@ -73,9 +73,9 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <% elsif comment.is_from_email? %>
           e-mailed
         <% end %>
-	<% if defined?(is_unread) && is_unread %>
-	  <% mark_unread = true %>
-	<% end %>
+        <% if defined?(is_unread) && is_unread %>
+          <% mark_unread = true %>
+        <% end %>
         <%= time_ago_in_words_label((comment.has_been_edited? ?
           comment.updated_at : comment.created_at), strip_about: true, mark_unread: mark_unread) %>
       <% end %>

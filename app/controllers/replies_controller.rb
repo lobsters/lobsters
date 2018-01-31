@@ -1,9 +1,9 @@
 class RepliesController < ApplicationController
   REPLIES_PER_PAGE = 25
-  
+
   before_action :require_logged_in_user_or_400
   after_action :update_read_ribbons
-                
+
   def show
     @page = params[:page].to_i
     if @page == 0
@@ -13,7 +13,7 @@ class RepliesController < ApplicationController
     end
 
     @filter = params[:filter] || 'unread'
-    
+
     case @filter
     when 'comments'
       @heading = @title = "Your Comment Replies"

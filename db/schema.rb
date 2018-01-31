@@ -115,7 +115,7 @@ ActiveRecord::Schema.define(version: 20180130235553) do
     t.index ["created_at"], name: "index_moderations_on_created_at"
   end
 
-  create_table "read_ribbons", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "read_ribbons", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
     t.boolean "is_following", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -248,7 +248,7 @@ ActiveRecord::Schema.define(version: 20180130235553) do
 
 
   create_view "replying_comments",  sql_definition: <<-SQL
-      select `lobsters_dev`.`read_ribbons`.`user_id` AS `user_id`,`lobsters_dev`.`comments`.`id` AS `comment_id`,`lobsters_dev`.`read_ribbons`.`story_id` AS `story_id`,`lobsters_dev`.`comments`.`parent_comment_id` AS `parent_comment_id`,`lobsters_dev`.`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`lobsters_dev`.`comments`.`user_id` AS `comment_author_id`,`lobsters_dev`.`stories`.`user_id` AS `story_author_id`,(`lobsters_dev`.`read_ribbons`.`updated_at` < `lobsters_dev`.`comments`.`created_at`) AS `is_unread` from (((`lobsters_dev`.`read_ribbons` join `lobsters_dev`.`comments` on((`lobsters_dev`.`comments`.`story_id` = `lobsters_dev`.`read_ribbons`.`story_id`))) join `lobsters_dev`.`stories` on((`lobsters_dev`.`stories`.`id` = `lobsters_dev`.`comments`.`story_id`))) left join `lobsters_dev`.`comments` `parent_comments` on((`parent_comments`.`id` = `lobsters_dev`.`comments`.`parent_comment_id`))) where ((`lobsters_dev`.`read_ribbons`.`is_following` = 1) and (`lobsters_dev`.`comments`.`user_id` <> `lobsters_dev`.`read_ribbons`.`user_id`) and ((`parent_comments`.`user_id` = `lobsters_dev`.`read_ribbons`.`user_id`) or (isnull(`parent_comments`.`user_id`) and (`lobsters_dev`.`stories`.`user_id` = `lobsters_dev`.`read_ribbons`.`user_id`))) and ((`lobsters_dev`.`comments`.`upvotes` - `lobsters_dev`.`comments`.`downvotes`) < 0) and ((`parent_comments`.`upvotes` - `parent_comments`.`downvotes`) < 0))
+      select `lobsters`.`read_ribbons`.`user_id` AS `user_id`,`lobsters`.`comments`.`id` AS `comment_id`,`lobsters`.`read_ribbons`.`story_id` AS `story_id`,`lobsters`.`comments`.`parent_comment_id` AS `parent_comment_id`,`lobsters`.`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`lobsters`.`comments`.`user_id` AS `comment_author_id`,`lobsters`.`stories`.`user_id` AS `story_author_id`,(`lobsters`.`read_ribbons`.`updated_at` < `lobsters`.`comments`.`created_at`) AS `is_unread` from (((`lobsters`.`read_ribbons` join `lobsters`.`comments` on((`lobsters`.`comments`.`story_id` = `lobsters`.`read_ribbons`.`story_id`))) join `lobsters`.`stories` on((`lobsters`.`stories`.`id` = `lobsters`.`comments`.`story_id`))) left join `lobsters`.`comments` `parent_comments` on((`parent_comments`.`id` = `lobsters`.`comments`.`parent_comment_id`))) where ((`lobsters`.`read_ribbons`.`is_following` = 1) and (`lobsters`.`comments`.`user_id` <> `lobsters`.`read_ribbons`.`user_id`) and ((`parent_comments`.`user_id` = `lobsters`.`read_ribbons`.`user_id`) or (isnull(`parent_comments`.`user_id`) and (`lobsters`.`stories`.`user_id` = `lobsters`.`read_ribbons`.`user_id`))) and ((`lobsters`.`comments`.`upvotes` - `lobsters`.`comments`.`downvotes`) < 0) and ((`parent_comments`.`upvotes` - `parent_comments`.`downvotes`) < 0))
   SQL
 
 end

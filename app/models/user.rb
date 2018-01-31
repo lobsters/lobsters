@@ -505,6 +505,10 @@ class User < ActiveRecord::Base
       self.received_messages.unread.count)
   end
 
+  def unread_replies_count
+    ReplyingComment.where(user_id: self.id, is_unread: true).count
+  end
+
   def votes_for_others
     self.votes.joins(:story, :comment).
       where("comments.user_id <> votes.user_id AND " <<

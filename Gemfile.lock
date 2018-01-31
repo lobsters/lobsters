@@ -132,6 +132,11 @@ GEM
     rspec-support (3.6.0)
     ruby-enum (0.7.1)
       i18n
+    scenic (1.4.0)
+      activerecord (>= 4.0.0)
+      railties (>= 4.0.0)
+    scenic-mysql (0.1.0)
+      scenic (>= 1.3)
     sprockets (3.7.1)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -175,6 +180,8 @@ DEPENDENCIES
   rotp
   rqrcode
   rspec-rails (~> 3.6)
+  scenic
+  scenic-mysql
   sqlite3
   uglifier (>= 1.3.0)
   unicorn

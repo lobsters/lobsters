@@ -33,6 +33,9 @@ Lobsters::Application.routes.draw do
     get "/threads" => "comments#threads"
     get "/threads/:user" => "comments#threads"
 
+    get "/replies" => "replies#show"
+    get "/replies/page/:page" => "replies#show"
+
     get "/login" => "login#index"
     post "/login" => "login#login"
     post "/logout" => "login#logout"

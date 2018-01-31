@@ -119,8 +119,6 @@ class StoriesController < ApplicationController
   end
 
   def show
-    @story = Story.where(:short_id => params[:id]).first!
-
     if @story.merged_into_story
       flash[:success] = "\"#{@story.title}\" has been merged into this story."
       return redirect_to @story.merged_into_story.comments_path
@@ -411,10 +409,9 @@ private
   end
 
   def track_story_reads
-    story = Story.where(short_id: params[:id]).first!
-    @ribbon = ReadRibbon.where(user_id: @user.id, story_id: story.id).first_or_create
+    @story = Story.where(short_id: params[:id]).first!
+    @ribbon = ReadRibbon.where(user: @user, story: story).first_or_create
     yield
-    @ribbon.updated_at = Time.now
-    @ribbon.save
+    @ribbon.touch
   end
 end

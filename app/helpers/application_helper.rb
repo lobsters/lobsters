@@ -37,29 +37,29 @@ module ApplicationHelper
     return @header_links if @header_links
 
     @header_links = {
-      "/" => { :title => @cur_url == "/" ? Rails.application.name : "Home" },
-      "/recent" => { :title => "Recent" },
-      "/comments" => { :title => "Comments" },
+      root_path => { :title => @cur_url == "/" ? Rails.application.name : "Home" },
+      recent_path => { :title => "Recent" },
+      comments_path => { :title => "Comments" },
     }
 
     if @user
-      @header_links.merge!({ "/threads" => { :title => "Your Threads" } })
+      @header_links.merge!({ threads_path => { :title => "Your Threads" } })
     end
 
     if @user && @user.can_submit_stories?
       @header_links.merge!({
-        "/stories/new" => { :title => "Submit Story" }
+        new_story_path => { :title => "Submit Story" }
       })
     end
 
     if @user
       @header_links.merge!({
-        "/saved" => { :title => "Saved" },
+        saved_path => { :title => "Saved" },
       })
     end
 
     @header_links.merge!({
-      "/search" => { :title => "Search" },
+      search_path => { :title => "Search" },
     })
 
     @header_links.each do |k,v|
@@ -80,13 +80,13 @@ module ApplicationHelper
 
     if @user
       if (count = @user.unread_replies_count) > 0
-        @right_header_links.merge!({ "/replies" => {
+        @right_header_links.merge!({ replies_unread_path => {
           :class => [ "new_messages" ],
           :title => "Replies (#{count})",
         } })
       else
         @right_header_links.merge!({
-          "/replies" => { :title => "Replies" }
+          replies_path => { :title => "Replies" }
         })
       end
 
@@ -97,16 +97,16 @@ module ApplicationHelper
         } })
       else
         @right_header_links.merge!({
-          "/messages" => { :title => "Messages" }
+          messages_path => { :title => "Messages" }
         })
       end
 
       @right_header_links.merge!({
-        "/settings" => { :title => "#{@user.username} (#{@user.karma})" }
+        settings_path => { :title => "#{@user.username} (#{@user.karma})" }
       })
     else
       @right_header_links.merge!({
-        "/login" => { :title => "Login" }
+        login_path => { :title => "Login" }
       })
     end
 

@@ -23,5 +23,5 @@ WHERE
         (parent_comments.user_id = read_ribbons.user_id
          OR (parent_comments.user_id IS NULL
          AND stories.user_id = read_ribbons.user_id))
-    AND (comments.upvotes - comments.downvotes) < 0
-    AND (parent_comments.upvotes - parent_comments.downvotes) < 0;
+    AND (comments.upvotes - comments.downvotes) >= 0
+    AND (parent_comments.upvotes - parent_comments.downvotes) >= 0;

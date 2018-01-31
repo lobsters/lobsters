@@ -1,10 +1,9 @@
 <div class="box wide">
   <div class="legend right">
-    <%= link_to_filter('unread') %> |
-    <%= link_to_filter('all') %> |
-    <%= link_to_filter('comments') %> |
-    <%= link_to_filter('stories') %>
-
+    <%= link_to_different_page('Unread',   replies_unread_path) %> |
+    <%= link_to_different_page('All',      replies_path) %> |
+    <%= link_to_different_page('Comments', replies_comments_path) %> |
+    <%= link_to_different_page('Stories',  replies_stories_path) %>
   </div>
 
   <div class="legend">
@@ -16,9 +15,9 @@
   <% @replies.each do |reply| %>
     <li class="comments_subtree">
       <%= render "comments/comment",
-  	  comment: reply.comment,
+          comment: reply.comment,
           show_story: true,
-	  is_unread: reply.is_unread,
+          is_unread: reply.is_unread,
           show_tree_lines: false %>
       <ol class="comments"></ol>
     </li>

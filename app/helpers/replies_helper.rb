@@ -1,11 +1,9 @@
 module RepliesHelper
-  def link_to_filter(name)
-    title = name.titleize
-    
-    if @filter != name
-      link_to(title, replies_path(filter: name))
+  def link_to_different_page(text, path)
+    if current_page? path
+      text
     else
-      title
+      link_to(text, path)
     end
   end
 end

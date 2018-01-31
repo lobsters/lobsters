@@ -31,9 +31,7 @@ class User < ActiveRecord::Base
     :through => :votes,
     :source => :story
   has_many :hats
-  has_many :wearable_hats,
-    -> { where('hats.doffed_at' => nil) },
-    :class_name => "Hat"
+  has_many :wearable_hats, -> { where('doffed_at is null') }, :class_name => "Hat"
 
   has_secure_password
 

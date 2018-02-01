@@ -100,3 +100,9 @@ in a `config/initializers/production.rb` or similar file:
 * In production, set up crontab or another scheduler to run regular jobs:
 
           */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/post_to_twitter'
+
+#### Administration
+
+Users who are registered as site administrators can create and edit Tags via a web interface by going to the `/tags`
+route. There is `Create New Tag` link at the top, and clicking on the box for any tag will allow you to edit it. All
+modifications to tags via this interface will be logged to the Moderation Log.

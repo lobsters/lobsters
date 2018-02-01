@@ -1,0 +1,53 @@
+Unread tracking, less deletion, hat doffing, deployment, bug fixes
+announce
+
+Hey folks,
+
+Lobsters has had a big busy week of code and I wanted to call it out.
+
+The big new feature is the new reply tracking that @355e3b
+[implemented](https://github.com/lobsters/lobsters/pull/417).
+You now have a page to see [all new replies](https://lobste.rs/replies)
+to your comments and stories at a glance, including a page showing only
+[unread replies](https://lobste.rs/replies/unread).
+
+I've long thought that the conversations are the best part of the Lobsters community.
+I hope this helps grow good discussions.
+To avoid this also helping flame wars grow, though,
+the replies page does not include replies or replies to comments with
+negative scores (less than 1% of comments in the last 90 days).
+
+I know many folks currently watch the thread page ([for example](https://lobste.rs/threads/pushcx))
+that's linked from the "Comments Posted" number on their profile to see new replies to their comments.
+If this rolls out smoothly, in a week or so I'll change that link to be a page of just the user's comments, not thread.
+This will make actually reading someone's comments a lot easier; it's often hard to find them in the tree of replies.
+
+Related to comments, there will be less comment deletion when users become inactive by deactivating or being banned.
+Previously all of their comments were deleted; in the future only their comments with negative scores are.
+(To be explicit: I did not retroactively undelete any comments from inactive users, this is only a future change.)
+This is like how inactive users' stories are not deleted because that would take down any community discussion.
+This change preserves more discussion for the community, which can otherwise turn into swiss cheese as users leave.
+To balance the user privacy against the community good, though, deactivating users can now choose to disown their comments.
+Doing so will change the author on their comments to @inactive-user.
+
+Next up is a much smaller feature: hat doffing, for hats that no longer apply.
+The first use was @jcs stepping down from being sysop,
+second was @zg changing employers.
+A doffed hat is still displayed on old comments and on profiles,
+but can't be used on new comments.
+There's no UI for this, please just message me if you no longer need a hat.
+
+Under the covers, I finished some flaky deployment automation, knocked ~45% off deployment time, and fixed some logging.
+Thanks to @bordel and @jstoja for their ansible advice.
+This is not exciting user-level stuff, but having deployment and backups runing smoothly
+has freed up time and attention for these other features and bugfixes.
+
+And speaking of bugfixes, let me call out some recent contributions:
+
+ * Thanks to @talklittle for fixing [story resubmission](https://github.com/lobsters/lobsters/pull/441) and [thread lines on reply](https://github.com/lobsters/lobsters/pull/444)
+ * Thanks to mftaff for fixing [international characters in story title urls](https://github.com/lobsters/lobsters/issues/419)
+ * Thanks to Joe Rafaniello for fixing a small [memory leak](https://github.com/lobsters/lobsters/pull/449)
+ * Thanks to avinassh for [easing smtp config](https://github.com/lobsters/lobsters/pull/446) for sister sites
+
+And thanks also to all the folks who've made suggestions in issues and pull
+requests or talked through feature design in [chat](https://lobste.rs/chat).

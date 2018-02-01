@@ -3,7 +3,9 @@ language: ruby
 services:
   - mysql
 env:
-  - DATABASE_URL=mysql2://root:@localhost/lobsters_test
+  global:
+    - DATABASE_URL=mysql2://root:@localhost/lobsters_dev
+    - RAILS_ENV=test
 before_script:
   - ./bin/rails db:create
   - ./bin/rails db:schema:load

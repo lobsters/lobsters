@@ -40,7 +40,7 @@
   <ol class="comments comments1">
     <% if !@story.is_gone? && !@story.previewing %>
       <li class="comments_subtree"><%= render "comments/commentbox", :comment => @comment %></li>
-      <script>autosize($("#comment")[0]);</script>
+      <% if @user %><script>autosize($("#comment")[0]);</script><% end %>
     <% end %>
 
     <% comments_by_parent = @comments.group_by(&:parent_comment_id) %>
@@ -56,9 +56,12 @@
           :show_story => (comment.story_id != @story.id),
           :show_tree_lines => true,
           :was_merged => (comment.story_id != @story.id),
-          :children => children %>
+          :children => children,
+	  :is_unread => is_unread?(comment) %>
 
-        <div class="comment_siblings_tree_line"></div>
+        <% if ancestors.present? %>
+          <div class="comment_siblings_tree_line"></div>
+        <% end %>
 
         <% if children %>
           <% ancestors << subtree %>

@@ -8,6 +8,7 @@ class StoriesController < ApplicationController
   before_action :find_user_story, :only => [ :destroy, :edit, :undelete,
     :update ]
   before_action :find_story!, :only => [ :suggest, :submit_suggestions ]
+  around_action :track_story_reads, only: [ :show ], if: -> { @user.present? }
 
   def create
     @title = "Submit Story"
@@ -18,9 +19,7 @@ class StoriesController < ApplicationController
 
     if @story.valid? && !(@story.already_posted_story && !@story.seen_previous)
       if @story.save
-        Countinual.count!("#{Rails.application.shortname}.stories.submitted",
-          "+1")
-
+        ReadRibbon.where(user: @user, story: @story).first_or_create
         return redirect_to @story.comments_path
       end
     end
@@ -121,8 +120,8 @@ class StoriesController < ApplicationController
   end
 
   def show
-    @story = Story.where(:short_id => params[:id]).first!
-
+    # @story was already loaded by track_story_reads for logged-in users
+    @story ||= Story.where(short_id: params[:id]).first!
     if @story.merged_into_story
       flash[:success] = "\"#{@story.title}\" has been merged into this story."
       return redirect_to @story.merged_into_story.comments_path
@@ -295,6 +294,7 @@ class StoriesController < ApplicationController
     end
 
     HiddenStory.hide_story_for_user(story.id, @user.id)
+    ReadRibbon.hide_replies_for(story.id, @user.id)
 
     render :plain => "ok"
   end
@@ -409,5 +409,12 @@ private
       flash[:error] = "You are not allowed to submit new stories."
       return redirect_to "/"
     end
+  end
+
+  def track_story_reads
+    @story = Story.where(short_id: params[:id]).first!
+    @ribbon = ReadRibbon.where(user: @user, story: @story).first_or_create
+    yield
+    @ribbon.touch
   end
 end

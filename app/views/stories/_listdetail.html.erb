@@ -76,7 +76,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             <a href="/u/<%= ms.user.username %>" class="<%=
               ms.html_class_for_user %>"><%= ms.user.username %></a>
 
-            <%= time_ago_in_words_label(ms.created_at, :strip_about => true) %>
+            <%= time_ago_in_words_label(ms.created_at) %>
             <% if ms.is_editable_by_user?(@user) %>
               |
               <a href="<%= edit_story_path(ms.short_id) %>">edit</a>
@@ -118,7 +118,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <a href="/u/<%= story.user.username %>" class="<%=
           story.html_class_for_user %>"><%= story.user.username %></a>
 
-        <%= time_ago_in_words_label(story.created_at, :strip_about => true) %>
+        <%= time_ago_in_words_label(story.created_at) %>
 
         <% if story.is_editable_by_user?(@user) %>
           |

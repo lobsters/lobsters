@@ -19,7 +19,7 @@ class Comment < ActiveRecord::Base
   end
   after_create :record_initial_upvote, :mark_submitter,
     :deliver_reply_notifications, :deliver_mention_notifications,
-    :log_to_countinual, :log_hat_use
+    :log_hat_use
   after_destroy :unassign_votes
 
   scope :active, -> { where(:is_deleted => false, :is_moderated => false) }
@@ -367,10 +367,6 @@ class Comment < ActiveRecord::Base
     m.moderator_user_id = user.id
     m.action = "used #{self.hat.hat} hat"
     m.save!
-  end
-
-  def log_to_countinual
-    Countinual.count!("#{Rails.application.shortname}.comments.submitted", "+1")
   end
 
   def mark_submitter

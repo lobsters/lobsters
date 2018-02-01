@@ -51,10 +51,6 @@ class SignupController < ApplicationController
       flash[:success] = "Welcome to #{Rails.application.name}, " <<
         "#{@new_user.username}!"
 
-      Countinual.count!("#{Rails.application.shortname}.users.created", "+1")
-      Countinual.count!("#{Rails.application.shortname}.users.total",
-        User.count)
-
       return redirect_to "/signup/invite"
     else
       render :action => "invited"

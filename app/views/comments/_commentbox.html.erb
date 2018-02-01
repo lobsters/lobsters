@@ -44,7 +44,7 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
           :type => "button" %>
       <% end %>
 
-      <% if @user && @user.hats.any? %>
+      <% if @user && @user.wearable_hats.any? %>
         <div style="display: inline-block; margin-left: 1em;">
         Put on hat:
         <%= select_tag "hat_id",

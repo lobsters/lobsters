@@ -16,7 +16,7 @@ module Lobsters
     #config.autoload_paths += %W(#{config.root}/extras)
 
     # Eager load everything in extras/
-    config.eager_load_paths << Rails.root.join("extras")
+    config.eager_load_paths << Rails.root.join("extras").to_s
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -74,7 +74,7 @@ class << Rails.application
     })
   end
 
-  # used as mailing list prefix and countinual prefix, cannot have spaces
+  # used as mailing list prefix, cannot have spaces
   def shortname
     name.downcase.gsub(/[^a-z]/, "")
   end

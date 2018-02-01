@@ -33,8 +33,17 @@ Lobsters::Application.routes.draw do
     get "/threads" => "comments#threads"
     get "/threads/:user" => "comments#threads"
 
+    get "/replies" => "replies#all"
+    get "/replies/page/:page" => "replies#all"
+    get "/replies/comments" => "replies#comments"
+    get "/replies/comments/page/:page" => "replies#comments"
+    get "/replies/stories" => "replies#stories"
+    get "/replies/stories/page/:page" => "replies#stories"
+    get "/replies/unread" => "replies#unread"
+    get "/replies/unread/page/:page" => "replies#unread"
+
     get "/login" => "login#index"
-    post "/login" => "login#login", :format => /html|json/
+    post "/login" => "login#login"
     post "/logout" => "login#logout"
     get "/login/2fa" => "login#twofa"
     post "/login/2fa_verify" => "login#twofa_verify", :as => "twofa_login"

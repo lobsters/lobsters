@@ -300,28 +300,41 @@
   <br>
   <br>
 
-  <%= form_for @edit_user, :url => delete_account_path, :method => :post,
-  :html => { :id => "delete_user" } do |f| %>
-    <div class="legend">
-      Delete Account
-    </div>
+  <div class="deletion">
+    <%= form_for @edit_user, :url => delete_account_path, :method => :post,
+    :html => { :id => "delete_user" } do |f| %>
+      <div class="legend">
+        Delete Account
+      </div>
 
-    <p>
-    To permanently delete your account, verify your current password below.
-    Your account will be put into a deleted state, your comments will be marked
-    as deleted and no longer readable by any other users, and your private
-    messages will be deleted.
-    Your submitted stories will not be deleted.
-    Your username will remain reserved and will not be available to be used on
-    any other account.
-    </p>
+      <p>
+      To permanently delete your account, verify your current password below.
+      </p>
+      <ul>
+        <li>Your account will be put into a deleted state.</li>
+        <li>Your username will remain reserved and will not be available to be
+          used on any other account.</li>
+        <li>Your private messages will be deleted.</li>
+        <li>Your submitted stories will not be deleted.</li>
+        <li>
+          Your comments with negative scores will be deleted, and you can click
+          "disown comments" below if you want all of your comments to change to
+          list <a href="/u/inactive-user">inactive-user</a> as the author
+          instead of your username.
+        </li>
+      </ul>
 
-    <div class="boxline">
-      <%= f.label :password, "Verify Password:", :class => "required" %>
-      <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
-    </div>
+      <div class="boxline">
+        <%= f.label :password, "Verify Password:", :class => "required" %>
+        <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
+      </div>
+      <div class="boxline">
+        <%= f.label :disown, "Disown Comments:" %>
+        <%= check_box_tag :disown %>
+      </div>
 
-    <br>
-    <%= f.submit "Yes, Delete My Account" %>
-  <% end %>
+      <br>
+      <%= f.submit "Yes, Delete My Account", :class => "deletion" %>
+    <% end %>
+  </div>
 </div>

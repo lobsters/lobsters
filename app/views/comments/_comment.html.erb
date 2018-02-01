@@ -29,15 +29,10 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <span class="downvoter downvoter_stub"></span>
       <% end %>
     </div>
-    <% if defined?(children) && children %>
-      <% if can_downvote %>
-        <div class="comment_parent_tree_line can_downvote"></div>
-      <% elsif score_display != "&nbsp;" %>
-        <div class="comment_parent_tree_line score_shown"></div>
-      <% else %>
-        <div class="comment_parent_tree_line"></div>
-      <% end %>
-    <% end %>
+    <div class="comment_parent_tree_line
+      <%= can_downvote ? "can_downvote" : "" %>
+      <%= score_display != "&nbsp;" ? "score_shown" : "" %>
+      <%= defined?(children) && children ? "" : "no_children" %>"></div>
   <% end %>
 
   <div class="details">
@@ -78,8 +73,11 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <% elsif comment.is_from_email? %>
           e-mailed
         <% end %>
+        <% if defined?(is_unread) && is_unread %>
+          <% mark_unread = true %>
+        <% end %>
         <%= time_ago_in_words_label((comment.has_been_edited? ?
-          comment.updated_at : comment.created_at), :strip_about => true) %>
+          comment.updated_at : comment.created_at), strip_about: true, mark_unread: mark_unread) %>
       <% end %>
 
       <% if !comment.previewing %>
@@ -130,11 +128,10 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% if comment.is_gone? %>
         <p>
         <span class="na">
-        [<%= comment.gone_text %>]
+          [<%= comment.gone_text %><% if @user && @user.is_moderator? %> Visible to moderator:<% end %>]
         </span>
         </p>
         <% if @user && @user.is_moderator? %>
-          <p>[Original visible to moderator:]</p>
           <%= raw comment.markeddown_comment %>
         <% end %>
       <% else %>

@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
     :through => :votes,
     :source => :story
   has_many :hats
+  has_many :wearable_hats, -> { where('doffed_at is null') }, :class_name => "Hat"
 
   has_secure_password
 
@@ -82,9 +83,9 @@ class User < ActiveRecord::Base
   end
 
   BANNED_USERNAMES = [ "admin", "administrator", "contact", "fraud", "guest",
-    "help", "hostmaster", "mailer-daemon", "moderator", "moderators", "nobody",
-    "postmaster", "root", "security", "support", "sysop", "webmaster",
-    "enable", "new", "signup", ]
+    "help", "hostmaster", "inactive-user", "mailer-daemon", "moderator",
+    "moderators", "nobody", "postmaster", "root", "security", "support",
+    "sysop", "webmaster", "enable", "new", "signup", ]
 
   # days old accounts are considered new for
   NEW_USER_DAYS = 7
@@ -300,7 +301,9 @@ class User < ActiveRecord::Base
 
   def delete!
     User.transaction do
-      self.comments.each{|c| c.delete_for_user(self) }
+      self.comments
+        .where("upvotes - downvotes < 0")
+        .each{|c| c.delete_for_user(self) }
 
       self.sent_messages.each do |m|
         m.deleted_by_author = true
@@ -337,6 +340,12 @@ class User < ActiveRecord::Base
       self.deleted_at = nil
       self.save!
     end
+  end
+
+  def disown_comments!
+    inactive_user = User.find_by!(:username => 'inactive-user')
+    self.comments.update_all(:user_id => inactive_user.id)
+    inactive_user.update_comments_posted_count!
   end
 
   def disable_2fa!
@@ -492,6 +501,10 @@ class User < ActiveRecord::Base
   def update_unread_message_count!
     Keystore.put("user:#{self.id}:unread_messages",
       self.received_messages.unread.count)
+  end
+
+  def unread_replies_count
+    ReplyingComment.where(user_id: self.id, is_unread: true).count
   end
 
   def votes_for_others

@@ -234,6 +234,8 @@ button:disabled {
 	color: gray;
 }
 
+a.button,
+button.deletion,
 input.deletion {
   color: darkred;
   border: 1px solid darkred;

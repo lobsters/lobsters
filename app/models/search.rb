@@ -53,18 +53,26 @@ class Search
     end
   end
 
+  def with_tags(base, tag_scopes)
+    base
+      .joins({ :taggings => :tag }, :user)
+      .where(:tags => { :tag => tag_scopes })
+      .having("COUNT(stories.id) = ?", tag_scopes.length)
+      .group("stories.id")
+  end
+
   def search_for_user!(user)
     self.results = []
     self.total_results = 0
 
     # extract domain query since it must be done separately
     domain = nil
-    tag_scope = nil
+    tag_scopes = []
     words = self.q.to_s.split(" ").reject{|w|
       if m = w.match(/^domain:(.+)$/)
         domain = m[1]
       elsif m = w.match(/^tag:(.+)$/)
-        tag_scope = m[1]
+        tag_scopes << m[1]
       end
     }.join(" ")
 
@@ -74,9 +82,7 @@ class Search
 
     case self.what
     when "stories"
-      base = Story.unmerged.where(:is_expired => false).
-        includes({ :taggings => :tag }, :user)
-
+      base = Story.unmerged.where(:is_expired => false)
       if domain.present?
         begin
           reg = Regexp.new("//([^/]*\.)?#{domain}/")
@@ -85,10 +91,6 @@ class Search
         rescue RegexpError
           return false
         end
-      end
-
-      if tag_scope.present?
-        base.where!(:tags => { :tag => tag_scope })
       end
 
       title_match_sql = "MATCH(stories.title) AGAINST('#{qwords}' IN BOOLEAN MODE)"
@@ -102,14 +104,23 @@ class Search
           "#{story_cache_match_sql})"
         )
 
-        self.results = base.select(
-          "stories.*, " +
-          "#{title_match_sql}, " +
-          "#{description_match_sql}, " +
-          "#{story_cache_match_sql}"
-        )
+        if tag_scopes.present?
+          self.results = with_tags(base, tag_scopes)
+        else
+          base = base.includes({ :taggings => :tag }, :user)
+          self.results = base.select(
+            "stories.*, " +
+            "#{title_match_sql}, " +
+            "#{description_match_sql}, " +
+            "#{story_cache_match_sql}"
+          )
+        end
       else
-        self.results = base
+        if tag_scopes.present?
+          self.results = with_tags(base, tag_scopes)
+        else
+          self.results = base.includes({ :taggings => :tag }, :user)
+        end
       end
 
       case self.order
@@ -149,7 +160,11 @@ class Search
       end
     end
 
-    self.total_results = base.count
+    if tag_scopes.present?
+      self.total_results = self.results.length
+    else
+      self.total_results = base.count
+    end
 
     if self.page > self.page_count
       self.page = self.page_count

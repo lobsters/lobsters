@@ -10,6 +10,7 @@ class RepliesController < ApplicationController
                  .for_user(@user.id)
                  .offset((@page - 1) * REPLIES_PER_PAGE)
                  .limit(REPLIES_PER_PAGE)
+    apply_current_vote
     render :show
   end
 
@@ -19,6 +20,7 @@ class RepliesController < ApplicationController
                  .comment_replies_for(@user.id)
                  .offset((@page - 1) * REPLIES_PER_PAGE)
                  .limit(REPLIES_PER_PAGE)
+    apply_current_vote
     render :show
   end
 
@@ -28,16 +30,29 @@ class RepliesController < ApplicationController
                  .story_replies_for(@user.id)
                  .offset((@page - 1) * REPLIES_PER_PAGE)
                  .limit(REPLIES_PER_PAGE)
+    apply_current_vote
     render :show
   end
 
   def unread
     @heading = @title = "Your Unread Replies"
     @replies = ReplyingComment.unread_replies_for(@user.id)
+    apply_current_vote
     render :show
   end
 
   private
+
+  # comments/_comment expects Comment objects to have a comment_vote attribute
+  # with the current user's vote added by StoriesController.load_user_votes
+  def apply_current_vote
+    @replies.each do |r|
+      r.comment.current_vote = {
+        vote: r.current_vote_vote,
+        reason: r.current_vote_reason
+      }
+    end
+  end
 
   def set_page
     @page = params[:page].to_i

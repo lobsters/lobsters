@@ -55,7 +55,7 @@
           &nbsp; | &nbsp;
           <% if @story.user_id != @user.id && @user.is_moderator? %>
             <%= link_to "Delete", story_path(@story.short_id),
-              :method => :delete, :class => "button mod_story_link" %>
+              :method => :delete, :class => "button mod_story_link deletion" %>
           <% else %>
             <%= link_to "Delete", story_path(@story.short_id),
               :method => :delete, :data => {

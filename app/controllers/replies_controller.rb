@@ -49,7 +49,7 @@ class RepliesController < ApplicationController
     @replies.each do |r|
       r.comment.current_vote = {
         vote: r.current_vote_vote,
-        reason: r.current_vote_reason
+        reason: r.current_vote_reason.to_s
       }
     end
   end

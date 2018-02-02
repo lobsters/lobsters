@@ -1,4 +1,4 @@
-class IntegratedStoryHotness < ActiveRecord::Migration
+class IntegratedStoryHotness < ActiveRecord::Migration[5.1]
   def up
     add_column :stories, :hotness, :decimal, :precision => 20, :scale => 10
     add_column :comments, :confidence, :decimal, :precision => 20, :scale => 19

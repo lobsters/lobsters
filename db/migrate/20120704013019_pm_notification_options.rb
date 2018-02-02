@@ -1,4 +1,4 @@
-class PmNotificationOptions < ActiveRecord::Migration
+class PmNotificationOptions < ActiveRecord::Migration[5.1]
   def up
     change_table :messages do |t|
       t.change :has_been_read, :boolean, :default => false

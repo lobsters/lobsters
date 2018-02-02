@@ -1,4 +1,4 @@
-class MentionNotificationOptions < ActiveRecord::Migration
+class MentionNotificationOptions < ActiveRecord::Migration[5.1]
   def up
     add_column :users, :email_mentions, :boolean, :default => false
     add_column :users, :pushover_mentions, :boolean, :default => false

@@ -1,4 +1,4 @@
-class AddBanReason < ActiveRecord::Migration
+class AddBanReason < ActiveRecord::Migration[5.1]
   def change
     add_column :users, :banned_at, :datetime
     add_column :users, :banned_by_user_id, :integer

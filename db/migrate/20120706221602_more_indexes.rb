@@ -1,4 +1,4 @@
-class MoreIndexes < ActiveRecord::Migration
+class MoreIndexes < ActiveRecord::Migration[5.1]
   def up
     add_index :stories, [ "is_expired", "is_moderated" ],
       :name => "is_idxes"

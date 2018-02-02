@@ -48,6 +48,14 @@ class Story < ActiveRecord::Base
   # let a hot story linger for this many seconds
   HOTNESS_WINDOW = 60 * 60 * 22
 
+  # link shortening and other ad tracking domains
+  TRACKING_DOMAINS = %w{ 1url.com 7.ly adf.ly al.ly bc.vc bit.do bit.ly
+    bitly.com buzurl.com cur.lv cutt.us db.tt db.tt doiop.com filoops.info
+    goo.gl is.gd ity.im j.mp lnkd.in ow.ly ph.dog po.st prettylinkpro.com q.gs
+    qr.ae qr.net scrnch.me s.id sptfy.com t.co tinyarrows.com tiny.cc
+    tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd vzturl.com
+    wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }
+
   attr_accessor :vote, :already_posted_story, :previewing, :seen_previous,
     :is_hidden_by_cur_user, :is_saved_by_cur_user
   attr_accessor :editor, :moderation_reason, :merge_story_short_id,
@@ -66,6 +74,7 @@ class Story < ActiveRecord::Base
   validate do
     if self.url.present?
       check_already_posted
+      check_not_tracking_domain
       # URI.parse is not very lenient, so we can't use it
       unless self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/i)
         errors.add(:url, "is not valid")
@@ -89,6 +98,15 @@ class Story < ActiveRecord::Base
     if self.already_posted_story&.is_recent?
       errors.add(:url, "has already been submitted within the past " <<
         "#{RECENT_DAYS} days")
+    end
+  end
+
+  def check_not_tracking_domain
+    return unless self.url.present? && self.new_record?
+
+    match = self.url.match(/\Ahttps?:\/\/([^\/]+)/i)
+    if match and TRACKING_DOMAINS.include? match.captures.first.downcase
+      errors.add(:url, "is a link shortening or ad tracking domain")
     end
   end
 

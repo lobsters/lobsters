@@ -91,6 +91,9 @@
         <% if lookup_context.template_exists?("footer", "layouts", true) %>
           <%= render :partial => "layouts/footer" %>
         <% else %>
+          <% if @user.blank? && Rails.application.open_signups? %>
+            <a href="/invitations/open">Join <%= Rails.application.name %></a>
+          <% end %>
           <a href="/moderations">Moderation Log</a>
           <% if @user && @user.can_see_invitation_requests? &&
           (iqc = InvitationRequest.verified_count) > 0 %>

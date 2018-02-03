@@ -54,7 +54,7 @@ class << Rails.application
   end
 
   def open_signups?
-    true
+    "true" == ENV["OPEN_SIGNUPS"]
   end
 
   def domain

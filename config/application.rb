@@ -53,6 +53,10 @@ class << Rails.application
     true
   end
 
+  def open_signups?
+    true
+  end
+
   def domain
     "example.com"
   end

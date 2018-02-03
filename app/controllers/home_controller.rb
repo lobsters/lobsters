@@ -44,9 +44,9 @@ class HomeController < ApplicationController
       @title = "Privacy"
       render :action => "privacy"
     rescue ActionView::MissingTemplate
-      render :html => "<div class=\"box wide\">" <<
+      render :html => ("<div class=\"box wide\">" <<
         "You apparently have no privacy." <<
-        "</div>", :layout => "application"
+        "</div>").html_safe, :layout => "application"
     end
   end
 

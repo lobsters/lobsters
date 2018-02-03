@@ -2,15 +2,20 @@
   <div class="legend">
     Create an Account
   </div>
-
-  <p>
-  Signup is currently by invitation only to combat spam and increase
-  accountability.  If you know <a href="/u/">a current user</a> of the site,
-  ask them for an invitation, or
-  <% if Rails.application.allow_invitation_requests? %>
-    <a href="/invitations/request">request one publicly</a>.
+  <% if Rails.application.open_signups? %>
+    <p>
+      Not a user yet? <a href="/invitations/open">Sign up here</a>
+    </p>
   <% else %>
-    request one in <a href="/chat">chat</a>.
+    <p>
+    Signup is currently by invitation only to combat spam and increase
+    accountability.  If you know <a href="/u/">a current user</a> of the site,
+    ask them for an invitation, or
+    <% if Rails.application.allow_invitation_requests? %>
+      <a href="/invitations/request">request one publicly</a>.
+    <% else %>
+      request one in <a href="/chat">chat</a>.
+    <% end %>
+    </p>
   <% end %>
-  </p>
 </div>

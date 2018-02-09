@@ -26,8 +26,11 @@ class Comment < ActiveRecord::Base
 
   DOWNVOTABLE_DAYS = 7
 
-  # the lowest a score can go, which makes it collapsed by default
-  DOWNVOTABLE_MIN_SCORE = -5
+  # the lowest a score can go
+  DOWNVOTABLE_MIN_SCORE = -10
+
+  # the score at which a comment should be collapsed
+  COLLAPSE_SCORE = -5
 
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)

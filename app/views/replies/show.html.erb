@@ -11,20 +11,24 @@
   </div>
 </div>
 
-<ol class="comments comments1">
-  <% @replies.each do |reply| %>
-    <li class="comments_subtree">
-      <%= render "comments/comment",
-          comment: reply.comment,
-          show_story: true,
-          is_unread: reply.is_unread,
-          show_tree_lines: false %>
-      <ol class="comments"></ol>
-    </li>
-  <% end %>
-</ol>
+<% if @replies.present? %>
+  <ol class="comments comments1">
+    <% @replies.each do |reply| %>
+      <li class="comments_subtree">
+        <%= render "comments/comment",
+            comment: reply.comment,
+            show_story: true,
+            is_unread: reply.is_unread,
+            show_tree_lines: false %>
+        <ol class="comments"></ol>
+      </li>
+    <% end %>
+  </ol>
+<% else %>
+  <p>No replies to show.</p>
+<% end %>
 
-<%  if @replies.count > RepliesController::REPLIES_PER_PAGE && @filter != 'unread'%>
+<% if @replies.count > RepliesController::REPLIES_PER_PAGE && @filter != 'unread'%>
 <div class="morelink">
   <% if @page && @page > 1 %>
     <a href="/replies<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt;
@@ -41,3 +45,16 @@
   <% end %>
 </div>
 <% end %>
+
+<div class="help">
+  <% case action_name
+     when "all" %>
+    All replies to your stories and comments, most-recent first.
+  <% when "comments" %>
+    All replies to your comments, most-recent first.
+  <% when "unread" %>
+    New replies to your stories and comments that you haven't seen on this page or on story pages.
+  <% when "stories" %>
+    All replies to stories you've submitted, most-recent first.
+  <% end %>
+</div>

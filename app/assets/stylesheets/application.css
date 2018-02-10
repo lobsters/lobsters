@@ -367,6 +367,10 @@ div#gravatar img {
 	width: 100px;
 }
 
+.help {
+  margin-top: 2em;
+}
+
 /* stories */
 
 ol.stories,

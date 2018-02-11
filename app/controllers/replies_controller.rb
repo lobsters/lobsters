@@ -1,7 +1,7 @@
 class RepliesController < ApplicationController
   REPLIES_PER_PAGE = 25
 
-  before_action :require_logged_in_user_or_400, :set_page
+  before_action :require_logged_in_user, :set_page
   after_action :update_read_ribbons, only: [ :unread ]
 
   def all

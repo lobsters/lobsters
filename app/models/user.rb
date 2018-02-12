@@ -326,8 +326,6 @@ class User < ActiveRecord::Base
 
   def undelete!
     User.transaction do
-      self.comments.each{|c| c.undelete_for_user(self) }
-
       self.sent_messages.each do |m|
         m.deleted_by_author = false
         m.save

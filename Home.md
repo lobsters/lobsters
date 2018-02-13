@@ -9,7 +9,7 @@ Welcome to the [lobsters](https://lobste.rs/) wiki! Check the [about page](https
 
 Other sites using the Lobsters codebase:
 
-* [Barnacles](https://www.barnacl.es) ([repo](https://github.com/pushcx/barnacl.es)
+* [Barnacles](https://www.barnacl.es) ([repo](https://github.com/pushcx/barnacl.es))
 * [Le Journal du Hacker](https://www.journalduhacker.net/)
 * [Write.Narwhal.Space](https://write.narwhal.space) ([repo](https://github.com/charlesetc/write.narwhal.space))
 * [Barnaclad](https://barnacles.blackfriday/)

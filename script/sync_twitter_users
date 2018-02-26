@@ -22,6 +22,9 @@ res = Twitter.oauth_request("/1.1/lists/members.json?list_id=#{list_id}" <<
   "&count=5000&skip_status=true", :get)
 their_users = res["users"].map{|u| [ u["screen_name"].downcase, true ] }.to_h
 
+if their_users.empty?
+  raise "Intemittent Twitter bug: they said the list is empty when it's not"
+end
 if their_users.count >= 5000
   STDERR.puts "need to implement paging for list members"
 end

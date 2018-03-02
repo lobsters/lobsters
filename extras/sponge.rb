@@ -21,6 +21,7 @@ module Net
     end
 
   private
+
     def conn_address
       if self.custom_conn_address.to_s != ""
         self.custom_conn_address
@@ -250,6 +251,7 @@ class Sponge
   end
 
 private
+
   def dputs(string)
     if self.debug
       puts string

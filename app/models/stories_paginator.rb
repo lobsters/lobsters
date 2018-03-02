@@ -18,6 +18,7 @@ class StoriesPaginator
   end
 
 private
+
   def with_pagination_info(scope)
     scope = scope.to_a
     show_more = scope.count > per_page

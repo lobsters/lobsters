@@ -100,6 +100,7 @@ class StoryRepository
   end
 
 private
+
   def base_scope
     Story.unmerged.where(is_expired: false)
   end

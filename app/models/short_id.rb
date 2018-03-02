@@ -19,6 +19,7 @@ class ShortId
   end
 
 private
+
   class CandidateId
     attr_accessor :klass, :id
 

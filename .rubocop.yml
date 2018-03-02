@@ -6,6 +6,7 @@ AllCops:
     - '**/Rakefile'
     - '**/config.ru'
   Exclude:
+    - 'bin/**/*'
     - 'db/**/*'
 
 # Cop configuration:
@@ -17,6 +18,8 @@ AllCops:
 # Layout
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
+Layout/EmptyLinesAroundExceptionHandlingKeywords:
+  Enabled: false
 
 # Lint
 

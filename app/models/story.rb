@@ -443,6 +443,7 @@ class Story < ActiveRecord::Base
   def is_unavailable
     self.unavailable_at != nil
   end
+
   def is_unavailable=(what)
     self.unavailable_at = (what.to_i == 1 && !self.is_unavailable ?
       Time.now : nil)

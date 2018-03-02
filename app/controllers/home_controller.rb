@@ -253,6 +253,7 @@ class HomeController < ApplicationController
   end
 
 private
+
   def filtered_tag_ids
     if @user
       @user.tag_filters.map{|tf| tf.tag_id }

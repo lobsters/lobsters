@@ -4,7 +4,6 @@ describe Markdowner do
   it "parses simple markdown" do
     expect(Markdowner.to_html("hello there *italics* and **bold**!")).
       to eq("<p>hello there <em>italics</em> and <strong>bold</strong>!</p>\n")
-
   end
 
   it "turns @username into a link if @username exists" do
@@ -12,7 +11,6 @@ describe Markdowner do
 
     expect(Markdowner.to_html("hi @blahblah test")).
       to eq("<p>hi <a href=\"/u/blahblah\">@blahblah</a> test</p>\n")
-
 
     expect(Markdowner.to_html("hi @flimflam test")).
       to eq("<p>hi @flimflam test</p>\n")
@@ -36,7 +34,6 @@ describe Markdowner do
     expect(Markdowner.to_html("hi [test](http://example.com/@blahblah/)")).
       to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"nofollow\">" +
         "test</a></p>\n")
-
   end
 
   it "correctly adds nofollow" do
@@ -44,14 +41,11 @@ describe Markdowner do
       to eq("<p><a href=\"http://example.com\" rel=\"nofollow\">" +
             "ex</a></p>\n")
 
-
     expect(Markdowner.to_html("[ex](//example.com)")).
       to eq("<p><a href=\"//example.com\" rel=\"nofollow\">" +
             "ex</a></p>\n")
 
-
     expect(Markdowner.to_html("[ex](/u/abc)")).
       to eq("<p><a href=\"/u/abc\">ex</a></p>\n")
-
   end
 end

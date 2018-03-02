@@ -172,6 +172,7 @@ class LoginController < ApplicationController
   end
 
 private
+
   def find_twofa_user
     if session[:twofa_u].present?
       return User.where(:session_token => session[:twofa_u]).first

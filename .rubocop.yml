@@ -1,0 +1,33 @@
+# Project setup:
+Rails:
+  Enabled: true
+AllCops:
+  Include:
+    - '**/Rakefile'
+    - '**/config.ru'
+  Exclude:
+    - 'db/**/*'
+
+# Cop configuration:
+
+# Bundler
+
+# Gemspec
+
+# Layout
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+
+# Lint
+
+# Metrics
+
+# Naming
+
+# Performance
+
+# Rails
+
+# Security
+
+# Style

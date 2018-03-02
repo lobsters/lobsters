@@ -44,10 +44,10 @@ class StoryRepository
     10.times do |x|
       # grab the list of stories from the past n days, shifting out popular
       # stories that did gain traction
-      story_ids = stories.select(:id, :upvotes, :downvotes, :user_id).
-        where(Story.arel_table[:created_at].gt((RECENT_DAYS_OLD + x).days.ago)).
-        order("stories.created_at DESC").
-        reject{|s| s.score > HOT_STORY_POINTS }
+      story_ids = stories.select(:id, :upvotes, :downvotes, :user_id)
+        .where(Story.arel_table[:created_at].gt((RECENT_DAYS_OLD + x).days.ago))
+        .order("stories.created_at DESC")
+        .reject{|s| s.score > HOT_STORY_POINTS }
 
       if story_ids.length > StoriesPaginator::STORIES_PER_PAGE + 1
         # keep the top half (newest stories)

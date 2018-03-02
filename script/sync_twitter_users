@@ -30,9 +30,9 @@ if their_users.count >= 5000
 end
 
 # fetch our active users that have a linked twitter account
-our_users = User.active.where("settings LIKE '%twitter_username:%'").
-  select{|u| u.twitter_username.present? }.
-  map{|u| [ u.twitter_username.downcase, true ] }.to_h
+our_users = User.active.where("settings LIKE '%twitter_username:%'")
+  .select{|u| u.twitter_username.present? }
+  .map{|u| [ u.twitter_username.downcase, true ] }.to_h
 
 # ignore users that have previously been determined to have protected accounts,
 # which cannot be added to a public list
@@ -48,8 +48,8 @@ to_del = their_users.keys.reject{|u| our_users[u] }
 
 to_add.each_slice(100) do |g|
   # lookup and remove any protected users
-  Twitter.oauth_request("/1.1/users/lookup.json?screen_name=#{g.join(",")}").
-  select{|u| u["protected"] }.each do |u|
+  Twitter.oauth_request("/1.1/users/lookup.json?screen_name=#{g.join(",")}")
+  .select{|u| u["protected"] }.each do |u|
     #puts "user #{u["screen_name"]} protected, ignoring"
     Keystore.put("user:#{u["screen_name"]}:twitter_private", 1)
 

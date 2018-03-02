@@ -22,7 +22,7 @@ class Message < ActiveRecord::Base
   after_save :update_unread_counts
   after_save :check_for_both_deleted
 
-  def as_json(options = {})
+  def as_json(_options = {})
     attrs = [
       :short_id,
       :created_at,

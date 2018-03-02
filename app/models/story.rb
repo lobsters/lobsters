@@ -25,7 +25,7 @@ class Story < ActiveRecord::Base
   validates_length_of :url, :maximum => 250, :allow_nil => true
   validates_presence_of :user_id
 
-  validates_each :merged_story_id do |record,attr,value|
+  validates_each :merged_story_id do |record, _attr, value|
     if value.to_i == record.id
       record.errors.add(:merge_story_short_id, "id cannot be itself.")
     end
@@ -623,7 +623,7 @@ class Story < ActiveRecord::Base
 
     # if enough users voted on the same set of replacement tags, do it
     tag_votes = {}
-    self.suggested_taggings.group_by(&:user_id).each do |u,stg|
+    self.suggested_taggings.group_by(&:user_id).each do |_u, stg|
       stg.each do |st|
         tag_votes[st.tag.tag] ||= 0
         tag_votes[st.tag.tag] += 1
@@ -667,7 +667,7 @@ class Story < ActiveRecord::Base
       title_votes[st.title] += 1
     end
 
-    title_votes.sort_by{|k,v| v }.reverse.each do |kv|
+    title_votes.sort_by{ |_k, v| v }.reverse.each do |kv|
       if kv[1] >= SUGGESTION_QUORUM
         Rails.logger.info "[s#{self.id}] promoting suggested title " <<
           "#{kv[0].inspect} instead of #{self.title.inspect}"

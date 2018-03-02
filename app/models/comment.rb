@@ -117,7 +117,7 @@ class Comment < ActiveRecord::Base
       "CAST(downvotes AS #{Story.votes_cast_type}))"
   end
 
-  def as_json(options = {})
+  def as_json(_options = {})
     h = [
       :short_id,
       :short_id_url,

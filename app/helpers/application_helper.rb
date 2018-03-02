@@ -20,7 +20,7 @@ module ApplicationHelper
     }, " ")
   end
 
-  def errors_for(object, message=nil)
+  def errors_for(object, _message=nil)
     html = ""
     unless object.errors.blank?
       html << "<div class=\"flash-error\">\n"

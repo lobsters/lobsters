@@ -41,7 +41,7 @@ class RepliesController < ApplicationController
     render :show
   end
 
-  private
+private
 
   # comments/_comment expects Comment objects to have a comment_vote attribute
   # with the current user's vote added by StoriesController.load_user_votes

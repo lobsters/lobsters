@@ -119,7 +119,7 @@ class User < ActiveRecord::Base
     "/^" + VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, "") + "$/"
   end
 
-  def as_json(options = {})
+  def as_json(_options = {})
     attrs = [
       :username,
       :created_at,

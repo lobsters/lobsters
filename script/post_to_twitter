@@ -47,7 +47,7 @@ StoriesPaginator.new(StoryRepository.new.hottest).get.first
 
   # if there are any urls in the title, they should be sized (at least) to a
   # twitter t.co url
-  left_len -= (title.scan(/[^ ]\.[a-z]{2,10}/i).map{|u| [ 0,
+  left_len -= (title.scan(/[^ ]\.[a-z]{2,10}/i).map{ |_u| [ 0,
     Twitter::TCO_LEN ].max }.inject(:+)).to_i
 
   if left_len < -3

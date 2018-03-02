@@ -5,7 +5,7 @@ class FakeDataGenerator
   end
 
   def generate
-    users = 0.upto(@users_count).map do |i|
+    users = 0.upto(@users_count).each do
       name = Faker::Name.name
       password = Faker::Internet.password
       user_name = Faker::Internet.user_name(name, %w(_))

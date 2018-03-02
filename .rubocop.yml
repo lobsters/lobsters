@@ -18,10 +18,16 @@ AllCops:
 # Layout
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
+Layout/CaseIndentation:
+  EnforcedStyle: end
+Layout/ElseAlignment:
+  Enabled: false
 Layout/EmptyLinesAroundExceptionHandlingKeywords:
   Enabled: false
 
 # Lint
+Lint/EndAlignment:
+  EnforcedStyleAlignWith: variable
 
 # Metrics
 

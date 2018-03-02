@@ -27,8 +27,8 @@ class UsersController < ApplicationController
       }
       render :html => content.html_safe, :layout => "application"
     elsif params[:moderators]
-      @users = User.where("is_admin = ? OR is_moderator = ?", true, true).
-        order("id ASC").to_a
+      @users = User.where("is_admin = ? OR is_moderator = ?", true, true)
+        .order("id ASC").to_a
       @user_count = @users.length
       @title = "Moderators and Administrators"
       render :action => "list"

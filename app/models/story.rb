@@ -221,10 +221,10 @@ class Story < ActiveRecord::Base
       (self.user_is_author ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
-    cpoints = self.comments.
-      where("user_id <> ?", self.user_id).
-      select(:upvotes, :downvotes).
-      map{|c|
+    cpoints = self.comments
+      .where("user_id <> ?", self.user_id)
+      .select(:upvotes, :downvotes)
+      .map{|c|
         if base < 0
           # in stories already starting out with a bad hotness mod, only look
           # at the downvotes to find out if this tire fire needs to be put out
@@ -232,8 +232,8 @@ class Story < ActiveRecord::Base
         else
           c.upvotes + 1 - c.downvotes
         end
-      }.
-      inject(&:+).to_f * 0.5
+      }
+      .inject(&:+).to_f * 0.5
 
     # mix in any stories this one cannibalized
     cpoints += self.merged_stories.map{|s| s.score }.inject(&:+).to_f
@@ -334,11 +334,11 @@ class Story < ActiveRecord::Base
       nil
     else
       # URI.parse is not very lenient, so we can't use it
-      self.url.
-        gsub(/^[^:]+:\/\//, "").        # proto
-        gsub(/\/.*/, "").               # path
-        gsub(/:\d+$/, "").              # possible port
-        gsub(/^www\d*\.(.+\..+)/, '\1') # possible "www3." in host unless
+      self.url
+        .gsub(/^[^:]+:\/\//, "")        # proto
+        .gsub(/\/.*/, "")               # path
+        .gsub(/:\d+$/, "")              # possible port
+        .gsub(/^www\d*\.(.+\..+)/, '\1') # possible "www3." in host unless
                                         # it's the only non-TLD
     end
   end
@@ -516,8 +516,8 @@ class Story < ActiveRecord::Base
 
   def merged_comments
     # TODO: make this a normal has_many?
-    Comment.where(:story_id => Story.select(:id).
-      where(:merged_story_id => self.id) + [ self.id ])
+    Comment.where(:story_id => Story.select(:id)
+      .where(:merged_story_id => self.id) + [ self.id ])
   end
 
   def merge_story_short_id=(sid)
@@ -695,8 +695,8 @@ class Story < ActiveRecord::Base
     wl = 0
     words = []
 
-    self.title.parameterize.gsub(/[^a-z0-9]/, "_").split("_").
-    reject{|z| [ "", "a", "an", "and", "but", "in", "of", "or", "that", "the",
+    self.title.parameterize.gsub(/[^a-z0-9]/, "_").split("_")
+    .reject{|z| [ "", "a", "an", "and", "but", "in", "of", "or", "that", "the",
     "to" ].include?(z) }.each do |w|
       if wl + w.length <= max_len
         words.push w
@@ -827,8 +827,8 @@ class Story < ActiveRecord::Base
     # name
     title = ""
     begin
-      title = parsed.at_css("meta[property='og:title']").
-        attributes["content"].text
+      title = parsed.at_css("meta[property='og:title']")
+        .attributes["content"].text
     rescue
     end
 
@@ -848,8 +848,8 @@ class Story < ActiveRecord::Base
     # see if the site name is available, so we can strip it out in case it was
     # present in the fetched title
     begin
-      site_name = parsed.at_css("meta[property='og:site_name']").
-        attributes["content"].text
+      site_name = parsed.at_css("meta[property='og:site_name']")
+        .attributes["content"].text
 
       if site_name.present? && site_name.length < title.length &&
       title[-(site_name.length), site_name.length] == site_name
@@ -868,8 +868,8 @@ class Story < ActiveRecord::Base
     # now get canonical version of url (though some cms software puts incorrect
     # urls here, hopefully the user will notice)
     begin
-      if (cu = parsed.at_css("link[rel='canonical']").attributes["href"].
-      text).present? && (ucu = URI.parse(cu)) && ucu.scheme.present? &&
+      if (cu = parsed.at_css("link[rel='canonical']").attributes["href"]
+      .text).present? && (ucu = URI.parse(cu)) && ucu.scheme.present? &&
       ucu.host.present?
         @fetched_attributes[:url] = cu
       end

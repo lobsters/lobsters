@@ -43,8 +43,8 @@ class HatsController < ApplicationController
 
   def approve_request
     @hat_request = HatRequest.find(params[:id])
-    @hat_request.update_attributes!(params.require(:hat_request).
-      permit(:hat, :link))
+    @hat_request.update_attributes!(params.require(:hat_request)
+      .permit(:hat, :link))
     @hat_request.approve_by_user!(@user)
 
     flash[:success] = "Successfully approved hat request."

@@ -71,8 +71,8 @@ class Search
 
     case self.what
     when "stories"
-      base = Story.unmerged.where(:is_expired => false).
-        includes({ :taggings => :tag }, :user)
+      base = Story.unmerged.where(:is_expired => false)
+        .includes({ :taggings => :tag }, :user)
 
       if domain.present?
         begin
@@ -147,9 +147,9 @@ class Search
       self.page = 1
     end
 
-    self.results = self.results.
-      limit(self.per_page).
-      offset((self.page - 1) * self.per_page)
+    self.results = self.results
+      .limit(self.per_page)
+      .offset((self.page - 1) * self.per_page)
 
     # if a user is logged in, fetch their votes for what's on the page
     if user

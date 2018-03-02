@@ -34,3 +34,5 @@ Layout/EmptyLinesAroundExceptionHandlingKeywords:
 # Security
 
 # Style
+Style/StringLiterals:
+  Enabled: false

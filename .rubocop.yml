@@ -42,6 +42,10 @@ Rails/FilePath:
 # Security
 
 # Style
+Style/IfUnlessModifier:
+  Enabled: false
+Style/NegatedIf:
+  EnforcedStyle: postfix
 Style/RedundantReturn:
   Enabled: false
 Style/StringLiterals:

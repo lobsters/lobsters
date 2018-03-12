@@ -16,3 +16,4 @@ Other sites using the Lobsters codebase:
 * [CryptoBuzz](https://cryptobuzz.io/) ([repo](https://github.com/lukehamilton/cryptobuzz))
 * [Impct](https://impct.io/)
 * [Whistling Lobsters](https://lobsters.obormot.net/) ([repo](https://github.com/achmizs/whistling-lobsters))
+* [Kind and Green News](http://news.kindandgreenworld.com/)

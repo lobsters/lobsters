@@ -79,7 +79,7 @@ GEM
     minitest (5.10.2)
     mysql2 (0.4.6)
     nio4r (2.1.0)
-    nokogiri (1.8.1)
+    nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
     oauth (0.5.3)
     rack (2.0.3)

@@ -152,7 +152,7 @@ GEM
     thread_safe (0.3.6)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    uglifier (3.2.0)
+    uglifier (4.1.7)
       execjs (>= 0.3.0, < 3)
     unicorn (5.3.0)
       kgio (~> 2.6)

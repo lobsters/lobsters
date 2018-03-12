@@ -135,7 +135,7 @@ GEM
     rspec-support (3.7.1)
     ruby-enum (0.7.1)
       i18n
-    scenic (1.4.0)
+    scenic (1.4.1)
       activerecord (>= 4.0.0)
       railties (>= 4.0.0)
     scenic-mysql (0.1.0)

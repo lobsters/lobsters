@@ -303,7 +303,7 @@ class User < ActiveRecord::Base
     User.transaction do
       self.comments
         .where("upvotes - downvotes < 0")
-        .each{|c| c.delete_for_user(self) }
+        .each {|c| c.delete_for_user(self) }
 
       self.sent_messages.each do |m|
         m.deleted_by_author = true

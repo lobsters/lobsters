@@ -11,7 +11,7 @@ Rails.application.require_environment!
 # the web would see it, not just the first group of stories with no twitter ids
 # which would just keep walking through pages
 StoriesPaginator.new(StoryRepository.new.hottest).get.first
-.reject{|s| s.twitter_id.present? || s.score < 2 || s.tags.map(&:tag).include?("meta") }
+.reject {|s| s.twitter_id.present? || s.score < 2 || s.tags.map(&:tag).include?("meta") }
 .each_with_index do |s,x|
   if x > 0
     sleep 2
@@ -47,8 +47,10 @@ StoriesPaginator.new(StoryRepository.new.hottest).get.first
 
   # if there are any urls in the title, they should be sized (at least) to a
   # twitter t.co url
-  left_len -= (title.scan(/[^ ]\.[a-z]{2,10}/i).map{ |_u| [ 0,
-    Twitter::TCO_LEN ].max }.inject(:+)).to_i
+  left_len -= title.scan(/[^ ]\.[a-z]{2,10}/i)
+                   .map {|_u| [0, Twitter::TCO_LEN].max }
+                   .inject(:+)
+                   .to_i
 
   if left_len < -3
     left_len = -3
@@ -66,7 +68,7 @@ StoriesPaginator.new(StoryRepository.new.hottest).get.first
   begin
     if res["id_str"].to_s.match(/\d+/)
       s.update_column("twitter_id", res["id_str"])
-    elsif res["errors"].select{|e| e["code"] == 226 || e["code"] == 186 }.any?
+    elsif res["errors"].select {|e| e["code"] == 226 || e["code"] == 186 }.any?
       # twitter is rejecting the content of this message, skip it
       s.update_column("twitter_id", 0)
       puts "skipping: failed posting story #{s.id} (#{status.inspect}): " +

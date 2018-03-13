@@ -225,8 +225,7 @@ class CommentsController < ApplicationController
         "hidden_stories WHERE user_id = ? AND " <<
         "hidden_stories.story_id = comments.story_id)", @user.id)
 
-      @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id,
-        @comments.map{|c| c.id })
+      @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, @comments.map {|c| c.id })
 
       @comments.each do |c|
         if @votes[c.id]

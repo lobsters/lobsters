@@ -47,7 +47,7 @@ class StoryRepository
       story_ids = stories.select(:id, :upvotes, :downvotes, :user_id)
         .where(Story.arel_table[:created_at].gt((RECENT_DAYS_OLD + x).days.ago))
         .order("stories.created_at DESC")
-        .reject{|s| s.score > HOT_STORY_POINTS }
+        .reject {|s| s.score > HOT_STORY_POINTS }
 
       if story_ids.length > StoriesPaginator::STORIES_PER_PAGE + 1
         # keep the top half (newest stories)

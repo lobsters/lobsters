@@ -24,6 +24,11 @@ Layout/ElseAlignment:
   Enabled: false
 Layout/EmptyLinesAroundExceptionHandlingKeywords:
   Enabled: false
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+Layout/SpaceInsideBlockBraces:
+  EnforcedStyle: space
+  SpaceBeforeBlockParameters: false
 
 # Lint
 Lint/EndAlignment:

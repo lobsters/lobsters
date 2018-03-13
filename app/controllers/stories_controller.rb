@@ -172,7 +172,7 @@ class StoriesController < ApplicationController
     end
 
     if (st = @story.suggested_taggings.where(:user_id => @user.id)).any?
-      @story.tags_a = st.map{|st| st.tag.tag }
+      @story.tags_a = st.map {|st| st.tag.tag }
     end
     if tt = @story.suggested_titles.where(:user_id => @user.id).first
       @story.title = tt.title
@@ -195,7 +195,7 @@ class StoriesController < ApplicationController
         dsug = true
       end
 
-      sugtags = params[:story][:tags_a].reject{|t| t.to_s.strip == "" }.sort
+      sugtags = params[:story][:tags_a].reject {|t| t.to_s.strip == "" }.sort
       if @story.tags_a.sort != sugtags
         @story.save_suggested_tags_a_for_user!(sugtags, @user)
         dsug = true

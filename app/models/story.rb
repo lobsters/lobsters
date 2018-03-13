@@ -182,7 +182,7 @@ class Story < ActiveRecord::Base
       { :description => :markeddown_description },
       :comments_url,
       { :submitter_user => :user },
-      { :tags => self.tags.map{|t| t.tag }.sort },
+      { :tags => self.tags.map {|t| t.tag }.sort },
     ]
 
     if options && options[:with_comments]
@@ -217,14 +217,13 @@ class Story < ActiveRecord::Base
   def calculated_hotness
     # take each tag's hotness modifier into effect, and give a slight bump to
     # stories submitted by the author
-    base = self.tags.map{|t| t.hotness_mod }.sum +
-      (self.user_is_author ? 0.25 : 0.0)
+    base = self.tags.map {|t| t.hotness_mod }.sum + (self.user_is_author ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
     cpoints = self.comments
       .where("user_id <> ?", self.user_id)
       .select(:upvotes, :downvotes)
-      .map{|c|
+      .map {|c|
         if base < 0
           # in stories already starting out with a bad hotness mod, only look
           # at the downvotes to find out if this tire fire needs to be put out
@@ -236,7 +235,7 @@ class Story < ActiveRecord::Base
       .inject(&:+).to_f * 0.5
 
     # mix in any stories this one cannibalized
-    cpoints += self.merged_stories.map{|s| s.score }.inject(&:+).to_f
+    cpoints += self.merged_stories.map {|s| s.score }.inject(&:+).to_f
 
     # if a story has many comments but few votes, it's probably a bad story, so
     # cap the comment points at the number of upvotes
@@ -271,7 +270,7 @@ class Story < ActiveRecord::Base
       return false
     end
 
-    if self.taggings.select{|t| t.tag && t.tag.privileged? }.any?
+    if self.taggings.select {|t| t.tag && t.tag.privileged? }.any?
       return false
     end
 
@@ -293,7 +292,7 @@ class Story < ActiveRecord::Base
       end
     end
 
-    if !self.taggings.reject{|t| t.marked_for_destruction? || t.tag.is_media?
+    if !self.taggings.reject {|t| t.marked_for_destruction? || t.tag.is_media?
     }.any?
       errors.add(:base, "Must have at least one non-media (PDF, video) " <<
         "tag.  If no tags apply to your content, it probably doesn't " <<
@@ -356,7 +355,7 @@ class Story < ActiveRecord::Base
   def fix_bogus_chars
     # this is needlessly complicated to work around character encoding issues
     # that arise when doing just self.title.to_s.gsub(160.chr, "")
-    self.title = self.title.to_s.split("").map{|chr|
+    self.title = self.title.to_s.split("").map {|chr|
       if chr.ord == 160
         " "
       else
@@ -486,7 +485,7 @@ class Story < ActiveRecord::Base
     elsif all_changes["is_expired"] && !self.is_expired?
       m.action = "undeleted story"
     else
-      m.action = all_changes.map{|k,v|
+      m.action = all_changes.map {|k,v|
         if k == "merged_story_id"
           if v[1]
             "merged into #{self.merged_into_story.short_id} " <<
@@ -551,14 +550,14 @@ class Story < ActiveRecord::Base
   end
 
   def sorted_taggings
-    self.taggings.sort_by{|t| t.tag.tag }.sort_by{|t| t.tag.is_media?? -1 : 0 }
+    self.taggings.sort_by {|t| t.tag.tag }.sort_by {|t| t.tag.is_media?? -1 : 0 }
   end
 
   def tagging_changes
-    old_tags_a = self.taggings.reject{|tg| tg.new_record? }.map{|tg|
+    old_tags_a = self.taggings.reject {|tg| tg.new_record? }.map {|tg|
       tg.tag.tag }.join(" ")
-    new_tags_a = self.taggings.reject{|tg| tg.marked_for_destruction?
-      }.map{|tg| tg.tag.tag }.join(" ")
+    new_tags_a = self.taggings.reject {|tg| tg.marked_for_destruction?
+      }.map {|tg| tg.tag.tag }.join(" ")
 
     if old_tags_a == new_tags_a
       {}
@@ -569,8 +568,8 @@ class Story < ActiveRecord::Base
 
   @_tags_a = []
   def tags_a
-    @_tags_a ||= self.taggings.reject{|t| t.marked_for_destruction?
-      }.map{|t| t.tag.tag }
+    @_tags_a ||= self.taggings.reject {|t| t.marked_for_destruction?
+      }.map {|t| t.tag.tag }
   end
 
   def tags_a=(new_tag_names_a)
@@ -606,7 +605,7 @@ class Story < ActiveRecord::Base
 
     new_tag_names_a.each do |tag_name|
       # XXX: AR bug? st.exists?(:tag => tag_name) does not work
-      if tag_name.to_s != "" && !st.map{|x| x.tag.tag }.include?(tag_name)
+      if tag_name.to_s != "" && !st.map {|x| x.tag.tag }.include?(tag_name)
         if (t = Tag.active.where(:tag => tag_name).first) &&
         t.valid_for?(user)
           tg = self.suggested_taggings.build
@@ -667,7 +666,7 @@ class Story < ActiveRecord::Base
       title_votes[st.title] += 1
     end
 
-    title_votes.sort_by{ |_k, v| v }.reverse.each do |kv|
+    title_votes.sort_by {|_k, v| v }.reverse.each do |kv|
       if kv[1] >= SUGGESTION_QUORUM
         Rails.logger.info "[s#{self.id}] promoting suggested title " <<
           "#{kv[0].inspect} instead of #{self.title.inspect}"
@@ -696,7 +695,7 @@ class Story < ActiveRecord::Base
     words = []
 
     self.title.parameterize.gsub(/[^a-z0-9]/, "_").split("_")
-    .reject{|z| [ "", "a", "an", "and", "but", "in", "of", "or", "that", "the",
+    .reject {|z| [ "", "a", "an", "and", "but", "in", "of", "or", "that", "the",
     "to" ].include?(z) }.each do |w|
       if wl + w.length <= max_len
         words.push w
@@ -732,8 +731,7 @@ class Story < ActiveRecord::Base
     comments = self.merged_comments.arrange_for_user(nil)
 
     # calculate count after removing deleted comments and threads
-    self.update_column :comments_count,
-      (self.comments_count = comments.count{|c| !c.is_gone? })
+    self.update_column :comments_count, (self.comments_count = comments.count {|c| !c.is_gone? })
 
     self.recalculate_hotness!
   end
@@ -748,7 +746,7 @@ class Story < ActiveRecord::Base
     # strip out stupid google analytics parameters
     if u && (m = u.match(/\A([^\?]+)\?(.+)\z/))
       params = m[2].split("&")
-      params.reject!{|p|
+      params.reject! {|p|
         p.match(/^utm_(source|medium|campaign|term|content)=/) }
 
       u = m[1] << (params.any?? "?" << params.join("&") : "")
@@ -787,7 +785,7 @@ class Story < ActiveRecord::Base
       end
     end
 
-    r_counts.keys.sort.map{|k|
+    r_counts.keys.sort.map {|k|
       if k == ""
         "+#{r_counts[k]}"
       else

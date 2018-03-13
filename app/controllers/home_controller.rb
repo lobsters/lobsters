@@ -256,9 +256,9 @@ private
 
   def filtered_tag_ids
     if @user
-      @user.tag_filters.map{|tf| tf.tag_id }
+      @user.tag_filters.map {|tf| tf.tag_id }
     else
-      tags_filtered_by_cookie.map{|t| t.id }
+      tags_filtered_by_cookie.map {|t| t.id }
     end
   end
 
@@ -284,7 +284,7 @@ private
     if Rails.env.development? || @user || tags_filtered_by_cookie.any?
       yield
     else
-      key = opts.merge(page: page).sort.map{|k,v| "#{k}=#{v.to_param}"
+      key = opts.merge(page: page).sort.map {|k,v| "#{k}=#{v.to_param}"
         }.join(" ")
       begin
         Rails.cache.fetch("stories #{key}", :expires_in => 45, &block)

@@ -91,7 +91,7 @@ class Sponge
     end
 
     if cooks
-      return cooks.map{|k,v| "#{k}=#{v};" }.join(" ")
+      return cooks.map {|k,v| "#{k}=#{v};" }.join(" ")
     else
       return ""
     end
@@ -117,7 +117,7 @@ class Sponge
         end
 
         # reject ipv6 addresses
-        ips.reject!{|ip| ip.match(/:/) }
+        ips.reject! {|ip| ip.match(/:/) }
 
         # pick a random one
         tip = ips[rand(ips.length)]
@@ -138,8 +138,8 @@ class Sponge
       raise "couldn't resolve #{uri.host}"
     end
 
-    if BAD_NETS.select{|n| IPAddr.new(n).include?(ip) }.any?
-      raise "refusing to talk to IP #{ip.to_s}"
+    if BAD_NETS.select {|n| IPAddr.new(n).include?(ip) }.any?
+      raise "refusing to talk to IP #{ip}"
     end
 
     host = Net::HTTP.new(ip.to_s, uri.port)
@@ -170,7 +170,7 @@ class Sponge
         post_data = raw_post_data
         send_headers["Content-type"] = "application/x-www-form-urlencoded"
       else
-        post_data = fields.map{|k,v| "#{k}=#{v}" }.join("&")
+        post_data = fields.map {|k,v| "#{k}=#{v}" }.join("&")
       end
 
       send_headers["Content-Length"] = post_data.length.to_s

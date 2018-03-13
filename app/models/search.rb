@@ -30,8 +30,7 @@ class Search
   end
 
   def to_url_params
-    [ :q, :what, :order ].map{|p| "#{p}=#{CGI.escape(self.send(p).to_s)}"
-      }.join("&amp;")
+    [:q, :what, :order].map {|p| "#{p}=#{CGI.escape(self.send(p).to_s)}" }.join("&amp;")
   end
 
   def page_count
@@ -67,9 +66,8 @@ class Search
 
     # extract domain query since it must be done separately
     domain = nil
-    tag_scopes = []
-    words = self.q.to_s.split(" ").reject{|w|
-      if m = w.match(/^domain:(.+)$/)
+    words = self.q.to_s.split(" ").reject {|w|
+      if (m = w.match(/^domain:(.+)$/))
         domain = m[1]
       elsif m = w.match(/^tag:(.+)$/)
         tag_scopes << m[1]
@@ -182,7 +180,7 @@ class Search
       case what
       when "stories"
         votes = Vote.story_votes_by_user_for_story_ids_hash(user.id,
-          self.results.map{|s| s.id })
+          self.results.map { |s| s.id })
 
         self.results.each do |r|
           if votes[r.id]
@@ -192,7 +190,7 @@ class Search
 
       when "comments"
         votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id,
-          self.results.map{|c| c.id })
+          self.results.map { |c| c.id })
 
         self.results.each do |r|
           if votes[r.id]

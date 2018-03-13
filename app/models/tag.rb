@@ -21,7 +21,7 @@ class Tag < ActiveRecord::Base
   def self.all_with_filtered_counts_for(user)
     counts = TagFilter.group(:tag_id).count
 
-    Tag.active.order(:tag).select{|t| t.valid_for?(user) }.map{|t|
+    Tag.active.order(:tag).select {|t| t.valid_for?(user) }.map {|t|
       t.filtered_count = counts[t.id].to_i
       t
     }
@@ -30,7 +30,7 @@ class Tag < ActiveRecord::Base
   def self.all_with_story_counts_for(user)
     counts = Tagging.group(:tag_id).count
 
-    Tag.active.order(:tag).select{|t| t.valid_for?(user) }.map{|t|
+    Tag.active.order(:tag).select {|t| t.valid_for?(user) }.map {|t|
       t.stories_count = counts[t.id].to_i
       t
     }

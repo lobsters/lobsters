@@ -8,7 +8,7 @@ class AvatarsController < ApplicationController
   def expire
     expired = 0
 
-    Dir.entries(CACHE_DIR).select{|f|
+    Dir.entries(CACHE_DIR).select {|f|
       f.match(/\A#{@user.username}-(\d+)\.png\z/)
     }.each do |f|
       begin

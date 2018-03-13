@@ -47,6 +47,8 @@ Rails/FilePath:
 # Security
 
 # Style
+Style/BlockDelimiters:
+  Enabled: False
 Style/IfUnlessModifier:
   Enabled: false
 Style/NegatedIf:

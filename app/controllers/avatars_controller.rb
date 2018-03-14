@@ -43,7 +43,7 @@ class AvatarsController < ApplicationController
       raise ActionController::RoutingError.new("failed fetching avatar")
     end
 
-    if !Dir.exists?(CACHE_DIR)
+    if !Dir.exist?(CACHE_DIR)
       Dir.mkdir(CACHE_DIR)
     end
 

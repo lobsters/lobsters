@@ -8,7 +8,7 @@ class Message < ActiveRecord::Base
 
   validates_presence_of :recipient
 
-  attr_accessor :recipient_username
+  attr_reader :recipient_username
 
   validates_length_of :subject, :in => 1..100
   validates_length_of :body, :maximum => (64 * 1024)

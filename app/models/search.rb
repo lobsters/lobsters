@@ -4,7 +4,7 @@ class Search
   include ActiveModel::AttributeMethods
   extend ActiveModel::Naming
 
-  attr_accessor :q, :what, :order
+  attr_accessor :q, :order
   attr_accessor :results, :page, :total_results, :per_page
 
   validates_length_of :q, :minimum => 2

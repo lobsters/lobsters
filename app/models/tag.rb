@@ -2,7 +2,7 @@ class Tag < ActiveRecord::Base
   has_many :taggings, :dependent => :delete_all
   has_many :stories, :through => :taggings
 
-  attr_accessor :filtered_count, :stories_count
+  attr_accessor :stories_count
 
   scope :active, -> { where(:inactive => false) }
 

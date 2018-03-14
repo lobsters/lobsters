@@ -30,7 +30,8 @@ describe User do
   end
 
   it "gets an error message after registering banned name" do
-    expect { User.make!(:username => "admin") }.to raise_error("Validation failed: Username is not permitted")
+    expect { User.make!(:username => "admin") }
+           .to raise_error("Validation failed: Username is not permitted")
   end
 
   it "shows a user is banned or not" do

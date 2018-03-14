@@ -189,7 +189,8 @@ class Sponge
     }.merge(send_headers || {})
 
     if uri.user
-      send_headers["Authorization"] = "Basic " + ["#{uri.user}:#{uri.password}"].pack('m').delete("\r\n")
+      send_headers["Authorization"] = "Basic " +
+                                      ["#{uri.user}:#{uri.password}"].pack('m').delete("\r\n")
     end
 
     res = nil

@@ -54,6 +54,8 @@ Style/BlockDelimiters:
 Style/Documentation:
   Enabled: false
   Exclude: [db/migrate/**/*, spec/**/*, test/**/*]
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: never
 Style/HashSyntax:
   EnforcedStyle: no_mixed_keys
 Style/IfUnlessModifier:

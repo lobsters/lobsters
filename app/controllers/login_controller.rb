@@ -5,7 +5,7 @@ class LoginFailedError < StandardError; end
 
 class LoginController < ApplicationController
   before_action :authenticate_user
-  before_action :check_for_read_only_mode, :except => [ :index ]
+  before_action :check_for_read_only_mode, :except => [:index]
 
   def logout
     if @user

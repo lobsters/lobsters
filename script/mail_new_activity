@@ -9,7 +9,7 @@ Rails.application.require_environment!
 
 class String
   def quoted_printable(encoded_word = false)
-    s = [ self ].pack("M")
+    s = [self].pack("M")
 
     if encoded_word
       s.split(/\r?\n/).map {|l| "=?UTF-8?Q?" <<
@@ -182,7 +182,7 @@ last_comment_id, false, false).order(:id).each do |c|
       mail.puts "Content-Transfer-Encoding: quoted-printable"
       mail.puts "Message-ID: <#{c.mailing_list_message_id}>"
 
-      refs = [ "<#{c.story.mailing_list_message_id}>" ]
+      refs = ["<#{c.story.mailing_list_message_id}>"]
 
       if c.parent_comment_id
         mail.puts "In-Reply-To: <#{c.parent_comment.mailing_list_message_id}>"

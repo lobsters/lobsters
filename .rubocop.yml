@@ -33,6 +33,8 @@ Layout/SpaceInsideBlockBraces:
 # Lint
 Lint/EndAlignment:
   EnforcedStyleAlignWith: variable
+Lint/HandleExceptions:
+  Enabled: false
 
 # Metrics
 Metrics/AbcSize:

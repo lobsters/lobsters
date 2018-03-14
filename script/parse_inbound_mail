@@ -17,7 +17,7 @@ while !STDIN.eof?
   message += STDIN.gets.to_s
 end
 
-parser = EmailParser.new(sender = ARGV[1], recipient = ARGV[0], message)
+parser = EmailParser.new(ARGV[1], ARGV[0], message)
 
 if parser.been_here?
   # avoid looping, quietly

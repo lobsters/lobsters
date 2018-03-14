@@ -201,7 +201,7 @@ class Sponge
           res = host.get(path, send_headers)
         end
       end
-    rescue Timeout::Error => e
+    rescue Timeout::Error
       dputs "timed out during #{method}"
       return nil
     end
@@ -215,8 +215,6 @@ class Sponge
         end
       end
     end
-
-    last_res = res
 
     case res
     when Net::HTTPSuccess

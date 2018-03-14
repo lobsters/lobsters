@@ -198,7 +198,7 @@ class Search
       end
     end
 
-  rescue ActiveRecord::StatementInvalid => e
+  rescue ActiveRecord::StatementInvalid
     # this is most likely bad boolean chars
     self.results = []
     self.total_results = -1

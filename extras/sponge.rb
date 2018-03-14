@@ -208,7 +208,7 @@ class Sponge
 
     if res.get_fields("Set-Cookie")
       res.get_fields("Set-Cookie").each do |cook|
-        if p = Regexp.new(/^([^=]+)=([^;]*)/).match(cook)
+        if (p = Regexp.new(/^([^=]+)=([^;]*)/).match(cook))
           set_cookie(uri.host, p[1], p[2])
         else
           dputs "unable to match cookie line #{cook}"

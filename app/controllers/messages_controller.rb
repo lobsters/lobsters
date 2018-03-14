@@ -109,7 +109,7 @@ class MessagesController < ApplicationController
     deleted = 0
 
     params.each do |k,v|
-      if v.to_s == "1" && m = k.match(/^delete_(.+)$/)
+      if (v.to_s == "1") && (m = k.match(/^delete_(.+)$/))
         if (message = Message.where(:short_id => m[1]).first)
           ok = false
           if message.author_user_id == @user.id
@@ -152,10 +152,8 @@ private
   end
 
   def find_message
-    if @message = Message.where(:short_id => params[:message_id] ||
-    params[:id]).first
-      if (@message.author_user_id == @user.id ||
-      @message.recipient_user_id == @user.id)
+    if (@message = Message.where(:short_id => params[:message_id] || params[:id]).first)
+      if @message.author_user_id == @user.id || @message.recipient_user_id == @user.id
         return true
       end
     end

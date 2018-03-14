@@ -24,8 +24,7 @@ class CommentsController < ApplicationController
     end
 
     if params[:parent_comment_short_id].present?
-      if pc = Comment.where(:story_id => story.id, :short_id =>
-      params[:parent_comment_short_id]).first
+      if (pc = Comment.where(:story_id => story.id, :short_id => params[:parent_comment_short_id]).first)
         comment.parent_comment = pc
       else
         return render :json => { :error => "invalid parent comment", :status => 400 }
@@ -77,7 +76,7 @@ class CommentsController < ApplicationController
   end
 
   def redirect_from_short_id
-    if comment = find_comment
+    if (comment = find_comment)
       return redirect_to comment.url
     else
       return render :plain => "can't find comment", :status => 400

@@ -577,7 +577,7 @@ class Story < ActiveRecord::Base
 
     new_tag_names_a.each do |tag_name|
       if tag_name.to_s != "" && !self.tags.exists?(:tag => tag_name)
-        if t = Tag.active.where(:tag => tag_name).first
+        if (t = Tag.active.where(:tag => tag_name).first)
           # we can't lookup whether the user is allowed to use this tag yet
           # because we aren't assured to have a user_id by now; we'll do it in
           # the validation with check_tags

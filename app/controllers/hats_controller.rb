@@ -1,7 +1,6 @@
 class HatsController < ApplicationController
   before_action :require_logged_in_user, :except => [:index]
-  before_action :require_logged_in_moderator,
-    :except => [:build_request, :index, :create_request]
+  before_action :require_logged_in_moderator, :except => [:build_request, :index, :create_request]
 
   def build_request
     @title = "Request a Hat"
@@ -54,8 +53,7 @@ class HatsController < ApplicationController
 
   def reject_request
     @hat_request = HatRequest.find(params[:id])
-    @hat_request.reject_by_user_for_reason!(@user,
-      params[:hat_request][:rejection_comment])
+    @hat_request.reject_by_user_for_reason!(@user, params[:hat_request][:rejection_comment])
 
     flash[:success] = "Successfully rejected hat request."
 

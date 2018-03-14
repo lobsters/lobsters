@@ -1,13 +1,13 @@
 class Comment < ActiveRecord::Base
   belongs_to :user
   belongs_to :story,
-    :inverse_of => :comments
+             :inverse_of => :comments
   has_many :votes,
-    :dependent => :delete_all
+           :dependent => :delete_all
   belongs_to :parent_comment,
-    :class_name => "Comment"
+             :class_name => "Comment"
   has_one :moderation,
-    :class_name => "Moderation"
+          :class_name => "Moderation"
   belongs_to :hat
 
   attr_accessor :current_vote, :previewing, :indent_level
@@ -17,9 +17,8 @@ class Comment < ActiveRecord::Base
     self.assign_initial_confidence
     self.assign_thread_id
   end
-  after_create :record_initial_upvote, :mark_submitter,
-    :deliver_reply_notifications, :deliver_mention_notifications,
-    :log_hat_use
+  after_create :record_initial_upvote, :mark_submitter, :deliver_reply_notifications,
+               :deliver_mention_notifications, :log_hat_use
   after_destroy :unassign_votes
 
   scope :active, -> { where(:is_deleted => false, :is_moderated => false) }
@@ -395,8 +394,9 @@ class Comment < ActiveRecord::Base
   end
 
   def record_initial_upvote
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.story_id,
-      self.id, self.user_id, nil, false)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      1, self.story_id, self.id, self.user_id, nil, false
+    )
 
     self.story.update_comments_count!
   end

@@ -1,8 +1,6 @@
 class Tag < ActiveRecord::Base
-  has_many :taggings,
-    :dependent => :delete_all
-  has_many :stories,
-    :through => :taggings
+  has_many :taggings, :dependent => :delete_all
+  has_many :stories, :through => :taggings
 
   attr_accessor :filtered_count, :stories_count
 

@@ -1,7 +1,6 @@
 class Hat < ActiveRecord::Base
   belongs_to :user
-  belongs_to :granted_by_user,
-    :class_name => "User"
+  belongs_to :granted_by_user, :class_name => "User"
 
   validates :user, :hat, :presence => true
   validates :granted_by_user, :presence => true

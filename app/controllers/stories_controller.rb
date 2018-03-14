@@ -1,8 +1,8 @@
 class StoriesController < ApplicationController
   before_action :require_logged_in_user_or_400,
-    :only => [:upvote, :downvote, :unvote, :hide, :unhide, :preview, :save, :unsave]
-  before_action :require_logged_in_user, :only => [:destroy, :create, :edit,
-    :fetch_url_attributes, :new, :suggest,]
+                :only => [:upvote, :downvote, :unvote, :hide, :unhide, :preview, :save, :unsave]
+  before_action :require_logged_in_user,
+                :only => [:destroy, :create, :edit, :fetch_url_attributes, :new, :suggest,]
   before_action :verify_user_can_submit_stories, :only => [:new, :create]
   before_action :find_user_story, :only => [:destroy, :edit, :undelete, :update]
   before_action :find_story!, :only => [:suggest, :submit_suggestions]
@@ -132,8 +132,9 @@ class StoriesController < ApplicationController
     @title = @story.title
     @short_url = @story.short_id_url
 
-    @comments = @story.merged_comments.includes(:user, :story, :hat,
-      :votes => :user).arrange_for_user(@user)
+    @comments = @story.merged_comments
+                      .includes(:user, :story, :hat, :votes => :user)
+                      .arrange_for_user(@user)
 
     respond_to do |format|
       format.html {
@@ -250,8 +251,9 @@ class StoriesController < ApplicationController
       return render :plain => "can't find story", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(0, story.id,
-      nil, @user.id, nil)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      0, story.id, nil, @user.id, nil
+    )
 
     render :plain => "ok"
   end
@@ -261,8 +263,9 @@ class StoriesController < ApplicationController
       return render :plain => "can't find story", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, story.id,
-      nil, @user.id, nil)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      1, story.id, nil, @user.id, nil
+    )
 
     render :plain => "ok"
   end
@@ -280,8 +283,9 @@ class StoriesController < ApplicationController
       return render :plain => "not permitted to downvote", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id,
-      nil, @user.id, params[:reason])
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      -1, story.id, nil, @user.id, params[:reason]
+    )
 
     render :plain => "ok"
   end

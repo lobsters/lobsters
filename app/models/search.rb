@@ -154,8 +154,7 @@ class Search
     if user
       case what
       when "stories"
-        votes = Vote.story_votes_by_user_for_story_ids_hash(user.id,
-          self.results.map { |s| s.id })
+        votes = Vote.story_votes_by_user_for_story_ids_hash(user.id, self.results.map(&:id))
 
         self.results.each do |r|
           if votes[r.id]
@@ -164,8 +163,7 @@ class Search
         end
 
       when "comments"
-        votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id,
-          self.results.map { |c| c.id })
+        votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id, self.results.map(&:id))
 
         self.results.each do |r|
           if votes[r.id]

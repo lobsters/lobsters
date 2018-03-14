@@ -74,8 +74,7 @@ class SettingsController < ApplicationController
       session[:totp_secret] = ROTP::Base32.random_base32
     end
 
-    totp = ROTP::TOTP.new(session[:totp_secret],
-      :issuer => Rails.application.name)
+    totp = ROTP::TOTP.new(session[:totp_secret], :issuer => Rails.application.name)
     totp_url = totp.provisioning_uri(@user.email)
 
     # no option for inline svg, so just strip off leading <?xml> tag

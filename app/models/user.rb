@@ -1,34 +1,34 @@
 class User < ActiveRecord::Base
   has_many :stories,
-    -> { includes :user }
+           -> { includes :user }
   has_many :comments
   has_many :sent_messages,
-    :class_name => "Message",
-    :foreign_key => "author_user_id"
+           :class_name => "Message",
+           :foreign_key => "author_user_id"
   has_many :received_messages,
-    :class_name => "Message",
-    :foreign_key => "recipient_user_id"
+           :class_name => "Message",
+           :foreign_key => "recipient_user_id"
   has_many :tag_filters
   has_many :tag_filter_tags,
-    :class_name => "Tag",
-    :through => :tag_filters,
-    :source => :tag,
-    :dependent => :delete_all
+           :class_name => "Tag",
+           :through => :tag_filters,
+           :source => :tag,
+           :dependent => :delete_all
   belongs_to :invited_by_user,
-    :class_name => "User"
+             :class_name => "User"
   belongs_to :banned_by_user,
-    :class_name => "User"
+             :class_name => "User"
   belongs_to :disabled_invite_by_user,
-    :class_name => "User"
+             :class_name => "User"
   has_many :invitations
   has_many :moderations, :inverse_of => :moderator
   has_many :votes
   has_many :voted_stories, -> { where('votes.comment_id' => nil) },
-    :through => :votes,
-    :source => :story
+           :through => :votes,
+           :source => :story
   has_many :upvoted_stories,
-    -> { where('votes.comment_id' => nil, 'votes.vote' => 1) },
-    :through => :votes,
+           -> { where('votes.comment_id' => nil, 'votes.vote' => 1) },
+           :through => :votes,
     :source => :story
   has_many :hats
   has_many :wearable_hats, -> { where('doffed_at is null') }, :class_name => "Hat"
@@ -54,15 +54,16 @@ class User < ActiveRecord::Base
     s.string :twitter_username
   end
 
-  validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
-    :uniqueness => { :case_sensitive => false }
+  validates :email,
+            :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
+            :uniqueness => { :case_sensitive => false }
 
   validates :password, :presence => true, :on => :create
 
   VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/
   validates :username,
-    :format => { :with => /\A#{VALID_USERNAME}\z/ },
-    :uniqueness => { :case_sensitive => false }
+            :format => { :with => /\A#{VALID_USERNAME}\z/ },
+            :uniqueness => { :case_sensitive => false }
 
   validates_each :username do |record,attr,value|
     if BANNED_USERNAMES.include?(value.to_s.downcase)
@@ -497,8 +498,7 @@ class User < ActiveRecord::Base
   end
 
   def update_unread_message_count!
-    Keystore.put("user:#{self.id}:unread_messages",
-      self.received_messages.unread.count)
+    Keystore.put("user:#{self.id}:unread_messages", self.received_messages.unread.count)
   end
 
   def unread_replies_count

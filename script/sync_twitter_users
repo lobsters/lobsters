@@ -62,13 +62,21 @@ to_add.each_slice(100) do |g|
 
   #puts "adding: #{g.inspect}"
 
-  Twitter.oauth_request("/1.1/lists/members/create_all.json", :post,
-    { "list_id" => list_id, "screen_name" => g.join(",") })
+  Twitter.oauth_request(
+    "/1.1/lists/members/create_all.json",
+    :post,
+    "list_id" => list_id,
+    "screen_name" => g.join(",")
+  )
 end
 
 to_del.each_slice(100) do |g|
   #puts "deleting: #{g.inspect}"
 
-  Twitter.oauth_request("/1.1/lists/members/destroy_all.json", :post,
-    { "list_id" => list_id, "screen_name" => g.join(",") })
+  Twitter.oauth_request(
+    "/1.1/lists/members/destroy_all.json",
+    :post,
+    "list_id" => list_id,
+    "screen_name" => g.join(",")
+  )
 end

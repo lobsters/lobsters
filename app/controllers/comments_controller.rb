@@ -4,7 +4,7 @@ class CommentsController < ApplicationController
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, :only => [:index]
   before_action :require_logged_in_user_or_400,
-    :only => [:create, :preview, :upvote, :downvote, :unvote]
+                :only => [:create, :preview, :upvote, :downvote, :unvote]
 
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, :only => [:index]
@@ -140,12 +140,13 @@ class CommentsController < ApplicationController
     end
 
     if params[:preview].blank? && comment.save
-      votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id,
-        [comment.id])
+      votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, [comment.id])
       comment.current_vote = votes[comment.id]
 
-      render :partial => "comments/comment", :layout => false,
-        :content_type => "text/html", :locals => { :comment => comment }
+      render :partial => "comments/comment",
+             :layout => false,
+             :content_type => "text/html",
+             :locals => { :comment => comment }
     else
       comment.current_vote = { :vote => 1 }
 
@@ -158,8 +159,9 @@ class CommentsController < ApplicationController
       return render :plain => "can't find comment", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(0, comment.story_id,
-      comment.id, @user.id, nil)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      0, comment.story_id, comment.id, @user.id, nil
+    )
 
     render :plain => "ok"
   end
@@ -169,8 +171,9 @@ class CommentsController < ApplicationController
       return render :plain => "can't find comment", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, comment.story_id,
-      comment.id, @user.id, params[:reason])
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      1, comment.story_id, comment.id, @user.id, params[:reason]
+    )
 
     render :plain => "ok"
   end
@@ -188,8 +191,9 @@ class CommentsController < ApplicationController
       return render :plain => "not permitted to downvote", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(-1, comment.story_id,
-      comment.id, @user.id, params[:reason])
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      -1, comment.story_id, comment.id, @user.id, params[:reason]
+    )
 
     render :plain => "ok"
   end
@@ -262,8 +266,10 @@ class CommentsController < ApplicationController
       @cur_url = "/threads"
     end
 
-    thread_ids = @showing_user.recent_threads(20,
-      include_submitted_stories = !!(@user && @user.id == @showing_user.id))
+    thread_ids = @showing_user.recent_threads(
+      20,
+      include_submitted_stories = !!(@user && @user.id == @showing_user.id)
+    )
 
     comments = Comment.where(
       :thread_id => thread_ids
@@ -277,8 +283,7 @@ class CommentsController < ApplicationController
     @threads = comments_by_thread_id.values_at(*thread_ids).compact
 
     if @user
-      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,
-        comments.map(&:story_id).uniq)
+      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, comments.map(&:story_id).uniq)
 
       comments.each do |c|
         if @votes[c.id]

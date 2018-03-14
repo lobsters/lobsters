@@ -51,8 +51,7 @@ class AvatarsController < ApplicationController
       f.write av
     end
 
-    File.rename("#{CACHE_DIR}/.#{u.username}-#{size}.png",
-      "#{CACHE_DIR}/#{u.username}-#{size}.png")
+    File.rename("#{CACHE_DIR}/.#{u.username}-#{size}.png", "#{CACHE_DIR}/#{u.username}-#{size}.png")
 
     response.headers["Expires"] = 1.hour.from_now.httpdate
     send_data av, :type => "image/png", :disposition => "inline"

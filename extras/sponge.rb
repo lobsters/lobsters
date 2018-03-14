@@ -176,7 +176,7 @@ class Sponge
 
     path.gsub!(/^\/\//, "/")
 
-    dputs "fetching #{url} (#{ip.to_s}) " +
+    dputs "fetching #{url} (#{ip}) " +
           (uri.user ? "with http auth " + uri.user + "/" + ("*" * uri.password.length) + " " : "") +
           "by #{method} with cookies #{cookies(uri.host)}"
 

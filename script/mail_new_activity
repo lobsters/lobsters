@@ -77,8 +77,7 @@ Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each d
       next
     end
 
-    domain = Rails.application.domain
-    list = "#{Rails.application.shortname}-#{u.mailing_list_token}@#{ails.application.domain}"
+    list = "#{Rails.application.shortname}-#{u.mailing_list_token}@#{Rails.application.domain}"
 
     IO.popen([{}, "/usr/sbin/sendmail", "-i", "-f", "nobody@#{Rails.application.domain}", u.email],
              "w") do |mail|

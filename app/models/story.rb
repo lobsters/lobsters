@@ -219,7 +219,8 @@ class Story < ApplicationRecord
   def calculated_hotness
     # take each tag's hotness modifier into effect, and give a slight bump to
     # stories submitted by the author
-    base = self.tags.map(&:hotness_mod).sum + (self.user_is_author ? 0.25 : 0.0)
+    base = self.tags.map(&:hotness_mod).sum +
+           (self.user_is_author? && self.url.present? ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
     cpoints = self.comments

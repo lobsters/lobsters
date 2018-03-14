@@ -11,7 +11,7 @@ class CommentsController < ApplicationController
 
   def create
     if !(story = Story.where(:short_id => params[:story_id]).first) ||
-    story.is_gone?
+       story.is_gone?
       return render :plain => "can't find story", :status => 400
     end
 
@@ -34,8 +34,9 @@ class CommentsController < ApplicationController
 
     # prevent double-clicks of the post button
     if params[:preview].blank? &&
-    (pc = Comment.where(:story_id => story.id, :user_id => @user.id,
-      :parent_comment_id => comment.parent_comment_id).first)
+       (pc = Comment.where(:story_id => story.id,
+                           :user_id => @user.id,
+                           :parent_comment_id => comment.parent_comment_id).first)
       if (Time.now - pc.created_at) < 5.minutes && !@user.is_moderator?
         comment.errors.add(:comment, "^You have already posted a comment " <<
           "here recently.")

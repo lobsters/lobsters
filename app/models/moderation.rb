@@ -18,12 +18,12 @@ class Moderation < ActiveRecord::Base
     if self.story
       m.recipient_user_id = self.story.user_id
       m.subject = "Your story has been edited by " <<
-        (self.is_from_suggestions? ? "user suggestions" : "a moderator")
+                  (self.is_from_suggestions? ? "user suggestions" : "a moderator")
       m.body = "Your story [#{self.story.title}](" <<
-        "#{self.story.comments_url}) has been edited with the following " <<
-          "changes:\n" <<
-        "\n" <<
-        "> *#{self.action}*\n"
+               "#{self.story.comments_url}) has been edited with the following " <<
+               "changes:\n" <<
+               "\n" <<
+               "> *#{self.action}*\n"
 
       if self.reason.present?
         m.body << "\n" <<
@@ -36,9 +36,9 @@ class Moderation < ActiveRecord::Base
       m.recipient_user_id = self.comment.user_id
       m.subject = "Your comment has been moderated"
       m.body = "Your comment on [#{self.comment.story.title}](" <<
-        "#{self.comment.story.comments_url}) has been moderated:\n" <<
-        "\n" <<
-        "> *#{self.comment.comment}*\n"
+               "#{self.comment.story.comments_url}) has been moderated:\n" <<
+               "\n" <<
+               "> *#{self.comment.comment}*\n"
 
       if self.reason.present?
         m.body << "\n" <<

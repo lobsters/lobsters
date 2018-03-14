@@ -78,7 +78,7 @@ class StoriesController < ApplicationController
 
       if sattrs[:url].present? && @story.url != sattrs[:url]
         flash.now[:notice] = "Note: URL has been changed to fetched " <<
-          "canonicalized version"
+                             "canonicalized version"
         @story.url = sattrs[:url]
       end
 
@@ -144,9 +144,9 @@ class StoriesController < ApplicationController
           "twitter:site" => "@lobsters",
           "twitter:title" => @story.title,
           "twitter:description" => "#{@story.comments_count} comment" <<
-            "#{@story.comments_count == 1 ? "" : "s"}",
+                                   "#{@story.comments_count == 1 ? "" : "s"}",
           "twitter:image" => Rails.application.root_url +
-            "apple-touch-icon-144.png",
+                             "apple-touch-icon-144.png",
         }
 
         if @story.user.twitter_username.present?
@@ -377,7 +377,7 @@ private
 
     if !@story
       flash[:error] = "Could not find story or you are not authorized " <<
-        "to manage it."
+                      "to manage it."
       redirect_to "/"
       return false
     end

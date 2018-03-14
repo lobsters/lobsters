@@ -13,8 +13,7 @@ class InvitationsController < ApplicationController
 
   def index
     if !@user.can_see_invitation_requests?
-      flash[:error] = "Your account is not permitted to view invitation " <<
-        "requests."
+      flash[:error] = "Your account is not permitted to view invitation requests."
       return redirect_to "/"
     end
 
@@ -31,7 +30,7 @@ class InvitationsController < ApplicationController
     ir.save!
 
     flash[:success] = "Your invitation request has been validated and " <<
-      "will now be shown to other logged-in users."
+                      "will now be shown to other logged-in users."
     return redirect_to "/invitations/request"
   end
 
@@ -51,10 +50,10 @@ class InvitationsController < ApplicationController
       i.save!
       i.send_email
       flash[:success] = "Successfully e-mailed invitation to " <<
-        params[:email].to_s << "."
+                        params[:email].to_s << "."
     rescue
       flash[:error] = "Could not send invitation, verify the e-mail " <<
-        "address is valid."
+                      "address is valid."
     end
 
     if params[:return_home]
@@ -73,7 +72,7 @@ class InvitationsController < ApplicationController
 
       if @invitation_request.save
         flash[:success] = "You have been e-mailed a confirmation to " <<
-          params[:invitation_request][:email].to_s << "."
+                          params[:invitation_request][:email].to_s << "."
         return redirect_to "/invitations/request"
       else
         render :action => :build
@@ -86,7 +85,7 @@ class InvitationsController < ApplicationController
   def send_for_request
     if !@user.can_see_invitation_requests?
       flash[:error] = "Your account is not permitted to view invitation " <<
-        "requests."
+                      "requests."
       return redirect_to "/"
     end
 
@@ -102,10 +101,10 @@ class InvitationsController < ApplicationController
     i.send_email
     ir.destroy!
     flash[:success] = "Successfully e-mailed invitation to " <<
-      ir.name.to_s << "."
+                      ir.name.to_s << "."
 
     Rails.logger.info "[u#{@user.id}] sent invitiation for request " <<
-      ir.inspect
+                      ir.inspect
 
     return redirect_to "/invitations"
   end
@@ -122,10 +121,10 @@ class InvitationsController < ApplicationController
 
     ir.destroy!
     flash[:success] = "Successfully deleted invitation request from " <<
-      ir.name.to_s << "."
+                      ir.name.to_s << "."
 
     Rails.logger.info "[u#{@user.id}] deleted invitation request " <<
-      "from #{ir.inspect}"
+                      "from #{ir.inspect}"
 
     return redirect_to "/invitations"
   end

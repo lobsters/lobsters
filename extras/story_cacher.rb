@@ -16,8 +16,7 @@ class StoryCacher
       return nil
     end
 
-    db_url = "#{DIFFBOT_API_URL}?token=#{@@DIFFBOT_API_KEY}&url=" <<
-      CGI.escape(story.url)
+    db_url = "#{DIFFBOT_API_URL}?token=#{@@DIFFBOT_API_KEY}&url=#{CGI.escape(story.url)}"
 
     begin
       s = Sponge.new

@@ -78,18 +78,15 @@ Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each d
     end
 
     domain = Rails.application.domain
-    list = "#{Rails.application.shortname}-#{u.mailing_list_token}@" <<
-      Rails.application.domain
+    list = "#{Rails.application.shortname}-#{u.mailing_list_token}@#{ails.application.domain}"
 
     IO.popen([{}, "/usr/sbin/sendmail", "-i", "-f", "nobody@#{Rails.application.domain}", u.email], "w") do |mail|
-      mail.puts "From: #{s.user.username} <#{s.user.username}@" <<
-        "#{Rails.application.domain}>"
+      mail.puts "From: #{s.user.username} <#{s.user.username}@#{Rails.application.domain}>"
       mail.puts "Reply-To: #{list}"
       mail.puts "To: #{list}"
       mail.puts "X-BeenThere: #{list}"
       mail.puts "List-Id: #{Rails.application.name} <#{list}>"
-      mail.puts "List-Unsubscribe: <" <<
-        "#{Rails.application.root_url}settings>"
+      mail.puts "List-Unsubscribe: <#{Rails.application.root_url}settings>"
       mail.puts "Precedence: list"
       mail.puts "MIME-Version: 1.0"
       mail.puts "Content-Type: text/plain; charset=\"utf-8\""
@@ -160,8 +157,7 @@ last_comment_id, false, false).order(:id).each do |c|
     end
 
     domain = Rails.application.domain
-    list = "#{Rails.application.shortname}-#{u.mailing_list_token}@" <<
-      Rails.application.domain
+    list = "#{Rails.application.shortname}-#{u.mailing_list_token}@#{Rails.application.domain}"
 
     IO.popen([{}, "/usr/sbin/sendmail", "-i", "-f", "nobody@#{domain}", u.email], "w") do |mail|
       from = "From: \"#{c.user.username}"
@@ -174,8 +170,7 @@ last_comment_id, false, false).order(:id).each do |c|
       mail.puts "Reply-To: #{list}"
       mail.puts "To: #{list}"
       mail.puts "List-Id: #{Rails.application.name} <#{list}>"
-      mail.puts "List-Unsubscribe: <" <<
-        "#{Rails.application.root_url}settings>"
+      mail.puts "List-Unsubscribe: <#{Rails.application.root_url}settings>"
       mail.puts "Precedence: list"
       mail.puts "MIME-Version: 1.0"
       mail.puts "Content-Type: text/plain; charset=\"utf-8\""

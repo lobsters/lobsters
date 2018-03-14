@@ -284,8 +284,7 @@ class Story < ActiveRecord::Base
 
     self.taggings.each do |t|
       if !t.tag.valid_for?(u)
-        raise "#{u.username} does not have permission to use privileged " <<
-          "tag #{t.tag.tag}"
+        raise "#{u.username} does not have permission to use privileged tag #{t.tag.tag}"
       elsif t.tag.inactive? && t.new_record? && !t.marked_for_destruction?
         # stories can have inactive tags as long as they existed before
         raise "#{u.username} cannot add inactive tag #{t.tag.tag}"
@@ -444,8 +443,7 @@ class Story < ActiveRecord::Base
   end
 
   def is_unavailable=(what)
-    self.unavailable_at = (what.to_i == 1 && !self.is_unavailable ?
-      Time.now : nil)
+    self.unavailable_at = (what.to_i == 1 && !self.is_unavailable ? Time.now : nil)
   end
 
   def is_undeletable_by_user?(user)
@@ -460,8 +458,7 @@ class Story < ActiveRecord::Base
 
   def log_moderation
     if self.new_record? ||
-    (!self.editing_from_suggestions &&
-    (!self.editor || self.editor.id == self.user_id))
+       (!self.editing_from_suggestions && (!self.editor || self.editor.id == self.user_id))
       return
     end
 
@@ -607,7 +604,7 @@ class Story < ActiveRecord::Base
       # XXX: AR bug? st.exists?(:tag => tag_name) does not work
       if tag_name.to_s != "" && !st.map {|x| x.tag.tag }.include?(tag_name)
         if (t = Tag.active.where(:tag => tag_name).first) &&
-        t.valid_for?(user)
+           t.valid_for?(user)
           tg = self.suggested_taggings.build
           tg.user_id = user.id
           tg.tag_id = t.id
@@ -638,14 +635,14 @@ class Story < ActiveRecord::Base
 
     if final_tags.any? && (final_tags.sort != self.tags_a.sort)
       Rails.logger.info "[s#{self.id}] promoting suggested tags " <<
-        "#{final_tags.inspect} instead of #{self.tags_a.inspect}"
+                        "#{final_tags.inspect} instead of #{self.tags_a.inspect}"
       self.editor = nil
       self.editing_from_suggestions = true
       self.moderation_reason = "Automatically changed from user suggestions"
       self.tags_a = final_tags.sort
       if !self.save
         Rails.logger.error "[s#{self.id}] failed auto promoting: " <<
-          self.errors.inspect
+                           self.errors.inspect
       end
     end
   end
@@ -669,14 +666,14 @@ class Story < ActiveRecord::Base
     title_votes.sort_by {|_k, v| v }.reverse.each do |kv|
       if kv[1] >= SUGGESTION_QUORUM
         Rails.logger.info "[s#{self.id}] promoting suggested title " <<
-          "#{kv[0].inspect} instead of #{self.title.inspect}"
+                          "#{kv[0].inspect} instead of #{self.title.inspect}"
         self.editor = nil
         self.editing_from_suggestions = true
         self.moderation_reason = "Automatically changed from user suggestions"
         self.title = kv[0]
         if !self.save
           Rails.logger.error "[s#{self.id}] failed auto promoting: " <<
-            self.errors.inspect
+                             self.errors.inspect
         end
 
         break
@@ -852,8 +849,9 @@ class Story < ActiveRecord::Base
       site_name = parsed.at_css("meta[property='og:site_name']")
         .attributes["content"].text
 
-      if site_name.present? && site_name.length < title.length &&
-      title[-(site_name.length), site_name.length] == site_name
+      if site_name.present? &&
+         site_name.length < title.length &&
+         title[-(site_name.length), site_name.length] == site_name
         title = title[0, title.length - site_name.length]
 
         # remove title/site name separator
@@ -869,9 +867,9 @@ class Story < ActiveRecord::Base
     # now get canonical version of url (though some cms software puts incorrect
     # urls here, hopefully the user will notice)
     begin
-      if (cu = parsed.at_css("link[rel='canonical']").attributes["href"]
-      .text).present? && (ucu = URI.parse(cu)) && ucu.scheme.present? &&
-      ucu.host.present?
+      if (cu = parsed.at_css("link[rel='canonical']").attributes["href"] .text).present? &&
+         (ucu = URI.parse(cu)) && ucu.scheme.present? &&
+         ucu.host.present?
         @fetched_attributes[:url] = cu
       end
     rescue

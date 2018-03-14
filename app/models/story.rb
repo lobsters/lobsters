@@ -48,6 +48,9 @@ class Story < ActiveRecord::Base
   # let a hot story linger for this many seconds
   HOTNESS_WINDOW = 60 * 60 * 22
 
+  # drop these words from titles when making URLs
+  TITLE_DROP_WORDS = ["", "a", "an", "and", "but", "in", "of", "or", "that", "the", "to"].freeze
+
   # link shortening and other ad tracking domains
   TRACKING_DOMAINS = %w{ 1url.com 7.ly adf.ly al.ly bc.vc bit.do bit.ly
     bitly.com buzurl.com cur.lv cutt.us db.tt db.tt doiop.com filoops.info
@@ -695,7 +698,11 @@ class Story < ActiveRecord::Base
          .parameterize
          .gsub(/[^a-z0-9]/, "_")
          .split("_")
+<<<<<<< HEAD
          .reject {|z| ["", "a", "an", "and", "but", "in", "of", "or", "that", "the", "to"] .include?(z) }
+=======
+         .reject { |z| TITLE_DROP_WORDS.include?(z) }
+>>>>>>> 777001a... rubocop: Metrics/*, 805
          .each do |w|
       if wl + w.length <= max_len
         words.push w

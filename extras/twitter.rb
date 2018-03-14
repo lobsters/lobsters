@@ -67,7 +67,7 @@ class Twitter
       return nil
     end
 
-    [ at.token, at.secret, js["screen_name"] ]
+    [at.token, at.secret, js["screen_name"]]
   end
 
   def self.oauth_request_token(state)

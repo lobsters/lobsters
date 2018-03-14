@@ -29,7 +29,7 @@ Story.blueprint do
   user_id { User.make!.id }
   title { "story title #{sn}" }
   url { "http://example.com/#{sn}" }
-  tags_a { [ "tag1", "tag2" ] }
+  tags_a { ["tag1", "tag2"] }
 end
 
 Comment.blueprint do

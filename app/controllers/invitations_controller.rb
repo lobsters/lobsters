@@ -1,6 +1,6 @@
 class InvitationsController < ApplicationController
   before_action :require_logged_in_user,
-    :except => [ :build, :create_by_request, :confirm_email ]
+    :except => [:build, :create_by_request, :confirm_email]
 
   def build
     if Rails.application.allow_invitation_requests?

@@ -30,9 +30,9 @@ describe Story do
 
   it "must have at least one tag" do
     expect { Story.make!(:tags_a => nil) }.to raise_error
-    expect { Story.make!(:tags_a => [ "", " " ]) }.to raise_error
+    expect { Story.make!(:tags_a => ["", " "]) }.to raise_error
 
-    expect { Story.make!(:tags_a => [ "", "tag1" ]) }.to_not raise_error
+    expect { Story.make!(:tags_a => ["", "tag1"]) }.to_not raise_error
   end
 
   it "checks for invalid urls" do
@@ -115,21 +115,21 @@ describe Story do
   end
 
   it "calculates tag changes properly" do
-    s = Story.make!(:title => "blah", :tags_a => [ "tag1", "tag2" ])
+    s = Story.make!(:title => "blah", :tags_a => ["tag1", "tag2"])
 
-    s.tags_a = [ "tag2" ]
-    expect(s.tagging_changes).to eq({ "tags" => [ "tag1 tag2", "tag2" ] })
+    s.tags_a = ["tag2"]
+    expect(s.tagging_changes).to eq({ "tags" => ["tag1 tag2", "tag2"] })
   end
 
   it "logs moderations properly" do
     mod = User.make!(:username => "mod", :is_moderator => true)
 
-    s = Story.make!(:title => "blah", :tags_a => [ "tag1", "tag2" ],
+    s = Story.make!(:title => "blah", :tags_a => ["tag1", "tag2"],
       :description => "desc")
 
     s.title = "changed title"
     s.description = nil
-    s.tags_a = [ "tag1" ]
+    s.tags_a = ["tag1"]
 
     s.editor = mod
     s.moderation_reason = "because i hate you"

@@ -30,11 +30,11 @@ class Github
       res = s.fetch("https://api.github.com/user?access_token=#{tok}")
       js = JSON.parse(res)
       if js && js["login"].present?
-        return [ tok, js["login"] ]
+        return [tok, js["login"]]
       end
     end
 
-    return [ nil, nil ]
+    return [nil, nil]
   end
 
   def self.oauth_auth_url(state)

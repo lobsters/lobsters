@@ -2,12 +2,12 @@ class CommentsController < ApplicationController
   COMMENTS_PER_PAGE = 20
 
   # for rss feeds, load the user's tag filters if a token is passed
-  before_action :find_user_from_rss_token, :only => [ :index ]
+  before_action :find_user_from_rss_token, :only => [:index]
   before_action :require_logged_in_user_or_400,
-    :only => [ :create, :preview, :upvote, :downvote, :unvote ]
+    :only => [:create, :preview, :upvote, :downvote, :unvote]
 
   # for rss feeds, load the user's tag filters if a token is passed
-  before_action :find_user_from_rss_token, :only => [ :index ]
+  before_action :find_user_from_rss_token, :only => [:index]
 
   def create
     if !(story = Story.where(:short_id => params[:story_id]).first) ||

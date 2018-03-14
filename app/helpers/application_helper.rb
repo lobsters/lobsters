@@ -76,7 +76,7 @@ module ApplicationHelper
     if @user
       if (count = @user.unread_replies_count) > 0
         @right_header_links[replies_unread_path] = {
-          :class => [ "new_messages" ],
+          :class => ["new_messages"],
           :title => "Replies (#{count})",
         }
       else
@@ -85,7 +85,7 @@ module ApplicationHelper
 
       if (count = @user.unread_message_count) > 0
         @right_header_links[messages_path] = {
-          :class => [ "new_messages" ],
+          :class => ["new_messages"],
           :title => "#{count} New Message#{count == 1 ? "" : "s"}",
         }
       else

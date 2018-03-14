@@ -219,7 +219,7 @@ class HomeController < ApplicationController
     @cur_url = "/top"
     length = { :dur => 1, :intv => "Week" }
 
-    if m = params[:length].to_s.match(/\A(\d+)([#{TOP_INTVS.keys.join}])\z/)
+    if (m = params[:length].to_s.match(/\A(\d+)([#{TOP_INTVS.keys.join}])\z/))
       length[:dur] = m[1].to_i
       length[:intv] = TOP_INTVS[m[2]]
 

@@ -149,7 +149,7 @@ class LoginController < ApplicationController
   end
 
   def twofa
-    if tmpu = find_twofa_user
+    if (tmpu = find_twofa_user)
       Rails.logger.info "  Authenticated as user #{tmpu.id} " <<
                         "(#{tmpu.username}), verifying TOTP"
     else

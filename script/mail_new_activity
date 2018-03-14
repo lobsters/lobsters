@@ -25,7 +25,7 @@ class String
     split("\n").collect do |line|
       if line.length <= len
         line
-      elsif m = line.match(/^(> ?|   +)(.*)/)
+      elsif (m = line.match(/^(> ?|   +)(.*)/))
         ind = m[1]
         if len - ind.length < 0
           ind = "    "

@@ -82,7 +82,7 @@ class StoriesController < ApplicationController
         @story.url = sattrs[:url]
       end
 
-      if s = Story.find_similar_by_url(@story.url)
+      if (s = Story.find_similar_by_url(@story.url))
         if s.is_recent?
           # user won't be able to submit this story as new, so just redirect
           # them to the previous story
@@ -173,7 +173,7 @@ class StoriesController < ApplicationController
     if (st = @story.suggested_taggings.where(:user_id => @user.id)).any?
       @story.tags_a = st.map {|st| st.tag.tag }
     end
-    if tt = @story.suggested_titles.where(:user_id => @user.id).first
+    if (tt = @story.suggested_titles.where(:user_id => @user.id).first)
       @story.title = tt.title
     end
   end
@@ -389,8 +389,7 @@ private
 
   def load_user_votes
     if @user
-      if v = Vote.where(:user_id => @user.id, :story_id => @story.id,
-      :comment_id => nil).first
+      if (v = Vote.where(:user_id => @user.id, :story_id => @story.id, :comment_id => nil).first)
         @story.vote = { :vote => v.vote, :reason => v.reason }
       end
 

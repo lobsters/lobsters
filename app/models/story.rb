@@ -61,8 +61,7 @@ class Story < ActiveRecord::Base
 
   attr_accessor :already_posted_story, :editing_from_suggestions, :editor,
                 :fetching_ip, :is_hidden_by_cur_user, :is_saved_by_cur_user,
-                :merge_story_short_id, :moderation_reason, :previewing,
-                :seen_previous, :vote
+                :moderation_reason, :previewing, :seen_previous, :vote
   attr_writer :fetched_content
 
   before_validation :assign_short_id_and_upvote, :on => :create

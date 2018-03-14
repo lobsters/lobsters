@@ -50,7 +50,7 @@ private
       next unless r.current_vote_vote.present?
       r.comment.current_vote = {
         vote: r.current_vote_vote,
-        reason: r.current_vote_reason.to_s
+        reason: r.current_vote_reason.to_s,
       }
     end
   end

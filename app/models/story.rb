@@ -696,7 +696,7 @@ class Story < ActiveRecord::Base
 
     self.title.parameterize.gsub(/[^a-z0-9]/, "_").split("_")
     .reject {|z| [ "", "a", "an", "and", "but", "in", "of", "or", "that", "the",
-    "to" ].include?(z) }.each do |w|
+    "to", ].include?(z) }.each do |w|
       if wl + w.length <= max_len
         words.push w
         wl += w.length
@@ -708,7 +708,7 @@ class Story < ActiveRecord::Base
       end
     end
 
-    if !words.any?
+    if words.empty?
       words.push "_"
     end
 
@@ -811,7 +811,7 @@ class Story < ActiveRecord::Base
         s = Sponge.new
         s.timeout = 3
         @fetched_content = s.fetch(self.url, :get, nil, nil, {
-          "User-agent" => "#{Rails.application.domain} for #{self.fetching_ip}"
+          "User-agent" => "#{Rails.application.domain} for #{self.fetching_ip}",
         }, 3)
       rescue
         return @fetched_attributes

@@ -49,6 +49,11 @@ Rails/FilePath:
 # Style
 Style/BlockDelimiters:
   Enabled: false
+# It would be nice to have this on, but I'm not up for writing 66 of these in
+# the process of addressing the initial 4,489 cop warnings.
+Style/Documentation:
+  Enabled: false
+  Exclude: [db/migrate/**/*, spec/**/*, test/**/*]
 Style/IfUnlessModifier:
   Enabled: false
 Style/NegatedIf:
@@ -59,3 +64,5 @@ Style/RedundantSelf:
   Enabled: false
 Style/StringLiterals:
   Enabled: false
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: consistent_comma

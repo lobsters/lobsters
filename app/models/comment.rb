@@ -128,8 +128,7 @@ class Comment < ActiveRecord::Base
       :score,
       :upvotes,
       :downvotes,
-      { :comment => (self.is_gone? ? "<em>#{self.gone_text}</em>" :
-        :markeddown_comment) },
+      { :comment => (self.is_gone? ? "<em>#{self.gone_text}</em>" : :markeddown_comment) },
       :url,
       :indent_level,
       { :commenting_user => :user },

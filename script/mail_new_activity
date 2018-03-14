@@ -81,8 +81,7 @@ Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each d
     list = "#{Rails.application.shortname}-#{u.mailing_list_token}@" <<
       Rails.application.domain
 
-    IO.popen([ {}, "/usr/sbin/sendmail", "-i", "-f",
-    "nobody@#{Rails.application.domain}", u.email ], "w") do |mail|
+    IO.popen([{}, "/usr/sbin/sendmail", "-i", "-f", "nobody@#{Rails.application.domain}", u.email], "w") do |mail|
       mail.puts "From: #{s.user.username} <#{s.user.username}@" <<
         "#{Rails.application.domain}>"
       mail.puts "Reply-To: #{list}"
@@ -164,8 +163,7 @@ last_comment_id, false, false).order(:id).each do |c|
     list = "#{Rails.application.shortname}-#{u.mailing_list_token}@" <<
       Rails.application.domain
 
-    IO.popen([ {}, "/usr/sbin/sendmail", "-i", "-f",
-    "nobody@#{domain}", u.email ], "w") do |mail|
+    IO.popen([{}, "/usr/sbin/sendmail", "-i", "-f", "nobody@#{domain}", u.email], "w") do |mail|
       from = "From: \"#{c.user.username}"
       if c.hat
         from << " (#{c.hat.hat})"

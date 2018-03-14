@@ -28,8 +28,7 @@ class CommentsController < ApplicationController
       params[:parent_comment_short_id]).first
         comment.parent_comment = pc
       else
-        return render :json => { :error => "invalid parent comment",
-          :status => 400 }
+        return render :json => { :error => "invalid parent comment", :status => 400 }
       end
     end
 
@@ -195,8 +194,10 @@ class CommentsController < ApplicationController
   end
 
   def index
-    @rss_link ||= { :title => "RSS 2.0 - Newest Comments",
-      :href => "/comments.rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
+    @rss_link ||= {
+      :title => "RSS 2.0 - Newest Comments",
+      :href => "/comments.rss#{@user ? "?token=#{@user.rss_token}" : ""}",
+    }
 
     @heading = @title = "Newest Comments"
     @cur_url = "/comments"
@@ -304,9 +305,13 @@ private
     comment.previewing = true
     comment.is_deleted = false # show normal preview for deleted comments
 
-    render :partial => "comments/commentbox", :layout => false,
-      :content_type => "text/html", :locals => {
-      :comment => comment, :show_comment => comment }
+    render :partial => "comments/commentbox",
+           :layout => false,
+           :content_type => "text/html",
+           :locals => {
+             :comment => comment,
+             :show_comment => comment,
+           }
   end
 
   def find_comment

@@ -66,10 +66,14 @@ class HomeController < ApplicationController
       paginate stories.hottest
     }
 
-    @rss_link ||= { :title => "RSS 2.0",
-      :href => "/rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
-    @comments_rss_link ||= { :title => "Comments - RSS 2.0",
-      :href => "/comments.rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
+    @rss_link ||= {
+      :title => "RSS 2.0",
+      :href => "/rss#{@user ? "?token=#{@user.rss_token}" : ""}",
+    }
+    @comments_rss_link ||= {
+      :title => "Comments - RSS 2.0",
+      :href => "/comments.rss#{@user ? "?token=#{@user.rss_token}" : ""}",
+    }
 
     @heading = @title = ""
     @cur_url = "/"
@@ -99,8 +103,10 @@ class HomeController < ApplicationController
     @heading = @title = "Newest Stories"
     @cur_url = "/newest"
 
-    @rss_link = { :title => "RSS 2.0 - Newest Items",
-      :href => "/newest.rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
+    @rss_link = {
+      :title => "RSS 2.0 - Newest Items",
+      :href => "/newest.rss#{@user ? "?token=#{@user.rss_token}" : ""}",
+    }
 
     respond_to do |format|
       format.html { render :action => "index" }
@@ -151,8 +157,10 @@ class HomeController < ApplicationController
     @cur_url = "/recent"
 
     # our content changes every page load, so point at /newest.rss to be stable
-    @rss_link = { :title => "RSS 2.0 - Newest Items",
-      :href => "/newest.rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
+    @rss_link = {
+      :title => "RSS 2.0 - Newest Items",
+      :href => "/newest.rss#{@user ? "?token=#{@user.rss_token}" : ""}",
+    }
 
     render :action => "index"
   end
@@ -162,8 +170,10 @@ class HomeController < ApplicationController
       paginate stories.saved
     }
 
-    @rss_link ||= { :title => "RSS 2.0",
-      :href => "/saved.rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
+    @rss_link ||= {
+      :title => "RSS 2.0",
+      :href => "/saved.rss#{@user ? "?token=#{@user.rss_token}" : ""}",
+    }
 
     @heading = @title = "Saved Stories"
     @cur_url = "/saved"
@@ -192,8 +202,10 @@ class HomeController < ApplicationController
     @heading = @title = @tag.description.blank?? @tag.tag : @tag.description
     @cur_url = tag_url(@tag.tag)
 
-    @rss_link = { :title => "RSS 2.0 - Tagged #{@tag.tag} (#{@tag.description})",
-      :href => "/t/#{@tag.tag}.rss" }
+    @rss_link = {
+      :title => "RSS 2.0 - Tagged #{@tag.tag} (#{@tag.description})",
+      :href => "/t/#{@tag.tag}.rss",
+    }
 
     respond_to do |format|
       format.html { render :action => "index" }
@@ -236,8 +248,10 @@ class HomeController < ApplicationController
     @heading = @title = "Your Upvoted Stories"
     @cur_url = "/upvoted"
 
-    @rss_link = { :title => "RSS 2.0 - Your Upvoted Stories",
-      :href => "/upvoted.rss#{(@user ? "?token=#{@user.rss_token}" : "")}" }
+    @rss_link = {
+      :title => "RSS 2.0 - Your Upvoted Stories",
+      :href => "/upvoted.rss#{(@user ? "?token=#{@user.rss_token}" : "")}",
+    }
 
     respond_to do |format|
       format.html { render :action => "index" }

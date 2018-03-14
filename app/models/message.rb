@@ -1,10 +1,10 @@
 class Message < ActiveRecord::Base
   belongs_to :recipient,
-    :class_name => "User",
-    :foreign_key => "recipient_user_id"
+             :class_name => "User",
+             :foreign_key => "recipient_user_id"
   belongs_to :author,
-    :class_name => "User",
-    :foreign_key => "author_user_id"
+             :class_name => "User",
+             :foreign_key => "author_user_id"
 
   validates_presence_of :recipient
 
@@ -13,11 +13,9 @@ class Message < ActiveRecord::Base
   validates_length_of :subject, :in => 1..100
   validates_length_of :body, :maximum => (64 * 1024)
 
-  scope :unread, -> { where(:has_been_read => false,
-    :deleted_by_recipient => false) }
+  scope :unread, -> { where(:has_been_read => false, :deleted_by_recipient => false) }
 
-  before_validation :assign_short_id,
-    :on => :create
+  before_validation :assign_short_id, :on => :create
   after_create :deliver_email_notifications
   after_save :update_unread_counts
   after_save :check_for_both_deleted

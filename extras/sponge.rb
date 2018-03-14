@@ -96,8 +96,7 @@ class Sponge
     end
   end
 
-  def fetch(url, method = :get, fields = nil, raw_post_data = nil,
-  headers = {}, limit = 10)
+  def fetch(url, method = :get, fields = nil, raw_post_data = nil, headers = {}, limit = 10)
     raise ArgumentError, "http redirection too deep" if limit <= 0
 
     uri = URI.parse(url)

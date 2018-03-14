@@ -78,8 +78,9 @@ class Vote < ActiveRecord::Base
     end
   end
 
-  def self.vote_thusly_on_story_or_comment_for_user_because(vote, story_id,
-  comment_id, user_id, reason, update_counters = true)
+  def self.vote_thusly_on_story_or_comment_for_user_because(
+    vote, story_id, comment_id, user_id, reason, update_counters = true
+  )
     v = Vote.where(:user_id => user_id, :story_id => story_id,
       :comment_id => comment_id).first_or_initialize
 
@@ -120,8 +121,7 @@ class Vote < ActiveRecord::Base
             User.update_counters c.user_id, :karma => upvote - downvote
           end
 
-          c.give_upvote_or_downvote_and_recalculate_confidence!(upvote,
-            downvote)
+          c.give_upvote_or_downvote_and_recalculate_confidence!(upvote, downvote)
         else
           s = Story.find(v.story_id)
           if s.user_id != user_id

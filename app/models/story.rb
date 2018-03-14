@@ -1,22 +1,22 @@
 class Story < ActiveRecord::Base
   belongs_to :user
   belongs_to :merged_into_story,
-    :class_name => "Story",
-    :foreign_key => "merged_story_id"
+             :class_name => "Story",
+             :foreign_key => "merged_story_id"
   has_many :merged_stories,
-    :class_name => "Story",
-    :foreign_key => "merged_story_id"
+           :class_name => "Story",
+           :foreign_key => "merged_story_id"
   has_many :taggings,
-    :autosave => true
+           :autosave => true
   has_many :suggested_taggings
   has_many :suggested_titles
   has_many :comments,
-    :inverse_of => :story
+           :inverse_of => :story
   has_many :tags, :through => :taggings
   has_many :votes, -> { where(:comment_id => nil) }
   has_many :voters, -> { where('votes.comment_id' => nil) },
-    :through => :votes,
-    :source => :user
+           :through => :votes,
+           :source => :user
 
   scope :unmerged, -> { where(:merged_story_id => nil) }
 
@@ -59,15 +59,13 @@ class Story < ActiveRecord::Base
     tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd vzturl.com
     wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }
 
-  attr_accessor :vote, :already_posted_story, :previewing, :seen_previous,
-    :is_hidden_by_cur_user, :is_saved_by_cur_user
-  attr_accessor :editor, :moderation_reason, :merge_story_short_id,
-    :editing_from_suggestions
-  attr_accessor :fetching_ip
+  attr_accessor :already_posted_story, :editing_from_suggestions, :editor,
+                :fetching_ip, :is_hidden_by_cur_user, :is_saved_by_cur_user,
+                :merge_story_short_id, :moderation_reason, :previewing,
+                :seen_previous, :vote
   attr_writer :fetched_content
 
-  before_validation :assign_short_id_and_upvote,
-    :on => :create
+  before_validation :assign_short_id_and_upvote, :on => :create
   before_create :assign_initial_hotness
   before_save :log_moderation
   before_save :fix_bogus_chars
@@ -533,8 +531,7 @@ class Story < ActiveRecord::Base
   end
 
   def record_initial_upvote
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.id, nil,
-      self.user_id, nil, false)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.id, nil, self.user_id, nil, false)
   end
 
   def score
@@ -698,11 +695,7 @@ class Story < ActiveRecord::Base
          .parameterize
          .gsub(/[^a-z0-9]/, "_")
          .split("_")
-<<<<<<< HEAD
-         .reject {|z| ["", "a", "an", "and", "but", "in", "of", "or", "that", "the", "to"] .include?(z) }
-=======
-         .reject { |z| TITLE_DROP_WORDS.include?(z) }
->>>>>>> 777001a... rubocop: Metrics/*, 805
+         .reject {|z| TITLE_DROP_WORDS.include?(z) }
          .each do |w|
       if wl + w.length <= max_len
         words.push w

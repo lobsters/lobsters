@@ -33,9 +33,9 @@ class Hat < ActiveRecord::Base
     hl = (self.link.present? && self.link.match(/^https?:\/\//))
 
     h = "<span class=\"hat " <<
-      "hat_#{self.hat.gsub(/[^A-Za-z0-9]/, "_").downcase}\" " <<
-      "title=\"Granted by " << "#{self.granted_by_user.username} on " <<
-      "#{self.created_at.strftime("%Y-%m-%d")}"
+        "hat_#{self.hat.gsub(/[^A-Za-z0-9]/, "_").downcase}\" " <<
+        "title=\"Granted by " << "#{self.granted_by_user.username} on " <<
+        "#{self.created_at.strftime("%Y-%m-%d")}"
 
     if !hl && self.link.present?
       h << " - #{ERB::Util.html_escape(self.link)}"

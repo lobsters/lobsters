@@ -178,10 +178,10 @@ class User < ActiveRecord::Base
       msg.recipient_user_id = self.id
       msg.subject = "Your invite privileges have been revoked"
       msg.body = "The reason given:\n" <<
-        "\n" <<
-        "> *#{reason}*\n" <<
-        "\n" <<
-        "*This is an automated message.*"
+                 "\n" <<
+                 "> *#{reason}*\n" <<
+                 "\n" <<
+                 "*This is an automated message.*"
       msg.save!
 
       m = Moderation.new
@@ -278,8 +278,8 @@ class User < ActiveRecord::Base
 
   def fetched_avatar(size = 100)
     gravatar_url = "https://www.gravatar.com/avatar/" <<
-      Digest::MD5.hexdigest(self.email.strip.downcase) <<
-      "?r=pg&d=identicon&s=#{size}"
+                   Digest::MD5.hexdigest(self.email.strip.downcase) <<
+                   "?r=pg&d=identicon&s=#{size}"
 
     begin
       s = Sponge.new

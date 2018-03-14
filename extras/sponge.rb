@@ -83,8 +83,7 @@ class Sponge
 
     # check for domain cookies
     @cookies.keys.each do |dom|
-      if dom.length < host.length &&
-      dom == host[host.length - dom.length .. host.length - 1]
+      if dom.length < host.length && dom == host[host.length - dom.length .. host.length - 1]
         dputs "adding domain keys from #{dom}"
         cooks = cooks.merge @cookies[dom]
       end
@@ -178,9 +177,9 @@ class Sponge
 
     path.gsub!(/^\/\//, "/")
 
-    dputs "fetching #{url} (#{ip.to_s}) " + (uri.user ? "with http auth " +
-      uri.user + "/" + ("*" * uri.password.length) + " " : "") +
-      "by #{method} with cookies #{cookies(uri.host)}"
+    dputs "fetching #{url} (#{ip.to_s}) " +
+          (uri.user ? "with http auth " + uri.user + "/" + ("*" * uri.password.length) + " " : "") +
+          "by #{method} with cookies #{cookies(uri.host)}"
 
     send_headers = {
       "Host" => uri.host,
@@ -190,8 +189,7 @@ class Sponge
     }.merge(send_headers || {})
 
     if uri.user
-      send_headers["Authorization"] = "Basic " +
-        ["#{uri.user}:#{uri.password}"].pack('m').delete("\r\n")
+      send_headers["Authorization"] = "Basic " + ["#{uri.user}:#{uri.password}"].pack('m').delete("\r\n")
     end
 
     res = nil

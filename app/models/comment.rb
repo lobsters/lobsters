@@ -75,8 +75,8 @@ class Comment < ActiveRecord::Base
         # from the tree.  otherwise they have to stay and a "[deleted]" stub
         # will be shown
         if node.is_gone? && # deleted or moderated
-          !children.present? && # don't have child comments
-          (!user || (!user.is_moderator? && node.user_id != user.id))
+           children.empty? && # don't have child comments
+           (!user || (!user.is_moderator? && node.user_id != user.id))
           # admins and authors should be able to see their deleted comments
           next
         end
@@ -246,8 +246,9 @@ class Comment < ActiveRecord::Base
   end
 
   def deliver_reply_notifications
-    if self.parent_comment_id && (u = self.parent_comment.try(:user)) &&
-    u.id != self.user.id
+    if self.parent_comment_id &&
+       (u = self.parent_comment.try(:user)) &&
+       u.id != self.user.id
       if u.email_replies?
         begin
           EmailReply.reply(self, u).deliver_now
@@ -308,7 +309,7 @@ class Comment < ActiveRecord::Base
     elsif self.user.is_new?
       c.push "new_user"
     elsif self.story && self.story.user_is_author? &&
-    self.story.user_id == self.user_id
+          self.story.user_id == self.user_id
       c.push "user_is_author"
     end
 
@@ -420,8 +421,8 @@ class Comment < ActiveRecord::Base
 
   def showing_downvotes_for_user?(u)
     return (u && u.is_moderator?) ||
-      (self.created_at && self.created_at < 36.hours.ago) ||
-      !SCORE_RANGE_TO_HIDE.include?(self.score)
+           (self.created_at && self.created_at < 36.hours.ago) ||
+           !SCORE_RANGE_TO_HIDE.include?(self.score)
   end
 
   def to_param

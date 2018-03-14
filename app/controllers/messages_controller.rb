@@ -56,7 +56,7 @@ class MessagesController < ApplicationController
 
     if @new_message.save
       flash[:success] = "Your message has been sent to " <<
-        @new_message.recipient.username.to_s << "."
+                        @new_message.recipient.username.to_s << "."
       return redirect_to "/messages"
     else
       render :action => "index"

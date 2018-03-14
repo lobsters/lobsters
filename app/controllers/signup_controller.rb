@@ -49,7 +49,7 @@ class SignupController < ApplicationController
       @invitation.destroy
       session[:u] = @new_user.session_token
       flash[:success] = "Welcome to #{Rails.application.name}, " <<
-        "#{@new_user.username}!"
+                        "#{@new_user.username}!"
 
       return redirect_to "/signup/invite"
     else

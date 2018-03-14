@@ -45,8 +45,8 @@ class HomeController < ApplicationController
       render :action => "privacy"
     rescue ActionView::MissingTemplate
       render :html => "<div class=\"box wide\">" <<
-        "You apparently have no privacy." <<
-        "</div>", :layout => "application"
+                      "You apparently have no privacy." <<
+                      "</div>", :layout => "application"
     end
   end
 
@@ -232,7 +232,7 @@ class HomeController < ApplicationController
 
     if length[:dur] > 1
       @heading = @title = "Top Stories of the Past #{length[:dur]} " <<
-        length[:intv] << "s"
+                          length[:intv] << "s"
     else
       @heading = @title = "Top Stories of the Past " << length[:intv]
     end

@@ -105,8 +105,7 @@ class LoginController < ApplicationController
 
     @found_user.initiate_password_reset_for_ip(request.remote_ip)
 
-    flash.now[:success] = "Password reset instructions have been e-mailed " <<
-      "to you."
+    flash.now[:success] = "Password reset instructions have been e-mailed to you."
     return index
   end
 
@@ -114,7 +113,7 @@ class LoginController < ApplicationController
     @title = "Reset Password"
 
     if (m = params[:token].to_s.match(/^(\d+)-/)) &&
-    (Time.now - Time.at(m[1].to_i)) < 24.hours
+       (Time.now - Time.at(m[1].to_i)) < 24.hours
       @reset_user = User.where(:password_reset_token => params[:token].to_s).first
     end
 
@@ -145,7 +144,7 @@ class LoginController < ApplicationController
       end
     else
       flash[:error] = "Invalid reset token.  It may have already been " <<
-        "used or you may have copied it incorrectly."
+                      "used or you may have copied it incorrectly."
       return redirect_to forgot_password_path
     end
   end
@@ -153,7 +152,7 @@ class LoginController < ApplicationController
   def twofa
     if tmpu = find_twofa_user
       Rails.logger.info "  Authenticated as user #{tmpu.id} " <<
-        "(#{tmpu.username}), verifying TOTP"
+                        "(#{tmpu.username}), verifying TOTP"
     else
       reset_session
       return redirect_to "/login"

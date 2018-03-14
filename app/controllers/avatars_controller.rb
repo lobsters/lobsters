@@ -21,7 +21,7 @@ class AvatarsController < ApplicationController
     end
 
     flash[:success] = "Your avatar cache has been purged of #{expired} " <<
-      "file#{expired == 1 ? "" : "s"}"
+                      "file#{expired == 1 ? "" : "s"}"
     return redirect_to "/settings"
   end
 

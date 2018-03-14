@@ -24,17 +24,21 @@ StoriesPaginator.new(StoryRepository.new.hottest).get.first
 
   via = ""
   if s.user.twitter_username.present?
-    via = "\n" + (s.user_is_author? ? "by" : "via") +
-      " @#{s.user.twitter_username}"
+    via = "\n" +
+          (s.user_is_author? ? "by" : "via") +
+          " @#{s.user.twitter_username}"
   end
 
-  tco_status = via + "\n" +
-    ("X" * Twitter::TCO_LEN) + tags +
-    (s.url.present?? "\n" + ("X" * Twitter::TCO_LEN) : "")
+  tco_status = via +
+               "\n" +
+               ("X" * Twitter::TCO_LEN) + tags +
+               (s.url.present? ? "\n" + ("X" * Twitter::TCO_LEN) : "")
 
-  status = via + "\n" +
-    s.short_id_url + tags +
-    (s.url.present?? "\n" + s.url : "")
+  status = via +
+           "\n" +
+           s.short_id_url +
+           tags +
+           (s.url.present? ? "\n" + s.url : "")
 
   left_len = Twitter::MAX_TWEET_LEN - tco_status.length
 
@@ -71,14 +75,12 @@ StoriesPaginator.new(StoryRepository.new.hottest).get.first
     elsif res["errors"].select {|e| e["code"] == 226 || e["code"] == 186 }.any?
       # twitter is rejecting the content of this message, skip it
       s.update_column("twitter_id", 0)
-      puts "skipping: failed posting story #{s.id} (#{status.inspect}): " +
-        "#{res.inspect}\n"
+      puts "skipping: failed posting story #{s.id} (#{status.inspect}): #{res.inspect}\n"
     else
       raise
     end
   rescue => e
-    puts "failed posting story #{s.id} (#{status.inspect}): #{e.inspect}\n" +
-      "#{res.inspect}"
+    puts "failed posting story #{s.id} (#{status.inspect}): #{e.inspect}\n#{res.inspect}"
     exit
   end
 end

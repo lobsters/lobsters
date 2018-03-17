@@ -218,7 +218,7 @@ class Comment < ActiveRecord::Base
 
   def deliver_mention_notifications
     self.plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
-      if (u = User.where(:username => mention).first)
+      if (u = User.find_by(:username => mention))
         if u.id == self.user.id
           next
         end

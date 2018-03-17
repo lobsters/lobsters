@@ -427,7 +427,7 @@ class Story < ActiveRecord::Base
   end
 
   def is_hidden_by_user?(user)
-    !!HiddenStory.where(:user_id => user.id, :story_id => self.id).first
+    !!HiddenStory.find_by(:user_id => user.id, :story_id => self.id)
   end
 
   def is_recent?
@@ -435,7 +435,7 @@ class Story < ActiveRecord::Base
   end
 
   def is_saved_by_user?(user)
-    !!SavedStory.where(:user_id => user.id, :story_id => self.id).first
+    !!SavedStory.find_by(:user_id => user.id, :story_id => self.id)
   end
 
   def is_unavailable
@@ -517,8 +517,7 @@ class Story < ActiveRecord::Base
   end
 
   def merge_story_short_id=(sid)
-    self.merged_story_id = sid.present??
-      Story.where(:short_id => sid).first.id : nil
+    self.merged_story_id = sid.present? ? Story.where(:short_id => sid).pluck(:id).first : nil
   end
 
   def merge_story_short_id
@@ -577,7 +576,7 @@ class Story < ActiveRecord::Base
 
     new_tag_names_a.each do |tag_name|
       if tag_name.to_s != "" && !self.tags.exists?(:tag => tag_name)
-        if (t = Tag.active.where(:tag => tag_name).first)
+        if (t = Tag.active.find_by(:tag => tag_name))
           # we can't lookup whether the user is allowed to use this tag yet
           # because we aren't assured to have a user_id by now; we'll do it in
           # the validation with check_tags
@@ -602,7 +601,7 @@ class Story < ActiveRecord::Base
     new_tag_names_a.each do |tag_name|
       # XXX: AR bug? st.exists?(:tag => tag_name) does not work
       if tag_name.to_s != "" && !st.map {|x| x.tag.tag }.include?(tag_name)
-        if (t = Tag.active.where(:tag => tag_name).first) &&
+        if (t = Tag.active.find_by(:tag => tag_name)) &&
            t.valid_for?(user)
           tg = self.suggested_taggings.build
           tg.user_id = user.id
@@ -647,7 +646,7 @@ class Story < ActiveRecord::Base
   end
 
   def save_suggested_title_for_user!(title, user)
-    st = self.suggested_titles.where(:user_id => user.id).first
+    st = self.suggested_titles.find_by(:user_id => user.id)
     if !st
       st = self.suggested_titles.build
       st.user_id = user.id

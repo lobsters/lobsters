@@ -270,9 +270,9 @@ private
 
   def filtered_tag_ids
     if @user
-      @user.tag_filters.map {|tf| tf.tag_id }
+      @user.tag_filters.map(&:tag_id)
     else
-      tags_filtered_by_cookie.map {|t| t.id }
+      tags_filtered_by_cookie.map(&:id)
     end
   end
 

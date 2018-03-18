@@ -94,6 +94,8 @@ Style/LineEndConcatenation:
   Enabled: false
 Style/NegatedIf:
   EnforcedStyle: postfix
+Style/NumericPredicate:
+  Enabled: false
 Style/RedundantReturn:
   Enabled: false
 Style/RedundantSelf:

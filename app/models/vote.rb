@@ -10,17 +10,17 @@ class Vote < ActiveRecord::Base
     "T" => "Troll",
     "S" => "Spam",
     "" => "Cancel",
-  }
+  }.freeze
 
   STORY_REASONS = {
     "O" => "Off-topic",
     "A" => "Already Posted",
     "S" => "Spam",
     "" => "Cancel",
-  }
+  }.freeze
   OLD_STORY_REASONS = {
     "Q" => "Low Quality",
-  }
+  }.freeze
 
   def self.votes_by_user_for_stories_hash(user, stories)
     votes = {}

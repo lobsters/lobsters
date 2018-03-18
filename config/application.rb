@@ -43,7 +43,7 @@ end
 
 # disable yaml/xml/whatever input parsing
 silence_warnings do
-  ActionDispatch::ParamsParser::DEFAULT_PARSERS = {}
+  ActionDispatch::ParamsParser::DEFAULT_PARSERS = {}.freeze
 end
 
 # define site name and domain to be used globally, should be overridden in a

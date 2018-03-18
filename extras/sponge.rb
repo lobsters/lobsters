@@ -51,7 +51,7 @@ class Sponge
     "198.18.0.0/15",
     "224.0.0.0/4",
     "240.0.0.0/4",
-  ]
+  ].freeze
 
   # old api
   def self.fetch(url, headers = {}, limit = 10)

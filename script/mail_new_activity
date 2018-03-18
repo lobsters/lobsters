@@ -49,8 +49,8 @@ def story_subject(story, prefix = "")
 end
 
 EMAIL_WIDTH = 72
-LAST_STORY_KEY = "mailing:last_story_id"
-LAST_COMMENT_KEY = "mailing:last_comment_id"
+LAST_STORY_KEY = "mailing:last_story_id".freeze
+LAST_COMMENT_KEY = "mailing:last_comment_id".freeze
 
 mailing_list_users = User.where("mailing_list_mode > 0").select {|u|
   u.is_active? }

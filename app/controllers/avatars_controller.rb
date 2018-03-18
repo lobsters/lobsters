@@ -1,9 +1,9 @@
 class AvatarsController < ApplicationController
   before_action :require_logged_in_user, :only => [:expire]
 
-  ALLOWED_SIZES = [16, 32, 100, 200]
+  ALLOWED_SIZES = [16, 32, 100, 200].freeze
 
-  CACHE_DIR = "#{Rails.root}/public/avatars/"
+  CACHE_DIR = "#{Rails.root}/public/avatars/".freeze
 
   def expire
     expired = 0

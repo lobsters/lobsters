@@ -214,7 +214,7 @@ class HomeController < ApplicationController
     end
   end
 
-  TOP_INTVS = { "d" => "Day", "w" => "Week", "m" => "Month", "y" => "Year" }
+  TOP_INTVS = { "d" => "Day", "w" => "Week", "m" => "Month", "y" => "Year" }.freeze
   def top
     @cur_url = "/top"
     length = { :dur => 1, :intv => "Week" }

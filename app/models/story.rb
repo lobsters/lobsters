@@ -57,7 +57,7 @@ class Story < ActiveRecord::Base
     goo.gl is.gd ity.im j.mp lnkd.in ow.ly ph.dog po.st prettylinkpro.com q.gs
     qr.ae qr.net scrnch.me s.id sptfy.com t.co tinyarrows.com tiny.cc
     tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd vzturl.com
-    wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }
+    wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }.freeze
 
   attr_accessor :already_posted_story, :editing_from_suggestions, :editor,
                 :fetching_ip, :is_hidden_by_cur_user, :is_saved_by_cur_user,

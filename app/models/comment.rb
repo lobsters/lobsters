@@ -381,7 +381,7 @@ class Comment < ActiveRecord::Base
       self.short_id,
       self.is_from_email ? "email" : nil,
       created_at.to_i,
-    ].reject {|p| !p }.join(".") << "@" << Rails.application.domain
+    ].reject(&:!).join(".") << "@" << Rails.application.domain
   end
 
   def path

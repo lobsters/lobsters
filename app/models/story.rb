@@ -146,12 +146,8 @@ class Story < ActiveRecord::Base
 
   def self.recalculate_all_hotnesses!
     # do the front page first, since find_each can't take an order
-    Story.order("id DESC").limit(100).each do |s|
-      s.recalculate_hotness!
-    end
-    Story.find_each do |s|
-      s.recalculate_hotness!
-    end
+    Story.order("id DESC").limit(100).each(&:recalculate_hotness!)
+    Story.find_each(&:recalculate_hotness!)
     true
   end
 
@@ -182,7 +178,7 @@ class Story < ActiveRecord::Base
       { :description => :markeddown_description },
       :comments_url,
       { :submitter_user => :user },
-      { :tags => self.tags.map {|t| t.tag }.sort },
+      { :tags => self.tags.map(&:tag).sort },
     ]
 
     if options && options[:with_comments]
@@ -217,7 +213,7 @@ class Story < ActiveRecord::Base
   def calculated_hotness
     # take each tag's hotness modifier into effect, and give a slight bump to
     # stories submitted by the author
-    base = self.tags.map {|t| t.hotness_mod }.sum + (self.user_is_author ? 0.25 : 0.0)
+    base = self.tags.map(&:hotness_mod).sum + (self.user_is_author ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
     cpoints = self.comments
@@ -235,7 +231,7 @@ class Story < ActiveRecord::Base
       .inject(&:+).to_f * 0.5
 
     # mix in any stories this one cannibalized
-    cpoints += self.merged_stories.map {|s| s.score }.inject(&:+).to_f
+    cpoints += self.merged_stories.map(&:score).inject(&:+).to_f
 
     # if a story has many comments but few votes, it's probably a bad story, so
     # cap the comment points at the number of upvotes
@@ -549,10 +545,9 @@ class Story < ActiveRecord::Base
   end
 
   def tagging_changes
-    old_tags_a = self.taggings.reject {|tg| tg.new_record? }.map {|tg|
+    old_tags_a = self.taggings.reject(&:new_record?).map {|tg|
       tg.tag.tag }.join(" ")
-    new_tags_a = self.taggings.reject {|tg| tg.marked_for_destruction?
-      }.map {|tg| tg.tag.tag }.join(" ")
+    new_tags_a = self.taggings.reject(&:marked_for_destruction?).map {|tg| tg.tag.tag }.join(" ")
 
     if old_tags_a == new_tags_a
       {}
@@ -563,8 +558,7 @@ class Story < ActiveRecord::Base
 
   @_tags_a = []
   def tags_a
-    @_tags_a ||= self.taggings.reject {|t| t.marked_for_destruction?
-      }.map {|t| t.tag.tag }
+    @_tags_a ||= self.taggings.reject(&:marked_for_destruction?).map {|t| t.tag.tag }
   end
 
   def tags_a=(new_tag_names_a)

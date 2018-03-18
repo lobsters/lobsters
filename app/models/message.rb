@@ -73,14 +73,14 @@ class Message < ActiveRecord::Base
     end
 
     if self.recipient.pushover_messages?
-      self.recipient.pushover!({
+      self.recipient.pushover!(
         :title => "#{Rails.application.name} message from " <<
           "#{self.author_username}: #{self.subject}",
         :message => self.plaintext_body,
         :url => self.url,
         :url_title => (self.author ? "Reply to #{self.author_username}" :
           "View message"),
-      })
+      )
     end
   end
 

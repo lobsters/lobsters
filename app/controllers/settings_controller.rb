@@ -132,11 +132,11 @@ class SettingsController < ApplicationController
 
     session[:pushover_rand] = SecureRandom.hex
 
-    return redirect_to Pushover.subscription_url({
+    return redirect_to Pushover.subscription_url(
       :success => "#{Rails.application.root_url}settings/pushover_callback?" <<
         "rand=#{session[:pushover_rand]}",
       :failure => "#{Rails.application.root_url}settings/",
-    })
+    )
   end
 
   def pushover_callback

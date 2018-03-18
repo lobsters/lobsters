@@ -54,8 +54,8 @@ class Twitter
   end
 
   def self.token_secret_and_user_from_token_and_verifier(tok, verifier)
-    rt = OAuth::RequestToken.from_hash(self.oauth_consumer, { :oauth_token => tok })
-    at = rt.get_access_token({ :oauth_verifier => verifier })
+    rt = OAuth::RequestToken.from_hash(self.oauth_consumer, :oauth_token => tok)
+    at = rt.get_access_token(:oauth_verifier => verifier)
 
     res = at.get("/1.1/account/verify_credentials.json")
     js = JSON.parse(res.body)

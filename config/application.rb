@@ -68,10 +68,10 @@ class << Rails.application
   end
 
   def root_url
-    Rails.application.routes.url_helpers.root_url({
+    Rails.application.routes.url_helpers.root_url(
       :host => Rails.application.domain,
       :protocol => Rails.application.ssl? ? "https" : "http",
-    })
+    )
   end
 
   # used as mailing list prefix, cannot have spaces

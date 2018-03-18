@@ -118,7 +118,7 @@ describe Story do
     s = Story.make!(:title => "blah", :tags_a => ["tag1", "tag2"])
 
     s.tags_a = ["tag2"]
-    expect(s.tagging_changes).to eq({ "tags" => ["tag1 tag2", "tag2"] })
+    expect(s.tagging_changes).to eq("tags" => ["tag1 tag2", "tag2"])
   end
 
   it "logs moderations properly" do

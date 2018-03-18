@@ -69,7 +69,7 @@ StoriesPaginator.new(StoryRepository.new.hottest).get.first
   res = Twitter.oauth_request(
           "/1.1/statuses/update.json",
           :post,
-          { "status" => status }
+          "status" => status
         )
 
   begin

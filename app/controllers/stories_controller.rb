@@ -144,8 +144,7 @@ class StoriesController < ApplicationController
           "twitter:card" => "summary",
           "twitter:site" => "@lobsters",
           "twitter:title" => @story.title,
-          "twitter:description" => "#{@story.comments_count} comment" <<
-                                   "#{@story.comments_count == 1 ? "" : "s"}",
+          "twitter:description" => "#{@story.comments_count} #{'comment'.pluralize(@story.comments_count)}",
           "twitter:image" => Rails.application.root_url +
                              "apple-touch-icon-144.png",
         }

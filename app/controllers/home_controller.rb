@@ -68,11 +68,11 @@ class HomeController < ApplicationController
 
     @rss_link ||= {
       :title => "RSS 2.0",
-      :href => "/rss#{@user ? "?token=#{@user.rss_token}" : ""}",
+      :href => user_token_link("/rss"),
     }
     @comments_rss_link ||= {
       :title => "Comments - RSS 2.0",
-      :href => "/comments.rss#{@user ? "?token=#{@user.rss_token}" : ""}",
+      :href => user_token_link("/comments.rss"),
     }
 
     @heading = @title = ""
@@ -105,7 +105,7 @@ class HomeController < ApplicationController
 
     @rss_link = {
       :title => "RSS 2.0 - Newest Items",
-      :href => "/newest.rss#{@user ? "?token=#{@user.rss_token}" : ""}",
+      :href => user_token_link("/newest.rss"),
     }
 
     respond_to do |format|
@@ -159,7 +159,7 @@ class HomeController < ApplicationController
     # our content changes every page load, so point at /newest.rss to be stable
     @rss_link = {
       :title => "RSS 2.0 - Newest Items",
-      :href => "/newest.rss#{@user ? "?token=#{@user.rss_token}" : ""}",
+      :href => user_token_link("/newest.rss"),
     }
 
     render :action => "index"
@@ -172,7 +172,7 @@ class HomeController < ApplicationController
 
     @rss_link ||= {
       :title => "RSS 2.0",
-      :href => "/saved.rss#{@user ? "?token=#{@user.rss_token}" : ""}",
+      :href => user_token_link("/saved.rss"),
     }
 
     @heading = @title = "Saved Stories"
@@ -250,7 +250,7 @@ class HomeController < ApplicationController
 
     @rss_link = {
       :title => "RSS 2.0 - Your Upvoted Stories",
-      :href => "/upvoted.rss#{(@user ? "?token=#{@user.rss_token}" : "")}",
+      :href => user_token_link("/upvoted.rss"),
     }
 
     respond_to do |format|
@@ -307,5 +307,9 @@ private
         yield
       end
     end
+  end
+
+  def user_token_link(url)
+    @user ? "#{url}?token=#{user.rss_token}" : url
   end
 end

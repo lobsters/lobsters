@@ -129,7 +129,7 @@ class MessagesController < ApplicationController
       end
     end
 
-    flash[:success] = "Deleted #{deleted} message#{deleted == 1 ? "" : "s"}."
+    flash[:success] = "Deleted #{deleted} #{'message'.pluralize(deleted)}"
 
     @user.update_unread_message_count!
 

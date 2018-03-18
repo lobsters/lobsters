@@ -108,5 +108,7 @@ Style/RegexpLiteral:
   AllowInnerSlashes: true
 Style/StringLiterals:
   Enabled: false
+Style/SymbolArray:
+  EnforcedStyle: brackets
 Style/TrailingCommaInLiteral:
   EnforcedStyleForMultiline: consistent_comma

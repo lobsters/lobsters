@@ -455,7 +455,7 @@ class Comment < ActiveRecord::Base
       else
         o = "#{r_counts[k]} #{Vote::COMMENT_REASONS[k]}"
         if u && u.is_moderator? && self.user_id != u.id
-          o << " (#{r_users[k].join(", ")})"
+          o << " (#{r_users[k].join(', ')})"
         end
         o
       end

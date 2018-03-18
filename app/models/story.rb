@@ -789,7 +789,7 @@ class Story < ActiveRecord::Base
       else
         "#{r_counts[k]} " +
           (Vote::STORY_REASONS[k] || Vote::OLD_STORY_REASONS[k] || k) +
-          (user && user.is_moderator?? " (#{r_whos[k].join(", ")})" : "")
+          (user && user.is_moderator? ? " (#{r_whos[k].join(', ')})" : "")
       end
     }.join(", ")
   end

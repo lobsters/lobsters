@@ -77,7 +77,7 @@ module ApplicationHelper
       if (count = @user.unread_replies_count) > 0
         @right_header_links[replies_unread_path] = {
           :class => ["new_messages"],
-          :title => "Replies (#{count})",
+          :title => 'Reply'.pluralize(count),
         }
       else
         @right_header_links[replies_path] = { :title => "Replies" }
@@ -86,7 +86,7 @@ module ApplicationHelper
       if (count = @user.unread_message_count) > 0
         @right_header_links[messages_path] = {
           :class => ["new_messages"],
-          :title => "#{count} New Message#{count == 1 ? "" : "s"}",
+          :title => 'Message'.pluralize(count),
         }
       else
         @right_header_links[messages_path] = { :title => "Messages" }
@@ -153,19 +153,19 @@ module ApplicationHelper
       ago = "less than a minute ago"
     elsif secs < (60 * 60)
       mins = (secs / 60.0).floor
-      ago = "#{mins} minute#{mins == 1 ? "" : "s"} ago"
+      ago = "#{mins} #{'minute'.pluralize(mins)} ago"
     elsif secs < (60 * 60 * 48)
       hours = (secs / 60.0 / 60.0).floor
-      ago = "#{hours} hour#{hours == 1 ? "" : "s"} ago"
+      ago = "#{hours} #{'hour'.pluralize(hours)} ago"
     elsif secs < (60 * 60 * 24 * 30)
       days = (secs / 60.0 / 60.0 / 24.0).floor
-      ago = "#{days} day#{days == 1 ? "" : "s"} ago"
+      ago = "#{days} #{'day'.pluralize(days)} ago"
     elsif secs < (60 * 60 * 24 * 365)
       months = (secs / 60.0 / 60.0 / 24.0 / 30.0).floor
-      ago = "#{months} month#{months == 1 ? "" : "s"} ago"
+      ago = "#{months} #{'month'.pluralize(months)} ago"
     else
       years = (secs / 60.0 / 60.0 / 24.0 / 365.0).floor
-      ago = "#{years} year#{years == 1 ? "" : "s"} ago"
+      ago = "#{years} #{'year'.pluralize(years)} ago"
     end
 
     span_class = ''

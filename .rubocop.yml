@@ -102,6 +102,8 @@ Style/RedundantReturn:
   Enabled: false
 Style/RedundantSelf:
   Enabled: false
+Style/RescueStandardError:
+  EnforcedStyle: implicit
 Style/RegexpLiteral:
   AllowInnerSlashes: true
 Style/StringLiterals:

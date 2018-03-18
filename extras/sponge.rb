@@ -128,7 +128,7 @@ class Sponge
         retried = true
         retry
       end
-    rescue StandardError => e
+    rescue => e
       raise "couldn't resolve #{uri.host} (#{e.inspect})"
     end
 

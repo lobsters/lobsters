@@ -24,6 +24,8 @@ Layout/ElseAlignment:
   Enabled: false
 Layout/EmptyLinesAroundExceptionHandlingKeywords:
   Enabled: false
+Layout/IndentHash:
+  EnforcedStyle: consistent
 Layout/MultilineMethodCallIndentation:
   Enabled: false
 Layout/SpaceInsideBlockBraces:

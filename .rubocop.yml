@@ -88,14 +88,16 @@ Style/HashSyntax:
   EnforcedStyle: no_mixed_keys
 Style/IfUnlessModifier:
   Enabled: false
+Style/LineEndConcatenation:
+  Enabled: false
 Style/NegatedIf:
   EnforcedStyle: postfix
 Style/RedundantReturn:
   Enabled: false
 Style/RedundantSelf:
   Enabled: false
-Style/LineEndConcatenation:
-  Enabled: false
+Style/RegexpLiteral:
+  AllowInnerSlashes: true
 Style/StringLiterals:
   Enabled: false
 Style/TrailingCommaInLiteral:

@@ -761,11 +761,11 @@ class Story < ApplicationRecord
   end
 
   def url_or_comments_path
-    self.url.blank? ? self.comments_path : self.url
+    self.url.presence || self.comments_path
   end
 
   def url_or_comments_url
-    self.url.blank? ? self.comments_url : self.url
+    self.url.presence || self.comments_url
   end
 
   def vote_summary_for(user)

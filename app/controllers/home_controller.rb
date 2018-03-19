@@ -199,7 +199,7 @@ class HomeController < ApplicationController
       paginate stories.tagged(@tag)
     }
 
-    @heading = @title = @tag.description.blank?? @tag.tag : @tag.description
+    @heading = @title = @tag.description.presence || @tag.tag
     @cur_url = tag_url(@tag.tag)
 
     @rss_link = {

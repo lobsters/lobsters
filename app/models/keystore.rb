@@ -1,7 +1,7 @@
 class Keystore < ApplicationRecord
   self.primary_key = "key"
 
-  validates_presence_of :key
+  validates :key, presence: true
 
   def self.get(key)
     self.find_by(:key => key)

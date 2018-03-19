@@ -109,6 +109,8 @@ Style/ConditionalAssignment:
 Style/Documentation:
   Enabled: false
   Exclude: [db/migrate/**/*, spec/**/*, test/**/*]
+Style/DoubleNegation:
+  Enabled: false
 Style/FrozenStringLiteralComment:
   EnforcedStyle: never
 Style/GuardClause:

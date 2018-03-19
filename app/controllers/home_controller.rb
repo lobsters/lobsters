@@ -294,7 +294,7 @@ private
     StoriesPaginator.new(scope, page, @user).get
   end
 
-  def get_from_cache(opts={}, &block)
+  def get_from_cache(opts = {}, &block)
     if Rails.env.development? || @user || tags_filtered_by_cookie.any?
       yield
     else

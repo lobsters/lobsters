@@ -30,6 +30,8 @@ Layout/EmptyLinesAroundExceptionHandlingKeywords:
   Enabled: false
 Layout/IndentHash:
   EnforcedStyle: consistent
+Layout/MultilineMethodCallBraceLayout:
+  Enabled: false
 Layout/MultilineMethodCallIndentation:
   Enabled: false
 Layout/SpaceAroundOperators:

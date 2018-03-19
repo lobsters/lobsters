@@ -8,14 +8,13 @@ describe Story do
   end
 
   it "requires a url or a description" do
-    expect { Story.make!(:title => "hello", :url => "",
-      :description => "") }.to raise_error
+    expect { Story.make!(:title => "hello", :url => "", :description => "") }.to raise_error
 
-    expect { Story.make!(:title => "hello", :description => "hi", :url => nil)
-      }.to_not raise_error
+    expect { Story.make!(:title => "hello", :description => "hi", :url => nil) }.to_not raise_error
 
-    expect { Story.make!(:title => "hello", :url => "http://ex.com/",
-      :description => nil) }.to_not raise_error
+    expect {
+      Story.make!(:title => "hello", :url => "http://ex.com/", :description => nil)
+    }.to_not raise_error
   end
 
   it "does not allow too-short titles" do
@@ -36,11 +35,13 @@ describe Story do
   end
 
   it "checks for invalid urls" do
-    expect { Story.make!(:title => "test", :url => "http://gooses.com/")
-      }.to_not raise_error
+    expect {
+      Story.make!(:title => "test", :url => "http://gooses.com/")
+    }.to_not raise_error
 
-    expect { Story.make!(:title => "test", url => "ftp://gooses/")
-      }.to raise_error
+    expect {
+      Story.make!(:title => "test", url => "ftp://gooses/")
+    }.to raise_error
   end
 
   it "checks for a previously posted story with same url" do
@@ -49,13 +50,15 @@ describe Story do
     Story.make!(:title => "flim flam", :url => "http://example.com/")
     expect(Story.count).to eq(1)
 
-    expect { Story.make!(:title => "flim flam 2",
-      :url => "http://example.com/") }.to raise_error
+    expect {
+      Story.make!(:title => "flim flam 2", :url => "http://example.com/")
+    }.to raise_error
 
     expect(Story.count).to eq(1)
 
-    expect { Story.make!(:title => "flim flam 2",
-      :url => "http://www.example.com/") }.to raise_error
+    expect {
+      Story.make!(:title => "flim flam 2", :url => "http://www.example.com/")
+    }.to raise_error
 
     expect(Story.count).to eq(1)
   end

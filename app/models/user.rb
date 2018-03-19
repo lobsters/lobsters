@@ -84,10 +84,12 @@ class User < ApplicationRecord
   end
 
   scope :active, -> { where(:banned_at => nil, :deleted_at => nil) }
-  scope :moderators, -> { where('
+  scope :moderators, -> {
+    where('
       is_moderator = True OR
       users.id IN (select distinct moderator_user_id from moderations)
-  ') }
+    ')
+  }
 
   before_save :check_session_token
   before_validation :on => :create do

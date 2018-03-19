@@ -771,7 +771,7 @@ class Story < ApplicationRecord
   def vote_summary_for(user)
     r_counts = {}
     r_whos = {}
-    Vote.where(:story_id => self.id, :comment_id => nil).where("vote != 0").each do |v|
+    Vote.where(:story_id => self.id, :comment_id => nil).where("vote != 0").find_each do |v|
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += v.vote
       if user && user.is_moderator?

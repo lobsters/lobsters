@@ -26,7 +26,7 @@ class Vote < ApplicationRecord
     votes = {}
 
     Vote.where(:user_id => user, :story_id => stories,
-    :comment_id => nil).each do |v|
+    :comment_id => nil).find_each do |v|
       votes[v.story_id] = { :vote => v.vote, :reason => v.reason }
     end
 
@@ -40,7 +40,7 @@ class Vote < ApplicationRecord
       :user_id => user_id, :story_id => story_id
     ).where(
       "comment_id IS NOT NULL"
-    ).each do |v|
+    ).find_each do |v|
       votes[v.comment_id] = { :vote => v.vote, :reason => v.reason }
     end
 

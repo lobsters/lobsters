@@ -116,7 +116,7 @@ class User < ApplicationRecord
   MIN_STORIES_CHECK_SELF_PROMOTION = 2
 
   def self.recalculate_all_karmas!
-    User.all.each do |u|
+    User.all.find_each do |u|
       u.karma = u.stories.map(&:score).sum + u.comments.map(&:score).sum
       u.save!
     end
@@ -310,7 +310,7 @@ class User < ApplicationRecord
     User.transaction do
       self.comments
         .where("upvotes - downvotes < 0")
-        .each {|c| c.delete_for_user(self) }
+        .find_each {|c| c.delete_for_user(self) }
 
       self.sent_messages.each do |m|
         m.deleted_by_author = true

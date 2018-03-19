@@ -108,6 +108,8 @@ Style/NegatedIf:
   EnforcedStyle: postfix
 Style/NumericPredicate:
   Enabled: false
+Style/RaiseArgs:
+  EnforcedStyle: compact
 Style/RedundantReturn:
   Enabled: false
 Style/RedundantSelf:

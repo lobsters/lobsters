@@ -125,6 +125,8 @@ Style/NumericPredicate:
   Enabled: false
 Style/RaiseArgs:
   EnforcedStyle: compact
+Style/RedundantBegin:
+  Enabled: false
 Style/RedundantReturn:
   Enabled: false
 Style/RedundantSelf:

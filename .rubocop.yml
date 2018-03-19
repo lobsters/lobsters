@@ -75,6 +75,8 @@ Rails/FilePath:
   Enabled: false
 Rails/OutputSafety:
   Enabled: false
+Rails/SkipsModelValidations:
+  Enabled: false
 
 # Security
 

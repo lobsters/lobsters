@@ -287,18 +287,6 @@ class CommentsController < ApplicationController
         end
       end
     end
-
-    # trim each thread to this user's first response
-    # XXX: busted
-    #@threads.each do |th|
-    #  th.each do |c|
-    #    if c.user_id == @user.id
-    #      break
-    #    else
-    #      th.shift
-    #    end
-    #  end
-    #end
   end
 
 private

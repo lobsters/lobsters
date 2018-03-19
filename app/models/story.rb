@@ -1,4 +1,4 @@
-class Story < ActiveRecord::Base
+class Story < ApplicationRecord
   belongs_to :user
   belongs_to :merged_into_story,
              :class_name => "Story",

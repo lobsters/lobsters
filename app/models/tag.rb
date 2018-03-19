@@ -1,4 +1,4 @@
-class Tag < ActiveRecord::Base
+class Tag < ApplicationRecord
   has_many :taggings, :dependent => :delete_all
   has_many :stories, :through => :taggings
 

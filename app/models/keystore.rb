@@ -1,4 +1,4 @@
-class Keystore < ActiveRecord::Base
+class Keystore < ApplicationRecord
   self.primary_key = "key"
 
   validates_presence_of :key

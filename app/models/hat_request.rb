@@ -1,4 +1,4 @@
-class HatRequest < ActiveRecord::Base
+class HatRequest < ApplicationRecord
   belongs_to :user
 
   validates :user, :presence => true

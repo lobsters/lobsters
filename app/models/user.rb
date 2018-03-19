@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   has_many :stories,
            -> { includes :user }
   has_many :comments

@@ -1,4 +1,4 @@
-class SavedStory < ActiveRecord::Base
+class SavedStory < ApplicationRecord
   belongs_to :user
   belongs_to :story
 

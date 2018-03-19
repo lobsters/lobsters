@@ -9,9 +9,9 @@ class EmailParser
     @email = nil
 
     begin
-    Utils.silence_stream(STDERR) do
-      @email = Mail.read_from_string(email_text)
-    end
+      Utils.silence_stream(STDERR) do
+        @email = Mail.read_from_string(email_text)
+      end
     rescue
     end
 

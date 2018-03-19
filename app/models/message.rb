@@ -8,12 +8,12 @@ class Message < ApplicationRecord
              :foreign_key => "author_user_id",
              :inverse_of => :sent_messages
 
-  validates_presence_of :recipient
+  validates :recipient, presence: true
 
   attr_reader :recipient_username
 
-  validates_length_of :subject, :in => 1..100
-  validates_length_of :body, :maximum => (64 * 1024)
+  validates :subject, length: { :in => 1..100 }
+  validates :body, length: { :maximum => (64 * 1024) }
 
   scope :unread, -> { where(:has_been_read => false, :deleted_by_recipient => false) }
 

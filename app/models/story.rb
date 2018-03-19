@@ -25,10 +25,10 @@ class Story < ApplicationRecord
 
   scope :unmerged, -> { where(:merged_story_id => nil) }
 
-  validates_length_of :title, :in => 3..150
-  validates_length_of :description, :maximum => (64 * 1024)
-  validates_length_of :url, :maximum => 250, :allow_nil => true
-  validates_presence_of :user_id
+  validates :title, length: { :in => 3..150 }
+  validates :description, length: { :maximum => (64 * 1024) }
+  validates :url, length: { :maximum => 250, :allow_nil => true }
+  validates :user_id, presence: true
 
   validates_each :merged_story_id do |record, _attr, value|
     if value.to_i == record.id

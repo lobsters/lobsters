@@ -7,7 +7,7 @@ class Search
   attr_accessor :q, :order
   attr_accessor :results, :page, :total_results, :per_page
 
-  validates_length_of :q, :minimum => 2
+  validates :q, length: { :minimum => 2 }
 
   def initialize
     @q = ""

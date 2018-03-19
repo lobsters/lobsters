@@ -183,10 +183,8 @@ class HomeController < ApplicationController
       format.rss {
         if @user
           @title = "Private feed of saved stories for #{@user.username}"
-          render :action => "rss", :layout => false
-        else
-          render :action => "rss", :layout => false
         end
+        render :action => "rss", :layout => false
       }
       format.json { render :json => @stories }
     end

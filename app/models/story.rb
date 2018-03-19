@@ -94,8 +94,9 @@ class Story < ApplicationRecord
     return unless self.url.present? && self.new_record?
 
     self.already_posted_story = Story.find_similar_by_url(self.url)
+    return unless self.already_posted_story
 
-    if self.already_posted_story&.is_recent?
+    if self.already_posted_story.is_recent?
       errors.add(:url, "has already been submitted within the past " <<
         "#{RECENT_DAYS} days")
     end

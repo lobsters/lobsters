@@ -7,13 +7,16 @@ class Story < ApplicationRecord
   has_many :merged_stories,
            :class_name => "Story",
            :foreign_key => "merged_story_id",
-           :inverse_of => :merged_into_story
+           :inverse_of => :merged_into_story,
+           :dependent => :nullify
   has_many :taggings,
-           :autosave => true
-  has_many :suggested_taggings
-  has_many :suggested_titles
+           :autosave => true,
+           :dependent => :destroy
+  has_many :suggested_taggings, :dependent => :destroy
+  has_many :suggested_titles, :dependent => :destroy
   has_many :comments,
-           :inverse_of => :story
+           :inverse_of => :story,
+           :dependent => :destroy
   has_many :tags, :through => :taggings
   has_many :votes, -> { where(:comment_id => nil) }, :inverse_of => :story
   has_many :voters, -> { where('votes.comment_id' => nil) },

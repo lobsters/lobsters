@@ -89,6 +89,8 @@ Rails/SkipsModelValidations:
 # Style
 Style/BlockDelimiters:
   Enabled: false
+Style/ClassVars:
+  Enabled: false
 Style/ConditionalAssignment:
   Enabled: false
 # It would be nice to have this on, but I'm not up for writing 66 of these in

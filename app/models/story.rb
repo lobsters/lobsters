@@ -561,7 +561,6 @@ class Story < ApplicationRecord
     end
   end
 
-  @_tags_a = []
   def tags_a
     @_tags_a ||= self.taggings.reject(&:marked_for_destruction?).map {|t| t.tag.tag }
   end

@@ -123,6 +123,8 @@ Style/NegatedIf:
   EnforcedStyle: postfix
 Style/NumericPredicate:
   Enabled: false
+Style/PerlBackrefs:
+  Enabled: false
 Style/RaiseArgs:
   EnforcedStyle: compact
 Style/RedundantBegin:

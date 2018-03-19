@@ -6,6 +6,7 @@ AllCops:
     - '**/Rakefile'
     - '**/config.ru'
   Exclude:
+    - Gemfile
     - 'bin/**/*'
     - 'db/**/*'
 

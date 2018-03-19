@@ -57,7 +57,7 @@ module ApplicationHelper
 
     @header_links[search_path] = { :title => "Search" }
 
-    @header_links.each do |k,v|
+    @header_links.each do |k, v|
       v[:class] ||= []
 
       if k == @cur_url
@@ -97,7 +97,7 @@ module ApplicationHelper
       @right_header_links[login_path] = { :title => "Login" }
     end
 
-    @right_header_links.each do |k,v|
+    @right_header_links.each do |k, v|
       v[:class] ||= []
 
       if k == @cur_url

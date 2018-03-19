@@ -484,7 +484,7 @@ class Story < ApplicationRecord
     elsif all_changes["is_expired"] && !self.is_expired?
       m.action = "undeleted story"
     else
-      m.action = all_changes.map {|k,v|
+      m.action = all_changes.map {|k, v|
         if k == "merged_story_id"
           if v[1]
             "merged into #{self.merged_into_story.short_id} " <<
@@ -625,7 +625,7 @@ class Story < ApplicationRecord
     end
 
     final_tags = []
-    tag_votes.each do |k,v|
+    tag_votes.each do |k, v|
       if v >= SUGGESTION_QUORUM
         final_tags.push k
       end

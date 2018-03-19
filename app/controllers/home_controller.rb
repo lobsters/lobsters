@@ -298,7 +298,7 @@ private
     if Rails.env.development? || @user || tags_filtered_by_cookie.any?
       yield
     else
-      key = opts.merge(page: page).sort.map {|k,v| "#{k}=#{v.to_param}"
+      key = opts.merge(page: page).sort.map {|k, v| "#{k}=#{v.to_param}"
         }.join(" ")
       begin
         Rails.cache.fetch("stories #{key}", :expires_in => 45, &block)

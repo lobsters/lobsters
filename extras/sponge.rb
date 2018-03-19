@@ -115,7 +115,7 @@ class Sponge
         end
 
         # reject ipv6 addresses
-        ips.reject! {|ip| ip.match(/:/) }
+        ips.reject! {|address| address.match(/:/) }
 
         # pick a random one
         tip = ips[rand(ips.length)]

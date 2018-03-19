@@ -144,7 +144,8 @@ class StoriesController < ApplicationController
           "twitter:card" => "summary",
           "twitter:site" => "@lobsters",
           "twitter:title" => @story.title,
-          "twitter:description" => "#{@story.comments_count} #{'comment'.pluralize(@story.comments_count)}",
+          "twitter:description" => @story.comments_count + " " +
+                                   'comment'.pluralize(@story.comments_count),
           "twitter:image" => Rails.application.root_url +
                              "apple-touch-icon-144.png",
         }
@@ -169,8 +170,8 @@ class StoriesController < ApplicationController
       return redirect_to @story.comments_path
     end
 
-    if (st = @story.suggested_taggings.where(:user_id => @user.id)).any?
-      @story.tags_a = st.map {|st| st.tag.tag }
+    if (suggested_tags = @story.suggested_taggings.where(:user_id => @user.id)).any?
+      @story.tags_a = suggested_tags.map {|st| st.tag.tag }
     end
     if (tt = @story.suggested_titles.where(:user_id => @user.id).first)
       @story.title = tt.title

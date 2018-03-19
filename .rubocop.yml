@@ -30,6 +30,8 @@ Layout/IndentHash:
   EnforcedStyle: consistent
 Layout/MultilineMethodCallIndentation:
   Enabled: false
+Layout/SpaceAroundOperators:
+  Enabled: false
 Layout/SpaceInsideBlockBraces:
   EnforcedStyle: space
   SpaceBeforeBlockParameters: false

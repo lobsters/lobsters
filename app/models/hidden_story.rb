@@ -1,4 +1,4 @@
-class HiddenStory < ActiveRecord::Base
+class HiddenStory < ApplicationRecord
   belongs_to :user
   belongs_to :story
 

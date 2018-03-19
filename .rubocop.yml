@@ -106,6 +106,8 @@ Style/RescueStandardError:
   EnforcedStyle: implicit
 Style/RegexpLiteral:
   AllowInnerSlashes: true
+Style/SafeNavigation:
+  Enabled: false
 Style/StringLiterals:
   Enabled: false
 Style/SymbolArray:

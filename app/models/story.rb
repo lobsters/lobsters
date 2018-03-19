@@ -250,7 +250,7 @@ class Story < ActiveRecord::Base
     end
 
     return -((order * sign) + base +
-      ((self.created_at || Time.now).to_f / HOTNESS_WINDOW)).round(7)
+      ((self.created_at || Time.current).to_f / HOTNESS_WINDOW)).round(7)
   end
 
   def can_be_seen_by_user?(user)
@@ -398,7 +398,7 @@ class Story < ActiveRecord::Base
 
   def is_downvotable?
     if self.created_at && self.score >= DOWNVOTABLE_MIN_SCORE
-      Time.now - self.created_at <= DOWNVOTABLE_DAYS.days
+      Time.current - self.created_at <= DOWNVOTABLE_DAYS.days
     else
       false
     end
@@ -411,7 +411,7 @@ class Story < ActiveRecord::Base
       if self.is_moderated?
         return false
       else
-        return (Time.now.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
+        return (Time.current.to_i - self.created_at.to_i < (60 * MAX_EDIT_MINS))
       end
     else
       return false
@@ -439,7 +439,7 @@ class Story < ActiveRecord::Base
   end
 
   def is_unavailable=(what)
-    self.unavailable_at = (what.to_i == 1 && !self.is_unavailable ? Time.now : nil)
+    self.unavailable_at = (what.to_i == 1 && !self.is_unavailable ? Time.current : nil)
   end
 
   def is_undeletable_by_user?(user)
@@ -713,7 +713,7 @@ class Story < ActiveRecord::Base
 
   def update_availability
     if self.is_unavailable && !self.unavailable_at
-      self.unavailable_at = Time.now
+      self.unavailable_at = Time.current
     elsif self.unavailable_at && !self.is_unavailable
       self.unavailable_at = nil
     end

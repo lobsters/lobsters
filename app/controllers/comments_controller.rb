@@ -36,7 +36,7 @@ class CommentsController < ApplicationController
        (pc = Comment.where(:story_id => story.id,
                            :user_id => @user.id,
                            :parent_comment_id => comment.parent_comment_id).first)
-      if (Time.now - pc.created_at) < 5.minutes && !@user.is_moderator?
+      if (Time.current - pc.created_at) < 5.minutes && !@user.is_moderator?
         comment.errors.add(:comment, "^You have already posted a comment " <<
           "here recently.")
 

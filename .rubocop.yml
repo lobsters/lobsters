@@ -80,6 +80,10 @@ Naming/VariableName:
   Enabled: false
 
 # Performance
+Performance/Casecmp:
+  Enabled: false
+Performance/HashEachMethods:
+  Enabled: false
 Performance/RedundantMatch:
   Enabled: false
 

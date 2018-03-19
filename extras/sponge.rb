@@ -159,7 +159,7 @@ class Sponge
     if uri.query
       path += "?" + uri.query
     elsif method == :get && raw_post_data
-      path += "?" + URI.encode(raw_post_data)
+      path += "?" + URI.encode_www_form(raw_post_data)
       send_headers["Content-type"] = "application/x-www-form-urlencoded"
     end
 

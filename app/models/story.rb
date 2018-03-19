@@ -550,8 +550,7 @@ class Story < ApplicationRecord
   end
 
   def tagging_changes
-    old_tags_a = self.taggings.reject(&:new_record?).map {|tg|
-      tg.tag.tag }.join(" ")
+    old_tags_a = self.taggings.reject(&:new_record?).map {|tg| tg.tag.tag }.join(" ")
     new_tags_a = self.taggings.reject(&:marked_for_destruction?).map {|tg| tg.tag.tag }.join(" ")
 
     if old_tags_a == new_tags_a
@@ -742,8 +741,7 @@ class Story < ApplicationRecord
     # strip out stupid google analytics parameters
     if u && (m = u.match(/\A([^\?]+)\?(.+)\z/))
       params = m[2].split("&")
-      params.reject! {|p|
-        p.match(/^utm_(source|medium|campaign|term|content)=/) }
+      params.reject! {|p| p.match(/^utm_(source|medium|campaign|term|content)=/) }
 
       u = m[1] << (params.any?? "?" << params.join("&") : "")
     end

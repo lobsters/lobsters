@@ -168,7 +168,7 @@ class User < ActiveRecord::Base
 
   def disable_invite_by_user_for_reason!(disabler, reason)
     User.transaction do
-      self.disabled_invite_at = Time.now
+      self.disabled_invite_at = Time.current
       self.disabled_invite_by_user_id = disabler.id
       self.disabled_invite_reason = reason
       self.save!
@@ -198,7 +198,7 @@ class User < ActiveRecord::Base
 
   def ban_by_user_for_reason!(banner, reason)
     User.transaction do
-      self.banned_at = Time.now
+      self.banned_at = Time.current
       self.banned_by_user_id = banner.id
       self.banned_reason = reason
 
@@ -320,7 +320,7 @@ class User < ActiveRecord::Base
       self.session_token = nil
       self.check_session_token
 
-      self.deleted_at = Time.now
+      self.deleted_at = Time.current
       self.save!
     end
   end
@@ -374,7 +374,7 @@ class User < ActiveRecord::Base
   end
 
   def initiate_password_reset_for_ip(ip)
-    self.password_reset_token = "#{Time.now.to_i}-#{Utils.random_str(30)}"
+    self.password_reset_token = "#{Time.current.to_i}-#{Utils.random_str(30)}"
     self.save!
 
     PasswordReset.password_reset_link(self, ip).deliver_now
@@ -393,7 +393,7 @@ class User < ActiveRecord::Base
   end
 
   def is_new?
-    Time.now - self.created_at <= NEW_USER_DAYS.days
+    Time.current - self.created_at <= NEW_USER_DAYS.days
   end
 
   def is_heavy_self_promoter?

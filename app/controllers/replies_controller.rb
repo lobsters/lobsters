@@ -68,6 +68,6 @@ private
     story_ids = @replies.pluck(:story_id).uniq
     ReadRibbon
       .where(user_id: @user.id, story_id: story_ids)
-      .update_all(updated_at: Time.now)
+      .update_all(updated_at: Time.current)
   end
 end

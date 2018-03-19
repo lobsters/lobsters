@@ -14,7 +14,7 @@ class Hat < ActiveRecord::Base
     m.action = "Doffed hat \"#{self.hat}\": #{reason}"
     m.save!
 
-    self.doffed_at = Time.now
+    self.doffed_at = Time.current
     self.save!
   end
 

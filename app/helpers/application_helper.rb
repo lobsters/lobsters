@@ -146,7 +146,7 @@ module ApplicationHelper
 
   def time_ago_in_words_label(time, options = {})
     ago = ""
-    secs = (Time.now - time).to_i
+    secs = (Time.current - time).to_i
     if secs <= 5
       ago = "just now"
     elsif secs < 60

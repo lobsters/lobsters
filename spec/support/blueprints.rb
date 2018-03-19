@@ -12,7 +12,7 @@ User.blueprint(:banned) do
   password { "blah blah" }
   password_confirmation { object.password }
   username { "username#{sn}" }
-  banned_at { Time.now }
+  banned_at { Time.current }
 end
 
 Tag.blueprint do

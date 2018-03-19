@@ -73,6 +73,8 @@ Rails/Blank:
   Enabled: false
 Rails/FilePath:
   Enabled: false
+Rails/OutputSafety:
+  Enabled: false
 
 # Security
 

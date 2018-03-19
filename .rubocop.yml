@@ -18,6 +18,8 @@ AllCops:
 # Layout
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
+Layout/AlignArray:
+  Enabled: false
 Layout/AlignHash:
   Enabled: false
 Layout/CaseIndentation:

@@ -105,6 +105,8 @@ Rails/SkipsModelValidations:
 # Style
 Style/BlockDelimiters:
   Enabled: false
+Style/CommentedKeyword:
+  Enabled: false
 Style/ClassVars:
   Enabled: false
 Style/ConditionalAssignment:
@@ -116,6 +118,10 @@ Style/Documentation:
   Exclude: [db/migrate/**/*, spec/**/*, test/**/*]
 Style/DoubleNegation:
   Enabled: false
+Style/EachWithObject:
+  Enabled: false
+Style/FormatString:
+  Enabled: false
 Style/FrozenStringLiteralComment:
   EnforcedStyle: never
 Style/GuardClause:
@@ -124,11 +130,31 @@ Style/HashSyntax:
   EnforcedStyle: no_mixed_keys
 Style/IfUnlessModifier:
   Enabled: false
+Style/InverseMethods:
+  Enabled: false
+Style/Lambda:
+  Enabled: false
 Style/LineEndConcatenation:
+  Enabled: false
+Style/MethodDefParentheses:
+  Enabled: false
+Style/MultilineBlockChain:
+  Enabled: false
+Style/MultilineTernaryOperator:
   Enabled: false
 Style/NegatedIf:
   EnforcedStyle: postfix
+Style/NegatedWhile:
+  Enabled: false
+Style/Next:
+  Enabled: false
+Style/NonNilCheck:
+  Enabled: false
 Style/NumericPredicate:
+  Enabled: false
+Style/ParallelAssignment:
+  Enabled: false
+Style/PercentLiteralDelimiters:
   Enabled: false
 Style/PerlBackrefs:
   Enabled: false
@@ -136,15 +162,21 @@ Style/RaiseArgs:
   EnforcedStyle: compact
 Style/RedundantBegin:
   Enabled: false
+Style/RedundantParentheses:
+  Enabled: false
 Style/RedundantReturn:
   Enabled: false
 Style/RedundantSelf:
+  Enabled: false
+Style/RescueModifier:
   Enabled: false
 Style/RescueStandardError:
   EnforcedStyle: implicit
 Style/RegexpLiteral:
   AllowInnerSlashes: true
 Style/SafeNavigation:
+  Enabled: false
+Style/SignalException:
   Enabled: false
 Style/StringLiterals:
   Enabled: false
@@ -154,3 +186,11 @@ Style/TrailingCommaInArguments:
   Enabled: false
 Style/TrailingCommaInLiteral:
   EnforcedStyleForMultiline: consistent_comma
+Style/WhileUntilDo:
+  Enabled: false
+Style/WhileUntilModifier:
+  Enabled: false
+Style/WordArray:
+  Enabled: false
+Style/ZeroLengthPredicate:
+  Enabled: false

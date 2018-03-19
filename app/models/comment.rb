@@ -282,8 +282,7 @@ class Comment < ApplicationRecord
     Comment.connection.execute("UPDATE #{Comment.table_name} SET " <<
       "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " <<
       "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " <<
-      "confidence = '#{self.calculated_confidence}' WHERE id = " <<
-      "#{self.id.to_i}")
+      "confidence = '#{self.calculated_confidence}' WHERE id = #{self.id}")
 
     self.story.recalculate_hotness!
   end

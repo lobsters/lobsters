@@ -1,13 +1,14 @@
 class User < ApplicationRecord
-  has_many :stories,
-           -> { includes :user }
-  has_many :comments
+  has_many :stories, -> { includes :user }, :inverse_of => :user
+  has_many :comments, :inverse_of => :user
   has_many :sent_messages,
            :class_name => "Message",
-           :foreign_key => "author_user_id"
+           :foreign_key => "author_user_id",
+           :inverse_of => :author
   has_many :received_messages,
            :class_name => "Message",
-           :foreign_key => "recipient_user_id"
+           :foreign_key => "recipient_user_id",
+           :inverse_of => :recipient
   has_many :tag_filters
   has_many :tag_filter_tags,
            :class_name => "Tag",
@@ -15,11 +16,14 @@ class User < ApplicationRecord
            :source => :tag,
            :dependent => :delete_all
   belongs_to :invited_by_user,
-             :class_name => "User"
+             :class_name => "User",
+             :inverse_of => false
   belongs_to :banned_by_user,
-             :class_name => "User"
+             :class_name => "User",
+             :inverse_of => false
   belongs_to :disabled_invite_by_user,
-             :class_name => "User"
+             :class_name => "User",
+             :inverse_of => false
   has_many :invitations
   has_many :moderations, :inverse_of => :moderator
   has_many :votes
@@ -31,7 +35,9 @@ class User < ApplicationRecord
            :through => :votes,
     :source => :story
   has_many :hats
-  has_many :wearable_hats, -> { where('doffed_at is null') }, :class_name => "Hat"
+  has_many :wearable_hats, -> { where('doffed_at is null') },
+           :class_name => "Hat",
+           :inverse_of => :user
 
   has_secure_password
 

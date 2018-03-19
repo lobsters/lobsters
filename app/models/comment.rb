@@ -5,9 +5,11 @@ class Comment < ApplicationRecord
   has_many :votes,
            :dependent => :delete_all
   belongs_to :parent_comment,
-             :class_name => "Comment"
+             :class_name => "Comment",
+             :inverse_of => false
   has_one :moderation,
-          :class_name => "Moderation"
+          :class_name => "Moderation",
+          :inverse_of => :comment
   belongs_to :hat
 
   attr_accessor :current_vote, :previewing, :indent_level

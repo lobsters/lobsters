@@ -2,10 +2,12 @@ class Story < ApplicationRecord
   belongs_to :user
   belongs_to :merged_into_story,
              :class_name => "Story",
-             :foreign_key => "merged_story_id"
+             :foreign_key => "merged_story_id",
+             :inverse_of => :merged_stories
   has_many :merged_stories,
            :class_name => "Story",
-           :foreign_key => "merged_story_id"
+           :foreign_key => "merged_story_id",
+           :inverse_of => :merged_into_story
   has_many :taggings,
            :autosave => true
   has_many :suggested_taggings
@@ -13,7 +15,7 @@ class Story < ApplicationRecord
   has_many :comments,
            :inverse_of => :story
   has_many :tags, :through => :taggings
-  has_many :votes, -> { where(:comment_id => nil) }
+  has_many :votes, -> { where(:comment_id => nil) }, :inverse_of => :story
   has_many :voters, -> { where('votes.comment_id' => nil) },
            :through => :votes,
            :source => :user

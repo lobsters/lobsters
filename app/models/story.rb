@@ -131,7 +131,7 @@ class Story < ApplicationRecord
     # trailing slash
     urls.each do |u|
       urls2.push u.gsub(/\/+\z/, "")
-      urls2.push (u + "/")
+      urls2.push u + "/"
     end
     urls = urls2.clone
 

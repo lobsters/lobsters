@@ -1,15 +1,19 @@
 class User < ApplicationRecord
   has_many :stories, -> { includes :user }, :inverse_of => :user
-  has_many :comments, :inverse_of => :user
+  has_many :comments,
+           :inverse_of => :user,
+           :dependent => :restrict_with_exception
   has_many :sent_messages,
            :class_name => "Message",
            :foreign_key => "author_user_id",
-           :inverse_of => :author
+           :inverse_of => :author,
+           :dependent => :restrict_with_exception
   has_many :received_messages,
            :class_name => "Message",
            :foreign_key => "recipient_user_id",
-           :inverse_of => :recipient
-  has_many :tag_filters
+           :inverse_of => :recipient,
+           :dependent => :restrict_with_exception
+  has_many :tag_filters, :dependent => :destroy
   has_many :tag_filter_tags,
            :class_name => "Tag",
            :through => :tag_filters,
@@ -24,9 +28,11 @@ class User < ApplicationRecord
   belongs_to :disabled_invite_by_user,
              :class_name => "User",
              :inverse_of => false
-  has_many :invitations
-  has_many :moderations, :inverse_of => :moderator
-  has_many :votes
+  has_many :invitations, :dependent => :destroy
+  has_many :moderations,
+           :inverse_of => :moderator,
+           :dependent => :restrict_with_exception
+  has_many :votes, :dependent => :destroy
   has_many :voted_stories, -> { where('votes.comment_id' => nil) },
            :through => :votes,
            :source => :story
@@ -34,7 +40,7 @@ class User < ApplicationRecord
            -> { where('votes.comment_id' => nil, 'votes.vote' => 1) },
            :through => :votes,
     :source => :story
-  has_many :hats
+  has_many :hats, :dependent => :destroy
   has_many :wearable_hats, -> { where('doffed_at is null') },
            :class_name => "Hat",
            :inverse_of => :user

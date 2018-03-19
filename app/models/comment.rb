@@ -9,7 +9,8 @@ class Comment < ApplicationRecord
              :inverse_of => false
   has_one :moderation,
           :class_name => "Moderation",
-          :inverse_of => :comment
+          :inverse_of => :comment,
+          :dependent => :destroy
   belongs_to :hat
 
   attr_accessor :current_vote, :previewing, :indent_level

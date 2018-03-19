@@ -75,6 +75,9 @@ Naming/AccessorMethodName:
   Enabled: false
 Naming/PredicateName:
   Enabled: false
+# disabled until class vaiables in extras become constants
+Naming/VariableName:
+  Enabled: false
 
 # Performance
 Performance/RedundantMatch:

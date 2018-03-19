@@ -69,6 +69,8 @@ Naming/PredicateName:
 # Performance
 
 # Rails
+Rails/Blank:
+  Enabled: false
 Rails/FilePath:
   Enabled: false
 

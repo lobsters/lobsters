@@ -71,6 +71,8 @@ Metrics/PerceivedComplexity:
   Enabled: false
 
 # Naming
+Naming/AccessorMethodName:
+  Enabled: false
 Naming/PredicateName:
   Enabled: false
 

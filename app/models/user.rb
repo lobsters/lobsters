@@ -77,7 +77,7 @@ class User < ApplicationRecord
             :format => { :with => /\A#{VALID_USERNAME}\z/ },
             :uniqueness => { :case_sensitive => false }
 
-  validates_each :username do |record,attr,value|
+  validates_each :username do |record, attr, value|
     if BANNED_USERNAMES.include?(value.to_s.downcase)
       record.errors.add(attr, "is not permitted")
     end

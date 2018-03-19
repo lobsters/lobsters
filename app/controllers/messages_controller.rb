@@ -108,7 +108,7 @@ class MessagesController < ApplicationController
   def batch_delete
     deleted = 0
 
-    params.each do |k,v|
+    params.each do |k, v|
       if (v.to_s == "1") && (m = k.match(/^delete_(.+)$/))
         if (message = Message.where(:short_id => m[1]).first)
           ok = false

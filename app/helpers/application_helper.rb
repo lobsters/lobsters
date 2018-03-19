@@ -116,13 +116,13 @@ module ApplicationHelper
     pages = (cur - (MAX_PAGES / 2) + 1 .. cur + (MAX_PAGES / 2) - 1).to_a
 
     while pages[0] < 1
-      pages.push (pages.last + 1)
+      pages.push pages.last + 1
       pages.shift
     end
 
     while pages.last > max
       if pages[0] > 1
-        pages.unshift (pages[0] - 1)
+        pages.unshift pages[0] - 1
       end
       pages.pop
     end

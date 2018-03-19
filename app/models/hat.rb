@@ -1,6 +1,6 @@
 class Hat < ApplicationRecord
   belongs_to :user
-  belongs_to :granted_by_user, :class_name => "User"
+  belongs_to :granted_by_user, :class_name => "User", :inverse_of => false
 
   validates :user, :hat, :presence => true
   validates :granted_by_user, :presence => true

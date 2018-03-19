@@ -1,5 +1,8 @@
 class Moderation < ApplicationRecord
-  belongs_to :moderator, :class_name => "User", :foreign_key => "moderator_user_id"
+  belongs_to :moderator,
+             :class_name => "User",
+             :foreign_key => "moderator_user_id",
+             :inverse_of => moderations
   belongs_to :story
   belongs_to :comment
   belongs_to :user

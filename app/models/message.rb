@@ -1,10 +1,12 @@
 class Message < ApplicationRecord
   belongs_to :recipient,
              :class_name => "User",
-             :foreign_key => "recipient_user_id"
+             :foreign_key => "recipient_user_id",
+             :inverse_of => :received_messages
   belongs_to :author,
              :class_name => "User",
-             :foreign_key => "author_user_id"
+             :foreign_key => "author_user_id",
+             :inverse_of => :sent_messages
 
   validates_presence_of :recipient
 

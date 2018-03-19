@@ -293,8 +293,7 @@ class Story < ApplicationRecord
       end
     end
 
-    if !self.taggings.reject {|t| t.marked_for_destruction? || t.tag.is_media?
-    }.any?
+    if self.taggings.reject {|t| t.marked_for_destruction? || t.tag.is_media? }.empty?
       errors.add(:base, "Must have at least one non-media (PDF, video) " <<
         "tag.  If no tags apply to your content, it probably doesn't " <<
         "belong here.")

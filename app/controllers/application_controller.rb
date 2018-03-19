@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
       traffic -= (100.0 * (now_i - date_kv.value) * TRAFFIC_DECREMENTER).to_i
 
       # clamp to 100, 1000
-      traffic = [[100, traffic].max, 10000].min
+      traffic = [[100, traffic].max, 10_000].min
 
       @traffic = traffic * 0.01
 

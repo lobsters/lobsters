@@ -111,7 +111,7 @@ class Story < ApplicationRecord
     return unless self.url.present? && self.new_record?
 
     match = self.url.match(/\Ahttps?:\/\/([^\/]+)/i)
-    if match and TRACKING_DOMAINS.include? match.captures.first.downcase
+    if match && TRACKING_DOMAINS.include?(match.captures.first.downcase)
       errors.add(:url, "is a link shortening or ad tracking domain")
     end
   end

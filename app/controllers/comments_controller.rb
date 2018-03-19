@@ -24,7 +24,8 @@ class CommentsController < ApplicationController
     end
 
     if params[:parent_comment_short_id].present?
-      if (pc = Comment.where(:story_id => story.id, :short_id => params[:parent_comment_short_id]).first)
+      if (pc = Comment.where(:story_id => story.id, :short_id => params[:parent_comment_short_id])
+        .first)
         comment.parent_comment = pc
       else
         return render :json => { :error => "invalid parent comment", :status => 400 }

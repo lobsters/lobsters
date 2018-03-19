@@ -614,9 +614,9 @@ class Story < ApplicationRecord
     # if enough users voted on the same set of replacement tags, do it
     tag_votes = {}
     self.suggested_taggings.group_by(&:user_id).each do |_u, stg|
-      stg.each do |st|
-        tag_votes[st.tag.tag] ||= 0
-        tag_votes[st.tag.tag] += 1
+      stg.each do |s|
+        tag_votes[s.tag.tag] ||= 0
+        tag_votes[s.tag.tag] += 1
       end
     end
 
@@ -652,9 +652,9 @@ class Story < ApplicationRecord
 
     # if enough users voted on the same exact title, save it
     title_votes = {}
-    self.suggested_titles.each do |st|
-      title_votes[st.title] ||= 0
-      title_votes[st.title] += 1
+    self.suggested_titles.each do |s|
+      title_votes[s.title] ||= 0
+      title_votes[s.title] += 1
     end
 
     title_votes.sort_by {|_k, v| v }.reverse.each do |kv|

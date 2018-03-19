@@ -58,8 +58,8 @@ class Keystore < ApplicationRecord
 
   def self.find_or_create_key_for_update(key, init = nil)
     loop do
-      kv = self.lock(true).find_by(:key => key)
-      return kv if kv
+      found = self.lock(true).find_by(:key => key)
+      return found if found
 
       begin
         self.create! do |kv|

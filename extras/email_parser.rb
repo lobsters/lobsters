@@ -61,17 +61,18 @@ class EmailParser
       # parts[0] - multipart/alternative
       #  parts[0].parts[0] - text/plain
       #  parts[0].parts[1] - text/html
-      if (p = self.email.parts.first.parts.select {|p| p.content_type.match(/text\/plain/i) }).any?
-        @body = p.first.body.to_s
+      if (found = self.email.parts.first.parts.select {|p| p.content_type.match(/text\/plain/i) }
+         ).any?
+        @body = found.first.body.to_s
 
         begin
-          @possible_charset = p.first.content_type_parameters["charset"]
+          @possible_charset = parts.first.content_type_parameters["charset"]
         rescue
         end
 
       # parts[0] - text/plain
-      elsif (p = self.email.parts.select {|p| p.content_type.match(/text\/plain/i) }).any?
-        @body = p.first.body.to_s
+      elsif (found = self.email.parts.select {|p| p.content_type.match(/text\/plain/i) }).any?
+        @body = found.first.body.to_s
 
         begin
           @possible_charset = p.first.content_type_parameters["charset"]

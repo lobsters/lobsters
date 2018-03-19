@@ -66,11 +66,7 @@ StoriesPaginator.new(StoryRepository.new.hottest).get.first
     status = title + status
   end
 
-  res = Twitter.oauth_request(
-          "/1.1/statuses/update.json",
-          :post,
-          "status" => status
-        )
+  res = Twitter.oauth_request("/1.1/statuses/update.json", :post, "status" => status)
 
   begin
     if res["id_str"].to_s.match(/\d+/)

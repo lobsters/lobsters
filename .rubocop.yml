@@ -67,6 +67,8 @@ Naming/PredicateName:
   Enabled: false
 
 # Performance
+Performance/RedundantMatch:
+  Enabled: false
 
 # Rails
 Rails/Blank:

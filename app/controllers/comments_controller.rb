@@ -200,7 +200,7 @@ class CommentsController < ApplicationController
   def index
     @rss_link ||= {
       :title => "RSS 2.0 - Newest Comments",
-      :href => "/comments.rss#{@user ? '?token=#{@user.rss_token}' : ''}",
+      :href => "/comments.rss" + @user ? "?token=#{@user.rss_token}" : "",
     }
 
     @heading = @title = "Newest Comments"

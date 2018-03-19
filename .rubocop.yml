@@ -120,5 +120,7 @@ Style/StringLiterals:
   Enabled: false
 Style/SymbolArray:
   EnforcedStyle: brackets
+Style/TrailingCommaInArguments:
+  Enabled: false
 Style/TrailingCommaInLiteral:
   EnforcedStyleForMultiline: consistent_comma

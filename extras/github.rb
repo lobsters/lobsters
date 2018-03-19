@@ -16,12 +16,12 @@ class Github
   def self.token_and_user_from_code(code)
     s = Sponge.new
     res = s.fetch(
-            "https://github.com/login/oauth/access_token",
-            :post,
-            :client_id => self.CLIENT_ID,
-            :client_secret => self.CLIENT_SECRET,
-            :code => code,
-          )
+      "https://github.com/login/oauth/access_token",
+      :post,
+      :client_id => self.CLIENT_ID,
+      :client_secret => self.CLIENT_SECRET,
+      :code => code,
+    )
     ps = CGI.parse(res)
     tok = ps["access_token"].first
 

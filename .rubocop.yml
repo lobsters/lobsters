@@ -39,6 +39,8 @@ Layout/SpaceAroundOperators:
 Layout/SpaceInsideBlockBraces:
   EnforcedStyle: space
   SpaceBeforeBlockParameters: false
+Layout/SpaceInsideRangeLiteral:
+  Enabled: false
 
 # Lint
 Lint/EndAlignment:

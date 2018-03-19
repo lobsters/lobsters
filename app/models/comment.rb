@@ -103,7 +103,7 @@ class Comment < ApplicationRecord
   def self.regenerate_markdown
     Comment.record_timestamps = false
 
-    Comment.all.each do |c|
+    Comment.all.find_each do |c|
       c.markeddown_comment = c.generated_markeddown_comment
       c.save(:validate => false)
     end

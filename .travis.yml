@@ -9,3 +9,6 @@ env:
 before_script:
   - ./bin/rails db:create
   - ./bin/rails db:schema:load
+script:
+  - bundle exec rubocop -d
+  - bundle exec rspec

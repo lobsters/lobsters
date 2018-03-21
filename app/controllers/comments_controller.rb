@@ -64,8 +64,13 @@ class CommentsController < ApplicationController
       return render :plain => "can't find comment", :status => 400
     end
 
-    render :partial => "comment", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+    render :partial => "comment",
+           :layout => false,
+           :content_type => "text/html",
+           :locals => {
+             :comment => comment,
+             :show_tree_lines => params[:show_tree_lines],
+           }
   end
 
   def show_short_id
@@ -146,7 +151,7 @@ class CommentsController < ApplicationController
       render :partial => "comments/comment",
              :layout => false,
              :content_type => "text/html",
-             :locals => { :comment => comment }
+             :locals => { :comment => comment, :show_tree_lines => params[:show_tree_lines] }
     else
       comment.current_vote = { :vote => 1 }
 
@@ -302,6 +307,7 @@ private
            :locals => {
              :comment => comment,
              :show_comment => comment,
+             :show_tree_lines => params[:show_tree_lines],
            }
   end
 

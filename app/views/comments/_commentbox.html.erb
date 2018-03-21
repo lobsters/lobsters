@@ -65,7 +65,8 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
 <% end %>
 <% if defined?(show_comment) && show_comment.valid? %>
   <div class="preview">
-    <%= render "comments/comment", :comment => show_comment %>
+    <%= render "comments/comment", :comment => show_comment,
+      :show_tree_lines => defined?(show_tree_lines) && show_tree_lines %>
   </div>
 <% end %>
 </div>

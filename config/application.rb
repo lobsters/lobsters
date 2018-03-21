@@ -13,7 +13,7 @@ module Lobsters
     # -- all .rb files in that directory are automatically loaded.
 
     # Custom directories with classes and modules you want to be autoloadable.
-    #config.autoload_paths += %W(#{config.root}/extras)
+    # config.autoload_paths += %W(#{config.root}/extras)
 
     # Eager load everything in extras/
     config.eager_load_paths << Rails.root.join("extras").to_s
@@ -43,7 +43,7 @@ end
 
 # disable yaml/xml/whatever input parsing
 silence_warnings do
-  ActionDispatch::ParamsParser::DEFAULT_PARSERS = {}
+  ActionDispatch::ParamsParser::DEFAULT_PARSERS = {}.freeze
 end
 
 # define site name and domain to be used globally, should be overridden in a
@@ -54,7 +54,7 @@ class << Rails.application
   end
 
   def open_signups?
-    "true" == ENV["OPEN_SIGNUPS"]
+    ENV["OPEN_SIGNUPS"] == "true"
   end
 
   def domain
@@ -72,10 +72,10 @@ class << Rails.application
   end
 
   def root_url
-    Rails.application.routes.url_helpers.root_url({
+    Rails.application.routes.url_helpers.root_url(
       :host => Rails.application.domain,
       :protocol => Rails.application.ssl? ? "https" : "http",
-    })
+    )
   end
 
   # used as mailing list prefix, cannot have spaces

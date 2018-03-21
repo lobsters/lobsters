@@ -1,13 +1,16 @@
-class Comment < ActiveRecord::Base
+class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :story,
-    :inverse_of => :comments
+             :inverse_of => :comments
   has_many :votes,
-    :dependent => :delete_all
+           :dependent => :delete_all
   belongs_to :parent_comment,
-    :class_name => "Comment"
+             :class_name => "Comment",
+             :inverse_of => false
   has_one :moderation,
-    :class_name => "Moderation"
+          :class_name => "Moderation",
+          :inverse_of => :comment,
+          :dependent => :destroy
   belongs_to :hat
 
   attr_accessor :current_vote, :previewing, :indent_level
@@ -17,9 +20,8 @@ class Comment < ActiveRecord::Base
     self.assign_initial_confidence
     self.assign_thread_id
   end
-  after_create :record_initial_upvote, :mark_submitter,
-    :deliver_reply_notifications, :deliver_mention_notifications,
-    :log_hat_use
+  after_create :record_initial_upvote, :mark_submitter, :deliver_reply_notifications,
+               :deliver_mention_notifications, :log_hat_use
   after_destroy :unassign_votes
 
   scope :active, -> { where(:is_deleted => false, :is_moderated => false) }
@@ -58,8 +60,8 @@ class Comment < ActiveRecord::Base
   end
 
   def self.arrange_for_user(user)
-    parents = self.order("(upvotes - downvotes) < 0 ASC, confidence DESC").
-      group_by(&:parent_comment_id)
+    parents = self.order("(upvotes - downvotes) < 0 ASC, confidence DESC")
+      .group_by(&:parent_comment_id)
 
     # top-down list of comments, regardless of indent level
     ordered = []
@@ -75,8 +77,8 @@ class Comment < ActiveRecord::Base
         # from the tree.  otherwise they have to stay and a "[deleted]" stub
         # will be shown
         if node.is_gone? && # deleted or moderated
-          !children.present? && # don't have child comments
-          (!user || (!user.is_moderator? && node.user_id != user.id))
+           children.empty? && # don't have child comments
+           (!user || (!user.is_moderator? && node.user_id != user.id))
           # admins and authors should be able to see their deleted comments
           next
         end
@@ -102,7 +104,7 @@ class Comment < ActiveRecord::Base
   def self.regenerate_markdown
     Comment.record_timestamps = false
 
-    Comment.all.each do |c|
+    Comment.all.find_each do |c|
       c.markeddown_comment = c.generated_markeddown_comment
       c.save(:validate => false)
     end
@@ -117,7 +119,7 @@ class Comment < ActiveRecord::Base
       "CAST(downvotes AS #{Story.votes_cast_type}))"
   end
 
-  def as_json(options = {})
+  def as_json(_options = {})
     h = [
       :short_id,
       :short_id_url,
@@ -128,8 +130,7 @@ class Comment < ActiveRecord::Base
       :score,
       :upvotes,
       :downvotes,
-      { :comment => (self.is_gone? ? "<em>#{self.gone_text}</em>" :
-        :markeddown_comment) },
+      { :comment => (self.is_gone? ? "<em>#{self.gone_text}</em>" : :markeddown_comment) },
       :url,
       :indent_level,
       { :commenting_user => :user },
@@ -220,7 +221,7 @@ class Comment < ActiveRecord::Base
 
   def deliver_mention_notifications
     self.plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
-      if u = User.where(:username => mention).first
+      if (u = User.find_by(:username => mention))
         if u.id == self.user.id
           next
         end
@@ -234,21 +235,22 @@ class Comment < ActiveRecord::Base
         end
 
         if u.pushover_mentions?
-          u.pushover!({
+          u.pushover!(
             :title => "#{Rails.application.name} mention by " <<
               "#{self.user.username} on #{self.story.title}",
             :message => self.plaintext_comment,
             :url => self.url,
             :url_title => "Reply to #{self.user.username}",
-          })
+          )
         end
       end
     end
   end
 
   def deliver_reply_notifications
-    if self.parent_comment_id && (u = self.parent_comment.try(:user)) &&
-    u.id != self.user.id
+    if self.parent_comment_id &&
+       (u = self.parent_comment.try(:user)) &&
+       u.id != self.user.id
       if u.email_replies?
         begin
           EmailReply.reply(self, u).deliver_now
@@ -258,13 +260,13 @@ class Comment < ActiveRecord::Base
       end
 
       if u.pushover_replies?
-        u.pushover!({
+        u.pushover!(
           :title => "#{Rails.application.name} reply from " <<
             "#{self.user.username} on #{self.story.title}",
           :message => self.plaintext_comment,
           :url => self.url,
           :url_title => "Reply to #{self.user.username}",
-        })
+        )
       end
     end
   end
@@ -280,8 +282,7 @@ class Comment < ActiveRecord::Base
     Comment.connection.execute("UPDATE #{Comment.table_name} SET " <<
       "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " <<
       "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " <<
-      "confidence = '#{self.calculated_confidence}' WHERE id = " <<
-      "#{self.id.to_i}")
+      "confidence = '#{self.calculated_confidence}' WHERE id = #{self.id}")
 
     self.story.recalculate_hotness!
   end
@@ -309,7 +310,7 @@ class Comment < ActiveRecord::Base
     elsif self.user.is_new?
       c.push "new_user"
     elsif self.story && self.story.user_is_author? &&
-    self.story.user_id == self.user_id
+          self.story.user_id == self.user_id
       c.push "user_is_author"
     end
 
@@ -328,7 +329,7 @@ class Comment < ActiveRecord::Base
 
   def is_downvotable?
     if self.created_at && self.score > DOWNVOTABLE_MIN_SCORE
-      Time.now - self.created_at <= DOWNVOTABLE_DAYS.days
+      Time.current - self.created_at <= DOWNVOTABLE_DAYS.days
     else
       false
     end
@@ -339,7 +340,7 @@ class Comment < ActiveRecord::Base
       if self.is_moderated?
         return false
       else
-        return (Time.now.to_i - (self.updated_at ? self.updated_at.to_i :
+        return (Time.current.to_i - (self.updated_at ? self.updated_at.to_i :
           self.created_at.to_i) < (60 * MAX_EDIT_MINS))
       end
     else
@@ -381,8 +382,8 @@ class Comment < ActiveRecord::Base
       "comment",
       self.short_id,
       self.is_from_email ? "email" : nil,
-      created_at.to_i
-    ].reject{|p| !p }.join(".") << "@" << Rails.application.domain
+      created_at.to_i,
+    ].reject(&:!).join(".") << "@" << Rails.application.domain
   end
 
   def path
@@ -395,8 +396,9 @@ class Comment < ActiveRecord::Base
   end
 
   def record_initial_upvote
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.story_id,
-      self.id, self.user_id, nil, false)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      1, self.story_id, self.id, self.user_id, nil, false
+    )
 
     self.story.update_comments_count!
   end
@@ -421,8 +423,8 @@ class Comment < ActiveRecord::Base
 
   def showing_downvotes_for_user?(u)
     return (u && u.is_moderator?) ||
-      (self.created_at && self.created_at < 36.hours.ago) ||
-      !SCORE_RANGE_TO_HIDE.include?(self.score)
+           (self.created_at && self.created_at < 36.hours.ago) ||
+           !SCORE_RANGE_TO_HIDE.include?(self.score)
   end
 
   def to_param
@@ -449,13 +451,13 @@ class Comment < ActiveRecord::Base
       r_users[v.reason.to_s].push v.user.username
     end
 
-    r_counts.keys.sort.map{|k|
+    r_counts.keys.sort.map {|k|
       if k == ""
         "+#{r_counts[k]}"
       else
         o = "#{r_counts[k]} #{Vote::COMMENT_REASONS[k]}"
         if u && u.is_moderator? && self.user_id != u.id
-          o << " (#{r_users[k].join(", ")})"
+          o << " (#{r_users[k].join(', ')})"
         end
         o
       end

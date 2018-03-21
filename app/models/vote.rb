@@ -1,4 +1,4 @@
-class Vote < ActiveRecord::Base
+class Vote < ApplicationRecord
   belongs_to :user
   belongs_to :story
   belongs_to :comment
@@ -10,23 +10,23 @@ class Vote < ActiveRecord::Base
     "T" => "Troll",
     "S" => "Spam",
     "" => "Cancel",
-  }
+  }.freeze
 
   STORY_REASONS = {
     "O" => "Off-topic",
     "A" => "Already Posted",
     "S" => "Spam",
     "" => "Cancel",
-  }
+  }.freeze
   OLD_STORY_REASONS = {
     "Q" => "Low Quality",
-  }
+  }.freeze
 
   def self.votes_by_user_for_stories_hash(user, stories)
     votes = {}
 
     Vote.where(:user_id => user, :story_id => stories,
-    :comment_id => nil).each do |v|
+    :comment_id => nil).find_each do |v|
       votes[v.story_id] = { :vote => v.vote, :reason => v.reason }
     end
 
@@ -40,7 +40,7 @@ class Vote < ActiveRecord::Base
       :user_id => user_id, :story_id => story_id
     ).where(
       "comment_id IS NOT NULL"
-    ).each do |v|
+    ).find_each do |v|
       votes[v.comment_id] = { :vote => v.vote, :reason => v.reason }
     end
 
@@ -78,8 +78,9 @@ class Vote < ActiveRecord::Base
     end
   end
 
-  def self.vote_thusly_on_story_or_comment_for_user_because(vote, story_id,
-  comment_id, user_id, reason, update_counters = true)
+  def self.vote_thusly_on_story_or_comment_for_user_because(
+    vote, story_id, comment_id, user_id, reason, update_counters = true
+  )
     v = Vote.where(:user_id => user_id, :story_id => story_id,
       :comment_id => comment_id).first_or_initialize
 
@@ -120,8 +121,7 @@ class Vote < ActiveRecord::Base
             User.update_counters c.user_id, :karma => upvote - downvote
           end
 
-          c.give_upvote_or_downvote_and_recalculate_confidence!(upvote,
-            downvote)
+          c.give_upvote_or_downvote_and_recalculate_confidence!(upvote, downvote)
         else
           s = Story.find(v.story_id)
           if s.user_id != user_id

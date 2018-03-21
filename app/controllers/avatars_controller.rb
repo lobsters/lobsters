@@ -1,14 +1,14 @@
 class AvatarsController < ApplicationController
-  before_action :require_logged_in_user, :only => [ :expire ]
+  before_action :require_logged_in_user, :only => [:expire]
 
-  ALLOWED_SIZES = [ 16, 32, 100, 200 ]
+  ALLOWED_SIZES = [16, 32, 100, 200].freeze
 
-  CACHE_DIR = "#{Rails.root}/public/avatars/"
+  CACHE_DIR = "#{Rails.root}/public/avatars/".freeze
 
   def expire
     expired = 0
 
-    Dir.entries(CACHE_DIR).select{|f|
+    Dir.entries(CACHE_DIR).select {|f|
       f.match(/\A#{@user.username}-(\d+)\.png\z/)
     }.each do |f|
       begin
@@ -20,8 +20,7 @@ class AvatarsController < ApplicationController
       end
     end
 
-    flash[:success] = "Your avatar cache has been purged of #{expired} " <<
-      "file#{expired == 1 ? "" : "s"}"
+    flash[:success] = "Your avatar cache has been purged of #{'file'.pluralize(expired)}"
     return redirect_to "/settings"
   end
 
@@ -43,7 +42,7 @@ class AvatarsController < ApplicationController
       raise ActionController::RoutingError.new("failed fetching avatar")
     end
 
-    if !Dir.exists?(CACHE_DIR)
+    if !Dir.exist?(CACHE_DIR)
       Dir.mkdir(CACHE_DIR)
     end
 
@@ -51,8 +50,7 @@ class AvatarsController < ApplicationController
       f.write av
     end
 
-    File.rename("#{CACHE_DIR}/.#{u.username}-#{size}.png",
-      "#{CACHE_DIR}/#{u.username}-#{size}.png")
+    File.rename("#{CACHE_DIR}/.#{u.username}-#{size}.png", "#{CACHE_DIR}/#{u.username}-#{size}.png")
 
     response.headers["Expires"] = 1.hour.from_now.httpdate
     send_data av, :type => "image/png", :disposition => "inline"

@@ -2,7 +2,7 @@ class RepliesController < ApplicationController
   REPLIES_PER_PAGE = 25
 
   before_action :require_logged_in_user, :set_page
-  after_action :update_read_ribbons, only: [ :unread ]
+  after_action :update_read_ribbons, only: [:unread]
 
   def all
     @heading = @title = "All Your Replies"
@@ -41,7 +41,7 @@ class RepliesController < ApplicationController
     render :show
   end
 
-  private
+private
 
   # comments/_comment expects Comment objects to have a comment_vote attribute
   # with the current user's vote added by StoriesController.load_user_votes
@@ -50,7 +50,7 @@ class RepliesController < ApplicationController
       next unless r.current_vote_vote.present?
       r.comment.current_vote = {
         vote: r.current_vote_vote,
-        reason: r.current_vote_reason.to_s
+        reason: r.current_vote_reason.to_s,
       }
     end
   end
@@ -68,6 +68,6 @@ class RepliesController < ApplicationController
     story_ids = @replies.pluck(:story_id).uniq
     ReadRibbon
       .where(user_id: @user.id, story_id: story_ids)
-      .update_all(updated_at: Time.now)
+      .update_all(updated_at: Time.current)
   end
 end

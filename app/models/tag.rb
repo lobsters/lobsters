@@ -1,10 +1,8 @@
-class Tag < ActiveRecord::Base
-  has_many :taggings,
-    :dependent => :delete_all
-  has_many :stories,
-    :through => :taggings
+class Tag < ApplicationRecord
+  has_many :taggings, :dependent => :delete_all
+  has_many :stories, :through => :taggings
 
-  attr_accessor :filtered_count, :stories_count
+  attr_accessor :stories_count
 
   scope :active, -> { where(:inactive => false) }
 
@@ -15,7 +13,7 @@ class Tag < ActiveRecord::Base
   def self.all_with_filtered_counts_for(user)
     counts = TagFilter.group(:tag_id).count
 
-    Tag.active.order(:tag).select{|t| t.valid_for?(user) }.map{|t|
+    Tag.active.order(:tag).select {|t| t.valid_for?(user) }.map {|t|
       t.filtered_count = counts[t.id].to_i
       t
     }
@@ -24,7 +22,7 @@ class Tag < ActiveRecord::Base
   def self.all_with_story_counts_for(user)
     counts = Tagging.group(:tag_id).count
 
-    Tag.active.order(:tag).select{|t| t.valid_for?(user) }.map{|t|
+    Tag.active.order(:tag).select {|t| t.valid_for?(user) }.map {|t|
       t.stories_count = counts[t.id].to_i
       t
     }

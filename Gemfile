@@ -38,6 +38,7 @@ gem "mail"
 group :test, :development do
   gem "rspec-rails", "~> 3.7"
   gem "machinist"
+  gem "rubocop"
   gem "sqlite3"
   gem "faker"
 end

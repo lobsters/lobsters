@@ -1,28 +1,28 @@
-class Message < ActiveRecord::Base
+class Message < ApplicationRecord
   belongs_to :recipient,
-    :class_name => "User",
-    :foreign_key => "recipient_user_id"
+             :class_name => "User",
+             :foreign_key => "recipient_user_id",
+             :inverse_of => :received_messages
   belongs_to :author,
-    :class_name => "User",
-    :foreign_key => "author_user_id"
+             :class_name => "User",
+             :foreign_key => "author_user_id",
+             :inverse_of => :sent_messages
 
-  validates_presence_of :recipient
+  validates :recipient, presence: true
 
-  attr_accessor :recipient_username
+  attr_reader :recipient_username
 
-  validates_length_of :subject, :in => 1..100
-  validates_length_of :body, :maximum => (64 * 1024)
+  validates :subject, length: { :in => 1..100 }
+  validates :body, length: { :maximum => (64 * 1024) }
 
-  scope :unread, -> { where(:has_been_read => false,
-    :deleted_by_recipient => false) }
+  scope :unread, -> { where(:has_been_read => false, :deleted_by_recipient => false) }
 
-  before_validation :assign_short_id,
-    :on => :create
+  before_validation :assign_short_id, :on => :create
   after_create :deliver_email_notifications
   after_save :update_unread_counts
   after_save :check_for_both_deleted
 
-  def as_json(options = {})
+  def as_json(_options = {})
     attrs = [
       :short_id,
       :created_at,
@@ -75,21 +75,21 @@ class Message < ActiveRecord::Base
     end
 
     if self.recipient.pushover_messages?
-      self.recipient.pushover!({
+      self.recipient.pushover!(
         :title => "#{Rails.application.name} message from " <<
           "#{self.author_username}: #{self.subject}",
         :message => self.plaintext_body,
         :url => self.url,
         :url_title => (self.author ? "Reply to #{self.author_username}" :
           "View message"),
-      })
+      )
     end
   end
 
   def recipient_username=(username)
     self.recipient_user_id = nil
 
-    if u = User.where(:username => username).first
+    if (u = User.find_by(:username => username))
       self.recipient_user_id = u.id
       @recipient_username = username
     else

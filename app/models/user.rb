@@ -1,37 +1,49 @@
-class User < ActiveRecord::Base
-  has_many :stories,
-    -> { includes :user }
-  has_many :comments
+class User < ApplicationRecord
+  has_many :stories, -> { includes :user }, :inverse_of => :user
+  has_many :comments,
+           :inverse_of => :user,
+           :dependent => :restrict_with_exception
   has_many :sent_messages,
-    :class_name => "Message",
-    :foreign_key => "author_user_id"
+           :class_name => "Message",
+           :foreign_key => "author_user_id",
+           :inverse_of => :author,
+           :dependent => :restrict_with_exception
   has_many :received_messages,
-    :class_name => "Message",
-    :foreign_key => "recipient_user_id"
-  has_many :tag_filters
+           :class_name => "Message",
+           :foreign_key => "recipient_user_id",
+           :inverse_of => :recipient,
+           :dependent => :restrict_with_exception
+  has_many :tag_filters, :dependent => :destroy
   has_many :tag_filter_tags,
-    :class_name => "Tag",
-    :through => :tag_filters,
-    :source => :tag,
-    :dependent => :delete_all
+           :class_name => "Tag",
+           :through => :tag_filters,
+           :source => :tag,
+           :dependent => :delete_all
   belongs_to :invited_by_user,
-    :class_name => "User"
+             :class_name => "User",
+             :inverse_of => false
   belongs_to :banned_by_user,
-    :class_name => "User"
+             :class_name => "User",
+             :inverse_of => false
   belongs_to :disabled_invite_by_user,
-    :class_name => "User"
-  has_many :invitations
-  has_many :moderations, :inverse_of => :moderator
-  has_many :votes
+             :class_name => "User",
+             :inverse_of => false
+  has_many :invitations, :dependent => :destroy
+  has_many :moderations,
+           :inverse_of => :moderator,
+           :dependent => :restrict_with_exception
+  has_many :votes, :dependent => :destroy
   has_many :voted_stories, -> { where('votes.comment_id' => nil) },
-    :through => :votes,
-    :source => :story
+           :through => :votes,
+           :source => :story
   has_many :upvoted_stories,
-    -> { where('votes.comment_id' => nil, 'votes.vote' => 1) },
-    :through => :votes,
+           -> { where('votes.comment_id' => nil, 'votes.vote' => 1) },
+           :through => :votes,
     :source => :story
-  has_many :hats
-  has_many :wearable_hats, -> { where('doffed_at is null') }, :class_name => "Hat"
+  has_many :hats, :dependent => :destroy
+  has_many :wearable_hats, -> { where('doffed_at is null') },
+           :class_name => "Hat",
+           :inverse_of => :user
 
   has_secure_password
 
@@ -54,27 +66,30 @@ class User < ActiveRecord::Base
     s.string :twitter_username
   end
 
-  validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
-    :uniqueness => { :case_sensitive => false }
+  validates :email,
+            :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
+            :uniqueness => { :case_sensitive => false }
 
   validates :password, :presence => true, :on => :create
 
   VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/
   validates :username,
-    :format => { :with => /\A#{VALID_USERNAME}\z/ },
-    :uniqueness => { :case_sensitive => false }
+            :format => { :with => /\A#{VALID_USERNAME}\z/ },
+            :uniqueness => { :case_sensitive => false }
 
-  validates_each :username do |record,attr,value|
+  validates_each :username do |record, attr, value|
     if BANNED_USERNAMES.include?(value.to_s.downcase)
       record.errors.add(attr, "is not permitted")
     end
   end
 
   scope :active, -> { where(:banned_at => nil, :deleted_at => nil) }
-  scope :moderators, -> { where('
+  scope :moderators, -> {
+    where('
       is_moderator = True OR
       users.id IN (select distinct moderator_user_id from moderations)
-  ') }
+    ')
+  }
 
   before_save :check_session_token
   before_validation :on => :create do
@@ -82,10 +97,10 @@ class User < ActiveRecord::Base
     self.create_mailing_list_token
   end
 
-  BANNED_USERNAMES = [ "admin", "administrator", "contact", "fraud", "guest",
+  BANNED_USERNAMES = ["admin", "administrator", "contact", "fraud", "guest",
     "help", "hostmaster", "inactive-user", "mailer-daemon", "moderator",
     "moderators", "nobody", "postmaster", "root", "security", "support",
-    "sysop", "webmaster", "enable", "new", "signup", ]
+    "sysop", "webmaster", "enable", "new", "signup",].freeze
 
   # days old accounts are considered new for
   NEW_USER_DAYS = 7
@@ -109,7 +124,7 @@ class User < ActiveRecord::Base
   MIN_STORIES_CHECK_SELF_PROMOTION = 2
 
   def self.recalculate_all_karmas!
-    User.all.each do |u|
+    User.all.find_each do |u|
       u.karma = u.stories.map(&:score).sum + u.comments.map(&:score).sum
       u.save!
     end
@@ -119,7 +134,7 @@ class User < ActiveRecord::Base
     "/^" + VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, "") + "$/"
   end
 
-  def as_json(options = {})
+  def as_json(_options = {})
     attrs = [
       :username,
       :created_at,
@@ -167,7 +182,7 @@ class User < ActiveRecord::Base
 
   def disable_invite_by_user_for_reason!(disabler, reason)
     User.transaction do
-      self.disabled_invite_at = Time.now
+      self.disabled_invite_at = Time.current
       self.disabled_invite_by_user_id = disabler.id
       self.disabled_invite_reason = reason
       self.save!
@@ -178,10 +193,10 @@ class User < ActiveRecord::Base
       msg.recipient_user_id = self.id
       msg.subject = "Your invite privileges have been revoked"
       msg.body = "The reason given:\n" <<
-        "\n" <<
-        "> *#{reason}*\n" <<
-        "\n" <<
-        "*This is an automated message.*"
+                 "\n" <<
+                 "> *#{reason}*\n" <<
+                 "\n" <<
+                 "*This is an automated message.*"
       msg.save!
 
       m = Moderation.new
@@ -197,7 +212,7 @@ class User < ActiveRecord::Base
 
   def ban_by_user_for_reason!(banner, reason)
     User.transaction do
-      self.banned_at = Time.now
+      self.banned_at = Time.current
       self.banned_by_user_id = banner.id
       self.banned_reason = reason
 
@@ -278,8 +293,8 @@ class User < ActiveRecord::Base
 
   def fetched_avatar(size = 100)
     gravatar_url = "https://www.gravatar.com/avatar/" <<
-      Digest::MD5.hexdigest(self.email.strip.downcase) <<
-      "?r=pg&d=identicon&s=#{size}"
+                   Digest::MD5.hexdigest(self.email.strip.downcase) <<
+                   "?r=pg&d=identicon&s=#{size}"
 
     begin
       s = Sponge.new
@@ -303,7 +318,7 @@ class User < ActiveRecord::Base
     User.transaction do
       self.comments
         .where("upvotes - downvotes < 0")
-        .each{|c| c.delete_for_user(self) }
+        .find_each {|c| c.delete_for_user(self) }
 
       self.sent_messages.each do |m|
         m.deleted_by_author = true
@@ -319,7 +334,7 @@ class User < ActiveRecord::Base
       self.session_token = nil
       self.check_session_token
 
-      self.deleted_at = Time.now
+      self.deleted_at = Time.current
       self.save!
     end
   end
@@ -373,7 +388,7 @@ class User < ActiveRecord::Base
   end
 
   def initiate_password_reset_for_ip(ip)
-    self.password_reset_token = "#{Time.now.to_i}-#{Utils.random_str(30)}"
+    self.password_reset_token = "#{Time.current.to_i}-#{Utils.random_str(30)}"
     self.save!
 
     PasswordReset.password_reset_link(self, ip).deliver_now
@@ -392,7 +407,7 @@ class User < ActiveRecord::Base
   end
 
   def is_new?
-    Time.now - self.created_at <= NEW_USER_DAYS.days
+    Time.current - self.created_at <= NEW_USER_DAYS.days
   end
 
   def is_heavy_self_promoter?
@@ -429,13 +444,13 @@ class User < ActiveRecord::Base
   end
 
   def recent_threads(amount, include_submitted_stories = false)
-    thread_ids = self.comments.active.group(:thread_id).
-      order('MAX(created_at) DESC').limit(amount).pluck(:thread_id)
+    thread_ids = self.comments.active.group(:thread_id)
+      .order('MAX(created_at) DESC').limit(amount).pluck(:thread_id)
 
     if include_submitted_stories && self.show_submitted_story_threads
-      thread_ids += Comment.joins(:story).
-        where(:stories => { :user_id => self.id }).group(:thread_id).
-        order("MAX(comments.created_at) DESC").limit(amount).pluck(:thread_id)
+      thread_ids += Comment.joins(:story)
+        .where(:stories => { :user_id => self.id }).group(:thread_id)
+        .order("MAX(comments.created_at) DESC").limit(amount).pluck(:thread_id)
 
       thread_ids = thread_ids.uniq.sort.reverse[0, amount]
     end
@@ -497,8 +512,7 @@ class User < ActiveRecord::Base
   end
 
   def update_unread_message_count!
-    Keystore.put("user:#{self.id}:unread_messages",
-      self.received_messages.unread.count)
+    Keystore.put("user:#{self.id}:unread_messages", self.received_messages.unread.count)
   end
 
   def unread_replies_count
@@ -506,9 +520,9 @@ class User < ActiveRecord::Base
   end
 
   def votes_for_others
-    self.votes.joins(:story, :comment).
-      where("comments.user_id <> votes.user_id AND " <<
-        "stories.user_id <> votes.user_id").
-      order("id DESC")
+    self.votes.joins(:story, :comment)
+      .where("comments.user_id <> votes.user_id AND " <<
+        "stories.user_id <> votes.user_id")
+      .order("id DESC")
   end
 end

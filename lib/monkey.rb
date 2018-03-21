@@ -17,15 +17,19 @@ class String
         return self
       end
 
-      str = self.dup.force_encoding("binary").encode("utf-8",
-        :invalid => :replace, :undef => :replace, :replace => "?")
+      str = self.dup.force_encoding("binary").encode(
+        "utf-8",
+        :invalid => :replace,
+        :undef => :replace,
+        :replace => "?"
+      )
 
       if !str.valid_encoding? || str.encoding.to_s != "UTF-8"
         raise Encoding::UndefinedConversionError
       end
 
-    rescue Encoding::UndefinedConversionError => e
-      str = self.chars.map{|c|
+    rescue Encoding::UndefinedConversionError
+      str = self.chars.map {|c|
         begin
           c.encode("UTF-8", :invalid => :replace, :undef => :replace)
         rescue

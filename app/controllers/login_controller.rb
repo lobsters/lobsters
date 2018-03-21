@@ -5,7 +5,7 @@ class LoginFailedError < StandardError; end
 
 class LoginController < ApplicationController
   before_action :authenticate_user
-  before_action :check_for_read_only_mode, :except => [ :index ]
+  before_action :check_for_read_only_mode, :except => [:index]
 
   def logout
     if @user
@@ -95,8 +95,7 @@ class LoginController < ApplicationController
   end
 
   def reset_password
-    @found_user = User.where("email = ? OR username = ?", params[:email].to_s,
-      params[:email].to_s).first
+    @found_user = User.where("email = ? OR username = ?", params[:email], params[:email]).first
 
     if !@found_user
       flash.now[:error] = "Invalid e-mail address or username."
@@ -105,8 +104,7 @@ class LoginController < ApplicationController
 
     @found_user.initiate_password_reset_for_ip(request.remote_ip)
 
-    flash.now[:success] = "Password reset instructions have been e-mailed " <<
-      "to you."
+    flash.now[:success] = "Password reset instructions have been e-mailed to you."
     return index
   end
 
@@ -114,7 +112,7 @@ class LoginController < ApplicationController
     @title = "Reset Password"
 
     if (m = params[:token].to_s.match(/^(\d+)-/)) &&
-    (Time.now - Time.at(m[1].to_i)) < 24.hours
+       (Time.current - Time.at.utc(m[1].to_i)) < 24.hours
       @reset_user = User.where(:password_reset_token => params[:token].to_s).first
     end
 
@@ -145,15 +143,15 @@ class LoginController < ApplicationController
       end
     else
       flash[:error] = "Invalid reset token.  It may have already been " <<
-        "used or you may have copied it incorrectly."
+                      "used or you may have copied it incorrectly."
       return redirect_to forgot_password_path
     end
   end
 
   def twofa
-    if tmpu = find_twofa_user
+    if (tmpu = find_twofa_user)
       Rails.logger.info "  Authenticated as user #{tmpu.id} " <<
-        "(#{tmpu.username}), verifying TOTP"
+                        "(#{tmpu.username}), verifying TOTP"
     else
       reset_session
       return redirect_to "/login"
@@ -172,6 +170,7 @@ class LoginController < ApplicationController
   end
 
 private
+
   def find_twofa_user
     if session[:twofa_u].present?
       return User.where(:session_token => session[:twofa_u]).first

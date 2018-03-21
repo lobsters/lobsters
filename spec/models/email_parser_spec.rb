@@ -11,12 +11,12 @@ describe EmailParser do
     @emailer = User.make!(:mailing_list_mode => 1)
 
     @emails = {}
-    Dir.glob("#{Rails.root}/spec/fixtures/inbound_emails/*.eml").
-    each do |f|
-      @emails[File.basename(f).gsub(/\..*/, "")] = File.read(f).
-        gsub(/##SHORTNAME##/, Rails.application.shortname).
-        gsub(/##MAILING_LIST_TOKEN##/, @emailer.mailing_list_token).
-        gsub(/##COMMENT_ID##/, @comment.short_id)
+    Dir.glob("#{Rails.root}/spec/fixtures/inbound_emails/*.eml")
+    .each do |f|
+      @emails[File.basename(f).gsub(/\..*/, "")] = File.read(f)
+        .gsub(/##SHORTNAME##/, Rails.application.shortname)
+        .gsub(/##MAILING_LIST_TOKEN##/, @emailer.mailing_list_token)
+        .gsub(/##COMMENT_ID##/, @comment.short_id)
     end
   end
 
@@ -56,8 +56,9 @@ describe EmailParser do
       @emails["3"])
 
     expect(parser.email).to_not be_nil
-    expect(parser.body).
-      to eq("It hasn't decreased any measurable amount but since the traffic to\nthe site is increasing a bit each week, it's hard to tell.")
+    expect(parser.body)
+      .to eq("It hasn't decreased any measurable amount but since the traffic to\n" <<
+             "the site is increasing a bit each week, it's hard to tell.")
   end
 
   it "strips quoted lines with attribution" do
@@ -68,7 +69,8 @@ describe EmailParser do
       @emails["4"])
 
     expect(parser.email).to_not be_nil
-    expect(parser.body).
-      to eq("It hasn't decreased any measurable amount but since the traffic to\nthe site is increasing a bit each week, it's hard to tell.")
+    expect(parser.body)
+      .to eq("It hasn't decreased any measurable amount but since the traffic to\n" <<
+             "the site is increasing a bit each week, it's hard to tell.")
   end
 end

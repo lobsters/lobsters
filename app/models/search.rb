@@ -4,10 +4,10 @@ class Search
   include ActiveModel::AttributeMethods
   extend ActiveModel::Naming
 
-  attr_accessor :q, :what, :order
+  attr_accessor :q, :order
   attr_accessor :results, :page, :total_results, :per_page
 
-  validates_length_of :q, :minimum => 2
+  validates :q, length: { :minimum => 2 }
 
   def initialize
     @q = ""
@@ -30,8 +30,7 @@ class Search
   end
 
   def to_url_params
-    [ :q, :what, :order ].map{|p| "#{p}=#{CGI.escape(self.send(p).to_s)}"
-      }.join("&amp;")
+    [:q, :what, :order].map {|p| "#{p}=#{CGI.escape(self.send(p).to_s)}" }.join("&amp;")
   end
 
   def page_count
@@ -68,10 +67,10 @@ class Search
     # extract domain query since it must be done separately
     domain = nil
     tag_scopes = []
-    words = self.q.to_s.split(" ").reject{|w|
-      if m = w.match(/^domain:(.+)$/)
+    words = self.q.to_s.split(" ").reject {|w|
+      if (m = w.match(/^domain:(.+)$/))
         domain = m[1]
-      elsif m = w.match(/^tag:(.+)$/)
+      elsif (m = w.match(/^tag:(.+)$/))
         tag_scopes << m[1]
       end
     }.join(" ")
@@ -109,10 +108,7 @@ class Search
         else
           base = base.includes({ :taggings => :tag }, :user)
           self.results = base.select(
-            "stories.*, " +
-            "#{title_match_sql}, " +
-            "#{description_match_sql}, " +
-            "#{story_cache_match_sql}"
+            ["stories.*", title_match_sql, description_match_sql, story_cache_match_sql].join(', ')
           )
         end
       else
@@ -173,16 +169,15 @@ class Search
       self.page = 1
     end
 
-    self.results = self.results.
-      limit(self.per_page).
-      offset((self.page - 1) * self.per_page)
+    self.results = self.results
+      .limit(self.per_page)
+      .offset((self.page - 1) * self.per_page)
 
     # if a user is logged in, fetch their votes for what's on the page
     if user
       case what
       when "stories"
-        votes = Vote.story_votes_by_user_for_story_ids_hash(user.id,
-          self.results.map{|s| s.id })
+        votes = Vote.story_votes_by_user_for_story_ids_hash(user.id, self.results.map(&:id))
 
         self.results.each do |r|
           if votes[r.id]
@@ -191,8 +186,7 @@ class Search
         end
 
       when "comments"
-        votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id,
-          self.results.map{|c| c.id })
+        votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id, self.results.map(&:id))
 
         self.results.each do |r|
           if votes[r.id]
@@ -202,7 +196,7 @@ class Search
       end
     end
 
-  rescue ActiveRecord::StatementInvalid => e
+  rescue ActiveRecord::StatementInvalid
     # this is most likely bad boolean chars
     self.results = []
     self.total_results = -1

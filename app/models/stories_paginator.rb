@@ -13,11 +13,11 @@ class StoriesPaginator
   def get
     with_pagination_info @scope.limit(per_page + 1)
       .offset((@page - 1) * per_page)
-      .includes(:user, :suggested_titles, :suggested_taggings,
-        :taggings => :tag)
+      .includes(:user, :suggested_titles, :suggested_taggings, :taggings => :tag)
   end
 
 private
+
   def with_pagination_info(scope)
     scope = scope.to_a
     show_more = scope.count > per_page

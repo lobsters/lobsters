@@ -9,9 +9,9 @@ class EmailParser
     @email = nil
 
     begin
-    Utils.silence_stream(STDERR) do
-      @email = Mail.read_from_string(email_text)
-    end
+      Utils.silence_stream(STDERR) do
+        @email = Mail.read_from_string(email_text)
+      end
     rescue
     end
 
@@ -31,8 +31,8 @@ class EmailParser
   def sending_user
     return @sending_user if @sending_user
 
-    if (user = User.where("mailing_list_mode > 0 AND mailing_list_token = ?",
-    user_token).first) && user.is_active?
+    if (user = User.where("mailing_list_mode > 0 AND mailing_list_token = ?", user_token).first) &&
+       user.is_active?
       @sending_user = user
       return user
     end
@@ -43,9 +43,9 @@ class EmailParser
 
     irt = self.email[:in_reply_to].to_s.gsub(/[^A-Za-z0-9@\.]/, "")
 
-    if m = irt.match(/^comment\.([^\.]+)\.\d+@/)
+    if (m = irt.match(/^comment\.([^\.]+)\.\d+@/))
       @parent = Comment.where(:short_id => m[1]).first
-    elsif m = irt.match(/^story\.([^\.]+)\.\d+@/)
+    elsif (m = irt.match(/^story\.([^\.]+)\.\d+@/))
       @parent = Story.where(:short_id => m[1]).first
     end
 
@@ -61,19 +61,18 @@ class EmailParser
       # parts[0] - multipart/alternative
       #  parts[0].parts[0] - text/plain
       #  parts[0].parts[1] - text/html
-      if (p = self.email.parts.first.parts.select{|p|
-      p.content_type.match(/text\/plain/i) }).any?
-        @body = p.first.body.to_s
+      if (found = self.email.parts.first.parts.select {|p| p.content_type.match(/text\/plain/i) }
+         ).any?
+        @body = found.first.body.to_s
 
         begin
-          @possible_charset = p.first.content_type_parameters["charset"]
+          @possible_charset = parts.first.content_type_parameters["charset"]
         rescue
         end
 
       # parts[0] - text/plain
-      elsif (p = self.email.parts.select{|p|
-      p.content_type.match(/text\/plain/i) }).any?
-        @body = p.first.body.to_s
+      elsif (found = self.email.parts.select {|p| p.content_type.match(/text\/plain/i) }).any?
+        @body = found.first.body.to_s
 
         begin
           @possible_charset = p.first.content_type_parameters["charset"]

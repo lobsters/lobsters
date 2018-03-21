@@ -1,6 +1,5 @@
 class EmailMessage < ActionMailer::Base
-  default :from => "#{Rails.application.name} " <<
-    "<nobody@#{Rails.application.domain}>"
+  default :from => "#{Rails.application.name} <nobody@#{Rails.application.domain}>"
 
   def notify(message, user)
     @message = message
@@ -9,7 +8,7 @@ class EmailMessage < ActionMailer::Base
     mail(
       :to => user.email,
       :subject => "[#{Rails.application.name}] Private Message from " <<
-        "#{message.author_username}: #{message.subject}"
+                  "#{message.author_username}: #{message.subject}"
     )
   end
 end

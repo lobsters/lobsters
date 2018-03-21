@@ -1,7 +1,6 @@
-class Hat < ActiveRecord::Base
+class Hat < ApplicationRecord
   belongs_to :user
-  belongs_to :granted_by_user,
-    :class_name => "User"
+  belongs_to :granted_by_user, :class_name => "User", :inverse_of => false
 
   validates :user, :hat, :presence => true
   validates :granted_by_user, :presence => true
@@ -15,7 +14,7 @@ class Hat < ActiveRecord::Base
     m.action = "Doffed hat \"#{self.hat}\": #{reason}"
     m.save!
 
-    self.doffed_at = Time.now
+    self.doffed_at = Time.current
     self.save!
   end
 
@@ -33,9 +32,9 @@ class Hat < ActiveRecord::Base
     hl = (self.link.present? && self.link.match(/^https?:\/\//))
 
     h = "<span class=\"hat " <<
-      "hat_#{self.hat.gsub(/[^A-Za-z0-9]/, "_").downcase}\" " <<
-      "title=\"Granted by " << "#{self.granted_by_user.username} on " <<
-      "#{self.created_at.strftime("%Y-%m-%d")}"
+        "hat_#{self.hat.gsub(/[^A-Za-z0-9]/, '_').downcase}\" " <<
+        "title=\"Granted by " << "#{self.granted_by_user.username} on " <<
+        self.created_at.strftime("%Y-%m-%d")
 
     if !hl && self.link.present?
       h << " - #{ERB::Util.html_escape(self.link)}"

@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe Search do
-
   # We need to set up and then teardown the environment
   # outside of the typical RSpec transaction because
   # the search module uses custom SQL that doesn't
@@ -36,7 +35,7 @@ describe Search do
 
   after(:all) do
     @user.destroy!
-    @stories.each { |s| s.destroy! }
+    @stories.each(&:destroy!)
   end
 
   it "can search for stories" do

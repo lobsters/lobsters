@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe User do
   it "has a valid username" do

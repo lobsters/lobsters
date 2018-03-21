@@ -105,6 +105,8 @@ Rails/SkipsModelValidations:
 # Style
 Style/BlockDelimiters:
   Enabled: false
+Style/BlockComments:
+  Enabled: false
 Style/CommentedKeyword:
   Enabled: false
 Style/ClassVars:

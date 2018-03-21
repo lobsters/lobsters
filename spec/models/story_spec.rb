@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Story do
   it "should get a short id" do

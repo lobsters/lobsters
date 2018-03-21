@@ -307,6 +307,6 @@ private
   end
 
   def user_token_link(url)
-    @user ? "#{url}?token=#{user.rss_token}" : url
+    @user ? "#{url}?token=#{@user.rss_token}" : url
   end
 end

@@ -111,6 +111,8 @@ Style/AndOr:
   EnforcedStyle: conditionals
 Style/BlockDelimiters:
   Enabled: false
+Style/BlockComments:
+  Enabled: false
 Style/CommentedKeyword:
   Enabled: false
 Style/ClassVars:

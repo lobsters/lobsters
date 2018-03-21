@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe ApplicationHelper do
   describe "#page_numbers_for_pagination" do

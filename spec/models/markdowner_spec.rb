@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Markdowner do
   it "parses simple markdown" do

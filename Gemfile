@@ -36,7 +36,7 @@ gem "oauth"
 gem "mail"
 
 group :test, :development do
-  gem "rspec-rails", "~> 3.7"
+  gem "rspec-rails"
   gem "machinist"
   gem "rubocop"
   gem "sqlite3"

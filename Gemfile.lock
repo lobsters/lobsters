@@ -195,7 +195,7 @@ DEPENDENCIES
   rails (~> 5.1)
   rotp
   rqrcode
-  rspec-rails (~> 3.7)
+  rspec-rails
   rubocop
   scenic
   scenic-mysql

@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Search do
   # We need to set up and then teardown the environment

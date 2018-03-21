@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Vote do
   it "applies a story upvote and karma properly" do

@@ -7,7 +7,9 @@ class SignupController < ApplicationController
       flash[:error] = "You are already signed up."
       return redirect_to "/"
     end
-
+    if Rails.application.open_signups?
+      redirect_to action: :invited, invitation_code: 'open' and return
+    end
     @title = "Signup"
   end
 
@@ -21,32 +23,44 @@ class SignupController < ApplicationController
       return redirect_to "/"
     end
 
-    if !(@invitation = Invitation.where(:code => params[:invitation_code].to_s).first)
-      flash[:error] = "Invalid or expired invitation"
-      return redirect_to "/signup"
+    if not Rails.application.open_signups?
+      if !(@invitation = Invitation.where(:code => params[:invitation_code].to_s).first)
+        flash[:error] = "Invalid or expired invitation"
+        return redirect_to "/signup"
+      end
     end
 
     @title = "Signup"
 
     @new_user = User.new
-    @new_user.email = @invitation.email
+
+    if not Rails.application.open_signups?
+      @new_user.email = @invitation.email
+    end
 
     render :action => "invited"
   end
 
   def signup
-    if !(@invitation = Invitation.where(:code => params[:invitation_code].to_s).first)
-      flash[:error] = "Invalid or expired invitation."
-      return redirect_to "/signup"
+    if not Rails.application.open_signups?
+      if !(@invitation = Invitation.where(:code => params[:invitation_code].to_s).first)
+        flash[:error] = "Invalid or expired invitation."
+        return redirect_to "/signup"
+      end
     end
 
     @title = "Signup"
 
     @new_user = User.new(user_params)
-    @new_user.invited_by_user_id = @invitation.user_id
+
+    if not Rails.application.open_signups?
+      @new_user.invited_by_user_id = @invitation.user_id
+    end
 
     if @new_user.save
-      @invitation.destroy
+      if not Rails.application.open_signups?
+        @invitation.destroy
+      end
       session[:u] = @new_user.session_token
       flash[:success] = "Welcome to #{Rails.application.name}, " <<
                         "#{@new_user.username}!"

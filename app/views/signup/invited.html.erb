@@ -4,8 +4,6 @@
   </div>
 
   <%= form_for @new_user, { :url => signup_path } do |f| %>
-    <%= hidden_field_tag "invitation_code", @invitation.code %>
-
     <p>
     To create a new account, enter your e-mail address and a password.
     Your e-mail address will never be shown to users and will only be used
@@ -15,13 +13,16 @@
 
     <%= error_messages_for(@new_user) %>
 
-    <p>
-    <%= f.label :invitation, "Invited By:", :class => "required" %>
-    <span class="d">
-      <a href="/u/<%= @invitation.user.username %>" target="_blank"><%=
-        @invitation.user.username %></a>
-    </span>
-    </p>
+    <% if not Rails.application.open_signups? %>
+      <%= hidden_field_tag "invitation_code", @invitation.code %>
+      <p>
+      <%= f.label :invitation, "Invited By:", :class => "required" %>
+      <span class="d">
+        <a href="/u/<%= @invitation.user.username %>" target="_blank"><%=
+          @invitation.user.username %></a>
+      </span>
+      </p>
+    <% end %>
 
     <p>
     <%= f.label :username, "Username:", :class => "required" %>

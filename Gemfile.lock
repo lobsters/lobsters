@@ -43,8 +43,8 @@ GEM
     arel (8.0.0)
     bcrypt (3.1.11)
     builder (3.2.3)
-    chunky_png (1.3.8)
-    commonmarker (0.16.0)
+    chunky_png (1.3.10)
+    commonmarker (0.17.9)
       ruby-enum (~> 0.5)
     concurrent-ruby (1.0.5)
     crass (1.0.3)
@@ -68,7 +68,7 @@ GEM
       thor (>= 0.14, < 2.0)
     json (2.1.0)
     kgio (2.11.2)
-    loofah (2.2.0)
+    loofah (2.2.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     machinist (2.0)
@@ -78,8 +78,8 @@ GEM
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
-    mysql2 (0.4.10)
-    nio4r (2.2.0)
+    mysql2 (0.3.21)
+    nio4r (2.3.0)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
     oauth (0.5.4)
@@ -131,7 +131,7 @@ GEM
       rspec-mocks (~> 3.7.0)
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
-    ruby-enum (0.7.1)
+    ruby-enum (0.7.2)
       i18n
     scenic (1.4.1)
       activerecord (>= 4.0.0)
@@ -150,7 +150,7 @@ GEM
     thread_safe (0.3.6)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    uglifier (4.1.7)
+    uglifier (4.1.8)
       execjs (>= 0.3.0, < 3)
     unicorn (5.4.0)
       kgio (~> 2.6)
@@ -174,7 +174,7 @@ DEPENDENCIES
   json
   machinist
   mail
-  mysql2 (>= 0.3.14)
+  mysql2 (~> 0.3.20)
   nokogiri (>= 1.7.2)
   oauth
   rails (~> 5.1)

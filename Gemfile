@@ -38,7 +38,7 @@ gem "mail"
 group :test, :development do
   gem "rspec-rails"
   gem "machinist"
-  gem "rubocop"
+  gem "rubocop", require: false
   gem "sqlite3"
   gem "faker"
 end

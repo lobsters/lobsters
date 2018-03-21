@@ -9,6 +9,7 @@ AllCops:
     - Gemfile
     - 'bin/**/*'
     - 'db/**/*'
+    - 'vendor/**/*'
 
 # Cop configuration:
 

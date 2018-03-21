@@ -1,4 +1,4 @@
-class AddIndexes < ActiveRecord::Migration
+class AddIndexes < ActiveRecord::Migration[5.1]
   def change
     add_index :votes, [ :comment_id ]
     add_index :comments, [ :user_id ]

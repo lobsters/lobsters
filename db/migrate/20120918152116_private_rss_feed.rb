@@ -1,4 +1,4 @@
-class PrivateRssFeed < ActiveRecord::Migration
+class PrivateRssFeed < ActiveRecord::Migration[5.1]
   def up
     add_column :users, :rss_token, :string
   end

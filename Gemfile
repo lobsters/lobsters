@@ -5,7 +5,7 @@ gem "rails", "~> 5.1"
 
 gem "unicorn"
 
-gem "mysql2", "~> 0.3.20"
+gem "mysql2", "~> 0.5.0"
 
 # uncomment to use PostgreSQL
 # gem "pg"

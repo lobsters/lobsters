@@ -36,6 +36,7 @@ gem "oauth"
 gem "mail"
 
 group :test, :development do
+  gem 'bullet'
   gem "rspec-rails"
   gem "machinist"
   gem "rubocop", require: false

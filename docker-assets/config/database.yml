@@ -1,0 +1,25 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  pool: 5
+  username: <%= ENV['MARIADB_USER'] %>
+  password: <%= ENV['MARIADB_PASSWORD'] %>
+  host: localhost
+  port: 3306
+  # please see the update below about using hostnames to
+  # access linked services via docker-compose
+  host: <%= ENV['MARIADB_HOST'] %>
+  port: <%= ENV['MARIADB_PORT'] %>
+
+development:
+  <<: *default
+  database: <%= ENV['LOBSTER_DATABASE'] %>_development
+
+test:
+  <<: *default
+  database: <%= ENV['LOBSTER_DATABASE'] %>_test
+
+production:
+  <<: *default
+  database: <%= ENV['LOBSTER_DATABASE'] %>_production

@@ -3,6 +3,7 @@ class Tag < ApplicationRecord
   has_many :stories, :through => :taggings
 
   attr_accessor :stories_count
+  attr_writer :filtered_count
 
   scope :active, -> { where(:inactive => false) }
 

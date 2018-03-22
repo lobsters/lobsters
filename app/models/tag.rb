@@ -5,6 +5,7 @@ class Tag < ApplicationRecord
   before_save :log_modifications
 
   attr_accessor :stories_count
+  attr_writer :filtered_count
 
   validates :tag, length: { maximum: 25 }, presence: true, uniqueness: true
   validates :description, length: { maximum: 100 }

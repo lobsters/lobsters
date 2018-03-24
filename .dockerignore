@@ -14,3 +14,4 @@
 .git
 log/*
 tmp/*
+Dockerfile

@@ -21,15 +21,14 @@ COPY Gemfile Gemfile.lock /lobsters/
 # the build-deps after doing a bundle install.
 RUN apk --no-cache --update --virtual deps add mariadb-client-libs sqlite-libs tzdata nodejs \
     && apk --no-cache --virtual build-deps add build-base gcc mariadb-dev linux-headers sqlite-dev \
-    && gem install bundler \
+    && export PATH=/lobsters/.gem/ruby/2.3.0/bin:$PATH \
+    && export GEM_HOME="/lobsters/.gem" \
+    && export GEM_PATH="/lobsters/.gem" \
+    && export BUNDLE_PATH="/lobsters/.bundle" \
     && cd /lobsters \
-    && bundle install --no-cache \
-    && if [ "${developer_build}" = "true" ]; then \
-          chown -R lobsters:lobsters /usr/local/bundle; \
-          chown -R lobsters:lobsters /usr/local/lib/ruby; \
-        else \
-          apk del build-deps; \
-        fi
+    && su lobsters -c "gem install bundler --user-install" \
+    && su lobsters -c "bundle install --no-cache" \
+    && if [ "${developer_build}" != "true" ]; then apk del build-deps; fi
 
 # Copy lobsters into the container.
 COPY ./ /lobsters
@@ -58,7 +57,11 @@ ENV MARIADB_HOST="mariadb" \
     LOBSTER_HOSTNAME="localhost" \
     LOBSTER_SITE_NAME="Example News" \
     RAILS_ENV="development" \
-    SECRET_KEY=""
+    SECRET_KEY="" \
+    GEM_HOME="/lobsters/.gem" \
+    GEM_PATH="/lobsters/.gem" \
+    BUNDLE_PATH="/lobsters/.bundle" \
+    PATH="/lobsters/.gem/ruby/2.3.0/bin:$PATH"
 
 # Expose HTTP port.
 EXPOSE 3000

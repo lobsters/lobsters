@@ -1,0 +1,49 @@
+version: '2.1'
+
+services:
+  proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+  database:
+    image: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=lobsters
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=password --execute \"SHOW DATABASES;\""
+      timeout: 5s
+      retries: 20
+    volumes:
+      - 'lobsters_database:/var/lib/mysql'
+
+  app:
+    build:
+      context: .
+      args:
+        developer_build: "false"
+    environment:
+      - MARIADB_HOST=database
+      - MARIADB_PORT=3306
+      - MARIADB_PASSWORD=password
+      - MARIADB_USER=root
+      - LOBSTER_DATABASE=lobsters
+      - LOBSTER_SITE_NAME="Example News"
+      - RAILS_ENV=development
+      - LOBSTER_HOSTNAME=localhost
+      - VIRTUAL_HOST=localhost
+    ports:
+      - "3000:3000"
+    depends_on:
+      database:
+        condition: service_healthy
+      proxy:
+        condition: service_started
+
+volumes:
+  lobsters_database:
+    driver: local

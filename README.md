@@ -19,6 +19,9 @@ file.
 
 #### Initial setup
 
+Use the steps below for a local install or consider the external
+project [docker-lobsters](https://github.com/jamesbrink/docker-lobsters).
+
 * Install Ruby 2.3.
 
 * Checkout the lobsters git tree from Github

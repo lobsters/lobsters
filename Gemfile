@@ -18,6 +18,7 @@ gem "jquery-rails", "~> 4.3"
 gem "dynamic_form"
 
 gem "exception_notification"
+gem "skylight"
 
 gem "bcrypt", "~> 3.1.2"
 gem "rotp"

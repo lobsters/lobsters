@@ -10,7 +10,7 @@ class SettingsController < ApplicationController
   end
 
   def delete_account
-    if @user.try(:authenticate, params[:user][:delete_password].to_s)
+    if @user.try(:authenticate, params[:user][:password].to_s)
       @user.delete!
       if params[:disown].present?
         @user.disown_comments!

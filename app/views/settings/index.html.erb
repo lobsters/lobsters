@@ -1,3 +1,15 @@
+<script>
+  $(document).ready(function() {
+    $("#delete_account_checkbox").change(function(e) {
+      if (e.target.checked) {
+        $(".deletion input:not(#delete_account_checkbox)").removeAttr("disabled");
+      } else {
+        $(".deletion input:not(#delete_account_checkbox)").attr("disabled", "disabled");
+      }
+    });
+  });
+</script>
+
 <div class="box wide">
   <div class="legend right">
     <a href="/filters">Filtered Tags</a>
@@ -325,16 +337,21 @@
       </ul>
 
       <div class="boxline">
+        <label for="delete_account_checkbox" class="required">Ready to delete?:</label>
+        <input type="checkbox" id="delete_account_checkbox" name="delete_account_checkbox"/>
+      </div>
+
+      <div class="boxline">
         <%= f.label :password, "Verify Password:", :class => "required" %>
-        <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
+        <%= f.password_field :password, :size => 40, :autocomplete => "off", :disabled => true %>
       </div>
       <div class="boxline">
         <%= f.label :disown, "Disown Comments:" %>
-        <%= check_box_tag :disown %>
+        <%= check_box_tag :disown, "1", false, :disabled => true %>
       </div>
 
       <br>
-      <%= f.submit "Yes, Delete My Account", :class => "deletion" %>
+      <%= f.submit "Yes, Delete My Account", :class => "deletion", :disabled => true %>
     <% end %>
   </div>
 </div>

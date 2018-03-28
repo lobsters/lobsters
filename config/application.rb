@@ -35,6 +35,8 @@ module Lobsters
 
     config.exceptions_app = self.routes
 
+    config.skip_yarn = true
+
     config.after_initialize do
       require "#{Rails.root}/lib/monkey.rb"
     end

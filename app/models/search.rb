@@ -6,6 +6,7 @@ class Search
 
   attr_accessor :q, :order
   attr_accessor :results, :page, :total_results, :per_page
+  attr_writer :what
 
   validates :q, length: { :minimum => 2 }
 

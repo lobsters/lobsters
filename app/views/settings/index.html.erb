@@ -334,6 +334,10 @@
       </div>
 
       <br>
+      <div class="boxline">
+        <%= f.label :i_am_sure, "I am sure:", :class => "required" %>
+        <%= check_box_tag :i_am_sure %>
+      </div>
       <%= f.submit "Yes, Delete My Account", :class => "deletion" %>
     <% end %>
   </div>

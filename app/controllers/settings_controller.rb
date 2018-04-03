@@ -12,6 +12,9 @@ class SettingsController < ApplicationController
   def delete_account
     if @user.try(:authenticate, params[:user][:password].to_s)
       @user.delete!
+      if params[:disown].present?
+        @user.disown_comments!
+      end
       reset_session
       flash[:success] = "Your account has been deleted."
       return redirect_to "/"
@@ -25,8 +28,8 @@ class SettingsController < ApplicationController
     @edit_user = @user.clone
 
     if params[:user][:password].empty? ||
-    @user.authenticate(params[:current_password].to_s)
-      if @edit_user.update_attributes(user_params)
+       @user.authenticate(params[:current_password].to_s)
+      if @edit_user.update(user_params)
         flash.now[:success] = "Successfully updated settings."
         @user = @edit_user
       end
@@ -71,14 +74,15 @@ class SettingsController < ApplicationController
       session[:totp_secret] = ROTP::Base32.random_base32
     end
 
-    totp = ROTP::TOTP.new(session[:totp_secret],
-      :issuer => Rails.application.name)
+    totp = ROTP::TOTP.new(session[:totp_secret], :issuer => Rails.application.name)
     totp_url = totp.provisioning_uri(@user.email)
 
     # no option for inline svg, so just strip off leading <?xml> tag
     qrcode = RQRCode::QRCode.new(totp_url)
-    qr = qrcode.as_svg(:offset => 0, color: "000", :module_size => 5,
-      :shape_rendering => "crispEdges").gsub(/^<\?xml.*>/, "")
+    qr = qrcode.as_svg(offset: 0,
+                       color: "000",
+                       module_size: 5,
+                       shape_rendering: "crispEdges").gsub(/^<\?xml.*>/, "")
 
     @qr_svg = "<a href=\"#{totp_url}\">#{qr}</a>"
   end
@@ -87,7 +91,7 @@ class SettingsController < ApplicationController
     @title = "Two-Factor Authentication"
 
     if ((Time.now.to_i - session[:last_authed].to_i) > TOTP_SESSION_TIMEOUT) ||
-    !session[:totp_secret]
+       !session[:totp_secret]
       flash[:error] = "Your enrollment period timed out."
       return redirect_to twofa_url
     end
@@ -95,7 +99,7 @@ class SettingsController < ApplicationController
 
   def twofa_update
     if ((Time.now.to_i - session[:last_authed].to_i) > TOTP_SESSION_TIMEOUT) ||
-    !session[:totp_secret]
+       !session[:totp_secret]
       flash[:error] = "Your enrollment period timed out."
       return redirect_to twofa_url
     end
@@ -108,13 +112,12 @@ class SettingsController < ApplicationController
 
       session[:u] = @user.session_token
 
-      flash[:success] = "Two-Factor Authentication has been enabled on " <<
-        "your account."
+      flash[:success] = "Two-Factor Authentication has been enabled on your account."
       session.delete(:totp_secret)
       return redirect_to "/settings"
     else
       flash[:error] = "Your TOTP code was invalid, please verify the " <<
-        "current code in your TOTP application."
+                      "current code in your TOTP application."
       return redirect_to twofa_verify_url
     end
   end
@@ -129,11 +132,11 @@ class SettingsController < ApplicationController
 
     session[:pushover_rand] = SecureRandom.hex
 
-    return redirect_to Pushover.subscription_url({
+    return redirect_to Pushover.subscription_url(
       :success => "#{Rails.application.root_url}settings/pushover_callback?" <<
         "rand=#{session[:pushover_rand]}",
       :failure => "#{Rails.application.root_url}settings/",
-    })
+    )
   end
 
   def pushover_callback
@@ -148,8 +151,7 @@ class SettingsController < ApplicationController
     end
 
     if params[:rand].to_s != session[:pushover_rand].to_s
-      raise "rand param #{params[:rand].inspect} != " <<
-        session[:pushover_rand].inspect
+      raise "rand param #{params[:rand].inspect} != #{session[:pushover_rand].inspect}"
     end
 
     @user.pushover_user_key = params[:pushover_user_key].to_s
@@ -158,8 +160,7 @@ class SettingsController < ApplicationController
     if @user.pushover_user_key.present?
       flash[:success] = "Your account is now setup for Pushover notifications."
     else
-      flash[:success] = "Your account is no longer setup for Pushover " <<
-        "notifications."
+      flash[:success] = "Your account is no longer setup for Pushover notifications."
     end
 
     return redirect_to "/settings"
@@ -171,8 +172,9 @@ class SettingsController < ApplicationController
   end
 
   def github_callback
-    if !session[:github_state].present? || !params[:code].present? ||
-    (params[:state].to_s != session[:github_state].to_s)
+    if !session[:github_state].present? ||
+       !params[:code].present? ||
+       (params[:state].to_s != session[:github_state].to_s)
       flash[:error] = "Invalid OAuth state"
       return redirect_to "/settings"
     end
@@ -184,8 +186,7 @@ class SettingsController < ApplicationController
       @user.github_oauth_token = tok
       @user.github_username = username
       @user.save!
-      flash[:success] = "Your account has been linked to GitHub user " <<
-        "#{username}."
+      flash[:success] = "Your account has been linked to GitHub user #{username}."
     else
       return github_disconnect
     end
@@ -207,8 +208,8 @@ class SettingsController < ApplicationController
   end
 
   def twitter_callback
-    if !session[:twitter_state].present? ||
-    (params[:state].to_s != session[:twitter_state].to_s)
+    if session[:twitter_state].blank? ||
+       (params[:state].to_s != session[:twitter_state].to_s)
       flash[:error] = "Invalid OAuth state"
       return redirect_to "/settings"
     end
@@ -222,8 +223,7 @@ class SettingsController < ApplicationController
       @user.twitter_oauth_token_secret = sec
       @user.twitter_username = username
       @user.save!
-      flash[:success] = "Your account has been linked to Twitter user @" <<
-        "#{username}."
+      flash[:success] = "Your account has been linked to Twitter user @#{username}."
     else
       return twitter_disconnect
     end

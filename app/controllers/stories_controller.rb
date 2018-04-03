@@ -1,13 +1,12 @@
 class StoriesController < ApplicationController
   before_action :require_logged_in_user_or_400,
-    :only => [ :upvote, :downvote, :unvote, :hide, :unhide, :preview,
-    :save, :unsave ]
-  before_action :require_logged_in_user, :only => [ :destroy, :create, :edit,
-    :fetch_url_attributes, :new, :suggest ]
-  before_action :verify_user_can_submit_stories, :only => [ :new, :create ]
-  before_action :find_user_story, :only => [ :destroy, :edit, :undelete,
-    :update ]
-  before_action :find_story!, :only => [ :suggest, :submit_suggestions ]
+                :only => [:upvote, :downvote, :unvote, :hide, :unhide, :preview, :save, :unsave]
+  before_action :require_logged_in_user,
+                :only => [:destroy, :create, :edit, :fetch_url_attributes, :new, :suggest]
+  before_action :verify_user_can_submit_stories, :only => [:new, :create]
+  before_action :find_user_story, :only => [:destroy, :edit, :undelete, :update]
+  before_action :find_story!, :only => [:suggest, :submit_suggestions]
+  around_action :track_story_reads, only: [:show], if: -> { @user.present? }
 
   def create
     @title = "Submit Story"
@@ -18,9 +17,7 @@ class StoriesController < ApplicationController
 
     if @story.valid? && !(@story.already_posted_story && !@story.seen_previous)
       if @story.save
-        Countinual.count!("#{Rails.application.shortname}.stories.submitted",
-          "+1")
-
+        ReadRibbon.where(user: @user, story: @story).first_or_create
         return redirect_to @story.comments_path
       end
     end
@@ -81,11 +78,11 @@ class StoriesController < ApplicationController
 
       if sattrs[:url].present? && @story.url != sattrs[:url]
         flash.now[:notice] = "Note: URL has been changed to fetched " <<
-          "canonicalized version"
+                             "canonicalized version"
         @story.url = sattrs[:url]
       end
 
-      if s = Story.find_similar_by_url(@story.url)
+      if (s = Story.find_similar_by_url(@story.url))
         if s.is_recent?
           # user won't be able to submit this story as new, so just redirect
           # them to the previous story
@@ -121,8 +118,8 @@ class StoriesController < ApplicationController
   end
 
   def show
-    @story = Story.where(:short_id => params[:id]).first!
-
+    # @story was already loaded by track_story_reads for logged-in users
+    @story ||= Story.where(short_id: params[:id]).first!
     if @story.merged_into_story
       flash[:success] = "\"#{@story.title}\" has been merged into this story."
       return redirect_to @story.merged_into_story.comments_path
@@ -135,8 +132,9 @@ class StoriesController < ApplicationController
     @title = @story.title
     @short_url = @story.short_id_url
 
-    @comments = @story.merged_comments.includes(:user, :story, :hat,
-      :votes => :user).arrange_for_user(@user)
+    @comments = @story.merged_comments
+                      .includes(:user, :story, :hat, :votes => :user)
+                      .arrange_for_user(@user)
 
     respond_to do |format|
       format.html {
@@ -146,10 +144,10 @@ class StoriesController < ApplicationController
           "twitter:card" => "summary",
           "twitter:site" => "@lobsters",
           "twitter:title" => @story.title,
-          "twitter:description" => "#{@story.comments_count} comment" <<
-            "#{@story.comments_count == 1 ? "" : "s"}",
+          "twitter:description" => @story.comments_count.to_s + " " +
+                                   'comment'.pluralize(@story.comments_count),
           "twitter:image" => Rails.application.root_url +
-            "apple-touch-icon-144.png",
+                             "apple-touch-icon-144.png",
         }
 
         if @story.user.twitter_username.present?
@@ -172,10 +170,10 @@ class StoriesController < ApplicationController
       return redirect_to @story.comments_path
     end
 
-    if (st = @story.suggested_taggings.where(:user_id => @user.id)).any?
-      @story.tags_a = st.map{|st| st.tag.tag }
+    if (suggested_tags = @story.suggested_taggings.where(:user_id => @user.id)).any?
+      @story.tags_a = suggested_tags.map {|st| st.tag.tag }
     end
-    if tt = @story.suggested_titles.where(:user_id => @user.id).first
+    if (tt = @story.suggested_titles.where(:user_id => @user.id).first)
       @story.title = tt.title
     end
   end
@@ -196,7 +194,7 @@ class StoriesController < ApplicationController
         dsug = true
       end
 
-      sugtags = params[:story][:tags_a].reject{|t| t.to_s.strip == "" }.sort
+      sugtags = params[:story][:tags_a].reject {|t| t.to_s.strip == "" }.sort
       if @story.tags_a.sort != sugtags
         @story.save_suggested_tags_a_for_user!(sugtags, @user)
         dsug = true
@@ -253,8 +251,9 @@ class StoriesController < ApplicationController
       return render :plain => "can't find story", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(0, story.id,
-      nil, @user.id, nil)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      0, story.id, nil, @user.id, nil
+    )
 
     render :plain => "ok"
   end
@@ -264,8 +263,9 @@ class StoriesController < ApplicationController
       return render :plain => "can't find story", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, story.id,
-      nil, @user.id, nil)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      1, story.id, nil, @user.id, nil
+    )
 
     render :plain => "ok"
   end
@@ -283,8 +283,9 @@ class StoriesController < ApplicationController
       return render :plain => "not permitted to downvote", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id,
-      nil, @user.id, params[:reason])
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      -1, story.id, nil, @user.id, params[:reason]
+    )
 
     render :plain => "ok"
   end
@@ -295,6 +296,7 @@ class StoriesController < ApplicationController
     end
 
     HiddenStory.hide_story_for_user(story.id, @user.id)
+    ReadRibbon.hide_replies_for(story.id, @user.id)
 
     render :plain => "ok"
   end
@@ -379,7 +381,7 @@ private
 
     if !@story
       flash[:error] = "Could not find story or you are not authorized " <<
-        "to manage it."
+                      "to manage it."
       redirect_to "/"
       return false
     end
@@ -387,8 +389,7 @@ private
 
   def load_user_votes
     if @user
-      if v = Vote.where(:user_id => @user.id, :story_id => @story.id,
-      :comment_id => nil).first
+      if (v = Vote.where(:user_id => @user.id, :story_id => @story.id, :comment_id => nil).first)
         @story.vote = { :vote => v.vote, :reason => v.reason }
       end
 
@@ -409,5 +410,12 @@ private
       flash[:error] = "You are not allowed to submit new stories."
       return redirect_to "/"
     end
+  end
+
+  def track_story_reads
+    @story = Story.where(short_id: params[:id]).first!
+    @ribbon = ReadRibbon.where(user: @user, story: @story).first_or_create
+    yield
+    @ribbon.touch
   end
 end

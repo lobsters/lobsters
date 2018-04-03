@@ -1,4 +1,4 @@
-class InvitationRequest < ActiveRecord::Base
+class InvitationRequest < ApplicationRecord
   validates :name, :presence => true
   validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ }
   validates :memo, :format => { :with => /https?:\/\// }

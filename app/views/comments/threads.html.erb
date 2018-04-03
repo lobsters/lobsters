@@ -1,4 +1,3 @@
-
 <% @threads.each do |thread| %>
 <ol class="comments comments1">
   <% comments_by_parent = thread.group_by(&:parent_comment_id) %>

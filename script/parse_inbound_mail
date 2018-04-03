@@ -1,21 +1,9 @@
 #!/usr/bin/env ruby
-#
-# postfix main.cf:
-#   relay_domains = example.com
-#   transport_maps = hash:/etc/postfix/transport
-#   defer_transports =
-#
-# postfix transports:
-#   example.com   lobsters:
-#
-# postfix master.cf:
-#   lobsters  unix  -       n       n       -       2       pipe
-#    flags=Fqhu user=lobsters size=1024000 argv=/d/rails/lobsters/script/parse_inbound_mail ${recipient} ${sender}
 
 ENV["RAILS_ENV"] ||= "production"
 
-APP_PATH = File.expand_path('../../config/application',  __FILE__)
-require File.expand_path('../../config/boot',  __FILE__)
+APP_PATH = File.expand_path('../../config/application', __FILE__)
+require File.expand_path('../../config/boot', __FILE__)
 require APP_PATH
 Rails.application.require_environment!
 
@@ -29,7 +17,7 @@ while !STDIN.eof?
   message += STDIN.gets.to_s
 end
 
-parser = EmailParser.new(sender = ARGV[1], recipient = ARGV[0], message)
+parser = EmailParser.new(ARGV[1], ARGV[0], message)
 
 if parser.been_here?
   # avoid looping, quietly

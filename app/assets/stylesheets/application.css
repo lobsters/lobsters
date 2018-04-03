@@ -240,6 +240,13 @@ button:disabled {
 	color: gray;
 }
 
+a.button,
+button.deletion,
+input.deletion {
+  color: darkred;
+  border: 1px solid darkred;
+}
+
 .totp_code::-webkit-inner-spin-button,
 .totp_code::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -364,6 +371,10 @@ div#gravatar img {
 	border-radius: 50px;
 	height: 100px;
 	width: 100px;
+}
+
+.help {
+  margin-top: 2em;
 }
 
 /* stories */
@@ -612,6 +623,9 @@ li .comment_parent_tree_line.score_shown {
 li .comment_parent_tree_line.can_downvote {
 	top: 56px;
 }
+li .comment_parent_tree_line.no_children {
+	border-left-color: transparent;
+}
 li .comment_siblings_tree_line {
 	position: absolute;
 	left: 28px;
@@ -828,7 +842,7 @@ a.pagelink.curpage {
 	width: 100px;
 	border: 1px solid #ccc;
 	border-bottom: 0;
-	z-index: 2;
+	z-index: 15;
 }
 #downvote_why a {
 	background-color: white;
@@ -918,6 +932,11 @@ div.comment_form_container form {
 div.comment_form_container textarea {
 	box-sizing: border-box;
 	width: 100%;
+}
+
+span.comment_unread {
+    color: #ac130d;
+    font-weight: 600;
 }
 
 /* trees */

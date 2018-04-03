@@ -33,8 +33,17 @@ Lobsters::Application.routes.draw do
     get "/threads" => "comments#threads"
     get "/threads/:user" => "comments#threads"
 
+    get "/replies" => "replies#all"
+    get "/replies/page/:page" => "replies#all"
+    get "/replies/comments" => "replies#comments"
+    get "/replies/comments/page/:page" => "replies#comments"
+    get "/replies/stories" => "replies#stories"
+    get "/replies/stories/page/:page" => "replies#stories"
+    get "/replies/unread" => "replies#unread"
+    get "/replies/unread/page/:page" => "replies#unread"
+
     get "/login" => "login#index"
-    post "/login" => "login#login", :format => /html|json/
+    post "/login" => "login#login"
     post "/logout" => "login#logout"
     get "/login/2fa" => "login#twofa"
     post "/login/2fa_verify" => "login#twofa_verify", :as => "twofa_login"
@@ -81,9 +90,6 @@ Lobsters::Application.routes.draw do
 
         post "delete"
         post "undelete"
-
-        post "dragon"
-        post "undragon"
       end
     end
     get "/comments/page/:page" => "comments#index"
@@ -113,8 +119,10 @@ Lobsters::Application.routes.draw do
 
     post "/users/:username/ban" => "users#ban", :as => "user_ban"
     post "/users/:username/unban" => "users#unban", :as => "user_unban"
-    post "/users/:username/disable_invitation" => "users#disable_invitation", :as => "user_disable_invite"
-    post "/users/:username/enable_invitation" => "users#enable_invitation", :as => "user_enable_invite"
+    post "/users/:username/disable_invitation" => "users#disable_invitation",
+         :as => "user_disable_invite"
+    post "/users/:username/enable_invitation" => "users#enable_invitation",
+         :as => "user_enable_invite"
 
     get "/settings" => "settings#index"
     post "/settings" => "settings#update"

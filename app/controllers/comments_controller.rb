@@ -2,16 +2,16 @@ class CommentsController < ApplicationController
   COMMENTS_PER_PAGE = 20
 
   # for rss feeds, load the user's tag filters if a token is passed
-  before_action :find_user_from_rss_token, :only => [ :index ]
+  before_action :find_user_from_rss_token, :only => [:index]
   before_action :require_logged_in_user_or_400,
-    :only => [ :create, :preview, :upvote, :downvote, :unvote ]
+                :only => [:create, :preview, :upvote, :downvote, :unvote]
 
   # for rss feeds, load the user's tag filters if a token is passed
-  before_action :find_user_from_rss_token, :only => [ :index ]
+  before_action :find_user_from_rss_token, :only => [:index]
 
   def create
     if !(story = Story.where(:short_id => params[:story_id]).first) ||
-    story.is_gone?
+       story.is_gone?
       return render :plain => "can't find story", :status => 400
     end
 
@@ -19,25 +19,25 @@ class CommentsController < ApplicationController
     comment.comment = params[:comment].to_s
     comment.user = @user
 
-    if params[:hat_id] && @user.hats.where(:id => params[:hat_id])
+    if params[:hat_id] && @user.wearable_hats.where(:id => params[:hat_id])
       comment.hat_id = params[:hat_id]
     end
 
     if params[:parent_comment_short_id].present?
-      if pc = Comment.where(:story_id => story.id, :short_id =>
-      params[:parent_comment_short_id]).first
+      if (pc = Comment.where(:story_id => story.id, :short_id => params[:parent_comment_short_id])
+        .first)
         comment.parent_comment = pc
       else
-        return render :json => { :error => "invalid parent comment",
-          :status => 400 }
+        return render :json => { :error => "invalid parent comment", :status => 400 }
       end
     end
 
     # prevent double-clicks of the post button
     if params[:preview].blank? &&
-    (pc = Comment.where(:story_id => story.id, :user_id => @user.id,
-      :parent_comment_id => comment.parent_comment_id).first)
-      if (Time.now - pc.created_at) < 5.minutes
+       (pc = Comment.where(:story_id => story.id,
+                           :user_id => @user.id,
+                           :parent_comment_id => comment.parent_comment_id).first)
+      if (Time.current - pc.created_at) < 5.minutes && !@user.is_moderator?
         comment.errors.add(:comment, "^You have already posted a comment " <<
           "here recently.")
 
@@ -64,8 +64,13 @@ class CommentsController < ApplicationController
       return render :plain => "can't find comment", :status => 400
     end
 
-    render :partial => "comment", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+    render :partial => "comment",
+           :layout => false,
+           :content_type => "text/html",
+           :locals => {
+             :comment => comment,
+             :show_tree_lines => params[:show_tree_lines],
+           }
   end
 
   def show_short_id
@@ -77,7 +82,7 @@ class CommentsController < ApplicationController
   end
 
   def redirect_from_short_id
-    if comment = find_comment
+    if (comment = find_comment)
       return redirect_to comment.url
     else
       return render :plain => "can't find comment", :status => 400
@@ -135,17 +140,18 @@ class CommentsController < ApplicationController
 
     comment.comment = params[:comment]
     comment.hat_id = nil
-    if params[:hat_id] && @user.hats.where(:id => params[:hat_id])
+    if params[:hat_id] && @user.wearable_hats.where(:id => params[:hat_id])
       comment.hat_id = params[:hat_id]
     end
 
     if params[:preview].blank? && comment.save
-      votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id,
-        [comment.id])
+      votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, [comment.id])
       comment.current_vote = votes[comment.id]
 
-      render :partial => "comments/comment", :layout => false,
-        :content_type => "text/html", :locals => { :comment => comment }
+      render :partial => "comments/comment",
+             :layout => false,
+             :content_type => "text/html",
+             :locals => { :comment => comment, :show_tree_lines => params[:show_tree_lines] }
     else
       comment.current_vote = { :vote => 1 }
 
@@ -158,8 +164,9 @@ class CommentsController < ApplicationController
       return render :plain => "can't find comment", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(0, comment.story_id,
-      comment.id, @user.id, nil)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      0, comment.story_id, comment.id, @user.id, nil
+    )
 
     render :plain => "ok"
   end
@@ -169,8 +176,9 @@ class CommentsController < ApplicationController
       return render :plain => "can't find comment", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, comment.story_id,
-      comment.id, @user.id, params[:reason])
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      1, comment.story_id, comment.id, @user.id, params[:reason]
+    )
 
     render :plain => "ok"
   end
@@ -188,15 +196,18 @@ class CommentsController < ApplicationController
       return render :plain => "not permitted to downvote", :status => 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(-1, comment.story_id,
-      comment.id, @user.id, params[:reason])
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      -1, comment.story_id, comment.id, @user.id, params[:reason]
+    )
 
     render :plain => "ok"
   end
 
   def index
-    @rss_link ||= { :title => "RSS 2.0 - Newest Comments",
-      :href => "/comments.rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
+    @rss_link ||= {
+      :title => "RSS 2.0 - Newest Comments",
+      :href => "/comments.rss" + (@user ? "?token=#{@user.rss_token}" : ""),
+    }
 
     @heading = @title = "Newest Comments"
     @cur_url = "/comments"
@@ -225,8 +236,7 @@ class CommentsController < ApplicationController
         "hidden_stories WHERE user_id = ? AND " <<
         "hidden_stories.story_id = comments.story_id)", @user.id)
 
-      @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id,
-        @comments.map{|c| c.id })
+      @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, @comments.map(&:id))
 
       @comments.each do |c|
         if @votes[c.id]
@@ -261,8 +271,7 @@ class CommentsController < ApplicationController
       @cur_url = "/threads"
     end
 
-    thread_ids = @showing_user.recent_threads(20,
-      include_submitted_stories = !!(@user && @user.id == @showing_user.id))
+    thread_ids = @showing_user.recent_threads(20, !!(@user && @user.id == @showing_user.id))
 
     comments = Comment.where(
       :thread_id => thread_ids
@@ -276,8 +285,7 @@ class CommentsController < ApplicationController
     @threads = comments_by_thread_id.values_at(*thread_ids).compact
 
     if @user
-      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,
-        comments.map(&:story_id).uniq)
+      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, comments.map(&:story_id).uniq)
 
       comments.each do |c|
         if @votes[c.id]
@@ -285,18 +293,6 @@ class CommentsController < ApplicationController
         end
       end
     end
-
-    # trim each thread to this user's first response
-    # XXX: busted
-    #@threads.each do |th|
-    #  th.each do |c|
-    #    if c.user_id == @user.id
-    #      break
-    #    else
-    #      th.shift
-    #    end
-    #  end
-    #end
   end
 
 private
@@ -305,9 +301,14 @@ private
     comment.previewing = true
     comment.is_deleted = false # show normal preview for deleted comments
 
-    render :partial => "comments/commentbox", :layout => false,
-      :content_type => "text/html", :locals => {
-      :comment => comment, :show_comment => comment }
+    render :partial => "comments/commentbox",
+           :layout => false,
+           :content_type => "text/html",
+           :locals => {
+             :comment => comment,
+             :show_comment => comment,
+             :show_tree_lines => params[:show_tree_lines],
+           }
   end
 
   def find_comment

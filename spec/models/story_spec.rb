@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Story do
   it "should get a short id" do
@@ -8,14 +8,13 @@ describe Story do
   end
 
   it "requires a url or a description" do
-    expect { Story.make!(:title => "hello", :url => "",
-      :description => "") }.to raise_error
+    expect { Story.make!(:title => "hello", :url => "", :description => "") }.to raise_error
 
-    expect { Story.make!(:title => "hello", :description => "hi", :url => nil)
-      }.to_not raise_error
+    expect { Story.make!(:title => "hello", :description => "hi", :url => nil) }.to_not raise_error
 
-    expect { Story.make!(:title => "hello", :url => "http://ex.com/",
-      :description => nil) }.to_not raise_error
+    expect {
+      Story.make!(:title => "hello", :url => "http://ex.com/", :description => nil)
+    }.to_not raise_error
   end
 
   it "does not allow too-short titles" do
@@ -30,17 +29,19 @@ describe Story do
 
   it "must have at least one tag" do
     expect { Story.make!(:tags_a => nil) }.to raise_error
-    expect { Story.make!(:tags_a => [ "", " " ]) }.to raise_error
+    expect { Story.make!(:tags_a => ["", " "]) }.to raise_error
 
-    expect { Story.make!(:tags_a => [ "", "tag1" ]) }.to_not raise_error
+    expect { Story.make!(:tags_a => ["", "tag1"]) }.to_not raise_error
   end
 
   it "checks for invalid urls" do
-    expect { Story.make!(:title => "test", :url => "http://gooses.com/")
-      }.to_not raise_error
+    expect {
+      Story.make!(:title => "test", :url => "http://gooses.com/")
+    }.to_not raise_error
 
-    expect { Story.make!(:title => "test", url => "ftp://gooses/")
-      }.to raise_error
+    expect {
+      Story.make!(:title => "test", url => "ftp://gooses/")
+    }.to raise_error
   end
 
   it "checks for a previously posted story with same url" do
@@ -49,13 +50,15 @@ describe Story do
     Story.make!(:title => "flim flam", :url => "http://example.com/")
     expect(Story.count).to eq(1)
 
-    expect { Story.make!(:title => "flim flam 2",
-      :url => "http://example.com/") }.to raise_error
+    expect {
+      Story.make!(:title => "flim flam 2", :url => "http://example.com/")
+    }.to raise_error
 
     expect(Story.count).to eq(1)
 
-    expect { Story.make!(:title => "flim flam 2",
-      :url => "http://www.example.com/") }.to raise_error
+    expect {
+      Story.make!(:title => "flim flam 2", :url => "http://www.example.com/")
+    }.to raise_error
 
     expect(Story.count).to eq(1)
   end
@@ -115,21 +118,21 @@ describe Story do
   end
 
   it "calculates tag changes properly" do
-    s = Story.make!(:title => "blah", :tags_a => [ "tag1", "tag2" ])
+    s = Story.make!(:title => "blah", :tags_a => ["tag1", "tag2"])
 
-    s.tags_a = [ "tag2" ]
-    expect(s.tagging_changes).to eq({ "tags" => [ "tag1 tag2", "tag2" ] })
+    s.tags_a = ["tag2"]
+    expect(s.tagging_changes).to eq("tags" => ["tag1 tag2", "tag2"])
   end
 
   it "logs moderations properly" do
     mod = User.make!(:username => "mod", :is_moderator => true)
 
-    s = Story.make!(:title => "blah", :tags_a => [ "tag1", "tag2" ],
+    s = Story.make!(:title => "blah", :tags_a => ["tag1", "tag2"],
       :description => "desc")
 
     s.title = "changed title"
     s.description = nil
-    s.tags_a = [ "tag1" ]
+    s.tags_a = ["tag1"]
 
     s.editor = mod
     s.moderation_reason = "because i hate you"

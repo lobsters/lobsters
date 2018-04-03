@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Message do
   it "should get a short id" do

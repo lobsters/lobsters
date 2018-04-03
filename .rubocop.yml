@@ -1,0 +1,211 @@
+# Project setup:
+Rails:
+  Enabled: true
+AllCops:
+  Include:
+    - '**/Rakefile'
+    - '**/config.ru'
+  Exclude:
+    - Gemfile
+    - 'bin/**/*'
+    - 'db/**/*'
+    - 'vendor/**/*'
+
+# Cop configuration:
+
+# Bundler
+
+# Gemspec
+
+# Layout
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+Layout/AlignArray:
+  Enabled: false
+Layout/AlignHash:
+  Enabled: false
+Layout/CaseIndentation:
+  EnforcedStyle: end
+Layout/ElseAlignment:
+  Enabled: false
+Layout/EmptyLinesAroundExceptionHandlingKeywords:
+  Enabled: false
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+Layout/IndentHash:
+  EnforcedStyle: consistent
+Layout/MultilineMethodCallBraceLayout:
+  Enabled: false
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+Layout/SpaceAroundOperators:
+  Enabled: false
+Layout/SpaceInsideBlockBraces:
+  EnforcedStyle: space
+  SpaceBeforeBlockParameters: false
+Layout/SpaceInsideRangeLiteral:
+  Enabled: false
+
+# Lint
+Lint/HandleExceptions:
+  Enabled: false
+
+# Metrics
+Metrics/AbcSize:
+  Enabled: false
+Metrics/BlockLength:
+  Enabled: false
+Metrics/BlockNesting:
+  Enabled: false
+Metrics/ClassLength:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/LineLength:
+  Max: 100
+Metrics/MethodLength:
+  Enabled: false
+Metrics/ModuleLength:
+  Enabled: false
+Metrics/ParameterLists:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+# Naming
+Naming/AccessorMethodName:
+  Enabled: false
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+Naming/PredicateName:
+  Enabled: false
+# disabled until class vaiables in extras become constants
+Naming/UncommunicativeMethodParamName:
+  Enabled: false
+Naming/VariableName:
+  Enabled: false
+
+# Performance
+Performance/Casecmp:
+  Enabled: false
+Performance/RedundantMatch:
+  Enabled: false
+
+# Rails
+Rails/Blank:
+  Enabled: false
+Rails/FilePath:
+  Enabled: false
+Rails/HttpStatus:
+  Enabled: false
+Rails/OutputSafety:
+  Enabled: false
+Rails/Present:
+  UnlessBlank: false
+Rails/SkipsModelValidations:
+  Enabled: false
+
+# Security
+
+# Style
+Style/AndOr:
+  EnforcedStyle: conditionals
+Style/BlockDelimiters:
+  Enabled: false
+Style/BlockComments:
+  Enabled: false
+Style/CommentedKeyword:
+  Enabled: false
+Style/ClassVars:
+  Enabled: false
+Style/ConditionalAssignment:
+  Enabled: false
+# It would be nice to have this on, but I'm not up for writing 66 of these in
+# the process of addressing the initial 4,489 cop warnings.
+Style/Documentation:
+  Enabled: false
+  Exclude: [db/migrate/**/*, spec/**/*, test/**/*]
+Style/DoubleNegation:
+  Enabled: false
+Style/EachWithObject:
+  Enabled: false
+Style/ExpandPathArguments:
+  Enabled: false
+Style/FormatString:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: never
+Style/GuardClause:
+  Enabled: false
+Style/HashSyntax:
+  EnforcedStyle: no_mixed_keys
+Style/IfInsideElse:
+  Enabled: false
+Style/IfUnlessModifier:
+  Enabled: false
+Style/InverseMethods:
+  Enabled: false
+Style/Lambda:
+  Enabled: false
+Style/LineEndConcatenation:
+  Enabled: false
+Style/MethodDefParentheses:
+  Enabled: false
+Style/MultilineBlockChain:
+  Enabled: false
+Style/MultilineTernaryOperator:
+  Enabled: false
+Style/NegatedIf:
+  EnforcedStyle: postfix
+Style/NegatedWhile:
+  Enabled: false
+Style/Next:
+  Enabled: false
+Style/NonNilCheck:
+  Enabled: false
+Style/NumericPredicate:
+  Enabled: false
+Style/ParallelAssignment:
+  Enabled: false
+Style/PercentLiteralDelimiters:
+  Enabled: false
+Style/PerlBackrefs:
+  Enabled: false
+Style/RaiseArgs:
+  EnforcedStyle: compact
+Style/RedundantBegin:
+  Enabled: false
+Style/RedundantParentheses:
+  Enabled: false
+Style/RedundantReturn:
+  Enabled: false
+Style/RedundantSelf:
+  Enabled: false
+Style/RescueModifier:
+  Enabled: false
+Style/RescueStandardError:
+  EnforcedStyle: implicit
+Style/RegexpLiteral:
+  AllowInnerSlashes: true
+Style/SafeNavigation:
+  Enabled: false
+Style/SignalException:
+  Enabled: false
+Style/StringLiterals:
+  Enabled: false
+Style/SymbolArray:
+  EnforcedStyle: brackets
+Style/TrailingCommaInArguments:
+  Enabled: false
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+Style/WhileUntilDo:
+  Enabled: false
+Style/WhileUntilModifier:
+  Enabled: false
+Style/WordArray:
+  Enabled: false
+Style/ZeroLengthPredicate:
+  Enabled: false

@@ -5,7 +5,7 @@ class FakeDataGenerator
   end
 
   def generate
-    users = 0.upto(@users_count).map do |i|
+    users = 0.upto(@users_count).each do
       name = Faker::Name.name
       password = Faker::Internet.password
       user_name = Faker::Internet.user_name(name, %w(_))
@@ -15,11 +15,18 @@ class FakeDataGenerator
         username: user_name
     end
 
-    @stories_count.times do
+    @stories_count.times do |i|
       user = users[Random.rand(users.length-1)]
       title = Faker::Lorem.sentence(3)
       tag = Tag.find_or_create_by! tag: title.split(' ').first.downcase
-      Story.create! user: user, title: title, url: Faker::Internet.url, tags_a: [tag.tag]
+      if i.even?
+        Story.create! user: user, title: title, url: Faker::Internet.url, tags_a: [tag.tag]
+      else
+        Story.create! user: user,
+          title: title,
+          description: Faker::Lorem.paragraphs(3).join("\n\n"),
+          tags_a: [tag.tag]
+      end
     end
   end
 end

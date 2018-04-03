@@ -13,10 +13,10 @@ module Lobsters
     # -- all .rb files in that directory are automatically loaded.
 
     # Custom directories with classes and modules you want to be autoloadable.
-    #config.autoload_paths += %W(#{config.root}/extras)
+    # config.autoload_paths += %W(#{config.root}/extras)
 
     # Eager load everything in extras/
-    config.eager_load_paths << Rails.root.join("extras")
+    config.eager_load_paths << Rails.root.join("extras").to_s
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -35,6 +35,8 @@ module Lobsters
 
     config.exceptions_app = self.routes
 
+    config.skip_yarn = true
+
     config.after_initialize do
       require "#{Rails.root}/lib/monkey.rb"
     end
@@ -43,7 +45,7 @@ end
 
 # disable yaml/xml/whatever input parsing
 silence_warnings do
-  ActionDispatch::ParamsParser::DEFAULT_PARSERS = {}
+  ActionDispatch::ParamsParser::DEFAULT_PARSERS = {}.freeze
 end
 
 # define site name and domain to be used globally, should be overridden in a
@@ -51,6 +53,10 @@ end
 class << Rails.application
   def allow_invitation_requests?
     true
+  end
+
+  def open_signups?
+    ENV["OPEN_SIGNUPS"] == "true"
   end
 
   def domain
@@ -68,13 +74,13 @@ class << Rails.application
   end
 
   def root_url
-    Rails.application.routes.url_helpers.root_url({
+    Rails.application.routes.url_helpers.root_url(
       :host => Rails.application.domain,
       :protocol => Rails.application.ssl? ? "https" : "http",
-    })
+    )
   end
 
-  # used as mailing list prefix and countinual prefix, cannot have spaces
+  # used as mailing list prefix, cannot have spaces
   def shortname
     name.downcase.gsub(/[^a-z]/, "")
   end

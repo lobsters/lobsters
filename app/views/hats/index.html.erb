@@ -36,6 +36,9 @@
           <% else %>
             <%= hh.link %>
           <% end %>
+          <% if hh.doffed_at? %>
+            doffed <%= time_ago_in_words_label(hh.doffed_at) %>
+          <% end %>
         </td>
       </tr>
       <% bit = (bit == 1 ? 0 : 1) %>

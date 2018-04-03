@@ -4,7 +4,7 @@ class StoryCacher
   # this needs to be overridden in config/initializers/production.rb
   @@DIFFBOT_API_KEY = nil
 
-  DIFFBOT_API_URL = "http://www.diffbot.com/api/article"
+  DIFFBOT_API_URL = "http://www.diffbot.com/api/article".freeze
 
   def self.get_story_text(story)
     if !@@DIFFBOT_API_KEY
@@ -16,8 +16,7 @@ class StoryCacher
       return nil
     end
 
-    db_url = "#{DIFFBOT_API_URL}?token=#{@@DIFFBOT_API_KEY}&url=" <<
-      CGI.escape(story.url)
+    db_url = "#{DIFFBOT_API_URL}?token=#{@@DIFFBOT_API_KEY}&url=#{CGI.escape(story.url)}"
 
     begin
       s = Sponge.new

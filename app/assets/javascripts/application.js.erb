@@ -115,22 +115,25 @@ var _Lobsters = Class.extend({
       d.append(a);
     });
 
-    if (thingType == "story")
-      li.after(d);
-    else
+    if (thingType == "story") {
       $(voterEl).after(d);
-
-    d.position({
-      my: "left top",
-      at: "left bottom",
-      offset: "-2 -2",
-      of: $(voterEl),
-      collision: "none",
-    });
-
-    /* XXX: why is this needed? */
-    if (thingType == "story")
+      d.position({
+        my: "left top",
+        at: "left bottom",
+        offset: "-2 -2",
+        of: $(voterEl),
+        collision: "none",
+      });
       d.css("left", $(voterEl).position().left);
+    } else {
+      // place downvote menu outside of the comment to avoid inheriting opacity
+      var voterPos = $(voterEl).position();
+      d.appendTo($(voterEl).closest(".comments_subtree"));
+      d.css({
+        left: voterPos.left,
+        top: voterPos.top + $(voterEl).outerHeight()
+      });
+    }
   },
 
   vote: function(thingType, voterEl, point, reason) {
@@ -199,11 +202,28 @@ var _Lobsters = Class.extend({
   },
 
   postComment: function(form) {
-    $.post($(form).attr("action"), $(form).serializeArray(), function(data) {
-      if ($(form).find('#parent_comment_short_id').length) {
-        $(form).closest('.comment').replaceWith($.parseHTML(data));
+    var params = $(form).serializeArray();
+    params.push({"name": "show_tree_lines", "value": "true"});
+
+    $.post($(form).attr("action"), params, function(data) {
+      var parsedHTML = $.parseHTML(data);
+
+      var isEdit = $(form).hasClass("edit_comment");
+      var hasChildren = $(form).closest(".comments_subtree")
+        .find(".comments_subtree").length;
+      if (isEdit && hasChildren) {
+        $(parsedHTML).find(".comment_parent_tree_line:first")
+          .removeClass("no_children");
+      }
+
+      if ($(form).find("#parent_comment_short_id").length) {
+        // reply to comment
+        $(form).closest(".comments_subtree")
+          .find(".comment_parent_tree_line:first").removeClass("no_children");
+        $(form).closest(".comment").replaceWith(parsedHTML);
       } else {
-        $(form).parent(".comment").replaceWith($.parseHTML(data));
+        // reply to story
+        $(form).parent(".comment").replaceWith(parsedHTML);
       }
     });
   },
@@ -211,6 +231,7 @@ var _Lobsters = Class.extend({
   previewComment: function(form) {
     var params = $(form).serializeArray();
     params.push({"name": "preview", "value": "true"});
+    params.push({"name": "show_tree_lines", "value": "true"});
     $.post($(form).attr("action"), params, function(data) {
       var da = $.parseHTML(data);
       var ta = $(da).find("textarea");
@@ -418,9 +439,18 @@ $(document).ready(function() {
     var comment = $(this).closest(".comment");
     var comment_id = comment.attr("data-shortid");
     if (comment_id != null && comment_id !== '') {
-      $.get("/comments/" + comment_id, function(data) {
-        comment.replaceWith($.parseHTML(data));
-      });
+      $.get("/comments/" + comment_id + "?show_tree_lines=true",
+        function(data) {
+          var parsedHTML = $.parseHTML(data);
+          var isEdit = comment.children("form").hasClass("edit_comment");
+          var hasChildren = comment.closest(".comments_subtree")
+            .find(".comments_subtree").length;
+          if (isEdit && hasChildren) {
+            $(parsedHTML).find(".comment_parent_tree_line:first")
+              .removeClass("no_children");
+          }
+          comment.replaceWith(parsedHTML);
+        });
     } else {
       comment.remove();
     }

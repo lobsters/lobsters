@@ -12,7 +12,7 @@ User.blueprint(:banned) do
   password { "blah blah" }
   password_confirmation { object.password }
   username { "username#{sn}" }
-  banned_at { Time.now }
+  banned_at { Time.current }
 end
 
 Tag.blueprint do
@@ -29,7 +29,7 @@ Story.blueprint do
   user_id { User.make!.id }
   title { "story title #{sn}" }
   url { "http://example.com/#{sn}" }
-  tags_a { [ "tag1", "tag2" ] }
+  tags_a { ["tag1", "tag2"] }
 end
 
 Comment.blueprint do

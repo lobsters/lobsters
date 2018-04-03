@@ -2,17 +2,17 @@
 
 ENV["RAILS_ENV"] ||= "production"
 
-APP_PATH = File.expand_path('../../config/application',  __FILE__)
-require File.expand_path('../../config/boot',  __FILE__)
+APP_PATH = File.expand_path('../../config/application', __FILE__)
+require File.expand_path('../../config/boot', __FILE__)
 require APP_PATH
 Rails.application.require_environment!
 
 # don't where(:twitter_id => nil) here because we just want the first page as
 # the web would see it, not just the first group of stories with no twitter ids
 # which would just keep walking through pages
-StoriesPaginator.new(StoryRepository.new.hottest).get.first.
-reject{|s| s.twitter_id.present? || s.score < 2 || s.tags.map(&:tag).include?("meta") }.
-each_with_index do |s,x|
+StoriesPaginator.new(StoryRepository.new.hottest).get.first
+.reject {|s| s.twitter_id.present? || s.score < 2 || s.tags.map(&:tag).include?("meta") }
+.each_with_index do |s, x|
   if x > 0
     sleep 2
   end
@@ -24,17 +24,21 @@ each_with_index do |s,x|
 
   via = ""
   if s.user.twitter_username.present?
-    via = "\n" + (s.user_is_author? ? "by" : "via") +
-      " @#{s.user.twitter_username}"
+    via = "\n" +
+          (s.user_is_author? ? "by" : "via") +
+          " @#{s.user.twitter_username}"
   end
 
-  tco_status = via + "\n" +
-    ("X" * Twitter::TCO_LEN) + tags +
-    (s.url.present?? "\n" + ("X" * Twitter::TCO_LEN) : "")
+  tco_status = via +
+               "\n" +
+               ("X" * Twitter::TCO_LEN) + tags +
+               (s.url.present? ? "\n" + ("X" * Twitter::TCO_LEN) : "")
 
-  status = via + "\n" +
-    s.short_id_url + tags +
-    (s.url.present?? "\n" + s.url : "")
+  status = via +
+           "\n" +
+           s.short_id_url +
+           tags +
+           (s.url.present? ? "\n" + s.url : "")
 
   left_len = Twitter::MAX_TWEET_LEN - tco_status.length
 
@@ -47,8 +51,10 @@ each_with_index do |s,x|
 
   # if there are any urls in the title, they should be sized (at least) to a
   # twitter t.co url
-  left_len -= (title.scan(/[^ ]\.[a-z]{2,10}/i).map{|u| [ 0,
-    Twitter::TCO_LEN ].max }.inject(:+)).to_i
+  left_len -= title.scan(/[^ ]\.[a-z]{2,10}/i)
+                   .map {|_u| [0, Twitter::TCO_LEN].max }
+                   .inject(:+)
+                   .to_i
 
   if left_len < -3
     left_len = -3
@@ -60,23 +66,20 @@ each_with_index do |s,x|
     status = title + status
   end
 
-  res = Twitter.oauth_request("/1.1/statuses/update.json", :post,
-    { "status" => status })
+  res = Twitter.oauth_request("/1.1/statuses/update.json", :post, "status" => status)
 
   begin
     if res["id_str"].to_s.match(/\d+/)
       s.update_column("twitter_id", res["id_str"])
-    elsif res["errors"].select{|e| e["code"] == 226 || e["code"] == 186 }.any?
+    elsif res["errors"].select {|e| e["code"] == 226 || e["code"] == 186 }.any?
       # twitter is rejecting the content of this message, skip it
       s.update_column("twitter_id", 0)
-      puts "skipping: failed posting story #{s.id} (#{status.inspect}): " +
-        "#{res.inspect}\n"
+      puts "skipping: failed posting story #{s.id} (#{status.inspect}): #{res.inspect}\n"
     else
       raise
     end
   rescue => e
-    puts "failed posting story #{s.id} (#{status.inspect}): #{e.inspect}\n" +
-      "#{res.inspect}"
+    puts "failed posting story #{s.id} (#{status.inspect}): #{e.inspect}\n#{res.inspect}"
     exit
   end
 end

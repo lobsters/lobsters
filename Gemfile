@@ -5,10 +5,13 @@ gem "rails", "~> 5.1"
 
 gem "unicorn"
 
-gem "mysql2", ">= 0.3.14"
+gem "mysql2", "~> 0.3.20"
 
 # uncomment to use PostgreSQL
 # gem "pg"
+
+gem 'scenic'
+gem 'scenic-mysql'
 
 gem "uglifier", ">= 1.3.0"
 gem "jquery-rails", "~> 4.3"
@@ -33,8 +36,10 @@ gem "oauth"
 gem "mail"
 
 group :test, :development do
-  gem "rspec-rails", "~> 3.6"
+  gem 'bullet'
+  gem "rspec-rails"
   gem "machinist"
+  gem "rubocop", require: false
   gem "sqlite3"
   gem "faker"
 end

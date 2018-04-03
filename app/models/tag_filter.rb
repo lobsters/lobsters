@@ -1,4 +1,4 @@
-class TagFilter < ActiveRecord::Base
+class TagFilter < ApplicationRecord
   belongs_to :tag
   belongs_to :user
 end

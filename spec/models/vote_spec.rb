@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Vote do
   it "applies a story upvote and karma properly" do
@@ -10,8 +10,7 @@ describe Vote do
 
     u = User.make!
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id,
-      nil, u.id, nil)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
 
     s.reload
 
@@ -25,8 +24,7 @@ describe Vote do
     u = User.make!
 
     2.times do
-      Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id,
-        nil, u.id, nil)
+      Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
 
       s.reload
 
@@ -41,8 +39,7 @@ describe Vote do
 
     u = User.make!
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id,
-      nil, u.id, "H")
+    Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id, nil, u.id, "H")
     s.reload
     expect(s.user.karma).to eq(0)
     expect(s.upvotes).to eq(1)
@@ -56,8 +53,7 @@ describe Vote do
 
     u = User.make!
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id,
-      c.id, u.id, nil)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, c.id, u.id, nil)
     c.reload
     expect(c.user.karma).to eq(1)
     # initial poster upvote plus new user's vote
@@ -65,8 +61,9 @@ describe Vote do
     expect(c.downvotes).to eq(0)
 
     # flip vote
-    Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id,
-      c.id, u.id, Vote::COMMENT_REASONS.keys.first)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(
+      -1, s.id, c.id, u.id, Vote::COMMENT_REASONS.keys.first
+    )
     c.reload
 
     expect(c.user.karma).to eq(-1)
@@ -80,15 +77,13 @@ describe Vote do
 
     u = User.make!
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id,
-      c.id, u.id, nil)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, c.id, u.id, nil)
     c.reload
     expect(c.user.karma).to eq(1)
     expect(c.upvotes).to eq(2)
     expect(c.downvotes).to eq(0)
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id,
-      c.id, u.id, nil)
+    Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id, c.id, u.id, nil)
     c.reload
 
     expect(c.user.karma).to eq(0)

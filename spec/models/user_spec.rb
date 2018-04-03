@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe User do
   it "has a valid username" do
@@ -30,7 +30,8 @@ describe User do
   end
 
   it "gets an error message after registering banned name" do
-    expect { User.make!(:username => "admin") }.to raise_error("Validation failed: Username is not permitted")
+    expect { User.make!(:username => "admin") }
+           .to raise_error("Validation failed: Username is not permitted")
   end
 
   it "shows a user is banned or not" do
@@ -48,8 +49,8 @@ describe User do
   end
 
   it "shows a user is recent or not" do
-    user = User.make!(:created_at => Time.now)
-    u = User.make!(:created_at => Time.now - 8.days)
+    user = User.make!(:created_at => Time.current)
+    u = User.make!(:created_at => Time.current - 8.days)
     expect(user.is_new?).to be true
     expect(u.is_new?).to be false
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171025072230) do
+ActiveRecord::Schema.define(version: 20180201184612) do
 
   create_table "comments", id: :integer, unsigned: true, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
     t.datetime "created_at", null: false
@@ -51,9 +51,10 @@ ActiveRecord::Schema.define(version: 20171025072230) do
     t.datetime "updated_at"
     t.integer "user_id"
     t.integer "granted_by_user_id"
-    t.string "hat", collation: "utf8mb4_general_ci"
+    t.string "hat", null: false
     t.string "link", collation: "utf8mb4_general_ci"
     t.boolean "modlog_use", default: false
+    t.datetime "doffed_at"
   end
 
   create_table "hidden_stories", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -112,6 +113,16 @@ ActiveRecord::Schema.define(version: 20171025072230) do
     t.text "reason", limit: 16777215
     t.boolean "is_from_suggestions", default: false
     t.index ["created_at"], name: "index_moderations_on_created_at"
+  end
+
+  create_table "read_ribbons", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+    t.boolean "is_following", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.bigint "story_id"
+    t.index ["story_id"], name: "index_read_ribbons_on_story_id"
+    t.index ["user_id"], name: "index_read_ribbons_on_user_id"
   end
 
   create_table "saved_stories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -234,5 +245,10 @@ ActiveRecord::Schema.define(version: 20171025072230) do
     t.index ["user_id", "comment_id"], name: "user_id_comment_id"
     t.index ["user_id", "story_id"], name: "user_id_story_id"
   end
+
+
+  create_view "replying_comments",  sql_definition: <<-SQL
+      select `read_ribbons`.`user_id` AS `user_id`,`comments`.`id` AS `comment_id`,`read_ribbons`.`story_id` AS `story_id`,`comments`.`parent_comment_id` AS `parent_comment_id`,`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`comments`.`user_id` AS `comment_author_id`,`stories`.`user_id` AS `story_author_id`,(`read_ribbons`.`updated_at` < `comments`.`created_at`) AS `is_unread`,(select `votes`.`vote` from `votes` where ((`votes`.`user_id` = `read_ribbons`.`user_id`) and (`votes`.`comment_id` = `comments`.`id`))) AS `current_vote_vote`,(select `votes`.`reason` from `votes` where ((`votes`.`user_id` = `read_ribbons`.`user_id`) and (`votes`.`comment_id` = `comments`.`id`))) AS `current_vote_reason` from (((`read_ribbons` join `comments` on((`comments`.`story_id` = `read_ribbons`.`story_id`))) join `stories` on((`stories`.`id` = `comments`.`story_id`))) left join `comments` `parent_comments` on((`parent_comments`.`id` = `comments`.`parent_comment_id`))) where ((`read_ribbons`.`is_following` = 1) and (`comments`.`user_id` <> `read_ribbons`.`user_id`) and (`comments`.`is_deleted` = 0) and (`comments`.`is_moderated` = 0) and ((`parent_comments`.`user_id` = `read_ribbons`.`user_id`) or (isnull(`parent_comments`.`user_id`) and (`stories`.`user_id` = `read_ribbons`.`user_id`))) and ((`comments`.`upvotes` - `comments`.`downvotes`) >= 0) and (isnull(`parent_comments`.`id`) or ((`parent_comments`.`upvotes` - `parent_comments`.`downvotes`) >= 0)))
+  SQL
 
 end

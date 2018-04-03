@@ -1,6 +1,6 @@
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
-  <%= comment.score <= Comment::DOWNVOTABLE_MIN_SCORE ? "checked" : "" %>>
+  <%= comment.score <= Comment::COLLAPSE_SCORE ? "checked" : "" %>>
 
 <div id="c_<%= comment.short_id %>"
 data-shortid="<%= comment.short_id if comment.persisted? %>"
@@ -29,15 +29,10 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <span class="downvoter downvoter_stub"></span>
       <% end %>
     </div>
-    <% if defined?(children) && children %>
-      <% if can_downvote %>
-        <div class="comment_parent_tree_line can_downvote"></div>
-      <% elsif score_display != "&nbsp;" %>
-        <div class="comment_parent_tree_line score_shown"></div>
-      <% else %>
-        <div class="comment_parent_tree_line"></div>
-      <% end %>
-    <% end %>
+    <div class="comment_parent_tree_line
+      <%= can_downvote ? "can_downvote" : "" %>
+      <%= score_display != "&nbsp;" ? "score_shown" : "" %>
+      <%= defined?(children) && children ? "" : "no_children" %>"></div>
   <% end %>
 
   <div class="details">
@@ -78,8 +73,11 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <% elsif comment.is_from_email? %>
           e-mailed
         <% end %>
+        <% if defined?(is_unread) && is_unread %>
+          <% mark_unread = true %>
+        <% end %>
         <%= time_ago_in_words_label((comment.has_been_edited? ?
-          comment.updated_at : comment.created_at), :strip_about => true) %>
+          comment.updated_at : comment.created_at), strip_about: true, mark_unread: mark_unread) %>
       <% end %>
 
       <% if !comment.previewing %>

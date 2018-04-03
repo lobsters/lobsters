@@ -4,10 +4,11 @@ class Search
   include ActiveModel::AttributeMethods
   extend ActiveModel::Naming
 
-  attr_accessor :q, :what, :order
+  attr_accessor :q, :order
   attr_accessor :results, :page, :total_results, :per_page
+  attr_writer :what
 
-  validates_length_of :q, :minimum => 2
+  validates :q, length: { :minimum => 2 }
 
   def initialize
     @q = ""
@@ -30,8 +31,7 @@ class Search
   end
 
   def to_url_params
-    [ :q, :what, :order ].map{|p| "#{p}=#{CGI.escape(self.send(p).to_s)}"
-      }.join("&amp;")
+    [:q, :what, :order].map {|p| "#{p}=#{CGI.escape(self.send(p).to_s)}" }.join("&amp;")
   end
 
   def page_count
@@ -53,15 +53,26 @@ class Search
     end
   end
 
+  def with_tags(base, tag_scopes)
+    base
+      .joins({ :taggings => :tag }, :user)
+      .where(:tags => { :tag => tag_scopes })
+      .having("COUNT(stories.id) = ?", tag_scopes.length)
+      .group("stories.id")
+  end
+
   def search_for_user!(user)
     self.results = []
     self.total_results = 0
 
     # extract domain query since it must be done separately
     domain = nil
-    words = self.q.to_s.split(" ").reject{|w|
-      if m = w.match(/^domain:(.+)$/)
+    tag_scopes = []
+    words = self.q.to_s.split(" ").reject {|w|
+      if (m = w.match(/^domain:(.+)$/))
         domain = m[1]
+      elsif (m = w.match(/^tag:(.+)$/))
+        tag_scopes << m[1]
       end
     }.join(" ")
 
@@ -71,9 +82,7 @@ class Search
 
     case self.what
     when "stories"
-      base = Story.unmerged.where(:is_expired => false).
-        includes({ :taggings => :tag }, :user)
-
+      base = Story.unmerged.where(:is_expired => false)
       if domain.present?
         begin
           reg = Regexp.new("//([^/]*\.)?#{domain}/")
@@ -84,36 +93,46 @@ class Search
         end
       end
 
+      title_match_sql = "MATCH(stories.title) AGAINST('#{qwords}' IN BOOLEAN MODE)"
+      description_match_sql = "MATCH(stories.description) AGAINST('#{qwords}' IN BOOLEAN MODE)"
+      story_cache_match_sql = "MATCH(stories.story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE)"
+
       if qwords.present?
         base.where!(
-          "(MATCH(title) AGAINST('#{qwords}' IN BOOLEAN MODE) OR " +
-          "MATCH(description) AGAINST('#{qwords}' IN BOOLEAN MODE) OR " +
-          "MATCH(story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE))"
+          "(#{title_match_sql} OR " +
+          "#{description_match_sql} OR " +
+          "#{story_cache_match_sql})"
         )
 
-        self.results = base.select(
-          "stories.*, " +
-          "MATCH(title) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_title, " +
-          "MATCH(description) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_description, " +
-          "MATCH(story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_story_cache"
-        )
+        if tag_scopes.present?
+          self.results = with_tags(base, tag_scopes)
+        else
+          base = base.includes({ :taggings => :tag }, :user)
+          self.results = base.select(
+            ["stories.*", title_match_sql, description_match_sql, story_cache_match_sql].join(', ')
+          )
+        end
       else
-        self.results = base
+        if tag_scopes.present?
+          self.results = with_tags(base, tag_scopes)
+        else
+          self.results = base.includes({ :taggings => :tag }, :user)
+        end
       end
 
       case self.order
       when "relevance"
         if qwords.present?
           self.results.order!(
-            "(rel_title * 2) DESC, " +
-            "(rel_description * 1.5) DESC, " +
-            "(rel_story_cache) DESC"
+            "((#{title_match_sql}) * 2) DESC, " +
+            "((#{description_match_sql}) * 1.5) DESC, " +
+            "(#{story_cache_match_sql}) DESC"
           )
         else
-          self.results.order!("created_at DESC")
+          self.results.order!("stories.created_at DESC")
         end
       when "newest"
-        self.results.order!("created_at DESC")
+        self.results.order!("stories.created_at DESC")
       when "points"
         self.results.order!("#{Story.score_sql} DESC")
       end
@@ -138,7 +157,11 @@ class Search
       end
     end
 
-    self.total_results = base.count
+    if tag_scopes.present?
+      self.total_results = self.results.length
+    else
+      self.total_results = base.count
+    end
 
     if self.page > self.page_count
       self.page = self.page_count
@@ -147,16 +170,15 @@ class Search
       self.page = 1
     end
 
-    self.results = self.results.
-      limit(self.per_page).
-      offset((self.page - 1) * self.per_page)
+    self.results = self.results
+      .limit(self.per_page)
+      .offset((self.page - 1) * self.per_page)
 
     # if a user is logged in, fetch their votes for what's on the page
     if user
       case what
       when "stories"
-        votes = Vote.story_votes_by_user_for_story_ids_hash(user.id,
-          self.results.map{|s| s.id })
+        votes = Vote.story_votes_by_user_for_story_ids_hash(user.id, self.results.map(&:id))
 
         self.results.each do |r|
           if votes[r.id]
@@ -165,8 +187,7 @@ class Search
         end
 
       when "comments"
-        votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id,
-          self.results.map{|c| c.id })
+        votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id, self.results.map(&:id))
 
         self.results.each do |r|
           if votes[r.id]
@@ -176,7 +197,7 @@ class Search
       end
     end
 
-  rescue ActiveRecord::StatementInvalid => e
+  rescue ActiveRecord::StatementInvalid
     # this is most likely bad boolean chars
     self.results = []
     self.total_results = -1

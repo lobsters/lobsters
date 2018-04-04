@@ -1,18 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <% coder = HTMLEntities.new %>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title><%= Rails.application.name %><%= @title.present? ?
       ": " + h(@title) : "" %></title>
     <description><%= @title %></description>
     <link><%= Rails.application.root_url + (@newest ? "newest" : "") %></link>
+    <atom:link href="<%= request.original_url %>" rel="self" type="application/rss+xml" />
 
     <% @stories.each do |story| %>
       <item>
         <title><%= raw coder.encode(story.title, :decimal) %></title>
         <link><%= story.url_or_comments_url %></link>
         <guid isPermaLink="false"><%= story.short_id_url %></guid>
-        <author><%= story.user.username %></author>
+        <author><%= story.user.username %>@users.lobste.rs</author>
         <pubDate><%= story.created_at.rfc2822 %></pubDate>
         <comments><%= story.comments_url %></comments>
         <description>

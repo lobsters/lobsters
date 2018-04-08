@@ -25,7 +25,7 @@
     <% end %>
   </ol>
 <% else %>
-  <p>No replies to show.</p>
+  <p class="help">No replies to show.</p>
 <% end %>
 
 <% if @replies.count > RepliesController::REPLIES_PER_PAGE && @filter != 'unread'%>

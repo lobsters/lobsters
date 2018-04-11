@@ -10,7 +10,8 @@ describe Markdowner do
     User.make!(:username => "blahblah")
 
     expect(Markdowner.to_html("hi @blahblah test"))
-      .to eq("<p>hi <a href=\"/u/blahblah\">@blahblah</a> test</p>\n")
+      .to eq("<p>hi <a href=\"https://example.com/u/blahblah\" rel=\"nofollow\">" +
+             "@blahblah</a> test</p>\n")
 
     expect(Markdowner.to_html("hi @flimflam test"))
       .to eq("<p>hi @flimflam test</p>\n")

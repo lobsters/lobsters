@@ -23,7 +23,7 @@ class SignupController < ApplicationController
       return redirect_to "/"
     end
 
-    if not Rails.application.open_signups?
+    if !Rails.application.open_signups?
       if !(@invitation = Invitation.where(:code => params[:invitation_code].to_s).first)
         flash[:error] = "Invalid or expired invitation"
         return redirect_to "/signup"
@@ -34,7 +34,7 @@ class SignupController < ApplicationController
 
     @new_user = User.new
 
-    if not Rails.application.open_signups?
+    if !Rails.application.open_signups?
       @new_user.email = @invitation.email
     end
 
@@ -42,7 +42,7 @@ class SignupController < ApplicationController
   end
 
   def signup
-    if not Rails.application.open_signups?
+    if !Rails.application.open_signups?
       if !(@invitation = Invitation.where(:code => params[:invitation_code].to_s).first)
         flash[:error] = "Invalid or expired invitation."
         return redirect_to "/signup"
@@ -53,12 +53,12 @@ class SignupController < ApplicationController
 
     @new_user = User.new(user_params)
 
-    if not Rails.application.open_signups?
+    if !Rails.application.open_signups?
       @new_user.invited_by_user_id = @invitation.user_id
     end
 
     if @new_user.save
-      if not Rails.application.open_signups?
+      if !Rails.application.open_signups?
         @invitation.destroy
       end
       session[:u] = @new_user.session_token

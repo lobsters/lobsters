@@ -122,6 +122,5 @@ in a `config/initializers/production.rb` or similar file:
 
 #### Administration
 
-Users who are registered as site administrators can create and edit Tags via a web interface by going to the `/tags`
-route. There is `Create New Tag` link at the top, and clicking on the box for any tag will allow you to edit it. All
-modifications to tags via this interface will be logged to the Moderation Log.
+Basic moderation happens on-site, but most other administrative tasks require use of the rails console in production.
+Side administrators can create and edit tags at `/tags`.

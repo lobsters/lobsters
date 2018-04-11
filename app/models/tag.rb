@@ -4,7 +4,7 @@ class Tag < ApplicationRecord
 
   before_save :log_modifications
 
-  attr_accessor :stories_count
+  attr_accessor :edit_user_id, :stories_count
   attr_writer :filtered_count
 
   validates :tag, length: { maximum: 25 }, presence: true, uniqueness: true
@@ -54,10 +54,10 @@ class Tag < ApplicationRecord
   def log_modifications
     Moderation.create do |m|
       if self.new_record?
-        m.action = 'Created new tag '  + self.changes.map { |f, c| "with #{f} '#{c[1]}'" } .join(', ')
+        m.action = 'Created new tag ' + self.changes.map {|f, c| "with #{f} '#{c[1]}'" }.join(', ')
       else
         m.action = "Updating tag #{self.tag}, " +
-          self.changes.map { |f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" } .join(', ')
+                   self.changes.map {|f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" } .join(', ')
       end
       m.moderator_user_id = @edit_user_id
     end

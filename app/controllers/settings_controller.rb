@@ -29,7 +29,7 @@ class SettingsController < ApplicationController
 
     if params[:user][:password].empty? ||
        @user.authenticate(params[:current_password].to_s)
-      if @edit_user.update_attributes(user_params)
+      if @edit_user.update(user_params)
         flash.now[:success] = "Successfully updated settings."
         @user = @edit_user
       end

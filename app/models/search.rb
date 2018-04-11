@@ -67,10 +67,11 @@ class Search
 
     # extract domain query since it must be done separately
     domain = nil
+    tag_scopes = []
     words = self.q.to_s.split(" ").reject {|w|
       if (m = w.match(/^domain:(.+)$/))
         domain = m[1]
-      elsif m = w.match(/^tag:(.+)$/)
+      elsif (m = w.match(/^tag:(.+)$/))
         tag_scopes << m[1]
       end
     }.join(" ")
@@ -108,10 +109,7 @@ class Search
         else
           base = base.includes({ :taggings => :tag }, :user)
           self.results = base.select(
-            "stories.*, " +
-            "#{title_match_sql}, " +
-            "#{description_match_sql}, " +
-            "#{story_cache_match_sql}"
+            ["stories.*", title_match_sql, description_match_sql, story_cache_match_sql].join(', ')
           )
         end
       else

@@ -42,7 +42,7 @@ class HatsController < ApplicationController
 
   def approve_request
     @hat_request = HatRequest.find(params[:id])
-    @hat_request.update_attributes!(params.require(:hat_request)
+    @hat_request.update!(params.require(:hat_request)
       .permit(:hat, :link))
     @hat_request.approve_by_user!(@user)
 

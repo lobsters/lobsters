@@ -1,11 +1,12 @@
-require "spec_helper"
+require "rails_helper"
 
 describe TagsController do
   let(:user_id) { 5 }
   before do
     allow(controller).to receive(:require_logged_in_admin)
     allow(controller).to receive(:session).and_return(u: 'asdf')
-    allow(User).to receive(:where).and_return(double(first: double(id: user_id, is_active?: true, username: 'name')))
+    allow(User).to receive(:where).and_return(
+      double(first: double(id: user_id, is_active?: true, username: 'name')))
   end
 
   context 'create' do
@@ -16,15 +17,20 @@ describe TagsController do
     end
 
     it 'does not create a new tag when the name is blank' do
-      expect { post :create, params: { tag: { tag: '' } } } .not_to change { Tag.count }
+      expect { post :create, params: { tag: { tag: '' } } } .not_to(change { Tag.count })
       expect(response).to redirect_to new_tag_path
       expect(flash[:error]).to include "Tag can't be blank"
     end
 
     it 'creates new tags with expected params' do
       post :create, params: { tag: {
-        tag: 'mytag', description: 'desc', is_media: true, hotness_mod: 1.5, privileged: true, inactive: true
-      } }
+        tag: 'mytag',
+        description: 'desc',
+        is_media: true,
+        hotness_mod: 1.5,
+        privileged: true,
+        inactive: true,
+      }, }
       tag = Tag.find_by(tag: 'mytag')
       expect(tag.description).to eq 'desc'
       expect(tag.is_media).to be true
@@ -47,7 +53,7 @@ describe TagsController do
       expect(Tag.find(tag.id).tag).to eq 'modified_tag'
       expect(response).to redirect_to tags_path
     end
-    
+
     it 'does not update tags when the new name is blank' do
       post :update, params: { id: tag.id, tag: { tag: '' } }
       expect(Tag.find(tag.id).tag).not_to be_blank
@@ -55,14 +61,18 @@ describe TagsController do
     end
 
     it 'rejects updates with unpermiited params' do
-      expect { post :update, params: { id: tag.id,  tag: { is_media: true } } }
+      expect { post :update, params: { id: tag.id, tag: { is_media: true } } }
         .to raise_error ActionController::UnpermittedParameters
     end
 
     it 'updates with all permitted params' do
-      post :update, params: { id: tag.id,  tag: {
-        tag: 'mytag', description: 'desc', hotness_mod: 1.5, privileged: true, inactive: true
-      } }
+      post :update, params: { id: tag.id, tag: {
+        tag: 'mytag',
+        description: 'desc',
+        hotness_mod: 1.5,
+        privileged: true,
+        inactive: true,
+      }, }
       new_tag = Tag.find(tag.id)
       expect(new_tag.tag).to eq 'mytag'
       expect(new_tag.description).to eq 'desc'

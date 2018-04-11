@@ -30,6 +30,8 @@ Layout/ElseAlignment:
   Enabled: false
 Layout/EmptyLinesAroundExceptionHandlingKeywords:
   Enabled: false
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
 Layout/IndentHash:
   EnforcedStyle: consistent
 Layout/MultilineMethodCallBraceLayout:
@@ -75,16 +77,18 @@ Metrics/PerceivedComplexity:
 # Naming
 Naming/AccessorMethodName:
   Enabled: false
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
 Naming/PredicateName:
   Enabled: false
 # disabled until class vaiables in extras become constants
+Naming/UncommunicativeMethodParamName:
+  Enabled: false
 Naming/VariableName:
   Enabled: false
 
 # Performance
 Performance/Casecmp:
-  Enabled: false
-Performance/HashEachMethods:
   Enabled: false
 Performance/RedundantMatch:
   Enabled: false
@@ -93,6 +97,8 @@ Performance/RedundantMatch:
 Rails/Blank:
   Enabled: false
 Rails/FilePath:
+  Enabled: false
+Rails/HttpStatus:
   Enabled: false
 Rails/OutputSafety:
   Enabled: false
@@ -104,6 +110,8 @@ Rails/SkipsModelValidations:
 # Security
 
 # Style
+Style/AndOr:
+  EnforcedStyle: conditionals
 Style/BlockDelimiters:
   Enabled: false
 Style/BlockComments:
@@ -123,6 +131,8 @@ Style/DoubleNegation:
   Enabled: false
 Style/EachWithObject:
   Enabled: false
+Style/ExpandPathArguments:
+  Enabled: false
 Style/FormatString:
   Enabled: false
 Style/FrozenStringLiteralComment:
@@ -131,6 +141,8 @@ Style/GuardClause:
   Enabled: false
 Style/HashSyntax:
   EnforcedStyle: no_mixed_keys
+Style/IfInsideElse:
+  Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
 Style/InverseMethods:
@@ -187,7 +199,9 @@ Style/SymbolArray:
   EnforcedStyle: brackets
 Style/TrailingCommaInArguments:
   Enabled: false
-Style/TrailingCommaInLiteral:
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
 Style/WhileUntilDo:
   Enabled: false

@@ -2,7 +2,7 @@ class Tag < ApplicationRecord
   has_many :taggings, :dependent => :delete_all
   has_many :stories, :through => :taggings
 
-  before_save :log_modifications
+  after_save :log_modifications
 
   attr_accessor :edit_user_id, :stories_count
   attr_writer :filtered_count
@@ -56,8 +56,8 @@ class Tag < ApplicationRecord
       if self.new_record?
         m.action = 'Created new tag ' + self.changes.map {|f, c| "with #{f} '#{c[1]}'" }.join(', ')
       else
-        m.action = "Updating tag #{self.tag}, " +
-                   self.changes.map {|f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" } .join(', ')
+        m.action = "Updating tag #{self.tag}, " + self.saved_changes
+          .map {|f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" } .join(', ')
       end
       m.moderator_user_id = @edit_user_id
       m.tag_id = self.id

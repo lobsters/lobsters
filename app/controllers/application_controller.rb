@@ -126,6 +126,19 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def require_logged_in_admin
+    require_logged_in_user
+
+    if @user
+      if @user.is_admin?
+        true
+      else
+        flash[:error] = "You are not authorized to access that resource."
+        return redirect_to "/"
+      end
+    end
+  end
+
   def require_logged_in_user_or_400
     if @user
       true

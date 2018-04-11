@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 20180201184612) do
 
-  create_table "comments", id: :integer, unsigned: true, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at"
     t.string "short_id", limit: 10, default: "", null: false
@@ -194,7 +194,7 @@ ActiveRecord::Schema.define(version: 20180201184612) do
   end
 
   create_table "tags", id: :integer, unsigned: true, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "tag", limit: 25, default: "", null: false
+    t.string "tag", limit: 25, null: false
     t.string "description", limit: 100
     t.boolean "privileged", default: false
     t.boolean "is_media", default: false

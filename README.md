@@ -119,3 +119,8 @@ in a `config/initializers/production.rb` or similar file:
     ```
     */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/post_to_twitter'
     ```
+
+#### Administration
+
+Basic moderation happens on-site, but most other administrative tasks require use of the rails console in production.
+Side administrators can create and edit tags at `/tags`.

@@ -1,0 +1,11 @@
+<div class="box wide">
+  <div class="legend">
+    Tag Edit
+  </div>
+
+  <div class="boxline">
+    <%= link_to "Filter By Tag #{@tag.tag}", tag_path(@tag) %>
+  </div>
+
+  <%= render partial: 'form' %>
+</div>

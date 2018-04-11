@@ -39,9 +39,11 @@ describe TagsController do
       expect(tag.inactive).to be true
     end
 
-    it 'creates a moderation with the expected user_id' do
+    it 'creates a moderation with the expected tag_id and user_id' do
       post :create, params: { tag: { tag: 'mytag' } }
-      expect(Moderation.order(id: :desc).first.moderator_user_id).to eq user_id
+      mod = Moderation.order(id: :desc).first
+      expect(mod.tag_id).to eq Tag.order(id: :desc).first.id
+      expect(mod.moderator_user_id).to eq user_id
     end
   end
 

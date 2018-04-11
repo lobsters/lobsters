@@ -38,6 +38,8 @@
             <%= mod.comment.user.username %>
             on
             <%= mod.comment.story.title %></a>
+        <% elsif mod.tag %>
+          <%= link_to("Tag: #{mod.tag.tag}", mod.tag) %>
         <% elsif mod.user_id %>
           <% if mod.user %>
             <a href="/u/<%= mod.user.username %>">User

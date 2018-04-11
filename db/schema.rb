@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180201184612) do
+ActiveRecord::Schema.define(version: 20180411131217) do
 
   create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "created_at", null: false
@@ -112,6 +112,7 @@ ActiveRecord::Schema.define(version: 20180201184612) do
     t.text "action", limit: 16777215
     t.text "reason", limit: 16777215
     t.boolean "is_from_suggestions", default: false
+    t.integer "tag_id"
     t.index ["created_at"], name: "index_moderations_on_created_at"
   end
 

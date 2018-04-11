@@ -3,8 +3,9 @@ class Moderation < ApplicationRecord
              :class_name => "User",
              :foreign_key => "moderator_user_id",
              :inverse_of => :moderations
-  belongs_to :story
   belongs_to :comment
+  belongs_to :story
+  belongs_to :tag
   belongs_to :user
 
   after_create :send_message_to_moderated

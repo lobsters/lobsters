@@ -123,4 +123,4 @@ in a `config/initializers/production.rb` or similar file:
 #### Administration
 
 Basic moderation happens on-site, but most other administrative tasks require use of the rails console in production.
-Side administrators can create and edit tags at `/tags`.
+Administrators can create and edit tags at `/tags`.

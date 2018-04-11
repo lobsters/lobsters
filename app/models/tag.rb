@@ -60,6 +60,7 @@ class Tag < ApplicationRecord
                    self.changes.map {|f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" } .join(', ')
       end
       m.moderator_user_id = @edit_user_id
+      m.tag = self
     end
   end
 end

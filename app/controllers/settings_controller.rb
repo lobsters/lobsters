@@ -10,17 +10,22 @@ class SettingsController < ApplicationController
   end
 
   def delete_account
-    if @user.try(:authenticate, params[:user][:password].to_s)
-      @user.delete!
-      if params[:disown].present?
-        @user.disown_comments!
+    if params[:i_am_sure].present?
+      if @user.try(:authenticate, params[:user][:password].to_s)
+        @user.delete!
+        if params[:disown].present?
+          @user.disown_comments!
+        end
+        reset_session
+        flash[:success] = "Your account has been deleted."
+        return redirect_to "/"
       end
-      reset_session
-      flash[:success] = "Your account has been deleted."
-      return redirect_to "/"
+
+      flash[:error] = "Your password could not be verified."
+    else
+      flash[:error] = "You did not check the \"I am sure\" checkbox."
     end
 
-    flash[:error] = "Your password could not be verified."
     return redirect_to settings_path
   end
 

@@ -17,6 +17,8 @@ gem "uglifier", ">= 1.3.0"
 gem "jquery-rails", "~> 4.3"
 gem "dynamic_form"
 
+gem "exception_notification"
+
 gem "bcrypt", "~> 3.1.2"
 gem "rotp"
 gem "rqrcode"
@@ -32,11 +34,6 @@ gem "oauth"
 
 # for parsing incoming mail
 gem "mail"
-
-group :production do
-  gem "exception_notification"
-  gem "skylight"
-end
 
 group :test, :development do
   gem 'bullet'

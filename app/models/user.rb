@@ -522,7 +522,7 @@ class User < ApplicationRecord
 
   def votes_for_others
     self.votes.left_outer_joins(:story, :comment)
-      .where("(votes.comment_id is null or comments.user_id <> votes.user_id) AND " <<
+      .where("(votes.comment_id is not null and comments.user_id <> votes.user_id) OR " <<
              "(votes.comment_id is null and stories.user_id <> votes.user_id)")
       .order("id DESC")
   end

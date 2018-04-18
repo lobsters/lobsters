@@ -70,6 +70,7 @@ class Story < ApplicationRecord
   attr_accessor :already_posted_story, :editing_from_suggestions, :editor,
                 :fetching_ip, :is_hidden_by_cur_user, :is_saved_by_cur_user,
                 :moderation_reason, :previewing, :seen_previous, :vote
+  attr_reader :domain
   attr_writer :fetched_content
 
   before_validation :assign_short_id_and_upvote, :on => :create
@@ -326,12 +327,6 @@ class Story < ApplicationRecord
     end
 
     HTMLEntities.new.decode(s.to_s)
-  end
-
-  def domain
-    if url.present? && (match = url.match(URL_RE))
-      match[:domain].sub(/^www\d*\./, '')
-    end
   end
 
   def domain_search_url
@@ -732,8 +727,11 @@ class Story < ApplicationRecord
   def url=(u)
     super(u) or return if u.blank?
 
-    # remove well-known port for http and https if present
     if (match = u.match(URL_RE))
+      # set domain
+      @domain = match[:domain].sub(/^www\d*\./, '')
+
+      # remove well-known port for http and https if present
       @url_port = match[:port]
       if match[:protocol] == 'http'  && match[:port] == ':80' ||
          match[:protocol] == 'https' && match[:port] == ':443'

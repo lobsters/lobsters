@@ -503,7 +503,8 @@ $(document).ready(function() {
       children(".markdown_help").toggle();
   });
 
-  $(document).on("click", "button.comment-post", function() {
+  $(document).on("click", ".comment-post", function(event) {
+    event.preventDefault();
     Lobsters.postComment($(this).parents("form").first());
   });
 
@@ -556,7 +557,7 @@ $(document).ready(function() {
 
   $('textarea#comment').keydown(function (e) {
     if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
-      $("button.comment-post").click();
+      $(".comment-post").click();
     }
   });
 });

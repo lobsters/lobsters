@@ -387,7 +387,7 @@ class Comment < ApplicationRecord
   end
 
   def path
-    self.story.comments_path + "/comments/#{self.short_id}#c_#{self.short_id}"
+    self.story.comments_path + "#c_#{self.short_id}"
   end
 
   def plaintext_comment

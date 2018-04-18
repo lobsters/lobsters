@@ -3,10 +3,8 @@ require "rails_helper"
 describe TagsController do
   let(:user_id) { 5 }
   before do
+    stub_login_as double('admin', id: user_id, is_active?: true, username: 'admin')
     allow(controller).to receive(:require_logged_in_admin)
-    allow(controller).to receive(:session).and_return(u: 'asdf')
-    allow(User).to receive(:where).and_return(
-      double(first: double(id: user_id, is_active?: true, username: 'name')))
   end
 
   context 'create' do

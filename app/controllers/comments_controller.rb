@@ -49,8 +49,12 @@ class CommentsController < ApplicationController
     if comment.valid? && params[:preview].blank? && comment.save
       comment.current_vote = { :vote => 1 }
 
-      render :partial => "comments/postedreply", :layout => false,
-        :content_type => "text/html", :locals => { :comment => comment }
+      if request.xhr?
+        render :partial => "comments/postedreply", :layout => false,
+          :content_type => "text/html", :locals => { :comment => comment }
+      else
+        redirect_to comment.path
+      end
     else
       comment.upvotes = 1
       comment.current_vote = { :vote => 1 }
@@ -83,7 +87,7 @@ class CommentsController < ApplicationController
 
   def redirect_from_short_id
     if (comment = find_comment)
-      return redirect_to comment.url
+      return redirect_to comment.path
     else
       return render :plain => "can't find comment", :status => 400
     end

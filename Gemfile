@@ -37,6 +37,7 @@ gem "mail"
 
 group :test, :development do
   gem 'bullet'
+  gem 'capybara'
   gem "rspec-rails"
   gem "machinist"
   gem "rubocop", require: false

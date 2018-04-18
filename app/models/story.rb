@@ -81,7 +81,7 @@ class Story < ApplicationRecord
       check_already_posted
       check_not_tracking_domain
       # URI.parse is not very lenient, so we can't use it
-      unless self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/i)
+      unless self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(:\d+)?(\/|\z)/i)
         errors.add(:url, "is not valid")
       end
     elsif self.description.to_s.strip == ""

@@ -64,6 +64,9 @@ class Story < ApplicationRecord
     tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd vzturl.com
     wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }.freeze
 
+  # URI.parse is not very lenient, so we can't use it
+  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i
+
   attr_accessor :already_posted_story, :editing_from_suggestions, :editor,
                 :fetching_ip, :is_hidden_by_cur_user, :is_saved_by_cur_user,
                 :moderation_reason, :previewing, :seen_previous, :vote
@@ -80,10 +83,7 @@ class Story < ApplicationRecord
     if self.url.present?
       check_already_posted
       check_not_tracking_domain
-      # URI.parse is not very lenient, so we can't use it
-      unless self.url.match(/\Ahttps?:\/\/([^\.]+\.)+[a-z]+(\/|\z)/i)
-        errors.add(:url, "is not valid")
-      end
+      errors.add(:url, "is not valid") unless url.match(URL_RE)
     elsif self.description.to_s.strip == ""
       errors.add(:description, "must contain text if no URL posted")
     end
@@ -110,8 +110,7 @@ class Story < ApplicationRecord
   def check_not_tracking_domain
     return unless self.url.present? && self.new_record?
 
-    match = self.url.match(/\Ahttps?:\/\/([^\/]+)/i)
-    if match && TRACKING_DOMAINS.include?(match.captures.first.downcase)
+    if TRACKING_DOMAINS.include?(domain)
       errors.add(:url, "is a link shortening or ad tracking domain")
     end
   end
@@ -330,20 +329,13 @@ class Story < ApplicationRecord
   end
 
   def domain
-    if self.url.blank?
-      nil
-    else
-      # URI.parse is not very lenient, so we can't use it
-      self.url
-        .gsub(/^[^:]+:\/\//, "")         # proto
-        .gsub(/\/.*/, "")                # path
-        .gsub(/:\d+$/, "")               # possible port
-        .gsub(/^www\d*\.(.+\..+)/, '\1') # possible "www3." in host unless it's the only non-TLD
+    if url.present? && (match = url.match(URL_RE))
+      match[:domain].sub(/^www\d*\./, '')
     end
   end
 
   def domain_search_url
-    "/search?q=domain:#{self.domain}&order=newest"
+    "/search?order=newest&q=domain:#{self.domain}"
   end
 
   def fetch_story_cache!
@@ -738,15 +730,26 @@ class Story < ApplicationRecord
   end
 
   def url=(u)
-    # strip out stupid google analytics parameters
-    if u && (m = u.match(/\A([^\?]+)\?(.+)\z/))
-      params = m[2].split("&")
-      params.reject! {|p| p.match(/^utm_(source|medium|campaign|term|content)=/) }
+    super(u) or return if u.blank?
 
-      u = m[1] << (params.any?? "?" << params.join("&") : "")
+    # remove well-known port for http and https if present
+    if (match = u.match(URL_RE))
+      @url_port = match[:port]
+      if match[:protocol] == 'http'  && match[:port] == ':80' ||
+         match[:protocol] == 'https' && match[:port] == ':443'
+        u = u[0...match.begin(3)] + u[match.end(3)..-1]
+        @url_port = nil
+      end
     end
 
-    self[:url] = u.to_s.strip
+    # strip out stupid google analytics parameters
+    if (match = u.match(/\A([^\?]+)\?(.+)\z/))
+      params = match[2].split(/[&\?]/)
+      params.reject! {|p| p.match(/^utm_(source|medium|campaign|term|content)=/) }
+      u = match[1] << (params.any?? "?" << params.join("&") : "")
+    end
+
+    super(u)
   end
 
   def url_is_editable_by_user?(user)
@@ -791,14 +794,15 @@ class Story < ApplicationRecord
   end
 
   def fetched_attributes
-    if @fetched_attributes
-      return @fetched_attributes
-    end
+    return @fetched_attributes if @fetched_attributes
 
     @fetched_attributes = {
       :url => self.url,
       :title => "",
     }
+
+    # security: do not connect to arbitrary user-submitted ports
+    return @fetched_attributes if @url_port
 
     if !@fetched_content
       begin

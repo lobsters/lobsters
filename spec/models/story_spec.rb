@@ -34,14 +34,25 @@ describe Story do
     expect { Story.make!(:tags_a => ["", "tag1"]) }.to_not raise_error
   end
 
-  it "checks for invalid urls" do
-    expect {
-      Story.make!(:title => "test", :url => "http://gooses.com/")
-    }.to_not raise_error
+  it "removes redundant http port 80 and https port 443" do
+    expect(Story.new(url: 'http://example.com:80').url).to eq('http://example.com')
+    expect(Story.new(url: 'http://example.com:80/').url).to eq('http://example.com/')
+    expect(Story.new(url: 'https://example.com:443').url).to eq('https://example.com')
+    expect(Story.new(url: 'https://example.com:443/').url).to eq('https://example.com/')
+  end
 
-    expect {
-      Story.make!(:title => "test", url => "ftp://gooses/")
-    }.to raise_error
+  it "removes utm_ tracking parameters" do
+    expect(Story.new(url: 'http://a.com?a=b').url).to eq('http://a.com?a=b')
+    expect(Story.new(url: 'http://a.com?utm_term=track&c=d').url).to eq('http://a.com?c=d')
+    expect(Story.new(url: 'http://a.com?a=b&utm_term=track&c=d').url).to eq('http://a.com?a=b&c=d')
+  end
+
+  it "checks for invalid urls" do
+    expect(Story.new(url: 'http://example.com').tap(&:valid?).errors[:url]).to be_empty
+
+    expect(Story.new(url: 'http://example/').tap(&:valid?).errors[:url]).to_not be_empty
+    expect(Story.new(url: 'ftp://example.com/').tap(&:valid?).errors[:url]).to_not be_empty
+    expect(Story.new(url: 'http://example.com:123/').tap(&:valid?).errors[:url]).to be_empty
   end
 
   it "checks for a previously posted story with same url" do
@@ -100,14 +111,18 @@ describe Story do
 
   it "can fetch its title properly" do
     s = Story.make
-    s.fetched_content = File.read(Rails.root +
-      "spec/fixtures/story_pages/1.html")
+    s.fetched_content = File.read(Rails.root + "spec/fixtures/story_pages/1.html")
     expect(s.fetched_attributes[:title]).to eq("B2G demo & quick hack // by Paul Rouget")
 
     s = Story.make
-    s.fetched_content = File.read(Rails.root +
-      "spec/fixtures/story_pages/2.html")
+    s.fetched_content = File.read(Rails.root + "spec/fixtures/story_pages/2.html")
     expect(s.fetched_attributes[:title]).to eq("Google")
+  end
+
+  it "does not fetch title with a port specified" do
+    expect(Sponge).to_not receive(:new)
+    story = Story.new url: 'https://example.com:123/'
+    expect(story.fetched_attributes[:title]).to eq('')
   end
 
   it "sets the url properly" do

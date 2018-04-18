@@ -75,14 +75,12 @@ describe Story do
   end
 
   it "parses domain properly" do
-    s = Story.make!(:url => "http://example.com")
-    expect(s.domain).to eq("example.com")
-
-    s = Story.make!(:url => "http://www3.example.com/goose")
-    expect(s.domain).to eq("example.com")
-
-    s = Story.make!(:url => "http://flub.example.com")
-    expect(s.domain).to eq("flub.example.com")
+    expect(Story.new(url: "http://example.com").domain).to eq("example.com")
+    expect(Story.new(url: "https://example.com").domain).to eq("example.com")
+    expect(Story.new(url: "http://example.com:8000").domain).to eq("example.com")
+    expect(Story.new(url: "http://example.com:8000/").domain).to eq("example.com")
+    expect(Story.new(url: "http://www3.example.com/goose").domain).to eq("example.com")
+    expect(Story.new(url: "http://flub.example.com").domain).to eq("flub.example.com")
   end
 
   it "converts a title to a url properly" do

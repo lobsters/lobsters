@@ -89,6 +89,16 @@ describe Story do
     end
   end
 
+  it "has domain straight out of the db, when Rails doesn't use setters" do
+    s = Story.make!(url: 'https://example.com/foo.html')
+    s = Story.find(s.id)
+    expect(s.domain).to eq('example.com')
+    s.url = 'http://example.org'
+    expect(s.domain).to eq('example.org')
+    s.url = 'invalid'
+    expect(s.domain).to be_nil
+  end
+
   it "converts a title to a url properly" do
     s = Story.make!(:title => "Hello there, this is a title")
     expect(s.title_as_url).to eq("hello_there_this_is_title")

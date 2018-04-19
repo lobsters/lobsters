@@ -65,12 +65,11 @@ class Story < ApplicationRecord
     wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }.freeze
 
   # URI.parse is not very lenient, so we can't use it
-  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i
+  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i
 
   attr_accessor :already_posted_story, :editing_from_suggestions, :editor,
                 :fetching_ip, :is_hidden_by_cur_user, :is_saved_by_cur_user,
                 :moderation_reason, :previewing, :seen_previous, :vote
-  attr_reader :domain
   attr_writer :fetched_content
 
   before_validation :assign_short_id_and_upvote, :on => :create
@@ -724,13 +723,19 @@ class Story < ApplicationRecord
     end
   end
 
+  def domain
+    return @domain if @domain
+    set_domain self.url.match(URL_RE) if self.url
+  end
+
+  def set_domain match
+    @domain = match ? match[:domain].sub(/^www\d*\./, '') : nil
+  end
+
   def url=(u)
     super(u) or return if u.blank?
 
     if (match = u.match(URL_RE))
-      # set domain
-      @domain = match[:domain].sub(/^www\d*\./, '')
-
       # remove well-known port for http and https if present
       @url_port = match[:port]
       if match[:protocol] == 'http'  && match[:port] == ':80' ||
@@ -739,6 +744,7 @@ class Story < ApplicationRecord
         @url_port = nil
       end
     end
+    set_domain match
 
     # strip out stupid google analytics parameters
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))

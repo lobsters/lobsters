@@ -27,7 +27,7 @@ to avoid wasted efforts.
 
 * (Optional) Create a branch to house your changes.
 
-* Wrap code at 80 characters with 2-space soft tabs for Ruby code.  For other
+* Run `bundle exec rubocop` to check the style of your Ruby.  For other
 languages, use the existing style of the files being edited.  3rd party,
 externally-maintained code such as Javascript libraries can remain in their
 own style.
@@ -42,8 +42,8 @@ present-tense explanation of the change.  Wrap all lines at 80 characters.
 * If applicable, add tests for your changes.  Not all changes require tests,
 and tests should not be added just for the sake of code coverage.
 
-* Run _all_ tests (with `rake` in the root directory) to ensure nothing has
-been broken by your changes.
+* Run _all_ tests (with `bundle exec rspec` in the root directory) to ensure
+nothing has been broken by your changes.
 
 ### Submitting Changes
 

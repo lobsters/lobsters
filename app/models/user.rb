@@ -168,8 +168,18 @@ class User < ApplicationRecord
     totp.verify(code)
   end
 
+  def avatar_path(size = 100)
+    ActionController::Base.helpers.image_path(
+      "/avatars/#{self.username}-#{size}.png",
+      skip_pipeline: true
+    )
+  end
+
   def avatar_url(size = 100)
-    Rails.application.root_url + "avatars/#{self.username}-#{size}.png"
+    ActionController::Base.helpers.image_url(
+      "/avatars/#{self.username}-#{size}.png",
+      skip_pipeline: true
+    )
   end
 
   def average_karma

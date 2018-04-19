@@ -10,16 +10,13 @@ class StoryRepository
   end
 
   def hottest
-    hottest = Story.base.positive_ranked
-    hottest = filter_hidden_and_tags hottest
+    hottest = Story.base.positive_ranked.not_hidden_by(@user)
+    hottest = filter_tags_by_id hottest
     hottest.order('hotness')
   end
 
   def hidden
-    hidden = Story.base
-    if @user
-      hidden = hidden.where(Story.arel_table[:id].in(hidden_arel))
-    end
+    hidden = Story.base.hidden_by(@user)
     if @params[:exclude_tags].try(:any?)
       hidden = filter_tags hidden, @params[:exclude_tags]
     end
@@ -27,7 +24,7 @@ class StoryRepository
   end
 
   def newest
-    newest = filter_hidden_and_tags Story.base
+    newest = filter_tags_by_id Story.base
     newest.order("stories.id DESC")
   end
 
@@ -101,28 +98,11 @@ class StoryRepository
 
 private
 
-  def filter_hidden_and_tags(scope)
-    if @user
-      scope = filter_hidden scope
-    end
+  def filter_tags_by_id(scope)
     if @params[:exclude_tags].try(:any?)
       scope = filter_tags scope, @params[:exclude_tags]
     end
     scope
-  end
-
-  def filter_hidden(scope)
-    scope.where(Story.arel_table[:id].not_in(hidden_arel))
-  end
-
-  def hidden_arel
-    if @user
-      HiddenStory.arel_table.where(
-        HiddenStory.arel_table[:user_id].eq(@user.id)
-      ).project(
-        HiddenStory.arel_table[:story_id]
-      )
-    end
   end
 
   def saved_arel

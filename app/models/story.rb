@@ -22,10 +22,19 @@ class Story < ApplicationRecord
   has_many :voters, -> { where('votes.comment_id' => nil) },
            :through => :votes,
            :source => :user
+  has_many :hidings, :class_name => 'HiddenStory', :inverse_of => :story, :dependent => :destroy
 
   scope :base, -> { unmerged.where(is_expired: false) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
   scope :positive_ranked, -> { where("#{Story.score_sql} >= 0") }
+  scope :hidden_by, ->(user) {
+    user.nil? ? none : joins(:hidings).merge(HiddenStory.by(user))
+  }
+  scope :not_hidden_by, ->(user) {
+    user.nil? ? all : where.not(
+      HiddenStory.where('hidden_stories.story_id = stories.id').by(user).exists
+    )
+  }
 
   validates :title, length: { :in => 3..150 }
   validates :description, length: { :maximum => (64 * 1024) }

@@ -23,6 +23,7 @@ class Story < ApplicationRecord
            :through => :votes,
            :source => :user
 
+  scope :base, -> { unmerged.where(is_expired: false) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
   scope :positive_ranked, -> { where("#{Story.score_sql} >= 0") }
 

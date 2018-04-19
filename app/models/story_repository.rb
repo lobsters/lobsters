@@ -10,13 +10,13 @@ class StoryRepository
   end
 
   def hottest
-    hottest = base_scope.positive_ranked
+    hottest = Story.base.positive_ranked
     hottest = filter_hidden_and_tags hottest
     hottest.order('hotness')
   end
 
   def hidden
-    hidden = base_scope
+    hidden = Story.base
     if @user
       hidden = hidden.where(Story.arel_table[:id].in(hidden_arel))
     end
@@ -27,12 +27,12 @@ class StoryRepository
   end
 
   def newest
-    newest = filter_hidden_and_tags base_scope
+    newest = filter_hidden_and_tags Story.base
     newest.order("stories.id DESC")
   end
 
   def newest_by_user(user)
-    base_scope.where(user_id: user.id).order("stories.id DESC")
+    Story.base.where(user_id: user.id).order("stories.id DESC")
   end
 
   def recent
@@ -70,7 +70,7 @@ class StoryRepository
   end
 
   def saved
-    saved = base_scope
+    saved = Story.base
     if @user
       saved = saved.where(Story.arel_table[:id].in(saved_arel))
     end
@@ -81,7 +81,7 @@ class StoryRepository
   end
 
   def tagged(tag)
-    tagged = base_scope.positive_ranked.where(
+    tagged = Story.base.positive_ranked.where(
       Story.arel_table[:id].in(
         Tagging.arel_table.where(
           Tagging.arel_table[:tag_id].eq(tag.id)
@@ -94,16 +94,12 @@ class StoryRepository
   end
 
   def top(length)
-    top = base_scope.where("created_at >= (NOW() - INTERVAL " <<
+    top = Story.base.where("created_at >= (NOW() - INTERVAL " <<
       "#{length[:dur]} #{length[:intv].upcase})")
     top.order("#{Story.score_sql} DESC")
   end
 
 private
-
-  def base_scope
-    Story.unmerged.where(is_expired: false)
-  end
 
   def filter_hidden_and_tags(scope)
     if @user

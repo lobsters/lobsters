@@ -24,6 +24,7 @@ class Story < ApplicationRecord
            :source => :user
 
   scope :unmerged, -> { where(:merged_story_id => nil) }
+  scope :positive_ranked, -> { where("#{Story.score_sql} >= 0") }
 
   validates :title, length: { :in => 3..150 }
   validates :description, length: { :maximum => (64 * 1024) }

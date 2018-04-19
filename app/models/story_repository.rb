@@ -10,7 +10,7 @@ class StoryRepository
   end
 
   def hottest
-    hottest = positive_ranked base_scope
+    hottest = base_scope.positive_ranked
     hottest = filter_hidden_and_tags hottest
     hottest.order('hotness')
   end
@@ -81,7 +81,7 @@ class StoryRepository
   end
 
   def tagged(tag)
-    tagged = positive_ranked base_scope.where(
+    tagged = base_scope.positive_ranked.where(
       Story.arel_table[:id].in(
         Tagging.arel_table.where(
           Tagging.arel_table[:tag_id].eq(tag.id)
@@ -127,10 +127,6 @@ private
         HiddenStory.arel_table[:story_id]
       )
     end
-  end
-
-  def positive_ranked(scope)
-    scope.where("#{Story.score_sql} >= 0")
   end
 
   def saved_arel

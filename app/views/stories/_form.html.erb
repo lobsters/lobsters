@@ -82,8 +82,9 @@
   <% unless defined?(suggesting) %>
     <div class="boxline">
       <%= f.label :description, "Text:", :class => "required" %>
-      <%= f.text_area :description, :rows => 15,
-        :placeholder => "Optional when submitting a URL; please see guidelines" %>
+      <%= f.text_area :description, :rows => 15, :placeholder => "Optional when submitting a URL.
+Not for summarizing the post or personal opinions.
+See the guidelines below." %>
     </div>
 
     <div class="boxline actions markdown_help_toggler">

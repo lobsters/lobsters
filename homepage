@@ -1,0 +1,18 @@
+Homepage before cleanup:
+
+  SuggestedTitle Load (1.1ms)  SELECT `suggested_titles`.* FROM `suggested_titles` WHERE `suggested_titles`.`story_id` IN (41932, 41938, 41935, 41924, 41918, 41894, 41939, 41909, 41922, 41930, 41925, 41937, 41881, 41931, 41921, 41887, 41916, 41912, 41941, 41940, 41934, 41928, 41880, 41927, 41936, 41920)                                                                                       
+  SuggestedTagging Load (2.3ms)  SELECT `suggested_taggings`.* FROM `suggested_taggings` WHERE `suggested_taggings`.`story_id` IN (41932, 41938, 41935, 41924, 41918, 41894, 41939, 41909, 41922, 41930, 41925, 41937, 41881, 41931, 41921, 41887, 41916, 41912, 41941, 41940, 41934, 41928, 41880, 41927, 41936, 41920)                                                                               
+  Tagging Load (0.6ms)  SELECT `taggings`.* FROM `taggings` WHERE `taggings`.`story_id` IN (41932, 41938, 41935, 41924, 41918, 41894, 41939, 41909, 41922, 41930, 41925, 41937, 41881, 41931, 41921, 41887, 41916, 41912, 41941, 41940, 41934, 41928, 41880, 41927, 41936, 41920)
+  Tag Load (0.5ms)  SELECT `tags`.* FROM `tags` WHERE `tags`.`id` IN (22, 25, 74, 104, 20, 31, 39, 21, 88, 35, 7, 59, 107, 67, 41, 13, 45, 86, 96, 16, 69, 33, 79, 84, 47, 49, 37, 68, 82, 103, 9, 52)
+  Vote Load (1.4ms)  SELECT  `votes`.* FROM `votes` WHERE `votes`.`user_id` = 78 AND `votes`.`story_id` IN (41932, 41938, 41935, 41924, 41918, 41894, 41939, 41909, 41922, 41930, 41925, 41937, 41881, 41931, 41921, 41887, 41916, 41912, 41941, 41940, 41934, 41928, 41880, 41927, 41936) AND `votes`.`comment_id` IS NULL ORDER BY `votes`.`id` ASC LIMIT 1000                                       
+  HiddenStory Load (0.6ms)  SELECT `hidden_stories`.* FROM `hidden_stories` WHERE `hidden_stories`.`user_id` = 78 AND `hidden_stories`.`story_id` IN (41932, 41938, 41935, 41924, 41918, 41894, 41939, 41909, 41922, 41930, 41925, 41937, 41881, 41931, 41921, 41887, 41916, 41912, 41941, 41940, 41934, 41928, 41880, 41927, 41936)                                                                   
+  SavedStory Load (0.6ms)  SELECT `saved_stories`.* FROM `saved_stories` WHERE `saved_stories`.`user_id` = 78 AND `saved_stories`.`story_id` IN (41932, 41938, 41935, 41924, 41918, 41894, 41939, 41909, 41922, 41930, 41925, 41937, 41881, 41931, 41921, 41887, 41916, 41912, 41941, 41940, 41934, 41928, 41880, 41927, 41936)                                                                        
+  Rendering home/index.html.erb within layouts/application
+  Rendered collection of stories/_listdetail.html.erb [25 times] (169.9ms)
+  Rendered home/index.html.erb within layouts/application (170.9ms)
+   (127.3ms)  SELECT COUNT(*) FROM `replying_comments` WHERE `replying_comments`.`user_id` = 78 AND `replying_comments`.`is_unread` = 1                                                            
+  Keystore Load (0.6ms)  SELECT  `keystores`.* FROM `keystores` WHERE `keystores`.`key` = 'user:78:unread_messages' LIMIT 1                                                                        
+   (0.3ms)  SELECT COUNT(*) FROM `invitation_requests` WHERE `invitation_requests`.`is_verified` = 1                                                                                               
+   (0.3ms)  SELECT COUNT(*) FROM `hat_requests`
+
+

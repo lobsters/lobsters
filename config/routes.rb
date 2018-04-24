@@ -22,7 +22,7 @@ Lobsters::Application.routes.draw do
     get "/saved" => "home#saved", :format => /html|rss|json/
     get "/saved/page/:page" => "home#saved"
 
-    get "/upvoted(.format)" => "home#upvoted"
+    get "/upvoted(.format)" => "home#upvoted", :format => /html|json|rss/
     get "/upvoted/page/:page" => "home#upvoted"
 
     get "/top" => "home#top"

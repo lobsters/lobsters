@@ -27,12 +27,17 @@ class Story < ApplicationRecord
   scope :base, -> { unmerged.where(is_expired: false) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
   scope :positive_ranked, -> { where("#{Story.score_sql} >= 0") }
+  scope :filter_tags, ->(tags) {
+    where.not(
+      Tagging.select('TRUE').where('taggings.story_id = stories.id').where(tag_id: tags).exists
+    )
+  }
   scope :hidden_by, ->(user) {
     user.nil? ? none : joins(:hidings).merge(HiddenStory.by(user))
   }
   scope :not_hidden_by, ->(user) {
     user.nil? ? all : where.not(
-      HiddenStory.where('hidden_stories.story_id = stories.id').by(user).exists
+      HiddenStory.select('TRUE').where('hidden_stories.story_id = stories.id').by(user).exists
     )
   }
 

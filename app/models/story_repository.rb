@@ -11,20 +11,17 @@ class StoryRepository
 
   def hottest
     hottest = Story.base.positive_ranked.not_hidden_by(@user)
-    hottest = filter_tags_by_id hottest
+    hottest = hottest.filter_tags(@params[:exclude_tags] || [])
     hottest.order('hotness')
   end
 
   def hidden
-    hidden = Story.base.hidden_by(@user)
-    if @params[:exclude_tags].try(:any?)
-      hidden = filter_tags hidden, @params[:exclude_tags]
-    end
+    hidden = Story.base.hidden_by(@user).filter_tags(@params[:exclude_tags] || [])
     hidden.order("hotness")
   end
 
   def newest
-    newest = filter_tags_by_id Story.base
+    newest = Story.base.filter_tags(@params[:exclude_tags] || [])
     newest.order("stories.id DESC")
   end
 
@@ -71,9 +68,7 @@ class StoryRepository
     if @user
       saved = saved.where(Story.arel_table[:id].in(saved_arel))
     end
-    if @params[:exclude_tags].try(:any?)
-      saved = filter_tags saved, @params[:exclude_tags]
-    end
+    saved = saved.filter_tags(@params[:exclude_tags] || [])
     saved.order("hotness")
   end
 
@@ -98,13 +93,6 @@ class StoryRepository
 
 private
 
-  def filter_tags_by_id(scope)
-    if @params[:exclude_tags].try(:any?)
-      scope = filter_tags scope, @params[:exclude_tags]
-    end
-    scope
-  end
-
   def saved_arel
     if @user
       SavedStory.arel_table.where(
@@ -113,17 +101,5 @@ private
         SavedStory.arel_table[:story_id]
       )
     end
-  end
-
-  def filter_tags(scope, tags)
-    scope.where(
-      Story.arel_table[:id].not_in(
-        Tagging.arel_table.where(
-          Tagging.arel_table[:tag_id].in(tags)
-        ).project(
-          Tagging.arel_table[:story_id]
-        )
-      )
-    )
   end
 end

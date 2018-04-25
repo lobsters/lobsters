@@ -23,6 +23,7 @@ class Story < ApplicationRecord
            :through => :votes,
            :source => :user
   has_many :hidings, :class_name => 'HiddenStory', :inverse_of => :story, :dependent => :destroy
+  has_many :savings, :class_name => 'SavedStory', :inverse_of => :story, :dependent => :destroy
 
   scope :base, -> { unmerged.where(is_expired: false) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
@@ -39,6 +40,9 @@ class Story < ApplicationRecord
     user.nil? ? all : where.not(
       HiddenStory.select('TRUE').where('hidden_stories.story_id = stories.id').by(user).exists
     )
+  }
+  scope :saved_by, ->(user) {
+    user.nil? ? none : joins(:savings).merge(SavedStory.by(user))
   }
 
   validates :title, length: { :in => 3..150 }

@@ -64,11 +64,7 @@ class StoryRepository
   end
 
   def saved
-    saved = Story.base
-    if @user
-      saved = saved.where(Story.arel_table[:id].in(saved_arel))
-    end
-    saved = saved.filter_tags(@params[:exclude_tags] || [])
+    saved = Story.base.saved_by(@user).filter_tags(@params[:exclude_tags] || [])
     saved.order("hotness")
   end
 
@@ -89,17 +85,5 @@ class StoryRepository
     top = Story.base.where("created_at >= (NOW() - INTERVAL " <<
       "#{length[:dur]} #{length[:intv].upcase})")
     top.order("#{Story.score_sql} DESC")
-  end
-
-private
-
-  def saved_arel
-    if @user
-      SavedStory.arel_table.where(
-        SavedStory.arel_table[:user_id].eq(@user.id)
-      ).project(
-        SavedStory.arel_table[:story_id]
-      )
-    end
   end
 end

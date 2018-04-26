@@ -145,22 +145,14 @@ class HomeController < ApplicationController
 
   def recent
     @stories, @show_more = get_from_cache(recent: true) {
-      scope = if page == 1
-        stories.recent
-      else
-        stories.newest
-      end
-      paginate scope
+      paginate Story.recent(@user, filtered_tag_ids)
     }
 
     @heading = @title = "Recent Stories"
     @cur_url = "/recent"
 
-    # our content changes every page load, so point at /newest.rss to be stable
-    @rss_link = {
-      :title => "RSS 2.0 - Newest Items",
-      :href => user_token_link("/newest.rss"),
-    }
+    # our list is unstable because upvoted stories get removed, so point at /newest.rss
+    @rss_link = { :title => "RSS 2.0 - Newest Items", :href => user_token_link("/newest.rss") }
 
     render :action => "index"
   end

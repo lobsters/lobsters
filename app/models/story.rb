@@ -1,7 +1,4 @@
 class Story < ApplicationRecord
-  # how many points a story has to have to probably get on the front page
-  HOT_STORY_POINTS = 5
-
   belongs_to :user
   belongs_to :merged_into_story,
              :class_name => "Story",
@@ -31,11 +28,18 @@ class Story < ApplicationRecord
   scope :base, -> { unmerged.where(is_expired: false) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
   scope :positive_ranked, -> { where("#{Story.score_sql} >= 0") }
-  scope :recent, ->(user = nil, exclude_tags = nil) {
+  scope :low_scoring, ->(max = 5) { where("#{Story.score_sql} < ?", max) }
+  scope :hottest, ->(user = nil, exclude_tags = nil) {
     base.not_hidden_by(user)
         .filter_tags(exclude_tags || [])
+        .positive_ranked
+        .order('hotness')
+  }
+  scope :recent, ->(user = nil, exclude_tags = nil) {
+    base.low_scoring
+        .not_hidden_by(user)
+        .filter_tags(exclude_tags || [])
         .where("created_at >= ?", 10.days.ago)
-        .where("upvotes - downvotes < #{HOT_STORY_POINTS}")
         .order("stories.created_at DESC")
   }
   scope :filter_tags, ->(tags) {

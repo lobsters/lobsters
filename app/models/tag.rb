@@ -1,6 +1,12 @@
 class Tag < ApplicationRecord
   has_many :taggings, :dependent => :delete_all
   has_many :stories, :through => :taggings
+  has_many :tag_filters, :dependent => :destroy
+  has_many :filtering_users,
+           :class_name => "User",
+           :through => :tag_filters,
+           :source => :user,
+           :dependent => :delete_all
 
   after_save :log_modifications
 

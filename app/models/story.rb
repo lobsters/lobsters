@@ -1,4 +1,7 @@
 class Story < ApplicationRecord
+  # how many points a story has to have to probably get on the front page
+  HOT_STORY_POINTS = 5
+
   belongs_to :user
   belongs_to :merged_into_story,
              :class_name => "Story",
@@ -22,8 +25,43 @@ class Story < ApplicationRecord
   has_many :voters, -> { where('votes.comment_id' => nil) },
            :through => :votes,
            :source => :user
+  has_many :hidings, :class_name => 'HiddenStory', :inverse_of => :story, :dependent => :destroy
+  has_many :savings, :class_name => 'SavedStory', :inverse_of => :story, :dependent => :destroy
 
+  scope :base, -> { unmerged.where(is_expired: false) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
+  scope :positive_ranked, -> { where("#{Story.score_sql} >= 0") }
+  scope :recent, ->(user = nil, exclude_tags = nil) {
+    base.not_hidden_by(user)
+        .filter_tags(exclude_tags || [])
+        .where("created_at >= ?", 10.days.ago)
+        .where("upvotes - downvotes < #{HOT_STORY_POINTS}")
+        .order("stories.created_at DESC")
+  }
+  scope :filter_tags, ->(tags) {
+    where.not(
+      Tagging.select('TRUE').where('taggings.story_id = stories.id').where(tag_id: tags).exists
+    )
+  }
+  scope :filter_tags_for, ->(user) {
+    user.nil? ? all : where.not(
+      Tagging.joins(tag: :tag_filters)
+             .select('TRUE')
+             .where('taggings.story_id = stories.id')
+             .where(tag_filters: { user_id: user }).exists
+    )
+  }
+  scope :hidden_by, ->(user) {
+    user.nil? ? none : joins(:hidings).merge(HiddenStory.by(user))
+  }
+  scope :not_hidden_by, ->(user) {
+    user.nil? ? all : where.not(
+      HiddenStory.select('TRUE').where('hidden_stories.story_id = stories.id').by(user).exists
+    )
+  }
+  scope :saved_by, ->(user) {
+    user.nil? ? none : joins(:savings).merge(SavedStory.by(user))
+  }
 
   validates :title, length: { :in => 3..150 }
   validates :description, length: { :maximum => (64 * 1024) }

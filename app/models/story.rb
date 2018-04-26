@@ -33,6 +33,14 @@ class Story < ApplicationRecord
       Tagging.select('TRUE').where('taggings.story_id = stories.id').where(tag_id: tags).exists
     )
   }
+  scope :filter_tags_for, ->(user) {
+    user.nil? ? all : where.not(
+      Tagging.joins(tag: :tag_filters)
+             .select('TRUE')
+             .where('taggings.story_id = stories.id')
+             .where(tag_filters: { user_id: user }).exists
+    )
+  }
   scope :hidden_by, ->(user) {
     user.nil? ? none : joins(:hidings).merge(HiddenStory.by(user))
   }

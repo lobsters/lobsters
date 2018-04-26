@@ -43,7 +43,7 @@ class Story < ApplicationRecord
         .order("stories.created_at DESC")
   }
   scope :filter_tags, ->(tags) {
-    where.not(
+    tags.empty? ? all : where.not(
       Tagging.select('TRUE').where('taggings.story_id = stories.id').where(tag_id: tags).exists
     )
   }
@@ -65,6 +65,13 @@ class Story < ApplicationRecord
   }
   scope :saved_by, ->(user) {
     user.nil? ? none : joins(:savings).merge(SavedStory.by(user))
+  }
+  scope :to_tweet, -> {
+    hottest(nil, Tag.where(tag: 'meta').pluck(:id))
+        .where(twitter_id: nil)
+        .where("#{Story.score_sql} >= 2")
+        .where("created_at >= ?", 2.days.ago)
+        .limit(10)
   }
 
   validates :title, length: { :in => 3..150 }

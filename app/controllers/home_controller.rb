@@ -189,7 +189,7 @@ class HomeController < ApplicationController
       paginate stories.tagged(@tag)
     }
 
-    @heading = @title = @tag.description.presence || @tag.tag
+    @heading = @title = [@tag.tag, @tag.description].compact.join(' - ')
     @cur_url = tag_url(@tag.tag)
 
     @rss_link = {

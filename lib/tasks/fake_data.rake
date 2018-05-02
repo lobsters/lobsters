@@ -5,7 +5,7 @@ class FakeDataGenerator
   end
 
   def generate
-    users = 0.upto(@users_count).each do
+    users = 0.upto(@users_count).map do
       name = Faker::Name.name
       password = Faker::Internet.password
       user_name = Faker::Internet.user_name(name, %w(_))
@@ -16,7 +16,7 @@ class FakeDataGenerator
     end
 
     @stories_count.times do |i|
-      user = users[Random.rand(users.length-1)]
+      user = users[Random.rand(@users_count-1)]
       title = Faker::Lorem.sentence(3)
       tag = Tag.find_or_create_by! tag: title.split(' ').first.downcase
       if i.even?
@@ -35,7 +35,8 @@ desc 'Generates fake data for testing purposes'
 task fake_data: :environment do
   fail "It's not intended to be run outside development environment" unless Rails.env.development?
   unless (User.count + Tag.count + Story.count) == 0
-    fail "Please ensure that you're running it on clean database because it will destroy all data"
+    fail "Please ensure that you're running `rails fake_data` on clean database because it will" <<
+         "destroy all data"
   end
 
   User.destroy_all

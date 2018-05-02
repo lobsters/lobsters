@@ -7,31 +7,28 @@
   <p>
   Lobsters is a technology-focused community centered around link aggregation
   and discussion, launched on July 1st, 2012.
-  The current administrator is <a href="/u/pushcx">Peter (pushcx) Bhat Harkins</a>, contact him with any support issues.
+  The current administrator is <a href="/u/pushcx">Peter Bhat Harkins</a> ("pushcx"), contact him with any support issues.
   Lobsters was created by <a href="/u/jcs">joshua stein</a>
   with some specific design goals in mind to avoid problems faced by
   other link aggregation sites:
   </p>
 
   <ul>
-  <li>a <a href="#tagging">tagging</a> system to categorize and filter
-    submissions,
-  <li>a user <a href="#invitations">invitation tree</a> to combat spam,
-  <li><a href="#downvotes">downvote explanations</a> to curb reflexive
-    downvoting,
-  <li>a strong commitment to <a href="#transparency">transparency</a>,
-  <li>and <a href="#features">many other features</a> that have been added over
-  the years.
+    <li>a <a href="#tagging">tagging</a> system to categorize and filter submissions,</li>
+    <li>a user <a href="#invitations">invitation tree</a> to combat spam,</li>
+    <li><a href="#downvotes">downvote explanations</a> to curb reflexive downvoting,</li>
+    <li>a strong commitment to <a href="#transparency">transparency</a>,</li>
+    <li>and <a href="#features">many other features</a> that have been added over the years.</li>
   </ul>
 
   <p id="tagging">
   <strong>Tagging</strong>
   <br>
-  When links/stories are submitted, they must be tagged by the submitter from a
-  list of predefined <a href="/tags">tags</a>.  Users can choose to <a
-  href="/filters">filter</a> out all submissions with particular tags, but
-  rather than use rigidly segmented sub-forums that users must each subscribe
-  to, all users see all stories by default.  The reason for this is threefold:
+  When links/stories are submitted, they must be tagged by the submitter from a list of predefined <a href="/tags">tags</a>.
+  Users can choose to <a href="/filters">filter</a> out or
+  subscribe to all submissions with particular tags (<a href="https://lobste.rs/t/programming.rss">example</a>).
+  All users see all stories by default.
+  The tagging system works this way for three reasons:
   </p>
 
   <ul>
@@ -66,16 +63,14 @@
   </ul>
 
   <p>
-  Creating new tags and retiring old tags is done by the community by
-  submitting, discussing, and voting on
-  <a href="/t/meta" class="tag">meta</a>-tagged requests about them.
+  Creating new tags and retiring old tags is done by the community by submitting, discussing, and voting on <a href="/t/meta" class="tag">meta</a>-tagged requests about them,
+  and these events are <a href="https://lobste.rs/moderations?utf8=✓&moderator=(All)&what[tags]=tags">logged</a> (since 2018-04).
   </p>
 
   <p id="invitations">
   <strong>Invitation Tree</strong><br />
-  Invitations are used as a mechanism for spam-control and to encourage users
-  to "be nice".  New users must be invited by a current user, though there is
-  no vetting process and invitations are not intended to promote exclusivity.
+  New users must be invited by a current user, though there is no formal vetting process.
+  Invitations are used as a mechanism for spam-control and to encourage users to be nice, not to make the Lobsters userbase an elite club.
   The most efficient way to receive an invitation is to talk to someone you
   recognize from the site or
   <% if Rails.application.allow_invitation_requests? %>
@@ -83,15 +78,18 @@
   <% else %>
     request one in <a href="/chat">chat</a>.
   <% end %>
-  Invitations are unlimited unless scaling problems temporarily prevent new
-  accounts.  If spammers are invited to the site and banned, the user that
-  invited them may also be banned, going up the chain of invitations as needed.
   </p>
 
   <p>
   The full <a href="/u">user tree</a> is made public and each user's profile
-  shows who invited them.  This provides some degree of accountability and can
-  act as a tool to help identify voting rings.
+  shows who invited them.  This provides some degree of accountability and
+  helps identify voting rings.
+  </p>
+
+  <p>
+  There's no limit on how many invitations a user can send (though that might be prompted by scaling problems in the future).
+  When accounts are banned for spam, <a href="https://en.wikipedia.org/wiki/Sockpuppet_(Internet)">sockpuppeting</a>, or other abuse,
+  moderators will look up the invitation tree to consider disabling their inviter's ability to send invitations or, rarely, also banning.
   </p>
 
   <p id="downvotes">
@@ -111,32 +109,40 @@
   All <a href="/moderations">moderator actions</a> on this site are visible to
   everyone and the identities of those moderators are <a
   href="/u?moderators=1">made public</a>.  While the individual actions of a
-  moderator may cause debate, there should be no question about which moderator
-  it was or whether they had an ulterior motive for those actions.
+  moderator may cause debate, there should be no question about if an action happened or who is responsible.
   </p>
 
   <p>
   All user voting and story ranking on this site uses a universal algorithm and
   does not <a
   href="http://www.righto.com/2013/11/how-hacker-news-ranking-really-works.html"
-  rel="nofollow">artificially penalize</a> or prioritize users or domains.
+  rel="nofollow">penalize</a> or prioritize specific users or domains.
   Per-tag <a href="/filters">hotness modifiers</a> do affect all stories with
-  those tags, but these modifiers are made public and usually used to shorten
-  the life of meta-discussions.  If certain domains have to be banned from
-  being submitted due to spam, the list will be made publicly available.
+  those tags, but these modifiers (and <a href="https://lobste.rs/moderations?utf8=%E2%9C%93&moderator=(All)&what[tags]=tags">changes</a> to them) are made public.
+  Domains used for tracking are banned and tracking parameters are removed from links
+  (look for <tt>TRACKING_DOMAINS</tt> and <tt>utm_</tt> in
+  <a href="https://github.com/lobsters/lobsters/blob/master/app/models/story.rb">story.rb</a>).
   </p>
 
   <p>
   If users are disruptive enough to warrant banning, they will be banned
   absolutely, given notice of their banning, and their disabled user profile
-  will indicate which moderator banned them and why.  There will be no hidden,
-  antisocial "shadow banning" or "hellbanning" of users.
+  will indicate which moderator banned them and why.
+  There will be no <a href="https://en.wikipedia.org/wiki/Shadow_banning">shadow banning</a> or other secret moderation actions.
   </p>
 
   <p>
-  The <a href="https://github.com/lobsters/lobsters">source code to this site</a> is
-  made available under a 3-clause BSD license for viewing, auditing, forking,
-  or contributing to.
+  The <a href="https://github.com/lobsters/lobsters">source code to this site</a> and
+  its <a href="https://github.com/lobsters/lobsters-ansible">provisioning and deployment</a> are
+  made available under a 3-clause BSD license for viewing, auditing, forking, or contributing to.
+  </p>
+
+  <p>
+  If you dislike the content or moderation policies here, you may prefer
+  <a href="https://news.ycombinator.com">Y Combinator News</a>,
+  <a href="https://reddit.com/r/programming">r/programming</a>,
+  <a href="https://en.wikipedia.org/wiki/Comp.*_hierarchy">comp.*</a>, or
+  <a href="http://boards.4chan.org/g/">/g/</a>.
   </p>
 
   <p id="features">
@@ -199,6 +205,7 @@
   be automatically applied to a story when a quorum of users agrees on a new
   title (such as removing a site's name, or appending the story's year of
   publication) or set of tags, without any moderator action required.
+  (<a href="https://lobste.rs/moderations?utf8=%E2%9C%93&moderator=(Users)">Log</a>)
   </p></li>
 
   <li><p>
@@ -227,6 +234,12 @@
   service</a></strong> for anonymous access to the site.
   </p></li>
   <% end %>
+
+  <li name="emoji"><p>
+  <strong><a href="https://unicode.org/consortium/adopted-characters.html#s1f99E">Sponsor of the 🦞 emoji</a></strong>:
+  In February 2018, Lobsters <a href="https://lobste.rs/s/pnysdr/lobsters_emoji_adoption">held a fundraiser</a>
+  to officially adopt the new lobster emoji in support of the Unicode Foundation.
+  </p></li>
 
   <li><p>
   <strong>Stickers</strong> are

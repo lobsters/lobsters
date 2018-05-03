@@ -32,6 +32,13 @@ Story.blueprint do
   tags_a { ["tag1", "tag2"] }
 end
 
+Hat.blueprint do
+  user_id { User.make!.id }
+  hat { "hat #{rand}" }
+  granted_by_user_id { User.make!.id }
+  link { 'http://example.com' }
+end
+
 Comment.blueprint do
   user_id { User.make!.id }
   story_id { Story.make!.id }
@@ -43,6 +50,7 @@ Message.blueprint do
   author_user_id { User.make!.id }
   subject { "message subject #{sn}" }
   body { "message body #{sn}" }
+  hat { nil }
 end
 
 Vote.blueprint do

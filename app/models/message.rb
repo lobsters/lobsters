@@ -7,6 +7,7 @@ class Message < ApplicationRecord
              :class_name => "User",
              :foreign_key => "author_user_id",
              :inverse_of => :sent_messages
+  belongs_to :hat
 
   validates :recipient, presence: true
 

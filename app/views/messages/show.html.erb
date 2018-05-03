@@ -23,6 +23,7 @@
       <% else %>
         <%= @message.author_username %>
       <% end %>
+      <%= @message.hat.to_html_label if @message.hat %>
       to
       <a href="/u/<%= @message.recipient.username %>"><%=
         @message.recipient.username %></a>

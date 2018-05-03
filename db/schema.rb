@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180411131217) do
+ActiveRecord::Schema.define(version: 20180503150810) do
 
   create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "created_at", null: false
@@ -99,6 +99,8 @@ ActiveRecord::Schema.define(version: 20180411131217) do
     t.string "short_id", limit: 30
     t.boolean "deleted_by_author", default: false
     t.boolean "deleted_by_recipient", default: false
+    t.bigint "hat_id"
+    t.index ["hat_id"], name: "index_messages_on_hat_id"
     t.index ["short_id"], name: "random_hash", unique: true
   end
 

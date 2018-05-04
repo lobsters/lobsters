@@ -137,6 +137,11 @@ class Story < ApplicationRecord
       errors.add(:description, "must contain text if no URL posted")
     end
 
+    if self.title.starts_with?("Ask") && self.tags_a.include?('ask')
+      errors.add(:title, " starting 'Ask #{Rails.application.name}' or similar is redundant " <<
+                          "with the ask tag.")
+    end
+
     if !errors.any? && self.url.blank?
       self.user_is_author = true
     end

@@ -129,12 +129,14 @@ class StoriesController < ApplicationController
       raise ActionController::RoutingError.new("story gone")
     end
 
+    @comments = get_arranged_comments_from_cache(params[:id]) do
+      @story.merged_comments
+            .includes(:user, :story, :hat, :votes => :user)
+            .arrange_for_user(@user)
+    end
+
     @title = @story.title
     @short_url = @story.short_id_url
-
-    @comments = @story.merged_comments
-                      .includes(:user, :story, :hat, :votes => :user)
-                      .arrange_for_user(@user)
 
     respond_to do |format|
       format.html {
@@ -340,6 +342,14 @@ class StoriesController < ApplicationController
   end
 
 private
+
+  def get_arranged_comments_from_cache(short_id, &block)
+    if Rails.env.development? || @user
+      yield
+    else
+      Rails.cache.fetch("story #{short_id}", expires_in: 60, &block)
+    end
+  end
 
   def story_params
     p = params.require(:story).permit(

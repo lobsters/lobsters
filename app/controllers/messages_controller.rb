@@ -147,7 +147,7 @@ private
 
   def message_params
     params.require(:message).permit(
-      :recipient_username, :subject, :body,
+      :recipient_username, :subject, :body, :hat_id
     )
   end
 

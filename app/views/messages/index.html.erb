@@ -35,17 +35,22 @@
       <% @messages.includes(:author, :recipient).each do |message| %>
         <tr class="<%= message.has_been_read? ? "" : "bold" %>">
           <td><%= check_box_tag "delete_#{message.short_id}" %></td>
-          <td><% if @direction == :in %>
-              <% if message.author %>
-                <a href="/u/<%= message.author.username %>"><%=
-                  message.author.username %></a>
+          <td>
+            <div style="white-space:nowrap;">
+              <% if @direction == :in %>
+                <% if message.author %>
+                  <a href="/u/<%= message.author.username %>"><%=
+                    message.author.username %></a>
+                <% else %>
+                  <%= message.author_username %>
+                <% end %>
+                <%= message.hat.to_html_label if message.hat %>
               <% else %>
-                <%= message.author_username %>
+                <a href="/u/<%= message.recipient.username %>"><%=
+                  message.recipient.username %></a>
               <% end %>
-            <% else %>
-              <a href="/u/<%= message.recipient.username %>"><%=
-                message.recipient.username %></a>
-            <% end %></td>
+            </div>
+          </td>
           <td><%= time_ago_in_words_label(message.created_at) %></td>
           <td><a href="/messages/<%= message.short_id %>"><%= message.subject
             %></a></td>
@@ -87,6 +92,14 @@
       <%= f.label :body, "Message:", :class => "required" %>
       <%= f.text_area :body, :style => "width: 500px;", :rows => 5 %>
     </div>
+
+    <% if @user.wearable_hats.any? %>
+      <div class="boxline">
+        <%= f.label :hat_id, 'Put on hat:', :class => "required" %>
+        <%= f.select "hat_id", options_from_collection_for_select(@user.hats, "id", "hat", nil), :include_blank => true %>
+      </div>
+      </div>
+    <% end %>
 
     <div class="boxline">
       <p></p>

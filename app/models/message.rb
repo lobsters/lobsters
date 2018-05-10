@@ -7,6 +7,7 @@ class Message < ApplicationRecord
              :class_name => "User",
              :foreign_key => "author_user_id",
              :inverse_of => :sent_messages
+  belongs_to :hat
 
   validates :recipient, presence: true
 
@@ -14,6 +15,12 @@ class Message < ApplicationRecord
 
   validates :subject, length: { :in => 1..100 }
   validates :body, length: { :maximum => (64 * 1024) }
+  validate :hat do
+    next if hat.blank?
+    if author.blank? || author.wearable_hats.exclude?(hat)
+      errors.add(:hat, 'not wearable by author')
+    end
+  end
 
   scope :unread, -> { where(:has_been_read => false, :deleted_by_recipient => false) }
 

@@ -5,7 +5,10 @@ class ApplicationController < ActionController::Base
 
   TRAFFIC_DECREMENTER = 0.50
 
+  # match this in your nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
+
+  CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
 
   def authenticate_user
     # eagerly evaluate, in case this triggers an IpSpoofAttackError

@@ -1,6 +1,8 @@
 class CommentsController < ApplicationController
   COMMENTS_PER_PAGE = 20
 
+  caches_page :index, :threads, if: CACHE_PAGE
+
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, :only => [:index]
   before_action :require_logged_in_user_or_400,

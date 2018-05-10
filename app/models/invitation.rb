@@ -1,6 +1,11 @@
 class Invitation < ApplicationRecord
   belongs_to :user
+  belongs_to :new_user, class_name: 'User'
 
+  scope :used, -> { where.not(:used_at => nil) }
+  scope :unused, -> { where(:used_at => nil) }
+
+  validates :user, presence: true
   validate do
     unless email.to_s.match(/\A[^@ ]+@[^ @]+\.[^ @]+\z/)
       errors.add(:email, "is not valid")

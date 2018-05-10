@@ -6,8 +6,8 @@ describe User do
     expect { User.make!(:username => "") }.to raise_error
     expect { User.make!(:username => "*") }.to raise_error
 
-    User.make!(:username => "test")
-    expect { User.make!(:username => "test") }.to raise_error
+    User.make!(:username => "newbie")
+    expect { User.make!(:username => "newbie") }.to raise_error
   end
 
   it "has a valid email address" do

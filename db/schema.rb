@@ -75,13 +75,14 @@ ActiveRecord::Schema.define(version: 20180503150810) do
   end
 
   create_table "invitations", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
-    t.integer "user_id"
+    t.integer "user_id", null: false
     t.string "email"
     t.string "code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "memo", limit: 16777215
     t.datetime "used_at"
+    t.integer "new_user_id"
   end
 
   create_table "keystores", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

@@ -17,3 +17,4 @@ Other sites using the Lobsters codebase:
 * [Impct](https://impct.io/)
 * [Whistling Lobsters](https://lobsters.obormot.net/) ([repo](https://github.com/achmizs/whistling-lobsters))
 * [Kind and Green News](http://news.kindandgreenworld.com/)
+* [Gh Tech Roundup](https://ghtechroundup.com/)

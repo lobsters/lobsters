@@ -151,6 +151,7 @@ class User < ApplicationRecord
     h = super(:only => attrs)
 
     h[:avatar_url] = self.avatar_url
+    h[:invited_by_user] = User.where(id: invited_by_user_id).pluck(:username).first
 
     if self.github_username.present?
       h[:github_username] = self.github_username

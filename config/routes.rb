@@ -9,38 +9,38 @@ Lobsters::Application.routes.draw do
     get "/rss" => "home#index", :format => "rss"
     get "/hottest" => "home#index", :format => "json"
 
-    get "/page/:page" => "home#index"
+    get "/page/:page" => "home#index", :format => /html|json|rss/
 
     get "/newest" => "home#newest", :format => /html|json|rss/
-    get "/newest/page/:page" => "home#newest"
+    get "/newest/page/:page" => "home#newest", :format => /html|rss|json/
     get "/newest/:user" => "home#newest_by_user", :format => /html|json|rss/
-    get "/newest/:user/page/:page" => "home#newest_by_user"
-    get "/recent" => "home#recent"
-    get "/recent/page/:page" => "home#recent"
-    get "/hidden" => "home#hidden"
-    get "/hidden/page/:page" => "home#hidden"
+    get "/newest/:user/page/:page" => "home#newest_by_user", :format => /html|json|rss/
+    get "/recent" => "home#recent", :format => /html|rss|json/
+    get "/recent/page/:page" => "home#recent", :format => /html|rss|json/
+    get "/hidden" => "home#hidden", :format => /html|rss|json/
+    get "/hidden/page/:page" => "home#hidden", :format => /html|rss|json/
     get "/saved" => "home#saved", :format => /html|rss|json/
-    get "/saved/page/:page" => "home#saved"
+    get "/saved/page/:page" => "home#saved", :format => /html|rss|json/
 
     get "/upvoted(.format)" => "home#upvoted", :format => /html|json|rss/
-    get "/upvoted/page/:page" => "home#upvoted"
+    get "/upvoted/page/:page" => "home#upvoted", :format => /html|json|rss/
 
-    get "/top" => "home#top"
-    get "/top/page/:page" => "home#top"
-    get "/top/:length" => "home#top"
-    get "/top/:length/page/:page" => "home#top"
+    get "/top" => "home#top", :format => /html|json|rss/
+    get "/top/page/:page" => "home#top", :format => /html|json|rss/
+    get "/top/:length" => "home#top", :format => /html|json|rss/
+    get "/top/:length/page/:page" => "home#top", :format => /html|json|rss/
 
-    get "/threads" => "comments#threads"
-    get "/threads/:user" => "comments#threads"
+    get "/threads" => "comments#threads", :format => /html|json|rss/
+    get "/threads/:user" => "comments#threads", :format => /html|json|rss/
 
-    get "/replies" => "replies#all"
-    get "/replies/page/:page" => "replies#all"
-    get "/replies/comments" => "replies#comments"
-    get "/replies/comments/page/:page" => "replies#comments"
-    get "/replies/stories" => "replies#stories"
-    get "/replies/stories/page/:page" => "replies#stories"
-    get "/replies/unread" => "replies#unread"
-    get "/replies/unread/page/:page" => "replies#unread"
+    get "/replies" => "replies#all", :format => /html|json|rss/
+    get "/replies/page/:page" => "replies#all", :format => /html|json|rss/
+    get "/replies/comments" => "replies#comments", :format => /html|json|rss/
+    get "/replies/comments/page/:page" => "replies#comments", :format => /html|json|rss/
+    get "/replies/stories" => "replies#stories", :format => /html|json|rss/
+    get "/replies/stories/page/:page" => "replies#stories", :format => /html|json|rss/
+    get "/replies/unread" => "replies#unread", :format => /html|json|rss/
+    get "/replies/unread/page/:page" => "replies#unread", :format => /html|json|rss/
 
     get "/login" => "login#index"
     post "/login" => "login#login"
@@ -60,7 +60,7 @@ Lobsters::Application.routes.draw do
       :as => "set_new_password", :via => [:get, :post]
 
     get "/t/:tag" => "home#tagged", :as => "tag", :format => /html|rss|json/
-    get "/t/:tag/page/:page" => "home#tagged"
+    get "/t/:tag/page/:page" => "home#tagged", :format => /html|json|rss/
 
     get "/search" => "search#index"
     get "/search/:q" => "search#index"
@@ -92,10 +92,10 @@ Lobsters::Application.routes.draw do
         post "undelete"
       end
     end
-    get "/comments/page/:page" => "comments#index"
-    get "/comments" => "comments#index", :format => /html|rss/
+    get "/comments/page/:page" => "comments#index", :format => /html|json|rss/
+    get "/comments" => "comments#index", :format => /html|json|rss/
 
-    get "/messages/sent" => "messages#sent", :format => /html|json/
+    get "/messages/sent" => "messages#sent", :format => /html|json|rss/
     get "/messages" => "messages#index", :format => /html|json/
     post "/messages/batch_delete" => "messages#batch_delete",
       :as => "batch_delete_messages"
@@ -103,7 +103,7 @@ Lobsters::Application.routes.draw do
       post "keep_as_new"
     end
 
-    get "/c/:id" => "comments#redirect_from_short_id"
+    get "/c/:id" => "comments#redirect_from_short_id", :format => /html|json|rss/
     get "/c/:id.json" => "comments#show_short_id", :format => "json"
 
     # deprecated
@@ -112,7 +112,7 @@ Lobsters::Application.routes.draw do
     get "/s/:id/(:title)" => "stories#show", :format => /html|json/
 
     get "/u" => "users#tree"
-    get "/u/:username" => "users#show", :as => "user", :format => /html|json/
+    get "/u/:username" => "users#show", :as => "user", :format => /html|json|rss/
 
     get "/avatars/:username_size.png" => "avatars#show"
     post "/avatars/expire" => "avatars#expire"

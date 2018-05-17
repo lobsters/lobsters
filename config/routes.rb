@@ -10,18 +10,18 @@ Lobsters::Application.routes.draw do
 
   get "/page/:page" => "home#index"
 
-  get "/newest" => "home#newest", :format => /html|json|rss/
+  get "/newest" => "home#newest"
   get "/newest/page/:page" => "home#newest"
-  get "/newest/:user" => "home#newest_by_user", :format => /html|json|rss/
+  get "/newest/:user" => "home#newest_by_user"
   get "/newest/:user/page/:page" => "home#newest_by_user"
   get "/recent" => "home#recent"
   get "/recent/page/:page" => "home#recent"
   get "/hidden" => "home#hidden"
   get "/hidden/page/:page" => "home#hidden"
-  get "/saved" => "home#saved", :format => /html|rss|json/
+  get "/saved" => "home#saved"
   get "/saved/page/:page" => "home#saved"
 
-  get "/upvoted(.format)" => "home#upvoted", :format => /html|json|rss/
+  get "/upvoted" => "home#upvoted"
   get "/upvoted/page/:page" => "home#upvoted"
 
   get "/top" => "home#top"
@@ -58,7 +58,7 @@ Lobsters::Application.routes.draw do
   match "/login/set_new_password" => "login#set_new_password",
     :as => "set_new_password", :via => [:get, :post]
 
-  get "/t/:tag" => "home#tagged", :as => "tag", :format => /html|rss|json/
+  get "/t/:tag" => "home#tagged", :as => "tag"
   get "/t/:tag/page/:page" => "home#tagged"
 
   get "/search" => "search#index"
@@ -92,10 +92,10 @@ Lobsters::Application.routes.draw do
     end
   end
   get "/comments/page/:page" => "comments#index"
-  get "/comments" => "comments#index", :format => /html|rss/
+  get "/comments" => "comments#index"
 
-  get "/messages/sent" => "messages#sent", :format => /html|json/
-  get "/messages" => "messages#index", :format => /html|json/
+  get "/messages/sent" => "messages#sent"
+  get "/messages" => "messages#index"
   post "/messages/batch_delete" => "messages#batch_delete",
     :as => "batch_delete_messages"
   resources :messages do
@@ -108,10 +108,10 @@ Lobsters::Application.routes.draw do
   # deprecated
   get "/s/:story_id/:title/comments/:id" => "comments#redirect_from_short_id"
 
-  get "/s/:id/(:title)" => "stories#show", :format => /html|json/
+  get "/s/:id/(:title)" => "stories#show"
 
   get "/u" => "users#tree"
-  get "/u/:username" => "users#show", :as => "user", :format => /html|json/
+  get "/u/:username" => "users#show", :as => "user"
 
   get "/avatars/:username_size.png" => "avatars#show"
   post "/avatars/expire" => "avatars#expire"

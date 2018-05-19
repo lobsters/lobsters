@@ -5,6 +5,8 @@ User.blueprint do
   password { "blah blah" }
   password_confirmation { object.password }
   username { "username#{sn}" }
+  is_moderator { false }
+  is_admin { false }
 end
 
 User.blueprint(:banned) do

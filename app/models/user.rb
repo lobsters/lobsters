@@ -494,7 +494,7 @@ class User < ApplicationRecord
   end
 
   def enable_invite_by_user!(mod)
-    User.transaciton do
+    User.transaction do
       self.disabled_invite_at = nil
       self.disabled_invite_by_user_id = nil
       self.disabled_invite_reason = nil

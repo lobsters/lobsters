@@ -312,12 +312,11 @@
       </p>
       <ul>
         <li>Your account will be put into a deleted state.</li>
-        <li>Your username will remain reserved and will not be available to be
-          used on any other account.</li>
+        <li>Your username will remain reserved and will not be available for any other account.</li>
         <li>Your private messages will be deleted.</li>
         <li>Your submitted stories will not be deleted.</li>
         <li>
-          Your comments with negative scores will be deleted, and you can click
+          Your comments with negative scores will be deleted, and you can check
           "disown comments" below if you want all of your comments to change to
           list <a href="/u/inactive-user">inactive-user</a> as the author
           instead of your username.
@@ -329,14 +328,11 @@
         <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
       </div>
       <div class="boxline">
-        <%= f.label :disown, "Disown Comments:" %>
-        <%= check_box_tag :disown %>
-      </div>
-
-      <br>
-      <div class="boxline">
         <%= f.label :i_am_sure, "I am sure:", :class => "required" %>
         <%= check_box_tag :i_am_sure %>
+        <br />
+        <%= f.label :disown, "Disown Comments:" %>
+        <%= check_box_tag :disown %> (optional)
       </div>
       <%= f.submit "Yes, Delete My Account", :class => "deletion" %>
     <% end %>

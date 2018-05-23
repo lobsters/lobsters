@@ -43,6 +43,7 @@ Comment.blueprint do
   user_id { User.make!.id }
   story_id { Story.make!.id }
   comment { "comment text #{sn}" }
+  hat { nil }
 end
 
 Message.blueprint do

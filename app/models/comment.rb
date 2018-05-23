@@ -57,6 +57,9 @@ class Comment < ApplicationRecord
 
     self.comment.to_s.strip.match(/\Ame too.?\z/i) &&
       errors.add(:base, "Please just upvote the parent post instead.")
+
+    self.hat.present? && self.user.wearable_hats.exclude?(self.hat) &&
+      errors.add(:hat, "not wearable by user")
   end
 
   def self.arrange_for_user(user)

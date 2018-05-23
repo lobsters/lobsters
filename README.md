@@ -42,7 +42,7 @@ There's an external project [docker-lobsters](https://github.com/jamesbrink/dock
 * Run Bundler to install/bundle gems needed by the project:
 
     ```sh
-    lobsters$ bundle
+    lobsters$ bin/bundle
     ```
 
 * Create a MySQL (other DBs supported by ActiveRecord may work, only MySQL and

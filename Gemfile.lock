@@ -51,6 +51,8 @@ GEM
     arel (9.0.0)
     ast (2.4.0)
     bcrypt (3.1.11)
+    bootsnap (1.3.0)
+      msgpack (~> 1.0)
     builder (3.2.3)
     bullet (5.7.5)
       activesupport (>= 3.0.0)
@@ -101,6 +103,7 @@ GEM
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
+    msgpack (1.2.4)
     mysql2 (0.3.21)
     nio4r (2.3.1)
     nokogiri (1.8.2)
@@ -208,6 +211,7 @@ DEPENDENCIES
   actionpack-page_caching
   activerecord-typedstore
   bcrypt (~> 3.1.2)
+  bootsnap (>= 1.1.0)
   bullet
   byebug
   capybara

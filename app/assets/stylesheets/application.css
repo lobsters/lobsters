@@ -40,6 +40,9 @@ h1 {
 	font-size: 14pt;
 	font-weight: bold;
 }
+h2 {
+	font-size: 11pt;
+}
 
 div.clear {
 	clear: both;

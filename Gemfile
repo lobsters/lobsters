@@ -51,4 +51,5 @@ group :test, :development do
   gem "sqlite3"
   gem "faker"
   gem "byebug"
+  gem 'listen'
 end

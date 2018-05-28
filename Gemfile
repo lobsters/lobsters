@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "rails", "~> 5.2.0"
 
-gem "mysql2", "~> 0.3.20"
+gem "mysql2", "~> 0.4.10"
 
 # uncomment to use PostgreSQL
 # gem "pg"

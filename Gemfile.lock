@@ -104,7 +104,7 @@ GEM
     mini_portile2 (2.3.0)
     minitest (5.11.3)
     msgpack (1.2.4)
-    mysql2 (0.3.21)
+    mysql2 (0.4.10)
     nio4r (2.3.1)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
@@ -224,7 +224,7 @@ DEPENDENCIES
   json
   machinist
   mail
-  mysql2 (~> 0.3.20)
+  mysql2 (~> 0.4.10)
   nokogiri (>= 1.7.2)
   oauth
   rails (~> 5.2.0)

@@ -139,6 +139,18 @@ class CommentsController < ApplicationController
       :content_type => "text/html", :locals => { :comment => comment }
   end
 
+  def disown
+    if !((comment = find_comment) && comment.is_disownable_by_user?(@user))
+      return render :plain => "can't find comment", :status => 400
+    end
+
+    InactiveUser.disown! comment
+    comment = find_comment
+
+    render :partial => "comment", :layout => false,
+      :content_type => "text/html", :locals => { :comment => comment }
+  end
+
   def update
     if !((comment = find_comment) && comment.is_editable_by_user?(@user))
       return render :plain => "can't find comment", :status => 400

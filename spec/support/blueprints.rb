@@ -46,6 +46,7 @@ Comment.blueprint do
   story_id { Story.make!.id }
   comment { "comment text #{sn}" }
   hat { nil }
+  created_at { Time.current }
 end
 
 Message.blueprint do

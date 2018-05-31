@@ -366,12 +366,6 @@ class User < ApplicationRecord
     end
   end
 
-  def disown_comments!
-    inactive_user = User.find_by!(:username => 'inactive-user')
-    self.comments.update_all(:user_id => inactive_user.id)
-    inactive_user.update_comments_posted_count!
-  end
-
   def disable_2fa!
     self.totp_secret = nil
     self.save!

@@ -27,6 +27,7 @@ class Comment < ApplicationRecord
   scope :active, -> { where(:is_deleted => false, :is_moderated => false) }
 
   DOWNVOTABLE_DAYS = 7
+  DELETEABLE_DAYS = DOWNVOTABLE_DAYS * 2
 
   # the lowest a score can go
   DOWNVOTABLE_MIN_SCORE = -10
@@ -324,10 +325,14 @@ class Comment < ApplicationRecord
     if user && user.is_moderator?
       return true
     elsif user && user.id == self.user_id
-      return true
+      return self.created_at >= DELETEABLE_DAYS.days.ago
     else
       return false
     end
+  end
+
+  def is_disownable_by_user?(user)
+    user && user.id == self.user_id && self.created_at && self.created_at < DELETEABLE_DAYS.days.ago
   end
 
   def is_downvotable?

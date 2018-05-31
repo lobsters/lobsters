@@ -89,6 +89,7 @@ Lobsters::Application.routes.draw do
 
       post "delete"
       post "undelete"
+      post "disown"
     end
   end
   get "/comments/page/:page" => "comments#index"

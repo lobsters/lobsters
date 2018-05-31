@@ -78,7 +78,7 @@ class User < ApplicationRecord
             :uniqueness => { :case_sensitive => false }
 
   validates_each :username do |record, attr, value|
-    if BANNED_USERNAMES.include?(value.to_s.downcase)
+    if BANNED_USERNAMES.include?(value.to_s.downcase) || value.starts_with?('tag-')
       record.errors.add(attr, "is not permitted")
     end
   end
@@ -98,7 +98,7 @@ class User < ApplicationRecord
   end
 
   BANNED_USERNAMES = ["admin", "administrator", "contact", "fraud", "guest",
-    "help", "hostmaster", "inactive-user", "mailer-daemon", "moderator",
+    "help", "hostmaster", "inactive-user", "lobster", "lobsters", "mailer-daemon", "moderator",
     "moderators", "nobody", "postmaster", "root", "security", "support",
     "sysop", "webmaster", "enable", "new", "signup",].freeze
 

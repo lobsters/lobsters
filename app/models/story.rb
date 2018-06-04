@@ -25,7 +25,9 @@ class Story < ApplicationRecord
   has_many :hidings, :class_name => 'HiddenStory', :inverse_of => :story, :dependent => :destroy
   has_many :savings, :class_name => 'SavedStory', :inverse_of => :story, :dependent => :destroy
 
-  scope :base, -> { unmerged.where(is_expired: false) }
+  scope :base, -> { unmerged.not_deleted }
+  scope :deleted, -> { where(is_expired: true) }
+  scope :not_deleted, -> { where(is_expired: false) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
   scope :positive_ranked, -> { where("#{Story.score_sql} >= 0") }
   scope :low_scoring, ->(max = 5) { where("#{Story.score_sql} < ?", max) }

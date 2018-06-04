@@ -278,7 +278,7 @@ class Story < ApplicationRecord
            (self.user_is_author? && self.url.present? ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
-    cpoints = self.comments
+    cpoints = self.merged_comments
       .where("user_id <> ?", self.user_id)
       .select(:upvotes, :downvotes)
       .map {|c|

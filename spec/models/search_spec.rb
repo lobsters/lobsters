@@ -31,11 +31,29 @@ describe Search do
                   :user_id => @user.id,
                   :tags_a => ["tag1"]),
     ]
+    @comments = [
+      create(:comment, :comment => "comment0",
+                    :story_id => @multi_tag.id,
+                    :user_id => @user.id),
+      create(:comment, :comment => "comment1",
+                    :story_id => @stories[0].id,
+                    :user_id => @user.id),
+      create(:comment, :comment => "comment2",
+                    :story_id => @stories[1].id,
+                    :user_id => @user.id),
+      create(:comment, :comment => "comment3",
+                    :story_id => @stories[2].id,
+                    :user_id => @user.id),
+      create(:comment, :comment => "comment4",
+                    :story_id => @stories[4].id,
+                    :user_id => @user.id),
+    ]
   end
 
   after(:all) do
-    @user.destroy!
+    @comments.each(&:destroy!)
     @stories.each(&:destroy!)
+    @user.destroy! if @user
   end
 
   it "can search for stories" do
@@ -102,5 +120,55 @@ describe Search do
     search.search_for_user!(@user)
 
     expect(search.results.length).to eq(2)
+  end
+
+  it "can search for comments" do
+    search = Search.new
+    search.q = "comment1"
+    search.what = "comments"
+
+    search.search_for_user!(@user)
+
+    expect(search.results).to include(@comments[1])
+  end
+  it "can search for comments by tag" do
+    search = Search.new
+    search.q = "comment2 comment3 tag:tag1"
+    search.what = "comments"
+
+    search.search_for_user!(@user)
+
+    expect(search.results).to include(@comments[2])
+    expect(search.results).not_to include(@comments[3])
+  end
+  it "can search for comments with only tags" do
+    search = Search.new
+    search.q = "tag:tag1"
+    search.what = "comments"
+
+    search.search_for_user!(@user)
+
+    expect(search.results).to include(@comments[2])
+    expect(search.results).not_to include(@comments[3])
+  end
+  it "should only return comments matching all tags if multiple are present" do
+    search = Search.new
+    search.q = "tag:tag1 tag:tag2"
+    search.what = "comments"
+
+    search.search_for_user!(@user)
+
+    expect(search.results).to eq([@comments[0]])
+  end
+
+  it "should only return comments with stories in domain if domain present" do
+    search = Search.new
+    search.q = "comment3 comment4 domain:lobste.rs"
+    search.what = "comments"
+
+    search.search_for_user!(@user)
+
+    expect(search.results).to include(@comments[4])
+    expect(search.results).not_to include(@comments[3])
   end
 end

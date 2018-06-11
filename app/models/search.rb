@@ -61,6 +61,23 @@ class Search
       .group("stories.id")
   end
 
+  def with_stories_in_domain(base, domain)
+    begin
+      reg = Regexp.new("//([^/]*\.)?#{domain}/")
+      base.where("`stories`.`url` REGEXP '" +
+        ActiveRecord::Base.connection.quote_string(reg.source) + "'")
+    rescue RegexpError
+      return base
+    end
+  end
+
+  def with_stories_matching_tags(base, tag_scopes)
+    story_ids_matching_tags = with_tags(
+      Story.unmerged.where(:is_expired => false), tag_scopes
+    ).select(:id).map(&:id)
+    base.where(story_id: story_ids_matching_tags)
+  end
+
   def search_for_user!(user)
     self.results = []
     self.total_results = 0
@@ -84,13 +101,7 @@ class Search
     when "stories"
       base = Story.unmerged.where(:is_expired => false)
       if domain.present?
-        begin
-          reg = Regexp.new("//([^/]*\.)?#{domain}/")
-          base = base.where("`url` REGEXP '" +
-            ActiveRecord::Base.connection.quote_string(reg.source) + "'")
-        rescue RegexpError
-          return false
-        end
+        base = with_stories_in_domain(base, domain)
       end
 
       title_match_sql = Arel.sql("MATCH(stories.title) AGAINST('#{qwords}' IN BOOLEAN MODE)")
@@ -138,17 +149,20 @@ class Search
       end
 
     when "comments"
-      base = Comment.active.where(Arel.sql("MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE)"))
-        .includes(:user, :story)
-
+      base = Comment.active
+      if domain.present?
+        base = with_stories_in_domain(base.joins(:story), domain)
+      end
+      if tag_scopes.present?
+        base = with_stories_matching_tags(base, tag_scopes)
+      end
+      if qwords.present?
+        base = base.where(Arel.sql("MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE)"))
+      end
       self.results = base.select(
         "comments.*, " +
         "MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_comment"
-      )
-
-      if tag_scopes.present?
-        self.results = with_tags(base, tag_scopes)
-      end
+      ).includes(:user, :story)
 
       case self.order
       when "relevance"
@@ -158,12 +172,8 @@ class Search
       when "points"
         self.results.order!("#{Comment.score_sql} DESC")
       end
-    end
 
-    if tag_scopes.present?
       self.total_results = self.results.length
-    else
-      self.total_results = base.count
     end
 
     if self.page > self.page_count

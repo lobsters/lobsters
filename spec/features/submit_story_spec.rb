@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.feature "Submitting Stories", type: :feature do
-  let(:user) { User.make! }
+  let(:user) { create(:user) }
   before(:each) { stub_login_as user }
 
   scenario "submitting a link" do

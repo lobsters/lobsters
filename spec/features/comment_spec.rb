@@ -4,8 +4,8 @@ require 'rails_helper'
 # so the call can't just be click_on('delete'), etc.
 
 RSpec.feature "Commenting" do
-  let(:story) { Story.make! title: "Example Story" }
-  let(:user) { User.make! username: 'user' }
+  let(:story) { create(:story) }
+  let(:user) { create(:user) }
 
   before(:each) { stub_login_as user }
 
@@ -20,12 +20,11 @@ RSpec.feature "Commenting" do
 
   feature "deleting comments" do
     scenario 'deleting a comment' do
-      comment = Comment.make!(
-        comment: 'An example comment',
-        user_id: user.id,
-        story_id: story.id,
-        created_at: 1.day.ago,
-      )
+      comment = create(:comment,
+                       user_id: user.id,
+                       story_id: story.id,
+                       created_at: 1.day.ago,
+                      )
       visit "/s/#{story.short_id}"
       expect(page).to have_link('delete')
 
@@ -37,12 +36,7 @@ RSpec.feature "Commenting" do
     end
 
     scenario 'trying to delete old comments' do
-      comment = Comment.make!(
-        comment: 'An example comment',
-        user_id: user.id,
-        story_id: story.id,
-        created_at: 90.days.ago,
-      )
+      comment = create(:comment, user: user, story: story, created_at: 90.days.ago)
       visit "/s/#{story.short_id}"
       expect(page).not_to have_link('delete')
 
@@ -55,9 +49,9 @@ RSpec.feature "Commenting" do
   feature "disowning comments" do
     scenario 'disowning a comment' do
       # bypass validations to create inactive-user:
-      User.make!.tap {|u| u.update_column :username, 'inactive-user' }
+      create(:user, :inactive)
 
-      comment = Comment.make! user_id: user.id, story_id: story.id, created_at: 90.days.ago
+      comment = create(:comment, user_id: user.id, story_id: story.id, created_at: 90.days.ago)
       visit "/s/#{story.short_id}"
       expect(page).to have_link('disown')
 
@@ -69,12 +63,11 @@ RSpec.feature "Commenting" do
     end
 
     scenario 'trying to disown recent comments' do
-      comment = Comment.make! user_id: user.id, story_id: story.id, created_at: 1.day.ago
+      comment = create(:comment, user_id: user.id, story_id: story.id, created_at: 1.day.ago)
       visit "/s/#{story.short_id}"
       expect(page).not_to have_link('disown')
 
       page.driver.post "/comments/#{comment.short_id}/disown"
-      puts page.body
       comment.reload
       expect(comment.user).to eq(user)
     end

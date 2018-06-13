@@ -71,6 +71,11 @@ GEM
       actionmailer (>= 4.0, < 6)
       activesupport (>= 4.0, < 6)
     execjs (2.7.0)
+    factory_bot (4.10.0)
+      activesupport (>= 3.0.0)
+    factory_bot_rails (4.10.0)
+      factory_bot (~> 4.10.0)
+      railties (>= 3.0.0)
     faker (1.8.7)
       i18n (>= 0.7)
     globalid (0.4.1)
@@ -87,7 +92,6 @@ GEM
     loofah (2.2.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
-    machinist (2.0)
     mail (2.7.0)
       mini_mime (>= 0.1.1)
     method_source (0.9.0)
@@ -206,11 +210,11 @@ DEPENDENCIES
   commonmarker (~> 0.14)
   dynamic_form
   exception_notification
+  factory_bot_rails
   faker
   htmlentities
   jquery-rails (~> 4.3)
   json
-  machinist
   mail
   mysql2 (~> 0.3.20)
   nokogiri (>= 1.7.2)

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.feature "Reading Homepage", type: feature do
-  let!(:story) { Story.make! title: "Example Story" }
+  let!(:story) { create(:story) }
 
   feature "when logged out" do
     scenario "reading a story" do
@@ -11,7 +11,7 @@ RSpec.feature "Reading Homepage", type: feature do
   end
 
   feature "when logged in" do
-    let(:user) { User.make! }
+    let(:user) { create(:user) }
     before(:each) { stub_login_as user }
 
     scenario "reading a story" do

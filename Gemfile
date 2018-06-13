@@ -11,7 +11,7 @@ gem "mysql2", "~> 0.3.20"
 # gem "pg"
 
 gem 'scenic'
-gem 'scenic-mysql'
+gem 'scenic-mysql_adapter'
 
 gem "uglifier", ">= 1.3.0"
 gem "jquery-rails", "~> 4.3"

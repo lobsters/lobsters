@@ -1,19 +1,16 @@
 require 'rails_helper'
 
 RSpec.feature "User Administration" do
-  let(:admin) { User.make! is_moderator: true, is_admin: true }
-  let(:user) { User.make! username: 'user' }
-  let(:banned) {
-    User.make!(username: 'banned').tap {|u| u.ban_by_user_for_reason!(admin, 'why') }
-  }
-  let(:noinvite) {
-    User.make!(username: 'noinvite').tap {|u| u.disable_invite_by_user_for_reason!(admin, 'why') }
-  }
+  let(:admin) { create(:user, :admin) }
+  let(:user) { create(:user) }
+  let(:banned) { create(:user, :banned, banner: admin) }
+  let(:noinvite) { create(:user, :noinvite, disabler: admin) }
+
   before(:each) { stub_login_as admin }
 
   scenario 'diabling invites' do
     expect(user.can_invite?).to be(true)
-    visit '/u/user'
+    visit user_path(user)
     expect(page).to have_button('Disable Invites')
     fill_in 'Reason', with: 'Invited spammers'
     click_on 'Disable Invites'
@@ -27,7 +24,7 @@ RSpec.feature "User Administration" do
 
   scenario 'enabling invites' do
     expect(noinvite.can_invite?).to be(false)
-    visit '/u/noinvite'
+    visit user_path(noinvite)
     click_on 'Enable Invites'
     expect(page).to have_content('invite capability enabled')
     noinvite.reload
@@ -39,7 +36,7 @@ RSpec.feature "User Administration" do
 
   scenario 'banning' do
     expect(user.is_banned?).to be(false)
-    visit '/u/user'
+    visit user_path(user)
     expect(page).to have_button('Ban')
     fill_in 'Reason', with: 'Spammer'
     click_on 'Ban'
@@ -52,7 +49,7 @@ RSpec.feature "User Administration" do
 
   scenario "unbanning" do
     expect(banned.is_banned?).to be(true)
-    visit '/u/banned'
+    visit user_path(banned)
     click_on 'Unban'
     expect(page).to have_content('unbanned')
     banned.reload

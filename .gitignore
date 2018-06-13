@@ -41,6 +41,3 @@ config/database.yml
 config/initializers/secret_token.rb
 config/*.sphinx.conf
 config/unicorn.conf.rb
-
-# ignore vim swp files
-*.swp

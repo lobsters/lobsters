@@ -2,13 +2,12 @@ require "rails_helper"
 
 describe Vote do
   it "applies a story upvote and karma properly" do
-    s = Story.make!
-
+    s = create(:story)
     expect(s.upvotes).to eq(1)
     expect(s.downvotes).to eq(0)
     expect(s.user.karma).to eq(0)
 
-    u = User.make!
+    u = create(:user)
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
 
@@ -19,9 +18,9 @@ describe Vote do
   end
 
   it "does nothing when upvoting an existing upvote" do
-    s = Story.make!
+    s = create(:story)
 
-    u = User.make!
+    u = create(:user)
 
     2.times do
       Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
@@ -34,10 +33,10 @@ describe Vote do
   end
 
   it "has no effect on a story score when casting a hide vote" do
-    s = Story.make!
+    s = create(:story)
     expect(s.upvotes).to eq(1)
 
-    u = User.make!
+    u = create(:user)
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id, nil, u.id, "H")
     s.reload
@@ -47,11 +46,11 @@ describe Vote do
   end
 
   it "removes karma and upvote when downvoting an upvote" do
-    s = Story.make!
-    c = Comment.make!(:story_id => s.id)
+    s = create(:story)
+    c = create(:comment, :story => s)
     expect(c.user.karma).to eq(0)
 
-    u = User.make!
+    u = create(:user)
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, c.id, u.id, nil)
     c.reload
@@ -72,10 +71,10 @@ describe Vote do
   end
 
   it "neutralizes karma and upvote when unvoting an upvote" do
-    s = Story.make!
-    c = Comment.make!(:story_id => s.id)
+    s = create(:story)
+    c = create(:comment, :story_id => s.id)
 
-    u = User.make!
+    u = create(:user)
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, c.id, u.id, nil)
     c.reload

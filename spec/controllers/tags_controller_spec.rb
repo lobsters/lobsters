@@ -1,9 +1,9 @@
 require "rails_helper"
 
 describe TagsController do
-  let(:user_id) { 5 }
+  let(:user) { create(:user) }
   before do
-    stub_login_as User.make!(id: user_id)
+    stub_login_as user
     allow(controller).to receive(:require_logged_in_admin)
   end
 
@@ -41,7 +41,7 @@ describe TagsController do
       post :create, params: { tag: { tag: 'mytag' } }
       mod = Moderation.order(id: :desc).first
       expect(mod.tag_id).to eq Tag.order(id: :desc).first.id
-      expect(mod.moderator_user_id).to eq user_id
+      expect(mod.moderator_user_id).to eq user.id
     end
   end
 
@@ -83,7 +83,7 @@ describe TagsController do
 
     it 'creates a moderation with the expected user_id' do
       post :update, params: { id: tag.id, tag: { tag: 'modified_tag' } }
-      expect(Moderation.order(id: :desc).first.moderator_user_id).to eq user_id
+      expect(Moderation.order(id: :desc).first.moderator_user_id).to eq user.id
     end
   end
 end

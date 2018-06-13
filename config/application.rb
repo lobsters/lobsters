@@ -40,6 +40,10 @@ module Lobsters
     config.after_initialize do
       require "#{Rails.root}/lib/monkey.rb"
     end
+
+    config.generators do |g|
+      g.factory_bot false
+    end
   end
 end
 

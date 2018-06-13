@@ -18,6 +18,7 @@ Other sites using the Lobsters codebase:
 * [Whistling Lobsters](https://lobsters.obormot.net/) ([repo](https://github.com/achmizs/whistling-lobsters))
 * [Kind and Green News](http://news.kindandgreenworld.com/)
 * [Gh Tech Roundup](https://ghtechroundup.com/)
+* [G33kz](https://g33kz.de/)
 
 ## Cousin Sites
 

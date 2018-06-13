@@ -1,3 +1,9 @@
+Tag.destroy_all
+Tag.create!([
+  { tag: "tag1" },
+  { tag: "tag2" },
+])
+
 FactoryBot.define do
   factory :story do
     association(:user)

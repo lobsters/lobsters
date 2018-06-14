@@ -9,7 +9,7 @@ gem "mysql2", "~> 0.3.20"
 
 # rails
 gem 'scenic'
-gem 'scenic-mysql'
+gem 'scenic-mysql_adapter'
 gem "activerecord-typedstore"
 
 # js

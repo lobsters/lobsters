@@ -1,6 +1,22 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
-require 'rails/all'
+# included from https://github.com/rails/rails/blob/5-2-stable/railties/lib/rails/all.rb
+require 'rails'
+
+%w(
+  active_record/railtie
+  action_controller/railtie
+  action_view/railtie
+  action_mailer/railtie
+  active_job/railtie
+  rails/test_unit/railtie
+  sprockets/railtie
+).each do |railtie|
+  begin
+    require railtie
+  rescue LoadError
+  end
+end
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -8,9 +24,15 @@ Bundler.require(*Rails.groups)
 
 module Lobsters
   class Application < Rails::Application
+    # Initialize configuration defaults for originally generated Rails version.
+    config.load_defaults 5.0
+
+    config.active_record.belongs_to_required_by_default = false
+
     # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration should go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded.
+    # Application configuration can go into files in config/initializers
+    # -- all .rb files in that directory are automatically loaded after loading
+    # the framework and any gems in your application.
 
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
@@ -49,7 +71,7 @@ end
 
 # disable yaml/xml/whatever input parsing
 silence_warnings do
-  ActionDispatch::ParamsParser::DEFAULT_PARSERS = {}.freeze
+  ActionDispatch::Http::Parameters::DEFAULT_PARSERS = {}.freeze
 end
 
 # define site name and domain to be used globally, should be overridden in a

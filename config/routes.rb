@@ -1,4 +1,4 @@
-Lobsters::Application.routes.draw do
+Rails.application.routes.draw do
   root :to => "home#index",
     :protocol => (Rails.application.config.force_ssl ? "https://" : "http://"),
     :as => "root"

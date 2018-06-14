@@ -32,4 +32,4 @@ Rails.application.config.active_record.cache_versioning = true
 Rails.application.config.active_record.sqlite3.represent_boolean_as_integer = true
 
 # Use SHA-1 instead of MD5 to generate non-sensitive digests, such as the ETag header.
-# Rails.application.config.active_support.use_sha1_digests = true
+Rails.application.config.active_support.use_sha1_digests = true

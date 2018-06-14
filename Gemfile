@@ -43,7 +43,7 @@ group :test, :development do
   gem 'bullet'
   gem 'capybara'
   gem "rspec-rails"
-  gem "machinist"
+  gem "factory_bot_rails"
   gem "rubocop", require: false
   gem "sqlite3"
   gem "faker"

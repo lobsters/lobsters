@@ -6,27 +6,27 @@ describe Search do
   # the search module uses custom SQL that doesn't
   # work inside the transaction
   before(:all) do
-    @user = User.make!
+    @user = create(:user)
 
-    @multi_tag = Story.make!(:title => "multitag term1 t1 t2",
+    @multi_tag = create(:story, :title => "multitag term1 t1 t2",
                              :url => "https://example.com/3",
                              :user_id => @user.id,
                              :tags_a => ["tag1", "tag2"])
     @stories = [
-      Story.make!(:title => "unique",
+      create(:story, :title => "unique",
                   :url => "https://example.com/unique",
                   :user_id => @user.id,
                   :tags_a => ["tag1"]),
-      Story.make!(:title => "term1 domain1",
+      create(:story, :title => "term1 domain1",
                   :url => "https://example.com/1",
                   :user_id => @user.id,
                   :tags_a => ["tag1"]),
-      Story.make!(:title => "term1 t2",
+      create(:story, :title => "term1 t2",
                   :url => "https://example.com/2",
                   :user_id => @user.id,
                   :tags_a => ["tag2"]),
       @multi_tag,
-      Story.make!(:title => "term1 domain2",
+      create(:story, :title => "term1 domain2",
                   :url => "https://lobste.rs/1",
                   :user_id => @user.id,
                   :tags_a => ["tag1"]),

@@ -23,6 +23,9 @@ gem "actionpack-page_caching"
 gem "exception_notification"
 gem "unicorn"
 
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.1.0', require: false
+
 # security
 gem "bcrypt", "~> 3.1.2"
 gem "rotp"
@@ -48,4 +51,5 @@ group :test, :development do
   gem "sqlite3"
   gem "faker"
   gem "byebug"
+  gem 'listen'
 end

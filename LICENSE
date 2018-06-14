@@ -1,4 +1,7 @@
-Copyright (c) 2012-2017 joshua stein <jcs@jcs.org>
+Copyright (c) 2012-2018
+Created by joshua stein <jcs@jcs.org>
+For full list of contributors run `git log --format='%aN <%aE>' | sort -u`
+
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions

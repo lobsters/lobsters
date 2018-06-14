@@ -1,4 +1,6 @@
 class HomeController < ApplicationController
+  caches_page :about, :chat, :index, :newest, :newest_by_user, :recent, :top, if: CACHE_PAGE
+
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, :only => [:index, :newest, :saved]
   before_action { @page = page }

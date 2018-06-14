@@ -78,7 +78,7 @@ class User < ApplicationRecord
             :uniqueness => { :case_sensitive => false }
 
   validates_each :username do |record, attr, value|
-    if BANNED_USERNAMES.include?(value.to_s.downcase)
+    if BANNED_USERNAMES.include?(value.to_s.downcase) || value.starts_with?('tag-')
       record.errors.add(attr, "is not permitted")
     end
   end
@@ -98,7 +98,7 @@ class User < ApplicationRecord
   end
 
   BANNED_USERNAMES = ["admin", "administrator", "contact", "fraud", "guest",
-    "help", "hostmaster", "inactive-user", "mailer-daemon", "moderator",
+    "help", "hostmaster", "inactive-user", "lobster", "lobsters", "mailer-daemon", "moderator",
     "moderators", "nobody", "postmaster", "root", "security", "support",
     "sysop", "webmaster", "enable", "new", "signup",].freeze
 
@@ -366,12 +366,6 @@ class User < ApplicationRecord
     end
   end
 
-  def disown_comments!
-    inactive_user = User.find_by!(:username => 'inactive-user')
-    self.comments.update_all(:user_id => inactive_user.id)
-    inactive_user.update_comments_posted_count!
-  end
-
   def disable_2fa!
     self.totp_secret = nil
     self.save!
@@ -494,7 +488,7 @@ class User < ApplicationRecord
   end
 
   def enable_invite_by_user!(mod)
-    User.transaciton do
+    User.transaction do
       self.disabled_invite_at = nil
       self.disabled_invite_by_user_id = nil
       self.disabled_invite_reason = nil

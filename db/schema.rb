@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180503150810) do
+ActiveRecord::Schema.define(version: 20180506045709) do
 
-  create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "comments", id: :integer, unsigned: true, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at"
     t.string "short_id", limit: 10, default: "", null: false
@@ -246,6 +246,7 @@ ActiveRecord::Schema.define(version: 20180503150810) do
     t.integer "comment_id", unsigned: true
     t.integer "vote", limit: 1, null: false
     t.string "reason", limit: 1
+    t.datetime "updated_at", null: false
     t.index ["comment_id"], name: "index_votes_on_comment_id"
     t.index ["user_id", "comment_id"], name: "user_id_comment_id"
     t.index ["user_id", "story_id"], name: "user_id_story_id"

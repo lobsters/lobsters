@@ -3,7 +3,7 @@ require "rails_helper"
 describe TagsController do
   let(:user_id) { 5 }
   before do
-    stub_login_as double('admin', id: user_id, is_active?: true, username: 'admin')
+    stub_login_as User.make!(id: user_id)
     allow(controller).to receive(:require_logged_in_admin)
   end
 

@@ -1,6 +1,8 @@
 class CommentsController < ApplicationController
   COMMENTS_PER_PAGE = 20
 
+  caches_page :index, :threads, if: CACHE_PAGE
+
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, :only => [:index]
   before_action :require_logged_in_user_or_400,
@@ -132,6 +134,18 @@ class CommentsController < ApplicationController
     end
 
     comment.undelete_for_user(@user)
+
+    render :partial => "comment", :layout => false,
+      :content_type => "text/html", :locals => { :comment => comment }
+  end
+
+  def disown
+    if !((comment = find_comment) && comment.is_disownable_by_user?(@user))
+      return render :plain => "can't find comment", :status => 400
+    end
+
+    InactiveUser.disown! comment
+    comment = find_comment
 
     render :partial => "comment", :layout => false,
       :content_type => "text/html", :locals => { :comment => comment }

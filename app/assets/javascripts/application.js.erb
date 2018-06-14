@@ -483,6 +483,16 @@ $(document).ready(function() {
     }
   });
 
+  $(document).on("click", "a.comment_disownor", function() {
+    if (confirm("Are you sure you want to disown this comment?")) {
+      var li = $(this).closest(".comment");
+      $.post("/comments/" + $(li).attr("data-shortid") + "/disown",
+      function(d) {
+        $(li).replaceWith(d);
+      });
+    }
+  });
+
   $(document).on("click", "a.comment_moderator", function() {
     var reason = prompt("Moderation reason:");
     if (reason == null || reason == "")

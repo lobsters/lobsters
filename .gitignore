@@ -22,6 +22,7 @@ public/avatars
 node_modules/
 yarn-error.log
 yarn.lock
+.byebug*
 
 # templates to be created per-site
 app/views/home/privacy.*

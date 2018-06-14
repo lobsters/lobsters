@@ -5,7 +5,13 @@ class ApplicationController < ActionController::Base
 
   TRAFFIC_DECREMENTER = 0.50
 
+  # match this in your nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
+
+  # returning false until 1. nginx wants to serve cached files
+  # 2. the "stay logged in" cookie is separated from rails session cookie
+  # (lobster_trap) which is sent even to logged-out visitors
+  CACHE_PAGE = proc { false && @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
 
   def authenticate_user
     # eagerly evaluate, in case this triggers an IpSpoofAttackError

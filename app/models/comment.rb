@@ -27,6 +27,7 @@ class Comment < ApplicationRecord
   scope :active, -> { where(:is_deleted => false, :is_moderated => false) }
 
   DOWNVOTABLE_DAYS = 7
+  DELETEABLE_DAYS = DOWNVOTABLE_DAYS * 2
 
   # the lowest a score can go
   DOWNVOTABLE_MIN_SCORE = -10
@@ -57,6 +58,9 @@ class Comment < ApplicationRecord
 
     self.comment.to_s.strip.match(/\Ame too.?\z/i) &&
       errors.add(:base, "Please just upvote the parent post instead.")
+
+    self.hat.present? && self.user.wearable_hats.exclude?(self.hat) &&
+      errors.add(:hat, "not wearable by user")
   end
 
   def self.arrange_for_user(user)
@@ -321,10 +325,14 @@ class Comment < ApplicationRecord
     if user && user.is_moderator?
       return true
     elsif user && user.id == self.user_id
-      return true
+      return self.created_at >= DELETEABLE_DAYS.days.ago
     else
       return false
     end
+  end
+
+  def is_disownable_by_user?(user)
+    user && user.id == self.user_id && self.created_at && self.created_at < DELETEABLE_DAYS.days.ago
   end
 
   def is_downvotable?

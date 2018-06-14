@@ -21,7 +21,7 @@ class SettingsController < ApplicationController
 
     @user.delete!
     if params[:disown].present?
-      @user.disown_comments!
+      InactiveUser.disown_all_by_author! @user
     end
     reset_session
     flash[:success] = "Your account has been deleted."

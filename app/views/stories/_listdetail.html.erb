@@ -45,7 +45,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
 
       <% if defined?(single_story) && single_story %>
-        <% story.merged_stories.each do |ms| %>
+        <% story.merged_stories.not_deleted.each do |ms| %>
           <br>
           <span class="merge"></span>
           <span class="link">

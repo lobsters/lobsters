@@ -120,6 +120,7 @@ in a `config/initializers/production.rb` or similar file:
     ```
     */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/post_to_twitter'
     ```
+* In production, see `config/initializers/production.rb.sample` for GitHub/Twitter integration help.
 
 #### Administration
 

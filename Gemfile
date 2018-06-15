@@ -47,5 +47,4 @@ group :test, :development do
   gem "rubocop", require: false
   gem "sqlite3"
   gem "faker"
-  gem "byebug"
 end

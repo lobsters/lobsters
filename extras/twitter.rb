@@ -10,7 +10,7 @@ class Twitter
   @@AUTH_TOKEN = nil
   @@AUTH_SECRET = nil
 
-  MAX_TWEET_LEN = 140
+  MAX_TWEET_LEN = 280
 
   # https://t.co/eyW1U2HLtP
   TCO_LEN = 23

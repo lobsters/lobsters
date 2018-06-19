@@ -5,6 +5,10 @@ class Twitter
   @@CONSUMER_KEY = nil
   @@CONSUMER_SECRET = nil
 
+  # You'll need to go to https://apps.twitter.com/, add an app, and
+  # whitelist both /settings and /settings/twitter_callback as Callback URLs
+  # for users to be able to authenticate their Twitter accounts.
+
   # these are set for the account used to post updates in
   # script/post_to_twitter (needs read/write access)
   @@AUTH_TOKEN = nil

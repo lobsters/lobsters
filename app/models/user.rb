@@ -438,7 +438,7 @@ class User < ApplicationRecord
     ).group(
       Tag.arel_table[:id]
     ).order(
-      'COUNT(*) desc'
+      Arel.sql('COUNT(*) desc')
     ).first
   end
 

@@ -64,7 +64,7 @@ class Comment < ApplicationRecord
   end
 
   def self.arrange_for_user(user)
-    parents = self.order("(upvotes - downvotes) < 0 ASC, confidence DESC")
+    parents = self.order(Arel.sql("(upvotes - downvotes) < 0 ASC, confidence DESC"))
       .group_by(&:parent_comment_id)
 
     # top-down list of comments, regardless of indent level
@@ -119,8 +119,8 @@ class Comment < ApplicationRecord
   end
 
   def self.score_sql
-    "(CAST(upvotes AS #{Story.votes_cast_type}) - " <<
-      "CAST(downvotes AS #{Story.votes_cast_type}))"
+    Arel.sql("(CAST(upvotes AS #{Story.votes_cast_type}) - " <<
+      "CAST(downvotes AS #{Story.votes_cast_type}))")
   end
 
   def as_json(_options = {})

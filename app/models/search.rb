@@ -93,9 +93,11 @@ class Search
         end
       end
 
-      title_match_sql = "MATCH(stories.title) AGAINST('#{qwords}' IN BOOLEAN MODE)"
-      description_match_sql = "MATCH(stories.description) AGAINST('#{qwords}' IN BOOLEAN MODE)"
-      story_cache_match_sql = "MATCH(stories.story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE)"
+      title_match_sql = Arel.sql("MATCH(stories.title) AGAINST('#{qwords}' IN BOOLEAN MODE)")
+      description_match_sql =
+        Arel.sql("MATCH(stories.description) AGAINST('#{qwords}' IN BOOLEAN MODE)")
+      story_cache_match_sql =
+        Arel.sql("MATCH(stories.story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE)")
 
       if qwords.present?
         base.where!(
@@ -123,11 +125,9 @@ class Search
       case self.order
       when "relevance"
         if qwords.present?
-          self.results.order!(
-            "((#{title_match_sql}) * 2) DESC, " +
-            "((#{description_match_sql}) * 1.5) DESC, " +
-            "(#{story_cache_match_sql}) DESC"
-          )
+          self.results.order!(Arel.sql("((#{title_match_sql}) * 2) DESC, " +
+                                       "((#{description_match_sql}) * 1.5) DESC, " +
+                                       "(#{story_cache_match_sql}) DESC"))
         else
           self.results.order!("stories.created_at DESC")
         end
@@ -138,9 +138,8 @@ class Search
       end
 
     when "comments"
-      base = Comment.active.where(
-        "MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE)"
-      ).includes(:user, :story)
+      base = Comment.active.where(Arel.sql("MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE)"))
+        .includes(:user, :story)
 
       self.results = base.select(
         "comments.*, " +

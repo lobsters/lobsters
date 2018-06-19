@@ -62,7 +62,10 @@ class Story < ApplicationRecord
   }
   scope :not_hidden_by, ->(user) {
     user.nil? ? all : where.not(
-      HiddenStory.select('TRUE').where('hidden_stories.story_id = stories.id').by(user).exists
+      HiddenStory.select('TRUE')
+        .where(Arel.sql('hidden_stories.story_id = stories.id'))
+        .by(user)
+        .exists
     )
   }
   scope :saved_by, ->(user) {
@@ -213,8 +216,8 @@ class Story < ApplicationRecord
   end
 
   def self.score_sql
-    "(CAST(upvotes AS #{votes_cast_type}) - " <<
-      "CAST(downvotes AS #{votes_cast_type}))"
+    Arel.sql("(CAST(upvotes AS #{votes_cast_type}) - " <<
+      "CAST(downvotes AS #{votes_cast_type}))")
   end
 
   def self.votes_cast_type

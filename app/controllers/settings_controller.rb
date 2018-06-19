@@ -209,6 +209,9 @@ class SettingsController < ApplicationController
   def twitter_auth
     session[:twitter_state] = SecureRandom.hex
     return redirect_to Twitter.oauth_auth_url(session[:twitter_state])
+  rescue OAuth::Unauthorized
+    flash[:error] = "Twitter says we're not authenticating properly, please message the admin"
+    return redirect_to "/settings"
   end
 
   def twitter_callback

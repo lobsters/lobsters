@@ -1,18 +1,24 @@
 <div class="box wide">
-  <div class="legend">
-    Moderation Log
-  </div>
+  <% if @mod_dashboard_render # see mod#index %>
+    <div class="legend">
+      Activity by other mods
+    </div>
+  <% else %>
+    <div class="legend">
+      Moderation Log
+    </div>
 
-  <%= form_tag(moderations_path, :method => :get) do |f| %>
-    <label class="normal" for="moderator">Moderator:</label>
-    <%= select_tag 'moderator', options_for_select(@moderators, @moderator) %>
-    <% @what.each do |type, checked| %>
-      <%= check_box_tag "what[#{type}]", type, checked %>
-      <label class="normal" for="what_<%= type %>"><%= type.to_s.titlecase %></label>
-    <% end %>
+    <%= form_tag(moderations_path, :method => :get) do |f| %>
+      <label class="normal" for="moderator">Moderator:</label>
+      <%= select_tag 'moderator', options_for_select(@moderators, @moderator) %>
+      <% @what.each do |type, checked| %>
+        <%= check_box_tag "what[#{type}]", type, checked %>
+        <label class="normal" for="what_<%= type %>"><%= type.to_s.titlecase %></label>
+      <% end %>
 
-    <input type="submit" value="Filter">
-  <% end %><br>
+      <input type="submit" value="Filter">
+    <% end %><br>
+  <% end %>
 
   <table class="data" width="100%" cellspacing=0>
   <tr>

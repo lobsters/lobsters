@@ -183,6 +183,10 @@ Rails.application.routes.draw do
   get "/moderations/page/:page" => "moderations#index"
   get "/moderators" => "users#tree", :moderators => true
 
+  get "/mod" => "mod#index"
+  get "/mod/flagged/:period"   => "mod#flagged",   :as => "mod_flagged"
+  get "/mod/downvoted/:period" => "mod#downvoted", :as => "mod_downvoted"
+
   get "/privacy" => "home#privacy"
   get "/about" => "home#about"
   get "/chat" => "home#chat"

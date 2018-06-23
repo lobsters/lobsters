@@ -1,0 +1,11 @@
+<div class="box wide">
+  <div class="legend right">
+    Flagged: <% @periods.each do |p| %><%= link_to_different_page(p, mod_flagged_path(period: p)) %> <% end %>
+    Downvoted: <% @periods.each do |p| %><%= link_to_different_page(p, mod_downvoted_path(period: p)) %> <% end %>
+  </div>
+
+  <div class="legend">
+    <%= link_to 'Dashboard', mod_path %>
+  </div>
+</div>
+<div class="clear"></div>

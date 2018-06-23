@@ -108,6 +108,14 @@ module ApplicationHelper
     @right_header_links
   end
 
+  def link_to_different_page(text, path)
+    if current_page? path
+      text
+    else
+      link_to(text, path)
+    end
+  end
+
   def page_numbers_for_pagination(max, cur)
     if max <= MAX_PAGES
       return (1 .. max).to_a

@@ -997,6 +997,12 @@ ul.user_tree {
 	color: #888;
 }
 
+/* /mod dashbaord */
+
+.nominal {
+	color: #ac130d;
+	text-align: center;
+}
 
 /* data tables */
 

@@ -1,4 +1,6 @@
 class HomeController < ApplicationController
+  include IntervalHelper
+
   caches_page :about, :chat, :index, :newest, :newest_by_user, :recent, :top, if: CACHE_PAGE
 
   # for rss feeds, load the user's tag filters if a token is passed
@@ -206,17 +208,10 @@ class HomeController < ApplicationController
     end
   end
 
-  TOP_INTVS = { "d" => "Day", "w" => "Week", "m" => "Month", "y" => "Year" }.freeze
   def top
     @cur_url = "/top"
-    length = { :dur => 1, :intv => "Week" }
-
-    if (m = params[:length].to_s.match(/\A(\d+)([#{TOP_INTVS.keys.join}])\z/))
-      length[:dur] = m[1].to_i
-      length[:intv] = TOP_INTVS[m[2]]
-
-      @cur_url << "/#{params[:length]}"
-    end
+    length = time_interval(params[:length])
+    @cur_url << "/#{params[:length]}"
 
     @stories, @show_more = get_from_cache(top: true, length: length) {
       paginate stories.top(length)

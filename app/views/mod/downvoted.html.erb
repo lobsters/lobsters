@@ -1,0 +1,13 @@
+<%= render partial: 'nav' %>
+
+<% if @comments.present? %>
+  <ol class="comments comments1">
+    <% @comments.each do |comment| %>
+      <li>
+      <%= render "comments/comment", :comment => comment, :show_story => true, force_open: true %>
+      </li>
+    <% end %>
+  </ol>
+<% else %>
+  <div class="nominal">🦞</div>
+<% end %>

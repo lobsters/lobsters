@@ -82,6 +82,7 @@ GEM
       railties (>= 3.0.0)
     faker (1.8.7)
       i18n (>= 0.7)
+    ffi (1.9.25)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     htmlentities (4.3.4)
@@ -93,6 +94,10 @@ GEM
       thor (>= 0.14, < 2.0)
     json (2.1.0)
     kgio (2.11.2)
+    listen (3.1.5)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
+      ruby_dep (~> 1.2)
     loofah (2.2.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -145,6 +150,9 @@ GEM
     rainbow (3.0.0)
     raindrops (0.19.0)
     rake (12.3.1)
+    rb-fsevent (0.10.3)
+    rb-inotify (0.9.10)
+      ffi (>= 0.5.0, < 2)
     rotp (3.3.1)
     rqrcode (0.10.1)
       chunky_png (~> 1.0)
@@ -175,6 +183,7 @@ GEM
     ruby-enum (0.7.2)
       i18n
     ruby-progressbar (1.9.0)
+    ruby_dep (1.5.0)
     scenic (1.4.1)
       activerecord (>= 4.0.0)
       railties (>= 4.0.0)
@@ -224,6 +233,7 @@ DEPENDENCIES
   htmlentities
   jquery-rails (~> 4.3)
   json
+  listen
   mail
   mysql2 (~> 0.4.10)
   nokogiri (>= 1.7.2)

@@ -17,7 +17,7 @@ class Story < ApplicationRecord
   has_many :comments,
            :inverse_of => :story,
            :dependent => :destroy
-  has_many :tags, :through => :taggings
+  has_many :tags, -> { order('tags.is_media desc, tags.tag') }, :through => :taggings
   has_many :votes, -> { where(:comment_id => nil) }, :inverse_of => :story
   has_many :voters, -> { where('votes.comment_id' => nil) },
            :through => :votes,
@@ -25,7 +25,7 @@ class Story < ApplicationRecord
   has_many :hidings, :class_name => 'HiddenStory', :inverse_of => :story, :dependent => :destroy
   has_many :savings, :class_name => 'SavedStory', :inverse_of => :story, :dependent => :destroy
 
-  scope :base, -> { unmerged.not_deleted }
+  scope :base, -> { includes(:tags).unmerged.not_deleted }
   scope :deleted, -> { where(is_expired: true) }
   scope :not_deleted, -> { where(is_expired: false) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
@@ -590,10 +590,6 @@ class Story < ApplicationRecord
     Rails.application.root_url + "s/#{self.short_id}"
   end
 
-  def sorted_taggings
-    self.taggings.sort_by {|t| t.tag.tag }.sort_by {|t| t.tag.is_media?? -1 : 0 }
-  end
-
   def tagging_changes
     old_tags_a = self.taggings.reject(&:new_record?).map {|tg| tg.tag.tag }.join(" ")
     new_tags_a = self.taggings.reject(&:marked_for_destruction?).map {|tg| tg.tag.tag }.join(" ")
@@ -836,7 +832,8 @@ class Story < ApplicationRecord
   def vote_summary_for(user)
     r_counts = {}
     r_whos = {}
-    Vote.where(:story_id => self.id, :comment_id => nil).where("vote != 0").find_each do |v|
+    votes.find_each do |v|
+      next if v.vote == 0
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += v.vote
       if user && user.is_moderator?

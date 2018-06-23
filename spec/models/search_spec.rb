@@ -82,8 +82,8 @@ describe Search do
     end
 
     expect(multi_tag_res.length).to eq(1)
-    expect(multi_tag_res.first.sorted_taggings.first.tag.tag).to eq("tag1")
-    expect(multi_tag_res.first.sorted_taggings.second.tag.tag).to eq("tag2")
+    expect(multi_tag_res.first.tags.first.tag).to eq("tag1")
+    expect(multi_tag_res.first.tags.second.tag).to eq("tag2")
   end
 
   it "should return only stories with both tags if multiple tags are present" do

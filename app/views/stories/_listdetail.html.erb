@@ -33,10 +33,10 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
     <% end %>
     <% if story.can_be_seen_by_user?(@user) %>
       <span class="tags">
-        <% story.sorted_taggings.each do |tagging| %>
-          <a href="<%= tag_path(tagging.tag.tag) %>"
-            class="<%= tagging.tag.css_class %>"
-            title="<%= tagging.tag.description %>"><%= tagging.tag.tag %></a>
+        <% story.tags.each do |tag| %>
+          <a href="<%= tag_path(tag) %>"
+            class="<%= tag.css_class %>"
+            title="<%= tag.description %>"><%= tag.tag %></a>
         <% end %>
       </span>
       <% if story.domain.present? %>
@@ -53,10 +53,10 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
               break_long_words(ms.title) %></a>
           </span>
           <span class="tags">
-            <% ms.sorted_taggings.each do |tagging| %>
-              <a href="<%= tag_path(tagging.tag.tag) %>"
-                class="<%= tagging.tag.css_class %>"
-                title="<%= tagging.tag.description %>"><%= tagging.tag.tag %></a>
+            <% ms.tags.each do |tag| %>
+              <a href="<%= tag_path(tag) %>"
+                class="<%= tag.css_class %>"
+                title="<%= tag.description %>"><%= tag.tag %></a>
             <% end %>
           </span>
           <% if ms.domain.present? %>

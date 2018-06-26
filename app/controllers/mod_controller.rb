@@ -23,7 +23,7 @@ class ModController < ApplicationController
     @stories = period(Story.base
       .includes(:user, :suggested_titles, :suggested_taggings, :tags)
       .where("downvotes > 1")
-      .order("downvotes DESC"))
+      .order("stories.id DESC"))
   end
 
   def downvoted
@@ -33,7 +33,7 @@ class ModController < ApplicationController
                 votes.comment_id = comments.id and
                 vote < 0 and
                 votes.reason != 'M') > 2") # Me-Too comments rarely need attention
-      .order("comments.downvotes DESC"))
+      .order("comments.id DESC"))
   end
 
 private

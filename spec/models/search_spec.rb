@@ -31,13 +31,11 @@ describe Search do
                   :user_id => @user.id,
                   :tags_a => ["tag1"]),
     ]
-    @comment = Comment.make!(:comment => "body", :story => @stories.third)
   end
 
   after(:all) do
-    @comment.destroy!
-    @stories.each(&:destroy!)
     @user.destroy!
+    @stories.each(&:destroy!)
   end
 
   it "can search for stories" do
@@ -104,14 +102,5 @@ describe Search do
     search.search_for_user!(@user)
 
     expect(search.results.length).to eq(2)
-  end
-
-  it "can search for comments that have tags" do
-    search = Search.new
-    search.q = "body tag: tag2"
-
-    search.search_for_user!(@user)
-
-    expect(search.results.length).to eq(1)
   end
 end

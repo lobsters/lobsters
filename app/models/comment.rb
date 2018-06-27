@@ -12,6 +12,7 @@ class Comment < ApplicationRecord
           :inverse_of => :comment,
           :dependent => :destroy
   belongs_to :hat
+  has_many :taggings, through: :story
 
   attr_accessor :current_vote, :previewing, :indent_level
 

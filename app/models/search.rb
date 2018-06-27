@@ -146,6 +146,10 @@ class Search
         "MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_comment"
       )
 
+      if tag_scopes.present?
+        self.results = with_tags(base, tag_scopes)
+      end
+
       case self.order
       when "relevance"
         self.results.order!("rel_comment DESC")

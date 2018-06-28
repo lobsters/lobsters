@@ -12,7 +12,7 @@ Story.to_tweet.each_with_index do |s, x|
     sleep 2
   end
 
-  tags = s.tags.pluck(:tag).map {|t| '#' + t }.join(' ')
+  tags = s.tags.pluck(:tag).map {|t| ' #' + t }.join('')
 
   via = ""
   if s.user.twitter_username.present?

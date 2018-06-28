@@ -999,8 +999,12 @@ ul.user_tree {
 
 /* /mod dashbaord */
 
+.modmodlog .mod td:first-child {
+	border-left: 2pt solid #ac130d;
+}
 .nominal {
 	color: #ac130d;
+	font-size: 2em;
 	text-align: center;
 }
 

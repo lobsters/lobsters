@@ -13,10 +13,9 @@ class ModController < ApplicationController
 
     @moderations = Moderation.all
       .eager_load(:moderator, :story, :comment, :tag, :user)
-      .joins(:moderator).where.not(users: { id: @user.id })
+      .where("moderator_user_id != ? or moderator_user_id is null", @user.id)
       .where('moderations.created_at >= (NOW() - INTERVAL 1 MONTH)')
       .order('moderations.id desc')
-      .limit(100)
   end
 
   def flagged

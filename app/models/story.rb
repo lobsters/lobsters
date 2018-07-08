@@ -718,7 +718,7 @@ class Story < ApplicationRecord
 
   def title=(t)
     # change unicode whitespace characters into real spaces
-    self[:title] = t.strip
+    self[:title] = t.strip.gsub(/[\.,;:!]*$/, '')
   end
 
   def title_as_url
@@ -787,7 +787,7 @@ class Story < ApplicationRecord
   end
 
   def url=(u)
-    super(u) or return if u.blank?
+    super(u.strip) or return if u.blank?
 
     if (match = u.match(URL_RE))
       # remove well-known port for http and https if present

@@ -30,7 +30,7 @@ Rails.application.routes.draw do
   get "/top/:length/page/:page" => "home#top"
 
   get "/threads" => "comments#threads"
-  get "/threads/:user" => "comments#threads"
+  get "/threads/:user" => "comments#threads", :as => "user_threads"
 
   get "/replies" => "replies#all"
   get "/replies/page/:page" => "replies#all"
@@ -186,6 +186,7 @@ Rails.application.routes.draw do
   get "/mod" => "mod#index"
   get "/mod/flagged/:period"   => "mod#flagged",   :as => "mod_flagged"
   get "/mod/downvoted/:period" => "mod#downvoted", :as => "mod_downvoted"
+  get "/mod/commenters/:period" => "mod#commenters", :as => "mod_commenters"
 
   get "/privacy" => "home#privacy"
   get "/about" => "home#about"

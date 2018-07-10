@@ -153,14 +153,17 @@
   <% end %>
 
   <% if @user && @user.is_moderator? && !@showing_user.is_moderator? %>
-    <div style="clear: both;"></div>
-    <br>
+    <h2>Moderator Information</h2>
 
-    <p>
-    <div class="legend">
-      Moderation Information
-    </div>
-    </p>
+    <label class="required">Downvoted (1m):</label>
+    <span class="d">
+      <% if (stats = DownvotedCommenters.new('1m').check_list_for(@showing_user)) %>
+        <a href="/mod/commenters/1m<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % stats[:sigma] %> &sigma;
+      <% else %>
+        No
+      <% end %>
+    </span>
+    <br>
 
     <label class="required">Self Promoter:</label>
     <span class="d">
@@ -171,97 +174,67 @@
       <% end %>
     </span>
     <br>
-  <% end %>
 
-  <% if @user && @user.is_admin? && !@showing_user.is_moderator? %>
-    <div style="clear: both;"></div>
-    <br>
+    <% if @user.is_admin? %>
+      <h3>Admin Information</h3>
 
-    <p>
-    <div class="legend">
-      Administrative Information
-    </div>
-    </p>
+      <label class="required">E-Mail:</label>
+      <span class="d">
+        <%= @showing_user.email %>
+      </span>
+      <br>
 
-    <label class="required">E-Mail:</label>
-    <span class="d">
-      <%= @showing_user.email %>
-    </span>
-    <br>
-
-    <label class="required">Recent Votes:</label>
-    <div class="d shorten_first_p">
-      <% @showing_user.votes_for_others.limit(10).each do |v| %>
-        <p>
-        <% if v.vote == 1 %>
-          +1
-        <% else %>
-          <%= v.vote %>
+      <label class="required">Recent Votes:</label>
+      <table class="data zebra clear tall">
+        <% @showing_user.votes_for_others.limit(15).each do |v| %><tr>
+          <td><%= v.vote == 1 ? '+' : v.reason %></td>
           <% if v.comment_id %>
-            (<%= Vote::COMMENT_REASONS[v.reason] %>)
-          <% else %>
-            (<%= Vote::STORY_REASONS[v.reason] %>)
+            <td><a href="/u/<%= v.comment.user.try(:username) %>"><%= v.comment.user.try(:username) %></a></td>
+            <td>
+              <%= v.story.title %>
+              <a href="<%= v.comment.short_id_url %>">comment</a>:<br>
+              <%= v.comment.comment.split[0..10].join(' ') %>
+            </td>
+          <% elsif v.story_id && !v.comment_id %>
+            <td><a href="/u/<%= v.story.user.try(:username) %>"><%= v.story.user.try(:username) %></a></td>
+            <td><a href="<%= v.story.short_id_url %>"><%= v.story.title %></a></td>
           <% end %>
+          </p>
+        </tr><% end %>
+      </table>
+
+      <% if @showing_user.is_banned? || @showing_user.banned_from_inviting? %>
+        <%= form_tag user_unban_path, :method => :post do %>
+          <p>
+            <% if @showing_user.is_banned? %>
+              <%= submit_tag "Unban" %>
+            <% end %>
+            <% if @showing_user.banned_from_inviting? %>
+              <%= submit_tag "Enable Invites", formaction: user_enable_invite_path %>
+            <% end %>
+          </p>
         <% end %>
-        on
-        <% if v.comment_id %>
-          <a href="<%= v.comment.short_id_url %>">comment</a>
-          by
-          <a href="/u/<%= v.comment.user.try(:username) %>"><%=
-            v.comment.user.try(:username) %></a>
-          on
-          <a href="<%= v.story.short_id_url %>"><%= v.story.title %></a>
-        <% elsif v.story_id && !v.comment_id %>
-          <a href="<%= v.story.short_id_url %>"><%= v.story.title %></a>
-          by
-          <a href="/u/<%= v.story.user.try(:username) %>"><%=
-            v.story.user.try(:username) %></a>
+      <% end %>
+
+      <% if !@showing_user.is_banned? || !@showing_user.banned_from_inviting? %>
+        <p>
+          Banning or disabling invites for a user will send an e-mail to the user with the reason below,
+          with your e-mail address as the Reply-To so the user can respond.
+        </p>
+        <%= form_tag user_ban_path, :method => :post do %>
+          <div class="boxline">
+            <%= label_tag :reason, "Reason:", :class => "required" %>
+            <%= text_field_tag :reason, "", :size => 40 %>
+          </div>
+          <p>
+            <% if !@showing_user.is_banned? %>
+              <%= submit_tag "Ban", class: 'deletion' %>
+            <% end %>
+            <% if !@showing_user.banned_from_inviting? %>
+              <%= submit_tag "Disable Invites", formaction: user_disable_invite_path %>
+            <% end %>
+          </p>
         <% end %>
-        </p>
-      <% end %>
-    </div>
-    <br>
-
-    <div style="clear: both;"></div>
-    <br>
-
-    <p>
-    <div class="legend">
-      Administrative Actions
-    </div>
-    </p>
-
-    <% if @showing_user.is_banned? || @showing_user.banned_from_inviting? %>
-      <%= form_tag user_unban_path, :method => :post do %>
-        <p>
-          <% if @showing_user.is_banned? %>
-            <%= submit_tag "Unban" %>
-          <% end %>
-          <% if @showing_user.banned_from_inviting? %>
-            <%= submit_tag "Enable Invites", formaction: user_enable_invite_path %>
-          <% end %>
-        </p>
-      <% end %>
-    <% end %>
-
-    <% if !@showing_user.is_banned? || !@showing_user.banned_from_inviting? %>
-      <p>
-        Banning or disabling invites for a user will send an e-mail to the user with the reason below,
-        with your e-mail address as the Reply-To so the user can respond.
-      </p>
-      <%= form_tag user_ban_path, :method => :post do %>
-        <div class="boxline">
-          <%= label_tag :reason, "Reason:", :class => "required" %>
-          <%= text_field_tag :reason, "", :size => 40 %>
-        </div>
-        <p>
-          <% if !@showing_user.is_banned? %>
-            <%= submit_tag "Ban", class: 'deletion' %>
-          <% end %>
-          <% if !@showing_user.banned_from_inviting? %>
-            <%= submit_tag "Disable Invites", formaction: user_disable_invite_path %>
-          <% end %>
-        </p>
       <% end %>
     <% end %>
   <% end %>

@@ -44,7 +44,7 @@ h2 {
 	font-size: 11pt;
 }
 
-div.clear {
+.clear {
 	clear: both;
 }
 
@@ -1055,12 +1055,10 @@ table.thread td img {
 	vertical-align: middle;
 }
 
-table.data tr.row0 td,
 table.data.zebra tr:nth-child(even) td {
 	background-color: #f8f8f8;
 	border-bottom: 1px solid #eaeaea;
 }
-table.data tr.row1 td,
 table.data.zebra tr:nth-child(odd) td {
 	background-color: #f5f5f5;
 	border-bottom: 1px solid #eaeaea;
@@ -1068,6 +1066,9 @@ table.data.zebra tr:nth-child(odd) td {
 table.data tr.nobottom td {
 	border-bottom: 0px;
 	padding-bottom: 0px;
+}
+table.data.tall td {
+	vertical-align: top;
 }
 
 table.data tr.void td, table.data tr.void td a {
@@ -1224,11 +1225,11 @@ table.data td p:last-child {
 div.flash-error,
 div.flash-notice,
 div.flash-success,
+div.downvoteWarning,
 div.errorExplanation {
 	position: relative;
 	padding: 7px 15px;
 	margin-bottom: 18px;
-	color: white;
 	background-color: #eedc94;
 	background-repeat: repeat-x;
 	background-image: linear-gradient(top, #fceec1, #eedc94);
@@ -1240,6 +1241,9 @@ div.errorExplanation {
 	border-style: solid;
 	border-radius: 4px;
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.downvoteWarning {
+  color: black;
 }
 div.flash-error a,
 div.flash-notice a,

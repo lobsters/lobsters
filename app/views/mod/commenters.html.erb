@@ -1,0 +1,39 @@
+<%= render partial: 'nav' %>
+
+<% if @commenters.present? %>
+  <table class='data zebra' style='margin: 0 auto;'>
+    <tr>
+      <th>User</th>
+      <th title="Number of standard deviations above average commenter">+&sigma;</th>
+      <th class="r" title="Downvotes per comment">D/C</th>
+      <th class="r" title="total # of downvotes"># DV</th>
+      <th class="r" title="total # of downvoted comments"># C</th>
+      <th class="r" title="(percentage of all of users's comments)">% C</th>
+    </tr>
+    <% @commenters.each do |id, user| %><tr id="<%= user[:username] %>">
+      <td>
+        <%= link_to user[:username], user_path(user[:username]) %>
+        <small>(<%= link_to 'threads', user_threads_path(user[:username]) %>)</small>
+      </td>
+      <td class="r"><%= '%.1f' % user[:sigma] %></td>
+      <td class="r"><%= '%.1f' % user[:average_downvotes] %></td>
+      <td class="r"><%= user[:n_downvotes] %></td>
+      <td class="r"><%= user[:n_comments] %></td>
+      <td class="r"><%= user[:percent_downvoted].round %>%</td>
+    </tr><% end %>
+    <tr>
+      <td title="Average of commenters, including the most-downvoted commenters above">
+        Avg of <%= @agg[:n_commenters] %> commenters
+      </td>
+      <td class="r" title="0 by definition; () is standard deviation">
+        (&sigma; = <%= '%.1f' % @agg[:stddev] %>)
+      </td>
+      <td class="r"><%= '%.1f' % @agg[:avg] %></td>
+      <td class="r"><%= (@agg[:avg] * @agg[:n_comments]).round %></td>
+      <td class="r"><%= '%.1f' % @agg[:n_comments] %></td>
+    </tr>
+  </table>
+
+<% else %>
+  <div class="nominal">🦞</div>
+<% end %>

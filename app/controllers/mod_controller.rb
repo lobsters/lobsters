@@ -35,6 +35,13 @@ class ModController < ApplicationController
       .order("comments.id DESC"))
   end
 
+  def commenters
+    dvc = DownvotedCommenters.new(params[:period])
+    @interval = dvc.interval
+    @agg = dvc.aggregates
+    @commenters = dvc.commenters
+  end
+
 private
 
   def default_periods

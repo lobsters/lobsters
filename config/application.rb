@@ -89,7 +89,7 @@ class << Rails.application
   end
 
   def name
-    "Example News"
+    "Lobsters"
   end
 
   # to force everyone to be considered logged-out (without destroying

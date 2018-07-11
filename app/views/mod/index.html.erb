@@ -1,5 +1,11 @@
 <%= render partial: 'nav' %>
 
-<div class="modmodlog">
-  <%= render file: 'moderations/index' %>
+<div class="box wide">
+  <div class="legend">
+    Activity by other mods
+  </div>
+</div>
+
+<div class="box wide modmodlog">
+  <%= render partial: 'moderations/table', locals: { moderations: @moderations } %>
 </div>

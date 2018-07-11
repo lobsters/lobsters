@@ -7,10 +7,6 @@ class ModController < ApplicationController
   before_action :require_logged_in_moderator, :default_periods
 
   def index
-    # setup for rendering moderations/index from mod/index:
-    @mod_dashboard_render = true
-    @page = @pages = 0
-
     @moderations = Moderation.all
       .eager_load(:moderator, :story, :comment, :tag, :user)
       .where("moderator_user_id != ? or moderator_user_id is null", @user.id)

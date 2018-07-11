@@ -1,0 +1,46 @@
+<table class="data zebra" width="100%" cellspacing=0>
+<tr>
+  <th>Date/Time</th>
+  <th>Moderator</th>
+  <th>Story/Comment/User, Action, Reason</th>
+</tr>
+<% moderations.each do |mod| %>
+  <tr class="nobottom <%= mod.moderator && 'mod' %>">
+    <td><%= raw mod.created_at.strftime("%Y-%m-%d&nbsp;%H:%M&nbsp;%z") %></td>
+    <td><% if mod.moderator %>
+      <a href="/messages?to=<%= mod.moderator.try(:username) %>"><%=
+        mod.moderator.try(:username) %></a>
+      <% elsif mod.is_from_suggestions? %>
+        <em>(Users)</em>
+      <% end %></td>
+    <td><% if mod.story %>
+        <a href="<%= mod.story.comments_path %>">Story: <%= mod.story.title
+          %></a>
+      <% elsif mod.comment %>
+        <a href="<%= mod.comment.url %>">Comment by
+          <%= mod.comment.user.username %>
+          on
+          <%= mod.comment.story.title %></a>
+      <% elsif mod.tag %>
+        <%= link_to("Tag: #{mod.tag.tag}", mod.tag) %>
+      <% elsif mod.user_id %>
+        <% if mod.user %>
+          <a href="/u/<%= mod.user.username %>">User
+            <%= mod.user.username %></a>
+        <% else %>
+          User <%= mod.user_id %> (Deleted)
+        <% end %>
+      <% end %></td>
+  </tr>
+  <tr class="<%= mod.reason.present?? "nobottom" : "" %>">
+    <td colspan=2></td>
+    <td>Action: <em><%= mod.action %></em></td>
+  </tr>
+  <% if mod.reason.present? %>
+    <tr>
+      <td colspan=2></td>
+      <td>Reason: <em><%= mod.reason %></em></td>
+    </tr>
+  <% end %>
+<% end %>
+</table>

@@ -175,6 +175,12 @@
     </span>
     <br>
 
+    <label class="required">Last 10 Moderations:</label>
+    <%= render partial: 'moderations/table', locals: {
+      moderations: Moderation.for(@showing_user).order('id desc').limit(10),
+    } %>
+
+
     <% if @user.is_admin? %>
       <h3>Admin Information</h3>
 

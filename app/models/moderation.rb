@@ -8,6 +8,13 @@ class Moderation < ApplicationRecord
   belongs_to :tag
   belongs_to :user
 
+  scope :for, ->(user) {
+    left_outer_joins(:story, :comment) .where("
+      moderations.user_id = ? OR
+      stories.user_id = ? OR
+      comments.user_id = ?", user, user, user)
+  }
+
   after_create :send_message_to_moderated
 
   def send_message_to_moderated

@@ -175,6 +175,11 @@
     </span>
     <br>
 
+    <label class="required">Last 10 Notes:</label>
+    <%= render partial: 'mod_notes/table', locals: {
+      mod_notes: ModNote.for(@showing_user).limit(10),
+    } %>
+
     <label class="required">Last 10 Moderations:</label>
     <%= render partial: 'moderations/table', locals: {
       moderations: Moderation.for(@showing_user).order('id desc').limit(10),

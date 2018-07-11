@@ -1,0 +1,18 @@
+<table class="data zebra tall" width="100%" cellspacing=0>
+  <tr>
+    <th>Mod &rarr; User/When</th>
+    <th>Note</th>
+  </tr>
+  <% mod_notes.each do |note| %>
+    <tr class="nobottom">
+      <td>
+        <%= note.moderator.username %>
+        &rarr;
+        <%= link_to note.user.username, user_path(note.user) %>
+        <br>
+        <%= raw note.created_at.strftime("%Y-%m-%d&nbsp;%H:%M&nbsp;%z") %>
+      </td>
+      <td><%= raw note.markeddown_note %></td>
+    </tr>
+  <% end %>
+</table>

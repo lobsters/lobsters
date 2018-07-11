@@ -1,6 +1,7 @@
 class MessagesController < ApplicationController
   before_action :require_logged_in_user
-  before_action :find_message, :only => [:show, :destroy, :keep_as_new]
+  before_action :require_logged_in_moderator, only: [:mod_note]
+  before_action :find_message, :only => [:show, :destroy, :keep_as_new, :mod_note]
 
   def index
     @messages = @user.undeleted_received_messages
@@ -55,6 +56,9 @@ class MessagesController < ApplicationController
     @messages = @user.undeleted_received_messages
 
     if @new_message.save
+      if @user.is_moderator? && @new_message.mod_note
+        ModNote.create_from_message(@new_message, @user)
+      end
       flash[:success] = "Your message has been sent to " <<
                         @new_message.recipient.username.to_s << "."
       return redirect_to "/messages"
@@ -143,11 +147,18 @@ class MessagesController < ApplicationController
     return redirect_to "/messages"
   end
 
+  def mod_note
+    ModNote.create_from_message(@message, @user)
+
+    return redirect_to messages_path, notice: 'ModNote created'
+  end
+
 private
 
   def message_params
     params.require(:message).permit(
-      :recipient_username, :subject, :body, :hat_id
+      :recipient_username, :subject, :body, :hat_id,
+      @user.is_moderator? ? :mod_note : nil
     )
   end
 

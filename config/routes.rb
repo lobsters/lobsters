@@ -101,6 +101,7 @@ Rails.application.routes.draw do
     :as => "batch_delete_messages"
   resources :messages do
     post "keep_as_new"
+    post "mod_note"
   end
 
   get "/c/:id" => "comments#redirect_from_short_id"
@@ -187,6 +188,7 @@ Rails.application.routes.draw do
   get "/mod/flagged/:period"   => "mod#flagged",   :as => "mod_flagged"
   get "/mod/downvoted/:period" => "mod#downvoted", :as => "mod_downvoted"
   get "/mod/commenters/:period" => "mod#commenters", :as => "mod_commenters"
+  get "/mod/notes/:period" => "mod_notes#index", :as => "mod_notes"
 
   get "/privacy" => "home#privacy"
   get "/about" => "home#about"

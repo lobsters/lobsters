@@ -58,6 +58,10 @@ class Hat < ApplicationRecord
     h.html_safe
   end
 
+  def to_txt
+    "(#{self.hat}) "
+  end
+
   def log_moderation
     m = Moderation.new
     m.created_at = self.created_at

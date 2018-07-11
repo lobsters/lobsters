@@ -787,7 +787,7 @@ class Story < ApplicationRecord
   end
 
   def url=(u)
-    super(u.strip) or return if u.blank?
+    super(u.try(:strip)) or return if u.blank?
 
     if (match = u.match(URL_RE))
       # remove well-known port for http and https if present

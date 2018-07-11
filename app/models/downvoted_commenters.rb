@@ -42,11 +42,11 @@ class DownvotedCommenters
   end
 
   def stddev_sum_downvotes
-    aggregates[:stddev]
+    aggregates[:stddev].to_i
   end
 
   def avg_sum_downvotes
-    aggregates[:avg]
+    aggregates[:avg].to_i
   end
 
   def commenters

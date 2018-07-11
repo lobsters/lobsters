@@ -83,7 +83,7 @@ class ApplicationController < ActionController::Base
     true
   end
 
-  # http://umaine.edu/lobsterinstitute/files/2011/12/LobsterColorsWeb.pdf
+  # https://web.archive.org/web/20180108083712/http://umaine.edu/lobsterinstitute/files/2011/12/LobsterColorsWeb.pdf
   def set_traffic_style intensity
     @traffic_style = "background-color: ##{intensity}0000;"
     return unless @user

@@ -1,0 +1,36 @@
+<%= form_for new_message, :method => :post do |f| %>
+  <%= error_messages_for @new_message %>
+
+  <% if replying %>
+    <%= f.hidden_field :recipient_username %>
+  <% else %>
+    <div class="boxline">
+      <%= f.label :recipient_username, "To:", :class => "required" %>
+      <%= f.text_field :recipient_username, :size => 20 %>
+    </div>
+  <% end %>
+
+  <div class="boxline">
+    <%= f.label :subject, "Subject:", :class => "required" %>
+    <%= f.text_field :subject, :style => "width: 500px;",
+      :maxlength => 100 %>
+  </div>
+
+  <div class="boxline">
+    <%= f.label :body, "Message:", :class => "required" %>
+    <%= f.text_area :body, :style => "width: 500px;", :rows => 5 %>
+  </div>
+
+  <% if @user.wearable_hats.any? %>
+    <div class="boxline">
+      <%= f.label :hat_id, 'Put on hat:', :class => "required" %>
+      <%= f.select "hat_id", options_from_collection_for_select(@user.hats, "id", "hat", nil), :include_blank => true %>
+    </div>
+    </div>
+  <% end %>
+
+  <div class="boxline">
+    <p></p>
+    <%= submit_tag replying ? "Reply" : "Send Message" %>
+  </div>
+<% end %>

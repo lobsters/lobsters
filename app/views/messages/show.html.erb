@@ -13,13 +13,7 @@
     <div class="sublegend">
       Sent from
       <% if @message.author %>
-        <a href="/u/<%= @message.author.username %>"><%=
-          @message.author.username %></a>
-        <% if @message.author.is_admin? %>
-          (administrator)
-        <% elsif @message.author.is_moderator? %>
-          (moderator)
-        <% end %>
+        <a href="/u/<%= @message.author.username %>"><%= @message.author.username %></a>
       <% else %>
         <%= @message.author_username %>
       <% end %>
@@ -56,35 +50,16 @@
 
   <br>
 
-  <div class="legend">
-    Compose Reply
-    <% if @new_message %>
-      To <%= @new_message.recipient_username %>
-    <% end %>
-  </div>
-
   <% if @new_message %>
-    <%= form_for @new_message, :method => :post do |f| %>
-      <%= f.hidden_field :recipient_username %>
+    <div class="legend">
+      Compose Reply
+      <% if @new_message %>
+        To <%= @new_message.recipient_username %>
+      <% end %>
+    </div>
 
-      <%= error_messages_for @new_message %>
-
-      <div class="boxline">
-        <%= f.text_field :subject, :style => "width: 500px;",
-          :maxlength => 100 %>
-      </div>
-
-      <div class="boxline">
-        <%= f.text_area :body, :style => "width: 500px;", :rows => 5 %>
-      </div>
-
-      <div class="boxline">
-        <p></p>
-        <%= submit_tag "Send Message" %>
-      </div>
-    <% end %>
+    <%= render partial: 'form', locals: { new_message: @new_message, replying: true } %>
   <% else %>
-    This message cannot be replied to.  Please contact a moderator for
-    assistance.
+    For help with this message, contact <a href="/u?moderators=1">a moderator</a>.
   <% end %>
 </div>

@@ -188,7 +188,8 @@ Rails.application.routes.draw do
   get "/mod/flagged/:period"   => "mod#flagged",   :as => "mod_flagged"
   get "/mod/downvoted/:period" => "mod#downvoted", :as => "mod_downvoted"
   get "/mod/commenters/:period" => "mod#commenters", :as => "mod_commenters"
-  get "/mod/notes/:period" => "mod_notes#index", :as => "mod_notes"
+  get "/mod/notes(/:period)" => "mod_notes#index", :as => "mod_notes"
+  post "/mod/notes" => "mod_notes#create"
 
   get "/privacy" => "home#privacy"
   get "/about" => "home#about"

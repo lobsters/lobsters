@@ -6,6 +6,11 @@ class UsersController < ApplicationController
     @showing_user = User.where(:username => params[:username]).first!
     @title = "User #{@showing_user.username}"
 
+    if @user.try(:is_moderator?)
+      @mod_note = ModNote.new(user: @showing_user)
+      @mod_note.note = params[:note]
+    end
+
     respond_to do |format|
       format.html { render :action => "show" }
       format.json { render :json => @showing_user }

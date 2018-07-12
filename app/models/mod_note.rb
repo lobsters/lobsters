@@ -10,6 +10,21 @@ class ModNote < ApplicationRecord
 
   validates :moderator, :user, :note, presence: true
 
+  def username
+    user.username
+  end
+
+  def username=(username)
+    self.user_id = nil
+
+    if (u = User.find_by(username: username))
+      self.user_id = u.id
+      @username = u.username
+    else
+      errors.add(:username, "is not a valid user")
+    end
+  end
+
   def note=(n)
     self[:note] = n.to_s.strip
     self.markeddown_note = self.generated_markeddown

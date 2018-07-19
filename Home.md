@@ -19,7 +19,7 @@ Other sites using the Lobsters codebase:
 * [Kind and Green News](http://news.kindandgreenworld.com/)
 * [Gh Tech Roundup](https://ghtechroundup.com/)
 * [G33kz](https://g33kz.de/)
-* [Tildeverse News](https://links.tildeverse.org/) ([repo](https://git.tildeverse.org/tildeverse/links))
+* [Tildeverse](https://links.tildeverse.org/)
 
 ## Cousin Sites
 

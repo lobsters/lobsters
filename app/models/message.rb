@@ -11,7 +11,7 @@ class Message < ApplicationRecord
 
   validates :recipient, presence: true
 
-  attr_accessor :mod_note
+  attribute :mod_note, :boolean
   attr_reader :recipient_username
 
   validates :subject, length: { :in => 1..100 }

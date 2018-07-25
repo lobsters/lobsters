@@ -10,9 +10,7 @@ class ModNote < ApplicationRecord
 
   validates :moderator, :user, :note, presence: true
 
-  def username
-    user.username
-  end
+  delegate :username, to: :user
 
   def username=(username)
     self.user_id = nil

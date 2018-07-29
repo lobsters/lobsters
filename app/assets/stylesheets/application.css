@@ -534,7 +534,7 @@ li.story .description_present {
 	vertical-align: middle;
 }
 
-li.story a.tag {
+li.story a.tag, #leader a.tag {
 	vertical-align: middle;
 }
 

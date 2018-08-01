@@ -33,11 +33,9 @@ gem "nokogiri", ">= 1.7.2"
 gem "htmlentities"
 gem "commonmarker", "~> 0.14"
 
-# for twitter-posting bot
-gem "oauth"
-
-# for parsing incoming mail
-gem "mail"
+gem "oauth" # for twitter-posting bot
+gem "mail" # for parsing incoming mail
+gem "sitemap_generator" # for better search engine indexing
 
 group :test, :development do
   gem 'bullet'

@@ -29,11 +29,19 @@ class SettingsController < ApplicationController
   end
 
   def update
+    previous_username = @user.username
     @edit_user = @user.clone
 
     if params[:user][:password].empty? ||
        @user.authenticate(params[:current_password].to_s)
       if @edit_user.update(user_params)
+        if @edit_user.username != previous_username
+          Moderation.create!({
+            is_from_suggestions: true,
+            user: @edit_user,
+            action: "changed own username from \"#{previous_username}\" to \"#{@edit_user.username}\"",
+          })
+        end
         flash.now[:success] = "Successfully updated settings."
         @user = @edit_user
       end

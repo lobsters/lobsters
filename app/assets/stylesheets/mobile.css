@@ -135,15 +135,16 @@
 		padding-bottom: 0.75em;
 		width: 100%;
 	}
-	ol.stories.list li.story div.mobile_comments {
+	ol.stories.list li.story .mobile_comments {
 		background-color: #e8e8e8;
 		display: table-cell !important;
 		font-size: 11pt;
 		min-width: 40px;
 		text-align: center;
+		text-decoration: none;
 		vertical-align: middle;
 	}
-	ol.stories.list li.story div.mobile_comments a:before {
+	ol.stories.list li.story .mobile_comments span:before {
 		border-style: solid;
 		border-width: 0px 6px 3px 0px;
 		border-color: #ccc;
@@ -151,13 +152,13 @@
 		bottom: -10px;
 		content: "";
 		display: block;
-		height: 6px;
+		height: 7px;
 		left: 4px;
 		position: absolute;
 		width: 5px;
 		z-index: 10;
 	}
-	ol.stories.list li.story div.mobile_comments a:after {
+	ol.stories.list li.story .mobile_comments span:after {
 		border-bottom-right-radius: 10px;
 		border-color: #ccc;
 		border-style: solid;
@@ -165,13 +166,13 @@
 		bottom: -10px;
 		content: "";
 		display: block;
-		height: 6px;
+		height: 7px;
 		left: 5px;
 		position: absolute;
 		width: 10px;
 		z-index: 10;
 	}
-	ol.stories.list li.story div.mobile_comments a {
+	ol.stories.list li.story .mobile_comments span {
 		background-color: #ccc;
 		border: 1px solid #ccc;
 		border-radius: 5px;
@@ -182,25 +183,24 @@
 		padding: 2px;
 		position: relative;
 		text-align: center;
-		text-decoration: none;
 	}
-	ol.stories.list li.story div.mobile_comments a:active,
-	ol.stories.list li.story div.mobile_comments a:focus {
+	ol.stories.list li.story .mobile_comments:active span,
+	ol.stories.list li.story .mobile_comments:focus span {
 		outline: 0;
 	}
-	ol.stories.list li.story div.mobile_comments.zero a {
+	ol.stories.list li.story .mobile_comments.zero span {
 		color: gray;
 	}
-	ol.stories.list li.story div.mobile_comments.zero a {
+	ol.stories.list li.story .mobile_comments.zero span {
 		background-color: #d8d8d8;
 		color: #999;
 	}
-	ol.stories.list li.story div.mobile_comments.zero a,
-	ol.stories.list li.story div.mobile_comments.zero a:before,
-	ol.stories.list li.story div.mobile_comments.zero a:after {
+	ol.stories.list li.story .mobile_comments.zero span,
+	ol.stories.list li.story .mobile_comments.zero span:before,
+	ol.stories.list li.story .mobile_comments.zero span:after {
 		border-color: #d8d8d8;
 	}
-	ol.stories.list li.story span.comments_label {
+	ol.stories.list li.story .comments_label {
 		display: none;
 	}
 

@@ -256,6 +256,9 @@ var _Lobsters = Class.extend({
 
   checkStoryTitle: function() {
     var title = $("#story_title").val();
+    if (title === undefined) {
+      return;
+    }
     var m;
     if (m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i)) {
       var ta = $("#story_tags_a").data("select2");

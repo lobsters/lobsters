@@ -36,11 +36,12 @@ class SettingsController < ApplicationController
        @user.authenticate(params[:current_password].to_s)
       if @edit_user.update(user_params)
         if @edit_user.username != previous_username
-          Moderation.create!({
+          Moderation.create!(
             is_from_suggestions: true,
             user: @edit_user,
-            action: "changed own username from \"#{previous_username}\" to \"#{@edit_user.username}\"",
-          })
+            action: "changed own username from \"#{previous_username}\" " <<
+                    "to \"#{@edit_user.username}\"",
+          )
         end
         flash.now[:success] = "Successfully updated settings."
         @user = @edit_user

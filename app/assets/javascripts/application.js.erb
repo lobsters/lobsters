@@ -254,6 +254,24 @@ var _Lobsters = Class.extend({
     });
   },
 
+  checkStoryTitle: function() {
+    var title = $("#story_title").val();
+    var m;
+    if (m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i)) {
+      var ta = $("#story_tags_a").data("select2");
+      if (ta.getVal().indexOf(m[1].toLowerCase()) < 0)
+        ta.addSelectedChoice({ id: m[1].toLowerCase() });
+      $("#story_title").val(m[2]);
+    }
+
+    // common separators or (parens) that don't enclose a 4-digit year
+    if (title.match(/: | - | – | — | \| | · | by /) ||
+        title.match(/\([^\)]*\)/g).some(function (p) { return !p.match(/\(\d{4}\)/) })
+    ) {
+      $('.title-reminder').slideDown();
+    }
+  },
+
   runSelect2: function() {
     $("#story_tags_a").select2({
     formatSelection: function(what) {
@@ -554,15 +572,8 @@ $(document).ready(function() {
     }
   });
 
-  $(document).on("blur", "#story_title", function() {
-    var m;
-    if (m = $("#story_title").val().match(/^(show|ask) lobste\.?rs:? (.+)$/i)) {
-      var ta = $("#story_tags_a").data("select2");
-      if (ta.getVal().indexOf(m[1].toLowerCase()) < 0)
-        ta.addSelectedChoice({ id: m[1].toLowerCase() });
-      $("#story_title").val(m[2]);
-    }
-  });
+  $(document).on("blur change", "#story_title", Lobsters.checkStoryTitle);
+  $(document).ready(Lobsters.checkStoryTitle);
 
   $(document).on("click", "#story_guidelines_toggler", function() {
     $("#story_guidelines").toggle();

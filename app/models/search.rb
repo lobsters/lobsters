@@ -172,9 +172,9 @@ class Search
       when "points"
         self.results.order!("#{Comment.score_sql} DESC")
       end
-
-      self.total_results = self.results.length
     end
+
+    self.total_results = self.results.length
 
     if self.page > self.page_count
       self.page = self.page_count

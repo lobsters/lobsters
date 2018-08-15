@@ -704,7 +704,7 @@ class Story < ApplicationRecord
       title_votes[s.title] += 1
     end
 
-    title_votes.sort_by {|_k, v| v }.reverse.each do |kv|
+    title_votes.sort_by {|_k, v| v }.reverse_each do |kv|
       if kv[1] >= SUGGESTION_QUORUM
         Rails.logger.info "[s#{self.id}] promoting suggested title " <<
                           "#{kv[0].inspect} instead of #{self.title.inspect}"

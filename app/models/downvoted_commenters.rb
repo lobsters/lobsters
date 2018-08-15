@@ -23,7 +23,6 @@ class DownvotedCommenters
     Rails.cache.fetch("aggregates_#{interval}", expires_in: CACHE_TIME) {
       ActiveRecord::Base.connection.exec_query("
         select
-          sum_downvotes,
           stddev(sum_downvotes) as stddev,
           sum(sum_downvotes) as sum,
           avg(sum_downvotes) as avg,

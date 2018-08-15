@@ -35,7 +35,7 @@ GEM
       activemodel (= 5.2.1)
       activesupport (= 5.2.1)
       arel (>= 9.0)
-    activerecord-typedstore (1.1.3)
+    activerecord-typedstore (1.2.0)
       activerecord (>= 4.2, < 5.3)
     activestorage (5.2.1)
       actionpack (= 5.2.1)

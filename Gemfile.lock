@@ -56,13 +56,13 @@ GEM
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11.0)
     byebug (10.0.2)
-    capybara (2.15.1)
+    capybara (3.6.0)
       addressable
       mini_mime (>= 0.1.3)
-      nokogiri (>= 1.3.3)
-      rack (>= 1.0.0)
-      rack-test (>= 0.5.4)
-      xpath (~> 2.0)
+      nokogiri (~> 1.8)
+      rack (>= 1.6.0)
+      rack-test (>= 0.6.3)
+      xpath (~> 3.1)
     chunky_png (1.3.10)
     commonmarker (0.17.11)
       ruby-enum (~> 0.5)
@@ -119,7 +119,7 @@ GEM
     parser (2.5.0.5)
       ast (~> 2.4.0)
     powerpack (0.1.1)
-    public_suffix (3.0.0)
+    public_suffix (3.0.2)
     rack (2.0.5)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -215,8 +215,8 @@ GEM
     websocket-driver (0.7.0)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
-    xpath (2.1.0)
-      nokogiri (~> 1.3)
+    xpath (3.1.0)
+      nokogiri (~> 1.8)
 
 PLATFORMS
   ruby

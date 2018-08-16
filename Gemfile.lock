@@ -120,7 +120,7 @@ GEM
     parser (2.5.1.2)
       ast (~> 2.4.0)
     powerpack (0.1.2)
-    public_suffix (3.0.2)
+    public_suffix (3.0.3)
     rack (2.0.5)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)

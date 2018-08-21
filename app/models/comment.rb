@@ -6,12 +6,14 @@ class Comment < ApplicationRecord
            :dependent => :delete_all
   belongs_to :parent_comment,
              :class_name => "Comment",
-             :inverse_of => false
+             :inverse_of => false,
+             :required => false
   has_one :moderation,
           :class_name => "Moderation",
           :inverse_of => :comment,
           :dependent => :destroy
-  belongs_to :hat
+  belongs_to :hat,
+             :required => false
   has_many :taggings, through: :story
 
   attr_accessor :current_vote, :previewing, :indent_level

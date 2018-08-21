@@ -2,11 +2,16 @@ class Moderation < ApplicationRecord
   belongs_to :moderator,
              :class_name => "User",
              :foreign_key => "moderator_user_id",
-             :inverse_of => :moderations
-  belongs_to :comment
-  belongs_to :story
-  belongs_to :tag
-  belongs_to :user
+             :inverse_of => :moderations,
+             :required => false
+  belongs_to :comment,
+             :required => false
+  belongs_to :story,
+             :required => false
+  belongs_to :tag,
+             :required => false
+  belongs_to :user,
+             :required => false
 
   scope :for, ->(user) {
     left_outer_joins(:story, :comment) .where("

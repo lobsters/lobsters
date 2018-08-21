@@ -21,13 +21,16 @@ class User < ApplicationRecord
            :dependent => :delete_all
   belongs_to :invited_by_user,
              :class_name => "User",
-             :inverse_of => false
+             :inverse_of => false,
+             :required => false
   belongs_to :banned_by_user,
              :class_name => "User",
-             :inverse_of => false
+             :inverse_of => false,
+             :required => false
   belongs_to :disabled_invite_by_user,
              :class_name => "User",
-             :inverse_of => false
+             :inverse_of => false,
+             :required => false
   has_many :invitations, :dependent => :destroy
   has_many :moderations,
            :inverse_of => :moderator,

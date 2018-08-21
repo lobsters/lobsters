@@ -26,8 +26,6 @@ module Lobsters
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
 
-    config.active_record.belongs_to_required_by_default = false
-
     config.action_view.form_with_generates_remote_forms = false
 
     # Settings in config/environments/* take precedence over those specified here.

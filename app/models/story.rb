@@ -3,7 +3,8 @@ class Story < ApplicationRecord
   belongs_to :merged_into_story,
              :class_name => "Story",
              :foreign_key => "merged_story_id",
-             :inverse_of => :merged_stories
+             :inverse_of => :merged_stories,
+             :required => false
   has_many :merged_stories,
            :class_name => "Story",
            :foreign_key => "merged_story_id",

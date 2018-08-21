@@ -20,6 +20,7 @@ Other sites using the Lobsters codebase:
 * [Gh Tech Roundup](https://ghtechroundup.com/)
 * [G33kz](https://g33kz.de/)
 * [Tildeverse](https://links.tildeverse.org/) ([repo](https://git.tildeverse.org/tildeverse/links))
+* [Paperkast](https://paperkast.com)
 
 ## Cousin Sites
 

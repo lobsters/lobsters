@@ -14,8 +14,6 @@ Other sites using the Lobsters codebase:
 * [Write.Narwhal.Space](https://write.narwhal.space) ([repo](https://github.com/charlesetc/write.narwhal.space))
 * [Barnaclad](https://barnacles.blackfriday/)
 * [CryptoBuzz](https://cryptobuzz.io/) ([repo](https://github.com/lukehamilton/cryptobuzz))
-* [Impct](https://impct.io/)
-* [Whistling Lobsters](https://lobsters.obormot.net/) ([repo](https://github.com/achmizs/whistling-lobsters))
 * [Kind and Green News](http://news.kindandgreenworld.com/)
 * [Gh Tech Roundup](https://ghtechroundup.com/)
 * [G33kz](https://g33kz.de/)

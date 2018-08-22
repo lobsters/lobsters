@@ -32,9 +32,9 @@ def endpoint_from_headers(header)
     return matches[1]
   elsif (matches = header.match(/rel=webmention; <([^>]+)>/))
     return matches[1]
-  elsif (matches = header.match(%r{<([^>]+)>; rel="http://webmention\.org/?"}))
+  elsif (matches = header.match(/<([^>]+)>; rel="http:\/\/webmention\.org\/?"/))
     return matches[1]
-  elsif (matches = header.match(%r{rel="http://webmention\.org/?"; <([^>]+)>}))
+  elsif (matches = header.match(/rel="http:\/\/webmention\.org\/?"; <([^>]+)>/))
     return matches[1]
   end
 end
@@ -56,10 +56,10 @@ end
 
 def send_webmention(source, target, endpoint)
   sp = Sponge.new
-  sp.timeout = 5 
-  sp.fetch(endpoint.to_s, :post,{ 
-    "source" => URI.encode_www_form_component(source), 
-    "target" => URI.encode_www_form_component(target), 
+  sp.timeout = 5
+  sp.fetch(endpoint.to_s, :post, {
+    "source" => URI.encode_www_form_component(source),
+    "target" => URI.encode_www_form_component(target),
   }, nil, {}, 3)
 end
 
@@ -74,7 +74,7 @@ Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each d
       }, 3, true)
       if !response.nil?
         wm_endpoint_raw = endpoint_from_headers(response['link']) ||\
-                        endpoint_from_body(response.body.to_s) || nil
+                          endpoint_from_body(response.body.to_s) || nil
         if !wm_endpoint_raw.nil?
           wm_endpoint = uri_to_absolute(wm_endpoint_raw, URI.parse(s.url))
           send_webmention(s.short_id_url, s.url, wm_endpoint)

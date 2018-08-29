@@ -112,7 +112,6 @@ pre {
 	overflow-x: auto;
 }
 
-
 /* default form styling */
 
 input,
@@ -795,6 +794,14 @@ div.story_text blockquote {
 	padding: 0 0 0 1em;
 	border-left: 2px solid gray;
 }
+
+/* un-italicize italics inside a blockquote */
+div.comment_text blockquote em, 
+div.markdown_help blockquote em, 
+div.story_text blockquote em {
+    font-style: normal
+}
+
 div#collapsed_story_text div.story_text blockquote {
 	font-style: normal;
 }

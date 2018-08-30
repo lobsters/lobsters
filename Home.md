@@ -19,6 +19,7 @@ Other sites using the Lobsters codebase:
 * [G33kz](https://g33kz.de/)
 * [Tildeverse news](https://tilde.news/) ([repo](https://git.tildeverse.org/tildeverse/links))
 * [Paperkast](https://paperkast.com)
+* [Standard](https://std.bz/)
 
 ## Cousin Sites
 

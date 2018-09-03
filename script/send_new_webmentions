@@ -63,24 +63,25 @@ def send_webmention(source, target, endpoint)
   }, nil, {}, 3)
 end
 
-last_story_id = (Keystore.value_for(LAST_STORY_KEY) || Story.last.id).to_i
-Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each do |s|
-  if s.url.present?
+if __FILE__ == $PROGRAM_NAME
+  last_story_id = (Keystore.value_for(LAST_STORY_KEY) || Story.last.id).to_i
+  Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each do |s|
+    next unless s.url.present?
     begin
       sp = Sponge.new
       sp.timeout = 3
       response = sp.fetch(s.url, :get, nil, nil, {
         "User-agent" => "#{Rails.application.domain} webmention endpoint lookup",
-      }, 3, true)
-      if !response.nil?
-        wm_endpoint_raw = endpoint_from_headers(response['link']) ||\
-                          endpoint_from_body(response.body.to_s) || nil
-        if !wm_endpoint_raw.nil?
-          wm_endpoint = uri_to_absolute(wm_endpoint_raw, URI.parse(s.url))
-          send_webmention(s.short_id_url, s.url, wm_endpoint)
-        end
-      end
+      }, 3)
+      next unless !response.nil?
+      wm_endpoint_raw = endpoint_from_headers(response['link']) ||\
+                        endpoint_from_body(response.body.to_s)
+      next unless !wm_endpoint_raw.nil?
+      wm_endpoint = uri_to_absolute(wm_endpoint_raw, URI.parse(s.url))
+      send_webmention(s.short_id_url, s.url, wm_endpoint)
+    rescue
     end
+    last_story_id = s.id
   end
-  last_story_id = s.id
+  Keystore.put(LAST_STORY_KEY, last_story_id)
 end

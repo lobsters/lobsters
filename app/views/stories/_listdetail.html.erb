@@ -1,3 +1,8 @@
+<% if false %>
+  The h-entry, u-report-of, u-url and h-card css classes are necessary
+  for the webmentions support. See <http://microformats.org/wiki/h-entry>
+  for more details.
+<% end %>
 <li id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
 class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 <%= story.vote && story.vote[:vote] == -1 ? "downvoted" : "" %>

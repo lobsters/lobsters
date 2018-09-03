@@ -96,8 +96,7 @@ class Sponge
     end
   end
 
-  def fetch(url, method = :get, fields = nil, raw_post_data = nil, headers = {}, limit = 10,
-            return_full_res = false)
+  def fetch(url, method = :get, fields = nil, raw_post_data = nil, headers = {}, limit = 10)
     raise ArgumentError.new("http redirection too deep") if limit <= 0
 
     uri = URI.parse(url)
@@ -219,11 +218,7 @@ class Sponge
 
     case res
     when Net::HTTPSuccess
-      if return_full_res
-        return res
-      else
-        return res.body
-      end
+      return res
     when Net::HTTPRedirection
       # follow
       newuri = URI.parse(res["location"])

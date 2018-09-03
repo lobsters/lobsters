@@ -875,7 +875,7 @@ class Story < ApplicationRecord
         s.timeout = 3
         @fetched_content = s.fetch(self.url, :get, nil, nil, {
           "User-agent" => "#{Rails.application.domain} for #{self.fetching_ip}",
-        }, 3)
+        }, 3).body
       rescue
         return @fetched_attributes
       end

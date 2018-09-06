@@ -1,7 +1,11 @@
 <%= render partial: 'nav' %>
 
-<ol class="stories list <%= @cur_url == "/hidden" ? "show_hidden" : "" %>">
-  <%= render :partial => "stories/listdetail",
-             :collection => @stories,
-             :as => :story %>
-</ol>
+<% if @stories.present? %>
+  <ol class="stories list <%= @cur_url == "/hidden" ? "show_hidden" : "" %>">
+    <%= render :partial => "stories/listdetail",
+              :collection => @stories,
+              :as => :story %>
+  </ol>
+<% else %>
+  <div class="nominal">🦞</div>
+<% end %>

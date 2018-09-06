@@ -1092,6 +1092,10 @@ table.data td p:first-child {
 table.data td p:last-child {
 	margin-bottom: 0;
 }
+table.data pre {
+	overflow-x: scroll;
+	max-width: 800px;
+}
 
 
 /* boxes */

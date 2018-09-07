@@ -624,8 +624,7 @@ class Story < ApplicationRecord
           # we can't lookup whether the user is allowed to use this tag yet
           # because we aren't assured to have a user_id by now; we'll do it in
           # the validation with check_tags
-          tg = self.taggings.build
-          tg.tag_id = t.id
+          self.tags << t
         end
       end
     end

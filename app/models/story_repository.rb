@@ -29,11 +29,11 @@ class StoryRepository
     saved.order("hotness")
   end
 
-  def tagged(tag)
+  def tagged(tags)
     tagged = Story.base.positive_ranked.where(
       Story.arel_table[:id].in(
         Tagging.arel_table.where(
-          Tagging.arel_table[:tag_id].eq(tag.id)
+          Tagging.arel_table[:tag_id].in(tags.map(&:id))
         ).project(
           Tagging.arel_table[:story_id]
         )

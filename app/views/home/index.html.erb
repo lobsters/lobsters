@@ -3,14 +3,16 @@
     <em>The <a href="/newest">newest</a> stories that have not yet reached the front page.</em>
   </div>
 <% end %>
-<% if @tag %>
+<% if @tags.present? %>
   <div class="box" id="leader">
     Stories <a href="/tags">tagged</a> as
-    <a href="<%= tag_path(@tag) %>"
-      class="<%= @tag.css_class %>"
-      title="<%= @tag.description %>"><%= @tag.tag %></a>
-    &ndash;
-    <%= @tag.description %>
+    <% @tags.each do |tag| %>
+      <a href="<%= tag_path(tag) %>"
+        class="<%= tag.css_class %>"
+        title="<%= tag.description %>"><%= tag.tag %></a>
+      &ndash;
+      <%= tag.description %>
+    <% end %>
   </div>
 <% end %>
 

@@ -191,19 +191,23 @@ class HomeController < ApplicationController
   end
 
   def tagged
-    @tag = Tag.where(:tag => params[:tag]).first!
+    tag_params = params[:tag].split('+')
+    @tags = Tag.where(tag: tag_params)
+    @tags.first!
 
-    @stories, @show_more = get_from_cache(tag: @tag) {
-      paginate stories.tagged(@tag)
+    @stories, @show_more = get_from_cache(tags: tag_params.sort.join('+')) {
+      paginate stories.tagged(@tags)
     }
 
-    @heading = @tag.tag
-    @title = [@tag.tag, @tag.description].compact.join(' - ')
-    @cur_url = tag_url(@tag.tag)
+    @heading = params[:tag]
+    @title = @tags.map do |tag|
+      [tag.tag, tag.description].compact.join(' - ')
+    end.join(' ')
+    @cur_url = tag_url(params[:tag])
 
     @rss_link = {
-      :title => "RSS 2.0 - Tagged #{@tag.tag} (#{@tag.description})",
-      :href => "/t/#{@tag.tag}.rss",
+      title: "RSS 2.0 - Tagged #{tags_with_description_for_rss(@tags)}",
+      href: "/t/#{params[:tag]}.rss",
     }
 
     respond_to do |format|
@@ -302,5 +306,9 @@ private
 
   def user_token_link(url)
     @user ? "#{url}?token=#{@user.rss_token}" : url
+  end
+
+  def tags_with_description_for_rss(tags)
+    tags.map {|tag| "#{tag.tag} (#{tag.description})" }.join(' ')
   end
 end

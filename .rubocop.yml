@@ -94,16 +94,12 @@ Performance/RedundantMatch:
   Enabled: false
 
 # Rails
-Rails/Blank:
-  Enabled: false
 Rails/FilePath:
   Enabled: false
 Rails/HttpStatus:
   Enabled: false
 Rails/OutputSafety:
   Enabled: false
-Rails/Present:
-  UnlessBlank: false
 Rails/SkipsModelValidations:
   Enabled: false
 

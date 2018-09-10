@@ -38,7 +38,7 @@ elsif !parser.parent
   STDERR.puts "no valid comment or story being replied to"
   exit EX_NOUSER
 
-elsif !parser.body.present?
+elsif parser.body.blank?
   STDERR.puts "no valid text/plain body found"
   exit EX_UNAVAILABLE
 end

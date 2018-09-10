@@ -89,7 +89,7 @@ class EmailParser
       rescue
       end
 
-    elsif !self.email.content_type.to_s.present?
+    elsif self.email.content_type.to_s.blank?
       # no content-type header, assume it's text/plain
       @body = self.email.body.to_s
     end

@@ -47,7 +47,7 @@ private
   # with the current user's vote added by StoriesController.load_user_votes
   def apply_current_vote
     @replies.each do |r|
-      next unless r.current_vote_vote.present?
+      next if r.current_vote_vote.blank?
       r.comment.current_vote = {
         vote: r.current_vote_vote,
         reason: r.current_vote_reason.to_s,

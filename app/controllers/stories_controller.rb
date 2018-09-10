@@ -99,7 +99,7 @@ class StoriesController < ApplicationController
 
       # ignore what the user brought unless we need it as a fallback
       @story.title = sattrs[:title]
-      if !@story.title.present? && params[:title].present?
+      if @story.title.blank? && params[:title].present?
         @story.title = params[:title]
       end
     end

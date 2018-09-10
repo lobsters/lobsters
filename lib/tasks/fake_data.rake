@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FakeDataGenerator
   def initialize(users_count, stories_count)
     @users_count = users_count

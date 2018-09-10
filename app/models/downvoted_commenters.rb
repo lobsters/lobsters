@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Finds the consistent most-heavily-downvoted commenters. Requires downvotes to be spread over
 # several comments and stories because anyone can have a bad thread or a bad day.
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SignupController < ApplicationController
   before_action :require_logged_in_user, :only => :invite
   before_action :check_for_read_only_mode
@@ -62,7 +64,7 @@ class SignupController < ApplicationController
         @invitation.update(used_at: Time.current, new_user: @new_user)
       end
       session[:u] = @new_user.session_token
-      flash[:success] = "Welcome to #{Rails.application.name}, " <<
+      flash[:success] = "Welcome to #{Rails.application.name}, " \
                         "#{@new_user.username}!"
 
       return redirect_to "/signup/invite"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Hat < ApplicationRecord
   belongs_to :user
   belongs_to :granted_by_user, :class_name => "User", :inverse_of => false
@@ -31,16 +33,16 @@ class Hat < ApplicationRecord
   def to_html_label
     hl = (self.link.present? && self.link.match(/^https?:\/\//))
 
-    h = "<span class=\"hat " <<
-        "hat_#{self.hat.gsub(/[^A-Za-z0-9]/, '_').downcase}\" " <<
-        "title=\"Granted by " << "#{self.granted_by_user.username} on " <<
+    h = "<span class=\"hat " \
+        "hat_#{self.hat.gsub(/[^A-Za-z0-9]/, '_').downcase}\" " \
+        "title=\"Granted by #{self.granted_by_user.username} on " +
         self.created_at.strftime("%Y-%m-%d")
 
     if !hl && self.link.present?
       h << " - #{ERB::Util.html_escape(self.link)}"
     end
 
-    h << "\">" <<
+    h << "\">" \
       "<span class=\"crown\">"
 
     if hl

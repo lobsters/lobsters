@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 ENV["RAILS_ENV"] ||= "production"
 
@@ -7,7 +8,7 @@ require File.expand_path('../../config/boot', __FILE__)
 require APP_PATH
 Rails.application.require_environment!
 
-TWITTER_LIST = "users".freeze
+TWITTER_LIST = "users"
 
 # find the id of our list name
 res = Twitter.oauth_request("/1.1/lists/list.json", :get)
@@ -18,7 +19,7 @@ end
 list_id = our_list["id_str"]
 
 # fetch its member list
-res = Twitter.oauth_request("/1.1/lists/members.json?list_id=#{list_id}" <<
+res = Twitter.oauth_request("/1.1/lists/members.json?list_id=#{list_id}" \
   "&count=5000&skip_status=true", :get)
 their_users = res["users"].map {|u| [u["screen_name"].downcase, true] }.to_h
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   has_many :stories, -> { includes :user }, :inverse_of => :user
   has_many :comments,
@@ -206,10 +208,10 @@ class User < ApplicationRecord
       msg.author_user_id = disabler.id
       msg.recipient_user_id = self.id
       msg.subject = "Your invite privileges have been revoked"
-      msg.body = "The reason given:\n" <<
-                 "\n" <<
-                 "> *#{reason}*\n" <<
-                 "\n" <<
+      msg.body = "The reason given:\n" \
+                 "\n" \
+                 "> *#{reason}*\n" \
+                 "\n" \
                  "*This is an automated message.*"
       msg.save!
 
@@ -306,7 +308,7 @@ class User < ApplicationRecord
   end
 
   def fetched_avatar(size = 100)
-    gravatar_url = "https://www.gravatar.com/avatar/" <<
+    gravatar_url = "https://www.gravatar.com/avatar/" +
                    Digest::MD5.hexdigest(self.email.strip.downcase) <<
                    "?r=pg&d=identicon&s=#{size}"
 
@@ -530,7 +532,7 @@ class User < ApplicationRecord
 
   def votes_for_others
     self.votes.left_outer_joins(:story, :comment)
-      .where("(votes.comment_id is not null and comments.user_id <> votes.user_id) OR " <<
+      .where("(votes.comment_id is not null and comments.user_id <> votes.user_id) OR " \
              "(votes.comment_id is null and stories.user_id <> votes.user_id)")
       .order("id DESC")
   end

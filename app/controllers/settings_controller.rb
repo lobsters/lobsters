@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SettingsController < ApplicationController
   before_action :require_logged_in_user
 
@@ -39,7 +41,7 @@ class SettingsController < ApplicationController
           Moderation.create!(
             is_from_suggestions: true,
             user: @edit_user,
-            action: "changed own username from \"#{previous_username}\" " <<
+            action: "changed own username from \"#{previous_username}\" " \
                     "to \"#{@edit_user.username}\"",
           )
         end
@@ -129,7 +131,7 @@ class SettingsController < ApplicationController
       session.delete(:totp_secret)
       return redirect_to "/settings"
     else
-      flash[:error] = "Your TOTP code was invalid, please verify the " <<
+      flash[:error] = "Your TOTP code was invalid, please verify the " \
                       "current code in your TOTP application."
       return redirect_to twofa_verify_url
     end
@@ -146,7 +148,7 @@ class SettingsController < ApplicationController
     session[:pushover_rand] = SecureRandom.hex
 
     return redirect_to Pushover.subscription_url(
-      :success => "#{Rails.application.root_url}settings/pushover_callback?" <<
+      :success => "#{Rails.application.root_url}settings/pushover_callback?" \
         "rand=#{session[:pushover_rand]}",
       :failure => "#{Rails.application.root_url}settings/",
     )

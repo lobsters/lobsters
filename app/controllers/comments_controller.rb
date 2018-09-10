@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CommentsController < ApplicationController
   COMMENTS_PER_PAGE = 20
 
@@ -38,7 +40,7 @@ class CommentsController < ApplicationController
                            :user_id => @user.id,
                            :parent_comment_id => comment.parent_comment_id).first)
       if (Time.current - pc.created_at) < 5.minutes && !@user.is_moderator?
-        comment.errors.add(:comment, "^You have already posted a comment " <<
+        comment.errors.add(:comment, "^You have already posted a comment " \
           "here recently.")
 
         return render :partial => "commentbox", :layout => false,
@@ -248,8 +250,8 @@ class CommentsController < ApplicationController
     )
 
     if @user
-      @comments = @comments.where("NOT EXISTS (SELECT 1 FROM " <<
-        "hidden_stories WHERE user_id = ? AND " <<
+      @comments = @comments.where("NOT EXISTS (SELECT 1 FROM " \
+        "hidden_stories WHERE user_id = ? AND " \
         "hidden_stories.story_id = comments.story_id)", @user.id)
 
       @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, @comments.map(&:id))

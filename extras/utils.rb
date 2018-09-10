@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Utils
   def self.random_str(len)
     str = ""

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Markdowner
   # opts[:allow_images] allows <img> tags
 

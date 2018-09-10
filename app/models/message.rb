@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Message < ApplicationRecord
   belongs_to :recipient,
              :class_name => "User",
@@ -85,7 +87,7 @@ class Message < ApplicationRecord
 
     if self.recipient.pushover_messages?
       self.recipient.pushover!(
-        :title => "#{Rails.application.name} message from " <<
+        :title => "#{Rails.application.name} message from " \
           "#{self.author_username}: #{self.subject}",
         :message => self.plaintext_body,
         :url => self.url,

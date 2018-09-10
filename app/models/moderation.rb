@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Moderation < ApplicationRecord
   belongs_to :moderator,
              :class_name => "User",
@@ -31,33 +33,33 @@ class Moderation < ApplicationRecord
 
     if self.story
       m.recipient_user_id = self.story.user_id
-      m.subject = "Your story has been edited by " <<
+      m.subject = "Your story has been edited by " +
                   (self.is_from_suggestions? ? "user suggestions" : "a moderator")
-      m.body = "Your story [#{self.story.title}](" <<
-               "#{self.story.comments_url}) has been edited with the following " <<
-               "changes:\n" <<
-               "\n" <<
+      m.body = "Your story [#{self.story.title}](" \
+               "#{self.story.comments_url}) has been edited with the following " \
+               "changes:\n" \
+               "\n" \
                "> *#{self.action}*\n"
 
       if self.reason.present?
-        m.body << "\n" <<
-          "The reason given:\n" <<
-          "\n" <<
+        m.body << "\n" \
+          "The reason given:\n" \
+          "\n" \
           "> *#{self.reason}*\n"
       end
 
     elsif self.comment
       m.recipient_user_id = self.comment.user_id
       m.subject = "Your comment has been moderated"
-      m.body = "Your comment on [#{self.comment.story.title}](" <<
-               "#{self.comment.story.comments_url}) has been moderated:\n" <<
-               "\n" <<
+      m.body = "Your comment on [#{self.comment.story.title}](" \
+               "#{self.comment.story.comments_url}) has been moderated:\n" \
+               "\n" \
                "> *#{self.comment.comment}*\n"
 
       if self.reason.present?
-        m.body << "\n" <<
-          "The reason given:\n" <<
-          "\n" <<
+        m.body << "\n" \
+          "The reason given:\n" \
+          "\n" \
           "> *#{self.reason}*\n"
       end
 
@@ -66,7 +68,7 @@ class Moderation < ApplicationRecord
       return
     end
 
-    m.body << "\n" <<
+    m.body << "\n" \
       "*This is an automated message.*"
 
     m.save

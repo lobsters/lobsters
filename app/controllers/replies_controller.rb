@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepliesController < ApplicationController
   REPLIES_PER_PAGE = 25
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module IntervalHelper
   TIME_INTERVALS = { "d" => "Day", "w" => "Week", "m" => "Month", "y" => "Year" }.freeze
 

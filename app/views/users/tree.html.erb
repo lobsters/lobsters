@@ -6,8 +6,8 @@
   <% if @newest %>
     <p>
     Newest users:
-    <%= raw @newest.map{|u| "<a href=\"##{u.username}\" class=\"" <<
-      (u.is_new?? "new_user" : "") << "\">#{u.username}</a> " <<
+    <%= raw @newest.map{|u| "<a href=\"##{u.username}\" class=\"" +
+      (u.is_new?? "new_user" : "") << "\">#{u.username}</a> " +
       "(#{u.karma})" }.join(", ") %>
     </p>
   <% end %>

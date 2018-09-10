@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   MAX_PAGES = 15
 

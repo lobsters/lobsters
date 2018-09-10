@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AuthenticationHelper
   def stub_login_as user
     user.update_column(:session_token, 'asdf')

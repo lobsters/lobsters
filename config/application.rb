@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'boot'
 
 # included from https://github.com/rails/rails/blob/5-2-stable/railties/lib/rails/all.rb

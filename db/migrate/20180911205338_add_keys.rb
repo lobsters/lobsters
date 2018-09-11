@@ -35,11 +35,11 @@ class AddKeys < ActiveRecord::Migration[5.2]
     # add_foreign_key "tag_filters", "tags", name: "tag_filters_tag_id_fk"
     # add_foreign_key "tag_filters", "users", name: "tag_filters_user_id_fk"
     add_foreign_key "taggings", "stories", name: "taggings_story_id_fk"
-    add_foreign_key "taggings", "tags", name: "taggings_tag_id_fk", on_update: :cascade, on_delete: :cascade
+    add_foreign_key "taggings", "tags", name: "taggings_tag_id_fk"
     # add_foreign_key "users", "users", column: "banned_by_user_id", name: "users_banned_by_user_id_fk"
     # add_foreign_key "users", "users", column: "disabled_invite_by_user_id", name: "users_disabled_invite_by_user_id_fk"
     # add_foreign_key "users", "users", column: "invited_by_user_id", name: "users_invited_by_user_id_fk"
-    add_foreign_key "votes", "comments", name: "votes_comment_id_fk", on_update: :cascade, on_delete: :cascade
+    add_foreign_key "votes", "comments", name: "votes_comment_id_fk"
     add_foreign_key "votes", "stories", name: "votes_story_id_fk"
     add_foreign_key "votes", "users", name: "votes_user_id_fk"
   end

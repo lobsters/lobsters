@@ -115,6 +115,10 @@ class Message < ApplicationRecord
     self.body.to_s
   end
 
+  def to_param
+    self.short_id
+  end
+
   def url
     Rails.application.root_url + "messages/#{self.short_id}"
   end

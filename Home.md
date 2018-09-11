@@ -20,6 +20,7 @@ Other sites using the Lobsters codebase:
 * [Tildeverse news](https://tilde.news/) ([repo](https://git.tildeverse.org/tildeverse/links))
 * [Paperkast](https://paperkast.com)
 * [Standard](https://std.bz/)
+* [Bitmia](https://bitmia.com/)
 
 ## Cousin Sites
 

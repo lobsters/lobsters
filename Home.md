@@ -21,6 +21,7 @@ Other sites using the Lobsters codebase:
 * [Paperkast](https://paperkast.com)
 * [Standard](https://std.bz/)
 * [Bitmia](https://bitmia.com/)
+* [0xBlockchain](https://github.com/pyk/0xblockchain)
 
 ## Cousin Sites
 

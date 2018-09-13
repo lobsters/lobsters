@@ -276,8 +276,8 @@ ActiveRecord::Schema.define(version: 2018_09_11_205338) do
   add_foreign_key "messages", "users", column: "recipient_user_id", name: "messages_recipient_user_id_fk"
   add_foreign_key "stories", "users", name: "stories_user_id_fk"
   add_foreign_key "taggings", "stories", name: "taggings_story_id_fk"
-  add_foreign_key "taggings", "tags", name: "taggings_tag_id_fk"
-  add_foreign_key "votes", "comments", name: "votes_comment_id_fk"
+  add_foreign_key "taggings", "tags", name: "taggings_tag_id_fk", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "votes", "comments", name: "votes_comment_id_fk", on_update: :cascade, on_delete: :cascade
   add_foreign_key "votes", "stories", name: "votes_story_id_fk"
   add_foreign_key "votes", "users", name: "votes_user_id_fk"
 

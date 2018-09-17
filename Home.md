@@ -9,19 +9,19 @@ Welcome to the [lobsters](https://lobste.rs/) wiki! Check the [about page](https
 
 Other sites using the Lobsters codebase:
 
-* [Barnacles](https://www.barnacl.es) ([repo](https://github.com/pushcx/barnacl.es))
-* [Le Journal du Hacker](https://www.journalduhacker.net/)
+* [Barnacles](https://www.barnacl.es) ([repo](https://github.com/pushcx/barnacl.es)) - Business
+* [Le Journal du Hacker](https://www.journalduhacker.net/) - Computer Science (fr)
 * [Write.Narwhal.Space](https://write.narwhal.space) ([repo](https://github.com/charlesetc/write.narwhal.space))
-* [Barnaclad](https://barnacles.blackfriday/)
-* [CryptoBuzz](https://cryptobuzz.io/) ([repo](https://github.com/lukehamilton/cryptobuzz))
-* [Kind and Green News](http://news.kindandgreenworld.com/)
-* [Gh Tech Roundup](https://ghtechroundup.com/)
-* [G33kz](https://g33kz.de/)
-* [Tildeverse news](https://tilde.news/) ([repo](https://git.tildeverse.org/tildeverse/links))
-* [Paperkast](https://paperkast.com)
-* [Standard](https://std.bz/)
-* [Bitmia](https://bitmia.com/)
-* [0xBlockchain](https://github.com/pyk/0xblockchain)
+* [Barnaclad](https://barnacles.blackfriday/) - Computer Science
+* [CryptoBuzz](https://cryptobuzz.io/) ([repo](https://github.com/lukehamilton/cryptobuzz)) - Cryptocurrency
+* [Kind and Green News](http://news.kindandgreenworld.com/) - Biology
+* [Gh Tech Roundup](https://www.ghtechroundup.com/) - Technology
+* [G33kz](https://g33kz.de/) - Technology (de)
+* [Tildeverse news](https://tilde.news/) ([repo](https://git.tildeverse.org/tildeverse/links)) - Computer Science
+* [Paperkast](https://paperkast.com) - Science, Futurology, and Technology
+* [Standard](https://std.bz/) - Cryptocurrency
+* [Bitmia](https://bitmia.com/) - Finance
+* [0xBlockchain](https://0xblockchain.network/) ([repo](https://github.com/pyk/0xblockchain)) - Cryptocurrency
 
 ## Cousin Sites
 

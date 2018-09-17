@@ -1,6 +1,8 @@
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
-  <%= !defined?(force_open) && comment.score <= Comment::COLLAPSE_SCORE ? "checked" : "" %>>
+  <%= defined?(force_open) ||
+      @user.try(:is_moderator?) ||
+      comment.score > Comment::COLLAPSE_SCORE ? "" : "checked" %>>
 
 <div id="c_<%= comment.short_id %>"
 data-shortid="<%= comment.short_id if comment.persisted? %>"

@@ -85,7 +85,7 @@ class UsersController < ApplicationController
       return redirect_to "/"
     end
 
-    if !params[:reason].present?
+    if params[:reason].blank?
       flash[:error] = "You must give a reason for the ban."
       return redirect_to user_path(:user => buser.username)
     end

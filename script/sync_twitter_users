@@ -12,7 +12,7 @@ TWITTER_LIST = "users".freeze
 # find the id of our list name
 res = Twitter.oauth_request("/1.1/lists/list.json", :get)
 our_list = res.select {|l| l["name"] == TWITTER_LIST }.first
-if !our_list.present?
+if our_list.blank?
   raise "can't find list #{TWITTER_LIST.inspect} in #{res.inspect}"
 end
 list_id = our_list["id_str"]

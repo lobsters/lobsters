@@ -10,7 +10,7 @@ class SettingsController < ApplicationController
   end
 
   def delete_account
-    unless params[:i_am_sure].present?
+    if params[:i_am_sure].blank?
       flash[:error] = 'You did not check the "I am sure" checkbox.'
       return redirect_to settings_path
     end
@@ -153,12 +153,12 @@ class SettingsController < ApplicationController
   end
 
   def pushover_callback
-    if !session[:pushover_rand].to_s.present?
+    if session[:pushover_rand].to_s.blank?
       flash[:error] = "No random token present in session"
       return redirect_to "/settings"
     end
 
-    if !params[:rand].to_s.present?
+    if params[:rand].to_s.blank?
       flash[:error] = "No random token present in URL"
       return redirect_to "/settings"
     end
@@ -185,8 +185,8 @@ class SettingsController < ApplicationController
   end
 
   def github_callback
-    if !session[:github_state].present? ||
-       !params[:code].present? ||
+    if session[:github_state].blank? ||
+       params[:code].blank? ||
        (params[:state].to_s != session[:github_state].to_s)
       flash[:error] = "Invalid OAuth state"
       return redirect_to "/settings"

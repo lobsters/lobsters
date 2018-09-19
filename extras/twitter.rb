@@ -64,7 +64,7 @@ class Twitter
     res = at.get("/1.1/account/verify_credentials.json")
     js = JSON.parse(res.body)
 
-    if !js["screen_name"].present?
+    if js["screen_name"].blank?
       return nil
     end
 

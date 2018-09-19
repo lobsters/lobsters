@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Twitter
   cattr_accessor :CONSUMER_KEY, :CONSUMER_SECRET, :AUTH_TOKEN, :AUTH_SECRET
 

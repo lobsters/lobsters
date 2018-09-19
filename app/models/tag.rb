@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Tag < ApplicationRecord
   has_many :taggings, :dependent => :delete_all
   has_many :stories, :through => :taggings
@@ -42,7 +44,7 @@ class Tag < ApplicationRecord
   end
 
   def css_class
-    "tag tag_#{self.tag}" << (self.is_media?? " tag_is_media" : "")
+    "tag tag_#{self.tag}" + (self.is_media? ? " tag_is_media" : "")
   end
 
   def valid_for?(user)

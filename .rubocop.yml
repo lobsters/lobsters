@@ -135,8 +135,6 @@ Style/ExpandPathArguments:
   Enabled: false
 Style/FormatString:
   Enabled: false
-Style/FrozenStringLiteralComment:
-  EnforcedStyle: never
 Style/GuardClause:
   Enabled: false
 Style/HashSyntax:
@@ -148,8 +146,6 @@ Style/IfUnlessModifier:
 Style/InverseMethods:
   Enabled: false
 Style/Lambda:
-  Enabled: false
-Style/LineEndConcatenation:
   Enabled: false
 Style/MethodDefParentheses:
   Enabled: false

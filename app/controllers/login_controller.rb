@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LoginBannedError < StandardError; end
 class LoginDeletedError < StandardError; end
 class LoginTOTPFailedError < StandardError; end
@@ -142,7 +144,7 @@ class LoginController < ApplicationController
         end
       end
     else
-      flash[:error] = "Invalid reset token.  It may have already been " <<
+      flash[:error] = "Invalid reset token.  It may have already been " \
                       "used or you may have copied it incorrectly."
       return redirect_to forgot_password_path
     end
@@ -150,7 +152,7 @@ class LoginController < ApplicationController
 
   def twofa
     if (tmpu = find_twofa_user)
-      Rails.logger.info "  Authenticated as user #{tmpu.id} " <<
+      Rails.logger.info "  Authenticated as user #{tmpu.id} " \
                         "(#{tmpu.username}), verifying TOTP"
     else
       reset_session

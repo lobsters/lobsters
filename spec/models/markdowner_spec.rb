@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Markdowner do
@@ -10,7 +12,7 @@ describe Markdowner do
     create(:user, :username => "blahblah")
 
     expect(Markdowner.to_html("hi @blahblah test"))
-      .to eq("<p>hi <a href=\"https://example.com/u/blahblah\" rel=\"nofollow\">" +
+      .to eq("<p>hi <a href=\"https://example.com/u/blahblah\" rel=\"nofollow\">" \
              "@blahblah</a> test</p>\n")
 
     expect(Markdowner.to_html("hi @flimflam test"))
@@ -20,7 +22,7 @@ describe Markdowner do
   # bug#209
   it "keeps punctuation inside of auto-generated links when using brackets" do
     expect(Markdowner.to_html("hi <http://example.com/a.> test"))
-      .to eq("<p>hi <a href=\"http://example.com/a.\" rel=\"nofollow\">" +
+      .to eq("<p>hi <a href=\"http://example.com/a.\" rel=\"nofollow\">" \
             "http://example.com/a.</a> test</p>\n")
   end
 
@@ -29,21 +31,21 @@ describe Markdowner do
     create(:user, :username => "blahblah")
 
     expect(Markdowner.to_html("hi http://example.com/@blahblah/ test"))
-      .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"nofollow\">" +
+      .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"nofollow\">" \
             "http://example.com/@blahblah/</a> test</p>\n")
 
     expect(Markdowner.to_html("hi [test](http://example.com/@blahblah/)"))
-      .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"nofollow\">" +
+      .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"nofollow\">" \
         "test</a></p>\n")
   end
 
   it "correctly adds nofollow" do
     expect(Markdowner.to_html("[ex](http://example.com)"))
-      .to eq("<p><a href=\"http://example.com\" rel=\"nofollow\">" +
+      .to eq("<p><a href=\"http://example.com\" rel=\"nofollow\">" \
             "ex</a></p>\n")
 
     expect(Markdowner.to_html("[ex](//example.com)"))
-      .to eq("<p><a href=\"//example.com\" rel=\"nofollow\">" +
+      .to eq("<p><a href=\"//example.com\" rel=\"nofollow\">" \
             "ex</a></p>\n")
 
     expect(Markdowner.to_html("[ex](/u/abc)"))

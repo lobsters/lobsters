@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HomeController < ApplicationController
   include IntervalHelper
 
@@ -13,9 +15,9 @@ class HomeController < ApplicationController
       @title = "Resource Not Found"
       render :action => "404", :status => 404
     rescue ActionView::MissingTemplate
-      render :html => ("<div class=\"box wide\">" <<
-        "<div class=\"legend\">404</div>" <<
-        "Resource not found" <<
+      render :html => ("<div class=\"box wide\">" \
+        "<div class=\"legend\">404</div>" \
+        "Resource not found" \
         "</div>").html_safe, :layout => "application"
     end
   end
@@ -25,8 +27,8 @@ class HomeController < ApplicationController
       @title = "About"
       render :action => "about"
     rescue ActionView::MissingTemplate
-      render :html => ("<div class=\"box wide\">" <<
-        "A mystery." <<
+      render :html => ("<div class=\"box wide\">" \
+        "A mystery." \
         "</div>").html_safe, :layout => "application"
     end
   end
@@ -36,9 +38,9 @@ class HomeController < ApplicationController
       @title = "Chat"
       render :action => "chat"
     rescue ActionView::MissingTemplate
-      render :html => ("<div class=\"box wide\">" <<
-        "<div class=\"legend\">Chat</div>" <<
-        "Keep it on-site" <<
+      render :html => ("<div class=\"box wide\">" \
+        "<div class=\"legend\">Chat</div>" \
+        "Keep it on-site" \
         "</div>").html_safe, :layout => "application"
     end
   end
@@ -48,8 +50,8 @@ class HomeController < ApplicationController
       @title = "Privacy"
       render :action => "privacy"
     rescue ActionView::MissingTemplate
-      render :html => ("<div class=\"box wide\">" <<
-                      "You apparently have no privacy." <<
+      render :html => ("<div class=\"box wide\">" \
+                      "You apparently have no privacy." \
                       "</div>").html_safe, :layout => "application"
     end
   end
@@ -219,10 +221,10 @@ class HomeController < ApplicationController
     }
 
     if length[:dur] > 1
-      @heading = @title = "Top Stories of the Past #{length[:dur]} " <<
-                          length[:intv] << "s"
+      @heading = @title = "Top Stories of the Past #{length[:dur]} " \
+                          "#{length[:intv]}s"
     else
-      @heading = @title = "Top Stories of the Past " << length[:intv]
+      @heading = @title = "Top Stories of the Past #{length[:intv]}"
     end
 
     render :action => "index"

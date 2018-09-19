@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InvitationRequestMailer < ActionMailer::Base
   default :from => "#{Rails.application.name} <nobody@#{Rails.application.domain}>"
 
@@ -6,8 +8,8 @@ class InvitationRequestMailer < ActionMailer::Base
 
     mail(
       to: invitation_request.email,
-      subject: "[#{Rails.application.name}] Confirm your invitation " <<
-               "request to " << Rails.application.name
+      subject: "[#{Rails.application.name}] Confirm your invitation " \
+               "request to #{Rails.application.name}"
     )
   end
 end

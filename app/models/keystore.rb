@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Keystore < ApplicationRecord
   self.primary_key = "key"
 
@@ -13,12 +15,12 @@ class Keystore < ApplicationRecord
 
   def self.put(key, value)
     if Keystore.connection.adapter_name == "SQLite"
-      Keystore.connection.execute("INSERT OR REPLACE INTO " <<
-        "#{Keystore.table_name} (`key`, `value`) VALUES " <<
+      Keystore.connection.execute("INSERT OR REPLACE INTO " \
+        "#{Keystore.table_name} (`key`, `value`) VALUES " \
         "(#{q(key)}, #{q(value)})")
     elsif Keystore.connection.adapter_name =~ /Mysql/
-      Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" +
-        "`key`, `value`) VALUES (#{q(key)}, #{q(value)}) ON DUPLICATE KEY " +
+      Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" \
+        "`key`, `value`) VALUES (#{q(key)}, #{q(value)}) ON DUPLICATE KEY " \
         "UPDATE `value` = #{q(value)}")
     else
       kv = self.find_or_create_key_for_update(key, value)
@@ -36,14 +38,14 @@ class Keystore < ApplicationRecord
   def self.incremented_value_for(key, amount = 1)
     Keystore.transaction do
       if Keystore.connection.adapter_name == "SQLite"
-        Keystore.connection.execute("INSERT OR IGNORE INTO " <<
-          "#{Keystore.table_name} (`key`, `value`) VALUES " <<
+        Keystore.connection.execute("INSERT OR IGNORE INTO " \
+          "#{Keystore.table_name} (`key`, `value`) VALUES " \
           "(#{q(key)}, 0)")
-        Keystore.connection.execute("UPDATE #{Keystore.table_name} " <<
+        Keystore.connection.execute("UPDATE #{Keystore.table_name} " \
           "SET `value` = `value` + #{q(amount)} WHERE `key` = #{q(key)}")
       elsif Keystore.connection.adapter_name =~ /Mysql/
-        Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" +
-          "`key`, `value`) VALUES (#{q(key)}, #{q(amount)}) ON DUPLICATE KEY " +
+        Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" \
+          "`key`, `value`) VALUES (#{q(key)}, #{q(amount)}) ON DUPLICATE KEY " \
           "UPDATE `value` = `value` + #{q(amount)}")
       else
         kv = self.find_or_create_key_for_update(key, 0)

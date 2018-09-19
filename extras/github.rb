@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Github
   cattr_accessor :CLIENT_ID, :CLIENT_SECRET
 
@@ -37,7 +39,7 @@ class Github
   end
 
   def self.oauth_auth_url(state)
-    "https://github.com/login/oauth/authorize?client_id=#{self.CLIENT_ID}&" <<
+    "https://github.com/login/oauth/authorize?client_id=#{self.CLIENT_ID}&" \
       "state=#{state}"
   end
 end

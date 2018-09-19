@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ActionMailer::Base.smtp_settings = {
   :address => ENV.fetch("SMTP_HOST", "127.0.0.1"),
   :port => Integer(ENV.fetch("SMTP_PORT", 25)),

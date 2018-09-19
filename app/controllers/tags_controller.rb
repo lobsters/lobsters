@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TagsController < ApplicationController
   before_action :require_logged_in_admin, except: [:index]
 

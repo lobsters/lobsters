@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module InactiveUser
   def self.inactive_user
     @inactive_user ||= User.find_by!(username: 'inactive-user')

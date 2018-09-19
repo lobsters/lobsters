@@ -55,7 +55,7 @@
         html << " (hotness mod #{t.hotness_mod > 0 ? "+" : ""}#{t.hotness_mod})"
       end
       if t.filtered_count > 0
-        html << " <em>#{t.filtered_count} user" <<
+        html << " <em>#{t.filtered_count} user" +
           (t.filtered_count == 1 ? "" : "s") << " filtering</em>"
       end
 

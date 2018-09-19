@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ShortId
   attr_accessor :klass, :generation_attempts
 

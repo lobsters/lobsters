@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BanNotification < ActionMailer::Base
   default :from => "#{Rails.application.name} <nobody@#{Rails.application.domain}>"
 

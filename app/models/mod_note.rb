@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ModNote < ApplicationRecord
   belongs_to :moderator,
              :class_name => "User",

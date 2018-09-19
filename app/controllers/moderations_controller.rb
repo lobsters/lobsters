@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ModerationsController < ApplicationController
   ENTRIES_PER_PAGE = 50
 

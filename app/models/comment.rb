@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :story,
@@ -122,7 +124,7 @@ class Comment < ApplicationRecord
   end
 
   def self.score_sql
-    Arel.sql("(CAST(upvotes AS #{Story.votes_cast_type}) - " <<
+    Arel.sql("(CAST(upvotes AS #{Story.votes_cast_type}) - " \
       "CAST(downvotes AS #{Story.votes_cast_type}))")
   end
 
@@ -243,7 +245,7 @@ class Comment < ApplicationRecord
 
         if u.pushover_mentions?
           u.pushover!(
-            :title => "#{Rails.application.name} mention by " <<
+            :title => "#{Rails.application.name} mention by " \
               "#{self.user.username} on #{self.story.title}",
             :message => self.plaintext_comment,
             :url => self.url,
@@ -268,7 +270,7 @@ class Comment < ApplicationRecord
 
       if u.pushover_replies?
         u.pushover!(
-          :title => "#{Rails.application.name} reply from " <<
+          :title => "#{Rails.application.name} reply from " \
             "#{self.user.username} on #{self.story.title}",
           :message => self.plaintext_comment,
           :url => self.url,
@@ -286,9 +288,9 @@ class Comment < ApplicationRecord
     self.upvotes += upvote.to_i
     self.downvotes += downvote.to_i
 
-    Comment.connection.execute("UPDATE #{Comment.table_name} SET " <<
-      "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " <<
-      "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " <<
+    Comment.connection.execute("UPDATE #{Comment.table_name} SET " \
+      "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " \
+      "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " \
       "confidence = '#{self.calculated_confidence}' WHERE id = #{self.id}")
 
     self.story.recalculate_hotness!
@@ -296,9 +298,10 @@ class Comment < ApplicationRecord
 
   def gone_text
     if self.is_moderated?
-      "Comment removed by moderator " <<
-        self.moderation.try(:moderator).try(:username).to_s << ": " <<
-        (self.moderation.try(:reason) || "No reason given")
+      reason = self.moderation.try(:reason) || "No reason given"
+
+      "Comment removed by moderator " \
+        "#{self.moderation.try(:moderator).try(:username)}: #{reason}"
     elsif self.user.is_banned?
       "Comment from banned user removed"
     else
@@ -394,7 +397,7 @@ class Comment < ApplicationRecord
       self.short_id,
       self.is_from_email ? "email" : nil,
       created_at.to_i,
-    ].reject(&:!).join(".") << "@" << Rails.application.domain
+    ].reject(&:!).join(".") << "@#{Rails.application.domain}"
   end
 
   def path

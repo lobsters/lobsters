@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InvitationRequest < ApplicationRecord
   validates :name, :presence => true
   validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ }

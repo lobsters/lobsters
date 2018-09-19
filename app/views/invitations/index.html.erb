@@ -28,12 +28,12 @@
       <td><%= raw ir.markeddown_memo %></td>
       <td><%= form_tag send_invitation_for_request_path do %>
         <%= hidden_field_tag "code", ir.code %>
-        <%= submit_tag "Send Invitation", :data => { :confirm => "Are " <<
+        <%= submit_tag "Send Invitation", :data => { :confirm => "Are " +
         "you sure you want to invite this person and remove this request?" } %>
       <% end %></td>
       <td><%= form_tag delete_invitation_request_path do %>
         <%= hidden_field_tag "code", ir.code %>
-        <%= submit_tag "Delete", :data => { :confirm => "Are you sure " <<
+        <%= submit_tag "Delete", :data => { :confirm => "Are you sure " +
           "you want to delete this request?" } %>
       <% end %>
     </tr>

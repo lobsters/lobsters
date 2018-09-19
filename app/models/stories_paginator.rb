@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StoriesPaginator
   attr_accessor :per_page
 

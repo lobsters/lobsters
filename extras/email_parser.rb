@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmailParser
   attr_reader :sender, :recipient, :email_text, :email
 

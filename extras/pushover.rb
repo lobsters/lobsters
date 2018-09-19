@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Pushover
   # these need to be overridden in config/initializers/production.rb
   cattr_accessor :API_TOKEN

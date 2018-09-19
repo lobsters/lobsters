@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class StoryCacher
   cattr_accessor :DIFFBOT_API_KEY
 
   # this needs to be overridden in config/initializers/production.rb
   @@DIFFBOT_API_KEY = nil
 
-  DIFFBOT_API_URL = "http://www.diffbot.com/api/article".freeze
+  DIFFBOT_API_URL = "http://www.diffbot.com/api/article"
 
   def self.get_story_text(story)
     if !@@DIFFBOT_API_KEY

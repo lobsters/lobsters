@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReplyingComment < ApplicationRecord
   attribute :is_unread, :boolean
 

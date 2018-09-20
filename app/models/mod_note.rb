@@ -8,7 +8,7 @@ class ModNote < ApplicationRecord
   scope :recent, -> { where('created_at >= ?', 1.week.ago).order('created_at desc') }
   scope :for, ->(user) { includes(:moderator).where('user_id = ?', user).order('created_at desc') }
 
-  validates :moderator, :user, :note, presence: true
+  validates :note, presence: true
 
   delegate :username, to: :user
 

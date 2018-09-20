@@ -1,6 +1,6 @@
 class InvitationRequest < ApplicationRecord
   validates :name, :presence => true
-  validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ }
+  validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ }, :presence => true
   validates :memo, :format => { :with => /https?:\/\// }
 
   before_validation :create_code

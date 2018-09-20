@@ -81,7 +81,7 @@ class EmailParser
       end
 
     # simple one-part
-    elsif self.email.content_type.to_s.match(/text\/plain/)
+    elsif self.email.content_type.to_s.match(/text\/plain/i)
       @body = self.email.body.to_s
 
       begin

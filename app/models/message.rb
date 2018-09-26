@@ -10,8 +10,6 @@ class Message < ApplicationRecord
   belongs_to :hat,
              :required => false
 
-  validates :recipient, presence: true
-
   attribute :mod_note, :boolean
   attr_reader :recipient_username
 

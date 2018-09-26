@@ -75,14 +75,7 @@ running tests:
     ```sh
     lobsters$ rake db:schema:load
     ```
-
-* Create a `config/initializers/secret_token.rb` file, using a randomly
-generated key from the output of `rake secret`:
-
-    ```sh
-    Lobsters::Application.config.secret_key_base = 'your random secret here'
-    ```
-
+    
 * Define your site's name and default domain, which are used in various places,
 in a `config/initializers/production.rb` or similar file:
 

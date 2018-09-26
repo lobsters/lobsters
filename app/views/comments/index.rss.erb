@@ -12,7 +12,7 @@
         <title>on <%= raw coder.encode(comment.story.title, :decimal) %></title>
         <link><%= comment.url %></link>
         <guid><%= comment.short_id_url %></guid>
-        <author><%= comment.user.username %></author>
+        <author><%= comment.user.username %>@users.<%= Rails.application.domain %> (<%= comment.user.username %>)</author>
         <pubDate><%= comment.created_at.rfc2822 %></pubDate>
         <comments><%= comment.url %></comments>
         <description><%= raw coder.encode(comment.markeddown_comment,

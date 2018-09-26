@@ -13,7 +13,7 @@
         <title><%= raw coder.encode(story.title, :decimal) %></title>
         <link><%= story.url_or_comments_url %></link>
         <guid isPermaLink="false"><%= story.short_id_url %></guid>
-        <author><%= story.user.username %>@users.lobste.rs</author>
+        <author><%= story.user.username %>@users.<%= Rails.application.domain %> (<%= story.user.username %>)</author>
         <pubDate><%= story.created_at.rfc2822 %></pubDate>
         <comments><%= story.comments_url %></comments>
         <description>

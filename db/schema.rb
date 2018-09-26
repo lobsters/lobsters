@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_30_114325) do
+ActiveRecord::Schema.define(version: 2018_09_11_205338) do
 
   create_table "comments", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -31,6 +31,8 @@ ActiveRecord::Schema.define(version: 2018_08_30_114325) do
     t.integer "hat_id"
     t.index ["comment"], name: "index_comments_on_comment", type: :fulltext
     t.index ["confidence"], name: "confidence_idx"
+    t.index ["hat_id"], name: "comments_hat_id_fk"
+    t.index ["parent_comment_id"], name: "comments_parent_comment_id_fk"
     t.index ["short_id"], name: "short_id", unique: true
     t.index ["story_id", "short_id"], name: "story_id_short_id"
     t.index ["thread_id"], name: "thread_id"
@@ -103,7 +105,9 @@ ActiveRecord::Schema.define(version: 2018_08_30_114325) do
     t.boolean "deleted_by_author", default: false
     t.boolean "deleted_by_recipient", default: false
     t.bigint "hat_id"
+    t.index ["author_user_id"], name: "messages_author_user_id_fk"
     t.index ["hat_id"], name: "index_messages_on_hat_id"
+    t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"
     t.index ["short_id"], name: "random_hash", unique: true
   end
 
@@ -206,6 +210,7 @@ ActiveRecord::Schema.define(version: 2018_08_30_114325) do
     t.integer "story_id", null: false, unsigned: true
     t.integer "tag_id", null: false, unsigned: true
     t.index ["story_id", "tag_id"], name: "story_id_tag_id", unique: true
+    t.index ["tag_id"], name: "taggings_tag_id_fk"
   end
 
   create_table "tags", id: :integer, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -258,13 +263,26 @@ ActiveRecord::Schema.define(version: 2018_08_30_114325) do
     t.string "reason", limit: 1
     t.datetime "updated_at", null: false
     t.index ["comment_id"], name: "index_votes_on_comment_id"
+    t.index ["story_id"], name: "votes_story_id_fk"
     t.index ["user_id", "comment_id"], name: "user_id_comment_id"
     t.index ["user_id", "story_id"], name: "user_id_story_id"
   end
 
+  add_foreign_key "comments", "comments", column: "parent_comment_id", name: "comments_parent_comment_id_fk"
+  add_foreign_key "comments", "hats", name: "comments_hat_id_fk"
+  add_foreign_key "comments", "stories", name: "comments_story_id_fk"
+  add_foreign_key "comments", "users", name: "comments_user_id_fk"
+  add_foreign_key "messages", "users", column: "author_user_id", name: "messages_author_user_id_fk"
+  add_foreign_key "messages", "users", column: "recipient_user_id", name: "messages_recipient_user_id_fk"
+  add_foreign_key "stories", "users", name: "stories_user_id_fk"
+  add_foreign_key "taggings", "stories", name: "taggings_story_id_fk"
+  add_foreign_key "taggings", "tags", name: "taggings_tag_id_fk", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "votes", "comments", name: "votes_comment_id_fk", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "votes", "stories", name: "votes_story_id_fk"
+  add_foreign_key "votes", "users", name: "votes_user_id_fk"
 
   create_view "replying_comments",  sql_definition: <<-SQL
-      select `read_ribbons`.`user_id` AS `user_id`,`comments`.`id` AS `comment_id`,`read_ribbons`.`story_id` AS `story_id`,`comments`.`parent_comment_id` AS `parent_comment_id`,`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`comments`.`user_id` AS `comment_author_id`,`stories`.`user_id` AS `story_author_id`,(`read_ribbons`.`updated_at` < `comments`.`created_at`) AS `is_unread`,(select `votes`.`vote` from `votes` where ((`votes`.`user_id` = `read_ribbons`.`user_id`) and (`votes`.`comment_id` = `comments`.`id`))) AS `current_vote_vote`,(select `votes`.`reason` from `votes` where ((`votes`.`user_id` = `read_ribbons`.`user_id`) and (`votes`.`comment_id` = `comments`.`id`))) AS `current_vote_reason` from (((`read_ribbons` join `comments` on((`comments`.`story_id` = `read_ribbons`.`story_id`))) join `stories` on((`stories`.`id` = `comments`.`story_id`))) left join `comments` `parent_comments` on((`parent_comments`.`id` = `comments`.`parent_comment_id`))) where ((`read_ribbons`.`is_following` = 1) and (`comments`.`user_id` <> `read_ribbons`.`user_id`) and (`comments`.`is_deleted` = 0) and (`comments`.`is_moderated` = 0) and ((`parent_comments`.`user_id` = `read_ribbons`.`user_id`) or (isnull(`parent_comments`.`user_id`) and (`stories`.`user_id` = `read_ribbons`.`user_id`))) and ((`comments`.`upvotes` - `comments`.`downvotes`) >= 0) and (isnull(`parent_comments`.`id`) or ((`parent_comments`.`upvotes` - `parent_comments`.`downvotes`) >= 0)) and ((cast(`stories`.`upvotes` as signed) - cast(`stories`.`downvotes` as signed)) >= 0))
+      select `read_ribbons`.`user_id` AS `user_id`,`comments`.`id` AS `comment_id`,`read_ribbons`.`story_id` AS `story_id`,`comments`.`parent_comment_id` AS `parent_comment_id`,`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`comments`.`user_id` AS `comment_author_id`,`stories`.`user_id` AS `story_author_id`,`read_ribbons`.`updated_at` < `comments`.`created_at` AS `is_unread`,(select `votes`.`vote` from `votes` where `votes`.`user_id` = `read_ribbons`.`user_id` and `votes`.`comment_id` = `comments`.`id`) AS `current_vote_vote`,(select `votes`.`reason` from `votes` where `votes`.`user_id` = `read_ribbons`.`user_id` and `votes`.`comment_id` = `comments`.`id`) AS `current_vote_reason` from (((`read_ribbons` join `comments` on(`comments`.`story_id` = `read_ribbons`.`story_id`)) join `stories` on(`stories`.`id` = `comments`.`story_id`)) left join `comments` `parent_comments` on(`parent_comments`.`id` = `comments`.`parent_comment_id`)) where `read_ribbons`.`is_following` = 1 and `comments`.`user_id` <> `read_ribbons`.`user_id` and `comments`.`is_deleted` = 0 and `comments`.`is_moderated` = 0 and (`parent_comments`.`user_id` = `read_ribbons`.`user_id` or `parent_comments`.`user_id` is null and `stories`.`user_id` = `read_ribbons`.`user_id`) and `comments`.`upvotes` - `comments`.`downvotes` >= 0 and (`parent_comments`.`id` is null or `parent_comments`.`upvotes` - `parent_comments`.`downvotes` >= 0) and cast(`stories`.`upvotes` as signed) - cast(`stories`.`downvotes` as signed) >= 0
   SQL
 
 end

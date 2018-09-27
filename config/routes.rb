@@ -65,6 +65,7 @@ Rails.application.routes.draw do
   get "/search/:q" => "search#index"
 
   resources :stories do
+    get "index"
     post "upvote"
     post "downvote"
     post "unvote"

@@ -11,6 +11,49 @@ class StoriesController < ApplicationController
   before_action :find_story!, :only => [:suggest, :submit_suggestions]
   around_action :track_story_reads, only: [:show], if: -> { @user.present? }
 
+  def index
+    @title = "Stories"
+    @cur_url = "/stories"
+
+    query = params[:q].to_s
+
+    respond_to do |format|
+      if query.blank?
+        format.html { redirect_to "/" }
+        format.json {
+          render json: { message: "Missing parameter: q" }, status: 422
+        }
+      else
+        format.html { redirect_to search_path, params: request.query_parameters }
+        format.json {
+          @search = Search.new
+          @search.what = "stories"
+          @search.q = query
+
+          if params[:order].present?
+            @search.order = params[:order]
+          end
+          if params[:page].present?
+            @search.page = params[:page].to_i
+          end
+
+          if @search.valid?
+            @search.search_for_user!(@user)
+          end
+
+          render json: {
+            results: @search.results.map(&:as_json),
+            meta: {
+              page: @search.page,
+              page_count: @search.page_count,
+              total_results: [@search.total_results, 0].max
+            }
+          }
+        }
+      end
+    end
+  end
+
   def create
     @title = "Submit Story"
     @cur_url = "/stories/new"

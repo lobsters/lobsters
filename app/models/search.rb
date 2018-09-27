@@ -36,12 +36,15 @@ class Search
 
   def page_count
     total = self.total_results.to_i
+    per_page_count = self.per_page.to_i
 
-    if total == -1 || total > self.max_matches
+    if total > self.max_matches
       total = self.max_matches
+    elsif total < per_page_count
+      total = 1
     end
 
-    ((total - 1) / self.per_page.to_i) + 1
+    ((total - 1) / per_page_count) + 1
   end
 
   def what

@@ -171,4 +171,26 @@ describe Search do
     expect(search.results).to include(@comments[4])
     expect(search.results).not_to include(@comments[3])
   end
+
+  it "should set page_count to 1 if results are less than per_page count" do
+    search = Search.new
+    search.q = "term1"
+
+    search.search_for_user!(@user)
+
+    expect(search.results.length).to eq(4)
+    expect(search.per_page).to eq(20)
+    expect(search.page_count).to eq(1)
+  end
+
+  it "should set page_count to 1 if no results" do
+    search = Search.new
+    search.q = "nomatch"
+
+    search.search_for_user!(@user)
+
+    expect(search.results.length).to eq(0)
+    expect(search.per_page).to eq(20)
+    expect(search.page_count).to eq(1)
+  end
 end

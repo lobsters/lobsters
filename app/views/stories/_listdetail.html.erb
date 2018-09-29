@@ -1,3 +1,8 @@
+<% if false %>
+  The h-entry, u-report-of, u-url and h-card css classes are necessary
+  for the webmentions support. See <http://microformats.org/wiki/h-entry>
+  for more details.
+<% end %>
 <li id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
 class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 <%= story.vote && story.vote[:vote] == -1 ? "downvoted" : "" %>
@@ -7,7 +12,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 <%= story.is_hidden_by_cur_user ? "hidden" : "" %>
 <%= story.is_saved_by_cur_user ? "saved" : "" %>
 <%= story.is_expired? ? "expired" : "" %>">
-<div class="story_liner">
+<div class="story_liner h-entry">
   <div class="voters">
     <% if @user %>
       <a class="upvoter"></a>
@@ -17,9 +22,9 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
     <div class="score"><%= story.score %></div>
   </div>
   <div class="details">
-    <span class="link">
+    <span class="link h-cite u-repost-of">
       <% if story.can_be_seen_by_user?(@user) %>
-        <a href="<%= story.url_or_comments_path %>"><%=
+        <a class="u-url" href="<%= story.url_or_comments_path %>"><%=
           break_long_words(story.title) %></a>
       <% end %>
       <% if story.is_gone? %>
@@ -73,7 +78,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             <% else %>
               via
             <% end %>
-            <a href="/u/<%= ms.user.username %>" class="<%=
+            <a href="/u/<%= ms.user.username %>" class="h-card u-url <%=
               ms.html_class_for_user %>"><%= ms.user.username %></a>
 
             <%= time_ago_in_words_label(ms.created_at) %>
@@ -106,7 +111,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% else %>
           via
         <% end %>
-        <a class="<%= story.html_class_for_user %>"><%=
+        <a class="h-card u-url <%= story.html_class_for_user %>"><%=
           story.user.username %></a>
         just now
       <% else %>
@@ -115,7 +120,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% else %>
           via
         <% end %>
-        <a href="/u/<%= story.user.username %>" class="<%=
+        <a href="/u/<%= story.user.username %>" class="h-card u-url <%=
           story.html_class_for_user %>"><%= story.user.username %></a>
 
         <%= time_ago_in_words_label(story.created_at) %>

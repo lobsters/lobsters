@@ -218,7 +218,7 @@ class Sponge
 
     case res
     when Net::HTTPSuccess
-      return res.body
+      return res
     when Net::HTTPRedirection
       # follow
       newuri = URI.parse(res["location"])

@@ -313,7 +313,7 @@ class User < ApplicationRecord
     begin
       s = Sponge.new
       s.timeout = 3
-      res = s.fetch(gravatar_url)
+      res = s.fetch(gravatar_url).body
       if res.present?
         return res
       end

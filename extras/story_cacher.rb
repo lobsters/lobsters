@@ -22,7 +22,7 @@ class StoryCacher
       s = Sponge.new
       # we're not doing this interactively, so take a while
       s.timeout = 45
-      res = s.fetch(db_url)
+      res = s.fetch(db_url).body
       if res.present?
         j = JSON.parse(res)
 

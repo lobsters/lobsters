@@ -17,20 +17,20 @@ class StoryRepository
 
   def newest
     newest = Story.base.filter_tags(@params[:exclude_tags] || [])
-    newest.order("stories.id DESC")
+    newest.order(id: :desc)
   end
 
   def newest_by_user(user)
-    Story.base.where(user_id: user.id).order("stories.id DESC")
+    Story.base.where(user_id: user.id).order(id: :desc)
   end
 
   def newest_including_deleted_by_user(user)
-    Story.includes(:tags).unmerged.where(user_id: user.id).order("stories.id DESC")
+    Story.includes(:tags).unmerged.where(user_id: user.id).order(id: :desc)
   end
 
   def saved
     saved = Story.base.saved_by(@user).filter_tags(@params[:exclude_tags] || [])
-    saved.order("hotness")
+    saved.order(:hotness)
   end
 
   def tagged(tag)
@@ -43,7 +43,7 @@ class StoryRepository
         )
       )
     )
-    tagged.order("stories.created_at DESC")
+    tagged.order(created_at: :desc)
   end
 
   def top(length)

@@ -289,7 +289,8 @@ class CommentsController < ApplicationController
 
     thread_ids = @showing_user.recent_threads(
       20,
-      include_submitted_stories: !!(@user && @user.id == @showing_user.id)
+      include_submitted_stories: !!(@user && @user.id == @showing_user.id),
+      include_deleted: @user&.is_moderator?
     )
 
     comments = Comment.where(

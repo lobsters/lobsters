@@ -24,6 +24,10 @@ class StoryRepository
     Story.base.where(user_id: user.id).order("stories.id DESC")
   end
 
+  def newest_including_deleted_by_user(user)
+    Story.includes(:tags).unmerged.where(user_id: user.id).order("stories.id DESC")
+  end
+
   def saved
     saved = Story.base.saved_by(@user).filter_tags(@params[:exclude_tags] || [])
     saved.order("hotness")

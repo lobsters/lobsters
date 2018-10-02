@@ -41,7 +41,9 @@ class StoriesController < ApplicationController
       @story.moderation_reason = params[:reason]
     end
 
-    @story.save(:validate => false)
+    if @story.save(:validate => false)
+      Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted")
+    end
 
     redirect_to @story.comments_path
   end
@@ -224,7 +226,10 @@ class StoriesController < ApplicationController
 
     @story.is_expired = false
     @story.editor = @user
-    @story.save(:validate => false)
+
+    if @story.save(:validate => false)
+      Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted", -1)
+    end
 
     redirect_to @story.comments_path
   end

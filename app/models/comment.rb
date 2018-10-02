@@ -27,7 +27,10 @@ class Comment < ApplicationRecord
                :deliver_mention_notifications, :log_hat_use
   after_destroy :unassign_votes
 
-  scope :active, -> { where(:is_deleted => false, :is_moderated => false) }
+  scope :deleted, -> { where(is_deleted: true) }
+  scope :not_deleted, -> { where(is_deleted: false) }
+  scope :not_moderated, -> { where(is_moderated: false) }
+  scope :active, -> { not_deleted.not_moderated }
 
   DOWNVOTABLE_DAYS = 7
   DELETEABLE_DAYS = DOWNVOTABLE_DAYS * 2

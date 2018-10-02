@@ -307,6 +307,7 @@ ActiveRecord::Schema.define(version: 2018_10_05_192331) do
   add_foreign_key "moderations", "comments", name: "moderations_comment_id_fk"
   add_foreign_key "moderations", "stories", name: "moderations_story_id_fk"
   add_foreign_key "moderations", "tags", name: "moderations_tag_id_fk"
+  add_foreign_key "moderations", "users", column: "moderator_user_id", name: "moderations_moderator_user_id_fk"
   add_foreign_key "read_ribbons", "stories", name: "read_ribbons_story_id_fk"
   add_foreign_key "read_ribbons", "users", name: "read_ribbons_user_id_fk"
   add_foreign_key "saved_stories", "stories", name: "saved_stories_story_id_fk"

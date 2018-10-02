@@ -126,10 +126,14 @@ class HomeController < ApplicationController
   end
 
   def newest_by_user
-    by_user = User.where(:username => params[:user]).first!
+    by_user = User.find_by!(username: params[:user])
 
     @stories, @show_more = get_from_cache(by_user: by_user) {
-      paginate stories.newest_by_user(by_user)
+      if @user && @user.is_moderator?
+        paginate stories.newest_including_deleted_by_user(by_user)
+      else
+        paginate stories.newest_by_user(by_user)
+      end
     }
 
     @heading = @title = "Newest Stories by #{by_user.username}"

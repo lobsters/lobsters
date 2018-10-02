@@ -275,7 +275,7 @@ class CommentsController < ApplicationController
 
   def threads
     if params[:user]
-      @showing_user = User.where(:username => params[:user]).first!
+      @showing_user = User.find_by!(username: params[:user])
       @heading = @title = "Threads for #{@showing_user.username}"
       @cur_url = "/threads/#{@showing_user.username}"
     elsif !@user

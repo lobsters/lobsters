@@ -451,7 +451,7 @@ class User < ApplicationRecord
     end
   end
 
-  def recent_threads(amount, include_submitted_stories = false)
+  def recent_threads(amount, include_submitted_stories: false)
     thread_ids = self.comments.active.group(:thread_id)
       .order('MAX(created_at) DESC').limit(amount).pluck(:thread_id)
 

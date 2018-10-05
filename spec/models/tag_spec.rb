@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Tag do
   context 'validations' do
@@ -33,20 +33,22 @@ describe Tag do
   end
 
   context 'logs modification in moderation log' do
+    let(:edit_user) { create :user }
+
     it 'logs on create' do
-      expect { Tag.create(tag: 'tag_name', edit_user_id: 5) }
+      expect { Tag.create(tag: 'tag_name', edit_user_id: edit_user.id) }
         .to(change { Moderation.count })
       mod = Moderation.order(id: :desc).first
       expect(mod.action).to include 'tag_name'
-      expect(mod.moderator_user_id).to be 5
+      expect(mod.moderator_user_id).to be edit_user.id
     end
 
     it 'logs on update' do
-      expect { Tag.first.update(tag: 'new_tag_name', edit_user_id: 5) }
+      expect { Tag.first.update(tag: 'new_tag_name', edit_user_id: edit_user.id) }
         .to(change { Moderation.count })
       mod = Moderation.order(id: :desc).first
       expect(mod.action).to include 'new_tag_name'
-      expect(mod.moderator_user_id).to be 5
+      expect(mod.moderator_user_id).to be edit_user.id
     end
   end
 end

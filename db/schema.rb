@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.string "short_id", limit: 10, default: "", null: false
     t.bigint "story_id", null: false, unsigned: true
     t.bigint "user_id", null: false, unsigned: true
-    t.integer "parent_comment_id", unsigned: true
-    t.integer "thread_id", unsigned: true
+    t.bigint "parent_comment_id", unsigned: true
+    t.bigint "thread_id", unsigned: true
     t.text "comment", limit: 16777215, null: false
     t.integer "upvotes", default: 0, null: false
     t.integer "downvotes", default: 0, null: false
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.boolean "is_deleted", default: false
     t.boolean "is_moderated", default: false
     t.boolean "is_from_email", default: false
-    t.integer "hat_id"
+    t.bigint "hat_id", unsigned: true
     t.index ["comment"], name: "index_comments_on_comment", type: :fulltext
     t.index ["confidence"], name: "confidence_idx"
     t.index ["short_id"], name: "short_id", unique: true
@@ -50,7 +50,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
   create_table "hats", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.bigint "user_id", unsigned: true
+    t.bigint "user_id", null: false, unsigned: true
     t.bigint "granted_by_user_id", null: false, unsigned: true
     t.string "hat", null: false
     t.string "link", collation: "utf8mb4_general_ci"
@@ -251,9 +251,9 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
   end
 
   create_table "votes", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "user_id", null: false, unsigned: true
-    t.integer "story_id", null: false, unsigned: true
-    t.integer "comment_id", unsigned: true
+    t.bigint "user_id", null: false, unsigned: true
+    t.bigint "story_id", null: false, unsigned: true
+    t.bigint "comment_id", unsigned: true
     t.integer "vote", limit: 1, null: false
     t.string "reason", limit: 1
     t.datetime "updated_at", null: false

@@ -477,6 +477,10 @@ class User < ApplicationRecord
     Keystore.value_for("user:#{self.id}:stories_submitted").to_i
   end
 
+  def stories_deleted_count
+    Keystore.value_for("user:#{self.id}:stories_deleted").to_i
+  end
+
   def to_param
     username
   end

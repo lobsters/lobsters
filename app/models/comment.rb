@@ -27,6 +27,7 @@ class Comment < ApplicationRecord
                :deliver_mention_notifications, :log_hat_use
   after_destroy :unassign_votes
 
+  scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, -> { where(is_deleted: false) }
   scope :not_moderated, -> { where(is_moderated: false) }
   scope :active, -> { not_deleted.not_moderated }

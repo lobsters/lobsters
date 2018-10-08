@@ -330,6 +330,7 @@ class User < ApplicationRecord
 
   def update_comments_posted_count!
     Keystore.put("user:#{self.id}:comments_posted", self.comments.active.count)
+    Keystore.put("user:#{self.id}:comments_deleted", self.comments.deleted.count)
   end
 
   def delete!

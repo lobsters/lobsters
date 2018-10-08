@@ -305,6 +305,10 @@ class User < ApplicationRecord
     Keystore.value_for("user:#{self.id}:comments_posted").to_i
   end
 
+  def comments_deleted_count
+    Keystore.value_for("user:#{self.id}:comments_deleted").to_i
+  end
+
   def fetched_avatar(size = 100)
     gravatar_url = "https://www.gravatar.com/avatar/" <<
                    Digest::MD5.hexdigest(self.email.strip.downcase) <<

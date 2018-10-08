@@ -92,10 +92,7 @@
   <br>
 
   <label class="required">Comments Posted:</label>
-  <span class="d">
-    <a href="/threads/<%= @showing_user.username %>"><%=
-      @showing_user.comments_posted_count %></a>
-  </span>
+  <span class="d"><%= comments_posted_content(@showing_user) %></span>
   <br>
 
   <% if @showing_user.hats.any? %>

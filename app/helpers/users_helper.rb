@@ -17,4 +17,16 @@ module UsersHelper
       end
     end
   end
+
+  def comments_posted_content(showing_user)
+    comments_deleted = showing_user.comments_deleted_count
+
+    capture do
+      concat link_to(showing_user.comments_posted_count, "/threads/#{showing_user.username}")
+
+      if @user&.is_moderator? && comments_deleted > 0
+        concat " (+#{comments_deleted} deleted)"
+      end
+    end
+  end
 end

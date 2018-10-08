@@ -1,17 +1,15 @@
 module UsersHelper
-  def stories_submitted(showing_user)
+  def stories_submitted_content(showing_user)
     tag = showing_user.most_common_story_tag
 
     stories_submitted = showing_user.stories_submitted_count
     stories_deleted = showing_user.stories_deleted_count
-    stories_displayed = @user&.is_moderator? ? stories_submitted - stories_deleted : stories_submitted
+    stories_displayed = stories_submitted - stories_deleted
 
     capture do
       concat link_to(stories_displayed, "/newest/#{showing_user.username}")
 
-      if @user&.is_moderator?
-        concat " (+#{stories_deleted} deleted)"
-      end
+      concat(" (+#{stories_deleted} deleted)") if @user&.is_moderator? && stories_deleted > 0
 
       if tag
         concat ", most commonly tagged "

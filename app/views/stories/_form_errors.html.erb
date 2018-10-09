@@ -1,20 +1,17 @@
 <div class="form_errors_header">
-  <% if story.errors.count == 1 && story.already_posted_stories %>
+  <% if story.errors.count == 1 && story.already_posted_stories.first %>
+    <%= debug story.already_posted_stories %>
     <div class="flash-error">
     <h2>Error: This story was most recently submitted <%=
       time_ago_in_words_label(story.already_posted_stories.first.created_at) %></h2>
     <p>
     Please view the previous discussions for this story:
-    <ul>
-    <% story.already_posted_stories.each do | prev | %>
-      <li><a href="<%= prev.comments_path %>" target="_blank"><%= prev.title %>: <em><%= prev.created_at.strftime("published %m/%d/%Y at %I:%M%p") %></em></a></li>
-    <% end %>
-    </ul>
+    <%= render :partial => "stories/similar", :locals => { :similar => story.already_posted_stories } %>
     </p>
     </div>
   <% elsif story.errors.any? %>
     <%= error_messages_for story %>
-  <% elsif !story.errors.any? && story.already_posted_stories %>
+  <% elsif !story.errors.any? && story.already_posted_stories.first %>
     <div class="flash-notice">
     <h2>Note: This story was already submitted <%=
       time_ago_in_words_label(story.already_posted_stories.first.created_at) %>, but

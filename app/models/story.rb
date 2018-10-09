@@ -164,12 +164,14 @@ class Story < ApplicationRecord
     return unless self.url.present? && self.new_record?
 
     self.already_posted_stories = Story.find_similar_by_url(self.url)
-    return unless self.already_posted_stories
+    return unless self.already_posted_stories.first
 
-    if self.already_posted_stories.first.is_recent?
+    if self.already_posted_stories.first && self.already_posted_stories.first.is_recent?
       errors.add(:url, "has already been submitted within the past " <<
         "#{RECENT_DAYS} days")
     end
+
+    puts "HELP PLS"
   end
 
   def check_not_tracking_domain
@@ -212,7 +214,6 @@ class Story < ApplicationRecord
       .where(:url => urls)
       .where("is_expired = ? OR is_moderated = ?", false, true)
       .order("id DESC")
-      .limit(10)
   end
 
   def self.recalculate_all_hotnesses!

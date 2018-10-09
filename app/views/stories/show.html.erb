@@ -76,3 +76,12 @@
     <% end %>
   </ol>
 <% end %>
+
+<div>
+  <p>
+  <h4>Discussions from the same URL:</h4>
+    <% if @similar && @similar.length > 0 %>
+      <%= render :partial => "stories/similar", :locals => { :similar => @similar } %>
+    <% end %>
+  </p>
+</div>

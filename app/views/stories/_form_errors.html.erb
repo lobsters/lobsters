@@ -1,22 +1,26 @@
 <div class="form_errors_header">
-  <% if story.errors.count == 1 && story.already_posted_story %>
+  <% if story.errors.count == 1 && story.already_posted_stories %>
     <div class="flash-error">
-    <h2>Error: This story was already submitted <%=
-      time_ago_in_words_label(story.already_posted_story.created_at) %></h2>
+    <h2>Error: This story was most recently submitted <%=
+      time_ago_in_words_label(story.already_posted_stories.first.created_at) %></h2>
     <p>
-    Please view the <a href="<%= story.already_posted_story.comments_path %>"
-    target="_blank">previous discussion</a> for this story.
+    Please view the previous discussions for this story:
+    <ul>
+    <% story.already_posted_stories.each do | prev | %>
+      <li><a href="<%= prev.comments_path %>" target="_blank"><%= prev.title %>: <em><%= prev.created_at.strftime("published %m/%d/%Y at %I:%M%p") %></em></a></li>
+    <% end %>
+    </ul>
     </p>
     </div>
   <% elsif story.errors.any? %>
     <%= error_messages_for story %>
-  <% elsif !story.errors.any? && story.already_posted_story %>
+  <% elsif !story.errors.any? && story.already_posted_stories %>
     <div class="flash-notice">
     <h2>Note: This story was already submitted <%=
-      time_ago_in_words_label(story.already_posted_story.created_at) %>, but
+      time_ago_in_words_label(story.already_posted_stories.first.created_at) %>, but
       may be submitted again.</h2>
     <p>
-    Please view the <a href="<%= story.already_posted_story.comments_path %>"
+    Please view the <a href="<%= story.already_posted_stories.first.comments_path %>"
     target="_blank">previous discussion</a> for this story first.  If the content
     has changed or warrants new discussion, you may submit it again.
     </p>

@@ -124,7 +124,7 @@ class Story < ApplicationRecord
   # Dingbats, emoji, and other graphics https://www.unicode.org/charts/
   GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}-\u{27BF}\u{1F000}-\u{1F9FF}]/
 
-  attr_accessor :already_posted_story, :editing_from_suggestions, :editor,
+  attr_accessor :already_posted_stories, :editing_from_suggestions, :editor,
                 :fetching_ip, :is_hidden_by_cur_user, :is_saved_by_cur_user,
                 :moderation_reason, :previewing, :seen_previous, :vote
   attr_writer :fetched_content
@@ -163,10 +163,15 @@ class Story < ApplicationRecord
   def check_already_posted
     return unless self.url.present? && self.new_record?
 
-    self.already_posted_story = Story.find_similar_by_url(self.url)
-    return unless self.already_posted_story
+    self.already_posted_stories = Story.find_similar_by_url(self.url)
+    return unless self.already_posted_stories
+    
+    self.already_posted_stories.each do |s|
+      puts s.title
+    end
 
-    if self.already_posted_story.is_recent?
+
+    if self.already_posted_stories.first.is_recent?
       errors.add(:url, "has already been submitted within the past " <<
         "#{RECENT_DAYS} days")
     end
@@ -211,7 +216,8 @@ class Story < ApplicationRecord
     Story
       .where(:url => urls)
       .where("is_expired = ? OR is_moderated = ?", false, true)
-      .order("id DESC").first
+      .order("id DESC")
+      .limit(10)
   end
 
   def self.recalculate_all_hotnesses!

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_26_134230) do
+ActiveRecord::Schema.define(version: 2018_10_05_192331) do
 
   create_table "comments", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -31,6 +31,8 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.bigint "hat_id", unsigned: true
     t.index ["comment"], name: "index_comments_on_comment", type: :fulltext
     t.index ["confidence"], name: "confidence_idx"
+    t.index ["hat_id"], name: "comments_hat_id_fk"
+    t.index ["parent_comment_id"], name: "comments_parent_comment_id_fk"
     t.index ["short_id"], name: "short_id", unique: true
     t.index ["story_id", "short_id"], name: "story_id_short_id"
     t.index ["thread_id"], name: "thread_id"
@@ -45,6 +47,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.string "hat", collation: "utf8mb4_general_ci"
     t.string "link", collation: "utf8mb4_general_ci"
     t.text "comment", collation: "utf8mb4_general_ci"
+    t.index ["user_id"], name: "hat_requests_user_id_fk"
   end
 
   create_table "hats", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -56,11 +59,14 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.string "link", collation: "utf8mb4_general_ci"
     t.boolean "modlog_use", default: false
     t.datetime "doffed_at"
+    t.index ["granted_by_user_id"], name: "hats_granted_by_user_id_fk"
+    t.index ["user_id"], name: "hats_user_id_fk"
   end
 
   create_table "hidden_stories", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_id", null: false, unsigned: true
     t.bigint "story_id", null: false, unsigned: true
+    t.index ["story_id"], name: "hidden_stories_story_id_fk"
     t.index ["user_id", "story_id"], name: "index_hidden_stories_on_user_id_and_story_id", unique: true
   end
 
@@ -84,6 +90,8 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.text "memo", limit: 16777215
     t.datetime "used_at"
     t.bigint "new_user_id", unsigned: true
+    t.index ["new_user_id"], name: "invitations_new_user_id_fk"
+    t.index ["user_id"], name: "invitations_user_id_fk"
   end
 
   create_table "keystores", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -104,6 +112,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.boolean "deleted_by_recipient", default: false
     t.bigint "hat_id", unsigned: true
     t.index ["hat_id"], name: "index_messages_on_hat_id"
+    t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"
     t.index ["short_id"], name: "random_hash", unique: true
   end
 
@@ -114,6 +123,8 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.text "markeddown_note", null: false
     t.datetime "created_at", null: false
     t.index ["id", "user_id"], name: "index_mod_notes_on_id_and_user_id"
+    t.index ["moderator_user_id"], name: "mod_notes_moderator_user_id_fk"
+    t.index ["user_id"], name: "mod_notes_user_id_fk"
   end
 
   create_table "moderations", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -127,7 +138,11 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.text "reason", limit: 16777215
     t.boolean "is_from_suggestions", default: false
     t.bigint "tag_id", unsigned: true
+    t.index ["comment_id"], name: "moderations_comment_id_fk"
     t.index ["created_at"], name: "index_moderations_on_created_at"
+    t.index ["moderator_user_id"], name: "moderations_moderator_user_id_fk"
+    t.index ["story_id"], name: "moderations_story_id_fk"
+    t.index ["tag_id"], name: "moderations_tag_id_fk"
   end
 
   create_table "read_ribbons", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -145,6 +160,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false, unsigned: true
     t.bigint "story_id", null: false, unsigned: true
+    t.index ["story_id"], name: "saved_stories_story_id_fk"
     t.index ["user_id", "story_id"], name: "index_saved_stories_on_user_id_and_story_id", unique: true
   end
 
@@ -186,12 +202,17 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.bigint "story_id", null: false, unsigned: true
     t.bigint "tag_id", null: false, unsigned: true
     t.bigint "user_id", null: false, unsigned: true
+    t.index ["story_id"], name: "suggested_taggings_story_id_fk"
+    t.index ["tag_id"], name: "suggested_taggings_tag_id_fk"
+    t.index ["user_id"], name: "suggested_taggings_user_id_fk"
   end
 
   create_table "suggested_titles", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "story_id", null: false, unsigned: true
     t.bigint "user_id", null: false, unsigned: true
     t.string "title", limit: 150, default: "", null: false, collation: "utf8mb4_general_ci"
+    t.index ["story_id"], name: "suggested_titles_story_id_fk"
+    t.index ["user_id"], name: "suggested_titles_user_id_fk"
   end
 
   create_table "tag_filters", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -199,6 +220,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false, unsigned: true
     t.bigint "tag_id", null: false, unsigned: true
+    t.index ["tag_id"], name: "tag_filters_tag_id_fk"
     t.index ["user_id", "tag_id"], name: "user_tag_idx"
   end
 
@@ -206,6 +228,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.bigint "story_id", null: false, unsigned: true
     t.bigint "tag_id", null: false, unsigned: true
     t.index ["story_id", "tag_id"], name: "story_id_tag_id", unique: true
+    t.index ["tag_id"], name: "taggings_tag_id_fk"
   end
 
   create_table "tags", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -242,6 +265,9 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.bigint "disabled_invite_by_user_id", unsigned: true
     t.string "disabled_invite_reason", limit: 200
     t.text "settings"
+    t.index ["banned_by_user_id"], name: "users_banned_by_user_id_fk"
+    t.index ["disabled_invite_by_user_id"], name: "users_disabled_invite_by_user_id_fk"
+    t.index ["invited_by_user_id"], name: "users_invited_by_user_id_fk"
     t.index ["mailing_list_mode"], name: "mailing_list_enabled"
     t.index ["mailing_list_token"], name: "mailing_list_token", unique: true
     t.index ["password_reset_token"], name: "password_reset_token", unique: true
@@ -258,10 +284,50 @@ ActiveRecord::Schema.define(version: 2018_09_26_134230) do
     t.string "reason", limit: 1
     t.datetime "updated_at", null: false
     t.index ["comment_id"], name: "index_votes_on_comment_id"
+    t.index ["story_id"], name: "votes_story_id_fk"
     t.index ["user_id", "comment_id"], name: "user_id_comment_id"
     t.index ["user_id", "story_id"], name: "user_id_story_id"
   end
 
+  add_foreign_key "comments", "comments", column: "parent_comment_id", name: "comments_parent_comment_id_fk"
+  add_foreign_key "comments", "hats", name: "comments_hat_id_fk"
+  add_foreign_key "comments", "stories", name: "comments_story_id_fk"
+  add_foreign_key "comments", "users", name: "comments_user_id_fk"
+  add_foreign_key "hat_requests", "users", name: "hat_requests_user_id_fk"
+  add_foreign_key "hats", "users", column: "granted_by_user_id", name: "hats_granted_by_user_id_fk"
+  add_foreign_key "hats", "users", name: "hats_user_id_fk"
+  add_foreign_key "hidden_stories", "stories", name: "hidden_stories_story_id_fk"
+  add_foreign_key "hidden_stories", "users", name: "hidden_stories_user_id_fk"
+  add_foreign_key "invitations", "users", column: "new_user_id", name: "invitations_new_user_id_fk"
+  add_foreign_key "invitations", "users", name: "invitations_user_id_fk"
+  add_foreign_key "messages", "hats", name: "messages_hat_id_fk"
+  add_foreign_key "messages", "users", column: "recipient_user_id", name: "messages_recipient_user_id_fk"
+  add_foreign_key "mod_notes", "users", column: "moderator_user_id", name: "mod_notes_moderator_user_id_fk"
+  add_foreign_key "mod_notes", "users", name: "mod_notes_user_id_fk"
+  add_foreign_key "moderations", "comments", name: "moderations_comment_id_fk"
+  add_foreign_key "moderations", "stories", name: "moderations_story_id_fk"
+  add_foreign_key "moderations", "tags", name: "moderations_tag_id_fk"
+  add_foreign_key "read_ribbons", "stories", name: "read_ribbons_story_id_fk"
+  add_foreign_key "read_ribbons", "users", name: "read_ribbons_user_id_fk"
+  add_foreign_key "saved_stories", "stories", name: "saved_stories_story_id_fk"
+  add_foreign_key "saved_stories", "users", name: "saved_stories_user_id_fk"
+  add_foreign_key "stories", "stories", column: "merged_story_id", name: "stories_merged_story_id_fk"
+  add_foreign_key "stories", "users", name: "stories_user_id_fk"
+  add_foreign_key "suggested_taggings", "stories", name: "suggested_taggings_story_id_fk"
+  add_foreign_key "suggested_taggings", "tags", name: "suggested_taggings_tag_id_fk"
+  add_foreign_key "suggested_taggings", "users", name: "suggested_taggings_user_id_fk"
+  add_foreign_key "suggested_titles", "stories", name: "suggested_titles_story_id_fk"
+  add_foreign_key "suggested_titles", "users", name: "suggested_titles_user_id_fk"
+  add_foreign_key "tag_filters", "tags", name: "tag_filters_tag_id_fk"
+  add_foreign_key "tag_filters", "users", name: "tag_filters_user_id_fk"
+  add_foreign_key "taggings", "stories", name: "taggings_story_id_fk"
+  add_foreign_key "taggings", "tags", name: "taggings_tag_id_fk", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "users", "users", column: "banned_by_user_id", name: "users_banned_by_user_id_fk"
+  add_foreign_key "users", "users", column: "disabled_invite_by_user_id", name: "users_disabled_invite_by_user_id_fk"
+  add_foreign_key "users", "users", column: "invited_by_user_id", name: "users_invited_by_user_id_fk"
+  add_foreign_key "votes", "comments", name: "votes_comment_id_fk", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "votes", "stories", name: "votes_story_id_fk"
+  add_foreign_key "votes", "users", name: "votes_user_id_fk"
 
   create_view "replying_comments",  sql_definition: <<-SQL
       select `read_ribbons`.`user_id` AS `user_id`,`comments`.`id` AS `comment_id`,`read_ribbons`.`story_id` AS `story_id`,`comments`.`parent_comment_id` AS `parent_comment_id`,`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`comments`.`user_id` AS `comment_author_id`,`stories`.`user_id` AS `story_author_id`,(`read_ribbons`.`updated_at` < `comments`.`created_at`) AS `is_unread`,(select `votes`.`vote` from `votes` where ((`votes`.`user_id` = `read_ribbons`.`user_id`) and (`votes`.`comment_id` = `comments`.`id`))) AS `current_vote_vote`,(select `votes`.`reason` from `votes` where ((`votes`.`user_id` = `read_ribbons`.`user_id`) and (`votes`.`comment_id` = `comments`.`id`))) AS `current_vote_reason` from (((`read_ribbons` join `comments` on((`comments`.`story_id` = `read_ribbons`.`story_id`))) join `stories` on((`stories`.`id` = `comments`.`story_id`))) left join `comments` `parent_comments` on((`parent_comments`.`id` = `comments`.`parent_comment_id`))) where ((`read_ribbons`.`is_following` = 1) and (`comments`.`user_id` <> `read_ribbons`.`user_id`) and (`comments`.`is_deleted` = 0) and (`comments`.`is_moderated` = 0) and ((`parent_comments`.`user_id` = `read_ribbons`.`user_id`) or (isnull(`parent_comments`.`user_id`) and (`stories`.`user_id` = `read_ribbons`.`user_id`))) and ((`comments`.`upvotes` - `comments`.`downvotes`) >= 0) and (isnull(`parent_comments`.`id`) or ((`parent_comments`.`upvotes` - `parent_comments`.`downvotes`) >= 0)) and ((cast(`stories`.`upvotes` as signed) - cast(`stories`.`downvotes` as signed)) >= 0))

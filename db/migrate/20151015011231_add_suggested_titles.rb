@@ -1,4 +1,4 @@
-class AddSuggestedTitles < ActiveRecord::Migration
+class AddSuggestedTitles < ActiveRecord::Migration[4.2]
   def change
     create_table "suggested_titles" do |t|
       t.integer :story_id

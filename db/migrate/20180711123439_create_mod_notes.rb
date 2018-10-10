@@ -1,6 +1,6 @@
 class CreateModNotes < ActiveRecord::Migration[5.2]
   def change
-    create_table :mod_notes do |t|
+    create_table :mod_notes, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
       t.integer :moderator_user_id, null: false
       t.integer :user_id, null: false
       t.text :note, null: false

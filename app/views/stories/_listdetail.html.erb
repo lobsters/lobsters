@@ -186,7 +186,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
     </div>
   </div>
 </div>
-<a href="<%= story.comments_path %> "class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>" style="display: none;">
+<a href="<%= story.comments_path %>" class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>" style="display: none;">
   <span><%= story.comments_count %></span>
 </a>
 </li>

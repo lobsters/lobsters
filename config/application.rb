@@ -85,7 +85,7 @@ class << Rails.application
   end
 
   def domain
-    "example.com"
+    ENV["APP_DOMAIN"] || "example.com"
   end
 
   def name

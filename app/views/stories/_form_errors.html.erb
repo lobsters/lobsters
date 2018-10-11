@@ -13,7 +13,7 @@
   <% elsif !story.errors.any? && story.already_posted_stories %>
     <div class="flash-notice">
     <h2>Note: This story was already submitted <%=
-      time_ago_in_words_label(similar.first.created_at) %>, but
+      time_ago_in_words_label(story.already_posted_stories.first.created_at) %>, but
       may be submitted again.</h2>
     <p>
       Please view the previous discussions for this story: <br>

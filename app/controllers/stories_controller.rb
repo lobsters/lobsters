@@ -76,7 +76,7 @@ class StoriesController < ApplicationController
 
     if params[:url].present?
       @story.url = params[:url]
-      @similar = Story.find_similar_by_url(@story.url);
+      @similar = Story.find_similar_by_url(@story.url)
       sattrs = @story.fetched_attributes
 
       if sattrs[:url].present? && @story.url != sattrs[:url]

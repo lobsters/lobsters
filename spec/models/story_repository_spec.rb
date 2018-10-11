@@ -8,10 +8,10 @@ describe StoryRepository do
     context "when user is viewing their own stories" do
       before do
         create(:story, user: viewing_user, title: "A story not merged")
-        create(:story, user: viewing_user, title: "A merged story", merged_into_story: create(:story))
+        create(:story, user: viewing_user, title: "A merged story",
+               merged_into_story: create(:story))
         create(:story, user: viewing_user, title: "A merged story by the same user",
-          merged_into_story: create(:story, user: viewing_user)
-        )
+               merged_into_story: create(:story, user: viewing_user))
       end
 
       it "sees their stories" do

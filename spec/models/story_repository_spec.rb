@@ -9,7 +9,7 @@ describe StoryRepository do
       before do
         create(:story, user: viewing_user, title: "A story not merged")
         create(:story, user: viewing_user, title: "A merged story",
-               merged_into_story: create(:story))
+               merged_into_story: create(:story, title: "Story merged into"))
         create(:story, user: viewing_user, title: "A merged story by the same user",
                merged_into_story: create(:story, user: viewing_user))
       end
@@ -20,10 +20,11 @@ describe StoryRepository do
         expect(stories.map(&:title)).to include("A story not merged")
       end
 
-      it "sees stories merged into another story" do
+      it "sees stories that their story was merged into" do
         stories = repo.newest_by_user(viewing_user)
 
-        expect(stories.map(&:title)).to include("A merged story")
+        expect(stories.map(&:title)).to_not include("A merged story")
+        expect(stories.map(&:title)).to include("Story merged into")
       end
 
       it "does not see stories merged into a story they submitted" do

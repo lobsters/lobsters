@@ -29,6 +29,7 @@ class Story < ApplicationRecord
   scope :base, -> { includes(:tags).unmerged.not_deleted }
   scope :deleted, -> { where(is_expired: true) }
   scope :not_deleted, -> { where(is_expired: false) }
+  scope :merged, -> { where(merged_story_id: nil) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
   scope :positive_ranked, -> { where("#{Story.score_sql} >= 0") }
   scope :low_scoring, ->(max = 5) { where("#{Story.score_sql} < ?", max) }

@@ -21,7 +21,15 @@ class StoryRepository
   end
 
   def newest_by_user(user)
-    Story.base.where(user_id: user.id).order("stories.id DESC")
+    if @user == user
+      stories = Story.includes(:tags).not_deleted.where(user_id: user.id).left_joins(:merged_into_story)
+      stories_not_merged = stories.where(merged_into_story: nil)
+      visible_merged_stories = stories.where.not(merged_into_stories_stories: { user_id: user.id })
+
+      stories_not_merged.or(visible_merged_stories).order(id: :desc)
+    else
+      Story.base.where(user_id: user.id).order("stories.id DESC")
+    end
   end
 
   def saved

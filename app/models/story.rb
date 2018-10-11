@@ -99,7 +99,7 @@ class Story < ApplicationRecord
   MAX_EDIT_MINS = (60 * 6)
 
   # days a story is considered recent, for resubmitting
-  RECENT_DAYS = 0
+  RECENT_DAYS = 30
 
   # users needed to make similar suggestions go live
   SUGGESTION_QUORUM = 2

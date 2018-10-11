@@ -15,8 +15,10 @@
 <% end %>
 
 <ol class="stories list <%= @cur_url == "/hidden" ? "show_hidden" : "" %>">
-  <%= render :partial => "stories/listdetail", :collection => @stories,
-    :as => :story %>
+  <% @stories.each do |story| %>
+    <% story_to_display = story.merged_into_story.present? ? story.merged_into_story : story %>
+    <%= render "stories/listdetail", story: story_to_display, single_story: @for_user == @user&.username %>
+  <% end %>
 </ol>
 
 <div class="morelink">

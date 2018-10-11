@@ -71,10 +71,9 @@ class StoriesController < ApplicationController
     @title = "Submit Story"
     @cur_url = "/stories/new"
 
-    
     @story = Story.new
     @story.fetching_ip = request.remote_ip
-    
+
     if params[:url].present?
       @story.url = params[:url]
       sattrs = @story.fetched_attributes
@@ -85,7 +84,7 @@ class StoriesController < ApplicationController
         @story.url = sattrs[:url]
       end
 
-      if (@similar.first && @similar.first.is_recent?)
+      if @similar.first && @similar.first.is_recent?
         # user won't be able to submit this story as new, so just redirect
         # them to the previous story
         flash[:success] = "This URL has already been submitted recently."

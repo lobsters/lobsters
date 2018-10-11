@@ -71,12 +71,12 @@ class StoriesController < ApplicationController
     @title = "Submit Story"
     @cur_url = "/stories/new"
 
+    
     @story = Story.new
     @story.fetching_ip = request.remote_ip
-
+    
     if params[:url].present?
       @story.url = params[:url]
-
       sattrs = @story.fetched_attributes
 
       if sattrs[:url].present? && @story.url != sattrs[:url]
@@ -85,16 +85,14 @@ class StoriesController < ApplicationController
         @story.url = sattrs[:url]
       end
 
-      if (s = Story.find_similar_by_url(@story.url))
-        if s.first.is_recent?
-          # user won't be able to submit this story as new, so just redirect
-          # them to the previous story
-          flash[:success] = "This URL has already been submitted recently."
-          return redirect_to s.first.comments_path
-        else
-          # user will see a warning like with preview screen
-          @story.already_posted_stories = s
-        end
+      if (@similar.first && @similar.first.is_recent?)
+        # user won't be able to submit this story as new, so just redirect
+        # them to the previous story
+        flash[:success] = "This URL has already been submitted recently."
+        return redirect_to s.first.comments_path
+      else
+        # user will see a warning like with preview screen
+        @story.already_posted_stories = s
       end
 
       # ignore what the user brought unless we need it as a fallback

@@ -1,25 +1,25 @@
 <div class="form_errors_header">
-  <% if story.errors.count == 1 && story.already_posted_stories.first %>
-    <%= debug story.already_posted_stories %>
+  <% if story.errors.count == 1 && story.already_posted_stories %>
     <div class="flash-error">
     <h2>Error: This story was most recently submitted <%=
       time_ago_in_words_label(story.already_posted_stories.first.created_at) %></h2>
     <p>
-    Please view the previous discussions for this story:
-    <%= render :partial => "stories/similar", :locals => { :similar => story.already_posted_stories } %>
+    Please view the previous discussions for this story: <br>
+    <%= render :partial => "stories/similar", :locals => { :similar => similar } %>
     </p>
     </div>
   <% elsif story.errors.any? %>
     <%= error_messages_for story %>
-  <% elsif !story.errors.any? && story.already_posted_stories.first %>
+  <% elsif !story.errors.any? && story.already_posted_stories %>
     <div class="flash-notice">
     <h2>Note: This story was already submitted <%=
-      time_ago_in_words_label(story.already_posted_stories.first.created_at) %>, but
+      time_ago_in_words_label(similar.first.created_at) %>, but
       may be submitted again.</h2>
     <p>
-    Please view the <a href="<%= story.already_posted_stories.first.comments_path %>"
-    target="_blank">previous discussion</a> for this story first.  If the content
-    has changed or warrants new discussion, you may submit it again.
+      Please view the previous discussions for this story: <br>
+      <%= render :partial => "stories/similar", :locals => { :similar => similar } %>
+      <br>
+      If the content has changed or warrants new discussion, you may submit it again.
     </p>
     </div>
 

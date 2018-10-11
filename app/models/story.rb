@@ -99,7 +99,7 @@ class Story < ApplicationRecord
   MAX_EDIT_MINS = (60 * 6)
 
   # days a story is considered recent, for resubmitting
-  RECENT_DAYS = 30
+  RECENT_DAYS = 0
 
   # users needed to make similar suggestions go live
   SUGGESTION_QUORUM = 2
@@ -161,7 +161,7 @@ class Story < ApplicationRecord
   end
 
   def check_already_posted
-    return unless self.url.present? && self.new_record?
+    return unless self.url.present? && self.new_record?\
 
     self.already_posted_stories = Story.find_similar_by_url(self.url)
     return unless self.already_posted_stories.first
@@ -170,8 +170,6 @@ class Story < ApplicationRecord
       errors.add(:url, "has already been submitted within the past " <<
         "#{RECENT_DAYS} days")
     end
-
-    puts "HELP PLS"
   end
 
   def check_not_tracking_domain

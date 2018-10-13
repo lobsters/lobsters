@@ -1,5 +1,5 @@
 <div class="form_errors_header">
-  <% if story.errors.count == 1 && story.already_posted_stories %>
+  <% if story.errors.count == 1 && !story.already_posted_stories.empty? %>
     <div class="flash-error">
     <h2>Error: This story was most recently submitted <%=
       time_ago_in_words_label(story.already_posted_stories.first.created_at) %></h2>
@@ -8,7 +8,7 @@
     <%= render :partial => "stories/similar", :locals => { :similar => similar } %>
     </p>
     </div>
-  <% elsif story.errors.any? %>
+  <% elsif story.errors.any? && story.already_posted_stories.empty?%>
     <%= error_messages_for story %>
   <% elsif !story.errors.any? && story.already_posted_stories %>
     <div class="flash-notice">

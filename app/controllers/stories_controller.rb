@@ -139,6 +139,7 @@ class StoriesController < ApplicationController
     @title = @story.title
     @short_url = @story.short_id_url
     @similar = Story.find_similar_by_url(@story.url)
+      .where("short_id != ?", @story.short_id);
 
     respond_to do |format|
       format.html {

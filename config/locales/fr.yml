@@ -34,6 +34,9 @@ fr:
       storyidcannotbeblank: "Un ID d'info ne peut pas être vide."
       deletedcomment: "commentaire supprimé"
       threadremovedby: "Fil supprimé par le modérateur %{modoname} : %{modreason}"
+      turnedintodragon: "transformé en dragon"
+      slayeddragon: "le dragon a été terrassé"
+      metooerror: "Merci de voter pour le commentaire à la place."
     moderation:
       storyeditedby: "Votre info a été éditée par "
       usersuggestions: "suggestions d'utilisateur"
@@ -78,6 +81,7 @@ fr:
       invitationqueuelink: "File d'invitation"
       chatlink: "Chat"
       hatrequestlink: "Porter le chapeau"
+      hatslink: "Chapeaux"
       privacylink: "Confidentialité"
       aboutlink: "À propos"
       blog: "Blog"
@@ -104,6 +108,8 @@ fr:
       delete: "supprimer"
       reply: "répondre"
       about: "sur :"
+      dragon: "dragon"
+      undragon: "non-dragon"
   global:
     markdownhelp:
       emphasizedtext: "italique"
@@ -120,6 +126,41 @@ fr:
       pretextdesc: "précéder le texte avec au moins <tt>&nbsp;&nbsp;&nbsp;&nbsp;4 espaces</tt>"
       inlineimage: "(image en ligne)"
       inlineimagedesc: "![texte de substitution](http://example.com/image.jpg)</tt> (autorisé seulement dans les articles)"
+  hats:
+    build_request:
+      title: "Demander un chapeau"
+      description: "<p>Un chapeau est un moyen formel, vérifié de poster un commentaire au nom d'un projet, d'une organisation ou d'une entreprise. Chaque utilisateur peut avoir plusieurs chapeaux, l'un d'eux pouvant être choisi d'être porté au moment de poster un commentaire ou d'envoyer un message privé.</p><p>Les chapeaux sont destinés aux développeurs principaux d'un projet et les employés d'entreprise qui sont autorisés à faire des commentaires au nom de leurs organisations, et sont habituellement réservés pour les projets notables et les organisations. Les chapeaux ne sont pas destinés à lister toutes les contributions d'une personne à des projets logiciels.</p><p>Les chapeaux ne vont pas être autorisés pour les contributeurs occasionnels d'un projet, développeurs d'un projet qui n'est pas largement connu, pas non plus pour les anciens employés d'une entreprise ou autres situations où il n'est pas possible de vérifier que quelqu'un est autorisé à représenter une organisation. En général à moins d'avoir un e-mail avec le nom de domaine de l'entreprise ou du projet ou les droits d'accès aux sources d'un projet, un chapeau ne sera pas autorisé.</p><p>Pour demander un chapeau pour votre compte, merci de fournir une courte description du chapeau (exemple \"développeur OpenBSD\"), un lien public qui sera affiché quand on passe la souris au-dessus du chapeau que les utilisateurs peuvent voir, comme votre adresse e-mail du projet ou de l'entreprise ou un lien vers le site web de l'entreprise puis une description privée qui sera seulement vue par les modérateurs durant le processus d'approbation.</p><p>Une fois qu'un chapeau a été demandé, un modérateur va vérifier votre demande en envoyant un e-mail à l'adresse soumise comme lien et/ou en effectuant d'autres vérifications manuelles de votre association au projet.</p>"
+      hat: "Chapeau:"
+      hatplaceholder: "Membre du projet XYZ"
+      link: "Lien :"
+      linkplaceholder: "membre@projet.org, ou l'URL de la page de l'employeur"
+      comment: "Commentaire :"
+      commentplaceholder: "Sera seulement montré aux modérateurs devant le processus d'approbation"
+      requesthatbutton: "Demander un chapeau"
+    create_request:
+      submittedhatrequest: "Demande de chapeau transmise avec succès."
+    index:
+      title: "Chapeaux"
+      description: "Un chapeau est un moyen formel, vérifié de poster un commentaire au nom d'un projet, d'une organisation ou d'une entreprise. Chaque utilisateur peut avoir plusieurs chapeaux, l'un d'eux pouvant être choisi d'être porté au moment de poster un commentaire ou d'envoyer un message privé."
+      request: "Demander un chapeau"
+      user: "Utilisateur"
+      hat: "Chapeau"
+      link: "Lien"
+    reject_request:
+      rejectedhatrequest: "Demande de chapeau rejetée avec succès."
+    requests_index:
+      title: "Chapeaux demandés"
+      nohatrequests: "Aucune demande de chapeau."
+      user: "Utilisateur :"
+      hat: "Chapeau :"
+      link: "Lien :"
+      comment: "Commentaire :"
+      approve: "Approuver la demande de chapeau"
+      reason: "Raison :"
+      reject: "Rejeter la demande de chapeau"
+      hator: "ou"
+    approve_request:
+      approvedhatrequest: "La demande de chapeau a été approuvée."
   home:
     index:
       homerecentsdesc: "<em>Les <a href=\"/newest\">plus récentes</a> infos avec un panaché aléatoire des infos récentes soumises qui n'ont pas encore atteint la page principale.</em>"
@@ -180,6 +221,16 @@ fr:
       password: "Mot de passe :"
       again: "(encore):"
       setpassbutton: "Changer le mot de passe"
+      passwordreset: "Votre mot de passe a été changé"
+      couldnotresetpassword: "Le mot de passe n'a pas pu être changé."
+      invalidresettoken: "Jeton de changement invalide. Il a pu déjà être utilisé ou mal copié."
+    twofa:
+      login2fa: "Identification par authentification à deux facteurs"
+      logintotpcode: "Entrez le code TOTP affiché par votre application :"
+      loginbutton: "S'identifier"
+      totpcode: "Code TOTP :"
+    twofa_verify:
+      totpcodenotmatch: "Code TOTP incorrect. Merci de ré-essayer."
   filters:
     index:
       filteredtags: "Marques filtrées"
@@ -255,10 +306,13 @@ fr:
       deleteaccountflash: "Votre compte a été supprimé."
       verifypasswordflash: "Votre mot de passe n'a pas pu être vérifié."
     index:
+      logoutlink: "Se déconnecter"
+      confirmlogoutlink: "Êtes-vous sûr de vouloir vous déconnecter?"
       viewprofile: "Voir le profil"
       accountsettings: "Paramètres du compte"
       username: "Utilisateur :"
       password: "Nouveau mot de passe :"
+      currentpassword: "Mot de passe actuel :"
       confirmpassword: "Confirmer le mot de passe :"
       emailaddress: "Adresse e-mail :"
       gravatarized: "<a href=\"http://www.gravatar.com/\" target=\"_blank\">Gravatar</a>isé"
@@ -273,7 +327,7 @@ fr:
       commentreplynotificationsettings: "Paramètres de notification de réponse à un commentaire"
       receiveemail: "Recevoir un e-mail :"
       receivepushover: "Recevoir une alerte Pushover :"
-      requirepushover: "Requière un abonnement Pushover ci-dessus"
+      requirepushover: "Requière un abonnement Pushover ci-dessous"
       commentmentionnotificationsettings: "Paramètres de notification de mention d'un commentaire"
       privatemessagenotificationsettings: "Paramètres de notification de message privé" 
       submittedstorycommentsettings: "Paramètres de commentaires relatifs à vos infos"
@@ -288,6 +342,7 @@ fr:
       miscsettings: "Paramètres variés"
       storypreview: "Montrer les aperçus des infos: "
       useravatars: "Montrer les avatars des utilisateurs :"
+      hidedragons: "Cacher les dragons :"
       saveallsettings: "Sauver tous les paramètres"
       inviteuser: "Inviter un nouvel utilisateur"
       cannotsendinvitations: "Vous ne pouvez pas envoyer d'invitations."
@@ -295,6 +350,12 @@ fr:
       deleteaccounttext: "Pour supprimer définitivement votre compte, vérifiez votre mot de passe actuel ci-dessous. Votre compte sera passé à l'état supprimé, vos commentaires seront marqués comme supprimés et ne seront plus lisibles par les autres utilisateurs, vos messages privés seront également supprimés. Vos infos proposées ne seront pas supprimées. Votre nom d'utilisateur restera réservé et ne sera pas disponible pour un autre compte."
       verifypassword: "Vérification du mot de passe :"
       deleteaccountconfirmation: "Oui, supprimez mon compte"
+      securitysettings: "Paramètres de sécurité"
+      twofactorauth: "Authentification à deux facteurs :"
+      disable2fa: "Désactiver"
+      enroll2fa: "Activer"
+      disabled2fa: "Désactivée"
+      enabled2fa: "Activée"
     pushover:
       pushovernotconfigured: "Ce site n'est pas configuré pour le Pushover"
     pushover_callback:
@@ -302,8 +363,36 @@ fr:
       pushovernorandomtokenurl: "Pas de jeton alétoire présent dans l'url"
       accountsetuppushover: "Votre compte est maintenant configuré pour les notifications Pushover."
       accountnolongersetuppushover: "Votre compte n'est plus configuré pour les notifications Pushover."
+    twofa:
+      title: "Authentification à deux facteurs"
+      backtosettings: "Retour aux paramètres"
+      disable2fa: "Désactiver l'authentification à deux facteurs"
+      continue: "Continuer"
+      currentpassword: "Mot de passe actuel :"
+      turnoff: "Pour désactiver l'authentification à deux facteurs, entrez votre mot de passe actuel :"
+      turnon: "Pour activer l'authentification à deux facteurs pour votre compte, entrez votre mot de passe actuel :"
+    twofa_auth:
+      2fahasbeendisabled: "L'authentification à deux facteurs a été désactivée sur votre compte"
+      2fapassnotcorrect: "Mot de passe incorrect"
+    twofa_enroll:
+      title: "Authentification à deux facteurs"
+      backtosettings: "Retour aux paramètres"
+      enrollmenttimeout: "Le délai d'attente est dépassé"
+      scanqrcode: "Scannez le QR code ci-dessous ou cliquez dessus pour l'ouvrir dans l'application <a href=\"https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\" target=\"_blank\">TOTP</a> de votre choix :"
+      registring: "Une fois le processus d'enregistrement de vos applications TOTP achevé, passez à l'écran suivant pour vérifier et activer l'authentification à deux facteurs pour votre compte."
+      verifyenable: "Vérifier et Activer"
+    twofa_update:
+      enrollmenttimeout: "Le délai d'attente est dépassé"
+      2fahasbeenenabled: "L'authentification à deux facteurs a été activée sur votre compte"
+      totpinvalid: "Votre code TOTP est invalide, merci de vérifier le code actuellement affiché par votre application TOTP"
+    twofa_verify:
+      title: "Authentification à deux facteurs"
+      enrollmenttimeout: "Le délai d'attente est dépassé"
+      enablecode: "Afin d'activer l'authentification à deux facteurs pour votre compte en utilisant votre nouveau secret TOTP, entrez le code à 6 chiffres de votre application :"
+      verifyenable: "Vérifier et Activer"
     update:
       updatesettingsflash: "Paramètres mis à jour avec succès."
+      passwordnotcorrect: "Le mot de passe courant n'a pas été entré correctement."
   stories:
     edit:
       edit: "Éditer l'info"
@@ -365,6 +454,8 @@ fr:
       preview: "Aperçu"
       submit: "Soumettre une info"
       submitbutton: "Soumettre"
+    show:
+      toggledragons: "&mdash; voici les dragons &mdash;"
   users:
     list:
       administrator: "administrateur"
@@ -382,7 +473,7 @@ fr:
       storysubmissions: "avec propositions d'infos"
       disabled: "désactivé"
       joined: "Inscrit :"
-      byinvitationfrom: "par invitation de"
+      byinvitationfrom: "par <a href=\"/u/%{user}\">invitation</a> de"
       banneduser: "Banni :"
       bannedby: "par"
       hats: "Chapeaux :"
@@ -449,6 +540,10 @@ fr:
       flashsuccessdeleteinvit: "Demande d'invitation de %{name} supprimée avec succès"
     login_controller:
       flashlogininvalid: "Adresse e-mail et/ou mot de passe invalide."
+      flashlogininvalid: "Adresse e-mail et/ou mot de passe invalide."
+      totpinvalid: "Votre code TOTP est invalide."
+      deletedaccount: "Votre compte a été supprimé."
+      bannedaccount: "Votre compte a été banni."
     messages_controller:
       messagestitle: "Messages"
       messagessenttitle: "Messages envoyés"
@@ -459,6 +554,7 @@ fr:
       flashdeletedmessage: "Message effacé." 
     search_controller:
       searchtitle: "Rechercher"
+      flasherrorsearchcontroller: "Désolé mais le moteur de recherche est actuellement cassé"
     stories_controller:
       submitstorytitle: "Soumettre une info"
       editstorytitle: "Éditer une info"

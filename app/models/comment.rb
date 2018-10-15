@@ -10,7 +10,7 @@ class Comment < ActiveRecord::Base
     :class_name => "Moderation"
   belongs_to :hat
 
-  attr_accessor :current_vote, :previewing, :indent_level, :highlighted
+  attr_accessor :current_vote, :previewing, :indent_level
 
   before_validation :on => :create do
     self.assign_short_id_and_upvote
@@ -26,8 +26,13 @@ class Comment < ActiveRecord::Base
 
   DOWNVOTABLE_DAYS = 7
 
+  # the lowest a score can go, which makes it collapsed by default
+  DOWNVOTABLE_MIN_SCORE = -5
+
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
+
+  SCORE_RANGE_TO_HIDE = (-2 .. 4)
 
   validate do
     self.comment.to_s.strip == "" &&
@@ -44,10 +49,14 @@ class Comment < ActiveRecord::Base
 
     self.comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
       errors.add(:base, "Wow!  A blue car!")
+
+    self.comment.to_s.strip.match(/\Ame too.?\z/i) &&
+      errors.add(:base, I18n.t( 'models.comment.metooerror'))
   end
 
   def self.arrange_for_user(user)
-    parents = self.order("confidence DESC").group_by(&:parent_comment_id)
+    parents = self.order("is_dragon ASC, (upvotes - downvotes) < 0 ASC, " <<
+      "confidence DESC").group_by(&:parent_comment_id)
 
     # top-down list of comments, regardless of indent level
     ordered = []
@@ -164,6 +173,36 @@ class Comment < ActiveRecord::Base
     end
   end
 
+  def become_dragon_for_user(user)
+    Comment.record_timestamps = false
+
+    self.is_dragon = true
+
+    m = Moderation.new
+    m.comment_id = self.id
+    m.moderator_user_id = user.id
+    m.action = I18n.t('models.comment.turnedintodragon')
+    m.save
+
+    self.save(:validate => false)
+    Comment.record_timestamps = true
+  end
+
+  def remove_dragon_for_user(user)
+    Comment.record_timestamps = false
+
+    self.is_dragon = false
+
+    m = Moderation.new
+    m.comment_id = self.id
+    m.moderator_user_id = user.id
+    m.action = I18n.t('models.comment.slayeddragon')
+    m.save
+
+    self.save(:validate => false)
+    Comment.record_timestamps = true
+  end
+
   # http://evanmiller.org/how-not-to-sort-by-average-rating.html
   # https://github.com/reddit/reddit/blob/master/r2/r2/lib/db/_sorts.pyx
   def calculated_confidence
@@ -223,7 +262,7 @@ class Comment < ActiveRecord::Base
 
         if u.email_mentions?
           begin
-            EmailReply.mention(self, u).deliver
+            EmailReply.mention(self, u).deliver_now
           rescue => e
             Rails.logger.error "error e-mailing #{u.email}: #{e}"
           end
@@ -247,7 +286,7 @@ class Comment < ActiveRecord::Base
     u.id != self.user.id
       if u.email_replies?
         begin
-          EmailReply.reply(self, u).deliver
+          EmailReply.reply(self, u).deliver_now
         rescue => e
           Rails.logger.error "error e-mailing #{u.email}: #{e}"
         end
@@ -321,7 +360,7 @@ class Comment < ActiveRecord::Base
   end
 
   def is_downvotable?
-    if self.created_at
+    if self.created_at && self.score > DOWNVOTABLE_MIN_SCORE
       Time.now - self.created_at <= DOWNVOTABLE_DAYS.days
     else
       false
@@ -392,12 +431,22 @@ class Comment < ActiveRecord::Base
     self.upvotes - self.downvotes
   end
 
-  def short_id_path
-    self.story.short_id_path + "/c/#{self.short_id}"
+  def score_for_user(u)
+    if self.showing_downvotes_for_user?(u)
+      score
+    else
+      "-"
+    end
   end
 
   def short_id_url
     Rails.application.root_url + "c/#{self.short_id}"
+  end
+
+  def showing_downvotes_for_user?(u)
+    return (u && u.is_moderator?) ||
+      (self.created_at && self.created_at < 36.hours.ago) ||
+      !SCORE_RANGE_TO_HIDE.include?(self.score)
   end
 
   def to_param
@@ -409,13 +458,14 @@ class Comment < ActiveRecord::Base
   end
 
   def url
-    self.story.comments_url + "/comments/#{self.short_id}#c_#{self.short_id}"
+    self.story.comments_url + "#c_#{self.short_id}"
   end
 
   def vote_summary_for_user(u)
     r_counts = {}
     r_users = {}
-    self.votes.includes(:user).each do |v|
+    # don't includes(:user) here and assume the caller did this already
+    self.votes.each do |v|
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += v.vote
 

@@ -7,9 +7,9 @@ require File.expand_path('../../config/boot',  __FILE__)
 require APP_PATH
 Rails.application.require_environment!
 
-MIN_STORY_SCORE = 2
+MIN_STORY_SCORE = 3
 
-Story.where("is_expired = ? AND #{Story.score_sql} > ? AND " <<
+Story.where("is_expired = ? AND #{Story.score_sql} >= ? AND " <<
 "twitter_id IS NULL AND created_at >= ?", false, MIN_STORY_SCORE,
 Time.now - 1.days).order(:id).each_with_index do |s,x|
   if s.tags.map(&:tag).include?("meta")
@@ -25,12 +25,18 @@ Time.now - 1.days).order(:id).each_with_index do |s,x|
     tags += ' #' + tagging.tag.tag
   end
 
-  tco_status = "\n" +
+  via = ""
+  if s.user.twitter_username.present?
+    via = "\n" + (s.user_is_author? ? "by" : "via") +
+      " @#{s.user.twitter_username}"
+  end
+
+  tco_status = via + "\n" +
     (s.url.present?? ("X" * Twitter::TCO_LEN) + "\n" : "") +
     ("X" * Twitter::TCO_LEN) +
     tags
 
-  status = "\n" +
+  status = via + "\n" +
     (s.url.present?? s.url + "\n" : "") +
     s.short_id_url +
     tags

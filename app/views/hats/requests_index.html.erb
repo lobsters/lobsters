@@ -1,10 +1,10 @@
 <div class="box wide">
   <div class="legend">
-    Requested Hats
+    <%= t('.title') %>
   </div>
 
   <% if @hat_requests.count == 0 %>
-    No hat requests.
+    <%= t('.nohatrequests') %>
   <% else %>
     <% @hat_requests.each_with_index do |hr,x| %>
       <% if x > 0 %>
@@ -15,42 +15,42 @@
       :method => :post do |f| %>
         <p>
         <div class="boxline">
-          <%= f.label :user_id, "User:", :class => "required" %>
+          <%= f.label :user_id, t('.user'), :class => "required" %>
           <a href="/u/<%= hr.user.username %>"><%= hr.user.username %></a>
         </div>
 
         <div class="boxline">
-          <%= f.label :hat, "Hat:", :class => "required" %>
-          <%= f.text_field "hat", :size => 25 %>
+          <%= f.label :hat, t('.hat'), :class => "required" %>
+          <%= f.text_field "hat", :size => 75 %>
         </div>
 
         <div class="boxline">
-          <%= f.label :link, "Link:", :class => "required" %>
-          <%= f.text_field "link", :size => 25 %>
+          <%= f.label :link, t('.link'), :class => "required" %>
+          <%= f.text_field "link", :size => 75 %>
         </div>
 
         <div class="boxline">
-          <%= f.label :link, "Comment:", :class => "required" %>
+          <%= f.label :link, t('.comment'), :class => "required" %>
           <div class="d">
             <%= raw(h(hr.comment.to_s).gsub(/\n/, "<br>")) %>
           </div>
         </div>
 
         <p style="clear: both;">
-        <%= submit_tag "Approve Hat Request" %>
+        <%= submit_tag t('.approve') %>
         </p>
       <% end %>
       <p>
-      or
+      <%= t('.hator') %>
       </p>
       <%= form_for hr, :url => reject_hat_request_url(:id => hr),
       :method => :post do |f| %>
         <div class="boxline">
-          <%= f.label :link, "Reason:", :class => "required" %>
+          <%= f.label :link, t('.reason'), :class => "required" %>
           <%= f.text_area :rejection_comment, :rows => 4 %>
         </div>
         <p>
-        <%= submit_tag "Reject Hat Request" %>
+        <%= submit_tag t('.reject') %>
         </p>
       <% end %>
     <% end %>

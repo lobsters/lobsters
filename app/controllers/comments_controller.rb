@@ -128,6 +128,26 @@ class CommentsController < ApplicationController
       :content_type => "text/html", :locals => { :comment => comment }
   end
 
+  def dragon
+    if !((comment = find_comment) && @user.is_moderator?)
+      return render :text => "can't find comment", :status => 400
+    end
+
+    comment.become_dragon_for_user(@user)
+
+    render :text => "ok"
+  end
+
+  def undragon
+    if !((comment = find_comment) && @user.is_moderator?)
+      return render :text => "can't find comment", :status => 400
+    end
+
+    comment.remove_dragon_for_user(@user)
+
+    render :text => "ok"
+  end
+
   def update
     if !((comment = find_comment) && comment.is_editable_by_user?(@user))
       return render :text => "can't find comment", :status => 400
@@ -211,7 +231,7 @@ class CommentsController < ApplicationController
     @comments = Comment.where(
       :is_deleted => false, :is_moderated => false
     ).order(
-      "created_at DESC"
+      "id DESC"
     ).offset(
       (@page - 1) * COMMENTS_PER_PAGE
     ).limit(
@@ -266,7 +286,7 @@ class CommentsController < ApplicationController
     comments = Comment.where(
       :thread_id => thread_ids
     ).includes(
-      :user, :story
+      :user, :story, :hat, :votes => :user
     ).arrange_for_user(
       @showing_user
     )
@@ -274,7 +294,7 @@ class CommentsController < ApplicationController
     comments_by_thread_id = comments.group_by(&:thread_id)
     @threads = comments_by_thread_id.values_at(*thread_ids).compact
 
-    if @user && (@showing_user.id == @user.id)
+    if @user
       @votes = Vote.comment_votes_by_user_for_story_hash(@user.id,
         comments.map(&:story_id).uniq)
 

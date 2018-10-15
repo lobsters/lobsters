@@ -17,9 +17,7 @@
 
   <% if @showing_user.is_active? %>
     <div id="gravatar">
-      <img src="<%= @showing_user.avatar_url(100) %>"
-        srcset="<%= @showing_user.avatar_url(100) %> 1x,
-        <%= @showing_user.avatar_url(200) %> 2x">
+      <%= avatar_img(@showing_user, 100) %>
     </div>
   <% end %>
 
@@ -49,7 +47,7 @@
   <span class="d">
     <%= distance_of_time_in_words(@showing_user.created_at, Time.now) %>
     <% if @showing_user.invited_by_user %>
-      <%= t('.byinvitationfrom') %>
+      <%= raw(t('.byinvitationfrom', :user => @showing_user.username)) %>
       <%= link_to @showing_user.invited_by_user.try(:username),
         @showing_user.invited_by_user %>
     <% end %>
@@ -65,16 +63,6 @@
           @showing_user.banned_by_user %>:
           <em><%= @showing_user.banned_reason %></em>
       <% end %>
-    </span>
-    <br>
-  <% end %>
-
-  <% if @showing_user.hats.any? %>
-    <label class="required"><%= t('.hats') %></label>
-    <span class="d">
-    <% @showing_user.hats.each do |hat| %>
-      <%= hat.to_html_label %>
-    <% end %>
     </span>
     <br>
   <% end %>
@@ -116,6 +104,38 @@
       @showing_user.comments_posted_count %></a>
   </span>
   <br>
+
+  <% if @showing_user.hats.any? %>
+    <label class="required"><%= t('.hats') %></label>
+    <div class="d">
+    <% @showing_user.hats.each do |hat| %>
+      <%= hat.to_html_label %>
+    <% end %>
+    </div>
+    <div style="clear: both;"></div>
+  <% end %>
+
+
+  <% if @showing_user.github_username.present? %>
+    <label class="required">GitHub:</label>
+
+    <span class="d">
+      <a href="https://github.com/<%= h(@showing_user.github_username) %>"
+        rel="nofollow">https://github.com/<%= h(@showing_user.github_username)
+        %></a>
+    </span>
+    <br>
+  <% end %>
+
+  <% if @showing_user.twitter_username.present? %>
+    <label class="required">Twitter:</label>
+
+    <span class="d">
+      <a href="https://twitter.com/<%= h(@showing_user.twitter_username) %>"
+        rel="nofollow">@<%= h(@showing_user.twitter_username) %></a>
+    </span>
+    <br>
+  <% end %>
 
   <% if @showing_user.is_active? %>
     <label class="required"><%= t('.about') %></label>

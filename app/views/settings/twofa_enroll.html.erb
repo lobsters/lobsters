@@ -1,0 +1,21 @@
+<div class="box wide">
+  <div class="legend right">
+    <a href="/settings"><%= t('.backtosettings') %></a>
+  </div>
+  <div class="legend">
+    <%= @title %>
+  </div>
+
+  <p>
+  <%= raw(t('.scanqrcode')) %>
+  </p>
+
+  <%= raw @qr_svg %>
+
+  <p>
+  <%= t('.registring') %>
+  </p>
+
+  <p>
+  <%= button_to t('.verifyenable'), twofa_verify_url, :method => :get %>
+</div>

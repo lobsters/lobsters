@@ -26,7 +26,15 @@ module Lobsters
     # Raise an exception when using mass assignment with unpermitted attributes
     config.action_controller.action_on_unpermitted_parameters = :raise
 
+    config.active_record.raise_in_transactional_callbacks = true
+
     config.cache_store = :file_store, "#{config.root}/tmp/cache/"
+
+    config.exceptions_app = self.routes
+
+    config.after_initialize do
+      require "#{Rails.root}/lib/monkey.rb"
+    end
   end
 end
 
@@ -68,5 +76,3 @@ class << Rails.application
     true
   end
 end
-
-require "#{Rails.root}/lib/monkey"

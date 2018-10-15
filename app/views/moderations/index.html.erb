@@ -5,14 +5,14 @@
 
   <table class="data" width="100%" cellspacing=0>
   <tr>
-    <th style="min-width: 130px;"><%= t('.datecolumn') %></th>
+    <th style="min-width: 150px;"><%= t('.datecolumn') %></th>
     <th><%= t('.moderatorcolumn') %></th>
     <th><%= t('.reasoncolumn') %></th>
   </tr>
   <% bit = 0 %>
   <% @moderations.each do |mod| %>
     <tr class="row<%= bit %> nobottom">
-      <td><%= l mod.created_at %></td>
+      <td><%= mod.created_at.strftime("%Y-%m-%d %H:%M %z") %></td>
       <td><% if mod.moderator %>
         <a href="/messages?to=<%= mod.moderator.try(:username) %>"><%=
           mod.moderator.try(:username) %></a>

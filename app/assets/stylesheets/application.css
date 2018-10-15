@@ -21,6 +21,7 @@ body, textarea, input, button {
 
 body {
 	background-color: #fefefe;
+	line-height: 1.45em;
 }
 
 a {
@@ -47,11 +48,11 @@ div.clear {
 a.tag {
 	background-color: #fffcd7;
 	border: 1px solid #d5d458;
-	border-radius: 10px;
+	border-radius: 5px;
 	color: #555;
 	font-size: 8pt;
 	margin-left: 0.25em;
-	padding: 0px 0.5em 1px 0.5em;
+	padding: 0px 0.4em 1px 0.4em;
 	text-decoration: none;
 	vertical-align: text-top;
 }
@@ -117,17 +118,16 @@ select,
 textarea {
 	color: #555;
 	background-color: white;
-	line-height: 1.2em;
 	padding: 3px 5px;
 }
 textarea {
-	line-height: 1.35em;
 	resize: vertical;
 }
 input[type="text"],
 input[type="search"],
 input[type="password"],
 input[type="email"],
+input[type="number"],
 textarea {
 	border: 1px solid #ccc;
 }
@@ -230,6 +230,12 @@ input:disabled,
 button:disabled {
 	background-color: #e9e9e9;
 	color: gray;
+}
+
+.totp_code::-webkit-inner-spin-button,
+.totp_code::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 
@@ -366,7 +372,6 @@ ol.comments {
 	margin-left: 20px;
 	margin-bottom: 0em;
 	padding-left: 6px;
-	line-height: 1.35em;
 }
 ol.comments1 {
 	margin-left: 0;
@@ -449,8 +454,8 @@ li.story {
 	clear: both;
 }
 ol.stories li.story div.story_liner {
-	padding-top: 0.3em;
-	padding-bottom: 0.3em;
+	padding-top: 0.25em;
+	padding-bottom: 0.25em;
 }
 .comment {
 	clear: both;
@@ -476,13 +481,17 @@ li div.details {
 	opacity: 0.7;
 }
 .negative_3 {
-	opacity: 0.5;
+	opacity: 0.6;
 }
 .negative_5 {
-	opacity: 0.2;
+	opacity: 0.5;
 }
 
-.comment.highlighted {
+.comment.bad {
+	opacity: 0.7;
+}
+
+.comment:target {
 	background-color: #fffcd7;
 	border-radius: 20px;
 }
@@ -493,7 +502,7 @@ li .link {
 }
 
 li .link a {
-	font-size: 11pt;
+	font-size: 11.5pt;
 	text-decoration: none;
 }
 
@@ -555,9 +564,15 @@ li .comment_folder_button:checked ~ ol.comments li {
  	display: none;
 }
 
+/* try to force a highlighted comment to stay visible */
+li .comment_folder_button:checked ~ div.comment div.comment_text,
+li .comment_folder_button:checked ~ div.comment div.voters {
+	display: block;
+}
+
 li .byline {
 	color: #888;
-	font-size: 9pt;
+	font-size: 9.5pt;
 }
 li .byline > img.avatar {
 	margin-bottom: -5px;
@@ -601,6 +616,9 @@ span.user_is_author, a.user_is_author,
 li .byline a.user_is_author {
 	color: #6081bd;
 }
+li .byline a.story_has_suggestions {
+	color: #6081bd;
+}
 
 li.story.hidden {
 	opacity: 0.25;
@@ -628,7 +646,6 @@ div.story_content {
 ol.stories.list div.story_content {
 	color: #777;
 	max-height: 2.6em;
-	line-height: 1.3em;
 	margin: 0.25em 40px 0.25em 0;
 	overflow: hidden;
 	text-overflow: clip;
@@ -674,11 +691,10 @@ div.page_link_buttons span {
 div.story_text {
 	margin-bottom: 1.5em;
 	max-width: 700px;
-	line-height: 1.4em;
+	word-wrap: break-word;
 }
 div.story_text p {
 	margin: 0.75em 0;
-	line-height: 1.4em;
 }
 div.story_text img {
 	max-width: 100%;
@@ -692,7 +708,9 @@ a#story_text_expander {
 }
 
 div.comment_text {
+	font-size: 10.5pt;
 	max-width: 700px;
+	word-wrap: break-word;
 }
 
 div.comment_text blockquote,
@@ -730,11 +748,21 @@ div.comment_text code {
 	line-height: 1.2em;
 }
 
-div.comment_actions a {
-	color: #888;
-	font-weight: bold;
-	font-size: 8.5pt;
-	text-decoration: none;
+div.dragons {
+}
+.dragon_text {
+	background-color: #f8f8f8;
+	color: gray;
+	font-style: italic;
+	margin: 1em;
+	padding: 2em 0 2.5em 0;
+	text-align: center;
+}
+.dragon_text a {
+	color: gray;
+}
+.dragon_threads.hidden {
+	display: none;
 }
 
 a.pagelink {
@@ -837,6 +865,11 @@ div.comment_form_container form {
 	max-width: 700px;
 }
 
+div.comment_form_container textarea {
+   box-sizing: border-box;
+   width: 100%;
+}
+
 
 /* trees */
 
@@ -844,7 +877,6 @@ div.comment_form_container form {
 .tree ul {
 	margin: 0 0 0 0.5em;
 	padding: 0;
-	line-height: 1.5em;
 	list-style: none;
 	position: relative;
 }
@@ -888,6 +920,12 @@ div.comment_form_container form {
 	border-left: 0;
 	bottom: 0;
 	height: auto;
+}
+
+li.noparent:before,
+ul.noparent:before {
+	border-top: 0 !important;
+	border-left: 0 !important;
 }
 
 ul.user_tree {
@@ -1201,7 +1239,6 @@ div#flasher {
 div#flasher div.flash-error,
 div#flasher div.flash-notice,
 div#flasher div.flash-success {
-	line-height: 1.5em;
 	display: inline-block;
 	padding-top: 25px;
 	margin-left: auto;

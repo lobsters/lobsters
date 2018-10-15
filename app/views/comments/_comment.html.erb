@@ -1,13 +1,11 @@
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
-  <%= comment.score <= -1 ? "checked" : "" %>>
-<div id="comment_<%= comment.short_id %>"
+  <%= comment.score <= Comment::DOWNVOTABLE_MIN_SCORE ? "checked" : "" %>>
+<div id="c_<%= comment.short_id %>"
 data-shortid="<%= comment.short_id if comment.persisted? %>"
 class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 "upvoted" : "downvoted") : "" %>
-  <%= comment.highlighted ? "highlighted" : "" %>
-  <%= comment.score <= 0 ? "negative" : "" %>
-  <%= comment.score <= -1 ? "negative_1" : "" %>">
+  <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>">
   <% if !comment.is_gone? %>
     <div class="voters">
       <% if @user %>
@@ -15,7 +13,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% else %>
         <%= link_to "", login_path, :class => "upvoter" %>
       <% end %>
-      <div class="score"><%= comment.score %></div>
+      <div class="score"><%= comment.score_for_user(@user) %></div>
       <% if @user && @user.can_downvote?(comment) %>
         <a class="downvoter"></a>
       <% else %>
@@ -35,8 +33,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% end %>
 
       <% if (@user && @user.show_avatars?) || !@user %>
-        <a href="/u/<%= comment.user.username %>"><img
-          src="<%= comment.user.avatar_url(16) %>" class="avatar"></a>
+        <a href="/u/<%= comment.user.username %>"><%=
+          avatar_img(comment.user, 16) %></a>
       <% end %>
 
       <a href="/u/<%= comment.user.username %>"
@@ -61,7 +59,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
       <% if !comment.previewing %>
         |
-        <a href="<%= comment.short_id_url %>"><%= t('.link') %></a>
+        <a href="<%= comment.url %>"><%= t('.link') %></a>
 
         <% if comment.is_editable_by_user?(@user) %>
           |
@@ -80,6 +78,15 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
           <% end %>
         <% end %>
 
+        <% if !comment.parent_comment_id && @user && @user.is_moderator? %>
+          |
+          <% if comment.is_dragon? %>
+            <a class="comment_undragon"><%= t('.undragon') %></a>
+          <% else %>
+            <a class="comment_dragon"><%= t('.dragon') %></a>
+          <% end %>
+        <% end %>
+
         <% if @user && !comment.story.is_gone? && !comment.is_gone? %>
             |
             <a class="comment_replier" unselectable="on"><%= t('.reply') %></a>
@@ -93,8 +100,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
         <span class="reason">
           <% if comment.downvotes > 0 &&
-          ((comment.score <= 0 && comment.user_id == @user.try(:id)) ||
-          @user.try("is_moderator?")) %>
+          comment.showing_downvotes_for_user?(@user) &&
+          (comment.user_id == @user.try(:id) || @user.try("is_moderator?")) %>
             | <%= comment.vote_summary_for_user(@user).downcase %>
           <% elsif comment.current_vote && comment.current_vote[:vote] == -1 %>
             | -1

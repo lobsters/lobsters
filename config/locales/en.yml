@@ -22,6 +22,9 @@ en:
       storyidcannotbeblank: "A story ID cannot be blank."
       deletedcomment: "deleted comment"
       threadremovedby: "Thread removed by moderator %{modoname} : %{modreason}" 
+      turnedintodragon: "turned into a dragon"
+      slayeddragon: "slayed dragon"
+      metooerror: "Please just upvote the parent post instead."
     moderation:
       storyeditedby: "Your story has been edited by "
       usersuggestions: "user suggestions"
@@ -61,11 +64,11 @@ en:
       messageslink: "Messages"
       loginlink: "Login"
       logoutlink: "Logout"
-      confirmlogoutlink: "Are you sure you want to logout?"
       moderationloglink: "Moderation Log"
       invitationqueuelink: "Invitation Queue"
       chatlink: "Chat"
       hatrequestlink: "Hat Requests"
+      hatslink: "Hats"
       privacylink: "Privacy"
       aboutlink: "About"
       blog: "Blog"
@@ -102,6 +105,8 @@ en:
       delete: "delete"
       reply: "reply"
       about: "on:"
+      dragon: "dragon"
+      undragon: "undragon"
   email_message:
     notification.text:
       replyat: "Reply at "
@@ -120,6 +125,41 @@ en:
       pretextdesc: "prefix text with at least<tt>&nbsp;&nbsp;&nbsp;&nbsp;4 spaces</tt>"
       inlineimage: "(inline image)"
       inlineimagedesc: "![alt text](http://example.com/image.jpg)</tt> (only allowed in story text)"
+  hats:
+    build_request:
+      title: "Request a Hat"
+      description: "<p>A hat is a formal, verified, way of posting a comment while speaking for a project, organization, or company.  Each user may have multiple hats, one of which may be worn at any time when posting a comment or sending a private message.</p><p>Hats are intended for core project developers and company employees that are authorized to make comments on behalf of those organizations, and are usually reserved for notable projects and organizations.  Hats are not intended to list every contribution a person has made to any software project.</p><p>Hats will not be authorized for occasional contributors to projects, developers of projects which are not widely known, past employees of companies, or other situations where it cannot be verified that one is authorized to represent that organization.  In general, unless one has an e-mail address at a compay domain or have commit access to a project, a hat will not be authorized.</p><p>To request a hat for your account, provide a short description of the hat (e.g., \"OpenBSD Developer\"), a public link that will be shown when hovering over the hat that users can see, such as your e-mail address at that project or company, or a link to a company website showing your employment, and private comments that will be seen only by moderators during approval.</p><p>Once your hat is requested, a moderator will verify your request by e-mailing the address you submitted as the link, or doing some other manual verification of project association.</p>"
+      hat: "Hat:"
+      hatplaceholder: "XYZ Project Member"
+      link: "Link:"
+      linkplaceholder: "user@project.org, or a URL to an employment page"
+      comment: "Comment:"
+      commentplaceholder: "Will only be shown to moderators during approval"
+      requesthatbutton: "Request Hat"
+    create_request:
+      submittedhatrequest: "Successfully submitted hat request."
+    index:
+      title: "Hats"
+      description: "A hat is a formal, verified, way of posting a comment while speaking for a project, organization, or company.  Each user may have multiple hats, one of which may be selected to be worn when posting a comment or sending a private message."
+      request: "Request Hat"
+      user: "User"
+      hat: "Hat"
+      link: "Link"
+    reject_request:
+      requestedhatrequest: "Successfully rejected hat request."
+    requests_index:
+      title: "Requested Hats"
+      nohatrequests: "No hat requests."
+      user: "User:"
+      hat: "Hat:"
+      link: "Link:"
+      comment: "Comment:"
+      approve: Approve Hat Request"
+      reason: "Reason:"
+      reject: "Reject Hat Request"
+      hator: "or"
+    approve_request:
+      approvedhatrequest: "Successfully approved hat request."
   home:
     index:
       homerecentsdesc: "<em>The <a href=\"/newest\">newest</a> stories with a random sampling of recently submitted stories that have not yet reached the front page.</em>"
@@ -180,6 +220,16 @@ en:
       password: "New Password:"
       again: "(Again):"
       setpassbutton: "Set New Password"
+      passwordreset: "Your password has been reset."
+      couldnotresetpassword: "Could not reset password."
+      invalidresettoken: "Invalid reset token. It may have already been used or you may have copied it incorrectly."
+    twofa:
+      login2fa: "Login - Two Factor Authentication"
+      logintotpcode: "Enter the current TOTP code from your TOTP application:"
+      loginbutton: "Login"
+      totpcode: "TOTP Code:"
+    twofa_verify:
+      totpcodenotmatch: "Your TOTP code did not match.  Please try again."
   messages:
     index:
       viewreceived: "View Received"
@@ -245,10 +295,13 @@ en:
       deleteaccountflash: "Your account has been deleted."
       verifypasswordflash: "Your password could not be verified."
     index:
+      logoutlink: "Logout"
+      confirmlogoutlink: "Are you sure you want to logout?"
       viewprofile: "View Profile"
       accountsettings: "Account Settings"
       username: "Username:"
       password: "New Password:"
+      currentpassword: "Current Password:"
       confirmpassword: "Confirm Password:"
       emailaddress: "E-mail Address:"
       gravatarized: "<a href=\"http://www.gravatar.com/\" target=\"_blank\">Gravatar</a>'ized"
@@ -263,7 +316,7 @@ en:
       commentreplynotificationsettings: "Comment Reply Notification Settings"
       receiveemail: "Receive E-mail:"
       receivepushover: "Receive Pushover Alert:"
-      requirepushover: "Requires Pushover subscription above"
+      requirepushover: "Requires Pushover subscription below"
       commentmentionnotificationsettings: "Comment Mention Notification Settings"
       privatemessagenotificationsettings: "Private Message Notification Settings"
       submittedstorycommentsettings: "Submitted Story Comment Settings"
@@ -278,6 +331,7 @@ en:
       miscsettings: "Miscellaneous Settings"
       storypreview: "Show Story Previews:"
       useravatars: "Show User Avatars:"
+      hidedragons: "Hide Dragons:"
       saveallsettings: "Save All Settings"
       inviteuser: "Invite a New User"
       cannotsendinvitations: "You cannot send invitations."
@@ -285,6 +339,12 @@ en:
       deleteaccounttext: "To permanently delete your account, verify your current password below. Your account will be put into a deleted state, your comments will be marked as deleted and no longer readable by any other users, and your private messages will be deleted. Your submitted stories will not be deleted. Your username will remain reserved and will not be available to be used on any other account."
       verifypassword: "Verify Password:"
       deleteaccountconfirmation: "Yes, Delete My Account"
+      securitysettings: "Security Settings"
+      twofactorauth: "Two-Factor Auth:"
+      disable2fa: "Disable"
+      enroll2fa: "Enroll"
+      disabled2fa: "Disabled"
+      enabled2fa: "Enabled"
     pushover:
       pushovernotconfigured: "This site is not configured for Pushover"
     pushover_callback:
@@ -292,8 +352,36 @@ en:
       pushovernorandomtokenurl: "No random token present in URL"
       accountsetuppushover: "Your account is now setup for Pushover notifications."
       accountnolongersetuppushover: "Your account is no longer setup for Pushover notifications."
+    twofa:
+      title: "Two-Factor Authentication"
+      backtosettings: "Back to Settings"
+      disable2fa: "Disable Two-Factor Authentication"
+      continue: "Continue"
+      currentpassword: "Current Password:"
+      turnoff: "To turn off two-factor authentication for your account, enter your current password:"
+      turnon: "To begin the two-factor authentication enrollment for your account, enter your current password:"
+    twofa_auth:
+      2fahasbeendisabled: "Two-Factor Authentication has been disabled on your account."
+      2fapassnotcorrect: "Your password was not correct."
+    twofa_enroll:
+      title: "Two-Factor Authentication"
+      backtosettings: "Back to Settings"
+      enrollmenttimeout: "Your enrollment period timed out."
+      scanqrcode: "Scan the QR code below or click on it to open in your <a href=\"https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\" target=\"_blank\">TOTP</a> application of choice:"
+      registring: "Once you have finished registering with your TOTP application, proceed to the next screen to verify your current TOTP code and actually enable Two-Factor Authentication on your account."
+      verifyenable: "Verify and Enable"
+    twofa_update:
+      enrollmenttimeout: "Your enrollment period timed out."
+      2fahasbeenenabled: "Two-Factor Authentication has been enabled on your account."
+      totpinvalid: "Your TOTP code was invalid, please verify the current code in your TOTP application."
+    twofa_verify:
+      title: "Two-Factor Authentication"
+      enrollmenttimeout: "Your enrollment period timed out."
+      enablecode: "To enable Two-Factor Authentication on your account using your new TOTP secret, enter the six-digit code from your TOTP application:"
+      verifyenable: "Verify and Enable"
     update:
       updatesettingsflash: "Successfully updated settings."
+      passwordnotcorrect: "Your current password was not entered correctly."
   stories:
     edit:
       edit: "Edit Story"
@@ -355,6 +443,8 @@ en:
       preview: "Preview"
       submit: "Submit a Story"
       submitbutton: "Submit"
+    show:
+      toggledragons: "&mdash; here be dragons &mdash;"
   users:
     list:
       administrator: "administrator"
@@ -372,7 +462,7 @@ en:
       storysubmissions: "with story submissions"
       disabled: "disabled"
       joined: "Joined:"
-      byinvitationfrom: "by invitation from"
+      byinvitationfrom: "by <a href=\"/u/%{user}\">invitation</a> from"
       banneduser: "Banned:"
       bannedby: "by"
       hats: "Hats:"
@@ -439,6 +529,9 @@ en:
       flashsuccessdeleteinvit: "Successfully deleted invitation request from %{name}"
     login_controller:
       flashlogininvalid: "Invalid e-mail address and/or password."
+      totpinvalid: "Your TOTP code was invalid."
+      deletedaccount: "Your account has been deleted."
+      bannedaccount: "Your account has been banned."
     messages_controller:
       messagestitle: "Messages"
       messagessenttitle: "Messages Sent"
@@ -449,6 +542,7 @@ en:
       flashdeletedmessage: "Deleted message."
     search_controller:
       searchtitle: "Search"
+      flasherrorsearchcontroller: "Sorry, but the search engine is currently out of order"
     stories_controller:
       submitstorytitle: "Submit Story"
       editstorytitle: "Edit Story"

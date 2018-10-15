@@ -126,25 +126,15 @@ class StoriesController < ApplicationController
       return redirect_to @story.merged_into_story.comments_path
     end
 
-    if @story.can_be_seen_by_user?(@user)
-      @title = @story.title
-    else
-      @title = "[Story removed]"
+    if !@story.can_be_seen_by_user?(@user)
+      raise ActionController::RoutingError.new("story gone")
     end
 
+    @title = @story.title
     @short_url = @story.short_id_url
 
-    @comments = @story.merged_comments.includes(:user, :story,
-      :hat).arrange_for_user(@user)
-
-    if params[:comment_short_id]
-      @comments.each do |c,x|
-        if c.short_id == params[:comment_short_id]
-          c.highlighted = true
-          break
-        end
-      end
-    end
+    @comments = @story.merged_comments.includes(:user, :story, :hat,
+      :votes => :user).arrange_for_user(@user)
 
     respond_to do |format|
       format.html {
@@ -159,6 +149,10 @@ class StoriesController < ApplicationController
           "twitter:image" => Rails.application.root_url +
             "apple-touch-icon-144.png",
         }
+
+        if @story.user.twitter_username.present?
+          @meta_tags["twitter:creator"] = "@" + @story.user.twitter_username
+        end
 
         load_user_votes
 

@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "4.1.12"
+gem "rails", "4.2.8"
 
 gem "unicorn"
 
@@ -21,10 +21,14 @@ gem "dynamic_form"
 gem "exception_notification"
 
 gem "bcrypt", "~> 3.1.2"
+gem "rotp"
+gem "rqrcode"
 
 gem "nokogiri", "= 1.6.1"
 gem "htmlentities"
-gem "rdiscount"
+gem "commonmarker", "~> 0.14"
+
+gem "activerecord-typedstore"
 
 # for twitter-posting bot
 gem "oauth"
@@ -33,7 +37,7 @@ gem "oauth"
 gem "mail"
 
 group :test, :development do
-  gem "rspec-rails", "~> 2.6"
+  gem "rspec-rails", "~> 3.5", ">= 3.5.2"
   gem "machinist"
   gem "sqlite3"
   gem "faker"

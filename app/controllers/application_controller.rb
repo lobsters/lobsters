@@ -8,6 +8,9 @@ class ApplicationController < ActionController::Base
   TAG_FILTER_COOKIE = :tag_filters
 
   def authenticate_user
+    # eagerly evaluate, in case this triggers an IpSpoofAttackError
+    request.remote_ip
+
     if session[:u] &&
     (user = User.where(:session_token => session[:u].to_s).first) &&
     user.is_active?
@@ -50,13 +53,12 @@ class ApplicationController < ActionController::Base
       Rails.logger.info "  Traffic level: #{@traffic.to_i}"
     end
 
-    if rand(2000000) == 1
-      @traffic_color = sprintf("%02x%02x%02x",
-        0, 0, [ 255, (@traffic * 7).floor + 50.0 ].min)
-    else
-      @traffic_color = sprintf("%02x%02x%02x",
-        [ 255, (@traffic * 7).floor + 50.0 ].min, 0, 0)
+    intensity = (@traffic * 7).floor + 50.0
+    if (blue = (rand(2000000) == 1)) && @user
+      Rails.logger.info "  User #{@user.id} (#{@user.username}) saw blue logo"
     end
+    color = (blue ? "0000%02x" : "%02x0000")
+    @traffic_color = sprintf(color, intensity > 255 ? 255 : intensity)
 
     true
   end

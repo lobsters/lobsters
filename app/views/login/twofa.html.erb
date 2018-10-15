@@ -1,0 +1,23 @@
+<div class="box wide">
+  <div class="legend">
+    <%= t('.login2fa') %>
+  </div>
+
+  <%= form_tag twofa_login_url do %>
+    <p>
+    <%= t('.logintotpcode') %>
+    </p>
+
+    <p>
+    <%= label_tag :totp_code, t('.totpcode') %>
+    <%= number_field_tag :totp_code, "", :size => 10, :autocomplete => "off",
+        :autofocus => true, :class => "totp_code" %>
+    <br />
+    </p>
+
+    <p>
+    <%= submit_tag t('.loginbutton') %>
+    </p>
+  <% end %>
+</div>
+

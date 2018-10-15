@@ -26,7 +26,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
     </span>
     <% if story.markeddown_description.present? %>
-      <a class="description_present" title="<%= t '.additionaltext' %>" href="<%= story.comments_path %>">&#x2636;</a>
+      <a class="description_present" title="<%= truncate(story.description,
+        :length => 500) %>" href="<%= story.comments_path %>">&#x2636;</a>
     <% end %>
     <% if story.can_be_seen_by_user?(@user) %>
       <span class="tags">
@@ -62,10 +63,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           <% end %>
           <span class="byline">
             <% if (@user && @user.show_avatars?) || !@user %>
-              <a href="/u/<%= ms.user.username %>"><img
-                src="<%= ms.user.avatar_url(16) %>"
-                srcset="<%= ms.user.avatar_url(16) %> 1x,
-                <%= ms.user.avatar_url(32) %> 2x" class="avatar"></a>
+              <a href="/u/<%= ms.user.username %>"><%=
+                avatar_img(ms.user, 16) %></a>
             <% end %>
             <% if story.user_is_author? %>
               <%= t('.authoredby') %>
@@ -76,6 +75,10 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
               ms.html_class_for_user %>"><%= ms.user.username %></a>
 
             <%= distance_of_time_in_words(ms.created_at, Time.now, :strip_about => true) %>
+            <% if ms.is_editable_by_user?(@user) %>
+              |
+              <a href="<%= edit_story_path(ms.short_id) %>"><%= t('.edit') %></a>
+            <% end %>
           </span>
         <% end %>
       <% end %>
@@ -92,10 +95,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 
     <div class="byline">
       <% if (@user && @user.show_avatars?) || !@user %>
-        <a href="/u/<%= story.user.username %>"><img
-          src="<%= story.user.avatar_url(16) %>"
-          srcset="<%= story.user.avatar_url(16) %> 1x,
-          <%= story.user.avatar_url(32) %> 2x" class="avatar"></a>
+        <a href="/u/<%= story.user.username %>"><%=
+          avatar_img(story.user, 16) %></a>
       <% end %>
       <% if story.previewing %>
         <% if story.user_is_author? %>
@@ -119,7 +120,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 
         <% if story.is_editable_by_user?(@user) %>
           |
-          <a href="<%= edit_story_path(story.short_id) %>"><%= t('.edit') %></a>
+          <a href="<%= edit_story_path(story.short_id) %>" class="<%=
+            story.has_suggestions? ? "story_has_suggestions" : "" %>"><%= t('.edit') %></a>
 
           <% if story.is_gone? && story.is_undeletable_by_user?(@user) %>
             |
@@ -163,7 +165,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
         <% if story.url.present? %>
           |
-          <a href="https://archive.is/<%= story.url %>" rel="nofollow"
+          <a href="<%= story.archive_url %>" rel="nofollow"
             target="_new"><%= t('.cached') %></a>
         <% end %>
         <% if !story.is_gone? %>

@@ -13,7 +13,8 @@ class StoriesPaginator
   def get
     with_pagination_info @scope.limit(per_page + 1)
       .offset((@page - 1) * per_page)
-      .includes(:user, :taggings => :tag)
+      .includes(:user, :suggested_titles, :suggested_taggings,
+        :taggings => :tag)
   end
 
 private

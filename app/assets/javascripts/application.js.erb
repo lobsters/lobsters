@@ -116,7 +116,12 @@ var _Lobsters = Class.extend({
 
     var li = $(voterEl).closest(".story, .comment");
     var scoreDiv = li.find("div.score").get(0);
-    var score = parseInt(scoreDiv.innerHTML);
+    var score = 0;
+    var showScore = true;
+    if (scoreDiv.innerHTML == "-")
+      showScore = false;
+    else
+      score = parseInt(scoreDiv.innerHTML);
     var action = "";
 
     if (li.hasClass("upvoted") && point > 0) {
@@ -150,7 +155,8 @@ var _Lobsters = Class.extend({
       action = "downvote";
     }
 
-    scoreDiv.innerHTML = score;
+    if (showScore)
+      scoreDiv.innerHTML = score;
 
     if (action == "upvote" || action == "unvote") {
       li.find(".reason").html("");
@@ -174,12 +180,7 @@ var _Lobsters = Class.extend({
       if ($(form).find('#parent_comment_short_id').length) {
         $(form).closest('.comment').replaceWith($.parseHTML(data));
       } else {
-        if ($(form).attr("id").match(/^edit_comment_.+$/)) {
-          $(form).parent(".comment").replaceWith($.parseHTML(data));
-        } else {
-          $(form).closest('.comment').after($.parseHTML(data));
-          $(form).find('textarea').val('');
-        }
+        $(form).parent(".comment").replaceWith($.parseHTML(data));
       }
     });
   },
@@ -338,6 +339,16 @@ $(document).ready(function() {
     return Lobsters.moderateStory(this);
   }),
 
+  $(".toggle_dragons").click(function(a) {
+    var c = $(".dragon_threads").first();
+    if (c) {
+      if (c.hasClass("hidden"))
+        c.removeClass("hidden");
+      else
+        c.addClass("hidden");
+    }
+  }),
+
   $(document).on("click", "a.comment_replier", function() {
     if (!Lobsters.curUser) {
       Lobsters.bounceToLogin();
@@ -408,6 +419,34 @@ $(document).ready(function() {
       });
     }
   });
+  $(document).on("click", "a.comment_undeletor", function() {
+    if (confirm("Êtes-vous sûr de vouloir restaurer ce commentaire ?")) {
+      var li = $(this).closest(".comment");
+      $.post("/comments/" + $(li).attr("data-shortid") + "/undelete",
+      function(d) {
+        $(li).replaceWith(d);
+      });
+    }
+  });
+
+  $(document).on("click", "a.comment_dragon", function() {
+    if (confirm("Êtes-vous sûr de vouloir marquer ce fil de discussion ?")) {
+      var li = $(this).closest(".comment");
+      $.post("/comments/" + $(li).attr("data-shortid") + "/dragon",
+      function(d) {
+        window.location.reload();
+      });
+    }
+  });
+  $(document).on("click", "a.comment_undragon", function() {
+    if (confirm("Êtes-vous sûr de vouloir supprimer la marque de ce fil de discussion ?")) {
+      var li = $(this).closest(".comment");
+      $.post("/comments/" + $(li).attr("data-shortid") + "/undragon",
+      function(d) {
+        window.location.reload();
+      });
+    }
+  });
 
   $(document).on("click", "a.comment_moderator", function() {
     var reason = prompt("Raison de la modération :");
@@ -419,16 +458,6 @@ $(document).ready(function() {
       { reason: reason }, function(d) {
         $(li).replaceWith(d);
       });
-  });
-
-  $(document).on("click", "a.comment_undeletor", function() {
-    if (confirm("Êtes-vous sûr de vouloir dé-supprimer ce commentaire ?")) {
-      var li = $(this).closest(".comment");
-      $.post("/comments/" + $(li).attr("data-shortid") + "/undelete",
-      function(d) {
-        $(li).replaceWith(d);
-      });
-    }
   });
 
   Lobsters.runSelect2();
@@ -483,5 +512,12 @@ $(document).ready(function() {
   $(document).on("click", "#story_guidelines_toggler", function() {
     $("#story_guidelines").toggle();
     return false;
+  });
+
+
+  $('textarea#comment').keydown(function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
+      $("button.comment-post").click();
+    }
   });
 });

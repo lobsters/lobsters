@@ -19,7 +19,11 @@ class SearchController < ApplicationController
       end
 
       if @search.valid?
-        @search.search_for_user!(@user)
+        begin
+          @search.search_for_user!(@user)
+        rescue ThinkingSph::ConnectionError
+          flash[:error] = I18n.t 'controllers.search_controller.flasherrorsearchcontroller'
+        end
       end
     end
 

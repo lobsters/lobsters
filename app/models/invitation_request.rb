@@ -26,8 +26,8 @@ class InvitationRequest < ActiveRecord::Base
   def markeddown_memo
     Markdowner.to_html(self.memo)
   end
-  
+
   def send_email
-    InvitationRequestMailer.invitation_request(self).deliver
+    InvitationRequestMailer.invitation_request(self).deliver_now
   end
 end

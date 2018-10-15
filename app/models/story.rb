@@ -33,6 +33,9 @@ class Story < ActiveRecord::Base
 
   DOWNVOTABLE_DAYS = 14
 
+  # the lowest a score can go
+  DOWNVOTABLE_MIN_SCORE = -5
+
   # after this many minutes old, a story cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
@@ -123,7 +126,11 @@ class Story < ActiveRecord::Base
   end
 
   def self.recalculate_all_hotnesses!
-    Story.all.order("id DESC").each do |s|
+    # do the front page first, since find_each can't take an order
+    Story.order("id DESC").limit(100).each do |s|
+      s.recalculate_hotness!
+    end
+    Story.find_each do |s|
       s.recalculate_hotness!
     end
     true
@@ -136,6 +143,10 @@ class Story < ActiveRecord::Base
 
   def self.votes_cast_type
     Story.connection.adapter_name.match(/mysql/i) ? "signed" : "integer"
+  end
+
+  def archive_url
+    "https://archive.is/#{CGI.escape(self.url)}"
   end
 
   def as_json(options = {})
@@ -185,20 +196,34 @@ class Story < ActiveRecord::Base
   end
 
   def calculated_hotness
-    base = self.tags.map{|t| t.hotness_mod }.sum
+    # take each tag's hotness modifier into effect, and give a slight bump to
+    # stories submitted by the author
+    base = self.tags.map{|t| t.hotness_mod }.sum +
+      (self.user_is_author ? 0.25 : 0.0)
 
-    # give a story's comment votes some weight (unless the hotness mod is
-    # negative), but ignore the story submitter's own comments
-    if base < 0
-      cpoints = 0
-    else
-      cpoints = self.comments.where("user_id <> ?", self.user_id).
-        select(:upvotes, :downvotes).map{|c| c.upvotes + 1 - c.downvotes }.
-        inject(&:+).to_f * 0.5
-    end
+    # give a story's comment votes some weight, ignoring submitter's comments
+    cpoints = self.comments.
+      where("user_id <> ?", self.user_id).
+      select(:upvotes, :downvotes).
+      map{|c|
+        if base < 0
+          # in stories already starting out with a bad hotness mod, only look
+          # at the downvotes to find out if this tire fire needs to be put out
+          c.downvotes * -0.5
+        else
+          c.upvotes + 1 - c.downvotes
+        end
+      }.
+      inject(&:+).to_f * 0.5
 
     # mix in any stories this one cannibalized
     cpoints += self.merged_stories.map{|s| s.score }.inject(&:+).to_f
+
+    # if a story has many comments but few votes, it's probably a bad story, so
+    # cap the comment points at the number of upvotes
+    if cpoints > self.upvotes
+      cpoints = self.upvotes
+    end
 
     # don't immediately kill stories at 0 by bumping up score by one
     order = Math.log([ (score + 1).abs + cpoints, 1 ].max, 10)
@@ -227,7 +252,7 @@ class Story < ActiveRecord::Base
       return false
     end
 
-    if self.tags.select{|t| t.privileged? }.any?
+    if self.taggings.select{|t| t.tag && t.tag.privileged? }.any?
       return false
     end
 
@@ -305,8 +330,22 @@ class Story < ActiveRecord::Base
 
   def fetch_story_cache!
     if self.url.present?
-      self.story_cache = StoryCacher.get_story_text(self.url)
+      self.story_cache = StoryCacher.get_story_text(self)
     end
+  end
+
+  def fix_bogus_chars
+    # this is needlessly complicated to work around character encoding issues
+    # that arise when doing just self.title.to_s.gsub(160.chr, "")
+    self.title = self.title.to_s.split("").map{|chr|
+      if chr.ord == 160
+        " "
+      else
+        chr
+      end
+    }.join("")
+
+    true
   end
 
   def generated_markeddown_description
@@ -321,6 +360,10 @@ class Story < ActiveRecord::Base
       "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " <<
       "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " <<
       "hotness = '#{self.calculated_hotness}' WHERE id = #{self.id.to_i}")
+  end
+
+  def has_suggestions?
+    self.suggested_taggings.any? || self.suggested_titles.any?
   end
 
   def hider_count
@@ -341,8 +384,7 @@ class Story < ActiveRecord::Base
   end
 
   def is_downvotable?
-    return true
-    if self.created_at
+    if self.created_at && self.score >= DOWNVOTABLE_MIN_SCORE
       Time.now - self.created_at <= DOWNVOTABLE_DAYS.days
     else
       false
@@ -465,20 +507,6 @@ class Story < ActiveRecord::Base
   def record_initial_upvote
     Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.id, nil,
       self.user_id, nil, false)
-  end
-
-  def fix_bogus_chars
-    # this is needlessly complicated to work around character encoding issues
-    # that arise when doing just self.title.to_s.gsub(160.chr, "")
-    self.title = self.title.to_s.split("").map{|chr|
-      if chr.ord == 160
-        " "
-      else
-        chr
-      end
-    }.join("")
-
-    true
   end
 
   def score
@@ -786,6 +814,24 @@ class Story < ActiveRecord::Base
     # then try plain old <title>
     if title.to_s == ""
       title = parsed.at_css("title").try(:text).to_s
+    end
+
+    # see if the site name is available, so we can strip it out in case it was
+    # present in the fetched title
+    begin
+      site_name = parsed.at_css("meta[property='og:site_name']").
+        attributes["content"].text
+
+      if site_name.present? && site_name.length < title.length &&
+      title[-(site_name.length), site_name.length] == site_name
+        title = title[0, title.length - site_name.length]
+
+        # remove title/site name separator
+        if title.match(/ [ \-\|\u2013] $/)
+          title = title[0, title.length - 3]
+        end
+      end
+    rescue
     end
 
     @fetched_attributes[:title] = title

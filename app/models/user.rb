@@ -33,13 +33,34 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
+  typed_store :settings do |s|
+    s.boolean :email_notifications, :default => false
+    s.boolean :email_replies, :default => false
+    s.boolean :pushover_replies, :default => false
+    s.string :pushover_user_key
+    s.boolean :email_messages, :default => false
+    s.boolean :pushover_messages, :default => false
+    s.boolean :email_mentions, :default => false
+    s.boolean :show_avatars, :default => true
+    s.boolean :show_story_previews, :default => false
+    s.boolean :show_submitted_story_threads, :default => false
+    s.boolean :hide_dragons, :default => false
+    s.string :totp_secret
+    s.string :github_oauth_token
+    s.string :github_username
+    s.string :twitter_oauth_token
+    s.string :twitter_oauth_token_secret
+    s.string :twitter_username
+  end
+
   validates :email, :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
     :uniqueness => { :case_sensitive => false }
 
   validates :password, :presence => true, :on => :create
 
+  VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/
   validates :username,
-    :format => { :with => /\A[A-Za-z0-9][A-Za-z0-9_-]{0,24}\Z/ },
+    :format => { :with => /\A#{VALID_USERNAME}\z/ },
     :uniqueness => { :case_sensitive => false }
 
   validates_each :username do |record,attr,value|
@@ -48,15 +69,17 @@ class User < ActiveRecord::Base
     end
   end
 
+  scope :active, -> { where(:banned_at => nil, :deleted_at => nil) }
+
   before_save :check_session_token
   before_validation :on => :create do
     self.create_rss_token
     self.create_mailing_list_token
   end
 
-  BANNED_USERNAMES = [ "admin", "administrator", "hostmaster", "mailer-daemon",
-    "postmaster", "root", "security", "support", "webmaster", "moderator",
-    "moderators", "help", "contact", "fraud", "guest", "nobody", ]
+  BANNED_USERNAMES = [ "admin", "administrator", "contact", "fraud", "guest",
+    "help", "hostmaster", "mailer-daemon", "moderator", "moderators", "nobody",
+    "postmaster", "root", "security", "support", "sysop", "webmaster" ]
 
   # days old accounts are considered new for
   NEW_USER_DAYS = 7
@@ -65,7 +88,7 @@ class User < ActiveRecord::Base
   MIN_KARMA_TO_SUGGEST = 10
 
   # minimum karma required to be able to downvote comments
-  MIN_KARMA_TO_DOWNVOTE = 100
+  MIN_KARMA_TO_DOWNVOTE = 50
 
   # minimum karma required to be able to submit new stories
   MIN_KARMA_TO_SUBMIT_STORIES = -4
@@ -77,10 +100,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.username_regex
-    User.validators_on(:username).select{|v|
-      v.class == ActiveModel::Validations::FormatValidator }.first.
-      options[:with].inspect
+  def self.username_regex_s
+    "/^" + VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, "") + "$/"
   end
 
   def as_json(options = {})
@@ -98,8 +119,23 @@ class User < ActiveRecord::Base
     attrs.push :about
 
     h = super(:only => attrs)
-    h[:avatar_url] = avatar_url
+
+    h[:avatar_url] = self.avatar_url
+
+    if self.github_username.present?
+      h[:github_username] = self.github_username
+    end
+
+    if self.twitter_username.present?
+      h[:twitter_username] = self.twitter_username
+    end
+
     h
+  end
+
+  def authenticate_totp(code)
+    totp = ROTP::TOTP.new(self.totp_secret)
+    totp.verify(code)
   end
 
   def avatar_url(size = 100)
@@ -176,7 +212,7 @@ class User < ActiveRecord::Base
         # user can unvote
         return true
       end
-    elsif obj.is_a?(Comment)
+    elsif obj.is_a?(Comment) && obj.is_downvotable?
       return !self.is_new? && (self.karma >= MIN_KARMA_TO_DOWNVOTE)
     end
 
@@ -262,6 +298,11 @@ class User < ActiveRecord::Base
     end
   end
 
+  def disable_2fa!
+    self.totp_secret = nil
+    self.save!
+  end
+
   def grant_moderatorship_by_user!(user)
     User.transaction do
       self.is_moderator = true
@@ -287,7 +328,11 @@ class User < ActiveRecord::Base
     self.password_reset_token = "#{Time.now.to_i}-#{Utils.random_str(30)}"
     self.save!
 
-    PasswordReset.password_reset_link(self, ip).deliver
+    PasswordReset.password_reset_link(self, ip).deliver_now
+  end
+
+  def has_2fa?
+    self.totp_secret.present?
   end
 
   def is_active?
@@ -303,9 +348,7 @@ class User < ActiveRecord::Base
   end
 
   def linkified_about
-    # most users are probably mentioning "@username" to mean a twitter url, not
-    # a link to a profile on this site
-    Markdowner.to_html(self.about, { :disable_profile_links => true })
+    Markdowner.to_html(self.about)
   end
 
   def most_common_story_tag

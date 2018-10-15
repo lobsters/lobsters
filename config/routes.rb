@@ -4,6 +4,8 @@ Lobsters::Application.routes.draw do
       :protocol => (Rails.application.config.force_ssl ? "https://" : "http://"),
       :as => "root"
 
+    get "/404" => "home#four_oh_four", :via => :all
+
     get "/rss" => "home#index", :format => "rss"
     get "/hottest" => "home#index", :format => "json"
 
@@ -30,8 +32,10 @@ Lobsters::Application.routes.draw do
     get "/threads/:user" => "comments#threads"
 
     get "/login" => "login#index"
-    post "/login" => "login#login"
+    post "/login" => "login#login", :format => /html|json/
     post "/logout" => "login#logout"
+    get "/login/2fa" => "login#twofa"
+    post "/login/2fa_verify" => "login#twofa_verify", :as => "twofa_login"
 
     get "/signup" => "signup#index"
     post "/signup" => "signup#signup"
@@ -72,6 +76,9 @@ Lobsters::Application.routes.draw do
 
         post "delete"
         post "undelete"
+
+        post "dragon"
+        post "undragon"
       end
     end
     get "/comments/page/:page" => "comments#index"
@@ -84,11 +91,13 @@ Lobsters::Application.routes.draw do
       post "keep_as_new"
     end
 
-    get "/s/:id/:title/comments/:comment_short_id" => "stories#show"
-    get "/s/:id/(:title)" => "stories#show", :format => /html|json/
-
     get "/c/:id" => "comments#redirect_from_short_id"
     get "/c/:id.json" => "comments#show_short_id", :format => "json"
+
+    # deprecated
+    get "/s/:story_id/:title/comments/:id" => "comments#redirect_from_short_id"
+
+    get "/s/:id/(:title)" => "stories#show", :format => /html|json/
 
     get "/u" => "users#tree"
     get "/u/:username" => "users#show", :as => "user", :format => /html|json/
@@ -100,10 +109,25 @@ Lobsters::Application.routes.draw do
 
     get "/settings" => "settings#index"
     post "/settings" => "settings#update"
-    post "/settings/pushover" => "settings#pushover"
-    get "/settings/pushover_callback" => "settings#pushover_callback"
     post "/settings/delete_account" => "settings#delete_account",
       :as => "delete_account"
+    get "/settings/2fa" => "settings#twofa", :as => "twofa"
+    post "/settings/2fa_auth" => "settings#twofa_auth", :as => "twofa_auth"
+    get "/settings/2fa_enroll" => "settings#twofa_enroll",
+      :as => "twofa_enroll"
+    get "/settings/2fa_verify" => "settings#twofa_verify",
+      :as => "twofa_verify"
+    post "/settings/2fa_update" => "settings#twofa_update",
+      :as => "twofa_update"
+
+    post "/settings/pushover_auth" => "settings#pushover_auth"
+    get "/settings/pushover_callback" => "settings#pushover_callback"
+    get "/settings/github_auth" => "settings#github_auth"
+    get "/settings/github_callback" => "settings#github_callback"
+    post "/settings/github_disconnect" => "settings#github_disconnect"
+    get "/settings/twitter_auth" => "settings#twitter_auth"
+    get "/settings/twitter_callback" => "settings#twitter_callback"
+    post "/settings/twitter_disconnect" => "settings#twitter_disconnect"
 
     get "/filters" => "filters#index"
     post "/filters" => "filters#update"

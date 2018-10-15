@@ -1,0 +1,23 @@
+<div class="box wide">
+  <div class="legend right">
+    <a href="/settings">Back to Settings</a>
+  </div>
+  <div class="legend">
+    <%= @title %>
+  </div>
+
+  <%= form_tag twofa_update_url do %>
+    <p>
+    <%= t('.enablecode') %>
+    </p>
+
+    <div class="boxline">
+      <%= label_tag :totp_code, "TOTP Code:", :class => "required" %>
+      <%= number_field_tag :totp_code, "", :size => 10, :autocomplete => "off",
+          :autofocus => true, :class => "totp_code" %>
+    </div>
+
+    <p>
+    <%= submit_tag t('.verifyenable') %>
+  <% end %>
+</div>

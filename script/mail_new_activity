@@ -140,7 +140,7 @@ last_comment_id = (Keystore.value_for(LAST_COMMENT_KEY) ||
 Comment.where("id > ? AND (is_deleted = ? AND is_moderated = ?)",
 last_comment_id, false, false).order(:id).each do |c|
   # allow some time for newer comments to be edited before sending them out
-  if (Time.now - c.created_at) < 2.minutes
+  if (Time.now - (c.updated_at || c.created_at)) < 2.minutes
     break
   end
 

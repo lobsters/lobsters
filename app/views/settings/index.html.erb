@@ -1,6 +1,10 @@
 <div class="box wide">
   <div class="legend right">
     <a href="/u/<%= @user.username %>"><%= t('.viewprofile') %></a>
+     |
+     <%= link_to t('.logoutlink'), { :controller => "login", :action => "logout" },
+       :data => { :confirm => t('.confirmlogoutlink') },
+       :method => "post" %>
   </div>
   <div class="legend">
     <%= t('.accountsettings') %>
@@ -14,8 +18,14 @@
       <%= f.label :username, t('.username'), :class => "required" %>
       <%= f.text_field :username, :size => 15 %>
       <span class="hint">
-        <tt><%= User.username_regex %></tt>
+        <tt><%= User.username_regex_s %></tt>
       </span>
+    </div>
+
+    <div class="boxline">
+      <%= label_tag :current_password, t('.currentpassword'),
+        :class => "required" %>
+      <%= password_field_tag :current_password, nil, :size => 40 %>
     </div>
 
     <div class="boxline">
@@ -32,7 +42,7 @@
 
     <div class="boxline">
       <%= f.label :email, t('.emailaddress'), :class => "required" %>
-      <%= f.text_field :email, :size => 40 %>
+      <%= f.email_field :email, :size => 40 %>
       <span class="hint">
         <%= raw(t('.gravatarized')) %>
       </span>
@@ -63,18 +73,19 @@
     <br>
 
     <div class="legend">
-      <%= t('.notificationsettings') %>
+      <%= t('.securitysettings') %>
     </div>
 
     <div class="boxline">
-      <%= f.label :pushover_user_key,
-        raw(t(".pushover")),
-        :class => "required" %>
-      <%= link_to((f.object.pushover_user_key.present??
-         t('.managepushoversubscription') : t('.subscribewithpushover')),
-        "/settings/pushover", :class => "pushover_button", :method => :post) %>
-      <span class="hint">
-        <%= t('.foroptionalcomment') %>
+      <%= f.label :twofa, t('.twofactorauth'), :class => "required" %>
+      <span>
+      <% if @edit_user.totp_secret.present? %>
+        <span style="color: green; font-weight: bold;">
+          <%= t('.enabled2fa') %>
+        </span> (<a href="/settings/2fa"><%= t('.disable2fa') %></a>)
+      <% else %>
+        <%= t('.disabled2fa') %> (<a href="/settings/2fa"><%= t('.enroll2fa') %></a>)
+      <% end %>
       </span>
     </div>
 
@@ -193,9 +204,65 @@
       <%= f.check_box :show_avatars %>
     </div>
 
+    <div class="boxline">
+      <%= f.label :hide_dragons, t('.hidedragons'), :class => "required" %>
+      <%= f.check_box :hide_dragons %>
+    </div>
 
     <br>
     <%= f.submit t('.saveallsettings') %>
+  <% end %>
+
+  <br>
+  <br>
+
+  <div class="legend">
+    External Accounts
+  </div>
+
+  <% if Pushover.enabled? %>
+    <div class="boxline">
+      <%= label_tag :pushover_user_key,
+        raw("<a href=\"https://pushover.net/\">Pushover</a>:"),
+        :class => "required" %>
+      <%= link_to((@edit_user.pushover_user_key.present??
+        "Manage Pushover Subscription" : "Subscribe With Pushover"),
+        "/settings/pushover_auth", :class => "pushover_button",
+        :method => :post) %>
+      <span class="hint">
+        For optional comment and message notifications above
+      </span>
+    </div>
+  <% end %>
+
+  <% if Github.enabled? %>
+    <div class="boxline">
+      <%= label_tag :github_username, "GitHub:", :class => "required" %>
+      <% if @edit_user.github_username.present? %>
+        Linked to
+        <strong><a href="https://github.com/<%= h(@edit_user.github_username)
+          %>"><%= h(@edit_user.github_username) %></a></strong>
+          (<%= link_to "Disconnect", "/settings/github_disconnect",
+            :method => :post %>)
+      <% else %>
+        <a href="/settings/github_auth">Connect</a>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if Twitter.enabled? %>
+    <div class="boxline">
+      <%= label_tag :twitter_username, "Twitter:", :class => "required" %>
+      <% if @edit_user.twitter_username.present? %>
+        Linked to
+        <strong><a href="https://twitter.com/<%= h(@edit_user.twitter_username)
+          %>">@<%= h(@edit_user.twitter_username) %></a></strong>
+          (<%= link_to "Disconnect", "/settings/twitter_disconnect",
+            :method => :post %>)
+      <% else %>
+        <a href="/settings/twitter_auth">Connect</a>
+      <% end %>
+    </div>
   <% end %>
 
   <br>

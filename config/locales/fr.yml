@@ -53,7 +53,7 @@ fr:
       unmerged: "dé-fusionnée depuis une autre info"
       changedfromto: "%{story} changée de %{stfrom} à %{stto}"
       nonmedia: "Une étiquette autre que PDF ou video doit être présente"
-      alreadysubmitted: "a déjà été proposée il y a %{days} jours"
+      alreadysubmitted: "a déjà été proposée dans les %{days} derniers jours"
     vote:
       offtopicvote: "Hors-sujet"
       incorrectvote: "Incorrecte"

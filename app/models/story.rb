@@ -71,8 +71,7 @@ class Story < ActiveRecord::Base
         if self.new_record? && (s = Story.find_similar_by_url(self.url))
           self.already_posted_story = s
           if s.is_recent?
-            errors.add(:url, "has already been submitted within the past " <<
-              "#{RECENT_DAYS} days")
+            errors.add(:url, I18n.t('models.story.alreadysubmitted', :days => "#{RECENT_DAYS}"))
           end
         end
       else

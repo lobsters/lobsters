@@ -41,6 +41,7 @@ en:
       unmerged: "unmerged from another story"
       changedfromto: "changed %{story} from %{stfrom} to %{stto}"
       nonmedia: "Must have at least one non-media (PDF, video) tag. If no tags apply to your content, it probably doesn't belong here."
+      alreadysubmitted: "Url has already been submitted within the past %{days} days."
     vote:
       offtopicvote: "Off-topic"
       incorrectvote: "Incorrect"

@@ -52,6 +52,7 @@ fr:
       mergedinto: "mergée avec %{shortid} (%{title})"
       unmerged: "dé-fusionnée depuis une autre info"
       changedfromto: "%{story} changée de %{stfrom} à %{stto}"
+      nonmedia: "Une étiquette autre que PDF ou video doit être présente"
     vote:
       offtopicvote: "Hors-sujet"
       incorrectvote: "Incorrecte"

@@ -401,6 +401,7 @@ fr:
       createaccounttitle: "Créer un compte"
     invited:
       createaccounttitle: "Créer un compte"
+      createaccountbody: "Pour créer un nouveau compte, veuillez saisir votre e-mail et votre mot de passe. Votre e-mail ne sera jamais affiché aux autres utilisateurs et ne sera utilisé que si vous avez besoin de changer votre mot de passe ou de recevoir des notifications optionnelles de nouveaux messages. Votre nom d'utilisateur peut être changé ultérieurement."
   stories:
     edit:
       edit: "Éditer l'info"

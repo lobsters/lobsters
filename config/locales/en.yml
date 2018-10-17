@@ -389,6 +389,13 @@ en:
     index:
       createaccounttitle: "Create an Account"
       createaccountbody: "To create a new account, enter your e-mail address and a password. Your e-mail address will never be shown to users and will only be used if you need to reset your password, or to receive optional new-message alerts.  Your username can be changed later."
+      invitedby: "Invited By:"
+      username: "Username:"
+      email: "Email address:"
+      password: "Password:"
+      passwordagain: "Password (again):"
+      about: "Want to tell us about yourself?  It's optional, but it will be visible in your public profile and can be changed at any time."
+      abouttitle: "About:"
     invited:
       createaccounttitle: "Create an Account"
   stories:

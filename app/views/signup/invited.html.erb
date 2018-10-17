@@ -13,7 +13,7 @@
     <%= error_messages_for(@new_user) %>
 
     <p>
-    <%= f.label :invitation, "Invited By:", :class => "required" %>
+    <%= f.label :invitation, t('.invitedby'), :class => "required" %>
     <span class="d">
       <a href="/u/<%= @invitation.user.username %>" target="_blank"><%=
         @invitation.user.username %></a>
@@ -21,25 +21,25 @@
     </p>
 
     <p>
-    <%= f.label :username, "Username:", :class => "required" %>
+    <%= f.label :username, t('.username'), :class => "required" %>
     <%= f.text_field :username, :size => 30 %>
     <span class="hint">
       <tt><%= User.username_regex_s %></tt>
     </span>
     <br />
 
-    <%= f.label :email, "E-mail Address:", :class => "required" %>
+    <%= f.label :email, t('.email'), :class => "required" %>
     <%= f.email_field :email, :size => 30 %>
     <span class="hint">
-      <a href="http://www.gravatar.com/" target="_blank">Gravatar</a>'ized
+      <a href="http://www.gravatar.com/" target="_blank">Gravatar</a>
     </span>
     <br />
 
-    <%= f.label :password, "Password:", :class => "required" %>
+    <%= f.label :password, t('.password'), :class => "required" %>
     <%= f.password_field :password, :size => 30, :autocomplete => "off" %>
     <br />
 
-    <%= f.label :password_confirmation, "Password (again):",
+    <%= f.label :password_confirmation, t('.passwordagain'),
       :class => "required" %>
     <%= f.password_field :password_confirmation, :size => 30,
       :autocomplete => "off" %>
@@ -47,13 +47,12 @@
     </p>
 
     <p>
-    Want to tell us about yourself?  It's optional, but it will be visible in
-    your public profile and can be changed at any time.
+    <%= t('.about') %>
     </p>
 
     <p>
     <div class="boxline">
-      <%= f.label :about, "About:", :class => "required" %>
+      <%= f.label :about, t('.abouttitle'), :class => "required" %>
       <%= f.text_area :about, :size => "100x5", :style => "width: 600px;" %>
     </div>
 

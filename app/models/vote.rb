@@ -16,6 +16,7 @@ class Vote < ApplicationRecord
     "O" => "Off-topic",
     "A" => "Already Posted",
     "S" => "Spam",
+    "B" => "Broken Link",
     "" => "Cancel",
   }.freeze
   OLD_STORY_REASONS = {

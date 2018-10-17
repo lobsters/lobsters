@@ -347,6 +347,7 @@ en:
       enroll2fa: "Enroll"
       disabled2fa: "Disabled"
       enabled2fa: "Enabled"
+      externalaccounts: "External Accounts
     pushover:
       pushovernotconfigured: "This site is not configured for Pushover"
     pushover_callback:

@@ -358,6 +358,7 @@ fr:
       enroll2fa: "Activer"
       disabled2fa: "Désactivée"
       enabled2fa: "Activée"
+      externalaccounts: "Comptes externes"
     pushover:
       pushovernotconfigured: "Ce site n'est pas configuré pour le Pushover"
     pushover_callback:

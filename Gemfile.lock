@@ -85,6 +85,9 @@ GEM
     ffi (1.9.25)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    good_migrations (0.0.2)
+      activerecord (>= 3.1)
+      railties (>= 3.1)
     htmlentities (4.3.4)
     i18n (1.1.0)
       concurrent-ruby (~> 1.0)
@@ -237,6 +240,7 @@ DEPENDENCIES
   exception_notification
   factory_bot_rails
   faker
+  good_migrations
   htmlentities
   jquery-rails (~> 4.3)
   json

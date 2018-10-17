@@ -396,6 +396,8 @@ en:
       passwordagain: "Password (again):"
       about: "Want to tell us about yourself?  It's optional, but it will be visible in your public profile and can be changed at any time."
       abouttitle: "About:"
+      markdownavailable: "Markdown formatting available"
+      signup: "Signup"
     invited:
       createaccounttitle: "Create an Account"
   stories:

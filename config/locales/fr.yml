@@ -409,6 +409,8 @@ fr:
       passwordagain: "Mot de passe (confirmation) :"
       about: "Envie de parler de vous ? C'est optionnel, ce sera visible sur votre profil public et vous pourrez le changer comme bon vous semble."
       abouttitle: "À propos :"
+      markdownavailable: "Syntaxe Markdown disponible"
+      signup: "S'inscrire"
   stories:
     edit:
       edit: "Éditer l'info"

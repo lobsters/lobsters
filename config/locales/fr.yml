@@ -396,6 +396,11 @@ fr:
     update:
       updatesettingsflash: "Paramètres mis à jour avec succès."
       passwordnotcorrect: "Le mot de passe courant n'a pas été entré correctement."
+  signup:
+    index:
+      createaccounttitle: "Créer un compte"
+    invited:
+      createaccounttitle: "Créer un compte"
   stories:
     edit:
       edit: "Éditer l'info"

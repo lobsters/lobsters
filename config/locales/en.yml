@@ -385,6 +385,11 @@ en:
     update:
       updatesettingsflash: "Successfully updated settings."
       passwordnotcorrect: "Your current password was not entered correctly."
+  signup:
+    index:
+      createaccounttitle: "Create an Account"
+    invited:
+      createaccounttitle: "Create an Account"
   stories:
     edit:
       edit: "Edit Story"

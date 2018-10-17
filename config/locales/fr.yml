@@ -235,11 +235,11 @@ fr:
       totpcodenotmatch: "Code TOTP incorrect. Merci de ré-essayer."
   filters:
     index:
-      filteredtags: "Marques filtrées"
+      filteredtags: "Étiquettes filtrées"
       filteredtagsdesc: "Pour cacher des infos de la page d'accueil qui ont été marquées avec une certaine <a href=\"/tags\">étiquette</a>, sélectionnez-les ci-dessous."
       filteredtagsnotloggedindesc: "Puisque vous n'êtes pas connecté, vos filtres seront enregistrés dans un cookie doté d'une longue durée de vie. Pour enregistrer définitivement vos filtres d'étiquettes et qu'ils fonctionnent donc quelque soit le navigateur web, <a href=\"/login\">connectez-vous</a> à votre compte."
       filteredhide: "Cacher"
-      filteredtag: "Marque"
+      filteredtag: "Étiquette"
       filtereddesc: "Description"
       filteredstories: "Infos"
       filteredsave: "Sauver les filtres"
@@ -415,7 +415,7 @@ fr:
       url: "URL :"
       title: "Titre :"
       changetitle: "Les utilisateurs ont proposé de changer le titre de l'info par :"
-      tags: "Marque :"
+      tags: "Étiquette :"
       changetags: "Les utilisateurs ont proposé de changer les étiquettes de l'info par :"
       text: "Texte :"
       placeholdertext: "Optionnel quand vous proposez une URL; se référer au mode d'emploi"
@@ -506,7 +506,7 @@ fr:
       moderator: "(modérateur)"
   tags:
     index:
-      tagstitle: "Marques"
+      tagstitle: "Étiquettes"
 # data for users/invitationform which is a partial view
   invitationtext: "Le nombre d'invitations est illimité, mais les personnes que vous invitez sont associées à votre compte dans <a href=\"/u\">l'arbre des utilisateurs</a> et vous pourriez être tenu pour responsable s'ils causent des problèmes. Merci d'évaluer le fait d'inviter des gens que vous ne connaissez pas personnellement."
   emailaddress: "Adresse e-mail :"
@@ -566,7 +566,7 @@ fr:
       flashalreadyposted: "Cette URL a déjà été soumise récemment."
       flashcanonicalversion: "Note: l'URL a été changée pour avoir la version canonique"
     tags_controller:
-      tagstitle: "Marques"
+      tagstitle: "Étiquettes"
     users_controller:
       usertitle: "Utilisateurs"
     signup_controller:

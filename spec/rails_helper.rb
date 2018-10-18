@@ -7,6 +7,7 @@ require 'rspec/rails'
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f }
 
+Moderation.destroy_all
 Tag.destroy_all
 Tag.create!([{ tag: "tag1" }, { tag: "tag2" }])
 

@@ -1,7 +1,7 @@
 <div class="form_errors_header">
   <% if story.errors.count == 1 && !story.already_posted_stories.empty? %>
     <div class="flash-error">
-    <h2>Error: This story was most recently submitted <%=
+    <h2>Error: This story was submitted <%=
       time_ago_in_words_label(story.already_posted_stories.first.created_at) %></h2>
     <p>
     Please view the previous discussions for this story: <br>

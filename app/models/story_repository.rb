@@ -11,6 +11,7 @@ class StoryRepository
 
   def hottest
     hottest = positive_ranked base_scope
+    hottest = has_minimal_score hottest
     hottest = filter_hidden_and_tags hottest
     hottest.order('hotness')
   end
@@ -119,6 +120,10 @@ private
 
   def positive_ranked(scope)
     scope.where("#{Story.score_sql} >= 0")
+  end
+
+  def has_minimal_score(scope)
+    scope.where("#{Story.score_sql} >= 2")
   end
 
   def filter_tags(scope, tags)

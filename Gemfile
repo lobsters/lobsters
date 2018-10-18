@@ -31,7 +31,7 @@ gem "rqrcode"
 # parsing
 gem "nokogiri", ">= 1.7.2"
 gem "htmlentities"
-gem "commonmarker", "~> 0.14"
+gem "commonmarker", "~> 0.14", "< 0.18"
 
 gem "oauth" # for twitter-posting bot
 gem "mail" # for parsing incoming mail

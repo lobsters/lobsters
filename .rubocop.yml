@@ -30,6 +30,8 @@ Layout/CaseIndentation:
   EnforcedStyle: end
 Layout/ElseAlignment:
   Enabled: false
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
 Layout/EmptyLinesAroundExceptionHandlingKeywords:
   Enabled: false
 Layout/EndAlignment:

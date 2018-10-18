@@ -11,7 +11,7 @@ class Markdowner
 
     walk_text_nodes(root) {|n| postprocess_text_node(n) }
 
-    ng = Nokogiri::HTML(root.to_html([:SAFE], exts))
+    ng = Nokogiri::HTML(root.to_html([:DEFAULT], exts))
 
     # change <h1>, <h2>, etc. headings to just bold tags
     ng.css("h1, h2, h3, h4, h5, h6").each do |h|

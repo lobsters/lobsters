@@ -805,10 +805,11 @@ class Story < ApplicationRecord
     end
     set_domain match
 
-    # strip out stupid google analytics parameters
+    # strip out tracking query params
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))
       params = match[2].split(/[&\?]/)
-      params.reject! {|p| p.match(/^utm_(source|medium|campaign|term|content)=/) }
+      # utm_ is google and many others; sk is medium
+      params.reject! {|p| p.match(/^utm_(source|medium|campaign|term|content)=|^sk=/) }
       u = match[1] << (params.any?? "?" << params.join("&") : "")
     end
 

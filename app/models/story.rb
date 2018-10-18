@@ -149,6 +149,12 @@ class Story < ApplicationRecord
   after_create :mark_submitter, :record_initial_upvote
   after_save :update_merged_into_story_comments, :recalculate_hotness!
 
+  after_commit ->(s) { IndexStoryJob.perform_later(s) },
+               on: [:create, :update, :destroy],
+               if: -> { Lobsters::Application.use_elasticsearch? }
+  after_commit ->(s) { s.comments.each {|c| IndexCommentJob.perform_later(c) } },
+               on: [:update]
+
   validate do
     if self.url.present?
       already_posted_recently?

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Search do
+describe SqlSearch do
   # We need to set up and then teardown the environment
   # outside of the typical RSpec transaction because
   # the search module uses custom SQL that doesn't
@@ -58,7 +58,7 @@ describe Search do
   end
 
   it "can search for stories" do
-    search = Search.new
+    search = described_class.new
     search.q = "unique"
 
     search.search_for_user!(@user)
@@ -68,7 +68,7 @@ describe Search do
   end
 
   it "can search for multitagged stories" do
-    search = Search.new
+    search = described_class.new
     search.q = "multitag"
 
     search.search_for_user!(@user)
@@ -78,7 +78,7 @@ describe Search do
   end
 
   it "can search for stories by domain" do
-    search = Search.new
+    search = described_class.new
     search.q = "term1 domain:lobste.rs"
 
     search.search_for_user!(@user)
@@ -88,7 +88,7 @@ describe Search do
   end
 
   it "can search for stories by tag" do
-    search = Search.new
+    search = described_class.new
     search.q = "term1 tag:tag1"
 
     search.search_for_user!(@user)
@@ -106,7 +106,7 @@ describe Search do
   end
 
   it "should return only stories with both tags if multiple tags are present" do
-    search = Search.new
+    search = described_class.new
     search.q = "term1 tag:tag1 tag:tag2"
 
     search.search_for_user!(@user)
@@ -115,7 +115,7 @@ describe Search do
   end
 
   it "can search for stories with only tags" do
-    search = Search.new
+    search = described_class.new
     search.q = "tag:tag2"
 
     search.search_for_user!(@user)
@@ -124,7 +124,7 @@ describe Search do
   end
 
   it "can search for comments" do
-    search = Search.new
+    search = described_class.new
     search.q = "comment1"
     search.what = "comments"
 
@@ -133,7 +133,7 @@ describe Search do
     expect(search.results).to include(@comments[1])
   end
   it "can search for comments by tag" do
-    search = Search.new
+    search = described_class.new
     search.q = "comment2 comment3 tag:tag1"
     search.what = "comments"
 
@@ -143,7 +143,7 @@ describe Search do
     expect(search.results).not_to include(@comments[3])
   end
   it "can search for comments with only tags" do
-    search = Search.new
+    search = described_class.new
     search.q = "tag:tag1"
     search.what = "comments"
 
@@ -153,7 +153,7 @@ describe Search do
     expect(search.results).not_to include(@comments[3])
   end
   it "should only return comments matching all tags if multiple are present" do
-    search = Search.new
+    search = described_class.new
     search.q = "tag:tag1 tag:tag2"
     search.what = "comments"
 
@@ -163,7 +163,7 @@ describe Search do
   end
 
   it "should only return comments with stories in domain if domain present" do
-    search = Search.new
+    search = described_class.new
     search.q = "comment3 comment4 domain:lobste.rs"
     search.what = "comments"
 

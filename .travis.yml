@@ -7,7 +7,7 @@ env:
     - DATABASE_URL=mysql2://root:@localhost/lobsters_dev
     - RAILS_ENV=test
 before_install:
-  - gem install bundler
+  - gem install bundler:2.0.1
 before_script:
   - ./bin/rails db:create
   - ./bin/rails db:schema:load

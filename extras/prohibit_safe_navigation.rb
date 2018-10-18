@@ -1,6 +1,6 @@
 require "rails"
 
-unless Rails.env.production?
+if Rails.env.test?
   module RuboCop
     module Cop
       module Style

@@ -1,4 +1,4 @@
-class Search
+class SqlSearch
   include ActiveModel::Validations
   include ActiveModel::Conversion
   include ActiveModel::AttributeMethods

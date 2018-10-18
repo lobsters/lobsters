@@ -1,9 +1,9 @@
 class SearchController < ApplicationController
+  before_action :load_search_backend
+
   def index
     @title = "Search"
     @cur_url = "/search"
-
-    @search = Search.new
 
     if params[:q].to_s.present?
       @search.q = params[:q].to_s
@@ -24,5 +24,15 @@ class SearchController < ApplicationController
     end
 
     render :action => "index"
+  end
+
+private
+
+  def load_search_backend
+    @search = if Rails.application.use_elasticsearch?
+      ElasticSearch.new
+    else
+      SqlSearch.new
+    end
   end
 end

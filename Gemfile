@@ -12,6 +12,11 @@ gem 'scenic'
 gem 'scenic-mysql_adapter'
 gem "activerecord-typedstore"
 
+# search
+gem 'elasticsearch'
+gem 'sucker_punch'
+gem 'backburner'
+
 # js
 gem "dynamic_form"
 gem "jquery-rails", "~> 4.3"
@@ -56,4 +61,6 @@ group :test, :development do
   gem "faker"
   gem "byebug"
   gem "rb-readline"
+  # For faking elasticsearch
+  gem 'wikipedia-client', require: false
 end

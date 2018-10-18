@@ -63,6 +63,8 @@ module Lobsters
     config.generators do |g|
       g.factory_bot false
     end
+
+    config.active_job.queue_adapter = ENV['USE_BEANSTALK'] ? :backburner : :sucker_punch
   end
 end
 

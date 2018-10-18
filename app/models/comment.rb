@@ -49,6 +49,10 @@ class Comment < ApplicationRecord
 
   SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
 
+  after_commit ->(s) { IndexCommentJob.perform_later(s) },
+               on: [:create, :update, :destroy],
+               if: -> { Lobsters::Application.use_elasticsearch? }
+
   validate do
     self.comment.to_s.strip == "" &&
       errors.add(:comment, "cannot be blank.")

@@ -202,9 +202,9 @@ fr:
     invitation_request:
       title: "Bonjour %{email},"
       invitedto: "Quelqu'un avec l'ip %{userip} a demandé une invitation au %{appname}."
-      name: "Name: %{name}"
-      email: "Email: %{email} (ne sera pas montré aux autres utilisateurs)"
-      memo: "Memo: %{memo}"
+      name: "Nom : %{name}"
+      email: "E-mail : %{email} (ne sera pas montré aux autres utilisateurs)"
+      memo: "Informations : %{memo}"
       warning: "Si c'est bien vous, suivez l'URL suivante pour confirmer votre demande et l'afficher aux autres utilisateurs."
       deletemessage: "S'il ne s'agit pas de vous, vous pouvez effacer ce message."
   login:

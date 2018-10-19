@@ -14,6 +14,8 @@ fr:
           attributes:
             password_confirmation:
               confirmation: "La confirmation et le mot de passe ne correspondent pas"
+            email:
+              taken: "Cet e-mail est déjà utilisé"
   time:
     formats:
       default: "%d-%m-%Y %H:%M:%S"

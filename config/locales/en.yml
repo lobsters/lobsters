@@ -400,6 +400,11 @@ en:
       signup: "Signup"
     invited:
       createaccounttitle: "Create an Account"
+    invite:
+      passinvitation: "Pass Along an Invitation"
+      passinvitationbody: "This community can only grow when members invite new users, just as you were invited. Take a moment and invite someone you know."
+      passinvitationor: "or"
+      passinvitationskip: "Skip"
   stories:
     edit:
       edit: "Edit Story"

@@ -418,6 +418,11 @@ fr:
       abouttitle: "À propos :"
       markdownavailable: "Syntaxe Markdown disponible"
       signup: "S'inscrire"
+    invite:
+      passinvitation: "À votre tour d'inviter quelqu'un"
+      passinvitationbody: "Cette communauté ne peut grossir que quand des membres invitent d'autres personnes. N'hésitez pas à prendre un moment pour inviter quelqu'un à votre tour."
+      passinvitationor: "ou"
+      passinvitationskip: "Plus tard"
   stories:
     edit:
       edit: "Éditer l'info"

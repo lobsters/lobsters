@@ -1,20 +1,18 @@
 <div class="box wide">
   <div class="legend">
-    Pass Along an Invitation
+    <%= t('.passinvitation') %>
   </div>
 
   <p>
-  This community can only grow when members invite new users, just as
-  <strong><%= @user.invited_by_user.try(:username) %></strong> invited you.
-  Take a moment and invite someone you know.
+  <%= t('.passinvitationbody') %>
   </p>
 
   <%= render :partial => "users/invitationform",
     :locals => { :return_home => true } %>
 
-  or
+  <%= t('.passinvitationor') %>
 
   <p>
-  <%= button_to "Skip", "/", :method => :get %>
+  <%= button_to t('.passinvitationskip'), "/", :method => :get %>
   </p>
 </div>

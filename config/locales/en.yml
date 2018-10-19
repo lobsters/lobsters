@@ -581,7 +581,7 @@ en:
     signup_controller:
       signedup: "You are already signed up."
       invalidinv: "Invalid or expired invitation."
-      flashsuccesssignupcontroller: "Welcome to %{app}, %{user}!"
+      flashsuccesssignupcontroller: "Welcome!"
   # views.stories.suggest scop, unable to get it, I don't know why
   suggeststorychanges: "Suggest Story Changes"
   suggestchangesbutton: "Suggest Changes"

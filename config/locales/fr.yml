@@ -600,7 +600,7 @@ fr:
     signup_controller:
       signedup: "Vous êtes déja inscrit."
       invalidinv: "Invitation invalide ou expirée."
-      flashsuccesssignupcontroller: "Bienvenue sur le %{app}, %{user} !"
+      flashsuccesssignupcontroller: "Bienvenue !"
   # suggest.stories scope, unable to get it so global, I don't know why
   suggeststorychanges: "Suggérer des changements à l'info"
   suggestchangesbutton: "Suggérer des changements"

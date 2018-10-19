@@ -566,8 +566,6 @@ en:
     search_controller:
       searchtitle: "Search"
       flasherrorsearchcontroller: "Sorry, but the search engine is currently out of order"
-    signup_controller:
-      flashsuccesssignupcontroller: "Welcome to %{app}, %{user}!"
     stories_controller:
       submitstorytitle: "Submit Story"
       editstorytitle: "Edit Story"
@@ -583,6 +581,7 @@ en:
     signup_controller:
       signedup: "You are already signed up."
       invalidinv: "Invalid or expired invitation."
+      flashsuccesssignupcontroller: "Welcome to %{app}, %{user}!"
   # views.stories.suggest scop, unable to get it, I don't know why
   suggeststorychanges: "Suggest Story Changes"
   suggestchangesbutton: "Suggest Changes"

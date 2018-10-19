@@ -585,8 +585,6 @@ fr:
     search_controller:
       searchtitle: "Rechercher"
       flasherrorsearchcontroller: "Désolé mais le moteur de recherche est actuellement cassé"
-    signup_controller:
-      flashsuccesssignupcontroller: "Bienvenue sur le %{app}, %{user} !"
     stories_controller:
       submitstorytitle: "Soumettre une info"
       editstorytitle: "Éditer une info"
@@ -602,6 +600,7 @@ fr:
     signup_controller:
       signedup: "Vous êtes déja inscrit."
       invalidinv: "Invitation invalide ou expirée."
+      flashsuccesssignupcontroller: "Bienvenue sur le %{app}, %{user} !"
   # suggest.stories scope, unable to get it so global, I don't know why
   suggeststorychanges: "Suggérer des changements à l'info"
   suggestchangesbutton: "Suggérer des changements"

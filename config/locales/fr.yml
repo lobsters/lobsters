@@ -12,10 +12,15 @@ fr:
       models:
         user:
           attributes:
+            email:
+              invalid: "L'e-mail est invalide"
+              taken: "Cet e-mail est déjà utilisé"
+            password:
+              blank: "Le champ pour le mot de passe est vide"
             password_confirmation:
               confirmation: "La confirmation et le mot de passe ne correspondent pas"
-            email:
-              taken: "Cet e-mail est déjà utilisé"
+            username:
+              invalid: "Le nom d'utilisateur est invalide"
   time:
     formats:
       default: "%d-%m-%Y %H:%M:%S"

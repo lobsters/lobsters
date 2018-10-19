@@ -566,6 +566,8 @@ en:
     search_controller:
       searchtitle: "Search"
       flasherrorsearchcontroller: "Sorry, but the search engine is currently out of order"
+    signup_controller:
+      flashsuccesssignupcontroller: "Welcome to %{app}, %{user}!"
     stories_controller:
       submitstorytitle: "Submit Story"
       editstorytitle: "Edit Story"

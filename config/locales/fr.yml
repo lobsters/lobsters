@@ -585,6 +585,8 @@ fr:
     search_controller:
       searchtitle: "Rechercher"
       flasherrorsearchcontroller: "Désolé mais le moteur de recherche est actuellement cassé"
+    signup_controller:
+      flashsuccesssignupcontroller: "Bienvenue sur le %{app}, %{user} !"
     stories_controller:
       submitstorytitle: "Soumettre une info"
       editstorytitle: "Éditer une info"

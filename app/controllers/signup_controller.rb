@@ -47,8 +47,7 @@ class SignupController < ApplicationController
     if @new_user.save
       @invitation.destroy
       session[:u] = @new_user.session_token
-      flash[:success] = "Welcome to #{Rails.application.name}, " <<
-        "#{@new_user.username}!"
+      flash[:success] = I18n.t 'controllers.signup_controller.flashsuccesssignupcontroller'
 
       Countinual.count!("#{Rails.application.shortname}.users.created", "+1")
       Countinual.count!("#{Rails.application.shortname}.users.total",

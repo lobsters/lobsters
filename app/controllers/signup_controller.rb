@@ -11,7 +11,7 @@ class SignupController < ApplicationController
   end
 
   def invite
-    @title = "Pass Along an Invitation"
+    @title = I18n.t 'controllers.signup_controller.signuptitle'
   end
 
   def invited

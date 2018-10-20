@@ -598,6 +598,7 @@ fr:
     users_controller:
       usertitle: "Utilisateurs"
     signup_controller:
+      signuptitle: "Envoyer une invitation à votre tour"
       signedup: "Vous êtes déja inscrit."
       invalidinv: "Invitation invalide ou expirée."
       flashsuccesssignupcontroller: "Bienvenue !"

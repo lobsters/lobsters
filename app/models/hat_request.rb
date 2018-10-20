@@ -21,7 +21,7 @@ class HatRequest < ActiveRecord::Base
       m.author_user_id = user.id
       m.recipient_user_id = self.user_id
       m.subject = I18n.t 'models.hat.grantsubject', :hat => "#{self.hat}"
-      m.body = raw(I18n.t 'models.hat.grantbody')
+      m.body = I18n.t 'models.hat.grantbody'
       m.save!
 
       self.destroy

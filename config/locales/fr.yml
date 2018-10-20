@@ -44,6 +44,8 @@ fr:
       turnedintodragon: "transformé en dragon"
       slayeddragon: "le dragon a été terrassé"
       metooerror: "Merci de voter pour le commentaire à la place."
+    hat:
+      grantedby: "<span class=\"hat hat_%{hat}\" title=\"Accordé par %{inviteuser} le %{invitedate}\""
     moderation:
       storyeditedby: "Votre info a été éditée par "
       usersuggestions: "suggestions d'utilisateur"

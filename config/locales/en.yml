@@ -25,6 +25,8 @@ en:
       turnedintodragon: "turned into a dragon"
       slayeddragon: "slayed dragon"
       metooerror: "Please just upvote the parent post instead."
+    hat:
+      grantedby: "<span class=\"hat hat_%{hat}\" title=\"Granted by %{inviteuser} on %{invitedate}\""
     moderation:
       storyeditedby: "Your story has been edited by "
       usersuggestions: "user suggestions"

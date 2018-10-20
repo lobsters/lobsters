@@ -48,6 +48,9 @@ fr:
       slayeddragon: "le dragon a été terrassé"
       metooerror: "Merci de voter pour le commentaire à la place."
     hat:
+      grantsubject: "Votre chapeau %{hat} a été approuvé"
+      grantbody: "Vous pouvez maintenant porter ce chapeau quand vous commentez.\n\nCeci est un message automatique."
+      rejectsubject: "Votre demande du chapeau %{hat} a été rejetée"
       grantedby: "<span class=\"hat hat_%{hat}\" title=\"Accordé par %{inviteuser} le %{invitedate}\""
     moderation:
       storyeditedby: "Votre info a été éditée par "

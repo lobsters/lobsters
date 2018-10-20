@@ -20,9 +20,8 @@ class HatRequest < ActiveRecord::Base
       m = Message.new
       m.author_user_id = user.id
       m.recipient_user_id = self.user_id
-      m.subject = "Your hat \"#{self.hat}\" has been approved"
-      m.body = "This hat may now be worn when commenting.\n\n" +
-        "This is an automated message."
+      m.subject = I18n.t 'models.hat.grantsubject', :hat => "#{self.hat}"
+      m.body = raw(I18n.t 'models.hat.grantbody')
       m.save!
 
       self.destroy
@@ -34,7 +33,7 @@ class HatRequest < ActiveRecord::Base
       m = Message.new
       m.author_user_id = user.id
       m.recipient_user_id = self.user_id
-      m.subject = "Your request for hat \"#{self.hat}\" has been rejected"
+      m.subject = I18n.t 'models.hat.rejectsubject', :hat => "#{self.hat}"
       m.body = reason
       m.save!
 

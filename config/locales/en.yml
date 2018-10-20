@@ -26,6 +26,9 @@ en:
       slayeddragon: "slayed dragon"
       metooerror: "Please just upvote the parent post instead."
     hat:
+      grantsubject: "Your hat %{hat} has been approved"
+      grantbody: "This hat may now be worn when commenting.\n\nThis is an automated message."
+      rejectsubject: "Your request for hat %{hat} has been rejected"
       grantedby: "<span class=\"hat hat_%{hat}\" title=\"Granted by %{inviteuser} on %{invitedate}\""
     moderation:
       storyeditedby: "Your story has been edited by "

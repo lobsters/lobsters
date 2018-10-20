@@ -47,7 +47,11 @@ class Story < ApplicationRecord
   }
   scope :filter_tags, ->(tags) {
     tags.empty? ? all : where.not(
-      Tagging.select('TRUE').where('taggings.story_id = stories.id').where(tag_id: tags).exists
+      Tagging.select('TRUE')
+             .where('taggings.story_id = stories.id')
+             .where(tag_id: tags)
+             .arel
+             .exists
     )
   }
   scope :filter_tags_for, ->(user) {
@@ -55,7 +59,9 @@ class Story < ApplicationRecord
       Tagging.joins(tag: :tag_filters)
              .select('TRUE')
              .where('taggings.story_id = stories.id')
-             .where(tag_filters: { user_id: user }).exists
+             .where(tag_filters: { user_id: user })
+             .arel
+             .exists
     )
   }
   scope :hidden_by, ->(user) {
@@ -66,6 +72,7 @@ class Story < ApplicationRecord
       HiddenStory.select('TRUE')
         .where(Arel.sql('hidden_stories.story_id = stories.id'))
         .by(user)
+        .arel
         .exists
     )
   }

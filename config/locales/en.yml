@@ -2,6 +2,8 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  hats:
+    hatstitle: "Hats"
   time:
     formats:
       default: "%Y-%m-%d %H:%M:%S"
@@ -532,8 +534,6 @@ en:
     filters_controller:
       filterstitle: "Tag Filters"
       flashfilterupdate: "Your filters have been updated."
-    hats_controller:
-      hatstitle: "Hats"
     home_controller:
       recenttitle: "Recent Stories"
       abouttitle: "About"

@@ -21,6 +21,8 @@ fr:
               confirmation: "La confirmation et le mot de passe ne correspondent pas"
             username:
               invalid: "Le nom d'utilisateur est invalide"
+  hats:
+    hatstitle: "Chapeaux"
   time:
     formats:
       default: "%d-%m-%Y %H:%M:%S"
@@ -550,8 +552,6 @@ fr:
     filters_controller:
       filterstitle: "Filtres"
       flashfilterupdate: "Vos filtres ont été mis à jour."
-    hats_controller:
-      hatstitle: "Chapeaux"
     home_controller:
       recenttitle: "Infos récentes"
       abouttitle: "À propos"

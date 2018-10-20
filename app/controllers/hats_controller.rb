@@ -10,7 +10,7 @@ class HatsController < ApplicationController
   end
 
   def index
-    @title = "Hats"
+    @title = t('.hatstitle')
 
     @hat_groups = {}
 

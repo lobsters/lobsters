@@ -550,6 +550,8 @@ fr:
     filters_controller:
       filterstitle: "Filtres"
       flashfilterupdate: "Vos filtres ont été mis à jour."
+    hats_controller:
+      hatstitle: "Chapeaux"
     home_controller:
       recenttitle: "Infos récentes"
       abouttitle: "À propos"

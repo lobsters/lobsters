@@ -10,7 +10,7 @@ class HatsController < ApplicationController
   end
 
   def index
-    @title = t('.hatstitle')
+    @title = I18n.t 'controllers.hats_controller.hatstitle'
 
     @hat_groups = {}
 

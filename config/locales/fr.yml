@@ -22,7 +22,8 @@ fr:
             username:
               invalid: "Le nom d'utilisateur est invalide"
   hats:
-    hatstitle: "Chapeaux"
+    index:
+      hatstitle: "Chapeaux"
   time:
     formats:
       default: "%d-%m-%Y %H:%M:%S"

@@ -3,7 +3,8 @@
 
 en:
   hats:
-    hatstitle: "Hats"
+    index:
+      hatstitle: "Hats"
   time:
     formats:
       default: "%Y-%m-%d %H:%M:%S"

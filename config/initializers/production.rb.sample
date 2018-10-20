@@ -2,7 +2,7 @@
 # cleaned up from Lobsters.
 #
 # Copy this to config/initializers/production.rb and customize, it's already
-# listed in .gitignore to help prevent you from accidentally commiting it.
+# listed in .gitignore to help prevent you from accidentally committing it.
 #
 # This predates Rails' config/secrets.yml feature and we could probably shift
 # to using that at some point.

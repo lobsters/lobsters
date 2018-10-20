@@ -21,7 +21,7 @@ class Hat < ActiveRecord::Base
   def to_html_label
     hl = (self.link.present? && self.link.match(/^https?:\/\//))
 
-    h =raw(t('.grantedby', :hat => "#{self.hat.gsub(/[^A-Za-z0-9]/, \"_\").downcase}", :inviteuser => "#{t('.inviteuser')}", "#{self.created_at.strftime("%Y-%m-%d")}"))
+    h = I18n.t 'models.hat.grantedby', :hat => "#{self.hat.gsub(/[^A-Za-z0-9]/, "_").downcase}", :inviteuser => "#{self.granted_by_user.username}", :invitedate => "#{self.created_at.strftime("%Y-%m-%d")}"
 
     if !hl && self.link.present?
       h << " - #{ERB::Util.html_escape(self.link)}"

@@ -16,7 +16,7 @@ class Keystore < ApplicationRecord
       Keystore.connection.execute("INSERT OR REPLACE INTO " <<
         "#{Keystore.table_name} (`key`, `value`) VALUES " <<
         "(#{q(key)}, #{q(value)})")
-    elsif Keystore.connection.adapter_name =~ /Mysql/
+    elsif /Mysql/.match?(Keystore.connection.adapter_name)
       Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" +
         "`key`, `value`) VALUES (#{q(key)}, #{q(value)}) ON DUPLICATE KEY " +
         "UPDATE `value` = #{q(value)}")
@@ -41,7 +41,7 @@ class Keystore < ApplicationRecord
           "(#{q(key)}, 0)")
         Keystore.connection.execute("UPDATE #{Keystore.table_name} " <<
           "SET `value` = `value` + #{q(amount)} WHERE `key` = #{q(key)}")
-      elsif Keystore.connection.adapter_name =~ /Mysql/
+      elsif /Mysql/.match?(Keystore.connection.adapter_name)
         Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" +
           "`key`, `value`) VALUES (#{q(key)}, #{q(amount)}) ON DUPLICATE KEY " +
           "UPDATE `value` = `value` + #{q(amount)}")

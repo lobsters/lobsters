@@ -35,7 +35,7 @@ Story.to_tweet.each_with_index do |s, x|
   left_len = Twitter::MAX_TWEET_LEN - tco_status.length
 
   title = s.title
-  if title.match(/^([dm] |@)/i)
+  if title.match?(/^([dm] |@)/i)
     # prevent these tweets from activating twitter shortcuts
     # https://dev.twitter.com/docs/faq#tweeting
     title = "- #{title}"
@@ -61,7 +61,7 @@ Story.to_tweet.each_with_index do |s, x|
   res = Twitter.oauth_request("/1.1/statuses/update.json", :post, "status" => status)
 
   begin
-    if res["id_str"].to_s.match(/\d+/)
+    if res["id_str"].to_s.match?(/\d+/)
       s.update_column("twitter_id", res["id_str"])
     elsif res["errors"].select {|e| e["code"] == 226 || e["code"] == 186 }.any?
       # twitter is rejecting the content of this message, skip it

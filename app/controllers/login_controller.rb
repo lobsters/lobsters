@@ -22,7 +22,7 @@ class LoginController < ApplicationController
   end
 
   def login
-    if params[:email].to_s.match(/@/)
+    if params[:email].to_s.match?(/@/)
       user = User.where(:email => params[:email]).first
     else
       user = User.where(:username => params[:email]).first

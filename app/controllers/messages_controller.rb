@@ -76,7 +76,7 @@ class MessagesController < ApplicationController
       @new_message.recipient_username = (@message.author_user_id == @user.id ?
         @message.recipient.username : @message.author.username)
 
-      if @message.subject.match(/^re:/i)
+      if @message.subject.match?(/^re:/i)
         @new_message.subject = @message.subject
       else
         @new_message.subject = "Re: #{@message.subject}"

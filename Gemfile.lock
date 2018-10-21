@@ -69,6 +69,7 @@ GEM
       ruby-enum (~> 0.5)
     concurrent-ruby (1.1.1)
     crass (1.0.4)
+    database_cleaner (1.7.0)
     diff-lcs (1.3)
     dynamic_form (1.1.4)
     erubi (1.7.1)
@@ -239,6 +240,7 @@ DEPENDENCIES
   byebug
   capybara
   commonmarker (~> 0.14)
+  database_cleaner
   dynamic_form
   exception_notification
   factory_bot_rails
@@ -267,4 +269,4 @@ DEPENDENCIES
   unicorn
 
 BUNDLED WITH
-   1.16.2
+   1.16.5

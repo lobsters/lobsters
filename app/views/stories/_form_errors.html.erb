@@ -1,6 +1,5 @@
 <div>
   <div class="form_errors_header">
-    <%= debug story.is_duplicate? %>
 
     <% if story.errors.count == 1 && story.is_duplicate? %>
       <div class="flash-error">
@@ -18,7 +17,7 @@
         time_ago_in_words_label(story.get_duplicates.first.created_at) %>, but
         may be submitted again.</h2>
       <p>
-        Please view the previous discussions for this story. <br>
+        Please view the previous discussions for this story.
         <br>
         If the content has changed or warrants new discussion, you may submit it again.
       </p>
@@ -35,5 +34,6 @@
   </div>
   <% if story.is_duplicate? %>
     <%= render :partial => "stories/similar", :locals => { :similar => story.get_duplicates } %>
+    <br>
   <% end %>
 </div>

@@ -1,8 +1,4 @@
 <%= render :partial => "stories/form_errors", :locals => { :f => f, :story => f.object } %>
-<%= debug story.is_duplicate? %>
-<% if f.object.is_duplicate? %>
-  <%= render :partial => "stories/similar", :locals => { :similar => story.get_duplicates } %>
-<% end %>
 
 <div class="box">
   <% unless defined?(suggesting) %>

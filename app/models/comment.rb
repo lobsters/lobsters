@@ -1,4 +1,7 @@
 class Comment < ApplicationRecord
+  include PgSearch
+  pg_search_scope :search_by_comment, against: :comment
+
   belongs_to :user
   belongs_to :story,
              :inverse_of => :comments

@@ -19,7 +19,7 @@ JOIN
 LEFT JOIN
     comments parent_comments ON parent_comments.id = comments.parent_comment_id
 WHERE
-    read_ribbons.is_following = 1
+    read_ribbons.is_following = TRUE
     AND comments.user_id != read_ribbons.user_id
     AND comments.is_deleted = FALSE
     AND comments.is_moderated = FALSE
@@ -32,5 +32,5 @@ WHERE
       parent_comments.id IS NULL
       OR (parent_comments.upvotes - parent_comments.downvotes) >= 0
     )
-    AND (CAST(stories.upvotes as signed) - CAST(stories.downvotes as signed)) >= 0
+    AND (CAST(stories.upvotes AS integer) - CAST(stories.downvotes AS integer)) >= 0
 ;

@@ -1,4 +1,4 @@
-class AddWeblogs < ActiveRecord::Migration
+class AddWeblogs < ActiveRecord::Migration[4.2]
   def change
     create_table :weblogs do |t|
       t.timestamps
@@ -13,7 +13,7 @@ class AddWeblogs < ActiveRecord::Migration
     end
 
     # why can't the charset be specified in the create_table?
-    execute("ALTER TABLE weblogs MODIFY `uuid` varchar(200) CHARACTER SET utf8")
+    # execute("ALTER TABLE weblogs MODIFY `uuid` varchar(200) CHARACTER SET utf8")
 
     add_index "weblogs", ["user_id", "uuid"], :name => "user_and_uuid",
       :unique => true

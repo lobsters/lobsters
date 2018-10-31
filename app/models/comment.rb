@@ -231,7 +231,7 @@ class Comment < ApplicationRecord
 
   def deliver_mention_notifications
     self.plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
-      if (u = User.find_by(:username => mention))
+      if (u = User.active.find_by(:username => mention))
         if u.id == self.user.id
           next
         end
@@ -260,7 +260,8 @@ class Comment < ApplicationRecord
   def deliver_reply_notifications
     if self.parent_comment_id &&
        (u = self.parent_comment.try(:user)) &&
-       u.id != self.user.id
+       u.id != self.user.id &&
+       u.is_active?
       if u.email_replies?
         begin
           EmailReply.reply(self, u).deliver_now

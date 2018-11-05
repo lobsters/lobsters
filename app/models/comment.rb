@@ -41,7 +41,7 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
-  SCORE_RANGE_TO_HIDE = (-2 .. 4)
+  SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
 
   validate do
     self.comment.to_s.strip == "" &&

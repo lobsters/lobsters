@@ -170,8 +170,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             <% if story.comments_count == 0 %>
               no comments
             <% else %>
-              <%= story.comments_count %>
-                comment<%= story.comments_count == 1 ? "" : "s" %>
+              <%= story.comments_count %> <%= 'comment'.pluralize(story.comments_count) %></a>
             <% end %>
             </a>
           </span>

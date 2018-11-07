@@ -131,9 +131,8 @@ class Story < ApplicationRecord
   # Dingbats, emoji, and other graphics https://www.unicode.org/charts/
   GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}-\u{27BF}\u{1F000}-\u{1F9FF}]/.freeze
 
-  attr_accessor :editing_from_suggestions, :editor,
-                :fetching_ip, :is_hidden_by_cur_user, :is_saved_by_cur_user,
-                :moderation_reason, :previewing, :seen_previous, :vote
+  attr_accessor :editing_from_suggestions, :editor, :fetching_ip, :is_hidden_by_cur_user,
+                :is_saved_by_cur_user, :moderation_reason, :previewing, :seen_previous, :vote
   attr_writer :fetched_content
 
   before_validation :assign_short_id_and_upvote, :on => :create
@@ -168,13 +167,10 @@ class Story < ApplicationRecord
   end
 
   def check_already_posted
-    return unless self.url.present? && self.new_record?\
+    return unless self.url.present? && self.new_record?
 
-    return unless self.is_duplicate?
-
-    if self.get_duplicates.first.is_recent?
-      errors.add(:url, "has already been submitted within the past " <<
-        "#{RECENT_DAYS} days")
+    if self.is_similar? && self.most_recent_similar.is_recent?
+      errors.add(:url, "has already been submitted within the past #{RECENT_DAYS} days")
     end
   end
 
@@ -184,14 +180,6 @@ class Story < ApplicationRecord
     if TRACKING_DOMAINS.include?(domain)
       errors.add(:url, "is a link shortening or ad tracking domain")
     end
-  end
-
-  def is_duplicate?
-    return Story.find_similar_by_url(self.url).any?
-  end
-
-  def get_duplicates
-    return Story.find_similar_by_url(self.url).order("id DESC")
   end
 
   # returns a story or nil
@@ -225,6 +213,24 @@ class Story < ApplicationRecord
     Story
       .where(:url => urls)
       .where("is_expired = ? OR is_moderated = ?", false, true)
+  end
+
+  def similar_stories
+    return [] unless self.url.present?
+
+    @_similar_stories ||= Story.find_similar_by_url(self.url).order("id DESC")
+    if self.id?
+      @_similar_stories = @_similar_stories.where.not(id: self.id)
+    end
+    @_similar_stories
+  end
+
+  def is_similar?
+    similar_stories.any?
+  end
+
+  def most_recent_similar
+    similar_stories.first
   end
 
   def self.recalculate_all_hotnesses!

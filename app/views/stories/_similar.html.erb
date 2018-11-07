@@ -1,27 +1,22 @@
 <ol>
   <% similar.each do |story| %>
     <li>
-      <a href="<%= story.url %>" target="_blank">
-        <%= story.title %></a>
+      <a href="<%= story.url %>" target="_blank"><%= story.title %></a>
+      <%= story.user_is_author? ? "authored by" : "via" %>
+      <a href="/u/<%= story.user.username %>" class="<%= story.html_class_for_user %>"><%= story.user.username %></a>
+      <%= time_ago_in_words_label(story.created_at) %>
+      <span>
+        |
+        <%= story.score %> <%= 'point'.pluralize(story.score) %>
+      </span>
       <span class="comments_label">
         |
         <a href="<%= story.comments_path %>">
           <% if story.comments_count == 0 %>
             no comments</a>
           <% else %>
-            <%= story.comments_count %>
-            comment<%= story.comments_count == 1 ? "" : "s"%></a>
+            <%= story.comments_count %> <%= 'comment'.pluralize(story.comments_count) %></a>
           <% end %>
-      </span>
-      <span>
-        |
-        <%= story.upvotes - story.downvotes %>
-          point<%= story.comments_count == 1 ? "" : "s" %>
-      </span>
-          - 
-      <span>
-        <em>published on </em><%=story.created_at.strftime("%m/%d/%Y") %>
-        <em> at </em> <%= story.created_at.strftime("%I:%M%p") %></em>
       </span>
     </li>
   <% end %>

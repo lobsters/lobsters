@@ -18,7 +18,7 @@ class StoriesController < ApplicationController
     @story = Story.new(story_params)
     @story.user_id = @user.id
 
-    if @story.valid? && !(@story.is_duplicate? && !@story.seen_previous)
+    if @story.valid? && !(@story.is_similar? && !@story.seen_previous)
       if @story.save
         ReadRibbon.where(user: @user, story: @story).first_or_create
         return redirect_to @story.comments_path
@@ -136,8 +136,6 @@ class StoriesController < ApplicationController
 
     @title = @story.title
     @short_url = @story.short_id_url
-    @similar = Story.find_similar_by_url(@story.url)
-      .where("short_id != ?", @story.short_id)
 
     respond_to do |format|
       format.html {

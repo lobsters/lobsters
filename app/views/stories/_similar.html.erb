@@ -1,0 +1,28 @@
+<ol>
+  <% similar.each do |story| %>
+    <li>
+      <a href="<%= story.url %>" target="_blank">
+        <%= story.title %></a>
+      <span class="comments_label">
+        |
+        <a href="<%= story.comments_path %>">
+          <% if story.comments_count == 0 %>
+            no comments</a>
+          <% else %>
+            <%= story.comments_count %>
+            comment<%= story.comments_count == 1 ? "" : "s"%></a>
+          <% end %>
+      </span>
+      <span>
+        |
+        <%= story.upvotes - story.downvotes %>
+          point<%= story.comments_count == 1 ? "" : "s" %>
+      </span>
+          - 
+      <span>
+        <em>published on </em><%=story.created_at.strftime("%m/%d/%Y") %>
+        <em> at </em> <%= story.created_at.strftime("%I:%M%p") %></em>
+      </span>
+    </li>
+  <% end %>
+</ol>

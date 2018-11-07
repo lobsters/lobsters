@@ -1,33 +1,39 @@
-<div class="form_errors_header">
-  <% if story.errors.count == 1 && story.already_posted_story %>
-    <div class="flash-error">
-    <h2>Error: This story was already submitted <%=
-      time_ago_in_words_label(story.already_posted_story.created_at) %></h2>
-    <p>
-    Please view the <a href="<%= story.already_posted_story.comments_path %>"
-    target="_blank">previous discussion</a> for this story.
-    </p>
-    </div>
-  <% elsif story.errors.any? %>
-    <%= error_messages_for story %>
-  <% elsif !story.errors.any? && story.already_posted_story %>
-    <div class="flash-notice">
-    <h2>Note: This story was already submitted <%=
-      time_ago_in_words_label(story.already_posted_story.created_at) %>, but
-      may be submitted again.</h2>
-    <p>
-    Please view the <a href="<%= story.already_posted_story.comments_path %>"
-    target="_blank">previous discussion</a> for this story first.  If the content
-    has changed or warrants new discussion, you may submit it again.
-    </p>
-    </div>
+<div>
+  <div class="form_errors_header">
 
-    <% if defined?(f) %>
-      <%= f.hidden_field :seen_previous %>
-    <% else %>
-      <%= form_for story do |f| %>
+    <% if story.errors.count == 1 && story.is_duplicate? %>
+      <div class="flash-error">
+      <h2>Error: This story was submitted <%=
+        time_ago_in_words_label(story.get_duplicates.first.created_at) %></h2>
+      <p>
+      Please view the previous discussions for this story. <br>
+      </p>
+      </div>
+    <% elsif story.errors.any? && !story.is_duplicate?%>
+      <%= error_messages_for story %>
+    <% elsif !story.errors.any? && story.is_duplicate? %>
+      <div class="flash-notice">
+      <h2>Note: This story was already submitted <%=
+        time_ago_in_words_label(story.get_duplicates.first.created_at) %>, but
+        may be submitted again.</h2>
+      <p>
+        Please view the previous discussions for this story.
+        <br>
+        If the content has changed or warrants new discussion, you may submit it again.
+      </p>
+      </div>
+
+      <% if defined?(f) %>
         <%= f.hidden_field :seen_previous %>
+      <% else %>
+        <%= form_for story do |f| %>
+          <%= f.hidden_field :seen_previous %>
+        <% end %>
       <% end %>
     <% end %>
+  </div>
+  <% if story.is_duplicate? %>
+    <%= render :partial => "stories/similar", :locals => { :similar => story.get_duplicates } %>
+    <br>
   <% end %>
 </div>

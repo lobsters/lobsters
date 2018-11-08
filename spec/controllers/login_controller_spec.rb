@@ -69,4 +69,90 @@ describe LoginController do
       end
     end
   end
+
+  describe "/login/reset_password" do
+    it "starts reset process" do
+      expect {
+        post :reset_password, params: { email: user.email }
+        expect(flash[:success]).to_not be_nil
+      }.to(change { User.find(user.id).password_reset_token })
+    end
+
+    it "starts reset process for deleted users" do
+      expect {
+        post :reset_password, params: { email: deleted.email }
+        expect(flash[:success]).to_not be_nil
+      }.to(change { User.find(deleted.id).password_reset_token })
+    end
+
+    it "doesn't start reset process if user was banned" do
+      expect {
+        post :reset_password, params: { email: banned.email }
+        expect(flash[:success]).to be_nil
+      }.not_to(change { User.find(banned.id).password_reset_token })
+    end
+
+    it "doesn't start reset process if user was deleted and wiped" do
+      expect {
+        post :reset_password, params: { email: deleted_wiped.email }
+        expect(flash[:success]).to be_nil
+      }.not_to(change { User.find(deleted_wiped.id).password_reset_token })
+    end
+  end
+
+  describe "/login/set_new_password" do
+    it "resets if token matches" do
+      user.initiate_password_reset_for_ip('127.0.0.1')
+      expect {
+        post :set_new_password, params: {
+          token: user.password_reset_token,
+          password: 'new',
+          password_confirmation: 'new',
+        }
+      }.to(change { User.find(user.id).password_digest })
+      expect(User.find(user.id).authenticate('new')).to be_truthy
+    end
+
+    it "doesn't reset if token is wrong" do
+      user.initiate_password_reset_for_ip('127.0.0.1')
+      expect {
+        post :set_new_password, params: {
+          token: 'totes wrong',
+          password: 'new',
+          password_confirmation: 'new',
+        }
+      }.not_to(change { User.find(user.id).password_digest })
+    end
+
+    it "doesn't reset if token is missing" do
+      expect {
+        post :set_new_password, params: {
+          password: 'new',
+          password_confirmation: 'new',
+        }
+      }.not_to(change { User.find(user.id).password_digest })
+    end
+
+    it "doesn't reset if token expired" do
+      user.update(password_reset_token: "#{2.days.ago.to_i}-#{Utils.random_str(30)}")
+      expect {
+        post :set_new_password, params: {
+          token: user.password_reset_token,
+          password: 'new',
+          password_confirmation: 'new',
+        }
+      }.not_to(change { User.find(user.id).password_digest })
+    end
+
+    it "doesn't reset if user is banned" do
+      banned.initiate_password_reset_for_ip('127.0.0.1')
+      expect {
+        post :set_new_password, params: {
+          token: banned.password_reset_token,
+          password: 'new',
+          password_confirmation: 'new',
+        }
+      }.not_to(change { User.find(banned.id).password_digest })
+    end
+  end
 end

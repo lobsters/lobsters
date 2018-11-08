@@ -24,6 +24,9 @@ FactoryBot.define do
       username { 'inactive-user' }
       to_create {|user| user.save(validate: false) }
     end
+    trait(:deleted) do
+      deleted_at { Time.current }
+    end
     trait(:admin) do
       is_admin { true }
       is_moderator { true }

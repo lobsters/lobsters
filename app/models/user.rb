@@ -419,6 +419,11 @@ class User < ApplicationRecord
     banned_at?
   end
 
+  # user was deleted/banned before a server move, see lib/tasks/privacy_wipe
+  def is_wiped?
+    password_digest == '*'
+  end
+
   def is_new?
     Time.current - self.created_at <= NEW_USER_DAYS.days
   end

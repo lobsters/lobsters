@@ -1,6 +1,7 @@
 class LoginBannedError < StandardError; end
 class LoginDeletedError < StandardError; end
 class LoginTOTPFailedError < StandardError; end
+class LoginWipedError < StandardError; end
 class LoginFailedError < StandardError; end
 
 class LoginController < ApplicationController
@@ -33,6 +34,10 @@ class LoginController < ApplicationController
     begin
       if !user
         raise LoginFailedError
+      end
+
+      if user.is_wiped?
+        raise LoginWipedError
       end
 
       if !user.authenticate(params[:password].to_s)
@@ -74,6 +79,9 @@ class LoginController < ApplicationController
       end
 
       return redirect_to "/"
+    rescue LoginWipedError
+      fail_reason = "Your account was banned or deleted before the site changed admins. " <<
+                    "Your email and password hash were wiped for privacy."
     rescue LoginBannedError
       fail_reason = "Your account has been banned."
     rescue LoginDeletedError

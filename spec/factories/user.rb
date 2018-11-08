@@ -27,6 +27,11 @@ FactoryBot.define do
     trait(:deleted) do
       deleted_at { Time.current }
     end
+    # users who were banned/deleted before a server move
+    # you must also add banned/deleted trait with this
+    trait(:wiped) do
+      password_digest { '*' }
+    end
     trait(:admin) do
       is_admin { true }
       is_moderator { true }

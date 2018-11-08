@@ -5,6 +5,7 @@ ENV["RAILS_ENV"] ||= "production"
 APP_PATH = File.expand_path('../../config/application', __FILE__)
 require File.expand_path('../../config/boot', __FILE__)
 require APP_PATH
+require 'webrick'
 Rails.application.require_environment!
 
 LAST_STORY_KEY = "webmentions:last_story_id".freeze
@@ -77,7 +78,7 @@ if __FILE__ == $PROGRAM_NAME
 
     sp = Sponge.new
     sp.timeout = 10
-    response = sp.fetch(s.url, :get, nil, nil, {
+    response = sp.fetch(WEBrick::HTTPUtils.escape(s.url), :get, nil, nil, {
       "User-agent" => "#{Rails.application.domain} webmention endpoint lookup",
     }, 3)
     next unless response

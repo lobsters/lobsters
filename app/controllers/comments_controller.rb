@@ -275,7 +275,7 @@ class CommentsController < ApplicationController
 
   def threads
     if params[:user]
-      @showing_user = User.where(:username => params[:user]).first!
+      @showing_user = User.find_by!(username: params[:user])
       @heading = @title = "Threads for #{@showing_user.username}"
       @cur_url = "/threads/#{@showing_user.username}"
     elsif !@user
@@ -287,7 +287,11 @@ class CommentsController < ApplicationController
       @cur_url = "/threads"
     end
 
-    thread_ids = @showing_user.recent_threads(20, !!(@user && @user.id == @showing_user.id))
+    thread_ids = @showing_user.recent_threads(
+      20,
+      include_submitted_stories: !!(@user && @user.id == @showing_user.id),
+      include_deleted: @user && @user.is_moderator?
+    )
 
     comments = Comment.where(
       :thread_id => thread_ids

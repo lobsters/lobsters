@@ -30,7 +30,10 @@ class Comment < ApplicationRecord
                :deliver_mention_notifications, :log_hat_use
   after_destroy :unassign_votes
 
-  scope :active, -> { where(:is_deleted => false, :is_moderated => false) }
+  scope :deleted, -> { where(is_deleted: true) }
+  scope :not_deleted, -> { where(is_deleted: false) }
+  scope :not_moderated, -> { where(is_moderated: false) }
+  scope :active, -> { not_deleted.not_moderated }
 
   DOWNVOTABLE_DAYS = 7
   DELETEABLE_DAYS = DOWNVOTABLE_DAYS * 2
@@ -44,7 +47,7 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
-  SCORE_RANGE_TO_HIDE = (-2 .. 4)
+  SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
 
   validate do
     self.comment.to_s.strip == "" &&

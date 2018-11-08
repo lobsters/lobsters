@@ -1,33 +1,31 @@
-<div class="form_errors_header">
-  <% if story.errors.count == 1 && story.already_posted_story %>
-    <div class="flash-error">
-    <h2>Error: This story was already submitted <%=
-      time_ago_in_words_label(story.already_posted_story.created_at) %></h2>
-    <p>
-    Please view the <a href="<%= story.already_posted_story.comments_path %>"
-    target="_blank">previous discussion</a> for this story.
-    </p>
-    </div>
-  <% elsif story.errors.any? %>
-    <%= error_messages_for story %>
-  <% elsif !story.errors.any? && story.already_posted_story %>
-    <div class="flash-notice">
-    <h2>Note: This story was already submitted <%=
-      time_ago_in_words_label(story.already_posted_story.created_at) %>, but
-      may be submitted again.</h2>
-    <p>
-    Please view the <a href="<%= story.already_posted_story.comments_path %>"
-    target="_blank">previous discussion</a> for this story first.  If the content
-    has changed or warrants new discussion, you may submit it again.
-    </p>
-    </div>
+<div>
+  <div class="form_errors_header">
+    <% if story.errors.count == 1 && story.is_similar? %>
+      <div class="flash-error">
+        <h2>Error: This story was submitted <%= time_ago_in_words_label(story.most_recent_similar.created_at) %></h2>
+      </div>
+    <% elsif story.errors.any? && !story.is_similar? %>
+      <%= error_messages_for story %>
+    <% elsif !story.errors.any? && story.is_similar? %>
+      <div class="flash-notice">
+        <h2>Note: This story was already submitted <%= time_ago_in_words_label(story.most_recent_similar.created_at) %>, but may be submitted again.</h2>
+        <p>
+        If the content has changed or warrants new discussion, you may submit it again.
+        </p>
+      </div>
 
-    <% if defined?(f) %>
-      <%= f.hidden_field :seen_previous %>
-    <% else %>
-      <%= form_for story do |f| %>
+      <% if defined?(f) %>
         <%= f.hidden_field :seen_previous %>
+      <% else %>
+        <%= form_for story do |f| %>
+          <%= f.hidden_field :seen_previous %>
+        <% end %>
       <% end %>
     <% end %>
+  </div>
+
+  <% if story.is_similar? %>
+    <p>Previous discussions for this story:</p>
+    <%= render partial: "stories/similar", locals: { similar: story.similar_stories } %>
   <% end %>
 </div>

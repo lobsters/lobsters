@@ -76,3 +76,10 @@
     <% end %>
   </ol>
 <% end %>
+
+<% if !@story.previewing && @story.similar_stories.any? %>
+  <div class="box wide">
+    <h4>Stories with similar links:</h4>
+    <%= render partial: "stories/similar", locals: { similar: @story.similar_stories } %>
+  </div>
+<% end %>

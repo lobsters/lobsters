@@ -129,14 +129,13 @@ class Story < ApplicationRecord
     wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }.freeze
 
   # URI.parse is not very lenient, so we can't use it
-  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i
+  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i.freeze
 
   # Dingbats, emoji, and other graphics https://www.unicode.org/charts/
-  GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}-\u{27BF}\u{1F000}-\u{1F9FF}]/
+  GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}-\u{27BF}\u{1F000}-\u{1F9FF}]/.freeze
 
-  attr_accessor :already_posted_story, :editing_from_suggestions, :editor,
-                :fetching_ip, :is_hidden_by_cur_user, :is_saved_by_cur_user,
-                :moderation_reason, :previewing, :seen_previous, :vote
+  attr_accessor :editing_from_suggestions, :editor, :fetching_ip, :is_hidden_by_cur_user,
+                :is_saved_by_cur_user, :moderation_reason, :previewing, :seen_previous, :vote
   attr_writer :fetched_content
 
   before_validation :assign_short_id_and_upvote, :on => :create
@@ -173,12 +172,8 @@ class Story < ApplicationRecord
   def check_already_posted
     return unless self.url.present? && self.new_record?
 
-    self.already_posted_story = Story.find_similar_by_url(self.url)
-    return unless self.already_posted_story
-
-    if self.already_posted_story.is_recent?
-      errors.add(:url, "has already been submitted within the past " <<
-        "#{RECENT_DAYS} days")
+    if self.is_similar? && self.most_recent_similar.is_recent?
+      errors.add(:url, "has already been submitted within the past #{RECENT_DAYS} days")
     end
   end
 
@@ -221,7 +216,24 @@ class Story < ApplicationRecord
     Story
       .where(:url => urls)
       .where("is_expired = ? OR is_moderated = ?", false, true)
-      .order("id DESC").first
+  end
+
+  def similar_stories
+    return [] unless self.url.present?
+
+    @_similar_stories ||= Story.find_similar_by_url(self.url).order("id DESC")
+    if self.id?
+      @_similar_stories = @_similar_stories.where.not(id: self.id)
+    end
+    @_similar_stories
+  end
+
+  def is_similar?
+    similar_stories.any?
+  end
+
+  def most_recent_similar
+    similar_stories.first
   end
 
   def self.recalculate_all_hotnesses!

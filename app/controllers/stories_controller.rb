@@ -86,11 +86,11 @@ class StoriesController < ApplicationController
         @story.url = sattrs[:url]
       end
 
-      if @story.is_duplicate? && @story.get_duplicates.first.is_recent?
+      if @story.is_similar? && @story.most_recent_similar.is_recent?
         # user won't be able to submit this story as new, so just redirect
         # them to the previous story
         flash[:success] = "This URL has already been submitted recently."
-        return redirect_to @story.get_duplicates.first.comments_path
+        return redirect_to @story.most_recent_similar.comments_path
       end
 
       # ignore what the user brought unless we need it as a fallback

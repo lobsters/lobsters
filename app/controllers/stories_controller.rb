@@ -339,8 +339,17 @@ class StoriesController < ApplicationController
     @story = Story.new(story_params)
     @story.check_already_posted
 
-    return render :partial => "stories/form_errors", :layout => false,
-      :content_type => "text/html", :locals => { :story => @story }
+    respond_to do |format|
+      format.html {
+        return render :partial => "stories/form_errors", :layout => false,
+          :content_type => "text/html", :locals => { :story => @story }
+      }
+      format.json {
+        similar_stories = @story.similar_stories.map(&:as_json)
+
+        render :json => @story.as_json.merge(similar_stories: similar_stories)
+      }
+    end
   end
 
 private

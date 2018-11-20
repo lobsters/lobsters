@@ -78,9 +78,14 @@ if __FILE__ == $PROGRAM_NAME
 
     sp = Sponge.new
     sp.timeout = 10
-    response = sp.fetch(WEBrick::HTTPUtils.escape(s.url), :get, nil, nil, {
-      "User-agent" => "#{Rails.application.domain} webmention endpoint lookup",
-    }, 3)
+    begin
+      response = sp.fetch(WEBrick::HTTPUtils.escape(s.url), :get, nil, nil, {
+        "User-agent" => "#{Rails.application.domain} webmention endpoint lookup",
+      }, 3)
+    rescue NoIPsError, DNSError
+      # other people's DNS issues (usually transient); just skip the webmention
+      next
+    end
     next unless response
 
     wm_endpoint_raw = endpoint_from_headers(response['link']) ||

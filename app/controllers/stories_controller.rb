@@ -2,8 +2,7 @@ class StoriesController < ApplicationController
   caches_page :show, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,
-                :only => [:upvote, :downvote, :unvote, :hide, :unhide, :preview, :save, :unsave,
-                          :check_url_dupe,]
+                :only => [:upvote, :downvote, :unvote, :hide, :unhide, :preview, :save, :unsave]
   before_action :require_logged_in_user,
                 :only => [:destroy, :create, :edit, :fetch_url_attributes, :new, :suggest]
   before_action :verify_user_can_submit_stories, :only => [:new, :create]
@@ -368,7 +367,7 @@ private
       :merge_story_short_id, :is_unavailable, :user_is_author, :tags_a => [],
     )
 
-    if @user.is_moderator?
+    if @user && @user.is_moderator?
       p
     else
       p.except(:moderation_reason, :merge_story_short_id, :is_unavailable)

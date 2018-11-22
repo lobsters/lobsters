@@ -317,7 +317,7 @@ class Story < ApplicationRecord
     # mix in any stories this one cannibalized
     cpoints += self.merged_stories.map(&:score).inject(&:+).to_f
 
-    # cap the merged-article boost
+    # cap the merged-story boost
     if cpoints > self.upvotes
       cpoints = self.upvotes
     end

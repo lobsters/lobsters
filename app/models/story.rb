@@ -311,7 +311,7 @@ class Story < ApplicationRecord
     i_cpoint = self.tags_a.include?('ask') ? 0 : -0.0625
     cpoints = self.merged_comments
       .select(:downvotes)
-      .map {|c| c.downvotes == 0 ? i_cpoint : -0.25}
+      .map {|c| c.downvotes == 0 ? i_cpoint : -0.25 }
       .inject(&:+).to_f
 
     # mix in any stories this one cannibalized

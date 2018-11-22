@@ -218,7 +218,7 @@ class Story < ApplicationRecord
   def similar_stories
     return [] unless self.url.present?
 
-    @_similar_stories ||= Story.find_similar_by_url(self.url).order("id DESC")
+    @_similar_stories ||= Story.base.find_similar_by_url(self.url).order("id DESC")
     # do not include this story itself or any story merged into it
     if self.id?
       @_similar_stories = @_similar_stories.where.not(id: self.id)

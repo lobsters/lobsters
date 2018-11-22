@@ -304,14 +304,14 @@ class Story < ApplicationRecord
     # stories submitted by the author
     base = self.tags.sum(:hotness_mod) + (self.user_is_author? && self.url.present? ? 0.25 : 0.0)
 
-    # if a story has a large number of comments, it's probably a dumpster fire and needs to be put out
-    # receiving four downvoted comments, or sixteen comments that receive no downvote, is equivalent to one flag
-    #
+    # if a story has a large number of comments, it's probably a dumpster fire
+    # receiving four downvoted comments, or sixteen comments that receive no downvote,
+    # is equivalent to one flag
     # ask posts don't count, because those are supposed to generate comments
     i_cpoint = self.tags_a.include?('ask') ? 0 : -0.0625
     cpoints = self.merged_comments
       .select(:downvotes)
-      .map { |c| c.downvotes == 0 ? i_cpoint : -0.25 }
+      .map {|c| c.downvotes == 0 ? i_cpoint : -0.25}
       .inject(&:+).to_f
 
     # mix in any stories this one cannibalized

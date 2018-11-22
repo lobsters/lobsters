@@ -174,4 +174,20 @@ describe Story do
     expect(mod_log.action).to match(/title from "blah" to "changed title"/)
     expect(mod_log.action).to match(/tags from "tag1 tag2" to "tag1"/)
   end
+
+  describe "#similar_stories" do
+    it "finds stories with similar URLs" do
+      s1 = create(:story, url: 'https://example.com', created_at: (Story::RECENT_DAYS + 1).days.ago)
+      s2 = create(:story, url: 'https://example.com/')
+      expect(s1.similar_stories).to eq([s2])
+      expect(s2.similar_stories).to eq([s1])
+    end
+
+    it "does not include merges" do
+      s1 = create(:story, url: 'https://example.com', created_at: (Story::RECENT_DAYS + 1).days.ago)
+      s2 = create(:story, url: 'https://example.com/', merged_story_id: s1.id)
+      expect(s1.similar_stories).to eq([])
+      expect(s2.similar_stories).to eq([])
+    end
+  end
 end

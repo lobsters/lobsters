@@ -219,8 +219,14 @@ class Story < ApplicationRecord
     return [] unless self.url.present?
 
     @_similar_stories ||= Story.find_similar_by_url(self.url).order("id DESC")
+    # do not include this story itself or any story merged into it
     if self.id?
       @_similar_stories = @_similar_stories.where.not(id: self.id)
+        .where('merged_story_id is null or merged_story_id != ?', self.id)
+    end
+    # do not include the story this one is merged into
+    if self.merged_story_id?
+      @_similar_stories = @_similar_stories.where('id != ?', self.merged_story_id)
     end
     @_similar_stories
   end

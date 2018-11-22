@@ -304,26 +304,20 @@ class Story < ApplicationRecord
     # stories submitted by the author
     base = self.tags.sum(:hotness_mod) + (self.user_is_author? && self.url.present? ? 0.25 : 0.0)
 
-    # give a story's comment votes some weight, ignoring submitter's comments
+    # if a story has a large number of comments, it's probably a dumpster fire and needs to be put out
+    # receiving four downvoted comments, or sixteen comments that receive no downvote, is equivalent to one flag
+    #
+    # ask posts don't count, because those are supposed to generate comments
+    i_cpoint = self.tags_a.include?('ask') ? 0 : -0.0625
     cpoints = self.merged_comments
-      .where("user_id <> ?", self.user_id)
-      .select(:upvotes, :downvotes)
-      .map {|c|
-        if base < 0
-          # in stories already starting out with a bad hotness mod, only look
-          # at the downvotes to find out if this tire fire needs to be put out
-          c.downvotes * -0.5
-        else
-          c.upvotes + 1 - c.downvotes
-        end
-      }
-      .inject(&:+).to_f * 0.5
+      .select(:downvotes)
+      .map { |c| c.downvotes == 0 ? i_cpoint : -0.25 }
+      .inject(&:+).to_f
 
     # mix in any stories this one cannibalized
     cpoints += self.merged_stories.map(&:score).inject(&:+).to_f
 
-    # if a story has many comments but few votes, it's probably a bad story, so
-    # cap the comment points at the number of upvotes
+    # cap the merged-article boost
     if cpoints > self.upvotes
       cpoints = self.upvotes
     end

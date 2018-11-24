@@ -71,8 +71,7 @@ class Comment < ApplicationRecord
   end
 
   def self.arrange_for_user(user)
-    parents = self
-      .order(Arel.sql("(comments.upvotes - comments.downvotes) < 0 ASC, comments.confidence DESC"))
+    parents = self.order(Arel.sql("(comments.upvotes - comments.downvotes) < 0 ASC, comments.confidence DESC"))
       .group_by(&:parent_comment_id)
 
     # top-down list of comments, regardless of indent level

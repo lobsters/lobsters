@@ -6,7 +6,7 @@ module RuboCop
       # operator
       #
       # @example
-      # 
+      #
       #   # bad
       #   foo&.bar
       #   a.foo&.bar

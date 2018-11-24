@@ -1,5 +1,5 @@
 # Project setup:
-require: ./extras/rubocop/cop/style/disallow_safe_navigation
+require: ./extras/prohibit_safe_navigation
 Rails:
   Enabled: true
 AllCops:

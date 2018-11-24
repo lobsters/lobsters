@@ -30,8 +30,7 @@ class Hat < ApplicationRecord
 
     h = "<span class=\"hat " <<
         "hat_#{self.hat.gsub(/[^A-Za-z0-9]/, '_').downcase}\" " <<
-        "title=\"Granted by " << "#{self.granted_by_user.username} on " <<
-        self.created_at.strftime("%Y-%m-%d")
+        "title=\"Granted by #{self.created_at.strftime('%Y-%m-%d')}"
 
     if !hl && self.link.present?
       h << " - #{ERB::Util.html_escape(self.link)}"

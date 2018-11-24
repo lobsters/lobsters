@@ -31,6 +31,7 @@ class Comment < ApplicationRecord
   scope :not_deleted, -> { where(is_deleted: false) }
   scope :not_moderated, -> { where(is_moderated: false) }
   scope :active, -> { not_deleted.not_moderated }
+  scope :for_user, ->(user) { user && user.is_moderator? ? all : active }
 
   DOWNVOTABLE_DAYS = 7
   DELETEABLE_DAYS = DOWNVOTABLE_DAYS * 2
@@ -70,7 +71,7 @@ class Comment < ApplicationRecord
   end
 
   def self.arrange_for_user(user)
-    parents = self.order(Arel.sql("(upvotes - downvotes) < 0 ASC, confidence DESC"))
+    parents = self.order(Arel.sql("(comments.upvotes - comments.downvotes) < 0 ASC, comments.confidence DESC"))
       .group_by(&:parent_comment_id)
 
     # top-down list of comments, regardless of indent level

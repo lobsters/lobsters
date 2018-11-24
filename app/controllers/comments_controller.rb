@@ -235,17 +235,12 @@ class CommentsController < ApplicationController
       raise ActionController::RoutingError.new("page out of bounds")
     end
 
-    @comments = Comment.where(
-      :is_deleted => false, :is_moderated => false
-    ).order(
-      "id DESC"
-    ).offset(
-      (@page - 1) * COMMENTS_PER_PAGE
-    ).limit(
-      COMMENTS_PER_PAGE
-    ).includes(
-      :user, :story
-    )
+    @comments = Comment.for_user(@user)
+      .order("id DESC")
+      .includes(:user, :hat, :story => :user)
+      .joins(:story).where.not(stories: { is_expired: true })
+      .limit(COMMENTS_PER_PAGE)
+      .offset((@page - 1) * COMMENTS_PER_PAGE)
 
     if @user
       @comments = @comments.where("NOT EXISTS (SELECT 1 FROM " <<
@@ -290,16 +285,14 @@ class CommentsController < ApplicationController
     thread_ids = @showing_user.recent_threads(
       20,
       include_submitted_stories: !!(@user && @user.id == @showing_user.id),
-      include_deleted: @user && @user.is_moderator?
+      for_user: @user
     )
 
-    comments = Comment.where(
-      :thread_id => thread_ids
-    ).includes(
-      :user, :story, :hat, :votes => :user
-    ).arrange_for_user(
-      @user
-    )
+    comments = Comment.for_user(@user)
+      .where(:thread_id => thread_ids)
+      .includes(:user, :hat, :story => :user, :votes => :user)
+      .joins(:story).where.not(stories: { is_expired: true })
+      .arrange_for_user(@user)
 
     comments_by_thread_id = comments.group_by(&:thread_id)
     @threads = comments_by_thread_id.values_at(*thread_ids).compact

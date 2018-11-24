@@ -9,7 +9,7 @@ module UsersHelper
     capture do
       concat link_to(stories_displayed, "/newest/#{showing_user.username}")
 
-      concat(" (+#{stories_deleted} deleted)") if @user&.is_moderator? && stories_deleted > 0
+      concat(" (+#{stories_deleted} deleted)") if user_is_moderator? && stories_deleted > 0
 
       if tag
         concat ", most commonly tagged "
@@ -24,9 +24,15 @@ module UsersHelper
     capture do
       concat link_to(showing_user.comments_posted_count, "/threads/#{showing_user.username}")
 
-      if @user&.is_moderator? && comments_deleted > 0
+      if user_is_moderator? && comments_deleted > 0
         concat " (+#{comments_deleted} deleted)"
       end
     end
+  end
+
+private
+
+  def user_is_moderator?
+    @user && @user.is_moderator?
   end
 end

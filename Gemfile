@@ -46,7 +46,6 @@ group :test, :development do
   gem "rspec-rails"
   gem "factory_bot_rails"
   gem "rubocop", require: false
-  gem "rubocop-disallow-safe-navigation", require: false
   gem "rubocop-rspec", require: false
   gem "sqlite3"
   gem "faker"

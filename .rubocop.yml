@@ -1,4 +1,5 @@
 # Project setup:
+require: rubocop-disallow-safe-navigation
 Rails:
   Enabled: true
 AllCops:

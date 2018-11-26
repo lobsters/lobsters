@@ -1,3 +1,6 @@
+require 'rails'
+return if Rails.env.production?
+
 module RuboCop
   module Cop
     module Style

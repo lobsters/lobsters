@@ -1,3 +1,5 @@
+[Note this is by an active Lobsters user rather than from a mod or a posting of official policy.]
+
 From: https://lobste.rs/s/nkxia1/how_use_downvotes_correctly
 
 Folks!

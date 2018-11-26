@@ -1,12 +1,12 @@
 class Tag < ApplicationRecord
-  has_many :taggings, :dependent => :delete_all
-  has_many :stories, :through => :taggings
-  has_many :tag_filters, :dependent => :destroy
+  has_many :taggings, dependent: :delete_all
+  has_many :stories, through: :taggings
+  has_many :tag_filters, dependent: :destroy
   has_many :filtering_users,
-           :class_name => "User",
-           :through => :tag_filters,
-           :source => :user,
-           :dependent => :delete_all
+           class_name: "User",
+           through: :tag_filters,
+           source: :user,
+           dependent: :delete_all
 
   after_save :log_modifications
 
@@ -17,7 +17,7 @@ class Tag < ApplicationRecord
   validates :description, length: { maximum: 100 }
   validates :hotness_mod, inclusion: { in: -10..10 }
 
-  scope :active, -> { where(:inactive => false) }
+  scope :active, -> { where(inactive: false) }
 
   def to_param
     self.tag
@@ -54,7 +54,7 @@ class Tag < ApplicationRecord
   end
 
   def filtered_count
-    @filtered_count ||= TagFilter.where(:tag_id => self.id).count
+    @filtered_count ||= TagFilter.where(tag_id: self.id).count
   end
 
   def log_modifications

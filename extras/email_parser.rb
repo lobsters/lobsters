@@ -44,9 +44,9 @@ class EmailParser
     irt = self.email[:in_reply_to].to_s.gsub(/[^A-Za-z0-9@\.]/, "")
 
     if (m = irt.match(/^comment\.([^\.]+)\.\d+@/))
-      @parent = Comment.where(:short_id => m[1]).first
+      @parent = Comment.where(short_id: m[1]).first
     elsif (m = irt.match(/^story\.([^\.]+)\.\d+@/))
-      @parent = Story.where(:short_id => m[1]).first
+      @parent = Story.where(short_id: m[1]).first
     end
 
     @parent

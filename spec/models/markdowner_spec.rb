@@ -7,7 +7,7 @@ describe Markdowner do
   end
 
   it "turns @username into a link if @username exists" do
-    create(:user, :username => "blahblah")
+    create(:user, username: "blahblah")
 
     expect(Markdowner.to_html("hi @blahblah test"))
       .to eq("<p>hi <a href=\"https://example.com/u/blahblah\" rel=\"nofollow\">" +
@@ -26,7 +26,7 @@ describe Markdowner do
 
   # bug#242
   it "does not expand @ signs inside urls" do
-    create(:user, :username => "blahblah")
+    create(:user, username: "blahblah")
 
     expect(Markdowner.to_html("hi http://example.com/@blahblah/ test"))
       .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"nofollow\">" +

@@ -1,24 +1,24 @@
 class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :story,
-             :inverse_of => :comments
+             inverse_of: :comments
   has_many :votes,
-           :dependent => :delete_all
+           dependent: :delete_all
   belongs_to :parent_comment,
-             :class_name => "Comment",
-             :inverse_of => false,
-             :required => false
+             class_name: "Comment",
+             inverse_of: false,
+             required: false
   has_one :moderation,
-          :class_name => "Moderation",
-          :inverse_of => :comment,
-          :dependent => :destroy
+          class_name: "Moderation",
+          inverse_of: :comment,
+          dependent: :destroy
   belongs_to :hat,
-             :required => false
+             required: false
   has_many :taggings, through: :story
 
   attr_accessor :current_vote, :previewing, :indent_level
 
-  before_validation :on => :create do
+  before_validation on: :create do
     self.assign_short_id_and_upvote
     self.assign_initial_confidence
     self.assign_thread_id
@@ -119,7 +119,7 @@ class Comment < ApplicationRecord
 
     Comment.all.find_each do |c|
       c.markeddown_comment = c.generated_markeddown_comment
-      c.save(:validate => false)
+      c.save(validate: false)
     end
 
     Comment.record_timestamps = true
@@ -143,10 +143,10 @@ class Comment < ApplicationRecord
       :score,
       :upvotes,
       :downvotes,
-      { :comment => (self.is_gone? ? "<em>#{self.gone_text}</em>" : :markeddown_comment) },
+      { comment: (self.is_gone? ? "<em>#{self.gone_text}</em>" : :markeddown_comment) },
       :url,
       :indent_level,
-      { :commenting_user => :user },
+      { commenting_user: :user },
     ]
 
     js = {}
@@ -225,7 +225,7 @@ class Comment < ApplicationRecord
       m.save
     end
 
-    self.save(:validate => false)
+    self.save(validate: false)
     Comment.record_timestamps = true
 
     self.story.update_comments_count!
@@ -234,7 +234,7 @@ class Comment < ApplicationRecord
 
   def deliver_mention_notifications
     self.plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
-      if (u = User.active.find_by(:username => mention))
+      if (u = User.active.find_by(username: mention))
         if u.id == self.user.id
           next
         end
@@ -249,11 +249,11 @@ class Comment < ApplicationRecord
 
         if u.pushover_mentions?
           u.pushover!(
-            :title => "#{Rails.application.name} mention by " <<
+            title: "#{Rails.application.name} mention by " <<
               "#{self.user.username} on #{self.story.title}",
-            :message => self.plaintext_comment,
-            :url => self.url,
-            :url_title => "Reply to #{self.user.username}",
+            message: self.plaintext_comment,
+            url: self.url,
+            url_title: "Reply to #{self.user.username}",
           )
         end
       end
@@ -275,11 +275,11 @@ class Comment < ApplicationRecord
 
       if u.pushover_replies?
         u.pushover!(
-          :title => "#{Rails.application.name} reply from " <<
+          title: "#{Rails.application.name} reply from " <<
             "#{self.user.username} on #{self.story.title}",
-          :message => self.plaintext_comment,
-          :url => self.url,
-          :url_title => "Reply to #{self.user.username}",
+          message: self.plaintext_comment,
+          url: self.url,
+          url_title: "Reply to #{self.user.username}",
         )
       end
     end
@@ -499,7 +499,7 @@ class Comment < ApplicationRecord
       end
     end
 
-    self.save(:validate => false)
+    self.save(validate: false)
     Comment.record_timestamps = true
 
     self.story.update_comments_count!

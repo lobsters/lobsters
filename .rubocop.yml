@@ -142,8 +142,6 @@ Style/FrozenStringLiteralComment:
   EnforcedStyle: never
 Style/GuardClause:
   Enabled: false
-Style/HashSyntax:
-  EnforcedStyle: no_mixed_keys
 Style/IfInsideElse:
   Enabled: false
 Style/IfUnlessModifier:

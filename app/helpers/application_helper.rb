@@ -4,10 +4,10 @@ module ApplicationHelper
   def avatar_img(user, size)
     image_tag(
       user.avatar_path(size),
-      :srcset => "#{user.avatar_path(size)} 1x, #{user.avatar_path(size * 2)} 2x",
-      :class => "avatar",
-      :size => "#{size}x#{size}",
-      :alt => "#{user.username} avatar",
+      srcset: "#{user.avatar_path(size)} 1x, #{user.avatar_path(size * 2)} 2x",
+      class: "avatar",
+      size: "#{size}x#{size}",
+      alt: "#{user.username} avatar",
     )
   end
 
@@ -38,24 +38,24 @@ module ApplicationHelper
     return @header_links if @header_links
 
     @header_links = {
-      root_path => { :title => @cur_url == "/" ? Rails.application.name : "Home" },
-      recent_path => { :title => "Recent" },
-      comments_path => { :title => "Comments" },
+      root_path => { title: @cur_url == "/" ? Rails.application.name : "Home" },
+      recent_path => { title: "Recent" },
+      comments_path => { title: "Comments" },
     }
 
     if @user
-      @header_links[threads_path] = { :title => "Your Threads" }
+      @header_links[threads_path] = { title: "Your Threads" }
     end
 
     if @user && @user.can_submit_stories?
-      @header_links[new_story_path] = { :title => "Submit Story" }
+      @header_links[new_story_path] = { title: "Submit Story" }
     end
 
     if @user
-      @header_links[saved_path] = { :title => "Saved" }
+      @header_links[saved_path] = { title: "Saved" }
     end
 
-    @header_links[search_path] = { :title => "Search" }
+    @header_links[search_path] = { title: "Search" }
 
     @header_links.each do |k, v|
       v[:class] ||= []
@@ -76,25 +76,25 @@ module ApplicationHelper
     if @user
       if (count = @user.unread_replies_count) > 0
         @right_header_links[replies_unread_path] = {
-          :class => ["new_messages"],
-          :title => "#{@user.unread_replies_count} Reply".pluralize(count),
+          class: ["new_messages"],
+          title: "#{@user.unread_replies_count} Reply".pluralize(count),
         }
       else
-        @right_header_links[replies_path] = { :title => "Replies" }
+        @right_header_links[replies_path] = { title: "Replies" }
       end
 
       if (count = @user.unread_message_count) > 0
         @right_header_links[messages_path] = {
-          :class => ["new_messages"],
-          :title => "#{@user.unread_message_count} Message".pluralize(count),
+          class: ["new_messages"],
+          title: "#{@user.unread_message_count} Message".pluralize(count),
         }
       else
-        @right_header_links[messages_path] = { :title => "Messages" }
+        @right_header_links[messages_path] = { title: "Messages" }
       end
 
-      @right_header_links[settings_path] = { :title => "#{@user.username} (#{@user.karma})" }
+      @right_header_links[settings_path] = { title: "#{@user.username} (#{@user.karma})" }
     else
-      @right_header_links[login_path] = { :title => "Login" }
+      @right_header_links[login_path] = { title: "Login" }
     end
 
     @right_header_links.each do |k, v|

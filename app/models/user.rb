@@ -1,66 +1,66 @@
 class User < ApplicationRecord
-  has_many :stories, -> { includes :user }, :inverse_of => :user
+  has_many :stories, -> { includes :user }, inverse_of: :user
   has_many :comments,
-           :inverse_of => :user,
-           :dependent => :restrict_with_exception
+           inverse_of: :user,
+           dependent: :restrict_with_exception
   has_many :sent_messages,
-           :class_name => "Message",
-           :foreign_key => "author_user_id",
-           :inverse_of => :author,
-           :dependent => :restrict_with_exception
+           class_name: "Message",
+           foreign_key: "author_user_id",
+           inverse_of: :author,
+           dependent: :restrict_with_exception
   has_many :received_messages,
-           :class_name => "Message",
-           :foreign_key => "recipient_user_id",
-           :inverse_of => :recipient,
-           :dependent => :restrict_with_exception
-  has_many :tag_filters, :dependent => :destroy
+           class_name: "Message",
+           foreign_key: "recipient_user_id",
+           inverse_of: :recipient,
+           dependent: :restrict_with_exception
+  has_many :tag_filters, dependent: :destroy
   has_many :tag_filter_tags,
-           :class_name => "Tag",
-           :through => :tag_filters,
-           :source => :tag,
-           :dependent => :delete_all
+           class_name: "Tag",
+           through: :tag_filters,
+           source: :tag,
+           dependent: :delete_all
   belongs_to :invited_by_user,
-             :class_name => "User",
-             :inverse_of => false,
-             :required => false
+             class_name: "User",
+             inverse_of: false,
+             required: false
   belongs_to :banned_by_user,
-             :class_name => "User",
-             :inverse_of => false,
-             :required => false
+             class_name: "User",
+             inverse_of: false,
+             required: false
   belongs_to :disabled_invite_by_user,
-             :class_name => "User",
-             :inverse_of => false,
-             :required => false
-  has_many :invitations, :dependent => :destroy
+             class_name: "User",
+             inverse_of: false,
+             required: false
+  has_many :invitations, dependent: :destroy
   has_many :moderations,
-           :inverse_of => :moderator,
-           :dependent => :restrict_with_exception
-  has_many :votes, :dependent => :destroy
+           inverse_of: :moderator,
+           dependent: :restrict_with_exception
+  has_many :votes, dependent: :destroy
   has_many :voted_stories, -> { where('votes.comment_id' => nil) },
-           :through => :votes,
-           :source => :story
+           through: :votes,
+           source: :story
   has_many :upvoted_stories,
            -> { where('votes.comment_id' => nil, 'votes.vote' => 1) },
-           :through => :votes,
-    :source => :story
-  has_many :hats, :dependent => :destroy
+           through: :votes,
+    source: :story
+  has_many :hats, dependent: :destroy
   has_many :wearable_hats, -> { where('doffed_at is null') },
-           :class_name => "Hat",
-           :inverse_of => :user
+           class_name: "Hat",
+           inverse_of: :user
 
   has_secure_password
 
   typed_store :settings do |s|
-    s.boolean :email_notifications, :default => false
-    s.boolean :email_replies, :default => false
-    s.boolean :pushover_replies, :default => false
+    s.boolean :email_notifications, default: false
+    s.boolean :email_replies, default: false
+    s.boolean :pushover_replies, default: false
     s.string :pushover_user_key
-    s.boolean :email_messages, :default => false
-    s.boolean :pushover_messages, :default => false
-    s.boolean :email_mentions, :default => false
-    s.boolean :show_avatars, :default => true
-    s.boolean :show_story_previews, :default => false
-    s.boolean :show_submitted_story_threads, :default => false
+    s.boolean :email_messages, default: false
+    s.boolean :pushover_messages, default: false
+    s.boolean :email_mentions, default: false
+    s.boolean :show_avatars, default: true
+    s.boolean :show_story_previews, default: false
+    s.boolean :show_submitted_story_threads, default: false
     s.string :totp_secret
     s.string :github_oauth_token
     s.string :github_username
@@ -70,15 +70,15 @@ class User < ApplicationRecord
   end
 
   validates :email,
-            :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
-            :uniqueness => { :case_sensitive => false }
+            format: { with: /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
+            uniqueness: { case_sensitive: false }
 
-  validates :password, :presence => true, :on => :create
+  validates :password, presence: true, on: :create
 
   VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/.freeze
   validates :username,
-            :format => { :with => /\A#{VALID_USERNAME}\z/ },
-            :uniqueness => { :case_sensitive => false }
+            format: { with: /\A#{VALID_USERNAME}\z/ },
+            uniqueness: { case_sensitive: false }
 
   validates_each :username do |record, attr, value|
     if BANNED_USERNAMES.include?(value.to_s.downcase) || value.starts_with?('tag-')
@@ -86,7 +86,7 @@ class User < ApplicationRecord
     end
   end
 
-  scope :active, -> { where(:banned_at => nil, :deleted_at => nil) }
+  scope :active, -> { where(banned_at: nil, deleted_at: nil) }
   scope :moderators, -> {
     where('
       is_moderator = True OR
@@ -95,7 +95,7 @@ class User < ApplicationRecord
   }
 
   before_save :check_session_token
-  before_validation :on => :create do
+  before_validation on: :create do
     self.create_rss_token
     self.create_mailing_list_token
   end
@@ -151,7 +151,7 @@ class User < ApplicationRecord
 
     attrs.push :about
 
-    h = super(:only => attrs)
+    h = super(only: attrs)
 
     h[:avatar_url] = self.avatar_url
     h[:invited_by_user] = User.where(id: invited_by_user_id).pluck(:username).first
@@ -434,7 +434,7 @@ class User < ApplicationRecord
     if total_count < MIN_STORIES_CHECK_SELF_PROMOTION
       false
     else
-      authored = self.stories.where(:user_is_author => true).count
+      authored = self.stories.where(user_is_author: true).count
       authored.to_f / total_count >= HEAVY_SELF_PROMOTER_PROPORTION
     end
   end
@@ -447,7 +447,7 @@ class User < ApplicationRecord
     Tag.active.joins(
       :stories
     ).where(
-      :stories => { :user_id => self.id }
+      stories: { user_id: self.id }
     ).group(
       Tag.arel_table[:id]
     ).order(
@@ -469,7 +469,7 @@ class User < ApplicationRecord
 
     if include_submitted_stories && self.show_submitted_story_threads
       thread_ids += Comment.joins(:story)
-        .where(:stories => { :user_id => self.id }).group(:thread_id)
+        .where(stories: { user_id: self.id }).group(:thread_id)
         .order("MAX(comments.created_at) DESC").limit(amount).pluck(:thread_id)
 
       thread_ids = thread_ids.uniq.sort.reverse[0, amount]
@@ -524,11 +524,11 @@ class User < ApplicationRecord
   end
 
   def undeleted_received_messages
-    received_messages.where(:deleted_by_recipient => false).order('id asc')
+    received_messages.where(deleted_by_recipient: false).order('id asc')
   end
 
   def undeleted_sent_messages
-    sent_messages.where(:deleted_by_author => false).order('id asc')
+    sent_messages.where(deleted_by_author: false).order('id asc')
   end
 
   def unread_message_count

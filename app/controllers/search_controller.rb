@@ -23,6 +23,6 @@ class SearchController < ApplicationController
       end
     end
 
-    render :action => "index"
+    render action: "index"
   end
 end

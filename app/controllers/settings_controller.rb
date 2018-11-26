@@ -50,7 +50,7 @@ class SettingsController < ApplicationController
       flash[:error] = "Your current password was not entered correctly."
     end
 
-    render :action => "index"
+    render action: "index"
   end
 
   def twofa
@@ -87,7 +87,7 @@ class SettingsController < ApplicationController
       session[:totp_secret] = ROTP::Base32.random_base32
     end
 
-    totp = ROTP::TOTP.new(session[:totp_secret], :issuer => Rails.application.name)
+    totp = ROTP::TOTP.new(session[:totp_secret], issuer: Rails.application.name)
     totp_url = totp.provisioning_uri(@user.email)
 
     # no option for inline svg, so just strip off leading <?xml> tag
@@ -146,9 +146,9 @@ class SettingsController < ApplicationController
     session[:pushover_rand] = SecureRandom.hex
 
     return redirect_to Pushover.subscription_url(
-      :success => "#{Rails.application.root_url}settings/pushover_callback?" <<
+      success: "#{Rails.application.root_url}settings/pushover_callback?" <<
         "rand=#{session[:pushover_rand]}",
-      :failure => "#{Rails.application.root_url}settings/",
+      failure: "#{Rails.application.root_url}settings/",
     )
   end
 

@@ -50,7 +50,7 @@ class Markdowner
 
       node.string_content = before
 
-      if User.exists?(:username => user[1..-1])
+      if User.exists?(username: user[1..-1])
         link = CommonMarker::Node.new(:link)
         link.url = Rails.application.root_url + "u/#{user[1..-1]}"
         node.insert_after(link)

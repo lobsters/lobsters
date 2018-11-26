@@ -3,12 +3,12 @@ require "rails_helper"
 describe EmailParser do
   before(:each) do
     @user = create(:user)
-    @story = create(:story, :user => @user)
+    @story = create(:story, user: @user)
 
     @commentor = create(:user)
-    @comment = create(:comment, :story => @story, :user => @commentor)
+    @comment = create(:comment, story: @story, user: @commentor)
 
-    @emailer = create(:user, :mailing_list_mode => 1)
+    @emailer = create(:user, mailing_list_mode: 1)
 
     @emails = {}
     Dir.glob("#{Rails.root}/spec/fixtures/inbound_emails/*.eml")

@@ -2,8 +2,8 @@ class Invitation < ApplicationRecord
   belongs_to :user
   belongs_to :new_user, class_name: 'User', inverse_of: nil, required: false
 
-  scope :used, -> { where.not(:used_at => nil) }
-  scope :unused, -> { where(:used_at => nil) }
+  scope :used, -> { where.not(used_at: nil) }
+  scope :unused, -> { where(used_at: nil) }
 
   validate do
     unless email.to_s.match(/\A[^@ ]+@[^ @]+\.[^ @]+\z/)
@@ -11,7 +11,7 @@ class Invitation < ApplicationRecord
     end
   end
 
-  before_validation :create_code, :on => :create
+  before_validation :create_code, on: :create
 
   def create_code
     (1...10).each do |tries|
@@ -20,7 +20,7 @@ class Invitation < ApplicationRecord
       end
 
       self.code = Utils.random_str(15)
-      unless Invitation.exists?(:code => self.code)
+      unless Invitation.exists?(code: self.code)
         break
       end
     end

@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
   before_action :require_logged_in_user
   before_action :require_logged_in_moderator, only: [:mod_note]
-  before_action :find_message, :only => [:show, :destroy, :keep_as_new, :mod_note]
+  before_action :find_message, only: [:show, :destroy, :keep_as_new, :mod_note]
 
   def index
     @messages = @user.undeleted_received_messages
@@ -20,7 +20,7 @@ class MessagesController < ApplicationController
         end
       }
       format.json {
-        render :json => @messages
+        render json: @messages
       }
     end
   end
@@ -37,10 +37,10 @@ class MessagesController < ApplicationController
 
         @new_message = Message.new
 
-        render :action => "index"
+        render action: "index"
       }
       format.json {
-        render :json => @messages
+        render json: @messages
       }
     end
   end
@@ -63,7 +63,7 @@ class MessagesController < ApplicationController
                         @new_message.recipient.username.to_s << "."
       return redirect_to "/messages"
     else
-      render :action => "index"
+      render action: "index"
     end
   end
 
@@ -114,7 +114,7 @@ class MessagesController < ApplicationController
 
     params.each do |k, v|
       if (v.to_s == "1") && (m = k.match(/^delete_(.+)$/))
-        if (message = Message.where(:short_id => m[1]).first)
+        if (message = Message.where(short_id: m[1]).first)
           ok = false
           if message.author_user_id == @user.id
             message.deleted_by_author = true
@@ -163,7 +163,7 @@ private
   end
 
   def find_message
-    if (@message = Message.where(:short_id => params[:message_id] || params[:id]).first)
+    if (@message = Message.where(short_id: params[:message_id] || params[:id]).first)
       if @message.author_user_id == @user.id || @message.recipient_user_id == @user.id
         return true
       end

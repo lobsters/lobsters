@@ -1,35 +1,35 @@
 class Story < ApplicationRecord
   belongs_to :user
   belongs_to :merged_into_story,
-             :class_name => "Story",
-             :foreign_key => "merged_story_id",
-             :inverse_of => :merged_stories,
-             :required => false
+             class_name: "Story",
+             foreign_key: "merged_story_id",
+             inverse_of: :merged_stories,
+             required: false
   has_many :merged_stories,
-           :class_name => "Story",
-           :foreign_key => "merged_story_id",
-           :inverse_of => :merged_into_story,
-           :dependent => :nullify
+           class_name: "Story",
+           foreign_key: "merged_story_id",
+           inverse_of: :merged_into_story,
+           dependent: :nullify
   has_many :taggings,
-           :autosave => true,
-           :dependent => :destroy
-  has_many :suggested_taggings, :dependent => :destroy
-  has_many :suggested_titles, :dependent => :destroy
+           autosave: true,
+           dependent: :destroy
+  has_many :suggested_taggings, dependent: :destroy
+  has_many :suggested_titles, dependent: :destroy
   has_many :comments,
-           :inverse_of => :story,
-           :dependent => :destroy
-  has_many :tags, -> { order('tags.is_media desc, tags.tag') }, :through => :taggings
-  has_many :votes, -> { where(:comment_id => nil) }, :inverse_of => :story
+           inverse_of: :story,
+           dependent: :destroy
+  has_many :tags, -> { order('tags.is_media desc, tags.tag') }, through: :taggings
+  has_many :votes, -> { where(comment_id: nil) }, inverse_of: :story
   has_many :voters, -> { where('votes.comment_id' => nil) },
-           :through => :votes,
-           :source => :user
-  has_many :hidings, :class_name => 'HiddenStory', :inverse_of => :story, :dependent => :destroy
-  has_many :savings, :class_name => 'SavedStory', :inverse_of => :story, :dependent => :destroy
+           through: :votes,
+           source: :user
+  has_many :hidings, class_name: 'HiddenStory', inverse_of: :story, dependent: :destroy
+  has_many :savings, class_name: 'SavedStory', inverse_of: :story, dependent: :destroy
 
   scope :base, -> { includes(:tags).unmerged.not_deleted }
   scope :deleted, -> { where(is_expired: true) }
   scope :not_deleted, -> { where(is_expired: false) }
-  scope :unmerged, -> { where(:merged_story_id => nil) }
+  scope :unmerged, -> { where(merged_story_id: nil) }
   scope :positive_ranked, -> { where("#{Story.score_sql} >= 0") }
   scope :low_scoring, ->(max = 5) { where("#{Story.score_sql} < ?", max) }
   scope :hottest, ->(user = nil, exclude_tags = nil) {
@@ -87,9 +87,9 @@ class Story < ApplicationRecord
         .limit(10)
   }
 
-  validates :title, length: { :in => 3..150 }
-  validates :description, length: { :maximum => (64 * 1024) }
-  validates :url, length: { :maximum => 250, :allow_nil => true }
+  validates :title, length: { in: 3..150 }
+  validates :description, length: { maximum: (64 * 1024) }
+  validates :url, length: { maximum: 250, allow_nil: true }
 
   validates_each :merged_story_id do |record, _attr, value|
     if value.to_i == record.id
@@ -135,7 +135,7 @@ class Story < ApplicationRecord
                 :is_saved_by_cur_user, :moderation_reason, :previewing, :seen_previous, :vote
   attr_writer :fetched_content
 
-  before_validation :assign_short_id_and_upvote, :on => :create
+  before_validation :assign_short_id_and_upvote, on: :create
   before_create :assign_initial_hotness
   before_save :log_moderation
   before_save :fix_bogus_chars
@@ -211,7 +211,7 @@ class Story < ApplicationRecord
     # if a previous submission was moderated, return it to block it from being
     # submitted again
     Story
-      .where(:url => urls)
+      .where(url: urls)
       .where("is_expired = ? OR is_moderated = ?", false, true)
   end
 
@@ -269,15 +269,15 @@ class Story < ApplicationRecord
       :score,
       :upvotes,
       :downvotes,
-      { :comment_count => :comments_count },
-      { :description => :markeddown_description },
+      { comment_count: :comments_count },
+      { description: :markeddown_description },
       :comments_url,
-      { :submitter_user => :user },
-      { :tags => self.tags.map(&:tag).sort },
+      { submitter_user: :user },
+      { tags: self.tags.map(&:tag).sort },
     ]
 
     if options && options[:with_comments]
-      h.push(:comments => options[:with_comments])
+      h.push(comments: options[:with_comments])
     end
 
     js = {}
@@ -442,7 +442,7 @@ class Story < ApplicationRecord
   end
 
   def generated_markeddown_description
-    Markdowner.to_html(self.description, :allow_images => true)
+    Markdowner.to_html(self.description, allow_images: true)
   end
 
   def give_upvote_or_downvote_and_recalculate_hotness!(upvote, downvote)
@@ -460,7 +460,7 @@ class Story < ApplicationRecord
   end
 
   def hider_count
-    @hider_count ||= HiddenStory.where(:story_id => self.id).count
+    @hider_count ||= HiddenStory.where(story_id: self.id).count
   end
 
   def html_class_for_user
@@ -503,7 +503,7 @@ class Story < ApplicationRecord
   end
 
   def is_hidden_by_user?(user)
-    !!HiddenStory.find_by(:user_id => user.id, :story_id => self.id)
+    !!HiddenStory.find_by(user_id: user.id, story_id: self.id)
   end
 
   def is_recent?
@@ -511,7 +511,7 @@ class Story < ApplicationRecord
   end
 
   def is_saved_by_user?(user)
-    !!SavedStory.find_by(:user_id => user.id, :story_id => self.id)
+    !!SavedStory.find_by(user_id: user.id, story_id: self.id)
   end
 
   def is_unavailable
@@ -588,12 +588,12 @@ class Story < ApplicationRecord
 
   def merged_comments
     # TODO: make this a normal has_many?
-    Comment.where(:story_id => Story.select(:id)
-      .where(:merged_story_id => self.id) + [self.id])
+    Comment.where(story_id: Story.select(:id)
+      .where(merged_story_id: self.id) + [self.id])
   end
 
   def merge_story_short_id=(sid)
-    self.merged_story_id = sid.present? ? Story.where(:short_id => sid).pluck(:id).first : nil
+    self.merged_story_id = sid.present? ? Story.where(short_id: sid).pluck(:id).first : nil
   end
 
   def merge_story_short_id
@@ -643,8 +643,8 @@ class Story < ApplicationRecord
     end
 
     new_tag_names_a.uniq.each do |tag_name|
-      if tag_name.to_s != "" && !self.tags.exists?(:tag => tag_name)
-        if (t = Tag.active.find_by(:tag => tag_name))
+      if tag_name.to_s != "" && !self.tags.exists?(tag: tag_name)
+        if (t = Tag.active.find_by(tag: tag_name))
           # we can't lookup whether the user is allowed to use this tag yet
           # because we aren't assured to have a user_id by now; we'll do it in
           # the validation with check_tags
@@ -655,7 +655,7 @@ class Story < ApplicationRecord
   end
 
   def save_suggested_tags_a_for_user!(new_tag_names_a, user)
-    st = self.suggested_taggings.where(:user_id => user.id)
+    st = self.suggested_taggings.where(user_id: user.id)
 
     st.each do |tagging|
       if !new_tag_names_a.include?(tagging.tag.tag)
@@ -668,7 +668,7 @@ class Story < ApplicationRecord
     new_tag_names_a.each do |tag_name|
       # XXX: AR bug? st.exists?(:tag => tag_name) does not work
       if tag_name.to_s != "" && !st.map {|x| x.tag.tag }.include?(tag_name)
-        if (t = Tag.active.find_by(:tag => tag_name)) &&
+        if (t = Tag.active.find_by(tag: tag_name)) &&
            t.valid_for?(user)
           tg = self.suggested_taggings.build
           tg.user_id = user.id
@@ -713,7 +713,7 @@ class Story < ApplicationRecord
   end
 
   def save_suggested_title_for_user!(title, user)
-    st = self.suggested_titles.find_by(:user_id => user.id)
+    st = self.suggested_titles.find_by(user_id: user.id)
     if !st
       st = self.suggested_titles.build
       st.user_id = user.id
@@ -887,8 +887,8 @@ class Story < ApplicationRecord
     return @fetched_attributes if @fetched_attributes
 
     @fetched_attributes = {
-      :url => self.url,
-      :title => "",
+      url: self.url,
+      title: "",
     }
 
     # security: do not connect to arbitrary user-submitted ports

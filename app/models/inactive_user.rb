@@ -10,7 +10,7 @@ module InactiveUser
   end
 
   def self.disown_all_by_author! author
-    author.comments.update_all(:user_id => inactive_user.id)
+    author.comments.update_all(user_id: inactive_user.id)
     refresh_comment_counts! author
   end
 

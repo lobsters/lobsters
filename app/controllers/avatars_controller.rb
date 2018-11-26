@@ -1,5 +1,5 @@
 class AvatarsController < ApplicationController
-  before_action :require_logged_in_user, :only => [:expire]
+  before_action :require_logged_in_user, only: [:expire]
 
   ALLOWED_SIZES = [16, 32, 100, 200].freeze
 
@@ -36,7 +36,7 @@ class AvatarsController < ApplicationController
       raise ActionController::RoutingError.new("invalid user name")
     end
 
-    u = User.where(:username => username).first!
+    u = User.where(username: username).first!
 
     if !(av = u.fetched_avatar(size))
       raise ActionController::RoutingError.new("failed fetching avatar")
@@ -53,6 +53,6 @@ class AvatarsController < ApplicationController
     File.rename("#{CACHE_DIR}/.#{u.username}-#{size}.png", "#{CACHE_DIR}/#{u.username}-#{size}.png")
 
     response.headers["Expires"] = 1.hour.from_now.httpdate
-    send_data av, :type => "image/png", :disposition => "inline"
+    send_data av, type: "image/png", disposition: "inline"
   end
 end

@@ -100,8 +100,8 @@ class << Rails.application
 
   def root_url
     Rails.application.routes.url_helpers.root_url(
-      :host => Rails.application.domain,
-      :protocol => Rails.application.ssl? ? "https" : "http",
+      host: Rails.application.domain,
+      protocol: Rails.application.ssl? ? "https" : "http",
     )
   end
 

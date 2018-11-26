@@ -23,7 +23,7 @@ class ModController < ApplicationController
 
   def downvoted
     @comments = period(Comment
-      .eager_load(:user, :hat, :story => :user, :votes => :user)
+      .eager_load(:user, :hat, story: :user, votes: :user)
       .where("(select count(*) from votes where
                 votes.comment_id = comments.id and
                 vote < 0 and

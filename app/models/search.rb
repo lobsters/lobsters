@@ -8,7 +8,7 @@ class Search
   attr_accessor :results, :page, :total_results, :per_page
   attr_writer :what
 
-  validates :q, length: { :minimum => 2 }
+  validates :q, length: { minimum: 2 }
 
   def initialize
     @q = ""
@@ -55,8 +55,8 @@ class Search
 
   def with_tags(base, tag_scopes)
     base
-      .joins({ :taggings => :tag }, :user)
-      .where(:tags => { :tag => tag_scopes })
+      .joins({ taggings: :tag }, :user)
+      .where(tags: { tag: tag_scopes })
       .having("COUNT(stories.id) = ?", tag_scopes.length)
       .group("stories.id")
   end
@@ -73,7 +73,7 @@ class Search
 
   def with_stories_matching_tags(base, tag_scopes)
     story_ids_matching_tags = with_tags(
-      Story.unmerged.where(:is_expired => false), tag_scopes
+      Story.unmerged.where(is_expired: false), tag_scopes
     ).select(:id).map(&:id)
     base.where(story_id: story_ids_matching_tags)
   end
@@ -99,7 +99,7 @@ class Search
 
     case self.what
     when "stories"
-      base = Story.unmerged.where(:is_expired => false)
+      base = Story.unmerged.where(is_expired: false)
       if domain.present?
         base = with_stories_in_domain(base, domain)
       end
@@ -120,7 +120,7 @@ class Search
         if tag_scopes.present?
           self.results = with_tags(base, tag_scopes)
         else
-          base = base.includes({ :taggings => :tag }, :user)
+          base = base.includes({ taggings: :tag }, :user)
           self.results = base.select(
             ["stories.*", title_match_sql, description_match_sql, story_cache_match_sql].join(', ')
           )
@@ -129,7 +129,7 @@ class Search
         if tag_scopes.present?
           self.results = with_tags(base, tag_scopes)
         else
-          self.results = base.includes({ :taggings => :tag }, :user)
+          self.results = base.includes({ taggings: :tag }, :user)
         end
       end
 

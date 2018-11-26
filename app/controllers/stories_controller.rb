@@ -2,13 +2,13 @@ class StoriesController < ApplicationController
   caches_page :show, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,
-                :only => [:upvote, :downvote, :unvote, :hide, :unhide, :preview, :save, :unsave,
+                only: [:upvote, :downvote, :unvote, :hide, :unhide, :preview, :save, :unsave,
                           :check_url_dupe,]
   before_action :require_logged_in_user,
-                :only => [:destroy, :create, :edit, :fetch_url_attributes, :new, :suggest]
-  before_action :verify_user_can_submit_stories, :only => [:new, :create]
-  before_action :find_user_story, :only => [:destroy, :edit, :undelete, :update]
-  before_action :find_story!, :only => [:suggest, :submit_suggestions]
+                only: [:destroy, :create, :edit, :fetch_url_attributes, :new, :suggest]
+  before_action :verify_user_can_submit_stories, only: [:new, :create]
+  before_action :find_user_story, only: [:destroy, :edit, :undelete, :update]
+  before_action :find_story!, only: [:suggest, :submit_suggestions]
   around_action :track_story_reads, only: [:show], if: -> { @user.present? }
 
   def create
@@ -25,7 +25,7 @@ class StoriesController < ApplicationController
       end
     end
 
-    return render :action => "new"
+    return render action: "new"
   end
 
   def destroy
@@ -41,7 +41,7 @@ class StoriesController < ApplicationController
       @story.moderation_reason = params[:reason]
     end
 
-    if @story.save(:validate => false)
+    if @story.save(validate: false)
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted")
     end
 
@@ -66,7 +66,7 @@ class StoriesController < ApplicationController
     s.fetching_ip = request.remote_ip
     s.url = params[:fetch_url]
 
-    return render :json => s.fetched_attributes
+    return render json: s.fetched_attributes
   end
 
   def new
@@ -106,14 +106,14 @@ class StoriesController < ApplicationController
     @story.user_id = @user.id
     @story.previewing = true
 
-    @story.vote = Vote.new(:vote => 1)
+    @story.vote = Vote.new(vote: 1)
     @story.upvotes = 1
 
     @story.valid?
 
     @story.seen_previous = true
 
-    return render :action => "new", :layout => false
+    return render action: "new", layout: false
   end
 
   def show
@@ -130,7 +130,7 @@ class StoriesController < ApplicationController
 
     @comments = get_arranged_comments_from_cache(params[:id]) do
       @story.merged_comments
-            .includes(:user, :story, :hat, :votes => :user)
+            .includes(:user, :story, :hat, votes: :user)
             .arrange_for_user(@user)
     end
 
@@ -157,10 +157,10 @@ class StoriesController < ApplicationController
 
         load_user_votes
 
-        render :action => "show"
+        render action: "show"
       }
       format.json {
-        render :json => @story.as_json(:with_comments => @comments)
+        render json: @story.as_json(with_comments: @comments)
       }
     end
   end
@@ -171,10 +171,10 @@ class StoriesController < ApplicationController
       return redirect_to @story.comments_path
     end
 
-    if (suggested_tags = @story.suggested_taggings.where(:user_id => @user.id)).any?
+    if (suggested_tags = @story.suggested_taggings.where(user_id: @user.id)).any?
       @story.tags_a = suggested_tags.map {|st| st.tag.tag }
     end
-    if (tt = @story.suggested_titles.where(:user_id => @user.id).first)
+    if (tt = @story.suggested_titles.where(user_id: @user.id).first)
       @story.title = tt.title
     end
   end
@@ -207,7 +207,7 @@ class StoriesController < ApplicationController
       end
       redirect_to ostory.comments_path
     else
-      render :action => "suggest"
+      render action: "suggest"
     end
   end
 
@@ -221,7 +221,7 @@ class StoriesController < ApplicationController
     @story.is_expired = false
     @story.editor = @user
 
-    if @story.save(:validate => false)
+    if @story.save(validate: false)
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted", -1)
     end
 
@@ -246,93 +246,93 @@ class StoriesController < ApplicationController
     if @story.save
       return redirect_to @story.comments_path
     else
-      return render :action => "edit"
+      return render action: "edit"
     end
   end
 
   def unvote
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render plain: "can't find story", status: 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
       0, story.id, nil, @user.id, nil
     )
 
-    render :plain => "ok"
+    render plain: "ok"
   end
 
   def upvote
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render plain: "can't find story", status: 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
       1, story.id, nil, @user.id, nil
     )
 
-    render :plain => "ok"
+    render plain: "ok"
   end
 
   def downvote
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render plain: "can't find story", status: 400
     end
 
     if !Vote::STORY_REASONS[params[:reason]]
-      return render :plain => "invalid reason", :status => 400
+      return render plain: "invalid reason", status: 400
     end
 
     if !@user.can_downvote?(story)
-      return render :plain => "not permitted to downvote", :status => 400
+      return render plain: "not permitted to downvote", status: 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
       -1, story.id, nil, @user.id, params[:reason]
     )
 
-    render :plain => "ok"
+    render plain: "ok"
   end
 
   def hide
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render plain: "can't find story", status: 400
     end
 
     HiddenStory.hide_story_for_user(story.id, @user.id)
     ReadRibbon.hide_replies_for(story.id, @user.id)
 
-    render :plain => "ok"
+    render plain: "ok"
   end
 
   def unhide
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render plain: "can't find story", status: 400
     end
 
-    HiddenStory.where(:user_id => @user.id, :story_id => story.id).delete_all
+    HiddenStory.where(user_id: @user.id, story_id: story.id).delete_all
 
-    render :plain => "ok"
+    render plain: "ok"
   end
 
   def save
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render plain: "can't find story", status: 400
     end
 
     SavedStory.save_story_for_user(story.id, @user.id)
 
-    render :plain => "ok"
+    render plain: "ok"
   end
 
   def unsave
     if !(story = find_story)
-      return render :plain => "can't find story", :status => 400
+      return render plain: "can't find story", status: 400
     end
 
-    SavedStory.where(:user_id => @user.id, :story_id => story.id).delete_all
+    SavedStory.where(user_id: @user.id, story_id: story.id).delete_all
 
-    render :plain => "ok"
+    render plain: "ok"
   end
 
   def check_url_dupe
@@ -341,13 +341,13 @@ class StoriesController < ApplicationController
 
     respond_to do |format|
       format.html {
-        return render :partial => "stories/form_errors", :layout => false,
-          :content_type => "text/html", :locals => { :story => @story }
+        return render partial: "stories/form_errors", layout: false,
+          content_type: "text/html", locals: { story: @story }
       }
       format.json {
         similar_stories = @story.similar_stories.map(&:as_json)
 
-        render :json => @story.as_json.merge(similar_stories: similar_stories)
+        render json: @story.as_json.merge(similar_stories: similar_stories)
       }
     end
   end
@@ -365,7 +365,7 @@ private
   def story_params
     p = params.require(:story).permit(
       :title, :url, :description, :moderation_reason, :seen_previous,
-      :merge_story_short_id, :is_unavailable, :user_is_author, :tags_a => [],
+      :merge_story_short_id, :is_unavailable, :user_is_author, tags_a: [],
     )
 
     if @user.is_moderator?
@@ -376,10 +376,10 @@ private
   end
 
   def find_story
-    story = Story.where(:short_id => params[:story_id]).first
+    story = Story.where(short_id: params[:story_id]).first
     if @user && story
-      story.vote = Vote.where(:user_id => @user.id,
-        :story_id => story.id, :comment_id => nil).first.try(:vote)
+      story.vote = Vote.where(user_id: @user.id,
+        story_id: story.id, comment_id: nil).first.try(:vote)
     end
 
     story
@@ -394,10 +394,9 @@ private
 
   def find_user_story
     if @user.is_moderator?
-      @story = Story.where(:short_id => params[:story_id] || params[:id]).first
+      @story = Story.where(short_id: params[:story_id] || params[:id]).first
     else
-      @story = Story.where(:user_id => @user.id, :short_id =>
-        (params[:story_id] || params[:id])).first
+      @story = Story.where(user_id: @user.id, short_id: (params[:story_id] || params[:id])).first
     end
 
     if !@story
@@ -410,8 +409,8 @@ private
 
   def load_user_votes
     if @user
-      if (v = Vote.where(:user_id => @user.id, :story_id => @story.id, :comment_id => nil).first)
-        @story.vote = { :vote => v.vote, :reason => v.reason }
+      if (v = Vote.where(user_id: @user.id, story_id: @story.id, comment_id: nil).first)
+        @story.vote = { vote: v.vote, reason: v.reason }
       end
 
       @story.is_hidden_by_cur_user = @story.is_hidden_by_user?(@user)

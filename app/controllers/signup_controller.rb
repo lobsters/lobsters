@@ -1,5 +1,5 @@
 class SignupController < ApplicationController
-  before_action :require_logged_in_user, :only => :invite
+  before_action :require_logged_in_user, only: :invite
   before_action :check_for_read_only_mode
 
   def index
@@ -24,7 +24,7 @@ class SignupController < ApplicationController
     end
 
     if !Rails.application.open_signups?
-      if !(@invitation = Invitation.unused.where(:code => params[:invitation_code].to_s).first)
+      if !(@invitation = Invitation.unused.where(code: params[:invitation_code].to_s).first)
         flash[:error] = "Invalid or expired invitation"
         return redirect_to "/signup"
       end
@@ -38,12 +38,12 @@ class SignupController < ApplicationController
       @new_user.email = @invitation.email
     end
 
-    render :action => "invited"
+    render action: "invited"
   end
 
   def signup
     if !Rails.application.open_signups?
-      if !(@invitation = Invitation.unused.where(:code => params[:invitation_code].to_s).first)
+      if !(@invitation = Invitation.unused.where(code: params[:invitation_code].to_s).first)
         flash[:error] = "Invalid or expired invitation."
         return redirect_to "/signup"
       end
@@ -67,7 +67,7 @@ class SignupController < ApplicationController
 
       return redirect_to "/signup/invite"
     else
-      render :action => "invited"
+      render action: "invited"
     end
   end
 

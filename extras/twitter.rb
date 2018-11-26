@@ -24,7 +24,7 @@ class Twitter
   end
 
   def self.oauth_consumer
-    OAuth::Consumer.new(self.CONSUMER_KEY, self.CONSUMER_SECRET, :site => "https://api.twitter.com")
+    OAuth::Consumer.new(self.CONSUMER_KEY, self.CONSUMER_SECRET, site: "https://api.twitter.com")
   end
 
   def self.oauth_request(req, method = :get, post_data = nil)
@@ -58,8 +58,8 @@ class Twitter
   end
 
   def self.token_secret_and_user_from_token_and_verifier(tok, verifier)
-    rt = OAuth::RequestToken.from_hash(self.oauth_consumer, :oauth_token => tok)
-    at = rt.get_access_token(:oauth_verifier => verifier)
+    rt = OAuth::RequestToken.from_hash(self.oauth_consumer, oauth_token: tok)
+    at = rt.get_access_token(oauth_verifier: verifier)
 
     res = at.get("/1.1/account/verify_credentials.json")
     js = JSON.parse(res.body)
@@ -72,8 +72,8 @@ class Twitter
   end
 
   def self.oauth_request_token(state)
-    self.oauth_consumer.get_request_token(:oauth_callback =>
-      Rails.application.root_url + "settings/twitter_callback?state=#{state}")
+    callback_url = Rails.application.root_url + "settings/twitter_callback?state=#{state}"
+    self.oauth_consumer.get_request_token(oauth_callback: callback_url)
   end
 
   def self.oauth_auth_url(state)

@@ -7,10 +7,10 @@ class ModerationsController < ApplicationController
 
     @moderator = params.fetch('moderator', '(All)')
     @what = {
-      :stories  => params.dig(:what, :stories),
-      :comments => params.dig(:what, :comments),
-      :tags     => params.dig(:what, :tags),
-      :users    => params.dig(:what, :users),
+      stories: params.dig(:what, :stories),
+      comments: params.dig(:what, :comments),
+      tags: params.dig(:what, :tags),
+      users: params.dig(:what, :users),
     }
     @what.transform_values! { true } if @what.values.none?
 
@@ -23,7 +23,7 @@ class ModerationsController < ApplicationController
     when '(Users)'
       @moderations.where("is_from_suggestions = true")
     else
-      @moderations.joins(:moderator).where(:users => { :username => @moderator })
+      @moderations.joins(:moderator).where(users: { username: @moderator })
     end
 
     # filter based on type of thing moderated

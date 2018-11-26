@@ -6,7 +6,7 @@ class LoginFailedError < StandardError; end
 
 class LoginController < ApplicationController
   before_action :authenticate_user
-  before_action :check_for_read_only_mode, :except => [:index]
+  before_action :check_for_read_only_mode, except: [:index]
 
   def logout
     if @user
@@ -19,14 +19,14 @@ class LoginController < ApplicationController
   def index
     @title = "Login"
     @referer ||= request.referer
-    render :action => "index"
+    render action: "index"
   end
 
   def login
     if params[:email].to_s.match(/@/)
-      user = User.where(:email => params[:email]).first
+      user = User.where(email: params[:email]).first
     else
-      user = User.where(:username => params[:email]).first
+      user = User.where(username: params[:email]).first
     end
 
     fail_reason = nil
@@ -99,7 +99,7 @@ class LoginController < ApplicationController
 
   def forgot_password
     @title = "Reset Password"
-    render :action => "forgot_password"
+    render action: "forgot_password"
   end
 
   def reset_password
@@ -133,7 +133,7 @@ class LoginController < ApplicationController
 
     if (m = params[:token].to_s.match(/^(\d+)-/)) &&
        (Time.current - Time.zone.at(m[1].to_i)) < 24.hours
-      @reset_user = User.where(:password_reset_token => params[:token].to_s).first
+      @reset_user = User.where(password_reset_token: params[:token].to_s).first
     end
 
     if @reset_user && !@reset_user.is_banned?
@@ -193,7 +193,7 @@ private
 
   def find_twofa_user
     if session[:twofa_u].present?
-      return User.where(:session_token => session[:twofa_u]).first
+      return User.where(session_token: session[:twofa_u]).first
     end
   end
 end

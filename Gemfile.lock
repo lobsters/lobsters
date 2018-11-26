@@ -126,6 +126,7 @@ GEM
       ast (~> 2.4.0)
     powerpack (0.1.2)
     public_suffix (3.0.3)
+    puma (3.12.0)
     rack (2.0.6)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -254,6 +255,7 @@ DEPENDENCIES
   mysql2
   nokogiri (>= 1.7.2)
   oauth
+  puma
   rails (~> 5.2.0)
   rb-readline
   rotp
@@ -269,4 +271,4 @@ DEPENDENCIES
   unicorn
 
 BUNDLED WITH
-   1.16.5
+   1.16.6

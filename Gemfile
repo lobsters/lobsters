@@ -4,6 +4,9 @@ gem "rails", "~> 5.2.0"
 
 gem "mysql2"
 
+# Use Puma as the app server
+gem "puma"
+
 # uncomment to use PostgreSQL
 # gem "pg"
 

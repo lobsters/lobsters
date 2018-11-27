@@ -73,7 +73,7 @@ running tests:
 * Load the schema into the new database:
 
     ```sh
-    lobsters$ rake db:schema:load
+    lobsters$ rails db:schema:load
     ```
     
 * Define your site's name and default domain, which are used in various places,
@@ -98,22 +98,28 @@ in a `config/initializers/production.rb` or similar file:
 * Seed the database to create an initial administrator user, the `inactive-user`, and at least one tag:
 
     ```sh
-    lobsters$ rake db:seed
+    lobsters$ rails db:seed
     ```
 
-* Run the Rails server in development mode.  You should be able to login to
-`http://localhost:3000` with your new `test` user:
+* On your personal computer, you can add some sample data and run the Rails server in development mode.
+  You should be able to login to `http://localhost:3000` with your new `test` user:
 
     ```sh
+    lobsters$ rails fake_data
     lobsters$ rails server
     ```
 
-* In production, set up crontab or another scheduler to run regular jobs:
+* Deploying the site in production requires setting up a web server and running the app in production mode.
+  There are more tools and options available than we can describe; find a guide or an expert.
+  The lobsters-ansible repo has our config files to crib from. Some app-specific notes:
+
+* Set up crontab or another scheduler to run regular jobs:
 
     ```
     */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/post_to_twitter'
     ```
-* In production, see `config/initializers/production.rb.sample` for GitHub/Twitter integration help.
+
+* See `config/initializers/production.rb.sample` for GitHub/Twitter integration help.
 
 #### Administration
 

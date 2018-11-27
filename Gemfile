@@ -40,6 +40,8 @@ gem "sitemap_generator" # for better search engine indexing
 group :test, :development do
   gem 'bullet'
   gem 'capybara'
+  gem 'database_cleaner'
+  gem 'good_migrations'
   gem "listen"
   gem "rspec-rails"
   gem "factory_bot_rails"

@@ -41,9 +41,7 @@ class ApplicationController < ActionController::Base
   end
 
   def increase_traffic_counter
-    if Rails.application.read_only?
-      return true
-    end
+    return true if Rails.application.read_only?
 
     @traffic = 1.0
 

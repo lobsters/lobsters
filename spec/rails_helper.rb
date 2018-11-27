@@ -7,9 +7,6 @@ require 'rspec/rails'
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f }
 
-Tag.destroy_all
-Tag.create!([{ tag: "tag1" }, { tag: "tag2" }])
-
 RSpec.configure do |config|
   # ## Mock Framework
   #
@@ -26,6 +23,29 @@ RSpec.configure do |config|
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = true
+
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with :truncation
+
+    Tag.create!([{ tag: "tag1" }, { tag: "tag2" }])
+  end
+
+  config.before(:example) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:example) do
+    DatabaseCleaner.clean
+  end
+
+  config.before(:example, :js) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:example, :truncate) do
+    DatabaseCleaner.strategy = :truncation
+  end
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of

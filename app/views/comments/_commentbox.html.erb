@@ -47,7 +47,7 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
         <div style="display: inline-block; margin-left: 1em;">
         Put on hat:
         <%= select_tag "hat_id",
-          options_from_collection_for_select(@user.hats, "id", "hat",
+          options_from_collection_for_select(@user.wearable_hats, "id", "hat",
           comment.hat_id), :include_blank => true %>
         </div>
       <% end %>

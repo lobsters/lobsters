@@ -3,6 +3,10 @@ require "net/https"
 require "resolv"
 require "ipaddr"
 
+class BadIPsError < StandardError; end
+class DNSError < StandardError; end
+class NoIPsError < StandardError; end
+
 module Net
   class HTTP
     attr_accessor :address, :custom_conn_address, :skip_close
@@ -111,7 +115,7 @@ class Sponge
         ips = Resolv.getaddresses(uri.host)
 
         if !ips.any?
-          raise
+          raise NoIPsError
         end
 
         # reject ipv6 addresses
@@ -123,21 +127,21 @@ class Sponge
       end
     rescue Timeout::Error => e
       if retried
-        raise "couldn't resolve #{uri.host} (DNS timeout)"
+        raise DNSError.new("couldn't resolve #{uri.host} (DNS timeout)")
       else
         retried = true
         retry
       end
     rescue => e
-      raise "couldn't resolve #{uri.host} (#{e.inspect})"
+      raise DNSError.new("couldn't resolve #{uri.host} (#{e.inspect})")
     end
 
     if !ip
-      raise "couldn't resolve #{uri.host}"
+      raise DNSError.new("couldn't resolve #{uri.host}")
     end
 
     if BAD_NETS.select {|n| IPAddr.new(n).include?(ip) }.any?
-      raise "refusing to talk to IP #{ip}"
+      raise BadIPsError.new("refusing to talk to IP #{ip}")
     end
 
     host = Net::HTTP.new(ip.to_s, uri.port)

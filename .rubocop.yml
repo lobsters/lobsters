@@ -1,4 +1,5 @@
 # Project setup:
+require: ./extras/prohibit_safe_navigation
 Rails:
   Enabled: true
 AllCops:
@@ -29,6 +30,8 @@ Layout/AlignHash:
 Layout/CaseIndentation:
   EnforcedStyle: end
 Layout/ElseAlignment:
+  Enabled: false
+Layout/EmptyLineAfterGuardClause:
   Enabled: false
 Layout/EmptyLinesAroundExceptionHandlingKeywords:
   Enabled: false

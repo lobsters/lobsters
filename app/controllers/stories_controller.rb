@@ -18,7 +18,7 @@ class StoriesController < ApplicationController
     @story = Story.new(story_params)
     @story.user_id = @user.id
 
-    if @story.valid? && !(@story.already_posted_story && !@story.seen_previous)
+    if @story.valid? && !(@story.is_similar? && !@story.seen_previous)
       if @story.save
         ReadRibbon.where(user: @user, story: @story).first_or_create
         return redirect_to @story.comments_path
@@ -41,7 +41,9 @@ class StoriesController < ApplicationController
       @story.moderation_reason = params[:reason]
     end
 
-    @story.save(:validate => false)
+    if @story.save(:validate => false)
+      Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted")
+    end
 
     redirect_to @story.comments_path
   end
@@ -76,7 +78,6 @@ class StoriesController < ApplicationController
 
     if params[:url].present?
       @story.url = params[:url]
-
       sattrs = @story.fetched_attributes
 
       if sattrs[:url].present? && @story.url != sattrs[:url]
@@ -85,16 +86,11 @@ class StoriesController < ApplicationController
         @story.url = sattrs[:url]
       end
 
-      if (s = Story.find_similar_by_url(@story.url))
-        if s.is_recent?
-          # user won't be able to submit this story as new, so just redirect
-          # them to the previous story
-          flash[:success] = "This URL has already been submitted recently."
-          return redirect_to s.comments_path
-        else
-          # user will see a warning like with preview screen
-          @story.already_posted_story = s
-        end
+      if @story.is_similar? && @story.most_recent_similar.is_recent?
+        # user won't be able to submit this story as new, so just redirect
+        # them to the previous story
+        flash[:success] = "This URL has already been submitted recently."
+        return redirect_to @story.most_recent_similar.comments_path
       end
 
       # ignore what the user brought unless we need it as a fallback
@@ -224,7 +220,10 @@ class StoriesController < ApplicationController
 
     @story.is_expired = false
     @story.editor = @user
-    @story.save(:validate => false)
+
+    if @story.save(:validate => false)
+      Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted", -1)
+    end
 
     redirect_to @story.comments_path
   end
@@ -340,8 +339,17 @@ class StoriesController < ApplicationController
     @story = Story.new(story_params)
     @story.check_already_posted
 
-    return render :partial => "stories/form_errors", :layout => false,
-      :content_type => "text/html", :locals => { :story => @story }
+    respond_to do |format|
+      format.html {
+        return render :partial => "stories/form_errors", :layout => false,
+          :content_type => "text/html", :locals => { :story => @story }
+      }
+      format.json {
+        similar_stories = @story.similar_stories.map(&:as_json)
+
+        render :json => @story.as_json.merge(similar_stories: similar_stories)
+      }
+    end
   end
 
 private

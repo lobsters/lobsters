@@ -29,7 +29,7 @@ class Story < ApplicationRecord
   scope :base, -> { includes(:tags).unmerged.not_deleted }
   scope :deleted, -> { where(is_expired: true) }
   scope :not_deleted, -> { where(is_expired: false) }
-  scope :merged, -> { where(merged_story_id: nil) }
+  scope :merged, -> { where.not(merged_stories: nil) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
   scope :positive_ranked, -> { where("#{Story.score_sql} >= 0") }
   scope :low_scoring, ->(max = 5) { where("#{Story.score_sql} < ?", max) }
@@ -48,7 +48,11 @@ class Story < ApplicationRecord
   }
   scope :filter_tags, ->(tags) {
     tags.empty? ? all : where.not(
-      Tagging.select('TRUE').where('taggings.story_id = stories.id').where(tag_id: tags).exists
+      Tagging.select('TRUE')
+             .where('taggings.story_id = stories.id')
+             .where(tag_id: tags)
+             .arel
+             .exists
     )
   }
   scope :filter_tags_for, ->(user) {
@@ -56,7 +60,9 @@ class Story < ApplicationRecord
       Tagging.joins(tag: :tag_filters)
              .select('TRUE')
              .where('taggings.story_id = stories.id')
-             .where(tag_filters: { user_id: user }).exists
+             .where(tag_filters: { user_id: user })
+             .arel
+             .exists
     )
   }
   scope :hidden_by, ->(user) {
@@ -67,6 +73,7 @@ class Story < ApplicationRecord
       HiddenStory.select('TRUE')
         .where(Arel.sql('hidden_stories.story_id = stories.id'))
         .by(user)
+        .arel
         .exists
     )
   }
@@ -120,14 +127,13 @@ class Story < ApplicationRecord
     wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }.freeze
 
   # URI.parse is not very lenient, so we can't use it
-  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i
+  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i.freeze
 
   # Dingbats, emoji, and other graphics https://www.unicode.org/charts/
-  GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}-\u{27BF}\u{1F000}-\u{1F9FF}]/
+  GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}-\u{27BF}\u{1F000}-\u{1F9FF}]/.freeze
 
-  attr_accessor :already_posted_story, :editing_from_suggestions, :editor,
-                :fetching_ip, :is_hidden_by_cur_user, :is_saved_by_cur_user,
-                :moderation_reason, :previewing, :seen_previous, :vote
+  attr_accessor :editing_from_suggestions, :editor, :fetching_ip, :is_hidden_by_cur_user,
+                :is_saved_by_cur_user, :moderation_reason, :previewing, :seen_previous, :vote
   attr_writer :fetched_content
 
   before_validation :assign_short_id_and_upvote, :on => :create
@@ -164,12 +170,8 @@ class Story < ApplicationRecord
   def check_already_posted
     return unless self.url.present? && self.new_record?
 
-    self.already_posted_story = Story.find_similar_by_url(self.url)
-    return unless self.already_posted_story
-
-    if self.already_posted_story.is_recent?
-      errors.add(:url, "has already been submitted within the past " <<
-        "#{RECENT_DAYS} days")
+    if self.is_similar? && self.most_recent_similar.is_recent?
+      errors.add(:url, "has already been submitted within the past #{RECENT_DAYS} days")
     end
   end
 
@@ -212,7 +214,30 @@ class Story < ApplicationRecord
     Story
       .where(:url => urls)
       .where("is_expired = ? OR is_moderated = ?", false, true)
-      .order("id DESC").first
+  end
+
+  def similar_stories
+    return [] unless self.url.present?
+
+    @_similar_stories ||= Story.base.find_similar_by_url(self.url).order("id DESC")
+    # do not include this story itself or any story merged into it
+    if self.id?
+      @_similar_stories = @_similar_stories.where.not(id: self.id)
+        .where('merged_story_id is null or merged_story_id != ?', self.id)
+    end
+    # do not include the story this one is merged into
+    if self.merged_story_id?
+      @_similar_stories = @_similar_stories.where('id != ?', self.merged_story_id)
+    end
+    @_similar_stories
+  end
+
+  def is_similar?
+    similar_stories.any?
+  end
+
+  def most_recent_similar
+    similar_stories.first
   end
 
   def self.recalculate_all_hotnesses!
@@ -806,10 +831,11 @@ class Story < ApplicationRecord
     end
     set_domain match
 
-    # strip out stupid google analytics parameters
+    # strip out tracking query params
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))
       params = match[2].split(/[&\?]/)
-      params.reject! {|p| p.match(/^utm_(source|medium|campaign|term|content)=/) }
+      # utm_ is google and many others; sk is medium
+      params.reject! {|p| p.match(/^utm_(source|medium|campaign|term|content)=|^sk=|^fbclid=/) }
       u = match[1] << (params.any?? "?" << params.join("&") : "")
     end
 

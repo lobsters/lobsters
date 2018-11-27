@@ -5,6 +5,7 @@ ENV["RAILS_ENV"] ||= "production"
 APP_PATH = File.expand_path('../../config/application', __FILE__)
 require File.expand_path('../../config/boot', __FILE__)
 require APP_PATH
+require 'webrick'
 Rails.application.require_environment!
 
 LAST_STORY_KEY = "webmentions:last_story_id".freeze
@@ -73,13 +74,18 @@ if __FILE__ == $PROGRAM_NAME
     # mark it done so we don't hit them again if we or they crash
     Keystore.put(LAST_STORY_KEY, s.id)
 
-    next unless s.url
+    next unless s.url.present?
 
     sp = Sponge.new
     sp.timeout = 10
-    response = sp.fetch(s.url, :get, nil, nil, {
-      "User-agent" => "#{Rails.application.domain} webmention endpoint lookup",
-    }, 3)
+    begin
+      response = sp.fetch(WEBrick::HTTPUtils.escape(s.url), :get, nil, nil, {
+        "User-agent" => "#{Rails.application.domain} webmention endpoint lookup",
+      }, 3)
+    rescue NoIPsError, DNSError
+      # other people's DNS issues (usually transient); just skip the webmention
+      next
+    end
     next unless response
 
     wm_endpoint_raw = endpoint_from_headers(response['link']) ||

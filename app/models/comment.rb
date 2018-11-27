@@ -27,7 +27,11 @@ class Comment < ApplicationRecord
                :deliver_mention_notifications, :log_hat_use
   after_destroy :unassign_votes
 
-  scope :active, -> { where(:is_deleted => false, :is_moderated => false) }
+  scope :deleted, -> { where(is_deleted: true) }
+  scope :not_deleted, -> { where(is_deleted: false) }
+  scope :not_moderated, -> { where(is_moderated: false) }
+  scope :active, -> { not_deleted.not_moderated }
+  scope :for_user, ->(user) { user && user.is_moderator? ? all : active }
 
   DOWNVOTABLE_DAYS = 7
   DELETEABLE_DAYS = DOWNVOTABLE_DAYS * 2
@@ -41,7 +45,7 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
-  SCORE_RANGE_TO_HIDE = (-2 .. 4)
+  SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
 
   validate do
     self.comment.to_s.strip == "" &&
@@ -67,7 +71,9 @@ class Comment < ApplicationRecord
   end
 
   def self.arrange_for_user(user)
-    parents = self.order(Arel.sql("(upvotes - downvotes) < 0 ASC, confidence DESC"))
+    parents = self.order(
+      Arel.sql("(comments.upvotes - comments.downvotes) < 0 ASC, comments.confidence DESC")
+    )
       .group_by(&:parent_comment_id)
 
     # top-down list of comments, regardless of indent level
@@ -228,7 +234,7 @@ class Comment < ApplicationRecord
 
   def deliver_mention_notifications
     self.plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
-      if (u = User.find_by(:username => mention))
+      if (u = User.active.find_by(:username => mention))
         if u.id == self.user.id
           next
         end
@@ -257,7 +263,8 @@ class Comment < ApplicationRecord
   def deliver_reply_notifications
     if self.parent_comment_id &&
        (u = self.parent_comment.try(:user)) &&
-       u.id != self.user.id
+       u.id != self.user.id &&
+       u.is_active?
       if u.email_replies?
         begin
           EmailReply.reply(self, u).deliver_now

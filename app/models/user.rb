@@ -75,7 +75,7 @@ class User < ApplicationRecord
 
   validates :password, :presence => true, :on => :create
 
-  VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/
+  VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/.freeze
   validates :username,
             :format => { :with => /\A#{VALID_USERNAME}\z/ },
             :uniqueness => { :case_sensitive => false }
@@ -305,6 +305,10 @@ class User < ApplicationRecord
     Keystore.value_for("user:#{self.id}:comments_posted").to_i
   end
 
+  def comments_deleted_count
+    Keystore.value_for("user:#{self.id}:comments_deleted").to_i
+  end
+
   def fetched_avatar(size = 100)
     gravatar_url = "https://www.gravatar.com/avatar/" <<
                    Digest::MD5.hexdigest(self.email.strip.downcase) <<
@@ -326,6 +330,7 @@ class User < ApplicationRecord
 
   def update_comments_posted_count!
     Keystore.put("user:#{self.id}:comments_posted", self.comments.active.count)
+    Keystore.put("user:#{self.id}:comments_deleted", self.comments.deleted.count)
   end
 
   def delete!
@@ -414,6 +419,11 @@ class User < ApplicationRecord
     banned_at?
   end
 
+  # user was deleted/banned before a server move, see lib/tasks/privacy_wipe
+  def is_wiped?
+    password_digest == '*'
+  end
+
   def is_new?
     Time.current - self.created_at <= NEW_USER_DAYS.days
   end
@@ -451,9 +461,11 @@ class User < ApplicationRecord
     end
   end
 
-  def recent_threads(amount, include_submitted_stories = false)
-    thread_ids = self.comments.active.group(:thread_id)
-      .order('MAX(created_at) DESC').limit(amount).pluck(:thread_id)
+  def recent_threads(amount, include_submitted_stories: false, for_user: user)
+    comments = self.comments.for_user(for_user)
+
+    thread_ids = comments.group(:thread_id).order('MAX(created_at) DESC').limit(amount)
+      .pluck(:thread_id)
 
     if include_submitted_stories && self.show_submitted_story_threads
       thread_ids += Comment.joins(:story)
@@ -468,6 +480,10 @@ class User < ApplicationRecord
 
   def stories_submitted_count
     Keystore.value_for("user:#{self.id}:stories_submitted").to_i
+  end
+
+  def stories_deleted_count
+    Keystore.value_for("user:#{self.id}:stories_deleted").to_i
   end
 
   def to_param

@@ -87,22 +87,12 @@
 
   <label class="required">Stories Submitted:</label>
   <span class="d">
-    <% tag = @showing_user.most_common_story_tag %>
-    <a href="/newest/<%= @showing_user.username %>"><%=
-      @showing_user.stories_submitted_count %></a><%= tag ? ", " : "" %>
-    <% if tag %>
-      most commonly tagged <a href="<%= tag_path(tag.tag) %>"
-        class="<%= tag.css_class %>" title="<%= tag.description %>"><%=
-        tag.tag %></a>
-    <% end %>
+    <%= stories_submitted_content(@showing_user) %>
   </span>
   <br>
 
   <label class="required">Comments Posted:</label>
-  <span class="d">
-    <a href="/threads/<%= @showing_user.username %>"><%=
-      @showing_user.comments_posted_count %></a>
-  </span>
+  <span class="d"><%= comments_posted_content(@showing_user) %></span>
   <br>
 
   <% if @showing_user.hats.any? %>

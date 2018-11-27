@@ -115,6 +115,7 @@ var _Lobsters = Class.extend({
       d.append(a);
     });
 
+    console.log(voterEl, d);
     if (thingType == "story") {
       $(voterEl).after(d);
       d.position({
@@ -385,11 +386,12 @@ var _Lobsters = Class.extend({
 var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
-  $(".comment a.downvoter").click(function() {
+  var $olcomments = $("ol.comments");
+  $olcomments.on("click", ".comment a.downvoter", function() {
     Lobsters.downvoteComment(this);
     return false;
   });
-  $(".comment a.upvoter").click(function() {
+  $olcomments.on("click", ".comment a.upvoter", function() {
     Lobsters.upvoteComment(this);
     return false;
   });

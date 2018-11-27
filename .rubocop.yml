@@ -1,3 +1,7 @@
+# Please do not 'fix' style issues without a compelling, metrics-driven
+# argument that a style change will materially improve cod equality.
+# https://github.com/lobsters/lobsters/pull/460
+
 # Project setup:
 require: ./extras/prohibit_safe_navigation
 Rails:

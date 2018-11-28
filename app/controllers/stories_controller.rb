@@ -2,8 +2,7 @@ class StoriesController < ApplicationController
   caches_page :show, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,
-                :only => [:upvote, :downvote, :unvote, :hide, :unhide, :preview, :save, :unsave,
-                          :check_url_dupe,]
+                :only => [:upvote, :downvote, :unvote, :hide, :unhide, :preview, :save, :unsave]
   before_action :require_logged_in_user,
                 :only => [:destroy, :create, :edit, :fetch_url_attributes, :new, :suggest]
   before_action :verify_user_can_submit_stories, :only => [:new, :create]
@@ -18,7 +17,7 @@ class StoriesController < ApplicationController
     @story = Story.new(story_params)
     @story.user_id = @user.id
 
-    if @story.valid? && !(@story.is_similar? && !@story.seen_previous)
+    if @story.valid? && !(@story.already_posted_recently? && !@story.seen_previous)
       if @story.save
         ReadRibbon.where(user: @user, story: @story).first_or_create
         return redirect_to @story.comments_path
@@ -86,7 +85,7 @@ class StoriesController < ApplicationController
         @story.url = sattrs[:url]
       end
 
-      if @story.is_similar? && @story.most_recent_similar.is_recent?
+      if @story.already_posted_recently?
         # user won't be able to submit this story as new, so just redirect
         # them to the previous story
         flash[:success] = "This URL has already been submitted recently."
@@ -337,7 +336,7 @@ class StoriesController < ApplicationController
 
   def check_url_dupe
     @story = Story.new(story_params)
-    @story.check_already_posted
+    @story.already_posted_recently?
 
     respond_to do |format|
       format.html {
@@ -345,7 +344,7 @@ class StoriesController < ApplicationController
           :content_type => "text/html", :locals => { :story => @story }
       }
       format.json {
-        similar_stories = @story.similar_stories.map(&:as_json)
+        similar_stories = @story.similar_stories.base.map(&:as_json)
 
         render :json => @story.as_json.merge(similar_stories: similar_stories)
       }
@@ -368,7 +367,7 @@ private
       :merge_story_short_id, :is_unavailable, :user_is_author, :tags_a => [],
     )
 
-    if @user.is_moderator?
+    if @user && @user.is_moderator?
       p
     else
       p.except(:moderation_reason, :merge_story_short_id, :is_unavailable)

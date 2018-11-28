@@ -1,12 +1,12 @@
 <div>
   <div class="form_errors_header">
-    <% if story.errors.count == 1 && story.is_similar? %>
+    <% if story.errors.count == 1 && story.already_posted_recently? %>
       <div class="flash-error">
         <h2>Error: This story was submitted <%= time_ago_in_words_label(story.most_recent_similar.created_at) %></h2>
       </div>
-    <% elsif story.errors.any? && !story.is_similar? %>
+    <% elsif story.errors.any? && !story.already_posted_recently? %>
       <%= error_messages_for story %>
-    <% elsif !story.errors.any? && story.is_similar? %>
+    <% elsif !story.errors.any? && story.already_posted_recently? %>
       <div class="flash-notice">
         <h2>Note: This story was already submitted <%= time_ago_in_words_label(story.most_recent_similar.created_at) %>, but may be submitted again.</h2>
         <p>
@@ -24,7 +24,7 @@
     <% end %>
   </div>
 
-  <% if story.is_similar? %>
+  <% if story.already_posted_recently? %>
     <p>Previous discussions for this story:</p>
     <%= render partial: "stories/similar", locals: { similar: story.similar_stories } %>
   <% end %>

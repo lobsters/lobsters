@@ -12,7 +12,7 @@ class String
     s = [self].pack("M")
 
     if encoded_word
-      s.split(/\r?\n/).map {|l| "=?UTF-8?Q?" + l.gsub(/=*$/, "").tr(" ", "_") << "?=" }.join("\n\t")
+      s.split(/\r?\n/).map {|l| "=?UTF-8?Q?" + l.gsub(/=*$/, "").gsub('?', '=3F').tr(" ", "_") << "?=" }.join("\n\t")
     else
       s
     end

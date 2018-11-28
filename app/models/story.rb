@@ -144,7 +144,7 @@ class Story < ApplicationRecord
 
   validate do
     if self.url.present?
-      check_already_posted
+      already_posted_recently?
       check_not_tracking_domain
       errors.add(:url, "is not valid") unless url.match(URL_RE)
     elsif self.description.to_s.strip == ""
@@ -166,11 +166,14 @@ class Story < ApplicationRecord
     check_tags
   end
 
-  def check_already_posted
-    return unless self.url.present? && self.new_record?
+  def already_posted_recently?
+    return false unless self.url.present? && self.new_record?
 
-    if self.is_similar? && self.most_recent_similar.is_recent?
+    if most_recent_similar && most_recent_similar.is_recent?
       errors.add(:url, "has already been submitted within the past #{RECENT_DAYS} days")
+      true
+    else
+      false
     end
   end
 
@@ -182,7 +185,7 @@ class Story < ApplicationRecord
     end
   end
 
-  # returns a story or nil
+  # all stories with similar urls
   def self.find_similar_by_url(url)
     urls = [url.to_s]
     urls2 = [url.to_s]
@@ -215,10 +218,11 @@ class Story < ApplicationRecord
       .where("is_expired = ? OR is_moderated = ?", false, true)
   end
 
+  # doesn't include deleted/moderated/merged stories
   def similar_stories
     return [] unless self.url.present?
 
-    @_similar_stories ||= Story.base.find_similar_by_url(self.url).order("id DESC")
+    @_similar_stories ||= Story.find_similar_by_url(self.url).order("id DESC")
     # do not include this story itself or any story merged into it
     if self.id?
       @_similar_stories = @_similar_stories.where.not(id: self.id)
@@ -231,8 +235,8 @@ class Story < ApplicationRecord
     @_similar_stories
   end
 
-  def is_similar?
-    similar_stories.any?
+  def public_similar_stories
+    @_public_similar_stories ||= similar_stories.base
   end
 
   def most_recent_similar

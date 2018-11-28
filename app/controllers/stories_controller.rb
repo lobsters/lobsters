@@ -18,7 +18,7 @@ class StoriesController < ApplicationController
     @story = Story.new(story_params)
     @story.user_id = @user.id
 
-    if @story.valid? && !(@story.is_similar? && !@story.seen_previous)
+    if @story.valid? && !(@story.already_posted_recently? && !@story.seen_previous)
       if @story.save
         ReadRibbon.where(user: @user, story: @story).first_or_create
         return redirect_to @story.comments_path
@@ -86,7 +86,7 @@ class StoriesController < ApplicationController
         @story.url = sattrs[:url]
       end
 
-      if @story.is_similar? && @story.most_recent_similar.is_recent?
+      if @story.already_posted_recently?
         # user won't be able to submit this story as new, so just redirect
         # them to the previous story
         flash[:success] = "This URL has already been submitted recently."
@@ -337,7 +337,7 @@ class StoriesController < ApplicationController
 
   def check_url_dupe
     @story = Story.new(story_params)
-    @story.check_already_posted
+    @story.already_posted_recently?
 
     respond_to do |format|
       format.html {
@@ -345,7 +345,7 @@ class StoriesController < ApplicationController
           :content_type => "text/html", :locals => { :story => @story }
       }
       format.json {
-        similar_stories = @story.similar_stories.map(&:as_json)
+        similar_stories = @story.similar_stories.base.map(&:as_json)
 
         render :json => @story.as_json.merge(similar_stories: similar_stories)
       }

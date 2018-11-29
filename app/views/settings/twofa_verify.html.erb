@@ -6,19 +6,19 @@
     <%= @title %>
   </div>
 
-  <%= form_tag twofa_update_url do %>
+  <%= form_with url: twofa_update_url do |f| %>
     <p>
     To enable Two-Factor Authentication on your account using your new TOTP
     secret, enter the six-digit code from your TOTP application:
     </p>
 
     <div class="boxline">
-      <%= label_tag :totp_code, "TOTP Code:", :class => "required" %>
-      <%= number_field_tag :totp_code, "", :size => 10, :autocomplete => "off",
+      <%= f.label :totp_code, "TOTP Code:", :class => "required" %>
+      <%= f.number_field :totp_code, :size => 10, :autocomplete => "off",
           :autofocus => true, :class => "totp_code" %>
     </div>
 
     <p>
-    <%= submit_tag "Verify and Enable" %>
+    <%= f.submit "Verify and Enable" %>
   <% end %>
 </div>

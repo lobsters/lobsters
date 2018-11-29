@@ -3,9 +3,9 @@
     Search
   </div>
 
-  <%= form_tag "/search", :method => :get do %>
+  <%= form_with url: "/search", :method => :get do |f| %>
     <div class="boxline">
-      <%= text_field_tag "q", @search.q, { :size => 40 }.
+        <%= f.text_field "q", { :value => @search.q, :size => 40 }.
         merge(@search.q.present? ? {} : { :autofocus => "autofocus" }) %>
       <input type="submit" value="Search">
     </div>
@@ -13,29 +13,29 @@
     <div class="boxline">
       <label class="required">Search:</label>
 
-      <%= radio_button_tag "what", "stories", @search.what == "stories" %>
+      <%= f.radio_button "what", "stories", :checked => @search.what == "stories" %>
         <label for="what_stories" class="normal">Stories</label>
 
       &nbsp;
 
-      <%= radio_button_tag "what", "comments", @search.what == "comments" %>
+      <%= f.radio_button "what", "comments", :checked => @search.what == "comments" %>
         <label for="what_comments" class="normal">Comments</label>
 
       <br>
 
       <label class="required">Order By:</label>
 
-      <%= radio_button_tag "order", "relevance", @search.order == "relevance" %>
+      <%= f.radio_button "order", "relevance", :checked => @search.order == "relevance" %>
         <label for="order_relevance" class="normal">Relevance</label>
 
       &nbsp;
 
-      <%= radio_button_tag "order", "newest", @search.order == "newest" %>
+      <%= f.radio_button "order", "newest", :checked => @search.order == "newest" %>
         <label for="order_newest" class="normal">Newest</label>
 
       &nbsp;
 
-      <%= radio_button_tag "order", "points", @search.order == "points" %>
+      <%= f.radio_button "order", "points", :checked => @search.order == "points" %>
         <label for="order_points" class="normal">Points</label>
     </div>
   <% end %>

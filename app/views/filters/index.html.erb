@@ -16,7 +16,7 @@
     </p>
   <% end %>
 
-  <%= form_tag "/filters", :method => :post do %>
+  <%= form_with url: "/filters", :method => :post do |f| %>
     <table class="data zebra" cellspacing=0 width="75%">
     <tr>
       <th width="7%">Hide</th>
@@ -41,7 +41,7 @@
     <% end %>
     </table>
     <p>
-    <%= submit_tag "Save Filters" %>
+    <%= f.submit "Save Filters" %>
     </p>
   <% end %>
 </div>

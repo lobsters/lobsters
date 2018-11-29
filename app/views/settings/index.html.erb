@@ -10,8 +10,8 @@
     Account Settings (<a href="/u/<%= @user.username %>">View Profile</a>)
   </div>
 
-  <%= form_for @edit_user, :url => settings_path, :method => :post,
-  :html => { :id => "edit_user" } do |f| %>
+  <%= form_with :model => @edit_user, :url => settings_path, :method => :post,
+  :id => "edit_user" do |f| %>
     <%= error_messages_for f.object %>
 
     <div class="boxline">
@@ -23,9 +23,9 @@
     </div>
 
     <div class="boxline">
-      <%= label_tag :current_password, "Current Password:",
+      <%= f.label :current_password, "Current Password:",
         :class => "required" %>
-      <%= password_field_tag :current_password, nil, :size => 40 %>
+    <%= f.password_field :current_password, :name => "current_password", :size => 30 %>
     </div>
 
     <div class="boxline">
@@ -74,7 +74,7 @@
     </div>
 
     <div class="boxline">
-      <%= label_tag :gravatar,
+      <%= f.label :gravatar,
         raw("<a href=\"https://gravatar.com/\">Gravatar</a>:"),
         :class => "required" %>
       <span>
@@ -86,7 +86,7 @@
 
     <% if Pushover.enabled? %>
       <div class="boxline">
-        <%= label_tag :pushover_user_key,
+        <%= f.label :pushover_user_key,
           raw("<a href=\"https://pushover.net/\">Pushover</a>:"),
           :class => "required" %>
         <span>
@@ -104,7 +104,7 @@
     <% if Github.enabled? %>
       <div class="boxline">
         <span>
-        <%= label_tag :github_username,
+        <%= f.label :github_username,
           raw("<a href=\"https://github.com/\">GitHub</a>:"),
           :class => "required" %>
         <% if @edit_user.github_username.present? %>
@@ -122,7 +122,7 @@
 
     <% if Twitter.enabled? %>
       <div class="boxline">
-        <%= label_tag :twitter_username,
+        <%= f.label :twitter_username,
           raw("<a href=\"https://twitter.com/\">Twitter</a>:"),
           :class => "required" %>
         <span>
@@ -301,8 +301,8 @@
   <br>
 
   <div class="deletion">
-    <%= form_for @edit_user, :url => delete_account_path, :method => :post,
-    :html => { :id => "delete_user" } do |f| %>
+      <%= form_with :model => @edit_user, :url => delete_account_path, :method => :post,
+            :id => "delete_user" do |f| %>
       <div class="legend">
         Delete Account
       </div>
@@ -329,10 +329,10 @@
       </div>
       <div class="boxline">
         <%= f.label :i_am_sure, "I am sure:", :class => "required" %>
-        <%= check_box_tag :i_am_sure %>
+        <%= f.check_box :i_am_sure %>
         <br />
         <%= f.label :disown, "Disown Comments:" %>
-        <%= check_box_tag :disown %> (optional)
+        <%= f.check_box :disown %> (optional)
       </div>
       <%= f.submit "Yes, Delete My Account", :class => "deletion" %>
     <% end %>

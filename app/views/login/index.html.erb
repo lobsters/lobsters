@@ -8,19 +8,19 @@
     The site is currently in read-only mode for maintenance.
     </p>
   <% else %>
-    <%= form_tag login_path do %>
+    <%= form_with url: login_path do |form| %>
     <p>
-      <%= label_tag :email, "E-mail or Username:" %>
-      <%= text_field_tag :email, "", :size => 30, :autofocus => "autofocus" %>
+      <%= form.label :email, "E-mail or Username:" %>
+      <%= form.text_field :email, :size => 30, :autofocus => "autofocus" %>
       <br />
 
-      <%= label_tag :password, "Password:" %>
-      <%= password_field_tag :password, "", :size => 30 %>
+      <%= form.label :password, "Password:" %>
+      <%= form.password_field :password, :size => 30 %>
       <br />
       </p>
 
       <p>
-      <%= submit_tag "Login" %>
+      <%= form.submit "Login" %>
       </p>
 
       <p>

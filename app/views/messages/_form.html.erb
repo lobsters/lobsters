@@ -1,4 +1,4 @@
-<%= form_for new_message, :method => :post do |f| %>
+<%= form_with model: Message, url: new_message, :method => :post do |f| %>
   <%= error_messages_for @new_message %>
 
   <% if replying %>
@@ -38,6 +38,6 @@
 
   <div class="boxline">
     <p></p>
-    <%= submit_tag replying ? "Reply" : "Send Message" %>
+    <%= f.submit replying ? "Reply" : "Send Message" %>
   </div>
 <% end %>

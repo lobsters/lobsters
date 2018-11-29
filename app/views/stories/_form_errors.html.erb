@@ -17,7 +17,7 @@
       <% if defined?(f) %>
         <%= f.hidden_field :seen_previous %>
       <% else %>
-        <%= form_for story do |f| %>
+        <%= form_with model: story do |f| %>
           <%= f.hidden_field :seen_previous %>
         <% end %>
       <% end %>

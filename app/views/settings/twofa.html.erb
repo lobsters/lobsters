@@ -6,7 +6,7 @@
     <%= @title %>
   </div>
 
-  <%= form_for @user, :url => twofa_auth_url, :method => :post do |f| %>
+  <%= form_with :model => @user, :url => twofa_auth_url, :method => :post do |f| %>
     <p>
     <% if @user.has_2fa? %>
       To turn off two-factor authentication for your account, enter your
@@ -24,9 +24,9 @@
 
     <p>
     <% if @user.has_2fa? %>
-      <%= submit_tag "Disable Two-Factor Authentication" %>
+      <%= f.submit "Disable Two-Factor Authentication" %>
     <% else %>
-      <%= submit_tag "Continue" %>
+      <%= f.submit "Continue" %>
     <% end %>
   <% end %>
 </div>

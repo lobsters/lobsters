@@ -22,7 +22,7 @@ class StoryRepository
     if @user == user
       stories = Story.includes(:tags).not_deleted.left_joins(:merged_stories)
       unmerged = stories.unmerged.where(user_id: user.id)
-      merged_into_others = stories.merged.where(merged_stories_stories: { user_id: user.id })
+      merged_into_others = stories.where(merged_stories_stories: { user_id: user.id })
 
       unmerged.or(merged_into_others).order(id: :desc)
     else

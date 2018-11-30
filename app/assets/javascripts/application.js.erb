@@ -117,7 +117,7 @@ var _Lobsters = Class.extend({
 
     console.log(voterEl, d);
     if (thingType == "story") {
-      $(voterEl).after(d);
+      $(voterEl).closest("li").after(d);
       d.position({
         my: "left top",
         at: "left bottom",

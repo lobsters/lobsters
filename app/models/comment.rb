@@ -57,6 +57,9 @@ class Comment < ApplicationRecord
     self.story_id.blank? &&
       errors.add(:story_id, "cannot be blank.")
 
+    self.parent_comment && self.parent_comment.is_gone? &&
+      errors.add(:base, "Comment was deleted by the author or a mod while you were writing.")
+
     (m = self.comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
       errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
 

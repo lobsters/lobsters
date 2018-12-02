@@ -263,11 +263,27 @@ class Comment < ApplicationRecord
     end
   end
 
-  def deliver_reply_notifications
+  def get_users_following_thread
+    users_following_thread = []
+    story_author_user = Story.find(self.story_id).user
+    if self.user.id != story_author_user.id
+      users_following_thread << story_author_user if story_author_user.email_replies?
+    end
+
     if self.parent_comment_id &&
        (u = self.parent_comment.try(:user)) &&
        u.id != self.user.id &&
        u.is_active?
+      users_following_thread << u
+    end
+
+    return users_following_thread
+  end
+
+  def deliver_reply_notifications
+    users_following_thread = get_users_following_thread
+
+    users_following_thread.each do |u|
       if u.email_replies?
         begin
           EmailReply.reply(self, u).deliver_now

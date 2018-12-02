@@ -265,9 +265,9 @@ class Comment < ApplicationRecord
 
   def get_users_following_thread
     users_following_thread = []
-    story_author_user = Story.find(self.story_id).user
-    if self.user.id != story_author_user.id
-      users_following_thread << story_author_user if story_author_user.email_replies?
+    story = Story.find(self.story_id)
+    if self.user.id != story.user.id && story.user_is_following
+      users_following_thread << story.user
     end
 
     if self.parent_comment_id &&
@@ -277,6 +277,7 @@ class Comment < ApplicationRecord
       users_following_thread << u
     end
 
+    users_following_thread.uniq!
     return users_following_thread
   end
 

@@ -148,6 +148,14 @@ See the guidelines below." %>
         " the author of the story at this URL (or this text)",
         :class => "normal" %>
     </div>
+    <div class="boxline">
+      <%= f.label :user_is_following, "Follow:", :class => "required" %>
+      <%= f.check_box :user_is_following %>
+      <%= f.label :user_is_following,
+        (f.object.id && f.object.user_id != @user.id ? "Submitter is" : "I am") +
+        " following this story and want to recieve replies via E-mail and Pushover Alerts",
+        :class => "normal" %>
+    </div>
   </div>
 
   <script>

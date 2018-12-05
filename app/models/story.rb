@@ -236,7 +236,7 @@ class Story < ApplicationRecord
   end
 
   def public_similar_stories
-    @_public_similar_stories ||= similar_stories.base
+    @_public_similar_stories ||= similar_stories.empty? ? [] : similar_stories.base
   end
 
   def most_recent_similar

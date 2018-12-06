@@ -1,6 +1,7 @@
 module AuthenticationHelper
   def stub_login_as user
-    user.update_column(:session_token, 'asdf')
-    allow_any_instance_of(ApplicationController).to receive(:session).and_return(u: 'asdf')
+    random_token = "abcdefg".split('').shuffle.join
+    user.update_column(:session_token, random_token)
+    allow_any_instance_of(ApplicationController).to receive(:session).and_return(u: random_token)
   end
 end

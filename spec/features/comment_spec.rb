@@ -4,8 +4,10 @@ require 'rails_helper'
 # so the call can't just be click_on('delete'), etc.
 
 RSpec.feature "Commenting" do
-  let(:story) { create(:story) }
   let(:user) { create(:user) }
+  let(:user1) { create(:user) }
+  let(:story) { create(:story, user: user) }
+  let(:story1) { create(:story, user: user1) }
 
   before(:each) { stub_login_as user }
 
@@ -70,6 +72,24 @@ RSpec.feature "Commenting" do
       page.driver.post "/comments/#{comment.short_id}/disown"
       comment.reload
       expect(comment.user).to eq(user)
+    end
+
+    feature "Merging story comments" do
+      scenario "upvote merged story comments" do
+        comment = create(:comment, user_id: user.id, story_id: story.id, created_at: 90.days.ago)
+
+        stub_login_as user1
+        visit "/s/#{story.short_id}"
+        expect(page.find(:css, ".comment .comment_text")).to have_content('comment text 5')
+        expect(comment.upvotes).to eq(1)
+        page.driver.post "/comments/#{comment.short_id}/upvote"
+        comment.reload
+        expect(comment.upvotes).to eq(2)
+
+        story1.update(merged_stories: [story])
+        visit "/s/#{story1.short_id}"
+        expect(page.find(:css, ".comment.upvoted .score")).to have_content('2')
+      end
     end
   end
 end

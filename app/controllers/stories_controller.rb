@@ -416,7 +416,8 @@ private
       @story.is_hidden_by_cur_user = @story.is_hidden_by_user?(@user)
       @story.is_saved_by_cur_user = @story.is_saved_by_user?(@user)
 
-      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @story.id)
+      @votes = Vote.comment_votes_by_user_for_story_hash(
+        @user.id, (@story.merged_stories.ids).push(@story.id))
       @comments.each do |c|
         if @votes[c.id]
           c.current_vote = @votes[c.id]

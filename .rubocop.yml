@@ -4,6 +4,7 @@
 
 # Project setup:
 require: ./extras/prohibit_safe_navigation
+require: ./extras/prohibit_form_for_and_form_tag
 Rails:
   Enabled: true
 AllCops:

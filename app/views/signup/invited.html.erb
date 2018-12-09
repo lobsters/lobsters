@@ -3,7 +3,7 @@
     Create an Account
   </div>
 
-  <%= form_for @new_user, { :url => signup_path } do |f| %>
+  <%= form_with model: @new_user, :url => signup_path do |f| %>
     <p>
     To create a new account, enter your e-mail address and a password.
     Your e-mail address will never be shown to users and will only be used
@@ -14,7 +14,7 @@
     <%= error_messages_for(@new_user) %>
 
     <% if not Rails.application.open_signups? %>
-      <%= hidden_field_tag "invitation_code", @invitation.code %>
+        <%= f.hidden_field "invitation_code", :value => @invitation.code %>
       <p>
       <%= f.label :invitation, "Invited By:", :class => "required" %>
       <span class="d">
@@ -75,7 +75,7 @@
     </div>
 
     <p>
-    <%= submit_tag "Signup" %>
+    <%= f.submit "Signup" %>
     </p>
   <% end %>
 </div>

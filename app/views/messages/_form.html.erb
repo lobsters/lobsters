@@ -1,8 +1,8 @@
-<%= form_for new_message, :method => :post do |f| %>
+<%= form_with model: @new_message, url: new_message, :method => :post do |f| %>
   <%= error_messages_for @new_message %>
 
   <% if replying %>
-    <%= f.hidden_field :recipient_username %>
+      <%= f.hidden_field :recipient_username  %>
   <% else %>
     <div class="boxline">
       <%= f.label :recipient_username, "To:", :class => "required" %>
@@ -38,6 +38,6 @@
 
   <div class="boxline">
     <p></p>
-    <%= submit_tag replying ? "Reply" : "Send Message" %>
+    <%= f.submit replying ? "Reply" : "Send Message" %>
   </div>
 <% end %>

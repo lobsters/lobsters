@@ -169,14 +169,14 @@
     <%= render partial: 'mod_notes/table', locals: {
       mod_notes: ModNote.for(@showing_user).limit(10),
     } %>
-    <%= form_for @mod_note, method: :post do |f| %>
+    <%= form_with model: @mod_note, method: :post do |f| %>
       <%= error_messages_for @mod_note %>
       <%= f.hidden_field :username %>
       <div class="boxline">
         <%= f.label :note, "New Note:", :class => "required" %>
         <%= f.text_area :note, :style => "width: 500px;", :rows => 5 %>
       </div>
-      <div class="boxline"><p></p><%= submit_tag "ModNote" %></div>
+      <div class="boxline"><p></p><%= f.submit "ModNote" %></div>
     <% end %>
 
     <label class="required">Last 10 Moderations:</label>
@@ -214,13 +214,13 @@
       </table>
 
       <% if @showing_user.is_banned? || @showing_user.banned_from_inviting? %>
-        <%= form_tag user_unban_path, :method => :post do %>
+        <%= form_with url: user_unban_path, :method => :post do |f| %>
           <p>
             <% if @showing_user.is_banned? %>
-              <%= submit_tag "Unban" %>
+              <%= f.submit "Unban" %>
             <% end %>
             <% if @showing_user.banned_from_inviting? %>
-              <%= submit_tag "Enable Invites", formaction: user_enable_invite_path %>
+              <%= f.submit "Enable Invites", formaction: user_enable_invite_path %>
             <% end %>
           </p>
         <% end %>
@@ -231,17 +231,17 @@
           Banning or disabling invites for a user will send an e-mail to the user with the reason below,
           with your e-mail address as the Reply-To so the user can respond.
         </p>
-        <%= form_tag user_ban_path, :method => :post do %>
+        <%= form_with url: user_ban_path, :method => :post do |f| %>
           <div class="boxline">
-            <%= label_tag :reason, "Reason:", :class => "required" %>
-            <%= text_field_tag :reason, "", :size => 40 %>
+            <%= f.label :reason, "Reason:", :class => "required" %>
+            <%= f.text_field :reason, :size => 40 %>
           </div>
           <p>
             <% if !@showing_user.is_banned? %>
-              <%= submit_tag "Ban", class: 'deletion' %>
+              <%= f.submit "Ban", class: 'deletion' %>
             <% end %>
             <% if !@showing_user.banned_from_inviting? %>
-              <%= submit_tag "Disable Invites", formaction: user_disable_invite_path %>
+              <%= f.submit "Disable Invites", formaction: user_disable_invite_path %>
             <% end %>
           </p>
         <% end %>

@@ -3,9 +3,9 @@
     Moderation Log
   </div>
 
-  <%= form_tag(moderations_path, :method => :get) do |f| %>
+  <%= form_with url: moderations_path, :method => :get do |f| %>
     <label class="normal" for="moderator">Moderator:</label>
-    <%= select_tag 'moderator', options_for_select(@moderators, @moderator) %>
+    <%= f.select 'moderator', options_for_select(@moderators, @moderator) %>
     <% @what.each do |type, checked| %>
       <%= check_box_tag "what[#{type}]", type, checked %>
       <label class="normal" for="what_<%= type %>"><%= type.to_s.titlecase %></label>

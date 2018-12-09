@@ -5,24 +5,24 @@ if they cause problems.  Please use your discretion when inviting persons you
 don't personally know.
 </p>
 
-<%= form_tag invitations_path, :method => :post do |f| %>
+<%= form_with url: invitations_path, :method => :post do |f| %>
   <% if defined?(return_home) && return_home %>
-    <%= hidden_field_tag :return_home, 1 %>
+    <%= f.hidden_field :return_home, 1 %>
   <% end %>
 
   <div class="boxline">
-    <%= label_tag :email, "E-mail Address:", :class => "required" %>
-    <%= email_field_tag :email, "", :size => 30, :autocomplete => "off" %>
+    <%= f.label :email, "E-mail Address:", :class => "required" %>
+    <%= f.email_field :email, :size => 30, :autocomplete => "off" %>
   </div>
 
   <div class="boxline">
-    <%= label_tag :memo, "Memo to User:", :class => "required" %>
-    <%= text_field_tag :memo, "", :size => 60 %>
+    <%= f.label :memo, "Memo to User:", :class => "required" %>
+    <%= f.text_field :memo, :size => 60 %>
   </div>
 
   <div class="boxline">
     <p></p>
-    <%= submit_tag "Send Invitation" %>
+    <%= f.submit "Send Invitation" %>
   </div>
 <% end %>
 

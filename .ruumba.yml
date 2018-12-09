@@ -1,0 +1,9 @@
+require: ./extras/prohibit_form_for_and_form_tag
+
+AllCops:
+  DisabledByDefault: true
+
+Style/DisallowFormForandFormTag:
+  Enabled: true
+  Include:
+    - '**/*.erb'

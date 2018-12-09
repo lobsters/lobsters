@@ -36,7 +36,7 @@
   verification of project association.
   </p>
 
-  <%= form_for @hat_request, :url => create_hat_request_path do |f| %>
+  <%= form_with model: @hat_request, :url => create_hat_request_path do |f| %>
     <p>
     <%= f.label :hat, "Hat:" %>
     <%= f.text_field :hat, :size => 20,

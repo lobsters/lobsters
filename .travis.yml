@@ -10,5 +10,6 @@ before_script:
   - ./bin/rails db:create
   - ./bin/rails db:schema:load
 script:
-  - bundle exec rubocop
   - bundle exec rspec
+  - bundle exec rubocop
+  - bundle exec ruumba

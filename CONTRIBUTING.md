@@ -27,10 +27,8 @@ to avoid wasted efforts.
 
 * (Optional) Create a branch to house your changes.
 
-* Run `bundle exec rubocop` to check the style of your Ruby.  For other
-languages, use the existing style of the files being edited.  3rd party,
-externally-maintained code such as Javascript libraries can remain in their
-own style.
+* Run `bundle exec rubocop && bundle exec ruumba` to check the style of your Ruby.
+  (3rd party, externally-maintained code such as Javascript libraries can remain in their own style.)
 
 * Check for unnecessary whitespace with `git diff --check` before committing.
 Commit whitespace and other code cleanups separately so that your actual

@@ -5,11 +5,10 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
     <%= errors_for comment %>
   <% end %>
 
-  <%= f.hidden_field "story_id", :value => comment.story.short_id %>
+  <%= f.hidden_field "story_id", value: comment.story.short_id %>
 
   <% if comment.parent_comment %>
-    <%= f.hidden_field "parent_comment_short_id",
-      comment.parent_comment.short_id %>
+    <%= f.hidden_field "parent_comment_short_id", value: comment.parent_comment.short_id %>
   <% end %>
 
   <div style="width: 100%;">

@@ -7,7 +7,7 @@ don't personally know.
 
 <%= form_with url: invitations_path, :method => :post do |f| %>
   <% if defined?(return_home) && return_home %>
-    <%= f.hidden_field :return_home, 1 %>
+    <%= f.hidden_field :return_home, value: 1 %>
   <% end %>
 
   <div class="boxline">

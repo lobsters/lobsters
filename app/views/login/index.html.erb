@@ -46,7 +46,7 @@
       <% end %>
 
       <% if @referer.present? %>
-        <%= hidden_field_tag :referer, @referer %>
+        <%= form.hidden_field :referer, value: @referer %>
       <% end %>
     <% end %>
   <% end %>

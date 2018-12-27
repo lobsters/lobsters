@@ -1,3 +1,8 @@
+# Magic hack to make rails happy when using herkou
+if ENV['DATABASE_URL'] && ENV['DATABASE_URL'].start_with?('mysql://')
+  ENV['DATABASE_URL'] = ENV['DATABASE_URL'].sub('mysql://', 'mysql2://')
+end
+
 # define site name and domain to be used globally, should be overridden in a
 # local file such as config/site.yml
 SITE_CONFIG = Rails.application.config_for(:site)

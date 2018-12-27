@@ -78,6 +78,8 @@ GEM
     crass (1.0.4)
     database_cleaner (1.7.0)
     diff-lcs (1.3)
+    domain_name (0.5.20180417)
+      unf (>= 0.0.5, < 1.0.0)
     dynamic_form (1.1.4)
     erubi (1.8.0)
     exception_notification (4.3.0)
@@ -98,7 +100,13 @@ GEM
       activerecord (>= 3.1)
       railties (>= 3.1)
     htmlentities (4.3.4)
+
     i18n (1.6.0)
+
+    http-cookie (1.0.3)
+      domain_name (~> 0.5)
+
+
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.3)
     jquery-rails (4.3.5)
@@ -116,14 +124,24 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
+    mailgun-ruby (1.1.11)
+      rest-client (~> 2.0.2)
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
     method_source (0.9.2)
-    mimemagic (0.3.3)
+
+
+
+    mime-types (3.2.2)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2018.0812)
+    mimemagic (0.3.2)
+
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
     minitest (5.11.3)
     mysql2 (0.5.2)
+    netrc (0.11.0)
     nio4r (2.3.1)
     nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
@@ -166,8 +184,17 @@ GEM
     rb-inotify (0.10.0)
       ffi (~> 1.0)
     rb-readline (0.5.5)
-    regexp_parser (1.5.1)
-    rotp (5.1.0)
+
+
+
+
+    regexp_parser (1.3.0)
+    rest-client (2.0.2)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
+    rotp (4.0.2)
+
       addressable (~> 2.5)
     rqrcode (0.10.1)
       chunky_png (~> 1.0)
@@ -227,8 +254,16 @@ GEM
       thread_safe (~> 0.1)
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
-    unicode-display_width (1.6.0)
-    unicorn (5.5.1)
+
+
+
+
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.5)
+    unicode-display_width (1.4.0)
+    unicorn (5.4.1)
+
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.12.1)
@@ -260,6 +295,7 @@ DEPENDENCIES
   json
   listen
   mail
+  mailgun-ruby
   mysql2
   nokogiri (>= 1.7.2)
   oauth

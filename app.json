@@ -1,0 +1,29 @@
+{
+  "name": "Lobste.rs",
+  "description": "Software behind the Lobste.rs community",
+  "keywords": ["community"],
+  "addons": [
+    {"plan": "jawsdb:kitefin", "as": "DATABASE"},
+    {"plan": "bonsai:sandbox-6", "as": "ES"},
+    "mailgun:starter",
+    "scheduler:standard"
+  ],
+  "env": {
+    "RAILS_ENV": "production",
+    "SITE_NAME": {
+      "description": "The name of your instance.",
+      "value": "My Link Website"
+    },
+    "SITE_DOMAIN": {
+      "description": "The domain name pointed to your instance.",
+      "value": "example.com"
+    },
+    "SECRET_KEY_BASE": {
+      "description": "A secret key for verifying the integrity of signed cookies.",
+      "generator": "secret"
+    }
+  },
+  "scripts": {
+    "postdeploy": "bundle exec rake db:setup"
+  }
+}

@@ -51,9 +51,9 @@ There's an external project [docker-lobsters](https://github.com/utensils/docker
     ```sh
     lobsters$ bundle
     ```
-    
-    * If when installing the `mysql2` gem on macOS, you see 
-      `ld: library not found for -l-lpthread` in the output, see 
+
+    * If when installing the `mysql2` gem on macOS, you see
+      `ld: library not found for -l-lpthread` in the output, see
       [this solution](https://stackoverflow.com/a/44790834/204052) for a fix.
       You might also see `ld: library not found for -lssl` if you're using
       macOS 10.4+ and Homebrew `openssl`, in which case see
@@ -73,7 +73,7 @@ running tests:
       socket: /tmp/mysql.sock
       username: *dev_username*
       password: *dev_password*
-      
+
     test:
       adapter: mysql2
       encoding: utf8mb4
@@ -90,9 +90,8 @@ running tests:
     lobsters$ rails db:schema:load
     ```
 
-* On your production server, copy `config/initializers/production.rb.sample`
-  to `config/initalizers/production.rb` and customize it with your site's
-  `domain` and `name`. (You don't need this on your dev machine).
+* Define your site's name and default domain, which are used in various places,
+in `config/site.yml`.
 
 * Put your site's custom CSS in `app/assets/stylesheets/local`.
 
@@ -120,7 +119,7 @@ running tests:
     */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/post_to_twitter; bundle exec ruby script/traffic_range'
     ```
 
-* See `config/initializers/production.rb.sample` for GitHub/Twitter integration help.
+* See `config/secrets.yml` for GitHub/Twitter integration help.
 
 #### Administration
 

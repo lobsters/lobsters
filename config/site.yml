@@ -1,0 +1,34 @@
+local: &local
+  allow_invitation_requests: true
+  open_signups: true
+  domain: "example.com"
+  name: "lobsters"
+  read_only: false
+  elasticsearch:
+    enabled: false
+    host: http://localhost:9200/
+  exception_notifications:
+    reply_to: Exception Notification <noreply@example.com>
+    emails: []
+
+development:
+  <<: *local
+
+test:
+  <<: *local
+
+production:
+  allow_invitation_requests: <%= ENV['SITE_ALLOW_INVITATION_REQUESTS'] != nil %>
+  open_signups: <%= ENV['SITE_OPEN_SIGNUPS'] != nil %>
+  domain: <%= ENV['SITE_DOMAIN'] %>
+  name: <%= ENV['SITE_NAME'] %>
+  read_only: <%= ENV['SITE_READ_ONLY'] != nil %>
+  elasticsearch:
+    enabled: false
+    host: <%= ENV['ES_URL'] %>
+  exception_notifications:
+    reply_to: <%= ENV['SITE_EXCEPTION_REPLY_TO'] %>
+    emails:
+      <% ENV.fetch('SITE_EXCEPTION_EMAILS', '').split(',') do |e| %>
+      - <%= e %>
+      <% end %>

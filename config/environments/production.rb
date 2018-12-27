@@ -88,3 +88,6 @@ end
 %w{render_template render_partial render_collection}.each do |event|
   ActiveSupport::Notifications.unsubscribe "#{event}.action_view"
 end
+
+BCrypt::Engine.cost = 12
+ActionMailer::Base.delivery_method = :sendmail

@@ -5,6 +5,7 @@ class FakeDataGenerator
   end
 
   def generate
+    # Users
     users = 0.upto(@users_count).map do
       name = Faker::Name.name
       password = Faker::Internet.password
@@ -15,6 +16,7 @@ class FakeDataGenerator
         username: user_name
     end
 
+    # Stories
     @stories_count.times do |i|
       user = users[Random.rand(@users_count-1)]
       title = Faker::Lorem.sentence(3)
@@ -27,6 +29,24 @@ class FakeDataGenerator
           description: Faker::Lorem.paragraphs(3).join("\n\n"),
           tags_a: [tag.tag]
       end
+    end
+
+    # Comments
+    Story.all.each do |x|
+      Random.rand(1..3).times do
+        Comment.create! user: users[Random.rand(@users_count-1)],
+          comment: Faker::Lorem.sentence(Random.rand(30..50)),
+          story_id: x.id
+      end
+    end
+
+    # Hats
+    (@users_count / 2).times do |i|
+      suffixes = ["Developer", "Founder", "User", "Contributor", "Creator"]
+      Hat.create! user: users[i + 1],
+        granted_by_user: users[0],
+        hat: Faker::Lorem.word.capitalize + " " + suffixes[Random.rand(5)],
+        link: Faker::Internet.url
     end
   end
 end
@@ -41,5 +61,5 @@ task fake_data: :environment do
     fail "Cancelled" if STDIN.gets.chomp != 'y'
   end
 
-  FakeDataGenerator.new(10, 1_000).generate
+  FakeDataGenerator.new(20, 200).generate
 end

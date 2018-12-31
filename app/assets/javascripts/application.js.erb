@@ -1,3 +1,4 @@
+//= require rails-ujs
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
@@ -25,11 +26,6 @@ if (!Element.prototype.closest) {
   };
 }
 
-function post(url, data) {
-  var request = new XMLHttpRequest();
-  request.open('POST', url, true);
-  request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-  request.send(data);
 }
 
 var _Lobsters = Class.extend({
@@ -64,7 +60,10 @@ var _Lobsters = Class.extend({
       hiderEl.innerHTML = "unhide";
     }
 
-    post("/stories/" + li.getAttribute("data-shortid") + "/" + act);
+    Rails.ajax({
+      type: "POST",
+      url: "/stories/" + li.getAttribute("data-shortid") + "/" + act,
+    });
   },
   saveStory: function(saverEl) {
     if (!Lobsters.curUser)
@@ -82,7 +81,11 @@ var _Lobsters = Class.extend({
       li.classList.add("saved");
       saverEl.innerHTML = "unsave";
     }
-    post("/stories/" + li.getAttribute("data-shortid") + "/" + act);
+
+    Rails.ajax({
+      type: "POST",
+      url: "/stories/" + li.getAttribute("data-shortid") + "/" + act,
+    });
   },
 
   upvoteComment: function(voterEl) {

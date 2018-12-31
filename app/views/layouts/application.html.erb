@@ -22,6 +22,7 @@
   <% end %>
   <title><%= @title.present? ? "#{@title} | " : "" %><%=
     Rails.application.name %></title>
+  <%= csrf_meta_tags %>
   <%= stylesheet_link_tag "application", :media => "all" %>
   <% if @user %>
     <%= javascript_include_tag "application" %>
@@ -29,7 +30,6 @@
       Lobsters.curUser = '<%= @user.id %>';
     </script>
   <% end %>
-  <%= csrf_meta_tags %>
   <% if @rss_link %>
     <link rel="alternate" type="application/rss+xml"
       title="<%= @rss_link[:title] %>" href="<%= @rss_link[:href] %>" />

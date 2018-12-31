@@ -51,21 +51,20 @@ var _Lobsters = Class.extend({
     if (!Lobsters.curUser)
       return Lobsters.bounceToLogin();
 
-    var li = $(hiderEl).closest(".story, .comment");
+    var li = hiderEl.closest(".story, .comment");
     var act;
 
-    if (li.hasClass("hidden")) {
+    if (li.classList.contains("hidden")) {
       act = "unhide";
-      li.removeClass("hidden");
+      li.classList.remove("hidden");
       hiderEl.innerHTML = "hide";
-    }
-    else {
+    } else {
       act = "hide";
-      li.addClass("hidden");
+      li.classList.add("hidden");
       hiderEl.innerHTML = "unhide";
     }
 
-    $.post("/stories/" + li.attr("data-shortid") + "/" + act);
+    post("/stories/" + li.getAttribute("data-shortid") + "/" + act);
   },
   saveStory: function(saverEl) {
     if (!Lobsters.curUser)
@@ -83,7 +82,7 @@ var _Lobsters = Class.extend({
       li.classList.add("saved");
       saverEl.innerHTML = "unsave";
     }
-    post("/stories/" + li.attr("data-shortid") + "/" + act);
+    post("/stories/" + li.getAttribute("data-shortid") + "/" + act);
   },
 
   upvoteComment: function(voterEl) {

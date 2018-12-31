@@ -4,6 +4,34 @@
 
 "use strict";
 
+// Polyfill Element.matches()
+// https://developer.mozilla.org/en-US/docs/Web/API/Element/matches#polyfill
+if (!Element.prototype.matches) {
+  Element.prototype.matches = Element.prototype.msMatchesSelector || 
+                              Element.prototype.webkitMatchesSelector;
+}
+
+// Polyfill Element.closest()
+// https://developer.mozilla.org/en-US/docs/Web/API/Element/closest#polyfill
+if (!Element.prototype.closest) {
+  Element.prototype.closest = function(s) {
+    var el = this;
+    if (!document.documentElement.contains(el)) return null;
+    do {
+      if (el.matches(s)) return el;
+      el = el.parentElement || el.parentNode;
+    } while (el !== null && el.nodeType === 1);
+    return null;
+  };
+}
+
+function post(url, data) {
+  var request = new XMLHttpRequest();
+  request.open('POST', url, true);
+  request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+  request.send(data);
+}
+
 var _Lobsters = Class.extend({
   curUser: null,
 
@@ -43,21 +71,19 @@ var _Lobsters = Class.extend({
     if (!Lobsters.curUser)
       return Lobsters.bounceToLogin();
 
-    var li = $(saverEl).closest(".story, .comment");
+    var li = saverEl.closest(".story, .comment");
     var act;
 
-    if (li.hasClass("saved")) {
+    if (li.classList.contains("saved")) {
       act = "unsave";
-      li.removeClass("saved");
+      li.classList.remove("saved");
       saverEl.innerHTML = "save";
-    }
-    else {
+    } else {
       act = "save";
-      li.addClass("saved");
+      li.classList.add("saved");
       saverEl.innerHTML = "unsave";
     }
-
-    $.post("/stories/" + li.attr("data-shortid") + "/" + act);
+    post("/stories/" + li.attr("data-shortid") + "/" + act);
   },
 
   upvoteComment: function(voterEl) {

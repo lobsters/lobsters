@@ -26,6 +26,19 @@ if (!Element.prototype.closest) {
   };
 }
 
+// Parameter encodes an object to replicate jQuery.post's behavior for it's
+// second argument.
+function param(object) {
+  var encodedString = '';
+  for (var prop in object) {
+    if (object.hasOwnProperty(prop) && object[prop] != undefined) {
+      if (encodedString.length > 0) {
+        encodedString += '&';
+      }
+      encodedString += encodeURI(prop + '=' + object[prop]);
+    }
+  }
+  return encodedString;
 }
 
 var _Lobsters = Class.extend({
@@ -169,8 +182,8 @@ var _Lobsters = Class.extend({
     if (!Lobsters.curUser)
       return Lobsters.bounceToLogin();
 
-    var li = $(voterEl).closest(".story, .comment");
-    var scoreDiv = li.find("div.score").get(0);
+    var li = voterEl.closest(".story, .comment");
+    var scoreDiv = li.querySelector("div.score");
     var showScore = true;
     var score = parseInt(scoreDiv.innerHTML);
     if (isNaN(score)) {
@@ -179,55 +192,66 @@ var _Lobsters = Class.extend({
     }
     var action = "";
 
-    if (li.hasClass("upvoted") && point > 0) {
+    if (li.classList.contains("upvoted") && point > 0) {
       /* already upvoted, neutralize */
-      li.removeClass("upvoted");
+      li.classList.remove("upvoted");
       score--;
       action = "unvote";
-    }
-    else if (li.hasClass("downvoted") && point < 0) {
+    } else if (li.classList.contains("downvoted") && point < 0) {
       /* already downvoted, neutralize */
-      li.removeClass("downvoted");
+      li.classList.remove("downvoted");
       score++;
       action = "unvote";
-    }
-    else if (point > 0) {
-      if (li.hasClass("downvoted"))
+    } else if (point > 0) {
+      if (li.classList.contains("downvoted")) {
         /* flip flop */
         score++;
+      }
 
-      li.removeClass("downvoted").addClass("upvoted");
+      li.classList.remove("downvoted");
+      li.classList.add("upvoted");
       score++;
       action = "upvote";
-    }
-    else if (point < 0) {
-      if (li.hasClass("upvoted"))
+    } else if (point < 0) {
+      if (li.classList.contains("upvoted"))
         /* flip flop */
         score--;
 
-      li.removeClass("upvoted").addClass("downvoted");
+      li.classList.remove("upvoted");
+      li.classList.add("downvoted");
       score--;
       action = "downvote";
     }
 
-    if (showScore)
+    if (showScore) {
       scoreDiv.innerHTML = score;
+    }
 
     if (action == "upvote" || action == "unvote") {
-      li.find(".reason").html("");
+      var reasonEl = li.querySelector(".reason");
+      if (reasonEl) {
+        reasonEl.innerHTML = "";
+      }
 
-      if (action == "unvote" && thingType == "story" && point < 0)
-        li.find(".flagger").text("flag");
+      if (action == "unvote" && thingType == "story" && point < 0) {
+        li.querySelector(".flagger").innerText = 'flag';
+      }
+    } else if (action == "downvote" && thingType == "comment") {
+      li.querySelector(".reason").innerHTML = "| " +
+        Lobsters.commentDownvoteReasons[reason].toLowerCase();
+    } else if (action == "downvote" && thingType == "story") {
+      li.querySelector(".flagger").innerText = "unflag";
     }
-    else if (action == "downvote" && thingType == "comment")
-      li.find(".reason").html("| " +
-        Lobsters.commentDownvoteReasons[reason].toLowerCase());
-    else if (action == "downvote" && thingType == "story")
-      li.find(".flagger").text("unflag");
 
-    $.post("/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
-      li.attr("data-shortid") + "/" +
-      action, { reason: reason });
+    Rails.ajax({
+      type: "POST",
+      url: (
+        "/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
+        li.getAttribute("data-shortid") + "/" +
+        action
+      ),
+      data: param({ reason: reason }),
+    })
   },
 
   postComment: function(form) {

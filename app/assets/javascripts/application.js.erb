@@ -41,6 +41,10 @@ function param(object) {
   return encodedString;
 }
 
+function removeEl(el) {
+  return el.parentNode.removeChild(el);
+}
+
 var _Lobsters = Class.extend({
   curUser: null,
 
@@ -112,69 +116,73 @@ var _Lobsters = Class.extend({
     if (!Lobsters.curUser)
       return Lobsters.bounceToLogin();
 
-    var li = $(voterEl).closest(".story, .comment");
-    if (li.hasClass("downvoted")) {
+    var li = voterEl.closest(".story, .comment");
+    if (li.classList.contains("downvoted")) {
       /* already upvoted, neutralize */
       Lobsters.vote(thingType, voterEl, -1, null);
       return;
     }
 
-    if ($("#downvote_why"))
-      $("#downvote_why").remove();
-    if ($("#downvote_why_shadow"))
-      $("#downvote_why_shadow").remove();
+    if (document.getElementById("downvote_why")) {
+      removeEl(document.getElementById("downvote_why"));
+    }
+    if (document.getElementById("downvote_why_shadow")) {
+      removeEl(document.getElementById("downvote_why_shadow"));
+    }
 
-    var sh = $("<div id=\"downvote_why_shadow\"></div>");
-    $(voterEl).after(sh);
-    sh.click(function() {
-      $("#downvote_why_shadow").remove();
-      $("#downvote_why").remove();
+    var sh = document.createElement("div");
+    sh.id = "downvote_why_shadow";
+    voterEl.insertAdjacentElement("afterend", sh);
+
+    sh.addEventListener('click', function() {
+      removeEl(document.getElementById("downvote_why_shadow"));
+      removeEl(document.getElementById("downvote_why"));
     });
 
-    var d = $("<div id=\"downvote_why\"></div>");
+    var d = document.createElement("div");
+    d.id = "downvote_why";
 
     var reasons;
-    if (thingType == "comment")
+    if (thingType === "comment") {
       reasons = Lobsters.commentDownvoteReasons;
-    else
+    } else {
       reasons = Lobsters.storyFlagReasons;
+    }
 
-    $.each(reasons, function(k, v) {
-      var a = $("<a href=\"#\"" + (k == "" ? " class=\"cancelreason\"" : "") +
-        ">" + v + "</a>");
+    Object.keys(reasons).forEach(function(k) {
+      var v = reasons[k];
+      var a = document.createElement("a");
+      a.setAttribute("href", "#");
+      a.textContent = v;
+      if (k === "") {
+        a.classList.add("cancelreason");
+      }
 
-      a.click(function() {
-        $("#downvote_why").remove();
-        $("#downvote_why_shadow").remove();
+      a.addEventListener("click", function(e) {
+        removeEl(document.getElementById("downvote_why"));
+        removeEl(document.getElementById("downvote_why_shadow"));
 
-        if (k != "")
+        if (k != "") {
           onChooseWhy(k);
+        }
 
-        return false;
+        e.preventDefault();
       });
 
-      d.append(a);
+      d.appendChild(a);
     });
 
-    console.log(voterEl, d);
-    if (thingType == "story") {
-      $(voterEl).closest("li").after(d);
-      d.position({
-        my: "left top",
-        at: "left bottom",
-        offset: "-2 -2",
-        of: $(voterEl),
-        collision: "none",
-      });
-      d.css("left", $(voterEl).position().left);
+    if (thingType === "story") {
+      d.style.top = voterEl.offsetTop + voterEl.offsetHeight - 2 + "px";
+      d.style.left = voterEl.offsetLeft - 2 + "px";
+      voterEl.closest("li").insertAdjacentElement('afterend', d);
     } else {
       // place downvote menu outside of the comment to avoid inheriting opacity
-      var voterPos = $(voterEl).position();
-      d.appendTo($(voterEl).closest(".comments_subtree"));
-      d.css({
-        left: voterPos.left,
-        top: voterPos.top + $(voterEl).outerHeight()
-      });
+      var voterPosLeft = voterEl.offsetLeft;
+      var voterPosTop = voterEl.offsetTop;
+      voterEl.closest(".comments_subtree").appendChild(d);
+      d.style.left = voterPosLeft;
+      d.style.top = voterPosTop + voterEl.offsetHeight;
     }
   },
 

@@ -45,6 +45,10 @@ function removeEl(el) {
   return el.parentNode.removeChild(el);
 }
 
+function replaceEl(oldEl, newEl) {
+  return oldEl.parentNode.replaceChild(newEl, oldEl);
+}
+
 var _Lobsters = Class.extend({
   curUser: null,
 
@@ -290,14 +294,19 @@ var _Lobsters = Class.extend({
   },
 
   previewComment: function(form) {
-    var params = $(form).serializeArray();
-    params.push({"name": "preview", "value": "true"});
-    params.push({"name": "show_tree_lines", "value": "true"});
-    $.post($(form).attr("action"), params, function(data) {
-      var da = $.parseHTML(data);
-      var ta = $(da).find("textarea");
-      $(form).closest(".comment").replaceWith(da);
-      autosize(ta);
+    var data = Rails.serializeElement(form, param({
+      preview: true,
+      show_tree_lines: true
+    }));
+    Rails.ajax({
+      type: "POST",
+      url: form.getAttribute("action"),
+      data: data,
+      success: function(da) {
+        var ta = da.querySelector("textarea");
+        replaceEl(form.closest(".comment"), da.body.children[0]);
+        autosize(ta);
+      },
     });
   },
 
@@ -607,7 +616,7 @@ $(document).ready(function() {
   });
 
   $(document).on("click", "button.comment-preview", function() {
-    Lobsters.previewComment($(this).parents("form").first());
+    Lobsters.previewComment($(this).parents("form").first()[0]);
   });
 
   $(document).on("click", "button.story-preview", function() {

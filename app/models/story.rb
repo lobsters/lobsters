@@ -195,21 +195,21 @@ class Story < ApplicationRecord
       urls2.push u.gsub(/^http:\/\//i, "https://")
       urls2.push u.gsub(/^https:\/\//i, "http://")
     end
-    urls = urls2.clone
+    urls = urls2.uniq
 
     # trailing slash
     urls.each do |u|
       urls2.push u.gsub(/\/+\z/, "")
       urls2.push u + "/"
     end
-    urls = urls2.clone
+    urls = urls2.uniq
 
     # www prefix
     urls.each do |u|
       urls2.push u.gsub(/^(https?:\/\/)www\d*\./i) {|_| $1 }
       urls2.push u.gsub(/^(https?:\/\/)/i) {|_| "#{$1}www." }
     end
-    urls = urls2.clone
+    urls = urls2.uniq
 
     # if a previous submission was moderated, return it to block it from being
     # submitted again

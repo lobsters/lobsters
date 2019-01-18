@@ -41,4 +41,12 @@ RSpec.feature "Submitting Stories", type: :feature do
       expect(page).to have_content "Error: This story was submitted"
     }.not_to(change { Story.count })
   end
+
+  scenario "resubmitting an old link" do
+    s = create(:story, created_at: (Story::RECENT_DAYS + 1).days.ago)
+    visit "/stories/new?url=#{s.url}"
+
+    expect(page).to have_content "may be submitted again"
+    expect(page).to have_content "Previous discussions"
+  end
 end

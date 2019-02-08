@@ -22,10 +22,10 @@ Other sites using the Lobsters codebase:
 * [Standard](https://std.bz/) - Cryptocurrency
 * [Bitmia](https://bitmia.com/) - Finance
 * [0xBlockchain](https://0xblockchain.network/) ([repo](https://github.com/pyk/0xblockchain)) - Cryptocurrency
-* [laarc](https://www.laarc.io/) - STEM. Humanities. Humor. 
 
 ## Cousin Sites
 
 Inspired by Lobsters, but not using the Lobsters codebase.
 
 * [Quasars](https://quasa.rs) ([repo](https://github.com/kineticdial/quasars))
+* [laarc](https://www.laarc.io/) - STEM. Humanities. Humor. A cross between Pinboard and Hacker News.

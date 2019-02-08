@@ -28,4 +28,4 @@ Other sites using the Lobsters codebase:
 Inspired by Lobsters, but not using the Lobsters codebase.
 
 * [Quasars](https://quasa.rs) ([repo](https://github.com/kineticdial/quasars))
-* [laarc](https://www.laarc.io/) - STEM. Humanities. Humor. A cross between Pinboard and Hacker News.
+* [laarc](https://www.laarc.io/) ([repo](https://github.com/laarc/laarc)) - STEM. Humanities. Humor. A cross between Pinboard and Hacker News.

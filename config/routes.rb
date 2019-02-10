@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  use_doorkeeper do
+    controllers :applications => 'oauth/applications'
+  end
+
   root :to => "home#index",
     :protocol => (Rails.application.config.force_ssl ? "https://" : "http://"),
     :as => "root"
@@ -194,4 +198,12 @@ Rails.application.routes.draw do
   get "/privacy" => "home#privacy"
   get "/about" => "home#about"
   get "/chat" => "home#chat"
+
+  scope :format => "json" do
+    namespace :api do
+      namespace :v1 do
+        get "/messages" => "messages#index"
+      end
+    end
+  end
 end

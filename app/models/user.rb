@@ -47,6 +47,9 @@ class User < ApplicationRecord
   has_many :wearable_hats, -> { where('doffed_at is null') },
            :class_name => "Hat",
            :inverse_of => :user
+  has_many :oauth_applications,
+           class_name: 'Doorkeeper::Application',
+           as: :owner
 
   has_secure_password
 

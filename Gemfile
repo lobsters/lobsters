@@ -34,6 +34,7 @@ gem "htmlentities"
 gem "commonmarker", "~> 0.14"
 
 gem "oauth" # for twitter-posting bot
+gem "doorkeeper" # for the oauth api
 gem "mail" # for parsing incoming mail
 gem "sitemap_generator" # for better search engine indexing
 

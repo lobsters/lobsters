@@ -265,6 +265,19 @@
     <br>
 
     <div class="legend">
+      OAuth Application Settings
+    </div>
+
+    <div class="boxline">
+      <label class="required">Owned:</label>
+      <span>
+        <%= @user.oauth_applications.size %> (<a href="/oauth/applications">Manage</a>)
+      </span>
+    </div>
+
+    <br>
+
+    <div class="legend">
       Miscellaneous Settings
     </div>
 

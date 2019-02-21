@@ -761,8 +761,8 @@ div.story_text blockquote {
 }
 
 /* un-italicize italics inside a blockquote */
-div.comment_text blockquote em, 
-div.markdown_help blockquote em, 
+div.comment_text blockquote em,
+div.markdown_help blockquote em,
 div.story_text blockquote em {
     font-style: normal
 }
@@ -1274,4 +1274,31 @@ div.fieldWithErrors {
 	text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
 	text-decoration: none;
 	vertical-align: middle;
+}
+
+.messages .message {
+	display: grid;
+	grid-row-gap: 1em;
+	grid-column-gap: 1em;
+	grid-template-columns: [meta] 15ex [body] auto;
+}
+
+.messages .meta {
+	grid-area: meta;
+}
+
+.message .body {
+	grid-area: body;
+}
+
+.message .meta {
+	text-align: right;
+}
+
+.message .author {
+	font-weight: bold;
+}
+
+.message .timestamp {
+	color: #999;
 }

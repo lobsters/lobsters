@@ -4,4 +4,8 @@ class ConversationsController < ApplicationController
   def index
     @conversations = Conversation.includes(:messages).involving(@user)
   end
+
+  def show
+    @conversation = Conversation.find(params[:id])
+  end
 end

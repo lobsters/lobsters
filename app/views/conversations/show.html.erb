@@ -1,0 +1,16 @@
+<section class="messages box wide">
+  <% @conversation.messages.each do |message| %>
+    <article class="message">
+      <header class="meta">
+        <div class="author"><%= message.author.username %></div>
+        <time
+          datetime="<%= l(message.created_at, format: :datetime) %>"
+          class="timestamp"
+        >
+          <%= l(message.created_at, format: :short) %>
+        </time>
+      </header>
+      <main class="body"><%= message.body %></main>
+    </article>
+  <% end %>
+</section>

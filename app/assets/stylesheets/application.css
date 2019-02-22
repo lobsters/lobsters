@@ -1276,29 +1276,28 @@ div.fieldWithErrors {
 	vertical-align: middle;
 }
 
-.messages .message {
+.messages {
 	display: grid;
-	grid-row-gap: 1em;
-	grid-column-gap: 1em;
-	grid-template-columns: [meta] 15ex [body] auto;
+	grid-template-columns: min-content minmax(auto, 750px);
+	grid-auto-rows: auto;
+	grid-gap: 1em;
 }
 
 .messages .meta {
-	grid-area: meta;
-}
-
-.message .body {
-	grid-area: body;
-}
-
-.message .meta {
+	grid-column-start: 1;
 	text-align: right;
 }
 
-.message .author {
+.messages .meta .author {
 	font-weight: bold;
 }
 
-.message .timestamp {
+.messages .meta .timestamp {
 	color: #999;
+}
+
+.messages .body {
+	grid-column-start: 2;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }

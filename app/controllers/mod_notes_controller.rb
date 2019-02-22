@@ -2,10 +2,12 @@ class ModNotesController < ModController
   before_action :require_logged_in_moderator
 
   def index
+    @title = "Mod Notes"
     @username = params[:username]
     query = ModNote.order('created_at desc').includes(:moderator, :user)
     if (@username = params[:username])
       if (user = User.find_by(username: @username))
+        @title = "#{@username} Mod Notes"
         @notes = query.where(user: user)
       else
         @notes = []
@@ -17,6 +19,7 @@ class ModNotesController < ModController
   end
 
   def create
+    @title = "Create Mod Note"
     @mod_note = ModNote.new(mod_note_params)
     @mod_note.moderator = @user
     if @mod_note.save

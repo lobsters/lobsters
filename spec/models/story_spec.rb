@@ -153,6 +153,29 @@ describe Story do
     expect(s.tagging_changes).to eq("tags" => ["tag1 tag2", "tag2"])
   end
 
+  it "assigning new tags_a should create new_record taggings" do
+    s = create(:story, tags_a: ['tag1'])
+    s.tags_a = ['tag1', 'tag2']
+    expect(s.taggings.map(&:new_record?)).to eq([false, true])
+  end
+
+  it "logs tag additions from user suggestions properly" do
+    s = create(:story, :title => "blah", :tags_a => ["tag1"], :description => "desc")
+
+    u1 = create(:user)
+    s.save_suggested_tags_a_for_user!(['tag1', 'tag2'], u1)
+    s.reload
+
+    u2 = create(:user)
+    s.save_suggested_tags_a_for_user!(['tag1', 'tag2'], u2)
+
+    mod_log = Moderation.last
+    expect(mod_log.moderator_user_id).to eq(nil)
+    expect(mod_log.story_id).to eq(s.id)
+    expect(mod_log.reason).to match(/Automatically changed/)
+    expect(mod_log.action).to match(/tags from "tag1" to "tag1 tag2"/)
+  end
+
   it "logs moderations properly" do
     mod = create(:user, :moderator)
 

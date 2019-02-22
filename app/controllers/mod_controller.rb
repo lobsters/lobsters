@@ -7,6 +7,7 @@ class ModController < ApplicationController
   before_action :require_logged_in_moderator, :default_periods
 
   def index
+    @title = "Mod Activity"
     @moderations = Moderation.all
       .eager_load(:moderator, :story, :comment, :tag, :user)
       .where("moderator_user_id != ? or moderator_user_id is null", @user.id)
@@ -15,13 +16,15 @@ class ModController < ApplicationController
   end
 
   def flagged
-    @stories = period(Story.base
+    @title = "Flagged Stories"
+    @stories = period(Story.includes(:tags).unmerged
       .includes(:user, :suggested_titles, :suggested_taggings, :tags)
       .where("downvotes > 1")
       .order("stories.id DESC"))
   end
 
   def downvoted
+    @title = "Downvoted Comments"
     @comments = period(Comment
       .eager_load(:user, :hat, :story => :user, :votes => :user)
       .where("(select count(*) from votes where
@@ -32,6 +35,7 @@ class ModController < ApplicationController
   end
 
   def commenters
+    @title = "Downvoted Commenters"
     dvc = DownvotedCommenters.new(params[:period])
     @interval = dvc.interval
     @agg = dvc.aggregates

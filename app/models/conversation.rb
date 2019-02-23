@@ -11,6 +11,9 @@ class Conversation < ApplicationRecord
   )
   has_many :messages
 
+  validates :short_id, presence: true, uniqueness: true
+  validates :subject, presence: true
+
   scope :involving, ->(user) do
     where(recipient: user).or(Conversation.where(author: user))
   end

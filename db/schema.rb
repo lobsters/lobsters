@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(version: 2019_05_29_133507) do
   create_table "conversations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "short_id", null: false
+    t.string "subject", null: false
     t.bigint "author_user_id"
     t.bigint "recipient_user_id"
     t.index ["author_user_id"], name: "index_conversations_on_author_user_id"

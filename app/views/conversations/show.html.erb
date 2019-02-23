@@ -6,7 +6,7 @@
           datetime="<%= l(message.created_at, format: :datetime) %>"
           class="timestamp"
         >
-          <%= l(message.created_at, format: :short) %>
+          <%= time_ago_in_words_label(message.created_at) %>
         </time>
       </header>
       <div class="body"><%= message.body %></div>

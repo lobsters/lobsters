@@ -1,4 +1,6 @@
 class Conversation < ApplicationRecord
+  before_validation :assign_short_id, :on => :create
+
   belongs_to(
     :author,
     class_name: User.name,
@@ -24,5 +26,9 @@ class Conversation < ApplicationRecord
     else
       author
     end
+  end
+
+  def assign_short_id
+    self.short_id = ShortId.new(self.class).generate
   end
 end

@@ -214,11 +214,19 @@ class User < ApplicationRecord
       self.disabled_invite_reason = reason
       self.save!
 
-      msg = Message.new
+      conversation = Conversation.new
+      conversation.author_user_id = disabler.id
+      conversation.recipient_user_id = self.id
+      conversation.subject = "Your invite privileges have been revoked"
+      conversation.save!
+      msg = conversation.messages.new
+
+      # TODO: Remove these 3 lines after message no longer has these fields
+      msg.author_user_id = conversation.author_user_id
+      msg.recipient_user_id = conversation.recipient_user_id
+      msg.subject = conversation.subject
+
       msg.deleted_by_author = true
-      msg.author_user_id = disabler.id
-      msg.recipient_user_id = self.id
-      msg.subject = "Your invite privileges have been revoked"
       msg.body = "The reason given:\n" <<
                  "\n" <<
                  "> *#{reason}*\n" <<

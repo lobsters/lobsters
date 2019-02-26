@@ -197,10 +197,14 @@ class Story < ApplicationRecord
     end
     urls = urls2.uniq
 
-    # trailing slash
+    # trailing slash or index.html
     urls.each do |u|
-      urls2.push u.gsub(/\/+\z/, "")
-      urls2.push u + "/"
+      u_without_slash = u.gsub(/\/+\z/, "")
+      urls2.push u_without_slash
+      urls2.push u_without_slash + "/"
+      urls2.push u_without_slash + "/index.htm"
+      urls2.push u_without_slash + "/index.html"
+      urls2.push u.gsub(/\/index.html?\z/, "")
     end
     urls = urls2.uniq
 

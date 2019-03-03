@@ -1296,7 +1296,7 @@ div.fieldWithErrors {
 	color: #999;
 }
 
-.messages .body {
+.messages .message_text {
 	grid-column-start: 2;
 	overflow: hidden;
 	text-overflow: ellipsis;

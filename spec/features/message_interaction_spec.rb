@@ -14,7 +14,7 @@ RSpec.feature "Checking messages" do
       recipient: user
     )
 
-    visit "/"
+    visit root_path
     click_on "1 Message"
 
     expect(current_path).to eq(conversations_path)

@@ -99,8 +99,7 @@ Rails.application.routes.draw do
   get "/comments/page/:page" => "comments#index"
   get "/comments" => "comments#index"
 
-  get "/conversations" => "conversations#index", as: :conversations
-  get "/conversations/:id" => "conversations#show", as: :conversation
+  resources :conversations, only: [:index, :show]
   get "/messages/sent" => "messages#sent"
   get "/messages" => "messages#index"
   post "/messages/batch_delete" => "messages#batch_delete",

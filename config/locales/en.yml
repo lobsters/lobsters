@@ -34,3 +34,7 @@ en:
   time:
     formats:
       datetime: "%Y-%m-%dT%H:%M:%S"
+  helpers:
+    submit:
+      conversation:
+        create: Send Message

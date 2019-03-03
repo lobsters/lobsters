@@ -24,4 +24,29 @@ RSpec.feature "Checking messages" do
 
     expect(page).to have_css(".message_text", text: "testing one two three")
   end
+
+  scenario "start a new conversation" do
+    user = create(:user)
+    stub_login_as user
+    other_user = create(:user, username: "seafood")
+
+    visit root_path
+    click_on "Messages"
+    within(".new_conversation") do
+      fill_in "To", with: other_user.username
+      fill_in "Subject", with: "Ahoy!"
+      fill_in(
+        "Message",
+        with: "I was wondering if you'd like to get some chowder sometime."
+      )
+      click_on "Send Message"
+    end
+
+    expect(current_path).to eq(conversations_path)
+    expect(page).to have_css(".conversation .subject", text: "Ahoy!")
+    expect(page).to have_css(
+      ".conversation .partner",
+      text: other_user.username
+    )
+  end
 end

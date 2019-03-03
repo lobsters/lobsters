@@ -1,9 +1,24 @@
 <div class="box wide">
-  <ul>
+  <ul class="conversations">
     <% @conversations.each do |conversation| %>
       <li class="conversation <%= conversation_status_classes(conversation) %>">
-        <%= link_to conversation.partner(of: @user).username, conversation_path(conversation) %>
+        <span class="partner">
+          <%= link_to(
+            conversation.partner(of: @user).username,
+            conversation_path(conversation)
+          ) %>
+        </span>
+        <span class="subject"><%= conversation.subject %></span>
       </li>
     <% end %>
   </ul>
+  <%= form_with model: @conversation, class: "new_conversation" do |form| %>
+    <%= label :user, :username, "To:", class: "required" %>
+    <%= text_field :user, :username, value: "" %>
+    <%= form.label :subject, "Subject:", class: "required" %>
+    <%= form.text_field :subject %>
+    <%= label :message, :body, "Message:", class: "required" %>
+    <%= text_area :message, :body %>
+    <%= form.submit %>
+  <% end %>
 </div>

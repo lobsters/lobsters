@@ -31,4 +31,12 @@ class Conversation < ApplicationRecord
   def assign_short_id
     self.short_id = ShortId.new(self.class).generate
   end
+
+  def unread?
+    messages.unread.any?
+  end
+
+  def last_message
+    messages.last
+  end
 end

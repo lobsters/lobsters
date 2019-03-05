@@ -1276,9 +1276,41 @@ div.fieldWithErrors {
 	vertical-align: middle;
 }
 
-.messages {
+/* Conversations & Messages */
+
+.conversations {
+	width: 100%;
+}
+
+.conversations .partner { width: 15%; }
+.conversations .received { width: 20%; }
+.conversations .subject { width: 60%; }
+
+.new_conversation {
 	display: grid;
 	grid-template-columns: min-content minmax(auto, 750px);
+	grid-auto-rows: auto;
+	grid-gap: 1em;
+	margin-top: 2em;
+}
+
+.new_conversation label {
+	grid-column-start: 1;
+}
+
+.new_conversation textarea {
+	grid-column-start: 2;
+	height: 10em;
+	width: auto;
+}
+
+.new_conversation input[type=submit] {
+	grid-column-start: 1;
+}
+
+.messages {
+	display: grid;
+	grid-template-columns: auto minmax(auto, 750px);
 	grid-auto-rows: auto;
 	grid-gap: 1em;
 }

@@ -1,18 +1,29 @@
 <div class="box wide">
-  <ul class="conversations">
-    <% @conversations.each do |conversation| %>
-      <li class="conversation <%= conversation_status_classes(conversation) %>">
-        <span class="partner">
-          <%= link_to(
-            conversation.partner(of: @user).username,
-            conversation_path(conversation)
-          ) %>
-        </span>
-        <span class="subject"><%= conversation.subject %></span>
-      </li>
-    <% end %>
-  </ul>
+  <h2 class="legend">Conversations</h2>
+  <table class="data zebra conversations">
+    <tbody>
+      <tr>
+        <th class="partner">Partner</th>
+        <th class="received">Received</th>
+        <th class="subject">Subject</th>
+      </tr>
+      <% @conversations.each do |conversation| %>
+        <tr class="conversation <%= conversation_status_classes(conversation) %>">
+          <td class="partner">
+            <%= link_to(
+              conversation.partner(of: @user).username,
+              conversation_path(conversation)
+            ) %>
+          </td>
+          <td class="received"><%= time_ago_in_words_label(conversation.last_message.created_at) %></td>
+          <td class="subject"><%= conversation.subject %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
   <%= form_with model: @conversation, class: "new_conversation" do |form| %>
+    <h2 class="legend">Create Conversation</h2>
     <%= label :user, :username, "To:", class: "required" %>
     <%= text_field :user, :username, value: "" %>
     <%= form.label :subject, "Subject:", class: "required" %>

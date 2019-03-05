@@ -2,7 +2,7 @@ class ConversationsController < ApplicationController
   before_action :require_logged_in_user
 
   def index
-    @conversations = Conversation.includes(:messages).involving(@user)
+    @conversations = Conversation.includes(:recipient, :author).involving(@user)
     @conversation = Conversation.new
   end
 

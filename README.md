@@ -48,6 +48,9 @@ There's an external project [docker-lobsters](https://github.com/jamesbrink/dock
     * If when installing the `mysql2` gem on macOS, you see 
       `ld: library not found for -l-lpthread` in the output, see 
       [this solution](https://stackoverflow.com/a/44790834/204052) for a fix.
+      You might also see `ld: library not found for -lssl` if you're using
+      macOS 10.4+ and Homebrew `openssl`, in which case see
+      [this solution](https://stackoverflow.com/a/39628463/1042144).
 
 * Create a MySQL (other DBs supported by ActiveRecord may work, only MySQL and
 MariaDB have been tested) database, username, and password and put them in a

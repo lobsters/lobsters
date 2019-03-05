@@ -67,7 +67,7 @@
         <div style="clear: both;"></div>
 
         <%= render :partial => "global/markdownhelp",
-          :locals => { :allow_images => true } %>
+          :locals => { allow_images: @story.can_have_images? } %>
       </div>
     </div>
   <% end %>

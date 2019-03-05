@@ -364,6 +364,12 @@ class Story < ApplicationRecord
     true
   end
 
+  def can_have_images?
+    # doesn't test self.editor so a user can't trick a mod into editing a
+    # story to enable an image
+    self.user.try(:is_moderator?)
+  end
+
   def can_have_suggestions_from_user?(user)
     if !user || (user.id == self.user_id) || !user.can_offer_suggestions?
       return false
@@ -450,7 +456,7 @@ class Story < ApplicationRecord
   end
 
   def generated_markeddown_description
-    Markdowner.to_html(self.description, :allow_images => true)
+    Markdowner.to_html(self.description, allow_images: self.can_have_images?)
   end
 
   def give_upvote_or_downvote_and_recalculate_hotness!(upvote, downvote)

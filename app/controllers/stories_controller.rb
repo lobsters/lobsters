@@ -72,7 +72,7 @@ class StoriesController < ApplicationController
     @title = "Submit Story"
     @cur_url = "/stories/new"
 
-    @story = Story.new
+    @story = Story.new(user_id: @user.id)
     @story.fetching_ip = request.remote_ip
 
     if params[:url].present?

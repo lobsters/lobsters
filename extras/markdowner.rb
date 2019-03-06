@@ -18,9 +18,8 @@ class Markdowner
       h.name = "strong"
     end
 
-    if !opts[:allow_images]
-      ng.css("img").remove
-    end
+    # This should happen before adding rel=nofollow to all links
+    convert_images_to_links(ng) unless opts[:allow_images]
 
     # make links have rel=nofollow
     ng.css("a").each do |h|
@@ -73,6 +72,20 @@ class Markdowner
       else
         node = nil
       end
+    end
+  end
+
+  def self.convert_images_to_links(node)
+    node.css("img").each_with_index do |img, index|
+      link = node.create_element('a')
+
+      link['href'], title, alt = img.attributes
+        .values_at('src', 'title', 'alt')
+        .map(&:to_s)
+
+      link.content = [title, alt, "image #{index}"].find(&:present?)
+
+      img.replace link
     end
   end
 end

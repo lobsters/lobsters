@@ -16,6 +16,18 @@ RSpec.feature "Submitting Stories", type: :feature do
     }.to(change { Story.count })
   end
 
+  scenario "submitting an inline image" do
+    expect {
+      visit "/stories/new"
+      fill_in "Text", with: "![](https://lobste.rs/favicon.ico)"
+      fill_in "Title", with: "Image Test"
+      select :tag1, from: 'Tags'
+      click_button "Submit"
+
+      expect(page).to have_content("image 0")
+    }.to(change { Story.count })
+  end
+
   scenario "resubmitting a recent link" do
     s = create(:story, created_at: 1.day.ago)
     expect {

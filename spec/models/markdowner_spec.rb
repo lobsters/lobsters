@@ -51,20 +51,21 @@ describe Markdowner do
   end
 
   context "when images are not allowed" do
-    subject { Markdowner.to_html(description, allow_images: false)}
-    # let(:description) { '![alt text](https://lobste.rs/favicon.ico "title text")'}
+    subject { Markdowner.to_html(description, allow_images: false) }
+    let(:fake_img_url) { 'https://lbst.rs/fake.jpg' }
+
     context "when single inline image in description" do
-      let(:description) { "![#{alt_text}](https://lobste.rs/favicon.ico \"#{title_text}\")" }
+      let(:description) { "![#{alt_text}](#{fake_img_url} \"#{title_text}\")" }
       let(:alt_text) { nil }
       let(:title_text) { nil }
 
-      def target_html inner_text=nil
-        "<p><a href=\"https://lobste.rs/favicon.ico\" rel=\"nofollow\">#{inner_text}</a></p>\n"
+      def target_html inner_text = nil
+        "<p><a href=\"#{fake_img_url}\" rel=\"nofollow\">#{inner_text}</a></p>\n"
       end
 
       context "with no alt text, title text" do
         it "turns inline image into links with the url as the default text" do
-          expect(subject).to eq(target_html('https://lobste.rs/favicon.ico'))
+          expect(subject).to eq(target_html(fake_img_url))
         end
       end
 
@@ -99,21 +100,21 @@ describe Markdowner do
 
     context "with multiple inline images in description" do
       let(:description) do
-        "![](https://lobste.rs/favicon.ico)" \
-        "![](https://lobste.rs/favicon.ico)" \
-        "![alt text](https://lobste.rs/favicon.ico)" \
-        "![](https://lobste.rs/favicon.ico \"title text\")" \
-        "![alt text](https://lobste.rs/favicon.ico \"title text 2\")"
+        "![](#{fake_img_url})" \
+        "![](#{fake_img_url})" \
+        "![alt text](#{fake_img_url})" \
+        "![](#{fake_img_url} \"title text\")" \
+        "![alt text](#{fake_img_url} \"title text 2\")"
       end
 
       it 'turns all inline images into links' do
         expect(subject).to eq(
           "<p>" \
-          "<a href=\"https://lobste.rs/favicon.ico\" rel=\"nofollow\">https://lobste.rs/favicon.ico</a>" \
-          "<a href=\"https://lobste.rs/favicon.ico\" rel=\"nofollow\">https://lobste.rs/favicon.ico</a>" \
-          "<a href=\"https://lobste.rs/favicon.ico\" rel=\"nofollow\">alt text</a>" \
-          "<a href=\"https://lobste.rs/favicon.ico\" rel=\"nofollow\">title text</a>" \
-          "<a href=\"https://lobste.rs/favicon.ico\" rel=\"nofollow\">title text 2</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">#{fake_img_url}</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">#{fake_img_url}</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">alt text</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">title text</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">title text 2</a>" \
           "</p>\n"
         )
       end

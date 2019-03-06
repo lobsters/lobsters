@@ -76,7 +76,7 @@ class Markdowner
   end
 
   def self.convert_images_to_links(node)
-    node.css("img").each_with_index do |img, index|
+    node.css("img").each do |img|
       link = node.create_element('a')
 
       link['href'], title, alt = img.attributes

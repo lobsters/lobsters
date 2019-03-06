@@ -19,12 +19,12 @@ RSpec.feature "Submitting Stories", type: :feature do
   scenario "submitting an inline image" do
     expect {
       visit "/stories/new"
-      fill_in "Text", with: "![](https://lobste.rs/favicon.ico)"
+      fill_in "Text", with: "![](https://lbst.rs/fake.jpg)"
       fill_in "Title", with: "Image Test"
       select :tag1, from: 'Tags'
       click_button "Submit"
 
-      expect(page).to have_content("https://lobste.rs/favicon.ico")
+      expect(page).to have_content("https://lbst.rs/fake.jpg")
     }.to(change { Story.count })
   end
 

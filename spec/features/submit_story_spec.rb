@@ -24,7 +24,7 @@ RSpec.feature "Submitting Stories", type: :feature do
       select :tag1, from: 'Tags'
       click_button "Submit"
 
-      expect(page).to have_content("image 0")
+      expect(page).to have_content("https://lobste.rs/favicon.ico")
     }.to(change { Story.count })
   end
 

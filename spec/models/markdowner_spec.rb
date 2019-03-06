@@ -63,8 +63,8 @@ describe Markdowner do
       end
 
       context "with no alt text, title text" do
-        it "turns inline image into links with default text 'image n'" do
-          expect(subject).to eq(target_html('image 0'))
+        it "turns inline image into links with the url as the default text" do
+          expect(subject).to eq(target_html('https://lobste.rs/favicon.ico'))
         end
       end
 
@@ -109,8 +109,8 @@ describe Markdowner do
       it 'turns all inline images into links' do
         expect(subject).to eq(
           "<p>" \
-          "<a href=\"https://lobste.rs/favicon.ico\" rel=\"nofollow\">image 0</a>" \
-          "<a href=\"https://lobste.rs/favicon.ico\" rel=\"nofollow\">image 1</a>" \
+          "<a href=\"https://lobste.rs/favicon.ico\" rel=\"nofollow\">https://lobste.rs/favicon.ico</a>" \
+          "<a href=\"https://lobste.rs/favicon.ico\" rel=\"nofollow\">https://lobste.rs/favicon.ico</a>" \
           "<a href=\"https://lobste.rs/favicon.ico\" rel=\"nofollow\">alt text</a>" \
           "<a href=\"https://lobste.rs/favicon.ico\" rel=\"nofollow\">title text</a>" \
           "<a href=\"https://lobste.rs/favicon.ico\" rel=\"nofollow\">title text 2</a>" \

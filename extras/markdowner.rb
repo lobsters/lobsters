@@ -83,7 +83,7 @@ class Markdowner
         .values_at('src', 'title', 'alt')
         .map(&:to_s)
 
-      link.content = [title, alt, "image #{index}"].find(&:present?)
+      link.content = [title, alt, link['href']].find(&:present?)
 
       img.replace link
     end

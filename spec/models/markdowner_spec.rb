@@ -120,4 +120,12 @@ describe Markdowner do
       end
     end
   end
+
+  context "when images are allowed" do
+    subject { Markdowner.to_html("![](https://lbst.rs/fake.jpg)", allow_images: true) }
+
+    it 'allows image tags' do
+      expect(subject).to include '<img'
+    end
+  end
 end

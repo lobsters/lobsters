@@ -1,25 +1,25 @@
 <div class="box wide">
   <h2 class="legend">Conversations</h2>
-  <table class="data zebra conversations">
-    <tbody>
-      <tr>
-        <th class="partner">Partner</th>
-        <th class="received">Received</th>
-        <th class="subject">Subject</th>
-      </tr>
-      <% @conversations.each do |conversation| %>
-        <tr class="conversation <%= conversation_status_classes(conversation) %>">
-          <td class="partner">
-            <%= link_to(
-              conversation.partner(of: @user).username,
-              conversation_path(conversation)
-            ) %>
-          </td>
-          <td class="received"><%= time_ago_in_words_label(conversation.last_message.created_at) %></td>
-          <td class="subject"><%= conversation.subject %></td>
-        </tr>
+  <section class="data zebra conversations">
+    <header>
+      <span class="partner">Partner</span>
+      <span class="received">Received</span>
+      <span class="subject">Subject</span>
+    </header>
+    <% @conversations.each do |conversation| %>
+      <%=
+      link_to(
+        conversation_path(conversation),
+        class: "conversation #{conversation_status_classes(conversation)}"
+      ) do
+      %>
+        <span class="partner">
+          <%= conversation.partner(of: @user).username %>
+        </span>
+        <span class="received"><%= time_ago_in_words_label(conversation.last_message.created_at) %></span>
+        <span class="subject"><%= conversation.subject %></span>
       <% end %>
-    </tbody>
+    <% end %>
   </table>
 
   <%= form_with model: @conversation, class: "new_conversation" do |form| %>

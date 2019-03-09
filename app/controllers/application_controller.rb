@@ -25,8 +25,11 @@ class ApplicationController < ActionController::Base
        (user = User.find_by(:session_token => session[:u].to_s)) &&
        user.is_active?
       @user = user
-      Rails.logger.info "  Logged in as user #{@user.id} (#{@user.username})"
     end
+    Rails.logger.info(
+      "  Request #{request.remote_ip} #{request.request_method} #{request.fullpath}" +
+      (@user ? " user: #{@user.id} #{@user.username}" : "")
+    )
 
     true
   end

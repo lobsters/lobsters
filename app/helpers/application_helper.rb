@@ -152,6 +152,10 @@ module ApplicationHelper
     pages
   end
 
+  def tag_link(tag)
+    link_to tag.tag, tag_path(tag), class: tag.css_class, title: tag.description
+  end
+
   def time_ago_in_words_label(time, options = {})
     ago = ""
     secs = (Time.current - time).to_i

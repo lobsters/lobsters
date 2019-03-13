@@ -25,22 +25,14 @@
     </p>
   </div>
 
-  <% if f.object.id && !defined?(suggesting) %>
-    <% title_votes = {} %>
-    <% f.object.suggested_titles.each do |st| %>
-      <% title_votes[st.title] ||= 0 %>
-      <% title_votes[st.title] += 1 %>
-    <% end %>
-    <% title_votes.delete(f.object.title) %>
-    <% if title_votes.any? %>
-      <div class="boxline actions">
-        Users have suggested changing this story's title to:
-        <br>
-        <% title_votes.each do |ti,c| %>
-          <%= h(ti) %><%= c == 1 ? "" : " (#{c} votes)" %><br>
-        <% end %>
-      </div>
-    <% end %>
+  <% if f.object.id && !defined?(suggesting) && f.object.suggested_title_times.any? %>
+    <div class="boxline actions">
+      Users have suggested setting this story's title to:
+      <br>
+      <% f.object.suggested_title_times.each do |st| %>
+        <%= st.times %>: <%= st.title %><br>
+      <% end %>
+    </div>
   <% end %>
 
   <div class="boxline" style="margin-bottom: 2px;">
@@ -62,23 +54,14 @@
     f.object.tags_a), {}, { :multiple => true } %>
   </div>
 
-  <% if f.object.id && !defined?(suggesting) %>
-    <% tag_votes = {} %>
-    <% f.object.suggested_taggings.group_by(&:user_id).each do |u,stg| %>
-      <% tl = stg.map{|st| st.tag.tag }.sort.join(", ") %>
-      <% tag_votes[tl] ||= 0 %>
-      <% tag_votes[tl] += 1 %>
-    <% end %>
-    <% tag_votes.delete(f.object.tags_a.sort.join(", ")) %>
-    <% if tag_votes.any? %>
-      <div class="boxline actions">
-        Users have suggested changing this story's tags to:
-        <br>
-        <% tag_votes.each do |ts,c| %>
-          <%= ts %><%= c == 1 ? "" : " (#{c} votes)" %><br>
-        <% end %>
-      </div>
-    <% end %>
+  <% if f.object.id && !defined?(suggesting) && f.object.suggested_tagging_times.any? %>
+    <div class="boxline actions">
+      Users have suggested setting this story's tags to:
+      <br>
+      <% f.object.suggested_tagging_times.includes(:tag).each do |st| %>
+        <%= st.times %>: <%= tag_link(st.tag) %><br>
+      <% end %>
+    </div>
   <% end %>
 
   <% unless defined?(suggesting) %>

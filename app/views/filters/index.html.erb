@@ -28,7 +28,7 @@
       <tr>
         <td><%= check_box_tag "tags[]", tag.tag,
           @filtered_tags.include?(tag) %></td>
-        <td><%= link_to tag.tag, tag_path(tag), :class => tag.css_class %></td>
+        <td><%= tag_link(tag) %></td>
         <td><%= tag.description %>
           <% if tag.hotness_mod != 0 %>
             &nbsp;

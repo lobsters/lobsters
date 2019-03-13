@@ -15,6 +15,14 @@ class Story < ApplicationRecord
            :dependent => :destroy
   has_many :suggested_taggings, :dependent => :destroy
   has_many :suggested_titles, :dependent => :destroy
+  has_many :suggested_tagging_times,
+           -> { group(:tag_id).select("count(*) as times, tag_id").order('times desc') },
+           :class_name => 'SuggestedTagging',
+           :inverse_of => :story
+  has_many :suggested_title_times,
+           -> { group(:title).select("count(*) as times, title").order('times desc') },
+           :class_name => 'SuggestedTitle',
+           :inverse_of => :story
   has_many :comments,
            :inverse_of => :story,
            :dependent => :destroy

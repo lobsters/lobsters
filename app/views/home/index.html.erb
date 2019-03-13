@@ -6,9 +6,7 @@
 <% if @tag %>
   <div class="box" id="leader">
     Stories <a href="/tags">tagged</a> as
-    <a href="<%= tag_path(@tag) %>"
-      class="<%= @tag.css_class %>"
-      title="<%= @tag.description %>"><%= @tag.tag %></a>
+    <%= tag_link(@tag) %>
     &ndash;
     <%= @tag.description %>
   </div>

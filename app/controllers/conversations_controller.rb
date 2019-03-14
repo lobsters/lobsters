@@ -8,6 +8,11 @@ class ConversationsController < ApplicationController
 
   def show
     @conversation = Conversation.find(params[:id])
+    @conversation.
+      messages.
+      where(recipient: @user).
+      update_all(has_been_read: true)
+    @user.update_unread_message_count!
   end
 
   def create

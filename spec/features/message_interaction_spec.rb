@@ -49,4 +49,37 @@ RSpec.feature "Checking messages" do
       text: other_user.username
     )
   end
+
+  scenario "marks conversations read when they are viewed" do
+    user = create(:user)
+    stub_login_as user
+    other_user = create(:user, username: "seafood")
+    conversation = create(
+      :conversation,
+      author: user,
+      recipient: other_user,
+      subject: "hi",
+    )
+    create(
+      :message,
+      :unread,
+      author: other_user,
+      recipient: user,
+      body: "Nice to meet you",
+      conversation: conversation,
+    )
+
+    visit root_path
+    click_on "1 Message"
+
+    expect(page).to have_css(".conversation.unread .subject", text: "hi")
+
+    click_on other_user.username
+    visit conversations_path
+
+    expect(page).not_to have_css(".conversation.unread .subject", text: "hi")
+    expect(page).to have_css(".conversation .subject", text: "hi")
+    expect(page).not_to have_css(".headerlinks .new_messages")
+    expect(page).to have_css(".headerlinks", text: "Messages")
+  end
 end

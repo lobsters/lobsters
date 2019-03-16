@@ -203,6 +203,10 @@ Rails.application.routes.draw do
     namespace :api do
       namespace :v1 do
         get "/messages" => "messages#index"
+        post "/messages" => "messages#create"
+        get "/messages/sent" => "messages#sent"
+        post "/comment" => "comments#create"
+        post "/comment/reply" => "comments#reply"
       end
     end
   end

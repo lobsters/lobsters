@@ -1,0 +1,29 @@
+version: '3'
+services:
+  app:
+    image: gambero:latest
+    depends_on:
+      - db
+    volumes:
+      - .:/gambero
+    networks:
+      default:
+        ipv4_address: 172.20.0.2
+  db:
+    image: mariadb
+    volumes:
+      - ./mariadb:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    networks:
+      default:
+        ipv4_address: 172.20.0.3
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24

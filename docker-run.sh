@@ -1,19 +1,30 @@
 #!/bin/bash
 DB_PATH=config/database.yml
+DB_TEMPLATE_PATH=config/database.template.yml
 
-if [ ! -f $DB_PATH ]; then
-	echo "Database config not found: please add $DB_PATH."
+function check_env_vars () {
+  for name; do
+    : ${!name:?$name must not be empty}
+  done
+}
+
+if [ ! -f $DB_TEMPLATE_PATH ]; then
+	echo "Database config not found: please add $DB_TEMPLATE_PATH."
 	exit 1
 fi
-if [ -z $MYSQL_DATABASE ]; then
-	echo "Must set the following environment variables: MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD, MYSQL_ROOT_PASSWORD"
+if [ ! -f .env ]; then
+	echo 'A .env file must be present.'
 	exit 2
 fi
-if [ -f .env ]; then
-	echo 'Do not use .env files.'
+if [ ! hash envsubst 2>/dev/null ]; then
+	echo 'envsubst not found; please install GNU gettext.'
 	exit 3
 fi
-sed -i "s/database:.*/database: $MYSQL_DATABASE/g" config/database.yml
-sed -i "s/username:.*/username: $MYSQL_USER/g" config/database.yml
-sed -i "s/password:.*/password: $MYSQL_PASSWORD/g" config/database.yml
+. .env
+export MYSQL_ROOT_PASSWORD MYSQL_USER MYSQL_PASSWORD MYSQL_DATABASE
+if ! check_env_vars "MYSQL_ROOT_PASSWORD" "MYSQL_USER" "MYSQL_PASSWORD" "MYSQL_DATABASE"; then 
+	echo 'You must set these variables in .env: MYSQL_ROOT_PASSWORD MYSQL_USER MYSQL_PASSWORD MYSQL_DATABASE'
+	exit 4
+fi
+cat $DB_TEMPLATE_PATH | envsubst > $DB_PATH
 docker-compose up

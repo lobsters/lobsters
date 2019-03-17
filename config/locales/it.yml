@@ -67,7 +67,7 @@ it:
       mergedinto: accorpato con %{shortid} (%{title})"
       unmerged: "scorporato da un'altra storia"
       changedfromto: "%{story} cambiato da %{stfrom} a %{stto}"
-      nonmedia: "Devi inserire un tag diverso da PDF o video"
+      nonmedia: "Devi inserire un'etichetta diversa da PDF o video"
       alreadysubmitted: "è già stato inserito negli ultimi %{days} giorni"
     vote:
       offtopicvote: "Off-topic"
@@ -146,7 +146,7 @@ it:
   hats:
     build_request:
       title: "Richiedi un cappello"
-      description: "<p>Un chapeau est un moyen formel, vérifié de poster un commentaire au nom d'un projet, d'une organisation ou d'une entreprise. Chaque utilisateur peut avoir plusieurs chapeaux, l'un d'eux pouvant être choisi d'être porté au moment de poster un commentaire ou d'envoyer un message privé.</p><p>Les chapeaux sont destinés aux développeurs principaux d'un projet et les employés d'entreprise qui sont autorisés à faire des commentaires au nom de leurs organisations, et sont habituellement réservés pour les projets notables et les organisations. Les chapeaux ne sont pas destinés à lister toutes les contributions d'une personne à des projets logiciels.</p><p>Les chapeaux ne vont pas être autorisés pour les contributeurs occasionnels d'un projet, développeurs d'un projet qui n'est pas largement connu, pas non plus pour les anciens employés d'une entreprise ou autres situations où il n'est pas possible de vérifier que quelqu'un est autorisé à représenter une organisation. En général à moins d'avoir un e-mail avec le nom de domaine de l'entreprise ou du projet ou les droits d'accès aux sources d'un projet, un chapeau ne sera pas autorisé.</p><p>Pour demander un chapeau pour votre compte, merci de fournir une courte description du chapeau (exemple \"développeur OpenBSD\"), un lien public qui sera affiché quand on passe la souris au-dessus du chapeau que les utilisateurs peuvent voir, comme votre adresse e-mail du projet ou de l'entreprise ou un lien vers le site web de l'entreprise puis une description privée qui sera seulement vue par les modérateurs durant le processus d'approbation.</p><p>Une fois qu'un chapeau a été demandé, un modérateur va vérifier votre demande en envoyant un e-mail à l'adresse soumise comme lien et/ou en effectuant d'autres vérifications manuelles de votre association au projet.</p>"
+      description: "<p>Un cappello è un modo formale e verificato di inviare un commento per conto di un progetto, organizzazione o azienda. Ogni utente può avere più cappelli, uno dei quali può essere scelto per essere indossato quando pubblica un commento o invia un messaggio privato.</p><p>I cappelli sono destinati agli sviluppatori di progetti senior e ai dipendenti aziendali che sono autorizzati a fare commenti per conto delle loro organizzazioni, e sono solitamente riservati a progetti e organizzazioni importanti. I cappelli non sono intesi per elencare tutti i contributi di una persona a progetti software.</p><p><p>I cappelli non sono ammessi per i collaboratori occasionali di un progetto, per gli sviluppatori di un progetto non molto conosciuto, né per gli ex dipendenti di un'azienda o altre situazioni in cui non è possibile verificare che qualcuno possa rappresentare un'organizzazione. In generale, a meno che non si disponga di un'e-mail con il nome di dominio dell'azienda o del progetto o i diritti di accesso alle fonti di un progetto, un cappello non sarà consentito.</p>Per richiedere un cappello per il tuo account, per favore fornisci una breve descrizione del cappello (esempio \"OpenBSD developer\"), un link pubblico che verrà visualizzato quando il mouse viene spostato sopra il cappello che gli utenti possono vedere, come il tuo progetto o l'indirizzo email della tua azienda o un link al sito web aziendale e una descrizione privata che sarà visualizzata solo dai moderatori durante il processo di approvazione.</p><p><p>Una volta richiesto un cappello, un moderatore controllerà la tua richiesta inviando una mail all'indirizzo indicato come link e/o eseguendo altri controlli manuali della tua associazione al progetto. </p>"
       hat: "Cappello:"
       hatplaceholder: "Membro del progetto XYZ"
       link: "Link:"
@@ -158,7 +158,7 @@ it:
       submittedhatrequest: "Richiesta di cappello inviata con successo."
     index:
       title: "Cappello"
-      description: "Un chapeau est un moyen formel, vérifié de poster un commentaire au nom d'un projet, d'une organisation ou d'une entreprise. Chaque utilisateur peut avoir plusieurs chapeaux, l'un d'eux pouvant être choisi d'être porté au moment de poster un commentaire ou d'envoyer un message privé."
+      description: "Un cappello è un modo formale, verificato di postare un commento a nome di un progetto, di un'organizzazione o di un'azienda. Ogni utente può avere più cappelli, uno dei quali può essere scelto per essere indossato quando pubblica un commento o invia un messaggio privato."
       request: "Richiedi un cappello"
       user: "Utente"
       hat: "Cappello"
@@ -166,9 +166,9 @@ it:
     reject_request:
       rejectedhatrequest: "Domanda di cappello rifiutata."
     requests_index:
-      title: "Cappelli richiesi"
+      title: "Cappelli richiesti"
       nohatrequests: "Nessuna domanda di cappello."
-      user: "Utilisateur :"
+      user: "Nome utente :"
       hat: "Cappello:"
       link: "Link :"
       comment: "Commento :"
@@ -235,11 +235,11 @@ it:
       setnewpassword: "Inserisci la nuova password"
       user: "Nome utente:"
       password: "Password:"
-      again: "(ripeti):"
+      again: "(ripeti password):"
       setpassbutton: "Cambia password"
       passwordreset: "La tua password è stata modificata"
       couldnotresetpassword: "La password non può essere cambiata."
-      invalidresettoken: "Toke di recupero non valido. Potrebbe essere stato già utilizzato oppure scaduto."
+      invalidresettoken: "Token di recupero non valido. Potrebbe essere stato già utilizzato oppure scaduto."
     twofa:
       login2fa: "Identificativo per autenticazione a due fattori"
       logintotpcode: "Inserisci il codice TOTP della tua applicazione:"
@@ -249,8 +249,8 @@ it:
       totpcodenotmatch: "Codice TOTP non corretto. Riprova."
   filters:
     index:
-      filteredtags: "Tag filtrati"
-      filteredtagsdesc: "Per nascondere le informazioni dalla home page che sono contrassegnate da un certo <a href=\"/tags\">tag</a>, selezionale qui sotto."
+      filteredtags: "Etichette filtrate"
+      filteredtagsdesc: "Per nascondere le informazioni dalla home page che sono contrassegnate da una certa <a href=\"/tags\">etichetta</a>, selezionale qui sotto."
       filteredtagsnotloggedindesc: "Poiché non sei connesso, i tuoi filtri saranno salvati in un cookie di lunga durata. Per registrare definitivamente i filtri delle etichette e che funzionano indipendentemente dal browser web, <a href=\"/login\">accedi</a> al tuo account."
       filteredhide: "Nascondi"
       filteredtag: "Etichetta"
@@ -315,12 +315,12 @@ it:
       newest: "Più recenti"
       relevance: "Pertinenza"
       points: "Punti"
-      searchresults : "%{searchnumber} risultat%{plural} per \"%{query}\""
-      searchplural: "s"
+      searchresults : "%{searchnumber} risultato%{plural} per \"%{query}\""
+      searchplural: "/i"
   settings:
     delete_account:
       deleteaccountflash: "Il tuo account è stato cancellato."
-      verifypasswordflash: "Votre mot de passe n'a pas pu être vérifié."
+      verifypasswordflash: "La tua password non può essere modificata."
     index:
       logoutlink: "Esci"
       confirmlogoutlink: "Sei sicuro di voler uscire?"
@@ -349,7 +349,7 @@ it:
       submittedstorycommentsettings: "Imposazioni di notifica dei commenti ad un tuo articolo"
       showyourthreads: "Mostra i tuoi <a href=\"/threads\">threads</a>:"
       mailinglistsettings: "Impostazioni della mailing list"
-      mailinglisttext: "Se attivato, riceverai tutti gli ultimi articoli pubblicati ed i commenti agli indirizzi e-mail indicati, eccetto le storie e i commenti filtrati a partire dai <a href=\"/filters\">filtri di tag</a>. Tutte le mail saranno inviate agli indirizzi e-mail della lista, e con le opzioni a seguire potrai filtrare quali e-mail ricevere. Le e-mail che invierai con questi indirizzi saranno postate con il tuo accoun sul sito web. Stai attento a chi accede al tuo account per evitare che qualcuno commenti al posto tuo."
+      mailinglisttext: "Se attivato, riceverai tutti gli ultimi articoli pubblicati ed i commenti agli indirizzi e-mail indicati, eccetto le storie e i commenti filtrati a partire dai <a href=\"/filters\">filtri di etichetta</a>. Tutte le mail saranno inviate agli indirizzi e-mail della lista, e con le opzioni a seguire potrai filtrare quali e-mail ricevere. Le e-mail che invierai con questi indirizzi saranno postate con il tuo accoun sul sito web. Stai attento a chi accede al tuo account per evitare che qualcuno commenti al posto tuo."
       receivelistemails: "Ricevi le e-mail della lista :"
       listemailoption1: "nessuna e-mail"
       listemailoption2: "Tutti gli articoli e i commenti"

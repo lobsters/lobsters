@@ -1,0 +1,739 @@
+# Sample localization file for Italian. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+# Convenzioni adottate:
+#   - tag → etichetta
+#   - story → articolo
+#   - merge/unmerge → accorpare/scorporare
+
+# Da fare:
+# 591 → verificare le variabili e tradurre adeguatamente
+# 628-724 → tradurre dal francese
+
+it:
+  activerecord:
+    errors:
+      template:
+        body: 'Veuillez vérifier les champs suivants : '
+        header:
+          one: 'Impossible d''enregistrer ce(tte) %{model} : 1 erreur'
+          other: 'Impossible d''enregistrer ce(tte) %{model} : %{count} erreurs'
+      models:
+        user:
+          attributes:
+            email:
+              invalid: "L'e-mail est invalide"
+              taken: "Cet e-mail est déjà utilisé"
+            password:
+              blank: "Le champ pour le mot de passe est vide"
+            password_confirmation:
+              confirmation: "La confirmation et le mot de passe ne correspondent pas"
+            username:
+              invalid: "Le nom d'utilisateur est invalide"
+  hats:
+    index:
+      hatstitle: "Chapeaux"
+  time:
+    formats:
+      default: "%d-%m-%Y %H:%M:%S"
+  mailers:
+    email_message:
+      subject: "[%{appname}] Message privé de %{author} : %{subject}"
+    email_reply:
+      replysubject: "[%{appname}] Réponse de %{author} sur %{story}"
+      mentionsubject: "[%{appname}] %{author} vous a mentionné dans %{story}"
+    invitation_mailer:
+      subject: "[%{appname}] Vous avez été invité au %{appname}"
+    invitation_request_mailer:
+      subject: "[%{appname}] Confirmez votre demande d'invitation au %{appname}"
+  models:
+    comment:
+      commentcannotbeblank: "Un commentaire ne peut pas être vide."
+      useridcannotbeblank: "Un ID utilisateur ne peut pas être vide."
+      storyidcannotbeblank: "Un ID d'info ne peut pas être vide."
+      deletedcomment: "commentaire supprimé"
+      threadremovedby: "Fil supprimé par le modérateur %{modoname} : %{modreason}"
+      turnedintodragon: "transformé en dragon"
+      slayeddragon: "le dragon a été terrassé"
+      metooerror: "Merci de voter pour le commentaire à la place."
+    hat:
+      grantsubject: "Votre chapeau %{hat} a été approuvé"
+      grantbody: "Vous pouvez maintenant porter ce chapeau quand vous commentez.\n\nCeci est un message automatique."
+      rejectsubject: "Votre demande du chapeau %{hat} a été rejetée"
+      grantedby: "<span class=\"hat hat_%{hat}\" title=\"Accordé par %{inviteuser} le %{invitedate}\""
+    moderation:
+      storyeditedby: "Votre info a été éditée par "
+      usersuggestions: "suggestions d'utilisateur"
+      amoderator: "un modérateur"
+      storyeditedfor: "Votre info [%{title}](%{url}) a été éditée avec les changements suivants :\n"
+      reasongiven: "La raison donnée :\n"
+      commentmoderated: "Votre commentaire a été modéré"
+      commentmoderatedwhy: "Votre commentaire sur [%{title}](%{url}) a été modéré :\n"
+      automatedmessage: "*Ceci est un message automatique.*"
+    story:
+      deletedstory: "info effacée"
+      undeletedstory: "info rétablie"
+      mergedinto: "mergée avec %{shortid} (%{title})"
+      unmerged: "dé-fusionnée depuis une autre info"
+      changedfromto: "%{story} changée de %{stfrom} à %{stto}"
+      nonmedia: "Une étiquette autre que PDF ou video doit être présente"
+      alreadysubmitted: "a déjà été proposée dans les %{days} derniers jours"
+    vote:
+      offtopicvote: "Hors-sujet"
+      incorrectvote: "Incorrecte"
+      metoovote: "Moi aussi"
+      trollvote: "Troll"
+      alreadypostedvote: "Déjà postée"
+      cancel: "Annuler"
+      spamvote: "Spam"
+  layouts:
+    application:
+      homelink: "Accueil"
+      recentlink: "Récents"
+      commentslink: "Commentaires"
+      yourthreadslink: "Vos sujets"
+      submitstorylink: "Soumettre"
+      searchlink: "Recherche"
+      invitationlink: "Demander une invitation"
+      filterslink: "Filtres"
+      newmessagelink:
+        one: "Nouveau message"
+        other: "%{count} Nouveau message"
+      messageslink: "Messages"
+      loginlink: "Se connecter"
+      logoutlink: "Se déconnecter"
+      confirmlogoutlink: "Êtes-vous sûr de vouloir vous déconnecter?"
+      moderationloglink: "Journal de modération"
+      invitationqueuelink: "File d'invitation"
+      chatlink: "Chat"
+      hatrequestlink: "Porter le chapeau"
+      hatslink: "Chapeaux"
+      privacylink: "Confidentialité"
+      aboutlink: "À propos"
+      blog: "Blog"
+      twitter: "Twitter"
+      diaspora: "Diaspora*"
+      mastodon: "Mastodon"
+      currenttraffic: "(Fréquentation actuelle : %{usernb})"
+  comments:
+    commentbox:
+      mustbelogged: "Vous devez être connecté pour laisser un commentaire."
+      markdown: "Utilisation du Markdown possible"
+      post: "Poster"
+      update: "Mettre à jour"
+      preview: "Aperçu"
+      cancel: "Annuler"
+      putonhat: "Mettre son chapeau : "
+    comment:
+      previewed: "prévisualisé à l'instant"
+      edited: "édité"
+      emailed: "envoyé par e-mail"
+      link: "lien"
+      edit: "éditer"
+      undelete: "désupprimer"
+      delete: "supprimer"
+      reply: "répondre"
+      about: "sur :"
+      dragon: "dragon"
+      undragon: "non-dragon"
+  global:
+    markdownhelp:
+      emphasizedtext: "italique"
+      emphasizedtextdesc: "encadrer le texte avec des <tt>*astérisques*</tt>"
+      strongtext: "gras"
+      strongtextdesc: "<tt>encadrer le texte avec <tt>**deux astérisques**</tt>"
+      fixedwidth: "chasse fixe"
+      fixedwidthdesc: "<tt>encadrer le texte avec <tt>`accent grave (backquote)`</tt>"
+      linkedtext: "lien"
+      linkedtextdesc: "<tt>[texte du lien](http://example.com/)</tt> ou bien l'url seule sans titre"
+      quotedtext: "citation"
+      quotedtextdesc: "précéder le texte avec <tt>&gt;</tt>"
+      pretext: "texte tabulé"
+      pretextdesc: "précéder le texte avec au moins <tt>&nbsp;&nbsp;&nbsp;&nbsp;4 espaces</tt>"
+      inlineimage: "(image en ligne)"
+      inlineimagedesc: "![texte de substitution](http://example.com/image.jpg)</tt> (autorisé seulement dans les articles)"
+  hats:
+    build_request:
+      title: "Demander un chapeau"
+      description: "<p>Un chapeau est un moyen formel, vérifié de poster un commentaire au nom d'un projet, d'une organisation ou d'une entreprise. Chaque utilisateur peut avoir plusieurs chapeaux, l'un d'eux pouvant être choisi d'être porté au moment de poster un commentaire ou d'envoyer un message privé.</p><p>Les chapeaux sont destinés aux développeurs principaux d'un projet et les employés d'entreprise qui sont autorisés à faire des commentaires au nom de leurs organisations, et sont habituellement réservés pour les projets notables et les organisations. Les chapeaux ne sont pas destinés à lister toutes les contributions d'une personne à des projets logiciels.</p><p>Les chapeaux ne vont pas être autorisés pour les contributeurs occasionnels d'un projet, développeurs d'un projet qui n'est pas largement connu, pas non plus pour les anciens employés d'une entreprise ou autres situations où il n'est pas possible de vérifier que quelqu'un est autorisé à représenter une organisation. En général à moins d'avoir un e-mail avec le nom de domaine de l'entreprise ou du projet ou les droits d'accès aux sources d'un projet, un chapeau ne sera pas autorisé.</p><p>Pour demander un chapeau pour votre compte, merci de fournir une courte description du chapeau (exemple \"développeur OpenBSD\"), un lien public qui sera affiché quand on passe la souris au-dessus du chapeau que les utilisateurs peuvent voir, comme votre adresse e-mail du projet ou de l'entreprise ou un lien vers le site web de l'entreprise puis une description privée qui sera seulement vue par les modérateurs durant le processus d'approbation.</p><p>Une fois qu'un chapeau a été demandé, un modérateur va vérifier votre demande en envoyant un e-mail à l'adresse soumise comme lien et/ou en effectuant d'autres vérifications manuelles de votre association au projet.</p>"
+      hat: "Chapeau:"
+      hatplaceholder: "Membre du projet XYZ"
+      link: "Lien :"
+      linkplaceholder: "membre@projet.org, ou l'URL de la page de l'employeur"
+      comment: "Commentaire :"
+      commentplaceholder: "Sera seulement montré aux modérateurs devant le processus d'approbation"
+      requesthatbutton: "Demander un chapeau"
+    create_request:
+      submittedhatrequest: "Demande de chapeau transmise avec succès."
+    index:
+      title: "Chapeaux"
+      description: "Un chapeau est un moyen formel, vérifié de poster un commentaire au nom d'un projet, d'une organisation ou d'une entreprise. Chaque utilisateur peut avoir plusieurs chapeaux, l'un d'eux pouvant être choisi d'être porté au moment de poster un commentaire ou d'envoyer un message privé."
+      request: "Demander un chapeau"
+      user: "Utilisateur"
+      hat: "Chapeau"
+      link: "Lien"
+    reject_request:
+      rejectedhatrequest: "Demande de chapeau rejetée avec succès."
+    requests_index:
+      title: "Chapeaux demandés"
+      nohatrequests: "Aucune demande de chapeau."
+      user: "Utilisateur :"
+      hat: "Chapeau :"
+      link: "Lien :"
+      comment: "Commentaire :"
+      approve: "Approuver la demande de chapeau"
+      reason: "Raison :"
+      reject: "Rejeter la demande de chapeau"
+      hator: "ou"
+    approve_request:
+      approvedhatrequest: "La demande de chapeau a été approuvée."
+  home:
+    index:
+      homerecentsdesc: "<em>Les <a href=\"/newest\">plus récentes</a> infos avec un panaché aléatoire des infos récentes soumises qui n'ont pas encore atteint la page principale.</em>"
+  invitations:
+    build:
+      buildinvtitle: "Demander une invitation"
+      buildinvtext: "<p>Si vous ne connaissez pas ou ne pouvez trouver un <a href=\"/u/\">utilisateur existant</a> auquel vous pourriez demander une invitation, vous pouvez le faire publiquement. Vous receverez directement l'invitation si elle vous est envoyée.</p><p>Votre adresse e-mail doit être valide et confirmée en visitant l'url qui vous est envoyée par e-mail avant que votre demande soit affichée. Votre adresse e-mail ne sera pas visible par les autres, à l'exception des modérateurs. </p>"
+      buildinvname: "Nom :"
+      buildinvemail: "Adresse e-mail :"
+      buildinvurl: "URL :"
+      buildinvverificationurl: "URL permettant la vérification (site web personnel, compte Github, etc.)"
+      buildinvrequest: "Demande d'invitation"
+    index:
+      requestedinvtitle: "Demandes d'invitations"
+      requestedinvsummary: "Ces personnes ont demandé une invitation et ont confirmé leur adresse e-mail. Si vous reconnaissez quelqu'un, n'hésitez pas à lui envoyer une invitation et à supprimer la demande. Les spams seront nettoyés par un modérateur."
+      requestedinvdate: "Date/Heure"
+      requestedinvname: "Nom"
+      requestedinvmemo: "Note"
+      sendinvitation: "Envoyer l'invitation"
+      confirminvitation: "Êtes-vous sûr de vouloir inviter cette personne et de supprimer la requête ?"
+      deleteinvitation: "Supprimer"
+      confirmdelete: "Êtes-vous sûr de vouloir supprimer cette demande ?"
+      noinvitation: "Pas d'invitation"
+  invitation_mailer:
+    invitation:
+      title: "Bonjour %{email},"
+      invitedto: "L'utilisateur %{user} vous a invité au %{appname}"
+      createaccount: "Pour accepter cette invitation et créer votre compte, merci de cliquer sur le lien ci-dessous :"
+  invitation_request_mailer:
+    invitation_request:
+      title: "Bonjour %{email},"
+      invitedto: "Quelqu'un avec l'ip %{userip} a demandé une invitation au %{appname}."
+      name: "Nom : %{name}"
+      email: "E-mail : %{email} (ne sera pas montré aux autres utilisateurs)"
+      memo: "Informations : %{memo}"
+      warning: "Si c'est bien vous, suivez l'URL suivante pour confirmer votre demande et l'afficher aux autres utilisateurs."
+      deletemessage: "S'il ne s'agit pas de vous, vous pouvez effacer ce message."
+  login:
+    index:
+      login: "Se connecter"
+      email: "E-mail ou utilisateur :"
+      password: "Mot de passe :"
+      login: "Connexion"
+      forgotdeleted: "Oubli du mot de passe ou suppression du compte ? "
+      resetpassword: "Changer de mot de passe"
+      notuseryet: "Pas encore utilisateur ? L'inscription est seulement par invitation pour lutter contre le spam  et améliorer la traçabilité. Si vous connaissez <a href=\"/u/\">%{acurrentuser}</a> du site, demandez-lui une invitation ou"
+      acurrentuser: "un utilisateur"
+      request: "demandez-en une publiquement"
+      requestinchat: "dans le <a href=\"/chat\">chat</a>."
+    forgot_password:
+      resetpassword: "Changer le mot de passe"
+      resetinstructions: "Si vous avez oublié votre mot de passe, entrez votre adresse e-mail ou votre utilisateur pour recevoir par e-mail les instructions de changement."
+      email: "E-mail ou utilisateur :"
+      reset: "Changer mot de passe"
+    set_new_password:
+      setnewpassword: "Définir le nouveau mot de passe"
+      user: "Utilisateur :"
+      password: "Mot de passe :"
+      again: "(encore):"
+      setpassbutton: "Changer le mot de passe"
+      passwordreset: "Votre mot de passe a été changé"
+      couldnotresetpassword: "Le mot de passe n'a pas pu être changé."
+      invalidresettoken: "Jeton de changement invalide. Il a pu déjà être utilisé ou mal copié."
+    twofa:
+      login2fa: "Identification par authentification à deux facteurs"
+      logintotpcode: "Entrez le code TOTP affiché par votre application :"
+      loginbutton: "S'identifier"
+      totpcode: "Code TOTP :"
+    twofa_verify:
+      totpcodenotmatch: "Code TOTP incorrect. Merci de ré-essayer."
+  filters:
+    index:
+      filteredtags: "Étiquettes filtrées"
+      filteredtagsdesc: "Pour cacher des infos de la page d'accueil qui ont été marquées avec une certaine <a href=\"/tags\">étiquette</a>, sélectionnez-les ci-dessous."
+      filteredtagsnotloggedindesc: "Puisque vous n'êtes pas connecté, vos filtres seront enregistrés dans un cookie doté d'une longue durée de vie. Pour enregistrer définitivement vos filtres d'étiquettes et qu'ils fonctionnent donc quelque soit le navigateur web, <a href=\"/login\">connectez-vous</a> à votre compte."
+      filteredhide: "Cacher"
+      filteredtag: "Étiquette"
+      filtereddesc: "Description"
+      filteredstories: "Infos"
+      filteredsave: "Sauver les filtres"
+  messages:
+    index:
+      viewreceived: "Voir messages reçus"
+      viewsent: "Voir messages envoyés"
+      subjectlabel: "Sujet"
+      privatemessages: "Messages privés reçus"
+      sent: "Envoyés"
+      from: "De"
+      tomsg: "À"
+      received: "Reçus"
+      deleteselected: "Supprimer les messages sélectionnés"
+      donothavemessages: "Vous n'avez pas de %{from} messages privés."
+      sentlower: "sent"
+      composemessage: "Écrire un message"
+      tomsglabel: "À :"
+      subject: "Sujet :"
+      message: "Message :"
+      sendmessage: "Envoyer le message"
+    show:
+      backtosentmessages: "Retour aux messages envoyés"
+      backtomessages: "Retour aux messages"
+      sentfrom: "Envoyé depuis"
+      tomsg: "à"
+      administrator: "(administrateur)"
+      moderator: "(modérateur)"
+      deletemessage: "Supprimer le message"
+      keepasnew: "Garder comme non-lu"
+      composereply: "Écrire une réponse"
+      toupper: "À"
+      sendmessage: "Envoyer le message"
+      cantreply: "Il n'est pas possible de répondre à ce message. Merci de contacter un modérateur pour assistance."
+  moderations:
+    index:
+      moderationlogtitle: "Journal de modération"
+      datecolumn: "Date/Heure"
+      moderatorcolumn: "Modérateur"
+      reasoncolumn: "Histoire/Commentaire/Utilisateur, Action, Raison"
+      storyline: "Info"
+      commentline: "Commentaire par"
+      commenton: "sur"
+      user: "Utilisateur"
+      users: "Utilisateurs"
+      deleted: "Supprimé"
+      actionline: "Action"
+      reasonline: "Raison"
+      page: "Page"
+  search:
+    index:
+      search: "Rechercher"
+      searchbutton: "Rechercher"
+      include: "Inclus :"
+      orderby: "Ordonné par :"
+      all: "Tous"
+      stories: "Infos"
+      comments: "Commentaires"
+      newest: "Le plus récent"
+      relevance: "Pertinence"
+      points: "Score"
+      searchresults : "%{searchnumber} résultat%{plural} pour \"%{query}\""
+      searchplural: "s"
+  settings:
+    delete_account:
+      deleteaccountflash: "Votre compte a été supprimé."
+      verifypasswordflash: "Votre mot de passe n'a pas pu être vérifié."
+    index:
+      logoutlink: "Se déconnecter"
+      confirmlogoutlink: "Êtes-vous sûr de vouloir vous déconnecter?"
+      viewprofile: "Voir le profil"
+      accountsettings: "Paramètres du compte"
+      username: "Utilisateur :"
+      password: "Nouveau mot de passe :"
+      currentpassword: "Mot de passe actuel :"
+      confirmpassword: "Confirmer le mot de passe :"
+      emailaddress: "Adresse e-mail :"
+      gravatarized: "<a href=\"http://www.gravatar.com/\" target=\"_blank\">Gravatar</a>isé"
+      about: "À propos :"
+      markdownformattingavailable: "Formatage Markdown possible"
+      saveaccountsettings: "Sauver les paramètres du compte"
+      notificationsettings: "Paramètres de notification"
+      pushover: "<a href=\"https://pushover.net/\">Pushover</a> :"
+      managepushoversubscription: "Gérer l'abonnement au Pushover"
+      subscribewithpushover: "S'abonner au Pushover"
+      foroptionalcomment: "Pour les notifications de commentaires et de messages ci-dessous"
+      commentreplynotificationsettings: "Paramètres de notification de réponse à un commentaire"
+      receiveemail: "Recevoir un e-mail :"
+      receivepushover: "Recevoir une alerte Pushover :"
+      requirepushover: "Requière un abonnement Pushover ci-dessous"
+      commentmentionnotificationsettings: "Paramètres de notification de mention d'un commentaire"
+      privatemessagenotificationsettings: "Paramètres de notification de message privé" 
+      submittedstorycommentsettings: "Paramètres de commentaires relatifs à vos infos"
+      showyourthreads: "Montrer dans <a href=\"/threads\">vos sujets</a>:"
+      mailinglistsettings: "Paramètres des listes de diffusion"
+      mailinglisttext: "Si activé, vous recevrez toutes les nouvelles récemment soumises et les commentaires à votre adresse e-mail ci-dessus, à l'exception de ces nouvelles et leurs commentaires filtrés à partir de vos <a href=\"/filters\">filtres de étiquettes</a>. Tous les e-mails seront envoyés à votre adresse de liste privée affichée ci-dessous à partir de laquelle vous pouvez filtrer, et les e-mails que vous envoyez à cette adresse seront postés sous ce compte sur le site web. Vous devrez garder cette adresse de liste privée pour éviter que d'autres ne postent des commentaires pour vous."
+      receivelistemails: "Recevoir les e-mails de la liste :"
+      listemailoption1: "pas d'e-mails"
+      listemailoption2: "Toutes les infos et les commentaires"
+      listemailoption3: "Seulement les infos"
+      listaddress: "Adresse de la liste :"
+      miscsettings: "Paramètres variés"
+      storypreview: "Montrer les aperçus des infos: "
+      useravatars: "Montrer les avatars des utilisateurs :"
+      hidedragons: "Cacher les dragons :"
+      saveallsettings: "Sauver tous les paramètres"
+      inviteuser: "Inviter un nouvel utilisateur"
+      cannotsendinvitations: "Vous ne pouvez pas envoyer d'invitations."
+      deleteaccount: "Supprimer le compte"
+      deleteaccounttext: "Pour supprimer définitivement votre compte, vérifiez votre mot de passe actuel ci-dessous. Votre compte sera passé à l'état supprimé, vos commentaires seront marqués comme supprimés et ne seront plus lisibles par les autres utilisateurs, vos messages privés seront également supprimés. Vos infos proposées ne seront pas supprimées. Votre nom d'utilisateur restera réservé et ne sera pas disponible pour un autre compte."
+      verifypassword: "Vérification du mot de passe :"
+      deleteaccountconfirmation: "Oui, supprimez mon compte"
+      securitysettings: "Paramètres de sécurité"
+      twofactorauth: "Authentification à deux facteurs :"
+      disable2fa: "Désactiver"
+      enroll2fa: "Activer"
+      disabled2fa: "Désactivée"
+      enabled2fa: "Activée"
+      externalaccounts: "Comptes externes"
+    pushover:
+      pushovernotconfigured: "Ce site n'est pas configuré pour le Pushover"
+    pushover_callback:
+      pushovernorandomtokensession: "Pas de jeton alétoire présent dans cette session"
+      pushovernorandomtokenurl: "Pas de jeton alétoire présent dans l'url"
+      accountsetuppushover: "Votre compte est maintenant configuré pour les notifications Pushover."
+      accountnolongersetuppushover: "Votre compte n'est plus configuré pour les notifications Pushover."
+    twofa:
+      title: "Authentification à deux facteurs"
+      backtosettings: "Retour aux paramètres"
+      disable2fa: "Désactiver l'authentification à deux facteurs"
+      continue: "Continuer"
+      currentpassword: "Mot de passe actuel :"
+      turnoff: "Pour désactiver l'authentification à deux facteurs, entrez votre mot de passe actuel :"
+      turnon: "Pour activer l'authentification à deux facteurs pour votre compte, entrez votre mot de passe actuel :"
+    twofa_auth:
+      2fahasbeendisabled: "L'authentification à deux facteurs a été désactivée sur votre compte"
+      2fapassnotcorrect: "Mot de passe incorrect"
+    twofa_enroll:
+      title: "Authentification à deux facteurs"
+      backtosettings: "Retour aux paramètres"
+      enrollmenttimeout: "Le délai d'attente est dépassé"
+      scanqrcode: "Scannez le QR code ci-dessous ou cliquez dessus pour l'ouvrir dans l'application <a href=\"https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\" target=\"_blank\">TOTP</a> de votre choix :"
+      registring: "Une fois le processus d'enregistrement de vos applications TOTP achevé, passez à l'écran suivant pour vérifier et activer l'authentification à deux facteurs pour votre compte."
+      verifyenable: "Vérifier et Activer"
+    twofa_update:
+      enrollmenttimeout: "Le délai d'attente est dépassé"
+      2fahasbeenenabled: "L'authentification à deux facteurs a été activée sur votre compte"
+      totpinvalid: "Votre code TOTP est invalide, merci de vérifier le code actuellement affiché par votre application TOTP"
+    twofa_verify:
+      title: "Authentification à deux facteurs"
+      enrollmenttimeout: "Le délai d'attente est dépassé"
+      enablecode: "Afin d'activer l'authentification à deux facteurs pour votre compte en utilisant votre nouveau secret TOTP, entrez le code à 6 chiffres de votre application :"
+      verifyenable: "Vérifier et Activer"
+    update:
+      updatesettingsflash: "Paramètres mis à jour avec succès."
+      passwordnotcorrect: "Le mot de passe courant n'a pas été entré correctement."
+  signup:
+    index:
+      createaccounttitle: "Créer un compte"
+    invited:
+      createaccounttitle: "Créer un compte"
+      createaccountbody: "Pour créer un nouveau compte, veuillez saisir votre e-mail et votre mot de passe. Votre e-mail ne sera jamais affiché aux autres utilisateurs et ne sera utilisé que si vous avez besoin de changer votre mot de passe ou de recevoir des notifications optionnelles de nouveaux messages. Votre nom d'utilisateur peut être changé ultérieurement."
+      invitedby: "Invité par :"
+      username: "Nom d'utilisateur :"
+      email: "Adresse e-mail :"
+      password: "Mot de passe :"
+      passwordagain: "Mot de passe (confirmation) :"
+      about: "Envie de parler de vous ? C'est optionnel, ce sera visible sur votre profil public et vous pourrez le changer comme bon vous semble."
+      abouttitle: "À propos :"
+      markdownavailable: "Syntaxe Markdown disponible"
+      signup: "S'inscrire"
+    invite:
+      passinvitation: "À votre tour d'inviter quelqu'un"
+      passinvitationbody: "Cette communauté ne peut grossir que quand des membres invitent d'autres personnes. N'hésitez pas à prendre un moment pour inviter quelqu'un à votre tour."
+      passinvitationor: "ou"
+      passinvitationskip: "Plus tard"
+  stories:
+    edit:
+      edit: "Éditer l'info"
+      merge: "Fusionner :"
+      shortid: "ID courte de l'info dans laquelle cette info sera fusionnée"
+      unavailable: "Non dispo :"
+      unavailableat: "URL source non disponible, active l'affichage du texte en cache"
+      modreason: "Raison de la modération :"
+      markdown: "Utilisation du Markdown possible"
+      save: "Sauver"
+      cancel: "Annuler l'édition"
+    form:
+      alreadysubmitted: "Erreur : Cette info a déjà été proposée "
+      alreadysubmittedflash: "Note: Cette info a déjà été proposée %{timeago} mais peut être de nouveau reproposée."
+      previousdiscussion: "Merci de consulter <a href=\"%{storypath}\" target=\"_blank\"> la discussion précédente</a> pour cette info."
+      previousexpireddiscussion: "Merci de consulter <a href=\"%{storypath}\" \"target=_blank\">la discussion précédente</a> pour la première proposition de cette info.  Si le contenu a changé ou génère de nouvelles discussions, vous pouvez la proposer de nouveau."
+      fetchtitle: "Prendre le titre"
+      url: "URL :"
+      title: "Titre :"
+      changetitle: "Les utilisateurs ont proposé de changer le titre de l'info par :"
+      tags: "Étiquette :"
+      changetags: "Les utilisateurs ont proposé de changer les étiquettes de l'info par :"
+      text: "Texte :"
+      placeholdertext: "Optionnel quand vous proposez une URL; se référer au mode d'emploi"
+      storysubmissionguidelines: "Lignes directrices de la proposition d'une info"
+      guidelinespart1: "Ne pas éditer les titres des infos, mais quand le titre original n'a pas de contexte ou est peu clair, changez-le. <strong>Merci de supprimer du titre le nom du site ou la section.</strong>"
+      guidelinespart2: "Quand l'info proposée a plus d'un an, merci d'ajouter en fin de titre entre parenthèse la date de publication."
+      guidelinespart3: "Quand une URL est proposée, le champ texte est optionnel et doit être utilisé seulement si du contexte ou des explications sur l'info proposée est nécessaire. Un commentaire ou une opinion doit faire l'objet d'un commentaire, afin qu'il reçoive un vote autre que celui de l'info. "
+      guidelinespart4: "Si aucune étiquette ne s'applique à l'info, il y a de fortes chances qu'elle ne corresponde pas aux <a href=\"/about\" \"target=_blank\">sujets couverts</a>. Ne pas entrer une étiquette ne s'appliquant pas à l'info."
+      guidelinespart5: "Pour proposer facilement une page que vous visionnez dans votre navigateur au %{appname}, cliquez-glissez ce bookmarklet vers votre barre de navigation: [<a href=\"javascript:{window.open(%22%{rooturl}stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title));%20void(0);}\">Soumettre au %{appname}</a>]. Vous serez redirigé vers la page actuelle avec l'URL et le titre de la page d'info."
+      submitter: "L'auteur est"
+      author: "Auteur :"
+      iamauthor: "Je suis"
+      authorownership: " l'auteur de l'info à cette URL (ou de ce texte)"
+    listdetail:
+      storyremovedby: "[Info supprimée par %{user}]"
+      moderator: "le modérateur"
+      originalsubmitter: "le contributeur d'origine"
+      authoredby: "écrit par"
+      via: "soumis par"
+      justnow: "à l'instant"
+      edit: "éditer"
+      delete: "supprimer"
+      confirmundelete: "Êtes-vous sûr de vouloir désupprimer cette info ?"
+      undelete: "désupprimer"
+      confirmdelete: "Êtes-vous sûr de vouloir supprimer cette info ?"
+      suggest: "suggérer"
+      unflag: "désindiquer"
+      flag: "drapeau"
+      hide: "masquer"
+      unhide: "révéler"
+      cached: "en cache"
+      nocomment: "pas de commentaire"
+      commentsingular: "commentaire"
+      commentplurial: "commentaires"
+      additionaltext: "Texte additionnel disponible"
+    new:
+      markdown: "Utilisation du Markdown possible"
+      preview: "Aperçu"
+      submit: "Soumettre une info"
+      submitbutton: "Soumettre"
+    show:
+      toggledragons: "&mdash; voici les dragons &mdash;"
+  users:
+    list:
+      administrator: "administrateur"
+      moderator: "modérateur"
+    show:
+      status: "Statut :"
+      sendmessage: "Envoyer un message"
+      banned: "Utilisateur banni"
+      inactive: "Utilisateur inactif"
+      active: "actif "
+      administrator: "administrateur"
+      moderator: "modérateur"
+      user: "utilisateur"
+      withinvites: "avec invitations"
+      storysubmissions: "avec propositions d'infos"
+      disabled: "désactivé"
+      joined: "Inscrit :"
+      byinvitationfrom: "par <a href=\"/u/%{user}\">invitation</a> de"
+      banneduser: "Banni :"
+      bannedby: "par"
+      hats: "Chapeaux :"
+      left: "Parti :"
+      karma: "Karma :"
+      karmaaverage: ", en moyenne "
+      karmaperstorycomment: "par info/commentaire"
+      storiessubmitted: "Infos soumises :"
+      postedcomments: "Commentaires postés :"
+      mostcommonlytagged: "le plus couramment marquées "
+      about: "À propos :"
+      aboutdefault: "Un mystère..."
+      administrativeinfo: "Informations administratives"
+      email: "E-mail :"
+      recentvotes: "Votes récents :"
+      commentlinktext: "comment"
+      administrativeactions: "Actions administratives"
+      unbanuser: "Unban User"
+      banningdescription: "Bannir ou désactiver les invitations pour un utilisateur lui enverra un e-mail avec la raison ci-dessous, et votre adresse e-mail dans le champ Reply-To afin qu'il puisse répondre."
+      banningreason: "Raison :"
+      banuserbutton: "Bannir l'utilisateur"
+      enableinvitesforuser: "Activer les invitations pour l'utilisateur"
+      disableinvitesreason: "Raison :"
+      disableinvitesbutton: "Désactiver les invitations"
+    tree:
+      newestusers: "Plus récents utilisateurs"
+      administrator: "(administrateur)"
+      moderator: "(modérateur)"
+  tags:
+    index:
+      tagstitle: "Étiquettes"
+# data for users/invitationform which is a partial view
+  invitationtext: "Le nombre d'invitations est illimité, mais les personnes que vous invitez sont associées à votre compte dans <a href=\"/u\">l'arbre des utilisateurs</a> et vous pourriez être tenu pour responsable s'ils causent des problèmes. Merci d'évaluer le fait d'inviter des gens que vous ne connaissez pas personnellement."
+  emailaddress: "Adresse e-mail :"
+  memouser: "Message à l'utilisateur :"
+  sendinvitation: "Envoyer l'invitation"
+# controllers
+  controllers:
+    comments_controller:
+      commentstitle: "Derniers commentaires"
+      threadstitle: "Vos sujets"
+    filters_controller:
+      filterstitle: "Filtres"
+      flashfilterupdate: "Vos filtres ont été mis à jour."
+    hats_controller:
+      hatstitle: "Chapeaux"
+    home_controller:
+      recenttitle: "Infos récentes"
+      abouttitle: "À propos"
+      chattitle: "Chat"
+      privacytitle: "Confidentialité"
+      hiddenstoriestitle: "Infos cachées"
+      rssforstoriestitle: "RSS 2.0"
+      rssforcommentstitle: "Commentaires - RSS 2.0"
+      neweststoriestitle: "Dernières infos"
+      licensetext: "<div class=\"box wide\">Toutes les actions sur le site sont publiques à l'exception des messages privés entre utilisateurs. Les actions de modération peuvent être consultées via le <a href=\"/moderations\">Journal de modération</a>.<br/><a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.fr\"><img alt=\"Licence Creative Commons\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by/4.0/88x31.png\" /></a><br /><span xmlns:dct=\"http://purl.org/dc/terms/\" property=\"dct:title\">Le Journal du hacker</span> est mis à disposition selon les termes de la <a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.fr\">licence Creative Commons Attribution 4.0 International</a>.</div>"
+      abouttext: "<h2>Le Journal du hacker</h2><div class=\"box wide\">Le <a href=\"/\">Journal du hacker</a> a pour ambition de présenter l'activité des hackers francophones, du mouvement du Logiciel Libre et open source en langue française, mais aussi des startups et du mouvement entrepreunarial de la communauté francophone.<br />Le Journal du hacker s'inspire directement du site anglophone <a href=\"https://news.ycombinator.com\">Hacker News</a> car l'idée de base est excellente mais propose d'aller plus loin en offrant un moteur <a href=\"https://gitlab.com/journalduhacker/journalduhacker\">basé sur un logiciel libre</a> fonctionnant par cooptation afin de créer une vraie communauté responsable. Il suffit de <a href=\"/invitations/request\">demander une invitation</a> pour nous rejoindre et partager vos infos avec nous ;)<br /></div><h2>Les acteurs du Journal du hacker</h2><div class=\"box wide\">En tant que <strong>lecteur</strong> vous avez accès au <a href=\"/\">site</a> et vous pouvez :<ul><li>Lire les <a href=\"/comments\">commentaires</a> sans toutefois pouvoir y participer</li><li>Suivre la publication des articles via <a href=\"/rss\">RSS</a>, <a href=\"https://twitter.com/journalduhacker\">Twitter</a>, <a href=\"https://framasphere.org/people/2aaaaba0110c0133c7ea2a0000053625\">Diaspora</a> ou <a href=\"https://framapiaf.org/@journalduhacker\">Mastodon</a></li><li>Suivre uniquement les étiquettes (tags) qui vous intéressent par RSS exemple <a href=\"/t/conteneurs.rss\">Conteneurs</a>, il suffit de se rendre sur <a href=\"/filters\">Filtres</a> de cliquer sur une étiquette et de rajouter .rss sur l'URL ainsi <a href=\"/t/linux\">https://www.journalduhacker.net/t/linux</a> devient <a href=\"/t/linux.rss\">https://www.journalduhacker.net/t/linux.rss</a> pour suivre cette étiquette par RSS</li><li>Vous pourrez y faire des <a href=\"/search\">recherches</a></li></ul>En tant qu'<strong>utilisateur inscrit</strong>, vous pourrez :<ul><li>Participer aux <a href=\"/comments\" >commentaires</a></li><li>Voter pour faire remonter en haut de la page d'<a href=\"/\">accueil</a> les articles que vous appréciez</li><li><a href=\"/stories/new\" >Soumettre des articles</a> (vidéos et podcasts compris)</li><li><a href=\"/filters\">Filtrer</a> selon les étiquettes qui vous intéressent pour afficher uniquement certaines étiquettes sur la page d'<a href=\"/\" >accueil</a></li></ul>Le Journal du hacker est un outil simple de veille pour la sphère professionnelle, une fenêtre vers le monde du Libre, du Hacking, de l'Open source dans la sphère privée, une bibliothèque des meilleurs articles en langue française grâce à la <a href=\"/search\">fonction de recherche</a>. Il est animé par nos <a href=\"/u\" >contributeurs</a> bénévoles qui sont impliqués dans la communauté.<br /></div><h2>Les données publiques du Journal du hacker</h2><div class=\"box wide\">Une copie de la base de données du Journal du hacker est mis à disposition de la communauté afin qu'elle puisse réutiliser les informations présentes sur le Jdh. Ce dump est généré chaque jour à 1h du matin et purgé des informations confidentielles (notamment des adresses mails et mots de passe), il est téléchargeable ici : <a href=\"/assets/database/journalduhacker.sql.tar.gz\">journalduhacker.sql.tar.gz</a><br /></div><h2>Informations</h2><div class=\"box wide\">L'outil est entièrement traduit en français et basé sur le projet <a href=\"https://github.com/jcs/lobsters\">lobste.rs</a> dont vous trouverez la licence <a href=\"https://github.com/jcs/lobsters/blob/master/LICENSE\" >ici</a>.<br />Adresse de contact : <a href =\"mailto:contact@journalduhacker.net\">contact@journalduhacker.net</a></div>"
+    invitations_controller:
+      flashpublicinvitnotallowed: "Richieste di inviti pubbliche non sono permesse."
+      flashsuccessinvitrequest: "La vostra richiesta d'invito è stata validata e sarà ora visibile agli altri utenti connessi."
+      flashaccountnotinvit: "Il tuo profilo non è autorizzatto a condividere inviti"
+      flashsuccessinvit: "L'email d'invito è stata inviata con successo a %{guest}."
+      flasherrorssinvit: "Non è stato possibile inviare l'invito, si verifichi la validità dell'indirizzo e-mail."
+      flashrequestconfirmation: "Ti è stata inviata una conferma a %{email}."
+      flashinvalidinvitation: "Invito invalido o scaduto"
+      flashsuccessdeleteinvit: "La richiesta d'invito di %{name} è stata rimossa con successo"
+    login_controller:
+      flashlogininvalid: "Indirizzo email e/o password invalido/i."
+      totpinvalid: "Il vostro codice TOTP non è valido."
+      deletedaccount: "Il vostro account è stato rimosso."
+      bannedaccount: "Il vostro account è stato bannato."
+    messages_controller:
+      messagestitle: "Messaggi"
+      messagessenttitle: "Messaggi inviati"
+      flashdelmsg: "%{nbmsg} message%{plural} supprimé%{plural}."
+      pluralmsg: "s"
+      flashcannotfindmsg: "Messaggio non trovato."
+      flashmsgsentto: "Il messaggio è stato inviato a %{user}."
+      flashdeletedmessage: "Messaggio eliminato." 
+    search_controller:
+      searchtitle: "Cerca"
+      flasherrorsearchcontroller: "Ci dispiace, purtroppo il motore di ricerca è attualmente malfunzionante"
+    stories_controller:
+      submitstorytitle: "Pubblica un articolo"
+      editstorytitle: "Modifica un articolo"
+      flashnotallowedsuggestion: "Non sei autorizzato a proporre suggerimenti su questo articolo."
+      flashallowedsuggestion: "Le modifiche suggerite sono state registrate."
+      flashmergedinto: "%{mergedstory} è stato accorpato a questo articolo."
+      flashalreadyposted: "Questo URL è già stato pubblicato di recente"
+      flashcanonicalversion: "Nota: l'URL è stato cambiato nella versione canonica rilevata"
+    tags_controller:
+      tagstitle: "Etichette"
+    users_controller:
+      usertitle: "Utenti"
+    signup_controller:
+      signuptitle: "Condividi un invito a tua volta"
+      signedup: "Siete già iscritti."
+      invalidinv: "Invito invalido o scaduto."
+      flashsuccesssignupcontroller: "Benvenuto !"
+  # suggest.stories scope, unable to get it so global, I don't know why
+  suggeststorychanges: "Suggerire delle modifiche all'articolo"
+  suggestchangesbutton: "Suggerire delle modifiche"
+  suggestor: "o"
+  suggestcancel: "Annullare"
+  # reply at in views/email_message/notification.text.erb
+  replyat: "Rispondi a "
+  # reply at in views/email_reply/reply.text.erb
+  emailreplyat: "%{author} ti ha risposto: "
+  emailcontinueto: "Continua la discussione su"
+  # reply at in views/email_reply/mention.text.erb
+  emailmentionreplyat: "%{author} ti ha citato in un commento:"
+  emailmentioncontinueto: "Continua la discussione su"
+  date:
+    abbr_day_names:
+    - dim
+    - lun
+    - mar
+    - mer
+    - jeu
+    - ven
+    - sam
+    abbr_month_names:
+    -
+    - jan.
+    - fév.
+    - mar.
+    - avr.
+    - mai
+    - juin
+    - juil.
+    - août
+    - sept.
+    - oct.
+    - nov.
+    - déc.
+    day_names:
+    - dimanche
+    - lundi
+    - mardi
+    - mercredi
+    - jeudi
+    - vendredi
+    - samedi
+    formats:
+      default: "%d/%m/%Y"
+      short: "%e %b"
+      long: "%e %B %Y"
+    month_names:
+    -
+    - gennaio
+    - février
+    - mars
+    - avril
+    - mai
+    - juin
+    - juillet
+    - août
+    - septembre
+    - octobre
+    - novembre
+    - décembre
+    order:
+    - :day
+    - :month
+    - :year
+  datetime:
+    distance_in_words:
+      about_x_seconds:
+        one: il y a une seconde
+        other: il y a %{count} seconds
+      about_x_minutes:
+        one: il y a une minute
+        other: il y a %{count} minutes
+      about_x_hours:
+        one: il y a une heure
+        other: il y a %{count} heures
+      about_x_months:
+        one: il y a un mois
+        other: il y a %{count} mois
+      about_x_years:
+        one: il y a un an
+        other: il y a %{count} ans
+      almost_x_years:
+        one: presqu'un an
+        other: presque %{count} ans
+      half_a_minute: une demi-minute
+      less_than_x_minutes:
+        zero: moins d'une minute
+        one: moins d'une minute
+        other: moins de %{count} minutes
+      less_than_x_seconds:
+        zero: moins d'une seconde
+        one: moins d'une seconde
+        other: moins de %{count} secondes
+      over_x_years:
+        one: plus d'un an
+        other: plus de %{count} ans
+      x_days:
+        one: il y a 1 jour
+        other: "il y a %{count} jours"
+      x_minutes:
+        one: il y a 1 minute
+        other: "il y a %{count} minutes"
+      x_months:
+        one: il y a 1 mois
+        other: "il y a %{count} mois"
+      x_seconds:
+        one: il y a 1 seconde
+        other: "il y a %{count} secondes"
+    prompts:
+      day: Giorno
+      hour: Ora
+      minute: Minuto
+      month: Mese
+      second: Secondo
+      year: Anno

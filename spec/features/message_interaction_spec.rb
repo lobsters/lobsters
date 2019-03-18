@@ -82,4 +82,35 @@ RSpec.feature "Checking messages" do
     expect(page).not_to have_css(".headerlinks .new_messages")
     expect(page).to have_css(".headerlinks", text: "Messages")
   end
+
+  scenario "add a message to a conversation" do
+    user = create(:user)
+    stub_login_as user
+    other_user = create(:user, username: "seafood")
+    conversation = create(
+      :conversation,
+      author: user,
+      recipient: other_user,
+      subject: "hi",
+    )
+    create(
+      :message,
+      :unread,
+      author: other_user,
+      recipient: user,
+      body: "Nice to meet you",
+      conversation: conversation,
+    )
+    message_text = "Do you like lobster bisque?"
+
+    visit root_path
+    click_on "1 Message"
+    click_on other_user.username
+    within(".new_message") do
+      fill_in("Message", with: message_text)
+      click_on "Send Message"
+    end
+
+    expect(page).to have_css(".message_text", text: message_text)
+  end
 end

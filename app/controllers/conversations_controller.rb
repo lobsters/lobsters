@@ -13,6 +13,7 @@ class ConversationsController < ApplicationController
       where(recipient: @user).
       update_all(has_been_read: true)
     @user.update_unread_message_count!
+    @message = Message.new(conversation: @conversation)
   end
 
   def create

@@ -12,3 +12,14 @@
       <div class="message_text"><%= message.body %></div>
   <% end %>
 </section>
+<section class="new_message box wide">
+  <%= form_with model: [@message.conversation, @message] do |form| %>
+    <%= error_messages_for @message %>
+    <div class="boxline">
+      <%= form.label :body, "Message", :class => "required" %>
+      <%= form.text_field :body %>
+    </div>
+
+    <%= form.submit "Send Message" %>
+  <% end %>
+</section>

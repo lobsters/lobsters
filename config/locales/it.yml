@@ -1,6 +1,29 @@
 # Sample localization file for Italian. Add more files in this directory for other locales.
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
+# Convenzioni adottate:
+#   - tag → etichetta
+#   - story → articolo
+#   - merge/unmerge → accorpare/scorporare
+#   - ban → bannare
+#   - thread → discussione
+#   - author/submitter → contributore
+#   - guidelines → linee guida
+#
+# Dubbi:
+#   - timeout → tempo di attesa ?
+#
+#   - 490 → confermare corretta traduzione
+#   - 497-498 → confermare corretta traduzione
+#   - 511 → funzione sconosciuta, da confermare corretta traduzione
+#   - 527 → da confermare corretto funzionamento
+#   - 560 → tradurre `memo` come "promemoria" o "messaggio" (come hanno fatto i francesi?)
+#   - 581 → tradurre la licenza?
+
+# Da fare:
+#   - 591 → verificare le variabili e tradurre adeguatamente
+#   - 698-741 → tradurre dal francese
+
 it:
   activerecord:
     errors:
@@ -8,7 +31,7 @@ it:
         body: 'Verifica i campi sottostanti: '
         header:
           one: 'Impossibile registrare questo/a %{model} : 1 errore'
-          other: 'Impossibile registrare questo/a %{model} : %{count} errori'
+          other: 'Impossibile registrare questo/a %{model} : %{count} errori' 
       models:
         user:
           attributes:
@@ -39,7 +62,7 @@ it:
       subject: "[%{appname}] Conferma la domanda di invito su %{appname}"
   models:
     comment:
-      commentcannotbeblank: Un commento non può essere vuoto."
+      commentcannotbeblank: "Un commento non può essere vuoto."
       useridcannotbeblank: "Un ID utente non può essere vuoto."
       storyidcannotbeblank: "Un ID articolo non può essere vuoto."
       deletedcomment: "commento rimosso"
@@ -64,7 +87,7 @@ it:
     story:
       deletedstory: "articolo rimosso"
       undeletedstory: "articolo non rimosso"
-      mergedinto: accorpato con %{shortid} (%{title})"
+      mergedinto: "accorpato con %{shortid} (%{title})"
       unmerged: "scorporato da un'altra storia"
       changedfromto: "%{story} cambiato da %{stfrom} a %{stto}"
       nonmedia: "Devi inserire un'etichetta diversa da PDF o video"
@@ -172,12 +195,12 @@ it:
       hat: "Cappello:"
       link: "Link :"
       comment: "Commento :"
-      approve: "Approva la richiesta di cappello"
+      approve: "Approva la richiesta del cappello"
       reason: "Ragione :"
-      reject: "Rifiutare la domanda di cappello"
+      reject: "Rifiutare la richiesta del cappello"
       hator: "oppure"
     approve_request:
-      approvedhatrequest: "La richiesta di cappello è stata approvata."
+      approvedhatrequest: "La richiesta del cappello è stata approvata."
   home:
     index:
       homerecentsdesc: "<em>Gli <a href=\"/newest\">ultimi</a> articoli con una frazione casuale di articoli che non hanno ancora raggiunto la pagina principale.</em>"
@@ -337,13 +360,13 @@ it:
       saveaccountsettings: "Salva le impostazioni dell'account"
       notificationsettings: "Impostazioni delle Notifiche"
       pushover: "<a href=\"https://pushover.net/\">Pushover</a> :"
-      managepushoversubscription: "Gestisci l'abbonamento a Pushover"
+      managepushoversubscription: "Gestisci l'iscrizione a Pushover"
       subscribewithpushover: "Abbonati a Pushover"
       foroptionalcomment: "Per le notifiche opzionali sui commenti e i messaggi"
       commentreplynotificationsettings: "Impostazioni di notifica della risposta a un commento"
       receiveemail: "Ricevi e-mail :"
       receivepushover: "Ricevi notifica Pushover :"
-      requirepushover: "Richiedi un abbonamento Pushover"
+      requirepushover: "Richiedi un iscrizione Pushover"
       commentmentionnotificationsettings: "Impostazioni di notifica delle menzioni sui commenti"
       privatemessagenotificationsettings: "Impostazioni di notifica dei messaggi privati" 
       submittedstorycommentsettings: "Imposazioni di notifica dei commenti ad un tuo articolo"
@@ -376,8 +399,8 @@ it:
     pushover:
       pushovernotconfigured: "Questo sito non è configurato per Pushover"
     pushover_callback:
-      pushovernorandomtokensession: "Nessun random token in questa sessione"
-      pushovernorandomtokenurl: "Nessun random token nell'URL"
+      pushovernorandomtokensession: "Nessun token casuale in questa sessione"
+      pushovernorandomtokenurl: "Nessun token casuale nell'URL"
       accountsetuppushover: "Il tuo account è stato configurato per le notifiche Pushover."
       accountnolongersetuppushover: "Il tuo account non è più configurato per le notifiche Pushover."
     twofa:
@@ -397,7 +420,7 @@ it:
       enrollmenttimeout: "Timeout esaurito"
       scanqrcode: "Scannerizza il QR code sotto o clicca il link per aprirlo nell'applicazione <a href=\"https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\" target=\"_blank\">TOTP</a> che preferisci :"
       registring: "Una volta completato il processo di autenticazione TOTP, passa alla schermata successiva per verificare e attivare l'autenticazione a due fattori sul tuo account."
-      verifyenable: "Vérifica e attiva"
+      verifyenable: "Verifica e attiva"
     twofa_update:
       enrollmenttimeout: "Timeout esaurito"
       2fahasbeenenabled: "L'autenticazione a due fattori è stata attivata sul tuo account"
@@ -405,274 +428,271 @@ it:
     twofa_verify:
       title: "Autenticazione a due fattori"
       enrollmenttimeout: "Timeout esaurito"
-      enablecode: "Afin d'activer l'authentification à deux facteurs pour votre compte en utilisant votre nouveau secret TOTP, entrez le code à 6 chiffres de votre application :"
-      verifyenable: "Vérifier et Activer"
+      enablecode: "Per attivare l'autenticazione 2FA sul tuo account utilizzando il tuo nuovo codice TOTP, inserisci il codice a 6 cifre dalla tua tua applicazione TOTP di riferimento:"
+      verifyenable: "Verifica e attiva"
     update:
-      updatesettingsflash: "Paramètres mis à jour avec succès."
-      passwordnotcorrect: "Le mot de passe courant n'a pas été entré correctement."
+      updatesettingsflash: "Le impostazioni sono state modificate con successo."
+      passwordnotcorrect: "La password non è stata inserita correttamente."
   signup:
     index:
-      createaccounttitle: "Créer un compte"
+      createaccounttitle: "Creare un profilo"
     invited:
-      createaccounttitle: "Créer un compte"
-      createaccountbody: "Pour créer un nouveau compte, veuillez saisir votre e-mail et votre mot de passe. Votre e-mail ne sera jamais affiché aux autres utilisateurs et ne sera utilisé que si vous avez besoin de changer votre mot de passe ou de recevoir des notifications optionnelles de nouveaux messages. Votre nom d'utilisateur peut être changé ultérieurement."
-      invitedby: "Invité par :"
-      username: "Nom d'utilisateur :"
-      email: "Adresse e-mail :"
-      password: "Mot de passe :"
-      passwordagain: "Mot de passe (confirmation) :"
-      about: "Envie de parler de vous ? C'est optionnel, ce sera visible sur votre profil public et vous pourrez le changer comme bon vous semble."
-      abouttitle: "À propos :"
-      markdownavailable: "Syntaxe Markdown disponible"
-      signup: "S'inscrire"
+      createaccounttitle: "Creare un profilo"
+      createaccountbody: "Per creare un nuovo profilo, inserisci il tuo indirizzo e-mail e una password. Il vostro indirizzo e-mail non sarà mai mostrato agli utenti e sarà utilizzato solo se avrai bisogno di azzerare la tua password, o per ricevere delle notifiche opzionali. Il tuo nome utente potrà essere cambiato successivamente."
+      invitedby: "Invitato da :"
+      username: "Nome utente:"
+      email: "Indirizzo email :"
+      password: "Password :"
+      passwordagain: "Password (di conferma):"
+      about: "Vuoi dirci qualcosa di te? Questo è opzionale, ma sarà visibile sul tuo profilo pubblicamente e potrà essere cambiato in qualunque momento."
+      abouttitle: "A riguardo:"
+      markdownavailable: "Formattazione Markdown disponibile"
+      signup: "Iscriversi"
     invite:
-      passinvitation: "À votre tour d'inviter quelqu'un"
-      passinvitationbody: "Cette communauté ne peut grossir que quand des membres invitent d'autres personnes. N'hésitez pas à prendre un moment pour inviter quelqu'un à votre tour."
-      passinvitationor: "ou"
-      passinvitationskip: "Plus tard"
+      passinvitation: "Condividi un invito a tua volta"
+      passinvitationbody: "Questa comunità potrà crescere solo se i suoi membri inviteranno nuovi utenti, come è stato fatto con te. Pensaci un attimo e invita qualcuno di tua conoscenza"
+      passinvitationor: "o"
+      passinvitationskip: "In seguito"
   stories:
     edit:
-      edit: "Éditer l'info"
-      merge: "Fusionner :"
-      shortid: "ID courte de l'info dans laquelle cette info sera fusionnée"
-      unavailable: "Non dispo :"
-      unavailableat: "URL source non disponible, active l'affichage du texte en cache"
-      modreason: "Raison de la modération :"
-      markdown: "Utilisation du Markdown possible"
-      save: "Sauver"
-      cancel: "Annuler l'édition"
+      edit: "Modifica l'articolo"
+      merge: "Accorpa a:"
+      shortid: "L'id breve dell'articolo cui si vuole accorpare"
+      unavailable: "Non disponibile :"
+      unavailableat: "URL sorgente non disponibile, abilita la visualizzazione del testo nella cache"
+      modreason: "Motivazione della moderazione: "
+      markdown: "Disponibile formattazione markdown"
+      save: "Salva"
+      cancel: "Annullare le modifiche"
     form:
-      alreadysubmitted: "Erreur : Cette info a déjà été proposée "
-      alreadysubmittedflash: "Note: Cette info a déjà été proposée %{timeago} mais peut être de nouveau reproposée."
-      previousdiscussion: "Merci de consulter <a href=\"%{storypath}\" target=\"_blank\"> la discussion précédente</a> pour cette info."
-      previousexpireddiscussion: "Merci de consulter <a href=\"%{storypath}\" \"target=_blank\">la discussion précédente</a> pour la première proposition de cette info.  Si le contenu a changé ou génère de nouvelles discussions, vous pouvez la proposer de nouveau."
-      fetchtitle: "Prendre le titre"
+      alreadysubmitted: "Errore: questo articolo è già stato pubblicato "
+      alreadysubmittedflash: "Nota: Questo articolo è gia stato pubblicato %{timeago}, ma può essere ripubblicato"
+      previousdiscussion: "Per favore consulta <a href=\"%{storypath}\" target=\"_blank\"> la discussione precedente</a> per questo articolo."
+      previousexpireddiscussion: "Per favore consulta prima <a href=\"%{storypath}\" \"target=_blank\">la discussione precedente</a> per questo articolo.  Se il contenuto è cambiato o giustifica una nuova discussione, puoi ripubblicarlo."
+      fetchtitle: "Recuperare il titolo"
       url: "URL :"
-      title: "Titre :"
-      changetitle: "Les utilisateurs ont proposé de changer le titre de l'info par :"
-      tags: "Étiquette :"
-      changetags: "Les utilisateurs ont proposé de changer les étiquettes de l'info par :"
-      text: "Texte :"
-      placeholdertext: "Optionnel quand vous proposez une URL; se référer au mode d'emploi"
-      storysubmissionguidelines: "Lignes directrices de la proposition d'une info"
-      guidelinespart1: "Ne pas éditer les titres des infos, mais quand le titre original n'a pas de contexte ou est peu clair, changez-le. <strong>Merci de supprimer du titre le nom du site ou la section.</strong>"
-      guidelinespart2: "Quand l'info proposée a plus d'un an, merci d'ajouter en fin de titre entre parenthèse la date de publication."
-      guidelinespart3: "Quand une URL est proposée, le champ texte est optionnel et doit être utilisé seulement si du contexte ou des explications sur l'info proposée est nécessaire. Un commentaire ou une opinion doit faire l'objet d'un commentaire, afin qu'il reçoive un vote autre que celui de l'info. "
-      guidelinespart4: "Si aucune étiquette ne s'applique à l'info, il y a de fortes chances qu'elle ne corresponde pas aux <a href=\"/about\" \"target=_blank\">sujets couverts</a>. Ne pas entrer une étiquette ne s'appliquant pas à l'info."
-      guidelinespart5: "Pour proposer facilement une page que vous visionnez dans votre navigateur au %{appname}, cliquez-glissez ce bookmarklet vers votre barre de navigation: [<a href=\"javascript:{window.open(%22%{rooturl}stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title));%20void(0);}\">Soumettre au %{appname}</a>]. Vous serez redirigé vers la page actuelle avec l'URL et le titre de la page d'info."
-      submitter: "L'auteur est"
-      author: "Auteur :"
-      iamauthor: "Je suis"
-      authorownership: " l'auteur de l'info à cette URL (ou de ce texte)"
+      title: "Titolo :"
+      changetitle: "Gli utenti hanno suggerito di modificare il titolo di questo articolo in:"
+      tags: "Etichette :"
+      changetags: "Gli utenti di hanno suggerito di modificare le etichette di questo articolo in:"
+      text: "Testo :"
+      placeholdertext: "Opzionale quando si pubblica un URL; per favore consulta le linee guida"
+      storysubmissionguidelines: "Linee guida per la pubblicazione degli articoli"
+      guidelinespart1: "Non modificare il titolo, se non quando il titolo originale dell'articolo manca di contestualizzazione o è confusionario. <strong>Per favore rimuovi dal titolo componenti estranei come il nome del sito o della sezione.</strong>"
+      guidelinespart2: "Quando l'articolo pubblicato è datato a più di un anno fa, per favore riporta l'anno di pubblicazione dell'articolo tra parentesi."
+      guidelinespart3: "Quando pubblichi un URL, la casella di testo è opzionale e va utilizzata solo per fornire contesto o spiegazioni qualora l'URL si riveli insufficiente. Le proprie interpretazioni o opinioni si riservino per un commento, in modo che questo possa essere valutato separatamente dall'articolo. "
+      guidelinespart4: "Se nessuna etichetta sembra essere adeguata per l'articolo che stai pubblicando, è probabile che non corrisponda agli <a href=\"/about\" \"target=_blank\">argomenti trattati</a>. Non strafare con le etichette che non sono temi principali dell'articolo."
+      guidelinespart5: "Per poter pubblicare facilmente una pagina che stai visualizzando nel tuo browser su gambe.ro, trascina questo bookmarklet sulla tua barra dei segnalibri:[<a href=\"javascript:{window.open(%22%{rooturl}stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title));%20void(0);}\">Pubblicare su %{appname}</a>]. Sarete reindirizzati a questa pagina con l'URL e il titolo della pagina visualizzata."
+      submitter: "Il contributore è"
+      author: "Contributore :"
+      iamauthor: "Io sono"
+      authorownership: " il contributore di questo articolo a questo URL (o questo testo)"
     listdetail:
-      storyremovedby: "[Info supprimée par %{user}]"
-      moderator: "le modérateur"
-      originalsubmitter: "le contributeur d'origine"
-      authoredby: "écrit par"
-      via: "soumis par"
-      justnow: "à l'instant"
-      edit: "éditer"
-      delete: "supprimer"
-      confirmundelete: "Êtes-vous sûr de vouloir désupprimer cette info ?"
-      undelete: "désupprimer"
-      confirmdelete: "Êtes-vous sûr de vouloir supprimer cette info ?"
-      suggest: "suggérer"
-      unflag: "désindiquer"
-      flag: "drapeau"
-      hide: "masquer"
-      unhide: "révéler"
-      cached: "en cache"
-      nocomment: "pas de commentaire"
-      commentsingular: "commentaire"
-      commentplurial: "commentaires"
-      additionaltext: "Texte additionnel disponible"
+      storyremovedby: "[Articolo rimosso da %{user}]"
+      moderator: "il moderatore"
+      originalsubmitter: "il contributore originale"
+      authoredby: "pubblicato da"
+      via: "preso da"
+      justnow: "in questo istante"
+      edit: "modifica"
+      delete: "rimuovere"
+      confirmundelete: "Sei sicuro di voler rimettere questo articolo"
+      undelete: "rimettere"
+      confirmdelete: "Sei sicuro di voler rimuovere questo articolo?"
+      suggest: "suggerire"
+      unflag: "rimuovere la segnalazione"
+      flag: "segnala"
+      hide: "nascondere"
+      unhide: "mostrare"
+      cached: "nella cache"
+      nocomment: "senza commenti"
+      commentsingular: "commento"
+      commentplurial: "commenti"
+      additionaltext: "Testo aggiuntivo disponibile"
     new:
-      markdown: "Utilisation du Markdown possible"
-      preview: "Aperçu"
-      submit: "Soumettre une info"
-      submitbutton: "Soumettre"
+      markdown: "Disponibile la formattazione in Markdown"
+      preview: "Anteprima"
+      submit: "Pubblicare un articolo"
+      submitbutton: "Pubblica"
     show:
-      toggledragons: "&mdash; voici les dragons &mdash;"
+      toggledragons: "&mdash; ecco qui i draghi &mdash;"
   users:
     list:
-      administrator: "administrateur"
-      moderator: "modérateur"
+      administrator: "amministratore"
+      moderator: "moderatore"
     show:
-      status: "Statut :"
-      sendmessage: "Envoyer un message"
-      banned: "Utilisateur banni"
-      inactive: "Utilisateur inactif"
-      active: "actif "
-      administrator: "administrateur"
-      moderator: "modérateur"
-      user: "utilisateur"
-      withinvites: "avec invitations"
-      storysubmissions: "avec propositions d'infos"
-      disabled: "désactivé"
-      joined: "Inscrit :"
-      byinvitationfrom: "par <a href=\"/u/%{user}\">invitation</a> de"
-      banneduser: "Banni :"
-      bannedby: "par"
-      hats: "Chapeaux :"
+      status: "Stato: "
+      sendmessage: "Invia un messaggio"
+      banned: "Utente bannato"
+      inactive: "Utente inattivo"
+      active: "attivo "
+      administrator: "amministratore"
+      moderator: "moderatore"
+      user: "utente"
+      withinvites: "con inviti"
+      storysubmissions: "con articoli pubblicati"
+      disabled: "disattivato"
+      joined: "Iscritto :"
+      byinvitationfrom: "per <a href=\"/u/%{user}\">invito</a> da`"
+      banneduser: "Bannato: :"
+      bannedby: "da"
+      hats: "Cappello :"
       left: "Parti :"
       karma: "Karma :"
-      karmaaverage: ", en moyenne "
-      karmaperstorycomment: "par info/commentaire"
-      storiessubmitted: "Infos soumises :"
-      postedcomments: "Commentaires postés :"
-      mostcommonlytagged: "le plus couramment marquées "
-      about: "À propos :"
-      aboutdefault: "Un mystère..."
-      administrativeinfo: "Informations administratives"
+      karmaaverage: ", in media "
+      karmaperstorycomment: "per articolo/commento"
+      storiessubmitted: "Articoli pubblicati :"
+      postedcomments: "Commenti pubblicati :"
+      mostcommonlytagged: "più comunemente etichettato"
+      about: "A riguardo :"
+      aboutdefault: "Un mistero ..."
+      administrativeinfo: "Informazioni amministrative"
       email: "E-mail :"
-      recentvotes: "Votes récents :"
+      recentvotes: "Voti recenti :"
       commentlinktext: "comment"
-      administrativeactions: "Actions administratives"
-      unbanuser: "Unban User"
-      banningdescription: "Bannir ou désactiver les invitations pour un utilisateur lui enverra un e-mail avec la raison ci-dessous, et votre adresse e-mail dans le champ Reply-To afin qu'il puisse répondre."
-      banningreason: "Raison :"
-      banuserbutton: "Bannir l'utilisateur"
-      enableinvitesforuser: "Activer les invitations pour l'utilisateur"
-      disableinvitesreason: "Raison :"
-      disableinvitesbutton: "Désactiver les invitations"
+      administrativeactions: "Azioni amministrative"
+      unbanuser: "Sbanna utente"
+      banningdescription: "Bannare o disabilitare gli inviti per un utente invierà una e/mail all'utente con la ragione indicata sotto, e il tuo indirizzo sarà presente nell'e-mail affinché l'utente possa replicare."
+      banningreason: "Ragione :"
+      banuserbutton: "Banna utente"
+      enableinvitesforuser: "Abilita gli inviti per l'utente"
+      disableinvitesreason: "Ragione :"
+      disableinvitesbutton: "Disattiva gli inviti"
     tree:
-      newestusers: "Plus récents utilisateurs"
-      administrator: "(administrateur)"
-      moderator: "(modérateur)"
+      newestusers: "Utenti più recenti"
+      administrator: "amministratore"
+      moderator: "moderatore"
   tags:
     index:
-      tagstitle: "Étiquettes"
+      tagstitle: "Etichette"
 # data for users/invitationform which is a partial view
-  invitationtext: "Le nombre d'invitations est illimité, mais les personnes que vous invitez sont associées à votre compte dans <a href=\"/u\">l'arbre des utilisateurs</a> et vous pourriez être tenu pour responsable s'ils causent des problèmes. Merci d'évaluer le fait d'inviter des gens que vous ne connaissez pas personnellement."
-  emailaddress: "Adresse e-mail :"
+  invitationtext: "Gli inviti sono illimitati, ma le persone da te invitate saranno associate al tuo profilo nell'<a href=\"/u\">albero degli utenti</a> e tu sarai responsabile per la loro condotta qualora queste causassero problemi. Per favore esercita accortezza nell'invitare persone che non conosci personalmente."
+  emailaddress: "Indirizzo e-mail:"
   memouser: "Message à l'utilisateur :"
-  sendinvitation: "Envoyer l'invitation"
-# controllers
+  sendinvitation: "Manda un invito"
   controllers:
     comments_controller:
-      commentstitle: "Derniers commentaires"
-      threadstitle: "Vos sujets"
+      commentstitle: "Commenti più recenti"
+      threadstitle: "Le tue discussioni"
     filters_controller:
-      filterstitle: "Filtres"
-      flashfilterupdate: "Vos filtres ont été mis à jour."
+      filterstitle: "Filtri"
+      flashfilterupdate: "I tuoi filtri sono stati aggiornati."
     hats_controller:
-      hatstitle: "Chapeaux"
+      hatstitle: "Cappello"
     home_controller:
-      recenttitle: "Infos récentes"
-      abouttitle: "À propos"
+      recenttitle: "Articoli recenti"
+      abouttitle: "A riguardo"
       chattitle: "Chat"
-      privacytitle: "Confidentialité"
-      hiddenstoriestitle: "Infos cachées"
+      privacytitle: "Confidenzialità"
+      hiddenstoriestitle: "Articoli nascosti"
       rssforstoriestitle: "RSS 2.0"
-      rssforcommentstitle: "Commentaires - RSS 2.0"
-      neweststoriestitle: "Dernières infos"
+      rssforcommentstitle: "Commenti - RSS 2.0"
+      neweststoriestitle: "Articoli più nuovi"
       licensetext: "<div class=\"box wide\">Toutes les actions sur le site sont publiques à l'exception des messages privés entre utilisateurs. Les actions de modération peuvent être consultées via le <a href=\"/moderations\">Journal de modération</a>.<br/><a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.fr\"><img alt=\"Licence Creative Commons\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by/4.0/88x31.png\" /></a><br /><span xmlns:dct=\"http://purl.org/dc/terms/\" property=\"dct:title\">Le Journal du hacker</span> est mis à disposition selon les termes de la <a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.fr\">licence Creative Commons Attribution 4.0 International</a>.</div>"
       abouttext: "<h2>Le Journal du hacker</h2><div class=\"box wide\">Le <a href=\"/\">Journal du hacker</a> a pour ambition de présenter l'activité des hackers francophones, du mouvement du Logiciel Libre et open source en langue française, mais aussi des startups et du mouvement entrepreunarial de la communauté francophone.<br />Le Journal du hacker s'inspire directement du site anglophone <a href=\"https://news.ycombinator.com\">Hacker News</a> car l'idée de base est excellente mais propose d'aller plus loin en offrant un moteur <a href=\"https://gitlab.com/journalduhacker/journalduhacker\">basé sur un logiciel libre</a> fonctionnant par cooptation afin de créer une vraie communauté responsable. Il suffit de <a href=\"/invitations/request\">demander une invitation</a> pour nous rejoindre et partager vos infos avec nous ;)<br /></div><h2>Les acteurs du Journal du hacker</h2><div class=\"box wide\">En tant que <strong>lecteur</strong> vous avez accès au <a href=\"/\">site</a> et vous pouvez :<ul><li>Lire les <a href=\"/comments\">commentaires</a> sans toutefois pouvoir y participer</li><li>Suivre la publication des articles via <a href=\"/rss\">RSS</a>, <a href=\"https://twitter.com/journalduhacker\">Twitter</a>, <a href=\"https://framasphere.org/people/2aaaaba0110c0133c7ea2a0000053625\">Diaspora</a> ou <a href=\"https://framapiaf.org/@journalduhacker\">Mastodon</a></li><li>Suivre uniquement les étiquettes (tags) qui vous intéressent par RSS exemple <a href=\"/t/conteneurs.rss\">Conteneurs</a>, il suffit de se rendre sur <a href=\"/filters\">Filtres</a> de cliquer sur une étiquette et de rajouter .rss sur l'URL ainsi <a href=\"/t/linux\">https://www.journalduhacker.net/t/linux</a> devient <a href=\"/t/linux.rss\">https://www.journalduhacker.net/t/linux.rss</a> pour suivre cette étiquette par RSS</li><li>Vous pourrez y faire des <a href=\"/search\">recherches</a></li></ul>En tant qu'<strong>utilisateur inscrit</strong>, vous pourrez :<ul><li>Participer aux <a href=\"/comments\" >commentaires</a></li><li>Voter pour faire remonter en haut de la page d'<a href=\"/\">accueil</a> les articles que vous appréciez</li><li><a href=\"/stories/new\" >Soumettre des articles</a> (vidéos et podcasts compris)</li><li><a href=\"/filters\">Filtrer</a> selon les étiquettes qui vous intéressent pour afficher uniquement certaines étiquettes sur la page d'<a href=\"/\" >accueil</a></li></ul>Le Journal du hacker est un outil simple de veille pour la sphère professionnelle, une fenêtre vers le monde du Libre, du Hacking, de l'Open source dans la sphère privée, une bibliothèque des meilleurs articles en langue française grâce à la <a href=\"/search\">fonction de recherche</a>. Il est animé par nos <a href=\"/u\" >contributeurs</a> bénévoles qui sont impliqués dans la communauté.<br /></div><h2>Les données publiques du Journal du hacker</h2><div class=\"box wide\">Une copie de la base de données du Journal du hacker est mis à disposition de la communauté afin qu'elle puisse réutiliser les informations présentes sur le Jdh. Ce dump est généré chaque jour à 1h du matin et purgé des informations confidentielles (notamment des adresses mails et mots de passe), il est téléchargeable ici : <a href=\"/assets/database/journalduhacker.sql.tar.gz\">journalduhacker.sql.tar.gz</a><br /></div><h2>Informations</h2><div class=\"box wide\">L'outil est entièrement traduit en français et basé sur le projet <a href=\"https://github.com/jcs/lobsters\">lobste.rs</a> dont vous trouverez la licence <a href=\"https://github.com/jcs/lobsters/blob/master/LICENSE\" >ici</a>.<br />Adresse de contact : <a href =\"mailto:contact@journalduhacker.net\">contact@journalduhacker.net</a></div>"
     invitations_controller:
-      flashpublicinvitnotallowed: "Demandes publiques d'invitation non-autorisées."
-      flashsuccessinvitrequest: "Votre demande d'invitation a été validée et sera maintenant affichée aux utilisateurs connectés."
-      flashaccountnotinvit: "Votre compte ne peut pas envoyer d'invitations"
-      flashsuccessinvit: "Invitation envoyée par e-mail avec succès à %{guest}."
-      flasherrorssinvit: "L'invitation n'a pas pu être envoyée, merci de vérifier l'adresse e-mail."
-      flashrequestconfirmation: "Un e-mail de confirmation vous a été envoyé à %{email}."
-      flashinvalidinvitation: "Invitation invalide ou expirée"
-      flashsuccessdeleteinvit: "Demande d'invitation de %{name} supprimée avec succès"
+      flashpublicinvitnotallowed: "Richieste di inviti pubbliche non sono permesse."
+      flashsuccessinvitrequest: "La tua richiesta d'invito è stata validata e sarà ora visibile agli altri utenti connessi."
+      flashaccountnotinvit: "Il tuo profilo non è autorizzatto a condividere inviti"
+      flashsuccessinvit: "L'email d'invito è stata inviata con successo a %{guest}."
+      flasherrorssinvit: "Non è stato possibile inviare l'invito, si verifichi la validità dell'indirizzo e-mail."
+      flashrequestconfirmation: "Ti è stata inviata una conferma a %{email}."
+      flashinvalidinvitation: "Invito invalido o scaduto"
+      flashsuccessdeleteinvit: "La richiesta d'invito di %{name} è stata rimossa con successo"
     login_controller:
-      flashlogininvalid: "Adresse e-mail et/ou mot de passe invalide."
-      flashlogininvalid: "Adresse e-mail et/ou mot de passe invalide."
-      totpinvalid: "Votre code TOTP est invalide."
-      deletedaccount: "Votre compte a été supprimé."
-      bannedaccount: "Votre compte a été banni."
+      flashlogininvalid: "Indirizzo email e/o password invalido/i."
+      totpinvalid: "Il tuo codice TOTP non è valido."
+      deletedaccount: "Il tuo account è stato rimosso."
+      bannedaccount: "Il tuo account è stato bannato."
     messages_controller:
-      messagestitle: "Messages"
-      messagessenttitle: "Messages envoyés"
+      messagestitle: "Messaggi"
+      messagessenttitle: "Messaggi inviati"
       flashdelmsg: "%{nbmsg} message%{plural} supprimé%{plural}."
       pluralmsg: "s"
-      flashcannotfindmsg: "Message non trouvé."
-      flashmsgsentto: "Votre message a été envoyé à %{user}."
-      flashdeletedmessage: "Message effacé." 
+      flashcannotfindmsg: "Messaggio non trovato."
+      flashmsgsentto: "Il messaggio è stato inviato a %{user}."
+      flashdeletedmessage: "Messaggio eliminato." 
     search_controller:
-      searchtitle: "Rechercher"
-      flasherrorsearchcontroller: "Désolé mais le moteur de recherche est actuellement cassé"
+      searchtitle: "Cerca"
+      flasherrorsearchcontroller: "Ci dispiace, purtroppo il motore di ricerca è attualmente malfunzionante"
     stories_controller:
-      submitstorytitle: "Soumettre une info"
-      editstorytitle: "Éditer une info"
-      flashnotallowedsuggestion: "Vous n'êtes pas autorisé à offrir des suggestions pour cette info."
-      flashallowedsuggestion: "Les changements que vous avez suggérés ont été notés."
-      flashmergedinto: "%{mergedstory} a été fusionnée dans cette info."
-      flashalreadyposted: "Cette URL a déjà été soumise récemment."
-      flashcanonicalversion: "Note: l'URL a été changée pour avoir la version canonique"
+      submitstorytitle: "Pubblica un articolo"
+      editstorytitle: "Modifica un articolo"
+      flashnotallowedsuggestion: "Non sei autorizzato a proporre suggerimenti su questo articolo."
+      flashallowedsuggestion: "Le modifiche suggerite sono state registrate."
+      flashmergedinto: "%{mergedstory} è stato accorpato a questo articolo."
+      flashalreadyposted: "Questo URL è già stato pubblicato di recente"
+      flashcanonicalversion: "Nota: l'URL è stato cambiato nella versione canonica rilevata"
     tags_controller:
-      tagstitle: "Étiquettes"
+      tagstitle: "Etichette"
     users_controller:
-      usertitle: "Utilisateurs"
+      usertitle: "Utenti"
     signup_controller:
-      signuptitle: "Envoyer une invitation à votre tour"
-      signedup: "Vous êtes déja inscrit."
-      invalidinv: "Invitation invalide ou expirée."
-      flashsuccesssignupcontroller: "Bienvenue !"
+      signuptitle: "Condividi un invito a tua volta"
+      signedup: "Siete già iscritti."
+      invalidinv: "Invito invalido o scaduto."
+      flashsuccesssignupcontroller: "Benvenuto!"
   # suggest.stories scope, unable to get it so global, I don't know why
-  suggeststorychanges: "Suggérer des changements à l'info"
-  suggestchangesbutton: "Suggérer des changements"
-  suggestor: "ou"
-  suggestcancel: "Annuler"
+  suggeststorychanges: "Suggerire delle modifiche all'articolo"
+  suggestchangesbutton: "Suggerire delle modifiche"
+  suggestor: "o"
+  suggestcancel: "Annullare"
   # reply at in views/email_message/notification.text.erb
-  replyat: "Répondre à "
+  replyat: "Rispondi a "
   # reply at in views/email_reply/reply.text.erb
-  emailreplyat: "%{author} vous a répondu : "
-  emailcontinueto: "Continuer cette discussion à "
+  emailreplyat: "%{author} ti ha risposto: "
+  emailcontinueto: "Continua la discussione su"
   # reply at in views/email_reply/mention.text.erb
-  emailmentionreplyat: "%{author} vous a mentionné dans un commentaire : "
-  emailmentioncontinueto: "Continuer cette discussion à "
+  emailmentionreplyat: "%{author} ti ha citato in un commento:"
+  emailmentioncontinueto: "Continua la discussione su"
   date:
     abbr_day_names:
-    - dim
+    - dom
     - lun
     - mar
     - mer
-    - jeu
+    - gio
     - ven
-    - sam
+    - sab
     abbr_month_names:
     -
-    - jan.
-    - fév.
+    - gen.
+    - feb.
     - mar.
-    - avr.
-    - mai
-    - juin
-    - juil.
-    - août
-    - sept.
-    - oct.
+    - apr.
+    - mag
+    - giu
+    - lug.
+    - ago
+    - set.
+    - ott.
     - nov.
-    - déc.
+    - dic.
     day_names:
-    - dimanche
-    - lundi
-    - mardi
-    - mercredi
-    - jeudi
-    - vendredi
-    - samedi
+    - domenica
+    - lunedì
+    - martedì
+    - mercoledì
+    - giovedì
+    - venerdì
+    - sabato
     formats:
       default: "%d/%m/%Y"
       short: "%e %b"
       long: "%e %B %Y"
     month_names:
-    -
-    - janvier
-    - février
-    - mars
-    - avril
-    - mai
-    - juin
-    - juillet
-    - août
-    - septembre
-    - octobre
+    - gennaio
+    - febbraio
+    - marzo
+    - aprile
+    - maggio
+    - giugno
+    - luglio
+    - agosto
+    - settembre
+    - ottobre
     - novembre
-    - décembre
+    - dicembre
     order:
     - :day
     - :month
@@ -722,9 +742,9 @@ it:
         one: il y a 1 seconde
         other: "il y a %{count} secondes"
     prompts:
-      day: Jour
-      hour: Heure
-      minute: Minute
-      month: Mois
-      second: Seconde
-      year: Année
+      day: Giorno
+      hour: Ora
+      minute: Minuto
+      month: Mese
+      second: Secondo
+      year: Anno

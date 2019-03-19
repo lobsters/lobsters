@@ -154,7 +154,7 @@ story.attribute = new_attribute_value
 story.save
 ```
 
-To delete a resource (please see [https://stackoverflow.com/a/22757533/](difference between delete and destroy)):
+To delete a resource (please see [difference between delete and destroy](https://stackoverflow.com/a/22757533/)):
 ```ruby
 story = Story.find_by(short_id: story_short_id)
 story.delete() # or story.destroy()

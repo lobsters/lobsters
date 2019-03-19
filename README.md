@@ -98,9 +98,9 @@ in a `config/initializers/production.rb` or similar file:
 ## Moderation
 
 On-site tasks are carried out directly on the website. Console tasks are carried out through the Ruby on Rails console in production.
-To start the Rails console: ```rails c```. To start the Rails console and rollback on exit: ```rails c --sandbox```
+To start the Rails console: `rails c`. To start the Rails console and rollback on exit: `rails c --sandbox`.
 
-Note: when moderating you should provide a moderation reason
+Note: when moderating you should provide a moderation reason.
 
 ### On-site tasks
 
@@ -143,19 +143,19 @@ Go to /hats/requests.
 ### Console tasks
 
 A typical command to add a resource is:
-```
+```ruby
 name_of_resource.create(attribute1: value1, attribute2: value2, ...)
 ```
 
 To edit a resource first assign it to a variable, edit it and then save:
-```
+```ruby
 story = Story.find_by(short_id: story_short_id)
 story.attribute = new_attribute_value
 story.save
 ```
 
-To delete a resource (please see [https://stackoverflow.com/a/22757533/](difference between delete and destroy):
-```
+To delete a resource (please see [https://stackoverflow.com/a/22757533/](difference between delete and destroy)):
+```ruby
 story = Story.find_by(short_id: story_short_id)
 story.delete() # or story.destroy()
 ```

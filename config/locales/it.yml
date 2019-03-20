@@ -1,4 +1,3 @@
-# Sample localization file for Italian. Add more files in this directory for other locales.
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 # Convenzioni adottate:
@@ -9,20 +8,12 @@
 #   - thread → discussione
 #   - author/submitter → contributore
 #   - guidelines → linee guida
+#   - timeout → tempo scaduto
 #
 # Dubbi:
-#   - timeout → tempo di attesa ?
-#
-#   - 490 → confermare corretta traduzione
-#   - 497-498 → confermare corretta traduzione
-#   - 511 → funzione sconosciuta, da confermare corretta traduzione
-#   - 527 → da confermare corretto funzionamento
-#   - 560 → tradurre `memo` come "promemoria" o "messaggio" (come hanno fatto i francesi?)
-#   - 581 → tradurre la licenza?
-
-# Da fare:
-#   - 591 → verificare le variabili e tradurre adeguatamente
-#   - 698-741 → tradurre dal francese
+#   - 582-583 → figure out what to do with the two fields "about" and "license"
+#   - 601-602 → reimplement the message in order to be able to use two different plural forms for "messaggi/o" e "eliminat/i"
+#   - 688-690 → confirm whether the translation is needed or not
 
 it:
   activerecord:
@@ -93,7 +84,7 @@ it:
       nonmedia: "Devi inserire un'etichetta diversa da PDF o video"
       alreadysubmitted: "è già stato inserito negli ultimi %{days} giorni"
     vote:
-      offtopicvote: "Off-topic"
+      offtopicvote: "Fuori tema"
       incorrectvote: "Non corretto"
       metoovote: "Anche io"
       trollvote: "Troll"
@@ -122,7 +113,7 @@ it:
       chatlink: "Chat"
       hatrequestlink: "Richiedi il cappello"
       hatslink: "Cappelli"
-      privacylink: "Privacy"
+      privacylink: "Informativa sulla Riservatezza"
       aboutlink: "Chi siamo"
       blog: "Blog"
       twitter: "Twitter"
@@ -417,17 +408,17 @@ it:
     twofa_enroll:
       title: "Autenticazione a due fattori"
       backtosettings: "Ritorna alle impostazioni"
-      enrollmenttimeout: "Timeout esaurito"
+      enrollmenttimeout: "Tempo scaduto"
       scanqrcode: "Scannerizza il QR code sotto o clicca il link per aprirlo nell'applicazione <a href=\"https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\" target=\"_blank\">TOTP</a> che preferisci :"
       registring: "Una volta completato il processo di autenticazione TOTP, passa alla schermata successiva per verificare e attivare l'autenticazione a due fattori sul tuo account."
       verifyenable: "Verifica e attiva"
     twofa_update:
-      enrollmenttimeout: "Timeout esaurito"
+      enrollmenttimeout: "Tempo scaduto"
       2fahasbeenenabled: "L'autenticazione a due fattori è stata attivata sul tuo account"
       totpinvalid: "Il tuo codice TOTP non è valido, verifica il codice assegnato attualmente alla tua applicazione TOTP"
     twofa_verify:
       title: "Autenticazione a due fattori"
-      enrollmenttimeout: "Timeout esaurito"
+      enrollmenttimeout: "Tempo scaduto"
       enablecode: "Per attivare l'autenticazione 2FA sul tuo account utilizzando il tuo nuovo codice TOTP, inserisci il codice a 6 cifre dalla tua tua applicazione TOTP di riferimento:"
       verifyenable: "Verifica e attiva"
     update:
@@ -496,8 +487,8 @@ it:
       justnow: "in questo istante"
       edit: "modifica"
       delete: "rimuovere"
-      confirmundelete: "Sei sicuro di voler rimettere questo articolo"
-      undelete: "rimettere"
+      confirmundelete: "Sei sicuro di voler ripristinare questo articolo"
+      undelete: "ripristinare"
       confirmdelete: "Sei sicuro di voler rimuovere questo articolo?"
       suggest: "suggerire"
       unflag: "rimuovere la segnalazione"
@@ -568,7 +559,7 @@ it:
 # data for users/invitationform which is a partial view
   invitationtext: "Gli inviti sono illimitati, ma le persone da te invitate saranno associate al tuo profilo nell'<a href=\"/u\">albero degli utenti</a> e tu sarai responsabile per la loro condotta qualora queste causassero problemi. Per favore esercita accortezza nell'invitare persone che non conosci personalmente."
   emailaddress: "Indirizzo e-mail:"
-  memouser: "Message à l'utilisateur :"
+  memouser: "Notifica all'utente :"
   sendinvitation: "Manda un invito"
   controllers:
     comments_controller:
@@ -583,7 +574,7 @@ it:
       recenttitle: "Articoli recenti"
       abouttitle: "A riguardo"
       chattitle: "Chat"
-      privacytitle: "Confidenzialità"
+      privacytitle: "Riservatezza"
       hiddenstoriestitle: "Articoli nascosti"
       rssforstoriestitle: "RSS 2.0"
       rssforcommentstitle: "Commenti - RSS 2.0"
@@ -700,47 +691,47 @@ it:
   datetime:
     distance_in_words:
       about_x_seconds:
-        one: il y a une seconde
-        other: il y a %{count} seconds
+        one: un secondo fa
+        other: "%{count} secondi fa"
       about_x_minutes:
-        one: il y a une minute
-        other: il y a %{count} minutes
+        one: un minuto fa
+        other: "%{count} minuti fa"
       about_x_hours:
-        one: il y a une heure
-        other: il y a %{count} heures
+        one: "un'ora fa"
+        other: "%{count} ore fa"
       about_x_months:
-        one: il y a un mois
-        other: il y a %{count} mois
+        one: un mese fa
+        other: "%{count} mesi fa"
       about_x_years:
-        one: il y a un an
-        other: il y a %{count} ans
+        one: un anno fa
+        other: "%{count} anni fa"
       almost_x_years:
-        one: presqu'un an
-        other: presque %{count} ans
-      half_a_minute: une demi-minute
+        one: quasi un anno
+        other: quasi %{count} anni
+      half_a_minute: mezzo minuto
       less_than_x_minutes:
-        zero: moins d'une minute
-        one: moins d'une minute
-        other: moins de %{count} minutes
+        zero: meno di un minuto
+        one: meno di un minuto
+        other: meno di %{count} minuti
       less_than_x_seconds:
-        zero: moins d'une seconde
-        one: moins d'une seconde
-        other: moins de %{count} secondes
+        zero: meno di un secondo
+        one: meno di un secondo
+        other: meno di %{count} secondi
       over_x_years:
-        one: plus d'un an
-        other: plus de %{count} ans
+        one: più di un anno
+        other: più di %{count} anni
       x_days:
-        one: il y a 1 jour
-        other: "il y a %{count} jours"
+        one: 1 giorno fa
+        other: "%{count} giorni fa"
       x_minutes:
-        one: il y a 1 minute
-        other: "il y a %{count} minutes"
+        one: 1 minuto fa
+        other: "%{count} minuti fa"
       x_months:
-        one: il y a 1 mois
-        other: "il y a %{count} mois"
+        one: 1 mese fa
+        other: "%{count} mesi fa"
       x_seconds:
-        one: il y a 1 seconde
-        other: "il y a %{count} secondes"
+        one: 1 secondo fa
+        other: "%{count} secondi fa"
     prompts:
       day: Giorno
       hour: Ora

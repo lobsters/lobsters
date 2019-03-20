@@ -66,6 +66,8 @@ class Moderation < ApplicationRecord
       return
     end
 
+    return if m.recipient_user_id == m.author_user_id
+
     m.body << "\n" <<
       "*This is an automated message.*"
 

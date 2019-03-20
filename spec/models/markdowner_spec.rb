@@ -49,4 +49,83 @@ describe Markdowner do
     expect(Markdowner.to_html("[ex](/u/abc)"))
       .to eq("<p><a href=\"/u/abc\">ex</a></p>\n")
   end
+
+  context "when images are not allowed" do
+    subject { Markdowner.to_html(description, allow_images: false) }
+    let(:fake_img_url) { 'https://lbst.rs/fake.jpg' }
+
+    context "when single inline image in description" do
+      let(:description) { "![#{alt_text}](#{fake_img_url} \"#{title_text}\")" }
+      let(:alt_text) { nil }
+      let(:title_text) { nil }
+
+      def target_html inner_text = nil
+        "<p><a href=\"#{fake_img_url}\" rel=\"nofollow\">#{inner_text}</a></p>\n"
+      end
+
+      context "with no alt text, title text" do
+        it "turns inline image into links with the url as the default text" do
+          expect(subject).to eq(target_html(fake_img_url))
+        end
+      end
+
+      context "with title text" do
+        let(:title_text) { 'title text' }
+        it "turns inline image into links with title text" do
+          expect(subject).to eq(target_html(title_text))
+        end
+      end
+
+      context "with alt text" do
+        let(:alt_text) { 'alt text' }
+        it "turns inline image into links with alt text" do
+          expect(subject).to eq(target_html(alt_text))
+        end
+      end
+
+      context "with title text" do
+        let(:title_text) { 'title text' }
+        it "turns inline image into links with title text" do
+          expect(subject).to eq(target_html(title_text))
+        end
+      end
+
+      context "with title text and alt text" do
+        let(:title_text) { 'title text' }
+        it "turns inline image into links, preferring title text" do
+          expect(subject).to eq(target_html(title_text))
+        end
+      end
+    end
+
+    context "with multiple inline images in description" do
+      let(:description) do
+        "![](#{fake_img_url})" \
+        "![](#{fake_img_url})" \
+        "![alt text](#{fake_img_url})" \
+        "![](#{fake_img_url} \"title text\")" \
+        "![alt text](#{fake_img_url} \"title text 2\")"
+      end
+
+      it 'turns all inline images into links' do
+        expect(subject).to eq(
+          "<p>" \
+          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">#{fake_img_url}</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">#{fake_img_url}</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">alt text</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">title text</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">title text 2</a>" \
+          "</p>\n"
+        )
+      end
+    end
+  end
+
+  context "when images are allowed" do
+    subject { Markdowner.to_html("![](https://lbst.rs/fake.jpg)", allow_images: true) }
+
+    it 'allows image tags' do
+      expect(subject).to include '<img'
+    end
+  end
 end

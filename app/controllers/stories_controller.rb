@@ -14,8 +14,8 @@ class StoriesController < ApplicationController
     @title = "Submit Story"
     @cur_url = "/stories/new"
 
-    @story = Story.new(story_params)
-    @story.user_id = @user.id
+    @story = Story.new(user: @user)
+    @story.attributes = story_params
 
     if @story.valid? && !(@story.already_posted_recently? && !@story.seen_previous)
       if @story.save

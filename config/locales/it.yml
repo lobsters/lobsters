@@ -1,4 +1,3 @@
-# Sample localization file for Italian. Add more files in this directory for other locales.
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 # Convenzioni adottate:
@@ -9,20 +8,12 @@
 #   - thread → discussione
 #   - author/submitter → contributore
 #   - guidelines → linee guida
+#   - timeout → tempo scaduto
 #
 # Dubbi:
-#   - timeout → tempo di attesa ?
-#
-#   - 490 → confermare corretta traduzione
-#   - 497-498 → confermare corretta traduzione
-#   - 511 → funzione sconosciuta, da confermare corretta traduzione
-#   - 527 → da confermare corretto funzionamento
-#   - 560 → tradurre `memo` come "promemoria" o "messaggio" (come hanno fatto i francesi?)
-#   - 581 → tradurre la licenza?
-
-# Da fare:
-#   - 591 → verificare le variabili e tradurre adeguatamente
-#   - 698-741 → tradurre dal francese
+#   - 582-583 → figure out what to do with the two fields "about" and "license"
+#   - 601-602 → reimplement the message in order to be able to use two different plural forms for "messaggi/o" e "eliminat/i"
+#   - 688-690 → confirm whether the translation is needed or not
 
 it:
   activerecord:
@@ -37,7 +28,7 @@ it:
           attributes:
             email:
               invalid: "L'e-mail non è valida"
-              taken: "L'e-mail è già stata utilizzata"
+              taken: "L'e-mail è già in uso"
             password:
               blank: "La password non può essere vuota"
             password_confirmation:
@@ -52,7 +43,7 @@ it:
       default: "%d-%m-%Y %H:%M:%S"
   mailers:
     email_message:
-      subject: "[%{appname}] Messaggio privato di %{author} : %{subject}"
+      subject: "[%{appname}] Messaggio privato di %{author}: %{subject}"
     email_reply:
       replysubject: "[%{appname}] Risposta di %{author} su %{story}"
       mentionsubject: "[%{appname}] %{author} ti ha menzionato su %{story}"
@@ -66,7 +57,7 @@ it:
       useridcannotbeblank: "Un ID utente non può essere vuoto."
       storyidcannotbeblank: "Un ID articolo non può essere vuoto."
       deletedcomment: "commento rimosso"
-      threadremovedby: "Commento rimosso dal moderatore %{modoname} : %{modreason}"
+      threadremovedby: "Commento rimosso dal moderatore %{modoname}: %{modreason}"
       turnedintodragon: "trasformato in drago"
       slayeddragon: "il drago è stato abbattuto"
       metooerror: "Vota per il commento originale."
@@ -79,21 +70,21 @@ it:
       storyeditedby: "Il tuo articolo è stato modificato da "
       usersuggestions: "suggerimenti di utenti"
       amoderator: "un moderatore"
-      storyeditedfor: "Il tuo articolo [%{title}](%{url}) è stato modificato con i seguenti cambiamenti :\n"
-      reasongiven: "Ragioni date :\n"
+      storyeditedfor: "Il tuo articolo [%{title}](%{url}) è stato modificato con i seguenti cambiamenti:\n"
+      reasongiven: "Ragioni date:\n"
       commentmoderated: "Il tuo commento è stato moderato"
-      commentmoderatedwhy: "Il tuo commento su [%{title}](%{url}) è stato moderato :\n"
+      commentmoderatedwhy: "Il tuo commento su [%{title}](%{url}) è stato moderato:\n"
       automatedmessage: "*Questo messaggio è stato inviato automaticamente.*"
     story:
       deletedstory: "articolo rimosso"
-      undeletedstory: "articolo non rimosso"
+      undeletedstory: "articolo ripristinato"
       mergedinto: "accorpato con %{shortid} (%{title})"
       unmerged: "scorporato da un'altra storia"
       changedfromto: "%{story} cambiato da %{stfrom} a %{stto}"
       nonmedia: "Devi inserire un'etichetta diversa da PDF o video"
       alreadysubmitted: "è già stato inserito negli ultimi %{days} giorni"
     vote:
-      offtopicvote: "Off-topic"
+      offtopicvote: "Fuori tema"
       incorrectvote: "Non corretto"
       metoovote: "Anche io"
       trollvote: "Troll"
@@ -122,13 +113,13 @@ it:
       chatlink: "Chat"
       hatrequestlink: "Richiedi il cappello"
       hatslink: "Cappelli"
-      privacylink: "Privacy"
+      privacylink: "Informativa sulla Riservatezza"
       aboutlink: "Chi siamo"
       blog: "Blog"
       twitter: "Twitter"
       diaspora: "Diaspora*"
       mastodon: "Mastodon"
-      currenttraffic: "(Utenti attivi : %{usernb})"
+      currenttraffic: "(Utenti attivi: %{usernb})"
   comments:
     commentbox:
       mustbelogged: "Devi essere connesso per lasciare un commento."
@@ -137,7 +128,7 @@ it:
       update: "Aggiorna"
       preview: "Anteprima"
       cancel: "Annulla"
-      putonhat: "Metti il cappello : "
+      putonhat: "Metti il cappello: "
     comment:
       previewed: "anteprima visualizzata"
       edited: "modificato"
@@ -174,7 +165,7 @@ it:
       hatplaceholder: "Membro del progetto XYZ"
       link: "Link:"
       linkplaceholder: "membro@progetto.org, o URL della pagina dell'azienda"
-      comment: "Commento :"
+      comment: "Commento:"
       commentplaceholder: "Sarà mostrato solo alla fine del processo di moderazione"
       requesthatbutton: "Richiedi un cappello"
     create_request:
@@ -193,7 +184,7 @@ it:
       nohatrequests: "Nessuna domanda di cappello."
       user: "Nome utente :"
       hat: "Cappello:"
-      link: "Link :"
+      link: "Link:"
       comment: "Commento :"
       approve: "Approva la richiesta del cappello"
       reason: "Ragione :"
@@ -203,19 +194,19 @@ it:
       approvedhatrequest: "La richiesta del cappello è stata approvata."
   home:
     index:
-      homerecentsdesc: "<em>Gli <a href=\"/newest\">ultimi</a> articoli con una frazione casuale di articoli che non hanno ancora raggiunto la pagina principale.</em>"
+      homerecentsdesc: "<em>Gli <a href=\"/newest\">ultimi</a> articoli, tra cui con una frazione casuale di quelli che non hanno ancora raggiunto la pagina principale.</em>"
   invitations:
     build:
       buildinvtitle: "Richiedi un invito"
       buildinvtext: "<p>Se non conosci o non sai come trovare un <a href=\"/u/\">utente iscritto</a> a cui richiedere l'invito, puoi richiedere un invito pubblicamente. Riceverai direttamente l'invito se ti sarà inviato.</p><p>Il tuo indirizzo e-mail deve essere valido e verificato visitando l'URL che ti sarà inviato prima che la tua domanda sia elaborata. Il tuo indirizzo e-mail non sarà visibile da nessuno ad eccezione dei moderatori. </p>"
-      buildinvname: "Nome :"
-      buildinvemail: "Indirizzo e-mail :"
+      buildinvname: "Nome:"
+      buildinvemail: "Indirizzo e-mail:"
       buildinvurl: "URL :"
       buildinvverificationurl: "URL verificabile (sito web personale, GitHub, etc.)"
       buildinvrequest: "Richiedi l'invito"
     index:
       requestedinvtitle: "Richieste di invito"
-      requestedinvsummary: "Queste persone hanno richiesto un invito ed hanno confermato il loro indirizzo e-mail. Se riconosci qualcuno, inviagli un invito e accetta la domanda. La spam sarà eliminata da un moderatore."
+      requestedinvsummary: "Queste persone hanno richiesto un invito ed hanno confermato il loro indirizzo e-mail. Se riconosci qualcuno, inviagli un invito e accetta la domanda. Lo spam sarà eliminata da un moderatore."
       requestedinvdate: "Data/Ora"
       requestedinvname: "Nome"
       requestedinvmemo: "Nota"
@@ -228,22 +219,22 @@ it:
     invitation:
       title: "Buongiorno %{email},"
       invitedto: "L'utente %{user} ti ha invitato a %{appname}"
-      createaccount: "Per accettare un invito e creare un account, clicca sul seguente link :"
+      createaccount: "Per accettare un invito e creare un account, clicca sul seguente link:"
   invitation_request_mailer:
     invitation_request:
-      title: "Buongiorno %{email},"
+    title: "Buongiorno %{email},"
       invitedto: "L'utente con l'IP %{userip} ha richiesto un invito a %{appname}."
-      name: "Nome : %{name}"
-      email: "E-mail : %{email} (non sarà visualizzata da altri utenti)"
+      name: "Nome: %{name}"
+      email: "E-mail: %{email} (non sarà visualizzata da altri utenti)"
       memo: "Informazioni : %{memo}"
-      warning: "Se sei tu, clicca l'URL sottostante per confermare la tua richiesta di iscrizione et l'invio ad altri utenti."
+      warning: "Se sei tu, clicca l'URL sottostante per confermare la tua richiesta di iscrizione e l'invio ad altri utenti."
       deletemessage: "Se non sei tu, puoi semplicemente ignorare questo messaggio."
   login:
     index:
       login: "Login"
-      email: "E-mail o nome utente :"
-      password: "Password :"
-      forgotdeleted: "Password dimenticata? "
+      email: "E-mail o nome utente:"
+      password: "Password:"
+      forgotdeleted: "Password dimenticata?"
       resetpassword: "Cambia password"
       notuseryet: "Non sei ancora iscritto? L'iscrizione è solo tramite invito per evitare lo spam e migliorare la tracciabilità. Se conosci <a href=\"/u/\">%{acurrentuser}</a> del sito, richiedigli un invito"
       acurrentuser: "un utente"
@@ -252,7 +243,7 @@ it:
     forgot_password:
       resetpassword: "Cambia password"
       resetinstructions: "Se hai dimenticato la password, inserisci il nome utente o l'indirizzo e-mail per ricevere le istruzioni per recuperarla."
-      email: "E-mail o nome utente :"
+      email: "E-mail o nome utente:"
       reset: "Cambia password"
     set_new_password:
       setnewpassword: "Inserisci la nuova password"
@@ -267,7 +258,7 @@ it:
       login2fa: "Identificativo per autenticazione a due fattori"
       logintotpcode: "Inserisci il codice TOTP della tua applicazione:"
       loginbutton: "Identificati"
-      totpcode: "Codice TOTP :"
+      totpcode: "Codice TOTP:"
     twofa_verify:
       totpcodenotmatch: "Codice TOTP non corretto. Riprova."
   filters:
@@ -294,9 +285,9 @@ it:
       donothavemessages: "Non hai messaggi privati da %{from}."
       sentlower: "invia"
       composemessage: "Scrivi un messaggio"
-      tomsglabel: "A :"
-      subject: "Oggetto :"
-      message: "Messaggio :"
+      tomsglabel: "A:"
+      subject: "Oggetto:"
+      message: "Messaggio:"
       sendmessage: "Invia il messaggio"
     show:
       backtosentmessages: "Ritorna ai Messaggi Inviati"
@@ -306,7 +297,7 @@ it:
       administrator: "(amministratore)"
       moderator: "(moderatore)"
       deletemessage: "Cancella il messaggio"
-      keepasnew: "Marca come non letto"
+      keepasnew: "Segna come non letto"
       composereply: "Scrivi una risposta"
       toupper: "A"
       sendmessage: "Invia il messaggio"
@@ -330,15 +321,15 @@ it:
     index:
       search: "Cerca"
       searchbutton: "Cerca"
-      include: "Include :"
-      orderby: "Ordinato per :"
+      include: "Include:"
+      orderby: "Ordinato per:"
       all: "Tutti"
       stories: "Articoli"
       comments: "Commenti"
       newest: "Più recenti"
       relevance: "Pertinenza"
       points: "Punti"
-      searchresults : "%{searchnumber} risultato%{plural} per \"%{query}\""
+      searchresults: "%{searchnumber} risultato%{plural} per \"%{query}\""
       searchplural: "/i"
   settings:
     delete_account:
@@ -349,23 +340,23 @@ it:
       confirmlogoutlink: "Sei sicuro di voler uscire?"
       viewprofile: "Profilo"
       accountsettings: "Impostazioni dell'account"
-      username: "Nome utente :"
-      password: "Nuova password :"
-      currentpassword: "Password attuale :"
-      confirmpassword: "Confierma password :"
-      emailaddress: "Indirizzo e-mail :"
+      username: "Nome utente:"
+      password: "Nuova password:"
+      currentpassword: "Password attuale:"
+      confirmpassword: "Conferma password:"
+      emailaddress: "Indirizzo e-mail:"
       gravatarized: "<a href=\"http://www.gravatar.com/\" target=\"_blank\">Gravatar</a>izzato"
       about: "Chi siamo:"
       markdownformattingavailable: "Formato Markdown possibile"
       saveaccountsettings: "Salva le impostazioni dell'account"
       notificationsettings: "Impostazioni delle Notifiche"
-      pushover: "<a href=\"https://pushover.net/\">Pushover</a> :"
+      pushover: "<a href=\"https://pushover.net/\">Pushover</a>:"
       managepushoversubscription: "Gestisci l'iscrizione a Pushover"
       subscribewithpushover: "Abbonati a Pushover"
       foroptionalcomment: "Per le notifiche opzionali sui commenti e i messaggi"
       commentreplynotificationsettings: "Impostazioni di notifica della risposta a un commento"
-      receiveemail: "Ricevi e-mail :"
-      receivepushover: "Ricevi notifica Pushover :"
+      receiveemail: "Ricevi e-mail:"
+      receivepushover: "Ricevi notifica Pushover:"
       requirepushover: "Richiedi un iscrizione Pushover"
       commentmentionnotificationsettings: "Impostazioni di notifica delle menzioni sui commenti"
       privatemessagenotificationsettings: "Impostazioni di notifica dei messaggi privati" 
@@ -373,24 +364,24 @@ it:
       showyourthreads: "Mostra i tuoi <a href=\"/threads\">threads</a>:"
       mailinglistsettings: "Impostazioni della mailing list"
       mailinglisttext: "Se attivato, riceverai tutti gli ultimi articoli pubblicati ed i commenti agli indirizzi e-mail indicati, eccetto le storie e i commenti filtrati a partire dai <a href=\"/filters\">filtri di etichetta</a>. Tutte le mail saranno inviate agli indirizzi e-mail della lista, e con le opzioni a seguire potrai filtrare quali e-mail ricevere. Le e-mail che invierai con questi indirizzi saranno postate con il tuo accoun sul sito web. Stai attento a chi accede al tuo account per evitare che qualcuno commenti al posto tuo."
-      receivelistemails: "Ricevi le e-mail della lista :"
+      receivelistemails: "Ricevi le e-mail della lista:"
       listemailoption1: "nessuna e-mail"
       listemailoption2: "Tutti gli articoli e i commenti"
       listemailoption3: "Solo gli articoli"
-      listaddress: "Indirizzi della lista :"
+      listaddress: "Indirizzi della lista:"
       miscsettings: "Parametri vari"
       storypreview: "Visualizza anteprima articolo: "
-      useravatars: "Visualizza l'avatar dell'utente :"
-      hidedragons: "Nascondi i draghi :"
+      useravatars: "Visualizza l'avatar dell'utente:"
+      hidedragons: "Nascondi i draghi:"
       saveallsettings: "Salva tutti i parametri"
       inviteuser: "Invita un nuovo utente"
       cannotsendinvitations: "Non puoi inviare inviti."
       deleteaccount: "Elimina l'account"
-      deleteaccounttext: "Per eliminare definitivamente l'account, inserisci la tua password qui sotto. Il tuo account sarà disattivato, i tuoi commenti sarànno marcati come disattivati e non saranno più visibili dagli altri utenti, i tuoi messaggi privati saranno ugualmente cancellati. Il tuo profilo non sarà cancellato. Il tuo nome utente non sarà utilizzabile da nessun altro."
-      verifypassword: "Inserisci la password :"
+      deleteaccounttext: "Per eliminare definitivamente l'account, inserisci la tua password qui sotto. Il tuo account sarà disattivato, i tuoi commenti sarànno segnati come disattivati e non saranno più visibili dagli altri utenti, i tuoi messaggi privati saranno cancellati. Il tuo profilo non sarà cancellato. Il tuo nome utente non sarà utilizzabile da nessun altro."
+      verifypassword: "Inserisci la password:"
       deleteaccountconfirmation: "Sì, cancella il mio account"
       securitysettings: "Impostazioni di sicurezza"
-      twofactorauth: "Autenticazione a due fattori :"
+      twofactorauth: "Autenticazione a due fattori:"
       disable2fa: "Disattiva"
       enroll2fa: "Attiva"
       disabled2fa: "Disattivata"
@@ -417,17 +408,17 @@ it:
     twofa_enroll:
       title: "Autenticazione a due fattori"
       backtosettings: "Ritorna alle impostazioni"
-      enrollmenttimeout: "Timeout esaurito"
+      enrollmenttimeout: "Tempo scaduto"
       scanqrcode: "Scannerizza il QR code sotto o clicca il link per aprirlo nell'applicazione <a href=\"https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\" target=\"_blank\">TOTP</a> che preferisci :"
       registring: "Una volta completato il processo di autenticazione TOTP, passa alla schermata successiva per verificare e attivare l'autenticazione a due fattori sul tuo account."
       verifyenable: "Verifica e attiva"
     twofa_update:
-      enrollmenttimeout: "Timeout esaurito"
+      enrollmenttimeout: "Tempo scaduto"
       2fahasbeenenabled: "L'autenticazione a due fattori è stata attivata sul tuo account"
       totpinvalid: "Il tuo codice TOTP non è valido, verifica il codice assegnato attualmente alla tua applicazione TOTP"
     twofa_verify:
       title: "Autenticazione a due fattori"
-      enrollmenttimeout: "Timeout esaurito"
+      enrollmenttimeout: "Tempo scaduto"
       enablecode: "Per attivare l'autenticazione 2FA sul tuo account utilizzando il tuo nuovo codice TOTP, inserisci il codice a 6 cifre dalla tua tua applicazione TOTP di riferimento:"
       verifyenable: "Verifica e attiva"
     update:
@@ -439,10 +430,10 @@ it:
     invited:
       createaccounttitle: "Creare un profilo"
       createaccountbody: "Per creare un nuovo profilo, inserisci il tuo indirizzo e-mail e una password. Il vostro indirizzo e-mail non sarà mai mostrato agli utenti e sarà utilizzato solo se avrai bisogno di azzerare la tua password, o per ricevere delle notifiche opzionali. Il tuo nome utente potrà essere cambiato successivamente."
-      invitedby: "Invitato da :"
+      invitedby: "Invitato da:"
       username: "Nome utente:"
-      email: "Indirizzo email :"
-      password: "Password :"
+      email: "Indirizzo email:"
+      password: "Password:"
       passwordagain: "Password (di conferma):"
       about: "Vuoi dirci qualcosa di te? Questo è opzionale, ma sarà visibile sul tuo profilo pubblicamente e potrà essere cambiato in qualunque momento."
       abouttitle: "A riguardo:"
@@ -458,7 +449,7 @@ it:
       edit: "Modifica l'articolo"
       merge: "Accorpa a:"
       shortid: "L'id breve dell'articolo cui si vuole accorpare"
-      unavailable: "Non disponibile :"
+      unavailable: "Non disponibile:"
       unavailableat: "URL sorgente non disponibile, abilita la visualizzazione del testo nella cache"
       modreason: "Motivazione della moderazione: "
       markdown: "Disponibile formattazione markdown"
@@ -470,12 +461,12 @@ it:
       previousdiscussion: "Per favore consulta <a href=\"%{storypath}\" target=\"_blank\"> la discussione precedente</a> per questo articolo."
       previousexpireddiscussion: "Per favore consulta prima <a href=\"%{storypath}\" \"target=_blank\">la discussione precedente</a> per questo articolo.  Se il contenuto è cambiato o giustifica una nuova discussione, puoi ripubblicarlo."
       fetchtitle: "Recuperare il titolo"
-      url: "URL :"
-      title: "Titolo :"
+      url: "URL:"
+      title: "Titolo:"
       changetitle: "Gli utenti hanno suggerito di modificare il titolo di questo articolo in:"
-      tags: "Etichette :"
+      tags: "Etichette:"
       changetags: "Gli utenti di hanno suggerito di modificare le etichette di questo articolo in:"
-      text: "Testo :"
+      text: "Testo:"
       placeholdertext: "Opzionale quando si pubblica un URL; per favore consulta le linee guida"
       storysubmissionguidelines: "Linee guida per la pubblicazione degli articoli"
       guidelinespart1: "Non modificare il titolo, se non quando il titolo originale dell'articolo manca di contestualizzazione o è confusionario. <strong>Per favore rimuovi dal titolo componenti estranei come il nome del sito o della sezione.</strong>"
@@ -484,7 +475,7 @@ it:
       guidelinespart4: "Se nessuna etichetta sembra essere adeguata per l'articolo che stai pubblicando, è probabile che non corrisponda agli <a href=\"/about\" \"target=_blank\">argomenti trattati</a>. Non strafare con le etichette che non sono temi principali dell'articolo."
       guidelinespart5: "Per poter pubblicare facilmente una pagina che stai visualizzando nel tuo browser su gambe.ro, trascina questo bookmarklet sulla tua barra dei segnalibri:[<a href=\"javascript:{window.open(%22%{rooturl}stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title));%20void(0);}\">Pubblicare su %{appname}</a>]. Sarete reindirizzati a questa pagina con l'URL e il titolo della pagina visualizzata."
       submitter: "Il contributore è"
-      author: "Contributore :"
+      author: "Contributore:"
       iamauthor: "Io sono"
       authorownership: " il contributore di questo articolo a questo URL (o questo testo)"
     listdetail:
@@ -496,8 +487,8 @@ it:
       justnow: "in questo istante"
       edit: "modifica"
       delete: "rimuovere"
-      confirmundelete: "Sei sicuro di voler rimettere questo articolo"
-      undelete: "rimettere"
+      confirmundelete: "Sei sicuro di voler ripristinare questo articolo?"
+      undelete: "ripristinare"
       confirmdelete: "Sei sicuro di voler rimuovere questo articolo?"
       suggest: "suggerire"
       unflag: "rimuovere la segnalazione"
@@ -532,31 +523,31 @@ it:
       withinvites: "con inviti"
       storysubmissions: "con articoli pubblicati"
       disabled: "disattivato"
-      joined: "Iscritto :"
+      joined: "Iscritto:"
       byinvitationfrom: "per <a href=\"/u/%{user}\">invito</a> da`"
-      banneduser: "Bannato: :"
+      banneduser: "Bannato:"
       bannedby: "da"
-      hats: "Cappello :"
-      left: "Parti :"
+      hats: "Cappello:"
+      left: "Parti:"
       karma: "Karma :"
       karmaaverage: ", in media "
       karmaperstorycomment: "per articolo/commento"
-      storiessubmitted: "Articoli pubblicati :"
-      postedcomments: "Commenti pubblicati :"
+      storiessubmitted: "Articoli pubblicati:"
+      postedcomments: "Commenti pubblicati:"
       mostcommonlytagged: "più comunemente etichettato"
-      about: "A riguardo :"
-      aboutdefault: "Un mistero ..."
+      about: "A riguardo:"
+      aboutdefault: "Un mistero..."
       administrativeinfo: "Informazioni amministrative"
-      email: "E-mail :"
-      recentvotes: "Voti recenti :"
+      email: "E-mail:"
+      recentvotes: "Voti recenti:"
       commentlinktext: "comment"
       administrativeactions: "Azioni amministrative"
       unbanuser: "Sbanna utente"
       banningdescription: "Bannare o disabilitare gli inviti per un utente invierà una e/mail all'utente con la ragione indicata sotto, e il tuo indirizzo sarà presente nell'e-mail affinché l'utente possa replicare."
-      banningreason: "Ragione :"
+      banningreason: "Ragione:"
       banuserbutton: "Banna utente"
       enableinvitesforuser: "Abilita gli inviti per l'utente"
-      disableinvitesreason: "Ragione :"
+      disableinvitesreason: "Ragione:"
       disableinvitesbutton: "Disattiva gli inviti"
     tree:
       newestusers: "Utenti più recenti"
@@ -568,7 +559,7 @@ it:
 # data for users/invitationform which is a partial view
   invitationtext: "Gli inviti sono illimitati, ma le persone da te invitate saranno associate al tuo profilo nell'<a href=\"/u\">albero degli utenti</a> e tu sarai responsabile per la loro condotta qualora queste causassero problemi. Per favore esercita accortezza nell'invitare persone che non conosci personalmente."
   emailaddress: "Indirizzo e-mail:"
-  memouser: "Message à l'utilisateur :"
+  memouser: "Notifica all'utente:"
   sendinvitation: "Manda un invito"
   controllers:
     comments_controller:
@@ -583,7 +574,7 @@ it:
       recenttitle: "Articoli recenti"
       abouttitle: "A riguardo"
       chattitle: "Chat"
-      privacytitle: "Confidenzialità"
+      privacytitle: "Riservatezza"
       hiddenstoriestitle: "Articoli nascosti"
       rssforstoriestitle: "RSS 2.0"
       rssforcommentstitle: "Commenti - RSS 2.0"
@@ -593,7 +584,7 @@ it:
     invitations_controller:
       flashpublicinvitnotallowed: "Richieste di inviti pubbliche non sono permesse."
       flashsuccessinvitrequest: "La tua richiesta d'invito è stata validata e sarà ora visibile agli altri utenti connessi."
-      flashaccountnotinvit: "Il tuo profilo non è autorizzatto a condividere inviti"
+      flashaccountnotinvit: "Il tuo profilo non è autorizzato a condividere inviti"
       flashsuccessinvit: "L'email d'invito è stata inviata con successo a %{guest}."
       flasherrorssinvit: "Non è stato possibile inviare l'invito, si verifichi la validità dell'indirizzo e-mail."
       flashrequestconfirmation: "Ti è stata inviata una conferma a %{email}."
@@ -700,47 +691,47 @@ it:
   datetime:
     distance_in_words:
       about_x_seconds:
-        one: il y a une seconde
-        other: il y a %{count} seconds
+        one: un secondo fa
+        other: "%{count} secondi fa"
       about_x_minutes:
-        one: il y a une minute
-        other: il y a %{count} minutes
+        one: un minuto fa
+        other: "%{count} minuti fa"
       about_x_hours:
-        one: il y a une heure
-        other: il y a %{count} heures
+        one: "un'ora fa"
+        other: "%{count} ore fa"
       about_x_months:
-        one: il y a un mois
-        other: il y a %{count} mois
+        one: un mese fa
+        other: "%{count} mesi fa"
       about_x_years:
-        one: il y a un an
-        other: il y a %{count} ans
+        one: un anno fa
+        other: "%{count} anni fa"
       almost_x_years:
-        one: presqu'un an
-        other: presque %{count} ans
-      half_a_minute: une demi-minute
+        one: quasi un anno
+        other: quasi %{count} anni
+      half_a_minute: mezzo minuto
       less_than_x_minutes:
-        zero: moins d'une minute
-        one: moins d'une minute
-        other: moins de %{count} minutes
+        zero: meno di un minuto
+        one: meno di un minuto
+        other: meno di %{count} minuti
       less_than_x_seconds:
-        zero: moins d'une seconde
-        one: moins d'une seconde
-        other: moins de %{count} secondes
+        zero: meno di un secondo
+        one: meno di un secondo
+        other: meno di %{count} secondi
       over_x_years:
-        one: plus d'un an
-        other: plus de %{count} ans
+        one: più di un anno
+        other: più di %{count} anni
       x_days:
-        one: il y a 1 jour
-        other: "il y a %{count} jours"
+        one: 1 giorno fa
+        other: "%{count} giorni fa"
       x_minutes:
-        one: il y a 1 minute
-        other: "il y a %{count} minutes"
+        one: 1 minuto fa
+        other: "%{count} minuti fa"
       x_months:
-        one: il y a 1 mois
-        other: "il y a %{count} mois"
+        one: 1 mese fa
+        other: "%{count} mesi fa"
       x_seconds:
-        one: il y a 1 seconde
-        other: "il y a %{count} secondes"
+        one: 1 secondo fa
+        other: "%{count} secondi fa"
     prompts:
       day: Giorno
       hour: Ora

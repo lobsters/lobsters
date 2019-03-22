@@ -922,7 +922,7 @@ class Story < ApplicationRecord
         s.timeout = 3
         @fetched_content = s.fetch(self.url, :get, nil, nil, {
           "User-agent" => "#{Rails.application.domain} for #{self.fetching_ip}",
-        }, 3).body.encode!(invalid: :replace, undef: :replace, replace: '')
+        }, 3).body.force_encoding('utf-8')
       rescue
         return @fetched_attributes
       end

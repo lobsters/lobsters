@@ -1,6 +1,6 @@
 # Gambe.ro
 
-[gambe.ro](https://www.gambe.ro) is an italian lobste.rs clone. We aim to build a strong community of italian programmers where constructive discussions can take place.
+[gambe.ro](https://www.gambe.ro) is a community of italian programmers built using lobste.rs software.
 
 This code is forked from [journalduhacker.net](https://www.journalduhacker.net) (code [available here](https://gitlab.com/journalduhacker/journalduhacker)). Journalduhacker, in turn, is a fork of [lobste.rs](https://www.lobste.rs) (code [available here](https://github.com/lobsters/lobsters)).
 
@@ -15,7 +15,7 @@ file.
 
 ## Setup
 
-Make sure you have Docker daemon running. Then:
+* Install [Docker](https://docs.docker.com/get-started/).
 
 * Clone the repository:
   ```bash
@@ -62,20 +62,18 @@ Make sure you have Docker daemon running. Then:
 
 * In production, set up crontab or another scheduler to run regular jobs:
   ```bash
-  */20 * * * * cd /path/to/journalduhacker && env RAILS_ENV=production bundle exec rake ts:index > /dev/null
+  */20 * * * * cd /path/to/gambero && env RAILS_ENV=production bundle exec rake ts:index > /dev/null
   ```
 ## Moderation
 
 On-site tasks are carried out directly on the website. Console tasks are carried out through the Ruby on Rails console in production.
 To start the Rails console: `rails c`. To start the Rails console and rollback on exit: `rails c --sandbox`.
 
-Note: when moderating you should provide a moderation reason.
-
 ### On-site tasks
 
 #### Edit/Delete a story
 
-Click the 'edit' button under the story title. You can:
+By clicking the 'edit' button under the story title you can:
 * Delete the story
 * Edit the URL
 * Edit the title
@@ -120,7 +118,7 @@ To edit a resource first assign it to a variable, edit it and then save:
 ```ruby
 story = Story.find_by(short_id: story_short_id)
 story.attribute = new_attribute_value
-story.save
+story.save()
 ```
 
 To delete a resource (please see [difference between delete and destroy](https://stackoverflow.com/a/22757533/)):

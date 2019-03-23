@@ -24,6 +24,7 @@
 
   <%= form_with model: @conversation, class: "new_conversation" do |form| %>
     <h2 class="legend">Create Conversation</h2>
+    <%= error_messages_for @conversation %>
     <%= label :user, :username, "To:", class: "required" %>
     <%= text_field :user, :username, value: "" %>
     <%= form.label :subject, "Subject:", class: "required" %>

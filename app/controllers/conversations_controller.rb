@@ -2,7 +2,7 @@ class ConversationsController < ApplicationController
   before_action :require_logged_in_user
 
   def index
-    @conversations = Conversation.includes(:recipient, :author).involving(@user)
+    @conversations = find_user_conversations(@user)
     @conversation = Conversation.new
   end
 
@@ -17,43 +17,35 @@ class ConversationsController < ApplicationController
   end
 
   def create
-    @conversation = Conversation.new(
-      conversation_params.
-        merge(conversation_user_params).
-        merge(author: @user)
+    @conversation = ConversationCreator.create(
+      author: @user,
+      recipient_username: conversation_recipient,
+      subject: conversation_subject,
+      message_body: message_body,
     )
-    if @conversation.save
-      @conversation.messages.create(
-        message_params.merge(
-          subject: @conversation.subject,
-          author: @conversation.author,
-          recipient: @conversation.recipient
-        )
-      )
+    if @conversation.persisted?
       redirect_to conversations_path
+    else
+      @conversations = find_user_conversations(@user)
+      render :index
     end
   end
 
   private
 
-  def conversation_params
-    params.require(:conversation).permit(:subject)
+  def find_user_conversations(user)
+    @conversations = Conversation.includes(:recipient, :author).involving(user)
   end
 
-  def message_params
-    params.require(:message).permit(:body)
+  def conversation_subject
+    params[:conversation][:subject]
   end
 
-  def conversation_user_params
-    user_params = params.require(:user).permit(:username)
-    if user = User.find_by(username: user_params[:username])
-      { recipient: user }
-    else
-      @conversation.errors.add(
-        :recipient,
-        "Can't find user: #{user_params[:username]}"
-      )
-      {}
-    end
+  def message_body
+    params[:message][:body]
+  end
+
+  def conversation_recipient
+    params[:user][:username]
   end
 end

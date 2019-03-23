@@ -1,28 +1,63 @@
 require "rails_helper"
 
 RSpec.feature "Checking messages" do
-  scenario "see that there are unread messages and read them" do
-    user = create(:user)
-    stub_login_as user
-    other_user = create(:user, username: "seafood")
-    conversation = create(:conversation, author: other_user, recipient: user)
-    message = create(
-      :message,
-      body: "testing one two three",
-      conversation: conversation,
-      author: other_user,
-      recipient: user
-    )
+  context "see that there are unread messages and read them" do
+    scenario "as the conversation author" do
+      author = create(:user)
+      stub_login_as author
+      recipient = create(:user, username: "seafood")
+      conversation = create(:conversation, author: author, recipient: recipient)
+      create(
+        :message,
+        conversation: conversation,
+        author: author,
+        recipient: recipient,
+      )
+      create(
+        :message,
+        :unread,
+        conversation: conversation,
+        body: "testing one two three",
+        author: recipient,
+        recipient: author,
+      )
 
-    visit root_path
-    click_on "1 Message"
 
-    expect(current_path).to eq(conversations_path)
-    expect(page).to have_css(".conversation.unread", text: "seafood")
+      visit root_path
+      click_on "1 Message"
 
-    click_on "seafood"
+      expect(current_path).to eq(conversations_path)
+      expect(page).to have_css(".conversation.unread", text: "seafood")
 
-    expect(page).to have_css(".message_text", text: "testing one two three")
+      click_on "seafood"
+
+      expect(page).to have_css(".message_text", text: "testing one two three")
+    end
+
+    scenario "as the conversation recipient" do
+      author = create(:user, username: "seafood")
+      recipient = create(:user)
+      stub_login_as recipient
+      conversation = create(:conversation, author: author, recipient: recipient)
+      message = create(
+        :message,
+        :unread,
+        body: "testing one two three",
+        conversation: conversation,
+        author: author,
+        recipient: recipient
+      )
+
+      visit root_path
+      click_on "1 Message"
+
+      expect(current_path).to eq(conversations_path)
+      expect(page).to have_css(".conversation.unread", text: "seafood")
+
+      click_on "seafood"
+
+      expect(page).to have_css(".message_text", text: "testing one two three")
+    end
   end
 
   scenario "start a new conversation" do

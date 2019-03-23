@@ -118,34 +118,72 @@ RSpec.feature "Checking messages" do
     expect(page).to have_css(".headerlinks", text: "Messages")
   end
 
-  scenario "add a message to a conversation" do
-    user = create(:user)
-    stub_login_as user
-    other_user = create(:user, username: "seafood")
-    conversation = create(
-      :conversation,
-      author: user,
-      recipient: other_user,
-      subject: "hi",
-    )
-    create(
-      :message,
-      :unread,
-      author: other_user,
-      recipient: user,
-      body: "Nice to meet you",
-      conversation: conversation,
-    )
-    message_text = "Do you like lobster bisque?"
+  context "add a message to a conversation" do
+    scenario "as the author" do
+      author = create(:user)
+      stub_login_as author
+      recipient = create(:user, username: "seafood")
+      conversation = create(
+        :conversation,
+        author: author,
+        recipient: recipient,
+        subject: "hi",
+      )
+      create(
+        :message,
+        :unread,
+        author: recipient,
+        recipient: author,
+        body: "Nice to meet you",
+        conversation: conversation,
+      )
+      message_text = "Do you like lobster bisque?"
 
-    visit root_path
-    click_on "1 Message"
-    click_on other_user.username
-    within(".new_message") do
-      fill_in("Message", with: message_text)
-      click_on "Send Message"
+      visit root_path
+      click_on "1 Message"
+      click_on recipient.username
+      within(".new_message") do
+        fill_in("Message", with: message_text)
+        click_on "Send Message"
+      end
+
+      within(".messages") do
+        expect(page).to have_css(".author", text: author.username)
+        expect(page).to have_css(".message_text", text: message_text)
+      end
     end
 
-    expect(page).to have_css(".message_text", text: message_text)
+    scenario "as the recipient" do
+      author = create(:user)
+      recipient = create(:user)
+      stub_login_as recipient
+      message_text = "Nice to meet you"
+      conversation = create(
+        :conversation,
+        author: author,
+        recipient: recipient,
+        subject: "hi",
+      )
+      message = create(
+        :message,
+        :unread,
+        author: author,
+        recipient: recipient,
+        conversation: conversation,
+      )
+
+      visit root_path
+      click_on "1 Message"
+      click_on author.username
+      within(".new_message") do
+        fill_in("Message", with: message_text)
+        click_on "Send Message"
+      end
+
+      within(".messages") do
+        expect(page).to have_css(".author", text: recipient.username)
+        expect(page).to have_css(".message_text", text: message_text)
+      end
+    end
   end
 end

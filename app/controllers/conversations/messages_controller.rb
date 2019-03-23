@@ -2,8 +2,8 @@ class Conversations::MessagesController < ApplicationController
   def create
     @message = conversation.messages.new(
       message_params.merge(
-        author: conversation.author,
-        recipient: conversation.recipient,
+        author: @user,
+        recipient: conversation.partner(of: @user),
         subject: conversation.subject,
       ),
     )

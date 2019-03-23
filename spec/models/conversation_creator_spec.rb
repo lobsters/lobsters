@@ -17,9 +17,8 @@ RSpec.describe ConversationCreator do
       expect(Conversation.count).to eq(1)
     end
 
-    it "creates an associated message" do
-      expect(Message.count).to eq(0)
-
+    it "uses the MessageCreator to create an associated message" do
+      allow(MessageCreator).to receive(:create)
       creator = ConversationCreator.new
 
       conversation = creator.create(
@@ -28,10 +27,8 @@ RSpec.describe ConversationCreator do
         subject: "this is a subject",
         message_body: "this is the body",
       )
-      message = conversation.messages.first
 
-      expect(Message.count).to eq(1)
-      expect(message.body).to eq("this is the body")
+      expect(MessageCreator).to have_received(:create)
     end
   end
 end

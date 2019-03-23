@@ -16,11 +16,10 @@ class ConversationCreator
     ).tap do |conversation|
       ensure_recipient(conversation: conversation, username: recipient_username)
       if conversation.persisted?
-        conversation.messages.create(
-          subject: conversation.subject,
-          author: conversation.author,
-          recipient: conversation.recipient,
-          body: message_body,
+        MessageCreator.create(
+          conversation: conversation,
+          author: author,
+          body: message_body
         )
       end
     end

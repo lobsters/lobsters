@@ -1,14 +1,12 @@
 class Conversations::MessagesController < ApplicationController
   def create
-    @message = conversation.messages.new(
-      message_params.merge(
-        author: @user,
-        recipient: conversation.partner(of: @user),
-        subject: conversation.subject,
-      ),
+    @message = MessageCreator.create(
+      conversation: conversation,
+      author: @user,
+      body: params[:message][:body],
     )
 
-    if @message.save
+    if @message.persisted?
       redirect_to conversation
     end
   end

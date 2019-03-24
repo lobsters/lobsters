@@ -31,7 +31,7 @@ class ConversationCreator
     @_recipient ||= User.find_by(username: username)
   end
 
-  def ensure_recipient(conversation: conversation, username: username)
+  def ensure_recipient(conversation:, username:)
     if conversation.recipient.nil?
       conversation.errors.add(:user, "Can't find user: #{username}")
     end

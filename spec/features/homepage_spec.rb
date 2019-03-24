@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.feature "Reading Homepage", type: feature do
-  let!(:story) { create(:story) }
+  let!(:story) { create(:story, title: "10 tips for lobstering") }
 
   feature "when logged out" do
     scenario "reading a story" do
       visit "/"
-      expect(page).to have_content(story.title)
+      expect(page).to have_content("10 tips for lobstering")
     end
   end
 
@@ -16,7 +16,7 @@ RSpec.feature "Reading Homepage", type: feature do
 
     scenario "reading a story" do
       visit "/"
-      expect(page).to have_content(story.title)
+      expect(page).to have_content("10 tips for lobstering")
     end
   end
 end

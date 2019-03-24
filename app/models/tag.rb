@@ -59,8 +59,8 @@ class Tag < ApplicationRecord
 
   def log_modifications
     Moderation.create do |m|
-      if self.new_record?
-        m.action = 'Created new tag ' + self.changes.map {|f, c| "with #{f} '#{c[1]}'" }.join(', ')
+      if self.id_previously_changed?
+        m.action = 'Created new tag ' + self.attributes.map {|f, c| "with #{f} '#{c}'" }.join(', ')
       else
         m.action = "Updating tag #{self.tag}, " + self.saved_changes
           .map {|f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" } .join(', ')

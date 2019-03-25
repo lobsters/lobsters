@@ -27,4 +27,7 @@ if ! check_env_vars "MYSQL_ROOT_PASSWORD" "MYSQL_USER" "MYSQL_PASSWORD" "MYSQL_D
 	exit 4
 fi
 cat $DB_TEMPLATE_PATH | envsubst > $DB_PATH
-docker-compose up
+echo "Rebuilding Docker container if necessary..."
+./docker-build.sh
+echo "Launching docker-compose..."
+docker-compose up "$@" # Passes any additional flags

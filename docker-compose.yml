@@ -4,6 +4,8 @@ services:
     image: gambero:latest
     depends_on:
       - db
+    environment:
+      - RAILS_ENV # One of "development", "test", "production"
     volumes:
       - .:/gambero
     networks:

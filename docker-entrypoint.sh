@@ -26,4 +26,4 @@ fi
 
 # Rails leaves the PID file behind when the container is shut down
 rm -v tmp/pids/server.pid
-rails server --environment development --binding 0.0.0.0
+rails server --environment $RAILS_ENV --binding 0.0.0.0

@@ -1,0 +1,22 @@
+# Do not set database, username, password manually: they are rewritten automatically by docker-run.sh
+development:
+  adapter: mysql2
+  encoding: utf8mb4
+  reconnect: false
+  database: ${MYSQL_DATABASE}
+  table_name_prefix: dev_
+  host: db
+  port: 3306
+  username: ${MYSQL_USER}
+  password: ${MYSQL_PASSWORD}
+
+test:
+  adapter: mysql2
+  encoding: utf8mb4
+  reconnect: false
+  database: ${MYSQL_DATABASE}
+  table_name_prefix: test_
+  host: db
+  port: 3306
+  username: ${MYSQL_USER}
+  password: ${MYSQL_PASSWORD}

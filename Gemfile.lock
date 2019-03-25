@@ -75,16 +75,18 @@ GEM
       mini_mime (>= 0.1.1)
     middleware (0.1.0)
     mini_mime (1.0.0)
-    mini_portile (0.5.3)
+    mini_portile2 (2.1.0)
     minitest (5.11.3)
     mysql2 (0.4.10)
-    nokogiri (1.6.1)
-      mini_portile (~> 0.5.0)
+    nokogiri (1.6.8)
+      mini_portile2 (~> 2.1.0)
+      pkg-config (~> 1.1.7)
     oauth (0.5.4)
     piwik_analytics (1.0.2)
       actionpack
       activesupport
       rails (>= 3.0.0)
+    pkg-config (1.1.9)
     rack (1.6.10)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -177,7 +179,7 @@ DEPENDENCIES
   machinist
   mail
   mysql2 (>= 0.4.10)
-  nokogiri (= 1.6.1)
+  nokogiri (= 1.6.8)
   oauth
   piwik_analytics (~> 1.0.1)
   rails (= 4.2.8)
@@ -190,4 +192,4 @@ DEPENDENCIES
   unicorn
 
 BUNDLED WITH
-   1.13.6
+   1.17.3

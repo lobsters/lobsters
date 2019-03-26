@@ -31,7 +31,12 @@ file.
 
 * If needed, create a new database configuration at `/config/database.yml`. Follow the template `/config/database.template.yml`.
 
-* Define the following environment variables: `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_ROOT_PASSWORD` and `MYSQL_DATABASE`. 
+* Define the following environment variables:
+  * `RAILS_ENV`: specifies in which environment Ruby on Rails will run. It must be set to one of the following values: `development`, `test`, `production`.
+  * `MYSQL_USER`: specifies user name of MariaDB.
+  * `MYSQL_PASSWORD`: specifies password of MariaDB.
+  * `MYSQL_ROOT_PASSWORD`: specifies root password of MariaDB.
+  * `MYSQL_DATABASE`: specifies database name of MariaDB.
 
 * Run `docker-run.sh`:
   ```bash

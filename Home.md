@@ -17,7 +17,7 @@ Other sites using the Lobsters codebase:
 * [Kind and Green News](http://news.kindandgreenworld.com/) - Biology
 * [Gh Tech Roundup](https://www.ghtechroundup.com/) - Technology
 * [G33kz](https://g33kz.de/) - Technology (de)
-* [Tildeverse news](https://tilde.news/) ([repo](https://git.tildeverse.org/tildeverse/links)) - Computer Science
+* [Tildeverse news](https://tilde.news/) ([repo](https://tildegit.org/tildeverse/tilde.news)) - Computer Science
 * [Paperkast](https://paperkast.com) - Science, Futurology, and Technology
 * [Standard](https://std.bz/) - Cryptocurrency
 * [Bitmia](https://bitmia.com/) - Finance

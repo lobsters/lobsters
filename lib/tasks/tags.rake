@@ -1,11 +1,11 @@
 namespace :tags do
     desc 'Loads new tasks from approved_tags.yaml'
-    task load_from_yaml: :environment do
+    task load_from_yaml, [:filename]: => :environment do |task, args|
         require 'yaml'
-        # Default filepath of the tags file
-        TAGS_FILEPATH = 'approved_tags.yaml'
+        # Gets file path from args or falls back to default
+        tags_filepath = args[:filename] || 'approved_tags.yaml'
         # Loads file as string
-        file_string = File.read(File.join Rails.root, TAGS_FILEPATH)
+        file_string = File.read(File.join Rails.root, tags_filepath)
         # Parses YAML from string
         tags = YAML.load(file_string)
         # Maps every tag and eventually adds it to the DB

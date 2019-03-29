@@ -6,7 +6,7 @@
 #   - merge/unmerge → accorpare/scorporare
 #   - ban → bannare
 #   - thread → discussione
-#   - author/submitter → contributore
+#   - author/submitter → autore
 #   - guidelines → linee guida
 #   - timeout → tempo scaduto
 #
@@ -113,7 +113,7 @@ it:
       chatlink: "Chat"
       hatrequestlink: "Richiedi il cappello"
       hatslink: "Cappelli"
-      privacylink: "Informativa sulla Riservatezza"
+      privacylink: "Informativa sulla riservatezza"
       aboutlink: "Chi siamo"
       blog: "Blog"
       twitter: "Twitter"
@@ -188,13 +188,13 @@ it:
       comment: "Commento :"
       approve: "Approva la richiesta del cappello"
       reason: "Ragione :"
-      reject: "Rifiutare la richiesta del cappello"
+      reject: "Rifiuta la richiesta del cappello"
       hator: "oppure"
     approve_request:
       approvedhatrequest: "La richiesta del cappello è stata approvata."
   home:
     index:
-      homerecentsdesc: "<em>Gli <a href=\"/newest\">ultimi</a> articoli, tra cui con una frazione casuale di quelli che non hanno ancora raggiunto la pagina principale.</em>"
+      homerecentsdesc: "<em>Gli <a href=\"/newest\">ultimi</a> articoli, tra cui alcuni non ancora giunti sulla pagina principale.</em>"
   invitations:
     build:
       buildinvtitle: "Richiedi un invito"
@@ -223,11 +223,11 @@ it:
   invitation_request_mailer:
     invitation_request:
     title: "Buongiorno %{email},"
-      invitedto: "L'utente con l'IP %{userip} ha richiesto un invito a %{appname}."
-      name: "Nome: %{name}"
-      email: "E-mail: %{email} (non sarà visualizzata da altri utenti)"
-      memo: "Informazioni : %{memo}"
-      warning: "Se sei tu, clicca l'URL sottostante per confermare la tua richiesta di iscrizione e l'invio ad altri utenti."
+    invitedto: "L'utente con l'IP %{userip} ha richiesto un invito a %{appname}."
+    name: "Nome: %{name}"
+    email: "E-mail: %{email} (non sarà visualizzata da altri utenti)"
+    memo: "Informazioni : %{memo}"
+    warning: "Se sei tu, clicca l'URL sottostante per confermare la tua richiesta di iscrizione e l'invio ad altri utenti."
       deletemessage: "Se non sei tu, puoi semplicemente ignorare questo messaggio."
   login:
     index:
@@ -236,7 +236,7 @@ it:
       password: "Password:"
       forgotdeleted: "Password dimenticata?"
       resetpassword: "Cambia password"
-      notuseryet: "Non sei ancora iscritto? L'iscrizione è solo tramite invito per evitare lo spam e migliorare la tracciabilità. Se conosci <a href=\"/u/\">%{acurrentuser}</a> del sito, richiedigli un invito"
+      notuseryet: "Non sei ancora iscritto? L'iscrizione è solo tramite invito per evitare lo spam e facilitare la moderazione. Se conosci <a href=\"/u/\">%{acurrentuser}</a> del sito, richiedigli un invito"
       acurrentuser: "un utente"
       request: "richiedi un invito pubblicamente"
       requestinchat: "in <a href=\"/chat\">chat</a>."
@@ -375,7 +375,7 @@ it:
       hidedragons: "Nascondi i draghi:"
       saveallsettings: "Salva tutti i parametri"
       inviteuser: "Invita un nuovo utente"
-      cannotsendinvitations: "Non puoi inviare inviti."
+      cannotsendinvitations: "Non puoi spedire inviti."
       deleteaccount: "Elimina l'account"
       deleteaccounttext: "Per eliminare definitivamente l'account, inserisci la tua password qui sotto. Il tuo account sarà disattivato, i tuoi commenti sarànno segnati come disattivati e non saranno più visibili dagli altri utenti, i tuoi messaggi privati saranno cancellati. Il tuo profilo non sarà cancellato. Il tuo nome utente non sarà utilizzabile da nessun altro."
       verifypassword: "Inserisci la password:"
@@ -426,22 +426,22 @@ it:
       passwordnotcorrect: "La password non è stata inserita correttamente."
   signup:
     index:
-      createaccounttitle: "Creare un profilo"
+      createaccounttitle: "Crea un profilo"
     invited:
-      createaccounttitle: "Creare un profilo"
+      createaccounttitle: "Crea un profilo"
       createaccountbody: "Per creare un nuovo profilo, inserisci il tuo indirizzo e-mail e una password. Il vostro indirizzo e-mail non sarà mai mostrato agli utenti e sarà utilizzato solo se avrai bisogno di azzerare la tua password, o per ricevere delle notifiche opzionali. Il tuo nome utente potrà essere cambiato successivamente."
       invitedby: "Invitato da:"
       username: "Nome utente:"
       email: "Indirizzo email:"
       password: "Password:"
       passwordagain: "Password (di conferma):"
-      about: "Vuoi dirci qualcosa di te? Questo è opzionale, ma sarà visibile sul tuo profilo pubblicamente e potrà essere cambiato in qualunque momento."
-      abouttitle: "A riguardo:"
+      about: "Vuoi dirci qualcosa di te? Questo campo è opzionale e sarà visibile sul tuo profilo pubblicamente, con la possibilità di modificarlo in qualunque momento."
+      abouttitle: "Su di me:"
       markdownavailable: "Formattazione Markdown disponibile"
       signup: "Iscriversi"
     invite:
       passinvitation: "Condividi un invito a tua volta"
-      passinvitationbody: "Questa comunità potrà crescere solo se i suoi membri inviteranno nuovi utenti, come è stato fatto con te. Pensaci un attimo e invita qualcuno di tua conoscenza"
+      passinvitationbody: "Questa comunità potrà crescere solo se i suoi membri inviteranno nuovi utenti, come è stato fatto con te. Se credi di conoscere qualcuno che potrebbe contribuire in modo costruttivo, non esitare a condividere la piattaforma con questo/a"
       passinvitationor: "o"
       passinvitationskip: "In seguito"
   stories:
@@ -451,10 +451,10 @@ it:
       shortid: "L'id breve dell'articolo cui si vuole accorpare"
       unavailable: "Non disponibile:"
       unavailableat: "URL sorgente non disponibile, abilita la visualizzazione del testo nella cache"
-      modreason: "Motivazione della moderazione: "
+      modreason: "Motivazione dell'azione del moderatore: "
       markdown: "Disponibile formattazione markdown"
       save: "Salva"
-      cancel: "Annullare le modifiche"
+      cancel: "Annulla le modifiche"
     form:
       alreadysubmitted: "Errore: questo articolo è già stato pubblicato "
       alreadysubmittedflash: "Nota: Questo articolo è gia stato pubblicato %{timeago}, ma può essere ripubblicato"
@@ -474,27 +474,27 @@ it:
       guidelinespart3: "Quando pubblichi un URL, la casella di testo è opzionale e va utilizzata solo per fornire contesto o spiegazioni qualora l'URL si riveli insufficiente. Le proprie interpretazioni o opinioni si riservino per un commento, in modo che questo possa essere valutato separatamente dall'articolo. "
       guidelinespart4: "Se nessuna etichetta sembra essere adeguata per l'articolo che stai pubblicando, è probabile che non corrisponda agli <a href=\"/about\" \"target=_blank\">argomenti trattati</a>. Non strafare con le etichette che non sono temi principali dell'articolo."
       guidelinespart5: "Per poter pubblicare facilmente una pagina che stai visualizzando nel tuo browser su gambe.ro, trascina questo bookmarklet sulla tua barra dei segnalibri:[<a href=\"javascript:{window.open(%22%{rooturl}stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title));%20void(0);}\">Pubblicare su %{appname}</a>]. Sarete reindirizzati a questa pagina con l'URL e il titolo della pagina visualizzata."
-      submitter: "Il contributore è"
+      submitter: "Il autore è"
       author: "Contributore:"
       iamauthor: "Io sono"
-      authorownership: " il contributore di questo articolo a questo URL (o questo testo)"
+      authorownership: " il autore di questo articolo a questo URL (o questo testo)"
     listdetail:
       storyremovedby: "[Articolo rimosso da %{user}]"
       moderator: "il moderatore"
-      originalsubmitter: "il contributore originale"
+      originalsubmitter: "il autore originale"
       authoredby: "pubblicato da"
       via: "preso da"
       justnow: "in questo istante"
       edit: "modifica"
-      delete: "rimuovere"
+      delete: "rimuovi"
       confirmundelete: "Sei sicuro di voler ripristinare questo articolo?"
-      undelete: "ripristinare"
+      undelete: "ripristina"
       confirmdelete: "Sei sicuro di voler rimuovere questo articolo?"
-      suggest: "suggerire"
-      unflag: "rimuovere la segnalazione"
+      suggest: "suggerisci"
+      unflag: "disfare la segnalazione"
       flag: "segnala"
-      hide: "nascondere"
-      unhide: "mostrare"
+      hide: "nascondi"
+      unhide: "mostra"
       cached: "nella cache"
       nocomment: "senza commenti"
       commentsingular: "commento"
@@ -503,7 +503,7 @@ it:
     new:
       markdown: "Disponibile la formattazione in Markdown"
       preview: "Anteprima"
-      submit: "Pubblicare un articolo"
+      submit: "Pubblica un articolo"
       submitbutton: "Pubblica"
     show:
       toggledragons: "&mdash; ecco qui i draghi &mdash;"
@@ -534,7 +534,7 @@ it:
       karmaperstorycomment: "per articolo/commento"
       storiessubmitted: "Articoli pubblicati:"
       postedcomments: "Commenti pubblicati:"
-      mostcommonlytagged: "più comunemente etichettato"
+      mostcommonlytagged: "solitamente etichettato"
       about: "A riguardo:"
       aboutdefault: "Un mistero..."
       administrativeinfo: "Informazioni amministrative"
@@ -574,7 +574,7 @@ it:
       recenttitle: "Articoli recenti"
       abouttitle: "A riguardo"
       chattitle: "Chat"
-      privacytitle: "Riservatezza"
+      privacytitle: "Informativa sulla riservatezza"
       hiddenstoriestitle: "Articoli nascosti"
       rssforstoriestitle: "RSS 2.0"
       rssforcommentstitle: "Commenti - RSS 2.0"
@@ -586,12 +586,12 @@ it:
       flashsuccessinvitrequest: "La tua richiesta d'invito è stata validata e sarà ora visibile agli altri utenti connessi."
       flashaccountnotinvit: "Il tuo profilo non è autorizzato a condividere inviti"
       flashsuccessinvit: "L'email d'invito è stata inviata con successo a %{guest}."
-      flasherrorssinvit: "Non è stato possibile inviare l'invito, si verifichi la validità dell'indirizzo e-mail."
-      flashrequestconfirmation: "Ti è stata inviata una conferma a %{email}."
-      flashinvalidinvitation: "Invito invalido o scaduto"
+      flasherrorssinvit: "Non è stato possibile spedire l'invito, si verifichi la validità dell'indirizzo e-mail."
+      flashrequestconfirmation: "Ti è stata inviata una richiesta conferma a %{email}."
+      flashinvalidinvitation: "Invito non valido o scaduto"
       flashsuccessdeleteinvit: "La richiesta d'invito di %{name} è stata rimossa con successo"
     login_controller:
-      flashlogininvalid: "Indirizzo email e/o password invalido/i."
+      flashlogininvalid: "Indirizzo email e/o password non valido/i."
       totpinvalid: "Il tuo codice TOTP non è valido."
       deletedaccount: "Il tuo account è stato rimosso."
       bannedaccount: "Il tuo account è stato bannato."
@@ -621,13 +621,13 @@ it:
     signup_controller:
       signuptitle: "Condividi un invito a tua volta"
       signedup: "Siete già iscritti."
-      invalidinv: "Invito invalido o scaduto."
+      invalidinv: "Invito non valido o scaduto."
       flashsuccesssignupcontroller: "Benvenuto!"
   # suggest.stories scope, unable to get it so global, I don't know why
-  suggeststorychanges: "Suggerire delle modifiche all'articolo"
-  suggestchangesbutton: "Suggerire delle modifiche"
+  suggeststorychanges: "Suggerisci delle modifiche all'articolo"
+  suggestchangesbutton: "Suggerisci delle modifiche"
   suggestor: "o"
-  suggestcancel: "Annullare"
+  suggestcancel: "Annulla"
   # reply at in views/email_message/notification.text.erb
   replyat: "Rispondi a "
   # reply at in views/email_reply/reply.text.erb

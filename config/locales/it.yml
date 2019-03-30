@@ -441,7 +441,7 @@ it:
       signup: "Iscriversi"
     invite:
       passinvitation: "Condividi un invito a tua volta"
-      passinvitationbody: "Questa comunità potrà crescere solo se i suoi membri inviteranno nuovi utenti, come è stato fatto con te. Se credi di conoscere qualcuno che potrebbe contribuire in modo costruttivo, non esitare a condividere la piattaforma con questo/a"
+      passinvitationbody: "Questa comunità potrà crescere solo se i suoi membri inviteranno nuovi utenti, come è stato fatto con te. Se credi di conoscere qualcuno che potrebbe contribuire in modo costruttivo, non esitare a condividere la piattaforma con questa persona."
       passinvitationor: "o"
       passinvitationskip: "In seguito"
   stories:
@@ -474,14 +474,14 @@ it:
       guidelinespart3: "Quando pubblichi un URL, la casella di testo è opzionale e va utilizzata solo per fornire contesto o spiegazioni qualora l'URL si riveli insufficiente. Le proprie interpretazioni o opinioni si riservino per un commento, in modo che questo possa essere valutato separatamente dall'articolo. "
       guidelinespart4: "Se nessuna etichetta sembra essere adeguata per l'articolo che stai pubblicando, è probabile che non corrisponda agli <a href=\"/about\" \"target=_blank\">argomenti trattati</a>. Non strafare con le etichette che non sono temi principali dell'articolo."
       guidelinespart5: "Per poter pubblicare facilmente una pagina che stai visualizzando nel tuo browser su gambe.ro, trascina questo bookmarklet sulla tua barra dei segnalibri:[<a href=\"javascript:{window.open(%22%{rooturl}stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title));%20void(0);}\">Pubblicare su %{appname}</a>]. Sarete reindirizzati a questa pagina con l'URL e il titolo della pagina visualizzata."
-      submitter: "Il autore è"
+      submitter: "L'autore è"
       author: "Contributore:"
       iamauthor: "Io sono"
-      authorownership: " il autore di questo articolo a questo URL (o questo testo)"
+      authorownership: " l'autore di questo articolo a questo URL (o questo testo)"
     listdetail:
       storyremovedby: "[Articolo rimosso da %{user}]"
       moderator: "il moderatore"
-      originalsubmitter: "il autore originale"
+      originalsubmitter: "l'autore originale"
       authoredby: "pubblicato da"
       via: "preso da"
       justnow: "in questo istante"
@@ -587,7 +587,7 @@ it:
       flashaccountnotinvit: "Il tuo profilo non è autorizzato a condividere inviti"
       flashsuccessinvit: "L'email d'invito è stata inviata con successo a %{guest}."
       flasherrorssinvit: "Non è stato possibile spedire l'invito, si verifichi la validità dell'indirizzo e-mail."
-      flashrequestconfirmation: "Ti è stata inviata una richiesta conferma a %{email}."
+      flashrequestconfirmation: "Ti è stata inviata una richiesta di conferma a %{email}."
       flashinvalidinvitation: "Invito non valido o scaduto"
       flashsuccessdeleteinvit: "La richiesta d'invito di %{name} è stata rimossa con successo"
     login_controller:

@@ -45,8 +45,8 @@ ActiveRecord::Schema.define(version: 2019_05_29_133507) do
     t.datetime "updated_at", null: false
     t.string "short_id", null: false
     t.string "subject", null: false
-    t.bigint "author_user_id"
-    t.bigint "recipient_user_id"
+    t.bigint "author_user_id", null: false
+    t.bigint "recipient_user_id", null: false
     t.index ["author_user_id"], name: "index_conversations_on_author_user_id"
     t.index ["recipient_user_id"], name: "index_conversations_on_recipient_user_id"
   end
@@ -122,7 +122,7 @@ ActiveRecord::Schema.define(version: 2019_05_29_133507) do
     t.boolean "deleted_by_author", default: false
     t.boolean "deleted_by_recipient", default: false
     t.bigint "hat_id", unsigned: true
-    t.bigint "conversation_id"
+    t.bigint "conversation_id", null: false
     t.index ["conversation_id"], name: "index_messages_on_conversation_id"
     t.index ["hat_id"], name: "index_messages_on_hat_id"
     t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"

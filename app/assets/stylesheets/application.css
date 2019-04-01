@@ -1054,17 +1054,6 @@ table.data tr.bold td {
 	font-weight: bold;
 }
 
-table.thread td {
-	padding: 0px 0px 0px 3px;
-	margin-bottom: 0px;
-	line-height: 17px;
-	/* text-vertical-align: middle; */
-	overflow: hidden;
-}
-table.thread td img {
-	vertical-align: middle;
-}
-
 table.data.zebra tr:nth-child(even) td {
 	background-color: #f8f8f8;
 	border-bottom: 1px solid #eaeaea;

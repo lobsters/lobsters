@@ -14,7 +14,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 <div class="story_liner h-entry">
   <div class="voters">
     <% if @user %>
-      <a class="upvoter"></a>
+      <a class="upvoter" title="Add upvote"></a>
     <% else %>
       <%= link_to "", login_path, :class => "upvoter" %>
     <% end %>

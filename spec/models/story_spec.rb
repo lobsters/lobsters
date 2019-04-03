@@ -123,20 +123,37 @@ describe Story do
     expect(s.is_editable_by_user?(u)).to be false
   end
 
-  it "can fetch its title properly" do
-    s = build(:story)
-    s.fetched_content = File.read(Rails.root + "spec/fixtures/story_pages/1.html")
-    expect(s.fetched_attributes[:title]).to eq("B2G demo & quick hack // by Paul Rouget")
+  context 'fetching titles' do
+    let(:story_directory) { Rails.root.join 'spec/fixtures/story_pages/' }
 
-    s = build(:story)
-    s.fetched_content = File.read(Rails.root + "spec/fixtures/story_pages/2.html")
-    expect(s.fetched_attributes[:title]).to eq("Google")
-  end
+    it "can fetch its title properly" do
+      s = build(:story)
+      s.fetched_content = File.read(story_directory + "1.html")
+      expect(s.fetched_attributes[:title]).to eq("B2G demo & quick hack // by Paul Rouget")
 
-  it "does not fetch title with a port specified" do
-    expect(Sponge).to_not receive(:new)
-    story = Story.new url: 'https://example.com:123/'
-    expect(story.fetched_attributes[:title]).to eq('')
+      s = build(:story)
+      s.fetched_content = File.read(story_directory + "2.html")
+      expect(s.fetched_attributes[:title]).to eq("Google")
+    end
+
+    it "does not fetch title with a port specified" do
+      expect(Sponge).to_not receive(:new)
+      story = Story.new url: 'https://example.com:123/'
+      expect(story.fetched_attributes[:title]).to eq('')
+    end
+
+    context "with unicode" do
+      before do
+        content = "<!DOCTYPE html><html><title>你好世界！ Here’s a fancy apostrophe</title></html>"
+                  .force_encoding('ASCII-8BIT') # This is the encoding returned by Sponge#fetch
+        allow_any_instance_of(Sponge).to receive(:fetch).and_return double(body: content)
+      end
+
+      it "can fetch unicode titles properly" do
+        s = build(:story)
+        expect(s.fetched_attributes[:title]).to eq("你好世界！ Here’s a fancy apostrophe")
+      end
+    end
   end
 
   it "sets the url properly" do

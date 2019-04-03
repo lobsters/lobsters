@@ -3,6 +3,7 @@ WORKDIR /gambero
 RUN apk add --update \
   bash \
   build-base \
+  curl \
   libxml2-dev \
   libxslt-dev \
   postgresql-dev \
@@ -11,9 +12,11 @@ RUN apk add --update \
   nodejs \
   tzdata \
   && rm -rf /var/cache/apk/*
+# Drop root as soon as possible
+RUN addgroup -S gambero && adduser -S gambero -G gambero
+USER gambero
 CMD /gambero/docker-entrypoint.sh
-
-# COPY commands come last, so that the rebuild takes as few steps as possible
+HEALTHCHECK --timeout=5s CMD curl -f http://localhost:3000
 
 # The gemfile is rarely updated, so this COPY will allow to cache the expensive `bundle install`
 COPY ./Gemfile ./Gemfile.lock /gambero/

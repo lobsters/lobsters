@@ -26,9 +26,9 @@ class MessageConverter
 
   def run
     config = ActiveRecord::Base.configurations[Rails.env].symbolize_keys
-    mysql = Mysql2::Client.new(config)
+    mysql = ActiveRecord::Base.connection
     begin
-      messages = mysql.query(messages_with_partner_combo_sql)
+      messages = mysql.exec_query(messages_with_partner_combo_sql)
       grouped_messages = group_messages(messages)
       conversation_values = grouped_messages.map do |group|
         messages = group.last
@@ -41,20 +41,20 @@ class MessageConverter
       grouped_messages.map do |group|
         message_ids = group.last.map { |message| message["id"] }.join(", ")
         short_id = conversation_data(group.last)[2]
-        conversation_ids = mysql.query <<~SQL
+        conversation_ids = mysql.exec_query <<~SQL
           SELECT id FROM conversations
           WHERE short_id = #{short_id}
         SQL
         conversation_id = conversation_ids.first["id"]
-        mysql.query <<~SQL
+        mysql.exec_query <<~SQL
           UPDATE messages
           SET conversation_id = #{conversation_id}
           WHERE id IN (#{message_ids})
         SQL
       end
     rescue => e
-      mysql.query("DELETE FROM conversations")
-      mysql.query("UPDATE messages SET conversation_id = NULL")
+      mysql.exec_query("DELETE FROM conversations")
+      mysql.exec_query("UPDATE messages SET conversation_id = NULL")
       puts e
       puts caller
     end
@@ -90,7 +90,7 @@ class MessageConverter
   end
 
   def create_conversations(values, mysql)
-    mysql.query <<~SQL
+    mysql.exec_query <<~SQL
       INSERT INTO conversations
       (created_at, updated_at, short_id, subject, author_user_id, recipient_user_id)
       VALUES #{values}

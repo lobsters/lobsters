@@ -50,6 +50,10 @@ class << Rails.application
     true
   end
 
+  def allow_invitation_sendings?
+    true
+  end
+
   def domain
     "example.com"
   end

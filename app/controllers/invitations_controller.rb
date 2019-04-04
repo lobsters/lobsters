@@ -29,7 +29,7 @@ class InvitationsController < ApplicationController
   end
 
   def create
-    if !@user.can_invite?
+    if !@user.can_invite? || !Rails.application.allow_invitation_sendings?
       flash[:error] = I18n.t 'controllers.invitations_controller.flashaccountnotinvit'
       redirect_to "/settings"
       return

@@ -273,7 +273,7 @@
     <%= t('.inviteuser') %>
   </div>
 
-  <% if @user.can_invite? %>
+  <% if @user.can_invite? && Rails.application.allow_invitation_sendings? %>
     <%= render :partial => "users/invitationform" %>
   <% else %>
       <%= t('.cannotsendinvitations') %>

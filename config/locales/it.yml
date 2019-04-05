@@ -1,7 +1,6 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 # Convenzioni adottate:
-#   - tag → etichetta
 #   - story → articolo
 #   - merge/unmerge → accorpare/scorporare
 #   - ban → bannare
@@ -81,7 +80,7 @@ it:
       mergedinto: "accorpato con %{shortid} (%{title})"
       unmerged: "scorporato da un'altra storia"
       changedfromto: "%{story} cambiato da %{stfrom} a %{stto}"
-      nonmedia: "Devi inserire un'etichetta diversa da PDF o video"
+      nonmedia: "Devi inserire un tag diverso da PDF o video"
       alreadysubmitted: "è già stato inserito negli ultimi %{days} giorni"
     vote:
       offtopicvote: "Fuori tema"
@@ -113,7 +112,7 @@ it:
       chatlink: "Chat"
       hatrequestlink: "Richiedi il cappello"
       hatslink: "Cappelli"
-      privacylink: "Informativa sulla riservatezza"
+      privacylink: "Informativa sulla privacy"
       aboutlink: "Chi siamo"
       blog: "Blog"
       twitter: "Twitter"
@@ -264,8 +263,8 @@ it:
   filters:
     index:
       filteredtags: "Etichette filtrate"
-      filteredtagsdesc: "Per nascondere le informazioni dalla home page che sono contrassegnate da una certa <a href=\"/tags\">etichetta</a>, selezionale qui sotto."
-      filteredtagsnotloggedindesc: "Poiché non sei connesso, i tuoi filtri saranno salvati in un cookie di lunga durata. Per registrare definitivamente i filtri delle etichette e che funzionano indipendentemente dal browser web, <a href=\"/login\">accedi</a> al tuo account."
+      filteredtagsdesc: "Per nascondere le informazioni dalla home page che sono contrassegnate da un certo <a href=\"/tags\">tag</a>, selezionale qui sotto."
+      filteredtagsnotloggedindesc: "Poiché non sei connesso, i tuoi filtri saranno salvati in un cookie di lunga durata. Per registrare definitivamente i filtri dei tag e perché funzionino indipendentemente dal browser web, <a href=\"/login\">accedi</a> al tuo account."
       filteredhide: "Nascondi"
       filteredtag: "Etichetta"
       filtereddesc: "Descrizione"
@@ -363,7 +362,7 @@ it:
       submittedstorycommentsettings: "Imposazioni di notifica dei commenti ad un tuo articolo"
       showyourthreads: "Mostra i tuoi <a href=\"/threads\">threads</a>:"
       mailinglistsettings: "Impostazioni della mailing list"
-      mailinglisttext: "Se attivato, riceverai tutti gli ultimi articoli pubblicati ed i commenti agli indirizzi e-mail indicati, eccetto le storie e i commenti filtrati a partire dai <a href=\"/filters\">filtri di etichetta</a>. Tutte le mail saranno inviate agli indirizzi e-mail della lista, e con le opzioni a seguire potrai filtrare quali e-mail ricevere. Le e-mail che invierai con questi indirizzi saranno postate con il tuo accoun sul sito web. Stai attento a chi accede al tuo account per evitare che qualcuno commenti al posto tuo."
+      mailinglisttext: "Se attivato, riceverai tutti gli ultimi articoli pubblicati ed i commenti agli indirizzi e-mail indicati, eccetto le storie e i commenti filtrati a partire dai <a href=\"/filters\">filtri di tag</a>. Tutte le mail saranno inviate agli indirizzi e-mail della lista, e con le opzioni a seguire potrai filtrare quali e-mail ricevere. Le e-mail che invierai con questi indirizzi saranno postate con il tuo accoun sul sito web. Stai attento a chi accede al tuo account per evitare che qualcuno commenti al posto tuo."
       receivelistemails: "Ricevi le e-mail della lista:"
       listemailoption1: "nessuna e-mail"
       listemailoption2: "Tutti gli articoli e i commenti"
@@ -465,14 +464,14 @@ it:
       title: "Titolo:"
       changetitle: "Gli utenti hanno suggerito di modificare il titolo di questo articolo in:"
       tags: "Etichette:"
-      changetags: "Gli utenti di hanno suggerito di modificare le etichette di questo articolo in:"
+      changetags: "Gli utenti di hanno suggerito di modificare i tag di questo articolo in:"
       text: "Testo:"
       placeholdertext: "Opzionale quando si pubblica un URL; per favore consulta le linee guida"
       storysubmissionguidelines: "Linee guida per la pubblicazione degli articoli"
       guidelinespart1: "Non modificare il titolo, se non quando il titolo originale dell'articolo manca di contestualizzazione o è confusionario. <strong>Per favore rimuovi dal titolo componenti estranei come il nome del sito o della sezione.</strong>"
       guidelinespart2: "Quando l'articolo pubblicato è datato a più di un anno fa, per favore riporta l'anno di pubblicazione dell'articolo tra parentesi."
       guidelinespart3: "Quando pubblichi un URL, la casella di testo è opzionale e va utilizzata solo per fornire contesto o spiegazioni qualora l'URL si riveli insufficiente. Le proprie interpretazioni o opinioni si riservino per un commento, in modo che questo possa essere valutato separatamente dall'articolo. "
-      guidelinespart4: "Se nessuna etichetta sembra essere adeguata per l'articolo che stai pubblicando, è probabile che non corrisponda agli <a href=\"/about\" \"target=_blank\">argomenti trattati</a>. Non strafare con le etichette che non sono temi principali dell'articolo."
+      guidelinespart4: "Se nessun tag sembra essere adeguata per l'articolo che stai pubblicando, è probabile che non corrisponda agli <a href=\"/about\" \"target=_blank\">argomenti trattati</a>. Non strafare con i tag che non sono temi principali dell'articolo."
       guidelinespart5: "Per poter pubblicare facilmente una pagina che stai visualizzando nel tuo browser su gambe.ro, trascina questo bookmarklet sulla tua barra dei segnalibri:[<a href=\"javascript:{window.open(%22%{rooturl}stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title));%20void(0);}\">Pubblicare su %{appname}</a>]. Sarete reindirizzati a questa pagina con l'URL e il titolo della pagina visualizzata."
       submitter: "L'autore è"
       author: "Contributore:"
@@ -534,7 +533,7 @@ it:
       karmaperstorycomment: "per articolo/commento"
       storiessubmitted: "Articoli pubblicati:"
       postedcomments: "Commenti pubblicati:"
-      mostcommonlytagged: "solitamente etichettato"
+      mostcommonlytagged: "solitamente taggato"
       about: "A riguardo:"
       aboutdefault: "Un mistero..."
       administrativeinfo: "Informazioni amministrative"
@@ -574,7 +573,7 @@ it:
       recenttitle: "Articoli recenti"
       abouttitle: "A riguardo"
       chattitle: "Chat"
-      privacytitle: "Informativa sulla riservatezza"
+      privacytitle: "Informativa sulla privacy"
       hiddenstoriestitle: "Articoli nascosti"
       rssforstoriestitle: "RSS 2.0"
       rssforcommentstitle: "Commenti - RSS 2.0"

@@ -490,7 +490,7 @@ it:
       undelete: "ripristina"
       confirmdelete: "Sei sicuro di voler rimuovere questo articolo?"
       suggest: "suggerisci"
-      unflag: "disfare la segnalazione"
+      unflag: "ritrai la segnalazione"
       flag: "segnala"
       hide: "nascondi"
       unhide: "mostra"

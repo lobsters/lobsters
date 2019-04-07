@@ -80,7 +80,7 @@ RSpec.feature "Checking messages" do
     expect(current_path).to eq(conversations_path)
     expect(page).to have_css(".conversation .subject", text: "Ahoy!")
     expect(page).to have_css(
-      ".conversation .partner",
+      ".conversation .from",
       text: other_user.username
     )
   end

@@ -1314,7 +1314,7 @@ div.fieldWithErrors {
 	background-color: #f0f0f0;
 }
 
-.conversations .partner {
+.conversations .from {
 	flex: 0 0 15%;
 	padding-left: 1em;
 }
@@ -1324,7 +1324,7 @@ div.fieldWithErrors {
 	flex: 0 0 20%;
 }
 
-.conversation .partner,
+.conversation .from,
 .conversation .subject {
 	text-decoration: underline;
 }

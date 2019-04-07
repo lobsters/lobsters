@@ -2,7 +2,7 @@
   <h2 class="legend">Conversations</h2>
   <section class="data zebra conversations">
     <header>
-      <span class="partner">Partner</span>
+      <span class="from">From</span>
       <span class="received">Received</span>
       <span class="subject">Subject</span>
     </header>
@@ -13,7 +13,7 @@
         class: "conversation #{conversation_status_classes(conversation)}"
       ) do
       %>
-        <span class="partner">
+        <span class="from">
           <%= conversation.partner(of: @user).username %>
         </span>
         <span class="received"><%= time_ago_in_words_label(conversation.last_message.created_at) %></span>

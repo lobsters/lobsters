@@ -1317,6 +1317,12 @@ div.fieldWithErrors {
 .conversations .from {
 	flex: 0 0 15%;
 	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.conversations .message_count {
+	color: #333;
+	flex: 0 0 5%;
 }
 
 .conversations .last_message {

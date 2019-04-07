@@ -4,6 +4,7 @@
     <header>
       <span class="from">From</span>
       <span class="last_message">Last Message</span>
+      <span class="message_count">#</span>
       <span class="subject">Subject</span>
     </header>
     <% @conversations.each do |conversation| %>
@@ -17,6 +18,7 @@
           <%= conversation.partner(of: @user).username %>
         </span>
         <span class="last_message"><%= time_ago_in_words_label(conversation.last_message.created_at) %></span>
+        <span class="message_count"><%= conversation.messages.count %></span>
         <span class="subject"><%= conversation.subject %></span>
       <% end %>
     <% end %>

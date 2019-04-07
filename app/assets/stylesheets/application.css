@@ -1319,7 +1319,7 @@ div.fieldWithErrors {
 	padding-left: 1em;
 }
 
-.conversations .received {
+.conversations .last_message {
 	color: #333;
 	flex: 0 0 20%;
 }

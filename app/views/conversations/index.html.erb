@@ -3,7 +3,7 @@
   <section class="data zebra conversations">
     <header>
       <span class="from">From</span>
-      <span class="received">Received</span>
+      <span class="last_message">Last Message</span>
       <span class="subject">Subject</span>
     </header>
     <% @conversations.each do |conversation| %>
@@ -16,7 +16,7 @@
         <span class="from">
           <%= conversation.partner(of: @user).username %>
         </span>
-        <span class="received"><%= time_ago_in_words_label(conversation.last_message.created_at) %></span>
+        <span class="last_message"><%= time_ago_in_words_label(conversation.last_message.created_at) %></span>
         <span class="subject"><%= conversation.subject %></span>
       <% end %>
     <% end %>

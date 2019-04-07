@@ -2,7 +2,7 @@ class ConversationsController < ApplicationController
   before_action :require_logged_in_user
 
   def index
-    @conversations = find_user_conversations(@user)
+    @conversations = find_user_conversations(@user).order(updated_at: :desc)
     @conversation = Conversation.new
   end
 

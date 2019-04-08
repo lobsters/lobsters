@@ -27,8 +27,8 @@ class ApplicationController < ActionController::Base
       @user = user
     end
     Rails.logger.info(
-      "  Request #{request.remote_ip} #{request.request_method} #{request.fullpath}" +
-      (@user ? " user: #{@user.id} #{@user.username}" : "")
+      "  Request #{request.remote_ip} #{request.request_method} #{request.fullpath} user: " +
+      (@user ? "#{@user.id} #{@user.username}" : "0 nobody")
     )
 
     true

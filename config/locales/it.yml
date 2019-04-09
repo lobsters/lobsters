@@ -228,7 +228,7 @@ it:
       email: "E-mail: %{email} (non sarà visualizzata da altri utenti)"
       memo: "Informazioni : %{memo}"
       warning: "Se sei tu, clicca l'URL sottostante per confermare la tua richiesta di iscrizione e l'invio ad altri utenti."
-    deletemessage: "Se non sei tu, puoi semplicemente ignorare questo messaggio."
+      deletemessage: "Se non sei tu, puoi semplicemente ignorare questo messaggio."
   login:
     index:
       login: "Login"
@@ -409,7 +409,7 @@ it:
       title: "Autenticazione a due fattori"
       backtosettings: "Ritorna alle impostazioni"
       enrollmenttimeout: "Tempo scaduto"
-      scanqrcode: "Scannerizza il QR code sotto o clicca il link per aprirlo nell'applicazione <a href=\"https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\" target=\"_blank\">TOTP</a> che preferisci :"
+      scanqrcode: "Scannerizza il QR code sotto o clicca il link per aprirlo nell'applicazione <a href=\"https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\" target=\"_blank\" rel=\"noopener\">TOTP</a> che preferisci :"
       registring: "Una volta completato il processo di autenticazione TOTP, passa alla schermata successiva per verificare e attivare l'autenticazione a due fattori sul tuo account."
       verifyenable: "Verifica e attiva"
     twofa_update:
@@ -583,7 +583,7 @@ it:
       abouttext: "<p>gambe.ro nasce dalla volontà di un gruppo di programmatori di creare uno spazio di discussione in lingua italiana e di scambio focalizzato sullo sviluppo software. Al contrario di buona parte dei siti, gruppi e chat venuti prima di noi, vogliamo coinvolgere specificatamente e unicamente la comunità di persone che produce software. Crediamo che allargare eccessivamente lo spettro delle tematiche trattate porti alla creazione di una community frammentata in cui convivono persone con background troppo differenti e pochi interessi in comune. Riteniamo che in una community del genere la qualità del dibattito sarebbe inevitabilmente penalizzata.
          </p> 
          <p>
-         Per questo abbiamo sentito il bisogno di imitare esperienze che all’estero hanno creato comunità di ottima qualità per contenuti e dibattito. Seguendo l’esempio di <a href=\"https://journalduhacker.net\" target=\"_black\">journalduhacker</a> che ha portato in lingua francese il format originariamente creato da <a href=\"https://lobste.rs\" target=\"_black\">lobste.rs</a>, abbiamo deciso di tradurre in lingua italiana il loro software e su questo costruire gambe.ro.
+         Per questo abbiamo sentito il bisogno di imitare esperienze che all’estero hanno creato comunità di ottima qualità per contenuti e dibattito. Seguendo l’esempio di <a href=\"https://journalduhacker.net\" target=\"_black\" rel=\"noopener\">journalduhacker</a> che ha portato in lingua francese il format originariamente creato da <a href=\"https://lobste.rs\" target=\"_black\" rel=\"noopener\">lobste.rs</a>, abbiamo deciso di tradurre in lingua italiana il loro software e su questo costruire gambe.ro.
           </p>
           <h3>Obiettivi della comunità</h3>
           <p>
@@ -597,7 +597,7 @@ it:
               
               <hr3>Moderazione</h3>
               <p>
-              Il team di moderazione si riserva di intervenire in caso vengano pubblicati sulla piattaforma contenuti illegali o esplicitamente fuori contesto rispetto ai temi di interesse della comunità. Confidiamo nella capacità della comunità di auto-moderarsi attraverso lo strumento del downvote che invitiamo ad usare con giudizio. La moderazione interverrà inoltre per reprimere comportamenti tossici e ostili verso membri della comunità o terzi, in linea con i principi e le regole esposte nel Code of Conduct.
+              Il team di moderazione si riserva di intervenire in caso vengano pubblicati sulla piattaforma contenuti illegali o esplicitamente fuori contesto rispetto ai temi di interesse della comunità. Confidiamo nella capacità della comunità di auto-moderarsi attraverso lo strumento del downvote che invitiamo ad usare con giudizio. La moderazione interverrà inoltre per reprimere comportamenti tossici e ostili verso membri della comunità o terzi.
               </p>
               
               <h4>Downvote</h4>
@@ -610,7 +610,7 @@ it:
               
               <h4>Log di moderazione e trasparenza</h4>
               <p>
-              Ogni azione di moderazione è visibile dal <a href=\"/moderations\">Log di Moderazione</a>. Da qui è possibile ricostruire da parte di chi, come e perché c’è stato un intervento di moderazione. In linea con lo spirito di lobste.rs che originariamente ha introdotto questa feature, crediamo che la trasparenza debba essere un elemento distintivo della nostra comunità, così da costruire una forma di trust con la nostra utenza. 
+              Ogni azione di moderazione è visibile dal <a href=\"/moderations\">Log di Moderazione</a>. Da qui è possibile ricostruire da parte di chi, come e perché c’è stato un intervento di moderazione. In linea con lo spirito di lobste.rs che originariamente ha introdotto questa feature, crediamo che la trasparenza debba essere un elemento distintivo della nostra comunità, così da costruire un rapporto di fiducia con la nostra utenza. 
               </p>
               
               <h3>Trivia</h3>

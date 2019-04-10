@@ -21,7 +21,7 @@ class String
       # Question marks are delimiters in q-encoding so must be escaped
       .gsub("?", "=3F") \
       # Spaces are insignificant in q-encoding so must be escaped
-      .gsub(' ', ' _') \
+      .gsub(/\s+/, ' _') \
       # Take each space-separated word, then q-encode
       .split(' ').map(&q_encode_word) \
       # Recombine words then word wrap at 75 characters

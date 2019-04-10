@@ -3,8 +3,10 @@ require_relative '../../script/mail_new_activity'
 describe 'EmailSender' do
   context "encoded words" do
     it "encodes text as quoted printable" do
+      # Note two spaces after "Why" - following conventions in many other sites
+      # additional spacing will be removed
       expect("Why  Use Pointers?".quoted_printable(true))
-        .to eq("=?UTF-8?Q?Why?= =?UTF-8?Q?_?= =?UTF-8?Q?_Use?= =?UTF-8?Q?_Pointers=3F?=")
+        .to eq("=?UTF-8?Q?Why?= =?UTF-8?Q?_Use?= =?UTF-8?Q?_Pointers=3F?=")
     end
 
     # https://tools.ietf.org/html/rfc2047#section-2

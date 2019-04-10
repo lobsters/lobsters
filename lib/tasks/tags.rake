@@ -10,7 +10,7 @@ namespace :tags do
         tags = YAML.load(file_string)
         # Maps every tag and eventually adds it to the DB
         tags.map do |tag|
-            Tag.find_or_create_by! tag: tag
+            Tag.find_or_create_by!(tag: tag)
         end
     end
 end

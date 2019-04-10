@@ -20,8 +20,8 @@ it:
       template:
         body: 'Verifica i campi sottostanti: '
         header:
-          one: 'Impossibile registrare questo/a %{model} : 1 errore'
-          other: 'Impossibile registrare questo/a %{model} : %{count} errori' 
+          one: 'Impossibile registrare questo/a %{model}: 1 errore'
+          other: 'Impossibile registrare questo/a %{model}: %{count} errori' 
       models:
         user:
           attributes:
@@ -138,7 +138,7 @@ it:
       undelete: "ripristina"
       delete: "cancella"
       reply: "rispondi"
-      about: "di :"
+      about: "di:"
       dragon: "drago"
       undragon: "non-drago"
   global:
@@ -182,12 +182,12 @@ it:
     requests_index:
       title: "Cappelli richiesti"
       nohatrequests: "Nessuna domanda di cappello."
-      user: "Nome utente :"
+      user: "Nome utente:"
       hat: "Cappello:"
       link: "Link:"
-      comment: "Commento :"
+      comment: "Commento:"
       approve: "Approva la richiesta del cappello"
-      reason: "Ragione :"
+      reason: "Ragione:"
       reject: "Rifiuta la richiesta del cappello"
       hator: "oppure"
     approve_request:
@@ -201,7 +201,7 @@ it:
       buildinvtext: "<p>Se non conosci o non sai come trovare un <a href=\"/u/\">utente iscritto</a> a cui richiedere l'invito, puoi richiedere un invito pubblicamente. Riceverai direttamente l'invito se ti sarà inviato.</p><p>Il tuo indirizzo e-mail deve essere valido e verificato visitando l'URL che ti sarà inviato prima che la tua domanda sia elaborata. Il tuo indirizzo e-mail non sarà visibile da nessuno ad eccezione dei moderatori. </p>"
       buildinvname: "Nome:"
       buildinvemail: "Indirizzo e-mail:"
-      buildinvurl: "URL :"
+      buildinvurl: "URL:"
       buildinvverificationurl: "URL verificabile (sito web personale, GitHub, etc.)"
       buildinvrequest: "Richiedi l'invito"
     index:
@@ -226,7 +226,7 @@ it:
       invitedto: "L'utente con l'IP %{userip} ha richiesto un invito a %{appname}."
       name: "Nome: %{name}"
       email: "E-mail: %{email} (non sarà visualizzata da altri utenti)"
-      memo: "Informazioni : %{memo}"
+      memo: "Informazioni: %{memo}"
       warning: "Se sei tu, clicca l'URL sottostante per confermare la tua richiesta di iscrizione e l'invio ad altri utenti."
       deletemessage: "Se non sei tu, puoi semplicemente ignorare questo messaggio."
   login:
@@ -409,7 +409,7 @@ it:
       title: "Autenticazione a due fattori"
       backtosettings: "Ritorna alle impostazioni"
       enrollmenttimeout: "Tempo scaduto"
-      scanqrcode: "Scannerizza il QR code sotto o clicca il link per aprirlo nell'applicazione <a href=\"https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\" target=\"_blank\" rel=\"noopener\">TOTP</a> che preferisci :"
+      scanqrcode: "Scannerizza il QR code sotto o clicca il link per aprirlo nell'applicazione <a href=\"https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\" target=\"_blank\" rel=\"noopener\">TOTP</a> che preferisci:"
       registring: "Una volta completato il processo di autenticazione TOTP, passa alla schermata successiva per verificare e attivare l'autenticazione a due fattori sul tuo account."
       verifyenable: "Verifica e attiva"
     twofa_update:
@@ -529,7 +529,7 @@ it:
       bannedby: "da"
       hats: "Cappello:"
       left: "Parti:"
-      karma: "Karma :"
+      karma: "Karma:"
       karmaaverage: ", in media "
       karmaperstorycomment: "per articolo/commento"
       storiessubmitted: "Articoli pubblicati:"
@@ -579,11 +579,11 @@ it:
       rssforstoriestitle: "RSS 2.0"
       rssforcommentstitle: "Commenti - RSS 2.0"
       neweststoriestitle: "Articoli più nuovi"
-      licensetext: "<div class=\"box wide\">Tutte le azioni sul sito sono pubblicche ad eccezione dei messaggi privati tra utenti. Le azioni di moderazione possono essere consultate sul <a href=\"/moderations\">Log di Moderazione</a>.<br/><a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.it\"><img alt=\"Licenza Creative Commons\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by/4.0/88x31.png\" /></a><br /><span xmlns:dct=\"http://purl.org/dc/terms/\" property=\"dct:title\">Gambe.ro</span> è pubblicato secondo i termini della <a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.it\">licenza Creative Commons Attribution 4.0 International</a>.</div>"
+      licensetext: "<div class=\"box wide\">Tutte le azioni sul sito sono pubbliche ad eccezione dei messaggi privati tra utenti. Le azioni di moderazione possono essere consultate sul <a href=\"/moderations\">Log di Moderazione</a>.<br/><a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.it\"><img alt=\"Licenza Creative Commons\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by/4.0/88x31.png\" /></a><br /><span xmlns:dct=\"http://purl.org/dc/terms/\" property=\"dct:title\">Gambe.ro</span> è pubblicato secondo i termini della <a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.it\">licenza Creative Commons Attribution 4.0 International</a>.</div>"
       abouttext: "<p>gambe.ro nasce dalla volontà di un gruppo di programmatori di creare uno spazio di discussione in lingua italiana e di scambio focalizzato sullo sviluppo software. Al contrario di buona parte dei siti, gruppi e chat venuti prima di noi, vogliamo coinvolgere specificatamente e unicamente la comunità di persone che produce software. Crediamo che allargare eccessivamente lo spettro delle tematiche trattate porti alla creazione di una community frammentata in cui convivono persone con background troppo differenti e pochi interessi in comune. Riteniamo che in una community del genere la qualità del dibattito sarebbe inevitabilmente penalizzata.
          </p> 
          <p>
-         Per questo abbiamo sentito il bisogno di imitare esperienze che all’estero hanno creato comunità di ottima qualità per contenuti e dibattito. Seguendo l’esempio di <a href=\"https://journalduhacker.net\" target=\"_black\" rel=\"noopener\">journalduhacker</a> che ha portato in lingua francese il format originariamente creato da <a href=\"https://lobste.rs\" target=\"_black\" rel=\"noopener\">lobste.rs</a>, abbiamo deciso di tradurre in lingua italiana il loro software e su questo costruire gambe.ro.
+         Per questo abbiamo sentito il bisogno di imitare esperienze che all’estero hanno creato comunità di ottima qualità per contenuti e dibattito. Seguendo l’esempio di <a href=\"https://journalduhacker.net\" target=\"_blank\" rel=\"noopener\">journalduhacker</a> che ha portato in lingua francese il format originariamente creato da <a href=\"https://lobste.rs\" target=\"_blank\" rel=\"noopener\">lobste.rs</a>, abbiamo deciso di tradurre in lingua italiana il loro software e su questo costruire gambe.ro.
           </p>
           <h3>Obiettivi della comunità</h3>
           <p>
@@ -608,7 +608,7 @@ it:
               Invece di rispondere ad un commento inappropriato lamentandosi, invitiamo gli utenti semplicemente a downvotare il commento.
               </p>
               
-              <h4>Log di moderazione e trasparenza</h4>
+              <h4>Log di Moderazione e trasparenza</h4>
               <p>
               Ogni azione di moderazione è visibile dal <a href=\"/moderations\">Log di Moderazione</a>. Da qui è possibile ricostruire da parte di chi, come e perché c’è stato un intervento di moderazione. In linea con lo spirito di lobste.rs che originariamente ha introdotto questa feature, crediamo che la trasparenza debba essere un elemento distintivo della nostra comunità, così da costruire un rapporto di fiducia con la nostra utenza. 
               </p>

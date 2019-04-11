@@ -26,4 +26,8 @@ fi
 
 # Rails leaves the PID file behind when the container is shut down
 rm -v tmp/pids/server.pid
+if [ "$RAILS_ENV" = "" ]; then
+  echo "RAILS_ENV not set, quitting!"
+  return 1
+fi
 rails server --environment $RAILS_ENV --binding 0.0.0.0

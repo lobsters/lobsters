@@ -51,7 +51,7 @@ class << Rails.application
   end
 
   def domain
-    "172.20.0.2:3000"
+    "gambe.ro"
   end
 
   def name

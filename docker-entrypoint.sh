@@ -30,4 +30,4 @@ if [ "$RAILS_ENV" = "" ]; then
   echo "RAILS_ENV not set, quitting!"
   return 1
 fi
-rails server --environment $RAILS_ENV --binding 0.0.0.0
+unicorn --env $RAILS_ENV

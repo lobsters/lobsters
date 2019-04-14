@@ -13,7 +13,10 @@ class Conversation < ApplicationRecord
   validates :subject, presence: true
 
   scope :involving, ->(user) do
-    where(recipient: user).or(Conversation.where(author: user))
+    where(author: user, deleted_by_author_at: nil).
+    or(where("deleted_by_author_at < updated_at")).
+    or(where(recipient: user, deleted_by_recipient_at: nil)).
+    or(where("deleted_by_recipient_at < updated_at"))
   end
 
   def partner(of:)

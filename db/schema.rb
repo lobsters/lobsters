@@ -47,6 +47,8 @@ ActiveRecord::Schema.define(version: 2019_05_29_133507) do
     t.string "subject", null: false
     t.bigint "author_user_id", null: false
     t.bigint "recipient_user_id", null: false
+    t.datetime "deleted_by_author_at"
+    t.datetime "deleted_by_recipient_at"
     t.index ["author_user_id"], name: "index_conversations_on_author_user_id"
     t.index ["recipient_user_id"], name: "index_conversations_on_recipient_user_id"
   end

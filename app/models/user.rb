@@ -67,6 +67,7 @@ class User < ApplicationRecord
     s.string :twitter_oauth_token
     s.string :twitter_oauth_token_secret
     s.string :twitter_username
+    s.array :keybase_signatures
   end
 
   validates :email,
@@ -162,6 +163,10 @@ class User < ApplicationRecord
 
     if self.twitter_username.present?
       h[:twitter_username] = self.twitter_username
+    end
+
+    if self.keybase_signatures.present?
+      h[:keybase_signatures] = self.keybase_signatures
     end
 
     h

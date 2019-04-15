@@ -139,6 +139,25 @@
       </div>
     <% end %>
 
+    <% if Keybase.enabled? %>
+      <div class="boxline">
+        <%= f.label :kb_username,
+          raw("<a href=\"https://keybase.io/\">Keybase</a>:"),
+          :class => "required" %>
+        <span>
+        <% if @edit_user.keybase_signatures.present? && Keybase.verify(@edit_user.keybase_signatures[0].kb_username, @edit_user.keybase_signatures[0].sig_hash, @edit_user.username) %>
+          Linked to
+          <strong><a href="https://keybase.io/<%= h(@edit_user.keybase_signatures[0].keybase_username)
+          %>">@<%= h(@edit_user.keybase_signaures[0].kb_username) %></a></strong>
+          (<a href="https://keybase.io/<%= h(@edit_user.keybase_signaures[0].kb_username)
+          %>">Disconnect on Keybase</a>)
+        <% else %>
+          <% @edit_user.keybase_signatures = [] %>
+        <% end %>
+        </span>
+      </div>
+    <% end %>
+
     <br>
 
     <div class="legend">

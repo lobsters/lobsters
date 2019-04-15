@@ -76,6 +76,7 @@ class User < ActiveRecord::Base
     self.create_rss_token
     self.create_mailing_list_token
   end
+  after_create :update_invitations_sent_count!
 
   BANNED_USERNAMES = [ "admin", "administrator", "contact", "fraud", "guest",
     "help", "hostmaster", "mailer-daemon", "moderator", "moderators", "nobody",
@@ -220,7 +221,16 @@ class User < ActiveRecord::Base
   end
 
   def can_invite?
-    !banned_from_inviting? && self.can_submit_stories?
+    closed_testing = Rails.application.closed_testing?
+    max_invitations_count = Rails.application.max_invitations_count
+
+    if self.is_admin || self.is_moderator
+      true
+    else
+      !banned_from_inviting? &&
+      self.can_submit_stories? &&
+      (closed_testing ? self.invitations_sent_count < max_invitations_count : true)
+    end
   end
 
   def can_offer_suggestions?
@@ -255,6 +265,14 @@ class User < ActiveRecord::Base
 
   def update_comments_posted_count!
     Keystore.put("user:#{self.id}:comments_posted", self.comments.active.count)
+  end
+
+  def invitations_sent_count
+    Keystore.value_for("user:#{self.id}:invitations_sent").to_i
+  end
+
+  def update_invitations_sent_count!
+    Keystore.put("user:#{self.id}:invitations_sent", self.invitations.count)
   end
 
   def delete!

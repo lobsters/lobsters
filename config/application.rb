@@ -21,7 +21,7 @@ module Lobsters
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    config.i18n.default_locale = :fr
+    config.i18n.default_locale = :it
 
     # Raise an exception when using mass assignment with unpermitted attributes
     config.action_controller.action_on_unpermitted_parameters = :raise
@@ -50,8 +50,16 @@ class << Rails.application
     true
   end
 
-  def allow_invitation_sendings?
+  # when true limits the number of invitation sendings to max_invitations_count
+  # when false there is no limit on the number of invitation sendings
+  def closed_testing?
     true
+  end
+
+  # the maximum number of invitation sendings when closed_testing? is true
+  # it does not apply to admins
+  def max_invitations_count
+    5
   end
 
   def domain

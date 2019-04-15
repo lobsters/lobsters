@@ -10,6 +10,8 @@ class Invitation < ActiveRecord::Base
   before_validation :create_code,
     :on => :create
 
+  after_save { |invite| User.find(invite.user_id).update_invitations_sent_count! }
+
   def create_code
     (1...10).each do |tries|
       if tries == 10

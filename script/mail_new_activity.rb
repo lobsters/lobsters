@@ -9,15 +9,25 @@ Rails.application.require_environment!
 
 class String
   def quoted_printable(encoded_word = false)
-    s = [self].pack("M")
+    string = [self].pack("M")
 
-    if encoded_word
-      s.split(/\r?\n/).map {|l|
-        "=?UTF-8?Q?" + l.gsub(/=*$/, "").gsub('?', '=3F').tr(" ", "_") << "?="
-      }.join("\n\t")
-    else
-      s
-    end
+    return string unless encoded_word
+
+    q_encode_word = ->(w) { "=?UTF-8?Q?#{w}?=" }
+
+    string \
+      # Undo linebreaks from #pack("M") because we'll be adding characters
+      .gsub("=\n", "") \
+      # Question marks are delimiters in q-encoding so must be escaped
+      .gsub("?", "=3F") \
+      # Spaces are insignificant in q-encoding so must be escaped
+      .gsub(/\s+/, ' _') \
+      # Take each space-separated word, then q-encode
+      .split(' ').map(&q_encode_word) \
+      # Recombine words then word wrap at 75 characters
+      .join(" ").word_wrap(75) \
+      # Compose final string, folding headers per rfc 2822 section 2.2.3
+      .lines.join("\t")
   end
 
   # like ActionView::Helpers::TextHelper but preserve > and indentation when

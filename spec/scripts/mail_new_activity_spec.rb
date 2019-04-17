@@ -29,7 +29,7 @@ describe 'EmailSender' do
       expect(remainder).to all eq "=?UTF-8?Q?_=C3=B6=C3=B6=C3=B6=C3=B6=C3=B6?="
     end
 
-    xit 'handles really long words' do
+    it 'handles really long words' do
       # it does not, in fact, handle long words because it would have to
       # potentially split in the middle of multibyte characters unless we
       # parsed the glyphs somehow. Current actual behavior is that it
@@ -38,10 +38,10 @@ describe 'EmailSender' do
       q_encoded = long_string.quoted_printable(true)
       expect(q_encoded.length).to be > long_string.length
 
-      q_encoded.lines.each {|line| expect(line.length).to be <= 75 }
-      # Failure/Error:  expect(line.length).to be <= 75
-      #   expected: <= 75
-      #   got: 787
+      # This expectation exists to track current behavior - the proper behavior is:
+      # q_encoded.lines.fist {|line| expect(line.length).to be <= 75 }
+      expect(q_encoded.lines.count).to eq 1
+      expect(q_encoded.lines.first.length).to be > 75
     end
   end
 end

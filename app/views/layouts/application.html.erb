@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <%= favicon_link_tag 'jdh-ico.ico' %>
+  <%= favicon_link_tag asset_path('favicon.png') %>
   <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon.png" />
   <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon.png" />
   <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-144.png" />
@@ -16,7 +16,6 @@
       <meta name="<%= k %>" content="<%= v %>" />
     <% end %>
   <% end %>
-  <link rel="shortcut icon" href="/favicon.ico" />
   <% if @short_url %>
     <link rev="canonical" rel="self alternate shorter shorturl shortlink"
       href="<%= @short_url %>" />
@@ -43,7 +42,7 @@
 </head>
 <body>
   <div id="wrapper">
-        <a href="/" title="<%= Rails.application.name %> <%= raw t('.currenttraffic', :usernb => "#{@traffic.to_i}") %>"><%= image_tag "logo-journal-du-hacker-middle.png" %></a>
+        <a href="/" title="<%= Rails.application.name %> <%= raw t('.currenttraffic', :usernb => "#{@traffic.to_i}") %>"><%= image_tag("gambero.png" )%></a>
     <div id="header">
       <div id="headerleft">
 

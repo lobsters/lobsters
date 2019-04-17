@@ -41,14 +41,3 @@ only screen and (-webkit-min-device-pixel-ratio: 2) {
 		background-position: 1px 1px;
 	}
 }
-
-div#hat_holder {
-	float: left;
-	width: 33px;
-	height: 16px;
-}
-img#party_hat {
-	position: relative;
-	top: -36px;
-	left: 2px;
-}

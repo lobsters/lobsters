@@ -1,0 +1,16 @@
+<a href="/moderations">Moderation Log</a>
+<% if @user && @user.can_see_invitation_requests? && (iqc = InvitationRequest.verified_count) > 0 %>
+  <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
+<% end %>
+<% if @user && @user.is_moderator? && (hrc = HatRequest.count) > 0 %>
+  <a href="/hats/requests">Hat Requests (<%= hrc %>)</a>
+<% else %>
+  <a href="/hats">Hats</a>
+<% end %>
+<% if false %>
+  <% bbs_count = Keystore.get("bbs:nodes_in_use").try(:value).to_i %>
+  <a href="/bbs">BBS<%= bbs_count == 0 ? "" : " (#{bbs_count})" %></a>
+<% end %>
+<a href="https://github.com/lobsters/lobsters/wiki">Wiki</a>
+<a href="/privacy">Privacy</a>
+<a href="/about">About</a>

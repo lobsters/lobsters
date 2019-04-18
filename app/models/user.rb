@@ -221,16 +221,23 @@ class User < ActiveRecord::Base
   end
 
   def can_invite?
-    closed_testing = Rails.application.closed_testing?
-    max_invitations_count = Rails.application.max_invitations_count
-
+    # admins and moderators can always invite
     if self.is_admin || self.is_moderator
-      true
-    else
-      !banned_from_inviting? &&
-      self.can_submit_stories? &&
-      (closed_testing ? self.invitations_sent_count < max_invitations_count : true)
+      return true
     end
+
+    # banned users can never invite
+    if banned_from_inviting? or !self.can_submit_stories?
+      return false
+    end
+
+    # during closed testing, a maximum of max_invitations_count invites can be sent
+    if Rails.application.closed_testing?
+      return self.invitations_sent_count < Rails.application.max_invitations_count
+    end
+
+    # usually there is not limit on the number of invites
+    return true
   end
 
   def can_offer_suggestions?

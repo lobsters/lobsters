@@ -57,7 +57,7 @@ class << Rails.application
   end
 
   # the maximum number of invitation sendings when closed_testing? is true
-  # it does not apply to admins
+  # it does not apply to admins and moderators
   def max_invitations_count
     5
   end

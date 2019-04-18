@@ -27,14 +27,14 @@ var _Lobsters = Class.extend({
     var act;
 
     if (li.hasClass("hidden")) {
-      act = "révéler";
+      act = "mostra";
       li.removeClass("hidden");
-      hiderEl.innerHTML = "cacher";
+      hiderEl.innerHTML = "nascondi";
     }
     else {
-      act = "cacher";
+      act = "nascondi";
       li.addClass("hidden");
-      hiderEl.innerHTML = "révéler";
+      hiderEl.innerHTML = "mostra";
     }
 
     $.post("/stories/" + li.attr("data-shortid") + "/" + act);
@@ -128,13 +128,13 @@ var _Lobsters = Class.extend({
       /* already upvoted, neutralize */
       li.removeClass("upvoted");
       score--;
-      action = "unvote";
+      action = "rimuovi voto";
     }
     else if (li.hasClass("downvoted") && point < 0) {
       /* already downvoted, neutralize */
       li.removeClass("downvoted");
       score++;
-      action = "unvote";
+      action = "rimuovi voto";
     }
     else if (point > 0) {
       if (li.hasClass("downvoted"))
@@ -242,7 +242,7 @@ var _Lobsters = Class.extend({
   },
 
   moderateStory: function(link) {
-    var reason = prompt("Raison de la modération :");
+    var reason = prompt("Ragione della moderazione:");
     if (reason == null || reason == "")
       return false;
 

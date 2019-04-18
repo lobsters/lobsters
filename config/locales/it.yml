@@ -375,6 +375,7 @@ it:
       hidedragons: "Nascondi i draghi:"
       saveallsettings: "Salva tutti i parametri"
       inviteuser: "Invita un nuovo utente"
+      closedtestingtext: "Gambero è attualmente in closed testing, quindi gli inviti per utente sono limitati a %{max_invitations}. Hai inviato %{invitations_sent} inviti."
       cannotsendinvitations: "Non puoi spedire inviti."
       deleteaccount: "Elimina l'account"
       deleteaccounttext: "Per eliminare definitivamente l'account, inserisci la tua password qui sotto. Il tuo account sarà disattivato, i tuoi commenti sarànno segnati come disattivati e non saranno più visibili dagli altri utenti, i tuoi messaggi privati saranno cancellati. Il tuo profilo non sarà cancellato. Il tuo nome utente non sarà utilizzabile da nessun altro."
@@ -557,7 +558,7 @@ it:
     index:
       tagstitle: "Etichette"
 # data for users/invitationform which is a partial view
-  invitationtext: "Gli inviti sono illimitati, ma le persone da te invitate saranno associate al tuo profilo nell'<a href=\"/u\">albero degli utenti</a> e tu sarai responsabile per la loro condotta qualora queste causassero problemi. Per favore esercita accortezza nell'invitare persone che non conosci personalmente."
+  invitationtext: "Le persone da te invitate saranno associate al tuo profilo nell'<a href=\"/u\">albero degli utenti</a> e tu sarai responsabile per la loro condotta qualora queste causassero problemi. Per favore esercita accortezza nell'invitare persone che non conosci personalmente."
   emailaddress: "Indirizzo e-mail:"
   memouser: "Notifica all'utente:"
   sendinvitation: "Manda un invito"

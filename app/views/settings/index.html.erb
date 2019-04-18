@@ -273,10 +273,14 @@
     <%= t('.inviteuser') %>
   </div>
 
+  <% if Rails.application.closed_testing? && !@user.is_admin && !@user.is_moderator %>
+    <%= t('.closedtestingtext', :max_invitations => Rails.application.max_invitations_count, :invitations_sent => @user.invitations_sent_count) %>
+  <% end %>
+
   <% if @user.can_invite? %>
     <%= render :partial => "users/invitationform" %>
   <% else %>
-      <%= t('.cannotsendinvitations') %>
+    <%= t('.cannotsendinvitations') %>
   <% end %>
 
   <br>

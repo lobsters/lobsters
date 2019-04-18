@@ -19,11 +19,13 @@
     </p>
 
     <p>
-    <%= t('.forgotdeleted') %><%= link_to t('.resetpassword'), forgot_password_path %>.
+    <%= t('.forgotdeleted') %> <%= link_to t('.resetpassword'), forgot_password_path %>.
     </p>
 
     <p>
     <%= raw(t('.notuseryet', :acurrentuser => "#{t('.acurrentuser')}")) %>
+    </p>
+    <p>
     <% if Rails.application.allow_invitation_requests? %>
       <a href="/invitations/request"><%= t('.request') %></a>.
     <% else %>

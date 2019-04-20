@@ -4,8 +4,10 @@ class CreateConversations < ActiveRecord::Migration[5.2]
       t.timestamps
       t.string :short_id, null: false, unique: true
       t.string :subject, null: false
-      t.belongs_to :author_user
-      t.belongs_to :recipient_user
+      t.belongs_to :author_user, null: false
+      t.belongs_to :recipient_user, null: false
+      t.datetime :deleted_by_author_at
+      t.datetime :deleted_by_recipient_at
     end
 
     add_belongs_to :messages, :conversation, null: true
@@ -24,12 +26,16 @@ end
 class MessageConverter
   include ActiveRecord::ConnectionAdapters::Quoting
 
-  def run
+  attr_reader :mysql
+
+  def initialize
     config = ActiveRecord::Base.configurations[Rails.env].symbolize_keys
-    mysql = ActiveRecord::Base.connection
+    @mysql = ActiveRecord::Base.connection
+  end
+
+  def run
     begin
-      messages = mysql.exec_query(messages_with_partner_combo_sql)
-      grouped_messages = group_messages(messages)
+      grouped_messages = group_messages(messages_with_partner_combo)
       conversation_values = grouped_messages.map do |group|
         messages = group.last
         values = conversation_data(messages).join(",")
@@ -46,6 +52,7 @@ class MessageConverter
           WHERE short_id = #{short_id}
         SQL
         conversation_id = conversation_ids.first["id"]
+
         mysql.exec_query <<~SQL
           UPDATE messages
           SET conversation_id = #{conversation_id}
@@ -60,8 +67,8 @@ class MessageConverter
     end
   end
 
-  def messages_with_partner_combo_sql
-    <<~SQL
+  def messages_with_partner_combo
+    mysql.exec_query <<~SQL
       SELECT *,
       (CASE WHEN author_user_id < recipient_user_id
         THEN CONCAT(author_user_id, '-', recipient_user_id)
@@ -86,13 +93,30 @@ class MessageConverter
       quote(messages.first["subject"]),
       messages.first["author_user_id"],
       messages.first["recipient_user_id"],
+      quote(author_deleted_at(messages)),
+      quote(recipient_deleted_at(messages)),
     ]
   end
 
+  def author_deleted_at(messages)
+    deleted_message = messages.
+      select{ |message| message["deleted_by_author"] == 1 }.
+      last
+    deleted_message&.dig("created_at")
+  end
+
+  def recipient_deleted_at(messages)
+    deleted_message = messages.
+      select{ |message| message["deleted_by_recipient"] == 1 }.
+      last
+    deleted_message&.dig("created_at")
+  end
+
   def create_conversations(values, mysql)
+    puts "create conversations"
     mysql.exec_query <<~SQL
       INSERT INTO conversations
-      (created_at, updated_at, short_id, subject, author_user_id, recipient_user_id)
+      (created_at, updated_at, short_id, subject, author_user_id, recipient_user_id, deleted_by_author_at, deleted_by_recipient_at)
       VALUES #{values}
     SQL
   end

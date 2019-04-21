@@ -1,27 +1,14 @@
 class ConversationCreator
-  def self.create(
-    author:,
-    recipient_username:,
-    subject:,
-    message_body:,
-    message_hat_id: nil
-  )
+  def self.create(author:, recipient_username:, subject:, message_params: nil)
     new.create(
       author: author,
       recipient_username: recipient_username,
       subject: subject,
-      message_body: message_body,
-      message_hat_id: message_hat_id,
+      message_params: message_params,
     )
   end
 
-  def create(
-    author:,
-    recipient_username:,
-    subject:,
-    message_body:,
-    message_hat_id: nil
-  )
+  def create(author:, recipient_username:, subject:, message_params: nil)
     conversation = Conversation.create(
       author: author,
       recipient: recipient(recipient_username),
@@ -32,8 +19,8 @@ class ConversationCreator
         MessageCreator.create(
           conversation: conversation,
           author: author,
-          body: message_body,
-          hat_id: message_hat_id,
+          body: message_params[:body],
+          hat_id: message_params[:hat_id],
         )
       end
     end

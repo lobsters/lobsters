@@ -11,7 +11,7 @@ RSpec.describe ConversationCreator do
         author: create(:user),
         recipient_username: create(:user).username,
         subject: "this is a subject",
-        message_body: "this is the body",
+        message_params: { body: "this is the body" },
       )
 
       expect(Conversation.count).to eq(1)
@@ -27,7 +27,7 @@ RSpec.describe ConversationCreator do
         author: author,
         recipient_username: recipient_username,
         subject: "this is a subject",
-        message_body: "this is the body",
+        message_params: { body: "this is the body" },
       )
 
       expect(MessageCreator).to have_received(:create).with(

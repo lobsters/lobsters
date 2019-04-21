@@ -5,6 +5,7 @@ class Conversations::MessagesController < ApplicationController
       author: @user,
       body: params[:message][:body],
       hat_id: params[:message][:hat_id],
+      create_modnote: create_modnote?,
     )
 
     if @message.persisted?
@@ -20,5 +21,9 @@ class Conversations::MessagesController < ApplicationController
 
   def conversation
     @conversation ||= Conversation.find_by(short_id: params[:conversation_id])
+  end
+
+  def create_modnote?
+    params[:message][:mod_note] == "1"
   end
 end

@@ -21,6 +21,7 @@ class ConversationCreator
           author: author,
           body: message_params[:body],
           hat_id: message_params[:hat_id],
+          create_modnote: create_modnote?(message_params),
         )
       end
     end
@@ -36,5 +37,9 @@ class ConversationCreator
     if conversation.recipient.nil?
       conversation.errors.add(:user, "Can't find user: #{username}")
     end
+  end
+
+  def create_modnote?(message_params)
+    message_params[:mod_note] == "1"
   end
 end

@@ -44,7 +44,7 @@ class ConversationsController < ApplicationController
   end
 
   def message_params
-    params.require(:message).permit(:body, :hat_id)
+    params.require(:message).permit(:body, :hat_id, :mod_note)
   end
 
   def conversation_recipient

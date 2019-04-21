@@ -63,5 +63,22 @@ RSpec.describe MessageCreator do
 
       expect(message.hat).to eq(hat)
     end
+
+    it "creates a mod note for the message" do
+      expect(ModNote.count).to eq(0)
+
+      conversation = create(:conversation)
+      hat = create(:hat, :for_modnotes)
+
+      message = MessageCreator.create(
+        conversation: conversation,
+        author: conversation.author,
+        body: "Hi",
+        hat_id: hat.id,
+        create_modnote: true,
+      )
+
+      expect(ModNote.count).to eq(1)
+    end
   end
 end

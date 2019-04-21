@@ -5,4 +5,8 @@ FactoryBot.define do
     association(:granted_by_user, factory: :user)
     link { 'http://example.com' }
   end
+
+  trait :for_modnotes do
+    modlog_use { true }
+  end
 end

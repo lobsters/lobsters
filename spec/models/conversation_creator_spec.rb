@@ -20,15 +20,22 @@ RSpec.describe ConversationCreator do
     it "uses the MessageCreator to create an associated message" do
       allow(MessageCreator).to receive(:create)
       creator = ConversationCreator.new
+      author = create(:user)
+      recipient_username = create(:user).username
 
       conversation = creator.create(
-        author: create(:user),
-        recipient_username: create(:user).username,
+        author: author,
+        recipient_username: recipient_username,
         subject: "this is a subject",
         message_body: "this is the body",
       )
 
-      expect(MessageCreator).to have_received(:create)
+      expect(MessageCreator).to have_received(:create).with(
+        conversation: conversation,
+        author: author,
+        body: "this is the body",
+        hat_id: nil,
+      )
     end
   end
 end

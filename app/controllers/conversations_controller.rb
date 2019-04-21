@@ -22,6 +22,7 @@ class ConversationsController < ApplicationController
       recipient_username: conversation_recipient,
       subject: conversation_subject,
       message_body: message_body,
+      message_hat_id: message_hat_id,
     )
     if @conversation.persisted?
       redirect_to conversation_path(@conversation)
@@ -43,6 +44,10 @@ class ConversationsController < ApplicationController
 
   def message_body
     params[:message][:body]
+  end
+
+  def message_hat_id
+    params[:message][:hat_id]
   end
 
   def conversation_recipient

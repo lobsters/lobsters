@@ -49,5 +49,19 @@ RSpec.describe MessageCreator do
       expect(message1.recipient).to eq(user2)
       expect(message2.recipient).to eq(user1)
     end
+
+    it "adds a hat to the message" do
+      conversation = create(:conversation)
+      hat = create(:hat)
+
+      message = MessageCreator.create(
+        conversation: conversation,
+        author: conversation.author,
+        body: "Hi",
+        hat_id: hat.id,
+      )
+
+      expect(message.hat).to eq(hat)
+    end
   end
 end

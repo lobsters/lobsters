@@ -1,7 +1,16 @@
+<header class="box wide">
+  <h1>
+    <%= @conversation.subject %> with
+    <%= @conversation.partner(of: @user).username %>
+  </h1>
+</header>
 <section class="messages box wide">
   <% @conversation.messages.each do |message| %>
       <header class="meta">
-        <div class="author"><%= message.author.username %></div>
+        <div class="author">
+          <%= message.hat.to_html_label if message.hat %>
+          <%= message.author.username %>
+        </div>
         <time
           datetime="<%= l(message.created_at, format: :datetime) %>"
           class="timestamp"

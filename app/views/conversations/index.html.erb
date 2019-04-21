@@ -27,13 +27,25 @@
   <%= form_with model: @conversation, class: "new_conversation" do |form| %>
     <h2 class="legend">Create Conversation</h2>
     <%= error_messages_for @conversation %>
-    <%= label :user, :username, "To:", class: "required" %>
-    <%= text_field :user, :username, value: "" %>
-    <%= form.label :subject, "Subject:", class: "required" %>
-    <%= form.text_field :subject %>
-    <%= label :message, :body, "Message:", class: "required" %>
-    <%= text_area :message, :body %>
-    <%= render partial: "hat_inputs", locals: { user: @user } %>
-    <%= form.submit %>
+    <div class="field">
+      <%= label :user, :username, "To:", class: "required" %>
+      <%= text_field :user, :username, value: "" %>
+    </div>
+    <div class="field">
+      <%= form.label :subject, "Subject:", class: "required" %>
+      <%= form.text_field :subject %>
+    </div>
+    <div class="field">
+      <%= label :message, :body, "Message:", class: "required" %>
+      <%= text_area :message, :body %>
+    </div>
+    <div class="field">
+    </div>
+    <div class="field">
+      <%= render partial: "hat_inputs", locals: { user: @user } %>
+    </div>
+    <div class="action">
+      <%= form.submit %>
+    </div>
   <% end %>
 </div>

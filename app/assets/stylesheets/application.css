@@ -1335,38 +1335,53 @@ div.fieldWithErrors {
 	text-decoration: underline;
 }
 
-.new_conversation {
-	display: grid;
-	grid-template-columns: min-content minmax(auto, 750px);
-	grid-auto-rows: auto;
-	grid-gap: 1em;
+.new_conversation,
+.new_message {
 	margin-top: 2em;
 }
 
-.new_conversation label {
-	grid-column-start: 1;
+.new_conversation .field,
+.new_message .field {
+	display: flex;
+	margin-bottom: 0.5em;
 }
 
-.new_conversation textarea {
-	grid-column-start: 2;
-	height: 10em;
-	width: auto;
+.new_conversation .field label,
+.new_message .field label {
+	flex-basis: 12em;
+	flex-shrink: 1;
 }
 
-.new_conversation input[type=submit] {
-	grid-column-start: 1;
+.new_conversation .field input,
+.new_conversation .field textarea,
+.new_message .field textarea {
+	flex: 2;
 }
 
-.messages {
-	display: grid;
-	grid-template-columns: auto minmax(auto, 750px);
-	grid-auto-rows: auto;
-	grid-gap: 1em;
+.new_conversation .field textarea,
+.new_message textarea {
+	height: 5em;
+	width: inherit;
+}
+
+.messages.zebra .message:nth-child(even) {
+	background-color: #f8f8f8;
+}
+
+.messages.zebra .message:nth-child(odd) {
+	background-color: #f5f5f5;
+}
+
+.messages .message {
+	border-bottom: 1px solid #eaeaea;
+	display: flex;
+	padding: 0.5em 1em;
 }
 
 .messages .meta {
-	grid-column-start: 1;
-	text-align: right;
+	flex-basis: 12em;
+	flex-shrink: 1;
+	margin-right: 1em;
 }
 
 .messages .meta .author {
@@ -1378,7 +1393,7 @@ div.fieldWithErrors {
 }
 
 .messages .message_text {
-	grid-column-start: 2;
+	flex: 1;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }

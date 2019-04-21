@@ -1,11 +1,10 @@
 <header class="box wide">
-  <h1>
-    <%= @conversation.subject %> with
-    <%= @conversation.partner(of: @user).username %>
-  </h1>
+  <h1><%= @conversation.subject %></h1>
+  <h2>with <%= @conversation.partner(of: @user).username %></h2>
 </header>
-<section class="messages box wide">
+<section class="messages box wide zebra">
   <% @conversation.messages.each do |message| %>
+    <div class="message">
       <header class="meta">
         <div class="author">
           <%= message.hat.to_html_label if message.hat %>
@@ -19,16 +18,19 @@
         </time>
       </header>
       <div class="message_text"><%= message.body %></div>
+    </div>
   <% end %>
 </section>
 <section class="new_message box wide">
   <%= form_with model: [@message.conversation, @message] do |form| %>
     <%= error_messages_for @message %>
-    <div class="boxline">
+    <div class="field">
       <%= form.label :body, "Message", :class => "required" %>
-      <%= form.text_field :body %>
+      <%= form.text_area :body %>
     </div>
-    <%= render partial: "hat_inputs", locals: { user: @user } %>
+    <div class="field">
+      <%= render partial: "hat_inputs", locals: { user: @user } %>
+    </div>
 
     <%= form.submit "Send Message" %>
   <% end %>

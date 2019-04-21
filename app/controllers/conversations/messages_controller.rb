@@ -18,6 +18,6 @@ class Conversations::MessagesController < ApplicationController
   end
 
   def conversation
-    @conversation ||= Conversation.find(params[:conversation_id])
+    @conversation ||= Conversation.find_by(short_id: params[:conversation_id])
   end
 end

@@ -38,4 +38,8 @@ class Conversation < ApplicationRecord
   def last_message
     messages.last
   end
+
+  def to_param
+    self.short_id
+  end
 end

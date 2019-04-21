@@ -4,6 +4,7 @@ class Conversations::MessagesController < ApplicationController
       conversation: conversation,
       author: @user,
       body: params[:message][:body],
+      hat_id: params[:message][:hat_id],
     )
 
     if @message.persisted?
@@ -14,7 +15,7 @@ class Conversations::MessagesController < ApplicationController
   private
 
   def message_params
-    params.require(:message).permit(:body)
+    params.require(:message).permit(:body, :hat_id)
   end
 
   def conversation

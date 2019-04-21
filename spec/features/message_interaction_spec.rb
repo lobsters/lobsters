@@ -206,5 +206,33 @@ RSpec.feature "add a message to a conversation" do
         expect(page).to have_css(".author", text: hat.hat)
       end
     end
+
+    scenario "adds a message to a conversation with a hat" do
+      conversation = create(:conversation)
+      author = conversation.author
+      stub_login_as author
+      create(
+        :message,
+        :read,
+        author: author,
+        recipient: conversation.recipient,
+        body: "Nice to meet you",
+        conversation: conversation,
+      )
+      hat = create(:hat, user: author)
+
+      visit root_path
+      click_on "Messages"
+      click_on conversation.subject
+      within(".new_message") do
+        fill_in("Message", with: "hello")
+        select(hat.hat, from: "Put on hat:")
+        click_on "Send Message"
+      end
+
+      within(".messages") do
+        expect(page).to have_css(".author", text: hat.hat)
+      end
+    end
   end
 end

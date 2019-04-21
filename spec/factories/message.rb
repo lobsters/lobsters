@@ -9,5 +9,9 @@ FactoryBot.define do
     trait :unread do
       has_been_read { false }
     end
+
+    trait :read do
+      has_been_read { true }
+    end
   end
 end

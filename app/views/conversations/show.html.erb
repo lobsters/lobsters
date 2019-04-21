@@ -28,6 +28,7 @@
       <%= form.label :body, "Message", :class => "required" %>
       <%= form.text_field :body %>
     </div>
+    <%= render partial: "hat_inputs", locals: { user: @user } %>
 
     <%= form.submit "Send Message" %>
   <% end %>

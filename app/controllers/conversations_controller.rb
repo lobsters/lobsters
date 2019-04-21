@@ -33,6 +33,24 @@ class ConversationsController < ApplicationController
     end
   end
 
+  def destroy
+    @conversation = find_user_conversations(@user).
+      find_by(short_id: params[:id])
+
+    if @conversation.present?
+      if @conversation.author == @user
+        @conversation.update(deleted_by_author_at: Time.now)
+      else
+        @conversation.update(deleted_by_recipient_at: Time.now)
+      end
+      flash[:success] = "Conversation deleted"
+      redirect_to conversations_path
+    else
+      flash[:error] = "Could not delete message"
+      redirect_to conversation_path(@conversation)
+    end
+  end
+
   private
 
   def find_user_conversations(user)

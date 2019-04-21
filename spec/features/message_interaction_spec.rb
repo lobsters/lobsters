@@ -236,3 +236,25 @@ RSpec.feature "add a message to a conversation" do
     end
   end
 end
+
+RSpec.feature "delete a conversation" do
+  scenario "I dare you" do
+    conversation = create(:conversation)
+    author = conversation.author
+    stub_login_as author
+    MessageCreator.create(
+      conversation: conversation,
+      author: author,
+      body: "Hello",
+    )
+
+    visit root_path
+    click_on "Messages"
+    click_on conversation.subject
+    click_on "Delete Conversation"
+
+    expect(current_path).to eq(conversations_path)
+    expect(page).not_to have_css(".conversation", text: conversation.subject)
+    expect(page).to have_css("h2.legend", text: "Create Conversation")
+  end
+end

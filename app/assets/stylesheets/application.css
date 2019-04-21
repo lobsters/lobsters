@@ -1364,6 +1364,11 @@ div.fieldWithErrors {
 	width: inherit;
 }
 
+.message_actions {
+	margin-bottom: 1em;
+	margin-top: 2em;
+}
+
 .messages.zebra .message:nth-child(even) {
 	background-color: #f8f8f8;
 }

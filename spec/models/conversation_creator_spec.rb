@@ -35,6 +35,7 @@ RSpec.describe ConversationCreator do
         author: author,
         body: "this is the body",
         hat_id: nil,
+        create_modnote: false,
       )
     end
   end

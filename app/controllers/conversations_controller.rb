@@ -24,9 +24,9 @@ class ConversationsController < ApplicationController
       message_body: message_body,
     )
     if @conversation.persisted?
-      redirect_to conversations_path
+      redirect_to conversation_path(@conversation)
     else
-      @conversations = find_user_conversations(@user)
+      @conversations = find_user_conversations(@user).order(updated_at: :desc)
       render :index
     end
   end

@@ -76,13 +76,11 @@ RSpec.feature "Checking messages" do
       )
       click_on "Send Message"
     end
+    conversation = Conversation.order(created_at: :desc).last
 
-    expect(current_path).to eq(conversations_path)
-    expect(page).to have_css(".conversation .subject", text: "Ahoy!")
-    expect(page).to have_css(
-      ".conversation .from",
-      text: other_user.username
-    )
+    expect(current_path).to eq(conversation_path(conversation))
+    expect(page).to have_css("header", text: "Ahoy!")
+    expect(page).to have_css("header", text: "with #{other_user.username}")
   end
 
   scenario "marks conversations read when they are viewed" do

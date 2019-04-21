@@ -7,7 +7,9 @@ class ConversationsController < ApplicationController
   end
 
   def show
-    @conversation = Conversation.find_by(short_id: params[:id])
+    @conversation = Conversation.
+      includes(messages: [:author, :hat]).
+      find_by(short_id: params[:id])
     @conversation.
       messages.
       where(recipient: @user).

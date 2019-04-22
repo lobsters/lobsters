@@ -1,4 +1,5 @@
 require "rails_helper"
+include ActiveSupport::Testing::TimeHelpers
 
 RSpec.describe Conversation do
   it "should get a short id" do
@@ -72,6 +73,29 @@ RSpec.describe Conversation do
 
         expect(conversations).to match_array([updated_convo])
       end
+    end
+  end
+
+  describe ".check_for_both_deleted" do
+    it "needs both partners to delete the conversation to be deleted" do
+      conversation = create(:conversation)
+      travel_to(1.day.ago) do
+        MessageCreator.create(
+          conversation: conversation,
+          author: conversation.author,
+          body: "hi",
+        )
+      end
+
+      expect(Conversation.count).to eq(1)
+
+      conversation.update(deleted_by_author_at: Time.now)
+
+      expect(Conversation.count).to eq(1)
+
+      conversation.update(deleted_by_recipient_at: Time.now)
+
+      expect(Conversation.count).to eq(0)
     end
   end
 end

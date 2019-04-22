@@ -28,7 +28,6 @@ class Message < ApplicationRecord
   before_validation :assign_short_id, :on => :create
   after_create :deliver_email_notifications
   after_save :update_unread_counts
-  after_save :check_for_both_deleted
 
   def as_json(_options = {})
     attrs = [
@@ -58,12 +57,6 @@ class Message < ApplicationRecord
       self.author.username
     else
       "System"
-    end
-  end
-
-  def check_for_both_deleted
-    if self.deleted_by_author? && self.deleted_by_recipient?
-      self.destroy
     end
   end
 

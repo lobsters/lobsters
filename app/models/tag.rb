@@ -13,7 +13,8 @@ class Tag < ApplicationRecord
   attr_accessor :edit_user_id, :stories_count
   attr_writer :filtered_count
 
-  validates :tag, length: { maximum: 25 }, presence: true, uniqueness: true
+  validates :tag, length: { maximum: 25 }, presence: true,
+                  uniqueness: true, format: { without: /,/ }
   validates :description, length: { maximum: 100 }
   validates :hotness_mod, inclusion: { in: -10..10 }
 

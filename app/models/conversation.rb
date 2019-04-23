@@ -38,7 +38,7 @@ class Conversation < ApplicationRecord
   end
 
   def last_message
-    messages.last
+    messages.order(created_at: :desc).last
   end
 
   def to_param
@@ -60,9 +60,5 @@ class Conversation < ApplicationRecord
 
   def recipient_deleted_after_last_message?
     deleted_by_recipient_at && deleted_by_recipient_at > last_message.created_at
-  end
-
-  def last_message
-    messages.order(created_at: :desc).last
   end
 end

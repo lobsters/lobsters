@@ -15,6 +15,7 @@ class CreateConversations < ActiveRecord::Migration[5.2]
     MessageConverter.new.run
 
     change_column_null :messages, :conversation_id, false
+    add_foreign_key :messages, :conversations, column: :conversation_id, name: "messages_conversation_id_fk"
   end
 
   def down

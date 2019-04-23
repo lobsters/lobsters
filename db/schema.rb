@@ -316,6 +316,7 @@ ActiveRecord::Schema.define(version: 2019_05_29_133507) do
   add_foreign_key "hidden_stories", "users", name: "hidden_stories_user_id_fk"
   add_foreign_key "invitations", "users", column: "new_user_id", name: "invitations_new_user_id_fk"
   add_foreign_key "invitations", "users", name: "invitations_user_id_fk"
+  add_foreign_key "messages", "conversations", name: "messages_conversation_id_fk"
   add_foreign_key "messages", "hats", name: "messages_hat_id_fk"
   add_foreign_key "messages", "users", column: "recipient_user_id", name: "messages_recipient_user_id_fk"
   add_foreign_key "mod_notes", "users", column: "moderator_user_id", name: "mod_notes_moderator_user_id_fk"

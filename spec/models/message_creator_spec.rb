@@ -70,7 +70,7 @@ RSpec.describe MessageCreator do
       conversation = create(:conversation)
       hat = create(:hat, :for_modnotes)
 
-      message = MessageCreator.create(
+      MessageCreator.create(
         conversation: conversation,
         author: conversation.author,
         body: "Hi",

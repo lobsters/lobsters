@@ -3,20 +3,22 @@ class Conversation < ApplicationRecord
 
   belongs_to :author,
              class_name: "User",
-             foreign_key: "author_user_id"
+             foreign_key: "author_user_id",
+             inverse_of: false
   belongs_to :recipient,
              class_name: "User",
-             foreign_key: "recipient_user_id"
+             foreign_key: "recipient_user_id",
+             inverse_of: false
   has_many :messages, dependent: :destroy
 
   validates :short_id, presence: true, uniqueness: true
   validates :subject, presence: true
 
   scope :involving, ->(user) do
-    where(author: user, deleted_by_author_at: nil).
-    or(where("deleted_by_author_at < updated_at")).
-    or(where(recipient: user, deleted_by_recipient_at: nil)).
-    or(where("deleted_by_recipient_at < updated_at"))
+    where(author: user, deleted_by_author_at: nil)
+    .or(where("deleted_by_author_at < updated_at"))
+    .or(where(recipient: user, deleted_by_recipient_at: nil))
+    .or(where("deleted_by_recipient_at < updated_at"))
   end
 
   after_update :check_for_both_deleted
@@ -45,11 +47,11 @@ class Conversation < ApplicationRecord
     self.short_id
   end
 
-  private
+private
 
   def check_for_both_deleted
     if author_deleted_after_last_message? &&
-      recipient_deleted_after_last_message?
+       recipient_deleted_after_last_message?
       destroy
     end
   end

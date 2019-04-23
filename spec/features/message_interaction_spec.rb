@@ -22,7 +22,6 @@ RSpec.feature "Checking messages" do
         recipient: author,
       )
 
-
       visit root_path
       click_on "1 Message"
 
@@ -39,7 +38,7 @@ RSpec.feature "Checking messages" do
       recipient = create(:user)
       stub_login_as recipient
       conversation = create(:conversation, author: author, recipient: recipient)
-      message = create(
+      create(
         :message,
         :unread,
         body: "testing one two three",
@@ -163,7 +162,7 @@ RSpec.feature "add a message to a conversation" do
       recipient: recipient,
       subject: "hi",
     )
-    message = create(
+    create(
       :message,
       :unread,
       author: author,

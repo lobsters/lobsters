@@ -1,7 +1,8 @@
 require "rails_helper"
-include ActiveSupport::Testing::TimeHelpers
 
 RSpec.describe Conversation do
+  include ActiveSupport::Testing::TimeHelpers
+
   it "should get a short id" do
     short_id = instance_double(ShortId, generate: "abc123")
     allow(ShortId).to receive(:new).and_return(short_id)
@@ -33,7 +34,7 @@ RSpec.describe Conversation do
         updated_convo = create(
           :conversation,
           deleted_by_author_at: 1.minute.ago,
-          updated_at: Time.now,
+          updated_at: Time.zone.now,
           author: user,
         )
 
@@ -65,7 +66,7 @@ RSpec.describe Conversation do
         updated_convo = create(
           :conversation,
           deleted_by_recipient_at: 1.minute.ago,
-          updated_at: Time.now,
+          updated_at: Time.zone.now,
           recipient: user,
         )
 
@@ -89,11 +90,11 @@ RSpec.describe Conversation do
 
       expect(Conversation.count).to eq(1)
 
-      conversation.update(deleted_by_author_at: Time.now)
+      conversation.update(deleted_by_author_at: Time.zone.now)
 
       expect(Conversation.count).to eq(1)
 
-      conversation.update(deleted_by_recipient_at: Time.now)
+      conversation.update(deleted_by_recipient_at: Time.zone.now)
 
       expect(Conversation.count).to eq(0)
     end

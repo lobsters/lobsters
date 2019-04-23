@@ -7,13 +7,13 @@ class ConversationsController < ApplicationController
   end
 
   def show
-    @conversation = Conversation.
-      includes(messages: [:author, :hat]).
-      find_by(short_id: params[:id])
-    @conversation.
-      messages.
-      where(recipient: @user).
-      update_all(has_been_read: true)
+    @conversation = Conversation
+      .includes(messages: [:author, :hat])
+      .find_by(short_id: params[:id])
+    @conversation
+      .messages
+      .where(recipient: @user)
+      .update_all(has_been_read: true)
     @user.update_unread_message_count!
     @message = Message.new(conversation: @conversation)
   end
@@ -34,14 +34,14 @@ class ConversationsController < ApplicationController
   end
 
   def destroy
-    @conversation = find_user_conversations(@user).
-      find_by(short_id: params[:id])
+    @conversation = find_user_conversations(@user)
+      .find_by(short_id: params[:id])
 
     if @conversation.present?
       if @conversation.author == @user
-        @conversation.update(deleted_by_author_at: Time.now)
+        @conversation.update(deleted_by_author_at: Time.zone.now)
       else
-        @conversation.update(deleted_by_recipient_at: Time.now)
+        @conversation.update(deleted_by_recipient_at: Time.zone.now)
       end
       flash[:success] = "Conversation deleted"
       redirect_to conversations_path
@@ -51,7 +51,7 @@ class ConversationsController < ApplicationController
     end
   end
 
-  private
+private
 
   def find_user_conversations(user)
     @conversations = Conversation.includes(:recipient, :author).involving(user)

@@ -9,7 +9,7 @@ class ConversationCreator
   end
 
   def create(author:, recipient_username:, subject:, message_params: nil)
-    conversation = Conversation.create(
+    Conversation.create(
       author: author,
       recipient: recipient(recipient_username),
       subject: subject,
@@ -27,7 +27,7 @@ class ConversationCreator
     end
   end
 
-  private
+private
 
   def recipient(username)
     @_recipient ||= User.find_by(username: username)

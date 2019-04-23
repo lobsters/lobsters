@@ -43,7 +43,7 @@ class ConversationsController < ApplicationController
       else
         @conversation.update(deleted_by_recipient_at: Time.zone.now)
       end
-      flash[:success] = "Conversation deleted"
+      flash[:success] = "Conversation marked for deletion"
       redirect_to conversations_path
     else
       flash[:error] = "Could not delete message"

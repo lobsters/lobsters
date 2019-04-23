@@ -7,7 +7,7 @@ class Conversation < ApplicationRecord
   belongs_to :recipient,
              class_name: "User",
              foreign_key: "recipient_user_id"
-  has_many :messages
+  has_many :messages, dependent: :destroy
 
   validates :short_id, presence: true, uniqueness: true
   validates :subject, presence: true

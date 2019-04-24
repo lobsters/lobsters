@@ -31,15 +31,8 @@ class StoryRepository
   end
 
   def tagged(tags)
-    tagged = Story.base.positive_ranked.where(
-      Story.arel_table[:id].in(
-        Tagging.arel_table.where(
-          Tagging.arel_table[:tag_id].in(tags.map(&:id))
-        ).project(
-          Tagging.arel_table[:story_id]
-        )
-      )
-    )
+    tagged = Story.base.positive_ranked.joins(:taggings).where(taggings: { tag_id: tags.map(&:id) })
+
     tagged.order(created_at: :desc)
   end
 

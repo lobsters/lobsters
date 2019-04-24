@@ -48,8 +48,18 @@ RSpec.feature "Reading Homepage", type: feature do
       expect(page).to have_content(b_story.title)
     end
 
-    scenario "no tags raises error" do
-      expect { visit "/t/definitelynosuchtaghere" }.to raise_error
+    context "errors" do
+      scenario "non-existent tag raises error" do
+        expect { visit "/t/definitelynosuchtaghere" }.to raise_error
+      end
+
+      scenario "non-existent tag with existing tag raises an error" do
+        expect { visit "/t/#{tag_a},definitelynosuchtaghere"}.to raise_error
+      end
+
+      scenario "non-unique existing tags raises an error" do
+        expect { visit "/t/#{tag_a},#{tag_a}"}.to raise_error
+      end
     end
   end
 end

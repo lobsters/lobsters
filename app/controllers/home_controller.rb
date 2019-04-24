@@ -193,7 +193,8 @@ class HomeController < ApplicationController
   def tagged
     tag_params = params[:tag].split(',')
     @tags = Tag.where(tag: tag_params)
-    @tags.first!
+
+    raise ActiveRecord::RecordNotFound unless @tags.length == tag_params.length
 
     @stories, @show_more = get_from_cache(tags: tag_params.sort.join(',')) do
       paginate stories.tagged(@tags)

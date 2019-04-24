@@ -54,11 +54,11 @@ RSpec.feature "Reading Homepage", type: feature do
       end
 
       scenario "non-existent tag with existing tag raises an error" do
-        expect { visit "/t/#{tag_a},definitelynosuchtaghere"}.to raise_error
+        expect { visit "/t/#{tag_a},definitelynosuchtaghere" }.to raise_error
       end
 
       scenario "non-unique existing tags raises an error" do
-        expect { visit "/t/#{tag_a},#{tag_a}"}.to raise_error
+        expect { visit "/t/#{tag_a},#{tag_a}" }.to raise_error
       end
     end
   end

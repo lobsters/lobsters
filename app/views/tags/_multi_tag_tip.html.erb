@@ -1,0 +1,5 @@
+<p class="sublegend">
+  Tip: combine tag feeds by delimiting them with commas:
+  <% tags = tags.pluck(:tag)[0..1].join(',') %>
+  <a href="/t/<%= tags %>"><code><%= Rails.application.domain %>/t/<%= tags %></code></a>
+</p >

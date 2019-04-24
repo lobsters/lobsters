@@ -13,6 +13,8 @@
         &ndash; <%= tag.description %>
       <% end %>
     <% end %>
+
+    <%= render(partial: 'tags/multi_tag_tip', locals: { tags: @tags + Tag.limit(1) }) if @tags.count == 1 %>
   </div>
 <% end %>
 

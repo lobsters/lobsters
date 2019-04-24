@@ -1,7 +1,7 @@
 # activity: is the weighted sum of votes, comments, and stories in some time period
 # period: 15 minute block of time
 # range: high and low of periods in the last few months
-# intensity: what % of the range the current activity is (0-1)
+# intensity: what % of the range the current activity is (0-100)
 module TrafficHelper
   PERIOD_LENGTH = 15 # minutes
   CACHE_FOR = 5 # minutes
@@ -55,11 +55,11 @@ module TrafficHelper
     low, high = cached_traffic_range
     return 0.5 if low.nil? || high.nil? || high == low
     activity = [low, current_activity, high].sort[1]
-    (activity - low)*1.0/(high - low)
+    [0, ((activity - low)*1.0/(high - low) * 100).round, 100].sort[1]
   end
 
   def self.current_period_key
-    "traffic:at:#{Time.now.utc.to_i/(CACHE_FOR * 60)}"
+    "traffic:at:#{(Time.now.utc.to_i/CACHE_FOR.minutes).floor}"
   end
 
   def self.cached_current_intensity

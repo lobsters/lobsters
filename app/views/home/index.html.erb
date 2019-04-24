@@ -7,9 +7,11 @@
   <div class="box" id="leader">
     Stories <a href="/tags">tagged</a> as
     <% @tags.each do |tag| %>
-      <%= tag_link(@tag) %>
-      &ndash;
-      <%= tag.description %>
+      <%= tag_link(tag) %>
+
+      <% if tag.description.present? %>
+        &ndash; <%= tag.description %>
+      <% end %>
     <% end %>
   </div>
 <% end %>

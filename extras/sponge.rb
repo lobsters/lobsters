@@ -141,7 +141,7 @@ class Sponge
     end
 
     if BAD_NETS.select {|n| IPAddr.new(n).include?(ip) }.any?
-      raise BadIPsError.new("refusing to talk to IP #{ip}")
+      raise BadIPsError.new("refusing to talk to IP #{ip}") if Rails.env.production?
     end
 
     host = Net::HTTP.new(ip.to_s, uri.port)

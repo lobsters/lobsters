@@ -191,13 +191,13 @@ class HomeController < ApplicationController
   end
 
   def tagged
-    tag_params = params[:tag].split('+')
+    tag_params = params[:tag].split(',')
     @tags = Tag.where(tag: tag_params)
     @tags.first!
 
-    @stories, @show_more = get_from_cache(tags: tag_params.sort.join('+')) {
+    @stories, @show_more = get_from_cache(tags: tag_params.sort.join(',')) do
       paginate stories.tagged(@tags)
-    }
+    end
 
     @heading = params[:tag]
     @title = @tags.map do |tag|

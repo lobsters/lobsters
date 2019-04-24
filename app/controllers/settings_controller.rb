@@ -268,6 +268,7 @@ class SettingsController < ApplicationController
 
     if Keybase.validate_initial(kb_username, kb_signature, @user.username)
       @user.keybase_signatures = [{ kb_username: kb_username, sig_hash: kb_signature }]
+      @user.save!
       return redirect_to Keybase.success_url(kb_username, kb_signature, kb_ua, @user.username)
     else
       flash[:error] = "Failed to connect your account to Keybase, invalid proof signature was provided."

@@ -21,9 +21,8 @@ if [ ! hash envsubst 2>/dev/null ]; then
 	exit 3
 fi
 . .env
-export RAILS_ENV MYSQL_ROOT_PASSWORD MYSQL_USER MYSQL_PASSWORD MYSQL_DATABASE
-if ! check_env_vars "RAILS_ENV" "MYSQL_ROOT_PASSWORD" "MYSQL_USER" "MYSQL_PASSWORD" "MYSQL_DATABASE"; then 
-	echo 'You must set these variables in .env: RAILS_ENV MYSQL_ROOT_PASSWORD MYSQL_USER MYSQL_PASSWORD MYSQL_DATABASE'
+if ! check_env_vars "RAILS_ENV" "MYSQL_ROOT_PASSWORD" "MYSQL_USER" "MYSQL_PASSWORD" "MYSQL_DATABASE" "SMTP_USERNAME" "SMTP_PASSWORD"; then
+	echo 'Some variables are not set in .env, please refer to docker-run.sh for the list'
 	exit 4
 fi
 cat $DB_TEMPLATE_PATH | envsubst > $DB_PATH

@@ -8,6 +8,8 @@ services:
       - 8080:8080
     environment:
       - RAILS_ENV # One of "development", "test", "production"
+      - SMTP_USERNAME
+      - SMTP_PASSWORD
     volumes:
       - .:/gambero
     security_opt:

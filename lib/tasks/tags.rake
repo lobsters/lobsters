@@ -5,10 +5,10 @@ namespace :tags do
         # Gets file path from args or falls back to default
         tags_filepath = args[:filename] || 'approved_tags.yaml'
         # Parses YAML from string
-        tags = YAML.load_file(tags_filepath)
+        items = YAML.load_file(tags_filepath)
         # Maps every tag and if it's not present adds it to the DB
-        tags.map do |tag|
-            Tag.find_or_create_by! tag: tag
+        items.map do |item|
+            Tag.find_or_create_by! tag: item["tag"], description: item["description"]
         end
     end
 end

@@ -1,88 +1,88 @@
 ---
-- "accessibilità"
-- "android"
-- "api"
-- "arte"
-- "assembly"
-- "audio"
-- "browsers"
-- "c"
-- "c++"
-- "clojure"
-- "compilatori"
-- "criptovalute"
-- "crittografia"
-- "css"
-- "cultura-it"
-- "database"
-- "debugging"
-- "design"
-- "devops"
-- "domanda"
-- "dotnet"
-- "erlang/elixir"
-- "etica"
-- "evento"
-- "filosofia"
-- "freebsd"
-- "giochi"
-- "go"
-- "grafica"
-- "hardware"
-- "haskell"
-- "informaticateorica"
-- "ios"
-- "istruzione"
-- "java"
-- "javascript"
-- "lamentela"
-- "lavoro"
-- "legislazione"
-- "libro"
-- "linux"
-- "lisp"
-- "lua"
-- "mac"
-- "machinelearning"
-- "matematica"
-- "meta"
-- "metodiformali"
-- "mobile"
-- "netbsd"
-- "objectivec"
-- "openbsd"
-- "pdf"
-- "performance"
-- "perl"
-- "php"
-- "plt"
-- "politica"
-- "pratiche"
-- "privacy"
-- "python"
-- "reti"
-- "reverse-engineering"
-- "rilascio"
-- "ruby"
-- "rust"
-- "satira"
-- "scala"
-- "scalabilità"
-- "scienza"
-- "sicurezza"
-- "sistemidistribuiti"
-- "sistemioperativi"
-- "slides"
-- "società"
-- "storia"
-- "swift"
-- "systemd"
-- "testing"
-- "trascrizione"
-- "unix"
-- "vcs"
-- "video"
-- "virtualizzazione"
-- "wasm"
-- "web"
-- "windows"
+- { tag: "accessibilità", description: "Accessibilità, tecnologie di fruizione" }
+- { tag: "android", description: "Sistema operativo Android per dispositivi mobili" }
+- { tag: "api", description: "Application Programming Interfaces" }
+- { tag: "arte", description: "Arte " }
+- { tag: "assembly", description: "Linguaggio Assembly" }
+- { tag: "audio", description: "Audio" }
+- { tag: "browsers", description: "Web browsers" }
+- { tag: "c", description: "Linguaggio di programmazione C" }
+- { tag: "c++", description: "Linguaggio di programmazione C++" }
+- { tag: "clojure", description: "Linguaggio di programmazione Clojure" }
+- { tag: "compilatori", description: "Design di compilatori" }
+- { tag: "criptovalute", description: "Bitcoin ed altre valute" }
+- { tag: "crittografia", description: "Crittografia" }
+- { tag: "css", description: "Cascading Style Sheet" }
+- { tag: "cultura-it", description: "Cultura del mondo IT" }
+- { tag: "database", description: "Basi di dati" }
+- { tag: "debugging", description: "Tecniche di debugging" }
+- { tag: "design", description: "Design e progettazione visuale" }
+- { tag: "devops", description: "Developer Operations" }
+- { tag: "domanda", description: "Chiedi alla community gambe.ro" }
+- { tag: "dotnet", description: "Piattaforma .NET di Microsoft" }
+- { tag: "erlang/elixir", description: "Linguaggi di programmazione Erlang ed Elixir" }
+- { tag: "etica", description: "Etica dello sviluppo software" }
+- { tag: "evento", description: "Evento per sviluppatori" }
+- { tag: "filosofia", description: "Filosofia dello sviluppo software" }
+- { tag: "freebsd", description: "Famiglia di sistemi operativi FreeBSD" }
+- { tag: "giochi", description: "Giochi" }
+- { tag: "go", description: "Linguaggio di programmazione Go" }
+- { tag: "grafica", description: "Grafica" }
+- { tag: "hardware", description: "Hardware" }
+- { tag: "haskell", description: "Linguaggio di programmazione Haskell" }
+- { tag: "informaticateorica", description: "Teoria della computazione, semantica, calcolabilità" }
+- { tag: "ios", description: "Sistema operativo iOS per iPhone" }
+- { tag: "istruzione", description: "Istruzione" }
+- { tag: "java", description: "Linguaggio di programmazione Java" }
+- { tag: "javascript", description: "Linguaggio di programmazione JavaScript" }
+- { tag: "lamentela", description: "Lamentela riguardo a qualcosa" }
+- { tag: "lavoro", description: "Lavoro" }
+- { tag: "legislazione", description: "Legislazione" }
+- { tag: "libro", description: "Libro" }
+- { tag: "linux", description: "Sistema operativo Linux" }
+- { tag: "lisp", description: "Linguaggio di programmazione Lisp" }
+- { tag: "lua", description: "Linguaggio di programmazione Lua" }
+- { tag: "mac", description: "Prodotti Mac di Apple" }
+- { tag: "machinelearning", description: "Machine learning" }
+- { tag: "matematica", description: "Matematica" }
+- { tag: "meta", description: "Argomenti legati a gambe.ro" }
+- { tag: "metodiformali", description: "Metodi di verifica e specifica formale" }
+- { tag: "mobile", description: "Programmazione per l'ambiente mobile" }
+- { tag: "netbsd", description: "Sistema operativo NetBSD" }
+- { tag: "objectivec", description: "Linguaggio di programmazione Objective-C" }
+- { tag: "openbsd", description: "Sistema operativo OpenBSD" }
+- { tag: "pdf", description: "Link ad un file PDF" }
+- { tag: "performance", description: "Performance di programmi" }
+- { tag: "perl", description: "Linguaggio di programmazione Perl" }
+- { tag: "php", description: "Linguaggio di programmazione PHP" }
+- { tag: "plt", description: "Teoria dei linguaggi di programmazione" }
+- { tag: "politica", description: "Politica" }
+- { tag: "pratiche", description: "Buone pratiche di programmazione" }
+- { tag: "privacy", description: "Privacy e gestione dei dati" }
+- { tag: "python", description: "Linguaggio di programmazione Python" }
+- { tag: "reti", description: "Reti di comunicazione" }
+- { tag: "reverse-engineering", description: "Ingegneria inversa" }
+- { tag: "rilascio", description: "Rilascio di software in produzione" }
+- { tag: "ruby", description: "Linguaggio di programmazione Ruby" }
+- { tag: "rust", description: "Linguagggio di programmazione Rust" }
+- { tag: "satira", description: "Satira" }
+- { tag: "scala", description: "Linguaggio di programmazione Scala" }
+- { tag: "scalabilità", description: "Scalabilità di sistemi software" }
+- { tag: "scienza", description: "Scienza" }
+- { tag: "sicurezza", description: "Sicurezza di sistemi informatici" }
+- { tag: "sistemidistribuiti", description: "Sistemi distribuiti" }
+- { tag: "sistemioperativi", description: "Sistemi operativi" }
+- { tag: "slides", description: "Link a delle slides, es. di una conferenza" }
+- { tag: "società", description: "Società" }
+- { tag: "storia", description: "Storia" }
+- { tag: "swift", description: "Linguaggio di programmazione Swift" }
+- { tag: "systemd", description: "Service manager per sistemi unix-like" }
+- { tag: "testing", description: "Testing di software" }
+- { tag: "trascrizione", description: "Link ad una trascrizione, es. di una conferenza" }
+- { tag: "unix", description: "Sistemi operativi Unix" }
+- { tag: "vcs", description: "Sistemi di controllo versione" }
+- { tag: "video", description: "Link ad un video" }
+- { tag: "virtualizzazione", description: "Virtualizzazione di sistemi operativi" }
+- { tag: "wasm", description: "WebAssembly" }
+- { tag: "web", description: "Sviluppo web" }
+- { tag: "windows", description: "Sistema operativo Windows" }

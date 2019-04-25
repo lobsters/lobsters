@@ -600,7 +600,17 @@ it:
       <p>
         gambe.ro non vuole essere uno spazio di supporto tecnico né per sviluppatori né per utilizzatori. Non vuole essere neppure uno spazio di discussione della tecnologia in senso esteso: vi invitiamo a trattare temi come hardware, telefonia o futurologia nei numerosi spazi di discussione già esistenti.
       </p>
-
+      <a name=\"betatest\">
+      </a>
+      <h2>Beta Test</h2>
+      <p>
+      Gambe.ro è al momento in una fase di test preliminare. L’idea è di raccogliere feedback da voi utenti per adattare il software, i regolamenti e i contenuti al nostro uso specifico. Inoltre vogliamo raccogliere dati sull’utilizzo della piattaforma così da acquistare un hardware adatto alle nostre necessità.
+      </p><p>
+      Nella pratica, Gambe.ro sarà pienamente operativo sin da subito. Saranno tuttavia limitati gli inviti per evitare una crescita troppo rapida della comunità prima che la piattaforma sia pronta e stabile. Ci riserviamo inoltre di chiudere completamente gli inviti e di resettare integralmente la piattaforma una volta concluso il testing, nel caso in cui queste misure si rivelassero necessarie.
+      </p><p>
+      Per segnalarci errori di traduzione, bug o semplicemente per darci i vostri feedback, potete contattarci all’indirizzo e-mail: <a href=\"mailto:feedback@gambe.ro\">feedback@gambe.ro</a>. 
+      </p>
+      
       <h2>I draghi</h2>
       <p>Puoi contrassegnare un commento come drago quando la soluzione funziona, ma non sai perché funziona. Viene dall'espressione latina 'hic sunt dracones'.</p>
 
@@ -625,7 +635,8 @@ it:
       <h2>Trivia</h2>
       <p>
         Il nome gambe.ro è ispirato ovviamente a lobste.rs che a sua volta è semplicemente un gioco di parole con un dominio e non ha una vera connessione con gli obiettivi del sito. Dopo aver scartato pastaconlesar.de e spaghetticodealloscogl.io abbiamo optato per il più minimale gambe.ro.
-      </p>"
+      </p>
+      "
     invitations_controller:
       flashpublicinvitnotallowed: "Richieste di inviti pubbliche non sono permesse."
       flashsuccessinvitrequest: "La tua richiesta d'invito è stata validata e sarà ora visibile agli altri utenti connessi."

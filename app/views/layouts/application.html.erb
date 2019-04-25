@@ -58,6 +58,9 @@
         <% end %>
 
         <% links.merge!({ "/search" => t('.searchlink') }) %>
+        <% links.merge!({ "/about#betatest" => t('.beta-test') }) %>
+        
+
         <% if !@user %>
           <% links.merge!({ "/invitations/request" => t('.invitationlink') }) %>
         <% end %>

@@ -16,7 +16,7 @@ RUN apk add --update \
 RUN addgroup -S gambero && adduser -S gambero -G gambero
 USER gambero
 CMD /gambero/docker-entrypoint.sh
-HEALTHCHECK --timeout=5s CMD curl -f http://localhost:3000
+HEALTHCHECK --timeout=5s CMD curl -f http://localhost:8080
 
 # The gemfile is rarely updated, so this COPY will allow to cache the expensive `bundle install`
 COPY ./Gemfile ./Gemfile.lock /gambero/

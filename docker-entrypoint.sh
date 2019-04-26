@@ -30,8 +30,14 @@ fi
 
 # Rails leaves the PID file behind when the container is shut down
 rm -v tmp/pids/server.pid
+
 if [ "$RAILS_ENV" = "" ]; then
   echo "RAILS_ENV not set, quitting!"
   return 1
 fi
+
+# Precompile assets
+bundle exec rake assets:precompile
+
+# Launch!
 unicorn --env $RAILS_ENV

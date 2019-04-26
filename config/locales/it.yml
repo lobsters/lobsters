@@ -99,6 +99,7 @@ it:
       yourthreadslink: "I tuoi thread"
       submitstorylink: "Invia articolo"
       searchlink: "Ricerca"
+      beta-test: "Beta Test"
       invitationlink: "Richiedi un invito"
       filterslink: "Filtri"
       newmessagelink:
@@ -123,7 +124,7 @@ it:
   comments:
     commentbox:
       mustbelogged: "Devi essere connesso per lasciare un commento."
-      markdown: "Markdown attivo"
+      markdown: "Formattazione Markdown disponibile"
       post: "Invia"
       update: "Aggiorna"
       preview: "Anteprima"
@@ -347,7 +348,7 @@ it:
       emailaddress: "Indirizzo e-mail:"
       gravatarized: "<a href=\"http://www.gravatar.com/\" target=\"_blank\">Gravatar</a>izzato"
       about: "Chi siamo:"
-      markdownformattingavailable: "Formato Markdown possibile"
+      markdownformattingavailable: "Formattazione Markdown disponibile"
       saveaccountsettings: "Salva le impostazioni dell'account"
       notificationsettings: "Impostazioni delle Notifiche"
       pushover: "<a href=\"https://pushover.net/\">Pushover</a>:"
@@ -453,7 +454,7 @@ it:
       unavailable: "Non disponibile:"
       unavailableat: "URL sorgente non disponibile, abilita la visualizzazione del testo nella cache"
       modreason: "Motivazione dell'azione del moderatore: "
-      markdown: "Disponibile formattazione markdown"
+      markdown: "Formattazione Markdown disponibile"
       save: "Salva"
       cancel: "Annulla le modifiche"
     form:
@@ -502,7 +503,7 @@ it:
       commentplurial: "commenti"
       additionaltext: "Testo aggiuntivo disponibile"
     new:
-      markdown: "Disponibile la formattazione in Markdown"
+      markdown: "Formattazione Markdown disponibile"
       preview: "Anteprima"
       submit: "Pubblica un articolo"
       submitbutton: "Pubblica"
@@ -521,11 +522,11 @@ it:
       administrator: "amministratore"
       moderator: "moderatore"
       user: "utente"
-      withinvites: "con inviti"
+      withinvites: "inviti"
       storysubmissions: "con articoli pubblicati"
-      disabled: "disattivato"
+      disabled: "disattivati"
       joined: "Iscritto:"
-      byinvitationfrom: "per <a href=\"/u/%{user}\">invito</a> da`"
+      byinvitationfrom: "per <a href=\"/u/%{user}\">invito</a> da"
       banneduser: "Bannato:"
       bannedby: "da"
       hats: "Cappello:"

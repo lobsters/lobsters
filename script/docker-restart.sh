@@ -22,5 +22,7 @@ echo "Applying security fixes..."
 script/docker-host-security.sh
 echo "Rebuilding Docker container if necessary..."
 script/docker-build.sh
-echo "Launching docker-compose..."
+echo "Bringing down containers..."
+docker-compose down
+echo "Launching containers..."
 docker-compose up "$@" # Passes any additional flags

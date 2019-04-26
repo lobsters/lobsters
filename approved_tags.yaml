@@ -4,7 +4,7 @@
 - { tag: "api", description: "Application Programming Interfaces" }
 - { tag: "arte", description: "Arte " }
 - { tag: "assembly", description: "Linguaggio Assembly" }
-- { tag: "audio", description: "Audio" }
+- { tag: "audio", description: "Audio", is_media: true }
 - { tag: "browsers", description: "Web browsers" }
 - { tag: "c", description: "Linguaggio di programmazione C" }
 - { tag: "c++", description: "Linguaggio di programmazione C++" }
@@ -51,7 +51,7 @@
 - { tag: "netbsd", description: "Sistema operativo NetBSD" }
 - { tag: "objectivec", description: "Linguaggio di programmazione Objective-C" }
 - { tag: "openbsd", description: "Sistema operativo OpenBSD" }
-- { tag: "pdf", description: "Link ad un file PDF" }
+- { tag: "pdf", description: "Link ad un file PDF", is_media: true }
 - { tag: "performance", description: "Performance di programmi" }
 - { tag: "perl", description: "Linguaggio di programmazione Perl" }
 - { tag: "php", description: "Linguaggio di programmazione PHP" }
@@ -72,7 +72,7 @@
 - { tag: "sicurezza", description: "Sicurezza di sistemi informatici" }
 - { tag: "sistemidistribuiti", description: "Sistemi distribuiti" }
 - { tag: "sistemioperativi", description: "Sistemi operativi" }
-- { tag: "slides", description: "Link a delle slides, es. di una conferenza" }
+- { tag: "slides", description: "Link a delle slides, es. di una conferenza", is_media: true }
 - { tag: "società", description: "Società" }
 - { tag: "storia", description: "Storia" }
 - { tag: "swift", description: "Linguaggio di programmazione Swift" }
@@ -81,7 +81,7 @@
 - { tag: "trascrizione", description: "Link ad una trascrizione, es. di una conferenza" }
 - { tag: "unix", description: "Sistemi operativi Unix" }
 - { tag: "vcs", description: "Sistemi di controllo versione" }
-- { tag: "video", description: "Link ad un video" }
+- { tag: "video", description: "Link ad un video", is_media: true }
 - { tag: "virtualizzazione", description: "Virtualizzazione di sistemi operativi" }
 - { tag: "wasm", description: "WebAssembly" }
 - { tag: "web", description: "Sviluppo web" }

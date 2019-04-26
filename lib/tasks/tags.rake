@@ -8,7 +8,7 @@ namespace :tags do
         items = YAML.load_file(tags_filepath)
         # Maps every tag and if it's not present adds it to the DB
         items.map do |item|
-            Tag.find_or_create_by! tag: item["tag"], description: item["description"]
+            Tag.find_or_create_by! tag: item["tag"], description: item["description"], is_media: item["is_media"]
         end
     end
 end

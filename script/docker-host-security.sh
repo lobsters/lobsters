@@ -16,4 +16,6 @@ else
 fi
 mkdir -pv tmp/
 chmod -Rv 777 tmp/
+mkdir -pv public/assets/
+chmod -Rv 777 public/assets/
 chmod -v a+rw db/schema.rb

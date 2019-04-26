@@ -20,13 +20,17 @@ if [ ! hash envsubst 2>/dev/null ]; then
 	echo 'envsubst not found; please install GNU gettext.'
 	exit 3
 fi
+
+# Load env vars from .env
+set -a
 . .env
+
 if ! check_env_vars "RAILS_ENV" "MYSQL_ROOT_PASSWORD" "MYSQL_USER" "MYSQL_PASSWORD" "MYSQL_DATABASE" "SMTP_USERNAME" "SMTP_PASSWORD"; then
 	echo 'Some variables are not set in .env, please refer to docker-run.sh for the list'
 	exit 4
 fi
 cat $DB_TEMPLATE_PATH | envsubst > $DB_PATH
 echo "Rebuilding Docker container if necessary..."
-./docker-build.sh
+script/docker-build.sh
 echo "Launching docker-compose..."
 docker-compose up "$@" # Passes any additional flags

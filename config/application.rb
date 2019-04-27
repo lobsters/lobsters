@@ -17,11 +17,11 @@ module Lobsters
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
-    config.time_zone = 'Europe/Paris'
+    config.time_zone = 'Europe/Rome'
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    config.i18n.default_locale = :fr
+    config.i18n.default_locale = :it
 
     # Raise an exception when using mass assignment with unpermitted attributes
     config.action_controller.action_on_unpermitted_parameters = :raise
@@ -50,12 +50,24 @@ class << Rails.application
     true
   end
 
+  # when true limits the number of invitation sendings to max_invitations_count
+  # when false there is no limit on the number of invitation sendings
+  def closed_testing?
+    true
+  end
+
+  # the maximum number of invitation sendings when closed_testing? is true
+  # it does not apply to admins and moderators
+  def max_invitations_count
+    5
+  end
+
   def domain
-    "example.com"
+    "gambe.ro"
   end
 
   def name
-    "Example News"
+    "gambe.ro"
   end
 
   def root_url

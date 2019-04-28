@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 services:
   app:
     image: gambero:latest
@@ -8,21 +8,42 @@ services:
       - RAILS_ENV # One of "development", "test", "production"
     volumes:
       - .:/gambero
+    security_opt:
+      - no-new-privileges
+    read_only: true
     networks:
       default:
         ipv4_address: 172.20.0.2
+    healthcheck:
+      interval: 5m
+      retries: 3
+      start_period: 30s
   db:
     image: mariadb
     volumes:
       - ./mariadb:/var/lib/mysql
+    # tmpfs's must be explicitly declared, because / is by default read-only (read_only: true).
+    tmpfs:
+      - /tmp
+      - /run/mysqld
+      - /var/run
     environment:
       - MYSQL_ROOT_PASSWORD
       - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
+    security_opt:
+      - no-new-privileges
     networks:
       default:
         ipv4_address: 172.20.0.3
+    read_only: true
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -u $MYSQL_USER -p$MYSQL_PASSWORD -h 172.20.0.3 || exit 1"]
+      interval: 5m
+      timeout: 5s
+      retries: 3
+      start_period: 30s
 
 networks:
   default:

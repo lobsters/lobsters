@@ -10,6 +10,7 @@ RUN apk add --update \
   sqlite-dev \
   nodejs \
   tzdata \
+  sphinx \
   && rm -rf /var/cache/apk/*
 CMD /gambero/docker-entrypoint.sh
 

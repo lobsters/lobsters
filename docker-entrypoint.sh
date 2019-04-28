@@ -17,6 +17,10 @@ else
   bundle exec rake db:migrate
 fi
 
+# Run ThinkingSphinx rake tasks to configure Sphinx
+bundle exec rake ts:index
+bundle exec rake ts:start
+
 # Set out SECRET_KEY_BASE
 if [ "$SECRET_KEY_BASE" = "" ]; then
   echo "No SECRET_KEY_BASE provided, generating one now."

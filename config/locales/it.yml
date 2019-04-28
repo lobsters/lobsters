@@ -1,0 +1,797 @@
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+# Convenzioni adottate:
+#   - story → articolo
+#   - merge/unmerge → accorpare/scorporare
+#   - ban → bannare
+#   - thread → discussione
+#   - author/submitter → autore
+#   - guidelines → linee guida
+#   - timeout → tempo scaduto
+#
+# Dubbi:
+#   - 582-583 → figure out what to do with the two fields "about" and "license"
+#   - 601-602 → reimplement the message in order to be able to use two different plural forms for "messaggi/o" e "eliminat/i"
+#   - 688-690 → confirm whether the translation is needed or not
+
+it:
+  activerecord:
+    errors:
+      template:
+        body: 'Verifica i campi sottostanti: '
+        header:
+          one: 'Impossibile registrare questo/a %{model}: 1 errore'
+          other: 'Impossibile registrare questo/a %{model}: %{count} errori' 
+      models:
+        user:
+          attributes:
+            email:
+              invalid: "L'e-mail non è valida"
+              taken: "L'e-mail è già in uso"
+            password:
+              blank: "La password non può essere vuota"
+            password_confirmation:
+              confirmation: "Le due password non corrispondono"
+            username:
+              invalid: "Il nome utente non è valido"
+  hats:
+    index:
+      hatstitle: "Cappelli"
+  time:
+    formats:
+      default: "%d-%m-%Y %H:%M:%S"
+  mailers:
+    email_message:
+      subject: "[%{appname}] Messaggio privato di %{author}: %{subject}"
+    email_reply:
+      replysubject: "[%{appname}] Risposta di %{author} su %{story}"
+      mentionsubject: "[%{appname}] %{author} ti ha menzionato su %{story}"
+    invitation_mailer:
+      subject: "[%{appname}] Sei stato invitato su %{appname}"
+    invitation_request_mailer:
+      subject: "[%{appname}] Conferma la domanda di invito su %{appname}"
+  models:
+    comment:
+      commentcannotbeblank: "Un commento non può essere vuoto."
+      useridcannotbeblank: "Un ID utente non può essere vuoto."
+      storyidcannotbeblank: "Un ID articolo non può essere vuoto."
+      deletedcomment: "commento rimosso"
+      threadremovedby: "Commento rimosso dal moderatore %{modoname}: %{modreason}"
+      turnedintodragon: "trasformato in drago"
+      slayeddragon: "il drago è stato abbattuto"
+      metooerror: "Vota per il commento originale."
+    hat:
+      grantsubject: "Il tuo cappello %{hat} è stato approvato"
+      grantbody: "Ora puoi indossare questo cappello quando commenti.\n\nQuesto messaggio è stato inviato automaticamente."
+      rejectsubject: "La tua richiesta del cappello %{hat} è stata rifiutata"
+      grantedby: "<span class=\"hat hat_%{hat}\" title=\"Concesso da %{inviteuser} il %{invitedate}\""
+    moderation:
+      storyeditedby: "Il tuo articolo è stato modificato da "
+      usersuggestions: "suggerimenti di utenti"
+      amoderator: "un moderatore"
+      storyeditedfor: "Il tuo articolo [%{title}](%{url}) è stato modificato con i seguenti cambiamenti:\n"
+      reasongiven: "Ragioni date:\n"
+      commentmoderated: "Il tuo commento è stato moderato"
+      commentmoderatedwhy: "Il tuo commento su [%{title}](%{url}) è stato moderato:\n"
+      automatedmessage: "*Questo messaggio è stato inviato automaticamente.*"
+    story:
+      deletedstory: "articolo rimosso"
+      undeletedstory: "articolo ripristinato"
+      mergedinto: "accorpato con %{shortid} (%{title})"
+      unmerged: "scorporato da un'altra storia"
+      changedfromto: "%{story} cambiato da %{stfrom} a %{stto}"
+      nonmedia: "Devi inserire un tag diverso da PDF o video"
+      alreadysubmitted: "è già stato inserito negli ultimi %{days} giorni"
+    vote:
+      offtopicvote: "Fuori tema"
+      incorrectvote: "Non corretto"
+      metoovote: "Anche io"
+      trollvote: "Troll"
+      alreadypostedvote: "Già postato"
+      cancel: "Annullato"
+      spamvote: "Spam"
+  layouts:
+    application:
+      name: "Gambe.ro"
+      homelink: "Home"
+      recentlink: "Recenti"
+      commentslink: "Commenti"
+      yourthreadslink: "I tuoi thread"
+      submitstorylink: "Invia articolo"
+      searchlink: "Ricerca"
+      invitationlink: "Richiedi un invito"
+      filterslink: "Filtri"
+      newmessagelink:
+        one: "Un nuovo messaggio"
+        other: "%{count} Nuovi messaggi"
+      messageslink: "Messaggi"
+      loginlink: "Login"
+      logoutlink: "Logout"
+      confirmlogoutlink: "Sei sicuro di voler uscire?"
+      moderationloglink: "Log di moderazione"
+      invitationqueuelink: "Link di invito"
+      chatlink: "Chat"
+      hatrequestlink: "Richiedi il cappello"
+      hatslink: "Cappelli"
+      privacylink: "Informativa sulla privacy"
+      aboutlink: "Chi siamo"
+      blog: "Blog"
+      twitter: "Twitter"
+      diaspora: "Diaspora*"
+      mastodon: "Mastodon"
+      currenttraffic: "(Utenti attivi: %{usernb})"
+  comments:
+    commentbox:
+      mustbelogged: "Devi essere connesso per lasciare un commento."
+      markdown: "Markdown attivo"
+      post: "Invia"
+      update: "Aggiorna"
+      preview: "Anteprima"
+      cancel: "Annulla"
+      putonhat: "Metti il cappello: "
+    comment:
+      previewed: "anteprima visualizzata"
+      edited: "modificato"
+      emailed: "inviato via e-mail"
+      link: "link"
+      edit: "modifica"
+      undelete: "ripristina"
+      delete: "cancella"
+      reply: "rispondi"
+      about: "di:"
+      dragon: "drago"
+      undragon: "non-drago"
+  global:
+    markdownhelp:
+      emphasizedtext: "corsivo"
+      emphasizedtextdesc: "racchiudi il testo tra <tt>*asterischi*</tt>"
+      strongtext: "grassetto"
+      strongtextdesc: "<tt>racchiudi il testo tra <tt>**doppi asterischi**</tt>"
+      fixedwidth: "monospaziato"
+      fixedwidthdesc: "<tt>racchiudi il testo tra <tt>`accenti gravi (backquote)`</tt>"
+      linkedtext: "link"
+      linkedtextdesc: "<tt>[testo del link](http://example.com/)</tt> o anche solo l'URL senza titolo"
+      quotedtext: "citazione"
+      quotedtextdesc: "scrivi <tt>&gt;</tt> prima del testo"
+      pretext: "testo tabulato"
+      pretextdesc: "scrivi <tt>&nbsp;&nbsp;&nbsp;&nbsp;4 espaces</tt> prima del testo"
+      inlineimage: "(link immagine)"
+      inlineimagedesc: "![testo alternativo](http://example.com/image.jpg)</tt> (autorizzato solamente negli articoli)"
+  hats:
+    build_request:
+      title: "Richiedi un cappello"
+      description: "<p>Un cappello è un modo formale e verificato di inviare un commento per conto di un progetto, organizzazione o azienda. Ogni utente può avere più cappelli, uno dei quali può essere scelto per essere indossato quando pubblica un commento o invia un messaggio privato.</p><p>I cappelli sono destinati agli sviluppatori di progetti senior e ai dipendenti aziendali che sono autorizzati a fare commenti per conto delle loro organizzazioni, e sono solitamente riservati a progetti e organizzazioni importanti. I cappelli non sono intesi per elencare tutti i contributi di una persona a progetti software.</p><p><p>I cappelli non sono ammessi per i collaboratori occasionali di un progetto, per gli sviluppatori di un progetto non molto conosciuto, né per gli ex dipendenti di un'azienda o altre situazioni in cui non è possibile verificare che qualcuno possa rappresentare un'organizzazione. In generale, a meno che non si disponga di un'e-mail con il nome di dominio dell'azienda o del progetto o i diritti di accesso alle fonti di un progetto, un cappello non sarà consentito.</p>Per richiedere un cappello per il tuo account, per favore fornisci una breve descrizione del cappello (esempio \"OpenBSD developer\"), un link pubblico che verrà visualizzato quando il mouse viene spostato sopra il cappello che gli utenti possono vedere, come il tuo progetto o l'indirizzo email della tua azienda o un link al sito web aziendale e una descrizione privata che sarà visualizzata solo dai moderatori durante il processo di approvazione.</p><p><p>Una volta richiesto un cappello, un moderatore controllerà la tua richiesta inviando una mail all'indirizzo indicato come link e/o eseguendo altri controlli manuali della tua associazione al progetto. </p>"
+      hat: "Cappello:"
+      hatplaceholder: "Membro del progetto XYZ"
+      link: "Link:"
+      linkplaceholder: "membro@progetto.org, o URL della pagina dell'azienda"
+      comment: "Commento:"
+      commentplaceholder: "Sarà mostrato solo alla fine del processo di moderazione"
+      requesthatbutton: "Richiedi un cappello"
+    create_request:
+      submittedhatrequest: "Richiesta di cappello inviata con successo."
+    index:
+      title: "Cappello"
+      description: "Un cappello è un modo formale, verificato di postare un commento a nome di un progetto, di un'organizzazione o di un'azienda. Ogni utente può avere più cappelli, uno dei quali può essere scelto per essere indossato quando pubblica un commento o invia un messaggio privato."
+      request: "Richiedi un cappello"
+      user: "Utente"
+      hat: "Cappello"
+      link: "Link"
+    reject_request:
+      rejectedhatrequest: "Domanda di cappello rifiutata."
+    requests_index:
+      title: "Cappelli richiesti"
+      nohatrequests: "Nessuna domanda di cappello."
+      user: "Nome utente:"
+      hat: "Cappello:"
+      link: "Link:"
+      comment: "Commento:"
+      approve: "Approva la richiesta del cappello"
+      reason: "Ragione:"
+      reject: "Rifiuta la richiesta del cappello"
+      hator: "oppure"
+    approve_request:
+      approvedhatrequest: "La richiesta del cappello è stata approvata."
+  home:
+    index:
+      homerecentsdesc: "<em>Gli <a href=\"/newest\">ultimi</a> articoli, tra cui alcuni non ancora giunti sulla pagina principale.</em>"
+  invitations:
+    build:
+      buildinvtitle: "Richiedi un invito"
+      buildinvtext: "<p>Se non conosci o non sai come trovare un <a href=\"/u/\">utente iscritto</a> a cui richiedere l'invito, puoi richiedere un invito pubblicamente. Riceverai direttamente l'invito se ti sarà inviato.</p><p>Il tuo indirizzo e-mail deve essere valido e verificato visitando l'URL che ti sarà inviato prima che la tua domanda sia elaborata. Il tuo indirizzo e-mail non sarà visibile da nessuno ad eccezione dei moderatori. </p>"
+      buildinvname: "Nome:"
+      buildinvemail: "Indirizzo e-mail:"
+      buildinvurl: "URL:"
+      buildinvverificationurl: "URL verificabile (sito web personale, GitHub, etc.)"
+      buildinvrequest: "Richiedi l'invito"
+    index:
+      requestedinvtitle: "Richieste di invito"
+      requestedinvsummary: "Queste persone hanno richiesto un invito ed hanno confermato il loro indirizzo e-mail. Se riconosci qualcuno, inviagli un invito e accetta la domanda. Lo spam sarà eliminata da un moderatore."
+      requestedinvdate: "Data/Ora"
+      requestedinvname: "Nome"
+      requestedinvmemo: "Nota"
+      sendinvitation: "Invia l'invito"
+      confirminvitation: "Sei sicuro di voler invitare l'utente e accettare la richiesta?"
+      deleteinvitation: "Cancella"
+      confirmdelete: "Sei sicuro di voler rifiutare la domanda?"
+      noinvitation: "Nessun invito"
+  invitation_mailer:
+    invitation:
+      title: "Buongiorno %{email},"
+      invitedto: "L'utente %{user} ti ha invitato a %{appname}"
+      createaccount: "Per accettare un invito e creare un account, clicca sul seguente link:"
+  invitation_request_mailer:
+    invitation_request:
+      title: "Buongiorno %{email},"
+      invitedto: "L'utente con l'IP %{userip} ha richiesto un invito a %{appname}."
+      name: "Nome: %{name}"
+      email: "E-mail: %{email} (non sarà visualizzata da altri utenti)"
+      memo: "Informazioni: %{memo}"
+      warning: "Se sei tu, clicca l'URL sottostante per confermare la tua richiesta di iscrizione e l'invio ad altri utenti."
+      deletemessage: "Se non sei tu, puoi semplicemente ignorare questo messaggio."
+  login:
+    index:
+      login: "Login"
+      email: "E-mail o nome utente:"
+      password: "Password:"
+      forgotdeleted: "Password dimenticata?"
+      resetpassword: "Cambia password"
+      notuseryet: "Non sei ancora iscritto? L'iscrizione è solo tramite invito per evitare lo spam e facilitare la moderazione. Se conosci <a href=\"/u/\">%{acurrentuser}</a> del sito, richiedigli un invito."
+      acurrentuser: "un utente"
+      request: "Altrimenti richiedi un invito pubblicamente"
+      requestinchat: "in <a href=\"/chat\">chat</a>."
+    forgot_password:
+      resetpassword: "Cambia password"
+      resetinstructions: "Se hai dimenticato la password, inserisci il nome utente o l'indirizzo e-mail per ricevere le istruzioni per recuperarla."
+      email: "E-mail o nome utente:"
+      reset: "Cambia password"
+    set_new_password:
+      setnewpassword: "Inserisci la nuova password"
+      user: "Nome utente:"
+      password: "Password:"
+      again: "(ripeti password):"
+      setpassbutton: "Cambia password"
+      passwordreset: "La tua password è stata modificata"
+      couldnotresetpassword: "La password non può essere cambiata."
+      invalidresettoken: "Token di recupero non valido. Potrebbe essere stato già utilizzato oppure scaduto."
+    twofa:
+      login2fa: "Identificativo per autenticazione a due fattori"
+      logintotpcode: "Inserisci il codice TOTP della tua applicazione:"
+      loginbutton: "Identificati"
+      totpcode: "Codice TOTP:"
+    twofa_verify:
+      totpcodenotmatch: "Codice TOTP non corretto. Riprova."
+  filters:
+    index:
+      filteredtags: "Etichette filtrate"
+      filteredtagsdesc: "Per nascondere le informazioni dalla home page che sono contrassegnate da un certo <a href=\"/tags\">tag</a>, selezionale qui sotto."
+      filteredtagsnotloggedindesc: "Poiché non sei connesso, i tuoi filtri saranno salvati in un cookie di lunga durata. Per registrare definitivamente i filtri dei tag e perché funzionino indipendentemente dal browser web, <a href=\"/login\">accedi</a> al tuo account."
+      filteredhide: "Nascondi"
+      filteredtag: "Etichetta"
+      filtereddesc: "Descrizione"
+      filteredstories: "Articoli"
+      filteredsave: "Salva i filtri"
+  messages:
+    index:
+      viewreceived: "Vedi messaggi ricevuti"
+      viewsent: "Vedi messaggi inviati"
+      subjectlabel: "Oggetto"
+      privatemessages: "Messaggi privati ricevuti"
+      sent: "Inviato"
+      from: "Da"
+      tomsg: "A"
+      received: "Ricevuto"
+      deleteselected: "Cancella i messaggi selezionati"
+      donothavemessages: "Non hai messaggi privati da %{from}."
+      sentlower: "invia"
+      composemessage: "Scrivi un messaggio"
+      tomsglabel: "A:"
+      subject: "Oggetto:"
+      message: "Messaggio:"
+      sendmessage: "Invia il messaggio"
+    show:
+      backtosentmessages: "Ritorna ai Messaggi Inviati"
+      backtomessages: "Ritorna ai Messaggi"
+      sentfrom: "Inviato da"
+      tomsg: "a"
+      administrator: "(amministratore)"
+      moderator: "(moderatore)"
+      deletemessage: "Cancella il messaggio"
+      keepasnew: "Segna come non letto"
+      composereply: "Scrivi una risposta"
+      toupper: "A"
+      sendmessage: "Invia il messaggio"
+      cantreply: "Non è possibile rispondere a questo messaggio. Contatta un moderatore per assistenza."
+  moderations:
+    index:
+      moderationlogtitle: "Log di moderazione"
+      datecolumn: "Data/Ora"
+      moderatorcolumn: "Moderatore"
+      reasoncolumn: "Articolo/Commento/Utente, Azione, Ragione"
+      storyline: "Articolo"
+      commentline: "Commentato da"
+      commenton: "su"
+      user: "Utente"
+      users: "Utenti"
+      deleted: "Cancellato"
+      actionline: "Azione"
+      reasonline: "Ragione"
+      page: "Pagina"
+  search:
+    index:
+      search: "Cerca"
+      searchbutton: "Cerca"
+      include: "Include:"
+      orderby: "Ordinato per:"
+      all: "Tutti"
+      stories: "Articoli"
+      comments: "Commenti"
+      newest: "Più recenti"
+      relevance: "Pertinenza"
+      points: "Punti"
+      searchresults: "%{searchnumber} risultato%{plural} per \"%{query}\""
+      searchplural: "/i"
+  settings:
+    delete_account:
+      deleteaccountflash: "Il tuo account è stato cancellato."
+      verifypasswordflash: "La tua password non può essere modificata."
+    index:
+      logoutlink: "Esci"
+      confirmlogoutlink: "Sei sicuro di voler uscire?"
+      viewprofile: "Profilo"
+      accountsettings: "Impostazioni dell'account"
+      username: "Nome utente:"
+      password: "Nuova password:"
+      currentpassword: "Password attuale:"
+      confirmpassword: "Conferma password:"
+      emailaddress: "Indirizzo e-mail:"
+      gravatarized: "<a href=\"http://www.gravatar.com/\" target=\"_blank\">Gravatar</a>izzato"
+      about: "Chi siamo:"
+      markdownformattingavailable: "Formato Markdown possibile"
+      saveaccountsettings: "Salva le impostazioni dell'account"
+      notificationsettings: "Impostazioni delle Notifiche"
+      pushover: "<a href=\"https://pushover.net/\">Pushover</a>:"
+      managepushoversubscription: "Gestisci l'iscrizione a Pushover"
+      subscribewithpushover: "Abbonati a Pushover"
+      foroptionalcomment: "Per le notifiche opzionali sui commenti e i messaggi"
+      commentreplynotificationsettings: "Impostazioni di notifica della risposta a un commento"
+      receiveemail: "Ricevi e-mail:"
+      receivepushover: "Ricevi notifica Pushover:"
+      requirepushover: "Richiedi un iscrizione Pushover"
+      commentmentionnotificationsettings: "Impostazioni di notifica delle menzioni sui commenti"
+      privatemessagenotificationsettings: "Impostazioni di notifica dei messaggi privati" 
+      submittedstorycommentsettings: "Imposazioni di notifica dei commenti ad un tuo articolo"
+      showyourthreads: "Mostra i tuoi <a href=\"/threads\">threads</a>:"
+      mailinglistsettings: "Impostazioni della mailing list"
+      mailinglisttext: "Se attivato, riceverai tutti gli ultimi articoli pubblicati ed i commenti agli indirizzi e-mail indicati, eccetto le storie e i commenti filtrati a partire dai <a href=\"/filters\">filtri di tag</a>. Tutte le mail saranno inviate agli indirizzi e-mail della lista, e con le opzioni a seguire potrai filtrare quali e-mail ricevere. Le e-mail che invierai con questi indirizzi saranno postate con il tuo accoun sul sito web. Stai attento a chi accede al tuo account per evitare che qualcuno commenti al posto tuo."
+      receivelistemails: "Ricevi le e-mail della lista:"
+      listemailoption1: "nessuna e-mail"
+      listemailoption2: "Tutti gli articoli e i commenti"
+      listemailoption3: "Solo gli articoli"
+      listaddress: "Indirizzi della lista:"
+      miscsettings: "Parametri vari"
+      storypreview: "Visualizza anteprima articolo: "
+      useravatars: "Visualizza l'avatar dell'utente:"
+      hidedragons: "Nascondi i draghi:"
+      saveallsettings: "Salva tutti i parametri"
+      inviteuser: "Invita un nuovo utente"
+      closedtestingtext: "Gambero è attualmente in closed testing, quindi gli inviti per utente sono limitati a %{max_invitations}. Hai inviato %{invitations_sent} inviti."
+      cannotsendinvitations: "Non puoi spedire inviti."
+      deleteaccount: "Elimina l'account"
+      deleteaccounttext: "Per eliminare definitivamente l'account, inserisci la tua password qui sotto. Il tuo account sarà disattivato, i tuoi commenti sarànno segnati come disattivati e non saranno più visibili dagli altri utenti, i tuoi messaggi privati saranno cancellati. Il tuo profilo non sarà cancellato. Il tuo nome utente non sarà utilizzabile da nessun altro."
+      verifypassword: "Inserisci la password:"
+      deleteaccountconfirmation: "Sì, cancella il mio account"
+      securitysettings: "Impostazioni di sicurezza"
+      twofactorauth: "Autenticazione a due fattori:"
+      disable2fa: "Disattiva"
+      enroll2fa: "Attiva"
+      disabled2fa: "Disattivata"
+      enabled2fa: "Attivata"
+      externalaccounts: "Account esterno"
+    pushover:
+      pushovernotconfigured: "Questo sito non è configurato per Pushover"
+    pushover_callback:
+      pushovernorandomtokensession: "Nessun token casuale in questa sessione"
+      pushovernorandomtokenurl: "Nessun token casuale nell'URL"
+      accountsetuppushover: "Il tuo account è stato configurato per le notifiche Pushover."
+      accountnolongersetuppushover: "Il tuo account non è più configurato per le notifiche Pushover."
+    twofa:
+      title: "Autenticazione a due fattori"
+      backtosettings: "Ritorna alle impostazioni"
+      disable2fa: "Disattiva l'autenticazione a due fattori"
+      continue: "Continua"
+      currentpassword: "Password attuale:"
+      turnoff: "Per disattivare l'autenticazione a due fattori, inserisci la tua password attuale:"
+      turnon: "Per attivare l'autenticazione a due fattori sul tuo account, inserisci la tua password attuale:"
+    twofa_auth:
+      2fahasbeendisabled: "L'autenticazione a due fattori è stata disattivata sul tuo account"
+      2fapassnotcorrect: "Password non corretta"
+    twofa_enroll:
+      title: "Autenticazione a due fattori"
+      backtosettings: "Ritorna alle impostazioni"
+      enrollmenttimeout: "Tempo scaduto"
+      scanqrcode: "Scannerizza il QR code sotto o clicca il link per aprirlo nell'applicazione <a href=\"https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\" target=\"_blank\" rel=\"noopener\">TOTP</a> che preferisci:"
+      registring: "Una volta completato il processo di autenticazione TOTP, passa alla schermata successiva per verificare e attivare l'autenticazione a due fattori sul tuo account."
+      verifyenable: "Verifica e attiva"
+    twofa_update:
+      enrollmenttimeout: "Tempo scaduto"
+      2fahasbeenenabled: "L'autenticazione a due fattori è stata attivata sul tuo account"
+      totpinvalid: "Il tuo codice TOTP non è valido, verifica il codice assegnato attualmente alla tua applicazione TOTP"
+    twofa_verify:
+      title: "Autenticazione a due fattori"
+      enrollmenttimeout: "Tempo scaduto"
+      enablecode: "Per attivare l'autenticazione 2FA sul tuo account utilizzando il tuo nuovo codice TOTP, inserisci il codice a 6 cifre dalla tua tua applicazione TOTP di riferimento:"
+      verifyenable: "Verifica e attiva"
+    update:
+      updatesettingsflash: "Le impostazioni sono state modificate con successo."
+      passwordnotcorrect: "La password non è stata inserita correttamente."
+  signup:
+    index:
+      createaccounttitle: "Crea un profilo"
+    invited:
+      createaccounttitle: "Crea un profilo"
+      createaccountbody: "Per creare un nuovo profilo, inserisci il tuo indirizzo e-mail e una password. Il vostro indirizzo e-mail non sarà mai mostrato agli utenti e sarà utilizzato solo se avrai bisogno di azzerare la tua password, o per ricevere delle notifiche opzionali. Il tuo nome utente potrà essere cambiato successivamente."
+      invitedby: "Invitato da:"
+      username: "Nome utente:"
+      email: "Indirizzo email:"
+      password: "Password:"
+      passwordagain: "Password (di conferma):"
+      about: "Vuoi dirci qualcosa di te? Questo campo è opzionale e sarà visibile sul tuo profilo pubblicamente, con la possibilità di modificarlo in qualunque momento."
+      abouttitle: "Su di me:"
+      markdownavailable: "Formattazione Markdown disponibile"
+      signup: "Iscriversi"
+    invite:
+      passinvitation: "Condividi un invito a tua volta"
+      passinvitationbody: "Questa comunità potrà crescere solo se i suoi membri inviteranno nuovi utenti, come è stato fatto con te. Se credi di conoscere qualcuno che potrebbe contribuire in modo costruttivo, non esitare a condividere la piattaforma con questa persona."
+      passinvitationor: "o"
+      passinvitationskip: "In seguito"
+  stories:
+    edit:
+      edit: "Modifica l'articolo"
+      merge: "Accorpa a:"
+      shortid: "L'id breve dell'articolo cui si vuole accorpare"
+      unavailable: "Non disponibile:"
+      unavailableat: "URL sorgente non disponibile, abilita la visualizzazione del testo nella cache"
+      modreason: "Motivazione dell'azione del moderatore: "
+      markdown: "Disponibile formattazione markdown"
+      save: "Salva"
+      cancel: "Annulla le modifiche"
+    form:
+      alreadysubmitted: "Errore: questo articolo è già stato pubblicato "
+      alreadysubmittedflash: "Nota: Questo articolo è gia stato pubblicato %{timeago}, ma può essere ripubblicato"
+      previousdiscussion: "Per favore consulta <a href=\"%{storypath}\" target=\"_blank\"> la discussione precedente</a> per questo articolo."
+      previousexpireddiscussion: "Per favore consulta prima <a href=\"%{storypath}\" \"target=_blank\">la discussione precedente</a> per questo articolo.  Se il contenuto è cambiato o giustifica una nuova discussione, puoi ripubblicarlo."
+      fetchtitle: "Recuperare il titolo"
+      url: "URL:"
+      title: "Titolo:"
+      changetitle: "Gli utenti hanno suggerito di modificare il titolo di questo articolo in:"
+      tags: "Etichette:"
+      changetags: "Gli utenti di hanno suggerito di modificare i tag di questo articolo in:"
+      text: "Testo:"
+      placeholdertext: "Opzionale quando si pubblica un URL; per favore consulta le linee guida"
+      storysubmissionguidelines: "Linee guida per la pubblicazione degli articoli"
+      guidelinespart1: "Non modificare il titolo, se non quando il titolo originale dell'articolo manca di contestualizzazione o è confusionario. <strong>Per favore rimuovi dal titolo componenti estranei come il nome del sito o della sezione.</strong>"
+      guidelinespart2: "Quando l'articolo pubblicato è datato a più di un anno fa, per favore riporta l'anno di pubblicazione dell'articolo tra parentesi."
+      guidelinespart3: "Quando pubblichi un URL, la casella di testo è opzionale e va utilizzata solo per fornire contesto o spiegazioni qualora l'URL si riveli insufficiente. Le proprie interpretazioni o opinioni si riservino per un commento, in modo che questo possa essere valutato separatamente dall'articolo. "
+      guidelinespart4: "Se nessun tag sembra essere adeguata per l'articolo che stai pubblicando, è probabile che non corrisponda agli <a href=\"/about\" \"target=_blank\">argomenti trattati</a>. Non strafare con i tag che non sono temi principali dell'articolo."
+      guidelinespart5: "Per poter pubblicare facilmente una pagina che stai visualizzando nel tuo browser su gambe.ro, trascina questo bookmarklet sulla tua barra dei segnalibri:[<a href=\"javascript:{window.open(%22%{rooturl}stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title));%20void(0);}\">Pubblicare su %{appname}</a>]. Sarete reindirizzati a questa pagina con l'URL e il titolo della pagina visualizzata."
+      submitter: "L'autore è"
+      author: "Contributore:"
+      iamauthor: "Io sono"
+      authorownership: " l'autore di questo articolo a questo URL (o questo testo)"
+    listdetail:
+      storyremovedby: "[Articolo rimosso da %{user}]"
+      moderator: "il moderatore"
+      originalsubmitter: "l'autore originale"
+      authoredby: "pubblicato da"
+      via: "preso da"
+      justnow: "in questo istante"
+      edit: "modifica"
+      delete: "rimuovi"
+      confirmundelete: "Sei sicuro di voler ripristinare questo articolo?"
+      undelete: "ripristina"
+      confirmdelete: "Sei sicuro di voler rimuovere questo articolo?"
+      suggest: "suggerisci"
+      unflag: "ritrai la segnalazione"
+      flag: "segnala"
+      hide: "nascondi"
+      unhide: "mostra"
+      cached: "nella cache"
+      nocomment: "senza commenti"
+      commentsingular: "commento"
+      commentplurial: "commenti"
+      additionaltext: "Testo aggiuntivo disponibile"
+    new:
+      markdown: "Disponibile la formattazione in Markdown"
+      preview: "Anteprima"
+      submit: "Pubblica un articolo"
+      submitbutton: "Pubblica"
+    show:
+      toggledragons: "&mdash; ecco qui i draghi &mdash;"
+  users:
+    list:
+      administrator: "amministratore"
+      moderator: "moderatore"
+    show:
+      status: "Stato: "
+      sendmessage: "Invia un messaggio"
+      banned: "Utente bannato"
+      inactive: "Utente inattivo"
+      active: "attivo "
+      administrator: "amministratore"
+      moderator: "moderatore"
+      user: "utente"
+      withinvites: "con inviti"
+      storysubmissions: "con articoli pubblicati"
+      disabled: "disattivato"
+      joined: "Iscritto:"
+      byinvitationfrom: "per <a href=\"/u/%{user}\">invito</a> da`"
+      banneduser: "Bannato:"
+      bannedby: "da"
+      hats: "Cappello:"
+      left: "Parti:"
+      karma: "Karma:"
+      karmaaverage: ", in media "
+      karmaperstorycomment: "per articolo/commento"
+      storiessubmitted: "Articoli pubblicati:"
+      postedcomments: "Commenti pubblicati:"
+      mostcommonlytagged: "solitamente taggato"
+      about: "A riguardo:"
+      aboutdefault: "Un mistero..."
+      administrativeinfo: "Informazioni amministrative"
+      email: "E-mail:"
+      recentvotes: "Voti recenti:"
+      commentlinktext: "comment"
+      administrativeactions: "Azioni amministrative"
+      unbanuser: "Sbanna utente"
+      banningdescription: "Bannare o disabilitare gli inviti per un utente invierà una e/mail all'utente con la ragione indicata sotto, e il tuo indirizzo sarà presente nell'e-mail affinché l'utente possa replicare."
+      banningreason: "Ragione:"
+      banuserbutton: "Banna utente"
+      enableinvitesforuser: "Abilita gli inviti per l'utente"
+      disableinvitesreason: "Ragione:"
+      disableinvitesbutton: "Disattiva gli inviti"
+    tree:
+      newestusers: "Utenti più recenti"
+      administrator: "amministratore"
+      moderator: "moderatore"
+  tags:
+    index:
+      tagstitle: "Etichette"
+# data for users/invitationform which is a partial view
+  invitationtext: "Le persone da te invitate saranno associate al tuo profilo nell'<a href=\"/u\">albero degli utenti</a> e tu sarai responsabile per la loro condotta qualora queste causassero problemi. Per favore esercita accortezza nell'invitare persone che non conosci personalmente."
+  emailaddress: "Indirizzo e-mail:"
+  memouser: "Notifica all'utente:"
+  sendinvitation: "Manda un invito"
+  controllers:
+    comments_controller:
+      commentstitle: "Commenti più recenti"
+      threadstitle: "Le tue discussioni"
+    filters_controller:
+      filterstitle: "Filtri"
+      flashfilterupdate: "I tuoi filtri sono stati aggiornati."
+    hats_controller:
+      hatstitle: "Cappello"
+    home_controller:
+      recenttitle: "Articoli recenti"
+      abouttitle: "A riguardo"
+      chattitle: "Chat"
+      privacytitle: "Informativa sulla privacy"
+      hiddenstoriestitle: "Articoli nascosti"
+      rssforstoriestitle: "RSS 2.0"
+      rssforcommentstitle: "Commenti - RSS 2.0"
+      neweststoriestitle: "Articoli più nuovi"
+      licensetext: "<div class=\"box wide\">Tutte le azioni sul sito sono pubbliche ad eccezione dei messaggi privati tra utenti. Le azioni di moderazione possono essere consultate sul <a href=\"/moderations\">Log di Moderazione</a>.<br/><a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.it\"><img alt=\"Licenza Creative Commons\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by/4.0/88x31.png\" /></a><br /><span xmlns:dct=\"http://purl.org/dc/terms/\" property=\"dct:title\">Gambe.ro</span> è pubblicato secondo i termini della <a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.it\">licenza Creative Commons Attribution 4.0 International</a>.</div>"
+      abouttext: "
+      <h1>Chi Siamo</h1>
+      <p>
+        gambe.ro nasce dalla volontà di un gruppo di programmatori di creare uno spazio di discussione in lingua italiana e di scambio focalizzato sullo sviluppo software. Al contrario di buona parte dei siti, gruppi e chat venuti prima di noi, vogliamo coinvolgere specificatamente e unicamente la comunità di persone che produce software. Crediamo che allargare eccessivamente lo spettro delle tematiche trattate porti alla creazione di una community frammentata in cui convivono persone con background troppo differenti e pochi interessi in comune. Riteniamo che in una community del genere la qualità del dibattito sarebbe inevitabilmente penalizzata.
+      </p> 
+      <p>
+        Per questo abbiamo sentito il bisogno di imitare esperienze che all’estero hanno creato comunità di ottima qualità per contenuti e dibattito. Seguendo l’esempio di <a href=\"https://journalduhacker.net\" target=\"_blank\" rel=\"noopener\">journalduhacker</a> che ha portato in lingua francese il format originariamente creato da <a href=\"https://lobste.rs\" target=\"_blank\" rel=\"noopener\">lobste.rs</a>, abbiamo deciso di tradurre in lingua italiana il loro software e su questo costruire gambe.ro.
+      </p>
+
+      <h2>Obiettivi della comunità</h2>
+      <p>
+        gambe.ro è sia un aggregatore di notizie che uno spazio di discussione. Gli argomenti che vuole coprire sono le pratiche dello sviluppo software e tutto ciò che le circonda, inclusi i cambiamenti politici, sociali ed economici che il software porta nella nostra società. 
+      </p>
+      <p>
+        gambe.ro vuole essere anche uno spazio di crescita personale e professionale per persone di tutti i gradi di competenza. Perciò sono benvenute discussioni e riflessioni su percorsi di studio, carriera, eventi e conferenze se collegati ai temi di interesse della comunità.
+      </p>
+      <p>
+        gambe.ro non vuole essere uno spazio di supporto tecnico né per sviluppatori né per utilizzatori. Non vuole essere neppure uno spazio di discussione della tecnologia in senso esteso: vi invitiamo a trattare temi come hardware, telefonia o futurologia nei numerosi spazi di discussione già esistenti.
+      </p>
+      <a name=\"betatest\">
+      </a>
+      <h2>Beta Test</h2>
+      <p>
+      Gambe.ro è al momento in una fase di test preliminare. L’idea è di raccogliere feedback da voi utenti per adattare il software, i regolamenti e i contenuti al nostro uso specifico. Inoltre vogliamo raccogliere dati sull’utilizzo della piattaforma così da acquistare un hardware adatto alle nostre necessità.
+      </p><p>
+      Nella pratica, Gambe.ro sarà pienamente operativo sin da subito. Saranno tuttavia limitati gli inviti per evitare una crescita troppo rapida della comunità prima che la piattaforma sia pronta e stabile. Ci riserviamo inoltre di chiudere completamente gli inviti e di resettare integralmente la piattaforma una volta concluso il testing, nel caso in cui queste misure si rivelassero necessarie.
+      </p><p>
+      Per segnalarci errori di traduzione, bug o semplicemente per darci i vostri feedback, potete contattarci all’indirizzo e-mail: <a href=\"mailto:feedback@gambe.ro\">feedback@gambe.ro</a>. 
+      </p>
+      
+      <h2>I draghi</h2>
+      <p>Puoi contrassegnare un commento come drago quando la soluzione funziona, ma non sai perché funziona. Viene dall'espressione latina 'hic sunt dracones'.</p>
+
+      <h2>Moderazione</h2>
+      <p>
+        Il team di moderazione si riserva di intervenire in caso vengano pubblicati sulla piattaforma contenuti illegali o esplicitamente fuori contesto rispetto ai temi di interesse della comunità. Confidiamo nella capacità della comunità di auto-moderarsi attraverso lo strumento del downvote che invitiamo ad usare con giudizio. La moderazione interverrà inoltre per reprimere comportamenti tossici e ostili verso membri della comunità o terzi.
+      </p>
+        
+      <h3>Downvote</h3>
+      <p>
+        Lo strumento del downvote su gambe.ro è da intendersi come un’espressione di dissenso verso la presenza del commento che si downvota. Non deve rispecchiare invece il vostro parere personale sull’opinione espressa dal commento. Per questo motivo ogni downvote è accompagnato da una motivazione. Se nessuna delle motivazioni presenti si applica al downvote che volete assegnare, probabilmente il contenuto non si merita un downvote.
+      </p>
+      <p>
+        Invece di rispondere ad un commento inappropriato lamentandosi, invitiamo gli utenti semplicemente a downvotare il commento.
+      </p>
+        
+      <h3>Log di Moderazione e trasparenza</h3>
+      <p>
+        Ogni azione di moderazione è visibile dal <a href=\"/moderations\">Log di Moderazione</a>. Da qui è possibile ricostruire da parte di chi, come e perché c’è stato un intervento di moderazione. In linea con lo spirito di lobste.rs che originariamente ha introdotto questa feature, crediamo che la trasparenza debba essere un elemento distintivo della nostra comunità, così da costruire un rapporto di fiducia con la nostra utenza. 
+      </p>
+
+      <h2>Trivia</h2>
+      <p>
+        Il nome gambe.ro è ispirato ovviamente a lobste.rs che a sua volta è semplicemente un gioco di parole con un dominio e non ha una vera connessione con gli obiettivi del sito. Dopo aver scartato pastaconlesar.de e spaghetticodealloscogl.io abbiamo optato per il più minimale gambe.ro.
+      </p>
+      "
+    invitations_controller:
+      flashpublicinvitnotallowed: "Richieste di inviti pubbliche non sono permesse."
+      flashsuccessinvitrequest: "La tua richiesta d'invito è stata validata e sarà ora visibile agli altri utenti connessi."
+      flashaccountnotinvit: "Il tuo profilo non è autorizzato a condividere inviti"
+      flashsuccessinvit: "L'email d'invito è stata inviata con successo a %{guest}."
+      flasherrorssinvit: "Non è stato possibile spedire l'invito, si verifichi la validità dell'indirizzo e-mail."
+      flashrequestconfirmation: "Ti è stata inviata una richiesta di conferma a %{email}."
+      flashinvalidinvitation: "Invito non valido o scaduto"
+      flashsuccessdeleteinvit: "La richiesta d'invito di %{name} è stata rimossa con successo"
+    login_controller:
+      flashlogininvalid: "Indirizzo email e/o password non valido/i."
+      totpinvalid: "Il tuo codice TOTP non è valido."
+      deletedaccount: "Il tuo account è stato rimosso."
+      bannedaccount: "Il tuo account è stato bannato."
+    messages_controller:
+      messagestitle: "Messaggi"
+      messagessenttitle: "Messaggi inviati"
+      flashdelmsg: "%{nbmsg} message%{plural} supprimé%{plural}."
+      pluralmsg: "s"
+      flashcannotfindmsg: "Messaggio non trovato."
+      flashmsgsentto: "Il messaggio è stato inviato a %{user}."
+      flashdeletedmessage: "Messaggio eliminato." 
+    search_controller:
+      searchtitle: "Cerca"
+      flasherrorsearchcontroller: "Ci dispiace, purtroppo il motore di ricerca è attualmente malfunzionante"
+    stories_controller:
+      submitstorytitle: "Pubblica un articolo"
+      editstorytitle: "Modifica un articolo"
+      flashnotallowedsuggestion: "Non sei autorizzato a proporre suggerimenti su questo articolo."
+      flashallowedsuggestion: "Le modifiche suggerite sono state registrate."
+      flashmergedinto: "%{mergedstory} è stato accorpato a questo articolo."
+      flashalreadyposted: "Questo URL è già stato pubblicato di recente"
+      flashcanonicalversion: "Nota: l'URL è stato cambiato nella versione canonica rilevata"
+    tags_controller:
+      tagstitle: "Etichette"
+    users_controller:
+      usertitle: "Utenti"
+    signup_controller:
+      signuptitle: "Condividi un invito a tua volta"
+      signedup: "Siete già iscritti."
+      invalidinv: "Invito non valido o scaduto."
+      flashsuccesssignupcontroller: "Benvenuto!"
+  # suggest.stories scope, unable to get it so global, I don't know why
+  suggeststorychanges: "Suggerisci delle modifiche all'articolo"
+  suggestchangesbutton: "Suggerisci delle modifiche"
+  suggestor: "o"
+  suggestcancel: "Annulla"
+  # reply at in views/email_message/notification.text.erb
+  replyat: "Rispondi a "
+  # reply at in views/email_reply/reply.text.erb
+  emailreplyat: "%{author} ti ha risposto: "
+  emailcontinueto: "Continua la discussione su"
+  # reply at in views/email_reply/mention.text.erb
+  emailmentionreplyat: "%{author} ti ha citato in un commento:"
+  emailmentioncontinueto: "Continua la discussione su"
+  date:
+    abbr_day_names:
+    - dom
+    - lun
+    - mar
+    - mer
+    - gio
+    - ven
+    - sab
+    abbr_month_names:
+    -
+    - gen.
+    - feb.
+    - mar.
+    - apr.
+    - mag
+    - giu
+    - lug.
+    - ago
+    - set.
+    - ott.
+    - nov.
+    - dic.
+    day_names:
+    - domenica
+    - lunedì
+    - martedì
+    - mercoledì
+    - giovedì
+    - venerdì
+    - sabato
+    formats:
+      default: "%d/%m/%Y"
+      short: "%e %b"
+      long: "%e %B %Y"
+    month_names:
+    - gennaio
+    - febbraio
+    - marzo
+    - aprile
+    - maggio
+    - giugno
+    - luglio
+    - agosto
+    - settembre
+    - ottobre
+    - novembre
+    - dicembre
+    order:
+    - :day
+    - :month
+    - :year
+  datetime:
+    distance_in_words:
+      about_x_seconds:
+        one: un secondo fa
+        other: "%{count} secondi fa"
+      about_x_minutes:
+        one: un minuto fa
+        other: "%{count} minuti fa"
+      about_x_hours:
+        one: "un'ora fa"
+        other: "%{count} ore fa"
+      about_x_months:
+        one: un mese fa
+        other: "%{count} mesi fa"
+      about_x_years:
+        one: un anno fa
+        other: "%{count} anni fa"
+      almost_x_years:
+        one: quasi un anno
+        other: quasi %{count} anni
+      half_a_minute: mezzo minuto
+      less_than_x_minutes:
+        zero: meno di un minuto
+        one: meno di un minuto
+        other: meno di %{count} minuti
+      less_than_x_seconds:
+        zero: meno di un secondo
+        one: meno di un secondo
+        other: meno di %{count} secondi
+      over_x_years:
+        one: più di un anno
+        other: più di %{count} anni
+      x_days:
+        one: 1 giorno fa
+        other: "%{count} giorni fa"
+      x_minutes:
+        one: 1 minuto fa
+        other: "%{count} minuti fa"
+      x_months:
+        one: 1 mese fa
+        other: "%{count} mesi fa"
+      x_seconds:
+        one: 1 secondo fa
+        other: "%{count} secondi fa"
+    prompts:
+      day: Giorno
+      hour: Ora
+      minute: Minuto
+      month: Mese
+      second: Secondo
+      year: Anno

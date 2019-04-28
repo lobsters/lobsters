@@ -17,6 +17,10 @@ else
   bundle exec rake db:migrate
 fi
 
+# Run ThinkingSphinx rake tasks to configure Sphinx
+bundle exec rake ts:index
+bundle exec rake ts:start
+
 # Set out SECRET_KEY_BASE
 if [ "$SECRET_KEY_BASE" = "" ]; then
   echo "No SECRET_KEY_BASE provided, generating one now."
@@ -26,4 +30,8 @@ fi
 
 # Rails leaves the PID file behind when the container is shut down
 rm -v tmp/pids/server.pid
-rails server --environment $RAILS_ENV --binding 0.0.0.0
+if [ "$RAILS_ENV" = "" ]; then
+  echo "RAILS_ENV not set, quitting!"
+  return 1
+fi
+unicorn --env $RAILS_ENV

@@ -51,7 +51,7 @@ class ApplicationController < ActionController::Base
 
     @traffic_intensity = TrafficHelper.cached_current_intensity
     # map intensity to 80-255 so there's always a little red
-    hex = sprintf('%02x', (@traffic_intensity * 1.75 * 80).round)
+    hex = sprintf('%02x', (@traffic_intensity * 1.75 + 80).round)
     @traffic_style = "background-color: ##{hex}0000;"
     return true unless @user
 

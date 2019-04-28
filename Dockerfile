@@ -11,6 +11,7 @@ RUN apk add --update \
   sqlite-dev \
   nodejs \
   tzdata \
+  sphinx \
   && rm -rf /var/cache/apk/*
 # Drop root as soon as possible
 RUN addgroup -S gambero && adduser -S gambero -G gambero

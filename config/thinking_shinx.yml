@@ -1,7 +1,0 @@
-production:
-  address: 127.0.0.1
-  port: 9313
-  min_infix_len: 2
-
-development:
-  min_infix_len: 2

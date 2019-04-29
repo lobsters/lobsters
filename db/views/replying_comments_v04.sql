@@ -21,7 +21,7 @@ JOIN
 LEFT JOIN
     comments parent_comments ON parent_comments.id = comments.parent_comment_id
 WHERE
-    read_ribbons.is_following = 1
+    read_ribbons.is_following = TRUE
     AND comments.user_id != read_ribbons.user_id
     AND votes.user_id = read_ribbons.user_id
     AND

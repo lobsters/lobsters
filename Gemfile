@@ -2,14 +2,16 @@ source "https://rubygems.org"
 
 gem "rails", "~> 5.2.0"
 
-gem "mysql2"
+# gem "mysql2"
+gem "pg"
+gem "pg_search"
 
 # uncomment to use PostgreSQL
 # gem "pg"
 
 # rails
 gem 'scenic'
-gem 'scenic-mysql_adapter'
+# gem 'scenic-mysql_adapter'
 gem "activerecord-typedstore"
 
 # js

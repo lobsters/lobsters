@@ -38,7 +38,7 @@ public/apple-touch-icon*
 # files added in production
 lib/tasks/deploy.rake
 config/initializers/production.rb
-config/database.yml
+# config/database.yml
 config/initializers/secret_token.rb
 config/*.sphinx.conf
 config/unicorn.conf.rb

@@ -56,14 +56,15 @@ class DownvotedCommenters
       rank = 0
       User.active.joins(:comments)
         .where("comments.downvotes > 0 and comments.created_at >= ?", period)
-        .group("comments.user_id")
+        .group("comments.user_id, users.id")
         .select("
           users.id, users.username,
           (sum(downvotes) - #{avg_sum_downvotes})/#{stddev_sum_downvotes} as sigma,
           count(distinct comments.id) as n_comments,
           count(distinct story_id) as n_stories,
           sum(downvotes) as n_downvotes")
-        .having("n_comments > 2 and n_stories > 1 and n_downvotes >= 10")
+        .having("count(distinct comments.id) > 2 and count(distinct story_id) > 1 and
+                 sum(downvotes) >= 10")
         .order("sigma desc")
         .limit(30)
         .each_with_object({}) {|u, hash|

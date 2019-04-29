@@ -1,3 +1,3 @@
 Scenic.configure do |config|
-  config.database = Scenic::Adapters::MySQL.new
+  config.database = Scenic::Adapters::Postgres.new
 end

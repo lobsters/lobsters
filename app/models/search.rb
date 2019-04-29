@@ -93,8 +93,6 @@ class Search
       end
     }.join(" ")
 
-    qwords = ActiveRecord::Base.connection.quote_string(words)
-
     base = nil
 
     case self.what
@@ -104,48 +102,31 @@ class Search
         base = with_stories_in_domain(base, domain)
       end
 
-      title_match_sql = Arel.sql("MATCH(stories.title) AGAINST('#{qwords}' IN BOOLEAN MODE)")
-      description_match_sql =
-        Arel.sql("MATCH(stories.description) AGAINST('#{qwords}' IN BOOLEAN MODE)")
-      story_cache_match_sql =
-        Arel.sql("MATCH(stories.story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE)")
-
-      if qwords.present?
-        base.where!(
-          "(#{title_match_sql} OR " +
-          "#{description_match_sql} OR " +
-          "#{story_cache_match_sql})"
-        )
+      self.results = if words.present?
+        base = base.search(words)
 
         if tag_scopes.present?
-          self.results = with_tags(base, tag_scopes)
+          with_tags(base, tag_scopes)
         else
-          base = base.includes({ :taggings => :tag }, :user)
-          self.results = base.select(
-            ["stories.*", title_match_sql, description_match_sql, story_cache_match_sql].join(', ')
-          )
+          base.includes({ :taggings => :tag }, :user)
         end
+      elsif tag_scopes.present?
+        with_tags(base, tag_scopes)
       else
-        if tag_scopes.present?
-          self.results = with_tags(base, tag_scopes)
-        else
-          self.results = base.includes({ :taggings => :tag }, :user)
-        end
+        base.includes({ taggings: :tag }, :user)
       end
 
       case self.order
       when "relevance"
-        if qwords.present?
-          self.results.order!(Arel.sql("((#{title_match_sql}) * 2) DESC, " +
-                                       "((#{description_match_sql}) * 1.5) DESC, " +
-                                       "(#{story_cache_match_sql}) DESC"))
+        if words.present?
+          results
         else
-          self.results.order!("stories.created_at DESC")
+          self.results.reorder!("stories.created_at DESC")
         end
       when "newest"
-        self.results.order!("stories.created_at DESC")
+        self.results.reorder!("stories.created_at DESC")
       when "points"
-        self.results.order!("#{Story.score_sql} DESC")
+        self.results.reorder!("#{Story.score_sql} DESC")
       end
 
     when "comments"
@@ -156,21 +137,16 @@ class Search
       if tag_scopes.present?
         base = with_stories_matching_tags(base, tag_scopes)
       end
-      if qwords.present?
-        base = base.where(Arel.sql("MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE)"))
-      end
-      self.results = base.select(
-        "comments.*, " +
-        "MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_comment"
-      ).includes(:user, :story)
+      base = base.search_by_comment(words) if words.present?
+      self.results = base.includes(:user, :story)
 
       case self.order
       when "relevance"
-        self.results.order!("rel_comment DESC")
+        self.results
       when "newest"
-        self.results.order!("created_at DESC")
+        self.results.reorder!("created_at DESC")
       when "points"
-        self.results.order!("#{Comment.score_sql} DESC")
+        self.results.reorder!("#{Comment.score_sql} DESC")
       end
     end
 

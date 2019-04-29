@@ -1157,8 +1157,7 @@ div.errorExplanation a {
 }
 div.flash-error p a,
 div.flash-notice p a,
-div.flash-success p a,
-div.errorExplanation a {
+div.flash-success p a {
 	color: #ffffff;
 }
 div.flash-error p,
@@ -1177,10 +1176,10 @@ div.errorExplanation div {
 }
 div.flash-error,
 div.errorExplanation {
-	background-color: #c43c35;
+	background-color: #fdcfcc;
 	background-repeat: repeat-x;
 	background-image: linear-gradient(top, #ee5f5b, #c43c35);
-	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	text-shadow: none;
 	border-color: #c43c35 #c43c35 #882a25;
 	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }

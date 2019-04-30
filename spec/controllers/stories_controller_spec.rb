@@ -56,6 +56,20 @@ describe StoriesController do
         expect(json.fetch("title")).to eq "some other title"
         expect(json.fetch("similar_stories").count).to eq(0)
       end
+
+      it "throws a 400 if there's no URL present" do
+        expect {
+          post :check_url_dupe,
+              format: :json,
+              params: { story: { url: "" } }
+        }.to raise_error(ActionController::ParameterMissing)
+
+        expect {
+          post :check_url_dupe,
+              format: :json,
+              params: { story: {} }
+        }.to raise_error(ActionController::ParameterMissing)
+      end
     end
   end
 

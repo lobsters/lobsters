@@ -96,7 +96,7 @@ class Message < ApplicationRecord
   def recipient_username=(username)
     self.recipient_user_id = nil
 
-    if (u = User.find_by(:username => username))
+    if (u = User.where('lower(username) = ?', username.downcase).first)
       self.recipient_user_id = u.id
       @recipient_username = username
     else

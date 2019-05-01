@@ -24,9 +24,9 @@ class LoginController < ApplicationController
 
   def login
     if params[:email].to_s.match(/@/)
-      user = User.where(:email => params[:email]).first
+      user = User.where('lower(email) = ?', params[:email].downcase).first
     else
-      user = User.where(:username => params[:email]).first
+      user = User.where('lower(email) = ?', params[:email].downcase).first
     end
 
     fail_reason = nil

@@ -12,7 +12,7 @@ class CommentsController < ApplicationController
   def create
     if !(story = Story.where(:short_id => params[:story_id]).first) ||
     story.is_gone?
-      return render :text => "can't find story", :status => 400
+      return render :text => "thread non trovato", :status => 400
     end
 
     comment = story.comments.build
@@ -28,7 +28,7 @@ class CommentsController < ApplicationController
       params[:parent_comment_short_id]).first
         comment.parent_comment = pc
       else
-        return render :json => { :error => "invalid parent comment",
+        return render :json => { :error => "commento padre non valido",
           :status => 400 }
       end
     end
@@ -38,8 +38,7 @@ class CommentsController < ApplicationController
     (pc = Comment.where(:story_id => story.id, :user_id => @user.id,
       :parent_comment_id => comment.parent_comment_id).first)
       if (Time.now - pc.created_at) < 5.minutes
-        comment.errors.add(:comment, "^You have already posted a comment " <<
-          "here recently.")
+        comment.errors.add(:comment, "^Hai già postato un commento qui negli ultimi 5 minuti.")
 
         return render :partial => "commentbox", :layout => false,
           :content_type => "text/html", :locals => { :comment => comment }
@@ -61,7 +60,7 @@ class CommentsController < ApplicationController
 
   def show
     if !((comment = find_comment) && comment.is_editable_by_user?(@user))
-      return render :text => "can't find comment", :status => 400
+      return render :text => "commento non trovato", :status => 400
     end
 
     render :partial => "comment", :layout => false,
@@ -70,7 +69,7 @@ class CommentsController < ApplicationController
 
   def show_short_id
     if !(comment = find_comment)
-      return render :text => "can't find comment", :status => 400
+      return render :text => "commento non trovato", :status => 400
     end
 
     render :json => comment.as_json
@@ -80,13 +79,13 @@ class CommentsController < ApplicationController
     if comment = find_comment
       return redirect_to comment.url
     else
-      return render :text => "can't find comment", :status => 400
+      return render :text => "commento non trovato", :status => 400
     end
   end
 
   def edit
     if !((comment = find_comment) && comment.is_editable_by_user?(@user))
-      return render :text => "can't find comment", :status => 400
+      return render :text => "commento non trovato", :status => 400
     end
 
     render :partial => "commentbox", :layout => false,
@@ -95,7 +94,7 @@ class CommentsController < ApplicationController
 
   def reply
     if !(parent_comment = find_comment)
-      return render :text => "can't find comment", :status => 400
+      return render :text => "commento non trovato", :status => 400
     end
 
     comment = Comment.new
@@ -130,7 +129,7 @@ class CommentsController < ApplicationController
 
   def dragon
     if !((comment = find_comment) && @user.is_moderator?)
-      return render :text => "can't find comment", :status => 400
+      return render :text => "commento non trovato", :status => 400
     end
 
     comment.become_dragon_for_user(@user)
@@ -140,7 +139,7 @@ class CommentsController < ApplicationController
 
   def undragon
     if !((comment = find_comment) && @user.is_moderator?)
-      return render :text => "can't find comment", :status => 400
+      return render :text => "commento non trovato", :status => 400
     end
 
     comment.remove_dragon_for_user(@user)
@@ -150,7 +149,7 @@ class CommentsController < ApplicationController
 
   def update
     if !((comment = find_comment) && comment.is_editable_by_user?(@user))
-      return render :text => "can't find comment", :status => 400
+      return render :text => "commento non trovato", :status => 400
     end
 
     comment.comment = params[:comment]
@@ -175,7 +174,7 @@ class CommentsController < ApplicationController
 
   def unvote
     if !(comment = find_comment)
-      return render :text => "can't find comment", :status => 400
+      return render :text => "commento non trovato", :status => 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(0, comment.story_id,
@@ -186,7 +185,7 @@ class CommentsController < ApplicationController
 
   def upvote
     if !(comment = find_comment)
-      return render :text => "can't find comment", :status => 400
+      return render :text => "commento non trovato", :status => 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(1, comment.story_id,
@@ -197,15 +196,15 @@ class CommentsController < ApplicationController
 
   def downvote
     if !(comment = find_comment)
-      return render :text => "can't find comment", :status => 400
+      return render :text => "commento non trovato", :status => 400
     end
 
     if !Vote::COMMENT_REASONS[params[:reason]]
-      return render :text => "invalid reason", :status => 400
+      return render :text => "ragione non valida", :status => 400
     end
 
     if !@user.can_downvote?(comment)
-      return render :text => "not permitted to downvote", :status => 400
+      return render :text => "downvote non consentito", :status => 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(-1, comment.story_id,
@@ -215,7 +214,7 @@ class CommentsController < ApplicationController
   end
 
   def index
-    @rss_link ||= { :title => "RSS 2.0 - Newest Comments",
+    @rss_link ||= { :title => "RSS 2.0 - Ultimi commenti",
       :href => "/comments.rss#{@user ? "?token=#{@user.rss_token}" : ""}" }
 
     @heading = @title = I18n.t 'controllers.comments_controller.commentstitle'
@@ -258,7 +257,7 @@ class CommentsController < ApplicationController
       format.html { render :action => "index" }
       format.rss {
         if @user && params[:token].present?
-          @title = "Private comments feed for #{@user.username}"
+          @title = "Feed dei commenti privato per #{@user.username}"
         end
 
         render :action => "index.rss", :layout => false

@@ -128,7 +128,7 @@ class LoginController < ApplicationController
   end
 
   def forgot_password
-    @title = "Reset Password"
+    @title = "Reimposta Password"
     render :action => "forgot_password"
   end
 
@@ -137,19 +137,18 @@ class LoginController < ApplicationController
       params[:email].to_s).first
 
     if !@found_user
-      flash.now[:error] = "Invalid e-mail address or username."
+      flash.now[:error] = "Username o password non corretti"
       return forgot_password
     end
 
     @found_user.initiate_password_reset_for_ip(request.remote_ip)
 
-    flash.now[:success] = "Password reset instructions have been e-mailed " <<
-      "to you."
+    flash.now[:success] = "Le istruzioni per il recupero della password ti sono state inviate via e-mail"
     return index
   end
 
   def set_new_password
-    @title = "Reset Password"
+    @title = "Reimposta Password"
 
     if (m = params[:token].to_s.match(/^(\d+)-/)) &&
     (Time.now - Time.at(m[1].to_i)) < 24.hours

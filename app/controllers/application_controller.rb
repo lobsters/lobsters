@@ -82,7 +82,7 @@ class ApplicationController < ActionController::Base
       if @user.is_moderator?
         true
       else
-        flash[:error] = "You are not authorized to access that resource."
+        flash[:error] = "Non sei autorizzato ad accedere a questa risorsa."
         return redirect_to "/"
       end
     end
@@ -92,7 +92,7 @@ class ApplicationController < ActionController::Base
     if @user
       true
     else
-      render :text => "not logged in", :status => 400
+      render :text => "non hai effettuato il login", :status => 400
       return false
     end
   end

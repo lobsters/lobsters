@@ -4,10 +4,22 @@ services:
     image: gambero:latest
     depends_on:
       - db
+    ports:
+      - 8080:8080
     environment:
       - RAILS_ENV # One of "development", "test", "production"
+      - SECRET_KEY_BASE
+      - SMTP_USERNAME
+      - SMTP_PASSWORD
+    # tmpfs's must be explicitly declared, because / is by default read-only (read_only: true).
+    tmpfs:
+      - /tmp
+      - /gambero/tmp
+      - /gambero/public/assets
     volumes:
       - .:/gambero
+      - /data/log:/gambero/log
+      - /data/sphinx:/sphinx
     security_opt:
       - no-new-privileges
     read_only: true
@@ -21,8 +33,7 @@ services:
   db:
     image: mariadb
     volumes:
-      - ./mariadb:/var/lib/mysql
-    # tmpfs's must be explicitly declared, because / is by default read-only (read_only: true).
+      - /data/mariadb:/var/lib/mysql
     tmpfs:
       - /tmp
       - /run/mysqld

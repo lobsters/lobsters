@@ -22,17 +22,21 @@ fi
 bundle exec rake ts:index
 bundle exec rake ts:start
 
-# Set out SECRET_KEY_BASE
 if [ "$SECRET_KEY_BASE" = "" ]; then
-  echo "No SECRET_KEY_BASE provided, generating one now."
-  export SECRET_KEY_BASE=$(bundle exec rake secret)
-  echo "Your new secret key: $SECRET_KEY_BASE"
+  echo "SECRET_KEY_BASE not set, quitting!"
+  exit 2
 fi
 
 # Rails leaves the PID file behind when the container is shut down
-rm -v tmp/pids/server.pid
+rm -fv tmp/pids/server.pid
+
 if [ "$RAILS_ENV" = "" ]; then
   echo "RAILS_ENV not set, quitting!"
-  return 1
+  exit 1
 fi
+
+# Precompile assets
+bundle exec rake assets:precompile
+
+# Launch!
 unicorn --env $RAILS_ENV

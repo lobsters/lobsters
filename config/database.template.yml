@@ -20,3 +20,14 @@ test:
   port: 3306
   username: ${MYSQL_USER}
   password: ${MYSQL_PASSWORD}
+
+production:
+  adapter: mysql2
+  encoding: utf8mb4
+  reconnect: false
+  database: ${MYSQL_DATABASE}
+  table_name_prefix: prod_
+  host: db
+  port: 3306
+  username: ${MYSQL_USER}
+  password: ${MYSQL_PASSWORD}

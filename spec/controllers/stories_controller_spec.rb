@@ -60,14 +60,14 @@ describe StoriesController do
       it "throws a 400 if there's no URL present" do
         expect {
           post :check_url_dupe,
-              format: :json,
-              params: { story: { url: "" } }
+               format: :json,
+               params: { story: { url: "" } }
         }.to raise_error(ActionController::ParameterMissing)
 
         expect {
           post :check_url_dupe,
-              format: :json,
-              params: { story: {} }
+               format: :json,
+               params: { story: {} }
         }.to raise_error(ActionController::ParameterMissing)
       end
     end

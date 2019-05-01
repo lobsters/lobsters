@@ -4,6 +4,8 @@ pipelines:
     group: defaultGroup
     label_template: ${COUNT}
     lock_behavior: unlockWhenFinished
+    environment_variables:
+      DOCKER_CONTENT_TRUST: '1'
     materials:
       git:
         git: https://github.com/gambe-ro/lobsters
@@ -25,8 +27,26 @@ pipelines:
             - exec:
                 arguments:
                 - -c
-                - cp -v /vagrant/.env .env && script/docker-reload.sh
+                - cp -v /vagrant/.env .env && script/docker-restart.sh -d
                 command: bash
                 working_directory: gambero
+                run_if: passed
+    - Healthcheck:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+        jobs:
+          HTTPRequest:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - -fLI
+                - --retry
+                - '6'
+                - https://gambe.ro
+                command: curl
                 run_if: passed
 

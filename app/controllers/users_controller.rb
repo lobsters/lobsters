@@ -30,7 +30,7 @@ class UsersController < ApplicationController
       @users = User.where("is_admin = ? OR is_moderator = ?", true, true).
         order("id ASC").to_a
       @user_count = @users.length
-      @title = "Moderators and Administrators"
+      @title = "Moderatori e Amministratori"
       render :action => "list"
     else
       content = Rails.cache.fetch("users_tree_#{newest_user}",
@@ -46,18 +46,18 @@ class UsersController < ApplicationController
   end
 
   def invite
-    @title = "Pass Along an Invitation"
+    @title = "Trasmetti un Invito"
   end
 
   def disable_invitation
     target = User.where(:username => params[:username]).first
     if !target
-      flash[:error] = "Invalid user."
+      flash[:error] = "Utente non valido."
       redirect_to "/"
     else
       target.disable_invite_by_user_for_reason!(@user, params[:reason])
 
-      flash[:success] = "User has had invite capability disabled."
+      flash[:success] = "L'utente ha disabilitata la possibilità di mandare inviti."
       redirect_to user_path(:user => target.username)
     end
   end
@@ -65,12 +65,12 @@ class UsersController < ApplicationController
   def enable_invitation
     target = User.where(:username => params[:username]).first
     if !target
-      flash[:error] = "Invalid user."
+      flash[:error] = "Utente non valido."
       redirect_to "/"
     else
       target.enable_invite_by_user!(@user)
 
-      flash[:success] = "User has had invite capability enabled."
+      flash[:success] = "L'utente ha la possibilità di creare inviti."
       redirect_to user_path(:user => target.username)
     end
   end
@@ -83,26 +83,26 @@ class UsersController < ApplicationController
     end
 
     if !params[:reason].present?
-      flash[:error] = "You must give a reason for the ban."
+      flash[:error] = "Devi fornire una ragione per il ban."
       return redirect_to user_path(:user => buser.username)
     end
 
     buser.ban_by_user_for_reason!(@user, params[:reason])
 
-    flash[:success] = "User has been banned."
+    flash[:success] = "L'utente è stato bannato."
     return redirect_to user_path(:user => buser.username)
   end
 
   def unban
     buser = User.where(:username => params[:username]).first
     if !buser
-      flash[:error] = "Invalid user."
+      flash[:error] = "Utente non valido."
       return redirect_to "/"
     end
 
     buser.unban_by_user!(@user)
 
-    flash[:success] = "User has been unbanned."
+    flash[:success] = "L'utente è stato sbannato."
     return redirect_to user_path(:user => buser.username)
   end
 end

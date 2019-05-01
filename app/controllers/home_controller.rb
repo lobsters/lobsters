@@ -6,12 +6,12 @@ class HomeController < ApplicationController
 
   def four_oh_four
     begin
-      @title = "Resource Not Found"
+      @title = "Risorsa non trovata"
       render :action => "404", :status => 404
     rescue ActionView::MissingTemplate
       render :text => "<div class=\"box wide\">" <<
         "<div class=\"legend\">404</div>" <<
-        "Resource not found" <<
+        "Risorsa non trovata" <<
         "</div>", :layout => "application"
     end
   end
@@ -99,7 +99,7 @@ class HomeController < ApplicationController
       format.html { render :action => "index" }
       format.rss {
         if @user && params[:token].present?
-          @title += " - Private feed for #{@user.username}"
+          @title += " - Feed privato per #{@user.username}"
         end
 
         render :action => "rss", :layout => false
@@ -115,7 +115,7 @@ class HomeController < ApplicationController
       paginate stories.newest_by_user(by_user)
     }
 
-    @heading = @title = "Newest Stories by #{by_user.username}"
+    @heading = @title = "Ultime storie da #{by_user.username}"
     @cur_url = "/newest/#{by_user.username}"
 
     @newest = true
@@ -187,10 +187,10 @@ class HomeController < ApplicationController
     }
 
     if length[:dur] > 1
-      @heading = @title = "Top Stories of the Past #{length[:dur]} " <<
+      @heading = @title = "Migliori storie degli ultimi #{length[:dur]} " <<
         length[:intv] << "s"
     else
-      @heading = @title = "Top Stories of the Past " << length[:intv]
+      @heading = @title = "Migliori storie degli ultimi " << length[:intv]
     end
 
     render :action => "index"
@@ -201,17 +201,17 @@ class HomeController < ApplicationController
       paginate @user.upvoted_stories.order('votes.id DESC')
     }
 
-    @heading = @title = "Your Upvoted Stories"
+    @heading = @title = "Le storie che hai votato"
     @cur_url = "/upvoted"
 
-    @rss_link = { :title => "RSS 2.0 - Your Upvoted Stories",
+    @rss_link = { :title => "RSS 2.0 - Le storie che hai votato",
       :href => "/upvoted.rss#{(@user ? "?token=#{@user.rss_token}" : "")}" }
 
     respond_to do |format|
       format.html { render :action => "index" }
       format.rss {
         if @user && params[:token].present?
-          @title += " - Private feed for #{@user.username}"
+          @title += " - Feed privato per #{@user.username}"
         end
 
         render :action => "rss", :layout => false

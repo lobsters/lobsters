@@ -1,3 +1,7 @@
+development:
+  configuration_file: "/tmp/development.sphinx.conf"
+  indices_location: "/sphinx/development"
+
 production:
   configuration_file: "/tmp/production.sphinx.conf"
   indices_location: "/sphinx/production"

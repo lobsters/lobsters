@@ -30,6 +30,10 @@ describe Tag do
     it 'does not allow a tag with a description too long to be saved' do
       expect(Tag.create(tag: 'tag_name', description: 'test_desc' * 20)).not_to be_valid
     end
+
+    it 'does not allow a tag with a comma to be saved' do
+      expect(Tag.create(tag: 'tag,name')).not_to be_valid
+    end
   end
 
   context 'logs modification in moderation log' do

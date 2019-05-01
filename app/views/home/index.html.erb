@@ -3,12 +3,18 @@
     <em>The <a href="/newest">newest</a> stories that have not yet reached the front page.</em>
   </div>
 <% end %>
-<% if @tag %>
+<% if @tags.present? %>
   <div class="box" id="leader">
     Stories <a href="/tags">tagged</a> as
-    <%= tag_link(@tag) %>
-    &ndash;
-    <%= @tag.description %>
+    <% @tags.each do |tag| %>
+      <%= tag_link(tag) %>
+
+      <% if tag.description.present? %>
+        &ndash; <%= tag.description %>
+      <% end %>
+    <% end %>
+
+    <%= render(partial: 'tags/multi_tag_tip') if @tags.count == 1 %>
   </div>
 <% end %>
 

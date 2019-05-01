@@ -1,6 +1,8 @@
 <div class="box wide">
   <div class="legend">
     Tags
+
+    <%= render partial: 'tags/multi_tag_tip' %>
   </div>
 
   <% is_admin = @user.try(:is_admin?) %>

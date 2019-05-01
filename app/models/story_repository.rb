@@ -30,16 +30,9 @@ class StoryRepository
     Story.base.saved_by(@user).filter_tags(@params[:exclude_tags] || []).order(:hotness)
   end
 
-  def tagged(tag)
-    tagged = Story.base.positive_ranked.where(
-      Story.arel_table[:id].in(
-        Tagging.arel_table.where(
-          Tagging.arel_table[:tag_id].eq(tag.id)
-        ).project(
-          Tagging.arel_table[:story_id]
-        )
-      )
-    )
+  def tagged(tags)
+    tagged = Story.base.positive_ranked.joins(:taggings).where(taggings: { tag_id: tags.map(&:id) })
+
     tagged.order(created_at: :desc)
   end
 

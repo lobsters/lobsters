@@ -15,17 +15,17 @@
 - { tag: "css", description: "Cascading Style Sheet" }
 - { tag: "cultura-it", description: "Cultura del mondo IT" }
 - { tag: "database", description: "Basi di dati" }
-- { tag: "debugging", description: "Tecniche di debugging" }
+- { tag: "debugging", description: "Tecniche e software per il debugging" }
 - { tag: "design", description: "Design e progettazione visuale" }
 - { tag: "devops", description: "Developer Operations" }
 - { tag: "domanda", description: "Chiedi alla community gambe.ro" }
 - { tag: "dotnet", description: "Piattaforma .NET di Microsoft" }
 - { tag: "erlang/elixir", description: "Linguaggi di programmazione Erlang ed Elixir" }
-- { tag: "etica", description: "Etica dello sviluppo software" }
+- { tag: "etica", description: "Etica del software e del suo sviluppo" }
 - { tag: "evento", description: "Evento per sviluppatori" }
-- { tag: "filosofia", description: "Filosofia dello sviluppo software" }
+- { tag: "filosofia", description: "Temi filosofici connessi al software" }
 - { tag: "freebsd", description: "Famiglia di sistemi operativi FreeBSD" }
-- { tag: "giochi", description: "Giochi" }
+- { tag: "giochi", description: "Sviluppo di Videogiochi" }
 - { tag: "go", description: "Linguaggio di programmazione Go" }
 - { tag: "grafica", description: "Grafica" }
 - { tag: "hardware", description: "Hardware" }
@@ -35,8 +35,7 @@
 - { tag: "istruzione", description: "Istruzione" }
 - { tag: "java", description: "Linguaggio di programmazione Java" }
 - { tag: "javascript", description: "Linguaggio di programmazione JavaScript" }
-- { tag: "lamentela", description: "Lamentela riguardo a qualcosa" }
-- { tag: "lavoro", description: "Lavoro" }
+- { tag: "lavoro", description: "Carriera, burocrazia e diritti dei lavoratori" }
 - { tag: "legislazione", description: "Legislazione" }
 - { tag: "libro", description: "Libro" }
 - { tag: "linux", description: "Sistema operativo Linux" }
@@ -45,7 +44,7 @@
 - { tag: "mac", description: "Prodotti Mac di Apple" }
 - { tag: "machinelearning", description: "Machine learning" }
 - { tag: "matematica", description: "Matematica" }
-- { tag: "meta", description: "Argomenti legati a gambe.ro" }
+- { tag: "meta", description: "Argomenti legati al sito e alla comunità di Gambe.ro" }
 - { tag: "metodiformali", description: "Metodi di verifica e specifica formale" }
 - { tag: "mobile", description: "Programmazione per l'ambiente mobile" }
 - { tag: "netbsd", description: "Sistema operativo NetBSD" }
@@ -62,7 +61,7 @@
 - { tag: "python", description: "Linguaggio di programmazione Python" }
 - { tag: "reti", description: "Reti di comunicazione" }
 - { tag: "reverse-engineering", description: "Ingegneria inversa" }
-- { tag: "rilascio", description: "Rilascio di software in produzione" }
+- { tag: "rilascio", description: "Rilascio di software in produzione o al pubblico" }
 - { tag: "ruby", description: "Linguaggio di programmazione Ruby" }
 - { tag: "rust", description: "Linguagggio di programmazione Rust" }
 - { tag: "satira", description: "Satira" }
@@ -72,11 +71,10 @@
 - { tag: "sicurezza", description: "Sicurezza di sistemi informatici" }
 - { tag: "sistemidistribuiti", description: "Sistemi distribuiti" }
 - { tag: "sistemioperativi", description: "Sistemi operativi" }
-- { tag: "slides", description: "Link a delle slides, es. di una conferenza", is_media: true }
+- { tag: "slide", description: "Link a slide, ad es. slide di una conferenza", is_media: true }
 - { tag: "società", description: "Società" }
 - { tag: "storia", description: "Storia" }
 - { tag: "swift", description: "Linguaggio di programmazione Swift" }
-- { tag: "systemd", description: "Service manager per sistemi unix-like" }
 - { tag: "testing", description: "Testing di software" }
 - { tag: "trascrizione", description: "Link ad una trascrizione, es. di una conferenza" }
 - { tag: "unix", description: "Sistemi operativi Unix" }

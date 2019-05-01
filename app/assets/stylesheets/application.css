@@ -124,6 +124,7 @@ input[type="search"],
 input[type="password"],
 input[type="email"],
 input[type="number"],
+input[type="url"],
 textarea {
 	border: 1px solid #ccc;
 }

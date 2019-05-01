@@ -20,6 +20,15 @@ describe User do
     expect { create(:user, :email => "user@") }.to raise_error
   end
 
+  it "has a valid homepage" do
+    create(:user, :homepage => "https://lobste.rs")
+    create(:user, :homepage => "https://lobste.rs/w00t")
+    create(:user, :homepage => "https://ሙዚቃ.et")
+
+    expect { create(:user, :homepage => "http://") }.to raise_error
+    expect { create(:user, :homepage => "http://notld") }.to raise_error
+  end
+
   it "authenticates properly" do
     u = create(:user, :password => "hunter2")
 

@@ -1,0 +1,3 @@
+production:
+  configuration_file: "/tmp/production.sphinx.conf"
+  indices_location: "/sphinx/production"

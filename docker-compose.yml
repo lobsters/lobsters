@@ -19,6 +19,7 @@ services:
     volumes:
       - .:/gambero
       - /data/log:/gambero/log
+      - /data/sphinx:/sphinx
     security_opt:
       - no-new-privileges
     read_only: true

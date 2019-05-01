@@ -2,10 +2,6 @@
 
 set -e # Abort on error
 
-if [ ! -f $DB_TEMPLATE_PATH ]; then
-	echo "Database config not found: please add $DB_TEMPLATE_PATH."
-	exit 1
-fi
 if [ ! hash envsubst 2>/dev/null ]; then
 	echo 'envsubst not found; please install GNU gettext.'
 	exit 3
@@ -17,6 +13,8 @@ set -a
 script/check-env.sh
 
 cat config/database.template.yml | envsubst > config/database.yml
+cat config/production.sphinx.template.conf | envsubst > config/production.sphinx.conf
+chmod a+w config/production.sphinx.conf
 cat config/secrets.template.yml | envsubst > config/secrets.yml
 echo "Applying security fixes..."
 script/docker-host-security.sh

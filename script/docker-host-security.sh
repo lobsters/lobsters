@@ -14,6 +14,12 @@ if [ $(stat -c %a /data/log/) != 777 ]; then
 else
 	echo '/data/log/ permissions ok'
 fi
+if [ $(stat -c %a /data/sphinx/) != 777 ]; then
+	echo '/data/sphinx/ should have 777 permissions (chmod -R 777 /data/sphinx/).'
+	exit 2
+else
+	echo '/data/sphinx/ permissions ok'
+fi
 mkdir -pv tmp/
 chmod -Rv 777 tmp/
 mkdir -pv public/assets/

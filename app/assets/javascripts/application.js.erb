@@ -128,13 +128,13 @@ var _Lobsters = Class.extend({
       /* already upvoted, neutralize */
       li.removeClass("upvoted");
       score--;
-      action = "rimuovi voto";
+      action = "unvote";
     }
     else if (li.hasClass("downvoted") && point < 0) {
       /* already downvoted, neutralize */
       li.removeClass("downvoted");
       score++;
-      action = "rimuovi voto";
+      action = "unvote";
     }
     else if (point > 0) {
       if (li.hasClass("downvoted"))

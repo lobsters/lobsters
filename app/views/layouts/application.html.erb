@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="always" />
-  <meta name="theme-color" content="#AC130D" />
+  <meta name="theme-color" content="#0E0E0E" />
   <% if @meta_tags %>
     <% @meta_tags.each do |k,v| %>
       <meta name="<%= k %>" content="<%= v %>" />
@@ -58,14 +58,7 @@
         <% end %>
 
         <% links.merge!({ "/search" => t('.searchlink') }) %>
-        <% links.merge!({ "/about#betatest" => t('.beta-test') }) %>
-        
-
-        <% if !@user %>
-          <% links.merge!({ "/invitations/request" => t('.invitationlink') }) %>
-        <% end %>
-
-        <% if @cur_url.present? && !links.keys.include?(@cur_url) &&
+                      <% if @cur_url.present? && !links.keys.include?(@cur_url) &&
         @heading.present? %>
           <span id="headertitle">
             <a href="<%= @cur_url %>"><%= @heading %></a>
@@ -77,7 +70,14 @@
             <a href="<%= u %>" <%= u == @cur_url ? raw("class=\"cur_url\"") :
               "" %>><%= v %></a>
           <% end %>
+        <a href="/about#betatest" class="highlighted"><%=t('.beta-test')=%></a>
+        <% if !@user %>
+           <a href="/invitations/request" class="highlighted"><%=t('.invitationlink')=%></a>
+        <% end %>
+
+
         </span>
+
       </div>
 
       <div id="headerright">

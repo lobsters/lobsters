@@ -39,6 +39,8 @@ gem "sitemap_generator" # for better search engine indexing
 
 gem "ruumba"
 
+gem "scout_apm"
+
 group :test, :development do
   gem 'bullet'
   gem 'capybara'

@@ -8,7 +8,7 @@ class WellKnownController < ApplicationController
     @brand_color = "#AC130D"
     @description = "Computing-focused community centered around link aggregation and discussion"
     @contacts = ["admin@#{Keybase.DOMAIN}"]
-    @prefill_url = "#{settings_keybase_auth_url}?kb_username=%{kb_username}&kb_signature=%{sig_hash}&kb_ua=%{kb_ua}&username=%{username}"
+    @prefill_url = "#{new_keybase_proof_url}?kb_username=%{kb_username}&kb_signature=%{sig_hash}&kb_ua=%{kb_ua}&username=%{username}"
     @profile_url = "#{u_url}/%{username}"
     @check_url = "#{u_url}/%{username}.json"
     @logo_black = "https://lobste.rs/small-black-logo.svg"

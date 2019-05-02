@@ -57,6 +57,10 @@ a.tag {
 	vertical-align: text-top;
 }
 
+span.headerlinks >a.highlighted{
+    color: #30ABCB;
+}
+
 a.tag_is_media {
 	background-color: #ddebf9;
 	border-color: #b2ccf0;
@@ -321,7 +325,7 @@ div#inside {
 }
 
 #header a.new_messages {
-	color: #ac130d;
+	color: #ff4202;
 }
 
 div#leader {
@@ -426,7 +430,7 @@ div.voters .downvoter {
 
 div.voters .upvoter:hover,
 .upvoted div.voters .upvoter {
-	border-bottom-color: #ac130d;
+	border-bottom-color: #ff4d02;
 }
 
 div.voters .upvoter {
@@ -1260,7 +1264,7 @@ div.fieldWithErrors {
 	border: 1px solid rgba(160,160,160,.8);
 }
 .select2-container .select2-results .select2-highlighted {
-	background: darkred;
+	background: #ff4202;
 	color: #fff;
 }
 
@@ -1313,3 +1317,5 @@ div.fieldWithErrors {
 	text-decoration: none;
 	vertical-align: middle;
 }
+
+

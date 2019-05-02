@@ -121,7 +121,7 @@ class SettingsController < ApplicationController
 
   def pushover_auth
     if !Pushover.SUBSCRIPTION_CODE
-      flash[:error] = "This site is not configured for Pushover"
+      flash[:error] = "Questo sito non è configurato per Pushover"
       return redirect_to "/settings"
     end
 
@@ -136,12 +136,12 @@ class SettingsController < ApplicationController
 
   def pushover_callback
     if !session[:pushover_rand].to_s.present?
-      flash[:error] = "No random token present in session"
+      flash[:error] = "Nessun random token nella sessione"
       return redirect_to "/settings"
     end
 
     if !params[:rand].to_s.present?
-      flash[:error] = "No random token present in URL"
+      flash[:error] = "Nessun random token nell'URL"
       return redirect_to "/settings"
     end
 
@@ -154,10 +154,9 @@ class SettingsController < ApplicationController
     @user.save!
 
     if @user.pushover_user_key.present?
-      flash[:success] = "Your account is now setup for Pushover notifications."
+      flash[:success] = "Il tuo account è abilitato alle notifiche Pushover."
     else
-      flash[:success] = "Your account is no longer setup for Pushover " <<
-        "notifications."
+      flash[:success] = "Il tuo account ha disabilitato le notifiche Pushover."
     end
 
     return redirect_to "/settings"
@@ -182,7 +181,7 @@ class SettingsController < ApplicationController
       @user.github_oauth_token = tok
       @user.github_username = username
       @user.save!
-      flash[:success] = "Your account has been linked to GitHub user " <<
+      flash[:success] = "Il tuo account è stato collegato all'utente GitHub " <<
         "#{username}."
     else
       return github_disconnect
@@ -195,7 +194,7 @@ class SettingsController < ApplicationController
     @user.github_oauth_token = nil
     @user.github_username = nil
     @user.save!
-    flash[:success] = "Your GitHub association has been removed."
+    flash[:success] = "La tua associazione con GitHub è stata rimossa."
     return redirect_to "/settings"
   end
 
@@ -207,7 +206,7 @@ class SettingsController < ApplicationController
   def twitter_callback
     if !session[:twitter_state].present? ||
     (params[:state].to_s != session[:twitter_state].to_s)
-      flash[:error] = "Invalid OAuth state"
+      flash[:error] = "Stato OAuth non valido"
       return redirect_to "/settings"
     end
 
@@ -220,7 +219,7 @@ class SettingsController < ApplicationController
       @user.twitter_oauth_token_secret = sec
       @user.twitter_username = username
       @user.save!
-      flash[:success] = "Your account has been linked to Twitter user @" <<
+      flash[:success] = "Il tuo account è stato collegato all'account Twitter @" <<
         "#{username}."
     else
       return twitter_disconnect
@@ -234,7 +233,7 @@ class SettingsController < ApplicationController
     @user.twitter_username = nil
     @user.twitter_oauth_token_secret = nil
     @user.save!
-    flash[:success] = "Your Twitter association has been removed."
+    flash[:success] = "La tua associazione con Twitter è stata rimossa."
     return redirect_to "/settings"
   end
 

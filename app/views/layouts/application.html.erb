@@ -121,7 +121,7 @@
           <%= render :partial => "layouts/footer" %>
         <% else %>
           <a href="/moderations"><%= t('.moderationloglink') %></a>
-          <% if @user && !@user.is_new? &&
+          <% if @user && @user.is_moderator? &&
           (iqc = InvitationRequest.verified_count) > 0 %>
             <a href="/invitations"><%= t('.invitationqueuelink') %>(<%= iqc %>)</a>
           <% end %>

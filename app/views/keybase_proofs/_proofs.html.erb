@@ -1,0 +1,13 @@
+<% if user.keybase_signatures? %>
+  Linked to
+  <% user.keybase_signatures.each do |kbs| %>
+    <strong><%= link_to "@#{kbs[:kb_username]}", "#{Keybase.BASE_URL}/#{kbs[:kb_username]}" %></strong>
+    <strong><%= link_to "✔", "#{Keybase.BASE_URL}/#{kbs[:kb_username]}/sigchain\##{kbs[:sig_hash]}" %></strong>
+    &nbsp;
+  <% end %>
+  <% if for_self %>
+    (<%= link_to "Disconnect on Keybase", "https://keybase.io/download" %>)
+  <% end %>
+<% elsif for_self %>
+  Install <%= link_to "Keybase", "https://keybase.io/download" %> to prove a cryptographic connection.
+<% end %>

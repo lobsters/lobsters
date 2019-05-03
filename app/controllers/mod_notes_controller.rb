@@ -6,7 +6,7 @@ class ModNotesController < ModController
     @username = params[:username]
     query = ModNote.order('created_at desc').includes(:moderator, :user)
     if (@username = params[:username])
-      if (user = User.find_by(username: @username))
+      if (user = User.find_by("LOWER(username) = :s", :s => @username.downcase))
         @title = "#{@username} Mod Notes"
         @notes = query.where(user: user)
       else

@@ -103,7 +103,7 @@ class LoginController < ApplicationController
   end
 
   def reset_password
-    @found_user = User.where("email = ? OR username = ?", params[:email], params[:email]).first
+    @found_user = User.where("lower(email) = ? OR lower(username) = ?", params[:email].downcase, params[:email].downcase).first
 
     if !@found_user
       flash.now[:error] = "Invalid e-mail address or username."

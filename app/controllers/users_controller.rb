@@ -97,7 +97,7 @@ class UsersController < ApplicationController
   end
 
   def unban
-    buser = User.where(:username => params[:username]).first
+    buser = User.where("lower(username) = ?", params[:username].downcase).first
     if !buser
       flash[:error] = "Invalid user."
       return redirect_to "/"

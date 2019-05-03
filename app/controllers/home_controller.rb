@@ -126,7 +126,7 @@ class HomeController < ApplicationController
   end
 
   def newest_by_user
-    by_user = User.find_by!("LOWER(username) = :s", :s => params[:user])
+    by_user = User.find_by!("LOWER(username) = :s", :s => params[:user].downcase)
 
     @stories, @show_more = get_from_cache(by_user: by_user) {
       if @user && @user.is_moderator?

@@ -1,3 +1,12 @@
+<%= content_for(:meta_og) do %>
+    <meta property="og:title" content="<%= @story.title %>" />
+    <meta property="og:type" content="article" />
+    <meta property="og:published_time" content="<%= @story.created_at.strftime('%Y-%m-%d %H:%M') %>" />
+    <meta property="og:author" content="<%= @story.user.username if @story.user && @story.user.username %>" />
+        <meta property="og:description" content="Leggi la discussione su Gambe.ro" />
+    <%= tag :meta, property: 'og:image', content: image_url('gambero.png') %>
+<% end %>
+
 <ol class="stories">
   <%= render :partial => "stories/listdetail",
     :locals => { :story => @story, :single_story => true } %>

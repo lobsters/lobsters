@@ -11,6 +11,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="always" />
   <meta name="theme-color" content="#0E0E0E" />
+  <% if content_for?(:meta_og) %>
+      <%= yield :meta_og %>
+  <% else %>
+  <meta property="og:url"                content="https://gambe.ro"/>
+<meta property="og:type"               content="website" />
+<meta property="og:title"              content="Gambe.ro" />
+<meta property="og:description"        content="Gambe.ro: la comunità italiana dei progammatori" />
+          <%= tag :meta, property: 'og:image', content: image_url('gambero.png') %>
+    <% end %>
   <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139538384-1"></script>
 <script>

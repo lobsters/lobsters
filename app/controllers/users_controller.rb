@@ -66,7 +66,7 @@ class UsersController < ApplicationController
   end
 
   def enable_invitation
-    target = User.where(:username => params[:username]).first
+    target = User.where("lower(username) = ?", params[:username].downcase).first
     if !target
       flash[:error] = "Invalid user."
       redirect_to "/"

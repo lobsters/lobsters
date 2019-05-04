@@ -137,7 +137,7 @@ See the guidelines below." %>
       <%= f.check_box :user_is_following %>
       <%= f.label :user_is_following,
         (f.object.id && f.object.user_id == @user.id ? 'Follow' : "Submitter is following") +
-        " this story to recieve replies via e-mail and Pushover",
+        " this story to receive replies via e-mail and Pushover",
         :class => "normal" %>
     </div>
   </div>

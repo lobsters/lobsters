@@ -1,3 +1,5 @@
+require 'set'
+
 class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :story,
@@ -263,11 +265,24 @@ class Comment < ApplicationRecord
     end
   end
 
-  def deliver_reply_notifications
+  def users_following_thread
+    users_following_thread = Set.new
+    if self.user.id != self.story.user.id && self.story.user_is_following
+      users_following_thread << self.story.user
+    end
+
     if self.parent_comment_id &&
        (u = self.parent_comment.try(:user)) &&
        u.id != self.user.id &&
        u.is_active?
+      users_following_thread << u
+    end
+
+    users_following_thread
+  end
+
+  def deliver_reply_notifications
+    users_following_thread.each do |u|
       if u.email_replies?
         begin
           EmailReply.reply(self, u).deliver_now

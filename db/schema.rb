@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_05_192331) do
+ActiveRecord::Schema.define(version: 2018_12_02_194809) do
 
   create_table "comments", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -183,6 +183,7 @@ ActiveRecord::Schema.define(version: 2018_10_05_192331) do
     t.datetime "unavailable_at"
     t.string "twitter_id", limit: 20
     t.boolean "user_is_author", default: false
+    t.boolean "user_is_following", default: false, null: false
     t.index ["created_at"], name: "index_stories_on_created_at"
     t.index ["description"], name: "index_stories_on_description", type: :fulltext
     t.index ["hotness"], name: "hotness_idx"
@@ -331,7 +332,7 @@ ActiveRecord::Schema.define(version: 2018_10_05_192331) do
   add_foreign_key "votes", "users", name: "votes_user_id_fk"
 
   create_view "replying_comments",  sql_definition: <<-SQL
-      select `read_ribbons`.`user_id` AS `user_id`,`comments`.`id` AS `comment_id`,`read_ribbons`.`story_id` AS `story_id`,`comments`.`parent_comment_id` AS `parent_comment_id`,`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`comments`.`user_id` AS `comment_author_id`,`stories`.`user_id` AS `story_author_id`,(`read_ribbons`.`updated_at` < `comments`.`created_at`) AS `is_unread`,(select `votes`.`vote` from `votes` where ((`votes`.`user_id` = `read_ribbons`.`user_id`) and (`votes`.`comment_id` = `comments`.`id`))) AS `current_vote_vote`,(select `votes`.`reason` from `votes` where ((`votes`.`user_id` = `read_ribbons`.`user_id`) and (`votes`.`comment_id` = `comments`.`id`))) AS `current_vote_reason` from (((`read_ribbons` join `comments` on((`comments`.`story_id` = `read_ribbons`.`story_id`))) join `stories` on((`stories`.`id` = `comments`.`story_id`))) left join `comments` `parent_comments` on((`parent_comments`.`id` = `comments`.`parent_comment_id`))) where ((`read_ribbons`.`is_following` = 1) and (`comments`.`user_id` <> `read_ribbons`.`user_id`) and (`comments`.`is_deleted` = 0) and (`comments`.`is_moderated` = 0) and ((`parent_comments`.`user_id` = `read_ribbons`.`user_id`) or (isnull(`parent_comments`.`user_id`) and (`stories`.`user_id` = `read_ribbons`.`user_id`))) and ((`comments`.`upvotes` - `comments`.`downvotes`) >= 0) and (isnull(`parent_comments`.`id`) or ((`parent_comments`.`upvotes` - `parent_comments`.`downvotes`) >= 0)) and ((cast(`stories`.`upvotes` as signed) - cast(`stories`.`downvotes` as signed)) >= 0))
+      select `read_ribbons`.`user_id` AS `user_id`,`comments`.`id` AS `comment_id`,`read_ribbons`.`story_id` AS `story_id`,`comments`.`parent_comment_id` AS `parent_comment_id`,`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`comments`.`user_id` AS `comment_author_id`,`stories`.`user_id` AS `story_author_id`,`read_ribbons`.`updated_at` < `comments`.`created_at` AS `is_unread`,(select `votes`.`vote` from `votes` where `votes`.`user_id` = `read_ribbons`.`user_id` and `votes`.`comment_id` = `comments`.`id`) AS `current_vote_vote`,(select `votes`.`reason` from `votes` where `votes`.`user_id` = `read_ribbons`.`user_id` and `votes`.`comment_id` = `comments`.`id`) AS `current_vote_reason` from (((`read_ribbons` join `comments` on(`comments`.`story_id` = `read_ribbons`.`story_id`)) join `stories` on(`stories`.`id` = `comments`.`story_id`)) left join `comments` `parent_comments` on(`parent_comments`.`id` = `comments`.`parent_comment_id`)) where `read_ribbons`.`is_following` = 1 and `comments`.`user_id` <> `read_ribbons`.`user_id` and `comments`.`is_deleted` = 0 and `comments`.`is_moderated` = 0 and (`parent_comments`.`user_id` = `read_ribbons`.`user_id` or `parent_comments`.`user_id` is null and `stories`.`user_id` = `read_ribbons`.`user_id`) and `comments`.`upvotes` - `comments`.`downvotes` >= 0 and (`parent_comments`.`id` is null or `parent_comments`.`upvotes` - `parent_comments`.`downvotes` >= 0) and cast(`stories`.`upvotes` as signed) - cast(`stories`.`downvotes` as signed) >= 0
   SQL
 
 end

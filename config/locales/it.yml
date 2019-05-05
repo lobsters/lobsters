@@ -266,11 +266,11 @@ it:
       totpcodenotmatch: "Codice TOTP non corretto. Riprova."
   filters:
     index:
-      filteredtags: "Etichette filtrate"
+      filteredtags: "Tag filtrati"
       filteredtagsdesc: "Per nascondere le informazioni dalla home page che sono contrassegnate da un certo <a href=\"/tags\">tag</a>, selezionale qui sotto."
       filteredtagsnotloggedindesc: "Poiché non sei connesso, i tuoi filtri saranno salvati in un cookie di lunga durata. Per registrare definitivamente i filtri dei tag e perché funzionino indipendentemente dal browser web, <a href=\"/login\">accedi</a> al tuo account."
       filteredhide: "Nascondi"
-      filteredtag: "Etichetta"
+      filteredtag: "Tag"
       filtereddesc: "Descrizione"
       filteredstories: "Articoli"
       filteredsave: "Salva i filtri"
@@ -468,7 +468,7 @@ it:
       url: "URL:"
       title: "Titolo:"
       changetitle: "Gli utenti hanno suggerito di modificare il titolo di questo articolo in:"
-      tags: "Etichette:"
+      tags: "Tag:"
       changetags: "Gli utenti di hanno suggerito di modificare i tag di questo articolo in:"
       text: "Testo:"
       placeholdertext: "Opzionale quando si pubblica un URL; per favore consulta le linee guida"
@@ -499,7 +499,7 @@ it:
       flag: "segnala"
       hide: "nascondi"
       unhide: "mostra"
-      cached: "Copia cache"
+      cached: "copia cache"
       nocomment: "nessun commento"
       commentsingular: "commento"
       commentplurial: "commenti"
@@ -538,7 +538,7 @@ it:
       karmaperstorycomment: "per articolo/commento"
       storiessubmitted: "Articoli pubblicati:"
       postedcomments: "Commenti pubblicati:"
-      mostcommonlytagged: "tag usate più frequentemente"
+      mostcommonlytagged: "tag usati più frequentemente"
       about: "Descrizione:"
       aboutdefault: "Un mistero..."
       administrativeinfo: "Informazioni amministrative"
@@ -559,7 +559,7 @@ it:
       moderator: "moderatore"
   tags:
     index:
-      tagstitle: "Etichette"
+      tagstitle: "Tag"
 # data for users/invitationform which is a partial view
   invitationtext: "Le persone da te invitate saranno associate al tuo profilo nell'<a href=\"/u\">albero degli utenti</a> e tu sarai responsabile per la loro condotta qualora queste causassero problemi. Per favore esercita accortezza nell'invitare persone che non conosci personalmente."
   emailaddress: "Indirizzo e-mail:"
@@ -674,7 +674,7 @@ it:
       flashalreadyposted: "Questo URL è già stato pubblicato di recente"
       flashcanonicalversion: "Nota: l'URL è stato cambiato nella versione canonica rilevata"
     tags_controller:
-      tagstitle: "Etichette"
+      tagstitle: "Tag"
     users_controller:
       usertitle: "Utenti"
     signup_controller:

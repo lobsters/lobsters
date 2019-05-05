@@ -1,3 +1,18 @@
+<%= content_for(:meta_og) do %>
+    <meta property="og:type" content="profile" />
+    <% if @user.username %>
+        <meta property="og:title" content="<%= @user.username %>" />
+        <meta property="og:username" content="<%= @user.username %>" />
+    <% else %>
+        <meta property="og:title" content="Anonymous User Profile" />
+    <% end %>
+    <% if @showing_user.is_active? %>
+        <%= tag :meta, property: 'og:image', content: image_url("gambero.png") %>
+      <% end %>
+    <meta property="og:description" content="Un utente di Gambe.ro" />
+      
+    <% end %>
+
 <div class="box wide">
   <div class="legend">
     <% if !@showing_user.is_active? %>

@@ -609,8 +609,8 @@ class Story < ApplicationRecord
 
   def merged_comments
     # TODO: make this a normal has_many?
-    Comment.where(:story_id => Story.select(:id)
-      .where(:merged_story_id => self.id) + [self.id])
+    Comment.where(story_id: Story.select(:id).where(merged_story_id: self.id)
+      .where('merged_story_id is not null') + [self.id])
   end
 
   def merge_story_short_id=(sid)

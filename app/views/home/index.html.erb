@@ -19,8 +19,7 @@
 <% end %>
 
 <ol class="stories list <%= @cur_url == "/hidden" ? "show_hidden" : "" %>">
-  <%= render partial: "stories/listdetail", collection: @stories, as: :story,
-             locals: { single_story: @for_user == @user.try(:username) } %>
+  <%= render partial: "stories/listdetail", collection: @stories, as: :story %>
 </ol>
 
 <div class="morelink">

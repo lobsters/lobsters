@@ -585,7 +585,7 @@ $(document).ready(function() {
   });
 
   $(document).on("blur", "#user_homepage", function() {
-    if (!this.value.match('^https?:\/\/'))
+    if (this.value.trim() !== '' && !this.value.match('^https?:\/\/'))
       this.value = 'http://' + this.value;
   });
 

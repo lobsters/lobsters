@@ -23,10 +23,15 @@ describe User do
   it "has a valid homepage" do
     create(:user, :homepage => "https://lobste.rs")
     create(:user, :homepage => "https://lobste.rs/w00t")
+    create(:user, :homepage => "https://lobste.rs/w00t.path")
+    create(:user, :homepage => "https://lobste.rs/w00t")
     create(:user, :homepage => "https://ሙዚቃ.et")
+    create(:user, :homepage => "http://lobste.rs/ሙዚቃ")
 
     expect { create(:user, :homepage => "http://") }.to raise_error
     expect { create(:user, :homepage => "http://notld") }.to raise_error
+    expect { create(:user, :homepage => "http://notld/w00t.path") }.to raise_error
+    expect { create(:user, :homepage => "ftp://invalid.protocol") }.to raise_error
   end
 
   it "authenticates properly" do

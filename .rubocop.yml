@@ -3,8 +3,9 @@
 # https://github.com/lobsters/lobsters/pull/460
 
 # Project setup:
-require: ./extras/prohibit_safe_navigation
-require: ./extras/prohibit_form_for_and_form_tag
+require:
+  - ./extras/prohibit_safe_navigation
+  - ./extras/prohibit_form_for_and_form_tag
 Rails:
   Enabled: true
 AllCops:

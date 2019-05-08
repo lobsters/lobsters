@@ -326,19 +326,8 @@ class Story < ApplicationRecord
     base = self.tags.sum(:hotness_mod) + (self.user_is_author? && self.url.present? ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
-    cpoints = self.merged_comments
-      .where("user_id <> ?", self.user_id)
-      .select(:upvotes, :downvotes)
-      .map {|c|
-        if base < 0
-          # in stories already starting out with a bad hotness mod, only look
-          # at the downvotes to find out if this tire fire needs to be put out
-          c.downvotes * -0.5
-        else
-          c.upvotes + 1 - c.downvotes
-        end
-      }
-      .inject(&:+).to_f * 0.5
+    sum_expression = base < 0 ? "downvotes * -0.5" : "upvotes + 1 - downvotes"
+    cpoints = self.merged_comments.where.not(user_id: self.user_id).sum(sum_expression).to_f * 0.5
 
     # mix in any stories this one cannibalized
     cpoints += self.merged_stories.map(&:score).inject(&:+).to_f

@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/scoutapp/scout_apm_ruby.git
+  revision: 574b0a6cf9ee774b5c09e60825f0f6131ea9f005
+  ref: 574b0a6
+  specs:
+    scout_apm (2.4.24)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -266,6 +273,7 @@ DEPENDENCIES
   ruumba
   scenic
   scenic-mysql_adapter
+  scout_apm!
   sitemap_generator
   sqlite3
   uglifier (>= 1.3.0)

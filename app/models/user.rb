@@ -67,11 +67,16 @@ class User < ApplicationRecord
     s.string :twitter_oauth_token
     s.string :twitter_oauth_token_secret
     s.string :twitter_username
+    s.string :homepage
   end
 
   validates :email,
             :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
             :uniqueness => { :case_sensitive => false }
+
+  validates :homepage,
+            :format => { :with => /\Ahttps?:\/\/[^.\/\s]+\.[^.\/\s]+(\/.*)?\Z/ },
+            :allow_blank => true
 
   validates :password, :presence => true, :on => :create
 
@@ -149,7 +154,7 @@ class User < ApplicationRecord
       attrs.push :karma
     end
 
-    attrs.push :about
+    attrs.push :homepage, :about
 
     h = super(:only => attrs)
 

@@ -132,6 +132,7 @@ class Search
           self.results = base.includes({ :taggings => :tag }, :user)
         end
       end
+      self.total_results = self.results.dup.count("stories.id")
 
       case self.order
       when "relevance"
@@ -163,6 +164,7 @@ class Search
         "comments.*, " +
         "MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_comment"
       ).includes(:user, :story)
+      self.total_results = self.results.dup.count("comments.id")
 
       case self.order
       when "relevance"
@@ -174,7 +176,6 @@ class Search
       end
     end
 
-    self.total_results = self.results.length
 
     if self.page > self.page_count
       self.page = self.page_count

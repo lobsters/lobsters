@@ -19,29 +19,32 @@ class UsersController < ApplicationController
 
   def tree
     @title = "Users"
-
     newest_user = User.last.id
+
+    # pulling 10+ users is significant enough memory pressure this is worthwhile
+    attrs = %w{banned_at created_at deleted_at id invited_by_user_id is_admin is_moderator karma
+      username}
 
     if params[:by].to_s == "karma"
       content = Rails.cache.fetch("users_by_karma_#{newest_user}", :expires_in => (60 * 60 * 24)) {
-        @users = User.order("karma DESC, id ASC").to_a
+        @users = User.select(*attrs).order("karma DESC, id ASC").to_a
         @user_count = @users.length
         @title << " By Karma"
         render_to_string :action => "list", :layout => nil
       }
       render :html => content.html_safe, :layout => "application"
     elsif params[:moderators]
-      @users = User.where("is_admin = ? OR is_moderator = ?", true, true)
+      @users = User.select(*attrs).where("is_admin = ? OR is_moderator = ?", true, true)
         .order("id ASC").to_a
       @user_count = @users.length
       @title = "Moderators and Administrators"
       render :action => "list"
     else
       content = Rails.cache.fetch("users_tree_#{newest_user}", :expires_in => (60 * 60 * 24)) {
-        users = User.order("id DESC").to_a
+        users = User.select(*attrs).order("id DESC").to_a
         @user_count = users.length
         @users_by_parent = users.group_by(&:invited_by_user_id)
-        @newest = User.order("id DESC").limit(10)
+        @newest = User.select(*attrs).order("id DESC").limit(10)
         render_to_string :action => "tree", :layout => nil
       }
       render :html => content.html_safe, :layout => "application"

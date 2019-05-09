@@ -176,6 +176,8 @@ class Search
       end
     end
 
+    # with_tags uses group_by, so count returns a hash
+    self.total_results = self.total_results.count if self.total_results.is_a? Hash
 
     if self.page > self.page_count
       self.page = self.page_count

@@ -62,6 +62,7 @@
 - { tag: "reti", description: "Reti di comunicazione" }
 - { tag: "reverse-engineering", description: "Ingegneria inversa" }
 - { tag: "rilascio", description: "Rilascio di software in produzione o al pubblico" }
+- { tag: "ricerca", description: "Ricerca scientifica in campo informatico" }
 - { tag: "ruby", description: "Linguaggio di programmazione Ruby" }
 - { tag: "rust", description: "Linguagggio di programmazione Rust" }
 - { tag: "satira", description: "Satira" }
@@ -74,6 +75,7 @@
 - { tag: "slide", description: "Link a slide, ad es. slide di una conferenza", is_media: true }
 - { tag: "società", description: "Società" }
 - { tag: "storia", description: "Storia" }
+- { tag: "strumenti", description: "Strumenti per lo sviluppo software" }
 - { tag: "swift", description: "Linguaggio di programmazione Swift" }
 - { tag: "testing", description: "Testing di software" }
 - { tag: "trascrizione", description: "Link ad una trascrizione, es. di una conferenza" }

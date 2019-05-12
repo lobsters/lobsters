@@ -12,7 +12,7 @@
 <div class="morelink">
   <% if @page && @page > 1 %>
     <a href="<%= @cur_url %><%= @cur_url == "/" ? "" : "/" %><%=
-      @page == 2 ? "" : "page/#{@page - 1}" %>">&lt;&lt; Page
+      @page == 2 ? "" : "page/#{@page - 1}" %>">&lt;&lt; <%= t('layouts.application.nextpage') %>
       <%= @page - 1 %></a>
   <% end %>
 
@@ -21,6 +21,6 @@
       |
     <% end %>
     <a href="<%= @cur_url %><%= @cur_url == "/" ? "" : "/" %>page/<%=
-      @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
+      @page + 1 %>"> <%= t('layouts.application.nextpage') %> <%= @page + 1 %> &gt;&gt;</a>
   <% end %>
 </div>

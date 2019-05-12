@@ -88,7 +88,7 @@ it:
       metoovote: "Anche io"
       trollvote: "Troll"
       alreadypostedvote: "Già postato"
-      cancel: "Annullato"
+      cancel: "Annulla"
       spamvote: "Spam"
   layouts:
     application:
@@ -121,6 +121,7 @@ it:
       diaspora: "Diaspora*"
       mastodon: "Mastodon"
       currenttraffic: "(Utenti attivi: %{usernb})"
+      nextpage: "Pagina"
   comments:
     commentbox:
       mustbelogged: "Devi essere connesso per lasciare un commento."
@@ -363,15 +364,15 @@ it:
       requirepushover: "Richiedi un'iscrizione Pushover qua sopra"
       commentmentionnotificationsettings: "Impostazioni di notifica delle menzioni sui commenti"
       privatemessagenotificationsettings: "Impostazioni di notifica dei messaggi privati" 
-      submittedstorycommentsettings: "Imposazioni di notifica dei commenti ad un tuo articolo"
+      submittedstorycommentsettings: "Impostazioni di notifica dei commenti ad un tuo articolo"
       showyourthreads: "Mostra i tuoi <a href=\"/threads\">threads</a>:"
       mailinglistsettings: "Impostazioni della mailing list"
       mailinglisttext: "Se attivato, riceverai tutti gli ultimi articoli pubblicati ed i commenti agli indirizzi e-mail indicati, eccetto le storie e i commenti filtrati a partire dai <a href=\"/filters\">filtri di tag</a>. Tutte le mail saranno inviate agli indirizzi e-mail della lista, e con le opzioni a seguire potrai filtrare quali e-mail ricevere. Le e-mail che invierai con questi indirizzi saranno postate con il tuo accoun sul sito web. Stai attento a chi accede al tuo account per evitare che qualcuno commenti al posto tuo."
-      receivelistemails: "Ricevi le e-mail della lista:"
+      receivelistemails: "Ricevi le e-mail della mailing list:"
       listemailoption1: "nessuna e-mail"
       listemailoption2: "Tutti gli articoli e i commenti"
       listemailoption3: "Solo gli articoli"
-      listaddress: "Indirizzi della lista:"
+      listaddress: "Indirizzi della mailing list:"
       miscsettings: "Parametri vari"
       storypreview: "Visualizza anteprima articolo: "
       useravatars: "Visualizza l'avatar dell'utente:"
@@ -442,7 +443,7 @@ it:
       about: "Vuoi dirci qualcosa di te? Questo campo è opzionale e sarà visibile sul tuo profilo pubblicamente, con la possibilità di modificarlo in qualunque momento."
       abouttitle: "Su di me:"
       markdownavailable: "Formattazione Markdown disponibile"
-      signup: "Iscriversi"
+      signup: "Iscriviti"
     invite:
       passinvitation: "Condividi un invito a tua volta"
       passinvitationbody: "Questa comunità potrà crescere solo se i suoi membri inviteranno nuovi utenti, come è stato fatto con te. Se credi di conoscere qualcuno che potrebbe contribuire in modo costruttivo, non esitare a condividere la piattaforma con questa persona."
@@ -458,6 +459,7 @@ it:
       modreason: "Motivazione dell'azione del moderatore: "
       markdown: "Formattazione Markdown disponibile"
       save: "Salva"
+      or: "oppure"
       cancel: "Annulla le modifiche"
     form:
       alreadysubmitted: "Errore: questo articolo è già stato pubblicato "
@@ -516,6 +518,7 @@ it:
       administrator: "amministratore"
       moderator: "moderatore"
     show:
+      profileof: "Profilo di"
       status: "Stato: "
       sendmessage: "Invia un messaggio"
       banned: "Utente bannato"
@@ -576,7 +579,7 @@ it:
       hatstitle: "Cappello"
     home_controller:
       recenttitle: "Articoli recenti"
-      abouttitle: "A riguardo"
+      abouttitle: "Descrizione"
       chattitle: "Chat"
       privacytitle: "Informativa sulla privacy"
       hiddenstoriestitle: "Articoli nascosti"

@@ -1,8 +1,8 @@
 <%= content_for(:meta_og) do %>
     <meta property="og:type" content="profile" />
-    <% if @user.username %>
-        <meta property="og:title" content="<%= @user.username %>" />
-        <meta property="og:username" content="<%= @user.username %>" />
+    <% if @showing_user.username %>
+        <meta property="og:title" content="<%= t('.profileof') %> <%= @showing_user.username %>" />
+        <meta property="og:username" content="<%= @showing_user.username %>" />
     <% else %>
         <meta property="og:title" content="Anonymous User Profile" />
     <% end %>
@@ -225,7 +225,7 @@
     <% if @showing_user.is_banned? %>
       <%= form_tag user_unban_path, :method => :post do %>
         <p>
-        <%= submit_tag t('unbanuser') %>
+        <%= submit_tag t('.unbanuser') %>
         </p>
       <% end %>
     <% else %>

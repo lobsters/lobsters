@@ -99,7 +99,8 @@
       <%= f.label :email_replies, t('.receiveemail'), :class => "required" %>
       <%= f.check_box :email_replies %>
     </div>
-
+    
+    <% if Pushover.enabled? %>
     <div class="boxline">
       <%= f.label :pushover_replies,  t('.receivepushover'),
         :class => "required" %>
@@ -108,6 +109,7 @@
         <%= t('.requirepushover') %>
       </span>
     </div>
+    <% end %>
 
     <br>
 
@@ -119,7 +121,7 @@
       <%= f.label :email_mentions, t('.receiveemail'), :class => "required" %>
       <%= f.check_box :email_mentions %>
     </div>
-
+    <% if Pushover.enabled? %>
     <div class="boxline">
       <%= f.label :pushover_mentions, t('.receivepushover'),
         :class => "required" %>
@@ -128,6 +130,7 @@
         <%= t('.requirepushover') %>
       </span>
     </div>
+    <% end %>
 
     <br>
 
@@ -139,7 +142,7 @@
       <%= f.label :email_messages, t('.receiveemail'), :class => "required" %>
       <%= f.check_box :email_messages %>
     </div>
-
+    <% if Pushover.enabled? %>
     <div class="boxline">
       <%= f.label :pushover_messages, t('.receivepushover'),
         :class => "required" %>
@@ -148,7 +151,7 @@
         <%= t('.requirepushover') %>
       </span>
     </div>
-
+    <% end %>
     <br>
 
     <div class="legend">

@@ -42,7 +42,7 @@
         </div>
 
         <%= submit_tag t('.save') %>
-        &nbsp;or <a href="<%= story_path(@story.short_id) %>"><%= t('.cancel') %></a>
+        &nbsp;<%= t('.or') %> <a href="<%= story_path(@story.short_id) %>"><%= t('.cancel') %></a>
 
         <div style="clear: both;"></div>
 

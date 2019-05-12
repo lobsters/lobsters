@@ -4,10 +4,12 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <%= favicon_link_tag asset_path('favicon.png') %>
+  <!--
   <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon.png" />
   <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon.png" />
   <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-144.png" />
   <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144.png" />
+  -->
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="always" />
   <meta name="theme-color" content="#0E0E0E" />
@@ -25,15 +27,6 @@
 <meta property="og:image:height" content="521" />
 <meta property="og:image:width" content="1521" />
       <% end %>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-139538384-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-139538384-1');
-</script>
   <% if @meta_tags %>
     <% @meta_tags.each do |k,v| %>
       <meta name="<%= k %>" content="<%= v %>" />

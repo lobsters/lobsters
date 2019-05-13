@@ -13,7 +13,7 @@ class KeybaseProofsController < ApplicationController
   def create
     kb_username, kb_signature, kb_ua = post_params[:kb_username], post_params[:kb_signature], post_params[:kb_ua]
     if Keybase.proof_valid?(kb_username, kb_signature, @user.username)
-      @user.keybase_signatures = [{ kb_username: kb_username, sig_hash: kb_signature }]
+      @user.add_or_update_keybase_proof(kb_username, kb_signature)
       @user.save!
       return redirect_to Keybase.success_url(kb_username, kb_signature, kb_ua, @user.username)
     else

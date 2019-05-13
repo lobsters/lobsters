@@ -24,13 +24,42 @@ describe KeybaseProofsController do
   end
 
   context 'create' do
-    it 'saves the signature to the user settings' do
-      expect(Keybase).to receive(:validate_initial).
-        with(kb_username, kb_sig, user.username).and_return(true)
+    context 'when the user does not already have a proof' do
+      it 'saves the signature to the user settings' do
+        expect(Keybase).to receive(:proof_valid?).
+          with(kb_username, kb_sig, user.username).and_return(true)
 
-      post :create, params: create_params
+        post :create, params: create_params
 
-      expect(user.reload.keybase_signatures).to eq [{"kb_username" => kb_username, "sig_hash" => kb_sig}]
+        expect(user.reload.keybase_signatures).to eq [{ 'kb_username' => kb_username, 'sig_hash' => kb_sig}]
+      end
     end
+
+    context 'when the user already has proofs' do
+      let(:other_kb_username) { 'somethingelse' }
+      let(:other_kb_sig) { '3'*66 }
+      let(:expected_keybase_signatures) do
+        [
+          {'kb_username' => kb_username, 'sig_hash' => kb_sig},
+          {'kb_username' => other_kb_username, 'sig_hash' => other_kb_sig}
+        ]
+      end
+
+      before do
+        user.add_or_update_keybase_proof(kb_username, '2'*66)
+        user.add_or_update_keybase_proof(other_kb_username, other_kb_sig)
+        user.save!
+      end
+
+      it 'updates the signature for the matching user and retains any others' do
+        expect(Keybase).to receive(:proof_valid?).
+          with(kb_username, kb_sig, user.username).and_return(true)
+
+        post :create, params: create_params
+
+        expect(user.reload.keybase_signatures).to match_array expected_keybase_signatures
+      end
+    end
+
   end
 end

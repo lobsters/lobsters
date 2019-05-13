@@ -433,6 +433,14 @@ class User < ApplicationRecord
     Time.current - self.created_at <= NEW_USER_DAYS.days
   end
 
+  def add_or_update_keybase_proof(kb_username, kb_signature)
+    self.keybase_signatures ||= []
+    self.keybase_signatures = self.keybase_signatures.select do |kbsig|
+      kbsig['kb_username'] != kb_username
+    end
+    self.keybase_signatures.push({'kb_username' => kb_username, 'sig_hash' => kb_signature})
+  end
+
   def is_heavy_self_promoter?
     total_count = self.stories_submitted_count
 

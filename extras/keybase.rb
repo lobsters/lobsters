@@ -7,7 +7,7 @@ class Keybase
   @@BASE_URL = nil
 
   def self.enabled?
-    @@DOMAIN.present?
+    @@DOMAIN.present? || ENV['KEYBASE_BASE_URL']
   end
 
   def self.avatar_url(kb_username)

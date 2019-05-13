@@ -162,13 +162,13 @@ var _Lobsters = Class.extend({
       li.find(".reason").html("");
 
       if (action == "unvote" && thingType == "story" && point < 0)
-        li.find(".flagger").text("flag");
+        li.find(".flagger").text("segnala");
     }
     else if (action == "downvote" && thingType == "comment")
       li.find(".reason").html("| " +
         Lobsters.commentDownvoteReasons[reason].toLowerCase());
     else if (action == "downvote" && thingType == "story")
-      li.find(".flagger").text("unflag");
+      li.find(".flagger").text("annulla la segnalazione");
 
     $.post("/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
       li.attr("data-shortid") + "/" +

@@ -100,7 +100,9 @@
   Often on other sites, a user would have his or her comment downvoted without
   explanation and then edit their comment to ask why they were downvoted.  On
   this site, voters must choose a reason before downvoting comments and those
-  votes are tallied and shown to the original commenter.
+  votes are tallied and shown to the original commenter. Users may downvote
+  stories and comments after their account has
+  <%= User::MIN_KARMA_TO_DOWNVOTE %> karma.
   </p>
   <p>
   For submitted stories, downvoting is done through flagging (also requiring a

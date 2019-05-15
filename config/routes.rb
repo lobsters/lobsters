@@ -146,7 +146,8 @@ Rails.application.routes.draw do
   get "/settings/twitter_auth" => "settings#twitter_auth"
   get "/settings/twitter_callback" => "settings#twitter_callback"
   post "/settings/twitter_disconnect" => "settings#twitter_disconnect"
-  get "/settings/keybase_auth" => "settings#keybase_auth"
+  resources :keybase_proofs, only: [:new, :create]
+  get "/.well-known/keybase-proof-config" => "well_known#keybase"
 
   get "/filters" => "filters#index"
   post "/filters" => "filters#update"

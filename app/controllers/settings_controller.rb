@@ -256,26 +256,6 @@ class SettingsController < ApplicationController
     return redirect_to "/settings"
   end
 
-  def keybase_auth
-    if !params[:kb_username].present? || !params[:kb_signature].present? || !params[:kb_ua].present? || (!params[:username].present? || !params[:username] == @user.username)
-      flash[:error] = "Invalid Keybase connection parameters"
-      return redirect_to "/settings"
-    end
-
-    kb_username = params[:kb_username]
-    kb_signature = params[:kb_signature]
-    kb_ua = params[:kb_ua]
-
-    if Keybase.validate_initial(kb_username, kb_signature, @user.username)
-      @user.keybase_signatures = [{ kb_username: kb_username, sig_hash: kb_signature }]
-      @user.save!
-      return redirect_to Keybase.success_url(kb_username, kb_signature, kb_ua, @user.username)
-    else
-      flash[:error] = "Failed to connect your account to Keybase, invalid proof signature was provided."
-      return redirect_to "/settings"
-    end
-  end
-
 private
 
   def user_params

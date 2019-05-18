@@ -230,4 +230,32 @@ describe Story do
       expect(s2.similar_stories).to eq([])
     end
   end
+
+  describe "#calculated_hotness" do
+    let(:story) do
+      create(:story, url: 'https://example.com', user_is_author: true, created_at: Time.zone.at(0))
+    end
+
+    before do
+      create(:comment, story: story, downvotes: 5, upvotes: 10)
+      create(:comment, story: story, downvotes: 10, upvotes: 5)
+    end
+
+    context "with positive base" do
+      it "return correct score" do
+        expect(story.calculated_hotness).to eq(-0.25)
+      end
+    end
+
+    context "with negative base" do
+      before do
+        tag = create(:tag, hotness_mod: -10)
+        story.update(tags: [tag])
+      end
+
+      it "return correct score" do
+        expect(story.calculated_hotness).to eq 9.75
+      end
+    end
+  end
 end

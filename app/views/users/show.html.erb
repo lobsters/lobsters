@@ -114,7 +114,7 @@
 
     <span class="d">
       <a href="https://github.com/<%= h(@showing_user.github_username) %>"
-        rel="nofollow">https://github.com/<%= h(@showing_user.github_username)
+        rel="me nofollow">https://github.com/<%= h(@showing_user.github_username)
         %></a>
     </span>
     <br>
@@ -125,7 +125,17 @@
 
     <span class="d">
       <a href="https://twitter.com/<%= h(@showing_user.twitter_username) %>"
-        rel="nofollow">@<%= h(@showing_user.twitter_username) %></a>
+        rel="me nofollow">@<%= h(@showing_user.twitter_username) %></a>
+    </span>
+    <br>
+  <% end %>
+
+  <% if @showing_user.homepage.present? %>
+    <label class="required">Homepage:</label>
+
+    <span class="d">
+      <a href="<%= h(@showing_user.homepage) %>"
+        rel="me nofollow"><%= h(@showing_user.homepage) %></a>
     </span>
     <br>
   <% end %>

@@ -67,7 +67,7 @@ describe Search do
     expect(search.results.first.title).to eq("unique")
   end
 
-  it "can search for multitaged stories" do
+  it "can search for multitagged stories" do
     search = Search.new
     search.q = "multitag"
 

@@ -115,7 +115,6 @@ var _Lobsters = Class.extend({
       d.append(a);
     });
 
-    console.log(voterEl, d);
     if (thingType == "story") {
       $(voterEl).closest("li").after(d);
       d.position({
@@ -585,6 +584,10 @@ $(document).ready(function() {
     return false;
   });
 
+  $(document).on("blur", "#user_homepage", function() {
+    if (this.value.trim() !== '' && !this.value.match('^https?:\/\/'))
+      this.value = 'http://' + this.value;
+  });
 
   $('textarea#comment').keydown(function (e) {
     if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {

@@ -126,12 +126,11 @@ class Story < ApplicationRecord
   TITLE_DROP_WORDS = ["", "a", "an", "and", "but", "in", "of", "or", "that", "the", "to"].freeze
 
   # link shortening and other ad tracking domains
-  TRACKING_DOMAINS = %w{ 1url.com 7.ly adf.ly al.ly bc.vc bit.do bit.ly
-    bitly.com buzurl.com cur.lv cutt.us db.tt db.tt doiop.com filoops.info
-    goo.gl is.gd ity.im j.mp lnkd.in ow.ly ph.dog po.st prettylinkpro.com q.gs
-    qr.ae qr.net scrnch.me s.id sptfy.com t.co tinyarrows.com tiny.cc
-    tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd vzturl.com
-    wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }.freeze
+  TRACKING_DOMAINS = %w{ 1url.com 7.ly adf.ly al.ly bc.vc bit.do bit.ly bitly.com buzurl.com cur.lv
+  cutt.us db.tt db.tt doiop.com filoops.info goo.gl is.gd ity.im j.mp lnkd.in ow.ly ph.dog po.st
+  prettylinkpro.com q.gs qr.ae qr.net research.eligrey.com scrnch.me s.id sptfy.com t.co
+  tinyarrows.com tiny.cc tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd vzturl.com
+  wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }.freeze
 
   # URI.parse is not very lenient, so we can't use it
   URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i.freeze
@@ -327,19 +326,8 @@ class Story < ApplicationRecord
     base = self.tags.sum(:hotness_mod) + (self.user_is_author? && self.url.present? ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
-    cpoints = self.merged_comments
-      .where("user_id <> ?", self.user_id)
-      .select(:upvotes, :downvotes)
-      .map {|c|
-        if base < 0
-          # in stories already starting out with a bad hotness mod, only look
-          # at the downvotes to find out if this tire fire needs to be put out
-          c.downvotes * -0.5
-        else
-          c.upvotes + 1 - c.downvotes
-        end
-      }
-      .inject(&:+).to_f * 0.5
+    sum_expression = base < 0 ? "downvotes * -0.5" : "upvotes + 1 - downvotes"
+    cpoints = self.merged_comments.where.not(user_id: self.user_id).sum(sum_expression).to_f * 0.5
 
     # mix in any stories this one cannibalized
     cpoints += self.merged_stories.map(&:score).inject(&:+).to_f
@@ -610,8 +598,8 @@ class Story < ApplicationRecord
 
   def merged_comments
     # TODO: make this a normal has_many?
-    Comment.where(:story_id => Story.select(:id)
-      .where(:merged_story_id => self.id) + [self.id])
+    Comment.where(story_id: Story.select(:id).where(merged_story_id: self.id)
+      .where('merged_story_id is not null') + [self.id])
   end
 
   def merge_story_short_id=(sid)

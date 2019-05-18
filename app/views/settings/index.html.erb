@@ -46,6 +46,11 @@
     </div>
 
     <div class="boxline">
+      <%= f.label :homepage, "Homepage:", :class => "required" %>
+      <%= f.url_field :homepage, :size => 40 %>
+    </div>
+
+    <div class="boxline">
       <%= f.label :about, "About:", :class => "required" %>
       <%= f.text_area :about, :size => "100x5", :style => "width: 600px;" %>
     </div>

@@ -73,6 +73,17 @@ class Keystore < ApplicationRecord
     end
   end
 
+  # deliberately no lock/transaction as TrafficHelper is on the hot path of every request
+  def self.readthrough_cache(key, &blk)
+    if (found = value_for(key))
+      found
+    else
+      value = yield blk
+      put(key, value)
+      value
+    end
+  end
+
   def self.decrement_value_for(key, amount = -1)
     self.increment_value_for(key, amount)
   end

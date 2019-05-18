@@ -39,6 +39,8 @@ gem "sitemap_generator" # for better search engine indexing
 
 gem "ruumba"
 
+gem "scout_apm", :git => 'git://github.com/scoutapp/scout_apm_ruby.git', :ref => '574b0a6'
+
 group :test, :development do
   gem 'bullet'
   gem 'capybara'

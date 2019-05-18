@@ -93,12 +93,6 @@ span.hat span.crown, span.hat a {
 	text-decoration: none;
 }
 
-span.fakea {
-	cursor: pointer;
-	text-decoration: underline;
-	color: gray;
-}
-
 span.na {
 	color: gray;
 	font-style: italic;
@@ -130,6 +124,7 @@ input[type="search"],
 input[type="password"],
 input[type="email"],
 input[type="number"],
+input[type="url"],
 textarea {
 	border: 1px solid #ccc;
 }
@@ -216,20 +211,6 @@ select::-moz-focus-inner {
 	outline: 0;
 }
 
-div.field_with_errors {
-	display: inline;
-}
-
-div.field_with_errors input[type="text"],
-div.field_with_errors input[type="email"],
-div.field_with_errors input[type="password"],
-div.field_with_errors textarea {
-	border: 1px solid red;
-}
-div.field_with_errors input:focus {
-	border-color: rgba(255,0,0,.8);
-}
-
 input:disabled,
 button:disabled {
 	background-color: #e9e9e9;
@@ -277,19 +258,6 @@ div#inside {
 
 #headerleft {
 	float: left;
-}
-
-#header h1 {
-	font-size: 11pt;
-	margin: 0px;
-	margin-left: 22px;
-	margin-right: 1em;
-	padding: 0px;
-	display: inline;
-}
-#header h1 a {
-	color: #333;
-	text-decoration: none;
 }
 
 #l_holder {
@@ -494,9 +462,6 @@ li div.details {
 	padding-top: 0.1em;
 }
 
-.negative {
-	color: gray !important;
-}
 .negative_1 {
 	opacity: 0.7;
 }
@@ -829,17 +794,6 @@ div.comment_text code {
 	line-height: 1.2em;
 }
 
-a.pagelink {
-	border: 1px solid #ddd;
-	background-color: #fbfbfb;
-	padding: 4px 8px;
-}
-a.pagelink.curpage {
-	border: 1px solid gray;
-	background-color: white;
-	font-weight: bold;
-}
-
 
 #downvote_why {
 	position: absolute;
@@ -1020,15 +974,6 @@ ul.user_tree {
 
 /* data tables */
 
-table.data caption {
-	font-weight: bold;
-	text-align: left;
-	padding-bottom: 3px;
-}
-table.data .capright {
-	float: right;
-}
-
 table.data th {
 	background-color: #eaeaea;
 	border-bottom: 1px solid #cacaca;
@@ -1070,11 +1015,6 @@ table.data.tall td {
 	vertical-align: top;
 }
 
-table.data tr.void td, table.data tr.void td a {
-	text-decoration: line-through;
-	color: gray !important;
-}
-
 table.data td p:first-child {
 	margin-top: 0;
 }
@@ -1093,15 +1033,6 @@ table.data pre {
 	margin: 0 40px;
 	padding: 0;
 }
-.box_submitter {
-	border: 1px solid #cacaca;
-	border-top: 0px;
-	background-color: #eaeaea;
-	padding: 1em;
-}
-.box_submitter input {
-	width: 10em;
-}
 
 .box .legend {
 	margin-bottom: 1em;
@@ -1119,17 +1050,7 @@ table.data pre {
 	float: right;
 }
 
-.box .boxtitle {
-	background-color: #f0f0f0;
-	border-bottom: 1px solid #cacaca;
-	display: block;
-	font-weight: bold;
-	margin: -3px -7px 4px -7px;
-	padding: 3px 5px 3px 5px;
-}
-
-.box label,
-.box .label_holder {
+.box label {
 	display: block;
 	float: left;
 	margin-bottom: 4px;
@@ -1163,8 +1084,7 @@ table.data pre {
 	width: 75%;
 }
 
-.box label,
-.box .label_holder {
+.box label {
 	width: 7em;
 	line-height: 2em;
 	vertical-align: middle;
@@ -1193,30 +1113,14 @@ table.data pre {
 	vertical-align: middle;
 }
 
-.box .label_holder label,
-.box .label_holder input {
-	line-height: 2.5em;
-	vertical-align: middle;
-}
-
 .hint {
 	color: gray;
 	font-style: italic;
 	margin-left: 1em;
 }
 
-.hintblock {
-	color: gray;
-	font-style: italic;
-	margin-left: 7em;
-}
-
-.box.wide label,
-.box.wide .label_holder {
+.box.wide label {
 	width: 12em;
-}
-.box.wide .hintblock {
-	margin-left: 12em;
 }
 .box.wide div.d {
 	margin-left: 12em;
@@ -1245,9 +1149,6 @@ div.errorExplanation {
 	border-radius: 4px;
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
-.downvoteWarning {
-  color: black;
-}
 div.flash-error a,
 div.flash-notice a,
 div.flash-success a,
@@ -1257,8 +1158,7 @@ div.errorExplanation a {
 }
 div.flash-error p a,
 div.flash-notice p a,
-div.flash-success p a,
-div.errorExplanation a {
+div.flash-success p a {
 	color: #ffffff;
 }
 div.flash-error p,
@@ -1277,10 +1177,10 @@ div.errorExplanation div {
 }
 div.flash-error,
 div.errorExplanation {
-	background-color: #c43c35;
+	background-color: #fdcfcc;
 	background-repeat: repeat-x;
 	background-image: linear-gradient(top, #ee5f5b, #c43c35);
-	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	text-shadow: none;
 	border-color: #c43c35 #c43c35 #882a25;
 	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
@@ -1307,26 +1207,6 @@ div.flash-success h2,
 div.errorExplanation h2 {
 	font-size: 1.25em;
 	margin: 0;
-}
-
-div#flasher {
-    position: fixed;
-    top: -40px;
-	right: 0px;
-	left: 325px;
-	text-align: center;
-	z-index: 15;
-	height: 1px;
-}
-div#flasher div.flash-error,
-div#flasher div.flash-notice,
-div#flasher div.flash-success {
-	display: inline-block;
-	padding-top: 25px;
-	margin-left: auto;
-	margin-right: auto;
-}
-div#flasher span#flashcontent {
 }
 
 

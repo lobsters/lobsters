@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+# Maintenance for the traffic intensity on the logo, see TrafficHelper
+
+ENV["RAILS_ENV"] ||= "production"
+
+APP_PATH = File.expand_path('../../config/application', __FILE__)
+require File.expand_path('../../config/boot', __FILE__)
+require APP_PATH
+Rails.application.require_environment!
+
+# Delete old period keys
+Keystore
+  .where('`key` like "traffic:at:%"')
+  .where.not('`key` = ?', TrafficHelper.current_period_key)
+  .delete_all
+
+# calculate and cache new low and high activity range for traffic
+TrafficHelper.cached_traffic_range

@@ -1,0 +1,9 @@
+<div class="box wide">
+  <ul>
+    <% @conversations.each do |conversation| %>
+      <li class="conversation <%= conversation_status_classes(conversation) %>">
+        <%= link_to conversation.partner(of: @user).username, conversation_path(conversation) %>
+      </li>
+    <% end %>
+  </ul>
+</div>

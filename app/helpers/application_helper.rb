@@ -84,12 +84,12 @@ module ApplicationHelper
       end
 
       if (count = @user.unread_message_count) > 0
-        @right_header_links[messages_path] = {
+        @right_header_links[conversations_path] = {
           :class => ["new_messages"],
           :title => "#{@user.unread_message_count} Message".pluralize(count),
         }
       else
-        @right_header_links[messages_path] = { :title => "Messages" }
+        @right_header_links[conversations_path] = { :title => "Messages" }
       end
 
       @right_header_links[settings_path] = { :title => "#{@user.username} (#{@user.karma})" }

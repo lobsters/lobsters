@@ -40,6 +40,15 @@ ActiveRecord::Schema.define(version: 2019_05_29_133507) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "conversations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "author_user_id"
+    t.bigint "recipient_user_id"
+    t.index ["author_user_id"], name: "index_conversations_on_author_user_id"
+    t.index ["recipient_user_id"], name: "index_conversations_on_recipient_user_id"
+  end
+
   create_table "hat_requests", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -111,6 +120,8 @@ ActiveRecord::Schema.define(version: 2019_05_29_133507) do
     t.boolean "deleted_by_author", default: false
     t.boolean "deleted_by_recipient", default: false
     t.bigint "hat_id", unsigned: true
+    t.bigint "conversation_id"
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
     t.index ["hat_id"], name: "index_messages_on_hat_id"
     t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"
     t.index ["short_id"], name: "random_hash", unique: true

@@ -99,6 +99,7 @@ Rails.application.routes.draw do
   get "/comments/page/:page" => "comments#index"
   get "/comments" => "comments#index"
 
+  get "/conversations" => "conversations#index", as: :conversations
   get "/messages/sent" => "messages#sent"
   get "/messages" => "messages#index"
   post "/messages/batch_delete" => "messages#batch_delete",

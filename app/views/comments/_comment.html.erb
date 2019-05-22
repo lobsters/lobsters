@@ -93,13 +93,13 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
         <% if comment.is_gone? && comment.is_undeletable_by_user?(@user) %>
           |
-          <a tabindex="0" class="comment_undeletor" href="#">undelete</a>
+          <a tabindex="0" class="comment_undeletor" href="#c_<%= comment.short_id %>">undelete</a>
         <% elsif !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
           |
           <% if @user && @user.is_moderator? && @user.id != comment.user_id %>
-            <a tabindex="0" class="comment_moderator" href="#">delete</a>
+            <a tabindex="0" class="comment_moderator" href="#c_<%= comment.short_id %>">delete</a>
           <% else %>
-            <a tabindex="0" class="comment_deletor" href="#">delete</a>
+            <a tabindex="0" class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>
           <% end %>
         <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
           |

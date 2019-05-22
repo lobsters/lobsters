@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   before_action :authenticate_user
   before_action :set_traffic_style
+  before_action :prepare_exception_notifier
 
   # match this in your nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
@@ -136,5 +137,12 @@ class ApplicationController < ActionController::Base
     if !@user && request[:format] == "rss" && params[:token].to_s.present?
       @user = User.where(:rss_token => params[:token].to_s).first
     end
+  end
+
+  def prepare_exception_notifier
+    exception_data = {}
+    exception_data[:username] = @user.username unless @user.nil?
+
+    request.env["exception_notifier.exception_data"] = exception_data
   end
 end

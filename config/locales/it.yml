@@ -21,7 +21,7 @@ it:
         body: 'Verifica i campi sottostanti: '
         header:
           one: 'Impossibile registrare questo/a %{model}: 1 errore'
-          other: 'Impossibile registrare questo/a %{model}: %{count} errori' 
+          other: 'Impossibile registrare questo/a %{model}: %{count} errori'
       models:
         user:
           attributes:
@@ -34,6 +34,10 @@ it:
               confirmation: "Le due password non corrispondono"
             username:
               invalid: "Il nome utente non è valido"
+          story:
+            attributes:
+              title:
+                too_short: "Il titolo è troppo corto"
   hats:
     index:
       hatstitle: "Cappelli"
@@ -444,6 +448,7 @@ it:
       abouttitle: "Su di me:"
       markdownavailable: "Formattazione Markdown disponibile"
       signup: "Iscriviti"
+      sent: "Inviato"
     invite:
       passinvitation: "Condividi un invito a tua volta"
       passinvitationbody: "Questa comunità potrà crescere solo se i suoi membri inviteranno nuovi utenti, come è stato fatto con te. Se credi di conoscere qualcuno che potrebbe contribuire in modo costruttivo, non esitare a condividere la piattaforma con questa persona."

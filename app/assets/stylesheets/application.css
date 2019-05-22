@@ -71,6 +71,11 @@ a.tag_meta {
 	border-color: #c8c8c8;
 }
 
+a.tag_domanda, a.tag_show {
+	background-color: #ff4d02;
+	color: white;
+}
+
 span.hat {
 	border-bottom: 6px solid #bbb;
 	border-radius: 4px;

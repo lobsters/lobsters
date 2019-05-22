@@ -107,6 +107,7 @@ class StoriesController < ApplicationController
     @story = Story.new(story_params)
     @story.user_id = @user.id
     @story.previewing = true
+    @story.created_at = DateTime.now
 
     @story.vote = Vote.new(:vote => 1)
     @story.upvotes = 1

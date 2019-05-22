@@ -39,6 +39,8 @@ class MessageConverter
   end
 
   def run
+    return if mysql.query("SELECT COUNT(*) FROM messages;")[0][0].zero?
+
     grouped_messages = group_messages(messages_with_partner_combo)
     conversation_values = grouped_messages.map do |group|
       messages = group.last

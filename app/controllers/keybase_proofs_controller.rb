@@ -11,7 +11,9 @@ class KeybaseProofsController < ApplicationController
   end
 
   def create
-    kb_username, kb_signature, kb_ua = post_params[:kb_username], post_params[:kb_signature], post_params[:kb_ua]
+    kb_username = post_params[:kb_username]
+    kb_signature = post_params[:kb_signature]
+    kb_ua = post_params[:kb_ua]
     if Keybase.proof_valid?(kb_username, kb_signature, @user.username)
       @user.add_or_update_keybase_proof(kb_username, kb_signature)
       @user.save!
@@ -22,7 +24,7 @@ class KeybaseProofsController < ApplicationController
     end
   end
 
-  private
+private
 
   def check_user_matches
     unless @user.username.casecmp(params[:username]).zero?
@@ -36,6 +38,8 @@ class KeybaseProofsController < ApplicationController
   end
 
   def check_new_params
-    redirect_to settings_path unless [:kb_username, :kb_signature, :kb_ua, :username].all? { |k| params[k].present? }
+    redirect_to settings_path unless [:kb_username, :kb_signature, :kb_ua, :username].all? do |k|
+      params[k].present?
+    end
   end
 end

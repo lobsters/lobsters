@@ -69,7 +69,6 @@ class User < ApplicationRecord
     s.string :twitter_username
     s.any :keybase_signatures, array: true
     s.string :homepage
-
   end
 
   validates :email,
@@ -444,7 +443,7 @@ class User < ApplicationRecord
     self.keybase_signatures = self.keybase_signatures.select do |kbsig|
       kbsig['kb_username'] != kb_username
     end
-    self.keybase_signatures.push({'kb_username' => kb_username, 'sig_hash' => kb_signature})
+    self.keybase_signatures.push('kb_username' => kb_username, 'sig_hash' => kb_signature)
   end
 
   def is_heavy_self_promoter?

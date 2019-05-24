@@ -37,7 +37,9 @@ class Keybase
   end
 
   def self.success_url(kb_username, kb_signature, kb_ua, username)
-    File.join(base_url, "/_/proof_creation_success?domain=#{@@DOMAIN}&kb_username=#{kb_username}&username=#{username}&sig_hash=#{kb_signature}&kb_ua=#{kb_ua}")
+    File.join(base_url, "/_/proof_creation_success?domain=#{@@DOMAIN}&" \
+      "kb_username=#{kb_username}&username=#{username}&" \
+      "sig_hash=#{kb_signature}&kb_ua=#{kb_ua}")
   end
 
   def self.default_keybase_avatar_url

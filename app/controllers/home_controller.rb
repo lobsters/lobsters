@@ -157,7 +157,7 @@ class HomeController < ApplicationController
       paginate stories.tagged(@tag)
     }
 
-    @heading = @title = @tag.description.blank?? @tag.tag : @tag.description
+    @heading = @title = @tag.tag
     @cur_url = tag_url(@tag.tag)
 
     @rss_link = { :title => "RSS 2.0 - Tagged #{@tag.tag} (#{@tag.description})",

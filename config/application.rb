@@ -27,7 +27,6 @@ module Lobsters
     config.action_controller.action_on_unpermitted_parameters = :raise
 
     config.active_record.raise_in_transactional_callbacks = true
-    config.action_view.raise_on_missing_translations=true
 
     config.cache_store = :file_store, "/tmp/"
 

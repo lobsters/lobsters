@@ -18,6 +18,10 @@ describe ReplyingComment do
     p
   end
 
+  def reply_to(p)
+    create(:comment, story_id: p.story_id, parent_comment: p)
+  end
+
   def flag_comment(comment, by = create(:user))
     Vote.vote_thusly_on_story_or_comment_for_user_because(
       -1, comment.story_id, comment.id, by.id, 'T'
@@ -27,9 +31,9 @@ describe ReplyingComment do
   describe "is listed when" do
     it "it's a direct reply" do
       p = followed_parent
-      c = create(:comment, story_id: p.story_id, parent_comment: p)
+      r = reply_to p
 
-      expect(p).to have_reply(c)
+      expect(p).to have_reply(r)
     end
   end
 
@@ -38,55 +42,55 @@ describe ReplyingComment do
       p = followed_parent
       flag_comment(p)
       flag_comment(p)
-      c = create(:comment, story_id: p.story_id, parent_comment: p)
+      r = reply_to p
 
-      expect(p).to_not have_reply(c)
+      expect(p).to_not have_reply(r)
     end
 
     it "it has a negative score" do
       p = followed_parent
-      c = create(:comment, story_id: p.story_id, parent_comment: p)
-      flag_comment(c)
-      flag_comment(c)
+      r = reply_to r
+      flag_comment(r)
+      flag_comment(r)
 
-      expect(p).to_not have_reply(c)
+      expect(p).to_not have_reply(r)
     end
 
     it "parent is deleted" do
       p = followed_parent
-      c = create(:comment, story_id: p.story_id, parent_comment: p)
+      r = reply_to c
       p.delete_for_user(p.user)
 
-      expect(p).to_not have_reply(c)
+      expect(p).to_not have_reply(r)
     end
 
     it "it is deleted" do
       p = followed_parent
-      c = create(:comment, story_id: p.story_id, parent_comment: p)
-      c.delete_for_user(c.user)
+      r = reply_to p
+      r.delete_for_user(r.user)
 
-      expect(p).to_not have_reply(c)
+      expect(p).to_not have_reply(r)
     end
 
     it "parent is moderated" do
       p = followed_parent
-      c = create(:comment, story_id: p.story_id, parent_comment: p)
+      r = reply_to p
       p.delete_for_user(create(:user, :admin), "obvs because I disagree with your politics")
 
-      expect(p).to_not have_reply(c)
+      expect(p).to_not have_reply(r)
     end
 
     it "it is moderated" do
       p = followed_parent
-      c = create(:comment, story_id: p.story_id, parent_comment: p)
+      r = reply_to p
       c.delete_for_user(create(:user, :admin), "obvs because I disagree with your politics")
 
-      expect(p).to_not have_reply(c)
+      expect(p).to_not have_reply(r)
     end
 
     it "it is on a story with a negative score" do
       p = followed_parent
-      c = create(:comment, story_id: p.story_id, parent_comment: p)
+      r = reply_to p
       Vote.vote_thusly_on_story_or_comment_for_user_because(
         -1, p.story_id, nil, create(:user).id, 'O'
       )
@@ -95,17 +99,17 @@ describe ReplyingComment do
       )
 
       expect(p.story.reload.score).to be < 0
-      expect(p).to_not have_reply(c)
+      expect(p).to_not have_reply(r)
     end
 
     it "commenter has not flagged child commenter in the story" do
       p = followed_parent
-      c = create(:comment, story_id: p.story_id, parent_comment: p)
+      r = reply_to p
 
-      expect(p).to have_reply(c)
+      expect(p).to have_reply(r)
 
-      flag_comment(c, p.user)
-      expect(p).to_not have_reply(c)
+      flag_comment(r, p.user)
+      expect(p).to_not have_reply(r)
     end
   end
 end

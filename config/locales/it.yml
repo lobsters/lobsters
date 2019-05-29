@@ -38,6 +38,16 @@ it:
             attributes:
               title:
                 too_short: "Il titolo è troppo corto"
+        message:
+          attributes:
+            recipient:
+              blank: "Il destinatario non può essere vuoto"
+            subject:
+              too_short: "L'oggetto del messaggio è troppo corto"
+        story:
+          attributes:
+            title:
+              too_short: "Il titolo è troppo corto"
   hats:
     index:
       hatstitle: "Cappelli"
@@ -494,7 +504,7 @@ it:
       moderator: "il moderatore"
       originalsubmitter: "l'autore originale"
       authoredby: "pubblicato da"
-      via: "preso da"
+      via: "pubblicato da"
       justnow: "in questo istante"
       edit: "modifica"
       delete: "rimuovi"

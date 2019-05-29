@@ -105,6 +105,10 @@ it:
       searchlink: "Ricerca"
       beta-test: "Beta Test"
       invitationlink: "Richiedi un invito"
+      replieslink: "Risposte"
+      newreplieslink:
+        one: "Una risposta"
+        other: "%{count} risposte"
       filterslink: "Filtri"
       newmessagelink:
         one: "Un nuovo messaggio"
@@ -669,7 +673,16 @@ it:
       pluralmsg: "s"
       flashcannotfindmsg: "Messaggio non trovato."
       flashmsgsentto: "Il messaggio è stato inviato a %{user}."
-      flashdeletedmessage: "Messaggio eliminato." 
+      flashdeletedmessage: "Messaggio eliminato."
+    replies_controller:
+      unreadlink: "Non lette"
+      unreadtitle: "Risposte non lette"
+      alllink: "Tutte"
+      alltitle: "Tutte le risposte"
+      commentslink: "Commenti"
+      commentstitle: "Risposte ai tuoi commenti"
+      storieslink: "Articoli"
+      storiestitle: "Risposte ai tuoi articoli"
     search_controller:
       searchtitle: "Cerca"
       flasherrorsearchcontroller: "Ci dispiace, purtroppo il motore di ricerca è attualmente malfunzionante"

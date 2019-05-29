@@ -4,7 +4,7 @@ gem "rails", "4.2.8"
 
 gem "unicorn"
 
-gem "mysql2", ">= 0.4.10"
+gem "mysql2", ">= 0.4.10", "<0.5"
 
 # uncomment to use PostgreSQL
 # gem "pg"
@@ -26,7 +26,7 @@ gem "rqrcode"
 
 gem "nokogiri", "= 1.6.8"
 gem "htmlentities"
-gem "commonmarker", "~> 0.14"
+gem "commonmarker", "~> 0.17.9"
 
 gem "activerecord-typedstore"
 
@@ -35,6 +35,8 @@ gem "oauth"
 
 # for parsing incoming mail
 gem "mail"
+gem 'scenic', "1.4.0"
+gem 'scenic-mysql'
 
 group :test, :development do
   gem "rspec-rails", "~> 3.5", ">= 3.5.2"

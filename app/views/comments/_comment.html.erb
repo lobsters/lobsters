@@ -5,7 +5,9 @@
 data-shortid="<%= comment.short_id if comment.persisted? %>"
 class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 "upvoted" : "downvoted") : "" %>
-  <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>">
+  <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
+  <%= defined?(is_unread) && is_unread ? ' comment_unread' : '' %>
+    ">
   <% if !comment.is_gone? %>
     <div class="voters">
       <% if @user %>
@@ -52,9 +54,11 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
           <%= t('.edited') %>
         <% elsif comment.is_from_email? %>
           <%= t('.emailed') %>
-        <% end %>
-        <%= distance_of_time_in_words((comment.has_been_edited? ?
-          comment.updated_at : comment.created_at), Time.now, :strip_about => true) %>
+      <% end %>
+        <span class="comment_timeago">
+          <%= distance_of_time_in_words((comment.has_been_edited? ?
+            comment.updated_at : comment.created_at), Time.now, :strip_about => true) %>
+        </span>
       <% end %>
 
       <% if !comment.previewing %>

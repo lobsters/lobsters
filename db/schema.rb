@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170413161450) do
+ActiveRecord::Schema.define(version: 20180130235553) do
 
   create_table "comments", force: :cascade do |t|
     t.datetime "created_at",                                                                    null: false
@@ -116,6 +116,17 @@ ActiveRecord::Schema.define(version: 20170413161450) do
     t.text     "reason",              limit: 16777215
     t.boolean  "is_from_suggestions",                  default: false
   end
+
+  create_table "read_ribbons", force: :cascade do |t|
+    t.boolean  "is_following",           default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id",      limit: 4
+    t.integer  "story_id",     limit: 4
+  end
+
+  add_index "read_ribbons", ["story_id"], name: "index_read_ribbons_on_story_id", using: :btree
+  add_index "read_ribbons", ["user_id"], name: "index_read_ribbons_on_user_id", using: :btree
 
   create_table "stories", force: :cascade do |t|
     t.datetime "created_at"
@@ -229,5 +240,10 @@ ActiveRecord::Schema.define(version: 20170413161450) do
   add_index "votes", ["comment_id"], name: "index_votes_on_comment_id", using: :btree
   add_index "votes", ["user_id", "comment_id"], name: "user_id_comment_id", using: :btree
   add_index "votes", ["user_id", "story_id"], name: "user_id_story_id", using: :btree
+
+
+  create_view "replying_comments",  sql_definition: <<-SQL
+      select `test`.`read_ribbons`.`user_id` AS `user_id`,`test`.`comments`.`id` AS `comment_id`,`test`.`read_ribbons`.`story_id` AS `story_id`,`test`.`comments`.`parent_comment_id` AS `parent_comment_id`,`test`.`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`test`.`comments`.`user_id` AS `comment_author_id`,`test`.`stories`.`user_id` AS `story_author_id`,`test`.`read_ribbons`.`updated_at` < `test`.`comments`.`created_at` AS `is_unread`,(select `test`.`votes`.`vote` from `test`.`votes` where `test`.`votes`.`user_id` = `test`.`read_ribbons`.`user_id` and `test`.`votes`.`comment_id` = `test`.`comments`.`id`) AS `current_vote_vote`,(select `test`.`votes`.`reason` from `test`.`votes` where `test`.`votes`.`user_id` = `test`.`read_ribbons`.`user_id` and `test`.`votes`.`comment_id` = `test`.`comments`.`id`) AS `current_vote_reason` from (((`test`.`read_ribbons` join `test`.`comments` on(`test`.`comments`.`story_id` = `test`.`read_ribbons`.`story_id`)) join `test`.`stories` on(`test`.`stories`.`id` = `test`.`comments`.`story_id`)) left join `test`.`comments` `parent_comments` on(`parent_comments`.`id` = `test`.`comments`.`parent_comment_id`)) where `test`.`read_ribbons`.`is_following` = 1 and `test`.`comments`.`user_id` <> `test`.`read_ribbons`.`user_id` and `test`.`comments`.`is_deleted` = 0 and `test`.`comments`.`is_moderated` = 0 and (`parent_comments`.`user_id` = `test`.`read_ribbons`.`user_id` or `parent_comments`.`user_id` is null and `test`.`stories`.`user_id` = `test`.`read_ribbons`.`user_id`) and `test`.`comments`.`upvotes` - `test`.`comments`.`downvotes` >= 0 and (`parent_comments`.`id` is null or `parent_comments`.`upvotes` - `parent_comments`.`downvotes` >= 0) and cast(`test`.`stories`.`upvotes` as signed) - cast(`test`.`stories`.`downvotes` as signed) >= 0
+  SQL
 
 end

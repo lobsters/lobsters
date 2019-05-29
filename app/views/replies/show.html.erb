@@ -1,0 +1,44 @@
+<div class="box wide">
+  <div class="legend right">
+    <%= link_to_filter(I18n.t('controllers.replies_controller.unreadlink'), 'unread') %> |
+    <%= link_to_filter(I18n.t('controllers.replies_controller.alllink'), 'all') %> |
+    <%= link_to_filter(I18n.t('controllers.replies_controller.commentslink'), 'comments') %> |
+    <%= link_to_filter(I18n.t('controllers.replies_controller.storieslink'), 'stories') %>
+  </div>
+
+  <div class="legend">
+    <%= @heading %>
+  </div>
+</div>
+
+<ol class="comments comments1">
+  <% @replies.each do |reply| %>
+    <li class="comments_subtree">
+      <%= render "comments/comment",
+  	    comment: reply.comment,
+        show_story: true,
+	      is_unread: reply.is_unread,
+        show_tree_lines: false
+      %>
+      <ol class="comments"></ol>
+    </li>
+  <% end %>
+</ol>
+
+<%  if @replies.count > RepliesController::REPLIES_PER_PAGE && @filter != 'unread'%>
+<div class="morelink">
+  <% if @page && @page > 1 %>
+    <a href="/replies<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt;
+      Page <%= @page - 1 %></a>
+  <% end %>
+
+  <% if @replies.any? %>
+    <% if @page && @page > 1 %>
+      |
+    <% end %>
+
+    <a href="/replies/page/<%= @page + 1 %>">Page
+      <%= @page + 1 %> &gt;&gt;</a>
+  <% end %>
+</div>
+<% end %>

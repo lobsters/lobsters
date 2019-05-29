@@ -1323,4 +1323,12 @@ div.fieldWithErrors {
 	vertical-align: middle;
 }
 
+div.comment_unread {
+	background-clip: content-box;
+	background-color: #fee7df7d;
+}
 
+div.comment_unread span.comment_timeago {
+	color: #ff4202;
+	font-weight: 600;
+}

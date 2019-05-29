@@ -6,16 +6,23 @@ source code to the site operating at
 [https://lobste.rs](https://lobste.rs).
 It is a Rails 5 codebase and uses a SQL (MariaDB in production) backend for the database.
 
-While you are free to fork this code and modify it (according to the [license](https://github.com/lobsters/lobsters/blob/master/LICENSE))
-to run your own link aggregation website, this source code repository and bug
-tracker are only for the site operating at [lobste.rs](https://lobste.rs/).
-Please do not use the bug tracker for support related to operating your own
-site unless you are contributing code that will also benefit [lobste.rs](https://lobste.rs/).
+You are free to use this code to start your own [sister site](https://github.com/lobsters/lobsters/wiki)
+because the code is availbale under a [permissive license](https://github.com/lobsters/lobsters/blob/master/LICENSE) (3-clause BSD).
+We welcome bug reports and code contributions that help use improve [lobste.rs](https://lobste.rs).
+As a volunteer project we're reluctant to take on work that's not useful to our site, so please understand if we don't want to adopt your custom feature.
+
+2019-05-29 experiment:
+Are you interested in running your own sister site and not technical, or otherwise willing to pay for hosting/support?
+Maybe you're a Reddit community unhappy with their redesign, want an internal site for your company, or want to experiement with community design?
+Please contact Peter (email that name @push.cx).
+I'm exploring the idea of a hosting company to run sites using the codebase, or maybe consulting on custom features, and would love to hear from you.
+(The only change to Lobsters would be that someone's getting paid to PR back bug fixes.)
+
 
 #### Contributing bugfixes and new features
 
-Please see the [CONTRIBUTING](https://github.com/lobsters/lobsters/blob/master/CONTRIBUTING.md)
-file.
+We'd love to have your help.
+Please see the [CONTRIBUTING](https://github.com/lobsters/lobsters/blob/master/CONTRIBUTING.md) file for details.
 
 #### Initial setup
 

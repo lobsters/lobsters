@@ -325,7 +325,7 @@ class Comment < ActiveRecord::Base
     if self.is_moderated?
       I18n.t('models.comment.threadremovedby', :modoname => "#{self.moderation.try(:moderator).try(:username).to_s}", :modreason => "#{(self.moderation.try(:reason) || "No reason given")}")
     elsif self.user.is_banned?
-      "Commento rimosso per utente bannato"
+      "Commento rimosso per ban dell'utente"
     else
       "Commento rimosso dall'autore"
     end

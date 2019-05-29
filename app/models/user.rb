@@ -460,6 +460,10 @@ class User < ActiveRecord::Base
     Keystore.value_for("user:#{self.id}:unread_messages").to_i
   end
 
+  def unread_replies_count
+    ReplyingComment.where(user_id: self.id, is_unread: true).count
+  end
+
   def update_unread_message_count!
     Keystore.put("user:#{self.id}:unread_messages",
       self.received_messages.unread.count)

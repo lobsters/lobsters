@@ -7,7 +7,9 @@ class StoriesController < ApplicationController
   before_filter :find_user_story, :only => [ :destroy, :edit, :undelete,
     :update ]
   before_filter :find_story!, :only => [ :suggest, :submit_suggestions ]
-
+ 
+  around_action :track_story_reads, only: [ :show ], if: -> { @user.present? }
+  
   def create
     @title = I18n.t 'controllers.stories_controller.submitstorytitle'
     @cur_url = "/stories/new"
@@ -107,6 +109,7 @@ class StoriesController < ApplicationController
     @story = Story.new(story_params)
     @story.user_id = @user.id
     @story.previewing = true
+    @story.created_at = DateTime.now
 
     @story.vote = Vote.new(:vote => 1)
     @story.upvotes = 1
@@ -294,6 +297,7 @@ class StoriesController < ApplicationController
 
     HiddenStory.hide_story_for_user(story.id, @user.id)
 
+    ReadRibbon.hide_replies_for(story.id, @user.id)
     render :text => "ok"
   end
 
@@ -378,5 +382,12 @@ private
       flash[:error] = "You are not allowed to submit new stories."
       return redirect_to "/"
     end
+  end
+  def track_story_reads
+    story = Story.where(short_id: params[:id]).first!
+    @ribbon = ReadRibbon.where(user_id: @user.id, story_id: story.id).first_or_create
+    yield
+    @ribbon.updated_at = Time.now
+    @ribbon.save
   end
 end

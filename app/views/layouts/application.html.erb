@@ -19,7 +19,7 @@
   <meta property="og:url"                content="https://gambe.ro"/>
 <meta property="og:type"               content="website" />
 <meta property="og:title"              content="Gambe.ro" />
-<meta property="og:description"        content="Gambe.ro: la comunità italiana dei progammatori" />
+<meta property="og:description"        content="Gambe.ro: la comunità italiana dei programmatori" />
 <%= tag :meta, property: 'og:image', content: image_url('gambero_opengraph_preview.png') %>
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="1200" />
@@ -58,65 +58,28 @@
 </head>
 <body>
   <div id="wrapper">
-        <a href="/" title="<%= Rails.application.name %> <%= raw t('.currenttraffic', :usernb => "#{@traffic.to_i}") %>"><%= image_tag("gambero.png", width:"300" )%></a>
+      <a href="/" title="<%= Rails.application.name %> <%= raw t('.currenttraffic', :usernb => "#{@traffic.to_i}") %>"><%= image_tag("gambero.png", width:"300" )%></a>
    <div id="header">
       <div id="headerleft">
-
-        <% links = {
-          "/" => @cur_url == "/" ? Rails.application.name : t('.homelink'),
-          "/recent" => t('.recentlink'),
-          "/comments" => t('.commentslink')
-        } %>
-
-        <% if @user && @user.can_submit_stories? %>
-          <% links.merge!({ "/threads" => t('.yourthreadslink'),
-            "/stories/new" => t('.submitstorylink') }) %>
-        <% end %>
-
-        <% links.merge!({ "/search" => t('.searchlink') }) %>
-                      <% if @cur_url.present? && !links.keys.include?(@cur_url) &&
-        @heading.present? %>
+        <% if @cur_url.present? && !header_links.keys.include?(@cur_url) && @heading.present? %>
           <span id="headertitle">
             <a href="<%= @cur_url %>"><%= @heading %></a>
           </span>
         <% end %>
 
         <span class="headerlinks">
-          <% links.each do |u,v| %>
-            <a href="<%= u %>" <%= u == @cur_url ? raw("class=\"cur_url\"") :
-              "" %>><%= v %></a>
+          <% header_links.each do |u,v| %>
+            <a href="<%= u %>" class="<%= v[:class].join(" ") %>"><%=
+              v[:title] %></a>
           <% end %>
-        <a href="/about#betatest" class="highlighted"><%=t('.beta-test')=%></a>
-        <% if !@user %>
-           <a href="/invitations/request" class="highlighted"><%=t('.invitationlink')=%></a>
-        <% end %>
-
-
         </span>
-
       </div>
 
       <div id="headerright">
         <span class="headerlinks">
-        <a href="/filters" <%= @cur_url == "/filters" ?
-          raw("class=\"cur_url\"") : "" %>><%= t('.filterslink') %></a>
-        <% if @user %>
-          <% if (count = @user.unread_message_count) > 0 %>
-            <a href="/messages" class="new_messages <%= @cur_url == "/messages" ?
-              "cur_url" : "" %>"><%= t(".newmessagelink", :count => count)
-              %></a>
-          <% else %>
-            <a href="/messages" <%= @cur_url == "/messages" ?
-              raw("class=\"cur_url\"") : "" %>><%= t('.messageslink') %></a>
+          <% right_header_links.each do |u,v| %>
+            <a href="<%= u %>" class="<%= v[:class].join(" ") %>"><%=v[:title] %></a>
           <% end %>
-
-          <a href="/settings" <%= @cur_url == "/settings" ?
-            raw("class=\"cur_url\"") : "" %>><%= @user.username %>
-            (<%= @user.karma %>)</a>
-
-        <% else %>
-          <a href="/login"><%= t('.loginlink') %></a>
-        <% end %>
         </span>
       </div>
 

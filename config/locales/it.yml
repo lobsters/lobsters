@@ -21,7 +21,7 @@ it:
         body: 'Verifica i campi sottostanti: '
         header:
           one: 'Impossibile registrare questo/a %{model}: 1 errore'
-          other: 'Impossibile registrare questo/a %{model}: %{count} errori' 
+          other: 'Impossibile registrare questo/a %{model}: %{count} errori'
       models:
         user:
           attributes:
@@ -34,6 +34,10 @@ it:
               confirmation: "Le due password non corrispondono"
             username:
               invalid: "Il nome utente non è valido"
+          story:
+            attributes:
+              title:
+                too_short: "Il titolo è troppo corto"
   hats:
     index:
       hatstitle: "Cappelli"
@@ -101,6 +105,10 @@ it:
       searchlink: "Ricerca"
       beta-test: "Beta Test"
       invitationlink: "Richiedi un invito"
+      replieslink: "Risposte"
+      newreplieslink:
+        one: "Una risposta"
+        other: "%{count} risposte"
       filterslink: "Filtri"
       newmessagelink:
         one: "Un nuovo messaggio"
@@ -444,6 +452,7 @@ it:
       abouttitle: "Su di me:"
       markdownavailable: "Formattazione Markdown disponibile"
       signup: "Iscriviti"
+      sent: "Inviato"
     invite:
       passinvitation: "Condividi un invito a tua volta"
       passinvitationbody: "Questa comunità potrà crescere solo se i suoi membri inviteranno nuovi utenti, come è stato fatto con te. Se credi di conoscere qualcuno che potrebbe contribuire in modo costruttivo, non esitare a condividere la piattaforma con questa persona."
@@ -497,7 +506,7 @@ it:
       undelete: "ripristina"
       confirmdelete: "Sei sicuro di voler rimuovere questo articolo?"
       suggest: "suggerisci"
-      unflag: "ritrai la segnalazione"
+      unflag: "annulla segnalazione"
       flag: "segnala"
       hide: "nascondi"
       unhide: "mostra"
@@ -664,7 +673,16 @@ it:
       pluralmsg: "s"
       flashcannotfindmsg: "Messaggio non trovato."
       flashmsgsentto: "Il messaggio è stato inviato a %{user}."
-      flashdeletedmessage: "Messaggio eliminato." 
+      flashdeletedmessage: "Messaggio eliminato."
+    replies_controller:
+      unreadlink: "Non lette"
+      unreadtitle: "Risposte non lette"
+      alllink: "Tutte"
+      alltitle: "Tutte le risposte"
+      commentslink: "Commenti"
+      commentstitle: "Risposte ai tuoi commenti"
+      storieslink: "Articoli"
+      storiestitle: "Risposte ai tuoi articoli"
     search_controller:
       searchtitle: "Cerca"
       flasherrorsearchcontroller: "Ci dispiace, purtroppo il motore di ricerca è attualmente malfunzionante"

@@ -73,7 +73,9 @@
         <li>
         <%= render "comments/comment", :comment => comment,
           :show_story => (comment.story_id != @story.id),
-          :was_merged => (comment.story_id != @story.id) %>
+          :was_merged => (comment.story_id != @story.id),
+      
+          :is_unread => is_unread?(comment)      %>
 
         <% if (children = comments_by_parent[comment.id]) %>
           <% ancestors << subtree %>

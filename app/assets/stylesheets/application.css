@@ -71,6 +71,11 @@ a.tag_meta {
 	border-color: #c8c8c8;
 }
 
+a.tag_domanda, a.tag_show {
+	background-color: #ff4d02;
+	color: white;
+}
+
 span.hat {
 	border-bottom: 6px solid #bbb;
 	border-radius: 4px;
@@ -1318,4 +1323,12 @@ div.fieldWithErrors {
 	vertical-align: middle;
 }
 
+div.comment_unread {
+	background-clip: content-box;
+	background-color: #fee7df7d;
+}
 
+div.comment_unread span.comment_timeago {
+	color: #ff4202;
+	font-weight: 600;
+}

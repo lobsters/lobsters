@@ -35,7 +35,6 @@
 		display: inline;
 		float: none;
 		text-align: left;
-		margin-top: 0.25em;
 		clear: both;
 	}
 
@@ -45,7 +44,7 @@
 		padding-left: 0;
 	}
 
-	div#inside {
+	div#insidecontent {
 		margin: 1em;
 	}
 

@@ -84,7 +84,7 @@ RSpec.describe Conversation do
         MessageCreator.create(
           conversation: conversation,
           author: conversation.author,
-          body: "hi",
+          params: { body: "hi" },
         )
       end
 

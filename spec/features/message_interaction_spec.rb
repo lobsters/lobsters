@@ -234,6 +234,65 @@ RSpec.feature "add a message to a conversation" do
       end
     end
   end
+
+  context "as a moderator" do
+    scenario "starts a conversation with a mod note" do
+      author = create(:user, is_moderator: true)
+      stub_login_as author
+      recipient = create(:user)
+      hat = create(:hat, user: author)
+
+      visit root_path
+      click_on "Messages"
+      within(".new_conversation") do
+        fill_in("To", with: recipient.username)
+        fill_in("Subject", with: "subject")
+        fill_in("Message", with: "hello with modnote")
+        check("ModNote")
+        click_on "Send Message"
+      end
+
+      visit user_path(recipient)
+
+      mod_notes = page.find(:table, text: "Mod → User/When")
+
+      within(mod_notes) do
+        expect(page).to have_text("hello with modnote")
+      end
+    end
+  end
+
+  context "as a non-moderator" do
+    scenario "cannot add a mod note" do
+      author = create(:user, is_moderator: true)
+      stub_login_as author
+      recipient = create(:user)
+      hat = create(:hat, user: author)
+
+      visit root_path
+      click_on "Messages"
+      within(".new_conversation") do
+        fill_in("To", with: recipient.username)
+        fill_in("Subject", with: "subject")
+        fill_in("Message", with: "hello with modnote")
+        check("ModNote")
+
+        author.update(is_moderator: false)
+
+        click_on "Send Message"
+
+        author.update(is_moderator: true)
+      end
+
+      visit user_path(recipient)
+
+      mod_notes = page.find(:table, text: "Mod → User/When")
+
+      within(mod_notes) do
+        expect(page).to_not have_text("hello with modnote")
+      end
+    end
+  end
 end
 
 RSpec.feature "delete a conversation" do
@@ -244,7 +303,7 @@ RSpec.feature "delete a conversation" do
     MessageCreator.create(
       conversation: conversation,
       author: author,
-      body: "Hello",
+      params: { body: "Hello" },
     )
 
     visit root_path

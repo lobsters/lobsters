@@ -4,9 +4,7 @@ module Conversations
       @message = MessageCreator.create(
         conversation: conversation,
         author: @user,
-        body: params[:message][:body],
-        hat_id: params[:message][:hat_id],
-        create_modnote: create_modnote?,
+        params: message_params
       )
 
       if @message.persisted?
@@ -17,15 +15,11 @@ module Conversations
   private
 
     def message_params
-      params.require(:message).permit(:body, :hat_id)
+      params.require(:message).permit(:body, :hat_id, :mod_note)
     end
 
     def conversation
       @conversation ||= Conversation.find_by(short_id: params[:conversation_id])
-    end
-
-    def create_modnote?
-      params[:message][:mod_note] == "1"
     end
   end
 end

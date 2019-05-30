@@ -7,10 +7,10 @@ RSpec.describe MessageCreator do
 
       conversation = create(:conversation)
 
-      message = MessageCreator.new.create(
+      message = MessageCreator.create(
         conversation: conversation,
         author: conversation.author,
-        body: "Hi"
+        params: { body: "Hi" }
       )
       conversation.reload
 
@@ -21,10 +21,10 @@ RSpec.describe MessageCreator do
     it "uses the conversation subject" do
       conversation = create(:conversation, subject: "Here I am")
 
-      message = MessageCreator.new.create(
+      message = MessageCreator.create(
         conversation: conversation,
         author: conversation.author,
-        body: "Hi"
+        params: { body: "Hi" }
       )
 
       expect(message.subject).to eq("Here I am")
@@ -35,15 +35,15 @@ RSpec.describe MessageCreator do
       user2 = create(:user)
       conversation = create(:conversation, author: user1, recipient: user2)
 
-      message1 = MessageCreator.new.create(
+      message1 = MessageCreator.create(
         conversation: conversation,
         author: user1,
-        body: "Hi"
+        params: { body: "Hi" }
       )
-      message2 = MessageCreator.new.create(
+      message2 = MessageCreator.create(
         conversation: conversation,
         author: user2,
-        body: "Hi, back"
+        params: { body: "Hi, back" }
       )
 
       expect(message1.recipient).to eq(user2)
@@ -57,8 +57,10 @@ RSpec.describe MessageCreator do
       message = MessageCreator.create(
         conversation: conversation,
         author: conversation.author,
-        body: "Hi",
-        hat_id: hat.id,
+        params: {
+          body: "Hi",
+          hat_id: hat.id,
+        }
       )
 
       expect(message.hat).to eq(hat)
@@ -70,12 +72,16 @@ RSpec.describe MessageCreator do
       conversation = create(:conversation)
       hat = create(:hat, :for_modnotes)
 
+      conversation.author.update(is_moderator: true)
+
       MessageCreator.create(
         conversation: conversation,
         author: conversation.author,
-        body: "Hi",
-        hat_id: hat.id,
-        create_modnote: true,
+        params: {
+          body: "Hi",
+          hat_id: hat.id,
+          mod_note: "1",
+        }
       )
 
       expect(ModNote.count).to eq(1)

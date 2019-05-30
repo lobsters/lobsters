@@ -217,6 +217,63 @@ it:
   home:
     index:
       homerecentsdesc: "<em>Gli <a href=\"/newest\">ultimi</a> articoli, tra cui alcuni non ancora giunti sulla pagina principale.</em>"
+    about:
+      abouttext: "
+      <h1>Chi Siamo</h1>
+      <p>
+        gambe.ro nasce dalla volontà di un gruppo di programmatori di creare uno spazio di discussione in lingua italiana e di scambio focalizzato sullo sviluppo software. Al contrario di buona parte dei siti, gruppi e chat venuti prima di noi, vogliamo coinvolgere specificatamente e unicamente la comunità di persone che produce software. Crediamo che allargare eccessivamente lo spettro delle tematiche trattate porti alla creazione di una community frammentata in cui convivono persone con background troppo differenti e pochi interessi in comune. Riteniamo che in una community del genere la qualità del dibattito sarebbe inevitabilmente penalizzata.
+      </p> 
+      <p>
+        Per questo abbiamo sentito il bisogno di imitare esperienze che all’estero hanno creato comunità di ottima qualità per contenuti e dibattito. Seguendo l’esempio di <a href=\"https://journalduhacker.net\" target=\"_blank\" rel=\"noopener\">journalduhacker</a> che ha portato in lingua francese il format originariamente creato da <a href=\"https://lobste.rs\" target=\"_blank\" rel=\"noopener\">lobste.rs</a>, abbiamo deciso di tradurre in lingua italiana il loro software e su questo costruire gambe.ro.
+      </p>
+
+      <h2>Obiettivi della comunità</h2>
+      <p>
+        gambe.ro è sia un aggregatore di notizie che uno spazio di discussione. Gli argomenti che vuole coprire sono le pratiche dello sviluppo software e tutto ciò che le circonda, inclusi i cambiamenti politici, sociali ed economici che il software porta nella nostra società. 
+      </p>
+      <p>
+        gambe.ro vuole essere anche uno spazio di crescita personale e professionale per persone di tutti i gradi di competenza. Perciò sono benvenute discussioni e riflessioni su percorsi di studio, carriera, eventi e conferenze se collegati ai temi di interesse della comunità.
+      </p>
+      <p>
+        gambe.ro non vuole essere uno spazio di supporto tecnico né per sviluppatori né per utilizzatori. Non vuole essere neppure uno spazio di discussione della tecnologia in senso esteso: vi invitiamo a trattare temi come hardware, telefonia o futurologia nei numerosi spazi di discussione già esistenti.
+      </p>
+      <a name=\"betatest\">
+      </a>
+      <h2>Beta Test</h2>
+      <p>
+      Gambe.ro è al momento in una fase di test preliminare. L’idea è di raccogliere feedback da voi utenti per adattare il software, i regolamenti e i contenuti al nostro uso specifico. Inoltre vogliamo raccogliere dati sull’utilizzo della piattaforma così da acquistare un hardware adatto alle nostre necessità.
+      </p><p>
+      Nella pratica, Gambe.ro sarà pienamente operativo sin da subito. Saranno tuttavia limitati gli inviti per evitare una crescita troppo rapida della comunità prima che la piattaforma sia pronta e stabile. Ci riserviamo inoltre di chiudere completamente gli inviti e di resettare integralmente la piattaforma una volta concluso il testing, nel caso in cui queste misure si rivelassero necessarie.
+      </p><p>
+      Per segnalarci errori di traduzione, bug o semplicemente per darci i vostri feedback, potete contattarci all’indirizzo e-mail: <a href=\"mailto:feedback@gambe.ro\">feedback@gambe.ro</a>. 
+      </p>
+      
+      <h2>I draghi</h2>
+      <p>Puoi contrassegnare un commento come drago quando la soluzione funziona, ma non sai perché funziona. Viene dall'espressione latina 'hic sunt dracones'.</p>
+
+      <h2>Moderazione</h2>
+      <p>
+        Il team di moderazione si riserva di intervenire in caso vengano pubblicati sulla piattaforma contenuti illegali o esplicitamente fuori contesto rispetto ai temi di interesse della comunità. Confidiamo nella capacità della comunità di auto-moderarsi attraverso lo strumento del downvote che invitiamo ad usare con giudizio. La moderazione interverrà inoltre per reprimere comportamenti tossici e ostili verso membri della comunità o terzi.
+      </p>
+        
+      <h3>Downvote</h3>
+      <p>
+        Lo strumento del downvote su gambe.ro è da intendersi come un’espressione di dissenso verso la presenza del commento che si downvota. Non deve rispecchiare invece il vostro parere personale sull’opinione espressa dal commento. Per questo motivo ogni downvote è accompagnato da una motivazione. Se nessuna delle motivazioni presenti si applica al downvote che volete assegnare, probabilmente il contenuto non si merita un downvote.
+      </p>
+      <p>
+        Invece di rispondere ad un commento inappropriato lamentandosi, invitiamo gli utenti semplicemente a downvotare il commento.
+      </p>
+        
+      <h3>Log di Moderazione e trasparenza</h3>
+      <p>
+        Ogni azione di moderazione è visibile dal <a href=\"/moderations\">Log di Moderazione</a>. Da qui è possibile ricostruire da parte di chi, come e perché c’è stato un intervento di moderazione. In linea con lo spirito di lobste.rs che originariamente ha introdotto questa feature, crediamo che la trasparenza debba essere un elemento distintivo della nostra comunità, così da costruire un rapporto di fiducia con la nostra utenza. 
+      </p>
+
+      <h2>Trivia</h2>
+      <p>
+        Il nome gambe.ro è ispirato ovviamente a lobste.rs che a sua volta è semplicemente un gioco di parole con un dominio e non ha una vera connessione con gli obiettivi del sito. Dopo aver scartato pastaconlesar.de e spaghetticodealloscogl.io abbiamo optato per il più minimale gambe.ro.
+      </p>
+      "
   invitations:
     build:
       buildinvtitle: "Richiedi un invito"
@@ -606,62 +663,6 @@ it:
       rssforcommentstitle: "Commenti - RSS 2.0"
       neweststoriestitle: "Articoli più nuovi"
       licensetext: "<div class=\"box wide\">Tutte le azioni sul sito sono pubbliche ad eccezione dei messaggi privati tra utenti. Le azioni di moderazione possono essere consultate sul <a href=\"/moderations\">Log di Moderazione</a>.<br/><a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.it\"><img alt=\"Licenza Creative Commons\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by/4.0/88x31.png\" /></a><br /><span xmlns:dct=\"http://purl.org/dc/terms/\" property=\"dct:title\">Gambe.ro</span> è pubblicato secondo i termini della <a rel=\"license\" href=\"https://creativecommons.org/licenses/by/4.0/deed.it\">licenza Creative Commons Attribution 4.0 International</a>.</div>"
-      abouttext: "
-      <h1>Chi Siamo</h1>
-      <p>
-        gambe.ro nasce dalla volontà di un gruppo di programmatori di creare uno spazio di discussione in lingua italiana e di scambio focalizzato sullo sviluppo software. Al contrario di buona parte dei siti, gruppi e chat venuti prima di noi, vogliamo coinvolgere specificatamente e unicamente la comunità di persone che produce software. Crediamo che allargare eccessivamente lo spettro delle tematiche trattate porti alla creazione di una community frammentata in cui convivono persone con background troppo differenti e pochi interessi in comune. Riteniamo che in una community del genere la qualità del dibattito sarebbe inevitabilmente penalizzata.
-      </p> 
-      <p>
-        Per questo abbiamo sentito il bisogno di imitare esperienze che all’estero hanno creato comunità di ottima qualità per contenuti e dibattito. Seguendo l’esempio di <a href=\"https://journalduhacker.net\" target=\"_blank\" rel=\"noopener\">journalduhacker</a> che ha portato in lingua francese il format originariamente creato da <a href=\"https://lobste.rs\" target=\"_blank\" rel=\"noopener\">lobste.rs</a>, abbiamo deciso di tradurre in lingua italiana il loro software e su questo costruire gambe.ro.
-      </p>
-
-      <h2>Obiettivi della comunità</h2>
-      <p>
-        gambe.ro è sia un aggregatore di notizie che uno spazio di discussione. Gli argomenti che vuole coprire sono le pratiche dello sviluppo software e tutto ciò che le circonda, inclusi i cambiamenti politici, sociali ed economici che il software porta nella nostra società. 
-      </p>
-      <p>
-        gambe.ro vuole essere anche uno spazio di crescita personale e professionale per persone di tutti i gradi di competenza. Perciò sono benvenute discussioni e riflessioni su percorsi di studio, carriera, eventi e conferenze se collegati ai temi di interesse della comunità.
-      </p>
-      <p>
-        gambe.ro non vuole essere uno spazio di supporto tecnico né per sviluppatori né per utilizzatori. Non vuole essere neppure uno spazio di discussione della tecnologia in senso esteso: vi invitiamo a trattare temi come hardware, telefonia o futurologia nei numerosi spazi di discussione già esistenti.
-      </p>
-      <a name=\"betatest\">
-      </a>
-      <h2>Beta Test</h2>
-      <p>
-      Gambe.ro è al momento in una fase di test preliminare. L’idea è di raccogliere feedback da voi utenti per adattare il software, i regolamenti e i contenuti al nostro uso specifico. Inoltre vogliamo raccogliere dati sull’utilizzo della piattaforma così da acquistare un hardware adatto alle nostre necessità.
-      </p><p>
-      Nella pratica, Gambe.ro sarà pienamente operativo sin da subito. Saranno tuttavia limitati gli inviti per evitare una crescita troppo rapida della comunità prima che la piattaforma sia pronta e stabile. Ci riserviamo inoltre di chiudere completamente gli inviti e di resettare integralmente la piattaforma una volta concluso il testing, nel caso in cui queste misure si rivelassero necessarie.
-      </p><p>
-      Per segnalarci errori di traduzione, bug o semplicemente per darci i vostri feedback, potete contattarci all’indirizzo e-mail: <a href=\"mailto:feedback@gambe.ro\">feedback@gambe.ro</a>. 
-      </p>
-      
-      <h2>I draghi</h2>
-      <p>Puoi contrassegnare un commento come drago quando la soluzione funziona, ma non sai perché funziona. Viene dall'espressione latina 'hic sunt dracones'.</p>
-
-      <h2>Moderazione</h2>
-      <p>
-        Il team di moderazione si riserva di intervenire in caso vengano pubblicati sulla piattaforma contenuti illegali o esplicitamente fuori contesto rispetto ai temi di interesse della comunità. Confidiamo nella capacità della comunità di auto-moderarsi attraverso lo strumento del downvote che invitiamo ad usare con giudizio. La moderazione interverrà inoltre per reprimere comportamenti tossici e ostili verso membri della comunità o terzi.
-      </p>
-        
-      <h3>Downvote</h3>
-      <p>
-        Lo strumento del downvote su gambe.ro è da intendersi come un’espressione di dissenso verso la presenza del commento che si downvota. Non deve rispecchiare invece il vostro parere personale sull’opinione espressa dal commento. Per questo motivo ogni downvote è accompagnato da una motivazione. Se nessuna delle motivazioni presenti si applica al downvote che volete assegnare, probabilmente il contenuto non si merita un downvote.
-      </p>
-      <p>
-        Invece di rispondere ad un commento inappropriato lamentandosi, invitiamo gli utenti semplicemente a downvotare il commento.
-      </p>
-        
-      <h3>Log di Moderazione e trasparenza</h3>
-      <p>
-        Ogni azione di moderazione è visibile dal <a href=\"/moderations\">Log di Moderazione</a>. Da qui è possibile ricostruire da parte di chi, come e perché c’è stato un intervento di moderazione. In linea con lo spirito di lobste.rs che originariamente ha introdotto questa feature, crediamo che la trasparenza debba essere un elemento distintivo della nostra comunità, così da costruire un rapporto di fiducia con la nostra utenza. 
-      </p>
-
-      <h2>Trivia</h2>
-      <p>
-        Il nome gambe.ro è ispirato ovviamente a lobste.rs che a sua volta è semplicemente un gioco di parole con un dominio e non ha una vera connessione con gli obiettivi del sito. Dopo aver scartato pastaconlesar.de e spaghetticodealloscogl.io abbiamo optato per il più minimale gambe.ro.
-      </p>
-      "
     invitations_controller:
       flashpublicinvitnotallowed: "Richieste di inviti pubbliche non sono permesse."
       flashsuccessinvitrequest: "La tua richiesta d'invito è stata validata e sarà ora visibile agli altri utenti connessi."

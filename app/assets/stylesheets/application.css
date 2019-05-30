@@ -257,11 +257,6 @@ div#wrapper {
 	min-width: 600px;
 	max-width: 900px;
 }
-div#inside {
-	margin-left: 0.25em;
-	margin-right: 0.25em;
-}
-
 
 /* header */
 
@@ -757,8 +752,6 @@ div.comment_text code {
 	line-height: 1.2em;
 }
 
-div.dragons {
-}
 .dragon_text {
 	background-color: #f8f8f8;
 	color: gray;
@@ -1252,8 +1245,6 @@ div#flasher div.flash-success {
 	padding-top: 25px;
 	margin-left: auto;
 	margin-right: auto;
-}
-div#flasher span#flashcontent {
 }
 
 

@@ -17,17 +17,6 @@ describe KeybaseProofsController do
     stub_login_as user
   end
 
-  context 'config' do
-    it 'parses to valid json' do
-      get :kbconfig
-      config = JSON.parse(response.body)
-
-      # rubocop:disable Style/FormatStringToken
-      expect(config['profile_url']).to eq "http://test.host/u/%{username}"
-      # rubocop:enable Style/FormatStringToken
-    end
-  end
-
   context 'new' do
     it 'renders the expected kb_username' do
       get :new, params: new_params

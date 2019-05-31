@@ -1,8 +1,8 @@
 <% if user.keybase_signatures? %>
   Linked to
   <% user.keybase_signatures.each do |kbs| %>
-    <strong><%= link_to "@#{kbs[:kb_username]}", "#{Keybase.BASE_URL}/#{kbs[:kb_username]}" %></strong>
-    <strong><%= link_to "✔", "#{Keybase.BASE_URL}/#{kbs[:kb_username]}/sigchain\##{kbs[:sig_hash]}" %></strong>
+    <strong><%= link_to "@#{kbs[:kb_username]}", keybase_user_link(kbs) %></strong>
+    <strong><%= link_to "✔", keybase_proof_link(kbs) %></strong>
     &nbsp;
   <% end %>
   <% if for_self %>

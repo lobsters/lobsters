@@ -72,8 +72,8 @@ a.tag_meta {
 }
 
 a.tag_domanda, a.tag_show {
-	background-color: #ff4d02;
-	color: white;
+	background-color: #ffd2bf;
+	border-color: #fda078;
 }
 
 span.hat {

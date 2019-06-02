@@ -806,8 +806,8 @@ class Story < ApplicationRecord
     comments = self.merged_comments.arrange_for_user(nil)
 
     # calculate count after removing deleted comments and threads
-    self.update_column :comments_count, (self.comments_count = comments.count {|c| !c.is_gone? })
-
+    self.update_column :comments_count, (comments.count {|c| !c.is_gone? })
+    self.update_merged_into_story_comments
     self.recalculate_hotness!
   end
 

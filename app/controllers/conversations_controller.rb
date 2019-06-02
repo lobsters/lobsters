@@ -3,7 +3,9 @@ class ConversationsController < ApplicationController
 
   def index
     @conversations = find_user_conversations(@user).order(updated_at: :desc)
-    @conversation = Conversation.new
+    @conversation = ConversationForm.new(
+      conversation: Conversation.new, username: params[:to]
+    )
   end
 
   def show
@@ -66,6 +68,6 @@ private
   end
 
   def conversation_recipient
-    params[:user][:username]
+    params[:conversation][:username]
   end
 end

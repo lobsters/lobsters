@@ -28,8 +28,8 @@
     <h2 class="legend">Create Conversation</h2>
     <%= error_messages_for @conversation %>
     <div class="field">
-      <%= label :user, :username, "To:", class: "required" %>
-      <%= text_field :user, :username, value: "" %>
+      <%= form.label :username, "To:", class: "required" %>
+      <%= form.text_field :username %>
     </div>
     <div class="field">
       <%= form.label :subject, "Subject:", class: "required" %>

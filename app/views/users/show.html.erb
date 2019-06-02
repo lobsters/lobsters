@@ -11,7 +11,10 @@
     </span>
 
     <% if @user && @showing_user.is_active? %>
-      (<a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>)
+      (<%= link_to(
+        "Send a Message",
+        conversations_path(to: @showing_user.username)
+      ) %>)
     <% end %>
   </div>
 

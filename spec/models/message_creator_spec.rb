@@ -69,14 +69,15 @@ RSpec.describe MessageCreator do
     it "creates a mod note for the message" do
       expect(ModNote.count).to eq(0)
 
-      conversation = create(:conversation)
+      author = create(:user, is_moderator: true)
+      conversation = create(:conversation, author: author)
       hat = create(:hat, :for_modnotes)
 
       conversation.author.update(is_moderator: true)
 
       MessageCreator.create(
         conversation: conversation,
-        author: conversation.author,
+        author: author,
         params: {
           body: "Hi",
           hat_id: hat.id,
@@ -85,6 +86,28 @@ RSpec.describe MessageCreator do
       )
 
       expect(ModNote.count).to eq(1)
+    end
+
+    context "when the user is not a moderator" do
+      it "does not create a modnote" do
+        expect(ModNote.count).to eq(0)
+
+        author = create(:user, is_moderator: true)
+        conversation = create(:conversation, author: author)
+        hat = create(:hat, :for_modnotes)
+
+        MessageCreator.create(
+          conversation: conversation,
+          author: author,
+          params: {
+            body: "Hi",
+            hat_id: hat.id,
+            mod_note: "1",
+          }
+        )
+
+        expect(ModNote.count).to eq(1)
+      end
     end
   end
 end

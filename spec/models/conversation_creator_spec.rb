@@ -1,12 +1,11 @@
 require "rails_helper"
 
 RSpec.describe ConversationCreator do
-  let(:author) { create(:user) }
-
   describe "#create" do
     it "creates a conversation" do
       expect(Conversation.count).to eq(0)
 
+      author = create(:user)
       ConversationCreator.create(
         author: author,
         recipient_username: create(:user).username,
@@ -21,6 +20,7 @@ RSpec.describe ConversationCreator do
       allow(MessageCreator).to receive(:create)
       recipient_username = create(:user).username
 
+      author = create(:user)
       conversation = ConversationCreator.create(
         author: author,
         recipient_username: recipient_username,
@@ -36,16 +36,31 @@ RSpec.describe ConversationCreator do
     end
 
     it "doesn't allow invalid recipients" do
-      creation_attempt = lambda do
-        ConversationCreator.create(
-          author: author,
-          recipient_username: "this_user_doesnt_exist",
-          subject: "this is a subject",
-          message_params: { body: "this is the body" },
-        )
-      end
+      expect(Conversation.count).to eq(0)
 
-      expect(&creation_attempt).to_not change { Conversation.count }
+      author = create(:user)
+      ConversationCreator.create(
+        author: author,
+        recipient_username: "this_user_doesnt_exist",
+        subject: "this is a subject",
+        message_params: { body: "this is the body" },
+      )
+
+      expect(Conversation.count).to eq(0)
+    end
+
+    it "doesn't allow invalid recipients" do
+      expect(Conversation.count).to eq(0)
+
+      author = create(:user)
+      ConversationCreator.create(
+        author: author,
+        recipient_username: "this_user_doesnt_exist",
+        subject: "this is a subject",
+        message_params: { body: "this is the body" },
+      )
+
+      expect(Conversation.count).to eq(0)
     end
   end
 end

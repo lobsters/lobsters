@@ -3,6 +3,21 @@ require "rails_helper"
 RSpec.describe Conversation do
   include ActiveSupport::Testing::TimeHelpers
 
+  context "validations" do
+    it "should have a valid factory" do
+      conversation = build(:conversation)
+
+      expect(conversation).to be_valid
+    end
+
+    it "should not allow self-messages" do
+      author = build(:user)
+      conversation = build(:conversation, author: author, recipient: author)
+
+      expect(conversation).not_to be_valid
+    end
+  end
+
   it "should get a short id" do
     short_id = instance_double(ShortId, generate: "abc123")
     allow(ShortId).to receive(:new).and_return(short_id)

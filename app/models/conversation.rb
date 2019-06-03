@@ -13,6 +13,7 @@ class Conversation < ApplicationRecord
 
   validates :short_id, presence: true, uniqueness: true
   validates :subject, presence: true
+  validate :cannot_send_to_self
 
   scope :involving, ->(user) do
     where(author: user, deleted_by_author_at: nil)
@@ -62,5 +63,11 @@ private
 
   def recipient_deleted_after_last_message?
     deleted_by_recipient_at && deleted_by_recipient_at > last_message.created_at
+  end
+
+  def cannot_send_to_self
+    if author == recipient
+      errors.add(:user, "can't be you")
+    end
   end
 end

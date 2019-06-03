@@ -48,19 +48,5 @@ RSpec.describe ConversationCreator do
 
       expect(Conversation.count).to eq(0)
     end
-
-    it "doesn't allow invalid recipients" do
-      expect(Conversation.count).to eq(0)
-
-      author = create(:user)
-      ConversationCreator.create(
-        author: author,
-        recipient_username: "this_user_doesnt_exist",
-        subject: "this is a subject",
-        message_params: { body: "this is the body" },
-      )
-
-      expect(Conversation.count).to eq(0)
-    end
   end
 end

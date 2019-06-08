@@ -24,9 +24,9 @@
     <% end %>
   </table>
 
-  <%= form_with model: @conversation, class: "new_conversation" do |form| %>
+  <%= form_with model: @conversation_form, class: "new_conversation" do |form| %>
     <h2 class="legend">Create Conversation</h2>
-    <%= error_messages_for @conversation %>
+    <%= error_messages_for @conversation_form %>
     <div class="field">
       <%= form.label :username, "To:", class: "required" %>
       <%= form.text_field :username %>
@@ -36,13 +36,13 @@
       <%= form.text_field :subject %>
     </div>
     <div class="field">
-      <%= label :message, :body, "Message:", class: "required" %>
-      <%= text_area :message, :body %>
+      <%= form.label :body, "Message:", class: "required" %>
+      <%= form.text_area :body %>
     </div>
     <div class="field">
     </div>
     <div class="field">
-      <%= render partial: "hat_inputs", locals: { user: @user } %>
+      <%= render partial: "hat_inputs", locals: { user: @user, form: form } %>
     </div>
     <div class="action">
       <%= form.submit %>

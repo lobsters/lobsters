@@ -12,7 +12,7 @@ class Conversation < ApplicationRecord
   has_many :messages, dependent: :destroy
 
   validates :short_id, presence: true, uniqueness: true
-  validates :subject, presence: true
+  validates :subject, length: { maximum: 255 }, presence: true
   validate :cannot_send_to_self
 
   scope :involving, ->(user) do

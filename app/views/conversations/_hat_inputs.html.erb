@@ -1,8 +1,8 @@
 <% if user.wearable_hats.any? || user.is_moderator? %>
   <div class="boxline">
     <% if user.wearable_hats.any? %>
-      <%= label :message, :hat_id, "Put on hat:" %>
-      <%= select :message, :hat_id, options_for_select( [["",""]] +
+      <%= form.label :hat_id, "Put on hat:" %>
+      <%= form.select :hat_id, options_for_select( [["",""]] +
         user.hats.map do |h|
           [h.hat, { "data-modnote" => h.modlog_use }, h.id]
         end
@@ -10,8 +10,8 @@
     <% end %>
 
     <% if user.is_moderator? %>
-      <%= check_box_tag "message[mod_note]", "1", false, class: :normal %>
-      <%= label_tag "message[mod_note]", "ModNote", class: :normal %>
+      <%= form.check_box :mod_note, {class: :normal}, "1", false %>
+      <%= form.label :mod_note, "ModNote", class: :normal %>
     <% end %>
   </div>
 <% end %>

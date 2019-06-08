@@ -3,9 +3,7 @@ class ConversationsController < ApplicationController
 
   def index
     @conversations = find_user_conversations(@user).order(updated_at: :desc)
-    @conversation = ConversationForm.new(
-      conversation: Conversation.new, username: params[:to]
-    )
+    @conversation_form = ConversationForm.new(username: params[:to])
   end
 
   def show
@@ -17,18 +15,15 @@ class ConversationsController < ApplicationController
       .where(recipient: @user)
       .update_all(has_been_read: true)
     @user.update_unread_message_count!
-    @message = Message.new(conversation: @conversation)
+    @message_form = MessageForm.new(conversation: @conversation, author: @user)
   end
 
   def create
-    @conversation = ConversationCreator.create(
-      author: @user,
-      recipient_username: conversation_recipient,
-      subject: conversation_subject,
-      message_params: message_params,
-    )
-    if @conversation.persisted?
-      redirect_to conversation_path(@conversation)
+    @conversation_form = ConversationForm.new(conversation_form_params)
+    @conversation_form.save
+
+    if @conversation_form.persisted?
+      redirect_to conversation_path(@conversation_form)
     else
       @conversations = find_user_conversations(@user).order(updated_at: :desc)
       render :index
@@ -55,16 +50,19 @@ class ConversationsController < ApplicationController
 
 private
 
+  def conversation_form_params
+    params
+      .require(:conversation)
+      .permit(:username, :subject, :body, :hat_id, :mod_note)
+      .merge(author: @user)
+  end
+
   def find_user_conversations(user)
     @conversations = Conversation.includes(:recipient, :author).involving(user)
   end
 
   def conversation_subject
     params[:conversation][:subject]
-  end
-
-  def message_params
-    params.require(:message).permit(:body, :hat_id, :mod_note)
   end
 
   def conversation_recipient

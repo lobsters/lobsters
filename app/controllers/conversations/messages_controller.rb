@@ -1,25 +1,30 @@
 module Conversations
   class MessagesController < ApplicationController
     def create
-      @message = MessageCreator.create(
-        conversation: conversation,
-        author: @user,
-        params: message_params
+      @conversation = find_conversation
+      @message_form = MessageForm.new(
+        message_params.merge(conversation: @conversation)
       )
+      @message_form.save
 
-      if @message.persisted?
-        redirect_to conversation
+      if @message_form.persisted?
+        redirect_to @conversation
+      else
+        render "conversations/show"
       end
     end
 
   private
 
     def message_params
-      params.require(:message).permit(:body, :hat_id, :mod_note)
+      params
+        .require(:message)
+        .permit(:body, :hat_id, :mod_note)
+        .merge(author: @user)
     end
 
-    def conversation
-      @conversation ||= Conversation.find_by(short_id: params[:conversation_id])
+    def find_conversation
+      Conversation.find_by(short_id: params[:conversation_id])
     end
   end
 end

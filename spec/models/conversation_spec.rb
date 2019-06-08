@@ -16,6 +16,13 @@ RSpec.describe Conversation do
 
       expect(conversation).not_to be_valid
     end
+
+    it "should limit the length of conversations" do
+      too_long_subject = "a" * 256
+      conversation = build(:conversation, subject: too_long_subject)
+
+      expect(conversation).not_to be_valid
+    end
   end
 
   it "should get a short id" do
@@ -96,11 +103,11 @@ RSpec.describe Conversation do
     it "needs both partners to delete the conversation to be deleted" do
       conversation = create(:conversation)
       travel_to(1.day.ago) do
-        MessageCreator.create(
+        MessageForm.new(
           conversation: conversation,
           author: conversation.author,
-          params: { body: "hi" },
-        )
+          body: "hi",
+        ).save
       end
 
       expect(Conversation.count).to eq(1)

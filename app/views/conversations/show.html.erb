@@ -31,14 +31,14 @@
   <% end %>
 </section>
 <section class="new_message box wide">
-  <%= form_with model: [@message.conversation, @message] do |form| %>
-    <%= error_messages_for @message %>
+  <%= form_with model: [@conversation, @message_form] do |form| %>
+    <%= error_messages_for @message_form %>
     <div class="field">
       <%= form.label :body, "Message", :class => "required" %>
       <%= form.text_area :body %>
     </div>
     <div class="field">
-      <%= render partial: "hat_inputs", locals: { user: @user } %>
+      <%= render partial: "conversations/hat_inputs", locals: { user: @user, form: form } %>
     </div>
 
     <%= form.submit "Send Message" %>

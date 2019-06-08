@@ -1,33 +1,33 @@
 require "rails_helper"
 
-RSpec.describe MessageCreator do
+RSpec.describe MessageForm do
   describe "#create" do
     it "creates a message on a conversation" do
       expect(Message.count).to eq(0)
 
       conversation = create(:conversation)
 
-      message = MessageCreator.create(
+      form = MessageForm.new(
         conversation: conversation,
         author: conversation.author,
-        params: { body: "Hi" }
-      )
+        body: "Hi"
+      ).tap(&:save)
       conversation.reload
 
       expect(Message.count).to eq(1)
-      expect(conversation.messages.last).to eq(message)
+      expect(conversation.messages.last).to eq(form.message)
     end
 
     it "uses the conversation subject" do
       conversation = create(:conversation, subject: "Here I am")
 
-      message = MessageCreator.create(
+      form = MessageForm.new(
         conversation: conversation,
         author: conversation.author,
-        params: { body: "Hi" }
-      )
+        body: "Hi"
+      ).tap(&:save)
 
-      expect(message.subject).to eq("Here I am")
+      expect(form.message.subject).to eq("Here I am")
     end
 
     it "sets the recipient to the other person in the conversation" do
@@ -35,35 +35,33 @@ RSpec.describe MessageCreator do
       user2 = create(:user)
       conversation = create(:conversation, author: user1, recipient: user2)
 
-      message1 = MessageCreator.create(
+      form1 = MessageForm.new(
         conversation: conversation,
         author: user1,
-        params: { body: "Hi" }
-      )
-      message2 = MessageCreator.create(
+        body: "Hi"
+      ).tap(&:save)
+      form2 = MessageForm.new(
         conversation: conversation,
         author: user2,
-        params: { body: "Hi, back" }
-      )
+        body: "Hi, back"
+      ).tap(&:save)
 
-      expect(message1.recipient).to eq(user2)
-      expect(message2.recipient).to eq(user1)
+      expect(form1.message.recipient).to eq(user2)
+      expect(form2.message.recipient).to eq(user1)
     end
 
     it "adds a hat to the message" do
       conversation = create(:conversation)
       hat = create(:hat)
 
-      message = MessageCreator.create(
+      form = MessageForm.new(
         conversation: conversation,
         author: conversation.author,
-        params: {
-          body: "Hi",
-          hat_id: hat.id,
-        }
-      )
+        body: "Hi",
+        hat_id: hat.id,
+      ).tap(&:save)
 
-      expect(message.hat).to eq(hat)
+      expect(form.message.hat).to eq(hat)
     end
 
     it "creates a mod note for the message" do
@@ -75,15 +73,13 @@ RSpec.describe MessageCreator do
 
       conversation.author.update(is_moderator: true)
 
-      MessageCreator.create(
+      MessageForm.new(
         conversation: conversation,
         author: author,
-        params: {
-          body: "Hi",
-          hat_id: hat.id,
-          mod_note: "1",
-        }
-      )
+        body: "Hi",
+        hat_id: hat.id,
+        mod_note: "1",
+      ).save
 
       expect(ModNote.count).to eq(1)
     end
@@ -96,15 +92,13 @@ RSpec.describe MessageCreator do
         conversation = create(:conversation, author: author)
         hat = create(:hat, :for_modnotes)
 
-        MessageCreator.create(
+        MessageForm.new(
           conversation: conversation,
           author: author,
-          params: {
-            body: "Hi",
-            hat_id: hat.id,
-            mod_note: "1",
-          }
-        )
+          body: "Hi",
+          hat_id: hat.id,
+          mod_note: "1",
+        ).save
 
         expect(ModNote.count).to eq(1)
       end

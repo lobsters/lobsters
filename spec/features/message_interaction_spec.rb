@@ -114,6 +114,28 @@ RSpec.feature "Checking messages" do
     expect(page).not_to have_css(".headerlinks .new_messages")
     expect(page).to have_css(".headerlinks", text: "Messages")
   end
+
+  context "when the message is invalid" do
+    scenario "it bubbles up error messages to the form" do
+      max_message_length = 1024 * 64
+      author = create(:user)
+      stub_login_as author
+      create(:user, username: "seafood")
+
+      visit root_path
+      click_on "Messages"
+      within(".new_conversation") do
+        fill_in("To:", with: "seafood")
+        fill_in("Subject:", with: "subject")
+        fill_in("Message:", with: "a" * (max_message_length + 1))
+        click_on "Send Message"
+      end
+
+      within(".errorExplanation") do
+        expect(page).to have_css("li", text: "Body is too long")
+      end
+    end
+  end
 end
 
 RSpec.feature "add a message to a conversation" do
@@ -261,6 +283,36 @@ RSpec.feature "add a message to a conversation" do
       end
     end
   end
+
+  context "when the message is invalid" do
+    scenario "it shows the error messages on the form" do
+      max_message_length = 1024 * 64
+      conversation = create(:conversation)
+      author = conversation.author
+      stub_login_as author
+      create(
+        :message,
+        :read,
+        author: author,
+        recipient: conversation.recipient,
+        body: "Nice to meet you",
+        conversation: conversation,
+      )
+
+      visit root_path
+      click_on "Messages"
+      click_on conversation.recipient.username
+
+      within(".new_message") do
+        fill_in("Message", with: "a" * (max_message_length + 1))
+        click_on "Send Message"
+      end
+
+      within(".errorExplanation") do
+        expect(page).to have_css("li", text: "Body is too long")
+      end
+    end
+  end
 end
 
 RSpec.feature "delete a conversation" do
@@ -268,11 +320,11 @@ RSpec.feature "delete a conversation" do
     conversation = create(:conversation)
     author = conversation.author
     stub_login_as author
-    MessageCreator.create(
+    MessageForm.new(
       conversation: conversation,
       author: author,
-      params: { body: "Hello" },
-    )
+      body: "Hello",
+    ).save
 
     visit root_path
     click_on "Messages"

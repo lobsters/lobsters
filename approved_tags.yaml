@@ -20,7 +20,7 @@
 - { tag: "devops", description: "Developer Operations" }
 - { tag: "domanda", description: "Chiedi alla community gambe.ro" }
 - { tag: "dotnet", description: "Piattaforma .NET di Microsoft" }
-- { tag: "erlang/elixir", description: "Linguaggi di programmazione Erlang ed Elixir" }
+- { tag: "erlang-elixir", description: "Linguaggi di programmazione Erlang ed Elixir" }
 - { tag: "etica", description: "Etica del software e del suo sviluppo" }
 - { tag: "evento", description: "Evento per sviluppatori" }
 - { tag: "filosofia", description: "Temi filosofici connessi al software" }
@@ -69,6 +69,7 @@
 - { tag: "scala", description: "Linguaggio di programmazione Scala" }
 - { tag: "scalabilità", description: "Scalabilità di sistemi software" }
 - { tag: "scienza", description: "Scienza" }
+- { tag: "presenta", description: "Mostraci i tuoi progetti personali" }
 - { tag: "sicurezza", description: "Sicurezza di sistemi informatici" }
 - { tag: "sistemidistribuiti", description: "Sistemi distribuiti" }
 - { tag: "sistemioperativi", description: "Sistemi operativi" }

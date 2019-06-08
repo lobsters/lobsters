@@ -1346,22 +1346,29 @@ div.fieldWithErrors {
 	margin-bottom: 0.5em;
 }
 
-.new_conversation .field label,
-.new_message .field label {
+.new_conversation .field > *:first-child,
+.new_message .field > *:first-child {
 	flex-basis: 12em;
 	flex-shrink: 1;
 }
 
-.new_conversation .field input,
-.new_conversation .field textarea,
-.new_message .field textarea {
+.new_conversation .field > *:last-child,
+.new_message .field > *:last-child {
 	flex: 2;
+}
+
+.field_with_errors {
+	display: flex;
+}
+
+.field_with_errors input,
+.field_with_errors textarea {
+	width: 100%;
 }
 
 .new_conversation .field textarea,
 .new_message textarea {
 	height: 5em;
-	width: inherit;
 }
 
 .message_actions {

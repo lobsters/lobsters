@@ -27,7 +27,7 @@
         <td><%= hh.to_html_label %></td>
         <td>
           <% if hh.link.to_s.match(/^http/) %>
-            <a href="<%= hh.link %>" rel="nofollow"><%= hh.link %></a>
+            <a href="<%= hh.link %>" target="_blank" rel="nofollow"><%= hh.link %></a>
           <% elsif hh.link.blank? %>
             <span class="na">None</span>
           <% else %>

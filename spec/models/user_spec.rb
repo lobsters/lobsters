@@ -21,17 +21,18 @@ describe User do
   end
 
   it "has a valid homepage" do
-    create(:user, :homepage => "https://lobste.rs")
-    create(:user, :homepage => "https://lobste.rs/w00t")
-    create(:user, :homepage => "https://lobste.rs/w00t.path")
-    create(:user, :homepage => "https://lobste.rs/w00t")
-    create(:user, :homepage => "https://ሙዚቃ.et")
-    create(:user, :homepage => "http://lobste.rs/ሙዚቃ")
+    expect(build(:user, :homepage => "https://lobste.rs")).to be_valid
+    expect(build(:user, :homepage => "https://lobste.rs/w00t")).to be_valid
+    expect(build(:user, :homepage => "https://lobste.rs/w00t.path")).to be_valid
+    expect(build(:user, :homepage => "https://lobste.rs/w00t")).to be_valid
+    expect(build(:user, :homepage => "https://ሙዚቃ.et")).to be_valid
+    expect(build(:user, :homepage => "http://lobste.rs/ሙዚቃ")).to be_valid
+    expect(build(:user, :homepage => "http://www.lobste.rs/")).to be_valid
 
-    expect { create(:user, :homepage => "http://") }.to raise_error
-    expect { create(:user, :homepage => "http://notld") }.to raise_error
-    expect { create(:user, :homepage => "http://notld/w00t.path") }.to raise_error
-    expect { create(:user, :homepage => "ftp://invalid.protocol") }.to raise_error
+    expect(build(:user, :homepage => "http://")).to_not be_valid
+    expect(build(:user, :homepage => "http://notld")).to_not be_valid
+    expect(build(:user, :homepage => "http://notld/w00t.path")).to_not be_valid
+    expect(build(:user, :homepage => "ftp://invalid.protocol")).to_not be_valid
   end
 
   it "authenticates properly" do

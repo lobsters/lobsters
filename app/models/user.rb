@@ -75,7 +75,7 @@ class User < ApplicationRecord
             :uniqueness => { :case_sensitive => false }
 
   validates :homepage,
-            :format => { :with => /\Ahttps?:\/\/[^.\/\s]+\.[^.\/\s]+(\/.*)?\Z/ },
+            :format => { :with => /\Ahttps?:\/\/[^\/\s]+\.[^.\/\s]+(\/.*)?\Z/ },
             :allow_blank => true
 
   validates :password, :presence => true, :on => :create

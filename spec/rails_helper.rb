@@ -56,6 +56,15 @@ RSpec.configure do |config|
   config.raise_errors_for_deprecations!
 
   config.include AuthenticationHelper
+
+  config.filter_rails_from_backtrace!
+  config.filter_gems_from_backtrace \
+    'bullet',
+    'capybara',
+    'rack',
+    'rack-test',
+    'railties',
+    'scout_apm_ruby'
 end
 
 RSpec::Expectations.configuration.on_potential_false_positives = :nothing

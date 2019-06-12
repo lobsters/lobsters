@@ -3,11 +3,11 @@
   <% user.keybase_signatures.each do |kbs| %>
     <strong><%= link_to "@#{kbs[:kb_username]}", keybase_user_link(kbs) %></strong>
     <strong><%= link_to "✔", keybase_proof_link(kbs) %></strong>
-    &nbsp;
-  <% end %>
-  <% if for_self %>
-    (<%= link_to "Disconnect on Keybase", "https://keybase.io/download" %>)
+    <% if for_self %>
+      <%= link_to "Delete", "https://keybase.io/download" %>:<br>
+      <pre>keybase sigs revoke <%= kbs[:sig_hash] %></pre>)
+    <% end %>
   <% end %>
 <% elsif for_self %>
-  Install <%= link_to "Keybase", "https://keybase.io/download" %> to prove a cryptographic connection.
+  <%= link_to "Run", "https://keybase.io/download" %> <pre>keybase prove lobste.rs</pre>
 <% end %>

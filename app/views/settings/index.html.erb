@@ -332,10 +332,9 @@
         <li>Your private messages will be deleted.</li>
         <li>Your submitted stories will not be deleted.</li>
         <li>
-          Your comments with negative scores will be deleted, and you can check
-          "disown comments" below if you want all of your comments to change to
-          list <a href="/u/inactive-user">inactive-user</a> as the author
-          instead of your username.
+          Your comments with negative scores will be deleted, and you can check "disown comments"
+          below if you want all of your stories and comments to change to list
+          <a href="/u/inactive-user">inactive-user</a> instead of your username.
         </li>
       </ul>
 
@@ -347,7 +346,7 @@
         <%= f.label :i_am_sure, "I am sure:", :class => "required" %>
         <%= f.check_box :i_am_sure %>
         <br />
-        <%= f.label :disown, "Disown Comments:" %>
+        <%= f.label :disown, "Disown stories/comments:" %>
         <%= f.check_box :disown %> (optional)
       </div>
       <%= f.submit "Yes, Delete My Account", :class => "deletion" %>

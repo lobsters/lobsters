@@ -67,6 +67,7 @@ class User < ApplicationRecord
     s.string :twitter_oauth_token
     s.string :twitter_oauth_token_secret
     s.string :twitter_username
+    s.any :keybase_signatures, array: true
     s.string :homepage
   end
 
@@ -167,6 +168,10 @@ class User < ApplicationRecord
 
     if self.twitter_username.present?
       h[:twitter_username] = self.twitter_username
+    end
+
+    if self.keybase_signatures.present?
+      h[:keybase_signatures] = self.keybase_signatures
     end
 
     h
@@ -431,6 +436,12 @@ class User < ApplicationRecord
 
   def is_new?
     Time.current - self.created_at <= NEW_USER_DAYS.days
+  end
+
+  def add_or_update_keybase_proof(kb_username, kb_signature)
+    self.keybase_signatures ||= []
+    self.keybase_signatures.reject! {|kbsig| kbsig['kb_username'] == kb_username }
+    self.keybase_signatures.push('kb_username' => kb_username, 'sig_hash' => kb_signature)
   end
 
   def is_heavy_self_promoter?

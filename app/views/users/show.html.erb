@@ -149,7 +149,18 @@
       <% else %>
         <span class="na">A mystery...</span>
       <% end %>
+      <br>
     </div>
+  <% end %>
+
+  <% if Keybase.enabled? %>
+    <% for_self = (@showing_user == @user) %>
+    <% if @showing_user.keybase_signatures? || for_self %>
+      <label class="required">Keybase:</label>
+      <span class="d">
+        <%= render :partial => "keybase_proofs/proofs", locals: {user: @showing_user, for_self: for_self} %>
+      </span>
+    <% end %>
   <% end %>
 
   <% if @user && @user.is_moderator? && !@showing_user.is_moderator? %>

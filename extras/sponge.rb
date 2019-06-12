@@ -141,6 +141,8 @@ class Sponge
     end
 
     if BAD_NETS.select {|n| IPAddr.new(n).include?(ip) }.any?
+      # This blocks all requests to localhost, so you might need to comment
+      # it out if you're building an end-to-end integration locally.
       raise BadIPsError.new("refusing to talk to IP #{ip}")
     end
 

@@ -144,6 +144,17 @@
       </div>
     <% end %>
 
+    <% if Keybase.enabled? %>
+      <div class="boxline">
+        <%= f.label :kb_username,
+          raw("<a href=\"https://keybase.io/\">Keybase</a>:"),
+          :class => "required" %>
+        <span>
+          <%= render :partial => "keybase_proofs/proofs", locals: {user: @edit_user, for_self: true} %>
+        </span>
+      </div>
+    <% end %>
+
     <br>
 
     <div class="legend">

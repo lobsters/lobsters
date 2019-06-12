@@ -37,6 +37,8 @@ RSpec.configure do |config|
 
   config.after(:example) do
     DatabaseCleaner.clean
+    # Admitted a little hacky. prod memoizes to save db hits but tests recreate.
+    InactiveUser.instance_variable_set(:@inactive_user, nil)
   end
 
   config.before(:example, :js) do

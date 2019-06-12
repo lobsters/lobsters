@@ -234,7 +234,7 @@ class Comment < ApplicationRecord
     Comment.record_timestamps = true
 
     self.story.update_comments_count!
-    self.user.update_comments_posted_count!
+    self.user.refresh_counts!
   end
 
   def deliver_mention_notifications
@@ -521,6 +521,6 @@ class Comment < ApplicationRecord
     Comment.record_timestamps = true
 
     self.story.update_comments_count!
-    self.user.update_comments_posted_count!
+    self.user.refresh_counts!
   end
 end

@@ -12,7 +12,6 @@ RSpec.feature "Settings" do
       comment = create :comment, user: user
       allow_any_instance_of(User).to receive(:authenticate).with('pass').and_return(true)
 
-      puts "inactive #{inactive_user.id}, user #{user.id}"
       page.driver.post '/settings/delete_account', user: {
         i_am_sure: true, password: 'pass', disown: true,
       }

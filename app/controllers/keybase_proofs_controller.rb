@@ -1,5 +1,5 @@
 class KeybaseProofsController < ApplicationController
-  before_action :require_logged_in_user, only: [:new, :create]
+  before_action :require_logged_in_user, only: [:new, :create, :destroy]
   before_action :check_new_params, only: :new
   before_action :check_user_matches, only: :new
   before_action :force_to_json, only: [:kbconfig]
@@ -23,6 +23,15 @@ class KeybaseProofsController < ApplicationController
       flash[:error] = "Failed to connect your account to Keybase. Try again from Keybase."
       return redirect_to settings_path
     end
+  end
+
+  def destroy
+    @user.remove_keybase_proof(params[:id])
+    @user.save!
+    redirect_to(
+      user_path(@user),
+      notice: "Removed from profile. You still need to delete it from the Keybase site or app."
+    )
   end
 
   def kbconfig

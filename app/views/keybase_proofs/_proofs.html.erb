@@ -1,12 +1,8 @@
 <% if user.keybase_signatures? %>
-  Linked to
   <% user.keybase_signatures.each do |kbs| %>
     <strong><%= link_to "@#{kbs[:kb_username]}", keybase_user_link(kbs) %></strong>
     <strong><%= link_to "✔", keybase_proof_link(kbs) %></strong>
-    <% if for_self %>
-      <%= link_to "Delete", "https://keybase.io/download" %>:<br>
-      <pre>keybase sigs revoke <%= kbs[:sig_hash] %></pre>)
-    <% end %>
+    <% if for_self %>(<%= link_to "Unlink", keybase_proof_path(kbs[:kb_username]), method: :delete %>)<% end %>
   <% end %>
 <% elsif for_self %>
   <%= link_to "Run", "https://keybase.io/download" %> <pre>keybase prove lobste.rs</pre>

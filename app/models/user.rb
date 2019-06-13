@@ -441,8 +441,13 @@ class User < ApplicationRecord
 
   def add_or_update_keybase_proof(kb_username, kb_signature)
     self.keybase_signatures ||= []
-    self.keybase_signatures.reject! {|kbsig| kbsig['kb_username'] == kb_username }
+    self.remove_keybase_proof(kb_username)
     self.keybase_signatures.push('kb_username' => kb_username, 'sig_hash' => kb_signature)
+  end
+
+  def remove_keybase_proof(kb_username)
+    self.keybase_signatures ||= []
+    self.keybase_signatures.reject! {|kbsig| kbsig['kb_username'] == kb_username }
   end
 
   def is_heavy_self_promoter?

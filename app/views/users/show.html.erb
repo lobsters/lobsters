@@ -109,6 +109,16 @@
     <div style="clear: both;"></div>
   <% end %>
 
+  <% if @showing_user.homepage.present? %>
+    <label class="required">Homepage:</label>
+
+    <span class="d">
+      <a href="<%= h(@showing_user.homepage) %>"
+        rel="me nofollow"><%= h(@showing_user.homepage) %></a>
+    </span>
+    <br>
+  <% end %>
+
   <% if @showing_user.github_username.present? %>
     <label class="required">GitHub:</label>
 
@@ -138,15 +148,6 @@
         <%= render :partial => "keybase_proofs/proofs", locals: {user: @showing_user, for_self: for_self} %>
       </span>
     <% end %>
-  <% end %>
-
-  <% if @showing_user.homepage.present? %>
-    <label class="required">Homepage:</label>
-
-    <span class="d">
-      <a href="<%= h(@showing_user.homepage) %>"
-        rel="me nofollow"><%= h(@showing_user.homepage) %></a>
-    </span>
     <br>
   <% end %>
 

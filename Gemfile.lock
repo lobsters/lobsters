@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/scoutapp/scout_apm_ruby.git
+  remote: https://github.com/scoutapp/scout_apm_ruby.git
   revision: 574b0a6cf9ee774b5c09e60825f0f6131ea9f005
   ref: 574b0a6
   specs:

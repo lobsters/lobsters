@@ -1,7 +1,7 @@
 class Vote < ApplicationRecord
-  belongs_to :user, required: false
-  belongs_to :story, required: false
-  belongs_to :comment, required: false
+  belongs_to :user, optional: true
+  belongs_to :story, optional: true
+  belongs_to :comment, optional: true
 
   COMMENT_REASONS = {
     "O" => "Off-topic",

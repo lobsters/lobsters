@@ -8,7 +8,7 @@ class Message < ApplicationRecord
              :foreign_key => "author_user_id",
              :inverse_of => :sent_messages
   belongs_to :hat,
-             :required => false
+             :optional => true
 
   attribute :mod_note, :boolean
   attr_reader :recipient_username

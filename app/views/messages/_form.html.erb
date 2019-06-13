@@ -1,4 +1,4 @@
-<%= form_with model: @new_message, url: new_message, :method => :post do |f| %>
+<%= form_with model: @new_message, url: new_message, method: :post, local: true do |f| %>
   <%= error_messages_for @new_message %>
 
   <% if replying %>

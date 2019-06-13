@@ -16,8 +16,7 @@
   shown to any other users (except moderators).
   </p>
 
-  <%= form_with model: @invitation_request,
-  :url => create_invitation_by_request_path do |f| %>
+  <%= form_with model: @invitation_request, url: create_invitation_by_request_path, local: true do |f| %>
     <p>
     <%= f.label :name, "Name (not username):" %>
     <%= f.text_field :name, :size => 30 %>

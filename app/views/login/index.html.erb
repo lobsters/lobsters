@@ -10,7 +10,7 @@
     The site is currently in read-only mode for maintenance.
     </p>
   <% else %>
-    <%= form_with url: login_path do |form| %>
+    <%= form_with url: login_path, local: true do |form| %>
     <p>
       <%= form.label :email, "E-mail or Username:" %>
       <%= form.text_field :email, :size => 30, :autofocus => "autofocus" %>

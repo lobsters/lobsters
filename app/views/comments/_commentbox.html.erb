@@ -1,6 +1,6 @@
 <div class="comment comment_form_container"
 data-shortid="<%= comment.short_id if comment.persisted? %>">
-<%= form_with url: comment, :id => "edit_comment_#{comment.short_id}" do |f| %>
+<%= form_with url: comment, id: "edit_comment_#{comment.short_id}", local: true do |f| %>
   <% if comment.errors.any? %>
     <%= errors_for comment %>
   <% end %>

@@ -6,8 +6,7 @@
 require:
   - ./extras/prohibit_safe_navigation
   - ./extras/prohibit_form_for_and_form_tag
-Rails:
-  Enabled: true
+  - rubocop-rails
 AllCops:
   Include:
     - '**/*.rb'
@@ -110,6 +109,8 @@ Rails/OutputSafety:
 Rails/Present:
   UnlessBlank: false
 Rails/SkipsModelValidations:
+  Enabled: false
+Rails/HelperInstanceVariable:
   Enabled: false
 
 # Security

@@ -195,6 +195,9 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
+    rubocop-rails (2.0.1)
+      rack (>= 1.1)
+      rubocop (>= 0.70.0)
     rubocop-rspec (1.33.0)
       rubocop (>= 0.60.0)
     ruby-enum (0.7.2)
@@ -267,6 +270,7 @@ DEPENDENCIES
   rqrcode
   rspec-rails
   rubocop
+  rubocop-rails
   rubocop-rspec
   ruumba
   scenic

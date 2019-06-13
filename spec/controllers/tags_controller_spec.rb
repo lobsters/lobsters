@@ -28,7 +28,7 @@ describe TagsController do
         hotness_mod: 1.5,
         privileged: true,
         inactive: true,
-      }, }
+      } }
       tag = Tag.find_by(tag: 'mytag')
       expect(tag.description).to eq 'desc'
       expect(tag.is_media).to be true

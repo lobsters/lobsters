@@ -43,7 +43,7 @@ Layout/EmptyLinesAroundExceptionHandlingKeywords:
   Enabled: false
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
-Layout/IndentHash:
+Layout/IndentFirstHashElement:
   EnforcedStyle: consistent
 Layout/MultilineMethodCallBraceLayout:
   Enabled: false

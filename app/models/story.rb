@@ -915,6 +915,9 @@ class Story < ApplicationRecord
       begin
         s = Sponge.new
         s.timeout = 3
+        # User submitted URLs may have an incorrect https certificate, but we
+        # don't want to fail the retrieval for this. Security risk is minimal.
+        s.ssl_verify = false
         user_agent = { "User-agent" => "#{Rails.application.domain} for #{fetching_ip}" }
         @fetched_content = s.fetch(url, :get, nil, nil, user_agent, 3).body.force_encoding('utf-8')
       rescue

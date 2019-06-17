@@ -299,7 +299,6 @@ class StoriesController < ApplicationController
     end
 
     HiddenStory.hide_story_for_user(story.id, @user.id)
-    ReadRibbon.hide_replies_for(story.id, @user.id)
 
     render :plain => "ok"
   end
@@ -310,7 +309,6 @@ class StoriesController < ApplicationController
     end
 
     HiddenStory.unhide_story_for_user(story.id, @user.id)
-    ReadRibbon.unhide_replies_for(story.id, @user.id)
 
     render :plain => "ok"
   end

@@ -127,8 +127,8 @@ class Story < ApplicationRecord
 
   # link shortening and other ad tracking domains
   TRACKING_DOMAINS = %w{ 1url.com 7.ly adf.ly al.ly bc.vc bit.do bit.ly bitly.com buzurl.com cur.lv
-  cutt.us db.tt db.tt doiop.com filoops.info goo.gl is.gd ity.im j.mp lnkd.in ow.ly ph.dog po.st
-  prettylinkpro.com q.gs qr.ae qr.net research.eligrey.com scrnch.me s.id sptfy.com t.co
+  cutt.us db.tt db.tt doiop.com ey.io filoops.info goo.gl is.gd ity.im j.mp lnkd.in ow.ly ph.dog
+  po.st prettylinkpro.com q.gs qr.ae qr.net research.eligrey.com scrnch.me s.id sptfy.com t.co
   tinyarrows.com tiny.cc tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd vzturl.com
   wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }.freeze
 
@@ -188,6 +188,13 @@ class Story < ApplicationRecord
     return unless self.url.present? && self.new_record?
 
     if TRACKING_DOMAINS.include?(domain)
+      ModNote.create!(
+        moderator: InactiveUser.inactive_user,
+        user: self.user,
+        created_at: Time.current,
+        note: "Attempted to post a tracking url: #{self.url}"
+      )
+
       errors.add(:url, "is a link shortening or ad tracking domain")
     end
   end

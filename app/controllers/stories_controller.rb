@@ -310,6 +310,7 @@ class StoriesController < ApplicationController
     end
 
     HiddenStory.where(:user_id => @user.id, :story_id => story.id).delete_all
+    ReadRibbon.unhide_replies_for(story.id, @user.id)
 
     render :plain => "ok"
   end

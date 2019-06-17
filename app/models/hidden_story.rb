@@ -8,4 +8,9 @@ class HiddenStory < ApplicationRecord
     HiddenStory.where(:user_id => user_id, :story_id =>
       story_id).first_or_initialize.save!
   end
+
+  def self.unhide_story_for_user(story_id, user_id)
+    HiddenStory.where(:user_id => user_id, :story_id =>
+      story_id).delete_all
+  end
 end

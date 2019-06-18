@@ -22,15 +22,15 @@ class User < ApplicationRecord
   belongs_to :invited_by_user,
              :class_name => "User",
              :inverse_of => false,
-             :required => false
+             :optional => true
   belongs_to :banned_by_user,
              :class_name => "User",
              :inverse_of => false,
-             :required => false
+             :optional => true
   belongs_to :disabled_invite_by_user,
              :class_name => "User",
              :inverse_of => false,
-             :required => false
+             :optional => true
   has_many :invitations, :dependent => :destroy
   has_many :moderations,
            :inverse_of => :moderator,

@@ -6,8 +6,7 @@
 require:
   - ./extras/prohibit_safe_navigation
   - ./extras/prohibit_form_for_and_form_tag
-Rails:
-  Enabled: true
+  - rubocop-rails
 AllCops:
   Include:
     - '**/*.rb'
@@ -43,7 +42,7 @@ Layout/EmptyLinesAroundExceptionHandlingKeywords:
   Enabled: false
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
-Layout/IndentHash:
+Layout/IndentFirstHashElement:
   EnforcedStyle: consistent
 Layout/MultilineMethodCallBraceLayout:
   Enabled: false
@@ -97,10 +96,6 @@ Naming/VariableName:
   Enabled: false
 
 # Performance
-Performance/Casecmp:
-  Enabled: false
-Performance/RedundantMatch:
-  Enabled: false
 
 # Rails
 Rails/Blank:
@@ -114,6 +109,8 @@ Rails/OutputSafety:
 Rails/Present:
   UnlessBlank: false
 Rails/SkipsModelValidations:
+  Enabled: false
+Rails/HelperInstanceVariable:
   Enabled: false
 
 # Security

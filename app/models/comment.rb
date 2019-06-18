@@ -9,13 +9,13 @@ class Comment < ApplicationRecord
   belongs_to :parent_comment,
              :class_name => "Comment",
              :inverse_of => false,
-             :required => false
+             :optional => true
   has_one :moderation,
           :class_name => "Moderation",
           :inverse_of => :comment,
           :dependent => :destroy
   belongs_to :hat,
-             :required => false
+             :optional => true
   has_many :taggings, through: :story
 
   attr_accessor :current_vote, :previewing, :indent_level

@@ -24,22 +24,22 @@ if parser.been_here?
   exit
 
 elsif !parser.sending_user
-  STDERR.puts "no active user with mailing list token #{parser.user_token}"
+  warn "no active user with mailing list token #{parser.user_token}"
 
   # if this looks like a user token but invalid, generate a bounce to be
   # helpful.  otherwise supress it to avoid talking back to spammers
   exit(parser.user_token ? EX_NOUSER : 0)
 
 elsif !parser.email
-  STDERR.puts "error parsing e-mail"
+  warn "error parsing e-mail"
   exit EX_UNAVAILABLE
 
 elsif !parser.parent
-  STDERR.puts "no valid comment or story being replied to"
+  warn "no valid comment or story being replied to"
   exit EX_NOUSER
 
 elsif !parser.body.present?
-  STDERR.puts "no valid text/plain body found"
+  warn "no valid text/plain body found"
   exit EX_UNAVAILABLE
 end
 
@@ -58,6 +58,6 @@ end
 if c.save
   exit
 else
-  STDERR.puts c.errors.inspect
+  warn c.errors.inspect
   exit EX_UNAVAILABLE
 end

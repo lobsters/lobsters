@@ -3,15 +3,15 @@ class Moderation < ApplicationRecord
              :class_name => "User",
              :foreign_key => "moderator_user_id",
              :inverse_of => :moderations,
-             :required => false
+             :optional => true
   belongs_to :comment,
-             :required => false
+             :optional => true
   belongs_to :story,
-             :required => false
+             :optional => true
   belongs_to :tag,
-             :required => false
+             :optional => true
   belongs_to :user,
-             :required => false
+             :optional => true
 
   scope :for, ->(user) {
     left_outer_joins(:story, :comment) .where("

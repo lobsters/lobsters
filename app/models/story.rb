@@ -4,7 +4,7 @@ class Story < ApplicationRecord
              :class_name => "Story",
              :foreign_key => "merged_story_id",
              :inverse_of => :merged_stories,
-             :required => false
+             :optional => true
   has_many :merged_stories,
            :class_name => "Story",
            :foreign_key => "merged_story_id",

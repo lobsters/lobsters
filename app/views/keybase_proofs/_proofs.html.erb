@@ -1,3 +1,4 @@
+<% for_self = (user == @user) %>
 <% if user.keybase_signatures? %>
   <% user.keybase_signatures.each do |kbs| %>
     <%= link_to "@#{kbs[:kb_username]}", keybase_user_link(kbs) %>

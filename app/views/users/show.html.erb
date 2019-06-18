@@ -140,14 +140,11 @@
     <br>
   <% end %>
 
-  <% if Keybase.enabled? %>
-    <% for_self = (@showing_user == @user) %>
-    <% if @showing_user.keybase_signatures? || for_self %>
-      <label class="required">Keybase:</label>
-      <span class="d">
-        <%= render :partial => "keybase_proofs/proofs", locals: {user: @showing_user, for_self: for_self} %>
-      </span>
-    <% end %>
+  <% if Keybase.enabled? && @showing_user.keybase_signatures? %>
+    <label class="required">Keybase:</label>
+    <span class="d">
+      <%= render :partial => "keybase_proofs/proofs" %>
+    </span>
     <br>
   <% end %>
 

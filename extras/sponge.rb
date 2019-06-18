@@ -40,7 +40,7 @@ class Sponge
   MAX_TIME = 60
   MAX_DNS_TIME = 5
 
-  attr_accessor :debug, :last_res, :timeout
+  attr_accessor :debug, :last_res, :timeout, :ssl_verify
 
   # rfc3330
   BAD_NETS = [
@@ -60,12 +60,14 @@ class Sponge
   # old api
   def self.fetch(url, headers = {}, limit = 10)
     s = Sponge.new
+    s.ssl_verify = false # backward compatibility
     s.fetch(url, "get", nil, nil, headers, limit)
   end
 
   def initialize
     @cookies = {}
     @timeout = MAX_TIME
+    @ssl_verify = OpenSSL::SSL::VERIFY_PEER
   end
 
   def set_cookie(host, name, val)
@@ -156,7 +158,7 @@ class Sponge
       host.use_ssl = true
       host.address = uri.host
       host.custom_conn_address = ip.to_s
-      host.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      host.verify_mode = self.ssl_verify ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
     end
 
     send_headers = headers.dup

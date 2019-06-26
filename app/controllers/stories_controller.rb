@@ -299,7 +299,6 @@ class StoriesController < ApplicationController
     end
 
     HiddenStory.hide_story_for_user(story.id, @user.id)
-    ReadRibbon.hide_replies_for(story.id, @user.id)
 
     render :plain => "ok"
   end
@@ -309,7 +308,7 @@ class StoriesController < ApplicationController
       return render :plain => "can't find story", :status => 400
     end
 
-    HiddenStory.where(:user_id => @user.id, :story_id => story.id).delete_all
+    HiddenStory.unhide_story_for_user(story.id, @user.id)
 
     render :plain => "ok"
   end

@@ -2,13 +2,11 @@ require "rails_helper"
 
 describe StoriesController do
   let(:user) { create(:user) }
-
-  before do
-    stub_login_as user
-  end
+  let(:story) { create(:story, user: user) }
+  let(:mod) { create(:user, :moderator) }
 
   describe "#check_url_dupe" do
-    let(:story) { create(:story, user: user) }
+    before { stub_login_as user }
 
     context "json" do
       it "returns similar story matching URL" do
@@ -74,7 +72,7 @@ describe StoriesController do
   end
 
   describe "#delete" do
-    let(:story) { create(:story, user: user) }
+    before { stub_login_as user }
 
     it "increments the user's count of deleted stories" do
       expect {
@@ -84,12 +82,51 @@ describe StoriesController do
   end
 
   describe "#undelete" do
+    before { stub_login_as user }
     let(:deleted_story) { create(:story, :deleted, user: user) }
 
     it "decrements the user's count of deleted stories" do
       expect do
         post :undelete, params: { story_id: deleted_story.short_id }
       end.to change { user.stories_deleted_count }.by(-1)
+    end
+  end
+
+  describe "merged stories" do
+    it "can be merged by mod" do
+      stub_login_as mod
+      s = create(:story)
+      post :update, params: {
+        id: s.short_id,
+        story: {
+          merge_story_short_id: story.short_id,
+          moderation_reason: 'cuz',
+        },
+      }
+      expect(response).to be_redirect
+
+      s.reload
+      expect(s.merged_into_story).to eq(story)
+
+      ml = Moderation.last
+      expect(ml.story).to eq(s)
+      expect(ml.reason).to eq('cuz')
+    end
+
+    it "can't be done by submitter" do
+      stub_login_as user
+
+      s = create(:story)
+      post :update, params: {
+        id: s.short_id,
+        story: {
+          merge_story_short_id: story.short_id,
+          moderation_reason: 'anarchy!',
+        },
+      }
+      expect(response).to be_redirect
+      s.reload
+      expect(s.merged_into_story).to be_nil
     end
   end
 end

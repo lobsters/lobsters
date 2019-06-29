@@ -462,7 +462,7 @@ class Story < ApplicationRecord
     Markdowner.to_html(self.description, allow_images: self.can_have_images?)
   end
 
-  def give_upvote_or_downvote_and_recalculate_hotness!(upvote, downvote)
+  def give_upvote_or_downvote_and_recalculate!(upvote, downvote)
     self.upvotes += upvote.to_i
     self.downvotes += downvote.to_i
 

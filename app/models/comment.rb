@@ -307,7 +307,7 @@ class Comment < ApplicationRecord
     Markdowner.to_html(self.comment)
   end
 
-  def give_upvote_or_downvote_and_recalculate_confidence!(upvote, downvote)
+  def give_upvote_or_downvote_and_recalculate!(upvote, downvote)
     self.upvotes += upvote.to_i
     self.downvotes += downvote.to_i
 

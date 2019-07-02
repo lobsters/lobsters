@@ -5,7 +5,7 @@ if they cause problems.  Please use your discretion when inviting persons you
 don't personally know.
 </p>
 
-<%= form_with url: invitations_path, :method => :post do |f| %>
+<%= form_with url: invitations_path, method: :post, local: true do |f| %>
   <% if defined?(return_home) && return_home %>
     <%= f.hidden_field :return_home, value: 1 %>
   <% end %>

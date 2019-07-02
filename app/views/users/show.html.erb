@@ -188,7 +188,7 @@
     <%= render partial: 'mod_notes/table', locals: {
       mod_notes: ModNote.for(@showing_user).limit(10),
     } %>
-    <%= form_with model: @mod_note, method: :post do |f| %>
+    <%= form_with model: @mod_note, method: :post, local: true do |f| %>
       <%= error_messages_for @mod_note %>
       <%= f.hidden_field :username %>
       <div class="boxline">
@@ -233,7 +233,7 @@
       </table>
 
       <% if @showing_user.is_banned? || @showing_user.banned_from_inviting? %>
-        <%= form_with url: user_unban_path, :method => :post do |f| %>
+        <%= form_with url: user_unban_path, method: :post, local: true do |f| %>
           <p>
             <% if @showing_user.is_banned? %>
               <%= f.submit "Unban" %>
@@ -250,7 +250,7 @@
           Banning or disabling invites for a user will send an e-mail to the user with the reason below,
           with your e-mail address as the Reply-To so the user can respond.
         </p>
-        <%= form_with url: user_ban_path, :method => :post do |f| %>
+        <%= form_with url: user_ban_path, method: :post, local: true do |f| %>
           <div class="boxline">
             <%= f.label :reason, "Reason:", :class => "required" %>
             <%= f.text_field :reason, :size => 40 %>

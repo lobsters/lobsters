@@ -11,8 +11,7 @@
         <hr>
       <% end %>
 
-      <%= form_with model: hr, :url => approve_hat_request_url(:id => hr),
-      :method => :post do |f| %>
+      <%= form_with model: hr, url: approve_hat_request_url(id: hr), method: :post, local: true do |f| %>
         <p>
         <div class="boxline">
           <%= f.label :user_id, "User:", :class => "required" %>
@@ -48,8 +47,7 @@
       <p>
       or
       </p>
-      <%= form_with model: hr, :url => reject_hat_request_url(:id => hr),
-      :method => :post do |f| %>
+      <%= form_with model: hr, url: reject_hat_request_url(id: hr), method: :post, local: true do |f| %>
         <div class="boxline">
           <%= f.label :link, "Reason:", :class => "required" %>
           <%= f.text_area :rejection_comment, :rows => 4 %>

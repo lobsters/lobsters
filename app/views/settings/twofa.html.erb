@@ -6,7 +6,7 @@
     <%= @title %>
   </div>
 
-  <%= form_with :model => @user, :url => twofa_auth_url, :method => :post do |f| %>
+  <%= form_with model: @user, url: twofa_auth_url, method: :post, local: true do |f| %>
     <p>
     <% if @user.has_2fa? %>
       To turn off two-factor authentication for your account, enter your

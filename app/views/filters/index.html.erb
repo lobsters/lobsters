@@ -16,7 +16,7 @@
     </p>
   <% end %>
 
-  <%= form_with url: "/filters", :method => :post do |f| %>
+  <%= form_with url: '/filters', method: :post, local: true do |f| %>
     <table class="data zebra" cellspacing=0 width="75%">
     <tr>
       <th width="7%">Hide</th>

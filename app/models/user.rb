@@ -40,7 +40,10 @@ class User < ApplicationRecord
            :through => :votes,
            :source => :story
   has_many :upvoted_stories,
-           -> { where('votes.comment_id' => nil, 'votes.vote' => 1) },
+           -> {
+             where('votes.comment_id' => nil, 'votes.vote' => 1)
+             .where('stories.user_id != votes.user_id')
+           },
            :through => :votes,
            :source => :story
   has_many :hats, :dependent => :destroy

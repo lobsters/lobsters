@@ -242,11 +242,11 @@ class HomeController < ApplicationController
       paginate @user.upvoted_stories.includes(:tags).order('votes.id DESC')
     }
 
-    @heading = @title = "Your Upvoted Stories"
+    @heading = @title = "Upvoted Stories"
     @cur_url = "/upvoted"
 
     @rss_link = {
-      :title => "RSS 2.0 - Your Upvoted Stories",
+      :title => "RSS 2.0 - Upvoted Stories",
       :href => user_token_link("/upvoted.rss"),
     }
 

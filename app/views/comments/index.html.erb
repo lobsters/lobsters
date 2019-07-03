@@ -8,17 +8,16 @@
 </ol>
 
 <div class="morelink">
-  <% if @page && @page > 1 %>
-    <a href="/comments<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt; 
-      Page <%= @page - 1 %></a>
-  <% end %>
-
   <% if @comments.any? %>
+    <% if @page && @page > 1 %>
+      <a href="<%= @cur_url %><%= @cur_url == "/" ? "" : "/" %><%=
+      @page == 2 ? "" : "page/#{@page - 1}" %>">&lt;&lt; Page
+      <%= @page - 1 %></a>
+    <% end %>
+
     <% if @page && @page > 1 %>
       |
     <% end %>
-
-    <a href="/comments/page/<%= @page + 1 %>">Page
-      <%= @page + 1 %> &gt;&gt;</a>
+    <a href="<%= @cur_url %><%= @cur_url == "/" ? "" : "/" %>page/<%= @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
   <% end %>
 </div>

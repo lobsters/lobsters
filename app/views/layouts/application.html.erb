@@ -78,6 +78,13 @@
       <div class="clear"></div>
     </div>
 
+    <% if content_for? :nav %>
+      <div class="box wide">
+        <%= yield :nav %>
+      </div>
+      <div class="clear"></div>
+    <% end %>
+
     <div id="inside">
       <% [ :error, :success, :notice ].each do |f| %>
         <% if flash[f].present? %>

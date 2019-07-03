@@ -113,8 +113,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
         <% if defined?(show_story) && show_story %>
           | on:
-          <a href="<%= comment.story.comments_path %>"><%= comment.story.title
-            %></a>
+          <a href="<%= comment.story.comments_path %>"><%= comment.story.title %></a>
+          <%= comment.id %>
         <% end %>
 
         <span class="reason">

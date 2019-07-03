@@ -1,0 +1,11 @@
+<% content_for :nav do %>
+  <div class="legend right">
+    <%= link_to_different_page 'Stories', upvoted_stories_path %> |
+    <%= link_to_different_page 'Comments', upvoted_comments_path %>
+  </div>
+
+  <div class="legend">
+    Upvoted
+  </div>
+<% end %>
+<%= render template: 'layouts/application' %>

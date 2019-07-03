@@ -5,6 +5,7 @@ class CommentsController < ApplicationController
 
   before_action :require_logged_in_user_or_400,
                 :only => [:create, :preview, :upvote, :downvote, :unvote]
+  before_action :require_logged_in_user, :only => [:upvoted]
 
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, :only => [:index]
@@ -261,6 +262,50 @@ class CommentsController < ApplicationController
       format.rss {
         if @user && params[:token].present?
           @title = "Private comments feed for #{@user.username}"
+        end
+
+        render :action => "index.rss", :layout => false
+      }
+    end
+  end
+
+  def upvoted
+    @rss_link ||= {
+      :title => "RSS 2.0 - Newest Comments",
+      :href => upvoted_comments_path(format: :rss) + (@user ? "?token=#{@user.rss_token}" : ""),
+    }
+
+    @heading = @title = "Upvoted Comments"
+    @cur_url = upvoted_comments_path
+
+    @page = params[:page].to_i
+    if @page == 0
+      @page = 1
+    elsif @page < 0 || @page > (2 ** 32)
+      raise ActionController::RoutingError.new("page out of bounds")
+    end
+
+    @comments = Comment.for_user(@user)
+      .where.not(user_id: @user.id)
+      .order("id DESC")
+      .includes(:user, :hat, :story => :user)
+      .joins(:votes).where(votes: { user_id: @user.id, vote: 1 })
+      .joins(:story).where.not(stories: { is_expired: true })
+      .limit(COMMENTS_PER_PAGE)
+      .offset((@page - 1) * COMMENTS_PER_PAGE)
+
+    # TODO: respect hidden stories
+
+    @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, @comments.map(&:id))
+    @comments.each do |c|
+      c.current_vote = @votes[c.id]
+    end
+
+    respond_to do |format|
+      format.html { render action: :index, layout: 'upvoted' }
+      format.rss {
+        if @user && params[:token].present?
+          @title = "Upvoted comments feed for #{@user.username}"
         end
 
         render :action => "index.rss", :layout => false

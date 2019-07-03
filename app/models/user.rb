@@ -42,7 +42,7 @@ class User < ApplicationRecord
   has_many :upvoted_stories,
            -> { where('votes.comment_id' => nil, 'votes.vote' => 1) },
            :through => :votes,
-    :source => :story
+           :source => :story
   has_many :hats, :dependent => :destroy
   has_many :wearable_hats, -> { where('doffed_at is null') },
            :class_name => "Hat",

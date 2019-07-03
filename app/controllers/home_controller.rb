@@ -239,7 +239,7 @@ class HomeController < ApplicationController
 
   def upvoted
     @stories, @show_more = get_from_cache(upvoted: true, user: @user) {
-      paginate @user.upvoted_stories.order('votes.id DESC')
+      paginate @user.upvoted_stories.includes(:tags).order('votes.id DESC')
     }
 
     @heading = @title = "Your Upvoted Stories"
@@ -251,7 +251,7 @@ class HomeController < ApplicationController
     }
 
     respond_to do |format|
-      format.html { render :action => "index" }
+      format.html { render action: :index, layout: 'upvoted' }
       format.rss {
         if @user && params[:token].present?
           @title += " - Private feed for #{@user.username}"

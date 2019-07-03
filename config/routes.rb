@@ -18,11 +18,15 @@ Rails.application.routes.draw do
   get "/recent/page/:page" => "home#recent"
   get "/hidden" => "home#hidden"
   get "/hidden/page/:page" => "home#hidden"
+
   get "/saved" => "home#saved"
   get "/saved/page/:page" => "home#saved"
-
-  get "/upvoted" => "home#upvoted"
-  get "/upvoted/page/:page" => "home#upvoted"
+  get "/upvoted/stories" => "home#upvoted"
+  get "/upvoted/stories/page/:page" => "home#upvoted"
+  get "/upvoted/comments" => "comments#upvoted"
+  get "/upvoted/comments/page/:page" => "comments#upvoted"
+  get "/upvoted", to: redirect('/upvoted/stories')
+  get "/upvoted/page/:page", to: redirect('/upvoted/stories/page/%{page}')
 
   get "/top" => "home#top"
   get "/top/page/:page" => "home#top"

@@ -21,9 +21,12 @@ class CreateConversations < ActiveRecord::Migration[5.2]
       column: :conversation_id,
       name: "messages_conversation_id_fk",
     )
+
+    remove_column :messages, :short_id
   end
 
   def down
+    add_column :messages, :short_id, :string, limit: 20
     remove_belongs_to :messages, :conversation
     drop_table :conversations
   end

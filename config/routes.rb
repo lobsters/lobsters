@@ -104,13 +104,11 @@ Rails.application.routes.draw do
       resources :messages, only: :create
     end
   end
-  get "/messages/sent" => "messages#sent"
-  get "/messages" => "messages#index"
-  post "/messages/batch_delete" => "messages#batch_delete",
-    :as => "batch_delete_messages"
-  resources :messages do
-    post "keep_as_new"
-    post "mod_note"
+  resources :messages, only: [] do
+    collection do
+      root to: redirect('/conversations')
+      get :sent, to: redirect('/conversations')
+    end
   end
 
   get "/c/:id" => "comments#redirect_from_short_id"

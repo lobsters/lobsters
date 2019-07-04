@@ -8,8 +8,10 @@
   <tr class="nobottom <%= mod.moderator && 'mod' %>">
     <td><%= raw mod.created_at.strftime("%Y-%m-%d&nbsp;%H:%M&nbsp;%z") %></td>
     <td><% if mod.moderator %>
-      <a href="/messages?to=<%= mod.moderator.try(:username) %>"><%=
-        mod.moderator.try(:username) %></a>
+      <%= link_to(
+        mod.moderator.try(:username),
+        conversations_path(to: mod.moderator.try(:username))
+      ) %>
       <% elsif mod.is_from_suggestions? %>
         <em>(Users)</em>
       <% end %></td>

@@ -120,7 +120,6 @@ ActiveRecord::Schema.define(version: 2019_06_03_153814) do
     t.boolean "has_been_read", default: false
     t.string "subject", limit: 100
     t.text "body", limit: 16777215
-    t.string "short_id", limit: 30
     t.boolean "deleted_by_author", default: false
     t.boolean "deleted_by_recipient", default: false
     t.bigint "hat_id", unsigned: true
@@ -128,7 +127,6 @@ ActiveRecord::Schema.define(version: 2019_06_03_153814) do
     t.index ["conversation_id"], name: "index_messages_on_conversation_id"
     t.index ["hat_id"], name: "index_messages_on_hat_id"
     t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"
-    t.index ["short_id"], name: "random_hash", unique: true
   end
 
   create_table "mod_notes", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|

@@ -25,13 +25,11 @@ class Message < ApplicationRecord
 
   scope :unread, -> { where(:has_been_read => false, :deleted_by_recipient => false) }
 
-  before_validation :assign_short_id, :on => :create
   after_create :deliver_email_notifications
   after_save :update_unread_counts
 
   def as_json(_options = {})
     attrs = [
-      :short_id,
       :created_at,
       :has_been_read,
       :subject,
@@ -46,10 +44,6 @@ class Message < ApplicationRecord
     h[:recipient_username] = self.recipient.try(:username)
 
     h
-  end
-
-  def assign_short_id
-    self.short_id = ShortId.new(self.class).generate
   end
 
   def author_username
@@ -105,13 +99,5 @@ class Message < ApplicationRecord
   def plaintext_body
     # TODO: linkify then strip tags and convert entities back
     self.body.to_s
-  end
-
-  def to_param
-    self.short_id
-  end
-
-  def url
-    Rails.application.root_url + "messages/#{self.short_id}"
   end
 end

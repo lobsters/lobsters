@@ -25,7 +25,7 @@ gem "unicorn"
 
 # security
 gem "bcrypt", "~> 3.1.2"
-gem "rotp", '4.0.2'
+gem "rotp"
 gem "rqrcode"
 
 # parsing

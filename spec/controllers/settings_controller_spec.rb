@@ -13,7 +13,7 @@ describe SettingsController do
 
   describe 'GET /settings/2fa_enroll' do
     it 'returns successfully' do
-      get :twofa_enroll, session: { last_authed: Time.now }
+      get :twofa_enroll, session: { last_authed: Time.current }
       expect(response).to be_successful
       expect(session[:totp_secret]).not_to be_nil
       expect(session[:totp_secret]).to have_attributes(length: 32)

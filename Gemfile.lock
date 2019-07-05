@@ -167,7 +167,7 @@ GEM
       ffi (~> 1.0)
     rb-readline (0.5.5)
     regexp_parser (1.5.1)
-    rotp (5.0.0)
+    rotp (4.0.2)
       addressable (~> 2.5)
     rqrcode (0.10.1)
       chunky_png (~> 1.0)
@@ -265,7 +265,7 @@ DEPENDENCIES
   oauth
   rails (~> 5.2.0)
   rb-readline
-  rotp
+  rotp (= 4.0.2)
   rqrcode
   rspec-rails
   rubocop

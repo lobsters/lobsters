@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe SettingsController do
   let(:user) { create(:user) }
+
   before { stub_login_as user }
 
   describe 'GET /settings/2fa' do

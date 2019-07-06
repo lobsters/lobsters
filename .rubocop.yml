@@ -157,8 +157,6 @@ RSpec/DescribeClass:
   Enabled: false
 Capybara/FeatureMethods:
   Enabled: false
-RSpec/VoidExpect:
-  Enabled: false
 
 # Security
 

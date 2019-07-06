@@ -34,7 +34,7 @@ RSpec.feature "Commenting" do
       visit "/s/#{story.short_id}"
       expect(page).to have_link('undelete')
       comment.reload
-      expect(comment.is_deleted?)
+      expect(comment.is_deleted?).to be(true)
     end
 
     scenario 'trying to delete old comments' do
@@ -44,7 +44,7 @@ RSpec.feature "Commenting" do
 
       page.driver.post "/comments/#{comment.short_id}/delete"
       comment.reload
-      expect(!comment.is_deleted?)
+      expect(comment.is_deleted?).to be(false)
     end
   end
 

@@ -131,8 +131,6 @@ RSpec/ContextWording:
   Enabled: false
 RSpec/ExpectChange:
   Enabled: false
-RSpec/EmptyLineAfterFinalLet:
-  Enabled: false
 RSpec/HookArgument:
   Enabled: false
 RSpec/ExampleWording:

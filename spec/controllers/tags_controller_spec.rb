@@ -2,6 +2,7 @@ require "rails_helper"
 
 describe TagsController do
   let(:user) { create(:user) }
+
   before do
     stub_login_as user
     allow(controller).to receive(:require_logged_in_admin)

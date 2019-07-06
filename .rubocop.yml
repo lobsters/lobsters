@@ -147,8 +147,6 @@ RSpec/AnyInstance:
   Enabled: false
 RSpec/UnspecifiedException:
   Enabled: false
-RSpec/FilePath:
-  Enabled: false
 RSpec/InstanceVariable:
   Enabled: false
 RSpec/BeforeAfterAll:

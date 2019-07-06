@@ -141,8 +141,6 @@ RSpec/NamedSubject:
   Enabled: false
 RSpec/NestedGroups:
   Enabled: false
-RSpec/EmptyLineAfterSubject:
-  Enabled: false
 RSpec/AnyInstance:
   Enabled: false
 RSpec/UnspecifiedException:

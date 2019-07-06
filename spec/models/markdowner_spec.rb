@@ -52,6 +52,7 @@ describe Markdowner do
 
   context "when images are not allowed" do
     subject { Markdowner.to_html(description, allow_images: false) }
+
     let(:fake_img_url) { 'https://lbst.rs/fake.jpg' }
 
     context "when single inline image in description" do

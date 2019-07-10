@@ -28,7 +28,7 @@ Please see the [CONTRIBUTING](https://github.com/lobsters/lobsters/blob/master/C
 
 Use the steps below for a local install or
 [lobsters-ansible](https://github.com/lobsters/lobsters-ansible) for our production deployment config.
-There's an external project [docker-lobsters](https://github.com/jamesbrink/docker-lobsters) if you want to use Docker.
+There's an external project [docker-lobsters](https://github.com/utensils/docker-lobsters) if you want to use Docker.
 
 * Install Ruby 2.3.
 

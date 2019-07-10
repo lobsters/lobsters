@@ -84,7 +84,7 @@ class SettingsController < ApplicationController
     end
 
     if !session[:totp_secret]
-      session[:totp_secret] = ROTP::Base32.random_base32
+      session[:totp_secret] = ROTP::Base32.random
     end
 
     totp = ROTP::TOTP.new(session[:totp_secret], :issuer => Rails.application.name)

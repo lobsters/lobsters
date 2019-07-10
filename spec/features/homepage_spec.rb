@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Reading Homepage", type: feature do
+RSpec.feature "Reading Homepage", type: :feature do
   let!(:story) { create(:story) }
 
   feature "when logged out" do

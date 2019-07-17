@@ -7,6 +7,7 @@ require:
   - ./extras/prohibit_safe_navigation
   - ./extras/prohibit_form_for_and_form_tag
   - rubocop-rails
+  - rubocop-rspec
 AllCops:
   Include:
     - '**/*.rb'
@@ -111,6 +112,44 @@ Rails/Present:
 Rails/SkipsModelValidations:
   Enabled: false
 Rails/HelperInstanceVariable:
+  Enabled: false
+
+# RSpec
+RSpec/ExampleLength:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/DescribedClass:
+  Enabled: false
+RSpec/MessageSpies:
+  Enabled: false
+RSpec/VerifiedDoubles:
+  Enabled: false
+RSpec/NotToNot:
+  Enabled: false
+RSpec/ContextWording:
+  Enabled: false
+RSpec/ExpectChange:
+  Enabled: false
+RSpec/HookArgument:
+  Enabled: false
+RSpec/ExampleWording:
+  Enabled: false
+RSpec/NamedSubject:
+  Enabled: false
+RSpec/NestedGroups:
+  Enabled: false
+RSpec/AnyInstance:
+  Enabled: false
+RSpec/UnspecifiedException:
+  Enabled: false
+RSpec/InstanceVariable:
+  Enabled: false
+RSpec/BeforeAfterAll:
+  Enabled: false
+RSpec/DescribeClass:
+  Enabled: false
+Capybara/FeatureMethods:
   Enabled: false
 
 # Security

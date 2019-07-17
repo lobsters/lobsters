@@ -14,6 +14,7 @@ RSpec.feature "Reading Stories", type: :feature do
 
   feature "when logged in" do
     let(:user) { create(:user) }
+
     before(:each) { stub_login_as user }
 
     scenario "reading a story" do

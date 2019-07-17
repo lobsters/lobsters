@@ -49,7 +49,7 @@ describe ReplyingComment do
 
     it "it has a negative score" do
       p = followed_parent
-      r = reply_to r
+      r = reply_to p
       flag_comment(r)
       flag_comment(r)
 
@@ -58,7 +58,7 @@ describe ReplyingComment do
 
     it "parent is deleted" do
       p = followed_parent
-      r = reply_to c
+      r = reply_to p
       p.delete_for_user(p.user)
 
       expect(p).to_not have_reply(r)
@@ -83,7 +83,7 @@ describe ReplyingComment do
     it "it is moderated" do
       p = followed_parent
       r = reply_to p
-      c.delete_for_user(create(:user, :admin), "obvs because I disagree with your politics")
+      r.delete_for_user(create(:user, :admin), "obvs because I disagree with your politics")
 
       expect(p).to_not have_reply(r)
     end

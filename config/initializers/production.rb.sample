@@ -40,3 +40,21 @@ if Rails.env.production?
 
   ActionMailer::Base.delivery_method = :sendmail
 end
+
+class << Rails.application
+  def allow_invitation_requests?
+    false
+  end
+
+  def domain
+    "example.org"
+  end
+
+  def name
+    "Sitename"
+  end
+
+  def ssl?
+    true
+  end
+end

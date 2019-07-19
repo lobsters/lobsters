@@ -900,31 +900,7 @@ class Story < ApplicationRecord
     }.join(", ")
   end
 
-  def fetched_attributes
-    return @fetched_attributes if @fetched_attributes
-
-    @fetched_attributes = {
-      :url => self.url,
-      :title => "",
-    }
-
-    # security: do not connect to arbitrary user-submitted ports
-    return @fetched_attributes if @url_port
-
-    if !@fetched_content
-      begin
-        s = Sponge.new
-        s.timeout = 3
-        # User submitted URLs may have an incorrect https certificate, but we
-        # don't want to fail the retrieval for this. Security risk is minimal.
-        s.ssl_verify = false
-        user_agent = { "User-agent" => "#{Rails.application.domain} for #{fetching_ip}" }
-        @fetched_content = s.fetch(url, :get, nil, nil, user_agent, 3).body.force_encoding('utf-8')
-      rescue
-        return @fetched_attributes
-      end
-    end
-
+  def fetched_attributes_html
     parsed = Nokogiri::HTML(@fetched_content.to_s)
 
     # parse best title from html tags
@@ -983,5 +959,55 @@ class Story < ApplicationRecord
     end
 
     @fetched_attributes
+  end
+
+  def fetched_attributes_pdf
+    # pdf-reader only accepts a stream or filename
+    pdf_stream = StringIO.new(@fetched_content)
+    pdf = PDF::Reader.new(pdf_stream)
+
+    # TODO: Some ideas here:
+    #   - automatically append date (:ModDate or :CreationDate) if not current year
+    #   - automatically suggest tags (:Keywords)
+    #   - automatically check the author box (:Author)
+    #   - automatically append media tags from filetype (currently done by frontend JS?)
+    title = pdf.info[:Title]
+
+    @fetched_attributes[:title] = title
+    @fetched_attributes
+  end
+
+  def fetched_attributes
+    return @fetched_attributes if @fetched_attributes
+
+    @fetched_attributes = {
+      :url => self.url,
+      :title => "",
+    }
+
+    # security: do not connect to arbitrary user-submitted ports
+    return @fetched_attributes if @url_port
+
+    if !@fetched_content
+      begin
+        s = Sponge.new
+        s.timeout = 3
+        # User submitted URLs may have an incorrect https certificate, but we
+        # don't want to fail the retrieval for this. Security risk is minimal.
+        s.ssl_verify = false
+        user_agent = { "User-agent" => "#{Rails.application.domain} for #{fetching_ip}" }
+        res = s.fetch(url, :get, nil, nil, user_agent, 3)
+        case res["content-type"]
+        when /pdf/
+          @fetched_content = res.body
+          return fetched_attributes_pdf
+        else
+          @fetched_content = res.body.force_encoding('utf-8')
+          return fetched_attributes_html
+        end
+      rescue
+        return @fetched_attributes
+      end
+    end
   end
 end

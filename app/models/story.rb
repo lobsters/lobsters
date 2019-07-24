@@ -140,7 +140,7 @@ class Story < ApplicationRecord
 
   attr_accessor :editing_from_suggestions, :editor, :fetching_ip, :is_hidden_by_cur_user,
                 :is_saved_by_cur_user, :moderation_reason, :previewing, :seen_previous, :vote
-  attr_writer :fetched_content
+  attr_writer :fetched_response
 
   before_validation :assign_short_id_and_upvote, :on => :create
   before_create :assign_initial_hotness
@@ -901,7 +901,8 @@ class Story < ApplicationRecord
   end
 
   def fetched_attributes_html
-    parsed = Nokogiri::HTML(@fetched_content.to_s)
+    converted = @fetched_response.body.force_encoding('utf-8')
+    parsed = Nokogiri::HTML(converted.to_s)
 
     # parse best title from html tags
     # try <meta property="og:title"> first, it probably won't have the site
@@ -963,7 +964,7 @@ class Story < ApplicationRecord
 
   def fetched_attributes_pdf
     # pdf-reader only accepts a stream or filename
-    pdf_stream = StringIO.new(@fetched_content)
+    pdf_stream = StringIO.new(@fetched_response.body)
     pdf = PDF::Reader.new(pdf_stream)
 
     # TODO: Some ideas here:
@@ -988,8 +989,9 @@ class Story < ApplicationRecord
     # security: do not connect to arbitrary user-submitted ports
     return @fetched_attributes if @url_port
 
-    if !@fetched_content
-      begin
+    begin
+      # if we haven't had a test inject a response into us
+      if !@fetched_response
         s = Sponge.new
         s.timeout = 3
         # User submitted URLs may have an incorrect https certificate, but we
@@ -997,17 +999,17 @@ class Story < ApplicationRecord
         s.ssl_verify = false
         user_agent = { "User-agent" => "#{Rails.application.domain} for #{fetching_ip}" }
         res = s.fetch(url, :get, nil, nil, user_agent, 3)
-        case res["content-type"]
-        when /pdf/
-          @fetched_content = res.body
-          return fetched_attributes_pdf
-        else
-          @fetched_content = res.body.force_encoding('utf-8')
-          return fetched_attributes_html
-        end
-      rescue
-        return @fetched_attributes
+        @fetched_response = res
       end
+
+      case @fetched_response["content-type"]
+      when /pdf/
+        return fetched_attributes_pdf
+      else
+        return fetched_attributes_html
+      end
+    rescue
+      return @fetched_attributes
     end
   end
 end

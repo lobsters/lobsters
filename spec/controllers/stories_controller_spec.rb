@@ -129,4 +129,18 @@ describe StoriesController do
       expect(s.merged_into_story).to be_nil
     end
   end
+
+  describe "show" do
+    context "json" do
+      context "for a story that merged into another story" do
+        let(:merged_into_story) { create(:story) }
+        let(:story) { create(:story, merged_into_story: merged_into_story) }
+
+        it "redirects to the merged story's json" do
+          get :show, params: { id: story.short_id, format: :json }
+          expect(response).to redirect_to action: :show, id: merged_into_story.short_id, format: :json
+        end
+      end
+    end
+  end
 end

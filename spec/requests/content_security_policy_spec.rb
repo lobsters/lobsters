@@ -10,7 +10,7 @@ describe 'content security policy' do
       "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
       "form-action 'self'",
-      "report-uri /csp-violation-report"
+      "report-uri /csp-violation-report",
     ].join('; ')
 
     expect(response.headers['Content-Security-Policy']).to eq(directives)

@@ -125,7 +125,7 @@ class StoriesController < ApplicationController
           return redirect_to @story.merged_into_story.comments_path
         }
         format.json {
-          return redirect_to(story_path @story.merged_into_story, format: :json)
+          return redirect_to(story_path(@story.merged_into_story, format: :json))
         }
       end
     end

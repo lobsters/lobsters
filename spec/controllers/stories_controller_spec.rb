@@ -83,6 +83,7 @@ describe StoriesController do
 
   describe "#undelete" do
     before { stub_login_as user }
+
     let(:deleted_story) { create(:story, :deleted, user: user) }
 
     it "decrements the user's count of deleted stories" do
@@ -138,7 +139,9 @@ describe StoriesController do
 
         it "redirects to the merged story's json" do
           get :show, params: { id: story.short_id, format: :json }
-          expect(response).to redirect_to action: :show, id: merged_into_story.short_id, format: :json
+          expect(response).to redirect_to(action: :show,
+                                          id: merged_into_story.short_id,
+                                          format: :json)
         end
       end
     end

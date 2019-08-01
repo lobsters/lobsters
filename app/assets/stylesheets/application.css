@@ -1185,10 +1185,10 @@ div.errorExplanation {
 	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 div.flash-success {
-	background-color: #57a957;
+	background-color: #dff0d8;
 	background-repeat: repeat-x;
 	background-image: linear-gradient(top, #62c462, #57a957);
-	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	text-shadow: none;
 	border-color: #57a957 #57a957 #3d773d;
 	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }

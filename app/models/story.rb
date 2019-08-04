@@ -127,7 +127,7 @@ class Story < ApplicationRecord
 
   # link shortening and other ad tracking domains
   TRACKING_DOMAINS = %w{ 1url.com 7.ly adf.ly al.ly bc.vc bit.do bit.ly bitly.com buzurl.com cur.lv
-  cutt.us db.tt db.tt doiop.com ey.io filoops.info goo.gl is.gd ity.im j.mp lnkd.in ow.ly ph.dog
+  cutt.us db.tt db.tt doiop.com ey.io filoops.info goo.gl is.gd ity.im j.mp link.tl lnkd.in ow.ly ph.dog
   po.st prettylinkpro.com q.gs qr.ae qr.net research.eligrey.com scrnch.me s.id sptfy.com t.co
   tinyarrows.com tiny.cc tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd vzturl.com
   wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }.freeze

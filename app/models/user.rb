@@ -368,6 +368,7 @@ class User < ApplicationRecord
       self.check_session_token
 
       self.deleted_at = Time.current
+      self.good_riddance?
       self.save!
     end
   end
@@ -391,6 +392,16 @@ class User < ApplicationRecord
   def disable_2fa!
     self.totp_secret = nil
     self.save!
+  end
+
+  # ensures some users talk to a mod before reactivating
+  def good_riddance?
+    self.email = "#{self.username}@lobsters.example" if \
+      self.karma < 0 ||
+      (self.comments.where('created_at >= now() - interval 30 day AND is_moderated').count +
+       self.stories.where('created_at >= now() - interval 30 day AND is_expired AND is_moderated')
+         .count >= 3) ||
+      DownvotedCommenters.new('90d').check_list_for(self).try(:[], :rank).try(:<, 10)
   end
 
   def grant_moderatorship_by_user!(user)

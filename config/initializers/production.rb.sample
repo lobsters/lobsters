@@ -39,22 +39,22 @@ if Rails.env.production?
   Keybase.BASE_URL = ENV.fetch('KEYBASE_BASE_URL') { 'https://keybase.io' }
 
   ActionMailer::Base.delivery_method = :sendmail
-end
 
-class << Rails.application
-  def allow_invitation_requests?
-    false
-  end
+  class << Rails.application
+    def allow_invitation_requests?
+      false
+    end
 
-  def domain
-    "example.org"
-  end
+    def domain
+      "example.org"
+    end
 
-  def name
-    "Sitename"
-  end
+    def name
+      "Sitename"
+    end
 
-  def ssl?
-    true
+    def ssl?
+      true
+    end
   end
 end

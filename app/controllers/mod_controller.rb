@@ -9,7 +9,7 @@ class ModController < ApplicationController
   def index
     @title = "Mod Activity"
     @moderations = Moderation.all
-      .eager_load(:moderator, :story, :comment, :tag, :user)
+      .eager_load(:moderator, :story, :tag, :user, :comment => [:story, :user])
       .where("moderator_user_id != ? or moderator_user_id is null", @user.id)
       .where('moderations.created_at >= (NOW() - INTERVAL 1 MONTH)')
       .order('moderations.id desc')

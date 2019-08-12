@@ -91,7 +91,7 @@ running tests:
     ```
 
 * On your production server, copy `config/initializers/production.rb.sample`
-  to `config/initalizers.production.rb` and customize it with your site's
+  to `config/initalizers/production.rb` and customize it with your site's
   `domain` and `name`. (You don't need this on your dev machine).
 
 * Put your site's custom CSS in `app/assets/stylesheets/local`.

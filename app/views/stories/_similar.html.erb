@@ -7,7 +7,7 @@
       <%= time_ago_in_words_label(story.created_at) %>
       <span>
         |
-        <%= story.score %> <%= 'point'.pluralize(story.score) %>
+        <%= story.show_score_to_user?(@user) ? "#{story.score} point".pluralize(story.score) : '~' %>
       </span>
       <span class="comments_label">
         |

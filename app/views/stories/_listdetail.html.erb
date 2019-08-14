@@ -18,7 +18,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
     <% else %>
       <%= link_to "", login_path, :class => "upvoter" %>
     <% end %>
-    <div class="score"><%= story.score %></div>
+    <div class="score"><%= story.show_score_to_user?(@user) ? story.score : '~' %></div>
   </div>
   <div class="details">
     <span class="link h-cite u-repost-of">

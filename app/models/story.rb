@@ -637,6 +637,12 @@ class Story < ApplicationRecord
     Rails.application.root_url + "s/#{self.short_id}"
   end
 
+  def show_score_to_user?(u)
+    return true if u && u.is_moderator?
+    # cast nil to 0, only show score if user hasn't flagged
+    (!vote || vote[:vote].to_i >= 0)
+  end
+
   def tagging_changes
     old_tags_a = self.taggings.reject(&:new_record?).map {|tg| tg.tag.tag }.join(" ")
     new_tags_a = self.taggings.reject(&:marked_for_destruction?).map {|tg| tg.tag.tag }.join(" ")

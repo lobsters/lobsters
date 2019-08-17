@@ -396,6 +396,7 @@ class User < ApplicationRecord
 
   # ensures some users talk to a mod before reactivating
   def good_riddance?
+    return if self.is_banned? # https://www.youtube.com/watch?v=UcZzlPGnKdU
     self.email = "#{self.username}@lobsters.example" if \
       self.karma < 0 ||
       (self.comments.where('created_at >= now() - interval 30 day AND is_moderated').count +

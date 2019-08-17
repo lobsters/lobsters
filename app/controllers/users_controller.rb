@@ -21,7 +21,7 @@ class UsersController < ApplicationController
     @title = "Users"
     newest_user = User.last.id
 
-    # pulling 10+ users is significant enough memory pressure this is worthwhile
+    # pulling 10k+ users is significant enough memory pressure this is worthwhile
     attrs = %w{banned_at created_at deleted_at id invited_by_user_id is_admin is_moderator karma
       username}
 

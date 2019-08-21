@@ -17,9 +17,14 @@ class LoginController < ApplicationController
   end
 
   def index
-    @title = "Login"
-    @referer ||= request.referer
-    render :action => "index"
+    if @user
+      flash[:success] = "You are already logged in."
+      redirect_to "/"
+    else
+      @title = "Login"
+      @referer ||= request.referer
+      render :action => "index"
+    end
   end
 
   def login

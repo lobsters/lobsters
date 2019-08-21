@@ -116,7 +116,7 @@ class LoginController < ApplicationController
     end
 
     if @found_user.is_wiped?
-      flash.now[:error] = "It's not possible to reest your password " <<
+      flash.now[:error] = "It's not possible to reset your password " <<
                           "because your account was deleted before the site changed admins " <<
                           "and your email address was wiped for privacy."
       return forgot_password

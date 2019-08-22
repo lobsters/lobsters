@@ -83,9 +83,9 @@ RSpec.feature "Commenting" do
           created_at: 90.days.ago,
           comment: "Cool story.",
         )
-	reset_session!
+        reset_session!
 
-	stub_login_as user1
+        stub_login_as user1
         visit "/s/#{story.short_id}"
         expect(page.find(:css, ".comment .comment_text")).to have_content('Cool story.')
         expect(comment.upvotes).to eq(1)

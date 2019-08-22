@@ -1325,7 +1325,7 @@ div.fieldWithErrors {
 	flex: 0 0 5%;
 }
 
-.conversations .last_message {
+.conversations .latest {
 	color: #333;
 	flex: 0 0 20%;
 }

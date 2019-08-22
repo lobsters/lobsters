@@ -3,7 +3,7 @@
   <section class="data zebra conversations">
     <header>
       <span class="from">From</span>
-      <span class="last_message">Last Message</span>
+      <span class="latest">Latest</span>
       <span class="message_count">#</span>
       <span class="subject">Subject</span>
     </header>
@@ -17,7 +17,7 @@
         <span class="from">
           <%= conversation.partner(of: @user).username %>
         </span>
-        <span class="last_message"><%= time_ago_in_words_label(conversation.last_message.created_at) %></span>
+        <span class="latest"><%= time_ago_in_words_label(conversation.updated_at) %></span>
         <span class="message_count"><%= conversation.messages.count %></span>
         <span class="subject"><%= conversation.subject %></span>
       <% end %>

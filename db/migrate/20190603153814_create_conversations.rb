@@ -78,6 +78,7 @@ class MessageConverter
         ELSE CONCAT(recipient_user_id, '-', author_user_id)
       END) AS partners
       FROM messages
+      ORDER BY messages.id asc
     SQL
   end
 

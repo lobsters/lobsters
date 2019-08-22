@@ -40,8 +40,8 @@ class Conversation < ApplicationRecord
     messages.unread.any?
   end
 
-  def last_message
-    messages.order(created_at: :desc).last
+  def latest_message
+    messages.order(id: :desc).first
   end
 
   def to_param
@@ -51,18 +51,18 @@ class Conversation < ApplicationRecord
 private
 
   def check_for_both_deleted
-    if author_deleted_after_last_message? &&
-       recipient_deleted_after_last_message?
-      destroy
+    if author_deleted_after_latest_message? &&
+       recipient_deleted_after_latest_message?
+      destroy!
     end
   end
 
-  def author_deleted_after_last_message?
-    deleted_by_author_at && deleted_by_author_at > last_message.created_at
+  def author_deleted_after_latest_message
+    deleted_by_author_at && deleted_by_author_at > latest_message.created_at
   end
 
-  def recipient_deleted_after_last_message?
-    deleted_by_recipient_at && deleted_by_recipient_at > last_message.created_at
+  def recipient_deleted_after_latest_message?
+    deleted_by_recipient_at && deleted_by_recipient_at > latest_message.created_at
   end
 
   def cannot_send_to_self

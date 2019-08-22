@@ -1278,56 +1278,8 @@ div.fieldWithErrors {
 
 /* Conversations & Messages */
 
-.conversations .conversation,
-.conversations header {
-	align-items: center;
-	display: flex;
-	border-bottom: 1px solid #eaeaea;
-}
-
-.conversations.zebra .conversation:nth-child(even) {
-	background-color: #f8f8f8;
-}
-
-.conversations.zebra .conversation:nth-child(odd) {
-	background-color: #f5f5f5;
-}
-
-.conversations header {
-	font-weight: bold;
-	background-color: #eaeaea;
-	border-bottom: 1px solid #cacaca;
-	border-top: 1px solid #cacaca;
-}
-
-.conversations .conversation {
-	padding-bottom: 0.2em;
-	padding-top: 0.3em;
-	text-decoration: none;
-}
-
-.conversations .conversation.unread {
-	font-weight: bold;
-}
-
-.conversations.zebra .conversation:hover {
-	background-color: #f0f0f0;
-}
-
-.conversations .from {
-	flex: 0 0 15%;
-	padding-left: 1em;
-	padding-right: 1em;
-}
-
-.conversations .message_count {
-	color: #333;
-	flex: 0 0 5%;
-}
-
-.conversations .latest {
-	color: #333;
-	flex: 0 0 20%;
+tr.unread {
+  font-weight: bold;
 }
 
 .conversation .from,

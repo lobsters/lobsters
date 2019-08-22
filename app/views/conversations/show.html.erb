@@ -1,45 +1,41 @@
-<header class="box wide">
-  <h1><%= @conversation.subject %></h1>
-  <h2>with <%= @conversation.partner(of: @user).username %></h2>
-</header>
-<section class="message_actions box wide">
-  <%= button_to(
-    "Delete Conversation",
-    conversation_path(@conversation),
-    method: :delete,
-    data: { confirm: "Are you sure?" },
-    )
-  %>
-</section>
-<section class="messages box wide zebra">
-  <% @conversation.messages.each do |message| %>
-    <div class="message">
-      <header class="meta">
-        <div class="author">
-          <%= message.hat.to_html_label if message.hat %>
-          <%= message.author.username %>
-        </div>
-        <time datetime="<%= l(message.created_at, format: :datetime) %>" class="timestamp">
-          <%= time_ago_in_words_label(message.created_at) %>
-        </time>
-      </header>
-      <div class="message_text">
-        <%= raw message.linkified_body %>
-      </div>
-    </div>
-  <% end %>
-</section>
-<section class="new_message box wide">
-  <%= form_with model: [@conversation, @message_form], local: true do |form| %>
-    <%= error_messages_for @message_form %>
-    <div class="field">
-      <%= form.label :body, "Message", :class => "required" %>
-      <%= form.text_area :body %>
-    </div>
-    <div class="field">
-      <%= render partial: "conversations/hat_inputs", locals: { user: @user, form: form } %>
-    </div>
+<div class="inside box wide">
+  <div class="legend"><%= @conversation.subject %></div>
 
-    <%= form.submit "Send Message" %>
+  <%= form_with url: conversation_path(@conversation), method: :delete, local: true do |f| %>
+    <%= f.submit "Delete Conversation" %>
   <% end %>
-</section>
+
+  <section class="messages zebra">
+    <% @conversation.messages.each do |message| %>
+      <div class="message">
+        <header class="meta">
+          <div class="author">
+            <%= message.hat.to_html_label if message.hat %>
+            <%= message.author.username %>
+          </div>
+          <time datetime="<%= l(message.created_at, format: :datetime) %>" class="timestamp">
+            <%= time_ago_in_words_label(message.created_at) %>
+          </time>
+        </header>
+        <div class="message_text">
+          <%= raw message.linkified_body %>
+        </div>
+      </div>
+    <% end %>
+  </section>
+
+  <section class="new_message">
+    <%= form_with model: [@conversation, @message_form], local: true do |form| %>
+      <%= error_messages_for @message_form %>
+      <div class="field">
+        <%= form.label :body, "Message", :class => "required" %>
+        <%= form.text_area :body %>
+      </div>
+      <div class="field">
+        <%= render partial: "conversations/hat_inputs", locals: { user: @user, form: form } %>
+      </div>
+
+      <%= form.submit "Send Message" %>
+    <% end %>
+  </section>
+</div>

@@ -104,12 +104,10 @@ Rails.application.routes.draw do
       resources :messages, only: :create
     end
   end
-  resources :messages, only: [] do
-    collection do
-      root to: redirect('/conversations')
-      get :sent, to: redirect('/conversations')
-    end
-  end
+  # legacy routes
+  get "/messages", to: redirect("/conversations")
+  get "/messages/sent", to: redirect("/conversations")
+  get "/messages/:short_id", to: redirect("/conversations")
 
   get "/c/:id" => "comments#redirect_from_short_id"
   get "/c/:id.json" => "comments#show_short_id", :format => "json"

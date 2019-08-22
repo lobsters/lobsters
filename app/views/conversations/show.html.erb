@@ -3,15 +3,15 @@
 
   <%= form_with url: conversation_path(@conversation), method: :delete, local: true do |f| %>
     <%= f.submit "Delete Conversation" %>
-  <% end %>
+  <% end %><br />
 
   <section class="messages zebra">
     <% @conversation.messages.each do |message| %>
       <div class="message">
         <header class="meta">
           <div class="author">
-            <%= message.hat.to_html_label if message.hat %>
             <%= message.author.username %>
+            <%= message.hat.to_html_label if message.hat %>
           </div>
           <time datetime="<%= l(message.created_at, format: :datetime) %>" class="timestamp">
             <%= time_ago_in_words_label(message.created_at) %>

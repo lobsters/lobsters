@@ -23,7 +23,8 @@ class Message < ApplicationRecord
     end
   end
 
-  scope :unread, -> { where(:has_been_read => false, :deleted_by_recipient => false) }
+  scope :unread, -> { where(has_been_read: false, deleted_by_recipient: false) }
+  scope :unread_by, ->(user) { unread.where(recipient: user) }
 
   after_create :deliver_email_notifications
   after_save :update_unread_counts

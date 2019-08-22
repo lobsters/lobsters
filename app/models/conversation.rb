@@ -36,8 +36,8 @@ class Conversation < ApplicationRecord
     self.short_id = ShortId.new(self.class).generate
   end
 
-  def unread?
-    messages.unread.any?
+  def unread_by(user)
+    messages.unread_by(user).any?
   end
 
   def latest_message

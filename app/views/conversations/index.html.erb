@@ -10,7 +10,7 @@
     <tbody>
       <% @conversations.each do |conversation| %>
         <% partner = conversation.partner(of: @user).username %>
-        <tr class="<%= conversation.unread? ? 'unread' : '' %>">
+        <tr class="<%= conversation.unread_by(@user) ? 'unread' : '' %>">
           <td><%= link_to partner, "/u/#{partner}" %></td>
           <td><%= time_ago_in_words_label(conversation.updated_at) %></td>
           <td><%= conversation.messages.count %></td>

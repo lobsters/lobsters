@@ -10,6 +10,7 @@ class ConversationsController < ApplicationController
     @conversation = Conversation
       .includes(messages: [:author, :hat])
       .find_by(short_id: params[:id])
+    @heading = @conversation.subject
     @conversation
       .messages
       .where(recipient: @user)

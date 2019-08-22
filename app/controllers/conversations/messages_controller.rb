@@ -8,7 +8,7 @@ module Conversations
       @message_form.save
 
       if @message_form.persisted?
-        redirect_to @conversation
+        redirect_to @conversation, flash: { success: "Message sent." }
       else
         render "conversations/show"
       end

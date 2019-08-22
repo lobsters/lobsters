@@ -24,7 +24,7 @@
     <% end %>
   </table>
 
-  <%= form_with model: @conversation_form, class: "new_conversation" do |form| %>
+  <%= form_with model: @conversation_form, class: "new_conversation", local: true do |form| %>
     <h2 class="legend">Create Conversation</h2>
     <%= error_messages_for @conversation_form %>
     <div class="field">

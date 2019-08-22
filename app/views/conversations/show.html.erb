@@ -19,10 +19,7 @@
           <%= message.hat.to_html_label if message.hat %>
           <%= message.author.username %>
         </div>
-        <time
-          datetime="<%= l(message.created_at, format: :datetime) %>"
-          class="timestamp"
-        >
+        <time datetime="<%= l(message.created_at, format: :datetime) %>" class="timestamp">
           <%= time_ago_in_words_label(message.created_at) %>
         </time>
       </header>
@@ -33,7 +30,7 @@
   <% end %>
 </section>
 <section class="new_message box wide">
-  <%= form_with model: [@conversation, @message_form] do |form| %>
+  <%= form_with model: [@conversation, @message_form], local: true do |form| %>
     <%= error_messages_for @message_form %>
     <div class="field">
       <%= form.label :body, "Message", :class => "required" %>

@@ -23,7 +23,7 @@ class ConversationsController < ApplicationController
     @conversation_form.save
 
     if @conversation_form.persisted?
-      redirect_to conversation_path(@conversation_form)
+      redirect_to conversation_path(@conversation_form), flash: { success: "Conversation started." }
     else
       @conversations = find_user_conversations(@user).order(updated_at: :desc)
       render :index
@@ -40,8 +40,7 @@ class ConversationsController < ApplicationController
       else
         @conversation.update(deleted_by_recipient_at: Time.zone.now)
       end
-      flash[:success] = "Conversation marked for deletion"
-      redirect_to conversations_path
+      redirect_to conversations_path, flash: { success: "Deleted conversation." }
     else
       flash[:error] = "Could not delete message"
       redirect_to conversation_path(@conversation)

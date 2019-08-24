@@ -5,14 +5,16 @@
     <%= f.submit "Delete Conversation" %>
   <% end %><br />
 
-  <section class="messages zebra">
+  <ol class="messages">
     <% @conversation.messages.each do |message| %>
-      <div class="message">
-        <header class="meta">
-          <div class="author">
-            <%= message.author.username %>
-            <%= message.hat.to_html_label if message.hat %>
-          </div>
+      <li class="message">
+        <header class="byline">
+          <% if @user.show_avatars? %>
+            <a href="/u/<%= message.author.username %>"><%= avatar_img(message.author, 16) %></a>
+          <% end %>
+
+          <%= link_to message.author.username, "/u/#{message.author.username}" %>
+          <%= message.hat.to_html_label if message.hat %>
           <time datetime="<%= l(message.created_at, format: :datetime) %>" class="timestamp">
             <%= time_ago_in_words_label(message.created_at) %>
           </time>
@@ -20,9 +22,9 @@
         <div class="message_text">
           <%= raw message.linkified_body %>
         </div>
-      </div>
+      </li>
     <% end %>
-  </section>
+  </ol>
 
   <section class="new_message">
     <%= form_with model: [@conversation, @message_form], local: true do |form| %>

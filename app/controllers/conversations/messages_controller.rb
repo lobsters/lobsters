@@ -1,5 +1,8 @@
 module Conversations
   class MessagesController < ApplicationController
+    before_action :require_logged_in_user
+    before_action :require_logged_in_moderator, :mod_note
+
     def create
       @conversation = find_conversation
       @message_form = MessageForm.new(
@@ -12,6 +15,12 @@ module Conversations
       else
         render "conversations/show"
       end
+    end
+
+    def mod_note
+      @message = Message.find(params[:message_id])
+      ModNote.create_from_message(@message, @user)
+      return redirect_to conversation_path(params[:conversation_id]), notice: 'ModNote created'
     end
 
   private

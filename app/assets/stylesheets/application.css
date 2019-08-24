@@ -1327,6 +1327,9 @@ tr.unread {
 	display: block;
 	color: #888;
 }
+.byline form {
+	display: inline;
+}
 
 .message_text p:first-child {
   margin-top: 0;

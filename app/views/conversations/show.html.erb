@@ -18,6 +18,11 @@
           <time datetime="<%= l(message.created_at, format: :datetime) %>" class="timestamp">
             <%= time_ago_in_words_label(message.created_at) %>
           </time>
+          <% if @user.is_moderator? %>
+            <%= form_with model: message, url: conversation_message_mod_note_path(@conversation, message), local: true do |f| %>
+              <%= f.submit 'ModNote' %>
+            <% end %>
+          <% end %>
         </header>
         <div class="message_text">
           <%= raw message.linkified_body %>

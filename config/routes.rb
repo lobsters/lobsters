@@ -101,7 +101,9 @@ Rails.application.routes.draw do
 
   resources :conversations, only: [:index, :show, :create, :destroy] do
     scope module: :conversations do
-      resources :messages, only: :create
+      resources :messages, only: :create do
+        patch :mod_note
+      end
     end
   end
   # legacy routes

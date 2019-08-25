@@ -33,13 +33,13 @@ class ModNote < ApplicationRecord
   end
 
   def self.create_from_message(message, moderator)
-    user = moderator.id == message.recipient.id ? message.author : message.recipient
+    user = message.conversation.partner(of: moderator)
     ModNote.create!(
       moderator: moderator,
       user: user,
       created_at: message.created_at,
       note: <<~NOTE
-        *#{message.author.username} #{message.hat ? message.hat.to_txt : ''}-> #{message.recipient.username}*: #{message.subject}
+        *#{message.author.username} #{message.hat ? message.hat.to_txt : ''}-> #{user.username}*: #{message.conversation.subject}
 
         #{message.body}
       NOTE

@@ -57,7 +57,7 @@ private
     end
   end
 
-  def author_deleted_after_latest_message
+  def author_deleted_after_latest_message?
     deleted_by_author_at && deleted_by_author_at > latest_message.created_at
   end
 

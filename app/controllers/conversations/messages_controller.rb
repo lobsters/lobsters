@@ -1,7 +1,7 @@
 module Conversations
   class MessagesController < ApplicationController
     before_action :require_logged_in_user
-    before_action :require_logged_in_moderator, :mod_note
+    before_action :require_logged_in_moderator, only: :mod_note
 
     def create
       @conversation = find_conversation
@@ -12,9 +12,9 @@ module Conversations
       @message.update(message_params)
       @message.hat = nil if @message.hat.try(:user_id) != @user.id
 
-      if @message.save?
+      if @message.save!
         if @user.is_moderator? && @message.mod_note
-          ModNote.create_from_message(@new_message, @user)
+          ModNote.create_from_message(@message, @user)
         end
         redirect_to @conversation, flash: { success: "Message sent." }
       else

@@ -102,22 +102,19 @@ RSpec.describe Conversation do
   describe ".check_for_both_deleted" do
     it "needs both partners to delete the conversation to be deleted" do
       conversation = create(:conversation)
-      travel_to(1.day.ago) do
-        MessageForm.new(
-          conversation: conversation,
-          author: conversation.author,
-          body: "hi",
-        ).save
-      end
+      conversation.messages.create!(
+        created_at: 1.day.ago,
+        author: conversation.author,
+        recipient: conversation.recipient,
+        body: "hi",
+      )
 
       expect(Conversation.count).to eq(1)
 
       conversation.update(deleted_by_author_at: Time.zone.now)
-
       expect(Conversation.count).to eq(1)
 
       conversation.update(deleted_by_recipient_at: Time.zone.now)
-
       expect(Conversation.count).to eq(0)
     end
   end

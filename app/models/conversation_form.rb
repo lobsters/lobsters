@@ -3,24 +3,28 @@ class ConversationForm
   extend ActiveModel::Naming
   attr_accessor :username, :subject, :body, :hat_id, :mod_note
   attr_accessor :conversation, :author
-  attr_reader :message_form
+  attr_reader :message
 
   delegate :to_param, :model_name, :persisted?, to: :conversation
 
   def initialize(attributes = {})
     super
     @conversation = build_conversation
-    @message_form = MessageForm.new(message_params)
+    @message = Message.new(message_params)
+    @message.hat = nil if @message.hat.try(:user_id) != author.id
   end
 
   def save
     Conversation.transaction do
       if valid?
         conversation.save!
-        message_form.save
+        message.save!
+        if author.is_moderator? && @message.mod_note
+          ModNote.create_from_message(@message, author)
+        end
       else
         self.errors.merge!(conversation.errors)
-        self.errors.merge!(message_form.errors)
+        self.errors.merge!(message.errors)
         false
       end
       conversation
@@ -28,7 +32,7 @@ class ConversationForm
   end
 
   def valid?
-    conversation.valid? && message_form.valid?
+    conversation.valid? && message.valid?
   end
 
 private
@@ -49,6 +53,7 @@ private
     {
       conversation: conversation,
       author: author,
+      recipient: recipient(username),
       body: body,
       hat_id: hat_id,
       mod_note: mod_note,

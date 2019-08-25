@@ -242,9 +242,7 @@ RSpec.feature "add a message to a conversation" do
       )
       hat = create(:hat, user: author)
 
-      visit root_path
-      click_on "Messages"
-      click_on conversation.subject
+      visit conversation_path(conversation)
       within(".new_message") do
         fill_in("Message", with: "hello")
         select(hat.hat, from: "Put on hat:")
@@ -299,9 +297,7 @@ RSpec.feature "add a message to a conversation" do
         conversation: conversation,
       )
 
-      visit root_path
-      click_on "Messages"
-      click_on conversation.recipient.username
+      visit conversation_path(conversation)
 
       within(".new_message") do
         fill_in("Message", with: "a" * (max_message_length + 1))
@@ -316,18 +312,12 @@ RSpec.feature "add a message to a conversation" do
 end
 
 RSpec.feature "delete a conversation" do
-  scenario "I dare you" do
+  scenario "deletes a conversation" do
     conversation = create(:conversation)
     author = conversation.author
     stub_login_as author
-    MessageForm.new(
-      conversation: conversation,
-      author: author,
-      body: "Hello",
-    ).save
 
-    visit root_path
-    click_on "Messages"
+    visit conversations_path
     click_on conversation.subject
     click_on "Delete Conversation"
 

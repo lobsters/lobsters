@@ -3,7 +3,7 @@ class ConversationsController < ApplicationController
 
   def index
     @conversations = find_user_conversations(@user).order(updated_at: :desc)
-    @conversation_form = ConversationForm.new(username: params[:to])
+    @conversation_form = ConversationForm.new(author: @user, username: params[:to])
   end
 
   def show

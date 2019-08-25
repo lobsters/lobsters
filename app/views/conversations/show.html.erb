@@ -32,17 +32,17 @@
   </ol>
 
   <section class="new_message">
-    <%= form_with model: [@conversation, @message], local: true do |form| %>
+    <%= form_with model: [@conversation, @message], local: true do |f| %>
       <%= error_messages_for @message %>
-      <div class="field">
-        <%= form.label :body, "Message", :class => "required" %>
-        <%= form.text_area :body %>
+      <div class="boxline">
+        <%= f.label :body, "Message", :class => "required" %>
+        <%= f.text_area :body %>
       </div>
-      <div class="field">
-        <%= render partial: "conversations/hat_inputs", locals: { user: @user, form: form } %>
+      <div class="boxline">
+        <%= render partial: "conversations/hat_inputs", locals: { user: @user, form: f } %>
       </div>
 
-      <%= form.submit "Send Message" %>
+      <%= f.submit "Send Message" %>
     <% end %>
   </section>
 </div>

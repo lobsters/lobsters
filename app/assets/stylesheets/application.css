@@ -1284,53 +1284,22 @@ div.fieldWithErrors {
 /* Conversations & Messages */
 
 tr.unread {
-  font-weight: bold;
+	font-weight: bold;
 }
 
-.new_conversation,
-.new_message {
+.new_conversation, .new_message {
 	margin-top: 2em;
-}
-
-.new_conversation .field,
-.new_message .field {
-	display: flex;
-	margin-bottom: 0.5em;
-}
-
-.new_conversation .field > *:first-child,
-.new_message .field > *:first-child {
-	flex-basis: 12em;
-	flex-shrink: 1;
-}
-
-.new_conversation .field > *:last-child,
-.new_message .field > *:last-child {
-	flex: 2;
-}
-
-.field_with_errors {
-	display: flex;
-}
-
-.field_with_errors input,
-.field_with_errors textarea {
-	width: 100%;
-}
-
-.new_conversation .field textarea,
-.new_message textarea {
-	height: 5em;
 }
 
 .messages .meta {
 	display: block;
 	color: #888;
 }
+
 .byline form {
 	display: inline;
 }
 
 .message_text p:first-child {
-  margin-top: 0;
+	margin-top: 0;
 }

@@ -20,28 +20,27 @@
     </tbody>
   </table>
 
-  <%= form_with model: @conversation_form, class: "new_conversation", local: true do |form| %>
+  <%= form_with model: @conversation_form, class: "new_conversation", local: true do |f| %>
     <h2 class="legend">Create Conversation</h2>
     <%= error_messages_for @conversation_form %>
-    <div class="field">
-      <%= form.label :username, "To:", class: "required" %>
-      <%= form.text_field :username %>
+
+    <div class="boxline">
+      <%= f.label :username, "To:", class: "required" %>
+      <%= f.text_field :username %>
     </div>
-    <div class="field">
-      <%= form.label :subject, "Subject:", class: "required" %>
-      <%= form.text_field :subject %>
+    <div class="boxline">
+      <%= f.label :subject, "Subject:", class: "required" %>
+      <%= f.text_field :subject, style: 'width: 500px;', maxlength: 100 %>
     </div>
-    <div class="field">
-      <%= form.label :body, "Message:", class: "required" %>
-      <%= form.text_area :body %>
+    <div class="boxline">
+      <%= f.label :body, "Message:", class: "required" %>
+      <%= f.text_area :body, style: 'width: 500px;' %>
     </div>
-    <div class="field">
+    <div class="boxline">
+      <%= render partial: "hat_inputs", locals: { user: @user, form: f } %>
     </div>
-    <div class="field">
-      <%= render partial: "hat_inputs", locals: { user: @user, form: form } %>
-    </div>
-    <div class="action">
-      <%= form.submit %>
+    <div class="boxline">
+      <%= f.submit %>
     </div>
   <% end %>
 </div>

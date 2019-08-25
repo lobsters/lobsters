@@ -14,7 +14,6 @@ class Message < ApplicationRecord
   attribute :mod_note, :boolean
   attr_reader :recipient_username
 
-  validates :subject, length: { :in => 1..100 }
   validates :body, length: { :maximum => (64 * 1024) }
   validate :hat do
     next if hat.blank?
@@ -33,7 +32,6 @@ class Message < ApplicationRecord
     attrs = [
       :created_at,
       :has_been_read,
-      :subject,
       :body,
       :deleted_by_author,
       :deleted_by_recipient,
@@ -73,7 +71,7 @@ class Message < ApplicationRecord
     if self.recipient.pushover_messages?
       self.recipient.pushover!(
         :title => "#{Rails.application.name} message from " <<
-          "#{self.author_username}: #{self.subject}",
+          "#{self.author_username}: #{self.conversation.subject}",
         :message => self.plaintext_body,
         :url => self.url,
         :url_title => (self.author ? "Reply to #{self.author_username}" :

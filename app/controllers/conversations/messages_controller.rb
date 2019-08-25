@@ -5,12 +5,17 @@ module Conversations
 
     def create
       @conversation = find_conversation
-      @message_form = MessageForm.new(
-        message_params.merge(conversation: @conversation)
+      @message = @conversation.messages.build(
+        author: @user,
+        recipient: @conversation.partner(of: @user),
       )
-      @message_form.save
+      @message.update(message_params)
+      @message.hat = nil if @message.hat.try(:user_id) != @user.id
 
-      if @message_form.persisted?
+      if @message.save?
+        if @user.is_moderator? && @message.mod_note
+          ModNote.create_from_message(@new_message, @user)
+        end
         redirect_to @conversation, flash: { success: "Message sent." }
       else
         render "conversations/show"
@@ -28,7 +33,7 @@ module Conversations
     def message_params
       params
         .require(:message)
-        .permit(:body, :hat_id, :mod_note)
+        .permit(:body, :hat_id, @user.is_moderator? ? :mod_note : nil)
         .merge(author: @user)
     end
 

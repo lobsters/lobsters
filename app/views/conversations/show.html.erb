@@ -32,8 +32,8 @@
   </ol>
 
   <section class="new_message">
-    <%= form_with model: [@conversation, @message_form], local: true do |form| %>
-      <%= error_messages_for @message_form %>
+    <%= form_with model: [@conversation, @message], local: true do |form| %>
+      <%= error_messages_for @message %>
       <div class="field">
         <%= form.label :body, "Message", :class => "required" %>
         <%= form.text_area :body %>

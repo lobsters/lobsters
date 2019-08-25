@@ -23,6 +23,7 @@ class CreateConversations < ActiveRecord::Migration[5.2]
     )
 
     remove_column :messages, :short_id
+    remove_column :messages, :subject
   end
 
   def down

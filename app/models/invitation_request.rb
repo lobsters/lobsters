@@ -11,16 +11,11 @@ class InvitationRequest < ApplicationRecord
   end
 
   def create_code
-    (1...10).each do |tries|
-      if tries == 10
-        raise "too many hash collisions"
-      end
-
+    10.times do
       self.code = Utils.random_str(15)
-      unless InvitationRequest.exists?(:code => self.code)
-        break
-      end
+      return unless InvitationRequest.exists?(:code => self.code)
     end
+    raise "too many hash collisions"
   end
 
   def markeddown_memo

@@ -37,9 +37,9 @@ class ConversationsController < ApplicationController
 
     if @conversation.present?
       if @conversation.author == @user
-        @conversation.update(deleted_by_author_at: Time.zone.now)
+        @conversation.update(deleted_by_author_at: Time.current)
       else
-        @conversation.update(deleted_by_recipient_at: Time.zone.now)
+        @conversation.update(deleted_by_recipient_at: Time.current)
       end
       redirect_to conversations_path, flash: { success: "Deleted conversation." }
     else

@@ -5,11 +5,11 @@ FactoryBot.define do
     sequence(:subject) {|n| "Subject #{n}" }
 
     trait :deleted_by_author do
-      deleted_by_author_at { Time.zone.now }
+      deleted_by_author_at { Time.current }
     end
 
     trait :deleted_by_recipient do
-      deleted_by_recipient_at { Time.zone.now }
+      deleted_by_recipient_at { Time.current }
     end
 
     factory :conversation do

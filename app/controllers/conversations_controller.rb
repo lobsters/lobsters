@@ -60,12 +60,4 @@ private
   def find_user_conversations(user)
     @conversations = Conversation.includes(:recipient, :author).involving(user)
   end
-
-  def conversation_subject
-    params[:conversation][:subject]
-  end
-
-  def conversation_recipient
-    params[:conversation][:username]
-  end
 end

@@ -111,7 +111,7 @@ class LoginController < ApplicationController
     end
 
     if @found_user.is_banned?
-      flash.now[:error] = "Your acocunt has been banned."
+      flash.now[:error] = "Your account has been banned."
       return forgot_password
     end
 

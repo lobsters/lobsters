@@ -23,6 +23,7 @@ Other sites using the Lobsters codebase:
 * [Bitmia](https://bitmia.com/) - Finance
 * [0xBlockchain](https://0xblockchain.network/) ([repo](https://github.com/pyk/0xblockchain)) - Cryptocurrency
 * [Gambe.ro](https://gambe.ro) - Software development (it)
+* [Middlebit](https://middlebit.com/) - Technology-focused link-aggregation for the "no-coast" region of the United States.
 
 ## Cousin Sites
 

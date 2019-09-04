@@ -14,16 +14,11 @@ class Invitation < ApplicationRecord
   before_validation :create_code, :on => :create
 
   def create_code
-    (1...10).each do |tries|
-      if tries == 10
-        raise "too many hash collisions"
-      end
-
+    10.times do
       self.code = Utils.random_str(15)
-      unless Invitation.exists?(:code => self.code)
-        break
-      end
+      return unless Invitation.exists?(:code => self.code)
     end
+    raise "too many hash collisions"
   end
 
   def send_email

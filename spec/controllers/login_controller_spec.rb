@@ -71,7 +71,7 @@ describe LoginController do
 
     it "doesn't show login form if user is already logged in" do
       post :login, params: { email: user.email, password: 'asdf' }
-      get :login
+      get :index
       expect(response).to redirect_to('/')
     end
   end
@@ -105,9 +105,9 @@ describe LoginController do
       }.not_to(change { User.find(deleted_wiped.id).password_reset_token })
     end
 
-    it "doesn't show reset form if user is already logged in" do
+    it "doesn't show forgot password form if user is already logged in" do
       post :login, params: { email: user.email, password: 'asdf' }
-      get :login
+      get :forgot_password
       expect(response).to redirect_to('/')
     end
   end

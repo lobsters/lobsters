@@ -66,7 +66,7 @@ if __FILE__ == $PROGRAM_NAME
 
   mailing_list_users = User.where("mailing_list_mode > 0").select(&:is_active?)
 
-  last_story_id = (Keystore.value_for(LAST_STORY_KEY) || Story.last.id).to_i
+  last_story_id = (Keystore.value_for(LAST_STORY_KEY) || Story.last && Story.last.id).to_i
 
   Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each do |s|
     s.fetch_story_cache!
@@ -142,8 +142,7 @@ if __FILE__ == $PROGRAM_NAME
 
   # repeat for comments
 
-  last_comment_id = (Keystore.value_for(LAST_COMMENT_KEY) ||
-    Comment.last.id).to_i
+  last_comment_id = (Keystore.value_for(LAST_COMMENT_KEY) || Comment.last && Comment.last.id).to_i
 
   Comment.where(
     "id > ? AND (is_deleted = ? AND is_moderated = ?)",

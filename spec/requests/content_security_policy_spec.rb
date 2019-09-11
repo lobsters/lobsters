@@ -9,7 +9,7 @@ describe 'content security policy' do
       "connect-src 'self'",
       "font-src 'self' https: data:",
       "img-src * data:",
-      "script-src 'self' 'unsafe-inline'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline'",
       "form-action 'self'",
       "report-uri /csp-violation-report",

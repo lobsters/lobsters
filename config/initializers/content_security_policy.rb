@@ -6,6 +6,8 @@
 
 Rails.application.config.content_security_policy do |policy|
   policy.default_src :none
+  policy.connect_src :self
+  policy.font_src    :self, :https, :data
   policy.img_src     '*', :data
   policy.script_src  :self, :unsafe_inline
   policy.style_src   :self, :unsafe_inline

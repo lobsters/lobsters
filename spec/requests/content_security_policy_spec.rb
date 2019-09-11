@@ -6,6 +6,8 @@ describe 'content security policy' do
 
     directives = [
       "default-src 'none'",
+      "connect-src 'self'",
+      "font-src 'self' https: data:",
       "img-src * data:",
       "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",

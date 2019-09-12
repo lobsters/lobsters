@@ -15,6 +15,6 @@ describe 'content security policy' do
       "report-uri /csp-violation-report",
     ].join('; ')
 
-    expect(response.headers['Content-Security-Policy']).to eq(directives)
+    expect(response.headers['Content-Security-Policy-Report-Only']).to eq(directives)
   end
 end

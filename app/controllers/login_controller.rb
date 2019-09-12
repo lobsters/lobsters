@@ -17,13 +17,11 @@ class LoginController < ApplicationController
   end
 
   def index
-    if @user
-      redirect_to "/"
-    else
-      @title = "Login"
-      @referer ||= request.referer
-      render :action => "index"
-    end
+    return redirect_to "/" if @user
+
+    @title = "Login"
+    @referer ||= request.referer
+    render :action => "index"
   end
 
   def login
@@ -102,12 +100,10 @@ class LoginController < ApplicationController
   end
 
   def forgot_password
-    if @user
-      redirect_to "/"
-    else
-      @title = "Reset Password"
-      render :action => "forgot_password"
-    end
+    return redirect_to "/" if @user
+
+    @title = "Reset Password"
+    render :action => "forgot_password"
   end
 
   def reset_password

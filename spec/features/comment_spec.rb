@@ -83,7 +83,8 @@ RSpec.feature "Commenting" do
           created_at: 90.days.ago,
           comment: "Cool story.",
         )
-        reset_session!
+        visit "/settings"
+        click_on "Logout"
 
         stub_login_as user1
         visit "/s/#{story.short_id}"

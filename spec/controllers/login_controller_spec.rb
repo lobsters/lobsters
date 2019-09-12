@@ -68,6 +68,12 @@ describe LoginController do
         expect(flash[:error]).to match(/wiped/)
       end
     end
+
+    it "doesn't show login form if user is already logged in" do
+      post :login, params: { email: user.email, password: 'asdf' }
+      get :index
+      expect(response).to redirect_to('/')
+    end
   end
 
   describe "/login/reset_password" do
@@ -97,6 +103,12 @@ describe LoginController do
         post :reset_password, params: { email: deleted_wiped.email }
         expect(flash[:success]).to be_nil
       }.not_to(change { User.find(deleted_wiped.id).password_reset_token })
+    end
+
+    it "doesn't show forgot password form if user is already logged in" do
+      post :login, params: { email: user.email, password: 'asdf' }
+      get :forgot_password
+      expect(response).to redirect_to('/')
     end
   end
 

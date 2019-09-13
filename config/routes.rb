@@ -106,7 +106,7 @@ Rails.application.routes.draw do
       end
     end
   end
-  # legacy routes
+  # old message routes; rm after 2020-10-01
   get "/messages", to: redirect("/conversations")
   get "/messages/sent", to: redirect("/conversations")
   get "/messages/:short_id", to: redirect("/conversations")

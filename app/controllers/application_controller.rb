@@ -122,6 +122,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def require_no_user_or_redirect
+    return redirect_to "/" if @user
+  end
+
   def tags_filtered_by_cookie
     @_tags_filtered ||= Tag.where(
       :tag => cookies[TAG_FILTER_COOKIE].to_s.split(",")

@@ -51,6 +51,7 @@ private
     params.require(:tag).permit(
       :tag,
       :description,
+      :suggestion_regex,
       :privileged,
       :inactive,
       :hotness_mod,

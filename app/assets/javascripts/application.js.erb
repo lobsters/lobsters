@@ -276,6 +276,19 @@ var _Lobsters = Class.extend({
     ) {
       $('.title-reminder').slideDown();
     }
+
+    // add tag suggestions if possible
+    var suggestedTags = $('#story_tags_a > option').reduce(function(tagAcc,$tag){
+      var tagRegex = $($tag).data("suggestionRegex") || '';
+      if (tagRegex.length > 0 && title.match(new RegExp(tagRegex))){
+        tagAcc.push($tag.value);
+      }
+      return tagAcc;
+    },[]);
+    $('#regex_suggested_tags').html(
+      suggestedTags.length === 0 ? '' :
+      "Suggested tags: " + suggestedTags.join(' ')
+    );
   },
 
   runSelect2: function() {

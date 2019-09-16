@@ -286,8 +286,8 @@ var _Lobsters = Class.extend({
       return tagAcc;
     },[]);
     $('#regex_suggested_tags').html(
-      suggestedTags.length === 0 ? '' :
-      "Suggested tags: " + suggestedTags.join(' ')
+      (suggestedTags.length === 0) ? ('') :
+      ("Suggested tags: " + suggestedTags.join(' '))
     );
   },
 

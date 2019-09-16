@@ -10,7 +10,7 @@ class Tag < ApplicationRecord
 
   after_save :log_modifications
 
-  attr_accessor :edit_user_id, :stories_count, :suggestion_regex
+  attr_accessor :edit_user_id, :stories_count
   attr_writer :filtered_count
 
   validates :tag, length: { maximum: 25 }, presence: true,

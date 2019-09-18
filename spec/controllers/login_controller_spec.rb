@@ -74,6 +74,12 @@ describe LoginController do
       get :index
       expect(response).to redirect_to('/')
     end
+
+    it "doesn't allow submission from logged in users" do
+      post :login, params: { email: user.email, password: 'asdf' }
+      post :login, params: { email: user.email, password: 'asdf' }
+      expect(response).to redirect_to('/')
+    end
   end
 
   describe "/login/reset_password" do
@@ -108,6 +114,12 @@ describe LoginController do
     it "doesn't show forgot password form if user is already logged in" do
       post :login, params: { email: user.email, password: 'asdf' }
       get :forgot_password
+      expect(response).to redirect_to('/')
+    end
+
+    it "doesn't allow submission from logged in users" do
+      post :login, params: { email: user.email, password: 'asdf' }
+      post :reset_password, params: { email: user.email }
       expect(response).to redirect_to('/')
     end
   end

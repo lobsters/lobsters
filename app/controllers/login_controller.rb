@@ -7,6 +7,8 @@ class LoginFailedError < StandardError; end
 class LoginController < ApplicationController
   before_action :authenticate_user
   before_action :check_for_read_only_mode, :except => [:index]
+  before_action :require_no_user_or_redirect,
+                only: [:index, :login, :forgot_password, :reset_password]
 
   def logout
     if @user
@@ -17,8 +19,6 @@ class LoginController < ApplicationController
   end
 
   def index
-    return redirect_to "/" if @user
-
     @title = "Login"
     @referer ||= request.referer
     render :action => "index"
@@ -100,8 +100,6 @@ class LoginController < ApplicationController
   end
 
   def forgot_password
-    return redirect_to "/" if @user
-
     @title = "Reset Password"
     render :action => "forgot_password"
   end

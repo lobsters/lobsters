@@ -56,3 +56,7 @@ group :test, :development do
   gem "byebug"
   gem "rb-readline"
 end
+
+group :test do
+  gem 'shoulda-matchers'
+end

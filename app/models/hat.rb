@@ -1,5 +1,6 @@
 class Hat < ApplicationRecord
   validates :hat, presence: true, length: { maximum: 255 }
+  validates :link, length: { maximum: 255 }
 
   belongs_to :user
   belongs_to :granted_by_user, :class_name => "User", :inverse_of => false

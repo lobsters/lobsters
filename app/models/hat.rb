@@ -1,4 +1,6 @@
 class Hat < ApplicationRecord
+  validates :hat, presence: true
+
   belongs_to :user
   belongs_to :granted_by_user, :class_name => "User", :inverse_of => false
 

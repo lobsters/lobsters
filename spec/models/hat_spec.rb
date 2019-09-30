@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Hat, type: :model do
+describe Hat do
   describe '#hat' do
     it { is_expected.to validate_presence_of(:hat) }
     it { is_expected.to validate_length_of(:hat).is_at_most(255) }

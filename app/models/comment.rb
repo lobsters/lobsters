@@ -48,8 +48,9 @@ class Comment < ApplicationRecord
   MAX_EDIT_MINS = (60 * 6)
 
   validates :short_id, length: { maximum: 10 }
-  validates :markeddown_comment, length: { maximum: 16777215 }
-  validates_presence_of :comment
+  validates :markeddown_comment, length: { maximum: 16_777_215 }
+  validates :comment, presence: true
+
   SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
 
   validate do

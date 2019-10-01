@@ -34,7 +34,7 @@ describe Comment do
   end
 
   it "validates the length of markeddown_comment" do
-    comment = build(:comment, markeddown_comment: "a" * 16777216)
+    comment = build(:comment, markeddown_comment: "a" * 16_777_216)
     expect(comment).to_not be_valid
   end
 end

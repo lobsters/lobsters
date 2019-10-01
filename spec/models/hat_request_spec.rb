@@ -12,7 +12,7 @@ describe HatRequest do
   end
 
   it "has a limit on the comment field" do
-    hat_request = build(:hat_request, comment: "a" * 65536)
+    hat_request = build(:hat_request, comment: "a" * 65_536)
     expect(hat_request).to_not be_valid
   end
 end

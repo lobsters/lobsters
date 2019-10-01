@@ -1,9 +1,9 @@
 class HatRequest < ApplicationRecord
   belongs_to :user
 
-  validates :hat, :presence => true
-  validates :link, :presence => true
-  validates :comment, :presence => true
+  validates :hat, :presence => true, length: { maximum: 255 }
+  validates :link, :presence => true, length: { maximum: 255 }
+  validates :comment, :presence => true, length: { maximum: 65535 }
 
   attr_accessor :rejection_comment
 

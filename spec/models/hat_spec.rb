@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Hat do
   it "has a hat field" do
@@ -7,14 +7,12 @@ describe Hat do
   end
 
   it "has a limit on the hat field" do
-    hat = Hat.make!
-    hat.hat = "a" * 256
+    hat = build(:hat, hat: "a" * 256)
     expect(hat).to_not be_valid
   end
 
   it "has a limit on the link field" do
-    hat = Hat.make!
-    hat.link = "a" * 256
+    hat = build(:hat, link: "a" * 256)
     expect(hat).to_not be_valid
   end
 end

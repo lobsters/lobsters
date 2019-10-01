@@ -23,6 +23,10 @@ class SearchController < ApplicationController
       end
     end
 
-    render :action => "index"
+    respond_to :html
+  end
+
+  rescue_from ActionController::UnknownFormat do
+    render status: :not_found, plain: '404 not found'
   end
 end

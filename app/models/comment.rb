@@ -47,6 +47,9 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
+  validates :short_id, length: { maximum: 10 }
+  validates :markeddown_comment, length: { maximum: 16777215 }
+  validates_presence_of :comment
   SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
 
   validate do

@@ -22,4 +22,20 @@ describe Comment do
       expect(comment.errors[:hat]).to be_empty
     end
   end
+
+  it "validates the length of short_id" do
+    comment = Comment.new(short_id: "01234567890")
+    expect(comment).to_not be_valid
+  end
+
+  it "is not valid without a comment" do
+    comment = Comment.new(comment: nil)
+    expect(comment).to_not be_valid
+  end
+
+  it "validates the length of markeddown_comment" do
+    comment = Comment.make!
+    comment.markeddown_comment = "a" * 16777216
+    expect(comment).to_not be_valid
+  end
 end

@@ -25,6 +25,7 @@ Other sites using the Lobsters codebase:
 * [Gambe.ro](https://gambe.ro) - Software development (it)
 * [Middlebit](https://middlebit.com/) - Content curation for the "no-coast" region of the United States.
 * [Quantum News](http://science.solobsd.org/) - Science
+* [Concat](https://concat.id) ([repo](https://github.com/evilfactorylabs/concat)) - Computing (Indonesian)
 
 ## Cousin Sites
 

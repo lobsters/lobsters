@@ -4,6 +4,9 @@ class Hat < ApplicationRecord
 
   after_create :log_moderation
 
+  validates_presence_of :user, :granted_by_user, :hat
+  validates :hat, :link, length: { maximum: 255 }
+
   def doff_by_user_with_reason(user, reason)
     m = Moderation.new
     m.user_id = self.user_id

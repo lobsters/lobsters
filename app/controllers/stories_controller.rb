@@ -273,6 +273,10 @@ class StoriesController < ApplicationController
       return render :plain => "can't find story", :status => 400
     end
 
+    if story.merged_into_story
+      return render :plain => "story has been merged", :status => 400
+    end
+
     Vote.vote_thusly_on_story_or_comment_for_user_because(
       1, story.id, nil, @user.id, nil
     )
@@ -305,6 +309,10 @@ class StoriesController < ApplicationController
       return render :plain => "can't find story", :status => 400
     end
 
+    if story.merged_into_story
+      return render :plain => "story has been merged", :status => 400
+    end
+
     HiddenStory.hide_story_for_user(story.id, @user.id)
 
     render :plain => "ok"
@@ -323,6 +331,10 @@ class StoriesController < ApplicationController
   def save
     if !(story = find_story)
       return render :plain => "can't find story", :status => 400
+    end
+
+    if story.merged_into_story
+      return render :plain => "story has been merged", :status => 400
     end
 
     SavedStory.save_story_for_user(story.id, @user.id)

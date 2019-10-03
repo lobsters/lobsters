@@ -129,7 +129,7 @@ GEM
       mini_portile2 (~> 2.4.0)
     oauth (0.5.4)
     parallel (1.17.0)
-    parser (2.6.3.0)
+    parser (2.6.5.0)
       ast (~> 2.4.0)
     public_suffix (3.1.1)
     rack (2.0.7)
@@ -188,18 +188,18 @@ GEM
       rspec-mocks (~> 3.8.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.2)
-    rubocop (0.71.0)
+    rubocop (0.75.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.6)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
-    rubocop-rails (2.0.1)
+    rubocop-rails (2.3.2)
       rack (>= 1.1)
-      rubocop (>= 0.70.0)
-    rubocop-rspec (1.33.0)
-      rubocop (>= 0.60.0)
+      rubocop (>= 0.72.0)
+    rubocop-rspec (1.36.0)
+      rubocop (>= 0.68.1)
     ruby-enum (0.7.2)
       i18n
     ruby-progressbar (1.10.1)
@@ -280,4 +280,4 @@ DEPENDENCIES
   unicorn
 
 BUNDLED WITH
-   2.0.1
+   2.0.2

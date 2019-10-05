@@ -124,51 +124,60 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 
         <% if story.is_editable_by_user?(@user) %>
           |
-          <a href="<%= edit_story_path(story.short_id) %>" class="<%=
-            story.has_suggestions? ? "story_has_suggestions" : "" %>">edit</a>
+          <a href="<%= edit_story_path(story.short_id) %>"
+             class="<%= story.has_suggestions? ? "story_has_suggestions" : "" %>">edit</a>
         <% end %>
         <% if story.can_have_suggestions_from_user?(@user) %>
           | <%= link_to "suggest", story_suggest_path(story.short_id),
-            :class => "suggester" %>
+             'aria-label' => "Suggest changes to #{break_long_words(story.title)}",
+             :class => "suggester" %>
         <% end %>
         <% if !story.is_gone? && @user %>
           <% if @user && story.vote && story.vote[:vote] == -1 %>
-            | <a class="flagger">unflag (<%=
-              Vote::STORY_REASONS[story.vote[:reason]].to_s.downcase %>)</a>
+            | <a class="flagger" aria-label="unflag (<%= Vote::STORY_REASONS[story.vote[:reason]].to_s.downcase %>) <%= break_long_words(story.title) %>">
+            unflag (<%= Vote::STORY_REASONS[story.vote[:reason]].to_s.downcase %>)
+            </a>
           <% elsif @user && @user.can_downvote?(story) %>
-            | <a class="flagger">flag</a>
+            | <a class="flagger" aria-label="unflag <%= break_long_words(story.title) %>">flag</a>
           <% end %>
           <% if story.is_hidden_by_cur_user %>
             | <%= link_to "unhide", story_unhide_path(story.short_id),
-              :class => "hider" %>
+               'aria-label' => "unhide #{break_long_words(story.title)}",
+               :class => "hider" %>
           <% else %>
             | <%= link_to "hide", story_hide_path(story.short_id),
-              :class => "hider" %>
+               'aria-label' => "hide #{break_long_words(story.title)}",
+               :class => "hider" %>
           <% end %>
           <% if defined?(single_story) && single_story && story.hider_count > 0 %>
             (hidden by <%= pluralize(story.hider_count, "user") %>)
           <% end %>
           <% if story.is_saved_by_cur_user %>
             | <%= link_to "unsave", story_unsave_path(story.short_id),
-              :class => "saver" %>
+               'aria-label' => "unsave #{break_long_words(story.title)}",
+               :class => "saver" %>
           <% else %>
             | <%= link_to "save", story_save_path(story.short_id),
-              :class => "saver" %>
+               'aria-label' => "save #{break_long_words(story.title)}",
+               :class => "saver" %>
           <% end %>
         <% end %>
         <% if story.url.present? %>
           |
           <a href="<%= story.archive_url %>" rel="nofollow"
-            target="_blank">cached</a>
+            target="_blank" aria-label="cached <%= break_long_words(story.title) %>">cached</a>
         <% end %>
         <% if !story.is_gone? %>
           <span class="comments_label">
             |
-            <a href="<%= story.comments_path %>">
             <% if story.comments_count == 0 %>
-              no comments</a>
+              <a href="<%= story.comments_path %>" aria-label="no comments on <%= break_long_words(story.title) %>">
+                no comments
+              </a>
             <% else %>
-              <%= story.comments_count %> <%= 'comment'.pluralize(story.comments_count) %></a>
+              <a href="<%= story.comments_path %>" aria-label="<%= story.comments_count %> <%= 'comment'.pluralize(story.comments_count) %> on <%= break_long_words(story.title) %>">
+                <%= story.comments_count %> <%= 'comment'.pluralize(story.comments_count) %>
+              </a>
             <% end %>
           </span>
         <% end %>

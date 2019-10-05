@@ -1,6 +1,24 @@
 require "rails_helper"
 
 describe Vote do
+  it "is not valid without a vote amount" do
+    s = create(:story)
+    u = create(:user)
+    v = build(:vote, user: u, story: s, vote: nil)
+
+    v.valid?
+    expect(v.errors[:vote]).to eq(["can't be blank"])
+  end
+
+  it "has a limit on the reason field" do
+    s = create(:story)
+    u = create(:user)
+    v = build(:vote, user: u, story: s, reason: "ABC")
+
+    v.valid?
+    expect(v.errors[:reason]).to eq(["is the wrong length (should be 1 character)"])
+  end
+
   it "applies a story upvote and karma properly" do
     s = create(:story)
     expect(s.upvotes).to eq(1)

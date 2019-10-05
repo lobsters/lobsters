@@ -3,6 +3,11 @@ class Vote < ApplicationRecord
   belongs_to :story, optional: false
   belongs_to :comment, optional: true
 
+  validates :vote, presence: true
+  validates :reason,
+            length: { is: 1 },
+            allow_blank: true
+
   COMMENT_REASONS = {
     "O" => "Off-topic",
     "I" => "Incorrect",

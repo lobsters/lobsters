@@ -24,6 +24,7 @@ node_modules/
 yarn-error.log
 yarn.lock
 .byebug*
+tags
 
 # templates to be created per-site
 app/views/home/privacy.*

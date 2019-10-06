@@ -98,6 +98,10 @@ class Story < ApplicationRecord
   validates :title, length: { :in => 3..150 }
   validates :description, length: { :maximum => (64 * 1024) }
   validates :url, length: { :maximum => 250, :allow_nil => true }
+  validates :short_id, presence: true, length: { :maximum => 6 }
+  validates :markeddown_description, length: { :maximum => 16_777_215, :allow_nil => true }
+  validates :story_cache, length: { :maximum => 16_777_215, :allow_nil => true }
+  validates :twitter_id, length: { :maximum => 20, :allow_nil => true }
 
   validates_each :merged_story_id do |record, _attr, value|
     if value.to_i == record.id

@@ -7,6 +7,32 @@ describe Story do
     expect(s.short_id).to match(/^\A[a-zA-Z0-9]{1,10}\z/)
   end
 
+  it "has a limit on the markdown description field" do
+    s = build(:story)
+    s.markeddown_description = "Z" * 16_777_218
+
+    s.valid?
+    expect(s.errors[:markeddown_description]).to(
+      eq(['is too long (maximum is 16777215 characters)'])
+    )
+  end
+
+  it "has a limit on the story cache field" do
+    s = build(:story)
+    s.story_cache = "Z" * 16_777_218
+
+    s.valid?
+    expect(s.errors[:story_cache]).to eq(['is too long (maximum is 16777215 characters)'])
+  end
+
+  it "has a limit on the twitter id field" do
+    s = build(:story)
+    s.twitter_id = "Z" * 25
+
+    s.valid?
+    expect(s.errors[:twitter_id]).to eq(['is too long (maximum is 20 characters)'])
+  end
+
   it "requires a url or a description" do
     expect { create(:story, :title => "hello", :url => "", :description => "") }.to raise_error
 

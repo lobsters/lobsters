@@ -18,6 +18,51 @@ describe User do
 
     # bad address
     expect { create(:user, :email => "user@") }.to raise_error
+
+    # address too long
+    expect(build(:user, :email => "a" * 95 + "@example.com")).to_not be_valid
+  end
+
+  it "has a limit on the password reset token field" do
+    user = build(:user, :password_reset_token => "a" * 100)
+    user.valid?
+    expect(user.errors[:password_reset_token]).to eq(['is too long (maximum is 75 characters)'])
+  end
+
+  it "has a limit on the session token field" do
+    user = build(:user, :session_token => "a" * 100)
+    user.valid?
+    expect(user.errors[:session_token]).to eq(['is too long (maximum is 75 characters)'])
+  end
+
+  it "has a limit on the about field" do
+    user = build(:user, :about => "a" * 16_777_218)
+    user.valid?
+    expect(user.errors[:about]).to eq(['is too long (maximum is 16777215 characters)'])
+  end
+
+  it "has a limit on the rss token field" do
+    user = build(:user, :rss_token => "a" * 100)
+    user.valid?
+    expect(user.errors[:rss_token]).to eq(['is too long (maximum is 75 characters)'])
+  end
+
+  it "has a limit on the mailing list token field" do
+    user = build(:user, :mailing_list_token => "a" * 100)
+    user.valid?
+    expect(user.errors[:mailing_list_token]).to eq(['is too long (maximum is 75 characters)'])
+  end
+
+  it "has a limit on the banned reason field" do
+    user = build(:user, :banned_reason => "a" * 300)
+    user.valid?
+    expect(user.errors[:banned_reason]).to eq(['is too long (maximum is 200 characters)'])
+  end
+
+  it "has a limit on the disabled invite reason field" do
+    user = build(:user, :disabled_invite_reason => "a" * 300)
+    user.valid?
+    expect(user.errors[:disabled_invite_reason]).to eq(['is too long (maximum is 200 characters)'])
   end
 
   it "has a valid homepage" do

@@ -7,7 +7,7 @@ describe 'merged stories', type: :request do
   let(:story) { create(:story) }
 
   context 'user votes on merged story' do
-    before {
+    before do
       sign_in mod
       put "/stories/#{merged_story.short_id}", params: {
         story: {
@@ -16,7 +16,7 @@ describe 'merged stories', type: :request do
         },
       }
       sign_in user
-    }
+    end
 
     it "does nothing when upvoting merged story" do
       post "/stories/#{merged_story.short_id}/upvote"

@@ -16,7 +16,7 @@ module AuthenticationHelper
       click_button 'Login'
     end
   end
-  
+
   module RequestHelper
     def sign_in user
       post '/login', params: { email: user.email, password: user.password }

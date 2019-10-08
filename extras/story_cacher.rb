@@ -40,12 +40,14 @@ class StoryCacher
       Rails.logger.error "error fetching #{db_url}: #{e.message}"
     end
 
+    ia_url = "https://web.archive.org/save/#{story.url}"
+
     begin
       s = Sponge.new
       s.timeout = 45
-      s.fetch(story.archive_url)
+      s.fetch(ia_url)
     rescue => e
-      Rails.logger.error "error caching #{db_url}: #{e.message}"
+      Rails.logger.error "error caching #{ia_url}: #{e.message}"
     end
 
     nil

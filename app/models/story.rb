@@ -278,7 +278,8 @@ class Story < ApplicationRecord
   end
 
   def archive_url
-    "https://archive.is/#{CGI.escape(self.url)}"
+    datecode = (self.created_at || Time.current).utc.strftime("%Y%m%d%H%M%S")
+    "https://web.archive.org/web/#{datecode}/#{self.url}"
   end
 
   def as_json(options = {})

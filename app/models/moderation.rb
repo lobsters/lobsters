@@ -20,6 +20,8 @@ class Moderation < ApplicationRecord
       comments.user_id = ?", user, user, user)
   }
 
+  validates :action, :reason, length: { maximum: 16_777_215 }
+
   after_create :send_message_to_moderated
 
   def send_message_to_moderated

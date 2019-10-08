@@ -1,7 +1,7 @@
 class Keystore < ApplicationRecord
   self.primary_key = "key"
 
-  validates :key, presence: true
+  validates :key, presence: true, length: { maximum: 50 }
 
   def self.get(key)
     self.find_by(:key => key)
@@ -12,6 +12,7 @@ class Keystore < ApplicationRecord
   end
 
   def self.put(key, value)
+    validate_input_key(key)
     if Keystore.connection.adapter_name == "SQLite"
       Keystore.connection.execute("INSERT OR REPLACE INTO " <<
         "#{Keystore.table_name} (`key`, `value`) VALUES " <<
@@ -25,7 +26,6 @@ class Keystore < ApplicationRecord
       kv.value = value
       kv.save!
     end
-
     true
   end
 
@@ -34,6 +34,7 @@ class Keystore < ApplicationRecord
   end
 
   def self.incremented_value_for(key, amount = 1)
+    validate_input_key(key)
     Keystore.transaction do
       if Keystore.connection.adapter_name == "SQLite"
         Keystore.connection.execute("INSERT OR IGNORE INTO " <<
@@ -90,5 +91,10 @@ class Keystore < ApplicationRecord
 
   def self.decremented_value_for(key, amount = -1)
     self.incremented_value_for(key, amount)
+  end
+
+  def self.validate_input_key(key)
+    exception = ActiveRecord::ValueTooLong.new('50 characters is the maximum allowed for key')
+    raise exception if key.length > 50
   end
 end

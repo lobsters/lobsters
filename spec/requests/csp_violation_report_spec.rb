@@ -1,11 +1,12 @@
 require 'rails_helper'
 
 describe 'csp violations', type: :request do
-  it 'records the violation' do
-    body = {
+  let(:document_uri) { "http://localhost:3000/s/izi825/hckr_news_hacker_news_sorted_by_time" }
+  let(:post_body) do
+    {
       "csp-report" => {
         "blocked-uri" => "data",
-        "document-uri" => "http://localhost:3000/s/izi825/hckr_news_hacker_news_sorted_by_time",
+        "document-uri" => document_uri,
         "original-policy" => [
           "default-src 'none'",
           "img-src *",
@@ -18,8 +19,16 @@ describe 'csp violations', type: :request do
         "violated-directive" => "img-src",
       },
     }
+  end
 
-    post '/csp-violation-report', params: { body: body.to_json, format: :json }
+  it 'response appopriately' do
+    post '/csp-violation-report', params: { body: post_body.to_json, format: :json }
     expect(response).to have_http_status(:ok)
+  end
+
+  it 'records the violation' do
+    allow(Rails.logger).to receive(:info)
+    post '/csp-violation-report', params: { body: post_body.to_json, format: :json }
+    expect(Rails.logger).to have_received(:info).with(/#{document_uri}/)
   end
 end

@@ -34,6 +34,7 @@ describe InvitationRequest do
   it "has a limit on the ip_address field" do
     invitation_request = build(:invitation_request, ip_address: "a" * 256)
     invitation_request.valid?
-    expect(invitation_request.errors[:ip_address]).to eq(['is too long (maximum is 255 characters)'])
+    expect(invitation_request.errors[:ip_address])
+      .to eq(['is too long (maximum is 255 characters)'])
   end
 end

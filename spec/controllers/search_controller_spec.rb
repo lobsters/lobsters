@@ -2,16 +2,20 @@ require 'rails_helper'
 
 describe SearchController do
   describe '#index' do
-    it 'response okish for html requests' do
-      get :index
+    context 'when requesting html view' do
+      it 'responses with oki' do
+        get :index
 
-      expect(response).to have_http_status(:ok)
+        expect(response).to have_http_status(:ok)
+      end
     end
 
-    it 'responses with a 404 for rss requests' do
-      get :index, format: :rss
+    context 'when requested with another format' do
+      it 'responses with a 404' do
+        get :index, format: :rss
 
-      expect(response).to have_http_status(:not_found)
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 end

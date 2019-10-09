@@ -1,5 +1,14 @@
 class SearchController < ApplicationController
   def index
+    respond_to do |format|
+      format.html { render_search }
+      format.all { render status: :not_found, plain: '404 not found' }
+    end
+  end
+
+private
+
+  def render_search
     @title = "Search"
     @cur_url = "/search"
 
@@ -23,10 +32,6 @@ class SearchController < ApplicationController
       end
     end
 
-    respond_to :html
-  end
-
-  rescue_from ActionController::UnknownFormat do
-    render status: :not_found, plain: '404 not found'
+    render action: :index
   end
 end

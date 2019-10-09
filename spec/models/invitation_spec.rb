@@ -2,18 +2,21 @@ require 'rails_helper'
 
 describe Invitation do
   it "has a limit on the email field" do
-    invitation = build(:invitation, email: "a" * 256)
-    expect(invitation).to_not be_valid
+    invitation = build(:invitation, email: 'a' * 256 + '@b.b')
+    invitation.valid?
+    expect(invitation.errors[:email]).to eq(['is too long (maximum is 255 characters)'])
   end
 
-  it "has a limit on the code field" do
+  it "creates a code before validation" do
     invitation = build(:invitation)
-    invitation.code = "a" * 256
-    expect(invitation).to_not be_valid
+    invitation.code = 'my code'
+    invitation.valid?
+    expect(invitation.code).to_not eq('my_code')
   end
 
   it "has a limit on the memo field" do
     invitation = build(:invitation, memo: "a" * 256)
-    expect(invitation).to_not be_valid
+    invitation.valid?
+    expect(invitation.errors[:memo]).to eq(['is too long (maximum is 255 characters)'])
   end
 end

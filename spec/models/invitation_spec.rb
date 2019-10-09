@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 describe Invitation do
+  it "has a valid factory" do
+    invitation = build(:invitation)
+    expect(invitation).to be_valid
+  end
+
   it "has a limit on the email field" do
     invitation = build(:invitation, email: 'a' * 256 + '@b.b')
     invitation.valid?

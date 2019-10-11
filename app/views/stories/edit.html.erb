@@ -10,6 +10,18 @@
     <% if @user.is_moderator? %>
       <br />
       <div class="box">
+        <!-- Because description can't be empty if URL is absent -->
+        <% unless @story.url.empty? %>
+          <div class="boxline">
+            <%= f.label :repost_description, "Add comment:",
+              :class => "required" %>
+            <%= f.check_box :repost_description %>
+            <%= f.label :repost_description, "Repost description " <<
+              "as comment", :class => "normal" %>
+          </div>
+        <% end %>
+
+
         <div class="boxline">
           <%= f.label :merge_story_short_id, "Merge Into:",
             :class => "required" %>

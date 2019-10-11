@@ -244,11 +244,12 @@ class StoriesController < ApplicationController
     @story.editor = @user
 
     if @story.url_is_editable_by_user?(@user)
-      @story.attributes = story_params
+      @story.attributes = story_params.except(:repost_description)
     else
-      @story.attributes = story_params.except(:url)
+      @story.attributes = story_params.except(:url, :repost_description)
     end
 
+    StoriesHelper.repost_story_description(@story, story_params) if @user && @user.is_moderator?
     if @story.save
       return redirect_to @story.comments_path
     else
@@ -385,7 +386,7 @@ private
     p = params.require(:story).permit(
       :title, :url, :description, :moderation_reason, :seen_previous,
       :merge_story_short_id, :is_unavailable, :user_is_author, :user_is_following,
-      :tags_a => [],
+      :repost_description, :tags_a => []
     )
 
     if @user && @user.is_moderator?

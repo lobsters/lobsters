@@ -31,12 +31,32 @@ class FakeDataGenerator
       end
     end
 
+    # User-deleted stories
+    (@stories_count / 10).times do
+      user = users[Random.rand(@users_count-1)]
+      title = Faker::Lorem.sentence(3)
+      tag = Tag.find_or_create_by! tag: title.split(' ').first.downcase
+      Story.create! user: user,
+        title: title,
+        tags_a: [tag.tag],
+        description: Faker::Lorem.paragraphs(1),
+        is_expired: true,
+        editor: user
+    end
+
     # Comments
     Story.all.each do |x|
-      Random.rand(1..3).times do
-        Comment.create! user: users[Random.rand(@users_count-1)],
+      Random.rand(1..3).times do |i|
+        c = Comment.create! user: users[Random.rand(@users_count-1)],
           comment: Faker::Lorem.sentence(Random.rand(30..50)),
           story_id: x.id
+        # Replies to comments
+        if i.odd?
+          Comment.create! user: x.user,
+            comment: Faker::Lorem.sentence(Random.rand(30..50)),
+            story_id: x.id,
+            parent_comment_id: c.id
+        end
       end
     end
 

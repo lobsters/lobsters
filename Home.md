@@ -33,3 +33,4 @@ Inspired by Lobsters, but not using the Lobsters codebase.
 
 * [Quasars](https://quasa.rs) ([repo](https://github.com/kineticdial/quasars))
 * [laarc](https://www.laarc.io/) ([repo](https://github.com/laarc/laarc)) - STEM. Humanities. Humor. A cross between Pinboard and Hacker News.
+* [Pythonic News](https://news.python.sc/) ([repo](https://github.com/sebst/pythonic-news)) - A social news aggregator for the Python community.

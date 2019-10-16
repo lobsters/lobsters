@@ -589,11 +589,14 @@ class Story < ApplicationRecord
       m.moderator_user_id = self.editor.try(:id)
     end
     m.story_id = self.id
-
     if all_changes["is_expired"] && self.is_expired?
       m.action = "deleted story"
     elsif all_changes["is_expired"] && !self.is_expired?
       m.action = "undeleted story"
+    elsif check_for_description_repost(all_changes)
+      comment = self.comments.find(&:new_record?)
+      comment.try(:save)
+      m.action = "reposted description as comment https://lobste.rs/c/#{comment.short_id}"
     else
       m.action = all_changes.map {|k, v|
         if k == "merged_story_id"
@@ -1058,5 +1061,11 @@ private
 
   def canonical_target(parsed)
     parsed.at_css("link[rel='canonical']").attributes["href"].text
+  end
+
+  def check_for_description_repost(all_changes)
+    all_changes["description"] &&
+      all_changes["markeddown_description"][1].empty? &&
+      self.comments.any?(&:new_record?)
   end
 end

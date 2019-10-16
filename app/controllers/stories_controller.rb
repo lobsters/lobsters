@@ -250,6 +250,7 @@ class StoriesController < ApplicationController
     end
 
     StoriesHelper.repost_story_description(@story, story_params) if @user && @user.is_moderator?
+
     if @story.save
       return redirect_to @story.comments_path
     else

@@ -3,6 +3,7 @@ FactoryBot.define do
     association(:user)
     sequence(:title) {|n| "story title #{n}" }
     sequence(:url) {|n| "http://example.com/#{n}" }
+    sequence(:description) {|n| "#{n} Lorem ipsum dolor sit amet" }
     tags_a { ["tag1", "tag2"] }
 
     trait :deleted do

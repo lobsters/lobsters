@@ -177,4 +177,69 @@ describe 'stores', type: :request do
       expect(Vote.where(user: user).count).to eq(0)
     end
   end
+
+  describe '#UPDATE' do
+    let(:attr) do
+      {
+        url: 'http://newexample.com/',
+        title: 'new title',
+        description: 'new description',
+      }
+    end
+    let(:send_request) { put :update, params: { id: story.short_id, story: attr } }
+    let(:send_request_with_repost) do
+      put :update, params: { id: story.short_id,
+                             story: attr.merge(:repost_description => '1'), }
+    end
+
+    before { stub_login_as mod }
+
+    context "get #edit" do
+      it "has a 200 status code" do
+        get :edit, params: { id: story.short_id }
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "when params is valid" do
+      before do
+        send_request
+        story.reload
+      end
+
+      it "update story attributes" do
+        expect(story.title).to eql attr[:title]
+        expect(story.url).to eql attr[:url]
+        expect(story.description).to eql attr[:description]
+      end
+
+      it "redirect to story comment path" do
+        expect(response).to redirect_to(story.comments_path)
+      end
+    end
+
+    context "when params is valid and include repost description option" do
+      before do
+        send_request_with_repost
+        story.reload
+      end
+
+      it "cleanse story description" do
+        expect(story.description).to be_empty
+      end
+
+      it "create new comment with description message" do
+        expect(story.comments.take.comment).to eq(attr[:description])
+      end
+
+      it "create new comment with story timestamp" do
+        expect(story.comments.take.created_at).to eq(story.created_at)
+        expect(story.comments.take.updated_at).to eq(story.created_at)
+      end
+
+      it "create new comment by the story submitter" do
+        expect(story.comments.take.user).to eq(story.user)
+      end
+    end
+  end
 end

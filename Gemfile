@@ -39,7 +39,7 @@ gem "ruumba" # tests views
 gem "sitemap_generator" # for better search engine indexing
 gem 'transaction_retry' # mitigate https://github.com/lobsters/lobsters-ansible/issues/39
 
-gem "scout_apm", :git => 'https://github.com/scoutapp/scout_apm_ruby.git', :ref => '574b0a6'
+gem "scout_apm"
 
 group :test, :development do
   gem 'bullet'

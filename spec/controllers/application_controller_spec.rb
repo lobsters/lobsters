@@ -1,33 +1,49 @@
 require 'rails_helper'
 
 describe ApplicationController do
-  describe 'rescuing for unkown format errors' do
+  describe 'rescuing format errors' do
     controller do
-      def index
+      def with_respond_to
         respond_to do |format|
           format.html { render plain: 'hello world', status: :ok }
         end
       end
+
+      def with_render
+        render plain: 'hello world', status: :ok
+      end
     end
 
+    # https://github.com/rspec/rspec-rails/issues/636
     before do
-      get :index, format: request_format
-    end
-
-    context 'requesting with handeled format' do
-      let(:request_format) { :html }
-
-      it 'responses with the expected http status code' do
-        expect(response).to have_http_status(:ok)
+      routes.draw do
+        get 'with_respond_to' => 'anonymous#with_respond_to'
+        get 'with_render' => 'anonymous#with_render'
       end
     end
 
-    context 'requesting with unhandeled format' do
-      let(:request_format) { :flv }
+    it 'requesting valid format from respond_to works' do
+      get :with_respond_to, format: :html
+      expect(response).to have_http_status(:ok)
+      get :with_respond_to
+      expect(response).to have_http_status(:ok)
+    end
 
-      it 'responses with a error inicating http status code' do
-        expect(response).to have_http_status(:not_found)
-      end
+    it 'requesting valid format from render call worksworks' do
+      get :with_render, format: :html
+      expect(response).to have_http_status(:ok)
+      get :with_render
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'requesting unhandled format from respond_to fails' do
+      get :with_respond_to, format: :rss
+      expect(response).to have_http_status(:not_found)
+    end
+
+    xit 'requesting unhandled format from render fails' do
+      get :with_render, format: :rss
+      expect(response).to have_http_status(:not_found)
     end
   end
 end

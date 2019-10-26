@@ -2,7 +2,6 @@ class SearchController < ApplicationController
   def index
     respond_to do |format|
       format.html { render_search }
-      format.all { render status: :not_found, plain: '404 not found' }
     end
   end
 

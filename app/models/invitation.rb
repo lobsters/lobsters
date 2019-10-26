@@ -11,6 +11,8 @@ class Invitation < ApplicationRecord
     end
   end
 
+  validates :code, :email, :memo, length: { maximum: 255 }
+
   before_validation :create_code, :on => :create
 
   def create_code

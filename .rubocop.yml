@@ -180,6 +180,8 @@ Style/ExpandPathArguments:
   Enabled: false
 Style/FormatString:
   Enabled: false
+Style/FormatStringToken:
+  Enabled: false
 Style/FrozenStringLiteralComment:
   EnforcedStyle: never
 Style/GuardClause:

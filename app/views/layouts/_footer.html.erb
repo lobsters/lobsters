@@ -6,7 +6,9 @@
   <a href="/hats/requests">Hat Requests (<%= hrc %>)</a>
 <% else %>
   <a href="/hats">Hats</a>
+  <a href="/tags">Tags</a>
 <% end %>
+
 <% if false %>
   <% bbs_count = Keystore.get("bbs:nodes_in_use").try(:value).to_i %>
   <a href="/bbs">BBS<%= bbs_count == 0 ? "" : " (#{bbs_count})" %></a>

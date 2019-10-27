@@ -977,17 +977,35 @@ class Story < ApplicationRecord
 
     @fetched_attributes[:title] = title
 
-    # now get canonical version of url (though some cms software puts incorrect
-    # urls here, hopefully the user will notice)
+    # attempt to get the canonical url if it can be parsed,
+    # if it is not the domain root path, and if it
+    # responds to GET with a 200-level code
     begin
-      if (cu = parsed.at_css("link[rel='canonical']").attributes["href"] .text).present? &&
-         (ucu = URI.parse(cu)) && ucu.scheme.present? &&
-         ucu.host.present?
-        @fetched_attributes[:url] = cu
-      end
+      cu = canonical_target(parsed)
+      @fetched_attributes[:url] = cu if valid_canonical_uri?(cu)
     rescue
     end
 
     @fetched_attributes
+  end
+
+private
+
+  def valid_canonical_uri?(url)
+    ucu = URI.parse(url)
+    new_page = ucu &&
+               ucu.scheme.present? &&
+               ucu.host.present? &&
+               ucu.path != "/"
+
+    return false unless new_page
+
+    res = Sponge.new.fetch(url)
+
+    res.code.to_s =~ /\A2.*\Z/
+  end
+
+  def canonical_target(parsed)
+    parsed.at_css("link[rel='canonical']").attributes["href"].text
   end
 end

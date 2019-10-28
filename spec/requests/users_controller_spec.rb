@@ -5,7 +5,7 @@ describe 'users controller' do
     it 'displays the username' do
       user = create(:user)
 
-      get "/top/1y.rss"
+      get "/u/#{user.username}"
 
       expect(response.body).to include("User #{user.username}")
     end

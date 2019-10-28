@@ -21,7 +21,7 @@ describe 'csp violations', type: :request do
     }
   end
 
-  it 'response appopriately' do
+  it 'responds appropriately' do
     post '/csp-violation-report', params: { body: post_body.to_json, format: :json }
     expect(response).to have_http_status(:ok)
   end

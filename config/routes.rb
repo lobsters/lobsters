@@ -101,14 +101,17 @@ Rails.application.routes.draw do
   get "/comments/page/:page" => "comments#index"
   get "/comments" => "comments#index"
 
-  get "/messages/sent" => "messages#sent"
-  get "/messages" => "messages#index"
-  post "/messages/batch_delete" => "messages#batch_delete",
-    :as => "batch_delete_messages"
-  resources :messages do
-    post "keep_as_new"
-    post "mod_note"
+  resources :conversations, only: [:index, :show, :create, :destroy] do
+    scope module: :conversations do
+      resources :messages, only: :create do
+        patch :mod_note
+      end
+    end
   end
+  # old message routes; rm after 2020-10-01
+  get "/messages", to: redirect("/conversations")
+  get "/messages/sent", to: redirect("/conversations")
+  get "/messages/:short_id", to: redirect("/conversations")
 
   get "/c/:id" => "comments#redirect_from_short_id"
   get "/c/:id.json" => "comments#show_short_id", :format => "json"

@@ -345,7 +345,8 @@ div#gravatar img {
 
 ol.stories,
 ol.comments,
-ol.search_results {
+ol.search_results,
+ol.messages {
 	padding: 0;
 	list-style: none;
 	margin: 0;
@@ -761,8 +762,8 @@ div.story_text blockquote {
 }
 
 /* un-italicize italics inside a blockquote */
-div.comment_text blockquote em, 
-div.markdown_help blockquote em, 
+div.comment_text blockquote em,
+div.markdown_help blockquote em,
 div.story_text blockquote em {
     font-style: normal
 }
@@ -973,6 +974,10 @@ ul.user_tree {
 }
 
 /* data tables */
+
+table.data {
+  width: 100%;
+}
 
 table.data th {
 	background-color: #eaeaea;
@@ -1274,4 +1279,27 @@ div.fieldWithErrors {
 	text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
 	text-decoration: none;
 	vertical-align: middle;
+}
+
+/* Conversations & Messages */
+
+tr.unread {
+	font-weight: bold;
+}
+
+.new_conversation, .new_message {
+	margin-top: 2em;
+}
+
+.messages .meta {
+	display: block;
+	color: #888;
+}
+
+.byline form {
+	display: inline;
+}
+
+.message_text p:first-child {
+	margin-top: 0;
 }

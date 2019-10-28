@@ -214,17 +214,19 @@ class User < ApplicationRecord
       self.disabled_invite_reason = reason
       self.save!
 
-      msg = Message.new
-      msg.deleted_by_author = true
-      msg.author_user_id = disabler.id
-      msg.recipient_user_id = self.id
-      msg.subject = "Your invite privileges have been revoked"
-      msg.body = "The reason given:\n" <<
-                 "\n" <<
-                 "> *#{reason}*\n" <<
-                 "\n" <<
-                 "*This is an automated message.*"
-      msg.save!
+      body = <<~BODY
+        The reason given:
+
+        > *#{reason}*
+
+        *This is an automated message.*
+      BODY
+      ConversationForm.new(
+        author: disabler,
+        username: self.username,
+        subject: "Your invite privileges have been revoked",
+        body: body,
+      ).save
 
       m = Moderation.new
       m.moderator_user_id = disabler.id

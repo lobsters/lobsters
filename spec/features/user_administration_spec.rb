@@ -8,7 +8,7 @@ RSpec.feature "User Administration" do
 
   before(:each) { stub_login_as admin }
 
-  scenario 'diabling invites' do
+  scenario 'disabling invites' do
     expect(user.can_invite?).to be(true)
     visit user_path(user)
     expect(page).to have_button('Disable Invites')

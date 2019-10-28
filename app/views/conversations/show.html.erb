@@ -1,0 +1,48 @@
+<div class="inside box wide">
+  <div class="legend"><%= @conversation.subject %></div>
+
+  <%= form_with url: conversation_path(@conversation), method: :delete, local: true do |f| %>
+    <%= f.submit "Delete Conversation" %>
+  <% end %><br />
+
+  <ol class="messages">
+    <% @conversation.messages.each do |message| %>
+      <li class="message">
+        <header class="byline">
+          <% if @user.show_avatars? %>
+            <a href="/u/<%= message.author.username %>"><%= avatar_img(message.author, 16) %></a>
+          <% end %>
+
+          <%= link_to message.author.username, "/u/#{message.author.username}" %>
+          <%= message.hat.to_html_label if message.hat %>
+          <time datetime="<%= l(message.created_at, format: :datetime) %>" class="timestamp">
+            <%= time_ago_in_words_label(message.created_at) %>
+          </time>
+          <% if @user.is_moderator? %>
+            <%= form_with model: message, url: conversation_message_mod_note_path(@conversation, message), local: true do |f| %>
+              <%= f.submit 'ModNote' %>
+            <% end %>
+          <% end %>
+        </header>
+        <div class="message_text">
+          <%= raw message.linkified_body %>
+        </div>
+      </li>
+    <% end %>
+  </ol>
+
+  <section class="new_message">
+    <%= form_with model: [@conversation, @message], local: true do |f| %>
+      <%= error_messages_for @message %>
+      <div class="boxline">
+        <%= f.label :body, "Message", :class => "required" %>
+        <%= f.text_area :body %>
+      </div>
+      <div class="boxline">
+        <%= render partial: "conversations/hat_inputs", locals: { user: @user, form: f } %>
+      </div>
+
+      <%= f.submit "Send Message" %>
+    <% end %>
+  </section>
+</div>

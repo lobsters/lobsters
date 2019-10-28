@@ -1,4 +1,5 @@
 class Message < ApplicationRecord
+  belongs_to :conversation, touch: true
   belongs_to :recipient,
              :class_name => "User",
              :foreign_key => "recipient_user_id",
@@ -13,7 +14,6 @@ class Message < ApplicationRecord
   attribute :mod_note, :boolean
   attr_reader :recipient_username
 
-  validates :subject, length: { :in => 1..100 }
   validates :body, length: { :maximum => (64 * 1024) }
   validate :hat do
     next if hat.blank?
@@ -22,19 +22,16 @@ class Message < ApplicationRecord
     end
   end
 
-  scope :unread, -> { where(:has_been_read => false, :deleted_by_recipient => false) }
+  scope :unread, -> { where(has_been_read: false, deleted_by_recipient: false) }
+  scope :unread_by, ->(user) { unread.where(recipient: user) }
 
-  before_validation :assign_short_id, :on => :create
   after_create :deliver_email_notifications
   after_save :update_unread_counts
-  after_save :check_for_both_deleted
 
   def as_json(_options = {})
     attrs = [
-      :short_id,
       :created_at,
       :has_been_read,
-      :subject,
       :body,
       :deleted_by_author,
       :deleted_by_recipient,
@@ -48,21 +45,11 @@ class Message < ApplicationRecord
     h
   end
 
-  def assign_short_id
-    self.short_id = ShortId.new(self.class).generate
-  end
-
   def author_username
     if self.author
       self.author.username
     else
       "System"
-    end
-  end
-
-  def check_for_both_deleted
-    if self.deleted_by_author? && self.deleted_by_recipient?
-      self.destroy
     end
   end
 
@@ -84,7 +71,7 @@ class Message < ApplicationRecord
     if self.recipient.pushover_messages?
       self.recipient.pushover!(
         :title => "#{Rails.application.name} message from " <<
-          "#{self.author_username}: #{self.subject}",
+          "#{self.author_username}: #{self.conversation.subject}",
         :message => self.plaintext_body,
         :url => self.url,
         :url_title => (self.author ? "Reply to #{self.author_username}" :
@@ -111,13 +98,5 @@ class Message < ApplicationRecord
   def plaintext_body
     # TODO: linkify then strip tags and convert entities back
     self.body.to_s
-  end
-
-  def to_param
-    self.short_id
-  end
-
-  def url
-    Rails.application.root_url + "messages/#{self.short_id}"
   end
 end

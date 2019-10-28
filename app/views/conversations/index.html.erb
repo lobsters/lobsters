@@ -1,0 +1,46 @@
+<p></p>
+<div class="inside box wide">
+  <table class="data zebra" cellspacing=0>
+    <thead>
+      <th>From</th>
+      <th>Latest</th>
+      <th>#</th>
+      <th>Subject</th>
+    </thead>
+    <tbody>
+      <% @conversations.each do |conversation| %>
+        <% partner = conversation.partner(of: @user).username %>
+        <tr class="<%= conversation.unread_by(@user) ? 'unread' : '' %>">
+          <td><%= link_to partner, "/u/#{partner}" %></td>
+          <td><%= time_ago_in_words_label(conversation.updated_at) %></td>
+          <td><%= conversation.messages.count %></td>
+          <td><%= link_to conversation.subject, conversation_path(conversation) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= form_with model: @conversation_form, class: "new_conversation", local: true do |f| %>
+    <h2 class="legend">Create Conversation</h2>
+    <%= error_messages_for @conversation_form %>
+
+    <div class="boxline">
+      <%= f.label :username, "To:", class: "required" %>
+      <%= f.text_field :username %>
+    </div>
+    <div class="boxline">
+      <%= f.label :subject, "Subject:", class: "required" %>
+      <%= f.text_field :subject, style: 'width: 500px;', maxlength: 100 %>
+    </div>
+    <div class="boxline">
+      <%= f.label :body, "Message:", class: "required" %>
+      <%= f.text_area :body, style: 'width: 500px;' %>
+    </div>
+    <div class="boxline">
+      <%= render partial: "hat_inputs", locals: { user: @user, form: f } %>
+    </div>
+    <div class="boxline">
+      <%= f.submit %>
+    </div>
+  <% end %>
+</div>

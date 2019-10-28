@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_29_133507) do
+ActiveRecord::Schema.define(version: 2019_06_03_153814) do
 
   create_table "comments", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -38,6 +38,19 @@ ActiveRecord::Schema.define(version: 2019_05_29_133507) do
     t.index ["thread_id"], name: "thread_id"
     t.index ["user_id", "story_id", "downvotes", "created_at"], name: "downvote_index"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "conversations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "short_id", null: false
+    t.string "subject", null: false
+    t.bigint "author_user_id", null: false
+    t.bigint "recipient_user_id", null: false
+    t.datetime "deleted_by_author_at"
+    t.datetime "deleted_by_recipient_at"
+    t.index ["author_user_id"], name: "index_conversations_on_author_user_id"
+    t.index ["recipient_user_id"], name: "index_conversations_on_recipient_user_id"
   end
 
   create_table "hat_requests", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -107,13 +120,13 @@ ActiveRecord::Schema.define(version: 2019_05_29_133507) do
     t.boolean "has_been_read", default: false
     t.string "subject", limit: 100
     t.text "body", limit: 16777215
-    t.string "short_id", limit: 30
     t.boolean "deleted_by_author", default: false
     t.boolean "deleted_by_recipient", default: false
     t.bigint "hat_id", unsigned: true
+    t.bigint "conversation_id", null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
     t.index ["hat_id"], name: "index_messages_on_hat_id"
     t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"
-    t.index ["short_id"], name: "random_hash", unique: true
   end
 
   create_table "mod_notes", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -301,6 +314,7 @@ ActiveRecord::Schema.define(version: 2019_05_29_133507) do
   add_foreign_key "hidden_stories", "users", name: "hidden_stories_user_id_fk"
   add_foreign_key "invitations", "users", column: "new_user_id", name: "invitations_new_user_id_fk"
   add_foreign_key "invitations", "users", name: "invitations_user_id_fk"
+  add_foreign_key "messages", "conversations", name: "messages_conversation_id_fk"
   add_foreign_key "messages", "hats", name: "messages_hat_id_fk"
   add_foreign_key "messages", "users", column: "recipient_user_id", name: "messages_recipient_user_id_fk"
   add_foreign_key "mod_notes", "users", column: "moderator_user_id", name: "mod_notes_moderator_user_id_fk"
@@ -331,8 +345,7 @@ ActiveRecord::Schema.define(version: 2019_05_29_133507) do
   add_foreign_key "votes", "stories", name: "votes_story_id_fk"
   add_foreign_key "votes", "users", name: "votes_user_id_fk"
 
-  create_view "replying_comments",  sql_definition: <<-SQL
-      select `read_ribbons`.`user_id` AS `user_id`,`comments`.`id` AS `comment_id`,`read_ribbons`.`story_id` AS `story_id`,`comments`.`parent_comment_id` AS `parent_comment_id`,`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`comments`.`user_id` AS `comment_author_id`,`stories`.`user_id` AS `story_author_id`,`read_ribbons`.`updated_at` < `comments`.`created_at` AS `is_unread`,(select `votes`.`vote` from `votes` where `votes`.`user_id` = `read_ribbons`.`user_id` and `votes`.`comment_id` = `comments`.`id`) AS `current_vote_vote`,(select `votes`.`reason` from `votes` where `votes`.`user_id` = `read_ribbons`.`user_id` and `votes`.`comment_id` = `comments`.`id`) AS `current_vote_reason` from (((`read_ribbons` join `comments` on(`comments`.`story_id` = `read_ribbons`.`story_id`)) join `stories` on(`stories`.`id` = `comments`.`story_id`)) left join `comments` `parent_comments` on(`parent_comments`.`id` = `comments`.`parent_comment_id`)) where `read_ribbons`.`is_following` = 1 and `comments`.`user_id` <> `read_ribbons`.`user_id` and `comments`.`is_deleted` = 0 and `comments`.`is_moderated` = 0 and (`parent_comments`.`user_id` = `read_ribbons`.`user_id` or `parent_comments`.`user_id` is null and `stories`.`user_id` = `read_ribbons`.`user_id`) and `comments`.`upvotes` - `comments`.`downvotes` >= 0 and (`parent_comments`.`id` is null or `parent_comments`.`upvotes` - `parent_comments`.`downvotes` >= 0 and `parent_comments`.`is_moderated` = 0 and `parent_comments`.`is_deleted` = 0) and !exists(select 1 from (`votes` `f` join `comments` `c` on(`f`.`comment_id` = `c`.`id`)) where `f`.`vote` < 0 and `f`.`user_id` = `parent_comments`.`user_id` and `c`.`user_id` = `comments`.`user_id` and `f`.`story_id` = `comments`.`story_id`) and cast(`stories`.`upvotes` as signed) - cast(`stories`.`downvotes` as signed) >= 0
+  create_view "replying_comments", sql_definition: <<-SQL
+      select `read_ribbons`.`user_id` AS `user_id`,`comments`.`id` AS `comment_id`,`read_ribbons`.`story_id` AS `story_id`,`comments`.`parent_comment_id` AS `parent_comment_id`,`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`comments`.`user_id` AS `comment_author_id`,`stories`.`user_id` AS `story_author_id`,`read_ribbons`.`updated_at` < `comments`.`created_at` AS `is_unread`,(select `votes`.`vote` from `votes` where `votes`.`user_id` = `read_ribbons`.`user_id` and `votes`.`comment_id` = `comments`.`id`) AS `current_vote_vote`,(select `votes`.`reason` from `votes` where `votes`.`user_id` = `read_ribbons`.`user_id` and `votes`.`comment_id` = `comments`.`id`) AS `current_vote_reason` from (((`read_ribbons` join `comments` on(`comments`.`story_id` = `read_ribbons`.`story_id`)) join `stories` on(`stories`.`id` = `comments`.`story_id`)) left join `comments` `parent_comments` on(`parent_comments`.`id` = `comments`.`parent_comment_id`)) where `read_ribbons`.`is_following` = 1 and `comments`.`user_id` <> `read_ribbons`.`user_id` and `comments`.`is_deleted` = 0 and `comments`.`is_moderated` = 0 and (`parent_comments`.`user_id` = `read_ribbons`.`user_id` or `parent_comments`.`user_id` is null and `stories`.`user_id` = `read_ribbons`.`user_id`) and `comments`.`upvotes` - `comments`.`downvotes` >= 0 and (`parent_comments`.`id` is null or `parent_comments`.`upvotes` - `parent_comments`.`downvotes` >= 0 and `parent_comments`.`is_moderated` = 0 and `parent_comments`.`is_deleted` = 0) and !exists(select 1 from (`votes` `f` join `comments` `c` on(`f`.`comment_id` = `c`.`id`)) where `f`.`vote` < 0 and `f`.`user_id` = `parent_comments`.`user_id` and `c`.`user_id` = `comments`.`user_id` and `f`.`story_id` = `comments`.`story_id` limit 1) and cast(`stories`.`upvotes` as signed) - cast(`stories`.`downvotes` as signed) >= 0
   SQL
-
 end

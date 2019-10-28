@@ -128,11 +128,11 @@ describe Story do
 
     it "can fetch its title properly" do
       s = build(:story)
-      s.fetched_content = File.read(story_directory + "1.html")
+      s.fetched_content = File.read(story_directory + "title_ampersand.html")
       expect(s.fetched_attributes[:title]).to eq("B2G demo & quick hack // by Paul Rouget")
 
       s = build(:story)
-      s.fetched_content = File.read(story_directory + "2.html")
+      s.fetched_content = File.read(story_directory + "title_google.html")
       expect(s.fetched_attributes[:title]).to eq("Google")
     end
 
@@ -145,7 +145,7 @@ describe Story do
     it "does not follow rel=canonical when this is to the main page" do
       url = "https://www.mcsweeneys.net/articles/who-said-it-donald-trump-or-regina-george"
       s = build(:story, url: url)
-      s.fetched_content = File.read(story_directory + "3.html")
+      s.fetched_content = File.read(story_directory + "canonical_root.html")
       expect(s.fetched_attributes[:url]).to eq(url)
     end
 
@@ -154,10 +154,10 @@ describe Story do
 
       expect_any_instance_of(Sponge)
         .to receive(:fetch)
-        .and_return(Net::HTTPResponse.new(1.0, 500, "OK"))
+        .and_return(Net::HTTPResponse.new(1.0, 404, "OK"))
 
       s = build(:story, url: url)
-      s.fetched_content = File.read(story_directory + "4.html")
+      s.fetched_content = File.read(story_directory + "canonical_error.html")
       expect(s.fetched_attributes[:url]).to eq(url)
     end
 
@@ -170,7 +170,7 @@ describe Story do
         .and_return(Net::HTTPResponse.new(1.0, 200, "OK"))
 
       s = build(:story, url: url)
-      s.fetched_content = File.read(story_directory + "4.html")
+      s.fetched_content = File.read(story_directory + "canonical_error.html")
       expect(s.fetched_attributes[:url]).to eq(canonical)
     end
 

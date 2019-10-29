@@ -1,18 +1,20 @@
-require "rails_helper"
+require 'rails_helper'
 
-describe StoriesController do
+describe 'stores', type: :request do
   let(:user) { create(:user) }
   let(:story) { create(:story, user: user) }
   let(:mod) { create(:user, :moderator) }
 
   describe "#check_url_dupe" do
-    before { stub_login_as user }
+    before { sign_in user }
 
     context "json" do
+      let(:headers) { { 'Content-Type' => 'application/json', 'Accept' => 'application/json' } }
+
       it "returns similar story matching URL" do
-        post :check_url_dupe,
-             format: :json,
-             params: { story: { title: "some other title", url: story.url } }
+        post "/stories/check_url_dupe",
+             params: { story: { title: "some other title", url: story.url } }.to_json,
+             headers: headers
 
         expect(response).to be_successful
 
@@ -30,9 +32,9 @@ describe StoriesController do
       end
 
       it "returns no matches if previously submitted URL is only partial match" do
-        post :check_url_dupe,
-             format: :json,
-             params: { story: { title: "some other title", url: story.url[0...-1] } }
+        post "/stories/check_url_dupe",
+             params: { story: { title: "some other title", url: story.url[0...-1] } }.to_json,
+             headers: headers
 
         expect(response).to be_successful
 
@@ -43,9 +45,9 @@ describe StoriesController do
       end
 
       it "returns no matches if no matching URL" do
-        post :check_url_dupe,
-             format: :json,
-             params: { story: { title: "some other title", url: "invalid_url" } }
+        post "/stories/check_url_dupe",
+             params: { story: { title: "some other title", url: "invalid_url" } }.to_json,
+             headers: headers
 
         expect(response).to be_successful
 
@@ -57,53 +59,53 @@ describe StoriesController do
 
       it "throws a 400 if there's no URL present" do
         expect {
-          post :check_url_dupe,
-               format: :json,
-               params: { story: { url: "" } }
+          post "/stories/check_url_dupe",
+               params: { story: { url: "" } }.to_json,
+               headers: headers
         }.to raise_error(ActionController::ParameterMissing)
 
         expect {
-          post :check_url_dupe,
-               format: :json,
-               params: { story: {} }
+          post "/stories/check_url_dupe",
+               params: { story: {} }.to_json,
+               headers: headers
         }.to raise_error(ActionController::ParameterMissing)
       end
     end
   end
 
   describe "#delete" do
-    before { stub_login_as user }
+    before { sign_in user }
 
     it "increments the user's count of deleted stories" do
       expect {
-        delete :destroy, params: { id: story.short_id }
+        delete "/stories/#{story.short_id}"
       }.to change { user.stories_deleted_count }.by(1)
     end
   end
 
   describe "#undelete" do
-    before { stub_login_as user }
+    before { sign_in user }
 
     let(:deleted_story) { create(:story, :deleted, user: user) }
 
     it "decrements the user's count of deleted stories" do
-      expect do
-        post :undelete, params: { story_id: deleted_story.short_id }
-      end.to change { user.stories_deleted_count }.by(-1)
+      expect {
+        post "/stories/#{deleted_story.short_id}/undelete"
+      }.to change { user.stories_deleted_count }.by(-1)
     end
   end
 
   describe "merged stories" do
     it "can be merged by mod" do
-      stub_login_as mod
+      sign_in mod
       s = create(:story)
-      post :update, params: {
-        id: s.short_id,
-        story: {
-          merge_story_short_id: story.short_id,
-          moderation_reason: 'cuz',
-        },
-      }
+      put "/stories/#{s.short_id}",
+          params: {
+            story: {
+              merge_story_short_id: story.short_id,
+              moderation_reason: 'cuz',
+            },
+          }
       expect(response).to be_redirect
 
       s.reload
@@ -115,16 +117,16 @@ describe StoriesController do
     end
 
     it "can't be done by submitter" do
-      stub_login_as user
+      sign_in user
 
       s = create(:story)
-      post :update, params: {
-        id: s.short_id,
-        story: {
-          merge_story_short_id: story.short_id,
-          moderation_reason: 'anarchy!',
-        },
-      }
+      put "/stories/#{s.short_id}",
+          params: {
+            story: {
+              merge_story_short_id: story.short_id,
+              moderation_reason: 'anarchy!',
+            },
+          }
       expect(response).to be_redirect
       s.reload
       expect(s.merged_into_story).to be_nil
@@ -133,12 +135,15 @@ describe StoriesController do
 
   describe "show" do
     context "json" do
+      let(:headers) { { 'Content-Type' => 'application/json', 'Accept' => 'application/json' } }
+
       context "for a story that merged into another story" do
         let(:merged_into_story) { create(:story) }
         let(:story) { create(:story, merged_into_story: merged_into_story) }
 
         it "redirects to the merged story's json" do
-          get :show, params: { id: story.short_id, format: :json }
+          get "/stories/#{story.short_id}",
+              headers: headers
           expect(response).to redirect_to(action: :show,
                                           id: merged_into_story.short_id,
                                           format: :json)

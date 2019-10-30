@@ -5,15 +5,19 @@ class FakeDataGenerator
   end
 
   def generate
-    # Users
-    users = 0.upto(@users_count).map do
+    # Users and Moderators
+    users = []
+    0.upto(@users_count).each do |i|
       name = Faker::Name.name
       password = Faker::Internet.password
-      user_name = Faker::Internet.user_name(name, %w(_))
-      User.create! email: Faker::Internet.email(name),
+      create_args = {
+        email: Faker::Internet.email(name),
         password: password,
         password_confirmation: password,
-        username: user_name
+        username: Faker::Internet.user_name(name, %w(_)),
+      }
+      create_args.merge!(is_moderator: true) if i % 7 == 0
+      users << User.create!(create_args)
     end
 
     # Stories
@@ -67,6 +71,17 @@ class FakeDataGenerator
         granted_by_user: users[0],
         hat: Faker::Lorem.word.capitalize + " " + suffixes[Random.rand(5)],
         link: Faker::Internet.url
+    end
+
+    ### Moderation ###
+
+    # Comments (delete/undelete)
+    Comment.all.each_with_index do |comment, i|
+      comment_mod = users.detect(&:is_moderator)
+      if i % 7 == 0
+        comment.delete_for_user(comment_mod, Faker::Lorem.paragraphs(1))
+        comment.undelete_for_user(comment_mod) if i.even?
+      end
     end
   end
 end

@@ -832,8 +832,11 @@ class Story < ApplicationRecord
   end
 
   def domain
-    return @domain if @domain
-    set_domain self.url.match(URL_RE) if self.url
+    return @domain if defined?(@domain)
+
+    @domain ||= normalized_domain || begin
+      set_domain self.url.match(URL_RE) if self.url
+    end
   end
 
   def set_domain match
@@ -852,7 +855,6 @@ class Story < ApplicationRecord
         @url_port = nil
       end
     end
-    set_domain match
 
     # strip out tracking query params
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))
@@ -862,7 +864,9 @@ class Story < ApplicationRecord
       u = match[1] << (params.any?? "?" << params.join("&") : "")
     end
 
-    super(u)
+    remove_instance_variable(:@domain) if defined?(@domain)
+
+    super(u).tap { build_normalized_domain }
   end
 
   def url_is_editable_by_user?(user)
@@ -1014,9 +1018,10 @@ private
     begin
       hostname = URI.parse(url).hostname.squish
     rescue
+      self.normalized_domain = nil
       return
     end
 
-    self.normalized_domain = hostname.gsub(/\A(?:www|m)\./, '')
+    self.normalized_domain = hostname.gsub(/\A(?:www[^\.]*|m)\./, '')
   end
 end

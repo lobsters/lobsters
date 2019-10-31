@@ -76,29 +76,31 @@ describe Story do
     expect(Story.count).to eq(1)
   end
 
-  it "parses domain properly" do
-    story = Story.new
-    {
-      "http://example.com" => "example.com",
-      "https://example.com" => "example.com",
-      "http://example.com:8000" => "example.com",
-      "http://example.com:8000/" => "example.com",
-      "http://www3.example.com/goose" => "example.com",
-      "http://flub.example.com" => "flub.example.com",
-    }.each_pair do |url, domain|
-      story.url = url
-      expect(story.domain).to eq(domain)
+  describe '#domain' do
+    it "parses domain properly" do
+      story = Story.new
+      {
+        "http://example.com" => "example.com",
+        "https://example.com" => "example.com",
+        "http://example.com:8000" => "example.com",
+        "http://example.com:8000/" => "example.com",
+        "http://www3.example.com/goose" => "example.com",
+        "http://flub.example.com" => "flub.example.com",
+      }.each_pair do |url, domain|
+        story.url = url
+        expect(story.domain).to eq(domain)
+      end
     end
-  end
 
-  it "has domain straight out of the db, when Rails doesn't use setters" do
-    s = create(:story, url: 'https://example.com/foo.html')
-    s = Story.find(s.id)
-    expect(s.domain).to eq('example.com')
-    s.url = 'http://example.org'
-    expect(s.domain).to eq('example.org')
-    s.url = 'invalid'
-    expect(s.domain).to be_nil
+    it "has domain straight out of the db, when Rails doesn't use setters" do
+      s = create(:story, url: 'https://example.com/foo.html').reload
+      s = Story.find(s.id)
+      expect(s.domain).to eq('example.com')
+      s.url = 'http://example.org'
+      expect(s.domain).to eq('example.org')
+      s.url = 'invalid'
+      expect(s.domain).to be_nil
+    end
   end
 
   it "converts a title to a url properly" do
@@ -329,6 +331,14 @@ describe Story do
         let(:url) { 'https://m.mobile.domain/path/to/article' }
 
         it { is_expected.to eq 'mobile.domain' }
+      end
+
+      context 'unsetting domain' do
+        let(:url) { 'https://lobste.rs' }
+
+        subject { story.tap { |s| s.url = 'invalid' }.normalized_domain }
+
+        it { is_expected.to be_nil }
       end
     end
   end

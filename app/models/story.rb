@@ -144,6 +144,7 @@ class Story < ApplicationRecord
 
   before_validation :assign_short_id_and_upvote, :on => :create
   before_create :assign_initial_hotness
+  before_save :build_normalized_domain
   before_save :log_moderation
   before_save :fix_bogus_chars
   after_create :mark_submitter, :record_initial_upvote
@@ -1007,5 +1008,15 @@ private
 
   def canonical_target(parsed)
     parsed.at_css("link[rel='canonical']").attributes["href"].text
+  end
+
+  def build_normalized_domain
+    begin
+      hostname = URI.parse(url).hostname.squish
+    rescue
+      return
+    end
+
+    self.normalized_domain = hostname.gsub(/\A(?:www|m)\./, '')
   end
 end

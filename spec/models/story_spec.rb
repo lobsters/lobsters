@@ -306,4 +306,30 @@ describe Story do
       end
     end
   end
+
+  describe '#save' do
+    describe 'saving normalized_domain' do
+      let(:story) { build(:story, url: url) }
+
+      subject { story.tap(&:save).normalized_domain }
+
+      context 'with a not-to-normalize domain' do
+        let(:url) { 'https://my.awesome.domain/path/to/article' }
+
+        it { is_expected.to eq 'my.awesome.domain' }
+      end
+
+      context 'with a domain starting with `www`' do
+        let(:url) { 'https://www.normal.domain/path/to/article' }
+
+        it { is_expected.to eq 'normal.domain' }
+      end
+
+      context 'with a domain starting with `m`' do
+        let(:url) { 'https://m.mobile.domain/path/to/article' }
+
+        it { is_expected.to eq 'mobile.domain' }
+      end
+    end
+  end
 end

@@ -402,7 +402,7 @@ $(document).ready(function() {
     Lobsters.flagStory(this);
     return false;
   });
-  $("li.story a.upvoter").click(function() {
+  $("li.story .voters > a").click(function() {
     Lobsters.upvoteStory(this);
     return false;
   });

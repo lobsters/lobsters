@@ -244,12 +244,12 @@ class StoriesController < ApplicationController
     @story.editor = @user
 
     if @story.url_is_editable_by_user?(@user)
-      @story.attributes = story_params.except(:repost_description)
+      @story.attributes = story_params
     else
-      @story.attributes = story_params.except(:url, :repost_description)
+      @story.attributes = story_params.except(:url)
     end
 
-    StoriesHelper.repost_story_description(@story, story_params) if @user && @user.is_moderator?
+    repost_story_description if @user && @user.is_moderator?
 
     if @story.save
       return redirect_to @story.comments_path
@@ -393,7 +393,7 @@ private
     if @user && @user.is_moderator?
       p
     else
-      p.except(:moderation_reason, :merge_story_short_id, :is_unavailable)
+      p.except(:moderation_reason, :merge_story_short_id, :is_unavailable, :repost_description)
     end
   end
 
@@ -461,5 +461,32 @@ private
     @ribbon = ReadRibbon.where(user: @user, story: @story).first_or_create
     yield
     @ribbon.touch
+  end
+
+  def repost_story_description
+    if ActiveRecord::Type::Boolean.new.deserialize(story_params[:repost_description])
+      @story.description= ""
+      comment = @story.comments.build
+      comment.comment = story_params[:description].to_s
+      comment.user = User.find(@story.user_id)
+      comment.created_at = @story.created_at
+      comment.updated_at = @story.created_at
+      log_moderation_repost_repost_description
+      true
+    else
+      false
+    end
+  end
+
+  def log_moderation_repost_repost_description
+    m = Moderation.new
+    m.moderator_user_id = @story.editor.try(:id)
+    m.story_id = @story.id
+    comment = @story.comments.find(&:new_record?)
+    comment.try(:save)
+    m.action = "reposted description as comment https://lobste.rs/c/#{comment.short_id}"
+    m.reason = @story.moderation_reason
+    m.save
+    @story.is_moderated = true
   end
 end

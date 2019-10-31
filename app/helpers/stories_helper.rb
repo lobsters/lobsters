@@ -27,18 +27,4 @@ module StoriesHelper
 
     (comment.created_at > @ribbon.updated_at) && (comment.user_id != @user.id)
   end
-
-  def self.repost_story_description(story, story_params)
-    if ActiveRecord::Type::Boolean.new.deserialize(story_params[:repost_description])
-      story.description= ""
-      comment = story.comments.build
-      comment.comment = story_params[:description].to_s
-      comment.user = User.find(story.user_id)
-      comment.created_at = story.created_at
-      comment.updated_at = story.created_at
-      true
-    else
-      false
-    end
-  end
 end

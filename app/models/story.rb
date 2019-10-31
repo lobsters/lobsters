@@ -138,6 +138,7 @@ class Story < ApplicationRecord
 
   attr_accessor :editing_from_suggestions, :editor, :fetching_ip, :is_hidden_by_cur_user,
                 :is_saved_by_cur_user, :moderation_reason, :previewing, :seen_previous, :vote
+                :repost_description
   attr_writer :fetched_response
 
   before_validation :assign_short_id_and_upvote, :on => :create
@@ -578,6 +579,12 @@ class Story < ApplicationRecord
     all_changes = self.changes.merge(self.tagging_changes)
     all_changes.delete("unavailable_at")
 
+    # condition because of duplicating this logic in controller
+    if self.repost_description == "1"
+      all_changes.delete("description")
+      all_changes.delete("markeddown_description")
+    end
+
     if !all_changes.any?
       return
     end
@@ -593,10 +600,6 @@ class Story < ApplicationRecord
       m.action = "deleted story"
     elsif all_changes["is_expired"] && !self.is_expired?
       m.action = "undeleted story"
-    elsif check_for_description_repost(all_changes)
-      comment = self.comments.find(&:new_record?)
-      comment.try(:save)
-      m.action = "reposted description as comment https://lobste.rs/c/#{comment.short_id}"
     else
       m.action = all_changes.map {|k, v|
         if k == "merged_story_id"

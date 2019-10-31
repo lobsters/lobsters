@@ -601,5 +601,30 @@ $(document).ready(function() {
       $(".comment-post").click();
     }
   });
+
+  $("#delete_all").click(function(e) {
+    var table = $(e.target).closest("table");
+    $("td input:checkbox", table).attr("checked", e.target.checked);
+  });
+
+  $("#story_text_expander").on('click', function(e) {
+    e.preventDefault();
+    $("#collapsed_story_text").toggle();
+  })
+
+  $("#story_fetch_title").on('click', function(event) {
+    event.preventDefault();
+    Lobsters.fetchURLTitle($(this), $("#story_url"), $("#story_title"));
+  });
+
+  var commentBox = $("#comment");
+  if (Lobsters.curUser && commentBox.length) {
+    autosize(commentBox[0]);
+  }
+
+  var storyBox = $("#story_box.new-story");
+  if (storyBox.length && !storyBox.hasClass('previewing')) {
+    $("#story_url").focus();
+  }
 });
 

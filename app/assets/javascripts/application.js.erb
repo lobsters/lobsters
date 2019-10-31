@@ -388,6 +388,8 @@ var _Lobsters = Class.extend({
 var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
+  Lobsters.curUser = parseInt($('body').data('current-user-id'));
+
   var $olcomments = $("ol.comments");
   $olcomments.on("click", ".comment a.downvoter", function() {
     Lobsters.downvoteComment(this);

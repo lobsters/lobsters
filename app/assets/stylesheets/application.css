@@ -393,7 +393,11 @@ div.voters div.score {
 
 li.story div.voters div.score {
 	font-size: 9.5pt;
-	margin-top: 2px;
+}
+
+div.voters > a {
+	display: block;
+	padding-bottom: 2px;
 }
 
 div.voters .upvoter,

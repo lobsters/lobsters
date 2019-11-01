@@ -471,14 +471,14 @@ private
       comment.user = User.find(@story.user_id)
       comment.created_at = @story.created_at
       comment.updated_at = @story.created_at
-      log_moderation_repost_repost_description
+      log_mod_repost_description
       true
     else
       false
     end
   end
 
-  def log_moderation_repost_repost_description
+  def log_mod_repost_description
     m = Moderation.new
     m.moderator_user_id = @story.editor.try(:id)
     m.story_id = @story.id

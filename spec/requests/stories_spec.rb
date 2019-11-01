@@ -178,10 +178,10 @@ describe 'stores', type: :request do
     end
   end
 
-  describe '#UPDATE' do
+  describe 'when repost story description' do
     let(:attr) do
       {
-        url: 'http://newexample.com/',
+        url: 'http://example.com/',
         title: 'new title',
         description: 'new description',
       }
@@ -201,7 +201,7 @@ describe 'stores', type: :request do
       end
     end
 
-    context "when params is valid" do
+    context "and params is valid" do
       before do
         send_request
         story.reload
@@ -218,7 +218,7 @@ describe 'stores', type: :request do
       end
     end
 
-    context "when params is valid and include repost description option" do
+    context "and params is valid and include repost description option" do
       before do
         send_request_with_repost
         story.reload

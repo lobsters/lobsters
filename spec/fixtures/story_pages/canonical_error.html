@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="/assets/application-32157d391254c4d90fa85a570365b778e89b8b7f08ed14c6e5f92fc6f86f7cd7.js"></script>
+
+  <link rel="stylesheet" media="all" href="/assets/application-3f0e388d0558175065886ad433dd4239a86510cad43692b6a1c7dccd5c815632.css" />
+
+  <meta charset="utf-8">
+<script>window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","errorBeacon":"bam.nr-data.net","licenseKey":"65b1bdbe6f","applicationID":"2345031","transactionName":"el9dRUoLXlxXRh1TQE1ZUF1dFx1DWltF","queueTime":0,"applicationTime":28,"agent":""}</script>
+<script>(window.NREUM||(NREUM={})).loader_config={xpid:"VwEFVFdUGwEDUFRSBAA="};window.NREUM||(NREUM={}),__nr_require=function(t,n,e){function r(e){if(!n[e]){var o=n[e]={exports:{}};t[e][0].call(o.exports,function(n){var o=t[e][1][n];return r(o||n)},o,o.exports)}return n[e].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<e.length;o++)r(e[o]);return r}({1:[function(t,n,e){function r(t){try{s.console&&console.log(t)}catch(n){}}var o,i=t("ee"),a=t(18),s={};try{o=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(s.console=!0,o.indexOf("dev")!==-1&&(s.dev=!0),o.indexOf("nr_dev")!==-1&&(s.nrDev=!0))}catch(c){}s.nrDev&&i.on("internal-error",function(t){r(t.stack)}),s.dev&&i.on("fn-err",function(t,n,e){r(e.stack)}),s.dev&&(r("NR AGENT IN DEVELOPMENT MODE"),r("flags: "+a(s,function(t,n){return t}).join(", ")))},{}],2:[function(t,n,e){function r(t,n,e,r,s){try{p?p-=1:o(s||new UncaughtException(t,n,e),!0)}catch(f){try{i("ierr",[f,c.now(),!0])}catch(d){}}return"function"==typeof u&&u.apply(this,a(arguments))}function UncaughtException(t,n,e){this.message=t||"Uncaught error with no additional information",this.sourceURL=n,this.line=e}function o(t,n){var e=n?null:c.now();i("err",[t,e])}var i=t("handle"),a=t(19),s=t("ee"),c=t("loader"),f=t("gos"),u=window.onerror,d=!1,l="nr@seenError",p=0;c.features.err=!0,t(1),window.onerror=r;try{throw new Error}catch(h){"stack"in h&&(t(8),t(7),"addEventListener"in window&&t(5),c.xhrWrappable&&t(9),d=!0)}s.on("fn-start",function(t,n,e){d&&(p+=1)}),s.on("fn-err",function(t,n,e){d&&!e[l]&&(f(e,l,function(){return!0}),this.thrown=!0,o(e))}),s.on("fn-end",function(){d&&!this.thrown&&p>0&&(p-=1)}),s.on("internal-error",function(t){i("ierr",[t,c.now(),!0])})},{}],3:[function(t,n,e){t("loader").features.ins=!0},{}],4:[function(t,n,e){function r(t){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var o=t("ee"),i=t("handle"),a=t(8),s=t(7),c="learResourceTimings",f="addEventListener",u="resourcetimingbufferfull",d="bstResource",l="resource",p="-start",h="-end",m="fn"+p,w="fn"+h,v="bstTimer",y="pushState",g=t("loader");g.features.stn=!0,t(6);var x=NREUM.o.EV;o.on(m,function(t,n){var e=t[0];e instanceof x&&(this.bstStart=g.now())}),o.on(w,function(t,n){var e=t[0];e instanceof x&&i("bst",[e,n,this.bstStart,g.now()])}),a.on(m,function(t,n,e){this.bstStart=g.now(),this.bstType=e}),a.on(w,function(t,n){i(v,[n,this.bstStart,g.now(),this.bstType])}),s.on(m,function(){this.bstStart=g.now()}),s.on(w,function(t,n){i(v,[n,this.bstStart,g.now(),"requestAnimationFrame"])}),o.on(y+p,function(t){this.time=g.now(),this.startPath=location.pathname+location.hash}),o.on(y+h,function(t){i("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),f in window.performance&&(window.performance["c"+c]?window.performance[f](u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["c"+c]()},!1):window.performance[f]("webkit"+u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["webkitC"+c]()},!1)),document[f]("scroll",r,{passive:!0}),document[f]("keypress",r,!1),document[f]("click",r,!1)}},{}],5:[function(t,n,e){function r(t){for(var n=t;n&&!n.hasOwnProperty(u);)n=Object.getPrototypeOf(n);n&&o(n)}function o(t){s.inPlace(t,[u,d],"-",i)}function i(t,n){return t[1]}var a=t("ee").get("events"),s=t(21)(a,!0),c=t("gos"),f=XMLHttpRequest,u="addEventListener",d="removeEventListener";n.exports=a,"getPrototypeOf"in Object?(r(document),r(window),r(f.prototype)):f.prototype.hasOwnProperty(u)&&(o(window),o(f.prototype)),a.on(u+"-start",function(t,n){var e=t[1],r=c(e,"nr@wrapped",function(){function t(){if("function"==typeof e.handleEvent)return e.handleEvent.apply(e,arguments)}var n={object:t,"function":e}[typeof e];return n?s(n,"fn-",null,n.name||"anonymous"):e});this.wrapped=t[1]=r}),a.on(d+"-start",function(t){t[1]=this.wrapped||t[1]})},{}],6:[function(t,n,e){var r=t("ee").get("history"),o=t(21)(r);n.exports=r;var i=window.history&&window.history.constructor&&window.history.constructor.prototype,a=window.history;i&&i.pushState&&i.replaceState&&(a=i),o.inPlace(a,["pushState","replaceState"],"-")},{}],7:[function(t,n,e){var r=t("ee").get("raf"),o=t(21)(r),i="equestAnimationFrame";n.exports=r,o.inPlace(window,["r"+i,"mozR"+i,"webkitR"+i,"msR"+i],"raf-"),r.on("raf-start",function(t){t[0]=o(t[0],"fn-")})},{}],8:[function(t,n,e){function r(t,n,e){t[0]=a(t[0],"fn-",null,e)}function o(t,n,e){this.method=e,this.timerDuration=isNaN(t[1])?0:+t[1],t[0]=a(t[0],"fn-",this,e)}var i=t("ee").get("timer"),a=t(21)(i),s="setTimeout",c="setInterval",f="clearTimeout",u="-start",d="-";n.exports=i,a.inPlace(window,[s,"setImmediate"],s+d),a.inPlace(window,[c],c+d),a.inPlace(window,[f,"clearImmediate"],f+d),i.on(c+u,r),i.on(s+u,o)},{}],9:[function(t,n,e){function r(t,n){d.inPlace(n,["onreadystatechange"],"fn-",s)}function o(){var t=this,n=u.context(t);t.readyState>3&&!n.resolved&&(n.resolved=!0,u.emit("xhr-resolved",[],t)),d.inPlace(t,y,"fn-",s)}function i(t){g.push(t),h&&(b?b.then(a):w?w(a):(E=-E,R.data=E))}function a(){for(var t=0;t<g.length;t++)r([],g[t]);g.length&&(g=[])}function s(t,n){return n}function c(t,n){for(var e in t)n[e]=t[e];return n}t(5);var f=t("ee"),u=f.get("xhr"),d=t(21)(u),l=NREUM.o,p=l.XHR,h=l.MO,m=l.PR,w=l.SI,v="readystatechange",y=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"],g=[];n.exports=u;var x=window.XMLHttpRequest=function(t){var n=new p(t);try{u.emit("new-xhr",[n],n),n.addEventListener(v,o,!1)}catch(e){try{u.emit("internal-error",[e])}catch(r){}}return n};if(c(p,x),x.prototype=p.prototype,d.inPlace(x.prototype,["open","send"],"-xhr-",s),u.on("send-xhr-start",function(t,n){r(t,n),i(n)}),u.on("open-xhr-start",r),h){var b=m&&m.resolve();if(!w&&!m){var E=1,R=document.createTextNode(E);new h(a).observe(R,{characterData:!0})}}else f.on("fn-end",function(t){t[0]&&t[0].type===v||a()})},{}],10:[function(t,n,e){function r(){var t=window.NREUM,n=t.info.accountID||null,e=t.info.agentID||null,r=t.info.trustKey||null,i="btoa"in window&&"function"==typeof window.btoa;if(!n||!e||!i)return null;var a={v:[0,1],d:{ty:"Browser",ac:n,ap:e,id:o.generateCatId(),tr:o.generateCatId(),ti:Date.now()}};return r&&n!==r&&(a.d.tk=r),btoa(JSON.stringify(a))}var o=t(16);n.exports={generateTraceHeader:r}},{}],11:[function(t,n,e){function r(t){var n=this.params,e=this.metrics;if(!this.ended){this.ended=!0;for(var r=0;r<p;r++)t.removeEventListener(l[r],this.listener,!1);n.aborted||(e.duration=s.now()-this.startTime,this.loadCaptureCalled||4!==t.readyState?null==n.status&&(n.status=0):a(this,t),e.cbTime=this.cbTime,d.emit("xhr-done",[t],t),c("xhr",[n,e,this.startTime]))}}function o(t,n){var e=t.responseType;if("json"===e&&null!==n)return n;var r="arraybuffer"===e||"blob"===e||"json"===e?t.response:t.responseText;return w(r)}function i(t,n){var e=f(n),r=t.params;r.host=e.hostname+":"+e.port,r.pathname=e.pathname,t.sameOrigin=e.sameOrigin}function a(t,n){t.params.status=n.status;var e=o(n,t.lastSize);if(e&&(t.metrics.rxSize=e),t.sameOrigin){var r=n.getResponseHeader("X-NewRelic-App-Data");r&&(t.params.cat=r.split(", ").pop())}t.loadCaptureCalled=!0}var s=t("loader");if(s.xhrWrappable){var c=t("handle"),f=t(12),u=t(10).generateTraceHeader,d=t("ee"),l=["load","error","abort","timeout"],p=l.length,h=t("id"),m=t(15),w=t(14),v=window.XMLHttpRequest;s.features.xhr=!0,t(9),d.on("new-xhr",function(t){var n=this;n.totalCbs=0,n.called=0,n.cbTime=0,n.end=r,n.ended=!1,n.xhrGuids={},n.lastSize=null,n.loadCaptureCalled=!1,t.addEventListener("load",function(e){a(n,t)},!1),m&&(m>34||m<10)||window.opera||t.addEventListener("progress",function(t){n.lastSize=t.loaded},!1)}),d.on("open-xhr-start",function(t){this.params={method:t[0]},i(this,t[1]),this.metrics={}}),d.on("open-xhr-end",function(t,n){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&n.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid);var e=!1;if("init"in NREUM&&"distributed_tracing"in NREUM.init&&(e=!!NREUM.init.distributed_tracing.enabled),e&&this.sameOrigin){var r=u();r&&n.setRequestHeader("newrelic",r)}}),d.on("send-xhr-start",function(t,n){var e=this.metrics,r=t[0],o=this;if(e&&r){var i=w(r);i&&(e.txSize=i)}this.startTime=s.now(),this.listener=function(t){try{"abort"!==t.type||o.loadCaptureCalled||(o.params.aborted=!0),("load"!==t.type||o.called===o.totalCbs&&(o.onloadCalled||"function"!=typeof n.onload))&&o.end(n)}catch(e){try{d.emit("internal-error",[e])}catch(r){}}};for(var a=0;a<p;a++)n.addEventListener(l[a],this.listener,!1)}),d.on("xhr-cb-time",function(t,n,e){this.cbTime+=t,n?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof e.onload||this.end(e)}),d.on("xhr-load-added",function(t,n){var e=""+h(t)+!!n;this.xhrGuids&&!this.xhrGuids[e]&&(this.xhrGuids[e]=!0,this.totalCbs+=1)}),d.on("xhr-load-removed",function(t,n){var e=""+h(t)+!!n;this.xhrGuids&&this.xhrGuids[e]&&(delete this.xhrGuids[e],this.totalCbs-=1)}),d.on("addEventListener-end",function(t,n){n instanceof v&&"load"===t[0]&&d.emit("xhr-load-added",[t[1],t[2]],n)}),d.on("removeEventListener-end",function(t,n){n instanceof v&&"load"===t[0]&&d.emit("xhr-load-removed",[t[1],t[2]],n)}),d.on("fn-start",function(t,n,e){n instanceof v&&("onload"===e&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=s.now()))}),d.on("fn-end",function(t,n){this.xhrCbStart&&d.emit("xhr-cb-time",[s.now()-this.xhrCbStart,this.onload,n],n)})}},{}],12:[function(t,n,e){n.exports=function(t){var n=document.createElement("a"),e=window.location,r={};n.href=t,r.port=n.port;var o=n.href.split("://");!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=n.hostname||e.hostname,r.pathname=n.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname);var i=!n.protocol||":"===n.protocol||n.protocol===e.protocol,a=n.hostname===document.domain&&n.port===e.port;return r.sameOrigin=i&&(!n.hostname||a),r}},{}],13:[function(t,n,e){function r(){}function o(t,n,e){return function(){return i(t,[f.now()].concat(s(arguments)),n?null:this,e),n?void 0:this}}var i=t("handle"),a=t(18),s=t(19),c=t("ee").get("tracer"),f=t("loader"),u=NREUM;"undefined"==typeof window.newrelic&&(newrelic=u);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],l="api-",p=l+"ixn-";a(d,function(t,n){u[n]=o(l+n,!0,"api")}),u.addPageAction=o(l+"addPageAction",!0),u.setCurrentRouteName=o(l+"routeName",!0),n.exports=newrelic,u.interaction=function(){return(new r).get()};var h=r.prototype={createTracer:function(t,n){var e={},r=this,o="function"==typeof n;return i(p+"tracer",[f.now(),t,e],r),function(){if(c.emit((o?"":"no-")+"fn-start",[f.now(),r,o],e),o)try{return n.apply(this,arguments)}catch(t){throw c.emit("fn-err",[arguments,this,t],e),t}finally{c.emit("fn-end",[f.now()],e)}}}};a("actionText,setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(t,n){h[n]=o(p+n)}),newrelic.noticeError=function(t,n){"string"==typeof t&&(t=new Error(t)),i("err",[t,f.now(),!1,n])}},{}],14:[function(t,n,e){n.exports=function(t){if("string"==typeof t&&t.length)return t.length;if("object"==typeof t){if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if(!("undefined"!=typeof FormData&&t instanceof FormData))try{return JSON.stringify(t).length}catch(n){return}}}},{}],15:[function(t,n,e){var r=0,o=navigator.userAgent.match(/Firefox[\/\s](\d+\.\d+)/);o&&(r=+o[1]),n.exports=r},{}],16:[function(t,n,e){function r(){function t(){return n?15&n[e++]:16*Math.random()|0}var n=null,e=0,r=window.crypto||window.msCrypto;r&&r.getRandomValues&&(n=r.getRandomValues(new Uint8Array(31)));for(var o,i="xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx",a="",s=0;s<i.length;s++)o=i[s],"x"===o?a+=t().toString(16):"y"===o?(o=3&t()|8,a+=o.toString(16)):a+=o;return a}function o(){function t(){return n?15&n[e++]:16*Math.random()|0}var n=null,e=0,r=window.crypto||window.msCrypto;r&&r.getRandomValues&&Uint8Array&&(n=r.getRandomValues(new Uint8Array(31)));for(var o=[],i=0;i<16;i++)o.push(t().toString(16));return o.join("")}n.exports={generateUuid:r,generateCatId:o}},{}],17:[function(t,n,e){function r(t,n){if(!o)return!1;if(t!==o)return!1;if(!n)return!0;if(!i)return!1;for(var e=i.split("."),r=n.split("."),a=0;a<r.length;a++)if(r[a]!==e[a])return!1;return!0}var o=null,i=null,a=/Version\/(\S+)\s+Safari/;if(navigator.userAgent){var s=navigator.userAgent,c=s.match(a);c&&s.indexOf("Chrome")===-1&&s.indexOf("Chromium")===-1&&(o="Safari",i=c[1])}n.exports={agent:o,version:i,match:r}},{}],18:[function(t,n,e){function r(t,n){var e=[],r="",i=0;for(r in t)o.call(t,r)&&(e[i]=n(r,t[r]),i+=1);return e}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],19:[function(t,n,e){function r(t,n,e){n||(n=0),"undefined"==typeof e&&(e=t?t.length:0);for(var r=-1,o=e-n||0,i=Array(o<0?0:o);++r<o;)i[r]=t[n+r];return i}n.exports=r},{}],20:[function(t,n,e){n.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],21:[function(t,n,e){function r(t){return!(t&&t instanceof Function&&t.apply&&!t[a])}var o=t("ee"),i=t(19),a="nr@original",s=Object.prototype.hasOwnProperty,c=!1;n.exports=function(t,n){function e(t,n,e,o){function nrWrapper(){var r,a,s,c;try{a=this,r=i(arguments),s="function"==typeof e?e(r,a):e||{}}catch(f){l([f,"",[r,a,o],s])}u(n+"start",[r,a,o],s);try{return c=t.apply(a,r)}catch(d){throw u(n+"err",[r,a,d],s),d}finally{u(n+"end",[r,a,c],s)}}return r(t)?t:(n||(n=""),nrWrapper[a]=t,d(t,nrWrapper),nrWrapper)}function f(t,n,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<n.length;c++)s=n[c],a=t[s],r(a)||(t[s]=e(a,f?s+o:o,i,s))}function u(e,r,o){if(!c||n){var i=c;c=!0;try{t.emit(e,r,o,n)}catch(a){l([a,e,r,o])}c=i}}function d(t,n){if(Object.defineProperty&&Object.keys)try{var e=Object.keys(t);return e.forEach(function(e){Object.defineProperty(n,e,{get:function(){return t[e]},set:function(n){return t[e]=n,n}})}),n}catch(r){l([r])}for(var o in t)s.call(t,o)&&(n[o]=t[o]);return n}function l(n){try{t.emit("internal-error",n)}catch(e){}}return t||(t=o),e.inPlace=f,e.flag=a,e}},{}],ee:[function(t,n,e){function r(){}function o(t){function n(t){return t&&t instanceof r?t:t?c(t,s,i):i()}function e(e,r,o,i){if(!l.aborted||i){t&&t(e,r,o);for(var a=n(o),s=m(e),c=s.length,f=0;f<c;f++)s[f].apply(a,r);var d=u[g[e]];return d&&d.push([x,e,r,a]),a}}function p(t,n){y[t]=m(t).concat(n)}function h(t,n){var e=y[t];if(e)for(var r=0;r<e.length;r++)e[r]===n&&e.splice(r,1)}function m(t){return y[t]||[]}function w(t){return d[t]=d[t]||o(e)}function v(t,n){f(t,function(t,e){n=n||"feature",g[e]=n,n in u||(u[n]=[])})}var y={},g={},x={on:p,addEventListener:p,removeEventListener:h,emit:e,get:w,listeners:m,context:n,buffer:v,abort:a,aborted:!1};return x}function i(){return new r}function a(){(u.api||u.feature)&&(l.aborted=!0,u=l.backlog={})}var s="nr@context",c=t("gos"),f=t(18),u={},d={},l=n.exports=o();l.backlog=u},{}],gos:[function(t,n,e){function r(t,n,e){if(o.call(t,n))return t[n];var r=e();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,n,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return t[n]=r,r}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],handle:[function(t,n,e){function r(t,n,e,r){o.buffer([t],r),o.emit(t,n,e)}var o=t("ee").get("handle");n.exports=r,r.ee=o},{}],id:[function(t,n,e){function r(t){var n=typeof t;return!t||"object"!==n&&"function"!==n?-1:t===window?0:a(t,i,function(){return o++})}var o=1,i="nr@id",a=t("gos");n.exports=r},{}],loader:[function(t,n,e){function r(){if(!E++){var t=b.info=NREUM.info,n=p.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(t&&t.licenseKey&&t.applicationID&&n))return u.abort();f(g,function(n,e){t[n]||(t[n]=e)}),c("mark",["onload",a()+b.offset],null,"api");var e=p.createElement("script");e.src="https://"+t.agent,n.parentNode.insertBefore(e,n)}}function o(){"complete"===p.readyState&&i()}function i(){c("mark",["domContent",a()+b.offset],null,"api")}function a(){return R.exists&&performance.now?Math.round(performance.now()):(s=Math.max((new Date).getTime(),s))-b.offset}var s=(new Date).getTime(),c=t("handle"),f=t(18),u=t("ee"),d=t(17),l=window,p=l.document,h="addEventListener",m="attachEvent",w=l.XMLHttpRequest,v=w&&w.prototype;NREUM.o={ST:setTimeout,SI:l.setImmediate,CT:clearTimeout,XHR:w,REQ:l.Request,EV:l.Event,PR:l.Promise,MO:l.MutationObserver};var y=""+location,g={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1130.min.js"},x=w&&v&&v[h]&&!/CriOS/.test(navigator.userAgent),b=n.exports={offset:s,now:a,origin:y,features:{},xhrWrappable:x,userAgent:d};t(13),p[h]?(p[h]("DOMContentLoaded",i,!1),l[h]("load",r,!1)):(p[m]("onreadystatechange",o),l[m]("onload",r)),c("mark",["firstbyte",s],null,"api");var E=0,R=t(20)},{}]},{},["loader",2,11,4,3]);</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon-c00a7323f0c7e4d41a62566b39d7da544be6e13c1aadcde94586aec0057e2322.png" />
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+
+  <title>List: Who Said It? Donald Trump or Regina George? - McSweeney’s Internet Tendency</title>
+
+  <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+  <link rel="preload" href="https://use.typekit.net/sxu1ita.css" as="style" crossorigin>
+  <link rel="stylesheet" href="https://use.typekit.net/sxu1ita.css" crossorigin>
+
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-10152280-6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-10152280-6');
+  </script>
+
+  <link rel="alternate" type="application/rss+xml" title="Timothy McSweeney’s Internet Tendency" href="https://feeds.feedburner.com/mcsweeneys" />
+
+  <meta name='generated-time' content='Fri, 04 Oct 2019 14:50:56 +0000' />
+
+  <meta property="og:site_name" content="McSweeney's Internet Tendency" />
+  <meta property="fb:pages" content="26594187784" />
+  <meta property="fb:app_id" content="287359397946929" />
+  <meta name="twitter:site" content="@mcsweeneys" />
+
+    <meta property="og:title" content="List: Who Said It? Donald Trump or Regina George?" />
+    <meta name="twitter:title" content="List: Who Said It? Donald Trump or Regina George?" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.mcsweeneys.net/articles/who-said-it-donald-trump-or-regina-george" />
+    <meta property="og:description" content="1. “I promise not to talk about your massive plastic surgeries that didn’t work.”
+2. “Why are you so obsessed with me?”
+3. “It’s almost like… does ..." />
+    <meta name="twitter:description" content="1. “I promise not to talk about your massive plastic surgeries that didn’t work.”
+2. “Why are you so obsessed with me?”
+3. “It’s almost like… does ..." />
+    <link rel="canonical" href="https://www.mcsweeneys.net/articles/who-said-it-donald-trump-or-regina-george" />
+      <meta property="og:image" content="http://d3thpuk46eyjbu.cloudfront.net/uploads/production/9904/1549935345/original/trumporgeorge.png" />
+      <meta property="og:image:secure_url" content="https://d3thpuk46eyjbu.cloudfront.net/uploads/production/9904/1549935345/original/trumporgeorge.png" />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:width" content="1000" />
+      <meta property="og:image:height" content="554" />
+      <meta name="twitter:image" content="https://d3thpuk46eyjbu.cloudfront.net/uploads/production/9904/1549935345/original/trumporgeorge.png?1549935345">
+      <meta name="twitter:card" content="summary_large_image" />
+
+</head>
+<body class="tendency" style="">
+  <div id="fb-root"></div>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.7&appId=118308768273070";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
+
+
+  <div id="o-wrapper" class="o-wrapper">
+  	<main class="o-content">
+        <header>
+    <div class="desktop-nav">
+      <div class="search-container">
+        <div class="search">
+          <span class="icons"><img class="search-icon" src="/assets/search-6dce36f1bf31751b92ecf7aed2a41fb713bc50a327473825b9a5178088884842.svg" /></span>
+          <form action="/articles/search" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="&#x2713;" />
+            <input type="search" name="q" id="q" placeholder="Search" />
+</form>        </div>
+      </div>
+      <div class="links-container">
+        <ul>
+          <li><a href="/">Internet Tendency</a></li>
+          <li><a href="https://store.mcsweeneys.net">The Store</a></li>
+          <li><a href="https://store.mcsweeneys.net/t/categories/books">Books Division</a></li>
+          <li><a href="https://store.mcsweeneys.net/t/categories/timothy-mcsweeneys-quarterly-concern">Quarterly Concern</a></li>
+          <li><a href="/donate">Donate</a></li>
+        </ul>
+      </div>
+    </div>			
+    <div class="row">
+      <div class="masthead-left-container desktop">
+        <div class="tagline"><a href="https://www.patreon.com/mcsweeneysinternettendency" class="home-patreon"><img src="https://d3thpuk46eyjbu.cloudfront.net/uploads/production/3720/1538532886/public/patreon_buttonb.png?1538532886"></a></div>
+      </div>
+      <div class="logo-container">
+        <a href="/">
+          <div class="logo-text"><span class="logo-text-span">M<span class="smallcaps">c</span>Sweeney’s</span></div>
+          <div class="logo-tagline"><span class="desktop">Internet Tendency<br />
+<br/>
+<strong>Celebrating our 21st Year!</strong></span><span class="mobile">Celebrating our 21st year of publishing daily humor almost every day.</span></div>
+</a>      </div>
+      <div class="masthead-right-container desktop">
+        <div class="tagline">Daily humor<br />almost every day<br />since 1998.</div>
+      </div>
+      <div class="o-container mobile">
+        <div class="c-buttons">
+          <button id="c-button--push-top" class="c-button menu-icon">      </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+      
+  <div class="breaking-news-container" style='background-color: #EED578;'>
+    <h6>EVENTS</h6>
+    <div class="breaking-news"><p><strong><span class="caps">NYC</span>/<span class="caps">BROOKLYN</span>: Come see a night of McSweeney&#8217;s humor at the powerHouse Arena, featuring a cavalcade of Tendency contributors from our new anthology <span class="caps">KEEP</span> <span class="caps">SCROLLING</span> <span class="caps">TILL</span> <span class="caps">YOU</span> <span class="caps">FEEL</span> <span class="caps">SOMETHING</span>. <a href="https://www.facebook.com/events/399361314078772/">October 19th, 6 pm.</a></strong></p></div>
+  </div>
+
+
+      
+<article>
+    <div class="postdate">July 22, 2016</div>
+        <div class="column-title"><a href="/columns/lists">Lists</a></div>
+        <div class="title"><h1>Who Said It? Donald Trump or Regina George?</h1></div>
+    <div class="byline"><h2><span class="connector">by </span><a href="/authors/amber-karlins">Amber&nbsp;Karlins</a></h2></div>
+    <div class="divider-thin-thick">&nbsp;</div>
+    <div class="article-body">
+      <p>1. “I promise not to talk about your massive plastic surgeries that didn’t work.”</p>
+<p>2. “Why are you so obsessed with me?”</p>
+<p>3. “It’s almost like… does he watch television?”</p>
+<p>4. “He put on glasses so people will think he&#8217;s smart. And it just doesn&#8217;t work! You know people can see through the glasses.”</p>
+<p>5. “I, like, invented her, you know what I mean?”</p>
+<p>6. &#8220;My IQ is one of the highest — and you all know it! Please don&#8217;t feel so stupid or insecure; it&#8217;s not your fault.&#8221;</p>
+<p>7. &#8220;The beauty of me is that I&#8217;m very rich.&#8221;</p>
+<p>8. “My fingers are long and beautiful, as, it has been well documented, are various other parts of my body.”</p>
+<p>9. “Get in, loser.”</p>
+<p>10. “Her ass is too fat.”</p>
+<div class='break'>- - -</div><p><strong>Donald Trump:</strong> 1, 3, 4, 6, 7, 8, 10<br />
+<strong>Regina George:</strong> 2, 5, 9</p>
+    </div>
+    <div class="metadata">
+      <ul class="tags">
+          <li><a href="/tags/donald-trump">Donald Trump</a></li>
+          <li><a href="/tags/mean-girls">Mean Girls</a></li>
+          <li><a href="/tags/tina-fey">Tina Fey</a></li>
+          <li><a href="/tags/rachel-mcadams">Rachel McAdams</a></li>
+      </ul>
+    </div>
+
+    <div class="patreon">
+    <div class="col-60">
+        As little as $1 a month ($12 a year!) goes a long way towards supporting our editorial staff and contributors while keeping us ad-free. Become a McSweeney&#8217;s Internet Tendency patron today.
+    </div>
+    <div class="col-40">
+      <a href="https://www.patreon.com/mcsweeneysinternettendency">
+        Become a patron
+      </a>
+    </div>
+  </div>
+
+  <div class="social after">
+	<div class="fb-share-button" data-href="https://www.mcsweeneys.net/articles/who-said-it-donald-trump-or-regina-george" data-layout="button_count" data-size="small" data-mobile-iframe="true" style="top: -5px; margin-right: 10px;"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fgoogle.com%2F&amp;src=sdkpreparse">Share</a></div>
+	<a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+
+<div class="divider-thin-thick">&nbsp;</div>
+</article>
+
+    <section>
+    <div id="navigation">
+        <div class="prev">
+          <a href="/articles/your-private-nonprofit-high-school-congratulates-you-on-your-new-job">
+  <div class="arrow">➤</div>
+  <div class="headline">
+    
+    <h5><p>Your Private, Nonprofit High School Congratulates You On Your New Job!</p></h5>
+  </div>
+</a>
+        </div>
+        <div class="next">
+          <a href="/articles/these-smart-swimming-trunks-automatically-remind-you-to-be-self-conscious">
+  <div class="arrow">➤</div>
+  <div class="headline">
+    
+    <h5><p>These Smart Swimming Trunks Automatically Remind You to Be Self-Conscious!</p></h5>
+  </div>
+</a>
+        </div>
+    </div>
+  </section>
+
+
+      <section>
+      <div class="links">
+        <h5>Suggested Reads</h5>
+        <ul>
+            <li>
+    <a href="/articles/a-condensed-history-of-the-world-2000-2007">
+      <div class="postdate">March 16, 2000</div>
+      <div class="hed">A Condensed History of the World: 2000-2007</div>
+</a>    <div class="byline"><span class="connector">by </span>Mike Sacks</div>
+  </li>
+  <li>
+    <a href="/articles/why-im-supporting-the-demonic-creature-that-emerged-from-the-depths-of-hell-in-this-years-presidential-election">
+      <div class="postdate">April  4, 2016</div>
+      <div class="hed">Why I’m Supporting the Demonic Creature That Emerged From the Depths of Hell In This Year’s Presidential Election</div>
+</a>    <div class="byline"><span class="connector">by </span>Gavin Speiller</div>
+  </li>
+  <li>
+    <a href="/articles/final-schedule-for-the-2016-republican-national-convention">
+      <div class="postdate">July 18, 2016</div>
+      <div class="hed">List: Final Schedule for the 2016 Republican National Convention</div>
+</a>    <div class="byline"><span class="connector">by </span>John Moe</div>
+  </li>
+  <li>
+    <a href="/articles/i-went-to-a-trump-rally-what-i-found-there-was-a-bunch-of-other-journalists-already-writing-this-article">
+      <div class="postdate">September 15, 2016</div>
+      <div class="hed">I Went to a Trump Rally. What I Found There Was a Bunch of Other Journalists Already Writing This Article</div>
+</a>    <div class="byline"><span class="connector">by </span>Dan Hopper</div>
+  </li>
+
+        </ul>
+      </div>
+    </section>
+
+
+  <section>
+        <div class="links popular">
+      <h5>Trending 🔥</h5>
+      <ol>
+          <li>
+    <a href="/articles/who-said-it-donald-trump-or-regina-george">
+      <div class="postdate">July 22, 2016</div>
+      <div class="hed">List: Who Said It? Donald Trump or Regina George?</div>
+</a>    <div class="byline"><span class="connector">by </span>Amber Karlins</div>
+  </li>
+  <li>
+    <a href="/articles/professor-minerva-mcgonagalls-letter-to-the-tenure-committee">
+      <div class="postdate">October  1, 2019</div>
+      <div class="hed">Professor Minerva McGonagall&#8217;s Letter to the Tenure Committee</div>
+</a>    <div class="byline"><span class="connector">by </span>Alyse Knorr</div>
+  </li>
+  <li>
+    <a href="/articles/its-decorative-gourd-season-motherfuckers">
+      <div class="postdate">September 23, 2019</div>
+      <div class="hed">It&#8217;s Decorative Gourd Season, Motherfuckers</div>
+</a>    <div class="byline"><span class="connector">by </span>Colin Nissan</div>
+  </li>
+  <li>
+    <a href="/articles/how-to-nurse-your-goddamn-baby-in-public-so-bystanders-dont-complain">
+      <div class="postdate">September 24, 2019</div>
+      <div class="hed">List: How to Nurse Your Goddamn Baby in Public So Bystanders Don&#8217;t Complain</div>
+</a>    <div class="byline"><span class="connector">by </span>Hayley D<span style="text-transform: none; font-variant: small-caps;">e</span>Roche</div>
+  </li>
+
+      </ol>
+    </div>
+
+      <div class="links">
+    <h5>Recently</h5>
+    <ul>
+        <li>
+    <a href="/articles/rudy-giulianis-daily-affirmations">
+      <div class="postdate">October 10, 2019</div>
+      <div class="hed">List: Rudy Giuliani&#8217;s Daily Affirmations</div>
+</a>    <div class="byline"><span class="connector">by </span>Harris Mayersohn</div>
+  </li>
+  <li>
+    <a href="/articles/hypothetically-its-still-okay-to-sit-courtside-with-dick-cheney-right">
+      <div class="postdate">October 10, 2019</div>
+      <div class="hed">Hypothetically, It’s Still Okay to Sit Courtside With Dick Cheney, Right?</div>
+</a>    <div class="byline"><span class="connector">by </span>Wen Powers</div>
+  </li>
+  <li>
+    <a href="/articles/why-mark-zuckerberg-is-a-better-chinese-person-than-i-am-according-to-my-grandmother">
+      <div class="postdate">October 10, 2019</div>
+      <div class="hed">List: Why Mark Zuckerberg Is a Better Chinese Person Than I Am, According to My Grandmother</div>
+</a>    <div class="byline"><span class="connector">by </span>Jasper Wang</div>
+  </li>
+  <li>
+    <a href="/articles/an-interview-with-dave-eggers-about-his-new-novel-the-captain-and-the-glory">
+      <div class="postdate">October 10, 2019</div>
+        <div class="thumbnail"><img data-at2x="https://d3thpuk46eyjbu.cloudfront.net/uploads/production/13031/1570580507/bubble_icon_2x/9780525659082.jpeg?1570580507" data-at3x="https://d3thpuk46eyjbu.cloudfront.net/uploads/production/13031/1570580507/bubble_icon_3x/9780525659082.jpeg?1570580507" src="https://d3thpuk46eyjbu.cloudfront.net/uploads/production/13031/1570580507/bubble_icon/9780525659082.jpeg?1570580507" /></div>
+      <div class="hed">An Interview With Dave Eggers About His New Novel <i>The Captain and the Glory</i></div>
+</a>    <div class="byline"><span class="connector">by </span>Knopf</div>
+  </li>
+
+    </ul>
+  </div>
+
+  </section>
+
+
+
+
+
+        <footer>
+    <section>
+        <div class='mission'>McSweeney’s is an independent nonprofit publishing company based in San Francisco.<br />
+As well as operating a <a href="https://www.mcsweeneys.net">daily humor website</a>, we also publish <em><a href="https://store.mcsweeneys.net/t/categories/timothy-mcsweeneys-quarterly-concern">Timothy McSweeney’s Quarterly Concern</a></em>, <em><a href="https://store.mcsweeneys.net/t/categories/Illustoria">Illustoria</a></em> and an ever-growing <em><a href="https://store.mcsweeneys.net/t/categories/books">selection of books</a></em> under various imprints. You can buy all of these things from our <em><a href="http://store.mcsweeneys.net/">online store</a></em>. You can support us today by <a href="https://store.mcsweeneys.net/t/categories/donate">making a donation</a>.</div>
+    </section>
+    <section>
+      <ul class="footer-links">
+        <li><a href="https://www.mcsweeneys.net/">Internet Tendency</a></li>
+        <li><a href="https://store.mcsweeneys.net">The Store</a></li>
+        <li><a href="https://store.mcsweeneys.net/t/categories/books">Books Division</a></li>
+        <li><a href="https://store.mcsweeneys.net/t/categories/timothy-mcsweeneys-quarterly-concern">Quarterly Concern</a></li>
+        <li><a href="https://store.mcsweeneys.net/t/categories/donate">Donate</a></li>
+	      <li><a href="https://www.mcsweeneys.net/pages/about-us">About Us</a></li>
+      </ul>
+<!--
+      <ul class="footer-links">
+          <li><a href="/pages/about-us">About Us</a></li>
+          <li><a href="/pages/guidelines-for-web-submissions">Guidelines for McSweeney&#39;s Internet Tendency Submissions</a></li>
+          <li><a href="/pages/jobs">Job Opportunities</a></li>
+          <li><a href="/pages/download-wajahat-alis-the-domestic-crusaders">Download Wajahat Ali&#39;s The Domestic Crusaders</a></li>
+          <li><a href="/pages/mcsweeneys-internet-tendencys-16-most-read-articles-of-2016">McSweeney&#39;s Internet Tendency&#39;s 16 Most-Read Articles of 2016</a></li>
+          <li><a href="/pages/social-media-and-events-intern">Social Media and Events Intern</a></li>
+          <li><a href="/pages/sales-and-marketing-intern">Sales and Marketing Intern</a></li>
+          <li><a href="/pages/patty-yumi-cottrell-sorry-to-disrupt-the-peace">Patty Yumi Cottrell: Sorry To Disrupt the Peace</a></li>
+          <li><a href="/pages/our-patreon-donor-virtual-wall-of-fame">Our Patreon Donor Virtual Wall of Fame</a></li>
+          <li><a href="/pages/special-call-for-submissions">Special Call for Print Quarterly Submissions</a></li>
+          <li><a href="/pages/timothy-mcsweeneys-order-and-subscription-policy">Timothy McSweeney’s Order and Subscription Policy</a></li>
+          <li><a href="/pages/daniel-gumbiner-on-tour-the-boatbuilder">Daniel Gumbiner at the Mechanics&#39; Institute Library:The Boatbuilder</a></li>
+          <li><a href="/pages/sunday-evening-poetry">Sunday Evening Poetry </a></li>
+          <li><a href="/pages/see-chimamanda-adichie-khaled-hosseini-dave-eggers-jose-antonio-vargas-chinaka-hodge-at-one-singular-event-in-san-francisco">See Chimamanda Adichie, Khaled Hosseini, Dave Eggers, Jose Antonio Vargas, and Chinaka Hodge at one singular event in San Francisco!</a></li>
+          <li><a href="/pages/our-18-most-read-articles-of-2018">Our 18 Most-Read Articles of 2018</a></li>
+          <li><a href="/pages/indelible-in-the-hippocampus-us-tour">INDELIBLE IN THE HIPPOCAMPUS: US TOUR</a></li>
+      </ul>
+-->
+      <ul class="footer-links">
+	      <li><a href="https://www.mcsweeneys.net/pages/mcsweeneys-related-events-and-tour-dates">Events</a></li>
+	      <li><a href="https://www.mcsweeneys.net/pages/mcsweeneys-monthly-mailing-list">Email Newsletter</a></li>
+	      <li><a href="https://www.mcsweeneys.net/pages/advertise-with-us">Advertise</a></li>
+	      <li><a href="https://www.mcsweeneys.net/pages/timothy-mcsweeneys-order-and-subscription-policy">Store Policy</a></li>
+	      <li><a href="https://www.mcsweeneys.net/pages/contact-us">Contact Us</a></li>
+	      <li><a href="https://www.mcsweeneys.net/pages/mcsweeneys-internships">Internships</a></li>
+	      <li><a href="https://www.mcsweeneys.net/pages/submission-guidelines">Submission Guidelines</a></li>
+      </ul>
+    </section>
+    <section>
+      <div class="logo"></div>				
+      <div class="fineprint">Copyright &copy; 1998–2019, McSweeney’s Publishing LLC.<br />All Rights Reserved.</div>
+    </section>
+  </footer>
+
+    </main>
+  </div>
+  <nav id="c-menu--push-top" class="c-menu c-menu--push-top">
+  <button class="c-menu__close"></button>
+  <form action="/articles/search" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="&#x2713;" />
+    <span class="icons"><img class="search-icon" src="/assets/search-6dce36f1bf31751b92ecf7aed2a41fb713bc50a327473825b9a5178088884842.svg" /></span>
+    <input type="search" name="q" id="q" class="search-box" placeholder="Search" />
+</form>  <ul class="mobile-nav">
+    <li><a href="/" class="c-menu__link">Internet Tendency</a></li>
+    <li><a href="https://store.mcsweeneys.net" class="c-menu__link">The Store</a></li>
+    <li><a href="https://store.mcsweeneys.net/t/categories/books" class="c-menu__link">Books Division</a></li>
+    <li><a href="https://store.mcsweeneys.net/t/categories/timothy-mcsweeneys-quarterly-concern" class="c-menu__link">Quarterly Concern</a></li>
+    <li><a href="donate" class="c-menu__link">Donate</a></li>
+  </ul>
+</nav><!-- /c-menu push-top -->
+<div id="c-mask" class="c-mask"></div><!-- /c-mask -->
+<script>
+  var pushTop = new Menu({
+    wrapper: '#o-wrapper',
+    type: 'push-top',
+    menuOpenerClass: '.c-button',
+    maskId: '#c-mask'
+  });
+
+  var pushTopBtn = document.querySelector('#c-button--push-top');
+
+  pushTopBtn.addEventListener('click', function(e) {
+    e.preventDefault;
+    pushTop.open();
+  });
+</script>
+  <script src="/assets/retinajs/retina-be3592dceb0a540933f0fc1b11ac74c9e44a7cb00c44aace4e3f4fb8dd56ca1a.js"></script>
+</body>
+</html>
+

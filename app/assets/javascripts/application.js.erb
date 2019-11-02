@@ -177,12 +177,15 @@ var _Lobsters = Class.extend({
         score--;
 
       li.removeClass("upvoted").addClass("downvoted");
+      showScore = false;
       score--;
       action = "downvote";
     }
 
     if (showScore)
       scoreDiv.innerHTML = score;
+    else
+      scoreDiv.innerHTML = '~';
 
     if (action == "upvote" || action == "unvote") {
       li.find(".reason").html("");

@@ -132,6 +132,7 @@ describe Search do
 
     expect(search.results).to include(@comments[1])
   end
+
   it "can search for comments by tag" do
     search = Search.new
     search.q = "comment2 comment3 tag:tag1"
@@ -142,6 +143,7 @@ describe Search do
     expect(search.results).to include(@comments[2])
     expect(search.results).not_to include(@comments[3])
   end
+
   it "can search for comments with only tags" do
     search = Search.new
     search.q = "tag:tag1"
@@ -152,6 +154,7 @@ describe Search do
     expect(search.results).to include(@comments[2])
     expect(search.results).not_to include(@comments[3])
   end
+
   it "should only return comments matching all tags if multiple are present" do
     search = Search.new
     search.q = "tag:tag1 tag:tag2"

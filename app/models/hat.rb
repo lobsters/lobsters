@@ -4,6 +4,9 @@ class Hat < ApplicationRecord
 
   after_create :log_moderation
 
+  validates :user, :granted_by_user, :hat, presence: true
+  validates :hat, :link, length: { maximum: 255 }
+
   def doff_by_user_with_reason(user, reason)
     m = Moderation.new
     m.user_id = self.user_id
@@ -30,7 +33,7 @@ class Hat < ApplicationRecord
 
     h = "<span class=\"hat " <<
         "hat_#{self.hat.gsub(/[^A-Za-z0-9]/, '_').downcase}\" " <<
-        "title=\"Granted by #{self.created_at.strftime('%Y-%m-%d')}"
+        "title=\"Granted #{self.created_at.strftime('%Y-%m-%d')}"
 
     if !hl && self.link.present?
       h << " - #{ERB::Util.html_escape(self.link)}"

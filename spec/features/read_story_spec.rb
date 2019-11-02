@@ -34,7 +34,7 @@ RSpec.feature "Reading Stories", type: :feature do
 
     it "redirects links" do
       visit merged.comments_path
-      expect(page.current_path).to eq(story.comments_path)
+      expect(page).to have_current_path(story.comments_path)
     end
 
     it "shows merged story at the top" do

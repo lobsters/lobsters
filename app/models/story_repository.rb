@@ -39,9 +39,9 @@ class StoryRepository
   end
 
   def tagged(tags)
-    tagged = Story.base.positive_ranked.joins(:taggings).where(taggings: { tag_id: tags.map(&:id) })
+    tagged_story_ids = Tagging.select(:story_id).where(tag_id: tags.map(&:id))
 
-    tagged.order(created_at: :desc)
+    Story.base.positive_ranked.where(id: tagged_story_ids).order(created_at: :desc)
   end
 
   def top(length)

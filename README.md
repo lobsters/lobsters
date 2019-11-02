@@ -89,23 +89,10 @@ running tests:
     ```sh
     lobsters$ rails db:schema:load
     ```
-    
-* Define your site's name and default domain, which are used in various places,
-in a `config/initializers/production.rb` or similar file:
 
-    ```ruby
-    class << Rails.application
-      def domain
-        "example.com"
-      end
-
-      def name
-        "Example News"
-      end
-    end
-
-    Rails.application.routes.default_url_options[:host] = Rails.application.domain
-    ```
+* On your production server, copy `config/initializers/production.rb.sample`
+  to `config/initalizers/production.rb` and customize it with your site's
+  `domain` and `name`. (You don't need this on your dev machine).
 
 * Put your site's custom CSS in `app/assets/stylesheets/local`.
 

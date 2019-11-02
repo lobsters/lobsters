@@ -8,6 +8,7 @@ env:
     - RAILS_ENV=test
 before_install:
   - gem install bundler
+  - gem install bundler-leak
 before_script:
   - ./bin/rails db:create
   - ./bin/rails db:schema:load
@@ -15,3 +16,5 @@ script:
   - bundle exec rspec
   - bundle exec rubocop
   - bundle exec ruumba
+  - bundle leak update
+  - bundle leak check

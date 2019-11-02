@@ -127,10 +127,10 @@ class Story < ApplicationRecord
 
   # link shortening and other ad tracking domains
   TRACKING_DOMAINS = %w{ 1url.com 7.ly adf.ly al.ly bc.vc bit.do bit.ly bitly.com buzurl.com cur.lv
-  cutt.us db.tt db.tt doiop.com ey.io filoops.info goo.gl is.gd ity.im j.mp lnkd.in ow.ly ph.dog
-  po.st prettylinkpro.com q.gs qr.ae qr.net research.eligrey.com scrnch.me s.id sptfy.com t.co
-  tinyarrows.com tiny.cc tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd vzturl.com
-  wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }.freeze
+  cutt.us db.tt db.tt doiop.com ey.io filoops.info goo.gl is.gd ity.im j.mp link.tl lnkd.in ow.ly
+  ph.dog po.st prettylinkpro.com q.gs qr.ae qr.net research.eligrey.com scrnch.me s.id sptfy.com
+  t.co tinyarrows.com tiny.cc tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd
+  vzturl.com wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }.freeze
 
   # URI.parse is not very lenient, so we can't use it
   URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i.freeze
@@ -637,6 +637,12 @@ class Story < ApplicationRecord
     Rails.application.root_url + "s/#{self.short_id}"
   end
 
+  def show_score_to_user?(u)
+    return true if u && u.is_moderator?
+    # cast nil to 0, only show score if user hasn't flagged
+    (!vote || vote[:vote].to_i >= 0)
+  end
+
   def tagging_changes
     old_tags_a = self.taggings.reject(&:new_record?).map {|tg| tg.tag.tag }.join(" ")
     new_tags_a = self.taggings.reject(&:marked_for_destruction?).map {|tg| tg.tag.tag }.join(" ")
@@ -948,14 +954,12 @@ class Story < ApplicationRecord
 
     @fetched_attributes[:title] = title
 
-    # now get canonical version of url (though some cms software puts incorrect
-    # urls here, hopefully the user will notice)
+    # attempt to get the canonical url if it can be parsed,
+    # if it is not the domain root path, and if it
+    # responds to GET with a 200-level code
     begin
-      if (cu = parsed.at_css("link[rel='canonical']").attributes["href"] .text).present? &&
-         (ucu = URI.parse(cu)) && ucu.scheme.present? &&
-         ucu.host.present?
-        @fetched_attributes[:url] = cu
-      end
+      cu = canonical_target(parsed)
+      @fetched_attributes[:url] = cu if valid_canonical_uri?(cu)
     rescue
     end
 
@@ -1011,5 +1015,24 @@ class Story < ApplicationRecord
     rescue
       return @fetched_attributes
     end
+
+private
+
+  def valid_canonical_uri?(url)
+    ucu = URI.parse(url)
+    new_page = ucu &&
+               ucu.scheme.present? &&
+               ucu.host.present? &&
+               ucu.path != "/"
+
+    return false unless new_page
+
+    res = Sponge.new.fetch(url)
+
+    res.code.to_s =~ /\A2.*\Z/
+  end
+
+  def canonical_target(parsed)
+    parsed.at_css("link[rel='canonical']").attributes["href"].text
   end
 end

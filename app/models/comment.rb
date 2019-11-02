@@ -47,6 +47,10 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
+  validates :short_id, length: { maximum: 10 }
+  validates :markeddown_comment, length: { maximum: 16_777_215 }
+  validates :comment, presence: true
+
   SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
 
   validate do
@@ -444,7 +448,7 @@ class Comment < ApplicationRecord
   end
 
   def score_for_user(u)
-    if self.showing_downvotes_for_user?(u)
+    if self.show_score_to_user?(u)
       score
     elsif u && u.can_downvote?(self)
       "~"
@@ -457,10 +461,15 @@ class Comment < ApplicationRecord
     Rails.application.root_url + "c/#{self.short_id}"
   end
 
-  def showing_downvotes_for_user?(u)
-    return (u && u.is_moderator?) ||
-           (self.created_at && self.created_at < 36.hours.ago) ||
-           !SCORE_RANGE_TO_HIDE.include?(self.score)
+  def show_score_to_user?(u)
+    return true if u && u.is_moderator?
+
+    # hide score on new/near-zero comments to cut down on threads about voting
+    # also hide if user has flagged the story/comment to make retaliatory flagging less fun
+    (
+      (self.created_at && self.created_at < 36.hours.ago) ||
+      !SCORE_RANGE_TO_HIDE.include?(self.score)
+    ) && (!current_vote || current_vote[:vote] >= 0)
   end
 
   def to_param

@@ -1,8 +1,6 @@
-require "rails_helper"
+require 'rails_helper'
 
-describe KeybaseProofsController do
-  render_views
-
+describe 'keybase proofs', type: :request do
   let(:user) { create(:user) }
   let(:kb_username) { "cryptojim" }
   let(:kb_sig) { "1"*66 }
@@ -14,12 +12,12 @@ describe KeybaseProofsController do
   let(:create_params) { { keybase_proof: valid_kb_params } }
 
   before do
-    stub_login_as user
+    sign_in user
   end
 
   context 'new' do
     it 'renders the expected kb_username' do
-      get :new, params: new_params
+      get '/keybase_proofs/new', params: new_params
       expect(response.body).to include(kb_username)
     end
   end
@@ -30,7 +28,7 @@ describe KeybaseProofsController do
         expect(Keybase).to receive(:proof_valid?)
           .with(kb_username, kb_sig, user.username).and_return(true)
 
-        post :create, params: create_params
+        post '/keybase_proofs', params: create_params
 
         expect(user.reload.keybase_signatures).to eq [
           { 'kb_username' => kb_username, 'sig_hash' => kb_sig },
@@ -58,7 +56,7 @@ describe KeybaseProofsController do
         expect(Keybase).to receive(:proof_valid?)
           .with(kb_username, kb_sig, user.username).and_return(true)
 
-        post :create, params: create_params
+        post '/keybase_proofs', params: create_params
 
         expect(user.reload.keybase_signatures).to match_array expected_keybase_signatures
       end

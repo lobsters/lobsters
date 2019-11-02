@@ -7,6 +7,8 @@ class LoginFailedError < StandardError; end
 class LoginController < ApplicationController
   before_action :authenticate_user
   before_action :check_for_read_only_mode, :except => [:index]
+  before_action :require_no_user_or_redirect,
+                only: [:index, :login, :forgot_password, :reset_password]
 
   def logout
     if @user
@@ -111,12 +113,12 @@ class LoginController < ApplicationController
     end
 
     if @found_user.is_banned?
-      flash.now[:error] = "Your acocunt has been banned."
+      flash.now[:error] = "Your account has been banned."
       return forgot_password
     end
 
     if @found_user.is_wiped?
-      flash.now[:error] = "It's not possible to reest your password " <<
+      flash.now[:error] = "It's not possible to reset your password " <<
                           "because your account was deleted before the site changed admins " <<
                           "and your email address was wiped for privacy."
       return forgot_password

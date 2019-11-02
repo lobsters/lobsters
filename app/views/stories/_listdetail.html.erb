@@ -18,7 +18,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
     <% else %>
       <%= link_to "", login_path, :class => "upvoter" %>
     <% end %>
-    <div class="score"><%= story.score %></div>
+    <div class="score"><%= story.show_score_to_user?(@user) ? story.score : '~' %></div>
   </div>
   <div class="details">
     <span class="link h-cite u-repost-of">
@@ -47,7 +47,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
 
       <% if defined?(single_story) && single_story %>
-        <% story.merged_stories.not_deleted.each do |ms| %>
+        <% story.merged_stories.not_deleted.includes(:user, :tags).each do |ms| %>
           <br>
           <span class="merge"></span>
           <span class="link">

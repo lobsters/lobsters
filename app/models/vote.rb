@@ -9,6 +9,7 @@ class Vote < ApplicationRecord
     "M" => "Me-too",
     "T" => "Troll",
     "S" => "Spam",
+    "U" => "Unkind",
     "" => "Cancel",
   }.freeze
 

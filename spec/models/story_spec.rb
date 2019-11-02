@@ -136,13 +136,13 @@ describe Story do
     end
 
     it "can fetch its title properly" do
-      content = File.read(story_directory + "1.html")
+      content = File.read(story_directory + "title_ampersand.html")
       res = fake_response(content, "text/html")
       s = build(:story)
       s.fetched_response = res
       expect(s.fetched_attributes[:title]).to eq("B2G demo & quick hack // by Paul Rouget")
 
-      content = File.read(story_directory + "2.html")
+      content = File.read(story_directory + "title_google.html")
       res = fake_response(content, "text/html")
       s = build(:story)
       s.fetched_response = res
@@ -153,6 +153,38 @@ describe Story do
       expect(Sponge).to_not receive(:new)
       story = Story.new url: 'https://example.com:123/'
       expect(story.fetched_attributes[:title]).to eq('')
+    end
+
+    it "does not follow rel=canonical when this is to the main page" do
+      url = "https://www.mcsweeneys.net/articles/who-said-it-donald-trump-or-regina-george"
+      s = build(:story, url: url)
+      s.fetched_content = File.read(story_directory + "canonical_root.html")
+      expect(s.fetched_attributes[:url]).to eq(url)
+    end
+
+    it "does not assign canonical url when the response is non-200" do
+      url = "https://www.mcsweeneys.net/a/who-said-it-donald-trump-or-regina-george"
+
+      expect_any_instance_of(Sponge)
+        .to receive(:fetch)
+        .and_return(Net::HTTPResponse.new(1.0, 404, "OK"))
+
+      s = build(:story, url: url)
+      s.fetched_content = File.read(story_directory + "canonical_error.html")
+      expect(s.fetched_attributes[:url]).to eq(url)
+    end
+
+    it "assigns canonical when url when it resolves 200" do
+      url = "https://www.mcsweeneys.net/a/who-said-it-donald-trump-or-regina-george"
+      canonical = "https://www.mcsweeneys.net/articles/who-said-it-donald-trump-or-regina-george"
+
+      expect_any_instance_of(Sponge)
+        .to receive(:fetch)
+        .and_return(Net::HTTPResponse.new(1.0, 200, "OK"))
+
+      s = build(:story, url: url)
+      s.fetched_content = File.read(story_directory + "canonical_error.html")
+      expect(s.fetched_attributes[:url]).to eq(canonical)
     end
 
     context "with unicode" do

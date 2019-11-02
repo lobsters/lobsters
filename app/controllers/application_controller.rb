@@ -12,6 +12,10 @@ class ApplicationController < ActionController::Base
   # (lobster_trap) which is sent even to logged-out visitors
   CACHE_PAGE = proc { false && @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
 
+  rescue_from ActionController::UnknownFormat, ActionView::MissingTemplate do
+    render plain: '404 Not Found', status: :not_found, content_type: 'text/plain'
+  end
+
   def authenticate_user
     # eagerly evaluate, in case this triggers an IpSpoofAttackError
     request.remote_ip
@@ -120,6 +124,10 @@ class ApplicationController < ActionController::Base
       render :plain => "not logged in", :status => 400
       return false
     end
+  end
+
+  def require_no_user_or_redirect
+    return redirect_to "/" if @user
   end
 
   def tags_filtered_by_cookie

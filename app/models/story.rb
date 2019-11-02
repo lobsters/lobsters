@@ -1015,7 +1015,7 @@ class Story < ApplicationRecord
     rescue
       return @fetched_attributes
     end
-   end
+  end
 
 private
 

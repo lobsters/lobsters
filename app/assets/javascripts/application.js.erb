@@ -259,7 +259,7 @@ var _Lobsters = Class.extend({
 
   checkStoryTitle: function() {
     var title = $("#story_title").val();
-    if (title === undefined) {
+    if (title === undefined || title === '') {
       return;
     }
     var m;

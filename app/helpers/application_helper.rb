@@ -181,11 +181,13 @@ module ApplicationHelper
     end
 
     span_class = ''
+    title = time.strftime("%F %T %z")
 
     if options[:mark_unread]
       span_class += 'comment_unread'
+      title += ' (new)'
     end
 
-    raw(content_tag(:span, ago, title: time.strftime("%F %T %z"), class: span_class))
+    raw(content_tag(:span, ago, title: title, class: span_class))
   end
 end

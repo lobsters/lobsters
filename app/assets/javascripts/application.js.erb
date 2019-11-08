@@ -389,11 +389,13 @@ var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
   var $olcomments = $("ol.comments");
-  $olcomments.on("click", ".comment a.downvoter", function() {
+  $olcomments.on("click", ".comment .voters > a + div + a", function() {
+    console.log("downvote");
     Lobsters.downvoteComment(this);
     return false;
   });
-  $olcomments.on("click", ".comment a.upvoter", function() {
+  $olcomments.on("click", ".comment .voters > a", function() {
+    console.log("upvote");
     Lobsters.upvoteComment(this);
     return false;
   });

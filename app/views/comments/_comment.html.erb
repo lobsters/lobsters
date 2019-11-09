@@ -20,7 +20,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
     <% score_display = comment.score_for_user(@user) %>
     <div class="voters">
       <% if @user %>
-        <a>
+        <a class="upvoter-tap">
           <div class="upvoter"></div>
         </a>
       <% else %>
@@ -28,7 +28,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% end %>
       <div class="score"><%= score_display %></div>
       <% if can_downvote %>
-        <a>
+        <a class="downvoter-tap">
           <div class="downvoter"></div>
         </a>
       <% else %>

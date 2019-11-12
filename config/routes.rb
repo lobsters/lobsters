@@ -85,7 +85,7 @@ Rails.application.routes.draw do
   post "/stories/preview" => "stories#preview"
   post "/stories/check_url_dupe" => "stories#check_url_dupe"
 
-  resources :comments, except: [:new] do
+  resources :comments, except: [:new, :destroy] do
     member do
       get "/comments/:id" => "comments#redirect_from_short_id"
       get "reply"

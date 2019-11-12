@@ -78,7 +78,7 @@ class Sponge
     end
 
     if val.to_s == ""
-      @cookies[host][name] ? @cookies[host].delete(:name) : nil
+      @cookies[host][name] ? @cookies[host][name].delete : nil
     else
       @cookies[host][name] = val
     end

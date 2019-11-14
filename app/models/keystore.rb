@@ -1,7 +1,9 @@
 class Keystore < ApplicationRecord
+  MAX_KEY_LENGTH = 50
+
   self.primary_key = "key"
 
-  validates :key, presence: true, length: { maximum: 50 }
+  validates :key, presence: true, length: { maximum: MAX_KEY_LENGTH }
 
   def self.get(key)
     self.find_by(:key => key)
@@ -94,7 +96,8 @@ class Keystore < ApplicationRecord
   end
 
   def self.validate_input_key(key)
-    exception = ActiveRecord::ValueTooLong.new('50 characters is the maximum allowed for key')
-    raise exception if key.length > 50
+    exception = ActiveRecord::ValueTooLong.new("#{MAX_KEY_LENGTH}" \
+      " characters is the maximum allowed for key")
+    raise exception if key.length > MAX_KEY_LENGTH
   end
 end

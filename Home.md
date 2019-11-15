@@ -26,6 +26,7 @@ Other sites using the Lobsters codebase:
 * [Middlebit](https://middlebit.com/) - Content curation for the "no-coast" region of the United States.
 * [Quantum News](http://science.solobsd.org/) - Science
 * [Concat](https://concat.id) ([repo](https://github.com/evilfactorylabs/concat)) - Computing (Indonesian)
+* [ACRAB](https://acrab.isi.jhu.edu/) - Applied Cryptography Publications
 
 ## Cousin Sites
 

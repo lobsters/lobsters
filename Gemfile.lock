@@ -124,6 +124,7 @@ GEM
     parallel (1.17.0)
     parser (2.6.5.0)
       ast (~> 2.4.0)
+    pg (1.1.4)
     public_suffix (3.1.1)
     rack (2.0.7)
     rack-test (1.1.0)
@@ -263,6 +264,7 @@ DEPENDENCIES
   mysql2
   nokogiri (>= 1.7.2)
   oauth
+  pg
   rails (~> 5.2.0)
   rb-readline
   rotp

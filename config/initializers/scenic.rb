@@ -1,3 +1,5 @@
 Scenic.configure do |config|
-  config.database = Scenic::Adapters::MySQL.new
+  if ActiveRecord::Base.connection.adapter_name != 'PostgreSQL'
+    config.database = Scenic::Adapters::MySQL.new
+  end
 end

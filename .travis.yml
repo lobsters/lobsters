@@ -2,14 +2,19 @@
 language: ruby
 services:
   - mysql
+  - postgresql
 env:
   global:
-    - DATABASE_URL=mysql2://root:@localhost/lobsters_dev
     - RAILS_ENV=test
+  jobs:
+    - DATABASE_URL=mysql2://root:@localhost/lobsters_dev
+    - DATABASE_URL=postgresql://postgres:@localhost/lobsters_dev
 before_install:
   - gem install bundler
   - gem install bundler-leak
 before_script:
+  - mysql -e 'CREATE DATABASE lobsters_dev;'
+  - psql -c 'CREATE DATABASE lobsters_dev;' -U postgres
   - ./bin/rails db:create
   - ./bin/rails db:schema:load
 script:

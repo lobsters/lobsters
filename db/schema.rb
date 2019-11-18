@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_29_021735) do
+ActiveRecord::Schema.define(version: 2019_11_18_015357) do
 
   create_table "comments", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -75,7 +75,7 @@ ActiveRecord::Schema.define(version: 2019_10_29_021735) do
     t.boolean "is_verified", default: false
     t.string "email", null: false
     t.string "name", null: false
-    t.text "memo"
+    t.text "memo", limit: 255
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

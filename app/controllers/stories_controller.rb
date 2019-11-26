@@ -484,7 +484,7 @@ private
     m.story_id = @story.id
     comment = @story.comments.find(&:new_record?)
     comment.try(:save)
-    m.action = "reposted description as comment https://lobste.rs/c/#{comment.short_id}"
+    m.action = "Reposted description as comment https://lobste.rs/c/#{comment.short_id}"
     m.reason = @story.moderation_reason
     m.save
     @story.is_moderated = true

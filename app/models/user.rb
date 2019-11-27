@@ -399,8 +399,8 @@ class User < ApplicationRecord
     return if self.is_banned? # https://www.youtube.com/watch?v=UcZzlPGnKdU
     self.email = "#{self.username}@lobsters.example" if \
       self.karma < 0 ||
-      (self.comments.where('created_at >= now() - interval 30 day AND is_moderated').count +
-       self.stories.where('created_at >= now() - interval 30 day AND is_expired AND is_moderated')
+      (self.comments.where("created_at >= now() - #{SqlHelpers.interval(30, 'day')} AND is_moderated").count +
+       self.stories.where("created_at >= now() - #{SqlHelpers.interval(30, 'day')} AND is_expired AND is_moderated")
          .count >= 3) ||
       DownvotedCommenters.new('90d').check_list_for(self).try(:[], :rank).try(:<, 10)
   end

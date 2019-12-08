@@ -67,6 +67,10 @@ var _Lobsters = Class.extend({
     Lobsters._showDownvoteWhyAt("comment", voterEl, function(k) {
       Lobsters.vote("comment", voterEl, -1, k); });
   },
+  foldComment: function(folderEl) {
+    var input = document.getElementById(folderEl.getAttribute("for"));
+    folderEl.setAttribute("aria-expanded", input.checked ? "true" : "false");
+  },
   _showDownvoteWhyAt: function(thingType, voterEl, onChooseWhy) {
     if (!Lobsters.curUser)
       return Lobsters.bounceToLogin();
@@ -396,6 +400,11 @@ $(document).ready(function() {
   $olcomments.on("click", ".comment a.upvoter", function() {
     Lobsters.upvoteComment(this);
     return false;
+  });
+
+  $olcomments.on("click", ".comment label.comment_folder", function(event) {
+    Lobsters.foldComment(this);
+    return true;
   });
 
   $("li.story a.flagger").click(function() {

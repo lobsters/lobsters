@@ -12,7 +12,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
   <% if defined?(show_tree_lines) && show_tree_lines %>
     <label for="comment_folder_<%= comment.short_id %>"
-      class="comment_folder"></label>
+      class="comment_folder" role="button" aria-expanded="true"></label>
   <% end %>
 
   <% if !comment.is_gone? %>
@@ -43,10 +43,10 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
       <% if defined?(show_tree_lines) && show_tree_lines %>
         <label for="comment_folder_<%= comment.short_id %>"
-          class="comment_folder comment_folder_inline"></label>
+          class="comment_folder comment_folder_inline" role="button" aria-expanded="true"></label>
       <% else %>
         <label for="comment_folder_<%= comment.short_id %>"
-          class="comment_folder comment_folder_inline force_inline"></label>
+          class="comment_folder comment_folder_inline force_inline" role="button" aria-expanded="true"></label>
       <% end %>
 
       <% if defined?(was_merged) && was_merged %>

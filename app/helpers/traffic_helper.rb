@@ -6,19 +6,26 @@ module TrafficHelper
   PERIOD_LENGTH = 15 # minutes
   CACHE_FOR = 5 # minutes
 
-  def self.is_pg?
-    ActiveRecord::Base.connection_config[:adapter] == 'postgresql'
-  end
-
   def self.traffic_range
     div = PERIOD_LENGTH * 60
-    start_at = if is_pg?
-                 "now() - interval '90 day'"
-               else
-                 'now() - interval 90 day'
-               end
+    start_at = "now() - #{SqlHelpers.interval(90, 'day')}"
+
     result = ActiveRecord::Base.connection.execute <<-SQL
-      select 0 as low, 0 as high
+      select
+        min(activity) as low,
+        max(activity) as high
+      from
+        (select
+          -- from_unixtime(s.period * #{div}) as "at",
+          -- s.period,
+          v.n_votes + (c.n_comments * 10) + (s.n_stories * 20) AS activity
+        from
+          (SELECT count(1) AS n_votes,    floor(extract(epoch from (updated_at))/#{div}) AS period FROM votes    WHERE updated_at >= #{start_at} GROUP BY period) v,
+          (SELECT count(1) AS n_comments, floor(extract(epoch from (created_at))/#{div}) AS period FROM comments WHERE created_at >= #{start_at} GROUP BY period) c,
+          (SELECT count(1) AS n_stories,  floor(extract(epoch from (created_at))/#{div}) AS period FROM stories  WHERE created_at >= #{start_at} GROUP BY period) s
+        where
+          s.period = c.period and
+          s.period = v.period) act
     SQL
     result.to_a.first
   end

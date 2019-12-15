@@ -63,7 +63,7 @@ class DownvotedCommenters
           count(distinct comments.id) as n_comments,
           count(distinct story_id) as n_stories,
           sum(downvotes) as n_downvotes")
-        .having("count(distinct comments.id) > 2 and n_stories > 1 and sum(downvotes) >= 10")
+        .having("count(distinct comments.id) > 2 and count(distinct story_id) > 1 and sum(downvotes) >= 10")
         .order("sigma desc")
         .limit(30)
         .each_with_object({}) {|u, hash|

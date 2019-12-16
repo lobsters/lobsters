@@ -12,20 +12,8 @@ module TrafficHelper
 
     result = ActiveRecord::Base.connection.execute <<-SQL
       select
-        min(activity) as low,
-        max(activity) as high
-      from
-        (select
-          -- from_unixtime(s.period * #{div}) as "at",
-          -- s.period,
-          v.n_votes + (c.n_comments * 10) + (s.n_stories * 20) AS activity
-        from
-          (SELECT count(1) AS n_votes,    floor(extract(epoch from (updated_at))/#{div}) AS period FROM votes    WHERE updated_at >= #{start_at} GROUP BY period) v,
-          (SELECT count(1) AS n_comments, floor(extract(epoch from (created_at))/#{div}) AS period FROM comments WHERE created_at >= #{start_at} GROUP BY period) c,
-          (SELECT count(1) AS n_stories,  floor(extract(epoch from (created_at))/#{div}) AS period FROM stories  WHERE created_at >= #{start_at} GROUP BY period) s
-        where
-          s.period = c.period and
-          s.period = v.period) act
+        0 as low,
+        0 as high
     SQL
     result.to_a.first
   end

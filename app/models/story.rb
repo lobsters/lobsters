@@ -278,7 +278,7 @@ class Story < ApplicationRecord
   end
 
   def archive_url
-    "https://archive.is/#{CGI.escape(self.url)}"
+    "https://archive.md/#{CGI.escape(self.url)}"
   end
 
   def as_json(options = {})

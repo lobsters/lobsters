@@ -25,6 +25,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
 
   config.before(:suite) do
+    DatabaseCleaner.allow_remote_database_url = ENV['TRAVIS'].present?
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with :truncation
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_29_021735) do
+ActiveRecord::Schema.define(version: 2019_12_27_231938) do
 
   create_table "comments", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -193,6 +193,7 @@ ActiveRecord::Schema.define(version: 2019_10_29_021735) do
     t.index ["merged_story_id"], name: "index_stories_on_merged_story_id"
     t.index ["short_id"], name: "unique_short_id", unique: true
     t.index ["story_cache"], name: "index_stories_on_story_cache", type: :fulltext
+    t.index ["story_cache"], name: "stories_story_cache", type: :fulltext
     t.index ["title"], name: "index_stories_on_title", type: :fulltext
     t.index ["twitter_id"], name: "index_stories_on_twitter_id"
     t.index ["url"], name: "url", length: 191

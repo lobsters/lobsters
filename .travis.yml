@@ -1,16 +1,17 @@
 ---
 language: ruby
+dist: xenial
 services:
   - mysql
 env:
   global:
-    - DATABASE_URL=mysql2://root:@localhost/lobsters_dev
+    - DATABASE_URL=mysql2:///lobsters_test
     - RAILS_ENV=test
 before_install:
   - gem install bundler
   - gem install bundler-leak
 before_script:
-  - ./bin/rails db:create
+  - sudo mysql -e 'create database lobsters_test;'
   - ./bin/rails db:schema:load
 script:
   - bundle exec rspec

@@ -218,6 +218,29 @@ class HomeController < ApplicationController
     end
   end
 
+  def for_domain
+    @domain = Domain.first_by(fdqn: params[:fqdn])
+
+    @stories, @show_more = get_from_cache(tags: tag_params.sort.join(',')) do
+      paginate @domain.stories
+    end
+
+    @heading = params[:fqdn]
+    @title = "Stories submitted for #{domain.fqdn}."
+    @cur_url = for_domain_url(params[:domain])
+
+    @rss_link = {
+      title: "RSS 2.0 - For Domain #{tags_with_description_for_rss(@tags)}",
+      href: "/t/#{params[:tag]}.rss",
+    }
+
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.rss { render :action => "rss", :layout => false }
+      format.json { render :json => @stories }
+    end
+  end
+
   def top
     @cur_url = "/top"
     length = time_interval(params[:length])

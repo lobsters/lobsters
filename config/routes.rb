@@ -65,6 +65,9 @@ Rails.application.routes.draw do
   get "/t/:tag" => "home#tagged", :as => "tag"
   get "/t/:tag/page/:page" => "home#tagged"
 
+  get "/domain/:fqdn" => "home#for_domain", :as => "for_domain"
+  get "/domain/:fqdn/page/:page" => "home#for_domain"
+
   get "/search" => "search#index"
   get "/search/:q" => "search#index"
 

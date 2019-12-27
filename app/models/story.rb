@@ -1,5 +1,6 @@
 class Story < ApplicationRecord
   belongs_to :user
+  belongs_to :domain, optional: true
   belongs_to :merged_into_story,
              :class_name => "Story",
              :foreign_key => "merged_story_id",
@@ -125,13 +126,6 @@ class Story < ApplicationRecord
   # drop these words from titles when making URLs
   TITLE_DROP_WORDS = ["", "a", "an", "and", "but", "in", "of", "or", "that", "the", "to"].freeze
 
-  # link shortening and other ad tracking domains
-  TRACKING_DOMAINS = %w{ 1url.com 7.ly adf.ly al.ly bc.vc bit.do bit.ly bitly.com buzurl.com cur.lv
-  cutt.us db.tt db.tt doiop.com ey.io filoops.info goo.gl is.gd ity.im j.mp link.tl lnkd.in ow.ly
-  ph.dog po.st prettylinkpro.com q.gs qr.ae qr.net research.eligrey.com scrnch.me s.id sptfy.com
-  t.co tinyarrows.com tiny.cc tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd
-  vzturl.com wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net }.freeze
-
   # URI.parse is not very lenient, so we can't use it
   URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i.freeze
 
@@ -187,7 +181,7 @@ class Story < ApplicationRecord
   def check_not_tracking_domain
     return unless self.url.present? && self.new_record?
 
-    if TRACKING_DOMAINS.include?(domain)
+    if domain && domain.is_tracker
       ModNote.create!(
         moderator: InactiveUser.inactive_user,
         user: self.user,
@@ -830,13 +824,9 @@ class Story < ApplicationRecord
     end
   end
 
-  def domain
-    return @domain if @domain
-    set_domain self.url.match(URL_RE) if self.url
-  end
-
-  def set_domain match
-    @domain = match ? match[:domain].sub(/^www\d*\./, '') : nil
+  def set_domain(match)
+    name = match ? match[:domain].sub(/^www\d*\./, '') : nil
+    self.domain = name ? Domain.where(fqdn: name).first_or_initialize : nil
   end
 
   def url=(u)
@@ -851,7 +841,7 @@ class Story < ApplicationRecord
         @url_port = nil
       end
     end
-    set_domain match
+    set_domain(match)
 
     # strip out tracking query params
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))

@@ -1,28 +1,29 @@
-require "rails_helper"
+require 'rails_helper'
 
-describe TagsController do
+describe 'tags', type: :request do
   let(:user) { create(:user) }
 
   before do
-    stub_login_as user
-    allow(controller).to receive(:require_logged_in_admin)
+    sign_in user
+    allow_any_instance_of(TagsController).to receive(:require_logged_in_admin)
   end
 
   context 'create' do
     it 'creates new tags' do
-      post :create, params: { tag: { tag: 'mytag' } }
-      expect(Tag.find_by(tag: 'mytag')).to be_valid
+      post "/tags",
+           params: { tag: { tag: 'mytag' } }
       expect(response).to redirect_to tags_path
+      expect(Tag.find_by(tag: 'mytag')).to be_valid
     end
 
     it 'does not create a new tag when the name is blank' do
-      expect { post :create, params: { tag: { tag: '' } } } .not_to(change { Tag.count })
+      expect { post "/tags", params: { tag: { tag: '' } } } .not_to(change { Tag.count })
       expect(response).to redirect_to new_tag_path
       expect(flash[:error]).to include "Tag can't be blank"
     end
 
     it 'creates new tags with expected params' do
-      post :create, params: { tag: {
+      post "/tags", params: { tag: {
         tag: 'mytag',
         description: 'desc',
         is_media: true,
@@ -39,7 +40,7 @@ describe TagsController do
     end
 
     it 'creates a moderation with the expected tag_id and user_id' do
-      post :create, params: { tag: { tag: 'mytag' } }
+      post "/tags", params: { tag: { tag: 'mytag' } }
       mod = Moderation.order(id: :desc).first
       expect(mod.tag_id).to eq Tag.order(id: :desc).first.id
       expect(mod.moderator_user_id).to eq user.id
@@ -50,30 +51,30 @@ describe TagsController do
     let(:tag) { Tag.first }
 
     it 'updates tags with valid params' do
-      post :update, params: { id: tag.id, tag: { tag: 'modified_tag' } }
+      post "/tags/#{tag.id}", params: { tag: { tag: 'modified_tag' } }
       expect(Tag.find(tag.id).tag).to eq 'modified_tag'
       expect(response).to redirect_to tags_path
     end
 
     it 'does not update tags when the new name is blank' do
-      post :update, params: { id: tag.id, tag: { tag: '' } }
+      post "/tags/#{tag.id}", params: { tag: { tag: '' } }
       expect(Tag.find(tag.id).tag).not_to be_blank
       expect(response).to redirect_to edit_tag_path
     end
 
     it 'rejects updates with unpermiited params' do
-      expect { post :update, params: { id: tag.id, tag: { is_media: true } } }
+      expect { post "/tags/#{tag.id}", params: { tag: { is_media: true } } }
         .to raise_error ActionController::UnpermittedParameters
     end
 
     it 'updates with all permitted params' do
-      post :update, params: { id: tag.id, tag: {
+      post "/tags/#{tag.id}", params: { tag: {
         tag: 'mytag',
         description: 'desc',
         hotness_mod: 1.5,
         privileged: true,
         inactive: true,
-      }, }
+      } }
       new_tag = Tag.find(tag.id)
       expect(new_tag.tag).to eq 'mytag'
       expect(new_tag.description).to eq 'desc'
@@ -83,7 +84,7 @@ describe TagsController do
     end
 
     it 'creates a moderation with the expected user_id' do
-      post :update, params: { id: tag.id, tag: { tag: 'modified_tag' } }
+      post "/tags/#{tag.id}", params: { tag: { tag: 'modified_tag' } }
       expect(Moderation.order(id: :desc).first.moderator_user_id).to eq user.id
     end
   end

@@ -221,7 +221,7 @@ class HomeController < ApplicationController
   def for_domain
     @domain = Domain.first_by(fdqn: params[:fqdn])
 
-    @stories, @show_more = get_from_cache(tags: tag_params.sort.join(',')) do
+    @stories, @show_more = get_from_cache(domain: domain.fqdn) do
       paginate @domain.stories
     end
 

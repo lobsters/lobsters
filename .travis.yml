@@ -11,7 +11,7 @@ before_install:
   - gem install bundler
   - gem install bundler-leak
 before_script:
-  - sudo mysql -e 'create database lobsters_test;'
+  - ./bin/rails db:create
   - ./bin/rails db:schema:load
 script:
   - bundle exec rspec

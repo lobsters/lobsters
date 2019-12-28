@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 2019_12_27_234358) do
 
   create_table "domains", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "fqdn"
-    t.boolean "is_tracker"
+    t.boolean "is_tracker", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

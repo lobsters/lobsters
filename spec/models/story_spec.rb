@@ -87,16 +87,16 @@ describe Story do
       "http://flub.example.com" => "flub.example.com",
     }.each_pair do |url, domain|
       story.url = url
-      expect(story.domain.fqdn).to eq(domain)
+      expect(story.domain.domain).to eq(domain)
     end
   end
 
   it "has domain straight out of the db, when Rails doesn't use setters" do
     s = create(:story, url: 'https://example.com/foo.html')
     s = Story.find(s.id)
-    expect(s.domain.fqdn).to eq('example.com')
+    expect(s.domain.domain).to eq('example.com')
     s.url = 'http://example.org'
-    expect(s.domain.fqdn).to eq('example.org')
+    expect(s.domain.domain).to eq('example.org')
     s.url = 'invalid'
     expect(s.domain).to be_nil
   end

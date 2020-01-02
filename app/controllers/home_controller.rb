@@ -219,14 +219,14 @@ class HomeController < ApplicationController
   end
 
   def for_domain
-    @domain = Domain.first_by(fdqn: params[:fqdn])
+    @domain = Domain.first_by(domain: params[:domain])
 
-    @stories, @show_more = get_from_cache(domain: domain.fqdn) do
+    @stories, @show_more = get_from_cache(domain: @domain.domain) do
       paginate @domain.stories
     end
 
-    @heading = params[:fqdn]
-    @title = "Stories submitted for #{domain.fqdn}."
+    @heading = params[:domain]
+    @title = "Stories submitted for #{domain.domain}."
     @cur_url = for_domain_url(params[:domain])
 
     @rss_link = {

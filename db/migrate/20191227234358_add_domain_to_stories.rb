@@ -3,7 +3,6 @@ class AddDomainToStories < ActiveRecord::Migration[5.2]
   class Story < ActiveRecord::Base; end
   class Domain < ActiveRecord::Base; end
 
-
   def up
     add_reference :stories, :domain, foreign_key: true
     url_re = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i.freeze
@@ -14,14 +13,14 @@ class AddDomainToStories < ActiveRecord::Migration[5.2]
         ph.dog po.st prettylinkpro.com q.gs qr.ae qr.net research.eligrey.com scrnch.me s.id sptfy.com
         t.co tinyarrows.com tiny.cc tinyurl.com tny.im tr.im tweez.md twitthis.com u.bb u.to v.gd
         vzturl.com wp.me ➡.ws ✩.ws x.co yep.it yourls.org zip.net
-      }.each { |d| Domain.create!(fqdn: d, is_tracker: true) }
+      }.each { |d| Domain.create!(domain: d, is_tracker: true) }
 
     Story.find_in_batches do |s|
       match = u.match(URL_RE)
       next unless match
 
       name = match ? match[:domain].sub(/^www\d*\./, '') : nil
-      s.domain_id = name ? Domain.where(fqdn: name).first_or_create.id : nil
+      s.domain_id = name ? Domain.where(domain: name).first_or_create.id : nil
       s.save!
     end
   end

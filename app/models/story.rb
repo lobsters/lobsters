@@ -826,7 +826,7 @@ class Story < ApplicationRecord
 
   def set_domain(match)
     name = match ? match[:domain].sub(/^www\d*\./, '') : nil
-    self.domain = name ? Domain.where(fqdn: name).first_or_initialize : nil
+    self.domain = name ? Domain.where(domain: name, is_tracker: false).first_or_initialize : nil
   end
 
   def url=(u)

@@ -203,7 +203,7 @@ class Story < ApplicationRecord
   def self.find_similar_by_url(url)
     urls = [url.to_s.gsub(/(#.*)/, "")]
     urls2 = [url.to_s.gsub(/(#.*)/, "")]
-    urls_with_trailing_pound = [url.to_s.gsub(/(#.*)/, "")]
+    urls_with_trailing_pound = []
 
     # https
     urls.each do |u|

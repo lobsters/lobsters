@@ -219,19 +219,19 @@ class HomeController < ApplicationController
   end
 
   def for_domain
-    @domain = Domain.first_by(domain: params[:domain])
+    @domain = Domain.where(domain: params[:domain]).first
 
     @stories, @show_more = get_from_cache(domain: @domain.domain) do
       paginate @domain.stories
     end
 
     @heading = params[:domain]
-    @title = "Stories submitted for #{domain.domain}."
+    @title = "Stories submitted for #{@domain.domain}."
     @cur_url = for_domain_url(params[:domain])
 
     @rss_link = {
-      title: "RSS 2.0 - For Domain #{tags_with_description_for_rss(@tags)}",
-      href: "/t/#{params[:tag]}.rss",
+      title: "RSS 2.0 - For #{@domain}",
+      href: "/domain/#{params[:domain]}.rss",
     }
 
     respond_to do |format|

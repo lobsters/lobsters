@@ -234,7 +234,15 @@ class HomeController < ApplicationController
       @heading = @title = "Top Stories of the Past " << length[:intv]
     end
 
-    render :action => "index"
+    @rss_link ||= {
+      :title => "RSS 2.0 - " + @heading,
+      :href => "/top/rss",
+    }
+
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.rss { render :action => "rss", :layout => false }
+    end
   end
 
   def upvoted

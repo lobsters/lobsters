@@ -1,3 +1,5 @@
+<%= render partial: 'users/flag_warning' if @flag_warning && @showing_user == @user %>
+
 <div class="box wide">
   <div class="legend">
     <% if !@showing_user.is_active? %>

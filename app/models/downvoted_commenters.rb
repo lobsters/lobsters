@@ -4,12 +4,11 @@
 class DownvotedCommenters
   include IntervalHelper
 
-  CACHE_TIME = 30.minutes
+  attr_reader :interval, :period, :cache_time
 
-  attr_reader :interval, :period
-
-  def initialize(interval)
+  def initialize(interval, cache_time = 30.minutes)
     @interval = interval
+    @cache_time = cache_time
     length = time_interval(interval)
     @period = length[:dur].send(length[:intv].downcase).ago
   end
@@ -20,7 +19,7 @@ class DownvotedCommenters
 
   # aggregates for all commenters; not just those receiving downvotes
   def aggregates
-    Rails.cache.fetch("aggregates_#{interval}", expires_in: CACHE_TIME) {
+    Rails.cache.fetch("aggregates_#{interval}_#{cache_time}", expires_in: self.cache_time) {
       ActiveRecord::Base.connection.exec_query("
         select
           stddev(sum_downvotes) as stddev,
@@ -52,7 +51,8 @@ class DownvotedCommenters
   end
 
   def commenters
-    Rails.cache.fetch("downvoted_commenters_#{interval}", expires_in: CACHE_TIME) {
+    Rails.cache.fetch("downvoted_commenters_#{interval}_#{cache_time}",
+                      expires_in: self.cache_time) {
       rank = 0
       User.active.joins(:comments)
         .where("comments.created_at >= ?", period)

@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_action :require_logged_in_moderator,
                 :only => [:enable_invitation, :disable_invitation, :ban, :unban]
+  before_action :flag_warning, only: [:show]
 
   def show
     @showing_user = User.where(:username => params[:username]).first!

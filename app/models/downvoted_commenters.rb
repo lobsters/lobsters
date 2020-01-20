@@ -68,7 +68,7 @@ class DownvotedCommenters
             count(distinct if(downvotes>0, comments.id, null)) /
             count(distinct comments.id)
           ) * 100 as percent_downvoted")
-        .having("n_comments > 2 and n_stories > 1 and n_downvotes >= 10")
+        .having("n_comments > 4 and n_stories > 1 and n_downvotes >= 10 and percent_downvoted > 10")
         .order("sigma desc")
         .limit(30)
         .each_with_object({}) {|u, hash|

@@ -17,7 +17,7 @@
         <a href="<%= mod.story.comments_path %>">Story: <%= mod.story.title
           %></a>
       <% elsif mod.comment %>
-        <a href="<%= mod.comment.url %>">Comment by
+        <a href="<%= mod.comment.path %>">Comment by
           <%= mod.comment.user.username %>
           on
           <%= mod.comment.story.title %></a>

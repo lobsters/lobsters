@@ -66,8 +66,8 @@ Rails.application.routes.draw do
   get "/t/:tag" => "home#tagged", :as => "tag"
   get "/t/:tag/page/:page" => "home#tagged"
 
-  get "/domain/:domain" => "home#for_domain", :as => "for_domain"
-  get "/domain/:domain/page/:page" => "home#for_domain"
+  get "/domain/:name" => "home#for_domain", :as => "for_domain", :constraints => { name: /[^\/]+/ }
+  get "/domain/:name/page/:page" => "home#for_domain", :constraints => { name: /[^\/]+/ }
 
   get "/search" => "search#index"
   get "/search/:q" => "search#index"

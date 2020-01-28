@@ -222,7 +222,7 @@ class HomeController < ApplicationController
     @domain = Domain.find_by!(domain: params[:name])
 
     @stories, @show_more = get_from_cache(domain: @domain.domain) do
-      paginate @domain.stories
+      paginate @domain.stories.order('id desc')
     end
 
     @heading = params[:name]

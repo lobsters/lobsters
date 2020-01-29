@@ -169,7 +169,7 @@
     <label class="required">Downvoted (1m):</label>
     <span class="d">
       <% if (stats = DownvotedCommenters.new('1m').check_list_for(@showing_user)) %>
-        <a href="/mod/commenters/1m<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % stats[:sigma] %> &sigma;
+        <a href="/mod/commenters/1m#<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % stats[:sigma] %> &sigma;
       <% else %>
         No
       <% end %>

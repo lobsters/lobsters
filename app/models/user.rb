@@ -135,13 +135,6 @@ class User < ApplicationRecord
   # minimum number of submitted stories before checking self promotion
   MIN_STORIES_CHECK_SELF_PROMOTION = 2
 
-  def self.recalculate_all_karmas!
-    User.all.find_each do |u|
-      u.karma = u.stories.map(&:score).sum + u.comments.map(&:score).sum
-      u.save!
-    end
-  end
-
   def self.username_regex_s
     "/^" + VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, "") + "$/"
   end

@@ -75,6 +75,7 @@ class User < ApplicationRecord
   end
 
   validates :email,
+            :length => { :maximum => 100 },
             :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
             :uniqueness => { :case_sensitive => false }
 
@@ -87,7 +88,23 @@ class User < ApplicationRecord
   VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/.freeze
   validates :username,
             :format => { :with => /\A#{VALID_USERNAME}\z/ },
+            :length => { :maximum => 50 },
             :uniqueness => { :case_sensitive => false }
+
+  validates :password_reset_token,
+            :length => { :maximum => 75 }
+  validates :session_token,
+            :length => { :maximum => 75 }
+  validates :about,
+            :length => { :maximum => 16_777_215 }
+  validates :rss_token,
+            :length => { :maximum => 75 }
+  validates :mailing_list_token,
+            :length => { :maximum => 75 }
+  validates :banned_reason,
+            :length => { :maximum => 200 }
+  validates :disabled_invite_reason,
+            :length => { :maximum => 200 }
 
   validates_each :username do |record, attr, value|
     if BANNED_USERNAMES.include?(value.to_s.downcase) || value.starts_with?('tag-')

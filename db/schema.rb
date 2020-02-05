@@ -118,6 +118,7 @@ ActiveRecord::Schema.define(version: 2019_12_27_234358) do
     t.boolean "deleted_by_author", default: false
     t.boolean "deleted_by_recipient", default: false
     t.bigint "hat_id", unsigned: true
+    t.index ["author_user_id"], name: "author_user_id"
     t.index ["hat_id"], name: "index_messages_on_hat_id"
     t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"
     t.index ["short_id"], name: "random_hash", unique: true
@@ -150,6 +151,7 @@ ActiveRecord::Schema.define(version: 2019_12_27_234358) do
     t.index ["moderator_user_id"], name: "moderations_moderator_user_id_fk"
     t.index ["story_id"], name: "moderations_story_id_fk"
     t.index ["tag_id"], name: "moderations_tag_id_fk"
+    t.index ["user_id"], name: "index_moderations_on_user_id"
   end
 
   create_table "read_ribbons", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -312,6 +314,7 @@ ActiveRecord::Schema.define(version: 2019_12_27_234358) do
   add_foreign_key "invitations", "users", column: "new_user_id", name: "invitations_new_user_id_fk"
   add_foreign_key "invitations", "users", name: "invitations_user_id_fk"
   add_foreign_key "messages", "hats", name: "messages_hat_id_fk"
+  add_foreign_key "messages", "users", column: "author_user_id", name: "messages_ibfk_1"
   add_foreign_key "messages", "users", column: "recipient_user_id", name: "messages_recipient_user_id_fk"
   add_foreign_key "mod_notes", "users", column: "moderator_user_id", name: "mod_notes_moderator_user_id_fk"
   add_foreign_key "mod_notes", "users", name: "mod_notes_user_id_fk"

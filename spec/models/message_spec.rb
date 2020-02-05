@@ -6,6 +6,12 @@ describe Message do
     expect(m.short_id).to match(/^\A[a-zA-Z0-9]{1,10}\z/)
   end
 
+  it "validates the length of short_id" do
+    m_valid_short_id = create(:message)
+    m_valid_short_id.short_id = 'a' * 50
+    expect(m_valid_short_id).not_to be_valid
+  end
+
   describe "hat" do
     it "can't be worn if user doesn't have that hat" do
       message = build(:message, hat: create(:hat))

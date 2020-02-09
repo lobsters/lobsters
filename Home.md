@@ -24,7 +24,6 @@ Other sites using the Lobsters codebase:
 * [0xBlockchain](https://0xblockchain.network/) ([repo](https://github.com/pyk/0xblockchain)) - Cryptocurrency
 * [Gambe.ro](https://gambe.ro) - Software development (it)
 * [Middlebit](https://middlebit.com/) - Content curation for the "no-coast" region of the United States.
-* [Quantum News](http://science.solobsd.org/) - Science
 * [ACRAB](https://acrab.isi.jhu.edu/) - Applied Cryptography Publications
 * [V2ETH](https://v2eth.com) - Cryptocurrency (Ethereum)
 

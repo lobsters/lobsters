@@ -461,6 +461,7 @@ class User < ApplicationRecord
   end
 
   def is_new?
+    return true unless self.created_at # unsaved object; in signup flow or a test
     Time.current - self.created_at <= NEW_USER_DAYS.days
   end
 

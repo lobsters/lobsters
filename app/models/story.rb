@@ -404,6 +404,11 @@ class Story < ApplicationRecord
         # stories can have inactive tags as long as they existed before
         raise "#{u.username} cannot add inactive tag #{t.tag.tag}"
       end
+
+      if u.is_new? && !t.tag.permit_by_new_users?
+        errors.add(:base, "New users can't submit #{t.tag.tag} stories, please wait. " <<
+          "If the tag is appropriate, leaving it off to skirt this restriction is a bad idea.")
+      end
     end
 
     if self.taggings.reject {|t| t.marked_for_destruction? || t.tag.is_media? }.empty?

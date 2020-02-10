@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_10_125425) do
+ActiveRecord::Schema.define(version: 2020_02_10_155624) do
 
   create_table "comments", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -256,6 +256,7 @@ ActiveRecord::Schema.define(version: 2020_02_10_125425) do
     t.boolean "is_media", default: false
     t.boolean "inactive", default: false
     t.float "hotness_mod", default: 0.0
+    t.boolean "permit_by_new_users", default: true, null: false
     t.index ["tag"], name: "tag", unique: true
   end
 

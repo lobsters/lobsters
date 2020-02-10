@@ -10,6 +10,11 @@
   </div>
 
   <div class="boxline">
+    <%= f.label :permit_by_new_users, 'Permit by new users:' %>
+    <%= f.check_box :permit_by_new_users %>
+  </div>
+
+  <div class="boxline">
     <%= f.label :privileged, 'Privileged:' %>
     <%= f.check_box :privileged %>
   </div>

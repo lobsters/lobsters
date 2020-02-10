@@ -26,7 +26,18 @@ class Domain < ApplicationRecord
     banned_at?
   end
 
+  def n_submitters
+    self.stories.count('distinct user_id')
+  end
+
   def to_param
     domain
+  end
+
+  def would_be_majority_submitter?(user)
+    n_stories = self.stories.count
+    return false if n_stories < 5
+    n_submitted_by_user = self.stories.where(user: user).count
+    (n_submitted_by_user + 1) * 2 > n_stories
   end
 end

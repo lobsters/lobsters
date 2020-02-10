@@ -151,6 +151,7 @@ class Story < ApplicationRecord
     if self.url.present?
       already_posted_recently?
       check_not_tracking_domain
+      check_not_content_marketing
       errors.add(:url, "is not valid") unless url.match(URL_RE)
     elsif self.description.to_s.strip == ""
       errors.add(:description, "must contain text if no URL posted")
@@ -179,6 +180,17 @@ class Story < ApplicationRecord
       true
     else
       false
+    end
+  end
+
+  def check_not_content_marketing
+    return unless self.url.present? && self.new_record? && self.domain
+
+    # TODO: skip this check if the domain is consistently highly upvoted
+    # and its threads don't catch a lot of flags
+    if self.domain.would_be_majority_submitter?(self.user)
+      ModNote.tattle_on_story_domain!(self, "content marketing")
+      errors.add(:url, "would have more than half its stories submitted by you")
     end
   end
 

@@ -3,6 +3,23 @@
     <em>The <a href="/newest">newest</a> stories that have not yet reached the front page.</em>
   </div>
 <% end %>
+<% if @domain.present? %>
+  <% if @domain.banned? %>
+    <div class="box" id="leader">
+      Banned
+      <%= time_ago_in_words_label(@domain.banned_at) %>
+      <% if @domain.banned_by_user %>
+        by <%= link_to @domain.banned_by_user.try(:username), @domain.banned_by_user %>:
+          <em><%= @domain.banned_reason %></em>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="box" id="leader">
+    <%= "#{@domain.stories.count} story".pluralize(@domain.stories.count) %> from
+    <%= "#{@domain.n_submitters} submitter".pluralize(@domain.n_submitters) %>
+  </div>
+<% end %>
 <% if @tags.present? %>
   <div class="box" id="leader">
     Stories <a href="/tags">tagged</a> as

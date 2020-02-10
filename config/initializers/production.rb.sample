@@ -45,6 +45,10 @@ if Rails.env.production?
       false
     end
 
+    def allow_new_users_to_invite?
+      true
+    end
+
     def domain
       "example.org"
     end

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.feature "User Administration" do
   let(:admin) { create(:user, :admin) }
-  let(:user) { create(:user) }
+  let(:user) { create(:user, created_at: (User::NEW_USER_DAYS + 1).days.ago) }
   let(:banned) { create(:user, :banned, banner: admin) }
   let(:noinvite) { create(:user, :noinvite, disabler: admin) }
 

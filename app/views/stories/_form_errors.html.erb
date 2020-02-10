@@ -1,10 +1,6 @@
 <div>
   <div class="form_errors_header">
-    <% if story.errors.count == 1 && story.already_posted_recently? %>
-      <div class="flash-error">
-        <h2>Error: This story was submitted <%= time_ago_in_words_label(story.most_recent_similar.created_at) %></h2>
-      </div>
-    <% elsif story.errors.any? && !story.already_posted_recently? %>
+    <% if story.errors.any? %>
       <%= error_messages_for story %>
     <% elsif !story.errors.any? && story.public_similar_stories.any? %>
       <div class="flash-notice">

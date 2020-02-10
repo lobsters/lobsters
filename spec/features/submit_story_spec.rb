@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.feature "Submitting Stories", type: :feature do
   let(:user) { create(:user) }
+  let!(:inactive_user) { create(:user, :inactive) }
 
   before(:each) { stub_login_as user }
 
@@ -60,7 +61,36 @@ RSpec.feature "Submitting Stories", type: :feature do
       select :tag1, from: 'Tags'
       click_button "Submit"
 
-      expect(page).to have_content "Error: This story was submitted"
+      expect(page).to have_content "has already been submitted"
+    }.not_to(change { Story.count })
+  end
+
+  scenario "new user submitting a never-before-seen domain" do
+    inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
+    user.update(created_at: 1.day.ago)
+    refute(Domain.where(domain: 'example.net').exists?)
+    expect {
+      visit "/stories/new"
+      fill_in "URL", with: "https://example.net/story"
+      fill_in "Title", with: "Example Story"
+      select :tag1, from: 'Tags'
+      click_button "Submit"
+
+      expect(page).to have_content "unseen domain"
+    }.not_to(change { Story.count })
+  end
+
+  scenario "new user resubmitting a link" do
+    user.update(created_at: 1.day.ago)
+    s = create(:story, created_at: 1.year.ago)
+    expect {
+      visit "/stories/new"
+      fill_in "URL", with: s.url
+      fill_in "Title", with: "Example Story"
+      select :tag1, from: 'Tags'
+      click_button "Submit"
+
+      expect(page).to have_content "resubmitted by new users"
     }.not_to(change { Story.count })
   end
 
@@ -73,7 +103,8 @@ RSpec.feature "Submitting Stories", type: :feature do
       select :tag1, from: 'Tags'
       click_button "Submit"
 
-      expect(page).to have_content "Error: This story was submitted"
+      # TODO: would be nice if this had a specific error message
+      expect(page).to have_content "has already been submitted"
     }.not_to(change { Story.count })
   end
 

@@ -1,5 +1,5 @@
 class SignupController < ApplicationController
-  before_action :require_logged_in_user, :only => :invite
+  before_action :require_logged_in_user, :check_new_users, :check_can_invite, :only => :invite
   before_action :check_for_read_only_mode
 
   def index
@@ -65,13 +65,29 @@ class SignupController < ApplicationController
       flash[:success] = "Welcome to #{Rails.application.name}, " <<
                         "#{@new_user.username}!"
 
-      return redirect_to "/signup/invite"
+      if Rails.application.allow_new_users_to_invite?
+        return redirect_to signup_invite_path
+      else
+        return redirect_to root_path
+      end
     else
       render :action => "invited"
     end
   end
 
 private
+
+  def check_new_users
+    if !Rails.application.allow_new_users_to_invite? && @user.is_new?
+      redirect_to root_path, flash: { error: "New users cannot send invites" }
+    end
+  end
+
+  def check_can_invite
+    if !@user.can_invite?
+      redirect_to root_path, flash: { error: "You can't send invites" }
+    end
+  end
 
   def user_params
     params.require(:user).permit(

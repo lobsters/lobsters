@@ -110,9 +110,9 @@ describe User do
 
   it "shows a user is recent or not" do
     user = create(:user, :created_at => Time.current)
-    u = create(:user, :created_at => Time.current - 8.days)
     expect(user.is_new?).to be true
-    expect(u.is_new?).to be false
+    user = create(:user, :created_at => Time.current - (User::NEW_USER_DAYS.days + 1))
+    expect(user.is_new?).to be false
   end
 
   it "unbans a user" do

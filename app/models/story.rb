@@ -152,6 +152,7 @@ class Story < ApplicationRecord
       already_posted_recently?
       check_not_tracking_domain
       check_not_content_marketing
+      check_not_new_domain_from_new_user
       errors.add(:url, "is not valid") unless url.match(URL_RE)
     elsif self.description.to_s.strip == ""
       errors.add(:description, "must contain text if no URL posted")
@@ -178,6 +179,9 @@ class Story < ApplicationRecord
     if most_recent_similar && most_recent_similar.is_recent?
       errors.add(:url, "has already been submitted within the past #{RECENT_DAYS} days")
       true
+    elsif most_recent_similar && self.user.is_new?
+      errors.add(:url, "cannot be resubmitted by new users")
+      true
     else
       false
     end
@@ -191,6 +195,15 @@ class Story < ApplicationRecord
     if self.domain.would_be_majority_submitter?(self.user)
       ModNote.tattle_on_story_domain!(self, "content marketing")
       errors.add(:url, "would have more than half its stories submitted by you")
+    end
+  end
+
+  def check_not_new_domain_from_new_user
+    return unless self.url.present? && self.new_record? && self.domain
+
+    if self.domain.new_record? && self.user.is_new?
+      ModNote.tattle_on_story_domain!(self, "new user with new")
+      errors.add(:url, "is an unseen domain from a new user")
     end
   end
 

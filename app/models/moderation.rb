@@ -6,6 +6,8 @@ class Moderation < ApplicationRecord
              :optional => true
   belongs_to :comment,
              :optional => true
+  belongs_to :domain,
+             :optional => true
   belongs_to :story,
              :optional => true
   belongs_to :tag,

@@ -45,4 +45,18 @@ class ModNote < ApplicationRecord
       NOTE
     )
   end
+
+  def self.tattle_on_story_domain!(story, reason)
+    ModNote.create!(
+      moderator: InactiveUser.inactive_user,
+      user: story.user,
+      created_at: Time.current,
+      note: "Attempted to post a story from a #{reason} domain:\n" +
+        "url: #{story.url}" +
+        "title: #{story.title}" +
+        "user_is_author: #{story.user_id_author}" +
+        "tags: #{story.tags.map(&:tag).join(' ')}" +
+        "text: #{text}"
+    )
+  end
 end

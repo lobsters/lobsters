@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_27_234358) do
+ActiveRecord::Schema.define(version: 2020_02_10_125425) do
 
   create_table "comments", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -40,11 +40,14 @@ ActiveRecord::Schema.define(version: 2019_12_27_234358) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
-  create_table "domains", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "domains", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "domain"
     t.boolean "is_tracker", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "banned_at"
+    t.integer "banned_by_user_id"
+    t.string "banned_reason", limit: 200
   end
 
   create_table "hat_requests", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -146,8 +149,10 @@ ActiveRecord::Schema.define(version: 2019_12_27_234358) do
     t.text "reason", limit: 16777215
     t.boolean "is_from_suggestions", default: false
     t.bigint "tag_id", unsigned: true
+    t.integer "domain_id"
     t.index ["comment_id"], name: "moderations_comment_id_fk"
     t.index ["created_at"], name: "index_moderations_on_created_at"
+    t.index ["domain_id"], name: "index_moderations_on_domain_id"
     t.index ["moderator_user_id"], name: "moderations_moderator_user_id_fk"
     t.index ["story_id"], name: "moderations_story_id_fk"
     t.index ["tag_id"], name: "moderations_tag_id_fk"

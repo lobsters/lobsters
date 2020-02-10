@@ -42,8 +42,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
       </span>
       <% if story.domain.present? %>
-        <a class="domain" href="<%= for_domain_url(name: story.domain.domain) %>"><%=
-          break_long_words(story.domain.domain) %></a>
+        <a class="domain" href="<%= domain_path(story.domain) %>"><%= break_long_words(story.domain.domain) %></a>
       <% end %>
 
       <% if defined?(single_story) && single_story %>
@@ -62,8 +61,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             <% end %>
           </span>
           <% if ms.domain.present? %>
-            <a class="domain" href="<%= for_domain_url(name: ms.domain.domain) %>"><%=
-              break_long_words(ms.domain.domain) %></a>
+            <a class="domain" href="<%= domain_path(ms.domain) %>"><%= break_long_words(ms.domain.domain) %></a>
           <% end %>
           <span class="byline">
             <% if (@user && @user.show_avatars?) || !@user %>

@@ -227,7 +227,7 @@ class HomeController < ApplicationController
 
     @heading = params[:name]
     @title = "Stories submitted for #{@domain.domain}."
-    @cur_url = for_domain_url(params[:name])
+    @cur_url = domain_path(params[:name])
 
     @rss_link = {
       title: "RSS 2.0 - For #{@domain}",

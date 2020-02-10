@@ -183,16 +183,13 @@ class Story < ApplicationRecord
   end
 
   def check_not_tracking_domain
-    return unless self.url.present? && self.new_record?
+    return unless self.url.present? && self.new_record? && self.domain
 
-    if domain && domain.is_tracker
-      ModNote.create!(
-        moderator: InactiveUser.inactive_user,
-        user: self.user,
-        created_at: Time.current,
-        note: "Attempted to post a tracking url: #{self.url}"
-      )
-
+    if domain.banned?
+      ModNote.tattle_on_story_domain!(self, "banned")
+      errors.add(:url, "is from banned domain #{domain.domain}: #{domain.banned_reason}")
+    elsif domain.is_tracker
+      ModNote.tattle_on_story_domain!(self, "tracking")
       errors.add(:url, "is a link shortening or ad tracking domain")
     end
   end

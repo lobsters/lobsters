@@ -11,10 +11,11 @@ class ModerationsController < ApplicationController
       :comments => params.dig(:what, :comments),
       :tags     => params.dig(:what, :tags),
       :users    => params.dig(:what, :users),
+      :domains  => params.dig(:what, :domains),
     }
     @what.transform_values! { true } if @what.values.none?
 
-    @moderations = Moderation.all.eager_load(:moderator, :story, :comment, :tag, :user)
+    @moderations = Moderation.all.eager_load(:moderator, :story, :comment, :tag, :user, :domain)
 
     # filter based on target
     @moderations = case @moderator

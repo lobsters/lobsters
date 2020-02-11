@@ -13,6 +13,7 @@ class Domain < ApplicationRecord
     self.banned_at = Time.current
     self.banned_by_user_id = banner.id
     self.banned_reason = reason
+    self.save!
 
     m = Moderation.new
     m.moderator_user_id = banner.id

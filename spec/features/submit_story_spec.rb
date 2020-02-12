@@ -115,4 +115,18 @@ RSpec.feature "Submitting Stories", type: :feature do
     expect(page).to have_content "may be submitted again"
     expect(page).to have_content "Previous discussions"
   end
+
+  scenario "submitting a tracking link" do
+    Domain.create!(domain: 'example.com', is_tracker: true)
+
+    expect {
+      visit "/stories/new"
+      fill_in "URL", with: "https://example.com/tracking?redir=real"
+      fill_in "Title", with: "Example Story"
+      select :tag1, from: 'Tags'
+      click_button "Submit"
+
+      expect(page).to have_content "tracking"
+    }.not_to(change { Story.count })
+  end
 end

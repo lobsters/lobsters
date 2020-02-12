@@ -210,10 +210,10 @@ class Story < ApplicationRecord
   def check_not_tracking_domain
     return unless self.url.present? && self.new_record? && self.domain
 
-    if domain.banned?
+    if self.domain.banned?
       ModNote.tattle_on_story_domain!(self, "banned")
-      errors.add(:url, "is from banned domain #{domain.domain}: #{domain.banned_reason}")
-    elsif domain.is_tracker
+      errors.add(:url, "is from banned domain #{self.domain.domain}: #{self.domain.banned_reason}")
+    elsif self.domain.is_tracker
       ModNote.tattle_on_story_domain!(self, "tracking")
       errors.add(:url, "is a link shortening or ad tracking domain")
     end
@@ -857,7 +857,7 @@ class Story < ApplicationRecord
 
   def set_domain(match)
     name = match ? match[:domain].sub(/^www\d*\./, '') : nil
-    self.domain = name ? Domain.where(domain: name, is_tracker: false).first_or_initialize : nil
+    self.domain = name ? Domain.where(domain: name).first_or_initialize : nil
   end
 
   def url=(u)

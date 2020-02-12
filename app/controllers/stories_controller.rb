@@ -354,7 +354,8 @@ class StoriesController < ApplicationController
 
   def check_url_dupe
     raise ActionController::ParameterMissing.new("No URL") unless story_params[:url].present?
-    @story = Story.new(story_params)
+    @story = Story.new(user: @user)
+    @story.attributes = story_params
     @story.already_posted_recently?
 
     respond_to do |format|

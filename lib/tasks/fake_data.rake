@@ -15,6 +15,7 @@ class FakeDataGenerator
         password: password,
         password_confirmation: password,
         username: Faker::Internet.user_name(name, %w(_)),
+        created_at: User::NEW_USER_DAYS.days.ago,
       }
       create_args.merge!(is_moderator: true) if i % 7 == 0
       users << User.create!(create_args)

@@ -26,7 +26,8 @@ class Github
     tok = ps["access_token"].first
 
     if tok.present?
-      res = s.fetch("https://api.github.com/user?access_token=#{tok}").body
+      headers = { "Authorization" => "token #{tok}" }
+      res = s.fetch("https://api.github.com/user", :get, nil, nil, headers).body
       js = JSON.parse(res)
       if js && js["login"].present?
         return [tok, js["login"]]

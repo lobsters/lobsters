@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'stores', type: :request do
+describe 'stories', type: :request do
   let(:user) { create(:user) }
   let(:story) { create(:story, user: user) }
   let(:mod) { create(:user, :moderator) }
@@ -179,30 +179,34 @@ describe 'stores', type: :request do
   end
 
   describe 'when repost story description' do
+    let(:story) { create(:story, user: user) }
     let(:attr) do
       {
-        url: 'http://example.com/',
+        url: story.url,
         title: 'new title',
         description: 'new description',
       }
     end
-    let(:send_request) { put :update, params: { id: story.short_id, story: attr } }
-    let(:send_request_with_repost) do
-      put :update, params: { id: story.short_id,
-                             story: attr.merge(:repost_description => '1'), }
+    let(:send_request) do
+      put "/stories/#{story.short_id}",
+          params: { story: attr }
     end
-
-    before { stub_login_as mod }
+    let(:send_request_with_repost) do
+      put "/stories/#{story.short_id}",
+          params: { story: attr.merge(:repost_description => '1') }
+    end
 
     context "get #edit" do
       it "has a 200 status code" do
-        get :edit, params: { id: story.short_id }
+        sign_in mod
+        get "/stories/#{story.short_id}/edit"
         expect(response.status).to eq(200)
       end
     end
 
     context "and params is valid" do
       before do
+        sign_in mod
         send_request
         story.reload
       end
@@ -220,6 +224,7 @@ describe 'stores', type: :request do
 
     context "and params is valid and include repost description option" do
       before do
+        sign_in mod
         send_request_with_repost
         story.reload
       end

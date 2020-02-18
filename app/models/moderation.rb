@@ -23,6 +23,7 @@ class Moderation < ApplicationRecord
   }
 
   validates :action, :reason, length: { maximum: 16_777_215 }
+  validate :one_foreign_key_present
 
   after_create :send_message_to_moderated
 
@@ -76,5 +77,12 @@ class Moderation < ApplicationRecord
       "*This is an automated message.*"
 
     m.save
+  end
+
+protected
+
+  def one_foreign_key_present
+    fks = [comment_id, domain_id, story_id, tag_id, user_id].compact.length
+    errors.add(:base, "moderation should be linked to only one object") if fks != 1
   end
 end

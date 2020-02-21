@@ -257,7 +257,7 @@ class StoriesController < ApplicationController
   end
 
   def unvote
-    if !(story = find_story)
+    if !(story = find_story) || story.is_gone?
       return render :plain => "can't find story", :status => 400
     end
 
@@ -269,7 +269,7 @@ class StoriesController < ApplicationController
   end
 
   def upvote
-    if !(story = find_story)
+    if !(story = find_story) || story.is_gone?
       return render :plain => "can't find story", :status => 400
     end
 
@@ -285,7 +285,7 @@ class StoriesController < ApplicationController
   end
 
   def downvote
-    if !(story = find_story)
+    if !(story = find_story) || story.is_gone?
       return render :plain => "can't find story", :status => 400
     end
 

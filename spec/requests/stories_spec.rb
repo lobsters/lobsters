@@ -151,4 +151,30 @@ describe 'stores', type: :request do
       end
     end
   end
+
+  describe "upvoting" do
+    let(:target) { create(:story) }
+
+    before { sign_in user }
+
+    it 'works' do
+      expect {
+        post "/stories/#{target.short_id}/upvote"
+        expect(response.status).to eq(200)
+      }.to change { target.reload.score }.by(1)
+      expect(Vote.where(user: user).count).to eq(1)
+    end
+
+    it 'does nothing to deleted comments' do
+      expect {
+        target.is_expired = true
+        target.editor = target.user
+        target.save!
+
+        post "/stories/#{target.short_id}/upvote"
+        expect(response.status).to eq(400)
+      }.to change { target.reload.score }.by(0)
+      expect(Vote.where(user: user).count).to eq(0)
+    end
+  end
 end

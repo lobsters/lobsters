@@ -34,11 +34,4 @@ class Domain < ApplicationRecord
   def to_param
     domain
   end
-
-  def would_be_majority_submitter?(user)
-    n_stories = self.stories.count
-    return false if n_stories < 5
-    n_submitted_by_user = self.stories.where(user: user).count
-    (n_submitted_by_user + 1) * 2 > n_stories
-  end
 end

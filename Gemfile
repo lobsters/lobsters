@@ -29,6 +29,7 @@ gem "rotp"
 gem "rqrcode"
 
 # parsing
+gem "pdf-reader"
 gem "nokogiri", ">= 1.7.2"
 gem "htmlentities"
 gem "commonmarker", "~> 0.14"

@@ -138,7 +138,7 @@ class Story < ApplicationRecord
 
   attr_accessor :editing_from_suggestions, :editor, :fetching_ip, :is_hidden_by_cur_user,
                 :is_saved_by_cur_user, :moderation_reason, :previewing, :seen_previous, :vote
-  attr_writer :fetched_content
+  attr_writer :fetched_response
 
   before_validation :assign_short_id_and_upvote, :on => :create
   before_create :assign_initial_hotness
@@ -915,32 +915,9 @@ class Story < ApplicationRecord
     }.join(", ")
   end
 
-  def fetched_attributes
-    return @fetched_attributes if @fetched_attributes
-
-    @fetched_attributes = {
-      :url => self.url,
-      :title => "",
-    }
-
-    # security: do not connect to arbitrary user-submitted ports
-    return @fetched_attributes if @url_port
-
-    if !@fetched_content
-      begin
-        s = Sponge.new
-        s.timeout = 3
-        # User submitted URLs may have an incorrect https certificate, but we
-        # don't want to fail the retrieval for this. Security risk is minimal.
-        s.ssl_verify = false
-        user_agent = { "User-agent" => "#{Rails.application.domain} for #{fetching_ip}" }
-        @fetched_content = s.fetch(url, :get, nil, nil, user_agent, 3).body.force_encoding('utf-8')
-      rescue
-        return @fetched_attributes
-      end
-    end
-
-    parsed = Nokogiri::HTML(@fetched_content.to_s)
+  def fetched_attributes_html
+    converted = @fetched_response.body.force_encoding('utf-8')
+    parsed = Nokogiri::HTML(converted.to_s)
 
     # parse best title from html tags
     # try <meta property="og:title"> first, it probably won't have the site
@@ -996,6 +973,54 @@ class Story < ApplicationRecord
     end
 
     @fetched_attributes
+  end
+
+  def fetched_attributes_pdf
+    return @fetched_attributes = {} if @fetched_response.body >= 5.megabytes
+
+    # pdf-reader only accepts a stream or filename
+    pdf_stream = StringIO.new(@fetched_response.body)
+    pdf = PDF::Reader.new(pdf_stream)
+
+    title = pdf.info[:Title]
+
+    @fetched_attributes[:title] = title
+    @fetched_attributes
+  end
+
+  def fetched_attributes
+    return @fetched_attributes if @fetched_attributes
+
+    @fetched_attributes = {
+      :url => self.url,
+      :title => "",
+    }
+
+    # security: do not connect to arbitrary user-submitted ports
+    return @fetched_attributes if @url_port
+
+    begin
+      # if we haven't had a test inject a response into us
+      if !@fetched_response
+        s = Sponge.new
+        s.timeout = 3
+        # User submitted URLs may have an incorrect https certificate, but we
+        # don't want to fail the retrieval for this. Security risk is minimal.
+        s.ssl_verify = false
+        user_agent = { "User-agent" => "#{Rails.application.domain} for #{fetching_ip}" }
+        res = s.fetch(url, :get, nil, nil, user_agent, 3)
+        @fetched_response = res
+      end
+
+      case @fetched_response["content-type"]
+      when /pdf/
+        return fetched_attributes_pdf
+      else
+        return fetched_attributes_html
+      end
+    rescue
+      return @fetched_attributes
+    end
   end
 
 private

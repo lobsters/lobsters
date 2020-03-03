@@ -121,7 +121,7 @@ GEM
     minitest (5.14.0)
     mysql2 (0.5.2)
     nio4r (2.5.2)
-    nokogiri (1.10.7)
+    nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
     oauth (0.5.4)
     parallel (1.19.1)
@@ -272,7 +272,7 @@ DEPENDENCIES
   listen
   mail
   mysql2
-  nokogiri (>= 1.7.2)
+  nokogiri (>= 1.10.8)
   oauth
   pdf-reader
   rails (~> 5.2)

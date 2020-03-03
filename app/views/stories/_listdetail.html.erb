@@ -156,8 +156,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
         <% if story.url.present? %>
           |
-          <a href="<%= story.archive_url %>" rel="nofollow"
-            target="_blank">cached</a>
+          <a href="<%= story.archive_url %>" rel="ugc" target="_blank">cached</a>
         <% end %>
         <% if !story.is_gone? || @user.try(:is_moderator?) %>
           <span class="comments_label">

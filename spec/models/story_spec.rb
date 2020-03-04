@@ -161,6 +161,14 @@ describe Story do
       return res
     end
 
+    it "can fetch PDF titles properly" do
+      content = File.read(story_directory + "titled.pdf")
+      res = fake_response(content, "application/pdf")
+      s = build(:story)
+      s.fetched_response = res
+      expect(s.fetched_attributes[:title]).to eq("Taking a Long Look at QUIC")
+    end
+
     it "can fetch its title properly" do
       content = File.read(story_directory + "title_ampersand.html")
       res = fake_response(content, "text/html")

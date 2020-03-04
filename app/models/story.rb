@@ -976,7 +976,7 @@ class Story < ApplicationRecord
   end
 
   def fetched_attributes_pdf
-    return @fetched_attributes = {} if @fetched_response.body >= 5.megabytes
+    return @fetched_attributes = {} if @fetched_response.body.length >= 5.megabytes
 
     # pdf-reader only accepts a stream or filename
     pdf_stream = StringIO.new(@fetched_response.body)

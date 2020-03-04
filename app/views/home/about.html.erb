@@ -81,6 +81,7 @@
     request one in <a href="/chat">chat</a>.
   <% end %>
   If you wrote a link that was posted, definitely contact someone for an invite, we'd love to have you in the discussion.
+  New users cannot send invites until their account has at least <%= User::MIN_KARMA_TO_DOWNVOTE %> karma and is at least <%= User::NEW_USER_DAYS %> days old.
   </p>
 
   <p>

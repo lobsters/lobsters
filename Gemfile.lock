@@ -243,6 +243,7 @@ GEM
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.12.1)
+    vishnu (2.0.0)
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
@@ -291,6 +292,7 @@ DEPENDENCIES
   transaction_retry
   uglifier (>= 1.3.0)
   unicorn
+  vishnu
 
 BUNDLED WITH
    2.0.2

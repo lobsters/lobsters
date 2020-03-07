@@ -333,19 +333,20 @@ class User < ApplicationRecord
   end
 
   def fetched_avatar(size = 100)
-    gravatar_url = "https://www.gravatar.com/avatar/" <<
-                   Digest::MD5.hexdigest(self.email.strip.downcase) <<
-                   "?r=pg&d=identicon&s=#{size}"
+    libravatar_url = Libravatar.new(email: self.email,
+                                    size: size,
+                                    default: 'identicon',
+                                    https => true).url
 
     begin
       s = Sponge.new
       s.timeout = 3
-      res = s.fetch(gravatar_url).body
+      res = s.fetch(libravatar_url).body
       if res.present?
         return res
       end
     rescue => e
-      Rails.logger.error "error fetching #{gravatar_url}: #{e.message}"
+      Rails.logger.error "error fetching #{libravatar_url}: #{e.message}"
     end
 
     nil

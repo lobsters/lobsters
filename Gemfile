@@ -39,6 +39,7 @@ gem "mail" # for parsing incoming mail
 gem "ruumba" # tests views
 gem "sitemap_generator" # for better search engine indexing
 gem 'transaction_retry' # mitigate https://github.com/lobsters/lobsters-ansible/issues/39
+gem 'vishnu', require: 'libravatar' # gravatar alternative
 
 gem "scout_apm", "2.6.2"
 

@@ -59,6 +59,8 @@ Rails.application.configure do
     Bullet.console = true
     Bullet.rails_logger = true
   end
+
+  config.time_zone = 'UTC'
 end
 
 Keybase.DOMAIN = Rails.application.domain

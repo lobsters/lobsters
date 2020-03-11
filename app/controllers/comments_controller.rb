@@ -6,6 +6,7 @@ class CommentsController < ApplicationController
   before_action :require_logged_in_user_or_400,
                 :only => [:create, :preview, :upvote, :downvote, :unvote]
   before_action :require_logged_in_user, :only => [:upvoted]
+  before_action :flag_warning, only: [:threads]
 
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, :only => [:index]
@@ -177,7 +178,7 @@ class CommentsController < ApplicationController
   end
 
   def unvote
-    if !(comment = find_comment)
+    if !(comment = find_comment) || comment.is_gone?
       return render :plain => "can't find comment", :status => 400
     end
 
@@ -189,7 +190,7 @@ class CommentsController < ApplicationController
   end
 
   def upvote
-    if !(comment = find_comment)
+    if !(comment = find_comment) || comment.is_gone?
       return render :plain => "can't find comment", :status => 400
     end
 
@@ -201,7 +202,7 @@ class CommentsController < ApplicationController
   end
 
   def downvote
-    if !(comment = find_comment)
+    if !(comment = find_comment) || comment.is_gone?
       return render :plain => "can't find comment", :status => 400
     end
 
@@ -370,7 +371,7 @@ private
   end
 
   def find_comment
-    comment = Comment.where(:short_id => params[:id]).first
+    comment = Comment.where(short_id: params[:id]).first
     if @user && comment
       comment.current_vote = Vote.where(:user_id => @user.id,
         :story_id => comment.story_id, :comment_id => comment.id).first

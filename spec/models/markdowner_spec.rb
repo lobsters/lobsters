@@ -10,7 +10,7 @@ describe Markdowner do
     create(:user, :username => "blahblah")
 
     expect(Markdowner.to_html("hi @blahblah test"))
-      .to eq("<p>hi <a href=\"https://example.com/u/blahblah\" rel=\"nofollow\">" +
+      .to eq("<p>hi <a href=\"https://example.com/u/blahblah\" rel=\"ugc\">" +
              "@blahblah</a> test</p>\n")
 
     expect(Markdowner.to_html("hi @flimflam test"))
@@ -20,7 +20,7 @@ describe Markdowner do
   # bug#209
   it "keeps punctuation inside of auto-generated links when using brackets" do
     expect(Markdowner.to_html("hi <http://example.com/a.> test"))
-      .to eq("<p>hi <a href=\"http://example.com/a.\" rel=\"nofollow\">" +
+      .to eq("<p>hi <a href=\"http://example.com/a.\" rel=\"ugc\">" +
             "http://example.com/a.</a> test</p>\n")
   end
 
@@ -29,21 +29,21 @@ describe Markdowner do
     create(:user, :username => "blahblah")
 
     expect(Markdowner.to_html("hi http://example.com/@blahblah/ test"))
-      .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"nofollow\">" +
+      .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"ugc\">" +
             "http://example.com/@blahblah/</a> test</p>\n")
 
     expect(Markdowner.to_html("hi [test](http://example.com/@blahblah/)"))
-      .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"nofollow\">" +
+      .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"ugc\">" +
         "test</a></p>\n")
   end
 
-  it "correctly adds nofollow" do
+  it "correctly adds ugc" do
     expect(Markdowner.to_html("[ex](http://example.com)"))
-      .to eq("<p><a href=\"http://example.com\" rel=\"nofollow\">" +
+      .to eq("<p><a href=\"http://example.com\" rel=\"ugc\">" +
             "ex</a></p>\n")
 
     expect(Markdowner.to_html("[ex](//example.com)"))
-      .to eq("<p><a href=\"//example.com\" rel=\"nofollow\">" +
+      .to eq("<p><a href=\"//example.com\" rel=\"ugc\">" +
             "ex</a></p>\n")
 
     expect(Markdowner.to_html("[ex](/u/abc)"))
@@ -61,7 +61,7 @@ describe Markdowner do
       let(:title_text) { nil }
 
       def target_html inner_text = nil
-        "<p><a href=\"#{fake_img_url}\" rel=\"nofollow\">#{inner_text}</a></p>\n"
+        "<p><a href=\"#{fake_img_url}\" rel=\"ugc\">#{inner_text}</a></p>\n"
       end
 
       context "with no alt text, title text" do
@@ -115,11 +115,11 @@ describe Markdowner do
       it 'turns all inline images into links' do
         expect(subject).to eq(
           "<p>" \
-          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">#{fake_img_url}</a>" \
-          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">#{fake_img_url}</a>" \
-          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">alt text</a>" \
-          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">title text</a>" \
-          "<a href=\"#{fake_img_url}\" rel=\"nofollow\">title text 2</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"ugc\">#{fake_img_url}</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"ugc\">#{fake_img_url}</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"ugc\">alt text</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"ugc\">title text</a>" \
+          "<a href=\"#{fake_img_url}\" rel=\"ugc\">title text 2</a>" \
           "</p>\n"
         )
       end

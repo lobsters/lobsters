@@ -23,7 +23,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
   <div class="details">
     <span class="link h-cite u-repost-of">
       <% if story.can_be_seen_by_user?(@user) %>
-        <a class="u-url" href="<%= story.url_or_comments_path %>"><%=
+        <a class="u-url" href="<%= story.url_or_comments_path %>" rel="ugc"><%=
           break_long_words(story.title) %></a>
       <% end %>
       <% if story.is_gone? %>
@@ -42,8 +42,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
       </span>
       <% if story.domain.present? %>
-        <a class="domain" href="<%= story.domain_search_url %>"><%=
-          break_long_words(story.domain) %></a>
+        <a class="domain" href="<%= domain_path(story.domain) %>"><%= break_long_words(story.domain.domain) %></a>
       <% end %>
 
       <% if defined?(single_story) && single_story %>
@@ -62,8 +61,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             <% end %>
           </span>
           <% if ms.domain.present? %>
-            <a class="domain" href="<%= ms.domain_search_url %>"><%=
-              break_long_words(ms.domain) %></a>
+            <a class="domain" href="<%= domain_path(ms.domain) %>"><%= break_long_words(ms.domain.domain) %></a>
           <% end %>
           <span class="byline">
             <% if (@user && @user.show_avatars?) || !@user %>
@@ -158,10 +156,9 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
         <% if story.url.present? %>
           |
-          <a href="<%= story.archive_url %>" rel="nofollow"
-            target="_blank">cached</a>
+          <a href="<%= story.archive_url %>" rel="ugc" target="_blank">cached</a>
         <% end %>
-        <% if !story.is_gone? %>
+        <% if !story.is_gone? || @user.try(:is_moderator?) %>
           <span class="comments_label">
             |
             <a href="<%= story.comments_path %>">

@@ -11,6 +11,8 @@
   </div>
 </div>
 
+<%= render partial: 'users/flag_warning' if @flag_warning %>
+
 <% if @replies.present? %>
   <ol class="comments comments1">
     <% @replies.each do |reply| %>

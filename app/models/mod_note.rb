@@ -8,7 +8,7 @@ class ModNote < ApplicationRecord
   scope :recent, -> { where('created_at >= ?', 1.week.ago).order('created_at desc') }
   scope :for, ->(user) { includes(:moderator).where('user_id = ?', user).order('created_at desc') }
 
-  validates :note, presence: true
+  validates :note, :markeddown_note, presence: true, length: { maximum: 65_535 }
 
   delegate :username, to: :user
 
@@ -43,6 +43,20 @@ class ModNote < ApplicationRecord
 
         #{message.body}
       NOTE
+    )
+  end
+
+  def self.tattle_on_story_domain!(story, reason)
+    ModNote.create!(
+      moderator: InactiveUser.inactive_user,
+      user: story.user,
+      created_at: Time.current,
+      note: "Attempted to post a story from a #{reason} domain:\n" +
+        "url: #{story.url}" +
+        "title: #{story.title}" +
+        "user_is_author: #{story.user_is_author}" +
+        "tags: #{story.tags.map(&:tag).join(' ')}" +
+        "description: #{story.description}"
     )
   end
 end

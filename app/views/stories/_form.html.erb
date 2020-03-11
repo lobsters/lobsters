@@ -67,9 +67,10 @@
   <% unless defined?(suggesting) %>
     <div class="boxline">
       <%= f.label :description, "Text:", :class => "required" %>
-      <%= f.text_area :description, :rows => 15, :placeholder => "Optional when submitting a URL.
-Not for summarizing the post or personal opinions.
-See the guidelines below." %>
+      <%= f.text_area :description, :rows => 15, :placeholder => "Use this for stories without a URL, to link additional context, or to paste abstracts from PDF papers.
+
+Please don't use this to promote the story, summarize the post, or explain why you posted it.
+See the guidelines below for more." %>
     </div>
 
     <div class="boxline actions markdown_help_toggler">

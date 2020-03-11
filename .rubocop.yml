@@ -4,8 +4,8 @@
 
 # Project setup:
 require:
-  - ./extras/prohibit_safe_navigation
-  - ./extras/prohibit_form_for_and_form_tag
+  - ./extras/prohibit_form_for_and_form_tag.rb
+  - ./extras/prohibit_safe_navigation.rb
   - rubocop-rails
   - rubocop-rspec
 AllCops:
@@ -29,9 +29,7 @@ AllCops:
 # Layout
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
-Layout/AlignArray:
-  Enabled: false
-Layout/AlignHash:
+Layout/ArrayAlignment:
   Enabled: false
 Layout/CaseIndentation:
   EnforcedStyle: end
@@ -43,8 +41,12 @@ Layout/EmptyLinesAroundExceptionHandlingKeywords:
   Enabled: false
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
-Layout/IndentFirstHashElement:
+Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
+Layout/HashAlignment:
+  Enabled: false
+Layout/LineLength:
+  Max: 100
 Layout/MultilineMethodCallBraceLayout:
   Enabled: false
 Layout/MultilineMethodCallIndentation:
@@ -58,7 +60,7 @@ Layout/SpaceInsideRangeLiteral:
   Enabled: false
 
 # Lint
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Enabled: false
 
 # Metrics
@@ -72,8 +74,6 @@ Metrics/ClassLength:
   Enabled: false
 Metrics/CyclomaticComplexity:
   Enabled: false
-Metrics/LineLength:
-  Max: 100
 Metrics/MethodLength:
   Enabled: false
 Metrics/ModuleLength:
@@ -91,7 +91,7 @@ Naming/MemoizedInstanceVariableName:
 Naming/PredicateName:
   Enabled: false
 # disabled until class vaiables in extras become constants
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false
 Naming/VariableName:
   Enabled: false

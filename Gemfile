@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 5.2.0"
+gem "rails", "~> 5.2"
 
 gem "mysql2"
 
@@ -29,7 +29,8 @@ gem "rotp"
 gem "rqrcode"
 
 # parsing
-gem "nokogiri", ">= 1.7.2"
+gem "pdf-reader"
+gem "nokogiri", ">= 1.10.8"
 gem "htmlentities"
 gem "commonmarker", "~> 0.14"
 

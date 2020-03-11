@@ -1,7 +1,6 @@
 <!--
-Feature requests are no longer being accepted, unless in the form of a pull request with code.
-Don't be fooled by the feature requests pushcx posts to share plans and invite contributions.
+Please discuss feature requests in the chat room or a meta thread before posting.
 
-Issues and PRs are typically reviewed Wednesday and some Thursday mornings.
+Issues and PRs are typically reviewed Wednesday and most weekend mornings.
 -->
 

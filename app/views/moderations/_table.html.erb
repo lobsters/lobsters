@@ -17,7 +17,7 @@
         <a href="<%= mod.story.comments_path %>">Story: <%= mod.story.title
           %></a>
       <% elsif mod.comment %>
-        <a href="<%= mod.comment.url %>">Comment by
+        <a href="<%= mod.comment.path %>">Comment by
           <%= mod.comment.user.username %>
           on
           <%= mod.comment.story.title %></a>
@@ -30,6 +30,8 @@
         <% else %>
           User <%= mod.user_id %> (Deleted)
         <% end %>
+      <% elsif mod.domain %>
+        Domain <%= link_to mod.domain.domain,  domain_path(mod.domain) %>
       <% end %></td>
   </tr>
   <tr class="<%= mod.reason.present?? "nobottom" : "" %>">

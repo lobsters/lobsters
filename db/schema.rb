@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_29_021735) do
+ActiveRecord::Schema.define(version: 2020_02_10_155624) do
 
   create_table "comments", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -38,6 +38,16 @@ ActiveRecord::Schema.define(version: 2019_10_29_021735) do
     t.index ["thread_id"], name: "thread_id"
     t.index ["user_id", "story_id", "downvotes", "created_at"], name: "downvote_index"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "domains", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "domain"
+    t.boolean "is_tracker", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "banned_at"
+    t.integer "banned_by_user_id"
+    t.string "banned_reason", limit: 200
   end
 
   create_table "hat_requests", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -111,6 +121,7 @@ ActiveRecord::Schema.define(version: 2019_10_29_021735) do
     t.boolean "deleted_by_author", default: false
     t.boolean "deleted_by_recipient", default: false
     t.bigint "hat_id", unsigned: true
+    t.index ["author_user_id"], name: "author_user_id"
     t.index ["hat_id"], name: "index_messages_on_hat_id"
     t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"
     t.index ["short_id"], name: "random_hash", unique: true
@@ -138,11 +149,14 @@ ActiveRecord::Schema.define(version: 2019_10_29_021735) do
     t.text "reason", limit: 16777215
     t.boolean "is_from_suggestions", default: false
     t.bigint "tag_id", unsigned: true
+    t.integer "domain_id"
     t.index ["comment_id"], name: "moderations_comment_id_fk"
     t.index ["created_at"], name: "index_moderations_on_created_at"
+    t.index ["domain_id"], name: "index_moderations_on_domain_id"
     t.index ["moderator_user_id"], name: "moderations_moderator_user_id_fk"
     t.index ["story_id"], name: "moderations_story_id_fk"
     t.index ["tag_id"], name: "moderations_tag_id_fk"
+    t.index ["user_id"], name: "index_moderations_on_user_id"
   end
 
   create_table "read_ribbons", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -184,8 +198,10 @@ ActiveRecord::Schema.define(version: 2019_10_29_021735) do
     t.string "twitter_id", limit: 20
     t.boolean "user_is_author", default: false
     t.boolean "user_is_following", default: false, null: false
+    t.bigint "domain_id"
     t.index ["created_at"], name: "index_stories_on_created_at"
     t.index ["description"], name: "index_stories_on_description", type: :fulltext
+    t.index ["domain_id"], name: "index_stories_on_domain_id"
     t.index ["hotness"], name: "hotness_idx"
     t.index ["is_expired", "is_moderated"], name: "is_idxes"
     t.index ["is_expired"], name: "index_stories_on_is_expired"
@@ -193,6 +209,7 @@ ActiveRecord::Schema.define(version: 2019_10_29_021735) do
     t.index ["merged_story_id"], name: "index_stories_on_merged_story_id"
     t.index ["short_id"], name: "unique_short_id", unique: true
     t.index ["story_cache"], name: "index_stories_on_story_cache", type: :fulltext
+    t.index ["story_cache"], name: "stories_story_cache", type: :fulltext
     t.index ["title"], name: "index_stories_on_title", type: :fulltext
     t.index ["twitter_id"], name: "index_stories_on_twitter_id"
     t.index ["url"], name: "url", length: 191
@@ -239,6 +256,7 @@ ActiveRecord::Schema.define(version: 2019_10_29_021735) do
     t.boolean "is_media", default: false
     t.boolean "inactive", default: false
     t.float "hotness_mod", default: 0.0
+    t.boolean "permit_by_new_users", default: true, null: false
     t.index ["tag"], name: "tag", unique: true
   end
 
@@ -302,6 +320,7 @@ ActiveRecord::Schema.define(version: 2019_10_29_021735) do
   add_foreign_key "invitations", "users", column: "new_user_id", name: "invitations_new_user_id_fk"
   add_foreign_key "invitations", "users", name: "invitations_user_id_fk"
   add_foreign_key "messages", "hats", name: "messages_hat_id_fk"
+  add_foreign_key "messages", "users", column: "author_user_id", name: "messages_ibfk_1"
   add_foreign_key "messages", "users", column: "recipient_user_id", name: "messages_recipient_user_id_fk"
   add_foreign_key "mod_notes", "users", column: "moderator_user_id", name: "mod_notes_moderator_user_id_fk"
   add_foreign_key "mod_notes", "users", name: "mod_notes_user_id_fk"
@@ -313,6 +332,7 @@ ActiveRecord::Schema.define(version: 2019_10_29_021735) do
   add_foreign_key "read_ribbons", "users", name: "read_ribbons_user_id_fk"
   add_foreign_key "saved_stories", "stories", name: "saved_stories_story_id_fk"
   add_foreign_key "saved_stories", "users", name: "saved_stories_user_id_fk"
+  add_foreign_key "stories", "domains"
   add_foreign_key "stories", "stories", column: "merged_story_id", name: "stories_merged_story_id_fk"
   add_foreign_key "stories", "users", name: "stories_user_id_fk"
   add_foreign_key "suggested_taggings", "stories", name: "suggested_taggings_story_id_fk"

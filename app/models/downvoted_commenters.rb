@@ -4,12 +4,11 @@
 class DownvotedCommenters
   include IntervalHelper
 
-  CACHE_TIME = 30.minutes
+  attr_reader :interval, :period, :cache_time
 
-  attr_reader :interval, :period
-
-  def initialize(interval)
+  def initialize(interval, cache_time = 30.minutes)
     @interval = interval
+    @cache_time = cache_time
     length = time_interval(interval)
     @period = length[:dur].send(length[:intv].downcase).ago
   end
@@ -20,7 +19,7 @@ class DownvotedCommenters
 
   # aggregates for all commenters; not just those receiving downvotes
   def aggregates
-    Rails.cache.fetch("aggregates_#{interval}", expires_in: CACHE_TIME) {
+    Rails.cache.fetch("aggregates_#{interval}_#{cache_time}", expires_in: self.cache_time) {
       ActiveRecord::Base.connection.exec_query("
         select
           stddev(sum_downvotes) as stddev,
@@ -52,18 +51,24 @@ class DownvotedCommenters
   end
 
   def commenters
-    Rails.cache.fetch("downvoted_commenters_#{interval}", expires_in: CACHE_TIME) {
+    Rails.cache.fetch("downvoted_commenters_#{interval}_#{cache_time}",
+                      expires_in: self.cache_time) {
       rank = 0
       User.active.joins(:comments)
-        .where("comments.downvotes > 0 and comments.created_at >= ?", period)
+        .where("comments.created_at >= ?", period)
         .group("comments.user_id")
         .select("
           users.id, users.username,
           (sum(downvotes) - #{avg_sum_downvotes})/#{stddev_sum_downvotes} as sigma,
-          count(distinct comments.id) as n_comments,
-          count(distinct story_id) as n_stories,
-          sum(downvotes) as n_downvotes")
-        .having("n_comments > 2 and n_stories > 1 and n_downvotes >= 10")
+          count(distinct if(downvotes > 0, comments.id, null)) as n_comments,
+          count(distinct if(downvotes > 0, story_id, null)) as n_stories,
+          sum(downvotes) as n_downvotes,
+          sum(downvotes)/count(distinct comments.id) as average_downvotes,
+          (
+            count(distinct if(downvotes>0, comments.id, null)) /
+            count(distinct comments.id)
+          ) * 100 as percent_downvoted")
+        .having("n_comments > 4 and n_stories > 1 and n_downvotes >= 10 and percent_downvoted > 10")
         .order("sigma desc")
         .limit(30)
         .each_with_object({}) {|u, hash|
@@ -74,11 +79,9 @@ class DownvotedCommenters
             n_comments: u.n_comments,
             n_stories: u.n_stories,
             n_downvotes: u.n_downvotes,
-            average_downvotes: u.n_downvotes * 1.0 / u.n_comments,
+            average_downvotes: u.average_downvotes,
             stddev: 0,
-            percent_downvoted:
-              # TODO: fix 1 + n caused by u.comments to grab total comment count
-              u.n_comments * 100.0 / u.comments.where("created_at >= ?", period).count,
+            percent_downvoted: u.percent_downvoted,
           }
         }
     }

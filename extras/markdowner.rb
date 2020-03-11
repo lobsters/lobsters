@@ -18,12 +18,12 @@ class Markdowner
       h.name = "strong"
     end
 
-    # This should happen before adding rel=nofollow to all links
+    # This should happen before adding rel=ugc to all links
     convert_images_to_links(ng) unless opts[:allow_images]
 
-    # make links have rel=nofollow
+    # make links have rel=ugc
     ng.css("a").each do |h|
-      h[:rel] = "nofollow" unless (URI.parse(h[:href]).host.nil? rescue false)
+      h[:rel] = "ugc" unless (URI.parse(h[:href]).host.nil? rescue false)
     end
 
     if ng.at_css("body")

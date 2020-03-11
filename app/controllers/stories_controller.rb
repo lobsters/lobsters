@@ -257,7 +257,7 @@ class StoriesController < ApplicationController
   end
 
   def unvote
-    if !(story = find_story)
+    if !(story = find_story) || story.is_gone?
       return render :plain => "can't find story", :status => 400
     end
 
@@ -269,7 +269,7 @@ class StoriesController < ApplicationController
   end
 
   def upvote
-    if !(story = find_story)
+    if !(story = find_story) || story.is_gone?
       return render :plain => "can't find story", :status => 400
     end
 
@@ -285,7 +285,7 @@ class StoriesController < ApplicationController
   end
 
   def downvote
-    if !(story = find_story)
+    if !(story = find_story) || story.is_gone?
       return render :plain => "can't find story", :status => 400
     end
 
@@ -354,7 +354,8 @@ class StoriesController < ApplicationController
 
   def check_url_dupe
     raise ActionController::ParameterMissing.new("No URL") unless story_params[:url].present?
-    @story = Story.new(story_params)
+    @story = Story.new(user: @user)
+    @story.attributes = story_params
     @story.already_posted_recently?
 
     respond_to do |format|

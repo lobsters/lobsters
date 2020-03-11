@@ -51,6 +51,7 @@ private
     params.require(:tag).permit(
       :tag,
       :description,
+      :permit_by_new_users,
       :privileged,
       :inactive,
       :hotness_mod,

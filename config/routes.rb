@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   get "/upvoted/page/:page", to: redirect('/upvoted/stories/page/%{page}')
 
   get "/top" => "home#top"
+  get "/top/rss" => "home#top", :format => "rss"
   get "/top/page/:page" => "home#top"
   get "/top/:length" => "home#top"
   get "/top/:length/page/:page" => "home#top"
@@ -64,6 +65,9 @@ Rails.application.routes.draw do
 
   get "/t/:tag" => "home#tagged", :as => "tag"
   get "/t/:tag/page/:page" => "home#tagged"
+
+  get "/domain/:name" => "home#for_domain", :as => "domain", :constraints => { name: /[^\/]+/ }
+  get "/domain/:name/page/:page" => "home#for_domain", :constraints => { name: /[^\/]+/ }
 
   get "/search" => "search#index"
   get "/search/:q" => "search#index"

@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :user do
+    created_at { Time.current - (User::NEW_USER_DAYS + 1).days } # default to experience
     sequence(:email) {|n| "user-#{n}@example.com" }
     sequence(:username) {|n| "username#{n}" }
     password { "blah blah" }
@@ -26,6 +27,9 @@ FactoryBot.define do
     end
     trait(:deleted) do
       deleted_at { Time.current }
+    end
+    trait(:new) do
+      deleted_at { Time.current - 1.day }
     end
     # users who were banned/deleted before a server move
     # you must also add banned/deleted trait with this

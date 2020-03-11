@@ -218,6 +218,29 @@ class HomeController < ApplicationController
     end
   end
 
+  def for_domain
+    @domain = Domain.find_by!(domain: params[:name])
+
+    @stories, @show_more = get_from_cache(domain: @domain.domain) do
+      paginate @domain.stories.order('id desc')
+    end
+
+    @heading = params[:name]
+    @title = "Stories submitted for #{@domain.domain}."
+    @cur_url = domain_path(params[:name])
+
+    @rss_link = {
+      title: "RSS 2.0 - For #{@domain}",
+      href: "/domain/#{params[:domain]}.rss",
+    }
+
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.rss { render :action => "rss", :layout => false }
+      format.json { render :json => @stories }
+    end
+  end
+
   def top
     @cur_url = "/top"
     length = time_interval(params[:length])
@@ -234,7 +257,15 @@ class HomeController < ApplicationController
       @heading = @title = "Top Stories of the Past " << length[:intv]
     end
 
-    render :action => "index"
+    @rss_link ||= {
+      :title => "RSS 2.0 - " + @heading,
+      :href => "/top/rss",
+    }
+
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.rss { render :action => "rss", :layout => false }
+    end
   end
 
   def upvoted

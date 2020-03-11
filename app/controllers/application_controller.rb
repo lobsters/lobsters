@@ -46,6 +46,10 @@ class ApplicationController < ActionController::Base
     true
   end
 
+  def flag_warning
+    @flag_warning = @user && !!DownvotedCommenters.new('1m', 1.day).check_list_for(@user)
+  end
+
   # https://web.archive.org/web/20180108083712/http://umaine.edu/lobsterinstitute/files/2011/12/LobsterColorsWeb.pdf
   def set_traffic_style
     @traffic_intensity = '?'

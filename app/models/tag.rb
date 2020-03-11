@@ -17,6 +17,7 @@ class Tag < ApplicationRecord
                   uniqueness: true, format: { without: /,/ }
   validates :description, length: { maximum: 100 }
   validates :hotness_mod, inclusion: { in: -10..10 }
+  validates :permit_by_new_users, :privileged, inclusion: { in: [true, false] }
 
   scope :active, -> { where(:inactive => false) }
 

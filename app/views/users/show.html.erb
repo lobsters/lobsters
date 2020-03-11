@@ -1,3 +1,5 @@
+<%= render partial: 'users/flag_warning' if @flag_warning && @showing_user == @user %>
+
 <div class="box wide">
   <div class="legend">
     <% if !@showing_user.is_active? %>
@@ -114,7 +116,7 @@
 
     <span class="d">
       <a href="<%= h(@showing_user.homepage) %>"
-        rel="me nofollow"><%= h(@showing_user.homepage) %></a>
+        rel="me ugc"><%= h(@showing_user.homepage) %></a>
     </span>
     <br>
   <% end %>
@@ -124,7 +126,7 @@
 
     <span class="d">
       <a href="https://github.com/<%= h(@showing_user.github_username) %>"
-        rel="me nofollow">https://github.com/<%= h(@showing_user.github_username)
+        rel="me ugc">https://github.com/<%= h(@showing_user.github_username)
         %></a>
     </span>
     <br>
@@ -135,7 +137,7 @@
 
     <span class="d">
       <a href="https://twitter.com/<%= h(@showing_user.twitter_username) %>"
-        rel="me nofollow">@<%= h(@showing_user.twitter_username) %></a>
+        rel="me ugc">@<%= h(@showing_user.twitter_username) %></a>
     </span>
     <br>
   <% end %>
@@ -167,7 +169,7 @@
     <label class="required">Downvoted (1m):</label>
     <span class="d">
       <% if (stats = DownvotedCommenters.new('1m').check_list_for(@showing_user)) %>
-        <a href="/mod/commenters/1m<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % stats[:sigma] %> &sigma;
+        <a href="/mod/commenters/1m#<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % stats[:sigma] %> &sigma;
       <% else %>
         No
       <% end %>

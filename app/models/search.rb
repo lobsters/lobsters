@@ -62,13 +62,16 @@ class Search
   end
 
   def with_stories_in_domain(base, domain)
-    begin
-      reg = Regexp.new("//([^/]*\.)?#{domain}/")
-      base.where("`stories`.`url` REGEXP '" +
-        ActiveRecord::Base.connection.quote_string(reg.source) + "'")
-    rescue RegexpError
-      return base
-    end
+    # Get around the fact that case uses === not ==
+    # to compare objects
+    case base.klass
+    when ->(b) { b == Story }
+      base.joins(:domain)
+    when ->(b) { b == Comment }
+      base.joins(story: [:domain])
+    else
+      fail "Can't handle #{base.class}"
+    end.where('domains.domain = ?', domain)
   end
 
   def with_stories_matching_tags(base, tag_scopes)

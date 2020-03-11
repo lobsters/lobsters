@@ -7,6 +7,32 @@ describe Story do
     expect(s.short_id).to match(/^\A[a-zA-Z0-9]{1,10}\z/)
   end
 
+  it "has a limit on the markdown description field" do
+    s = build(:story)
+    s.markeddown_description = "Z" * 16_777_218
+
+    s.valid?
+    expect(s.errors[:markeddown_description]).to(
+      eq(['is too long (maximum is 16777215 characters)'])
+    )
+  end
+
+  it "has a limit on the story cache field" do
+    s = build(:story)
+    s.story_cache = "Z" * 16_777_218
+
+    s.valid?
+    expect(s.errors[:story_cache]).to eq(['is too long (maximum is 16777215 characters)'])
+  end
+
+  it "has a limit on the twitter id field" do
+    s = build(:story)
+    s.twitter_id = "Z" * 25
+
+    s.valid?
+    expect(s.errors[:twitter_id]).to eq(['is too long (maximum is 20 characters)'])
+  end
+
   it "requires a url or a description" do
     expect { create(:story, :title => "hello", :url => "", :description => "") }.to raise_error
 
@@ -87,16 +113,16 @@ describe Story do
       "http://flub.example.com" => "flub.example.com",
     }.each_pair do |url, domain|
       story.url = url
-      expect(story.domain).to eq(domain)
+      expect(story.domain.domain).to eq(domain)
     end
   end
 
   it "has domain straight out of the db, when Rails doesn't use setters" do
     s = create(:story, url: 'https://example.com/foo.html')
     s = Story.find(s.id)
-    expect(s.domain).to eq('example.com')
+    expect(s.domain.domain).to eq('example.com')
     s.url = 'http://example.org'
-    expect(s.domain).to eq('example.org')
+    expect(s.domain.domain).to eq('example.org')
     s.url = 'invalid'
     expect(s.domain).to be_nil
   end
@@ -126,13 +152,34 @@ describe Story do
   context 'fetching titles' do
     let(:story_directory) { Rails.root.join 'spec/fixtures/story_pages/' }
 
-    it "can fetch its title properly" do
+    # this is more elaborate than the previous system, because now it needs to know the content type
+    def fake_response(content, type, code = '200')
+      res = Net::HTTPResponse.new(1.0, code, "OK")
+      res.add_field("content-type", type)
+      # we can't seemingly just set body, so...
+      allow(res).to receive(:body).and_return(content)
+      return res
+    end
+
+    it "can fetch PDF titles properly" do
+      content = File.read(story_directory + "titled.pdf")
+      res = fake_response(content, "application/pdf")
       s = build(:story)
-      s.fetched_content = File.read(story_directory + "title_ampersand.html")
+      s.fetched_response = res
+      expect(s.fetched_attributes[:title]).to eq("Taking a Long Look at QUIC")
+    end
+
+    it "can fetch its title properly" do
+      content = File.read(story_directory + "title_ampersand.html")
+      res = fake_response(content, "text/html")
+      s = build(:story)
+      s.fetched_response = res
       expect(s.fetched_attributes[:title]).to eq("B2G demo & quick hack // by Paul Rouget")
 
+      content = File.read(story_directory + "title_google.html")
+      res = fake_response(content, "text/html")
       s = build(:story)
-      s.fetched_content = File.read(story_directory + "title_google.html")
+      s.fetched_response = res
       expect(s.fetched_attributes[:title]).to eq("Google")
     end
 
@@ -145,44 +192,46 @@ describe Story do
     it "does not follow rel=canonical when this is to the main page" do
       url = "https://www.mcsweeneys.net/articles/who-said-it-donald-trump-or-regina-george"
       s = build(:story, url: url)
-      s.fetched_content = File.read(story_directory + "canonical_root.html")
+      s.fetched_response = File.read(story_directory + "canonical_root.html")
       expect(s.fetched_attributes[:url]).to eq(url)
     end
 
     it "does not assign canonical url when the response is non-200" do
       url = "https://www.mcsweeneys.net/a/who-said-it-donald-trump-or-regina-george"
+      content = File.read(story_directory + "canonical_error.html")
+      res = fake_response(content, "text/html", '404')
 
       expect_any_instance_of(Sponge)
         .to receive(:fetch)
         .and_return(Net::HTTPResponse.new(1.0, 404, "OK"))
 
       s = build(:story, url: url)
-      s.fetched_content = File.read(story_directory + "canonical_error.html")
+      s.fetched_response = res
       expect(s.fetched_attributes[:url]).to eq(url)
     end
 
     it "assigns canonical when url when it resolves 200" do
       url = "https://www.mcsweeneys.net/a/who-said-it-donald-trump-or-regina-george"
       canonical = "https://www.mcsweeneys.net/articles/who-said-it-donald-trump-or-regina-george"
+      content = File.read(story_directory + "canonical_error.html")
+      res = fake_response(content, "text/html")
 
       expect_any_instance_of(Sponge)
         .to receive(:fetch)
         .and_return(Net::HTTPResponse.new(1.0, 200, "OK"))
 
       s = build(:story, url: url)
-      s.fetched_content = File.read(story_directory + "canonical_error.html")
+      s.fetched_response = res
       expect(s.fetched_attributes[:url]).to eq(canonical)
     end
 
     context "with unicode" do
-      before do
+      it "can fetch unicode titles properly" do
         content = "<!DOCTYPE html><html><title>你好世界！ Here’s a fancy apostrophe</title></html>"
                   .force_encoding('ASCII-8BIT') # This is the encoding returned by Sponge#fetch
-        allow_any_instance_of(Sponge).to receive(:fetch).and_return double(body: content)
-      end
-
-      it "can fetch unicode titles properly" do
+        res = fake_response(content, "text/html")
         s = build(:story)
+        s.fetched_response = res
         expect(s.fetched_attributes[:title]).to eq("你好世界！ Here’s a fancy apostrophe")
       end
     end

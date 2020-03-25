@@ -180,7 +180,7 @@ module ApplicationHelper
       ago = "#{years} #{'year'.pluralize(years)} ago"
     end
 
-    span_class = ''
+    span_class = 'time_ago '
 
     if options[:mark_unread]
       span_class += 'comment_unread'

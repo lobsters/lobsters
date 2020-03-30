@@ -12,8 +12,8 @@
 	div#leader {
 		margin: 0;
 		padding: 8px 5px;
-		background-color: #eee;
-		border-bottom: 1px solid #ccc;
+		background-color: var(--color-mobile-header-background);
+		border-bottom: 1px solid var(--color-mobile-header-border);
 	}
 	div#leader {
 		padding: 8px;
@@ -129,7 +129,7 @@
 		display: table;
 	}
 	ol.stories.list li.story div.story_liner {
-		background-color: #fbfbfb;
+		background-color: var(--color-mobile-stores-list-background);
 		display: table-cell;
 		padding-top: 0.5em;
 		padding-bottom: 0.75em;

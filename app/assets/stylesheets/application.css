@@ -42,7 +42,9 @@
 
     --color-header: #777777;
     --color-header-lobsters: #333333;
-    --color-header-title: #333333;
+	--color-header-title: #333333;
+
+	--color-byline: #888888;
 
     --color-markdown_help-background: #f4f4f4;
     --color-markdown_help-border: #e0e0e0;
@@ -50,17 +52,21 @@
     --color-downvote_why: #555555;
     --color-downvote_why-background: #ffffff;
     --color-downvote_why-background-hover: #eeeeee;
-    --color-downvote_why-background-cancel: #eeeeee;
+	--color-downvote_why-background-cancel: #eeeeee;
+
+	--color-mobile-header-background: #eee;
+	--color-mobile-header-border: #ccc;
+	--color-mobile-stores-list-background: #fbfbfb;
 }
 
 @media (prefers-color-scheme: dark) {
 :root {
-    --color: #bbbbbb;
-    --color-background: #333333;
-    --color-selection: #bbbbbb;
+    --color: hsl(240, 1.3%, 84.5%);
+    --color-background:  hsl(120, 2%, 9%);
+    --color-selection: hsl(120, 2%, 9%);
     --color-selection-background: #111111;
 
-    --color-link: #cccccc;
+    --color-link: hsl(206.7, 100%, 70%);
     --color-link-visited: #888888;
 
     --color-form: #999999;
@@ -86,9 +92,11 @@
     --color-tag-media-background: #ddebf9;
     --color-tag-media-border: #b2ccf0;
 
-    --color-header: #777777;
-    --color-header-lobsters: #aaaaaa;
-    --color-header-title: #aaaaaa;
+    --color-header: #888888;
+    --color-header-lobsters: #cccccc;
+	--color-header-title: #aaaaaa;
+
+	--color-byline: #bbbbbb;
 
     --color-markdown_help-border: #777777;
     --color-markdown_help-background: #222222;
@@ -96,7 +104,11 @@
     --color-downvote_why: #cccccc;
     --color-downvote_why-background: #333333;
     --color-downvote_why-background-hover: #3f3f3f;
-    --color-downvote_why-background-cancel: #222222;
+	--color-downvote_why-background-cancel: #222222;
+
+	--color-mobile-header-background: #222;
+	--color-mobile-header-border: #555;
+	--color-mobile-stores-list-background: var(--color-background);
 }
 }
 
@@ -703,7 +715,7 @@ div.comment:target div.voters {
 }
 
 li .byline {
-	color: #888;
+	color: var(--color-byline);
 	font-size: 9.5pt;
 }
 li .byline > img.avatar {
@@ -724,7 +736,7 @@ li.story span.byline {
 	margin-left: 0.5em;
 }
 li .byline a {
-	color: #888;
+	color: var(--color-byline);
 	text-decoration: none;
 }
 /* preserve selection made elsewhere when clicking */
@@ -859,8 +871,8 @@ div.story_text blockquote {
 }
 
 /* un-italicize italics inside a blockquote */
-div.comment_text blockquote em, 
-div.markdown_help blockquote em, 
+div.comment_text blockquote em,
+div.markdown_help blockquote em,
 div.story_text blockquote em {
     font-style: normal
 }

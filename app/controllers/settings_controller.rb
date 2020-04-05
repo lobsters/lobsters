@@ -256,6 +256,30 @@ class SettingsController < ApplicationController
     return redirect_to "/settings"
   end
 
+  def freenode_callback
+    reader = FreenodeTaxonomyReader.new
+    taxonomy = reader.for_user(params[:user][:freenode_username])
+
+    if taxonomy['LOBSTERS'] == @user.username
+      @user.freenode_username = params[:user][:freenode_username]
+      @user.save!
+      flash[:success] = "Your account has been linked to Freenoe user #{@user.freenode_username}."
+    elsif taxonomy['LOBSTERS']
+      flash[:error] = "Expected #{@user.username} in the taxonomy, not #{taxonomy['LOBSTERS']}."
+    else
+      flash[:error] = "The LOBSTERS key was not in #{params[:user][:freenode_username]}'s taxonomy."
+    end
+
+    return redirect_to "/settings"
+  end
+
+  def freenode_disconnect
+    @user.freenode_username = nil
+    @user.save!
+    flash[:success] = "Your Freenode association has been removed."
+    return redirect_to "/settings"
+  end
+
 private
 
   def user_params

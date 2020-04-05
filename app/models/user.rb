@@ -72,6 +72,7 @@ class User < ApplicationRecord
     s.string :twitter_username
     s.any :keybase_signatures, array: true
     s.string :homepage
+    s.string :freenode_username
   end
 
   validates :email,

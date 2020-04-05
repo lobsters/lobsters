@@ -158,6 +158,8 @@ Rails.application.routes.draw do
   get "/settings/twitter_auth" => "settings#twitter_auth"
   get "/settings/twitter_callback" => "settings#twitter_callback"
   post "/settings/twitter_disconnect" => "settings#twitter_disconnect"
+  post "/settings/freenode_callback" => "settings#freenode_callback"
+  post "/settings/freenode_disconnect" => "settings#freenode_disconnect"
 
   resources :keybase_proofs, only: [:new, :create, :destroy]
   get "/.well-known/keybase-proof-config" => "keybase_proofs#kbconfig", :as => "keybase_config"

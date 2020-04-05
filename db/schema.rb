@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 2020_08_11_022248) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
-  create_table "domains", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "domains", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "domain"
     t.boolean "is_tracker", default: false, null: false
     t.datetime "created_at", null: false

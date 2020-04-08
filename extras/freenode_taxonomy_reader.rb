@@ -7,8 +7,8 @@ class FreenodeTaxonomyReader
   END_MESSGE_REGEX = /End of (.+) taxonomy|(.+) is not registered/
 
   def initialize(
-        socket_provider: ->() { TCPSocket.new('chat.freenode.net', 6667) },
-        username_provider: ->() { SecureRandom.alphanumeric(16) }
+        socket_provider: ->() { ssl_socket },
+        username_provider: ->() { "lobsters-#{SecureRandom.alphanumeric(8)}" }
       )
     @socket_provider = socket_provider
     @nick = username_provider.call
@@ -45,5 +45,15 @@ class FreenodeTaxonomyReader
     taxonomy_lines
   ensure
     s.close
+  end
+
+  def ssl_socket
+    tcp = TCPSocket.new('chat.freenode.net', 6697)
+    ssl = OpenSSL::SSL::SSLSocket.new(tcp)
+
+    ssl.sync_close = true
+    ssl.connect
+
+    ssl
   end
 end

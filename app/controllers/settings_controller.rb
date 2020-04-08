@@ -263,7 +263,7 @@ class SettingsController < ApplicationController
     if taxonomy['LOBSTERS'] == @user.username
       @user.freenode_username = params[:user][:freenode_username]
       @user.save!
-      flash[:success] = "Your account has been linked to Freenoe user #{@user.freenode_username}."
+      flash[:success] = "Your account has been linked to freenode user #{@user.freenode_username}."
     elsif taxonomy['LOBSTERS']
       flash[:error] = "Expected #{@user.username} in the taxonomy, not #{taxonomy['LOBSTERS']}."
     else
@@ -276,7 +276,7 @@ class SettingsController < ApplicationController
   def freenode_disconnect
     @user.freenode_username = nil
     @user.save!
-    flash[:success] = "Your Freenode association has been removed."
+    flash[:success] = "Your freenode association has been removed."
     return redirect_to "/settings"
   end
 

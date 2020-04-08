@@ -151,11 +151,10 @@
   <% end %>
 
   <% if @showing_user.freenode_username.present? %>
-    <label class="required">Freenode:</label>
+    <label class="required">freenode:</label>
 
     <span class="d">
-      <a href="irc://chat.freenode.net:667/<%= h(@showing_user.freenode_username) %>"
-        rel="me ugc">@<%= h(@showing_user.freenode_username) %></a>
+      <a>@<%= h(@showing_user.freenode_username) %></a>
     </span>
     <br>
   <% end %>

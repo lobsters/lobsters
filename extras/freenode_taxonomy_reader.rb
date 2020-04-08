@@ -3,7 +3,7 @@ require 'securerandom'
 require 'timeout'
 
 class FreenodeTaxonomyReader
-  NICKSERV = 'NickServ@services'
+  NICKSERV = 'NickServ!NickServ@services.'
   END_MESSGE_REGEX = /End of (.+) taxonomy|(.+) is not registered/
 
   def initialize(
@@ -36,7 +36,7 @@ class FreenodeTaxonomyReader
       s.write("PRIVMSG NickServ :TAXONOMY #{username}\r\n")
 
       while line = s.gets
-        next unless line.include?(NICKSERV)
+        next unless line.include?(":#{NICKSERV}")
         break if line.match(END_MESSGE_REGEX)
         taxonomy_lines.push(line)
       end

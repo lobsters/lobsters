@@ -87,7 +87,7 @@ class << Rails.application
   end
 
   def name
-    "Lobsters"
+    "GloGang"
   end
 
   # to force everyone to be considered logged-out (without destroying

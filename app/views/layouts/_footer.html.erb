@@ -13,6 +13,3 @@
   <% bbs_count = Keystore.get("bbs:nodes_in_use").try(:value).to_i %>
   <a href="/bbs">BBS<%= bbs_count == 0 ? "" : " (#{bbs_count})" %></a>
 <% end %>
-<a href="https://github.com/lobsters/lobsters/wiki">Wiki</a>
-<a href="/privacy">Privacy</a>
-<a href="/about">About</a>

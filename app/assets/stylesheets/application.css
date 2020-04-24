@@ -261,6 +261,7 @@ div#inside {
 }
 
 #l_holder {
+	background-color: #ce0101;
 	background-position: center;
 	float: left;
 	display: block;

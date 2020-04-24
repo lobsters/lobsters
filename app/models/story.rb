@@ -137,7 +137,7 @@ class Story < ApplicationRecord
   GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}-\u{27BF}\u{1F000}-\u{1F9FF}]/.freeze
 
   attr_accessor :editing_from_suggestions, :editor, :fetching_ip, :is_hidden_by_cur_user,
-                :is_saved_by_cur_user, :moderation_reason, :previewing, :seen_previous, :vote
+                :is_saved_by_cur_user, :moderation_reason, :previewing, :seen_previous, :vote,
                 :repost_description
   attr_writer :fetched_response
 

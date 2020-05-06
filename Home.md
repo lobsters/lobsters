@@ -26,7 +26,7 @@ Other sites using the Lobsters codebase:
 * [Middlebit](https://middlebit.com/) - Content curation for the "no-coast" region of the United States.
 * [ACRAB](https://acrab.isi.jhu.edu/) - Applied Cryptography Publications
 * [V2ETH](https://v2eth.com) - Cryptocurrency (Ethereum)
-* [Hipppo](https://hipppo.xyz) - Hip-hop
+* [Hipppo](https://hipppo.fm) - Hip-hop
 
 ## Cousin Sites
 

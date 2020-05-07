@@ -209,8 +209,9 @@ class Story < ApplicationRecord
 
   # all stories with similar urls
   def self.find_similar_by_url(url)
-    urls = [url.to_s]
-    urls2 = [url.to_s]
+    urls = [url.to_s.gsub(/(#.*)/, "")]
+    urls2 = [url.to_s.gsub(/(#.*)/, "")]
+    urls_with_trailing_pound = []
 
     # https
     urls.each do |u|
@@ -237,10 +238,16 @@ class Story < ApplicationRecord
     end
     urls = urls2.uniq
 
+    # trailing pound
+    urls.each do |u|
+      urls_with_trailing_pound.push u + "#"
+    end
+
     # if a previous submission was moderated, return it to block it from being
     # submitted again
     Story
       .where(:url => urls)
+      .or(Story.where("url RLIKE ?", urls_with_trailing_pound.join(".|")))
       .where("is_expired = ? OR is_moderated = ?", false, true)
   end
 

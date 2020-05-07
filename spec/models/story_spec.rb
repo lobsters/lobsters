@@ -355,4 +355,20 @@ describe Story do
       end
     end
   end
+
+  describe "#already_posted_recently?" do
+    it "returns true when trying to submit a URL that's been submitted w/o an anchor in it" do
+      create(:story, url: "https://www.example.com/article.html")
+      story_has_url_with_anchor = build(:story, url: "https://www.example.com/article.html#main")
+
+      expect(story_has_url_with_anchor.already_posted_recently?).to be true
+    end
+
+    it "returns true when trying to submit a URL that's been submitted with an anchor in it" do
+      create(:story, url: "https://www.example.com/article.html#main")
+      story_has_url_without_anchor = build(:story, url: "https://www.example.com/article.html")
+
+      expect(story_has_url_without_anchor.already_posted_recently?).to be true
+    end
+  end
 end

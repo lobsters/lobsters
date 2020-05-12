@@ -75,7 +75,7 @@ Rails.application.routes.draw do
   resources :stories, except: [:index] do
     get '/stories/:short_id', to: redirect('/s/%{short_id}')
     post "upvote"
-    post "downvote"
+    post "flag"
     post "unvote"
     post "undelete"
     post "hide"
@@ -94,7 +94,7 @@ Rails.application.routes.draw do
       get "/comments/:id" => "comments#redirect_from_short_id"
       get "reply"
       post "upvote"
-      post "downvote"
+      post "flag"
       post "unvote"
 
       post "delete"
@@ -199,8 +199,8 @@ Rails.application.routes.draw do
   get "/moderators" => "users#tree", :moderators => true
 
   get "/mod" => "mod#index"
-  get "/mod/flagged/:period"   => "mod#flagged",   :as => "mod_flagged"
-  get "/mod/downvoted/:period" => "mod#downvoted", :as => "mod_downvoted"
+  get "/mod/flagged_stories/:period"  => "mod#flagged_stories",  :as => "mod_flagged_stories"
+  get "/mod/flagged_comments/:period" => "mod#flagged_comments", :as => "mod_flagged_comments"
   get "/mod/commenters/:period" => "mod#commenters", :as => "mod_commenters"
   get "/mod/notes(/:period)" => "mod_notes#index", :as => "mod_notes"
   post "/mod/notes" => "mod_notes#create"

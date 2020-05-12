@@ -2,7 +2,7 @@ class StoriesController < ApplicationController
   caches_page :show, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,
-                :only => [:upvote, :downvote, :unvote, :hide, :unhide, :preview, :save, :unsave]
+                :only => [:upvote, :flag, :unvote, :hide, :unhide, :preview, :save, :unsave]
   before_action :require_logged_in_user,
                 :only => [:destroy, :create, :edit, :fetch_url_attributes, :new, :suggest]
   before_action :verify_user_can_submit_stories, :only => [:new, :create]
@@ -106,7 +106,7 @@ class StoriesController < ApplicationController
     @story.previewing = true
 
     @story.vote = Vote.new(:vote => 1)
-    @story.upvotes = 1
+    @story.score = 1
 
     @story.valid?
 
@@ -284,7 +284,7 @@ class StoriesController < ApplicationController
     render :plain => "ok"
   end
 
-  def downvote
+  def flag
     if !(story = find_story) || story.is_gone?
       return render :plain => "can't find story", :status => 400
     end
@@ -293,8 +293,8 @@ class StoriesController < ApplicationController
       return render :plain => "invalid reason", :status => 400
     end
 
-    if !@user.can_downvote?(story)
-      return render :plain => "not permitted to downvote", :status => 400
+    if !@user.can_flag?(story)
+      return render :plain => "not permitted to flag", :status => 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(

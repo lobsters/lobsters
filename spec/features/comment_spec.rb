@@ -90,10 +90,10 @@ RSpec.feature "Commenting" do
       stub_login_as user1
       visit "/s/#{story.short_id}"
       expect(page.find(:css, ".comment .comment_text")).to have_content('Cool story.')
-      expect(comment.upvotes).to eq(1)
+      expect(comment.score).to eq(1)
       page.driver.post "/comments/#{comment.short_id}/upvote"
       comment.reload
-      expect(comment.upvotes).to eq(2)
+      expect(comment.score).to eq(2)
 
       story1.update(merged_stories: [story])
       visit "/s/#{story1.short_id}"

@@ -21,7 +21,7 @@ class Comment < ApplicationRecord
   attr_accessor :current_vote, :previewing, :indent_level
 
   before_validation :on => :create do
-    self.assign_short_id_and_upvote
+    self.assign_short_id_and_score
     self.assign_initial_confidence
     self.assign_thread_id
   end
@@ -42,11 +42,11 @@ class Comment < ApplicationRecord
     ) : where('true')
   }
 
-  DOWNVOTABLE_DAYS = 7
-  DELETEABLE_DAYS = DOWNVOTABLE_DAYS * 2
+  FLAGGABLE_DAYS = 7
+  DELETEABLE_DAYS = FLAGGABLE_DAYS * 2
 
   # the lowest a score can go
-  DOWNVOTABLE_MIN_SCORE = -10
+  FLAGGABLE_MIN_SCORE = -10
 
   # the score at which a comment should be collapsed
   COLLAPSE_SCORE = -5
@@ -88,7 +88,7 @@ class Comment < ApplicationRecord
 
   def self.arrange_for_user(user)
     parents = self.order(
-      Arel.sql("(comments.upvotes - comments.downvotes) < 0 ASC, comments.confidence DESC")
+      Arel.sql("score < 0 ASC, comments.confidence DESC")
     )
       .group_by(&:parent_comment_id)
 
@@ -143,11 +143,6 @@ class Comment < ApplicationRecord
     nil
   end
 
-  def self.score_sql
-    Arel.sql("(CAST(upvotes AS #{Story.votes_cast_type}) - " <<
-      "CAST(downvotes AS #{Story.votes_cast_type}))")
-  end
-
   def as_json(_options = {})
     h = [
       :short_id,
@@ -157,8 +152,7 @@ class Comment < ApplicationRecord
       :is_deleted,
       :is_moderated,
       :score,
-      :upvotes,
-      :downvotes,
+      :flags,
       { :comment => (self.is_gone? ? "<em>#{self.gone_text}</em>" : :markeddown_comment) },
       :url,
       :indent_level,
@@ -185,9 +179,9 @@ class Comment < ApplicationRecord
     self.confidence = self.calculated_confidence
   end
 
-  def assign_short_id_and_upvote
+  def assign_short_id_and_score
     self.short_id = ShortId.new(self.class).generate
-    self.upvotes = 1
+    self.score ||= 1 # tests are allowed to fake out the score
   end
 
   def assign_thread_id
@@ -201,11 +195,10 @@ class Comment < ApplicationRecord
   # http://evanmiller.org/how-not-to-sort-by-average-rating.html
   # https://github.com/reddit/reddit/blob/master/r2/r2/lib/db/_sorts.pyx
   def calculated_confidence
-    n = (upvotes + downvotes).to_f
-    if n == 0.0
-      return 0
-    end
+    n = (self.score + self.flags * 2).to_f
+    return 0 if n == 0.0
 
+    upvotes = self.score + self.flags
     z = 1.281551565545 # 80% confidence
     p = upvotes.to_f / n
 
@@ -318,15 +311,18 @@ class Comment < ApplicationRecord
     Markdowner.to_html(self.comment)
   end
 
-  def give_upvote_or_downvote_and_recalculate!(upvote, downvote)
-    self.upvotes += upvote.to_i
-    self.downvotes += downvote.to_i
-
-    Comment.connection.execute("UPDATE #{Comment.table_name} SET " <<
-      "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " <<
-      "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " <<
-      "confidence = '#{self.calculated_confidence}' WHERE id = #{self.id}")
-
+  # TODO: race condition: if two votes arrive at the same time, the second one
+  # won't take the first's score change into effect for calculated_confidence
+  def update_score_and_recalculate!(score_delta, flag_delta)
+    self.score += score_delta
+    self.flags += flag_delta
+    Comment.connection.execute <<~SQL
+      UPDATE comments SET
+        score = (select sum(vote) from votes where comment_id = comments.id),
+        flags = (select count(*) from votes where comment_id = comments.id and vote = -1),
+        confidence = #{self.calculated_confidence}
+      WHERE id = #{self.id.to_i}
+    SQL
     self.story.recalculate_hotness!
   end
 
@@ -374,9 +370,9 @@ class Comment < ApplicationRecord
     user && user.id == self.user_id && self.created_at && self.created_at < DELETEABLE_DAYS.days.ago
   end
 
-  def is_downvotable?
-    if self.created_at && self.score > DOWNVOTABLE_MIN_SCORE
-      Time.current - self.created_at <= DOWNVOTABLE_DAYS.days
+  def is_flaggable?
+    if self.created_at && self.score > FLAGGABLE_MIN_SCORE
+      Time.current - self.created_at <= FLAGGABLE_DAYS.days
     else
       false
     end
@@ -450,14 +446,10 @@ class Comment < ApplicationRecord
     self.story.update_comments_count!
   end
 
-  def score
-    self.upvotes - self.downvotes
-  end
-
   def score_for_user(u)
     if self.show_score_to_user?(u)
       score
-    elsif u && u.can_downvote?(self)
+    elsif u && u.can_flag?(self)
       "~"
     else
       "&nbsp;".html_safe

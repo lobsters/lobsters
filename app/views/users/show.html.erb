@@ -166,9 +166,9 @@
   <% if @user && @user.is_moderator? && !@showing_user.is_moderator? %>
     <h2>Moderator Information</h2>
 
-    <label class="required">Downvoted (1m):</label>
+    <label class="required">Flagged (1m):</label>
     <span class="d">
-      <% if (stats = DownvotedCommenters.new('1m').check_list_for(@showing_user)) %>
+      <% if (stats = FlaggedCommenters.new('1m').check_list_for(@showing_user)) %>
         <a href="/mod/commenters/1m#<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % stats[:sigma] %> &sigma;
       <% else %>
         No

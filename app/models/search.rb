@@ -149,7 +149,7 @@ class Search
       when "newest"
         self.results.order!("stories.created_at DESC")
       when "points"
-        self.results.order!("#{Story.score_sql} DESC")
+        self.results.order!("score DESC")
       end
 
     when "comments"
@@ -175,7 +175,7 @@ class Search
       when "newest"
         self.results.order!("created_at DESC")
       when "points"
-        self.results.order!("#{Comment.score_sql} DESC")
+        self.results.order!("score DESC")
       end
     end
 

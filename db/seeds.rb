@@ -15,7 +15,7 @@ User.create(
   :is_moderator => true,
   :karma => [
     User::MIN_KARMA_TO_SUGGEST,
-    User::MIN_KARMA_TO_DOWNVOTE,
+    User::MIN_KARMA_TO_FLAG,
     User::MIN_KARMA_TO_SUBMIT_STORIES,
     User::MIN_KARMA_FOR_INVITATION_REQUESTS
   ].max,

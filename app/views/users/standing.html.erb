@@ -3,15 +3,15 @@
 
   <p>
     Most commenters get zero or very few flags across their comments in the last <%= @flag_warning_int[:human] %>.
-    Currently, users who see the warning have been flagged between <%= @dc_flagged.first %> and <%= @dc_flagged.last %> times.
+    Currently, users who see the warning have been flagged between <%= @fc_flagged.first %> and <%= @fc_flagged.last %> times.
     Or, to make that visible:
   </p>
 
   <table class="standing">
-    <% (0..@dc_flagged.last.to_i).each do |n_flags| %>
+    <% (0..@fc_flagged.last.to_i).each do |n_flags| %>
       <tr>
         <td>
-          <% if @flagged_user_stats && n_flags == @flagged_user_stats[:n_downvotes] %>
+          <% if @flagged_user_stats && n_flags == @flagged_user_stats[:n_flags] %>
             <div class="jaccuse">You</div>
           <% else %>
             <%= @lookup[n_flags].to_i %>&nbsp;<%= "user".pluralize(@lookup[n_flags].to_i) %>
@@ -20,7 +20,7 @@
         <td>
           received&nbsp;<%= n_flags %>&nbsp;<%= "flag".pluralize(n_flags) %>
         </td>
-        <% if n_flags < @dc_flagged.first.to_i %>
+        <% if n_flags < @fc_flagged.first.to_i %>
           <td class="unwarned">
             <% @lookup[n_flags].to_i.times do %><div>&#129438;</div><% end %>
           </td>

@@ -47,6 +47,6 @@ class StoryRepository
   def top(length)
     top = Story.base.where("created_at >= (NOW() - INTERVAL " <<
       "#{length[:dur]} #{length[:intv].upcase})")
-    top.order("#{Story.score_sql} DESC")
+    top.order("score DESC")
   end
 end

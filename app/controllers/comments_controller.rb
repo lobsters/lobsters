@@ -4,7 +4,7 @@ class CommentsController < ApplicationController
   caches_page :index, :threads, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,
-                :only => [:create, :preview, :upvote, :downvote, :unvote]
+                :only => [:create, :preview, :upvote, :flag, :unvote]
   before_action :require_logged_in_user, :only => [:upvoted]
   before_action :flag_warning, only: [:threads]
 
@@ -58,7 +58,7 @@ class CommentsController < ApplicationController
         redirect_to comment.path
       end
     else
-      comment.upvotes = 1
+      comment.score = 1
       comment.current_vote = { :vote => 1 }
 
       preview comment
@@ -201,7 +201,7 @@ class CommentsController < ApplicationController
     render :plain => "ok"
   end
 
-  def downvote
+  def flag
     if !(comment = find_comment) || comment.is_gone?
       return render :plain => "can't find comment", :status => 400
     end
@@ -210,8 +210,8 @@ class CommentsController < ApplicationController
       return render :plain => "invalid reason", :status => 400
     end
 
-    if !@user.can_downvote?(comment)
-      return render :plain => "not permitted to downvote", :status => 400
+    if !@user.can_flag?(comment)
+      return render :plain => "not permitted to flag", :status => 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(

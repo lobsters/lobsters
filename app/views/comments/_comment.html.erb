@@ -7,7 +7,7 @@
 <div id="c_<%= comment.short_id %>"
 data-shortid="<%= comment.short_id if comment.persisted? %>"
 class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
-"upvoted" : "downvoted") : "" %>
+"upvoted" : "flagged") : "" %>
   <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>">
 
   <% if defined?(show_tree_lines) && show_tree_lines %>
@@ -16,7 +16,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
   <% end %>
 
   <% if !comment.is_gone? %>
-    <% can_downvote = @user && @user.can_downvote?(comment) %>
+    <% can_flag = @user && @user.can_flag?(comment) %>
     <% score_display = comment.score_for_user(@user) %>
     <div class="voters">
       <% if @user %>
@@ -25,14 +25,14 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <%= link_to "", login_path, :class => "upvoter" %>
       <% end %>
       <div class="score"><%= score_display %></div>
-      <% if can_downvote %>
-        <a class="downvoter"></a>
+      <% if can_flag %>
+        <a class="flagger"></a>
       <% else %>
-        <span class="downvoter downvoter_stub"></span>
+        <span class="flagger flagger_stub"></span>
       <% end %>
     </div>
     <div class="comment_parent_tree_line
-      <%= can_downvote ? "can_downvote" : "" %>
+      <%= can_flag ? "can_flag" : "" %>
       <%= score_display != "&nbsp;" ? "score_shown" : "" %>
       <%= defined?(children) && children ? "" : "no_children" %>"></div>
   <% end %>
@@ -117,7 +117,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <% end %>
 
         <span class="reason">
-          <% if comment.downvotes > 0 &&
+          <% if comment.flags > 0 &&
           comment.show_score_to_user?(@user) &&
           (comment.user_id == @user.try(:id) || @user.try("is_moderator?")) %>
             | <%= comment.vote_summary_for_user(@user).downcase %>

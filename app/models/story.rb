@@ -39,8 +39,8 @@ class Story < ApplicationRecord
   scope :deleted, -> { where(is_expired: true) }
   scope :not_deleted, -> { where(is_expired: false) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
-  scope :positive_ranked, -> { where("#{Story.score_sql} >= 0") }
-  scope :low_scoring, ->(max = 5) { where("#{Story.score_sql} < ?", max) }
+  scope :positive_ranked, -> { where("score >= 0") }
+  scope :low_scoring, ->(max = 5) { where("score < ?", max) }
   scope :front_page, -> { hottest.limit(StoriesPaginator::STORIES_PER_PAGE) }
   scope :hottest, ->(user = nil, exclude_tags = nil) {
     base.not_hidden_by(user)
@@ -93,7 +93,7 @@ class Story < ApplicationRecord
   scope :to_tweet, -> {
     hottest(nil, Tag.where(tag: 'meta').pluck(:id))
         .where(twitter_id: nil)
-        .where("#{Story.score_sql} >= 2")
+        .where("score >= 2")
         .where("created_at >= ?", 2.days.ago)
         .limit(10)
   }
@@ -112,10 +112,10 @@ class Story < ApplicationRecord
     end
   end
 
-  DOWNVOTABLE_DAYS = 14
+  FLAGGABLE_DAYS = 14
 
   # the lowest a score can go
-  DOWNVOTABLE_MIN_SCORE = -5
+  FLAGGABLE_MIN_SCORE = -5
 
   # after this many minutes old, a story cannot be edited
   MAX_EDIT_MINS = (60 * 6)
@@ -142,7 +142,7 @@ class Story < ApplicationRecord
                 :is_saved_by_cur_user, :moderation_reason, :previewing, :seen_previous, :vote
   attr_writer :fetched_response
 
-  before_validation :assign_short_id_and_upvote, :on => :create
+  before_validation :assign_short_id_and_score, :on => :create
   before_create :assign_initial_hotness
   before_save :log_moderation
   before_save :fix_bogus_chars
@@ -285,15 +285,6 @@ class Story < ApplicationRecord
     true
   end
 
-  def self.score_sql
-    Arel.sql("(CAST(upvotes AS #{votes_cast_type}) - " <<
-      "CAST(downvotes AS #{votes_cast_type}))")
-  end
-
-  def self.votes_cast_type
-    Story.connection.adapter_name.match(/mysql/i) ? "signed" : "integer"
-  end
-
   def archive_url
     "https://archive.md/#{CGI.escape(self.url)}"
   end
@@ -306,8 +297,8 @@ class Story < ApplicationRecord
       :title,
       :url,
       :score,
-      :upvotes,
-      :downvotes,
+      :score,
+      :flags,
       { :comment_count => :comments_count },
       { :description => :markeddown_description },
       :comments_url,
@@ -339,9 +330,9 @@ class Story < ApplicationRecord
     self.hotness = self.calculated_hotness
   end
 
-  def assign_short_id_and_upvote
+  def assign_short_id_and_score
     self.short_id = ShortId.new(self.class).generate
-    self.upvotes = 1
+    self.score ||= 1 # tests are allowed to fake out the score
   end
 
   def calculated_hotness
@@ -350,7 +341,7 @@ class Story < ApplicationRecord
     base = self.tags.sum(:hotness_mod) + (self.user_is_author? && self.url.present? ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
-    sum_expression = base < 0 ? "downvotes * -0.5" : "upvotes + 1 - downvotes"
+    sum_expression = base < 0 ? "flags * -0.5" : "score + 1"
     cpoints = self.merged_comments.where.not(user_id: self.user_id).sum(sum_expression).to_f * 0.5
 
     # mix in any stories this one cannibalized
@@ -358,8 +349,9 @@ class Story < ApplicationRecord
 
     # if a story has many comments but few votes, it's probably a bad story, so
     # cap the comment points at the number of upvotes
-    if cpoints > self.upvotes
-      cpoints = self.upvotes
+    upvotes = self.score + self.flags
+    if cpoints > upvotes
+      cpoints = upvotes
     end
 
     # don't immediately kill stories at 0 by bumping up score by one
@@ -484,14 +476,18 @@ class Story < ApplicationRecord
     Markdowner.to_html(self.description, allow_images: self.can_have_images?)
   end
 
-  def give_upvote_or_downvote_and_recalculate!(upvote, downvote)
-    self.upvotes += upvote.to_i
-    self.downvotes += downvote.to_i
-
-    Story.connection.execute("UPDATE #{Story.table_name} SET " <<
-      "upvotes = COALESCE(upvotes, 0) + #{upvote.to_i}, " <<
-      "downvotes = COALESCE(downvotes, 0) + #{downvote.to_i}, " <<
-      "hotness = '#{self.calculated_hotness}' WHERE id = #{self.id.to_i}")
+  # TODO: race condition: if two votes arrive at the same time, the second one
+  # won't take the first's score change into effect for calculated_hotness
+  def update_score_and_recalculate!(score_delta, flag_delta)
+    self.score += score_delta
+    self.flags += flag_delta
+    Story.connection.execute <<~SQL
+      UPDATE stories SET
+        score = (select sum(vote) from votes where story_id = stories.id and comment_id is null),
+        flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),
+        hotness = #{self.calculated_hotness}
+      WHERE id = #{self.id.to_i}
+    SQL
   end
 
   def has_suggestions?
@@ -515,9 +511,9 @@ class Story < ApplicationRecord
     c.join("")
   end
 
-  def is_downvotable?
-    if self.created_at && self.score > DOWNVOTABLE_MIN_SCORE
-      Time.current - self.created_at <= DOWNVOTABLE_DAYS.days
+  def is_flaggable?
+    if self.created_at && self.score > FLAGGABLE_MIN_SCORE
+      Time.current - self.created_at <= FLAGGABLE_DAYS.days
     else
       false
     end
@@ -645,10 +641,6 @@ class Story < ApplicationRecord
 
   def record_initial_upvote
     Vote.vote_thusly_on_story_or_comment_for_user_because(1, self.id, nil, self.user_id, nil, false)
-  end
-
-  def score
-    upvotes - downvotes
   end
 
   def short_id_path

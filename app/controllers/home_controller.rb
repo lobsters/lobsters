@@ -29,6 +29,7 @@ class HomeController < ApplicationController
         "A mystery." <<
         "</div>").html_safe, :layout => "application"
     end
+    raise "Seriously, write your own about page." if @homeabout
   end
 
   def chat

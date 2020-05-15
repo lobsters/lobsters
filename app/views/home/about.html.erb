@@ -1,6 +1,8 @@
 <div class="box wide">
   <h1>About</h1>
 
+  <%- raise "Site owner: You need to delete app/views/home/about.html.erb and write your own about page" if Rails.env.production? and Rails.application.name != 'Lobsters' -%>
+
   <div class="story_text">
   <p>
   Lobsters is a computing-focused community centered around link aggregation
@@ -174,6 +176,7 @@
   which allows them to reply to stories or comments directly in their e-mail
   client.  These e-mails are then converted and submitted to the website as
   comments, just as if the comment was posted through a web browser.
+  <%- raise "Don't just delete that error message. You didn't set up mailing list mode, right? This really isn't your about page, write one from scratch." if Rails.env.production? and Rails.application.name != 'Lobsters' -%>
   </p>
 
   <li><p>

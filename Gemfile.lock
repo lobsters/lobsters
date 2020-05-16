@@ -275,7 +275,7 @@ DEPENDENCIES
   nokogiri (>= 1.10.8)
   oauth
   pdf-reader
-  rails (~> 5.2)
+  rails (~> 5.2.4.2)
   rb-readline
   rotp
   rqrcode

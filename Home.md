@@ -36,3 +36,4 @@ Inspired by Lobsters, but not using the Lobsters codebase.
 * [laarc](https://www.laarc.io/) ([repo](https://github.com/laarc/laarc)) - STEM. Humanities. Humor. A cross between Pinboard and Hacker News.
 * [Pythonic News](https://news.python.sc/) ([repo](https://github.com/sebst/pythonic-news)) - A social news aggregator for the Python community.
 * [Racket Stories](https://racket-stories.com/) ([repo](https://github.com/soegaard/racket-stories)) - Racket.
+* [Journal du hacker](https://www.journalduhacker.net/) ([repo Gitlab](https://gitlab.com/journalduhacker/journalduhacker)) - Hacker news in french

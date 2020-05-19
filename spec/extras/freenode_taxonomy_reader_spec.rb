@@ -12,11 +12,11 @@ describe FreenodeTaxonomyReader do
 
     expect(socket).to receive(:gets).and_return(
                         ":#{described_class::NICKSERV}: Taxonomy for sample:",
-                        ":#{described_class::NICKSERV}: Key: Value",
+                        ":#{described_class::NICKSERV}: LOBSTERS: Value",
                         ":#{described_class::NICKSERV}: End of sample taxonomy"
                       )
     expect(socket).to receive(:close)
 
-    expect(subject.for_user('sample')).to eql('Key' => 'Value')
+    expect(subject.for_user('sample')).to eql('LOBSTERS' => 'Value')
   end
 end

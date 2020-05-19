@@ -4,18 +4,19 @@ require 'timeout'
 
 class FreenodeTaxonomyReader
   NICKSERV = 'NickServ!NickServ@services.'
-  END_MESSGE_REGEX = /End of (.+) taxonomy|(.+) is not registered/
+  END_MESSAGE_REGEX = /End of (.+) taxonomy|(.+) is not registered/
+  MAX_LINES = 100
 
   def initialize(
         socket_provider: ->() { ssl_socket },
-        username_provider: ->() { "lobsters-#{SecureRandom.alphanumeric(8)}" }
+        username_provider: ->() { "#{Rails.application.name}-#{SecureRandom.alphanumeric(8)}" }
       )
     @socket_provider = socket_provider
     @nick = username_provider.call
   end
 
   def for_user(username)
-    _head, *taxonomy_lines = taxonomy_for(username)
+    taxonomy_lines = taxonomy_for(username)
 
     taxonomy_lines.map do |line|
       line
@@ -32,13 +33,16 @@ class FreenodeTaxonomyReader
 
     Timeout.timeout(30) do
       s.write("NICK #{@nick}\r\n")
-      s.write("USER #{@nick} * * :Lobsters\r\n")
+      s.write("USER #{@nick} * * :#{Rails.application.name}\r\n")
       s.write("PRIVMSG NickServ :TAXONOMY #{username}\r\n")
 
-      while line = s.gets
+      lines_read = 0
+
+      while (line = s.gets) && lines_read < MAX_LINES
         next unless line.include?(":#{NICKSERV}")
-        break if line.match(END_MESSGE_REGEX)
-        taxonomy_lines.push(line)
+        break if line.match(END_MESSAGE_REGEX)
+        taxonomy_lines.push(line) if line.include?('LOBSTERS')
+        lines_read += 1
       end
     end
 

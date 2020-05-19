@@ -265,9 +265,9 @@ class SettingsController < ApplicationController
       @user.save!
       flash[:success] = "Your account has been linked to freenode user #{@user.freenode_username}."
     elsif taxonomy['LOBSTERS']
-      flash[:error] = "Expected #{@user.username} in the taxonomy, not #{taxonomy['LOBSTERS']}."
+      flash[:error] = "Checked on your username, but Freenode told us it's something other than #{@user.username}."
     else
-      flash[:error] = "The LOBSTERS key was not in #{params[:user][:freenode_username]}'s taxonomy."
+      flash[:error] = "The LOBSTERS key was not in #{params[:user][:freenode_username]}'s taxonomy. Message NickServ `SET PROPERTY LOBSTERS #{@user.username}` to set it."
     end
 
     return redirect_to "/settings"
@@ -277,7 +277,7 @@ class SettingsController < ApplicationController
     @user.freenode_username = nil
     @user.save!
     flash[:success] = "Your freenode association has been removed."
-    return redirect_to "/settings"
+    return redirect_to user_path(@user)
   end
 
 private

@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 5.2.4.2"
+gem "rails", "~> 5.2.4.3"
 
 gem "mysql2"
 
@@ -50,7 +50,7 @@ group :test, :development do
   gem "listen"
   gem "rspec-rails"
   gem "factory_bot_rails"
-  gem "rubocop", require: false
+  gem "rubocop", "0.81", require: false
   gem "rubocop-rails", require: false
   gem "rubocop-rspec", require: false
   gem "faker"

@@ -88,7 +88,7 @@ class Sponge
     cooks = @cookies[host] || {}
 
     # check for domain cookies
-    @cookies.keys.each do |dom|
+    @cookies.each_key do |dom|
       if dom.length < host.length && dom == host[host.length - dom.length .. host.length - 1]
         dputs "adding domain keys from #{dom}"
         cooks = cooks.merge @cookies[dom]

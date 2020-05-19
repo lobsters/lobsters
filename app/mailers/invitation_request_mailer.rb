@@ -1,6 +1,4 @@
-class InvitationRequestMailer < ActionMailer::Base
-  default :from => "#{Rails.application.name} <nobody@#{Rails.application.domain}>"
-
+class InvitationRequestMailer < ApplicationMailer
   def invitation_request(invitation_request)
     @invitation_request = invitation_request
 

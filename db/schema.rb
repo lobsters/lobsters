@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_10_155624) do
+ActiveRecord::Schema.define(version: 2020_05_19_000845) do
 
   create_table "comments", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -286,6 +286,7 @@ ActiveRecord::Schema.define(version: 2020_02_10_155624) do
     t.text "settings"
     t.index ["banned_by_user_id"], name: "users_banned_by_user_id_fk"
     t.index ["disabled_invite_by_user_id"], name: "users_disabled_invite_by_user_id_fk"
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invited_by_user_id"], name: "users_invited_by_user_id_fk"
     t.index ["mailing_list_mode"], name: "mailing_list_enabled"
     t.index ["mailing_list_token"], name: "mailing_list_token", unique: true

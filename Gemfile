@@ -54,6 +54,6 @@ group :test, :development do
   gem "rubocop-rails", require: false
   gem "rubocop-rspec", require: false
   gem "faker"
-  gem "byebug"
+  gem "byebug", "11.0.1"
   gem "rb-readline"
 end

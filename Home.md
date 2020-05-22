@@ -11,17 +11,10 @@ Other sites using the Lobsters codebase:
 
 * [Barnacles](https://www.barnacl.es) ([repo](https://github.com/pushcx/barnacl.es)) - Business
 * [Le Journal du Hacker](https://www.journalduhacker.net/) - Computer Science (fr)
-* [Write.Narwhal.Space](https://write.narwhal.space) ([repo](https://github.com/charlesetc/write.narwhal.space))
-* [Barnaclad](https://barnacles.blackfriday/) - Computer Science
 * [CryptoBuzz](https://cryptobuzz.io/) ([repo](https://github.com/lukehamilton/cryptobuzz)) - Cryptocurrency
 * [Kind and Green News](http://news.kindandgreenworld.com/) - Biology
-* [Gh Tech Roundup](https://www.ghtechroundup.com/) - Technology
-* [G33kz](https://g33kz.de/) - Technology (de)
 * [tilde news](https://tilde.news/) ([repo](https://tildegit.org/tildeverse/tilde.news)) - [tildeverse](https://tildeverse.org) links: unix, small web, decentralization
-* [Paperkast](https://paperkast.com) - Science, Futurology, and Technology
 * [Standard](https://std.bz/) - Cryptocurrency
-* [Bitmia](https://bitmia.com/) - Finance
-* [0xBlockchain](https://0xblockchain.network/) ([repo](https://github.com/pyk/0xblockchain)) - Cryptocurrency
 * [Gambe.ro](https://gambe.ro) - Software development (it)
 * [Middlebit](https://middlebit.com/) - Content curation for the "no-coast" region of the United States.
 * [ACRAB](https://acrab.isi.jhu.edu/) - Applied Cryptography Publications

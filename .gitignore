@@ -21,6 +21,7 @@ public/assets
 public/avatars
 public/sitemap*
 node_modules/
+coverage/
 yarn-error.log
 yarn.lock
 .byebug*

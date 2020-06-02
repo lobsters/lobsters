@@ -34,18 +34,37 @@
   </table>
 
   <p>
-    This isn't based on the percentage of the author's comments flagged because good comments don't excuse abusive ones.
+    If you're seeing the warning, the best case scenario is that you review your recent flagged comments below, maybe talk to <%= link_to 'a mod', moderators_path %> about what you think went wrong, and meet community norms.
+    If you can't or don't want to do that, you can delete your account from the bottom of your <%= link_to 'settings', settings_path %>.
   </p>
 
   <p>
-    For reference, your recent flagged comments:
+    We count total number of flags because that's the most direct measurement of harm:
+    occasionally one or two really nasty comments that hit deep negative scores,
+    but most often it's a consistent pattern of inappropriate, rude, dismissive, or abusive behavior poisoning many discussions.
+    We've tried more complicated measurements, but they correlate almost perfectly to a simple count and are a lot harder to explain than the total number of times another user has flagged your behavior as inappropriate.
+  </p>
+
+  <p>
+    The warning (and appearance on a mod dashboard) doesn't kick in until an author has received an unusually high number of flags across several comments on several threads because anyone can have a bad day or a bad thread.
+    The problem is a pattern across many threads, especially if it's gone on a while.
+  </p>
+
+  <p>
+    To address some common objections:
+    This isn't based on the percentage of the author's comments flagged or the average score because good comments don't excuse bad ones.
+    This doesn't ignore comments where you feel provoked or justified because you're still responsible for your words.
+    This includes flags on comments with net positive scores because Lobsters isn't a contest to write comments that are slightly funnier or more insightful than they are cruel.
+    If you think the people you're responding to don't deserve courtesy and respect: why do you spending time talking to them at all?
+  </p>
+
+  <p>
+    For reference, your recent flagged comments are below.
   </p>
 </div>
 
 <ol class="comments comments1">
   <% @flagged_comments.each do |comment| %>
-    <li><%= render "comments/comment", :comment => comment, :show_story => true %>
-      <ol class="comments"></ol>
-    </li>
+    <li><%= render "comments/comment", :comment => comment, :show_story => true, force_open: true %></li>
   <% end %>
 </ol>

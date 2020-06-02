@@ -210,10 +210,10 @@ class User < ApplicationRecord
   end
 
   def average_karma
-    if (k = self.karma) == 0
+    if self.karma == 0
       0
     else
-      k.to_f / (self.stories_submitted_count + self.comments_posted_count)
+      self.karma.to_f / (self.stories_submitted_count + self.comments_posted_count)
     end
   end
 

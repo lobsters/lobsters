@@ -352,7 +352,7 @@ class User < ApplicationRecord
   end
 
   def refresh_counts!
-    Keystore.put("user:#{self.id}:stories_submitted", self.stories.not_deleted.count)
+    Keystore.put("user:#{self.id}:stories_submitted", self.stories.count)
     Keystore.put("user:#{self.id}:comments_posted", self.comments.active.count)
     Keystore.put("user:#{self.id}:comments_deleted", self.comments.deleted.count)
   end

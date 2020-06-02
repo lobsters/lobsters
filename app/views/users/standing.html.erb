@@ -1,0 +1,75 @@
+<div class="box wide">
+  <style type="text/css">
+    svg { width: 100%; }
+    .graphBackground { fill: #f4f4f4; }
+    .yAxisTitle { color: black; }
+    .fill1 { fill: #3030ff; }
+    .dataPoint2 { fill: #3030ff; }
+    table tr td { vertical-align: top; }
+    table td:first-child { text-align: right }
+    /* https://codepen.io/sosuke/pen/Pjoqqp */
+    .unwarned {
+      filter: invert(36%) sepia(52%) saturate(0%) hue-rotate(292deg) brightness(96%) contrast(85%);
+    }
+    .warned, .jaccuse {
+      filter: invert(13%) sepia(85%) saturate(4911%) hue-rotate(356deg) brightness(78%) contrast(95%);
+    }
+    td.warned div, td.unwarned div {
+      display: inline-block;
+      height: 1em;
+      line-height: 1em;
+      text-align: center;
+      width: 1em;
+    }
+  </style>
+
+  <h1>Breakdown of commenters receiving flags in the last <%= @flag_warning_int[:human] %></h1>
+
+  <p>
+    Most commenters get zero or very few flags across their comments in the last <%= @flag_warning_int[:human] %>.
+    Currently, users who see the warning have been flagged between <%= @dc_flagged.first %> and <%= @dc_flagged.last %> times.
+    Or, to make that visible:
+  </p>
+
+  <table>
+    <% (0..@dc_flagged.last).each do |n_flags| %>
+      <tr>
+        <td>
+          <% if n_flags == @flagged_user_stats[:n_downvotes] %>
+            <div class="jaccuse">You</div>
+          <% else %>
+            <%= @lookup[n_flags].to_i %>&nbsp;<%= "user".pluralize(@lookup[n_flags].to_i) %>
+          <% end %>
+        </td>
+        <td>
+          received&nbsp;<%= n_flags %>&nbsp;<%= "flag".pluralize(n_flags) %>
+        </td>
+        <% if n_flags < @dc_flagged.first %>
+          <td class="unwarned">
+            <% @lookup[n_flags].to_i.times do %><div>&#129438;</div><% end %>
+          </td>
+        <% else %>
+          <td class="warned">
+            <% @lookup[n_flags].to_i.times do %><div>&#10060;</div><% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+
+  <p>
+    The warning and chart 
+  </p>
+
+  <p>
+    For reference, your recent flagged comments:
+  </p>
+</div>
+
+<ol class="comments comments1">
+  <% @flagged_comments.each do |comment| %>
+    <li><%= render "comments/comment", :comment => comment, :show_story => true %>
+      <ol class="comments"></ol>
+    </li>
+  <% end %>
+</ol>

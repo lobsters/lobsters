@@ -11,7 +11,6 @@ threads threads_count, threads_count
 #
 #port        ENV.fetch("PORT") { 3000 }
 #bind 'tcp://127.0.0.1:3000'
-bind 'unix:///srv/lobste.rs/http/tmp/puma.sock'
 
 # Specifies the `environment` that Puma will run in.
 #
@@ -34,6 +33,7 @@ workers ENV.fetch("WEB_CONCURRENCY") { 12 }
 # process behavior so workers use less memory.
 #
 if ENV.fetch("RAILS_ENV") == "production"
+  bind 'unix:///srv/lobste.rs/http/tmp/puma.sock'
   preload_app!
 end
 

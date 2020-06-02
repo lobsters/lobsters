@@ -1,14 +1,9 @@
 <div class="flash-error">
-  <p>
-    Your comments have been heavily flagged across several stories in the last 30 days.
-    This notice appears conservatively: if you're seeing it, something is unusual and bad and you need to make a change.
-    Reconsider your behavior or just <a href="https://xkcd.com/386">take a break</a>.
-    If you don't understand why you're seeing this after reviewing your <%= link_to 'recent threads', threads_path %>,
-    talk to <%= link_to 'a mod', moderators_path %> about what went wrong.
-  </p>
+  Your comments have been heavily flagged across several stories in the last <%= @flag_warning_int[:human] %>.
+  Review <%= link_to 'your standing', user_standing_path(@user.username) %> for context on how unusual this is.
+  Reconsider your behavior or <a href="https://xkcd.com/386">take a break</a>.
+  <br><br>
 
-  <p>
-    If you are outraged by this notice from a site that's full of idiots and led by mods who are power-tripping assholes,
-    you can delete your account from the bottom of your <%= link_to 'settings', settings_path %>.
-  </p>
+  You could also talk to <%= link_to 'a mod', moderators_path %> about what went wrong, or
+  delete your account from the bottom of your <%= link_to 'settings', settings_path %> if you prefer to leave.
 </div>

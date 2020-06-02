@@ -124,6 +124,7 @@ Rails.application.routes.draw do
 
   get "/u" => "users#tree"
   get "/u/:username" => "users#show", :as => "user"
+  get "/u/:username/standing" => "users#standing", :as => "user_standing"
 
   get "/avatars/:username_size.png" => "avatars#show"
   post "/avatars/expire" => "avatars#expire"

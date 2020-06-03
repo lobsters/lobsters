@@ -218,8 +218,6 @@ GEM
     scenic-mysql_adapter (1.0.1)
       mysql2
       scenic (>= 1.4.0)
-    scout_apm (2.6.2)
-      parser
     sitemap_generator (6.1.0)
       builder (~> 3.0)
     sprockets (3.7.2)
@@ -287,7 +285,6 @@ DEPENDENCIES
   ruumba
   scenic
   scenic-mysql_adapter
-  scout_apm (= 2.6.2)
   sitemap_generator
   sprockets-rails (= 2.3.3)
   transaction_retry

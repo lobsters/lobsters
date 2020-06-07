@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_19_000845) do
+ActiveRecord::Schema.define(version: 2020_06_07_192351) do
 
   create_table "comments", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -121,7 +121,6 @@ ActiveRecord::Schema.define(version: 2020_05_19_000845) do
     t.boolean "deleted_by_author", default: false
     t.boolean "deleted_by_recipient", default: false
     t.bigint "hat_id", unsigned: true
-    t.index ["author_user_id"], name: "author_user_id"
     t.index ["hat_id"], name: "index_messages_on_hat_id"
     t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"
     t.index ["short_id"], name: "random_hash", unique: true
@@ -203,13 +202,10 @@ ActiveRecord::Schema.define(version: 2020_05_19_000845) do
     t.index ["description"], name: "index_stories_on_description", type: :fulltext
     t.index ["domain_id"], name: "index_stories_on_domain_id"
     t.index ["hotness"], name: "hotness_idx"
-    t.index ["is_expired", "is_moderated"], name: "is_idxes"
-    t.index ["is_expired"], name: "index_stories_on_is_expired"
-    t.index ["is_moderated"], name: "index_stories_on_is_moderated"
+    t.index ["id", "is_expired", "is_moderated"], name: "index_stories_on_id_and_is_expired_and_is_moderated"
     t.index ["merged_story_id"], name: "index_stories_on_merged_story_id"
     t.index ["short_id"], name: "unique_short_id", unique: true
     t.index ["story_cache"], name: "index_stories_on_story_cache", type: :fulltext
-    t.index ["story_cache"], name: "stories_story_cache", type: :fulltext
     t.index ["title"], name: "index_stories_on_title", type: :fulltext
     t.index ["twitter_id"], name: "index_stories_on_twitter_id"
     t.index ["url"], name: "url", length: 191
@@ -321,7 +317,6 @@ ActiveRecord::Schema.define(version: 2020_05_19_000845) do
   add_foreign_key "invitations", "users", column: "new_user_id", name: "invitations_new_user_id_fk"
   add_foreign_key "invitations", "users", name: "invitations_user_id_fk"
   add_foreign_key "messages", "hats", name: "messages_hat_id_fk"
-  add_foreign_key "messages", "users", column: "author_user_id", name: "messages_ibfk_1"
   add_foreign_key "messages", "users", column: "recipient_user_id", name: "messages_recipient_user_id_fk"
   add_foreign_key "mod_notes", "users", column: "moderator_user_id", name: "mod_notes_moderator_user_id_fk"
   add_foreign_key "mod_notes", "users", name: "mod_notes_user_id_fk"

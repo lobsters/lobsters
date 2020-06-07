@@ -45,7 +45,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
 
       <% if defined?(single_story) && single_story %>
-        <% story.merged_stories.not_deleted.includes(:user, :tags).each do |ms| %>
+        <% story.merged_stories.not_deleted.includes(:domain, :user, :tags).each do |ms| %>
           <br>
           <span class="merge"></span>
           <span class="link">
@@ -58,7 +58,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
                 title="<%= tag.description %>"><%= tag.tag %></a>
             <% end %>
           </span>
-          <% if ms.domain.present? %>
+          <% if ms.domain_id.present? %>
             <a class="domain" href="<%= domain_path(ms.domain) %>"><%= break_long_words(ms.domain.domain) %></a>
           <% end %>
           <span class="byline">

@@ -8,7 +8,7 @@ module TrafficHelper
 
   def self.traffic_range
     div = PERIOD_LENGTH * 60
-    start_at = 'now() - interval 90 day'
+    start_at = 90.days.ago
     result = ActiveRecord::Base.connection.execute <<-SQL
       select
         min(activity) as low,
@@ -41,7 +41,7 @@ module TrafficHelper
   end
 
   def self.current_activity
-    start_at = "now() - interval #{PERIOD_LENGTH} minute"
+    start_at = 15.minutes.ago
     result = ActiveRecord::Base.connection.execute <<-SQL
       select
         (SELECT count(1) AS n_votes   FROM votes    WHERE updated_at >= #{start_at}) +

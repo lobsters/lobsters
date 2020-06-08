@@ -25,9 +25,6 @@
   <%= stylesheet_link_tag "application", :media => "all" %>
   <% if @user %>
     <%= javascript_include_tag "application" %>
-    <script>
-      Lobsters.curUser = '<%= @user.id %>';
-    </script>
   <% end %>
   <%= csrf_meta_tags %>
   <% if @rss_link %>
@@ -40,7 +37,7 @@
       href="<%= @comments_rss_link[:href] %>" />
   <% end %>
 </head>
-<body>
+<body data-current-user-id="<%= @user.id %>">
   <div id="wrapper">
     <div id="header">
       <div id="headerleft">

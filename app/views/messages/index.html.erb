@@ -1,12 +1,3 @@
-<script>
-  $(document).ready(function() {
-    $("#delete_all").click(function(e) {
-      var table = $(e.target).closest("table");
-      $("td input:checkbox", table).attr("checked", e.target.checked);
-    });
-  });
-</script>
-
 <div class="box wide">
   <div class="legend" style="float: right;">
     <% if @direction == :out %>

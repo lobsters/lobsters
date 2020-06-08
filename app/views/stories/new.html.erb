@@ -1,4 +1,4 @@
-<div class="box" id="story_box">
+<div id="story_box" class="box new-story <%= @story.previewing ? 'previewing' : '' %>">
   <div class="legend">
     Submit a Story
   </div>
@@ -35,11 +35,3 @@
     <%= render :template => "stories/show" %>
   <% end %>
 </div>
-
-<script>
-  $(document).ready(function() {
-    <% if !@story.previewing %>
-      $("#story_url").focus();
-    <% end %>
-  });
-</script>

@@ -25,14 +25,6 @@
         </blockquote>
       </div>
     </div>
-
-    <script>
-      document.getElementById("story_text_expander").addEventListener("click",
-        function() {
-          document.getElementById("collapsed_story_text").style.display = "block";
-          return false;
-        });
-    </script>
   <% end %>
 </div>
 
@@ -40,7 +32,6 @@
   <ol class="comments comments1">
     <% if !@story.is_gone? && !@story.previewing %>
       <li class="comments_subtree"><%= render "comments/commentbox", :comment => @comment %></li>
-      <% if @user %><script>autosize($("#comment")[0]);</script><% end %>
     <% end %>
 
     <% comments_by_parent = @comments.group_by(&:parent_comment_id) %>

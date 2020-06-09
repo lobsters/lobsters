@@ -34,6 +34,13 @@ class Comment < ApplicationRecord
   scope :not_moderated, -> { where(is_moderated: false) }
   scope :active, -> { not_deleted.not_moderated }
   scope :for_user, ->(user) { user && user.is_moderator? ? all : active }
+  scope :not_on_story_hidden_by, ->(user) {
+    user ? where.not(
+      HiddenStory.select('TRUE')
+      .where(Arel.sql('hidden_stories.story_id = stories.id'))
+      .by(user).arel.exists
+    ) : where('true')
+  }
 
   DOWNVOTABLE_DAYS = 7
   DELETEABLE_DAYS = DOWNVOTABLE_DAYS * 2

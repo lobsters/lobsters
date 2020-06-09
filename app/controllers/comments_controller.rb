@@ -238,6 +238,7 @@ class CommentsController < ApplicationController
     end
 
     @comments = Comment.for_user(@user)
+      .not_on_story_hidden_by(@user)
       .order("id DESC")
       .includes(:user, :hat, :story => :user)
       .joins(:story).where.not(stories: { is_expired: true })
@@ -245,10 +246,6 @@ class CommentsController < ApplicationController
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 
     if @user
-      @comments = @comments.where("NOT EXISTS (SELECT 1 FROM " <<
-        "hidden_stories WHERE user_id = ? AND " <<
-        "hidden_stories.story_id = comments.story_id)", @user.id)
-
       @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, @comments.map(&:id))
 
       @comments.each do |c|

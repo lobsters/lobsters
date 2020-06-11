@@ -55,4 +55,6 @@ group :test, :development do
   gem "faker"
   gem "byebug"
   gem "rb-readline"
+  gem "vcr"
+  gem "webmock" # used to support vcr
 end

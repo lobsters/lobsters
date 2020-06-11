@@ -579,7 +579,7 @@ class Story < ApplicationRecord
     all_changes = self.changes.merge(self.tagging_changes)
     all_changes.delete("unavailable_at")
 
-    # condition because of duplicating this logic in controller
+    # the controller creates a more explicit modlog message for this
     if self.repost_description == "1"
       all_changes.delete("description")
       all_changes.delete("markeddown_description")

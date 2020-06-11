@@ -465,7 +465,7 @@ private
 
   def repost_story_description
     if ActiveRecord::Type::Boolean.new.deserialize(story_params[:repost_description])
-      @story.description= ""
+      @story.description = ""
       comment = @story.comments.build
       comment.comment = story_params[:description].to_s
       comment.user = User.find(@story.user_id)

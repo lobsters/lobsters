@@ -1065,10 +1065,4 @@ private
   def canonical_target(parsed)
     parsed.at_css("link[rel='canonical']").attributes["href"].text
   end
-
-  def check_for_description_repost(all_changes)
-    all_changes["description"] &&
-      all_changes["markeddown_description"][1].empty? &&
-      self.comments.any?(&:new_record?)
-  end
 end

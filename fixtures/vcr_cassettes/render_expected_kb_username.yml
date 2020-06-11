@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://keybase.io/_/api/1.0/user/pic_url.json?username=cryptojim
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Host:
+      - keybase.io
+      Cookie:
+      - ''
+      Referer:
+      - https://keybase.io/_/api/1.0/user/pic_url.json?username=cryptojim
+      User-Agent:
+      - Mozilla/5.0 (compatible)
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 11 Jun 2020 22:28:50 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '77'
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET
+      Access-Control-Allow-Headers:
+      - Content-Type, Authorization, Content-Length, X-Requested-With
+      Access-Control-Allow-Credentials:
+      - 'false'
+      Cache-Control:
+      - no-store
+      Etag:
+      - W/"4d-JswfwKfhQJbTftnpUPSRYMA4ubo"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+    body:
+      encoding: UTF-8
+      string: '{"status":{"code":205,"desc":"cryptojim: user not found","name":"NOT_FOUND"}}'
+  recorded_at: Thu, 11 Jun 2020 22:28:50 GMT
+recorded_with: VCR 6.0.0

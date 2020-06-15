@@ -33,7 +33,11 @@
           <% elsif hh.link.blank? %>
             <span class="na">None</span>
           <% else %>
-            <%= hh.link %>
+            <% if @user %>
+              <%= hh.link %>
+            <% else %>
+              <%= hh.sanitized_link %>
+            <% end %>
           <% end %>
           <% if hh.doffed_at? %>
             doffed <%= time_ago_in_words_label(hh.doffed_at) %>

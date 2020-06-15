@@ -95,7 +95,7 @@
   <span class="d"><%= comments_posted_content(@showing_user) %></span>
   <br>
 
-  <% if @showing_user.hats.any? %>
+  <% if @user && @showing_user.hats.any? %>
     <label class="required">Hats:</label>
     <div class="d">
     <% @showing_user.hats.each do |hat| %>

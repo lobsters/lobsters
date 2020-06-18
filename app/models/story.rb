@@ -209,8 +209,9 @@ class Story < ApplicationRecord
 
   # all stories with similar urls
   def self.find_similar_by_url(url)
-    urls = [url.to_s]
-    urls2 = [url.to_s]
+    urls = [url.to_s.gsub(/(#.*)/, "")]
+    urls2 = [url.to_s.gsub(/(#.*)/, "")]
+    urls_with_trailing_pound = []
 
     # https
     urls.each do |u|
@@ -237,10 +238,16 @@ class Story < ApplicationRecord
     end
     urls = urls2.uniq
 
+    # trailing pound
+    urls.each do |u|
+      urls_with_trailing_pound.push u + "#"
+    end
+
     # if a previous submission was moderated, return it to block it from being
     # submitted again
     Story
       .where(:url => urls)
+      .or(Story.where("url RLIKE ?", urls_with_trailing_pound.join(".|")))
       .where("is_expired = ? OR is_moderated = ?", false, true)
   end
 
@@ -843,6 +850,13 @@ class Story < ApplicationRecord
     end
   end
 
+  # disincentivize content marketers by not appearing to be a source of
+  # significant traffic, but do show referrer a few times so authors can find
+  # their way back
+  def send_referrer?
+    self.created_at && self.created_at <= 1.hour && self.merged_story_id.nil?
+  end
+
   def set_domain(match)
     name = match ? match[:domain].sub(/^www\d*\./, '') : nil
     self.domain = name ? Domain.where(domain: name).first_or_initialize : nil
@@ -1007,8 +1021,11 @@ class Story < ApplicationRecord
         # User submitted URLs may have an incorrect https certificate, but we
         # don't want to fail the retrieval for this. Security risk is minimal.
         s.ssl_verify = false
-        user_agent = { "User-agent" => "#{Rails.application.domain} for #{fetching_ip}" }
-        res = s.fetch(url, :get, nil, nil, user_agent, 3)
+        headers = {
+          "User-agent" => "#{Rails.application.domain} for #{fetching_ip}",
+          "Referer" => Rails.application.domain,
+        }
+        res = s.fetch(url, :get, nil, nil, headers, 3)
         @fetched_response = res
       end
 

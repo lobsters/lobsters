@@ -23,8 +23,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
   <div class="details">
     <span class="link h-cite u-repost-of">
       <% if story.can_be_seen_by_user?(@user) %>
-        <a class="u-url" href="<%= story.url_or_comments_path %>" rel="ugc"><%=
-          break_long_words(story.title) %></a>
+        <a class="u-url" href="<%= story.url_or_comments_path %>" rel="ugc <%= story.send_referrer? ? '' : 'noreferrer' %>"><%= break_long_words(story.title) %></a>
       <% end %>
       <% if story.is_gone? %>
         [Story removed by <%= story.is_moderated? ? "moderator" :
@@ -46,12 +45,11 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
 
       <% if defined?(single_story) && single_story %>
-        <% story.merged_stories.not_deleted.includes(:user, :tags).each do |ms| %>
+        <% story.merged_stories.not_deleted.includes(:domain, :user, :tags).each do |ms| %>
           <br>
           <span class="merge"></span>
           <span class="link">
-            <a href="<%= ms.url_or_comments_path %>"><%=
-              break_long_words(ms.title) %></a>
+            <a href="<%= ms.url_or_comments_path %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>"%><%= break_long_words(ms.title) %></a>
           </span>
           <span class="tags">
             <% ms.tags.each do |tag| %>
@@ -60,7 +58,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
                 title="<%= tag.description %>"><%= tag.tag %></a>
             <% end %>
           </span>
-          <% if ms.domain.present? %>
+          <% if ms.domain_id.present? %>
             <a class="domain" href="<%= domain_path(ms.domain) %>"><%= break_long_words(ms.domain.domain) %></a>
           <% end %>
           <span class="byline">

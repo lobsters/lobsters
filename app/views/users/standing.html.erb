@@ -1,0 +1,70 @@
+<div class="box wide">
+  <h1>Breakdown of commenters receiving flags in the last <%= @flag_warning_int[:human] %></h1>
+
+  <p>
+    Most commenters get zero or very few flags across their comments in the last <%= @flag_warning_int[:human] %>.
+    Currently, users who see the warning have been flagged between <%= @dc_flagged.first %> and <%= @dc_flagged.last %> times.
+    Or, to make that visible:
+  </p>
+
+  <table class="standing">
+    <% (0..@dc_flagged.last.to_i).each do |n_flags| %>
+      <tr>
+        <td>
+          <% if @flagged_user_stats && n_flags == @flagged_user_stats[:n_downvotes] %>
+            <div class="jaccuse">You</div>
+          <% else %>
+            <%= @lookup[n_flags].to_i %>&nbsp;<%= "user".pluralize(@lookup[n_flags].to_i) %>
+          <% end %>
+        </td>
+        <td>
+          received&nbsp;<%= n_flags %>&nbsp;<%= "flag".pluralize(n_flags) %>
+        </td>
+        <% if n_flags < @dc_flagged.first.to_i %>
+          <td class="unwarned">
+            <% @lookup[n_flags].to_i.times do %><div>&#129438;</div><% end %>
+          </td>
+        <% else %>
+          <td class="warned">
+            <% @lookup[n_flags].to_i.times do %><div>&#10060;</div><% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+
+  <p>
+    If you're seeing the warning, the best case scenario is that you review your recent flagged comments below, maybe talk to <%= link_to 'a mod', moderators_path %> about what you think went wrong, and meet community norms.
+    If you can't or don't want to do that, you can delete your account from the bottom of your <%= link_to 'settings', settings_path %>.
+  </p>
+
+  <p>
+    We count total number of flags because that's the most direct measurement of harm:
+    occasionally one or two really nasty comments that hit deep negative scores,
+    but most often it's a consistent pattern of inappropriate, rude, dismissive, or abusive behavior poisoning many discussions.
+    We've tried more complicated measurements, but they correlate almost perfectly to a simple count and are a lot harder to explain than the total number of times another user has flagged your behavior as inappropriate.
+  </p>
+
+  <p>
+    The warning (and appearance on a mod dashboard) doesn't kick in until an author has received an unusually high number of flags across several comments on several threads because anyone can have a bad day or a bad thread.
+    The problem is a pattern across many threads, especially if it's gone on a while.
+  </p>
+
+  <p>
+    To address some common objections:
+    This isn't based on the percentage of the author's comments flagged or the average score because good comments don't excuse bad ones.
+    This doesn't ignore comments where you feel provoked or justified because you're still responsible for your words.
+    This includes flags on comments with net positive scores because Lobsters isn't a contest to write comments that are slightly funnier or more insightful than they are cruel.
+    If you think the people you're responding to don't deserve courtesy and respect: why do you spending time talking to them at all?
+  </p>
+
+  <p>
+    For reference, your recent flagged comments are below.
+  </p>
+</div>
+
+<ol class="comments comments1">
+  <% @flagged_comments.each do |comment| %>
+    <li><%= render "comments/comment", :comment => comment, :show_story => true, force_open: true %></li>
+  <% end %>
+</ol>

@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 5.2"
+gem "rails", "~> 5.2.4.3"
 
 gem "mysql2"
 
@@ -11,6 +11,7 @@ gem "mysql2"
 gem 'scenic'
 gem 'scenic-mysql_adapter'
 gem "activerecord-typedstore"
+gem 'sprockets-rails', '2.3.3'
 
 # js
 gem "dynamic_form"
@@ -21,7 +22,7 @@ gem "uglifier", ">= 1.3.0"
 # deployment
 gem "actionpack-page_caching"
 gem "exception_notification"
-gem "unicorn"
+gem "puma"
 
 # security
 gem "bcrypt", "~> 3.1.2"
@@ -41,8 +42,6 @@ gem "sitemap_generator" # for better search engine indexing
 gem 'transaction_retry' # mitigate https://github.com/lobsters/lobsters-ansible/issues/39
 gem 'vishnu', require: 'libravatar' # gravatar alternative
 
-gem "scout_apm", "2.6.2"
-
 group :test, :development do
   gem 'bullet'
   gem 'capybara'
@@ -51,10 +50,12 @@ group :test, :development do
   gem "listen"
   gem "rspec-rails"
   gem "factory_bot_rails"
-  gem "rubocop", require: false
+  gem "rubocop", "0.81", require: false
   gem "rubocop-rails", require: false
   gem "rubocop-rspec", require: false
   gem "faker"
   gem "byebug"
   gem "rb-readline"
+  gem "vcr"
+  gem "webmock" # used to support vcr
 end

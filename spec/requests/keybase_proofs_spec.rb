@@ -17,7 +17,9 @@ describe 'keybase proofs', type: :request do
 
   context 'new' do
     it 'renders the expected kb_username' do
-      get '/keybase_proofs/new', params: new_params
+      VCR.use_cassette('render_expected_kb_username') do
+        get '/keybase_proofs/new', params: new_params
+      end
       expect(response.body).to include(kb_username)
     end
   end

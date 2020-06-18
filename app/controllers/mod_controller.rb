@@ -18,7 +18,7 @@ class ModController < ApplicationController
   def flagged
     @title = "Flagged Stories"
     @stories = period(Story.includes(:tags).unmerged
-      .includes(:user, :suggested_titles, :suggested_taggings, :tags)
+      .includes(:user, :tags)
       .where("downvotes > 1")
       .order("stories.id DESC"))
   end

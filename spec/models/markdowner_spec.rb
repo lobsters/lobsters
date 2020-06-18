@@ -86,14 +86,6 @@ describe Markdowner do
         end
       end
 
-      context "with title text" do
-        let(:title_text) { 'title text' }
-
-        it "turns inline image into links with title text" do
-          expect(subject).to eq(target_html(title_text))
-        end
-      end
-
       context "with title text and alt text" do
         let(:title_text) { 'title text' }
 

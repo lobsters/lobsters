@@ -45,8 +45,6 @@ Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
 Layout/HashAlignment:
   Enabled: false
-Layout/LineLength:
-  Max: 100
 Layout/MultilineMethodCallBraceLayout:
   Enabled: false
 Layout/MultilineMethodCallIndentation:
@@ -62,6 +60,10 @@ Layout/SpaceInsideRangeLiteral:
 # Lint
 Lint/SuppressedException:
   Enabled: false
+Lint/RaiseException:
+  Enabled: true
+Lint/StructNewOverride:
+  Enabled: true
 
 # Metrics
 Metrics/AbcSize:
@@ -74,6 +76,8 @@ Metrics/ClassLength:
   Enabled: false
 Metrics/CyclomaticComplexity:
   Enabled: false
+Metrics/LineLength:
+  Max: 100
 Metrics/MethodLength:
   Enabled: false
 Metrics/ModuleLength:
@@ -186,6 +190,8 @@ Style/FrozenStringLiteralComment:
   EnforcedStyle: never
 Style/GuardClause:
   Enabled: false
+Style/HashEachMethods:
+  Enabled: true
 Style/HashSyntax:
   EnforcedStyle: no_mixed_keys
 Style/IfInsideElse:

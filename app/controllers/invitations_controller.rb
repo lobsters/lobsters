@@ -50,7 +50,8 @@ class InvitationsController < ApplicationController
       i.send_email
       flash[:success] = "Successfully e-mailed invitation to " <<
                         params[:email].to_s << "."
-    rescue
+    rescue => e
+      Rails.logger.error "Error creating invitation for #{params[:email]}: #{e.message}"
       flash[:error] = "Could not send invitation, verify the e-mail " <<
                       "address is valid."
     end

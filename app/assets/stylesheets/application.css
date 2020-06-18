@@ -961,6 +961,25 @@ ul.user_tree {
 	color: #888;
 }
 
+/* /u/:username/standing */
+/* https://codepen.io/sosuke/pen/Pjoqqp */
+.unwarned {
+	filter: invert(36%) sepia(52%) saturate(0%) hue-rotate(292deg) brightness(96%) contrast(85%);
+}
+.warned, .jaccuse {
+	filter: invert(13%) sepia(85%) saturate(4911%) hue-rotate(356deg) brightness(78%) contrast(95%);
+}
+table.standing tr td { vertical-align: top; }
+table.standing td:first-child { text-align: right }
+td.warned div, td.unwarned div {
+	display: inline-block;
+	height: 1em;
+	line-height: 1em;
+	text-align: center;
+	width: 1em;
+}
+
+
 /* /mod dashbaord */
 
 .modmodlog .mod td:first-child {

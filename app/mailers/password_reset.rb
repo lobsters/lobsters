@@ -1,6 +1,4 @@
-class PasswordReset < ActionMailer::Base
-  default :from => "#{Rails.application.name} <nobody@#{Rails.application.domain}>"
-
+class PasswordReset < ApplicationMailer
   def password_reset_link(user, ip)
     @user = user
     @ip = ip

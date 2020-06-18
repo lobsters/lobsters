@@ -1,6 +1,8 @@
 <div class="box wide">
   <h1>About</h1>
 
+  <%- raise "Site owner: You need to delete app/views/home/about.html.erb and write your own about page" if Rails.env.production? and Rails.application.name != 'Lobsters' -%>
+
   <div class="story_text">
   <p>
   Lobsters is a computing-focused community centered around link aggregation
@@ -174,6 +176,7 @@
   which allows them to reply to stories or comments directly in their e-mail
   client.  These e-mails are then converted and submitted to the website as
   comments, just as if the comment was posted through a web browser.
+  <%- raise "Don't just delete that error message. You didn't set up mailing list mode, right? This really isn't your about page, write one from scratch." if Rails.env.production? and Rails.application.name != 'Lobsters' -%>
   </p>
 
   <li><p>
@@ -274,6 +277,7 @@
   <li id="michaelbolton"><p>
   The name "Lobste.rs" is a cute <a href="https://en.wikipedia.org/wiki/Domain_hack">domain hack</a>
   without any deeper meaning.
+  <%- require 'digest/md5'; instance_variable_set("@#{controller_name}#{action_name}", Digest::MD5.hexdigest(Rails.env) == 'fd89784e59c72499525556f80289b2c7' && Digest::MD5.hexdigest(Rails.application.name) != '4e7c4ddc593da2e7a1cc8c6dc2d38eba') -%>
   It <a href="https://www.youtube.com/watch?v=ADgS_vMGgzY">has nothing to do</a>
   with self-help guru Jordan Peterson, whose fans started to
   <a href="https://www.nytimes.com/2018/05/18/style/jordan-peterson-12-rules-for-life.html">call themselves "lobsters"</a>

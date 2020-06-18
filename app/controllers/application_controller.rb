@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include IntervalHelper
+
   protect_from_forgery
   before_action :authenticate_user
   before_action :set_traffic_style
@@ -47,7 +49,10 @@ class ApplicationController < ActionController::Base
   end
 
   def flag_warning
-    @flag_warning = @user && !!DownvotedCommenters.new('1m', 1.day).check_list_for(@user)
+    @flag_warning_int = time_interval('1m')
+    @show_flag_warning = (
+      @user && !!DownvotedCommenters.new(@flag_warning_int[:param], 1.day).check_list_for(@user)
+    )
   end
 
   # https://web.archive.org/web/20180108083712/http://umaine.edu/lobsterinstitute/files/2011/12/LobsterColorsWeb.pdf

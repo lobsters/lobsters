@@ -144,6 +144,10 @@ textarea:focus {
 	color: #303030;
 	outline: 0;
 }
+textarea::placeholder {
+	color: #333;
+        opacity: 0.8;
+}
 textarea:disabled {
 	background-color: #f0f0f0;
 }

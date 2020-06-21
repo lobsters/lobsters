@@ -74,30 +74,31 @@ RSpec.feature "Commenting" do
       expect(comment.user).to eq(user)
     end
 
-    feature "Merging story comments" do
-      scenario "upvote merged story comments" do
-        comment = create(
-          :comment,
-          user_id: user.id,
-          story_id: story.id,
-          created_at: 90.days.ago,
-          comment: "Cool story.",
-        )
-        visit "/settings"
-        click_on "Logout"
+  end
 
-        stub_login_as user1
-        visit "/s/#{story.short_id}"
-        expect(page.find(:css, ".comment .comment_text")).to have_content('Cool story.')
-        expect(comment.upvotes).to eq(1)
-        page.driver.post "/comments/#{comment.short_id}/upvote"
-        comment.reload
-        expect(comment.upvotes).to eq(2)
+  feature "Merging story comments" do
+    scenario "upvote merged story comments" do
+      comment = create(
+        :comment,
+        user_id: user.id,
+        story_id: story.id,
+        created_at: 90.days.ago,
+        comment: "Cool story.",
+      )
+      visit "/settings"
+      click_on "Logout"
 
-        story1.update(merged_stories: [story])
-        visit "/s/#{story1.short_id}"
-        expect(page.find(:css, ".comment.upvoted .score")).to have_content('2')
-      end
+      stub_login_as user1
+      visit "/s/#{story.short_id}"
+      expect(page.find(:css, ".comment .comment_text")).to have_content('Cool story.')
+      expect(comment.upvotes).to eq(1)
+      page.driver.post "/comments/#{comment.short_id}/upvote"
+      comment.reload
+      expect(comment.upvotes).to eq(2)
+
+      story1.update(merged_stories: [story])
+      visit "/s/#{story1.short_id}"
+      expect(page.find(:css, ".comment.upvoted .score")).to have_content('2')
     end
   end
 end

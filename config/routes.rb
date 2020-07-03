@@ -209,5 +209,7 @@ Rails.application.routes.draw do
   get "/about" => "home#about"
   get "/chat" => "home#chat"
 
+  get "/stats" => "stats#index"
+
   post '/csp-violation-report' => 'csp#violation_report'
 end

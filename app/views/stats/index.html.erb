@@ -1,0 +1,28 @@
+<div class="box wide">
+
+<h2>New users by month</h2>
+<%= raw @users_graph %>
+
+<h2>Stories submitted by month</h2>
+<%= raw @stories_graph %>
+
+<h2>Comments posted by month</h2>
+<%= raw @comments_graph %>
+
+<h2>Votes cast by month</h2>
+<%= raw @votes_graph %>
+
+<p>
+Want more info?
+<a href="/about#queries">Write a query</a>.
+</p>
+
+<style type="text/css">
+.graphBackground { fill: #ffffff; }
+.axis { stroke: #cccccc; }
+.dataPoint1 { color: #ac130d; }
+.line1 { color: #ac130d; }
+.guideLines { stroke: #ffffff; stroke-dasharray: none; }
+</style>
+
+</div>

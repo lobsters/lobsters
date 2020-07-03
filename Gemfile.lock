@@ -231,6 +231,7 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    svg-graph (2.2.0)
     thor (1.0.1)
     thread_safe (0.3.6)
     transaction_isolation (1.0.5)
@@ -296,6 +297,7 @@ DEPENDENCIES
   scenic-mysql_adapter
   sitemap_generator
   sprockets-rails (= 2.3.3)
+  svg-graph
   transaction_retry
   uglifier (>= 1.3.0)
   vcr

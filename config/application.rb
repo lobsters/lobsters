@@ -58,6 +58,7 @@ module Lobsters
 
     config.after_initialize do
       require "#{Rails.root}/lib/monkey.rb"
+      require "#{Rails.root}/lib/time_series.rb"
     end
 
     config.generators do |g|

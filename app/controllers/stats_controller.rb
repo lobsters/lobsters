@@ -9,28 +9,46 @@ class StatsController < ApplicationController
       :graph_title => "Users joining by month",
       :scale_y_divisions => 50,
     }) {
-      User.group("date_format(created_at, '%Y-%m')")
+      User.group("date_format(created_at, '%Y-%m')").count
+    }
+
+    @active_users_graph = monthly_graph("active_users_graph", {
+      :graph_title => "Active users by month",
+      :scale_y_divisions => 100,
+    }) {
+      User.connection.execute <<~SQL
+        SELECT ym, count(distinct user_id)
+        FROM (
+          SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM stories
+          UNION
+          SELECT date_format(updated_at, '%Y-%m') as ym, user_id FROM votes
+          UNION
+          SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM comments
+        ) as active_users
+        GROUP BY 1
+        ORDER BY 1 asc;
+      SQL
     }
 
     @stories_graph = monthly_graph("stories_graph", {
       :graph_title => "Stories submitted by month",
       :scale_y_divisions => 100,
     }) {
-      Story.group("date_format(created_at, '%Y-%m')")
+      Story.group("date_format(created_at, '%Y-%m')").count
     }
 
     @comments_graph = monthly_graph("comments_graph", {
       :graph_title => "Comments posted by month",
       :scale_y_divisions => 1_000,
     }) {
-      Comment.group("date_format(created_at, '%Y-%m')")
+      Comment.group("date_format(created_at, '%Y-%m')").count
     }
 
     @votes_graph = monthly_graph("votes_graph", {
       :graph_title => "Votes cast by month",
       :scale_y_divisions => 10_000,
     }) {
-      Vote.group("date_format(updated_at, '%Y-%m')")
+      Vote.group("date_format(updated_at, '%Y-%m')").count
     }
   end
 
@@ -68,7 +86,7 @@ private
       }
       graph = TimeSeries.new(defaults.merge(opts))
       graph.add_data(
-        data: yield.count.to_a.flatten,
+        data: yield.to_a.flatten,
         template: "%Y-%m",
       )
       graph.burn_svg_only

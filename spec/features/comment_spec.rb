@@ -73,7 +73,6 @@ RSpec.feature "Commenting" do
       comment.reload
       expect(comment.user).to eq(user)
     end
-
   end
 
   feature "Merging story comments" do

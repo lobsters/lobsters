@@ -4,6 +4,25 @@ describe StoryRepository do
   let(:submitter) { create(:user) }
   let(:repo) { StoryRepository.new(submitter) }
 
+  describe ".newest" do
+    context 'when there is front page content' do
+      before do
+        create(:story, user: submitter, title: "Front Page")
+        create(:story, user: submitter, title: "Front Page 2")
+
+        create(:story, user: submitter, title: "New Story", downvotes: 2)
+      end
+
+      it "selects newest stories" do
+        expect(repo.newest).to include Story.find_by(title: "New Story")
+      end
+
+      it "does not select front page stories" do
+        expect(repo.newest).to_not include Story.where("title LIKE ?", "Front Page")
+      end
+    end
+  end
+
   describe ".newest_by_user" do
     context "when user is viewing their own stories" do
       before do

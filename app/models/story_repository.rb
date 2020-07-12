@@ -15,7 +15,8 @@ class StoryRepository
   end
 
   def newest
-    Story.base.filter_tags(@params[:exclude_tags] || []).order(id: :desc)
+    front_page = hottest.limit(StoriesPaginator::STORIES_PER_PAGE)
+    Story.base.filter_tags({} || []).where.not(id: front_page.ids).order(id: :desc)
   end
 
   def newest_by_user(user)

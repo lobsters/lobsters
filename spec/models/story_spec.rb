@@ -76,11 +76,11 @@ describe Story do
   end
 
   it "checks for invalid urls" do
-    expect(Story.new(url: 'http://example.com').tap(&:valid?).errors[:url]).to be_empty
+    expect(build(:story, url: 'http://example.com').tap(&:valid?).errors[:url]).to be_empty
+    expect(build(:story, url: 'http://example.com:123/').tap(&:valid?).errors[:url]).to be_empty
 
-    expect(Story.new(url: 'http://example/').tap(&:valid?).errors[:url]).to_not be_empty
-    expect(Story.new(url: 'ftp://example.com/').tap(&:valid?).errors[:url]).to_not be_empty
-    expect(Story.new(url: 'http://example.com:123/').tap(&:valid?).errors[:url]).to be_empty
+    expect(build(:story, url: 'http://example/').tap(&:valid?).errors[:url]).to_not be_empty
+    expect(build(:story, url: 'ftp://example.com/').tap(&:valid?).errors[:url]).to_not be_empty
   end
 
   it "checks for a previously posted story with same url" do

@@ -41,6 +41,7 @@ class Story < ApplicationRecord
   scope :unmerged, -> { where(:merged_story_id => nil) }
   scope :positive_ranked, -> { where("#{Story.score_sql} >= 0") }
   scope :low_scoring, ->(max = 5) { where("#{Story.score_sql} < ?", max) }
+  scope :front_page, -> { hottest.limit(StoriesPaginator::STORIES_PER_PAGE) }
   scope :hottest, ->(user = nil, exclude_tags = nil) {
     base.not_hidden_by(user)
         .filter_tags(exclude_tags || [])
@@ -48,10 +49,11 @@ class Story < ApplicationRecord
         .order('hotness')
   }
   scope :recent, ->(user = nil, exclude_tags = nil) {
-    base.low_scoring
-        .not_hidden_by(user)
+    base.not_hidden_by(user)
         .filter_tags(exclude_tags || [])
+        .low_scoring
         .where("created_at >= ?", 10.days.ago)
+        .where.not(id: front_page.ids)
         .order("stories.created_at DESC")
   }
   scope :filter_tags, ->(tags) {

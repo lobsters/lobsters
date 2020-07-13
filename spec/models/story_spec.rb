@@ -371,4 +371,20 @@ describe Story do
       expect(story_has_url_without_anchor.already_posted_recently?).to be true
     end
   end
+
+  describe "scopes" do
+    context "recent" do
+      before do
+        create(:story, title: "Front Page")
+        create(:story, title: "Front Page 2")
+
+        create(:story, title: "New Story", downvotes: 3) # downvotes simulate story off 'front'
+      end
+
+      it "returns the newest stories that have not yet reached the front page" do
+        expect(described_class.recent).to include described_class.find_by(title: "New Story")
+        expect(described_class.recent).to_not include(*described_class.front_page)
+      end
+    end
+  end
 end

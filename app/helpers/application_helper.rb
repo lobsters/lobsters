@@ -25,7 +25,8 @@ module ApplicationHelper
     html = ""
     unless object.errors.blank?
       html << "<div class=\"flash-error\">"
-      html << "<h2>#{pluralize(object.errors.count, 'error')} prohibited this #{object.class.name.downcase} from being saved</h2>"
+      html << "<h2>#{pluralize(object.errors.count, 'error')} prohibited this \
+               #{object.class.name.downcase} from being saved</h2>"
       html << "<p>There were the problems with the following fields:</p>"
       html << "<ul>"
       object.errors.full_messages.each do |error|

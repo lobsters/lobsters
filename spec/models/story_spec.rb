@@ -382,7 +382,7 @@ describe Story do
       end
 
       it "returns the newest stories that have not yet reached the front page" do
-        expect(described_class.recent).to include described_class.find_by(title: "New Story")
+        expect(Story.recent).to include Story.find_by(title: "New Story")
         expect(Story.recent).to_not include(Sto.front_page)
       end
     end

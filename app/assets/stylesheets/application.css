@@ -1233,7 +1233,7 @@ div.errorExplanation h2 {
 }
 
 
-/* for error_messages_for() */
+/* for errors_for() */
 div.fieldWithErrors {
 	display: inline;
 }

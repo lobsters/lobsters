@@ -73,54 +73,50 @@ Please don't use this to promote the story, summarize the post, or explain why y
 See the guidelines below for more." %>
     </div>
 
-    <div class="boxline actions markdown_help_toggler">
-      <a href="#" id="story_guidelines_toggler">
-        Story submission guidelines
-      </a>
-      <div id="story_guidelines" style="<%= show_guidelines?? "" : "display: none;" %>">
-        <ul>
+    <%= tag.details class: "boxline actions", open: show_guidelines? ? true : nil do %>
+      <summary>Story submission guidelines</summary>
+      <ul>
 
-          <li><p>
-          Do not editorialize story titles, but when the original story's
-          title has no context or is unclear, please change it.  <strong>Please
-          remove extraneous components from titles such as the name of the
-          site, blog, section, and author.</strong>
-          </p></li>
+        <li><p>
+        Do not editorialize story titles, but when the original story's
+        title has no context or is unclear, please change it.  <strong>Please
+        remove extraneous components from titles such as the name of the
+        site, blog, section, and author.</strong>
+        </p></li>
 
-          <li><p>
-          When the story being submitted is more than a year or so old,
-          please add the year the story was written to the post title in
-          parentheses.
-          </p></li>
+        <li><p>
+        When the story being submitted is more than a year or so old,
+        please add the year the story was written to the post title in
+        parentheses.
+        </p></li>
 
-          <li><p>
-          When submitting a URL, the text field is optional and should only
-          be used when additional context or explanation of the URL is
-          needed.  Commentary or opinion should be reserved for a comment,
-          so that it can be voted on separately from the story.
-          </p></li>
+        <li><p>
+        When submitting a URL, the text field is optional and should only
+        be used when additional context or explanation of the URL is
+        needed.  Commentary or opinion should be reserved for a comment,
+        so that it can be voted on separately from the story.
+        </p></li>
 
-          <li><p>
-          If no <a href="/tags">tags</a> clearly apply to the story you are submitting, chances
-          are it does not belong here.  Do not overreach with tags if they
-          are not the primary focus of the story.
-          </p></li>
+        <li><p>
+        If no <a href="/tags">tags</a> clearly apply to the story you are submitting, chances
+        are it does not belong here.  Do not overreach with tags if they
+        are not the primary focus of the story.
+        </p></li>
 
-          <li><p>
-          To be able to easily submit a page you're viewing in your browser
-          to <%= Rails.application.name %>, drag this bookmarklet to your
-          bookmark bar:
-          [<a href="javascript:{window.open(%22<%= Rails.application.root_url
-          %>stories/new?url=%22+encodeURIComponent(document.location)+<%
-          %>%22&title=%22+encodeURIComponent(document.title));%20void(0);}<%
-          %>">Submit to <%= Rails.application.name %></a>].
-          You'll be taken to this page with the viewed page's URL and title.
-          (It can't recognize and remove blog/author names for you, though.)
-          </p></li>
+        <li><p>
+        To be able to easily submit a page you're viewing in your browser
+        to <%= Rails.application.name %>, drag this bookmarklet to your
+        bookmark bar:
+        [<a href="javascript:{window.open(%22<%= Rails.application.root_url
+        %>stories/new?url=%22+encodeURIComponent(document.location)+<%
+        %>%22&title=%22+encodeURIComponent(document.title));%20void(0);}<%
+        %>">Submit to <%= Rails.application.name %></a>].
+        You'll be taken to this page with the viewed page's URL and title.
+        (It can't recognize and remove blog/author names for you, though.)
+        </p></li>
 
-        </ul>
-      </div>
-    </div>
+      </ul>
+    <% end %>
   <% end %>
 </div>
 <% unless defined?(suggesting) %>

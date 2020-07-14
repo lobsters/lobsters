@@ -383,7 +383,7 @@ describe Story do
 
       it "returns the newest stories that have not yet reached the front page" do
         expect(Story.recent).to include Story.find_by(title: "New Story")
-        expect(Story.recent).to_not include(Sto.front_page)
+        expect(Story.recent).to_not include(Story.front_page)
       end
     end
   end

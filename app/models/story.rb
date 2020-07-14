@@ -191,7 +191,7 @@ class Story < ApplicationRecord
   def check_not_new_domain_from_new_user
     return unless self.url.present? && self.new_record? && self.domain
 
-    if self.domain.new_record? && self.user.is_new?
+    if self.domain.new_record? && self.user && self.user.is_new?
       ModNote.tattle_on_story_domain!(self, "new user with new")
       errors.add(:url, "is an unseen domain from a new user")
     end

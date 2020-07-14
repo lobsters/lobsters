@@ -8,6 +8,98 @@
 
 /* generics */
 
+:root {
+    --color: #333333;
+    --color-background: #fefefe;
+    --color-selection: HighlightText;
+    --color-selection-background: Highlight;
+
+    --color-link: #2562dc;
+    --color-link-visited: #7395d9;
+
+    --color-form: #555555;
+    --color-form-focus: #303030;
+    --color-form-border: #cccccc;
+    --color-form-border-focus: #888888;
+    --color-form-background: #ffffff;
+
+    --color-button: #333333;
+    --color-button-border: #cccccc;
+    --color-button-hover: #333333;
+    --color-button-background: #fafafa;
+    --color-button-background-hover: #e6e6e6;
+
+    --color-table-background-header: #eaeaea;
+    --color-table-background-odd: #f8f8f8;
+    --color-table-background-even: #f5f5f5;
+
+    --color-tag: #555555;
+    --color-tag-background: #fffcd7;
+    --color-tag-border: #d5d458;
+    --color-tag-media: #555555;
+    --color-tag-media-background: #ddebf9;
+    --color-tag-media-border: #b2ccf0;
+
+    --color-header: #777777;
+    --color-header-lobsters: #333333;
+    --color-header-title: #333333;
+
+    --color-markdown_help-background: #f4f4f4;
+    --color-markdown_help-border: #e0e0e0;
+
+    --color-downvote_why: #555555;
+    --color-downvote_why-background: #ffffff;
+    --color-downvote_why-background-hover: #eeeeee;
+    --color-downvote_why-background-cancel: #eeeeee;
+}
+
+@media (prefers-color-scheme: dark) {
+:root {
+    --color: #bbbbbb;
+    --color-background: #333333;
+    --color-selection: #bbbbbb;
+    --color-selection-background: #111111;
+
+    --color-link: #cccccc;
+    --color-link-visited: #888888;
+
+    --color-form: #999999;
+    --color-form-focus: #cccccc;
+    --color-form-border: #777777;
+    --color-form-border-focus: #cccccc;
+    --color-form-background: #444444;
+
+    --color-button: #cccccc;
+    --color-button-border: #777777;
+    --color-button-hover: #cccccc;
+    --color-button-background: #222222;
+    --color-button-background-hover: #2f2f2f;
+
+    --color-table-background-header: #333333;
+    --color-table-background-odd: #444444;
+    --color-table-background-even: #4f4f4f;
+
+    --color-tag: #cccccc;
+    --color-tag-background: #222222;
+    --color-tag-border: #444444;
+    --color-tag-media: #555555;
+    --color-tag-media-background: #ddebf9;
+    --color-tag-media-border: #b2ccf0;
+
+    --color-header: #777777;
+    --color-header-lobsters: #aaaaaa;
+    --color-header-title: #aaaaaa;
+
+    --color-markdown_help-border: #777777;
+    --color-markdown_help-background: #222222;
+
+    --color-downvote_why: #cccccc;
+    --color-downvote_why-background: #333333;
+    --color-downvote_why-background-hover: #3f3f3f;
+    --color-downvote_why-background-cancel: #222222;
+}
+}
+
 /* force a vertical scrollbar to avoid page-shifting */
 html {
 	overflow-y: scroll;
@@ -16,21 +108,21 @@ html {
 body, textarea, input, button {
 	font-family: "helvetica neue", arial, sans-serif;
 	font-size: 10pt;
-	color: #333;
+	color: var(--color);
 	line-height: 1.45em;
 }
 
 body {
-	background-color: #fefefe;
+	background-color: var(--color-background);
 }
 
 a {
-	color: #2562dc;
+	color: var(--color-link);
 	cursor: pointer;
 }
 
 li.story div.details span.link a:visited {
-	color: #7395d9;
+	color: var(--color-link-visited);
 }
 
 h1 {
@@ -49,10 +141,10 @@ h2 {
 }
 
 a.tag {
-	background-color: #fffcd7;
-	border: 1px solid #d5d458;
+	background-color: var(--color-tag-background);
+	border: 1px solid var(--color-tag-border);
 	border-radius: 5px;
-	color: #555;
+	color: var(--color-tag);
 	font-size: 8pt;
 	margin-left: 0.25em;
 	padding: 0px 0.4em 1px 0.4em;
@@ -61,8 +153,9 @@ a.tag {
 }
 
 a.tag_is_media {
-	background-color: #ddebf9;
-	border-color: #b2ccf0;
+	background-color: var(--color-tag-media-background);
+	border-color: var(--color-tag-media-border);
+    color: var(--color-tag-media);
 }
 
 a.tag_meta {
@@ -112,8 +205,8 @@ input,
 button,
 select,
 textarea {
-	color: #555;
-	background-color: white;
+	color: var(--color-form);
+	background-color: var(--color-form-background);
 	padding: 3px 5px;
 }
 textarea {
@@ -126,7 +219,7 @@ input[type="email"],
 input[type="number"],
 input[type="url"],
 textarea {
-	border: 1px solid #ccc;
+	border: 1px solid var(--color-form-border);
 }
 input:focus, textarea:focus {
 	outline-style: solid;
@@ -140,8 +233,8 @@ select {
 }
 input:focus,
 textarea:focus {
-	border-color: #888;
-	color: #303030;
+	border-color: var(--color-form-border-focus);
+	color: var(--color-form-focus);
 	outline: 0;
 }
 textarea::placeholder {
@@ -175,10 +268,10 @@ input[type="reset"],
 input[type="submit"],
 div.select2-choices,
 a.button {
-	background-color: #fafafa;
+	background-color: var(--color-button-background);
 	border-bottom-color: #bbb;
-	border: 1px solid #ccc;
-	color: #333333;
+	border: 1px solid var(--color-button-border);
+	color: var(--color-button);
 	cursor: pointer;
 	display: inline-block;
 	line-height: 18px;
@@ -196,9 +289,9 @@ button:hover,
 input[type="button"]:hover,
 input[type="reset"]:hover,
 input[type="submit"]:hover {
-	color: #333333;
+	color: var(--color-button-hover);
 	text-decoration: none;
-	background-color: #e6e6e6;
+	background-color: var(--color-button-background-hover);
 }
 
 select {
@@ -232,6 +325,11 @@ input.deletion {
 .totp_code::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+::selection {
+    color: var(--color-selection);
+    background-color: var(--color-selection-background);
 }
 
 
@@ -279,12 +377,12 @@ div#inside {
 	padding-right: 0.75em;
 }
 #headertitle a {
-	color: #333;
+	color: var(--color-header-title);
 	text-decoration: none;
 }
 
 .headerlinks a {
-	color: #777;
+	color: var(--color-header);
 	text-decoration: none;
 	padding-right: 0.75em;
 }
@@ -300,7 +398,7 @@ div#inside {
 }
 
 #header a.cur_url {
-	color: #333;
+	color: var(--color-header-lobsters);
 }
 
 #header a.new_messages {
@@ -807,18 +905,18 @@ div.comment_text code {
 	z-index: 15;
 }
 #downvote_why a {
-	background-color: white;
-	color: #555;
+	background-color: var(--color-downvote_why-background);
+	color: var(--color-downvote_why);
 	border-bottom: 1px solid #ccc;
 	display: block;
 	padding: 3px;
 	font-size: 9pt;
 }
 #downvote_why a:hover {
-	background-color: #eee;
+	background-color: var(--color-downvote_why-background-hover);
 }
 #downvote_why a.cancelreason {
-	background-color: #eee;
+	background-color: var(--color-downvote_why-background-cancel);
 	font-size: 8pt;
 }
 
@@ -835,8 +933,8 @@ div.comment_text code {
 
 
 div.markdown_help {
-	background-color: #f4f4f4;
-	border: 1px solid #e0e0e0;
+	background-color: var(--color-markdown_help-background);
+	border: 1px solid var(--color-markdown_help-border);
 	padding: 0 1em;
 	margin-top: 0.5em;
 }
@@ -998,7 +1096,7 @@ td.warned div, td.unwarned div {
 /* data tables */
 
 table.data th {
-	background-color: #eaeaea;
+	background-color: var(--color-table-background-header);
 	border-bottom: 1px solid #cacaca;
 	border-top: 1px solid #cacaca;
 	text-align: left;
@@ -1023,11 +1121,11 @@ table.data tr.bold td {
 }
 
 table.data.zebra tr:nth-child(even) td {
-	background-color: #f8f8f8;
+	background-color: var(--color-table-background-odd);
 	border-bottom: 1px solid #eaeaea;
 }
 table.data.zebra tr:nth-child(odd) td {
-	background-color: #f5f5f5;
+	background-color: var(--color-table-background-even);
 	border-bottom: 1px solid #eaeaea;
 }
 table.data tr.nobottom td {

@@ -74,6 +74,10 @@ class Search
     end.where('domains.domain = ?', domain)
   end
 
+  def with_stories_pointing_to_url(base, url)
+    base.where('url = ?', url)
+  end
+
   def with_stories_matching_tags(base, tag_scopes)
     story_ids_matching_tags = with_tags(
       Story.unmerged.where(:is_expired => false), tag_scopes
@@ -87,12 +91,15 @@ class Search
 
     # extract domain query since it must be done separately
     domain = nil
+    url = nil
     tag_scopes = []
     words = self.q.to_s.split(" ").reject {|w|
       if (m = w.match(/^domain:(.+)$/))
         domain = m[1]
       elsif (m = w.match(/^tag:(.+)$/))
         tag_scopes << m[1]
+      elsif (m = w.match(/^url:(.+)$/))
+        url = m[1]
       end
     }.join(" ")
 
@@ -105,6 +112,9 @@ class Search
       base = Story.unmerged.where(:is_expired => false)
       if domain.present?
         base = with_stories_in_domain(base, domain)
+      end
+      if url.present?
+        base = with_stories_pointing_to_url(base, url)
       end
 
       title_match_sql = Arel.sql("MATCH(stories.title) AGAINST('#{qwords}' IN BOOLEAN MODE)")
@@ -156,6 +166,9 @@ class Search
       base = Comment.active
       if domain.present?
         base = with_stories_in_domain(base.joins(:story), domain)
+      end
+      if url.present?
+        base = with_stories_pointing_to_url(base.joins(:story), url)
       end
       if tag_scopes.present?
         base = with_stories_matching_tags(base, tag_scopes)

@@ -30,6 +30,10 @@ describe Search do
                   :url => "https://lobste.rs/1",
                   :user_id => @user.id,
                   :tags_a => ["tag1"]),
+      create(:story, :title => "term1 domain2 diffurl",
+                  :url => "https://lobste.rs/2",
+                  :user_id => @user.id,
+                  :tags_a => ["tag1"]),
     ]
     @comments = [
       create(:comment, :comment => "comment0",
@@ -46,6 +50,9 @@ describe Search do
                     :user_id => @user.id),
       create(:comment, :comment => "comment4",
                     :story_id => @stories[4].id,
+                    :user_id => @user.id),
+      create(:comment, :comment => "comment5",
+                    :story_id => @stories[5].id,
                     :user_id => @user.id),
     ]
   end
@@ -83,8 +90,18 @@ describe Search do
 
     search.search_for_user!(@user)
 
-    expect(search.results.length).to eq(1)
+    expect(search.results.length).to eq(2)
     expect(search.results.first.title).to eq("term1 domain2")
+  end
+
+  it "can search for stories by exact url" do
+    search = Search.new
+    search.q = "term1 url:https://lobste.rs/2"
+
+    search.search_for_user!(@user)
+
+    expect(search.results.length).to eq(1)
+    expect(search.results.first.title).to eq("term1 domain2 diffurl")
   end
 
   it "can search for stories by tag" do
@@ -93,7 +110,7 @@ describe Search do
 
     search.search_for_user!(@user)
 
-    expect(search.results.length).to eq(3)
+    expect(search.results.length).to eq(4)
 
     # Stories with multiple tags should return all the tags
     multi_tag_res = search.results.select do |res|
@@ -174,5 +191,16 @@ describe Search do
 
     expect(search.results).to include(@comments[4])
     expect(search.results).not_to include(@comments[3])
+  end
+
+  it "should only return comments with stories to url if url present" do
+    search = Search.new
+    search.q = "comment4 comment5 url:https://lobste.rs/2"
+    search.what = "comments"
+
+    search.search_for_user!(@user)
+
+    expect(search.results).to include(@comments[5])
+    expect(search.results).not_to include(@comments[4])
   end
 end

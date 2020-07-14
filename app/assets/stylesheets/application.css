@@ -480,9 +480,9 @@ li div.details {
 	opacity: 0.7;
 }
 
-.comment:target {
+.comment:target, li:target, p:target {
 	background-color: #fffcd7;
-	border-radius: 20px;
+	border-radius: 8px;
 }
 
 li .link {

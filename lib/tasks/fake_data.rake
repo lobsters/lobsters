@@ -11,7 +11,7 @@ class FakeDataGenerator
       name = Faker::Name.name
       password = Faker::Internet.password
       create_args = {
-        email: Faker::Internet.email(name),
+        email: Faker::Internet.email(name: name),
         password: password,
         password_confirmation: password,
         username: Faker::Internet.user_name(specifier: name, separators: %w(_)),

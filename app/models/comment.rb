@@ -25,8 +25,8 @@ class Comment < ApplicationRecord
     self.assign_initial_confidence
     self.assign_thread_id
   end
-  after_create :record_initial_upvote, :mark_submitter, :deliver_reply_notifications,
-               :deliver_mention_notifications, :log_hat_use
+  after_create :record_initial_upvote, :mark_submitter, :deliver_notifications,
+               :log_hat_use
   after_destroy :unassign_votes
 
   scope :deleted, -> { where(is_deleted: true) }
@@ -248,8 +248,19 @@ class Comment < ApplicationRecord
     self.user.refresh_counts!
   end
 
-  def deliver_mention_notifications
+  def deliver_notifications
+    notified = deliver_reply_notifications()
+    deliver_mention_notifications(notified)
+  end
+
+  def deliver_mention_notifications(notified = nil)
+    notified = notified || []
+
     self.plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
+      if notified.include? mention
+        next
+      end
+
       if (u = User.active.find_by(:username => mention))
         if u.id == self.user.id
           next
@@ -293,10 +304,13 @@ class Comment < ApplicationRecord
   end
 
   def deliver_reply_notifications
+    notified = []
+
     users_following_thread.each do |u|
       if u.email_replies?
         begin
           EmailReply.reply(self, u).deliver_now
+          notified << u.username
         rescue => e
           Rails.logger.error "error e-mailing #{u.email}: #{e}"
         end
@@ -310,8 +324,11 @@ class Comment < ApplicationRecord
           :url => self.url,
           :url_title => "Reply to #{self.user.username}",
         )
+        notified << u.username
       end
     end
+
+    notified
   end
 
   def generated_markeddown_comment

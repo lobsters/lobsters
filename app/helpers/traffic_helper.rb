@@ -41,7 +41,7 @@ module TrafficHelper
   end
 
   def self.current_activity
-    start_at = 15.minutes.ago
+    start_at = Time.now.utc - 15.minutes
     result = ActiveRecord::Base.connection.execute <<-SQL
       select
         (SELECT count(1) AS n_votes   FROM votes    WHERE updated_at >= "#{start_at}") +

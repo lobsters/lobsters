@@ -10,6 +10,9 @@ class Search
 
   validates :q, length: { :minimum => 2 }
 
+  # Set this to nil for infinite pages.
+  SEARCH_MAX_PAGES = 50
+
   def initialize
     @q = ""
     @what = "stories"
@@ -23,7 +26,12 @@ class Search
   end
 
   def max_matches
-    100
+    if SEARCH_MAX_PAGES.nil?
+      # A conservative maximum.
+      2 ** 31
+    else
+      SEARCH_MAX_PAGES * self.per_page
+    end
   end
 
   def persisted?

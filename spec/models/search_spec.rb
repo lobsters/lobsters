@@ -175,4 +175,42 @@ describe Search do
     expect(search.results).to include(@comments[4])
     expect(search.results).not_to include(@comments[3])
   end
+
+  # This needs to be nested because of RSpec's transactional semantics
+  # as described in the comment above.
+  describe "#page_count" do
+    before(:all) do
+      @per_page = 5
+      @stories = []
+
+      20.times {|i|
+        @stories << create(
+          :story, :title => "page_count_test test#{i}",
+          :url => "https://pagelimit.example.com/#{i}",
+          :user_id => @user.id,
+          :tags_a => ["tag1"])
+      }
+    end
+
+    after(:all) do
+      @stories.flat_map(&:votes).each(&:destroy!)
+      @stories.each(&:destroy!)
+    end
+
+    # RSpec is being picky about stubbing.
+    before(:each) do
+      stub_const('Search::SEARCH_MAX_PAGES', 3)
+    end
+
+    it "should limit the number of pages" do
+      search = Search.new
+      search.per_page = @per_page
+      search.q = "page_count_test"
+      search.what = "stories"
+
+      search.search_for_user!(@user)
+
+      expect(search.page_count * search.results.count).to eq(15)
+    end
+  end
 end

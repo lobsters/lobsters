@@ -75,7 +75,7 @@ class Search
   end
 
   def with_stories_pointing_to_url(base, url)
-    base.where('url = ?', url)
+    base.where('url LIKE ?', "#{url}%")
   end
 
   def with_stories_matching_tags(base, tag_scopes)

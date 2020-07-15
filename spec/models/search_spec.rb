@@ -34,6 +34,10 @@ describe Search do
                   :url => "https://lobste.rs/2",
                   :user_id => @user.id,
                   :tags_a => ["tag1"]),
+      create(:story, :title => "term1 domain2 longurl",
+                  :url => "https://lobste.rs/2/foo",
+                  :user_id => @user.id,
+                  :tags_a => ["tag1"]),
     ]
     @comments = [
       create(:comment, :comment => "comment0",
@@ -90,18 +94,19 @@ describe Search do
 
     search.search_for_user!(@user)
 
-    expect(search.results.length).to eq(2)
+    expect(search.results.length).to eq(3)
     expect(search.results.first.title).to eq("term1 domain2")
   end
 
-  it "can search for stories by exact url" do
+  it "can search for stories by url prefix" do
     search = Search.new
     search.q = "term1 url:https://lobste.rs/2"
 
     search.search_for_user!(@user)
 
-    expect(search.results.length).to eq(1)
+    expect(search.results.length).to eq(2)
     expect(search.results.first.title).to eq("term1 domain2 diffurl")
+    expect(search.results.last.title).to eq("term1 domain2 longurl")
   end
 
   it "can search for stories by tag" do
@@ -110,7 +115,7 @@ describe Search do
 
     search.search_for_user!(@user)
 
-    expect(search.results.length).to eq(4)
+    expect(search.results.length).to eq(5)
 
     # Stories with multiple tags should return all the tags
     multi_tag_res = search.results.select do |res|

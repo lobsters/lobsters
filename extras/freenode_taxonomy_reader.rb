@@ -3,14 +3,14 @@ require 'securerandom'
 require 'timeout'
 
 class FreenodeTaxonomyReader
-  NICKSERV = 'NickServ!NickServ@services.'
-  END_MESSAGE_REGEX = /End of (.+) taxonomy|(.+) is not registered/
+  NICKSERV = 'NickServ!NickServ@services.'.freeze
+  END_MESSAGE_REGEX = /End of (.+) taxonomy|(.+) is not registered/.freeze
   MAX_LINES = 100
 
   def initialize(
-        socket_provider: ->() { ssl_socket },
-        username_provider: ->() { "#{Rails.application.name}-#{SecureRandom.alphanumeric(8)}" }
-      )
+    socket_provider: -> { ssl_socket },
+    username_provider: -> { "#{Rails.application.name}-#{SecureRandom.alphanumeric(8)}" }
+  )
     @socket_provider = socket_provider
     @nick = username_provider.call
   end
@@ -20,12 +20,12 @@ class FreenodeTaxonomyReader
 
     taxonomy_lines.map do |line|
       line
-        .split(':')[2,3]
-        .map { |t| t.strip }
+        .split(':')[2, 3]
+        .map(&:strip)
     end.to_h
   end
 
-  private
+private
 
   def taxonomy_for(username)
     taxonomy_lines = []

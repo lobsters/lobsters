@@ -265,9 +265,9 @@ class SettingsController < ApplicationController
       @user.save!
       flash[:success] = "Your account has been linked to freenode user #{@user.freenode_username}."
     elsif taxonomy['LOBSTERS']
-      flash[:error] = "Checked on your username, but Freenode told us it's something other than #{@user.username}."
+      flash[:error] = "Checked on your username, but Freenode told us it's something other than #{@user.username}." # rubocop:disable Layout/LineLength
     else
-      flash[:error] = "The LOBSTERS key was not in #{params[:user][:freenode_username]}'s taxonomy. Message NickServ `SET PROPERTY LOBSTERS #{@user.username}` to set it."
+      flash[:error] = "The LOBSTERS key was not in #{params[:user][:freenode_username]}'s taxonomy. Message NickServ `SET PROPERTY LOBSTERS #{@user.username}` to set it." # rubocop:disable Layout/LineLength
     end
 
     return redirect_to "/settings"

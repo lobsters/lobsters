@@ -59,6 +59,9 @@ group :test, :development do
   gem "rubocop-rspec", require: false
   gem "faker"
   gem "byebug"
+  gem "pry"
+  gem "pry-byebug"
+  gem "pry-rails"
   gem "rb-readline"
   gem "vcr"
   gem "webmock" # used to support vcr

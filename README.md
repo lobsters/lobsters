@@ -51,7 +51,7 @@ There's an external project [docker-lobsters](https://github.com/utensils/docker
     ```sh
     lobsters$ bundle
     ```
-    
+
     * If when installing the `mysql2` gem on macOS, you see 
       `ld: library not found for -l-lpthread` in the output, see 
       [this solution](https://stackoverflow.com/a/44790834/204052) for a fix.
@@ -59,29 +59,28 @@ There's an external project [docker-lobsters](https://github.com/utensils/docker
       macOS 10.4+ and Homebrew `openssl`, in which case see
       [this solution](https://stackoverflow.com/a/39628463/1042144).
 
-* Create a MySQL (other DBs supported by ActiveRecord may work, only MySQL and
-MariaDB have been tested) database, username, and password and put them in a
-`config/database.yml` file.  You will also want a separate database for
-running tests:
+* Create test databases and configure them appropriately. If you have Docker installed then you can
+`cp config/database.yml.sample config/database.yml` and run `start_test_databases.sh`. Otherwise you have
+to adjust `config/database.yml.sample` to match your configuration.
+
+* To run specs use `bundle exec rake`. This ensures we run the spec suite against MySQL and PostgreSQL.
+
+* Add development configuration for your database to `config/database.yml`. If
+you're using provided Docker scripts then you can reuse `test_mysql` section
+(remember to change the database name):
 
     ```yaml
     development:
+      <<: *test_defaults
       adapter: mysql2
       encoding: utf8mb4
-      reconnect: false
       database: lobsters_dev
-      socket: /tmp/mysql.sock
-      username: *dev_username*
-      password: *dev_password*
-      
-    test:
+
+    test_mysql:
+      <<: *test_defaults
       adapter: mysql2
       encoding: utf8mb4
-      reconnect: false
-      database: lobsters_test
-      socket: /tmp/mysql.sock
-      username: *test_username*
-      password: *test_password*
+      port: 3306
     ```
 
 * Load the schema into the new database:

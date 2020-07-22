@@ -83,6 +83,7 @@
     request one in <a href="/chat">chat</a>.
   <% end %>
   If you wrote a link that was posted, definitely contact someone for an invite, we'd love to have you in the discussion.
+  New users cannot send invites or submit stories from domains that have not been seen before until their account has at least <%= User::MIN_KARMA_TO_DOWNVOTE %> karma and is at least <%= User::NEW_USER_DAYS %> days old.
   </p>
 
   <p>
@@ -104,7 +105,7 @@
   this site, voters must choose a reason before downvoting comments and those
   votes are tallied and shown to the original commenter. Users may downvote
   stories and comments after their account has
-  <%= User::MIN_KARMA_TO_DOWNVOTE %> karma.
+  <%= User::MIN_KARMA_TO_DOWNVOTE %> karma and has been a user for <%= User::NEW_USER_DAYS %> days.
   </p>
   <p>
   For submitted stories, downvoting is done through flagging (also requiring a

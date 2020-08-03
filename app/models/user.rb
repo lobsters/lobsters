@@ -495,7 +495,7 @@ class User < ApplicationRecord
     Tag.active.joins(
       :stories
     ).where(
-      :stories => { :user_id => self.id, is_expired: false }
+      :stories => { :user_id => self.id, :is_expired => false }
     ).group(
       Tag.arel_table[:id]
     ).order(

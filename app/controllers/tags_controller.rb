@@ -30,12 +30,12 @@ class TagsController < ApplicationController
   end
 
   def edit
-    @tag = Tag.find(params[:id])
+    @tag = Tag.where(:tag => params[:tag_name]).first!
     @title = "Edit Tag"
   end
 
   def update
-    tag = Tag.find(params[:id])
+    tag = Tag.where(:tag => params[:tag_name]).first!
     if tag.update(tag_params)
       flash[:success] = "Tag #{tag.tag} has been updated"
       redirect_to tags_path
@@ -50,6 +50,7 @@ private
   def tag_params
     params.require(:tag).permit(
       :tag,
+      :tag_name,
       :description,
       :permit_by_new_users,
       :privileged,

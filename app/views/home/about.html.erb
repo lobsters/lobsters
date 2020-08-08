@@ -71,30 +71,30 @@
 
   <h2 id="invitations">Invitation Tree</h2>
   <p>
-  New users must be invited by a current user, though there is no formal vetting process.
-  Invitations are used as a mechanism for spam-control,
-  to slow registrations to a pace <a href="https://en.wikipedia.org/wiki/Eternal_September">we can acculturate</a>
-  and to encourage users to be nice, not to make the Lobsters userbase an elite club.
-  The quickest way to receive an invitation is to talk to someone you
-  recognize from the site or
-  <% if Rails.application.allow_invitation_requests? %>
-    <a href="/invitations/request">request one publicly</a>.
-  <% else %>
-    request one in <a href="/chat">chat</a>.
-  <% end %>
-  If you wrote a link that was posted, definitely contact someone for an invite, we'd love to have you in the discussion.
-  </p>
-
-  <p>
-  The full <a href="/u">user tree</a> is made public and each user's profile
+  The full <a href="/u">user tree</a> is public and each user's profile
   shows who invited them.  This provides some degree of accountability and
   helps identify voting rings.
   </p>
 
   <p>
+  New users must be invited by a current user, though there is no formal vetting process.
+  Invitations are used as a mechanism for spam-control,
+  to slow registrations to a pace <a href="https://en.wikipedia.org/wiki/Eternal_September">we can acculturate</a>
+  and to encourage users to be nice, not to make the Lobsters userbase an elite club.
+  The quickest way to receive an invitation is to talk to someone you <a href="/u">recognize from the site</a>.
+  If you wrote a link that was posted, please reach out in <a href="/chat">chat</a>, we'd love to have you join the discussion.
+  Finally, if you can't find anyone you know in the invitation tree and didn't author something posted to the site,
+  <% if Rails.application.allow_invitation_requests? %>
+    you can <a href="/invitations/request">request an invite</a>.
+  <% else %>
+    consider joining the <a href="/chat">community in the chat room</a>.
+  <% end %>
+  </p>
+
+  <p>
   There's no limit on how many invitations a user can send (though that might be prompted by scaling problems in the future).
   When accounts are banned for spam, <a href="https://en.wikipedia.org/wiki/Sockpuppet_(Internet)">sockpuppeting</a>, or other abuse,
-  moderators will look up the invitation tree to consider disabling their inviter's ability to send invitations or, rarely, also banning.
+  moderators will consider disabling their inviter's ability to send invitations or, rarely, also ban them.
   </p>
 
   <h2 id="downvotes">Downvote Explanations</h2>

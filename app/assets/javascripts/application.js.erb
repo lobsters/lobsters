@@ -177,6 +177,7 @@ var _Lobsters = Class.extend({
         score--;
 
       li.removeClass("upvoted").addClass("flagged");
+      li.prev("input.comment_folder_button").prop("checked", true);
       showScore = false;
       score--;
       action = "flag";
@@ -190,14 +191,14 @@ var _Lobsters = Class.extend({
     if (action == "upvote" || action == "unvote") {
       li.find(".reason").html("");
 
-      if (action == "unvote" && thingType == "story" && point < 0)
+      if (action == "unvote" && point < 0)
         li.find(".flagger").text("flag");
     }
-    else if (action == "flag" && thingType == "comment")
-      li.find(".reason").html("| " +
-        Lobsters.commentFlagReasons[reason].toLowerCase());
-    else if (action == "flag" && thingType == "story")
+    else if (action == "flag") {
       li.find(".flagger").text("unflag");
+      if (thingType == "comment")
+        li.find(".reason").html("| " + Lobsters.commentFlagReasons[reason].toLowerCase());
+    }
 
     $.post("/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
       li.attr("data-shortid") + "/" +

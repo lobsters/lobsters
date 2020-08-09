@@ -1,8 +1,9 @@
+<% flagged = comment.current_vote && comment.current_vote[:vote] == -1 %>
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
   <%= defined?(force_open) ||
       @user.try(:is_moderator?) ||
-      comment.score > Comment::COLLAPSE_SCORE ? "" : "checked" %>>
+      (comment.score > Comment::COLLAPSE_SCORE && !flagged) ? "" : "checked" %>>
 
 <div id="c_<%= comment.short_id %>"
 data-shortid="<%= comment.short_id if comment.persisted? %>"
@@ -25,11 +26,6 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <%= link_to "", login_path, :class => "upvoter" %>
       <% end %>
       <div class="score"><%= score_display %></div>
-      <% if can_flag %>
-        <a class="flagger"></a>
-      <% else %>
-        <span class="flagger flagger_stub"></span>
-      <% end %>
     </div>
     <div class="comment_parent_tree_line
       <%= can_flag ? "can_flag" : "" %>
@@ -104,6 +100,14 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
           |
           <a tabindex="0" class="comment_disownor" href="#">disown</a>
+        <% end %>
+
+        <% if can_flag && !flagged %>
+          | <a class="flagger">flag</a>
+        <% elsif flagged %>
+          | <a class="flagger">unflag</a>
+        <% else %>
+          | <span class="flagger flagger_stub"></span>
         <% end %>
 
         <% if @user && !comment.story.is_gone? && !comment.is_gone? %>

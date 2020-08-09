@@ -93,7 +93,7 @@
 		margin-top: 0px;
 		width: 31px;
 	}
-	div.voters a.upvoter {
+	div.voters .upvoter {
 		margin-top: -5px;
 	}
 
@@ -105,8 +105,8 @@
 		margin-left: 35px;
 	}
 
-	div.voters a.upvoter,
-	div.voters a.downvoter {
+	div.voters .upvoter,
+	div.voters .downvoter {
 		margin-left: 6px;
 		border-width: 9px;
 	}

@@ -1,21 +1,26 @@
+<% is_admin = @user.try(:is_admin?) %>
 <div class="box wide">
-  <div class="legend">
-    Tags
+  <div class="legend">Tags</div>
 
-    <%= render partial: 'tags/multi_tag_tip' %>
-  </div>
+  <% @categories.each do |category| %>
+    <h2><%= link_to category.category, category_path(category) %></h2>
 
-  <% is_admin = @user.try(:is_admin?) %>
+    <% category.tags.each do |tag| %>
+      <%= link_to tag.tag, tag_path(tag), class: tag.css_class %>
+      <%= tag.description %>
+      <% if !tag.active %>
+        | <em>inactive</em>
+      <% end %>
+      <% if is_admin %>
+        | <%= link_to 'edit', edit_tag_path(tag.id) %>
+      <% end %>
+      <br>
+    <% end %>
+  <% end %>
+
   <% if is_admin %>
     <div>
       <%= link_to 'Create New Tag', new_tag_path %>
     </div>
-  <% end %>
-  <% max_size = @tags.map{|t| t.stories_count }.max %>
-  <% @tags.each do |tag| %>
-    <% mod = (max_size.to_f / ((tag.stories_count.to_f == 0) ? 1 : tag.stories_count.to_f )) %>
-    <%= link_to tag.tag, is_admin ? edit_tag_path(tag.id) : tag_path(tag), :class => tag.css_class,
-      :style => "text-decoration: none; vertical-align: middle; " <<
-      "font-size: #{((52 / (mod + 1)) + 8).ceil}pt; line-height: 1.5em;" %>
   <% end %>
 </div>

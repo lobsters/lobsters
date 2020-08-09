@@ -5,6 +5,7 @@ class TagsController < ApplicationController
     @cur_url = "/tags"
     @title = "Tags"
 
+    @categories = Category.all.order('category asc').includes(:tags)
     @tags = Tag.all_with_story_counts_for(nil)
 
     respond_to do |format|
@@ -49,11 +50,12 @@ private
 
   def tag_params
     params.require(:tag).permit(
+      :category_name,
       :tag,
       :description,
       :permit_by_new_users,
       :privileged,
-      :inactive,
+      :active,
       :hotness_mod,
       action_name == 'create' ? :is_media : nil
     ).merge(edit_user_id: @user.id)

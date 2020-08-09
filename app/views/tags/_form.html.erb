@@ -5,6 +5,11 @@
   </div>
 
   <div class="boxline">
+    <%= f.label :category_name, 'Category:' %>
+    <%= f.select :category_name, options_for_select(Category.pluck(:category), @tag.category_name) %>
+  </div>
+
+  <div class="boxline">
     <%= f.label :description, 'Description:' %>
     <%= f.text_field :description %>
   </div>
@@ -27,8 +32,8 @@
   <% end %>
 
   <div class="boxline">
-    <%= f.label :inactive, 'Inactive:' %>
-    <%= f.check_box :inactive %>
+    <%= f.label :active, 'Active:' %>
+    <%= f.check_box :active %>
   </div>
 
   <div class="boxline">

@@ -1,4 +1,5 @@
 class Tag < ApplicationRecord
+  belongs_to :category
   has_many :taggings, :dependent => :delete_all
   has_many :stories, :through => :taggings
   has_many :tag_filters, :dependent => :destroy
@@ -19,7 +20,7 @@ class Tag < ApplicationRecord
   validates :hotness_mod, inclusion: { in: -10..10 }
   validates :permit_by_new_users, :privileged, inclusion: { in: [true, false] }
 
-  scope :active, -> { where(:inactive => false) }
+  scope :active, -> { where(:active => true) }
 
   def to_param
     self.tag
@@ -41,6 +42,14 @@ class Tag < ApplicationRecord
       t.stories_count = counts[t.id].to_i
       t
     }
+  end
+
+  def category_name
+    self.category && self.category.category
+  end
+
+  def category_name=(category)
+    self.category = Category.find_by category: category
   end
 
   def css_class

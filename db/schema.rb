@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_07_021926) do
+ActiveRecord::Schema.define(version: 2020_08_09_023435) do
+
+  create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "category"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "comments", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -21,7 +27,7 @@ ActiveRecord::Schema.define(version: 2020_08_07_021926) do
     t.bigint "parent_comment_id", unsigned: true
     t.bigint "thread_id", unsigned: true
     t.text "comment", limit: 16777215, null: false
-    t.integer "score", default: 0, null: false
+    t.integer "score", default: 1, null: false
     t.integer "flags", default: 0, null: false, unsigned: true
     t.decimal "confidence", precision: 20, scale: 19, default: "0.0", null: false
     t.text "markeddown_comment", limit: 16777215
@@ -185,7 +191,7 @@ ActiveRecord::Schema.define(version: 2020_08_07_021926) do
     t.text "description", limit: 16777215
     t.string "short_id", limit: 6, default: "", null: false
     t.boolean "is_expired", default: false, null: false
-    t.integer "score", default: 0, null: false
+    t.integer "score", default: 1, null: false
     t.integer "flags", default: 0, null: false, unsigned: true
     t.boolean "is_moderated", default: false, null: false
     t.decimal "hotness", precision: 20, scale: 10, default: "0.0", null: false
@@ -249,11 +255,13 @@ ActiveRecord::Schema.define(version: 2020_08_07_021926) do
   create_table "tags", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "tag", limit: 25, null: false
     t.string "description", limit: 100
-    t.boolean "privileged", default: false
-    t.boolean "is_media", default: false
-    t.boolean "inactive", default: false
+    t.boolean "privileged", default: false, null: false
+    t.boolean "is_media", default: false, null: false
+    t.boolean "active", default: true, null: false
     t.float "hotness_mod", default: 0.0
     t.boolean "permit_by_new_users", default: true, null: false
+    t.bigint "category_id", null: false
+    t.index ["category_id"], name: "index_tags_on_category_id"
     t.index ["tag"], name: "tag", unique: true
   end
 

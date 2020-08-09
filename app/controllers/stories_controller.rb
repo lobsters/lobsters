@@ -18,7 +18,7 @@ class StoriesController < ApplicationController
     @story.attributes = story_params
 
     if @story.valid? && !(@story.already_posted_recently? && !@story.seen_previous)
-      if @story.save
+      if ActiveRecord::Base.transaction { @story.save }
         ReadRibbon.where(user: @user, story: @story).first_or_create
         return redirect_to @story.comments_path
       end

@@ -88,7 +88,7 @@ class Comment < ApplicationRecord
 
   def self.arrange_for_user(user)
     parents = self.order(
-      Arel.sql("score < 0 ASC, comments.confidence DESC")
+      Arel.sql("comments.score < 0 ASC, comments.confidence DESC")
     )
       .group_by(&:parent_comment_id)
 

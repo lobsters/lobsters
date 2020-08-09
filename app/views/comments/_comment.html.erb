@@ -123,7 +123,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
             | <%= comment.vote_summary_for_user(@user).downcase %>
           <% elsif comment.current_vote && comment.current_vote[:vote] == -1 %>
             | -1
-            <%= Vote::COMMENT_REASONS[comment.current_vote[:reason]].downcase %>
+            <%= Vote::ALL_COMMENT_REASONS[comment.current_vote[:reason]].downcase %>
           <% end %>
         </span>
       <% end %>

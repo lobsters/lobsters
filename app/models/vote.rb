@@ -8,26 +8,30 @@ class Vote < ApplicationRecord
             length: { is: 1 },
             allow_blank: true
 
+  # don't forget to edit the explanations on /about
   COMMENT_REASONS = {
     "O" => "Off-topic",
-    "I" => "Incorrect",
     "M" => "Me-too",
     "T" => "Troll",
-    "S" => "Spam",
     "U" => "Unkind",
+    "S" => "Spam",
     "" => "Cancel",
   }.freeze
+  ALL_COMMENT_REASONS = COMMENT_REASONS.merge({
+    "I" => "Incorrect",
+  }).freeze
 
+  # don't forget to edit the explanations on /about
   STORY_REASONS = {
     "O" => "Off-topic",
     "A" => "Already Posted",
-    "S" => "Spam",
     "B" => "Broken Link",
+    "S" => "Spam",
     "" => "Cancel",
   }.freeze
-  OLD_STORY_REASONS = {
+  ALL_STORY_REASONS = STORY_REASONS.merge({
     "Q" => "Low Quality",
-  }.freeze
+  }).freeze
 
   def self.votes_by_user_for_stories_hash(user, stories)
     votes = {}

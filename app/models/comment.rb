@@ -499,7 +499,7 @@ class Comment < ApplicationRecord
       if k == ""
         "+#{r_counts[k]}"
       else
-        o = "#{r_counts[k]} #{Vote::COMMENT_REASONS[k]}"
+        o = "#{r_counts[k]} #{Vote::ALL_COMMENT_REASONS[k]}"
         if u && u.is_moderator? && self.user_id != u.id
           o << " (#{r_users[k].join(', ')})"
         end

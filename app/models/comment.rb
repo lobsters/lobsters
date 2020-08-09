@@ -495,17 +495,15 @@ class Comment < ApplicationRecord
       r_users[v.reason.to_s].push v.user.username
     end
 
-    r_counts.keys.sort.map {|k|
-      if k == ""
-        "+#{r_counts[k]}"
-      else
-        o = "#{r_counts[k]} #{Vote::ALL_COMMENT_REASONS[k]}"
-        if u && u.is_moderator? && self.user_id != u.id
-          o << " (#{r_users[k].join(', ')})"
-        end
-        o
+    r_counts.keys.map {|k|
+      next if k == ""
+
+      o = "#{r_counts[k]} #{Vote::ALL_COMMENT_REASONS[k]}"
+      if u && u.is_moderator? && self.user_id != u.id
+        o << " (#{r_users[k].join(', ')})"
       end
-    }.join(", ")
+      o
+    }.compact.join(", ")
   end
 
   def undelete_for_user(user)

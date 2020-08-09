@@ -48,7 +48,7 @@ class CommentsController < ApplicationController
       end
     end
 
-    if comment.valid? && params[:preview].blank? && comment.save
+    if comment.valid? && params[:preview].blank? && ActiveRecord::Base.transaction { comment.save }
       comment.current_vote = { :vote => 1 }
 
       if request.xhr?

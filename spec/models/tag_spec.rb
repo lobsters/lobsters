@@ -3,8 +3,13 @@ require "rails_helper"
 describe Tag do
   context 'validations' do
     it 'allows a valid tag to be created' do
-      expect(Tag.create(category: Category.first, tag: 'tag_name', hotness_mod: 0.25, description: 'test description'))
-        .to be_valid
+      tag = Tag.create(
+        category: Category.first,
+        tag: 'tag_name',
+        hotness_mod: 0.25,
+        description: 'test description'
+      )
+      expect(tag).to be_valid
     end
 
     it 'does not allow a tag to be saved without a name' do

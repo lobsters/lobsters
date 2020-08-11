@@ -5,9 +5,7 @@ require 'rails_helper'
 
 RSpec.feature "Commenting" do
   let(:user) { create(:user) }
-  let(:user1) { create(:user) }
   let(:story) { create(:story, user: user) }
-  let(:story1) { create(:story, user: user1) }
 
   before(:each) { stub_login_as user }
 
@@ -77,6 +75,9 @@ RSpec.feature "Commenting" do
 
   feature "Merging story comments" do
     scenario "upvote merged story comments" do
+      reader = create(:user)
+      hot_take = create(:story)
+
       comment = create(
         :comment,
         user_id: user.id,
@@ -87,7 +88,7 @@ RSpec.feature "Commenting" do
       visit "/settings"
       click_on "Logout"
 
-      stub_login_as user1
+      stub_login_as reader
       visit "/s/#{story.short_id}"
       expect(page.find(:css, ".comment .comment_text")).to have_content('Cool story.')
       expect(comment.score).to eq(1)
@@ -95,8 +96,8 @@ RSpec.feature "Commenting" do
       comment.reload
       expect(comment.score).to eq(2)
 
-      story1.update(merged_stories: [story])
-      visit "/s/#{story1.short_id}"
+      story.update(merged_stories: [hot_take])
+      visit "/s/#{story.short_id}"
       expect(page.find(:css, ".comment.upvoted .score")).to have_content('2')
     end
   end

@@ -2,19 +2,29 @@
 <div class="box wide">
   <div class="legend">Tags</div>
 
+  <p>Inactive tags can no longer be used. You can also <a href="/filters">filter out stories by tag</a>.</p>
+
   <% @categories.each do |category| %>
     <h2><%= link_to category.category, category_path(category) %></h2>
 
     <% category.tags.each do |tag| %>
-      <%= link_to tag.tag, tag_path(tag), class: tag.css_class %>
-      <%= tag.description %>
-      <% if !tag.active %>
-        | <em>inactive</em>
-      <% end %>
-      <% if is_admin %>
-        | <%= link_to 'edit', edit_tag_path(tag.id) %>
-      <% end %>
-      <br>
+      <ol class="category_tags">
+        <li>
+        <% filtered = @filtered_tags.include?(tag.id) %>
+        <%= link_to tag.tag, tag_path(tag), class: tag.css_class %>
+        <span class="<%= filtered || !tag.active ? 'inactive_tag' : '' %>"><%= tag.description %></span>
+        <span class="byline">
+        <% if !tag.active %>
+          | <em>inactive</em>
+        <% end %>
+        <% if filtered %>
+          | <%= link_to "filtered", filters_path(anchor: tag.tag) %>
+        <% end %>
+        <% if is_admin %>
+          | <%= link_to 'edit', edit_tag_path(tag.id) %>
+        <% end %>
+        </span>
+      </ol>
     <% end %>
   <% end %>
 

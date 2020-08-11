@@ -6,7 +6,13 @@ class TagsController < ApplicationController
     @title = "Tags"
 
     @categories = Category.all.order('category asc').includes(:tags)
-    @tags = Tag.all_with_story_counts_for(nil)
+    @tags = Tag.all
+
+    if @user
+      @filtered_tags = @user.tag_filter_tags.index_by(&:id)
+    else
+      @filtered_tags = tags_filtered_by_cookie.index_by(&:id)
+    end
 
     respond_to do |format|
       format.html { render :action => "index" }

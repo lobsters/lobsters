@@ -349,7 +349,8 @@ div#gravatar img {
 
 ol.stories,
 ol.comments,
-ol.search_results {
+ol.search_results,
+ol.category_tags {
 	padding: 0;
 	list-style: none;
 	margin: 0;
@@ -646,7 +647,8 @@ li .byline a.new_user {
 	color: green;
 }
 span.inactive_user, a.inactive_user,
-li .byline a.inactive_user {
+li .byline a.inactive_user,
+.inactive_tag {
 	color: gray;
 	text-decoration: line-through;
 }

@@ -5,20 +5,26 @@ class FiltersController < ApplicationController
     @cur_url = "/filters"
     @title = "Tag Filters"
 
-    @tags = Tag.active.all_with_story_counts_for(@user)
+    @categories = Category.all
+                          .order('category asc')
+                          .eager_load(:tags)
+                          .references(:tags)
+                          .where('tags.active = true')
+
+    # perf: three queries is much faster than joining, grouping on tags.id for counts
+    @story_counts = Tagging.group(:tag_id).count
+    @filter_counts = TagFilter.group(:tag_id).count
 
     if @user
-      @filtered_tags = @user.tag_filter_tags.to_a
+      @filtered_tags = @user.tag_filter_tags.index_by(&:id)
     else
-      @filtered_tags = tags_filtered_by_cookie.to_a
+      @filtered_tags = tags_filtered_by_cookie.index_by(&:id)
     end
   end
 
   def update
-    tags_param = params[:tags]
-    new_tags = tags_param.blank? ? [] :
-      Tag.active.where(:tag => tags_param).to_a
-    new_tags.keep_if {|t| t.valid_for? @user }
+    new_tags = Tag.active.where(:tag => (params[:tags] || {}).keys).to_a
+    new_tags.keep_if {|t| t.user_can_filter? @user }
 
     if @user
       @user.tag_filter_tags = new_tags

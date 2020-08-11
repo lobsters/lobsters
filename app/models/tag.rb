@@ -35,15 +35,6 @@ class Tag < ApplicationRecord
     }
   end
 
-  def self.all_with_story_counts_for(user)
-    counts = Tagging.group(:tag_id).count
-
-    Tag.active.order(:tag).select {|t| t.valid_for?(user) }.map {|t|
-      t.stories_count = counts[t.id].to_i
-      t
-    }
-  end
-
   def category_name
     self.category && self.category.category
   end
@@ -54,6 +45,10 @@ class Tag < ApplicationRecord
 
   def css_class
     "tag tag_#{self.tag}" << (self.is_media?? " tag_is_media" : "")
+  end
+
+  def user_can_filter?(user)
+    self.active? && (!self.privileged? || user.try(:is_moderator?))
   end
 
   def valid_for?(user)

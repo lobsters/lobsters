@@ -124,7 +124,9 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
           <% if comment.flags > 0 &&
           comment.show_score_to_user?(@user) &&
           (comment.user_id == @user.try(:id) || @user.try("is_moderator?")) %>
-            | <%= comment.vote_summary_for_user(@user).downcase %>
+            <% if (s = comment.vote_summary_for_user(@user).downcase).present? %>
+              | <%= s %>
+            <% end %>
           <% elsif comment.current_vote && comment.current_vote[:vote] == -1 %>
             | -1
             <%= Vote::ALL_COMMENT_REASONS[comment.current_vote[:reason]].downcase %>

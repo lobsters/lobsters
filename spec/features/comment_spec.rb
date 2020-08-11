@@ -101,4 +101,16 @@ RSpec.feature "Commenting" do
       expect(page.find(:css, ".comment.upvoted .score")).to have_content('2')
     end
   end
+
+  feature "user threads list" do
+    scenario "viewing user's threads" do
+      poster = create(:user)
+      parent = create(:comment, story: story, user: poster)
+      reply = create(:comment, story: story, user: user, parent_comment: parent)
+
+      visit "/threads/#{user.username}"
+      expect(page).to have_content(parent.comment)
+      expect(page).to have_content(reply.comment)
+    end
+  end
 end

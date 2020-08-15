@@ -310,6 +310,11 @@ describe Story do
       expect(s1.similar_stories).to eq([])
       expect(s2.similar_stories).to eq([])
     end
+
+    it "doesn't throw exceptions at brackets" do
+      s = create(:story, url: 'http://aaonline.fr/search.php?search&criteria[title-contains]=debian')
+      expect(s.similar_stories).to eq([])
+    end
   end
 
   describe "#calculated_hotness" do

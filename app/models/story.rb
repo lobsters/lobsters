@@ -211,6 +211,8 @@ class Story < ApplicationRecord
 
   # all stories with similar urls
   def self.find_similar_by_url(url)
+    url = url.to_s.gsub('[', '\\[')
+    url = url.to_s.gsub(']', '\\]')
     urls = [url.to_s.gsub(/(#.*)/, "")]
     urls2 = [url.to_s.gsub(/(#.*)/, "")]
     urls_with_trailing_pound = []

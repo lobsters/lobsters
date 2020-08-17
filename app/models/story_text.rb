@@ -11,7 +11,7 @@ class StoryText < ApplicationRecord
     st = StoryText.find_or_initialize_by id: story.id
     return st.body if st.body.present?
 
-    result = StoryCacher.get_story_text(self)
+    _ = StoryCacher.get_story_text(self)
     # you're here, finish
   end
 end

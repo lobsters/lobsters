@@ -45,6 +45,8 @@ Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
 Layout/HashAlignment:
   Enabled: false
+Layout/LineLength:
+  Max: 100
 Layout/MultilineMethodCallBraceLayout:
   Enabled: false
 Layout/MultilineMethodCallIndentation:
@@ -76,8 +78,6 @@ Metrics/ClassLength:
   Enabled: false
 Metrics/CyclomaticComplexity:
   Enabled: false
-Metrics/LineLength:
-  Max: 100
 Metrics/MethodLength:
   Enabled: false
 Metrics/ModuleLength:
@@ -194,6 +194,10 @@ Style/HashEachMethods:
   Enabled: true
 Style/HashSyntax:
   EnforcedStyle: no_mixed_keys
+Style/HashTransformKeys:
+  Enabled: true
+Style/HashTransformValues:
+  Enabled: true
 Style/IfInsideElse:
   Enabled: false
 Style/IfUnlessModifier:

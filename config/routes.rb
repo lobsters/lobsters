@@ -63,6 +63,7 @@ Rails.application.routes.draw do
   match "/login/set_new_password" => "login#set_new_password",
     :as => "set_new_password", :via => [:get, :post]
 
+  get "/categories/:category" => "home#category", :as => :category
   get "/t/:tag" => "home#tagged", :as => "tag"
   get "/t/:tag/page/:page" => "home#tagged"
 
@@ -75,7 +76,7 @@ Rails.application.routes.draw do
   resources :stories, except: [:index] do
     get '/stories/:short_id', to: redirect('/s/%{short_id}')
     post "upvote"
-    post "downvote"
+    post "flag"
     post "unvote"
     post "undelete"
     post "hide"
@@ -94,7 +95,7 @@ Rails.application.routes.draw do
       get "/comments/:id" => "comments#redirect_from_short_id"
       get "reply"
       post "upvote"
-      post "downvote"
+      post "flag"
       post "unvote"
 
       post "delete"
@@ -164,6 +165,8 @@ Rails.application.routes.draw do
   get "/filters" => "filters#index"
   post "/filters" => "filters#update"
 
+  resources :categories, only: [:show]
+
   get "/tags" => "tags#index"
   get "/tags.json" => "tags#index", :format => "json"
   get "/tags/new" => "tags#new", :as => "new_tag"
@@ -199,8 +202,8 @@ Rails.application.routes.draw do
   get "/moderators" => "users#tree", :moderators => true
 
   get "/mod" => "mod#index"
-  get "/mod/flagged/:period"   => "mod#flagged",   :as => "mod_flagged"
-  get "/mod/downvoted/:period" => "mod#downvoted", :as => "mod_downvoted"
+  get "/mod/flagged_stories/:period"  => "mod#flagged_stories",  :as => "mod_flagged_stories"
+  get "/mod/flagged_comments/:period" => "mod#flagged_comments", :as => "mod_flagged_comments"
   get "/mod/commenters/:period" => "mod#commenters", :as => "mod_commenters"
   get "/mod/notes(/:period)" => "mod_notes#index", :as => "mod_notes"
   post "/mod/notes" => "mod_notes#create"
@@ -208,6 +211,8 @@ Rails.application.routes.draw do
   get "/privacy" => "home#privacy"
   get "/about" => "home#about"
   get "/chat" => "home#chat"
+
+  get "/stats" => "stats#index"
 
   post '/csp-violation-report' => 'csp#violation_report'
 end

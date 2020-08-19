@@ -23,7 +23,7 @@ describe 'merged stories', type: :request do
 
       merged_story.reload
       expect(merged_story.merged_into_story).to eq story
-      expect(merged_story.upvotes).to eq(1)
+      expect(merged_story.score).to eq(1)
     end
 
     it "has no effect when hiding merged story" do

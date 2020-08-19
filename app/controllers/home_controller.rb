@@ -4,7 +4,7 @@ class HomeController < ApplicationController
   caches_page :about, :chat, :index, :newest, :newest_by_user, :recent, :top, if: CACHE_PAGE
 
   # for rss feeds, load the user's tag filters if a token is passed
-  before_action :find_user_from_rss_token, :only => [:index, :newest, :saved]
+  before_action :find_user_from_rss_token, :only => [:index, :newest, :saved, :upvoted]
   before_action { @page = page }
   before_action :require_logged_in_user, :only => [:upvoted]
 
@@ -187,6 +187,32 @@ class HomeController < ApplicationController
         end
         render :action => "rss", :layout => false
       }
+      format.json { render :json => @stories }
+    end
+  end
+
+  def category
+    category_params = params[:category].split(',')
+    @categories = Category.where(category: category_params)
+
+    raise ActiveRecord::RecordNotFound unless @categories.length == category_params.length
+
+    @stories, @show_more = get_from_cache(categories: category_params.sort.join(',')) do
+      paginate stories.categories(@categories)
+    end
+
+    @heading = params[:category]
+    @title = @categories.map(&:category).join(' ')
+    @cur_url = category_url(params[:category])
+
+    @rss_link = {
+      title: "RSS 2.0 - Categorized #{@title}",
+      href: category_url(params[:category], format: 'rss'),
+    }
+
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.rss { render :action => "rss", :layout => false }
       format.json { render :json => @stories }
     end
   end

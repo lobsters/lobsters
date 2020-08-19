@@ -30,7 +30,8 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with :truncation
 
-    Tag.create!([{ tag: "tag1" }, { tag: "tag2" }])
+    c = Category.create! category: "category1"
+    c.tags.create!([{ tag: "tag1" }, { tag: "tag2" }])
   end
 
   config.before(:example) do

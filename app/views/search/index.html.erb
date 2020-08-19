@@ -80,6 +80,11 @@
   <% end %>
 <% else %>
   <div class="help">
-    Search by domain with <code>domain:example.com</code> and <%= link_to 'tag', tags_path %> with <code>tag:meta</code>.
+    Search hints:
+    <ul>
+      <li>Use <a href="https://mariadb.com/kb/en/full-text-index-overview/#in-boolean-mode">search operators</a> like <code>+</code> to require terms, <code>-</code> to ignore terms, and <code>"quotes for phrases"</code>.</li>
+      <li>Search by domain with <code>domain:example.com</code> (implicit <code>+</code>)</li>
+      <li>Search by <%= link_to 'tag', tags_path %> with <code>tag:meta</code> (implicit <code>+</code>)</li>
+    </ul>
   </div>
 <% end %>

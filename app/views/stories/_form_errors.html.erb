@@ -1,7 +1,7 @@
 <div>
   <div class="form_errors_header">
     <% if story.errors.any? %>
-      <%= error_messages_for story %>
+      <%= errors_for story %>
     <% elsif !story.errors.any? && story.public_similar_stories.any? %>
       <div class="flash-notice">
         <h2>Note: This story was already submitted <%= time_ago_in_words_label(story.most_recent_similar.created_at) %>, but may be submitted again.</h2>

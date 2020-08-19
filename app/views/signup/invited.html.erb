@@ -11,7 +11,7 @@
     alerts.  Your username can be changed later.
     </p>
 
-    <%= error_messages_for(@new_user) %>
+    <%= errors_for(@new_user) %>
 
     <% if not Rails.application.open_signups? %>
         <%= f.hidden_field "invitation_code", :value => @invitation.code, :name => :invitation_code %>

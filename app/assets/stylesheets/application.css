@@ -349,7 +349,8 @@ div#gravatar img {
 
 ol.stories,
 ol.comments,
-ol.search_results {
+ol.search_results,
+ol.category_tags {
 	padding: 0;
 	list-style: none;
 	margin: 0;
@@ -401,7 +402,7 @@ li.story div.voters div.score {
 }
 
 div.voters .upvoter,
-div.voters .downvoter {
+div.voters .flagger {
 	border-color: transparent transparent #bbb transparent;
 	border-style: solid;
 	border-width: 6px;
@@ -423,7 +424,7 @@ div.voters .upvoter {
 	border-bottom-width: 11px;
 }
 
-div.voters .downvoter {
+div.voters .flagger {
 	border-color: #bbb transparent transparent transparent;
 	border-width: 5px;
 	margin-top: 4px;
@@ -431,12 +432,12 @@ div.voters .downvoter {
 	margin-bottom: -5px;
 	border-top-width: 9px;
 }
-div.voters .downvoter:hover,
-.downvoted div.voters .downvoter {
+div.voters .flagger:hover,
+.flagged div.voters .flagger {
 	border-top-color: gray;
 }
 
-div.voters .downvoter.downvoter_stub {
+div.voters .flagger.flagger_stub {
 	border-color: transparent;
 }
 
@@ -480,9 +481,9 @@ li div.details {
 	opacity: 0.7;
 }
 
-.comment:target {
+.comment:target, li:target, p:target {
 	background-color: #fffcd7;
-	border-radius: 20px;
+	border-radius: 8px;
 }
 
 li .link {
@@ -585,7 +586,7 @@ li .comment_parent_tree_line {
 li .comment_parent_tree_line.score_shown {
 	top: 44px;
 }
-li .comment_parent_tree_line.can_downvote {
+li .comment_parent_tree_line.can_flag {
 	top: 56px;
 }
 li .comment_parent_tree_line.no_children {
@@ -646,7 +647,8 @@ li .byline a.new_user {
 	color: green;
 }
 span.inactive_user, a.inactive_user,
-li .byline a.inactive_user {
+li .byline a.inactive_user,
+.inactive_tag {
 	color: gray;
 	text-decoration: line-through;
 }
@@ -799,14 +801,14 @@ div.comment_text code {
 }
 
 
-#downvote_why {
+#flag_why {
 	position: absolute;
 	width: 100px;
 	border: 1px solid #ccc;
 	border-bottom: 0;
 	z-index: 15;
 }
-#downvote_why a {
+#flag_why a {
 	background-color: white;
 	color: #555;
 	border-bottom: 1px solid #ccc;
@@ -814,15 +816,15 @@ div.comment_text code {
 	padding: 3px;
 	font-size: 9pt;
 }
-#downvote_why a:hover {
+#flag_why a:hover {
 	background-color: #eee;
 }
-#downvote_why a.cancelreason {
+#flag_why a.cancelreason {
 	background-color: #eee;
 	font-size: 8pt;
 }
 
-#downvote_why_shadow {
+#flag_why_shadow {
 	position: fixed;
 	width: 100%;
 	height: 100%;
@@ -1154,9 +1156,7 @@ table.data pre {
 
 div.flash-error,
 div.flash-notice,
-div.flash-success,
-div.downvoteWarning,
-div.errorExplanation {
+div.flash-success {
 	position: relative;
 	padding: 7px 15px;
 	margin-bottom: 18px;
@@ -1174,8 +1174,7 @@ div.errorExplanation {
 }
 div.flash-error a,
 div.flash-notice a,
-div.flash-success a,
-div.errorExplanation a {
+div.flash-success a {
 	font-weight: bold;
 	color: #404040;
 }
@@ -1186,20 +1185,17 @@ div.flash-success p a {
 }
 div.flash-error p,
 div.flash-notice p,
-div.flash-success p,
-div.errorExplanation p {
+div.flash-success p {
 	margin-bottom: 0;
 }
 div.flash-error div,
 div.flash-notice div,
-div.flash-success div,
-div.errorExplanation div {
+div.flash-success div {
 	margin-top: 5px;
 	margin-bottom: 2px;
 	line-height: 28px;
 }
-div.flash-error,
-div.errorExplanation {
+div.flash-error {
 	background-color: #fdcfcc;
 	background-repeat: repeat-x;
 	background-image: linear-gradient(top, #ee5f5b, #c43c35);
@@ -1226,18 +1222,10 @@ div.flash-notice {
 
 div.flash-error h2,
 div.flash-notice h2,
-div.flash-success h2,
-div.errorExplanation h2 {
+div.flash-success h2 {
 	font-size: 1.25em;
 	margin: 0;
 }
-
-
-/* for error_messages_for() */
-div.fieldWithErrors {
-	display: inline;
-}
-
 
 /* select2 deuglification */
 

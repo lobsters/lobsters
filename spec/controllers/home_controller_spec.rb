@@ -14,4 +14,23 @@ describe HomeController do
       expect(@controller.view_assigns['stories']).to include(story)
     end
   end
+
+  describe "#upvoted" do
+    it "redirects to the login page" do
+      get :upvoted
+      expect(response).to be_redirect
+    end
+
+    context "when accessing RSS feeds" do
+      it "supports session-based access" do
+        get :upvoted, as: :rss, session: { u: user.session_token }
+        expect(response).to be_successful
+      end
+
+      it "supports token-based access" do
+        get :upvoted, as: :rss, params: { token: user.rss_token }
+        expect(response).to be_successful
+      end
+    end
+  end
 end

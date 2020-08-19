@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 5.2.4.3"
+gem "rails", "~> 6.0.3.2"
 
 gem "mysql2"
 
@@ -14,7 +14,6 @@ gem "activerecord-typedstore"
 gem 'sprockets-rails', '2.3.3'
 
 # js
-gem "dynamic_form"
 gem "jquery-rails", "~> 4.3"
 gem "json"
 gem "uglifier", ">= 1.3.0"
@@ -39,6 +38,7 @@ gem "oauth" # for twitter-posting bot
 gem "mail" # for parsing incoming mail
 gem "ruumba" # tests views
 gem "sitemap_generator" # for better search engine indexing
+gem "svg-graph", require: 'SVG/Graph/TimeSeries' # for charting, note workaround in lib/time_series.rb
 gem 'transaction_retry' # mitigate https://github.com/lobsters/lobsters-ansible/issues/39
 
 group :test, :development do

@@ -11,7 +11,7 @@
   </div>
 
   <%= form_with model: @edit_user, url: settings_path, method: :post, id: 'edit_user', local: true do |f| %>
-    <%= error_messages_for f.object %>
+    <%= errors_for f.object %>
 
     <div class="boxline">
       <%= f.label :username, "Username:", :class => "required" %>

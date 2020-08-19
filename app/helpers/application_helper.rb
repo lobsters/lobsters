@@ -21,14 +21,18 @@ module ApplicationHelper
     }, " ")
   end
 
-  def errors_for(object, _message = nil)
+  def errors_for(object)
     html = ""
     unless object.errors.blank?
-      html << "<div class=\"flash-error\">\n"
+      html << "<div class=\"flash-error\">"
+      html << "<h2>#{pluralize(object.errors.count, 'error')} prohibited this \
+               #{object.class.name.downcase} from being saved</h2>"
+      html << "<p>There were the problems with the following fields:</p>"
+      html << "<ul>"
       object.errors.full_messages.each do |error|
-        html << error << "<br>"
+        html << "<li>#{error}</li>"
       end
-      html << "</div>\n"
+      html << "</ul></div>"
     end
 
     raw(html)

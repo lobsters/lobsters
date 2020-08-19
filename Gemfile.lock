@@ -88,7 +88,6 @@ GEM
     crass (1.0.6)
     database_cleaner (1.8.5)
     diff-lcs (1.4.4)
-    dynamic_form (1.1.4)
     erubi (1.9.0)
     exception_notification (4.4.3)
       actionmailer (>= 4.0, < 7)
@@ -284,7 +283,6 @@ DEPENDENCIES
   capybara
   commonmarker (~> 0.14)
   database_cleaner
-  dynamic_form
   exception_notification
   factory_bot_rails
   faker

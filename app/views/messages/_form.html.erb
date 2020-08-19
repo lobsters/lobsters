@@ -1,5 +1,5 @@
 <%= form_with model: @new_message, url: new_message, method: :post, local: true do |f| %>
-  <%= error_messages_for @new_message %>
+  <%= errors_for @new_message %>
 
   <% if replying %>
       <%= f.hidden_field :recipient_username  %>

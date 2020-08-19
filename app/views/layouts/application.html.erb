@@ -26,7 +26,7 @@
   <% if @user %>
     <%= javascript_include_tag "application" %>
     <script>
-      Lobsters.curUser = '<%= @user.id %>';
+      Lobsters.curUser = '<%= @user.username %>';
     </script>
   <% end %>
   <%= csrf_meta_tags %>

@@ -3,8 +3,13 @@ require "rails_helper"
 describe Tag do
   context 'validations' do
     it 'allows a valid tag to be created' do
-      expect(Tag.create(tag: 'tag_name', hotness_mod: 0.25, description: 'test description'))
-        .to be_valid
+      tag = Tag.create(
+        category: Category.first,
+        tag: 'tag_name',
+        hotness_mod: 0.25,
+        description: 'test description'
+      )
+      expect(tag).to be_valid
     end
 
     it 'does not allow a tag to be saved without a name' do
@@ -40,7 +45,7 @@ describe Tag do
     let(:edit_user) { create :user }
 
     it 'logs on create' do
-      expect { Tag.create(tag: 'tag_name', edit_user_id: edit_user.id) }
+      expect { Tag.create(category: Category.first, tag: 'tag_name', edit_user_id: edit_user.id) }
         .to change { Moderation.count }.by(1)
       mod = Moderation.last
       expect(mod.action).to include 'tag_name'

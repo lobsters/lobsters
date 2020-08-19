@@ -4,8 +4,7 @@
   </div>
 
   <p>
-  To hide stories from the home page that have been tagged with certain <a
-  href="/tags">tags</a>, check them below.
+  To hide stories with certain <a href="/tags">tags</a> from across the site, check them below.
   </p>
 
   <% if !@user %>
@@ -17,27 +16,43 @@
   <% end %>
 
   <%= form_with url: '/filters', method: :post, local: true do |f| %>
-    <table class="data zebra" cellspacing=0 width="75%">
+    <table class="data zebra" cellspacing=0>
     <tr>
-      <th width="7%">Hide</th>
-      <th width="13%">Tag</th>
-      <th width="65%">Description</th>
-      <th width="5%" style="text-align: right; padding-right: 1em;">Stories</th>
+      <th>Hide</th>
+      <th>Tag</th>
+      <th>Description</th>
+      <th style="text-align: right;">Stories</th>
+      <th style="text-align: right; padding-right: 1em;">Filtering</th>
     </tr>
-    <% @tags.each do |tag| %>
+    <% @categories.each do |category| %>
       <tr>
-        <td><%= check_box_tag "tags[]", tag.tag,
-          @filtered_tags.include?(tag) %></td>
-        <td><%= tag_link(tag) %></td>
-        <td><%= tag.description %>
-          <% if tag.hotness_mod != 0 %>
-            &nbsp;
-            <em>(hotness mod <%= tag.hotness_mod > 0 ? "+" : ""%><%=
-              tag.hotness_mod %>)</em>
-          <% end %></td>
-        <td style="text-align: right; padding-right: 1em;"><%=
-          tag.stories_count %></td>
+        <th></th>
+        <th colspan=4><%= category.category %></th>
       </tr>
+      <% category.tags.each do |tag| %>
+        <tr id="<%= tag.tag %>">
+          <td>
+            <% if tag.user_can_filter?(@user) %>
+              <%= check_box_tag "tags[#{tag.tag}]", tag.tag, @filtered_tags.include?(tag.id) %>
+            <% end %>
+          </td>
+          <td><%= tag_link(tag) %></td>
+          <td>
+            <%= label_tag "tags[#{tag.tag}]" do %>
+              <span class="<%= tag.active? ? '' : 'inactive_tag' %>"><%= tag.description %></span>
+              <% if !tag.active %>
+                | <em>inactive</em>
+              <% end %>
+              <% if tag.hotness_mod != 0 %>
+                |
+                <em>hotness mod <%= tag.hotness_mod > 0 ? "+" : ""%><%= tag.hotness_mod %></em>
+              <% end %>
+            <% end %>
+          </td>
+          <td style="text-align: right;"><%= number_with_delimiter(@story_counts[tag.id]) %></td>
+          <td style="text-align: right; padding-right: 1em;"><%= number_with_delimiter(@filter_counts[tag.id]) %></td>
+        </tr>
+      <% end %>
     <% end %>
     </table>
     <p>

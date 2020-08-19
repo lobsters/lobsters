@@ -1,4 +1,5 @@
 class Tag < ApplicationRecord
+  belongs_to :category
   has_many :taggings, :dependent => :delete_all
   has_many :stories, :through => :taggings
   has_many :tag_filters, :dependent => :destroy
@@ -14,12 +15,12 @@ class Tag < ApplicationRecord
   attr_writer :filtered_count
 
   validates :tag, length: { maximum: 25 }, presence: true,
-                  uniqueness: true, format: { without: /,/ }
+                  uniqueness: { case_sensitive: true }, format: { without: /,/ }
   validates :description, length: { maximum: 100 }
   validates :hotness_mod, inclusion: { in: -10..10 }
   validates :permit_by_new_users, :privileged, inclusion: { in: [true, false] }
 
-  scope :active, -> { where(:inactive => false) }
+  scope :active, -> { where(:active => true) }
 
   def to_param
     self.tag
@@ -34,17 +35,20 @@ class Tag < ApplicationRecord
     }
   end
 
-  def self.all_with_story_counts_for(user)
-    counts = Tagging.group(:tag_id).count
+  def category_name
+    self.category && self.category.category
+  end
 
-    Tag.active.order(:tag).select {|t| t.valid_for?(user) }.map {|t|
-      t.stories_count = counts[t.id].to_i
-      t
-    }
+  def category_name=(category)
+    self.category = Category.find_by category: category
   end
 
   def css_class
     "tag tag_#{self.tag}" << (self.is_media?? " tag_is_media" : "")
+  end
+
+  def user_can_filter?(user)
+    self.active? && (!self.privileged? || user.try(:is_moderator?))
   end
 
   def valid_for?(user)

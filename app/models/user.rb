@@ -510,7 +510,7 @@ class User < ApplicationRecord
   end
 
   def recent_threads(amount, include_submitted_stories: false, for_user: user)
-    comments = self.comments.for_user(for_user)
+    comments = self.comments.accessible_to_user(for_user)
 
     thread_ids = comments.group(:thread_id).order('MAX(created_at) DESC').limit(amount)
       .pluck(:thread_id)

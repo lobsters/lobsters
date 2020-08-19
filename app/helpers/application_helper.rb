@@ -160,7 +160,7 @@ module ApplicationHelper
     link_to tag.tag, tag_path(tag), class: tag.css_class, title: tag.description
   end
 
-  def time_ago_in_words_label(time, options = {})
+  def time_ago_in_words_label(time)
     ago = ""
     secs = (Time.current - time).to_i
     if secs <= 5
@@ -184,12 +184,6 @@ module ApplicationHelper
       ago = "#{years} #{'year'.pluralize(years)} ago"
     end
 
-    span_class = ''
-
-    if options[:mark_unread]
-      span_class += 'comment_unread'
-    end
-
-    raw(content_tag(:span, ago, title: time.strftime("%F %T %z"), class: span_class))
+    raw(content_tag(:span, ago, title: time.strftime("%F %T %z")))
   end
 end

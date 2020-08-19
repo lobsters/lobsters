@@ -486,6 +486,12 @@ li div.details {
 	border-radius: 8px;
 }
 
+.showing-user-comment .time_ago {
+	background-color: #fffcd7;
+	border-radius: 5px;
+	padding: 3px;
+}
+
 li .link {
 	font-weight: bold;
 	vertical-align: middle;

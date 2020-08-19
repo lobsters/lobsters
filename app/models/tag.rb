@@ -15,7 +15,7 @@ class Tag < ApplicationRecord
   attr_writer :filtered_count
 
   validates :tag, length: { maximum: 25 }, presence: true,
-                  uniqueness: true, format: { without: /,/ }
+                  uniqueness: { case_sensitive: true }, format: { without: /,/ }
   validates :description, length: { maximum: 100 }
   validates :hotness_mod, inclusion: { in: -10..10 }
   validates :permit_by_new_users, :privileged, inclusion: { in: [true, false] }

@@ -57,4 +57,5 @@ group :test, :development do
   gem "rb-readline"
   gem "vcr"
   gem "webmock" # used to support vcr
+  gem 'simplecov', require: false
 end

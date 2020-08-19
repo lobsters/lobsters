@@ -237,7 +237,7 @@ class CommentsController < ApplicationController
       raise ActionController::RoutingError.new("page out of bounds")
     end
 
-    @comments = Comment.for_user(@user)
+    @comments = Comment.accessible_to_user(@user)
       .not_on_story_hidden_by(@user)
       .order("id DESC")
       .includes(:user, :hat, :story => :user)
@@ -283,7 +283,7 @@ class CommentsController < ApplicationController
       raise ActionController::RoutingError.new("page out of bounds")
     end
 
-    @comments = Comment.for_user(@user)
+    @comments = Comment.accessible_to_user(@user)
       .where.not(user_id: @user.id)
       .order("id DESC")
       .includes(:user, :hat, :story => :user)
@@ -331,7 +331,7 @@ class CommentsController < ApplicationController
       for_user: @user
     )
 
-    comments = Comment.for_user(@user)
+    comments = Comment.accessible_to_user(@user)
       .where(:thread_id => thread_ids)
       .includes(:user, :hat, :story => :user, :votes => :user)
       .joins(:story).where.not(stories: { is_expired: true })

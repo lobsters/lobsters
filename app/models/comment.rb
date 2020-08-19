@@ -33,7 +33,7 @@ class Comment < ApplicationRecord
   scope :not_deleted, -> { where(is_deleted: false) }
   scope :not_moderated, -> { where(is_moderated: false) }
   scope :active, -> { not_deleted.not_moderated }
-  scope :for_user, ->(user) { user && user.is_moderator? ? all : active }
+  scope :accessible_to_user, ->(user) { user && user.is_moderator? ? all : active }
   scope :not_on_story_hidden_by, ->(user) {
     user ? where.not(
       HiddenStory.select('TRUE')

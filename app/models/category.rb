@@ -6,7 +6,7 @@ class Category < ApplicationRecord
   has_many :stories, through: :tags
 
   validates :category, length: { maximum: 25 }, presence: true,
-                       uniqueness: true, format: { without: /,/ }
+                       uniqueness: { case_sensitive: false }, format: { without: /,/ }
 
   def to_param
     self.category

@@ -310,6 +310,11 @@ describe Story do
       expect(s1.similar_stories).to eq([])
       expect(s2.similar_stories).to eq([])
     end
+
+    it "doesn't throw exceptions at brackets" do
+      s = create(:story, url: 'http://aaonline.fr/search.php?search&criteria[title-contains]=debian')
+      expect(s.similar_stories).to eq([])
+    end
   end
 
   describe "#calculated_hotness" do
@@ -318,8 +323,8 @@ describe Story do
     end
 
     before do
-      create(:comment, story: story, downvotes: 5, upvotes: 10)
-      create(:comment, story: story, downvotes: 10, upvotes: 5)
+      create(:comment, story: story, score: 1, flags: 5)
+      create(:comment, story: story, score: -9, flags: 10)
     end
 
     context "with positive base" do
@@ -374,15 +379,13 @@ describe Story do
 
   describe "scopes" do
     context "recent" do
-      before do
+      it "returns the newest stories that have not yet reached the front page" do
         create(:story, title: "Front Page")
         create(:story, title: "Front Page 2")
+        flagged = create(:story, title: "New Story", score: -2, flags: 3)
+        expect(Story.front_page).to_not include(flagged)
 
-        create(:story, title: "New Story", downvotes: 3) # downvotes simulate story off 'front'
-      end
-
-      it "returns the newest stories that have not yet reached the front page" do
-        expect(Story.recent).to include Story.find_by(title: "New Story")
+        expect(Story.recent).to include(flagged)
         expect(Story.recent).to_not include(Story.front_page)
       end
     end

@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 5.2.4.3"
+gem "rails", "~> 6.0.3.2"
 
 gem "mysql2"
 
@@ -14,7 +14,6 @@ gem "activerecord-typedstore"
 gem 'sprockets-rails', '2.3.3'
 
 # js
-gem "dynamic_form"
 gem "jquery-rails", "~> 4.3"
 gem "json"
 gem "uglifier", ">= 1.3.0"
@@ -58,4 +57,5 @@ group :test, :development do
   gem "rb-readline"
   gem "vcr"
   gem "webmock" # used to support vcr
+  gem 'simplecov', require: false
 end

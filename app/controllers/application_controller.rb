@@ -51,7 +51,7 @@ class ApplicationController < ActionController::Base
   def flag_warning
     @flag_warning_int = time_interval('1m')
     @show_flag_warning = (
-      @user && !!DownvotedCommenters.new(@flag_warning_int[:param], 1.day).check_list_for(@user)
+      @user && !!FlaggedCommenters.new(@flag_warning_int[:param], 1.day).check_list_for(@user)
     )
   end
 

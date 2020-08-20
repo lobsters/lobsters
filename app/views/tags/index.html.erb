@@ -21,7 +21,7 @@
           | <%= link_to "filtered", filters_path(anchor: tag.tag) %>
         <% end %>
         <% if is_admin %>
-          | <%= link_to 'edit', edit_tag_path(tag.id) %>
+          | <%= link_to 'edit', edit_tag_path(tag.tag) %>
         <% end %>
         </span>
       </ol>

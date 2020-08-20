@@ -52,24 +52,24 @@ describe 'tags', type: :request do
     let(:tag) { Tag.first }
 
     it 'updates tags with valid params' do
-      post "/tags/#{tag.id}", params: { tag: { tag: 'modified_tag' } }
+      post "/tags/#{tag.tag}", params: { tag: { tag: 'modified_tag' } }
       expect(Tag.find(tag.id).tag).to eq 'modified_tag'
       expect(response).to redirect_to tags_path
     end
 
     it 'does not update tags when the new name is blank' do
-      post "/tags/#{tag.id}", params: { tag: { tag: '' } }
+      post "/tags/#{tag.tag}", params: { tag: { tag: '' } }
       expect(Tag.find(tag.id).tag).not_to be_blank
       expect(response).to redirect_to edit_tag_path
     end
 
     it 'rejects updates with unpermiited params' do
-      expect { post "/tags/#{tag.id}", params: { tag: { is_media: true } } }
+      expect { post "/tags/#{tag.tag}", params: { tag: { is_media: true } } }
         .to raise_error ActionController::UnpermittedParameters
     end
 
     it 'updates with all permitted params' do
-      post "/tags/#{tag.id}", params: { tag: {
+      post "/tags/#{tag.tag}", params: { tag: {
         tag: 'mytag',
         description: 'desc',
         hotness_mod: 1.5,
@@ -85,7 +85,7 @@ describe 'tags', type: :request do
     end
 
     it 'creates a moderation with the expected user_id' do
-      post "/tags/#{tag.id}", params: { tag: { tag: 'modified_tag' } }
+      post "/tags/#{tag.tag}", params: { tag: { tag: 'modified_tag' } }
       expect(Moderation.order(id: :desc).first.moderator_user_id).to eq user.id
     end
   end

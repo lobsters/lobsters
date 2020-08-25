@@ -439,7 +439,7 @@ class Story < ApplicationRecord
     s = if self.description.present?
       self.markeddown_description.gsub(/<[^>]*>/, "")
     else
-      self.story_text.body
+      self.story_text && self.story_text.body
     end
 
     if chars > 0 && s.to_s.length > chars

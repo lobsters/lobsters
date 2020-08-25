@@ -34,6 +34,7 @@ class Story < ApplicationRecord
            :source => :user
   has_many :hidings, :class_name => 'HiddenStory', :inverse_of => :story, :dependent => :destroy
   has_many :savings, :class_name => 'SavedStory', :inverse_of => :story, :dependent => :destroy
+  has_one :story_text, foreign_key: :id, dependent: :destroy, inverse_of: :story
 
   scope :base, -> { includes(:tags).unmerged.not_deleted }
   scope :deleted, -> { where(is_expired: true) }
@@ -103,7 +104,6 @@ class Story < ApplicationRecord
   validates :url, length: { :maximum => 250, :allow_nil => true }
   validates :short_id, presence: true, length: { :maximum => 6 }
   validates :markeddown_description, length: { :maximum => 16_777_215, :allow_nil => true }
-  validates :story_cache, length: { :maximum => 16_777_215, :allow_nil => true }
   validates :twitter_id, length: { :maximum => 20, :allow_nil => true }
 
   validates_each :merged_story_id do |record, _attr, value|
@@ -435,11 +435,11 @@ class Story < ApplicationRecord
     self.markeddown_description = self.generated_markeddown_description
   end
 
-  def description_or_story_cache(chars = 0)
+  def description_or_story_text(chars = 0)
     s = if self.description.present?
       self.markeddown_description.gsub(/<[^>]*>/, "")
     else
-      self.story_cache
+      self.story_text.body
     end
 
     if chars > 0 && s.to_s.length > chars
@@ -452,12 +452,6 @@ class Story < ApplicationRecord
 
   def domain_search_url
     "/search?order=newest&q=domain:#{self.domain}"
-  end
-
-  def fetch_story_cache!
-    if self.url.present?
-      self.story_cache = StoryCacher.get_story_text(self)
-    end
   end
 
   def fix_bogus_chars

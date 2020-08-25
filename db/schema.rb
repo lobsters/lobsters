@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `rails
+# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_11_022248) do
+ActiveRecord::Schema.define(version: 2020_08_12_024241) do
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "category"
@@ -27,11 +27,11 @@ ActiveRecord::Schema.define(version: 2020_08_11_022248) do
     t.bigint "user_id", null: false, unsigned: true
     t.bigint "parent_comment_id", unsigned: true
     t.bigint "thread_id", unsigned: true
-    t.text "comment", limit: 16777215, null: false
+    t.text "comment", size: :medium, null: false
     t.integer "score", default: 1, null: false
-    t.integer "flags", default: 0, null: false, unsigned: true
+    t.integer "flags", default: 1, null: false, unsigned: true
     t.decimal "confidence", precision: 20, scale: 19, default: "0.0", null: false
-    t.text "markeddown_comment", limit: 16777215
+    t.text "markeddown_comment", size: :medium
     t.boolean "is_deleted", default: false
     t.boolean "is_moderated", default: false
     t.boolean "is_from_email", default: false
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 2020_08_11_022248) do
     t.string "code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "memo", limit: 16777215
+    t.text "memo", size: :medium
     t.datetime "used_at"
     t.bigint "new_user_id", unsigned: true
     t.index ["new_user_id"], name: "invitations_new_user_id_fk"
@@ -123,7 +123,7 @@ ActiveRecord::Schema.define(version: 2020_08_11_022248) do
     t.bigint "recipient_user_id", null: false, unsigned: true
     t.boolean "has_been_read", default: false
     t.string "subject", limit: 100
-    t.text "body", limit: 16777215
+    t.text "body", size: :medium
     t.string "short_id", limit: 30
     t.boolean "deleted_by_author", default: false
     t.boolean "deleted_by_recipient", default: false
@@ -151,8 +151,8 @@ ActiveRecord::Schema.define(version: 2020_08_11_022248) do
     t.bigint "story_id", unsigned: true
     t.bigint "comment_id", unsigned: true
     t.bigint "user_id", unsigned: true
-    t.text "action", limit: 16777215
-    t.text "reason", limit: 16777215
+    t.text "action", size: :medium
+    t.text "reason", size: :medium
     t.boolean "is_from_suggestions", default: false
     t.bigint "tag_id", unsigned: true
     t.integer "domain_id"
@@ -189,15 +189,14 @@ ActiveRecord::Schema.define(version: 2020_08_11_022248) do
     t.bigint "user_id", null: false, unsigned: true
     t.string "url", limit: 250, default: ""
     t.string "title", limit: 150, default: "", null: false
-    t.text "description", limit: 16777215
+    t.text "description", size: :medium
     t.string "short_id", limit: 6, default: "", null: false
     t.boolean "is_expired", default: false, null: false
     t.integer "score", default: 1, null: false
     t.integer "flags", default: 0, null: false, unsigned: true
     t.boolean "is_moderated", default: false, null: false
     t.decimal "hotness", precision: 20, scale: 10, default: "0.0", null: false
-    t.text "markeddown_description", limit: 16777215
-    t.text "story_cache", limit: 16777215
+    t.text "markeddown_description", size: :medium
     t.integer "comments_count", default: 0, null: false
     t.bigint "merged_story_id", unsigned: true
     t.datetime "unavailable_at"
@@ -213,11 +212,16 @@ ActiveRecord::Schema.define(version: 2020_08_11_022248) do
     t.index ["merged_story_id"], name: "index_stories_on_merged_story_id"
     t.index ["score"], name: "index_stories_on_score"
     t.index ["short_id"], name: "unique_short_id", unique: true
-    t.index ["story_cache"], name: "index_stories_on_story_cache", type: :fulltext
     t.index ["title"], name: "index_stories_on_title", type: :fulltext
     t.index ["twitter_id"], name: "index_stories_on_twitter_id"
     t.index ["url"], name: "url", length: 191
     t.index ["user_id"], name: "index_stories_on_user_id"
+  end
+
+  create_table "story_texts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.text "body", size: :medium, null: false
+    t.timestamp "created_at", default: -> { "current_timestamp()" }, null: false
+    t.index ["body"], name: "index_story_texts_on_body", type: :fulltext
   end
 
   create_table "suggested_taggings", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -274,7 +278,7 @@ ActiveRecord::Schema.define(version: 2020_08_11_022248) do
     t.boolean "is_admin", default: false
     t.string "password_reset_token", limit: 75, collation: "utf8mb4_general_ci"
     t.string "session_token", limit: 75, default: "", null: false, collation: "utf8mb4_general_ci"
-    t.text "about", limit: 16777215, collation: "utf8mb4_general_ci"
+    t.text "about", size: :medium, collation: "utf8mb4_general_ci"
     t.bigint "invited_by_user_id", unsigned: true
     t.boolean "is_moderator", default: false
     t.boolean "pushover_mentions", default: false

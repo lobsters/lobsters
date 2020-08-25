@@ -57,7 +57,7 @@ describe Search do
     @user.destroy! if @user
   end
 
-  it "can search for stories" do
+  it "can search titles for stories" do
     search = Search.new
     search.q = "unique"
 

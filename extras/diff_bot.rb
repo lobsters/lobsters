@@ -1,4 +1,4 @@
-class StoryCacher
+class DiffBot
   cattr_accessor :DIFFBOT_API_KEY
 
   # this needs to be overridden in config/initializers/production.rb

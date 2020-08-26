@@ -132,7 +132,7 @@ class Search
         if tag_scopes.present?
           self.results = with_tags(base, tag_scopes)
         else
-          self.results = base.includes({ :taggings => :tag }, :user).left_outer_joins(:story_texts)
+          self.results = base.includes({ :taggings => :tag }, :user).left_outer_joins(:story_text)
         end
       end
       self.total_results = self.results.dup.count("stories.id")

@@ -371,11 +371,7 @@ class Story < ApplicationRecord
   end
 
   def can_be_seen_by_user?(user)
-    if is_gone? && !(user && (user.is_moderator? || user.id == self.user_id))
-      return false
-    end
-
-    true
+    return !is_gone? || (user && (user.is_moderator? || user.id == self.user_id))
   end
 
   def can_have_images?

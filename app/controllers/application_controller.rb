@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
   before_action :authenticate_user
+  before_action :mini_profiler
   before_action :set_traffic_style
   before_action :prepare_exception_notifier
 
@@ -53,6 +54,12 @@ class ApplicationController < ActionController::Base
     @show_flag_warning = (
       @user && !!FlaggedCommenters.new(@flag_warning_int[:param], 1.day).check_list_for(@user)
     )
+  end
+
+  def mini_profiler
+    if @user && @user.is_admin?
+      Rack::MiniProfiler.authorize_request
+    end
   end
 
   # https://web.archive.org/web/20180108083712/http://umaine.edu/lobsterinstitute/files/2011/12/LobsterColorsWeb.pdf

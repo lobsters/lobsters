@@ -588,7 +588,7 @@ class Story < ApplicationRecord
       m.action = all_changes.map {|k, v|
         if k == "merged_story_id"
           if v[1]
-            "merged into #{self.merged_into_story.short_id} " <<
+            "merged into story #{self.merged_into_story.short_id} " <<
               "(#{self.merged_into_story.title})"
           else
             "unmerged from another story"

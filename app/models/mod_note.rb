@@ -53,10 +53,10 @@ class ModNote < ApplicationRecord
       created_at: Time.current,
       note: "Attempted to post a story from a #{reason} domain:\n" +
         "url: #{story.url}" +
-        "title: #{story.title}" +
-        "user_is_author: #{story.user_is_author}" +
-        "tags: #{story.tags.map(&:tag).join(' ')}" +
-        "description: #{story.description}"
+        " title: #{story.title}" +
+        " user_is_author: #{story.user_is_author}" +
+        " tags: #{story.tags.map(&:tag).join(' ')}" +
+        " description: #{story.description}"
     )
   end
 end

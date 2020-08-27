@@ -567,6 +567,7 @@ class Story < ApplicationRecord
 
     all_changes = self.changes.merge(self.tagging_changes)
     all_changes.delete("unavailable_at")
+    all_changes.delete("domain_id")
 
     if !all_changes.any?
       return

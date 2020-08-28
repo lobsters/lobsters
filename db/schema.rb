@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_12_024241) do
+ActiveRecord::Schema.define(version: 2020_08_28_015742) do
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "category"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_024241) do
     t.bigint "thread_id", unsigned: true
     t.text "comment", size: :medium, null: false
     t.integer "score", default: 1, null: false
-    t.integer "flags", default: 1, null: false, unsigned: true
+    t.integer "flags", default: 0, null: false, unsigned: true
     t.decimal "confidence", precision: 20, scale: 19, default: "0.0", null: false
     t.text "markeddown_comment", size: :medium
     t.boolean "is_deleted", default: false

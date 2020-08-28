@@ -385,10 +385,7 @@ class Story < ApplicationRecord
       return false
     end
 
-    if self.taggings.select {|t| t.tag && t.tag.privileged? }.any?
-      return false
-    end
-
+    self.tags.each {|t| return false if t.privileged? }
     return true
   end
 

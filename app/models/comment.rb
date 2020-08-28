@@ -318,7 +318,7 @@ class Comment < ApplicationRecord
     self.flags += flag_delta
     Comment.connection.execute <<~SQL
       UPDATE comments SET
-        score = (select sum(vote) from votes where comment_id = comments.id),
+        score = coalesce((select sum(vote) from votes where comment_id = comments.id), 0),
         flags = (select count(*) from votes where comment_id = comments.id and vote = -1),
         confidence = #{self.calculated_confidence}
       WHERE id = #{self.id.to_i}

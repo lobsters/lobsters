@@ -11,14 +11,20 @@ class FakeDataGenerator
     0.upto(@users_count).each do |i|
       name = Faker::Name.name
       password = Faker::Internet.password
+      invite_user = users[Random.rand(users.length-1)] if users.length > 3
       create_args = {
         email: Faker::Internet.email(name: name),
         password: password,
         password_confirmation: password,
         username: Faker::Internet.user_name(specifier: name, separators: %w(_)),
         created_at: User::NEW_USER_DAYS.days.ago,
+        karma: Random.rand(User::MIN_KARMA_TO_FLAG * 2),
+        about: Faker::Lorem.sentence(word_count: 7),
+        homepage: Faker::Internet.url,
       }
       create_args.merge!(is_moderator: true) if i % 7 == 0
+      create_args.merge!(is_admin: true) if i % 8 == 0
+      create_args.merge!(invited_by_user: invite_user) if users.length > 3
       users << User.create!(create_args)
     end
 
@@ -75,6 +81,34 @@ class FakeDataGenerator
             story_id: x.id,
             parent_comment_id: c.id
         end
+      end
+    end
+
+    # Comment Flags
+    Comment.all.each do |c|
+      if Random.rand(100) > 95
+        u = users[Random.rand(@users_count-1)]
+        Vote.vote_thusly_on_story_or_comment_for_user_because(
+          -1,
+          c.story_id,
+          c.id,
+          u.id,
+          Vote::COMMENT_REASONS.keys[Random.rand(Vote::COMMENT_REASONS.keys.length)]
+        )
+      end
+    end
+
+    # Story Flags
+    Story.all.each do |s|
+      if Random.rand(100) > 95
+        u = users[Random.rand(@users_count-1)]
+        Vote.vote_thusly_on_story_or_comment_for_user_because(
+          -1,
+          s.id,
+          nil,
+          u.id,
+          Vote::STORY_REASONS.keys[Random.rand(Vote::STORY_REASONS.keys.length)]
+        )
       end
     end
 

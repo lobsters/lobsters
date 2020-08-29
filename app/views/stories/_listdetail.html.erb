@@ -86,7 +86,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 
     <% if !(defined?(single_story) && single_story) && @user &&
     @user.show_story_previews? %>
-      <% if (sc = story.description_or_story_cache(500)).present? %>
+      <% if (sc = story.description_or_story_text(500)).present? %>
         <div class="story_content">
           <%= break_long_words(sc) %>
         </div>

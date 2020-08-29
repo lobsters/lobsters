@@ -458,6 +458,6 @@ private
     @story = Story.where(short_id: params[:id]).first!
     @ribbon = ReadRibbon.where(user: @user, story: @story).first_or_create
     yield
-    @ribbon.touch
+    @ribbon.bump
   end
 end

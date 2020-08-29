@@ -34,6 +34,12 @@ gem "nokogiri", ">= 1.10.8"
 gem "htmlentities"
 gem "commonmarker", "~> 0.14"
 
+# perf
+gem 'flamegraph'
+gem 'memory_profiler'
+gem 'rack-mini-profiler'
+gem 'stackprof'
+
 gem "oauth" # for twitter-posting bot
 gem "mail" # for parsing incoming mail
 gem "ruumba" # tests views
@@ -42,7 +48,6 @@ gem "svg-graph", require: 'SVG/Graph/TimeSeries' # for charting, note workaround
 gem 'transaction_retry' # mitigate https://github.com/lobsters/lobsters-ansible/issues/39
 
 group :test, :development do
-  gem 'bullet'
   gem 'capybara'
   gem 'database_cleaner'
   gem 'good_migrations'

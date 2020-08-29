@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_20_170829) do
+ActiveRecord::Schema.define(version: 2020_08_28_015742) do
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "category"
@@ -214,11 +214,16 @@ ActiveRecord::Schema.define(version: 2020_08_20_170829) do
     t.index ["merged_story_id"], name: "index_stories_on_merged_story_id"
     t.index ["score"], name: "index_stories_on_score"
     t.index ["short_id"], name: "unique_short_id", unique: true
-    t.index ["story_cache"], name: "index_stories_on_story_cache", type: :fulltext
     t.index ["title"], name: "index_stories_on_title", type: :fulltext
     t.index ["twitter_id"], name: "index_stories_on_twitter_id"
     t.index ["url"], name: "url", length: 191
     t.index ["user_id"], name: "index_stories_on_user_id"
+  end
+
+  create_table "story_texts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.text "body", size: :medium, null: false
+    t.timestamp "created_at", default: -> { "current_timestamp()" }, null: false
+    t.index ["body"], name: "index_story_texts_on_body", type: :fulltext
   end
 
   create_table "suggested_taggings", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

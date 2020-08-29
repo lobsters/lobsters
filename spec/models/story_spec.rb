@@ -17,14 +17,6 @@ describe Story do
     )
   end
 
-  it "has a limit on the story cache field" do
-    s = build(:story)
-    s.story_cache = "Z" * 16_777_218
-
-    s.valid?
-    expect(s.errors[:story_cache]).to eq(['is too long (maximum is 16777215 characters)'])
-  end
-
   it "has a limit on the twitter id field" do
     s = build(:story)
     s.twitter_id = "Z" * 25

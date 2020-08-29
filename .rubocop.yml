@@ -19,6 +19,7 @@ AllCops:
     - 'bin/**/*'
     - 'db/**/*'
     - 'vendor/**/*'
+  UseCache: false
 
 # Cop configuration:
 

@@ -255,7 +255,7 @@ class User < ApplicationRecord
 
       self.delete!
 
-      BanNotification.notify(self, banner, reason)
+      BanNotification.notify(self, banner, reason) unless self.deleted_at?
 
       m = Moderation.new
       m.moderator_user_id = banner.id

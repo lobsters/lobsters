@@ -253,9 +253,8 @@ class User < ApplicationRecord
       self.banned_by_user_id = banner.id
       self.banned_reason = reason
 
-      self.delete!
-
       BanNotification.notify(self, banner, reason) unless self.deleted_at?
+      self.delete!
 
       m = Moderation.new
       m.moderator_user_id = banner.id

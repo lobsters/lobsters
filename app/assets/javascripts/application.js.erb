@@ -9,14 +9,14 @@ var _Lobsters = Class.extend({
 
   storyFlagReasons: { <%= Vote::STORY_REASONS.map{|k,v|
       "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
-  commentDownvoteReasons: { <%= Vote::COMMENT_REASONS.map{|k,v|
+  commentFlagReasons: { <%= Vote::COMMENT_REASONS.map{|k,v|
       "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
 
   upvoteStory: function(voterEl) {
     Lobsters.vote("story", voterEl, 1);
   },
   flagStory: function(voterEl) {
-    Lobsters._showDownvoteWhyAt("story", voterEl, function(k) {
+    Lobsters._showFlagWhyAt("story", voterEl, function(k) {
       Lobsters.vote("story", voterEl, -1, k); });
   },
   hideStory: function(hiderEl) {
@@ -63,38 +63,38 @@ var _Lobsters = Class.extend({
   upvoteComment: function(voterEl) {
     Lobsters.vote("comment", voterEl, 1);
   },
-  downvoteComment: function(voterEl) {
-    Lobsters._showDownvoteWhyAt("comment", voterEl, function(k) {
+  flagComment: function(voterEl) {
+    Lobsters._showFlagWhyAt("comment", voterEl, function(k) {
       Lobsters.vote("comment", voterEl, -1, k); });
   },
-  _showDownvoteWhyAt: function(thingType, voterEl, onChooseWhy) {
+  _showFlagWhyAt: function(thingType, voterEl, onChooseWhy) {
     if (!Lobsters.curUser)
       return Lobsters.bounceToLogin();
 
     var li = $(voterEl).closest(".story, .comment");
-    if (li.hasClass("downvoted")) {
+    if (li.hasClass("flagged")) {
       /* already upvoted, neutralize */
       Lobsters.vote(thingType, voterEl, -1, null);
       return;
     }
 
-    if ($("#downvote_why"))
-      $("#downvote_why").remove();
-    if ($("#downvote_why_shadow"))
-      $("#downvote_why_shadow").remove();
+    if ($("#flag_why"))
+      $("#flag_why").remove();
+    if ($("#flag_why_shadow"))
+      $("#flag_why_shadow").remove();
 
-    var sh = $("<div id=\"downvote_why_shadow\"></div>");
+    var sh = $("<div id=\"flag_why_shadow\"></div>");
     $(voterEl).after(sh);
     sh.click(function() {
-      $("#downvote_why_shadow").remove();
-      $("#downvote_why").remove();
+      $("#flag_why_shadow").remove();
+      $("#flag_why").remove();
     });
 
-    var d = $("<div id=\"downvote_why\"></div>");
+    var d = $("<div id=\"flag_why\"></div>");
 
     var reasons;
     if (thingType == "comment")
-      reasons = Lobsters.commentDownvoteReasons;
+      reasons = Lobsters.commentFlagReasons;
     else
       reasons = Lobsters.storyFlagReasons;
 
@@ -103,8 +103,8 @@ var _Lobsters = Class.extend({
         ">" + v + "</a>");
 
       a.click(function() {
-        $("#downvote_why").remove();
-        $("#downvote_why_shadow").remove();
+        $("#flag_why").remove();
+        $("#flag_why_shadow").remove();
 
         if (k != "")
           onChooseWhy(k);
@@ -126,7 +126,7 @@ var _Lobsters = Class.extend({
       });
       d.css("left", $(voterEl).position().left);
     } else {
-      // place downvote menu outside of the comment to avoid inheriting opacity
+      // place flag menu outside of the comment to avoid inheriting opacity
       var voterPos = $(voterEl).position();
       d.appendTo($(voterEl).closest(".comments_subtree"));
       d.css({
@@ -156,18 +156,18 @@ var _Lobsters = Class.extend({
       score--;
       action = "unvote";
     }
-    else if (li.hasClass("downvoted") && point < 0) {
-      /* already downvoted, neutralize */
-      li.removeClass("downvoted");
+    else if (li.hasClass("flagged") && point < 0) {
+      /* already flagged, neutralize */
+      li.removeClass("flagged");
       score++;
       action = "unvote";
     }
     else if (point > 0) {
-      if (li.hasClass("downvoted"))
+      if (li.hasClass("flagged"))
         /* flip flop */
         score++;
 
-      li.removeClass("downvoted").addClass("upvoted");
+      li.removeClass("flagged").addClass("upvoted");
       score++;
       action = "upvote";
     }
@@ -176,10 +176,11 @@ var _Lobsters = Class.extend({
         /* flip flop */
         score--;
 
-      li.removeClass("upvoted").addClass("downvoted");
+      li.removeClass("upvoted").addClass("flagged");
+      li.prev("input.comment_folder_button").prop("checked", true);
       showScore = false;
       score--;
-      action = "downvote";
+      action = "flag";
     }
 
     if (showScore)
@@ -190,14 +191,14 @@ var _Lobsters = Class.extend({
     if (action == "upvote" || action == "unvote") {
       li.find(".reason").html("");
 
-      if (action == "unvote" && thingType == "story" && point < 0)
+      if (action == "unvote" && point < 0)
         li.find(".flagger").text("flag");
     }
-    else if (action == "downvote" && thingType == "comment")
-      li.find(".reason").html("| " +
-        Lobsters.commentDownvoteReasons[reason].toLowerCase());
-    else if (action == "downvote" && thingType == "story")
+    else if (action == "flag") {
       li.find(".flagger").text("unflag");
+      if (thingType == "comment")
+        li.find(".reason").html("| " + Lobsters.commentFlagReasons[reason].toLowerCase());
+    }
 
     $.post("/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
       li.attr("data-shortid") + "/" +
@@ -389,8 +390,8 @@ var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
   var $olcomments = $("ol.comments");
-  $olcomments.on("click", ".comment a.downvoter", function() {
-    Lobsters.downvoteComment(this);
+  $olcomments.on("click", ".comment a.flagger", function() {
+    Lobsters.flagComment(this);
     return false;
   });
   $olcomments.on("click", ".comment a.upvoter", function() {

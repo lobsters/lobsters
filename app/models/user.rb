@@ -137,14 +137,14 @@ class User < ApplicationRecord
   # minimum karma required to be able to offer title/tag suggestions
   MIN_KARMA_TO_SUGGEST = 10
 
-  # minimum karma required to be able to downvote comments
-  MIN_KARMA_TO_DOWNVOTE = 50
+  # minimum karma required to be able to flag comments
+  MIN_KARMA_TO_FLAG = 50
 
   # minimum karma required to be able to submit new stories
   MIN_KARMA_TO_SUBMIT_STORIES = -4
 
   # minimum karma required to process invitation requests
-  MIN_KARMA_FOR_INVITATION_REQUESTS = MIN_KARMA_TO_DOWNVOTE
+  MIN_KARMA_FOR_INVITATION_REQUESTS = MIN_KARMA_TO_FLAG
 
   # proportion of posts authored by user to consider as heavy self promoter
   HEAVY_SELF_PROMOTER_PROPORTION = 0.51
@@ -253,9 +253,8 @@ class User < ApplicationRecord
       self.banned_by_user_id = banner.id
       self.banned_reason = reason
 
+      BanNotification.notify(self, banner, reason) unless self.deleted_at?
       self.delete!
-
-      BanNotification.notify(self, banner, reason)
 
       m = Moderation.new
       m.moderator_user_id = banner.id
@@ -272,18 +271,18 @@ class User < ApplicationRecord
     disabled_invite_at?
   end
 
-  def can_downvote?(obj)
+  def can_flag?(obj)
     if is_new?
       return false
     elsif obj.is_a?(Story)
-      if obj.is_downvotable?
+      if obj.is_flaggable?
         return true
       elsif obj.vote == -1
         # user can unvote
         return true
       end
-    elsif obj.is_a?(Comment) && obj.is_downvotable?
-      return !self.is_new? && (self.karma >= MIN_KARMA_TO_DOWNVOTE)
+    elsif obj.is_a?(Comment) && obj.is_flaggable?
+      return !self.is_new? && (self.karma >= MIN_KARMA_TO_FLAG)
     end
 
     false
@@ -360,7 +359,7 @@ class User < ApplicationRecord
   def delete!
     User.transaction do
       self.comments
-        .where("upvotes - downvotes < 0")
+        .where("score < 0")
         .find_each {|c| c.delete_for_user(self) }
 
       self.sent_messages.each do |m|
@@ -409,10 +408,10 @@ class User < ApplicationRecord
     return if self.is_banned? # https://www.youtube.com/watch?v=UcZzlPGnKdU
     self.email = "#{self.username}@lobsters.example" if \
       self.karma < 0 ||
-      (self.comments.where('created_at >= now() - interval 30 day AND is_moderated').count +
+      (self.comments.where('created_at >= now() - interval 30 day AND is_deleted').count +
        self.stories.where('created_at >= now() - interval 30 day AND is_expired AND is_moderated')
          .count >= 3) ||
-      DownvotedCommenters.new('90d').check_list_for(self)
+      FlaggedCommenters.new('90d').check_list_for(self)
   end
 
   def grant_moderatorship_by_user!(user)
@@ -495,7 +494,7 @@ class User < ApplicationRecord
     Tag.active.joins(
       :stories
     ).where(
-      :stories => { :user_id => self.id }
+      :stories => { :user_id => self.id, :is_expired => false }
     ).group(
       Tag.arel_table[:id]
     ).order(
@@ -510,7 +509,7 @@ class User < ApplicationRecord
   end
 
   def recent_threads(amount, include_submitted_stories: false, for_user: user)
-    comments = self.comments.for_user(for_user)
+    comments = self.comments.accessible_to_user(for_user)
 
     thread_ids = comments.group(:thread_id).order('MAX(created_at) DESC').limit(amount)
       .pluck(:thread_id)

@@ -120,16 +120,16 @@ class UsersController < ApplicationController
     int = @flag_warning_int
     @showing_user = User.where(username: params[:username]).first!
 
-    dc = DownvotedCommenters.new(int[:param], 1.day)
-    @dc_flagged = dc.commenters.map {|_, c| c[:n_downvotes] }.sort
-    @flagged_user_stats = dc.check_list_for(@showing_user)
+    fc = FlaggedCommenters.new(int[:param], 1.day)
+    @fc_flagged = fc.commenters.map {|_, c| c[:n_flags] }.sort
+    @flagged_user_stats = fc.check_list_for(@showing_user)
 
     rows = ActiveRecord::Base.connection.exec_query("
       select
         n_flags, count(*) as n_users
       from (
         select
-          comments.user_id, sum(downvotes) n_flags
+          comments.user_id, sum(flags) as n_flags
         from
           comments
         where
@@ -138,13 +138,13 @@ class UsersController < ApplicationController
       group by 1
       order by 1 asc;
     ").rows
-    users = Array.new(@dc_flagged.last.to_i + 1, 0)
+    users = Array.new(@fc_flagged.last.to_i + 1, 0)
     rows.each {|r| users[r.first] = r.last }
     @lookup = rows.to_h
 
     @flagged_comments = @showing_user.comments
       .where("
-        comments.downvotes > 0 and
+        comments.flags > 0 and
         comments.created_at >= now() - interval #{int[:dur]} #{int[:intv]}")
       .order("id DESC")
       .includes(:user, :hat, :story => :user)

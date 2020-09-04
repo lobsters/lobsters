@@ -4,7 +4,7 @@
 %>
 <li id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
 class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
-<%= story.vote && story.vote[:vote] == -1 ? "downvoted" : "" %>
+<%= story.vote && story.vote[:vote] == -1 ? "flagged" : "" %>
 <%= story.score <= -1 ? "negative_1" : "" %>
 <%= story.score <= -3 ? "negative_3" : "" %>
 <%= story.score <= -5 ? "negative_5" : "" %>
@@ -86,7 +86,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 
     <% if !(defined?(single_story) && single_story) && @user &&
     @user.show_story_previews? %>
-      <% if (sc = story.description_or_story_cache(500)).present? %>
+      <% if (sc = story.description_or_story_text(500)).present? %>
         <div class="story_content">
           <%= break_long_words(sc) %>
         </div>
@@ -131,7 +131,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           <% if @user && story.vote && story.vote[:vote] == -1 %>
             | <a class="flagger">unflag (<%=
               Vote::STORY_REASONS[story.vote[:reason]].to_s.downcase %>)</a>
-          <% elsif @user && @user.can_downvote?(story) %>
+          <% elsif @user && @user.can_flag?(story) %>
             | <a class="flagger">flag</a>
           <% end %>
           <% if story.is_hidden_by_cur_user %>
@@ -169,8 +169,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
 
         <% if defined?(single_story) && single_story &&
-        ((story.downvotes > 0 && @user && @user.is_moderator?) ||
-        (story.downvotes >= 3 || story.score <= 0)) %>
+        ((story.flags > 0 && @user && @user.is_moderator?) ||
+        (story.flags >= 3 || story.score <= 0)) %>
           | <%= story.vote_summary_for(@user).downcase %>
         <% end %>
       <% end %>

@@ -63,7 +63,7 @@ class Search
 
   def with_tags(base, tag_scopes)
     base
-      .joins({ :taggings => :tag }, :user)
+      .joins({ :taggings => :tag }, :user).left_outer_joins(:story_text)
       .where(:tags => { :tag => tag_scopes })
       .having("COUNT(stories.id) = ?", tag_scopes.length)
       .group("stories.id")
@@ -74,7 +74,7 @@ class Search
     # to compare objects
     case base.klass
     when ->(b) { b == Story }
-      base.joins(:domain)
+      base.joins(:domain).left_outer_joins(:story_text)
     when ->(b) { b == Comment }
       base.joins(story: [:domain])
     else
@@ -118,29 +118,29 @@ class Search
       title_match_sql = Arel.sql("MATCH(stories.title) AGAINST('#{qwords}' IN BOOLEAN MODE)")
       description_match_sql =
         Arel.sql("MATCH(stories.description) AGAINST('#{qwords}' IN BOOLEAN MODE)")
-      story_cache_match_sql =
-        Arel.sql("MATCH(stories.story_cache) AGAINST('#{qwords}' IN BOOLEAN MODE)")
+      story_text_match_sql =
+        Arel.sql("MATCH(story_texts.body) AGAINST('#{qwords}' IN BOOLEAN MODE)")
 
       if qwords.present?
         base.where!(
           "(#{title_match_sql} OR " +
           "#{description_match_sql} OR " +
-          "#{story_cache_match_sql})"
+          "#{story_text_match_sql})"
         )
 
         if tag_scopes.present?
           self.results = with_tags(base, tag_scopes)
         else
-          base = base.includes({ :taggings => :tag }, :user)
+          base = base.includes({ :taggings => :tag }, :user).left_outer_joins(:story_text)
           self.results = base.select(
-            ["stories.*", title_match_sql, description_match_sql, story_cache_match_sql].join(', ')
+            ["stories.*", title_match_sql, description_match_sql, story_text_match_sql].join(', ')
           )
         end
       else
         if tag_scopes.present?
           self.results = with_tags(base, tag_scopes)
         else
-          self.results = base.includes({ :taggings => :tag }, :user)
+          self.results = base.includes({ :taggings => :tag }, :user).left_outer_joins(:story_text)
         end
       end
       self.total_results = self.results.dup.count("stories.id")
@@ -148,16 +148,16 @@ class Search
       case self.order
       when "relevance"
         if qwords.present?
-          self.results.order!(Arel.sql("((#{title_match_sql}) * 2) DESC, " +
-                                       "((#{description_match_sql}) * 1.5) DESC, " +
-                                       "(#{story_cache_match_sql}) DESC"))
+          self.results.order!(Arel.sql("((#{title_match_sql}) * 2) + " +
+                                       "((#{description_match_sql}) * 1.5) + " +
+                                       "(#{story_text_match_sql}) DESC"))
         else
           self.results.order!("stories.created_at DESC")
         end
       when "newest"
         self.results.order!("stories.created_at DESC")
       when "points"
-        self.results.order!("#{Story.score_sql} DESC")
+        self.results.order!("score DESC")
       end
 
     when "comments"
@@ -183,7 +183,7 @@ class Search
       when "newest"
         self.results.order!("created_at DESC")
       when "points"
-        self.results.order!("#{Comment.score_sql} DESC")
+        self.results.order!("score DESC")
       end
     end
 
@@ -225,7 +225,8 @@ class Search
     end
 
   rescue ActiveRecord::StatementInvalid
-    # this is most likely bad boolean chars
+    # more likely the user has entered invalid boolean mode operators than our
+    # code is broken (not that I really trust this hairy class)
     self.results = []
     self.total_results = -1
   end

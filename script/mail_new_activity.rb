@@ -67,13 +67,7 @@ if __FILE__ == $PROGRAM_NAME
   last_story_id = (Keystore.value_for(LAST_STORY_KEY) || Story.last && Story.last.id).to_i
 
   Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each do |s|
-    s.fetch_story_cache!
-
-    if s.story_cache.blank?
-      s.fetch_story_cache!
-    end
-
-    s.save
+    StoryText.fill_cache!(s)
 
     mailing_list_users.each do |u|
       if (s.tags.map(&:id) & u.tag_filters.map(&:tag_id)).any?
@@ -119,9 +113,9 @@ if __FILE__ == $PROGRAM_NAME
 
           body.push "Via: #{s.url}"
 
-          if s.story_cache.present?
+          StoryText.cached?(s) do |text|
             body.push ""
-            body.push s.story_cache.to_s.word_wrap(EMAIL_WIDTH)
+            body.push text.to_s.word_wrap(EMAIL_WIDTH)
           end
         end
 

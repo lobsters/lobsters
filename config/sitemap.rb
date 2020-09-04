@@ -2,7 +2,7 @@ SitemapGenerator::Sitemap.default_host = "https://lobste.rs"
 
 check_hourly = 4.days.ago
 check_daily = 2.weeks.ago
-top_score = Story.all.maximum('upvotes')
+top_score = Story.all.maximum('score')
 
 SitemapGenerator::Sitemap.create do
   %w{/about /chat}.each do |path|
@@ -23,7 +23,7 @@ SitemapGenerator::Sitemap.create do
     changefreq = 'daily'   if lastmod >= check_daily
     changefreq = 'hourly'  if lastmod >= check_hourly
 
-    priority = 1.0 * story.upvotes / top_score
+    priority = 1.0 * story.score / top_score
     add story.comments_path, lastmod: lastmod, changefreq: changefreq, priority: priority
   end
 end

@@ -8,26 +8,30 @@ class Vote < ApplicationRecord
             length: { is: 1 },
             allow_blank: true
 
+  # don't forget to edit the explanations on /about
   COMMENT_REASONS = {
     "O" => "Off-topic",
-    "I" => "Incorrect",
     "M" => "Me-too",
     "T" => "Troll",
-    "S" => "Spam",
     "U" => "Unkind",
+    "S" => "Spam",
     "" => "Cancel",
   }.freeze
+  ALL_COMMENT_REASONS = COMMENT_REASONS.merge({
+    "I" => "Incorrect",
+  }).freeze
 
+  # don't forget to edit the explanations on /about
   STORY_REASONS = {
     "O" => "Off-topic",
     "A" => "Already Posted",
-    "S" => "Spam",
     "B" => "Broken Link",
+    "S" => "Spam",
     "" => "Cancel",
   }.freeze
-  OLD_STORY_REASONS = {
+  ALL_STORY_REASONS = STORY_REASONS.merge({
     "Q" => "Low Quality",
-  }.freeze
+  }).freeze
 
   def self.votes_by_user_for_stories_hash(user, stories)
     votes = {}
@@ -86,40 +90,29 @@ class Vote < ApplicationRecord
   end
 
   def self.vote_thusly_on_story_or_comment_for_user_because(
-    vote, story_id, comment_id, user_id, reason, update_counters = true
+    new_vote, story_id, comment_id, user_id, reason, update_counters = true
   )
     v = Vote.where(:user_id => user_id, :story_id => story_id,
       :comment_id => comment_id).first_or_initialize
 
-    # vote is already recorded, return
-    return if !v.new_record? && v.vote == vote
+    return if !v.new_record? && v.vote == new_vote # done if there's no change
 
-    #  v.vote  vote  up  down
-    #  -1       1     1   -1
-    #   0       1     1    0
-    #  -1       0     0   -1
-    #   1       0    -1    0
-    #   0      -1     0    1
-    #   1      -1    -1    1
-    if vote == 1
-      upvote = 1
-    elsif v.vote == 1
-      upvote = -1
+    score_delta = new_vote - v.vote.to_i
+    if v.vote == -1
+      # we know there's a change, so we must be removing a flag
+      flag_delta = -1
+    elsif new_vote == -1
+      # we know there's a change, so we must be adding a flag
+      flag_delta = 1
     else
-      upvote = 0
-    end
-    if vote == -1
-      downvote = 1
-    elsif v.vote == -1
-      downvote = -1
-    else
-      downvote = 0
+      # change from 1 to 0 or 0 to 1, so number of flags doesn't change
+      flag_delta = 0
     end
 
-    if vote == 0
+    if new_vote == 0
       v.destroy!
     else
-      v.vote = vote
+      v.vote = new_vote
       v.reason = reason
       v.save!
     end
@@ -127,9 +120,9 @@ class Vote < ApplicationRecord
     if update_counters
       t = v.target
       if v.user_id != t.user_id
-        User.update_counters t.user_id, karma: upvote - downvote
+        User.update_counters t.user_id, karma: score_delta
       end
-      t.give_upvote_or_downvote_and_recalculate!(upvote, downvote)
+      t.update_score_and_recalculate!(score_delta, flag_delta)
     end
   end
 

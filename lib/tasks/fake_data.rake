@@ -1,7 +1,8 @@
 class FakeDataGenerator
-  def initialize(users_count, stories_count)
+  def initialize(users_count, stories_count, categories_count)
     @users_count = users_count
     @stories_count = stories_count
+    @categories_count = categories_count
   end
 
   def generate
@@ -21,17 +22,26 @@ class FakeDataGenerator
       users << User.create!(create_args)
     end
 
+    # Categories
+    categories = []
+    @categories_count.times do
+      categories << Category.create!(category: Faker::Lorem.word.capitalize)
+    end
+
     # Stories
     @stories_count.times do |i|
       user = users[Random.rand(@users_count-1)]
-      title = Faker::Lorem.sentence(3)
-      tag = Tag.find_or_create_by! tag: title.split(' ').first.downcase
+      title = Faker::Lorem.sentence(word_count: 3)
+      category = categories[Random.rand(@categories_count)]
+      tag_name = title.split(' ').first.downcase
+      tag = Tag.find_by tag: tag_name
+      tag ||= Tag.create! tag: tag_name, category: category
       if i.even?
         Story.create! user: user, title: title, url: Faker::Internet.url, tags_a: [tag.tag]
       else
         Story.create! user: user,
           title: title,
-          description: Faker::Lorem.paragraphs(3).join("\n\n"),
+          description: Faker::Lorem.paragraphs(number: 3).join("\n\n"),
           tags_a: [tag.tag]
       end
     end
@@ -39,12 +49,15 @@ class FakeDataGenerator
     # User-deleted stories
     (@stories_count / 10).times do
       user = users[Random.rand(@users_count-1)]
-      title = Faker::Lorem.sentence(3)
-      tag = Tag.find_or_create_by! tag: title.split(' ').first.downcase
+      title = Faker::Lorem.sentence(word_count: 3)
+      category = categories[Random.rand(@categories_count-1)]
+      tag_name = title.split(' ').first.downcase
+      tag = Tag.find_by tag: tag_name
+      tag ||= Tag.create! tag: tag_name, category: category
       Story.create! user: user,
         title: title,
         tags_a: [tag.tag],
-        description: Faker::Lorem.paragraphs(1),
+        description: Faker::Lorem.paragraphs(number: 1),
         is_expired: true,
         editor: user
     end
@@ -53,12 +66,12 @@ class FakeDataGenerator
     Story.all.each do |x|
       Random.rand(1..3).times do |i|
         c = Comment.create! user: users[Random.rand(@users_count-1)],
-          comment: Faker::Lorem.sentence(Random.rand(30..50)),
+          comment: Faker::Lorem.sentence(word_count: Random.rand(30..50)),
           story_id: x.id
         # Replies to comments
         if i.odd?
           Comment.create! user: x.user,
-            comment: Faker::Lorem.sentence(Random.rand(30..50)),
+            comment: Faker::Lorem.sentence(word_count: Random.rand(30..50)),
             story_id: x.id,
             parent_comment_id: c.id
         end
@@ -80,7 +93,7 @@ class FakeDataGenerator
     Comment.all.each_with_index do |comment, i|
       comment_mod = users.detect(&:is_moderator)
       if i % 7 == 0
-        comment.delete_for_user(comment_mod, Faker::Lorem.paragraphs(1))
+        comment.delete_for_user(comment_mod, Faker::Lorem.paragraphs(number: 1))
         comment.undelete_for_user(comment_mod) if i.even?
       end
     end
@@ -97,5 +110,5 @@ task fake_data: :environment do
     fail "Cancelled" if STDIN.gets.chomp != 'y'
   end
 
-  FakeDataGenerator.new(20, 200).generate
+  FakeDataGenerator.new(20, 200, 5).generate
 end

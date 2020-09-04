@@ -4,6 +4,12 @@ class StoryRepository
     @params = params
   end
 
+  def categories(cats)
+    tagged_story_ids = Tagging.select(:story_id).where(tag_id: Tag.where(category: cats).pluck(:id))
+
+    Story.base.positive_ranked.where(id: tagged_story_ids).order(created_at: :desc)
+  end
+
   def hottest
     hottest = Story.base.positive_ranked.not_hidden_by(@user)
     hottest = hottest.filter_tags(@params[:exclude_tags] || [])
@@ -47,6 +53,6 @@ class StoryRepository
   def top(length)
     top = Story.base.where("created_at >= (NOW() - INTERVAL " <<
       "#{length[:dur]} #{length[:intv].upcase})")
-    top.order("#{Story.score_sql} DESC")
+    top.order("score DESC")
   end
 end

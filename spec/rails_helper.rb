@@ -2,7 +2,9 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
+require 'simplecov'
 
+SimpleCov.start 'rails'
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].sort.each {|f| require f }
@@ -28,7 +30,8 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with :truncation
 
-    Tag.create!([{ tag: "tag1" }, { tag: "tag2" }])
+    c = Category.create! category: "category1"
+    c.tags.create!([{ tag: "tag1" }, { tag: "tag2" }])
   end
 
   config.before(:example) do

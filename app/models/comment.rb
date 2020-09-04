@@ -246,10 +246,9 @@ class Comment < ApplicationRecord
     deliver_mention_notifications(notified)
   end
 
-  def deliver_mention_notifications(notified = nil)
-    notified ||= []
-
-    self.plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
+  def deliver_mention_notifications(notified = [])
+    to_notify = self.plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq
+    (to_notify - notified).each do |mention|
       if notified.include? mention
         next
       end

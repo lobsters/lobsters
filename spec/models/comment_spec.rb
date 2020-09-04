@@ -39,71 +39,66 @@ describe Comment do
   end
 
   it "sends reply notification" do
-    # The user receiving the notification.
-    u = create(:user)
-    u.settings["email_notifications"] = true
-    u.settings["email_replies"] = true
+    recipient = create(:user)
+    recipient.settings["email_notifications"] = true
+    recipient.settings["email_replies"] = true
 
-    # The user sending the notification.
-    u2 = create(:user)
+    sender = create(:user)
     # Story under which the comments are posted.
-    s = create(:story)
+    story = create(:story)
 
     # Parent comment.
-    c = build(:comment, story: s, user: u)
+    c = build(:comment, story: story, user: recipient)
     c.save # Comment needs to get an ID so it can have a child (c2).
 
     # Reply comment.
-    c2 = build(:comment, story: s, user: u2, parent_comment: c)
+    c2 = build(:comment, story: story, user: sender, parent_comment: c)
     c2.save
 
     expect(sent_emails.size).to eq(1)
-    expect(sent_emails[0].subject).to match(/Reply from #{u2.username}/)
+    expect(sent_emails[0].subject).to match(/Reply from #{sender.username}/)
   end
 
   it "sends mention notification" do
-    # User being mentioned.
-    u = create(:user)
-    u.settings["email_notifications"] = true
-    u.settings["email_mentions"] = true
+    recipient = create(:user)
+    recipient.settings["email_notifications"] = true
+    recipient.settings["email_mentions"] = true
     # Need to save, because deliver_mention_notifications re-fetches from DB.
-    u.save
+    recipient.save
 
-    # Mentioning user.
-    u2 = create(:user)
+    sender = create(:user)
     # Story under which the comment is posted.
-    s = create(:story)
+    story = create(:story)
     # The comment.
-    c = build(:comment, story: s, user: u2, comment: "@#{u.username}")
+    c = build(:comment, story: story, user: sender, comment: "@#{recipient.username}")
 
     c.save
     expect(sent_emails.size).to eq(1)
-    expect(sent_emails[0].subject).to match(/Mention from #{u2.username}/)
+    expect(sent_emails[0].subject).to match(/Mention from #{sender.username}/)
   end
 
   it "sends only reply notification on reply with mention" do
     # User being mentioned and replied to.
-    u = create(:user)
-    u.settings["email_notifications"] = true
-    u.settings["email_mentions"] = true
-    u.settings["email_replies"] = true
+    recipient = create(:user)
+    recipient.settings["email_notifications"] = true
+    recipient.settings["email_mentions"] = true
+    recipient.settings["email_replies"] = true
     # Need to save, because deliver_mention_notifications re-fetches from DB.
-    u.save
+    recipient.save
 
-    # User making the child comment.
-    u2 = create(:user)
+    sender = create(:user)
     # The story under which the comments are posted.
-    s = create(:story)
+    story = create(:story)
     # The parent comment.
-    c = build(:comment, user: u, story: s)
+    c = build(:comment, user: recipient, story: story)
     c.save # Comment needs to get an ID so it can have a child (c2).
 
     # The child comment.
-    c2 = build(:comment, user: u2, story: s, parent_comment: c,
-               comment: "@#{u.username}")
+    c2 = build(:comment, user: sender, story: story, parent_comment: c,
+               comment: "@#{recipient.username}")
     c2.save
 
     expect(sent_emails.size).to eq(1)
-    expect(sent_emails[0].subject).to match(/Reply from #{u2.username}/)
+    expect(sent_emails[0].subject).to match(/Reply from #{sender.username}/)
   end
 end

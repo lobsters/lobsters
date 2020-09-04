@@ -36,7 +36,7 @@ class Hat < ApplicationRecord
         "title=\"Granted #{self.created_at.strftime('%Y-%m-%d')}"
 
     if !hl && self.link.present?
-      h << " - #{ERB::Util.html_escape(self.link)}"
+      h << " - #{ERB::Util.html_escape(self.sanitized_link)}"
     end
 
     h << "\">" <<
@@ -69,5 +69,14 @@ class Hat < ApplicationRecord
     m.action = "Granted hat \"#{self.hat}\"" + (self.link.present? ?
       " (#{self.link})" : "")
     m.save
+  end
+
+  def sanitized_link
+    if link.include? "@"
+      a = Mail::Address.new(link)
+      a.domain
+    else
+      link
+    end
   end
 end

@@ -15,15 +15,15 @@ describe 'users controller' do
     let!(:bad_user) { create(:user) }
 
     before do
-      dc = double('DownvotedCommenters')
+      fc = double('FlaggedCommenters')
       bad_user_stats = {
-        n_downvotes: 15,
+        n_flags: 15,
       }
-      allow(dc).to receive(:commenters).and_return({
+      allow(fc).to receive(:commenters).and_return({
         bad_user.id => bad_user_stats,
       })
-      allow(dc).to receive(:check_list_for).and_return(bad_user_stats)
-      allow(DownvotedCommenters).to receive(:new).and_return(dc)
+      allow(fc).to receive(:check_list_for).and_return(bad_user_stats)
+      allow(FlaggedCommenters).to receive(:new).and_return(fc)
     end
 
     it "displays to the user" do

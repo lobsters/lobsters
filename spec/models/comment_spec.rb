@@ -38,6 +38,20 @@ describe Comment do
     expect(comment).to_not be_valid
   end
 
+  describe ".accessible_to_user" do
+    it "when user is a moderator" do
+      moderator = build(:user, :moderator)
+
+      expect(Comment.accessible_to_user(moderator)).to eq(Comment.all)
+    end
+
+    it "when user does not a moderator" do
+      user = build(:user)
+
+      expect(Comment.accessible_to_user(user)).to eq(Comment.active)
+    end
+  end
+
   it "sends reply notification" do
     recipient = create(:user)
     recipient.settings["email_notifications"] = true

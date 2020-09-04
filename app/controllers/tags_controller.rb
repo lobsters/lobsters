@@ -5,7 +5,14 @@ class TagsController < ApplicationController
     @cur_url = "/tags"
     @title = "Tags"
 
-    @tags = Tag.all_with_story_counts_for(nil)
+    @categories = Category.all.order('category asc').includes(:tags)
+    @tags = Tag.all
+
+    if @user
+      @filtered_tags = @user.tag_filter_tags.index_by(&:id)
+    else
+      @filtered_tags = tags_filtered_by_cookie.index_by(&:id)
+    end
 
     respond_to do |format|
       format.html { render :action => "index" }
@@ -30,12 +37,12 @@ class TagsController < ApplicationController
   end
 
   def edit
-    @tag = Tag.find(params[:id])
+    @tag = Tag.where(:tag => params[:tag_name]).first!
     @title = "Edit Tag"
   end
 
   def update
-    tag = Tag.find(params[:id])
+    tag = Tag.where(:tag => params[:tag_name]).first!
     if tag.update(tag_params)
       flash[:success] = "Tag #{tag.tag} has been updated"
       redirect_to tags_path
@@ -49,11 +56,13 @@ private
 
   def tag_params
     params.require(:tag).permit(
+      :category_name,
       :tag,
+      :tag_name,
       :description,
       :permit_by_new_users,
       :privileged,
-      :inactive,
+      :active,
       :hotness_mod,
       action_name == 'create' ? :is_media : nil
     ).merge(edit_user_id: @user.id)

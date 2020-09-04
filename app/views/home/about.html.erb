@@ -9,21 +9,20 @@
   and discussion, launched on July 3rd, 2012.
   The administrator is <a href="/u/pushcx">Peter Bhat Harkins</a> ("pushcx"), contact him with any support issues.
   Lobsters was created by <a href="/u/jcs">joshua stein</a>
-  with some specific design goals in mind to avoid problems faced by
-  other link aggregation sites:
+  with careful design touches to encourage a healthy community:
   </p>
 
   <ul>
     <li>a <a href="#tagging">tagging</a> system to categorize and filter submissions,</li>
     <li>a user <a href="#invitations">invitation tree</a> to combat spam,</li>
-    <li><a href="#downvotes">downvote explanations</a> to curb reflexive downvoting,</li>
+    <li><a href="#flags">flag explanations</a> to curb punishing disagreement,</li>
     <li>a strong commitment to <a href="#transparency">transparency</a>,</li>
-    <li>and <a href="#features">many other features</a> that have been added over the years.</li>
+    <li>and <a href="#features">many more features</a> that have been added over the years.</li>
   </ul>
 
-  <h2 id="tagging">Tagging</h2>
+  <h2 id="tagging">Tags and Topicality</h2>
   <p>
-  When links/stories are submitted, they must be tagged by the submitter from a list of predefined <a href="/tags">tags</a>.
+  When links or stories are submitted, they must be tagged by the submitter from a list of predefined <a href="/tags">tags</a>.
   Users can choose to <a href="/filters">filter</a> out or
   subscribe to all submissions with particular tags (example: <a href="https://lobste.rs/t/programming.rss">programming.rss</a>)
   or combinations of tags (example: <a href="https://lobste.rs/t/programming,audio.rss">programming,audio.rss</a>).
@@ -52,7 +51,7 @@
   </p></li>
 
   <li><p>
-  It keeps the conversation centralized.  Often stories contain discussion
+  It keeps the community coherent.  Often stories contain discussion
   about more than one topic, yet on other sites they are confined to a single
   category/forum, limiting the exposure.  The link could be submitted to more
   than one forum, but then each conversation would remain separate and users
@@ -69,66 +68,97 @@
   Explain the scope, list existing stories that should have been tagged, make a case for why people would want to specifically filter it out, and justify the increased complexity for submitters and mods.
   </p>
 
-  <h2 id="invitations">Invitation Tree</h2>
   <p>
-  New users must be invited by a current user, though there is no formal vetting process.
-  Invitations are used as a mechanism for spam-control,
-  to slow registrations to a pace <a href="https://en.wikipedia.org/wiki/Eternal_September">we can acculturate</a>
-  and to encourage users to be nice, not to make the Lobsters userbase an elite club.
-  The quickest way to receive an invitation is to talk to someone you
-  recognize from the site or
-  <% if Rails.application.allow_invitation_requests? %>
-    <a href="/invitations/request">request one publicly</a>.
-  <% else %>
-    request one in <a href="/chat">chat</a>.
-  <% end %>
-  If you wrote a link that was posted, definitely contact someone for an invite, we'd love to have you in the discussion.
+  Lobsters is focused pretty narrowly on computing; tags like <a href="/t/art">art</a> don't imply every piece of art is on-topic.
+  Some rules of thumb for great stories to submit: Will this improve the reader's next program? Will it deepen their understanding of their last program? Will it be more interesting in five or ten years?
   </p>
 
   <p>
-  The full <a href="/u">user tree</a> is made public and each user's profile
+  Some things that are off-topic here but popular on larger, similar sites:
+  entrepreneurship, management, news about companies that employ a lot of programmers,
+  investing, world events, anthropology, self-help, personal productivity systems,
+  last-resort customer service requests via public shaming,
+  "I wanted to see what this site's amazing users think about this off-topic thing",
+  and
+  defining the single morally correct economic and political system for the entire world when we can't even settle tabs vs. spaces.
+  </p>
+
+  <h2 id="invitations">Invitation Tree</h2>
+  <p>
+  The full <a href="/u">user tree</a> is public and each user's profile
   shows who invited them.  This provides some degree of accountability and
   helps identify voting rings.
   </p>
 
   <p>
-  There's no limit on how many invitations a user can send (though that might be prompted by scaling problems in the future).
-  When accounts are banned for spam, <a href="https://en.wikipedia.org/wiki/Sockpuppet_(Internet)">sockpuppeting</a>, or other abuse,
-  moderators will look up the invitation tree to consider disabling their inviter's ability to send invitations or, rarely, also banning.
+  New users must be invited by a current user, though there is no formal vetting process.
+  Invitations are used as a mechanism for spam-control,
+  to slow registrations to a pace <a href="https://en.wikipedia.org/wiki/Eternal_September">we can acculturate</a>
+  and to encourage users to be nice, not to make the Lobsters userbase an elite club.
+  The quickest way to receive an invitation is to talk to someone you <a href="/u">recognize from the site</a>.
+  If you wrote a link that was posted, please reach out in <a href="/chat">chat</a>, we'd love to have you join the discussion.
+  Finally, if you can't find anyone you know in the invitation tree and didn't author something posted to the site,
+  <% if Rails.application.allow_invitation_requests? %>
+    you can <a href="/invitations/request">request an invite</a>.
+  <% else %>
+    consider joining the <a href="/chat">community in the chat room</a>.
+  <% end %>
   </p>
 
-  <h2 id="downvotes">Downvote Explanations</h2>
   <p>
-  Often on other sites, a user would have their comment downvoted without
-  explanation and then edit their comment to ask why they were downvoted.  On
-  this site, voters must choose a reason before downvoting comments and those
-  votes are tallied and shown to the original commenter. Users may downvote
-  stories and comments after their account has
-  <%= User::MIN_KARMA_TO_DOWNVOTE %> karma.
+  There's no limit on how many invitations a user can send (though we might at some point, to manage <a href="https://lobste.rs/stats">growth</a>).
+  When accounts are banned for spam, <a href="https://en.wikipedia.org/wiki/Sockpuppet_(Internet)">sockpuppeting</a>, or other abuse,
+  moderators will consider disabling their inviter's ability to send invitations or, rarely, also ban them.
   </p>
+
+  <h2 id="ranking">Ranking</h2>
   <p>
-  For submitted stories, downvoting is done through flagging (also requiring a
-  valid reason) and these flag summaries are shown to all users.
+  All story and comment ranking on this site comes from user activity.
+  All users have equal votes, with no special priorities or penalties for specific users or domains.
+  Moderators have no ability to raise or <a href="http://www.righto.com/2013/11/how-hacker-news-ranking-really-works.html">lower</a> the rankings of stories or comments (besides voting like any user).
+  Per-tag <a href="/filters">hotness modifiers</a> affect all stories with
+  those tags, but these modifiers (and <a href="https://lobste.rs/moderations?utf8=%E2%9C%93&moderator=(All)&what[tags]=tags">changes</a> to them) are public.
+  Domains used for marketing analytics are banned and tracking parameters are removed from links
+  (look for <tt>TRACKING_DOMAINS</tt> and <tt>utm_</tt> in <a href="https://github.com/lobsters/lobsters/blob/master/app/models/story.rb">story.rb</a>).
+  </p>
+
+  <div id="flags">
+    <p>
+    Users can flag stories and comments when there's a serious problem that needs moderator attention.
+    Users must reach <%= User::MIN_KARMA_TO_FLAG %> karma to flag.
+    To guide usage and head off distracting meta conversations ("Why was this flagged!?", etc), flagging requires selecting from a preset list of reasons.
+    </p>
+
+    <p>
+    For stories, these are:
+    "Off-topic" for stories that are not about computing;
+    "Already Posted" for duplicate submissions and links that elaborate on or responses to a thread that's less than a week old (see <a href="#merging">merging</a>); and
+    "Broken Link" for links that 404, 500, or present a paywall;
+    "Spam" for links that promote a commercial service.
+    </p>
+
+    <p>
+    For comments, these are:
+    "Off-topic" for drifting into meta or topics that aren't related to the story;
+    "Me-too" when a comment doesn't add new information, typically a single sentence of appreciation, agreement, or humor;
+    "Troll" for derailing conversations into classic arguments, well-intentioned or not;
+    "Unkind" when uncharitable, insulting, or dismissive;
+    and
+    "Spam" for promoting commercial services.
+    </p>
+  </div>
+
+  <p>
+  Less than 1% of stories or comments get flagged, and users are not automatically punished by flags.
+  Users whose stories or comments are getting flagged significantly more often are strongly encouraged to talk to mods about what's not working.
+  (Please don't use flagging to try to push down topics or people you don't like; click "hide" on the story and <a href="https://xkcd.com/386">move on</a> rather than clutter up the mod dashboard with false alarms.)
   </p>
 
   <h2 id="transparency">Transparency Policy</h2>
   <p>
   All <a href="/moderations">moderator actions</a> on this site are visible to
-  everyone and the identities of those moderators are <a
-  href="/u?moderators=1">made public</a>.  While the individual actions of a
-  moderator may cause debate, there should be no question about if an action happened or who is responsible.
-  </p>
-
-  <p>
-  All user voting and story ranking on this site uses a universal algorithm and
-  does not <a
-  href="http://www.righto.com/2013/11/how-hacker-news-ranking-really-works.html"
-  rel="nofollow">penalize</a> or prioritize specific users or domains.
-  Per-tag <a href="/filters">hotness modifiers</a> do affect all stories with
-  those tags, but these modifiers (and <a href="https://lobste.rs/moderations?utf8=%E2%9C%93&moderator=(All)&what[tags]=tags">changes</a> to them) are made public.
-  Domains used for tracking are banned and tracking parameters are removed from links
-  (look for <tt>TRACKING_DOMAINS</tt> and <tt>utm_</tt> in
-  <a href="https://github.com/lobsters/lobsters/blob/master/app/models/story.rb">story.rb</a>).
+  everyone and the identities of those moderators are <a href="/u?moderators=1">public</a>.
+  While the individual actions of a moderator may cause debate, there should be no question about if an action happened or who is responsible.
   </p>
 
   <p>
@@ -150,7 +180,7 @@
   The Lobsters community is in a sweet spot that it's large enough to be worth asking questions about and small enough the answers make sense.
   We have <a href="/stats">some basic stats</a> available,
   and Peter is happy to run queries against the <a href="https://github.com/lobsters/lobsters/blob/master/db/schema.rb">database</a> and Rails/MySQL/nginx logs (but not write them for you),
-  as long as they don't reveal personal info like IPs, browsing, and voting or create “worst-of” leaderboards celebrating most-downvoted users/comments/stories.
+  as long as they don't reveal personal info like IPs, browsing, and voting or create “worst-of” leaderboards celebrating most-flagged users/comments/stories.
   If you're an academic researcher, please <a href="https://lobste.rs/s/cqnzl5/lobste_rs_access_pattern_statistics_for">be like MIT</a>, not like <a href="https://github.com/lobsters/lobsters/issues/517">UChicago</a> secretly experimenting on maintainers without IRB review.
   </p>
 
@@ -190,7 +220,7 @@
   <li><p>
   <strong>Responsive design</strong> enhances functionality on smaller screens
   such as phones and tablets without having to use a separate URL, 3rd party
-  (often read-only) websites, or proprietary mobile applications.
+  (often read-only) websites, or mobile apps.
   </p></li>
 
   <li><p>
@@ -200,7 +230,7 @@
   that don't even mention that keyword in the URL or title.
   </p></li>
 
-  <li><p>
+  <li id="merging"><p>
     <strong><a href="/s/cqq0kg/story_merging">Story merging</a></strong> collects comments on a topic that would otherwise fragment across multiple stories.
     This keeps the front page from being overwhelmed by a single topic and the discussion together for those interested (or so disinterested they'd prefer to hide it).
     Moderators merge stories on the same topic submitted within a week.

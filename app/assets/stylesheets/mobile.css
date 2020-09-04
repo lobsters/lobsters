@@ -106,7 +106,7 @@
 	}
 
 	div.voters a.upvoter,
-	div.voters a.downvoter {
+	div.voters a.flagger {
 		margin-left: 6px;
 		border-width: 9px;
 	}

@@ -1,7 +1,7 @@
-# Finds the consistent most-heavily-downvoted commenters. Requires downvotes to be spread over
+# Finds the consistent most-heavily-flagged commenters. Requires flags to be spread over
 # several comments and stories because anyone can have a bad thread or a bad day.
 
-class DownvotedCommenters
+class FlaggedCommenters
   include IntervalHelper
 
   attr_reader :interval, :period, :cache_time
@@ -17,19 +17,19 @@ class DownvotedCommenters
     commenters[showing_user.id]
   end
 
-  # aggregates for all commenters; not just those receiving downvotes
+  # aggregates for all commenters; not just those receiving flags
   def aggregates
     Rails.cache.fetch("aggregates_#{interval}_#{cache_time}", expires_in: self.cache_time) {
       ActiveRecord::Base.connection.exec_query("
         select
-          stddev(sum_downvotes) as stddev,
-          sum(sum_downvotes) as sum,
-          avg(sum_downvotes) as avg,
+          stddev(sum_flags) as stddev,
+          sum(sum_flags) as sum,
+          avg(sum_flags) as avg,
           avg(n_comments) as n_comments,
           count(*) as n_commenters
         from (
           select
-            sum(downvotes) as sum_downvotes,
+            sum(flags) as sum_flags,
             count(*) as n_comments
           from comments join users on comments.user_id = users.id
           where
@@ -42,16 +42,16 @@ class DownvotedCommenters
     }
   end
 
-  def stddev_sum_downvotes
+  def stddev_sum_flags
     aggregates[:stddev].to_i
   end
 
-  def avg_sum_downvotes
+  def avg_sum_flags
     aggregates[:avg].to_i
   end
 
   def commenters
-    Rails.cache.fetch("downvoted_commenters_#{interval}_#{cache_time}",
+    Rails.cache.fetch("flagged_commenters_#{interval}_#{cache_time}",
                       expires_in: self.cache_time) {
       rank = 0
       User.active.joins(:comments)
@@ -59,16 +59,16 @@ class DownvotedCommenters
         .group("comments.user_id")
         .select("
           users.id, users.username,
-          (sum(downvotes) - #{avg_sum_downvotes})/#{stddev_sum_downvotes} as sigma,
-          count(distinct if(downvotes > 0, comments.id, null)) as n_comments,
-          count(distinct if(downvotes > 0, story_id, null)) as n_stories,
-          sum(downvotes) as n_downvotes,
-          sum(downvotes)/count(distinct comments.id) as average_downvotes,
+          (sum(flags) - #{avg_sum_flags})/#{stddev_sum_flags} as sigma,
+          count(distinct if(flags > 0, comments.id, null)) as n_comments,
+          count(distinct if(flags > 0, story_id, null)) as n_stories,
+          sum(flags) as n_flags,
+          sum(flags)/count(distinct comments.id) as average_flags,
           (
-            count(distinct if(downvotes>0, comments.id, null)) /
+            count(distinct if(flags > 0, comments.id, null)) /
             count(distinct comments.id)
-          ) * 100 as percent_downvoted")
-        .having("n_comments > 4 and n_stories > 1 and n_downvotes >= 10 and percent_downvoted > 10")
+          ) * 100 as percent_flagged")
+        .having("n_comments > 4 and n_stories > 1 and n_flags >= 10 and percent_flagged > 10")
         .order("sigma desc")
         .limit(30)
         .each_with_object({}) {|u, hash|
@@ -78,10 +78,10 @@ class DownvotedCommenters
             sigma: u.sigma,
             n_comments: u.n_comments,
             n_stories: u.n_stories,
-            n_downvotes: u.n_downvotes,
-            average_downvotes: u.average_downvotes,
+            n_flags: u.n_flags,
+            average_flags: u.average_flags,
             stddev: 0,
-            percent_downvoted: u.percent_downvoted,
+            percent_flagged: u.percent_flagged,
           }
         }
     }

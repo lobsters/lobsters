@@ -15,16 +15,16 @@ class ModController < ApplicationController
       .order('moderations.id desc')
   end
 
-  def flagged
+  def flagged_stories
     @title = "Flagged Stories"
     @stories = period(Story.includes(:tags).unmerged
       .includes(:user, :tags)
-      .where("downvotes > 1")
+      .where("flags > 1")
       .order("stories.id DESC"))
   end
 
-  def downvoted
-    @title = "Downvoted Comments"
+  def flagged_comments
+    @title = "Flagged Comments"
     @comments = period(Comment
       .eager_load(:user, :hat, :story => :user, :votes => :user)
       .where("(select count(*) from votes where
@@ -35,11 +35,11 @@ class ModController < ApplicationController
   end
 
   def commenters
-    @title = "Downvoted Commenters"
-    dvc = DownvotedCommenters.new(params[:period])
-    @interval = dvc.interval
-    @agg = dvc.aggregates
-    @commenters = dvc.commenters
+    @title = "Flagged Commenters"
+    fc = FlaggedCommenters.new(params[:period])
+    @interval = fc.interval
+    @agg = fc.aggregates
+    @commenters = fc.commenters
   end
 
 private

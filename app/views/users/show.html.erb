@@ -166,9 +166,9 @@
   <% if @user && @user.is_moderator? && !@showing_user.is_moderator? %>
     <h2>Moderator Information</h2>
 
-    <label class="required">Downvoted (1m):</label>
+    <label class="required">Flagged (1m):</label>
     <span class="d">
-      <% if (stats = DownvotedCommenters.new('1m').check_list_for(@showing_user)) %>
+      <% if (stats = FlaggedCommenters.new('1m').check_list_for(@showing_user)) %>
         <a href="/mod/commenters/1m#<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % stats[:sigma] %> &sigma;
       <% else %>
         No
@@ -191,7 +191,7 @@
       mod_notes: ModNote.for(@showing_user).limit(10),
     } %>
     <%= form_with model: @mod_note, method: :post, local: true do |f| %>
-      <%= error_messages_for @mod_note %>
+      <%= errors_for @mod_note %>
       <%= f.hidden_field :username %>
       <div class="boxline">
         <%= f.label :note, "New Note:", :class => "required" %>

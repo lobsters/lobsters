@@ -1,10 +1,5 @@
 require "rails_helper"
 
-# TODO: This should probably go somewhere else.
-def sent_emails
-  ActionMailer::Base.deliveries
-end
-
 describe Comment do
   it "should get a short id" do
     c = create(:comment)

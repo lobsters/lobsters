@@ -43,12 +43,6 @@ class FakeDataGenerator
       categories << Category.create!(category: cat) unless Category.find_by(category: cat)
     end
 
-    # Categories
-    categories = []
-    @categories_count.times do
-      categories << Category.create!(category: Faker::Lorem.word.capitalize)
-    end
-
     # Stories
     @stories_count.times do |i|
       user = users[Random.rand(@users_count-1)]
@@ -89,7 +83,7 @@ class FakeDataGenerator
     # User-saved stories
     (@stories_count / 10).times do
       user = users[Random.rand(@users_count-1)]
-      story = Story.find(Random.rand(@stories_count-1))
+      story = Story.all.sample
       SavedStory.save_story_for_user(story.id, user.id)
     end
 
@@ -174,6 +168,22 @@ class FakeDataGenerator
       if i.even?
         user.unban_by_user!(User.moderators.sample)
       end
+    end
+
+    # Merging Stories
+    Story.all.sample(5).each do |story|
+      story.merged_story_id = Story.all.sample.id
+      story.editing_from_suggestions = true
+      story.moderation_reason = Faker::Lorem.sentence(word_count: 5)
+      story.save
+    end
+
+    # Deleting stories
+    Story.all.sample(5).each do |story|
+      story.is_expired = true
+      story.editing_from_suggestions = true
+      story.moderation_reason = Faker::Lorem.sentence(word_count: 5)
+      story.save
     end
   end
 end

@@ -178,6 +178,14 @@ class FakeDataGenerator
       story.save
     end
 
+    # Editing Stories
+    Story.all.sample(5).each do |story|
+      story.title = Faker::Lorem.sentence(word_count: 4)
+      story.editing_from_suggestions = true
+      story.moderation_reason = Faker::Lorem.sentence(word_count: 5)
+      story.save
+    end
+
     # Deleting stories
     Story.all.sample(5).each do |story|
       story.is_expired = true

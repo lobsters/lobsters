@@ -780,7 +780,7 @@ class Story < ApplicationRecord
 
   def title=(t)
     # change unicode whitespace characters into real spaces
-    self[:title] = t.strip.gsub(/[\.,;:!]*$/, '')
+    self[:title] = t.to_s.strip.gsub(/[\.,;:!]*$/, '')
   end
 
   def title_as_url

@@ -1,6 +1,3 @@
-## The following test configuration assumes you ran the test databases using
-## start_test_databases.sh script in the project root.
-
 test_defaults: &test_defaults
   ## Can't use localhost here because MySQL treats localhost as socket :(
   host: 127.0.0.1

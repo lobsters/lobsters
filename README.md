@@ -59,28 +59,24 @@ There's an external project [docker-lobsters](https://github.com/utensils/docker
       macOS 10.4+ and Homebrew `openssl`, in which case see
       [this solution](https://stackoverflow.com/a/39628463/1042144).
 
-* Create test databases and configure them appropriately. If you have Docker installed then you can
-`cp config/database.yml.sample config/database.yml` and run `start_test_databases.sh`. Otherwise you have
-to adjust `config/database.yml.sample` to match your configuration.
+* Create test databases and configure them appropriately. Start with
+`cp config/database.yml.sample config/database.yml` and match it to your database set up.
 
 * To run specs use `bundle exec rake`. This ensures we run the spec suite against MySQL and PostgreSQL.
 
-* Add development configuration for your database to `config/database.yml`. If
-you're using provided Docker scripts then you can reuse `test_mysql` section
-(remember to change the database name):
+* Add development configuration for your database to `config/database.yml`:
 
     ```yaml
     development:
-      <<: *test_defaults
+      host: localhost
+      # Or use 127.0.0.1 if you dont want to use socket based authentication
+      #host: 127.0.0.1
+      #port: 3306
+      #username: lobsters
+      #password: lobsters
       adapter: mysql2
       encoding: utf8mb4
       database: lobsters_dev
-
-    test_mysql:
-      <<: *test_defaults
-      adapter: mysql2
-      encoding: utf8mb4
-      port: 3306
     ```
 
 * Load the schema into the new database:

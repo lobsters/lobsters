@@ -472,7 +472,7 @@ class Story < ApplicationRecord
     self.flags += flag_delta
     Story.connection.execute <<~SQL
       UPDATE stories SET
-        score = (select sum(vote) from votes where story_id = stories.id and comment_id is null),
+        score = (select coalesce(sum(vote), 0) from votes where story_id = stories.id and comment_id is null),
         flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),
         hotness = #{self.calculated_hotness}
       WHERE id = #{self.id.to_i}

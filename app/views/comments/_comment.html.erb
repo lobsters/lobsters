@@ -105,7 +105,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <% elsif flagged %>
           | <a class="flagger">unflag</a>
         <% else %>
-          | <span class="flagger flagger_stub"></span>
+          <span class="flagger flagger_stub"></span>
         <% end %>
 
         <% if @user && !comment.story.is_gone? && !comment.is_gone? %>

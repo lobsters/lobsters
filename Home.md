@@ -16,7 +16,7 @@ Other sites using the Lobsters codebase:
 * [tilde news](https://tilde.news/) ([repo](https://tildegit.org/tildeverse/tilde.news)) - [tildeverse](https://tildeverse.org) links: unix, small web, decentralization
 * [Standard](https://std.bz/) - Cryptocurrency
 * [Gambe.ro](https://gambe.ro) - Software development (it)
-* [Middlebit](https://middlebit.com/) - Content curation for the "no-coast" region of the United States.
+* <s>[Middlebit](https://middlebit.com/)</s> - Content curation for the "no-coast" region of the United States. Site online from late August 2019 through late September 2020.
 * [ACRAB](https://acrab.isi.jhu.edu/) - Applied Cryptography Publications
 * [V2ETH](https://v2eth.com) - Cryptocurrency (Ethereum)
 * [Hipppo](https://hipppo.fm) - Hip-hop

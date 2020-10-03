@@ -20,6 +20,7 @@ Other sites using the Lobsters codebase:
 * [ACRAB](https://acrab.isi.jhu.edu/) - Applied Cryptography Publications
 * [V2ETH](https://v2eth.com) - Cryptocurrency (Ethereum)
 * [Hipppo](https://hipppo.fm) - Hip-hop
+* [MLN.dev](https://mln.dev/) - Machine learning
 
 ## Cousin Sites
 

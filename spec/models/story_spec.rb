@@ -309,6 +309,32 @@ describe Story do
     end
   end
 
+  describe ".similar_urls_to" do
+    it "includes http(s) scheme" do
+      expect(Story.similar_urls_to('https://example.com')).to include('http://example.com')
+      expect(Story.similar_urls_to('http://example.com')).to include('https://example.com/')
+    end
+
+    it "includes a trailing slash or index.htm(l)" do
+      expect(Story.similar_urls_to('https://example.com')).to include(
+        'https://example.com/',
+        'https://example.com/index.html',
+        'https://example.com/index.htm',
+      )
+    end
+
+    it "removes trailing slash or index.htm(l) if it ends with it" do
+      expect(Story.similar_urls_to('https://example.com/')).to include('https://example.com')
+      expect(Story.similar_urls_to('https://example.com/index.html')).to include('https://example.com')
+      expect(Story.similar_urls_to('https://example.com/index.htm')).to include('https://example.com')
+    end
+
+    it "includes or excludes the www prefix" do
+      expect(Story.similar_urls_to('https://example.com/')).to include('https://www.example.com')
+      expect(Story.similar_urls_to('https://www.example.com/')).to include('https://example.com')
+    end
+  end
+
   describe "#calculated_hotness" do
     let(:story) do
       create(:story, url: 'https://example.com', user_is_author: true, created_at: Time.zone.at(0))

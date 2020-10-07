@@ -254,6 +254,7 @@ class Story < ApplicationRecord
       urls2.push u_without_slash + ".html"
       urls2.push u_without_slash + ".htm"
       urls2.push u.gsub(/\/index.html?\z/, "")
+      urls2.push u.gsub(/\.html?\z/, "")
     end
     urls = urls2.uniq
 

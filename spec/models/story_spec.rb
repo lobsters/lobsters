@@ -342,6 +342,11 @@ describe Story do
         'https://example.com/foo.htm'
       )
     end
+
+    it "includes removal of .htm(l)" do
+      expect(Story.similar_urls_to('https://example.com/foo.html')).to include('https://example.com/foo')
+      expect(Story.similar_urls_to('https://example.com/foo.htm')).to include('https://example.com/foo')
+    end
   end
 
   describe "#calculated_hotness" do

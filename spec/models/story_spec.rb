@@ -323,7 +323,7 @@ describe Story do
       )
     end
 
-    it "removes trailing slash or index.htm(l) if it ends with it" do
+    it "includes trailing slash or index.htm(l)" do
       expect(Story.similar_urls_to('https://example.com/')).to include('https://example.com')
       expect(Story.similar_urls_to('https://example.com/index.html')).to include('https://example.com')
       expect(Story.similar_urls_to('https://example.com/index.htm')).to include('https://example.com')
@@ -332,6 +332,13 @@ describe Story do
     it "includes or excludes the www prefix" do
       expect(Story.similar_urls_to('https://example.com/')).to include('https://www.example.com')
       expect(Story.similar_urls_to('https://www.example.com/')).to include('https://example.com')
+    end
+
+    it "includes .htm(l) appended" do
+      expect(Story.similar_urls_to('https://example.com/foo')).to include(
+        'https://example.com/foo.html',
+        'https://example.com/foo.htm'
+      )
     end
   end
 

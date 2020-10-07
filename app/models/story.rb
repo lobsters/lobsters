@@ -233,33 +233,38 @@ class Story < ApplicationRecord
   end
 
   def self.similar_urls_to(url)
-    urls = [url.to_s.gsub(/(#.*)/, "")]
-    urls2 = [url.to_s.gsub(/(#.*)/, "")]
+    url_without_anchor = url.to_s.gsub(/(#.*)/, "")
+    urls = [url_without_anchor]
+    urls2 = urls.dup
 
-    # https
+    # http(s)
     urls.each do |u|
       urls2.push u.gsub(/^http:\/\//i, "https://")
       urls2.push u.gsub(/^https:\/\//i, "http://")
     end
     urls = urls2.uniq
 
-    # trailing slash or index.html
+    # add trailing slash or index.html
     urls.each do |u|
       u_without_slash = u.gsub(/\/+\z/, "")
       urls2.push u_without_slash
       urls2.push u_without_slash + "/"
       urls2.push u_without_slash + "/index.htm"
       urls2.push u_without_slash + "/index.html"
+      urls2.push u_without_slash + ".html"
+      urls2.push u_without_slash + ".htm"
       urls2.push u.gsub(/\/index.html?\z/, "")
     end
     urls = urls2.uniq
 
-    # www prefix
+    # add/remove www
     urls.each do |u|
       urls2.push u.gsub(/^(https?:\/\/)www\d*\./i) {|_| $1 }
       urls2.push u.gsub(/^(https?:\/\/)/i) {|_| "#{$1}www." }
     end
     urls = urls2.uniq
+
+    urls
   end
 
   # doesn't include deleted/moderated/merged stories

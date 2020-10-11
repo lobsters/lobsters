@@ -1,5 +1,5 @@
 class FakeDataGenerator
-  def initialize(users_count, stories_count, categories_count)
+  def initialize(users_count = 20, stories_count = 200, categories_count = 5)
     @users_count = users_count
     @stories_count = stories_count
     @categories_count = categories_count
@@ -28,9 +28,6 @@ class FakeDataGenerator
       if i % 7 == 0
         users[i].grant_moderatorship_by_user!(mod)
       end
-      if i % 3 == 0
-        users[i].enable_invite_by_user!(mod)
-      end
       if i % 6 == 0
         users[i].disable_invite_by_user_for_reason!(mod, Faker::Lorem.sentence(word_count: 5))
       end
@@ -44,6 +41,7 @@ class FakeDataGenerator
     end
 
     # Stories
+    stories = []
     @stories_count.times do |i|
       user = users[Random.rand(@users_count-1)]
       title = Faker::Lorem.sentence(word_count: 3)
@@ -57,11 +55,14 @@ class FakeDataGenerator
         description = Faker::Lorem.paragraphs(number: 3).join("\n\n")
         url = nil unless i % 7 == 0
       end
-      Story.create! user: user,
+      create_args = {
+        user: user,
         title: title,
         url: url,
         description: description,
-        tags_a: [tag.tag]
+        tags_a: [tag.tag],
+      }
+      stories << Story.create!(create_args)
     end
 
     # User-deleted stories
@@ -72,39 +73,52 @@ class FakeDataGenerator
       tag_name = title.split(' ').first.downcase
       tag = Tag.find_by tag: tag_name
       tag ||= Tag.create! tag: tag_name, category: category
-      Story.create! user: user,
+      url = Faker::Internet.url
+      create_args = {
+        user: user,
         title: title,
-        tags_a: [tag.tag],
+        url: url,
         description: Faker::Lorem.paragraphs(number: 1),
+        tags_a: [tag.tag],
         is_expired: true,
-        editor: user
+        editor: user,
+      }
+      stories << Story.create!(create_args)
     end
 
     # User-saved stories
     (@stories_count / 10).times do
       user = users[Random.rand(@users_count-1)]
-      story = Story.all.sample
+      story = stories[Random.rand(@stories_count - 1)]
       SavedStory.save_story_for_user(story.id, user.id)
     end
 
     # Comments
-    Story.all.each do |x|
+    comments = []
+    stories.each do |x|
       Random.rand(1..3).times do |i|
-        c = Comment.create! user: users[Random.rand(@users_count-1)],
+        create_args = {
+          user: users[Random.rand(@users_count-1)],
           comment: Faker::Lorem.sentence(word_count: Random.rand(30..50)),
-          story_id: x.id
+          story_id: x.id,
+        }
+        comments << Comment.create!(create_args)
+
         # Replies to comments
         if i.odd?
-          Comment.create! user: x.user,
+          create_args = {
+            user: x.user,
             comment: Faker::Lorem.sentence(word_count: Random.rand(30..50)),
             story_id: x.id,
-            parent_comment_id: c.id
+            parent_comment_id: comments.last.id,
+          }
+          comments << Comment.create!(create_args)
         end
       end
     end
 
     # Comment Flags
-    Comment.all.each do |c|
+    comments.each do |c|
       if Random.rand(100) > 95
         u = users[Random.rand(@users_count-1)]
         Vote.vote_thusly_on_story_or_comment_for_user_because(
@@ -118,7 +132,7 @@ class FakeDataGenerator
     end
 
     # Story Flags
-    Story.all.each do |s|
+    stories.each do |s|
       if Random.rand(100) > 95
         u = users[Random.rand(@users_count-1)]
         Vote.vote_thusly_on_story_or_comment_for_user_because(
@@ -132,22 +146,27 @@ class FakeDataGenerator
     end
 
     # Hats
+    hats = []
     (@users_count / 2).times do |i|
       suffixes = ["Developer", "Founder", "User", "Contributor", "Creator"]
       hat_wearer = users[i + 1]
-      hat = Hat.create! user: hat_wearer,
-                granted_by_user: users[0],
-                hat: Faker::Lorem.word.capitalize + " " + suffixes[Random.rand(5)],
-                link: Faker::Internet.url
+      create_args = {
+        user: hat_wearer,
+        granted_by_user: users[0],
+        hat: Faker::Lorem.word.capitalize + " " + suffixes[Random.rand(5)],
+        link: Faker::Internet.url,
+      }
+      hat = Hat.create!(create_args)
       if i.odd?
         hat.doff_by_user_with_reason(hat_wearer, Faker::Lorem.sentence(word_count: 5))
       end
+      hats << hat
     end
 
     ### Moderation ###
 
     # Comments (delete/undelete)
-    Comment.all.each_with_index do |comment, i|
+    comments.each_with_index do |comment, i|
       comment_mod = User.moderators.sample
       if i % 7 == 0
         comment.delete_for_user(comment_mod, Faker::Lorem.paragraphs(number: 1))
@@ -156,7 +175,8 @@ class FakeDataGenerator
     end
 
     # Hats
-    Hat.all.sample(2).each do |hat|
+    2.times do
+      hat = hats[Random.rand(hats.length - 1)]
       hat.destroy_by_user_with_reason(User.moderators.sample,
                                       Faker::Lorem.sentence(word_count: 5))
     end
@@ -171,15 +191,21 @@ class FakeDataGenerator
     end
 
     # Merging Stories
-    Story.all.sample(5).each do |story|
-      story.merged_story_id = Story.all.sample.id
+    5.times do
+      story = stories[Random.rand(stories.length - 1)]
+      second_story = stories[Random.rand(stories.length - 1)]
+      while second_story == story
+        second_story = stories[Random.rand(stories.length - 1)]
+      end
+      story.merged_story_id = second_story.id
       story.editing_from_suggestions = true
       story.moderation_reason = Faker::Lorem.sentence(word_count: 5)
       story.save
     end
 
     # Editing Stories
-    Story.all.sample(5).each do |story|
+    5.times do
+      story = stories[Random.rand(stories.length - 1)]
       story.title = Faker::Lorem.sentence(word_count: 4)
       story.editing_from_suggestions = true
       story.moderation_reason = Faker::Lorem.sentence(word_count: 5)
@@ -187,7 +213,8 @@ class FakeDataGenerator
     end
 
     # Deleting stories
-    Story.all.sample(5).each do |story|
+    5.times do
+      story = stories[Random.rand(stories.length - 1)]
       story.is_expired = true
       story.editing_from_suggestions = true
       story.moderation_reason = Faker::Lorem.sentence(word_count: 5)
@@ -206,5 +233,5 @@ task fake_data: :environment do
     fail "Cancelled" if STDIN.gets.chomp != 'y'
   end
 
-  FakeDataGenerator.new(20, 200, 5).generate
+  FakeDataGenerator.new.generate
 end

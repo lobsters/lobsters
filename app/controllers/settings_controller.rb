@@ -24,7 +24,10 @@ class SettingsController < ApplicationController
       InactiveUser.disown_all_by_author! @user
     end
     reset_session
-    flash[:success] = "Your account has been deleted."
+    
+    disown_message = params[:user][:disown].present? ? "and disowned all of your posted content" : "and chosen to leave your posted content as-is"
+    flash[:success] = "You have deleted your account from #{Rails.application.name} (#{disown_message})."
+    
     return redirect_to "/"
   end
 

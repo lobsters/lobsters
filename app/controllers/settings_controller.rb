@@ -26,7 +26,7 @@ class SettingsController < ApplicationController
       InactiveUser.disown_all_by_author! @user
     end
     reset_session
-    flash[:success] = "You have deleted your account your account#{disown_text}. Bye."
+    flash[:success] = "You have deleted your account#{disown_text}. Bye."
     return redirect_to "/"
   end
 

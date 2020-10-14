@@ -6,7 +6,12 @@ class UsersController < ApplicationController
   before_action :only_user_or_moderator, only: [:standing]
 
   def show
-    @showing_user = User.where(:username => params[:username]).first!
+    @showing_user = User.where(:username => params[:username]).first
+
+    if @showing_user.nil?
+      return render action: :not_found, status: 404
+    end
+
     @title = "User #{@showing_user.username}"
 
     if @user.try(:is_moderator?)

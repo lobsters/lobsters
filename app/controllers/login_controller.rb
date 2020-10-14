@@ -108,7 +108,7 @@ class LoginController < ApplicationController
     @found_user = User.where("email = ? OR username = ?", params[:email], params[:email]).first
 
     if !@found_user
-      flash.now[:error] = "Invalid e-mail address or username."
+      flash.now[:error] = "Unknown e-mail address or username."
       return forgot_password
     end
 

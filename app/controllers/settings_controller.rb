@@ -15,16 +15,18 @@ class SettingsController < ApplicationController
       return redirect_to settings_path
     end
     unless @user.try(:authenticate, params[:user][:password].to_s)
-      flash[:error] = "Your password could not be verified."
+      flash[:error] = "Given password doesn't match account."
       return redirect_to settings_path
     end
 
     @user.delete!
+    disown_text = ""
     if params[:user][:disown].present?
+      disown_text = " and disowned your stories and comments."
       InactiveUser.disown_all_by_author! @user
     end
     reset_session
-    flash[:success] = "Your account has been deleted."
+    flash[:success] = "You have deleted your account your account#{disown_text}. Bye."
     return redirect_to "/"
   end
 

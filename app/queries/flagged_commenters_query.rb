@@ -1,6 +1,6 @@
 class FlaggedCommentersQuery
-  def self.call(avg_sum_downvotes, stddev_sum_downvotes, relation)
-    new(avg_sum_downvotes, stddev_sum_downvotes, relation).execute
+  def self.call(avg_sum_flags, stddev_sum_flags, relation)
+    new(avg_sum_flags, stddev_sum_flags, relation).execute
   end
 
   def initialize(avg_sum_flags, stddev_sum_flags, relation)
@@ -10,11 +10,11 @@ class FlaggedCommentersQuery
   end
 
   def execute
-    Rails.cache.fetch("flagged_commenters_#{self.interval}_#{self.cache_time}",
-                      expires_in: self.cache_time) {
+    Rails.cache.fetch("flagged_commenters_#{@relation.interval}_#{@relation.cache_time}",
+                      expires_in: @relation.cache_time) {
       rank = 0
       User.active.joins(:comments)
-        .where("comments.created_at >= ?", self.period)
+        .where("comments.created_at >= ?", @relation.period)
         .group("comments.user_id")
         .select("
           users.id, users.username,

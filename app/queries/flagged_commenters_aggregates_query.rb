@@ -12,14 +12,14 @@ class FlaggedCommentersAggregatesQuery
       expires_in: @relation.cache_time) {
       ActiveRecord::Base.connection.exec_query("
         select
-          stddev(sum_downvotes) as stddev,
-          sum(sum_downvotes) as sum,
-          avg(sum_downvotes) as avg,
+          stddev(sum_flags) as stddev,
+          sum(sum_flags) as sum,
+          avg(sum_flags) as avg,
           avg(n_comments) as n_comments,
           count(*) as n_commenters
         from (
           select
-            sum(downvotes) as sum_downvotes,
+            sum(flags) as sum_flags,
             count(*) as n_comments
           from comments join users on comments.user_id = users.id
           where

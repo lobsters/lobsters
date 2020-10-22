@@ -30,19 +30,19 @@ class FlaggedCommentersQuery
           .having("n_comments > 4 and n_stories > 1 and n_flags >= 10 and percent_flagged > 10")
           .order("sigma desc")
           .limit(30)
-          .each_with_object({}) {|u, hash|
-          hash[u.id] = {
-            username: u.username,
-            rank: rank += 1,
-            sigma: u.sigma,
-            n_comments: u.n_comments,
-            n_stories: u.n_stories,
-            n_flags: u.n_flags,
-            average_flags: u.average_flags,
-            stddev: 0,
-            percent_flagged: u.percent_flagged,
-          }
-      }
+          .each_with_object({}) do |u, hash|
+            hash[u.id] = {
+              username: u.username,
+              rank: rank += 1,
+              sigma: u.sigma,
+              n_comments: u.n_comments,
+              n_stories: u.n_stories,
+              n_flags: u.n_flags,
+              average_flags: u.average_flags,
+              stddev: 0,
+              percent_flagged: u.percent_flagged,
+            }
+          end
     }
   end
 end

@@ -9,7 +9,7 @@ class FlaggedCommentersAggregatesQuery
 
   def execute
     Rails.cache.fetch("aggregates_#{@relation.interval}_#{@relation.cache_time}",
-      expires_in: @relation.cache_time) {
+                      expires_in: @relation.cache_time) {
       ActiveRecord::Base.connection.exec_query("
         select
           stddev(sum_flags) as stddev,

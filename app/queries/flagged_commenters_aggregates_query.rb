@@ -1,4 +1,4 @@
-class DownvotedCommentersAggregatesQuery
+class FlaggedCommentersAggregatesQuery
   def self.call(relation)
     new(relation).execute
   end

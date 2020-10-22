@@ -19,7 +19,7 @@ class FlaggedCommenters
 
   # aggregates for all commenters; not just those receiving flags
   def aggregates
-    DownvotedCommentersAggregatesQuery.call(self)
+    FlaggedCommentersAggregatesQuery.call(self)
   end
 
   def stddev_sum_flags
@@ -31,6 +31,6 @@ class FlaggedCommenters
   end
 
   def commenters
-    DownvotedCommentersQuery.call(avg_sum_downvotes, stddev_sum_downvotes, self)
+    FlaggedCommentersQuery.call(avg_sum_flags, stddev_sum_flags, self)
   end
 end

@@ -86,6 +86,7 @@ if __FILE__ == $PROGRAM_NAME
         [{}, "/usr/sbin/sendmail", "-i", "-f", "nobody@#{Rails.application.domain}", u.email],
         "w") do |mail|
         mail.puts "From: #{s.user.username} <#{s.user.username}@#{Rails.application.domain}>"
+        mail.puts "X-Is-Author: #{s.user_is_author?}"
         mail.puts "Reply-To: #{list}"
         mail.puts "To: #{list}"
         mail.puts "X-BeenThere: #{list}"

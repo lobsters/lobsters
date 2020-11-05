@@ -11,13 +11,6 @@ because the code is available under a [permissive license](https://github.com/lo
 We welcome bug reports and code contributions that help use improve [lobste.rs](https://lobste.rs).
 As a volunteer project we're reluctant to take on work that's not useful to our site, so please understand if we don't want to adopt your custom feature.
 
-2019-05-29 experiment:
-Are you interested in running your own sister site and not technical, or otherwise willing to pay for hosting/support?
-Maybe you're a Reddit community unhappy with their redesign, want an internal site for your company, or want to experiement with community design?
-Please contact Peter (email that name @push.cx).
-I'm exploring the idea of a hosting company to run sites using the codebase, or maybe consulting on custom features, and would love to hear from you.
-(The only change to Lobsters would be that someone's getting paid to PR back bug fixes.)
-
 
 #### Contributing bugfixes and new features
 

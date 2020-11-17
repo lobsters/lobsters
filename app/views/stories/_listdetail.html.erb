@@ -23,7 +23,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
   <div class="details">
     <span class="link h-cite u-repost-of">
       <% if story.can_be_seen_by_user?(@user) %>
-        <a class="u-url" href="<%= story.url_or_comments_path %>" rel="ugc <%= story.send_referrer? ? '' : 'noreferrer' %>"><%= break_long_words(story.title) %></a>
+        <a class="u-url" href="<%= story.url_or_comments_path %>" rel="ugc <%= story.send_referrer? ? '' : 'noreferrer' %>"><%= story.title %></a>
       <% end %>
       <% if story.is_gone? %>
         [Story removed by <%= story.is_moderated? ? "moderator" :
@@ -41,7 +41,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
       </span>
       <% if story.domain.present? %>
-        <a class="domain" href="<%= domain_path(story.domain) %>"><%= break_long_words(story.domain.domain) %></a>
+        <a class="domain" href="<%= domain_path(story.domain) %>"><%= story.domain.domain %></a>
       <% end %>
 
       <% if defined?(single_story) && single_story %>
@@ -49,7 +49,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           <br>
           <span class="merge"></span>
           <span class="link">
-            <a href="<%= ms.url_or_comments_path %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>"%><%= break_long_words(ms.title) %></a>
+            <a href="<%= ms.url_or_comments_path %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>"%><%= ms.title %></a>
           </span>
           <span class="tags">
             <% ms.tags.each do |tag| %>
@@ -59,7 +59,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             <% end %>
           </span>
           <% if ms.domain_id.present? %>
-            <a class="domain" href="<%= domain_path(ms.domain) %>"><%= break_long_words(ms.domain.domain) %></a>
+            <a class="domain" href="<%= domain_path(ms.domain) %>"><%= ms.domain.domain %></a>
           <% end %>
           <span class="byline">
             <% if (@user && @user.show_avatars?) || !@user %>
@@ -88,7 +88,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
     @user.show_story_previews? %>
       <% if (sc = story.description_or_story_text(500)).present? %>
         <div class="story_content">
-          <%= break_long_words(sc) %>
+          <%= sc %>
         </div>
       <% end %>
     <% end %>

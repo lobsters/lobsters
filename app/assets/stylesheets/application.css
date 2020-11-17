@@ -447,6 +447,7 @@ li.story {
 ol.stories li.story div.story_liner {
 	padding-top: 0.25em;
 	padding-bottom: 0.25em;
+	word-break: break-word;
 }
 .comment {
 	clear: both;

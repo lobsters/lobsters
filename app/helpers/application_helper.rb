@@ -11,16 +11,6 @@ module ApplicationHelper
     )
   end
 
-  def break_long_words(str, len = 30)
-    safe_join(str.split(" ").map {|w|
-      if w.length > len
-        safe_join(w.split(/(.{#{len}})/), "<wbr>".html_safe)
-      else
-        w
-      end
-    }, " ")
-  end
-
   def errors_for(object)
     html = ""
     unless object.errors.blank?

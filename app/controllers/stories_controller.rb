@@ -57,8 +57,6 @@ class StoriesController < ApplicationController
 
     if @story.merged_into_story
       @story.merge_story_short_id = @story.merged_into_story.short_id
-
-      # Match impact if mod removes by subtracting karma (so 2x for flags)
       User.update_counters self.user_id, karma: (self.votes.count * -2)
     end
   end

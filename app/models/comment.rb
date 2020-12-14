@@ -232,6 +232,8 @@ class Comment < ApplicationRecord
       end
 
       m.save
+
+      User.update_counters self.user_id, karma: (self.votes.count * -2)
     end
 
     self.save(:validate => false)

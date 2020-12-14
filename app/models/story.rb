@@ -585,6 +585,7 @@ class Story < ApplicationRecord
 
     if all_changes["is_expired"] && self.is_expired?
       m.action = "deleted story"
+      User.update_counters self.user_id, karma: (self.votes.count * -2)
     elsif all_changes["is_expired"] && !self.is_expired?
       m.action = "undeleted story"
     else

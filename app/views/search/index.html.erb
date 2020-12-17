@@ -77,6 +77,10 @@
         <% end %>
       <% end %>
     </div>
+  <% elsif @search.total_results == 1 %>
+    <div class="page_link_buttons">
+      <p>Hapax legomenon</p>
+    </div>
   <% end %>
 <% else %>
   <div class="help">

@@ -57,7 +57,7 @@ class StoriesController < ApplicationController
 
     if @story.merged_into_story
       @story.merge_story_short_id = @story.merged_into_story.short_id
-      User.update_counters self.user_id, karma: (self.votes.count * -2)
+      User.update_counters @story.user_id, karma: (@story.votes.count * -2)
     end
   end
 

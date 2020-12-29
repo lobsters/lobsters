@@ -273,9 +273,13 @@ var _Lobsters = Class.extend({
 
     // common separators or (parens) that don't enclose a 4-digit year
     if (title.match(/: | - | – | — | \| | · | • | by /) ||
-        title.match(/\([^\)]*\)/g).some(function (p) { return !p.match(/\(\d{4}\)/) })
+        title.match(/\([^\)]*\)/g)!= null
     ) {
-      $('.title-reminder').slideDown();
+        if (title.match(/: | - | – | — | \| | · | • | by /) ||
+            title.match(/\([^\)]*\)/g).some(function (p) { return !p.match(/\(\d{4}\)/) })
+        ) {
+          $('.title-reminder').slideDown();
+        }
     }
   },
 

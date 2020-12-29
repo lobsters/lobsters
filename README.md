@@ -77,6 +77,11 @@ running tests:
       password: *test_password*
     ```
 
+* Your socket file may be in a different location than '/tmp/mysql.sock'. You can find it with:
+```
+$ mysqladmin variables | grep socket
+```
+
 * Load the schema into the new database:
 
     ```sh

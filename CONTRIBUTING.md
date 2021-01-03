@@ -7,14 +7,14 @@ MIT, ISC, etc.).
 
 ### Before Making Changes
 
-While this project's license allows for modification and use to run your own
-website, this source code repository is for the code running the website at
-[lobste.rs](https://lobste.rs/).
-
 If you're new to contributing, issues tagged [good first issue](https://github.com/lobsters/lobsters/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
 require little knowledge of the codebase or community. Please don't hesitate to
 ask questions in the issue or in [our chat room](https://lobste.rs/chat), we'd love
 to help you get involved.
+
+While this project's license allows for modification and use to run your own
+website, this source code repository is for the code running the website at
+[lobste.rs](https://lobste.rs/).
 
 Not all changes or new features submitted will be accepted.  Please discuss
 your proposed changes on [/t/meta](https://lobste.rs/t/meta) or as a

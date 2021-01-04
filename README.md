@@ -4,7 +4,7 @@ This is the
 [quite sad](https://www.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)
 source code to the site operating at
 [https://lobste.rs](https://lobste.rs).
-It is a Rails 6 codebase and uses a SQL (MariaDB in production) backend for the database.
+It is a Rails codebase and uses a SQL (MariaDB in production) backend for the database.
 
 You are free to use this code to start your own [sister site](https://github.com/lobsters/lobsters/wiki)
 because the code is available under a [permissive license](https://github.com/lobsters/lobsters/blob/master/LICENSE) (3-clause BSD).

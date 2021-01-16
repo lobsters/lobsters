@@ -1,3 +1,5 @@
+require 'faker'
+
 class FakeDataGenerator
   def initialize(users_count, stories_count, categories_count)
     @users_count = users_count

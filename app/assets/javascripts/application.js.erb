@@ -594,6 +594,24 @@ $(document).ready(function() {
       this.value = 'http://' + this.value;
   });
 
+  // Remember story collapses; this is stored in localStorage for every story ID as an object.
+  $(document).on('change', '.comment_folder_button', function(e) {
+    var id       = $(e.target).closest('.comments_subtree').find('[data-shortid]:first').attr('data-shortid'),
+        storyID  = $('.story').attr('data-shortid'),
+        collapse = JSON.parse(localStorage.getItem(storyID) || '{}');
+    collapse[id] = e.target.checked
+    localStorage.setItem(storyID, JSON.stringify(collapse))
+  })
+
+  // Collapse stories on load; the actual hiding is done in CSS; just need to switch the checkbox.
+  $(document).ready(function() {
+    var storyID  = $('.story').attr('data-shortid'),
+        collapse = JSON.parse(localStorage.getItem(storyID) || '{}');
+
+    for (var k in collapse)
+      $('input#comment_folder_' + k).attr('checked', (collapse[k]))
+  });
+
   $('textarea#comment').keydown(function (e) {
     if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
       $(".comment-post").click();

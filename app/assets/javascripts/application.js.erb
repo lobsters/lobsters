@@ -596,7 +596,7 @@ $(document).ready(function() {
 
   // Remember story collapses; this is stored in localStorage for every story ID as an object.
   $(document).on('change', '.comment_folder_button', function(e) {
-    var id       = $(e.target).closest('.comments_subtree').find('[data-shortid]:first').attr('data-shortid'),
+    var id       = $(e.target).find('~ div.comment').attr('data-shortid'),
         storyID  = $('.story').attr('data-shortid'),
         collapse = JSON.parse(localStorage.getItem(storyID) || '{}');
     collapse[id] = e.target.checked

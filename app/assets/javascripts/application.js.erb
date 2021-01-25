@@ -599,8 +599,11 @@ $(document).ready(function() {
     var id       = $(e.target).find('~ div.comment').attr('data-shortid'),
         storyID  = $('.story').attr('data-shortid'),
         collapse = JSON.parse(localStorage.getItem(storyID) || '{}');
-    collapse[id] = e.target.checked
-    localStorage.setItem(storyID, JSON.stringify(collapse))
+    if (e.target.checked)
+      collapse[id] = true;
+    else
+      delete(collapse[id]);
+    localStorage.setItem(storyID, JSON.stringify(collapse));
   })
 
   // Collapse stories on load; the actual hiding is done in CSS; just need to switch the checkbox.

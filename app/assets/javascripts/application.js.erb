@@ -600,7 +600,7 @@ $(document).ready(function() {
         storyID  = $('.story').attr('data-shortid'),
         collapse = JSON.parse(localStorage.getItem(storyID) || '{}');
     if (e.target.checked)
-      collapse[id] = true;
+      collapse[id] = 1;
     else
       delete(collapse[id]);
     localStorage.setItem(storyID, JSON.stringify(collapse));
@@ -612,7 +612,7 @@ $(document).ready(function() {
         collapse = JSON.parse(localStorage.getItem(storyID) || '{}');
 
     for (var k in collapse)
-      $('input#comment_folder_' + k).attr('checked', (collapse[k]))
+      $('input#comment_folder_' + k).attr('checked', !!collapse[k])
   });
 
   $('textarea#comment').keydown(function (e) {

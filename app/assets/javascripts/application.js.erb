@@ -205,35 +205,50 @@ var _Lobsters = Class.extend({
       action, { reason: reason });
   },
 
-  postComment: function(form) {
+  postComment: function(btn, form) {
     var params = $(form).serializeArray();
     params.push({"name": "show_tree_lines", "value": "true"});
 
-    $.post($(form).attr("action"), params, function(data) {
-      // Clear form: Firefox will keep form values on reload (e.g. F5), which isn't too useful if
-      // it's already posted.
-      $(form).find('textarea').val('')
+    var done = Lobsters.loading(btn, () => {
+      $.post($(form).attr("action"), params, function(data) {
+        // Clear form: Firefox will keep form values on reload (e.g. F5), which isn't too useful if
+        // it's already posted.
+        $(form).find('textarea').val('')
 
-      var parsedHTML = $.parseHTML(data);
+        var parsedHTML = $.parseHTML(data);
 
-      var isEdit = $(form).hasClass("edit_comment");
-      var hasChildren = $(form).closest(".comments_subtree")
-        .find(".comments_subtree").length;
-      if (isEdit && hasChildren) {
-        $(parsedHTML).find(".comment_parent_tree_line:first")
-          .removeClass("no_children");
-      }
+        var isEdit = $(form).hasClass("edit_comment");
+        var hasChildren = $(form).closest(".comments_subtree")
+          .find(".comments_subtree").length;
+        if (isEdit && hasChildren) {
+          $(parsedHTML).find(".comment_parent_tree_line:first")
+            .removeClass("no_children");
+        }
 
-      if ($(form).find("#parent_comment_short_id").length) {
-        // reply to comment
-        $(form).closest(".comments_subtree")
-          .find(".comment_parent_tree_line:first").removeClass("no_children");
-        $(form).closest(".comment").replaceWith(parsedHTML);
-      } else {
-        // reply to story
-        $(form).parent(".comment").replaceWith(parsedHTML);
-      }
-    });
+        if ($(form).find("#parent_comment_short_id").length) {
+          // reply to comment
+          $(form).closest(".comments_subtree")
+            .find(".comment_parent_tree_line:first").removeClass("no_children");
+          $(form).closest(".comment").replaceWith(parsedHTML);
+        } else {
+          // reply to story
+          $(form).parent(".comment").replaceWith(parsedHTML);
+        }
+      })
+        .always(() => done())
+        .fail(function(req, err) { alert(`could not post comment: ${err}`) })
+    })
+  },
+
+  // Prevent a button/link from working while an AJAX request is in progress;
+  // otherwise smashing a "post comment" button will post a comment twice.
+  loading: function(btn, f) {
+    if (btn.attr('data-working') === '1')
+        return
+
+    btn.attr('data-working', '1').attr('disabled', true).addClass('loading')
+    f.call(btn)
+    return () => { btn.removeAttr('data-working').removeAttr('disabled').removeClass('loading') }
   },
 
   previewComment: function(form) {
@@ -457,15 +472,17 @@ $(document).ready(function() {
     }
 
     var replies = comment.nextAll(".comments").first();
-    $.get("/comments/" + comment.attr("data-shortid") + "/reply",
-    function(data) {
-      var reply = $($.parseHTML(data));
-      reply.attr("id", "reply_form_" + comment.attr("id"));
-      replies.prepend(reply);
-      var ta = reply.find("textarea");
-      ta.focus().text(sel);
-      autosize(ta);
-    });
+    var done = Lobsters.loading($(this), () => {
+      $.get("/comments/" + comment.attr("data-shortid") + "/reply", function(data) {
+        done()
+        var reply = $($.parseHTML(data));
+        reply.attr("id", "reply_form_" + comment.attr("id"));
+        replies.prepend(reply);
+        var ta = reply.find("textarea");
+        ta.focus().text(sel);
+        autosize(ta);
+      });
+    })
 
     return false;
   });
@@ -552,7 +569,7 @@ $(document).ready(function() {
 
   $(document).on("click", ".comment-post", function(event) {
     event.preventDefault();
-    Lobsters.postComment($(this).parents("form").first());
+    Lobsters.postComment($(this), $(this).parents("form").first());
   });
 
   $(document).on("click", "button.comment-preview", function() {

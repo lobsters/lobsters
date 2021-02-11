@@ -17,7 +17,7 @@ class Message < ApplicationRecord
   validates :subject, length: { :in => 1..100 }
   validates :body, length: { :maximum => (64 * 1024) }
   validates :short_id, length: { maximum: 30 }
-  validates :author, if: :is_authored?
+  validate :is_authored?
   validate :hat do
     next if hat.blank?
     if author.blank? || author.wearable_hats.exclude?(hat)

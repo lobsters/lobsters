@@ -16,7 +16,7 @@ describe Message do
     m = create(:message)
     m.author_user_id = 0
     m.deleted_by_author = true
-    expect(m.valid?).to be true
+    expect(m.valid?).to be false
     m.deleted_by_author = false
     m.deleted_by_recipient = true
     expect(m.valid?).to be true

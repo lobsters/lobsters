@@ -126,7 +126,7 @@ class Message < ApplicationRecord
 
   def is_authored?
     if self.author ||
-        (self.author_user_id == 0 && self.deleted_by_recipient) then
+       (self.author_user_id == 0 && self.deleted_by_recipient)
       true
     else
       errors.add(:author_user_id, "is not a valid user")

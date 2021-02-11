@@ -12,6 +12,16 @@ describe Message do
     expect(m_valid_short_id).not_to be_valid
   end
 
+  it "can be deleted if sent by id=0" do
+    m = create(:message)
+    m.author_user_id = 0
+    m.deleted_by_author = true
+    expect(m.valid?).to be true
+    m.deleted_by_author = false 
+    m.deleted_by_recipient = true
+    expect(m.valid?).to be true
+  end
+
   describe "hat" do
     it "can't be worn if user doesn't have that hat" do
       message = build(:message, hat: create(:hat))

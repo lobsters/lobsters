@@ -6,7 +6,8 @@ class Message < ApplicationRecord
   belongs_to :author,
              :class_name => "User",
              :foreign_key => "author_user_id",
-             :inverse_of => :sent_messages
+             :inverse_of => :sent_messages,
+             :optional => true
   belongs_to :hat,
              :optional => true
 
@@ -16,6 +17,7 @@ class Message < ApplicationRecord
   validates :subject, length: { :in => 1..100 }
   validates :body, length: { :maximum => (64 * 1024) }
   validates :short_id, length: { maximum: 30 }
+  validates :author, if: is_authored?
   validate :hat do
     next if hat.blank?
     if author.blank? || author.wearable_hats.exclude?(hat)
@@ -120,5 +122,14 @@ class Message < ApplicationRecord
 
   def url
     Rails.application.root_url + "messages/#{self.short_id}"
+  end
+
+  def is_authored?
+    if self.author ||
+        (self.author_user_id == 0 && self.deleted_by_recipient) then
+      true
+    else
+      errors.add(:author_user_id, "is not a valid user")
+    end
   end
 end

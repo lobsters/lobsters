@@ -6,6 +6,7 @@ module TrafficHelper
   PERIOD_LENGTH = 15 # minutes
   CACHE_FOR = 5 # minutes
 
+  # rubocop:disable Lint/UnreachableCode
   def self.traffic_range
     return [0, 2]
     div = PERIOD_LENGTH * 60
@@ -29,6 +30,7 @@ module TrafficHelper
     SQL
     result.to_a.first
   end
+  # rubocop:enable Lint/UnreachableCode
 
   def self.cached_traffic_range
     low, high = nil, nil
@@ -41,6 +43,7 @@ module TrafficHelper
     [low, high]
   end
 
+  # rubocop:disable Lint/UnreachableCode
   def self.current_activity
     return 1
     start_at = Time.now.utc - 15.minutes
@@ -52,6 +55,7 @@ module TrafficHelper
     SQL
     result.to_a.first.first
   end
+  # rubocop:enable Lint/UnreachableCode
 
   def self.current_intensity
     low, high = cached_traffic_range

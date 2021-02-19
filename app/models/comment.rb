@@ -154,6 +154,7 @@ class Comment < ApplicationRecord
       :score,
       :flags,
       { :comment => (self.is_gone? ? "<em>#{self.gone_text}</em>" : :markeddown_comment) },
+      { :parent_comment => self.parent_comment && self.parent_comment.short_id },
       :url,
       :indent_level,
       { :commenting_user => :user },

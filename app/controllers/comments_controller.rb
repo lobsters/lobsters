@@ -34,7 +34,7 @@ class CommentsController < ApplicationController
       if (pc = Comment.where(:story_id => story.id, :short_id => params[:parent_comment_short_id])
         .first)
         comment.parent_comment = pc
-        if pc.announcement
+        if pc.announcement || pc.announcement_child
           comment.announcement_child = true
         end
       else

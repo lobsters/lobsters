@@ -19,7 +19,12 @@ class CommentsController < ApplicationController
 
     comment = story.comments.build
     comment.comment = params[:comment].to_s
+
     comment.user = @user
+
+    if @user.is_moderator && params[:annoucement].to_s
+      comment.announcement = true
+    end
 
     if params[:hat_id] && @user.wearable_hats.where(:id => params[:hat_id])
       comment.hat_id = params[:hat_id]
@@ -29,6 +34,9 @@ class CommentsController < ApplicationController
       if (pc = Comment.where(:story_id => story.id, :short_id => params[:parent_comment_short_id])
         .first)
         comment.parent_comment = pc
+        if pc.announcement
+          comment.announcement_child = true
+        end
       else
         return render :json => { :error => "invalid parent comment", :status => 400 }
       end

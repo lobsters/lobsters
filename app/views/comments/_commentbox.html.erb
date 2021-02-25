@@ -30,6 +30,10 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
           [M&darr;]
         </div>
       <% end %>
+      <% if @user.is_moderator %>
+         <%= f.label "Collapse Replies" %><%= f.check_box :announcement %>
+        &nbsp;
+      <% end %>
 
       <%= f.submit "#{comment.new_record?? "Post" : "Update"}",
         :class => "comment-post", :disabled => !@user %>

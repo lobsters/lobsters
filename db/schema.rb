@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.boolean "is_deleted", default: false
     t.boolean "is_moderated", default: false
     t.boolean "is_from_email", default: false
+    t.boolean "is_announcement", default: false
     t.bigint "hat_id", unsigned: true
     t.index ["comment"], name: "index_comments_on_comment", type: :fulltext
     t.index ["confidence"], name: "confidence_idx"

@@ -6,8 +6,14 @@ module TrafficHelper
   PERIOD_LENGTH = 15 # minutes
   CACHE_FOR = 5 # minutes
 
+  # TODO: ISS-809: temporary measure for migration performance issue.
+  # When FEATURE_DISABLED = true, TrafficHelper does NOT perform ANY database
+  # transactions (cache only) and returns hard coded numbers (:13, :49).
+  FEATURE_DISABLED = true
+
   def self.traffic_range
-    return [0, 2]
+    return [0, 2] if FEATURE_DISABLED
+
     div = PERIOD_LENGTH * 60
     start_at = 90.days.ago
     result = ActiveRecord::Base.connection.execute <<-SQL
@@ -42,7 +48,8 @@ module TrafficHelper
   end
 
   def self.current_activity
-    return 1
+    return 1 if FEATURE_DISABLED
+
     start_at = Time.now.utc - 15.minutes
     result = ActiveRecord::Base.connection.execute <<-SQL
       select

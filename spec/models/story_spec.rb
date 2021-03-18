@@ -337,6 +337,53 @@ describe Story do
     end
   end
 
+  context 'merging stories' do
+    context 'when merging a non-submitter-authored story into a submitter-authored story' do
+      let!(:mgd_user) { create(:user) }
+      let!(:og_user) { create(:user) }
+      let!(:og_story) do
+        create(
+          :story,
+          user: og_user,
+          user_is_author: true
+        )
+      end
+      let!(:mgd_story) do
+        create(
+          :story,
+          user: mgd_user,
+          title: 'A Tale of Merging',
+          merged_into_story: og_story,
+          user_is_author: false
+        )
+      end
+
+      before do
+        mgd_story.reload
+        og_story.reload
+      end
+
+      it 'point to the parent story the child was merged into' do
+        expect(mgd_story.merged_into_story).to eq(og_story)
+        expect(og_story.merged_stories.map(&:id)).to eq([mgd_story.id])
+      end
+
+      # user_is_author? is the (only) boolean expression that dictates
+      # the rendering of either 'via' or 'authored by'.
+      describe '.user_is_author?' do
+        # See apps/views/stories/_listdetail.html.erb:69:102:111.
+
+        it 'is true for the parent story' do
+          expect(og_story.user_is_author?).to be true
+        end
+
+        it 'is false for the child/merged story' do
+          expect(mgd_story.user_is_author?).to be false
+        end
+      end
+    end
+  end
+
   describe "#update_comments_count!" do
     context "with a merged_into_story" do
       let(:merged_into_story) { create(:story) }

@@ -109,9 +109,9 @@ describe User do
   end
 
   it "shows a user is recent or not" do
-    user = create(:user, :created_at => Time.current)
+    user = create(:user, created_at: Time.current)
     expect(user.is_new?).to be true
-    user = create(:user, :created_at => Time.current - (User::NEW_USER_DAYS.days + 1.day))
+    user = create(:user, created_at: (User::NEW_USER_DAYS.days + 1.day).ago)
     expect(user.is_new?).to be false
   end
 

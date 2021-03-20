@@ -397,7 +397,7 @@ describe Story do
         "https://github.com/" => "github.com",
         "https://github.com" => "github.com",
         "https://blog.github.com/something" => "blog.github.com",
-        "https://twitter.com/dorianmariefr/status/1370384526430633990" => "twitter.com/dorianmariefr",
+        "https://twitter.com/dorianmariefr/status/1" => "twitter.com/dorianmariefr",
         "https://twitter.com/dorianmariefr" => "twitter.com/dorianmariefr",
         "https://twitter.com" => "twitter.com",
       }

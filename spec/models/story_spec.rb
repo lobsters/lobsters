@@ -382,4 +382,32 @@ describe Story do
       end
     end
   end
+
+  describe "#domain_with_path" do
+    it "returns the domain if not in the list" do
+      story = create(:story, url: "https://dorianmarie.fr/blog/hello-world")
+      expect(story.domain_with_path).to eq("dorianmarie.fr")
+    end
+
+    it "returns the domain with the path if github or twitter urls" do
+      expectations = {
+        "https://github.com/rails/webpacker" => "github.com/rails",
+        "https://github.com/rails" => "github.com/rails",
+        "https://github.com/rails/" => "github.com/rails",
+        "https://github.com/" => "github.com",
+        "https://github.com" => "github.com",
+        "https://blog.github.com/something" => "blog.github.com",
+        "https://twitter.com/dorianmariefr/status/1370384526430633990" => "twitter.com/dorianmariefr",
+        "https://twitter.com/dorianmariefr" => "twitter.com/dorianmariefr",
+        "https://twitter.com" => "twitter.com",
+      }
+
+      story = create(:story)
+
+      expectations.each do |(url, expected)|
+        story.update!(url: url)
+        expect(story.domain_with_path).to eq(expected)
+      end
+    end
+  end
 end

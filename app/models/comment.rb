@@ -57,27 +57,18 @@ class Comment < ApplicationRecord
   SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
 
   validates :short_id, length: { maximum: 10 }
+  validates :user_id, presence: true
+  validates :story_id, presence: true
   validates :markeddown_comment, length: { maximum: 16_777_215 }
-  validates :comment, presence: true
+  validates :comment, presence: { with: true, message: "cannot be empty." }
+  validates :comment, format: { without: /\A\w*(this|tl;?dr)[\.!]?\w*\z/i,
+    message: "is low effort.", }
+  validates :comment, format: { without: /\A\w*(me too|nice)[\.!]?\w*\z/i,
+    message: "is not necessary, please upvote the parent post instead", }
 
   validate do
-    self.user_id.blank? &&
-      errors.add(:user_id, "cannot be blank.")
-
-    self.story_id.blank? &&
-      errors.add(:story_id, "cannot be blank.")
-
     self.parent_comment && self.parent_comment.is_gone? &&
       errors.add(:base, "Comment was deleted by the author or a mod while you were writing.")
-
-    (m = self.comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
-      errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
-
-    self.comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
-      errors.add(:base, "Wow!  A blue car!")
-
-    self.comment.to_s.strip.match(/\A(me too|nice)([\.!])?\z/i) &&
-      errors.add(:base, "Please just upvote the parent post instead.")
 
     self.hat.present? && self.user.wearable_hats.exclude?(self.hat) &&
       errors.add(:hat, "not wearable by user")

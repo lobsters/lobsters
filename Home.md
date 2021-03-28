@@ -22,6 +22,7 @@ Other sites using the Lobsters codebase:
 * [Hipppo](https://hipppo.fm) - Hip-hop
 * [MLN.dev](https://mln.dev/) - Machine learning
 * [DataTau](https://datatau.net/) - Data science newsboard
+* [Khosenk](https://խօսենք.ցանցառներ.հայ/) - computing-focused (hy)
 
 ## Cousin Sites
 

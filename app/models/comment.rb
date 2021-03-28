@@ -54,16 +54,13 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
+  SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
+
   validates :short_id, length: { maximum: 10 }
   validates :markeddown_comment, length: { maximum: 16_777_215 }
   validates :comment, presence: true
 
-  SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
-
   validate do
-    self.comment.to_s.strip == "" &&
-      errors.add(:comment, "cannot be blank.")
-
     self.user_id.blank? &&
       errors.add(:user_id, "cannot be blank.")
 

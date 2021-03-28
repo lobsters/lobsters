@@ -8,26 +8,6 @@ module TrafficHelper
 
   def self.traffic_range
     return [0, 2]
-    div = PERIOD_LENGTH * 60
-    start_at = 90.days.ago
-    result = ActiveRecord::Base.connection.execute <<-SQL
-      select
-        min(activity) as low,
-        max(activity) as high
-      from
-        (select
-          -- from_unixtime(s.period * #{div}) as "at",
-          -- s.period,
-          v.n_votes + (c.n_comments * 10) + (s.n_stories * 20) AS activity
-        from
-          (SELECT count(1) AS n_votes,    floor(UNIX_TIMESTAMP(updated_at)/#{div}) AS period FROM votes    WHERE updated_at >= '#{start_at}' GROUP BY period) v,
-          (SELECT count(1) AS n_comments, floor(UNIX_TIMESTAMP(created_at)/#{div}) AS period FROM comments WHERE created_at >= '#{start_at}' GROUP BY period) c,
-          (SELECT count(1) AS n_stories,  floor(UNIX_TIMESTAMP(created_at)/#{div}) AS period FROM stories  WHERE created_at >= '#{start_at}' GROUP BY period) s
-        where
-          s.period = c.period and
-          s.period = v.period) act;
-    SQL
-    result.to_a.first
   end
 
   def self.cached_traffic_range
@@ -43,14 +23,6 @@ module TrafficHelper
 
   def self.current_activity
     return 1
-    start_at = Time.now.utc - 15.minutes
-    result = ActiveRecord::Base.connection.execute <<-SQL
-      select
-        (SELECT count(1) AS n_votes   FROM votes    WHERE updated_at >= '#{start_at}') +
-        (SELECT count(1) AS n_comment FROM comments WHERE created_at >= '#{start_at}') * 10 +
-        (SELECT count(1) AS n_stories FROM stories  WHERE created_at >= '#{start_at}') * 20
-    SQL
-    result.to_a.first.first
   end
 
   def self.current_intensity

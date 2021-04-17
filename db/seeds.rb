@@ -19,7 +19,7 @@ User.create(
     User::MIN_KARMA_TO_SUBMIT_STORIES,
     User::MIN_KARMA_FOR_INVITATION_REQUESTS
   ].max,
-  :created_at => User::NEW_USER_DAYS.days.ago
+  :created_at => (User::NEW_USER_DAYS+1).days.ago
 )
 
 c = Category.create!(category: "Category")

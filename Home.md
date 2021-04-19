@@ -33,3 +33,4 @@ Inspired by Lobsters, but not using the Lobsters codebase.
 * [Pythonic News](https://news.python.sc/) ([repo](https://github.com/sebst/pythonic-news)) - A social news aggregator for the Python community.
 * [Racket Stories](https://racket-stories.com/) ([repo](https://github.com/soegaard/racket-stories)) - Racket.
 * [Journal du hacker](https://www.journalduhacker.net/) ([repo Gitlab](https://gitlab.com/journalduhacker/journalduhacker)) - Hacker news in french
+* [Echo JS](https://www.echojs.com/) - Echo JS is a community-driven news site entirely focused on JavaScript development, HTML5, and front-end news

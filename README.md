@@ -25,7 +25,7 @@ Use the steps below for a local install.
 
 * Checkout the lobsters git tree from Github
     ```sh
-    $ git clone git@github.com:greta-code-pizza/lobsters.git
+    $ git clone https://github.com/greta-code-pizza/lobsters.git
     $ cd lobsters
     lobsters$
     ```

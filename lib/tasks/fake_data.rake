@@ -26,8 +26,15 @@ class FakeDataGenerator
 
     # Categories
     categories = []
-    @categories_count.times do
-      categories << Category.create!(category: Faker::Lorem.word.capitalize)
+    available_categories = 100.times.map do |cat|
+      Faker::Lorem.word.capitalize
+    end.uniq
+
+    @categories_count = available_categories.count
+
+
+    available_categories.each do |cat|
+      categories << Category.create!(category: cat)
     end
 
     # Stories
@@ -38,14 +45,14 @@ class FakeDataGenerator
       tag_name = title.split(' ').first.downcase
       tag = Tag.find_by tag: tag_name
       tag ||= Tag.create! tag: tag_name, category: category
-      if i.even?
-        Story.create! user: user, title: title, url: Faker::Internet.url, tags_a: [tag.tag]
-      else
+      # if i.even?
+      #   Story.create! user: user, description: "Hello world", title: title, tags_a: [tag.tag]
+      # else
         Story.create! user: user,
           title: title,
           description: Faker::Lorem.paragraphs(number: 3).join("\n\n"),
           tags_a: [tag.tag]
-      end
+      # end
     end
 
     # User-deleted stories

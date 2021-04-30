@@ -13,6 +13,8 @@ gem 'scenic-mysql_adapter'
 gem "activerecord-typedstore"
 gem 'sprockets-rails', '2.3.3'
 
+# traduction
+
 # js
 gem "jquery-rails", "~> 4.3"
 gem "json"

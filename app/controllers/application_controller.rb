@@ -6,6 +6,14 @@ class ApplicationController < ActionController::Base
   before_action :mini_profiler
   before_action :set_traffic_style
   before_action :prepare_exception_notifier
+  around_action :switch_locale
+
+        # test for locale variable 
+
+        def switch_locale(&action)
+          locale = params[:locale] || I18n.default_locale
+          I18n.with_locale(locale, &action)
+        end
 
   # match this in your nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
@@ -169,4 +177,5 @@ class ApplicationController < ActionController::Base
 
     request.env["exception_notifier.exception_data"] = exception_data
   end
+
 end

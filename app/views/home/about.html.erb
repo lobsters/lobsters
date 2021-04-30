@@ -1,5 +1,6 @@
 <div class="box wide">
-  <h1>About</h1>
+  <h1> <%= I18n.t 'hello'%></h1>
+  <h1> <%= I18n.l Time.now%></h1>
 
   <%- raise "Site owner: You need to delete app/views/home/about.html.erb and write your own about page" if Rails.env.production? and Rails.application.name != 'Lobsters' -%>
 

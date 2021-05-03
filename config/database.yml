@@ -4,14 +4,16 @@ development:
   reconnect: false
   database: lobsters_dev
   socket: /var/run/mysqld/mysqld.sock
-  username: <%= ENV.fetch("DEV_USER") %>
-  password: <%= ENV.fetch("DEV_PASSWORD") %>
+  username: <%= ENV["DEV_USER"] %>
+  password: <%= ENV["DEV_PASSWORD"] %>
   
 staging:
   adapter: mysql2
   encoding: utf8mb4
-  reconnect: false
-  url: <%= ENV.fetch("DB_URL") %>
+  reconnect: true
+  host: <%= ENV["STAGING_HOST"] %>
+  username: <%= ENV["STAGING_USER"] %>
+  password: <%= ENV["STAGING_PASSWORD"] %>
 
 test:
   adapter: mysql2
@@ -19,5 +21,5 @@ test:
   reconnect: false
   database: lobsters_test
   socket: /var/run/mysqld/mysqld.sock
-  username: <%= ENV.fetch("TEST_USER") %>
-  password: <%= ENV.fetch("TEST_PASSWORD") %>
+  username: <%= ENV["TEST_USER"] %>
+  password: <%= ENV["TEST_PASSWORD"] %>

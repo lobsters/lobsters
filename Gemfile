@@ -13,7 +13,7 @@ gem 'scenic-mysql_adapter'
 gem "activerecord-typedstore"
 gem 'sprockets-rails', '2.3.3'
 
-gem 'dotenv-rails', groups: [:staging420bb633a6246785f74235baf788977c0256b945f8423d7afdf3c3032b2dddf7d554bb68dcfb18bc22a1abc7a624151e28051881240d062c5bc58b211bb3669f, :test]
+gem 'dotenv-rails', groups: [:development, :staging, :test]
 
 # js
 gem "jquery-rails", "~> 4.3"

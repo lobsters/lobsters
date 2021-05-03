@@ -41,7 +41,6 @@ public/favicon.ico
 
 # prod config
 config/credentials.yml.enc
-config/database.yml
 config/initializers/development.rb
 config/initializers/production.rb
 config/master.key
@@ -49,3 +48,5 @@ config/scout_apm.yml
 config/*.sphinx.conf
 config/unicorn.conf.rb
 lib/tasks/deploy.rake
+
+.env

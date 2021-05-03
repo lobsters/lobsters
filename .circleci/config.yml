@@ -13,25 +13,11 @@ jobs:
           name: Which bundler?
           command: bundle -v
       - ruby/bundle-install
-      
-  test:
-      docker:
-        - image: circleci/node:11.10.1
-      steps:
-        - checkout
-        - run: yarn install
-        - run: yarn test:unit
-
-workflows:
-  version: 2
-  integration:
-    jobs:
-      - build
-      - test
 
 
 
 
 
 
-      
+
+

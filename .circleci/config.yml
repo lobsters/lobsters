@@ -16,5 +16,5 @@ jobs:
           command: bundle -v
       - ruby/bundle-install
       - run:
-        name: Run RSpec
-        command: bundle exec rspec spec
+          name: Run RSpec
+          command: bundle exec rspec spec

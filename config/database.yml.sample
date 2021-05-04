@@ -12,9 +12,6 @@ development:
 test:
   <<: *default
   database: hipsters_test
-  host: localhost
-  username: root
-  password: root
 
 staging:
   <<: *default

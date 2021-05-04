@@ -4,12 +4,12 @@
   <% unless defined?(suggesting) %>
     <div class="boxline">
     <% if f.object.url_is_editable_by_user?(@user) %>
-      <%= f.label :url, "URL:", :class => "required" %>
+      <%= f.label :url, t('stories.form.url'), :class => "required" %>
       <%= f.text_field :url, :autocomplete => "off" %>
-      <%= button_tag "Fetch Title", :id => "story_fetch_title",
+      <%= button_tag t('stories.form.fetch'), :id => "story_fetch_title",
         :type => "button" %>
     <% elsif !f.object.new_record? && !f.object.url.blank? %>
-      <%= f.label :url, "URL:", :class => "required" %>
+      <%= f.label :url, t('stories.form.url'), :class => "required" %>
       <div class="d">
       <a href="<%= f.object.url %>"><%= f.object.url %></a>
       </div>
@@ -18,16 +18,16 @@
   <% end %>
 
   <div class="boxline">
-    <%= f.label :title, "Title:", :class => "required" %>
+    <%= f.label :title, t('stories.form.title'), :class => "required" %>
     <%= f.text_field :title, :maxlength => 100 %>
     <p class="actions title-reminder">
-      Please remove extraneous components from titles such as the name of the site, blog, section, and author.
+    <%= t('stories.form.p1')%>
     </p>
   </div>
 
   <% if f.object.id && !defined?(suggesting) && f.object.suggested_title_times.any? %>
     <div class="boxline actions">
-      Users have suggested setting this story's title to:
+    <%= t('stories.form.p2')%>
       <br>
       <% f.object.suggested_title_times.each do |st| %>
         <%= st.times %>: <%= st.title %><br>
@@ -36,7 +36,7 @@
   <% end %>
 
   <div class="boxline" style="margin-bottom: 2px;">
-  <%= f.label :tags_a, "Tags:", :class => "required",
+  <%= f.label :tags_a, t('stories.form.tags'), :class => "required",
     :style => "line-height: 2.3em;" %>
   <%= f.select "tags_a", options_for_select(
     Tag.all_with_filtered_counts_for(@user).map{|t|
@@ -56,7 +56,7 @@
 
   <% if f.object.id && !defined?(suggesting) && f.object.suggested_tagging_times.any? %>
     <div class="boxline actions">
-      Users have suggested setting this story's tags to:
+    <%= t('stories.form.p3')%>
       <br>
       <% f.object.suggested_tagging_times.includes(:tag).each do |st| %>
         <%= st.times %>: <%= tag_link(st.tag) %><br>
@@ -66,53 +66,38 @@
 
   <% unless defined?(suggesting) %>
     <div class="boxline">
-      <%= f.label :description, "Text:", :class => "required" %>
-      <%= f.text_area :description, :rows => 8, :placeholder => "Use this for stories without a URL, to link additional context, or to paste abstracts from PDF papers.
-
-Please don't use this to promote the story, summarize the post, or explain why you posted it.
-See the guidelines below for more." %>
+      <%= f.label :description, t('stories.form.text'), :class => "required" %>
+      <%= f.text_area :description, :rows => 8, :placeholder => t('stories.form.placeholder_area') %>
     </div>
 
     <%= tag.details class: "boxline actions", open: show_guidelines? ? true : nil do %>
-      <summary>Story submission guidelines</summary>
+      <summary><%= t('stories.form.summary')%></summary>
       <ul>
 
         <li><p>
-        Do not editorialize story titles, but when the original story's
-        title has no context or is unclear, please change it.  <strong>Please
-        remove extraneous components from titles such as the name of the
-        site, blog, section, and author.</strong>
+        <%= t('stories.form.li1.p')%>  <strong><%= t('stories.form.li1.strong')%></strong>
         </p></li>
 
         <li><p>
-        When the story being submitted is more than a year or so old,
-        please add the year the story was written to the post title in
-        parentheses.
+        <%= t('stories.form.li2')%>
         </p></li>
 
         <li><p>
-        When submitting a URL, the text field is optional and should only
-        be used when additional context or explanation of the URL is
-        needed.  Commentary or opinion should be reserved for a comment,
-        so that it can be voted on separately from the story.
+        <%= t('stories.form.li3')%>
         </p></li>
 
         <li><p>
-        If no <a href="/tags">tags</a> clearly apply to the story you are submitting, chances
-        are it does not belong here.  Do not overreach with tags if they
-        are not the primary focus of the story.
+        <%= t('stories.form.li4.if')%> <a href="/tags">tags</a> <%= t('stories.form.li4.text')%>
         </p></li>
 
         <li><p>
-        To be able to easily submit a page you're viewing in your browser
-        to <%= Rails.application.name %>, drag this bookmarklet to your
-        bookmark bar:
+        <%= t('stories.form.li5.p1')%>
+        to <%= Rails.application.name %><%= t('stories.form.li5.p2')%>
         [<a href="javascript:{window.open(%22<%= Rails.application.root_url
         %>stories/new?url=%22+encodeURIComponent(document.location)+<%
         %>%22&title=%22+encodeURIComponent(document.title));%20void(0);}<%
-        %>">Submit to <%= Rails.application.name %></a>].
-        You'll be taken to this page with the viewed page's URL and title.
-        (It can't recognize and remove blog/author names for you, though.)
+        %>"><%= t('stories.form.li5.p3')%> <%= Rails.application.name %></a>].
+        <%= t('stories.form.li5.p4')%>
         </p></li>
 
       </ul>
@@ -122,19 +107,19 @@ See the guidelines below for more." %>
 <% unless defined?(suggesting) %>
   <div class="box">
     <div class="boxline">
-      <%= f.label :user_is_author, "Author:", :class => "required" %>
+      <%= f.label :user_is_author, t('stories.form.autor'), :class => "required" %>
       <%= f.check_box :user_is_author %>
       <%= f.label :user_is_author,
-        (f.object.id && f.object.user_id != @user.id ? "Submitter is" : "I am") +
-        " the author of the story at this URL (or this text)",
+        (f.object.id && f.object.user_id != @user.id ? t('stories.form.submitter') : t('stories.form.i_am')) +
+        t('stories.form.autor_story'),
         :class => "normal" %>
     </div>
     <div class="boxline">
-      <%= f.label :user_is_following, "Follow:", :class => "required" %>
+      <%= f.label :user_is_following, t('stories.form.follow')+":", :class => "required" %>
       <%= f.check_box :user_is_following %>
       <%= f.label :user_is_following,
-        (f.object.id && f.object.user_id == @user.id ? 'Follow' : "Submitter is following") +
-        " this story to receive replies via e-mail and Pushover",
+        (f.object.id && f.object.user_id == @user.id ? t('stories.form.follow') : t('stories.form.submitter_following')) +
+        t('stories.form.mail_story'),
         :class => "normal" %>
     </div>
   </div>

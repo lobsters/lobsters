@@ -1,39 +1,38 @@
 <div class="markdown_help" style="display: none; padding-top: 0.5em;">
   <table>
   <tr>
-    <td width="125"><em>emphasized text</em></td>
-    <td>surround text with <tt>*asterisks*</tt></td>
+    <td width="125"><em><%= t('global.table_tr1.th1')%></em></td>
+    <td><%= t('global.table_tr1.th2')%> <tt>*<%= t('global.table_tr1.asterisks')%>*</tt></td>
   </tr>
   <tr>
-    <td><strong>strong text</strong></td>
-    <td>surround text with <tt>**two asterisks**</tt></td>
+    <td><strong><%= t('global.table_tr2.th1')%></strong></td>
+    <td><%= t('global.table_tr2.th2')%> <tt>**<%= t('global.table_tr2.asterisks')%>**</tt></td>
   </tr>
   <tr>
-    <td><strike>struck-through</strike></td>
-    <td>surround text with <tt>~~two tilde characters~~</tt></td>
+    <td><strike><%= t('global.table_tr3.th1')%></strike></td>
+    <td><%= t('global.table_tr2.th2')%> <tt>~~<%= t('global.table_tr2.tilde')%>~~</tt></td>
   </tr>
   <tr>
-    <td><tt>fixed width</tt></td>
-    <td>surround text with <tt>`backticks`</tt></td>
+    <td><tt><%= t('global.table_tr4.th1')%></tt></td>
+    <td><%= t('global.table_tr4.th1')%> <tt>`<%= t('global.table_tr4.backticks')%>`</tt></td>
   </tr>
   <tr>
     <td><a href="http://example.com/"
-      style="color: inherit;">linked text</a></td>
-    <td><tt>[linked text](http://example.com/)</tt> or just a bare URL
-      to create without a title</td>
+      style="color: inherit;"><%= t('global.table_tr5.linked_text')%></a></td>
+    <td><tt>[<%= t('global.table_tr5.linked_text')%>](http://example.com/)</tt> <%= t('global.table_tr5.text')%></td>
   </tr>
   <tr>
-    <td><blockquote> quoted text</blockquote></td>
-    <td>prefix text with <tt>&gt;</tt></td>
+    <td><blockquote> <%= t('global.table_tr6.td1')%></blockquote></td>
+    <td><%= t('global.table_tr6.td2')%> <tt><%= t('global.table_tr6.prefix')%></tt></td>
   </tr>
   <tr>
-    <td><pre style="margin: 0px;">pre
-  text</pre></td>
-    <td>prefix text with at least<tt>&nbsp;&nbsp;&nbsp;&nbsp;4 spaces</tt></td>
+    <td><pre style="margin: 0px;"><%= t('global.table_tr7.pre')%>
+  <%= t('global.table_tr7.text')%></pre></td>
+    <td><%= t('global.table_tr7.prefix')%><tt>&nbsp;&nbsp;&nbsp;&nbsp;<%= t('global.table_tr7.space')%></tt></td>
   </tr>
   <% if defined?(allow_images) && allow_images %>
     <tr>
-      <td>(inline image)</td>
+      <td>(<%= t('global.image')%>)</td>
       <td><tt>![alt text](http://example.com/image.jpg)</tt></td>
     </tr>
   <% end %>

@@ -1,33 +1,267 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   'true': 'foo'
-#
-# To learn more, please read the Rails Internationalization guide
-# available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  ban_notification:
+    text: "You have been banned from"
+    for: "for"
+    notification: "You are no longer allowed to login to the site.  If you wish, you can
+                  discuss this ban with the moderator by replying to this e-mail."
+
+  categories:
+    text: "Tip: read stories across multiple categories with"
+
+  comments:
+    _commentbox:
+      placeholder: "You must be logged in to leave a comment."
+      markdown: "Markdown formatting available"
+      post: "Post"
+      update: "Update"
+      preview: "Preview"
+      cancel: "Cancel"
+      hats: "Put on hat"
+
+  email_message:
+    notify:
+      text: "Reply at"
+
+  email_reply:
+    mention:
+      text: "Continue this discussion at"
+    reply:
+      text: "Continue this discussion at"
+
+  filters:
+    legend: "Filtered Tags"
+    text1_part1: "To hide stories with certain "
+    text1_part2: "from across the site, check them below"
+    text2_part1: "Since you are not logged in, your filters will be stored in a long-lasting browser cookie.  
+                  To permanently store your tag filters and have them work across browsers"
+    text2_part2: "to your account"
+    table_th1 : "Hide"
+    table_th2 : "Tag"
+    table_th3 : "Description"
+    table_th4 : "Stories"
+    table_th5 : "Filtering"
+    inactive_tag: "inactive"
+    save: "Save Filters"
+
+  global:
+    table_tr1:
+      th1: "emphasized text"
+      th2: "surround text with"
+      asterisks: "asterisks"
+    table_tr2:
+      th1: "strong text"
+      th2: "surround text with "
+      asterisks: "two asterisks"
+    table_tr3:
+      th1: "struck-through"
+      th2: "surround text with"
+      tilde: "two tilde characters"
+    table_tr4:
+      th1: "fixed width"
+      th2: "surround text with"
+      backticks: "backticks"     
+    table_tr5: 
+       linked_text: "linked text"  
+       text: "or just a bare URL to create without a title"  
+    table_tr6:
+      td1: "quoted text"
+      td2: "prefix text with"
+      prefix: "&gt;"  
+    table_tr7:
+      pre: "pre"
+      text: "text"
+      prefix: "prefix text with at least"
+      space: "4 spaces"
+
+  hats:
+    build_request:
+      legend: "Request a Hat"
+      p1: "A hat is a formal, verified way of speaking officially for a project, organization, or company on Lobsters.
+          A user can have more than one hat, but only wear one at a time on a comment or private message."
+      p2: "Hats are for making public statements, not commemorating contributions to a project or jobs held.
+          Please request one only if you'll be acting offically here, like if you're a core project developer or company employee authorized to post on behalf of your organization.
+          Hats are usually reserved for notable projects and organizations."
+      p3: 'To request a hat for your account, provide a short description of the hat
+          (e.g., "OpenBSD Developer"), a public link that will be shown when hovering
+          over the hat that users can see, such as your e-mail address at that project
+          or company, or a link to a company website showing your employment, and
+          private comments that will be seen only by moderators during approval.'
+      p4: "It's really helpful if you link your GitHub or Twitter account to your Lobsters account and,
+          in your comment, link to where the organization links to that public account.
+          Then we can instantly see you're legit without having to send a verification email."
+      p5: "When you can no longer speak for a project or company, please contact a moderator to doff your hat.
+          Old messages will still show it and you won't be able to use it again."
+      hat: "Hat:"
+      placeholder_hat: "XYZ Project Member"
+      link: "Link:"
+      placeholder_link: "user@project.org, or a URL to an employment page"
+      comment: "Comment:"
+      placeholder_comment: "Will only be shown to moderators during approval. Please link to discussions where this hat would be useful for speaking on behalf of your project."     
+      request_hat_bnt : "Request Hat"
+
+    index:
+      legendR: "Request Hat"
+      legend: "Hats"
+      text: "A hat is a formal, verified, way of posting a comment while speaking for a
+            project, organization, or company.  Each user may have multiple hats, one of
+            which may be selected to be worn when posting a comment or sending a private
+            message."
+      table_th1: "User"
+      table_th2: "Hat"
+      table_th3: "Link"
+      none: "none"
+    
+    request_index: 
+      legend: "Requested Hats"
+      no_hat_requests: "No hat requests."
+      user: "User:"
+      hat: "Hat:"
+      hat_txt: "hat"
+      link: "Link:"
+      link_txt: "link"
+      comment: "Comment:"
+      reason: "Reason"
+      approve_hat: "Approve Hat Request"
+      reject_hat: "Reject Hat Request"
+
+  home:
+    no_found:
+      legend: "404"
+      text: "The resource you requested was not found, or the story has been deleted."
+    about:
+      title: "About"
+      p1_part1: 'Lobsters is a computing-focused community centered around link aggregation
+          and discussion, launched on July 3rd, 2012.
+          The administrator is'
+      p1_part2: ", contact him with any support issues."
+      p1_part3: "Lobsters was created by "
+      p1_part4: "with careful design touches to encourage a healthy community:"
+      li1:
+        a: "a"
+        tagging: "tagging"
+        text: "system to categorize and filter submissions,"
+      li2:
+        user: "a user"
+        invitation: "invitation tree"
+        combat: "to combat spam,"
+      li3: 
+        flag: "flag explanations"
+        curl: "to curb punishing disagreement,"
+      li4:         
+        strong: "a strong commitment to"
+        transparency: "transparency"        
+      li5: 
+        and: "and"
+        features: "many more features"  
+        add: "that have been added over the years."
+
+    index:
+      the: "The"
+      newest: "newest"
+      text: "stories that have not yet reached the front page."
+      banned: "Banned"
+      stories: "Stories"
+      tags: "tags"
+      in: "in the"
+      tagged: "tagged"
+      as: "as"
+
+    privacy:
+      legend: "Privacy Policy"
+      p1: "This is the Internet, you have no privacy."
+      p2:  "(Unless you are " 
+      p3: "under 13" 
+      p4: ", in which case you are not allowed here.)"
+      
+    
+  stories:
+    form_errors:
+      h2_part1: "Note: This story was already submitted"
+      h2_part2: ", but may be submitted again."
+      p1: "If the content has changed or warrants new discussion, you may submit it again."
+      p2: "Previous discussions for this story:"
+    form:
+      url: "URL:"
+      fetch: "Fetch Title"
+      title: "Title:"
+      tags: "Tags"
+      text: "Text:"
+      p1: "Please remove extraneous components from titles such as the name of the site, blog, section, and author."
+      p2: "Users have suggested setting this story's title to:"
+      p3: "Users have suggested setting this story's tags to:"
+      placeholder_area: "Use this for stories without a URL, to link additional context, or to paste abstracts from PDF papers.
+                          Please don't use this to promote the story, summarize the post, or explain why you posted it.
+                          See the guidelines below for more."
+      summary: "Story submission guidelines"
+      li1:
+        p: "Do not editorialize story titles, but when the original story's
+        title has no context or is unclear, please change it."
+        strong: "Please remove extraneous components from titles such as the name of the
+        site, blog, section, and author."
+      li2: "When the story being submitted is more than a year or so old,
+        please add the year the story was written to the post title in
+        parentheses."
+      li3: "When submitting a URL, the text field is optional and should only
+        be used when additional context or explanation of the URL is
+        needed.  Commentary or opinion should be reserved for a comment,
+        so that it can be voted on separately from the story."
+      li4: 
+        if: "If no" 
+        text: "clearly apply to the story you are submitting, chances
+        are it does not belong here.  Do not overreach with tags if they
+        are not the primary focus of the story."
+      li5: 
+        p1: "To be able to easily submit a page you're viewing in your browser
+        to"
+        p2: ", drag this bookmarklet to your
+        bookmark bar:"
+        p3: "Submit to"
+        p4: "You'll be taken to this page with the viewed page's URL and title.
+        (It can't recognize and remove blog/author names for you, though.)"
+      autor: "Author:"
+      submitter: "Submitter is"
+      i_am: "I am "
+      autor_story: "the author of the story at this URL (or this text)"
+      follow: "Follow"
+      submitter_following: "Submitter is following "
+      mail_story: " this story to receive replies via e-mail and Pushover"
+      
+    # +similar
+    listdetail:
+      authored_by: "authored by"
+      via: "via"
+      edit: "edit"
+      justnow: "just now"
+      nocomment: "no comments"
+
+    edit:
+      legend: "Edit Story"
+      merge: "Merge Into:"
+      placeholder1: "Short id of story into which this story "
+      bemerged: "be merged"
+      unavailable: "Unavailable:"
+      unavailable_label1: "Source URL is unavailable, "
+      unavailable_label2: "enable display of cached text"
+      modreason: "Mod Reason:"
+      markdown: "Markdown formatting available"
+      save: "Save"
+      undelete: "Undelete"
+      confirm: "Are you sure you want to undelete this story?"
+      delete: "Delete"
+      confirmdelete: "Are you sure you want to delete this story?"
+
+    new: 
+      legend: "Submit a Story"
+      markdown: "Markdown formatting available"
+      submit: "Submit"
+      preview: "Preview"
+
+    show:
+      storytext: "Source URL considered unavailable as of"
+      cache: ", cached text available"
+      allstory: "All story content copyright of its respective owner."
+      storylink: "Stories with similar links:"
+
+    suggest: 
+      legend: "Suggest Story Changes"

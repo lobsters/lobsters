@@ -1,23 +1,20 @@
 <div class="box wide">
-  <h1>About</h1>
+  <h1><%= t('home.about.title')%></h1>
 
   <%- raise "Site owner: You need to delete app/views/home/about.html.erb and write your own about page" if Rails.env.production? and Rails.application.name != 'Lobsters' -%>
 
   <div class="story_text">
   <p>
-  Lobsters is a computing-focused community centered around link aggregation
-  and discussion, launched on July 3rd, 2012.
-  The administrator is <a href="/u/pushcx">Peter Bhat Harkins</a> ("pushcx"), contact him with any support issues.
-  Lobsters was created by <a href="/u/jcs">joshua stein</a>
-  with careful design touches to encourage a healthy community:
+    <%= t('home.about.p1_part1')%> <a href="/u/pushcx">Peter Bhat Harkins</a> ("pushcx")<%= t('home.about.p1_part2')%> 
+    <%= t('home.about.p1_part3')%> <a href="/u/jcs">joshua stein</a> <%= t('home.about.p1_part4')%>
   </p>
 
   <ul>
-    <li>a <a href="#tagging">tagging</a> system to categorize and filter submissions,</li>
-    <li>a user <a href="#invitations">invitation tree</a> to combat spam,</li>
-    <li><a href="#flags">flag explanations</a> to curb punishing disagreement,</li>
-    <li>a strong commitment to <a href="#transparency">transparency</a>,</li>
-    <li>and <a href="#features">many more features</a> that have been added over the years.</li>
+    <li><%= t('home.about.li1.a')%>  <a href="#tagging"><%= t('home.about.li1.tagging')%> </a> <%= t('home.about.li1.text')%></li>
+    <li><%= t('home.about.li2.user')%> <a href="#invitations"><%= t('home.about.li2.invitation')%></a> <%= t('home.about.li2.combat')%></li>
+    <li><a href="#flags"><%= t('home.about.li3.flag')%></a> <%= t('home.about.li3.curl')%></li>
+    <li><%= t('home.about.li4.strong')%> < <a href="#transparency"><%= t('home.about.li4.transparency')%></a>,</li>
+    <li><%= t('home.about.li5.and')%> <a href="#features"><%= t('home.about.li5.features')%></a> <%= t('home.about.li5.add')%></li>
   </ul>
 
   <h2 id="tagging">Tags and Topicality</h2>

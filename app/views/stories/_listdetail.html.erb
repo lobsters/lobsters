@@ -67,9 +67,9 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
                 avatar_img(ms.user, 16) %></a>
             <% end %>
             <% if ms.user_is_author? %>
-              authored by
+            <%= t('stories.listdetail.authored_by')%>
             <% else %>
-              via
+            <%= t('stories.listdetail.via')%>
             <% end %>
             <a href="/u/<%= ms.user.username %>" class="u-author h-card <%=
               ms.html_class_for_user %>"><%= ms.user.username %></a>
@@ -77,7 +77,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             <%= time_ago_in_words_label(ms.created_at) %>
             <% if ms.is_editable_by_user?(@user) %>
               |
-              <a href="<%= edit_story_path(ms.short_id) %>">edit</a>
+              <a href="<%= edit_story_path(ms.short_id) %>"><%= t('stories.listdetail.edit')%></a>
             <% end %>
           </span>
         <% end %>
@@ -100,18 +100,18 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
       <% if story.previewing %>
         <% if story.user_is_author? %>
-          authored by
+          <%= t('stories.listdetail.authored_by')%>
         <% else %>
-          via
+          <%= t('stories.listdetail.via')%>
         <% end %>
         <a class="u-author h-card <%= story.html_class_for_user %>"><%=
           story.user.username %></a>
-        just now
+          <%= t('stories.listdetail.justnow')%>
       <% else %>
         <% if story.user_is_author? %>
-          authored by
+         <%= t('stories.listdetail.authored_by')%>
         <% else %>
-          via
+          <%= t('stories.listdetail.via')%>
         <% end %>
         <a href="/u/<%= story.user.username %>" class="u-author h-card <%=
           story.html_class_for_user %>"><%= story.user.username %></a>
@@ -121,7 +121,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% if story.is_editable_by_user?(@user) %>
           |
           <a href="<%= edit_story_path(story.short_id) %>" class="<%=
-            story.has_suggestions? ? "story_has_suggestions" : "" %>">edit</a>
+            story.has_suggestions? ? "story_has_suggestions" : "" %>"><%= t('stories.listdetail.edit')%></a>
         <% end %>
         <% if story.can_have_suggestions_from_user?(@user) %>
           | <%= link_to "suggest", story_suggest_path(story.short_id),
@@ -161,7 +161,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             |
             <a href="<%= story.comments_path %>">
             <% if story.comments_count == 0 %>
-              no comments</a>
+            <%= t('stories.listdetail.nocomments')%></a>
             <% else %>
               <%= story.comments_count %> <%= 'comment'.pluralize(story.comments_count) %></a>
             <% end %>

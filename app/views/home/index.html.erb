@@ -1,12 +1,12 @@
 <% if @cur_url == "/recent" %>
   <div class="box" id="leader">
-    <em>The <a href="/newest">newest</a> stories that have not yet reached the front page.</em>
+    <em><%= t('home.index.the')%> <a href="/newest"><%= t('home.index.newest')%></a> <%= t('home.index.text')%></em>
   </div>
 <% end %>
 <% if @domain.present? %>
   <% if @domain.banned? %>
     <div class="box" id="leader">
-      Banned
+    <%= t('home.index.banned')%>
       <%= time_ago_in_words_label(@domain.banned_at) %>
       <% if @domain.banned_by_user %>
         by <%= link_to @domain.banned_by_user.try(:username), @domain.banned_by_user %>:
@@ -22,7 +22,7 @@
 <% end %>
 <% if @categories.present? %>
   <div class="box" id="leader">
-    Stories with <a href="/tags">tags</a> in the
+  <%= t('home.index.stories')%> with <a href="/tags"><%= t('home.index.tags')%></a> <%= t('home.index.in')%>
     <% @categories.each do |c| %>
       <%= link_to c.category, category_path(c) %>
     <% end %>
@@ -33,7 +33,7 @@
 <% end %>
 <% if @tags.present? %>
   <div class="box" id="leader">
-    Stories <a href="/tags">tagged</a> as
+  <%= t('home.index.stories')%> <a href="/tags"><%= t('home.index.tagged')%></a> <%= t('home.index.as')%>
     <% @tags.each do |tag| %>
       <%= tag_link(tag) %>
 

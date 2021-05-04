@@ -9,14 +9,14 @@
       <%= raw @story.markeddown_description %>
     </div>
   <% end %>
-
+  
   <% if @story.is_unavailable %>
     <% StoryText.cached?(@story) do |text| %>
-      <a id="story_text_expander">Source URL considered unavailable as of
-      <%= time_ago_in_words_label(@story.unavailable_at) %>, cached text available</a>
+      <a id="story_text_expander"><%= t('stories.show.storytext')%>
+      <%= time_ago_in_words_label(@story.unavailable_at) %><%= t('stories.show.cache')%></a>
       <div id="collapsed_story_text">
         <p>
-        <em>All story content copyright of its respective owner.</em>
+        <em><%= t('stories.show.allstory')%></em>
         </p>
 
         <div class="story_text">
@@ -80,7 +80,7 @@
 
 <% if !@story.previewing && @story.public_similar_stories.any? %>
   <div class="box wide">
-    <h4>Stories with similar links:</h4>
+    <h4><%= t('stories.show.storylink')%></h4>
     <%= render partial: "stories/similar", locals: { similar: @story.public_similar_stories } %>
   </div>
 <% end %>

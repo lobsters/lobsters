@@ -4,9 +4,9 @@
       <%= errors_for story %>
     <% elsif !story.errors.any? && story.public_similar_stories.any? %>
       <div class="flash-notice">
-        <h2>Note: This story was already submitted <%= time_ago_in_words_label(story.most_recent_similar.created_at) %>, but may be submitted again.</h2>
+        <h2><%= t('stories.form_errors.h2_part1')%> <%= time_ago_in_words_label(story.most_recent_similar.created_at) %><%= t('stories.form_errors.h2_part1')%></h2>
         <p>
-        If the content has changed or warrants new discussion, you may submit it again.
+        <%= t('stories.form_errors.p1')%>
         </p>
       </div>
 
@@ -20,7 +20,7 @@
     <% end %>
 
     <% if story.public_similar_stories.any? %>
-      <p>Previous discussions for this story:</p>
+      <p><%= t('stories.form_errors.p2')%></p>
       <%= render partial: "stories/similar", locals: { similar: story.similar_stories } %>
     <% end %>
   </div>

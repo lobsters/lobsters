@@ -1,6 +1,6 @@
 <div class="box" id="story_box">
   <div class="legend">
-    Submit a Story
+  <%= t('stories.new.legend')%>
   </div>
 
   <div id="story_holder">
@@ -12,13 +12,13 @@
       <div class="box">
         <div class="boxline actions markdown_help_toggler">
           <div class="markdown_help_label">
-            Markdown formatting available
+          <%= t('stories.new.markdown')%>
           </div>
 
-          <%= f.submit "Submit" %>
+          <%= f.submit t('stories.new.submit') %>
 
           &nbsp;
-          <button type="button" class="story-preview">Preview</button>
+          <button type="button" class="story-preview">t('stories.new.preview')</button>
 
           <div style="clear: both;"></div>
 

@@ -1,10 +1,10 @@
 <div class="box wide">
   <div class="legend">
-    Requested Hats
+    <%= t('hats.request_index.legend')%>
   </div>
 
   <% if @hat_requests.count == 0 %>
-    No hat requests.
+  <%= t('hats.request_index.no_hat_requests')%>
   <% else %>
     <% @hat_requests.each_with_index do |hr,x| %>
       <% if x > 0 %>
@@ -14,34 +14,34 @@
       <%= form_with model: hr, url: approve_hat_request_url(id: hr), method: :post, local: true do |f| %>
         <p>
         <div class="boxline">
-          <%= f.label :user_id, "User:", :class => "required" %>
+          <%= f.label :user_id, t('hats.request_index.user'), :class => "required" %>
           <a href="/u/<%= hr.user.username %>"><%= hr.user.username %></a>
         </div>
 
         <div class="boxline">
-          <%= f.label :hat, "Hat:", :class => "required" %>
-          <%= f.text_field "hat", :size => 25 %>
+          <%= f.label :hat, t('hats.request_index.hat'), :class => "required" %>
+          <%= f.text_field t('hats.request_index.hat_txt'), :size => 25 %>
         </div>
 
         <div class="boxline">
-          <%= f.label :link, "Link:", :class => "required" %>
-          <%= f.text_field "link", :size => 75 %>
+          <%= f.label :link, t('hats.request_index.link'), :class => "required" %>
+          <%= f.text_field t('hats.request_index.link_txt'), :size => 75 %>
           <% if hr.link.to_s.match(/^http/) %>
             <br>
-            <%= f.label :link, "Link:", :class => "required" %>
+            <%= f.label :link, t('hats.request_index.link'), :class => "required" %>
             <a href="<%= hr.link %>" rel="ugc"><%= hr.link %></a>
           <% end %>
         </div>
 
         <div class="boxline">
-          <%= f.label :link, "Comment:", :class => "required" %>
+          <%= f.label :link, t('hats.request_index.comment'), :class => "required" %>
           <div class="d">
             <%= raw(h(hr.comment.to_s).gsub(/\n/, "<br>")) %>
           </div>
         </div>
 
         <p style="clear: both;">
-        <%= f.submit "Approve Hat Request" %>
+        <%= f.submit t('hats.request_index.approve_hat') %>
         </p>
       <% end %>
       <p>
@@ -49,11 +49,11 @@
       </p>
       <%= form_with model: hr, url: reject_hat_request_url(id: hr), method: :post, local: true do |f| %>
         <div class="boxline">
-          <%= f.label :link, "Reason:", :class => "required" %>
+          <%= f.label :link, t('hats.request_index.reason'), :class => "required" %>
           <%= f.text_area :rejection_comment, :rows => 4 %>
         </div>
         <p>
-        <%= f.submit "Reject Hat Request" %>
+        <%= f.submit t('hats.request_index.reject _hat')%>
         </p>
       <% end %>
     <% end %>

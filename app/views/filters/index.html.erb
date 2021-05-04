@@ -1,28 +1,26 @@
 <div class="box wide">
   <div class="legend">
-    Filtered Tags
+  <%= t('filters.legend')%>
   </div>
 
   <p>
-  To hide stories with certain <a href="/tags">tags</a> from across the site, check them below.
+  <%= t('filters.text1_part1')%> <a href="/tags">tags</a> <%= t('filters.text1_part2')%>.
   </p>
 
   <% if !@user %>
     <p>
-    Since you are not logged in, your filters will be stored in a long-lasting
-    browser cookie.  To permanently store your tag filters and have them work
-    across browsers, <a href="/login">login</a> to your account.
+    <%= t('filters.text2_part1')%>, <a href="/login">login</a> <%= t('filters.text2_part1')%>.
     </p>
   <% end %>
 
   <%= form_with url: '/filters', method: :post, local: true do |f| %>
     <table class="data zebra" cellspacing=0>
     <tr>
-      <th>Hide</th>
-      <th>Tag</th>
-      <th>Description</th>
-      <th style="text-align: right;">Stories</th>
-      <th style="text-align: right; padding-right: 1em;">Filtering</th>
+      <th><%= t('filters.table_th1')%></th>
+      <th><%= t('filters.table_th2')%></th>
+      <th><%= t('filters.table_th3")%></th>
+      <th style="text-align: right;"> <%= t('filters.table_th4')%> </th>
+      <th style="text-align: right; padding-right: 1em;"> <%= t('filters.table_th5')%> </th>
     </tr>
     <% @categories.each do |category| %>
       <tr>
@@ -41,7 +39,7 @@
             <%= label_tag "tags[#{tag.tag}]" do %>
               <span class="<%= tag.active? ? '' : 'inactive_tag' %>"><%= tag.description %></span>
               <% if !tag.active %>
-                | <em>inactive</em>
+                | <em><%= t('filters.inactive_tag')%></em>
               <% end %>
               <% if tag.hotness_mod != 0 %>
                 |
@@ -56,7 +54,7 @@
     <% end %>
     </table>
     <p>
-    <%= f.submit "Save Filters" %>
+    <%= f.submit "<%= t('filters.save')%>" %>
     </p>
   <% end %>
 </div>

@@ -1,52 +1,42 @@
 <div class="box wide">
   <div class="legend">
-    Request a Hat
+  <%= t('hats.build_request.legend')%>
   </div>
 
   <p>
-  A hat is a formal, verified way of speaking officially for a project, organization, or company on Lobsters.
-  A user can have more than one hat, but only wear one at a time on a comment or private message.
+  <%= t('hats.build_request.p1')%>
   </p>
   <p>
-  Hats are for making public statements, not commemorating contributions to a project or jobs held.
-  Please request one only if you'll be acting offically here, like if you're a core project developer or company employee authorized to post on behalf of your organization.
-  Hats are usually reserved for notable projects and organizations.
+  <%= t('hats.build_request.p2')%>
   </p>
   <p>
-  To request a hat for your account, provide a short description of the hat
-  (e.g., "OpenBSD Developer"), a public link that will be shown when hovering
-  over the hat that users can see, such as your e-mail address at that project
-  or company, or a link to a company website showing your employment, and
-  private comments that will be seen only by moderators during approval.
+  <%= t('hats.build_request.p3')%>
   </p>
   <p>
-  It's really helpful if you link your GitHub or Twitter account to your Lobsters account and,
-  in your comment, link to where the organization links to that public account.
-  Then we can instantly see you're legit without having to send a verification email.
+  <%= t('hats.build_request.p4')%>
   </p>
   <p>
-  When you can no longer speak for a project or company, please contact a moderator to doff your hat.
-  Old messages will still show it and you won't be able to use it again.
+  <%= t('hats.build_request.p5')%>
   </p>
 
   <%= form_with model: @hat_request, url: create_hat_request_path, local: true do |f| %>
     <p>
-    <%= f.label :hat, "Hat:" %>
+    <%= f.label :hat, t('hats.build_request.hat') %>
     <%= f.text_field :hat, :size => 20,
-      :placeholder => "XYZ Project Member" %>
+      :placeholder => t('hats.build_request.placeholder_hat') %>
     <br />
 
-    <%= f.label :link, "Link:" %>
+    <%= f.label :link, t('hats.build_request.link') %>
     <%= f.text_field :link, :size => 50,
-      :placeholder => "user@project.org, or a URL to an employment page" %>
+      :placeholder => t('hats.build_request.placeholder_link') %>
     <br />
 
-    <%= f.label :comment, "Comment:" %>
-    <%= f.text_area :comment, :rows => 4, :placeholder => "Will only be shown to moderators during approval. Please link to discussions where this hat would be useful for speaking on behalf of your project." %>
+    <%= f.label :comment, t('hats.build_request.comment') %>
+    <%= f.text_area :comment, :rows => 4, :placeholder => t('hats.build_request.placeholder_comment') %>
     </p>
 
     <p>
-    <%= submit_tag "Request Hat" %>
+    <%= submit_tag t('hats.build_request.request_hat_bnt') %>
     </p>
   <% end %>
 </div>

@@ -1,3 +1,3 @@
   <%= word_wrap(@message.plaintext_body, :line_width => 72).gsub(/\n/, "\n  ") %>
 
-Reply at <%= @message.url %>
+  <%= t('email_message.notify.text')%>: <%= @message.url %>

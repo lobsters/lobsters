@@ -1,6 +1,6 @@
 <div class="box" id="story_box">
   <div class="legend">
-    Edit Story
+  <%= t('stories.edit.legend')%>
   </div>
 
   <%= form_with model: @story, url: story_path(@story.short_id), method: :put, id: 'edit_story', local: true do |f| %>
@@ -11,22 +11,22 @@
       <br />
       <div class="box">
         <div class="boxline">
-          <%= f.label :merge_story_short_id, "Merge Into:",
+          <%= f.label :merge_story_short_id, t('stories.edit.merge'),
             :class => "required" %>
           <%= f.text_field :merge_story_short_id, :autocomplete => "off",
-            :placeholder => "Short id of story into which this story " <<
-            "be merged" %>
+            :placeholder => t('stories.edit.placeholder1') <<
+            t('stories.edit.bemerged') %>
         </div>
         <div class="boxline">
-          <%= f.label :unavailable_at, "Unavailable:",
+          <%= f.label :unavailable_at, t('stories.edit.unavailable'),
             :class => "required" %>
           <%= f.check_box :is_unavailable %>
-          <%= f.label :unavailable_at, "Source URL is unavailable, " <<
-            "enable display of cached text", :class => "normal" %>
+          <%= f.label :unavailable_at, t('stories.edit.unavailable_label1') <<
+          t('stories.edit.unavailable_label2'), :class => "normal" %>
         </div>
         <% if @story.user_id != @user.id %>
           <div class="boxline">
-            <%= f.label :moderation_reason, "Mod Reason:", :class => "required" %>
+            <%= f.label :moderation_reason, t('stories.edit.modreason'), :class => "required" %>
             <%= f.text_field :moderation_reason %>
           </div>
         <% end %>
@@ -38,26 +38,26 @@
     <div class="box">
       <div class="boxline actions markdown_help_toggler">
         <div class="markdown_help_label">
-          Markdown formatting available
+        <%= t('stories.edit.markdown')%>
         </div>
 
-        <%= f.submit "Save" %>
+        <%= f.submit t('stories.edit.save') %>
 
         <% if @story.is_gone? && @story.is_undeletable_by_user?(@user) %>
           &nbsp; | &nbsp;
-          <%= link_to "Undelete", story_undelete_path(@story.short_id),
+          <%= link_to t('stories.edit.undelete'), story_undelete_path(@story.short_id),
             :method => :post, :data => {
-            :confirm => "Are you sure you want to undelete this story?" },
+            :confirm => t('stories.edit.confirm') },
             :class => "button" %>
         <% elsif !@story.is_gone? %>
           &nbsp; | &nbsp;
           <% if @story.user_id != @user.id && @user.is_moderator? %>
-            <%= link_to "Delete", story_path(@story.short_id),
+            <%= link_to t('stories.edit.delete'), story_path(@story.short_id),
               :method => :delete, :class => "button mod_story_link deletion" %>
           <% else %>
-            <%= link_to "Delete", story_path(@story.short_id),
+            <%= link_to t('stories.edit.delete'), story_path(@story.short_id),
               :method => :delete, :data => {
-              :confirm => "Are you sure you want to delete this story?" },
+              :confirm => t('stories.edit.confirmdelete') },
               :class => "button" %>
           <% end %>
         <% end %>

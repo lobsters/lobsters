@@ -111,7 +111,7 @@ end
 
 desc 'Generates fake data for testing purposes'
 task fake_data: :environment do
-  fail "Refusing to add fake-data to a non-development environment" unless Rails.env.development?
+  fail "Refusing to add fake-data to a non-development environment" unless Rails.env.development? || Rails.env.staging?
 
   record_count = User.count + Tag.count + Story.count + Comment.count
   if record_count > 3 # more than would be created by db:seed

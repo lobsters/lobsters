@@ -11,5 +11,7 @@ jobs:
       - checkout
       - run:
           name: Which bundler?
+          environment:
+            BUNDLE_PATH: vendor/bundle
           command: bundle -v
       - ruby/bundle-install

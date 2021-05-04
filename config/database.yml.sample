@@ -13,7 +13,7 @@ test:
   <<: *default
   host: 127.0.0.1
   database: hipsters_test
-  username: root
+  username: username
   password: password
 
 staging:

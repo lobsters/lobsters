@@ -15,3 +15,6 @@ jobs:
             BUNDLE_PATH: vendor/bundle
           command: bundle -v
       - ruby/bundle-install
+      - run:
+        name: Run RSpec
+        command: bundle exec rspec spec

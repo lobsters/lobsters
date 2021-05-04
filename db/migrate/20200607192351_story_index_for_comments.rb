@@ -1,4 +1,4 @@
-class StoryIndexForComments < ActiveRecord::Migration[5.2]
+class StoryIndexForComments < ActiveRecord::Migration[6.0]
   def change
     remove_index :stories, name: "index_stories_on_is_expired"
     remove_index :stories, name:  "index_stories_on_is_moderated"

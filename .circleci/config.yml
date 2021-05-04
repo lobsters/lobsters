@@ -6,8 +6,9 @@ jobs:
   build:
     docker:
       - image: cimg/ruby:2.7-node
-      - image: circleci/mysql:8.0.4
+      - image: circleci/mysql:5.7
         environment:
+          MYSQL_ROOT_PASSWORD: suroot
           MYSQL_DATABASE: hipsters_test
           MYSQL_USER: root
           MYSQL_PASSWORD: root

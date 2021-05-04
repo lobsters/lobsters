@@ -17,113 +17,103 @@
     <li><%= t('home.about.li5.and')%> <a href="#features"><%= t('home.about.li5.features')%></a> <%= t('home.about.li5.add')%></li>
   </ul>
 
-  <h2 id="tagging">Tags and Topicality</h2>
+  <h2 id="tagging"><%= t('home.about.h2')%></h2>
   <p>
-  When links or stories are submitted, they must be tagged by the submitter from a list of predefined <a href="/tags">tags</a>.
-  Users can choose to <a href="/filters">filter</a> out or
-  subscribe to all submissions with particular tags (example: <a href="https://lobste.rs/t/programming.rss">programming.rss</a>)
-  or combinations of tags (example: <a href="https://lobste.rs/t/programming,audio.rss">programming,audio.rss</a>).
-  All users see all stories by default.
-  The tagging system works this way for three reasons:
+  <%= t('home.about.p2_p1')%>  <a href="/tags"><%= t('home.about.tags')%> </a>.
+  <%= t('home.about.p2_p2')%>  <a href="/filters"><%= t('home.about.filter')%></a> 
+  <%= t('home.about.p2_p3')%> (<%= t('home.about.example')%> <a href="https://lobste.rs/t/programming.rss">programming.rss</a>)
+  <%= t('home.about.p2_p4')%>  (<%= t('home.about.example')%>  <a href="https://lobste.rs/t/programming,audio.rss">programming,audio.rss</a>).
+  <%= t('home.about.p2_p5')%> 
+  <%= t('home.about.p2_p6')%> 
   </p>
 
   <ul>
   <li><p>
-  It keeps the site on-topic by only allowing a predefined list of tags.
-  These tags represent what most of the users of the site want to read, so
-  content that does not fit into any of those categories should not be
-  submitted.  It also keeps stories organized and more easily searchable.
+  <%= t('home.about.li6')%>
   </p></li>
 
   <li><p>
-  It promotes discussion.  On a site with separate forums, a Ruby programmer
-  would probably subscribe to a Ruby forum, but not a Python one.  When a link
-  is posted to the Python forum, that Ruby programmer would probably never see
-  it, even though they may have something useful to say about it (perhaps the
-  link is about a Python library which does the same thing as a Ruby library
-  which that Ruby programmer created).  On this site, the link would get posted
-  with a <a href="/t/python" class="tag">python</a> tag and shown to everyone,
-  encouraging the Ruby programmer to read and comment on it (unless that Ruby
-  programmer disliked Python enough to <a href="/filters">filter</a> it out).
+  <%= t('home.about.li7.p1')%> 
+  <a href="/t/python" class="tag">
+  <%= t('home.about.python')%> 
+  </a> <%= t('home.about.li7.p2')%>
+  <%= t('home.about.li7.p2')%> 
+  <a href="/filters"><%= t('home.about.filter')%>
+  </a> <%= t('home.about.li7.p3')%>
   </p></li>
 
   <li><p>
-  It keeps the community coherent.  Often stories contain discussion
-  about more than one topic, yet on other sites they are confined to a single
-  category/forum, limiting the exposure.  The link could be submitted to more
-  than one forum, but then each conversation would remain separate and users
-  would rarely interact with users from other forums.  On this site, the story
-  would simply be tagged with multiple tags and all users would see all
-  discussion about the story in a single location.
+  <%= t('home.about.li8')%>
   </p></li>
   </ul>
 
   <p>
-  Creating new tags and retiring old tags is done by the community by submitting, discussing, and voting on <a href="/t/meta" class="tag">meta</a>-tagged requests about them,
-  and these events are <a href="https://lobste.rs/moderations?utf8=✓&moderator=(All)&what[tags]=tags">logged</a> (since 2018-04).
-  To propose a tag, post a <a href="/t/meta">meta</a> thread with the name and description.
-  Explain the scope, list existing stories that should have been tagged, make a case for why people would want to specifically filter it out, and justify the increased complexity for submitters and mods.
+  <%= t('home.about.p3_p1')%> 
+  <a href="/t/meta" class="tag">meta</a>-
+  <%= t('home.about.p3_p2')%> 
+  <a href="https://lobste.rs/moderations?utf8=✓&moderator=(All)&what[tags]=tags"><%= t('home.about.logged')%></a> 
+  <%= t('home.about.p3_p3')%> 
+  <a href="/t/meta">meta</a> 
+  <%= t('home.about.p3_p4')%>
   </p>
 
   <p>
-  Lobsters is focused pretty narrowly on computing; tags like <a href="/t/art">art</a> don't imply every piece of art is on-topic.
-  Some rules of thumb for great stories to submit: Will this improve the reader's next program? Will it deepen their understanding of their last program? Will it be more interesting in five or ten years?
+  <%= t('home.about.p4_p1')%>
+  <a href="/t/art">art</a> 
+  <%= t('home.about.p4_p2')%>
   </p>
 
   <p>
-  Some things that are off-topic here but popular on larger, similar sites:
-  entrepreneurship, management, news about companies that employ a lot of programmers,
-  investing, world events, anthropology, self-help, personal productivity systems,
-  last-resort customer service requests via public shaming,
-  "I wanted to see what this site's amazing users think about this off-topic thing",
-  and
-  defining the single morally correct economic and political system for the entire world when we can't even settle tabs vs. spaces.
+  <%= t('home.about.p5')%>
   </p>
 
-  <h2 id="invitations">Invitation Tree</h2>
+  <h2 id="invitations"><%= t('home.about.h2_2')%></h2>
   <p>
-  The full <a href="/u">user tree</a> is public and each user's profile
-  shows who invited them.  This provides some degree of accountability and
-  helps identify voting rings.
+  <%= t('home.about.p6_p1')%> <a href="/u"><%= t('home.about.usertree')%></a> <%= t('home.about.p6_p2')%>
   </p>
 
   <p>
-  New users must be invited by a current user, though there is no formal vetting process.
-  Invitations are used as a mechanism for spam-control,
-  to slow registrations to a pace <a href="https://en.wikipedia.org/wiki/Eternal_September">we can acculturate</a>
-  and to encourage users to be nice, not to make the Lobsters userbase an elite club.
-  The quickest way to receive an invitation is to talk to someone you <a href="/u">recognize from the site</a>.
-  If you wrote a link that was posted, please reach out in <a href="/chat">chat</a>, we'd love to have you join the discussion.
-  Finally, if you can't find anyone you know in the invitation tree and didn't author something posted to the site,
+  <%= t('home.about.p7_p1')%> 
+  <a href="https://en.wikipedia.org/wiki/Eternal_September"><%= t('home.about.acculturate')%></a>
+  <%= t('home.about.p7_p2')%> 
+  <a href="/u"><%= t('home.about.recognize')%></a>.
+  <%= t('home.about.p7_p3')%> 
+  <a href="/chat">chat</a>
+  <%= t('home.about.p7_p4')%>
   <% if Rails.application.allow_invitation_requests? %>
-    you can <a href="/invitations/request">request an invite</a>.
+    <%= t('home.about.p7_p5')%> 
+    <a href="/invitations/request"><%= t('home.about.request')%></a>.
   <% else %>
-    consider joining the <a href="/chat">community in the chat room</a>.
+    <%= t('home.about.p6_p6')%> 
+    <a href="/chat"><%= t('home.about.p6_p7')%></a>.
   <% end %>
   </p>
 
   <p>
-  There's no limit on how many invitations a user can send (though we might at some point, to manage <a href="https://lobste.rs/stats">growth</a>).
-  When accounts are banned for spam, <a href="https://en.wikipedia.org/wiki/Sockpuppet_(Internet)">sockpuppeting</a>, or other abuse,
-  moderators will consider disabling their inviter's ability to send invitations or, rarely, also ban them.
+  <%= t('home.about.p9_p1')%> <a href="https://lobste.rs/stats"><%= t('home.about.growth')%></a>).
+  <%= t('home.about.p9_p2')%> <a href="https://en.wikipedia.org/wiki/Sockpuppet_(Internet)"><%= t('home.about.p9_p3')%></a>
+  <%= t('home.about.p9_p4')%>
   </p>
 
-  <h2 id="ranking">Ranking</h2>
+  <h2 id="ranking"><%= t('home.about.h2_3')%> </h2>
   <p>
-  All story and comment ranking on this site comes from user activity.
-  All users have equal votes, with no special priorities or penalties for specific users or domains.
-  Moderators have no ability to raise or <a href="http://www.righto.com/2013/11/how-hacker-news-ranking-really-works.html">lower</a> the rankings of stories or comments (besides voting like any user).
-  Per-tag <a href="/filters">hotness modifiers</a> affect all stories with
-  those tags, but these modifiers (and <a href="https://lobste.rs/moderations?utf8=%E2%9C%93&moderator=(All)&what[tags]=tags">changes</a> to them) are public.
-  Domains used for marketing analytics are banned and tracking parameters are removed from links
-  (look for <tt>TRACKING_DOMAINS</tt> and <tt>utm_</tt> in <a href="https://github.com/lobsters/lobsters/blob/master/app/models/story.rb">story.rb</a>).
+  <%= t('home.about.p8_p1')%> <a href="http://www.righto.com/2013/11/how-hacker-news-ranking-really-works.html"><%= t('home.about.lower')%></a> 
+  <%= t('home.about.p8_p2')%>  
+  <a href="/filters"><%= t('home.about.hotness')%></a> 
+  <%= t('home.about.p8_p3')%> 
+  <a href="https://lobste.rs/moderations?utf8=%E2%9C%93&moderator=(All)&what[tags]=tags"><%= t('home.about.changes')%></a> 
+  <%= t('home.about.p8_p4')%>
+  <tt>TRACKING_DOMAINS</tt>
+  <%= t('home.about.p8_p5')%>
+   <tt>utm_</tt>
+   <%= t('home.about.p8_p6')%> 
+    <a href="https://github.com/lobsters/lobsters/blob/master/app/models/story.rb">story.rb</a>).
   </p>
 
   <div id="flags">
     <p>
-    Users can flag stories and comments when there's a serious problem that needs moderator attention.
-    Users must reach <%= User::MIN_KARMA_TO_FLAG %> karma to flag.
-    To guide usage and head off distracting meta conversations ("Why was this flagged!?", etc), flagging requires selecting from a preset list of reasons.
+    <%= t('home.about.p10_p1')%> <%= User::MIN_KARMA_TO_FLAG %> 
+    <%= t('home.about.p10_p2')%>
     </p>
 
     <p>

@@ -1,14 +1,11 @@
 <div class="box wide">
   <div class="legend">
-    Create an Account
+  <%= t('signup.invited.legend')%>
   </div>
 
   <%= form_with model: @new_user, url: signup_path, local: true do |f| %>
     <p>
-    To create a new account, enter your e-mail address and a password.
-    Your e-mail address will never be shown to users and will only be used
-    if you need to reset your password, or to receive optional new-message
-    alerts.  Your username can be changed later.
+    <%= t('signup.invited.p1')%>
     </p>
 
     <%= errors_for(@new_user) %>
@@ -16,7 +13,7 @@
     <% if not Rails.application.open_signups? %>
         <%= f.hidden_field "invitation_code", :value => @invitation.code, :name => :invitation_code %>
       <p>
-      <%= f.label :invitation, "Invited By:", :class => "required" %>
+      <%= f.label :invitation, t('signup.invited.invited'), :class => "required" %>
       <span class="d">
         <a href="/u/<%= @invitation.user.username %>" target="_blank"><%=
           @invitation.user.username %></a>
@@ -25,25 +22,25 @@
     <% end %>
 
     <p>
-    <%= f.label :username, "Username:", :class => "required" %>
+    <%= f.label :username, t('signup.invited.username'), :class => "required" %>
     <%= f.text_field :username, :size => 30 %>
     <span class="hint">
       <tt><%= User.username_regex_s %></tt>
     </span>
     <br />
 
-    <%= f.label :email, "E-mail Address:", :class => "required" %>
+    <%= f.label :email, t('signup.invited.mail'), :class => "required" %>
     <%= f.email_field :email, :size => 30 %>
     <span class="hint">
       <a href="http://www.gravatar.com/" target="_blank">Gravatar</a>'ized
     </span>
     <br />
 
-    <%= f.label :password, "Password:", :class => "required" %>
+    <%= f.label :password, t('signup.invited.password'), :class => "required" %>
     <%= f.password_field :password, :size => 30, :autocomplete => "off" %>
     <br />
 
-    <%= f.label :password_confirmation, "Password (again):",
+    <%= f.label :password_confirmation, t('signup.invited.passwordagain'),
       :class => "required" %>
     <%= f.password_field :password_confirmation, :size => 30,
       :autocomplete => "off" %>
@@ -51,13 +48,12 @@
     </p>
 
     <p>
-    Want to tell us about yourself?  It's optional, but it will be visible in
-    your public profile and can be changed at any time.
+    <%= t('signup.invited.p2')%>
     </p>
 
     <p>
     <div class="boxline">
-      <%= f.label :about, "About:", :class => "required" %>
+      <%= f.label :about, t('signup.invited.about'), :class => "required" %>
       <%= f.text_area :about, :size => "100x5", :style => "width: 600px;" %>
     </div>
 
@@ -65,7 +61,7 @@
       <div class="boxline markdown_help_toggler"
         style="margin-left: 9em; width: 600px;">
         <div class="markdown_help_label">
-          Markdown formatting available
+          <%= t('signup.invited.markdown')%>
         </div>
 
         <div style="clear: both;"></div>
@@ -75,7 +71,7 @@
     </div>
 
     <p>
-    <%= f.submit "Signup" %>
+    <%= f.submit t('signup.invited.signup') %>
     </p>
   <% end %>
 </div>

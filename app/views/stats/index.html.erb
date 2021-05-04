@@ -1,30 +1,30 @@
 <div class="box wide">
 
-<h2>New users by month</h2>
+<h2><%= t('home.stats.h2_1')%></h2>
 <p>
-Outliers:
-2013-12 is the <a href="https://lobste.rs/s/orfht1/invitation_queue">invitation queue</a>;
-2017-01 is the <a href="https://lobste.rs/s/kmj9w9/invitation_pledge_drive">pledge drive</a>
-(<a href="https://lobste.rs/s/2scxd0/invitation_pledge_drive_results">results</a>)
+<%= t('home.stats.outliers')%><
+2013-12 <%= t('home.stats.isthe')%> < <a href="https://lobste.rs/s/orfht1/invitation_queue"><%= t('home.stats.inv')%></a>;
+2017-01 <%= t('home.stats.isthe')%> <a href="https://lobste.rs/s/kmj9w9/invitation_pledge_drive"><%= t('home.stats.drive')%></a>
+(<a href="https://lobste.rs/s/2scxd0/invitation_pledge_drive_results"><%= t('home.stats.results')%></a>)
 </p>
 <%= raw @users_graph %>
 
-<h2>Active users by month</h2>
-<p>Users who have submitted a story, posted a comment, or cast a vote<p>
+<h2><%= t('home.stats.h2_2')%></h2>
+<p><%= t('home.stats.users')%><p>
 <%= raw @active_users_graph %>
 
-<h2>Stories submitted by month</h2>
+<h2><%= t('home.stats.h2_3')%></h2>
 <%= raw @stories_graph %>
 
-<h2>Comments posted by month</h2>
+<h2><%= t('home.stats.h2_4')%></h2>
 <%= raw @comments_graph %>
 
-<h2>Votes cast by month</h2>
+<h2><%= t('home.stats.h2_5')%></h2>
 <%= raw @votes_graph %>
 
 <p>
-Want more info?
-<a href="/about#queries">Write a query</a>.
+<%= t('home.stats.want')%>
+<a href="/about#queries"><%= t('home.stats.write')%></a>.
 </p>
 
 <style type="text/css">

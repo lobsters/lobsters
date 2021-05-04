@@ -5,7 +5,7 @@
     <title><%= Rails.application.name %><%= @title.present? ?
       ": " + h(@title) : "" %></title>
     <description><%= @title %></description>
-    <link><%= Rails.application.root_url + (@newest ? "newest" : "") %></link>
+    <link><%= Rails.application.root_url + (@newest ? t('home.rss.newest') : "") %></link>
     <atom:link href="<%= request.original_url %>" rel="self" type="application/rss+xml" />
 
     <% @stories.each do |story| %>
@@ -20,7 +20,7 @@
           <%= raw coder.encode(story.markeddown_description, :decimal) %>
           <% if story.url.present? %>
             <%= raw coder.encode("<p>" +
-              link_to("Comments", story.comments_url) + "</p>", :decimal) %>
+              link_to(<%= t('home.rss.comments')%>, story.comments_url) + "</p>", :decimal) %>
           <% end %>
         </description>
         <% story.taggings.each do |tagging| %>

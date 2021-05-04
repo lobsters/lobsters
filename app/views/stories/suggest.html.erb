@@ -1,6 +1,6 @@
 <div class="box" id="story_box">
   <div class="legend">
-    Suggest Story Changes
+  <%= t('stories.suggest.legend')%>
   </div>
 
   <%= form_with model: @story, url: story_suggest_path(@story.short_id), method: :post, html: { id: 'edit_story' }, local: true do |f| %>
@@ -11,8 +11,8 @@
 
     <div class="box">
       <div class="boxline actions">
-        <%= f.submit "Suggest Changes" %>
-        &nbsp;or <a href="<%= story_path(@story.short_id) %>">cancel</a>
+        <%= f.submit "t('stories.suggest.change') %>
+        &nbsp;or <a href="<%= story_path(@story.short_id) %>"><%= t('stories.suggest.cancel')%></a>
       </div>
     </div>
   <% end %>

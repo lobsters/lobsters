@@ -1,20 +1,20 @@
 <div class="box wide">
   <div class="legend">
-    Create an Account
+  <%= t('signup.index.legend')%><
   </div>
   <% if Rails.application.open_signups? %>
     <p>
-      Not a user yet? <a href="/invitations/open">Sign up here</a>.
+      <%= t('signup.index.lnouser')%> <a href="/invitations/open"><%= t('signup.index.sign')%></a>.
     </p>
   <% else %>
     <p>
-    Signup is currently by invitation only to combat spam and increase
-    accountability.  If you know <a href="/u/">a current user</a> of the site,
-    ask them for an invitation, or
+    <%= t('signup.index.p1')%>
+    <a href="/u/"><%= t('signup.index.current')%></a> 
+    <%= t('signup.index.p2')%>
     <% if Rails.application.allow_invitation_requests? %>
-      <a href="/invitations/request">request one publicly</a>.
+      <a href="/invitations/request"><%= t('signup.index.requestpublicly)%></a>.
     <% else %>
-      request one in <a href="/chat">chat</a>.
+    <%= t('signup.index.requestin')%> <a href="/chat">chat</a>.
     <% end %>
     </p>
   <% end %>

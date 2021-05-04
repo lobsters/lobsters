@@ -161,7 +161,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             |
             <a href="<%= story.comments_path %>">
             <% if story.comments_count == 0 %>
-            <%= t('stories.listdetail.nocomments')%></a>
+            <%= t('stories.listdetail.nocomment')%></a>
             <% else %>
               <%= story.comments_count %> <%= 'comment'.pluralize(story.comments_count) %></a>
             <% end %>

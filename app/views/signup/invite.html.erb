@@ -1,11 +1,12 @@
 <div class="box wide">
   <div class="legend">
-    Pass Along an Invitation
+    <%= t('signup.invite.legend')%>
   </div>
 
   <p>
-  Now that you are a member you can invite people you think would be a good fit.
-  This is available anytime from <a href="/settings#invite">your settings page</a>.
+  <%= t('signup.invite.p1')%>
+  <a href="/settings#invite">
+  <%= t('signup.invite.p2')%></a>.
   </p>
 
   <%= render :partial => "users/invitationform",
@@ -14,6 +15,6 @@
   or
 
   <p>
-  <%= button_to "Skip", "/", :method => :get %>
+  <%= button_to t('signup.invite.skip'), "/", :method => :get %>
   </p>
 </div>

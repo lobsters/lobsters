@@ -1,4 +1,4 @@
-class MoveHiddenVotesToHiddenStory < ActiveRecord::Migration
+class MoveHiddenVotesToHiddenStory < ActiveRecord::Migration[6.0]
   def up
     create_table :hidden_stories do |t|
       t.integer :user_id

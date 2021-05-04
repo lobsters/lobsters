@@ -1,4 +1,4 @@
-class AddTagMediaTypes < ActiveRecord::Migration
+class AddTagMediaTypes < ActiveRecord::Migration[6.0]
   def up
     add_column :tags, :is_media, :boolean, :default => false
 

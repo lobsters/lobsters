@@ -1,4 +1,4 @@
-class AddUsedAtToInvitation < ActiveRecord::Migration[5.1]
+class AddUsedAtToInvitation < ActiveRecord::Migration[6.0]
   def change
     change_column :invitations, :user_id, :integer, null: false
     add_column :invitations, :used_at, :datetime, null: true, default: nil

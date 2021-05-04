@@ -22,7 +22,7 @@
       <td class="r"><%= user[:percent_flagged].round %>%</td>
     </tr><% end %>
     <tr>
-      <td title="Average of commenters, including the most-flagged commenters above">
+      <td title="<%= t('mod.commenters.title') %>">
         Avg of <%= @agg[:n_commenters] %> commenters
       </td>
       <td class="r" title="0 by definition; () is standard deviation">

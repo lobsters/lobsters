@@ -15,8 +15,10 @@ jobs:
             BUNDLE_PATH: vendor/bundle
           command: bundle -v
       - ruby/bundle-install
-      - run: bundle exec rake db:create
-      - run: bundle exec rake db:schema:load
+      # Database setup
+      - run: mv config/database.yml.sample config/database.yml
+      - run: RAILS_ENV=test bundle exec rake db:create
+      - run: RAILS_ENV=test bundle exec rake db:schema:load
       - run:
           name: Run RSpec
           command: bundle exec rspec spec

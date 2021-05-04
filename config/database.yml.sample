@@ -14,7 +14,7 @@ test:
   host: 127.0.0.1
   database: hipsters_test
   username: root
-  password: root
+  password: password
 
 staging:
   <<: *default

@@ -1,20 +1,20 @@
 <div class="box wide">
   <div class="legend right">
-    <a href="/filters">Filtered Tags</a>
+    <a href="/filters"><%= t('settings.index.a')%></a>
     |
-    <%= link_to "Logout", { :controller => "login", :action => "logout" },
-      :data => { :confirm => "Are you sure you want to logout?" },
+    <%= link_to t('settings.index.logout'), { :controller => "login", :action => "logout" },
+      :data => { :confirm => t('settings.index.confirm') },
       :method => "post" %>
   </div>
   <div class="legend">
-    Account Settings (<a href="/u/<%= @user.username %>">View Profile</a>)
+  <%= t('settings.index.legend1')%> (<a href="/u/<%= @user.username %>"><%= t('settings.index.legend2')%></a>)
   </div>
 
   <%= form_with model: @edit_user, url: settings_path, method: :post, id: 'edit_user', local: true do |f| %>
     <%= errors_for f.object %>
 
     <div class="boxline">
-      <%= f.label :username, "Username:", :class => "required" %>
+      <%= f.label :username, t('settings.index.username'), :class => "required" %>
       <%= f.text_field :username, :size => 15 %>
       <span class="hint">
         <tt><%= User.username_regex_s %></tt>
@@ -22,35 +22,35 @@
     </div>
 
     <div class="boxline">
-      <%= f.label :current_password, "Current Password:",
+      <%= f.label :current_password, t('settings.index.current'),
         :class => "required" %>
     <%= f.password_field :current_password, :name => "current_password", :size => 30 %>
     </div>
 
     <div class="boxline">
-      <%= f.label :password, "New Password:", :class => "required" %>
+      <%= f.label :password, t('settings.index.newpassword'), :class => "required" %>
       <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
     </div>
 
     <div class="boxline">
-      <%= f.label :password_confirmation, "Confirm Password:",
+      <%= f.label :password_confirmation, t('settings.index.confirmpassword'),
         :class => "required" %>
       <%= f.password_field :password_confirmation, :size => 40,
         :autocomplete => "off" %>
     </div>
 
     <div class="boxline">
-      <%= f.label :email, "E-mail Address:", :class => "required" %>
+      <%= f.label :email, t('settings.index.mail'), :class => "required" %>
       <%= f.email_field :email, :size => 40 %>
     </div>
 
     <div class="boxline">
-      <%= f.label :homepage, "Homepage:", :class => "required" %>
+      <%= f.label :homepage, t('settings.index.homepage'), :class => "required" %>
       <%= f.url_field :homepage, :size => 40 %>
     </div>
 
     <div class="boxline">
-      <%= f.label :about, "About:", :class => "required" %>
+      <%= f.label :about, t('settings.index.about'), :class => "required" %>
       <%= f.text_area :about, :size => "100x5", :style => "width: 600px;" %>
     </div>
 
@@ -58,7 +58,7 @@
       <div class="boxline markdown_help_toggler" style="margin-left: 9em;
       width: 600px;">
         <div class="markdown_help_label">
-          Markdown formatting available
+        <%= t('signup.invited.markdown')%><
         </div>
 
         <div style="clear: both;"></div>
@@ -68,13 +68,13 @@
     </div>
 
     <p>
-    <%= f.submit "Save Account Settings" %>
+    <%= f.submit t('settings.index.saveaccount') %>
     </p>
 
     <br>
 
     <div class="legend">
-      External Accounts
+    <%= t('settings.index.external')%><
     </div>
 
     <div class="boxline">

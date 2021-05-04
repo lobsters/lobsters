@@ -360,7 +360,26 @@ en:
       markdown: "Markdown formatting available"
       signup: "Signup"
   
+  settings: 
+    index: 
+      a: "Filtered Tags"  
+      logout: "Logout" 
+      confirm: "Are you sure you want to logout?"
+      legend1: "Account Settings"
+      legend2: "View Profile"
+      username: "Username:"
+      current: "Current Password:"
+      newpassword: "New Password:"
+      confirmpassword: "Confirm Password:"
+      mail: "E-mail Address:"
+      homepage: "Homepage:"
+      about: "About:"
+      saveaccount: "Save Account Settings"
+      external: External Accounts
+      p1: "Your avatar will be cached from the Gravatar icon for your e-mail
+          address above."
       
+
 
       
 

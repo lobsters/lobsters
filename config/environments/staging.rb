@@ -1,48 +1,32 @@
 Rails.application.configure do
 
-  config.cache_classes = true
+  config.cache_classes = false
+  config.eager_load = false
+  config.consider_all_requests_local = true
 
-  config.eager_load = true
+  if Rails.root.join('tmp', 'caching-dev.txt').exist?
+    config.action_controller.perform_caching = true
+    config.action_controller.enable_fragment_cache_logging = true
 
-  config.consider_all_requests_local       = false
-  config.action_controller.perform_caching = true
+    config.cache_store = :memory_store
+    config.public_file_server.headers = {
+      'Cache-Control' => "public, max-age=#{2.days.to_i}",
+    }
+  else
+    config.action_controller.perform_caching = false
 
-  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
-
-  config.assets.js_compressor = :uglifier
-
-  config.assets.compile = false
-
-  config.assets.digest = true
-
-  config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
-
-  config.force_ssl = true
-
-  config.log_level = :info
-
-  config.log_tags = [:request_id]
-
-  config.action_mailer.perform_caching = false
-
-  config.i18n.fallbacks = true
-
-  config.active_support.deprecation = :notify
-
-  config.log_formatter = ::Logger::Formatter.new
-
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
-    logger.formatter = config.log_formatter
-    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+    config.cache_store = :null_store
   end
 
-  config.active_record.dump_schema_after_migration = false
-
-  config.action_controller.page_cache_directory = "#{Rails.root}/public/cache"
-
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.perform_caching = false
+  config.active_support.deprecation = :log
+  config.active_record.migration_error = :page_load
+  config.active_record.verbose_query_logs = true
+  config.assets.debug = true
+  config.assets.quiet = true
+  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 end
 
-%w{render_template render_partial render_collection}.each do |event|
-  ActiveSupport::Notifications.unsubscribe "#{event}.action_view"
-end
+Keybase.DOMAIN = Rails.application.domain
+Keybase.BASE_URL = ENV.fetch('KEYBASE_BASE_URL') { 'https://keybase.io' }

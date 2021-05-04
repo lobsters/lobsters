@@ -11,6 +11,7 @@ development:
 
 test:
   <<: *default
+  host: localhost
   database: hipsters_test
 
 staging:

@@ -76,110 +76,99 @@ fr:
        linked_text: "lien hypertext"  
        text: "ou juste une URL à créer sans titre"  
     table_tr6:
-      #td1: "quoted text"
+      td1: "texte cité"
       td2: "prefixer le texte avec"
       prefix: "&gt;"  
     table_tr7:
       pre: "pre"
       text: "texte"
-      prefix: "prefix text with at least"
-      space: "4 spaces"
+      prefix: "prefixer le texte avec au moins"
+      space: "4 espaces"
 
   hats:
     build_request:
-      legend: "Request a Hat"
-      p1: "A hat is a formal, verified way of speaking officially for a project, organization, or company on Lobsters.
-          A user can have more than one hat, but only wear one at a time on a comment or private message."
-      p2: "Hats are for making public statements, not commemorating contributions to a project or jobs held.
-          Please request one only if you'll be acting offically here, like if you're a core project developer or company employee authorized to post on behalf of your organization.
-          Hats are usually reserved for notable projects and organizations."
-      p3: 'To request a hat for your account, provide a short description of the hat
-          (e.g., "OpenBSD Developer"), a public link that will be shown when hovering
-          over the hat that users can see, such as your e-mail address at that project
-          or company, or a link to a company website showing your employment, and
-          private comments that will be seen only by moderators during approval.'
-      p4: "It's really helpful if you link your GitHub or Twitter account to your Lobsters account and,
-          in your comment, link to where the organization links to that public account.
-          Then we can instantly see you're legit without having to send a verification email."
-      p5: "When you can no longer speak for a project or company, please contact a moderator to doff your hat.
-          Old messages will still show it and you won't be able to use it again."
-      hat: "Hat:"
+      legend: "Demander le rôle"
+      p1: "Un rôle est un moyen formel et authentifié de parler officiellement d'un projet, d'une organisation ou d'une compagnie de Lobsters.
+           Un utilisateur peut avoir plusieurs rôles, mais ne peut en endosser qu'un par commentaire ou message"
+      p2: "Les rôles servent à faire des déclarations publiques, non rappeler d'anciennes contribution d'un projet ou d'emplois occupés.
+          Veuillez en demander un uniquement si vous agissez officiellement ici, par exemple si vous êtes un développeur ou un employé autorisé à communiquer au nom de votre entreprise.
+          Les rôles sont généralment réservés aux projet et organisations notables"
+      p3: "Pour demander un rôle pour votre compte, fournissez une brève description du rôle (par exemple 'OpenBSD Developer', un lien publique   sera affiché lors du survol de vote rôle que les utilisateurs pourront voir, comme une adresse mail pour le projet, ou un lien vers le site Web de l'entreprise montrant votre emploi, et un commentaire privé qui ne sera visible que par les modérateurs durant la validation"
+      p4: "Il est vraiment utile si vous associez votre compte GitHub ou Twitter à votre compte Lobsters et, dans votre commentaire, créez un    lien vers l'endroit où l'organisation est liée à ce compte publique. Then nous pourrons instentanément voir votre légitimité sans avoir à vous envoyer un mail de vérification"
+    
+      p5: "Lorsque vous ne pouvez plus parler pour un projet ou une entreprise, veuillez contacter un modérateur pour retirer votre rôle. Les anciens messages s'afficheront toujours mais vous ne pourrez plus les utiliser"
+      hat: "Rôle:"
       placeholder_hat: "XYZ Project Member"
-      link: "Link:"
-      placeholder_link: "user@project.org, or a URL to an employment page"
-      comment: "Comment:"
-      placeholder_comment: "Will only be shown to moderators during approval. Please link to discussions where this hat would be useful for speaking on behalf of your project."     
-      request_hat_bnt : "Request Hat"
+      link: "Lien:"
+      placeholder_link: "utilisateur@project.org, ou un lien vers le site de votre employeur"
+      comment: "Commentaire:"
+      placeholder_comment: "Durant l'approbation, ce ne sera visible que par les modérateurs. Veuillez créer un lien vers les discussions ou ce rôle serait utile pour parler au nom de ce projet"     
+      request_hat_bnt : "Demande de rôle"
 
     index:
-      legendR: "Request Hat"
-      legend: "Hats"
-      text: "A hat is a formal, verified, way of posting a comment while speaking for a
-            project, organization, or company.  Each user may have multiple hats, one of
-            which may be selected to be worn when posting a comment or sending a private
-            message."
-      table_th1: "User"
-      table_th2: "Hat"
-      table_th3: "Link"
-      none: "none"
+      legendR: "Demande de rôle"
+      legend: "Rôle"
+      text: "Un rôle est un moyen formel et authentifié de parler officiellement d'un projet, d'une organisation ou d'une compagnie de Lobsters.
+           Un utilisateur peut avoir plusieurs rôles, mais ne peut en endosser qu'un par commentaire ou message"
+      table_th1: "Utilisateur"
+      table_th2: "Rôle"
+      table_th3: "Lien"
+      none: "rien"
     
     request_index: 
-      legend: "Requested Hats"
-      no_hat_requests: "No hat requests."
-      user: "User:"
-      hat: "Hat:"
-      hat_txt: "hat"
-      link: "Link:"
-      link_txt: "link"
-      comment: "Comment:"
-      reason: "Reason"
-      approve_hat: "Approve Hat Request"
-      reject_hat: "Reject Hat Request"
+      legend: "Requiert rôle"
+      no_hat_requests: "Pas de rôle demandé"
+      user: "Utilisateur:"
+      hat: "Rôle:"
+      hat_txt: "Rôle"
+      link: "Lien:"
+      link_txt: "lien"
+      comment: "Commentaire:"
+      reason: "Raison"
+      approve_hat: "Approuver la demande de rôle"
+      reject_hat: "Rejeter la demande de rôle"
 
   home:
     no_found:
       legend: "404"
-      text: "The resource you requested was not found, or the story has been deleted."
+      text: "La ressource que vous avez demandé n'a pas été trouvée, ou l'article a été supprimé"
     about:
-      title: "About"
-      p1_part1: 'Lobsters is a computing-focused community centered around link aggregation
-          and discussion, launched on July 3rd, 2012.
-          The administrator is'
-      p1_part2: ", contact him with any support issues."
-      p1_part3: "Lobsters was created by "
-      p1_part4: "with careful design touches to encourage a healthy community:"
+      title: "à propos"
+      p1_part1: 'Lobsters est une communauté axée sur l'informatique centrée sur l'agrégation de liens
+          et discussion, lancée le 3 juillet 2012.
+          L'administrateur est'
+      p1_part2: ", contactez-le pour tout problème de support"
+      p1_part3: "Lobsters a été créé par "
+      p1_part4: "avec des touches de conception soignées pour encourager une communauté saine:"
       li1:
         a: "a"
-        tagging: "tagging"
-        text: "system to categorize and filter submissions,"
+        tagging: "tagé"
+        text: "système de catégorisation et filter submissions,"
       li2:
-        user: "a user"
-        invitation: "invitation tree"
-        combat: "to combat spam,"
+        user: "un utilisateur"
+        invitation: "arbre d'invitation"
+        combat: "pour combattre le spam,"
       li3: 
-        flag: "flag explanations"
-        curl: "to curb punishing disagreement,"
+        flag: "explications flag"
+        curl: "pour limiter les désaccords sur les punitions,"
       li4:         
-        strong: "a strong commitment to"
-        transparency: "transparency"        
+        strong: "un engagement fort pour:"
+        transparency: "transparence"        
       li5: 
-        and: "and"
-        features: "many more features"  
-        add: "that have been added over the years."
-      h2: "Tags and Topicality"
-      p2_p1: "When links or stories are submitted, they must be tagged by the submitter from a list of predefined"
-      p2_p2: "Users can choose to"
-      p2_p3: "out or subscribe to all submissions with particular tags"
-      p2_p4: "or combinations of tags"
-      p2_p5: "All users see all stories by default."
-      p2_p6: "The tagging system works this way for three reasons:"      
+        and: "et"
+        features: "beaucoup plus de fonctionnalités"  
+        add: "qui ont été ajoutés au fil des ans."
+      h2: "Tags and Actualité"
+      p2_p1: "Lorsque des liens ou des histoires sont soumis, ils doivent être balisés par l'expéditeur à partir d'une liste de"
+      p2_p2: "L'utilisateur peut choisir de"
+      p2_p3: "ou abonnez-vous à toutes les soumissions avec des tags"
+      p2_p4: "ou des combinations de tags"
+      p2_p5: "Tous les utilisateurs voient tous les articles par défaut."
+      p2_p6: "Le système de tags fonctionne de cette façon pour trois raisons:"      
       tags: "tags"
-      filter: "filter"
-      example: "example:"
-      li6: "It keeps the site on-topic by only allowing a predefined list of tags.
-            These tags represent what most of the users of the site want to read, so
-            content that does not fit into any of those categories should not be
-           submitted.  It also keeps stories organized and more easily searchable."
+      filter: "filtres"
+      example: "exemples:"
+      li6: "Il maintient le site sur le sujet en n'autorisant qu'une liste prédéfinie de balises. Ces balises représentent ce que la plupart des utilisateurs du site veulent lire, donc le contenu qui ne rentre dans aucune catégorie ne doit pas être soumis. Il permet également d'organiser les articles et de les rechercher plus facilement"
       li7: 
         p1: "It promotes discussion.  On a site with separate forums, a Ruby programmer
             would probably subscribe to a Ruby forum, but not a Python one.  When a link

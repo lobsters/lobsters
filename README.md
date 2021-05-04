@@ -121,4 +121,6 @@ Administrators can create and edit tags at `/tags`.
 
 ### Test pull request
 ##### Badge
-[!CircleCI](https://img.shields.io/circleci/build/github/greta-code-pizza/lobsters/circleci-project-setup)
+[![CircleCI](https://img.shields.io/circleci/build/github/greta-code-pizza/lobsters/circleci-project-setup)]
+##[![CircleCI](https://circleci.com/gh/circleci/circleci-docs.svg?style=svg)](https://circleci.com/gh/circleci/circleci-docs)
+##[![Build Status](https://travis-ci.org/lobsters/lobsters.svg?branch=master)](https://travis-ci.org/lobsters/lobsters)

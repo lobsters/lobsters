@@ -7,11 +7,13 @@ default: &default
 
 development:
   <<: *default
-  database: <%= ENV["DB_NAME"] %>
 
 test:
   <<: *default
   database: hipsters_test
+  host: localhost
+  username: root
+  password: root
 
 staging:
   <<: *default

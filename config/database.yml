@@ -7,7 +7,7 @@ default: &default
 
 development:
   <<: *default
-   database: hipsters_dev
+  database: hipsters_dev
 
 test:
   <<: *default

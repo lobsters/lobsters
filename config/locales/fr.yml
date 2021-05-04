@@ -1,0 +1,482 @@
+#ban_notification
+#categories
+#comments
+#email_message
+#email_reply
+#filters
+#global
+#hats
+#home >> en cours about
+#stories
+
+
+
+fr:
+  ban_notification:
+    text: "Vous avez été banni de"
+    for: "pour"
+    notification: "Vous n'êtes plus autorisés à vous connecter à ce site. Si vous le souhaitez, vous pouvez contester ce ban avec un modérateur en répondant à cet email"
+
+  categories:
+  text: "Astuce: lisez des histoires dans plusieurs catégories avec"
+
+  comments:
+    _commentbox:
+      placeholder: "Vous devez être connectés pour poster un commentaire"
+      markdown: "Formatage Markdown disponible"
+      post: "Posté"
+      update: "Mis à jour"
+      preview: "Précédent"
+      cancel: "Annuler"
+      hats: "Porter une casquette"
+
+  email_message:
+    notify:
+      text: "Répondre à"
+
+  email_reply:
+    mention:
+      text: "Continuer la discussion à"
+    reply:
+      text: "Continuer la discussion à"
+
+  filters:
+    legend: "Tags filtrés"
+    text1_part1: "Pour cacher des articles avec certains?"
+    #text1_part2: "from across the site, check them below"
+    text2_part1: "Puisque vous n'êtes pas connecté, vos filtres seront stockés dans un cookie de navigateur de longue durée.
+                  Pour stocker de manière permanente vos filtres de balises et les faire fonctionner dans tous les navigateurs"
+    text2_part2: "Pour votre compte"
+    table_th1 : "Cacher"
+    table_th2 : "Tag"
+    table_th3 : "Description"
+    table_th4 : "Articles"
+    table_th5 : "Filtrer"
+    inactive_tag: "inactif"
+    save: "Sauvegarder Filtres"
+
+  global:
+    table_tr1:
+      th1: "text souligné"
+      th2: "entourer le texte avec"
+      asterisks: "astérisques"
+    table_tr2:
+      th1: "texte en gras"
+      th2: "entourer le texte avec"
+      asterisks: "deux astérisques"
+    table_tr3:
+      th1: "barré"
+      th2: "entourer le texte avec"
+      tilde: "deux charactères tildés"
+    table_tr4:
+      th1: "taille fixée"
+      th2: "entourer le texte avec"
+      backticks: "backticks"     
+    table_tr5: 
+       linked_text: "lien hypertext"  
+       text: "ou juste une URL à créer sans titre"  
+    table_tr6:
+      #td1: "quoted text"
+      td2: "prefixer le texte avec"
+      prefix: "&gt;"  
+    table_tr7:
+      pre: "pre"
+      text: "texte"
+      prefix: "prefix text with at least"
+      space: "4 spaces"
+
+  hats:
+    build_request:
+      legend: "Request a Hat"
+      p1: "A hat is a formal, verified way of speaking officially for a project, organization, or company on Lobsters.
+          A user can have more than one hat, but only wear one at a time on a comment or private message."
+      p2: "Hats are for making public statements, not commemorating contributions to a project or jobs held.
+          Please request one only if you'll be acting offically here, like if you're a core project developer or company employee authorized to post on behalf of your organization.
+          Hats are usually reserved for notable projects and organizations."
+      p3: 'To request a hat for your account, provide a short description of the hat
+          (e.g., "OpenBSD Developer"), a public link that will be shown when hovering
+          over the hat that users can see, such as your e-mail address at that project
+          or company, or a link to a company website showing your employment, and
+          private comments that will be seen only by moderators during approval.'
+      p4: "It's really helpful if you link your GitHub or Twitter account to your Lobsters account and,
+          in your comment, link to where the organization links to that public account.
+          Then we can instantly see you're legit without having to send a verification email."
+      p5: "When you can no longer speak for a project or company, please contact a moderator to doff your hat.
+          Old messages will still show it and you won't be able to use it again."
+      hat: "Hat:"
+      placeholder_hat: "XYZ Project Member"
+      link: "Link:"
+      placeholder_link: "user@project.org, or a URL to an employment page"
+      comment: "Comment:"
+      placeholder_comment: "Will only be shown to moderators during approval. Please link to discussions where this hat would be useful for speaking on behalf of your project."     
+      request_hat_bnt : "Request Hat"
+
+    index:
+      legendR: "Request Hat"
+      legend: "Hats"
+      text: "A hat is a formal, verified, way of posting a comment while speaking for a
+            project, organization, or company.  Each user may have multiple hats, one of
+            which may be selected to be worn when posting a comment or sending a private
+            message."
+      table_th1: "User"
+      table_th2: "Hat"
+      table_th3: "Link"
+      none: "none"
+    
+    request_index: 
+      legend: "Requested Hats"
+      no_hat_requests: "No hat requests."
+      user: "User:"
+      hat: "Hat:"
+      hat_txt: "hat"
+      link: "Link:"
+      link_txt: "link"
+      comment: "Comment:"
+      reason: "Reason"
+      approve_hat: "Approve Hat Request"
+      reject_hat: "Reject Hat Request"
+
+  home:
+    no_found:
+      legend: "404"
+      text: "The resource you requested was not found, or the story has been deleted."
+    about:
+      title: "About"
+      p1_part1: 'Lobsters is a computing-focused community centered around link aggregation
+          and discussion, launched on July 3rd, 2012.
+          The administrator is'
+      p1_part2: ", contact him with any support issues."
+      p1_part3: "Lobsters was created by "
+      p1_part4: "with careful design touches to encourage a healthy community:"
+      li1:
+        a: "a"
+        tagging: "tagging"
+        text: "system to categorize and filter submissions,"
+      li2:
+        user: "a user"
+        invitation: "invitation tree"
+        combat: "to combat spam,"
+      li3: 
+        flag: "flag explanations"
+        curl: "to curb punishing disagreement,"
+      li4:         
+        strong: "a strong commitment to"
+        transparency: "transparency"        
+      li5: 
+        and: "and"
+        features: "many more features"  
+        add: "that have been added over the years."
+      h2: "Tags and Topicality"
+      p2_p1: "When links or stories are submitted, they must be tagged by the submitter from a list of predefined"
+      p2_p2: "Users can choose to"
+      p2_p3: "out or subscribe to all submissions with particular tags"
+      p2_p4: "or combinations of tags"
+      p2_p5: "All users see all stories by default."
+      p2_p6: "The tagging system works this way for three reasons:"      
+      tags: "tags"
+      filter: "filter"
+      example: "example:"
+      li6: "It keeps the site on-topic by only allowing a predefined list of tags.
+            These tags represent what most of the users of the site want to read, so
+            content that does not fit into any of those categories should not be
+           submitted.  It also keeps stories organized and more easily searchable."
+      li7: 
+        p1: "It promotes discussion.  On a site with separate forums, a Ruby programmer
+            would probably subscribe to a Ruby forum, but not a Python one.  When a link
+            is posted to the Python forum, that Ruby programmer would probably never see
+            it, even though they may have something useful to say about it (perhaps the
+            link is about a Python library which does the same thing as a Ruby library
+            which that Ruby programmer created).  On this site, the link would get posted
+            with a"
+        p2: "tag and shown to everyone,
+            encouraging the Ruby programmer to read and comment on it (unless that Ruby
+            programmer disliked Python enough to"
+        p3: "it out."
+        python: "python"
+      li8: "It keeps the community coherent.  Often stories contain discussion
+            about more than one topic, yet on other sites they are confined to a single
+            category/forum, limiting the exposure.  The link could be submitted to more
+            than one forum, but then each conversation would remain separate and users
+            would rarely interact with users from other forums.  On this site, the story
+            would simply be tagged with multiple tags and all users would see all
+            discussion about the story in a single location."
+      p3_p1: "Creating new tags and retiring old tags is done by the community by submitting, discussing, and voting on"
+      p3_p2: "tagged requests about them, and these events are"
+      p3_p3: "since 2018-04). To propose a tag, post a"
+      p3_p4: "thread with the name and description.
+              Explain the scope, list existing stories that should have been tagged, make a case for why people would want to specifically filter it out, and justify the increased complexity for submitters and mods."
+      logged: "logged"
+      p4_p1: "Lobsters is focused pretty narrowly on computing; tags like"
+      p4_p2: "don't imply every piece of art is on-topic.
+              Some rules of thumb for great stories to submit: Will this improve the reader's 
+              next program? Will it deepen their understanding of their last program? Will it 
+              be more interesting in five or ten years?"
+      p5: "Some things that are off-topic here but popular on larger, similar sites:
+          entrepreneurship, management, news about companies that employ a lot of programmers,
+          investing, world events, anthropology, self-help, personal productivity systems,
+          last-resort customer service requests via public shaming,
+          'I wanted to see what this site's amazing users think about this off-topic thing',
+          and defining the single morally correct economic and political system for the entire world when we can't even settle tabs vs. spaces."
+      h2_2: "Invitation Tree"
+      p6_p1: "The full"
+      p6_p2: "is public and each user's profile
+              shows who invited them.  This provides some degree of accountability and
+              helps identify voting rings."
+      usertree: "user tree"
+      p7_p1: "New users must be invited by a current user, though there is no formal vetting process.
+              Invitations are used as a mechanism for spam-control,
+              to slow registrations to a pace"
+      p7_p2: "and to encourage users to be nice, not to make the Lobsters userbase an elite club.
+            The quickest way to receive an invitation is to talk to someone you "
+      p7_p3: "If you wrote a link that was posted, please reach out in"
+      p7_p4: ", we'd love to have you join the discussion.
+            Finally, if you can't find anyone you know in the invitation tree and didn't author something posted to the site,"
+      p7_p5: "you can"
+      p7_p6: "consider joining the"
+      p7_p7: "community in the chat room"
+      acculturate: "we can acculturate"
+      recognize: "recognize from the site"
+      request: "request an invite"
+      h2_3: "Ranking"
+      p8_p1: "All story and comment ranking on this site comes from user activity.
+              All users have equal votes, with no special priorities or penalties for specific users or domains.
+              Moderators have no ability to raise or"
+      p8_p2: "the rankings of stories or comments (besides voting like any user).
+              Per-tag"
+      p8_p3: "affect all stories with those tags, but these modifiers (and"
+      p8_p4: "are public.
+              Domains used for marketing analytics are banned and tracking parameters are removed from links
+              (look for"
+      p8_p5: "and"
+      p8_p6: "in"
+      lower: "lower"
+      changes: "changes"
+      hotness: "hotness modifiers"
+      p9_p1: "There's no limit on how many invitations a user can send (though we might at some point, to manage"
+      p9_p2: "When accounts are banned for spam,"
+      p9_p3: "sockpuppeting"
+      p9_p4: ", or other abuse,
+              moderators will consider disabling their inviter's ability to send invitations or, rarely, also ban them."
+      growth: "growth"
+      p10_p1: "Users can flag stories and comments when there's a serious problem that needs moderator attention.
+              Users must reach "
+      p10_p2: "karma to flag. To guide usage and head off distracting meta conversations ('Why was this flagged!?', etc), flagging requires selecting from a preset list of reasons."
+      #en cours
+    
+    chat:
+      legend: "Lobsters Chat"
+      p1_1: "An official real-time discussion channel is available to members and guests
+            of the site, hosted on the"
+      in: " in "
+      p1_2: ".  This channel was originally"
+      by: "by"
+      and: ", and"
+      p1_3: "are channel operators."
+      p2: "The policies and ideals of the discussion channel are the same as the
+            website; quality content and conversing, respect for other users, and no
+            spamming.  Slightly off-topic discussion is generally acceptable.  The
+            channel isn't busy enough that there's always someone talking, so don't be
+            surprised if you try to start a conversation and no one responds.  Leave it
+            open and you'll see activity, though we're most active during US work hours."
+      p3: "New contributors are always welcome on Lobsters.
+          If you are the author of or otherwise involved with a story that was submitted to the site, ask and someone can send you an invite.
+          We've unfortunately had problems with impersonation, so it helps a lot if you point out how your email address is linked to the story."
+       
+      p4: "Otherwise, you're welcome to join the community in the chat room.
+          Invites are not automatically extended, but typically someone will once they get to know you in chat.
+          They'll likely ask you for a link to your homepage or a public profile to feel confident that you're not a spammer."
+      p5_1: "Lurking in the channel is a bot creatively called"
+      p5_2: "It announces new stories submitted to the site and provides other useful features like showing the page title of URLs mentioned in the channel."
+      p6_1: "To participate in the discussion, join the"
+      p6_2: "channel on"
+      p6_3: "with an IRC client."
+      p7_1: "If you'd like a cloak to note that you've contributed to"
+      p7_2: "  or just for privacy as a regular user, contact a channel operator for a"
+      or: "or"
+      cloak: "cloak."
+      p8_1: "For a feed of stories without discussion,"
+      p8_2: "also posts new stories in "
+      p9_1: "Lobsters used to have an channel called "
+      p9_2: "for off-topic conversations (especially American politics) that ''boiled over'' from the main channel.
+            It was useful in the wake of some big events, but the mods "
+      p9_3: "didn't want to run it indefinitely<"
+      p9_4: "Community members independently run"
+
+    index:
+      the: "The"
+      newest: "newest"
+      text: "stories that have not yet reached the front page."
+      banned: "Banned"
+      stories: "Stories"
+      tags: "tags"
+      in: "in the"
+      tagged: "tagged"
+      as: "as"
+
+    privacy:
+      legend: "Privacy Policy"
+      p1: "This is the Internet, you have no privacy."
+      p2:  "(Unless you are " 
+      p3: "under 13" 
+      p4: ", in which case you are not allowed here.)"
+
+    rss:
+      newest: "newest"
+      comments: "Comments"
+
+  signup:
+    index:
+      legend: "Create an Account"
+      nouser: "Not a user yet?"
+      sign: "Sign up here"
+      p1: "Signup is currently by invitation only to combat spam and increase
+          accountability.  If you know "
+      current: "a current user"
+      p2: "of the site,
+          ask them for an invitation, or"
+      requestpublicly: "request one publicly"
+      requestin : "request one in "
+    invite:
+      legend: "Pass Along an Invitation"
+      p1: "Now that you are a member you can invite people you think would be a good fit.
+          This is available anytime from "
+      p2: "your settings page"
+      skip: "Skip"
+    invited:
+      legend: "Create an Account"
+      p1: "To create a new account, enter your e-mail address and a password.
+          Your e-mail address will never be shown to users and will only be used
+          if you need to reset your password, or to receive optional new-message
+          alerts.  Your username can be changed later."
+      invited: "Invited By:"
+      username: "Username:"
+      mail: "E-mail Address:"
+      password: "Password:"
+      passwordagain: "Password (again):"
+      p2: "Want to tell us about yourself?  It's optional, but it will be visible in
+          your public profile and can be changed at any time."
+      about: "About:"
+      markdown: "Markdown formatting available"
+      signup: "Signup"
+  
+      
+
+      
+
+
+
+    
+
+
+
+  stats:
+    h2_1: "New users by month"
+    h2_2: "Active users by month"
+    h2_3: "Stories submitted by month"
+    h2_4: "Comments posted by month"
+    h2_5: "Votes cast by month"
+    outliers: "Outliers:"
+    isthe: "is the"
+    inv: "invitation queue"
+    drive: "pledge drive"
+    results: "results"
+    users: "Users who have submitted a story, posted a comment, or cast a vote"
+    want: "Want more info?"
+    write: "Write a query"
+
+  stories:
+    form_errors:
+      h2_part1: "Note: This story was already submitted"
+      h2_part2: ", but may be submitted again."
+      p1: "If the content has changed or warrants new discussion, you may submit it again."
+      p2: "Previous discussions for this story:"
+    form:
+      url: "URL:"
+      fetch: "Fetch Title"
+      title: "Title:"
+      tags: "Tags"
+      text: "Text:"
+      p1: "Please remove extraneous components from titles such as the name of the site, blog, section, and author."
+      p2: "Users have suggested setting this story's title to:"
+      p3: "Users have suggested setting this story's tags to:"
+      placeholder_area: "Use this for stories without a URL, to link additional context, or to paste abstracts from PDF papers.
+                          Please don't use this to promote the story, summarize the post, or explain why you posted it.
+                          See the guidelines below for more."
+      summary: "Story submission guidelines"
+      li1:
+        p: "Do not editorialize story titles, but when the original story's
+        title has no context or is unclear, please change it."
+        strong: "Please remove extraneous components from titles such as the name of the
+        site, blog, section, and author."
+      li2: "When the story being submitted is more than a year or so old,
+        please add the year the story was written to the post title in
+        parentheses."
+      li3: "When submitting a URL, the text field is optional and should only
+        be used when additional context or explanation of the URL is
+        needed.  Commentary or opinion should be reserved for a comment,
+        so that it can be voted on separately from the story."
+      li4: 
+        if: "If no" 
+        text: "clearly apply to the story you are submitting, chances
+        are it does not belong here.  Do not overreach with tags if they
+        are not the primary focus of the story."
+      li5: 
+        p1: "To be able to easily submit a page you're viewing in your browser
+        to"
+        p2: ", drag this bookmarklet to your
+        bookmark bar:"
+        p3: "Submit to"
+        p4: "You'll be taken to this page with the viewed page's URL and title.
+        (It can't recognize and remove blog/author names for you, though.)"
+      autor: "Author:"
+      submitter: "Submitter is"
+      i_am: "I am "
+      autor_story: "the author of the story at this URL (or this text)"
+      follow: "Follow"
+      submitter_following: "Submitter is following "
+      mail_story: " this story to receive replies via e-mail and Pushover"
+      
+    # +similar
+    listdetail:
+      authored_by: "authored by"
+      via: "via"
+      edit: "edit"
+      justnow: "just now"
+      nocomment: "no comments"
+
+    edit:
+      legend: "Edit Story"
+      merge: "Merge Into:"
+      placeholder1: "Short id of story into which this story "
+      bemerged: "be merged"
+      unavailable: "Unavailable:"
+      unavailable_label1: "Source URL is unavailable, "
+      unavailable_label2: "enable display of cached text"
+      modreason: "Mod Reason:"
+      markdown: "Markdown formatting available"
+      save: "Save"
+      undelete: "Undelete"
+      confirm: "Are you sure you want to undelete this story?"
+      delete: "Delete"
+      confirmdelete: "Are you sure you want to delete this story?"
+
+    new: 
+      legend: "Submit a Story"
+      markdown: "Markdown formatting available"
+      submit: "Submit"
+      preview: "Preview"
+
+    show:
+      storytext: "Source URL considered unavailable as of"
+      cache: ", cached text available"
+      allstory: "All story content copyright of its respective owner."
+      storylink: "Stories with similar links:"
+
+    suggest: 
+      legend: "Suggest Story Changes"
+      suggest: "Suggest Changes"
+      cancel: "cancel"
+
+  
+
+    

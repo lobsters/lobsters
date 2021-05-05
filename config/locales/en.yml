@@ -7,6 +7,10 @@
 #global
 #hats
 #home >> en cours about
+#key
+#login
+#invitation
+#layout
 #messages
 #mod_notes
 #password
@@ -331,6 +335,83 @@ en:
       newest: "newest"
       comments: "Comments"
 
+  inv_mail:
+    user: "The user"
+    invited: "has invited you to"
+    p1: "To accept this invitation and create an account, visit the URL below:"
+    inv: "invitations/"
+
+  inv_request:
+    hello: "Hello"
+    p1: "Someone at"
+    p2: "has submitted an invitation request to"
+    name: "Name:"
+    mail: "E-mail:"
+    users: "(won't be displayed to other users)"
+    p3: "If this is you, visit the URL below to confirm your request and
+        display it to other logged-in users."
+    p4: "If this is not you, you can delete this message."
+    
+  inv:
+    build:
+      legend: "Request an Invitation"
+      p1: "If you don't know (or can't find) an"
+      p2: "existing user"
+      p3: "whom to request an invitation, you can make a public request for one.  This
+          will display your name and memo to all other logged-in users who can then
+          send you an invitation if they recognize you."
+      p4: "Your e-mail address must be valid and confirmed by visiting a URL e-mailed to
+          you before your request will be displayed.  Your e-mail address will not be
+          shown to any other users (except moderators)."
+      name: "Name (not username):"
+      mail: "E-mail Address:"
+      url: "URL:"
+      p5: "URL to verify you (Personal website, GitHub account,
+          etc.)"
+      request: "Request Invitation"
+    index:
+      legend: "Requested Invitations"
+      p1: "These persons have requested invitations and confirmed their e-mail
+          addresses.  If you recognize anyone, feel free to send them an invitation and
+          remove their request.  If a request looks suspicious, delete it."
+      th1: "Date/Time"
+      th2: "Name"
+      send: "Send Invitation"
+      are: "Are "
+      invite: "you sure you want to invite this person and remove this request?"
+      delete: "Delete"
+      sure: "Are you sure "
+      deleterequest: "you want to delete this request?"
+      noinvitation: "No invitation requests"
+
+  key:
+    new: 
+      legend1: "Connect Your Account "
+      legend2: "to Keybase"
+      confirm: "Confirm"
+
+  layout:
+    footer:
+      a1: "Moderation Log"
+      a2: "Invitation Queue"
+      a3: "Hat Requests"
+      a4: "Hats"
+      a5: "Tags"
+      a6: "Privacy"
+      a7: "About"
+    app:
+      sign: "Sign Up Now"
+      join: "Join"
+      moderation: "Moderation Log"
+      invitation: "Invitation Queue"
+      hat: "Hat Requests"
+      hats: "Hats"
+      chat: "Chat"
+      privacy: "Privacy"
+      about: "About"
+    upvoted:
+      legend: "Upvoted"
+      
   login:
     forgot:
       legend: "Reset Password"
@@ -364,13 +445,6 @@ en:
       legend: "Login - Two Factor Authentication"
       p1: "Enter the current TOTP code from your TOTP application:"
       login": "Login"
-
-
-
-
-
-
-
 
   messages:
     form:
@@ -715,6 +789,136 @@ en:
       legend: "Suggest Story Changes"
       suggest: "Suggest Changes"
       cancel: "cancel"
+
+  tags:
+    form:
+      name: 'Name:'
+      category: 'Category:'
+      description: 'Description:'
+      permit: 'Permit by new users:'
+      privileged: 'Privileged:'
+      media: 'Is Media:'
+      active: 'Active:'
+      hotness: 'Hotness Mod:'
+      update: 'Update Tag'
+      create: 'Create Tag'
+    multi:
+      p1: "Tip: read stories across multiple tags with"
+    edit:
+      legend: "Tag Edit"
+      filter: ""
+    index:
+      legend: "Tags"
+      p1: "Inactive tags can no longer be used. You can also"
+      filter: "filter out stories by tag"
+      inactive: "inactive"
+    new:
+      legend: "Tag Create"
+
+    users:
+      flag:
+        p1: "Your comments have been heavily flagged across several stories in the last"
+        p2: "Review "
+        p3: "for context on how unusual this is. Reconsider your behavior or "
+        p4: "take a break"
+        p5: "You could also talk to "
+        p6: "about what went wrong, or
+            delete your account from the bottom of your"
+        p7: "if you prefer to leave."
+      inv:
+        p1: "Invitations are unlimited, but persons you invite will be associated with your
+            account in the "
+        p2: "user tree"
+        p3: "and you may be responsible for them
+            if they cause problems.  Please use your discretion when inviting persons you
+            don't personally know."
+        mail: "E-mail Address:"
+        memo: "Memo to User:"
+        send: "Send Invitation"
+      not:
+        legend: "User not found"
+        p1: "If this user used to exist, they changed their username.
+            Check the"
+        p2: "moderation log"
+      list:
+        admin: "(administrator)"
+        mod: "(moderator)"
+      show:
+        send: "Send a Message"
+        banned: "Banned user"
+        inactive: "Inactive user"
+        active: "Active"
+        administrator: "administrator"
+        moderator: "moderator"
+        user: "user"
+        with: "with invites"
+        submissions: "and story submissions"
+        disabled: "disabled"
+        joined: "Joined:"
+        inv: "invitation"
+        from: "from"
+        banned2: "Banned:"
+        left: "Left:"
+        averaging: ", averaging "
+        number: "number_with_precision"
+        per: "per story/comment"
+        storiessub: "Stories Submitted:"
+        commentspost: "Comments Posted:"
+        hats: "Hats:"
+        homepage: "Homepage:"
+        about: "About:"
+        mystery: "A mystery..."
+        h2: "Moderator Information"
+        flagged: "Flagged (1m):"
+        no: "No"
+        self: "Self Promoter:"
+        yes: "Yes"
+        last: "Last 10 Notes:"
+        new: "New Note:"
+        last2: "Last 10 Moderations:"
+        admin: "Admin Information"
+        recent: "Recent Votes:"
+        com: "comment"
+        unban": "Unban" 
+
+        enable": "Enable Invites"
+        p1: "Banning or disabling invites for a user will send an e-mail to the user with the reason below,
+             with your e-mail address as the Reply-To so the user can respond"
+        reason: "Reason:"
+        ban": "Ban"
+        disable": "Disable Invites"
+
+
+      standing:
+        h1: "Breakdown of commenters receiving flags in the last "
+        p1: "Most commenters get zero or very few flags across their comments in the last"
+        p2: "Currently, users who see the warning have been flagged between"
+        p3: "and"
+        p4: "times."
+        p5: "Or, to make that visible:"
+        P6: "If you're seeing the warning, the best case scenario is that you review your recent flagged comments below, maybe talk to "
+        p7: "about what you think went wrong, and meet community norms.
+            If you can't or don't want to do that, you can delete your account from the bottom of your "
+        p8: "We count total number of flags because that's the most direct measurement of harm:
+            occasionally one or two really nasty comments that hit deep negative scores,
+            but most often it's a consistent pattern of inappropriate, rude, dismissive, or abusive behavior poisoning many discussions.
+            We've tried more complicated measurements, but they correlate almost perfectly to a simple count and are a lot harder to explain than the total number of times another user has flagged your behavior as inappropriate."
+        p9: "The warning (and appearance on a mod dashboard) doesn't kick in until an author has received an unusually high number of flags across several comments on several threads because anyone can have a bad day or a bad thread.
+            The problem is a pattern across many threads, especially if it's gone on a while."
+        p10: "To address some common objections:
+            This isn't based on the percentage of the author's comments flagged or the average score because good comments don't excuse bad ones.
+            This doesn't ignore comments where you feel provoked or justified because you're still responsible for your words.
+            This includes flags on comments with net positive scores because Lobsters isn't a contest to write comments that are slightly funnier or more insightful than they are cruel.
+            If you think the people you're responding to don't deserve courtesy and respect: why do you spending time talking to them at all?"
+        p11: "For reference, your recent flagged comments are below."
+
+
+
+
+
+
+
+
 
   
 

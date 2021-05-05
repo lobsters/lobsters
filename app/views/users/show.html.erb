@@ -13,7 +13,7 @@
     </span>
 
     <% if @user && @showing_user.is_active? %>
-      (<a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>)
+      (<a href="/messages?to=<%= @showing_user.username %>"><%= t('users.show.send')%></a>)
     <% end %>
   </div>
 
@@ -27,29 +27,29 @@
   <span class="d"
   <%= @showing_user.is_banned? ? raw("style=\"color: red;\"") : "" %>>
     <% if @showing_user.is_banned? %>
-      Banned user
+      <%= t('users.show.banned')%>
     <% elsif !@showing_user.is_active? %>
-      Inactive user
+     <%= t('users.show.inactive')%>
     <% else %>
-      Active
-      <%= @showing_user.is_admin? ? "administrator" :
-        (@showing_user.is_moderator? ? "moderator" : "user") %>
+    <%= t('users.show.active')%>
+      <%= @showing_user.is_admin? ? t('users.show.administrator') :
+        (@showing_user.is_moderator? ? t('users.show.moderator') : t('users.show.user')) %>
       <% if !@showing_user.can_invite? %>
-        with invites
+      <%= t('users.show.with')%>
         <% if !@showing_user.can_submit_stories? %>
-          and story submissions
+        <%= t('users.show.submissions')%>
         <% end %>
-        disabled
+        <%= t('users.show.disabled')%>
       <% end %>
     <% end %>
   </span>
   <br>
 
-  <label class="required">Joined:</label>
+  <label class="required"><%= t('users.show.joined')%></label>
   <span class="d">
     <%= time_ago_in_words_label(@showing_user.created_at) %>
     <% if @showing_user.invited_by_user %>
-      by <a href="/u#<%= @showing_user.username %>">invitation</a> from
+      by <a href="/u#<%= @showing_user.username %>"><%= t('users.show.inv')%></a> <%= t('users.show.from')%>
       <%= link_to @showing_user.invited_by_user.try(:username),
         @showing_user.invited_by_user %>
     <% end %>
@@ -57,7 +57,7 @@
   <br>
 
   <% if @showing_user.is_banned? %>
-    <label class="required">Banned:</label>
+    <label class="required"><%= t('users.show.banned2')%></label>
     <span class="d">
       <%= time_ago_in_words_label(@showing_user.banned_at) %>
       <% if @showing_user.banned_by_user %>
@@ -70,7 +70,7 @@
   <% end %>
 
   <% if @showing_user.deleted_at? %>
-    <label class="required">Left:</label>
+    <label class="required"><%= t('users.show.left')%></label>
     <span class="d">
       <%= time_ago_in_words_label(@showing_user.deleted_at) %>
     </span>
@@ -80,25 +80,25 @@
   <% if !@showing_user.is_admin? %>
     <label class="required">Karma:</label>
     <span class="d">
-      <%= @showing_user.karma %>, averaging <%=
-        number_with_precision(@showing_user.average_karma, :precision => 2) %>
-        per story/comment
+      <%= @showing_user.karma %><%= t('users.show.averaging')%> <%=
+      <%= t('users.show.number')%>(@showing_user.average_karma, :precision => 2) %>
+      <%= t('users.show.per')%>
     </span>
     <br>
   <% end %>
 
-  <label class="required">Stories Submitted:</label>
+  <label class="required"><%= t('users.show.storiessub')%></label>
   <span class="d">
     <%= stories_submitted_content(@showing_user) %>
   </span>
   <br>
 
-  <label class="required">Comments Posted:</label>
+  <label class="required"><%= t('users.show.commentspost')%></label>
   <span class="d"><%= comments_posted_content(@showing_user) %></span>
   <br>
 
   <% if @showing_user.hats.any? %>
-    <label class="required">Hats:</label>
+    <label class="required"><%= t('users.show.hats')%></label>
     <div class="d">
     <% @showing_user.hats.each do |hat| %>
       <%= hat.to_html_label %>
@@ -112,7 +112,7 @@
   <% end %>
 
   <% if @showing_user.homepage.present? %>
-    <label class="required">Homepage:</label>
+    <label class="required"><%= t('users.show.homepage')%></label>
 
     <span class="d">
       <a href="<%= h(@showing_user.homepage) %>"
@@ -151,42 +151,42 @@
   <% end %>
 
   <% if @showing_user.is_active? %>
-    <label class="required">About:</label>
+    <label class="required"><%= t('users.show.about')%></label>
 
     <div class="d shorten_first_p">
       <% if @showing_user.about.present? %>
         <%= raw @showing_user.linkified_about %>
       <% else %>
-        <span class="na">A mystery...</span>
+        <span class="na"><%= t('users.show.mystery')%></span>
       <% end %>
       <br>
     </div>
   <% end %>
 
   <% if @user && @user.is_moderator? && !@showing_user.is_moderator? %>
-    <h2>Moderator Information</h2>
+    <h2><%= t('users.show.h2')%></h2>
 
-    <label class="required">Flagged (1m):</label>
+    <label class="required"><%= t('users.show.flagged')%></label>
     <span class="d">
       <% if (stats = FlaggedCommenters.new('1m').check_list_for(@showing_user)) %>
         <a href="/mod/commenters/1m#<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % stats[:sigma] %> &sigma;
       <% else %>
-        No
+        <%= t('users.show.no')%>
       <% end %>
     </span>
     <br>
 
-    <label class="required">Self Promoter:</label>
+    <label class="required"><%= t('users.show.self')%></label>
     <span class="d">
       <% if @showing_user.is_heavy_self_promoter? %>
-        <strong>Yes</strong>
+        <strong><%= t('users.show.yes')%></strong>
       <% else %>
-        No
+        <%= t('users.show.no')%>
       <% end %>
     </span>
     <br>
 
-    <label class="required">Last 10 Notes:</label>
+    <label class="required"> <%= t('users.show.last')%></label>
     <%= render partial: 'mod_notes/table', locals: {
       mod_notes: ModNote.for(@showing_user).limit(10),
     } %>
@@ -194,20 +194,20 @@
       <%= errors_for @mod_note %>
       <%= f.hidden_field :username %>
       <div class="boxline">
-        <%= f.label :note, "New Note:", :class => "required" %>
+        <%= f.label :note, t('users.show.new'), :class => "required" %>
         <%= f.text_area :note, :style => "width: 500px;", :rows => 5 %>
       </div>
       <div class="boxline"><p></p><%= f.submit "ModNote" %></div>
     <% end %>
 
-    <label class="required">Last 10 Moderations:</label>
+    <label class="required"> <%= t('users.show.last2')%></label>
     <%= render partial: 'moderations/table', locals: {
       moderations: Moderation.for(@showing_user).order('id desc').limit(10),
     } %>
 
 
     <% if @user.is_admin? %>
-      <h3>Admin Information</h3>
+      <h3> <%= t('users.show.admin')%>/h3>
 
       <label class="required">E-Mail:</label>
       <span class="d">
@@ -215,7 +215,7 @@
       </span>
       <br>
 
-      <label class="required">Recent Votes:</label>
+      <label class="required"> <%= t('users.show.recent')%></label>
       <table class="data zebra clear tall">
         <% @showing_user.votes_for_others.limit(15).each do |v| %><tr>
           <td><%= v.vote == 1 ? '+' : v.reason %></td>
@@ -223,7 +223,7 @@
             <td><a href="/u/<%= v.comment.user.try(:username) %>"><%= v.comment.user.try(:username) %></a></td>
             <td>
               <%= v.story.title %>
-              <a href="<%= v.comment.short_id_url %>">comment</a>:<br>
+              <a href="<%= v.comment.short_id_url %>"> <%= t('users.show.com')%></a>:<br>
               <%= v.comment.comment.split[0..10].join(' ') %>
             </td>
           <% elsif v.story_id && !v.comment_id %>
@@ -238,10 +238,10 @@
         <%= form_with url: user_unban_path, method: :post, local: true do |f| %>
           <p>
             <% if @showing_user.is_banned? %>
-              <%= f.submit "Unban" %>
+              <%= f.submit t('users.show.unban') %>
             <% end %>
             <% if @showing_user.banned_from_inviting? %>
-              <%= f.submit "Enable Invites", formaction: user_enable_invite_path %>
+              <%= f.submit t('users.show.enable'), formaction: user_enable_invite_path %>
             <% end %>
           </p>
         <% end %>
@@ -249,20 +249,19 @@
 
       <% if !@showing_user.is_banned? || !@showing_user.banned_from_inviting? %>
         <p>
-          Banning or disabling invites for a user will send an e-mail to the user with the reason below,
-          with your e-mail address as the Reply-To so the user can respond.
+        <%= t('users.show.p1')%>
         </p>
         <%= form_with url: user_ban_path, method: :post, local: true do |f| %>
           <div class="boxline">
-            <%= f.label :reason, "Reason:", :class => "required" %>
+            <%= f.label :reason, t('users.show.reason'), :class => "required" %>
             <%= f.text_field :reason, :size => 40 %>
           </div>
           <p>
             <% if !@showing_user.is_banned? %>
-              <%= f.submit "Ban", class: 'deletion' %>
+              <%= f.submit t('users.show.ban'), class: 'deletion' %>
             <% end %>
             <% if !@showing_user.banned_from_inviting? %>
-              <%= f.submit "Disable Invites", formaction: user_disable_invite_path %>
+              <%= f.submit t('users.show.disable'), formaction: user_disable_invite_path %>
             <% end %>
           </p>
         <% end %>

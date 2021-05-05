@@ -1,8 +1,7 @@
 <p>
-Invitations are unlimited, but persons you invite will be associated with your
-account in the <a href="/u">user tree</a> and you may be responsible for them
-if they cause problems.  Please use your discretion when inviting persons you
-don't personally know.
+<%= t('users.inv.p1')%> 
+<a href="/u"><%= t('users.inv.p2')%></a> 
+<%= t('users.inv.p3')%>
 </p>
 
 <%= form_with url: invitations_path, method: :post, local: true do |f| %>
@@ -11,18 +10,20 @@ don't personally know.
   <% end %>
 
   <div class="boxline">
-    <%= f.label :email, "E-mail Address:", :class => "required" %>
+    <%= f.label :email, t('users.inv.mail'), :class => "required" %>
     <%= f.email_field :email, :size => 30, :autocomplete => "off" %>
   </div>
 
   <div class="boxline">
-    <%= f.label :memo, "Memo to User:", :class => "required" %>
+    <%= f.label :memo, t('users.inv.memo'), :class => "required" %>
     <%= f.text_field :memo, :size => 60 %>
   </div>
 
   <div class="boxline">
     <p></p>
-    <%= f.submit "Send Invitation" %>
+    <%= f.submit t('users.inv.send') %>
   </div>
 <% end %>
+
+
 

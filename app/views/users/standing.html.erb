@@ -1,10 +1,15 @@
 <div class="box wide">
-  <h1>Breakdown of commenters receiving flags in the last <%= @flag_warning_int[:human] %></h1>
+  <h1><%= t('users.standing.h1)%> 
+  <%= @flag_warning_int[:human] %></h1>
 
   <p>
-    Most commenters get zero or very few flags across their comments in the last <%= @flag_warning_int[:human] %>.
-    Currently, users who see the warning have been flagged between <%= @fc_flagged.first %> and <%= @fc_flagged.last %> times.
-    Or, to make that visible:
+    <%= t('users.standing.p1)%>
+    <%= @flag_warning_int[:human] %>.
+    <%= t('users.standing.p2)%> 
+    <%= @fc_flagged.first %> 
+    <%= t('users.standing.p3)%> <%= @fc_flagged.last %> 
+    <%= t('users.standing.p4)%>
+    <%= t('users.standing.p5)%>
   </p>
 
   <table class="standing">
@@ -34,32 +39,26 @@
   </table>
 
   <p>
-    If you're seeing the warning, the best case scenario is that you review your recent flagged comments below, maybe talk to <%= link_to 'a mod', moderators_path %> about what you think went wrong, and meet community norms.
-    If you can't or don't want to do that, you can delete your account from the bottom of your <%= link_to 'settings', settings_path %>.
+   <%= t('users.standing.p6)%> 
+    <%= link_to 'a mod', moderators_path %> 
+    <%= t('users.standing.p7)%> 
+      <%= link_to 'settings', settings_path %>.
   </p>
 
   <p>
-    We count total number of flags because that's the most direct measurement of harm:
-    occasionally one or two really nasty comments that hit deep negative scores,
-    but most often it's a consistent pattern of inappropriate, rude, dismissive, or abusive behavior poisoning many discussions.
-    We've tried more complicated measurements, but they correlate almost perfectly to a simple count and are a lot harder to explain than the total number of times another user has flagged your behavior as inappropriate.
+    <%= t('users.standing.p8)%>
   </p>
 
   <p>
-    The warning (and appearance on a mod dashboard) doesn't kick in until an author has received an unusually high number of flags across several comments on several threads because anyone can have a bad day or a bad thread.
-    The problem is a pattern across many threads, especially if it's gone on a while.
+    <%= t('users.standing.p9)%>
   </p>
 
   <p>
-    To address some common objections:
-    This isn't based on the percentage of the author's comments flagged or the average score because good comments don't excuse bad ones.
-    This doesn't ignore comments where you feel provoked or justified because you're still responsible for your words.
-    This includes flags on comments with net positive scores because Lobsters isn't a contest to write comments that are slightly funnier or more insightful than they are cruel.
-    If you think the people you're responding to don't deserve courtesy and respect: why do you spending time talking to them at all?
+  <%= t('users.standing.p10)%>
   </p>
 
   <p>
-    For reference, your recent flagged comments are below.
+  <%= t('users.standing.p11)%>
   </p>
 </div>
 

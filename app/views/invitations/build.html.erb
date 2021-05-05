@@ -1,41 +1,38 @@
 <div class="box wide">
   <div class="legend">
-    Request an Invitation
+  <%= t('inv.build.legend')%>
   </div>
 
   <p>
-  If you don't know (or can't find) an <a href="/u/">existing user</a> from
-  whom to request an invitation, you can make a public request for one.  This
-  will display your name and memo to all other logged-in users who can then
-  send you an invitation if they recognize you.
+  <%= t('inv.build.p1')%> 
+  <a href="/u/"><%= t('inv.build.p2')%></a> 
+  from
+  <%= t('inv.build.p3')%>
   </p>
 
   <p>
-  Your e-mail address must be valid and confirmed by visiting a URL e-mailed to
-  you before your request will be displayed.  Your e-mail address will not be
-  shown to any other users (except moderators).
+  <%= t('inv.build.p4')%>
   </p>
 
   <%= form_with model: @invitation_request, url: create_invitation_by_request_path, local: true do |f| %>
     <p>
-    <%= f.label :name, "Name (not username):" %>
+    <%= f.label :name, t('inv.build.name') %>
     <%= f.text_field :name, :size => 30 %>
     <br />
 
-    <%= f.label :email, "E-mail Address:" %>
+    <%= f.label :email, t('inv.build.mail') %>
     <%= f.email_field :email, :size => 30 %>
     <br />
 
-    <%= f.label :memo, "URL:" %>
+    <%= f.label :memo, t('inv.build.url') %>
     <%= f.text_field :memo, :size => 30 %>
     <br />
     <label></label>
-    <span class="na">URL to verify you (Personal website, GitHub account,
-      etc.)</span>
+    <span class="na"><%= t('inv.build.p5')%></span>
     </p>
 
     <p>
-    <%= f.submit "Request Invitation" %>
+    <%= f.submit t('inv.build.request') %>
     </p>
   <% end %>
 </div>

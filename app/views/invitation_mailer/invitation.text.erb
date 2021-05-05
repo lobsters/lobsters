@@ -1,7 +1,7 @@
-Hello <%= @invitation.email %>,
+<%= t('inv_request.hello')%> <%= @invitation.email %>,
 
-The user <%= @invitation.user.username %> has invited you to <%= Rails.application.name %> (<%= Rails.application.root_url %>)<%= @invitation.memo.present? ? raw("\n\n   #{@invitation.memo}") : "" %>
+<%= t('inv_mail.user')%> <%= @invitation.user.username %> <%= t('inv_mail.invited')%> <%= Rails.application.name %> (<%= Rails.application.root_url %>)<%= @invitation.memo.present? ? raw("\n\n   #{@invitation.memo}") : "" %>
 
-To accept this invitation and create an account, visit the URL below:
+<%= t('inv_mail.p1')%>
 
-<%= Rails.application.root_url %>invitations/<%= @invitation.code %>
+<%= Rails.application.root_url %><%= t('inv_mail.inv')%><%= @invitation.code %>

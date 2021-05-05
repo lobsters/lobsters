@@ -61,7 +61,7 @@
               v[:title] %></a>
           <% end %>
           <% if !@user && Rails.application.open_signups? %>
-            <strong><a href="/invitations/open" class="signup-text">Sign Up Now</a></strong>
+            <strong><a href="/invitations/open" class="signup-text"><%= t('layout.app.sign')%></a></strong>
           <% end %>
         </span>
       </div>
@@ -99,22 +99,22 @@
           <%= render :partial => "layouts/footer" %>
         <% else %>
           <% if !@user && Rails.application.open_signups? %>
-            <a href="/invitations/open">Join <%= Rails.application.name %></a>
+            <a href="/invitations/open"><%= t('layout.app.join')%> <%= Rails.application.name %></a>
           <% end %>
-          <a href="/moderations">Moderation Log</a>
+          <a href="/moderations"><%= t('layout.app.moderation')%></a>
           <% if @user && @user.can_see_invitation_requests? &&
           (iqc = InvitationRequest.verified_count) > 0 %>
-            <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
+            <a href="/invitations"><%= t('layout.app.invitation')%> (<%= iqc %>)</a>
           <% end %>
           <% if @user && @user.is_moderator? &&
           (hrc = HatRequest.count) > 0 %>
-            <a href="/hats/requests">Hat Requests (<%= hrc %>)</a>
+            <a href="/hats/requests"><%= t('layout.app.hat')%> (<%= hrc %>)</a>
           <% else %>
-            <a href="/hats">Hats</a>
+            <a href="/hats"><%= t('layout.app.hats')%></a>
           <% end %>
-          <a href="/chat">Chat</a>
-          <a href="/privacy">Privacy</a>
-          <a href="/about">About</a>
+          <a href="/chat"><%= t('layout.app.chat')%></a>
+          <a href="/privacy"><%= t('layout.app.privacy')%></a>
+          <a href="/about"><%= t('layout.app.about')%></a>
         <% end %>
       </div>
       <div class="clear"></div>

@@ -1,9 +1,15 @@
 <div class="flash-error">
-  Your comments have been heavily flagged across several stories in the last <%= @flag_warning_int[:human] %>.
-  Review <%= link_to 'your standing', user_standing_path(@user.username) %> for context on how unusual this is.
-  Reconsider your behavior or <a href="https://xkcd.com/386">take a break</a>.
+<%= t('users.flag.p1')%>
+  <%= @flag_warning_int[:human] %>.
+  <%= t('users.flag.p2')%> 
+  <%= link_to 'your standing', user_standing_path(@user.username) %> 
+  <%= t('users.flag.p3')%>
+  <a href="https://xkcd.com/386"><%= t('users.flag.p4')%></a>.
   <br><br>
 
-  You could also talk to <%= link_to 'a mod', moderators_path %> about what went wrong, or
-  delete your account from the bottom of your <%= link_to 'settings', settings_path %> if you prefer to leave.
+  <%= t('users.flag.p5')%> 
+  <%= link_to 'a mod', moderators_path %> 
+  <%= t('users.flag.p6')%> 
+  <%= link_to 'settings', settings_path %> 
+  <%= t('users.flag.p7')%>
 </div>

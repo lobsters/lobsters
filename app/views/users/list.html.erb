@@ -14,9 +14,9 @@
         <% end %>
         ><%= user.username %></a>
       <% if user.is_admin? %>
-        (administrator)
+       <%= t('users.list.admin')%>
       <% elsif user.is_moderator? %>
-        (moderator)
+        <%= t('users.list.mod')%>
       <% else %>
         (<%= user.karma %>)
       <% end %>
@@ -24,3 +24,5 @@
   <% end %>
   </ul>
 </div>
+
+

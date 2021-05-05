@@ -27,7 +27,7 @@
 
       <p>
       <%= t('login.index.p2')%>
-        <%= link_to t('login.index.resetpassword'), forgot_password_path %>.
+        <%= link_to "Reset your password", forgot_password_path %>.
       </p>
 
       <% if Rails.application.open_signups? %>
@@ -36,11 +36,12 @@
         </p>
       <% else %>
         <p>
-        <%= t('login.index.p5')%> <a href="/u/"><%= t('login.index.p6')%></a> <%= t('login.index.legend')%>
+        <%= t('login.index.p5')%><a href="/u/"><%= t('login.index.p6')%></a> <%= t('login.index.p7')%>
+        
         <% if Rails.application.allow_invitation_requests? %>
-          <a href="/invitations/request">request one publicly</a>.
+          <a href="/invitations/request"><%= t('login.index.p8')%></a>.
         <% else %>
-          join the <a href="/chat">community in chat</a>.
+          join the <a href="/chat"><%= t('login.index.p9')%></a>.
         <% end %>
         </p>
       <% end %>

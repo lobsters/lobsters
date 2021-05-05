@@ -1,15 +1,15 @@
-Hello <%= @invitation_request.email %>,
+<%= t('inv_request.hello')%> <%= @invitation_request.email %>,
 
-Someone at <%= @invitation_request.ip_address %> has submitted an invitation request to
+<%= t('inv_request.p1')%> <%= @invitation_request.ip_address %> <%= t('inv_request.p2')%>
 <%= Rails.application.name %>.
 
-  Name: <%= @invitation_request.name %>
-  E-mail: <%= @invitation_request.email %> (won't be displayed to other users)
-  Memo: <%= @invitation_request.memo %>
+<%= t('inv_request.hello')%> <%= @invitation_request.name %>
+<%= t('inv_request.hello')%> <%= @invitation_request.email %> <%= t('inv_request.users')%>
+Memo: <%= @invitation_request.memo %>
 
-If this is you, visit the URL below to confirm your request and
-display it to other logged-in users.
+<%= t('inv_request.p3')%>
 
   <%= Rails.application.root_url %>invitations/confirm/<%= @invitation_request.code %>
 
-If this is not you, you can delete this message.
+<%= t('inv_request.p4')%>
+

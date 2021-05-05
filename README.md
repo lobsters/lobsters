@@ -2,7 +2,7 @@
 [![CircleCI](https://img.shields.io/circleci/build/github/greta-code-pizza/lobsters/circleci-project-setup)](https://app.circleci.com/pipelines/github/greta-code-pizza)
 
 
-### Lobsters Rails Project 
+### Hipsters Rails Project 
 
 This is the
 [quite sad](https://www.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)

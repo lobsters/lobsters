@@ -1,12 +1,12 @@
-<a href="/moderations">Moderation Log</a>
+<a href="/moderations"><%= t('layout.footer.a1')%></a>
 <% if @user && @user.can_see_invitation_requests? && (iqc = InvitationRequest.verified_count) > 0 %>
-  <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
+  <a href="/invitations"><%= t('layout.footer.a2')%> (<%= iqc %>)</a>
 <% end %>
 <% if @user && @user.is_moderator? && (hrc = HatRequest.count) > 0 %>
-  <a href="/hats/requests">Hat Requests (<%= hrc %>)</a>
+  <a href="/hats/requests"><%= t('layout.footer.a3')%> (<%= hrc %>)</a>
 <% else %>
-  <a href="/hats">Hats</a>
-  <a href="/tags">Tags</a>
+  <a href="/hats"><%= t('layout.footer.a4')%></a>
+  <a href="/tags"><%= t('layout.footer.a5')%></a>
 <% end %>
 
 <% if false %>
@@ -14,5 +14,7 @@
   <a href="/bbs">BBS<%= bbs_count == 0 ? "" : " (#{bbs_count})" %></a>
 <% end %>
 <a href="https://github.com/lobsters/lobsters/wiki">Wiki</a>
-<a href="/privacy">Privacy</a>
-<a href="/about">About</a>
+<a href="/privacy"><%= t('layout.footer.a6')%></a>
+<a href="/about"><%= t('layout.footer.a7')%></a>
+
+

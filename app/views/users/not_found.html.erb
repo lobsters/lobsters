@@ -1,8 +1,9 @@
 <div class="box wide">
-  <div class="legend">User not found</div>
+  <div class="legend"><%= t('users.not.legend')%></div>
 
   <p>
-    If this user used to exist, they changed their username.
-    Check the <a href="/moderations?moderator=%28Users%29&what%5Busers%5D=users">moderation log</a>.
+  <%= t('users.not.p1')%>
+    <a href="/moderations?moderator=%28Users%29&what%5Busers%5D=users">
+    <%= t('users.not.p2')%></a>.
   </p>
 </div>

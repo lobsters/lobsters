@@ -1,8 +1,8 @@
 <% is_admin = @user.try(:is_admin?) %>
 <div class="box wide">
-  <div class="legend">Tags</div>
+  <div class="legend"><%= t('tags.edit.legend')%></div>
 
-  <p>Inactive tags can no longer be used. You can also <a href="/filters">filter out stories by tag</a>.</p>
+  <p><%= t('tags.index.p1')%> <a href="/filters"><%= t('tags.edit.filter')%></a>.</p>
 
   <% @categories.each do |category| %>
     <h2><%= link_to category.category, category_path(category) %></h2>
@@ -15,7 +15,7 @@
         <span class="<%= filtered || !tag.active ? 'inactive_tag' : '' %>"><%= tag.description %></span>
         <span class="byline">
         <% if !tag.active %>
-          | <em>inactive</em>
+          | <em><%= t('tags.edit.inactive')%></em>
         <% end %>
         <% if filtered %>
           | <%= link_to "filtered", filters_path(anchor: tag.tag) %>
@@ -34,3 +34,5 @@
     </div>
   <% end %>
 </div>
+
+

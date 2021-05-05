@@ -1,7 +1,7 @@
 <div class="box wide">
   <div class="legend">
     <span>
-      Connect Your Account (<%= @user.username %>) to Keybase
+    <%= t('key.new.legend1')%> (<%= @user.username %>) <%= t('key.new.legend2')%>
     </span>
   </div>
   <div id="gravatar">
@@ -19,7 +19,7 @@
     <%= f.hidden_field "kb_ua", value: @kb_ua %>
     <%= f.hidden_field "username", value: @user.username %>
     <p>
-      <%= f.submit "Confirm" %>
+      <%= f.submit t('key.new.confirm') %>
     </p>
   <% end %>
 </div>

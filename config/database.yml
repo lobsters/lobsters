@@ -8,7 +8,6 @@ default: &default
 development:
   <<: *default
   database: <%= ENV["DB_NAME"] %>
-  socket: /Applications/MAMP/tmp/mysql/mysql.sock
 
 test:
   <<: *default
@@ -21,3 +20,6 @@ staging:
   <<: *default
   database: <%= ENV["DB_NAME"] %>
   
+production:
+  <<: *default
+  database: <%= ENV["DB_NAME"] %>

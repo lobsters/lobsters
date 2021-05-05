@@ -22,7 +22,6 @@ jobs:
           command: bundle -v
       - ruby/bundle-install
       # Database setup
-      - run: mv config/database.yml config/database.yml.save
       - run: mv config/database.yml.sample config/database.yml
       - run: RAILS_ENV=test bundle exec rake db:create
       - run: RAILS_ENV=test bundle exec rake db:schema:load

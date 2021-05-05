@@ -1,4 +1,4 @@
-class NormalizeIdsAndFks < ActiveRecord::Migration[5.2]
+class NormalizeIdsAndFks < ActiveRecord::Migration[6.0]
   def change
     # ids
     change_column :comments,            :id,                         :bigint, unsigned: true, unique: true, null: false, auto_increment: true

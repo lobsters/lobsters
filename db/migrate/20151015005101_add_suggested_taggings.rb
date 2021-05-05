@@ -1,4 +1,4 @@
-class AddSuggestedTaggings < ActiveRecord::Migration
+class AddSuggestedTaggings < ActiveRecord::Migration[6.0]
   def change
     create_table :suggested_taggings do |t|
       t.integer :story_id

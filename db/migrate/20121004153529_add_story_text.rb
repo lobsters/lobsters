@@ -1,4 +1,4 @@
-class AddStoryText < ActiveRecord::Migration
+class AddStoryText < ActiveRecord::Migration[6.0]
   def up
     add_column :stories, :story_cache, :text
   end

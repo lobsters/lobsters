@@ -1,5 +1,5 @@
 # coding: utf-8
-class AddDomainToStories < ActiveRecord::Migration[5.2]
+class AddDomainToStories < ActiveRecord::Migration[6.0]
   class Story < ActiveRecord::Base; end
   class Domain < ActiveRecord::Base; end
 

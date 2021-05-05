@@ -1,4 +1,4 @@
-class CreateCategories < ActiveRecord::Migration[5.2]
+class CreateCategories < ActiveRecord::Migration[6.0]
   class Category < ActiveRecord::Base
     has_many :tags
   end

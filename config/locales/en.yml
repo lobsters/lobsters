@@ -33,8 +33,19 @@ en:
     text: "Tip: read stories across multiple categories with"
 
   comments:
-    #a traduire comment
+    #a traduire comment en fr
     comment:
+      prev: "previewed"
+      now: "just now"
+      edited: "edited"
+      e-mailed: "e-mailed"
+      delete: "delete"
+      flag: "flag"
+      unflag: "unflag"
+      reply: "reply"
+      on: "on:"
+      visible: "Visible to moderator:"
+
     _commentbox:
       placeholder: "You must be logged in to leave a comment."
       markdown: "Markdown formatting available"
@@ -124,7 +135,6 @@ en:
       comment: "Comment:"
       placeholder_comment: "Will only be shown to moderators during approval. Please link to discussions where this hat would be useful for speaking on behalf of your project."     
       request_hat_bnt : "Request Hat"
-
     index:
       legendR: "Request Hat"
       legend: "Hats"
@@ -136,7 +146,6 @@ en:
       table_th2: "Hat"
       table_th3: "Link"
       none: "none"
-    
     request_index: 
       legend: "Requested Hats"
       no_hat_requests: "No hat requests."
@@ -275,7 +284,165 @@ en:
       p10_p1: "Users can flag stories and comments when there's a serious problem that needs moderator attention.
               Users must reach "
       p10_p2: "karma to flag. To guide usage and head off distracting meta conversations ('Why was this flagged!?', etc), flagging requires selecting from a preset list of reasons."
-      #en cours
+      #suite ajout à trad dans about
+      p11_p1: "For stories, these are:
+              ''Off-topic'' for stories that are not about computing;
+              ''Already Posted'' for duplicate submissions and links that elaborate on or responses to a thread that's less than a week old (see "
+      p11_p2: "; and
+              ''Broken Link'' for links that 404, 500, or present a paywall;
+              ''Spam'' for links that promote a commercial service."
+      p12_p1: "For comments, these are:
+              ''Off-topi'' for drifting into meta or topics that aren't related to the story;
+              ''Me-to'' when a comment doesn't add new information, typically a single sentence of appreciation, agreement, or humor;
+              ''Trol'' for derailing conversations into classic arguments, well-intentioned or not;
+              ''Unkin'' when uncharitable, insulting, or dismissive;
+              and
+              ''Spam'' for promoting commercial services."
+      p13_p1: "Less than 1% of stories or comments get flagged, and users are not automatically punished by flags.
+              Users whose stories or comments are getting flagged significantly more often are strongly encouraged to talk to mods about what's not working.
+              (Please don't use flagging to try to push down topics or people you don't like; click ''hide'' on the story and "
+      p13_p2: "move on"
+      merging: "merging"
+      p13_p3: " rather than clutter up the mod dashboard with false alarms.)"
+      h2: "Transparency Policy"
+      p14_p1: "All"
+      p14_p2: "moderator actions"
+      p14_p3: "on this site are visible to
+              everyone and the identities of those moderators are "
+      p14_p4: "public"
+      p14_p5: "While the individual actions of a moderator may cause debate, there should be no question about if an action happened or who is responsible."
+      p15_p1: "If users are disruptive enough to warrant banning, they will be banned
+              absolutely, given notice of their banning, and their disabled user profile
+              will indicate which moderator banned them and why.
+              There will be no "
+      p15_p2: "shadow banning"
+      p15_p3: "or other secret moderation actions."
+      p16_p1: "The"
+      p16_p2: "source code to this site"
+      p16_p3: "and its"
+      p16_p4: "provisioning and deployment"
+      p16_p5: "are made available under a 3-clause BSD license for viewing, auditing, forking, or contributing to.
+              The codebase is used to run a dozen or so sister sites (that we know of) and we"
+      p16_p6: "keep a list"
+      p16_p7: "please get in touch if you've launched one."
+      p17_p1: "The Lobsters community is in a sweet spot that it's large enough to be worth asking questions about and small enough the answers make sense.
+              We have"
+      p17_p2: "some basic stats"
+      p17_p3: "available, and Peter is happy to run queries against the"
+      p17_p4: "database"
+      p17_p5: " and Rails/MySQL/nginx logs (but not write them for you),
+              as long as they don't reveal personal info like IPs, browsing, and voting or create ''worst-of'' leaderboards celebrating most-flagged users/comments/stories.
+              If you're an academic researcher, please"
+      p17_p6: "be like MIT"
+      p17_p7: ", not like"
+      p17_p8: "secretly experimenting on maintainers without IRB review."
+      p18_p1: "If you dislike the content or moderation policies here, you may prefer"
+      p18_p2: "Or you could use"
+      p18_p3: "our codebase"
+      p18_p4: "to start your own site."
+      h2_4: "Other Technical Features"
+      p19_1: "Mailing list mode"
+      p19_2: "can be enabled
+            per-user to receive all new stories (including their plain-text content as
+            fetched and extracted by"
+      p19_4: ") and user comments as e-mails, mirroring discussion threads offline.  This makes it
+            easy and efficient to read new stories as well as keep track of new comments
+            on old threads or stories, just like technical mailing lists or Usenet of
+            yore.  Each user is assigned a private mailing list address at this domain
+            which allows them to reply to stories or comments directly in their e-mail
+            client.  These e-mails are then converted and submitted to the website as
+            comments, just as if the comment was posted through a web browser."
+      p19_5: "Don't just delete that error message. You didn't set up mailing list mode, right? This really isn't your about page, write one from scratch."
+      p20_1: "Private messaging" 
+      p20_2:  "enables users to communicate privately
+              without having to publicly disclose an e-mail address, and users can receive
+              e-mail and"
+      p20_2: "Pushover"
+      p20_3: "notifications of new private messages."
+      p21_1: "Responsive design" 
+      p21_2: "enhances functionality on smaller screens
+              such as phones and tablets without having to use a separate URL, 3rd party
+              (often read-only) websites, or mobile apps."
+      p22_1: "Integrated search engine"
+      p22_2: "covers all submitted stories and comments, including full-text caches of all submitted
+            story contents.  Searching for a keyword will often bring up relevant stories
+            that don't even mention that keyword in the URL or title."
+      p23_1: "Story merging"
+      p23_2: "collects comments on a topic that would otherwise fragment across multiple stories.
+              This keeps the front page from being overwhelmed by a single topic and the discussion together for those interested (or so disinterested they'd prefer to hide it).
+              Moderators merge stories on the same topic submitted within a week.
+              Here's a"
+      p23_3: "small"
+      p23_4: "and"
+      p23_5: "large"
+      p23_5: "example."
+      p24_1: "Fuzzy-matching of submitted story URLs"
+      p24_2: "to avoid duplicate submissions of similar URLs that differ only in "
+      p24_3: ", trailing slashes, useless analytics parameters, etc.  When
+              using the story submission bookmarklet, story URLs are automatically
+              converted to use the page's canonical URL (if available) to present the best
+              URL to represent the story, as defined by the story's author or publisher."
+      p25_1: "User-suggested titles and tags"
+      p25_2: "can be automatically applied to a story when a quorum of users agrees on a new
+              title (such as removing a site's name, or appending the story's year of
+              publication) or set of tags, without any moderator action required."
+      p26_1: "Hats"
+      p26_2: "are a more formal process of
+              allowing users to post comments while ''wearing "
+      p26_3: "such and such "
+      p26_4: " hat'' to
+              give their words more authority (such as an employee speaking for the
+              company, or an open source developer speaking for the project)."
+      p27_1: "Per-tag, multi-tag and site-wide RSS feeds"
+      p27_2: "are available to the public and logged-in users have private RSS feeds that
+              filter out each user's"
+      p27_3: "filtered tags"
+      p28_1: "Official Twitter mirror"
+      p28_2: "posts all stories that have reached the front page to
+              the "
+      p28_3: "account on Twitter for easy following, retweeting/sharing, or archiving."
+      p29_1: "Tor onion/hidden service"
+      p29_2: "for anonymous access to the site."
+      p30_1: "Stickers"
+      p30_2: "will be available again when someone finds a service that will print and ship 2'' square vinyl stickers
+              with a blee <= 1/16'' (preferably full-bleed) directly to people who want them."
+      p31_1: "Lobsters is hosted at DigitalOcean. We"
+      p31_2: "recently migrated"
+      p31_3: "and our setup is still in flux.
+              Please hassle pushcx if he hasn't filled in details by March 2021.
+              Our domain name is registered with "
+      p31_4: "CRI Domains"
+      p31_5: ", who donated our first year of registration.
+              DNS is provided by"
+      p31_6: "and we use"
+      p31_7: "for backups, both of which pushcx pays for."
+      p32_1: "Sponsor of the lobster emoji"
+      p32_2: "In February 2018, Lobsters"
+      p32_3: "held a fundraiser"
+      p32_4: "to officially adopt the new lobster emoji in support of the Unicode Foundation."
+      p33_1: "The name ''Lobste.rs'' is a cute"
+      p33_2: "domain hack"
+      p33_3: "without any deeper meaning."
+      p33_4: "It"
+      p33_5: "has nothing to do"
+      p33_6: "with self-help guru Jordan Peterson, whose fans started to"
+      p33_7: "call themselves ''lobsters'' "
+      p33_8: "about six years after we started."
+      p34_1: "If you prefer to read Lobsters on a dark background instead of a light one, there are a few options. You could install the"
+      p34_2: "Dark Reader extension"
+      p34_3: "or an extension to add your own CSS to sites like"
+      p34_4: "or"
+      p34_5: "never Stylish"
+      p34_6: "Themes:"
+      p34_7: "Discussion:"
+      p34_8: "If you prefer the article links or comment links to open a new tab instead of navigating in your current tab you can add"
+      p34_9: "a client-side script"
+      p34_1O: "to do so."
+
+
+
+
+
     
     chat:
       legend: "Lobsters Chat"
@@ -815,102 +982,107 @@ en:
     new:
       legend: "Tag Create"
 
-    users:
-      flag:
-        p1: "Your comments have been heavily flagged across several stories in the last"
-        p2: "Review "
-        p3: "for context on how unusual this is. Reconsider your behavior or "
-        p4: "take a break"
-        p5: "You could also talk to "
-        p6: "about what went wrong, or
+  users:
+    flag:
+      p1: "Your comments have been heavily flagged across several stories in the last"
+      p2: "Review "
+      p3: "for context on how unusual this is. Reconsider your behavior or "
+      p4: "take a break"
+      p5: "You could also talk to "
+      p6: "about what went wrong, or
             delete your account from the bottom of your"
-        p7: "if you prefer to leave."
-      inv:
-        p1: "Invitations are unlimited, but persons you invite will be associated with your
+      p7: "if you prefer to leave."
+    inv:
+      p1: "Invitations are unlimited, but persons you invite will be associated with your
             account in the "
-        p2: "user tree"
-        p3: "and you may be responsible for them
+      p2: "user tree"
+      p3: "and you may be responsible for them
             if they cause problems.  Please use your discretion when inviting persons you
             don't personally know."
-        mail: "E-mail Address:"
-        memo: "Memo to User:"
-        send: "Send Invitation"
-      not:
-        legend: "User not found"
-        p1: "If this user used to exist, they changed their username.
-            Check the"
-        p2: "moderation log"
-      list:
-        admin: "(administrator)"
-        mod: "(moderator)"
-      show:
-        send: "Send a Message"
-        banned: "Banned user"
-        inactive: "Inactive user"
-        active: "Active"
-        administrator: "administrator"
-        moderator: "moderator"
-        user: "user"
-        with: "with invites"
-        submissions: "and story submissions"
-        disabled: "disabled"
-        joined: "Joined:"
-        inv: "invitation"
-        from: "from"
-        banned2: "Banned:"
-        left: "Left:"
-        averaging: ", averaging "
-        number: "number_with_precision"
-        per: "per story/comment"
-        storiessub: "Stories Submitted:"
-        commentspost: "Comments Posted:"
-        hats: "Hats:"
-        homepage: "Homepage:"
-        about: "About:"
-        mystery: "A mystery..."
-        h2: "Moderator Information"
-        flagged: "Flagged (1m):"
-        no: "No"
-        self: "Self Promoter:"
-        yes: "Yes"
-        last: "Last 10 Notes:"
-        new: "New Note:"
-        last2: "Last 10 Moderations:"
-        admin: "Admin Information"
-        recent: "Recent Votes:"
-        com: "comment"
-        unban": "Unban" 
+      mail: "E-mail Address:"
+      memo: "Memo to User:"
+      send: "Send Invitation"
+    not:
+      legend: "User not found"
+      p1: "If this user used to exist, they changed their username.
+              Check the"
+      p2: "moderation log"
+    list:
+      admin: "(administrator)"
+      mod: "(moderator)"
+    show:
+      send: "Send a Message"
+      banned: "Banned user"
+      inactive: "Inactive user"
+      active: "Active"
+      administrator: "administrator"
+      moderator: "moderator"
+      user: "user"
+      with: "with invites"
+      submissions: "and story submissions"
+      disabled: "disabled"
+      joined: "Joined:"
+      inv: "invitation"
+      from: "from"
+      averaging: ", averaging "
+      banned2: "Banned:"
+      per: "per story/comment"
+      left: "Left:"
+      commentspost: "Comments Posted:"
+      number: "number_with_precision"
+      homepage: "Homepage:"
+      storiessub: "Stories Submitted:"
+      mystery: "A mystery..."
+      hats: "Hats:"
+      about: "About:"
+      h2: "Moderator Information"
+      flagged: "Flagged (1m):"
+      no: "No"
+      self: "Self Promoter:"
+      yes: "Yes"
+      last: "Last 10 Notes:"
+      new: "New Note:"
+      last2: "Last 10 Moderations:"
+      admin: "Admin Information"
+      recent: "Recent Votes:"
+      com: "comment"
+      unban": "Unban" 
 
-        enable": "Enable Invites"
-        p1: "Banning or disabling invites for a user will send an e-mail to the user with the reason below,
+      enable": "Enable Invites"
+      p1: "Banning or disabling invites for a user will send an e-mail to the user with the reason below,
              with your e-mail address as the Reply-To so the user can respond"
-        reason: "Reason:"
-        ban": "Ban"
-        disable": "Disable Invites"
-
-
-      standing:
-        h1: "Breakdown of commenters receiving flags in the last "
-        p1: "Most commenters get zero or very few flags across their comments in the last"
-        p2: "Currently, users who see the warning have been flagged between"
-        p3: "and"
-        p4: "times."
-        p5: "Or, to make that visible:"
-        P6: "If you're seeing the warning, the best case scenario is that you review your recent flagged comments below, maybe talk to "
-        p7: "about what you think went wrong, and meet community norms.
+      reason: "Reason:"
+      ban": "Ban"
+      disable": "Disable Invites"
+    standing:
+      h1: "Breakdown of commenters receiving flags in the last "
+      p1: "Most commenters get zero or very few flags across their comments in the last"
+      p2: "Currently, users who see the warning have been flagged between"
+      p3: "and"
+      p4: "times."
+      p5: "Or, to make that visible:"
+      P6: "If you're seeing the warning, the best case scenario is that you review your recent flagged comments below, maybe talk to "
+      p7: "about what you think went wrong, and meet community norms.
             If you can't or don't want to do that, you can delete your account from the bottom of your "
-        p8: "We count total number of flags because that's the most direct measurement of harm:
+      p8: "We count total number of flags because that's the most direct measurement of harm:
             occasionally one or two really nasty comments that hit deep negative scores,
             but most often it's a consistent pattern of inappropriate, rude, dismissive, or abusive behavior poisoning many discussions.
             We've tried more complicated measurements, but they correlate almost perfectly to a simple count and are a lot harder to explain than the total number of times another user has flagged your behavior as inappropriate."
-        p9: "The warning (and appearance on a mod dashboard) doesn't kick in until an author has received an unusually high number of flags across several comments on several threads because anyone can have a bad day or a bad thread.
+      p9: "The warning (and appearance on a mod dashboard) doesn't kick in until an author has received an unusually high number of flags across several comments on several threads because anyone can have a bad day or a bad thread.
             The problem is a pattern across many threads, especially if it's gone on a while."
-        p10: "To address some common objections:
+      p10: "To address some common objections:
             This isn't based on the percentage of the author's comments flagged or the average score because good comments don't excuse bad ones.
             This doesn't ignore comments where you feel provoked or justified because you're still responsible for your words.
             This includes flags on comments with net positive scores because Lobsters isn't a contest to write comments that are slightly funnier or more insightful than they are cruel.
             If you think the people you're responding to don't deserve courtesy and respect: why do you spending time talking to them at all?"
-        p11: "For reference, your recent flagged comments are below."
+      p11: "For reference, your recent flagged comments are below."
+    tree:
+      newest: "Newest users:"
+      admi: "(administrator)"
+      mod: "(moderator)"
+
+
+      
 
 
 

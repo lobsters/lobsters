@@ -63,13 +63,13 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% end %>
 
       <% if comment.previewing %>
-        previewed
-        just now
+        <%= t('comments.comment.prev')%>
+        <%= t('comments.comment.now')%>
       <% else %>
         <% if comment.has_been_edited? %>
-          edited
+          <%= t('comments.comment.editd')%>
         <% elsif comment.is_from_email? %>
-          e-mailed
+          <%= t('comments.comment.e-mailed')%>
         <% end %>
         <% is_unread ||= false %>
         <%= time_ago_in_words_label(comment.has_been_edited? ? comment.updated_at : comment.created_at) %>
@@ -91,9 +91,9 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <% elsif !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
           |
           <% if @user && @user.is_moderator? && @user.id != comment.user_id %>
-            <a tabindex="0" class="comment_moderator" href="#c_<%= comment.short_id %>">delete</a>
+            <a tabindex="0" class="comment_moderator" href="#c_<%= comment.short_id %>"><%= t('comments.comment.delete')%></a>
           <% else %>
-            <a tabindex="0" class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>
+            <a tabindex="0" class="comment_deletor" href="#c_<%= comment.short_id %>"><%= t('comments.comment.delete')%></a>
           <% end %>
         <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
           |
@@ -101,20 +101,20 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <% end %>
 
         <% if can_flag && !flagged %>
-          | <a class="flagger">flag</a>
+          | <a class="flagger"><%= t('comments.comment.flag')%></a>
         <% elsif flagged %>
-          | <a class="flagger">unflag</a>
+          | <a class="flagger"><%= t('comments.comment.unflag')%></a>
         <% else %>
           <span class="flagger flagger_stub"></span>
         <% end %>
 
         <% if @user && !comment.story.is_gone? && !comment.is_gone? %>
             |
-            <a tabindex="0" class="comment_replier" unselectable="on">reply</a>
+            <a tabindex="0" class="comment_replier" unselectable="on"><%= t('comments.comment.reply')%></a>
         <% end %>
 
         <% if defined?(show_story) && show_story %>
-          | on:
+          | <%= t('comments.comment.on')%>
           <a href="<%= comment.story.comments_path %>"><%= comment.story.title %></a>
         <% end %>
 
@@ -136,7 +136,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% if comment.is_gone? %>
         <p>
         <span class="na">
-          [<%= comment.gone_text %><% if @user && @user.is_moderator? %> Visible to moderator:<% end %>]
+          [<%= comment.gone_text %><% if @user && @user.is_moderator? %> <%= t('comments.comment.visible')%><% end %>]
         </span>
         </p>
         <% if @user && @user.is_moderator? %>
@@ -148,3 +148,5 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
     </div>
   </div>
 </div>
+
+

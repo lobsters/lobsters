@@ -170,16 +170,8 @@ fr:
       example: "exemples:"
       li6: "Il maintient le site sur le sujet en n'autorisant qu'une liste prédéfinie de balises. Ces balises représentent ce que la plupart des utilisateurs du site veulent lire, donc le contenu qui ne rentre dans aucune catégorie ne doit pas être soumis. Il permet également d'organiser les articles et de les rechercher plus facilement"
       li7: 
-        p1: "It promotes discussion.  On a site with separate forums, a Ruby programmer
-            would probably subscribe to a Ruby forum, but not a Python one.  When a link
-            is posted to the Python forum, that Ruby programmer would probably never see
-            it, even though they may have something useful to say about it (perhaps the
-            link is about a Python library which does the same thing as a Ruby library
-            which that Ruby programmer created).  On this site, the link would get posted
-            with a"
-        p2: "tag and shown to everyone,
-            encouraging the Ruby programmer to read and comment on it (unless that Ruby
-            programmer disliked Python enough to"
+        p1: "Cela favorise la discussion, Sur un site avec des forums séparés, un développeur Ruby s'abonnerait probablement à un forum Ruby, mais pas à un forum Python. Quand un lien est posté sur le forum Python, le développeur Ruby ne le verrait probablement jamais même si il aurait quelque chose d'utile à dire à ce sujet (peut être le lien concerne une bibliothèque Python qui fait la même chose qu'une bibliothèque Ruby). Sur ce site, le lien serait affiché avec un "
+        p2: "tag et montré à tout le monde, pour encourager le développeur Ruby à le lire et le commenter (à moins que le développeur Ruby n'aime vraiment pas Python pour"
         p3: "it out."
         python: "python"
       li8: "It keeps the community coherent.  Often stories contain discussion

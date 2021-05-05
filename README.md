@@ -1,5 +1,5 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/9d0328e288fcf5afb83e/maintainability)](https://codeclimate.com/github/greta-code-pizza/lobsters/maintainability) 
-![CircleCI](https://img.shields.io/circleci/build/github/greta-code-pizza/lobsters/circleci-project-setup)
+[![CircleCI](https://img.shields.io/circleci/build/github/greta-code-pizza/lobsters/circleci-project-setup)](https://app.circleci.com/pipelines/github/greta-code-pizza)
 
 
 ### Lobsters Rails Project 

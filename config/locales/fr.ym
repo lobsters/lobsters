@@ -174,171 +174,138 @@ fr:
         p2: "tag et montré à tout le monde, pour encourager le développeur Ruby à le lire et le commenter (à moins que le développeur Ruby n'aime vraiment pas Python pour"
         p3: "it out."
         python: "python"
-      li8: "It keeps the community coherent.  Often stories contain discussion
-            about more than one topic, yet on other sites they are confined to a single
-            category/forum, limiting the exposure.  The link could be submitted to more
-            than one forum, but then each conversation would remain separate and users
-            would rarely interact with users from other forums.  On this site, the story
-            would simply be tagged with multiple tags and all users would see all
-            discussion about the story in a single location."
-      p3_p1: "Creating new tags and retiring old tags is done by the community by submitting, discussing, and voting on"
-      p3_p2: "tagged requests about them, and these events are"
-      p3_p3: "since 2018-04). To propose a tag, post a"
-      p3_p4: "thread with the name and description.
-              Explain the scope, list existing stories that should have been tagged, make a case for why people would want to specifically filter it out, and justify the increased complexity for submitters and mods."
-      logged: "logged"
-      p4_p1: "Lobsters is focused pretty narrowly on computing; tags like"
-      p4_p2: "don't imply every piece of art is on-topic.
-              Some rules of thumb for great stories to submit: Will this improve the reader's 
-              next program? Will it deepen their understanding of their last program? Will it 
-              be more interesting in five or ten years?"
-      p5: "Some things that are off-topic here but popular on larger, similar sites:
-          entrepreneurship, management, news about companies that employ a lot of programmers,
-          investing, world events, anthropology, self-help, personal productivity systems,
-          last-resort customer service requests via public shaming,
-          'I wanted to see what this site's amazing users think about this off-topic thing',
-          and defining the single morally correct economic and political system for the entire world when we can't even settle tabs vs. spaces."
-      h2_2: "Invitation Tree"
-      p6_p1: "The full"
-      p6_p2: "is public and each user's profile
-              shows who invited them.  This provides some degree of accountability and
-              helps identify voting rings."
-      usertree: "user tree"
-      p7_p1: "New users must be invited by a current user, though there is no formal vetting process.
-              Invitations are used as a mechanism for spam-control,
-              to slow registrations to a pace"
-      p7_p2: "and to encourage users to be nice, not to make the Lobsters userbase an elite club.
-            The quickest way to receive an invitation is to talk to someone you "
-      p7_p3: "If you wrote a link that was posted, please reach out in"
-      p7_p4: ", we'd love to have you join the discussion.
-            Finally, if you can't find anyone you know in the invitation tree and didn't author something posted to the site,"
-      p7_p5: "you can"
-      p7_p6: "consider joining the"
-      p7_p7: "community in the chat room"
-      acculturate: "we can acculturate"
-      recognize: "recognize from the site"
-      request: "request an invite"
-      h2_3: "Ranking"
-      p8_p1: "All story and comment ranking on this site comes from user activity.
-              All users have equal votes, with no special priorities or penalties for specific users or domains.
-              Moderators have no ability to raise or"
-      p8_p2: "the rankings of stories or comments (besides voting like any user).
-              Per-tag"
-      p8_p3: "affect all stories with those tags, but these modifiers (and"
-      p8_p4: "are public.
-              Domains used for marketing analytics are banned and tracking parameters are removed from links
-              (look for"
-      p8_p5: "and"
-      p8_p6: "in"
-      lower: "lower"
-      changes: "changes"
-      hotness: "hotness modifiers"
-      p9_p1: "There's no limit on how many invitations a user can send (though we might at some point, to manage"
-      p9_p2: "When accounts are banned for spam,"
-      p9_p3: "sockpuppeting"
-      p9_p4: ", or other abuse,
-              moderators will consider disabling their inviter's ability to send invitations or, rarely, also ban them."
-      growth: "growth"
-      p10_p1: "Users can flag stories and comments when there's a serious problem that needs moderator attention.
-              Users must reach "
-      p10_p2: "karma to flag. To guide usage and head off distracting meta conversations ('Why was this flagged!?', etc), flagging requires selecting from a preset list of reasons."
-      #en cours
+      li8: "Cela garde la communauté cohérente. Les histoires contiennent souvent des discussions sur plus d'un sujet, mais sur d'autres sites, ils sont confinés à une seule catégorie/forum, limitant l'exposition. Le lien pourrait être soumis à plus qu'un seul forum, mais chaque conversation resterait séparée et les utilisateurs interagiraient rarement avec les utilisateurs d'autres forums. Sur ce site, l'histoire serait simplement étiquetée avec plusieurs tags et tous les utilisateurs verraient toutes les discussions sur l'histoire en un seul endroit"
+      p3_p1: "La création de nouvelles balises et la suppression des anciennes balises sont effectuées par la communauté en soumettabt, discutant et en votant pour"
+      p3_p2: "Les demandes taggées à leur sujet, et les événements sont"
+      p3_p3: "depuis 2018-04). Pour proposer un tag, postez un"
+      p3_p4: "Suivant avec le nom et la description. Expliquez la portée, répertoriez les histoires existantes qui auraient du être taggées, expliquez pourquoi les gens voudraient spécifiquement les filtrer et justifiez la complexité accrue pour les contributeurs et les modérateurs"
+      logged: "connecté"
+      p4_p1: "Lobsters se concentre assez étroitement sur l'informatique, et des tags comme"
+      p4_p2: "n'implique pas que chaque oeuvre d'art est sur le sujet. Quelques règles de base pour de bons articles à soumettre: Améliorent-ils les futurs programmes du lecteur? Cela approfondira-t-il leur compréhension du dernier programme? Cela va t il être plus intéressant dans cinq ou dix ans?"
+      p5: "Certaines choses populaires sur des sites plus grands similaires à celui ci sont ici hors sujet: entrepreneuriat, management, actialité des entreprises qui emploient beaucoup de développeurs, investissement, événements mondiaux, anthropologie, auto-assistance, système de productivité personnelle"
+      h2_2: "arborescence d'invitation"
+      p6_p1: "L'ensemble"
+      p6_p2: "Le profil de chaque utilisateurmontre qui a invité publiquement. Cela offre un certain degréde responsabilité et aide à identifier la valeur d'un vote"
+      usertree: "arborescence des utilisateurs"
+      p7_p1: "Les nouveaux utilisateurs doivent être invités par un utilisateur actuel, bien qu'il n'y ait pas de processus formel de   vérification.
+              Les invitations sont utilisées comme mécanisme de contrôle du spam,
+              pour ralentir les inscriptions à un rythme"
+      p7_p2: "et pour encourager les utilisateurs à être gentils, ne pas faire de la base d'utilisateurs Lobsters un club d'élite.
+            Le moyen le plus rapide de recevoir une invitation est de parler à quelqu'un que vous"
+      p7_p3: "Si vous avez écrit un lien qui a été publié, veuillez contacter"
+      p7_p4: ", nous serions ravis de vous voir participer à la discussion.
+            Enfin, si vous ne trouvez personne que vous connaissez dans l'arborescence des invitations et que vous n'avez pas créé de contenu publié sur le site,"
+      p7_p5: "vous pouvez"
+      p7_p6: "envisager de rejoindre la"
+      p7_p7: "communauté dans la salle de chat"
+      acculturate: "nous pouvons acculturer"
+      recognize: "reconnaître depuis le site"
+      request: "demander une invitation"
+      h2_3: "Rang"
+      p8_p1: "Tous les classements d'articles et de commentaires sur ce site proviennent de lactivité des utilisateurs. Tous les utilisateurs ont des votes égaux, sans priorité ni pénalités spéciales pour des utilisateurs pou des domaines spécifiques. Les modérateurs n'ont pas la capacité d'augmenter ou"
+      p8_p2: "le classement des articles ou des commentaires (en plus de voter comme n'importe quel utilisateur). par tag"
+      p8_p3: "affectent toutes les histoires avec ces tags, mais ces modificateurs (et"
+      p8_p4: "sont publiques. Les domaines utilisés pour l'analyse marketing sont interdits et les paramètres de suivi sont supprimés des liens (chercher"
+      p8_p5: "et"
+      p8_p6: "dans"
+      lower: "plus bas"
+      changes: "change"
+      hotness: "modifier les pertinences"
+      p9_p1: "Il n'y a pas de limite au nombre d'invitations qu'un utilisateur peut envoyer (bien que nous puissions à un moment donné, gérer"
+      p9_p2: "Quand le compte est banni pour spam,"
+      #p9_p3: "sockpuppeting"
+      p9_p4: ", ou tout autre abus,
+              les modérateurs envisageront de désactiver la capacité de leur invité à envoyer des invitations ou, rarement, de les interdire également."
+      growth: "croissance"
+      p10_p1: "Les utilisateurs peuvent signaler les histoires et les commentaires lorsqu'il y a un problème sérieux qui nécessite l'attention du modérateur.
+              Les utilisateurs doivent atteindre "
+      p10_p2: "karma à signaler. Pour guider l'utilisation et éviter les méta-conversations distrayantes («Pourquoi cela a-t-il été signalé!?», Etc.), le marquage nécessite une sélection dans une liste prédéfinie de raisons."
     
     chat:
-      legend: "Lobsters Chat"
-      p1_1: "An official real-time discussion channel is available to members and guests
-            of the site, hosted on the"
-      in: " in "
-      p1_2: ".  This channel was originally"
-      by: "by"
-      and: ", and"
-      p1_3: "are channel operators."
-      p2: "The policies and ideals of the discussion channel are the same as the
-            website; quality content and conversing, respect for other users, and no
-            spamming.  Slightly off-topic discussion is generally acceptable.  The
-            channel isn't busy enough that there's always someone talking, so don't be
-            surprised if you try to start a conversation and no one responds.  Leave it
-            open and you'll see activity, though we're most active during US work hours."
-      p3: "New contributors are always welcome on Lobsters.
-          If you are the author of or otherwise involved with a story that was submitted to the site, ask and someone can send you an invite.
-          We've unfortunately had problems with impersonation, so it helps a lot if you point out how your email address is linked to the story."
+      legend: "Chat Lobsters"
+      p1_1: "Un canal de discussion officiel en temps réel est à la disposition des membres et des invités
+            du site, hébergé sur le"
+      in: " dans "
+      p1_2: ".  Ce canal était originellement"
+      by: "par"
+      and: ", avec"
+      p1_3: "sont des opérateurs de canaux"
+      p2: "les politiques et idéaux du canal de discussion sont les mêmes que sur le site internet. Contenu et conversation de qualité, respect des autres utilisateurs et non spamming. une discussion légèrement hors sujet est généralement acceptable. Le canal n'est pas assez occupé pour qu'il y ait toujours quelqu'un qui parle, alors ne soyez pas surpris si vous essayez d'entamer une conversation et que personne ne répond. Laissez le ouvert et vous verrez une activité, bien que nous soyons plus actifs pendant les heures de travail aux Etats-Unis."
+      p3: "Les nouveaux contributeurs sont toujours les bienvenus sur Lobsters. Si vous êtes l'auteur ou impliqué d'une autre manière dans un article qui a été soumis au site "
        
-      p4: "Otherwise, you're welcome to join the community in the chat room.
-          Invites are not automatically extended, but typically someone will once they get to know you in chat.
-          They'll likely ask you for a link to your homepage or a public profile to feel confident that you're not a spammer."
-      p5_1: "Lurking in the channel is a bot creatively called"
-      p5_2: "It announces new stories submitted to the site and provides other useful features like showing the page title of URLs mentioned in the channel."
-      p6_1: "To participate in the discussion, join the"
-      p6_2: "channel on"
-      p6_3: "with an IRC client."
-      p7_1: "If you'd like a cloak to note that you've contributed to"
-      p7_2: "  or just for privacy as a regular user, contact a channel operator for a"
-      or: "or"
-      cloak: "cloak."
-      p8_1: "For a feed of stories without discussion,"
-      p8_2: "also posts new stories in "
-      p9_1: "Lobsters used to have an channel called "
-      p9_2: "for off-topic conversations (especially American politics) that ''boiled over'' from the main channel.
-            It was useful in the wake of some big events, but the mods "
-      p9_3: "didn't want to run it indefinitely<"
-      p9_4: "Community members independently run"
+      p4: "Sinon, vous êtes invités à rejoindre le communauté dans la salle de chat. Les invitations ne sont pas automatiquement prolongées, mais en général quelqu'un le fera une fois qu'il vous connaîtra dans le chat. Ils vous demanderont probablement un lien vers votre page d'accueil ou un profil publique pour s'assurer que vous n'êtes pas un spammeur"
+      p5_1: "lurking est un bot qui se cache dans le canal"
+      p5_2: "Il annonce les nouvelles histoires soumises sur le site et fournit d'autres fonctionnalités utiles telles que l'affichage du titre de page des URL mentionnées dans la chaîne."
+      p6_1: "Pour participer à la discussion, rejoignez le"
+      p6_2: "canal dans"
+      p6_3: "Avec le client IRC."
+      p7_1: "Si vous souhaitez qu'un voile signale que vous avez contribué à"
+      p7_2: "  ou juste pour la confidentialité en tant qu'utilisateur régulier, contactez un opérateur de canal pour un"
+      or: "ou"
+      cloak: "voile."
+      p8_1: "Pour un flux d'articles sans discussion,"
+      p8_2: "publie également de nouvelles histoires dans"
+      p9_1: "Lobsters utilisait un canal appelé"
+      p9_2: "pour des conversations hors sujet (en particulier la politique américaine) qui «débordaient» de la chaîne principale.
+            C'était utile à la suite de certains grands événements, mais les modérateurs "
+      p9_3: "ne voulaient pas continuer indéfiniment"
+      p9_4: "Les membres de la communauté dirigent indépendamment"
 
     index:
-      the: "The"
-      newest: "newest"
-      text: "stories that have not yet reached the front page."
-      banned: "Banned"
-      stories: "Stories"
+      the: "Les"
+      newest: "nouveaux"
+      text: "articles qui n'ont pas encore atteint la première page."
+      banned: "Banni"
+      stories: "Articles"
       tags: "tags"
-      in: "in the"
-      tagged: "tagged"
-      as: "as"
+      in: "dans le"
+      tagged: "taggé"
+      as: "comme"
 
     privacy:
-      legend: "Privacy Policy"
-      p1: "This is the Internet, you have no privacy."
-      p2:  "(Unless you are " 
-      p3: "under 13" 
-      p4: ", in which case you are not allowed here.)"
+      legend: "Politique de confidentialité"
+      p1: "C'est Internet, vous n'avez aucune vie privée."
+      p2:  "(sauf si vous êtes" 
+      p3: "en dessous de 13" 
+      p4: ", auquel cas vous n'êtes pas autorisé ici."
 
     rss:
-      newest: "newest"
-      comments: "Comments"
+      newest: "nouveau"
+      comments: "Commentaires"
 
   signup:
     index:
-      legend: "Create an Account"
-      nouser: "Not a user yet?"
-      sign: "Sign up here"
-      p1: "Signup is currently by invitation only to combat spam and increase
-          accountability.  If you know "
-      current: "a current user"
-      p2: "of the site,
-          ask them for an invitation, or"
-      requestpublicly: "request one publicly"
-      requestin : "request one in "
+      legend: "Créer un compte"
+      nouser: "pas encore utilisateur?"
+      sign: "Inscrivez vous ici"
+      p1: "L'inscription se fait actuellement sur invitation uniquement pour lutter contre le spam et augmenter
+          responsabilité. Si vous connaissez "
+      current: "un utilisateur habitué"
+      p2: "de ce site, demandez lui ou"
+      requestpublicly: "en demander un publiquement"
+      requestin : "en demander un dans "
     invite:
-      legend: "Pass Along an Invitation"
-      p1: "Now that you are a member you can invite people you think would be a good fit.
-          This is available anytime from "
-      p2: "your settings page"
-      skip: "Skip"
+      legend: "Transmettre une invitation"
+      p1: "Maintenant que vous êtes membre, vous pouvez inviter des personnes qui, selon vous, conviendraient.
+          Ceci est disponible à tout moment à partir de "
+      p2: "votre page de paramètres"
+      skip: "Passer"
     invited:
-      legend: "Create an Account"
-      p1: "To create a new account, enter your e-mail address and a password.
-          Your e-mail address will never be shown to users and will only be used
-          if you need to reset your password, or to receive optional new-message
-          alerts.  Your username can be changed later."
-      invited: "Invited By:"
-      username: "Username:"
-      mail: "E-mail Address:"
-      password: "Password:"
-      passwordagain: "Password (again):"
-      p2: "Want to tell us about yourself?  It's optional, but it will be visible in
-          your public profile and can be changed at any time."
-      about: "About:"
-      markdown: "Markdown formatting available"
-      signup: "Signup"
+      legend: "Créer un compte"
+      p1: "Pour créer un nouveau compte, entrez votre adresse e-mail et un mot de passe.
+          Votre adresse e-mail ne sera jamais montrée aux utilisateurs et ne sera utilisée que
+          si vous devez réinitialiser votre mot de passe ou recevoir un nouveau message facultatif
+          alertes. Votre nom d'utilisateur peut être modifié ultérieurement."
+      invited: "Invité par:"
+      username: "Nom:"
+      mail: "Adresse E-mail:"
+      password: "Mot de passe:"
+      passwordagain: "Mot de passe (encore):"
+      p2: "Envie de nous parler de vous? C'est facultatif, mais il sera visible dans
+          votre profil public et peut être modifié à tout moment."
+      about: "A propos:"
+      markdown: "Formatage markDown disponible"
+      signup: "Se déconnecter"
   
       
 

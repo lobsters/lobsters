@@ -7,6 +7,7 @@
 #global
 #hats
 #home >> en cours about
+#messages
 #mod_notes
 #password
 #replies
@@ -310,7 +311,6 @@ en:
             It was useful in the wake of some big events, but the mods "
       p9_3: "didn't want to run it indefinitely<"
       p9_4: "Community members independently run"
-
     index:
       the: "The"
       newest: "newest"
@@ -321,17 +321,89 @@ en:
       in: "in the"
       tagged: "tagged"
       as: "as"
-
     privacy:
       legend: "Privacy Policy"
       p1: "This is the Internet, you have no privacy."
       p2:  "(Unless you are " 
       p3: "under 13" 
       p4: ", in which case you are not allowed here.)"
-
     rss:
       newest: "newest"
       comments: "Comments"
+
+  login:
+    forgot:
+      legend: "Reset Password"
+      p1: "If you've forgotten your password, enter your e-mail address or username
+            below and instructions will be e-mailed to you."
+      mail: "E-mail or Username:"
+      reset: "Reset Password"
+    index:
+      legend: "Login"
+      p1: "The site is currently in read-only mode for maintenance."
+      mail: "E-mail or Username:"
+      password: "Password:"
+      login: "Login"
+      p2: "Forgot your password or deleted your account?"
+      resetpassword: "Reset your password"
+      p3: "Not a user yet?"
+      p4: "Sign up here"
+      p5: "Not a user yet?  Signup is by invitation only to combat spam and increase
+        accountability.  If you know"
+      p6: "a current user"
+      p7: "of the site, ask them for an invitation or"
+      p8: "request one publicly"
+      p9: "community in chat"
+    setnew: 
+      legend: "Set New Password"
+      username: "Username:"
+      newpassword: "New Password:"
+      again: "(Again):"
+      setnewpassword: "Set New Password"
+    twofa:
+      legend: "Login - Two Factor Authentication"
+      p1: "Enter the current TOTP code from your TOTP application:"
+      login": "Login"
+
+
+
+
+
+
+
+
+  messages:
+    form:
+      to: "To:"
+      subject: "Subject:"
+      message: "Message:"
+      puthat: "Put on hat:"
+      reply: "Reply"
+      sendmessage: "Send Message"
+    index:
+      viewreceived: "View Received"
+      viewsent: "View Sent"
+      private: "Private Messages"
+      sent: "Sent"
+      from": "From"
+      to": "To"
+      received": "Received"
+      sent: "Sent"
+      delete: "Delete Selected"
+      sent2: "sent"
+      p1: "You do not have any"
+      p2: "private messages."
+      legend: "Compose Message"
+      subject: "Subject"
+    show:
+      backsent: "Back to Sent Messages"
+      backmessages: "Back to Messages"
+      sent: "Sent from"
+      delete": "Delete Message"
+      keepnew": "Keep As New"
+      p1: "For help with this message, contact"
+      p2: "a moderator"
+      compose: "Compose Reply"
 
   mod:
     nav:
@@ -342,6 +414,7 @@ en:
       title: "Average of commenters, including the most-flagged commenters above"
     index:
       legend: "Activity by other mods"
+      Compose Reply: "Compose Reply"
 
   mod_notes:
     table:

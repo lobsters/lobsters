@@ -2,43 +2,41 @@
 
 <div class="box wide">
   <div class="legend">
-    Login
+  <%= t('login.index.legend')%>
   </div>
 
   <% if Rails.application.read_only? %>
     <p>
-    The site is currently in read-only mode for maintenance.
+    <%= t('login.index.p1')%>
     </p>
   <% else %>
     <%= form_with url: login_path, local: true do |form| %>
     <p>
-      <%= form.label :email, "E-mail or Username:" %>
+      <%= form.label :email, t('login.index.mail') %>
       <%= form.text_field :email, :size => 30, :autofocus => "autofocus" %>
       <br />
 
-      <%= form.label :password, "Password:" %>
+      <%= form.label :password, t('login.index.password') %>
       <%= form.password_field :password, :size => 30 %>
       <br />
       </p>
 
       <p>
-      <%= form.submit "Login" %>
+      <%= form.submit t('login.index.login') %>
       </p>
 
       <p>
-      Forgot your password or deleted your account?
-        <%= link_to "Reset your password", forgot_password_path %>.
+      <%= t('login.index.p2')%>
+        <%= link_to t('login.index.resetpassword'), forgot_password_path %>.
       </p>
 
       <% if Rails.application.open_signups? %>
         <p>
-          Not a user yet? <a href="/invitations/open">Sign up here</a>.
+        <%= t('login.index.p3')%> <a href="/invitations/open"><%= t('login.index.p4')%></a>.
         </p>
       <% else %>
         <p>
-        Not a user yet?  Signup is by invitation only to combat spam and increase
-        accountability.  If you know <a href="/u/">a current user</a> of the site,
-        ask them for an invitation or
+        <%= t('login.index.p5')%> <a href="/u/"><%= t('login.index.p6')%></a> <%= t('login.index.legend')%>
         <% if Rails.application.allow_invitation_requests? %>
           <a href="/invitations/request">request one publicly</a>.
         <% else %>

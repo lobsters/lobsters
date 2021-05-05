@@ -5,25 +5,25 @@
       <%= f.hidden_field :recipient_username  %>
   <% else %>
     <div class="boxline">
-      <%= f.label :recipient_username, "To:", :class => "required" %>
+      <%= f.label :recipient_username, t('messages.form.to'), :class => "required" %>
       <%= f.text_field :recipient_username, :size => 20 %>
     </div>
   <% end %>
 
   <div class="boxline">
-    <%= f.label :subject, "Subject:", :class => "required" %>
+    <%= f.label :subject, t('messages.form.subjet'), :class => "required" %>
     <%= f.text_field :subject, :style => "width: 500px;",
       :maxlength => 100 %>
   </div>
 
   <div class="boxline">
-    <%= f.label :body, "Message:", :class => "required" %>
+    <%= f.label :body, t('messages.form.message'), :class => "required" %>
     <%= f.text_area :body, :style => "width: 500px;", :rows => 5 %>
   </div>
 
   <% if @user.wearable_hats.any? %>
     <div class="boxline">
-      <%= f.label :hat_id, 'Put on hat:' %>
+      <%= f.label :hat_id, t('messages.form.puthat') %>
       <%= f.select :hat_id, options_for_select( [['','']] +
         @user.wearable_hats.map{|h| [h.hat, { 'data-modnote' => h.modlog_use }, h.id] }
       ) %>
@@ -37,6 +37,6 @@
 
   <div class="boxline">
     <p></p>
-    <%= f.submit replying ? "Reply" : "Send Message" %>
+    <%= f.submit replying ? t('messages.form.reply') : t('messages.form.sendmessage') %>
   </div>
 <% end %>

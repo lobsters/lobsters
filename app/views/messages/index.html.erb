@@ -10,15 +10,15 @@
 <div class="box wide">
   <div class="legend" style="float: right;">
     <% if @direction == :out %>
-      <a href="/messages">View Received</a>
+      <a href="/messages"><%= t('messages.index.viewreceived')%></a>
     <% else %>
-      <a href="/messages/sent">View Sent</a>
+      <a href="/messages/sent"><%= t('messages.index.viewsent')%></a>
     <% end %>
   </div>
   <div class="legend">
-    Private Messages
+    <%= t('messages.index.private')%>
     <% if @direction == :out %>
-      Sent
+      <%= t('messages.index.sent')%>
     <% end %>
   </div>
 
@@ -28,9 +28,9 @@
       <tr>
         <th width="3%"><%= check_box_tag "delete_all",
           :id => "delete_all" %></th>
-        <th width="15%"><%= @direction == :in ? "From" : "To" %></th>
-        <th width="17%"><%= @direction == :in ? "Received" : "Sent" %></th>
-        <th width="60%">Subject</th>
+        <th width="15%"><%= @direction == :in ? t('messages.index.from') : t('messages.index.to') %></th>
+        <th width="17%"><%= @direction == :in ? t('messages.index.received') : t('messages.index.sent') %></th>
+        <th width="60%"><%= t('messages.index.subject')%></th>
       </tr>
       <% @messages.includes(:author, :recipient).each do |message| %>
         <tr class="<%= message.has_been_read? ? "" : "bold" %>">
@@ -58,20 +58,19 @@
       <% end %>
       </table>
       <p>
-      <%= f.submit "Delete Selected" %>
+      <%= f.submit t('messages.index.delete') %>
       </p>
     <% end %>
   <% else %>
     <p>
-    You do not have any <%= @direction == :in ? "" : "sent" %> private
-      messages.
+      <%= t('messages.index.p1')%> <%= @direction == :in ? "" : t('messages.index.sent2') %> <%= t('messages.index.p2')%>
     </p>
   <% end %>
 
   <br>
 
   <div class="legend">
-    Compose Message
+   <%= t('messages.index.legend')%>
   </div>
 
   <%= render partial: 'form', locals: { new_message: @new_message, replying: false } %>

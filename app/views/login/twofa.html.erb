@@ -1,11 +1,11 @@
 <div class="box wide">
   <div class="legend">
-    Login - Two Factor Authentication
+    <%= t('login.twofa.legend')%>
   </div>
 
   <%= form_with url: twofa_login_url, local: true do |f| %>
     <p>
-    Enter the current TOTP code from your TOTP application:
+    <%= t('login.twofa.p1')%>
     </p>
 
     <p>
@@ -16,7 +16,7 @@
     </p>
 
     <p>
-    <%= f.submit "Login" %>
+    <%= f.submit <%= t('login.twofa.login')%> %>
     </p>
   <% end %>
 </div>

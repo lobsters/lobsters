@@ -1,4 +1,4 @@
-class FixDatabaseConsistencyWithValidators < ActiveRecord::Migration[5.2]
+class FixDatabaseConsistencyWithValidators < ActiveRecord::Migration[6.0]
     def change
         change_column_null :hat_requests, :hat, false
         change_column_null :hat_requests, :link, false

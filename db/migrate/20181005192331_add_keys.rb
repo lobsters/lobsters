@@ -1,4 +1,4 @@
-class AddKeys < ActiveRecord::Migration[5.2]
+class AddKeys < ActiveRecord::Migration[6.0]
   def change
     add_foreign_key "comments", "hats", name: "comments_hat_id_fk"
     add_foreign_key "comments", "comments", column: "parent_comment_id", name: "comments_parent_comment_id_fk"

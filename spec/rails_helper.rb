@@ -76,4 +76,4 @@ end
 RSpec::Expectations.configuration.on_potential_false_positives = :nothing
 
 # Checks for pending migration and applies them before tests are run.
-ActiveRecord::Migration.maintain_test_schema!
+ActiveRecord::Migration[6.0].maintain_test_schema!

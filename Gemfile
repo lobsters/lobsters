@@ -13,6 +13,8 @@ gem 'scenic-mysql_adapter'
 gem "activerecord-typedstore"
 gem 'sprockets-rails', '2.3.3'
 
+gem 'dotenv-rails', groups: [:development, :staging, :test]
+
 # js
 gem "jquery-rails", "~> 4.3"
 gem "json"
@@ -47,7 +49,7 @@ gem "sitemap_generator" # for better search engine indexing
 gem "svg-graph", require: 'SVG/Graph/TimeSeries' # for charting, note workaround in lib/time_series.rb
 gem 'transaction_retry' # mitigate https://github.com/lobsters/lobsters-ansible/issues/39
 
-group :test, :development do
+group :test, :development, :staging do
   gem 'capybara'
   gem 'database_cleaner'
   gem 'good_migrations'

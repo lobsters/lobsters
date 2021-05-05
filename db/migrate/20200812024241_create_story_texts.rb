@@ -1,4 +1,4 @@
-class CreateStoryTexts < ActiveRecord::Migration[5.2]
+class CreateStoryTexts < ActiveRecord::Migration[6.0]
   def up
     create_table :story_texts, id: false do |t|
       t.primary_key :id, signed: false, null: false

@@ -1,4 +1,4 @@
-class TimestampVotes < ActiveRecord::Migration[5.1]
+class TimestampVotes < ActiveRecord::Migration[6.0]
   def change
     add_column :votes, :updated_at, :datetime, null: true
     ActiveRecord::Base.connection.execute("update votes, comments set votes.updated_at = comments.created_at where comments.id = votes.comment_id and votes.updated_at is null")

@@ -1,4 +1,4 @@
-class CreateModNotes < ActiveRecord::Migration[5.2]
+class CreateModNotes < ActiveRecord::Migration[6.0]
   def change
     create_table :mod_notes do |t|
       t.integer :moderator_user_id, null: false

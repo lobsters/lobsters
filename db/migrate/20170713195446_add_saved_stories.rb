@@ -1,4 +1,4 @@
-class AddSavedStories < ActiveRecord::Migration[5.1]
+class AddSavedStories < ActiveRecord::Migration[6.0]
   def change
     create_table :saved_stories do |t|
       t.timestamps

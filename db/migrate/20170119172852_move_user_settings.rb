@@ -1,4 +1,4 @@
-class MoveUserSettings < ActiveRecord::Migration
+class MoveUserSettings < ActiveRecord::Migration[6.0]
   def up
     add_column :users, :settings, :text
 

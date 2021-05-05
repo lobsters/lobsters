@@ -1,4 +1,4 @@
-class InitializeStoriesDeletedAndCommentsDeletedCounts < ActiveRecord::Migration[5.2]
+class InitializeStoriesDeletedAndCommentsDeletedCounts < ActiveRecord::Migration[6.0]
   def up
     ActiveRecord::Base.connection.execute <<~SQL
       -- initialize stories_deleted counts

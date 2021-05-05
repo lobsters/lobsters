@@ -1,4 +1,4 @@
-class UniqueCategoryNames < ActiveRecord::Migration[5.2]
+class UniqueCategoryNames < ActiveRecord::Migration[6.0]
   def change
     add_index :categories, :category, unique: true
   end

@@ -1,6 +1,6 @@
 <div class="box wide">
   <div class="legend right">
-    <a href="/settings">Back to Settings</a>
+    <a href="/settings"><%= t('settings.twofa_enroll.legend')%></a>
   </div>
   <div class="legend">
     <%= @title %>
@@ -8,17 +8,17 @@
 
   <%= form_with url: twofa_update_url, local: true do |f| %>
     <p>
-    To enable Two-Factor Authentication on your account using your new TOTP
-    secret, enter the six-digit code from your TOTP application:
+     <%= t('settings.twofa_verify.p1')%>
     </p>
 
     <div class="boxline">
-      <%= f.label :totp_code, "TOTP Code:", :class => "required" %>
+      <%= f.label :totp_code, t('settings.twofa_verify.code'), :class => "required" %>
       <%= f.number_field :totp_code, :size => 10, :autocomplete => "off",
           :autofocus => true, :class => "totp_code" %>
     </div>
 
     <p>
-    <%= f.submit "Verify and Enable" %>
+    <%= f.submit t('settings.twofa_verify.verify') %>
   <% end %>
 </div>
+

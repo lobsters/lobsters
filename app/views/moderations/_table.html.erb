@@ -1,8 +1,8 @@
 <table class="data zebra" width="100%" cellspacing=0>
 <tr>
-  <th>Date/Time</th>
-  <th>Moderator</th>
-  <th>Story/Comment/User, Action, Reason</th>
+  <th><%= t('moderations.table.th1')%></th>
+  <th><%= t('moderations.table.th2')%></th>
+  <th><%= t('moderations.table.th3')%></th>
 </tr>
 <% moderations.each do |mod| %>
   <tr class="nobottom <%= mod.moderator && 'mod' %>">
@@ -11,13 +11,13 @@
       <a href="/messages?to=<%= mod.moderator.try(:username) %>"><%=
         mod.moderator.try(:username) %></a>
       <% elsif mod.is_from_suggestions? %>
-        <em>(Users)</em>
+        <em><%= t('moderations.table.users')%></em>
       <% end %></td>
     <td><% if mod.story %>
-        <a href="<%= mod.story.comments_path %>">Story: <%= mod.story.title
+        <a href="<%= mod.story.comments_path %>"><%= t('moderations.table.story')%> <%= mod.story.title
           %></a>
       <% elsif mod.comment %>
-        <a href="<%= mod.comment.path %>">Comment by
+        <a href="<%= mod.comment.path %>"><%= t('moderations.table.commentby')%>
           <%= mod.comment.user.username %>
           on
           <%= mod.comment.story.title %></a>
@@ -25,13 +25,13 @@
         <%= link_to("Tag: #{mod.tag.tag}", mod.tag) %>
       <% elsif mod.user_id %>
         <% if mod.user %>
-          <a href="/u/<%= mod.user.username %>">User
+          <a href="/u/<%= mod.user.username %>"><%= t('moderations.table.user')%>
             <%= mod.user.username %></a>
         <% else %>
-          User <%= mod.user_id %> (Deleted)
+          <%= t('moderations.table.user')%> <%= mod.user_id %> <%= t('moderations.table.deleted')%>
         <% end %>
       <% elsif mod.domain %>
-        Domain <%= link_to mod.domain.domain,  domain_path(mod.domain) %>
+        <%= t('moderations.table.domain')%> <%= link_to mod.domain.domain,  domain_path(mod.domain) %>
       <% end %></td>
   </tr>
   <tr class="<%= mod.reason.present?? "nobottom" : "" %>">

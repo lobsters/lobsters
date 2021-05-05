@@ -1,17 +1,17 @@
 <div class="box wide">
   <div class="legend">
-    Moderation Log
+   <%= t('moderations.index.legend')%>
   </div>
 
   <%= form_with url: moderations_path, method: :get, local: true do |f| %>
-    <label class="normal" for="moderator">Moderator:</label>
+    <label class="normal" for="moderator"><%= t('moderations.index.moderator')%></label>
     <%= f.select 'moderator', options_for_select(@moderators, @moderator) %>
     <% @what.each do |type, checked| %>
       <%= check_box_tag "what[#{type}]", type, checked %>
       <label class="normal" for="what_<%= type %>"><%= type.to_s.titlecase %></label>
     <% end %>
 
-    <input type="submit" value="Filter">
+    <input type="submit" value=<%= t('moderations.index.filter')%>>
   <% end %><br>
 
   <%= render partial: 'table', locals: { moderations: @moderations } %>

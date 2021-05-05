@@ -1,6 +1,6 @@
 <div class="box wide">
   <div class="legend right">
-    <a href="/settings">Back to Settings</a>
+    <a href="/settings"><%= t('settings.twofa_enroll.legend')%></a>
   </div>
   <div class="legend">
     <%= @title %>
@@ -9,24 +9,22 @@
   <%= form_with model: @user, url: twofa_auth_url, method: :post, local: true do |f| %>
     <p>
     <% if @user.has_2fa? %>
-      To turn off two-factor authentication for your account, enter your
-      current password:
+    <%= t('settings.twofa.p1')%>
     <% else %>
-      To begin the two-factor authentication enrollment for your account,
-      enter your current password:
+    <%= t('settings.twofa.p2')%>
     <% end %>
     </p>
 
     <div class="boxline">
-      <%= f.label :password, "Current Password:", :class => "required" %>
+      <%= f.label :password, t('settings.twofa.currentpassword'), :class => "required" %>
       <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
     </div>
 
     <p>
     <% if @user.has_2fa? %>
-      <%= f.submit "Disable Two-Factor Authentication" %>
+      <%= f.submit t('settings.twofa.disableauthentication') %>
     <% else %>
-      <%= f.submit "Continue" %>
+      <%= f.submit t('settings.twofa.continue') %>
     <% end %>
   <% end %>
 </div>

@@ -2,12 +2,15 @@
 
 <%= form_with url: mod_notes_path, method: :get, local: true do |f| %>
   <div class="boxline">
-    <label class="normal" for="username">Username:</label>
+    <label class="normal" for="username"><%= t('mod_notes.inex.username')%></label>
     <input type="text" name="username" value="<%= @username %>">
-    <%= f.submit 'Filter' %>
+    <%= f.submit t('mod_notes.inex.filter') %>
   </div>
 <% end %>
 
 <%= render partial: 'table', locals: {
   mod_notes: @notes
 } %>
+
+
+

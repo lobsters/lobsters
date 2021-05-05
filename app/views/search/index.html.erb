@@ -1,42 +1,42 @@
 <div class="box">
   <div class="legend">
-    Search
+    <%= t('search.legend')%>
   </div>
 
   <%= form_with url: '/search', method: :get, local: true do |f| %>
     <div class="boxline">
         <%= f.text_field "q", { :value => @search.q, :size => 40 }.
         merge(@search.q.present? ? {} : { :autofocus => "autofocus" }) %>
-      <input type="submit" value="Search">
+      <input type="submit" value=<%= t('search.legend')%>>
     </div>
 
     <div class="boxline">
-      <label class="required">Search:</label>
+      <label class="required"><%= t('search.legend')%>:</label>
 
       <%= f.radio_button "what", "stories", :checked => @search.what == "stories" %>
-        <label for="what_stories" class="normal">Stories</label>
+        <label for="what_stories" class="normal"><%= t('search.stories')%></label>
 
       &nbsp;
 
       <%= f.radio_button "what", "comments", :checked => @search.what == "comments" %>
-        <label for="what_comments" class="normal">Comments</label>
+        <label for="what_comments" class="normal"><%= t('search.comments')%></label>
 
       <br>
 
-      <label class="required">Order By:</label>
+      <label class="required"><%= t('search.orderby')%></label>
 
       <%= f.radio_button "order", "relevance", :checked => @search.order == "relevance" %>
-        <label for="order_relevance" class="normal">Relevance</label>
+        <label for="order_relevance" class="normal"><%= t('search.relevance')%></label>
 
       &nbsp;
 
       <%= f.radio_button "order", "newest", :checked => @search.order == "newest" %>
-        <label for="order_newest" class="normal">Newest</label>
+        <label for="order_newest" class="normal"><%= t('search.newest')%></label>
 
       &nbsp;
 
       <%= f.radio_button "order", "points", :checked => @search.order == "points" %>
-        <label for="order_points" class="normal">Points</label>
+        <label for="order_points" class="normal"><%= t('search.points')%></label>
     </div>
   <% end %>
 </div>
@@ -84,9 +84,9 @@
   <% end %>
 <% else %>
   <div class="help">
-    Search hints:
+    <%= t('search.searchhints')%> 
     <ul>
-      <li>Use <a href="https://mariadb.com/kb/en/full-text-index-overview/#in-boolean-mode">search operators</a> like <code>+</code> to require terms, <code>-</code> to ignore terms, and <code>"quotes for phrases"</code>.</li>
+      <li><%= t('search.li1_p1')%> <a href="https://mariadb.com/kb/en/full-text-index-overview/#in-boolean-mode"><%= t('search.li1_p2')%> </a> like <code>+</code> <%= t('search.li1_p3')%>  <code>-</code> <%= t('search.li1_p4')%>  <code><%= t('search.li1_p5')%> </code>.</li>
       <li>Search by domain with <code>domain:example.com</code> (implicit <code>+</code>)</li>
       <li>Search by <%= link_to 'tag', tags_path %> with <code>tag:meta</code> (implicit <code>+</code>)</li>
     </ul>

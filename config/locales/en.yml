@@ -7,6 +7,12 @@
 #global
 #hats
 #home >> en cours about
+#mod_notes
+#password
+#replies
+#settings
+#stats
+#signup
 #stories
 
 
@@ -22,6 +28,8 @@ en:
     text: "Tip: read stories across multiple categories with"
 
   comments:
+    #a traduire comment
+    comment:
     _commentbox:
       placeholder: "You must be logged in to leave a comment."
       markdown: "Markdown formatting available"
@@ -325,6 +333,77 @@ en:
       newest: "newest"
       comments: "Comments"
 
+  mod:
+    nav:
+      F-Stories: "F-Stories:"
+      F-Comments: "F-Comments:"
+      commenters: "Commenters:"
+    commenters:
+      title: "Average of commenters, including the most-flagged commenters above"
+    index:
+      legend: "Activity by other mods"
+
+  mod_notes:
+    table:
+      userwhen: "User/When"
+    index:
+      username: "Username:"
+      filter: 'Filter'
+
+  moderations:
+    index:
+      legend: ""
+      moderator: "Moderator:"
+      filter: "Filter"
+    table:
+      th1: ""
+      th2: ""
+      th3: ""
+    users: "(Users)"
+    story: "Story:"
+    commentby: "Comment by"
+    on: "on"
+    user: "User"
+    deleted: "(Deleted)"
+    domain: "Domain"
+
+  password:
+    someone: "Someone at"
+    account: "requested to reset your account password"
+    on: "on"
+    subrequest: "If you submitted this request, visit the link below to
+                set a new password.  If not, you can disregard this e-mail."
+
+  replies: 
+    placeholder:
+      p1: "2020-12-03: We recently migrated the database and this feature hammers this db config, so it's unavailable until we can sort that out. Sorry for the hassle. - Peter"
+    show:
+      unread: 'Unread'
+      all: 'All'
+      comments: 'Comments'
+      stories: 'Stories'
+      noreplies: "No replies to show."
+      allreplies: "All replies to your stories and comments, most-recent first."
+      allcomments: "All replies to your comments, most-recent first."
+      newreplies: "New replies to your stories and comments that you haven't seen on this page or on story pages."
+      allstories: "All replies to stories you've submitted, most-recent first."
+
+  search:
+    legend: "Search"
+    stories: "Stories"
+    comments: "Comments"
+    orderby: "Order By:"
+    relevance: "Relevance"
+    newest: "Newest"
+    points: "Points"
+    searchhints: "Search hints:"
+    li1_p1: "Use"
+    li1_p2: "search operators"
+    li1_p3: "like"
+    li1_p4: "to require terms,"
+    li1_p5: "to ignore terms, and"
+    li1_p6: "''quotes for phrases''"
+
   signup:
     index:
       legend: "Create an Account"
@@ -360,14 +439,100 @@ en:
       markdown: "Markdown formatting available"
       signup: "Signup"
   
-      
-
-      
-
-
-
-    
-
+  settings: 
+    index: 
+      legend1: "Account Settings"
+      legend2: "View Profile"
+      legend3: "Security Settings"
+      legend4: "Comment Reply Notification Settings"
+      legend5: "Comment Mention Notification Settings"
+      legend6: "Private Message Notification Settings"
+      legend7: "Submitted Story Comment Settings"
+      legend8: "Mailing List Settings"
+      legend9: "Miscellaneous Settings"
+      legend10: "Invite a New User"
+      legend11: "Delete Account"
+      p1: "Your avatar will be cached from the Gravatar icon for your e-mail
+          address above."      
+      p2: "For optional comment and message notifications below"  
+      p3_1: "When enabled, you will receive all newly submitted stories and comments to
+            your e-mail address entered above, except the stories and comments filtered
+            by your"
+      p3_2: "All e-mail messages will appear to be sent to your private list address
+            shown below which you can filter on, and e-mails you send to that address
+            will be posted under your account on this website.  You should keep your
+            unique list address private to prevent others from posting comments as you."    
+      p4: "To permanently delete your account, verify your current password below."
+      li1: "Your account will be put into a deleted state."
+      li2: "Your username will remain reserved and will not be available for any other account."
+      li3: "Your private messages will be deleted."
+      li4: "Your submitted stories will not be deleted."
+      li5_p1: "Your comments with negative scores will be deleted, and you can check ''disown comments''
+              below if you want all of your stories and comments to change to list"
+      li5_p2: "instead of your username."
+      a: "Filtered Tags"  
+      logout: "Logout" 
+      confirm: "Are you sure you want to logout?"
+      username: "Username:"
+      current: "Current Password:"
+      newpassword: "New Password:"
+      confirmpassword: "Confirm Password:"
+      mail: "E-mail Address:"
+      homepage: "Homepage:"
+      about: "About:"
+      saveaccount: "Save Account Settings"
+      external: External Accounts
+      linktext1: "Manage Pushover Subscription"
+      linktext2: "Subscribe With Pushover"
+      linkedto: "Linked to"
+      disconnect: "Disconnect"
+      Connect: "Connect"
+      factorauth: "Two-Factor Auth:"
+      enabled: "Enabled"
+      disable: "Disable"
+      enroll: "Enroll"
+      receivemail: "Receive E-mail:"
+      receivealert: "Receive Pushover Alert"
+      hint: "Requires Pushover subscription above"
+      showin: "Show in"
+      yourthreads: "Your Threads"
+      tagfilter: "tag filters"
+      receivelist: "Receive List E-mails:"
+      nomails: "No e-mails"
+      allstoriesandcomments: "All stories and comments"
+      onlystories: "Only stories"
+      listaddress: "List Address:"
+      showstory: "Show Story Previews:"
+      showuser: "Show User Avatars:"
+      saveall: "Save All Settings"
+      sendinvitations: "You cannot send invitations:"
+      verifypass: "Verify Password:"
+      iamsure: "I am sure:"
+      disown: "Disown stories/comments:"
+      deleteaccount: "Yes, Delete My Account"
+      inactiveuser: "inactive-user"
+      optional: "(optional)"
+    twofa_enroll:
+      legend: "Back to Settings"
+      p1_p1: "Scan the QR code below or click on it to open in your"
+      p1_p2: "application of choice:"
+      p2: "Once you have finished registering with your TOTP application, proceed to
+          the next screen to verify your current TOTP code and actually enable
+          Two-Factor Authentication on your account."
+      verify: "Verify and Enable"
+    twofa_verify:
+      p1: "To enable Two-Factor Authentication on your account using your new TOTP
+          secret, enter the six-digit code from your TOTP application:"
+      code: "TOTP Code:"
+      verify: "Verify and Enable"
+    twofa:
+      p1: "To turn off two-factor authentication for your account, enter your
+          current password:"
+      p2: "To begin the two-factor authentication enrollment for your account,
+          enter your current password:"
+      currentpassword: "Current Password:"
+      disableauthentication: "Disable Two-Factor Authentication"
+      continue: "Continue"
 
 
   stats:

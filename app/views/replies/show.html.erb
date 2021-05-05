@@ -1,9 +1,9 @@
 <div class="box wide">
   <div class="legend right">
-    <%= link_to_different_page('Unread',   replies_unread_path) %> |
-    <%= link_to_different_page('All',      replies_path) %> |
-    <%= link_to_different_page('Comments', replies_comments_path) %> |
-    <%= link_to_different_page('Stories',  replies_stories_path) %>
+    <%= link_to_different_page(t('replies.show.unread'),   replies_unread_path) %> |
+    <%= link_to_different_page(t('replies.show.all'),      replies_path) %> |
+    <%= link_to_different_page(t('replies.show.comments'), replies_comments_path) %> |
+    <%= link_to_different_page(t('replies.show.stories'),  replies_stories_path) %>
   </div>
 
   <div class="legend">
@@ -27,7 +27,7 @@
     <% end %>
   </ol>
 <% else %>
-  <p class="help">No replies to show.</p>
+  <p class="help"><%= t('replies.show.noreplies')%></p>
 <% end %>
 
 <% if @replies.count > RepliesController::REPLIES_PER_PAGE && @filter != 'unread'%>
@@ -51,12 +51,12 @@
 <div class="help">
   <% case action_name
      when "all" %>
-    All replies to your stories and comments, most-recent first.
+      <%= t('replies.show.allreplies')%>
   <% when "comments" %>
-    All replies to your comments, most-recent first.
+    <%= t('replies.show.allcomments')%>
   <% when "unread" %>
-    New replies to your stories and comments that you haven't seen on this page or on story pages.
+    <%= t('replies.show.newreplies')%>
   <% when "stories" %>
-    All replies to stories you've submitted, most-recent first.
+    <%= t('replies.show.allstories')%>
   <% end %>
 </div>

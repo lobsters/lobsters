@@ -1,20 +1,20 @@
 <div class="box wide">
   <div class="legend right">
-    <a href="/filters">Filtered Tags</a>
+    <a href="/filters"><%= t('settings.index.a')%></a>
     |
-    <%= link_to "Logout", { :controller => "login", :action => "logout" },
-      :data => { :confirm => "Are you sure you want to logout?" },
+    <%= link_to t('settings.index.logout'), { :controller => "login", :action => "logout" },
+      :data => { :confirm => t('settings.index.confirm') },
       :method => "post" %>
   </div>
   <div class="legend">
-    Account Settings (<a href="/u/<%= @user.username %>">View Profile</a>)
+  <%= t('settings.index.legend1')%> (<a href="/u/<%= @user.username %>"><%= t('settings.index.legend2')%></a>)
   </div>
 
   <%= form_with model: @edit_user, url: settings_path, method: :post, id: 'edit_user', local: true do |f| %>
     <%= errors_for f.object %>
 
     <div class="boxline">
-      <%= f.label :username, "Username:", :class => "required" %>
+      <%= f.label :username, t('settings.index.username'), :class => "required" %>
       <%= f.text_field :username, :size => 15 %>
       <span class="hint">
         <tt><%= User.username_regex_s %></tt>
@@ -22,35 +22,35 @@
     </div>
 
     <div class="boxline">
-      <%= f.label :current_password, "Current Password:",
+      <%= f.label :current_password, t('settings.index.current'),
         :class => "required" %>
     <%= f.password_field :current_password, :name => "current_password", :size => 30 %>
     </div>
 
     <div class="boxline">
-      <%= f.label :password, "New Password:", :class => "required" %>
+      <%= f.label :password, t('settings.index.newpassword'), :class => "required" %>
       <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
     </div>
 
     <div class="boxline">
-      <%= f.label :password_confirmation, "Confirm Password:",
+      <%= f.label :password_confirmation, t('settings.index.confirmpassword'),
         :class => "required" %>
       <%= f.password_field :password_confirmation, :size => 40,
         :autocomplete => "off" %>
     </div>
 
     <div class="boxline">
-      <%= f.label :email, "E-mail Address:", :class => "required" %>
+      <%= f.label :email, t('settings.index.mail'), :class => "required" %>
       <%= f.email_field :email, :size => 40 %>
     </div>
 
     <div class="boxline">
-      <%= f.label :homepage, "Homepage:", :class => "required" %>
+      <%= f.label :homepage, t('settings.index.homepage'), :class => "required" %>
       <%= f.url_field :homepage, :size => 40 %>
     </div>
 
     <div class="boxline">
-      <%= f.label :about, "About:", :class => "required" %>
+      <%= f.label :about, t('settings.index.about'), :class => "required" %>
       <%= f.text_area :about, :size => "100x5", :style => "width: 600px;" %>
     </div>
 
@@ -58,7 +58,7 @@
       <div class="boxline markdown_help_toggler" style="margin-left: 9em;
       width: 600px;">
         <div class="markdown_help_label">
-          Markdown formatting available
+        <%= t('signup.invited.markdown')%><
         </div>
 
         <div style="clear: both;"></div>
@@ -68,13 +68,13 @@
     </div>
 
     <p>
-    <%= f.submit "Save Account Settings" %>
+    <%= f.submit t('settings.index.saveaccount') %>
     </p>
 
     <br>
 
     <div class="legend">
-      External Accounts
+    <%= t('settings.index.external')%>
     </div>
 
     <div class="boxline">
@@ -82,8 +82,7 @@
         raw("<a href=\"https://gravatar.com/\">Gravatar</a>:"),
         :class => "required" %>
       <span>
-        Your avatar will be cached from the Gravatar icon for your e-mail
-        address above.
+      <%= t('settings.index.p1')%>
         (<%= link_to "Expire cache", "/avatars/expire", :method => :post %>)
       </span>
     </div>
@@ -95,11 +94,11 @@
           :class => "required" %>
         <span>
         <%= link_to((@edit_user.pushover_user_key.present??
-          "Manage Pushover Subscription" : "Subscribe With Pushover"),
+        t('settings.index.linktext1') : t('settings.index.linktext2')),
           "/settings/pushover_auth", :class => "pushover_button",
           :method => :post) %>
         <span class="hint">
-          For optional comment and message notifications below
+        <%= t('settings.index.p2')%>
         </span>
         </span>
       </div>
@@ -112,13 +111,13 @@
           raw("<a href=\"https://github.com/\">GitHub</a>:"),
           :class => "required" %>
         <% if @edit_user.github_username.present? %>
-          Linked to
+        <%= t('settings.index.linkedto')%>
           <strong><a href="https://github.com/<%= h(@edit_user.github_username)
             %>"><%= h(@edit_user.github_username) %></a></strong>
-            (<%= link_to "Disconnect", "/settings/github_disconnect",
+            (<%= link_to t('settings.index.disconnect'), "/settings/github_disconnect",
               :method => :post %>)
         <% else %>
-          <a href="/settings/github_auth">Connect</a>
+          <a href="/settings/github_auth"><%= t('settings.index.connect')%></a>
         <% end %>
         </span>
       </div>
@@ -131,13 +130,13 @@
           :class => "required" %>
         <span>
         <% if @edit_user.twitter_username.present? %>
-          Linked to
+        <%= t('settings.index.linkedto')%>
           <strong><a href="https://twitter.com/<%= h(@edit_user.twitter_username)
             %>">@<%= h(@edit_user.twitter_username) %></a></strong>
-            (<%= link_to "Disconnect", "/settings/twitter_disconnect",
+            (<%= link_to t('settings.index.disconnect'), "/settings/twitter_disconnect",
               :method => :post %>)
         <% else %>
-          <a href="/settings/twitter_auth">Connect</a>
+          <a href="/settings/twitter_auth"><%= t('settings.index.connect')%></a>
         <% end %>
         </span>
       </div>
@@ -155,18 +154,18 @@
     <br>
 
     <div class="legend">
-      Security Settings
+      <%= t('settings.index.legend3')%>
     </div>
 
     <div class="boxline">
-      <%= f.label :twofa, "Two-Factor Auth:", :class => "required" %>
+      <%= f.label :twofa, t('settings.index.factorauth'), :class => "required" %>
       <span>
       <% if @edit_user.totp_secret.present? %>
         <span style="color: green; font-weight: bold;">
-          Enabled
-        </span> (<a href="/settings/2fa">Disable</a>)
+        <%= t('settings.index.enabled')%>
+        </span> (<a href="/settings/2fa"><%= t('settings.index.disable')%></a>)
       <% else %>
-        Disabled (<a href="/settings/2fa">Enroll</a>)
+        Disabled (<a href="/settings/2fa"><%= t('settings.index.enroll')%></a>)
       <% end %>
       </span>
     </div>
@@ -174,72 +173,72 @@
     <br>
 
     <div class="legend">
-      Comment Reply Notification Settings
+    <%= t('settings.index.legend4')%>
     </div>
 
     <div class="boxline">
-      <%= f.label :email_replies, "Receive E-mail:", :class => "required" %>
+      <%= f.label :email_replies, t('settings.index.receivemail'), :class => "required" %>
       <%= f.check_box :email_replies %>
     </div>
 
     <div class="boxline">
-      <%= f.label :pushover_replies, "Receive Pushover Alert:",
+      <%= f.label :pushover_replies, t('settings.index.receivealert'),
         :class => "required" %>
       <%= f.check_box :pushover_replies %>
       <span class="hint">
-        Requires Pushover subscription above
+      <%= t('settings.index.hint')%>
       </span>
     </div>
 
     <br>
 
     <div class="legend">
-      Comment Mention Notification Settings
+      <%= t('settings.index.legend5')%>
     </div>
 
     <div class="boxline">
-      <%= f.label :email_mentions, "Receive E-mail:", :class => "required" %>
+      <%= f.label :email_mentions, t('settings.index.receivemail'), :class => "required" %>
       <%= f.check_box :email_mentions %>
     </div>
 
     <div class="boxline">
-      <%= f.label :pushover_mentions, "Receive Pushover Alert:",
+      <%= f.label :pushover_mentions, t('settings.index.receivealert'),
         :class => "required" %>
       <%= f.check_box :pushover_mentions %>
       <span class="hint">
-        Requires Pushover subscription above
+        <%= t('settings.index.hint')%>
       </span>
     </div>
 
     <br>
 
     <div class="legend">
-      Private Message Notification Settings
+    <%= t('settings.index.legend6')%>
     </div>
 
     <div class="boxline">
-      <%= f.label :email_messages, "Receive E-mail:", :class => "required" %>
+      <%= f.label :email_messages, t('settings.index.receivemail'), :class => "required" %>
       <%= f.check_box :email_messages %>
     </div>
 
     <div class="boxline">
-      <%= f.label :pushover_messages, "Receive Pushover Alert:",
+      <%= f.label :pushover_messages, t('settings.index.receivealert'),
         :class => "required" %>
       <%= f.check_box :pushover_messages %>
       <span class="hint">
-        Requires Pushover subscription above
+        <%= t('settings.index.hint')%>
       </span>
     </div>
 
     <br>
 
     <div class="legend">
-      Submitted Story Comment Settings
+      <%= t('settings.index.legend7')%>
     </div>
 
     <div class="boxline">
       <%= f.label :show_submitted_story_threads,
-        raw("Show in <a href=\"/threads\">Your Threads</a>:"),
+        raw(" t('settings.index.showin') <a href=\"/threads\"> t('settings.index.yourthreads')</a>:"),
         :class => "required" %>
       <%= f.check_box :show_submitted_story_threads %>
     </div>
@@ -247,28 +246,23 @@
     <br>
 
     <div class="legend">
-      Mailing List Settings
+      <%= t('settings.index.legend8')%>
     </div>
 
     <p>
-    When enabled, you will receive all newly submitted stories and comments to
-    your e-mail address entered above, except the stories and comments filtered
-    by your <a href="/filters">tag filters</a>.
-    All e-mail messages will appear to be sent to your private list address
-    shown below which you can filter on, and e-mails you send to that address
-    will be posted under your account on this website.  You should keep your
-    unique list address private to prevent others from posting comments as you.
+    <%= t('settings.index.p3_1')%> <a href="/filters"><%= t('settings.index.tagfilter')%></a>.
+    <%= t('settings.index.p3_2')%>
     </p>
 
     <div class="boxline">
-      <%= f.label :mailing_list_mode, "Receive List E-mails:",
+      <%= f.label :mailing_list_mode, t('settings.index.receivelist'),
         :class => "required" %>
-      <%= f.select :mailing_list_mode, [ [ "No e-mails", 0 ],
-        [ "All stories and comments", 1 ], [ "Only stories", 2 ] ] %>
+      <%= f.select :mailing_list_mode, [ [ t('settings.index.nomails'), 0 ],
+        [ t('settings.index.allstoriesandcomments'), 1 ], [ t('settings.index.onlystories'), 2 ] ] %>
     </div>
 
     <div class="boxline">
-      <label class="required">List Address:</label>
+      <label class="required"><%= t('settings.index.listaddress')%></label>
       <span>
       <tt><%= Rails.application.shortname %>-<%=
         @edit_user.mailing_list_token %>@<%= Rails.application.domain %></tt>
@@ -278,22 +272,22 @@
     <br>
 
     <div class="legend">
-      Miscellaneous Settings
+      <%= t('settings.index.legend9')%>
     </div>
 
     <div class="boxline">
-      <%= f.label :show_story_previews, "Show Story Previews:",
+      <%= f.label :show_story_previews, t('settings.index.showstory'),
         :class => "required" %>
       <%= f.check_box :show_story_previews %>
     </div>
 
     <div class="boxline">
-      <%= f.label :show_avatars, "Show User Avatars:", :class => "required" %>
+      <%= f.label :show_avatars, t('settings.index.showuser'), :class => "required" %>
       <%= f.check_box :show_avatars %>
     </div>
 
     <br>
-    <%= f.submit "Save All Settings" %>
+    <%= f.submit t('settings.index.saveall') %>
   <% end %>
 
   <br>
@@ -301,13 +295,13 @@
 
   <a name="invite"></a>
   <div class="legend">
-    Invite a New User
+    <%= t('settings.index.legend10')%>
   </div>
 
   <% if @user.can_invite? %>
     <%= render :partial => "users/invitationform" %>
   <% else %>
-      You cannot send invitations: <%= @user.disabled_invite_reason %>
+  <%= t('settings.index.sendinvitations')%> <%= @user.disabled_invite_reason %>
   <% end %>
 
   <br>
@@ -316,36 +310,36 @@
   <div class="deletion">
       <%= form_with model: @edit_user, url: delete_account_path, method: :post, id: 'delete_user', local: true do |f| %>
       <div class="legend">
-        Delete Account
+      <%= t('settings.index.legend11')%>
       </div>
 
       <p>
-      To permanently delete your account, verify your current password below.
+      <%= t('settings.index.p4')%>
       </p>
       <ul>
-        <li>Your account will be put into a deleted state.</li>
-        <li>Your username will remain reserved and will not be available for any other account.</li>
-        <li>Your private messages will be deleted.</li>
-        <li>Your submitted stories will not be deleted.</li>
+        <li><%= t('settings.index.li1')%></li>
+        <li><%= t('settings.index.li2')%></li>
+        <li><%= t('settings.index.li3')%></li>
+        <li><%= t('settings.index.li4')%></li>
         <li>
-          Your comments with negative scores will be deleted, and you can check "disown comments"
-          below if you want all of your stories and comments to change to list
-          <a href="/u/inactive-user">inactive-user</a> instead of your username.
+        <%= t('settings.index.li5_p1')%>
+          <a href="/u/inactive-user"> <%=t('settings.index.inactiveuser')%> </a> 
+          <%= t('settings.index.li5_p2')%>
         </li>
       </ul>
 
       <div class="boxline">
-        <%= f.label :password, "Verify Password:", :class => "required" %>
+        <%= f.label :password, t('settings.index.verifypass'), :class => "required" %>
         <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
       </div>
       <div class="boxline">
-        <%= f.label :i_am_sure, "I am sure:", :class => "required" %>
+        <%= f.label :i_am_sure, t('settings.index.iamsure'), :class => "required" %>
         <%= f.check_box :i_am_sure %>
         <br />
-        <%= f.label :disown, "Disown stories/comments:" %>
-        <%= f.check_box :disown %> (optional)
+        <%= f.label :disown, t('settings.index.disown') %>
+        <%= f.check_box :disown %> <%= t('settings.index.optional')%>
       </div>
-      <%= f.submit "Yes, Delete My Account", :class => "deletion" %>
+      <%= f.submit t('settings.index.deleteaccount'), :class => "deletion" %>
     <% end %>
   </div>
 </div>

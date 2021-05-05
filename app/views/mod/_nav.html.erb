@@ -1,9 +1,9 @@
 <div class="box wide">
   <div class="legend right">
     <%= link_to 'Notes', mod_notes_path(period: '2w') %>
-    F-Stories: <% @periods.each do |p| %><%= link_to_different_page(p, mod_flagged_stories_path(period: p)) %> <% end %>
-    F-Comments: <% @periods.each do |p| %><%= link_to_different_page(p, mod_flagged_comments_path(period: p)) %> <% end %>
-  Commenters: <% %w{1m 2m 3m 6m}.each do |p| %><%= link_to_different_page(p, mod_commenters_path(period: p)) %> <% end %>
+    <%= t('mod.nav.F-Stories')%> <% @periods.each do |p| %><%= link_to_different_page(p, mod_flagged_stories_path(period: p)) %> <% end %>
+      <%= t('mod.nav.F-Comments')%> <% @periods.each do |p| %><%= link_to_different_page(p, mod_flagged_comments_path(period: p)) %> <% end %>
+        <%= t('mod.nav.commenters')%> <% %w{1m 2m 3m 6m}.each do |p| %><%= link_to_different_page(p, mod_commenters_path(period: p)) %> <% end %>
   </div>
 
   <div class="legend">
@@ -11,3 +11,5 @@
   </div>
 </div>
 <div class="clear"></div>
+
+

@@ -36,12 +36,6 @@ gem "nokogiri", ">= 1.11.0.rc4"
 gem "htmlentities"
 gem "commonmarker", "~> 0.14"
 
-# perf
-gem 'flamegraph'
-gem 'memory_profiler'
-gem 'rack-mini-profiler'
-gem 'stackprof'
-
 gem "oauth" # for twitter-posting bot
 gem "mail" # for parsing incoming mail
 gem "ruumba" # tests views
@@ -65,5 +59,11 @@ group :test, :development, :staging do
   gem "vcr"
   gem "webmock" # used to support vcr
   gem 'simplecov', require: false
- gem 'pry-rails'
+  gem 'pry-rails'
+
+  # perf
+  gem 'flamegraph'
+  gem 'memory_profiler'
+  gem 'rack-mini-profiler'
+  gem 'stackprof'
 end

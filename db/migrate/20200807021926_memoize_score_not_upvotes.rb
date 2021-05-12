@@ -1,4 +1,4 @@
-class MemoizeScoreNotUpvotes < ActiveRecord::Migration[5.2]
+class MemoizeScoreNotUpvotes < ActiveRecord::Migration[6.0]
   def up
     remove_index :comments, name: :downvote_index
     rename_column :comments, :upvotes, :score

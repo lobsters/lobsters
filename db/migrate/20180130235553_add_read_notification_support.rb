@@ -1,4 +1,4 @@
-class AddReadNotificationSupport < ActiveRecord::Migration[5.1]
+class AddReadNotificationSupport < ActiveRecord::Migration[6.0]
   def change
     create_table :read_ribbons do |t|
       t.boolean :is_following, default: true

@@ -1,0 +1,30 @@
+version: 2.1
+orbs:
+  ruby: circleci/ruby@0.1.2 
+
+jobs:
+  build:
+    docker:
+      - image: cimg/ruby:2.7-node
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: hipsters_test
+          MYSQL_USER: username
+          MYSQL_PASSWORD: password
+    executor: ruby/default
+    steps:
+      - checkout
+      - run:
+          name: Which bundler?
+          environment:
+            BUNDLE_PATH: vendor/bundle
+          command: bundle -v
+      - ruby/bundle-install
+      # Database setup
+      - run: mv config/database.yml.sample config/database.yml
+      - run: RAILS_ENV=test bundle exec rake db:create
+      - run: RAILS_ENV=test bundle exec rake db:schema:load
+      - run:
+          name: Run RSpec
+          command: bundle exec rspec spec

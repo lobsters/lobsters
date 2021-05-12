@@ -58,7 +58,14 @@
           :show_tree_lines => true,
           :was_merged => (comment.story_id != @story.id),
           :children => children,
-          :is_unread => is_unread?(comment) %>
+          :is_unread => 
+          
+          
+          if !@user || !@ribbon
+          return false
+        end
+    
+        (comment.created_at > @ribbon.updated_at) && (comment.user_id != @user.id)%>
 
         <% if ancestors.present? %>
           <div class="comment_siblings_tree_line"></div>

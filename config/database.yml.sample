@@ -1,0 +1,21 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  host: <%= ENV["DB_HOST"] %>
+  username: <%= ENV["DB_USER"] %>
+  password: <%= ENV["DB_PASSWORD"] %>
+
+development:
+  <<: *default
+  database: hipsters_dev
+
+test:
+  <<: *default
+  host: 127.0.0.1
+  database: hipsters_test
+  username: username
+  password: password
+
+staging:
+  <<: *default
+  database: <%= ENV["DB_NAME"] %>

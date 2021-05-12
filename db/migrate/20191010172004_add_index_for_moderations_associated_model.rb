@@ -1,4 +1,4 @@
-class AddIndexForModerationsAssociatedModel < ActiveRecord::Migration[5.2]
+class AddIndexForModerationsAssociatedModel < ActiveRecord::Migration[6.0]
   def change
     add_index :moderations, :user_id
   end

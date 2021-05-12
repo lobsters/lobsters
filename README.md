@@ -1,4 +1,8 @@
-### Lobsters Rails Project [![Build Status](https://travis-ci.org/lobsters/lobsters.svg?branch=master)](https://travis-ci.org/lobsters/lobsters)
+[![Maintainability](https://api.codeclimate.com/v1/badges/9d0328e288fcf5afb83e/maintainability)](https://codeclimate.com/github/greta-code-pizza/hipsters/maintainability) 
+[![CircleCI](https://img.shields.io/circleci/build/github/greta-code-pizza/hipsters/staging)](https://app.circleci.com/pipelines/github/greta-code-pizza)
+
+
+### Hipsters Rails Project 
 
 This is the
 [quite sad](https://www.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)

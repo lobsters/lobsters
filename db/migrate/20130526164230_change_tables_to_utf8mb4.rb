@@ -1,4 +1,4 @@
-class ChangeTablesToUtf8mb4 < ActiveRecord::Migration
+class ChangeTablesToUtf8mb4 < ActiveRecord::Migration[6.0]
   def up
     return if connection.adapter_name !~ /Mysql/
 

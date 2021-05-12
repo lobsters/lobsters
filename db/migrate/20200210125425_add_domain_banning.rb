@@ -1,4 +1,4 @@
-class AddDomainBanning < ActiveRecord::Migration[5.2]
+class AddDomainBanning < ActiveRecord::Migration[6.0]
   def change
     add_column :domains, :banned_at, :datetime, null: true, default: nil
     add_column :domains, :banned_by_user_id, :integer, null: true, default: nil

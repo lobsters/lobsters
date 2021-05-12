@@ -67,7 +67,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <%= t('comments.comment.now')%>
       <% else %>
         <% if comment.has_been_edited? %>
-          <%= t('comments.comment.editd')%>
+          <%= t('comments.comment.edited')%>
         <% elsif comment.is_from_email? %>
           <%= t('comments.comment.e-mailed')%>
         <% end %>
@@ -114,7 +114,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <% end %>
 
         <% if defined?(show_story) && show_story %>
-          | <%= t('comments.comment.on')%>
+          | <%= t('comments.comment.sur')%>
           <a href="<%= comment.story.comments_path %>"><%= comment.story.title %></a>
         <% end %>
 

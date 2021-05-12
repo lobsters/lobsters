@@ -2,7 +2,7 @@
   <% similar.each do |story| %>
     <li>
       <a href="<%= story.url %>" target="_blank"><%= story.title %></a>
-      <%= story.user_is_author? ? t('stories.listdetail.authored_by') : (stories.listdetail.via') %>
+      <%= story.user_is_author? ? t('stories.listdetail.authored_by') : t('stories.listdetail.via') %>
       <a href="/u/<%= story.user.username %>" class="<%= story.html_class_for_user %>"><%= story.user.username %></a>
       <%= time_ago_in_words_label(story.created_at) %>
       <span>
@@ -13,7 +13,7 @@
         |
         <a href="<%= story.comments_path %>">
           <% if story.comments_count == 0 %>
-          <%= t('stories.listdetail.nocomments')%></a>
+          <%= t('stories.listdetail.nocomment')%></a>
           <% else %>
             <%= story.comments_count %> <%= 'comment'.pluralize(story.comments_count) %></a>
           <% end %>

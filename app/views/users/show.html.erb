@@ -80,8 +80,8 @@
   <% if !@showing_user.is_admin? %>
     <label class="required">Karma:</label>
     <span class="d">
-      <%= @showing_user.karma %><%= t('users.show.averaging')%> <%=
-      <%= t('users.show.number')%>(@showing_user.average_karma, :precision => 2) %>
+      <%= @showing_user.karma %><%= t('users.show.averaging')%> 
+      <%= number_with_precision(@showing_user.average_karma, :precision => 2) %>
       <%= t('users.show.per')%>
     </span>
     <br>
@@ -171,7 +171,7 @@
       <% if (stats = FlaggedCommenters.new('1m').check_list_for(@showing_user)) %>
         <a href="/mod/commenters/1m#<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % stats[:sigma] %> &sigma;
       <% else %>
-        <%= t('users.show.no')%>
+        <%= t('users.show.non')%>
       <% end %>
     </span>
     <br>
@@ -181,7 +181,7 @@
       <% if @showing_user.is_heavy_self_promoter? %>
         <strong><%= t('users.show.yes')%></strong>
       <% else %>
-        <%= t('users.show.no')%>
+        <%= t('users.show.non')%>
       <% end %>
     </span>
     <br>

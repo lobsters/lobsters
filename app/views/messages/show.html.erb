@@ -1,9 +1,9 @@
 <div class="box wide">
   <div class="legend" style="float: right;">
     <% if @message.author_user_id == @user.id %>
-      <a href="/messages/sent"><%= t('messages.show.backsent')%></a>
+      <a href="/messages/sent"><%= t('messages.shw.backsent')%></a>
     <% else %>
-      <a href="/messages"><%= t('messages.show.backmessages')%></a>
+      <a href="/messages"><%= t('messages.shw.backmessages')%></a>
     <% end %>
   </div>
 
@@ -11,7 +11,7 @@
     <%= @message.subject %>
 
     <div class="sublegend">
-     <%= t('messages.show.sent')%>
+     <%= t('messages.shw.sent')%>
       <% if @message.author %>
         <a href="/u/<%= @message.author.username %>"><%= @message.author.username %></a>
       <% else %>
@@ -34,13 +34,13 @@
   <div class="boxline">
     <div style="float: left;">
       <%= form_with url: message_path(@message.short_id), method: :delete, local: true do |f| %>
-        <%= f.submit t('messages.show.delete') %>
+        <%= f.submit t('messages.shw.delete') %>
       <% end %>
     </div>
 
     <div style="float: left; padding-left: 1em;">
       <%= form_with url: message_keep_as_new_path(@message.short_id), method: :post, local: true do |f| %>
-        <%= f.submit t('messages.show.keepnew') %>
+        <%= f.submit t('messages.shw.keepnew') %>
       <% end %>
     </div>
 
@@ -59,7 +59,7 @@
 
   <% if @new_message %>
     <div class="legend">
-      <%= t('messages.show.p1')%>
+      <%= t('messages.shw.p1')%>
       <% if @new_message %>
         To <%= @new_message.recipient_username %>
       <% end %>
@@ -67,6 +67,6 @@
 
     <%= render partial: 'form', locals: { new_message: @new_message, replying: true } %>
   <% else %>
-   <%= t('messages.show.p1')%> <a href="/u?moderators=1"><%= t('messages.show.p2')%></a>.
+   <%= t('messages.shw.p1')%> <a href="/u?moderators=1"><%= t('messages.shw.p2')%></a>.
   <% end %>
 </div>

@@ -1,27 +1,3 @@
-#ban_notification
-#categories
-#comments
-#email_message
-#email_reply
-#filters
-#global
-#hats
-#home >> en cours about
-#key
-#login
-#invitation
-#layout
-#messages
-#mod_notes
-#password
-#replies
-#settings
-#stats
-#signup
-#stories
-
-
-
 en:
   ban_notification:
     text: "You have been banned from"
@@ -43,7 +19,7 @@ en:
       flag: "flag"
       unflag: "unflag"
       reply: "reply"
-      on: "on:"
+      sur: "on:"
       visible: "Visible to moderator:"
 
     _commentbox:
@@ -109,6 +85,7 @@ en:
       text: "text"
       prefix: "prefix text with at least"
       space: "4 spaces"
+      image: "(inline image)"
 
   hats:
     build_request:
@@ -611,7 +588,7 @@ en:
     twofa:
       legend: "Login - Two Factor Authentication"
       p1: "Enter the current TOTP code from your TOTP application:"
-      login": "Login"
+      login: "Login"
 
   messages:
     form:
@@ -626,9 +603,9 @@ en:
       viewsent: "View Sent"
       private: "Private Messages"
       sent: "Sent"
-      from": "From"
-      to": "To"
-      received": "Received"
+      from: "From"
+      to: "To"
+      received: "Received"
       sent: "Sent"
       delete: "Delete Selected"
       sent2: "sent"
@@ -636,12 +613,12 @@ en:
       p2: "private messages."
       legend: "Compose Message"
       subject: "Subject"
-    show:
+    shw:
       backsent: "Back to Sent Messages"
       backmessages: "Back to Messages"
       sent: "Sent from"
-      delete": "Delete Message"
-      keepnew": "Keep As New"
+      delete: "Delete Message"
+      keepnew: "Keep As New"
       p1: "For help with this message, contact"
       p2: "a moderator"
       compose: "Compose Reply"
@@ -666,25 +643,25 @@ en:
 
   moderations:
     index:
-      legend: ""
+      legend: "Moderation Log"
       moderator: "Moderator:"
       filter: "Filter"
     table:
-      th1: ""
-      th2: ""
-      th3: ""
-    users: "(Users)"
-    story: "Story:"
-    commentby: "Comment by"
-    on: "on"
-    user: "User"
-    deleted: "(Deleted)"
-    domain: "Domain"
+      th1: "Date/Time"
+      th2: "Moderator"
+      th3: "Story/Comment/User, Action, Reason"
+      users: "(Users)"
+      story: "Story:"
+      commentby: "Comment by"
+      sur: "on"
+      user: "User"
+      deleted: "(Deleted)"
+      domain: "Domain"
 
   password:
     someone: "Someone at"
     account: "requested to reset your account password"
-    on: "on"
+    sur: "on"
     subrequest: "If you submitted this request, visit the link below to
                 set a new password.  If not, you can disregard this e-mail."
 
@@ -1037,7 +1014,7 @@ en:
       about: "About:"
       h2: "Moderator Information"
       flagged: "Flagged (1m):"
-      no: "No"
+      non: "No"
       self: "Self Promoter:"
       yes: "Yes"
       last: "Last 10 Notes:"
@@ -1046,14 +1023,13 @@ en:
       admin: "Admin Information"
       recent: "Recent Votes:"
       com: "comment"
-      unban": "Unban" 
-
-      enable": "Enable Invites"
+      unban: "Unban" 
+      enable: "Enable Invites"
       p1: "Banning or disabling invites for a user will send an e-mail to the user with the reason below,
              with your e-mail address as the Reply-To so the user can respond"
       reason: "Reason:"
-      ban": "Ban"
-      disable": "Disable Invites"
+      ban: "Ban"
+      disable: "Disable Invites"
     standing:
       h1: "Breakdown of commenters receiving flags in the last "
       p1: "Most commenters get zero or very few flags across their comments in the last"
@@ -1061,7 +1037,7 @@ en:
       p3: "and"
       p4: "times."
       p5: "Or, to make that visible:"
-      P6: "If you're seeing the warning, the best case scenario is that you review your recent flagged comments below, maybe talk to "
+      p6: "If you're seeing the warning, the best case scenario is that you review your recent flagged comments below, maybe talk to "
       p7: "about what you think went wrong, and meet community norms.
             If you can't or don't want to do that, you can delete your account from the bottom of your "
       p8: "We count total number of flags because that's the most direct measurement of harm:

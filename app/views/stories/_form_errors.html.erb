@@ -4,7 +4,7 @@
       <%= errors_for story %>
     <% elsif !story.errors.any? && story.public_similar_stories.any? %>
       <div class="flash-notice">
-        <h2><%= t('stories.form_errors.h2_part1')%> <%= time_ago_in_words_label(story.most_recent_similar.created_at) %><%= t('stories.form_errors.h2_part1')%></h2>
+        <h2><%= t('stories.form_errors.h2_part1')%> <%= time_ago_in_words_label(story.most_recent_similar.created_at) %><%= t('stories.form_errors.h2_part2')%></h2>
         <p>
         <%= t('stories.form_errors.p1')%>
         </p>

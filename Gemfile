@@ -65,4 +65,5 @@ group :test, :development, :staging do
   gem "vcr"
   gem "webmock" # used to support vcr
   gem 'simplecov', require: false
+ gem 'pry-rails'
 end

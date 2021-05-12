@@ -1,0 +1,2 @@
+module Api::TagsHelper
+end

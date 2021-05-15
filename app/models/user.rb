@@ -588,7 +588,7 @@ class User < ApplicationRecord
   end
 
   def unread_replies_count
-    0 # @unread_replies_count ||= ReplyingComment.where(user_id: self.id, is_unread: true).count
+    @unread_replies_count ||= ReplyingComment.where(user_id: self.id, is_unread: true).count
   end
 
   def votes_for_others

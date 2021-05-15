@@ -7,7 +7,6 @@ module TrafficHelper
   CACHE_FOR = 5 # minutes
 
   def self.traffic_range
-    return [0, 2]
     div = PERIOD_LENGTH * 60
     start_at = 90.days.ago
     result = ActiveRecord::Base.connection.execute <<-SQL
@@ -42,7 +41,6 @@ module TrafficHelper
   end
 
   def self.current_activity
-    return 1
     start_at = Time.now.utc - 15.minutes
     result = ActiveRecord::Base.connection.execute <<-SQL
       select

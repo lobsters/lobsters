@@ -5,7 +5,6 @@ class RepliesController < ApplicationController
   after_action :update_read_ribbons, only: [:unread]
 
   def all
-    render action: 'placeholder' and return
     @heading = @title = "All Your Replies"
     @replies = ReplyingComment
                  .for_user(@user.id)
@@ -16,7 +15,6 @@ class RepliesController < ApplicationController
   end
 
   def comments
-    render action: 'placeholder' and return
     @heading = @title = "Your Comment Replies"
     @replies = ReplyingComment
                  .comment_replies_for(@user.id)
@@ -27,7 +25,6 @@ class RepliesController < ApplicationController
   end
 
   def stories
-    render action: 'placeholder' and return
     @heading = @title = "Your Story Replies"
     @replies = ReplyingComment
                  .story_replies_for(@user.id)
@@ -38,7 +35,6 @@ class RepliesController < ApplicationController
   end
 
   def unread
-    render action: 'placeholder' and return
     @heading = @title = "Your Unread Replies"
     @replies = ReplyingComment.unread_replies_for(@user.id)
     apply_current_vote

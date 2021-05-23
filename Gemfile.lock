@@ -150,6 +150,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
+    rack-attack (6.5.0)
+      rack (>= 1.0, < 3)
     rack-mini-profiler (2.0.4)
       rack (>= 1.2.0)
     rack-test (1.1.0)
@@ -304,6 +306,7 @@ DEPENDENCIES
   oauth
   pdf-reader
   puma
+  rack-attack
   rack-mini-profiler
   rails (~> 6.0.3.3)
   rb-readline

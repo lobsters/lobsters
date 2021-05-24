@@ -10,7 +10,7 @@ Rack::Attack.throttle("60 requests per minute", limit: 60, period: 60, &:ip)
 
 # there's an attacker enumeratng usernames via Tor
 Rack::Attack.throttle("user enumerator", limit: 30, period: 300) do |request|
-  request.ip if request.path.startswith? '/u/'
+  request.ip if request.path.starts_with? '/u/'
 end
 # at some point they'll proceed to testing credentials
 Rack::Attack.throttle("login", limit: 4, period: 60) do |request|

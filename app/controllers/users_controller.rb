@@ -159,7 +159,7 @@ class UsersController < ApplicationController
 private
 
   def only_user_or_moderator
-    if params[:username] == @user.username || @user.is_moderator?
+    if params[:username].downcase == @user.username.downcase || @user.is_moderator?
       true
     else
       redirect_to(user_path(params[:username]))

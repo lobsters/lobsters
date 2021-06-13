@@ -10,7 +10,7 @@ class SettingsController < ApplicationController
   end
 
   def delete_account
-    unless params[:user][:i_am_sure].present?
+    unless params[:user][:i_am_sure] == '1'
       flash[:error] = 'You did not check the "I am sure" checkbox.'
       return redirect_to settings_path
     end
@@ -21,7 +21,7 @@ class SettingsController < ApplicationController
 
     @user.delete!
     disown_text = ""
-    if params[:user][:disown].present?
+    if params[:user][:disown] == '1'
       disown_text = " and disowned your stories and comments."
       InactiveUser.disown_all_by_author! @user
     end

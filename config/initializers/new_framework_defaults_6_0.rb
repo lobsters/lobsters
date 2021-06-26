@@ -14,7 +14,7 @@ Rails.application.config.action_view.default_enforce_utf8 = false
 #
 # This option is not backwards compatible with earlier Rails versions.
 # It's best enabled when your entire app is migrated and stable on 6.0.
-# Rails.application.config.action_dispatch.use_cookies_with_metadata = true
+Rails.application.config.action_dispatch.use_cookies_with_metadata = true
 
 # Change the return value of `ActionDispatch::Response#content_type` to
 # Content-Type header without modification.
@@ -44,7 +44,7 @@ end
 # If you send mail in the background, job workers need to have a copy of
 # MailDeliveryJob to ensure all delivery jobs are processed properly.
 # Make sure your entire app is migrated and stable on 6.0 before using this setting.
-# Rails.application.config.action_mailer.delivery_job = "ActionMailer::MailDeliveryJob"
+Rails.application.config.action_mailer.delivery_job = "ActionMailer::MailDeliveryJob"
 
 # Enable the same cache key to be reused when the object being cached of type
 # `ActiveRecord::Relation` changes by moving the volatile information (max updated at and count)

@@ -1,4 +1,5 @@
 require "rails"
+require 'rubocop'
 
 unless Rails.env.production?
   module RuboCop
@@ -14,7 +15,7 @@ unless Rails.env.production?
         #   foo&.bar
         #   a.foo&.bar
         #
-        class DisallowSafeNavigation < Cop
+        class ProhibitSafeNavigation < Cop
           extend TargetRubyVersion
 
           MSG = 'Do not use &.'.freeze

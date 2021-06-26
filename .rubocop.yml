@@ -4,8 +4,8 @@
 
 # Project setup:
 require:
-  - ./extras/prohibit_form_for_and_form_tag.rb
-  - ./extras/prohibit_safe_navigation.rb
+  - ./extras/rubo_cop/cop/style/prohibit_form_for_and_form_tag.rb
+  - ./extras/rubo_cop/cop/style/prohibit_safe_navigation.rb
   - rubocop-rails
   - rubocop-rspec
 AllCops:

@@ -31,8 +31,8 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
         </div>
       <% end %>
 
-      <%= f.submit "#{comment.new_record?? "Post" : "Update"}",
-        :class => "comment-post", :disabled => !@user %>
+      <%= f.button "#{comment.new_record?? "Post" : "Update"}",
+        :type => "submit", :class => "comment-post", :disabled => !@user %>
       &nbsp;
       <%= f.button "Preview", :class => "comment-preview",
         :type => "button", :disabled => !@user %>

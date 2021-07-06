@@ -1287,3 +1287,17 @@ div.flash-success h2 {
 	text-decoration: none;
 	vertical-align: middle;
 }
+
+
+/* Loading indicator */
+@keyframes loading {
+	0%   { content: "."; }
+	50%  { content: ".."; }
+	100% { content: "..."; }
+}
+
+.loading::after {
+	content: "";
+	position: absolute;
+	animation: loading 500ms linear infinite;
+}

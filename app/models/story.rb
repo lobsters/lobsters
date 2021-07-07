@@ -211,48 +211,61 @@ class Story < ApplicationRecord
 
   # all stories with similar urls
   def self.find_similar_by_url(url)
-    url = url.to_s.gsub('[', '\\[')
-    url = url.to_s.gsub(']', '\\]')
-    urls = [url.to_s.gsub(/(#.*)/, "")]
-    urls2 = [url.to_s.gsub(/(#.*)/, "")]
-    urls_with_trailing_pound = []
+    similar_urls = similar_urls_to(url)
 
-    # https
-    urls.each do |u|
-      urls2.push u.gsub(/^http:\/\//i, "https://")
-      urls2.push u.gsub(/^https:\/\//i, "http://")
+    similar_urls.each do |similar_url|
+      similar_url.to_s.gsub!('[', '\\[')
+      similar_url.gsub!(']', '\\]')
     end
-    urls = urls2.uniq
-
-    # trailing slash or index.html
-    urls.each do |u|
-      u_without_slash = u.gsub(/\/+\z/, "")
-      urls2.push u_without_slash
-      urls2.push u_without_slash + "/"
-      urls2.push u_without_slash + "/index.htm"
-      urls2.push u_without_slash + "/index.html"
-      urls2.push u.gsub(/\/index.html?\z/, "")
-    end
-    urls = urls2.uniq
-
-    # www prefix
-    urls.each do |u|
-      urls2.push u.gsub(/^(https?:\/\/)www\d*\./i) {|_| $1 }
-      urls2.push u.gsub(/^(https?:\/\/)/i) {|_| "#{$1}www." }
-    end
-    urls = urls2.uniq
 
     # trailing pound
-    urls.each do |u|
+    urls_with_trailing_pound = []
+    similar_urls.each do |u|
       urls_with_trailing_pound.push u + "#"
     end
 
     # if a previous submission was moderated, return it to block it from being
     # submitted again
     Story
-      .where(:url => urls)
+      .where(:url => similar_urls)
       .or(Story.where("url RLIKE ?", urls_with_trailing_pound.join(".|")))
       .where("is_expired = ? OR is_moderated = ?", false, true)
+  end
+
+  def self.similar_urls_to(url)
+    url_without_anchor = url.to_s.gsub(/(#.*)/, "")
+    urls = [url_without_anchor]
+    urls2 = urls.dup
+
+    # http(s)
+    urls.each do |u|
+      urls2.push u.gsub(/^http:\/\//i, "https://")
+      urls2.push u.gsub(/^https:\/\//i, "http://")
+    end
+    urls = urls2.uniq
+
+    # add trailing slash or index.html
+    urls.each do |u|
+      u_without_slash = u.gsub(/\/+\z/, "")
+      urls2.push u_without_slash
+      urls2.push u_without_slash + "/"
+      urls2.push u_without_slash + "/index.htm"
+      urls2.push u_without_slash + "/index.html"
+      urls2.push u_without_slash + ".html"
+      urls2.push u_without_slash + ".htm"
+      urls2.push u.gsub(/\/index.html?\z/, "")
+      urls2.push u.gsub(/\.html?\z/, "")
+    end
+    urls = urls2.uniq
+
+    # add/remove www
+    urls.each do |u|
+      urls2.push u.gsub(/^(https?:\/\/)www\d*\./i) {|_| $1 }
+      urls2.push u.gsub(/^(https?:\/\/)/i) {|_| "#{$1}www." }
+    end
+    urls = urls2.uniq
+
+    urls
   end
 
   # doesn't include deleted/moderated/merged stories

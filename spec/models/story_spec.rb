@@ -309,6 +309,46 @@ describe Story do
     end
   end
 
+  describe ".similar_urls_to" do
+    it "includes alternate http(s) scheme" do
+      expect(Story.similar_urls_to('https://example.com')).to include('http://example.com')
+      expect(Story.similar_urls_to('http://example.com')).to include('https://example.com/')
+    end
+
+    it "includes addition of a trailing slash or index.htm(l)" do
+      expect(Story.similar_urls_to('https://example.com')).to include(
+        'https://example.com/',
+        'https://example.com/index.html',
+        'https://example.com/index.htm',
+      )
+    end
+
+    it "includes removal of a trailing slash or index.htm(l)" do
+      expect(Story.similar_urls_to('https://example.com/')).to include('https://example.com')
+      expect(Story.similar_urls_to('http://example.com/index.htm')).to include('http://example.com')
+      expect(Story.similar_urls_to('http://example.com/index.html')).to include(
+        'http://example.com'
+      )
+    end
+
+    it "includes addition or removal of www prefix" do
+      expect(Story.similar_urls_to('https://example.com/')).to include('https://www.example.com')
+      expect(Story.similar_urls_to('https://www.example.com/')).to include('https://example.com')
+    end
+
+    it "includes addition of .htm(l)" do
+      expect(Story.similar_urls_to('https://example.com/foo')).to include(
+        'https://example.com/foo.html',
+        'https://example.com/foo.htm'
+      )
+    end
+
+    it "includes removal of .htm(l)" do
+      expect(Story.similar_urls_to('https://example.com/foo.html')).to include('https://example.com/foo')
+      expect(Story.similar_urls_to('https://example.com/foo.htm')).to include('https://example.com/foo')
+    end
+  end
+
   describe "#calculated_hotness" do
     let(:story) do
       create(:story, url: 'https://example.com', user_is_author: true, created_at: Time.zone.at(0))

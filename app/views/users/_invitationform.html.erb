@@ -17,7 +17,7 @@ don't personally know.
 
   <div class="boxline">
     <%= f.label :memo, "Memo to User:", :class => "required" %>
-    <%= f.text_field :memo, :size => 60 %>
+    <%= f.text_field :memo, :size => 60, :maxlength => 255 %><!-- make sure maxlength corresponds to enforced maxlength -->
   </div>
 
   <div class="boxline">

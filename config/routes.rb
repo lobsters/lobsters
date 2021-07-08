@@ -63,7 +63,6 @@ Rails.application.routes.draw do
   match "/login/set_new_password" => "login#set_new_password",
     :as => "set_new_password", :via => [:get, :post]
 
-  get "/categories/:category" => "home#category", :as => :category
   get "/t/:tag" => "home#tagged", :as => "tag"
   get "/t/:tag/page/:page" => "home#tagged"
 
@@ -165,14 +164,18 @@ Rails.application.routes.draw do
   get "/filters" => "filters#index"
   post "/filters" => "filters#update"
 
-  resources :categories, only: [:show]
-
   get "/tags" => "tags#index"
   get "/tags.json" => "tags#index", :format => "json"
   get "/tags/new" => "tags#new", :as => "new_tag"
   get "/tags/:tag_name/edit" => "tags#edit", :as => "edit_tag"
   post "/tags" => "tags#create"
   post "/tags/:tag_name" => "tags#update", :as => "update_tag"
+
+  get "/categories/new" => "categories#new", :as => "new_category"
+  get "/categories/:category_name/edit" => "categories#edit", :as => "edit_category"
+  get "/categories/:category" => "home#category", :as => :category
+  post "/categories" => "categories#create"
+  post "/categories/:category_name" => "categories#update", :as => "update_category"
 
   post "/invitations" => "invitations#create"
   get "/invitations" => "invitations#index"

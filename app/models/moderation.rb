@@ -14,6 +14,8 @@ class Moderation < ApplicationRecord
              :optional => true
   belongs_to :user,
              :optional => true
+  belongs_to :category,
+             :optional => true
 
   scope :for, ->(user) {
     left_outer_joins(:story, :comment) .where("
@@ -82,7 +84,7 @@ class Moderation < ApplicationRecord
 protected
 
   def one_foreign_key_present
-    fks = [comment_id, domain_id, story_id, tag_id, user_id].compact.length
+    fks = [comment_id, domain_id, story_id, category_id, tag_id, user_id].compact.length
     errors.add(:base, "moderation should be linked to only one object") if fks != 1
   end
 end

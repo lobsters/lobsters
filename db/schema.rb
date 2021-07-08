@@ -156,6 +156,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.boolean "is_from_suggestions", default: false
     t.bigint "tag_id", unsigned: true
     t.integer "domain_id"
+    t.bigint "category_id"
     t.index ["comment_id"], name: "moderations_comment_id_fk"
     t.index ["created_at"], name: "index_moderations_on_created_at"
     t.index ["domain_id"], name: "index_moderations_on_domain_id"
@@ -197,6 +198,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.boolean "is_moderated", default: false, null: false
     t.decimal "hotness", precision: 20, scale: 10, default: "0.0", null: false
     t.text "markeddown_description", size: :medium
+    t.text "story_cache", size: :medium
     t.integer "comments_count", default: 0, null: false
     t.bigint "merged_story_id", unsigned: true
     t.datetime "unavailable_at"
@@ -362,6 +364,6 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
   add_foreign_key "votes", "users", name: "votes_user_id_fk"
 
   create_view "replying_comments", sql_definition: <<-SQL
-      select `read_ribbons`.`user_id` AS `user_id`,`comments`.`id` AS `comment_id`,`read_ribbons`.`story_id` AS `story_id`,`comments`.`parent_comment_id` AS `parent_comment_id`,`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`comments`.`user_id` AS `comment_author_id`,`stories`.`user_id` AS `story_author_id`,`read_ribbons`.`updated_at` < `comments`.`created_at` AS `is_unread`,(select `votes`.`vote` from `votes` where `votes`.`user_id` = `read_ribbons`.`user_id` and `votes`.`comment_id` = `comments`.`id`) AS `current_vote_vote`,(select `votes`.`reason` from `votes` where `votes`.`user_id` = `read_ribbons`.`user_id` and `votes`.`comment_id` = `comments`.`id`) AS `current_vote_reason` from (((`read_ribbons` join `comments` on(`comments`.`story_id` = `read_ribbons`.`story_id`)) join `stories` on(`stories`.`id` = `comments`.`story_id`)) left join `comments` `parent_comments` on(`parent_comments`.`id` = `comments`.`parent_comment_id`)) where `read_ribbons`.`is_following` = 1 and `comments`.`user_id` <> `read_ribbons`.`user_id` and `comments`.`is_deleted` = 0 and `comments`.`is_moderated` = 0 and (`parent_comments`.`user_id` = `read_ribbons`.`user_id` or `parent_comments`.`user_id` is null and `stories`.`user_id` = `read_ribbons`.`user_id`) and `stories`.`score` >= 0 and `comments`.`score` >= 0 and (`parent_comments`.`id` is null or `parent_comments`.`score` >= 0 and `parent_comments`.`is_moderated` = 0 and `parent_comments`.`is_deleted` = 0) and !exists(select 1 from (`votes` `f` join `comments` `c` on(`f`.`comment_id` = `c`.`id`)) where `f`.`vote` < 0 and `f`.`user_id` = `parent_comments`.`user_id` and `c`.`user_id` = `comments`.`user_id` and `f`.`story_id` = `comments`.`story_id` limit 1)
+      select `read_ribbons`.`user_id` AS `user_id`,`comments`.`id` AS `comment_id`,`read_ribbons`.`story_id` AS `story_id`,`comments`.`parent_comment_id` AS `parent_comment_id`,`comments`.`created_at` AS `comment_created_at`,`parent_comments`.`user_id` AS `parent_comment_author_id`,`comments`.`user_id` AS `comment_author_id`,`stories`.`user_id` AS `story_author_id`,(`read_ribbons`.`updated_at` < `comments`.`created_at`) AS `is_unread`,(select `votes`.`vote` from `votes` where ((`votes`.`user_id` = `read_ribbons`.`user_id`) and (`votes`.`comment_id` = `comments`.`id`))) AS `current_vote_vote`,(select `votes`.`reason` from `votes` where ((`votes`.`user_id` = `read_ribbons`.`user_id`) and (`votes`.`comment_id` = `comments`.`id`))) AS `current_vote_reason` from (((`read_ribbons` join `comments` on((`comments`.`story_id` = `read_ribbons`.`story_id`))) join `stories` on((`stories`.`id` = `comments`.`story_id`))) left join `comments` `parent_comments` on((`parent_comments`.`id` = `comments`.`parent_comment_id`))) where ((`read_ribbons`.`is_following` = 1) and (`comments`.`user_id` <> `read_ribbons`.`user_id`) and (`comments`.`is_deleted` = 0) and (`comments`.`is_moderated` = 0) and ((`parent_comments`.`user_id` = `read_ribbons`.`user_id`) or (isnull(`parent_comments`.`user_id`) and (`stories`.`user_id` = `read_ribbons`.`user_id`))) and (`stories`.`score` >= 0) and (`comments`.`score` >= 0) and (isnull(`parent_comments`.`id`) or ((`parent_comments`.`score` >= 0) and (`parent_comments`.`is_moderated` = 0) and (`parent_comments`.`is_deleted` = 0))) and (not(exists(select 1 from (`votes` `f` join `comments` `c` on((`f`.`comment_id` = `c`.`id`))) where ((`f`.`vote` < 0) and (`f`.`user_id` = `parent_comments`.`user_id`) and (`c`.`user_id` = `comments`.`user_id`) and (`f`.`story_id` = `comments`.`story_id`))))))
   SQL
 end

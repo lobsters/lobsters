@@ -2,7 +2,7 @@
 <tr>
   <th>Date/Time</th>
   <th>Moderator</th>
-  <th>Story/Comment/User, Action, Reason</th>
+  <th>Story/Comment/User/Tag/Category, Action, Reason</th>
 </tr>
 <% moderations.each do |mod| %>
   <tr class="nobottom <%= mod.moderator && 'mod' %>">
@@ -23,6 +23,8 @@
           <%= mod.comment.story.title %></a>
       <% elsif mod.tag %>
         <%= link_to("Tag: #{mod.tag.tag}", mod.tag) %>
+      <% elsif mod.category %>
+        <%= link_to("Category: #{mod.category.category}", mod.category) %>
       <% elsif mod.user_id %>
         <% if mod.user %>
           <a href="/u/<%= mod.user.username %>">User

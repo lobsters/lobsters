@@ -7,8 +7,13 @@
   <% @categories.each do |category| %>
     <h2><%= link_to category.category, category_path(category) %></h2>
 
-    <% category.tags.each do |tag| %>
-      <ol class="category_tags">
+    <ol class="category_tags">
+      <% if is_admin %>
+        <li>
+          <%= link_to 'Edit', edit_category_path(category.category) %> this category.
+        </li>
+      <% end %>
+      <% category.tags.each do |tag| %>
         <li>
         <% filtered = @filtered_tags.include?(tag.id) %>
         <%= link_to tag.tag, tag_path(tag), class: tag.css_class %>
@@ -24,13 +29,17 @@
           | <%= link_to 'edit', edit_tag_path(tag.tag) %>
         <% end %>
         </span>
-      </ol>
-    <% end %>
+        </li>
+      <% end %>
+    </ol>
   <% end %>
 
   <% if is_admin %>
     <div>
       <%= link_to 'Create New Tag', new_tag_path %>
+    </div>
+    <div>
+      <%= link_to 'Create New Category', new_category_path %>
     </div>
   <% end %>
 </div>

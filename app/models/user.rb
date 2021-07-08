@@ -571,11 +571,11 @@ class User < ApplicationRecord
   end
 
   def undeleted_received_messages
-    received_messages.where(:deleted_by_recipient => false).order('id asc')
+    received_messages.where(:deleted_by_recipient => false).order('id desc')
   end
 
   def undeleted_sent_messages
-    sent_messages.where(:deleted_by_author => false).order('id asc')
+    sent_messages.where(:deleted_by_author => false).order('id desc')
   end
 
   def unread_message_count

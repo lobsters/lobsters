@@ -41,7 +41,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
       </span>
       <% if story.domain.present? %>
-        <a class="domain" href="<%= domain_path(story.domain) %>"><%= story.domain.domain %></a>
+        <a class="domain" href="<%= domain_path(story.domain) %>"><%= story.domain_with_path %></a>
       <% end %>
 
       <% if defined?(single_story) && single_story %>

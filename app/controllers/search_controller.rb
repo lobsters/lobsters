@@ -1,5 +1,13 @@
 class SearchController < ApplicationController
   def index
+    respond_to do |format|
+      format.html { render_search }
+    end
+  end
+
+private
+
+  def render_search
     @title = "Search"
     @cur_url = "/search"
 
@@ -23,6 +31,6 @@ class SearchController < ApplicationController
       end
     end
 
-    render :action => "index"
+    render action: :index
   end
 end

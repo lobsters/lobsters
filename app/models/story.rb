@@ -570,6 +570,7 @@ class Story < ApplicationRecord
 
     all_changes = self.changes.merge(self.tagging_changes)
     all_changes.delete("unavailable_at")
+    all_changes.delete("domain_id")
 
     if !all_changes.any?
       return
@@ -592,7 +593,7 @@ class Story < ApplicationRecord
       m.action = all_changes.map {|k, v|
         if k == "merged_story_id"
           if v[1]
-            "merged into #{self.merged_into_story.short_id} " <<
+            "merged into story #{self.merged_into_story.short_id} " <<
               "(#{self.merged_into_story.title})"
           else
             "unmerged from another story"

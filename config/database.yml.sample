@@ -1,0 +1,18 @@
+test_defaults: &test_defaults
+  ## Can't use localhost here because MySQL treats localhost as socket :(
+  host: 127.0.0.1
+  database: lobsters_test
+  username: test
+  password: test
+
+test_mysql:
+  <<: *test_defaults
+  adapter: mysql2
+  encoding: utf8mb4
+  port: 3306
+
+test_postgres:
+  <<: *test_defaults
+  adapter: postgresql
+  encoding: unicode
+  port: 5432

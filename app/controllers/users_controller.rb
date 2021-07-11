@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :redirect_case_mismatch, :only => [:show, :standing]
   before_action :require_logged_in_moderator,
                 :only => [:enable_invitation, :disable_invitation, :ban, :unban]
   before_action :flag_warning, only: [:show]
@@ -158,8 +159,24 @@ class UsersController < ApplicationController
 
 private
 
+  # If viewing user at "/u/tEsT" but username is actually "test", then redirect to "/u/test".
+  def redirect_case_mismatch
+    target = User.where(username: params[:username]).first
+    return if target.nil?
+
+    same_username = target.username.casecmp?(params[:username])
+    different_case = target.username != params[:username]
+    if same_username && different_case
+      if params[:action] == 'standing'
+        redirect_to(user_standing_path(target.username))
+      else
+        redirect_to(user_path(target.username))
+      end
+    end
+  end
+
   def only_user_or_moderator
-    if params[:username].downcase == @user.username.downcase || @user.is_moderator?
+    if params[:username] == @user.username || @user.is_moderator?
       true
     else
       redirect_to(user_path(params[:username]))

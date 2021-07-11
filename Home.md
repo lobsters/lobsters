@@ -7,7 +7,7 @@ Welcome to the [lobsters](https://lobste.rs/) wiki! Check the [about page](https
 
 ## Sister Sites
 
-Other sites using the Lobsters codebase:
+Other sites using the Lobsters [codebase](https://github.com/lobsters/lobsters):
 
 * [Barnacles](https://www.barnacl.es) ([repo](https://github.com/pushcx/barnacl.es)) - Business
 * [Le Journal du Hacker](https://www.journalduhacker.net/) - Computer Science (fr)

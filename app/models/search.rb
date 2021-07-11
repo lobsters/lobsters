@@ -10,6 +10,9 @@ class Search
 
   validates :q, length: { :minimum => 2 }
 
+  # Set this to 2**31 for more pages than you will need.
+  SEARCH_MAX_PAGES = 50
+
   def initialize
     @q = ""
     @what = "stories"
@@ -23,7 +26,7 @@ class Search
   end
 
   def max_matches
-    100
+    SEARCH_MAX_PAGES * self.per_page
   end
 
   def persisted?

@@ -34,3 +34,4 @@ Inspired by Lobsters, but not using the Lobsters codebase.
 * [Racket Stories](https://racket-stories.com/) ([repo](https://github.com/soegaard/racket-stories)) - Racket.
 * [Journal du hacker](https://www.journalduhacker.net/) ([repo Gitlab](https://gitlab.com/journalduhacker/journalduhacker)) - Hacker news in french
 * [Echo JS](https://www.echojs.com/) - Echo JS is a community-driven news site entirely focused on JavaScript development, HTML5, and front-end news
+* [sic](https://sic.nessuent.xyz/) - sic is a community about everything that piques your curiosity and interest. To quote others before us: "anything that gratifies one's intellectual curiosity".

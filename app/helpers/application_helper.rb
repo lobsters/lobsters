@@ -8,6 +8,8 @@ module ApplicationHelper
       :class => "avatar",
       :size => "#{size}x#{size}",
       :alt => "#{user.username} avatar",
+      :loading => "lazy",
+      :decoding => "async",
     )
   end
 

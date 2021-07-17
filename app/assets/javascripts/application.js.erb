@@ -210,6 +210,10 @@ var _Lobsters = Class.extend({
     params.push({"name": "show_tree_lines", "value": "true"});
 
     $.post($(form).attr("action"), params, function(data) {
+      // Clear form: Firefox will keep form values on reload (e.g. F5), which isn't too useful if
+      // it's already posted.
+      $(form).find('textarea').val('')
+
       var parsedHTML = $.parseHTML(data);
 
       var isEdit = $(form).hasClass("edit_comment");

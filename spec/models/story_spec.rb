@@ -307,6 +307,26 @@ describe Story do
       s = create(:story, url: 'http://aaonline.fr/search.php?search&criteria[title-contains]=debian')
       expect(s.similar_stories).to eq([])
     end
+
+    it "finds arxiv html page and pdf URLs with the same arxiv identifier" do
+      s1 = create(:story,
+                  url: 'https://arxiv.org/abs/2101.07554',
+                  created_at: (Story::RECENT_DAYS + 1).days.ago)
+      s2 = create(:story, url: 'https://arxiv.org/pdf/2101.07554')
+
+      expect(s1.similar_stories).to eq([s2])
+      expect(s2.similar_stories).to eq([s1])
+    end
+
+    it "finds similar arxiv html page and pdf URLs that contain a pdf extension" do
+      s1 = create(:story,
+                  url: 'https://arxiv.org/abs/2101.09188',
+                  created_at: (Story::RECENT_DAYS + 1).days.ago)
+      s2 = create(:story, url: 'https://arxiv.org/pdf/2101.09188.pdf')
+
+      expect(s1.similar_stories).to eq([s2])
+      expect(s2.similar_stories).to eq([s1])
+    end
   end
 
   describe "#calculated_hotness" do

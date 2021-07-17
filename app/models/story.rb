@@ -217,6 +217,16 @@ class Story < ApplicationRecord
     urls2 = [url.to_s.gsub(/(#.*)/, "")]
     urls_with_trailing_pound = []
 
+    # arxiv html page and its pdf link based off the [arxiv identifier](https://arxiv.org/help/arxiv_identifier)
+    if /^https?:\/\/(www\d*\.)?arxiv.org/i.match(url)
+      urls.each do |u|
+        urls2.push u.gsub(/(arxiv.org\/)abs(\/\d{4}.\d{4,5})/i, '\1pdf\2')
+        urls2.push u.gsub(/(arxiv.org\/)abs(\/\d{4}.\d{4,5})/i, '\1pdf\2.pdf')
+        urls2.push u.gsub(/(arxiv.org\/)pdf(\/\d{4}.\d{4,5})(.pdf)?/i, '\1abs\2')
+      end
+      urls = urls2.uniq
+    end
+
     # https
     urls.each do |u|
       urls2.push u.gsub(/^http:\/\//i, "https://")

@@ -2,9 +2,14 @@
 # rate-limiting, you can replace separate checks of /t/c.rss and /t/python.rss
 # with a single check of /t/c,python.rss (you can add many tags)
 
+
 Rack::Attack.safelist('localhost') do |req|
   '127.0.0.1' == req.ip || '::1' == req.ip
 end
+
+# mitigating https://lobste.rs/s/8kxcvy - will post a comment there with more
+# info in a few hours
+Rack::Attack.throttle("1 request per 4 seconds", limit: 1, period: 4, &:ip)
 
 # this will kick in way too early if serving assets via rack
 Rack::Attack.throttle("5 requests per second", limit: 5, period: 1, &:ip)
@@ -34,5 +39,5 @@ Rack::Attack.throttled_response = lambda do |env|
     'RateLimit-Reset' => (now + (match_data[:period] - now % match_data[:period])).to_s,
   }
 
-  [429, headers, ["Throttled, sleep(1) between hits; more in config/initializers/rack_attack.rb\n"]]
+  [429, headers, ["Throttled, sleep(1) between hits; more in config/initializers/rack_attack.rb\n2021-08-20 - sorry for the inconvenience, I had to make rate limiting stricter and will post a comment in https://lobste.rs/s/8kxcvy n a few hours"]]
 end

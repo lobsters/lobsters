@@ -47,10 +47,10 @@
     --color-markdown_help-background: #f4f4f4;
     --color-markdown_help-border: #e0e0e0;
 
-    --color-downvote_why: #555555;
-    --color-downvote_why-background: #ffffff;
-    --color-downvote_why-background-hover: #eeeeee;
-    --color-downvote_why-background-cancel: #eeeeee;
+    --color-flag_why: #555555;
+    --color-flag_why-background: #ffffff;
+    --color-flag_why-background-hover: #eeeeee;
+    --color-flag_why-background-cancel: #eeeeee;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -93,10 +93,10 @@
     --color-markdown_help-border: #777777;
     --color-markdown_help-background: #222222;
 
-    --color-downvote_why: #cccccc;
-    --color-downvote_why-background: #333333;
-    --color-downvote_why-background-hover: #3f3f3f;
-    --color-downvote_why-background-cancel: #222222;
+    --color-flag_why: #cccccc;
+    --color-flag_why-background: #333333;
+    --color-flag_why-background-hover: #3f3f3f;
+    --color-flag_why-background-cancel: #222222;
 }
 }
 
@@ -908,18 +908,18 @@ div.comment_text code {
 	z-index: 15;
 }
 #flag_why a {
-	background-color: var(--color-downvote_why-background);
-	color: var(--color-downvote_why);
+	background-color: var(--color-flag_why-background);
+	color: var(--color-flag_why);
 	border-bottom: 1px solid #ccc;
 	display: block;
 	padding: 3px;
 	font-size: 9pt;
 }
 #flag_why a:hover {
-	background-color: var(--color-downvote_why-background-hover);
+	background-color: var(--color-flag_why-background-hover);
 }
 #flag_why a.cancelreason {
-	background-color: var(--color-downvote_why-background-cancel);
+	background-color: var(--color-flag_why-background-cancel);
 	font-size: 8pt;
 }
 

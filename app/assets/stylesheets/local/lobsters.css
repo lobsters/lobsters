@@ -3,7 +3,11 @@
     --color-link-tag-special-background: #f9ddde;
     --color-link-tag-special-border: #f0b2b8;
 
-    --color-link-tag-sysop: #555555;
+    --color-hat-sysop: #555555;
+	--color-hat-sysop-border: #bbb2b2;
+	--color-hat-sysop-crown-background: #ddc7c7;
+
+	--color-byline-has_suggestions: #bd6060;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -12,12 +16,16 @@
     --color-link-tag-special-background: #f9ddde;
     --color-link-tag-special-border: #f0b2b8;
 
-    --color-link-tag-sysop: #555555;
+    --color-hat-sysop: #555555;
+	--color-hat-sysop-border: #bbb2b2;
+	--color-hat-sysop-crown-background: #ddc7c7;
+
+	--color-byline-has_suggestions: #bd6060;
 }
 }
 
 li .byline a.story_has_suggestions {
-	color: #bd6060;
+	color: var(--color-byline-has_suggestions);
 }
 
 a.tag_announce, a.tag_ask, a.tag_show, a.tag_interview {
@@ -32,11 +40,11 @@ span.hat_openbsd_developer span.crown {
 }
 
 span.hat_sysop {
-	border-color: #bbb2b2;
-    color: var(--color-link-tag-sysop);
+	border-color: var(--color-hat-sysop-border);
+    color: var(--color-hat-sysop);
 }
 span.hat_sysop span.crown {
-	background-color: #ddc7c7;
+	background-color: var(--color-hat-sysop-crown-background);
 }
 
 #l_holder {

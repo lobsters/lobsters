@@ -1193,17 +1193,14 @@ div.flash-success div {
 div.flash-error {
 	background-color: #fdcfcc;
 	text-shadow: none;
-	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 div.flash-success {
 	background-color: #dff0d8;
 	text-shadow: none;
-	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 div.flash-notice {
 	background-color: #339bb9;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
 div.flash-error h2,

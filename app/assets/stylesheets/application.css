@@ -1162,10 +1162,6 @@ div.flash-success {
 	padding: 7px 15px;
 	margin-bottom: 18px;
 	background-color: #eedc94;
-	background-repeat: repeat-x;
-	background-image: linear-gradient(top, #fceec1, #eedc94);
-	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-	border-color: #eedc94 #eedc94 #e4c652;
 	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 	border-width: 1px;
@@ -1198,26 +1194,17 @@ div.flash-success div {
 }
 div.flash-error {
 	background-color: #fdcfcc;
-	background-repeat: repeat-x;
-	background-image: linear-gradient(top, #ee5f5b, #c43c35);
 	text-shadow: none;
-	border-color: #c43c35 #c43c35 #882a25;
 	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 div.flash-success {
 	background-color: #dff0d8;
-	background-repeat: repeat-x;
-	background-image: linear-gradient(top, #62c462, #57a957);
 	text-shadow: none;
-	border-color: #57a957 #57a957 #3d773d;
 	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 div.flash-notice {
 	background-color: #339bb9;
-	background-repeat: repeat-x;
-	background-image: linear-gradient(top, #5bc0de, #339bb9);
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-	border-color: #339bb9 #339bb9 #22697d;
 	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 

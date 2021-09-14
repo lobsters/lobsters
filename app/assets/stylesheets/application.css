@@ -1161,9 +1161,7 @@ div.flash-success {
 	position: relative;
 	padding: 7px 15px;
 	margin-bottom: 18px;
-	background-color: #eedc94;
 	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 	border-width: 1px;
 	border-style: solid;
 	border-radius: 4px;

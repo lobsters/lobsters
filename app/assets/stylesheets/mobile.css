@@ -1,5 +1,5 @@
 @media only screen and (max-width: 480px) {
-	:root {
+	html {
 		--color-mobile-header-background: #eee;
 		--color-mobile-header-border-bottom: #ccc;
 
@@ -10,12 +10,6 @@
 		--color-mobile-story-mobile_comments: #333;
 		--color-mobile-story-mobile_comments-zero-bubble: #d8d8d8;
 		--color-mobile-story-mobile_comments-zero: #999;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		:root {
-			/* todo */
-		}
 	}
 
 	html {

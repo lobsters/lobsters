@@ -1,4 +1,4 @@
-:root {
+html {
     --color-lobsters-link-tag-special: #555555;
     --color-lobsters-link-tag-special-background: #f9ddde;
     --color-lobsters-link-tag-special-border: #f0b2b8;
@@ -8,12 +8,6 @@
 	--color-lobsters-hat-sysop-crown-background: #ddc7c7;
 
 	--color-lobsters-byline-has_suggestions: #bd6060;
-}
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		/* todo */
-	}
 }
 
 li .byline a.story_has_suggestions {

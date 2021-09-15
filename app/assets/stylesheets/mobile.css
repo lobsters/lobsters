@@ -1,29 +1,20 @@
 @media only screen and (max-width: 480px) {
 	:root {
-		--color-header-background: #eee;
-		--color-header-border-bottom: #ccc;
+		--color-mobile-header-background: #eee;
+		--color-mobile-header-border-bottom: #ccc;
 
-		--color-story-border-bottom: #e0e0e0;
-		--color-story-story_liner-background: #fbfbfb;
-		--color-story-mobile_comments-background: #e8e8e8;
-		--color-story-mobile_comments-bubble: #ccc;
-		--color-story-mobile_comments: #333;
-		--color-story-mobile_comments-zero-bubble: #d8d8d8;
-		--color-story-mobile_comments-zero: #999;
+		--color-mobile-story-border-bottom: #e0e0e0;
+		--color-mobile-story-story_liner-background: #fbfbfb;
+		--color-mobile-story-mobile_comments-background: #e8e8e8;
+		--color-mobile-story-mobile_comments-bubble: #ccc;
+		--color-mobile-story-mobile_comments: #333;
+		--color-mobile-story-mobile_comments-zero-bubble: #d8d8d8;
+		--color-mobile-story-mobile_comments-zero: #999;
 	}
 
 	@media (prefers-color-scheme: dark) {
 		:root {
-			--color-header-background: #eee;
-			--color-header-border-bottom: #ccc;
-
-			--color-story-border-bottom: #e0e0e0;
-			--color-story-story_liner-background: #fbfbfb;
-			--color-story-mobile_comments-background: #e8e8e8;
-			--color-story-mobile_comments-bubble: #ccc;
-			--color-story-mobile_comments: #333;
-			--color-story-mobile_comments-zero-bubble: #d8d8d8;
-			--color-story-mobile_comments-zero: #999;
+			/* todo */
 		}
 	}
 
@@ -40,8 +31,8 @@
 	div#leader {
 		margin: 0;
 		padding: 8px 5px;
-		background-color: var(--color-header-background);
-		border-bottom: 1px solid var(--color-header-border-bottom);
+		background-color: var(--color-mobile-header-background);
+		border-bottom: 1px solid var(--color-mobile-header-border-bottom);
 	}
 	div#leader {
 		padding: 8px;
@@ -153,18 +144,18 @@
 	}
 
 	ol.stories.list li.story {
-		border-bottom: 1px solid var(--color-story-border-bottom);
+		border-bottom: 1px solid var(--color-mobile-story-border-bottom);
 		display: table;
 	}
 	ol.stories.list li.story div.story_liner {
-		background-color: var(--color-story-story_liner-background);
+		background-color: var(--color-mobile-story-story_liner-background);
 		display: table-cell;
 		padding-top: 0.5em;
 		padding-bottom: 0.75em;
 		width: 100%;
 	}
 	ol.stories.list li.story .mobile_comments {
-		background-color: var(--color-story-mobile_comments-background);
+		background-color: var(--color-mobile-story-mobile_comments-background);
 		display: table-cell !important;
 		font-size: 11pt;
 		min-width: 40px;
@@ -175,7 +166,7 @@
 	ol.stories.list li.story .mobile_comments span:before {
 		border-style: solid;
 		border-width: 0px 6px 3px 0px;
-		border-color: var(--color-story-mobile_comments-bubble);
+		border-color: var(--color-mobile-story-mobile_comments-bubble);
 		border-bottom-right-radius: 13px;
 		bottom: -10px;
 		content: "";
@@ -188,7 +179,7 @@
 	}
 	ol.stories.list li.story .mobile_comments span:after {
 		border-bottom-right-radius: 10px;
-		border-color: var(--color-story-mobile_comments-bubble);
+		border-color: var(--color-mobile-story-mobile_comments-bubble);
 		border-style: solid;
 		border-width: 0px 3px 3px 0px;
 		bottom: -10px;
@@ -201,10 +192,10 @@
 		z-index: 10;
 	}
 	ol.stories.list li.story .mobile_comments span {
-		background-color: var(--color-story-mobile_comments-bubble);
-		border: 1px solid var(--color-story-mobile_comments-bubble);
+		background-color: var(--color-mobile-story-mobile_comments-bubble);
+		border: 1px solid var(--color-mobile-story-mobile_comments-bubble);
 		border-radius: 5px;
-		color: var(--color-story-mobile_comments);
+		color: var(--color-mobile-story-mobile_comments);
 		display: block;
 		font-size: 9pt;
 		margin: 0 0.5em;
@@ -217,13 +208,13 @@
 		outline: 0;
 	}
 	ol.stories.list li.story .mobile_comments.zero span {
-		background-color: var(--color-story-mobile_comments-zero-bubble);
-		color: var(--color-story-mobile_comments-zero);
+		background-color: var(--color-mobile-story-mobile_comments-zero-bubble);
+		color: var(--color-mobile-story-mobile_comments-zero);
 	}
 	ol.stories.list li.story .mobile_comments.zero span,
 	ol.stories.list li.story .mobile_comments.zero span:before,
 	ol.stories.list li.story .mobile_comments.zero span:after {
-		border-color: var(--color-story-mobile_comments-zero-bubble);
+		border-color: var(--color-mobile-story-mobile_comments-zero-bubble);
 	}
 	ol.stories.list li.story .comments_label {
 		display: none;

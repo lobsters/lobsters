@@ -1,37 +1,29 @@
 :root {
-    --color-link-tag-special: #555555;
-    --color-link-tag-special-background: #f9ddde;
-    --color-link-tag-special-border: #f0b2b8;
+    --color-lobsters-link-tag-special: #555555;
+    --color-lobsters-link-tag-special-background: #f9ddde;
+    --color-lobsters-link-tag-special-border: #f0b2b8;
 
-    --color-hat-sysop: #555555;
-	--color-hat-sysop-border: #bbb2b2;
-	--color-hat-sysop-crown-background: #ddc7c7;
+    --color-lobsters-hat-sysop: #555555;
+	--color-lobsters-hat-sysop-border: #bbb2b2;
+	--color-lobsters-hat-sysop-crown-background: #ddc7c7;
 
-	--color-byline-has_suggestions: #bd6060;
+	--color-lobsters-byline-has_suggestions: #bd6060;
 }
 
 @media (prefers-color-scheme: dark) {
-:root {
-    --color-link-tag-special: #555555;
-    --color-link-tag-special-background: #f9ddde;
-    --color-link-tag-special-border: #f0b2b8;
-
-    --color-hat-sysop: #555555;
-	--color-hat-sysop-border: #bbb2b2;
-	--color-hat-sysop-crown-background: #ddc7c7;
-
-	--color-byline-has_suggestions: #bd6060;
-}
+	:root {
+		/* todo */
+	}
 }
 
 li .byline a.story_has_suggestions {
-	color: var(--color-byline-has_suggestions);
+	color: var(--color-lobsters-byline-has_suggestions);
 }
 
 a.tag_announce, a.tag_ask, a.tag_show, a.tag_interview {
-	background-color: var(--color-link-tag-special-background);
-	border-color: var(--color-link-tag-special-border);
-    color: var(--color-link-tag-special);
+	background-color: var(--color-lobsters-link-tag-special-background);
+	border-color: var(--color-lobsters-link-tag-special-border);
+    color: var(--color-lobsters-link-tag-special);
 }
 
 span.hat_openbsd_developer span.crown {
@@ -40,11 +32,11 @@ span.hat_openbsd_developer span.crown {
 }
 
 span.hat_sysop {
-	border-color: var(--color-hat-sysop-border);
-    color: var(--color-hat-sysop);
+	border-color: var(--color-lobsters-hat-sysop-border);
+    color: var(--color-lobsters-hat-sysop);
 }
 span.hat_sysop span.crown {
-	background-color: var(--color-hat-sysop-crown-background);
+	background-color: var(--color-lobsters-hat-sysop-crown-background);
 }
 
 #l_holder {

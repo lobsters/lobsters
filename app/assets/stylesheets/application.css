@@ -56,9 +56,10 @@
 
 	--color-na: gray;
 
-    --color-header: #777777;
-    --color-header-lobsters: #333333;
     --color-header-title: #333333;
+    --color-header-link: #777777;
+    --color-header-link-cur_url: #333333;
+	--color-header-link-new_messages: #ac130d;
 
     --color-markdown_help-background: #f4f4f4;
     --color-markdown_help-border: #e0e0e0;
@@ -69,8 +70,6 @@
     --color-flag_why-background-hover: #eeeeee;
     --color-flag_why-background-cancel: #eeeeee;
 	--color-flag_why-border: #ccc;
-
-	--color-new_messages: #ac130d;
 
 	--color-footer-link: #aaa;
 
@@ -187,9 +186,10 @@
     --color-tag_meta-background: #eee;
     --color-tag_meta-border: #c8c8c8;
 
-    --color-header: #777777;
-    --color-header-lobsters: #aaaaaa;
     --color-header-title: #aaaaaa;
+    --color-header-link: #777777;
+    --color-header-link-cur_url: #aaaaaa;
+	--color-header-link-new_messages: #ac130d;
 
     --color-markdown_help-border: #777777;
     --color-markdown_help-background: #222222;
@@ -483,7 +483,7 @@ div#inside {
 }
 
 .headerlinks a {
-	color: var(--color-header);
+	color: var(--color-header-link);
 	text-decoration: none;
 	padding-right: 0.75em;
 }
@@ -499,11 +499,11 @@ div#inside {
 }
 
 #header a.cur_url {
-	color: var(--color-header-lobsters);
+	color: var(--color-header-link-cur_url);
 }
 
 #header a.new_messages {
-	color: var(--color-new_messages);
+	color: var(--color-header-link-new_messages);
 }
 
 div#leader {

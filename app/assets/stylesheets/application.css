@@ -327,7 +327,7 @@ a.button {
 	background-color: var(--color-button-bg);
 	border-bottom-color: var(--color-fg-shape);
 	border: 1px solid var(--color-box-border);
-	color: var(--color-fg-67);
+	color: var(--color-fg);
 	cursor: pointer;
 	display: inline-block;
 	line-height: 18px;

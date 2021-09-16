@@ -299,7 +299,7 @@ textarea:focus {
 	outline: 0;
 }
 textarea::placeholder {
-	color: var(--color-fg-33);
+	color: var(--color-fg-60);
 }
 
 input[type="submit"]:focus,
@@ -310,11 +310,11 @@ button:focus {
 
 /* these must be separate */
 ::-webkit-input-placeholder {
-	color: var(--color-fg-33);
+	color: var(--color-fg-50);
 	font-style: italic;
 }
 :-moz-placeholder {
-	color: var(--color-fg-33);
+	color: var(--color-fg-50);
 	font-style: italic;
 }
 

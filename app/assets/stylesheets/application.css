@@ -1341,15 +1341,15 @@ div.flash-success div {
 	line-height: 28px;
 }
 div.flash-error {
-	background-color: var(--color-flash-error-background);
+	background-color: var(--color-flash-bg-error);
 	text-shadow: none;
 }
 div.flash-success {
-	background-color: var(--color-flash-success-background);
+	background-color: var(--color-flash-bg-success);
 	text-shadow: none;
 }
 div.flash-notice {
-	background-color: var(--color-flash-notice-background);
+	background-color: var(--color-flash-bg-notice);
 	text-shadow: 0 -1px 0 var(--color-shadow-25);
 }
 

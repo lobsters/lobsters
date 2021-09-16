@@ -1,15 +1,22 @@
 @media only screen and (max-width: 480px) {
-	html {
-		--color-mobile-header-background: #eee;
-		--color-mobile-header-border-bottom: #ccc;
+	/* light mode */
+	:root {
+		--color-mobile-story-border: #e0e0e0;
+		--color-mobile-story-liner-bg: #fbfbfb;
+		--color-mobile-story-comments-bg: #e8e8e8;
+		--color-mobile-story-comments-bubble-fill: #ccc;
+		--color-mobile-story-comments-bubble-fill-zero: #d8d8d8;
+	}
 
-		--color-mobile-story-border-bottom: #e0e0e0;
-		--color-mobile-story-story_liner-background: #fbfbfb;
-		--color-mobile-story-mobile_comments-background: #e8e8e8;
-		--color-mobile-story-mobile_comments-bubble: #ccc;
-		--color-mobile-story-mobile_comments: #333;
-		--color-mobile-story-mobile_comments-zero-bubble: #d8d8d8;
-		--color-mobile-story-mobile_comments-zero: #999;
+	/* dark mode */
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--color-mobile-story-border: #141414;
+			--color-mobile-story-liner-bg: #000;
+			--color-mobile-story-comments-bg: #080808;
+			--color-mobile-story-comments-bubble-fill: #141414;
+			--color-mobile-story-comments-bubble-fill-zero: #0e0e0e;
+		}
 	}
 
 	html {
@@ -25,8 +32,8 @@
 	div#leader {
 		margin: 0;
 		padding: 8px 5px;
-		background-color: var(--color-mobile-header-background);
-		border-bottom: 1px solid var(--color-mobile-header-border-bottom);
+		background-color: var(--color-box-bg-shaded);
+		border-bottom: 1px solid var(--color-box-border);
 	}
 	div#leader {
 		padding: 8px;
@@ -138,18 +145,18 @@
 	}
 
 	ol.stories.list li.story {
-		border-bottom: 1px solid var(--color-mobile-story-border-bottom);
+		border-bottom: 1px solid var(--color-mobile-story-border);
 		display: table;
 	}
 	ol.stories.list li.story div.story_liner {
-		background-color: var(--color-mobile-story-story_liner-background);
+		background-color: var(--color-mobile-story-liner-bg);
 		display: table-cell;
 		padding-top: 0.5em;
 		padding-bottom: 0.75em;
 		width: 100%;
 	}
 	ol.stories.list li.story .mobile_comments {
-		background-color: var(--color-mobile-story-mobile_comments-background);
+		background-color: var(--color-mobile-story-comments-bg);
 		display: table-cell !important;
 		font-size: 11pt;
 		min-width: 40px;
@@ -160,7 +167,7 @@
 	ol.stories.list li.story .mobile_comments span:before {
 		border-style: solid;
 		border-width: 0px 6px 3px 0px;
-		border-color: var(--color-mobile-story-mobile_comments-bubble);
+		border-color: var(--color-mobile-story-comments-bubble-fill);
 		border-bottom-right-radius: 13px;
 		bottom: -10px;
 		content: "";
@@ -173,7 +180,7 @@
 	}
 	ol.stories.list li.story .mobile_comments span:after {
 		border-bottom-right-radius: 10px;
-		border-color: var(--color-mobile-story-mobile_comments-bubble);
+		border-color: var(--color-mobile-story-comments-bubble-fill);
 		border-style: solid;
 		border-width: 0px 3px 3px 0px;
 		bottom: -10px;
@@ -186,10 +193,10 @@
 		z-index: 10;
 	}
 	ol.stories.list li.story .mobile_comments span {
-		background-color: var(--color-mobile-story-mobile_comments-bubble);
-		border: 1px solid var(--color-mobile-story-mobile_comments-bubble);
+		background-color: var(--color-mobile-story-comments-bubble-fill);
+		border: 1px solid var(--color-mobile-story-comments-bubble-fill);
 		border-radius: 5px;
-		color: var(--color-mobile-story-mobile_comments);
+		color: var(--color-fg);
 		display: block;
 		font-size: 9pt;
 		margin: 0 0.5em;
@@ -202,13 +209,13 @@
 		outline: 0;
 	}
 	ol.stories.list li.story .mobile_comments.zero span {
-		background-color: var(--color-mobile-story-mobile_comments-zero-bubble);
-		color: var(--color-mobile-story-mobile_comments-zero);
+		background-color: var(--color-mobile-story-comments-bubble-fill-zero);
+		color: var(--color-fg-33);
 	}
 	ol.stories.list li.story .mobile_comments.zero span,
 	ol.stories.list li.story .mobile_comments.zero span:before,
 	ol.stories.list li.story .mobile_comments.zero span:after {
-		border-color: var(--color-mobile-story-mobile_comments-zero-bubble);
+		border-color: var(--color-mobile-story-comments-bubble-fill-zero);
 	}
 	ol.stories.list li.story .comments_label {
 		display: none;

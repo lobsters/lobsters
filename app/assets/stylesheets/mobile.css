@@ -127,10 +127,10 @@
 	/* explicitly reset color when not upvoted, since previously-upvoted arrow
 	 * will still be triggering :hover until next tap */
 	div.voters .upvoter:hover {
-		border-bottom-color: var(--color-voters-upvoter-fill);
+		border-bottom-color: var(--color-fg-shape);
 	}
 	.upvoted div.voters .upvoter {
-		border-bottom-color: var(--color-voters-upvoter-fill-upvoted);
+		border-bottom-color: var(--color-fg-accent);
 	}
 
 	ol.stories.list {

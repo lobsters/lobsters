@@ -78,7 +78,7 @@
 		--palette-fg-accent: 207, 54, 49; /* red as in lobste.rs */
 		--palette-fg-negative: 190, 45, 45; /* red as in warning */
 		--palette-fg-affirmative: 42, 180, 42;
-		--palette-fg-author: 97, 122, 173;
+		--palette-fg-author: 80, 112, 177;
 		--palette-fg-shape: 80, 80, 80;
 
 		/* explicit view colors */
@@ -97,9 +97,9 @@
 		--color-table-row-border: #1d1d1d;
 
 		--color-tag-bg: #3b320d;
-		--color-tag-border: #5e4b09;
+		--color-tag-border: #665501;
 		--color-tag-media-bg: #15293d;
-		--color-tag-media-border: #213f69;
+		--color-tag-media-border: #214669;
 		--color-tag-meta-bg: #2c2c2c;
 		--color-tag-meta-border: #484848;
 

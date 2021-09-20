@@ -63,7 +63,7 @@
 	:root {
 		/* main monochrome */
 		--palette-bg: 0, 0, 0;
-		--palette-fg: 255, 255, 255;
+		--palette-fg: 225, 225, 225;
 		--palette-light: 255, 255, 255;
 		--palette-shadow: 0, 0, 0;
 
@@ -128,8 +128,7 @@ html {
 	--color-bg: rgb(var(--palette-bg));
 	--color-bg-50: rgba(var(--palette-bg), 50%);
 
-	/* c1c1c1 on dark mode. 88% gives d9d9d9, same contrast as light mode. */
-	--color-fg: rgb(var(--palette-fg)); /* 272727, 14.90, 272727, 14.90, primary text */
+	--color-fg: rgb(var(--palette-fg)); /* 272727, 14.90, 272727, 14.90, dadada, 14.99, primary text */
 	--color-fg-75: rgba(var(--palette-fg), 94%); /* 313131, 12.87, 313131, 13.03, links in flash banners */
 	--color-fg-67: rgba(var(--palette-fg), 83%); /* 444444, 9.75, 444444, 9.75, most text in a box */
 	--color-fg-60: rgba(var(--palette-fg), 75%); /* 545454, 7.60, 545454, 7.60, table page links*/

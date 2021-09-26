@@ -13,6 +13,15 @@
 	--palette-light: 255, 255, 255;
 	--palette-shadow: 0, 0, 0;
 
+	/* blends of foreground color over the background */
+	--opacity-contrast-75: 94%;
+	--opacity-contrast-67: 84%;
+	--opacity-contrast-60: 75%;
+	--opacity-contrast-53: 67%;
+	--opacity-contrast-50: 63%;
+	--opacity-contrast-47: 59%;
+	--opacity-contrast-40: 50%;
+	--opacity-contrast-33: 41%;
 	--opacity-gradient-lit: 0%;
 	--opacity-gradient-shadowed: 13%;
 
@@ -67,6 +76,15 @@
 		--palette-light: 255, 255, 255;
 		--palette-shadow: 0, 0, 0;
 
+		/* blends of foreground color over the background */
+		--opacity-contrast-75: 95%; /* 12.87, 13.03, 13.15, links in flash banners */
+		--opacity-contrast-67: 85%; /* 9.75, 9.89, 9.98, most text in a box */
+		--opacity-contrast-60: 76%; /* 7.60, 7.60, 7.54, table page links*/
+		--opacity-contrast-53: 69%; /* 5.85, 5.97, 6.02, uncolored text links */
+		--opacity-contrast-50: 64%; /* 5.12, 5.29, 5.13, disabled, expired */
+		--opacity-contrast-47: 61%; /* 4.49!, 4.62, 4.70, byline */
+		--opacity-contrast-40: 54%; /* 3.55!, 3.60!, 3.70!, footer link */
+		--opacity-contrast-33: 46%; /* 2.78!, 2.79!, 2.78!, faint text */
 		--opacity-gradient-lit: 13%;
 		--opacity-gradient-shadowed: 3%;
 
@@ -128,15 +146,15 @@ html {
 	--color-bg: rgb(var(--palette-bg));
 	--color-bg-50: rgba(var(--palette-bg), 50%);
 
-	--color-fg: rgb(var(--palette-fg)); /* 272727, 14.90, 272727, 14.90, dadada, 14.99, primary text */
-	--color-fg-75: rgba(var(--palette-fg), 94%); /* 313131, 12.87, 313131, 13.03, links in flash banners */
-	--color-fg-67: rgba(var(--palette-fg), 83%); /* 444444, 9.75, 444444, 9.75, most text in a box */
-	--color-fg-60: rgba(var(--palette-fg), 75%); /* 545454, 7.60, 545454, 7.60, table page links*/
-	--color-fg-53: rgba(var(--palette-fg), 67%); /* 646464, 5.85, 636363, 5.97, uncolored text links */
-	--color-fg-50: rgba(var(--palette-fg), 63%); /* 6d6d6d, 5.12, 6b6b6b, 5.29, disabled, expired */
-	--color-fg-47: rgba(var(--palette-fg), 58%); /* 767676, 4.49!, 767676, 4.56, byline */
-	--color-fg-40: rgba(var(--palette-fg), 50%); /* 888888, 3.55!, 868686, 3.60!, footer link */
-	--color-fg-33: rgba(var(--palette-fg), 41%); /* 9a9a9a, 2.78!, 9a9a9a, 2.79!, faint text */
+	--color-fg: rgb(var(--palette-fg)); /* primary text */
+	--color-fg-75: rgba(var(--palette-fg), var(--opacity-contrast-75)); /* links in flash banners */
+	--color-fg-67: rgba(var(--palette-fg), var(--opacity-contrast-67)); /* most text in a box */
+	--color-fg-60: rgba(var(--palette-fg), var(--opacity-contrast-60)); /* table page links */
+	--color-fg-53: rgba(var(--palette-fg), var(--opacity-contrast-53)); /* uncolored text links */
+	--color-fg-50: rgba(var(--palette-fg), var(--opacity-contrast-50)); /* disabled, expired */
+	--color-fg-47: rgba(var(--palette-fg), var(--opacity-contrast-47)); /* byline */
+	--color-fg-40: rgba(var(--palette-fg), var(--opacity-contrast-40)); /* footer link */
+	--color-fg-33: rgba(var(--palette-fg), var(--opacity-contrast-33)); /* faint text */
 	--color-fg-gradient-lit: rgba(var(--palette-fg), var(--opacity-gradient-lit));
 	--color-fg-gradient-shadowed: rgba(var(--palette-fg), var(--opacity-gradient-shadowed)); /* d7d7d7 */
 

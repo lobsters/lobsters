@@ -210,7 +210,7 @@
 	}
 	ol.stories.list li.story .mobile_comments.zero span {
 		background-color: var(--color-mobile-story-comments-bubble-fill-zero);
-		color: var(--color-fg-33);
+		color: var(--color-fg-contrast-2-75);
 	}
 	ol.stories.list li.story .mobile_comments.zero span,
 	ol.stories.list li.story .mobile_comments.zero span:before,

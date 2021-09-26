@@ -14,14 +14,15 @@
 	--palette-shadow: 0, 0, 0;
 
 	/* blends of foreground color over the background */
-	--opacity-contrast-75: 94%;
-	--opacity-contrast-67: 84%;
-	--opacity-contrast-60: 75%;
-	--opacity-contrast-53: 67%;
-	--opacity-contrast-50: 63%;
-	--opacity-contrast-47: 59%;
-	--opacity-contrast-40: 50%;
-	--opacity-contrast-33: 41%;
+	--opacity-contrast-13: 94%;
+	--opacity-contrast-10: 84%;
+	--opacity-contrast-7-5: 75%;
+	--opacity-contrast-6: 67%;
+	--opacity-contrast-5: 63%;
+	--opacity-contrast-4-5: 59%; /* WCAG AA minimum 4.5:1 text contrast */
+	--opacity-contrast-3-5: 50%;
+	--opacity-contrast-2-75: 41%;
+
 	--opacity-gradient-lit: 0%;
 	--opacity-gradient-shadowed: 13%;
 
@@ -77,14 +78,15 @@
 		--palette-shadow: 0, 0, 0;
 
 		/* blends of foreground color over the background */
-		--opacity-contrast-75: 95%; /* 12.87, 13.03, 13.15, links in flash banners */
-		--opacity-contrast-67: 85%; /* 9.75, 9.89, 9.98, most text in a box */
-		--opacity-contrast-60: 76%; /* 7.60, 7.60, 7.54, table page links*/
-		--opacity-contrast-53: 69%; /* 5.85, 5.97, 6.02, uncolored text links */
-		--opacity-contrast-50: 64%; /* 5.12, 5.29, 5.13, disabled, expired */
-		--opacity-contrast-47: 61%; /* 4.49!, 4.62, 4.70, byline */
-		--opacity-contrast-40: 54%; /* 3.55!, 3.60!, 3.70!, footer link */
-		--opacity-contrast-33: 46%; /* 2.78!, 2.79!, 2.78!, faint text */
+		--opacity-contrast-13: 95%;
+		--opacity-contrast-10: 85%;
+		--opacity-contrast-7-5: 76%;
+		--opacity-contrast-6: 69%;
+		--opacity-contrast-5: 64%;
+		--opacity-contrast-4-5: 61%; /* WCAG AA minimum 4.5:1 text contrast */
+		--opacity-contrast-3-5: 54%;
+		--opacity-contrast-2-75: 46%;
+
 		--opacity-gradient-lit: 13%;
 		--opacity-gradient-shadowed: 3%;
 
@@ -147,14 +149,15 @@ html {
 	--color-bg-50: rgba(var(--palette-bg), 50%);
 
 	--color-fg: rgb(var(--palette-fg)); /* primary text */
-	--color-fg-75: rgba(var(--palette-fg), var(--opacity-contrast-75)); /* links in flash banners */
-	--color-fg-67: rgba(var(--palette-fg), var(--opacity-contrast-67)); /* most text in a box */
-	--color-fg-60: rgba(var(--palette-fg), var(--opacity-contrast-60)); /* table page links */
-	--color-fg-53: rgba(var(--palette-fg), var(--opacity-contrast-53)); /* uncolored text links */
-	--color-fg-50: rgba(var(--palette-fg), var(--opacity-contrast-50)); /* disabled, expired */
-	--color-fg-47: rgba(var(--palette-fg), var(--opacity-contrast-47)); /* byline */
-	--color-fg-40: rgba(var(--palette-fg), var(--opacity-contrast-40)); /* footer link */
-	--color-fg-33: rgba(var(--palette-fg), var(--opacity-contrast-33)); /* faint text */
+	--color-fg-contrast-13: rgba(var(--palette-fg), var(--opacity-contrast-13));
+	--color-fg-contrast-10: rgba(var(--palette-fg), var(--opacity-contrast-10));
+	--color-fg-contrast-7-5: rgba(var(--palette-fg), var(--opacity-contrast-7-5));
+	--color-fg-contrast-6: rgba(var(--palette-fg), var(--opacity-contrast-6));
+	--color-fg-contrast-5: rgba(var(--palette-fg), var(--opacity-contrast-5));
+	--color-fg-contrast-4-5: rgba(var(--palette-fg), var(--opacity-contrast-4-5));
+	--color-fg-contrast-3-5: rgba(var(--palette-fg), var(--opacity-contrast-3-5));
+	--color-fg-contrast-2-75: rgba(var(--palette-fg), var(--opacity-contrast-2-75));
+
 	--color-fg-gradient-lit: rgba(var(--palette-fg), var(--opacity-gradient-lit));
 	--color-fg-gradient-shadowed: rgba(var(--palette-fg), var(--opacity-gradient-shadowed)); /* d7d7d7 */
 
@@ -223,7 +226,7 @@ a.tag {
 	background-color: var(--color-tag-bg);
 	border: 1px solid var(--color-tag-border);
 	border-radius: 5px;
-	color: var(--color-fg-67);
+	color: var(--color-fg-contrast-10);
 	font-size: 8pt;
 	margin-left: 0.25em;
 	padding: 0px 0.4em 1px 0.4em;
@@ -234,7 +237,7 @@ a.tag {
 a.tag_is_media {
 	background-color: var(--color-tag-media-bg);
 	border-color: var(--color-tag-media-border);
-	color: var(--color-fg-67);
+	color: var(--color-fg-contrast-10);
 }
 
 a.tag_meta {
@@ -261,12 +264,12 @@ span.hat span.crown {
 }
 
 span.hat span.crown, span.hat a {
-	color: var(--color-fg-53);
+	color: var(--color-fg-contrast-6);
 	text-decoration: none;
 }
 
 span.na {
-	color: var(--color-fg-50);
+	color: var(--color-fg-contrast-5);
 	font-style: italic;
 }
 
@@ -284,7 +287,7 @@ input,
 button,
 select,
 textarea {
-	color: var(--color-fg-67);
+	color: var(--color-fg-contrast-10);
 	background-color: var(--color-box-bg);
 	padding: 3px 5px;
 }
@@ -317,7 +320,7 @@ textarea:focus {
 	outline: 0;
 }
 textarea::placeholder {
-	color: var(--color-fg-60);
+	color: var(--color-fg-contrast-7-5);
 }
 
 input[type="submit"]:focus,
@@ -328,11 +331,11 @@ button:focus {
 
 /* these must be separate */
 ::-webkit-input-placeholder {
-	color: var(--color-fg-50);
+	color: var(--color-fg-contrast-5);
 	font-style: italic;
 }
 :-moz-placeholder {
-	color: var(--color-fg-50);
+	color: var(--color-fg-contrast-5);
 	font-style: italic;
 }
 
@@ -363,7 +366,7 @@ button:hover,
 input[type="button"]:hover,
 input[type="reset"]:hover,
 input[type="submit"]:hover {
-	color: var(--color-fg-67);
+	color: var(--color-fg-contrast-10);
 	text-decoration: none;
 	background-color: var(--color-button-bg-shaded);
 }
@@ -386,7 +389,7 @@ input:disabled,
 textarea:disabled,
 button:disabled {
 	background-color: var(--color-box-bg-shaded);
-	color: var(--color-fg-50);
+	color: var(--color-fg-contrast-5);
 }
 
 a.button,
@@ -457,7 +460,7 @@ div#inside {
 }
 
 .headerlinks a {
-	color: var(--color-fg-53);
+	color: var(--color-fg-contrast-6);
 	text-decoration: none;
 	padding-right: 0.75em;
 }
@@ -493,7 +496,7 @@ div#footer {
 	padding-right: 10px;
 }
 div#footer a {
-	color: var(--color-fg-40);
+	color: var(--color-fg-contrast-3-5);
 	text-decoration: none;
 	padding-left: 0.75em;
 }
@@ -562,7 +565,7 @@ div.voters {
 }
 
 div.voters div.score {
-	color: var(--color-fg-33);
+	color: var(--color-fg-contrast-2-75);
 	font-size: 9pt;
 	margin-top: 1px;
 	margin-bottom: -3px;
@@ -631,7 +634,7 @@ ol.stories li.story div.story_liner {
 }
 
 .comment a {
-	color: var(--color-fg-60);
+	color: var(--color-fg-contrast-7-5);
 }
 
 ol.stories li:first-child div.story_liner {
@@ -671,7 +674,7 @@ li .link a {
 }
 
 li.story .description_present {
-	color: var(--color-fg-50);
+	color: var(--color-fg-contrast-5);
 	padding-left: 0.25em;
 	text-decoration: none;
 	vertical-align: middle;
@@ -686,7 +689,7 @@ li .tags {
 }
 
 li .domain {
-	color: var(--color-fg-47);
+	color: var(--color-fg-contrast-4-5);
 	font-style: italic;
 	font-size: 9pt;
 	text-decoration: none;
@@ -708,7 +711,7 @@ li input.comment_folder_button {
 li .comment_folder {
 	display: inline-block;
 	font-size: 9pt;
-	color: var(--color-fg-33);
+	color: var(--color-fg-contrast-2-75);
 	letter-spacing: 0.1em;
 	width: 1.5em;
  	cursor: pointer;
@@ -784,7 +787,7 @@ div.comment:target div.voters {
 }
 
 li .byline {
-	color: var(--color-fg-47);
+	color: var(--color-fg-contrast-4-5);
 	font-size: 9.5pt;
 }
 li .byline > img.avatar {
@@ -805,7 +808,7 @@ li.story span.byline {
 	margin-left: 0.5em;
 }
 li .byline a {
-	color: var(--color-fg-47);
+	color: var(--color-fg-contrast-4-5);
 	text-decoration: none;
 }
 /* preserve selection made elsewhere when clicking */
@@ -823,7 +826,7 @@ li .byline a.new_user {
 span.inactive_user, a.inactive_user,
 li .byline a.inactive_user,
 .inactive_tag {
-	color: var(--color-fg-50);
+	color: var(--color-fg-contrast-5);
 	text-decoration: line-through;
 }
 span.user_is_author, a.user_is_author,
@@ -848,7 +851,7 @@ li.story.expired {
 	opacity: 0.6;
 }
 li.story.expired a {
-	color: var(--color-fg-50) !important;
+	color: var(--color-fg-contrast-5) !important;
 }
 
 li div.details,
@@ -861,7 +864,7 @@ div.story_content {
 	margin-bottom: 1em;
 }
 ol.stories.list div.story_content {
-	color: var(--color-fg-53);
+	color: var(--color-fg-contrast-6);
 	max-height: 2.6em;
 	margin: 0.25em 40px 0.25em 0;
 	overflow: hidden;
@@ -878,7 +881,7 @@ div.page_link_buttons {
 	margin-left: 40px;
 }
 div.morelink a {
-	color: var(--color-fg-60);
+	color: var(--color-fg-contrast-7-5);
 	font-weight: bold;
 	text-decoration: none;
 }
@@ -890,7 +893,7 @@ div.page_link_buttons a,
 div.page_link_buttons span {
 	border: 1px solid var(--color-box-border);
 	background-color: var(--color-button-bg);
-	color: var(--color-fg-60);
+	color: var(--color-fg-contrast-7-5);
 	padding: 0.25em 0.5em;
 	font-weight: bold;
 	text-decoration: none;
@@ -937,7 +940,7 @@ div.story_text blockquote {
 	font-style: italic;
 	margin: 0.25em 0 0 0.5em;
 	padding: 0 0 0 1em;
-	border-left: 2px solid var(--color-fg-50);
+	border-left: 2px solid var(--color-fg-contrast-5);
 }
 
 /* un-italicize italics inside a blockquote */
@@ -984,7 +987,7 @@ div.comment_text code {
 }
 #flag_why a {
 	background-color: var(--color-box-bg);
-	color: var(--color-fg-67);
+	color: var(--color-fg-contrast-10);
 	border-bottom: 1px solid var(--color-box-border);
 	display: block;
 	padding: 3px;
@@ -1021,7 +1024,7 @@ div.markdown_help_label {
 	float: right;
 	font-size: 9pt;
 	line-height: 2em;
-	color: var(--color-fg-33);
+	color: var(--color-fg-contrast-2-75);
 	text-decoration: underline;
 	cursor: pointer;
 }
@@ -1138,7 +1141,7 @@ ul.noparent:before {
 }
 
 ul.user_tree {
-	color: var(--color-fg-47);
+	color: var(--color-fg-contrast-4-5);
 }
 
 /* /u/:username/standing */
@@ -1243,7 +1246,7 @@ table.data pre {
 	font-size: 9.5pt;
 	font-weight: normal;
 	font-style: italic;
-	color: var(--color-fg-50);
+	color: var(--color-fg-contrast-5);
 }
 .box .legend.right {
 	float: right;
@@ -1313,7 +1316,7 @@ table.data pre {
 }
 
 .hint {
-	color: var(--color-fg-50);
+	color: var(--color-fg-contrast-5);
 	font-style: italic;
 	margin-left: 1em;
 }
@@ -1344,7 +1347,7 @@ div.flash-error a,
 div.flash-notice a,
 div.flash-success a {
 	font-weight: bold;
-	color: var(--color-fg-75);
+	color: var(--color-fg-contrast-13);
 }
 div.flash-error p,
 div.flash-notice p,
@@ -1416,7 +1419,7 @@ div.flash-success h2 {
 
 .select2-container .select2-results li em {
 	background: none;
-	color: var(--color-fg-33);
+	color: var(--color-fg-contrast-2-75);
 	font-style: italic;
 	padding-left: 0.5em;
 }

@@ -95,6 +95,7 @@ class SettingsController < ApplicationController
     # no option for inline svg, so just strip off leading <?xml> tag
     qrcode = RQRCode::QRCode.new(totp_url)
     qr = qrcode.as_svg(offset: 0,
+                       fill: "ffffff",
                        color: "000",
                        module_size: 5,
                        shape_rendering: "crispEdges").gsub(/^<\?xml.*>/, "")

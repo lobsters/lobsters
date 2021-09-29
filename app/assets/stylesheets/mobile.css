@@ -1,4 +1,24 @@
 @media only screen and (max-width: 480px) {
+	/* light mode */
+	:root {
+		--color-mobile-story-border: #e0e0e0;
+		--color-mobile-story-liner-bg: #fbfbfb;
+		--color-mobile-story-comments-bg: #e8e8e8;
+		--color-mobile-story-comments-bubble-fill: #ccc;
+		--color-mobile-story-comments-bubble-fill-zero: #d8d8d8;
+	}
+
+	/* dark mode */
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--color-mobile-story-border: #1c1c1c;
+			--color-mobile-story-liner-bg: #000;
+			--color-mobile-story-comments-bg: #0c0c0c;
+			--color-mobile-story-comments-bubble-fill: #282828;
+			--color-mobile-story-comments-bubble-fill-zero: #1c1c1c;
+		}
+	}
+
 	html {
 		-webkit-text-size-adjust: none;
 	}
@@ -12,8 +32,8 @@
 	div#leader {
 		margin: 0;
 		padding: 8px 5px;
-		background-color: #eee;
-		border-bottom: 1px solid #ccc;
+		background-color: var(--color-box-bg-shaded);
+		border-bottom: 1px solid var(--color-box-border);
 	}
 	div#leader {
 		padding: 8px;
@@ -113,10 +133,10 @@
 	/* explicitly reset color when not upvoted, since previously-upvoted arrow
 	 * will still be triggering :hover until next tap */
 	div.voters .upvoter:hover {
-		border-bottom-color: #bbb;
+		border-bottom-color: var(--color-fg-shape);
 	}
 	.upvoted div.voters .upvoter {
-		border-bottom-color: #ac130d;
+		border-bottom-color: var(--color-fg-accent);
 	}
 
 	ol.stories.list {
@@ -124,18 +144,18 @@
 	}
 
 	ol.stories.list li.story {
-		border-bottom: 1px solid #e0e0e0;
+		border-bottom: 1px solid var(--color-mobile-story-border);
 		display: table;
 	}
 	ol.stories.list li.story div.story_liner {
-		background-color: #fbfbfb;
+		background-color: var(--color-mobile-story-liner-bg);
 		display: table-cell;
 		padding-top: 0.5em;
 		padding-bottom: 0.75em;
 		width: 100%;
 	}
 	ol.stories.list li.story .mobile_comments {
-		background-color: #e8e8e8;
+		background-color: var(--color-mobile-story-comments-bg);
 		display: table-cell !important;
 		font-size: 11pt;
 		min-width: 40px;
@@ -146,7 +166,7 @@
 	ol.stories.list li.story .mobile_comments span:before {
 		border-style: solid;
 		border-width: 0px 6px 3px 0px;
-		border-color: #ccc;
+		border-color: var(--color-mobile-story-comments-bubble-fill);
 		border-bottom-right-radius: 13px;
 		bottom: -10px;
 		content: "";
@@ -159,7 +179,7 @@
 	}
 	ol.stories.list li.story .mobile_comments span:after {
 		border-bottom-right-radius: 10px;
-		border-color: #ccc;
+		border-color: var(--color-mobile-story-comments-bubble-fill);
 		border-style: solid;
 		border-width: 0px 3px 3px 0px;
 		bottom: -10px;
@@ -172,10 +192,10 @@
 		z-index: 10;
 	}
 	ol.stories.list li.story .mobile_comments span {
-		background-color: #ccc;
-		border: 1px solid #ccc;
+		background-color: var(--color-mobile-story-comments-bubble-fill);
+		border: 1px solid var(--color-mobile-story-comments-bubble-fill);
 		border-radius: 5px;
-		color: #333;
+		color: var(--color-fg);
 		display: block;
 		font-size: 9pt;
 		margin: 0 0.5em;
@@ -188,16 +208,13 @@
 		outline: 0;
 	}
 	ol.stories.list li.story .mobile_comments.zero span {
-		color: gray;
-	}
-	ol.stories.list li.story .mobile_comments.zero span {
-		background-color: #d8d8d8;
-		color: #999;
+		background-color: var(--color-mobile-story-comments-bubble-fill-zero);
+		color: var(--color-fg-contrast-4-5);
 	}
 	ol.stories.list li.story .mobile_comments.zero span,
 	ol.stories.list li.story .mobile_comments.zero span:before,
 	ol.stories.list li.story .mobile_comments.zero span:after {
-		border-color: #d8d8d8;
+		border-color: var(--color-mobile-story-comments-bubble-fill-zero);
 	}
 	ol.stories.list li.story .comments_label {
 		display: none;

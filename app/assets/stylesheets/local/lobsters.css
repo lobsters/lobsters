@@ -1,10 +1,35 @@
+/* light mode */
+:root {
+	--color-lobsters-fg-has-suggestions: #bd6060;
+
+	--color-lobsters-tag-special-bg: #f9ddde;
+	--color-lobsters-tag-special-border: #f0b2b8;
+
+	--color-lobsters-hat-sysop-crown-fill: #ddc7c7;
+	--color-lobsters-hat-sysop-brim-stroke: #bbb2b2;
+}
+
+/* dark mode */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-lobsters-fg-has-suggestions: #df7171;
+
+		--color-lobsters-tag-special-bg: #3b1719;
+		--color-lobsters-tag-special-border: #611a21;
+
+		--color-lobsters-hat-sysop-crown-fill: #362727;
+		--color-lobsters-hat-sysop-brim-stroke: #241a1a;
+	}
+}
+
 li .byline a.story_has_suggestions {
-	color: #bd6060;
+	color: var(--color-lobsters-fg-has-suggestions);
 }
 
 a.tag_announce, a.tag_ask, a.tag_show, a.tag_interview {
-	background-color: #f9ddde;
-	border-color: #f0b2b8;
+	background-color: var(--color-lobsters-tag-special-bg);
+	border-color: var(--color-lobsters-tag-special-border);
+	color: var(--color-fg-67);
 }
 
 span.hat_openbsd_developer span.crown {
@@ -13,10 +38,11 @@ span.hat_openbsd_developer span.crown {
 }
 
 span.hat_sysop {
-	border-color: #bbb2b2;
+	border-color: var(--color-lobsters-hat-sysop-brim-stroke);
+	color: var(--color-fg-67);
 }
 span.hat_sysop span.crown {
-	background-color: #ddc7c7;
+	background-color: var(--color-lobsters-hat-sysop-crown-fill);
 }
 
 #l_holder {

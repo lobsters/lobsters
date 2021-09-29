@@ -125,8 +125,7 @@
 		margin-left: 35px;
 	}
 
-	div.voters a.upvoter,
-	div.voters a.flagger {
+	div.voters a.upvoter {
 		margin-left: 6px;
 		border-width: 9px;
 	}

@@ -29,8 +29,8 @@
 	--palette-bg-accent: 172, 19, 13; /* behind light text */
 	--palette-bg-target: 255, 252, 215;
 
-	--palette-fg-link: 37, 98, 220;
-	--palette-fg-link-visited: 115, 149, 217;
+	--palette-fg-link: 28, 89, 209;
+	--palette-fg-link-visited: 95, 134, 212;
 	--palette-fg-accent: 172, 19, 13; /* red as in lobste.rs */
 	--palette-fg-negative: 139, 0, 0; /* red as in warning */
 	--palette-fg-affirmative: 0, 128, 0;

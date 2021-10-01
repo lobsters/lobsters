@@ -14,6 +14,7 @@
 	--palette-shadow: 0, 0, 0;
 
 	/* blends of foreground color over the background */
+	--opacity-contrast-15: 100%;
 	--opacity-contrast-13: 94%;
 	--opacity-contrast-10: 84%;
 	--opacity-contrast-7-5: 75%;
@@ -76,6 +77,7 @@
 		--palette-shadow: 0, 0, 0;
 
 		/* blends of foreground color over the background */
+		--opacity-contrast-15: 100%;
 		--opacity-contrast-13: 95%;
 		--opacity-contrast-10: 85%;
 		--opacity-contrast-7-5: 76%;
@@ -144,7 +146,7 @@ html {
 	--color-bg: rgb(var(--palette-bg));
 	--color-bg-50: rgba(var(--palette-bg), 50%);
 
-	--color-fg: rgb(var(--palette-fg)); /* primary text */
+	--color-fg: rgba(var(--palette-fg), var(--opacity-contrast-15)); /* primary text */
 	--color-fg-contrast-13: rgba(var(--palette-fg), var(--opacity-contrast-13));
 	--color-fg-contrast-10: rgba(var(--palette-fg), var(--opacity-contrast-10));
 	--color-fg-contrast-7-5: rgba(var(--palette-fg), var(--opacity-contrast-7-5));

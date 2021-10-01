@@ -77,8 +77,8 @@
 		--palette-shadow: 0, 0, 0;
 
 		/* blends of foreground color over the background */
-		--opacity-contrast-15: 100%;
-		--opacity-contrast-13: 95%;
+		--opacity-contrast-15: 85%; /* Contrast capped at 10:1 for dark mode */
+		--opacity-contrast-13: 85%; /* Contrast capped at 10:1 for dark mode */
 		--opacity-contrast-10: 85%;
 		--opacity-contrast-7-5: 76%;
 		--opacity-contrast-6: 69%;

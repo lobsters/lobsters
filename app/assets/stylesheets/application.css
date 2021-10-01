@@ -71,16 +71,16 @@
 @media (prefers-color-scheme: dark) {
 	:root {
 		/* main monochrome */
-		--palette-bg: 0, 0, 0;
+		--palette-bg: 12, 12, 12;
 		--palette-fg: 225, 225, 225;
 		--palette-light: 255, 255, 255;
 		--palette-shadow: 0, 0, 0;
 
 		/* blends of foreground color over the background */
-		--opacity-contrast-15: 85%; /* Contrast capped at 10:1 for dark mode */
-		--opacity-contrast-13: 85%; /* Contrast capped at 10:1 for dark mode */
-		--opacity-contrast-10: 85%;
-		--opacity-contrast-7-5: 76%;
+		--opacity-contrast-15: 87%; /* Contrast capped at 10:1 for dark mode */
+		--opacity-contrast-13: 87%; /* Contrast capped at 10:1 for dark mode */
+		--opacity-contrast-10: 87%;
+		--opacity-contrast-7-5: 77%;
 		--opacity-contrast-6: 69%;
 		--opacity-contrast-5: 64%;
 		--opacity-contrast-4-5: 61%; /* WCAG AA minimum 4.5:1 text contrast */

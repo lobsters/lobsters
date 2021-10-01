@@ -12,8 +12,8 @@
 	@media (prefers-color-scheme: dark) {
 		:root {
 			--color-mobile-story-border: #1c1c1c;
-			--color-mobile-story-liner-bg: #000;
-			--color-mobile-story-comments-bg: #0c0c0c;
+			--color-mobile-story-liner-bg: #0c0c0c;
+			--color-mobile-story-comments-bg: #101010;
 			--color-mobile-story-comments-bubble-fill: #282828;
 			--color-mobile-story-comments-bubble-fill-zero: #1c1c1c;
 		}

@@ -100,19 +100,19 @@
 		--palette-fg-shape: 80, 80, 80;
 
 		/* explicit view colors */
-		--color-box-bg: #080808;
-		--color-box-bg-shaded: #141414;
-		--color-box-border: #242424;
+		--color-box-bg: #141414;
+		--color-box-bg-shaded: #202020;
+		--color-box-border: #303030;
 		--color-box-border-focus: #808080;
 
-		--color-button-bg: #0c0c0c;
-		--color-button-bg-shaded: #181818;
+		--color-button-bg: #181818;
+		--color-button-bg-shaded: #242424;
 
-		--color-table-header-bg: #1d1d1d;
-		--color-table-header-border: #373737;
-		--color-table-row-bg-even: #0f0f0f;
-		--color-table-row-bg-odd: #121212;
-		--color-table-row-border: #1d1d1d;
+		--color-table-header-bg: #262626;
+		--color-table-header-border: #404040;
+		--color-table-row-bg-even: #181818;
+		--color-table-row-bg-odd: #1b1b1b;
+		--color-table-row-border: #262626;
 
 		--color-tag-bg: #3b320d;
 		--color-tag-border: #665501;

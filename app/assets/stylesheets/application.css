@@ -1427,3 +1427,22 @@ div.flash-success h2 {
 	text-decoration: none;
 	vertical-align: middle;
 }
+/* archive */
+.archived-dropdown {
+	display: none;
+	position: absolute;
+    background-color: var(--color-bg); 
+	min-width: 160px;
+	z-index: 1;
+}
+.archived-dropdown a  {
+	color: var(--color-fg-contrast-4-5);
+	padding: 12px 16px;
+	text-decoration: none;
+}
+.parent-dropdown:hover .archived-dropdown {
+	display: block;
+}
+.parent-dropdown {
+	display: inline;
+}

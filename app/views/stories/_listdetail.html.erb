@@ -154,7 +154,14 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
         <% if story.url.present? %>
           |
-          <a href="<%= story.archive_url %>" rel="ugc" target="_blank">cached</a>
+          <div class="parent-dropdown">
+            <span>cached</span>
+            <div class="archived-dropdown">
+             <a href="<%= story.archivetoday_url %>">Archive.today</a>
+             <a href="<%= story.ghost_url %>">Ghostarchive</a>
+             <a href="<%= story.archiveorg_url %>">Archive.org</a>
+            </div>
+          </div>
         <% end %>
         <% if !story.is_gone? || @user.try(:is_moderator?) %>
           <span class="comments_label">

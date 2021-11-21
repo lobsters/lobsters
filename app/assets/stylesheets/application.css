@@ -1302,9 +1302,9 @@ div.flash-success h2 {
 }
 /* archive */
 .archived-dropdown {
-	display: none;
 	position: absolute;
-    background-color: var(--color-bg); 
+        background-color: var(--color-bg); 
+	padding-top: 5px;
 	min-width: 160px;
 	z-index: 1;
 }
@@ -1313,8 +1313,11 @@ div.flash-success h2 {
 	padding: 12px 16px;
 	text-decoration: none;
 }
-.parent-dropdown:hover .archived-dropdown {
-	display: block;
+.archive_button:not(:checked) ~ .archived-dropdown {
+	display: none;
+}
+.archive_button {
+	display: none;
 }
 .parent-dropdown {
 	display: inline;

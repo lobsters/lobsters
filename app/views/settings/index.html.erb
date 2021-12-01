@@ -292,6 +292,13 @@
       <%= f.check_box :show_avatars %>
     </div>
 
+    <div class="boxline">
+      <%= f.label :prefers_color_scheme, "Color Scheme:", :class => "required" %>
+      <label><%= f.radio_button :prefers_color_scheme, :system %> System</label>
+      <label><%= f.radio_button :prefers_color_scheme, :light %> Light</label>
+      <label><%= f.radio_button :prefers_color_scheme, :dark %> Dark</label>
+    </div>
+
     <br>
     <%= f.submit "Save All Settings" %>
   <% end %>

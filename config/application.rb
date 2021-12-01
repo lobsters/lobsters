@@ -67,11 +67,14 @@ silence_warnings do
   ActionDispatch::Http::Parameters::DEFAULT_PARSERS = {}.freeze
 end
 
-# define site name and domain to be used globally, should be overridden in a
-# local file such as config/initializers/production.rb
+# site-wide settings
 class << Rails.application
   def allow_invitation_requests?
-    true
+    false
+  end
+
+  def allow_new_users_to_invite?
+    false
   end
 
   def open_signups?
@@ -79,7 +82,7 @@ class << Rails.application
   end
 
   def domain
-    "example.com"
+    "lobste.rs"
   end
 
   def name

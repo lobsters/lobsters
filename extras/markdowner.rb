@@ -1,13 +1,15 @@
 class Markdowner
   # opts[:allow_images] allows <img> tags
 
+  USER_MENTION = /\B(@#{User::VALID_USERNAME})/
+
   def self.to_html(text, opts = {})
     if text.blank?
       return ""
     end
 
     exts = [:tagfilter, :autolink, :strikethrough]
-    root = CommonMarker.render_doc(text.to_s, [:SMART], exts)
+    root = CommonMarker.render_doc(escape_user_hyphens(text.to_s), [:SMART], exts)
 
     walk_text_nodes(root) {|n| postprocess_text_node(n) }
 
@@ -33,6 +35,17 @@ class Markdowner
     end
   end
 
+  def self.escape_user_hyphens(text)
+    text.gsub(USER_MENTION) do |match|
+      match.gsub("-", "\\-")
+    end
+  end
+
+  def self.unescape_hyphens(user)
+    return user unless user.include?("--")
+    CommonMarker.render_doc(user, [:SMART]).to_plaintext.chomp
+  end
+
   def self.walk_text_nodes(node, &block)
     return if node.type == :link
     return block.call(node) if node.type == :text
@@ -44,7 +57,7 @@ class Markdowner
 
   def self.postprocess_text_node(node)
     while node
-      return unless node.string_content =~ /\B(@#{User::VALID_USERNAME})/
+      return unless node.string_content =~ USER_MENTION
       before, user, after = $`, $1, $'
 
       node.string_content = before
@@ -60,7 +73,7 @@ class Markdowner
 
         node = link
       else
-        node.string_content += user
+        node.string_content += unescape_hyphens(user)
       end
 
       if after.length > 0

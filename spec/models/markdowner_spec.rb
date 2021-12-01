@@ -8,6 +8,8 @@ describe Markdowner do
 
   it "turns @username into a link if @username exists" do
     create(:user, :username => "blahblah")
+    create(:user, :username => "blahblah--")
+    create(:user, :username => "blah---blah")
 
     expect(Markdowner.to_html("hi @blahblah test"))
       .to eq("<p>hi <a href=\"https://example.com/u/blahblah\" rel=\"ugc\">" +
@@ -15,6 +17,17 @@ describe Markdowner do
 
     expect(Markdowner.to_html("hi @flimflam test"))
       .to eq("<p>hi @flimflam test</p>\n")
+
+    expect(Markdowner.to_html("hi @blahblah-- test"))
+      .to eq("<p>hi <a href=\"https://example.com/u/blahblah--\" rel=\"ugc\">" +
+             "@blahblah--</a> test</p>\n")
+
+    expect(Markdowner.to_html("hi @blah---blah test"))
+      .to eq("<p>hi <a href=\"https://example.com/u/blah---blah\" rel=\"ugc\">" +
+             "@blah---blah</a> test</p>\n")
+
+    expect(Markdowner.to_html("hi @flimflam-- test"))
+      .to eq("<p>hi @flimflam– test</p>\n") # en dash
   end
 
   # bug#209

@@ -113,3 +113,8 @@ class << Rails.application
     true
   end
 end
+
+module Sprockets::Rails::Helper
+  require Rails.root.join('app', 'helpers', 'assets_helper.rb')
+  include AssetsHelper
+end

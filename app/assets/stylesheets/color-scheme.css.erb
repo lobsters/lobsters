@@ -125,16 +125,4 @@ CSS
     --color-flash-bg-notice: #142e36;
 CSS
 %>
-
-:root {
-  <%= light %>
-}
-
-@media (prefers-color-scheme: dark) {
-  html.color-scheme-system {
-    <%= dark %>
-  }
-}
-html.color-scheme-dark {
-  <%= dark %>
-}
+<%= preferred_color_scheme(light, dark) %>

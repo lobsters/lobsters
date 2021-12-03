@@ -1,23 +1,25 @@
-@media only screen and (max-width: 480px) {
-	/* light mode */
-	:root {
-		--color-mobile-story-border: #e0e0e0;
-		--color-mobile-story-liner-bg: #fbfbfb;
-		--color-mobile-story-comments-bg: #e8e8e8;
-		--color-mobile-story-comments-bubble-fill: #ccc;
-		--color-mobile-story-comments-bubble-fill-zero: #d8d8d8;
-	}
+/* light mode */
+<% light = <<-CSS
+	--color-mobile-story-border: #e0e0e0;
+	--color-mobile-story-liner-bg: #fbfbfb;
+	--color-mobile-story-comments-bg: #e8e8e8;
+	--color-mobile-story-comments-bubble-fill: #ccc;
+	--color-mobile-story-comments-bubble-fill-zero: #d8d8d8;
+CSS
+%>
 
-	/* dark mode */
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--color-mobile-story-border: #1c1c1c;
-			--color-mobile-story-liner-bg: #0c0c0c;
-			--color-mobile-story-comments-bg: #101010;
-			--color-mobile-story-comments-bubble-fill: #282828;
-			--color-mobile-story-comments-bubble-fill-zero: #1c1c1c;
-		}
-	}
+/* dark mode */
+<% dark = <<-CSS
+	--color-mobile-story-border: #1c1c1c;
+	--color-mobile-story-liner-bg: #0c0c0c;
+	--color-mobile-story-comments-bg: #101010;
+	--color-mobile-story-comments-bubble-fill: #282828;
+	--color-mobile-story-comments-bubble-fill-zero: #1c1c1c;
+CSS
+%>
+<%= preferred_color_scheme(light, dark, query: "only screen and (max-width: 480px)") %>
+/*i*/
+@media only screen and (max-width: 480px) {
 
 	html {
 		-webkit-text-size-adjust: none;

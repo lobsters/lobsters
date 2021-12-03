@@ -1,5 +1,5 @@
 /* light mode */
-:root {
+<% light = <<-CSS
 	--color-lobsters-fg-has-suggestions: #bd6060;
 
 	--color-lobsters-tag-special-bg: #f9ddde;
@@ -7,11 +7,12 @@
 
 	--color-lobsters-hat-sysop-crown-fill: #ddc7c7;
 	--color-lobsters-hat-sysop-brim-stroke: #bbb2b2;
-}
+CSS
+%>
+
 
 /* dark mode */
-@media (prefers-color-scheme: dark) {
-	:root {
+<% dark = <<-CSS
 		--color-lobsters-fg-has-suggestions: #df7171;
 
 		--color-lobsters-tag-special-bg: #3b1719;
@@ -19,8 +20,9 @@
 
 		--color-lobsters-hat-sysop-crown-fill: #3e2f2f;
 		--color-lobsters-hat-sysop-brim-stroke: #2c2222;
-	}
-}
+CSS
+%>
+<%= preferred_color_scheme(light, dark) %>
 
 li .byline a.story_has_suggestions {
 	color: var(--color-lobsters-fg-has-suggestions);

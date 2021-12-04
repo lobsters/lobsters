@@ -63,11 +63,6 @@ describe 'tags', type: :request do
       expect(response).to redirect_to edit_tag_path
     end
 
-    it 'rejects updates with unpermiited params' do
-      expect { post "/tags/#{tag.tag}", params: { tag: { is_media: true } } }
-        .to raise_error ActionController::UnpermittedParameters
-    end
-
     it 'updates with all permitted params' do
       post "/tags/#{tag.tag}", params: { tag: {
         tag: 'mytag',

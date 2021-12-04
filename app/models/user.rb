@@ -54,6 +54,7 @@ class User < ApplicationRecord
   has_secure_password
 
   typed_store :settings do |s|
+    s.string :prefers_color_scheme, :default => "system"
     s.boolean :email_notifications, :default => false
     s.boolean :email_replies, :default => false
     s.boolean :pushover_replies, :default => false
@@ -73,6 +74,8 @@ class User < ApplicationRecord
     s.any :keybase_signatures, array: true
     s.string :homepage
   end
+
+  validates :prefers_color_scheme, inclusion: %w(system light dark)
 
   validates :email,
             :length => { :maximum => 100 },

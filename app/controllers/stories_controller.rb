@@ -35,8 +35,9 @@ class StoriesController < ApplicationController
 
     update_story_attributes
 
-    if params[:reason].present? && @story.user_id != @user.id
-      @story.moderation_reason = params[:reason]
+    if @story.user_id != @user.id && @user.is_moderator? && !@story.moderation_reason.present?
+      @story.errors.add(:moderation_reason, message: 'is required')
+      return render :action => "edit" 
     end
 
     @story.is_expired = true

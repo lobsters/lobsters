@@ -33,13 +33,15 @@ class StoriesController < ApplicationController
       return redirect_to "/"
     end
 
-    @story.is_expired = true
-    @story.editor = @user
+    update_story_attributes
 
     if params[:reason].present? && @story.user_id != @user.id
       @story.moderation_reason = params[:reason]
     end
 
+    @story.is_expired = true
+    @story.editor = @user
+      
     if @story.save(:validate => false)
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted")
     end
@@ -225,6 +227,7 @@ class StoriesController < ApplicationController
       return redirect_to "/"
     end
 
+    update_story_attributes
     @story.is_expired = false
     @story.editor = @user
 

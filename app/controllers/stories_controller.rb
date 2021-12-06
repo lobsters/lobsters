@@ -243,12 +243,7 @@ class StoriesController < ApplicationController
 
     @story.is_expired = false
     @story.editor = @user
-
-    if @story.url_is_editable_by_user?(@user)
-      @story.attributes = story_params
-    else
-      @story.attributes = story_params.except(:url)
-    end
+    update_story_attributes
 
     if @story.save
       return redirect_to @story.comments_path
@@ -393,6 +388,14 @@ private
       p
     else
       p.except(:moderation_reason, :merge_story_short_id, :is_unavailable)
+    end
+  end
+
+  def update_story_attributes
+    if @story.url_is_editable_by_user?(@user)
+      @story.attributes = story_params
+    else
+      @story.attributes = story_params.except(:url)
     end
   end
 

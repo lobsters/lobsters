@@ -310,7 +310,7 @@ class User < ApplicationRecord
 
   def check_session_token
     if self.session_token.blank?
-      self.session_token = Utils.random_str(60)
+      self.roll_session_token
     end
   end
 
@@ -376,8 +376,7 @@ class User < ApplicationRecord
 
       self.invitations.destroy_all
 
-      self.session_token = nil
-      self.check_session_token
+      self.roll_session_token
 
       self.deleted_at = Time.current
       self.good_riddance?
@@ -476,6 +475,10 @@ class User < ApplicationRecord
   def remove_keybase_proof(kb_username)
     self.keybase_signatures ||= []
     self.keybase_signatures.reject! {|kbsig| kbsig['kb_username'] == kb_username }
+  end
+
+  def roll_session_token
+    self.session_token = Utils.random_str(60)
   end
 
   def is_heavy_self_promoter?

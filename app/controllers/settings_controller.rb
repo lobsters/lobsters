@@ -37,6 +37,7 @@ class SettingsController < ApplicationController
 
     if params[:user][:password].empty? ||
        @user.authenticate(params[:current_password].to_s)
+      @edit_user.roll_session_token if params[:user][:password]
       if @edit_user.update(user_params)
         if @edit_user.username != previous_username
           Moderation.create!(
@@ -46,6 +47,7 @@ class SettingsController < ApplicationController
                     "to \"#{@edit_user.username}\"",
           )
         end
+        session[:u] = @user.session_token if params[:user][:password]
         flash.now[:success] = "Successfully updated settings."
         @user = @edit_user
       end

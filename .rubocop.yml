@@ -154,6 +154,8 @@ RSpec/BeforeAfterAll:
   Enabled: false
 RSpec/DescribeClass:
   Enabled: false
+Rspec/LetSetup:
+  Enabled: false
 Capybara/FeatureMethods:
   Enabled: false
 

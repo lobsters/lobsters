@@ -46,6 +46,28 @@ class ModNote < ApplicationRecord
     )
   end
 
+  def self.tattle_on_invited(user, invitation_code)
+    invitation = Invitation.find_by(code: invitation_code)
+    return unless invitation
+
+    sender = invitation.user
+    sender_url = Rails.application.routes.url_helpers.user_url(
+      sender,
+      host: Rails.application.domain
+    )
+    ModNote.create!(
+      moderator: InactiveUser.inactive_user,
+      user: user,
+      created_at: Time.current,
+      note: "Attempted to redeem invitation code #{invitation.code} while logged in:\n" +
+        "sent by: [#{sender.username}](#{sender_url})\n" +
+        "created_at: #{invitation.created_at}\n" +
+        "used_at: #{invitation.used_at || 'unused'}\n" +
+        "email: #{invitation.email}\n" +
+        "memo: #{invitation.memo}"
+    )
+  end
+
   def self.tattle_on_story_domain!(story, reason)
     ModNote.create!(
       moderator: InactiveUser.inactive_user,

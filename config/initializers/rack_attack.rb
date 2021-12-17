@@ -22,6 +22,10 @@ Rack::Attack.throttle("login", limit: 4, period: 60) do |request|
                 (request.path == '/login' || request.path == '/login/set_new_password')
 end
 
+Rack::Attack.throttle("log4j probe", limit: 1, period: 1.week.to_i) do |request|
+  request.ip if request.user_agent.include? '${'
+end
+
 # explain the throttle
 Rack::Attack.throttled_response_retry_after_header = true
 Rack::Attack.throttled_response = lambda do |env|

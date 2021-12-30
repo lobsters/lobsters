@@ -880,7 +880,7 @@ class Story < ApplicationRecord
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))
       params = match[2].split(/[&\?]/)
       # utm_ is google and many others; sk is medium
-      params.reject! {|p| p.match(/^utm_(source|medium|campaign|term|content)=|^sk=|^fbclid=/) }
+      params.reject! {|p| p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=/) }
       u = match[1] << (params.any?? "?" << params.join("&") : "")
     end
 

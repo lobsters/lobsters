@@ -133,7 +133,7 @@ class Story < ApplicationRecord
   TITLE_DROP_WORDS = ["", "a", "an", "and", "but", "in", "of", "or", "that", "the", "to"].freeze
 
   # URI.parse is not very lenient, so we can't use it
-  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i.freeze
+  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z\-]+)(?<port>:\d+)?(\/|\z)/i.freeze
 
   # Dingbats, emoji, and other graphics https://www.unicode.org/charts/
   GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}-\u{27BF}\u{1F000}-\u{1F9FF}]/.freeze

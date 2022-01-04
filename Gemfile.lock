@@ -111,9 +111,6 @@ GEM
     flamegraph (0.9.5)
     globalid (0.5.2)
       activesupport (>= 5.0)
-    good_migrations (0.1.0)
-      activerecord (>= 3.1)
-      railties (>= 3.1)
     hashdiff (1.0.1)
     hashery (2.1.2)
     htmlentities (4.3.4)
@@ -302,7 +299,6 @@ DEPENDENCIES
   factory_bot_rails
   faker
   flamegraph
-  good_migrations
   htmlentities
   jquery-rails (~> 4.3)
   json

@@ -51,7 +51,6 @@ gem 'rack-attack' # rate-limiting
 group :test, :development do
   gem 'capybara'
   gem 'database_cleaner'
-  gem 'good_migrations'
   gem "listen"
   gem "rspec-rails"
   gem "factory_bot_rails"

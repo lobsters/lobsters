@@ -11,7 +11,7 @@ Other sites using the Lobsters [codebase](https://github.com/lobsters/lobsters):
 
 * [Barnacles](https://www.barnacl.es) ([repo](https://github.com/pushcx/barnacl.es)) - Business
 * [Le Journal du Hacker](https://www.journalduhacker.net/) - Computer Science (fr)
-* [CryptoBuzz](https://cryptobuzz.io/) ([repo](https://github.com/lukehamilton/cryptobuzz)) - Cryptocurrency
+* <s>[CryptoBuzz](https://cryptobuzz.io/)</s> ([repo](https://github.com/lukehamilton/cryptobuzz)) - Cryptocurrency
 * [Kind and Green News](http://news.kindandgreenworld.com/) - Biology
 * [tilde news](https://tilde.news/) ([repo](https://tildegit.org/tildeverse/tilde.news)) - [tildeverse](https://tildeverse.org) links: unix, small web, decentralization
 * [Standard](https://std.bz/) - Cryptocurrency

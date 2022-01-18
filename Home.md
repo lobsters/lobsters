@@ -17,7 +17,7 @@ Other sites using the Lobsters [codebase](https://github.com/lobsters/lobsters):
 * [Standard](https://std.bz/) - Cryptocurrency
 * [Gambe.ro](https://gambe.ro) - Software development (it)
 * <s>[Middlebit](https://middlebit.com/)</s> - Content curation for the "no-coast" region of the United States. Site online from late August 2019 through late September 2020.
-* [ACRAB](https://acrab.isi.jhu.edu/) - Applied Cryptography Publications
+* <s>[ACRAB](https://acrab.isi.jhu.edu/)</s> - Applied Cryptography Publications
 * [V2ETH](https://v2eth.com) - Cryptocurrency (Ethereum)
 * [Hipppo](https://hipppo.fm) - Hip-hop
 * [MLN.dev](https://mln.dev/) - Machine learning

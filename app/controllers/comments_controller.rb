@@ -34,7 +34,16 @@ class CommentsController < ApplicationController
       end
     end
 
-    # prevent double-clicks of the post button
+    # sometimes on slow connections people resubmit; silently accept it
+    if (already = Comment.find_by(user: comment.user,
+                                  story: comment.story,
+                                  parent_comment_id: comment.parent_comment_id,
+                                  comment: comment.comment))
+      self.render_created_comment(already)
+      return
+    end
+
+    # rate-limit users to one reply per 5m per parent comment
     if params[:preview].blank? &&
        (pc = Comment.where(:story_id => story.id,
                            :user_id => @user.id,
@@ -50,18 +59,21 @@ class CommentsController < ApplicationController
 
     if comment.valid? && params[:preview].blank? && ActiveRecord::Base.transaction { comment.save }
       comment.current_vote = { :vote => 1 }
-
-      if request.xhr?
-        render :partial => "comments/postedreply", :layout => false,
-          :content_type => "text/html", :locals => { :comment => comment }
-      else
-        redirect_to comment.path
-      end
+      self.render_created_comment(comment)
     else
       comment.score = 1
       comment.current_vote = { :vote => 1 }
 
       preview comment
+    end
+  end
+
+  def render_created_comment(comment)
+    if request.xhr?
+      render :partial => "comments/postedreply", :layout => false,
+        :content_type => "text/html", :locals => { :comment => comment }
+    else
+      redirect_to comment.path
     end
   end
 

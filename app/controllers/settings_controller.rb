@@ -101,7 +101,7 @@ class SettingsController < ApplicationController
                        fill: "ffffff",
                        color: "000",
                        module_size: 5,
-                       shape_rendering: "crispEdges").gsub(/^<\?xml.*>/, "")
+                       shape_rendering: "crispEdges")
 
     @qr_svg = "<a href=\"#{totp_url}\">#{qr}</a>"
   end

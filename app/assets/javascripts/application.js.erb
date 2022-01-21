@@ -128,7 +128,7 @@ var _Lobsters = Class.extend({
     } else {
       // place flag menu outside of the comment to avoid inheriting opacity
       var voterPos = $(voterEl).position();
-      d.appendTo($(voterEl).closest(".comments_subtree"));
+      d.appendTo($(voterEl).parent());
       d.css({
         left: voterPos.left,
         top: voterPos.top + $(voterEl).outerHeight()

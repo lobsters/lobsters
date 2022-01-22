@@ -37,12 +37,12 @@ class StoriesController < ApplicationController
 
     if @story.user_id != @user.id && @user.is_moderator? && !@story.moderation_reason.present?
       @story.errors.add(:moderation_reason, message: 'is required')
-      return render :action => "edit" 
+      return render :action => "edit"
     end
 
     @story.is_expired = true
     @story.editor = @user
-      
+
     if @story.save(:validate => false)
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted")
     end

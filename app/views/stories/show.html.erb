@@ -13,7 +13,7 @@
   <% if @story.is_unavailable %>
     <% StoryText.cached?(@story) do |text| %>
       <a id="story_text_expander">Source URL considered unavailable as of
-      <%= time_ago_in_words_label(@story.unavailable_at) %>, cached text available</a>
+      <%= time_ago_in_words_label(@story.unavailable_at) %>, cached text available; also see archive links above</a>
       <div id="collapsed_story_text">
         <p>
         <em>All story content copyright of its respective owner.</em>

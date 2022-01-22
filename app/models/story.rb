@@ -297,8 +297,17 @@ class Story < ApplicationRecord
     true
   end
 
-  def archive_url
-    "https://archive.md/#{CGI.escape(self.url)}"
+  def archiveorg_url
+    # This will redirect to the latest version they have
+    "https://web.archive.org/web/3/#{CGI.escape(self.url)}"
+  end
+
+  def archivetoday_url
+    "https://archive.today/#{CGI.escape(self.url)}"
+  end
+
+  def ghost_url
+    "https://ghostarchive.org/search?term=#{CGI.escape(self.url)}"
   end
 
   def as_json(options = {})

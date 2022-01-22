@@ -81,8 +81,8 @@ describe 'stores', type: :request do
         put "/stories/#{story.short_id}/destroy", params: {
           id: story.short_id,
           story:  {
-            title: story.title
-          }
+            title: story.title,
+          },
         }
       }.to change { user.stories_deleted_count }.by(1)
     end
@@ -98,8 +98,8 @@ describe 'stores', type: :request do
         put "/stories/#{deleted_story.short_id}/undelete", params: {
           id: deleted_story.short_id,
           story:  {
-            title: deleted_story.title
-          }
+            title: deleted_story.title,
+          },
         }
       }.to change { user.stories_deleted_count }.by(-1)
     end

@@ -163,7 +163,7 @@ private
 
     # now a case-sensitive check
     if params[:username] != @showing_user.username
-      return redirect_to username: @showing_user.username
+      redirect_to username: @showing_user.username
       return false
     end
   end

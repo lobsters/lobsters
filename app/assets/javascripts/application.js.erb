@@ -556,7 +556,7 @@ $(document).ready(function() {
   $(document).ready(Lobsters.checkStoryTitle);
 
   $(document).on("blur", "#user_homepage", function() {
-    if (this.value.trim() !== '' && !this.value.match('^https?:\/\/'))
+    if (this.value.trim() !== '' && !this.value.match('^[a-z]+:\/\/'))
       this.value = 'http://' + this.value;
   });
 

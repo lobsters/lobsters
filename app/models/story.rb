@@ -602,25 +602,22 @@ class Story < ApplicationRecord
     end
     m.story_id = self.id
 
-    if all_changes["is_expired"] && self.is_expired?
-      m.action = "deleted story"
-      User.update_counters self.user_id, karma: (self.votes.count * -2)
-    elsif all_changes["is_expired"] && !self.is_expired?
-      m.action = "undeleted story"
-    else
-      m.action = all_changes.map {|k, v|
-        if k == "merged_story_id"
-          if v[1]
-            "merged into #{self.merged_into_story.short_id} " <<
-              "(#{self.merged_into_story.title})"
-          else
-            "unmerged from another story"
-          end
+    m.action = all_changes.map {|k, v|
+      if k == "is_expired" && self.is_expired?
+        "deleted story"
+      elsif k == "is_expired" && !self.is_expired?
+        "undeleted story"
+      elsif k == "merged_story_id"
+        if v[1]
+          "merged into #{self.merged_into_story.short_id} " <<
+            "(#{self.merged_into_story.title})"
         else
-          "changed #{k} from #{v[0].inspect} to #{v[1].inspect}"
+          "unmerged from another story"
         end
-      }.join(", ")
-    end
+      else
+        "changed #{k} from #{v[0].inspect} to #{v[1].inspect}"
+      end
+    }.join(", ")
 
     m.reason = self.moderation_reason
     m.save

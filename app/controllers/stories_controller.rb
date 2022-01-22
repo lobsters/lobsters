@@ -33,12 +33,15 @@ class StoriesController < ApplicationController
       return redirect_to "/"
     end
 
+    update_story_attributes
+
+    if @story.user_id != @user.id && @user.is_moderator? && !@story.moderation_reason.present?
+      @story.errors.add(:moderation_reason, message: 'is required')
+      return render :action => "edit"
+    end
+
     @story.is_expired = true
     @story.editor = @user
-
-    if params[:reason].present? && @story.user_id != @user.id
-      @story.moderation_reason = params[:reason]
-    end
 
     if @story.save(:validate => false)
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted")
@@ -225,6 +228,7 @@ class StoriesController < ApplicationController
       return redirect_to "/"
     end
 
+    update_story_attributes
     @story.is_expired = false
     @story.editor = @user
 
@@ -243,12 +247,7 @@ class StoriesController < ApplicationController
 
     @story.is_expired = false
     @story.editor = @user
-
-    if @story.url_is_editable_by_user?(@user)
-      @story.attributes = story_params
-    else
-      @story.attributes = story_params.except(:url)
-    end
+    update_story_attributes
 
     if @story.save
       return redirect_to @story.comments_path
@@ -393,6 +392,14 @@ private
       p
     else
       p.except(:moderation_reason, :merge_story_short_id, :is_unavailable)
+    end
+  end
+
+  def update_story_attributes
+    if @story.url_is_editable_by_user?(@user)
+      @story.attributes = story_params
+    else
+      @story.attributes = story_params.except(:url)
     end
   end
 

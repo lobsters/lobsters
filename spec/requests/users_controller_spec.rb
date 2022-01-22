@@ -70,7 +70,6 @@ describe 'users controller' do
 
       get user_standing_path(user.username.upcase)
 
-      byebug
       expect(response).to redirect_to(user_standing_path(user.username))
     end
   end

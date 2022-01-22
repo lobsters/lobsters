@@ -25,13 +25,13 @@
 
       <label class="required">Order By:</label>
 
-      <%= f.radio_button "order", "relevance", :checked => @search.order == "relevance" %>
-        <label for="order_relevance" class="normal">Relevance</label>
+      <%= f.radio_button "order", "newest", :checked => @search.order == "newest" %>
+        <label for="order_newest" class="normal">Newest</label>
 
       &nbsp;
 
-      <%= f.radio_button "order", "newest", :checked => @search.order == "newest" %>
-        <label for="order_newest" class="normal">Newest</label>
+      <%= f.radio_button "order", "relevance", :checked => @search.order == "relevance" %>
+        <label for="order_relevance" class="normal">Relevance</label>
 
       &nbsp;
 

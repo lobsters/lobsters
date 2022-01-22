@@ -117,9 +117,9 @@
     <span class="d">
       <a href="<%= h(@showing_user.homepage) %>"
         rel="me ugc"><%= h(@showing_user.homepage) %></a>
-      <% if (@showing_user.homepage.start_with?('gemini://') %>
+      <% if @showing_user.homepage.start_with?('gemini://') %>
         (<a href="https://portal.mozz.us/gemini/<% h(@showing_user.homepage[9..-1]) %>">proxy</a>)
-      <% elsif (@showing_user.homepage.start_with?('gopher://') %>
+      <% elsif @showing_user.homepage.start_with?('gopher://') %>
         (<a href="https://gopher.floodgap.com/gopher/gw?<% h(@showing_user.homepage[9..-1]) %>">proxy</a>)
       <% end %>
     </span>

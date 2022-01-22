@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :load_showing_user, :only => [:show, :standing]
   before_action :require_logged_in_moderator,
                 :only => [:enable_invitation, :disable_invitation, :ban, :unban]
   before_action :flag_warning, only: [:show]
@@ -6,12 +7,6 @@ class UsersController < ApplicationController
   before_action :only_user_or_moderator, only: [:standing]
 
   def show
-    @showing_user = User.where(:username => params[:username]).first
-
-    if @showing_user.nil?
-      return render action: :not_found, status: 404
-    end
-
     @title = "User #{@showing_user.username}"
 
     if @user.try(:is_moderator?)
@@ -123,7 +118,6 @@ class UsersController < ApplicationController
   def standing
     flag_warning
     int = @flag_warning_int
-    @showing_user = User.where(username: params[:username]).first!
 
     fc = FlaggedCommenters.new(int[:param], 1.day)
     @fc_flagged = fc.commenters.map {|_, c| c[:n_flags] }.sort
@@ -157,6 +151,22 @@ class UsersController < ApplicationController
   end
 
 private
+
+  def load_showing_user
+    # case-insensitive search by username
+    @showing_user = User.find_by(username: params[:username])
+
+    if @showing_user.nil?
+      render action: :not_found, status: 404
+      return false
+    end
+
+    # now a case-sensitive check
+    if params[:username] != @showing_user.username
+      return redirect_to username: @showing_user.username
+      return false
+    end
+  end
 
   def only_user_or_moderator
     if params[:username].downcase == @user.username.downcase || @user.is_moderator?

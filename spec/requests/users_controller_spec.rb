@@ -55,4 +55,23 @@ describe 'users controller' do
       expect(response.body).to include("flags")
     end
   end
+
+  describe 'username case mismatch' do
+    it 'redirects to correct-case user page' do
+      user = create(:user)
+
+      get user_path(user.username.upcase)
+
+      expect(response).to redirect_to(user_path(user.username))
+    end
+
+    it 'redirects to correct-case user standing page' do
+      user = create(:user)
+
+      get user_standing_path(user.username.upcase)
+
+      byebug
+      expect(response).to redirect_to(user_standing_path(user.username))
+    end
+  end
 end

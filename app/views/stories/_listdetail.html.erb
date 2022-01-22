@@ -156,12 +156,11 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           |
           <div class="parent-dropdown">
             <input id="archive_<%= story.short_id %>"  class="archive_button" type="checkbox">
-            <label for="archive_<%= story.short_id %>" class="archive_class2">cached
-            </label>
-            <div class="archived-dropdown">
-             <a href="<%= story.archivetoday_url %>">Archive.today</a>
-             <a href="<%= story.ghost_url %>">Ghostarchive</a>
-             <a href="<%= story.archiveorg_url %>">Archive.org</a>
+            <label for="archive_<%= story.short_id %>">archive</label>
+            <div class="archive-dropdown">
+              <a href="<%= story.archiveorg_url %>">Archive.org</a>
+              <a href="<%= story.archivetoday_url %>">Archive.today</a>
+              <a href="<%= story.ghost_url %>">Ghostarchive</a>
             </div>
           </div>
         <% end %>

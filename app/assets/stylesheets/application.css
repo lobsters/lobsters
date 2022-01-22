@@ -1301,19 +1301,19 @@ div.flash-success h2 {
 	vertical-align: middle;
 }
 /* archive */
-.archived-dropdown {
-	position: absolute;
-        background-color: var(--color-bg); 
-	padding-top: 5px;
+.archive-dropdown {
+	background-color: var(--color-bg);
 	min-width: 160px;
+	padding-top: 5px;
+	position: absolute;
 	z-index: 1;
 }
-.archived-dropdown a  {
+.archive-dropdown a  {
 	color: var(--color-fg-contrast-4-5);
 	padding: 12px 16px;
 	text-decoration: none;
 }
-.archive_button:not(:checked) ~ .archived-dropdown {
+.archive_button:not(:checked) ~ .archive-dropdown {
 	display: none;
 }
 .archive_button {

@@ -257,8 +257,8 @@ class HomeController < ApplicationController
     @cur_url = domain_path(params[:name])
 
     @rss_link = {
-      title: "RSS 2.0 - For #{@domain}",
-      href: "/domain/#{params[:domain]}.rss",
+      title: "RSS 2.0 - For #{@domain.domain}",
+      href: "/domain/#{@domain.domain}.rss",
     }
 
     respond_to do |format|

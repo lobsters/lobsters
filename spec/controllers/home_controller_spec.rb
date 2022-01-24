@@ -13,6 +13,13 @@ describe HomeController do
       expect(@controller.view_assigns['title']).to include(story.domain.domain)
       expect(@controller.view_assigns['stories']).to include(story)
     end
+
+    context "when accessing RSS feeds" do
+      it "responds to requests" do
+        get :for_domain, params: { name: story.domain.domain }, as: :rss
+        expect(response).to be_successful
+      end
+    end
   end
 
   describe "#upvoted" do

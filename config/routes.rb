@@ -67,7 +67,17 @@ Rails.application.routes.draw do
   get "/t/:tag" => "home#tagged", :as => "tag"
   get "/t/:tag/page/:page" => "home#tagged"
 
-  get "/domain/:name" => "home#for_domain", :as => "domain", :constraints => { name: /[^\/]+/ }
+  # Why are there two routes for `home#for_domain`?
+  #
+  # By default, Rails omits dots from parameters so that it can use extension
+  # to determine format.  So the `:id` in `foo.json` is `foo`, and JSON is the format.
+  # We need to include dots in domain names, since they have them, but also support
+  # the `.rss` suffix for RSS/Atom feeds.  So we define one route just for HTML and
+  # another, with the extension, specifically for RSS.
+  get "/domain/:name" => "home#for_domain", :as => "domain",
+    :constraints => { name: /[^\/]+/ }, :format => false
+  get "/domain/:name.rss" => "home#for_domain", :as => "domain_rss",
+    :constraints => { name: /[^\/]+/ }, :format => 'rss'
   get "/domain/:name/page/:page" => "home#for_domain", :constraints => { name: /[^\/]+/ }
 
   get "/search" => "search#index"

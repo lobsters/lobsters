@@ -1,13 +1,16 @@
 class Markdowner
   # opts[:allow_images] allows <img> tags
 
+  USER_MENTION = /\B(@#{User::VALID_USERNAME})/
+
   def self.to_html(text, opts = {})
     if text.blank?
       return ""
     end
 
     exts = [:tagfilter, :autolink, :strikethrough]
-    root = CommonMarker.render_doc(text.to_s, [:SMART], exts)
+    escaped_text = escape_user_mention_hyphens_and_underscores(text.to_s)
+    root = CommonMarker.render_doc(escaped_text, [:SMART], exts)
 
     walk_text_nodes(root) {|n| postprocess_text_node(n) }
 
@@ -33,6 +36,13 @@ class Markdowner
     end
   end
 
+  def self.escape_user_mention_hyphens_and_underscores(text)
+    text.gsub(USER_MENTION) do |match|
+      match.gsub("-", "\\-")
+           .gsub("_", "\\_")
+    end
+  end
+
   def self.walk_text_nodes(node, &block)
     return if node.type == :link
     return block.call(node) if node.type == :text
@@ -44,23 +54,22 @@ class Markdowner
 
   def self.postprocess_text_node(node)
     while node
-      return unless node.string_content =~ /\B(@#{User::VALID_USERNAME})/
-      before, user, after = $`, $1, $'
+      return unless node.string_content =~ USER_MENTION
+      before, user_mention, after = $`, $1, $'
 
       node.string_content = before
 
-      if User.exists?(:username => user[1..-1])
-        link = CommonMarker::Node.new(:link)
-        link.url = Rails.application.root_url + "u/#{user[1..-1]}"
-        node.insert_after(link)
-
-        link_text = CommonMarker::Node.new(:text)
-        link_text.string_content = user
-        link.append_child(link_text)
-
-        node = link
+      if User.exists?(:username => user_mention[1..-1])
+        node = link_user_mention(user_mention, node)
       else
-        node.string_content += user
+        convert_dashes(user_mention) =~ USER_MENTION
+        user_mention_before_dashes, extra_after = $1, $'
+        if User.exists?(:username => user_mention_before_dashes[1..-1])
+          node = link_user_mention(user_mention_before_dashes, node)
+          after = extra_after + after
+        else
+          node = unescape_user_mention_hyphens_and_underscores(user_mention, node)
+        end
       end
 
       if after.length > 0
@@ -73,6 +82,34 @@ class Markdowner
         node = nil
       end
     end
+  end
+
+  def self.link_user_mention(user_mention, node)
+    link = CommonMarker::Node.new(:link)
+    link.url = Rails.application.root_url + "u/#{user_mention[1..-1]}"
+    node.insert_after(link)
+
+    link_text = CommonMarker::Node.new(:text)
+    link_text.string_content = user_mention
+    link.append_child(link_text)
+    link
+  end
+
+  def self.convert_dashes(string)
+    string.gsub("---", "—") # em dash
+          .gsub("--", "–") # en dash
+  end
+
+  def self.unescape_user_mention_hyphens_and_underscores(user_mention, node)
+    next_node = CommonMarker.render_doc(user_mention, [:SMART]).first_child.first_child
+    after_next = next_node.next
+    while next_node
+      node.insert_after(next_node)
+      node = next_node
+      next_node = after_next
+      after_next = after_next&.next
+    end
+    node
   end
 
   def self.convert_images_to_links(node)

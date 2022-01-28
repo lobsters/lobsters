@@ -90,7 +90,8 @@ class User < ApplicationRecord
 
   validates :password, :presence => true, :on => :create
 
-  VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/.freeze
+  VALID_USERNAME_CHARACTER = /[A-Za-z0-9_-]/.freeze
+  VALID_USERNAME = /[A-Za-z0-9]#{VALID_USERNAME_CHARACTER}{0,24}/.freeze
   validates :username,
             :format => { :with => /\A#{VALID_USERNAME}\z/ },
             :length => { :maximum => 50 },

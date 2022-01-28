@@ -1,6 +1,8 @@
 class Markdowner
   # opts[:allow_images] allows <img> tags
 
+  USER_MENTION = /\B(@#{User::VALID_USERNAME})/
+
   def self.to_html(text, opts = {})
     if text.blank?
       return ""
@@ -44,24 +46,18 @@ class Markdowner
 
   def self.postprocess_text_node(node)
     while node
-      return unless node.string_content =~ /\B(@#{User::VALID_USERNAME})/
-      before, user, after = $`, $1, $'
-
+      return unless detect_user_mention(node)
+      before, mention, after = rm_markdown_from_user_mention(node)
       node.string_content = before
+      link = CommonMarker::Node.new(:link)
+      link.url = Rails.application.root_url + "u/#{mention[1..-1]}"
+      node.insert_after(link)
 
-      if User.exists?(:username => user[1..-1])
-        link = CommonMarker::Node.new(:link)
-        link.url = Rails.application.root_url + "u/#{user[1..-1]}"
-        node.insert_after(link)
+      link_text = CommonMarker::Node.new(:text)
+      link_text.string_content = mention
+      link.append_child(link_text)
 
-        link_text = CommonMarker::Node.new(:text)
-        link_text.string_content = user
-        link.append_child(link_text)
-
-        node = link
-      else
-        node.string_content += user
-      end
+      node = link
 
       if after.length > 0
         remainder = CommonMarker::Node.new(:text)
@@ -73,6 +69,66 @@ class Markdowner
         node = nil
       end
     end
+  end
+
+  def self.detect_user_mention(node)
+    return nil unless rm_dashes(node.string_content) =~ USER_MENTION
+    collected_user_mention, after = $1, $'
+
+    26.times do
+      break unless after.empty? && (node.next && node.next.type == :emph)
+      node = node.next
+      # node.to_plaintext.chomp works for :emph or :text nodes, unlike node.string_content
+      if "_#{rm_dashes(node.to_plaintext.chomp)}_" =~ /\A#{User::VALID_USERNAME_CHARACTER}+/
+        user_continued, after = $&, $'
+        collected_user_mention += user_continued
+      else
+        break
+      end
+    end
+
+    user_mention, after = mention_and_after_of_existing_user(collected_user_mention, after)
+    user_mention
+  end
+
+  def self.mention_and_after_of_existing_user(mention, after)
+    if User.exists?(username: mention[1..-1])
+      return [mention, after]
+    else
+      convert_dashes(mention) =~ USER_MENTION
+      mention_before_dashes, extra_after = $1, $'
+      if User.exists?(username: mention_before_dashes[1..-1])
+        return [mention_before_dashes, extra_after + after]
+      end
+    end
+  end
+
+  def self.rm_markdown_from_user_mention(node)
+    26.times do
+      rm_dashes(node.string_content) =~ USER_MENTION
+      before, mention, after = $`, $1, $'
+      unless after.empty? && (node.next && node.next.type == :emph)
+        mention, after = mention_and_after_of_existing_user(mention, after)
+        return [before, mention, after]
+      end
+      adjoining_emph = "_#{node.next.to_plaintext.chomp}_"
+      node.string_content += adjoining_emph
+      node.next.delete
+      if node.type == :text && node.next&.type == :text
+        node.string_content += node.next.string_content
+        node.next.delete
+      end
+    end
+  end
+
+  def self.rm_dashes(string)
+    string.gsub("—", "---") # em dash
+          .gsub("–", "--") # en dash
+  end
+
+  def self.convert_dashes(string)
+    string.gsub("---", "—") # em dash
+          .gsub("--", "–") # en dash
   end
 
   def self.convert_images_to_links(node)

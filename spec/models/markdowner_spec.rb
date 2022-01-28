@@ -6,22 +6,80 @@ describe Markdowner do
       .to eq("<p>hello there <em>italics</em> and <strong>bold</strong>!</p>\n")
   end
 
-  it "turns @username into a link if @username exists" do
-    create(:user, :username => "blahblah")
+  # bug#1037
+  context "when @username refers to an existing user" do
+    it "turns into a link" do
+      create(:user, :username => "blahblah")
 
-    expect(Markdowner.to_html("hi @blahblah test"))
-      .to eq("<p>hi <a href=\"https://lobste.rs/u/blahblah\" rel=\"ugc\">" +
-             "@blahblah</a> test</p>\n")
+      expect(Markdowner.to_html("hi @blahblah test"))
+        .to eq("<p>hi <a href=\"#{Rails.application.root_url}u/blahblah\" rel=\"ugc\">" +
+               "@blahblah</a> test</p>\n")
+    end
 
-    expect(Markdowner.to_html("hi @flimflam test"))
-      .to eq("<p>hi @flimflam test</p>\n")
+    context "when @username contains repeated hyphens that would normally " \
+            "be parsed into dashes" do
+      it "turns into a link which includes the hyphens" do
+        create(:user, :username => "blahblah--")
+        create(:user, :username => "blah---blah")
+
+        expect(Markdowner.to_html("hi @blahblah--"))
+          .to eq("<p>hi <a href=\"#{Rails.application.root_url}u/blahblah--\" rel=\"ugc\">" +
+                 "@blahblah--</a></p>\n")
+
+        expect(Markdowner.to_html("hi @blah---blah test"))
+          .to eq("<p>hi <a href=\"#{Rails.application.root_url}u/blah---blah\" rel=\"ugc\">" +
+                 "@blah---blah</a> test</p>\n")
+      end
+    end
+
+    context "when @username appears before a dash" do
+      it "turns into a link without hyphens" do
+        create(:user, :username => "blah")
+
+        expect(Markdowner.to_html("hi @blah---blah test"))
+          .to eq("<p>hi <a href=\"#{Rails.application.root_url}u/blah\" rel=\"ugc\">" +
+                 "@blah</a>—blah test</p>\n")
+      end
+    end
+
+    context "when @username contains pairs of underscores that would normally " \
+            "be parsed into <em> tags" do
+      it "turns into a link which includes the underscores" do
+        create(:user, :username => "c-_-a_")
+
+        expect(Markdowner.to_html("hi @c-_-a_ test _bye_"))
+          .to eq("<p>hi <a href=\"#{Rails.application.root_url}u/c-_-a_\" rel=\"ugc\">" +
+                 "@c-_-a_</a> test <em>bye</em></p>\n")
+      end
+    end
+  end
+
+  context "when @username does not refer to any existing user" do
+    it "does not turn into a link" do
+      expect(Markdowner.to_html("hi @flimflam-- test"))
+        .to eq("<p>hi @flimflam– test</p>\n") # en dash
+    end
+
+    context "when the username is invalid and contains markdown formatting" do
+      it "does not turn into a link and is formatted" do
+        expect(Markdowner.to_html("hi @c-_-a_-too_long_for_a_user---name test _bye_"))
+          .to eq("<p>hi @c-<em>-a</em>-too_long_for_a_user—name test <em>bye</em></p>\n")
+      end
+    end
+
+    context "when the username is valid and contains markdown formatting" do
+      it "does not turn into a link and is formatted" do
+        expect(Markdowner.to_html("hi @c-_-a_--- test _bye_"))
+          .to eq("<p>hi @c-<em>-a</em>— test <em>bye</em></p>\n")
+      end
+    end
   end
 
   # bug#209
   it "keeps punctuation inside of auto-generated links when using brackets" do
     expect(Markdowner.to_html("hi <http://example.com/a.> test"))
       .to eq("<p>hi <a href=\"http://example.com/a.\" rel=\"ugc\">" +
-            "http://example.com/a.</a> test</p>\n")
+             "http://example.com/a.</a> test</p>\n")
   end
 
   # bug#242
@@ -30,11 +88,11 @@ describe Markdowner do
 
     expect(Markdowner.to_html("hi http://example.com/@blahblah/ test"))
       .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"ugc\">" +
-            "http://example.com/@blahblah/</a> test</p>\n")
+             "http://example.com/@blahblah/</a> test</p>\n")
 
     expect(Markdowner.to_html("hi [test](http://example.com/@blahblah/)"))
       .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"ugc\">" +
-        "test</a></p>\n")
+             "test</a></p>\n")
   end
 
   it "correctly adds ugc" do

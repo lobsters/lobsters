@@ -60,11 +60,11 @@ class ModNote < ApplicationRecord
       user: user,
       created_at: Time.current,
       note: "Attempted to redeem invitation code #{invitation.code} while logged in:\n" +
-        "sent by: [#{sender.username}](#{sender_url})\n" +
-        "created_at: #{invitation.created_at}\n" +
-        "used_at: #{invitation.used_at || 'unused'}\n" +
-        "email: #{invitation.email}\n" +
-        "memo: #{invitation.memo}"
+        "- sent by: [#{sender.username}](#{sender_url})\n" +
+        "- created_at: #{invitation.created_at}\n" +
+        "- used_at: #{invitation.used_at || 'unused'}\n" +
+        "- email: #{invitation.email}\n" +
+        "- memo: #{invitation.memo}"
     )
   end
 
@@ -74,11 +74,11 @@ class ModNote < ApplicationRecord
       user: story.user,
       created_at: Time.current,
       note: "Attempted to post a story from a #{reason} domain:\n" +
-        "url: #{story.url}" +
-        "title: #{story.title}" +
-        "user_is_author: #{story.user_is_author}" +
-        "tags: #{story.tags.map(&:tag).join(' ')}" +
-        "description: #{story.description}"
+        "- url: #{story.url}\n" +
+        "- title: #{story.title}\n" +
+        "- user_is_author: #{story.user_is_author}\n" +
+        "- tags: #{story.tags.map(&:tag).join(' ')}\n" +
+        "- description: #{story.description}\n"
     )
   end
 end

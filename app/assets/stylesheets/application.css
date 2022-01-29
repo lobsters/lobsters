@@ -511,7 +511,7 @@ li div.details {
 	opacity: 0.7;
 }
 
-.comment:target, li:target, p:target {
+.comment:target, li:target, p:target, div:target {
 	background-color: var(--color-bg-target);
 	border-radius: 8px;
 }
@@ -1143,7 +1143,7 @@ table.data pre {
 	vertical-align: middle;
 }
 .box label,
-.box span,
+.box > span,
 .box select,
 .box br {
 	line-height: 2em;

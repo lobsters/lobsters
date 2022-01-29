@@ -1,4 +1,6 @@
 class ModNote < ApplicationRecord
+  extend TimeAgoInWords
+
   belongs_to :moderator,
              :class_name => "User",
              :foreign_key => "moderator_user_id",
@@ -68,12 +70,28 @@ class ModNote < ApplicationRecord
     )
   end
 
+  def self.tattle_on_new_user_tagging!(story)
+    ModNote.create!(
+      moderator: InactiveUser.inactive_user,
+      user: story.user,
+      created_at: Time.current,
+      note: "Attempted to submit a story with tag(s) not allowed to new users:\n" +
+        "- user joined: #{time_ago_in_words(story.user.created_at)}\n" +
+        "- url: #{story.url}\n" +
+        "- title: #{story.title}\n" +
+        "- user_is_author: #{story.user_is_author}\n" +
+        "- tags: #{story.tags.map(&:tag).join(' ')}\n" +
+        "- description: #{story.description}\n"
+    )
+  end
+
   def self.tattle_on_story_domain!(story, reason)
     ModNote.create!(
       moderator: InactiveUser.inactive_user,
       user: story.user,
       created_at: Time.current,
       note: "Attempted to post a story from a #{reason} domain:\n" +
+        "- user joined: #{time_ago_in_words(story.user.created_at)}\n" +
         "- url: #{story.url}\n" +
         "- title: #{story.title}\n" +
         "- user_is_author: #{story.user_is_author}\n" +

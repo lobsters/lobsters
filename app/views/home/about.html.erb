@@ -68,20 +68,22 @@
   Explain the scope, list existing stories that should have been tagged, make a case for why people would want to specifically filter it out, and justify the increased complexity for submitters and mods.
   </p>
 
-  <p>
-  Lobsters is focused pretty narrowly on computing; tags like <a href="/t/art">art</a> don't imply every piece of art is on-topic.
-  Some rules of thumb for great stories to submit: Will this improve the reader's next program? Will it deepen their understanding of their last program? Will it be more interesting in five or ten years?
-  </p>
+  <div id="topicality">
+    <p>
+    Lobsters is focused pretty narrowly on computing; tags like <a href="/t/art">art</a> don't imply every piece of art is on-topic.
+    Some rules of thumb for great stories to submit: Will this improve the reader's next program? Will it deepen their understanding of their last program? Will it be more interesting in five or ten years?
+    </p>
 
-  <p>
-  Some things that are off-topic here but popular on larger, similar sites:
-  entrepreneurship, management, news about companies that employ a lot of programmers,
-  investing, world events, anthropology, self-help, personal productivity systems,
-  last-resort customer service requests via public shaming,
-  "I wanted to see what this site's amazing users think about this off-topic thing",
-  and
-  defining the single morally correct economic and political system for the entire world when we can't even settle tabs vs. spaces.
-  </p>
+    <p>
+    Some things that are off-topic here but popular on larger, similar sites:
+    entrepreneurship, management, news about companies that employ a lot of programmers,
+    investing, world events, anthropology, self-help, personal productivity systems,
+    last-resort customer service requests via public shaming,
+    "I wanted to see what this site's amazing users think about this off-topic thing",
+    and
+    defining the single morally correct economic and political system for the entire world when we can't even settle tabs vs. spaces.
+    </p>
+  </div>
 
   <h2 id="invitations">Invitation Tree</h2>
   <p>
@@ -91,22 +93,38 @@
   </p>
 
   <p>
-  New users must be invited by a current user, though there is no formal vetting process.
   Invitations are used as a mechanism for spam-control,
-  to slow registrations to a pace <a href="https://en.wikipedia.org/wiki/Eternal_September">we can acculturate</a> (more below)
+  to slow registrations to a <a href="https://en.wikipedia.org/wiki/Eternal_September">pace we can acculturate</a> (more below)
   and to encourage users to be nice, not to make the Lobsters userbase an elite club.
+  Users are considered "new" for their first <%= User::NEW_USER_DAYS %> days,
+  and their usernames appear <span class="new_user">in green</span>.
+  New users can't
+    send invites,
+    submit links to domains we haven't seen submitted before,
+    flag stories and comments,
+    suggest edits to story titles and tags,
+    resubmit links that have been seen before,
+    or
+    use tags for meta discussions or that are prone to off-topic stories
+      (<%= raw(
+        Tag.not_permitted_for_new_users.pluck(:tag).map { |t| link_to t, tag_path(t) }.join(' ')
+      ) %>).
+  </p>
+
+  <p>
   The quickest way to receive an invitation is to talk to someone you <a href="/u">recognize from the site</a>.
   If you wrote a link that was posted, please reach out in <a href="/chat">chat</a>, we'd love to have you join the discussion.
   Finally, if you can't find anyone you know in the invitation tree and didn't author something posted to the site,
   <% if Rails.application.allow_invitation_requests? %>
     you can <a href="/invitations/request">request an invite</a>.
   <% else %>
-    consider joining the <a href="/chat">community in the chat room</a>.
+    consider getting to know the community <a href="/chat">in the chat room</a>.
   <% end %>
   </p>
 
   <p>
   There's no limit on how many invitations a user can send (though we might at some point, to manage <a href="https://lobste.rs/stats">growth</a>).
+  There also no official vetting process for new users, each user is responsible for inviting people they believe will contribute positively to Lobsters.
   When accounts are banned for spam, <a href="https://en.wikipedia.org/wiki/Sockpuppet_(Internet)">sockpuppeting</a>, or other abuse,
   moderators will consider disabling their inviter's ability to send invitations or, rarely, also ban them.
   </p>

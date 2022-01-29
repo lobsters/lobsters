@@ -287,7 +287,7 @@ class User < ApplicationRecord
         return true
       end
     elsif obj.is_a?(Comment) && obj.is_flaggable?
-      return !self.is_new? && (self.karma >= MIN_KARMA_TO_FLAG)
+      return self.karma >= MIN_KARMA_TO_FLAG
     end
 
     false

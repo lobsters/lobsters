@@ -193,7 +193,11 @@ class Story < ApplicationRecord
 
     if self.user && self.user.is_new? && self.domain.stories.not_deleted.count == 0
       ModNote.tattle_on_story_domain!(self, "new user with new")
-      errors.add(:url, "is an unseen domain from a new user")
+      errors.add :url, <<-EXPLANATION
+        is an unseen domain from a new user. We restrict this to discourage
+        self-promotion and give you time to learn about topicality. Skirting
+        this with a URL shortener or tweet or something will probably earn a ban.
+      EXPLANATION
     end
   end
 
@@ -409,9 +413,22 @@ class Story < ApplicationRecord
   end
 
   # this has to happen just before save rather than in tags_a= because we need
-  # to have a valid user_id
+  # to have a valid user_id; remember it fills .taggings, not .tags
   def check_tags
     u = self.editor || self.user
+
+    if u && u.is_new? &&
+       (unpermitted = self.taggings.filter {|t| !t.tag.permit_by_new_users? }).any?
+      tags = unpermitted.map {|t| t.tag.tag }.to_sentence
+      errors.add :base, <<-EXPLANATION
+        New users can't submit stories with the tag(s) #{tags}
+        because they're for meta discussion or prone to off-topic stories.
+        If a tag is appropriate for the story, leaving it off to skirt this
+        restriction can earn a ban.
+      EXPLANATION
+      ModNote.tattle_on_new_user_tagging!(self)
+      return
+    end
 
     self.taggings.each do |t|
       if !t.tag.valid_for?(u)
@@ -419,11 +436,6 @@ class Story < ApplicationRecord
       elsif !t.tag.active? && t.new_record? && !t.marked_for_destruction?
         # stories can have inactive tags as long as they existed before
         raise "#{u.username} cannot add inactive tag #{t.tag.tag}"
-      end
-
-      if u.is_new? && !t.tag.permit_by_new_users?
-        errors.add(:base, "New users can't submit #{t.tag.tag} stories, please wait. " <<
-          "If the tag is appropriate, leaving it off to skirt this restriction is a bad idea.")
       end
     end
 

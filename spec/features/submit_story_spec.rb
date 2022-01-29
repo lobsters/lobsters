@@ -96,7 +96,7 @@ RSpec.feature "Submitting Stories", type: :feature do
 
   scenario "new user submitting with a tag not permitted for new users" do
     inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
-    drama.tag = create(:tag, tag: 'drama', permit_by_new_users: false)
+    drama = create(:tag, tag: 'drama', permit_by_new_users: false)
     earlier_story = create(:story)
     user.update(created_at: 1.day.ago)
     expect {

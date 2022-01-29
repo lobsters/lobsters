@@ -51,8 +51,7 @@
           href="/" title="<%= Rails.application.name %> (Current traffic: <%=
           @traffic_intensity.to_i %>%)"></a>
 
-        <% if @cur_url.present? && !header_links.keys.include?(@cur_url) && !right_header_links.keys.include?(@cur_url) &&
-        @heading.present? %>
+        <% if @cur_url.present? && !header_links.keys.include?(@cur_url) && @heading.present? %>
           <span id="headertitle">
             <a href="<%= @cur_url %>"><%= @heading %></a>
           </span>
@@ -71,9 +70,26 @@
 
       <div id="headerright">
         <span class="headerlinks">
-          <% right_header_links.each do |u,v| %>
-            <a href="<%= u %>" class="<%= v[:class].join(" ") %>"><%=
-              v[:title] %></a>
+          <% if @user %>
+            <% if @user.unread_replies_count > 0 %>
+              <%= link_to "#{@user.unread_replies_count} Reply".pluralize(@user.unread_replies_count),
+                    replies_unread_path, class: 'new_messages' %>
+            <% else %>
+              <%= link_to 'Replies', replies_path %>
+            <% end %>
+
+            <% if @user.unread_message_count > 0 %>
+              <%= link_to "#{@user.unread_message_count} Message".pluralize(@user.unread_message_count),
+                    messages_path, class: 'new_messages' %>
+            <% else %>
+              <%= link_to 'Messages', messages_path %>
+            <% end %>
+
+            <%= link_to @user.username, settings_path %>
+            <%= link_to "(#{@user.karma})", settings_path, class: 'karma' %>
+
+          <% else %>
+            <%= link_to 'Login', login_path %>
           <% end %>
         </span>
       </div>

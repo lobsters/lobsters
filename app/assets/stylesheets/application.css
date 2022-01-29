@@ -345,6 +345,7 @@ div#inside {
 	padding-right: 0;
 	padding-left: 0.75em;
 }
+#headerright .headerlinks .karma { padding-left: 0; }
 
 #header a.cur_url {
 	color: var(--color-fg);

@@ -73,6 +73,8 @@ describe User do
     expect(build(:user, :homepage => "https://ሙዚቃ.et")).to be_valid
     expect(build(:user, :homepage => "http://lobste.rs/ሙዚቃ")).to be_valid
     expect(build(:user, :homepage => "http://www.lobste.rs/")).to be_valid
+    expect(build(:user, :homepage => "gemini://www.lobste.rs/")).to be_valid
+    expect(build(:user, :homepage => "gopher://www.lobste.rs/")).to be_valid
 
     expect(build(:user, :homepage => "http://")).to_not be_valid
     expect(build(:user, :homepage => "http://notld")).to_not be_valid

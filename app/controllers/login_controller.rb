@@ -143,9 +143,7 @@ class LoginController < ApplicationController
         @reset_user.password = params[:password]
         @reset_user.password_confirmation = params[:password_confirmation]
         @reset_user.password_reset_token = nil
-
-        # this will get reset upon save
-        @reset_user.session_token = nil
+        @reset_user.roll_session_token
 
         if !@reset_user.is_active? && !@reset_user.is_banned?
           @reset_user.deleted_at = nil

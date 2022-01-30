@@ -1,8 +1,9 @@
-### Lobsters Rails Project [![Build Status](https://travis-ci.org/lobsters/lobsters.svg?branch=master)](https://travis-ci.org/lobsters/lobsters)
+### Lobsters Rails Project ![build status](https://github.com/lobsters/lobsters/actions/workflows/check.yml/badge.svg)
 
 This is the
 [quite sad](https://www.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)
-source code to the site operating at
+source code to the
+[ghost town](https://twitter.com/webshitweekly/status/1399935275057389571) at
 [https://lobste.rs](https://lobste.rs).
 It is a Rails codebase and uses a SQL (MariaDB in production) backend for the database.
 

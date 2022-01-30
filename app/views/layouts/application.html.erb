@@ -1,5 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  class='color-scheme-<%= @user&.prefers_color_scheme || 'system' %>'
+>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -41,84 +44,98 @@
   <% end %>
 </head>
 <body>
-  <div id="wrapper">
-    <div id="header">
-      <div id="headerleft">
-        <a id="l_holder" style="<%= @traffic_style %>"
-          href="/" title="<%= Rails.application.name %> (Current traffic: <%=
-          @traffic_intensity.to_i %>%)"></a>
+  <header>
+    <div id="headerleft">
+      <a id="l_holder" style="<%= @traffic_style %>"
+        href="/" title="<%= Rails.application.name %> (Current traffic: <%=
+        @traffic_intensity.to_i %>%)"></a>
 
-        <% if @cur_url.present? && !header_links.keys.include?(@cur_url) &&
-        @heading.present? %>
-          <span id="headertitle">
-            <a href="<%= @cur_url %>"><%= @heading %></a>
-          </span>
-        <% end %>
-
-        <span class="headerlinks">
-          <% header_links.each do |u,v| %>
-            <a href="<%= u %>" class="<%= v[:class].join(" ") %>"><%=
-              v[:title] %></a>
-          <% end %>
-          <% if !@user && Rails.application.open_signups? %>
-            <strong><a href="/invitations/open" class="signup-text">Sign Up Now</a></strong>
-          <% end %>
+      <% if @cur_url.present? && !header_links.keys.include?(@cur_url) && @heading.present? %>
+        <span id="headertitle">
+          <a href="<%= @cur_url %>"><%= @heading %></a>
         </span>
-      </div>
-
-      <div id="headerright">
-        <span class="headerlinks">
-          <% right_header_links.each do |u,v| %>
-            <a href="<%= u %>" class="<%= v[:class].join(" ") %>"><%=
-              v[:title] %></a>
-          <% end %>
-        </span>
-      </div>
-
-      <div class="clear"></div>
-    </div>
-
-    <% if content_for? :nav %>
-      <div class="box wide">
-        <%= yield :nav %>
-      </div>
-      <div class="clear"></div>
-    <% end %>
-
-    <div id="inside">
-      <% [ :error, :success, :notice ].each do |f| %>
-        <% if flash[f].present? %>
-          <div class="flash-<%= f %>"><%= flash[f] %></div>
-        <% end %>
       <% end %>
 
-      <%= yield %>
-
-      <div id="footer">
-        <% if lookup_context.template_exists?("footer", "layouts", true) %>
-          <%= render :partial => "layouts/footer" %>
-        <% else %>
-          <% if !@user && Rails.application.open_signups? %>
-            <a href="/invitations/open">Join <%= Rails.application.name %></a>
-          <% end %>
-          <a href="/moderations">Moderation Log</a>
-          <% if @user && @user.can_see_invitation_requests? &&
-          (iqc = InvitationRequest.verified_count) > 0 %>
-            <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
-          <% end %>
-          <% if @user && @user.is_moderator? &&
-          (hrc = HatRequest.count) > 0 %>
-            <a href="/hats/requests">Hat Requests (<%= hrc %>)</a>
-          <% else %>
-            <a href="/hats">Hats</a>
-          <% end %>
-          <a href="/chat">Chat</a>
-          <a href="/privacy">Privacy</a>
-          <a href="/about">About</a>
+      <span class="headerlinks">
+        <% header_links.each do |u,v| %>
+          <a href="<%= u %>" class="<%= v[:class].join(" ") %>"><%=
+            v[:title] %></a>
         <% end %>
-      </div>
-      <div class="clear"></div>
+        <% if !@user && Rails.application.open_signups? %>
+          <strong><a href="/invitations/open" class="signup-text">Sign Up Now</a></strong>
+        <% end %>
+      </span>
     </div>
+
+    <div id="headerright">
+      <span class="headerlinks">
+        <% if @user %>
+          <% if @user.unread_replies_count > 0 %>
+            <%= link_to "#{@user.unread_replies_count} Reply".pluralize(@user.unread_replies_count),
+                  replies_unread_path, class: 'new_messages' %>
+          <% else %>
+            <%= link_to 'Replies', replies_path %>
+          <% end %>
+
+          <% if @user.unread_message_count > 0 %>
+            <%= link_to "#{@user.unread_message_count} Message".pluralize(@user.unread_message_count),
+                  messages_path, class: 'new_messages' %>
+          <% else %>
+            <%= link_to 'Messages', messages_path %>
+          <% end %>
+
+          <%= link_to @user.username, settings_path %>
+          <%= link_to "(#{@user.karma})", settings_path, class: 'karma' %>
+
+        <% else %>
+          <%= link_to 'Login', login_path %>
+        <% end %>
+      </span>
+    </div>
+
+    <div class="clear"></div>
+  </header>
+
+  <% if content_for? :nav %>
+    <div class="box wide">
+      <%= yield :nav %>
+    </div>
+    <div class="clear"></div>
+  <% end %>
+
+  <div id="inside">
+    <% [ :error, :success, :notice ].each do |f| %>
+      <% if flash[f].present? %>
+        <div class="flash-<%= f %>"><%= flash[f] %></div>
+      <% end %>
+    <% end %>
+
+    <%= yield %>
+
+    <footer>
+      <% if lookup_context.template_exists?("footer", "layouts", true) %>
+        <%= render :partial => "layouts/footer" %>
+      <% else %>
+        <% if !@user && Rails.application.open_signups? %>
+          <a href="/invitations/open">Join <%= Rails.application.name %></a>
+        <% end %>
+        <a href="/moderations">Moderation Log</a>
+        <% if @user && @user.can_see_invitation_requests? &&
+        (iqc = InvitationRequest.verified_count) > 0 %>
+          <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
+        <% end %>
+        <% if @user && @user.is_moderator? &&
+        (hrc = HatRequest.count) > 0 %>
+          <a href="/hats/requests">Hat Requests (<%= hrc %>)</a>
+        <% else %>
+          <a href="/hats">Hats</a>
+        <% end %>
+        <a href="/chat">Chat</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/about">About</a>
+      <% end %>
+    </footer>
+    <div class="clear"></div>
   </div>
 </body>
 </html>

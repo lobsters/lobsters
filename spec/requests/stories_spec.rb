@@ -78,7 +78,12 @@ describe 'stores', type: :request do
 
     it "increments the user's count of deleted stories" do
       expect {
-        delete "/stories/#{story.short_id}"
+        put "/stories/#{story.short_id}/destroy", params: {
+          id: story.short_id,
+          story:  {
+            title: story.title,
+          },
+        }
       }.to change { user.stories_deleted_count }.by(1)
     end
   end
@@ -90,7 +95,12 @@ describe 'stores', type: :request do
 
     it "decrements the user's count of deleted stories" do
       expect {
-        post "/stories/#{deleted_story.short_id}/undelete"
+        put "/stories/#{deleted_story.short_id}/undelete", params: {
+          id: deleted_story.short_id,
+          story:  {
+            title: deleted_story.title,
+          },
+        }
       }.to change { user.stories_deleted_count }.by(-1)
     end
   end

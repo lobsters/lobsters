@@ -94,6 +94,23 @@ RSpec.feature "Submitting Stories", type: :feature do
     }.not_to(change { Story.count })
   end
 
+  scenario "new user submitting with a tag not permitted for new users" do
+    inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
+    drama = create(:tag, tag: 'drama', permit_by_new_users: false)
+    earlier_story = create(:story)
+    user.update(created_at: 1.day.ago)
+    expect {
+      visit "/stories/new"
+      fill_in "URL", with: "https://#{earlier_story.domain.domain}/story"
+      fill_in "Title", with: "Example Story"
+      select drama.tag, from: 'Tags'
+      click_button "Submit"
+
+      expect(page).to have_content "meta discussion or prone to"
+    }.not_to(change { Story.count })
+    expect(ModNote.last.user).to eq(user)
+  end
+
   scenario "resubmitting a recent link deleted by a moderator" do
     s = create(:story, is_expired: true, is_moderated: true, created_at: 1.day.ago)
     expect {

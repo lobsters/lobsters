@@ -27,6 +27,7 @@ class ModController < ApplicationController
     @title = "Flagged Comments"
     @comments = period(Comment
       .eager_load(:user, :hat, :story => :user, :votes => :user)
+      .where("comments.flags >= 2")
       .where("(select count(*) from votes where
                 votes.comment_id = comments.id and
                 vote < 0 and

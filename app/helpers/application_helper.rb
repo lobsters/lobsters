@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include TimeAgoInWords
+
   MAX_PAGES = 15
 
   def avatar_img(user, size)
@@ -64,46 +66,6 @@ module ApplicationHelper
     @header_links
   end
 
-  def right_header_links
-    return @right_header_links if @right_header_links
-
-    @right_header_links = {}
-
-    if @user
-      if (count = @user.unread_replies_count) > 0
-        @right_header_links[replies_unread_path] = {
-          :class => ["new_messages"],
-          :title => "#{@user.unread_replies_count} Reply".pluralize(count),
-        }
-      else
-        @right_header_links[replies_path] = { :title => "Replies" }
-      end
-
-      if (count = @user.unread_message_count) > 0
-        @right_header_links[messages_path] = {
-          :class => ["new_messages"],
-          :title => "#{@user.unread_message_count} Message".pluralize(count),
-        }
-      else
-        @right_header_links[messages_path] = { :title => "Messages" }
-      end
-
-      @right_header_links[settings_path] = { :title => "#{@user.username} (#{@user.karma})" }
-    else
-      @right_header_links[login_path] = { :title => "Login" }
-    end
-
-    @right_header_links.each do |k, v|
-      v[:class] ||= []
-
-      if k == @cur_url
-        v[:class].push "cur_url"
-      end
-    end
-
-    @right_header_links
-  end
-
   def link_to_different_page(text, path)
     if current_page? path
       text
@@ -153,29 +115,7 @@ module ApplicationHelper
   end
 
   def time_ago_in_words_label(time)
-    ago = ""
-    secs = (Time.current - time).to_i
-    if secs <= 5
-      ago = "just now"
-    elsif secs < 60
-      ago = "less than a minute ago"
-    elsif secs < (60 * 60)
-      mins = (secs / 60.0).floor
-      ago = "#{mins} #{'minute'.pluralize(mins)} ago"
-    elsif secs < (60 * 60 * 48)
-      hours = (secs / 60.0 / 60.0).floor
-      ago = "#{hours} #{'hour'.pluralize(hours)} ago"
-    elsif secs < (60 * 60 * 24 * 30)
-      days = (secs / 60.0 / 60.0 / 24.0).floor
-      ago = "#{days} #{'day'.pluralize(days)} ago"
-    elsif secs < (60 * 60 * 24 * 365)
-      months = (secs / 60.0 / 60.0 / 24.0 / 30.0).floor
-      ago = "#{months} #{'month'.pluralize(months)} ago"
-    else
-      years = (secs / 60.0 / 60.0 / 24.0 / 365.0).floor
-      ago = "#{years} #{'year'.pluralize(years)} ago"
-    end
-
+    ago = time_ago_in_words(time)
     raw(content_tag(:span, ago, title: time.strftime("%F %T %z")))
   end
 end

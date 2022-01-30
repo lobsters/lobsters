@@ -54,6 +54,7 @@ class User < ApplicationRecord
   has_secure_password
 
   typed_store :settings do |s|
+    s.string :prefers_color_scheme, :default => "system"
     s.boolean :email_notifications, :default => false
     s.boolean :email_replies, :default => false
     s.boolean :pushover_replies, :default => false
@@ -74,13 +75,17 @@ class User < ApplicationRecord
     s.string :homepage
   end
 
+  validates :prefers_color_scheme, inclusion: %w(system light dark)
+
   validates :email,
             :length => { :maximum => 100 },
             :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
             :uniqueness => { :case_sensitive => false }
 
   validates :homepage,
-            :format => { :with => /\Ahttps?:\/\/[^\/\s]+\.[^.\/\s]+(\/.*)?\Z/ },
+            :format => {
+              :with => /\A(?:https?|gemini|gopher):\/\/[^\/\s]+\.[^.\/\s]+(\/.*)?\Z/,
+            },
             :allow_blank => true
 
   validates :password, :presence => true, :on => :create
@@ -282,7 +287,7 @@ class User < ApplicationRecord
         return true
       end
     elsif obj.is_a?(Comment) && obj.is_flaggable?
-      return !self.is_new? && (self.karma >= MIN_KARMA_TO_FLAG)
+      return self.karma >= MIN_KARMA_TO_FLAG
     end
 
     false
@@ -307,7 +312,7 @@ class User < ApplicationRecord
 
   def check_session_token
     if self.session_token.blank?
-      self.session_token = Utils.random_str(60)
+      self.roll_session_token
     end
   end
 
@@ -373,8 +378,7 @@ class User < ApplicationRecord
 
       self.invitations.destroy_all
 
-      self.session_token = nil
-      self.check_session_token
+      self.roll_session_token
 
       self.deleted_at = Time.current
       self.good_riddance?
@@ -473,6 +477,10 @@ class User < ApplicationRecord
   def remove_keybase_proof(kb_username)
     self.keybase_signatures ||= []
     self.keybase_signatures.reject! {|kbsig| kbsig['kb_username'] == kb_username }
+  end
+
+  def roll_session_token
+    self.session_token = Utils.random_str(60)
   end
 
   def is_heavy_self_promoter?

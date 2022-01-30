@@ -20,6 +20,7 @@ class SignupController < ApplicationController
   def invited
     if @user
       flash[:error] = "You are already signed up."
+      ModNote.tattle_on_invited(@user, params[:invitation_code])
       return redirect_to "/"
     end
 

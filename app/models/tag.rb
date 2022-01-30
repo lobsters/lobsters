@@ -15,12 +15,14 @@ class Tag < ApplicationRecord
   attr_writer :filtered_count
 
   validates :tag, length: { maximum: 25 }, presence: true,
-                  uniqueness: { case_sensitive: true }, format: { without: /,/ }
+                  uniqueness: { case_sensitive: true },
+                  format: { with: /\A[A-Za-z0-9_\-]+\z/ }
   validates :description, length: { maximum: 100 }
   validates :hotness_mod, inclusion: { in: -10..10 }
   validates :permit_by_new_users, :privileged, inclusion: { in: [true, false] }
 
-  scope :active, -> { where(:active => true) }
+  scope :active, -> { where(active: true) }
+  scope :not_permitted_for_new_users, -> { where(permit_by_new_users: false) }
 
   def to_param
     self.tag

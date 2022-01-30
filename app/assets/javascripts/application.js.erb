@@ -128,7 +128,7 @@ var _Lobsters = Class.extend({
     } else {
       // place flag menu outside of the comment to avoid inheriting opacity
       var voterPos = $(voterEl).position();
-      d.appendTo($(voterEl).closest(".comments_subtree"));
+      d.appendTo($(voterEl).parent());
       d.css({
         left: voterPos.left,
         top: voterPos.top + $(voterEl).outerHeight()
@@ -256,7 +256,9 @@ var _Lobsters = Class.extend({
   },
 
   checkStoryDuplicate: function(form) {
-    var params = $(form).serializeArray();
+    // if this includes { '_method': 'PUT' }, the router maps it as
+    // StoriesController#update with story_id 'check_url_dupe'
+    var params = $(form).serializeArray().filter((e) => e.name !== '_method');
     $.post("/stories/check_url_dupe", params, function(formErrorsHtml) {
       $(form).find(".form_errors_header").html(formErrorsHtml);
     });
@@ -319,40 +321,6 @@ var _Lobsters = Class.extend({
         return results;
     }
     });
-  },
-
-  moderateStory: function(link) {
-    var reason = $("#story_moderation_reason").val();
-    if (reason == null || reason == "")
-      return false;
-
-    var link = $(link);
-
-    /* $.rails.handleMethod() */
-    var href = $.rails.href(link),
-      method = link.data('method'),
-      target = link.attr('target'),
-      csrf_token = $("meta[name=csrf-token]").attr("content"),
-      csrf_param = $("meta[name=csrf-param]").attr("content"),
-      form = $("<form method=\"post\" action=\"" + href + "\"></form>"),
-      metadata_input = "<input name=\"_method\" value=\"" + method +
-        "\" type=\"hidden\" />";
-
-    if (csrf_param !== undefined && csrf_token !== undefined)
-      metadata_input += "<input name=\"" + csrf_param + "\" value=\"" +
-        csrf_token + "\" type=\"hidden\" />";
-
-    if (target)
-      form.attr("target", target);
-
-    var r = $("<input type=\"hidden\" name=\"reason\" />");
-    r.val(reason);
-    form.append(r);
-
-    form.hide().append(metadata_input).appendTo('body');
-    form.submit();
-
-    return false;
   },
 
   fetchURLTitle: function(button, url_field, title_field) {
@@ -419,10 +387,6 @@ $(document).ready(function() {
     Lobsters.saveStory(this);
     return false;
   });
-
-  $("a.mod_story_link").click(function() {
-    return Lobsters.moderateStory(this);
-  }),
 
   $("select[name=message\\[hat_id\\]]").change(function() {
     $(this).siblings("input[name=message\\[mod_note\\]]")
@@ -581,7 +545,9 @@ $(document).ready(function() {
       }
     }
 
-    if ($("#story_url").val().length > 0) {
+    // check for dupe if there's a URL, but not when editing existing
+    if ($("#story_url").val().length > 0 &&
+        $("#edit_story input[name=_method]").val() !== "put") {
       Lobsters.checkStoryDuplicate($(this).parents("form").first());
     }
   });
@@ -590,7 +556,7 @@ $(document).ready(function() {
   $(document).ready(Lobsters.checkStoryTitle);
 
   $(document).on("blur", "#user_homepage", function() {
-    if (this.value.trim() !== '' && !this.value.match('^https?:\/\/'))
+    if (this.value.trim() !== '' && !this.value.match('^[a-z]+:\/\/'))
       this.value = 'http://' + this.value;
   });
 

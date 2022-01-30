@@ -1,4 +1,6 @@
 class ModNote < ApplicationRecord
+  extend TimeAgoInWords
+
   belongs_to :moderator,
              :class_name => "User",
              :foreign_key => "moderator_user_id",
@@ -46,17 +48,55 @@ class ModNote < ApplicationRecord
     )
   end
 
+  def self.tattle_on_invited(user, invitation_code)
+    invitation = Invitation.find_by(code: invitation_code)
+    return unless invitation
+
+    sender = invitation.user
+    sender_url = Rails.application.routes.url_helpers.user_url(
+      sender,
+      host: Rails.application.domain
+    )
+    ModNote.create!(
+      moderator: InactiveUser.inactive_user,
+      user: user,
+      created_at: Time.current,
+      note: "Attempted to redeem invitation code #{invitation.code} while logged in:\n" +
+        "- sent by: [#{sender.username}](#{sender_url})\n" +
+        "- created_at: #{invitation.created_at}\n" +
+        "- used_at: #{invitation.used_at || 'unused'}\n" +
+        "- email: #{invitation.email}\n" +
+        "- memo: #{invitation.memo}"
+    )
+  end
+
+  def self.tattle_on_new_user_tagging!(story)
+    ModNote.create!(
+      moderator: InactiveUser.inactive_user,
+      user: story.user,
+      created_at: Time.current,
+      note: "Attempted to submit a story with tag(s) not allowed to new users:\n" +
+        "- user joined: #{time_ago_in_words(story.user.created_at)}\n" +
+        "- url: #{story.url}\n" +
+        "- title: #{story.title}\n" +
+        "- user_is_author: #{story.user_is_author}\n" +
+        "- tags: #{story.tags.map(&:tag).join(' ')}\n" +
+        "- description: #{story.description}\n"
+    )
+  end
+
   def self.tattle_on_story_domain!(story, reason)
     ModNote.create!(
       moderator: InactiveUser.inactive_user,
       user: story.user,
       created_at: Time.current,
       note: "Attempted to post a story from a #{reason} domain:\n" +
-        "url: #{story.url}" +
-        "title: #{story.title}" +
-        "user_is_author: #{story.user_is_author}" +
-        "tags: #{story.tags.map(&:tag).join(' ')}" +
-        "description: #{story.description}"
+        "- user joined: #{time_ago_in_words(story.user.created_at)}\n" +
+        "- url: #{story.url}\n" +
+        "- title: #{story.title}\n" +
+        "- user_is_author: #{story.user_is_author}\n" +
+        "- tags: #{story.tags.map(&:tag).join(' ')}\n" +
+        "- description: #{story.description}\n"
     )
   end
 end

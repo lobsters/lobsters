@@ -133,7 +133,7 @@ class Story < ApplicationRecord
   TITLE_DROP_WORDS = ["", "a", "an", "and", "but", "in", "of", "or", "that", "the", "to"].freeze
 
   # URI.parse is not very lenient, so we can't use it
-  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i.freeze
+  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z\-]+)(?<port>:\d+)?(\/|\z)/i.freeze
 
   # Dingbats, emoji, and other graphics https://www.unicode.org/charts/
   GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}-\u{27BF}\u{1F000}-\u{1F9FF}]/.freeze
@@ -193,7 +193,11 @@ class Story < ApplicationRecord
 
     if self.user && self.user.is_new? && self.domain.stories.not_deleted.count == 0
       ModNote.tattle_on_story_domain!(self, "new user with new")
-      errors.add(:url, "is an unseen domain from a new user")
+      errors.add :url, <<-EXPLANATION
+        is an unseen domain from a new user. We restrict this to discourage
+        self-promotion and give you time to learn about topicality. Skirting
+        this with a URL shortener or tweet or something will probably earn a ban.
+      EXPLANATION
     end
   end
 
@@ -216,6 +220,16 @@ class Story < ApplicationRecord
     urls = [url.to_s.gsub(/(#.*)/, "")]
     urls2 = [url.to_s.gsub(/(#.*)/, "")]
     urls_with_trailing_pound = []
+
+    # arxiv html page and its pdf link based off the [arxiv identifier](https://arxiv.org/help/arxiv_identifier)
+    if /^https?:\/\/(www\d*\.)?arxiv.org/i.match(url)
+      urls.each do |u|
+        urls2.push u.gsub(/(arxiv.org\/)abs(\/\d{4}.\d{4,5})/i, '\1pdf\2')
+        urls2.push u.gsub(/(arxiv.org\/)abs(\/\d{4}.\d{4,5})/i, '\1pdf\2.pdf')
+        urls2.push u.gsub(/(arxiv.org\/)pdf(\/\d{4}.\d{4,5})(.pdf)?/i, '\1abs\2')
+      end
+      urls = urls2.uniq
+    end
 
     # https
     urls.each do |u|
@@ -287,8 +301,17 @@ class Story < ApplicationRecord
     true
   end
 
-  def archive_url
-    "https://archive.md/#{CGI.escape(self.url)}"
+  def archiveorg_url
+    # This will redirect to the latest version they have
+    "https://web.archive.org/web/3/#{CGI.escape(self.url)}"
+  end
+
+  def archivetoday_url
+    "https://archive.today/#{CGI.escape(self.url)}"
+  end
+
+  def ghost_url
+    "https://ghostarchive.org/search?term=#{CGI.escape(self.url)}"
   end
 
   def as_json(options = {})
@@ -390,9 +413,22 @@ class Story < ApplicationRecord
   end
 
   # this has to happen just before save rather than in tags_a= because we need
-  # to have a valid user_id
+  # to have a valid user_id; remember it fills .taggings, not .tags
   def check_tags
     u = self.editor || self.user
+
+    if u && u.is_new? &&
+       (unpermitted = self.taggings.filter {|t| !t.tag.permit_by_new_users? }).any?
+      tags = unpermitted.map {|t| t.tag.tag }.to_sentence
+      errors.add :base, <<-EXPLANATION
+        New users can't submit stories with the tag(s) #{tags}
+        because they're for meta discussion or prone to off-topic stories.
+        If a tag is appropriate for the story, leaving it off to skirt this
+        restriction can earn a ban.
+      EXPLANATION
+      ModNote.tattle_on_new_user_tagging!(self)
+      return
+    end
 
     self.taggings.each do |t|
       if !t.tag.valid_for?(u)
@@ -400,11 +436,6 @@ class Story < ApplicationRecord
       elsif !t.tag.active? && t.new_record? && !t.marked_for_destruction?
         # stories can have inactive tags as long as they existed before
         raise "#{u.username} cannot add inactive tag #{t.tag.tag}"
-      end
-
-      if u.is_new? && !t.tag.permit_by_new_users?
-        errors.add(:base, "New users can't submit #{t.tag.tag} stories, please wait. " <<
-          "If the tag is appropriate, leaving it off to skirt this restriction is a bad idea.")
       end
     end
 
@@ -583,25 +614,22 @@ class Story < ApplicationRecord
     end
     m.story_id = self.id
 
-    if all_changes["is_expired"] && self.is_expired?
-      m.action = "deleted story"
-      User.update_counters self.user_id, karma: (self.votes.count * -2)
-    elsif all_changes["is_expired"] && !self.is_expired?
-      m.action = "undeleted story"
-    else
-      m.action = all_changes.map {|k, v|
-        if k == "merged_story_id"
-          if v[1]
-            "merged into #{self.merged_into_story.short_id} " <<
-              "(#{self.merged_into_story.title})"
-          else
-            "unmerged from another story"
-          end
+    m.action = all_changes.map {|k, v|
+      if k == "is_expired" && self.is_expired?
+        "deleted story"
+      elsif k == "is_expired" && !self.is_expired?
+        "undeleted story"
+      elsif k == "merged_story_id"
+        if v[1]
+          "merged into #{self.merged_into_story.short_id} " <<
+            "(#{self.merged_into_story.title})"
         else
-          "changed #{k} from #{v[0].inspect} to #{v[1].inspect}"
+          "unmerged from another story"
         end
-      }.join(", ")
-    end
+      else
+        "changed #{k} from #{v[0].inspect} to #{v[1].inspect}"
+      end
+    }.join(", ")
 
     m.reason = self.moderation_reason
     m.save
@@ -870,7 +898,9 @@ class Story < ApplicationRecord
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))
       params = match[2].split(/[&\?]/)
       # utm_ is google and many others; sk is medium
-      params.reject! {|p| p.match(/^utm_(source|medium|campaign|term|content)=|^sk=|^fbclid=/) }
+      params.reject! {|p|
+        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=/x)
+      }
       u = match[1] << (params.any?? "?" << params.join("&") : "")
     end
 

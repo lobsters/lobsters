@@ -62,9 +62,9 @@ private
       :description,
       :permit_by_new_users,
       :privileged,
+      :is_media,
       :active,
       :hotness_mod,
-      action_name == 'create' ? :is_media : nil
     ).merge(edit_user_id: @user.id)
   end
 end

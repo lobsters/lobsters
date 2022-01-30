@@ -62,26 +62,28 @@
   </ul>
 
   <p>
-  Creating new tags and retiring old tags is done by the community by submitting, discussing, and voting on <a href="/t/meta" class="tag">meta</a>-tagged requests about them,
+  Creating new tags and retiring old tags is done by the community by submitting, discussing, and voting on <a href="/t/meta" class="tag tag_meta">meta</a>-tagged requests about them,
   and these events are <a href="https://lobste.rs/moderations?utf8=✓&moderator=(All)&what[tags]=tags">logged</a> (since 2018-04).
   To propose a tag, post a <a href="/t/meta">meta</a> thread with the name and description.
   Explain the scope, list existing stories that should have been tagged, make a case for why people would want to specifically filter it out, and justify the increased complexity for submitters and mods.
   </p>
 
-  <p>
-  Lobsters is focused pretty narrowly on computing; tags like <a href="/t/art">art</a> don't imply every piece of art is on-topic.
-  Some rules of thumb for great stories to submit: Will this improve the reader's next program? Will it deepen their understanding of their last program? Will it be more interesting in five or ten years?
-  </p>
+  <div id="topicality">
+    <p>
+    Lobsters is focused pretty narrowly on computing; tags like <a href="/t/art">art</a> don't imply every piece of art is on-topic.
+    Some rules of thumb for great stories to submit: Will this improve the reader's next program? Will it deepen their understanding of their last program? Will it be more interesting in five or ten years?
+    </p>
 
-  <p>
-  Some things that are off-topic here but popular on larger, similar sites:
-  entrepreneurship, management, news about companies that employ a lot of programmers,
-  investing, world events, anthropology, self-help, personal productivity systems,
-  last-resort customer service requests via public shaming,
-  "I wanted to see what this site's amazing users think about this off-topic thing",
-  and
-  defining the single morally correct economic and political system for the entire world when we can't even settle tabs vs. spaces.
-  </p>
+    <p>
+    Some things that are off-topic here but popular on larger, similar sites:
+    entrepreneurship, management, news about companies that employ a lot of programmers,
+    investing, world events, anthropology, self-help, personal productivity systems,
+    last-resort customer service requests via public shaming,
+    "I wanted to see what this site's amazing users think about this off-topic thing",
+    and
+    defining the single morally correct economic and political system for the entire world when we can't even settle tabs vs. spaces.
+    </p>
+  </div>
 
   <h2 id="invitations">Invitation Tree</h2>
   <p>
@@ -91,22 +93,38 @@
   </p>
 
   <p>
-  New users must be invited by a current user, though there is no formal vetting process.
   Invitations are used as a mechanism for spam-control,
-  to slow registrations to a pace <a href="https://en.wikipedia.org/wiki/Eternal_September">we can acculturate</a> (more below)
+  to slow registrations to a <a href="https://en.wikipedia.org/wiki/Eternal_September">pace we can acculturate</a> (more below)
   and to encourage users to be nice, not to make the Lobsters userbase an elite club.
+  Users are considered "new" for their first <%= User::NEW_USER_DAYS %> days,
+  and their usernames appear <span class="new_user">in green</span>.
+  New users can't
+    send invites,
+    submit links to domains we haven't seen submitted before,
+    flag stories and comments,
+    suggest edits to story titles and tags,
+    resubmit links that have been seen before,
+    or
+    use tags for meta discussions or that are prone to off-topic stories
+      (<%= raw(
+        Tag.not_permitted_for_new_users.pluck(:tag).map { |t| link_to t, tag_path(t) }.join(' ')
+      ) %>).
+  </p>
+
+  <p>
   The quickest way to receive an invitation is to talk to someone you <a href="/u">recognize from the site</a>.
   If you wrote a link that was posted, please reach out in <a href="/chat">chat</a>, we'd love to have you join the discussion.
   Finally, if you can't find anyone you know in the invitation tree and didn't author something posted to the site,
   <% if Rails.application.allow_invitation_requests? %>
     you can <a href="/invitations/request">request an invite</a>.
   <% else %>
-    consider joining the <a href="/chat">community in the chat room</a>.
+    consider getting to know the community <a href="/chat">in the chat room</a>.
   <% end %>
   </p>
 
   <p>
   There's no limit on how many invitations a user can send (though we might at some point, to manage <a href="https://lobste.rs/stats">growth</a>).
+  There also no official vetting process for new users, each user is responsible for inviting people they believe will contribute positively to Lobsters.
   When accounts are banned for spam, <a href="https://en.wikipedia.org/wiki/Sockpuppet_(Internet)">sockpuppeting</a>, or other abuse,
   moderators will consider disabling their inviter's ability to send invitations or, rarely, also ban them.
   </p>
@@ -292,11 +310,14 @@
 
   <ul>
   <li><p>
-  Lobsters is hosted at DigitalOcean. We <a href="https://lobste.rs/s/udj6qf/hosting_update">recently migrated</a> and our setup is still in flux.
-  Please hassle pushcx if he hasn't filled in details by March 2021.
+  Lobsters is hosted on three <a href="https://slugs.do-api.dev/">VPSs</a> at DigitalOcean:
+  a <tt>s-4vcpu-8gb</tt> for the web server,
+  a <tt>s-2vcpu-4gb</tt> for the mariadb server, and
+  a <tt>s-1vcpu-1gb</tt> for the <a href="/chat">IRC bot</a>.
   Our domain name is registered with <a href="https://cridomains.rs/en">CRI Domains</a>, who donated our first year of registration.
   DNS is provided by <a href="https://dnsimple.com/">DNSimple</a> and
   we use <a href="https://www.tarsnap.com">Tarsnap</a> for backups, both of which pushcx pays for.
+  Lobsters is cheap to run, so we <a href="https://lobste.rs/s/95uler/would_there_be_interest_patreon_for#c_9l58ia">don't</a> <a href="https://lobste.rs/s/udj6qf/hosting_update#c_jgro9y">take</a> donations.
   </p></li>
 
   <li id="emoji" style="list-style: none; position: relative; left: -1em;">
@@ -315,21 +336,6 @@
   with self-help guru Jordan Peterson, whose fans started to
   <a href="https://www.nytimes.com/2018/05/18/style/jordan-peterson-12-rules-for-life.html">call themselves "lobsters"</a>
   about six years after we started.
-  </p></li>
-
-  <li><p>
-    If you prefer to read Lobsters on a dark background instead of a light one, there are a few options. You could install the
-    <a href="https://darkreader.org/">Dark Reader extension</a>;
-    or an extension to add your own CSS to sites like <a href="https://add0n.com/stylus.html">Stylus</a> or <a href="https://github.com/openstyles/stylus/wiki/Usercss">UserCSS</a> (<a href="https://en.wikipedia.org/wiki/Stylish#Privacy_issues">never Stylish</a>). Themes:
-    <a href="https://openusercss.org/theme/5cc5ad28ad27da0c0016cf3c">1</a>
-    <a href="https://openusercss.org/theme/5cc5ab1ead27da0c0016cf3a">2</a>
-    <a href="https://openusercss.org/theme/5cc5aeb3ad27da0c0016cf3d">3</a>
-    <a href="https://openusercss.org/theme/5cc5ac10ad27da0c0016cf3b">4</a>.
-    Discussion:
-    <a href="https://github.com/lobsters/lobsters/issues/404">1</a>
-    <a href="https://github.com/lobsters/lobsters/issues/637">2</a>
-    <a href="https://lobste.rs/s/om839j/dark_light_mode">3</a>
-    <a href="https://lobste.rs/s/iaajwb/dark_theme_for_lobsters">4</a>
   </p></li>
 
   <li><p>

@@ -13,7 +13,7 @@ class Search
   def initialize
     @q = ""
     @what = "stories"
-    @order = "relevance"
+    @order = "newest"
 
     @page = 1
     @per_page = 20

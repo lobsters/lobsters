@@ -67,6 +67,10 @@ body, textarea, input, button {
 
 body {
 	background-color: var(--color-bg);
+	margin: 0 auto;
+	min-width: 600px;
+	max-width: 900px;
+	padding-bottom: 2em;
 }
 
 a {
@@ -284,13 +288,6 @@ input.deletion {
 
 /* outliners */
 
-div#wrapper {
-	margin-left: auto;
-	margin-right: auto;
-	padding-bottom: 2em;
-	min-width: 600px;
-	max-width: 900px;
-}
 div#inside {
 	margin-left: 0.25em;
 	margin-right: 0.25em;

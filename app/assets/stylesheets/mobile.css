@@ -25,7 +25,7 @@
 
 	body {
 		margin: 0;
-		padding: 0;
+		padding: 0 0 1em 0;
 	}
 
 	div#header,
@@ -37,14 +37,6 @@
 	}
 	div#leader {
 		padding: 8px;
-	}
-
-	div#wrapper {
-		padding: 0;
-		padding-bottom: 2em;
-		margin: 0;
-		min-width: 100%;
-		max-width: 100%;
 	}
 
 	div#headerleft {

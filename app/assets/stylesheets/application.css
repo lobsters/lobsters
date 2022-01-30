@@ -296,7 +296,7 @@ div#inside {
 
 /* header */
 
-#header {
+header {
 	font-weight: bold;
 	padding: 5px 10px;
 	margin-top: 1em;
@@ -344,11 +344,11 @@ div#inside {
 }
 #headerright .headerlinks .karma { padding-left: 0; }
 
-#header a.cur_url {
+header a.cur_url {
 	color: var(--color-fg);
 }
 
-#header a.new_messages {
+header a.new_messages {
 	color: var(--color-fg-accent);
 }
 
@@ -358,13 +358,13 @@ div#leader {
 
 /* footer */
 
-div#footer {
+footer {
 	float: right;
 	font-weight: bold;
 	margin-top: 1.5em;
 	padding-right: 10px;
 }
-div#footer a {
+footer a {
 	color: var(--color-fg-contrast-4-5);
 	text-decoration: none;
 	padding-left: 0.75em;

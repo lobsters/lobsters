@@ -44,7 +44,7 @@
   <% end %>
 </head>
 <body>
-  <div id="header">
+  <header>
     <div id="headerleft">
       <a id="l_holder" style="<%= @traffic_style %>"
         href="/" title="<%= Rails.application.name %> (Current traffic: <%=
@@ -94,7 +94,7 @@
     </div>
 
     <div class="clear"></div>
-  </div>
+  </header>
 
   <% if content_for? :nav %>
     <div class="box wide">
@@ -112,7 +112,7 @@
 
     <%= yield %>
 
-    <div id="footer">
+    <footer>
       <% if lookup_context.template_exists?("footer", "layouts", true) %>
         <%= render :partial => "layouts/footer" %>
       <% else %>
@@ -134,7 +134,7 @@
         <a href="/privacy">Privacy</a>
         <a href="/about">About</a>
       <% end %>
-    </div>
+    </footer>
     <div class="clear"></div>
   </div>
 </body>

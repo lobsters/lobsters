@@ -28,7 +28,7 @@
 		padding: 0 0 1em 0;
 	}
 
-	div#header,
+	header,
 	div#leader {
 		margin: 0;
 		padding: 8px 5px;
@@ -274,7 +274,7 @@
 		margin-left: 0;
 	}
 
-	div#footer {
+	footer {
 		text-align: center;
 		float: none;
 	}

@@ -25,6 +25,8 @@
 
 	body {
 		margin: 0;
+		min-width: 0;
+		max-width: none
 		padding: 0 0 1em 0;
 	}
 

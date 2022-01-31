@@ -237,8 +237,6 @@ body, textarea, input, button {
 body {
 	background-color: var(--color-bg);
 	margin: 0 auto;
-	min-width: 600px;
-	max-width: 900px;
 	padding-bottom: 2em;
 }
 
@@ -455,26 +453,12 @@ input.deletion {
 }
 
 
-/* outliners */
-
-div#inside {
-	margin-left: 0.25em;
-	margin-right: 0.25em;
-}
-
 
 /* header */
 
 header {
 	font-weight: bold;
-	padding: 5px 10px;
-	margin-top: 1em;
-	margin-bottom: 0.5em;
 	line-height: 18px;
-}
-
-#headerleft {
-	float: left;
 }
 
 #l_holder {
@@ -500,11 +484,6 @@ header {
 	color: var(--color-fg-contrast-6);
 	text-decoration: none;
 	padding-right: 0.75em;
-}
-
-#headerright {
-	float: right;
-	text-align: right;
 }
 
 #headerright .headerlinks a {
@@ -553,10 +532,6 @@ div#gravatar img {
 	border-radius: 50px;
 	height: 100px;
 	width: 100px;
-}
-
-.help {
-  margin-top: 2em;
 }
 
 /* stories */
@@ -1493,21 +1468,44 @@ div.flash-success h2 {
 	vertical-align: middle;
 }
 
+@media screen and (min-width: 481px) {
+	body {
+		min-width: 600px;
+		max-width: 900px;
+		padding-bottom: 2em;
+	}
+
+	header {
+		margin: 1em 0 0.5em;
+		padding: 5px 10px;
+	}
+
+	#headerleft {
+		float: left;
+	}
+
+	#headerright {
+		float: right;
+		text-align: right;
+	}
+
+	div#inside {
+		margin-left: 0.25em;
+		margin-right: 0.25em;
+	}
+
+	.help {
+	  margin-top: 2em;
+	}
+}
+
 @media only screen and (max-width: 480px) {
 	html {
 		-webkit-text-size-adjust: none;
 	}
 
-	body {
-		margin: 0;
-		min-width: 0;
-		max-width: none
-		padding: 0 0 1em 0;
-	}
-
 	header,
 	div#leader {
-		margin: 0;
 		padding: 8px 5px;
 		background-color: var(--color-box-bg-shaded);
 		border-bottom: 1px solid var(--color-box-border);
@@ -1518,12 +1516,9 @@ div.flash-success h2 {
 
 	div#headerleft {
 		display: inline;
-		float: none;
 	}
 	div#headerright {
 		display: inline;
-		float: none;
-		text-align: left;
 		margin-top: 0.25em;
 		clear: both;
 	}
@@ -1532,10 +1527,6 @@ div.flash-success h2 {
 	#headerright .headerlinks a {
 		padding-right: 0.25em;
 		padding-left: 0;
-	}
-
-	div#inside {
-		margin: 0;
 	}
 
 	.help, .box {

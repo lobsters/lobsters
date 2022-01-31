@@ -33,7 +33,6 @@ public/avatars
 public/sitemap*
 
 # templates to be created per-site
-app/assets/stylesheets/local/*
 app/views/home/404.*
 app/views/home/about.*
 app/views/home/chat.*

@@ -80,7 +80,7 @@ class ModNote < ApplicationRecord
         "- url: #{story.url}\n" +
         "- title: #{story.title}\n" +
         "- user_is_author: #{story.user_is_author}\n" +
-        "- tags: #{story.tags.map(&:tag).join(' ')}\n" +
+        "- tags: #{story.tags_a.join(' ')}\n" +
         "- description: #{story.description}\n"
     )
   end
@@ -95,7 +95,7 @@ class ModNote < ApplicationRecord
         "- url: #{story.url}\n" +
         "- title: #{story.title}\n" +
         "- user_is_author: #{story.user_is_author}\n" +
-        "- tags: #{story.tags.map(&:tag).join(' ')}\n" +
+        "- tags: #{story.tags_a.join(' ')}\n" +
         "- description: #{story.description}\n"
     )
   end

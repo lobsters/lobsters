@@ -85,7 +85,7 @@ class LoginController < ApplicationController
       fail_reason = "Your account was banned or deleted before the site changed admins. " <<
                     "Your email and password hash were wiped for privacy."
     rescue LoginBannedError
-      fail_reason = "Your account has been banned."
+      fail_reason = "Your account has been banned. Log: #{user.banned_reason}"
     rescue LoginDeletedError
       fail_reason = "Your account has been deleted."
     rescue LoginTOTPFailedError

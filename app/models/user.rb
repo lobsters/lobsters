@@ -32,6 +32,9 @@ class User < ApplicationRecord
              :inverse_of => false,
              :optional => true
   has_many :invitations, :dependent => :destroy
+  has_many :mod_notes,
+           :inverse_of => :user,
+           :dependent => :restrict_with_exception
   has_many :moderations,
            :inverse_of => :moderator,
            :dependent => :restrict_with_exception

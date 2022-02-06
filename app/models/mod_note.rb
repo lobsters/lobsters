@@ -2,10 +2,11 @@ class ModNote < ApplicationRecord
   extend TimeAgoInWords
 
   belongs_to :moderator,
-             :class_name => "User",
-             :foreign_key => "moderator_user_id",
-             :inverse_of => :moderations
-  belongs_to :user
+             class_name: "User",
+             foreign_key: "moderator_user_id",
+             inverse_of: :moderations
+  belongs_to :user,
+             inverse_of: :mod_notes
 
   scope :recent, -> { where('created_at >= ?', 1.week.ago).order('created_at desc') }
   scope :for, ->(user) { includes(:moderator).where('user_id = ?', user).order('created_at desc') }
@@ -57,7 +58,7 @@ class ModNote < ApplicationRecord
       sender,
       host: Rails.application.domain
     )
-    ModNote.create!(
+    create_without_dupe!(
       moderator: InactiveUser.inactive_user,
       user: user,
       created_at: Time.current,
@@ -71,7 +72,7 @@ class ModNote < ApplicationRecord
   end
 
   def self.tattle_on_new_user_tagging!(story)
-    ModNote.create!(
+    create_without_dupe!(
       moderator: InactiveUser.inactive_user,
       user: story.user,
       created_at: Time.current,
@@ -86,7 +87,7 @@ class ModNote < ApplicationRecord
   end
 
   def self.tattle_on_story_domain!(story, reason)
-    ModNote.create!(
+    create_without_dupe!(
       moderator: InactiveUser.inactive_user,
       user: story.user,
       created_at: Time.current,
@@ -98,5 +99,13 @@ class ModNote < ApplicationRecord
         "- tags: #{story.tags_a.join(' ')}\n" +
         "- description: #{story.description}\n"
     )
+  end
+
+  # story validations run on preview, check_url_dupe, title fetching
+  # and save attempts, leading to duplicate notes
+  def self.create_without_dupe!(attrs)
+    latest = attrs[:user].mod_notes.last
+    return latest if latest && attrs[:moderator] == latest.moderator && attrs[:note] == latest.note
+    ModNote.create!(attrs)
   end
 end

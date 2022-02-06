@@ -364,7 +364,7 @@ class StoriesController < ApplicationController
           :content_type => "text/html", :locals => { :story => @story }
       }
       format.json {
-        similar_stories = @story.similar_stories.base.map(&:as_json)
+        similar_stories = @story.public_similar_stories(@user).map(&:as_json)
 
         render :json => @story.as_json.merge(similar_stories: similar_stories)
       }

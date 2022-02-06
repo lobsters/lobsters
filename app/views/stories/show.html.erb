@@ -78,9 +78,9 @@
   </ol>
 <% end %>
 
-<% if !@story.previewing && @story.public_similar_stories.any? %>
+<% if !@story.previewing && @story.public_similar_stories(@user).any? %>
   <div class="box wide">
     <h4>Stories with similar links:</h4>
-    <%= render partial: "stories/similar", locals: { similar: @story.public_similar_stories } %>
+    <%= render partial: "stories/similar", locals: { similar: @story.public_similar_stories(@user) } %>
   </div>
 <% end %>

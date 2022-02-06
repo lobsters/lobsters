@@ -36,7 +36,10 @@ class Story < ApplicationRecord
   has_many :savings, :class_name => 'SavedStory', :inverse_of => :story, :dependent => :destroy
   has_one :story_text, foreign_key: :id, dependent: :destroy, inverse_of: :story
 
-  scope :base, -> { includes(:tags).unmerged.not_deleted }
+  scope :base, ->(user) {
+    q = includes(:tags).unmerged
+    user && user.is_moderator? ? q : q.not_deleted
+  }
   scope :deleted, -> { where(is_expired: true) }
   scope :not_deleted, -> { where(is_expired: false) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
@@ -44,13 +47,13 @@ class Story < ApplicationRecord
   scope :low_scoring, ->(max = 5) { where("score < ?", max) }
   scope :front_page, -> { hottest.limit(StoriesPaginator::STORIES_PER_PAGE) }
   scope :hottest, ->(user = nil, exclude_tags = nil) {
-    base.not_hidden_by(user)
+    base(user).not_hidden_by(user)
         .filter_tags(exclude_tags || [])
         .positive_ranked
         .order('hotness')
   }
   scope :recent, ->(user = nil, exclude_tags = nil) {
-    base.not_hidden_by(user)
+    base(user).not_hidden_by(user)
         .filter_tags(exclude_tags || [])
         .low_scoring
         .where("created_at >= ?", 10.days.ago)
@@ -286,8 +289,8 @@ class Story < ApplicationRecord
     @_similar_stories
   end
 
-  def public_similar_stories
-    @_public_similar_stories ||= similar_stories.empty? ? [] : similar_stories.base
+  def public_similar_stories(user)
+    @_public_similar_stories ||= similar_stories.empty? ? [] : similar_stories.base(user)
   end
 
   def most_recent_similar

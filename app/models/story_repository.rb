@@ -7,21 +7,21 @@ class StoryRepository
   def categories(cats)
     tagged_story_ids = Tagging.select(:story_id).where(tag_id: Tag.where(category: cats).pluck(:id))
 
-    Story.base.positive_ranked.where(id: tagged_story_ids).order(created_at: :desc)
+    Story.base(@user).positive_ranked.where(id: tagged_story_ids).order(created_at: :desc)
   end
 
   def hottest
-    hottest = Story.base.positive_ranked.not_hidden_by(@user)
+    hottest = Story.base(@user).positive_ranked.not_hidden_by(@user)
     hottest = hottest.filter_tags(@params[:exclude_tags] || [])
     hottest.order('hotness')
   end
 
   def hidden
-    Story.base.hidden_by(@user).filter_tags(@params[:exclude_tags] || []).order("hotness")
+    Story.base(@user).hidden_by(@user).filter_tags(@params[:exclude_tags] || []).order("hotness")
   end
 
   def newest
-    Story.base.filter_tags(@params[:exclude_tags] || []).order(id: :desc)
+    Story.base(@user).filter_tags(@params[:exclude_tags] || []).order(id: :desc)
   end
 
   def newest_by_user(user)
@@ -32,7 +32,7 @@ class StoryRepository
 
       unmerged.or(merged_into_others).order(id: :desc)
     else
-      Story.base.where(user_id: user.id).order("stories.id DESC")
+      Story.base(@user).where(user_id: user.id).order("stories.id DESC")
     end
   end
 
@@ -41,17 +41,17 @@ class StoryRepository
   end
 
   def saved
-    Story.base.saved_by(@user).filter_tags(@params[:exclude_tags] || []).order(:hotness)
+    Story.base(@user).saved_by(@user).filter_tags(@params[:exclude_tags] || []).order(:hotness)
   end
 
   def tagged(tags)
     tagged_story_ids = Tagging.select(:story_id).where(tag_id: tags.map(&:id))
 
-    Story.base.positive_ranked.where(id: tagged_story_ids).order(created_at: :desc)
+    Story.base(@user).positive_ranked.where(id: tagged_story_ids).order(created_at: :desc)
   end
 
   def top(length)
-    top = Story.base.where("created_at >= (NOW() - INTERVAL " <<
+    top = Story.base(@user).where("created_at >= (NOW() - INTERVAL " <<
       "#{length[:dur]} #{length[:intv].upcase})")
     top.order("score DESC")
   end

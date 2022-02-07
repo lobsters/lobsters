@@ -253,7 +253,7 @@ class CommentsController < ApplicationController
       .not_on_story_hidden_by(@user)
       .order("id DESC")
       .includes(:user, :hat, :story => :user)
-      .joins(:story).where.not(stories: { is_expired: true })
+      .joins(:story).where.not(stories: { is_deleted: true })
       .limit(COMMENTS_PER_PAGE)
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 
@@ -300,7 +300,7 @@ class CommentsController < ApplicationController
       .order("id DESC")
       .includes(:user, :hat, :story => :user)
       .joins(:votes).where(votes: { user_id: @user.id, vote: 1 })
-      .joins(:story).where.not(stories: { is_expired: true })
+      .joins(:story).where.not(stories: { is_deleted: true })
       .limit(COMMENTS_PER_PAGE)
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 
@@ -346,7 +346,7 @@ class CommentsController < ApplicationController
     comments = Comment.accessible_to_user(@user)
       .where(:thread_id => thread_ids)
       .includes(:user, :hat, :story => :user, :votes => :user)
-      .joins(:story).where.not(stories: { is_expired: true })
+      .joins(:story).where.not(stories: { is_deleted: true })
       .arrange_for_user(@user)
 
     comments_by_thread_id = comments.group_by(&:thread_id)

@@ -416,7 +416,7 @@ class User < ApplicationRecord
     self.email = "#{self.username}@lobsters.example" if \
       self.karma < 0 ||
       (self.comments.where('created_at >= now() - interval 30 day AND is_deleted').count +
-       self.stories.where('created_at >= now() - interval 30 day AND is_expired AND is_moderated')
+       self.stories.where('created_at >= now() - interval 30 day AND is_deleted AND is_moderated')
          .count >= 3) ||
       FlaggedCommenters.new('90d').check_list_for(self)
   end
@@ -505,7 +505,7 @@ class User < ApplicationRecord
     Tag.active.joins(
       :stories
     ).where(
-      :stories => { :user_id => self.id, :is_expired => false }
+      :stories => { :user_id => self.id, :is_deleted => false }
     ).group(
       Tag.arel_table[:id]
     ).order(

@@ -177,7 +177,7 @@ describe 'stores', type: :request do
 
     it 'does nothing to deleted comments' do
       expect {
-        target.is_expired = true
+        target.is_deleted = true
         target.editor = target.user
         target.save!
 

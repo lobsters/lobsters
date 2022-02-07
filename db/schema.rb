@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_28_133226) do
+ActiveRecord::Schema.define(version: 2022_02_07_033514) do
 
   create_table "categories", charset: "utf8mb4", force: :cascade do |t|
     t.string "category"
@@ -191,7 +191,7 @@ ActiveRecord::Schema.define(version: 2022_01_28_133226) do
     t.string "title", limit: 150, default: "", null: false
     t.text "description", size: :medium
     t.string "short_id", limit: 6, default: "", null: false
-    t.boolean "is_expired", default: false, null: false
+    t.boolean "is_deleted", default: false, null: false
     t.integer "score", default: 1, null: false
     t.integer "flags", default: 0, null: false, unsigned: true
     t.boolean "is_moderated", default: false, null: false
@@ -208,7 +208,7 @@ ActiveRecord::Schema.define(version: 2022_01_28_133226) do
     t.index ["description"], name: "index_stories_on_description", type: :fulltext
     t.index ["domain_id"], name: "index_stories_on_domain_id"
     t.index ["hotness"], name: "hotness_idx"
-    t.index ["id", "is_expired"], name: "index_stories_on_id_and_is_expired"
+    t.index ["id", "is_deleted"], name: "index_stories_on_id_and_is_deleted"
     t.index ["merged_story_id"], name: "index_stories_on_merged_story_id"
     t.index ["score"], name: "index_stories_on_score"
     t.index ["short_id"], name: "unique_short_id", unique: true

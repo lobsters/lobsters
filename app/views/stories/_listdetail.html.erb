@@ -10,7 +10,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 <%= story.score <= -5 ? "negative_5" : "" %>
 <%= story.is_hidden_by_cur_user ? "hidden" : "" %>
 <%= story.is_saved_by_cur_user ? "saved" : "" %>
-<%= story.is_expired? ? "expired" : "" %>">
+<%= story.is_deleted? ? "deleted" : "" %>">
 <div class="story_liner h-entry">
   <div class="voters">
     <% if @user %>

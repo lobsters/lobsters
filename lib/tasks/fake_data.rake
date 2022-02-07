@@ -60,7 +60,7 @@ class FakeDataGenerator
         title: title,
         tags_a: [tag.tag],
         description: Faker::Lorem.paragraphs(number: 1),
-        is_expired: true,
+        is_deleted: true,
         editor: user
     end
 

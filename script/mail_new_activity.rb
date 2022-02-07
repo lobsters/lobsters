@@ -66,7 +66,7 @@ if __FILE__ == $PROGRAM_NAME
 
   last_story_id = (Keystore.value_for(LAST_STORY_KEY) || Story.last && Story.last.id).to_i
 
-  Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each do |s|
+  Story.where("id > ? AND is_deleted = ?", last_story_id, false).order(:id).each do |s|
     StoryText.fill_cache!(s)
 
     mailing_list_users.each do |u|

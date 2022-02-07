@@ -76,7 +76,7 @@ class Search
 
   def with_stories_matching_tags(base, tag_scopes)
     story_ids_matching_tags = with_tags(
-      Story.unmerged.where(:is_expired => false), tag_scopes
+      Story.unmerged.where(is_deleted: false), tag_scopes
     ).select(:id).map(&:id)
     base.where(story_id: story_ids_matching_tags)
   end
@@ -102,7 +102,7 @@ class Search
 
     case self.what
     when "stories"
-      base = Story.unmerged.where(:is_expired => false)
+      base = Story.unmerged.where(is_deleted: false)
       if domain.present?
         base = with_stories_in_domain(base, domain)
       end

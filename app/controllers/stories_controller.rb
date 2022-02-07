@@ -40,7 +40,7 @@ class StoriesController < ApplicationController
       return render :action => "edit"
     end
 
-    @story.is_expired = true
+    @story.is_deleted = true
     @story.editor = @user
 
     if @story.save(:validate => false)
@@ -229,7 +229,7 @@ class StoriesController < ApplicationController
     end
 
     update_story_attributes
-    @story.is_expired = false
+    @story.is_deleted = false
     @story.editor = @user
 
     if @story.save(:validate => false)
@@ -245,7 +245,7 @@ class StoriesController < ApplicationController
       return redirect_to "/"
     end
 
-    @story.is_expired = false
+    @story.is_deleted = false
     @story.editor = @user
     update_story_attributes
 

@@ -40,8 +40,8 @@ class Story < ApplicationRecord
     q = includes(:tags).unmerged
     user && user.is_moderator? ? q : q.not_deleted
   }
-  scope :deleted, -> { where(is_expired: true) }
-  scope :not_deleted, -> { where(is_expired: false) }
+  scope :deleted, -> { where(is_deleted: true) }
+  scope :not_deleted, -> { where(is_deleted: false) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
   scope :positive_ranked, -> { where("score >= 0") }
   scope :low_scoring, ->(max = 5) { where("score < ?", max) }
@@ -269,7 +269,7 @@ class Story < ApplicationRecord
     Story
       .where(:url => urls)
       .or(Story.where("url RLIKE ?", urls_with_trailing_pound.join(".|")))
-      .where("is_expired = ? OR is_moderated = ?", false, true)
+      .where("is_deleted = ? OR is_moderated = ?", false, true)
   end
 
   # doesn't include deleted/moderated/merged stories
@@ -563,7 +563,7 @@ class Story < ApplicationRecord
   end
 
   def is_gone?
-    is_expired? || (self.user.is_banned? && score < 0)
+    is_deleted? || (self.user.is_banned? && score < 0)
   end
 
   def is_hidden_by_user?(user)
@@ -618,9 +618,9 @@ class Story < ApplicationRecord
     m.story_id = self.id
 
     m.action = all_changes.map {|k, v|
-      if k == "is_expired" && self.is_expired?
+      if k == "is_deleted" && self.is_deleted?
         "deleted story"
-      elsif k == "is_expired" && !self.is_expired?
+      elsif k == "is_deleted" && !self.is_deleted?
         "undeleted story"
       elsif k == "merged_story_id"
         if v[1]

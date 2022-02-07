@@ -112,7 +112,7 @@ RSpec.feature "Submitting Stories", type: :feature do
   end
 
   scenario "resubmitting a recent link deleted by a moderator" do
-    s = create(:story, is_expired: true, is_moderated: true, created_at: 1.day.ago)
+    s = create(:story, is_deleted: true, is_moderated: true, created_at: 1.day.ago)
     expect {
       visit "/stories/new"
       fill_in "URL", with: s.url

@@ -410,6 +410,7 @@ class Story < ApplicationRecord
     if !user || (user.id == self.user_id) || !user.can_offer_suggestions?
       return false
     end
+    return false if self.is_moderated?
 
     self.tags.each {|t| return false if t.privileged? }
     return true

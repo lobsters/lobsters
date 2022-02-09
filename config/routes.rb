@@ -116,6 +116,8 @@ Rails.application.routes.draw do
     post "mod_note"
   end
 
+  get "/inbox" => "inbox#index"
+
   get "/c/:id" => "comments#redirect_from_short_id"
   get "/c/:id.json" => "comments#show_short_id", :format => "json"
 

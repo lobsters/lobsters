@@ -70,23 +70,14 @@
     <div id="headerright">
       <span class="headerlinks">
         <% if @user %>
-          <% if @user.unread_replies_count > 0 %>
-            <%= link_to "#{@user.unread_replies_count} Reply".pluralize(@user.unread_replies_count),
-                  replies_unread_path, class: 'new_messages' %>
+          <% if @user.inbox_count > 0 %>
+            <%= link_to raw("Inbox <span class='inbox_unread'>#{@user.inbox_count}</span>"), inbox_path %>
           <% else %>
-            <%= link_to 'Replies', replies_path %>
+            <%= link_to "Inbox", inbox_path %>
           <% end %>
 
-          <% if @user.unread_message_count > 0 %>
-            <%= link_to "#{@user.unread_message_count} Message".pluralize(@user.unread_message_count),
-                  messages_path, class: 'new_messages' %>
-          <% else %>
-            <%= link_to 'Messages', messages_path %>
-          <% end %>
-
-          <%= link_to @user.username, settings_path %>
-          <%= link_to "(#{@user.karma})", settings_path, class: 'karma' %>
-
+          <%= link_to raw("#{@user.username} <span class='karma'>(#{@user.karma})</span>"), settings_path %>
+          <% # TODO: link karma to list of karma events %>
         <% else %>
           <%= link_to 'Login', login_path %>
         <% end %>

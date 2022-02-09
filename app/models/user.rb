@@ -602,7 +602,6 @@ class User < ApplicationRecord
     @unread_replies_count ||= ReplyingComment.where(user_id: self.id, is_unread: true).count
   end
 
-  # TODO: move ReplyingComment count into Keystore; one query to sum
   def inbox_count
     unread_message_count + unread_replies_count
   end

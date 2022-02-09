@@ -47,12 +47,16 @@
   <header id="nav">
     <a id="l_holder" style="<%= @traffic_style %>" href="/" title="<%= Rails.application.name %> (Current traffic: <%= @traffic_intensity.to_i %>%)"></a>
 
+    <%= link_to 'Recent', recent_path %>
     <%= link_to 'Comments', comments_path %>
 
     <% if @user && @user.can_submit_stories? %>
       <%= link_to 'Submit', new_story_path %>
     <% end %>
 
+    <% if @user %>
+      <%= link_to 'Saved', saved_path %>
+    <% end %>
     <%= link_to 'Search', search_path %>
 
     <div class="user">
@@ -93,7 +97,6 @@
 
     <footer>
       <%= link_to 'About', about_path %>
-      <% # TODO: About subnav: chat stats hats %>
       <% if !@user && Rails.application.open_signups? %>
         <a href="/invitations/open">Join <%= Rails.application.name %></a>
       <% end %>

@@ -32,40 +32,6 @@ module ApplicationHelper
     raw(html)
   end
 
-  def header_links
-    return @header_links if @header_links
-
-    @header_links = {
-      root_path => { :title => @cur_url == "/" ? Rails.application.name : "Home" },
-      recent_path => { :title => "Recent" },
-      comments_path => { :title => "Comments" },
-    }
-
-    if @user
-      @header_links[threads_path] = { :title => "Your Threads" }
-    end
-
-    if @user && @user.can_submit_stories?
-      @header_links[new_story_path] = { :title => "Submit Story" }
-    end
-
-    if @user
-      @header_links[saved_path] = { :title => "Saved" }
-    end
-
-    @header_links[search_path] = { :title => "Search" }
-
-    @header_links.each do |k, v|
-      v[:class] ||= []
-
-      if k == @cur_url
-        v[:class].push "cur_url"
-      end
-    end
-
-    @header_links
-  end
-
   def link_to_different_page(text, path)
     if current_page? path
       text

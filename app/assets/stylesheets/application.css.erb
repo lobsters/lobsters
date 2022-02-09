@@ -451,14 +451,14 @@ button:disabled {
 a.button,
 button.deletion,
 input.deletion {
-  color: var(--color-fg-negative);
-  border: 1px solid var(--color-fg-negative);
+	color: var(--color-fg-negative);
+	border: 1px solid var(--color-fg-negative);
 }
 
 .totp_code::-webkit-inner-spin-button,
 .totp_code::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+	-webkit-appearance: none;
+	margin: 0;
 }
 
 ::selection {
@@ -505,27 +505,16 @@ only screen and (-webkit-min-device-pixel-ratio: 2) {
 	}
 }
 
-#headertitle {
-	padding-right: 0.75em;
-}
-#headertitle a {
-	color: var(--color-fg);
-	text-decoration: none;
-}
-
-.headerlinks a {
+header#nav a {
 	color: var(--color-fg-contrast-6);
+	margin: 0 0.75em;
 	text-decoration: none;
-	padding-right: 0.75em;
 }
-
-#headerright .headerlinks a {
-	padding-right: 0;
-	padding-left: 0.75em;
+#nav #l_holder, #nav #l_holder ~ a {
+	margin-left: 0;
 }
-
-header a.cur_url {
-	color: var(--color-fg);
+#nav a:last-child {
+	margin-right: 0;
 }
 
 header .inbox_unread {
@@ -1048,15 +1037,15 @@ div.comment_text code {
 	display: block;
 }
 .archive_dismiss {
-  display: none;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 14;
+	display: none;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 14;
 }
 
 
@@ -1512,7 +1501,7 @@ div.flash-success h2 {
 		float: left;
 	}
 
-	#headerright {
+	header#nav .user {
 		float: right;
 		text-align: right;
 	}
@@ -1523,7 +1512,7 @@ div.flash-success h2 {
 	}
 
 	.help {
-	  margin-top: 2em;
+		margin-top: 2em;
 	}
 }
 
@@ -1532,7 +1521,7 @@ div.flash-success h2 {
 		-webkit-text-size-adjust: none;
 	}
 
-	header,
+	header#nav,
 	div#leader {
 		padding: 8px 5px;
 		background-color: var(--color-box-bg-shaded);
@@ -1542,17 +1531,16 @@ div.flash-success h2 {
 		padding: 8px;
 	}
 
-	div#headerleft {
+	header#nav {
 		display: inline;
 	}
-	div#headerright {
+	header#nav .user {
 		display: inline;
 		margin-top: 0.25em;
 		clear: both;
 	}
 
-	.headerlinks a,
-	#headerright .headerlinks a {
+	header#nav a {
 		padding-right: 0.25em;
 		padding-left: 0;
 	}

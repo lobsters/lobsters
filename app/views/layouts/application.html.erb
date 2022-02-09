@@ -44,43 +44,32 @@
   <% end %>
 </head>
 <body>
-  <header>
-    <div id="headerleft">
-      <a id="l_holder" style="<%= @traffic_style %>"
-        href="/" title="<%= Rails.application.name %> (Current traffic: <%=
-        @traffic_intensity.to_i %>%)"></a>
+  <header id="nav">
+    <a id="l_holder" style="<%= @traffic_style %>" href="/" title="<%= Rails.application.name %> (Current traffic: <%= @traffic_intensity.to_i %>%)"></a>
 
-      <% if @cur_url.present? && !header_links.keys.include?(@cur_url) && @heading.present? %>
-        <span id="headertitle">
-          <a href="<%= @cur_url %>"><%= @heading %></a>
-        </span>
-      <% end %>
+    <%= link_to 'Comments', comments_path %>
 
-      <span class="headerlinks">
-        <% header_links.each do |u,v| %>
-          <a href="<%= u %>" class="<%= v[:class].join(" ") %>"><%= v[:title] %></a>
-        <% end %>
-        <% if !@user && Rails.application.open_signups? %>
-          <strong><a href="/invitations/open" class="signup-text">Sign Up Now</a></strong>
-        <% end %>
-      </span>
-    </div>
+    <% if @user && @user.can_submit_stories? %>
+      <%= link_to 'Submit', new_story_path %>
+    <% end %>
 
-    <div id="headerright">
-      <span class="headerlinks">
-        <% if @user %>
-          <% if @user.inbox_count > 0 %>
-            <%= link_to raw("Inbox <span class='inbox_unread'>#{@user.inbox_count}</span>"), inbox_path %>
-          <% else %>
-            <%= link_to "Inbox", inbox_path %>
-          <% end %>
+    <%= link_to 'Search', search_path %>
 
-          <%= link_to raw("#{@user.username} <span class='karma'>(#{@user.karma})</span>"), settings_path %>
-          <% # TODO: link karma to list of karma events %>
+    <div class="user">
+      <% if @user %>
+        <% if @user.inbox_count > 0 %>
+          <%= link_to raw("Inbox <span class='inbox_unread'>#{@user.inbox_count}</span>"), inbox_path %>
         <% else %>
-          <%= link_to 'Login', login_path %>
+          <%= link_to "Inbox", inbox_path %>
         <% end %>
-      </span>
+
+        <% # TODO: this whitespace between <a>s isn't collapsing so both margins show; stop debugging and port to flexbox/grid %>
+
+        <%= link_to raw("#{@user.username} <span class='karma'>(#{@user.karma})</span>"), settings_path %>
+        <% # TODO: link karma to list of karma events %>
+      <% else %>
+        <%= link_to 'Login', login_path %>
+      <% end %>
     </div>
 
     <div class="clear"></div>

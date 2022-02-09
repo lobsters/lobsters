@@ -7,14 +7,9 @@
   });
 </script>
 
+<%= render partial: 'subnav' %>
+
 <div class="box wide">
-  <div class="legend" style="float: right;">
-    <% if @direction == :out %>
-      <a href="/messages">View Received</a>
-    <% else %>
-      <a href="/messages/sent">View Sent</a>
-    <% end %>
-  </div>
   <div class="legend">
     Private Messages
     <% if @direction == :out %>

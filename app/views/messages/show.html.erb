@@ -1,12 +1,6 @@
-<div class="box wide">
-  <div class="legend" style="float: right;">
-    <% if @message.author_user_id == @user.id %>
-      <a href="/messages/sent">Back to Sent Messages</a>
-    <% else %>
-      <a href="/messages">Back to Messages</a>
-    <% end %>
-  </div>
+<%= render partial: 'subnav' %>
 
+<div class="box wide">
   <div class="legend">
     <%= @message.subject %>
 

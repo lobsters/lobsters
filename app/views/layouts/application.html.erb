@@ -58,8 +58,7 @@
 
       <span class="headerlinks">
         <% header_links.each do |u,v| %>
-          <a href="<%= u %>" class="<%= v[:class].join(" ") %>"><%=
-            v[:title] %></a>
+          <a href="<%= u %>" class="<%= v[:class].join(" ") %>"><%= v[:title] %></a>
         <% end %>
         <% if !@user && Rails.application.open_signups? %>
           <strong><a href="/invitations/open" class="signup-text">Sign Up Now</a></strong>
@@ -104,27 +103,21 @@
     <%= yield %>
 
     <footer>
-      <% if lookup_context.template_exists?("footer", "layouts", true) %>
-        <%= render :partial => "layouts/footer" %>
-      <% else %>
-        <% if !@user && Rails.application.open_signups? %>
-          <a href="/invitations/open">Join <%= Rails.application.name %></a>
-        <% end %>
-        <a href="/moderations">Moderation Log</a>
-        <% if @user && @user.can_see_invitation_requests? &&
-        (iqc = InvitationRequest.verified_count) > 0 %>
-          <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
-        <% end %>
-        <% if @user && @user.is_moderator? &&
-        (hrc = HatRequest.count) > 0 %>
-          <a href="/hats/requests">Hat Requests (<%= hrc %>)</a>
-        <% else %>
-          <a href="/hats">Hats</a>
-        <% end %>
-        <a href="/chat">Chat</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/about">About</a>
+      <%= link_to 'About', about_path %>
+      <% # TODO: About subnav: chat stats hats %>
+      <% if !@user && Rails.application.open_signups? %>
+        <a href="/invitations/open">Join <%= Rails.application.name %></a>
       <% end %>
+      <% if @user && @user.can_see_invitation_requests? &&
+            (iqc = InvitationRequest.verified_count) > 0 %>
+        <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
+      <% end %>
+      <%= link_to 'Tags', tags_path %>
+      <% if @user && @user.is_moderator? && (hrc = HatRequest.count) > 0 %>
+        <%= link_to "#{hrc} Hat Requests", hats_requests_path %>
+      <% end %>
+      <%= link_to 'Filter', filters_path %>
+      <%= link_to 'Moderation Log', moderations_path %>
     </footer>
     <div class="clear"></div>
   </div>

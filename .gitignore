@@ -37,7 +37,6 @@ app/views/home/404.*
 app/views/home/about.*
 app/views/home/chat.*
 app/views/home/privacy.*
-app/views/layouts/_footer.*
 public/apple-touch-icon*
 public/favicon.ico
 

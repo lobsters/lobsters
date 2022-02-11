@@ -43,7 +43,7 @@ class StoriesController < ApplicationController
     @story.is_deleted = true
     @story.editor = @user
 
-    if @story.save(:validate => false)
+    if @story.save
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted")
     end
 
@@ -232,7 +232,7 @@ class StoriesController < ApplicationController
     @story.is_deleted = false
     @story.editor = @user
 
-    if @story.save(:validate => false)
+    if @story.save
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted", -1)
     end
 

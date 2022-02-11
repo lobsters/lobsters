@@ -1,13 +1,10 @@
-<div class="box wide">
+<% content_for :subnav do %>
   <% if @user %>
-    <div class="legend right">
-      <a href="<%= request_hat_url %>">Request Hat</a>
-    </div>
+    <a href="<%= request_hat_url %>">Request Hat</a>
   <% end %>
-  <div class="legend">
-    Hats
-  </div>
+<% end %>
 
+<div class="box wide">
   <p>
   A hat is a formal, verified, way of posting a comment while speaking for a
   project, organization, or company.  Each user may have multiple hats, one of

@@ -26,6 +26,7 @@ class TagsController < ApplicationController
   end
 
   def create
+    @title = 'Create Tag'
     tag = Tag.create(tag_params)
     if tag.valid?
       flash[:success] = "Tag #{tag.tag} has been created"

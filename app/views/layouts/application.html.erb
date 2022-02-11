@@ -78,11 +78,17 @@
 
   <% if content_for? :subnav %>
     <div class="box wide">
-      <div class="legend right">
+      <header class="subnav">
         <%= yield :subnav %>
-      </div>
+      </header>
+
+      <% if @title.present? %>
+        <h1 class="title"><%= @title %></h1>
+      <% end %>
     </div>
     <div class="clear"></div>
+  <% elsif @title.present? %>
+    <h1 class="title <%= @title_class %>"><%= @title %></h1>
   <% end %>
 
   <div id="inside">

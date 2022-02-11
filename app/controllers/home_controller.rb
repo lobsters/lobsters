@@ -14,7 +14,7 @@ class HomeController < ApplicationController
       render :action => "404", :status => 404
     rescue ActionView::MissingTemplate
       render :html => ("<div class=\"box wide\">" <<
-        "<div class=\"legend\">404</div>" <<
+        "<h1 class=\"title\">404</h1>" <<
         "Resource not found" <<
         "</div>").html_safe, :layout => "application"
     end
@@ -38,7 +38,7 @@ class HomeController < ApplicationController
       render :action => "chat"
     rescue ActionView::MissingTemplate
       render :html => ("<div class=\"box wide\">" <<
-        "<div class=\"legend\">Chat</div>" <<
+        "<h1 class=\"title\">Chat</h1>" <<
         "Keep it on-site" <<
         "</div>").html_safe, :layout => "application"
     end
@@ -46,7 +46,7 @@ class HomeController < ApplicationController
 
   def privacy
     begin
-      @title = "Privacy"
+      @title = "Privacy Policy"
       render :action => "privacy"
     rescue ActionView::MissingTemplate
       render :html => ("<div class=\"box wide\">" <<
@@ -60,7 +60,7 @@ class HomeController < ApplicationController
       paginate stories.hidden
     }
 
-    @heading = @title = "Hidden Stories"
+    @title = "Hidden Stories"
     @cur_url = "/hidden"
 
     render :action => "index"
@@ -80,7 +80,7 @@ class HomeController < ApplicationController
       :href => user_token_link("/comments.rss"),
     }
 
-    @heading = @title = ""
+    @title = ""
     @cur_url = "/"
 
     respond_to do |format|
@@ -105,7 +105,7 @@ class HomeController < ApplicationController
       paginate stories.newest
     }
 
-    @heading = @title = "Newest Stories"
+    @title = "Newest Stories"
     @cur_url = "/newest"
 
     @rss_link = {
@@ -137,7 +137,7 @@ class HomeController < ApplicationController
       end
     }
 
-    @heading = @title = "Newest Stories by #{by_user.username}"
+    @title = "Newest Stories by #{by_user.username}"
     @cur_url = "/newest/#{by_user.username}"
 
     @newest = true
@@ -157,7 +157,7 @@ class HomeController < ApplicationController
       paginate Story.recent(@user, filtered_tag_ids)
     }
 
-    @heading = @title = "Recent Stories"
+    @title = "Recent Stories"
     @cur_url = "/recent"
 
     # our list is unstable because upvoted stories get removed, so point at /newest.rss
@@ -176,7 +176,7 @@ class HomeController < ApplicationController
       :href => user_token_link("/saved.rss"),
     }
 
-    @heading = @title = "Saved Stories"
+    @title = "Saved Stories"
     @cur_url = "/saved"
 
     respond_to do |format|
@@ -201,7 +201,6 @@ class HomeController < ApplicationController
       paginate stories.categories(@categories)
     end
 
-    @heading = params[:category]
     @title = @categories.map(&:category).join(' ')
     @cur_url = category_url(params[:category])
 
@@ -227,7 +226,6 @@ class HomeController < ApplicationController
       paginate stories.tagged(@tags)
     end
 
-    @heading = params[:tag]
     @title = @tags.map do |tag|
       [tag.tag, tag.description].compact.join(' - ')
     end.join(' ')
@@ -252,8 +250,7 @@ class HomeController < ApplicationController
       paginate @domain.stories.not_deleted.order('id desc')
     end
 
-    @heading = params[:name]
-    @title = "Stories submitted for #{@domain.domain}."
+    @title = @domain.domain
     @cur_url = domain_path(params[:name])
 
     @rss_link = {
@@ -278,14 +275,13 @@ class HomeController < ApplicationController
     }
 
     if length[:dur] > 1
-      @heading = @title = "Top Stories of the Past #{length[:dur]} " <<
-                          length[:intv] << "s"
+      @title = "Top Stories of the Past #{length[:dur]} #{length[:intv]}"
     else
-      @heading = @title = "Top Stories of the Past " << length[:intv]
+      @title = "Top Stories of the Past #{length[:intv]}"
     end
 
     @rss_link ||= {
-      :title => "RSS 2.0 - " + @heading,
+      :title => "RSS 2.0 - " + @title,
       :href => "/top/rss",
     }
 
@@ -300,8 +296,9 @@ class HomeController < ApplicationController
       paginate @user.upvoted_stories.includes(:tags).order('votes.id DESC')
     }
 
-    @heading = @title = "Upvoted Stories"
+    @title = "Upvoted Stories"
     @cur_url = "/upvoted"
+    @upvoted = true
 
     @rss_link = {
       :title => "RSS 2.0 - Upvoted Stories",
@@ -309,7 +306,7 @@ class HomeController < ApplicationController
     }
 
     respond_to do |format|
-      format.html { render action: :index, layout: 'upvoted' }
+      format.html { render action: :index }
       format.rss {
         if @user && params[:token].present?
           @title += " - Private feed for #{@user.username}"

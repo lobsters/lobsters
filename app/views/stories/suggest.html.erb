@@ -1,8 +1,4 @@
 <div class="box" id="story_box">
-  <div class="legend">
-    Suggest Story Changes
-  </div>
-
   <%= form_with model: @story, url: story_suggest_path(@story.short_id), method: :post, html: { id: 'edit_story' }, local: true do |f| %>
     <%= render :partial => "stories/form", :locals => { :story => @story,
       :f => f, :suggesting => true } %>

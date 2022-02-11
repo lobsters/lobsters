@@ -3,7 +3,7 @@ class FiltersController < ApplicationController
 
   def index
     @cur_url = "/filters"
-    @title = "Tag Filters"
+    @title = "Filtered Tags"
 
     @categories = Category.all
                           .order('category asc')

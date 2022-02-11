@@ -1,3 +1,5 @@
+<% render partial: 'upvoted/subnav' if @upvoted %>
+
 <% if @cur_url == "/recent" %>
   <div class="box" id="leader">
     <em>The <a href="/newest">newest</a> stories that have not yet reached the front page.</em>

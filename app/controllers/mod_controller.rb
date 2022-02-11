@@ -7,7 +7,7 @@ class ModController < ApplicationController
   before_action :require_logged_in_moderator, :default_periods
 
   def index
-    @title = "Mod Activity"
+    @title = "Activity by Other Mods"
     @moderations = Moderation.all
       .eager_load(:moderator, :story, :tag, :user, :comment => [:story, :user])
       .where("moderator_user_id != ? or moderator_user_id is null", @user.id)

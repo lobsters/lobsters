@@ -1,7 +1,5 @@
 <% is_admin = @user.try(:is_admin?) %>
 <div class="box wide">
-  <div class="legend">Tags</div>
-
   <p>Inactive tags can no longer be used. You can also <a href="/filters">filter out stories by tag</a>, even if you don't have an account.</p>
 
   <% @categories.each do |category| %>

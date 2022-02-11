@@ -1,3 +1,5 @@
+<% render partial: 'upvoted/subnav' if @upvoted %>
+
 <ol class="comments comments1">
   <% @comments.each do |comment| %>
     <li><%= render "comments/comment", :comment => comment,

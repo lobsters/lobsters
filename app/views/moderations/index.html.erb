@@ -1,8 +1,4 @@
 <div class="box wide">
-  <div class="legend">
-    Moderation Log
-  </div>
-
   <%= form_with url: moderations_path, method: :get, local: true do |f| %>
     <label class="normal" for="moderator">Moderator:</label>
     <%= f.select 'moderator', options_for_select(@moderators, @moderator) %>

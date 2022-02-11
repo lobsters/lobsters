@@ -4,6 +4,7 @@ class MessagesController < ApplicationController
   before_action :find_message, :only => [:show, :destroy, :keep_as_new, :mod_note]
 
   def index
+    @title = "Private Messages"
     @messages = @user.undeleted_received_messages
 
     respond_to do |format|
@@ -26,6 +27,7 @@ class MessagesController < ApplicationController
   end
 
   def sent
+    @title = "Sent Messages"
     @messages = @user.undeleted_sent_messages
 
     respond_to do |format|

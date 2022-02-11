@@ -5,7 +5,7 @@ class RepliesController < ApplicationController
   after_action :update_read_ribbons, only: [:unread]
 
   def all
-    @heading = @title = "All Your Replies"
+    @title = "All Your Replies"
     @cur_url = "/replies"
 
     @replies = ReplyingComment
@@ -17,7 +17,7 @@ class RepliesController < ApplicationController
   end
 
   def comments
-    @heading = @title = "Your Comment Replies"
+    @title = "Your Comment Replies"
     @replies = ReplyingComment
                  .comment_replies_for(@user.id)
                  .offset((@page - 1) * REPLIES_PER_PAGE)
@@ -27,7 +27,7 @@ class RepliesController < ApplicationController
   end
 
   def stories
-    @heading = @title = "Your Story Replies"
+    @title = "Your Story Replies"
     @replies = ReplyingComment
                  .story_replies_for(@user.id)
                  .offset((@page - 1) * REPLIES_PER_PAGE)
@@ -37,7 +37,7 @@ class RepliesController < ApplicationController
   end
 
   def unread
-    @heading = @title = "Your Unread Replies"
+    @title = "Your Unread Replies"
     @replies = ReplyingComment.unread_replies_for(@user.id)
     apply_current_vote
     render :show

@@ -49,21 +49,37 @@ class ModNote < ApplicationRecord
     )
   end
 
-  def self.tattle_on_invited(user, invitation_code)
+  def self.tattle_on_invited(redeemer, invitation_code)
     invitation = Invitation.find_by(code: invitation_code)
     return unless invitation
+    invitation.update!(used_at: Time.current, new_user: nil)
 
     sender = invitation.user
     sender_url = Rails.application.routes.url_helpers.user_url(
       sender,
       host: Rails.application.domain
     )
+    redeemer_url = Rails.application.routes.url_helpers.user_url(
+      sender,
+      host: Rails.application.domain
+    )
     create_without_dupe!(
       moderator: InactiveUser.inactive_user,
-      user: user,
+      user: redeemer,
       created_at: Time.current,
       note: "Attempted to redeem invitation code #{invitation.code} while logged in:\n" +
         "- sent by: [#{sender.username}](#{sender_url})\n" +
+        "- created_at: #{invitation.created_at}\n" +
+        "- used_at: #{invitation.used_at || 'unused'}\n" +
+        "- email: #{invitation.email}\n" +
+        "- memo: #{invitation.memo}"
+    )
+    create_without_dupe!(
+      moderator: InactiveUser.inactive_user,
+      user: sender,
+      created_at: Time.current,
+      note: "Sent invitation #{invitation.code} another user tried to redeem while logged in:\n" +
+        "- attempted redeemer: [#{redeemer.username}](#{redeemer_url})\n" +
         "- created_at: #{invitation.created_at}\n" +
         "- used_at: #{invitation.used_at || 'unused'}\n" +
         "- email: #{invitation.email}\n" +

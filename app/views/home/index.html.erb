@@ -1,4 +1,8 @@
-<% render partial: 'upvoted/subnav' if @upvoted %>
+<% if @upvoted %>
+  <% render partial: 'upvoted/subnav' %>
+<% else %>
+  <% render partial: 'stories/subnav' %>
+<% end %>
 
 <% if @cur_url == "/recent" %>
   <div class="box" id="leader">

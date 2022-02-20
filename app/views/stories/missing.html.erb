@@ -1,0 +1,18 @@
+<div class="box"><p>
+  <% if !@user %>
+    <%
+      # Logged-out visitors don't get details so we don't make a convenient
+      # public monument to content that was so bad or bizarre we removed it.
+    %>
+    Story was removed.
+  <% elsif @story.is_moderated? %>
+    <% if @moderation %>
+      Story removed by moderator: <%= @moderation.reason %>
+    <% else %>
+      Story removed by moderator but no log message was found.
+      Please report this bug.
+    <% end %>
+  <% else %>
+    Story was removed by submitter<% if @user %> <%= link_to @story.user.username, user_path(@story.user) %><% end %>.
+  <% end %>
+</p></div>

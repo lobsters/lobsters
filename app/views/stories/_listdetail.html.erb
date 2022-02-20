@@ -27,7 +27,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
       <% if story.is_gone? %>
         [Story removed by <%= story.is_moderated? ? "moderator" :
-          "original submitter" %>]
+          "submitter" %>]
       <% end %>
     </span>
     <% if story.markeddown_description.present? %>

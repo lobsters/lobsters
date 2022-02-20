@@ -1,8 +1,8 @@
 <%= render partial: 'subnav' %>
 
 <div class="box wide">
-  <div class="sublegend">
-    Sent from
+  <h2>
+    From
     <% if @message.author %>
       <a href="/u/<%= @message.author.username %>"><%= @message.author.username %></a>
     <% else %>
@@ -13,7 +13,7 @@
     <a href="/u/<%= @message.recipient.username %>"><%=
       @message.recipient.username %></a>
     <%= time_ago_in_words_label(@message.created_at) %>
-  </div>
+  </h2>
 
   <div class="boxline comment_text">
     <%= raw @message.linkified_body %>

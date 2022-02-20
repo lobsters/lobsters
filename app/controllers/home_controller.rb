@@ -54,6 +54,20 @@ class HomeController < ApplicationController
     end
   end
 
+  def active
+    @stories, show_more = get_from_cache(order: 'max(comments.id) desc') {
+      paginate stories.active
+    }
+
+    @title = 'Active Discussions'
+    @cur_url = '/active'
+
+    respond_to do |format|
+      format.html { render action: :index }
+      format.json { render json: @stories }
+    end
+  end
+
   def newest
     @stories, @show_more = get_from_cache(newest: true) {
       paginate stories.newest

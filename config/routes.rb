@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
   get "/page/:page" => "home#index"
 
+  get "/active" => "home#active"
+  get "/active/page/:page" => "home#active"
   get "/newest" => "home#newest"
   get "/newest/page/:page" => "home#newest"
   get "/newest/:user" => "home#newest_by_user"

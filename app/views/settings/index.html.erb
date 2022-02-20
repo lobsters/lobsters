@@ -13,7 +13,7 @@
     <div class="boxline">
       <%= f.label :username, "Username:", :class => "required" %>
       <%= f.text_field :username, :size => 15 %>
-      <span class="hint">
+      <span class="hint indent">
         <tt><%= User.username_regex_s %></tt>
       </span>
     </div>
@@ -93,7 +93,7 @@
           "Manage Pushover Subscription" : "Subscribe With Pushover"),
           "/settings/pushover_auth", :class => "pushover_button",
           :method => :post) %>
-        <span class="hint">
+        <span class="hint indent">
           For optional comment and message notifications below
         </span>
         </span>
@@ -177,7 +177,7 @@
       <%= f.label :pushover_replies, "Receive Pushover Alert:",
         :class => "required" %>
       <%= f.check_box :pushover_replies %>
-      <span class="hint">
+      <span class="hint indent">
         Requires Pushover subscription above
       </span>
     </div>
@@ -195,7 +195,7 @@
       <%= f.label :pushover_mentions, "Receive Pushover Alert:",
         :class => "required" %>
       <%= f.check_box :pushover_mentions %>
-      <span class="hint">
+      <span class="hint indent">
         Requires Pushover subscription above
       </span>
     </div>
@@ -213,7 +213,7 @@
       <%= f.label :pushover_messages, "Receive Pushover Alert:",
         :class => "required" %>
       <%= f.check_box :pushover_messages %>
-      <span class="hint">
+      <span class="hint indent">
         Requires Pushover subscription above
       </span>
     </div>

@@ -84,6 +84,9 @@ class Comment < ApplicationRecord
 
     self.hat.present? && self.user.wearable_hats.exclude?(self.hat) &&
       errors.add(:hat, "not wearable by user")
+
+    self.story.accepting_comments? ||
+      errors.add(:base, "Story is no longer accepting comments.")
   end
 
   def self.arrange_for_user(user)

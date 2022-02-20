@@ -115,6 +115,7 @@ class Story < ApplicationRecord
     end
   end
 
+  COMMENTABLE_DAYS = 90
   FLAGGABLE_DAYS = 14
 
   # the lowest a score can go
@@ -175,6 +176,12 @@ class Story < ApplicationRecord
     end
 
     check_tags
+  end
+
+  def accepting_comments?
+    !self.is_gone? &&
+      !self.previewing &&
+      self.created_at > COMMENTABLE_DAYS.days.ago
   end
 
   def already_posted_recently?

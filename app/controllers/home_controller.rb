@@ -55,7 +55,7 @@ class HomeController < ApplicationController
   end
 
   def active
-    @stories, show_more = get_from_cache(order: 'max(comments.id) desc') {
+    @stories, @show_more = get_from_cache(active: true) {
       paginate stories.active
     }
 

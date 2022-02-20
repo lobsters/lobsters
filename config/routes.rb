@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     :protocol => (Rails.application.config.force_ssl ? "https://" : "http://"),
     :as => "root"
 
-  get "/404" => "home#four_oh_four", :via => :all
+  get "/404" => "about#four_oh_four", :via => :all
 
   get "/rss" => "home#index", :format => "rss"
   get "/hottest" => "home#index", :format => "json"
@@ -211,9 +211,9 @@ Rails.application.routes.draw do
   get "/mod/notes(/:period)" => "mod_notes#index", :as => "mod_notes"
   post "/mod/notes" => "mod_notes#create"
 
-  get "/privacy" => "home#privacy"
-  get "/about" => "home#about"
-  get "/chat" => "home#chat"
+  get "/privacy" => "about#privacy"
+  get "/about" => "about#about"
+  get "/chat" => "about#chat"
 
   get "/stats" => "stats#index"
 

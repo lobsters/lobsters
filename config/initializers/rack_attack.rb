@@ -28,7 +28,7 @@ end
 
 # explain the throttle
 Rack::Attack.throttled_response_retry_after_header = true
-Rack::Attack.throttled_response = lambda do |env|
+Rack::Attack.throttled_responder = lambda do |env|
   match_data = env['rack.attack.match_data']
   now = match_data[:epoch_time]
 

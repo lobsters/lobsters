@@ -67,6 +67,7 @@
           <%= link_to "Inbox", inbox_path %>
         <% end %>
 
+        <%= link_to 'Saved', saved_path %>
         <%= link_to raw("#{@user.username} <span class='karma'>(#{@user.karma})</span>"), settings_path %>
       <% else %>
         <%= link_to 'Login', login_path %>

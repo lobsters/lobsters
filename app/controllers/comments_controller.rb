@@ -287,7 +287,7 @@ class CommentsController < ApplicationController
 
     @title = "Upvoted Comments"
     @cur_url = upvoted_comments_path
-    @upvoted = true
+    @saved_subnav = true
 
     @page = params[:page].to_i
     if @page == 0

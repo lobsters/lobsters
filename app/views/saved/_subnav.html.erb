@@ -1,4 +1,7 @@
 <% content_for :subnav do %>
+  <%= link_to_different_page 'Saved', saved_path %>
+  Upvoted
   <%= link_to_different_page 'Stories', upvoted_stories_path %>
   <%= link_to_different_page 'Comments', upvoted_comments_path %>
+  <%= link_to_different_page 'Hidden', hidden_path %>
 <% end %>

@@ -62,6 +62,7 @@ class HomeController < ApplicationController
 
     @title = "Hidden Stories"
     @cur_url = "/hidden"
+    @saved_subnav = true
 
     render :action => "index"
   end
@@ -178,6 +179,7 @@ class HomeController < ApplicationController
 
     @title = "Saved Stories"
     @cur_url = "/saved"
+    @saved_subnav = true
 
     respond_to do |format|
       format.html { render :action => "index" }
@@ -298,7 +300,7 @@ class HomeController < ApplicationController
 
     @title = "Upvoted Stories"
     @cur_url = "/upvoted"
-    @upvoted = true
+    @saved_subnav = true
 
     @rss_link = {
       :title => "RSS 2.0 - Upvoted Stories",

@@ -79,7 +79,7 @@
         <% if @user.inbox_count > 0 %>
           <%= link_to raw("&#9993;&nbsp;<span class='inbox_unread'>#{@user.inbox_count}</span>"), inbox_path, class: 'inbox' %>
         <% else %>
-          <%= link_to "&#9993;", inbox_path, class: 'inbox' %>
+          <%= link_to raw("&#9993;"), inbox_path, class: 'inbox' %>
         <% end %>
       <% else %>
         <%= link_to 'Login', login_path, class: 'corner' %>

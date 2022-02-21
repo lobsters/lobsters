@@ -33,11 +33,8 @@ module ApplicationHelper
   end
 
   def link_to_different_page(text, path)
-    if current_page? path
-      text
-    else
-      link_to(text, path)
-    end
+    c = :current_page if current_page? path
+    link_to text, path, class: c
   end
 
   def page_numbers_for_pagination(max, cur)
@@ -82,6 +79,6 @@ module ApplicationHelper
 
   def time_ago_in_words_label(time)
     ago = time_ago_in_words(time)
-    raw(content_tag(:span, ago, title: time.strftime("%F %T %z")))
+    content_tag(:span, ago, title: time.strftime("%F %T %z"))
   end
 end

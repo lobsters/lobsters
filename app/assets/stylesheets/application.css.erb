@@ -505,10 +505,39 @@ only screen and (-webkit-min-device-pixel-ratio: 2) {
 	}
 }
 
-header#nav a {
+header#nav .navholder {
+	display: flex;
+	flex-wrap: nowrap;
+	overflow-x: auto;
+	overflow-y: clip;
+	position: relative; /* context for nav gradients */
+	width: 100%;
+}
+header#nav {
+	box-sizing: border-box;
+	display: flex;
+	padding: 0.5em 0.5em 0 0.5em;
+}
+header#nav nav.links {
+	display: flex;
+	width: 100%
+}
+header#nav a, header#subnav a {
 	color: var(--color-fg-contrast-6);
-	margin: 0 0.75em;
+	margin: 0 0.5em;
 	text-decoration: none;
+}
+header#subnav {
+	box-sizing: border-box;
+	height: 2em;
+	line-height: 1em;
+	padding: 0.5em;
+	text-align: right;
+	width: 100%;
+}
+header#subnav a.current_page {
+	border-bottom: 0.25em solid var(--color-fg-accent);
+	padding: 0 0.25em 0.25em;
 }
 header#nav #l_holder, header#nav #l_holder ~ a {
 	margin-left: 0;
@@ -1275,9 +1304,6 @@ table.data pre {
 	font-weight: bold;
 	font-size: 11pt;
 }
-.box .subnav {
-	float: right;
-}
 
 .box label {
 	display: block;
@@ -1479,19 +1505,24 @@ div.flash-success h2 {
 
 @media screen and (min-width: 481px) {
 	body {
-		min-width: 600px;
 		max-width: 900px;
 		padding-bottom: 2em;
 	}
 
-	header {
+	header#nav {
 		margin: 1em 0 0.5em;
 		padding: 5px 10px;
 	}
-
-	header#nav .user {
-		float: right;
-		text-align: right;
+	header#nav nav.links {
+		flex-flow: row wrap;
+		justify-content: start;
+	}
+	header#nav nav.links > .corner {
+		display: inline;
+		margin-left: auto;
+	}
+	header#nav nav.corner {
+		display: none;
 	}
 
 	div#inside {
@@ -1509,18 +1540,57 @@ div.flash-success h2 {
 		-webkit-text-size-adjust: none;
 	}
 
-        #l_holder,
-        header#nav,
-        header#user,
-        header#subnav {
-          /*
+	header#nav > .inbox {
+		font-size: 18px;
+		vertical-align: bottom;
+	}
+	header#nav > .inbox .inbox_unread {
+		font-size: 10pt;
+	}
+	header#nav {
 		background-color: var(--color-box-bg-shaded);
-                */
+		background-color: #ddd;
+		border-bottom:: 1px solid var(--color-box-border);
+		flex-flow: row nowrap;
+		height: 2.5em;
+		min-width: 100%;
+	}
+	#l_holder {
+		flex: 0 0 16px;
+	}
+	header#nav nav.links {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		overflow-y: clip;
 	}
 
-	header#nav {
-		display: inline;
+	header#nav .navholder:before, header#nav .navholder:after {
+		content: "";
+		height: 100%;
+		pointer-events: none;
+		position: absolute;
+		top: 0px;
+		width: 2em;
+		z-index: 1;
 	}
+	header#nav .navholder:before {
+		background: linear-gradient(to right, #ddd, transparent);
+		left: -1em;
+	}
+	header#nav .navholder:after {
+		right: 0px;
+		background: linear-gradient(to right, transparent, #ddd);
+	}
+	header#nav nav.links > .corner {
+		display: none;
+	}
+	header#nav nav.corner {
+		display: block;
+	}
+	header#subnav {
+		background-color: var(--color-box-bg-shaded);
+	}
+
 	header#nav .user {
 		display: inline;
 		margin-top: 0.25em;

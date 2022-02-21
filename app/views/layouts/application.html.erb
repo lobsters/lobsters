@@ -47,52 +47,57 @@
   <header id="nav">
     <a id="l_holder" style="<%= @traffic_style %>" href="/" title="<%= Rails.application.name %> (Current traffic: <%= @traffic_intensity.to_i %>%)"></a>
 
-    <%= link_to 'Active', recent_path %>
-    <%= link_to 'Comments', comments_path %>
+    <div class="navholder">
+      <nav class="links">
+        <%= link_to 'Active', recent_path %>
+        <%= link_to 'Comments', comments_path %>
 
-    <% if @user && @user.can_submit_stories? %>
-      <%= link_to 'Submit', new_story_path %>
-    <% end %>
-
-    <% if @user %>
-      <%= link_to 'Saved', saved_path %>
-    <% end %>
-    <%= link_to 'Search', search_path %>
-
-    <div class="user">
-      <% if @user %>
-        <% if @user.inbox_count > 0 %>
-          <%= link_to raw("Inbox <span class='inbox_unread'>#{@user.inbox_count}</span>"), inbox_path %>
-        <% else %>
-          <%= link_to "Inbox", inbox_path %>
+        <% if @user && @user.can_submit_stories? %>
+          <%= link_to 'Submit', new_story_path %>
         <% end %>
 
-        <%= link_to 'Saved', saved_path %>
-        <%= link_to raw("#{@user.username} <span class='karma'>(#{@user.karma})</span>"), settings_path %>
-      <% else %>
-        <%= link_to 'Login', login_path %>
-      <% end %>
+        <%= link_to 'Search', search_path %>
+
+
+        <% if @user %>
+          <% if @user.inbox_count > 0 %>
+            <%= link_to raw("Inbox&nbsp;<span class='inbox_unread'>#{@user.inbox_count}</span>"), inbox_path, class: 'inbox corner' %>
+          <% else %>
+            <%= link_to "Inbox", inbox_path, class: 'inbox corner' %>
+          <% end %>
+
+          <%= link_to 'Saved', saved_path %>
+          <%= link_to raw("#{@user.username}&nbsp;<span class='karma'>(#{@user.karma})</span>"), settings_path %>
+        <% else %>
+          <%= link_to 'Login', login_path, class: 'corner' %>
+        <% end %>
+      </nav>
     </div>
 
-    <div class="clear"></div>
+    <nav class="corner">
+      <% if @user %>
+        <% if @user.inbox_count > 0 %>
+          <%= link_to raw("&#9993;&nbsp;<span class='inbox_unread'>#{@user.inbox_count}</span>"), inbox_path, class: 'inbox' %>
+        <% else %>
+          <%= link_to "&#9993;", inbox_path, class: 'inbox' %>
+        <% end %>
+      <% else %>
+        <%= link_to 'Login', login_path, class: 'corner' %>
+      <% end %>
+    </nav>
   </header>
 
   <% if content_for? :subnav %>
-    <div class="box wide">
-      <header class="subnav">
-        <%= yield :subnav %>
-      </header>
-
-      <% if @title.present? %>
-        <h1 class="title"><%= @title %></h1>
-      <% end %>
-    </div>
-    <div class="clear"></div>
-  <% elsif @title.present? %>
-    <h1 class="title <%= @title_class %>"><%= @title %></h1>
+    <header id="subnav">
+      <%= yield :subnav %>
+    </header>
   <% end %>
 
   <div id="inside">
+    <% if @title.present? %>
+      <h1 class="title <%= @title_class %>"><%= @title %></h1>
+    <% end %>
+
     <% [ :error, :success, :notice ].each do |f| %>
       <% if flash[f].present? %>
         <div class="flash-<%= f %>"><%= flash[f] %></div>
@@ -100,24 +105,23 @@
     <% end %>
 
     <%= yield %>
-
-    <footer>
-      <%= link_to 'About', about_path %>
-      <% if !@user && Rails.application.open_signups? %>
-        <a href="/invitations/open">Join <%= Rails.application.name %></a>
-      <% end %>
-      <% if @user && @user.can_see_invitation_requests? &&
-            (iqc = InvitationRequest.verified_count) > 0 %>
-        <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
-      <% end %>
-      <%= link_to 'Tags', tags_path %>
-      <% if @user && @user.is_moderator? && (hrc = HatRequest.count) > 0 %>
-        <%= link_to "#{hrc} Hat Requests", hats_requests_path %>
-      <% end %>
-      <%= link_to 'Filter', filters_path %>
-      <%= link_to 'Moderation Log', moderations_path %>
-    </footer>
-    <div class="clear"></div>
   </div>
+
+  <footer>
+    <%= link_to 'About', about_path %>
+    <% if !@user && Rails.application.open_signups? %>
+      <a href="/invitations/open">Join <%= Rails.application.name %></a>
+    <% end %>
+    <% if @user && @user.can_see_invitation_requests? &&
+          (iqc = InvitationRequest.verified_count) > 0 %>
+      <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
+    <% end %>
+    <%= link_to 'Tags', tags_path %>
+    <% if @user && @user.is_moderator? && (hrc = HatRequest.count) > 0 %>
+      <%= link_to "#{hrc} Hat Requests", hats_requests_path %>
+    <% end %>
+    <%= link_to 'Filter', filters_path %>
+    <%= link_to 'Moderation Log', moderations_path %>
+  </footer>
 </body>
 </html>

@@ -12,7 +12,7 @@ data-shortid="<%= comment.short_id if comment.persisted? %>">
     <%= f.hidden_field "parent_comment_short_id", value: comment.parent_comment.short_id %>
   <% end %>
 
-  <% if (comment.story.created_at - 1.hour).after? Story::COMMENTABLE_DAYS.days.ago %>
+  <% if (comment.story.created_at - 1.hour).before? Story::COMMENTABLE_DAYS.days.ago %>
     <p class="hint">
       This story is almost <%= Story::COMMENTABLE_DAYS %> days old
       and will stop accepting comments in

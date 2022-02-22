@@ -516,7 +516,7 @@ header#nav .navholder {
 header#nav {
 	box-sizing: border-box;
 	display: flex;
-	padding: 0.5em 0.5em 0 0.5em;
+	padding: 0.5rem 0.5rem 0 0.5rem;
 }
 header#nav nav.links {
 	display: flex;
@@ -1529,8 +1529,29 @@ div.flash-success h2 {
 	}
 
 	div#inside {
-		margin-left: 0.25em;
-		margin-right: 0.25em;
+		margin-left: calc(
+			10px +   /* header#nav padding-left */
+			18px +   /* #l_holder width + padding l/r */
+			0.5rem + /* header#nav a margin-right for logo */
+			0.5rem   /* header#nav a margin-left for first link in header#nav */
+		);
+		margin-right: 10px; /* header#nav padding-right */
+	}
+
+	/* hang voters into left margin to center under logo */
+	ol.stories,
+	#inside > ol.comments {
+		/* .voters width + .voters padding-right */
+		margin-left: -40px;
+	}
+	ol.stories div.voters,
+	#inside > ol.comments div.voters {
+		padding-right: 10px;
+		width: 30px;
+	}
+	ol.stories .upvoter,
+	#inside > ol.comments .upvoter {
+		margin-left: 10px;
 	}
 
 	.help {
@@ -1604,6 +1625,9 @@ div.flash-success h2 {
 		padding-right: 0.25em;
 		padding-left: 0;
 	}
+	div#inside {
+		margin: 0 0.5rem;
+	}
 
 	.help, .box {
 		margin: 0 8px;
@@ -1621,11 +1645,10 @@ div.flash-success h2 {
 		padding-left: 25px;
 	}
 
-	ol.comments {
-		margin-left: 10px;
-	}
-	ol.comments1 {
-		margin-left: 0;
+	ol.comments { margin-left: 10px }
+	ol.stories,
+	div#inside > ol.comments {
+		margin: 0 0.5rem 0 -0.5rem;
 		padding-left: 0;
 	}
 	ol.comments1 > li.comments_subtree {
@@ -1759,8 +1782,7 @@ div.flash-success h2 {
 
 	li div.details,
 	div.story_content {
-		margin-left: 36px;
-		margin-right: 20px;
+		margin: 0 0 0 36px;
 	}
 	ol.stories.list div.story_content {
 		margin-right: 0;

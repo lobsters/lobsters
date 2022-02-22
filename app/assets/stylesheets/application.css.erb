@@ -553,10 +553,13 @@ header .inbox_unread {
 /* footer */
 
 footer {
-	float: right;
-	font-weight: bold;
-	margin-top: 1.5em;
-	padding-right: 10px;
+	box-sizing: border-box;
+	display: flex;
+	height: 2em;
+	line-height: 1em;
+	padding: 0.5em;
+	justify-content: end;
+	width: 100%;
 }
 footer a {
 	color: var(--color-fg-contrast-4-5);

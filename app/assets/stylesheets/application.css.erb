@@ -477,6 +477,7 @@ header {
 
 #l_holder {
 	background-position: center;
+	flex: 0 0 16px; /* width; no padding l/r */
 	float: left;
 	display: block;
 	width: 16px;
@@ -524,7 +525,7 @@ header#nav nav.links {
 }
 header#nav a, header#subnav a {
 	color: var(--color-fg-contrast-6);
-	margin: 0 0.5em;
+	margin: 0 0.5rem;
 	text-decoration: none;
 }
 header#subnav {
@@ -600,7 +601,7 @@ ol.comments {
 	padding-left: 6px;
 }
 ol.comments1 {
-	margin-left: -20px;
+	margin-left: -40px;
 	padding-left: 0;
 }
 ol.comments.comments1 {
@@ -673,7 +674,6 @@ ol.stories li.story div.story_liner {
 	clear: both;
 	padding-top: 0.4em;
 	padding-bottom: 0.4em;
-	padding-left: 20px;
 	position: relative;
 }
 
@@ -1296,9 +1296,11 @@ table.data pre {
 
 /* boxes */
 .box {
+  /*
 	border: 0;
 	margin: 0 40px;
 	padding: 0;
+        */
 }
 
 .box h1.title {
@@ -1513,7 +1515,7 @@ div.flash-success h2 {
 	}
 
 	header#nav {
-		margin: 1em 0 0.5em;
+		margin: 1em 0 0.5rem;
 		padding: 5px 10px;
 	}
 	header#nav nav.links {
@@ -1579,9 +1581,6 @@ div.flash-success h2 {
 		height: 2.5em;
 		min-width: 100%;
 	}
-	#l_holder {
-		flex: 0 0 16px;
-	}
 	header#nav nav.links {
 		flex-wrap: nowrap;
 		overflow-x: auto;
@@ -1630,7 +1629,7 @@ div.flash-success h2 {
 	}
 
 	.help, .box {
-		margin: 0 8px;
+		/*margin: 0 8px;*/
 	}
 
 	h1.title {
@@ -1670,7 +1669,7 @@ div.flash-success h2 {
 	div.voters {
 		margin-left: 0.25em;
 		margin-top: 0px;
-		width: 31px;
+		width: 30px;
 	}
 	div.voters a.upvoter {
 		margin-top: -5px;
@@ -1703,7 +1702,6 @@ div.flash-success h2 {
 	}
 
 	ol.stories.list li.story {
-		border-bottom: 1px solid var(--color-mobile-story-border);
 		display: table;
 	}
 	ol.stories.list li.story div.story_liner {
@@ -1714,7 +1712,6 @@ div.flash-success h2 {
 		width: 100%;
 	}
 	ol.stories.list li.story .mobile_comments {
-		background-color: var(--color-mobile-story-comments-bg);
 		display: table-cell !important;
 		font-size: 11pt;
 		min-width: 40px;

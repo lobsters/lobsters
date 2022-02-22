@@ -27,7 +27,11 @@ class StoryRepository
   def active
     Story.base(@user)
       .filter_tags(@params[:exclude_tags] || [])
-      .select('stories.*, (select max(comments.id) from comments where comments.story_id = stories.id) as latest_comment_id')
+      .select('stories.*, (
+        select max(comments.id)
+        from comments
+        where comments.story_id = stories.id
+      ) as latest_comment_id')
       .where('created_at >= ?', 3.days.ago)
       .order('latest_comment_id desc')
   end

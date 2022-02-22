@@ -85,7 +85,8 @@ class Comment < ApplicationRecord
     self.hat.present? && self.user.wearable_hats.exclude?(self.hat) &&
       errors.add(:hat, "not wearable by user")
 
-    self.story.accepting_comments? ||
+    # .try so tests don't need to persist a story and user
+    self.story.try(:accepting_comments?) ||
       errors.add(:base, "Story is no longer accepting comments.")
   end
 

@@ -3,6 +3,8 @@ class RepliesController < ApplicationController
 
   before_action :require_logged_in_user, :flag_warning, :set_page
   after_action :update_read_ribbons, only: [:unread]
+  after_action :clear_unread_replies_cache, only: [:comments, :stories]
+  after_action :zero_unread_replies_cache, only: [:all, :unread]
 
   def all
     @title = "All Your Replies"
@@ -55,6 +57,14 @@ private
         reason: r.current_vote_reason.to_s,
       }
     end
+  end
+
+  def clear_unread_replies_cache
+    Rails.cache.delete("user:{@user.id}:unread_replies")
+  end
+
+  def zero_unread_replies_cache
+    Rails.cache.write("user:{@user.id}:unread_replies", 0)
   end
 
   def set_page

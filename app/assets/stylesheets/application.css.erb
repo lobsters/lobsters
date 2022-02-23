@@ -761,7 +761,7 @@ li .comment_folder {
  	cursor: pointer;
 	float: left;
 	text-align: center;
-	margin-right: -0.3em;
+	margin-left: -4px;
 }
 li .comment_folder.comment_folder_inline {
 	display: none;
@@ -769,7 +769,7 @@ li .comment_folder.comment_folder_inline {
 	width: 1.4em;
 	float: none;
 	text-align: left;
-	margin-right: 0;
+	margin: 0;
 }
 li .comment_folder.comment_folder_inline.force_inline {
 	display: inline-block;
@@ -799,7 +799,7 @@ li.comments_subtree {
 
 li .comment_parent_tree_line {
 	position: absolute;
-	left: 54px;
+	left: 30px;
 	border-left: 1px dotted var(--color-fg-shape);
 	top: 30px;
 	bottom: 0;
@@ -815,7 +815,7 @@ li .comment_parent_tree_line.no_children {
 }
 li .comment_siblings_tree_line {
 	position: absolute;
-	left: 28px;
+	left: 4px;
 	border-left: 1px dotted var(--color-fg-shape);
 	top: 2em;
 	bottom: 0;
@@ -1295,14 +1295,6 @@ table.data pre {
 
 
 /* boxes */
-.box {
-  /*
-	border: 0;
-	margin: 0 40px;
-	padding: 0;
-        */
-}
-
 .box h1.title {
 	margin-bottom: 1em;
 	padding: 0;
@@ -1626,10 +1618,6 @@ div.flash-success h2 {
 	}
 	div#inside {
 		margin: 0 0.5rem;
-	}
-
-	.help, .box {
-		/*margin: 0 8px;*/
 	}
 
 	h1.title {

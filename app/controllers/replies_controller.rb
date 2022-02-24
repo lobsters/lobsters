@@ -1,7 +1,7 @@
 class RepliesController < ApplicationController
   REPLIES_PER_PAGE = 25
 
-  before_action :require_logged_in_user, :flag_warning, :set_page
+  before_action :require_logged_in_user, :flag_warning, :set_page, :show_title_h1
   after_action :update_read_ribbons, only: [:unread]
   after_action :clear_unread_replies_cache, only: [:comments, :stories]
   after_action :zero_unread_replies_cache, only: [:all, :unread]

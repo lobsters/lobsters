@@ -4,7 +4,7 @@
 class ModController < ApplicationController
   include IntervalHelper
 
-  before_action :require_logged_in_moderator, :default_periods
+  before_action :require_logged_in_moderator, :default_periods, :show_title_h1
 
   def index
     @title = "Activity by Other Mods"

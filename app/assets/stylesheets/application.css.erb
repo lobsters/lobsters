@@ -250,11 +250,10 @@ li.story div.details span.link a:visited {
 }
 
 h1 {
-	margin: 0px;
-	margin-bottom: 0.75em;
-	padding: 0px;
-	font-size: 14pt;
+	font-size: 12pt;
 	font-weight: bold;
+	margin: 0.5em 0 1em 0;
+	padding: 0;
 }
 h2 {
 	font-size: 11pt;
@@ -530,9 +529,9 @@ header#nav a, header#subnav a {
 }
 header#subnav {
 	box-sizing: border-box;
-	height: 2em;
+	min-height: 2em;
 	line-height: 1em;
-	padding: 0.5em;
+	padding: 0.5rem 0;
 	text-align: right;
 	width: 100%;
 }
@@ -546,9 +545,12 @@ header#nav #l_holder, header#nav #l_holder ~ a {
 header#nav a:last-child {
 	margin-right: 0;
 }
-
 header .inbox_unread {
 	color: var(--color-fg-accent);
+}
+
+#inside {
+	margin: 0.5rem 0;
 }
 
 /* footer */
@@ -1295,13 +1297,6 @@ table.data pre {
 
 
 /* boxes */
-.box h1.title {
-	margin-bottom: 1em;
-	padding: 0;
-	font-weight: bold;
-	font-size: 11pt;
-}
-
 .box label {
 	display: block;
 	float: left;
@@ -1354,7 +1349,6 @@ table.data pre {
 
 .box span.d label,
 .box td label,
-.box h1.title label,
 .box div.d label {
 	display: inline;
 	float: none;
@@ -1507,7 +1501,7 @@ div.flash-success h2 {
 	}
 
 	header#nav {
-		margin: 1em 0 0.5rem;
+		margin: 1em 0 0.5rem 0;
 		padding: 5px 10px;
 	}
 	header#nav nav.links {
@@ -1617,11 +1611,7 @@ div.flash-success h2 {
 		padding-left: 0;
 	}
 	div#inside {
-		margin: 0 0.5rem;
-	}
-
-	h1.title {
-		margin-top: 0.5em;
+		margin: 0.5rem;
 	}
 
 	.comment {

@@ -1,5 +1,5 @@
 class SettingsController < ApplicationController
-  before_action :require_logged_in_user
+  before_action :require_logged_in_user, :show_title_h1
 
   TOTP_SESSION_TIMEOUT = (60 * 15)
 

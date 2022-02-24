@@ -1,12 +1,13 @@
 class FiltersController < ApplicationController
   before_action :authenticate_user
+  before_action :show_title_h1
 
   def index
     @cur_url = "/filters"
     @title = "Filtered Tags"
 
     @categories = Category.all
-                          .order('category asc')
+                          .order('category asc, tags.tag asc')
                           .eager_load(:tags)
                           .references(:tags)
                           .where('tags.active = true')

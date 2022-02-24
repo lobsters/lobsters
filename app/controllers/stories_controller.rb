@@ -9,6 +9,7 @@ class StoriesController < ApplicationController
   before_action :find_user_story, :only => [:destroy, :edit, :undelete, :update]
   before_action :find_story!, :only => [:suggest, :submit_suggestions]
   around_action :track_story_reads, only: [:show], if: -> { @user.present? }
+  before_action :show_title_h1, only: [:new, :edit, :suggest]
 
   def create
     @title = "Submit Story"

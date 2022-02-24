@@ -7,6 +7,7 @@ class CommentsController < ApplicationController
                 :only => [:create, :preview, :upvote, :flag, :unvote]
   before_action :require_logged_in_user, :only => [:upvoted]
   before_action :flag_warning, only: [:threads]
+  before_action :show_title_h1
 
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, :only => [:index]
@@ -330,8 +331,7 @@ class CommentsController < ApplicationController
       @title = "Threads for #{@showing_user.username}"
       @cur_url = "/threads/#{@showing_user.username}"
     elsif !@user
-      # TODO: show all recent threads
-      return redirect_to "/login"
+      return redirect_to active_path
     else
       @showing_user = @user
       @title = "Your Threads"

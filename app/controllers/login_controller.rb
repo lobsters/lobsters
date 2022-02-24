@@ -9,6 +9,7 @@ class LoginController < ApplicationController
   before_action :check_for_read_only_mode, :except => [:index]
   before_action :require_no_user_or_redirect,
                 only: [:index, :login, :forgot_password, :reset_password]
+  before_action :show_title_h1
 
   def logout
     if @user

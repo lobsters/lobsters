@@ -2,6 +2,7 @@ class MessagesController < ApplicationController
   before_action :require_logged_in_user
   before_action :require_logged_in_moderator, only: [:mod_note]
   before_action :find_message, :only => [:show, :destroy, :keep_as_new, :mod_note]
+  before_action :show_title_h1
 
   def index
     @title = "Private Messages"

@@ -5,6 +5,7 @@ class UsersController < ApplicationController
   before_action :flag_warning, only: [:show]
   before_action :require_logged_in_user, only: [:standing]
   before_action :only_user_or_moderator, only: [:standing]
+  before_action :show_title_h1, only: [:show]
 
   def show
     @title = @showing_user.username

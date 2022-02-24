@@ -23,6 +23,11 @@ class ApplicationController < ActionController::Base
       status: :bad_request, content_type: 'text/plain'
   end
 
+  def agent_is_spider?
+    ua = request.env["HTTP_USER_AGENT"].to_s
+    (ua == "" || ua.match(/(Google|bing|Slack|Twitter)bot|Slurp|crawler|Feedly|FeedParser|RSS/))
+  end
+
   def authenticate_user
     # eagerly evaluate, in case this triggers an IpSpoofAttackError
     request.remote_ip
@@ -53,6 +58,12 @@ class ApplicationController < ActionController::Base
     true
   end
 
+  def find_user_from_rss_token
+    if !@user && request[:format] == "rss" && params[:token].to_s.present?
+      @user = User.where(:rss_token => params[:token].to_s).first
+    end
+  end
+
   def flag_warning
     @flag_warning_int = time_interval('1m')
     @show_flag_warning = (
@@ -64,6 +75,13 @@ class ApplicationController < ActionController::Base
     if @user && @user.is_admin?
       Rack::MiniProfiler.authorize_request
     end
+  end
+
+  def prepare_exception_notifier
+    exception_data = {}
+    exception_data[:username] = @user.username unless @user.nil?
+
+    request.env["exception_notifier.exception_data"] = exception_data
   end
 
   # https://web.archive.org/web/20180108083712/http://umaine.edu/lobsterinstitute/files/2011/12/LobsterColorsWeb.pdf
@@ -150,27 +168,13 @@ class ApplicationController < ActionController::Base
     return redirect_to "/" if @user
   end
 
+  def show_title_h1
+    @title_h1 = true
+  end
+
   def tags_filtered_by_cookie
     @_tags_filtered ||= Tag.where(
       :tag => cookies[TAG_FILTER_COOKIE].to_s.split(",")
     )
-  end
-
-  def agent_is_spider?
-    ua = request.env["HTTP_USER_AGENT"].to_s
-    (ua == "" || ua.match(/(Google|bing|Slack|Twitter)bot|Slurp|crawler|Feedly|FeedParser|RSS/))
-  end
-
-  def find_user_from_rss_token
-    if !@user && request[:format] == "rss" && params[:token].to_s.present?
-      @user = User.where(:rss_token => params[:token].to_s).first
-    end
-  end
-
-  def prepare_exception_notifier
-    exception_data = {}
-    exception_data[:username] = @user.username unless @user.nil?
-
-    request.env["exception_notifier.exception_data"] = exception_data
   end
 end

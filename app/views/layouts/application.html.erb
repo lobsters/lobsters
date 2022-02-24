@@ -94,8 +94,8 @@
   <% end %>
 
   <div id="inside">
-    <% if @title.present? %>
-      <h1 class="title <%= @title_class %>"><%= @title %></h1>
+    <% if @title.present? && @title_h1 %>
+      <h1 class="<%= @title_class %>"><%= @title %></h1>
     <% end %>
 
     <% [ :error, :success, :notice ].each do |f| %>

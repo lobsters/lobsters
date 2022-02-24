@@ -1,3 +1,5 @@
+<%= render partial: 'messages/subnav' %>
+
 <%= render partial: 'users/flag_warning' if @show_flag_warning && @showing_user == @user %>
 
 <% @threads.each do |thread| %>

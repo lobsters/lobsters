@@ -6,7 +6,22 @@ class HomeController < ApplicationController
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, :only => [:index, :newest, :saved, :upvoted]
   before_action { @page = page }
-  before_action :require_logged_in_user, :only => [:upvoted]
+  before_action :require_logged_in_user, :only => [:hidden, :saved, :upvoted]
+  before_action :show_title_h1, only: [:top]
+
+  def active
+    @stories, @show_more = get_from_cache(active: true) {
+      paginate stories.active
+    }
+
+    @title = 'Active Discussions'
+    @cur_url = '/active'
+
+    respond_to do |format|
+      format.html { render action: :index }
+      format.json { render json: @stories }
+    end
+  end
 
   def hidden
     @stories, @show_more = get_from_cache(hidden: true) {
@@ -54,20 +69,6 @@ class HomeController < ApplicationController
     end
   end
 
-  def active
-    @stories, @show_more = get_from_cache(active: true) {
-      paginate stories.active
-    }
-
-    @title = 'Active Discussions'
-    @cur_url = '/active'
-
-    respond_to do |format|
-      format.html { render action: :index }
-      format.json { render json: @stories }
-    end
-  end
-
   def newest
     @stories, @show_more = get_from_cache(newest: true) {
       paginate stories.newest
@@ -107,9 +108,7 @@ class HomeController < ApplicationController
 
     @title = "Newest Stories by #{by_user.username}"
     @cur_url = "/newest/#{by_user.username}"
-
-    @newest = true
-    @for_user = by_user.username
+    @newest_by_user = by_user
 
     respond_to do |format|
       format.html { render :action => "index" }

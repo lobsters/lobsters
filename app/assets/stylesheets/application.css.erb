@@ -474,7 +474,7 @@ header {
 	line-height: 18px;
 }
 
-#l_holder {
+#logo {
 	background-position: center;
 	flex: 0 0 16px; /* width; no padding l/r */
 	float: left;
@@ -486,7 +486,7 @@ header {
 	margin-right: 11px;
 	position: relative;
 }
-#l_holder:after {
+#logo:after {
 	content: '';
 	background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAL0ALQAtZF7+HAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wCCBAuLt2rqugAAACMSURBVDjL1ZMxCsJQEERfRPEk9im9mGfxBpaCnaXmBraeQEidKsKz2eIb/peEIOLAwu4Ws7PMbsUAKlOwYCaWmd4aWCV1B4yXpR59R61SitwKDdBHfgPaSTsF8zOmHz5NLykAeCRqvuvCfxGcgP0YF3ZqHy7c1Yt6jfo8dCF3idvkQjcRRVQ/f6bZBC+RBoeZnlCyqwAAAABJRU5ErkJggg==) no-repeat center;
 	position: absolute;
@@ -498,7 +498,7 @@ header {
 @media
 only screen and (min-resolution: 2dppx),
 only screen and (-webkit-min-device-pixel-ratio: 2) {
-	#l_holder {
+	#logo {
 		background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AsLFB03Jr/FjQAAAVZJREFUWMPtlr1KQ0EQhc+ZdZMQEkQlNopKENu8gLWVvkQa8QHs8wQ+h4UPYG+fTpsQEATJhYtFrkKy2btrFYuwV/Kv6D2w1QzLNzPLngFy/XcxK9DpdAr1er05zSXOuUet9cM8ABtZgVKpVAZwDeCAZDDPe58CeCV5B2C5AFprQzICsE9mNsoBiAF0VzajOI4raZre+wk55977/f72Wh7KaDS6CgA8L+NumZYh9ATWCbAy5QA5wN8GMMY0jDGNHwEYDofHSqm2Uqrd6/XKawdQSt2QFJJSrVZPZjajBb/uUxG5GJuYiFRW0YGgRSZJsiMitxPjeFm0A6EKdq215wA+ABRIbgI4AnBJco8kvPcgiSRJopnLa7VaHAwGh9baszRNnwJumHkmctxcK1kURVu1Wu3tKzGwlHifbYjjfO+9FRE98wiKxaL/ZhPKhAqoi1y5cv1mfQLQB8QlNdQ0/wAAAABJRU5ErkJggg==) no-repeat;
 		background-size: 16px;
 		background-position: 1px 1px;
@@ -539,7 +539,7 @@ header#subnav a.current_page {
 	border-bottom: 0.25em solid var(--color-fg-accent);
 	padding: 0 0.25em 0.25em;
 }
-header#nav #l_holder, header#nav #l_holder ~ a {
+header#nav #logo, header#nav #logo ~ a {
 	margin-left: 0;
 }
 header#nav a:last-child {
@@ -1514,7 +1514,7 @@ div.flash-success h2 {
 	div#inside {
 		margin-left: calc(
 			10px +   /* header#nav padding-left */
-			18px +   /* #l_holder width + padding l/r */
+			18px +   /* #logo width + padding l/r */
 			0.5rem + /* header#nav a margin-right for logo */
 			0.5rem   /* header#nav a margin-left for first link in header#nav */
 		);

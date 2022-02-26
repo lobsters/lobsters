@@ -13,7 +13,6 @@ class StoriesController < ApplicationController
 
   def create
     @title = "Submit Story"
-    @cur_url = "/stories/new"
 
     @story = Story.new(user: @user)
     @story.attributes = story_params
@@ -75,7 +74,6 @@ class StoriesController < ApplicationController
 
   def new
     @title = "Submit Story"
-    @cur_url = "/stories/new"
 
     @story = Story.new(user_id: @user.id)
     @story.fetching_ip = request.remote_ip

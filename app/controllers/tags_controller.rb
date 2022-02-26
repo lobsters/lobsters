@@ -3,7 +3,6 @@ class TagsController < ApplicationController
   before_action :show_title_h1, only: [:new, :edit]
 
   def index
-    @cur_url = "/tags"
     @title = "Tags"
 
     @categories = Category.all.order('category asc').includes(:tags)

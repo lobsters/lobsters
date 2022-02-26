@@ -32,8 +32,12 @@ module ApplicationHelper
     raw(html)
   end
 
+  # limitation: this can't handle generating links based on a hash of options,
+  # like { controller: ..., action: ... }
   def link_to_different_page(text, path)
-    c = :current_page if current_page? path
+    current = request.path.sub(/\/page\/\d+$/, '')
+    path.sub!(/\/page\/\d+$/, '')
+    c = :current_page if current == path
     link_to text, path, class: c
   end
 

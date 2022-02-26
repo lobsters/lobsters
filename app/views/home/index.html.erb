@@ -4,7 +4,7 @@
   <% render partial: 'stories/subnav' %>
 <% end %>
 
-<% if @cur_url == "/active" %>
+<% if current_page? "/active" %>
   <p class="hint">
     Stories with active discussions.
   </p>
@@ -57,13 +57,13 @@
   </div>
 <% end %>
 
-<ol class="stories list <%= @cur_url == "/hidden" ? "show_hidden" : "" %>">
+<ol class="stories list <%= current_page? "/hidden" ? "show_hidden" : "" %>">
   <%= render partial: "stories/listdetail", collection: @stories, as: :story %>
 </ol>
 
 <%= render(partial: 'tags/multi_tag_tip') if @tags && @tags.count == 1 %>
 
-<% if @cur_url == "/recent" %>
+<% if current_page? "/recent" %>
   <p class="hint">
     The <a href="/newest">newest</a> stories that have not yet reached the front page.
   </p>
@@ -71,16 +71,13 @@
 
 <div class="morelink">
   <% if @page && @page > 1 %>
-    <a href="<%= @cur_url %><%= @cur_url == "/" ? "" : "/" %><%=
-      @page == 2 ? "" : "page/#{@page - 1}" %>">&lt;&lt; Page
-      <%= @page - 1 %></a>
+    <%= link_to raw("&lt;&lt; Page #{@page - 1}"), @root_path ? "/page/#{@page - 1}" : { controller: controller_name, action: action_name, page: @page - 1 } %>
   <% end %>
 
   <% if @show_more %>
     <% if @page && @page > 1 %>
       |
     <% end %>
-    <a href="<%= @cur_url %><%= @cur_url == "/" ? "" : "/" %>page/<%=
-      @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
+    <%= link_to raw("Page #{@page + 1} &gt;&gt;"), @root_path ? "/page/#{@page + 1}" : { controller: controller_name, action: action_name, page: @page + 1 } %>
   <% end %>
 </div>

@@ -15,7 +15,6 @@ class HomeController < ApplicationController
     }
 
     @title = 'Active Discussions'
-    @cur_url = '/active'
 
     respond_to do |format|
       format.html { render action: :index }
@@ -29,7 +28,6 @@ class HomeController < ApplicationController
     }
 
     @title = "Hidden Stories"
-    @cur_url = "/hidden"
     @saved_subnav = true
 
     render :action => "index"
@@ -50,7 +48,7 @@ class HomeController < ApplicationController
     }
 
     @title = ""
-    @cur_url = "/"
+    @root_path = true
 
     respond_to do |format|
       format.html { render :action => "index" }
@@ -75,7 +73,6 @@ class HomeController < ApplicationController
     }
 
     @title = "Newest Stories"
-    @cur_url = "/newest"
 
     @rss_link = {
       :title => "RSS 2.0 - Newest Items",
@@ -107,7 +104,6 @@ class HomeController < ApplicationController
     }
 
     @title = "Newest Stories by #{by_user.username}"
-    @cur_url = "/newest/#{by_user.username}"
     @newest_by_user = by_user
 
     respond_to do |format|
@@ -125,7 +121,6 @@ class HomeController < ApplicationController
     }
 
     @title = "Recent Stories"
-    @cur_url = "/recent"
 
     # our list is unstable because upvoted stories get removed, so point at /newest.rss
     @rss_link = { :title => "RSS 2.0 - Newest Items", :href => user_token_link("/newest.rss") }
@@ -144,7 +139,6 @@ class HomeController < ApplicationController
     }
 
     @title = "Saved Stories"
-    @cur_url = "/saved"
     @saved_subnav = true
 
     respond_to do |format|
@@ -170,7 +164,6 @@ class HomeController < ApplicationController
     end
 
     @title = @categories.map(&:category).join(' ')
-    @cur_url = category_url(params[:category])
 
     @rss_link = {
       title: "RSS 2.0 - Categorized #{@title}",
@@ -197,7 +190,6 @@ class HomeController < ApplicationController
     @title = @tags.map do |tag|
       [tag.tag, tag.description].compact.join(' - ')
     end.join(' ')
-    @cur_url = tag_url(params[:tag])
 
     @rss_link = {
       title: "RSS 2.0 - Tagged #{tags_with_description_for_rss(@tags)}",
@@ -219,7 +211,6 @@ class HomeController < ApplicationController
     end
 
     @title = @domain.domain
-    @cur_url = domain_path(params[:name])
 
     @rss_link = {
       title: "RSS 2.0 - For #{@domain.domain}",
@@ -234,9 +225,7 @@ class HomeController < ApplicationController
   end
 
   def top
-    @cur_url = "/top"
     length = time_interval(params[:length])
-    @cur_url << "/#{params[:length]}"
 
     @stories, @show_more = get_from_cache(top: true, length: length) {
       paginate stories.top(length)
@@ -265,7 +254,6 @@ class HomeController < ApplicationController
     }
 
     @title = "Upvoted Stories"
-    @cur_url = "/upvoted"
     @saved_subnav = true
 
     @rss_link = {

@@ -241,7 +241,6 @@ class CommentsController < ApplicationController
     }
 
     @title = "Newest Comments"
-    @cur_url = "/comments"
 
     @page = params[:page].to_i
     if @page == 0
@@ -287,7 +286,6 @@ class CommentsController < ApplicationController
     }
 
     @title = "Upvoted Comments"
-    @cur_url = upvoted_comments_path
     @saved_subnav = true
 
     @page = params[:page].to_i
@@ -329,13 +327,11 @@ class CommentsController < ApplicationController
     if params[:user]
       @showing_user = User.find_by!(username: params[:user])
       @title = "Threads for #{@showing_user.username}"
-      @cur_url = "/threads/#{@showing_user.username}"
     elsif !@user
       return redirect_to active_path
     else
       @showing_user = @user
       @title = "Your Threads"
-      @cur_url = "/threads"
     end
 
     thread_ids = @showing_user.recent_threads(

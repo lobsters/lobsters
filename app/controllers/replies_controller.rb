@@ -8,7 +8,6 @@ class RepliesController < ApplicationController
 
   def all
     @title = "All Your Replies"
-    @cur_url = "/replies"
 
     @replies = ReplyingComment
                  .for_user(@user.id)

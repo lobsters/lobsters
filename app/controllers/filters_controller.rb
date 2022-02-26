@@ -3,7 +3,6 @@ class FiltersController < ApplicationController
   before_action :show_title_h1
 
   def index
-    @cur_url = "/filters"
     @title = "Filtered Tags"
 
     @categories = Category.all

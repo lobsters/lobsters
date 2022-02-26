@@ -5,7 +5,6 @@ class SettingsController < ApplicationController
 
   def index
     @title = "Account Settings"
-    @cur_url = "/settings"
 
     @edit_user = @user.dup
   end

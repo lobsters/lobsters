@@ -30,7 +30,7 @@ gem "rqrcode"
 
 # parsing
 gem "pdf-reader"
-gem "nokogiri", ">= 1.11.0.rc4"
+gem "nokogiri", ">= 1.13.2"
 gem "htmlentities"
 gem "commonmarker", "~> 0.14"
 

@@ -15,6 +15,7 @@ class HomeController < ApplicationController
     }
 
     @title = 'Active Discussions'
+    @above = 'active'
 
     respond_to do |format|
       format.html { render action: :index }
@@ -28,7 +29,7 @@ class HomeController < ApplicationController
     }
 
     @title = "Hidden Stories"
-    @saved_subnav = true
+    @above = 'saved/subnav'
 
     render :action => "index"
   end
@@ -48,6 +49,7 @@ class HomeController < ApplicationController
     }
 
     @title = ""
+    @above = 'stories/subnav'
     @root_path = true
 
     respond_to do |format|
@@ -73,6 +75,7 @@ class HomeController < ApplicationController
     }
 
     @title = "Newest Stories"
+    @above = 'stories/subnav'
 
     @rss_link = {
       :title => "RSS 2.0 - Newest Items",
@@ -105,6 +108,7 @@ class HomeController < ApplicationController
 
     @title = "Newest Stories by #{by_user.username}"
     @newest_by_user = by_user
+    @above = 'newest_by_user'
 
     respond_to do |format|
       format.html { render :action => "index" }
@@ -121,6 +125,7 @@ class HomeController < ApplicationController
     }
 
     @title = "Recent Stories"
+    @below = 'recent'
 
     # our list is unstable because upvoted stories get removed, so point at /newest.rss
     @rss_link = { :title => "RSS 2.0 - Newest Items", :href => user_token_link("/newest.rss") }
@@ -139,7 +144,7 @@ class HomeController < ApplicationController
     }
 
     @title = "Saved Stories"
-    @saved_subnav = true
+    @above = 'saved/subnav'
 
     respond_to do |format|
       format.html { render :action => "index" }
@@ -164,6 +169,7 @@ class HomeController < ApplicationController
     end
 
     @title = @categories.map(&:category).join(' ')
+    @above = 'category'
 
     @rss_link = {
       title: "RSS 2.0 - Categorized #{@title}",
@@ -190,6 +196,8 @@ class HomeController < ApplicationController
     @title = @tags.map do |tag|
       [tag.tag, tag.description].compact.join(' - ')
     end.join(' ')
+    @above = 'tagged'
+    @below = 'tags/multi_tag_tip' if @tags.count == 1
 
     @rss_link = {
       title: "RSS 2.0 - Tagged #{tags_with_description_for_rss(@tags)}",
@@ -211,6 +219,7 @@ class HomeController < ApplicationController
     end
 
     @title = @domain.domain
+    @above = 'for_domain'
 
     @rss_link = {
       title: "RSS 2.0 - For #{@domain.domain}",
@@ -254,7 +263,7 @@ class HomeController < ApplicationController
     }
 
     @title = "Upvoted Stories"
-    @saved_subnav = true
+    @above = 'saved/subnav'
 
     @rss_link = {
       :title => "RSS 2.0 - Upvoted Stories",

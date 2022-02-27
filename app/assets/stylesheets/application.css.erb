@@ -1556,7 +1556,6 @@ div.flash-success h2 {
 	}
 	header#nav {
 		background-color: var(--color-box-bg-shaded);
-		background-color: #ddd;
 		border-bottom:: 1px solid var(--color-box-border);
 		flex-flow: row nowrap;
 		height: 2.5em;
@@ -1578,12 +1577,12 @@ div.flash-success h2 {
 		z-index: 1;
 	}
 	header#nav .navholder:before {
-		background: linear-gradient(to right, #ddd, transparent);
+		background: linear-gradient(to right, var(--color-box-bg-shaded), transparent);
 		left: -1em;
 	}
 	header#nav .navholder:after {
 		right: 0px;
-		background: linear-gradient(to right, transparent, #ddd);
+		background: linear-gradient(to right, transparent, var(--color-box-bg-shaded));
 	}
 	header#nav nav.links > .corner {
 		display: none;

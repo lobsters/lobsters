@@ -43,7 +43,7 @@ class StoriesController < ApplicationController
     @story.is_deleted = true
     @story.editor = @user
 
-    if @story.save(:validate => false)
+    if @story.save
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted")
     end
 
@@ -134,7 +134,12 @@ class StoriesController < ApplicationController
     end
 
     if !@story.can_be_seen_by_user?(@user)
-      raise ActionController::RoutingError.new("story gone")
+      @moderation = Moderation
+        .where(story: @story, comment: nil)
+        .where("action LIKE 'deleted story%'")
+        .order('id desc')
+        .first
+      return render action: :missing, status: 404
     end
 
     @comments = get_arranged_comments_from_cache(params[:id]) do
@@ -232,7 +237,7 @@ class StoriesController < ApplicationController
     @story.is_deleted = false
     @story.editor = @user
 
-    if @story.save(:validate => false)
+    if @story.save
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted", -1)
     end
 
@@ -404,10 +409,13 @@ private
   end
 
   def find_story
-    story = Story.where(:short_id => params[:story_id]).first
+    story = Story.find_by(:short_id => params[:story_id])
     if @user && story
-      story.vote = Vote.where(:user_id => @user.id,
-        :story_id => story.id, :comment_id => nil).first.try(:vote)
+      story.vote = Vote.find_by(
+        user: @user,
+        story: story.id,
+        comment:  nil
+      ).try(:vote)
     end
 
     story

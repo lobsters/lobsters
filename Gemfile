@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 6.1.4"
+gem "rails", "~> 6.1.4.6"
 
 gem "mysql2"
 
@@ -21,7 +21,7 @@ gem "uglifier", ">= 1.3.0"
 # deployment
 gem "actionpack-page_caching"
 gem "exception_notification"
-gem "puma"
+gem "puma", ">= 5.6.2"
 
 # security
 gem "bcrypt", "~> 3.1.2"
@@ -30,7 +30,7 @@ gem "rqrcode"
 
 # parsing
 gem "pdf-reader"
-gem "nokogiri", ">= 1.11.0.rc4"
+gem "nokogiri", ">= 1.13.2"
 gem "htmlentities"
 gem "commonmarker", "~> 0.14"
 

@@ -30,7 +30,7 @@
   <p class="help">No replies to show.</p>
 <% end %>
 
-<% if @replies.count > RepliesController::REPLIES_PER_PAGE && @filter != 'unread'%>
+<% if @replies.length > RepliesController::REPLIES_PER_PAGE && @filter != 'unread'%>
 <div class="morelink">
   <% if @page && @page > 1 %>
     <a href="/replies<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt;

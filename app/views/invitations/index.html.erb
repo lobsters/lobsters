@@ -38,7 +38,7 @@
       <% end %>
     </tr>
   <% end %>
-  <% if @invitation_requests.count == 0 %>
+  <% if @invitation_requests.length == 0 %>
     <tr>
       <td colspan=<%= @user.is_moderator?? 5 : 4 %> align="center"><span
         class="na">No invitation requests</span></td>

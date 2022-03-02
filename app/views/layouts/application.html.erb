@@ -50,6 +50,7 @@
     <div class="navholder">
       <nav class="links">
         <%= link_to 'Active', active_path %>
+        <%= link_to 'Recent', recent_path %>
         <%= link_to 'Comments', comments_path %>
 
         <% if @user && @user.can_submit_stories? %>
@@ -66,6 +67,7 @@
             <%= link_to "Inbox", inbox_path, class: 'inbox corner' %>
           <% end %>
 
+          <%= link_to 'Threads', threads_path %>
           <%= link_to 'Saved', saved_path %>
           <%= link_to raw("#{@user.username}&nbsp;<span class='karma'>(#{@user.karma})</span>"), settings_path %>
         <% else %>

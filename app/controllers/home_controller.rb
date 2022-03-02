@@ -49,7 +49,6 @@ class HomeController < ApplicationController
     }
 
     @title = ""
-    @above = 'stories/subnav'
     @root_path = true
 
     respond_to do |format|

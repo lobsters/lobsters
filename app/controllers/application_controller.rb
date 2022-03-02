@@ -54,8 +54,9 @@ class ApplicationController < ActionController::Base
   end
 
   def flag_warning
-    @flag_warning_int = time_interval('1m')
-    @show_flag_warning = (
+    return false if Rails.env.development? # expensive because Rails doesn't cache in dev
+    @flag_warning_int ||= time_interval('1m')
+    @show_flag_warning ||= (
       @user && !!FlaggedCommenters.new(@flag_warning_int[:param], 1.day).check_list_for(@user)
     )
   end

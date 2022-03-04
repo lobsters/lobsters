@@ -84,9 +84,29 @@ class Comment < ApplicationRecord
 
     self.hat.present? && self.user.wearable_hats.exclude?(self.hat) &&
       errors.add(:hat, "not wearable by user")
+
+    # .try so tests don't need to persist a story and user
+    self.story.try(:accepting_comments?) ||
+      errors.add(:base, "Story is no longer accepting comments.")
   end
 
   def self.arrange_for_user(user)
+    # This function is always used when presenting threads. The calling
+    # controllers advance the user's ReadRibbon, which may reduce the number
+    # of ReplyingComments, invalidating the User.unread_replies_count cache.
+    # The controller clearing that cache on every view of any thread would be
+    # wasteful because users read many more threads than they participate in,
+    # the controller making an extra loop over all comments would be wasteful,
+    # so this does a couple checks (without replicating all the predicates in
+    # replying_comments view, which would be brittle) and may clear the cache.
+    #
+    # This whole function should be done in the DB using a common-table
+    # expression. When that happens the cache clear probably needs to move up
+    # to the controller, which means extra clears, but that's probably a win
+    # because this function is the site's core functionality and it's
+    # expensive in both CPU + redundant RAM for the web workers.
+    clear_replies_cache = false
+
     parents = self.order(
       Arel.sql("comments.score < 0 ASC, comments.confidence DESC")
     )
@@ -101,6 +121,8 @@ class Comment < ApplicationRecord
     while subtree
       if (node = subtree.shift)
         children = parents[node.id]
+
+        clear_replies_cache = true if user && node.user_id == user.id
 
         # for deleted comments, if they have no children, they can be removed
         # from the tree.  otherwise they have to stay and a "[deleted]" stub
@@ -126,6 +148,8 @@ class Comment < ApplicationRecord
         subtree = ancestors.pop
       end
     end
+
+    Rails.cache.delete("user:{@user.id}:unread_replies") if clear_replies_cache
 
     ordered
   end

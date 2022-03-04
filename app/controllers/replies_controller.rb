@@ -1,12 +1,13 @@
 class RepliesController < ApplicationController
   REPLIES_PER_PAGE = 25
 
-  before_action :require_logged_in_user, :flag_warning, :set_page
+  before_action :require_logged_in_user, :flag_warning, :set_page, :show_title_h1
   after_action :update_read_ribbons, only: [:unread]
+  after_action :clear_unread_replies_cache, only: [:comments, :stories]
+  after_action :zero_unread_replies_cache, only: [:all, :unread]
 
   def all
-    @heading = @title = "All Your Replies"
-    @cur_url = "/replies"
+    @title = "All Your Replies"
 
     @replies = ReplyingComment
                  .for_user(@user.id)
@@ -17,7 +18,7 @@ class RepliesController < ApplicationController
   end
 
   def comments
-    @heading = @title = "Your Comment Replies"
+    @title = "Your Comment Replies"
     @replies = ReplyingComment
                  .comment_replies_for(@user.id)
                  .offset((@page - 1) * REPLIES_PER_PAGE)
@@ -27,7 +28,7 @@ class RepliesController < ApplicationController
   end
 
   def stories
-    @heading = @title = "Your Story Replies"
+    @title = "Your Story Replies"
     @replies = ReplyingComment
                  .story_replies_for(@user.id)
                  .offset((@page - 1) * REPLIES_PER_PAGE)
@@ -37,7 +38,7 @@ class RepliesController < ApplicationController
   end
 
   def unread
-    @heading = @title = "Your Unread Replies"
+    @title = "Your Unread Replies"
     @replies = ReplyingComment.unread_replies_for(@user.id)
     apply_current_vote
     render :show
@@ -55,6 +56,14 @@ private
         reason: r.current_vote_reason.to_s,
       }
     end
+  end
+
+  def clear_unread_replies_cache
+    Rails.cache.delete("user:{@user.id}:unread_replies")
+  end
+
+  def zero_unread_replies_cache
+    Rails.cache.write("user:{@user.id}:unread_replies", 0)
   end
 
   def set_page

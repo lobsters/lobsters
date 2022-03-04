@@ -32,46 +32,13 @@ module ApplicationHelper
     raw(html)
   end
 
-  def header_links
-    return @header_links if @header_links
-
-    @header_links = {
-      root_path => { :title => @cur_url == "/" ? Rails.application.name : "Home" },
-      recent_path => { :title => "Recent" },
-      comments_path => { :title => "Comments" },
-    }
-
-    if @user
-      @header_links[threads_path] = { :title => "Your Threads" }
-    end
-
-    if @user && @user.can_submit_stories?
-      @header_links[new_story_path] = { :title => "Submit Story" }
-    end
-
-    if @user
-      @header_links[saved_path] = { :title => "Saved" }
-    end
-
-    @header_links[search_path] = { :title => "Search" }
-
-    @header_links.each do |k, v|
-      v[:class] ||= []
-
-      if k == @cur_url
-        v[:class].push "cur_url"
-      end
-    end
-
-    @header_links
-  end
-
+  # limitation: this can't handle generating links based on a hash of options,
+  # like { controller: ..., action: ... }
   def link_to_different_page(text, path)
-    if current_page? path
-      text
-    else
-      link_to(text, path)
-    end
+    current = request.path.sub(/\/page\/\d+$/, '')
+    path.sub!(/\/page\/\d+$/, '')
+    c = :current_page if current == path
+    link_to text, path, class: c
   end
 
   def page_numbers_for_pagination(max, cur)
@@ -116,6 +83,6 @@ module ApplicationHelper
 
   def time_ago_in_words_label(time)
     ago = time_ago_in_words(time)
-    raw(content_tag(:span, ago, title: time.strftime("%F %T %z")))
+    content_tag(:span, ago, title: time.strftime("%F %T %z"))
   end
 end

@@ -2,6 +2,7 @@ class MessagesController < ApplicationController
   before_action :require_logged_in_user
   before_action :require_logged_in_moderator, only: [:mod_note]
   before_action :find_message, :only => [:show, :destroy, :keep_as_new, :mod_note]
+  before_action :show_title_h1
 
   def index
     @title = "Private Messages"
@@ -9,7 +10,6 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       format.html {
-        @cur_url = "/messages"
         @title = "Messages"
 
         @new_message = Message.new
@@ -32,7 +32,6 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       format.html {
-        @cur_url = "/messages"
         @title = "Messages Sent"
 
         @direction = :out
@@ -48,7 +47,6 @@ class MessagesController < ApplicationController
   end
 
   def create
-    @cur_url = "/messages"
     @title = "Messages"
 
     @new_message = Message.new(message_params)
@@ -70,7 +68,6 @@ class MessagesController < ApplicationController
   end
 
   def show
-    @cur_url = "/messages"
     @title = @message.subject
 
     if @message.author
@@ -89,6 +86,7 @@ class MessagesController < ApplicationController
       @message.has_been_read = true
       @message.save
     end
+    Rails.cache.delete("user:{@user.id}:unread_replies")
   end
 
   def destroy

@@ -39,7 +39,7 @@
 
 <% if !@story.previewing %>
   <ol class="comments comments1">
-    <% if !@story.is_gone? && !@story.previewing %>
+    <% if !@story.is_gone? && !@story.previewing && @story.accepting_comments? %>
       <li class="comments_subtree"><%= render "comments/commentbox", :comment => @comment %></li>
       <% if @user %><script>autosize($("#comment")[0]);</script><% end %>
     <% end %>

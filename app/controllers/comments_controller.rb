@@ -7,6 +7,7 @@ class CommentsController < ApplicationController
                 :only => [:create, :preview, :upvote, :flag, :unvote]
   before_action :require_logged_in_user, :only => [:upvoted]
   before_action :flag_warning, only: [:threads]
+  before_action :show_title_h1
 
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, :only => [:index]
@@ -239,8 +240,7 @@ class CommentsController < ApplicationController
       :href => "/comments.rss" + (@user ? "?token=#{@user.rss_token}" : ""),
     }
 
-    @heading = @title = "Newest Comments"
-    @cur_url = "/comments"
+    @title = "Newest Comments"
 
     @page = params[:page].to_i
     if @page == 0
@@ -285,8 +285,8 @@ class CommentsController < ApplicationController
       :href => upvoted_comments_path(format: :rss) + (@user ? "?token=#{@user.rss_token}" : ""),
     }
 
-    @heading = @title = "Upvoted Comments"
-    @cur_url = upvoted_comments_path
+    @title = "Upvoted Comments"
+    @saved_subnav = true
 
     @page = params[:page].to_i
     if @page == 0
@@ -312,7 +312,7 @@ class CommentsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { render action: :index, layout: 'upvoted' }
+      format.html { render action: :index }
       format.rss {
         if @user && params[:token].present?
           @title = "Upvoted comments feed for #{@user.username}"
@@ -326,15 +326,12 @@ class CommentsController < ApplicationController
   def threads
     if params[:user]
       @showing_user = User.find_by!(username: params[:user])
-      @heading = @title = "Threads for #{@showing_user.username}"
-      @cur_url = "/threads/#{@showing_user.username}"
+      @title = "Threads for #{@showing_user.username}"
     elsif !@user
-      # TODO: show all recent threads
-      return redirect_to "/login"
+      return redirect_to active_path
     else
       @showing_user = @user
-      @heading = @title = "Your Threads"
-      @cur_url = "/threads"
+      @title = "Your Threads"
     end
 
     thread_ids = @showing_user.recent_threads(

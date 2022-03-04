@@ -1,8 +1,8 @@
 class TagsController < ApplicationController
   before_action :require_logged_in_admin, except: [:index]
+  before_action :show_title_h1, only: [:new, :edit]
 
   def index
-    @cur_url = "/tags"
     @title = "Tags"
 
     @categories = Category.all.order('category asc').includes(:tags)
@@ -26,6 +26,7 @@ class TagsController < ApplicationController
   end
 
   def create
+    @title = 'Create Tag'
     tag = Tag.create(tag_params)
     if tag.valid?
       flash[:success] = "Tag #{tag.tag} has been created"

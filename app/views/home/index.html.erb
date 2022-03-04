@@ -1,67 +1,20 @@
-<% if @cur_url == "/recent" %>
-  <div class="box" id="leader">
-    <em>The <a href="/newest">newest</a> stories that have not yet reached the front page.</em>
-  </div>
-<% end %>
-<% if @domain.present? %>
-  <% if @domain.banned? %>
-    <div class="box" id="leader">
-      Banned
-      <%= time_ago_in_words_label(@domain.banned_at) %>
-      <% if @domain.banned_by_user %>
-        by <%= link_to @domain.banned_by_user.try(:username), @domain.banned_by_user %>:
-          <em><%= @domain.banned_reason %></em>
-      <% end %>
-    </div>
-  <% end %>
+<%= render partial: @above if @above %>
 
-  <div class="box" id="leader">
-    <%= "#{@domain.stories.count} story".pluralize(@domain.stories.count) %> from
-    <%= "#{@domain.n_submitters} submitter".pluralize(@domain.n_submitters) %>
-  </div>
-<% end %>
-<% if @categories.present? %>
-  <div class="box" id="leader">
-    Stories with <a href="/tags">tags</a> in the
-    <% @categories.each do |c| %>
-      <%= link_to c.category, category_path(c) %>
-    <% end %>
-    <%= "category".pluralize(@categories) %>
-
-    <%= render(partial: 'categories/multi_category_tip') if @categories.count == 1 %>
-  </div>
-<% end %>
-<% if @tags.present? %>
-  <div class="box" id="leader">
-    Stories <a href="/tags">tagged</a> as
-    <% @tags.each do |tag| %>
-      <%= tag_link(tag) %>
-
-      <% if tag.description.present? %>
-        &ndash; <%= tag.description %>
-      <% end %>
-    <% end %>
-
-    <%= render(partial: 'tags/multi_tag_tip') if @tags.count == 1 %>
-  </div>
-<% end %>
-
-<ol class="stories list <%= @cur_url == "/hidden" ? "show_hidden" : "" %>">
+<ol class="stories list <%= action_name == "hidden" ? "show_hidden" : "" %>">
   <%= render partial: "stories/listdetail", collection: @stories, as: :story %>
 </ol>
 
+<%= render partial: @below if @below %>
+
 <div class="morelink">
   <% if @page && @page > 1 %>
-    <a href="<%= @cur_url %><%= @cur_url == "/" ? "" : "/" %><%=
-      @page == 2 ? "" : "page/#{@page - 1}" %>">&lt;&lt; Page
-      <%= @page - 1 %></a>
+    <%= link_to raw("&lt;&lt; Page #{@page - 1}"), @root_path ? "/page/#{@page - 1}" : { controller: controller_name, action: action_name, page: @page - 1 } %>
   <% end %>
 
   <% if @show_more %>
     <% if @page && @page > 1 %>
       |
     <% end %>
-    <a href="<%= @cur_url %><%= @cur_url == "/" ? "" : "/" %>page/<%=
-      @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
+    <%= link_to raw("Page #{@page + 1} &gt;&gt;"), @root_path ? "/page/#{@page + 1}" : { controller: controller_name, action: action_name, page: @page + 1 } %>
   <% end %>
 </div>

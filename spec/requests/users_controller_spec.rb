@@ -7,7 +7,7 @@ describe 'users controller' do
 
       get "/u/#{user.username}"
 
-      expect(response.body).to include("User #{user.username}")
+      expect(response.body).to include(user.username)
     end
   end
 

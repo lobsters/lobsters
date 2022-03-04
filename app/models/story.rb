@@ -115,6 +115,7 @@ class Story < ApplicationRecord
     end
   end
 
+  COMMENTABLE_DAYS = 90
   FLAGGABLE_DAYS = 14
 
   # the lowest a score can go
@@ -141,8 +142,10 @@ class Story < ApplicationRecord
   # Dingbats, emoji, and other graphics https://www.unicode.org/charts/
   GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}-\u{27BF}\u{1F000}-\u{1F9FF}]/.freeze
 
-  attr_accessor :editing_from_suggestions, :editor, :fetching_ip, :is_hidden_by_cur_user,
-                :is_saved_by_cur_user, :moderation_reason, :previewing, :seen_previous, :vote
+  attr_accessor :editing_from_suggestions, :editor, :fetching_ip,
+                :is_hidden_by_cur_user, :latest_comment_id,
+                :is_saved_by_cur_user, :moderation_reason, :previewing,
+                :seen_previous, :vote
   attr_writer :fetched_response
 
   before_validation :assign_short_id_and_score, :on => :create
@@ -175,6 +178,12 @@ class Story < ApplicationRecord
     end
 
     check_tags
+  end
+
+  def accepting_comments?
+    !self.is_gone? &&
+      !self.previewing &&
+      (self.new_record? || self.created_at.after?(COMMENTABLE_DAYS.days.ago))
   end
 
   def already_posted_recently?

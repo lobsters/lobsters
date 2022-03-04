@@ -1,10 +1,6 @@
 <link rel="prefetch" href="<%= path_to_javascript 'application' %>" as="script" />
 
 <div class="box wide">
-  <div class="legend">
-    Login
-  </div>
-
   <% if Rails.application.read_only? %>
     <p>
     The site is currently in read-only mode for maintenance.

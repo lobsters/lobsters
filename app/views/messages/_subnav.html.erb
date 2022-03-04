@@ -1,0 +1,9 @@
+<% content_for :subnav do %>
+  <%= link_to_different_page('Unread',   replies_unread_path) %>
+  <%= link_to_different_page('All',      replies_path) %>
+  <%= link_to_different_page('Comments', replies_comments_path) %>
+  <%= link_to_different_page('Stories',  replies_stories_path) %>
+  |
+  <%= link_to_different_page 'Messages', messages_path %>
+  <%= link_to_different_page 'Sent', messages_sent_path %>
+<% end %>

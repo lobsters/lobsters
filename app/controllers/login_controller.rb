@@ -9,6 +9,7 @@ class LoginController < ApplicationController
   before_action :check_for_read_only_mode, :except => [:index]
   before_action :require_no_user_or_redirect,
                 only: [:index, :login, :forgot_password, :reset_password]
+  before_action :show_title_h1
 
   def logout
     if @user
@@ -105,6 +106,7 @@ class LoginController < ApplicationController
   end
 
   def reset_password
+    @title = "Reset Password"
     @found_user = User.where("email = ? OR username = ?", params[:email], params[:email]).first
 
     if !@found_user
@@ -131,7 +133,7 @@ class LoginController < ApplicationController
   end
 
   def set_new_password
-    @title = "Reset Password"
+    @title = "Set New Password"
 
     if (m = params[:token].to_s.match(/^(\d+)-/)) &&
        (Time.current - Time.zone.at(m[1].to_i)) < 24.hours
@@ -169,6 +171,7 @@ class LoginController < ApplicationController
   end
 
   def twofa
+    @title = "Login - Two Factor Authentication"
     if (tmpu = find_twofa_user)
       Rails.logger.info "  Authenticated as user #{tmpu.id} " <<
                         "(#{tmpu.username}), verifying TOTP"
@@ -179,6 +182,7 @@ class LoginController < ApplicationController
   end
 
   def twofa_verify
+    @title = "Login - Two Factor Authentication"
     if (tmpu = find_twofa_user) && tmpu.authenticate_totp(params[:totp_code])
       session[:u] = tmpu.session_token
       session.delete(:twofa_u)

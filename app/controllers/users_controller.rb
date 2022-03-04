@@ -5,9 +5,15 @@ class UsersController < ApplicationController
   before_action :flag_warning, only: [:show]
   before_action :require_logged_in_user, only: [:standing]
   before_action :only_user_or_moderator, only: [:standing]
+  before_action :show_title_h1, only: [:show]
 
   def show
-    @title = "User #{@showing_user.username}"
+    @title = @showing_user.username
+    if @showing_user.is_active?
+      @title_class = :inactive_user
+    elsif @showing_user.is_new?
+      @title_class = :new_user
+    end
 
     if @user.try(:is_moderator?)
       @mod_note = ModNote.new(user: @showing_user)
@@ -157,6 +163,7 @@ private
     @showing_user = User.find_by(username: params[:username])
 
     if @showing_user.nil?
+      @title = "User not found"
       render action: :not_found, status: 404
       return false
     end

@@ -1,8 +1,9 @@
 class SignupController < ApplicationController
   before_action :require_logged_in_user, :check_new_users, :check_can_invite, :only => :invite
-  before_action :check_for_read_only_mode
+  before_action :check_for_read_only_mode, :show_title_h1
 
   def index
+    @title = "Create an Account"
     if @user
       flash[:error] = "You are already signed up."
       return redirect_to "/"
@@ -10,7 +11,6 @@ class SignupController < ApplicationController
     if Rails.application.open_signups?
       redirect_to action: :invited, invitation_code: 'open' and return
     end
-    @title = "Signup"
   end
 
   def invite
@@ -18,6 +18,8 @@ class SignupController < ApplicationController
   end
 
   def invited
+    @title = "Create an Account"
+
     if @user
       flash[:error] = "You are already signed up."
       ModNote.tattle_on_invited(@user, params[:invitation_code])

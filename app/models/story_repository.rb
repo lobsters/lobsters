@@ -24,6 +24,18 @@ class StoryRepository
     Story.base(@user).filter_tags(@params[:exclude_tags] || []).order(id: :desc)
   end
 
+  def active
+    Story.base(@user)
+      .filter_tags(@params[:exclude_tags] || [])
+      .select('stories.*, (
+        select max(comments.id)
+        from comments
+        where comments.story_id = stories.id
+      ) as latest_comment_id')
+      .where('created_at >= ?', 3.days.ago)
+      .order('latest_comment_id desc')
+  end
+
   def newest_by_user(user)
     if @user == user
       stories = Story.includes(:tags).not_deleted.left_joins(:merged_stories)

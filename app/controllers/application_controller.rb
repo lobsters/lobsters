@@ -15,12 +15,17 @@ class ApplicationController < ActionController::Base
   # (lobster_trap) which is sent even to logged-out visitors
   CACHE_PAGE = proc { false && @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
 
-  rescue_from ActionController::UnknownFormat, ActionView::MissingTemplate do
+  rescue_from ActionController::UnknownFormat do
     render plain: '404 Not Found', status: :not_found, content_type: 'text/plain'
   end
   rescue_from ActionDispatch::Http::MimeNegotiation::InvalidType do
     render plain: 'fix the mime type in your HTTP_ACCEPT header',
       status: :bad_request, content_type: 'text/plain'
+  end
+
+  def agent_is_spider?
+    ua = request.env["HTTP_USER_AGENT"].to_s
+    (ua == "" || ua.match(/(Google|bing|Slack|Twitter)bot|Slurp|crawler|Feedly|FeedParser|RSS/))
   end
 
   def authenticate_user
@@ -53,6 +58,12 @@ class ApplicationController < ActionController::Base
     true
   end
 
+  def find_user_from_rss_token
+    if !@user && request[:format] == "rss" && params[:token].to_s.present?
+      @user = User.where(:rss_token => params[:token].to_s).first
+    end
+  end
+
   def flag_warning
     return false if Rails.env.development? # expensive because Rails doesn't cache in dev
     @flag_warning_int ||= time_interval('1m')
@@ -65,6 +76,13 @@ class ApplicationController < ActionController::Base
     if @user && @user.is_admin?
       Rack::MiniProfiler.authorize_request
     end
+  end
+
+  def prepare_exception_notifier
+    exception_data = {}
+    exception_data[:username] = @user.username unless @user.nil?
+
+    request.env["exception_notifier.exception_data"] = exception_data
   end
 
   # https://web.archive.org/web/20180108083712/http://umaine.edu/lobsterinstitute/files/2011/12/LobsterColorsWeb.pdf
@@ -151,27 +169,13 @@ class ApplicationController < ActionController::Base
     return redirect_to "/" if @user
   end
 
+  def show_title_h1
+    @title_h1 = true
+  end
+
   def tags_filtered_by_cookie
     @_tags_filtered ||= Tag.where(
       :tag => cookies[TAG_FILTER_COOKIE].to_s.split(",")
     )
-  end
-
-  def agent_is_spider?
-    ua = request.env["HTTP_USER_AGENT"].to_s
-    (ua == "" || ua.match(/(Google|bing|Slack|Twitter)bot|Slurp|crawler|Feedly|FeedParser|RSS/))
-  end
-
-  def find_user_from_rss_token
-    if !@user && request[:format] == "rss" && params[:token].to_s.present?
-      @user = User.where(:rss_token => params[:token].to_s).first
-    end
-  end
-
-  def prepare_exception_notifier
-    exception_data = {}
-    exception_data[:username] = @user.username unless @user.nil?
-
-    request.env["exception_notifier.exception_data"] = exception_data
   end
 end

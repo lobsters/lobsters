@@ -1,22 +1,12 @@
-<%= render partial: 'users/flag_warning' if @show_flag_warning && @showing_user == @user %>
+<%= render partial: 'users/flag_warning' if @showing_user == @user && @show_flag_warning %>
+
+<% content_for :subnav do %>
+  <% if @user && @showing_user.is_active? && @showing_user != @user %>
+    (<a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>)
+  <% end %>
+<% end %>
 
 <div class="box wide">
-  <div class="legend">
-    <% if !@showing_user.is_active? %>
-      <span class="inactive_user">
-    <% elsif @showing_user.is_new? %>
-      <span class="new_user">
-    <% else %>
-      <span>
-    <% end %>
-      <%= @showing_user.username %>
-    </span>
-
-    <% if @user && @showing_user.is_active? %>
-      (<a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>)
-    <% end %>
-  </div>
-
   <% if @showing_user.is_active? %>
     <div id="gravatar">
       <%= avatar_img(@showing_user, 100) %>

@@ -1,0 +1,11 @@
+<div class="box">
+  Stories <a href="/tags">tagged</a> as
+  <% @tags.each do |tag| %>
+    <%= tag_link(tag) %>
+
+    <% if tag.description.present? %>
+      &ndash; <%= tag.description %>
+    <% end %>
+  <% end %>
+</div>
+

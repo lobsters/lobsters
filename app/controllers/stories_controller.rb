@@ -9,10 +9,10 @@ class StoriesController < ApplicationController
   before_action :find_user_story, :only => [:destroy, :edit, :undelete, :update]
   before_action :find_story!, :only => [:suggest, :submit_suggestions]
   around_action :track_story_reads, only: [:show], if: -> { @user.present? }
+  before_action :show_title_h1, only: [:new, :edit, :suggest]
 
   def create
     @title = "Submit Story"
-    @cur_url = "/stories/new"
 
     @story = Story.new(user: @user)
     @story.attributes = story_params
@@ -74,7 +74,6 @@ class StoriesController < ApplicationController
 
   def new
     @title = "Submit Story"
-    @cur_url = "/stories/new"
 
     @story = Story.new(user_id: @user.id)
     @story.fetching_ip = request.remote_ip
@@ -181,6 +180,7 @@ class StoriesController < ApplicationController
   end
 
   def suggest
+    @title = 'Suggest Story Changes'
     if !@story.can_have_suggestions_from_user?(@user)
       flash[:error] = "You are not allowed to offer suggestions on that story."
       return redirect_to @story.comments_path

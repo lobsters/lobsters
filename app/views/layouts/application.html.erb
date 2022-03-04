@@ -44,66 +44,62 @@
   <% end %>
 </head>
 <body>
-  <header>
-    <div id="headerleft">
-      <a id="l_holder" style="<%= @traffic_style %>"
-        href="/" title="<%= Rails.application.name %> (Current traffic: <%=
-        @traffic_intensity.to_i %>%)"></a>
+  <header id="nav">
+    <a id="logo" style="<%= @traffic_style %>" href="/" title="<%= Rails.application.name %> (Current traffic: <%= @traffic_intensity.to_i %>%)"></a>
 
-      <% if @cur_url.present? && !header_links.keys.include?(@cur_url) && @heading.present? %>
-        <span id="headertitle">
-          <a href="<%= @cur_url %>"><%= @heading %></a>
-        </span>
-      <% end %>
+    <div class="navholder">
+      <nav class="links">
+        <%= link_to 'Active', active_path %>
+        <%= link_to 'Recent', recent_path %>
+        <%= link_to 'Comments', comments_path %>
 
-      <span class="headerlinks">
-        <% header_links.each do |u,v| %>
-          <a href="<%= u %>" class="<%= v[:class].join(" ") %>"><%=
-            v[:title] %></a>
+        <% if @user && @user.can_submit_stories? %>
+          <%= link_to 'Submit', new_story_path %>
         <% end %>
-        <% if !@user && Rails.application.open_signups? %>
-          <strong><a href="/invitations/open" class="signup-text">Sign Up Now</a></strong>
-        <% end %>
-      </span>
-    </div>
 
-    <div id="headerright">
-      <span class="headerlinks">
+        <%= link_to 'Search', search_path %>
+
+
         <% if @user %>
-          <% if @user.unread_replies_count > 0 %>
-            <%= link_to "#{@user.unread_replies_count} Reply".pluralize(@user.unread_replies_count),
-                  replies_unread_path, class: 'new_messages' %>
+          <% if @user.inbox_count > 0 %>
+            <%= link_to raw("Inbox&nbsp;<span class='inbox_unread'>#{@user.inbox_count}</span>"), inbox_path, class: 'inbox corner' %>
           <% else %>
-            <%= link_to 'Replies', replies_path %>
+            <%= link_to "Inbox", inbox_path, class: 'inbox corner' %>
           <% end %>
 
-          <% if @user.unread_message_count > 0 %>
-            <%= link_to "#{@user.unread_message_count} Message".pluralize(@user.unread_message_count),
-                  messages_path, class: 'new_messages' %>
-          <% else %>
-            <%= link_to 'Messages', messages_path %>
-          <% end %>
-
-          <%= link_to @user.username, settings_path %>
-          <%= link_to "(#{@user.karma})", settings_path, class: 'karma' %>
-
+          <%= link_to 'Threads', threads_path %>
+          <%= link_to 'Saved', saved_path %>
+          <%= link_to raw("#{@user.username}&nbsp;<span class='karma'>(#{@user.karma})</span>"), settings_path %>
         <% else %>
-          <%= link_to 'Login', login_path %>
+          <%= link_to 'Login', login_path, class: 'corner' %>
         <% end %>
-      </span>
+      </nav>
     </div>
 
-    <div class="clear"></div>
+    <nav class="corner">
+      <% if @user %>
+        <% if @user.inbox_count > 0 %>
+          <%= link_to raw("&#9993;&nbsp;<span class='inbox_unread'>#{@user.inbox_count}</span>"), inbox_path, class: 'inbox' %>
+        <% else %>
+          <%= link_to raw("&#9993;"), inbox_path, class: 'inbox' %>
+        <% end %>
+      <% else %>
+        <%= link_to 'Login', login_path, class: 'corner' %>
+      <% end %>
+    </nav>
   </header>
 
-  <% if content_for? :nav %>
-    <div class="box wide">
-      <%= yield :nav %>
-    </div>
-    <div class="clear"></div>
+  <% if content_for? :subnav %>
+    <header id="subnav">
+      <%= yield :subnav %>
+    </header>
   <% end %>
 
   <div id="inside">
+    <% if @title.present? && @title_h1 %>
+      <h1 class="<%= @title_class %>"><%= @title %></h1>
+    <% end %>
+
     <% [ :error, :success, :notice ].each do |f| %>
       <% if flash[f].present? %>
         <div class="flash-<%= f %>"><%= flash[f] %></div>
@@ -111,31 +107,23 @@
     <% end %>
 
     <%= yield %>
-
-    <footer>
-      <% if lookup_context.template_exists?("footer", "layouts", true) %>
-        <%= render :partial => "layouts/footer" %>
-      <% else %>
-        <% if !@user && Rails.application.open_signups? %>
-          <a href="/invitations/open">Join <%= Rails.application.name %></a>
-        <% end %>
-        <a href="/moderations">Moderation Log</a>
-        <% if @user && @user.can_see_invitation_requests? &&
-        (iqc = InvitationRequest.verified_count) > 0 %>
-          <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
-        <% end %>
-        <% if @user && @user.is_moderator? &&
-        (hrc = HatRequest.count) > 0 %>
-          <a href="/hats/requests">Hat Requests (<%= hrc %>)</a>
-        <% else %>
-          <a href="/hats">Hats</a>
-        <% end %>
-        <a href="/chat">Chat</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/about">About</a>
-      <% end %>
-    </footer>
-    <div class="clear"></div>
   </div>
+
+  <footer>
+    <%= link_to 'About', about_path %>
+    <% if !@user && Rails.application.open_signups? %>
+      <a href="/invitations/open">Join <%= Rails.application.name %></a>
+    <% end %>
+    <% if @user && @user.can_see_invitation_requests? &&
+          (iqc = InvitationRequest.verified_count) > 0 %>
+      <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
+    <% end %>
+    <%= link_to 'Tags', tags_path %>
+    <% if @user && @user.is_moderator? && (hrc = HatRequest.count) > 0 %>
+      <%= link_to "#{hrc} Hat Requests", hats_requests_path %>
+    <% end %>
+    <%= link_to 'Filter', filters_path %>
+    <%= link_to 'Moderation Log', moderations_path %>
+  </footer>
 </body>
 </html>

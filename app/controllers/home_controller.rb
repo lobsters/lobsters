@@ -124,6 +124,7 @@ class HomeController < ApplicationController
     }
 
     @title = "Recent Stories"
+    @above = 'stories/subnav'
     @below = 'recent'
 
     # our list is unstable because upvoted stories get removed, so point at /newest.rss

@@ -38,7 +38,7 @@ class Story < ApplicationRecord
 
   scope :base, ->(user) {
     q = includes(:tags).unmerged
-    user && user.is_moderator? ? q : q.not_deleted
+    user && user.is_moderator? ? q.preload(:suggested_taggings, :suggested_titles) : q.not_deleted
   }
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, -> { where(is_deleted: false) }
@@ -524,13 +524,7 @@ class Story < ApplicationRecord
   end
 
   def has_suggestions?
-    # perf: save the round trip on a second query, equivalent to the below:
-    # self.suggested_taggings.any? || self.suggested_titles.any?
-    Story.joins(:suggested_taggings, :suggested_titles)
-         .where('stories.id = ? and
-                 (suggested_taggings.id is not null or suggested_titles.id is not null)
-                ', self.id)
-         .exists?
+    self.suggested_taggings.any? || self.suggested_titles.any?
   end
 
   def hider_count

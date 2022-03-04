@@ -245,6 +245,7 @@ class HomeController < ApplicationController
     else
       @title = "Top Stories of the Past #{length[:intv]}"
     end
+    @above = 'stories/subnav'
 
     @rss_link ||= {
       :title => "RSS 2.0 - " + @title,

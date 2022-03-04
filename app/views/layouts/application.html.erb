@@ -49,15 +49,15 @@
 
     <div class="navholder">
       <nav class="links">
-        <%= link_to 'Active', active_path %>
-        <%= link_to 'Recent', recent_path %>
-        <%= link_to 'Comments', comments_path %>
+        <%= link_to_different_page 'Active', active_path %>
+        <%= link_to_different_page 'Recent', recent_path %>
+        <%= link_to_different_page 'Comments', comments_path %>
 
         <% if @user && @user.can_submit_stories? %>
-          <%= link_to 'Submit', new_story_path %>
+          <%= link_to_different_page 'Submit', new_story_path %>
         <% end %>
 
-        <%= link_to 'Search', search_path %>
+        <%= link_to_different_page 'Search', search_path %>
 
 
         <% if @user %>
@@ -67,11 +67,11 @@
             <%= link_to "Inbox", inbox_path, class: 'inbox corner' %>
           <% end %>
 
-          <%= link_to 'Threads', threads_path %>
-          <%= link_to 'Saved', saved_path %>
-          <%= link_to raw("#{@user.username}&nbsp;<span class='karma'>(#{@user.karma})</span>"), settings_path %>
+          <%= link_to_different_page 'Threads', threads_path %>
+          <%= link_to_different_page 'Saved', saved_path %>
+          <%= link_to_different_page raw("#{@user.username}&nbsp;<span class='karma'>(#{@user.karma})</span>"), settings_path %>
         <% else %>
-          <%= link_to 'Login', login_path, class: 'corner' %>
+          <%= link_to_different_page 'Login', login_path, class: 'corner' %>
         <% end %>
       </nav>
     </div>

@@ -524,20 +524,23 @@ header#nav nav.links {
 }
 header#nav a, header#subnav a {
 	color: var(--color-fg-contrast-6);
-	margin: 0 0.5rem;
+	margin: 0 0.25rem;
 	text-decoration: none;
 }
 header#subnav {
 	box-sizing: border-box;
 	min-height: 2em;
 	line-height: 1em;
-	padding: 0.5rem 0;
+	padding: 0.5rem 0.25rem;
 	text-align: right;
 	width: 100%;
 }
-header#subnav a.current_page {
+header#subnav a.current_page:last-child {
+	margin-right: 0.375rem;
+}
+header a.current_page {
 	border-bottom: 0.25em solid var(--color-fg-accent);
-	padding: 0 0.25em 0.25em;
+	padding: 0 0.25rem 0.25rem;
 }
 header#nav #logo, header#nav #logo ~ a {
 	margin-left: 0;
@@ -1510,6 +1513,9 @@ div.flash-success h2 {
 	header#nav nav.corner {
 		display: none;
 	}
+	header#subnav a:last-child {
+		margin-right: 0.5rem;
+	}
 
 	div#inside {
 		margin-left: calc(
@@ -1592,6 +1598,9 @@ div.flash-success h2 {
 	}
 	header#subnav {
 		background-color: var(--color-box-bg-shaded);
+	}
+	header#subnav a:last-child {
+		margin-right: 0.75rem;
 	}
 
 	header#nav .user {

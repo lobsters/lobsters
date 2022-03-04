@@ -24,7 +24,7 @@ class AboutController < ApplicationController
   def chat
     begin
       @title = "Chat"
-      render action=> "chat"
+      render action: "chat"
     rescue ActionView::MissingTemplate
       render html: ("<h1>Don't speak. I know what you're thinking.</h1>"),
         layout: 'application'

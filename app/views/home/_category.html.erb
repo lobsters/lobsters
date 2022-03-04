@@ -5,6 +5,6 @@
   <% end %>
   <%= "category".pluralize(@categories) %>
 
-  <%= render(partial: 'categories/multi_category_tip') if @categories.count == 1 %>
+  <%= render(partial: 'categories/multi_category_tip') if @categories.length == 1 %>
 </div>
 

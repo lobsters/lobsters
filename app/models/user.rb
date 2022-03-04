@@ -581,14 +581,6 @@ class User < ApplicationRecord
     true
   end
 
-  def undeleted_received_messages
-    received_messages.where(:deleted_by_recipient => false).order('id asc')
-  end
-
-  def undeleted_sent_messages
-    sent_messages.where(:deleted_by_author => false).order('id asc')
-  end
-
   def unread_message_count
     @unread_message_count ||= Keystore.value_for("user:#{self.id}:unread_messages").to_i
   end

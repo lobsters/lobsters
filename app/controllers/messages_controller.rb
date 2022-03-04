@@ -6,7 +6,7 @@ class MessagesController < ApplicationController
 
   def index
     @title = "Private Messages"
-    @messages = @user.undeleted_received_messages
+    @messages = Message.inbox(@user).load
 
     respond_to do |format|
       format.html {
@@ -28,7 +28,7 @@ class MessagesController < ApplicationController
 
   def sent
     @title = "Sent Messages"
-    @messages = @user.undeleted_sent_messages
+    @messages = Message.outbox(@user).load
 
     respond_to do |format|
       format.html {
@@ -53,7 +53,6 @@ class MessagesController < ApplicationController
     @new_message.author_user_id = @user.id
 
     @direction = :out
-    @messages = @user.undeleted_received_messages
 
     if @new_message.save
       if @user.is_moderator? && @new_message.mod_note
@@ -63,6 +62,7 @@ class MessagesController < ApplicationController
                         @new_message.recipient.username.to_s << "."
       return redirect_to "/messages"
     else
+      @messages = Message.inbox(@user).load
       render :action => "index"
     end
   end

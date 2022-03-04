@@ -40,6 +40,7 @@ light = <<-LIGHT
 	/* explicit view colors */
 	--color-box-bg: #fff;
 	--color-box-bg-shaded: #eee;
+	--color-box-bg-shaded-rgb: 238, 238, 238;
 	--color-box-border: #ccc;
 	--color-box-border-focus: #808080;
 
@@ -117,6 +118,7 @@ dark = <<-DARK
 	/* explicit view colors */
 	--color-box-bg: #141414;
 	--color-box-bg-shaded: #202020;
+	--color-box-bg-shaded: 32, 32, 32;
 	--color-box-border: #303030;
 	--color-box-border-focus: #808080;
 
@@ -1583,12 +1585,12 @@ div.flash-success h2 {
 		z-index: 1;
 	}
 	header#nav .navholder:before {
-		background: linear-gradient(to right, var(--color-box-bg-shaded), transparent);
+		background: linear-gradient(to right, var(--color-box-bg-shaded), rgba(var(--color-box-bg-shaded-rgb), 0));
 		left: -1em;
 	}
 	header#nav .navholder:after {
 		right: 0px;
-		background: linear-gradient(to right, transparent, var(--color-box-bg-shaded));
+		background: linear-gradient(to right, rgba(var(--color-box-bg-shaded-rgb), 0), var(--color-box-bg-shaded));
 	}
 	header#nav nav.links > .corner {
 		display: none;

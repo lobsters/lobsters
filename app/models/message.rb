@@ -23,13 +23,13 @@ class Message < ApplicationRecord
     end
   end
 
-  scope :inbox, -> (user) {
+  scope :inbox, ->(user) {
     where(
       recipient: user,
       deleted_by_recipient: false,
     ).preload(:author, :hat, :recipient).order('id asc')
   }
-  scope :outbox, -> (user) {
+  scope :outbox, ->(user) {
     where(
       author: user,
       deleted_by_author: false,

@@ -215,6 +215,8 @@ Style/MethodDefParentheses:
   Enabled: false
 Style/MultilineBlockChain:
   Enabled: false
+Style/MultilineMemoization:
+  Enabled: false
 Style/MultilineTernaryOperator:
   Enabled: false
 Style/NegatedIf:

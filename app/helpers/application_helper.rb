@@ -34,11 +34,11 @@ module ApplicationHelper
 
   # limitation: this can't handle generating links based on a hash of options,
   # like { controller: ..., action: ... }
-  def link_to_different_page(text, path)
+  def link_to_different_page(text, path, options = {})
     current = request.path.sub(/\/page\/\d+$/, '')
     path.sub!(/\/page\/\d+$/, '')
-    c = :current_page if current == path
-    link_to text, path, class: c
+    options[:class] = :current_page if current == path
+    link_to text, path, options
   end
 
   def page_numbers_for_pagination(max, cur)

@@ -592,7 +592,7 @@ class User < ApplicationRecord
 
   def unread_replies_count
     @unread_replies_count ||=
-      Rails.cache.fetch("user:{self.id}:unread_replies", expires_in: 2.minutes) {
+      Rails.cache.fetch("user:#{self.id}:unread_replies", expires_in: 2.minutes) {
         ReplyingComment.where(user_id: self.id, is_unread: true).count
       }
   end

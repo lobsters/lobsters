@@ -149,7 +149,7 @@ class Comment < ApplicationRecord
       end
     end
 
-    Rails.cache.delete("user:{@user.id}:unread_replies") if clear_replies_cache
+    Rails.cache.delete("user:#{@user.id}:unread_replies") if clear_replies_cache
 
     ordered
   end

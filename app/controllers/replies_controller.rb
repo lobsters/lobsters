@@ -59,11 +59,11 @@ private
   end
 
   def clear_unread_replies_cache
-    Rails.cache.delete("user:{@user.id}:unread_replies")
+    Rails.cache.delete("user:#{@user.id}:unread_replies")
   end
 
   def zero_unread_replies_cache
-    Rails.cache.write("user:{@user.id}:unread_replies", 0)
+    Rails.cache.write("user:#{@user.id}:unread_replies", 0)
   end
 
   def set_page

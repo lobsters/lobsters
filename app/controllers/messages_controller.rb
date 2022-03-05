@@ -86,7 +86,7 @@ class MessagesController < ApplicationController
       @message.has_been_read = true
       @message.save
     end
-    Rails.cache.delete("user:{@user.id}:unread_replies")
+    Rails.cache.delete("user:#{@user.id}:unread_replies")
   end
 
   def destroy

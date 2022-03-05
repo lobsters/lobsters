@@ -79,6 +79,9 @@ class Comment < ApplicationRecord
     self.comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
       errors.add(:base, "Wow!  A blue car!")
 
+    self.comment.to_s.strip.match(/\A([[[:upper:]][[:punct:]]] )+[[[:upper:]][[:punct:]]]?$\z/) &&
+      errors.add(:base, "D O N ' T")
+
     self.comment.to_s.strip.match(/\A(me too|nice)([\.!])?\z/i) &&
       errors.add(:base, "Please just upvote the parent post instead.")
 

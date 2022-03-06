@@ -139,7 +139,10 @@ class StoriesController < ApplicationController
         .where("action LIKE 'deleted story%'")
         .order('id desc')
         .first
-      return render action: 'missing', status: 404
+      respond_to do |format|
+        format.html { return render action: 'missing', status: 404 }
+        format.json { raise ActiveRecord::RecordNotFound }
+      end
     end
 
     @comments = get_arranged_comments_from_cache(params[:id]) do

@@ -2,7 +2,7 @@
 
 <% content_for :subnav do %>
   <% if @user && @showing_user.is_active? && @showing_user != @user %>
-    (<a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>)
+    <a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>
   <% end %>
 <% end %>
 

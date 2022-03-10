@@ -136,7 +136,7 @@ class StoriesController < ApplicationController
     if !@story.can_be_seen_by_user?(@user)
       @moderation = Moderation
         .where(story: @story, comment: nil)
-        .where("action LIKE 'deleted story%'")
+        .where("action LIKE '%deleted story%'")
         .order('id desc')
         .first
       respond_to do |format|

@@ -133,14 +133,16 @@ class StoriesController < ApplicationController
       end
     end
 
-    if !@story.can_be_seen_by_user?(@user)
+    if @story.is_gone?
       @moderation = Moderation
         .where(story: @story, comment: nil)
         .where("action LIKE '%deleted story%'")
         .order('id desc')
         .first
+    end
+    if !@story.can_be_seen_by_user?(@user)
       respond_to do |format|
-        format.html { return render action: 'missing', status: 404 }
+        format.html { return render action: '_missing', status: 404 }
         format.json { raise ActiveRecord::RecordNotFound }
       end
     end

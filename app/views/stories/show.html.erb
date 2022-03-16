@@ -1,3 +1,8 @@
+<% if @user && @user.is_moderator? && @story.is_gone? %>
+  <%= render partial: 'stories/missing' %>
+  <hr class="mod">
+  <p>Full display for submitter and mods:</p>
+<% end %>
 <ol class="stories">
   <%= render :partial => "stories/listdetail",
     :locals => { :story => @story, :single_story => true } %>

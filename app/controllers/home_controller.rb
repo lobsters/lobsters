@@ -183,10 +183,35 @@ class HomeController < ApplicationController
     end
   end
 
-  def tagged
+  def single_tag
+    @tag = Tag.find_by!(tag: params[:tag])
+
+    @stories, @show_more = get_from_cache(tag: @tag.tag) do
+      paginate stories.tagged([@tag])
+    end
+
+    @title = [@tag.tag, @tag.description].compact.join(' - ')
+    @above = 'single_tag'
+    @related = Rails.cache.fetch("related_#{@tag.tag}", expires_in: 1.day) {
+      Tag.related(@tag)
+    }
+    @below = 'tags/multi_tag_tip'
+
+    @rss_link = {
+      title: "RSS 2.0 - Tagged #{@tag.tag} (#{@tag.description})",
+      href: "/t/#{@tag.tag}.rss",
+    }
+
+    respond_to do |format|
+      format.html { render :action => "index" }
+      format.rss { render :action => "rss", :layout => false }
+      format.json { render :json => @stories }
+    end
+  end
+
+  def multi_tag
     tag_params = params[:tag].split(',')
     @tags = Tag.where(tag: tag_params)
-
     raise ActiveRecord::RecordNotFound unless @tags.length == tag_params.length
 
     @stories, @show_more = get_from_cache(tags: tag_params.sort.join(',')) do
@@ -196,8 +221,7 @@ class HomeController < ApplicationController
     @title = @tags.map do |tag|
       [tag.tag, tag.description].compact.join(' - ')
     end.join(' ')
-    @above = 'tagged'
-    @below = 'tags/multi_tag_tip' if @tags.count == 1
+    @above = 'multi_tag'
 
     @rss_link = {
       title: "RSS 2.0 - Tagged #{tags_with_description_for_rss(@tags)}",

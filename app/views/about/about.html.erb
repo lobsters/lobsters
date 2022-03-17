@@ -105,10 +105,11 @@
     suggest edits to story titles and tags,
     resubmit links that have been seen before,
     or
-    use tags for meta discussions or that are prone to off-topic stories
+    <span id="new-user-tags">use tags for meta discussions or that are prone to off-topic stories
       (<%= raw(
         Tag.not_permitted_for_new_users.pluck(:tag).map { |t| link_to t, tag_path(t) }.join(' ')
       ) %>).
+    </span>
   </p>
 
   <p>

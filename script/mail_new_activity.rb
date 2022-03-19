@@ -69,7 +69,10 @@ if __FILE__ == $PROGRAM_NAME
   # Paranoia: only search back three days so that if last_story_id is oddly low we don't start
   # sending every story from the beginning of time, or if mailing list mode breaks for more than a
   # few days we won't bury them in email.
-  Story.where("id > ? AND is_deleted = ? AND created_at >= ?", last_story_id, false, 3.days.ago).order(:id).each do |s|
+  Story
+    .where("id > ? AND is_deleted = ? AND created_at >= ?", last_story_id, false, 3.days.ago)
+    .order(:id)
+    .each do |s|
     StoryText.fill_cache!(s)
 
     mailing_list_users.each do |u|

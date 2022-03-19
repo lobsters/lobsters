@@ -10,7 +10,7 @@ class Keystore < ApplicationRecord
   end
 
   def self.value_for(key)
-    self.where(key: 'traffic:intensity').limit(1).pluck(:value).first
+    self.where(key: key).limit(1).pluck(:value).first
   end
 
   def self.put(key, value)

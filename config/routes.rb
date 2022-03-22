@@ -66,7 +66,7 @@ Rails.application.routes.draw do
     :as => "set_new_password", :via => [:get, :post]
 
   get "/categories/:category" => "home#category", :as => :category
-  get "/t/:tag" => "home#single_tag", :as => "tag", :constraints => { tag: /[^,]+/ }
+  get "/t/:tag" => "home#single_tag", :as => "tag", :constraints => { tag: /[^,\.]+/ }
   get "/t/:tag" => "home#multi_tag", :as => "multi_tag"
   get "/t/:tag/page/:page" => "home#tagged"
 

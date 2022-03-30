@@ -5,8 +5,17 @@ jobs:
     environment: production
     runs-on: ubuntu-latest
 
+    services:
+      mariadb:
+        image: mariadb:10.5
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: lobsters_dev
+        ports:
+          - 3306:3306
+
     env:
-      DATABASE_URL: mysql2://root:root@localhost/lobsters_dev
+      DATABASE_URL: mysql2://root:root@127.0.0.1/lobsters_dev
       RAILS_ENV: test
 
     steps:
@@ -14,13 +23,8 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: Set up MySQL
-        run: |
-          sudo /etc/init.d/mysql start
       - name: Prepare database
-        run: |
-          ./bin/rails db:create
-          ./bin/rails db:schema:load
+        run: ./bin/rails db:schema:load
       - name: Run tests
         run: bundle exec rspec
       - name: Run linters

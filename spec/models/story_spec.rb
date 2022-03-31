@@ -405,4 +405,40 @@ describe Story do
       end
     end
   end
+
+  describe "suggestions" do
+    it "does not auto-accept suggestion if quorum is not met" do
+      story = create(:story, :title => "hello", :url => "http://example.com/")
+      user = create(:user)
+
+      story.save_suggested_title_for_user!("new title", user)
+
+      expect(story.title).to eq("hello")
+    end
+
+    it "auto-accept suggestion once quorum is met" do
+      story = create(:story, :title => "hello", :url => "http://example.com/")
+      user1 = create(:user)
+      user2 = create(:user)
+
+      story.save_suggested_title_for_user!("new title", user1)
+      story.save_suggested_title_for_user!("new title", user2)
+
+      expect(story.title).to eq("new title")
+    end
+
+    it "notifies story creator upon auto-accepted suggestion" do
+      creator = create(:user)
+      story = create(:story, :user => creator, :title => "hello", :url => "http://example.com/")
+      user1 = create(:user)
+      user2 = create(:user)
+
+      expect(creator.received_messages.length).to eq(0)
+
+      story.save_suggested_title_for_user!("new title", user1)
+      story.save_suggested_title_for_user!("new title", user2)
+
+      expect(creator.received_messages.length).to eq(1)
+    end
+  end
 end

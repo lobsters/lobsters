@@ -438,7 +438,7 @@ describe Story do
       story.save_suggested_title_for_user!("new title", user1)
       story.save_suggested_title_for_user!("new title", user2)
 
-      expect(creator.received_messages.length).to eq(1)
+      expect(creator.reload.received_messages.length).to eq(1)
     end
   end
 end

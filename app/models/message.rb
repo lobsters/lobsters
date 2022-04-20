@@ -6,7 +6,8 @@ class Message < ApplicationRecord
   belongs_to :author,
              :class_name => "User",
              :foreign_key => "author_user_id",
-             :inverse_of => :sent_messages
+             :inverse_of => :sent_messages,
+             :optional => true
   belongs_to :hat,
              :optional => true
 

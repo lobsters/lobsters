@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_07_033514) do
+ActiveRecord::Schema.define(version: 2022_03_31_165136) do
 
   create_table "categories", charset: "utf8mb4", force: :cascade do |t|
     t.string "category"
@@ -119,7 +119,7 @@ ActiveRecord::Schema.define(version: 2022_02_07_033514) do
 
   create_table "messages", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", force: :cascade do |t|
     t.datetime "created_at"
-    t.bigint "author_user_id", null: false, unsigned: true
+    t.bigint "author_user_id", unsigned: true
     t.bigint "recipient_user_id", null: false, unsigned: true
     t.boolean "has_been_read", default: false
     t.string "subject", limit: 100

@@ -70,7 +70,8 @@ Rails.application.routes.draw do
   get "/t/:tag" => "home#multi_tag", :as => "multi_tag"
   get "/t/:tag/page/:page" => "home#tagged"
 
-  get "/domain/:name" => "home#for_domain", :as => "domain", :constraints => { name: /[^\/]+/ }
+  get "/domain/:name(.:format)" => "home#for_domain", :as => "domain",
+    :constraints => { name: /[^\/]+?/, format: /json|rss/ }
   get "/domain/:name/page/:page" => "home#for_domain", :constraints => { name: /[^\/]+/ }
 
   get "/search" => "search#index"

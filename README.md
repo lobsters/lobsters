@@ -17,6 +17,8 @@ As a volunteer project we're reluctant to take on work that's not useful to our 
 
 We'd love to have your help.
 Please see the [CONTRIBUTING](https://github.com/lobsters/lobsters/blob/master/CONTRIBUTING.md) file for details.
+If you have questions, there is usually someone in [our chat room](https://lobste.rs/chat) who's familiar with the code.
+
 
 #### Initial setup
 
@@ -87,8 +89,6 @@ running tests:
 * On your production server, copy `config/initializers/production.rb.sample`
   to `config/initalizers/production.rb` and customize it with your site's
   `domain` and `name`. (You don't need this on your dev machine).
-
-* Put your site's custom CSS in `app/assets/stylesheets/local`.
 
 * Seed the database to create an initial administrator user, the `inactive-user`, and at least one tag:
 

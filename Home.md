@@ -23,7 +23,7 @@ Other sites using the Lobsters [codebase](https://github.com/lobsters/lobsters):
 * [MLN.dev](https://mln.dev/) - Machine learning
 * [DataTau](https://datatau.net/) - Data science newsboard
 * [Khosenk](https://խօսենք.ցանցառներ.հայ/) - computing-focused (hy)
-
+* [LeftRudder](https://leftrudder.net/) - Aviation
 
 ## Cousin Sites
 

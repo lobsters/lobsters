@@ -180,6 +180,7 @@ class Comment < ApplicationRecord
       :is_moderated,
       :score,
       :flags,
+      { :parent_comment => self.parent_comment && self.parent_comment.short_id },
       { :comment => (self.is_gone? ? "<em>#{self.gone_text}</em>" : :markeddown_comment) },
       { :comment_plain => (self.is_gone? ? self.gone_text : :comment) },
       :url,

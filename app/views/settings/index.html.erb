@@ -1,22 +1,19 @@
-<div class="box wide">
-  <div class="legend right">
-    <a href="/filters">Filtered Tags</a>
-    |
-    <%= link_to "Logout", { :controller => "login", :action => "logout" },
-      :data => { :confirm => "Are you sure you want to logout?" },
-      :method => "post" %>
-  </div>
-  <div class="legend">
-    Account Settings (<a href="/u/<%= @user.username %>">View Profile</a>)
-  </div>
+<% content_for :subnav do %>
+  <a href="/u/<%= @user.username %>">Public Profile</a>
+  <a href="/filters">Filtered Tags</a> |
+  <%= link_to "Logout", { :controller => "login", :action => "logout" },
+    :data => { :confirm => "Are you sure you want to logout?" },
+    :method => "post" %>
+<% end %>
 
+<div class="box wide">
   <%= form_with model: @edit_user, url: settings_path, method: :post, id: 'edit_user', local: true do |f| %>
     <%= errors_for f.object %>
 
     <div class="boxline">
       <%= f.label :username, "Username:", :class => "required" %>
       <%= f.text_field :username, :size => 15 %>
-      <span class="hint">
+      <span class="hint indent">
         <tt><%= User.username_regex_s %></tt>
       </span>
     </div>
@@ -24,7 +21,7 @@
     <div class="boxline">
       <%= f.label :current_password, "Current Password:",
         :class => "required" %>
-    <%= f.password_field :current_password, :name => "current_password", :size => 30 %>
+      <%= f.password_field :current_password, :name => "current_password", :size => 30 %>
     </div>
 
     <div class="boxline">
@@ -73,9 +70,7 @@
 
     <br>
 
-    <div class="legend">
-      External Accounts
-    </div>
+    <h2>External Accounts</h2>
 
     <div class="boxline">
       <%= f.label :gravatar,
@@ -98,7 +93,7 @@
           "Manage Pushover Subscription" : "Subscribe With Pushover"),
           "/settings/pushover_auth", :class => "pushover_button",
           :method => :post) %>
-        <span class="hint">
+        <span class="hint indent">
           For optional comment and message notifications below
         </span>
         </span>
@@ -154,9 +149,7 @@
 
     <br>
 
-    <div class="legend">
-      Security Settings
-    </div>
+    <h2>Security Settings</h2>
 
     <div class="boxline">
       <%= f.label :twofa, "Two-Factor Auth:", :class => "required" %>
@@ -173,9 +166,7 @@
 
     <br>
 
-    <div class="legend">
-      Comment Reply Notification Settings
-    </div>
+    <h2>Comment Reply Notification Settings</h2>
 
     <div class="boxline">
       <%= f.label :email_replies, "Receive E-mail:", :class => "required" %>
@@ -186,16 +177,14 @@
       <%= f.label :pushover_replies, "Receive Pushover Alert:",
         :class => "required" %>
       <%= f.check_box :pushover_replies %>
-      <span class="hint">
+      <span class="hint indent">
         Requires Pushover subscription above
       </span>
     </div>
 
     <br>
 
-    <div class="legend">
-      Comment Mention Notification Settings
-    </div>
+    <h2>Comment Mention Notification Settings</h2>
 
     <div class="boxline">
       <%= f.label :email_mentions, "Receive E-mail:", :class => "required" %>
@@ -206,16 +195,14 @@
       <%= f.label :pushover_mentions, "Receive Pushover Alert:",
         :class => "required" %>
       <%= f.check_box :pushover_mentions %>
-      <span class="hint">
+      <span class="hint indent">
         Requires Pushover subscription above
       </span>
     </div>
 
     <br>
 
-    <div class="legend">
-      Private Message Notification Settings
-    </div>
+    <h2>Private Message Notification Settings</h2>
 
     <div class="boxline">
       <%= f.label :email_messages, "Receive E-mail:", :class => "required" %>
@@ -226,16 +213,14 @@
       <%= f.label :pushover_messages, "Receive Pushover Alert:",
         :class => "required" %>
       <%= f.check_box :pushover_messages %>
-      <span class="hint">
+      <span class="hint indent">
         Requires Pushover subscription above
       </span>
     </div>
 
     <br>
 
-    <div class="legend">
-      Submitted Story Comment Settings
-    </div>
+    <h2>Submitted Story Comment Settings</h2>
 
     <div class="boxline">
       <%= f.label :show_submitted_story_threads,
@@ -246,9 +231,7 @@
 
     <br>
 
-    <div class="legend">
-      Mailing List Settings
-    </div>
+    <h2>Mailing List Settings</h2>
 
     <p>
     When enabled, you will receive all newly submitted stories and comments to
@@ -277,9 +260,7 @@
 
     <br>
 
-    <div class="legend">
-      Miscellaneous Settings
-    </div>
+    <h2>Miscellaneous Settings</h2>
 
     <div class="boxline">
       <%= f.label :show_story_previews, "Show Story Previews:",
@@ -292,6 +273,13 @@
       <%= f.check_box :show_avatars %>
     </div>
 
+    <div class="boxline">
+      <%= f.label :prefers_color_scheme, "Color Scheme:", :class => "required" %>
+      <label><%= f.radio_button :prefers_color_scheme, :system %> System (<a href="https://lobste.rs/s/eg1n75/dark_mode">details</a>)</label>
+      <label><%= f.radio_button :prefers_color_scheme, :light %> Light</label>
+      <label><%= f.radio_button :prefers_color_scheme, :dark %> Dark</label>
+    </div>
+
     <br>
     <%= f.submit "Save All Settings" %>
   <% end %>
@@ -299,10 +287,7 @@
   <br>
   <br>
 
-  <a name="invite"></a>
-  <div class="legend">
-    Invite a New User
-  </div>
+  <h2 name="invite">Invite a New User</h2>
 
   <% if @user.can_invite? %>
     <%= render :partial => "users/invitationform" %>
@@ -315,9 +300,7 @@
 
   <div class="deletion">
       <%= form_with model: @edit_user, url: delete_account_path, method: :post, id: 'delete_user', local: true do |f| %>
-      <div class="legend">
-        Delete Account
-      </div>
+      <h2>Delete Account</h2>
 
       <p>
       To permanently delete your account, verify your current password below.

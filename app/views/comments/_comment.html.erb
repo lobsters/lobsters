@@ -108,7 +108,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
           <span class="flagger flagger_stub"></span>
         <% end %>
 
-        <% if @user && !comment.story.is_gone? && !comment.is_gone? %>
+        <% if @user && !comment.is_gone? && comment.story.accepting_comments? %>
             |
             <a tabindex="0" class="comment_replier" unselectable="on">reply</a>
         <% end %>

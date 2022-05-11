@@ -1,8 +1,4 @@
 <div class="box" id="story_box">
-  <div class="legend">
-    Submit a Story
-  </div>
-
   <div id="story_holder">
     <%= form_with model: @story, local: true do |f| %>
       <%= render :partial => "stories/form", :locals => { :story => @story, :f => f } %>

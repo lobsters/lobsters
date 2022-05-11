@@ -6,11 +6,11 @@ class Keystore < ApplicationRecord
   validates :key, presence: true, length: { maximum: MAX_KEY_LENGTH }
 
   def self.get(key)
-    self.find_by(:key => key)
+    self.find_by(key: key)
   end
 
   def self.value_for(key)
-    self.find_by(:key => key).try(:value)
+    self.where(key: key).limit(1).pluck(:value).first
   end
 
   def self.put(key, value)
@@ -76,6 +76,14 @@ class Keystore < ApplicationRecord
     end
   end
 
+  def self.decrement_value_for(key, amount = -1)
+    self.increment_value_for(key, amount)
+  end
+
+  def self.decremented_value_for(key, amount = -1)
+    self.incremented_value_for(key, amount)
+  end
+
   # deliberately no lock/transaction as TrafficHelper is on the hot path of every request
   def self.readthrough_cache(key, &blk)
     if (found = value_for(key))
@@ -85,14 +93,6 @@ class Keystore < ApplicationRecord
       put(key, value)
       value
     end
-  end
-
-  def self.decrement_value_for(key, amount = -1)
-    self.increment_value_for(key, amount)
-  end
-
-  def self.decremented_value_for(key, amount = -1)
-    self.incremented_value_for(key, amount)
   end
 
   def self.validate_input_key(key)

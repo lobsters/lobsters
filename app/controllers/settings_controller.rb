@@ -1,5 +1,5 @@
 class SettingsController < ApplicationController
-  before_action :require_logged_in_user
+  before_action :require_logged_in_user, :show_title_h1
 
   TOTP_SESSION_TIMEOUT = (60 * 15)
 
@@ -10,7 +10,7 @@ class SettingsController < ApplicationController
   end
 
   def delete_account
-    unless params[:user][:i_am_sure].present?
+    unless params[:user][:i_am_sure] == '1'
       flash[:error] = 'You did not check the "I am sure" checkbox.'
       return redirect_to settings_path
     end
@@ -21,7 +21,7 @@ class SettingsController < ApplicationController
 
     @user.delete!
     disown_text = ""
-    if params[:user][:disown].present?
+    if params[:user][:disown] == '1'
       disown_text = " and disowned your stories and comments."
       InactiveUser.disown_all_by_author! @user
     end
@@ -36,6 +36,7 @@ class SettingsController < ApplicationController
 
     if params[:user][:password].empty? ||
        @user.authenticate(params[:current_password].to_s)
+      @edit_user.roll_session_token if params[:user][:password]
       if @edit_user.update(user_params)
         if @edit_user.username != previous_username
           Moderation.create!(
@@ -45,6 +46,7 @@ class SettingsController < ApplicationController
                     "to \"#{@edit_user.username}\"",
           )
         end
+        session[:u] = @user.session_token if params[:user][:password]
         flash.now[:success] = "Successfully updated settings."
         @user = @edit_user
       end
@@ -92,12 +94,12 @@ class SettingsController < ApplicationController
     totp = ROTP::TOTP.new(session[:totp_secret], :issuer => Rails.application.name)
     totp_url = totp.provisioning_uri(@user.email)
 
-    # no option for inline svg, so just strip off leading <?xml> tag
     qrcode = RQRCode::QRCode.new(totp_url)
     qr = qrcode.as_svg(offset: 0,
+                       fill: "ffffff",
                        color: "000",
                        module_size: 5,
-                       shape_rendering: "crispEdges").gsub(/^<\?xml.*>/, "")
+                       shape_rendering: "crispEdges")
 
     @qr_svg = "<a href=\"#{totp_url}\">#{qr}</a>"
   end
@@ -266,7 +268,7 @@ private
       :email_replies, :email_messages, :email_mentions,
       :pushover_replies, :pushover_messages, :pushover_mentions,
       :mailing_list_mode, :show_avatars, :show_story_previews,
-      :show_submitted_story_threads
+      :show_submitted_story_threads, :prefers_color_scheme
     )
   end
 end

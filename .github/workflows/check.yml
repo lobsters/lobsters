@@ -1,0 +1,38 @@
+on: [push, pull_request]
+
+jobs:
+  check:
+    environment: production
+    runs-on: ubuntu-latest
+
+    services:
+      mariadb:
+        image: mariadb:10.5
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: lobsters_dev
+        ports:
+          - 3306:3306
+
+    env:
+      DATABASE_URL: mysql2://root:root@127.0.0.1/lobsters_dev
+      RAILS_ENV: test
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Prepare database
+        run: ./bin/rails db:schema:load
+      - name: Run tests
+        run: bundle exec rspec
+      - name: Run linters
+        run: |
+          bundle exec rubocop
+          bundle exec ruumba
+      - name: Find leaky gems
+        run: |
+          gem install bundler-leak
+          bundle leak update
+          bundle leak check

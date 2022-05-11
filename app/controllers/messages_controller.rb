@@ -2,13 +2,14 @@ class MessagesController < ApplicationController
   before_action :require_logged_in_user
   before_action :require_logged_in_moderator, only: [:mod_note]
   before_action :find_message, :only => [:show, :destroy, :keep_as_new, :mod_note]
+  before_action :show_title_h1
 
   def index
-    @messages = @user.undeleted_received_messages
+    @title = "Private Messages"
+    @messages = Message.inbox(@user).load
 
     respond_to do |format|
       format.html {
-        @cur_url = "/messages"
         @title = "Messages"
 
         @new_message = Message.new
@@ -26,11 +27,11 @@ class MessagesController < ApplicationController
   end
 
   def sent
-    @messages = @user.undeleted_sent_messages
+    @title = "Sent Messages"
+    @messages = Message.outbox(@user).load
 
     respond_to do |format|
       format.html {
-        @cur_url = "/messages"
         @title = "Messages Sent"
 
         @direction = :out
@@ -46,14 +47,12 @@ class MessagesController < ApplicationController
   end
 
   def create
-    @cur_url = "/messages"
     @title = "Messages"
 
     @new_message = Message.new(message_params)
     @new_message.author_user_id = @user.id
 
     @direction = :out
-    @messages = @user.undeleted_received_messages
 
     if @new_message.save
       if @user.is_moderator? && @new_message.mod_note
@@ -63,12 +62,12 @@ class MessagesController < ApplicationController
                         @new_message.recipient.username.to_s << "."
       return redirect_to "/messages"
     else
+      @messages = Message.inbox(@user).load
       render :action => "index"
     end
   end
 
   def show
-    @cur_url = "/messages"
     @title = @message.subject
 
     if @message.author
@@ -87,6 +86,7 @@ class MessagesController < ApplicationController
       @message.has_been_read = true
       @message.save
     end
+    Rails.cache.delete("user:#{@user.id}:unread_replies")
   end
 
   def destroy

@@ -6,7 +6,8 @@ class Category < ApplicationRecord
   has_many :stories, through: :tags
 
   validates :category, length: { maximum: 25 }, presence: true,
-                       uniqueness: { case_sensitive: false }, format: { without: /,/ }
+                       uniqueness: { case_sensitive: false },
+                       format: { with: /\A[A-Za-z0-9_\-]+\z/ }
 
   def to_param
     self.category

@@ -338,6 +338,7 @@ class Story < ApplicationRecord
       :flags,
       { :comment_count => :comments_count },
       { :description => :markeddown_description },
+      { :description_plain => :description },
       :comments_url,
       { :submitter_user => :user },
       { :tags => self.tags.map(&:tag).sort },

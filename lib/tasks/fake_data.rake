@@ -181,7 +181,7 @@ class FakeDataGenerator
 
     # delete stories by submitter/mods
     deleted_stories.each do |story|
-      if i % 2 == 0
+      if i.even?
         story.editor = story.user
       else
         story.editor = User.moderators.sample
@@ -194,7 +194,7 @@ class FakeDataGenerator
     2.times do
       hat = hats[Random.rand(hats.length - 1)]
       hat.doff_by_user_with_reason(User.moderators.sample,
-                                      Faker::Lorem.sentence(word_count: 5))
+                                   Faker::Lorem.sentence(word_count: 5))
     end
 
     # Users, don't delete inactive-user or test

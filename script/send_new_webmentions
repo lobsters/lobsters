@@ -73,7 +73,7 @@ if __FILE__ == $PROGRAM_NAME
     Story.order('id desc').limit(1).offset(1).pluck(:id).try(:first)
   ).to_i
 
-  Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each do |s|
+  Story.where("id > ? AND is_deleted = ?", last_story_id, false).order(:id).each do |s|
     # mark it done so we don't hit them again if we or they crash
     Keystore.put(LAST_STORY_KEY, s.id)
 

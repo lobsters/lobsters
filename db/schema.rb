@@ -2,24 +2,24 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_28_015742) do
+ActiveRecord::Schema.define(version: 2022_03_31_165136) do
 
-  create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "categories", charset: "utf8mb4", force: :cascade do |t|
     t.string "category"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category"], name: "index_categories_on_category", unique: true
   end
 
-  create_table "comments", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "comments", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at"
     t.string "short_id", limit: 10, default: "", null: false
@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
-  create_table "domains", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "domains", charset: "utf8mb4", force: :cascade do |t|
     t.string "domain"
     t.boolean "is_tracker", default: false, null: false
     t.datetime "created_at", null: false
@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.string "banned_reason", limit: 200
   end
 
-  create_table "hat_requests", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "hat_requests", id: { type: :bigint, unsigned: true }, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.bigint "user_id", null: false, unsigned: true
@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["user_id"], name: "hat_requests_user_id_fk"
   end
 
-  create_table "hats", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "hats", id: { type: :bigint, unsigned: true }, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.bigint "user_id", null: false, unsigned: true
@@ -80,14 +80,14 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["user_id"], name: "hats_user_id_fk"
   end
 
-  create_table "hidden_stories", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "hidden_stories", id: { type: :bigint, unsigned: true }, charset: "utf8mb3", force: :cascade do |t|
     t.bigint "user_id", null: false, unsigned: true
     t.bigint "story_id", null: false, unsigned: true
     t.index ["story_id"], name: "hidden_stories_story_id_fk"
     t.index ["user_id", "story_id"], name: "index_hidden_stories_on_user_id_and_story_id", unique: true
   end
 
-  create_table "invitation_requests", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "invitation_requests", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", force: :cascade do |t|
     t.string "code"
     t.boolean "is_verified", default: false
     t.string "email", null: false
@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "invitations", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "invitations", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false, unsigned: true
     t.string "email"
     t.string "code"
@@ -111,15 +111,15 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["user_id"], name: "invitations_user_id_fk"
   end
 
-  create_table "keystores", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "keystores", id: { type: :bigint, unsigned: true }, charset: "utf8mb3", force: :cascade do |t|
     t.string "key", limit: 50, default: "", null: false
     t.bigint "value"
     t.index ["key"], name: "key", unique: true
   end
 
-  create_table "messages", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "messages", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", force: :cascade do |t|
     t.datetime "created_at"
-    t.bigint "author_user_id", null: false, unsigned: true
+    t.bigint "author_user_id", unsigned: true
     t.bigint "recipient_user_id", null: false, unsigned: true
     t.boolean "has_been_read", default: false
     t.string "subject", limit: 100
@@ -133,7 +133,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["short_id"], name: "random_hash", unique: true
   end
 
-  create_table "mod_notes", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "mod_notes", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", force: :cascade do |t|
     t.bigint "moderator_user_id", null: false, unsigned: true
     t.bigint "user_id", null: false, unsigned: true
     t.text "note", null: false
@@ -144,7 +144,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["user_id"], name: "mod_notes_user_id_fk"
   end
 
-  create_table "moderations", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "moderations", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "moderator_user_id", unsigned: true
@@ -165,7 +165,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["user_id"], name: "index_moderations_on_user_id"
   end
 
-  create_table "read_ribbons", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "read_ribbons", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", force: :cascade do |t|
     t.boolean "is_following", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["user_id"], name: "index_read_ribbons_on_user_id"
   end
 
-  create_table "saved_stories", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "saved_stories", id: { type: :bigint, unsigned: true }, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false, unsigned: true
@@ -184,14 +184,14 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["user_id", "story_id"], name: "index_saved_stories_on_user_id_and_story_id", unique: true
   end
 
-  create_table "stories", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "stories", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", force: :cascade do |t|
     t.datetime "created_at"
     t.bigint "user_id", null: false, unsigned: true
     t.string "url", limit: 250, default: ""
     t.string "title", limit: 150, default: "", null: false
     t.text "description", size: :medium
     t.string "short_id", limit: 6, default: "", null: false
-    t.boolean "is_expired", default: false, null: false
+    t.boolean "is_deleted", default: false, null: false
     t.integer "score", default: 1, null: false
     t.integer "flags", default: 0, null: false, unsigned: true
     t.boolean "is_moderated", default: false, null: false
@@ -208,7 +208,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["description"], name: "index_stories_on_description", type: :fulltext
     t.index ["domain_id"], name: "index_stories_on_domain_id"
     t.index ["hotness"], name: "hotness_idx"
-    t.index ["id", "is_expired"], name: "index_stories_on_id_and_is_expired"
+    t.index ["id", "is_deleted"], name: "index_stories_on_id_and_is_deleted"
     t.index ["merged_story_id"], name: "index_stories_on_merged_story_id"
     t.index ["score"], name: "index_stories_on_score"
     t.index ["short_id"], name: "unique_short_id", unique: true
@@ -218,13 +218,13 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["user_id"], name: "index_stories_on_user_id"
   end
 
-  create_table "story_texts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "story_texts", charset: "utf8mb4", force: :cascade do |t|
     t.text "body", size: :medium, null: false
     t.timestamp "created_at", default: -> { "current_timestamp()" }, null: false
     t.index ["body"], name: "index_story_texts_on_body", type: :fulltext
   end
 
-  create_table "suggested_taggings", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "suggested_taggings", id: { type: :bigint, unsigned: true }, charset: "utf8mb3", force: :cascade do |t|
     t.bigint "story_id", null: false, unsigned: true
     t.bigint "tag_id", null: false, unsigned: true
     t.bigint "user_id", null: false, unsigned: true
@@ -233,7 +233,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["user_id"], name: "suggested_taggings_user_id_fk"
   end
 
-  create_table "suggested_titles", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "suggested_titles", id: { type: :bigint, unsigned: true }, charset: "utf8mb3", force: :cascade do |t|
     t.bigint "story_id", null: false, unsigned: true
     t.bigint "user_id", null: false, unsigned: true
     t.string "title", limit: 150, default: "", null: false, collation: "utf8mb4_general_ci"
@@ -241,7 +241,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["user_id"], name: "suggested_titles_user_id_fk"
   end
 
-  create_table "tag_filters", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "tag_filters", id: { type: :bigint, unsigned: true }, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false, unsigned: true
@@ -250,14 +250,14 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["user_id", "tag_id"], name: "user_tag_idx"
   end
 
-  create_table "taggings", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "taggings", id: { type: :bigint, unsigned: true }, charset: "utf8mb3", force: :cascade do |t|
     t.bigint "story_id", null: false, unsigned: true
     t.bigint "tag_id", null: false, unsigned: true
     t.index ["story_id", "tag_id"], name: "story_id_tag_id", unique: true
     t.index ["tag_id"], name: "taggings_tag_id_fk"
   end
 
-  create_table "tags", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "tags", id: { type: :bigint, unsigned: true }, charset: "utf8mb3", force: :cascade do |t|
     t.string "tag", limit: 25, null: false
     t.string "description", limit: 100
     t.boolean "privileged", default: false, null: false
@@ -270,7 +270,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["tag"], name: "tag", unique: true
   end
 
-  create_table "users", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "users", id: { type: :bigint, unsigned: true }, charset: "utf8mb3", force: :cascade do |t|
     t.string "username", limit: 50, collation: "utf8mb4_general_ci"
     t.string "email", limit: 100, collation: "utf8mb4_general_ci"
     t.string "password_digest", limit: 75, collation: "utf8mb4_general_ci"
@@ -306,7 +306,7 @@ ActiveRecord::Schema.define(version: 2020_08_28_015742) do
     t.index ["username"], name: "username", unique: true
   end
 
-  create_table "votes", id: :bigint, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "votes", id: { type: :bigint, unsigned: true }, charset: "utf8mb3", force: :cascade do |t|
     t.bigint "user_id", null: false, unsigned: true
     t.bigint "story_id", null: false, unsigned: true
     t.bigint "comment_id", unsigned: true

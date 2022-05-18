@@ -1,28 +1,24 @@
-### Lobsters Rails Project [![Build Status](https://travis-ci.org/lobsters/lobsters.svg?branch=master)](https://travis-ci.org/lobsters/lobsters)
+### Lobsters Rails Project ![build status](https://github.com/lobsters/lobsters/actions/workflows/check.yml/badge.svg)
 
 This is the
 [quite sad](https://www.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)
-source code to the site operating at
+source code to the
+[ghost town](https://twitter.com/webshitweekly/status/1399935275057389571) at
 [https://lobste.rs](https://lobste.rs).
-It is a Rails 5 codebase and uses a SQL (MariaDB in production) backend for the database.
+It is a Rails codebase and uses a SQL (MariaDB in production) backend for the database.
 
 You are free to use this code to start your own [sister site](https://github.com/lobsters/lobsters/wiki)
 because the code is available under a [permissive license](https://github.com/lobsters/lobsters/blob/master/LICENSE) (3-clause BSD).
 We welcome bug reports and code contributions that help use improve [lobste.rs](https://lobste.rs).
 As a volunteer project we're reluctant to take on work that's not useful to our site, so please understand if we don't want to adopt your custom feature.
 
-2019-05-29 experiment:
-Are you interested in running your own sister site and not technical, or otherwise willing to pay for hosting/support?
-Maybe you're a Reddit community unhappy with their redesign, want an internal site for your company, or want to experiement with community design?
-Please contact Peter (email that name @push.cx).
-I'm exploring the idea of a hosting company to run sites using the codebase, or maybe consulting on custom features, and would love to hear from you.
-(The only change to Lobsters would be that someone's getting paid to PR back bug fixes.)
-
 
 #### Contributing bugfixes and new features
 
 We'd love to have your help.
 Please see the [CONTRIBUTING](https://github.com/lobsters/lobsters/blob/master/CONTRIBUTING.md) file for details.
+If you have questions, there is usually someone in [our chat room](https://lobste.rs/chat) who's familiar with the code.
+
 
 #### Initial setup
 
@@ -93,8 +89,6 @@ running tests:
 * On your production server, copy `config/initializers/production.rb.sample`
   to `config/initalizers/production.rb` and customize it with your site's
   `domain` and `name`. (You don't need this on your dev machine).
-
-* Put your site's custom CSS in `app/assets/stylesheets/local`.
 
 * Seed the database to create an initial administrator user, the `inactive-user`, and at least one tag:
 

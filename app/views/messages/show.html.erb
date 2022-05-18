@@ -1,29 +1,19 @@
+<%= render partial: 'subnav' %>
+
 <div class="box wide">
-  <div class="legend" style="float: right;">
-    <% if @message.author_user_id == @user.id %>
-      <a href="/messages/sent">Back to Sent Messages</a>
+  <h2>
+    From
+    <% if @message.author %>
+      <a href="/u/<%= @message.author.username %>"><%= @message.author.username %></a>
     <% else %>
-      <a href="/messages">Back to Messages</a>
+      <%= @message.author_username %>
     <% end %>
-  </div>
-
-  <div class="legend">
-    <%= @message.subject %>
-
-    <div class="sublegend">
-      Sent from
-      <% if @message.author %>
-        <a href="/u/<%= @message.author.username %>"><%= @message.author.username %></a>
-      <% else %>
-        <%= @message.author_username %>
-      <% end %>
-      <%= @message.hat.to_html_label if @message.hat %>
-      to
-      <a href="/u/<%= @message.recipient.username %>"><%=
-        @message.recipient.username %></a>
-      <%= time_ago_in_words_label(@message.created_at) %>
-    </div>
-  </div>
+    <%= @message.hat.to_html_label if @message.hat %>
+    to
+    <a href="/u/<%= @message.recipient.username %>"><%=
+      @message.recipient.username %></a>
+    <%= time_ago_in_words_label(@message.created_at) %>
+  </h2>
 
   <div class="boxline comment_text">
     <%= raw @message.linkified_body %>
@@ -58,12 +48,12 @@
   <br>
 
   <% if @new_message %>
-    <div class="legend">
+    <p>
       Compose Reply
       <% if @new_message %>
         To <%= @new_message.recipient_username %>
       <% end %>
-    </div>
+    </p>
 
     <%= render partial: 'form', locals: { new_message: @new_message, replying: true } %>
   <% else %>

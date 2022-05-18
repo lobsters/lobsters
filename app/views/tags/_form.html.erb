@@ -24,12 +24,10 @@
     <%= f.check_box :privileged %>
   </div>
 
-  <% unless @tag.persisted? %>
-    <div class="boxline">
-      <%= f.label :is_media, 'Is Media:' %>
-      <%= f.check_box :is_media %>
-    </div>
-  <% end %>
+  <div class="boxline">
+    <%= f.label :is_media, 'Is Media:' %>
+    <%= f.check_box :is_media %>
+  </div>
 
   <div class="boxline">
     <%= f.label :active, 'Active:' %>

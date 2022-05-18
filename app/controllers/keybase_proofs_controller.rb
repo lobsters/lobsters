@@ -5,6 +5,7 @@ class KeybaseProofsController < ApplicationController
   before_action :force_to_json, only: [:kbconfig]
 
   def new
+    @title = "Connect Your Keybase Account"
     @kb_username = params[:kb_username]
     @kb_signature = params[:kb_signature]
     @kb_ua = params[:kb_ua]

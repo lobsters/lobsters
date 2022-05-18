@@ -36,21 +36,24 @@ class Story < ApplicationRecord
   has_many :savings, :class_name => 'SavedStory', :inverse_of => :story, :dependent => :destroy
   has_one :story_text, foreign_key: :id, dependent: :destroy, inverse_of: :story
 
-  scope :base, -> { includes(:tags).unmerged.not_deleted }
-  scope :deleted, -> { where(is_expired: true) }
-  scope :not_deleted, -> { where(is_expired: false) }
+  scope :base, ->(user) {
+    q = includes(:tags).unmerged
+    user && user.is_moderator? ? q.preload(:suggested_taggings, :suggested_titles) : q.not_deleted
+  }
+  scope :deleted, -> { where(is_deleted: true) }
+  scope :not_deleted, -> { where(is_deleted: false) }
   scope :unmerged, -> { where(:merged_story_id => nil) }
   scope :positive_ranked, -> { where("score >= 0") }
   scope :low_scoring, ->(max = 5) { where("score < ?", max) }
   scope :front_page, -> { hottest.limit(StoriesPaginator::STORIES_PER_PAGE) }
   scope :hottest, ->(user = nil, exclude_tags = nil) {
-    base.not_hidden_by(user)
+    base(user).not_hidden_by(user)
         .filter_tags(exclude_tags || [])
         .positive_ranked
         .order('hotness')
   }
   scope :recent, ->(user = nil, exclude_tags = nil) {
-    base.not_hidden_by(user)
+    base(user).not_hidden_by(user)
         .filter_tags(exclude_tags || [])
         .low_scoring
         .where("created_at >= ?", 10.days.ago)
@@ -112,6 +115,7 @@ class Story < ApplicationRecord
     end
   end
 
+  COMMENTABLE_DAYS = 90
   FLAGGABLE_DAYS = 14
 
   # the lowest a score can go
@@ -133,13 +137,15 @@ class Story < ApplicationRecord
   TITLE_DROP_WORDS = ["", "a", "an", "and", "but", "in", "of", "or", "that", "the", "to"].freeze
 
   # URI.parse is not very lenient, so we can't use it
-  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z]+)(?<port>:\d+)?(\/|\z)/i.freeze
+  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z\-]+)(?<port>:\d+)?(\/|\z)/i.freeze
 
   # Dingbats, emoji, and other graphics https://www.unicode.org/charts/
   GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}-\u{27BF}\u{1F000}-\u{1F9FF}]/.freeze
 
-  attr_accessor :editing_from_suggestions, :editor, :fetching_ip, :is_hidden_by_cur_user,
-                :is_saved_by_cur_user, :moderation_reason, :previewing, :seen_previous, :vote
+  attr_accessor :editing_from_suggestions, :editor, :fetching_ip,
+                :is_hidden_by_cur_user, :latest_comment_id,
+                :is_saved_by_cur_user, :moderation_reason, :previewing,
+                :seen_previous, :vote
   attr_writer :fetched_response
 
   before_validation :assign_short_id_and_score, :on => :create
@@ -174,6 +180,12 @@ class Story < ApplicationRecord
     check_tags
   end
 
+  def accepting_comments?
+    !self.is_gone? &&
+      !self.previewing &&
+      (self.new_record? || self.created_at.after?(COMMENTABLE_DAYS.days.ago))
+  end
+
   def already_posted_recently?
     return false unless self.url.present? && self.new_record?
 
@@ -191,9 +203,13 @@ class Story < ApplicationRecord
   def check_not_new_domain_from_new_user
     return unless self.url.present? && self.new_record? && self.domain
 
-    if self.domain.new_record? && self.user && self.user.is_new?
+    if self.user && self.user.is_new? && self.domain.stories.not_deleted.count == 0
       ModNote.tattle_on_story_domain!(self, "new user with new")
-      errors.add(:url, "is an unseen domain from a new user")
+      errors.add :url, <<-EXPLANATION
+        is an unseen domain from a new user. We restrict this to discourage
+        self-promotion and give you time to learn about topicality. Skirting
+        this with a URL shortener or tweet or something will probably earn a ban.
+      EXPLANATION
     end
   end
 
@@ -216,6 +232,16 @@ class Story < ApplicationRecord
     urls = [url.to_s.gsub(/(#.*)/, "")]
     urls2 = [url.to_s.gsub(/(#.*)/, "")]
     urls_with_trailing_pound = []
+
+    # arxiv html page and its pdf link based off the [arxiv identifier](https://arxiv.org/help/arxiv_identifier)
+    if /^https?:\/\/(www\d*\.)?arxiv.org/i.match(url)
+      urls.each do |u|
+        urls2.push u.gsub(/(arxiv.org\/)abs(\/\d{4}.\d{4,5})/i, '\1pdf\2')
+        urls2.push u.gsub(/(arxiv.org\/)abs(\/\d{4}.\d{4,5})/i, '\1pdf\2.pdf')
+        urls2.push u.gsub(/(arxiv.org\/)pdf(\/\d{4}.\d{4,5})(.pdf)?/i, '\1abs\2')
+      end
+      urls = urls2.uniq
+    end
 
     # https
     urls.each do |u|
@@ -252,7 +278,7 @@ class Story < ApplicationRecord
     Story
       .where(:url => urls)
       .or(Story.where("url RLIKE ?", urls_with_trailing_pound.join(".|")))
-      .where("is_expired = ? OR is_moderated = ?", false, true)
+      .where("is_deleted = ? OR is_moderated = ?", false, true)
   end
 
   # doesn't include deleted/moderated/merged stories
@@ -272,8 +298,8 @@ class Story < ApplicationRecord
     @_similar_stories
   end
 
-  def public_similar_stories
-    @_public_similar_stories ||= similar_stories.empty? ? [] : similar_stories.base
+  def public_similar_stories(user)
+    @_public_similar_stories ||= similar_stories.empty? ? [] : similar_stories.base(user)
   end
 
   def most_recent_similar
@@ -287,8 +313,17 @@ class Story < ApplicationRecord
     true
   end
 
-  def archive_url
-    "https://archive.md/#{CGI.escape(self.url)}"
+  def archiveorg_url
+    # This will redirect to the latest version they have
+    "https://web.archive.org/web/3/#{CGI.escape(self.url)}"
+  end
+
+  def archivetoday_url
+    "https://archive.today/#{CGI.escape(self.url)}"
+  end
+
+  def ghost_url
+    "https://ghostarchive.org/search?term=#{CGI.escape(self.url)}"
   end
 
   def as_json(options = {})
@@ -303,6 +338,7 @@ class Story < ApplicationRecord
       :flags,
       { :comment_count => :comments_count },
       { :description => :markeddown_description },
+      { :description_plain => :description },
       :comments_url,
       { :submitter_user => :user },
       { :tags => self.tags.map(&:tag).sort },
@@ -384,18 +420,29 @@ class Story < ApplicationRecord
     if !user || (user.id == self.user_id) || !user.can_offer_suggestions?
       return false
     end
+    return false if self.is_moderated?
 
-    if self.taggings.select {|t| t.tag && t.tag.privileged? }.any?
-      return false
-    end
-
+    self.tags.each {|t| return false if t.privileged? }
     return true
   end
 
   # this has to happen just before save rather than in tags_a= because we need
-  # to have a valid user_id
+  # to have a valid user_id; remember it fills .taggings, not .tags
   def check_tags
     u = self.editor || self.user
+
+    if u && u.is_new? &&
+       (unpermitted = self.taggings.filter {|t| !t.tag.permit_by_new_users? }).any?
+      tags = unpermitted.map {|t| t.tag.tag }.to_sentence
+      errors.add :base, <<-EXPLANATION
+        New users can't submit stories with the tag(s) #{tags}
+        because they're for meta discussion or prone to off-topic stories.
+        If a tag is appropriate for the story, leaving it off to skirt this
+        restriction can earn a ban.
+      EXPLANATION
+      ModNote.tattle_on_new_user_tagging!(self)
+      return
+    end
 
     self.taggings.each do |t|
       if !t.tag.valid_for?(u)
@@ -403,11 +450,6 @@ class Story < ApplicationRecord
       elsif !t.tag.active? && t.new_record? && !t.marked_for_destruction?
         # stories can have inactive tags as long as they existed before
         raise "#{u.username} cannot add inactive tag #{t.tag.tag}"
-      end
-
-      if u.is_new? && !t.tag.permit_by_new_users?
-        errors.add(:base, "New users can't submit #{t.tag.tag} stories, please wait. " <<
-          "If the tag is appropriate, leaving it off to skirt this restriction is a bad idea.")
       end
     end
 
@@ -475,7 +517,7 @@ class Story < ApplicationRecord
     self.flags += flag_delta
     Story.connection.execute <<~SQL
       UPDATE stories SET
-        score = (select sum(vote) from votes where story_id = stories.id and comment_id is null),
+        score = (select coalesce(sum(vote), 0) from votes where story_id = stories.id and comment_id is null),
         flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),
         hotness = #{self.calculated_hotness}
       WHERE id = #{self.id.to_i}
@@ -526,7 +568,7 @@ class Story < ApplicationRecord
   end
 
   def is_gone?
-    is_expired? || (self.user.is_banned? && score < 0)
+    is_deleted? || (self.user.is_banned? && score < 0)
   end
 
   def is_hidden_by_user?(user)
@@ -580,24 +622,22 @@ class Story < ApplicationRecord
     end
     m.story_id = self.id
 
-    if all_changes["is_expired"] && self.is_expired?
-      m.action = "deleted story"
-    elsif all_changes["is_expired"] && !self.is_expired?
-      m.action = "undeleted story"
-    else
-      m.action = all_changes.map {|k, v|
-        if k == "merged_story_id"
-          if v[1]
-            "merged into #{self.merged_into_story.short_id} " <<
-              "(#{self.merged_into_story.title})"
-          else
-            "unmerged from another story"
-          end
+    m.action = all_changes.map {|k, v|
+      if k == "is_deleted" && self.is_deleted?
+        "deleted story"
+      elsif k == "is_deleted" && !self.is_deleted?
+        "undeleted story"
+      elsif k == "merged_story_id"
+        if v[1]
+          "merged into #{self.merged_into_story.short_id} " <<
+            "(#{self.merged_into_story.title})"
         else
-          "changed #{k} from #{v[0].inspect} to #{v[1].inspect}"
+          "unmerged from another story"
         end
-      }.join(", ")
-    end
+      else
+        "changed #{k} from #{v[0].inspect} to #{v[1].inspect}"
+      end
+    }.join(", ")
 
     m.reason = self.moderation_reason
     m.save
@@ -777,7 +817,7 @@ class Story < ApplicationRecord
 
   def title=(t)
     # change unicode whitespace characters into real spaces
-    self[:title] = t.strip.gsub(/[\.,;:!]*$/, '')
+    self[:title] = t.to_s.strip.gsub(/[\.,;:!]*$/, '')
   end
 
   def title_as_url
@@ -866,7 +906,9 @@ class Story < ApplicationRecord
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))
       params = match[2].split(/[&\?]/)
       # utm_ is google and many others; sk is medium
-      params.reject! {|p| p.match(/^utm_(source|medium|campaign|term|content)=|^sk=|^fbclid=/) }
+      params.reject! {|p|
+        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=/x)
+      }
       u = match[1] << (params.any?? "?" << params.join("&") : "")
     end
 

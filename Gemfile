@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 6.0.3.2"
+gem "rails", "~> 6.1.4.7"
 
 gem "mysql2"
 
@@ -21,7 +21,7 @@ gem "uglifier", ">= 1.3.0"
 # deployment
 gem "actionpack-page_caching"
 gem "exception_notification"
-gem "puma"
+gem "puma", ">= 5.6.2"
 
 # security
 gem "bcrypt", "~> 3.1.2"
@@ -30,9 +30,9 @@ gem "rqrcode"
 
 # parsing
 gem "pdf-reader"
-gem "nokogiri", ">= 1.10.8"
+gem "nokogiri", ">= 1.13.2"
 gem "htmlentities"
-gem "commonmarker", "~> 0.14"
+gem "commonmarker", ">= 0.23.4"
 
 # perf
 gem 'flamegraph'
@@ -46,11 +46,11 @@ gem "ruumba" # tests views
 gem "sitemap_generator" # for better search engine indexing
 gem "svg-graph", require: 'SVG/Graph/TimeSeries' # for charting, note workaround in lib/time_series.rb
 gem 'transaction_retry' # mitigate https://github.com/lobsters/lobsters-ansible/issues/39
+gem 'rack-attack' # rate-limiting
 
 group :test, :development do
   gem 'capybara'
   gem 'database_cleaner'
-  gem 'good_migrations'
   gem "listen"
   gem "rspec-rails"
   gem "factory_bot_rails"

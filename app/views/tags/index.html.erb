@@ -1,15 +1,16 @@
 <% is_admin = @user.try(:is_admin?) %>
 <div class="box wide">
-  <div class="legend">Tags</div>
-
-  <p>Inactive tags can no longer be used. You can also <a href="/filters">filter out stories by tag</a>.</p>
+  <p>
+    You can <a href="/filters">filter out stories by tag</a>, even if you don't have an account.
+    Inactive tags can no longer be used on new stories.
+  </p>
 
   <% @categories.each do |category| %>
-    <h2><%= link_to category.category, category_path(category) %></h2>
+    <h2 id="<%= category.category %>"><%= link_to category.category, category_path(category) %></h2>
 
     <% category.tags.each do |tag| %>
       <ol class="category_tags">
-        <li>
+        <li id="<%= tag.tag %>">
         <% filtered = @filtered_tags.include?(tag.id) %>
         <%= link_to tag.tag, tag_path(tag), class: tag.css_class %>
         <span class="<%= filtered || !tag.active ? 'inactive_tag' : '' %>"><%= tag.description %></span>

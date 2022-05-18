@@ -1,6 +1,7 @@
 //= require jquery
 //= require jquery_ujs
-//= require_tree .
+//= require jquery_class
+//= require autosize
 
 "use strict";
 
@@ -128,7 +129,7 @@ var _Lobsters = Class.extend({
     } else {
       // place flag menu outside of the comment to avoid inheriting opacity
       var voterPos = $(voterEl).position();
-      d.appendTo($(voterEl).closest(".comments_subtree"));
+      d.appendTo($(voterEl).parent());
       d.css({
         left: voterPos.left,
         top: voterPos.top + $(voterEl).outerHeight()
@@ -210,6 +211,10 @@ var _Lobsters = Class.extend({
     params.push({"name": "show_tree_lines", "value": "true"});
 
     $.post($(form).attr("action"), params, function(data) {
+      // Clear form: Firefox will keep form values on reload (e.g. F5), which isn't too useful if
+      // it's already posted.
+      $(form).find('textarea').val('')
+
       var parsedHTML = $.parseHTML(data);
 
       var isEdit = $(form).hasClass("edit_comment");
@@ -252,7 +257,9 @@ var _Lobsters = Class.extend({
   },
 
   checkStoryDuplicate: function(form) {
-    var params = $(form).serializeArray();
+    // if this includes { '_method': 'PUT' }, the router maps it as
+    // StoriesController#update with story_id 'check_url_dupe'
+    var params = $(form).serializeArray().filter((e) => e.name !== '_method');
     $.post("/stories/check_url_dupe", params, function(formErrorsHtml) {
       $(form).find(".form_errors_header").html(formErrorsHtml);
     });
@@ -280,75 +287,44 @@ var _Lobsters = Class.extend({
   },
 
   runSelect2: function() {
-    $("#story_tags_a").select2({
-    formatSelection: function(what) {
-      return what.id;
-    },
-    matcher: function(term, text) {
-      return text.toUpperCase().indexOf(term.toUpperCase()) >= 0;
-    },
-    sortResults: function(results, container, query) {
-        if (query.term) {
-          var tmatches = [];
-          var dmatches = [];
+    /* .each to avoid running on pages without select2 */
+    $("#story_tags_a").each(function(_index, el) {
+      $(el).select2({
+        formatSelection: function(what) {
+          return what.id;
+        },
+        matcher: function(term, text) {
+          return text.toUpperCase().indexOf(term.toUpperCase()) >= 0;
+        },
+        sortResults: function(results, container, query) {
+          if (query.term) {
+            var tmatches = [];
+            var dmatches = [];
 
-          /* prefer tag matches first, then description matches */
-          for (var x in results) {
-            var r = results[x];
+            /* prefer tag matches first, then description matches */
+            for (var x in results) {
+              var r = results[x];
 
-            if (r.id.toUpperCase().indexOf(query.term.toUpperCase()) == 0)
-              tmatches.push(r);
-            else
-              dmatches.push(r);
+              if (r.id.toUpperCase().indexOf(query.term.toUpperCase()) == 0)
+                tmatches.push(r);
+              else
+                dmatches.push(r);
+            }
+
+            tmatches = tmatches.sort(function(a, b) {
+              return a.text.localeCompare(b.text);
+            });
+            dmatches = dmatches.sort(function(a, b) {
+              return a.text.localeCompare(b.text);
+            });
+
+            return tmatches.concat(dmatches);
           }
 
-          tmatches = tmatches.sort(function(a, b) {
-            return a.text.localeCompare(b.text);
-          });
-          dmatches = dmatches.sort(function(a, b) {
-            return a.text.localeCompare(b.text);
-          });
-
-          return tmatches.concat(dmatches);
+          return results;
         }
-
-        return results;
-    }
+      });
     });
-  },
-
-  moderateStory: function(link) {
-    var reason = $("#story_moderation_reason").val();
-    if (reason == null || reason == "")
-      return false;
-
-    var link = $(link);
-
-    /* $.rails.handleMethod() */
-    var href = $.rails.href(link),
-      method = link.data('method'),
-      target = link.attr('target'),
-      csrf_token = $("meta[name=csrf-token]").attr("content"),
-      csrf_param = $("meta[name=csrf-param]").attr("content"),
-      form = $("<form method=\"post\" action=\"" + href + "\"></form>"),
-      metadata_input = "<input name=\"_method\" value=\"" + method +
-        "\" type=\"hidden\" />";
-
-    if (csrf_param !== undefined && csrf_token !== undefined)
-      metadata_input += "<input name=\"" + csrf_param + "\" value=\"" +
-        csrf_token + "\" type=\"hidden\" />";
-
-    if (target)
-      form.attr("target", target);
-
-    var r = $("<input type=\"hidden\" name=\"reason\" />");
-    r.val(reason);
-    form.append(r);
-
-    form.hide().append(metadata_input).appendTo('body');
-    form.submit();
-
-    return false;
   },
 
   fetchURLTitle: function(button, url_field, title_field) {
@@ -416,9 +392,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $("a.mod_story_link").click(function() {
-    return Lobsters.moderateStory(this);
-  }),
+  Lobsters.runSelect2();
 
   $("select[name=message\\[hat_id\\]]").change(function() {
     $(this).siblings("input[name=message\\[mod_note\\]]")
@@ -538,8 +512,6 @@ $(document).ready(function() {
       });
   });
 
-  Lobsters.runSelect2();
-
   $(document).on("click", "div.markdown_help_toggler .markdown_help_label",
   function() {
     $(this).parents("div.markdown_help_toggler").first().
@@ -577,7 +549,9 @@ $(document).ready(function() {
       }
     }
 
-    if ($("#story_url").val().length > 0) {
+    // check for dupe if there's a URL, but not when editing existing
+    if ($("#story_url").val().length > 0 &&
+        $("#edit_story input[name=_method]").val() !== "put") {
       Lobsters.checkStoryDuplicate($(this).parents("form").first());
     }
   });
@@ -586,7 +560,7 @@ $(document).ready(function() {
   $(document).ready(Lobsters.checkStoryTitle);
 
   $(document).on("blur", "#user_homepage", function() {
-    if (this.value.trim() !== '' && !this.value.match('^https?:\/\/'))
+    if (this.value.trim() !== '' && !this.value.match('^[a-z]+:\/\/'))
       this.value = 'http://' + this.value;
   });
 

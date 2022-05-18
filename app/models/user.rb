@@ -32,6 +32,9 @@ class User < ApplicationRecord
              :inverse_of => false,
              :optional => true
   has_many :invitations, :dependent => :destroy
+  has_many :mod_notes,
+           :inverse_of => :user,
+           :dependent => :restrict_with_exception
   has_many :moderations,
            :inverse_of => :moderator,
            :dependent => :restrict_with_exception
@@ -54,6 +57,7 @@ class User < ApplicationRecord
   has_secure_password
 
   typed_store :settings do |s|
+    s.string :prefers_color_scheme, :default => "system"
     s.boolean :email_notifications, :default => false
     s.boolean :email_replies, :default => false
     s.boolean :pushover_replies, :default => false
@@ -74,13 +78,17 @@ class User < ApplicationRecord
     s.string :homepage
   end
 
+  validates :prefers_color_scheme, inclusion: %w(system light dark)
+
   validates :email,
             :length => { :maximum => 100 },
             :format => { :with => /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/ },
             :uniqueness => { :case_sensitive => false }
 
   validates :homepage,
-            :format => { :with => /\Ahttps?:\/\/[^\/\s]+\.[^.\/\s]+(\/.*)?\Z/ },
+            :format => {
+              :with => /\A(?:https?|gemini|gopher):\/\/[^\/\s]+\.[^.\/\s]+(\/.*)?\Z/,
+            },
             :allow_blank => true
 
   validates :password, :presence => true, :on => :create
@@ -253,9 +261,8 @@ class User < ApplicationRecord
       self.banned_by_user_id = banner.id
       self.banned_reason = reason
 
+      BanNotification.notify(self, banner, reason) unless self.deleted_at?
       self.delete!
-
-      BanNotification.notify(self, banner, reason)
 
       m = Moderation.new
       m.moderator_user_id = banner.id
@@ -283,7 +290,7 @@ class User < ApplicationRecord
         return true
       end
     elsif obj.is_a?(Comment) && obj.is_flaggable?
-      return !self.is_new? && (self.karma >= MIN_KARMA_TO_FLAG)
+      return self.karma >= MIN_KARMA_TO_FLAG
     end
 
     false
@@ -308,7 +315,7 @@ class User < ApplicationRecord
 
   def check_session_token
     if self.session_token.blank?
-      self.session_token = Utils.random_str(60)
+      self.roll_session_token
     end
   end
 
@@ -374,8 +381,7 @@ class User < ApplicationRecord
 
       self.invitations.destroy_all
 
-      self.session_token = nil
-      self.check_session_token
+      self.roll_session_token
 
       self.deleted_at = Time.current
       self.good_riddance?
@@ -409,8 +415,8 @@ class User < ApplicationRecord
     return if self.is_banned? # https://www.youtube.com/watch?v=UcZzlPGnKdU
     self.email = "#{self.username}@lobsters.example" if \
       self.karma < 0 ||
-      (self.comments.where('created_at >= now() - interval 30 day AND is_moderated').count +
-       self.stories.where('created_at >= now() - interval 30 day AND is_expired AND is_moderated')
+      (self.comments.where('created_at >= now() - interval 30 day AND is_deleted').count +
+       self.stories.where('created_at >= now() - interval 30 day AND is_deleted AND is_moderated')
          .count >= 3) ||
       FlaggedCommenters.new('90d').check_list_for(self)
   end
@@ -462,7 +468,7 @@ class User < ApplicationRecord
 
   def is_new?
     return true unless self.created_at # unsaved object; in signup flow or a test
-    Time.current - self.created_at <= NEW_USER_DAYS.days
+    self.created_at > NEW_USER_DAYS.days.ago
   end
 
   def add_or_update_keybase_proof(kb_username, kb_signature)
@@ -474,6 +480,10 @@ class User < ApplicationRecord
   def remove_keybase_proof(kb_username)
     self.keybase_signatures ||= []
     self.keybase_signatures.reject! {|kbsig| kbsig['kb_username'] == kb_username }
+  end
+
+  def roll_session_token
+    self.session_token = Utils.random_str(60)
   end
 
   def is_heavy_self_promoter?
@@ -495,7 +505,7 @@ class User < ApplicationRecord
     Tag.active.joins(
       :stories
     ).where(
-      :stories => { :user_id => self.id, :is_expired => false }
+      :stories => { :user_id => self.id, :is_deleted => false }
     ).group(
       Tag.arel_table[:id]
     ).order(
@@ -571,14 +581,6 @@ class User < ApplicationRecord
     true
   end
 
-  def undeleted_received_messages
-    received_messages.where(:deleted_by_recipient => false).order('id asc')
-  end
-
-  def undeleted_sent_messages
-    sent_messages.where(:deleted_by_author => false).order('id asc')
-  end
-
   def unread_message_count
     @unread_message_count ||= Keystore.value_for("user:#{self.id}:unread_messages").to_i
   end
@@ -589,7 +591,14 @@ class User < ApplicationRecord
   end
 
   def unread_replies_count
-    @unread_replies_count ||= ReplyingComment.where(user_id: self.id, is_unread: true).count
+    @unread_replies_count ||=
+      Rails.cache.fetch("user:#{self.id}:unread_replies", expires_in: 2.minutes) {
+        ReplyingComment.where(user_id: self.id, is_unread: true).count
+      }
+  end
+
+  def inbox_count
+    unread_message_count + unread_replies_count
   end
 
   def votes_for_others

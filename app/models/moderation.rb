@@ -48,7 +48,9 @@ class Moderation < ApplicationRecord
         m.body << "\n" <<
           "The reason given:\n" <<
           "\n" <<
-          "> *#{self.reason}*\n"
+          "> *#{self.reason}*\n" <<
+          "\n" <<
+          "Maybe the guidelines on topicality are useful: https://lobste.rs/about#topicality"
       end
 
     elsif self.comment

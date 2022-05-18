@@ -1,9 +1,5 @@
 <div class="box wide">
-  <div class="legend">
-    Requested Hats
-  </div>
-
-  <% if @hat_requests.count == 0 %>
+  <% if @hat_requests.length == 0 %>
     No hat requests.
   <% else %>
     <% @hat_requests.each_with_index do |hr,x| %>

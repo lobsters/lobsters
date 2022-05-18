@@ -66,7 +66,13 @@ if __FILE__ == $PROGRAM_NAME
 
   last_story_id = (Keystore.value_for(LAST_STORY_KEY) || Story.last && Story.last.id).to_i
 
-  Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each do |s|
+  # Paranoia: only search back three days so that if last_story_id is oddly low we don't start
+  # sending every story from the beginning of time, or if mailing list mode breaks for more than a
+  # few days we won't bury them in email.
+  Story
+    .where("id > ? AND is_deleted = ? AND created_at >= ?", last_story_id, false, 3.days.ago)
+    .order(:id)
+    .each do |s|
     StoryText.fill_cache!(s)
 
     mailing_list_users.each do |u|
@@ -86,6 +92,7 @@ if __FILE__ == $PROGRAM_NAME
         [{}, "/usr/sbin/sendmail", "-i", "-f", "nobody@#{Rails.application.domain}", u.email],
         "w") do |mail|
         mail.puts "From: #{s.user.username} <#{s.user.username}@#{Rails.application.domain}>"
+        mail.puts "X-Is-Author: #{s.user_is_author?}"
         mail.puts "Reply-To: #{list}"
         mail.puts "To: #{list}"
         mail.puts "X-BeenThere: #{list}"
@@ -136,11 +143,15 @@ if __FILE__ == $PROGRAM_NAME
 
   last_comment_id = (Keystore.value_for(LAST_COMMENT_KEY) || Comment.last && Comment.last.id).to_i
 
+  # Paranoia: only search back three days so that if last_comment_id is oddly low we don't start
+  # sending every comment from the beginning of time, or if mailing list mode breaks for more than a
+  # few days we won't bury them in email.
   Comment.where(
-    "id > ? AND (is_deleted = ? AND is_moderated = ?)",
+    "id > ? AND (is_deleted = ? AND is_moderated = ?) AND created_at >= ?",
     last_comment_id,
     false,
-    false
+    false,
+    3.days.ago
   ).order(:id).each do |c|
     # allow some time for newer comments to be edited before sending them out
     if (Time.current - (c.updated_at || c.created_at)) < 2.minutes

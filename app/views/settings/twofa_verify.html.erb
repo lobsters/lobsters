@@ -1,11 +1,8 @@
-<div class="box wide">
-  <div class="legend right">
-    <a href="/settings">Back to Settings</a>
-  </div>
-  <div class="legend">
-    <%= @title %>
-  </div>
+<% content_for :subnav do %>
+  <a href="/settings">Back to Settings</a>
+<% end %>
 
+<div class="box wide">
   <%= form_with url: twofa_update_url, local: true do |f| %>
     <p>
     To enable Two-Factor Authentication on your account using your new TOTP

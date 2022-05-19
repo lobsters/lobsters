@@ -307,16 +307,39 @@ describe Story do
       s = create(:story, url: 'http://aaonline.fr/search.php?search&criteria[title-contains]=debian')
       expect(s.similar_stories).to eq([])
     end
+
+    it "finds arxiv html page and pdf URLs with the same arxiv identifier" do
+      s1 = create(:story,
+                  url: 'https://arxiv.org/abs/2101.07554',
+                  created_at: (Story::RECENT_DAYS + 1).days.ago)
+      s2 = create(:story, url: 'https://arxiv.org/pdf/2101.07554')
+
+      expect(s1.similar_stories).to eq([s2])
+      expect(s2.similar_stories).to eq([s1])
+    end
+
+    it "finds similar arxiv html page and pdf URLs that contain a pdf extension" do
+      s1 = create(:story,
+                  url: 'https://arxiv.org/abs/2101.09188',
+                  created_at: (Story::RECENT_DAYS + 1).days.ago)
+      s2 = create(:story, url: 'https://arxiv.org/pdf/2101.09188.pdf')
+
+      expect(s1.similar_stories).to eq([s2])
+      expect(s2.similar_stories).to eq([s1])
+    end
   end
 
   describe "#calculated_hotness" do
     let(:story) do
-      create(:story, url: 'https://example.com', user_is_author: true, created_at: Time.zone.at(0))
+      create(:story, url: 'https://example.com', user_is_author: true)
     end
 
     before do
       create(:comment, story: story, score: 1, flags: 5)
       create(:comment, story: story, score: -9, flags: 10)
+      # stories stop accepting comments after a while, but this calculation is
+      # based on created_at, so set that to a known value after posting comments
+      story.update(created_at: Time.zone.at(0))
     end
 
     context "with positive base" do
@@ -380,6 +403,42 @@ describe Story do
         expect(Story.recent).to include(flagged)
         expect(Story.recent).to_not include(Story.front_page)
       end
+    end
+  end
+
+  describe "suggestions" do
+    it "does not auto-accept suggestion if quorum is not met" do
+      story = create(:story, :title => "hello", :url => "http://example.com/")
+      user = create(:user)
+
+      story.save_suggested_title_for_user!("new title", user)
+
+      expect(story.title).to eq("hello")
+    end
+
+    it "auto-accept suggestion once quorum is met" do
+      story = create(:story, :title => "hello", :url => "http://example.com/")
+      user1 = create(:user)
+      user2 = create(:user)
+
+      story.save_suggested_title_for_user!("new title", user1)
+      story.save_suggested_title_for_user!("new title", user2)
+
+      expect(story.title).to eq("new title")
+    end
+
+    it "notifies story creator upon auto-accepted suggestion" do
+      creator = create(:user)
+      story = create(:story, :user => creator, :title => "hello", :url => "http://example.com/")
+      user1 = create(:user)
+      user2 = create(:user)
+
+      expect(creator.received_messages.length).to eq(0)
+
+      story.save_suggested_title_for_user!("new title", user1)
+      story.save_suggested_title_for_user!("new title", user2)
+
+      expect(creator.reload.received_messages.length).to eq(1)
     end
   end
 end

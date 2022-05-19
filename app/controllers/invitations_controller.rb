@@ -1,7 +1,9 @@
 class InvitationsController < ApplicationController
   before_action :require_logged_in_user, :except => [:build, :create_by_request, :confirm_email]
+  before_action :show_title_h1
 
   def build
+    @title = "Request an Invitation"
     if Rails.application.allow_invitation_requests?
       @invitation_request = InvitationRequest.new
     else
@@ -11,6 +13,7 @@ class InvitationsController < ApplicationController
   end
 
   def index
+    @title = "Requested Invitations"
     if !@user.can_see_invitation_requests?
       flash[:error] = "Your account is not permitted to view invitation requests."
       return redirect_to "/"

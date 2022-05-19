@@ -6,7 +6,8 @@ class Message < ApplicationRecord
   belongs_to :author,
              :class_name => "User",
              :foreign_key => "author_user_id",
-             :inverse_of => :sent_messages
+             :inverse_of => :sent_messages,
+             :optional => true
   belongs_to :hat,
              :optional => true
 
@@ -23,6 +24,18 @@ class Message < ApplicationRecord
     end
   end
 
+  scope :inbox, ->(user) {
+    where(
+      recipient: user,
+      deleted_by_recipient: false,
+    ).preload(:author, :hat, :recipient).order('id asc')
+  }
+  scope :outbox, ->(user) {
+    where(
+      author: user,
+      deleted_by_author: false,
+    ).preload(:author, :hat, :recipient).order('id asc')
+  }
   scope :unread, -> { where(:has_been_read => false, :deleted_by_recipient => false) }
 
   before_validation :assign_short_id, :on => :create

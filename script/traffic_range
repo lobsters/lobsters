@@ -9,11 +9,5 @@ require File.expand_path('../../config/boot', __FILE__)
 require APP_PATH
 Rails.application.require_environment!
 
-# Delete old period keys
-Keystore
-  .where('`key` like "traffic:at:%"')
-  .where.not('`key` = ?', TrafficHelper.current_period_key)
-  .delete_all
-
-# calculate and cache new low and high activity range for traffic
-TrafficHelper.cached_traffic_range
+# calculate and cache activity range for traffic
+TrafficHelper.cache_traffic!

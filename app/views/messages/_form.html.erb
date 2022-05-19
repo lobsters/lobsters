@@ -21,13 +21,12 @@
     <%= f.text_area :body, :style => "width: 500px;", :rows => 5 %>
   </div>
 
-  <% if @user.wearable_hats.any? %>
+  <% if @user.wearable_hats.load.any? %>
     <div class="boxline">
       <%= f.label :hat_id, 'Put on hat:' %>
       <%= f.select :hat_id, options_for_select( [['','']] +
-        @user.hats.map{|h| [h.hat, { 'data-modnote' => h.modlog_use }, h.id] }
+        @user.wearable_hats.map{|h| [h.hat, { 'data-modnote' => h.modlog_use }, h.id] }
       ) %>
-
       <% if @user.is_moderator? %>
         &nbsp;&nbsp;
         <%= f.check_box 'mod_note', class: 'normal' %>

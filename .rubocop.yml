@@ -154,6 +154,8 @@ RSpec/BeforeAfterAll:
   Enabled: false
 RSpec/DescribeClass:
   Enabled: false
+RSpec/LetSetup:
+  Enabled: false
 Capybara/FeatureMethods:
   Enabled: false
 
@@ -212,6 +214,8 @@ Style/LineEndConcatenation:
 Style/MethodDefParentheses:
   Enabled: false
 Style/MultilineBlockChain:
+  Enabled: false
+Style/MultilineMemoization:
   Enabled: false
 Style/MultilineTernaryOperator:
   Enabled: false

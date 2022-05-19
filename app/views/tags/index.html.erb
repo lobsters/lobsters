@@ -6,7 +6,12 @@
   </p>
 
   <% @categories.each do |category| %>
-    <h2 id="<%= category.category %>"><%= link_to category.category, category_path(category) %></h2>
+    <h2 id="<%= category.category %>">
+      <%= link_to category.category, category_path(category) %>
+      <% if is_admin %>
+        <span class="byline">| <%= link_to 'edit', edit_tag_path(tag.tag) %></span>
+      <% end %>
+    </h2>
 
     <% category.tags.each do |tag| %>
       <ol class="category_tags">
@@ -25,13 +30,17 @@
           | <%= link_to 'edit', edit_tag_path(tag.tag) %>
         <% end %>
         </span>
-      </ol>
-    <% end %>
+        </li>
+      <% end %>
+    </ol>
   <% end %>
 
   <% if is_admin %>
     <div>
       <%= link_to 'Create New Tag', new_tag_path %>
+    </div>
+    <div>
+      <%= link_to 'Create New Category', new_category_path %>
     </div>
   <% end %>
 </div>

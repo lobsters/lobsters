@@ -9,15 +9,22 @@ class ModerationsController < ApplicationController
 
     @moderator = params.fetch('moderator', '(All)')
     @what = {
-      :stories  => params.dig(:what, :stories),
-      :comments => params.dig(:what, :comments),
-      :tags     => params.dig(:what, :tags),
-      :users    => params.dig(:what, :users),
-      :domains  => params.dig(:what, :domains),
+      :stories     => params.dig(:what, :stories),
+      :comments    => params.dig(:what, :comments),
+      :tags        => params.dig(:what, :tags),
+      :users       => params.dig(:what, :users),
+      :domains     => params.dig(:what, :domains),
+      :categories  => params.dig(:what, :categories),
     }
     @what.transform_values! { true } if @what.values.none?
 
-    @moderations = Moderation.all.eager_load(:moderator, :story, :comment, :tag, :user, :domain)
+    @moderations = Moderation.all.eager_load(:moderator,
+                                             :story,
+                                             :comment,
+                                             :tag,
+                                             :user,
+                                             :domain,
+                                             :category)
 
     # filter based on target
     @moderations = case @moderator

@@ -115,7 +115,7 @@ class UsersController < ApplicationController
       return redirect_to "/"
     end
 
-    buser.unban_by_user!(@user)
+    buser.unban_by_user!(@user, params[:reason])
 
     flash[:success] = "User has been unbanned."
     return redirect_to user_path(:user => buser.username)

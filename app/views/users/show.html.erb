@@ -233,6 +233,10 @@
         <%= form_with url: user_unban_path, method: :post, local: true do |f| %>
           <p>
             <% if @showing_user.is_banned? %>
+              <div class="boxline">
+                <%= f.label :reason, "Reason:", :class => "required" %>
+                <%= f.text_field :reason, :size => 40 %>
+              </div>
               <%= f.submit "Unban" %>
             <% end %>
             <% if @showing_user.banned_from_inviting? %>

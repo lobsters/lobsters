@@ -119,7 +119,7 @@ describe User do
 
   it "unbans a user" do
     u = create(:user, :banned)
-    expect(u.unban_by_user!(User.first)).to be true
+    expect(u.unban_by_user!(User.first, "seems ok now")).to be true
   end
 
   it "tells if a user is a heavy self promoter" do

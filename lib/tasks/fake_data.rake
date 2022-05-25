@@ -1,7 +1,7 @@
 require 'faker'
 
 class FakeDataGenerator
-  def initialize(users_count=50, stories_count=100, categories_count=5)
+  def initialize(users_count = 50, stories_count = 100, categories_count = 5)
     @users_count = users_count
     @stories_count = stories_count
     @categories_count = categories_count

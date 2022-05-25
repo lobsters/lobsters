@@ -548,7 +548,7 @@ class User < ApplicationRecord
     username
   end
 
-  def unban_by_user!(unbanner)
+  def unban_by_user!(unbanner, reason)
     self.banned_at = nil
     self.banned_by_user_id = nil
     self.banned_reason = nil
@@ -559,6 +559,7 @@ class User < ApplicationRecord
     m.moderator_user_id = unbanner.id
     m.user_id = self.id
     m.action = "Unbanned"
+    m.reason = reason
     m.save!
 
     true

@@ -198,6 +198,7 @@ ActiveRecord::Schema.define(version: 2022_03_31_165136) do
     t.boolean "is_moderated", default: false, null: false
     t.decimal "hotness", precision: 20, scale: 10, default: "0.0", null: false
     t.text "markeddown_description", size: :medium
+    t.text "story_cache", size: :medium
     t.integer "comments_count", default: 0, null: false
     t.bigint "merged_story_id", unsigned: true
     t.datetime "unavailable_at"

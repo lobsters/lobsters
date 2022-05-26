@@ -489,12 +489,6 @@ $(document).ready(function() {
 
   Lobsters.runSelect2();
 
-  $(document).on("click", "div.markdown_help_toggler .markdown_help_label",
-  function() {
-    $(this).parents("div.markdown_help_toggler").first().
-      children(".markdown_help").toggle();
-  });
-
   $(document).on("click", ".comment-post", function(event) {
     event.preventDefault();
     Lobsters.postComment($(this).parents("form").first());
@@ -545,6 +539,35 @@ $(document).ready(function() {
     if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
       $(".comment-post").click();
     }
+  });
+});
+
+const parentSelector = (target, selector) => {
+  let parent = target;
+  while (!parent.matches(selector)) {
+    parent = parent.parentElement;
+    if (parent === null) {
+      throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
+    }
+  }
+  return parent;
+};
+
+function on(eventType, selector, callback) {
+  document.addEventListener(eventType, event => {
+    if (event.target.matches(selector)) {
+      callback(event);
+    }
+  });
+}
+
+const onPageLoad = (callback) => {
+  document.addEventListener('DOMContentLoaded', callback);
+};
+
+onPageLoad(() => {
+  on('click', '.markdown_help_label', (event) => {
+    parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
   });
 });
 

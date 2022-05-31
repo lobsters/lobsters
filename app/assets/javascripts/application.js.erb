@@ -494,10 +494,6 @@ $(document).ready(function() {
     Lobsters.postComment($(this).parents("form").first());
   });
 
-  $(document).on("click", "button.story-preview", function() {
-    Lobsters.previewStory($(this).parents("form").first());
-  });
-
   $(document).on("blur", "#story_url", function() {
     var url_tags = {
       "\.pdf$": "pdf",
@@ -564,10 +560,14 @@ const onPageLoad = (callback) => {
 onPageLoad(() => {
   on('click', '.markdown_help_label', (event) => {
     parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
-  })
+  });
 
   on('click', 'button.comment-preview', (event) => {
     Lobsters.previewComment(parentSelector(event.target, 'form'));
+  });
+
+  on('click', 'button.story-preview', (event) => {
+    Lobsters.previewStory(parentSelector(event.target, 'form'));
   });
 });
 

@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: do-issuer
+spec:
+  acme:
+    email: user@example.com
+    server: https://acme-staging-v02.api.letsencrypt.org/directory #for testing
+    #server: https://acme-v02.api.letsencrypt.org/directory #for production
+    privateKeySecretRef:
+      name: lets-encrypt-account-key
+    solvers:
+    - dns01:
+        digitalocean:
+          tokenSecretRef:
+            name: digitalocean-dns
+            key: access-token

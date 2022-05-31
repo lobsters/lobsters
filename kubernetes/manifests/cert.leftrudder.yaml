@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1alpha3
+kind: Certificate
+metadata:
+  name: lobsters
+  namespace: lobsters-site
+spec:
+  # Secret names are always required.
+  secretName: example-com-tls
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  subject:
+    organizations:
+      - lobsters
+  isCA: false
+  usages:
+    - server auth
+    - client auth
+  dnsNames:
+    - example.com
+    - www.example.com
+  issuerRef:
+    name: do-issuer

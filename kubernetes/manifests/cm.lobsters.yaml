@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lobsters-env
+  namespace: lobsters-site
+  labels:
+    app: lobsters
+data:
+  MARIADB_HOST: mariadb
+  MARIADB_PORT: "3306"
+  LOBSTER_DATABASE: lobsters
+  LOBSTER_SITE_NAME: Lobsters
+  RAILS_ENV: production
+  LOBSTER_HOSTNAME: example.com
+  VIRTUAL_HOST: localhost
+  RAILS_MAX_THREADS: "5"
+  SMTP_HOST: smtp-relay.gmail.com
+  SMTP_PORT: "587"
+  SMTP_STARTTLS_AUTO: "true"

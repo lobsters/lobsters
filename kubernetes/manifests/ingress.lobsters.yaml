@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lobsters-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "example.com"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: lobsters
+            port:
+              name: http
+  tls:
+  - hosts:
+    - example.com
+    - www.example.com
+    secretName: example-com-tls

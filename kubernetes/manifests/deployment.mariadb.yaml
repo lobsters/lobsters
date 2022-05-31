@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: lobsters-site
+  labels:
+    app: lobsters
+    server: mariadb
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: lobsters
+      server: mariadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: lobsters
+        server: mariadb
+    spec:
+      containers:
+      - name: lobsters
+        image: mariadb:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: mariadb
+          containerPort: 3306
+        env:
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: lobsters-env
+              key: MARIADB_PASSWORD

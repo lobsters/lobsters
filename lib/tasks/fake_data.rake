@@ -19,7 +19,7 @@ class FakeDataGenerator
         email: Faker::Internet.email(name: name),
         password: password,
         password_confirmation: password,
-        username: Faker::Internet.user_name(specifier: 5..40, separators: %w(_)),
+        username: Faker::Internet.user_name(specifier: name, separators: %w(_))[..23],
         created_at: (User::NEW_USER_DAYS + 1).days.ago,
         karma: Random.rand(User::MIN_KARMA_TO_FLAG * 2),
         about: Faker::Lorem.sentence(word_count: 7),
@@ -27,14 +27,20 @@ class FakeDataGenerator
         invited_by_user: User.select(&:can_invite?).sample,
       }
       create_args.merge!(is_admin: true) if i % 8 == 0
-      users << User.create!(create_args)
-      if i % 7 == 0
-        users[i].grant_moderatorship_by_user!(mod)
-      end
-      if i % 6 == 0
-        users[i].disable_invite_by_user_for_reason!(mod, Faker::Lorem.sentence(word_count: 5))
+      begin
+        users << User.create!(create_args)
+        if i % 7 == 0
+          users.last.grant_moderatorship_by_user!(mod)
+        end
+        if i % 6 == 0
+          users.last.disable_invite_by_user_for_reason!(mod, Faker::Lorem.sentence(word_count: 5))
+        end
+      rescue ActiveRecord::RecordInvalid => e
+        puts "caught #{e}"
+        next if e.message == 'Validation failed: Username has already been taken'
       end
     end
+    users.compact!
     puts
 
     print 'Categories '
@@ -225,7 +231,7 @@ class FakeDataGenerator
       user.ban_by_user_for_reason!(User.moderators.sample,
                                    Faker::Lorem.sentence(word_count: 5))
       if i.even?
-        user.unban_by_user!(User.moderators.sample)
+        user.unban_by_user!(User.moderators.sample, "reformed")
       end
     end
     puts

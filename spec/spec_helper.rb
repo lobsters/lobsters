@@ -37,6 +37,9 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
+  # Some tests are slow, rarely catch a bug, and are not critical functionality.
+  config.exclude_pattern = 'spec/slow/*_spec.rb'
+
   # This option will default to `:apply_to_host_groups` in RSpec 4 (and will
   # have no way to turn it off -- the option exists only for backwards
   # compatibility in RSpec 3). It causes shared context metadata to be

@@ -26,7 +26,9 @@ jobs:
       - name: Prepare database
         run: ./bin/rails db:schema:load
       - name: Run tests
-        run: bundle exec rspec
+        run: |
+          bundle exec rspec
+          bundle exec rspec spec/slow/*_spec.rb
       - name: Run linters
         run: |
           bundle exec rubocop

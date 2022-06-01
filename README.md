@@ -116,6 +116,9 @@ running tests:
 
 * See `config/initializers/production.rb.sample` for GitHub/Twitter integration help.
 
+* You probably want to use [git-imerge](https://lobste.rs/s/dbm2d4) to pull in
+  changes from Lobsters to your site.
+
 #### Administration
 
 Basic moderation happens on-site, but most other administrative tasks require use of the rails console in production.

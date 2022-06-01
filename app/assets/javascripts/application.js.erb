@@ -352,10 +352,7 @@ var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
   var $olcomments = $("ol.comments");
-  $olcomments.on("click", ".comment a.flagger", function() {
-    Lobsters.flagComment(this);
-    return false;
-  });
+
   $olcomments.on("click", ".comment a.upvoter", function() {
     Lobsters.upvoteComment(this);
     return false;
@@ -558,6 +555,12 @@ const onPageLoad = (callback) => {
 };
 
 onPageLoad(() => {
+
+  on('click', '.comment a.flagger', (event) => {
+    Lobsters.flagComment(event.target);
+    return false;
+  });
+
   on('click', '.markdown_help_label', (event) => {
     parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
   });

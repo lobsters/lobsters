@@ -31,4 +31,4 @@ puts "  * inactive-user for disowned comments by deleted users"
 puts "  * a test tag"
 puts
 puts "If this is a dev environment, you probably want to run `rails fake_data`"
-puts "If this is production, you want to run `rails console` to rename your admin, category, and tag"
+puts "If this is production, you want to run `rails console` to rename your admin. Edit your category, and tag on-site."

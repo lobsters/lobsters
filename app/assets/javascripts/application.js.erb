@@ -214,24 +214,14 @@ var _Lobsters = Class.extend({
       // it's already posted.
       $(form).find('textarea').val('')
 
-      var parsedHTML = $.parseHTML(data);
-
-      var isEdit = $(form).hasClass("edit_comment");
-      var hasChildren = $(form).closest(".comments_subtree")
-        .find(".comments_subtree").length;
-      if (isEdit && hasChildren) {
-        $(parsedHTML).find(".comment_parent_tree_line:first")
-          .removeClass("no_children");
-      }
-
       if ($(form).find("#parent_comment_short_id").length) {
         // reply to comment
         $(form).closest(".comments_subtree")
           .find(".comment_parent_tree_line:first").removeClass("no_children");
-        $(form).closest(".comment").replaceWith(parsedHTML);
+        $(form).closest(".comment").replaceWith($.parseHTML(data));
       } else {
         // reply to story
-        $(form).parent(".comment").replaceWith(parsedHTML);
+        $(form).parent(".comment").replaceWith($.parseHTML(data));
       }
     });
   },
@@ -438,18 +428,9 @@ $(document).ready(function() {
     var comment = $(this).closest(".comment");
     var comment_id = comment.attr("data-shortid");
     if (comment_id != null && comment_id !== '') {
-      $.get("/comments/" + comment_id + "?show_tree_lines=true",
-        function(data) {
-          var parsedHTML = $.parseHTML(data);
-          var isEdit = comment.children("form").hasClass("edit_comment");
-          var hasChildren = comment.closest(".comments_subtree")
-            .find(".comments_subtree").length;
-          if (isEdit && hasChildren) {
-            $(parsedHTML).find(".comment_parent_tree_line:first")
-              .removeClass("no_children");
-          }
-          comment.replaceWith(parsedHTML);
-        });
+      $.get("/comments/" + comment_id + "?show_tree_lines=true", function(data) {
+        comment.replaceWith($.parseHTML(data));
+      });
     } else {
       comment.remove();
     }

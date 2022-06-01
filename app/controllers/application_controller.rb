@@ -97,6 +97,9 @@ class ApplicationController < ActionController::Base
     # map intensity to 80-255 so there's always a little red
     hex = sprintf('%02x', (@traffic_intensity * 1.75 + 80).round)
     @traffic_style = "background-color: ##{hex}0000;"
+    if Time.now.month == 6
+      @traffic_style = "background: linear-gradient(180deg, #FE0000 16.66%, #FD8C00 16.66%, 33.32%, #FFE500 33.32%, 49.98%, #119F0B 49.98%, 66.64%, #0644B3 66.64%, 83.3%, #C22EDC 83.3%);"
+    end
     return true unless @user
 
     color = :red

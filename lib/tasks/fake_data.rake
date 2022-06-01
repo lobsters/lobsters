@@ -231,7 +231,7 @@ class FakeDataGenerator
       user.ban_by_user_for_reason!(User.moderators.sample,
                                    Faker::Lorem.sentence(word_count: 5))
       if i.even?
-        user.unban_by_user!(User.moderators.sample, "reformed")
+        user.unban_by_user!(User.moderators.sample, Faker::Lorem.sentence(word_count: 5))
       end
     end
     puts

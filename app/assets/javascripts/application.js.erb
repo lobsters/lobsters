@@ -486,11 +486,6 @@ $(document).ready(function() {
 
   Lobsters.runSelect2();
 
-  $(document).on("click", ".comment-post", function(event) {
-    event.preventDefault();
-    Lobsters.postComment($(this).parents("form").first());
-  });
-
   $(document).on("blur", "#story_url", function() {
     var url_tags = {
       "\.pdf$": "pdf",
@@ -571,6 +566,11 @@ onPageLoad(() => {
 
   on('click', 'button.story-preview', (event) => {
     Lobsters.previewStory(parentSelector(event.target, 'form'));
+  });
+
+  on('click', '.comment-post', (event) => {
+    event.preventDefault();
+    Lobsters.postComment(parentSelector(event.target, 'form'));
   });
 });
 

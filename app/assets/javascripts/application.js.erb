@@ -515,11 +515,13 @@ const parentSelector = (target, selector) => {
   return parent;
 };
 
-function on(eventType, selector, callback) {
-  document.addEventListener(eventType, event => {
-    if (event.target.matches(selector)) {
-      callback(event);
-    }
+function on(eventTypes, selector, callback) {
+  eventTypes.split(/ /).forEach( (eventType) => {
+    document.addEventListener(eventType, event => {
+      if (event.target.matches(selector)) {
+        callback(event);
+      }
+    });
   });
 }
 

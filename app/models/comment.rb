@@ -54,22 +54,15 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
-  validates :short_id, length: { maximum: 10 }
-  validates :markeddown_comment, length: { maximum: 16_777_215 }
-  validates :comment, presence: true
-
   SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
 
+  validates :short_id, length: { maximum: 10 }
+  validates :user_id, presence: true
+  validates :story_id, presence: true
+  validates :markeddown_comment, length: { maximum: 16_777_215 }
+  validates :comment, presence: { with: true, message: "cannot be empty." }
+
   validate do
-    self.comment.to_s.strip == "" &&
-      errors.add(:comment, "cannot be blank.")
-
-    self.user_id.blank? &&
-      errors.add(:user_id, "cannot be blank.")
-
-    self.story_id.blank? &&
-      errors.add(:story_id, "cannot be blank.")
-
     self.parent_comment && self.parent_comment.is_gone? &&
       errors.add(:base, "Comment was deleted by the author or a mod while you were writing.")
 

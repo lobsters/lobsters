@@ -4,10 +4,10 @@
 class ModController < ApplicationController
   include IntervalHelper
 
-  before_action :require_logged_in_moderator, :default_periods
+  before_action :require_logged_in_moderator, :default_periods, :show_title_h1
 
   def index
-    @title = "Mod Activity"
+    @title = "Activity by Other Mods"
     @moderations = Moderation.all
       .eager_load(:moderator, :story, :tag, :user, :comment => [:story, :user])
       .where("moderator_user_id != ? or moderator_user_id is null", @user.id)
@@ -27,6 +27,7 @@ class ModController < ApplicationController
     @title = "Flagged Comments"
     @comments = period(Comment
       .eager_load(:user, :hat, :story => :user, :votes => :user)
+      .where("comments.flags >= 2")
       .where("(select count(*) from votes where
                 votes.comment_id = comments.id and
                 vote < 0 and

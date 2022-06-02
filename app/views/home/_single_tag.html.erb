@@ -1,0 +1,26 @@
+<div class="box">
+  <p>
+    Stories <a href="/tags#<%= @tag.tag %>">tagged</a> as
+    <%= tag_link(@tag) %>
+    <%= @tag.description %>
+    <br>
+    <% if @tag.hotness_mod != 0.0 %>
+      Hotness modifier <%= @tag.hotness_mod %>
+      (<%= @tag.hotness_mod > 0 ? 'raises' : 'lowers' %> a story's rank).
+    <% end %>
+    <% if @tag.privileged %>
+      Only mods can use this tag.
+    <% elsif !@tag.permit_by_new_users %>
+      Tag is <a href="/about#new-user-tags">not permitted</a> on stories submitted by new users.
+    <% end %>
+  </p>
+
+
+  <p>
+    Most often also tagged with
+    <% @related.each do |tag| %>
+      <%= tag_link(tag) %>
+    <% end %>
+  </p>
+</div>
+

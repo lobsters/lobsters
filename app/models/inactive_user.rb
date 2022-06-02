@@ -10,8 +10,10 @@ module InactiveUser
   end
 
   def self.disown_all_by_author! author
-    author.stories.update_all(:user_id => inactive_user.id)
-    author.comments.update_all(:user_id => inactive_user.id)
+    # leave attribution on deleted stuff, which is generally very relevant to mods
+    # when looking back at returning users
+    author.stories.not_deleted.update_all(:user_id => inactive_user.id)
+    author.comments.active.update_all(:user_id => inactive_user.id)
     refresh_counts! author
   end
 

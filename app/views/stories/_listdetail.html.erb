@@ -10,7 +10,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 <%= story.score <= -5 ? "negative_5" : "" %>
 <%= story.is_hidden_by_cur_user ? "hidden" : "" %>
 <%= story.is_saved_by_cur_user ? "saved" : "" %>
-<%= story.is_expired? ? "expired" : "" %>">
+<%= story.is_deleted? ? "deleted" : "" %>">
 <div class="story_liner h-entry">
   <div class="voters">
     <% if @user %>
@@ -27,7 +27,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
       <% if story.is_gone? %>
         [Story removed by <%= story.is_moderated? ? "moderator" :
-          "original submitter" %>]
+          "submitter" %>]
       <% end %>
     </span>
     <% if story.markeddown_description.present? %>
@@ -154,7 +154,16 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
         <% if story.url.present? %>
           |
-          <a href="<%= story.archive_url %>" rel="ugc" target="_blank">cached</a>
+          <span>
+            <input id="archive_<%= story.short_id %>"  class="archive_button" type="checkbox">
+            <label for="archive_<%= story.short_id %>">archive</label>
+            <label for="archive_<%= story.short_id %>" class="archive_dismiss"></label>
+            <div class="archive-dropdown">
+              <a href="<%= story.archiveorg_url %>">Archive.org</a>
+              <a href="<%= story.archivetoday_url %>">Archive.today</a>
+              <a href="<%= story.ghost_url %>">Ghostarchive</a>
+            </div>
+          </span>
         <% end %>
         <% if !story.is_gone? || @user.try(:is_moderator?) %>
           <span class="comments_label">

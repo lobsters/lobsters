@@ -14,6 +14,8 @@ class Moderation < ApplicationRecord
              :optional => true
   belongs_to :user,
              :optional => true
+  belongs_to :category,
+             :optional => true
 
   scope :for, ->(user) {
     left_outer_joins(:story, :comment) .where("
@@ -48,7 +50,9 @@ class Moderation < ApplicationRecord
         m.body << "\n" <<
           "The reason given:\n" <<
           "\n" <<
-          "> *#{self.reason}*\n"
+          "> *#{self.reason}*\n" <<
+          "\n" <<
+          "Maybe the guidelines on topicality are useful: https://lobste.rs/about#topicality"
       end
 
     elsif self.comment
@@ -82,7 +86,7 @@ class Moderation < ApplicationRecord
 protected
 
   def one_foreign_key_present
-    fks = [comment_id, domain_id, story_id, tag_id, user_id].compact.length
+    fks = [comment_id, domain_id, story_id, category_id, tag_id, user_id].compact.length
     errors.add(:base, "moderation should be linked to only one object") if fks != 1
   end
 end

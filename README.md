@@ -1,8 +1,9 @@
-### Lobsters Rails Project [![Build Status](https://travis-ci.org/lobsters/lobsters.svg?branch=master)](https://travis-ci.org/lobsters/lobsters)
+### Lobsters Rails Project ![build status](https://github.com/lobsters/lobsters/actions/workflows/check.yml/badge.svg)
 
 This is the
 [quite sad](https://www.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)
-source code to the site operating at
+source code to the
+[ghost town](https://twitter.com/webshitweekly/status/1399935275057389571) at
 [https://lobste.rs](https://lobste.rs).
 It is a Rails codebase and uses a SQL (MariaDB in production) backend for the database.
 
@@ -16,6 +17,8 @@ As a volunteer project we're reluctant to take on work that's not useful to our 
 
 We'd love to have your help.
 Please see the [CONTRIBUTING](https://github.com/lobsters/lobsters/blob/master/CONTRIBUTING.md) file for details.
+If you have questions, there is usually someone in [our chat room](https://lobste.rs/chat) who's familiar with the code.
+
 
 #### Initial setup
 
@@ -87,8 +90,6 @@ running tests:
   to `config/initalizers/production.rb` and customize it with your site's
   `domain` and `name`. (You don't need this on your dev machine).
 
-* Put your site's custom CSS in `app/assets/stylesheets/local`.
-
 * Seed the database to create an initial administrator user, the `inactive-user`, and at least one tag:
 
     ```sh
@@ -114,6 +115,9 @@ running tests:
     ```
 
 * See `config/initializers/production.rb.sample` for GitHub/Twitter integration help.
+
+* You probably want to use [git-imerge](https://lobste.rs/s/dbm2d4) to pull in
+  changes from Lobsters to your site.
 
 #### Administration
 

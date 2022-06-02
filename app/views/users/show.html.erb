@@ -1,22 +1,12 @@
-<%= render partial: 'users/flag_warning' if @show_flag_warning && @showing_user == @user %>
+<%= render partial: 'users/flag_warning' if @showing_user == @user && @show_flag_warning %>
+
+<% content_for :subnav do %>
+  <% if @user && @showing_user.is_active? && @showing_user != @user %>
+    <a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>
+  <% end %>
+<% end %>
 
 <div class="box wide">
-  <div class="legend">
-    <% if !@showing_user.is_active? %>
-      <span class="inactive_user">
-    <% elsif @showing_user.is_new? %>
-      <span class="new_user">
-    <% else %>
-      <span>
-    <% end %>
-      <%= @showing_user.username %>
-    </span>
-
-    <% if @user && @showing_user.is_active? %>
-      (<a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>)
-    <% end %>
-  </div>
-
   <% if @showing_user.is_active? %>
     <div id="gravatar">
       <%= avatar_img(@showing_user, 100) %>
@@ -117,6 +107,11 @@
     <span class="d">
       <a href="<%= h(@showing_user.homepage) %>"
         rel="me ugc"><%= h(@showing_user.homepage) %></a>
+      <% if @showing_user.homepage.start_with?('gemini://') %>
+        (<a href="https://portal.mozz.us/gemini/<% h(@showing_user.homepage[9..-1]) %>">proxy</a>)
+      <% elsif @showing_user.homepage.start_with?('gopher://') %>
+        (<a href="https://gopher.floodgap.com/gopher/gw?<% h(@showing_user.homepage[9..-1]) %>">proxy</a>)
+      <% end %>
     </span>
     <br>
   <% end %>
@@ -238,6 +233,10 @@
         <%= form_with url: user_unban_path, method: :post, local: true do |f| %>
           <p>
             <% if @showing_user.is_banned? %>
+              <div class="boxline">
+                <%= f.label :reason, "Reason:", :class => "required" %>
+                <%= f.text_field :reason, :size => 40 %>
+              </div>
               <%= f.submit "Unban" %>
             <% end %>
             <% if @showing_user.banned_from_inviting? %>

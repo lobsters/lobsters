@@ -1,8 +1,4 @@
 <div class="box">
-  <div class="legend">
-    Search
-  </div>
-
   <%= form_with url: '/search', method: :get, local: true do |f| %>
     <div class="boxline">
         <%= f.text_field "q", { :value => @search.q, :size => 40 }.
@@ -25,13 +21,13 @@
 
       <label class="required">Order By:</label>
 
-      <%= f.radio_button "order", "relevance", :checked => @search.order == "relevance" %>
-        <label for="order_relevance" class="normal">Relevance</label>
+      <%= f.radio_button "order", "newest", :checked => @search.order == "newest" %>
+        <label for="order_newest" class="normal">Newest</label>
 
       &nbsp;
 
-      <%= f.radio_button "order", "newest", :checked => @search.order == "newest" %>
-        <label for="order_newest" class="normal">Newest</label>
+      <%= f.radio_button "order", "relevance", :checked => @search.order == "relevance" %>
+        <label for="order_relevance" class="normal">Relevance</label>
 
       &nbsp;
 
@@ -44,10 +40,10 @@
 <% if @search.total_results > -1 %>
   <div class="box">
     <p>
-    <div class="legend">
+    <h2>
       <%= @search.total_results %> result<%= @search.total_results == 1 ? "" :
         "s" %> for "<%= @search.q %>"
-    </div>
+    </h2>
     </p>
   </div>
 

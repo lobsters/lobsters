@@ -1,11 +1,8 @@
-<div class="box wide">
-  <div class="legend right">
-    <a href="/settings">Back to Settings</a>
-  </div>
-  <div class="legend">
-    <%= @title %>
-  </div>
+<% content_for :subnav do %>
+  <a href="/settings">Back to Settings</a>
+<% end %>
 
+<div class="box wide">
   <p>
   Scan the QR code below or click on it to open in your <a
   href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm"

@@ -4,6 +4,17 @@ describe StoryRepository do
   let(:submitter) { create(:user) }
   let(:repo) { StoryRepository.new(submitter) }
 
+  describe '.active' do
+    it "is ordered by most-recent comment" do
+      older_story = create(:story)
+      newer_story = create(:story)
+      older_comment = create(:comment, story: newer_story)
+      newer_comment = create(:comment, story: older_story)
+
+      expect(repo.active).to eq([newer_comment.story, older_comment.story])
+    end
+  end
+
   describe ".newest_by_user" do
     context "when user is viewing their own stories" do
       before do

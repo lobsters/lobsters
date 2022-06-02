@@ -3,13 +3,15 @@ Rails.application.routes.draw do
     :protocol => (Rails.application.config.force_ssl ? "https://" : "http://"),
     :as => "root"
 
-  get "/404" => "home#four_oh_four", :via => :all
+  get "/404" => "about#four_oh_four", :via => :all
 
   get "/rss" => "home#index", :format => "rss"
   get "/hottest" => "home#index", :format => "json"
 
   get "/page/:page" => "home#index"
 
+  get "/active" => "home#active"
+  get "/active/page/:page" => "home#active"
   get "/newest" => "home#newest"
   get "/newest/page/:page" => "home#newest"
   get "/newest/:user" => "home#newest_by_user"
@@ -63,11 +65,12 @@ Rails.application.routes.draw do
   match "/login/set_new_password" => "login#set_new_password",
     :as => "set_new_password", :via => [:get, :post]
 
-  get "/categories/:category" => "home#category", :as => :category
-  get "/t/:tag" => "home#tagged", :as => "tag"
+  get "/t/:tag" => "home#single_tag", :as => "tag", :constraints => { tag: /[^,\.]+/ }
+  get "/t/:tag" => "home#multi_tag", :as => "multi_tag"
   get "/t/:tag/page/:page" => "home#tagged"
 
-  get "/domain/:name" => "home#for_domain", :as => "domain", :constraints => { name: /[^\/]+/ }
+  get "/domain/:name(.:format)" => "home#for_domain", :as => "domain",
+    :constraints => { name: /[^\/]+?/, format: /json|rss/ }
   get "/domain/:name/page/:page" => "home#for_domain", :constraints => { name: /[^\/]+/ }
 
   get "/search" => "search#index"
@@ -78,7 +81,8 @@ Rails.application.routes.draw do
     post "upvote"
     post "flag"
     post "unvote"
-    post "undelete"
+    put "destroy"
+    put "undelete"
     post "hide"
     post "unhide"
     post "save"
@@ -114,6 +118,8 @@ Rails.application.routes.draw do
     post "keep_as_new"
     post "mod_note"
   end
+
+  get "/inbox" => "inbox#index"
 
   get "/c/:id" => "comments#redirect_from_short_id"
   get "/c/:id.json" => "comments#show_short_id", :format => "json"
@@ -165,14 +171,18 @@ Rails.application.routes.draw do
   get "/filters" => "filters#index"
   post "/filters" => "filters#update"
 
-  resources :categories, only: [:show]
-
   get "/tags" => "tags#index"
   get "/tags.json" => "tags#index", :format => "json"
   get "/tags/new" => "tags#new", :as => "new_tag"
   get "/tags/:tag_name/edit" => "tags#edit", :as => "edit_tag"
   post "/tags" => "tags#create"
   post "/tags/:tag_name" => "tags#update", :as => "update_tag"
+
+  get "/categories/new" => "categories#new", :as => "new_category"
+  get "/categories/:category_name/edit" => "categories#edit", :as => "edit_category"
+  get "/categories/:category" => "home#category", :as => :category
+  post "/categories" => "categories#create"
+  post "/categories/:category_name" => "categories#update", :as => "update_category"
 
   post "/invitations" => "invitations#create"
   get "/invitations" => "invitations#index"
@@ -208,9 +218,9 @@ Rails.application.routes.draw do
   get "/mod/notes(/:period)" => "mod_notes#index", :as => "mod_notes"
   post "/mod/notes" => "mod_notes#create"
 
-  get "/privacy" => "home#privacy"
-  get "/about" => "home#about"
-  get "/chat" => "home#chat"
+  get "/privacy" => "about#privacy"
+  get "/about" => "about#about"
+  get "/chat" => "about#chat"
 
   get "/stats" => "stats#index"
 

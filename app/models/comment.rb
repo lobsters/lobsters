@@ -61,20 +61,48 @@ class Comment < ApplicationRecord
   validates :story_id, presence: true
   validates :markeddown_comment, length: { maximum: 16_777_215 }
   validates :comment, presence: { with: true, message: "cannot be empty." }
-  validates :comment, format: { without: /\A\w*(this|tl;?dr)[\.!]?\w*\z/i,
-    message: "is low effort.", }
-  validates :comment, format: { without: /\A\w*(me too|nice)[\.!]?\w*\z/i,
-    message: "is not necessary, please upvote the parent post instead", }
 
   validate do
     self.parent_comment && self.parent_comment.is_gone? &&
       errors.add(:base, "Comment was deleted by the author or a mod while you were writing.")
 
+    (m = self.comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
+      errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
+
+    self.comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
+      errors.add(:base, "Wow!  A blue car!")
+
+    self.comment.to_s.strip.match(/\A([[[:upper:]][[:punct:]]] )+[[[:upper:]][[:punct:]]]?$\z/) &&
+      errors.add(:base, "D O N ' T")
+
+    self.comment.to_s.strip.match(/\A(me too|nice)([\.!])?\z/i) &&
+      errors.add(:base, "Please just upvote the parent post instead.")
+
     self.hat.present? && self.user.wearable_hats.exclude?(self.hat) &&
       errors.add(:hat, "not wearable by user")
+
+    # .try so tests don't need to persist a story and user
+    self.story.try(:accepting_comments?) ||
+      errors.add(:base, "Story is no longer accepting comments.")
   end
 
   def self.arrange_for_user(user)
+    # This function is always used when presenting threads. The calling
+    # controllers advance the user's ReadRibbon, which may reduce the number
+    # of ReplyingComments, invalidating the User.unread_replies_count cache.
+    # The controller clearing that cache on every view of any thread would be
+    # wasteful because users read many more threads than they participate in,
+    # the controller making an extra loop over all comments would be wasteful,
+    # so this does a couple checks (without replicating all the predicates in
+    # replying_comments view, which would be brittle) and may clear the cache.
+    #
+    # This whole function should be done in the DB using a common-table
+    # expression. When that happens the cache clear probably needs to move up
+    # to the controller, which means extra clears, but that's probably a win
+    # because this function is the site's core functionality and it's
+    # expensive in both CPU + redundant RAM for the web workers.
+    clear_replies_cache = false
+
     parents = self.order(
       Arel.sql("comments.score < 0 ASC, comments.confidence DESC")
     )
@@ -89,6 +117,8 @@ class Comment < ApplicationRecord
     while subtree
       if (node = subtree.shift)
         children = parents[node.id]
+
+        clear_replies_cache = true if user && node.user_id == user.id
 
         # for deleted comments, if they have no children, they can be removed
         # from the tree.  otherwise they have to stay and a "[deleted]" stub
@@ -114,6 +144,8 @@ class Comment < ApplicationRecord
         subtree = ancestors.pop
       end
     end
+
+    Rails.cache.delete("user:#{user.id}:unread_replies") if clear_replies_cache
 
     ordered
   end
@@ -141,7 +173,9 @@ class Comment < ApplicationRecord
       :is_moderated,
       :score,
       :flags,
+      { :parent_comment => self.parent_comment && self.parent_comment.short_id },
       { :comment => (self.is_gone? ? "<em>#{self.gone_text}</em>" : :markeddown_comment) },
+      { :comment_plain => (self.is_gone? ? self.gone_text : :comment) },
       :url,
       :indent_level,
       { :commenting_user => :user },

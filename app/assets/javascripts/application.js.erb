@@ -350,10 +350,6 @@ var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
   
-  $("li.story a.hider").click(function() {
-    Lobsters.hideStory(this);
-    return false;
-  });
   $("li.story a.saver").click(function() {
     Lobsters.saveStory(this);
     return false;
@@ -550,6 +546,11 @@ onPageLoad(() => {
     Lobsters.flagStory(event.target);
     return false;
   });
+
+  on('click', 'li.story a.hider', (event) => {
+    event.preventDefault();
+    Lobsters.hideStory(event.target);
+  })
 
   on('click', '.markdown_help_label', (event) => {
     parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');

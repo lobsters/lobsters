@@ -218,11 +218,8 @@ var _Lobsters = Class.extend({
         // reply to comment
         $(form).closest(".comments_subtree")
           .find(".comment_parent_tree_line:first").removeClass("no_children");
-        $(form).closest(".comment").replaceWith($.parseHTML(data));
-      } else {
-        // reply to story
-        $(form).parent(".comment").replaceWith($.parseHTML(data));
       }
+      $(form).closest(".comment").replaceWith($.parseHTML(data));
     });
   },
 
@@ -352,10 +349,6 @@ var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
   
-  $("li.story a.upvoter").click(function() {
-    Lobsters.upvoteStory(this);
-    return false;
-  });
   $("li.story a.hider").click(function() {
     Lobsters.hideStory(this);
     return false;
@@ -508,7 +501,7 @@ $(document).ready(function() {
     if (this.value.trim() !== '' && !this.value.match('^[a-z]+:\/\/'))
       this.value = 'http://' + this.value;
   });
-
+  
   $('textarea#comment').keydown(function (e) {
     if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
       $(".comment-post").click();
@@ -543,6 +536,11 @@ onPageLoad(() => {
 
   on('click', '.comment a.flagger', (event) => {
     Lobsters.flagComment(event.target);
+    return false;
+  });
+
+  on('click', 'li.story a.upvoter', (event) => {
+    Lobsters.upvoteStory(event.target);
     return false;
   });
 

@@ -352,11 +352,6 @@ var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
   
-
-  $("li.story a.flagger").click(function() {
-    Lobsters.flagStory(this);
-    return false;
-  });
   $("li.story a.upvoter").click(function() {
     Lobsters.upvoteStory(this);
     return false;
@@ -553,6 +548,11 @@ onPageLoad(() => {
 
   on("click", '.comment a.upvoter', (event) => {
     Lobsters.upvoteComment(event.target);
+    return false;
+  });
+
+  on('click', 'li.story a.flagger', (event) => {
+    Lobsters.flagStory(event.target);
     return false;
   });
 

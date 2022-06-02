@@ -92,10 +92,9 @@ class ApplicationController < ActionController::Base
     return true if Rails.application.read_only? ||
                    agent_is_spider? ||
                    %w{json rss}.include?(params[:format])
-
-    if Time.current.month == 6 && Time.current.day == 28 # Anniversary of the Stonewall riots
-      @traffic_style = "background: linear-gradient(180deg, #FE0000 16.66%, #FD8C00 16.66%, 33.32%, #FFE500 33.32%, 49.98%, #119F0B 49.98%, 66.64%, #0644B3 66.64%, 83.3%, #C22EDC 83.3%);" # rubocop:disable Layout/LineLength
-      return true
+    if (skip = TrafficHelper.novelty_logo)
+      @traffic_style = skip
+      return
     end
 
     @traffic_intensity = TrafficHelper.cached_current_intensity

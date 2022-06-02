@@ -56,4 +56,18 @@ module TrafficHelper
   def self.cached_current_intensity
     Keystore.value_for('traffic:intensity') || 0.5
   end
+
+  # rubocop:disable Layout/LineLength
+  def self.novelty_logo
+    time = Time.current
+
+    if time.month == 6 && time.day == 28 # Stonewall riots
+      return "background: linear-gradient(180deg, #FE0000 16.66%, #FD8C00 16.66%, 33.32%, #FFE500 33.32%, 49.98%, #119F0B 49.98%, 66.64%, #0644B3 66.64%, 83.3%, #C22EDC 83.3%);"
+    elsif time.month == 12 && time.day == 25 # Christmas
+      return "background: conic-gradient(at 50% 0, #9f3631 157.5deg, #01c94f 0, #01c94f 202.5deg, #9f3631 0);"
+    end
+
+    nil
+  end
+  # rubocop:enable Layout/LineLength
 end

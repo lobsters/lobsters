@@ -567,10 +567,10 @@ onPageLoad(() => {
   on('click', 'button.story-preview', (event) => {
     Lobsters.previewStory(parentSelector(event.target, 'form'));
   });
-
-  on('click', '.comment-post', (event) => {
+  
+  on('submit', '.comment_form_container form', (event) => {
     event.preventDefault();
-    Lobsters.postComment(parentSelector(event.target, 'form'));
+    Lobsters.postComment(event.target);
   });
 });
 

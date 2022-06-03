@@ -408,14 +408,6 @@ $(document).ready(function() {
     }
   });
 
-  $(document).on("click", "a.comment_editor", function() {
-    var comment = $(this).closest(".comment");
-    $.get("/comments/" + comment.attr("data-shortid") + "/edit",
-    function(data) {
-      comment.replaceWith($.parseHTML(data));
-    });
-  });
-
   $(document).on("click", "a.comment_deletor", function(event) {
     event.preventDefault();
     if (confirm("Are you sure you want to delete this comment?")) {
@@ -520,6 +512,13 @@ const onPageLoad = (callback) => {
   document.addEventListener('DOMContentLoaded', callback);
 };
 
+const replace = (oldElement, newHTMLString) => {
+  const placeHolder = document.createElement('div');
+  placeHolder.insertAdjacentHTML('afterBegin', newHTMLString);
+  const newElement = placeHolder.firstElementChild;
+  oldElement.replaceWith(newElement);
+}
+
 onPageLoad(() => {
 
   on('click', '.comment a.flagger', (event) => {
@@ -573,6 +572,18 @@ onPageLoad(() => {
     if ((event.metaKey || event.ctrlKey) && event.keyCode == 13) {
       Lobsters.postComment(parentSelector(event.target, 'form'));
     }
+  });
+
+  on('click', 'a.comment_editor', (event) => {
+    let comment = parentSelector(event.target, '.comment');
+    fetch('/comments/' + comment.getAttribute('data-shortid') + '/edit')
+    .then(response => {
+      return response.text().then(function(text) {
+        replace(comment, text);
+      });
+    }).catch(error => {
+      console.log(error);
+    });
   });
 });
 

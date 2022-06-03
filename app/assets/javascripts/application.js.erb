@@ -349,11 +349,6 @@ var _Lobsters = Class.extend({
 var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
-  
-  $("li.story a.saver").click(function() {
-    Lobsters.saveStory(this);
-    return false;
-  });
 
   $("select[name=message\\[hat_id\\]]").change(function() {
     $(this).siblings("input[name=message\\[mod_note\\]]")
@@ -551,6 +546,11 @@ onPageLoad(() => {
     event.preventDefault();
     Lobsters.hideStory(event.target);
   })
+
+  on('click', 'li.story a.saver', (event) => {
+    event.preventDefault();
+    Lobsters.saveStory(event.target);
+  });
 
   on('click', '.markdown_help_label', (event) => {
     parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');

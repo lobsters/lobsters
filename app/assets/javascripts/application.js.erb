@@ -501,12 +501,6 @@ $(document).ready(function() {
     if (this.value.trim() !== '' && !this.value.match('^[a-z]+:\/\/'))
       this.value = 'http://' + this.value;
   });
-  
-  $('textarea#comment').keydown(function (e) {
-    if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
-      $(".comment-post").click();
-    }
-  });
 });
 
 const parentSelector = (target, selector) => {
@@ -569,6 +563,12 @@ onPageLoad(() => {
   on('submit', '.comment_form_container form', (event) => {
     event.preventDefault();
     Lobsters.postComment(event.target);
+  });
+
+  on('keydown', 'textarea#comment', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.keyCode == 13) {
+      Lobsters.postComment(parentSelector(event.target, 'form'));
+    }
   });
 });
 

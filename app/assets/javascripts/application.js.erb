@@ -521,24 +521,19 @@ const replace = (oldElement, newHTMLString) => {
 
 onPageLoad(() => {
 
-  on('click', '.comment a.flagger', (event) => {
-    Lobsters.flagComment(event.target);
-    return false;
+  on('click', '.markdown_help_label', (event) => {
+    parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
   });
 
+  // Story Related Functions
   on('click', 'li.story a.upvoter', (event) => {
+    event.preventDefault();
     Lobsters.upvoteStory(event.target);
-    return false;
-  });
-
-  on("click", '.comment a.upvoter', (event) => {
-    Lobsters.upvoteComment(event.target);
-    return false;
   });
 
   on('click', 'li.story a.flagger', (event) => {
+    event.preventDefault();
     Lobsters.flagStory(event.target);
-    return false;
   });
 
   on('click', 'li.story a.hider', (event) => {
@@ -551,16 +546,23 @@ onPageLoad(() => {
     Lobsters.saveStory(event.target);
   });
 
-  on('click', '.markdown_help_label', (event) => {
-    parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
-  });
-
-  on('click', 'button.comment-preview', (event) => {
-    Lobsters.previewComment(parentSelector(event.target, 'form'));
-  });
-
   on('click', 'button.story-preview', (event) => {
     Lobsters.previewStory(parentSelector(event.target, 'form'));
+  });
+
+  // Comment Related Functions
+  on('click', '.comment a.flagger', (event) => {
+    event.preventDefault();
+    Lobsters.flagComment(event.target);
+  });
+
+  on("click", '.comment a.upvoter', (event) => {
+    event.preventDefault();
+    Lobsters.upvoteComment(event.target);
+  });
+  
+  on('click', 'button.comment-preview', (event) => {
+    Lobsters.previewComment(parentSelector(event.target, 'form'));
   });
   
   on('submit', '.comment_form_container form', (event) => {
@@ -577,13 +579,11 @@ onPageLoad(() => {
   on('click', 'a.comment_editor', (event) => {
     let comment = parentSelector(event.target, '.comment');
     fetch('/comments/' + comment.getAttribute('data-shortid') + '/edit')
-    .then(response => {
-      return response.text().then(function(text) {
-        replace(comment, text);
+      .then(response => {
+        return response.text().then(function(text) {
+          replace(comment, text);
+        });
       });
-    }).catch(error => {
-      console.log(error);
-    });
   });
 });
 

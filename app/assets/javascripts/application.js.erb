@@ -396,18 +396,6 @@ $(document).ready(function() {
     return false;
   });
 
-  $(document).on("click", "button.comment-cancel", function() {
-    var comment = $(this).closest(".comment");
-    var comment_id = comment.attr("data-shortid");
-    if (comment_id != null && comment_id !== '') {
-      $.get("/comments/" + comment_id + "?show_tree_lines=true", function(data) {
-        comment.replaceWith($.parseHTML(data));
-      });
-    } else {
-      comment.remove();
-    }
-  });
-
   $(document).on("click", "a.comment_deletor", function(event) {
     event.preventDefault();
     if (confirm("Are you sure you want to delete this comment?")) {
@@ -574,6 +562,21 @@ onPageLoad(() => {
   on('keydown', 'textarea#comment', (event) => {
     if ((event.metaKey || event.ctrlKey) && event.keyCode == 13) {
       Lobsters.postComment(parentSelector(event.target, 'form'));
+    }
+  });
+
+  on('click', 'button.comment-cancel', (event) => {
+    const comment = (parentSelector(event.target, '.comment'));
+    const commentId = comment.getAttribute('data-shortid');
+    if (commentId !== null && commentId !== '') {
+      fetch('/comments/' + commentId + '?show_tree_lines=true')
+        .then(response => {
+          return response.text().then((text) => {
+            replace(comment, text);
+          });
+        });
+    } else {
+      comment.remove();
     }
   });
 

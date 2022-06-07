@@ -515,12 +515,13 @@ const onPageLoad = (callback) => {
 const replace = (oldElement, newHTMLString) => {
   const placeHolder = document.createElement('div');
   placeHolder.insertAdjacentHTML('afterBegin', newHTMLString);
-  const newElement = placeHolder.firstElementChild;
-  oldElement.replaceWith(newElement);
+  const newElements = placeHolder.childNodes.values();
+  oldElement.replaceWith(...newElements);
 }
 
 onPageLoad(() => {
 
+  // Global Functions
   on('click', '.markdown_help_label', (event) => {
     parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
   });

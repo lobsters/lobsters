@@ -218,11 +218,8 @@ var _Lobsters = Class.extend({
         // reply to comment
         $(form).closest(".comments_subtree")
           .find(".comment_parent_tree_line:first").removeClass("no_children");
-        $(form).closest(".comment").replaceWith($.parseHTML(data));
-      } else {
-        // reply to story
-        $(form).parent(".comment").replaceWith($.parseHTML(data));
       }
+      $(form).closest(".comment").replaceWith($.parseHTML(data));
     });
   },
 
@@ -339,6 +336,7 @@ var _Lobsters = Class.extend({
       button.val(old_value);
       button.prop("disabled", false);
     });
+    Lobsters.checkStoryTitle();
   },
 
   bounceToLogin: function() {
@@ -351,32 +349,6 @@ var _Lobsters = Class.extend({
 var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
-  var $olcomments = $("ol.comments");
-  $olcomments.on("click", ".comment a.flagger", function() {
-    Lobsters.flagComment(this);
-    return false;
-  });
-  $olcomments.on("click", ".comment a.upvoter", function() {
-    Lobsters.upvoteComment(this);
-    return false;
-  });
-
-  $("li.story a.flagger").click(function() {
-    Lobsters.flagStory(this);
-    return false;
-  });
-  $("li.story a.upvoter").click(function() {
-    Lobsters.upvoteStory(this);
-    return false;
-  });
-  $("li.story a.hider").click(function() {
-    Lobsters.hideStory(this);
-    return false;
-  });
-  $("li.story a.saver").click(function() {
-    Lobsters.saveStory(this);
-    return false;
-  });
 
   $("select[name=message\\[hat_id\\]]").change(function() {
     $(this).siblings("input[name=message\\[mod_note\\]]")
@@ -436,14 +408,6 @@ $(document).ready(function() {
     }
   });
 
-  $(document).on("click", "a.comment_editor", function() {
-    var comment = $(this).closest(".comment");
-    $.get("/comments/" + comment.attr("data-shortid") + "/edit",
-    function(data) {
-      comment.replaceWith($.parseHTML(data));
-    });
-  });
-
   $(document).on("click", "a.comment_deletor", function(event) {
     event.preventDefault();
     if (confirm("Are you sure you want to delete this comment?")) {
@@ -489,25 +453,6 @@ $(document).ready(function() {
 
   Lobsters.runSelect2();
 
-  $(document).on("click", "div.markdown_help_toggler .markdown_help_label",
-  function() {
-    $(this).parents("div.markdown_help_toggler").first().
-      children(".markdown_help").toggle();
-  });
-
-  $(document).on("click", ".comment-post", function(event) {
-    event.preventDefault();
-    Lobsters.postComment($(this).parents("form").first());
-  });
-
-  $(document).on("click", "button.comment-preview", function() {
-    Lobsters.previewComment($(this).parents("form").first());
-  });
-
-  $(document).on("click", "button.story-preview", function() {
-    Lobsters.previewStory($(this).parents("form").first());
-  });
-
   $(document).on("blur", "#story_url", function() {
     var url_tags = {
       "\.pdf$": "pdf",
@@ -540,11 +485,105 @@ $(document).ready(function() {
     if (this.value.trim() !== '' && !this.value.match('^[a-z]+:\/\/'))
       this.value = 'http://' + this.value;
   });
+});
 
-  $('textarea#comment').keydown(function (e) {
-    if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
-      $(".comment-post").click();
+const parentSelector = (target, selector) => {
+  let parent = target;
+  while (!parent.matches(selector)) {
+    parent = parent.parentElement;
+    if (parent === null) {
+      throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
     }
+  }
+  return parent;
+};
+
+function on(eventTypes, selector, callback) {
+  eventTypes.split(/ /).forEach( (eventType) => {
+    document.addEventListener(eventType, event => {
+      if (event.target.matches(selector)) {
+        callback(event);
+      }
+    });
+  });
+}
+
+const onPageLoad = (callback) => {
+  document.addEventListener('DOMContentLoaded', callback);
+};
+
+const replace = (oldElement, newHTMLString) => {
+  const placeHolder = document.createElement('div');
+  placeHolder.insertAdjacentHTML('afterBegin', newHTMLString);
+  const newElement = placeHolder.firstElementChild;
+  oldElement.replaceWith(newElement);
+}
+
+onPageLoad(() => {
+
+  on('click', '.markdown_help_label', (event) => {
+    parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
+  });
+
+  // Story Related Functions
+  on('click', 'li.story a.upvoter', (event) => {
+    event.preventDefault();
+    Lobsters.upvoteStory(event.target);
+  });
+
+  on('click', 'li.story a.flagger', (event) => {
+    event.preventDefault();
+    Lobsters.flagStory(event.target);
+  });
+
+  on('click', 'li.story a.hider', (event) => {
+    event.preventDefault();
+    Lobsters.hideStory(event.target);
+  })
+
+  on('click', 'li.story a.saver', (event) => {
+    event.preventDefault();
+    Lobsters.saveStory(event.target);
+  });
+
+  on('click', 'button.story-preview', (event) => {
+    Lobsters.previewStory(parentSelector(event.target, 'form'));
+  });
+
+  // Comment Related Functions
+  on('click', '.comment a.flagger', (event) => {
+    event.preventDefault();
+    Lobsters.flagComment(event.target);
+  });
+
+  on("click", '.comment a.upvoter', (event) => {
+    event.preventDefault();
+    Lobsters.upvoteComment(event.target);
+  });
+  
+  on('click', 'button.comment-preview', (event) => {
+    Lobsters.previewComment(parentSelector(event.target, 'form'));
+  });
+  
+  on('submit', '.comment_form_container form', (event) => {
+    event.preventDefault();
+    Lobsters.postComment(event.target);
+  });
+
+  on('keydown', 'textarea#comment', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.keyCode == 13) {
+      Lobsters.postComment(parentSelector(event.target, 'form'));
+    }
+  });
+
+  on('click', 'a.comment_editor', (event) => {
+    let comment = parentSelector(event.target, '.comment');
+    fetch('/comments/' + comment.getAttribute('data-shortid') + '/edit')
+      .then(response => {
+        return response.text().then(function(text) {
+          replace(comment, text);
+        });
+      });
   });
 });
 

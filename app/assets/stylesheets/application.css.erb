@@ -1077,11 +1077,12 @@ div.comment_text code {
 
 
 
-div.markdown_help {
+.markdown_help {
 	background-color: var(--color-box-bg-shaded);
 	border: 1px solid var(--color-box-border);
 	padding: 0 1em;
 	margin-top: 0.5em;
+	display: none;
 }
 
 div.markdown_help_label {
@@ -1373,6 +1374,9 @@ table.data pre {
 	margin-left: 12em;
 }
 
+.display-block {
+	display: block;
+}
 
 /* for flash_notices() and flash_errors() */
 
@@ -1789,9 +1793,6 @@ div.flash-success h2 {
 		max-width: 90%;
 	}
 
-	div.markdown_help_label {
-		display: none;
-	}
 	div.markdown_help_label_mobile {
 		display: inline !important;
 		margin-right: 2em;

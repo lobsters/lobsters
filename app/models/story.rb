@@ -61,22 +61,19 @@ class Story < ApplicationRecord
         .order("stories.created_at DESC")
   }
   scope :filter_tags, ->(tags) {
-    tags.empty? ? all : where.not(
-      Tagging.select('TRUE')
-             .where('taggings.story_id = stories.id')
-             .where(tag_id: tags)
-             .arel
-             .exists
+    tags.empty? ? all : where(
+      Story.arel_table[:id].not_in(
+        Tagging.where(tag_id: tags).select(:story_id).arel
+      )
     )
   }
   scope :filter_tags_for, ->(user) {
-    user.nil? ? all : where.not(
-      Tagging.joins(tag: :tag_filters)
-             .select('TRUE')
-             .where('taggings.story_id = stories.id')
-             .where(tag_filters: { user_id: user })
-             .arel
-             .exists
+    user.nil? ? all : where(
+      Story.arel_table[:id].not_in(
+        Tagging.joins(tag: :tag_filters)
+          .where(tag_filters: { user_id: user })
+          .select(:story_id).arel
+      )
     )
   }
   scope :hidden_by, ->(user) {

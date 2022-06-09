@@ -396,16 +396,6 @@ $(document).ready(function() {
     return false;
   });
 
-  $(document).on("click", "a.comment_deletor", function(event) {
-    event.preventDefault();
-    if (confirm("Are you sure you want to delete this comment?")) {
-      var li = $(this).closest(".comment");
-      $.post("/comments/" + $(li).attr("data-shortid") + "/delete",
-      function(d) {
-        $(li).replaceWith(d);
-      });
-    }
-  });
   $(document).on("click", "a.comment_undeletor", function(event) {
     event.preventDefault();
     if (confirm("Are you sure you want to undelete this comment?")) {
@@ -507,6 +497,15 @@ const replace = (oldElement, newHTMLString) => {
   oldElement.replaceWith(...newElements);
 }
 
+const fetchWithCSRF = (url, params) => {
+  let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  let h = new Headers();
+  h.append('X-CSRF-Token', csrfToken);
+  params = params || {};
+  params['headers'] = h;
+  return fetch(url, params);
+} 
+
 onPageLoad(() => {
 
   // Global Functions
@@ -571,9 +570,7 @@ onPageLoad(() => {
     if (commentId !== null && commentId !== '') {
       fetch('/comments/' + commentId + '?show_tree_lines=true')
         .then(response => {
-          return response.text().then((text) => {
-            replace(comment, text);
-          });
+          response.text().then(text => replace(comment, text));
         });
     } else {
       comment.remove();
@@ -584,10 +581,20 @@ onPageLoad(() => {
     let comment = parentSelector(event.target, '.comment');
     fetch('/comments/' + comment.getAttribute('data-shortid') + '/edit')
       .then(response => {
-        return response.text().then(function(text) {
-          replace(comment, text);
+        response.text().then(text => replace(comment, text));
+      });   
+  });
+
+  on("click", "a.comment_deletor", (event) => {
+    event.preventDefault();
+    if (confirm("Are you sure you want to delete this comment?")) {
+      const comment = parentSelector(event.target, ".comment");
+      const commentId = comment.getAttribute('data-shortid');
+      fetchWithCSRF('/comments/' + commentId + '/delete',{method: 'post'})
+        .then(response => {
+          response.text().then(text => replace(comment, text));
         });
-      });
+    }
   });
 });
 

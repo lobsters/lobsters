@@ -391,17 +391,6 @@ $(document).ready(function() {
     return false;
   });
 
-  $(document).on("click", "a.comment_undeletor", function(event) {
-    event.preventDefault();
-    if (confirm("Are you sure you want to undelete this comment?")) {
-      var li = $(this).closest(".comment");
-      $.post("/comments/" + $(li).attr("data-shortid") + "/undelete",
-      function(d) {
-        $(li).replaceWith(d);
-      });
-    }
-  });
-
   $(document).on("click", "a.comment_disownor", function() {
     if (confirm("Are you sure you want to disown this comment?")) {
       var li = $(this).closest(".comment");
@@ -501,11 +490,11 @@ const fetchWithCSRF = (url, params) => {
   return fetch(url, params);
 } 
 
-    const removeExtraInput = (targetElement) => {
-      // This deletion will resovle a bug that creates an extra hidden input when rendering the comment elements.
-       const extraInput2 = targetElement.parentElement.querySelector('.comment_folder_button');
-       extraInput2.remove();
-    }
+const removeExtraInput = (targetElement) => {
+  // This deletion will resovle a bug that creates an extra hidden input when rendering the comment elements.
+  const extraInput2 = targetElement.parentElement.querySelector('.comment_folder_button');
+  extraInput2.remove();
+}
 
 onPageLoad(() => {
 
@@ -589,7 +578,8 @@ onPageLoad(() => {
 
   on('click', 'a.comment_editor', (event) => {
     let comment = parentSelector(event.target, '.comment');
-    fetch('/comments/' + comment.getAttribute('data-shortid') + '/edit')
+    const commentId = comment.getAttribute('data-shortid')
+    fetch('/comments/' + commentId + '/edit')
       .then(response => {
         response.text().then(text => replace(comment, text));
       });  
@@ -599,10 +589,23 @@ onPageLoad(() => {
   on("click", "a.comment_deletor", (event) => {
     event.preventDefault();
     if (confirm("Are you sure you want to delete this comment?")) {
-      const comment = parentSelector(event.target, ".comment");
+      const comment = parentSelector(event.target, '.comment');
       removeExtraInput(comment);
       const commentId = comment.getAttribute('data-shortid');
       fetchWithCSRF('/comments/' + commentId + '/delete',{method: 'post'})
+        .then(response => {
+          response.text().then(text => replace(comment, text));
+        });
+    }
+  });
+
+  on('click', 'a.comment_undeletor', (event) => {
+    event.preventDefault();
+    if (confirm("Are uou sure you want to undelete this comment?")) {
+      const comment = parentSelector(event.target, '.comment');
+      removeExtraInput(comment);
+      const commentId = comment.getAttribute('data-shortid');
+      fetchWithCSRF('/comments/' + commentId + '/undelete', {method: 'post'})
         .then(response => {
           response.text().then(text => replace(comment, text));
         });

@@ -401,18 +401,6 @@ $(document).ready(function() {
     }
   });
 
-  $(document).on("click", "a.comment_moderator", function() {
-    var reason = prompt("Moderation reason:");
-    if (reason == null || reason == "")
-      return false;
-
-    var li = $(this).closest(".comment");
-    $.post("/comments/" + $(li).attr("data-shortid") + "/delete",
-      { reason: reason }, function(d) {
-        $(li).replaceWith(d);
-      });
-  });
-
   Lobsters.runSelect2();
 
   $(document).on("blur", "#story_url", function() {
@@ -610,6 +598,21 @@ onPageLoad(() => {
           response.text().then(text => replace(comment, text));
         });
     }
+  });
+
+  on('click', 'a.comment_moderator', (event) => {
+    const reason = prompt("Moderation reason:");
+    if (reason == null || reason == '') 
+      return false;
+
+    const formData = new FormData();
+    formData.append('reason', reason);
+    const comment = parentSelector(event.target, '.comment');
+    const commentId = comment.getAttribute('data-shortid');
+    fetchWithCSRF('/comments/' + commentId + '/delete', { method: 'post', body: formData })
+      .then(response => {
+        response.text().then(text => replace(comment, text));
+      });
   });
 });
 

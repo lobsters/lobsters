@@ -428,11 +428,6 @@ $(document).ready(function() {
       Lobsters.checkStoryDuplicate($(this).parents("form").first());
     }
   });
-
-  $(document).on("blur", "#user_homepage", function() {
-    if (this.value.trim() !== '' && !this.value.match('^[a-z]+:\/\/'))
-      this.value = 'http://' + this.value;
-  });
 });
 
 const parentSelector = (target, selector) => {
@@ -490,6 +485,15 @@ onPageLoad(() => {
   on('click', '.markdown_help_label', (event) => {
     parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
   });
+
+  // Account Settings Functions
+
+  on('focusout', '#user_homepage', (event) => {
+    const homePage = event.target
+    console.log("homepage", homePage)
+    if (homePage.value.trim() !== '' && !homePage.value.match('^[a-z]+:\/\/'))
+      homePage.value = 'https://' + homePage.value
+  })
 
   // Inbox Related Funtions
 

@@ -428,8 +428,6 @@ $(document).ready(function() {
       Lobsters.checkStoryDuplicate($(this).parents("form").first());
     }
   });
-  
-  $(document).ready(Lobsters.checkStoryTitle);
 
   $(document).on("blur", "#user_homepage", function() {
     if (this.value.trim() !== '' && !this.value.match('^[a-z]+:\/\/'))
@@ -505,6 +503,8 @@ onPageLoad(() => {
   on('blur change', '#story_title', (event) => {
     Lobsters.checkStoryTitle(event.target);
   });
+
+  Lobsters.checkStoryTitle()
 
   on('click', 'li.story a.upvoter', (event) => {
     event.preventDefault();

@@ -471,10 +471,9 @@ const replace = (oldElement, newHTMLString) => {
 
 const fetchWithCSRF = (url, params) => {
   let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-  let h = new Headers();
-  h.append('X-CSRF-Token', csrfToken);
   params = params || {};
-  params['headers'] = h;
+  params['headers'] = params['headers'] || new Headers;
+  params['headers'].append('X-CSRF-Token', csrfToken);
   return fetch(url, params);
 } 
 

@@ -467,6 +467,7 @@ const replace = (oldElement, newHTMLString) => {
   placeHolder.insertAdjacentHTML('afterBegin', newHTMLString);
   const newElements = placeHolder.childNodes.values();
   oldElement.replaceWith(...newElements);
+  removeExtraInputs();
 }
 
 const fetchWithCSRF = (url, params) => {
@@ -477,10 +478,12 @@ const fetchWithCSRF = (url, params) => {
   return fetch(url, params);
 } 
 
-const removeExtraInput = (targetElement) => {
+const removeExtraInputs = () => {
   // This deletion will resovle a bug that creates an extra hidden input when rendering the comment elements.
-  const extraInput2 = targetElement.parentElement.querySelector('.comment_folder_button');
-  extraInput2.remove();
+  const extraInputs = document.querySelectorAll('.comment_folder_button + .comment_folder_button');
+  for (const i of extraInputs) {
+    i.remove();
+  }
 }
 
 onPageLoad(() => {
@@ -558,7 +561,7 @@ onPageLoad(() => {
         });
     } else {
       comment.remove();
-    }
+    }  
   });
 
   on('click', 'a.comment_editor', (event) => {
@@ -568,14 +571,12 @@ onPageLoad(() => {
       .then(response => {
         response.text().then(text => replace(comment, text));
       });  
-    removeExtraInput(comment); 
   });
 
   on("click", "a.comment_deletor", (event) => {
     event.preventDefault();
     if (confirm("Are you sure you want to delete this comment?")) {
       const comment = parentSelector(event.target, '.comment');
-      removeExtraInput(comment);
       const commentId = comment.getAttribute('data-shortid');
       fetchWithCSRF('/comments/' + commentId + '/delete',{method: 'post'})
         .then(response => {
@@ -588,7 +589,6 @@ onPageLoad(() => {
     event.preventDefault();
     if (confirm("Are uou sure you want to undelete this comment?")) {
       const comment = parentSelector(event.target, '.comment');
-      removeExtraInput(comment);
       const commentId = comment.getAttribute('data-shortid');
       fetchWithCSRF('/comments/' + commentId + '/undelete', {method: 'post'})
         .then(response => {

@@ -493,10 +493,8 @@ onPageLoad(() => {
   // Inbox Related Funtions
 
   on('change', '#message_hat_id', (event) => {
-    let selectedOption = event.target.options.selectedIndex;
-    if (event.target.options[selectedOption].getAttribute('data-modnote') == 'true') {
-      document.getElementById('message_mod_note').checked = true;
-    } else document.getElementById('message_mod_note').checked = false;
+    let selectedOption = event.target.selectedOptions[0];
+    document.getElementById('message_mod_note').checked = (selectedOption.getAttribute('data-modnote') === 'true');
   });
 
   // Story Related Functions

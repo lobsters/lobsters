@@ -472,12 +472,82 @@ const fetchWithCSRF = (url, params) => {
 } 
 
 const removeExtraInputs = () => {
-  // This deletion will resovle a bug that creates an extra hidden input when rendering the comment elements.
+  // This deletion will resovle a bug that creates an extra hidden input when rendering the comment elements.<<<<<<< HEAD
   const extraInputs = document.querySelectorAll('.comment_folder_button + .comment_folder_button');
   for (const i of extraInputs) {
     i.remove();
   }
 }
+
+class _LobstersFunction {
+  constructor () {
+    this.curUser = 'will';  //done
+  }
+
+  bounceToLogin() { //requires []
+
+  }
+
+  checkStoryDuplicate(form) { //requires []
+
+  }
+
+  checkStoryTitle() { //requires []
+
+  }
+
+  fetchURLTitle(button, urlField, titleField) { //requires [checkStoryTitle]
+
+  }
+
+  flagComment(voterEl) { //requires [_showFlagWhyAt, vote]
+
+  }
+
+  flagStory(voterEl) { //requires [_showFlagWhyAt, vote]
+
+  }
+
+  hideStory(hiderEl) { //requires [bounceToLogin]
+
+  }
+
+  postComment(form) { //requires []
+    
+  }
+
+  previewComment(form) { //requires []
+
+  }
+
+  previewStory(form) { //requires [runSelect2]
+
+  }
+
+  runSelect2() {  //requires [] (will actully replace select2)
+
+  }
+
+  saveStory(saverEl) {  //requires [bounceToLogin, ]
+
+  }
+
+  _showFlagWhyAt(thingType, voterEl, onChooseWhy) { // requires [bounceToLogin, vote]
+
+  }
+
+  upvoteComment(voterEl) {  //requires [vote]
+
+  }
+
+  upvoteStory(voterEl) {  //requires [vote]
+  }
+
+  vote(thingType, voterEl, point, reason) {  // requires [bounceToLogin, comentFlagReasons]
+  }
+}
+
+const Lobster = new _LobstersFunction();
 
 onPageLoad(() => {
 
@@ -490,7 +560,6 @@ onPageLoad(() => {
 
   on('focusout', '#user_homepage', (event) => {
     const homePage = event.target
-    console.log("homepage", homePage)
     if (homePage.value.trim() !== '' && !homePage.value.match('^[a-z]+:\/\/'))
       homePage.value = 'https://' + homePage.value
   })

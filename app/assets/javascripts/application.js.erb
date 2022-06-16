@@ -205,24 +205,6 @@ var _Lobsters = Class.extend({
       action, { reason: reason });
   },
 
-  postComment: function(form) {
-    var params = $(form).serializeArray();
-    params.push({"name": "show_tree_lines", "value": "true"});
-
-    $.post($(form).attr("action"), params, function(data) {
-      // Clear form: Firefox will keep form values on reload (e.g. F5), which isn't too useful if
-      // it's already posted.
-      $(form).find('textarea').val('')
-
-      if ($(form).find("#parent_comment_short_id").length) {
-        // reply to comment
-        $(form).closest(".comments_subtree")
-          .find(".comment_parent_tree_line:first").removeClass("no_children");
-      }
-      $(form).closest(".comment").replaceWith($.parseHTML(data));
-    });
-  },
-
   previewComment: function(form) {
     var params = $(form).serializeArray();
     params.push({"name": "preview", "value": "true"});
@@ -512,8 +494,17 @@ class _LobstersFunction {
 
   }
 
-  postComment(form) { //requires []
-    
+  postComment(form) { 
+    const formData = new FormData(form);
+    formData.append('show_tree_lines', true);
+    fetch ('/comments', {
+      method: 'POST',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData
+    })
+      .then(response => {
+        response.text().then(text => replace(form.parentElement, text));
+      })
   }
 
   previewComment(form) { //requires []
@@ -620,7 +611,7 @@ onPageLoad(() => {
   
   on('submit', '.comment_form_container form', (event) => {
     event.preventDefault();
-    Lobsters.postComment(event.target);
+    Lobster.postComment(event.target);
   });
 
   on('keydown', 'textarea#comment', (event) => {

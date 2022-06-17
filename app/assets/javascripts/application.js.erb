@@ -350,11 +350,6 @@ var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
 
-  $("select[name=message\\[hat_id\\]]").change(function() {
-    $(this).siblings("input[name=message\\[mod_note\\]]")
-      .prop("checked", !!$(this).find('option:selected').data('modnote'));
-  }),
-
   $(document).on("click", "a.comment_replier", function() {
     if (!Lobsters.curUser) {
       Lobsters.bounceToLogin();
@@ -396,39 +391,6 @@ $(document).ready(function() {
     return false;
   });
 
-  $(document).on("click", "button.comment-cancel", function() {
-    var comment = $(this).closest(".comment");
-    var comment_id = comment.attr("data-shortid");
-    if (comment_id != null && comment_id !== '') {
-      $.get("/comments/" + comment_id + "?show_tree_lines=true", function(data) {
-        comment.replaceWith($.parseHTML(data));
-      });
-    } else {
-      comment.remove();
-    }
-  });
-
-  $(document).on("click", "a.comment_deletor", function(event) {
-    event.preventDefault();
-    if (confirm("Are you sure you want to delete this comment?")) {
-      var li = $(this).closest(".comment");
-      $.post("/comments/" + $(li).attr("data-shortid") + "/delete",
-      function(d) {
-        $(li).replaceWith(d);
-      });
-    }
-  });
-  $(document).on("click", "a.comment_undeletor", function(event) {
-    event.preventDefault();
-    if (confirm("Are you sure you want to undelete this comment?")) {
-      var li = $(this).closest(".comment");
-      $.post("/comments/" + $(li).attr("data-shortid") + "/undelete",
-      function(d) {
-        $(li).replaceWith(d);
-      });
-    }
-  });
-
   $(document).on("click", "a.comment_disownor", function() {
     if (confirm("Are you sure you want to disown this comment?")) {
       var li = $(this).closest(".comment");
@@ -437,18 +399,6 @@ $(document).ready(function() {
         $(li).replaceWith(d);
       });
     }
-  });
-
-  $(document).on("click", "a.comment_moderator", function() {
-    var reason = prompt("Moderation reason:");
-    if (reason == null || reason == "")
-      return false;
-
-    var li = $(this).closest(".comment");
-    $.post("/comments/" + $(li).attr("data-shortid") + "/delete",
-      { reason: reason }, function(d) {
-        $(li).replaceWith(d);
-      });
   });
 
   Lobsters.runSelect2();
@@ -515,14 +465,39 @@ const onPageLoad = (callback) => {
 const replace = (oldElement, newHTMLString) => {
   const placeHolder = document.createElement('div');
   placeHolder.insertAdjacentHTML('afterBegin', newHTMLString);
-  const newElement = placeHolder.firstElementChild;
-  oldElement.replaceWith(newElement);
+  const newElements = placeHolder.childNodes.values();
+  oldElement.replaceWith(...newElements);
+  removeExtraInputs();
+}
+
+const fetchWithCSRF = (url, params) => {
+  let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  params = params || {};
+  params['headers'] = params['headers'] || new Headers;
+  params['headers'].append('X-CSRF-Token', csrfToken);
+  return fetch(url, params);
+} 
+
+const removeExtraInputs = () => {
+  // This deletion will resovle a bug that creates an extra hidden input when rendering the comment elements.
+  const extraInputs = document.querySelectorAll('.comment_folder_button + .comment_folder_button');
+  for (const i of extraInputs) {
+    i.remove();
+  }
 }
 
 onPageLoad(() => {
 
+  // Global Functions
   on('click', '.markdown_help_label', (event) => {
     parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
+  });
+
+  // Inbox Related Funtions
+
+  on('change', '#message_hat_id', (event) => {
+    let selectedOption = event.target.selectedOptions[0];
+    document.getElementById('message_mod_note').checked = (selectedOption.getAttribute('data-modnote') === 'true');
   });
 
   // Story Related Functions
@@ -576,13 +551,64 @@ onPageLoad(() => {
     }
   });
 
+  on('click', 'button.comment-cancel', (event) => {
+    const comment = (parentSelector(event.target, '.comment'));
+    const commentId = comment.getAttribute('data-shortid');
+    if (commentId !== null && commentId !== '') {
+      fetch('/comments/' + commentId + '?show_tree_lines=true')
+        .then(response => {
+          response.text().then(text => replace(comment, text));
+        });
+    } else {
+      comment.remove();
+    }
+  });
+
   on('click', 'a.comment_editor', (event) => {
     let comment = parentSelector(event.target, '.comment');
-    fetch('/comments/' + comment.getAttribute('data-shortid') + '/edit')
+    const commentId = comment.getAttribute('data-shortid')
+    fetch('/comments/' + commentId + '/edit')
       .then(response => {
-        return response.text().then(function(text) {
-          replace(comment, text);
+        response.text().then(text => replace(comment, text));
+      });  
+  });
+
+  on("click", "a.comment_deletor", (event) => {
+    event.preventDefault();
+    if (confirm("Are you sure you want to delete this comment?")) {
+      const comment = parentSelector(event.target, '.comment');
+      const commentId = comment.getAttribute('data-shortid');
+      fetchWithCSRF('/comments/' + commentId + '/delete',{method: 'post'})
+        .then(response => {
+          response.text().then(text => replace(comment, text));
         });
+    }
+  });
+
+  on('click', 'a.comment_undeletor', (event) => {
+    event.preventDefault();
+    if (confirm("Are uou sure you want to undelete this comment?")) {
+      const comment = parentSelector(event.target, '.comment');
+      const commentId = comment.getAttribute('data-shortid');
+      fetchWithCSRF('/comments/' + commentId + '/undelete', {method: 'post'})
+        .then(response => {
+          response.text().then(text => replace(comment, text));
+        });
+    }
+  });
+
+  on('click', 'a.comment_moderator', (event) => {
+    const reason = prompt("Moderation reason:");
+    if (reason == null || reason == '') 
+      return false;
+
+    const formData = new FormData();
+    formData.append('reason', reason);
+    const comment = parentSelector(event.target, '.comment');
+    const commentId = comment.getAttribute('data-shortid');
+    fetchWithCSRF('/comments/' + commentId + '/delete', { method: 'post', body: formData })
+      .then(response => {
+        response.text().then(text => replace(comment, text));
       });
   });
 });

@@ -224,7 +224,7 @@ var _Lobsters = Class.extend({
     });
   },
 
-  checkStoryDuplicate: function(form) { 
+  checkStoryDuplicate: function(form) {
     // if this includes { '_method': 'PUT' }, the router maps it as
     // StoriesController#update with story_id 'check_url_dupe'
     // Creates an error where it will delete other errors on blur. e.g. no title/tags error.
@@ -454,7 +454,7 @@ const fetchWithCSRF = (url, params) => {
 } 
 
 const removeExtraInputs = () => {
-  // This deletion will resovle a bug that creates an extra hidden input when rendering the comment elements.<<<<<<< HEAD
+  // This deletion will resovle a bug that creates an extra hidden input when rendering the comment elements.
   const extraInputs = document.querySelectorAll('.comment_folder_button + .comment_folder_button');
   for (const i of extraInputs) {
     i.remove();
@@ -494,10 +494,11 @@ class _LobstersFunction {
 
   }
 
-  postComment(form) { 
+  postComment(form) {
     const formData = new FormData(form);
+    const action = form.getAttribute('action');
     formData.append('show_tree_lines', true);
-    fetch ('/comments', {
+    fetchWithCSRF (action, {
       method: 'POST',
       headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
       body: formData

@@ -205,24 +205,6 @@ var _Lobsters = Class.extend({
       action, { reason: reason });
   },
 
-  postComment: function(form) {
-    var params = $(form).serializeArray();
-    params.push({"name": "show_tree_lines", "value": "true"});
-
-    $.post($(form).attr("action"), params, function(data) {
-      // Clear form: Firefox will keep form values on reload (e.g. F5), which isn't too useful if
-      // it's already posted.
-      $(form).find('textarea').val('')
-
-      if ($(form).find("#parent_comment_short_id").length) {
-        // reply to comment
-        $(form).closest(".comments_subtree")
-          .find(".comment_parent_tree_line:first").removeClass("no_children");
-      }
-      $(form).closest(".comment").replaceWith($.parseHTML(data));
-    });
-  },
-
   previewComment: function(form) {
     var params = $(form).serializeArray();
     params.push({"name": "preview", "value": "true"});
@@ -245,6 +227,7 @@ var _Lobsters = Class.extend({
   checkStoryDuplicate: function(form) {
     // if this includes { '_method': 'PUT' }, the router maps it as
     // StoriesController#update with story_id 'check_url_dupe'
+    // Creates an error where it will delete other errors on blur. e.g. no title/tags error.
     var params = $(form).serializeArray().filter((e) => e.name !== '_method');
     $.post("/stories/check_url_dupe", params, function(formErrorsHtml) {
       $(form).find(".form_errors_header").html(formErrorsHtml);
@@ -427,14 +410,6 @@ $(document).ready(function() {
       Lobsters.checkStoryDuplicate($(this).parents("form").first());
     }
   });
-
-  $(document).on("blur change", "#story_title", Lobsters.checkStoryTitle);
-  $(document).ready(Lobsters.checkStoryTitle);
-
-  $(document).on("blur", "#user_homepage", function() {
-    if (this.value.trim() !== '' && !this.value.match('^[a-z]+:\/\/'))
-      this.value = 'http://' + this.value;
-  });
 });
 
 const parentSelector = (target, selector) => {
@@ -486,12 +461,100 @@ const removeExtraInputs = () => {
   }
 }
 
+class _LobstersFunction {
+  constructor () {
+    this.curUser = 'will';  //done
+  }
+
+  bounceToLogin() { //requires []
+
+  }
+
+  checkStoryDuplicate(form) { //requires []
+
+  }
+
+  checkStoryTitle() { //requires []
+
+  }
+
+  fetchURLTitle(button, urlField, titleField) { //requires [checkStoryTitle]
+
+  }
+
+  flagComment(voterEl) { //requires [_showFlagWhyAt, vote]
+
+  }
+
+  flagStory(voterEl) { //requires [_showFlagWhyAt, vote]
+
+  }
+
+  hideStory(hiderEl) { //requires [bounceToLogin]
+
+  }
+
+  postComment(form) {
+    const formData = new FormData(form);
+    const action = form.getAttribute('action');
+    formData.append('show_tree_lines', true);
+    fetchWithCSRF (action, {
+      method: 'POST',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData
+    })
+      .then(response => {
+        response.text().then(text => replace(form.parentElement, text));
+      })
+  }
+
+  previewComment(form) { //requires []
+
+  }
+
+  previewStory(form) { //requires [runSelect2]
+
+  }
+
+  runSelect2() {  //requires [] (will actully replace select2)
+
+  }
+
+  saveStory(saverEl) {  //requires [bounceToLogin, ]
+
+  }
+
+  _showFlagWhyAt(thingType, voterEl, onChooseWhy) { // requires [bounceToLogin, vote]
+
+  }
+
+  upvoteComment(voterEl) {  //requires [vote]
+
+  }
+
+  upvoteStory(voterEl) {  //requires [vote]
+  }
+
+  vote(thingType, voterEl, point, reason) {  // requires [bounceToLogin, comentFlagReasons]
+  }
+}
+
+const Lobster = new _LobstersFunction();
+
 onPageLoad(() => {
 
   // Global Functions
   on('click', '.markdown_help_label', (event) => {
     parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
   });
+
+  // Account Settings Functions
+
+  on('focusout', '#user_homepage', (event) => {
+    const homePage = event.target
+    if (homePage.value.trim() !== '' && !homePage.value.match('^[a-z]+:\/\/'))
+      homePage.value = 'https://' + homePage.value
+  })
 
   // Inbox Related Funtions
 
@@ -501,6 +564,13 @@ onPageLoad(() => {
   });
 
   // Story Related Functions
+
+  on('blur change', '#story_title', (event) => {
+    Lobsters.checkStoryTitle(event.target);
+  });
+
+  Lobsters.checkStoryTitle()
+
   on('click', 'li.story a.upvoter', (event) => {
     event.preventDefault();
     Lobsters.upvoteStory(event.target);
@@ -542,7 +612,7 @@ onPageLoad(() => {
   
   on('submit', '.comment_form_container form', (event) => {
     event.preventDefault();
-    Lobsters.postComment(event.target);
+    Lobster.postComment(event.target);
   });
 
   on('keydown', 'textarea#comment', (event) => {

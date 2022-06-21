@@ -508,8 +508,22 @@ class _LobstersFunction {
       })
   }
 
-  previewComment(form) { //requires []
-
+  previewComment(form) {
+    const formData = new FormData(form);
+    const action = form.getAttribute('action');
+    formData.append('preview', 'true');
+    formData.append('show_tree_lines', 'true');
+    fetchWithCSRF(action, {
+      method: 'POST',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData
+    })
+      .then(response => {
+        response.text().then(text => {
+          replace(form.parentElement, text);
+          autosize(document.querySelectorAll('textarea'));
+        });
+      });
   }
 
   previewStory(form) { //requires [runSelect2]
@@ -607,7 +621,7 @@ onPageLoad(() => {
   });
   
   on('click', 'button.comment-preview', (event) => {
-    Lobsters.previewComment(parentSelector(event.target, 'form'));
+    Lobster.previewComment(parentSelector(event.target, 'form'));
   });
   
   on('submit', '.comment_form_container form', (event) => {

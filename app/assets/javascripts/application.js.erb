@@ -21,7 +21,7 @@ var _Lobsters = Class.extend({
   },
   hideStory: function(hiderEl) {
     if (!Lobsters.curUser)
-      return Lobsters.bounceToLogin();
+      return Lobster.bounceToLogin();
 
     var li = $(hiderEl).closest(".story, .comment");
     var act;
@@ -41,7 +41,7 @@ var _Lobsters = Class.extend({
   },
   saveStory: function(saverEl) {
     if (!Lobsters.curUser)
-      return Lobsters.bounceToLogin();
+      return Lobster.bounceToLogin();
 
     var li = $(saverEl).closest(".story, .comment");
     var act;
@@ -69,7 +69,7 @@ var _Lobsters = Class.extend({
   },
   _showFlagWhyAt: function(thingType, voterEl, onChooseWhy) {
     if (!Lobsters.curUser)
-      return Lobsters.bounceToLogin();
+      return Lobster.bounceToLogin();
 
     var li = $(voterEl).closest(".story, .comment");
     if (li.hasClass("flagged")) {
@@ -138,7 +138,7 @@ var _Lobsters = Class.extend({
 
   vote: function(thingType, voterEl, point, reason) {
     if (!Lobsters.curUser)
-      return Lobsters.bounceToLogin();
+      return Lobster.bounceToLogin();
 
     var li = $(voterEl).closest(".story, .comment");
     var scoreDiv = li.find("div.score").get(0);
@@ -311,12 +311,6 @@ var _Lobsters = Class.extend({
     });
     Lobsters.checkStoryTitle();
   },
-
-  bounceToLogin: function() {
-    document.location = "/login?return=" +
-      encodeURIComponent(document.location);
-    return false;
-  },
 });
 
 var Lobsters = new _Lobsters();
@@ -325,7 +319,7 @@ $(document).ready(function() {
 
   $(document).on("click", "a.comment_replier", function() {
     if (!Lobsters.curUser) {
-      Lobsters.bounceToLogin();
+      Lobster.bounceToLogin();
       return false;
     }
 
@@ -456,8 +450,8 @@ class _LobstersFunction {
     this.curUser = 'will';  //done
   }
 
-  bounceToLogin() { //requires []
-
+  bounceToLogin() {
+    document.location = "/login?return=" + encodeURIComponent(document.location);
   }
 
   checkStoryDuplicate(form) {

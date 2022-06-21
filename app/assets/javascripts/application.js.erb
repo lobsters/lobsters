@@ -224,16 +224,6 @@ var _Lobsters = Class.extend({
     });
   },
 
-  checkStoryDuplicate: function(form) {
-    // if this includes { '_method': 'PUT' }, the router maps it as
-    // StoriesController#update with story_id 'check_url_dupe'
-    // Creates an error where it will delete other errors on blur. e.g. no title/tags error.
-    var params = $(form).serializeArray().filter((e) => e.name !== '_method');
-    $.post("/stories/check_url_dupe", params, function(formErrorsHtml) {
-      $(form).find(".form_errors_header").html(formErrorsHtml);
-    });
-  },
-
   checkStoryTitle: function() {
     var title = $("#story_title").val();
     if (title === undefined || title === '') {
@@ -407,7 +397,7 @@ $(document).ready(function() {
     // check for dupe if there's a URL, but not when editing existing
     if ($("#story_url").val().length > 0 &&
         $("#edit_story input[name=_method]").val() !== "put") {
-      Lobsters.checkStoryDuplicate($(this).parents("form").first());
+      Lobster.checkStoryDuplicate(parentSelector(document.getElementById('story_url'), 'form'));
     }
   });
 });
@@ -470,11 +460,20 @@ class _LobstersFunction {
 
   }
 
-  checkStoryDuplicate(form) { //requires []
-
+  checkStoryDuplicate(form) {
+    const formData = new FormData(form);
+    const action = '/stories/check_url_dupe';
+    fetch(action, {
+      method: 'POST',
+      body: formData,
+    }).then (response => {
+      response.text().then(text => {
+        document.querySelector('.form_errors_header').innerHTML = text;
+      });
+    });
   }
 
-  checkStoryTitle() { //requires []
+  checkStoryTitle() { //requires [select2]
 
   }
 

@@ -653,8 +653,12 @@ onPageLoad(() => {
     const commentId = comment.getAttribute('data-shortid')
     fetch('/comments/' + commentId + '/edit')
       .then(response => {
-        response.text().then(text => replace(comment, text));
-      });  
+        response.text().then(text => {
+          replace(comment, text);
+        autosize(document.querySelectorAll('textarea'));
+        });
+      });
+    autosize(document.querySelectorAll('textarea'));
   });
 
   on("click", "a.comment_deletor", (event) => {

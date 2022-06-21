@@ -579,7 +579,7 @@ onPageLoad(() => {
 
   // Story Related Functions
 
-  on('blur change', '#story_title', (event) => {
+  on('focusout change', '#story_title', (event) => {
     Lobsters.checkStoryTitle(event.target);
   });
 

@@ -429,6 +429,18 @@ const replace = (oldElement, newHTMLString) => {
   removeExtraInputs();
 }
 
+const slideDownJS = (element) => {
+  if (element.classList.contains('slide-down'))
+    return;
+
+  element.classList.add('slide-down');
+  const cs = getComputedStyle(element);
+  const paddingHeight = parseInt(cs.paddingTop) + parseInt(cs.paddingBottom);
+  const height = (element.clientHeight - paddingHeight) + 'px';
+  element.style.height = '0px';
+  setTimeout(() => { element.style.height = height; }, 0);
+};
+
 const fetchWithCSRF = (url, params) => {
   let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   params = params || {};

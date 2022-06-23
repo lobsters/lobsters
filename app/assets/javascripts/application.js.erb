@@ -205,18 +205,6 @@ var _Lobsters = Class.extend({
       action, { reason: reason });
   },
 
-  previewComment: function(form) {
-    var params = $(form).serializeArray();
-    params.push({"name": "preview", "value": "true"});
-    params.push({"name": "show_tree_lines", "value": "true"});
-    $.post($(form).attr("action"), params, function(data) {
-      var da = $.parseHTML(data);
-      var ta = $(da).find("textarea");
-      $(form).closest(".comment").replaceWith(da);
-      autosize(ta);
-    });
-  },
-
   previewStory: function(form) {
     $("#inside").load("/stories/preview", $(form).serializeArray(),
     function() {
@@ -337,7 +325,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $(document).on("click", "a.comment_disownor", function() {
+  $(document).on("click", "a.comment_disownor", function() { //can't test until a comment is 14 days old
     if (confirm("Are you sure you want to disown this comment?")) {
       var li = $(this).closest(".comment");
       $.post("/comments/" + $(li).attr("data-shortid") + "/disown",
@@ -349,7 +337,7 @@ $(document).ready(function() {
 
   Lobsters.runSelect2();
 
-  $(document).on("blur", "#story_url", function() {
+  $(document).on("blur", "#story_url", function() { //requires select2
     var url_tags = {
       "\.pdf$": "pdf",
       "[\/\.]((youtube|vimeo)\.com|youtu\.be|twitch.tv)\/": "video",
@@ -438,7 +426,14 @@ const removeExtraInputs = () => {
 
 class _LobstersFunction {
   constructor () {
-    this.curUser = 'will';  //done
+    this.curUser = 'will';  // remove line when done with production
+    // this.curUser = null, //for finished product
+
+  this.storyFlagReasons = ({<%= Vote::STORY_REASONS.map{|k,v|
+    "#{k.inspect}: #{v.inspect}" }.join(", ") %>});
+
+  this.commentFlagReasons = ({<%= Vote::COMMENT_REASONS.map{|k,v|
+    "#{k.inspect}: #{v.inspect}" }.join(", ") %>});
   }
 
   bounceToLogin() {
@@ -560,6 +555,7 @@ const Lobster = new _LobstersFunction();
 onPageLoad(() => {
 
   // Global Functions
+
   on('click', '.markdown_help_label', (event) => {
     parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
   });
@@ -610,6 +606,7 @@ onPageLoad(() => {
   });
 
   // Comment Related Functions
+
   on('click', '.comment a.flagger', (event) => {
     event.preventDefault();
     Lobsters.flagComment(event.target);

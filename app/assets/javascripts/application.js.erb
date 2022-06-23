@@ -19,26 +19,6 @@ var _Lobsters = Class.extend({
     Lobsters._showFlagWhyAt("story", voterEl, function(k) {
       Lobsters.vote("story", voterEl, -1, k); });
   },
-  hideStory: function(hiderEl) {
-    if (!Lobsters.curUser)
-      return Lobster.bounceToLogin();
-
-    var li = $(hiderEl).closest(".story, .comment");
-    var act;
-
-    if (li.hasClass("hidden")) {
-      act = "unhide";
-      li.removeClass("hidden");
-      hiderEl.innerHTML = "hide";
-    }
-    else {
-      act = "hide";
-      li.addClass("hidden");
-      hiderEl.innerHTML = "unhide";
-    }
-
-    $.post("/stories/" + li.attr("data-shortid") + "/" + act);
-  },
   saveStory: function(saverEl) {
     if (!Lobsters.curUser)
       return Lobster.bounceToLogin();
@@ -487,8 +467,21 @@ class _LobstersFunction {
 
   }
 
-  hideStory(hiderEl) { //requires [bounceToLogin]
+  hideStory(hiderEl) {
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
 
+    const li = parentSelector(hiderEl, ".story, .comment");
+    let act;
+    if (li.classList.contains("hidden")) {
+      act = "unhide";
+      li.classList.remove("hidden");
+      hiderEl.innerHTML = "hide";
+    } else {
+      act = "hide";
+      li.classList.add("hidden");
+      hiderEl.innerHTML = "unhide";
+    }
+    fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + act, {method: 'post'});
   }
 
   postComment(form) {
@@ -593,7 +586,7 @@ onPageLoad(() => {
 
   on('click', 'li.story a.hider', (event) => {
     event.preventDefault();
-    Lobsters.hideStory(event.target);
+    Lobster.hideStory(event.target);
   })
 
   on('click', 'li.story a.saver', (event) => {

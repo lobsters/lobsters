@@ -19,26 +19,6 @@ var _Lobsters = Class.extend({
     Lobsters._showFlagWhyAt("story", voterEl, function(k) {
       Lobsters.vote("story", voterEl, -1, k); });
   },
-  saveStory: function(saverEl) {
-    if (!Lobsters.curUser)
-      return Lobster.bounceToLogin();
-
-    var li = $(saverEl).closest(".story, .comment");
-    var act;
-
-    if (li.hasClass("saved")) {
-      act = "unsave";
-      li.removeClass("saved");
-      saverEl.innerHTML = "save";
-    }
-    else {
-      act = "save";
-      li.addClass("saved");
-      saverEl.innerHTML = "unsave";
-    }
-
-    $.post("/stories/" + li.attr("data-shortid") + "/" + act);
-  },
 
   upvoteComment: function(voterEl) {
     Lobsters.vote("comment", voterEl, 1);
@@ -524,8 +504,23 @@ class _LobstersFunction {
 
   }
 
-  saveStory(saverEl) {  //requires [bounceToLogin, ]
+  saveStory(saverEl) {
+    if (!Lobster.curUser)
+      return Lobster.bounceToLogin();
 
+    const li = parentSelector(saverEl, ".story, .comment");
+    let act;
+
+    if (li.classList.contains("saved")) {
+      act = "unsave";
+      li.classList.remove("saved");
+      saverEl.innerHTML = "save";
+    } else {
+      act = "save";
+      li.classList.add("saved");
+      saverEl.innerHTML = "unsave";
+    }
+    fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + act, {method: 'post'});
   }
 
   _showFlagWhyAt(thingType, voterEl, onChooseWhy) { // requires [bounceToLogin, vote]
@@ -591,7 +586,7 @@ onPageLoad(() => {
 
   on('click', 'li.story a.saver', (event) => {
     event.preventDefault();
-    Lobsters.saveStory(event.target);
+    Lobster.saveStory(event.target);
   });
 
   on('click', 'button.story-preview', (event) => {

@@ -224,27 +224,6 @@ var _Lobsters = Class.extend({
     });
   },
 
-  checkStoryTitle: function() {
-    var title = $("#story_title").val();
-    if (title === undefined || title === '') {
-      return;
-    }
-    var m;
-    if (m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i)) {
-      var ta = $("#story_tags_a").data("select2");
-      if (ta.getVal().indexOf(m[1].toLowerCase()) < 0)
-        ta.addSelectedChoice({ id: m[1].toLowerCase() });
-      $("#story_title").val(m[2]);
-    }
-
-    // common separators or (parens) that don't enclose a 4-digit year
-    if (title.match(/: | - | – | — | \| | · | • | by /) ||
-        title.match(/\([^\)]*\)/g).some(function (p) { return !p.match(/\(\d{4}\)/) })
-    ) {
-      $('.title-reminder').slideDown();
-    }
-  },
-
   runSelect2: function() {
     $("#story_tags_a").select2({
     formatSelection: function(what) {
@@ -309,7 +288,7 @@ var _Lobsters = Class.extend({
       button.val(old_value);
       button.prop("disabled", false);
     });
-    Lobsters.checkStoryTitle();
+    Lobster.checkStoryTitle();
   },
 });
 
@@ -479,8 +458,26 @@ class _LobstersFunction {
     });
   }
 
-  checkStoryTitle() { //requires [select2]
+  checkStoryTitle() { //partial removal (due to select2)
+    const titleLocation = document.getElementById('story_title');
+    if(!titleLocation) return;
 
+    const title = titleLocation.value;
+    if (!title) return;
+
+    const m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i);
+    if (m) {
+      const ta = $("#story_tags_a").data("select2");
+      if (ta.getVal().indexOf(m[1].toLowerCase()) < 0) {
+        ta.addSelectedChoice({ id: m[1].toLowerCase() });
+        $("#story_title").val(m[2]);
+      }
+    }
+    // common separators or (parens) that don't enclose a 4-digit year
+    if (title.match(/: | - | – | — | \| | · | • | by /) ||
+       (title.match(/\([^\)]*\)/g) || []).some(function (p) { return !p.match(/\(\d{4}\)/) })) {
+          slideDownJS(document.querySelector('.title-reminder'));
+    }
   }
 
   fetchURLTitle(button, urlField, titleField) { //requires [checkStoryTitle]
@@ -584,11 +581,9 @@ onPageLoad(() => {
 
   // Story Related Functions
 
-  on('focusout change', '#story_title', (event) => {
-    Lobsters.checkStoryTitle(event.target);
-  });
+  on('change', '#story_title', Lobster.checkStoryTitle);
 
-  Lobsters.checkStoryTitle()
+  Lobster.checkStoryTitle()
 
   on('click', 'li.story a.upvoter', (event) => {
     event.preventDefault();

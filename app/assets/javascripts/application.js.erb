@@ -15,7 +15,7 @@ var _Lobsters = Class.extend({
   upvoteStory: function(voterEl) {
     Lobster.vote("story", voterEl, 1);
   },
-  flagStory: function(voterEl) { //
+  flagStory: function(voterEl) {
     Lobsters._showFlagWhyAt("story", voterEl, function(k) {
       Lobster.vote("story", voterEl, -1, k); });
   },
@@ -23,7 +23,7 @@ var _Lobsters = Class.extend({
   upvoteComment: function(voterEl) {
     Lobster.vote("comment", voterEl, 1);
   },
-  flagComment: function(voterEl) { //
+  flagComment: function(voterEl) {
     Lobsters._showFlagWhyAt("comment", voterEl, function(k) {
       Lobster.vote("comment", voterEl, -1, k); });
   },
@@ -216,7 +216,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $(document).on("click", "a.comment_disownor", function() { //can't test until a comment is 14 days old
+  $(document).on("click", "a.comment_disownor", function() {
     if (confirm("Are you sure you want to disown this comment?")) {
       var li = $(this).closest(".comment");
       $.post("/comments/" + $(li).attr("data-shortid") + "/disown",
@@ -228,7 +228,7 @@ $(document).ready(function() {
 
   Lobsters.runSelect2();
 
-  $(document).on("blur", "#story_url", function() { //requires select2
+  $(document).on("blur", "#story_url", function() {
     var url_tags = {
       "\.pdf$": "pdf",
       "[\/\.]((youtube|vimeo)\.com|youtu\.be|twitch.tv)\/": "video",
@@ -351,6 +351,8 @@ class _LobstersFunction {
     const title = titleLocation.value;
     if (!title) return;
 
+    // Will check title for common phrases to be removed like "ask/show" lobsters :"
+    // Then it will add the keyword "ask/show" to the tags.
     const m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i);
     if (m) {
       const ta = $("#story_tags_a").data("select2");
@@ -366,15 +368,15 @@ class _LobstersFunction {
     }
   }
 
-  fetchURLTitle(button, urlField, titleField) { //requires [checkStoryTitle]
+  fetchURLTitle(button, urlField, titleField) {
 
   }
 
-  flagComment(voterEl) { //requires [_showFlagWhyAt, vote]
+  flagComment(voterEl) { //requires [_showFlagWhyAt]
 
   }
 
-  flagStory(voterEl) { //requires [_showFlagWhyAt, vote]
+  flagStory(voterEl) { //requires [_showFlagWhyAt]
 
   }
 
@@ -454,15 +456,15 @@ class _LobstersFunction {
     fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + act, {method: 'post'});
   }
 
-  _showFlagWhyAt(thingType, voterEl, onChooseWhy) { // requires [bounceToLogin, vote]
+  _showFlagWhyAt(thingType, voterEl, onChooseWhy) {
 
   }
 
-  upvoteComment(voterEl) {  //requires [vote]
+  upvoteComment(voterEl) {
 
   }
 
-  upvoteStory(voterEl) {  //requires [vote]
+  upvoteStory(voterEl) {
   }
 
   vote(thingType, voterEl, point, reason) {
@@ -472,7 +474,6 @@ class _LobstersFunction {
     const li = parentSelector(voterEl, ".story, .comment");
     const scoreDiv = li.querySelector("div.score");
     const formData = new FormData();
-    //Breaks non-flagging actions if you don't have this guard.
     formData.append('reason', reason || '');
     let showScore = true;
     let score = parseInt(scoreDiv.innerHTML);

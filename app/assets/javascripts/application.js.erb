@@ -12,9 +12,6 @@ var _Lobsters = Class.extend({
   commentFlagReasons: { <%= Vote::COMMENT_REASONS.map{|k,v|
       "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
 
-  upvoteStory: function(voterEl) {
-    Lobster.vote("story", voterEl, 1);
-  },
   flagStory: function(voterEl) {
     Lobsters._showFlagWhyAt("story", voterEl, function(k) {
       Lobster.vote("story", voterEl, -1, k); });
@@ -462,6 +459,7 @@ class _LobstersFunction {
   }
 
   upvoteStory(voterEl) {
+    Lobster.vote("story", voterEl, 1);
   }
 
   vote(thingType, voterEl, point, reason) {
@@ -573,7 +571,7 @@ onPageLoad(() => {
 
   on('click', 'li.story a.upvoter', (event) => {
     event.preventDefault();
-    Lobsters.upvoteStory(event.target);
+    Lobster.upvoteStory(event.target);
   });
 
   on('click', 'li.story a.flagger', (event) => {

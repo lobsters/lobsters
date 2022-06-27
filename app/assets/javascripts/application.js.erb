@@ -20,9 +20,6 @@ var _Lobsters = Class.extend({
       Lobster.vote("story", voterEl, -1, k); });
   },
 
-  upvoteComment: function(voterEl) {
-    Lobster.vote("comment", voterEl, 1);
-  },
   flagComment: function(voterEl) {
     Lobsters._showFlagWhyAt("comment", voterEl, function(k) {
       Lobster.vote("comment", voterEl, -1, k); });
@@ -461,7 +458,7 @@ class _LobstersFunction {
   }
 
   upvoteComment(voterEl) {
-
+    Lobster.vote("comment", voterEl, 1);
   }
 
   upvoteStory(voterEl) {
@@ -607,7 +604,7 @@ onPageLoad(() => {
 
   on("click", '.comment a.upvoter', (event) => {
     event.preventDefault();
-    Lobsters.upvoteComment(event.target);
+    Lobster.upvoteComment(event.target);
   });
   
   on('click', 'button.comment-preview', (event) => {

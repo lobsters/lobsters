@@ -12,11 +12,6 @@ var _Lobsters = Class.extend({
   commentFlagReasons: { <%= Vote::COMMENT_REASONS.map{|k,v|
       "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
 
-  flagStory: function(voterEl) {
-    Lobsters._showFlagWhyAt("story", voterEl, function(k) {
-      Lobster.vote("story", voterEl, -1, k); });
-  },
-
   _showFlagWhyAt: function(thingType, voterEl, onChooseWhy) {
     if (!Lobsters.curUser)
       return Lobster.bounceToLogin();
@@ -367,8 +362,9 @@ class _LobstersFunction {
       Lobster.vote("comment", voterEl, -1, k); });
   }
 
-  flagStory(voterEl) { //requires [_showFlagWhyAt]
-
+  flagStory(voterEl) {
+    Lobsters._showFlagWhyAt("story", voterEl, function(k) {
+      Lobster.vote("story", voterEl, -1, k); });
   }
 
   hideStory(hiderEl) {
@@ -573,7 +569,7 @@ onPageLoad(() => {
 
   on('click', 'li.story a.flagger', (event) => {
     event.preventDefault();
-    Lobsters.flagStory(event.target);
+    Lobster.flagStory(event.target);
   });
 
   on('click', 'li.story a.hider', (event) => {

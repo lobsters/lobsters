@@ -81,13 +81,6 @@ var _Lobsters = Class.extend({
     }
   },
 
-  previewStory: function(form) {
-    $("#inside").load("/stories/preview", $(form).serializeArray(),
-    function() {
-      Lobsters.runSelect2();
-    });
-  },
-
   runSelect2: function() {
     $("#story_tags_a").select2({
     formatSelection: function(what) {
@@ -416,8 +409,18 @@ class _LobstersFunction {
       });
   }
 
-  previewStory(form) { //requires [runSelect2]
-
+  previewStory(formElement) {
+    const formData = new FormData(formElement);
+    const previewElement = document.getElementById('inside');
+    fetch('/stories/preview', {
+      method: 'post',
+      body: formData
+    }).then (response => {
+      response.text().then(text => {
+        previewElement.innerHTML = text;
+      });
+    });
+    Lobsters.runSelect2();
   }
 
   runSelect2() {  //requires [] (will actully replace select2)
@@ -583,7 +586,7 @@ onPageLoad(() => {
   });
 
   on('click', 'button.story-preview', (event) => {
-    Lobsters.previewStory(parentSelector(event.target, 'form'));
+    Lobster.previewStory(parentSelector(event.target, 'form'));
   });
 
   // Comment Related Functions

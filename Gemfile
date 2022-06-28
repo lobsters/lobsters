@@ -52,7 +52,7 @@ group :test, :development do
   gem 'capybara'
   gem 'database_cleaner'
   gem "listen"
-  gem "rspec-rails"
+  gem 'rspec-rails', '~> 6.0.0.rc1'
   gem "factory_bot_rails"
   gem "rubocop", "0.81", require: false
   gem "rubocop-rails", require: false

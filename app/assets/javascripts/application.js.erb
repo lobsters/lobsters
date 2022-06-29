@@ -316,8 +316,8 @@ const removeExtraInputs = () => {
 }
 
 class _LobstersFunction {
-  constructor () {
-    this.curUser = document.body.getAttribute('data-username');
+  constructor (username) {
+    this.curUser = null;
 
     this.storyFlagReasons = ({
       <%= Vote::STORY_REASONS.map{|k,v| "'#{k}': '#{v}'" }.join(", ") %>
@@ -544,11 +544,12 @@ class _LobstersFunction {
   }
 }
 
+const Lobster = new _LobstersFunction();
+
 onPageLoad(() => {
+  Lobster.curUser = document.body.getAttribute('data-username'); // hack
 
   // Global Functions
-
-  const Lobster = new _LobstersFunction();
 
   on('click', '.markdown_help_label', (event) => {
     parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');

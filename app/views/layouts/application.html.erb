@@ -43,7 +43,7 @@
       href="<%= @comments_rss_link[:href] %>" />
   <% end %>
 </head>
-<body>
+<body data-username='<%= @user.try(:username) %>'>
   <header id="nav">
     <a id="logo" style="<%= @traffic_style %>" href="/" title="<%= Rails.application.name %> (Current traffic: <%= @traffic_intensity.to_i %>%)"></a>
 

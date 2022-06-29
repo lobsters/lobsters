@@ -13,68 +13,28 @@ var _Lobsters = Class.extend({
       "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
 
   upvoteStory: function(voterEl) {
-    Lobsters.vote("story", voterEl, 1);
+    Lobster.vote("story", voterEl, 1);
   },
   flagStory: function(voterEl) {
     Lobsters._showFlagWhyAt("story", voterEl, function(k) {
-      Lobsters.vote("story", voterEl, -1, k); });
-  },
-  hideStory: function(hiderEl) {
-    if (!Lobsters.curUser)
-      return Lobsters.bounceToLogin();
-
-    var li = $(hiderEl).closest(".story, .comment");
-    var act;
-
-    if (li.hasClass("hidden")) {
-      act = "unhide";
-      li.removeClass("hidden");
-      hiderEl.innerHTML = "hide";
-    }
-    else {
-      act = "hide";
-      li.addClass("hidden");
-      hiderEl.innerHTML = "unhide";
-    }
-
-    $.post("/stories/" + li.attr("data-shortid") + "/" + act);
-  },
-  saveStory: function(saverEl) {
-    if (!Lobsters.curUser)
-      return Lobsters.bounceToLogin();
-
-    var li = $(saverEl).closest(".story, .comment");
-    var act;
-
-    if (li.hasClass("saved")) {
-      act = "unsave";
-      li.removeClass("saved");
-      saverEl.innerHTML = "save";
-    }
-    else {
-      act = "save";
-      li.addClass("saved");
-      saverEl.innerHTML = "unsave";
-    }
-
-    $.post("/stories/" + li.attr("data-shortid") + "/" + act);
+      Lobster.vote("story", voterEl, -1, k); });
   },
 
   upvoteComment: function(voterEl) {
-    Lobsters.vote("comment", voterEl, 1);
+    Lobster.vote("comment", voterEl, 1);
   },
   flagComment: function(voterEl) {
     Lobsters._showFlagWhyAt("comment", voterEl, function(k) {
-      Lobsters.vote("comment", voterEl, -1, k); });
+      Lobster.vote("comment", voterEl, -1, k); });
   },
   _showFlagWhyAt: function(thingType, voterEl, onChooseWhy) {
     if (!Lobsters.curUser)
-      return Lobsters.bounceToLogin();
+      return Lobster.bounceToLogin();
 
     var li = $(voterEl).closest(".story, .comment");
     if (li.hasClass("flagged")) {
       /* already upvoted, neutralize */
-      Lobsters.vote(thingType, voterEl, -1, null);
+      Lobster.vote(thingType, voterEl, -1, null);
       return;
     }
 
@@ -136,123 +96,11 @@ var _Lobsters = Class.extend({
     }
   },
 
-  vote: function(thingType, voterEl, point, reason) {
-    if (!Lobsters.curUser)
-      return Lobsters.bounceToLogin();
-
-    var li = $(voterEl).closest(".story, .comment");
-    var scoreDiv = li.find("div.score").get(0);
-    var showScore = true;
-    var score = parseInt(scoreDiv.innerHTML);
-    if (isNaN(score)) {
-      showScore = false;
-      score = 0;
-    }
-    var action = "";
-
-    if (li.hasClass("upvoted") && point > 0) {
-      /* already upvoted, neutralize */
-      li.removeClass("upvoted");
-      score--;
-      action = "unvote";
-    }
-    else if (li.hasClass("flagged") && point < 0) {
-      /* already flagged, neutralize */
-      li.removeClass("flagged");
-      score++;
-      action = "unvote";
-    }
-    else if (point > 0) {
-      if (li.hasClass("flagged"))
-        /* flip flop */
-        score++;
-
-      li.removeClass("flagged").addClass("upvoted");
-      score++;
-      action = "upvote";
-    }
-    else if (point < 0) {
-      if (li.hasClass("upvoted"))
-        /* flip flop */
-        score--;
-
-      li.removeClass("upvoted").addClass("flagged");
-      li.prev("input.comment_folder_button").prop("checked", true);
-      showScore = false;
-      score--;
-      action = "flag";
-    }
-
-    if (showScore)
-      scoreDiv.innerHTML = score;
-    else
-      scoreDiv.innerHTML = '~';
-
-    if (action == "upvote" || action == "unvote") {
-      li.find(".reason").html("");
-
-      if (action == "unvote" && point < 0)
-        li.find(".flagger").text("flag");
-    }
-    else if (action == "flag") {
-      li.find(".flagger").text("unflag");
-      if (thingType == "comment")
-        li.find(".reason").html("| " + Lobsters.commentFlagReasons[reason].toLowerCase());
-    }
-
-    $.post("/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
-      li.attr("data-shortid") + "/" +
-      action, { reason: reason });
-  },
-
-  previewComment: function(form) {
-    var params = $(form).serializeArray();
-    params.push({"name": "preview", "value": "true"});
-    params.push({"name": "show_tree_lines", "value": "true"});
-    $.post($(form).attr("action"), params, function(data) {
-      var da = $.parseHTML(data);
-      var ta = $(da).find("textarea");
-      $(form).closest(".comment").replaceWith(da);
-      autosize(ta);
-    });
-  },
-
   previewStory: function(form) {
     $("#inside").load("/stories/preview", $(form).serializeArray(),
     function() {
       Lobsters.runSelect2();
     });
-  },
-
-  checkStoryDuplicate: function(form) {
-    // if this includes { '_method': 'PUT' }, the router maps it as
-    // StoriesController#update with story_id 'check_url_dupe'
-    // Creates an error where it will delete other errors on blur. e.g. no title/tags error.
-    var params = $(form).serializeArray().filter((e) => e.name !== '_method');
-    $.post("/stories/check_url_dupe", params, function(formErrorsHtml) {
-      $(form).find(".form_errors_header").html(formErrorsHtml);
-    });
-  },
-
-  checkStoryTitle: function() {
-    var title = $("#story_title").val();
-    if (title === undefined || title === '') {
-      return;
-    }
-    var m;
-    if (m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i)) {
-      var ta = $("#story_tags_a").data("select2");
-      if (ta.getVal().indexOf(m[1].toLowerCase()) < 0)
-        ta.addSelectedChoice({ id: m[1].toLowerCase() });
-      $("#story_title").val(m[2]);
-    }
-
-    // common separators or (parens) that don't enclose a 4-digit year
-    if (title.match(/: | - | – | — | \| | · | • | by /) ||
-        title.match(/\([^\)]*\)/g).some(function (p) { return !p.match(/\(\d{4}\)/) })
-    ) {
-      $('.title-reminder').slideDown();
-    }
   },
 
   runSelect2: function() {
@@ -319,13 +167,7 @@ var _Lobsters = Class.extend({
       button.val(old_value);
       button.prop("disabled", false);
     });
-    Lobsters.checkStoryTitle();
-  },
-
-  bounceToLogin: function() {
-    document.location = "/login?return=" +
-      encodeURIComponent(document.location);
-    return false;
+    Lobster.checkStoryTitle();
   },
 });
 
@@ -335,7 +177,7 @@ $(document).ready(function() {
 
   $(document).on("click", "a.comment_replier", function() {
     if (!Lobsters.curUser) {
-      Lobsters.bounceToLogin();
+      Lobster.bounceToLogin();
       return false;
     }
 
@@ -407,7 +249,7 @@ $(document).ready(function() {
     // check for dupe if there's a URL, but not when editing existing
     if ($("#story_url").val().length > 0 &&
         $("#edit_story input[name=_method]").val() !== "put") {
-      Lobsters.checkStoryDuplicate($(this).parents("form").first());
+      Lobster.checkStoryDuplicate(parentSelector(document.getElementById('story_url'), 'form'));
     }
   });
 });
@@ -445,6 +287,18 @@ const replace = (oldElement, newHTMLString) => {
   removeExtraInputs();
 }
 
+const slideDownJS = (element) => {
+  if (element.classList.contains('slide-down'))
+    return;
+
+  element.classList.add('slide-down');
+  const cs = getComputedStyle(element);
+  const paddingHeight = parseInt(cs.paddingTop) + parseInt(cs.paddingBottom);
+  const height = (element.clientHeight - paddingHeight) + 'px';
+  element.style.height = '0px';
+  setTimeout(() => { element.style.height = height; }, 0);
+};
+
 const fetchWithCSRF = (url, params) => {
   let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   params = params || {};
@@ -463,35 +317,83 @@ const removeExtraInputs = () => {
 
 class _LobstersFunction {
   constructor () {
-    this.curUser = 'will';  //done
+    this.curUser = document.body.getAttribute('data-username');
+
+    this.storyFlagReasons = ({<%= Vote::STORY_REASONS.map{|k,v|
+      "#{k.inspect}: #{v.inspect}" }.join(", ") %>});
+
+    this.commentFlagReasons = ({<%= Vote::COMMENT_REASONS.map{|k,v|
+      "#{k.inspect}: #{v.inspect}" }.join(", ") %>});
   }
 
-  bounceToLogin() { //requires []
+  bounceToLogin() {
+    document.location = "/login?return=" + encodeURIComponent(document.location);
+  }
+
+  checkStoryDuplicate(form) {
+    const formData = new FormData(form);
+    const action = '/stories/check_url_dupe';
+    fetch(action, {
+      method: 'POST',
+      body: formData,
+    }).then (response => {
+      response.text().then(text => {
+        document.querySelector('.form_errors_header').innerHTML = text;
+      });
+    });
+  }
+
+  checkStoryTitle() { //partial removal (due to select2)
+    const titleLocation = document.getElementById('story_title');
+    if (!titleLocation) return;
+
+    const title = titleLocation.value;
+    if (!title) return;
+
+    // Will check title for common phrases to be removed like "ask/show" lobsters :"
+    // Then it will add the keyword "ask/show" to the tags.
+    const m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i);
+    if (m) {
+      const ta = $("#story_tags_a").data("select2");
+      if (ta.getVal().indexOf(m[1].toLowerCase()) < 0) {
+        ta.addSelectedChoice({ id: m[1].toLowerCase() });
+        $("#story_title").val(m[2]);
+      }
+    }
+    // common separators or (parens) that don't enclose a 4-digit year
+    if (title.match(/: | - | – | — | \| | · | • | by /) ||
+       (title.match(/\([^\)]*\)/g) || []).some(function (p) { return !p.match(/\(\d{4}\)/) })) {
+          slideDownJS(document.querySelector('.title-reminder'));
+    }
+  }
+
+  fetchURLTitle(button, urlField, titleField) {
 
   }
 
-  checkStoryDuplicate(form) { //requires []
+  flagComment(voterEl) { //requires [_showFlagWhyAt]
 
   }
 
-  checkStoryTitle() { //requires []
+  flagStory(voterEl) { //requires [_showFlagWhyAt]
 
   }
 
-  fetchURLTitle(button, urlField, titleField) { //requires [checkStoryTitle]
+  hideStory(hiderEl) {
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
 
-  }
-
-  flagComment(voterEl) { //requires [_showFlagWhyAt, vote]
-
-  }
-
-  flagStory(voterEl) { //requires [_showFlagWhyAt, vote]
-
-  }
-
-  hideStory(hiderEl) { //requires [bounceToLogin]
-
+    const li = parentSelector(hiderEl, ".story, .comment");
+    let act;
+    if (li.classList.contains("hidden")) {
+      act = "unhide";
+      li.classList.remove("hidden");
+      hiderEl.innerHTML = "hide";
+    } else {
+      act = "hide";
+      li.classList.add("hidden");
+      hiderEl.innerHTML = "unhide";
+    }
+    fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + act, {method: 'post'});
   }
 
   postComment(form) {
@@ -508,8 +410,22 @@ class _LobstersFunction {
       })
   }
 
-  previewComment(form) { //requires []
-
+  previewComment(form) {
+    const formData = new FormData(form);
+    const action = form.getAttribute('action');
+    formData.append('preview', 'true');
+    formData.append('show_tree_lines', 'true');
+    fetchWithCSRF(action, {
+      method: 'POST',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData
+    })
+      .then(response => {
+        response.text().then(text => {
+          replace(form.parentElement, text);
+          autosize(document.querySelectorAll('textarea'));
+        });
+      });
   }
 
   previewStory(form) { //requires [runSelect2]
@@ -520,30 +436,118 @@ class _LobstersFunction {
 
   }
 
-  saveStory(saverEl) {  //requires [bounceToLogin, ]
+  saveStory(saverEl) {
+    if (!Lobster.curUser)
+      return Lobster.bounceToLogin();
+
+    const li = parentSelector(saverEl, ".story, .comment");
+    let act;
+
+    if (li.classList.contains("saved")) {
+      act = "unsave";
+      li.classList.remove("saved");
+      saverEl.innerHTML = "save";
+    } else {
+      act = "save";
+      li.classList.add("saved");
+      saverEl.innerHTML = "unsave";
+    }
+    fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + act, {method: 'post'});
+  }
+
+  _showFlagWhyAt(thingType, voterEl, onChooseWhy) {
 
   }
 
-  _showFlagWhyAt(thingType, voterEl, onChooseWhy) { // requires [bounceToLogin, vote]
+  upvoteComment(voterEl) {
 
   }
 
-  upvoteComment(voterEl) {  //requires [vote]
-
+  upvoteStory(voterEl) {
   }
 
-  upvoteStory(voterEl) {  //requires [vote]
-  }
+  vote(thingType, voterEl, point, reason) {
+    if (!Lobster.curUser)
+      return Lobster.bounceToLogin();
 
-  vote(thingType, voterEl, point, reason) {  // requires [bounceToLogin, comentFlagReasons]
+    const li = parentSelector(voterEl, ".story, .comment");
+    const scoreDiv = li.querySelector("div.score");
+    const formData = new FormData();
+    formData.append('reason', reason || '');
+    let showScore = true;
+    let score = parseInt(scoreDiv.innerHTML);
+    let action = "";
+
+    if (isNaN(score)) {
+      showScore = false;
+      score = 0;
+    }
+
+    if (li.classList.contains("upvoted") && point > 0) {
+      /* already upvoted, neutralize */
+      li.classList.remove("upvoted");
+      score--;
+      action = "unvote";
+    } else if (li.classList.contains("flagged") && point < 0) {
+      /* already flagged, neutralize */
+      li.classList.remove("flagged");
+      score++;
+      action = "unvote";
+    } else if (point > 0) {
+      if (li.classList.contains("flagged")) {
+        /* Give back the lost flagged point */
+        score++;
+      }
+      li.classList.remove("flagged");
+      li.classList.add("upvoted");
+      score++;
+      action = "upvote";
+    } else if (point < 0) {
+      if (li.classList.contains("upvoted")) {
+        /* Removes the upvote point this user already gave the story*/
+        score--;
+      }
+      li.classList.remove("upvoted");
+      li.classList.add("flagged");
+      if (li.parentElement.querySelector('.comment_folder_button')) {
+        li.parentElement.querySelector('.comment_folder_button').setAttribute("checked", true);
+      };
+      showScore = false;
+      score--;
+      action = "flag";
+    }
+    if (showScore) {
+      scoreDiv.innerHTML = score;
+    } else {
+      scoreDiv.innerHTML = '~';
+    }
+    if (action == "upvote" || action == "unvote") {
+      if (li.querySelector(".reason")) {
+        li.querySelector(".reason").innerHTML = ""
+      };
+
+      if (action == "unvote" && point < 0)
+        li.querySelector(".flagger").textContent = "flag";
+      } else if (action == "flag") {
+        li.querySelector(".flagger").textContent = "unflag";
+      if (thingType == "comment") {
+        li.querySelector(".reason").innerHTML = "| " + Lobster.commentFlagReasons[reason].toLowerCase();
+      }
+    }
+
+    fetchWithCSRF("/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
+      li.getAttribute("data-shortid") + "/" + action, {
+      method: 'post',
+      body: formData });
   }
 }
-
-const Lobster = new _LobstersFunction();
 
 onPageLoad(() => {
 
   // Global Functions
+
+  const Lobster = new _LobstersFunction();
+
   on('click', '.markdown_help_label', (event) => {
     parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
   });
@@ -565,11 +569,9 @@ onPageLoad(() => {
 
   // Story Related Functions
 
-  on('blur change', '#story_title', (event) => {
-    Lobsters.checkStoryTitle(event.target);
-  });
+  on('change', '#story_title', Lobster.checkStoryTitle);
 
-  Lobsters.checkStoryTitle()
+  Lobster.checkStoryTitle()
 
   on('click', 'li.story a.upvoter', (event) => {
     event.preventDefault();
@@ -583,12 +585,12 @@ onPageLoad(() => {
 
   on('click', 'li.story a.hider', (event) => {
     event.preventDefault();
-    Lobsters.hideStory(event.target);
+    Lobster.hideStory(event.target);
   })
 
   on('click', 'li.story a.saver', (event) => {
     event.preventDefault();
-    Lobsters.saveStory(event.target);
+    Lobster.saveStory(event.target);
   });
 
   on('click', 'button.story-preview', (event) => {
@@ -596,6 +598,7 @@ onPageLoad(() => {
   });
 
   // Comment Related Functions
+
   on('click', '.comment a.flagger', (event) => {
     event.preventDefault();
     Lobsters.flagComment(event.target);
@@ -607,7 +610,7 @@ onPageLoad(() => {
   });
   
   on('click', 'button.comment-preview', (event) => {
-    Lobsters.previewComment(parentSelector(event.target, 'form'));
+    Lobster.previewComment(parentSelector(event.target, 'form'));
   });
   
   on('submit', '.comment_form_container form', (event) => {
@@ -617,7 +620,7 @@ onPageLoad(() => {
 
   on('keydown', 'textarea#comment', (event) => {
     if ((event.metaKey || event.ctrlKey) && event.keyCode == 13) {
-      Lobsters.postComment(parentSelector(event.target, 'form'));
+      Lobster.postComment(parentSelector(event.target, 'form'));
     }
   });
 
@@ -639,8 +642,12 @@ onPageLoad(() => {
     const commentId = comment.getAttribute('data-shortid')
     fetch('/comments/' + commentId + '/edit')
       .then(response => {
-        response.text().then(text => replace(comment, text));
-      });  
+        response.text().then(text => {
+          replace(comment, text);
+        autosize(document.querySelectorAll('textarea'));
+        });
+      });
+    autosize(document.querySelectorAll('textarea'));
   });
 
   on("click", "a.comment_deletor", (event) => {

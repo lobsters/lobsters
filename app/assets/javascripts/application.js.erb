@@ -319,11 +319,13 @@ class _LobstersFunction {
   constructor () {
     this.curUser = document.body.getAttribute('data-username');
 
-    this.storyFlagReasons = ({<%= Vote::STORY_REASONS.map{|k,v|
-      "#{k.inspect}: #{v.inspect}" }.join(", ") %>});
+    this.storyFlagReasons = ({
+      <%= Vote::STORY_REASONS.map{|k,v| "'#{k}': '#{v}'" }.join(", ") %>
+    });
 
-    this.commentFlagReasons = ({<%= Vote::COMMENT_REASONS.map{|k,v|
-      "#{k.inspect}: #{v.inspect}" }.join(", ") %>});
+    this.commentFlagReasons = ({
+      <%= Vote::COMMENT_REASONS.map{|k,v| "'#{k}': '#{v}'" }.join(", ") %>
+    });
   }
 
   bounceToLogin() {

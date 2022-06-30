@@ -7,6 +7,9 @@ gem "mysql2"
 # uncomment to use PostgreSQL
 # gem "pg"
 
+# workaround to reference the mimemagicrb/mimemagic yanked gem version
+gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
+
 # rails
 gem 'scenic'
 gem 'scenic-mysql_adapter'

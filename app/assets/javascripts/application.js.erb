@@ -118,35 +118,6 @@ var _Lobsters = Class.extend({
     }
     });
   },
-
-  fetchURLTitle: function(button, url_field, title_field) {
-    if (url_field.val() == "")
-      return;
-
-    var old_value = button.val();
-    button.prop("disabled", true);
-    button.val("Fetching...");
-
-    $.post("/stories/fetch_url_attributes", {
-      fetch_url: url_field.val(),
-    })
-    .success(function(data) {
-      if (data) {
-        if (data.title)
-          title_field.val(data.title.substr(0, title_field.maxLength));
-        if (data.url)
-          url_field.val(data.url);
-      }
-
-      button.val(old_value);
-      button.prop("disabled", false);
-    })
-    .error(function() {
-      button.val(old_value);
-      button.prop("disabled", false);
-    });
-    Lobster.checkStoryTitle();
-  },
 });
 
 var Lobsters = new _Lobsters();
@@ -347,8 +318,29 @@ class _LobstersFunction {
     }
   }
 
-  fetchURLTitle(button, urlField, titleField) {
+  fetchURLTitle(button) {
+    const targetUrl = document.getElementById('story_url').value;
+    const title_field = document.getElementById('story_title');
+    const formData = new FormData();
+    const old_text = button.textContent;
+    button.setAttribute("disabled", true);
+    button.textContent = "Fetching...";
+    formData.append('fetch_url', targetUrl);
 
+    if (targetUrl == "")
+      return;
+
+    fetchWithCSRF('/stories/fetch_url_attributes', {
+      method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData,})
+      .then (response => response.json())
+      .then (data => {
+        title_field.value = data.title
+        button.textContent = old_text
+      });
+    button.removeAttribute("disabled");
+    Lobster.checkStoryTitle();
   }
 
   flagComment(voterEl) {
@@ -566,6 +558,10 @@ onPageLoad(() => {
   on('change', '#story_title', Lobster.checkStoryTitle);
 
   Lobster.checkStoryTitle()
+
+  on('click', '#story_fetch_title', (event) => {
+    Lobster.fetchURLTitle(event.target);
+  });
 
   on('click', 'li.story a.upvoter', (event) => {
     event.preventDefault();

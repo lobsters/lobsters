@@ -97,7 +97,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
           <% end %>
         <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
           |
-          <a tabindex="0" class="comment_disownor" href="#">disown</a>
+          <a tabindex="0" class="comment-disowner" href="#">disown</a>
         <% end %>
 
         <% if can_flag && !flagged %>

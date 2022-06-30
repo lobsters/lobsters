@@ -165,16 +165,6 @@ $(document).ready(function() {
     return false;
   });
 
-  $(document).on("click", "a.comment_disownor", function() {
-    if (confirm("Are you sure you want to disown this comment?")) {
-      var li = $(this).closest(".comment");
-      $.post("/comments/" + $(li).attr("data-shortid") + "/disown",
-      function(d) {
-        $(li).replaceWith(d);
-      });
-    }
-  });
-
   Lobsters.runSelect2();
 
   $(document).on("blur", "#story_url", function() {
@@ -588,6 +578,17 @@ onPageLoad(() => {
   });
 
   // Comment Related Functions
+
+  on('click', 'a.comment-disowner', (event) => {
+    if (confirm("Are you sure you want to disown this comment?")) {
+      let li = parentSelector(event.target, '.comment');
+      fetchWithCSRF('/comments/' + li.getAttribute('data-shortid') + '/disown', {
+        method: 'post'
+      })
+        .then(response => response.text())
+        .then(text => replace(li, text));
+    }
+  });
 
   on('click', '.comment a.flagger', (event) => {
     event.preventDefault();

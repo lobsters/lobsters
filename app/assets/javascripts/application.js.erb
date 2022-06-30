@@ -12,21 +12,6 @@ var _Lobsters = Class.extend({
   commentFlagReasons: { <%= Vote::COMMENT_REASONS.map{|k,v|
       "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
 
-  upvoteStory: function(voterEl) {
-    Lobster.vote("story", voterEl, 1);
-  },
-  flagStory: function(voterEl) {
-    Lobsters._showFlagWhyAt("story", voterEl, function(k) {
-      Lobster.vote("story", voterEl, -1, k); });
-  },
-
-  upvoteComment: function(voterEl) {
-    Lobster.vote("comment", voterEl, 1);
-  },
-  flagComment: function(voterEl) {
-    Lobsters._showFlagWhyAt("comment", voterEl, function(k) {
-      Lobster.vote("comment", voterEl, -1, k); });
-  },
   _showFlagWhyAt: function(thingType, voterEl, onChooseWhy) {
     if (!Lobsters.curUser)
       return Lobster.bounceToLogin();
@@ -94,13 +79,6 @@ var _Lobsters = Class.extend({
         top: voterPos.top + $(voterEl).outerHeight()
       });
     }
-  },
-
-  previewStory: function(form) {
-    $("#inside").load("/stories/preview", $(form).serializeArray(),
-    function() {
-      Lobsters.runSelect2();
-    });
   },
 
   runSelect2: function() {
@@ -373,12 +351,14 @@ class _LobstersFunction {
 
   }
 
-  flagComment(voterEl) { //requires [_showFlagWhyAt]
-
+  flagComment(voterEl) {
+    Lobsters._showFlagWhyAt("comment", voterEl, function(k) {
+      Lobster.vote("comment", voterEl, -1, k); });
   }
 
-  flagStory(voterEl) { //requires [_showFlagWhyAt]
-
+  flagStory(voterEl) {
+    Lobsters._showFlagWhyAt("story", voterEl, function(k) {
+      Lobster.vote("story", voterEl, -1, k); });
   }
 
   hideStory(hiderEl) {
@@ -430,8 +410,18 @@ class _LobstersFunction {
       });
   }
 
-  previewStory(form) { //requires [runSelect2]
-
+  previewStory(formElement) {
+    const formData = new FormData(formElement);
+    const previewElement = document.getElementById('inside');
+    fetch('/stories/preview', {
+      method: 'post',
+      body: formData
+    }).then (response => {
+      response.text().then(text => {
+        previewElement.innerHTML = text;
+      });
+    });
+    Lobsters.runSelect2();
   }
 
   runSelect2() {  //requires [] (will actully replace select2)
@@ -462,10 +452,11 @@ class _LobstersFunction {
   }
 
   upvoteComment(voterEl) {
-
+    Lobster.vote("comment", voterEl, 1);
   }
 
   upvoteStory(voterEl) {
+    Lobster.vote("story", voterEl, 1);
   }
 
   vote(thingType, voterEl, point, reason) {
@@ -578,12 +569,12 @@ onPageLoad(() => {
 
   on('click', 'li.story a.upvoter', (event) => {
     event.preventDefault();
-    Lobsters.upvoteStory(event.target);
+    Lobster.upvoteStory(event.target);
   });
 
   on('click', 'li.story a.flagger', (event) => {
     event.preventDefault();
-    Lobsters.flagStory(event.target);
+    Lobster.flagStory(event.target);
   });
 
   on('click', 'li.story a.hider', (event) => {
@@ -597,19 +588,19 @@ onPageLoad(() => {
   });
 
   on('click', 'button.story-preview', (event) => {
-    Lobsters.previewStory(parentSelector(event.target, 'form'));
+    Lobster.previewStory(parentSelector(event.target, 'form'));
   });
 
   // Comment Related Functions
 
   on('click', '.comment a.flagger', (event) => {
     event.preventDefault();
-    Lobsters.flagComment(event.target);
+    Lobster.flagComment(event.target);
   });
 
   on("click", '.comment a.upvoter', (event) => {
     event.preventDefault();
-    Lobsters.upvoteComment(event.target);
+    Lobster.upvoteComment(event.target);
   });
   
   on('click', 'button.comment-preview', (event) => {

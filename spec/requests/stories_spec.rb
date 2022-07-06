@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'stores', type: :request do
+describe 'stories', type: :request do
   let(:user) { create(:user) }
   let(:story) { create(:story, user: user) }
   let(:mod) { create(:user, :moderator) }
@@ -9,12 +9,9 @@ describe 'stores', type: :request do
     before { sign_in user }
 
     context "json" do
-      let(:headers) { { 'Content-Type' => 'application/json', 'Accept' => 'application/json' } }
-
       it "returns similar story matching URL" do
-        post "/stories/check_url_dupe",
-             params: { story: { title: "some other title", url: story.url } }.to_json,
-             headers: headers
+        post "/stories/check_url_dupe.json",
+             params: { story: { title: "some other title", url: story.url } }
 
         expect(response).to be_successful
 
@@ -32,9 +29,8 @@ describe 'stores', type: :request do
       end
 
       it "returns no matches if previously submitted URL is only partial match" do
-        post "/stories/check_url_dupe",
-             params: { story: { title: "some other title", url: story.url[0...-1] } }.to_json,
-             headers: headers
+        post "/stories/check_url_dupe.json",
+             params: { story: { title: "some other title", url: story.url[0...-1] } }
 
         expect(response).to be_successful
 
@@ -45,9 +41,8 @@ describe 'stores', type: :request do
       end
 
       it "returns no matches if no matching URL" do
-        post "/stories/check_url_dupe",
-             params: { story: { title: "some other title", url: "invalid_url" } }.to_json,
-             headers: headers
+        post "/stories/check_url_dupe.json",
+             params: { story: { title: "some other title", url: "invalid_url" } }
 
         expect(response).to be_successful
 
@@ -59,15 +54,13 @@ describe 'stores', type: :request do
 
       it "throws a 400 if there's no URL present" do
         expect {
-          post "/stories/check_url_dupe",
-               params: { story: { url: "" } }.to_json,
-               headers: headers
+          post "/stories/check_url_dupe.json",
+               params: { story: { url: "" } }
         }.to raise_error(ActionController::ParameterMissing)
 
         expect {
-          post "/stories/check_url_dupe",
-               params: { story: {} }.to_json,
-               headers: headers
+          post "/stories/check_url_dupe.json",
+               params: { story: {} }
         }.to raise_error(ActionController::ParameterMissing)
       end
     end

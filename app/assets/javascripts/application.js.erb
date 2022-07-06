@@ -521,6 +521,7 @@ const Lobster = new _LobstersFunction();
 
 onPageLoad(() => {
   Lobster.curUser = document.body.getAttribute('data-username'); // hack
+  autosize(document.querySelectorAll('textarea'));
 
   // Global Functions
 

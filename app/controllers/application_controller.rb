@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   end
   rescue_from ActionDispatch::Http::MimeNegotiation::InvalidType do
     render plain: 'fix the mime type in your HTTP_ACCEPT header',
-      status: :bad_request, content_type: 'text/plain'
+           status: :bad_request, content_type: 'text/plain'
   end
 
   def agent_is_spider?

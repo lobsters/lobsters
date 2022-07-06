@@ -10,7 +10,7 @@ describe ModNote do
                            note: 'a' * 65_536,
                            markeddown_note: 'a')
     expect(mod_note).not_to be_valid
-    expect(mod_note.errors.messages.dig(:note))
+    expect(mod_note.errors.messages[:note])
       .to eq(["is too long (maximum is 65535 characters)"])
   end
 
@@ -20,7 +20,7 @@ describe ModNote do
                            note: 'a',
                            markeddown_note: 'a' * 65_536)
     expect(mod_note).not_to be_valid
-    expect(mod_note.errors.messages.dig(:markeddown_note))
+    expect(mod_note.errors.messages[:markeddown_note])
       .to eq(["is too long (maximum is 65535 characters)"])
   end
 
@@ -30,7 +30,7 @@ describe ModNote do
                            note: nil,
                            markeddown_note: 'a')
     expect(mod_note).not_to be_valid
-    expect(mod_note.errors.messages.dig(:note))
+    expect(mod_note.errors.messages[:note])
       .to eq(["can't be blank"])
   end
 
@@ -40,7 +40,7 @@ describe ModNote do
                            note: 'a',
                            markeddown_note: nil)
     expect(mod_note).not_to be_valid
-    expect(mod_note.errors.messages.dig(:markeddown_note))
+    expect(mod_note.errors.messages[:markeddown_note])
       .to eq(["can't be blank"])
   end
 end

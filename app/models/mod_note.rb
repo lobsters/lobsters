@@ -94,13 +94,7 @@ class ModNote < ApplicationRecord
       moderator: InactiveUser.inactive_user,
       user: story.user,
       created_at: Time.current,
-      note: "Attempted to submit a story with tag(s) not allowed to new users:\n" +
-        "- user joined: #{time_ago_in_words(story.user.created_at)}\n" +
-        "- url: #{story.url}\n" +
-        "- title: #{story.title}\n" +
-        "- user_is_author: #{story.user_is_author}\n" +
-        "- tags: #{story.tags_a.join(' ')}\n" +
-        "- description: #{story.description}\n"
+      note: "Attempted to submit a story with tag(s) not allowed to new users:\n- user joined: #{time_ago_in_words(story.user.created_at)}\n- url: #{story.url}\n- title: #{story.title}\n- user_is_author: #{story.user_is_author}\n- tags: #{story.tags_a.join(' ')}\n- description: #{story.description}\n"
     )
   end
 

@@ -113,22 +113,20 @@ class MessagesController < ApplicationController
     deleted = 0
 
     params.each do |k, v|
-      if (v.to_s == "1") && (m = k.match(/^delete_(.+)$/))
-        if (message = Message.where(:short_id => m[1]).first)
-          ok = false
-          if message.author_user_id == @user.id
-            message.deleted_by_author = true
-            ok = true
-          end
-          if message.recipient_user_id == @user.id
-            message.deleted_by_recipient = true
-            ok = true
-          end
+      if (v.to_s == "1") && (m = k.match(/^delete_(.+)$/)) && (message = Message.where(:short_id => m[1]).first)
+        ok = false
+        if message.author_user_id == @user.id
+          message.deleted_by_author = true
+          ok = true
+        end
+        if message.recipient_user_id == @user.id
+          message.deleted_by_recipient = true
+          ok = true
+        end
 
-          if ok
-            message.save!
-            deleted += 1
-          end
+        if ok
+          message.save!
+          deleted += 1
         end
       end
     end
@@ -163,10 +161,8 @@ private
   end
 
   def find_message
-    if (@message = Message.where(:short_id => params[:message_id] || params[:id]).first)
-      if @message.author_user_id == @user.id || @message.recipient_user_id == @user.id
-        return true
-      end
+    if (@message = Message.where(:short_id => params[:message_id] || params[:id]).first) && (@message.author_user_id == @user.id || @message.recipient_user_id == @user.id)
+      return true
     end
 
     flash[:error] = "Could not find message."

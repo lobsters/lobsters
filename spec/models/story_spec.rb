@@ -154,7 +154,7 @@ describe Story do
     end
 
     it "can fetch PDF titles properly" do
-      content = File.read(story_directory + "titled.pdf")
+      content = File.read("#{story_directory}titled.pdf")
       res = fake_response(content, "application/pdf")
       s = build(:story)
       s.fetched_response = res
@@ -162,13 +162,13 @@ describe Story do
     end
 
     it "can fetch its title properly" do
-      content = File.read(story_directory + "title_ampersand.html")
+      content = File.read("#{story_directory}title_ampersand.html")
       res = fake_response(content, "text/html")
       s = build(:story)
       s.fetched_response = res
       expect(s.fetched_attributes[:title]).to eq("B2G demo & quick hack // by Paul Rouget")
 
-      content = File.read(story_directory + "title_google.html")
+      content = File.read("#{story_directory}title_google.html")
       res = fake_response(content, "text/html")
       s = build(:story)
       s.fetched_response = res
@@ -184,13 +184,13 @@ describe Story do
     it "does not follow rel=canonical when this is to the main page" do
       url = "https://www.mcsweeneys.net/articles/who-said-it-donald-trump-or-regina-george"
       s = build(:story, url: url)
-      s.fetched_response = File.read(story_directory + "canonical_root.html")
+      s.fetched_response = File.read("#{story_directory}canonical_root.html")
       expect(s.fetched_attributes[:url]).to eq(url)
     end
 
     it "does not assign canonical url when the response is non-200" do
       url = "https://www.mcsweeneys.net/a/who-said-it-donald-trump-or-regina-george"
-      content = File.read(story_directory + "canonical_error.html")
+      content = File.read("#{story_directory}canonical_error.html")
       res = fake_response(content, "text/html", '404')
 
       expect_any_instance_of(Sponge)
@@ -205,7 +205,7 @@ describe Story do
     it "assigns canonical when url when it resolves 200" do
       url = "https://www.mcsweeneys.net/a/who-said-it-donald-trump-or-regina-george"
       canonical = "https://www.mcsweeneys.net/articles/who-said-it-donald-trump-or-regina-george"
-      content = File.read(story_directory + "canonical_error.html")
+      content = File.read("#{story_directory}canonical_error.html")
       res = fake_response(content, "text/html")
 
       expect_any_instance_of(Sponge)

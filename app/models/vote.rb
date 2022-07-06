@@ -37,7 +37,7 @@ class Vote < ApplicationRecord
     votes = {}
 
     Vote.where(:user_id => user, :story_id => stories,
-    :comment_id => nil).find_each do |v|
+               :comment_id => nil).find_each do |v|
       votes[v.story_id] = { :vote => v.vote, :reason => v.reason }
     end
 
@@ -93,7 +93,7 @@ class Vote < ApplicationRecord
     new_vote, story_id, comment_id, user_id, reason, update_counters = true
   )
     v = Vote.where(:user_id => user_id, :story_id => story_id,
-      :comment_id => comment_id).first_or_initialize
+                   :comment_id => comment_id).first_or_initialize
 
     return if !v.new_record? && v.vote == new_vote # done if there's no change
 

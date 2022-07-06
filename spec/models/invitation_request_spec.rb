@@ -7,7 +7,7 @@ describe InvitationRequest do
   end
 
   it "has a limit on the email field" do
-    invitation_request = build(:invitation_request, email: "a" * 256 + '@b.b')
+    invitation_request = build(:invitation_request, email: "#{'a' * 256}@b.b")
     invitation_request.valid?
     expect(invitation_request.errors[:email]).to eq(['is too long (maximum is 255 characters)'])
   end
@@ -20,7 +20,7 @@ describe InvitationRequest do
   end
 
   it "has a limit on the memo field" do
-    invitation_request = build(:invitation_request, memo: 'https://' + 'a' * 256)
+    invitation_request = build(:invitation_request, memo: "https://#{'a' * 256}")
     invitation_request.valid?
     expect(invitation_request.errors[:memo]).to eq(['is too long (maximum is 255 characters)'])
   end

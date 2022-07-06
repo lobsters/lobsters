@@ -26,11 +26,9 @@ class SignupController < ApplicationController
       return redirect_to "/"
     end
 
-    if !Rails.application.open_signups?
-      if !(@invitation = Invitation.unused.where(:code => params[:invitation_code].to_s).first)
-        flash[:error] = "Invalid or expired invitation"
-        return redirect_to "/signup"
-      end
+    if !Rails.application.open_signups? && !(@invitation = Invitation.unused.where(:code => params[:invitation_code].to_s).first)
+      flash[:error] = "Invalid or expired invitation"
+      return redirect_to "/signup"
     end
 
     @title = "Signup"
@@ -45,11 +43,9 @@ class SignupController < ApplicationController
   end
 
   def signup
-    if !Rails.application.open_signups?
-      if !(@invitation = Invitation.unused.where(:code => params[:invitation_code].to_s).first)
-        flash[:error] = "Invalid or expired invitation."
-        return redirect_to "/signup"
-      end
+    if !Rails.application.open_signups? && !(@invitation = Invitation.unused.where(:code => params[:invitation_code].to_s).first)
+      flash[:error] = "Invalid or expired invitation."
+      return redirect_to "/signup"
     end
 
     @title = "Signup"

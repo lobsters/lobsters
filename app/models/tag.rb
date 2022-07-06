@@ -16,7 +16,7 @@ class Tag < ApplicationRecord
 
   validates :tag, length: { maximum: 25 }, presence: true,
                   uniqueness: { case_sensitive: true },
-                  format: { with: /\A[A-Za-z0-9_\-\+]+\z/ }
+                  format: { with: /\A[A-Za-z0-9_\-+]+\z/ }
   validates :description, length: { maximum: 100 }
   validates :hotness_mod, inclusion: { in: -10..10 }
   validates :permit_by_new_users, :privileged, inclusion: { in: [true, false] }
@@ -81,7 +81,7 @@ class Tag < ApplicationRecord
         m.action = 'Created new tag ' + self.attributes.map {|f, c| "with #{f} '#{c}'" }.join(', ')
       else
         m.action = "Updating tag #{self.tag}, " + self.saved_changes
-          .map {|f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" } .join(', ')
+          .map {|f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" }.join(', ')
       end
       m.moderator_user_id = @edit_user_id
       m.tag_id = self.id

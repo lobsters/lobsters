@@ -12,25 +12,16 @@ Story.to_tweet.each_with_index do |s, x|
     sleep 2
   end
 
-  tags = s.tags.pluck(:tag).map {|t| ' #' + t }.join('')
+  tags = s.tags.pluck(:tag).map {|t| " ##{t}" }.join('')
 
   via = ""
   if s.user.twitter_username.present?
-    via = "\n" +
-          (s.user_is_author? ? "by" : "via") +
-          " @#{s.user.twitter_username}"
+    via = "\n#{(s.user_is_author? ? 'by' : 'via')} @#{s.user.twitter_username}"
   end
 
-  tco_status = via +
-               "\n" +
-               ("X" * Twitter::TCO_LEN) + tags +
-               (s.url.present? ? "\n" + ("X" * Twitter::TCO_LEN) : "")
+  tco_status = "#{via}\n#{('X' * Twitter::TCO_LEN)}#{tags}#{(s.url.present? ? "\n#{('X' * Twitter::TCO_LEN)}" : '')}"
 
-  status = via +
-           "\n" +
-           s.short_id_url +
-           tags +
-           (s.url.present? ? "\n" + s.url : "")
+  status = "#{via}\n#{s.short_id_url}#{tags}#{(s.url.present? ? "\n#{s.url}" : '')}"
 
   left_len = Twitter::MAX_TWEET_LEN - tco_status.length
 
@@ -53,7 +44,7 @@ Story.to_tweet.each_with_index do |s, x|
   end
 
   if title.bytesize > left_len
-    status = title[0, left_len - 3] + "..." + status
+    status = "#{title[0, left_len - 3]}...#{status}"
   else
     status = title + status
   end

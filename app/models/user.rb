@@ -93,7 +93,7 @@ class User < ApplicationRecord
 
   validates :password, :presence => true, :on => :create
 
-  VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/.freeze
+  VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/
   validates :username,
             :format => { :with => /\A#{VALID_USERNAME}\z/ },
             :length => { :maximum => 50 },
@@ -161,7 +161,7 @@ class User < ApplicationRecord
   MIN_STORIES_CHECK_SELF_PROMOTION = 2
 
   def self.username_regex_s
-    "/^" + VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, "") + "$/"
+    "/^#{VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, '')}$/"
   end
 
   def as_json(_options = {})
@@ -181,7 +181,7 @@ class User < ApplicationRecord
     h = super(:only => attrs)
 
     h[:avatar_url] = self.avatar_url
-    h[:invited_by_user] = User.where(id: invited_by_user_id).pluck(:username).first
+    h[:invited_by_user] = User.where(id: invited_by_user_id).pick(:username)
 
     if self.github_username.present?
       h[:github_username] = self.github_username

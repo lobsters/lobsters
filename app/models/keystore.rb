@@ -10,16 +10,17 @@ class Keystore < ApplicationRecord
   end
 
   def self.value_for(key)
-    self.where(key: key).limit(1).pluck(:value).first
+    self.where(key: key).limit(1).pick(:value)
   end
 
   def self.put(key, value)
     validate_input_key(key)
-    if Keystore.connection.adapter_name == "SQLite"
+    case Keystore.connection.adapter_name
+    when "SQLite"
       Keystore.connection.execute("INSERT OR REPLACE INTO " <<
         "#{Keystore.table_name} (`key`, `value`) VALUES " <<
         "(#{q(key)}, #{q(value)})")
-    elsif Keystore.connection.adapter_name =~ /Mysql/
+    when /Mysql/
       Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" +
         "`key`, `value`) VALUES (#{q(key)}, #{q(value)}) ON DUPLICATE KEY " +
         "UPDATE `value` = #{q(value)}")
@@ -38,13 +39,14 @@ class Keystore < ApplicationRecord
   def self.incremented_value_for(key, amount = 1)
     validate_input_key(key)
     Keystore.transaction do
-      if Keystore.connection.adapter_name == "SQLite"
+      case Keystore.connection.adapter_name
+      when "SQLite"
         Keystore.connection.execute("INSERT OR IGNORE INTO " <<
           "#{Keystore.table_name} (`key`, `value`) VALUES " <<
           "(#{q(key)}, 0)")
         Keystore.connection.execute("UPDATE #{Keystore.table_name} " <<
           "SET `value` = `value` + #{q(amount)} WHERE `key` = #{q(key)}")
-      elsif Keystore.connection.adapter_name =~ /Mysql/
+      when /Mysql/
         Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" +
           "`key`, `value`) VALUES (#{q(key)}, #{q(amount)}) ON DUPLICATE KEY " +
           "UPDATE `value` = `value` + #{q(amount)}")

@@ -17,7 +17,7 @@ describe 'tags', type: :request do
     end
 
     it 'does not create a new tag when the name is blank' do
-      expect { post "/tags", params: { tag: { tag: '' } } } .not_to(change { Tag.count })
+      expect { post "/tags", params: { tag: { tag: '' } } }.not_to(change { Tag.count })
       expect(response).to redirect_to new_tag_path
       expect(flash[:error]).to include "Tag can't be blank"
     end

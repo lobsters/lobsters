@@ -272,7 +272,7 @@ class HomeController < ApplicationController
     @above = 'stories/subnav'
 
     @rss_link ||= {
-      :title => "RSS 2.0 - " + @title,
+      :title => "RSS 2.0 - #{@title}",
       :href => "/top/rss",
     }
 

@@ -48,14 +48,12 @@ class CommentsController < ApplicationController
     if params[:preview].blank? &&
        (pc = Comment.where(:story_id => story.id,
                            :user_id => @user.id,
-                           :parent_comment_id => comment.parent_comment_id).first)
-      if (Time.current - pc.created_at) < 5.minutes && !@user.is_moderator?
-        comment.errors.add(:comment, "^You have already posted a comment " <<
-          "here recently.")
+                           :parent_comment_id => comment.parent_comment_id).first) && ((Time.current - pc.created_at) < 5.minutes && !@user.is_moderator?)
+      comment.errors.add(:comment, "^You have already posted a comment " <<
+        "here recently.")
 
-        return render :partial => "commentbox", :layout => false,
-          :content_type => "text/html", :locals => { :comment => comment }
-      end
+      return render :partial => "commentbox", :layout => false,
+                    :content_type => "text/html", :locals => { :comment => comment }
     end
 
     if comment.valid? && params[:preview].blank? && ActiveRecord::Base.transaction { comment.save }
@@ -72,7 +70,7 @@ class CommentsController < ApplicationController
   def render_created_comment(comment)
     if request.xhr?
       render :partial => "comments/postedreply", :layout => false,
-        :content_type => "text/html", :locals => { :comment => comment }
+             :content_type => "text/html", :locals => { :comment => comment }
     else
       redirect_to comment.path
     end
@@ -114,7 +112,7 @@ class CommentsController < ApplicationController
     end
 
     render :partial => "commentbox", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+           :content_type => "text/html", :locals => { :comment => comment }
   end
 
   def reply
@@ -127,7 +125,7 @@ class CommentsController < ApplicationController
     comment.parent_comment = parent_comment
 
     render :partial => "commentbox", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+           :content_type => "text/html", :locals => { :comment => comment }
   end
 
   def delete
@@ -138,7 +136,7 @@ class CommentsController < ApplicationController
     comment.delete_for_user(@user, params[:reason])
 
     render :partial => "comment", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+           :content_type => "text/html", :locals => { :comment => comment }
   end
 
   def undelete
@@ -149,7 +147,7 @@ class CommentsController < ApplicationController
     comment.undelete_for_user(@user)
 
     render :partial => "comment", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+           :content_type => "text/html", :locals => { :comment => comment }
   end
 
   def disown
@@ -161,7 +159,7 @@ class CommentsController < ApplicationController
     comment = find_comment
 
     render :partial => "comment", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+           :content_type => "text/html", :locals => { :comment => comment }
   end
 
   def update
@@ -237,7 +235,7 @@ class CommentsController < ApplicationController
   def index
     @rss_link ||= {
       :title => "RSS 2.0 - Newest Comments",
-      :href => "/comments.rss" + (@user ? "?token=#{@user.rss_token}" : ""),
+      :href => "/comments.rss#{(@user ? "?token=#{@user.rss_token}" : '')}",
     }
 
     @title = "Newest Comments"
@@ -380,7 +378,7 @@ private
     comment = Comment.where(short_id: params[:id]).first
     if @user && comment
       comment.current_vote = Vote.where(:user_id => @user.id,
-        :story_id => comment.story_id, :comment_id => comment.id).first
+                                        :story_id => comment.story_id, :comment_id => comment.id).first
     end
 
     comment

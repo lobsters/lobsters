@@ -4,8 +4,7 @@ class Search
   include ActiveModel::AttributeMethods
   extend ActiveModel::Naming
 
-  attr_accessor :q, :order
-  attr_accessor :results, :page, :total_results, :per_page
+  attr_accessor :q, :order, :results, :page, :total_results, :per_page
   attr_writer :what
 
   validates :q, length: { :minimum => 2 }
@@ -164,8 +163,7 @@ class Search
         base = base.where(Arel.sql("MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE)"))
       end
       self.results = base.select(
-        "comments.*, " +
-        "MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_comment"
+        "comments.*, MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_comment"
       ).includes(:user, :story)
       self.total_results = self.results.dup.count("comments.id")
 

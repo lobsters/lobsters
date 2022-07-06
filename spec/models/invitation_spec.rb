@@ -7,7 +7,7 @@ describe Invitation do
   end
 
   it "has a limit on the email field" do
-    invitation = build(:invitation, email: 'a' * 256 + '@b.b')
+    invitation = build(:invitation, email: "#{'a' * 256}@b.b")
     invitation.valid?
     expect(invitation.errors[:email]).to eq(['is too long (maximum is 255 characters)'])
   end

@@ -165,9 +165,9 @@ class Sponge
 
     path = (uri.path == "" ? "/" : uri.path)
     if uri.query
-      path += "?" + uri.query
+      path += "?#{uri.query}"
     elsif method == :get && raw_post_data
-      path += "?" + URI.encode_www_form(raw_post_data)
+      path += "?#{URI.encode_www_form(raw_post_data)}"
       send_headers["Content-type"] = "application/x-www-form-urlencoded"
     end
 
@@ -185,7 +185,7 @@ class Sponge
     path.gsub!(/^\/\//, "/")
 
     dputs "fetching #{url} (#{ip}) " +
-          (uri.user ? "with http auth " + uri.user + "/" + ("*" * uri.password.length) + " " : "") +
+          (uri.user ? "with http auth #{uri.user}/#{('*' * uri.password.length)} " : "") +
           "by #{method} with cookies #{cookies(uri.host)}"
 
     send_headers = {
@@ -196,8 +196,8 @@ class Sponge
     }.merge(send_headers || {})
 
     if uri.user
-      send_headers["Authorization"] = "Basic " +
-                                      ["#{uri.user}:#{uri.password}"].pack('m').delete("\r\n")
+      send_headers["Authorization"] =
+        "Basic #{["#{uri.user}:#{uri.password}"].pack('m').delete("\r\n")}"
     end
 
     res = nil
@@ -231,7 +231,7 @@ class Sponge
       # follow
       newuri = URI.parse(res["location"])
       if newuri.host
-        dputs "following redirection to " + res["location"]
+        dputs "following redirection to #{res['location']}"
       else
         # relative path
         newuri.host = uri.host
@@ -239,7 +239,7 @@ class Sponge
         newuri.port = uri.port
         newuri.path = "/#{newuri.path}"
 
-        dputs "following relative redirection to " + newuri.to_s
+        dputs "following relative redirection to #{newuri}"
       end
 
       fetch(newuri.to_s, "get", nil, nil, headers, limit - 1)

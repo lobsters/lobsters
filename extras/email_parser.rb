@@ -9,7 +9,7 @@ class EmailParser
     @email = nil
 
     begin
-      Utils.silence_stream(STDERR) do
+      Utils.silence_stream($stderr) do
         @email = Mail.read_from_string(email_text)
       end
     rescue
@@ -41,11 +41,11 @@ class EmailParser
   def parent
     return @parent if @parent
 
-    irt = self.email[:in_reply_to].to_s.gsub(/[^A-Za-z0-9@\.]/, "")
+    irt = self.email[:in_reply_to].to_s.gsub(/[^A-Za-z0-9@.]/, "")
 
-    if (m = irt.match(/^comment\.([^\.]+)\.\d+@/))
+    if (m = irt.match(/^comment\.([^.]+)\.\d+@/))
       @parent = Comment.where(:short_id => m[1]).first
-    elsif (m = irt.match(/^story\.([^\.]+)\.\d+@/))
+    elsif (m = irt.match(/^story\.([^.]+)\.\d+@/))
       @parent = Story.where(:short_id => m[1]).first
     end
 

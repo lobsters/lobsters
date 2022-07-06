@@ -24,7 +24,7 @@ class Category < ApplicationRecord
                    self.attributes.map {|f, c| "with #{f} '#{c}'" }.join(', ')
       else
         m.action = "Updating category #{self.category}, " + self.saved_changes
-          .map {|f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" } .join(', ')
+          .map {|f, c| "changed #{f} from '#{c[0]}' to '#{c[1]}'" }.join(', ')
       end
       m.moderator_user_id = @edit_user_id
       m.category_id = self.id

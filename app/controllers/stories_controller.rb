@@ -17,11 +17,11 @@ class StoriesController < ApplicationController
     @story = Story.new(user: @user)
     @story.attributes = story_params
 
-    if @story.valid? && !(@story.already_posted_recently? && !@story.seen_previous)
-      if ActiveRecord::Base.transaction { @story.save }
-        ReadRibbon.where(user: @user, story: @story).first_or_create
-        return redirect_to @story.comments_path
-      end
+    if @story.valid? && !(@story.already_posted_recently? && !@story.seen_previous) && ActiveRecord::Base.transaction {
+         @story.save
+       }
+      ReadRibbon.where(user: @user, story: @story).first_or_create
+      return redirect_to @story.comments_path
     end
 
     return render :action => "new"
@@ -164,14 +164,12 @@ class StoriesController < ApplicationController
           "twitter:card" => "summary",
           "twitter:site" => "@lobsters",
           "twitter:title" => @story.title,
-          "twitter:description" => @story.comments_count.to_s + " " +
-                                   'comment'.pluralize(@story.comments_count),
-          "twitter:image" => Rails.application.root_url +
-                             "apple-touch-icon-144.png",
+          "twitter:description" => "#{@story.comments_count} #{'comment'.pluralize(@story.comments_count)}",
+          "twitter:image" => "#{Rails.application.root_url}apple-touch-icon-144.png",
         }
 
         if @story.user.twitter_username.present?
-          @meta_tags["twitter:creator"] = "@" + @story.user.twitter_username
+          @meta_tags["twitter:creator"] = "@#{@story.user.twitter_username}"
         end
 
         load_user_votes
@@ -371,7 +369,7 @@ class StoriesController < ApplicationController
     respond_to do |format|
       format.html {
         return render :partial => "stories/form_errors", :layout => false,
-          :content_type => "text/html", :locals => { :story => @story }
+                      :content_type => "text/html", :locals => { :story => @story }
       }
       format.json {
         similar_stories = @story.public_similar_stories(@user).map(&:as_json)

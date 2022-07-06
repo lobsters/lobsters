@@ -36,15 +36,16 @@ class Twitter
       Timeout.timeout(120) do
         at = OAuth::AccessToken.new(self.oauth_consumer, self.AUTH_TOKEN, self.AUTH_SECRET)
 
-        if method == :get
+        case method
+        when :get
           res = at.get(req)
-        elsif method == :post
+        when :post
           res = at.post(req, post_data)
         else
           raise "what kind of method is #{method}?"
         end
 
-        if res.class == Net::HTTPUnauthorized
+        if res.instance_of?(Net::HTTPUnauthorized)
           raise "not authorized"
         end
 

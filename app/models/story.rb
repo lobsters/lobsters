@@ -134,10 +134,10 @@ class Story < ApplicationRecord
   TITLE_DROP_WORDS = ["", "a", "an", "and", "but", "in", "of", "or", "that", "the", "to"].freeze
 
   # URI.parse is not very lenient, so we can't use it
-  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^\.\/]+\.)+[a-z\-]+)(?<port>:\d+)?(\/|\z)/i.freeze
+  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>([^.\/]+\.)+[a-z\-]+)(?<port>:\d+)?(\/|\z)/i
 
   # Dingbats, emoji, and other graphics https://www.unicode.org/charts/
-  GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}\u{2192}-\u{27BF}\u{1F000}-\u{1F9FF}]/.freeze
+  GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}\u{2192}-\u{27BF}\u{1F000}-\u{1F9FF}]/
 
   attr_accessor :editing_from_suggestions, :editor, :fetching_ip,
                 :is_hidden_by_cur_user, :latest_comment_id,
@@ -251,9 +251,9 @@ class Story < ApplicationRecord
     urls.each do |u|
       u_without_slash = u.gsub(/\/+\z/, "")
       urls2.push u_without_slash
-      urls2.push u_without_slash + "/"
-      urls2.push u_without_slash + "/index.htm"
-      urls2.push u_without_slash + "/index.html"
+      urls2.push "#{u_without_slash}/"
+      urls2.push "#{u_without_slash}/index.htm"
+      urls2.push "#{u_without_slash}/index.html"
       urls2.push u.gsub(/\/index.html?\z/, "")
     end
     urls = urls2.uniq
@@ -267,7 +267,7 @@ class Story < ApplicationRecord
 
     # trailing pound
     urls.each do |u|
-      urls_with_trailing_pound.push u + "#"
+      urls_with_trailing_pound.push "#{u}#"
     end
 
     # if a previous submission was moderated, return it to block it from being
@@ -347,9 +347,10 @@ class Story < ApplicationRecord
 
     js = {}
     h.each do |k|
-      if k.is_a?(Symbol)
+      case k
+      when Symbol
         js[k] = self.send(k)
-      elsif k.is_a?(Hash)
+      when Hash
         if k.values.first.is_a?(Symbol)
           js[k.keys.first] = self.send(k.values.first)
         else
@@ -657,7 +658,7 @@ class Story < ApplicationRecord
   end
 
   def merge_story_short_id=(sid)
-    self.merged_story_id = sid.present? ? Story.where(:short_id => sid).pluck(:id).first : nil
+    self.merged_story_id = sid.present? ? Story.where(:short_id => sid).pick(:id) : nil
   end
 
   def merge_story_short_id
@@ -709,13 +710,11 @@ class Story < ApplicationRecord
     end
 
     new_tag_names_a.uniq.each do |tag_name|
-      if tag_name.to_s != "" && !self.tags.exists?(:tag => tag_name)
-        if (t = Tag.active.find_by(:tag => tag_name))
-          # we can't lookup whether the user is allowed to use this tag yet
-          # because we aren't assured to have a user_id by now; we'll do it in
-          # the validation with check_tags
-          self.taggings.build(tag_id: t.id)
-        end
+      if tag_name.to_s != "" && !self.tags.exists?(:tag => tag_name) && (t = Tag.active.find_by(:tag => tag_name))
+        # we can't lookup whether the user is allowed to use this tag yet
+        # because we aren't assured to have a user_id by now; we'll do it in
+        # the validation with check_tags
+        self.taggings.build(tag_id: t.id)
       end
     end
   end
@@ -814,7 +813,7 @@ class Story < ApplicationRecord
 
   def title=(t)
     # change unicode whitespace characters into real spaces
-    self[:title] = t.to_s.strip.gsub(/[\.,;:!]*$/, '')
+    self[:title] = t.to_s.strip.gsub(/[.,;:!]*$/, '')
   end
 
   def title_as_url
@@ -893,15 +892,15 @@ class Story < ApplicationRecord
       @url_port = match[:port]
       if match[:protocol] == 'http'  && match[:port] == ':80' ||
          match[:protocol] == 'https' && match[:port] == ':443'
-        u = u[0...match.begin(3)] + u[match.end(3)..-1]
+        u = u[0...match.begin(3)] + u[match.end(3)..]
         @url_port = nil
       end
     end
     set_domain(match)
 
     # strip out tracking query params
-    if (match = u.match(/\A([^\?]+)\?(.+)\z/))
-      params = match[2].split(/[&\?]/)
+    if (match = u.match(/\A([^?]+)\?(.+)\z/))
+      params = match[2].split(/[&?]/)
       # utm_ is google and many others; sk is medium
       params.reject! {|p|
         p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=/x)
@@ -993,7 +992,7 @@ class Story < ApplicationRecord
         title = title[0, title.length - site_name.length]
 
         # remove title/site name separator
-        if title.match(/ [ \-\|\u2013] $/)
+        if title.match(/ [ \-|\u2013] $/)
           title = title[0, title.length - 3]
         end
       end

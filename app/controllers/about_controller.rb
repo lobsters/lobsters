@@ -27,7 +27,7 @@ class AboutController < ApplicationController
       render action: "chat"
     rescue ActionView::MissingTemplate
       render html: ("<h1>Don't speak. I know what you're thinking.</h1>"),
-        layout: 'application'
+             layout: 'application'
     end
   end
 

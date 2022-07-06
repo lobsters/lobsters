@@ -179,7 +179,7 @@ class FakeDataGenerator
       create_args = {
         user: hat_wearer,
         granted_by_user: users[0],
-        hat: Faker::Lorem.word.capitalize + " " + suffixes[Random.rand(5)],
+        hat: "#{Faker::Lorem.word.capitalize} #{suffixes[Random.rand(5)]}",
         link: Faker::Internet.url,
       }
       hat = Hat.create!(create_args)
@@ -282,7 +282,7 @@ task fake_data: :environment do
   record_count = User.count + Tag.count + Story.count + Comment.count
   if record_count > 3 # more than would be created by db:seed
     warn "Database has #{record_count} records, are you sure you want to add more? [y to continue]"
-    fail "Cancelled" if STDIN.gets.chomp != 'y'
+    fail "Cancelled" if $stdin.gets.chomp != 'y'
   end
 
   FakeDataGenerator.new.generate

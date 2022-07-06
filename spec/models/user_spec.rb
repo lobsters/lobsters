@@ -20,7 +20,7 @@ describe User do
     expect { create(:user, :email => "user@") }.to raise_error
 
     # address too long
-    expect(build(:user, :email => "a" * 95 + "@example.com")).to_not be_valid
+    expect(build(:user, :email => "#{'a' * 95}@example.com")).to_not be_valid
   end
 
   it "has a limit on the password reset token field" do

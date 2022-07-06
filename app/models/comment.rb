@@ -54,7 +54,7 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
-  SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
+  SCORE_RANGE_TO_HIDE = (-2 .. 4)
 
   validates :short_id, length: { maximum: 10 }
   validates :user_id, presence: true
@@ -66,8 +66,8 @@ class Comment < ApplicationRecord
     self.parent_comment && self.parent_comment.is_gone? &&
       errors.add(:base, "Comment was deleted by the author or a mod while you were writing.")
 
-    (m = self.comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
-      errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
+    (m = self.comment.to_s.strip.match(/\A(t)his([.!])?$\z/i)) &&
+      errors.add(:base, "#{(m[1] == 'T' ? 'N' : 'n')}ope#{m[2]}")
 
     self.comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
       errors.add(:base, "Wow!  A blue car!")
@@ -75,7 +75,7 @@ class Comment < ApplicationRecord
     self.comment.to_s.strip.match(/\A([[[:upper:]][[:punct:]]] )+[[[:upper:]][[:punct:]]]?$\z/) &&
       errors.add(:base, "D O N ' T")
 
-    self.comment.to_s.strip.match(/\A(me too|nice)([\.!])?\z/i) &&
+    self.comment.to_s.strip.match(/\A(me too|nice)([.!])?\z/i) &&
       errors.add(:base, "Please just upvote the parent post instead.")
 
     self.hat.present? && self.user.wearable_hats.exclude?(self.hat) &&
@@ -183,9 +183,10 @@ class Comment < ApplicationRecord
 
     js = {}
     h.each do |k|
-      if k.is_a?(Symbol)
+      case k
+      when Symbol
         js[k] = self.send(k)
-      elsif k.is_a?(Hash)
+      when Hash
         if k.values.first.is_a?(Symbol)
           js[k.keys.first] = self.send(k.values.first)
         else
@@ -266,7 +267,7 @@ class Comment < ApplicationRecord
   end
 
   def deliver_mention_notifications
-    self.plaintext_comment.scan(/\B\@([\w\-]+)/).flatten.uniq.each do |mention|
+    self.plaintext_comment.scan(/\B@([\w\-]+)/).flatten.uniq.each do |mention|
       if (u = User.active.find_by(:username => mention))
         if u.id == self.user.id
           next

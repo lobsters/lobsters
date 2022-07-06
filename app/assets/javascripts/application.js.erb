@@ -124,47 +124,6 @@ var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
 
-  $(document).on("click", "a.comment_replier", function() {
-    if (!Lobsters.curUser) {
-      Lobster.bounceToLogin();
-      return false;
-    }
-
-    var comment = $(this).closest(".comment");
-    if ($("#reply_form_" + comment.attr("id")).length > 0)
-      return false;
-
-    var sel = "";
-    if (window.getSelection)
-      sel = window.getSelection().toString();
-    else if (document.selection && document.selection.type != "Control")
-      sel = document.selection.createRange().text;
-
-    if (sel != "") {
-      var t = "";
-      $.each(sel.split("\n"), function(k, v) {
-        t += (t == "" ? "" : "\n") + "> " + v;
-      });
-      sel = t;
-
-      if (sel != "")
-        sel += "\n\n";
-    }
-
-    var replies = comment.nextAll(".comments").first();
-    $.get("/comments/" + comment.attr("data-shortid") + "/reply",
-    function(data) {
-      var reply = $($.parseHTML(data));
-      reply.attr("id", "reply_form_" + comment.attr("id"));
-      replies.prepend(reply);
-      var ta = reply.find("textarea");
-      ta.focus().text(sel);
-      autosize(ta);
-    });
-
-    return false;
-  });
-
   Lobsters.runSelect2();
 
   $(document).on("blur", "#story_url", function() {
@@ -589,6 +548,49 @@ onPageLoad(() => {
         .then(response => response.text())
         .then(text => replace(li, text));
     }
+  });
+
+  on("click", "a.comment_replier", (event) => {
+    if (!Lobsters.curUser) {
+      Lobster.bounceToLogin();
+    }
+
+    const comment = parentSelector(event.target, '.comment');
+    const commentId = comment.getAttribute('id');
+
+    // Check to make sure we don't already have a reply box.
+    if (document.getElementById('reply_form_' + commentId)) {
+      return false;
+    }
+
+    // Inserts "> " on quoted text.
+    let sel = document.getSelection().toString() || '';
+    if (sel != "") {
+      sel = sel.split("\n").map(s => "> " + s + '\n').join('');
+      sel += "\n";
+    }
+
+    let div = document.createElement('div');
+    if (document.querySelector('.comments_subtree')) {
+      parentSelector(comment, '.comments_subtree').lastElementChild.prepend(div);
+    } else {
+      console.log('lastchild', comment.parentElement.lastElementChild.prepend(div))
+      console.log('not last child', comment.parentElement.prepend(div))
+      comment.parentElement.lastElementChild.prepend(div);
+    }
+
+    fetch('/comments/' + comment.getAttribute('data-shortid') + '/reply')
+      .then(response => {
+        response.text().then(text => {
+          div.innerHTML = text;
+          div.setAttribute('id', 'reply_form_' + commentId );
+          var ta = div.querySelector("textarea");
+          ta.textContent = sel;
+          ta.setSelectionRange(sel.length, sel.length);
+          ta.focus();
+          autosize(ta);
+        })
+      });
   });
 
   on('click', '.comment a.flagger', (event) => {

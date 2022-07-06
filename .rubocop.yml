@@ -300,7 +300,7 @@ RSpec/DescribeClass:
   Enabled: false
 RSpec/LetSetup:
   Enabled: false
-Capybara/FeatureMethods:
+RSpec/Capybara/FeatureMethods:
   Enabled: false
 RSpec/BeEq: # new in 2.9.0
   Enabled: false

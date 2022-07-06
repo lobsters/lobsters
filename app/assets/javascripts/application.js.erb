@@ -625,7 +625,7 @@ onPageLoad(() => {
           response.text().then(text => replace(comment, text));
         });
     } else {
-      comment.remove();
+      comment.parentElement.remove();
     }
   });
 

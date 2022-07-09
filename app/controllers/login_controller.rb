@@ -110,7 +110,8 @@ class LoginController < ApplicationController
     @found_user = User.where("email = ? OR username = ?", params[:email], params[:email]).first
 
     if !@found_user
-      flash.now[:error] = "Unknown e-mail address or username."
+      flash.now[:success] = "Password reset instructions have been " <<
+                            "e-mailed to you if this account exists."
       return forgot_password
     end
 
@@ -128,7 +129,8 @@ class LoginController < ApplicationController
 
     @found_user.initiate_password_reset_for_ip(request.remote_ip)
 
-    flash.now[:success] = "Password reset instructions have been e-mailed to you."
+    flash.now[:success] = "Password reset instructions have been " <<
+                          "e-mailed to you if this account exists."
     return index
   end
 

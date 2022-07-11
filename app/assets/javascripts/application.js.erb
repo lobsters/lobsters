@@ -505,6 +505,10 @@ onPageLoad(() => {
 
   // Story Related Functions
 
+  if (document.getElementById('story_url') && !document.getElementById('story_preview').firstElementChild) {
+    document.getElementById('story_url').focus()
+  }
+
   on('change', '#story_title', Lobster.checkStoryTitle);
 
   Lobster.checkStoryTitle()

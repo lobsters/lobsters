@@ -123,33 +123,7 @@ var _Lobsters = Class.extend({
 var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
-
   Lobsters.runSelect2();
-
-  $(document).on("blur", "#story_url", function() {
-    var url_tags = {
-      "\.pdf$": "pdf",
-      "[\/\.]((youtube|vimeo)\.com|youtu\.be|twitch.tv)\/": "video",
-      "[\/\.](slideshare\.net|speakerdeck\.com)\/": "slides",
-      "[\/\.](soundcloud\.com)\/": "audio",
-    };
-
-    for (var u in url_tags) {
-      var tag = url_tags[u];
-
-      if ($("#story_url").val().match(new RegExp(u, "i"))) {
-        var ta = $("#story_tags_a").data("select2");
-        if (ta.getVal().indexOf(tag) < 0)
-          ta.addSelectedChoice({ id: tag });
-      }
-    }
-
-    // check for dupe if there's a URL, but not when editing existing
-    if ($("#story_url").val().length > 0 &&
-        $("#edit_story input[name=_method]").val() !== "put") {
-      Lobster.checkStoryDuplicate(parentSelector(document.getElementById('story_url'), 'form'));
-    }
-  });
 });
 
 const parentSelector = (target, selector) => {
@@ -539,6 +513,34 @@ onPageLoad(() => {
 
   on('click', 'button.story-preview', (event) => {
     Lobster.previewStory(parentSelector(event.target, 'form'));
+  });
+
+  on('focusout', '#story_url', (event) => {
+    let url_tags = {
+      "\.pdf$": "pdf",
+      "[\/\.]((youtube|vimeo)\.com|youtu\.be|twitch.tv)\/": "video",
+      "[\/\.](slideshare\.net|speakerdeck\.com)\/": "slides",
+      "[\/\.](soundcloud\.com)\/": "audio",
+    };
+
+    for (let u in url_tags) {
+      let tag = url_tags[u];
+
+      // can't remove the jquery until I replace select 2
+      if ($("#story_url").val().match(new RegExp(u, "i"))) {
+        var ta = $("#story_tags_a").data("select2");
+        if (ta.getVal().indexOf(tag) < 0)
+          ta.addSelectedChoice({ id: tag });
+      }
+    }
+
+    // check for dupe if there's a URL, but not when editing existing
+
+    if (document.getElementById('story_url') &&
+      document.querySelector('input[name="_method"]') &&
+      (document.querySelector('input[name="_method"]').getAttribute('value') !== 'put')) {
+        Lobster.checkStoryDuplicate(parentSelector(document.getElementById('story_url'), 'form'));
+    }
   });
 
   // Comment Related Functions

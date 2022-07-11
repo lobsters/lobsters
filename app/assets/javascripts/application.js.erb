@@ -333,10 +333,10 @@ class _LobstersFunction {
       body: formData
     }).then (response => {
       response.text().then(text => {
-        previewElement.innerHTML = text;
+        replace(previewElement, text);
+        Lobsters.runSelect2();
       });
     });
-    Lobsters.runSelect2();
   }
 
   runSelect2() {  //requires [] (will actully replace select2)

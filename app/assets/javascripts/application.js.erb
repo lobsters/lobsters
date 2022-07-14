@@ -7,80 +7,6 @@
 var _Lobsters = Class.extend({
   curUser: null,
 
-  storyFlagReasons: { <%= Vote::STORY_REASONS.map{|k,v|
-      "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
-  commentFlagReasons: { <%= Vote::COMMENT_REASONS.map{|k,v|
-      "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
-
-  _showFlagWhyAt: function(thingType, voterEl, onChooseWhy) {
-    if (!Lobsters.curUser)
-      return Lobster.bounceToLogin();
-
-    var li = $(voterEl).closest(".story, .comment");
-    if (li.hasClass("flagged")) {
-      /* already upvoted, neutralize */
-      Lobster.vote(thingType, voterEl, -1, null);
-      return;
-    }
-
-    if ($("#flag_why"))
-      $("#flag_why").remove();
-    if ($("#flag_why_shadow"))
-      $("#flag_why_shadow").remove();
-
-    var sh = $("<div id=\"flag_why_shadow\"></div>");
-    $(voterEl).after(sh);
-    sh.click(function() {
-      $("#flag_why_shadow").remove();
-      $("#flag_why").remove();
-    });
-
-    var d = $("<div id=\"flag_why\"></div>");
-
-    var reasons;
-    if (thingType == "comment")
-      reasons = Lobsters.commentFlagReasons;
-    else
-      reasons = Lobsters.storyFlagReasons;
-
-    $.each(reasons, function(k, v) {
-      var a = $("<a href=\"#\"" + (k == "" ? " class=\"cancelreason\"" : "") +
-        ">" + v + "</a>");
-
-      a.click(function() {
-        $("#flag_why").remove();
-        $("#flag_why_shadow").remove();
-
-        if (k != "")
-          onChooseWhy(k);
-
-        return false;
-      });
-
-      d.append(a);
-    });
-
-    if (thingType == "story") {
-      $(voterEl).closest("li").after(d);
-      d.position({
-        my: "left top",
-        at: "left bottom",
-        offset: "-2 -2",
-        of: $(voterEl),
-        collision: "none",
-      });
-      d.css("left", $(voterEl).position().left);
-    } else {
-      // place flag menu outside of the comment to avoid inheriting opacity
-      var voterPos = $(voterEl).position();
-      d.appendTo($(voterEl).parent());
-      d.css({
-        left: voterPos.left,
-        top: voterPos.top + $(voterEl).outerHeight()
-      });
-    }
-  },
-
   runSelect2: function() {
     $("#story_tags_a").select2({
     formatSelection: function(what) {
@@ -204,6 +130,62 @@ class _LobstersFunction {
     document.location = "/login?return=" + encodeURIComponent(document.location);
   }
 
+  modalFlaggingDropDown(flaggedItem, voterEl, onChooseWhy) {
+    if (!Lobsters.curUser)
+      return Lobster.bounceToLogin();
+
+    const li = parentSelector(voterEl, '.story, .comment');
+    if (li.classList.contains("flagged")) {
+      /* already upvoted, neutralize */
+      Lobster.vote(flaggedItem, voterEl, -1, null);
+      return;
+    }
+
+    if (document.querySelector("#flag_dropdown")) {
+      document.querySelector("#flag_dropdown").remove();
+    }
+    if (document.querySelector("#modal_backdrop")) {
+      document.querySelector("#modal_backdrop").remove();
+    }
+
+    const modalDiv = document.createElement("div");
+    modalDiv.setAttribute('id', 'modal_backdrop');
+    // voterEl.after(modalDiv);
+    document.body.appendChild(modalDiv);
+
+    const flaggingDropDown = document.createElement('div');
+    flaggingDropDown.setAttribute('id', 'flag_dropdown');
+    document.body.appendChild(flaggingDropDown);
+    flaggingDropDown.style.top = "" + (voterEl.getBoundingClientRect().bottom + window.pageYOffset + 2) + "px";
+    flaggingDropDown.style.left = "" + (voterEl.getBoundingClientRect().left + window.pageXOffset) + "px";
+
+    let reasons;
+    if (flaggedItem == "comment") {
+      reasons = Lobster.commentFlagReasons;
+    } else {
+      reasons = Lobster.storyFlagReasons;
+    }
+
+    Object.keys(reasons).map(function(k, v) {
+      let a = document.createElement('a')
+      a.textContent = reasons[k]
+      a.setAttribute('data', k)
+      if (k === ''){
+        a.setAttribute('href', '#' )
+        a.classList.add('cancel-reason')
+      } else {
+        a.setAttribute('href', '#')
+      }
+      flaggingDropDown.append(a);
+    });
+
+    on('click', '#flag_dropdown a', (event) => {
+      if (event.target.getAttribute('data') != '')
+        onChooseWhy(event.target.getAttribute('data'));
+      return false;
+    });
+  }
+
   checkStoryDuplicate(form) {
     const formData = new FormData(form);
     const action = '/stories/check_url_dupe';
@@ -267,12 +249,12 @@ class _LobstersFunction {
   }
 
   flagComment(voterEl) {
-    Lobsters._showFlagWhyAt("comment", voterEl, function(k) {
+    Lobster.modalFlaggingDropDown("comment", voterEl, function(k) {
       Lobster.vote("comment", voterEl, -1, k); });
   }
 
   flagStory(voterEl) {
-    Lobsters._showFlagWhyAt("story", voterEl, function(k) {
+    Lobster.modalFlaggingDropDown("story", voterEl, function(k) {
       Lobster.vote("story", voterEl, -1, k); });
   }
 
@@ -360,10 +342,6 @@ class _LobstersFunction {
       saverEl.innerHTML = "unsave";
     }
     fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + act, {method: 'post'});
-  }
-
-  _showFlagWhyAt(thingType, voterEl, onChooseWhy) {
-
   }
 
   upvoteComment(voterEl) {
@@ -461,6 +439,17 @@ onPageLoad(() => {
   on('click', '.markdown_help_label', (event) => {
     parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
   });
+
+  on('click', '#flag_dropdown a', (event) => {
+    document.querySelector("#flag_dropdown").remove();
+    document.querySelector("#modal_backdrop").remove();
+  });
+
+  on('click', '#modal_backdrop', (event) => {
+    event.preventDefault();
+    event.target.remove();
+    document.querySelector("#flag_dropdown").remove();
+  })
 
   // Account Settings Functions
 

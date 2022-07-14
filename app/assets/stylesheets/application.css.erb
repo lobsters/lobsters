@@ -1017,15 +1017,15 @@ div.comment_text code {
 }
 
 
-#flag_why, .archive-dropdown {
+#flag_dropdown, .archive-dropdown {
 	position: absolute;
-	left: 50%;
+  left: 50%;
 	width: 100px;
 	border: 1px solid var(--color-box-border);
 	border-bottom: 0;
 	z-index: 15;
 }
-#flag_why a, .archive-dropdown a {
+#flag_dropdown a, .archive-dropdown a {
 	background-color: var(--color-box-bg);
 	border-bottom: 1px solid var(--color-box-border);
 	color: var(--color-fg-contrast-10);
@@ -1034,15 +1034,15 @@ div.comment_text code {
 	padding: 3px;
 	text-decoration: underline;
 }
-#flag_why a:hover, .archive-dropdown a:hover {
+#flag_dropdown a:hover, .archive-dropdown a:hover {
 	background-color: var(--color-box-bg-shaded);
 }
-#flag_why a.cancelreason {
+#flag_dropdown a.cancel-reason {
 	background-color: var(--color-box-bg-shaded);
 	font-size: 8pt;
 }
 
-#flag_why_shadow {
+#modal_backdrop {
 	position: fixed;
 	width: 100%;
 	height: 100%;
@@ -1053,7 +1053,7 @@ div.comment_text code {
 	z-index: 1;
 }
 
-/* archive; dropdown styling is with #flag_why to match it */
+/* archive; dropdown styling is with #flag_dropdown to match it */
 .archive_button {
 	display: none;
 }

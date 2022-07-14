@@ -374,7 +374,7 @@ class _LobstersFunction {
     Lobster.vote("story", voterEl, 1);
   }
 
-  vote(thingType, voterEl, point, reason) {
+  vote(elementType, voterEl, point, reason) {
     if (!Lobster.curUser)
       return Lobster.bounceToLogin();
 
@@ -438,12 +438,12 @@ class _LobstersFunction {
         li.querySelector(".flagger").textContent = "flag";
       } else if (action == "flag") {
         li.querySelector(".flagger").textContent = "unflag";
-      if (thingType == "comment") {
+      if (elementType == "comment") {
         li.querySelector(".reason").innerHTML = "| " + Lobster.commentFlagReasons[reason].toLowerCase();
       }
     }
 
-    fetchWithCSRF("/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
+    fetchWithCSRF("/" + (elementType == "story" ? "stories" : elementType + "s") + "/" +
       li.getAttribute("data-shortid") + "/" + action, {
       method: 'post',
       body: formData });

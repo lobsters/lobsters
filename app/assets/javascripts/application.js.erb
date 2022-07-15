@@ -150,14 +150,16 @@ class _LobstersFunction {
 
     const modalDiv = document.createElement("div");
     modalDiv.setAttribute('id', 'modal_backdrop');
-    // voterEl.after(modalDiv);
     document.body.appendChild(modalDiv);
 
     const flaggingDropDown = document.createElement('div');
     flaggingDropDown.setAttribute('id', 'flag_dropdown');
-    document.body.appendChild(flaggingDropDown);
-    flaggingDropDown.style.top = "" + (voterEl.getBoundingClientRect().bottom + window.pageYOffset + 2) + "px";
-    flaggingDropDown.style.left = "" + (voterEl.getBoundingClientRect().left + window.pageXOffset) + "px";
+    const flaggingWrapper = document.createElement('span');
+    flaggingWrapper.style.position = 'relative';
+    flaggingWrapper.style.maxWidth = '1 px';
+    flaggingWrapper.style.maxHeight = '1 px';
+    flaggingWrapper.appendChild(flaggingDropDown);
+    voterEl.after(flaggingWrapper);
 
     let reasons;
     if (flaggedItem == "comment") {

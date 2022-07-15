@@ -134,12 +134,16 @@ class _LobstersFunction {
     if (!Lobsters.curUser)
       return Lobster.bounceToLogin();
 
-    const li = parentSelector(voterEl, '.story, .comment');
-    if (li.classList.contains("flagged")) {
-      /* already upvoted, neutralize */
-      Lobster.vote(flaggedItem, voterEl, -1, null);
-      return;
-    }
+      const li = parentSelector(voterEl, '.story, .comment');
+      if (li.classList.contains('flagged')) {
+        /* already upvoted, neutralize */
+        if (li.classList.contains('story')) {
+        Lobster.voteStory(voterEl, -1, null);
+        } else {
+          Lobster.voteComment(voterEl, -1, null);
+        }
+        return
+      }
 
     if (document.querySelector("#flag_dropdown")) {
       document.querySelector("#flag_dropdown").remove();
@@ -252,12 +256,12 @@ class _LobstersFunction {
 
   flagComment(voterEl) {
     Lobster.modalFlaggingDropDown("comment", voterEl, function(k) {
-      Lobster.vote("comment", voterEl, -1, k); });
+      Lobster.voteComment(voterEl, -1, k); });
   }
 
   flagStory(voterEl) {
     Lobster.modalFlaggingDropDown("story", voterEl, function(k) {
-      Lobster.vote("story", voterEl, -1, k); });
+      Lobster.voteStory(voterEl, -1, k); });
   }
 
   hideStory(hiderEl) {
@@ -347,18 +351,18 @@ class _LobstersFunction {
   }
 
   upvoteComment(voterEl) {
-    Lobster.vote("comment", voterEl, 1);
+    Lobster.voteComment(voterEl, 1);
   }
 
   upvoteStory(voterEl) {
-    Lobster.vote("story", voterEl, 1);
+    Lobster.voteStory(voterEl, 1);
   }
 
-  vote(elementType, voterEl, point, reason) {
+  voteStory(voterEl, point, reason) {
     if (!Lobster.curUser)
       return Lobster.bounceToLogin();
 
-    const li = parentSelector(voterEl, ".story, .comment");
+    const li = parentSelector(voterEl, '.story');
     const scoreDiv = li.querySelector("div.score");
     const formData = new FormData();
     formData.append('reason', reason || '');
@@ -418,13 +422,81 @@ class _LobstersFunction {
         li.querySelector(".flagger").textContent = "flag";
       } else if (action == "flag") {
         li.querySelector(".flagger").textContent = "unflag";
-      if (elementType == "comment") {
-        li.querySelector(".reason").innerHTML = "| " + Lobster.commentFlagReasons[reason].toLowerCase();
-      }
     }
 
-    fetchWithCSRF("/" + (elementType == "story" ? "stories" : elementType + "s") + "/" +
-      li.getAttribute("data-shortid") + "/" + action, {
+    fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + action, {
+      method: 'post',
+      body: formData });
+  }
+
+  voteComment(voterEl, point, reason) {
+    if (!Lobster.curUser)
+      return Lobster.bounceToLogin();
+
+    const li = parentSelector(voterEl, ".comment");
+    const scoreDiv = li.querySelector("div.score");
+    const formData = new FormData();
+    formData.append('reason', reason || '');
+    let showScore = true;
+    let score = parseInt(scoreDiv.innerHTML);
+    let action = "";
+
+    if (isNaN(score)) {
+      showScore = false;
+      score = 0;
+    }
+
+    if (li.classList.contains("upvoted") && point > 0) {
+      /* already upvoted, neutralize */
+      li.classList.remove("upvoted");
+      score--;
+      action = "unvote";
+    } else if (li.classList.contains("flagged") && point < 0) {
+      /* already flagged, neutralize */
+      li.classList.remove("flagged");
+      score++;
+      action = "unvote";
+    } else if (point > 0) {
+      if (li.classList.contains("flagged")) {
+        /* Give back the lost flagged point */
+        score++;
+      }
+      li.classList.remove("flagged");
+      li.classList.add("upvoted");
+      score++;
+      action = "upvote";
+    } else if (point < 0) {
+      if (li.classList.contains("upvoted")) {
+        /* Removes the upvote point this user already gave the story*/
+        score--;
+      }
+      li.classList.remove("upvoted");
+      li.classList.add("flagged");
+      if (li.parentElement.querySelector('.comment_folder_button')) {
+        li.parentElement.querySelector('.comment_folder_button').setAttribute("checked", true);
+      };
+      showScore = false;
+      score--;
+      action = "flag";
+    }
+    if (showScore) {
+      scoreDiv.innerHTML = score;
+    } else {
+      scoreDiv.innerHTML = '~';
+    }
+    if (action == "upvote" || action == "unvote") {
+      if (li.querySelector(".reason")) {
+        li.querySelector(".reason").innerHTML = ""
+      };
+
+      if (action == "unvote" && point < 0)
+        li.querySelector(".flagger").textContent = "flag";
+      } else if (action == "flag") {
+        li.querySelector(".flagger").textContent = "unflag";
+        li.querySelector(".reason").innerHTML = "| " + Lobster.commentFlagReasons[reason].toLowerCase();
+    }
+
+    fetchWithCSRF("/comments/" + li.getAttribute("data-shortid") + "/" + action, {
       method: 'post',
       body: formData });
   }

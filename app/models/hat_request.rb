@@ -7,7 +7,7 @@ class HatRequest < ApplicationRecord
 
   attr_accessor :rejection_comment
 
-  def approve_by_user!(user)
+  def approve_by_user_for_reason!(user, reason)
     self.transaction do
       h = Hat.new
       h.user_id = self.user_id
@@ -20,8 +20,7 @@ class HatRequest < ApplicationRecord
       m.author_user_id = user.id
       m.recipient_user_id = self.user_id
       m.subject = "Your hat \"#{self.hat}\" has been approved"
-      m.body = "This hat may now be worn when commenting.\n\n" +
-               "This is an automated message."
+      m.body = reason
       m.save!
 
       self.destroy

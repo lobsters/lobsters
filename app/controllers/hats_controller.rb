@@ -44,8 +44,8 @@ class HatsController < ApplicationController
   def approve_request
     @hat_request = HatRequest.find(params[:id])
     @hat_request.update!(params.require(:hat_request)
-      .permit(:hat, :link))
-    @hat_request.approve_by_user!(@user)
+      .permit(:hat, :link, :reason).except(:reason))
+    @hat_request.approve_by_user_for_reason!(@user, params[:hat_request][:reason])
 
     flash[:success] = "Successfully approved hat request."
 
@@ -54,7 +54,7 @@ class HatsController < ApplicationController
 
   def reject_request
     @hat_request = HatRequest.find(params[:id])
-    @hat_request.reject_by_user_for_reason!(@user, params[:hat_request][:rejection_comment])
+    @hat_request.reject_by_user_for_reason!(@user, params[:hat_request][:reason])
 
     flash[:success] = "Successfully rejected hat request."
 

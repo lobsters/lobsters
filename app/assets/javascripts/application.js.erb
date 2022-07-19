@@ -542,11 +542,10 @@ onPageLoad(() => {
   on('click', 'a.comment-disowner', (event) => {
     if (confirm("Are you sure you want to disown this comment?")) {
       let li = parentSelector(event.target, '.comment');
-      fetchWithCSRF('/comments/' + li.getAttribute('data-shortid') + '/disown', {
-        method: 'post'
-      })
-        .then(response => response.text())
-        .then(text => replace(li, text));
+      fetchWithCSRF('/comments/' + li.getAttribute('data-shortid') + '/disown', { method: 'post' })
+        .then(response => {
+          response.text().then(text => replace(li, text));
+        });
     }
   });
 
@@ -574,8 +573,6 @@ onPageLoad(() => {
     if (document.querySelector('.comments_subtree')) {
       parentSelector(comment, '.comments_subtree').lastElementChild.prepend(div);
     } else {
-      console.log('lastchild', comment.parentElement.lastElementChild.prepend(div))
-      console.log('not last child', comment.parentElement.prepend(div))
       comment.parentElement.lastElementChild.prepend(div);
     }
 
@@ -586,6 +583,7 @@ onPageLoad(() => {
           div.setAttribute('id', 'reply_form_' + commentId );
           var ta = div.querySelector("textarea");
           ta.textContent = sel;
+          // This will place the cursor at the end of the quoted string and focus on your reply.
           ta.setSelectionRange(sel.length, sel.length);
           ta.focus();
           autosize(ta);

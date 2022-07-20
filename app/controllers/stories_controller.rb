@@ -373,6 +373,7 @@ class StoriesController < ApplicationController
         return render :partial => "stories/form_errors", :layout => false,
           :content_type => "text/html", :locals => { :story => @story }
       }
+      # json: https://github.com/lobsters/lobsters/pull/555
       format.json {
         similar_stories = @story.public_similar_stories(@user).map(&:as_json)
 

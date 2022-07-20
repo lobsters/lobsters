@@ -185,12 +185,6 @@ class _LobstersFunction {
       }
       flaggingDropDown.append(a);
     });
-
-    on('click', '#flag_dropdown a', (event) => {
-      if (event.target.getAttribute('data') != '')
-        onChooseWhy(event.target.getAttribute('data'));
-      return false;
-    });
   }
 
   checkStoryDuplicate(form) {
@@ -516,6 +510,9 @@ onPageLoad(() => {
   });
 
   on('click', '#flag_dropdown a', (event) => {
+    if (event.target.getAttribute('data') != '') {
+      Lobster.voteStory(parentSelector(event.target, '.story'), -1,  event.target.getAttribute('data'));
+    }
     document.querySelector("#flag_dropdown").remove();
     document.querySelector("#modal_backdrop").remove();
     document.querySelector('.flag-wrapper').remove();

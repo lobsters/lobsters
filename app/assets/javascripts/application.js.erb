@@ -563,9 +563,9 @@ onPageLoad(() => {
     }
 
     // Inserts "> " on quoted text.
-    let sel = document.getSelection().toString() || '';
+    let sel = document.getSelection().toString();
     if (sel != "") {
-      sel = sel.split("\n").map(s => "> " + s + '\n').join('');
+      sel = sel.split("\n").map(s => "> " + s + '\n\n').join('');
       sel += "\n";
     }
 

@@ -159,6 +159,7 @@ class _LobstersFunction {
     const flaggingDropDown = document.createElement('div');
     flaggingDropDown.setAttribute('id', 'flag_dropdown');
     const flaggingWrapper = document.createElement('span');
+    flaggingWrapper.setAttribute('class', 'flag-wrapper')
     flaggingWrapper.style.position = 'relative';
     flaggingWrapper.style.maxWidth = '1 px';
     flaggingWrapper.style.maxHeight = '1 px';
@@ -517,12 +518,14 @@ onPageLoad(() => {
   on('click', '#flag_dropdown a', (event) => {
     document.querySelector("#flag_dropdown").remove();
     document.querySelector("#modal_backdrop").remove();
+    document.querySelector('.flag-wrapper').remove();
   });
 
   on('click', '#modal_backdrop', (event) => {
     event.preventDefault();
     event.target.remove();
-    document.querySelector("#flag_dropdown").remove();
+    document.querySelector('#flag_dropdown').remove();
+    document.querySelector('.flag-wrapper').remove();
   })
 
   // Account Settings Functions
@@ -578,7 +581,7 @@ onPageLoad(() => {
     Lobster.previewStory(parentSelector(event.target, 'form'));
   });
 
-  on('focusout', '#story_url', (event) => {
+  on('focusout', '#story_url', () => {
     let url_tags = {
       "\.pdf$": "pdf",
       "[\/\.]((youtube|vimeo)\.com|youtu\.be|twitch.tv)\/": "video",

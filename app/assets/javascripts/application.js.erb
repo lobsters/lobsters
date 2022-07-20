@@ -12,21 +12,6 @@ var _Lobsters = Class.extend({
   commentFlagReasons: { <%= Vote::COMMENT_REASONS.map{|k,v|
       "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
 
-  upvoteStory: function(voterEl) {
-    Lobster.vote("story", voterEl, 1);
-  },
-  flagStory: function(voterEl) {
-    Lobsters._showFlagWhyAt("story", voterEl, function(k) {
-      Lobster.vote("story", voterEl, -1, k); });
-  },
-
-  upvoteComment: function(voterEl) {
-    Lobster.vote("comment", voterEl, 1);
-  },
-  flagComment: function(voterEl) {
-    Lobsters._showFlagWhyAt("comment", voterEl, function(k) {
-      Lobster.vote("comment", voterEl, -1, k); });
-  },
   _showFlagWhyAt: function(thingType, voterEl, onChooseWhy) {
     if (!Lobsters.curUser)
       return Lobster.bounceToLogin();
@@ -96,13 +81,6 @@ var _Lobsters = Class.extend({
     }
   },
 
-  previewStory: function(form) {
-    $("#inside").load("/stories/preview", $(form).serializeArray(),
-    function() {
-      Lobsters.runSelect2();
-    });
-  },
-
   runSelect2: function() {
     $("#story_tags_a").select2({
     formatSelection: function(what) {
@@ -140,91 +118,11 @@ var _Lobsters = Class.extend({
     }
     });
   },
-
-  fetchURLTitle: function(button, url_field, title_field) {
-    if (url_field.val() == "")
-      return;
-
-    var old_value = button.val();
-    button.prop("disabled", true);
-    button.val("Fetching...");
-
-    $.post("/stories/fetch_url_attributes", {
-      fetch_url: url_field.val(),
-    })
-    .success(function(data) {
-      if (data) {
-        if (data.title)
-          title_field.val(data.title.substr(0, title_field.maxLength));
-        if (data.url)
-          url_field.val(data.url);
-      }
-
-      button.val(old_value);
-      button.prop("disabled", false);
-    })
-    .error(function() {
-      button.val(old_value);
-      button.prop("disabled", false);
-    });
-    Lobster.checkStoryTitle();
-  },
 });
 
 var Lobsters = new _Lobsters();
 
 $(document).ready(function() {
-
-  $(document).on("click", "a.comment_replier", function() {
-    if (!Lobsters.curUser) {
-      Lobster.bounceToLogin();
-      return false;
-    }
-
-    var comment = $(this).closest(".comment");
-    if ($("#reply_form_" + comment.attr("id")).length > 0)
-      return false;
-
-    var sel = "";
-    if (window.getSelection)
-      sel = window.getSelection().toString();
-    else if (document.selection && document.selection.type != "Control")
-      sel = document.selection.createRange().text;
-
-    if (sel != "") {
-      var t = "";
-      $.each(sel.split("\n"), function(k, v) {
-        t += (t == "" ? "" : "\n") + "> " + v;
-      });
-      sel = t;
-
-      if (sel != "")
-        sel += "\n\n";
-    }
-
-    var replies = comment.nextAll(".comments").first();
-    $.get("/comments/" + comment.attr("data-shortid") + "/reply",
-    function(data) {
-      var reply = $($.parseHTML(data));
-      reply.attr("id", "reply_form_" + comment.attr("id"));
-      replies.prepend(reply);
-      var ta = reply.find("textarea");
-      ta.focus().text(sel);
-      autosize(ta);
-    });
-
-    return false;
-  });
-
-  $(document).on("click", "a.comment_disownor", function() {
-    if (confirm("Are you sure you want to disown this comment?")) {
-      var li = $(this).closest(".comment");
-      $.post("/comments/" + $(li).attr("data-shortid") + "/disown",
-      function(d) {
-        $(li).replaceWith(d);
-      });
-    }
-  });
 
   Lobsters.runSelect2();
 
@@ -369,16 +267,39 @@ class _LobstersFunction {
     }
   }
 
-  fetchURLTitle(button, urlField, titleField) {
+  fetchURLTitle(button) {
+    const targetUrl = document.getElementById('story_url').value;
+    const title_field = document.getElementById('story_title');
+    const formData = new FormData();
+    const old_text = button.textContent;
+    button.setAttribute("disabled", true);
+    button.textContent = "Fetching...";
+    formData.append('fetch_url', targetUrl);
 
+    if (targetUrl == "")
+      return;
+
+    fetchWithCSRF('/stories/fetch_url_attributes', {
+      method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData,})
+      .then (response => response.json())
+      .then (data => {
+        title_field.value = data.title
+        button.textContent = old_text
+      });
+    button.removeAttribute("disabled");
+    Lobster.checkStoryTitle();
   }
 
-  flagComment(voterEl) { //requires [_showFlagWhyAt]
-
+  flagComment(voterEl) {
+    Lobsters._showFlagWhyAt("comment", voterEl, function(k) {
+      Lobster.vote("comment", voterEl, -1, k); });
   }
 
-  flagStory(voterEl) { //requires [_showFlagWhyAt]
-
+  flagStory(voterEl) {
+    Lobsters._showFlagWhyAt("story", voterEl, function(k) {
+      Lobster.vote("story", voterEl, -1, k); });
   }
 
   hideStory(hiderEl) {
@@ -430,8 +351,18 @@ class _LobstersFunction {
       });
   }
 
-  previewStory(form) { //requires [runSelect2]
-
+  previewStory(formElement) {
+    const formData = new FormData(formElement);
+    const previewElement = document.getElementById('inside');
+    fetch('/stories/preview', {
+      method: 'post',
+      body: formData
+    }).then (response => {
+      response.text().then(text => {
+        previewElement.innerHTML = text;
+      });
+    });
+    Lobsters.runSelect2();
   }
 
   runSelect2() {  //requires [] (will actully replace select2)
@@ -462,10 +393,11 @@ class _LobstersFunction {
   }
 
   upvoteComment(voterEl) {
-
+    Lobster.vote("comment", voterEl, 1);
   }
 
   upvoteStory(voterEl) {
+    Lobster.vote("story", voterEl, 1);
   }
 
   vote(thingType, voterEl, point, reason) {
@@ -548,6 +480,7 @@ const Lobster = new _LobstersFunction();
 
 onPageLoad(() => {
   Lobster.curUser = document.body.getAttribute('data-username'); // hack
+  autosize(document.querySelectorAll('textarea'));
 
   // Global Functions
 
@@ -576,14 +509,18 @@ onPageLoad(() => {
 
   Lobster.checkStoryTitle()
 
+  on('click', '#story_fetch_title', (event) => {
+    Lobster.fetchURLTitle(event.target);
+  });
+
   on('click', 'li.story a.upvoter', (event) => {
     event.preventDefault();
-    Lobsters.upvoteStory(event.target);
+    Lobster.upvoteStory(event.target);
   });
 
   on('click', 'li.story a.flagger', (event) => {
     event.preventDefault();
-    Lobsters.flagStory(event.target);
+    Lobster.flagStory(event.target);
   });
 
   on('click', 'li.story a.hider', (event) => {
@@ -597,19 +534,71 @@ onPageLoad(() => {
   });
 
   on('click', 'button.story-preview', (event) => {
-    Lobsters.previewStory(parentSelector(event.target, 'form'));
+    Lobster.previewStory(parentSelector(event.target, 'form'));
   });
 
   // Comment Related Functions
 
+  on('click', 'a.comment-disowner', (event) => {
+    if (confirm("Are you sure you want to disown this comment?")) {
+      let li = parentSelector(event.target, '.comment');
+      fetchWithCSRF('/comments/' + li.getAttribute('data-shortid') + '/disown', { method: 'post' })
+        .then(response => {
+          response.text().then(text => replace(li, text));
+        });
+    }
+  });
+
+  on("click", "a.comment_replier", (event) => {
+    if (!Lobsters.curUser) {
+      Lobster.bounceToLogin();
+    }
+
+    const comment = parentSelector(event.target, '.comment');
+    const commentId = comment.getAttribute('id');
+
+    // Check to make sure we don't already have a reply box.
+    if (document.getElementById('reply_form_' + commentId)) {
+      return false;
+    }
+
+    // Inserts "> " on quoted text.
+    let sel = document.getSelection().toString();
+    if (sel != "") {
+      sel = sel.split("\n").map(s => "> " + s + '\n\n').join('');
+      sel += "\n";
+    }
+
+    let div = document.createElement('div');
+    if (document.querySelector('.comments_subtree')) {
+      parentSelector(comment, '.comments_subtree').lastElementChild.prepend(div);
+    } else {
+      comment.parentElement.lastElementChild.prepend(div);
+    }
+
+    fetch('/comments/' + comment.getAttribute('data-shortid') + '/reply')
+      .then(response => {
+        response.text().then(text => {
+          div.innerHTML = text;
+          div.setAttribute('id', 'reply_form_' + commentId );
+          var ta = div.querySelector("textarea");
+          ta.textContent = sel;
+          // This will place the cursor at the end of the quoted string and focus on your reply.
+          ta.setSelectionRange(sel.length, sel.length);
+          ta.focus();
+          autosize(ta);
+        })
+      });
+  });
+
   on('click', '.comment a.flagger', (event) => {
     event.preventDefault();
-    Lobsters.flagComment(event.target);
+    Lobster.flagComment(event.target);
   });
 
   on("click", '.comment a.upvoter', (event) => {
     event.preventDefault();
-    Lobsters.upvoteComment(event.target);
+    Lobster.upvoteComment(event.target);
   });
   
   on('click', 'button.comment-preview', (event) => {
@@ -636,7 +625,7 @@ onPageLoad(() => {
           response.text().then(text => replace(comment, text));
         });
     } else {
-      comment.remove();
+      comment.parentElement.remove();
     }
   });
 

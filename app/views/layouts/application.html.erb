@@ -120,7 +120,7 @@
     <% end %>
     <%= link_to 'Tags', tags_path %>
     <% if @user && @user.is_moderator? && (hrc = HatRequest.count) > 0 %>
-      <%= link_to "#{hrc} Hat Requests", hats_requests_path %>
+      <%= link_to "#{hrc} Hat Requests", hats_requests_path, class: 'mod' %>
     <% end %>
     <%= link_to 'Filter', filters_path %>
     <%= link_to 'Moderation Log', moderations_path %>

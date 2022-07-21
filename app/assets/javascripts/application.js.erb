@@ -130,7 +130,7 @@ class _LobstersFunction {
     document.location = "/login?return=" + encodeURIComponent(document.location);
   }
 
-  modalFlaggingDropDown(flaggedItem, voterEl, onChooseWhy) {
+  modalFlaggingDropDown(flaggedItemType, voterEl) {
     if (!Lobsters.curUser)
       return Lobster.bounceToLogin();
 
@@ -145,11 +145,8 @@ class _LobstersFunction {
         return
       }
 
-    if (document.querySelector("#flag_dropdown")) {
-      document.querySelector("#flag_dropdown").remove();
-    }
-    if (document.querySelector("#modal_backdrop")) {
-      document.querySelector("#modal_backdrop").remove();
+    if (document.querySelector("#flag_dropdown") || document.querySelector('#modal_backdrop')) {
+      Lobster.modalRemoval()
     }
 
     const modalDiv = document.createElement("div");
@@ -167,7 +164,7 @@ class _LobstersFunction {
     voterEl.after(flaggingWrapper);
 
     let reasons;
-    if (flaggedItem == "comment") {
+    if (flaggedItemType == "comment") {
       reasons = Lobster.commentFlagReasons;
     } else {
       reasons = Lobster.storyFlagReasons;
@@ -249,16 +246,6 @@ class _LobstersFunction {
     Lobster.checkStoryTitle();
   }
 
-  flagComment(voterEl) {
-    Lobster.modalFlaggingDropDown("comment", voterEl, function(k) {
-      Lobster.voteComment(voterEl, -1, k); });
-  }
-
-  flagStory(voterEl) {
-    Lobster.modalFlaggingDropDown("story", voterEl, function(k) {
-      Lobster.voteStory(voterEl, -1, k); });
-  }
-
   hideStory(hiderEl) {
     if (!Lobster.curUser) return Lobster.bounceToLogin();
 
@@ -274,6 +261,12 @@ class _LobstersFunction {
       hiderEl.innerHTML = "unhide";
     }
     fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + act, {method: 'post'});
+  }
+
+  modalRemoval() {
+    document.querySelector("#flag_dropdown").remove();
+    document.querySelector("#modal_backdrop").remove();
+    document.querySelector('.flag-wrapper').remove();
   }
 
   postComment(form) {
@@ -509,20 +502,8 @@ onPageLoad(() => {
     parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
   });
 
-  on('click', '#flag_dropdown a', (event) => {
-    if (event.target.getAttribute('data') != '') {
-      Lobster.voteStory(parentSelector(event.target, '.story'), -1,  event.target.getAttribute('data'));
-    }
-    document.querySelector("#flag_dropdown").remove();
-    document.querySelector("#modal_backdrop").remove();
-    document.querySelector('.flag-wrapper').remove();
-  });
-
-  on('click', '#modal_backdrop', (event) => {
-    event.preventDefault();
-    event.target.remove();
-    document.querySelector('#flag_dropdown').remove();
-    document.querySelector('.flag-wrapper').remove();
+  on('click', '#modal_backdrop', () => {
+    Lobster.modalRemoval()
   })
 
   // Account Settings Functions
@@ -542,13 +523,20 @@ onPageLoad(() => {
 
   // Story Related Functions
 
+  Lobster.checkStoryTitle()
+
   if (document.getElementById('story_url') && !document.getElementById('story_preview').firstElementChild) {
     document.getElementById('story_url').focus()
   }
 
   on('change', '#story_title', Lobster.checkStoryTitle);
 
-  Lobster.checkStoryTitle()
+  on('click', '.story #flag_dropdown a', (event) => {
+    if (event.target.getAttribute('data') != '') {
+      Lobster.voteStory(parentSelector(event.target, '.story'), -1,  event.target.getAttribute('data'));
+    }
+    Lobster.modalRemoval()
+  });
 
   on('click', '#story_fetch_title', (event) => {
     Lobster.fetchURLTitle(event.target);
@@ -561,7 +549,7 @@ onPageLoad(() => {
 
   on('click', 'li.story a.flagger', (event) => {
     event.preventDefault();
-    Lobster.flagStory(event.target);
+    Lobster.modalFlaggingDropDown("story", event.target);
   });
 
   on('click', 'li.story a.hider', (event) => {
@@ -662,7 +650,14 @@ onPageLoad(() => {
 
   on('click', '.comment a.flagger', (event) => {
     event.preventDefault();
-    Lobster.flagComment(event.target);
+    Lobster.modalFlaggingDropDown("comment", event.target);
+  });
+
+  on('click', '.comment #flag_dropdown a', (event) => {
+    if (event.target.getAttribute('data') != '') {
+      Lobster.voteComment(parentSelector(event.target, '.comment'), -1,  event.target.getAttribute('data'));
+    }
+    Lobster.modalRemoval()
   });
 
   on("click", '.comment a.upvoter', (event) => {
@@ -705,7 +700,7 @@ onPageLoad(() => {
       .then(response => {
         response.text().then(text => {
           replace(comment, text);
-        autosize(document.querySelectorAll('textarea'));
+          autosize(document.querySelectorAll('textarea'));
         });
       });
     autosize(document.querySelectorAll('textarea'));

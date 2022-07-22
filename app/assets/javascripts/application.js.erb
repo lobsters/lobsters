@@ -1,5 +1,4 @@
-//= require jquery
-//= require jquery_ujs
+
 //= require_tree .
 
 "use strict";
@@ -7,50 +6,50 @@
 var _Lobsters = Class.extend({
   curUser: null,
 
-  runSelect2: function() {
-    $("#story_tags_a").select2({
-    formatSelection: function(what) {
-      return what.id;
-    },
-    matcher: function(term, text) {
-      return text.toUpperCase().indexOf(term.toUpperCase()) >= 0;
-    },
-    sortResults: function(results, container, query) {
-        if (query.term) {
-          var tmatches = [];
-          var dmatches = [];
+  // runSelect2: function() {
+  //   $("#story_tags_a").select2({
+  //   formatSelection: function(what) {
+  //     return what.id;
+  //   },
+  //   matcher: function(term, text) {
+  //     return text.toUpperCase().indexOf(term.toUpperCase()) >= 0;
+  //   },
+  //   sortResults: function(results, container, query) {
+  //       if (query.term) {
+  //         var tmatches = [];
+  //         var dmatches = [];
 
-          /* prefer tag matches first, then description matches */
-          for (var x in results) {
-            var r = results[x];
+  //         /* prefer tag matches first, then description matches */
+  //         for (var x in results) {
+  //           var r = results[x];
 
-            if (r.id.toUpperCase().indexOf(query.term.toUpperCase()) == 0)
-              tmatches.push(r);
-            else
-              dmatches.push(r);
-          }
+  //           if (r.id.toUpperCase().indexOf(query.term.toUpperCase()) == 0)
+  //             tmatches.push(r);
+  //           else
+  //             dmatches.push(r);
+  //         }
 
-          tmatches = tmatches.sort(function(a, b) {
-            return a.text.localeCompare(b.text);
-          });
-          dmatches = dmatches.sort(function(a, b) {
-            return a.text.localeCompare(b.text);
-          });
+  //         tmatches = tmatches.sort(function(a, b) {
+  //           return a.text.localeCompare(b.text);
+  //         });
+  //         dmatches = dmatches.sort(function(a, b) {
+  //           return a.text.localeCompare(b.text);
+  //         });
 
-          return tmatches.concat(dmatches);
-        }
+  //         return tmatches.concat(dmatches);
+  //       }
 
-        return results;
-    }
-    });
-  },
+  //       return results;
+  //   }
+  //   });
+  // },
 });
 
 var Lobsters = new _Lobsters();
 
-$(document).ready(function() {
-  Lobsters.runSelect2();
-});
+// $(document).ready(function() {
+//   Lobsters.runSelect2();
+// });
 
 const parentSelector = (target, selector) => {
   let parent = target;
@@ -194,11 +193,11 @@ class _LobstersFunction {
     // Then it will add the keyword "ask/show" to the tags.
     const m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i);
     if (m) {
-      const ta = $("#story_tags_a").data("select2");
-      if (ta.getVal().indexOf(m[1].toLowerCase()) < 0) {
-        ta.addSelectedChoice({ id: m[1].toLowerCase() });
-        $("#story_title").val(m[2]);
-      }
+      // const ta = $("#story_tags_a").data("select2");
+      // if (ta.getVal().indexOf(m[1].toLowerCase()) < 0) {
+      //   ta.addSelectedChoice({ id: m[1].toLowerCase() });
+      //   $("#story_title").val(m[2]);
+      // }
     }
     // common separators or (parens) that don't enclose a 4-digit year
     if (title.match(/: | - | – | — | \| | · | • | by /) ||
@@ -300,13 +299,9 @@ class _LobstersFunction {
     }).then(response => {
       response.text().then(text => {
         previewElement.innerHTML = text;
-        Lobsters.runSelect2();
+        // Lobsters.runSelect2();
       });
     });
-  }
-
-  runSelect2() {  //requires [] (will actully replace select2)
-
   }
 
   saveStory(saverEl) {
@@ -405,6 +400,10 @@ class _LobstersFunction {
     fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + action, {
       method: 'post',
       body: formData });
+  }
+
+  tomSelect() {
+
   }
 
   voteComment(voterEl, point, reason) {

@@ -1,10 +1,10 @@
-
+//= require tom-select.base.js
 //= require_tree .
 
 "use strict";
 
-var _Lobsters = Class.extend({
-  curUser: null,
+// var _Lobsters = Class.extend({
+//   curUser: null,
 
   // runSelect2: function() {
   //   $("#story_tags_a").select2({
@@ -43,9 +43,9 @@ var _Lobsters = Class.extend({
   //   }
   //   });
   // },
-});
+// });
 
-var Lobsters = new _Lobsters();
+// var Lobsters = new _Lobsters();
 
 // $(document).ready(function() {
 //   Lobsters.runSelect2();
@@ -299,7 +299,7 @@ class _LobstersFunction {
     }).then(response => {
       response.text().then(text => {
         previewElement.innerHTML = text;
-        // Lobsters.runSelect2();
+        Lobster.tomSelect;
       });
     });
   }
@@ -403,7 +403,15 @@ class _LobstersFunction {
   }
 
   tomSelect() {
-
+    let tom = new TomSelect('#story_tags_a', {
+      //plugins: ['dropdown_input', 'input_autogrow', 'caret_position', 'remove_button'],
+      maxOptions: 8,
+      maxItems: 10,
+      hideSelected: true,
+      closeAfterSelect: true,
+      selectOnTab: true,
+    });
+    // tom();
   }
 
   voteComment(voterEl, point, reason) {
@@ -482,6 +490,7 @@ const Lobster = new _LobstersFunction();
 onPageLoad(() => {
   Lobster.curUser = document.body.getAttribute('data-username'); // hack
   autosize(document.querySelectorAll('textarea'));
+  Lobster.tomSelect();
 
   // Global Functions
 

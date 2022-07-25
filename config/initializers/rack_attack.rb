@@ -21,7 +21,7 @@ Rack::Attack.throttle("login", limit: 4, period: 60) do |request|
   request.ip if request.post? && (
                  request.path.start_with?('/login') ||
                  request.path.start_with?('/login/set_new_password')
-              )
+               )
 end
 
 Rack::Attack.throttle("log4j probe", limit: 1, period: 1.week.to_i) do |request|

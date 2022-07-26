@@ -915,7 +915,7 @@ class Story < ApplicationRecord
   def url_is_editable_by_user?(user)
     if self.new_record?
       true
-    elsif user && user.is_moderator? && self.url.present?
+    elsif user && user.is_moderator?
       true
     else
       false

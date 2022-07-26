@@ -130,23 +130,23 @@ class _LobstersFunction {
     document.location = "/login?return=" + encodeURIComponent(document.location);
   }
 
-  modalFlaggingDropDown(flaggedItemType, voterEl) {
+  modalFlaggingDropDown(flaggedItemType, voterEl, reasons) {
     if (!Lobsters.curUser)
       return Lobster.bounceToLogin();
 
-      const li = parentSelector(voterEl, '.story, .comment');
-      if (li.classList.contains('flagged')) {
-        /* already upvoted, neutralize */
-        if (li.classList.contains('story')) {
+    const li = parentSelector(voterEl, '.story, .comment');
+    if (li.classList.contains('flagged')) {
+      /* already upvoted, neutralize */
+      if (li.classList.contains('story')) {
         Lobster.voteStory(voterEl, -1, null);
-        } else {
-          Lobster.voteComment(voterEl, -1, null);
-        }
-        return
+      } else {
+        Lobster.voteComment(voterEl, -1, null);
       }
+      return
+    }
 
     if (document.querySelector("#flag_dropdown") || document.querySelector('#modal_backdrop')) {
-      Lobster.modalRemoval()
+      Lobster.removeFlagModal()
     }
 
     const modalDiv = document.createElement("div");
@@ -155,30 +155,21 @@ class _LobstersFunction {
 
     const flaggingDropDown = document.createElement('div');
     flaggingDropDown.setAttribute('id', 'flag_dropdown');
-    const flaggingWrapper = document.createElement('span');
-    flaggingWrapper.setAttribute('class', 'flag-wrapper')
-    flaggingWrapper.style.position = 'relative';
-    flaggingWrapper.style.maxWidth = '1 px';
-    flaggingWrapper.style.maxHeight = '1 px';
-    flaggingWrapper.appendChild(flaggingDropDown);
-    voterEl.after(flaggingWrapper);
-
-    let reasons;
-    if (flaggedItemType == "comment") {
-      reasons = Lobster.commentFlagReasons;
-    } else {
-      reasons = Lobster.storyFlagReasons;
-    }
+    const flagWrapper = document.createElement('span');
+    flagWrapper.setAttribute('id', 'flag_wrapper')
+    flagWrapper.style.position = 'relative';
+    flagWrapper.style.maxWidth = '1 px';
+    flagWrapper.style.maxHeight = '1 px';
+    flagWrapper.appendChild(flaggingDropDown);
+    voterEl.after(flagWrapper);
 
     Object.keys(reasons).map(function(k, v) {
       let a = document.createElement('a')
       a.textContent = reasons[k]
       a.setAttribute('data', k)
+      a.setAttribute('href', '#')
       if (k === ''){
-        a.setAttribute('href', '#' )
         a.classList.add('cancel-reason')
-      } else {
-        a.setAttribute('href', '#')
       }
       flaggingDropDown.append(a);
     });
@@ -263,10 +254,10 @@ class _LobstersFunction {
     fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + act, {method: 'post'});
   }
 
-  modalRemoval() {
-    document.querySelector("#flag_dropdown").remove();
-    document.querySelector("#modal_backdrop").remove();
-    document.querySelector('.flag-wrapper').remove();
+  removeFlagModal() {
+    document.getElementById("flag_dropdown").remove();
+    document.getElementById("modal_backdrop").remove();
+    document.querySelector('#flag_wrapper').remove();
   }
 
   postComment(form) {
@@ -460,9 +451,7 @@ class _LobstersFunction {
       }
       li.classList.remove("upvoted");
       li.classList.add("flagged");
-      if (li.parentElement.querySelector('.comment_folder_button')) {
-        li.parentElement.querySelector('.comment_folder_button').setAttribute("checked", true);
-      };
+      li.parentElement.querySelector('.comment_folder_button').setAttribute("checked", true);
       showScore = false;
       score--;
       action = "flag";
@@ -472,16 +461,16 @@ class _LobstersFunction {
     } else {
       scoreDiv.innerHTML = '~';
     }
-    if (action == "upvote" || action == "unvote") {
-      if (li.querySelector(".reason")) {
-        li.querySelector(".reason").innerHTML = ""
-      };
 
-      if (action == "unvote" && point < 0)
-        li.querySelector(".flagger").textContent = "flag";
-      } else if (action == "flag") {
-        li.querySelector(".flagger").textContent = "unflag";
-        li.querySelector(".reason").innerHTML = "| " + Lobster.commentFlagReasons[reason].toLowerCase();
+    if (action == "upvote" || action == "unvote") {
+      li.querySelector(".reason").innerHTML = ""
+    }
+
+    if (action == "unvote" && point < 0) {
+      li.querySelector(".flagger").textContent = "flag";
+    } else if (action == "flag") {
+      li.querySelector(".flagger").textContent = "unflag";
+      li.querySelector(".reason").innerHTML = "| " + Lobster.commentFlagReasons[reason].toLowerCase();
     }
 
     fetchWithCSRF("/comments/" + li.getAttribute("data-shortid") + "/" + action, {
@@ -503,7 +492,7 @@ onPageLoad(() => {
   });
 
   on('click', '#modal_backdrop', () => {
-    Lobster.modalRemoval()
+    Lobster.removeFlagModal()
   })
 
   // Account Settings Functions
@@ -535,7 +524,7 @@ onPageLoad(() => {
     if (event.target.getAttribute('data') != '') {
       Lobster.voteStory(parentSelector(event.target, '.story'), -1,  event.target.getAttribute('data'));
     }
-    Lobster.modalRemoval()
+    Lobster.removeFlagModal()
   });
 
   on('click', '#story_fetch_title', (event) => {
@@ -549,7 +538,8 @@ onPageLoad(() => {
 
   on('click', 'li.story a.flagger', (event) => {
     event.preventDefault();
-    Lobster.modalFlaggingDropDown("story", event.target);
+    const reasons = Lobster.storyFlagReasons;
+    Lobster.modalFlaggingDropDown("story", event.target, reasons);
   });
 
   on('click', 'li.story a.hider', (event) => {
@@ -586,7 +576,6 @@ onPageLoad(() => {
     }
 
     // check for dupe if there's a URL, but not when editing existing
-
     if (document.getElementById('story_url') &&
       document.querySelector('input[name="_method"]') &&
       (document.querySelector('input[name="_method"]').getAttribute('value') !== 'put')) {
@@ -650,14 +639,15 @@ onPageLoad(() => {
 
   on('click', '.comment a.flagger', (event) => {
     event.preventDefault();
-    Lobster.modalFlaggingDropDown("comment", event.target);
+    const reasons = Lobster.commentFlagReasons
+    Lobster.modalFlaggingDropDown("comment", event.target, reasons);
   });
 
   on('click', '.comment #flag_dropdown a', (event) => {
     if (event.target.getAttribute('data') != '') {
       Lobster.voteComment(parentSelector(event.target, '.comment'), -1,  event.target.getAttribute('data'));
     }
-    Lobster.modalRemoval()
+    Lobster.removeFlagModal()
   });
 
   on("click", '.comment a.upvoter', (event) => {

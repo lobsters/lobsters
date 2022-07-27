@@ -31,11 +31,3 @@
     <%= render :template => "stories/show" %>
   <% end %>
 </div>
-
-<script>
-  $(document).ready(function() {
-    <% if !@story.previewing %>
-      $("#story_url").focus();
-    <% end %>
-  });
-</script>

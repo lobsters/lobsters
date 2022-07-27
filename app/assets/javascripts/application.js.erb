@@ -130,7 +130,7 @@ class _LobstersFunction {
   }
 
   modalFlaggingDropDown(flaggedItemType, voterEl, reasons) {
-    if (!Lobsters.curUser)
+    if (!Lobster.curUser)
       return Lobster.bounceToLogin();
 
     const li = parentSelector(voterEl, '.story, .comment');
@@ -182,7 +182,7 @@ class _LobstersFunction {
     });
   }
 
-  checkStoryTitle() { //partial removal (due to select2)
+  checkStoryTitle() {
     const titleLocation = document.getElementById('story_title');
     if (!titleLocation) return;
 
@@ -191,12 +191,14 @@ class _LobstersFunction {
 
     // Will check title for common phrases to be removed like "ask/show" lobsters :"
     // Then it will add the keyword "ask/show" to the tags.
-    const m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i);
-    if (m) {
-      // const ta = $("#story_tags_a").data("select2");
-      // if (ta.getVal().indexOf(m[1].toLowerCase()) < 0) {
-      //   ta.addSelectedChoice({ id: m[1].toLowerCase() });
-      //   $("#story_title").val(m[2]);
+    // And it will replace the title with what came after the removed common phrase.
+    const m = title.match(/^(show|amet) lobste\.?rs:? (.+)$/i); //change amet to ask after I'm done testing this
+    console.log("m in checkStoryTitle", m)
+    if (m) { 
+      const ta = document.getElementById('story_tags_a')
+      // if (ta.getAttribute('value').includes(m[1])) {//.indexOf(m[1].toLowerCase()) < 0) {
+        ta.setAttribute('value', m[1]) //   ta.addSelectedChoice({ id: m[1].toLowerCase() });
+        titleLocation.textContent = m[2];
       // }
     }
     // common separators or (parens) that don't enclose a 4-digit year
@@ -490,7 +492,6 @@ const Lobster = new _LobstersFunction();
 onPageLoad(() => {
   Lobster.curUser = document.body.getAttribute('data-username'); // hack
   autosize(document.querySelectorAll('textarea'));
-  Lobster.tomSelect();
 
   // Global Functions
 
@@ -520,6 +521,10 @@ onPageLoad(() => {
   // Story Related Functions
 
   Lobster.checkStoryTitle()
+
+  if (document.getElementById('story_url')) {
+    Lobster.tomSelect();
+  }
 
   if (document.getElementById('story_url') && document.getElementById('story_preview') && !document.getElementById('story_preview').firstElementChild) {
     document.getElementById('story_url').focus()
@@ -576,10 +581,12 @@ onPageLoad(() => {
       let tag = url_tags[u];
 
       // can't remove the jquery until I replace select 2
-      if ($("#story_url").val().match(new RegExp(u, "i"))) {
-        var ta = $("#story_tags_a").data("select2");
-        if (ta.getVal().indexOf(tag) < 0)
-          ta.addSelectedChoice({ id: tag });
+      if (document.getElementById('story_url').getAttribute('value').match(new RegExp(u, "i"))) {
+        var ta = document.getElementById("#story_tags_a") //.data("select2");
+        console.log("ta from story url focus out call ", ta);
+        if (ta.getAttribute('value').indexOf(tag) < 0) {
+          ta.setAttribute('value', tag)  //.addSelectedChoice({ id: tag });
+        }
       }
     }
 
@@ -604,7 +611,7 @@ onPageLoad(() => {
   });
 
   on("click", "a.comment_replier", (event) => {
-    if (!Lobsters.curUser) {
+    if (!Lobster.curUser) {
       Lobster.bounceToLogin();
     }
 
@@ -743,4 +750,3 @@ onPageLoad(() => {
       });
   });
 });
-

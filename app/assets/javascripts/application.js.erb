@@ -123,6 +123,15 @@ class _LobstersFunction {
     this.commentFlagReasons = ({
       <%= Vote::COMMENT_REASONS.map{|k,v| "'#{k}': '#{v}'" }.join(", ") %>
     });
+
+    // this.tom = new TomSelect('#story_tags_a', {
+    //   //plugins: ['dropdown_input', 'input_autogrow', 'caret_position', 'remove_button'],
+    //   maxOptions: 8,
+    //   maxItems: 10,
+    //   hideSelected: true,
+    //   closeAfterSelect: true,
+    //   selectOnTab: true,
+    // });
   }
 
   bounceToLogin() {
@@ -192,14 +201,11 @@ class _LobstersFunction {
     // Will check title for common phrases to be removed like "ask/show" lobsters :"
     // Then it will add the keyword "ask/show" to the tags.
     // And it will replace the title with what came after the removed common phrase.
-    const m = title.match(/^(show|amet) lobste\.?rs:? (.+)$/i); //change amet to ask after I'm done testing this
-    console.log("m in checkStoryTitle", m)
+    const m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i);
     if (m) { 
-      const ta = document.getElementById('story_tags_a')
-      // if (ta.getAttribute('value').includes(m[1])) {//.indexOf(m[1].toLowerCase()) < 0) {
-        ta.setAttribute('value', m[1]) //   ta.addSelectedChoice({ id: m[1].toLowerCase() });
-        titleLocation.textContent = m[2];
-      // }
+      const titleEl = document.getElementById('story_title');
+      Lobster.tom.addItem(m[1].toLowerCase());
+      titleEl.value = m[2];
     }
     // common separators or (parens) that don't enclose a 4-digit year
     if (title.match(/: | - | – | — | \| | · | • | by /) ||
@@ -301,7 +307,7 @@ class _LobstersFunction {
     }).then(response => {
       response.text().then(text => {
         previewElement.innerHTML = text;
-        Lobster.tomSelect;
+        Lobster.tomSelect();
       });
     });
   }
@@ -404,8 +410,8 @@ class _LobstersFunction {
       body: formData });
   }
 
-  tomSelect() {
-    let tom = new TomSelect('#story_tags_a', {
+  tomSelect(item) {
+    this.tom = new TomSelect('#story_tags_a', {
       //plugins: ['dropdown_input', 'input_autogrow', 'caret_position', 'remove_button'],
       maxOptions: 8,
       maxItems: 10,
@@ -413,7 +419,6 @@ class _LobstersFunction {
       closeAfterSelect: true,
       selectOnTab: true,
     });
-    // tom();
   }
 
   voteComment(voterEl, point, reason) {
@@ -583,7 +588,6 @@ onPageLoad(() => {
       // can't remove the jquery until I replace select 2
       if (document.getElementById('story_url').getAttribute('value').match(new RegExp(u, "i"))) {
         var ta = document.getElementById("#story_tags_a") //.data("select2");
-        console.log("ta from story url focus out call ", ta);
         if (ta.getAttribute('value').indexOf(tag) < 0) {
           ta.setAttribute('value', tag)  //.addSelectedChoice({ id: tag });
         }

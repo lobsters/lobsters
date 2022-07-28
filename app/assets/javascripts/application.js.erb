@@ -3,54 +3,6 @@
 
 "use strict";
 
-// var _Lobsters = Class.extend({
-//   curUser: null,
-
-  // runSelect2: function() {
-  //   $("#story_tags_a").select2({
-  //   formatSelection: function(what) {
-  //     return what.id;
-  //   },
-  //   matcher: function(term, text) {
-  //     return text.toUpperCase().indexOf(term.toUpperCase()) >= 0;
-  //   },
-  //   sortResults: function(results, container, query) {
-  //       if (query.term) {
-  //         var tmatches = [];
-  //         var dmatches = [];
-
-  //         /* prefer tag matches first, then description matches */
-  //         for (var x in results) {
-  //           var r = results[x];
-
-  //           if (r.id.toUpperCase().indexOf(query.term.toUpperCase()) == 0)
-  //             tmatches.push(r);
-  //           else
-  //             dmatches.push(r);
-  //         }
-
-  //         tmatches = tmatches.sort(function(a, b) {
-  //           return a.text.localeCompare(b.text);
-  //         });
-  //         dmatches = dmatches.sort(function(a, b) {
-  //           return a.text.localeCompare(b.text);
-  //         });
-
-  //         return tmatches.concat(dmatches);
-  //       }
-
-  //       return results;
-  //   }
-  //   });
-  // },
-// });
-
-// var Lobsters = new _Lobsters();
-
-// $(document).ready(function() {
-//   Lobsters.runSelect2();
-// });
-
 const parentSelector = (target, selector) => {
   let parent = target;
   while (!parent.matches(selector)) {
@@ -123,15 +75,6 @@ class _LobstersFunction {
     this.commentFlagReasons = ({
       <%= Vote::COMMENT_REASONS.map{|k,v| "'#{k}': '#{v}'" }.join(", ") %>
     });
-
-    // this.tom = new TomSelect('#story_tags_a', {
-    //   //plugins: ['dropdown_input', 'input_autogrow', 'caret_position', 'remove_button'],
-    //   maxOptions: 8,
-    //   maxItems: 10,
-    //   hideSelected: true,
-    //   closeAfterSelect: true,
-    //   selectOnTab: true,
-    // });
   }
 
   bounceToLogin() {
@@ -582,18 +525,18 @@ onPageLoad(() => {
       "[\/\.](soundcloud\.com)\/": "audio",
     };
 
-    for (let u in url_tags) {
-      let tag = url_tags[u];
-      if (document.getElementById('story_url').value.match(new RegExp(u, "i"))) {
-        Lobster.tom.addItem(tag.toLowerCase())
+    const storyUrlEl = document.getElementById('story_url');
+    for (const [match, tag] of Object.entries(url_tags)) {
+      if (storyUrlEl.value.match(new RegExp(match, "i"))) {
+        Lobster.tom.addItem(tag.toLowerCase());
       }
     }
 
     // check for dupe if there's a URL, but not when editing existing
-    if (document.getElementById('story_url').value !== "" &&
+    if (storyUrlEl.value !== "" &&
       (!document.querySelector('input[name="_method"]') ||
       document.querySelector('input[name="_method"]').getAttribute('value') === 'put')) {
-        Lobster.checkStoryDuplicate(parentSelector(document.getElementById('story_url'), 'form'));
+        Lobster.checkStoryDuplicate(parentSelector(storyUrlEl, 'form'));
     }
   });
 

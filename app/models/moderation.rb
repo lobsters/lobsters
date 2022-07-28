@@ -61,7 +61,7 @@ class Moderation < ApplicationRecord
       m.body = "Your comment on [#{self.comment.story.title}](" <<
                "#{self.comment.story.comments_url}) has been moderated:\n" <<
                "\n" <<
-               "> *#{self.comment.comment}*\n"
+               self.comment.comment.split("\n").map {|l| "> " << l }.join("\n")
 
       if self.reason.present?
         m.body << "\n" <<

@@ -584,13 +584,8 @@ onPageLoad(() => {
 
     for (let u in url_tags) {
       let tag = url_tags[u];
-
-      // can't remove the jquery until I replace select 2
-      if (document.getElementById('story_url').getAttribute('value').match(new RegExp(u, "i"))) {
-        var ta = document.getElementById("#story_tags_a") //.data("select2");
-        if (ta.getAttribute('value').indexOf(tag) < 0) {
-          ta.setAttribute('value', tag)  //.addSelectedChoice({ id: tag });
-        }
+      if (document.getElementById('story_url').value.match(new RegExp(u, "i"))) {
+        Lobster.tom.addItem(tag.toLowerCase())
       }
     }
 

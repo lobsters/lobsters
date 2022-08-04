@@ -9,7 +9,7 @@
     <h2 id="<%= category.category %>">
       <%= link_to category.category, category_path(category) %>
       <% if is_admin %>
-        <span class="byline">| <%= link_to 'edit', edit_tag_path(tag.tag) %></span>
+        <span class="byline">| <%= link_to 'edit', edit_category_path(category.category) %></span>
       <% end %>
     </h2>
 

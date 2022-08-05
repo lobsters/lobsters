@@ -31,16 +31,14 @@
         <% end %>
         </span>
         </li>
-      <% end %>
-    </ol>
+      </ol>
+    <% end %>
   <% end %>
 
   <% if is_admin %>
-    <div>
-      <%= link_to 'Create New Tag', new_tag_path %>
-    </div>
-    <div>
+    <p>
+      <%= link_to 'Create New Tag', new_tag_path %><br/>
       <%= link_to 'Create New Category', new_category_path %>
-    </div>
+    </p>
   <% end %>
 </div>

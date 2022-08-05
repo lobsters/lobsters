@@ -61,7 +61,11 @@ class FakeDataGenerator
       category = categories.sample
       tag_name = title.split(' ').first.downcase
       tag = Tag.find_by tag: tag_name
-      tag ||= Tag.create! tag: tag_name, category: category
+      tag ||= Tag.create!(
+        tag: tag_name,
+        category: category,
+        description: Faker::Lorem.sentence(word_count: Random.rand(2..15))
+      )
       url = Faker::Internet.url
       description = nil
       if i % 10 == 0

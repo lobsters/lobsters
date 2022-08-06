@@ -1,0 +1,49 @@
+<div class="box wide">
+  <%= form_with model: @domain, url: update_domain_path, method: :post, local: true do |f| %>
+    <div class="boxline">
+      <%= f.label :domain, 'Domain:', class: 'required' %>
+      <%= f.text_field :domain  %>
+    </div>
+
+    <div class="boxline">
+      <%= f.submit 'Update Domain' %>
+    </div>
+  <% end %>
+
+  <% unless @domain.banned_at %>
+    <%= form_with model: @domain, url: ban_domain_path, method: :post, local: true do |f| %>
+      <div class="boxline">
+        <%= f.label :banned_reason, 'Ban Reason:', class: 'required' %>
+        <%= f.text_field :banned_reason  %>
+      </div>
+
+      <div class="boxline">
+        <%= f.submit 'Ban', class: 'deletion' %>
+      </div>
+    <% end %>
+  <% else %>
+    <label class="required">Status:</label>
+    <span class="d">
+      Banned
+    </span>
+    <br>
+
+    <label class="required">Banned Reason:</label>
+    <span class="d">
+      <%= @domain.banned_reason %>
+    </span>
+    <br>
+
+    <label class="required">Banned At:</label>
+    <span class="d">
+      <%= @domain.banned_at %>
+    </span>
+    <br>
+
+    <label class="required">Banned by User:</label>
+    <span class="d">
+      <%= @domain.banned_by_user.username %>
+    </span>
+
+  <% end %>
+</div>

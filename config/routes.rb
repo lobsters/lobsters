@@ -181,7 +181,6 @@ Rails.application.routes.draw do
   dm_con = { :domain_name => /[-,0-z\.]+/ }
   get "/domains/:domain_name" => "domains#edit", :as => "edit_domain", :constraints => dm_con
   post "/domains/:domain_name" => "domains#update", :as => "update_domain", :constraints => dm_con
-  post "/domains/ban/:domain_name" => "domains#ban", :as => "ban_domain", :constraints => dm_con
 
   get "/categories/new" => "categories#new", :as => "new_category"
   get "/categories/:category_name/edit" => "categories#edit", :as => "edit_category"

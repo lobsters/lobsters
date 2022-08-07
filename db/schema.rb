@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[6.1].define(version: 2022_03_31_165136) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_08_06_202153) do
   create_table "categories", charset: "utf8mb4", force: :cascade do |t|
     t.string "category"
     t.datetime "created_at", null: false
@@ -49,7 +48,6 @@ ActiveRecord::Schema[6.1].define(version: 2022_03_31_165136) do
 
   create_table "domains", charset: "utf8mb4", force: :cascade do |t|
     t.string "domain"
-    t.boolean "is_tracker", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "banned_at"

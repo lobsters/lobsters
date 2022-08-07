@@ -1,17 +1,7 @@
 <div class="box wide">
-  <%= form_with model: @domain, url: update_domain_path, method: :post, local: true do |f| %>
-    <div class="boxline">
-      <%= f.label :domain, 'Domain:', class: 'required' %>
-      <%= f.text_field :domain  %>
-    </div>
-
-    <div class="boxline">
-      <%= f.submit 'Update Domain' %>
-    </div>
-  <% end %>
-
+  <h1><%= @domain.domain %></h1>
   <% unless @domain.banned_at %>
-    <%= form_with model: @domain, url: ban_domain_path, method: :post, local: true do |f| %>
+    <%= form_with model: @domain, url: update_domain_path, method: :post, local: true do |f| %>
       <div class="boxline">
         <%= f.label :banned_reason, 'Ban Reason:', class: 'required' %>
         <%= f.text_field :banned_reason  %>

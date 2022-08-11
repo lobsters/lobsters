@@ -2,8 +2,8 @@
 
 //= require tom-select.base.js
 //= require TomSelect_remove_button
-// require TomSelect_caret_position from 'tom-select/dist/js/plugins/caret_position'
-// require TomSelect_input_autogrow from 'tom-select/dist/js/plugins/input_autogrow'
+//= require TomSelect_caret_position
+//= require TomSelect_input_autogrow
 
 "use strict";
 
@@ -358,13 +358,11 @@ class _LobstersFunction {
   }
 
   tomSelect(item) {
+    TomSelect.define('caret_position', caret_position);
+    TomSelect.define('input_autogrow', input_autogrow);
     TomSelect.define('remove_button', remove_button);
-
-    // TomSelect.define('caret_position', TomSelect_caret_position);
-    // TomSelect.define('input_autogrow', TomSelect_input_autogrow);
-    // TomSelect.define('remove_button', require('tom-select/dist/js/plugins/remove_button.js'));  // doesn't understand require
     this.tom = new TomSelect('#story_tags_a', {
-      plugins: ['remove_button'], //'input_autogrow', 'caret_position',
+      plugins: ['caret_position', 'input_autogrow', 'remove_button'],
       maxOptions: 8,
       maxItems: 10,
       hideSelected: true,

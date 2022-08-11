@@ -64,7 +64,7 @@ class FakeDataGenerator
       tag ||= Tag.create!(
         tag: tag_name,
         category: category,
-        description: Faker::Lorem.sentence(word_count: Random.rand(2..15))
+        description: Faker::Lorem.sentence(word_count: Random.rand(2..15)[...100])
       )
       url = Faker::Internet.url
       description = nil

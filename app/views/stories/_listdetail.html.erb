@@ -132,7 +132,10 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             | <a class="flagger">unflag (<%=
               Vote::STORY_REASONS[story.vote[:reason]].to_s.downcase %>)</a>
           <% elsif @user && @user.can_flag?(story) %>
-            | <a class="flagger">flag</a>
+            | 
+            <span class="dropdown_parent">
+              <a class="flagger">flag</a>
+            </span>
           <% end %>
           <% if story.is_hidden_by_cur_user %>
             | <%= link_to "unhide", story_unhide_path(story.short_id),
@@ -154,7 +157,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
         <% if story.url.present? %>
           |
-          <span>
+          <span class="dropdown_parent">
             <input id="archive_<%= story.short_id %>"  class="archive_button" type="checkbox">
             <label for="archive_<%= story.short_id %>">archive</label>
             <label for="archive_<%= story.short_id %>" class="archive_dismiss"></label>

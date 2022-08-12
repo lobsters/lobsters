@@ -155,13 +155,7 @@ class _LobstersFunction {
 
     const flaggingDropDown = document.createElement('div');
     flaggingDropDown.setAttribute('id', 'flag_dropdown');
-    const flagWrapper = document.createElement('span');
-    flagWrapper.setAttribute('id', 'flag_wrapper')
-    flagWrapper.style.position = 'relative';
-    flagWrapper.style.maxWidth = '1 px';
-    flagWrapper.style.maxHeight = '1 px';
-    flagWrapper.appendChild(flaggingDropDown);
-    voterEl.after(flagWrapper);
+    voterEl.after(flaggingDropDown);
 
     Object.keys(reasons).map(function(k, v) {
       let a = document.createElement('a')
@@ -258,7 +252,6 @@ class _LobstersFunction {
   removeFlagModal() {
     document.getElementById("flag_dropdown").remove();
     document.getElementById("modal_backdrop").remove();
-    document.querySelector('#flag_wrapper').remove();
   }
 
   postComment(form) {

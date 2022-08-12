@@ -178,8 +178,9 @@ class _LobstersFunction {
   checkStoryDuplicate(form) {
     const formData = new FormData(form);
     const action = '/stories/check_url_dupe';
-    fetch(action, {
-      method: 'POST',
+    fetchWithCSRF(action, {
+      method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
       body: formData,
     }).then (response => {
       response.text().then(text => {
@@ -266,7 +267,7 @@ class _LobstersFunction {
     const action = form.getAttribute('action');
     formData.append('show_tree_lines', true);
     fetchWithCSRF (action, {
-      method: 'POST',
+      method: 'post',
       headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
       body: formData
     })
@@ -281,7 +282,7 @@ class _LobstersFunction {
     formData.append('preview', 'true');
     formData.append('show_tree_lines', 'true');
     fetchWithCSRF(action, {
-      method: 'POST',
+      method: 'post',
       headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
       body: formData
     })
@@ -294,12 +295,16 @@ class _LobstersFunction {
   }
 
   previewStory(formElement) {
+    if(!Lobster.curUser)
+      return Lobster.bounceToLogin();
+
     const formData = new FormData(formElement);
     const previewElement = document.getElementById('inside');
     fetchWithCSRF('/stories/preview', {
       method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
       body: formData
-    }).then (response => {
+    }).then(response => {
       response.text().then(text => {
         previewElement.innerHTML = text;
         Lobsters.runSelect2();
@@ -577,7 +582,7 @@ onPageLoad(() => {
     }
 
     // check for dupe if there's a URL, but not when editing existing
-    if (document.getElementById('story_url').getAttribute('value') !== "" &&
+    if (document.getElementById('story_url').value !== "" &&
       (!document.querySelector('input[name="_method"]') ||
       document.querySelector('input[name="_method"]').getAttribute('value') === 'put')) {
         Lobster.checkStoryDuplicate(parentSelector(document.getElementById('story_url'), 'form'));

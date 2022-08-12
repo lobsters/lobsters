@@ -189,7 +189,7 @@ class Story < ApplicationRecord
     if most_recent_similar && most_recent_similar.is_recent?
       errors.add(:url, "has already been submitted within the past #{RECENT_DAYS} days")
       true
-    elsif most_recent_similar && self.user.is_new?
+    elsif most_recent_similar && self.user && self.user.is_new?
       errors.add(:url, "cannot be resubmitted by new users")
       true
     else

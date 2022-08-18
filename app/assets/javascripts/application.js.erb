@@ -527,10 +527,11 @@ onPageLoad(() => {
   on('change', '#story_title', Lobster.checkStoryTitle);
 
   on('click', '.story #flag_dropdown a', (event) => {
+    event.preventDefault();
     if (event.target.getAttribute('data') != '') {
       Lobster.voteStory(parentSelector(event.target, '.story'), -1,  event.target.getAttribute('data'));
     }
-    Lobster.removeFlagModal()
+    Lobster.removeFlagModal();
   });
 
   on('click', '#story_fetch_title', (event) => {

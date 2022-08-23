@@ -402,7 +402,6 @@ button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"],
-div.select2-choices,
 a.button {
 	background-color: var(--color-button-bg);
 	border-bottom-color: var(--color-fg-shape);
@@ -1432,51 +1431,112 @@ div.flash-success h2 {
 	margin: 0;
 }
 
-/* select2 deuglification */
+/* select2 deuglification
+The css selectors require the #story_holder to overwrite the TomSelect presets*/
 
-.select2-container-multi.select2-container-active .select2-choices {
-	border: 1px solid var(--color-box-border-focus);
-}
-.select2-container .select2-results .select2-highlighted {
-	background: var(--color-bg-accent);
-	color: var(--color-box-bg);
-}
-
-.select2-container-multi .select2-choices {
-	border-color: var(--color-box-border);
+#story_holder .ts-control {  /* .select2-container-multi.select2-container-active .select2-choices */
 	background-color: var(--color-box-bg);
-	background-image: none;
-	padding-top: 2px;
+  border: 1px solid var(--color-box-border);
+  border-radius: 0px;
+  box-shadow: none;
+  box-sizing: border-box;
+  display: inline-block;
+  padding-top: 2px;
+  position: relative;
+  width: 612px;
+  /* supposed to be inherited from body, but TS overwrites */
+  font-family: "helvetica neue", arial, sans-serif;
+  font-size: 10pt;
+  color: var(--color-fg);
+  line-height: 1.45em;
 }
 
-.select2-container .select2-drop {
-	background-color: var(--color-box-bg);
-	border-color: var(--color-box-border-focus);
+#story_holder .ts-control:focus-within {
+  border-color: var(--color-box-border-focus)
 }
 
-.select2-container-multi.select2-container-active .select2-choices {
-	box-shadow	: none;
+#story_holder .ts-control .item { /* item already selected by user || SHould be done*/
+	border-radius: 3px;
+  background-clip: padding-box;
+  background-color: #e4e4e4;
+  background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+  box-shadow: 0 0 2px #ffffff inset, 0 1px 0 rgb(0 0 0 / 5%);
+  color: #333;
+  border: 1px solid #aaaaaa;
+  line-height: 13px;
+  padding: 3px 5px 3px 18px;
+  padding-left: 1rem;
+  position: relative;
+  margin: 3px 0 3px 5px;
+  position: relative;
+  cursor: default;
 }
 
-.select2-container-active .select2-choice,
-.select2-container-active .select2-choices {
-	box-shadow	: none;
+#story_holder .ts-control .item a { /* item already selected by user, removal box || position is way off & the CSS is copied from previous tomselect settings*/
+  display: block;
+  position: absolute;
+  padding: 0;
+  right: 3px;
+  top: 4px;
+  width: 12px;
+  height: 13px;
+  outline: none;
+  cursor: pointer;
+  color: (var(--color-fg-contrast-4-5));
+  line-height: 13px;
+  visibility: hidden; /*Part 1 to replace tomSelect default content*/
 }
 
-.select2-dropdown-open .select2-choice {
-	border-bottom-color: transparent;
-	box-shadow	: none;
+#story_holder .ts-control .item a::after {
+  content: "\2715";
+  background-color: red; /* Remove later Just for development*/
+  display: block;
+  position: absolute;
+  padding: 0;
+  top: 0px;
+  outline: none;
+  cursor: pointer;
+  color: (var(--color-fg-contrast-4-5));
+  visibility: visible; /*Part 2 to replace tomSelect default content*/
 }
 
-.select2-container .select2-results li em {
-	background: none;
-	color: var(--color-fg-contrast-4-5);
-	font-style: italic;
-	padding-left: 0.5em;
+#story_holder .ts-dropdown { /*frame = select2-drop  || Note to self need to add modal && correct font*/
+  background: #fff;
+  background-color: var(--color-box-bg);
+  border-color: var(--color-box-border-focus);
+  width: 612px;
+  margin-top: -5px; /* Check to see if this is ok*/
+  margin-left: 7em; /* not quite right. about 2 px off*/
+  border: 1px solid #aaa;
+  border-top: 0;
+  position: relative;
+  top: 100%;
+  box-shadow: 0 4px rgb(0 0 0 / 15%);
+  z-index: 999;
+  border-radius: 0 0 4px 4px;
 }
 
-.select2-container .select2-results .select2-highlighted em {
-	color: var(--color-box-bg);
+#story_holder .ts-dropdown .ts-dropdown-content .active { /*done*/
+  background: var(--color-bg-accent);
+  color: var(--color-box-bg);
+}
+
+#story_holder .ts-dropdown-content { /*item visable holder = select2-results*/
+  padding: 0;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 200px;
+}
+
+#story_holder .ts-dropdown .option { /*item = select2-result*/
+  line-height: 80%;
+  padding: 7px 7px 8px;
+  margin: 0px;
+  cursor: pointer;
+  font-family: "helvetica neue", arial, sans-serif;
+  font-size: 10px;
+  color: var(--color-fg)
 }
 
 /* pushover */

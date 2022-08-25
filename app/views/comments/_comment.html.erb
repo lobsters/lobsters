@@ -101,7 +101,9 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <% end %>
 
         <% if can_flag && !flagged %>
-          | <a class="flagger">flag</a>
+          <span class="dropdown_parent">
+            | <a class="flagger">flag</a>
+          </span>
         <% elsif flagged %>
           | <a class="flagger">unflag</a>
         <% else %>

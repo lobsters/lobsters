@@ -132,7 +132,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             | <a class="flagger">unflag (<%=
               Vote::STORY_REASONS[story.vote[:reason]].to_s.downcase %>)</a>
           <% elsif @user && @user.can_flag?(story) %>
-            | 
+            |
             <span class="dropdown_parent">
               <a class="flagger">flag</a>
             </span>

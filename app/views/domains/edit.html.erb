@@ -35,5 +35,7 @@
       <%= @domain.banned_by_user.username %>
     </span>
 
+    <%= button_to 'Unban', unban_domain_path(name: @domain.domain), method: :post, class: 'deletion' %>
+
   <% end %>
 </div>

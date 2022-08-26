@@ -69,9 +69,15 @@ Rails.application.routes.draw do
   get "/t/:tag" => "home#multi_tag", :as => "multi_tag"
   get "/t/:tag/page/:page" => "home#tagged"
 
+  dm_con = { :name => /([^\/]+?)(?=\.json|\.rss|$|\/)/ }
   get "/domain/:name(.:format)" => "home#for_domain", :as => "domain",
-    :constraints => { name: /[^\/]+?/, format: /json|rss/ }
+    :constraints => dm_con
+
   get "/domain/:name/page/:page" => "home#for_domain", :constraints => { name: /[^\/]+/ }
+
+  get "/domains/:name" => "domains#edit", :as => "edit_domain", :constraints => dm_con
+  post "/domains/:name/unban" => "domains#unban", :as => "unban_domain", :constraints => dm_con
+  post "/domains/:name" => "domains#update", :as => "update_domain", :constraints => dm_con
 
   get "/search" => "search#index"
   get "/search/:q" => "search#index"
@@ -177,10 +183,6 @@ Rails.application.routes.draw do
   get "/tags/:tag_name/edit" => "tags#edit", :as => "edit_tag"
   post "/tags" => "tags#create"
   post "/tags/:tag_name" => "tags#update", :as => "update_tag"
-
-  dm_con = { :domain_name => /[-,0-z\.]+/ }
-  get "/domains/:domain_name" => "domains#edit", :as => "edit_domain", :constraints => dm_con
-  post "/domains/:domain_name" => "domains#update", :as => "update_domain", :constraints => dm_con
 
   get "/categories/new" => "categories#new", :as => "new_category"
   get "/categories/:category_name/edit" => "categories#edit", :as => "edit_category"

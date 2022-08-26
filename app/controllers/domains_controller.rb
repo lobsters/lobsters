@@ -1,6 +1,6 @@
 class DomainsController < ApplicationController
   before_action :require_logged_in_admin
-  before_action :set_domain, only: [:update, :edit]
+  before_action :set_domain, only: [:update, :edit, :unban]
 
   def edit; end
 
@@ -12,12 +12,17 @@ class DomainsController < ApplicationController
       flash[:error] = "You must give a reason for the ban"
     end
 
-    redirect_to edit_domain_path(domain_name: @domain.domain)
+    redirect_to edit_domain_path(name: @domain.domain)
+  end
+
+  def unban
+    @domain.unban_by_user!(@user)
+    redirect_to edit_domain_path(name: @domain.domain)
   end
 
 private
 
   def set_domain
-    @domain = Domain.find_by(domain: params[:domain_name])
+    @domain = Domain.find_by(domain: params[:name])
   end
 end

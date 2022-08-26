@@ -11,7 +11,7 @@ RSpec.describe "Domains", type: :request do
   context 'update' do
     let(:domain) { create(:domain) }
 
-    it 'buns domain with valid params' do
+    it 'bans domain with valid params' do
       messg = 'Banned with reason'
       expect_any_instance_of(Domain).to receive(:ban_by_user_for_reason!).once.with(user, messg)
 
@@ -23,6 +23,17 @@ RSpec.describe "Domains", type: :request do
       expect_any_instance_of(Domain).not_to receive(:ban_by_user_for_reason!)
       post "/domains/#{domain.domain}", params: { domain: { domain: '' } }
 
+      expect(response).to redirect_to edit_domain_path
+    end
+  end
+
+  context 'unban' do
+    let(:domain) { create(:domain) }
+
+    it 'unbans domain with valid params' do
+      expect_any_instance_of(Domain).to receive(:unban_by_user!).once.with(user)
+
+      post "/domains/#{domain.domain}/unban"
       expect(response).to redirect_to edit_domain_path
     end
   end

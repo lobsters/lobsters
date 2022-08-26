@@ -9,17 +9,11 @@ class Domain < ApplicationRecord
   validates :domain, presence: true
 
   def ban_by_user_for_reason!(banner, reason)
-    self.banned_at = Time.current
-    self.banned_by_user_id = banner.id
-    self.banned_reason = reason
-    self.save!
+    banning_switcher(:on, banner, reason)
+  end
 
-    m = Moderation.new
-    m.moderator_user_id = banner.id
-    m.domain = self
-    m.action = "Banned"
-    m.reason = reason
-    m.save!
+  def unban_by_user!(banner)
+    banning_switcher(:off, banner)
   end
 
   def banned?
@@ -32,5 +26,21 @@ class Domain < ApplicationRecord
 
   def to_param
     domain
+  end
+
+private
+
+  def banning_switcher(state, banner, reason = nil)
+    self.banned_at = state == :on ? Time.current : nil
+    self.banned_by_user_id = state == :on ? banner.id : nil
+    self.banned_reason = state == :on ? reason : nil
+    self.save!
+
+    m = Moderation.new
+    m.moderator_user_id = banner.id
+    m.domain = self
+    m.action = state == :on ? 'Banned' : 'Unbanned'
+    m.reason = reason
+    m.save!
   end
 end

@@ -368,6 +368,16 @@ class _LobstersFunction {
       hideSelected: true,
       closeAfterSelect: true,
       selectOnTab: true,
+      render: {
+        option: function(data){
+          return '<div>' +
+            '<span class="dropDownItem">' + data.title + '</span>' +
+            '</div>';
+        },
+        item: function(data){
+          return '<div class="data-ts-item">' + data.value + '</div>';
+        }
+      }
     });
   }
 

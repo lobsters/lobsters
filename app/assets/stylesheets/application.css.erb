@@ -1431,10 +1431,9 @@ div.flash-success h2 {
 	margin: 0;
 }
 
-/* select2 deuglification
-The css selectors require the #story_holder to overwrite the TomSelect presets*/
+/* The css selectors require the #story_holder to overwrite the TomSelect presets*/
 
-#story_holder .ts-control {  /* .select2-container-multi.select2-container-active .select2-choices */
+#story_holder .ts-control {
 	background-color: var(--color-box-bg);
   border: 1px solid var(--color-box-border);
   border-radius: 0px;
@@ -1455,44 +1454,40 @@ The css selectors require the #story_holder to overwrite the TomSelect presets*/
   border-color: var(--color-box-border-focus)
 }
 
-#story_holder .ts-control .item { /* item already selected by user || SHould be done*/
+#story_holder .ts-control .data-ts-item { /* item already selected by user*/
 	border-radius: 3px;
-  background-clip: padding-box;
   background-color: #e4e4e4;
   background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
-  box-shadow: 0 0 2px #ffffff inset, 0 1px 0 rgb(0 0 0 / 5%);
   color: #333;
   border: 1px solid #aaaaaa;
   line-height: 13px;
-  padding: 3px 5px 3px 18px;
-  padding-left: 1rem;
-  position: relative;
+  padding: 3px 0.5rem 3px 1rem !important;
   margin: 3px 0 3px 5px;
   position: relative;
   cursor: default;
 }
 
-#story_holder .ts-control .item a { /* item already selected by user, removal box || position is way off & the CSS is copied from previous tomselect settings*/
+#story_holder .ts-control .data-ts-item a {
   display: block;
   position: absolute;
-  padding: 0;
-  right: 3px;
-  top: 4px;
+  padding: 2px;
+  left: 0px;
   width: 12px;
   height: 13px;
   outline: none;
   cursor: pointer;
-  color: (var(--color-fg-contrast-4-5));
+  color: grey;
+  font-weight: bold;
   line-height: 13px;
+  margin-left: 0;
   visibility: hidden; /*Part 1 to replace tomSelect default content*/
 }
 
-#story_holder .ts-control .item a::after {
+#story_holder .ts-control .data-ts-item a::after {
   content: "\2715";
-  background-color: red; /* Remove later Just for development*/
   display: block;
   position: absolute;
-  padding: 0;
+  padding-right: 3px;
   top: 0px;
   outline: none;
   cursor: pointer;
@@ -1500,13 +1495,13 @@ The css selectors require the #story_holder to overwrite the TomSelect presets*/
   visibility: visible; /*Part 2 to replace tomSelect default content*/
 }
 
-#story_holder .ts-dropdown { /*frame = select2-drop  || Note to self need to add modal && correct font*/
+#story_holder .ts-dropdown {
   background: #fff;
   background-color: var(--color-box-bg);
   border-color: var(--color-box-border-focus);
   width: 612px;
-  margin-top: -5px; /* Check to see if this is ok*/
-  margin-left: 7em; /* not quite right. about 2 px off*/
+  margin-top: -5px;
+  margin-left: 5.85rem;
   border: 1px solid #aaa;
   border-top: 0;
   position: relative;
@@ -1516,12 +1511,12 @@ The css selectors require the #story_holder to overwrite the TomSelect presets*/
   border-radius: 0 0 4px 4px;
 }
 
-#story_holder .ts-dropdown .ts-dropdown-content .active { /*done*/
+#story_holder .ts-dropdown .ts-dropdown-content .active {
   background: var(--color-bg-accent);
   color: var(--color-box-bg);
 }
 
-#story_holder .ts-dropdown-content { /*item visable holder = select2-results*/
+#story_holder .ts-dropdown-content {
   padding: 0;
   position: relative;
   overflow-x: hidden;
@@ -1529,7 +1524,7 @@ The css selectors require the #story_holder to overwrite the TomSelect presets*/
   max-height: 200px;
 }
 
-#story_holder .ts-dropdown .option { /*item = select2-result*/
+#story_holder .ts-dropdown .option {
   line-height: 80%;
   padding: 7px 7px 8px;
   margin: 0px;

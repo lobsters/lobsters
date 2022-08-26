@@ -11,7 +11,7 @@ RSpec.describe "Domains", type: :request do
   context 'update' do
     let(:domain) { create(:domain) }
 
-    it 'buns domain with valid params' do
+    it 'bans domain with valid params' do
       messg = 'Banned with reason'
       expect_any_instance_of(Domain).to receive(:ban_by_user_for_reason!).once.with(user, messg)
 

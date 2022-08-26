@@ -133,7 +133,7 @@ RSpec.feature "Submitting Stories", type: :feature do
     expect(page).to have_content "Previous discussions"
   end
 
-  scenario "submitting a tracking link" do
+  scenario "submitting a banned domain" do
     Domain.create!(domain: 'example.com', banned_at: DateTime.now)
 
     expect {

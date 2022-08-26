@@ -466,7 +466,7 @@ onPageLoad(() => {
 
   on('click', '#modal_backdrop', () => {
     Lobster.removeFlagModal()
-  })
+  });
 
   // Account Settings Functions
 
@@ -474,7 +474,7 @@ onPageLoad(() => {
     const homePage = event.target
     if (homePage.value.trim() !== '' && !homePage.value.match('^[a-z]+:\/\/'))
       homePage.value = 'https://' + homePage.value
-  })
+  });
 
   // Inbox Related Funtions
 
@@ -523,7 +523,7 @@ onPageLoad(() => {
   on('click', 'li.story a.hider', (event) => {
     event.preventDefault();
     Lobster.hideStory(event.target);
-  })
+  });
 
   on('click', 'li.story a.saver', (event) => {
     event.preventDefault();

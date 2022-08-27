@@ -58,7 +58,7 @@ RSpec.describe Domain, type: :model do
     }
 
     before do
-      domain.unban_by_user!(user)
+      domain.unban_by_user_for_reason!(user, 'Test reason')
     end
 
     describe 'should be unbanned' do
@@ -90,6 +90,10 @@ RSpec.describe Domain, type: :model do
 
       it 'has correct action' do
         expect(@moderation.action).to eq 'Unbanned'
+      end
+
+      it 'has correct reason' do
+        expect(@moderation.reason).to eq 'Test reason'
       end
     end
   end

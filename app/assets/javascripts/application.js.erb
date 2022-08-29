@@ -145,9 +145,7 @@ class _LobstersFunction {
     const title = titleLocation.value;
     if (!title) return;
 
-    // Will check title for common phrases to be removed like "ask/show" lobsters :"
-    // Then it will add the keyword "ask/show" to the tags.
-    // And it will replace the title with what came after the removed common phrase.
+    // Check for common prefixes like "ask lobsters:", remove it, and add the appropriate tag.
     const m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i);
     if (m) { 
       const titleEl = document.getElementById('story_title');

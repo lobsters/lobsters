@@ -1482,6 +1482,10 @@ div.flash-success h2 {
   font-weight: bold;
   line-height: 13px;
   margin-left: 0;
+  /*
+  For a decade, select2 had the `x` to remove a tag on the left. TomSelect puts it
+  on the right, so we hide that and insert an`x` on the left with `a::after` below.
+  */
   visibility: hidden; /*Part 1 to replace tomSelect default content*/
 }
 

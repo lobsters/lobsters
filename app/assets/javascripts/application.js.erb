@@ -240,7 +240,7 @@ class _LobstersFunction {
   }
 
   previewStory(formElement) {
-    if(!Lobster.curUser)
+    if (!Lobster.curUser)
       return Lobster.bounceToLogin();
 
     const formData = new FormData(formElement);

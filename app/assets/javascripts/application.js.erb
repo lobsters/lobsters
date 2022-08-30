@@ -276,6 +276,35 @@ class _LobstersFunction {
     fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + act, {method: 'post'});
   }
 
+  tomSelect(item) {
+    TomSelect.define('caret_position', caret_position);
+    TomSelect.define('input_autogrow', input_autogrow);
+    TomSelect.define('remove_button', remove_button);
+    this.tom = new TomSelect('#story_tags_a', {
+      plugins: ['caret_position', 'input_autogrow', 'remove_button'],
+      maxOptions: 200,
+      maxItems: 10,
+      hideSelected: true,
+      closeAfterSelect: true,
+      selectOnTab: true,
+      sortField: {field: "data-value"},
+      onInitialize: function() {
+        const parent = document.querySelector(".ts-control");
+        parent.appendChild(document.querySelector(".ts-dropdown"));
+      },
+      render: {
+        option: function(data) {
+          return '<div>' +
+            '<span class="dropDownItem">' + data.title + '</span>' +
+            '</div>';
+        },
+        item: function(data) {
+          return '<div class="data-ts-item">' + data.value + '</div>';
+        }
+      }
+    });
+  }
+
   upvoteComment(voterEl) {
     Lobster.voteComment(voterEl, 1);
   }
@@ -353,31 +382,6 @@ class _LobstersFunction {
     fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + action, {
       method: 'post',
       body: formData });
-  }
-
-  tomSelect(item) {
-    TomSelect.define('caret_position', caret_position);
-    TomSelect.define('input_autogrow', input_autogrow);
-    TomSelect.define('remove_button', remove_button);
-    this.tom = new TomSelect('#story_tags_a', {
-      plugins: ['caret_position', 'input_autogrow', 'remove_button'],
-      maxOptions: 200,
-      maxItems: 10,
-      hideSelected: true,
-      closeAfterSelect: true,
-      selectOnTab: true,
-      sortField: {field: "data-value"},
-      render: {
-        option: function(data){
-          return '<div>' +
-            '<span class="dropDownItem">' + data.title + '</span>' +
-            '</div>';
-        },
-        item: function(data){
-          return '<div class="data-ts-item">' + data.value + '</div>';
-        }
-      }
-    });
   }
 
   voteComment(voterEl, point, reason) {
@@ -486,7 +490,7 @@ onPageLoad(() => {
 
   Lobster.checkStoryTitle()
 
-  if (document.getElementById('story_url')) {
+  if (document.getElementById('story_tags_a')) {
     Lobster.tomSelect();
   }
 

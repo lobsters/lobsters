@@ -1435,20 +1435,22 @@ div.flash-success h2 {
 /* Using #story_holder for precedence over TomSelect's vendored CSS  */
 
 #story_holder .ts-control {
-	background-color: var(--color-box-bg);
+  display: inline-block;
+  position: absolute;
+  width: 612px;
+  background-color: var(--color-box-bg);
   border: 1px solid var(--color-box-border);
   border-radius: 0px;
   box-shadow: none;
   box-sizing: border-box;
-  display: inline-block;
+  margin-bottom: 2px;
+  padding: 0px;
   padding-top: 2px;
-  padding-left: 1px;
-  position: relative;
-  width: 612px;
+  /* supposed to be inherited from body, but TS overwrites */
   font-family: "helvetica neue", arial, sans-serif;
   font-size: 10pt;
   color: var(--color-fg);
-  line-height: 1.45em;
+  line-height: 1.45rem;
 }
 
 #story_holder .ts-control:focus-within {
@@ -1456,14 +1458,14 @@ div.flash-success h2 {
 }
 
 #story_holder .ts-control .data-ts-item { /* item already selected by user*/
-	border-radius: 3px;
   background-color: #e4e4e4;
   background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
-  color: #333;
   border: 1px solid #aaaaaa;
+	border-radius: 3px;
+  color: #333;
   line-height: 13px;
-  padding: 3px 0.5rem 3px 1rem !important;
   margin: 3px 0 3px 5px;
+  padding: 3px 0.5rem 3px 1rem !important;
   position: relative;
   cursor: default;
 }
@@ -1471,49 +1473,43 @@ div.flash-success h2 {
 #story_holder .ts-control .data-ts-item a {
   display: block;
   position: absolute;
+  height: 13px;
   padding: 2px;
   left: 0px;
-  width: 12px;
-  height: 13px;
-  outline: none;
-  cursor: pointer;
-  color: grey;
-  font-weight: bold;
-  line-height: 13px;
   margin-left: 0;
   /*
   For a decade, select2 had the `x` to remove a tag on the left. TomSelect puts it
   on the right, so we hide that and insert an`x` on the left with `a::after` below.
   */
-  visibility: hidden; /*Part 1 to replace tomSelect default content*/
+  visibility: hidden;
 }
 
 #story_holder .ts-control .data-ts-item a::after {
   content: "\2715";
   display: block;
   position: absolute;
+  color: grey;
+  font-weight: bold;
+  outline: none;
   padding-right: 3px;
   top: 0px;
-  outline: none;
+  width: 12px;
   cursor: pointer;
-  color: (var(--color-fg-contrast-4-5));
   visibility: visible;
 }
 
 #story_holder .ts-dropdown {
+  position: relative;
+  width: 100%;
   background: #fff;
   background-color: var(--color-box-bg);
   border-color: var(--color-box-border-focus);
-  width: 612px;
-  margin-top: -5px;
-  margin-left: 5.85rem;
-  border: 1px solid #aaa;
-  border-top: 0;
-  position: absolute;
-  top: 100%;
-  box-shadow: 0 4px rgb(0 0 0 / 15%);
-  z-index: 999;
   border-radius: 0 0 4px 4px;
+  border-top: 1px solid #aaa;
+  box-shadow: 0 4px rgb(0 0 0 / 15%);
+  margin: 0px;
+  padding: 0px;
+  z-index: 999;
 }
 
 #story_holder .ts-dropdown .ts-dropdown-content .active {
@@ -1522,21 +1518,21 @@ div.flash-success h2 {
 }
 
 #story_holder .ts-dropdown-content {
+  max-height: 200px;
   padding: 0;
   position: relative;
   overflow-x: hidden;
   overflow-y: scroll;
-  max-height: 200px;
 }
 
 #story_holder .ts-dropdown .option {
-  line-height: 80%;
-  padding: 7px 7px 8px;
-  margin: 0px;
-  cursor: pointer;
+  color: var(--color-fg);
   font-family: "helvetica neue", arial, sans-serif;
   font-size: 10px;
-  color: var(--color-fg)
+  line-height: 80%;
+  margin: 0px;
+  padding: 7px 7px 8px;
+  cursor: pointer;
 }
 
 /* pushover */
@@ -1879,6 +1875,10 @@ div.flash-success h2 {
 	div#user_about {
 		margin-left: 0;
 	}
+
+  #story_holder .ts-wrapper .multi {
+    margin-left: 0rem;
+  }
 
 	footer {
 		text-align: center;

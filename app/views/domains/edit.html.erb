@@ -1,0 +1,39 @@
+<div class="box wide">
+  <h1><%= @domain.domain %></h1>
+
+  <% if @domain.banned_at %>
+    <label class="required">Status:</label>
+    <span class="d">
+      Banned
+    </span>
+    <br>
+
+    <label class="required">Banned Reason:</label>
+    <span class="d">
+      <%= @domain.banned_reason %>
+    </span>
+    <br>
+
+    <label class="required">Banned At:</label>
+    <span class="d">
+      <%= @domain.banned_at %>
+    </span>
+    <br>
+
+    <label class="required">Banned by User:</label>
+    <span class="d">
+      <%= @domain.banned_by_user.username %>
+    </span>
+  <% end %>
+
+  <%= form_with model: @domain, url: path_of_form(@domain), method: :post, local: true do |f| %>
+    <div class="boxline">
+      <%= f.label :banned_reason, "#{caption_of_button(@domain)} Reason:", class: 'required' %>
+      <%= f.text_field :banned_reason  %>
+    </div>
+
+    <div class="boxline">
+      <%= f.submit caption_of_button(@domain), class: 'deletion' %>
+    </div>
+  <% end %>
+</div>

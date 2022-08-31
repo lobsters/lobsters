@@ -216,9 +216,6 @@ class Story < ApplicationRecord
     if self.domain.banned?
       ModNote.tattle_on_story_domain!(self, "banned")
       errors.add(:url, "is from banned domain #{self.domain.domain}: #{self.domain.banned_reason}")
-    elsif self.domain.is_tracker
-      ModNote.tattle_on_story_domain!(self, "tracking")
-      errors.add(:url, "is a link shortening or ad tracking domain")
     end
   end
 

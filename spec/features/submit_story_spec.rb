@@ -133,8 +133,8 @@ RSpec.feature "Submitting Stories", type: :feature do
     expect(page).to have_content "Previous discussions"
   end
 
-  scenario "submitting a tracking link" do
-    Domain.create!(domain: 'example.com', is_tracker: true)
+  scenario "submitting a banned domain" do
+    Domain.create!(domain: 'example.com', banned_at: DateTime.now)
 
     expect {
       visit "/stories/new"
@@ -143,7 +143,7 @@ RSpec.feature "Submitting Stories", type: :feature do
       select :tag1, from: 'Tags'
       click_button "Submit"
 
-      expect(page).to have_content "tracking"
+      expect(page).to have_content "banned"
     }.not_to(change { Story.count })
   end
 end

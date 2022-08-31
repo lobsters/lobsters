@@ -277,6 +277,10 @@ class _LobstersFunction {
   }
 
   tomSelect(item) {
+    if (!document.getElementById('story_tags_a')) {
+      return
+    }
+
     TomSelect.define('caret_position', caret_position);
     TomSelect.define('input_autogrow', input_autogrow);
     TomSelect.define('remove_button', remove_button);
@@ -490,9 +494,7 @@ onPageLoad(() => {
 
   Lobster.checkStoryTitle()
 
-  if (document.getElementById('story_tags_a')) {
-    Lobster.tomSelect();
-  }
+  Lobster.tomSelect();
 
   if (document.getElementById('story_url') && document.getElementById('story_preview') && !document.getElementById('story_preview').firstElementChild) {
     document.getElementById('story_url').focus()

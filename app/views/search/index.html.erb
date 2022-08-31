@@ -1,5 +1,5 @@
 <div class="box">
-  <%= form_with url: '/search', method: :get, local: true do |f| %>
+  <%= form_with url: '/search', method: :get do |f| %>
     <div class="boxline">
         <%= f.text_field "q", { :value => @search.q, :size => 40 }.
         merge(@search.q.present? ? {} : { :autofocus => "autofocus" }) %>

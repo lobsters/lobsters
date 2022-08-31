@@ -23,20 +23,20 @@
 
   <div class="boxline">
     <div style="float: left;">
-      <%= form_with url: message_path(@message.short_id), method: :delete, local: true do |f| %>
+      <%= form_with url: message_path(@message.short_id), method: :delete do |f| %>
         <%= f.submit "Delete Message" %>
       <% end %>
     </div>
 
     <div style="float: left; padding-left: 1em;">
-      <%= form_with url: message_keep_as_new_path(@message.short_id), method: :post, local: true do |f| %>
+      <%= form_with url: message_keep_as_new_path(@message.short_id), method: :post do |f| %>
         <%= f.submit "Keep As New" %>
       <% end %>
     </div>
 
     <% if @user.is_moderator? %>
       <div style="float: left; padding-left: 1em;">
-        <%= form_with url: message_mod_note_path(@message.short_id), method: :post, local: true do |f| %>
+        <%= form_with url: message_mod_note_path(@message.short_id), method: :post do |f| %>
           <%= f.submit "ModNote" %>
         <% end %>
       </div>

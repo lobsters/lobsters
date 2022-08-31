@@ -1,5 +1,5 @@
 <div class="box wide">
-  <%= form_with url: moderations_path, method: :get, local: true do |f| %>
+  <%= form_with url: moderations_path, method: :get do |f| %>
     <label class="normal" for="moderator">Moderator:</label>
     <%= f.select 'moderator', options_for_select(@moderators, @moderator) %>
     <% @what.each do |type, checked| %>

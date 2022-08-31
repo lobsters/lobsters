@@ -7,7 +7,7 @@
   <%= image_tag @kb_avatar, width: 100 %>
   </p>
 
-  <%= form_with url: keybase_proofs_url, scope: :keybase_proof, local: true do |f| %>
+  <%= form_with url: keybase_proofs_url, scope: :keybase_proof do |f| %>
     Is this you on Keybase? <b><i><%= @kb_username %></b></i>
     <%= f.hidden_field "kb_username", value: @kb_username %>
     <%= f.hidden_field "kb_signature", value: @kb_signature %>

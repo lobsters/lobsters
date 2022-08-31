@@ -7,7 +7,7 @@
 <% end %>
 
 <div class="box wide">
-  <%= form_with model: @edit_user, url: settings_path, method: :post, id: 'edit_user', local: true do |f| %>
+  <%= form_with model: @edit_user, url: settings_path, method: :post, id: 'edit_user' do |f| %>
     <%= errors_for f.object %>
 
     <div class="boxline">
@@ -299,7 +299,7 @@
   <br>
 
   <div class="deletion">
-      <%= form_with model: @edit_user, url: delete_account_path, method: :post, id: 'delete_user', local: true do |f| %>
+      <%= form_with model: @edit_user, url: delete_account_path, method: :post, id: 'delete_user' do |f| %>
       <h2>Delete Account</h2>
 
       <p>

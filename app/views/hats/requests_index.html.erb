@@ -7,14 +7,13 @@
         <hr>
       <% end %>
 
-      <%= form_with model: hr, url: approve_hat_request_url(id: hr), method: :post, local: true do |f| %>
+      <%= form_with model: hr, url: approve_hat_request_url(id: hr), method: :post do |f| %>
         <p>
         <div class="boxline">
           <%= f.label :user_id, "User:", :class => "required" %>
           <a href="/u/<%= hr.user.username %>"><%= hr.user.username %></a>
           <%= time_ago_in_words(hr.created_at) %>
         </div>
-        
 
         <div class="boxline">
           <%= f.label :hat, "Hat:", :class => "required" %>
@@ -39,7 +38,7 @@
         </div>
       <% end %>
 
-      <%= form_with model: hr, url: reject_hat_request_url(id: hr), method: :post, local: true do |f| %>
+      <%= form_with model: hr, url: reject_hat_request_url(id: hr), method: :post do |f| %>
         <div class="boxline">
           <%= f.label :link, "Reason:", :class => "required" %>
           <%= f.text_area :reason, :rows => 4 %>

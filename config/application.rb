@@ -63,6 +63,9 @@ module Lobsters
     # https://discuss.rubyonrails.org/t/cve-2022-32224-possible-rce-escalation-bug-with-serialized-columns-in-active-record/81017
     # activerecord-typedstore needs:
     config.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess]
+
+    # rails stop putting js on everything
+    config.action_view.form_with_generates_remote_forms = false
   end
 end
 

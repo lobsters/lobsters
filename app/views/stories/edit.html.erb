@@ -1,5 +1,5 @@
 <div class="box" id="story_box">
-  <%= form_with model: @story, url: story_path(@story.short_id), method: :put, id: 'edit_story', local: true do |f| %>
+  <%= form_with model: @story, url: story_path(@story.short_id), method: :put, id: 'edit_story' do |f| %>
     <%= render :partial => "stories/form", :locals => { :story => @story,
       :f => f } %>
 

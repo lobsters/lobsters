@@ -1,4 +1,4 @@
-<%= form_with model: @category, url: @category.persisted? ? update_category_path : categories_path, method: :post, local: true do |f| %>
+<%= form_with model: @category, url: @category.persisted? ? update_category_path : categories_path, method: :post do |f| %>
   <div class="boxline">
     <%= f.label :category, 'Name:', class: 'required' %>
     <%= f.text_field :category  %>

@@ -26,7 +26,7 @@
     </span>
   <% end %>
 
-  <%= form_with model: @domain, url: path_of_form(@domain), method: :post, local: true do |f| %>
+  <%= form_with model: @domain, method: :post do |f| %>
     <div class="boxline">
       <%= f.label :banned_reason, "#{caption_of_button(@domain)} Reason:", class: 'required' %>
       <%= f.text_field :banned_reason  %>

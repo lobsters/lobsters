@@ -7,7 +7,7 @@ describe HomeController do
 
   describe "#for_domain" do
     it 'returns stories for a domain' do
-      get :for_domain, params: { name: story.domain.domain }
+      get :for_domain, params: { id: story.domain.domain }
 
       expect(response).to be_successful
       expect(@controller.view_assigns['title']).to include(story.domain.domain)

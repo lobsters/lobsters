@@ -236,7 +236,7 @@ class HomeController < ApplicationController
   end
 
   def for_domain
-    @domain = Domain.find_by!(domain: params[:name])
+    @domain = Domain.find_by!(domain: params[:id])
 
     @stories, @show_more = get_from_cache(domain: @domain.domain) do
       paginate @domain.stories.base(@user).order('id desc')

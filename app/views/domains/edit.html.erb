@@ -26,10 +26,10 @@
     </span>
   <% end %>
 
-  <%= form_with model: @domain, method: :post do |f| %>
+  <%= form_with model: @domain do |f| %>
     <div class="boxline">
       <%= f.label :banned_reason, "#{caption_of_button(@domain)} Reason:", class: 'required' %>
-      <%= f.text_field :banned_reason  %>
+      <%= f.text_field :banned_reason, value: '' %>
     </div>
 
     <div class="boxline">

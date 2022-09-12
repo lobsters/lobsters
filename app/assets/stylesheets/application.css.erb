@@ -76,6 +76,10 @@ light = <<-LIGHT
 	--color-lobsters-hat-sysop-crown-fill: #ddc7c7;
 	--color-lobsters-hat-sysop-brim-stroke: #bbb2b2;
 
+  --color-negative-story-rating-1: #aaaaaa;
+  --color-negative-story-rating-3: #b6b6b6;
+  --color-negative-story-rating-5: #c2c2c2;
+
 	/* mobile */
 	--color-mobile-story-border: #e0e0e0;
 	--color-mobile-story-liner-bg: #fbfbfb;
@@ -153,6 +157,10 @@ dark = <<-DARK
 
 	--color-lobsters-hat-sysop-crown-fill: #3e2f2f;
 	--color-lobsters-hat-sysop-brim-stroke: #2c2222;
+
+  --color-negative-story-rating-1: #666666;
+  --color-negative-story-rating-3: #595959;
+  --color-negative-story-rating-5: #4c4c4c;
 
 	/* mobile */
 	--color-mobile-story-border: #1c1c1c;
@@ -694,16 +702,28 @@ li div.details {
 	padding-top: 0.1em;
 }
 
-.negative_1 *:not(div, .dropdown_parent, .dropdown_parent *) {
+.negative_1 *:not(div, span, .dropdown_parent, .dropdown_parent *),
+.negative_1 .score {
   opacity: 0.7;
   }
-
-.negative_3 *:not(div, .dropdown_parent, .dropdown_parent *) {
-  opacity: 0.6;
+.negative_1 div.byline {
+  color: var(--color-negative-story-rating-1);
 }
 
-.negative_5 *:not(div, .dropdown_parent, .dropdown_parent *) {
+.negative_3 *:not(div, span, .dropdown_parent, .dropdown_parent *),
+.negative_3 .score {
+  opacity: 0.6;
+}
+.negative_3 div.byline {
+  color: var(--color-negative-story-rating-3);
+}
+
+.negative_5 *:not(div, span, .dropdown_parent, .dropdown_parent *),
+.negative_5 .score {
   opacity: 0.5;
+}
+.negative_5 div.byline {
+  color: var(--color-negative-story-rating-5);
 }
 
 .comment.bad *:not(div, .dropdown_parent, .dropdown_parent *) {

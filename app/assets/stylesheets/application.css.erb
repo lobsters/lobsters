@@ -694,18 +694,20 @@ li div.details {
 	padding-top: 0.1em;
 }
 
-.negative_1 {
-	opacity: 0.7;
-}
-.negative_3 {
-	opacity: 0.6;
-}
-.negative_5 {
-	opacity: 0.5;
+.negative_1 *:not(div, .dropdown_parent, .dropdown_parent *) {
+  opacity: 0.7;
+  }
+
+.negative_3 *:not(div, .dropdown_parent, .dropdown_parent *) {
+  opacity: 0.6;
 }
 
-.comment.bad {
-	opacity: 0.7;
+.negative_5 *:not(div, .dropdown_parent, .dropdown_parent *) {
+  opacity: 0.5;
+}
+
+.comment.bad *:not(div, .dropdown_parent, .dropdown_parent *) {
+  opacity: 0.7;
 }
 
 .comment:target, li:target, p:target, div:target, span:target {

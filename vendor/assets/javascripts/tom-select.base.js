@@ -2849,22 +2849,27 @@
 
 
 	  refreshOptions(triggerDropdown = true) {
-	    var i, j, k, n, optgroup, optgroups, html, has_create_option, active_value, active_group;
+	    var i, j, k, n, optgroup, optgroups, html, has_create_option, active_group;
 	    var create;
 	    const groups = {};
 	    const groups_order = [];
 	    var self = this;
 	    var query = self.inputValue();
+      const same_query = query === self.lastQuery || (query == '' && self.lastQuery == null);
 	    var results = self.search(query);
-	    var active_option = null; //self.activeOption;
+	    var active_option = null;
 
 	    var show_dropdown = self.settings.shouldOpen || false;
 	    var dropdown_content = self.dropdown_content;
 
-	    if (self.activeOption) {
-	      active_value = self.activeOption.dataset.value;
-	      active_group = self.activeOption.closest('[data-group]');
-	    } // build markup
+      if( same_query ){
+        active_option = self.activeOption;
+        if( active_option ){
+          active_group = active_option.closest('[data-group]');
+        }
+      }
+
+	     // build markup
 
 
 	    n = results.items.length;
@@ -2912,18 +2917,15 @@
 	          });
 	          option_el.classList.add('ts-cloned');
 	          removeClasses(option_el, 'active');
-	        } // make sure we keep the activeOption in the same group
+	         // make sure we keep the activeOption in the same group
 
 
-	        if (!active_option && active_value == opt_value) {
-	          if (active_group) {
-	            if (active_group.dataset.group === optgroup) {
-	              active_option = option_el;
-	            }
-	          } else {
-	            active_option = option_el;
-	          }
-	        }
+            if (self.activeOption && self.activeOption.dataset.value == opt_value) {
+              if (active_group && active_group.dataset.group === optgroup.toString()) {
+                active_option = option_el;
+              }
+            }
+          }
 
 	        groups[optgroup].appendChild(option_el);
 	      }

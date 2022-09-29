@@ -67,16 +67,16 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
                 avatar_img(ms.user, 16) %></a>
             <% end %>
             <% if ms.user_is_author? %>
-              authored by
+              <span> authored by </span>
             <% else %>
-              via
+              <span> via </span>
             <% end %>
             <a href="/u/<%= ms.user.username %>" class="u-author h-card <%=
               ms.html_class_for_user %>"><%= ms.user.username %></a>
 
             <%= time_ago_in_words_label(ms.created_at) %>
             <% if ms.is_editable_by_user?(@user) %>
-              |
+              <span> | </span>
               <a href="<%= edit_story_path(ms.short_id) %>">edit</a>
             <% end %>
           </span>
@@ -100,18 +100,18 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
       <% if story.previewing %>
         <% if story.user_is_author? %>
-          authored by
+          <span> authored by </span>
         <% else %>
-          via
+          <span> via </span>
         <% end %>
         <a class="u-author h-card <%= story.html_class_for_user %>"><%=
           story.user.username %></a>
-        just now
+        <span> just now </span>
       <% else %>
         <% if story.user_is_author? %>
-          authored by
+          <span> authored by </span>
         <% else %>
-          via
+          <span> via </span>
         <% end %>
         <a href="/u/<%= story.user.username %>" class="u-author h-card <%=
           story.html_class_for_user %>"><%= story.user.username %></a>
@@ -119,44 +119,44 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <%= time_ago_in_words_label(story.created_at) %>
 
         <% if story.is_editable_by_user?(@user) %>
-          |
+          <span> | </span>
           <a href="<%= edit_story_path(story.short_id) %>" class="<%=
             story.has_suggestions? ? "story_has_suggestions" : "" %>">edit</a>
         <% end %>
         <% if story.can_have_suggestions_from_user?(@user) %>
-          | <%= link_to "suggest", story_suggest_path(story.short_id),
+          <span> | </span><%= link_to "suggest", story_suggest_path(story.short_id),
             :class => "suggester" %>
         <% end %>
         <% if !story.is_gone? && @user %>
           <% if @user && story.vote && story.vote[:vote] == -1 %>
-            | <a class="flagger">unflag (<%=
+            <span> | </span><a class="flagger">unflag (<%=
               Vote::STORY_REASONS[story.vote[:reason]].to_s.downcase %>)</a>
           <% elsif @user && @user.can_flag?(story) %>
-            |
+            <span> | </span>
             <span class="dropdown_parent">
               <a class="flagger">flag</a>
             </span>
           <% end %>
           <% if story.is_hidden_by_cur_user %>
-            | <%= link_to "unhide", story_unhide_path(story.short_id),
+            <span> | </span><%= link_to "unhide", story_unhide_path(story.short_id),
               :class => "hider" %>
           <% else %>
-            | <%= link_to "hide", story_hide_path(story.short_id),
+            <span> | </span><%= link_to "hide", story_hide_path(story.short_id),
               :class => "hider" %>
           <% end %>
           <% if defined?(single_story) && single_story && story.hider_count > 0 %>
             (hidden by <%= pluralize(story.hider_count, "user") %>)
           <% end %>
           <% if story.is_saved_by_cur_user %>
-            | <%= link_to "unsave", story_unsave_path(story.short_id),
+            <span> | </span><%= link_to "unsave", story_unsave_path(story.short_id),
               :class => "saver" %>
           <% else %>
-            | <%= link_to "save", story_save_path(story.short_id),
+            <span> | </span><%= link_to "save", story_save_path(story.short_id),
               :class => "saver" %>
           <% end %>
         <% end %>
         <% if story.url.present? %>
-          |
+          <span> | </span>
           <span class="dropdown_parent">
             <input id="archive_<%= story.short_id %>"  class="archive_button" type="checkbox">
             <label for="archive_<%= story.short_id %>">archive</label>
@@ -170,7 +170,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% end %>
         <% if !story.is_gone? || @user.try(:is_moderator?) %>
           <span class="comments_label">
-            |
+            <span> | </span>
             <a href="<%= story.comments_path %>">
             <% if story.comments_count == 0 %>
               no comments</a>
@@ -183,7 +183,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% if defined?(single_story) && single_story &&
         ((story.flags > 0 && @user && @user.is_moderator?) ||
         (story.flags >= 3 || story.score <= 0)) %>
-          | <%= story.vote_summary_for(@user).downcase %>
+          <span> | <%= story.vote_summary_for(@user).downcase %> </span>
         <% end %>
       <% end %>
     </div>

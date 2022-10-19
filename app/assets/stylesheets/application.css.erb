@@ -694,18 +694,35 @@ li div.details {
 	padding-top: 0.1em;
 }
 
-.negative_1 {
-	opacity: 0.7;
-}
-.negative_3 {
-	opacity: 0.6;
-}
-.negative_5 {
-	opacity: 0.5;
+/*
+Stories with negative scores are dimmed by decreasing their opacity.
+However, if the flag or archive dropdowns have an opacity set, it creates a "stacking context",
+which overides the Z index, so the drop down appears under textareas, making them unclickable.
+Thus, the selector for opacity must not target those divs or any of their direct parents.
+We must also becareful to apply to only children and not any of the parents.
+Otherwise it will double apply, resulting in invidual elements being darker.
+
+We'd like to write the following selector to express that directly, but can't until Firefox
+supports it:  https://caniuse.com/?search=%3Ahas
+.negative_1 *:not(.dropdown_parent, :has(*)) { ... }
+*/
+.negative_1 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
+.negative_1 .score {
+  opacity: 0.7;
+  }
+
+.negative_3 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
+.negative_3 .score {
+  opacity: 0.6;
 }
 
-.comment.bad {
-	opacity: 0.7;
+.negative_5 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
+.negative_5 .score {
+  opacity: 0.5;
+}
+
+.comment.bad *:not(div, .dropdown_parent, .dropdown_parent *) {
+  opacity: 0.7;
 }
 
 .comment:target, li:target, p:target, div:target, span:target {

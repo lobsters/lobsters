@@ -1040,8 +1040,8 @@ div.comment_text code {
 }
 
 .comments_subtree .dropdown_parent > #flag_dropdown {
-  position: absolute;
-  left: 0.25rem;
+	position: absolute;
+	left: 0.25rem;
 }
 
 #flag_dropdown, .archive-dropdown {
@@ -1135,8 +1135,8 @@ div#story_box input#story_merge_story_short_id {
 	display: none;
 }
 .slide-down {
-  display: block !important;
-  transition: height .5s ease !important;
+	display: block !important;
+	transition: height .5s ease !important;
 }
 div#story_box #story_tags_a {
 	width: 624px;
@@ -1452,104 +1452,104 @@ div.flash-success h2 {
 /* Using #story_holder for precedence over TomSelect's vendored CSS  */
 
 #story_holder .ts-control {
-  display: inline-block;
-  position: absolute;
-  width: 612px;
-  background-color: var(--color-box-bg);
-  border: 1px solid var(--color-box-border);
-  border-radius: 0px;
-  box-shadow: none;
-  box-sizing: border-box;
-  margin-bottom: 2px;
-  padding: 0px;
-  padding-top: 2px;
-  /* supposed to be inherited from body, but TS overwrites */
-  font-family: "helvetica neue", arial, sans-serif;
-  font-size: 10pt;
-  color: var(--color-fg);
-  line-height: 1.45rem;
+	display: inline-block;
+	position: absolute;
+	width: 612px;
+	background-color: var(--color-box-bg);
+	border: 1px solid var(--color-box-border);
+	border-radius: 0px;
+	box-shadow: none;
+	box-sizing: border-box;
+	margin-bottom: 2px;
+	padding: 0px;
+	padding-top: 2px;
+	/* supposed to be inherited from body, but TS overwrites */
+	font-family: "helvetica neue", arial, sans-serif;
+	font-size: 10pt;
+	color: var(--color-fg);
+	line-height: 1.45rem;
 }
 
 #story_holder .ts-control:focus-within {
-  border-color: var(--color-box-border-focus)
+	border-color: var(--color-box-border-focus)
 }
 
 #story_holder .ts-control .data-ts-item { /* item already selected by user*/
-  background-color: #e4e4e4;
-  background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
-  border: 1px solid #aaaaaa;
+	background-color: #e4e4e4;
+	background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+	border: 1px solid #aaaaaa;
 	border-radius: 3px;
-  color: #333;
-  line-height: 13px;
-  margin: 3px 0 3px 5px;
-  padding: 3px 0.5rem 3px 1rem !important;
-  position: relative;
-  cursor: default;
+	color: #333;
+	line-height: 13px;
+	margin: 3px 0 3px 5px;
+	padding: 3px 0.5rem 3px 1rem !important;
+	position: relative;
+	cursor: default;
 }
 
 #story_holder .ts-control .data-ts-item a {
-  display: block;
-  position: absolute;
-  height: 13px;
-  padding: 2px;
-  left: 0px;
-  margin-left: 0;
-  /*
-  For a decade, select2 had the `x` to remove a tag on the left. TomSelect puts it
-  on the right, so we hide that and insert an`x` on the left with `a::after` below.
-  */
-  visibility: hidden;
+	display: block;
+	position: absolute;
+	height: 13px;
+	padding: 2px;
+	left: 0px;
+	margin-left: 0;
+	/*
+	For a decade, select2 had the `x` to remove a tag on the left. TomSelect puts it
+	on the right, so we hide that and insert an`x` on the left with `a::after` below.
+	*/
+	visibility: hidden;
 }
 
 #story_holder .ts-control .data-ts-item a::after {
-  content: "\2715";
-  display: block;
-  position: absolute;
-  color: grey;
-  font-weight: bold;
-  outline: none;
-  padding-right: 3px;
-  top: 0px;
-  width: 12px;
-  cursor: pointer;
-  visibility: visible;
+	content: "\2715";
+	display: block;
+	position: absolute;
+	color: grey;
+	font-size: 10px;
+	outline: none;
+	padding-right: 3px;
+	top: 0px;
+	width: 12px;
+	cursor: pointer;
+	visibility: visible;
 }
 
 #story_holder .ts-dropdown {
-  position: relative;
-  width: 100%;
-  background: #fff;
-  background-color: var(--color-box-bg);
-  border-color: var(--color-box-border-focus);
-  border-radius: 0 0 4px 4px;
-  border-top: 1px solid #aaa;
-  box-shadow: 0 4px rgb(0 0 0 / 15%);
-  margin: 0px;
-  padding: 0px;
-  z-index: 999;
+	position: relative;
+	width: 100%;
+	background: #fff;
+	background-color: var(--color-box-bg);
+	border-color: var(--color-box-border-focus);
+	border-radius: 0 0 4px 4px;
+	border-top: 1px solid #aaa;
+	box-shadow: 0 4px rgb(0 0 0 / 15%);
+	margin: 0px;
+	padding: 0px;
+	z-index: 999;
 }
 
 #story_holder .ts-dropdown .ts-dropdown-content .active {
-  background: var(--color-bg-accent);
-  color: var(--color-box-bg);
+	background: var(--color-bg-accent);
+	color: var(--color-box-bg);
 }
 
 #story_holder .ts-dropdown-content {
-  max-height: 200px;
-  padding: 0;
-  position: relative;
-  overflow-x: hidden;
-  overflow-y: scroll;
+	max-height: 200px;
+	padding: 0;
+	position: relative;
+	overflow-x: hidden;
+	overflow-y: scroll;
 }
 
 #story_holder .ts-dropdown .option {
-  color: var(--color-fg);
-  font-family: "helvetica neue", arial, sans-serif;
-  font-size: 10px;
-  line-height: 80%;
-  margin: 0px;
-  padding: 7px 7px 8px;
-  cursor: pointer;
+	color: var(--color-fg);
+	font-family: "helvetica neue", arial, sans-serif;
+	font-size: 10px;
+	line-height: 80%;
+	margin: 0px;
+	padding: 7px 7px 8px;
+	cursor: pointer;
 }
 
 /* pushover */
@@ -1893,9 +1893,9 @@ div.flash-success h2 {
 		margin-left: 0;
 	}
 
-  #story_holder .ts-wrapper .multi {
-    margin-left: 0rem;
-  }
+	#story_holder .ts-wrapper .multi {
+		margin-left: 0rem;
+	}
 
 	footer {
 		text-align: center;

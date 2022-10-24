@@ -50,7 +50,7 @@
           (t.filtered_count == 1 ? "" : "s") << " filtering</em>"
       end
 
-      [ "#{t.tag} - #{t.description}", t.tag, { "data-html" => raw(html) } ]},
+      [ "#{t.tag} - #{t.description}", t.tag, { "data-title" => raw(html) } ]},
     f.object.tags_a), {}, { :multiple => true } %>
   </div>
 

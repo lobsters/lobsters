@@ -1,6 +1,9 @@
 /*
- *= require select2
- *= require_self
+*= require tom-select
+*= require TomSelect_remove_button
+
+after vendor css for easier overriding:
+*= require_self 
 */
 
 /* light and dark mode colorschemes */
@@ -399,7 +402,6 @@ button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"],
-div.select2-choices,
 a.button {
 	background-color: var(--color-button-bg);
 	border-bottom-color: var(--color-fg-shape);
@@ -1089,6 +1091,8 @@ div.comment_text code {
 	cursor: pointer;
 }
 
+
+
 .markdown_help {
 	background-color: var(--color-box-bg-shaded);
 	border: 1px solid var(--color-box-border);
@@ -1243,7 +1247,6 @@ td.warned div, td.unwarned div {
 	width: 1em;
 }
 
-
 /* /mod dashbaord */
 
 .mod {
@@ -1311,8 +1314,8 @@ table.data pre {
 	max-width: 800px;
 }
 
-
 /* boxes */
+
 .box label {
 	display: block;
 	float: left;
@@ -1446,51 +1449,107 @@ div.flash-success h2 {
 	margin: 0;
 }
 
-/* select2 deuglification */
+/* Using #story_holder for precedence over TomSelect's vendored CSS  */
 
-.select2-container-multi.select2-container-active .select2-choices {
-	border: 1px solid var(--color-box-border-focus);
-}
-.select2-container .select2-results .select2-highlighted {
-	background: var(--color-bg-accent);
-	color: var(--color-box-bg);
-}
-
-.select2-container-multi .select2-choices {
-	border-color: var(--color-box-border);
-	background-color: var(--color-box-bg);
-	background-image: none;
-	padding-top: 2px;
-}
-
-.select2-container .select2-drop {
-	background-color: var(--color-box-bg);
-	border-color: var(--color-box-border-focus);
-}
-
-.select2-container-multi.select2-container-active .select2-choices {
-	box-shadow	: none;
+#story_holder .ts-control {
+  display: inline-block;
+  position: absolute;
+  width: 612px;
+  background-color: var(--color-box-bg);
+  border: 1px solid var(--color-box-border);
+  border-radius: 0px;
+  box-shadow: none;
+  box-sizing: border-box;
+  margin-bottom: 2px;
+  padding: 0px;
+  padding-top: 2px;
+  /* supposed to be inherited from body, but TS overwrites */
+  font-family: "helvetica neue", arial, sans-serif;
+  font-size: 10pt;
+  color: var(--color-fg);
+  line-height: 1.45rem;
 }
 
-.select2-container-active .select2-choice,
-.select2-container-active .select2-choices {
-	box-shadow	: none;
+#story_holder .ts-control:focus-within {
+  border-color: var(--color-box-border-focus)
 }
 
-.select2-dropdown-open .select2-choice {
-	border-bottom-color: transparent;
-	box-shadow	: none;
+#story_holder .ts-control .data-ts-item { /* item already selected by user*/
+  background-color: #e4e4e4;
+  background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+  border: 1px solid #aaaaaa;
+	border-radius: 3px;
+  color: #333;
+  line-height: 13px;
+  margin: 3px 0 3px 5px;
+  padding: 3px 0.5rem 3px 1rem !important;
+  position: relative;
+  cursor: default;
 }
 
-.select2-container .select2-results li em {
-	background: none;
-	color: var(--color-fg-contrast-4-5);
-	font-style: italic;
-	padding-left: 0.5em;
+#story_holder .ts-control .data-ts-item a {
+  display: block;
+  position: absolute;
+  height: 13px;
+  padding: 2px;
+  left: 0px;
+  margin-left: 0;
+  /*
+  For a decade, select2 had the `x` to remove a tag on the left. TomSelect puts it
+  on the right, so we hide that and insert an`x` on the left with `a::after` below.
+  */
+  visibility: hidden;
 }
 
-.select2-container .select2-results .select2-highlighted em {
-	color: var(--color-box-bg);
+#story_holder .ts-control .data-ts-item a::after {
+  content: "\2715";
+  display: block;
+  position: absolute;
+  color: grey;
+  font-weight: bold;
+  outline: none;
+  padding-right: 3px;
+  top: 0px;
+  width: 12px;
+  cursor: pointer;
+  visibility: visible;
+}
+
+#story_holder .ts-dropdown {
+  position: relative;
+  width: 100%;
+  background: #fff;
+  background-color: var(--color-box-bg);
+  border-color: var(--color-box-border-focus);
+  border-radius: 0 0 4px 4px;
+  border-top: 1px solid #aaa;
+  box-shadow: 0 4px rgb(0 0 0 / 15%);
+  margin: 0px;
+  padding: 0px;
+  z-index: 999;
+}
+
+#story_holder .ts-dropdown .ts-dropdown-content .active {
+  background: var(--color-bg-accent);
+  color: var(--color-box-bg);
+}
+
+#story_holder .ts-dropdown-content {
+  max-height: 200px;
+  padding: 0;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+#story_holder .ts-dropdown .option {
+  color: var(--color-fg);
+  font-family: "helvetica neue", arial, sans-serif;
+  font-size: 10px;
+  line-height: 80%;
+  margin: 0px;
+  padding: 7px 7px 8px;
+  cursor: pointer;
 }
 
 /* pushover */
@@ -1778,7 +1837,6 @@ div.flash-success h2 {
 		display: none;
 	}
 
-
 	li div.details {
 		margin: 0 0 0 36px;
 	}
@@ -1834,6 +1892,10 @@ div.flash-success h2 {
 	div#user_about {
 		margin-left: 0;
 	}
+
+  #story_holder .ts-wrapper .multi {
+    margin-left: 0rem;
+  }
 
 	footer {
 		text-align: center;

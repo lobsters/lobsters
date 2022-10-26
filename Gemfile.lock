@@ -88,7 +88,7 @@ GEM
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
     chunky_png (1.4.0)
-    commonmarker (0.23.4)
+    commonmarker (0.23.6)
     concurrent-ruby (1.1.10)
     crack (0.4.5)
       rexml
@@ -160,10 +160,10 @@ GEM
       net-protocol
       timeout
     nio4r (2.5.8)
-    nokogiri (1.13.7)
+    nokogiri (1.13.9)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    nokogiri (1.13.7-x86_64-linux)
+    nokogiri (1.13.9-x86_64-linux)
       racc (~> 1.4)
     oauth (0.5.10)
     parallel (1.22.1)
@@ -319,7 +319,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.2)
   byebug
   capybara
-  commonmarker (>= 0.23.4)
+  commonmarker (>= 0.23.6)
   database_cleaner
   exception_notification
   factory_bot_rails
@@ -332,7 +332,7 @@ DEPENDENCIES
   mail
   memory_profiler
   mysql2
-  nokogiri (>= 1.13.6)
+  nokogiri (>= 1.13.9)
   oauth
   pdf-reader
   puma (>= 5.6.2)

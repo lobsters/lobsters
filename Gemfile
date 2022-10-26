@@ -30,9 +30,9 @@ gem "rqrcode"
 
 # parsing
 gem "pdf-reader"
-gem "nokogiri", ">= 1.13.6"
+gem "nokogiri", ">= 1.13.9"
 gem "htmlentities"
-gem "commonmarker", ">= 0.23.4"
+gem "commonmarker", ">= 0.23.6"
 
 # perf
 gem 'flamegraph'

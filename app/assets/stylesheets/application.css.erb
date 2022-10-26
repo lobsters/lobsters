@@ -1120,11 +1120,13 @@ div#story_preview {
 }
 
 div#story_box input#story_url {
-	width: 508px;
+	width: 512px;
 }
 div#story_box button#story_fetch_title {
+	height: 27px;
 	padding-top: 1px;
 	padding-bottom: 1px;
+	width: 84px;
 }
 div#story_box input#story_title,
 div#story_box input#story_moderation_reason,
@@ -1143,10 +1145,6 @@ div#story_box #story_tags_a {
 }
 div#story_box textarea {
 	width: 600px;
-}
-div#story_box .actions {
-	margin-left: 7em;
-	width: 610px;
 }
 
 div.comment_form_container {
@@ -1452,22 +1450,18 @@ div.flash-success h2 {
 /* Using #story_holder for precedence over TomSelect's vendored CSS  */
 
 #story_holder .ts-control {
-	display: inline-block;
-	position: absolute;
-	width: 612px;
 	background-color: var(--color-box-bg);
 	border: 1px solid var(--color-box-border);
 	border-radius: 0px;
 	box-shadow: none;
 	box-sizing: border-box;
 	margin-bottom: 2px;
-	padding: 0px;
-	padding-top: 2px;
+	padding: 2px 0 0px 5px;
 	/* supposed to be inherited from body, but TS overwrites */
 	font-family: "helvetica neue", arial, sans-serif;
-	font-size: 10pt;
+	font-size: 13.33px;
 	color: var(--color-fg);
-	line-height: 1.45rem;
+	line-height: 1.5rem;
 }
 
 #story_holder .ts-control:focus-within {
@@ -1481,7 +1475,7 @@ div.flash-success h2 {
 	border-radius: 3px;
 	color: #333;
 	line-height: 13px;
-	margin: 3px 0 3px 5px;
+	margin: 3px 5px 3px 0;
 	padding: 3px 0.5rem 3px 1rem !important;
 	position: relative;
 	cursor: default;
@@ -1545,7 +1539,6 @@ div.flash-success h2 {
 #story_holder .ts-dropdown .option {
 	color: var(--color-fg);
 	font-family: "helvetica neue", arial, sans-serif;
-	font-size: 10px;
 	line-height: 80%;
 	margin: 0px;
 	padding: 7px 7px 8px;
@@ -1624,6 +1617,17 @@ div.flash-success h2 {
 
 	.help {
 		margin-top: 2em;
+	}
+
+
+	div#story_box .actions {
+		margin-left: 7em;
+		width: 610px;
+	}
+	#story_holder .ts-control {
+		display: inline-block;
+		position: absolute;
+		width: 611px;
 	}
 }
 
@@ -1867,6 +1871,9 @@ div.flash-success h2 {
 		max-width: 90%;
 	}
 
+	div.markdown_help_label {
+		display: none;
+	}
 	div.markdown_help_label_mobile {
 		display: inline !important;
 		margin-right: 2em;
@@ -1878,7 +1885,6 @@ div.flash-success h2 {
 	div#story_box #story_tags_a,
 	div.actions {
 		margin: 0 !important;
-		width: 100% !important;
 	}
 
 	div#story_box #story_tags_a {

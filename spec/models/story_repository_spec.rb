@@ -23,8 +23,8 @@ describe StoryRepository do
       HiddenStory.hide_story_for_user(hidden_story.id, hidden_story.user_id)
       hidden_story_user = User.find_by(:id => hidden_story.user_id)
 
-      repo = StoryRepository.new(hidden_story_user)
-      expect(repo.active).to eq([normal_comment.story])
+      hidden_story_user_repo = StoryRepository.new(hidden_story_user)
+      expect(hidden_story_user_repo.active).to eq([normal_comment.story])
     end
   end
 

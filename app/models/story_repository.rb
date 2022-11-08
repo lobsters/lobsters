@@ -26,6 +26,7 @@ class StoryRepository
 
   def active
     Story.base(@user)
+      .where.not(id: Story.hidden_by(@user).pluck(:id))
       .filter_tags(@params[:exclude_tags] || [])
       .select('stories.*, (
         select max(comments.id)

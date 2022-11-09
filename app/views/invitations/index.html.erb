@@ -23,21 +23,18 @@
         <% end %></td>
       <td><%= raw ir.markeddown_memo %></td>
       <td><%= form_with url: send_invitation_for_request_path do |f| %>
-          <%= f.hidden_field "code", :value => ir.code %>
-        <%= f.submit "Send Invitation", :data => { :confirm => "Are " <<
-        "you sure you want to invite this person and remove this request?" } %>
+        <%= f.hidden_field "code", :value => ir.code %>
+        <%= f.submit "Send Invitation" %>
       <% end %></td>
       <td><%= form_with url: delete_invitation_request_path do |f| %>
-          <%= f.hidden_field "code", :value => ir.code %>
-        <%= f.submit "Delete", :data => { :confirm => "Are you sure " <<
-          "you want to delete this request?" } %>
+        <%= f.hidden_field "code", :value => ir.code %>
+        <%= f.submit "Delete" %>
       <% end %>
     </tr>
   <% end %>
   <% if @invitation_requests.length == 0 %>
     <tr>
-      <td colspan=<%= @user.is_moderator?? 5 : 4 %> align="center"><span
-        class="na">No invitation requests</span></td>
+      <td colspan=<%= @user.is_moderator?? 5 : 4 %> align="center"><span class="na">No invitation requests</span></td>
     </tr>
   <% end %>
   </table>

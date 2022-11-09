@@ -41,6 +41,16 @@ module ApplicationHelper
     link_to text, path, options
   end
 
+  def link_post button_label, link, options={}
+    options.reverse_merge class_name: nil, confirm: nil
+    render partial: 'helpers/link_post', locals: {
+      button_label: button_label,
+      link: link,
+      class_name: options[:class_name],
+      confirm: options[:confirm],
+    }
+  end
+
   def page_numbers_for_pagination(max, cur)
     if max <= MAX_PAGES
       return (1 .. max).to_a

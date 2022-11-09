@@ -7,16 +7,9 @@
 
 "use strict";
 
-const parentSelector = (target, selector) => {
-  let parent = target;
-  while (!parent.matches(selector)) {
-    parent = parent.parentElement;
-    if (parent === null) {
-      throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
-    }
-  }
-  return parent;
-};
+const csrfToken = () => {
+  return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
 
 function on(eventTypes, selector, callback) {
   eventTypes.split(/ /).forEach( (eventType) => {
@@ -30,6 +23,17 @@ function on(eventTypes, selector, callback) {
 
 const onPageLoad = (callback) => {
   document.addEventListener('DOMContentLoaded', callback);
+};
+
+const parentSelector = (target, selector) => {
+  let parent = target;
+  while (!parent.matches(selector)) {
+    parent = parent.parentElement;
+    if (parent === null) {
+      throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
+    }
+  }
+  return parent;
 };
 
 const replace = (oldElement, newHTMLString) => {
@@ -53,10 +57,9 @@ const slideDownJS = (element) => {
 };
 
 const fetchWithCSRF = (url, params) => {
-  let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   params = params || {};
   params['headers'] = params['headers'] || new Headers;
-  params['headers'].append('X-CSRF-Token', csrfToken);
+  params['headers'].append('X-CSRF-Token', csrfToken());
   return fetch(url, params);
 } 
 
@@ -464,6 +467,11 @@ const Lobster = new _LobstersFunction();
 onPageLoad(() => {
   Lobster.curUser = document.body.getAttribute('data-username'); // hack
   autosize(document.querySelectorAll('textarea'));
+
+  // replace csrf token in forms that may be fragment caches with page token
+  for (const i of document.querySelectorAll('form input[name="authenticity_token"]')) {
+    i.value = csrfToken();
+  }
 
   // Global Functions
 

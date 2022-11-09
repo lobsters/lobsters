@@ -1,9 +1,7 @@
 <% content_for :subnav do %>
   <a href="/u/<%= @user.username %>">Public Profile</a>
   <a href="/filters">Filtered Tags</a> |
-  <%= link_to "Logout", { :controller => "login", :action => "logout" },
-    :data => { :confirm => "Are you sure you want to logout?" },
-    :method => "post" %>
+  <%= link_post 'Logout', logout_path, confirm: 'Are you sure you want to logout?' %>
 <% end %>
 
 <div class="box wide">
@@ -77,9 +75,8 @@
         raw("<a href=\"https://gravatar.com/\">Gravatar</a>:"),
         :class => "required" %>
       <span>
-        Your avatar will be cached from the Gravatar icon for your e-mail
-        address above.
-        (<%= link_to "Expire cache", "/avatars/expire", :method => :post %>)
+        Your avatar will be cached from the Gravatar icon for your e-mail address above.
+        <%= link_post "Expire cache", "/avatars/expire" %>
       </span>
     </div>
 
@@ -89,13 +86,12 @@
           raw("<a href=\"https://pushover.net/\">Pushover</a>:"),
           :class => "required" %>
         <span>
-        <%= link_to((@edit_user.pushover_user_key.present??
-          "Manage Pushover Subscription" : "Subscribe With Pushover"),
-          "/settings/pushover_auth", :class => "pushover_button",
-          :method => :post) %>
-        <span class="hint indent">
-          For optional comment and message notifications below
-        </span>
+          <%= link_post((@edit_user.pushover_user_key.present? ?
+            "Manage Pushover Subscription" : "Subscribe With Pushover"),
+            "/settings/pushover_auth", class_name: "pushover_button") %>
+          <span class="hint indent">
+            For optional comment and message notifications below
+          </span>
         </span>
       </div>
     <% end %>
@@ -110,8 +106,7 @@
           Linked to
           <strong><a href="https://github.com/<%= h(@edit_user.github_username)
             %>"><%= h(@edit_user.github_username) %></a></strong>
-            (<%= link_to "Disconnect", "/settings/github_disconnect",
-              :method => :post %>)
+            <%= link_post "Disconnect", "/settings/github_disconnect" %>
         <% else %>
           <a href="/settings/github_auth">Connect</a>
         <% end %>
@@ -129,8 +124,7 @@
           Linked to
           <strong><a href="https://twitter.com/<%= h(@edit_user.twitter_username)
             %>">@<%= h(@edit_user.twitter_username) %></a></strong>
-            (<%= link_to "Disconnect", "/settings/twitter_disconnect",
-              :method => :post %>)
+            <%= link_post "Disconnect", "/settings/twitter_disconnect" %>
         <% else %>
           <a href="/settings/twitter_auth">Connect</a>
         <% end %>

@@ -475,6 +475,12 @@ onPageLoad(() => {
     Lobster.removeFlagModal()
   });
 
+  on('click', '[data-confirm]', (event) => {
+    if (!confirm(event.target.dataset.confirm)) {
+      event.preventDefault();
+    }
+  });
+
   // Account Settings Functions
 
   on('focusout', '#user_homepage', (event) => {

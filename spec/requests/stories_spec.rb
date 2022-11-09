@@ -71,7 +71,7 @@ describe 'stories', type: :request do
 
     it "increments the user's count of deleted stories" do
       expect {
-        put "/stories/#{story.short_id}/destroy", params: {
+        patch "/stories/#{story.short_id}/destroy", params: {
           id: story.short_id,
           story:  {
             title: story.title,
@@ -88,7 +88,7 @@ describe 'stories', type: :request do
 
     it "decrements the user's count of deleted stories" do
       expect {
-        put "/stories/#{deleted_story.short_id}/undelete", params: {
+        patch "/stories/#{deleted_story.short_id}/undelete", params: {
           id: deleted_story.short_id,
           story:  {
             title: deleted_story.title,

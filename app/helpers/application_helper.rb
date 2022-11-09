@@ -41,7 +41,7 @@ module ApplicationHelper
     link_to text, path, options
   end
 
-  def link_post button_label, link, options={}
+  def link_post button_label, link, options = {}
     options.reverse_merge class_name: nil, confirm: nil
     render partial: 'helpers/link_post', locals: {
       button_label: button_label,

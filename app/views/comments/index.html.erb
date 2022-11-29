@@ -1,4 +1,4 @@
-<% render partial: 'upvoted/subnav' if @upvoted %>
+<%= render partial: @above if @above %>
 
 <ol class="comments comments1">
   <% @comments.each do |comment| %>

@@ -286,7 +286,7 @@ class CommentsController < ApplicationController
     }
 
     @title = "Upvoted Comments"
-    @saved_subnav = true
+    @above = 'saved/subnav'
 
     @page = params[:page].to_i
     if @page == 0

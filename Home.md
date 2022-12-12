@@ -19,7 +19,7 @@ Other sites using the Lobsters [codebase](https://github.com/lobsters/lobsters):
 * <s>[Middlebit](https://middlebit.com/)</s> - Content curation for the "no-coast" region of the United States. Site online from late August 2019 through late September 2020.
 * <s>[ACRAB](https://acrab.isi.jhu.edu/)</s> - Applied Cryptography Publications
 * [V2ETH](https://v2eth.com) - Cryptocurrency (Ethereum)
-* [Hipppo](https://hipppo.fm) - Hip-hop
+* <s>[Hipppo](https://hipppo.fm)</s> - Hip-hop
 * [MLN.dev](https://mln.dev/) - Machine learning
 * [DataTau](https://datatau.net/) - Data science newsboard
 * [Khosenk](https://խօսենք.ցանցառներ.հայ/) - computing-focused (hy)

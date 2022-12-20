@@ -76,7 +76,7 @@
         :class => "required" %>
       <span>
         Your avatar will be cached from the Gravatar icon for your e-mail address above.
-        <%= link_post "Expire cache", "/avatars/expire" %>
+        (<%= link_post "Expire cache", "/avatars/expire" %>)
       </span>
     </div>
 
@@ -106,7 +106,7 @@
           Linked to
           <strong><a href="https://github.com/<%= h(@edit_user.github_username)
             %>"><%= h(@edit_user.github_username) %></a></strong>
-            <%= link_post "Disconnect", "/settings/github_disconnect" %>
+            (<%= link_post "Disconnect", "/settings/github_disconnect" %>
         <% else %>
           <a href="/settings/github_auth">Connect</a>
         <% end %>
@@ -124,7 +124,7 @@
           Linked to
           <strong><a href="https://twitter.com/<%= h(@edit_user.twitter_username)
             %>">@<%= h(@edit_user.twitter_username) %></a></strong>
-            <%= link_post "Disconnect", "/settings/twitter_disconnect" %>
+            (<%= link_post "Disconnect", "/settings/twitter_disconnect" %>)
         <% else %>
           <a href="/settings/twitter_auth">Connect</a>
         <% end %>

@@ -41,14 +41,18 @@ module ApplicationHelper
     link_to text, path, options
   end
 
-  def link_post button_label, link, options = {}
+  def link_post button_label, url, options = {}
     options.reverse_merge class_name: nil, confirm: nil
-    render partial: 'helpers/link_post', locals: {
-      button_label: button_label,
-      link: link,
-      class_name: options[:class_name],
-      confirm: options[:confirm],
-    }
+
+    link_to(
+      button_label,
+      "javascript:void(0)",
+      class: "link_post #{options[:class_name]}",
+      data: {
+        url: url,
+        confirm: options[:confirm],
+      },
+    )
   end
 
   def page_numbers_for_pagination(max, cur)

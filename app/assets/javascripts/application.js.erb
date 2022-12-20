@@ -489,6 +489,25 @@ onPageLoad(() => {
     }
   });
 
+  on('click', 'a.link_post', (event) => {
+    event.preventDefault();
+
+    const link = event.target;
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = link.dataset.url;
+
+    const csrf = document.createElement('input');
+    csrf.type = 'hidden';
+    csrf.name = 'authenticity_token';
+    csrf.value = csrfToken();
+    form.appendChild(csrf);
+
+    document.body.appendChild(form);
+    form.submit();
+  });
+
   // Account Settings Functions
 
   on('focusout', '#user_homepage', (event) => {

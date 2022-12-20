@@ -86,7 +86,7 @@ RSpec.feature "Commenting" do
         comment: "Cool story.",
       )
       visit "/settings"
-      click_on "Logout"
+      page.driver.post "/logout"
 
       stub_login_as reader
       visit "/s/#{story.short_id}"

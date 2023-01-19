@@ -727,4 +727,24 @@ onPageLoad(() => {
         response.text().then(text => replace(comment, text));
       });
   });
+
+  on('click', '.comment_unread', (event) => {
+    var nodes = document.getElementsByClassName('comment_unread')
+    var foundIndex = Array.from(nodes).findIndex(function(n){
+      if (n.id == event.target.id) {
+        return true;
+      }
+    })
+
+    var targetIndex = foundIndex + 1
+    if (targetIndex < nodes.length) {
+      // Option 1: "scroll" using html anchor
+      // var targetHash = "#" + nodes[targetIndex].id
+      // window.location.hash = targetHash
+
+      // Option 2: scroll w/javascript
+      var targetY = nodes[targetIndex].getBoundingClientRect().top + window.scrollY
+      window.scrollTo({ top: targetY, behavior: 'smooth' })
+    }
+  });
 });

@@ -73,7 +73,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         <% end %>
         <% is_unread ||= false %>
         <%= time_ago_in_words_label(comment.has_been_edited? ? comment.updated_at : comment.created_at) %>
-        <%= raw "<span class='comment_unread'>(unread)</span>" if is_unread %>
+        <%= raw "<span id='unread-comment-#{comment.id}' class='comment_unread'>(unread)</span>" if is_unread %>
       <% end %>
 
       <% if !comment.previewing %>

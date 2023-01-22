@@ -738,11 +738,6 @@ onPageLoad(() => {
 
     var targetIndex = foundIndex + 1
     if (targetIndex < nodes.length) {
-      // Option 1: "scroll" using html anchor
-      // var targetHash = "#" + nodes[targetIndex].id
-      // window.location.hash = targetHash
-
-      // Option 2: scroll w/javascript
       var targetY = nodes[targetIndex].getBoundingClientRect().top + window.scrollY
       window.scrollTo({ top: targetY, behavior: 'smooth' })
     }

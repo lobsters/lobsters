@@ -134,7 +134,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
         </span>
       <% end %>
     </div>
-    <div class="comment_text">
+    <div role="heading" aria-level="3" class="comment_text">
       <% if comment.is_gone? %>
         <p>
         <span class="na">

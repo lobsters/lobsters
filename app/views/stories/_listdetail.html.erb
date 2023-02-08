@@ -24,7 +24,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
     <div class="score"><%= story.show_score_to_user?(@user) ? story.score : '~' %></div>
   </div>
   <div class="details">
-    <span class="link h-cite u-repost-of">
+    <span role="heading" aria-level="1" class="link h-cite u-repost-of">
       <% if story.can_be_seen_by_user?(@user) %>
         <a class="u-url" href="<%= story.url_or_comments_path %>" rel="ugc <%= story.send_referrer? ? '' : 'noreferrer' %>"><%= story.title %></a>
       <% end %>
@@ -173,7 +173,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% if !story.is_gone? || @user.try(:is_moderator?) %>
           <span class="comments_label">
             <span> | </span>
-            <a href="<%= story.comments_path %>">
+            <a role="heading" aria-level="2" href="<%= story.comments_path %>">
             <% if story.comments_count == 0 %>
               no comments</a>
             <% else %>

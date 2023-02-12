@@ -736,10 +736,8 @@ onPageLoad(() => {
       }
     })
 
-    var targetIndex = foundIndex + 1
-    if (targetIndex < nodes.length) {
-      var targetY = nodes[targetIndex].getBoundingClientRect().top + window.scrollY
-      window.scrollTo({ top: targetY, behavior: 'smooth' })
-    }
+    var targetIndex = (foundIndex + 1) % nodes.length;
+    var targetY = nodes[targetIndex].getBoundingClientRect().top + window.scrollY
+    window.scrollTo({ top: targetY, behavior: 'smooth' })
   });
 });

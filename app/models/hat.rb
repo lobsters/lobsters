@@ -1,11 +1,13 @@
 class Hat < ApplicationRecord
   belongs_to :user
-  belongs_to :granted_by_user, :class_name => "User", :inverse_of => false
+  belongs_to :granted_by_user, class_name: "User", inverse_of: false
 
   after_create :log_moderation
 
   validates :user, :granted_by_user, :hat, presence: true
   validates :hat, :link, length: { maximum: 255 }
+
+  scope :active, -> { joins(:user).where(doffed_at: nil).merge(User.active) }
 
   def doff_by_user_with_reason(user, reason)
     m = Moderation.new

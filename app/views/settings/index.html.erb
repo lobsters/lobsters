@@ -68,81 +68,6 @@
 
     <br>
 
-    <h2>External Accounts</h2>
-
-    <div class="boxline">
-      <%= f.label :gravatar,
-        raw("<a href=\"https://gravatar.com/\">Gravatar</a>:"),
-        :class => "required" %>
-      <span>
-        Your avatar will be cached from the Gravatar icon for your e-mail address above.
-        <%= link_post "Expire cache", "/avatars/expire" %>
-      </span>
-    </div>
-
-    <% if Pushover.enabled? %>
-      <div class="boxline">
-        <%= f.label :pushover_user_key,
-          raw("<a href=\"https://pushover.net/\">Pushover</a>:"),
-          :class => "required" %>
-        <span>
-          <%= link_post((@edit_user.pushover_user_key.present? ?
-            "Manage Pushover Subscription" : "Subscribe With Pushover"),
-            "/settings/pushover_auth", class_name: "pushover_button") %>
-          <span class="hint indent">
-            For optional comment and message notifications below
-          </span>
-        </span>
-      </div>
-    <% end %>
-
-    <% if Github.enabled? %>
-      <div class="boxline">
-        <span>
-        <%= f.label :github_username,
-          raw("<a href=\"https://github.com/\">GitHub</a>:"),
-          :class => "required" %>
-        <% if @edit_user.github_username.present? %>
-          Linked to
-          <strong><a href="https://github.com/<%= h(@edit_user.github_username)
-            %>"><%= h(@edit_user.github_username) %></a></strong>
-            <%= link_post "Disconnect", "/settings/github_disconnect" %>
-        <% else %>
-          <a href="/settings/github_auth">Connect</a>
-        <% end %>
-        </span>
-      </div>
-    <% end %>
-
-    <% if Twitter.enabled? %>
-      <div class="boxline">
-        <%= f.label :twitter_username,
-          raw("<a href=\"https://twitter.com/\">Twitter</a>:"),
-          :class => "required" %>
-        <span>
-        <% if @edit_user.twitter_username.present? %>
-          Linked to
-          <strong><a href="https://twitter.com/<%= h(@edit_user.twitter_username)
-            %>">@<%= h(@edit_user.twitter_username) %></a></strong>
-            <%= link_post "Disconnect", "/settings/twitter_disconnect" %>
-        <% else %>
-          <a href="/settings/twitter_auth">Connect</a>
-        <% end %>
-        </span>
-      </div>
-    <% end %>
-
-    <% if Keybase.enabled? %>
-      <div class="boxline">
-        <%= f.label :kb_username, raw("<a href=\"https://keybase.io/\">Keybase</a>:"), :class => "required" %>
-        <span>
-          <%= render :partial => "keybase_proofs/proofs", locals: {user: @edit_user, for_self: true} %>
-        </span>
-      </div>
-    <% end %>
-
-    <br>
-
     <h2>Security Settings</h2>
 
     <div class="boxline">
@@ -275,7 +200,85 @@
     </div>
 
     <br>
-    <%= f.submit "Save All Settings" %>
+    <br>
+
+    <%= f.submit "Save Account Settings" %>
+  <% end %>
+
+  <br>
+  <br>
+
+  <h2>External Accounts</h2>
+
+  <div class="boxline">
+    <%= label_tag :gravatar,
+      raw("<a href=\"https://gravatar.com/\">Gravatar</a>:"),
+      :class => "required" %>
+    <span>
+      Your avatar will be cached from the Gravatar icon for your e-mail address above.
+      <%= link_post "Expire cache", "/avatars/expire" %>
+    </span>
+  </div>
+
+  <% if Pushover.enabled? %>
+    <div class="boxline">
+      <%= label_tag :pushover_user_key,
+        raw("<a href=\"https://pushover.net/\">Pushover</a>:"),
+        :class => "required" %>
+      <span>
+        <%= link_post((@edit_user.pushover_user_key.present? ?
+          "Manage Pushover Subscription" : "Subscribe With Pushover"),
+          "/settings/pushover_auth", class_name: "pushover_button") %>
+        <span class="hint indent">
+          For optional comment and message notifications below
+        </span>
+      </span>
+    </div>
+  <% end %>
+
+  <% if Github.enabled? %>
+    <div class="boxline">
+      <span>
+      <%= label_tag :github_username,
+        raw("<a href=\"https://github.com/\">GitHub</a>:"),
+        :class => "required" %>
+      <% if @edit_user.github_username.present? %>
+        Linked to
+        <strong><a href="https://github.com/<%= h(@edit_user.github_username)
+          %>"><%= h(@edit_user.github_username) %></a></strong>
+          <%= link_post "Disconnect", "/settings/github_disconnect" %>
+      <% else %>
+        <a href="/settings/github_auth">Connect</a>
+      <% end %>
+      </span>
+    </div>
+  <% end %>
+
+  <% if Twitter.enabled? %>
+    <div class="boxline">
+      <%= label_tag :twitter_username,
+        raw("<a href=\"https://twitter.com/\">Twitter</a>:"),
+        :class => "required" %>
+      <span>
+      <% if @edit_user.twitter_username.present? %>
+        Linked to
+        <strong><a href="https://twitter.com/<%= h(@edit_user.twitter_username)
+          %>">@<%= h(@edit_user.twitter_username) %></a></strong>
+          <%= link_post "Disconnect", "/settings/twitter_disconnect" %>
+      <% else %>
+        <a href="/settings/twitter_auth">Connect</a>
+      <% end %>
+      </span>
+    </div>
+  <% end %>
+
+  <% if Keybase.enabled? %>
+    <div class="boxline">
+      <%= label_tag :kb_username, raw("<a href=\"https://keybase.io/\">Keybase</a>:"), :class => "required" %>
+      <span>
+        <%= render :partial => "keybase_proofs/proofs", locals: {user: @edit_user, for_self: true} %>
+      </span>
+    </div>
   <% end %>
 
   <br>
@@ -294,6 +297,7 @@
 
   <div class="deletion">
     <%= form_with model: @edit_user, url: delete_account_path, method: :post, id: 'delete_user', namespace: 'delete_user' do |f| %>
+
       <h2>Delete Account</h2>
 
       <p>

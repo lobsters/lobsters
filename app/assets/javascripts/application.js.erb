@@ -637,6 +637,7 @@ onPageLoad(() => {
   });
 
   on('click', '.comment #flag_dropdown a', (event) => {
+    event.preventDefault();
     if (event.target.getAttribute('data') != '') {
       Lobster.voteComment(parentSelector(event.target, '.comment'), -1,  event.target.getAttribute('data'));
     }

@@ -731,7 +731,7 @@ onPageLoad(() => {
   on('click', '.comment_unread', (event) => {
     var nodes = document.getElementsByClassName('comment_unread')
     var foundIndex = Array.from(nodes).findIndex(function(n){
-      if (n.id == event.target.id) {
+      if (n === event.target) {
         return true;
       }
     })

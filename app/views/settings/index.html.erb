@@ -5,7 +5,7 @@
 <% end %>
 
 <div class="box wide">
-  <%= form_with model: @edit_user, url: settings_path, method: :post, id: 'edit_user' do |f| %>
+  <%= form_with model: @edit_user, url: settings_path, method: :post, id: 'edit_user', namespace: 'edit_user' do |f| %>
     <%= errors_for f.object %>
 
     <div class="boxline">
@@ -19,7 +19,7 @@
     <div class="boxline">
       <%= f.label :current_password, "Current Password:",
         :class => "required" %>
-      <%= f.password_field :current_password, :name => "current_password", :size => 30 %>
+      <%= f.password_field :current_password, :name => "current_password", :size => 30, :autocomplete => "off" %>
     </div>
 
     <div class="boxline">
@@ -296,7 +296,8 @@
   <br>
 
   <div class="deletion">
-    <%= form_with model: @edit_user, url: delete_account_path, method: :post, id: 'delete_user' do |f| %>
+    <%= form_with model: @edit_user, url: delete_account_path, method: :post, id: 'delete_user', namespace: 'delete_user' do |f| %>
+
       <h2>Delete Account</h2>
 
       <p>

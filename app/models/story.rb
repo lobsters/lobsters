@@ -999,6 +999,9 @@ class Story < ApplicationRecord
 
     @fetched_attributes[:title] = title
 
+    # strip off common GitHub site + repo owner
+    @fetched_attributes[:title].sub!(/GitHub - [a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}\//i, '')
+
     # attempt to get the canonical url if it can be parsed,
     # if it is not the domain root path, and if it
     # responds to GET with a 200-level code

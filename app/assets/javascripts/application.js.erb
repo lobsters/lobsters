@@ -728,4 +728,12 @@ onPageLoad(() => {
         response.text().then(text => replace(comment, text));
       });
   });
+
+  on('click', '.comment_unread', (event) => {
+    const nodes = document.getElementsByClassName('comment_unread')
+    const foundIndex = Array.from(nodes).findIndex(node => node === event.target)
+    const targetIndex = (foundIndex + 1) % nodes.length;
+    const targetY = nodes[targetIndex].getBoundingClientRect().top + window.scrollY
+    window.scrollTo({ top: targetY, behavior: 'smooth' })
+  });
 });

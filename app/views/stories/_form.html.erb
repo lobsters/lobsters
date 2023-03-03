@@ -6,7 +6,7 @@
     <% if f.object.url_is_editable_by_user?(@user) %>
       <%= f.label :url, "URL:", :class => "required" %>
       <%= f.text_field :url, :autocomplete => "off" %>
-      <%= button_tag "Fetch&nbsp;Title", :id => "story_fetch_title",
+      <%= button_tag raw("Fetch&nbsp;Title"), :id => "story_fetch_title",
         :type => "button" %>
     <% elsif !f.object.new_record? && !f.object.url.blank? %>
       <%= f.label :url, "URL:", :class => "required" %>

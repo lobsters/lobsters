@@ -25,7 +25,7 @@ Rack::Attack.throttle("login", limit: 4, period: 60) do |request|
 end
 
 Rack::Attack.throttle("log4j probe", limit: 1, period: 1.week.to_i) do |request|
-  request.ip if request.user_agent.include? '${'
+  request.ip if request.user_agent.try(:include?, '${')
 end
 
 # explain the throttle

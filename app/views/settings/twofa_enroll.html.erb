@@ -10,6 +10,13 @@
   </p>
 
   <%= raw @qr_svg %>
+  <p>
+    Or to add to a device manually enter the secret:
+    <details>
+      <summary>Reveal Secret</summary>
+      <%= raw @qr_secret %>
+    </details>
+  </p>
 
   <p>
   Once you have finished registering with your TOTP application, proceed to

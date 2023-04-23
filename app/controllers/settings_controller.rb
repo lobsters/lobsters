@@ -101,6 +101,7 @@ class SettingsController < ApplicationController
                        module_size: 5,
                        shape_rendering: "crispEdges")
 
+    @qr_secret = totp.secret
     @qr_svg = "<a href=\"#{totp_url}\">#{qr}</a>"
   end
 

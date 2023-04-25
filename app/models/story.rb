@@ -237,6 +237,28 @@ class Story < ApplicationRecord
       urls = urls2.uniq
     end
 
+    # www.youtube.com
+    # m.youtube.com
+    # youtube.com          redirects to www.youtube.com
+    # youtu.be             redirects to www.youtube.com
+    # www.m.youtube.com    doesn't work
+    # www.youtu.be         doesn't exist
+    # m.youtu.be           doesn't exist
+    if /^https?:\/\/((?:www\d*|m)\.)?(youtube\.com|youtu\.be)/i.match(url)
+      urls.each do |u|
+        id = /^https?:\/\/(?:(?:m|www)\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9\-_]+)/i
+          .match(u)[1]
+
+        urls2.push "https://www.youtube.com/watch?v=#{id}"
+        # In theory, youtube redirects https://youtube.com to https://www.youtube.com
+        # let's check it just in case
+        urls2.push "https://youtube.com/watch?v=#{id}"
+        urls2.push "https://youtu.be/#{id}"
+        urls2.push "https://m.youtube.com/watch?v=#{id}"
+      end
+      urls = urls2.uniq
+    end
+
     # https
     urls.each do |u|
       urls2.push u.gsub(/^http:\/\//i, "https://")

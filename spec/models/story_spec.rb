@@ -327,6 +327,28 @@ describe Story do
       expect(s1.similar_stories).to eq([s2])
       expect(s2.similar_stories).to eq([s1])
     end
+
+    it "finds similar www.youtube and youtu.be URLs" do
+      s1 = create(:story,
+                  url: 'https://www.youtube.com/watch?v=7Pq-S557XQU',
+                  created_at: (Story::RECENT_DAYS + 1).days.ago)
+
+      s2 = create(:story, url: 'https://youtu.be/7Pq-S557XQU')
+
+      expect(s1.similar_stories).to eq([s2])
+      expect(s2.similar_stories).to eq([s1])
+    end
+
+    it "finds similar www.youtube and m.youtube URLs" do
+      s1 = create(:story,
+                  url: 'https://www.youtube.com/watch?v=7Pq-S557XQU',
+                  created_at: (Story::RECENT_DAYS + 1).days.ago)
+
+      s2 = create(:story, url: 'https://m.youtube.com/watch?v=7Pq-S557XQU')
+
+      expect(s1.similar_stories).to eq([s2])
+      expect(s2.similar_stories).to eq([s1])
+    end
   end
 
   describe "#calculated_hotness" do

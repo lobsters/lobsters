@@ -1,16 +1,23 @@
-require 'rails_helper'
-
 RSpec.describe MastodonInstance, type: :model do
-  required_fields = [:name, :client_id, :client_secret]
+  it "is not valid without a name" do
+    instance = MastodonInstance.new(client_id: '123', client_secret: 'abc123')
+    expect(instance).to_not be_valid
+  end
 
-  required_fields.each do |field|
-    it "has a #{field} field" do
-      instance = MastodonInstance.new(
-        name: field == :name ? nil : 'mastodon.test',
-        client_id: field == :client_id ? nil : '123',
-        client_secret: field == :client_secret ? nil : 'abc123'
-      )
-      expect(instance).to_not be_valid
-    end
+  it "is not valid without a client_id" do
+    instance = MastodonInstance.new(name: 'mastodon.test', client_secret: 'abc123')
+    expect(instance).to_not be_valid
+  end
+
+  it "is not valid without a client_secret" do
+    instance = MastodonInstance.new(name: 'mastodon.test', client_id: '123')
+    expect(instance).to_not be_valid
+  end
+
+  it "is valid with all required fields" do
+    instance = MastodonInstance.new(
+      name: 'mastodon.test', client_id: '123', client_secret: 'abc123'
+    )
+    expect(instance).to be_valid
   end
 end

@@ -1,0 +1,2 @@
+class MastodonInstance < ApplicationRecord
+end

@@ -14,4 +14,3 @@ RSpec.describe MastodonInstance, type: :model do
     end
   end
 end
-

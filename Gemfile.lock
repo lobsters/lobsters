@@ -409,8 +409,11 @@ DEPENDENCIES
 =======
   transaction_retry
   uglifier (>= 1.3.0)
+<<<<<<< HEAD
   uri
 >>>>>>> 428174e9 (Add uri gem requirement)
+=======
+>>>>>>> 4c9a2e99 (Remove uri dependency)
   vcr
   webmock
 

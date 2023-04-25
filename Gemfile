@@ -40,6 +40,8 @@ gem "stackprof"
 
 gem "oauth" # for twitter-posting bot
 gem "mail" # for parsing incoming mail
+gem "uri" # for parsing URIs
+gem "ruumba" # tests views
 gem "sitemap_generator" # for better search engine indexing
 gem "svg-graph", require: "SVG/Graph/TimeSeries" # for charting, note workaround in lib/time_series.rb
 gem "rack-attack" # rate-limiting

@@ -73,6 +73,9 @@ class User < ApplicationRecord
     s.string :totp_secret
     s.string :github_oauth_token
     s.string :github_username
+    s.string :mastodon_instance
+    s.string :mastodon_oauth_token
+    s.string :mastodon_username
     s.string :twitter_oauth_token
     s.string :twitter_oauth_token_secret
     s.string :twitter_username

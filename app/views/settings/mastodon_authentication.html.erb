@@ -1,0 +1,21 @@
+<% content_for :subnav do %>
+  <a href="/settings">Back to Settings</a>
+<% end %>
+
+<div class="box wide">
+  <%= form_with url: "/settings/mastodon_auth", method: :get do |f| %>
+    <p>
+    Enter the name of your Mastodon instance without the scheme, 
+    i.e mastodon.social not https://mastodon.social
+    </p>
+
+    <div class="boxline">
+      <%= f.label :mastodon_instance_name, "Mastodon Instance:", :class => "required" %>
+      <%= f.text_field :mastodon_instance_name, :autofocus => true  %>
+    </div>
+
+    <p>
+    <%= f.submit "Continue" %>
+
+  <% end %>
+</div>

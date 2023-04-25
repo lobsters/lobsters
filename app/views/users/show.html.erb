@@ -126,6 +126,17 @@
     <br>
   <% end %>
 
+  <% if @showing_user.mastodon_username.present? && @showing_user.mastodon_instance.present? %>
+    <label class="required">Mastodon:</label>
+
+    <span class="d">
+      <a href="https://<%= h(@showing_user.mastodon_instance)%>/@<%= h(@showing_user.mastodon_username)%>"
+        rel="me ugc">@<%= h(@showing_user.mastodon_username)%>@<%= h(@showing_user.mastodon_instance)%>
+        </a>
+    </span>
+    <br>
+  <% end %>
+
   <% if @showing_user.twitter_username.present? %>
     <label class="required">Twitter:</label>
 

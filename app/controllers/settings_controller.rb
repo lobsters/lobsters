@@ -186,6 +186,39 @@ class SettingsController < ApplicationController
     redirect_to "/settings"
   end
 
+  def mastodon_auth
+    instance_name = params[:mastodon_instance_name].to_s
+    return redirect_to Mastodon.oauth_auth_url(instance_name)
+  end
+
+  def mastodon_callback
+    if !params[:code].present?
+     flash[:error] = "Invalid OAuth state"
+     return redirect_to "/settings"
+   end
+
+   tok, username = Mastodon.token_and_user_from_code(params[:instance], params[:code])
+   if tok.present? && username.present?
+     @user.mastodon_oauth_token = tok
+     @user.mastodon_username = username
+     @user.mastodon_instance = params[:instance]
+     @user.save!
+     flash[:success] = "Your account has been linked to Mastodon user #{username}."
+   else
+     return mastodon_disconnect
+   end
+
+   return redirect_to "/settings"
+ end
+
+ def mastodon_disconnect
+  @user.mastodon_oauth_token = nil
+  @user.mastodon_username = nil
+  @user.save!
+  flash[:success] = "Your Mastodon association has been removed."
+  return redirect_to "/settings"
+end
+
   def github_auth
     session[:github_state] = SecureRandom.hex
     redirect_to Github.oauth_auth_url(session[:github_state])

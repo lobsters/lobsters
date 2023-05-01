@@ -1,5 +1,9 @@
 module IntervalHelper
-  TIME_INTERVALS = { "d" => "Day", "w" => "Week", "m" => "Month", "y" => "Year" }.freeze
+  TIME_INTERVALS = { "h" => "Hour",
+                     "d" => "Day",
+                     "w" => "Week",
+                     "m" => "Month",
+                     "y" => "Year", }.freeze
 
   def time_interval(param)
     if (m = param.to_s.match(/\A(\d+)([#{TIME_INTERVALS.keys.join}])\z/))

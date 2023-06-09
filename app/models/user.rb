@@ -176,9 +176,11 @@ class User < ApplicationRecord
       attrs.push :karma
     end
 
-    attrs.push :homepage, :about
+    attrs.push :homepage
 
     h = super(:only => attrs)
+
+    h[:about] = self.linkified_about
 
     h[:avatar_url] = self.avatar_url
     h[:invited_by_user] = User.where(id: invited_by_user_id).pluck(:username).first

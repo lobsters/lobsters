@@ -1,28 +1,29 @@
-<link rel="prefetch" href="<%= path_to_javascript 'application' %>" as="script" />
+<link rel="prefetch" href="<%= path_to_javascript 'application' %>" as="script"/>
 
 <div class="box wide">
   <% if Rails.application.read_only? %>
     <p>
-    The site is currently in read-only mode for maintenance.
+      The site is currently in read-only mode for maintenance.
     </p>
   <% else %>
     <%= form_with url: login_path do |form| %>
-    <p>
-      <%= form.label :email, "E-mail or Username:" %>
-      <%= form.text_field :email, :size => 30, :autofocus => "autofocus" %>
-      <br />
+      <p>
+        <%= form.label :email, "E-mail or Username:" %>
+        <%= form.text_field :email, :size => 30, :autofocus => "autofocus" %>
+        <br/>
 
-      <%= form.label :password, "Password:" %>
-      <%= form.password_field :password, :size => 30 %>
-      <br />
+        <%= form.label :password, "Password:" %>
+        <%= form.password_field :password, :size => 30, :onkeyup => 'handleCapsLockText(event)' %>
+        <span id="caps-on" style="visibility:hidden">Caps Lock is ON.</span>
+        <br/>
       </p>
 
       <p>
-      <%= form.submit "Login" %>
+        <%= form.submit "Login" %>
       </p>
 
       <p>
-      Forgot your password or deleted your account?
+        Forgot your password or deleted your account?
         <%= link_to "Reset your password", forgot_password_path %>.
       </p>
 
@@ -34,10 +35,10 @@
         Not a user yet? <a href="/invitations/request">Request an invite</a>.
       <% else %>
         <p>
-        Not a user yet?
-        Read about <a href="/about#invitations">how invitations work</a> and see if you know
-        <a href="/u">a current user</a> of the site.
-        The <a href="/chat">chat room</a> does not require an invitation.
+          Not a user yet?
+          Read about <a href="/about#invitations">how invitations work</a> and see if you know
+          <a href="/u">a current user</a> of the site.
+          The <a href="/chat">chat room</a> does not require an invitation.
         </p>
       <% end %>
 
@@ -47,3 +48,13 @@
     <% end %>
   <% end %>
 </div>
+
+<script>
+    function handleCapsLockText(event) {
+        if (event.getModifierState('CapsLock')) {
+            document.getElementById('caps-on').style.visibility = 'visible';
+        } else {
+            document.getElementById('caps-on').style.visibility = 'hidden';
+        }
+    }
+</script>

@@ -50,6 +50,7 @@
 </div>
 
 <script>
+    // If CapsLock is enabled, caps-on element will be displayed, else it will be hidden.
     function handleCapsLockText(event) {
         if (event.getModifierState('CapsLock')) {
             document.getElementById('caps-on').style.visibility = 'visible';

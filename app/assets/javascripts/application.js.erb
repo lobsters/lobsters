@@ -704,7 +704,7 @@ onPageLoad(() => {
 
   on('click', 'a.comment_undeletor', (event) => {
     event.preventDefault();
-    if (confirm("Are uou sure you want to undelete this comment?")) {
+    if (confirm("Are you sure you want to undelete this comment?")) {
       const comment = parentSelector(event.target, '.comment');
       const commentId = comment.getAttribute('data-shortid');
       fetchWithCSRF('/comments/' + commentId + '/undelete', {method: 'post'})

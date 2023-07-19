@@ -17,7 +17,7 @@ class ModController < ApplicationController
 
   def flagged_stories
     @title = "Flagged Stories"
-    @stories = period(Story.includes(:tags).unmerged
+    @stories = period(Story.base(@user).unmerged
       .includes(:user, :tags)
       .where("flags > 1")
       .order("stories.id DESC"))

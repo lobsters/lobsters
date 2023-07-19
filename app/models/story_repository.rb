@@ -39,7 +39,7 @@ class StoryRepository
 
   def newest_by_user(user)
     if @user == user
-      stories = Story.includes(:tags).not_deleted.left_joins(:merged_stories)
+      stories = Story.base(@user).not_deleted.left_joins(:merged_stories)
       unmerged = stories.unmerged.where(user_id: user.id)
       merged_into_others = stories.where(merged_stories_stories: { user_id: user.id })
 
@@ -50,7 +50,7 @@ class StoryRepository
   end
 
   def newest_including_deleted_by_user(user)
-    Story.includes(:tags).unmerged.where(user_id: user.id).order(id: :desc)
+    Story.base(@user).unmerged.where(user_id: user.id).order(id: :desc)
   end
 
   def saved

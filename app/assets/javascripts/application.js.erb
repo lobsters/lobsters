@@ -8,7 +8,7 @@
 "use strict";
 
 const csrfToken = () => {
-  return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  return qS('meta[name="csrf-token"]').getAttribute('content');
 }
 
 function on(eventTypes, selector, callback) {
@@ -34,6 +34,22 @@ const parentSelector = (target, selector) => {
     }
   }
   return parent;
+};
+
+const qS = (context, selector) => {
+  if (selector === undefined) {
+    selector = context;
+    context = document;
+  }
+  return context.querySelector(selector);
+};
+
+const qSA = (context, selector) => {
+  if (selector === undefined) {
+    selector = context;
+    context = document;
+  }
+  return context.querySelectorAll(selector);
 };
 
 const replace = (oldElement, newHTMLString) => {
@@ -65,7 +81,7 @@ const fetchWithCSRF = (url, params) => {
 
 const removeExtraInputs = () => {
   // This deletion will resolve a bug that creates an extra hidden input when rendering the comment elements.
-  const extraInputs = document.querySelectorAll('.comment_folder_button + .comment_folder_button');
+  const extraInputs = qSA('.comment_folder_button + .comment_folder_button');
   for (const i of extraInputs) {
     i.remove();
   }
@@ -103,7 +119,7 @@ class _LobstersFunction {
       return
     }
 
-    if (document.querySelector("#flag_dropdown") || document.querySelector('#modal_backdrop')) {
+    if (qS('#flag_dropdown') || qS('#modal_backdrop')) {
       Lobster.removeFlagModal()
     }
 
@@ -136,13 +152,13 @@ class _LobstersFunction {
       body: formData,
     }).then (response => {
       response.text().then(text => {
-        document.querySelector('.form_errors_header').innerHTML = text;
+        qS('.form_errors_header').innerHTML = text;
       });
     });
   }
 
   checkStoryTitle() {
-    const titleLocation = document.getElementById('story_title');
+    const titleLocation = qS('#story_title');
     if (!titleLocation) return;
 
     const title = titleLocation.value;
@@ -151,20 +167,20 @@ class _LobstersFunction {
     // Check for common prefixes like "ask lobsters:", remove it, and add the appropriate tag.
     const m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i);
     if (m) { 
-      const titleEl = document.getElementById('story_title');
+      const titleEl = qS('#story_title');
       Lobster.tom.addItem(m[1].toLowerCase());
       titleEl.value = m[2];
     }
     // common separators or (parens) that don't enclose a 4-digit year
     if (title.match(/: | - | – | — | \| | · | • | by /) ||
        (title.match(/\([^\)]*\)/g) || []).some(function (p) { return !p.match(/\(\d{4}\)/) })) {
-          slideDownJS(document.querySelector('.title-reminder'));
+          slideDownJS(qS('.title-reminder'));
     }
   }
 
   fetchURLTitle(button) {
-    const targetUrl = document.getElementById('story_url').value;
-    const title_field = document.getElementById('story_title');
+    const targetUrl = qS('#story_url').value;
+    const title_field = qS('#story_title');
     const formData = new FormData();
     const old_text = button.textContent;
 
@@ -206,8 +222,8 @@ class _LobstersFunction {
   }
 
   removeFlagModal() {
-    document.getElementById("flag_dropdown").remove();
-    document.getElementById("modal_backdrop").remove();
+    qs('#flag_dropdown').remove();
+    qS('#modal_backdrop').remove();
   }
 
   postComment(form) {
@@ -237,7 +253,7 @@ class _LobstersFunction {
       .then(response => {
         response.text().then(text => {
           replace(form.parentElement, text);
-          autosize(document.querySelectorAll('textarea'));
+          autosize(qSA('textarea'));
         });
       });
   }
@@ -247,7 +263,7 @@ class _LobstersFunction {
       return Lobster.bounceToLogin();
 
     const formData = new FormData(formElement);
-    const previewElement = document.getElementById('inside');
+    const previewElement = qS('#inside');
     fetchWithCSRF('/stories/preview', {
       method: 'post',
       headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
@@ -280,7 +296,7 @@ class _LobstersFunction {
   }
 
   tomSelect(item) {
-    if (!document.getElementById('story_tags_a')) {
+    if (!qS('#story_tags_a')) {
       return
     }
 
@@ -296,8 +312,8 @@ class _LobstersFunction {
       selectOnTab: true,
       sortField: {field: "data-value"},
       onInitialize: function() {
-        const parent = document.querySelector(".ts-control");
-        parent.appendChild(document.querySelector(".ts-dropdown"));
+        const parent = qS('.ts-control');
+        parent.appendChild(qS('.ts-dropdown'));
       },
       render: {
         option: function(data) {
@@ -325,7 +341,7 @@ class _LobstersFunction {
       return Lobster.bounceToLogin();
 
     const li = parentSelector(voterEl, '.story');
-    const scoreDiv = li.querySelector("div.score");
+    const scoreDiv = qS(li, 'div.score');
     const formData = new FormData();
     formData.append('reason', reason || '');
     let showScore = true;
@@ -363,8 +379,8 @@ class _LobstersFunction {
       }
       li.classList.remove("upvoted");
       li.classList.add("flagged");
-      if (li.parentElement.querySelector('.comment_folder_button')) {
-        li.parentElement.querySelector('.comment_folder_button').setAttribute("checked", true);
+      if (qS(li.parentElement, '.comment_folder_button')) {
+        qS(li.parentElement, '.comment_folder_button').setAttribute('checked', true);
       };
       showScore = false;
       score--;
@@ -376,14 +392,14 @@ class _LobstersFunction {
       scoreDiv.innerHTML = '~';
     }
     if (action == "upvote" || action == "unvote") {
-      if (li.querySelector(".reason")) {
-        li.querySelector(".reason").innerHTML = ""
+      if (qS(li, '.reason')) {
+        qS(li, '.reason').innerHTML = '';
       };
 
       if (action == "unvote" && point < 0)
-        li.querySelector(".flagger").textContent = "flag";
+        qS(li, '.flagger').textContent = 'flag';
       } else if (action == "flag") {
-        li.querySelector(".flagger").textContent = "unflag";
+        qS(li, '.flagger').textContent = 'unflag';
     }
 
     fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + action, {
@@ -396,7 +412,7 @@ class _LobstersFunction {
       return Lobster.bounceToLogin();
 
     const li = parentSelector(voterEl, ".comment");
-    const scoreDiv = li.querySelector("div.score");
+    const scoreDiv = qS(li, 'div.score');
     const formData = new FormData();
     formData.append('reason', reason || '');
     let showScore = true;
@@ -446,14 +462,14 @@ class _LobstersFunction {
     }
 
     if (action == "upvote" || action == "unvote") {
-      li.querySelector(".reason").innerHTML = ""
+      qS(li, '.reason').innerHTML = '';
     }
 
     if (action == "unvote" && point < 0) {
-      li.querySelector(".flagger").textContent = "flag";
+      qS(li, '.flagger').textContent = 'flag';
     } else if (action == "flag") {
-      li.querySelector(".flagger").textContent = "unflag";
-      li.querySelector(".reason").innerHTML = "| " + Lobster.commentFlagReasons[reason].toLowerCase();
+      qS(li, '.flagger').textContent = 'unflag';
+      qS(li, '.reason').innerHTML = "| " + Lobster.commentFlagReasons[reason].toLowerCase();
     }
 
     fetchWithCSRF("/comments/" + li.getAttribute("data-shortid") + "/" + action, {
@@ -466,17 +482,17 @@ const Lobster = new _LobstersFunction();
 
 onPageLoad(() => {
   Lobster.curUser = document.body.getAttribute('data-username'); // hack
-  autosize(document.querySelectorAll('textarea'));
+  autosize(qSA('textarea'));
 
   // replace csrf token in forms that may be fragment caches with page token
-  for (const i of document.querySelectorAll('form input[name="authenticity_token"]')) {
+  for (const i of qSA('form input[name="authenticity_token"]')) {
     i.value = csrfToken();
   }
 
   // Global Functions
 
   on('click', '.markdown_help_label', (event) => {
-    parentSelector(event.target, '.markdown_help_toggler').querySelector('.markdown_help').classList.toggle('display-block');
+    qS(parentSelector(event.target, '.markdown_help_toggler'), '.markdown_help').classList.toggle('display-block');
   });
 
   on('click', '#modal_backdrop', () => {
@@ -501,7 +517,7 @@ onPageLoad(() => {
 
   on('change', '#message_hat_id', (event) => {
     let selectedOption = event.target.selectedOptions[0];
-    document.getElementById('message_mod_note').checked = (selectedOption.getAttribute('data-modnote') === 'true');
+    qS('#message_mod_note').checked = (selectedOption.getAttribute('data-modnote') === 'true');
   });
 
   // Story Related Functions
@@ -510,8 +526,8 @@ onPageLoad(() => {
 
   Lobster.tomSelect();
 
-  if (document.getElementById('story_url') && document.getElementById('story_preview') && !document.getElementById('story_preview').firstElementChild) {
-    document.getElementById('story_url').focus()
+  if (qS('#story_url') && qS('#story_preview') && !qS('#story_preview').firstElementChild) {
+    qS('#story_url').focus()
   }
 
   on('change', '#story_title', Lobster.checkStoryTitle);
@@ -561,7 +577,7 @@ onPageLoad(() => {
       "[\/\.](soundcloud\.com)\/": "audio",
     };
 
-    const storyUrlEl = document.getElementById('story_url');
+    const storyUrlEl = qS('#story_url');
     for (const [match, tag] of Object.entries(url_tags)) {
       if (storyUrlEl.value.match(new RegExp(match, "i"))) {
         Lobster.tom.addItem(tag.toLowerCase());
@@ -570,8 +586,8 @@ onPageLoad(() => {
 
     // check for dupe if there's a URL, but not when editing existing
     if (storyUrlEl.value !== "" &&
-      (!document.querySelector('input[name="_method"]') ||
-      document.querySelector('input[name="_method"]').getAttribute('value') === 'put')) {
+      (!qS('input[name="_method"]') ||
+      qS('input[name="_method"]').getAttribute('value') === 'put')) {
         Lobster.checkStoryDuplicate(parentSelector(storyUrlEl, 'form'));
     }
   });
@@ -597,7 +613,7 @@ onPageLoad(() => {
     const commentId = comment.getAttribute('id');
 
     // Check to make sure we don't already have a reply box.
-    if (document.getElementById('reply_form_' + commentId)) {
+    if (qS('#reply_form_' + commentId)) {
       return false;
     }
 
@@ -609,7 +625,7 @@ onPageLoad(() => {
     }
 
     let div = document.createElement('div');
-    if (document.querySelector('.comments_subtree')) {
+    if (qS('.comments_subtree')) {
       parentSelector(comment, '.comments_subtree').lastElementChild.prepend(div);
     } else {
       comment.parentElement.lastElementChild.prepend(div);
@@ -620,7 +636,7 @@ onPageLoad(() => {
         response.text().then(text => {
           div.innerHTML = text;
           div.setAttribute('id', 'reply_form_' + commentId );
-          var ta = div.querySelector("textarea");
+          var ta = (qS, 'textarea');
           ta.textContent = sel;
           // This will place the cursor at the end of the quoted string and focus on your reply.
           ta.setSelectionRange(sel.length, sel.length);
@@ -684,10 +700,10 @@ onPageLoad(() => {
       .then(response => {
         response.text().then(text => {
           replace(comment, text);
-          autosize(document.querySelectorAll('textarea'));
+          autosize(qSA('textarea'));
         });
       });
-    autosize(document.querySelectorAll('textarea'));
+    autosize(qSA('textarea'));
   });
 
   on("click", "a.comment_deletor", (event) => {
@@ -730,7 +746,7 @@ onPageLoad(() => {
   });
 
   on('click', '.comment_unread', (event) => {
-    const nodes = document.getElementsByClassName('comment_unread')
+    const nodes = qSA('.comment_unread')
     const foundIndex = Array.from(nodes).findIndex(node => node === event.target)
     const targetIndex = (foundIndex + 1) % nodes.length;
     const targetY = nodes[targetIndex].getBoundingClientRect().top + window.scrollY
@@ -741,13 +757,13 @@ onPageLoad(() => {
 
   on('click', '.story_text_expander', (event) => {
     event.preventDefault();
-    document.getElementById("collapsed_story_text").style.display = 'block';
+    qS('#collapsed_story_text').style.display = 'block';
   });
 
   // Private messages
 
   // inject js-only UI
-  const select_all = document.querySelectorAll('.with_select_all tr:first-child th:first-child');
+  const select_all = qSA('.with_select_all tr:first-child th:first-child');
   for (const th of select_all) {
     const checkbox = document.createElement('input');
     checkbox.setAttribute('type', 'checkbox');
@@ -757,7 +773,7 @@ onPageLoad(() => {
 
   on('click', '.select_all', (event) => {
     const table = parentSelector(event.target, 'table');
-    const checkboxes = table.querySelectorAll('input[type=checkbox]');
+    const checkboxes = qSA(table, 'input[type=checkbox]');
     for (const checkbox of checkboxes) {
       checkbox.checked = event.target.checked;
     }

@@ -743,4 +743,23 @@ onPageLoad(() => {
     event.preventDefault();
     document.getElementById("collapsed_story_text").style.display = 'block';
   });
+
+  // Private messages
+
+  // inject js-only UI
+  const select_all = document.querySelectorAll('.with_select_all tr:first-child th:first-child');
+  for (const th of select_all) {
+    const checkbox = document.createElement('input');
+    checkbox.setAttribute('type', 'checkbox');
+    checkbox.classList.add('select_all');
+    th.append(checkbox);
+  }
+
+  on('click', '.select_all', (event) => {
+    const table = parentSelector(event.target, 'table');
+    const checkboxes = table.querySelectorAll('input[type=checkbox]');
+    for (const checkbox of checkboxes) {
+      checkbox.checked = event.target.checked;
+    }
+  });
 });

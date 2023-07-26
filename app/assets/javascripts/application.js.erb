@@ -105,8 +105,7 @@ class _LobstersFunction {
   }
 
   modalFlaggingDropDown(flaggedItemType, voterEl, reasons) {
-    if (!Lobster.curUser)
-      return Lobster.bounceToLogin();
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
 
     const li = parentSelector(voterEl, '.story, .comment');
     if (li.classList.contains('flagged')) {
@@ -259,8 +258,7 @@ class _LobstersFunction {
   }
 
   previewStory(formElement) {
-    if (!Lobster.curUser)
-      return Lobster.bounceToLogin();
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
 
     const formData = new FormData(formElement);
     const previewElement = qS('#inside');
@@ -277,8 +275,7 @@ class _LobstersFunction {
   }
 
   saveStory(saverEl) {
-    if (!Lobster.curUser)
-      return Lobster.bounceToLogin();
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
 
     const li = parentSelector(saverEl, ".story, .comment");
     let act;
@@ -337,8 +334,7 @@ class _LobstersFunction {
   }
 
   voteStory(voterEl, point, reason) {
-    if (!Lobster.curUser)
-      return Lobster.bounceToLogin();
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
 
     const li = parentSelector(voterEl, '.story');
     const scoreDiv = qS(li, 'div.score');
@@ -408,8 +404,7 @@ class _LobstersFunction {
   }
 
   voteComment(voterEl, point, reason) {
-    if (!Lobster.curUser)
-      return Lobster.bounceToLogin();
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
 
     const li = parentSelector(voterEl, ".comment");
     const scoreDiv = qS(li, 'div.score');
@@ -605,9 +600,7 @@ onPageLoad(() => {
   });
 
   on("click", "a.comment_replier", (event) => {
-    if (!Lobster.curUser) {
-      Lobster.bounceToLogin();
-    }
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
 
     const comment = parentSelector(event.target, '.comment');
     const commentId = comment.getAttribute('id');

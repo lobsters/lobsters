@@ -64,7 +64,7 @@ const fetchWithCSRF = (url, params) => {
 } 
 
 const removeExtraInputs = () => {
-  // This deletion will resovle a bug that creates an extra hidden input when rendering the comment elements.
+  // This deletion will resolve a bug that creates an extra hidden input when rendering the comment elements.
   const extraInputs = document.querySelectorAll('.comment_folder_button + .comment_folder_button');
   for (const i of extraInputs) {
     i.remove();
@@ -735,5 +735,12 @@ onPageLoad(() => {
     const targetIndex = (foundIndex + 1) % nodes.length;
     const targetY = nodes[targetIndex].getBoundingClientRect().top + window.scrollY
     window.scrollTo({ top: targetY, behavior: 'smooth' })
+  });
+
+  // Story view
+
+  on('click', '.story_text_expander', (event) => {
+    event.preventDefault();
+    document.getElementById("collapsed_story_text").style.display = 'block';
   });
 });

@@ -17,8 +17,8 @@
 
   <% if @story.is_unavailable %>
     <% StoryText.cached?(@story) do |text| %>
-      <a id="story_text_expander">Source URL considered unavailable as of
-      <%= time_ago_in_words_label(@story.unavailable_at) %>, cached text available; also see archive links above</a>
+      <a class="story_text_expander">Source URL considered unavailable as of
+      <%= time_ago_in_words_label(@story.unavailable_at) %>, click for cached text - also see archive links above</a>
       <div id="collapsed_story_text">
         <p>
         <em>All story content copyright of its respective owner.</em>
@@ -31,13 +31,6 @@
         </div>
       </div>
 
-      <script>
-        document.getElementById("story_text_expander").addEventListener("click",
-          function() {
-            document.getElementById("collapsed_story_text").style.display = "block";
-            return false;
-          });
-      </script>
     <% end %>
   <% end %>
 </div>

@@ -80,7 +80,7 @@ const fetchWithCSRF = (url, params) => {
 }
 
 const removeExtraInputs = () => {
-  // This deletion will resolve a bug that creates an extra hidden input when rendering the comment elements.
+  // This deletion will resolve a bug that creates an extra hidden input when rendering the comment elements
   const extraInputs = qSA('.comment_folder_button + .comment_folder_button');
   for (const i of extraInputs) {
     i.remove();
@@ -164,7 +164,7 @@ class _LobstersFunction {
     const title = titleLocation.value;
     if (!title) return;
 
-    // Check for common prefixes like "ask lobsters:", remove it, and add the appropriate tag.
+    // Check for common prefixes like "ask lobsters:", remove it, and add the appropriate tag
     const m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i);
     if (m) {
       const titleEl = qS('#story_title');
@@ -489,7 +489,7 @@ onPageLoad(() => {
     i.value = csrfToken();
   }
 
-  // Global Functions
+  // Global
 
   on('click', '.markdown_help_label', (event) => {
     qS(parentSelector(event.target, '.markdown_help_toggler'), '.markdown_help').classList.toggle('display-block');
@@ -505,7 +505,7 @@ onPageLoad(() => {
     }
   });
 
-  // Account Settings Functions
+  // Account Settings
 
   on('focusout', '#user_homepage', (event) => {
     const homePage = event.target
@@ -513,14 +513,14 @@ onPageLoad(() => {
       homePage.value = 'https://' + homePage.value
   });
 
-  // Inbox Related Funtions
+  // Inbox
 
   on('change', '#message_hat_id', (event) => {
     let selectedOption = event.target.selectedOptions[0];
     qS('#message_mod_note').checked = (selectedOption.getAttribute('data-modnote') === 'true');
   });
 
-  // Story Related Functions
+  // Story
 
   Lobster.checkStoryTitle()
 
@@ -592,7 +592,7 @@ onPageLoad(() => {
     }
   });
 
-  // Comment Related Functions
+  // Comment
 
   on('click', 'a.comment-disowner', (event) => {
     if (confirm("Are you sure you want to disown this comment?")) {
@@ -612,12 +612,12 @@ onPageLoad(() => {
     const comment = parentSelector(event.target, '.comment');
     const commentId = comment.getAttribute('id');
 
-    // Check to make sure we don't already have a reply box.
+    // Check to make sure we don't already have a reply box
     if (qS('#reply_form_' + commentId)) {
       return false;
     }
 
-    // Inserts "> " on quoted text.
+    // Inserts "> " on quoted text
     let sel = document.getSelection().toString();
     if (sel != "") {
       sel = sel.split("\n").map(s => "> " + s + '\n\n').join('');
@@ -638,7 +638,7 @@ onPageLoad(() => {
           div.setAttribute('id', 'reply_form_' + commentId );
           var ta = (qS, 'textarea');
           ta.textContent = sel;
-          // This will place the cursor at the end of the quoted string and focus on your reply.
+          // This will place the cursor at the end of the quoted string and focus on your reply
           ta.setSelectionRange(sel.length, sel.length);
           ta.focus();
           autosize(ta);

@@ -349,6 +349,12 @@ describe Story do
       expect(s1.similar_stories).to eq([s2])
       expect(s2.similar_stories).to eq([s1])
     end
+
+    it "accepts playlists" do
+      s = Story.new(url: 'https://www.youtube.com/playlist?list=PLZdCLR02grLpIQQkyGLgIyt0eHE56aJqd')
+      s.valid?
+      expect(s.errors[:url]).to be_empty
+    end
   end
 
   describe "#calculated_hotness" do

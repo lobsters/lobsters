@@ -246,8 +246,10 @@ class Story < ApplicationRecord
     # m.youtu.be           doesn't exist
     if /^https?:\/\/((?:www\d*|m)\.)?(youtube\.com|youtu\.be)/i.match(url)
       urls.each do |u|
-        id = /^https?:\/\/(?:(?:m|www)\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9\-_]+)/i
-          .match(u)[1]
+        ids = /^https?:\/\/(?:(?:m|www)\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9\-_]+)/i
+          .match(u)
+        next if ids.nil?
+        id = ids[1]
 
         urls2.push "https://www.youtube.com/watch?v=#{id}"
         # In theory, youtube redirects https://youtube.com to https://www.youtube.com

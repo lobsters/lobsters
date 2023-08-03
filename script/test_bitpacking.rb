@@ -17,7 +17,12 @@ res = ActiveRecord::Base.connection.exec_query <<~SQL
     char(#{2 ** 32 - 1} using binary) as int32bit,
     char(#{2 ** 40 - 1} using binary) as int40bit,
     char(#{2 ** 48 - 1} using binary) as int48bit,
-    concat(lpad(char(2 using binary), 2, char(0 using binary)), lpad(char(#{2 ** (5 * 8)    } using binary), 5, char(0 using binary))) as overflow_comment_id
+    concat(lpad(char(2 using binary), 2, char(0 using binary)), lpad(char(#{2 ** (5 * 8)    } using binary), 5, char(0 using binary))) as overflow_comment_id,
+    65 & 0xff as getbyte1,
+    255 & 0xff as getbyte2,
+    256 & 0xff as getbyte3,
+    435431 & 0xff as getbyte4,
+    #{2 ** (5 * 8) -1} & 0xff as getbyte5
     ;
 SQL
 
@@ -41,9 +46,12 @@ SQL
 #
 # Still, a collision only means two same-confidence comments aren't oldest-first, which is ALREADY
 # often the case because arrange_for_user is underspecified. I'll just take the bottom byte of
-# comment id.
+# comment id. (And heck, there's further only a 50% chance the collision results in flipped order.)
+#
+# So 2 bytes for confidence and 1 for id. Deepest reply chain is currently 30, so that's 90b.
+# TINYBLOB it is.
 
 res.first.each do |val|
-  puts "#{val.inspect} #{val.last.length}"
+  puts "#{val.inspect} #{val.last.length if val.last.is_a? String}"
 end
 # puts res.first['v'].to_yaml

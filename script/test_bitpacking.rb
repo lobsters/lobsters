@@ -13,16 +13,34 @@ res = ActiveRecord::Base.connection.exec_query <<~SQL
     concat(lpad(char(65537 using binary), 2, char(0 using binary)), lpad(char(435431 using binary), 5, char(0 using binary))) as overflow2,
     concat(lpad(char(1 using binary), 2, char(0 using binary)), lpad(char(#{2 ** (4 * 8)} using binary), 5, char(0 using binary))) as nooverflow,
     concat(lpad(char(1 using binary), 2, char(0 using binary)), lpad(char(#{2 ** (5 * 8) - 1} using binary), 5, char(0 using binary))) as nooverflow2,
+
     char(#{2 ** 24 - 1} using binary) as int24bit,
     char(#{2 ** 32 - 1} using binary) as int32bit,
     char(#{2 ** 40 - 1} using binary) as int40bit,
     char(#{2 ** 48 - 1} using binary) as int48bit,
+
     concat(lpad(char(2 using binary), 2, char(0 using binary)), lpad(char(#{2 ** (5 * 8)    } using binary), 5, char(0 using binary))) as overflow_comment_id,
+
     65 & 0xff as getbyte1,
     255 & 0xff as getbyte2,
     256 & 0xff as getbyte3,
     435431 & 0xff as getbyte4,
-    #{2 ** (5 * 8) -1} & 0xff as getbyte5
+    #{2 ** (5 * 8) -1} & 0xff as getbyte5,
+
+    lpad(char(65536 - floor(((0 - -0.2) * 65535) / 1.2) using binary), 2, '0') as ord0,
+    lpad(char(65536 - floor(((-0.195 - -0.2) * 65535) / 1.2) using binary), 2, '0') as ordlow,
+    lpad(char(65536 - floor(((0.99 - -0.2) * 65535) / 1.2) using binary), 2, '0') as ordhigh,
+
+    cast(concat(lpad(char(65536 - floor(((0 - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(98869 & 0xff using binary)) as char(90) character set binary) as base_ordpath,
+
+    cast(concat(lpad("", 3, 0), lpad(char(65536 - floor(((0 - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(98869 & 0xff using binary)) as char(90) character set binary) as ordpath_d2_section,
+
+    cast(concat(
+      substring(cast(concat(lpad(char(65536 - floor(((0 - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(98869 & 0xff using binary)) as char(90) character set binary), 1, 3),
+      cast(concat(lpad(char(65536 - floor(((0 - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(98869 & 0xff using binary)) as char(3) character set binary)
+    ) as char(90) character set binary) as ordpath_d2
+
+
     ;
 SQL
 

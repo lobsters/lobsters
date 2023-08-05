@@ -38,7 +38,13 @@ res = ActiveRecord::Base.connection.exec_query <<~SQL
     cast(concat(
       substring(cast(concat(lpad(char(65536 - floor(((0 - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(98869 & 0xff using binary)) as char(90) character set binary), 1, 3),
       cast(concat(lpad(char(65536 - floor(((0 - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(98869 & 0xff using binary)) as char(3) character set binary)
-    ) as char(90) character set binary) as ordpath_d2
+    ) as char(90) character set binary) as ordpath_d2,
+
+    cast(concat(
+      substring(cast(concat(lpad(char(65536 - floor(((0 - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(98869 & 0xff using binary)) as char(90) character set binary), 1, 3),
+      lpad(char(65536 - floor(((0 - -0.2) * 65535) / 1.2) using binary), 2, '0'),
+      char(98869 & 0xff using binary)
+    ) as char(90) character set binary) as ordpath_d2_shorter
 
 
     ;

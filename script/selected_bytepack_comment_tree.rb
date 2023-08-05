@@ -11,6 +11,14 @@ end
 
 # max_depth_seen = 0
 
+# integration perf test: loop all stories and time rendering them 10x
+#   run w arrange_for_user
+#   run w selected
+#   run w selected_bytepack
+# better name for ord/ordpath
+# extract exploratory tests in test_bitpacking to test suite
+# future: replace confidence w ord
+
 Story.find_each(batch_size: 100) do |story|
   selected_comments = ActiveRecord::Base.connection.exec_query <<~SQL
     with recursive discussion as (
@@ -23,8 +31,8 @@ Story.find_each(batch_size: 100) do |story|
         c.score,
         c.confidence,
         lpad(char(65536 - floor(((c.confidence - -0.2) * 65535) / 1.2) using binary), 2, '0') as ord,
-        cast(null as char(90) character set binary) as parentord,
-        cast(concat(lpad(char(65536 - floor(((c.confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(c.id & 0xff using binary)) as char(90) character set binary) as ordpath,
+        cast(null as char(93) character set binary) as parentord,
+        cast(concat(lpad(char(65536 - floor(((c.confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(c.id & 0xff using binary)) as char(93) character set binary) as ordpath,
         regexp_replace(substring(c.comment, 1, 41), "[\r\n]", " ") as blurb
         from comments c
         where
@@ -45,7 +53,7 @@ Story.find_each(batch_size: 100) do |story|
           left(discussion.ordpath, 3 * (depth + 1)),
           lpad(char(65536 - floor(((c.confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'),
           char(c.id & 0xff using binary)
-        ) as char(90) character set binary),
+        ) as char(93) character set binary),
         regexp_replace(substring(c.comment, 1, 41), "[\r\n]", " ") as blurb
       from comments c join discussion on c.parent_comment_id = discussion.id
       )

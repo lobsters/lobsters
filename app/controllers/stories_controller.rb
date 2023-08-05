@@ -416,6 +416,9 @@ private
 
   def find_story
     story = Story.find_by(:short_id => params[:story_id])
+    # convenience to use PK (from external queries) without generally permitting enumeration:
+    story ||= Story.find(params[:id]) if @user && @user.is_admin?
+
     if @user && story
       story.vote = Vote.find_by(
         user: @user,

@@ -378,6 +378,9 @@ private
 
   def find_comment
     comment = Comment.where(short_id: params[:id]).first
+    # convenience to use PK (from external queries) without generally permitting enumeration:
+    comment ||= Comment.find(params[:id]) if @user && @user.is_admin?
+
     if @user && comment
       comment.current_vote = Vote.where(:user_id => @user.id,
         :story_id => comment.story_id, :comment_id => comment.id).first

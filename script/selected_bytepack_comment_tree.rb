@@ -11,14 +11,6 @@ end
 
 # max_depth_seen = 0
 
-# integration perf test: loop all stories and time rendering them 10x
-#   run w arrange_for_user
-#   run w selected
-#   run w selected_bytepack
-# better name for ord/ordpath
-# extract exploratory tests in test_bitpacking to test suite
-# future: replace confidence w ord
-
 Story.find_each(batch_size: 100) do |story|
   selected_comments = ActiveRecord::Base.connection.exec_query <<~SQL
     with recursive discussion as (

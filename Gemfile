@@ -49,6 +49,7 @@ gem 'transaction_retry' # mitigate https://github.com/lobsters/lobsters-ansible/
 gem 'rack-attack' # rate-limiting
 
 group :test, :development do
+  gem 'benchmark-perf'
   gem 'capybara'
   gem 'database_cleaner'
   gem "listen"

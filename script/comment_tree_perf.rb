@@ -13,6 +13,7 @@ require APP_PATH
 Rails.application.require_environment!
 
 require 'benchmark-perf'
+Rails.cache.clear
 
 puts "short_id,comments_count,avg,stdev,dt"
 

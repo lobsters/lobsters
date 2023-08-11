@@ -41,37 +41,40 @@
       <li class="comments_subtree"><%= render "comments/commentbox", :comment => @comment %></li>
     <% end %>
 
-    <% comments_by_parent = @comments.group_by(&:parent_comment_id) %>
-    <% subtree = comments_by_parent[nil] %>
-    <% ancestors = [] %>
+    <li class="comments_subtree">
+      <% previous_depth = 0 %>
+      <% @comments.each do |comment| %>
 
-    <% while subtree %>
-      <% if (comment = subtree.shift) %>
-        <li class="comments_subtree">
+        <% if comment.depth > previous_depth %>
+          <ol class="comments">
+            <li class="comments_subtree">
+        <% else %>
+          <% (previous_depth - comment.depth).times do %>
+              </li>
+            </ol>
+          <% end %>
+        <% end %>
+        <% previous_depth = comment.depth %>
 
-        <% children = comments_by_parent[comment.id] %>
         <%= render "comments/comment", :comment => comment,
           :show_story => (comment.story_id != @story.id),
           :show_tree_lines => true,
           :was_merged => (comment.story_id != @story.id),
-          :children => children,
+          :children => [],
           :is_unread => is_unread?(comment) %>
 
-        <% if ancestors.present? %>
+        <%#
+	#  If you edit this structure, update the incredibly brittle css selector
+        #    li.comments_subtree > .comment:nth-last-of-type(2) .comment_parent_tree_line
+        #  (or refactor the whole parent/sibling lines implementation)
+        #%>
+        <% if comment.depth != 0 %>
           <div class="comment_siblings_tree_line"></div>
         <% end %>
 
-        <% if children %>
-          <% ancestors << subtree %>
-          <% subtree = children %>
-          <ol class="comments">
-        <% else %>
-          <ol class="comments"></ol></li>
-        <% end %>
-      <% elsif (subtree = ancestors.pop) %>
-        </ol></li>
       <% end %>
-    <% end %>
+    </li>
+
   </ol>
 <% end %>
 

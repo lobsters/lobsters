@@ -19,6 +19,7 @@ class Comment < ApplicationRecord
   has_many :taggings, through: :story
 
   attr_accessor :current_vote, :previewing, :indent_level
+  attribute :depth
 
   before_validation :on => :create do
     self.assign_short_id_and_score
@@ -87,6 +88,9 @@ class Comment < ApplicationRecord
   end
 
   def self.arrange_for_user(user)
+    Rails.cache.delete("user:#{user.id}:unread_replies") if user
+    return self
+
     # This function is always used when presenting threads. The calling
     # controllers advance the user's ReadRibbon, which may reduce the number
     # of ReplyingComments, invalidating the User.unread_replies_count cache.

@@ -147,11 +147,11 @@ class StoriesController < ApplicationController
       end
     end
 
-    @comments = get_arranged_comments_from_cache(params[:id]) do
+    Rails.cache.delete("user:#{@user.id}:unread_replies") if @user
+    @comments = #get_arranged_comments_from_cache(params[:id]) do
       @story.merged_comments
             .includes(:user, :story, :hat, :votes => :user)
-            .arrange_for_user(@user)
-    end
+    #end
 
     @title = @story.title
     @short_url = @story.short_id_url
@@ -464,6 +464,7 @@ private
 
       @votes = Vote.comment_votes_by_user_for_story_hash(
         @user.id, (@story.merged_stories.ids).push(@story.id))
+      # TODO ugh don't need this extra pass, pass @votes to view loop and pull there
       @comments.each do |c|
         if @votes[c.id]
           c.current_vote = @votes[c.id]

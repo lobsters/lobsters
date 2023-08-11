@@ -11,7 +11,7 @@ end
 
 # max_depth_seen = 0
 
-# TODO you are here - change range to 0 - 2^16, not 0-999
+# change range to 0 - 2^16, not 0-999
 #   then concat(lpad(char(65 using binary), 2, char(0 using binary)), lpad(char(435431 using binary), 5, char(0 using binary)));
 #   then output that to selected_packed and diff against selected
 # oldrange = (1 - -0.2) # 1.2

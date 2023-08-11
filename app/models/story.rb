@@ -672,9 +672,34 @@ class Story < ApplicationRecord
   end
 
   def merged_comments
-    # TODO: make this a normal has_many?
-    Comment.where(story_id: Story.select(:id).where(merged_story_id: self.id)
-      .where('merged_story_id is not null') + [self.id])
+    # If the story_ids predicate is in the outer select the query planner doesn't push it down into
+    # the recursive CTE, so that subquery would build the tree for the entire comments table.
+    Comment
+      .joins(<<~SQL
+        inner join (
+          with recursive discussion as (
+          select
+            c.id,
+            0 as depth,
+            cast(concat(lpad(1000 - floor(((confidence - -0.2) * 999) / 1.2), 3, '0'), '.', lpad(c.id, 9, '0')) as char(600)) as ordpath
+            from comments c
+            join stories on stories.id = c.story_id
+            where
+              (stories.id = #{self.id} or stories.merged_story_id = #{self.id}) and
+              parent_comment_id is null
+          union all
+          select
+            c.id,
+            discussion.depth + 1,
+            concat(discussion.ordpath, ",", lpad(1000 - floor(((c.confidence - -0.2) * 999) / 1.2), 3, '0'), '.', lpad(c.id, 9, '0'))
+          from comments c join discussion on c.parent_comment_id = discussion.id
+          )
+          select * from discussion as comments
+        ) as comments_recursive on comments.id = comments_recursive.id
+      SQL
+            )
+      .order('comments_recursive.ordpath')
+      .select('comments.*, comments_recursive.depth as depth')
   end
 
   def merge_story_short_id=(sid)

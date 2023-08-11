@@ -79,3 +79,39 @@ res.first.each do |val|
   puts "#{val.inspect} #{val.last.length if val.last.is_a? String}"
 end
 # puts res.first['v'].to_yaml
+
+ActiveRecord::Base.logger = Logger.new STDOUT
+ActiveRecord::Base.clear_reloadable_connections!
+
+puts;puts;puts
+
+story_id = 43385
+story_ids = Story.where(merged_story_id: story_id).pluck(:id) + [story_id]
+q = Comment.where(story_id: story_ids).joins( <<~SQL
+  inner join (
+    with recursive discussion as (
+    select
+      c.id,
+      0 as depth,
+      cast(concat(lpad(1000 - floor(((confidence - -0.2) * 999) / 1.2), 3, '0'), '.', lpad(id, 9, '0')) as char(600)) as ordpath
+      from comments c
+      where
+        story_id in (#{story_ids.join(',')}) and
+        parent_comment_id is null
+    union all
+    select
+      c.id,
+      discussion.depth + 1,
+      concat(discussion.ordpath, ",", lpad(1000 - floor(((c.confidence - -0.2) * 999) / 1.2), 3, '0'), '.', lpad(c.id, 9, '0'))
+    from comments c join discussion on c.parent_comment_id = discussion.id
+    )
+    select * from discussion as comments
+  ) as comments_recursive on comments.id = comments_recursive.id
+  SQL
+                 )
+                   .order('comments_recursive.ordpath').select('comments.*, comments_recursive.depth as depth')
+                  .includes(:user, :story, :hat, :votes => :user)
+# puts q.to_sql
+q.each do |c|
+  puts "#{' ' * c.depth} #{c.indent_level} #{c.id} #{c.user.username}"
+end

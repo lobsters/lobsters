@@ -3,3 +3,6 @@ Crawl-delay: 1
 Disallow: /search
 Disallow: /page/
 Disallow: /comments/page/
+
+User-agent: GPTBot
+Disallow: /

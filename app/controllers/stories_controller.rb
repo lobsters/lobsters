@@ -148,10 +148,10 @@ class StoriesController < ApplicationController
     end
 
     Rails.cache.delete("user:#{@user.id}:unread_replies") if @user
-    @comments = #get_arranged_comments_from_cache(params[:id]) do
+    @comments = get_arranged_comments_from_cache(params[:id]) do
       @story.merged_comments
             .includes(:user, :story, :hat, :votes => :user)
-    #end
+    end
 
     @title = @story.title
     @short_url = @story.short_id_url

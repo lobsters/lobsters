@@ -681,7 +681,7 @@ class Story < ApplicationRecord
           select
             c.id,
             0 as depth,
-            cast(concat(lpad(1000 - floor(((confidence - -0.2) * 999) / 1.2), 3, '0'), '.', lpad(c.id, 9, '0')) as char(600)) as ordpath
+            cast(concat(lpad(char(65536 - floor(((c.confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(c.id & 0xff using binary)) as char(93) character set binary) as ordpath
             from comments c
             join stories on stories.id = c.story_id
             where
@@ -691,8 +691,12 @@ class Story < ApplicationRecord
           select
             c.id,
             discussion.depth + 1,
-            concat(discussion.ordpath, ",", lpad(1000 - floor(((c.confidence - -0.2) * 999) / 1.2), 3, '0'), '.', lpad(c.id, 9, '0'))
           from comments c join discussion on c.parent_comment_id = discussion.id
+          cast(concat(
+            left(discussion.ordpath, 3 * (depth + 1)),
+            lpad(char(65536 - floor(((c.confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'),
+            char(c.id & 0xff using binary)
+          ) as char(93) character set binary)
           )
           select * from discussion as comments
         ) as comments_recursive on comments.id = comments_recursive.id

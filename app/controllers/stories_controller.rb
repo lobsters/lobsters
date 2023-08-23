@@ -464,7 +464,6 @@ private
 
       @votes = Vote.comment_votes_by_user_for_story_hash(
         @user.id, (@story.merged_stories.ids).push(@story.id))
-      # TODO ugh don't need this extra pass, pass @votes to view loop and pull there
       @comments.each do |c|
         if @votes[c.id]
           c.current_vote = @votes[c.id]

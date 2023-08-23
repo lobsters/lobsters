@@ -54,7 +54,7 @@ def arranged_comments_tree(comments, depth = 1)
 end
 
 Story.find_each(batch_size: 100) do |story|
-  arranged_comments = story.merged_comments.arrange_for_user(admin)
+  arranged_comments = story.merged_comments
 
   puts "Story #{story.short_id} http://localhost:3000/s/#{story.short_id}"
   print arranged_comments_tree(arranged_comments)

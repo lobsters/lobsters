@@ -344,8 +344,8 @@ class CommentsController < ApplicationController
       .where(:thread_id => thread_ids)
       .includes(:user, :hat, :story => :user, :votes => :user)
       .joins(:story).where.not(stories: { is_deleted: true })
-      .arrange_for_user(@user)
 
+    @user.clear_unread_replies!
     comments_by_thread_id = comments.group_by(&:thread_id)
     @threads = comments_by_thread_id.values_at(*thread_ids).compact
 

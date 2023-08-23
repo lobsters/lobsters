@@ -147,7 +147,7 @@ class StoriesController < ApplicationController
       end
     end
 
-    Rails.cache.delete("user:#{@user.id}:unread_replies") if @user
+    @user.try(:clear_unread_replies!)
     @comments = get_arranged_comments_from_cache(params[:id]) do
       @story.merged_comments
             .includes(:user, :story, :hat, :moderation => :moderator, :votes => :user)

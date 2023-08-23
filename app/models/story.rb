@@ -910,7 +910,7 @@ class Story < ApplicationRecord
   end
 
   def update_comments_count!
-    comments = self.merged_comments.arrange_for_user(nil)
+    comments = self.merged_comments
 
     # calculate count after removing deleted comments and threads
     self.update_column :comments_count, (comments.count {|c| !c.is_gone? })

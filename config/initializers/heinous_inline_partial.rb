@@ -27,7 +27,7 @@ def do_heinous_inline_partial_replacement
     # puts "  will replace in #{filename}"
 
     template = File.read(filename)
-    template.sub!(/^<%#heinous_inline_partial\(([\w\/\.]+)\)%>(.+)^<%#\/heinous_inline_partial\(([\w\/\.]+)\)/m) { |match|
+    template.sub!(/^<%#heinous_inline_partial\(([\w\/\.]+)\)%>(.+)^<%#\/heinous_inline_partial\(([\w\/\.]+)\)%>\n/m) { |match|
       raise "Template name didn't match in open and closing tags. One per file!" unless $1 == $3
       # puts "  .sub! matched, replacing"
 

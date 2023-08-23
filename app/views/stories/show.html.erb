@@ -218,11 +218,9 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 </div>
 
 <%#/heinous_inline_partial(comments/_comment.html.erb)%>
-%>
-%>
 
         <%#
-	#  If you edit this structure, update the incredibly brittle css selector
+        #  If you edit this structure, update the incredibly brittle css selector
         #    li.comments_subtree > .comment:nth-last-of-type(2) .comment_parent_tree_line
         #  (or refactor the whole parent/sibling lines implementation)
         #%>

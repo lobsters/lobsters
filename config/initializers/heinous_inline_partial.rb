@@ -4,9 +4,11 @@
 # Inlining the comments/_comment partial into stories/show (bulk of our traffic!)
 # gives a 25% speedup over 'render collection: @comment'.
 
+# rubocop:disable Style/MutableConstant
 HEINOUS_INLINE_PARTIALS = {
-  # including template => partial
+  # including template filename => partial filename
 }
+# rubocop:enable Style/MutableConstant
 
 Dir['app/views/**/*.erb'].each do |filename|
   template = File.read(filename)
@@ -27,7 +29,11 @@ def do_heinous_inline_partial_replacement
     # puts "  will replace in #{filename}"
 
     template = File.read(filename)
-    template.sub!(/^<%#heinous_inline_partial\(([\w\/\.]+)\)%>(.+)^<%#\/heinous_inline_partial\(([\w\/\.]+)\)%>\n/m) { |match|
+    template.sub!(/
+      ^<%\#heinous_inline_partial\(([\w\/\.]+)\)%>
+      (.+)
+      ^<%\#\/heinous_inline_partial\(([\w\/\.]+)\)%>\n
+      /xm) {|_match|
       raise "Template name didn't match in open and closing tags. One per file!" unless $1 == $3
       # puts "  .sub! matched, replacing"
 

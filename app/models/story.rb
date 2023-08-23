@@ -681,7 +681,7 @@ class Story < ApplicationRecord
           select
             c.id,
             0 as depth,
-            cast(concat(lpad(char(65536 - floor(((c.confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(c.id & 0xff using binary)) as char(93) character set binary) as ordpath
+            cast(concat(lpad(char(65536 - floor(((c.confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(c.id & 0xff using binary)) as char(93) character set binary) as confidence_order_path
             from comments c
             join stories on stories.id = c.story_id
             where
@@ -692,7 +692,7 @@ class Story < ApplicationRecord
             c.id,
             discussion.depth + 1,
             cast(concat(
-              left(discussion.ordpath, 3 * (depth + 1)),
+              left(discussion.confidence_order_path, 3 * (depth + 1)),
               lpad(char(65536 - floor(((c.confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'),
               char(c.id & 0xff using binary)
             ) as char(93) character set binary)
@@ -702,7 +702,7 @@ class Story < ApplicationRecord
         ) as comments_recursive on comments.id = comments_recursive.id
       SQL
             )
-      .order('comments_recursive.ordpath')
+      .order('comments_recursive.confidence_order_path')
       .select('comments.*, comments_recursive.depth as depth')
   end
 

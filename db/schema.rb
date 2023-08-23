@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_06_200248) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_23_150648) do
   create_table "categories", charset: "utf8mb4", force: :cascade do |t|
     t.string "category"
     t.datetime "created_at", precision: nil, null: false
@@ -23,6 +23,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_06_200248) do
     t.datetime "updated_at", precision: nil
     t.string "short_id", limit: 10, default: "", null: false
     t.bigint "story_id", null: false, unsigned: true
+    t.binary "confidence_order", limit: 3, null: false
     t.bigint "user_id", null: false, unsigned: true
     t.bigint "parent_comment_id", unsigned: true
     t.bigint "thread_id", unsigned: true

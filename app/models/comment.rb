@@ -203,6 +203,11 @@ class Comment < ApplicationRecord
 
   def assign_initial_confidence
     self.confidence = self.calculated_confidence
+    # 0 is a placeholder, don't have an id before save.
+    # This will move it up so it gets seen + voted on.
+    self.confidence_order =
+      [65_536 - (((self.confidence - -0.2) * 65_535) / 1.2).floor].pack('S>') +
+      [0].pack('C')
   end
 
   def assign_short_id_and_score
@@ -348,7 +353,8 @@ class Comment < ApplicationRecord
       UPDATE comments SET
         score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),
         flags = (select count(*) from votes where comment_id = comments.id and vote = -1),
-        confidence = #{self.calculated_confidence}
+        confidence = #{self.calculated_confidence},
+        confidence_order = concat(lpad(char(65536 - floor(((confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(id & 0xff using binary))
       WHERE id = #{self.id.to_i}
     SQL
     self.story.recalculate_hotness!

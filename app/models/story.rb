@@ -672,6 +672,8 @@ class Story < ApplicationRecord
   end
 
   def merged_comments
+    return Comment.none unless self.id # unsaved Stories have no comments
+
     # If the story_ids predicate is in the outer select the query planner doesn't push it down into
     # the recursive CTE, so that subquery would build the tree for the entire comments table.
     Comment
@@ -681,7 +683,7 @@ class Story < ApplicationRecord
           select
             c.id,
             0 as depth,
-            cast(concat(lpad(char(65536 - floor(((c.confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(c.id & 0xff using binary)) as char(93) character set binary) as confidence_order_path
+            cast(confidence_order as char(93) character set binary) as confidence_order_path
             from comments c
             join stories on stories.id = c.story_id
             where
@@ -693,8 +695,7 @@ class Story < ApplicationRecord
             discussion.depth + 1,
             cast(concat(
               left(discussion.confidence_order_path, 3 * (depth + 1)),
-              lpad(char(65536 - floor(((c.confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'),
-              char(c.id & 0xff using binary)
+              c.confidence_order
             ) as char(93) character set binary)
           from comments c join discussion on c.parent_comment_id = discussion.id
           )

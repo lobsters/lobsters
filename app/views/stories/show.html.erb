@@ -56,12 +56,170 @@
         <% end %>
         <% previous_depth = comment.depth %>
 
-        <%= render "comments/comment", :comment => comment,
-          :show_story => (comment.story_id != @story.id),
-          :show_tree_lines => true,
-          :was_merged => (comment.story_id != @story.id),
-          :children => [],
-          :is_unread => is_unread?(comment) %>
+        <%
+          show_story = (comment.story_id != @story.id)
+          show_tree_lines = true
+          was_merged = (comment.story_id != @story.id)
+          is_unread = is_unread?(comment)
+        %>
+<%#heinous_inline_partial(comments/_comment.html.erb)%>
+<%# Do not edit, the content until /heinous_inline_partial comes from the named partial %>
+<% flagged = comment.current_vote && comment.current_vote[:vote] == -1 %>
+<input id="comment_folder_<%= comment.short_id %>"
+  class="comment_folder_button" type="checkbox"
+  <%= defined?(force_open) ||
+      @user.try(:is_moderator?) ||
+      (comment.score > Comment::COLLAPSE_SCORE && !flagged) ? "" : "checked" %>>
+
+<div id="c_<%= comment.short_id %>"
+data-shortid="<%= comment.short_id if comment.persisted? %>"
+class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
+"upvoted" : "flagged") : "" %>
+  <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>">
+
+  <% if defined?(show_tree_lines) && show_tree_lines %>
+    <label for="comment_folder_<%= comment.short_id %>"
+      class="comment_folder"></label>
+  <% end %>
+
+  <% if !comment.is_gone? %>
+    <% can_flag = @user && @user.can_flag?(comment) %>
+    <% score_display = comment.score_for_user(@user) %>
+    <div class="voters">
+      <% if @user %>
+        <a class="upvoter"></a>
+      <% else %>
+        <%= link_to "", login_path, :class => "upvoter" %>
+      <% end %>
+      <div class="score"><%= score_display %></div>
+    </div>
+    <div class="comment_parent_tree_line
+      <%= can_flag ? "can_flag" : "" %>
+      <%= score_display != "&nbsp;" ? "score_shown" : "" %>
+      <%= defined?(children) && children ? "" : "no_children" %>"></div>
+  <% end %>
+
+  <div class="details">
+    <div class="byline">
+      <a name="c_<%= comment.short_id %>"></a>
+
+      <% if defined?(show_tree_lines) && show_tree_lines %>
+        <label for="comment_folder_<%= comment.short_id %>"
+          class="comment_folder comment_folder_inline"></label>
+      <% else %>
+        <label for="comment_folder_<%= comment.short_id %>"
+          class="comment_folder comment_folder_inline force_inline"></label>
+      <% end %>
+
+      <% if defined?(was_merged) && was_merged %>
+        <span class="merge"></span>
+      <% end %>
+
+      <% if (@user && @user.show_avatars?) || !@user %>
+        <a href="/u/<%= comment.user.username %>"><%=
+          avatar_img(comment.user, 16) %></a>
+      <% end %>
+
+      <a href="/u/<%= comment.user.username %>"
+        class="<%= comment.html_class_for_user %>"><%=
+        comment.user.username %></a>
+
+      <% if comment.hat %>
+        <%= comment.hat.to_html_label %>
+      <% end %>
+
+      <% if comment.previewing %>
+        previewed
+        just now
+      <% else %>
+        <% if comment.has_been_edited? %>
+          edited
+        <% elsif comment.is_from_email? %>
+          e-mailed
+        <% end %>
+        <% is_unread ||= false %>
+        <%= time_ago_in_words_label(comment.has_been_edited? ? comment.updated_at : comment.created_at) %>
+        <%= raw "<span class='comment_unread'>(unread)</span>" if is_unread %>
+      <% end %>
+
+      <% if !comment.previewing %>
+        |
+        <a href="<%= comment.path %>">link</a>
+
+        <% if comment.is_editable_by_user?(@user) %>
+          |
+          <a tabindex="0" class="comment_editor">edit</a>
+        <% end %>
+
+        <% if comment.is_gone? && comment.is_undeletable_by_user?(@user) %>
+          |
+          <a tabindex="0" class="comment_undeletor" href="#c_<%= comment.short_id %>">undelete</a>
+        <% elsif !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
+          |
+          <% if @user && @user.is_moderator? && @user.id != comment.user_id %>
+            <a tabindex="0" class="comment_moderator" href="#c_<%= comment.short_id %>">delete</a>
+          <% else %>
+            <a tabindex="0" class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>
+          <% end %>
+        <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
+          |
+          <a tabindex="0" class="comment-disowner" href="#">disown</a>
+        <% end %>
+
+        <% if can_flag && !flagged %>
+          <span class="dropdown_parent">
+            | <a class="flagger">flag</a>
+          </span>
+        <% elsif flagged %>
+          | <a class="flagger">unflag</a>
+        <% else %>
+          <span class="flagger flagger_stub"></span>
+        <% end %>
+
+        <% if @user && !comment.is_gone? && comment.story.accepting_comments? %>
+            |
+            <a tabindex="0" class="comment_replier" unselectable="on">reply</a>
+        <% end %>
+
+        <% if defined?(show_story) && show_story %>
+          | on:
+          <a href="<%= comment.story.comments_path %>"><%= comment.story.title %></a>
+        <% end %>
+
+        <span class="reason">
+          <% if comment.flags > 0 &&
+          comment.show_score_to_user?(@user) &&
+          (comment.user_id == @user.try(:id) || @user.try("is_moderator?")) %>
+            <% if (s = comment.vote_summary_for_user(@user).downcase).present? %>
+              | <%= s %>
+            <% end %>
+          <% elsif comment.current_vote && comment.current_vote[:vote] == -1 %>
+            | -1
+            <%= Vote::ALL_COMMENT_REASONS[comment.current_vote[:reason]].downcase %>
+          <% end %>
+        </span>
+      <% end %>
+    </div>
+    <div role="heading" aria-level="3" class="comment_text">
+      <% if comment.is_gone? %>
+        <p>
+        <span class="na">
+          [<%= comment.gone_text %><% if @user && @user.is_moderator? %> Visible to moderator:<% end %>]
+        </span>
+        </p>
+        <% if @user && @user.is_moderator? %>
+          <%= raw comment.markeddown_comment %>
+        <% end %>
+      <% else %>
+        <%= raw comment.markeddown_comment %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%#/heinous_inline_partial(comments/_comment.html.erb)%>
+%>
+%>
 
         <%#
 	#  If you edit this structure, update the incredibly brittle css selector

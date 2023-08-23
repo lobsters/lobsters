@@ -3,9 +3,10 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
   before_action :authenticate_user
+  before_action :heinous_inline_partials, if: -> { Rails.env.development? }
   before_action :mini_profiler
-  before_action :set_traffic_style
   before_action :prepare_exception_notifier
+  before_action :set_traffic_style
 
   # match this in your nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
@@ -70,6 +71,10 @@ class ApplicationController < ActionController::Base
     @show_flag_warning ||= (
       @user && !!FlaggedCommenters.new(@flag_warning_int[:param], 1.day).check_list_for(@user)
     )
+  end
+
+  def heinous_inline_partials
+    do_heinous_inline_partial_replacement
   end
 
   def mini_profiler

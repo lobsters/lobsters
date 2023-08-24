@@ -27,10 +27,10 @@ class CommentsController < ApplicationController
     end
 
     if params[:parent_comment_short_id].present?
-      if (pc = Comment.where(:story_id => story.id, :short_id => params[:parent_comment_short_id])
-        .first)
-        comment.parent_comment = pc
-      else
+      # includes parent story_id to ensure this comment's story_id matches
+      comment.parent_comment =
+        Comment.find_by(:story_id => story.id, :short_id => params[:parent_comment_short_id])
+      if !comment.parent_comment
         return render :json => { :error => "invalid parent comment", :status => 400 }
       end
     end
@@ -46,16 +46,15 @@ class CommentsController < ApplicationController
 
     # rate-limit users to one reply per 5m per parent comment
     if params[:preview].blank? &&
-       (pc = Comment.where(:story_id => story.id,
-                           :user_id => @user.id,
-                           :parent_comment_id => comment.parent_comment_id).first)
-      if (Time.current - pc.created_at) < 5.minutes && !@user.is_moderator?
-        comment.errors.add(:comment, "^You have already posted a comment " <<
-          "here recently.")
+       !@user.is_moderator &&
+       comment.parent_comment &&
+       Comment.where('created_at >= ?', 5.minutes.ago)
+         .find_by(user: @user, thread_id: comment.parent_comment.thread_id)
+       comment.errors.add(:comment, "^You have already posted a comment " <<
+         "here recently.")
 
-        return render :partial => "commentbox", :layout => false,
-          :content_type => "text/html", :locals => { :comment => comment }
-      end
+       return render :partial => "commentbox", :layout => false,
+         :content_type => "text/html", :locals => { :comment => comment }
     end
 
     if comment.valid? && params[:preview].blank? && ActiveRecord::Base.transaction { comment.save }

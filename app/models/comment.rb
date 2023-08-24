@@ -55,6 +55,13 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
+  # thread_sorted_comments builds a confidence_order_path in SQL this many characters long:
+  # the longest reply chain in prod data is 31 comments (so, depth 30) * 3b confidence_order
+  COP_LENGTH = 31 * 3
+  # Stop accepting replies this deep. Recursive CTE requires a fixed max (COP_LENGTH),
+  # but in practice all deep reply chains have gone off-topic and/or tuned into flamewars.
+  MAX_DEPTH = 18
+
   SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
 
   validates :short_id, length: { maximum: 10 }
@@ -66,6 +73,10 @@ class Comment < ApplicationRecord
   validate do
     self.parent_comment && self.parent_comment.is_gone? &&
       errors.add(:base, "Comment was deleted by the author or a mod while you were writing.")
+
+    self.parent_comment && !self.parent_comment.depth_permits_reply? &&
+      ModNote.tattle_on_max_depth_limit(self.user, self.parent_comment) &&
+      errors.add(:base, "You have replied too greedily and too deep.")
 
     (m = self.comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
       errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
@@ -149,7 +160,7 @@ class Comment < ApplicationRecord
   end
 
   def assign_thread_id
-    if self.parent_comment_id.present?
+    if self.parent_comment.present?
       self.thread_id = self.parent_comment.thread_id
     else
       self.thread_id = Keystore.incremented_value_for("thread_id")
@@ -271,6 +282,31 @@ class Comment < ApplicationRecord
         )
       end
     end
+  end
+
+  def depth_permits_reply?
+    # Top-level replies (eg parent_comment_id == null) have depth 0, then each reply is +1.
+    # Alternate definition: depth is the number of ancestor comments.
+
+    return false if self.new_record? # can't reply to unsaved comments
+
+    # Most commonly, depth is set by merged_comments. But we need to count parents when executing as
+    # a validation on reply.
+    if depth.nil?
+      # recursive CTE to walk up parent_comment_id
+      res = ActiveRecord::Connection.base.exec_query <<~SQL
+        with recursive parents as (
+          select id target_id, id, parent_comment_id
+          from comments where id = #{self.id}
+          union all
+          select parents.target_id, c.id, c.parent_comment_id
+          from comments c join parents on parents.parent_comment_id = c.id
+        ) select count(*) from parents where id != #{self.id};
+      SQL
+      self.depth = res.first.values.first
+    end
+
+    depth < MAX_DEPTH
   end
 
   def generated_markeddown_comment

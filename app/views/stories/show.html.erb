@@ -178,7 +178,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
         <% if @user && !comment.is_gone? && comment.story.accepting_comments? %>
             |
-            <a tabindex="0" class="comment_replier" unselectable="on">reply</a>
+            <a tabindex="0" class="comment_replier" unselectable="on" href="<%= reply_comment_path(comment) %>">reply</a>
         <% end %>
 
         <% if defined?(show_story) && show_story %>

@@ -89,6 +89,24 @@ class ModNote < ApplicationRecord
     )
   end
 
+  def self.tattle_on_max_depth_limit(user, parent_comment)
+    parent_author_url = Rails.application.routes.url_helpers.user_url(
+      parent_comment.user,
+      host: Rails.application.domain
+    )
+    comment_url = Rails.application.routes.url_helpers.comment_url(
+      parent_comment,
+      host: Rails.application.domain
+    )
+    create_without_dupe!(
+      moderator: InactiveUser.inactive_user,
+      user: user,
+      created_at: Time.current,
+      note: "Hit max comment depth replying to [#{parent_comment.short_id}](#{comment_url}) " +
+        "by [#{parent_comment.user.username}](#{parent_author_url})"
+    )
+  end
+
   def self.tattle_on_new_user_tagging!(story)
     create_without_dupe!(
       moderator: InactiveUser.inactive_user,

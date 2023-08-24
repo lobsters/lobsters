@@ -122,11 +122,16 @@ class CommentsController < ApplicationController
       return render :plain => "can't find comment", :status => 400
     end
 
+    if !parent_comment.depth_permits_reply?
+      ModNote.tattle_on_max_depth_limit(@user, parent_comment)
+      return render partial: 'too_deep', layout: !request.xhr?
+    end
+
     comment = Comment.new
     comment.story = parent_comment.story
     comment.parent_comment = parent_comment
 
-    render :partial => "commentbox", :layout => false,
+    render :partial => "commentbox", :layout => !request.xhr?,
       :content_type => "text/html", :locals => { :comment => comment }
   end
 

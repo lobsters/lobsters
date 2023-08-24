@@ -397,7 +397,7 @@ class Story < ApplicationRecord
     base = self.tags.sum(:hotness_mod) + (self.user_is_author? && self.url.present? ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
-    sum_expression = base < 0 ? "flags * -0.5" : "score + 1"
+    sum_expression = base < 0 ? "comments.flags * -0.5" : "comments.score + 1"
     cpoints = self.merged_comments.where.not(user_id: self.user_id).sum(sum_expression).to_f * 0.5
 
     # mix in any stories this one cannibalized
@@ -671,40 +671,13 @@ class Story < ApplicationRecord
     Keystore.increment_value_for("user:#{self.user_id}:stories_submitted")
   end
 
+  # unordered, use Comment.thread_sorted_comments for presenting threads
   def merged_comments
     return Comment.none unless self.id # unsaved Stories have no comments
 
-    # If the story_ids predicate is in the outer select the query planner doesn't push it down into
-    # the recursive CTE, so that subquery would build the tree for the entire comments table.
-    Comment
-      .joins(<<~SQL
-        inner join (
-          with recursive discussion as (
-          select
-            c.id,
-            0 as depth,
-            cast(confidence_order as char(93) character set binary) as confidence_order_path
-            from comments c
-            join stories on stories.id = c.story_id
-            where
-              (stories.id = #{self.id} or stories.merged_story_id = #{self.id}) and
-              parent_comment_id is null
-          union all
-          select
-            c.id,
-            discussion.depth + 1,
-            cast(concat(
-              left(discussion.confidence_order_path, 3 * (depth + 1)),
-              c.confidence_order
-            ) as char(93) character set binary)
-          from comments c join discussion on c.parent_comment_id = discussion.id
-          )
-          select * from discussion as comments
-        ) as comments_recursive on comments.id = comments_recursive.id
-      SQL
-            )
-      .order('comments_recursive.confidence_order_path')
-      .select('comments.*, comments_recursive.depth as depth')
+    Comment.joins(:story)
+      .where(story: { merged_story_id: self.id })
+      .or(Comment.where(story_id: self.id))
   end
 
   def merge_story_short_id=(sid)

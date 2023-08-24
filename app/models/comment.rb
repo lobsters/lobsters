@@ -294,7 +294,7 @@ class Comment < ApplicationRecord
     # a validation on reply.
     if depth.nil?
       # recursive CTE to walk up parent_comment_id
-      res = ActiveRecord::Connection.base.exec_query <<~SQL
+      res = ActiveRecord::Base.connection.exec_query <<~SQL
         with recursive parents as (
           select id target_id, id, parent_comment_id
           from comments where id = #{self.id}
@@ -531,5 +531,43 @@ class Comment < ApplicationRecord
 
     self.story.update_comments_count!
     self.user.refresh_counts!
+  end
+
+  # select in thread order with preloading for _comment.html.erb
+  def self.thread_sorted_comments(story)
+    return Comment.none unless story.id # unsaved Stories have no comments
+
+    # If the story_ids predicate is in the outer select the query planner doesn't push it down into
+    # the recursive CTE, so that subquery would build the tree for the entire comments table.
+    Comment
+      .joins(<<~SQL
+        inner join (
+          with recursive discussion as (
+          select
+            c.id,
+            0 as depth,
+            cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
+            from comments c
+            join stories on stories.id = c.story_id
+            where
+              (stories.id = #{story.id} or stories.merged_story_id = #{story.id}) and
+              parent_comment_id is null
+          union all
+          select
+            c.id,
+            discussion.depth + 1,
+            cast(concat(
+              left(discussion.confidence_order_path, 3 * (depth + 1)),
+              c.confidence_order
+            ) as char(#{Comment::COP_LENGTH}) character set binary)
+          from comments c join discussion on c.parent_comment_id = discussion.id
+          )
+          select * from discussion as comments
+        ) as comments_recursive on comments.id = comments_recursive.id
+      SQL
+            )
+      .order('comments_recursive.confidence_order_path')
+      .select('comments.*, comments_recursive.depth as depth')
+      .includes(:user, :story, :hat, :moderation => :moderator, :votes => :user)
   end
 end

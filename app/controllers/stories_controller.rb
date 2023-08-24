@@ -149,7 +149,7 @@ class StoriesController < ApplicationController
 
     @user.try(:clear_unread_replies!)
     @comments = get_arranged_comments_from_cache(params[:id]) do
-      Comment.thread_sorted_comments(@story)
+      Comment.story_threads(@story).for_presentation
     end
 
     @title = @story.title

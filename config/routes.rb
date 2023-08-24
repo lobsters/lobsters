@@ -36,8 +36,8 @@ Rails.application.routes.draw do
   get "/top/:length" => "home#top"
   get "/top/:length/page/:page" => "home#top"
 
-  get "/threads" => "comments#threads"
-  get "/threads/:user" => "comments#threads", :as => "user_threads"
+  get "/threads" => "comments#user_threads"
+  get "/threads/:user" => "comments#user_threads", :as => "user_threads"
 
   get "/replies" => "replies#all"
   get "/replies/page/:page" => "replies#all"

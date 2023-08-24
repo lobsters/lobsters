@@ -35,12 +35,19 @@ class Comment < ApplicationRecord
   scope :not_moderated, -> { where(is_moderated: false) }
   scope :active, -> { not_deleted.not_moderated }
   scope :accessible_to_user, ->(user) { user && user.is_moderator? ? all : active }
+  scope :for_presentation, -> {
+    includes(:user, :hat, :moderation => :moderator, :story => :user, :votes => :user)
+  }
   scope :not_on_story_hidden_by, ->(user) {
     user ? where.not(
       HiddenStory.select('TRUE')
       .where(Arel.sql('hidden_stories.story_id = stories.id'))
       .by(user).arel.exists
     ) : where('true')
+  }
+  # workaround: if this select is in #parents, calling .count produces invalid SQL
+  scope :with_relative_depth, -> {
+    select('comments.*, comments_recursive.depth as depth')
   }
 
   FLAGGABLE_DAYS = 7
@@ -55,7 +62,7 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
-  # thread_sorted_comments builds a confidence_order_path in SQL this many characters long:
+  # story_threads builds a confidence_order_path in SQL this many characters long:
   # the longest reply chain in prod data is 31 comments (so, depth 30) * 3b confidence_order
   COP_LENGTH = 31 * 3
   # Stop accepting replies this deep. Recursive CTE requires a fixed max (COP_LENGTH),
@@ -292,19 +299,7 @@ class Comment < ApplicationRecord
 
     # Most commonly, depth is set by merged_comments. But we need to count parents when executing as
     # a validation on reply.
-    if depth.nil?
-      # recursive CTE to walk up parent_comment_id
-      res = ActiveRecord::Base.connection.exec_query <<~SQL
-        with recursive parents as (
-          select id target_id, id, parent_comment_id
-          from comments where id = #{self.id}
-          union all
-          select parents.target_id, c.id, c.parent_comment_id
-          from comments c join parents on parents.parent_comment_id = c.id
-        ) select count(*) from parents where id != #{self.id};
-      SQL
-      self.depth = res.first.values.first
-    end
+    self.depth ||= self.parents.count
 
     depth < MAX_DEPTH
   end
@@ -432,6 +427,26 @@ class Comment < ApplicationRecord
     ].reject(&:!).join(".") << "@" << Rails.application.domain
   end
 
+  def parents
+    return Comment.none if self.parent_comment_id.nil?
+
+    # starts from parent_comment_id so it works on new records
+    Comment
+      .joins(<<~SQL
+        inner join (
+          with recursive parents as (
+            select id target_id, id, parent_comment_id, 0 as depth
+            from comments where id = #{self.parent_comment_id}
+            union all
+            select parents.target_id, c.id, c.parent_comment_id, depth - 1
+            from comments c join parents on parents.parent_comment_id = c.id
+          ) select id, depth from parents
+        ) as comments_recursive on comments.id = comments_recursive.id
+      SQL
+            )
+      .order('id asc')
+  end
+
   def path
     self.story.comments_path + "#c_#{self.short_id}"
   end
@@ -533,8 +548,48 @@ class Comment < ApplicationRecord
     self.user.refresh_counts!
   end
 
+  def self.recent_threads(user)
+    return Comment.none unless user.try(:id)
+
+    thread_ids = Comment
+      .where(user: user)
+      .group(:thread_id)
+      .order('id desc')
+      .limit(20)
+      .pluck(:thread_id)
+
+    Comment
+      .joins(<<~SQL
+        inner join (
+          with recursive discussion as (
+          select
+            c.id,
+            0 as depth,
+            cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
+            from comments c
+            where
+              thread_id in (#{thread_ids.join(', ')}) and
+              parent_comment_id is null
+          union all
+          select
+            c.id,
+            discussion.depth + 1,
+            cast(concat(
+              left(discussion.confidence_order_path, 3 * (depth + 1)),
+              c.confidence_order
+            ) as char(#{Comment::COP_LENGTH}) character set binary)
+          from comments c join discussion on c.parent_comment_id = discussion.id
+          )
+          select * from discussion as comments
+        ) as comments_recursive on comments.id = comments_recursive.id
+      SQL
+            )
+      .order('comments.thread_id desc, comments_recursive.confidence_order_path')
+      .select('comments.*, comments_recursive.depth as depth')
+  end
+
   # select in thread order with preloading for _comment.html.erb
-  def self.thread_sorted_comments(story)
+  def self.story_threads(story)
     return Comment.none unless story.id # unsaved Stories have no comments
 
     # If the story_ids predicate is in the outer select the query planner doesn't push it down into
@@ -568,6 +623,5 @@ class Comment < ApplicationRecord
             )
       .order('comments_recursive.confidence_order_path')
       .select('comments.*, comments_recursive.depth as depth')
-      .includes(:user, :story, :hat, :moderation => :moderator, :votes => :user)
   end
 end

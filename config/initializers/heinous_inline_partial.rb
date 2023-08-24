@@ -37,10 +37,14 @@ def do_heinous_inline_partial_replacement
       raise "Template name didn't match in open and closing tags. One per file!" unless $1 == $3
       # puts "  .sub! matched, replacing"
 
+      partial = File.read(partial_name)
+      if partial.include? 'heinous_inline_partial'
+        raise "No nesting: #{filename} includes #{$1} which has a  heinous_inline_partial"
+      end
       <<~REPLACE
         <%#heinous_inline_partial(#{$1})%>
         <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
-        #{File.read(partial_name)}
+        #{partial}
         <%#/heinous_inline_partial(#{$1})%>
       REPLACE
     }

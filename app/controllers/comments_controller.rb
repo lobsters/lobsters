@@ -50,11 +50,11 @@ class CommentsController < ApplicationController
        comment.parent_comment &&
        Comment.where('created_at >= ?', 5.minutes.ago)
          .find_by(user: @user, thread_id: comment.parent_comment.thread_id)
-       comment.errors.add(:comment, "^You have already posted a comment " <<
-         "here recently.")
+      comment.errors.add(:comment, "^You have already posted a comment " <<
+        "here recently.")
 
-       return render :partial => "commentbox", :layout => false,
-         :content_type => "text/html", :locals => { :comment => comment }
+      return render :partial => "commentbox", :layout => false,
+        :content_type => "text/html", :locals => { :comment => comment }
     end
 
     if comment.valid? && params[:preview].blank? && ActiveRecord::Base.transaction { comment.save }

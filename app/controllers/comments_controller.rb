@@ -121,17 +121,26 @@ class CommentsController < ApplicationController
       return render :plain => "can't find comment", :status => 400
     end
 
+    comment = parent_comment.story.comments.build
+    comment.parent_comment = parent_comment
+    comment.comment = params[:comment].to_s
+    comment.user = @user
+
     if !parent_comment.depth_permits_reply?
       ModNote.tattle_on_max_depth_limit(@user, parent_comment)
-      return render partial: 'too_deep', layout: !request.xhr?
+      if request.xhr?
+        render partial: 'too_deep'
+      else
+        render '_too_deep'
+      end
+      return
     end
 
-    comment = Comment.new
-    comment.story = parent_comment.story
-    comment.parent_comment = parent_comment
-
-    render :partial => "commentbox", :layout => !request.xhr?,
-      :content_type => "text/html", :locals => { :comment => comment }
+    if request.xhr?
+      render partial: 'commentbox', locals: { comment: comment }
+    else
+      render '_commentbox', locals: { comment: comment }
+    end
   end
 
   def delete

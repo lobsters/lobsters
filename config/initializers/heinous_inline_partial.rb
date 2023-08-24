@@ -39,7 +39,7 @@ def do_heinous_inline_partial_replacement
 
       <<~REPLACE
         <%#heinous_inline_partial(#{$1})%>
-        <%# Do not edit, the content until /heinous_inline_partial comes from the named partial %>
+        <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
         #{File.read(partial_name)}
         <%#/heinous_inline_partial(#{$1})%>
       REPLACE

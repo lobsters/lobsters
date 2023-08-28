@@ -843,22 +843,22 @@ li .comment_parent_tree_line {
 	top: 30px;
 	bottom: 0;
 }
+
 li .comment_parent_tree_line.score_shown {
 	top: 44px;
 }
 li .comment_parent_tree_line.can_flag {
 	top: 56px;
 }
-li .comment_parent_tree_line.no_children {
-	border-left-color: transparent;
-}
-li.comments_subtree > .comment:nth-last-of-type(2) .comment_parent_tree_line {
+/* brittle way to figure out if a comment has no children (it won't have an <ol>
+after it) so we know not to draw the parent line descending from it */
+li.comments_subtree > .comment:nth-last-child(2) > .comment_parent_tree_line {
 	border-left-color: transparent;
 }
 li .comment_siblings_tree_line {
 	position: absolute;
 	left: 4px;
-	border-left: 1px dotted var(--color-fg-shape);
+	border-left: 1px dashed var(--color-fg-shape);
 	top: 2em;
 	bottom: 0;
 }

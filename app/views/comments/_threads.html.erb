@@ -2,25 +2,32 @@
 <% top_comment_depth = nil %>
 <% thread.each do |comment| %>
 
-  <% if !previous_depth || comment.depth > previous_depth %>
-    <ol class="comments">
-      <li class="comments_subtree">
-  <% else %>
-    <% (previous_depth - comment.depth).times do %>
-        </li>
-      </ol>
-    <% end %>
-  <% end %>
-  <% previous_depth = comment.depth %>
-  <% top_comment_depth ||= comment.depth %>
+    <% if !previous_depth || comment.depth > previous_depth %>
+      <%# brittle - see li.comments_subtree > .comment:nth-last-child(2) in css %>
+      <span class="prior_comment_has_children"></span>
 
-  <%
-    force_option = true
-    show_story = true
-    show_tree_lines = true
-    was_merged = false
-    is_unread = is_unread?(comment)
-  %>
+      <ol class="comments">
+    <% elsif previous_depth == comment.depth %>
+      </li>
+    <% else %>
+      <% (previous_depth - comment.depth).times do %>
+          </li>
+        </ol>
+      <% end %>
+    <% end %>
+    <% previous_depth = comment.depth %>
+    <% top_comment_depth ||= comment.depth %>
+
+    <li class="comments_subtree">
+
+    <%
+      force_option = true
+      show_story = true
+      show_tree_lines = true
+      was_merged = false
+      is_unread = is_unread?(comment)
+    %>
+
 <%#heinous_inline_partial(comments/_comment.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
 <% flagged = comment.current_vote && comment.current_vote[:vote] == -1 %>
@@ -54,8 +61,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
     </div>
     <div class="comment_parent_tree_line
       <%= can_flag ? "can_flag" : "" %>
-      <%= score_display != "&nbsp;" ? "score_shown" : "" %>
-      <%= defined?(children) && children ? "" : "no_children" %>"></div>
+      <%= score_display != "&nbsp;" ? "score_shown" : "" %>"></div>
   <% end %>
 
   <div class="details">
@@ -178,13 +184,20 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 
 <%#/heinous_inline_partial(comments/_comment.html.erb)%>
 
-  <%#
-  #  If you edit this structure, update the incredibly brittle css selector
-  #    li.comments_subtree > .comment:nth-last-of-type(2) .comment_parent_tree_line
-  #  (or refactor the whole parent/sibling lines implementation)
-  #%>
-  <% if comment.depth != top_comment_depth %>
-    <div class="comment_siblings_tree_line"></div>
-  <% end %>
+    <%
+    #  If you edit this structure, update the incredibly brittle css selector
+    #    li.comments_subtree > .comment:nth-last-of-type(2) .comment_parent_tree_line
+    #  (or refactor the whole parent/sibling lines implementation)
+    %>
+    <% if comment.depth != top_comment_depth %>
+      <div class="comment_siblings_tree_line"></div>
+    <% end %>
 
 <% end %>
+
+<%# close tree of replies %>
+<% (previous_depth - top_comment_depth).times do %>
+    </li>
+  </ol>
+<% end %>
+</ol> <%# matches very first comment %>

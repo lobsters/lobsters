@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
   before_action :require_logged_in_user_or_400,
                 :only => [:create, :preview, :upvote, :flag, :unvote]
   before_action :require_logged_in_user, :only => [:upvoted]
-  before_action :flag_warning, only: [:threads]
+  before_action :flag_warning, only: [:user_threads]
   before_action :show_title_h1
 
   # for rss feeds, load the user's tag filters if a token is passed

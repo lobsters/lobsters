@@ -221,81 +221,9 @@ class Story < ApplicationRecord
 
   # all stories with similar urls
   def self.find_similar_by_url(url)
-    url = url.to_s.gsub('[', '\\[')
-    url = url.to_s.gsub(']', '\\]')
-    urls = [url.to_s.gsub(/(#.*)/, "")]
-    urls2 = [url.to_s.gsub(/(#.*)/, "")]
-    urls_with_trailing_pound = []
-
-    # arxiv html page and its pdf link based off the [arxiv identifier](https://arxiv.org/help/arxiv_identifier)
-    if /^https?:\/\/(www\d*\.)?arxiv.org/i.match(url)
-      urls.each do |u|
-        urls2.push u.gsub(/(arxiv.org\/)abs(\/\d{4}.\d{4,5})/i, '\1pdf\2')
-        urls2.push u.gsub(/(arxiv.org\/)abs(\/\d{4}.\d{4,5})/i, '\1pdf\2.pdf')
-        urls2.push u.gsub(/(arxiv.org\/)pdf(\/\d{4}.\d{4,5})(.pdf)?/i, '\1abs\2')
-      end
-      urls = urls2.uniq
-    end
-
-    # www.youtube.com
-    # m.youtube.com
-    # youtube.com          redirects to www.youtube.com
-    # youtu.be             redirects to www.youtube.com
-    # www.m.youtube.com    doesn't work
-    # www.youtu.be         doesn't exist
-    # m.youtu.be           doesn't exist
-    if /^https?:\/\/((?:www\d*|m)\.)?(youtube\.com|youtu\.be)/i.match(url)
-      urls.each do |u|
-        ids = /^https?:\/\/(?:(?:m|www)\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9\-_]+)/i
-          .match(u)
-        next if ids.nil?
-        id = ids[1]
-
-        urls2.push "https://www.youtube.com/watch?v=#{id}"
-        # In theory, youtube redirects https://youtube.com to https://www.youtube.com
-        # let's check it just in case
-        urls2.push "https://youtube.com/watch?v=#{id}"
-        urls2.push "https://youtu.be/#{id}"
-        urls2.push "https://m.youtube.com/watch?v=#{id}"
-      end
-      urls = urls2.uniq
-    end
-
-    # https
-    urls.each do |u|
-      urls2.push u.gsub(/^http:\/\//i, "https://")
-      urls2.push u.gsub(/^https:\/\//i, "http://")
-    end
-    urls = urls2.uniq
-
-    # trailing slash or index.html
-    urls.each do |u|
-      u_without_slash = u.gsub(/\/+\z/, "")
-      urls2.push u_without_slash
-      urls2.push u_without_slash + "/"
-      urls2.push u_without_slash + "/index.htm"
-      urls2.push u_without_slash + "/index.html"
-      urls2.push u.gsub(/\/index.html?\z/, "")
-    end
-    urls = urls2.uniq
-
-    # www prefix
-    urls.each do |u|
-      urls2.push u.gsub(/^(https?:\/\/)www\d*\./i) {|_| $1 }
-      urls2.push u.gsub(/^(https?:\/\/)/i) {|_| "#{$1}www." }
-    end
-    urls = urls2.uniq
-
-    # trailing pound
-    urls.each do |u|
-      urls_with_trailing_pound.push u + "#"
-    end
-
     # if a previous submission was moderated, return it to block it from being
     # submitted again
-    Story
-      .where(:url => urls)
-      .or(Story.where("url RLIKE ?", urls_with_trailing_pound.join(".|")))
+    Story.where(normalized_url: Utils.normalize_url(url))
       .where("is_deleted = ? OR is_moderated = ?", false, true)
   end
 
@@ -933,6 +861,7 @@ class Story < ApplicationRecord
       u = match[1] << (params.any?? "?" << params.join("&") : "")
     end
 
+    self.normalized_url = Utils.normalize_url(u)
     super(u)
   end
 

@@ -1,33 +1,5 @@
 require 'rails_helper'
 
-# URI.parse is not lenient enough
-# rubocop: disable Style/RegexpLiteral
-def normalize_url url
-  url = url.dup # copy in case frozen
-
-  url.slice! %r{#.*$} # remove anchor
-  url.slice! %r{/$} # remove trailing slash
-  url.slice! %r{/index.html$} # remove index.html
-  url = url.sub %r{\.htm$}, '.html' # fix microsoft naming
-
-  url.slice! %r{https?://} # consider http and https the same
-  url.slice! %r{^(www\d*\.)} # remove www\d* from domain
-
-  # unify arxiv page and pdf based on their identifier https://arxiv.org/help/arxiv_identifier
-  url = url.sub %r{^arxiv\.org/(abs|pdf)/(?<id>\d{4}\.\d{4,5})(\.pdf)?}, 'arxiv.org/abs/\k<id>'
-
-  url = url.sub %r{^m\.youtube\.com/}, 'youtube.com/'
-  url = url.sub %r{^youtu\.be/}, 'youtube.com/watch?v='
-  url = url.sub %r{^youtube\.com/.*v=(?<id>[A-Za-z0-9\-_]+).*}, 'youtube.com/watch?v=\k<id>'
-  url = url.sub(
-    %r{^youtube\.com/playlist\?.*list=(?<id>[A-Za-z0-9\-_]+).*},
-    'youtube.com/playlist?list=\k<id>'
-  )
-
-  url
-end
-# rubocop: enable Style/RegexpLiteral
-
 describe 'normalize_url' do
   {
     'https://example.com' => 'example.com', # basic
@@ -44,6 +16,9 @@ describe 'normalize_url' do
     'https://e.com/index.html' => 'e.com', # remove index.html
     'https://e.com/asdf.html' => 'e.com/asdf.html', # end .html ok
     'https://e.com/asdf.htm' => 'e.com/asdf.html', # .htm -> .html
+    'https://e.com?b=2&a=1' => 'e.com?a=1&b=2', # sort query args
+    'https://e.com?a=1?b=2' => 'e.com?a=1&b=2', # normalize ? to &
+    'https://e.com?c=3&a=1?b=2&' => 'e.com?a=1&b=2&c=3', # combined; trailing &
 
     'https://www.arxiv.org' => 'arxiv.org',
     'https://arxiv.org/abs/1234.12345' => 'arxiv.org/abs/1234.12345',
@@ -62,11 +37,11 @@ describe 'normalize_url' do
 
     # no exceptions on real URLs we've seen (output not particularly important)
     'http://aaonline.fr/search.php?search&criteria[title-contains]=debian' =>
-      'aaonline.fr/search.php?search&criteria[title-contains]=debian',
+      'aaonline.fr/search.php?criteria[title-contains]=debian&search',
     'https://wiki.freebsd.org/VCSWhy (' => 'wiki.freebsd.org/VCSWhy (',
   }.each do |input, output|
     it 'normalizes' do
-      ret = normalize_url(input)
+      ret = Utils.normalize_url(input)
       expect(ret).to eq(output), "normalize_url(#{input}) expected #{output} but got #{ret}"
     end
   end

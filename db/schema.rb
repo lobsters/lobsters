@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_23_150648) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_28_195756) do
   create_table "categories", charset: "utf8mb4", force: :cascade do |t|
     t.string "category"
     t.datetime "created_at", precision: nil, null: false
@@ -188,6 +188,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_23_150648) do
     t.datetime "created_at", precision: nil
     t.bigint "user_id", null: false, unsigned: true
     t.string "url", limit: 250, default: ""
+    t.string "normalized_url"
     t.string "title", limit: 150, default: "", null: false
     t.text "description", size: :medium
     t.string "short_id", limit: 6, default: "", null: false
@@ -210,6 +211,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_23_150648) do
     t.index ["hotness"], name: "hotness_idx"
     t.index ["id", "is_deleted"], name: "index_stories_on_id_and_is_deleted"
     t.index ["merged_story_id"], name: "index_stories_on_merged_story_id"
+    t.index ["normalized_url"], name: "index_stories_on_normalized_url"
     t.index ["score"], name: "index_stories_on_score"
     t.index ["short_id"], name: "unique_short_id", unique: true
     t.index ["title"], name: "index_stories_on_title", type: :fulltext

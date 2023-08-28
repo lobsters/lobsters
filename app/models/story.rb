@@ -229,7 +229,7 @@ class Story < ApplicationRecord
 
   # doesn't include deleted/moderated/merged stories
   def similar_stories
-    return [] unless self.url.present?
+    return Story.none unless self.url.present?
 
     @_similar_stories ||= Story.find_similar_by_url(self.url).order("id DESC")
     # do not include this story itself or any story merged into it
@@ -245,7 +245,7 @@ class Story < ApplicationRecord
   end
 
   def public_similar_stories(user)
-    @_public_similar_stories ||= similar_stories.empty? ? [] : similar_stories.base(user)
+    @_public_similar_stories ||= similar_stories.base(user)
   end
 
   def most_recent_similar

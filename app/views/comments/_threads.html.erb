@@ -196,7 +196,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
 <% end %>
 
 <%# close tree of replies %>
-<% (previous_depth - top_comment_depth).times do %>
+<% top_comment_depth && (previous_depth - top_comment_depth).times do %>
     </li>
   </ol>
 <% end %>

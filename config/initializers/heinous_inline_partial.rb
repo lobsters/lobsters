@@ -2,7 +2,8 @@
 # In production & test: once at startup; development: every request
 #
 # Inlining the comments/_comment partial into stories/show (bulk of our traffic!)
-# gives a 25% speedup over 'render collection: @comment'.
+# gives a 25-50% speedup over 'render collection: @comment', and 80-90% speedup over looping to
+# 'render partial: comment'.
 
 # rubocop:disable Style/MutableConstant
 HEINOUS_INLINE_PARTIALS = {

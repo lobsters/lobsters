@@ -324,7 +324,8 @@ class Comment < ApplicationRecord
     # which means sibling comments will swap positions on page reloads (infrequently and
     # intermittently, real fun to debug). So the third byte is the low byte of the comment id. Being
     # assigned sequentially, mostly the tiebreaker sorts earlier comments sooner. We average ~200
-    # comments per weekday so seeing rollover between sibling comments is rare.
+    # comments per weekday so seeing rollover between sibling comments is rare. Importantly, even
+    # when it is 'wrong', it gives a stable sort.
     Comment.connection.execute <<~SQL
       UPDATE comments SET
         score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),

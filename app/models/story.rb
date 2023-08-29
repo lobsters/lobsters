@@ -221,87 +221,15 @@ class Story < ApplicationRecord
 
   # all stories with similar urls
   def self.find_similar_by_url(url)
-    url = url.to_s.gsub('[', '\\[')
-    url = url.to_s.gsub(']', '\\]')
-    urls = [url.to_s.gsub(/(#.*)/, "")]
-    urls2 = [url.to_s.gsub(/(#.*)/, "")]
-    urls_with_trailing_pound = []
-
-    # arxiv html page and its pdf link based off the [arxiv identifier](https://arxiv.org/help/arxiv_identifier)
-    if /^https?:\/\/(www\d*\.)?arxiv.org/i.match(url)
-      urls.each do |u|
-        urls2.push u.gsub(/(arxiv.org\/)abs(\/\d{4}.\d{4,5})/i, '\1pdf\2')
-        urls2.push u.gsub(/(arxiv.org\/)abs(\/\d{4}.\d{4,5})/i, '\1pdf\2.pdf')
-        urls2.push u.gsub(/(arxiv.org\/)pdf(\/\d{4}.\d{4,5})(.pdf)?/i, '\1abs\2')
-      end
-      urls = urls2.uniq
-    end
-
-    # www.youtube.com
-    # m.youtube.com
-    # youtube.com          redirects to www.youtube.com
-    # youtu.be             redirects to www.youtube.com
-    # www.m.youtube.com    doesn't work
-    # www.youtu.be         doesn't exist
-    # m.youtu.be           doesn't exist
-    if /^https?:\/\/((?:www\d*|m)\.)?(youtube\.com|youtu\.be)/i.match(url)
-      urls.each do |u|
-        ids = /^https?:\/\/(?:(?:m|www)\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9\-_]+)/i
-          .match(u)
-        next if ids.nil?
-        id = ids[1]
-
-        urls2.push "https://www.youtube.com/watch?v=#{id}"
-        # In theory, youtube redirects https://youtube.com to https://www.youtube.com
-        # let's check it just in case
-        urls2.push "https://youtube.com/watch?v=#{id}"
-        urls2.push "https://youtu.be/#{id}"
-        urls2.push "https://m.youtube.com/watch?v=#{id}"
-      end
-      urls = urls2.uniq
-    end
-
-    # https
-    urls.each do |u|
-      urls2.push u.gsub(/^http:\/\//i, "https://")
-      urls2.push u.gsub(/^https:\/\//i, "http://")
-    end
-    urls = urls2.uniq
-
-    # trailing slash or index.html
-    urls.each do |u|
-      u_without_slash = u.gsub(/\/+\z/, "")
-      urls2.push u_without_slash
-      urls2.push u_without_slash + "/"
-      urls2.push u_without_slash + "/index.htm"
-      urls2.push u_without_slash + "/index.html"
-      urls2.push u.gsub(/\/index.html?\z/, "")
-    end
-    urls = urls2.uniq
-
-    # www prefix
-    urls.each do |u|
-      urls2.push u.gsub(/^(https?:\/\/)www\d*\./i) {|_| $1 }
-      urls2.push u.gsub(/^(https?:\/\/)/i) {|_| "#{$1}www." }
-    end
-    urls = urls2.uniq
-
-    # trailing pound
-    urls.each do |u|
-      urls_with_trailing_pound.push u + "#"
-    end
-
     # if a previous submission was moderated, return it to block it from being
     # submitted again
-    Story
-      .where(:url => urls)
-      .or(Story.where("url RLIKE ?", urls_with_trailing_pound.join(".|")))
+    Story.where(normalized_url: Utils.normalize_url(url))
       .where("is_deleted = ? OR is_moderated = ?", false, true)
   end
 
   # doesn't include deleted/moderated/merged stories
   def similar_stories
-    return [] unless self.url.present?
+    return Story.none unless self.url.present?
 
     @_similar_stories ||= Story.find_similar_by_url(self.url).order("id DESC")
     # do not include this story itself or any story merged into it
@@ -317,7 +245,7 @@ class Story < ApplicationRecord
   end
 
   def public_similar_stories(user)
-    @_public_similar_stories ||= similar_stories.empty? ? [] : similar_stories.base(user)
+    @_public_similar_stories ||= similar_stories.base(user)
   end
 
   def most_recent_similar
@@ -397,7 +325,7 @@ class Story < ApplicationRecord
     base = self.tags.sum(:hotness_mod) + (self.user_is_author? && self.url.present? ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
-    sum_expression = base < 0 ? "flags * -0.5" : "score + 1"
+    sum_expression = base < 0 ? "comments.flags * -0.5" : "comments.score + 1"
     cpoints = self.merged_comments.where.not(user_id: self.user_id).sum(sum_expression).to_f * 0.5
 
     # mix in any stories this one cannibalized
@@ -671,10 +599,13 @@ class Story < ApplicationRecord
     Keystore.increment_value_for("user:#{self.user_id}:stories_submitted")
   end
 
+  # unordered, use Comment.thread_sorted_comments for presenting threads
   def merged_comments
-    # TODO: make this a normal has_many?
-    Comment.where(story_id: Story.select(:id).where(merged_story_id: self.id)
-      .where('merged_story_id is not null') + [self.id])
+    return Comment.none unless self.id # unsaved Stories have no comments
+
+    Comment.joins(:story)
+      .where(story: { merged_story_id: self.id })
+      .or(Comment.where(story_id: self.id))
   end
 
   def merge_story_short_id=(sid)
@@ -880,7 +811,7 @@ class Story < ApplicationRecord
   end
 
   def update_comments_count!
-    comments = self.merged_comments.arrange_for_user(nil)
+    comments = self.merged_comments
 
     # calculate count after removing deleted comments and threads
     self.update_column :comments_count, (comments.count {|c| !c.is_gone? })
@@ -930,6 +861,7 @@ class Story < ApplicationRecord
       u = match[1] << (params.any?? "?" << params.join("&") : "")
     end
 
+    self.normalized_url = Utils.normalize_url(u)
     super(u)
   end
 

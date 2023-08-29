@@ -76,6 +76,7 @@ const fetchWithCSRF = (url, params) => {
   params = params || {};
   params['headers'] = params['headers'] || new Headers;
   params['headers'].append('X-CSRF-Token', csrfToken());
+  params['headers'].append('X-Requested-With', 'XMLHttpRequest'); // request.xhr?
   return fetch(url, params);
 }
 
@@ -600,15 +601,14 @@ onPageLoad(() => {
   });
 
   on("click", "a.comment_replier", (event) => {
+    event.preventDefault();
     if (!Lobster.curUser) return Lobster.bounceToLogin();
 
     const comment = parentSelector(event.target, '.comment');
     const commentId = comment.getAttribute('id');
 
-    // Check to make sure we don't already have a reply box
-    if (qS('#reply_form_' + commentId)) {
-      return false;
-    }
+    // guard: don't create multiple reply boxes to one comment
+    if (qS('#reply_form_' + commentId)) { return false; }
 
     // Inserts "> " on quoted text
     let sel = document.getSelection().toString();
@@ -618,20 +618,18 @@ onPageLoad(() => {
     }
 
     let div = document.createElement('div');
-    if (qS('.comments_subtree')) {
-      parentSelector(comment, '.comments_subtree').lastElementChild.prepend(div);
-    } else {
-      comment.parentElement.lastElementChild.prepend(div);
-    }
+    div.innerHTML = 'placeholder';
+    comment.lastElementChild.append(div);
 
-    fetch('/comments/' + comment.getAttribute('data-shortid') + '/reply')
+    fetchWithCSRF('/comments/' + comment.getAttribute('data-shortid') + '/reply')
       .then(response => {
         response.text().then(text => {
           div.innerHTML = text;
-          div.setAttribute('id', 'reply_form_' + commentId );
-          var ta = (qS, 'textarea');
+          div.setAttribute('id', 'reply_form_' + commentId);
+
+          var ta = div.qS('textarea');
           ta.textContent = sel;
-          // This will place the cursor at the end of the quoted string and focus on your reply
+          // place the cursor at the end of the quoted string
           ta.setSelectionRange(sel.length, sel.length);
           ta.focus();
           autosize(ta);

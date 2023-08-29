@@ -147,10 +147,9 @@ class StoriesController < ApplicationController
       end
     end
 
+    @user.try(:clear_unread_replies!)
     @comments = get_arranged_comments_from_cache(params[:id]) do
-      @story.merged_comments
-            .includes(:user, :story, :hat, :votes => :user)
-            .arrange_for_user(@user)
+      Comment.story_threads(@story).for_presentation
     end
 
     @title = @story.title

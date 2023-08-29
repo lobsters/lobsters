@@ -591,6 +591,10 @@ class User < ApplicationRecord
     Keystore.put("user:#{self.id}:unread_messages", @unread_message_count)
   end
 
+  def clear_unread_replies!
+    Rails.cache.delete("user:#{self.id}:unread_replies")
+  end
+
   def unread_replies_count
     @unread_replies_count ||=
       Rails.cache.fetch("user:#{self.id}:unread_replies", expires_in: 2.minutes) {

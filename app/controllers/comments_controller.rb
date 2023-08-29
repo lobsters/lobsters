@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
   before_action :require_logged_in_user_or_400,
                 :only => [:create, :preview, :upvote, :flag, :unvote]
   before_action :require_logged_in_user, :only => [:upvoted]
-  before_action :flag_warning, only: [:threads]
+  before_action :flag_warning, only: [:user_threads]
   before_action :show_title_h1
 
   # for rss feeds, load the user's tag filters if a token is passed
@@ -27,10 +27,10 @@ class CommentsController < ApplicationController
     end
 
     if params[:parent_comment_short_id].present?
-      if (pc = Comment.where(:story_id => story.id, :short_id => params[:parent_comment_short_id])
-        .first)
-        comment.parent_comment = pc
-      else
+      # includes parent story_id to ensure this comment's story_id matches
+      comment.parent_comment =
+        Comment.find_by(:story_id => story.id, :short_id => params[:parent_comment_short_id])
+      if !comment.parent_comment
         return render :json => { :error => "invalid parent comment", :status => 400 }
       end
     end
@@ -46,16 +46,15 @@ class CommentsController < ApplicationController
 
     # rate-limit users to one reply per 5m per parent comment
     if params[:preview].blank? &&
-       (pc = Comment.where(:story_id => story.id,
-                           :user_id => @user.id,
-                           :parent_comment_id => comment.parent_comment_id).first)
-      if (Time.current - pc.created_at) < 5.minutes && !@user.is_moderator?
-        comment.errors.add(:comment, "^You have already posted a comment " <<
-          "here recently.")
+       !@user.is_moderator &&
+       comment.parent_comment &&
+       Comment.where('created_at >= ?', 5.minutes.ago)
+         .find_by(user: @user, thread_id: comment.parent_comment.thread_id)
+      comment.errors.add(:comment, "^You have already posted a comment " <<
+        "here recently.")
 
-        return render :partial => "commentbox", :layout => false,
-          :content_type => "text/html", :locals => { :comment => comment }
-      end
+      return render :partial => "commentbox", :layout => false,
+        :content_type => "text/html", :locals => { :comment => comment }
     end
 
     if comment.valid? && params[:preview].blank? && ActiveRecord::Base.transaction { comment.save }
@@ -122,12 +121,38 @@ class CommentsController < ApplicationController
       return render :plain => "can't find comment", :status => 400
     end
 
-    comment = Comment.new
-    comment.story = parent_comment.story
+    @story = parent_comment.story
+    comment = @story.comments.build
     comment.parent_comment = parent_comment
+    comment.comment = params[:comment].to_s
+    comment.user = @user
 
-    render :partial => "commentbox", :layout => false,
-      :content_type => "text/html", :locals => { :comment => comment }
+    if !parent_comment.depth_permits_reply?
+      ModNote.tattle_on_max_depth_limit(@user, parent_comment)
+      if request.xhr?
+        render partial: 'too_deep'
+      else
+        render '_too_deep'
+      end
+      return
+    end
+
+    if request.xhr?
+      render partial: 'commentbox', locals: { comment: comment }
+    else
+      parents = comment.parents.with_relative_depth.for_presentation
+
+      @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, parents.map(&:id))
+      parents.each do |c|
+        if @votes[c.id]
+          c.current_vote = @votes[c.id]
+        end
+      end
+      render '_commentbox', locals: {
+        comment: comment,
+        parents: parents,
+      }
+    end
   end
 
   def delete
@@ -323,7 +348,7 @@ class CommentsController < ApplicationController
     end
   end
 
-  def threads
+  def user_threads
     if params[:user]
       @showing_user = User.find_by!(username: params[:user])
       @title = "Threads for #{@showing_user.username}"
@@ -334,25 +359,16 @@ class CommentsController < ApplicationController
       @title = "Your Threads"
     end
 
-    thread_ids = @showing_user.recent_threads(
-      20,
-      include_submitted_stories: !!(@user && @user.id == @showing_user.id),
-      for_user: @user
-    )
-
-    comments = Comment.accessible_to_user(@user)
-      .where(:thread_id => thread_ids)
-      .includes(:user, :hat, :story => :user, :votes => :user)
-      .joins(:story).where.not(stories: { is_deleted: true })
-      .arrange_for_user(@user)
-
-    comments_by_thread_id = comments.group_by(&:thread_id)
-    @threads = comments_by_thread_id.values_at(*thread_ids).compact
+    @threads = Comment.recent_threads(@showing_user)
+      .accessible_to_user(@user)
+      .for_presentation
+      .joins(:story)
 
     if @user
-      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, comments.map(&:story_id).uniq)
+      @user.clear_unread_replies!
+      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @threads.map(&:story_id).uniq)
 
-      comments.each do |c|
+      @threads.each do |c|
         if @votes[c.id]
           c.current_vote = @votes[c.id]
         end

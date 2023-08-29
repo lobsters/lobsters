@@ -202,7 +202,7 @@ if __FILE__ == $PROGRAM_NAME
 
           thread = []
           indent_level = 0
-          Comment.where(:thread_id => c.thread_id).arrange_for_user(nil).reverse_each do |cc|
+          Comment.where(:thread_id => c.thread_id).reverse_each do |cc|
             if indent_level > 0 && cc.indent_level < indent_level
               thread.unshift cc
               indent_level = cc.indent_level

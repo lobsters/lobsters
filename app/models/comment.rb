@@ -19,6 +19,7 @@ class Comment < ApplicationRecord
   has_many :taggings, through: :story
 
   attr_accessor :current_vote, :previewing, :indent_level
+  attribute :depth
 
   before_validation :on => :create do
     self.assign_short_id_and_score
@@ -34,12 +35,19 @@ class Comment < ApplicationRecord
   scope :not_moderated, -> { where(is_moderated: false) }
   scope :active, -> { not_deleted.not_moderated }
   scope :accessible_to_user, ->(user) { user && user.is_moderator? ? all : active }
+  scope :for_presentation, -> {
+    includes(:user, :hat, :moderation => :moderator, :story => :user, :votes => :user)
+  }
   scope :not_on_story_hidden_by, ->(user) {
     user ? where.not(
       HiddenStory.select('TRUE')
       .where(Arel.sql('hidden_stories.story_id = stories.id'))
       .by(user).arel.exists
     ) : where('true')
+  }
+  # workaround: if this select is in #parents, calling .count produces invalid SQL
+  scope :with_relative_depth, -> {
+    select('comments.*, comments_recursive.depth as depth')
   }
 
   FLAGGABLE_DAYS = 7
@@ -54,6 +62,13 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
+  # story_threads builds a confidence_order_path in SQL this many characters long:
+  # the longest reply chain in prod data is 31 comments (so, depth 30) * 3b confidence_order
+  COP_LENGTH = 31 * 3
+  # Stop accepting replies this deep. Recursive CTE requires a fixed max (COP_LENGTH),
+  # but in practice all deep reply chains have gone off-topic and/or tuned into flamewars.
+  MAX_DEPTH = 18
+
   SCORE_RANGE_TO_HIDE = (-2 .. 4).freeze
 
   validates :short_id, length: { maximum: 10 }
@@ -65,6 +80,10 @@ class Comment < ApplicationRecord
   validate do
     self.parent_comment && self.parent_comment.is_gone? &&
       errors.add(:base, "Comment was deleted by the author or a mod while you were writing.")
+
+    self.parent_comment && !self.parent_comment.depth_permits_reply? &&
+      ModNote.tattle_on_max_depth_limit(self.user, self.parent_comment) &&
+      errors.add(:base, "You have replied too greedily and too deep.")
 
     (m = self.comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
       errors.add(:base, (m[1] == "T" ? "N" : "n") + "ope" + m[2].to_s)
@@ -84,70 +103,6 @@ class Comment < ApplicationRecord
     # .try so tests don't need to persist a story and user
     self.story.try(:accepting_comments?) ||
       errors.add(:base, "Story is no longer accepting comments.")
-  end
-
-  def self.arrange_for_user(user)
-    # This function is always used when presenting threads. The calling
-    # controllers advance the user's ReadRibbon, which may reduce the number
-    # of ReplyingComments, invalidating the User.unread_replies_count cache.
-    # The controller clearing that cache on every view of any thread would be
-    # wasteful because users read many more threads than they participate in,
-    # the controller making an extra loop over all comments would be wasteful,
-    # so this does a couple checks (without replicating all the predicates in
-    # replying_comments view, which would be brittle) and may clear the cache.
-    #
-    # This whole function should be done in the DB using a common-table
-    # expression. When that happens the cache clear probably needs to move up
-    # to the controller, which means extra clears, but that's probably a win
-    # because this function is the site's core functionality and it's
-    # expensive in both CPU + redundant RAM for the web workers.
-    clear_replies_cache = false
-
-    parents = self.order(
-      Arel.sql("comments.score < 0 ASC, comments.confidence DESC")
-    )
-      .group_by(&:parent_comment_id)
-
-    # top-down list of comments, regardless of indent level
-    ordered = []
-
-    ancestors = [nil] # nil sentinel so indent_level starts at 1 without add op.
-    subtree = parents[nil]
-
-    while subtree
-      if (node = subtree.shift)
-        children = parents[node.id]
-
-        clear_replies_cache = true if user && node.user_id == user.id
-
-        # for deleted comments, if they have no children, they can be removed
-        # from the tree.  otherwise they have to stay and a "[deleted]" stub
-        # will be shown
-        if node.is_gone? && # deleted or moderated
-           !children.present? && # don't have child comments
-           (!user || (!user.is_moderator? && node.user_id != user.id))
-          # admins and authors should be able to see their deleted comments
-          next
-        end
-
-        node.indent_level = ancestors.length
-        ordered << node
-
-        # no children to recurse
-        next unless children
-
-        # drill down a level
-        ancestors << subtree
-        subtree = children
-      else
-        # climb back out
-        subtree = ancestors.pop
-      end
-    end
-
-    Rails.cache.delete("user:#{user.id}:unread_replies") if clear_replies_cache
-
-    ordered
   end
 
   def self.regenerate_markdown
@@ -199,6 +154,12 @@ class Comment < ApplicationRecord
 
   def assign_initial_confidence
     self.confidence = self.calculated_confidence
+    # See comment explaining confidence_order in update_score_and_recalculate!
+    # 0 is a placeholder, don't have an id before save.
+    # This will move it up so it gets seen + voted on.
+    self.confidence_order =
+      [65_536 - (((self.confidence - -0.2) * 65_535) / 1.2).floor].pack('S>') +
+      [0].pack('C')
   end
 
   def assign_short_id_and_score
@@ -207,7 +168,7 @@ class Comment < ApplicationRecord
   end
 
   def assign_thread_id
-    if self.parent_comment_id.present?
+    if self.parent_comment.present?
       self.thread_id = self.parent_comment.thread_id
     else
       self.thread_id = Keystore.incremented_value_for("thread_id")
@@ -331,6 +292,19 @@ class Comment < ApplicationRecord
     end
   end
 
+  def depth_permits_reply?
+    # Top-level replies (eg parent_comment_id == null) have depth 0, then each reply is +1.
+    # Alternate definition: depth is the number of ancestor comments.
+
+    return false if self.new_record? # can't reply to unsaved comments
+
+    # Most commonly, depth is set by merged_comments. But we need to count parents when executing as
+    # a validation on reply.
+    self.depth ||= self.parents.count
+
+    depth < MAX_DEPTH
+  end
+
   def generated_markeddown_comment
     Markdowner.to_html(self.comment)
   end
@@ -340,11 +314,24 @@ class Comment < ApplicationRecord
   def update_score_and_recalculate!(score_delta, flag_delta)
     self.score += score_delta
     self.flags += flag_delta
+    # confidence_order allows sorting sibling comments by confidence in queries like story_threads.
+    # confidence_order must sort in ascending order so that it's in the right order when
+    # concatenated into confidence_order_path, which the database sorts lexiographically. It is 3
+    # bytes wide. The first two bytes map confidence to a big-endian unsigned integer, inverted so
+    # that high-confidence have low values. confidence is based on the number of upvotes and flags,
+    # so some values (like the one for 1 vote, 0 flags) are very common, causing sibling comments to
+    # tie. If we don't specify a tiebreaker, the database will return results in an arbitrary order,
+    # which means sibling comments will swap positions on page reloads (infrequently and
+    # intermittently, real fun to debug). So the third byte is the low byte of the comment id. Being
+    # assigned sequentially, mostly the tiebreaker sorts earlier comments sooner. We average ~200
+    # comments per weekday so seeing rollover between sibling comments is rare. Importantly, even
+    # when it is 'wrong', it gives a stable sort.
     Comment.connection.execute <<~SQL
       UPDATE comments SET
         score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),
         flags = (select count(*) from votes where comment_id = comments.id and vote = -1),
-        confidence = #{self.calculated_confidence}
+        confidence = #{self.calculated_confidence},
+        confidence_order = concat(lpad(char(65536 - floor(((confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(id & 0xff using binary))
       WHERE id = #{self.id.to_i}
     SQL
     self.story.recalculate_hotness!
@@ -453,6 +440,26 @@ class Comment < ApplicationRecord
     ].reject(&:!).join(".") << "@" << Rails.application.domain
   end
 
+  def parents
+    return Comment.none if self.parent_comment_id.nil?
+
+    # starts from parent_comment_id so it works on new records
+    Comment
+      .joins(<<~SQL
+        inner join (
+          with recursive parents as (
+            select id target_id, id, parent_comment_id, 0 as depth
+            from comments where id = #{self.parent_comment_id}
+            union all
+            select parents.target_id, c.id, c.parent_comment_id, depth - 1
+            from comments c join parents on parents.parent_comment_id = c.id
+          ) select id, depth from parents
+        ) as comments_recursive on comments.id = comments_recursive.id
+      SQL
+            )
+      .order('id asc')
+  end
+
   def path
     self.story.comments_path + "#c_#{self.short_id}"
   end
@@ -552,5 +559,82 @@ class Comment < ApplicationRecord
 
     self.story.update_comments_count!
     self.user.refresh_counts!
+  end
+
+  def self.recent_threads(user)
+    return Comment.none unless user.try(:id)
+
+    thread_ids = Comment
+      .where(user: user)
+      .group(:thread_id)
+      .order('id desc')
+      .limit(20)
+      .pluck(:thread_id)
+
+    Comment
+      .joins(<<~SQL
+        inner join (
+          with recursive discussion as (
+          select
+            c.id,
+            0 as depth,
+            cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
+            from comments c
+            where
+              thread_id in (#{thread_ids.join(', ')}) and
+              parent_comment_id is null
+          union all
+          select
+            c.id,
+            discussion.depth + 1,
+            cast(concat(
+              left(discussion.confidence_order_path, 3 * (depth + 1)),
+              c.confidence_order
+            ) as char(#{Comment::COP_LENGTH}) character set binary)
+          from comments c join discussion on c.parent_comment_id = discussion.id
+          )
+          select * from discussion as comments
+        ) as comments_recursive on comments.id = comments_recursive.id
+      SQL
+            )
+      .order('comments.thread_id desc, comments_recursive.confidence_order_path')
+      .select('comments.*, comments_recursive.depth as depth')
+  end
+
+  # select in thread order with preloading for _comment.html.erb
+  def self.story_threads(story)
+    return Comment.none unless story.id # unsaved Stories have no comments
+
+    # If the story_ids predicate is in the outer select the query planner doesn't push it down into
+    # the recursive CTE, so that subquery would build the tree for the entire comments table.
+    Comment
+      .joins(<<~SQL
+        inner join (
+          with recursive discussion as (
+          select
+            c.id,
+            0 as depth,
+            cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
+            from comments c
+            join stories on stories.id = c.story_id
+            where
+              (stories.id = #{story.id} or stories.merged_story_id = #{story.id}) and
+              parent_comment_id is null
+          union all
+          select
+            c.id,
+            discussion.depth + 1,
+            cast(concat(
+              left(discussion.confidence_order_path, 3 * (depth + 1)),
+              c.confidence_order
+            ) as char(#{Comment::COP_LENGTH}) character set binary)
+          from comments c join discussion on c.parent_comment_id = discussion.id
+          )
+          select * from discussion as comments
+        ) as comments_recursive on comments.id = comments_recursive.id
+      SQL
+            )
+      .order('comments_recursive.confidence_order_path')
+      .select('comments.*, comments_recursive.depth as depth')
   end
 end

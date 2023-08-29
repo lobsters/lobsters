@@ -61,7 +61,8 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
     </div>
     <div class="comment_parent_tree_line
       <%= can_flag ? "can_flag" : "" %>
-      <%= score_display != "&nbsp;" ? "score_shown" : "" %>"></div>
+      <%= score_display != "&nbsp;" ? "score_shown" : "" %>
+      <%= comment.reply_count.to_i == 0 ? "no_children" : "" %>"></div>
   <% end %>
 
   <div class="details">

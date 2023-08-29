@@ -19,7 +19,8 @@ class Comment < ApplicationRecord
   has_many :taggings, through: :story
 
   attr_accessor :current_vote, :previewing, :indent_level
-  attribute :depth
+  attribute :depth, :integer
+  attribute :reply_count, :integer
 
   before_validation :on => :create do
     self.assign_short_id_and_score
@@ -46,8 +47,8 @@ class Comment < ApplicationRecord
     ) : where('true')
   }
   # workaround: if this select is in #parents, calling .count produces invalid SQL
-  scope :with_relative_depth, -> {
-    select('comments.*, comments_recursive.depth as depth')
+  scope :with_thread_attributes, -> {
+    select('comments.*, comments_recursive.depth as depth, comments_recursive.reply_count')
   }
 
   FLAGGABLE_DAYS = 7
@@ -434,12 +435,22 @@ class Comment < ApplicationRecord
       .joins(<<~SQL
         inner join (
           with recursive parents as (
-            select id target_id, id, parent_comment_id, 0 as depth
+            select
+              id target_id,
+              id,
+              parent_comment_id,
+              0 as depth,
+              (select count(*) from comments where parent_comment_id = id) as reply_count
             from comments where id = #{self.parent_comment_id}
             union all
-            select parents.target_id, c.id, c.parent_comment_id, depth - 1
+            select
+              parents.target_id,
+              c.id,
+              c.parent_comment_id,
+              depth - 1,
+              (select count(*) from comments where parent_comment_id = c.id)
             from comments c join parents on parents.parent_comment_id = c.id
-          ) select id, depth from parents
+          ) select id, depth, reply_count from parents
         ) as comments_recursive on comments.id = comments_recursive.id
       SQL
             )
@@ -565,6 +576,7 @@ class Comment < ApplicationRecord
           select
             c.id,
             0 as depth,
+            (select count(*) from comments where parent_comment_id = c.id) as reply_count,
             cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
             from comments c
             where
@@ -574,6 +586,7 @@ class Comment < ApplicationRecord
           select
             c.id,
             discussion.depth + 1,
+            (select count(*) from comments where parent_comment_id = c.id),
             cast(concat(
               left(discussion.confidence_order_path, 3 * (depth + 1)),
               c.confidence_order
@@ -585,7 +598,11 @@ class Comment < ApplicationRecord
       SQL
             )
       .order('comments.thread_id desc, comments_recursive.confidence_order_path')
-      .select('comments.*, comments_recursive.depth as depth')
+      .select('
+        comments.*,
+        comments_recursive.depth as depth,
+        comments_recursive.reply_count as reply_count
+      ')
   end
 
   # select in thread order with preloading for _comment.html.erb
@@ -601,6 +618,7 @@ class Comment < ApplicationRecord
           select
             c.id,
             0 as depth,
+            (select count(*) from comments where parent_comment_id = c.id) as reply_count,
             cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
             from comments c
             join stories on stories.id = c.story_id
@@ -611,6 +629,7 @@ class Comment < ApplicationRecord
           select
             c.id,
             discussion.depth + 1,
+            (select count(*) from comments where parent_comment_id = c.id),
             cast(concat(
               left(discussion.confidence_order_path, 3 * (depth + 1)),
               c.confidence_order
@@ -622,6 +641,10 @@ class Comment < ApplicationRecord
       SQL
             )
       .order('comments_recursive.confidence_order_path')
-      .select('comments.*, comments_recursive.depth as depth')
+      .select('
+        comments.*,
+        comments_recursive.depth as depth,
+        comments_recursive.reply_count as reply_count
+      ')
   end
 end

@@ -140,7 +140,7 @@ class CommentsController < ApplicationController
     if request.xhr?
       render partial: 'commentbox', locals: { comment: comment }
     else
-      parents = comment.parents.with_relative_depth.for_presentation
+      parents = comment.parents.with_thread_attributes.for_presentation
 
       @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, parents.map(&:id))
       parents.each do |c|

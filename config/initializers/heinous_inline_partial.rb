@@ -3,7 +3,7 @@
 #
 # Inlining the comments/_comment partial into stories/show (bulk of our traffic!)
 # gives a 25-50% speedup over 'render collection: @comment', and 80-90% speedup over looping to
-# 'render partial: comment'.
+# 'render partial: "_comment"'.
 
 # rubocop:disable Style/MutableConstant
 HEINOUS_INLINE_PARTIALS = {
@@ -25,7 +25,7 @@ l.warn "heinous_inline_partial initialized, found: #{HEINOUS_INLINE_PARTIALS}"
 def do_heinous_inline_partial_replacement
   HEINOUS_INLINE_PARTIALS.each do |filename, partial_name|
     partial_mtime = File.mtime(partial_name)
-    #  puts "heinous contemplating #{filename} #{File.mtime(filename).to_i} #{partial_mtime.to_i}"
+    # puts "heinous contemplating #{filename} #{File.mtime(filename).to_i} #{partial_mtime.to_i}"
     next if File.mtime(filename) == partial_mtime
     # puts "  will replace in #{filename}"
 
@@ -40,7 +40,7 @@ def do_heinous_inline_partial_replacement
 
       partial = File.read(partial_name)
       if partial.include? 'heinous_inline_partial'
-        raise "No nesting: #{filename} includes #{$1} which has a  heinous_inline_partial"
+        raise "No nesting: #{filename} includes #{$1} which has a heinous_inline_partial"
       end
       <<~REPLACE
         <%#heinous_inline_partial(#{$1})%>

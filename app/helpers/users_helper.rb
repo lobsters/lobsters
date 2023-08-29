@@ -30,6 +30,35 @@ module UsersHelper
     end
   end
 
+  def styled_user_link user, content = nil, css_classes = []
+    if content.is_a?(Story) && content.user_is_author?
+      css_classes.push 'user_is_author'
+    end
+    if content.is_a?(Comment) && content.story &&
+       content.story.user_is_author? && content.story.user_id == user.id
+      css_classes.push 'user_is_author'
+    end
+
+    if !user.is_active?
+      css_classes.push 'inactive_user'
+    end
+    if user.is_new?
+      css_classes.push 'new_user'
+    end
+
+    link_to(user.username, user, class: css_classes)
+  end
+
+  def user_karma(user)
+    if user.is_admin?
+      "(administrator)"
+    elsif user.is_moderator?
+      "(moderator"
+    else
+      "(#{user.karma})"
+    end
+  end
+
 private
 
   def user_is_moderator?

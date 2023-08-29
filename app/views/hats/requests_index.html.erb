@@ -11,7 +11,7 @@
         <p>
         <div class="boxline">
           <%= f.label :user_id, "User:", :class => "required" %>
-          <a href="/u/<%= hr.user.username %>"><%= hr.user.username %></a>
+          <%= styled_user_link hr.user %>
           <%= time_ago_in_words(hr.created_at) %>
         </div>
 

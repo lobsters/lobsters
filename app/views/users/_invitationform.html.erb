@@ -1,8 +1,8 @@
 <p>
-Invitations are unlimited, but persons you invite will be associated with your
-account in the <a href="/u">user tree</a> and you may be responsible for them
-if they cause problems.  Please use your discretion when inviting persons you
-don't personally know.
+Invitations are unlimited, but persons you invite will be associated with your account
+in the <%= link_to 'user tree', users_tree_path %>
+and you may be responsible for them if they cause problems.
+Please use your discretion when inviting persons you don't personally know.
 </p>
 
 <%= form_with url: invitations_path, method: :post do |f| %>

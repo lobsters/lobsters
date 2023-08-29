@@ -17,15 +17,13 @@
             <div style="white-space:nowrap;">
               <% if @direction == :in %>
                 <% if message.author %>
-                  <a href="/u/<%= message.author.username %>"><%=
-                    message.author.username %></a>
+                  <%= styled_user_link message.author %>
                 <% else %>
                   <%= message.author_username %>
                 <% end %>
                 <%= message.hat.to_html_label if message.hat %>
               <% else %>
-                <a href="/u/<%= message.recipient.username %>"><%=
-                  message.recipient.username %></a>
+                <%= styled_user_link message.recipient %>
               <% end %>
             </div>
           </td>

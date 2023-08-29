@@ -39,9 +39,8 @@
   <span class="d">
     <%= time_ago_in_words_label(@showing_user.created_at) %>
     <% if @showing_user.invited_by_user %>
-      by <a href="/u#<%= @showing_user.username %>">invitation</a> from
-      <%= link_to @showing_user.invited_by_user.try(:username),
-        @showing_user.invited_by_user %>
+      by <%= link_to 'invitation', users_tree_path(anchor: @showing_user.username) %> from
+      <%= link_to @showing_user.invited_by_user.try(:username), @showing_user.invited_by_user %>
     <% end %>
   </span>
   <br>
@@ -215,14 +214,14 @@
         <% @showing_user.votes_for_others.limit(15).each do |v| %><tr>
           <td><%= v.vote == 1 ? '+' : v.reason %></td>
           <% if v.comment_id %>
-            <td><a href="/u/<%= v.comment.user.try(:username) %>"><%= v.comment.user.try(:username) %></a></td>
+            <td><a href="/~<%= v.comment.user.try(:username) %>"><%= v.comment.user.try(:username) %></a></td>
             <td>
               <%= v.story.title %>
               <a href="<%= v.comment.short_id_url %>">comment</a>:<br>
               <%= v.comment.comment.split[0..10].join(' ') %>
             </td>
           <% elsif v.story_id && !v.comment_id %>
-            <td><a href="/u/<%= v.story.user.try(:username) %>"><%= v.story.user.try(:username) %></a></td>
+            <td><a href="/~<%= v.story.user.try(:username) %>"><%= v.story.user.try(:username) %></a></td>
             <td><a href="<%= v.story.short_id_url %>"><%= v.story.title %></a></td>
           <% end %>
           </p>

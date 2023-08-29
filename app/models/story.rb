@@ -478,19 +478,6 @@ class Story < ApplicationRecord
     @hider_count ||= HiddenStory.where(:story_id => self.id).count
   end
 
-  def html_class_for_user
-    c = []
-    if !self.user.is_active?
-      c.push "inactive_user"
-    elsif self.user.is_new?
-      c.push "new_user"
-    elsif self.user_is_author?
-      c.push "user_is_author"
-    end
-
-    c.join("")
-  end
-
   def is_flaggable?
     if self.created_at && self.score > FLAGGABLE_MIN_SCORE
       Time.current - self.created_at <= FLAGGABLE_DAYS.days

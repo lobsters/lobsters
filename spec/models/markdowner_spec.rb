@@ -10,7 +10,7 @@ describe Markdowner do
     create(:user, :username => "blahblah")
 
     expect(Markdowner.to_html("hi @blahblah test"))
-      .to eq("<p>hi <a href=\"https://lobste.rs/u/blahblah\" rel=\"ugc\">" +
+      .to eq("<p>hi <a href=\"https://lobste.rs/~blahblah\" rel=\"ugc\">" +
              "@blahblah</a> test</p>\n")
 
     expect(Markdowner.to_html("hi @flimflam test"))
@@ -46,8 +46,8 @@ describe Markdowner do
       .to eq("<p><a href=\"//example.com\" rel=\"ugc\">" +
             "ex</a></p>\n")
 
-    expect(Markdowner.to_html("[ex](/u/abc)"))
-      .to eq("<p><a href=\"/u/abc\">ex</a></p>\n")
+    expect(Markdowner.to_html("[ex](/~abc)"))
+      .to eq("<p><a href=\"/~abc\">ex</a></p>\n")
   end
 
   context "when images are not allowed" do

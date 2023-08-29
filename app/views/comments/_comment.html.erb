@@ -49,13 +49,10 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
       <% end %>
 
       <% if (@user && @user.show_avatars?) || !@user %>
-        <a href="/u/<%= comment.user.username %>"><%=
-          avatar_img(comment.user, 16) %></a>
+        <%= link_to avatar_img(comment.user, 16), comment.user %>
       <% end %>
 
-      <a href="/u/<%= comment.user.username %>"
-        class="<%= comment.html_class_for_user %>"><%=
-        comment.user.username %></a>
+      <%= styled_user_link comment.user, comment %>
 
       <% if comment.hat %>
         <%= comment.hat.to_html_label %>

@@ -66,16 +66,14 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           <% end %>
           <span class="byline">
             <% if (@user && @user.show_avatars?) || !@user %>
-              <a href="/u/<%= ms.user.username %>"><%=
-                avatar_img(ms.user, 16) %></a>
+              <%= link_to avatar_img(ms.user, 16), ms.user %>
             <% end %>
             <% if ms.user_is_author? %>
               <span> authored by </span>
             <% else %>
               <span> via </span>
             <% end %>
-            <a href="/u/<%= ms.user.username %>" class="u-author h-card <%=
-              ms.html_class_for_user %>"><%= ms.user.username %></a>
+            <%= styled_user_link ms.user, story, ['u-author', 'h-card'] %>
 
             <%= time_ago_in_words_label(ms.created_at) %>
             <% if ms.is_editable_by_user?(@user) %>
@@ -98,8 +96,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 
     <div class="byline">
       <% if (@user && @user.show_avatars?) || !@user %>
-        <a href="/u/<%= story.user.username %>"><%=
-          avatar_img(story.user, 16) %></a>
+        <%= link_to avatar_img(story.user, 16), story.user %>
       <% end %>
       <% if story.previewing %>
         <% if story.user_is_author? %>
@@ -107,8 +104,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% else %>
           <span> via </span>
         <% end %>
-        <a class="u-author h-card <%= story.html_class_for_user %>"><%=
-          story.user.username %></a>
+
+        <%= styled_user_link story.user, story, ['u-author', 'h-card'] %>
         <span> just now </span>
       <% else %>
         <% if story.user_is_author? %>
@@ -116,8 +113,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% else %>
           <span> via </span>
         <% end %>
-        <a href="/u/<%= story.user.username %>" class="u-author h-card <%=
-          story.html_class_for_user %>"><%= story.user.username %></a>
+        <%= styled_user_link story.user, story, ['u-author', 'h-card'] %>
 
         <%= time_ago_in_words_label(story.created_at) %>
 

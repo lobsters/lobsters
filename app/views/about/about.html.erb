@@ -7,8 +7,8 @@
   <p>
   Lobsters is a computing-focused community centered around link aggregation
   and discussion, launched on July 3rd, 2012.
-  The administrator is <a href="/u/pushcx">Peter Bhat Harkins</a> ("pushcx"), contact him with any support issues.
-  Lobsters was created by <a href="/u/jcs">joshua stein</a>
+  The administrator is <a href="/~pushcx">Peter Bhat Harkins</a> ("pushcx"), contact him with any support issues.
+  Lobsters was created by <a href="/~jcs">joshua stein</a>
   with careful design touches to encourage a healthy community:
   </p>
 
@@ -87,7 +87,7 @@
 
   <h2 id="invitations">Invitation Tree</h2>
   <p>
-  The full <a href="/u">user tree</a> is public and each user's profile
+  The full <%= link_to 'user tree', users_tree_path %> is public and each user's profile
   shows who invited them.  This provides some degree of accountability and
   helps identify voting rings.
   </p>
@@ -113,7 +113,7 @@
   </p>
 
   <p>
-  The quickest way to receive an invitation is to talk to someone you <a href="/u">recognize from the site</a>.
+  The quickest way to receive an invitation is to talk to someone you <%= link_to 'recognize from the site', users_tree_path %>.
   If you wrote a link that was posted, please reach out in <a href="/chat">chat</a>, we'd love to have you join the discussion.
   Finally, if you can't find anyone you know in the invitation tree and didn't author something posted to the site,
   <% if Rails.application.allow_invitation_requests? %>
@@ -176,7 +176,7 @@
   <h2 id="transparency">Transparency Policy</h2>
   <p>
   All <a href="/moderations">moderator actions</a> on this site are visible to
-  everyone and the identities of those moderators are <a href="/u?moderators=1">public</a>.
+  everyone and the identities of those moderators are <%= link_to 'public', moderators_path %>.
   While the individual actions of a moderator may cause debate, there should be no question about if an action happened or who is responsible.
   </p>
 

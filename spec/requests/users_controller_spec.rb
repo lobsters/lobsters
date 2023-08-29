@@ -5,7 +5,7 @@ describe 'users controller' do
     it 'displays the username' do
       user = create(:user)
 
-      get "/u/#{user.username}"
+      get "/~#{user.username}"
 
       expect(response.body).to include(user.username)
     end
@@ -29,7 +29,7 @@ describe 'users controller' do
     it "displays to the user" do
       sign_in bad_user
 
-      get "/u/#{bad_user.username}/standing"
+      get "/~#{bad_user.username}/standing"
       expect(response.body).to include("flags")
       expect(response.body).to include("You")
     end
@@ -38,12 +38,12 @@ describe 'users controller' do
       user2 = create(:user)
       sign_in user2
 
-      get "/u/#{bad_user.username}/standing"
+      get "/~#{bad_user.username}/standing"
       expect(response.status).to eq(302)
     end
 
     it "doesn't display to logged-out users" do
-      get "/u/#{bad_user.username}/standing"
+      get "/~#{bad_user.username}/standing"
       expect(response.status).to eq(302)
     end
 
@@ -51,7 +51,7 @@ describe 'users controller' do
       mod = create(:user, :moderator)
       sign_in mod
 
-      get "/u/#{bad_user.username}/standing"
+      get "/~#{bad_user.username}/standing"
       expect(response.body).to include("flags")
     end
   end

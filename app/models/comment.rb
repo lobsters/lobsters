@@ -353,20 +353,6 @@ class Comment < ApplicationRecord
     self.updated_at && (self.updated_at - self.created_at > 1.minute)
   end
 
-  def html_class_for_user
-    c = []
-    if !self.user.is_active?
-      c.push "inactive_user"
-    elsif self.user.is_new?
-      c.push "new_user"
-    elsif self.story && self.story.user_is_author? &&
-          self.story.user_id == self.user_id
-      c.push "user_is_author"
-    end
-
-    c.join("")
-  end
-
   def is_deletable_by_user?(user)
     if user && user.is_moderator?
       return true

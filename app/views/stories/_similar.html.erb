@@ -3,7 +3,7 @@
     <li>
       <a href="<%= story.url %>" target="_blank"><%= story.title %></a>
       <%= story.user_is_author? ? "authored by" : "via" %>
-      <a href="/u/<%= story.user.username %>" class="<%= story.html_class_for_user %>"><%= story.user.username %></a>
+      <%= styled_user_link story.user, story %>
       <%= time_ago_in_words_label(story.created_at) %>
       <span>
         |

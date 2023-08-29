@@ -14,8 +14,6 @@ Rails.application.routes.draw do
   get "/active/page/:page" => "home#active"
   get "/newest" => "home#newest"
   get "/newest/page/:page" => "home#newest"
-  get "/newest/:user" => "home#newest_by_user"
-  get "/newest/:user/page/:page" => "home#newest_by_user"
   get "/recent" => "home#recent"
   get "/recent/page/:page" => "home#recent"
   get "/hidden" => "home#hidden"
@@ -37,7 +35,6 @@ Rails.application.routes.draw do
   get "/top/:length/page/:page" => "home#top"
 
   get "/threads" => "comments#user_threads"
-  get "/threads/:user" => "comments#user_threads", :as => "user_threads"
 
   get "/replies" => "replies#all"
   get "/replies/page/:page" => "replies#all"
@@ -133,19 +130,31 @@ Rails.application.routes.draw do
 
   get "/s/:id/(:title)" => "stories#show"
 
-  get "/u" => "users#tree"
-  get "/u/:username" => "users#show", :as => "user"
-  get "/u/:username/standing" => "users#standing", :as => "user_standing"
+  get "/users" => "users#tree", :as => "users_tree"
+  get "/~:username" => "users#show", :as => "user"
+  get "/~:username/standing" => "users#standing", :as => "user_standing"
+  get "/~:user/stories(/page/:page)" => "home#newest_by_user"
+  get "/~:user/threads" => "comments#user_threads", :as => "user_threads"
+
+  post "/~:username/ban" => "users#ban", :as => "user_ban"
+  post "/~:username/unban" => "users#unban", :as => "user_unban"
+  post "/~:username/disable_invitation" => "users#disable_invitation",
+        :as => "user_disable_invite"
+  post "/~:username/enable_invitation" => "users#enable_invitation",
+        :as => "user_enable_invite"
+
+  # 2023-07 redirect /u to /~username and /users (for tree)
+  get "/u", to: redirect("/users", status: 302)
+  get "/u/:username", to: redirect("/~%{username}", status: 302)
+  # we don't do /@alice but easy mistake with comments autolinking @alice
+  get "/@:username", to: redirect("/~%{username}", status: 302)
+  get "/u/:username/standing", to: redirect("~%{username}/standing", status: 302)
+  get "/newest/:user", to: redirect("~%{user}/stories", status: 302)
+  get "/newest/:user(/page/:page)", to: redirect("~%{user}/stories/page/%{page}", status: 302)
+  get "/threads/:user", to: redirect("~%{user}/threads", status: 302)
 
   get "/avatars/:username_size.png" => "avatars#show"
   post "/avatars/expire" => "avatars#expire"
-
-  post "/users/:username/ban" => "users#ban", :as => "user_ban"
-  post "/users/:username/unban" => "users#unban", :as => "user_unban"
-  post "/users/:username/disable_invitation" => "users#disable_invitation",
-        :as => "user_disable_invite"
-  post "/users/:username/enable_invitation" => "users#enable_invitation",
-        :as => "user_enable_invite"
 
   get "/settings" => "settings#index"
   post "/settings" => "settings#update"

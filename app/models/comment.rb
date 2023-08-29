@@ -154,6 +154,7 @@ class Comment < ApplicationRecord
 
   def assign_initial_confidence
     self.confidence = self.calculated_confidence
+    # See comment explaining confidence_order in update_score_and_recalculate!
     # 0 is a placeholder, don't have an id before save.
     # This will move it up so it gets seen + voted on.
     self.confidence_order =
@@ -313,6 +314,17 @@ class Comment < ApplicationRecord
   def update_score_and_recalculate!(score_delta, flag_delta)
     self.score += score_delta
     self.flags += flag_delta
+    # confidence_order allows sorting sibling comments by confidence in queries like story_threads.
+    # confidence_order must sort in ascending order so that it's in the right order when
+    # concatenated into confidence_order_path, which the database sorts lexiographically. It is 3
+    # bytes wide. The first two bytes map confidence to a big-endian unsigned integer, inverted so
+    # that high-confidence have low values. confidence is based on the number of upvotes and flags,
+    # so some values (like the one for 1 vote, 0 flags) are very common, causing sibling comments to
+    # tie. If we don't specify a tiebreaker, the database will return results in an arbitrary order,
+    # which means sibling comments will swap positions on page reloads (infrequently and
+    # intermittently, real fun to debug). So the third byte is the low byte of the comment id. Being
+    # assigned sequentially, mostly the tiebreaker sorts earlier comments sooner. We average ~200
+    # comments per weekday so seeing rollover between sibling comments is rare.
     Comment.connection.execute <<~SQL
       UPDATE comments SET
         score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),

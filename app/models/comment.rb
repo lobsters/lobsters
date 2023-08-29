@@ -556,6 +556,7 @@ class Comment < ApplicationRecord
       .order('id desc')
       .limit(20)
       .pluck(:thread_id)
+    return Comment.none if thread_ids.empty?
 
     Comment
       .joins(<<~SQL

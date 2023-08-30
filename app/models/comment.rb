@@ -428,6 +428,7 @@ class Comment < ApplicationRecord
     ].reject(&:!).join(".") << "@" << Rails.application.domain
   end
 
+  # all direct ancestors of this comment, oldest first
   def parents
     return Comment.none if self.parent_comment_id.nil?
 

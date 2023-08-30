@@ -195,33 +195,15 @@ if __FILE__ == $PROGRAM_NAME
         mail.puts "Content-Transfer-Encoding: quoted-printable"
         mail.puts "Message-ID: <#{c.mailing_list_message_id}>"
 
-        refs = ["<#{c.story.mailing_list_message_id}>"]
-
         if c.parent_comment_id
           mail.puts "In-Reply-To: <#{c.parent_comment.mailing_list_message_id}>"
-
-          thread = []
-          indent_level = 0
-          Comment.where(:thread_id => c.thread_id).reverse_each do |cc|
-            if indent_level > 0 && cc.indent_level < indent_level
-              thread.unshift cc
-              indent_level = cc.indent_level
-            elsif cc.id == c.id
-              indent_level = cc.indent_level
-            end
-          end
-
-          thread.each do |cc|
-            refs.push "<#{cc.mailing_list_message_id}>"
-          end
         else
           mail.puts "In-Reply-To: <#{c.story.mailing_list_message_id}>"
         end
 
-        mail.print "References:"
-        refs.each do |ref|
-          mail.puts " #{ref}"
-        end
+        refs = ["<#{c.story.mailing_list_message_id}>"] +
+               c.parents.map(&:mailing_list_message_id)
+        mail.print "References: #{refs.join(' ')}"
 
         mail.puts "Date: " << c.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
         mail.puts "Subject: " << story_subject(c.story, "Re: ")

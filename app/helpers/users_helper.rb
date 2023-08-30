@@ -7,7 +7,7 @@ module UsersHelper
     stories_displayed = stories_submitted - stories_deleted
 
     capture do
-      concat link_to(stories_displayed, "/newest/#{showing_user.username}")
+      concat link_to(stories_displayed, newest_by_user_path(showing_user))
 
       concat(" (+#{stories_deleted} deleted)") if user_is_moderator? && stories_deleted > 0
 
@@ -22,7 +22,7 @@ module UsersHelper
     comments_deleted = showing_user.comments_deleted_count
 
     capture do
-      concat link_to(showing_user.comments_posted_count, "/threads/#{showing_user.username}")
+      concat link_to(showing_user.comments_posted_count, user_threads_path(showing_user))
 
       if user_is_moderator? && comments_deleted > 0
         concat " (+#{comments_deleted} deleted)"

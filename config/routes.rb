@@ -133,7 +133,7 @@ Rails.application.routes.draw do
   get "/users" => "users#tree", :as => "users_tree"
   get "/~:username" => "users#show", :as => "user"
   get "/~:username/standing" => "users#standing", :as => "user_standing"
-  get "/~:user/stories(/page/:page)" => "home#newest_by_user"
+  get "/~:user/stories(/page/:page)" => "home#newest_by_user", as: 'newest_by_user'
   get "/~:user/threads" => "comments#user_threads", :as => "user_threads"
 
   post "/~:username/ban" => "users#ban", :as => "user_ban"

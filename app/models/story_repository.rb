@@ -38,19 +38,8 @@ class StoryRepository
   end
 
   def newest_by_user(user)
-    if @user == user
-      stories = Story.base(@user).not_deleted.left_joins(:merged_stories)
-      unmerged = stories.unmerged.where(user_id: user.id)
-      merged_into_others = stories.where(merged_stories_stories: { user_id: user.id })
-
-      unmerged.or(merged_into_others).order(id: :desc)
-    else
-      Story.base(@user).where(user_id: user.id).order("stories.id DESC")
-    end
-  end
-
-  def newest_including_deleted_by_user(user)
-    Story.base(@user).unmerged.where(user_id: user.id).order(id: :desc)
+    # Story.base without unmerged scope
+    Story.where(user: user).includes(:tags).not_deleted(@user).mod_preload?(@user).order(id: :desc)
   end
 
   def saved

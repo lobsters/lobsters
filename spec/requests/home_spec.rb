@@ -32,4 +32,15 @@ describe 'home', type: :request do
       expect(response).to redirect_to('/domains/example.com/page/2')
     end
   end
+
+  describe "#newest_by_user" do
+    it 'shows a merge icon for merged stories' do
+      by_other = create(:story)
+      alice = create(:user, username: 'alice')
+      create(:story, user: alice, merged_into_story: by_other)
+
+      get "/~alice/stories"
+      expect(response.body).to include('<span class="merge">')
+    end
+  end
 end

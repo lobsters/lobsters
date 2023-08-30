@@ -25,6 +25,9 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
   </div>
   <div class="details">
     <span role="heading" aria-level="1" class="link h-cite u-repost-of">
+      <% if story.merged_story_id %>
+        <span class="merge"></span>
+      <% end %>
       <% if story.can_be_seen_by_user?(@user) %>
         <a class="u-url" href="<%= story.url_or_comments_path %>" rel="ugc <%= story.send_referrer? ? '' : 'noreferrer' %>"><%= story.title %></a>
       <% end %>
@@ -48,7 +51,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
 
       <% if defined?(single_story) && single_story %>
-        <% story.merged_stories.not_deleted.includes(:domain, :user, :tags).each do |ms| %>
+        <% story.merged_stories.not_deleted(nil).includes(:domain, :user, :tags).each do |ms| %>
           <br>
           <span class="merge"></span>
           <span class="link">

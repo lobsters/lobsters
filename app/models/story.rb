@@ -36,12 +36,14 @@ class Story < ApplicationRecord
   has_many :savings, :class_name => 'SavedStory', :inverse_of => :story, :dependent => :destroy
   has_one :story_text, foreign_key: :id, dependent: :destroy, inverse_of: :story
 
-  scope :base, ->(user) {
-    q = includes(:tags).unmerged
-    user && user.is_moderator? ? q.preload(:suggested_taggings, :suggested_titles) : q.not_deleted
+  scope :base, ->(user) { includes(:tags).not_deleted(user).unmerged.mod_preload?(user) }
+  scope :mod_preload?, ->(user) {
+    user.try(:is_moderator?) ? preload(:suggested_taggings, :suggested_titles) : all
   }
   scope :deleted, -> { where(is_deleted: true) }
-  scope :not_deleted, -> { where(is_deleted: false) }
+  scope :not_deleted, ->(user) {
+    user.try(:is_moderator?) ? all : where("is_deleted = false or user_id = ?", user.try(:id).to_i)
+  }
   scope :unmerged, -> { where(:merged_story_id => nil) }
   scope :positive_ranked, -> { where("score >= 0") }
   scope :low_scoring, ->(max = 5) { where("score < ?", max) }
@@ -200,7 +202,7 @@ class Story < ApplicationRecord
   def check_not_new_domain_from_new_user
     return unless self.url.present? && self.new_record? && self.domain
 
-    if self.user && self.user.is_new? && self.domain.stories.not_deleted.count == 0
+    if self.user && self.user.is_new? && self.domain.stories.not_deleted(nil).count == 0
       ModNote.tattle_on_story_domain!(self, "new user with new")
       errors.add :url, <<-EXPLANATION
         is an unseen domain from a new user. We restrict this to discourage

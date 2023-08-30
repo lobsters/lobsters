@@ -18,10 +18,12 @@ class Moderation < ApplicationRecord
              :optional => true
 
   scope :for, ->(user) {
-    left_outer_joins(:story, :comment) .where("
-      moderations.user_id = ? OR
-      stories.user_id = ? OR
-      comments.user_id = ?", user, user, user)
+    left_outer_joins(:story, :comment)
+      .includes(:moderator, comment: [:user, :story], story: :user)
+      .where("
+        moderations.user_id = ? OR
+        stories.user_id = ? OR
+        comments.user_id = ?", user, user, user)
   }
 
   validates :action, :reason, length: { maximum: 16_777_215 }

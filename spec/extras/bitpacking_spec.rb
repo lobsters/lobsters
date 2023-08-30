@@ -134,13 +134,14 @@ describe "sql assumptions" do
 
   describe "Comment#update_score_and_recalculate matches SQL math" do
     it "initializes correctly" do
-      c = create(:comment, score: 1, flags: 0)
-      expect(c.confidence_order).to be_bytes("\xAE\x52\x00")
+      c = create(:comment, id: 9, score: 1, flags: 0)
+      c.reload
+      expect(c.confidence_order).to be_bytes("\xAE\x52\x09")
     end
 
     it "increments correctly" do
       c = create(:comment, id: 4, score: 1, flags: 0)
-      expect(c.confidence_order).to be_bytes("\xAE\x52\x00") # id ignored on creation
+      expect(c.confidence_order).to be_bytes("\x00\x00\x00") # placeholder on creation
       create(:vote, story: c.story, comment: c)
       c.update_score_and_recalculate!(1, 0)
       c.reload

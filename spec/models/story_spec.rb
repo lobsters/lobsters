@@ -372,7 +372,7 @@ describe Story do
 
     context "with positive base" do
       it "return correct score" do
-        expect(story.calculated_hotness).to eq(-0.25)
+        expect(story.calculated_hotness).to eq(-0.7271213)
       end
     end
 
@@ -383,7 +383,7 @@ describe Story do
       end
 
       it "return correct score" do
-        expect(story.calculated_hotness).to eq 9.75
+        expect(story.calculated_hotness).to eq 9.44897
       end
     end
   end

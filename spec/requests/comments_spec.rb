@@ -8,10 +8,11 @@ describe 'comments', type: :request do
 
   describe 'upvoting' do
     it 'works' do
-      expect {
-        post "/comments/#{comment.short_id}/upvote"
-        expect(response.status).to eq(200)
-      }.to change { comment.reload.score }.by(1)
+      expect(comment.score).to eq(1)
+      expect(comment.reload.score).to eq(1)
+      post "/comments/#{comment.short_id}/upvote"
+      expect(response.status).to eq(200)
+      expect(comment.reload.score).to eq(2)
       expect(Vote.where(user: user).count).to eq(1)
     end
 

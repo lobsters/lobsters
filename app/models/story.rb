@@ -541,6 +541,7 @@ class Story < ApplicationRecord
     end
 
     all_changes = self.changes.merge(self.tagging_changes)
+    all_changes.delete("normalized_url")
     all_changes.delete("unavailable_at")
 
     if !all_changes.any?

@@ -277,15 +277,30 @@ describe Story do
     s.tags_a = ["tag1"]
 
     s.editor = mod
-    s.moderation_reason = "because i hate you"
+    s.moderation_reason = "not about tag2"
     s.save!
 
     mod_log = Moderation.last
     expect(mod_log.moderator_user_id).to eq(mod.id)
     expect(mod_log.story_id).to eq(s.id)
-    expect(mod_log.reason).to eq("because i hate you")
+    expect(mod_log.reason).to eq("not about tag2")
     expect(mod_log.action).to match(/title from "blah" to "changed title"/)
     expect(mod_log.action).to match(/tags from "tag1 tag2" to "tag1"/)
+  end
+
+  it "doesn't log changed to derived field normalized_url" do
+    mod = create(:user, :moderator)
+
+    s = create(:story, url: 'https://example.com/1')
+
+    s.url = 'https://example.com/2'
+    s.editor = mod
+    s.moderation_reason = 'fixed link'
+    s.save!
+
+    mod_log = Moderation.last
+    expect(mod_log.story_id).to eq(s.id)
+    expect(mod_log.action).to_not match(/normalize/)
   end
 
   describe "#similar_stories" do

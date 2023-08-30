@@ -18,7 +18,7 @@ class Comment < ApplicationRecord
              :optional => true
   has_many :taggings, through: :story
 
-  attr_accessor :current_vote, :previewing, :indent_level
+  attr_accessor :current_vote, :previewing
   attribute :depth, :integer
   attribute :reply_count, :integer
 
@@ -137,7 +137,7 @@ class Comment < ApplicationRecord
       { :comment => (self.is_gone? ? "<em>#{self.gone_text}</em>" : :markeddown_comment) },
       { :comment_plain => (self.is_gone? ? self.gone_text : :comment) },
       :url,
-      :indent_level,
+      :depth,
       { :commenting_user => :user },
     ]
 

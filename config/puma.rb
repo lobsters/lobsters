@@ -17,7 +17,13 @@ threads threads_count, threads_count
 environment ENV.fetch("RAILS_ENV") { "development" }
 
 # Specifies the `pidfile` that Puma will use.
-pidfile ENV.fetch("PIDFILE") { "/srv/lobste.rs/run/puma.pid" }
+pidfile ENV.fetch("PIDFILE") {
+  if ENV.fetch("RAILS_ENV") == "production"
+    "/srv/lobste.rs/run/puma.pid"
+  else
+    "tmp/puma.pid"
+  end
+}
 
 # Specifies the number of `workers` to boot in clustered mode.
 # Workers are forked webserver processes. If using threads and workers together

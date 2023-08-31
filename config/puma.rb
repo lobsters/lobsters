@@ -8,12 +8,10 @@ threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
 threads threads_count, threads_count
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
-#
 # port        ENV.fetch("PORT") { 3000 }
 # bind 'tcp://127.0.0.1:3000'
 
 # Specifies the `environment` that Puma will run in.
-#
 environment ENV.fetch("RAILS_ENV") { "development" }
 
 # Specifies the `pidfile` that Puma will use.
@@ -30,17 +28,21 @@ pidfile ENV.fetch("PIDFILE") {
 # the concurrency of the application would be max `threads` * `workers`.
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
-#
 workers ENV.fetch("WEB_CONCURRENCY") { 12 }
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
 # before forking the application. This takes advantage of Copy On Write
 # process behavior so workers use less memory.
-#
 if ENV.fetch("RAILS_ENV") == "production"
   bind 'unix:///srv/lobste.rs/run/puma.sock'
-  preload_app!
+
+  # phased restarts
+  # https://github.com/puma/puma/blob/master/docs/restart.md
+  prune_bundler
+
+  # old hot restart config; will need ansible change to tell systemctl to restart instead of reload
+  #preload_app!
 end
 
 # Allow puma to be restarted by `rails restart` command.

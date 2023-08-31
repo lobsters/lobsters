@@ -12,9 +12,9 @@ Rack::Attack.throttle("5 requests per second", limit: 5, period: 1, &:ip)
 # we ask scrapers to sleep 1s between hits
 Rack::Attack.throttle("60 requests per minute", limit: 60, period: 60, &:ip)
 
-# there's an attacker enumeratng usernames via Tor
+# there's attackers enumeratng usernames, mostly via Tor
 Rack::Attack.throttle("user enumerator", limit: 30, period: 300) do |request|
-  request.ip if request.path.starts_with? '/u/'
+  request.ip if request.path.starts_with? '/u/' or request.path.starts_with? '/~'
 end
 # at some point they'll proceed to testing credentials
 Rack::Attack.throttle("login", limit: 4, period: 60) do |request|

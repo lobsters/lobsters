@@ -78,7 +78,7 @@ class ApplicationController < ActionController::Base
   end
 
   def mini_profiler
-    if @user && @user.is_admin?
+    if @user && @user.is_moderator?
       Rack::MiniProfiler.authorize_request
     end
   end

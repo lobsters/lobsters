@@ -618,7 +618,7 @@ onPageLoad(() => {
     }
 
     let div = document.createElement('div');
-    div.innerHTML = 'placeholder';
+    div.innerHTML = '';
     comment.lastElementChild.append(div);
 
     fetchWithCSRF('/comments/' + comment.getAttribute('data-shortid') + '/reply')

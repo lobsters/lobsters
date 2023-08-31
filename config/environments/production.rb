@@ -48,6 +48,7 @@ Rails.application.configure do
 
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).
+  config.logger = Logger.new('/srv/lobste.rs/log/production.log')
   config.log_level = :info
 
   # Prepend all log lines with the following tags.

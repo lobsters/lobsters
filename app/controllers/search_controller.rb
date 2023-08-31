@@ -23,7 +23,5 @@ class SearchController < ApplicationController
         @search.search_for_user!(@user)
       end
     end
-
-    render :action => "index"
   end
 end

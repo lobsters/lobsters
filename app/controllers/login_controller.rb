@@ -22,7 +22,6 @@ class LoginController < ApplicationController
   def index
     @title = "Login"
     @referer ||= request.referer
-    render :action => "index"
   end
 
   def login
@@ -102,7 +101,6 @@ class LoginController < ApplicationController
 
   def forgot_password
     @title = "Reset Password"
-    render :action => "forgot_password"
   end
 
   def reset_password

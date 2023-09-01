@@ -102,7 +102,7 @@ class Search
 
     case self.what
     when "stories"
-      base = Story.unmerged.where(is_deleted: false)
+      base = Story.unmerged.where(is_deleted: false).includes(:domain, :tags, :taggings)
       if domain.present?
         base = with_stories_in_domain(base, domain)
       end

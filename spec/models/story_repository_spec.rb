@@ -4,7 +4,7 @@ describe StoryRepository do
   let(:submitter) { create(:user) }
   let(:repo) { StoryRepository.new(submitter) }
 
-  describe '.active' do
+  describe ".active" do
     it "is ordered by most-recent comment" do
       older_story = create(:story)
       newer_story = create(:story)
@@ -21,7 +21,7 @@ describe StoryRepository do
       normal_comment = create(:comment, story: normal_story)
 
       HiddenStory.hide_story_for_user(hidden_story.id, hidden_story.user_id)
-      hidden_story_user = User.find_by(:id => hidden_story.user_id)
+      hidden_story_user = User.find_by(id: hidden_story.user_id)
 
       hidden_story_user_repo = StoryRepository.new(hidden_story_user)
       expect(hidden_story_user_repo.active).to eq([normal_comment.story])

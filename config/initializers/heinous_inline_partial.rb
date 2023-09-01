@@ -11,15 +11,15 @@ HEINOUS_INLINE_PARTIALS = {
 }
 # rubocop:enable Style/MutableConstant
 
-Dir['app/views/**/*.erb'].each do |filename|
+Dir["app/views/**/*.erb"].each do |filename|
   template = File.read(filename)
-  next unless template.include? 'heinous_inline_partial'
+  next unless template.include? "heinous_inline_partial"
 
   partial_match = template.match(/^<%#heinous_inline_partial\(([\w\/\.]+)\)%>/)
-  partial_name = partial_match && partial_match.captures.first
-  HEINOUS_INLINE_PARTIALS[filename] = 'app/views/' + partial_name
+  partial_name = partial_match&.captures&.first
+  HEINOUS_INLINE_PARTIALS[filename] = "app/views/" + partial_name
 end
-l = Logger.new(STDOUT)
+l = Logger.new($stdout)
 l.warn "heinous_inline_partial initialized, found: #{HEINOUS_INLINE_PARTIALS}"
 
 def do_heinous_inline_partial_replacement
@@ -34,12 +34,12 @@ def do_heinous_inline_partial_replacement
       ^<%\#heinous_inline_partial\(([\w\/\.]+)\)%>
       (.+)
       ^<%\#\/heinous_inline_partial\(([\w\/\.]+)\)%>\n
-      /xm) {|_match|
+      /xm) { |_match|
       raise "Template name didn't match in open and closing tags. One per file!" unless $1 == $3
       # puts "  .sub! matched, replacing"
 
       partial = File.read(partial_name)
-      if partial.include? 'heinous_inline_partial'
+      if partial.include? "heinous_inline_partial"
         raise "No nesting: #{filename} includes #{$1} which has a heinous_inline_partial"
       end
       <<~REPLACE

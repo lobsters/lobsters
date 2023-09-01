@@ -30,10 +30,10 @@ module TrafficHelper
   end
 
   def self.cache_traffic!
-    low, high = self.traffic_range
-    Keystore.put('traffic:low', low)
-    Keystore.put('traffic:high', high)
-    Keystore.put('traffic:intensity', current_intensity(low, high))
+    low, high = traffic_range
+    Keystore.put("traffic:low", low)
+    Keystore.put("traffic:high", high)
+    Keystore.put("traffic:intensity", current_intensity(low, high))
   end
 
   def self.current_activity
@@ -50,11 +50,11 @@ module TrafficHelper
   def self.current_intensity(low, high)
     return 0.5 if low.nil? || high.nil? || high == low
     activity = [low, current_activity, high].sort[1]
-    [0, ((activity - low)*1.0/(high - low) * 100).round, 100].sort[1]
+    [0, ((activity - low) * 1.0 / (high - low) * 100).round, 100].sort[1]
   end
 
   def self.cached_current_intensity
-    Keystore.value_for('traffic:intensity') || 0.5
+    Keystore.value_for("traffic:intensity") || 0.5
   end
 
   # rubocop:disable Layout/LineLength

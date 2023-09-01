@@ -11,7 +11,7 @@ describe Comment do
     it "can't be worn if user doesn't have that hat" do
       comment = build(:comment, hat: build(:hat))
       comment.valid?
-      expect(comment.errors[:hat]).to eq(['not wearable by user'])
+      expect(comment.errors[:hat]).to eq(["not wearable by user"])
     end
 
     it "can be one of the user's hats" do

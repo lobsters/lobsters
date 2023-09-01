@@ -8,7 +8,7 @@ class Search
   attr_accessor :results, :page, :total_results, :per_page
   attr_writer :what
 
-  validates :q, length: { :minimum => 2 }
+  validates :q, length: {minimum: 2}
 
   def initialize
     @q = ""
@@ -31,17 +31,17 @@ class Search
   end
 
   def to_url_params
-    [:q, :what, :order].map {|p| "#{p}=#{CGI.escape(self.send(p).to_s)}" }.join("&amp;")
+    [:q, :what, :order].map { |p| "#{p}=#{CGI.escape(send(p).to_s)}" }.join("&amp;")
   end
 
   def page_count
-    total = self.total_results.to_i
+    total = total_results.to_i
 
-    if total == -1 || total > self.max_matches
-      total = self.max_matches
+    if total == -1 || total > max_matches
+      total = max_matches
     end
 
-    ((total - 1) / self.per_page.to_i) + 1
+    ((total - 1) / per_page.to_i) + 1
   end
 
   def what
@@ -55,8 +55,8 @@ class Search
 
   def with_tags(base, tag_scopes)
     base
-      .joins({ :taggings => :tag }, :user).left_outer_joins(:story_text)
-      .where(:tags => { :tag => tag_scopes })
+      .joins({taggings: :tag}, :user).left_outer_joins(:story_text)
+      .where(tags: {tag: tag_scopes})
       .having("COUNT(stories.id) = ?", tag_scopes.length)
       .group("stories.id")
   end
@@ -71,7 +71,7 @@ class Search
       base.joins(story: [:domain])
     else
       fail "Can't handle #{base.class}"
-    end.where('domains.domain = ?', domain)
+    end.where("domains.domain = ?", domain)
   end
 
   def with_stories_matching_tags(base, tag_scopes)
@@ -88,7 +88,7 @@ class Search
     # extract domain query since it must be done separately
     domain = nil
     tag_scopes = []
-    words = self.q.to_s.split(" ").reject {|w|
+    words = q.to_s.split(" ").reject { |w|
       if (m = w.match(/^domain:(.+)$/))
         domain = m[1]
       elsif (m = w.match(/^tag:(.+)$/))
@@ -100,7 +100,7 @@ class Search
 
     base = nil
 
-    case self.what
+    case what
     when "stories"
       base = Story.unmerged.where(is_deleted: false).includes(:domain, :tags, :taggings)
       if domain.present?
@@ -115,41 +115,41 @@ class Search
 
       if qwords.present?
         base.where!(
-          "(#{title_match_sql} OR " +
-          "#{description_match_sql} OR " +
+          "(#{title_match_sql} OR " \
+          "#{description_match_sql} OR " \
           "#{story_text_match_sql})"
         )
 
         if tag_scopes.present?
           self.results = with_tags(base, tag_scopes)
         else
-          base = base.includes({ :taggings => :tag }, :user).left_outer_joins(:story_text)
+          base = base.includes({taggings: :tag}, :user).left_outer_joins(:story_text)
           self.results = base.select(
-            ["stories.*", title_match_sql, description_match_sql, story_text_match_sql].join(', ')
+            ["stories.*", title_match_sql, description_match_sql, story_text_match_sql].join(", ")
           )
         end
       else
-        if tag_scopes.present?
-          self.results = with_tags(base, tag_scopes)
+        self.results = if tag_scopes.present?
+          with_tags(base, tag_scopes)
         else
-          self.results = base.includes({ :taggings => :tag }, :user).left_outer_joins(:story_text)
+          base.includes({taggings: :tag}, :user).left_outer_joins(:story_text)
         end
       end
-      self.total_results = self.results.dup.count("stories.id")
+      self.total_results = results.dup.count("stories.id")
 
-      case self.order
+      case order
       when "relevance"
         if qwords.present?
-          self.results.order!(Arel.sql("((#{title_match_sql}) * 2) + " +
-                                       "((#{description_match_sql}) * 1.5) + " +
+          results.order!(Arel.sql("((#{title_match_sql}) * 2) + " \
+                                       "((#{description_match_sql}) * 1.5) + " \
                                        "(#{story_text_match_sql}) DESC"))
         else
-          self.results.order!("stories.created_at DESC")
+          results.order!("stories.created_at DESC")
         end
       when "newest"
-        self.results.order!("stories.created_at DESC")
+        results.order!("stories.created_at DESC")
       when "points"
-        self.results.order!("score DESC")
+        results.order!("score DESC")
       end
 
     when "comments"
@@ -164,59 +164,58 @@ class Search
         base = base.where(Arel.sql("MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE)"))
       end
       self.results = base.select(
-        "comments.*, " +
+        "comments.*, " \
         "MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_comment"
       ).includes(:user, :story)
-      self.total_results = self.results.dup.count("comments.id")
+      self.total_results = results.dup.count("comments.id")
 
-      case self.order
+      case order
       when "relevance"
-        self.results.order!("rel_comment DESC")
+        results.order!("rel_comment DESC")
       when "newest"
-        self.results.order!("created_at DESC")
+        results.order!("created_at DESC")
       when "points"
-        self.results.order!("score DESC")
+        results.order!("score DESC")
       end
     end
 
     # with_tags uses group_by, so count returns a hash
-    self.total_results = self.total_results.count if self.total_results.is_a? Hash
+    self.total_results = total_results.count if total_results.is_a? Hash
 
-    if self.page > self.page_count
-      self.page = self.page_count
+    if page > page_count
+      self.page = page_count
     end
-    if self.page < 1
+    if page < 1
       self.page = 1
     end
 
-    self.results = self.results
-      .limit(self.per_page)
-      .offset((self.page - 1) * self.per_page)
+    self.results = results
+      .limit(per_page)
+      .offset((page - 1) * per_page)
 
     # if a user is logged in, fetch their votes for what's on the page
     if user
       case what
       when "stories"
-        self.results = self.results.mod_preload?(user)
-        votes = Vote.story_votes_by_user_for_story_ids_hash(user.id, self.results.map(&:id))
+        self.results = results.mod_preload?(user)
+        votes = Vote.story_votes_by_user_for_story_ids_hash(user.id, results.map(&:id))
 
-        self.results.each do |r|
+        results.each do |r|
           if votes[r.id]
             r.vote = votes[r.id]
           end
         end
 
       when "comments"
-        votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id, self.results.map(&:id))
+        votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id, results.map(&:id))
 
-        self.results.each do |r|
+        results.each do |r|
           if votes[r.id]
             r.current_vote = votes[r.id]
           end
         end
       end
     end
-
   rescue ActiveRecord::StatementInvalid
     # more likely the user has entered invalid boolean mode operators than our
     # code is broken (not that I really trust this hairy class)

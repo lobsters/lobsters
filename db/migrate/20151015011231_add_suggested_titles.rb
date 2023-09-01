@@ -3,7 +3,7 @@ class AddSuggestedTitles < ActiveRecord::Migration
     create_table "suggested_titles" do |t|
       t.integer :story_id
       t.integer :user_id
-      t.string :title, :limit => 150, :null => false
+      t.string :title, limit: 150, null: false
     end
   end
 end

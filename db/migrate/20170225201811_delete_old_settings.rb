@@ -10,7 +10,7 @@ class DeleteOldSettings < ActiveRecord::Migration
       :email_mentions,
       :show_avatars,
       :show_story_previews,
-      :show_submitted_story_threads,
+      :show_submitted_story_threads
     ].each do |col|
       remove_column :users, "old_#{col}"
     end

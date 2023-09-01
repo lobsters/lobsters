@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe Hat do
   it "has a hat field" do

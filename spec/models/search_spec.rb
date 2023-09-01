@@ -8,45 +8,45 @@ describe Search do
   before(:all) do
     @user = create(:user)
 
-    @multi_tag = create(:story, :title => "multitag term1 t1 t2",
-                             :url => "https://example.com/3",
-                             :user_id => @user.id,
-                             :tags_a => ["tag1", "tag2"])
+    @multi_tag = create(:story, title: "multitag term1 t1 t2",
+      url: "https://example.com/3",
+      user_id: @user.id,
+      tags_a: ["tag1", "tag2"])
     @stories = [
-      create(:story, :title => "unique",
-                  :url => "https://example.com/unique",
-                  :user_id => @user.id,
-                  :tags_a => ["tag1"]),
-      create(:story, :title => "term1 domain1",
-                  :url => "https://example.com/1",
-                  :user_id => @user.id,
-                  :tags_a => ["tag1"]),
-      create(:story, :title => "term1 t2",
-                  :url => "https://example.com/2",
-                  :user_id => @user.id,
-                  :tags_a => ["tag2"]),
+      create(:story, title: "unique",
+        url: "https://example.com/unique",
+        user_id: @user.id,
+        tags_a: ["tag1"]),
+      create(:story, title: "term1 domain1",
+        url: "https://example.com/1",
+        user_id: @user.id,
+        tags_a: ["tag1"]),
+      create(:story, title: "term1 t2",
+        url: "https://example.com/2",
+        user_id: @user.id,
+        tags_a: ["tag2"]),
       @multi_tag,
-      create(:story, :title => "term1 domain2",
-                  :url => "https://lobste.rs/1",
-                  :user_id => @user.id,
-                  :tags_a => ["tag1"]),
+      create(:story, title: "term1 domain2",
+        url: "https://lobste.rs/1",
+        user_id: @user.id,
+        tags_a: ["tag1"])
     ]
     @comments = [
-      create(:comment, :comment => "comment0",
-                    :story_id => @multi_tag.id,
-                    :user_id => @user.id),
-      create(:comment, :comment => "comment1",
-                    :story_id => @stories[0].id,
-                    :user_id => @user.id),
-      create(:comment, :comment => "comment2",
-                    :story_id => @stories[1].id,
-                    :user_id => @user.id),
-      create(:comment, :comment => "comment3",
-                    :story_id => @stories[2].id,
-                    :user_id => @user.id),
-      create(:comment, :comment => "comment4",
-                    :story_id => @stories[4].id,
-                    :user_id => @user.id),
+      create(:comment, comment: "comment0",
+        story_id: @multi_tag.id,
+        user_id: @user.id),
+      create(:comment, comment: "comment1",
+        story_id: @stories[0].id,
+        user_id: @user.id),
+      create(:comment, comment: "comment2",
+        story_id: @stories[1].id,
+        user_id: @user.id),
+      create(:comment, comment: "comment3",
+        story_id: @stories[2].id,
+        user_id: @user.id),
+      create(:comment, comment: "comment4",
+        story_id: @stories[4].id,
+        user_id: @user.id)
     ]
   end
 
@@ -54,7 +54,7 @@ describe Search do
     @comments.each(&:destroy!)
     @stories.flat_map(&:votes).each(&:destroy!)
     @stories.each(&:destroy!)
-    @user.destroy! if @user
+    @user&.destroy!
   end
 
   it "can search titles for stories" do

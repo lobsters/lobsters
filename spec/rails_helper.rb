@@ -1,13 +1,13 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
+ENV["RAILS_ENV"] ||= "test"
 require File.expand_path("../../config/environment", __FILE__)
-require 'rspec/rails'
-require 'simplecov'
+require "rspec/rails"
+require "simplecov"
 
-SimpleCov.start 'rails'
+SimpleCov.start "rails"
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].sort.each {|f| require f }
+Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
 
 RSpec.configure do |config|
   # ## Mock Framework
@@ -31,7 +31,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with :truncation
 
     c = Category.create! category: "category1"
-    c.tags.create!([{ tag: "tag1" }, { tag: "tag2" }])
+    c.tags.create!([{tag: "tag1"}, {tag: "tag2"}])
   end
 
   config.before(:example) do
@@ -65,12 +65,12 @@ RSpec.configure do |config|
 
   config.filter_rails_from_backtrace!
   config.filter_gems_from_backtrace \
-    'bullet',
-    'capybara',
-    'rack',
-    'rack-test',
-    'railties',
-    'scout_apm_ruby'
+    "bullet",
+    "capybara",
+    "rack",
+    "rack-test",
+    "railties",
+    "scout_apm_ruby"
 end
 
 RSpec::Expectations.configuration.on_potential_false_positives = :nothing

@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.feature "Reading Stories", type: :feature do
   let!(:story) { create(:story) }
@@ -54,7 +54,7 @@ RSpec.feature "Reading Stories", type: :feature do
 
       expect(page).to have_content(merged_comment.comment)
       expect(page).to have_content(merged_reply.comment)
-      expect(page).to have_selector('span.merge')
+      expect(page).to have_selector("span.merge")
     end
   end
 end

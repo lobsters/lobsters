@@ -18,7 +18,7 @@ unless Rails.env.production?
         class DisallowSafeNavigation < Cop
           extend TargetRubyVersion
 
-          MSG = 'Do not use &.'.freeze
+          MSG = "Do not use &.".freeze
 
           minimum_target_ruby_version 2.3
 

@@ -8,10 +8,10 @@ gem "mysql2"
 # gem "pg"
 
 # rails
-gem 'scenic'
-gem 'scenic-mysql_adapter'
+gem "scenic"
+gem "scenic-mysql_adapter"
 gem "activerecord-typedstore"
-gem 'sprockets-rails', '2.3.3'
+gem "sprockets-rails", "2.3.3"
 
 # js
 gem "jquery-rails", "~> 4.3"
@@ -35,33 +35,30 @@ gem "htmlentities"
 gem "commonmarker", ">= 0.23.6"
 
 # perf
-gem 'flamegraph'
-gem 'memory_profiler'
-gem 'rack-mini-profiler'
-gem 'stackprof'
+gem "flamegraph"
+gem "memory_profiler"
+gem "rack-mini-profiler"
+gem "stackprof"
 
 gem "oauth" # for twitter-posting bot
 gem "mail" # for parsing incoming mail
-gem "ruumba" # tests views
 gem "sitemap_generator" # for better search engine indexing
-gem "svg-graph", require: 'SVG/Graph/TimeSeries' # for charting, note workaround in lib/time_series.rb
-gem 'transaction_retry' # mitigate https://github.com/lobsters/lobsters-ansible/issues/39
-gem 'rack-attack' # rate-limiting
+gem "svg-graph", require: "SVG/Graph/TimeSeries" # for charting, note workaround in lib/time_series.rb
+gem "transaction_retry" # mitigate https://github.com/lobsters/lobsters-ansible/issues/39
+gem "rack-attack" # rate-limiting
 
 group :test, :development do
-  gem 'benchmark-perf'
-  gem 'capybara'
-  gem 'database_cleaner'
+  gem "benchmark-perf"
+  gem "capybara"
+  gem "database_cleaner"
   gem "listen"
-  gem 'rspec-rails', '~> 6.0.0.rc1'
+  gem "rspec-rails", "~> 6.0.0.rc1"
   gem "factory_bot_rails"
-  gem "rubocop", "0.81", require: false
-  gem "rubocop-rails", require: false
-  gem "rubocop-rspec", require: false
+  gem "standard"
   gem "faker"
   gem "byebug"
   gem "rb-readline"
   gem "vcr"
   gem "webmock" # used to support vcr
-  gem 'simplecov', require: false
+  gem "simplecov", require: false
 end

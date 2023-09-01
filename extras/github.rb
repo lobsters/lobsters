@@ -10,7 +10,7 @@ class Github
   end
 
   def self.oauth_consumer
-    OAuth::Consumer.new(self.CLIENT_ID, self.CLIENT_SECRET, :site => "https://api.github.com")
+    OAuth::Consumer.new(self.CLIENT_ID, self.CLIENT_SECRET, site: "https://api.github.com")
   end
 
   def self.token_and_user_from_code(code)
@@ -18,15 +18,15 @@ class Github
     res = s.fetch(
       "https://github.com/login/oauth/access_token",
       :post,
-      :client_id => self.CLIENT_ID,
-      :client_secret => self.CLIENT_SECRET,
-      :code => code,
+      client_id: self.CLIENT_ID,
+      client_secret: self.CLIENT_SECRET,
+      code: code
     ).body
     ps = CGI.parse(res)
     tok = ps["access_token"].first
 
     if tok.present?
-      headers = { "Authorization" => "token #{tok}" }
+      headers = {"Authorization" => "token #{tok}"}
       res = s.fetch("https://api.github.com/user", :get, nil, nil, headers).body
       js = JSON.parse(res)
       if js && js["login"].present?
@@ -34,11 +34,11 @@ class Github
       end
     end
 
-    return [nil, nil]
+    [nil, nil]
   end
 
   def self.oauth_auth_url(state)
-    "https://github.com/login/oauth/authorize?client_id=#{self.CLIENT_ID}&" <<
+    "https://github.com/login/oauth/authorize?client_id=#{self.CLIENT_ID}&" \
       "state=#{state}"
   end
 end

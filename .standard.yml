@@ -1,0 +1,4 @@
+ignore:
+  # it's mad about the class variables and I don't want to risk the refactor now
+  - 'extras/**/*':
+    - Naming/VariableName

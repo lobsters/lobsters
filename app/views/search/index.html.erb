@@ -39,12 +39,10 @@
 
 <% if @search.total_results > -1 %>
   <div class="box">
-    <p>
     <h2>
       <%= @search.total_results %> result<%= @search.total_results == 1 ? "" :
         "s" %> for "<%= @search.q %>"
     </h2>
-    </p>
   </div>
 
   <ol class="search_results">

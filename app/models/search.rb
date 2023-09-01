@@ -197,6 +197,7 @@ class Search
     if user
       case what
       when "stories"
+        self.results = self.results.mod_preload?(user)
         votes = Vote.story_votes_by_user_for_story_ids_hash(user.id, self.results.map(&:id))
 
         self.results.each do |r|

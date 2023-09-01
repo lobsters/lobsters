@@ -11,7 +11,7 @@ describe Comment do
     it "can't be worn if user doesn't have that hat" do
       comment = build(:comment, hat: build(:hat))
       comment.valid?
-      expect(comment.errors[:hat]).to eq(['not wearable by user'])
+      expect(comment.errors[:hat]).to eq(["not wearable by user"])
     end
 
     it "can be one of the user's hats" do
@@ -126,7 +126,7 @@ describe Comment do
         comment: "too fast"
       )
       expect(c.breaks_speed_limit?).to be_truthy
-      expect(c.errors[:comment].join(' ')).to include("You flagged")
+      expect(c.errors[:comment].join(" ")).to include("You flagged")
     end
 
     it "doesn't limit slow responses" do

@@ -32,18 +32,18 @@ module UsersHelper
 
   def styled_user_link user, content = nil, css_classes = []
     if content.is_a?(Story) && content.user_is_author?
-      css_classes.push 'user_is_author'
+      css_classes.push "user_is_author"
     end
     if content.is_a?(Comment) && content.story &&
-       content.story.user_is_author? && content.story.user_id == user.id
-      css_classes.push 'user_is_author'
+        content.story.user_is_author? && content.story.user_id == user.id
+      css_classes.push "user_is_author"
     end
 
     if !user.is_active?
-      css_classes.push 'inactive_user'
+      css_classes.push "inactive_user"
     end
     if user.is_new?
-      css_classes.push 'new_user'
+      css_classes.push "new_user"
     end
 
     link_to(user.username, user, class: css_classes)
@@ -59,9 +59,9 @@ module UsersHelper
     end
   end
 
-private
+  private
 
   def user_is_moderator?
-    @user && @user.is_moderator?
+    @user&.is_moderator?
   end
 end

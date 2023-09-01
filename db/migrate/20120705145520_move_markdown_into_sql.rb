@@ -6,14 +6,14 @@ class MoveMarkdownIntoSql < ActiveRecord::Migration
     Comment.all.each do |c|
       c.markeddown_comment = c.generated_markeddown_comment
       Comment.record_timestamps = false
-      c.save(:validate => false)
+      c.save(validate: false)
     end
 
     Story.all.each do |s|
       if s.description.present?
         s.markeddown_description = s.generated_markeddown_description
         Story.record_timestamps = false
-        s.save(:validate => false)
+        s.save(validate: false)
       end
     end
   end

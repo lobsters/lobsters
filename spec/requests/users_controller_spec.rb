@@ -1,8 +1,8 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'users controller' do
-  describe 'show user' do
-    it 'displays the username' do
+describe "users controller" do
+  describe "show user" do
+    it "displays the username" do
       user = create(:user)
 
       get "/~#{user.username}"
@@ -11,16 +11,16 @@ describe 'users controller' do
     end
   end
 
-  describe 'user standing' do
+  describe "user standing" do
     let!(:bad_user) { create(:user) }
 
     before do
-      fc = double('FlaggedCommenters')
+      fc = double("FlaggedCommenters")
       bad_user_stats = {
-        n_flags: 15,
+        n_flags: 15
       }
       allow(fc).to receive(:commenters).and_return({
-        bad_user.id => bad_user_stats,
+        bad_user.id => bad_user_stats
       })
       allow(fc).to receive(:check_list_for).and_return(bad_user_stats)
       allow(FlaggedCommenters).to receive(:new).and_return(fc)
@@ -56,8 +56,8 @@ describe 'users controller' do
     end
   end
 
-  describe 'username case mismatch' do
-    it 'redirects to correct-case user page' do
+  describe "username case mismatch" do
+    it "redirects to correct-case user page" do
       user = create(:user)
 
       get user_path(user.username.upcase)
@@ -65,7 +65,7 @@ describe 'users controller' do
       expect(response).to redirect_to(user_path(user.username))
     end
 
-    it 'redirects to correct-case user standing page' do
+    it "redirects to correct-case user standing page" do
       user = create(:user)
 
       get user_standing_path(user.username.upcase)

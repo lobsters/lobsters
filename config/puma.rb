@@ -35,14 +35,14 @@ workers ENV.fetch("WEB_CONCURRENCY") { 12 }
 # before forking the application. This takes advantage of Copy On Write
 # process behavior so workers use less memory.
 if ENV.fetch("RAILS_ENV") == "production"
-  bind 'unix:///srv/lobste.rs/run/puma.sock'
+  bind "unix:///srv/lobste.rs/run/puma.sock"
 
   # phased restarts
   # https://github.com/puma/puma/blob/master/docs/restart.md
   prune_bundler
 
   # old hot restart config; will need ansible change to tell systemctl to restart instead of reload
-  #preload_app!
+  # preload_app!
 end
 
 # Allow puma to be restarted by `rails restart` command.

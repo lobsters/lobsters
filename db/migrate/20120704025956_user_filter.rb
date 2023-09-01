@@ -1,7 +1,7 @@
 class UserFilter < ActiveRecord::Migration
   def up
     create_table :tag_filters do |t|
-      t.timestamps :null => false
+      t.timestamps null: false
       t.integer :user_id
       t.integer :tag_id
     end

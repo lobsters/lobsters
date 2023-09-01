@@ -1,2 +1,2 @@
-require 'rspec/core'
-RSpec::Core::Runner.run(['spec'])
+require "rspec/core"
+RSpec::Core::Runner.run(["spec"])

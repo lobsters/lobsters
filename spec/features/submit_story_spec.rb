@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.feature "Submitting Stories", type: :feature do
   let(:user) { create(:user) }
@@ -11,7 +11,7 @@ RSpec.feature "Submitting Stories", type: :feature do
       visit "/stories/new"
       fill_in "URL", with: "https://example.com/page"
       fill_in "Title", with: "Example Story"
-      select :tag1, from: 'Tags'
+      select :tag1, from: "Tags"
       click_button "Submit"
 
       expect(page).not_to have_content "prohibited this story from being saved"
@@ -25,7 +25,7 @@ RSpec.feature "Submitting Stories", type: :feature do
           visit "/stories/new"
           fill_in "Text", with: "![](https://lbst.rs/fake.jpg)"
           fill_in "Title", with: "Image Test"
-          select :tag1, from: 'Tags'
+          select :tag1, from: "Tags"
           click_button "Submit"
 
           expect(page).to have_css 'a[href="https://lbst.rs/fake.jpg"]'
@@ -42,7 +42,7 @@ RSpec.feature "Submitting Stories", type: :feature do
           visit "/stories/new"
           fill_in "Text", with: "![](https://lbst.rs/fake.jpg)"
           fill_in "Title", with: "Image Test"
-          select :tag1, from: 'Tags'
+          select :tag1, from: "Tags"
           click_button "Submit"
 
           expect(page).not_to have_css 'a[href="https://lbst.rs/fake.jpg"]'
@@ -58,7 +58,7 @@ RSpec.feature "Submitting Stories", type: :feature do
       visit "/stories/new"
       fill_in "URL", with: s.url
       fill_in "Title", with: "Example Story"
-      select :tag1, from: 'Tags'
+      select :tag1, from: "Tags"
       click_button "Submit"
 
       expect(page).to have_content "has already been submitted"
@@ -68,12 +68,12 @@ RSpec.feature "Submitting Stories", type: :feature do
   scenario "new user submitting a never-before-seen domain" do
     inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
     user.update(created_at: 1.day.ago)
-    refute(Domain.where(domain: 'example.net').exists?)
+    refute(Domain.where(domain: "example.net").exists?)
     expect {
       visit "/stories/new"
       fill_in "URL", with: "https://example.net/story"
       fill_in "Title", with: "Example Story"
-      select :tag1, from: 'Tags'
+      select :tag1, from: "Tags"
       click_button "Submit"
 
       expect(page).to have_content "unseen domain"
@@ -87,7 +87,7 @@ RSpec.feature "Submitting Stories", type: :feature do
       visit "/stories/new"
       fill_in "URL", with: s.url
       fill_in "Title", with: "Example Story"
-      select :tag1, from: 'Tags'
+      select :tag1, from: "Tags"
       click_button "Submit"
 
       expect(page).to have_content "resubmitted by new users"
@@ -96,14 +96,14 @@ RSpec.feature "Submitting Stories", type: :feature do
 
   scenario "new user submitting with a tag not permitted for new users" do
     inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
-    drama = create(:tag, tag: 'drama', permit_by_new_users: false)
+    drama = create(:tag, tag: "drama", permit_by_new_users: false)
     earlier_story = create(:story)
     user.update(created_at: 1.day.ago)
     expect {
       visit "/stories/new"
       fill_in "URL", with: "https://#{earlier_story.domain.domain}/story"
       fill_in "Title", with: "Example Story"
-      select drama.tag, from: 'Tags'
+      select drama.tag, from: "Tags"
       click_button "Submit"
 
       expect(page).to have_content "meta discussion or prone to"
@@ -117,7 +117,7 @@ RSpec.feature "Submitting Stories", type: :feature do
       visit "/stories/new"
       fill_in "URL", with: s.url
       fill_in "Title", with: "Example Story"
-      select :tag1, from: 'Tags'
+      select :tag1, from: "Tags"
       click_button "Submit"
 
       # TODO: would be nice if this had a specific error message
@@ -134,13 +134,13 @@ RSpec.feature "Submitting Stories", type: :feature do
   end
 
   scenario "submitting a banned domain" do
-    Domain.create!(domain: 'example.com', banned_at: DateTime.now)
+    Domain.create!(domain: "example.com", banned_at: DateTime.now)
 
     expect {
       visit "/stories/new"
       fill_in "URL", with: "https://example.com/tracking?redir=real"
       fill_in "Title", with: "Example Story"
-      select :tag1, from: 'Tags'
+      select :tag1, from: "Tags"
       click_button "Submit"
 
       expect(page).to have_content "banned"

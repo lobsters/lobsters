@@ -34,8 +34,7 @@ jobs:
           bundle exec rspec spec/slow/*_spec.rb
       - name: Run linters
         run: |
-          bundle exec rubocop
-          bundle exec ruumba
+          bundle exec standardrb
       - name: Find leaky gems
         run: |
           gem install bundler-leak

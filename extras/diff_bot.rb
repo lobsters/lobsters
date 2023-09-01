@@ -12,7 +12,7 @@ class DiffBot
     end
 
     # XXX: diffbot tries to read pdfs as text, so disable for now
-    if story.url.to_s.match(/\.pdf$/i)
+    if /\.pdf$/i.match?(story.url.to_s)
       return nil
     end
 
@@ -29,13 +29,12 @@ class DiffBot
         # turn newlines into double newlines, so they become paragraphs
         j["text"] = j["text"].to_s.gsub("\n", "\n\n")
 
-        while j["text"].match("\n\n\n")
+        while j["text"] =~ "\n\n\n"
           j["text"].gsub!("\n\n\n", "\n\n")
         end
 
         return j["text"]
       end
-
     rescue => e
       Rails.logger.error "error fetching #{db_url}: #{e.message}"
     end

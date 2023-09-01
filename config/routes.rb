@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  root :to => "home#index",
-    :protocol => (Rails.application.config.force_ssl ? "https://" : "http://"),
-    :as => "root"
+  root to: "home#index",
+    protocol: (Rails.application.config.force_ssl ? "https://" : "http://"),
+    as: "root"
 
   get "/404" => "about#four_oh_four", :via => :all
 
@@ -25,8 +25,8 @@ Rails.application.routes.draw do
   get "/upvoted/stories/page/:page" => "home#upvoted"
   get "/upvoted/comments" => "comments#upvoted"
   get "/upvoted/comments/page/:page" => "comments#upvoted"
-  get "/upvoted", to: redirect('/upvoted/stories')
-  get "/upvoted/page/:page", to: redirect('/upvoted/stories/page/%{page}')
+  get "/upvoted", to: redirect("/upvoted/stories")
+  get "/upvoted/page/:page", to: redirect("/upvoted/stories/page/%{page}")
 
   get "/top" => "home#top"
   get "/top/rss" => "home#top", :format => "rss"
@@ -62,13 +62,13 @@ Rails.application.routes.draw do
   match "/login/set_new_password" => "login#set_new_password",
     :as => "set_new_password", :via => [:get, :post]
 
-  get "/t/:tag" => "home#single_tag", :as => "tag", :constraints => { tag: /[^,\.]+/ }
+  get "/t/:tag" => "home#single_tag", :as => "tag", :constraints => {tag: /[^,\.]+/}
   get "/t/:tag" => "home#multi_tag", :as => "multi_tag"
   get "/t/:tag/page/:page" => "home#tagged"
 
-  constraints :id => /([^\/]+?)(?=\.json|\.rss|$|\/)/ do
-    get "/domain/:id(.:format)", to: redirect('/domains/%{id}')
-    get "/domain/:id/page/:page", to: redirect('/domains/%{id}/page/%{page}')
+  constraints id: /([^\/]+?)(?=\.json|\.rss|$|\/)/ do
+    get "/domain/:id(.:format)", to: redirect("/domains/%{id}")
+    get "/domain/:id/page/:page", to: redirect("/domains/%{id}/page/%{page}")
     get "/domains/:id(.:format)" => "home#for_domain", :as => "domain"
     get "/domains/:id/page/:page" => "home#for_domain"
     resources :domains, only: [:edit, :update]
@@ -78,7 +78,7 @@ Rails.application.routes.draw do
   get "/search/:q" => "search#index"
 
   resources :stories, except: [:index] do
-    get '/stories/:short_id', to: redirect('/s/%{short_id}')
+    get "/stories/:short_id", to: redirect("/s/%{short_id}")
     post "upvote"
     post "flag"
     post "unvote"
@@ -89,9 +89,9 @@ Rails.application.routes.draw do
     post "save"
     post "unsave"
     get "suggest"
-    post "suggest", :action => "submit_suggestions"
+    post "suggest", action: "submit_suggestions"
   end
-  post "/stories/fetch_url_attributes", :format => "json"
+  post "/stories/fetch_url_attributes", format: "json"
   post "/stories/preview" => "stories#preview"
   post "/stories/check_url_dupe" => "stories#check_url_dupe"
 
@@ -133,15 +133,15 @@ Rails.application.routes.draw do
   get "/users" => "users#tree", :as => "users_tree"
   get "/~:username" => "users#show", :as => "user"
   get "/~:username/standing" => "users#standing", :as => "user_standing"
-  get "/~:user/stories(/page/:page)" => "home#newest_by_user", :as => 'newest_by_user'
+  get "/~:user/stories(/page/:page)" => "home#newest_by_user", :as => "newest_by_user"
   get "/~:user/threads" => "comments#user_threads", :as => "user_threads"
 
   post "/~:username/ban" => "users#ban", :as => "user_ban"
   post "/~:username/unban" => "users#unban", :as => "user_unban"
   post "/~:username/disable_invitation" => "users#disable_invitation",
-        :as => "user_disable_invite"
+    :as => "user_disable_invite"
   post "/~:username/enable_invitation" => "users#enable_invitation",
-        :as => "user_enable_invite"
+    :as => "user_enable_invite"
 
   # 2023-07 redirect /u to /~username and /users (for tree)
   get "/u", to: redirect("/users", status: 302)
@@ -225,7 +225,7 @@ Rails.application.routes.draw do
   get "/moderators" => "users#tree", :moderators => true
 
   get "/mod" => "mod#index"
-  get "/mod/flagged_stories/:period"  => "mod#flagged_stories",  :as => "mod_flagged_stories"
+  get "/mod/flagged_stories/:period" => "mod#flagged_stories", :as => "mod_flagged_stories"
   get "/mod/flagged_comments/:period" => "mod#flagged_comments", :as => "mod_flagged_comments"
   get "/mod/commenters/:period" => "mod#commenters", :as => "mod_commenters"
   get "/mod/notes(/:period)" => "mod_notes#index", :as => "mod_notes"
@@ -237,5 +237,5 @@ Rails.application.routes.draw do
 
   get "/stats" => "stats#index"
 
-  post '/csp-violation-report' => 'csp#violation_report'
+  post "/csp-violation-report" => "csp#violation_report"
 end

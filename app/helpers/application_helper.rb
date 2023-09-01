@@ -6,12 +6,12 @@ module ApplicationHelper
   def avatar_img(user, size)
     image_tag(
       user.avatar_path(size),
-      :srcset => "#{user.avatar_path(size)} 1x, #{user.avatar_path(size * 2)} 2x",
-      :class => "avatar",
-      :size => "#{size}x#{size}",
-      :alt => "#{user.username} avatar",
-      :loading => "lazy",
-      :decoding => "async",
+      srcset: "#{user.avatar_path(size)} 1x, #{user.avatar_path(size * 2)} 2x",
+      class: "avatar",
+      size: "#{size}x#{size}",
+      alt: "#{user.username} avatar",
+      loading: "lazy",
+      decoding: "async"
     )
   end
 
@@ -19,7 +19,7 @@ module ApplicationHelper
     html = ""
     unless object.errors.blank?
       html << "<div class=\"flash-error\">"
-      html << "<h2>#{pluralize(object.errors.count, 'error')} prohibited this \
+      html << "<h2>#{pluralize(object.errors.count, "error")} prohibited this \
                #{object.class.name.downcase} from being saved</h2>"
       html << "<p>There were the problems with the following fields:</p>"
       html << "<ul>"
@@ -35,28 +35,28 @@ module ApplicationHelper
   # limitation: this can't handle generating links based on a hash of options,
   # like { controller: ..., action: ... }
   def link_to_different_page(text, path, options = {})
-    current = request.path.sub(/\/page\/\d+$/, '')
-    path.sub!(/\/page\/\d+$/, '')
+    current = request.path.sub(/\/page\/\d+$/, "")
+    path.sub!(/\/page\/\d+$/, "")
     options[:class] = :current_page if current == path
     link_to text, path, options
   end
 
   def link_post button_label, link, options = {}
     options.reverse_merge class_name: nil, confirm: nil
-    render partial: 'helpers/link_post', locals: {
+    render partial: "helpers/link_post", locals: {
       button_label: button_label,
       link: link,
       class_name: options[:class_name],
-      confirm: options[:confirm],
+      confirm: options[:confirm]
     }
   end
 
   def page_numbers_for_pagination(max, cur)
     if max <= MAX_PAGES
-      return (1 .. max).to_a
+      return (1..max).to_a
     end
 
-    pages = (cur - (MAX_PAGES / 2) + 1 .. cur + (MAX_PAGES / 2) - 1).to_a
+    pages = (cur - (MAX_PAGES / 2) + 1..cur + (MAX_PAGES / 2) - 1).to_a
 
     while pages[0] < 1
       pages.push pages.last + 1

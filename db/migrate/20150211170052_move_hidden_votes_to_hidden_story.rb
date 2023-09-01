@@ -5,15 +5,15 @@ class MoveHiddenVotesToHiddenStory < ActiveRecord::Migration
       t.integer :story_id
     end
 
-    add_index "hidden_stories", ["user_id", "story_id"], :unique => true
+    add_index "hidden_stories", ["user_id", "story_id"], unique: true
 
-    Vote.where(:vote => 0).each do |v|
+    Vote.where(vote: 0).each do |v|
       hs = HiddenStory.new
       hs.user_id = v.user_id
       hs.story_id = v.story_id
       hs.save!
     end
 
-    Vote.where(:vote => 0).delete_all
+    Vote.where(vote: 0).delete_all
   end
 end

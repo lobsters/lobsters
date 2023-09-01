@@ -19,10 +19,10 @@ class KeybaseProofsController < ApplicationController
     if Keybase.proof_valid?(kb_username, kb_signature, @user.username)
       @user.add_or_update_keybase_proof(kb_username, kb_signature)
       @user.save!
-      return redirect_to Keybase.success_url(kb_username, kb_signature, kb_ua, @user.username)
+      redirect_to Keybase.success_url(kb_username, kb_signature, kb_ua, @user.username)
     else
       flash[:error] = "Failed to connect your account to Keybase. Try again from Keybase."
-      return redirect_to settings_path
+      redirect_to settings_path
     end
   end
 
@@ -51,7 +51,7 @@ class KeybaseProofsController < ApplicationController
     @user_re = User.username_regex_s[1...-1]
   end
 
-private
+  private
 
   def force_to_json
     request.format = :json
@@ -60,7 +60,7 @@ private
   def check_user_matches
     unless case_insensitive_match?(@user.username, params[:username])
       flash[:error] = "not logged in as the correct user"
-      return redirect_to settings_path
+      redirect_to settings_path
     end
   end
 

@@ -12,7 +12,7 @@ class MoveUserSettings < ActiveRecord::Migration
       :email_mentions,
       :show_avatars,
       :show_story_previews,
-      :show_submitted_story_threads,
+      :show_submitted_story_threads
     ].each do |col|
       rename_column :users, col, "old_#{col}"
     end
@@ -28,12 +28,12 @@ class MoveUserSettings < ActiveRecord::Migration
         :email_mentions,
         :show_avatars,
         :show_story_previews,
-        :show_submitted_story_threads,
+        :show_submitted_story_threads
       ].each do |k|
         u.settings[k] = u.send("old_#{k}")
       end
 
-      u.save(:validate => false)
+      u.save(validate: false)
     end
   end
 
@@ -50,7 +50,7 @@ class MoveUserSettings < ActiveRecord::Migration
       :email_mentions,
       :show_avatars,
       :show_story_previews,
-      :show_submitted_story_threads,
+      :show_submitted_story_threads
     ].each do |col|
       rename_column :users, "old#{col}", col
     end

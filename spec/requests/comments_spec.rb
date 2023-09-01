@@ -1,13 +1,13 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'comments', type: :request do
+describe "comments", type: :request do
   let(:user) { create(:user) }
   let(:comment) { create(:comment) }
 
   before { sign_in user }
 
-  describe 'upvoting' do
-    it 'works' do
+  describe "upvoting" do
+    it "works" do
       expect(comment.score).to eq(1)
       expect(comment.reload.score).to eq(1)
       post "/comments/#{comment.short_id}/upvote"
@@ -16,7 +16,7 @@ describe 'comments', type: :request do
       expect(Vote.where(user: user).count).to eq(1)
     end
 
-    it 'does nothing to deleted comments' do
+    it "does nothing to deleted comments" do
       expect {
         comment.delete_for_user(comment.user)
         comment.reload

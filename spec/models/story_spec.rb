@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe Story do
   it "should get a short id" do
-    s = create(:story, :title => "hello", :url => "http://example.com/")
+    s = create(:story, title: "hello", url: "http://example.com/")
 
     expect(s.short_id).to match(/^\A[a-zA-Z0-9]{1,10}\z/)
   end
@@ -13,7 +13,7 @@ describe Story do
 
     s.valid?
     expect(s.errors[:markeddown_description]).to(
-      eq(['is too long (maximum is 16777215 characters)'])
+      eq(["is too long (maximum is 16777215 characters)"])
     )
   end
 
@@ -22,73 +22,73 @@ describe Story do
     s.twitter_id = "Z" * 25
 
     s.valid?
-    expect(s.errors[:twitter_id]).to eq(['is too long (maximum is 20 characters)'])
+    expect(s.errors[:twitter_id]).to eq(["is too long (maximum is 20 characters)"])
   end
 
   it "requires a url or a description" do
-    expect { create(:story, :title => "hello", :url => "", :description => "") }.to raise_error
+    expect { create(:story, title: "hello", url: "", description: "") }.to raise_error
 
     expect {
-      create(:story, :title => "hello", :description => "hi", :url => nil)
+      create(:story, title: "hello", description: "hi", url: nil)
     }.to_not raise_error
 
     expect {
-      create(:story, :title => "hello", :url => "http://ex.com/", :description => nil)
+      create(:story, title: "hello", url: "http://ex.com/", description: nil)
     }.to_not raise_error
   end
 
   it "does not allow too-short titles" do
-    expect { create(:story, :title => "") }.to raise_error
-    expect { create(:story, :title => "hi") }.to raise_error
-    expect { create(:story, :title => "hello") }.to_not raise_error
+    expect { create(:story, title: "") }.to raise_error
+    expect { create(:story, title: "hi") }.to raise_error
+    expect { create(:story, title: "hello") }.to_not raise_error
   end
 
   it "does not allow too-long titles" do
-    expect { create(:story, :title => ("hello" * 100)) }.to raise_error
+    expect { create(:story, title: ("hello" * 100)) }.to raise_error
   end
 
   it "must have at least one tag" do
-    expect { create(:story, :tags_a => nil) }.to raise_error
-    expect { create(:story, :tags_a => ["", " "]) }.to raise_error
+    expect { create(:story, tags_a: nil) }.to raise_error
+    expect { create(:story, tags_a: ["", " "]) }.to raise_error
 
-    expect { create(:story, :tags_a => ["", "tag1"]) }.to_not raise_error
+    expect { create(:story, tags_a: ["", "tag1"]) }.to_not raise_error
   end
 
   it "removes redundant http port 80 and https port 443" do
-    expect(Story.new(url: 'http://example.com:80').url).to eq('http://example.com')
-    expect(Story.new(url: 'http://example.com:80/').url).to eq('http://example.com/')
-    expect(Story.new(url: 'https://example.com:443').url).to eq('https://example.com')
-    expect(Story.new(url: 'https://example.com:443/').url).to eq('https://example.com/')
+    expect(Story.new(url: "http://example.com:80").url).to eq("http://example.com")
+    expect(Story.new(url: "http://example.com:80/").url).to eq("http://example.com/")
+    expect(Story.new(url: "https://example.com:443").url).to eq("https://example.com")
+    expect(Story.new(url: "https://example.com:443/").url).to eq("https://example.com/")
   end
 
   it "removes utm_ tracking parameters" do
-    expect(Story.new(url: 'http://a.com?a=b').url).to eq('http://a.com?a=b')
-    expect(Story.new(url: 'http://a.com?utm_term=track&c=d').url).to eq('http://a.com?c=d')
-    expect(Story.new(url: 'http://a.com?a=b&utm_term=track&c=d').url).to eq('http://a.com?a=b&c=d')
+    expect(Story.new(url: "http://a.com?a=b").url).to eq("http://a.com?a=b")
+    expect(Story.new(url: "http://a.com?utm_term=track&c=d").url).to eq("http://a.com?c=d")
+    expect(Story.new(url: "http://a.com?a=b&utm_term=track&c=d").url).to eq("http://a.com?a=b&c=d")
   end
 
   it "checks for invalid urls" do
-    expect(Story.new(url: 'http://example.com').tap(&:valid?).errors[:url]).to be_empty
+    expect(Story.new(url: "http://example.com").tap(&:valid?).errors[:url]).to be_empty
 
-    expect(Story.new(url: 'http://example/').tap(&:valid?).errors[:url]).to_not be_empty
-    expect(Story.new(url: 'ftp://example.com/').tap(&:valid?).errors[:url]).to_not be_empty
-    expect(Story.new(url: 'http://example.com:123/').tap(&:valid?).errors[:url]).to be_empty
+    expect(Story.new(url: "http://example/").tap(&:valid?).errors[:url]).to_not be_empty
+    expect(Story.new(url: "ftp://example.com/").tap(&:valid?).errors[:url]).to_not be_empty
+    expect(Story.new(url: "http://example.com:123/").tap(&:valid?).errors[:url]).to be_empty
   end
 
   it "checks for a previously posted story with same url" do
     expect(Story.count).to eq(0)
 
-    create(:story, :title => "flim flam", :url => "http://example.com/")
+    create(:story, title: "flim flam", url: "http://example.com/")
     expect(Story.count).to eq(1)
 
     expect {
-      create(:story, :title => "flim flam 2", :url => "http://example.com/")
+      create(:story, title: "flim flam 2", url: "http://example.com/")
     }.to raise_error
 
     expect(Story.count).to eq(1)
 
     expect {
-      create(:story, :title => "flim flam 2", :url => "http://www.example.com/")
+      create(:story, title: "flim flam 2", url: "http://www.example.com/")
     }.to raise_error
 
     expect(Story.count).to eq(1)
@@ -102,7 +102,7 @@ describe Story do
       "http://example.com:8000" => "example.com",
       "http://example.com:8000/" => "example.com",
       "http://www3.example.com/goose" => "example.com",
-      "http://flub.example.com" => "flub.example.com",
+      "http://flub.example.com" => "flub.example.com"
     }.each_pair do |url, domain|
       story.url = url
       expect(story.domain.domain).to eq(domain)
@@ -110,26 +110,26 @@ describe Story do
   end
 
   it "has domain straight out of the db, when Rails doesn't use setters" do
-    s = create(:story, url: 'https://example.com/foo.html')
+    s = create(:story, url: "https://example.com/foo.html")
     s = Story.find(s.id)
-    expect(s.domain.domain).to eq('example.com')
-    s.url = 'http://example.org'
-    expect(s.domain.domain).to eq('example.org')
-    s.url = 'invalid'
+    expect(s.domain.domain).to eq("example.com")
+    s.url = "http://example.org"
+    expect(s.domain.domain).to eq("example.org")
+    s.url = "invalid"
     expect(s.domain).to be_nil
   end
 
   it "converts a title to a url properly" do
-    s = create(:story, :title => "Hello there, this is a title")
+    s = create(:story, title: "Hello there, this is a title")
     expect(s.title_as_url).to eq("hello_there_this_is_title")
 
-    s = create(:story, :title => "Hello _ underscore")
+    s = create(:story, title: "Hello _ underscore")
     expect(s.title_as_url).to eq("hello_underscore")
 
-    s = create(:story, :title => "Hello, underscore")
+    s = create(:story, title: "Hello, underscore")
     expect(s.title_as_url).to eq("hello_underscore")
 
-    s = build(:story, :title => "The One-second War (What Time Will You Die?) ")
+    s = build(:story, title: "The One-second War (What Time Will You Die?) ")
     expect(s.title_as_url).to eq("one_second_war_what_time_will_you_die")
   end
 
@@ -141,16 +141,16 @@ describe Story do
     expect(s.is_editable_by_user?(u)).to be false
   end
 
-  context 'fetching titles' do
-    let(:story_directory) { Rails.root.join 'spec/fixtures/story_pages/' }
+  context "fetching titles" do
+    let(:story_directory) { Rails.root.join "spec/fixtures/story_pages/" }
 
     # this is more elaborate than the previous system, because now it needs to know the content type
-    def fake_response(content, type, code = '200')
+    def fake_response(content, type, code = "200")
       res = Net::HTTPResponse.new(1.0, code, "OK")
       res.add_field("content-type", type)
       # we can't seemingly just set body, so...
       allow(res).to receive(:body).and_return(content)
-      return res
+      res
     end
 
     it "can fetch PDF titles properly" do
@@ -177,8 +177,8 @@ describe Story do
 
     it "does not fetch title with a port specified" do
       expect(Sponge).to_not receive(:new)
-      story = Story.new url: 'https://example.com:123/'
-      expect(story.fetched_attributes[:title]).to eq('')
+      story = Story.new url: "https://example.com:123/"
+      expect(story.fetched_attributes[:title]).to eq("")
     end
 
     it "does not follow rel=canonical when this is to the main page" do
@@ -191,7 +191,7 @@ describe Story do
     it "does not assign canonical url when the response is non-200" do
       url = "https://www.mcsweeneys.net/a/who-said-it-donald-trump-or-regina-george"
       content = File.read(story_directory + "canonical_error.html")
-      res = fake_response(content, "text/html", '404')
+      res = fake_response(content, "text/html", "404")
 
       expect_any_instance_of(Sponge)
         .to receive(:fetch)
@@ -220,7 +220,7 @@ describe Story do
     context "with unicode" do
       it "can fetch unicode titles properly" do
         content = "<!DOCTYPE html><html><title>你好世界！ Here’s a fancy apostrophe</title></html>"
-                  .force_encoding('ASCII-8BIT') # This is the encoding returned by Sponge#fetch
+          .force_encoding("ASCII-8BIT") # This is the encoding returned by Sponge#fetch
         res = fake_response(content, "text/html")
         s = build(:story)
         s.fetched_response = res
@@ -230,34 +230,34 @@ describe Story do
   end
 
   it "sets the url properly" do
-    s = build(:story, :title => "blah")
+    s = build(:story, title: "blah")
     s.url = "https://factorable.net/"
     s.valid?
     expect(s.url).to eq("https://factorable.net/")
   end
 
   it "calculates tag changes properly" do
-    s = create(:story, :title => "blah", :tags_a => ["tag1", "tag2"])
+    s = create(:story, title: "blah", tags_a: ["tag1", "tag2"])
 
     s.tags_a = ["tag2"]
     expect(s.tagging_changes).to eq("tags" => ["tag1 tag2", "tag2"])
   end
 
   it "assigning new tags_a should create new_record taggings" do
-    s = create(:story, tags_a: ['tag1'])
-    s.tags_a = ['tag1', 'tag2']
+    s = create(:story, tags_a: ["tag1"])
+    s.tags_a = ["tag1", "tag2"]
     expect(s.taggings.map(&:new_record?)).to eq([false, true])
   end
 
   it "logs tag additions from user suggestions properly" do
-    s = create(:story, :title => "blah", :tags_a => ["tag1"], :description => "desc")
+    s = create(:story, title: "blah", tags_a: ["tag1"], description: "desc")
 
     u1 = create(:user)
-    s.save_suggested_tags_a_for_user!(['tag1', 'tag2'], u1)
+    s.save_suggested_tags_a_for_user!(["tag1", "tag2"], u1)
     s.reload
 
     u2 = create(:user)
-    s.save_suggested_tags_a_for_user!(['tag1', 'tag2'], u2)
+    s.save_suggested_tags_a_for_user!(["tag1", "tag2"], u2)
 
     mod_log = Moderation.last
     expect(mod_log.moderator_user_id).to eq(nil)
@@ -269,8 +269,8 @@ describe Story do
   it "logs moderations properly" do
     mod = create(:user, :moderator)
 
-    s = create(:story, :title => "blah", :tags_a => ["tag1", "tag2"],
-      :description => "desc")
+    s = create(:story, title: "blah", tags_a: ["tag1", "tag2"],
+      description: "desc")
 
     s.title = "changed title"
     s.description = nil
@@ -291,11 +291,11 @@ describe Story do
   it "doesn't log changed to derived field normalized_url" do
     mod = create(:user, :moderator)
 
-    s = create(:story, url: 'https://example.com/1')
+    s = create(:story, url: "https://example.com/1")
 
-    s.url = 'https://example.com/2'
+    s.url = "https://example.com/2"
     s.editor = mod
-    s.moderation_reason = 'fixed link'
+    s.moderation_reason = "fixed link"
     s.save!
 
     mod_log = Moderation.last
@@ -305,29 +305,29 @@ describe Story do
 
   describe "#similar_stories" do
     it "finds stories with similar URLs" do
-      s1 = create(:story, url: 'https://example.com', created_at: (Story::RECENT_DAYS + 1).days.ago)
-      s2 = create(:story, url: 'https://example.com/')
+      s1 = create(:story, url: "https://example.com", created_at: (Story::RECENT_DAYS + 1).days.ago)
+      s2 = create(:story, url: "https://example.com/")
       expect(s1.similar_stories).to eq([s2])
       expect(s2.similar_stories).to eq([s1])
     end
 
     it "does not include merges" do
-      s1 = create(:story, url: 'https://example.com', created_at: (Story::RECENT_DAYS + 1).days.ago)
-      s2 = create(:story, url: 'https://example.com/', merged_story_id: s1.id)
+      s1 = create(:story, url: "https://example.com", created_at: (Story::RECENT_DAYS + 1).days.ago)
+      s2 = create(:story, url: "https://example.com/", merged_story_id: s1.id)
       expect(s1.similar_stories).to eq([])
       expect(s2.similar_stories).to eq([])
     end
 
     it "doesn't throw exceptions at brackets" do
-      s = create(:story, url: 'http://aaonline.fr/search.php?search&criteria[title-contains]=debian')
+      s = create(:story, url: "http://aaonline.fr/search.php?search&criteria[title-contains]=debian")
       expect(s.similar_stories).to eq([])
     end
 
     it "finds arxiv html page and pdf URLs with the same arxiv identifier" do
       s1 = create(:story,
-                  url: 'https://arxiv.org/abs/2101.07554',
-                  created_at: (Story::RECENT_DAYS + 1).days.ago)
-      s2 = create(:story, url: 'https://arxiv.org/pdf/2101.07554')
+        url: "https://arxiv.org/abs/2101.07554",
+        created_at: (Story::RECENT_DAYS + 1).days.ago)
+      s2 = create(:story, url: "https://arxiv.org/pdf/2101.07554")
 
       expect(s1.similar_stories).to eq([s2])
       expect(s2.similar_stories).to eq([s1])
@@ -335,9 +335,9 @@ describe Story do
 
     it "finds similar arxiv html page and pdf URLs that contain a pdf extension" do
       s1 = create(:story,
-                  url: 'https://arxiv.org/abs/2101.09188',
-                  created_at: (Story::RECENT_DAYS + 1).days.ago)
-      s2 = create(:story, url: 'https://arxiv.org/pdf/2101.09188.pdf')
+        url: "https://arxiv.org/abs/2101.09188",
+        created_at: (Story::RECENT_DAYS + 1).days.ago)
+      s2 = create(:story, url: "https://arxiv.org/pdf/2101.09188.pdf")
 
       expect(s1.similar_stories).to eq([s2])
       expect(s2.similar_stories).to eq([s1])
@@ -345,10 +345,10 @@ describe Story do
 
     it "finds similar www.youtube and youtu.be URLs" do
       s1 = create(:story,
-                  url: 'https://www.youtube.com/watch?v=7Pq-S557XQU',
-                  created_at: (Story::RECENT_DAYS + 1).days.ago)
+        url: "https://www.youtube.com/watch?v=7Pq-S557XQU",
+        created_at: (Story::RECENT_DAYS + 1).days.ago)
 
-      s2 = create(:story, url: 'https://youtu.be/7Pq-S557XQU')
+      s2 = create(:story, url: "https://youtu.be/7Pq-S557XQU")
 
       expect(s1.similar_stories).to eq([s2])
       expect(s2.similar_stories).to eq([s1])
@@ -356,17 +356,17 @@ describe Story do
 
     it "finds similar www.youtube and m.youtube URLs" do
       s1 = create(:story,
-                  url: 'https://www.youtube.com/watch?v=7Pq-S557XQU',
-                  created_at: (Story::RECENT_DAYS + 1).days.ago)
+        url: "https://www.youtube.com/watch?v=7Pq-S557XQU",
+        created_at: (Story::RECENT_DAYS + 1).days.ago)
 
-      s2 = create(:story, url: 'https://m.youtube.com/watch?v=7Pq-S557XQU')
+      s2 = create(:story, url: "https://m.youtube.com/watch?v=7Pq-S557XQU")
 
       expect(s1.similar_stories).to eq([s2])
       expect(s2.similar_stories).to eq([s1])
     end
 
     it "accepts playlists" do
-      s = Story.new(url: 'https://www.youtube.com/playlist?list=PLZdCLR02grLpIQQkyGLgIyt0eHE56aJqd')
+      s = Story.new(url: "https://www.youtube.com/playlist?list=PLZdCLR02grLpIQQkyGLgIyt0eHE56aJqd")
       s.valid?
       expect(s.errors[:url]).to be_empty
     end
@@ -374,7 +374,7 @@ describe Story do
 
   describe "#calculated_hotness" do
     let(:story) do
-      create(:story, url: 'https://example.com', user_is_author: true)
+      create(:story, url: "https://example.com", user_is_author: true)
     end
 
     before do
@@ -451,7 +451,7 @@ describe Story do
 
   describe "suggestions" do
     it "does not auto-accept suggestion if quorum is not met" do
-      story = create(:story, :title => "hello", :url => "http://example.com/")
+      story = create(:story, title: "hello", url: "http://example.com/")
       user = create(:user)
 
       story.save_suggested_title_for_user!("new title", user)
@@ -460,7 +460,7 @@ describe Story do
     end
 
     it "auto-accept suggestion once quorum is met" do
-      story = create(:story, :title => "hello", :url => "http://example.com/")
+      story = create(:story, title: "hello", url: "http://example.com/")
       user1 = create(:user)
       user2 = create(:user)
 
@@ -472,7 +472,7 @@ describe Story do
 
     it "notifies story creator upon auto-accepted suggestion" do
       creator = create(:user)
-      story = create(:story, :user => creator, :title => "hello", :url => "http://example.com/")
+      story = create(:story, user: creator, title: "hello", url: "http://example.com/")
       user1 = create(:user)
       user2 = create(:user)
 

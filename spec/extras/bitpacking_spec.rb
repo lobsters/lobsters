@@ -10,7 +10,7 @@ end
 
 RSpec::Matchers.define :be_bytes do |bytes|
   match do |str|
-    str.eql?(bytes.force_encoding('binary'))
+    str.eql?(bytes.force_encoding("binary"))
   end
 end
 
@@ -96,10 +96,10 @@ describe "sql assumptions" do
       expect(one_result("435431 & 0xff")).to eq(231)
 
       # number of bits currently needed for comment IDs
-      expect(one_result("#{2 ** (5 * 8) - 1} & 0xff")).to eq(255)
+      expect(one_result("#{2**(5 * 8) - 1} & 0xff")).to eq(255)
 
       # more than the number of bits currently needed for comment IDs
-      expect(one_result("#{2 ** (5 * 9) - 1} & 0xff")).to eq(255)
+      expect(one_result("#{2**(5 * 9) - 1} & 0xff")).to eq(255)
     end
   end
 
@@ -145,7 +145,7 @@ describe "sql assumptions" do
       create(:vote, story: c.story, comment: c)
       c.update_score_and_recalculate!(1, 0)
       c.reload
-      expect(c.confidence_order.split('')[2]).to be_bytes("\x04") # id included after vote
+      expect(c.confidence_order[2]).to be_bytes("\x04") # id included after vote
     end
   end
 end

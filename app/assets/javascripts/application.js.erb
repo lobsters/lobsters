@@ -624,6 +624,9 @@ onPageLoad(() => {
     fetchWithCSRF('/comments/' + comment.getAttribute('data-shortid') + '/reply')
       .then(response => {
         response.text().then(text => {
+          // guard: don't create multiple reply boxes to one comment
+          if (qS('#reply_form_' + commentId)) { return false; }
+
           div.innerHTML = text;
           div.setAttribute('id', 'reply_form_' + commentId);
 

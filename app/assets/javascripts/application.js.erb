@@ -635,7 +635,7 @@ onPageLoad(() => {
           div.innerHTML = text;
           div.setAttribute('id', 'reply_form_' + commentId);
 
-          var ta = div.qS('textarea');
+          var ta = qS(div, 'textarea');
           ta.textContent = sel;
           // place the cursor at the end of the quoted string
           ta.setSelectionRange(sel.length, sel.length);

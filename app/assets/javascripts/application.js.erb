@@ -171,10 +171,15 @@ class _LobstersFunction {
       Lobster.tom.addItem(m[1].toLowerCase());
       titleEl.value = m[2];
     }
+
     // common separators or (parens) that don't enclose a 4-digit year
     if (title.match(/: | - | – | — | \| | · | • | by /) ||
        (title.match(/\([^\)]*\)/g) || []).some(function (p) { return !p.match(/\(\d{4}\)/) })) {
           slideDownJS(qS('.title-reminder'));
+
+    // else if the title doesn't contain concerns and reminder is visible
+    } else if (qS('.title-reminder').classList.contains('slide-down')) {
+      qS('.title-reminder-thanks').style.display = 'inline';
     }
   }
 

@@ -8,6 +8,11 @@ class Vote < ApplicationRecord
             length: { is: 1 },
             allow_blank: true
 
+  scope :comments_flags, ->(comments, user=nil) {
+    q = where(comment: comments, vote: -1)
+    user ? q.where(user: user) : q.all
+  }
+
   # don't forget to edit the explanations on /about
   COMMENT_REASONS = {
     "O" => "Off-topic",

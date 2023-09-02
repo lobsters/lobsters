@@ -194,6 +194,33 @@ class Comment < ApplicationRecord
     return (left - right) / under
   end
 
+  # rate-limit users in heated reply chains, called by controller so that authors can preview
+  # without seeing the message
+  def breaks_speed_limit?
+    return false unless parent_comment_id
+    return false if user.is_moderator?
+
+    parent_comment_ids = parent_comment.parents.pluck(:id).append(parent_comment.id)
+    flag_count = Vote.comments_flags(parent_comment_ids).count
+    commenter_flag_count = Vote.comments_flags(parent_comment_ids, user).count # double-count author
+    delay = (2 + flag_count + commenter_flag_count).minutes
+
+    recent = Comment.where("created_at >= ?", delay.ago)
+      .find_by(user: user, thread_id: parent_comment.thread_id)
+
+    return false unless recent.present?
+
+    wait = ActionController::Base.helpers
+      .distance_of_time_in_words(Time.now, (recent.created_at + delay))
+    Rails.logger.info "breaks_speed_limit: #{user.username} replying to https://lobste.rs/c/#{parent_comment.short_id} flags #{flag_count}"
+    errors.add(
+      :comment,
+      "Thread speed limit reached, next comment allowed in #{wait}. " +
+      (flag_count.zero? ? "" : "Is this thread getting heated? ") +
+      (commenter_flag_count.zero? ? "" : "You flagged here, you can leave it for mods.")
+    )
+  end
+
   def comment=(com)
     self[:comment] = com.to_s.rstrip
     self.markeddown_comment = self.generated_markeddown_comment
@@ -433,7 +460,7 @@ class Comment < ApplicationRecord
     return Comment.none if self.parent_comment_id.nil?
 
     # starts from parent_comment_id so it works on new records
-    Comment
+    @parents ||= Comment
       .joins(<<~SQL
         inner join (
           with recursive parents as (

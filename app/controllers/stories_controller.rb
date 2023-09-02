@@ -133,6 +133,11 @@ class StoriesController < ApplicationController
       end
     end
 
+    # if asking with a title and it's been edited, 302
+    if params[:title] && params[:title] != @story.title_as_url
+      return redirect_to(@story.comments_path)
+    end
+
     if @story.is_gone?
       @moderation = Moderation
         .where(story: @story, comment: nil)

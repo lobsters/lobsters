@@ -6,7 +6,7 @@
 
     <p>
     <%= f.label :totp_code, "TOTP Code:" %>
-    <%= f.number_field :totp_code, :size => 10, :autocomplete => "off",
+    <%= f.number_field :totp_code, :size => 10, :autocomplete => "one-time-code",
         :autofocus => true, :class => "totp_code" %>
     <br />
     </p>

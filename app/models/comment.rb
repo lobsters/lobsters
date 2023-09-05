@@ -212,7 +212,7 @@ class Comment < ApplicationRecord
 
     wait = ActionController::Base.helpers
       .distance_of_time_in_words(Time.now, (recent.created_at + delay))
-    Rails.logger.info "breaks_speed_limit: #{user.username} replying to https://lobste.rs/c/#{parent_comment.short_id} flags #{flag_count}"
+    Rails.logger.info "breaks_speed_limit: #{user.username} replying to https://lobste.rs/c/#{parent_comment.short_id} parent_comment_ids (#{parent_comment_ids.join(" ")}) flags #{flag_count} commenter_flag_count #{commenter_flag_count} delay #{delay} delay.ago #{delay.ago} recent #{recent.id}"
     errors.add(
       :comment,
       "Thread speed limit reached, next comment allowed in #{wait}. " +

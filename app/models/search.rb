@@ -1,41 +1,59 @@
+# results:
+#   not performed
+#   nothing found
+#   invalid: negative w/o positive term
+#   invalid: multiple domains
+#   invalid: unknown tag
+#   results
+
 class Search
-  include ActiveModel::Validations
-  include ActiveModel::Conversion
-  include ActiveModel::AttributeMethods
-  extend ActiveModel::Naming
+  attr_reader :q, :what, :order, :page, :searcher
+  attr_reader :parse_tree
 
-  attr_accessor :q, :order
-  attr_accessor :results, :page, :total_results, :per_page
-  attr_writer :what
+  # takes untrusted params from controller, so sanitize
+  def initialize params, user
+    @q = params[:q]
+    @parse_tree = if params[:q]
+      SearchParser.new.parse(params[:q])
+    else
+      []
+    end
 
-  validates :q, length: {minimum: 2}
+    @what = if %w[stories comments].include? params[:what]
+      params[:what].to_sym
+    else
+      :comments
+    end
 
-  def initialize
-    @q = ""
-    @what = "stories"
-    @order = "newest"
+    @order = if %w[newest relevance score].include? params[:order]
+      params[:order].to_sym
+    else
+      :newest
+    end
 
-    @page = 1
-    @per_page = 20
+    @page = params[:page].to_i
+    @page = 1 if @page == 0
 
-    @results = []
-    @total_results = -1
+    @searcher = user
+
+    @results = nil
+    @results_count = -1
   end
 
   def max_matches
     100
   end
 
-  def persisted?
-    false
+  def per_page
+    20
   end
 
   def to_url_params
-    [:q, :what, :order].map { |p| "#{p}=#{CGI.escape(send(p).to_s)}" }.join("&amp;")
+    [:q, :what, :order, :page].map { |p| "#{p}=#{CGI.escape(send(p).to_s)}" }.join("&")
   end
 
   def page_count
-    total = total_results.to_i
+    total = results_count.to_i
 
     if total == -1 || total > max_matches
       total = max_matches
@@ -44,182 +62,183 @@ class Search
     ((total - 1) / per_page.to_i) + 1
   end
 
-  def what
-    case @what
-    when "comments"
-      "comments"
+  def perform!
+    return (@results = searched_model.none) if q.nil?
+    if what == :stories
+      perform_story_search!
     else
-      "stories"
+      perform_comment_search!
     end
   end
 
-  def with_tags(base, tag_scopes)
-    base
-      .joins({taggings: :tag}, :user).left_outer_joins(:story_text)
-      .where(tags: {tag: tag_scopes})
-      .having("COUNT(stories.id) = ?", tag_scopes.length)
-      .group("stories.id")
+  # strip all punctuation except ' so people can search for contractions like "don't"
+  # some of these are search operators, some sql injection
+  # https://mariadb.com/kb/ru/full-text-index-overview/#in-boolean-mode
+  def strip_operators s
+    s.to_s.gsub(/[\p{Punct}&&[^']]/, " ").strip
   end
 
-  def with_stories_in_domain(base, domain)
-    # Get around the fact that case uses === not ==
-    # to compare objects
-    case base.klass
-    when ->(b) { b == Story }
-      base.joins(:domain).left_outer_joins(:story_text)
-    when ->(b) { b == Comment }
-      base.joins(story: [:domain])
-    else
-      fail "Can't handle #{base.class}"
-    end.where("domains.domain = ?", domain)
-  end
+  def perform_comment_search!
+    query = Comment.accessible_to_user(searcher).for_presentation
 
-  def with_stories_matching_tags(base, tag_scopes)
-    story_ids_matching_tags = with_tags(
-      Story.unmerged.where(is_deleted: false), tag_scopes
-    ).select(:id).map(&:id)
-    base.where(story_id: story_ids_matching_tags)
-  end
+    terms = []
+    n_domains = 0
+    n_tags = 0
+    tags = nil
 
-  def search_for_user!(user)
-    self.results = []
-    self.total_results = 0
-
-    # extract domain query since it must be done separately
-    domain = nil
-    tag_scopes = []
-    words = q.to_s.split(" ").reject { |w|
-      if (m = w.match(/^domain:(.+)$/))
-        domain = m[1]
-      elsif (m = w.match(/^tag:(.+)$/))
-        tag_scopes << m[1]
-      end
-    }.join(" ")
-
-    qwords = ActiveRecord::Base.connection.quote_string(words)
-
-    base = nil
-
-    case what
-    when "stories"
-      base = Story.unmerged.where(is_deleted: false).includes(:domain, :tags, :taggings)
-      if domain.present?
-        base = with_stories_in_domain(base, domain)
-      end
-
-      title_match_sql = Arel.sql("MATCH(stories.title) AGAINST('#{qwords}' IN BOOLEAN MODE)")
-      description_match_sql =
-        Arel.sql("MATCH(stories.description) AGAINST('#{qwords}' IN BOOLEAN MODE)")
-      story_text_match_sql =
-        Arel.sql("MATCH(story_texts.body) AGAINST('#{qwords}' IN BOOLEAN MODE)")
-
-      if qwords.present?
-        base.where!(
-          "(#{title_match_sql} OR " \
-          "#{description_match_sql} OR " \
-          "#{story_text_match_sql})"
-        )
-
-        if tag_scopes.present?
-          self.results = with_tags(base, tag_scopes)
-        else
-          base = base.includes({taggings: :tag}, :user).left_outer_joins(:story_text)
-          self.results = base.select(
-            ["stories.*", title_match_sql, description_match_sql, story_text_match_sql].join(", ")
-          )
-        end
-      else
-        self.results = if tag_scopes.present?
-          with_tags(base, tag_scopes)
-        else
-          base.includes({taggings: :tag}, :user).left_outer_joins(:story_text)
-        end
-      end
-      self.total_results = results.dup.count("stories.id")
-
-      case order
-      when "relevance"
-        if qwords.present?
-          results.order!(Arel.sql("((#{title_match_sql}) * 2) + " \
-                                       "((#{description_match_sql}) * 1.5) + " \
-                                       "(#{story_text_match_sql}) DESC"))
-        else
-          results.order!("stories.created_at DESC")
-        end
-      when "newest"
-        results.order!("stories.created_at DESC")
-      when "points"
-        results.order!("score DESC")
-      end
-
-    when "comments"
-      base = Comment.active.for_presentation
-      if domain.present?
-        base = with_stories_in_domain(base.joins(:story), domain)
-      end
-      if tag_scopes.present?
-        base = with_stories_matching_tags(base, tag_scopes)
-      end
-      if qwords.present?
-        base = base.where(Arel.sql("MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE)"))
-      end
-      self.results = base.select(
-        "comments.*, " \
-        "MATCH(comment) AGAINST('#{qwords}' IN BOOLEAN MODE) AS rel_comment"
-      ).includes(:user, :story)
-      self.total_results = results.dup.count("comments.id")
-
-      case order
-      when "relevance"
-        results.order!("rel_comment DESC")
-      when "newest"
-        results.order!("comments.created_at DESC")
-      when "points"
-        results.order!("score DESC")
+    # array of hashes, type => value(s)
+    @parse_tree.each do |node|
+      type, value = node.first
+      case type
+      when :domain
+        n_domains += 1
+        # TODO handle invalid search of multiple domains
+        # raise "too many cooks" if n_domains > 1
+        query.joins!(story: [:domain]).where!(story: {domains: {domain: value.to_s}})
+      when :tag
+        n_tags += 1
+        tags ||= Tag.none.select(:id)
+        tags.or!(Tag.where(tag: value.to_s))
+        # TODO unknown tag
+      when :negated
+        # TODO
+      when :quoted
+        terms.append '"' + strip_operators(value).gsub("'", "\\'") + '"'
+      when :term
+        val = strip_operators(value).gsub("'", "\\'")
+        # if punctuation is replaced with a space, this would generate a terms search
+        # AGAINST('+' in boolean mode)
+        terms.append val if !val.empty?
       end
     end
+    if terms.any?
+      terms_sql = <<~SQL.tr("\n", " ")
+        MATCH(comment)
+        AGAINST ('#{terms.map { |s| "+#{s}" }.join(", ")}' in boolean mode)
+      SQL
+      query.where! terms_sql
+    end
+    if tags
+      query.where!(
+        story: Story
+                .joins(:tags)
+                .where(tags: tags)
+                .group("stories.id")
+                .having("count(distinct tags.id) = #{n_tags}")
+      )
+    end
 
+    @results_count = query.dup.count
     # with_tags uses group_by, so count returns a hash
-    self.total_results = total_results.count if total_results.is_a? Hash
+    @results_count = @results_count.count if @results_count.is_a? Hash
 
-    if page > page_count
-      self.page = page_count
+    case order
+    when :newest
+      query.order!(id: :desc)
+    when :relevance
+      # relevance is undefined without search terms so sort by score
+      if terms.any?
+        query.order!(Arel.sql(terms_sql + " DESC"))
+      else
+        query.order!(score: :desc)
+      end
+    when :score
+      query.order!(score: :desc)
     end
-    if page < 1
-      self.page = 1
-    end
 
-    self.results = results
-      .limit(per_page)
-      .offset((page - 1) * per_page)
+    query.limit!(per_page)
+    query.offset!((page - 1) * per_page)
+    query
+  end
 
-    # if a user is logged in, fetch their votes for what's on the page
-    if user
-      case what
-      when "stories"
-        self.results = results.mod_preload?(user)
-        votes = Vote.story_votes_by_user_for_story_ids_hash(user.id, results.map(&:id))
+  def perform_story_search!
+    query = Story.base(@user).for_presentation
 
-        results.each do |r|
-          if votes[r.id]
-            r.vote = votes[r.id]
-          end
-        end
+    terms = []
+    n_domains = 0
+    n_tags = 0
+    tags = nil
 
-      when "comments"
-        votes = Vote.comment_votes_by_user_for_comment_ids_hash(user.id, results.map(&:id))
-
-        results.each do |r|
-          if votes[r.id]
-            r.current_vote = votes[r.id]
-          end
-        end
+    # array of hashes, type => value(s)
+    @parse_tree.each do |node|
+      type, value = node.first
+      case type
+      when :domain
+        n_domains += 1
+        # TODO handle invalid search of multiple domains
+        # raise "too many cooks" if n_domains > 1
+        query.joins!(:domain).where!(domains: {domain: value.to_s})
+      when :tag
+        n_tags += 1
+        tags ||= Tag.none.select(:id)
+        tags.or!(Tag.where(tag: value.to_s))
+        # TODO unknown tag
+      when :negated
+        # TODO
+      when :quoted
+        terms.append '"' + strip_operators(value).gsub("'", "\\'") + '"'
+      when :term
+        val = strip_operators(value).gsub("'", "\\'")
+        # if punctuation is replaced with a space, this would generate a terms search
+        # AGAINST('+' in boolean mode)
+        terms.append val if !val.empty?
       end
     end
-  rescue ActiveRecord::StatementInvalid
-    # more likely the user has entered invalid boolean mode operators than our
-    # code is broken (not that I really trust this hairy class)
-    self.results = []
-    self.total_results = -1
+    if terms.any?
+      terms_sql = <<~SQL.tr("\n", " ")
+        MATCH(story_texts.title, story_texts.description, story_texts.body)
+        AGAINST ('#{terms.map { |s| "+#{s}" }.join(", ")}' in boolean mode)
+      SQL
+      query.joins!(:story_text).where! terms_sql
+    end
+    if tags
+      # This searches tags by subquery because otherwise Rails recognizes the join against tags and
+      # thinks the .tags association preload is satisfied, so returned stories will only have the
+      # searched-for tags.
+      query.joins!(<<~SQL.tr("\n", "")
+        inner join (
+          select stories.id
+          from stories
+          join taggings on taggings.story_id = stories.id
+          where taggings.tag_id in (#{tags.to_sql})
+          group by stories.id
+          having count(distinct taggings.id) = #{n_tags}
+        ) as stories_with_tags on stories_with_tags.id = stories.id
+      SQL
+                  )
+    end
+
+    @results_count = query.dup.count
+
+    case order
+    when :newest
+      query.order!(id: :desc)
+    when :relevance
+      # relevance is undefined without search terms so sort by score
+      if terms.any?
+        query.order!(Arel.sql(terms_sql + " desc"))
+      else
+        query.order!(score: :desc)
+      end
+    when :score
+      query.order!(score: :desc)
+    end
+
+    query.limit!(per_page)
+    query.offset!((page - 1) * per_page)
+    query
+  end
+
+  def results
+    @results ||= perform!
+  end
+
+  def results_count
+    perform! if @results.nil?
+    @results_count
+  end
+
+  def searched_model
+    (what == :stories) ? Story : Comment
   end
 end

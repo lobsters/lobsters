@@ -37,6 +37,9 @@ class Story < ApplicationRecord
   has_one :story_text, foreign_key: :id, dependent: :destroy, inverse_of: :story
 
   scope :base, ->(user) { includes(:tags).not_deleted(user).unmerged.mod_preload?(user) }
+  scope :for_presentation, -> {
+    includes(:domain, :user, taggings: :tag)
+  }
   scope :mod_preload?, ->(user) {
     user.try(:is_moderator?) ? preload(:suggested_taggings, :suggested_titles) : all
   }
@@ -152,7 +155,7 @@ class Story < ApplicationRecord
   before_save :log_moderation
   before_save :fix_bogus_chars
   after_create :mark_submitter, :record_initial_upvote
-  after_save :update_merged_into_story_comments, :recalculate_hotness!
+  after_save :update_merged_into_story_comments, :recalculate_hotness!, :update_story_text
 
   validate do
     if url.present?
@@ -811,6 +814,13 @@ class Story < ApplicationRecord
 
   def update_merged_into_story_comments
     merged_into_story&.update_comments_count!
+  end
+
+  def update_story_text
+    return unless saved_change_to_attribute?(:title) || saved_change_to_attribute?(:description)
+
+    # story_text created by cron job, so ignore missing story_text
+    story_text.try(:update!, title: title, description: description)
   end
 
   # disincentivize content marketers by not appearing to be a source of

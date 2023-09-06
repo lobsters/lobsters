@@ -11,6 +11,8 @@ class DiffBot
       return
     end
 
+    return "" if story.url.nil?
+
     # XXX: diffbot tries to read pdfs as text, so disable for now
     if /\.pdf$/i.match?(story.url.to_s)
       return nil

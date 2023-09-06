@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_28_195756) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_12_160752) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "category"
     t.datetime "created_at", precision: nil, null: false
@@ -206,7 +206,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_28_195756) do
     t.boolean "user_is_following", default: false, null: false
     t.bigint "domain_id"
     t.index ["created_at"], name: "index_stories_on_created_at"
-    t.index ["description"], name: "index_stories_on_description", type: :fulltext
     t.index ["domain_id"], name: "index_stories_on_domain_id"
     t.index ["hotness"], name: "hotness_idx"
     t.index ["id", "is_deleted"], name: "index_stories_on_id_and_is_deleted"
@@ -214,16 +213,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_28_195756) do
     t.index ["normalized_url"], name: "index_stories_on_normalized_url"
     t.index ["score"], name: "index_stories_on_score"
     t.index ["short_id"], name: "unique_short_id", unique: true
-    t.index ["title"], name: "index_stories_on_title", type: :fulltext
     t.index ["twitter_id"], name: "index_stories_on_twitter_id"
     t.index ["url"], name: "url", length: 191
     t.index ["user_id"], name: "index_stories_on_user_id"
   end
 
   create_table "story_texts", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.text "body", size: :medium, null: false
+    t.string "title", limit: 150, default: "", null: false
+    t.text "description", size: :medium
+    t.text "body", size: :medium
     t.timestamp "created_at", default: -> { "current_timestamp() ON UPDATE current_timestamp()" }, null: false
-    t.index ["body"], name: "index_story_texts_on_body", type: :fulltext
+    t.index ["title", "description", "body"], name: "index_story_texts_on_title_and_description_and_body", type: :fulltext
   end
 
   create_table "suggested_taggings", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

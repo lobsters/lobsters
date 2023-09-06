@@ -153,7 +153,7 @@ class Search
       end
 
     when "comments"
-      base = Comment.active
+      base = Comment.active.for_presentation
       if domain.present?
         base = with_stories_in_domain(base.joins(:story), domain)
       end

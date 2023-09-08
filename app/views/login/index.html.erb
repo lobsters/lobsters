@@ -9,7 +9,7 @@
     <%= form_with url: login_path do |form| %>
     <p>
       <%= form.label :email, "E-mail or Username:" %>
-      <%= form.email_field :email, :size => 40, :inputmode => "email", :autofocus => "autofocus" %>
+      <%= form.text_field :email, :size => 40, :inputmode => "email", :autofocus => "autofocus" %>
       <br />
 
       <%= form.label :password, "Password:" %>

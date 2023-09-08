@@ -29,6 +29,7 @@ class LoginController < ApplicationController
   end
 
   def login
+    @title = "Login"
     user = if /@/.match?(params[:email].to_s)
       User.where(email: params[:email]).first
     else
@@ -100,7 +101,7 @@ class LoginController < ApplicationController
 
     flash.now[:error] = fail_reason
     @referer = params[:referer]
-    index
+    render "index"
   end
 
   def forgot_password
@@ -131,7 +132,7 @@ class LoginController < ApplicationController
     @found_user.initiate_password_reset_for_ip(request.remote_ip)
 
     flash.now[:success] = "Password reset instructions have been e-mailed to you."
-    index
+    render "index"
   end
 
   def set_new_password

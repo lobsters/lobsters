@@ -8,7 +8,7 @@
     <%= f.label :totp_code, "TOTP Code:" %>
     <%= f.text_field :totp_code,
       :inputmode => "numeric",
-      :pattern => "[0-9]",
+      :pattern => "[0-9]+",
       :size => 10,
       :autocomplete => "one-time-code",
       :autofocus => true,

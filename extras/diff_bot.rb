@@ -29,22 +29,22 @@ class DiffBot
         # turn newlines into double newlines, so they become paragraphs
         j["text"] = j["text"].to_s.gsub("\n", "\n\n")
 
-        while j["text"] =~ "\n\n\n"
+        while j["text"].include?("\n\n\n")
           j["text"].gsub!("\n\n\n", "\n\n")
         end
 
         return j["text"]
       end
     rescue => e
-      Rails.logger.error "error fetching #{db_url}: #{e.message}"
+      Rails.logger.error "error fetching #{db_url} #{e.backtrace.first} #{e.message}"
     end
 
     begin
       s = Sponge.new
       s.timeout = 45
-      s.fetch(story.archive_url)
+      s.fetch(story.archiveorg_url)
     rescue => e
-      Rails.logger.error "error caching #{db_url}: #{e.message}"
+      Rails.logger.error "error caching #{db_url}: #{e.backtrace.first} #{e.message}"
     end
 
     nil

@@ -108,7 +108,7 @@ class StoriesController < ApplicationController
     @story.user_id = @user.id
     @story.previewing = true
 
-    @story.vote = Vote.new(vote: 1)
+    @story.current_vote = Vote.new(vote: 1)
     @story.score = 1
 
     @story.valid?
@@ -424,7 +424,7 @@ class StoriesController < ApplicationController
     story ||= Story.find(params[:id]) if @user&.is_admin?
 
     if @user && story
-      story.vote = Vote.find_by(
+      story.current_vote = Vote.find_by(
         user: @user,
         story: story.id,
         comment: nil
@@ -458,9 +458,7 @@ class StoriesController < ApplicationController
 
   def load_user_votes
     if @user
-      if (v = Vote.where(user_id: @user.id, story_id: @story.id, comment_id: nil).first)
-        @story.vote = {vote: v.vote, reason: v.reason}
-      end
+      @story.current_vote = Vote.find_by(user: @user, story: @story, comment: nil)
 
       @story.is_hidden_by_cur_user = @story.is_hidden_by_user?(@user)
       @story.is_saved_by_cur_user = @story.is_saved_by_user?(@user)
@@ -468,11 +466,7 @@ class StoriesController < ApplicationController
       @votes = Vote.comment_votes_by_user_for_story_hash(
         @user.id, @story.merged_stories.ids.push(@story.id)
       )
-      @comments.each do |c|
-        if @votes[c.id]
-          c.current_vote = @votes[c.id]
-        end
-      end
+      @comments.each { |c| c.current_vote = @votes[c.id] }
     end
   end
 

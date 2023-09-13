@@ -144,10 +144,10 @@ class Story < ApplicationRecord
   # Dingbats, emoji, and other graphics https://www.unicode.org/charts/
   GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}\u{2192}-\u{27BF}\u{1F000}-\u{1F9FF}]/
 
-  attr_accessor :editing_from_suggestions, :editor, :fetching_ip,
+  attr_accessor :current_vote, :editing_from_suggestions, :editor, :fetching_ip,
     :is_hidden_by_cur_user, :latest_comment_id,
     :is_saved_by_cur_user, :moderation_reason, :previewing,
-    :seen_previous, :vote
+    :seen_previous
   attr_writer :fetched_response
 
   before_validation :assign_short_id_and_score, on: :create
@@ -222,6 +222,15 @@ class Story < ApplicationRecord
       ModNote.tattle_on_story_domain!(self, "banned")
       errors.add(:url, "is from banned domain #{domain.domain}: #{domain.banned_reason}")
     end
+  end
+
+  # current_vote is the vote loaded for the currently-viewing user
+  def current_flagged?
+    current_vote.try(:[], :vote) == -1
+  end
+
+  def current_upvoted?
+    current_vote.try(:[], :vote) == 1
   end
 
   # all stories with similar urls
@@ -626,9 +635,7 @@ class Story < ApplicationRecord
   end
 
   def show_score_to_user?(u)
-    return true if u&.is_moderator?
-    # cast nil to 0, only show score if user hasn't flagged
-    (!vote || vote[:vote].to_i >= 0)
+    u&.is_moderator? && !current_flagged?
   end
 
   def tagging_changes

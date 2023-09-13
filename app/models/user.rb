@@ -285,7 +285,7 @@ class User < ApplicationRecord
     elsif obj.is_a?(Story)
       if obj.is_flaggable?
         return true
-      elsif obj.vote == -1
+      elsif obj.current_flagged?
         # user can unvote
         return true
       end

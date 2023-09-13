@@ -34,9 +34,7 @@ class StoriesPaginator
       ss = SavedStory.where(user_id: @user.id, story_id: scope.map(&:id)).map(&:story_id)
 
       scope.each do |s|
-        if votes[s.id]
-          s.vote = votes[s.id]
-        end
+        s.current_vote = votes[s.id]
         if hs.include?(s.id)
           s.is_hidden_by_cur_user = true
         end

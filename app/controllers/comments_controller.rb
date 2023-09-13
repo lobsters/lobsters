@@ -135,11 +135,7 @@ class CommentsController < ApplicationController
       parents = comment.parents.with_thread_attributes.for_presentation
 
       @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, parents.map(&:id))
-      parents.each do |c|
-        if @votes[c.id]
-          c.current_vote = @votes[c.id]
-        end
-      end
+      parents.each { |c| c.current_vote = @votes[c.id] }
       render "_commentbox", locals: {
         comment: comment,
         parents: parents
@@ -277,11 +273,7 @@ class CommentsController < ApplicationController
     if @user
       @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, @comments.map(&:id))
 
-      @comments.each do |c|
-        if @votes[c.id]
-          c.current_vote = @votes[c.id]
-        end
-      end
+      @comments.each { |c| c.current_vote = @votes[c.id] }
     end
 
     respond_to do |format|
@@ -360,11 +352,7 @@ class CommentsController < ApplicationController
       @user.clear_unread_replies!
       @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @threads.map(&:story_id).uniq)
 
-      @threads.each do |c|
-        if @votes[c.id]
-          c.current_vote = @votes[c.id]
-        end
-      end
+      @threads.each { |c| c.current_vote = @votes[c.id] }
     end
   end
 

@@ -32,18 +32,19 @@
 
 <%#heinous_inline_partial(comments/_comment.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
-<% flagged = comment.current_vote && comment.current_vote[:vote] == -1 %>
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
   <%= defined?(force_open) ||
       @user.try(:is_moderator?) ||
-      (comment.score > Comment::COLLAPSE_SCORE && !flagged) ? "" : "checked" %>>
+      (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
 <div id="c_<%= comment.short_id %>"
-data-shortid="<%= comment.short_id if comment.persisted? %>"
-class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
-"upvoted" : "flagged") : "" %>
-  <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>">
+  data-shortid="<%= comment.short_id if comment.persisted? %>"
+  class="comment
+    <%= comment.current_upvoted? ? "upvoted" : "" %>
+    <%= comment.current_flagged? ? "flagged" : "" %>
+    <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
+  ">
 
   <% if defined?(show_tree_lines) && show_tree_lines %>
     <label for="comment_folder_<%= comment.short_id %>"
@@ -131,11 +132,11 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
           <a tabindex="0" class="comment-disowner" href="#">disown</a>
         <% end %>
 
-        <% if can_flag && !flagged %>
+        <% if can_flag && !comment.current_flagged? %>
           <span class="dropdown_parent">
             | <a class="flagger">flag</a>
           </span>
-        <% elsif flagged %>
+        <% elsif comment.current_flagged? %>
           | <a class="flagger">unflag</a>
         <% else %>
           <span class="flagger flagger_stub"></span>
@@ -158,7 +159,7 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
             <% if (s = comment.vote_summary_for_user(@user).downcase).present? %>
               | <%= s %>
             <% end %>
-          <% elsif comment.current_vote && comment.current_vote[:vote] == -1 %>
+          <% elsif comment.current_flagged? %>
             | -1
             <%= Vote::ALL_COMMENT_REASONS[comment.current_vote[:reason]].downcase %>
           <% end %>

@@ -224,6 +224,15 @@ class Comment < ApplicationRecord
     self.markeddown_comment = generated_markeddown_comment
   end
 
+  # current_vote is the vote loaded for the currently-viewing user
+  def current_flagged?
+    current_vote.try(:[], :vote) == -1
+  end
+
+  def current_upvoted?
+    current_vote.try(:[], :vote) == 1
+  end
+
   def delete_for_user(user, reason = nil)
     Comment.record_timestamps = false
 
@@ -523,7 +532,7 @@ class Comment < ApplicationRecord
     (
       (created_at && created_at < 36.hours.ago) ||
       !SCORE_RANGE_TO_HIDE.include?(self.score)
-    ) && (!current_vote || current_vote[:vote] >= 0)
+    ) && !current_flagged?
   end
 
   def to_param

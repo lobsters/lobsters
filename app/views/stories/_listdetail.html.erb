@@ -1,13 +1,13 @@
 <%#
   The h-entry, u-report-of, u-url and h-card css classes are necessary
   for the webmentions support. http://microformats.org/wiki/h-entry
-  
+
   This has apparently useless <span> tags explained in a comment in CSS
   around .negative_1 in CSS (introduced same commit as this comment).
 %>
 <li id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
-class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
-<%= story.vote && story.vote[:vote] == -1 ? "flagged" : "" %>
+class="story <%= story.current_upvoted? ? "upvoted" : "" %>
+<%= story.current_flagged? ? "flagged" : "" %>
 <%= story.score <= -1 ? "negative_1" : "" %>
 <%= story.score <= -3 ? "negative_3" : "" %>
 <%= story.score <= -5 ? "negative_5" : "" %>
@@ -130,9 +130,9 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             :class => "suggester" %>
         <% end %>
         <% if !story.is_gone? && @user %>
-          <% if @user && story.vote && story.vote[:vote] == -1 %>
+          <% if @user && story.current_flagged? %>
             <span> | </span><a class="flagger">unflag (<%=
-              Vote::STORY_REASONS[story.vote[:reason]].to_s.downcase %>)</a>
+              Vote::STORY_REASONS[story.current_vote[:reason]].to_s.downcase %>)</a>
           <% elsif @user && @user.can_flag?(story) %>
             <span> | </span>
             <span class="dropdown_parent">

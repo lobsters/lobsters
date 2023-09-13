@@ -1,6 +1,15 @@
+<%
+  # partial inputs:
+  comment ||= raise "required Comment missing" # the Comment to render
+  force_open ||= false # this comment is allowed to collapse
+  show_tree_lines ||= false # render collapse button (misnamed?)
+  show_story ||= false # show "on: story title" end of byline
+  was_merged ||= false # show merged icon start of byline
+  is_unread ||= false # show (unread) in byline
+%>
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
-  <%= defined?(force_open) ||
+  <%= force_open ||
       @user.try(:is_moderator?) ||
       (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
@@ -12,7 +21,7 @@
     <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
   ">
 
-  <% if defined?(show_tree_lines) && show_tree_lines %>
+  <% if show_tree_lines %>
     <label for="comment_folder_<%= comment.short_id %>"
       class="comment_folder"></label>
   <% end %>
@@ -38,7 +47,7 @@
     <div class="byline">
       <a name="c_<%= comment.short_id %>"></a>
 
-      <% if defined?(show_tree_lines) && show_tree_lines %>
+      <% if show_tree_lines %>
         <label for="comment_folder_<%= comment.short_id %>"
           class="comment_folder comment_folder_inline"></label>
       <% else %>
@@ -46,7 +55,7 @@
           class="comment_folder comment_folder_inline force_inline"></label>
       <% end %>
 
-      <% if defined?(was_merged) && was_merged %>
+      <% if was_merged %>
         <span class="merge"></span>
       <% end %>
 
@@ -69,7 +78,6 @@
         <% elsif comment.is_from_email? %>
           e-mailed
         <% end %>
-        <% is_unread ||= false %>
         <%= time_ago_in_words_label(comment.has_been_edited? ? comment.updated_at : comment.created_at) %>
         <%= raw "<span class='comment_unread'>(unread)</span>" if is_unread %>
       <% end %>
@@ -113,7 +121,7 @@
             <a tabindex="0" class="comment_replier" unselectable="on" href="<%= reply_comment_path(comment) %>">reply</a>
         <% end %>
 
-        <% if defined?(show_story) && show_story %>
+        <% if show_story %>
           | on:
           <a href="<%= comment.story.comments_path %>"><%= comment.story.title %></a>
         <% end %>

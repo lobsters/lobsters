@@ -1,3 +1,10 @@
+<%
+  # partial inputs:
+  story ||= raise "required Story missing" # the Story to render
+  # top of a single story page, eg /s/abc123, controls rendering additional info
+  # like list of merged stories, preview, users hiding, and flag summary
+  single_story ||= false
+%>
 <%#
   The h-entry, u-report-of, u-url and h-card css classes are necessary
   for the webmentions support. http://microformats.org/wiki/h-entry
@@ -50,7 +57,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
         <a class="domain" href="<%= domain_path(story.domain) %>"><%= story.domain.domain %></a>
       <% end %>
 
-      <% if defined?(single_story) && single_story %>
+      <% if single_story %>
         <% story.merged_stories.not_deleted(nil).includes(:domain, :user, :tags).each do |ms| %>
           <br>
           <span class="merge"></span>
@@ -88,8 +95,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
       <% end %>
     <% end %>
 
-    <% if !(defined?(single_story) && single_story) && @user &&
-    @user.show_story_previews? %>
+    <% if !single_story && @user && @user.show_story_previews? %>
       <% if (sc = story.description_or_story_text(500)).present? %>
         <div class="story_content">
           <%= sc %>
@@ -146,7 +152,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
             <span> | </span><%= link_to "hide", story_hide_path(story.short_id),
               :class => "hider" %>
           <% end %>
-          <% if defined?(single_story) && single_story && story.hider_count > 0 %>
+          <% if single_story && story.hider_count > 0 %>
             (hidden by <%= pluralize(story.hider_count, "user") %>)
           <% end %>
           <% if story.is_saved_by_cur_user %>
@@ -181,7 +187,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           </span>
         <% end %>
 
-        <% if defined?(single_story) && single_story &&
+        <% if single_story &&
         ((story.flags > 0 && @user && @user.is_moderator?) ||
         (story.flags >= 3 || story.score <= 0)) %>
           <span> | <%= story.vote_summary_for(@user).downcase %> </span>

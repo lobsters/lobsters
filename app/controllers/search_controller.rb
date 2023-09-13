@@ -20,6 +20,6 @@ class SearchController < ApplicationController
   private
 
   def search_params
-    params.permit(:q, :what, :order, :page)
+    params.permit(:q, :what, :order, :page, :utf8, :authenticity_token)
   end
 end

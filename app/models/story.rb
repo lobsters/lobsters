@@ -194,7 +194,7 @@ class Story < ApplicationRecord
     if most_recent_similar&.is_recent?
       errors.add(:url, "has already been submitted within the past #{RECENT_DAYS} days")
       true
-    elsif most_recent_similar && user && user.is_new?
+    elsif most_recent_similar && user&.is_new?
       errors.add(:url, "cannot be resubmitted by new users")
       true
     else
@@ -635,7 +635,7 @@ class Story < ApplicationRecord
   end
 
   def show_score_to_user?(u)
-    u&.is_moderator? && !current_flagged?
+    u&.is_moderator? || !current_flagged?
   end
 
   def tagging_changes

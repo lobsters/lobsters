@@ -1,3 +1,5 @@
+# typed: false
+
 class Domain < ApplicationRecord
   has_many :stories
   belongs_to :banned_by_user,

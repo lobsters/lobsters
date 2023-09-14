@@ -9,6 +9,7 @@ ignore:
 
 plugins:
   - standard-rails
+  - standard-sorbet
 # Needs to be packaged as a plugin https://github.com/standardrb/standard#user-content-plugins
 #  - use_form_with:
 #      require_path: extras/prohibit_form_for_and_form_tag

@@ -1,3 +1,5 @@
+# typed: false
+
 class LoginBannedError < StandardError; end
 
 class LoginDeletedError < StandardError; end

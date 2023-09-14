@@ -1,3 +1,5 @@
+# typed: false
+
 # Finds the consistent most-heavily-flagged commenters. Requires flags to be spread over
 # several comments and stories because anyone can have a bad thread or a bad day.
 

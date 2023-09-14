@@ -1,3 +1,5 @@
+# typed: false
+
 class Vote < ApplicationRecord
   belongs_to :user, optional: false
   belongs_to :story, optional: false

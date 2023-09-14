@@ -1,3 +1,5 @@
+# typed: false
+
 FactoryBot.define do
   factory :message do
     association(:recipient, factory: :user)

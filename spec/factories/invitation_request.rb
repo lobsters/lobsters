@@ -1,3 +1,5 @@
+# typed: false
+
 FactoryBot.define do
   factory :invitation_request do
     name { "pete smith" }

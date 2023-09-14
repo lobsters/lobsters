@@ -56,6 +56,7 @@ group :test, :development do
   gem "factory_bot_rails"
   gem "standard"
   gem "standard-rails"
+  gem "standard-sorbet"
   gem "faker"
   gem "byebug"
   gem "rb-readline"

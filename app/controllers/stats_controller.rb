@@ -1,3 +1,5 @@
+# typed: false
+
 class StatsController < ApplicationController
   FIRST_MONTH = Time.new(2012, 7, 3).utc.freeze
   TIMESCALE_DIVISIONS = "1 year".freeze

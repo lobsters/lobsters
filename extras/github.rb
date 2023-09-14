@@ -1,3 +1,5 @@
+# typed: false
+
 class Github
   cattr_accessor :CLIENT_ID, :CLIENT_SECRET
 

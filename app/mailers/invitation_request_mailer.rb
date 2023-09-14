@@ -1,3 +1,5 @@
+# typed: false
+
 class InvitationRequestMailer < ApplicationMailer
   def invitation_request(invitation_request)
     @invitation_request = invitation_request

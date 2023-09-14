@@ -1,3 +1,5 @@
+# typed: false
+
 require "parslet"
 
 class SearchParser < Parslet::Parser

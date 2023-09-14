@@ -1,3 +1,5 @@
+# typed: false
+
 class RepliesController < ApplicationController
   REPLIES_PER_PAGE = 25
 

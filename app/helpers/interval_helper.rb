@@ -1,3 +1,5 @@
+# typed: false
+
 module IntervalHelper
   TIME_INTERVALS = {"h" => "Hour",
                     "d" => "Day",

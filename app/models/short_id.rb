@@ -1,3 +1,5 @@
+# typed: false
+
 class ShortId
   attr_accessor :klass, :generation_attempts
 

@@ -1,3 +1,5 @@
+# typed: false
+
 class User < ApplicationRecord
   has_many :stories, -> { includes :user }, inverse_of: :user
   has_many :comments,

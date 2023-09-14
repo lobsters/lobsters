@@ -1,3 +1,5 @@
+# typed: false
+
 class SearchController < ApplicationController
   before_action :show_title_h1
 

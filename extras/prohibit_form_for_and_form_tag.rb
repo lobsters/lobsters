@@ -1,3 +1,5 @@
+# typed: false
+
 require "rails"
 require "rubocop"
 

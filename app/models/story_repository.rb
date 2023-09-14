@@ -1,3 +1,5 @@
+# typed: false
+
 class StoryRepository
   def initialize(user = nil, params = {})
     @user = user

@@ -1,3 +1,5 @@
+# typed: false
+
 require "uri"
 require "net/https"
 require "resolv"

@@ -1,3 +1,5 @@
+# typed: false
+
 class MessagesController < ApplicationController
   before_action :require_logged_in_user
   before_action :require_logged_in_moderator, only: [:mod_note]

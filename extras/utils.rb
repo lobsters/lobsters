@@ -1,3 +1,5 @@
+# typed: false
+
 class Utils
   # URI.parse is not lenient enough
   def self.normalize_url url

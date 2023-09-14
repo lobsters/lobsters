@@ -1,3 +1,5 @@
+# typed: false
+
 # named 00_zeitwerk because Rails loads these in alphabetical order and
 # production.rb needs these classes loaded
 

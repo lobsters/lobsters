@@ -1,3 +1,5 @@
+# typed: false
+
 class ModNote < ApplicationRecord
   extend TimeAgoInWords
 

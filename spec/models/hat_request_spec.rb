@@ -1,3 +1,5 @@
+# typed: false
+
 require "rails_helper"
 
 describe HatRequest do

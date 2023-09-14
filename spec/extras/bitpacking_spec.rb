@@ -1,3 +1,5 @@
+# typed: false
+
 require "rails_helper"
 
 # Story#merged_comments (and Comment.confidence_order) depend on a lot of fiddly SQL.

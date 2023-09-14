@@ -1,3 +1,5 @@
+# typed: false
+
 FactoryBot.define do
   factory :user do
     created_at { Time.current - (User::NEW_USER_DAYS + 1).days } # default to experience

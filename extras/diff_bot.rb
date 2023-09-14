@@ -1,3 +1,5 @@
+# typed: false
+
 class DiffBot
   cattr_accessor :DIFFBOT_API_KEY
 

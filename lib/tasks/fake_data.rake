@@ -1,3 +1,5 @@
+# typed: false
+
 require "faker"
 
 class FakeDataGenerator

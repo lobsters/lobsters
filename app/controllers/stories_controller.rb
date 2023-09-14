@@ -1,3 +1,5 @@
+# typed: false
+
 class StoriesController < ApplicationController
   caches_page :show, if: CACHE_PAGE
 

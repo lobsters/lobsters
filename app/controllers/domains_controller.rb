@@ -1,3 +1,5 @@
+# typed: false
+
 class DomainsController < ApplicationController
   before_action :require_logged_in_admin
   before_action :find_domain, only: [:edit, :update]

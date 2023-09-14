@@ -1,3 +1,5 @@
+# typed: false
+
 module Rails
   module ConsoleMethods
     def admin

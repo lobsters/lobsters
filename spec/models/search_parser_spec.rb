@@ -1,3 +1,5 @@
+# typed: false
+
 require "rails_helper"
 require "parslet/convenience" # sp.parse_with_debug("input") for tree
 require "parslet/rig/rspec"

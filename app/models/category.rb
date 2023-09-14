@@ -1,3 +1,5 @@
+# typed: false
+
 class Category < ApplicationRecord
   has_many :tags,
     -> { order("tag asc") },

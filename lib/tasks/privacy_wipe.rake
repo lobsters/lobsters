@@ -1,3 +1,5 @@
+# typed: false
+
 desc "Wipe private data if site is changing hands"
 task privacy_wipe: :environment do
   fail "Refusing to wipe. Read and edit this task if your site is really changing hands"

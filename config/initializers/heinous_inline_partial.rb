@@ -1,3 +1,5 @@
+# typed: false
+
 # Inlines partials into parent templates for performance.
 # In production & test: once at startup; development: every request
 #

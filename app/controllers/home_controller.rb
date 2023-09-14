@@ -1,3 +1,5 @@
+# typed: false
+
 class HomeController < ApplicationController
   include IntervalHelper
 

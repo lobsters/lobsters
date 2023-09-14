@@ -1,3 +1,5 @@
+# typed: false
+
 module TimeAgoInWords
   def time_ago_in_words(time)
     secs = (Time.current - time).to_i

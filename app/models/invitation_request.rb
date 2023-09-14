@@ -1,3 +1,5 @@
+# typed: false
+
 class InvitationRequest < ApplicationRecord
   validates :name,
     presence: true,

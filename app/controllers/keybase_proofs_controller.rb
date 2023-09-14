@@ -1,3 +1,5 @@
+# typed: false
+
 class KeybaseProofsController < ApplicationController
   before_action :require_logged_in_user, only: [:new, :create, :destroy]
   before_action :check_new_params, only: :new

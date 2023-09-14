@@ -1,3 +1,5 @@
+# typed: false
+
 class Markdowner
   # opts[:allow_images] allows <img> tags
 

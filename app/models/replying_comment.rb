@@ -1,3 +1,5 @@
+# typed: false
+
 class ReplyingComment < ApplicationRecord
   attribute :is_unread, :boolean
 

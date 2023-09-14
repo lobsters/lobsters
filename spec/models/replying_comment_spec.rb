@@ -1,3 +1,5 @@
+# typed: false
+
 require "rails_helper"
 
 RSpec::Matchers.define :have_reply do |expected|

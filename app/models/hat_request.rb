@@ -1,3 +1,5 @@
+# typed: false
+
 class HatRequest < ApplicationRecord
   belongs_to :user
 

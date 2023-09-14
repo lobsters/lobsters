@@ -1,3 +1,5 @@
+# typed: false
+
 class HatsController < ApplicationController
   before_action :require_logged_in_user, except: [:index]
   before_action :require_logged_in_moderator, except: [:build_request, :index, :create_request]

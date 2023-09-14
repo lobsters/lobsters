@@ -1,3 +1,5 @@
+# typed: false
+
 # activity: is the weighted sum of votes, comments, and stories in some time period
 # period: 15 minute block of time
 # range: high and low of periods in the last few months

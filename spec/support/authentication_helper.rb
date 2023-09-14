@@ -1,3 +1,5 @@
+# typed: false
+
 module AuthenticationHelper
   module FeatureHelper
     def stub_login_as user

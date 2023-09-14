@@ -1,3 +1,5 @@
+# typed: false
+
 class Keybase
   cattr_accessor :DOMAIN
   cattr_accessor :BASE_URL

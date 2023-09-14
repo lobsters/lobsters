@@ -1,3 +1,5 @@
+# typed: false
+
 module KeybaseProofsHelper
   def keybase_user_link(kb_sig)
     File.join Keybase.BASE_URL, kb_sig[:kb_username]

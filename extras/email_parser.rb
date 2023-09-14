@@ -1,3 +1,5 @@
+# typed: false
+
 class EmailParser
   attr_reader :sender, :recipient, :email_text, :email
 

@@ -1,3 +1,5 @@
+# typed: false
+
 module UsersHelper
   def stories_submitted_content(showing_user)
     tag = showing_user.most_common_story_tag

@@ -1,3 +1,5 @@
+# typed: false
+
 module ActiveRecord
   class Base
     def self.q(str)

@@ -1,5 +1,7 @@
 # typed: false
 
+require "etc"
+
 # Puma can serve each request in a thread from an internal thread pool.
 # The `threads` method setting takes two numbers: a minimum and maximum.
 # Any libraries that use thread pools should be configured to match
@@ -31,6 +33,18 @@ pidfile ENV.fetch("PIDFILE") {
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
 workers ENV.fetch("PUMA_WORKERS") { 4 }
+
+# In prod we run dozens of workers on a 4 core cpu. Puma starts all of them at
+# the same time, pinning the CPU until the box is unresponsive. Where one
+# worker takes 5-6.5s to start, starting 30 at the same time takes 90s for any
+# to start so we throw a lot of 502s.  This hook runs before the app boots and
+# sleeps a variable period to give other workers a chance to start.
+workers_to_start_at_a_time = Etc.nprocessors - 1 # leave one open for serving
+on_worker_boot do |index|
+  # workers are numbered from zero, so:
+  # (0..11).map {|i| (i / 3.0).floor } => [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3]
+  sleep (index / workers_to_start_at_a_time.to_f).floor * 7
+end
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code

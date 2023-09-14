@@ -65,7 +65,7 @@ class Search
   end
 
   def perform!
-    return (@results = searched_model.none) if q.nil?
+    return (@results = searched_model.none) if q.blank? or parse_tree.blank?
     if what == :stories
       perform_story_search!
     else
@@ -89,7 +89,7 @@ class Search
     tags = nil
 
     # array of hashes, type => value(s)
-    @parse_tree.each do |node|
+    parse_tree.each do |node|
       type, value = node.first
       case type
       when :domain
@@ -162,7 +162,7 @@ class Search
     tags = nil
 
     # array of hashes, type => value(s)
-    @parse_tree.each do |node|
+    parse_tree.each do |node|
       type, value = node.first
       case type
       when :domain

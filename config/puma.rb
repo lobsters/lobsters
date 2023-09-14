@@ -46,7 +46,7 @@ def sleep_for_index index
   workers_to_start_at_a_time = Etc.nprocessors - 1 # leave one open for serving
   (index / workers_to_start_at_a_time.to_f).floor * worker_boot_duration
 end
-last_index = (ENV.fetch("PUMA_WORKERS") { 4 }) - 1
+last_index = (ENV.fetch("PUMA_WORKERS") { 4 }).to_i - 1
 worker_boot_timeout sleep_for_index(last_index) + worker_boot_duration * 3
 on_worker_boot { |index| sleep index }
 

@@ -39,12 +39,16 @@ workers ENV.fetch("PUMA_WORKERS") { 4 }
 # worker takes 5-6.5s to start, starting 30 at the same time takes 90s for any
 # to start so we throw a lot of 502s.  This hook runs before the app boots and
 # sleeps a variable period to give other workers a chance to start.
-workers_to_start_at_a_time = Etc.nprocessors - 1 # leave one open for serving
-on_worker_boot do |index|
-  # workers are numbered from zero, so:
-  # (0..11).map {|i| (i / 3.0).floor } => [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3]
-  sleep (index / workers_to_start_at_a_time.to_f).floor * 7
+worker_boot_duration = 7 # seconds, conservatively
+# workers are numbered from zero, so:
+# (0..11).map {|i| (i / 3.0).floor } => [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3]
+def sleep_for_index index
+  workers_to_start_at_a_time = Etc.nprocessors - 1 # leave one open for serving
+  (index / workers_to_start_at_a_time.to_f).floor * worker_boot_duration
 end
+last_index = (ENV.fetch("PUMA_WORKERS") { 4 }) - 1
+worker_boot_timeout sleep_for_index(last_index) + worker_boot_duration * 3
+on_worker_boot { |index| sleep index }
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code

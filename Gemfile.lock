@@ -386,6 +386,7 @@ DEPENDENCIES
   sprockets-rails (= 2.3.3)
   stackprof
   standard
+  standard-performance
   standard-rails
   standard-sorbet
   svg-graph

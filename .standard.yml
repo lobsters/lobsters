@@ -8,6 +8,7 @@ ignore:
   - 'db/migrate/202309*'
 
 plugins:
+  - standard-performance
   - standard-rails
   - standard-sorbet
 # Needs to be packaged as a plugin https://github.com/standardrb/standard#user-content-plugins

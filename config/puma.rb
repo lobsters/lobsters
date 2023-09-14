@@ -42,13 +42,13 @@ workers ENV.fetch("PUMA_WORKERS") { 4 }
 worker_boot_duration = 7 # seconds, conservatively
 # workers are numbered from zero, so:
 # (0..11).map {|i| (i / 3.0).floor } => [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3]
-def sleep_for_index index
+def sleep_for_index index, worker_boot_duration
   workers_to_start_at_a_time = Etc.nprocessors - 1 # leave one open for serving
   (index / workers_to_start_at_a_time.to_f).floor * worker_boot_duration
 end
 last_index = (ENV.fetch("PUMA_WORKERS") { 4 }).to_i - 1
-worker_boot_timeout sleep_for_index(last_index) + worker_boot_duration * 3
-on_worker_boot { |index| sleep index }
+worker_boot_timeout sleep_for_index(last_index, worker_boot_duration) + worker_boot_duration * 3
+on_worker_boot { |index| sleep sleep_for_index(index, worker_boot_duration) }
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code

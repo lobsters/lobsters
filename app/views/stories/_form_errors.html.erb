@@ -4,9 +4,10 @@
       <%= errors_for story %>
     <% elsif !story.errors.any? && story.public_similar_stories(@user).any? %>
       <div class="flash-notice">
-        <h2>Note: This story was already submitted <%= time_ago_in_words_label(story.most_recent_similar.created_at) %>, but may be submitted again.</h2>
+        <h2>Note: This story was already submitted <%= time_ago_in_words_label(story.most_recent_similar.created_at) %></h2>
         <p>
-        If the content has changed or warrants new discussion, you may submit it again.
+        You can submit it again if the content has changed or warrants new discussion.
+        Please post a comment about that to start.
         </p>
       </div>
 

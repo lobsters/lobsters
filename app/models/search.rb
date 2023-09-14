@@ -15,7 +15,7 @@ class Search
   # takes untrusted params from controller, so sanitize
   def initialize params, user
     @q = params[:q]
-    @parse_tree = if params[:q]
+    @parse_tree = if params[:q].present?
       SearchParser.new.parse(params[:q])
     else
       []

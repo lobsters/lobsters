@@ -18,7 +18,7 @@ class StoryTextSearching < ActiveRecord::Migration[7.0]
     SQL
 
     # create StoryTexts for old failures
-    Story.where.not(url: nil).where(story_text_id: nil).find_each do |s|
+    Story.where.not(url: nil).left_outer_joins(:story_text).where(story_text: {id: nil}).find_each do |s|
       print "#{s.id} "
       StoryText.fill_cache!(s)
       sleep 2

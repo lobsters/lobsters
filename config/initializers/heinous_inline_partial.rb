@@ -5,11 +5,9 @@
 # gives a 25-50% speedup over 'render collection: @comment', and 80-90% speedup over looping to
 # 'render partial: "_comment"'.
 
-# rubocop:disable Style/MutableConstant
 HEINOUS_INLINE_PARTIALS = {
   # including template filename => partial filename
 }
-# rubocop:enable Style/MutableConstant
 
 Dir["app/views/**/*.erb"].each do |filename|
   template = File.read(filename)

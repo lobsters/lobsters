@@ -1,6 +1,5 @@
 require "rails_helper"
 
-# rubocop:disable RSpec/MultipleDescribes
 describe "user routing" do
   it "users#tree" do
     assert_routing(
@@ -63,4 +62,3 @@ describe "user redirects", type: :request do
     expect(Time.zone.today).to be_before(Date.new(2024, 1, 1))
   end
 end
-# rubocop:enable RSpec/MultipleDescribes

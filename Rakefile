@@ -3,9 +3,4 @@
 
 require File.expand_path("../config/application", __FILE__)
 
-if Rails.env.development? || Rails.env.test?
-  require "rubocop/rake_task"
-  RuboCop::RakeTask.new
-end
-
 Lobsters::Application.load_tasks

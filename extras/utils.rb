@@ -1,6 +1,5 @@
 class Utils
   # URI.parse is not lenient enough
-  # rubocop: disable Style/RegexpLiteral
   def self.normalize_url url
     return "" if url == ""
     return nil if url.nil?
@@ -32,7 +31,6 @@ class Utils
       'youtube.com/playlist?list=\k<id>'
     )
   end
-  # rubocop: enable Style/RegexpLiteral
 
   def self.random_str(len)
     str = ""

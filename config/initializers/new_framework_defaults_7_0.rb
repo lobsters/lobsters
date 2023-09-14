@@ -1,4 +1,3 @@
-# rubocop:disable Layout/LineLength
 # Be sure to restart your server when you modify this file.
 #
 # This file eases your Rails 7.0 framework defaults upgrade.
@@ -116,4 +115,3 @@
 #   "X-Permitted-Cross-Domain-Policies" => "none",
 #   "Referrer-Policy" => "strict-origin-when-cross-origin"
 # }
-# rubocop:enable Layout/LineLength

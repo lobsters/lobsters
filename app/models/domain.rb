@@ -1,5 +1,5 @@
 class Domain < ApplicationRecord
-  has_many :stories # rubocop:disable Rails/HasManyOrHasOneDependent
+  has_many :stories
   belongs_to :banned_by_user,
     class_name: "User",
     inverse_of: false,

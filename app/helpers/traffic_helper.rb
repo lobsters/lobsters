@@ -57,7 +57,6 @@ module TrafficHelper
     Keystore.value_for("traffic:intensity") || 0.5
   end
 
-  # rubocop:disable Layout/LineLength
   def self.novelty_logo
     time = Time.current
 
@@ -69,5 +68,4 @@ module TrafficHelper
 
     nil
   end
-  # rubocop:enable Layout/LineLength
 end

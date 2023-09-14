@@ -28,7 +28,7 @@ pidfile ENV.fetch("PIDFILE") {
 # the concurrency of the application would be max `threads` * `workers`.
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
-workers ENV.fetch("WEB_CONCURRENCY") { 12 }
+workers ENV.fetch("PUMA_WORKERS") { 4 }
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code

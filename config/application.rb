@@ -43,6 +43,10 @@ module Lobsters
     # Raise an exception when using mass assignment with unpermitted attributes
     config.action_controller.action_on_unpermitted_parameters = :raise
 
+    # log where queries came from
+    config.active_record.query_log_tags_enabled = true
+    config.active_record.cache_query_log_tags = true
+
     # config.active_record.raise_in_transactional_callbacks = true
 
     config.cache_store = :file_store, "#{config.root}/tmp/cache/"

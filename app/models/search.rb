@@ -105,9 +105,9 @@ class Search
       when :negated
         # TODO
       when :quoted
-        terms.append '"' + strip_operators(value).gsub("'", "\\'") + '"'
+        terms.append '"' + strip_operators(value).gsub("'", "\\\\'") + '"'
       when :term
-        val = strip_operators(value).gsub("'", "\\'")
+        val = strip_operators(value).gsub("'", "\\\\'")
         # if punctuation is replaced with a space, this would generate a terms search
         # AGAINST('+' in boolean mode)
         terms.append val if !val.empty?
@@ -178,9 +178,9 @@ class Search
       when :negated
         # TODO
       when :quoted
-        terms.append '"' + strip_operators(value).gsub("'", "\\'") + '"'
+        terms.append '"' + strip_operators(value).gsub("'", "\\\\'") + '"'
       when :term
-        val = strip_operators(value).gsub("'", "\\'")
+        val = strip_operators(value).gsub("'", "\\\\'")
         # if punctuation is replaced with a space, this would generate a terms search
         # AGAINST('+' in boolean mode)
         terms.append val if !val.empty?

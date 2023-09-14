@@ -85,6 +85,7 @@ describe Search do
         {what: "stories", q: "term", order: "newest#{esc}"},
         {what: "stories", q: "term", page: "2#{esc}"},
         {what: "stories#{esc}", q: "term"},
+        {what: "stories", q: "term 'two apostrophes'"},
         # comments
         {what: "comments", q: "term#{esc}"},
         {what: "comments", q: "\"term#{esc}\""},

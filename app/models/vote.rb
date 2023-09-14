@@ -54,9 +54,7 @@ class Vote < ApplicationRecord
 
     Vote.where(
       user_id: user_id, story_id: story_id
-    ).where(
-      "comment_id IS NOT NULL"
-    ).find_each do |v|
+    ).where.not(comment_id: nil).find_each do |v|
       votes[v.comment_id] = {vote: v.vote, reason: v.reason}
     end
 

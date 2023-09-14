@@ -2,3 +2,14 @@ ignore:
   # it's mad about the class variables and I don't want to risk the refactor now
   - 'extras/**/*':
     - Naming/VariableName
+  # migrations are not live code; ignore those before standardrb
+  - 'db/migrate/201*'
+  - 'db/migrate/2020*'
+  - 'db/migrate/202309*'
+
+plugins:
+  - standard-rails
+# Needs to be packaged as a plugin https://github.com/standardrb/standard#user-content-plugins
+#  - use_form_with:
+#      require_path: extras/prohibit_form_for_and_form_tag
+#      plugin_class_name: RuboCop::Cop::Style::DisallowFormForandFormTag

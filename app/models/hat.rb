@@ -4,7 +4,7 @@ class Hat < ApplicationRecord
 
   after_create :log_moderation
 
-  validates :user, :granted_by_user, :hat, presence: true
+  validates :hat, presence: true
   validates :hat, :link, length: {maximum: 255}
 
   scope :active, -> { joins(:user).where(doffed_at: nil).merge(User.active) }

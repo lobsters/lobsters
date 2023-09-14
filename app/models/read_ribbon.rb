@@ -2,8 +2,6 @@ class ReadRibbon < ApplicationRecord
   belongs_to :user
   belongs_to :story
 
-  validates :user, :story, presence: true
-
   # don't add callbacks to this model; for performance the read tracking in
   # StoriesController uses .bump and RepliesController uses update_all, etc.
 

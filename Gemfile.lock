@@ -270,6 +270,10 @@ GEM
     rubocop-performance (1.19.0)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
+    rubocop-rails (2.20.2)
+      activesupport (>= 4.2.0)
+      rack (>= 1.1)
+      rubocop (>= 1.33.0, < 2.0)
     ruby-progressbar (1.13.0)
     ruby-rc4 (0.1.5)
     scenic (1.7.0)
@@ -309,6 +313,9 @@ GEM
     standard-performance (1.2.0)
       lint_roller (~> 1.1)
       rubocop-performance (~> 1.19.0)
+    standard-rails (0.2.0)
+      lint_roller (~> 1.0)
+      rubocop-rails (~> 2.20.2)
     svg-graph (2.2.2)
     thor (1.2.2)
     timeout (0.4.0)
@@ -374,6 +381,7 @@ DEPENDENCIES
   sprockets-rails (= 2.3.3)
   stackprof
   standard
+  standard-rails
   svg-graph
   uglifier (>= 1.3.0)
   vcr

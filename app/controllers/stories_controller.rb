@@ -35,7 +35,7 @@ class StoriesController < ApplicationController
 
     update_story_attributes
 
-    if @story.user_id != @user.id && @user.is_moderator? && !@story.moderation_reason.present?
+    if @story.user_id != @user.id && @user.is_moderator? && @story.moderation_reason.blank?
       @story.errors.add(:moderation_reason, message: "is required")
       return render action: "edit"
     end
@@ -97,7 +97,7 @@ class StoriesController < ApplicationController
 
       # ignore what the user brought unless we need it as a fallback
       @story.title = sattrs[:title]
-      if !@story.title.present? && params[:title].present?
+      if @story.title.blank? && params[:title].present?
         @story.title = params[:title]
       end
     end
@@ -367,7 +367,7 @@ class StoriesController < ApplicationController
   end
 
   def check_url_dupe
-    raise ActionController::ParameterMissing.new("No URL") unless story_params[:url].present?
+    raise ActionController::ParameterMissing.new("No URL") if story_params[:url].blank?
     @story = Story.new(user: @user)
     @story.attributes = story_params
     @story.already_posted_recently?

@@ -243,7 +243,7 @@ class Story < ApplicationRecord
 
   # doesn't include deleted/moderated/merged stories
   def similar_stories
-    return Story.none unless url.present?
+    return Story.none if url.blank?
 
     @_similar_stories ||= Story.find_similar_by_url(url).order("id DESC")
     # do not include this story itself or any story merged into it
@@ -253,7 +253,7 @@ class Story < ApplicationRecord
     end
     # do not include the story this one is merged into
     if merged_story_id?
-      @_similar_stories = @_similar_stories.where("id != ?", merged_story_id)
+      @_similar_stories = @_similar_stories.where.not(id: merged_story_id)
     end
     @_similar_stories
   end

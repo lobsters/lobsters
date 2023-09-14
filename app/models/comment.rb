@@ -75,8 +75,6 @@ class Comment < ApplicationRecord
   SCORE_RANGE_TO_HIDE = (-2..4)
 
   validates :short_id, length: {maximum: 10}
-  validates :user_id, presence: true
-  validates :story_id, presence: true
   validates :markeddown_comment, length: {maximum: 16_777_215}
   validates :comment, presence: {with: true, message: "cannot be empty."}
 
@@ -206,7 +204,7 @@ class Comment < ApplicationRecord
     recent = Comment.where("created_at >= ?", delay.ago)
       .find_by(user: user, thread_id: parent_comment.thread_id)
 
-    return false unless recent.present?
+    return false if recent.blank?
 
     wait = ActionController::Base.helpers
       .distance_of_time_in_words(Time.now, (recent.created_at + delay))

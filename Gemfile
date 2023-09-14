@@ -55,6 +55,7 @@ group :test, :development do
   gem "rspec-rails", "~> 6.0.0.rc1"
   gem "factory_bot_rails"
   gem "standard"
+  gem "standard-rails"
   gem "faker"
   gem "byebug"
   gem "rb-readline"

@@ -129,7 +129,7 @@ RSpec.feature "Submitting Stories", type: :feature do
     s = create(:story, created_at: (Story::RECENT_DAYS + 1).days.ago)
     visit "/stories/new?url=#{s.url}"
 
-    expect(page).to have_content "may be submitted again"
+    expect(page).to have_content "submit it again"
     expect(page).to have_content "Previous discussions"
   end
 

@@ -79,8 +79,10 @@ describe Search do
         # stories
         {what: "stories", q: "term#{esc}"},
         {what: "stories", q: "\"term#{esc}\""},
-        {what: "stories", q: "tag:foo#{esc}"},
         {what: "stories", q: "domain:foo#{esc}"},
+        {what: "stories", q: "tag:foo#{esc}"},
+        {what: "stories", q: "title:titl#{esc}"},
+        {what: "stories", q: "title:\"multi#{esc} titl\""},
         {what: "stories", q: "term#{esc}"},
         {what: "stories", q: "term", order: "newest#{esc}"},
         {what: "stories", q: "term", page: "2#{esc}"},
@@ -169,6 +171,20 @@ describe Search do
     expect(search.results.first.title).to eq("term1 domain2")
   end
 
+  it "can search for stories by title" do
+    search = Search.new({q: "title:unique", what: "stories"}, @user)
+
+    expect(search.results.length).to eq(1)
+    expect(search.results.first.title).to eq("unique")
+  end
+
+  it "can search for stories by title with multiple words" do
+    search = Search.new({q: 'title:"term1 t2"', what: "stories"}, @user)
+
+    expect(search.results.length).to eq(1)
+    expect(search.results.first.title).to eq("term1 t2")
+  end
+
   it "can search for comments" do
     search = Search.new({q: "comment1", what: "comments"}, @user)
 
@@ -204,6 +220,12 @@ describe Search do
 
   it "can search for comments by url" do
     search = Search.new({q: "comment4 https://lobste.rs/1", what: "comments"}, @user)
+
+    expect(search.results).to eq([@comments[4]])
+  end
+
+  it "can search for comments by story title" do
+    search = Search.new({q: "comment4 title:domain2", what: "comments"}, @user)
 
     expect(search.results).to eq([@comments[4]])
   end

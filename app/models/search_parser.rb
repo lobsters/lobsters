@@ -6,7 +6,13 @@ class SearchParser < Parslet::Parser
   rule(:space) { match('\s').repeat(1) }
   rule(:space?) { space.maybe }
 
-  rule(:quoted) { str('"') >> (match("\\w") | space).repeat(1).as(:quoted) >> str('"') >> space? }
+  # this regexp should invert punctuation stripped by Search.strip_operators
+  rule(:term) { match('[\p{Word}_\\-\']').repeat(1).as(:term) >> space? }
+  rule(:quoted) { str('"') >> term.repeat(1).as(:quoted) >> str('"') >> space? }
+
+  # reproduce the <domain> named capture in Story.URL_RE
+  rule(:domain) { str("domain:") >> match("[A-Za-z_\\-\\.]").repeat(1).as(:domain) >> space? }
+  # reproduce the the Tagtag format regexp
   rule(:tag) { str("tag:") >> match("[A-Za-z0-9\\-_+]").repeat(1).as(:tag) >> space? }
   rule(:domain) { str("domain:") >> match("[A-Za-z0-9_\\-\\.]").repeat(1).as(:domain) >> space? }
   rule(:url) {
@@ -15,11 +21,15 @@ class SearchParser < Parslet::Parser
       match("[A-Za-z0-9\\-_.:@/()%~?&=#]").repeat(1)
     ).as(:url) >> space?
   }
+  rule(:title) { str("title:") >> (term | quoted).as(:title) >> space? }
   rule(:negated) { str("-") >> (domain | tag | quoted | term).as(:negated) >> space? }
 
-  # 'term' is a catchall so it can consume ill-structured input, should be last in groups
-  rule(:term) { match("\\S").repeat(1).as(:term) >> space? }
+  # catchall consumes ill-structured input
+  rule(:catchall) { match("\\S").repeat(1).as(:term) >> space? }
 
-  rule(:expression) { space.maybe >> (domain | tag | url | quoted | negated | term).repeat(1) }
+  # ordering:
+  #   title should be before quoted so that doesn't consume the quotes
+  #   catchall must be last because it consumes everything
+  rule(:expression) { space.maybe >> (domain | tag | title | url | term | quoted | negated | catchall).repeat(1) }
   root(:expression)
 end

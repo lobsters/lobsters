@@ -61,6 +61,9 @@
         <% when :tag %>
           <dt><span class="searchq">tag:<%= value %></span></dt>
           <dd>Tag: <%= link_to value, tag_path(value) %></dd>
+        <% when :title %>
+          <dt><span class="searchq">title:<%= @search.flatten_title(value) %></span></dt>
+          <dd>Title: <%= @search.flatten_title(value) %></dd>
         <% when :negated %>
         <% when :quoted %>
           <dt><span class="searchq">"<%= value %>"</span></dt>
@@ -94,9 +97,12 @@
                 <br>Use <span class="searchq">tag:ai</span> for artificial intelligence/machine learning
               <% end %>
             <% end %>
-            <% if value.to_s =~ /[":]/ %>
-              <br>If you were trying to use an operator, it wasn't recognized.
-            <% end %>
+          </dd>
+        <% when :catchall %>
+          <dt><span class="searchq"><%= value %></span></dt>
+          <dd>
+            Catchall: <span class="searchq"><%= @search.strip_operators(value) %></span>
+            If you were trying to use a search operator, it wasn't recognized.
           </dd>
         <% end %>
       <% end %>
@@ -139,10 +145,11 @@
   <div class="help">
     Search hints:
     <ul>
-      <li>All search terms are required. Use quote marks if you want <span class="searchq">"words together"</span></li>
+      <li>Search terms are required. Use quote marks if you want <span class="searchq">"words together"</span></li>
       <li>Terms are exact, so <span class="searchq">code</span> doesn't match <span class="searchq">coder</span> or <span class="searchq">coding</span>. You can approximate stemming with <span class="searchq">cod*</span></li>
-      <li>Search by domain with <code>domain:example.com</code></li>
-      <li>Search by <%= link_to 'tag', tags_path %> with <code>tag:meta</code></li>
+      <li>Search titles with <span class="searchq">title:kernel</span> or <span class="searchq">title:"linux kernel"</span></li>
+      <li>Search by domain with <span class="searchq">domain:example.com</span></li>
+      <li>Search by <%= link_to 'tag', tags_path %> with <code>tag:meta</span></li>
     </ul>
   </div>
 <% end %>

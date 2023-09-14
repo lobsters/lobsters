@@ -78,6 +78,14 @@ class Search
     end
   end
 
+  def flatten_title tree
+    if tree.keys.first == :term
+      tree.values.first.to_s.gsub("'", "\\\\'")
+    elsif tree.keys.first == :quoted
+      '"' + tree.values.first.map(&:values).flatten.join(" ").gsub("'", "\\\\'") + '"'
+    end
+  end
+
   # strip all nonword except -_' so people can search for contractions like "don't"
   # some of these are search operators, some sql injection
   # https://mariadb.com/kb/ru/full-text-index-overview/#in-boolean-mode
@@ -100,6 +108,7 @@ class Search
     n_tags = 0
     tags = nil
     url = false
+    title = false
 
     # array of hashes, type => value(s)
     parse_tree.each do |node|
@@ -115,6 +124,14 @@ class Search
         tags ||= Tag.none.select(:id)
         tags.or!(Tag.where(tag: value.to_s))
         # TODO unknown tag
+      when :title
+        title = true
+        value = flatten_title value
+        query.where!(
+          story: Story.joins(:story_text).where(
+            "MATCH(story_texts.title) AGAINST ('+#{value}' in boolean mode)"
+          )
+        )
       when :url
         url = true
         query
@@ -127,9 +144,8 @@ class Search
         # TODO
       when :quoted
         terms.append '"' + strip_operators(value).gsub("'", "\\\\'") + '"'
-      when :term
-        val = strip_operators(value).gsub("'", "\\\\'")
-        val = strip_short_terms(val)
+      when :term, :catchall
+        val = strip_short_terms(strip_operators(value)).gsub("'", "\\\\'")
         # if punctuation is replaced with a space, this would generate a terms search
         # AGAINST('+' in boolean mode)
         terms.append val if !val.empty?
@@ -153,7 +169,7 @@ class Search
     end
 
     # don't allow blank searches for all records when strip_ removes all data
-    if n_domains == 0 && n_tags == 0 && !url && terms.empty?
+    if n_domains == 0 && n_tags == 0 && !url && !title && terms.empty?
       @results_count = 0
       return Comment.none
     end
@@ -189,6 +205,7 @@ class Search
     n_tags = 0
     tags = nil
     url = false
+    title = false
 
     # array of hashes, type => value(s)
     parse_tree.each do |node|
@@ -204,6 +221,12 @@ class Search
         tags ||= Tag.none.select(:id)
         tags.or!(Tag.where(tag: value.to_s))
         # TODO unknown tag
+      when :title
+        title = true
+        value = flatten_title value
+        query.joins!(:story_text).where!(
+          "MATCH(story_texts.title) AGAINST ('+#{value}' in boolean mode)"
+        )
       when :url
         url = true
         query.and!(
@@ -214,9 +237,8 @@ class Search
         # TODO
       when :quoted
         terms.append '"' + strip_operators(value).gsub("'", "\\\\'") + '"'
-      when :term
-        val = strip_operators(value).gsub("'", "\\\\'")
-        val = strip_short_terms(val)
+      when :term, :catchall
+        val = strip_short_terms(strip_operators(value)).gsub("'", "\\'")
         # if punctuation is replaced with a space, this would generate a terms search
         # AGAINST('+' in boolean mode)
         terms.append val if !val.empty?
@@ -247,7 +269,7 @@ class Search
     end
 
     # don't allow blank searches for all records when strip_ removes all data
-    if n_domains == 0 && n_tags == 0 && !url && terms.empty?
+    if n_domains == 0 && n_tags == 0 && !url && !title && terms.empty?
       @results_count = 0
       return Story.none
     end

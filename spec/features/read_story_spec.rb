@@ -59,4 +59,44 @@ RSpec.feature "Reading Stories", type: :feature do
       expect(page).to have_selector("span.merge")
     end
   end
+
+  feature "reading saved stories" do
+    let(:user) { create(:user) }
+
+    before do
+      story.update!(user:, editor: user)
+      stub_login_as user
+      SavedStory.save_story_for_user(story.id, user.id)
+    end
+
+    scenario "when story is deleted" do
+      story.update!(is_deleted: true)
+      visit "/saved"
+
+      expect(page).not_to have_css("a.saver", text: "save", exact_text: true)
+      expect(page).to have_link("unsave")
+    end
+
+    scenario "when story is available" do
+      visit "/saved"
+
+      expect(page).not_to have_css("a.saver", text: "save", exact_text: true)
+      expect(page).to have_link("unsave")
+    end
+  end
+
+  feature "reading deleted stories" do
+    let(:user) { create(:user) }
+
+    before do
+      story.update!(is_deleted: true)
+      stub_login_as user
+      visit "/"
+    end
+
+    it "does not display saver links" do
+      expect(page).not_to have_css("a.saver", text: "save", exact_text: true)
+      expect(page).not_to have_link("unsave")
+    end
+  end
 end

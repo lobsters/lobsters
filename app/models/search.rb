@@ -65,7 +65,7 @@ class Search
   end
 
   def perform!
-    return (@results = searched_model.none) if q.blank? or parse_tree.blank?
+    return (@results = searched_model.none) if q.blank? || parse_tree.blank?
     if what == :stories
       perform_story_search!
     else

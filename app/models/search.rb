@@ -78,7 +78,7 @@ class Search
   # https://mariadb.com/kb/ru/full-text-index-overview/#in-boolean-mode
   # surprise: + is not in \p{Punct}
   def strip_operators s
-    s.to_s.gsub(/[^\p{Word}\-_']/, " ").strip
+    s.to_s.gsub(/[^\p{Word}']/, " ").strip
   end
 
   # not security-sensitive, mariadb ignores 1 and 2 character terms and

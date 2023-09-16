@@ -103,10 +103,18 @@ describe Search do
   end
 
   # + is the boolean mode operator meaning 'required'
-  it "doesn't error in a search for for c++," do
-    search = Search.new({q: "c++", what: "stories"}, @user)
+  it "doesn't error on odd real searches with punctuation" do
+    [
+      {q: "c++"},
+      {q: "sudo-rs"},
+      {q: "pi-hole"},
+      {q: "header X-Powered-By: Express"},
+      {q: "snake_case"}
+    ].each do |params|
+      search = Search.new(params, @user)
 
-    expect(search.results.length).to eq(0)
+      expect(search.results_count).to be_an_instance_of(Integer)
+    end
   end
 
   it "can search titles for stories" do

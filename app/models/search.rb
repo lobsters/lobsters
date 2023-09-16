@@ -94,6 +94,7 @@ class Search
     n_domains = 0
     n_tags = 0
     tags = nil
+    url = false
 
     # array of hashes, type => value(s)
     parse_tree.each do |node|
@@ -109,6 +110,14 @@ class Search
         tags ||= Tag.none.select(:id)
         tags.or!(Tag.where(tag: value.to_s))
         # TODO unknown tag
+      when :url
+        url = true
+        query
+          .joins!(:story)
+          .and!(
+            Story.where(url: value.to_s)
+              .or(Story.where(normalized_url: Utils.normalize_url(value.to_s)))
+          )
       when :negated
         # TODO
       when :quoted
@@ -139,7 +148,7 @@ class Search
     end
 
     # don't allow blank searches for all records when strip_ removes all data
-    if n_domains == 0 && n_tags == 0 && terms.empty?
+    if n_domains == 0 && n_tags == 0 && !url && terms.empty?
       @results_count = 0
       return Comment.none
     end
@@ -174,6 +183,7 @@ class Search
     n_domains = 0
     n_tags = 0
     tags = nil
+    url = false
 
     # array of hashes, type => value(s)
     parse_tree.each do |node|
@@ -189,6 +199,12 @@ class Search
         tags ||= Tag.none.select(:id)
         tags.or!(Tag.where(tag: value.to_s))
         # TODO unknown tag
+      when :url
+        url = true
+        query.and!(
+          Story.where(url: value.to_s)
+            .or(Story.where(normalized_url: Utils.normalize_url(value.to_s)))
+        )
       when :negated
         # TODO
       when :quoted
@@ -226,7 +242,7 @@ class Search
     end
 
     # don't allow blank searches for all records when strip_ removes all data
-    if n_domains == 0 && n_tags == 0 && terms.empty?
+    if n_domains == 0 && n_tags == 0 && !url && terms.empty?
       @results_count = 0
       return Story.none
     end

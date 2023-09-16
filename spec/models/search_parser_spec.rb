@@ -53,6 +53,11 @@ describe SearchParser do
     it("doesn't parse blank") { expect(sp.domain).to parse("domain:") }
   end
 
+  describe("url rule") do
+    it("parses urls") { expect(sp.url).to parse("https://example.com/") }
+    it("parses punctuation stripped from terms") { expect(sp.url).to parse("https://example.com/foo-bar&a=b") }
+  end
+
   describe("negated rule") do
     it("parses single") { expect(sp.negated).to parse("-perl") }
     it("parses quotes") { expect(sp.negated).to parse('-"perl"') }
@@ -64,6 +69,7 @@ describe SearchParser do
     it("parses a term and tag") { expect(sp).to parse("research tag:pdf") }
     it("parses a tag and term") { expect(sp).to parse("tag:audio podcast") }
     it("parses multiple tags") { expect(sp).to parse("tag:pdf tag:slides") }
+    it("parses with URLs") { expect(sp).to parse("https://example.com/ tag:python") }
     it("parses complex searches") { expect(sp).to parse('foo -("multi word" cat) tag:pdf') }
   end
 end

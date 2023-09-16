@@ -162,6 +162,13 @@ describe Search do
     expect(search.results.length).to eq(2)
   end
 
+  it "can search for stories by url" do
+    search = Search.new({q: "term1 https://lobste.rs/1", what: "stories"}, @user)
+
+    expect(search.results.length).to eq(1)
+    expect(search.results.first.title).to eq("term1 domain2")
+  end
+
   it "can search for comments" do
     search = Search.new({q: "comment1", what: "comments"}, @user)
 
@@ -193,5 +200,13 @@ describe Search do
 
     expect(search.results).to include(@comments[4])
     expect(search.results).not_to include(@comments[3])
+  end
+
+  it "can search for comments by url" do
+    search = Search.new({q: "comment4 https://lobste.rs/1", what: "comments"}, @user)
+    puts search.parse_tree
+    puts search.results.to_sql
+
+    expect(search.results).to eq([@comments[4]])
   end
 end

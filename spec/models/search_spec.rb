@@ -102,6 +102,13 @@ describe Search do
     end
   end
 
+  # + is the boolean mode operator meaning 'required'
+  it "doesn't error in a search for for c++," do
+    search = Search.new({q: "c++", what: "stories"}, @user)
+
+    expect(search.results.length).to eq(0)
+  end
+
   it "can search titles for stories" do
     search = Search.new({q: "unique", what: "stories"}, @user)
 

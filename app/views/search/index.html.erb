@@ -39,7 +39,7 @@
 
 <% if @search.results_count > -1 %>
   <div class="box searchresults">
-    <details>
+    <details <%= "open" if @search.results_count == 0 %>>
       <summary>
         <span class="heading"><%= @search.results_count %> result<%= @search.results_count == 1 ? "" : "s" %> for </span>
         <span class="searchq"><%= @search.q %></span>
@@ -76,9 +76,23 @@
         <% when :term %>
           <dt><span class="searchq"><%= value %></span></dt>
           <dd>
-            Term: <span class="searchq"><%= @search.strip_operators(value) %></span>
+            Term: <span class="searchq"><%= @search.strip_short_terms(@search.strip_operators(value)) %></span>
             <% if value.to_s != @search.strip_operators(value) %>
               <br>Punctuation that might have been taken as a <a href="https://mariadb.com/kb/ru/full-text-index-overview/#in-boolean-mode">SQL search operator</a> was stripped.
+            <% end %>
+            <% if value.to_s != @search.strip_short_terms(value) %>
+              <br>1 and 2 character terms are not indexed.
+              <% if value.to_s.downcase =~ /\b(d\b|go\b|ml\b|c([+][+]|\b)?)/ %>
+                <% lang = $& %>
+                <br>For the
+                <% if value.to_s.downcase =~ /\bgo\b/ %>
+                  terribly-named
+                <% end %>
+                language, use <span class="searchq">tag:<%= lang %></span>
+              <% end %>
+              <% if value.to_s.downcase =~ /\b(ai|ml)\b/ %>
+                <br>Use <span class="searchq">tag:ai</span> for artificial intelligence/machine learning
+              <% end %>
             <% end %>
             <% if value.to_s =~ /[":]/ %>
               <br>If you were trying to use an operator, it wasn't recognized.

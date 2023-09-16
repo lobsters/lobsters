@@ -73,11 +73,18 @@ class Search
     end
   end
 
-  # strip all punctuation except ' so people can search for contractions like "don't"
+  # strip all nonword except -_' so people can search for contractions like "don't"
   # some of these are search operators, some sql injection
   # https://mariadb.com/kb/ru/full-text-index-overview/#in-boolean-mode
+  # surprise: + is not in \p{Punct}
   def strip_operators s
-    s.to_s.gsub(/[\p{Punct}&&[^']]/, " ").strip
+    s.to_s.gsub(/[^\p{Word}\-_']/, " ").strip
+  end
+
+  # not security-sensitive, mariadb ignores 1 and 2 character terms and
+  # stripping them allows the frontend to explain they're ignored
+  def strip_short_terms(s)
+    s.to_s.gsub(/\b\p{Word}\p{Word}?\b/, "").strip
   end
 
   def perform_comment_search!
@@ -108,6 +115,7 @@ class Search
         terms.append '"' + strip_operators(value).gsub("'", "\\\\'") + '"'
       when :term
         val = strip_operators(value).gsub("'", "\\\\'")
+        val = strip_short_terms(val)
         # if punctuation is replaced with a space, this would generate a terms search
         # AGAINST('+' in boolean mode)
         terms.append val if !val.empty?
@@ -128,6 +136,12 @@ class Search
                 .group("stories.id")
                 .having("count(distinct tags.id) = #{n_tags}")
       )
+    end
+
+    # don't allow blank searches for all records when strip_ removes all data
+    if n_domains == 0 && n_tags == 0 && terms.empty?
+      @results_count = 0
+      return Comment.none
     end
 
     @results_count = query.dup.count
@@ -181,6 +195,7 @@ class Search
         terms.append '"' + strip_operators(value).gsub("'", "\\\\'") + '"'
       when :term
         val = strip_operators(value).gsub("'", "\\\\'")
+        val = strip_short_terms(val)
         # if punctuation is replaced with a space, this would generate a terms search
         # AGAINST('+' in boolean mode)
         terms.append val if !val.empty?
@@ -208,6 +223,12 @@ class Search
         ) as stories_with_tags on stories_with_tags.id = stories.id
       SQL
                   )
+    end
+
+    # don't allow blank searches for all records when strip_ removes all data
+    if n_domains == 0 && n_tags == 0 && terms.empty?
+      @results_count = 0
+      return Story.none
     end
 
     @results_count = query.dup.count

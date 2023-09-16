@@ -53,6 +53,11 @@ Rails.application.configure do
   config.logger = Logger.new("/srv/lobste.rs/log/production.log")
   config.log_level = :info
 
+  # I updated sprockets and every page raised 'The asset "application.css" is not present in the
+  # asset pipeline.' And then I turned this on and everything was fine. The asset pipeline continues
+  # to be a fiddly, unreliable mystery.
+  config.assets.unknown_asset_fallback = true
+
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
 

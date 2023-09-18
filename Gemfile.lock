@@ -92,6 +92,7 @@ GEM
     chunky_png (1.4.0)
     commonmarker (0.23.10)
     concurrent-ruby (1.2.2)
+    connection_pool (2.4.1)
     crack (0.4.5)
       rexml
     crass (1.0.6)
@@ -225,6 +226,8 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rb-readline (0.5.5)
+    redis-client (0.17.0)
+      connection_pool
     regexp_parser (2.8.1)
     rexml (3.2.6)
     rotp (6.3.0)
@@ -280,6 +283,11 @@ GEM
     scenic-mysql_adapter (1.0.1)
       mysql2
       scenic (>= 1.4.0)
+    sidekiq (7.1.4)
+      concurrent-ruby (< 2)
+      connection_pool (>= 2.3.0)
+      rack (>= 2.2.4)
+      redis-client (>= 0.14.0)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -376,6 +384,7 @@ DEPENDENCIES
   rspec-rails
   scenic
   scenic-mysql_adapter
+  sidekiq
   simplecov
   sitemap_generator
   sprockets-rails

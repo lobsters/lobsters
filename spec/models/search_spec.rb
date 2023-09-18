@@ -204,8 +204,6 @@ describe Search do
 
   it "can search for comments by url" do
     search = Search.new({q: "comment4 https://lobste.rs/1", what: "comments"}, @user)
-    puts search.parse_tree
-    puts search.results.to_sql
 
     expect(search.results).to eq([@comments[4]])
   end

@@ -50,8 +50,13 @@ class Search
     20
   end
 
-  def to_url_params
-    [:q, :what, :order, :page].map { |p| "#{p}=#{CGI.escape(send(p).to_s)}" }.join("&")
+  def to_param
+    {
+      q: @q,
+      what: @what,
+      order: @order,
+      page: @page
+    }
   end
 
   def page_count

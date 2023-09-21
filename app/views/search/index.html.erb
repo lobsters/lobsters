@@ -124,9 +124,7 @@
 
       <% page_numbers_for_pagination(@search.page_count, @search.page).each do |p| %>
         <% if p.is_a?(Integer) %>
-          <a href="/search?<%= raw(@search.to_url_params) %>&amp;page=<%= p
-            %>" class="<%= @search.page == p ? "cur" : "" %>"><%= p
-            %></a>
+          <%= link_to p, search_path(@search.to_param), class: (@search.page == p ? 'cur' : '') %>
         <% else %>
           <span>...</span>
         <% end %>

@@ -642,6 +642,7 @@ class Comment < ApplicationRecord
   end
 
   # select in thread order with preloading for _comment.html.erb
+  # eventually confidence_order_path can go away: https://modern-sql.com/caniuse/search_(recursion)
   def self.story_threads(story)
     return Comment.none unless story.id # unsaved Stories have no comments
 

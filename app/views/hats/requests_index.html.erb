@@ -33,7 +33,7 @@
         <div class="boxline">
           <%= f.label :link, "Comment:", :class => "required" %>
           <div class="d">
-            <%= Markdowner.to_html(hr.comment || '') %>
+            <%= raw Markdowner.to_html(hr.comment || '') %>
           </div>
         </div>
       <% end %>

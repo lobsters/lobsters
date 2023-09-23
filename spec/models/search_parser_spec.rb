@@ -50,7 +50,8 @@ describe SearchParser do
   describe("domain rule") do
     it("parses single") { expect(sp.domain).to parse("domain:example.com") }
     it("parses dash") { expect(sp.domain).to parse("domain:foo-bar.com") }
-    it("doesn't parse blank") { expect(sp.domain).to parse("domain:") }
+    it("parses numbers") { expect(sp.domain).to parse("domain:9to5mac.com") }
+    it("doesn't parse blank") { expect(sp.domain).to_not parse("domain:") }
   end
 
   describe("url rule") do

@@ -72,6 +72,13 @@ describe SearchParser do
     it("doesn't parse blank") { expect(sp.domain).to_not parse("domain:") }
   end
 
+  describe "submitter rule" do
+    it("parses username") { expect(sp.submitter).to parse("submitter:alice") }
+    it("parses with @") { expect(sp.submitter).to parse("submitter:@bob") }
+    it("parses with ~") { expect(sp.submitter).to parse("submitter:~carol") }
+    it("doesn't parse blank") { expect(sp.submitter).to_not parse("submitter:") }
+  end
+
   describe "tag rule" do
     it("parses single") { expect(sp.tag).to parse("tag:practices") }
     it("parses plus") { expect(sp.tag).to parse("tag:c++") }
@@ -117,6 +124,11 @@ describe SearchParser do
 
     it "parses a tag and a term" do
       expect("tag:pdf research").to parse_to [{tag: "pdf"}, {term: "research"}]
+    end
+
+    it "parses submitters, dropping @ or ~" do
+      expect("submitter:~username").to parse_to [{submitter: "username"}]
+      expect("submitter:@username").to parse_to [{submitter: "username"}]
     end
 
     it "parses urls" do

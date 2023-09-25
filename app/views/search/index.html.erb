@@ -58,6 +58,9 @@
         %>
           <dt><span class="searchq">domain:<%= value %></span></dt>
           <dd>Domain: <%= link_to value, domain_path(value) %></dd>
+        <% when :submitter %>
+          <dt><span class="searchq">submitter:<%= value %></span></dt>
+          <dd>Story submitted by: <%= link_to value, user_path(value) %></dd>
         <% when :tag %>
           <dt><span class="searchq">tag:<%= value %></span></dt>
           <dd>Tag: <%= link_to value, tag_path(value) %></dd>
@@ -149,6 +152,7 @@
       <li>Terms are exact, so <span class="searchq">code</span> doesn't match <span class="searchq">coder</span> or <span class="searchq">coding</span>. You can approximate stemming with <span class="searchq">cod*</span></li>
       <li>Search titles with <span class="searchq">title:kernel</span> or <span class="searchq">title:"linux kernel"</span></li>
       <li>Search by domain with <span class="searchq">domain:example.com</span></li>
+      <li>Search by story submitter with <span class="searchq">submitter:alice</span></li>
       <li>Search by <%= link_to 'tag', tags_path %> with <code>tag:meta</span></li>
     </ul>
   </div>

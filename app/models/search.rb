@@ -105,6 +105,7 @@ class Search
 
     terms = []
     n_domains = 0
+    n_submitters = 0
     n_tags = 0
     tags = nil
     url = false
@@ -119,6 +120,11 @@ class Search
         # TODO handle invalid search of multiple domains
         # raise "too many cooks" if n_domains > 1
         query.joins!(story: [:domain]).where!(story: {domains: {domain: value.to_s}})
+      when :submitter
+        n_submitters += 1
+        # TODO handle invalid search of multiple submitters
+        # raise "too many cooks" if n_submitters > 1
+        query.joins!(story: :user).where!(story: {users: {username: value.to_s}})
       when :tag
         n_tags += 1
         tags ||= Tag.none.select(:id)
@@ -169,7 +175,7 @@ class Search
     end
 
     # don't allow blank searches for all records when strip_ removes all data
-    if n_domains == 0 && n_tags == 0 && !url && !title && terms.empty?
+    if n_domains == 0 && n_submitters == 0 && n_tags == 0 && !url && !title && terms.empty?
       @results_count = 0
       return Comment.none
     end
@@ -202,6 +208,7 @@ class Search
 
     terms = []
     n_domains = 0
+    n_submitters = 0
     n_tags = 0
     tags = nil
     url = false
@@ -216,6 +223,11 @@ class Search
         # TODO handle invalid search of multiple domains
         # raise "too many cooks" if n_domains > 1
         query.joins!(:domain).where!(domains: {domain: value.to_s})
+      when :submitter
+        n_submitters += 1
+        # TODO handle invalid search of multiple submitters
+        # raise "too many cooks" if n_submitters > 1
+        query.joins!(:user).where!(user: {username: value.to_s})
       when :tag
         n_tags += 1
         tags ||= Tag.none.select(:id)
@@ -269,7 +281,7 @@ class Search
     end
 
     # don't allow blank searches for all records when strip_ removes all data
-    if n_domains == 0 && n_tags == 0 && !url && !title && terms.empty?
+    if n_domains == 0 && n_submitters == 0 && n_tags == 0 && !url && !title && terms.empty?
       @results_count = 0
       return Story.none
     end

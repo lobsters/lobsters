@@ -8,29 +8,30 @@ describe Search do
   # the search module uses custom SQL that doesn't
   # work inside the transaction
   before(:all) do
-    @user = create(:user)
+    @alice = create(:user, username: "alice")
+    @bob = create(:user, username: "bob")
 
     @multi_tag = create(:story, title: "multitag term1 t1 t2",
       url: "https://example.com/3",
-      user_id: @user.id,
+      user_id: @alice.id,
       tags_a: ["tag1", "tag2"])
     @stories = [
       create(:story, title: "unique",
         url: "https://example.com/unique",
-        user_id: @user.id,
+        user_id: @bob.id,
         tags_a: ["tag1"]),
       create(:story, title: "term1 domain1",
         url: "https://example.com/1",
-        user_id: @user.id,
+        user_id: @alice.id,
         tags_a: ["tag1"]),
       create(:story, title: "term1 t2",
         url: "https://example.com/2",
-        user_id: @user.id,
+        user_id: @bob.id,
         tags_a: ["tag2"]),
       @multi_tag,
       create(:story, title: "term1 domain2",
         url: "https://lobste.rs/1",
-        user_id: @user.id,
+        user_id: @alice.id,
         tags_a: ["tag1"])
     ]
     @stories.each do |s|
@@ -39,19 +40,19 @@ describe Search do
     @comments = [
       create(:comment, comment: "comment0",
         story_id: @multi_tag.id,
-        user_id: @user.id),
+        user_id: @bob.id),
       create(:comment, comment: "comment1",
         story_id: @stories[0].id,
-        user_id: @user.id),
+        user_id: @alice.id),
       create(:comment, comment: "comment2",
         story_id: @stories[1].id,
-        user_id: @user.id),
+        user_id: @alice.id),
       create(:comment, comment: "comment3",
         story_id: @stories[2].id,
-        user_id: @user.id),
+        user_id: @bob.id),
       create(:comment, comment: "comment4",
         story_id: @stories[4].id,
-        user_id: @user.id)
+        user_id: @bob.id)
     ]
   end
 
@@ -59,7 +60,8 @@ describe Search do
     @comments.each(&:destroy!)
     @stories.flat_map(&:votes).each(&:destroy!)
     @stories.each(&:destroy!)
-    @user&.destroy!
+    @alice&.destroy!
+    @bob&.destroy!
   end
 
   it "returns nothing when initialized empty" do
@@ -80,6 +82,8 @@ describe Search do
         {what: "stories", q: "term#{esc}"},
         {what: "stories", q: "\"term#{esc}\""},
         {what: "stories", q: "domain:foo#{esc}"},
+        {what: "stories", q: "submitter:alice{esc}"},
+        {what: "stories", q: "submitter:@bob{esc}"},
         {what: "stories", q: "tag:foo#{esc}"},
         {what: "stories", q: "title:titl#{esc}"},
         {what: "stories", q: "title:\"multi#{esc} titl\""},
@@ -91,8 +95,12 @@ describe Search do
         # comments
         {what: "comments", q: "term#{esc}"},
         {what: "comments", q: "\"term#{esc}\""},
-        {what: "comments", q: "tag:foo#{esc}"},
         {what: "comments", q: "domain:foo#{esc}"},
+        {what: "comments", q: "submitter:carol{esc}"},
+        {what: "comments", q: "submitter:@dave{esc}"},
+        {what: "comments", q: "tag:foo#{esc}"},
+        {what: "comments", q: "title:titl#{esc}"},
+        {what: "comments", q: "title:\"multi#{esc} titl\""},
         {what: "comments", q: "term#{esc}"},
         {what: "comments", q: "term", order: "newest#{esc}"},
         {what: "comments", q: "term", page: "2#{esc}"},
@@ -113,35 +121,42 @@ describe Search do
       {q: "header X-Powered-By: Express"},
       {q: "snake_case"}
     ].each do |params|
-      search = Search.new(params, @user)
+      search = Search.new(params, @alice)
 
       expect(search.results_count).to be_an_instance_of(Integer)
     end
   end
 
   it "can search titles for stories" do
-    search = Search.new({q: "unique", what: "stories"}, @user)
+    search = Search.new({q: "unique", what: "stories"}, @alice)
 
     expect(search.results.length).to eq(1)
     expect(search.results.first.title).to eq("unique")
   end
 
   it "can search for multitagged stories" do
-    search = Search.new({q: "multitag", what: "stories"}, @user)
+    search = Search.new({q: "multitag", what: "stories"}, @alice)
 
     expect(search.results.length).to eq(1)
     expect(search.results.first.title).to eq("multitag term1 t1 t2")
   end
 
   it "can search for stories by domain" do
-    search = Search.new({q: "term1 domain:lobste.rs", what: "stories"}, @user)
+    search = Search.new({q: "term1 domain:lobste.rs", what: "stories"}, @alice)
 
     expect(search.results.length).to eq(1)
     expect(search.results.first.title).to eq("term1 domain2")
   end
 
+  it "can search for stories by submitter" do
+    search = Search.new({q: "submitter:bob", what: "stories"}, nil)
+
+    expect(search.results.length).to eq(2)
+    expect(search.results.map(&:title).sort).to eq(["term1 t2", "unique"])
+  end
+
   it "can search for stories by tag" do
-    search = Search.new({q: "term1 tag:tag1", what: "stories"}, @user)
+    search = Search.new({q: "term1 tag:tag1", what: "stories"}, @alice)
 
     expect(search.results.length).to eq(3)
 
@@ -153,80 +168,86 @@ describe Search do
   end
 
   it "should return only stories with both tags if multiple tags are present" do
-    search = Search.new({q: "term1 tag:tag1 tag:tag2", what: "stories"}, @user)
+    search = Search.new({q: "term1 tag:tag1 tag:tag2", what: "stories"}, @alice)
 
     expect(search.results.length).to eq(1)
   end
 
   it "can search for stories with only tags" do
-    search = Search.new({q: "tag:tag2", what: "stories"}, @user)
+    search = Search.new({q: "tag:tag2", what: "stories"}, @alice)
 
     expect(search.results.length).to eq(2)
   end
 
-  it "can search for stories by url" do
-    search = Search.new({q: "term1 https://lobste.rs/1", what: "stories"}, @user)
-
-    expect(search.results.length).to eq(1)
-    expect(search.results.first.title).to eq("term1 domain2")
-  end
-
   it "can search for stories by title" do
-    search = Search.new({q: "title:unique", what: "stories"}, @user)
+    search = Search.new({q: "title:unique", what: "stories"}, @alice)
 
     expect(search.results.length).to eq(1)
     expect(search.results.first.title).to eq("unique")
   end
 
   it "can search for stories by title with multiple words" do
-    search = Search.new({q: 'title:"term1 t2"', what: "stories"}, @user)
+    search = Search.new({q: 'title:"term1 t2"', what: "stories"}, @alice)
 
     expect(search.results.length).to eq(1)
     expect(search.results.first.title).to eq("term1 t2")
   end
 
+  it "can search for stories by url" do
+    search = Search.new({q: "term1 https://lobste.rs/1", what: "stories"}, @alice)
+
+    expect(search.results.length).to eq(1)
+    expect(search.results.first.title).to eq("term1 domain2")
+  end
+
   it "can search for comments" do
-    search = Search.new({q: "comment1", what: "comments"}, @user)
+    search = Search.new({q: "comment1", what: "comments"}, @alice)
 
     expect(search.results).to include(@comments[1])
   end
 
   it "can search for comments by tag" do
-    search = Search.new({q: "comment2 tag:tag1", what: "comments"}, @user)
+    search = Search.new({q: "comment2 tag:tag1", what: "comments"}, @alice)
 
     expect(search.results).to include(@comments[2])
     expect(search.results).not_to include(@comments[3])
   end
 
   it "can search for comments with only tags" do
-    search = Search.new({q: "tag:tag1", what: "comments"}, @user)
+    search = Search.new({q: "tag:tag1", what: "comments"}, @alice)
 
     expect(search.results).to include(@comments[2])
     expect(search.results).not_to include(@comments[3])
   end
 
   it "should only return comments matching all tags if multiple are present" do
-    search = Search.new({q: "tag:tag1 tag:tag2", what: "comments"}, @user)
+    search = Search.new({q: "tag:tag1 tag:tag2", what: "comments"}, @alice)
 
     expect(search.results).to eq([@comments[0]])
   end
 
   it "should only return comments with stories in domain if domain present" do
-    search = Search.new({q: "domain:lobste.rs", what: "comments"}, @user)
+    search = Search.new({q: "domain:lobste.rs", what: "comments"}, @alice)
 
     expect(search.results).to include(@comments[4])
     expect(search.results).not_to include(@comments[3])
   end
 
   it "can search for comments by url" do
-    search = Search.new({q: "comment4 https://lobste.rs/1", what: "comments"}, @user)
+    search = Search.new({q: "comment4 https://lobste.rs/1", what: "comments"}, @alice)
 
     expect(search.results).to eq([@comments[4]])
   end
 
   it "can search for comments by story title" do
-    search = Search.new({q: "comment4 title:domain2", what: "comments"}, @user)
+    search = Search.new({q: "comment4 title:domain2", what: "comments"}, @alice)
 
     expect(search.results).to eq([@comments[4]])
+  end
+
+  it "can search for comments by story submitter" do
+    search = Search.new({q: "submitter:bob", what: "comments"}, nil)
+
+    expect(search.results.length).to eq(2)
   end
 end

@@ -11,17 +11,18 @@ class SearchParser < Parslet::Parser
   rule(:quoted) { str('"') >> term.repeat(1).as(:quoted) >> str('"') >> space? }
 
   # reproduce the <domain> named capture in Story.URL_RE
-  rule(:domain) { str("domain:") >> match("[A-Za-z_\\-\\.]").repeat(1).as(:domain) >> space? }
-  # reproduce the the Tagtag format regexp
-  rule(:tag) { str("tag:") >> match("[A-Za-z0-9\\-_+]").repeat(1).as(:tag) >> space? }
   rule(:domain) { str("domain:") >> match("[A-Za-z0-9_\\-\\.]").repeat(1).as(:domain) >> space? }
+  # User::VALID_USERNAME
+  rule(:submitter) { str("submitter:") >> match("[@~]").repeat(0, 1) >> match("[A-Za-z0-9_\\-]").repeat(1, 24).as(:submitter) >> space? }
+  # reproduce the 'validates :tag, format:' regexp from Tag
+  rule(:tag) { str("tag:") >> match("[A-Za-z0-9\\-_+]").repeat(1).as(:tag) >> space? }
+  rule(:title) { str("title:") >> (term | quoted).as(:title) >> space? }
   rule(:url) {
     (
       str("http") >> str("s").repeat(0, 1) >> str("://") >>
       match("[A-Za-z0-9\\-_.:@/()%~?&=#]").repeat(1)
     ).as(:url) >> space?
   }
-  rule(:title) { str("title:") >> (term | quoted).as(:title) >> space? }
   rule(:negated) { str("-") >> (domain | tag | quoted | term).as(:negated) >> space? }
 
   # catchall consumes ill-structured input
@@ -30,6 +31,6 @@ class SearchParser < Parslet::Parser
   # ordering:
   #   title should be before quoted so that doesn't consume the quotes
   #   catchall must be last because it consumes everything
-  rule(:expression) { space.maybe >> (domain | tag | title | url | term | quoted | negated | catchall).repeat(1) }
+  rule(:expression) { space.maybe >> (domain | submitter | tag | title | url | term | quoted | negated | catchall).repeat(1) }
   root(:expression)
 end

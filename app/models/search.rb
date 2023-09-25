@@ -112,6 +112,7 @@ class Search
     query = Comment.accessible_to_user(searcher).for_presentation
 
     terms = []
+    n_commenters = 0
     n_domains = 0
     n_submitters = 0
     n_tags = 0
@@ -123,6 +124,10 @@ class Search
     parse_tree.each do |node|
       type, value = node.first
       case type
+      when :commenter
+        n_commenters += 1
+        return invalid("A comment only has one commenter") if n_commenters > 1
+        query.joins!(:user).where!(users: {username: value.to_s})
       when :domain
         n_domains += 1
         return invalid("A story can't be from multiple domains at once") if n_domains > 1
@@ -181,7 +186,13 @@ class Search
     end
 
     # don't allow blank searches for all records when strip_ removes all data
-    if n_domains == 0 && n_submitters == 0 && n_tags == 0 && !url && !title && terms.empty?
+    if n_commenters == 0 &&
+        n_domains == 0 &&
+        n_submitters == 0 &&
+        n_tags == 0 &&
+        !url &&
+        !title &&
+        terms.empty?
       return invalid("No search terms recognized")
     end
 
@@ -286,7 +297,12 @@ class Search
     end
 
     # don't allow blank searches for all records when strip_ removes all data
-    if n_domains == 0 && n_submitters == 0 && n_tags == 0 && !url && !title && terms.empty?
+    if n_domains == 0 &&
+        n_submitters == 0 &&
+        n_tags == 0 &&
+        !url &&
+        !title &&
+        terms.empty?
       return invalid("No search terms recognized")
     end
 

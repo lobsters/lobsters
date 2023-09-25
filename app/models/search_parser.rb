@@ -10,6 +10,8 @@ class SearchParser < Parslet::Parser
   rule(:term) { match('[\p{Word}_\\-\']').repeat(1).as(:term) >> space? }
   rule(:quoted) { str('"') >> term.repeat(1).as(:quoted) >> str('"') >> space? }
 
+  # User::VALID_USERNAME
+  rule(:commenter) { str("commenter:") >> match("[@~]").repeat(0, 1) >> match("[A-Za-z0-9_\\-]").repeat(1, 24).as(:commenter) >> space? }
   # reproduce the <domain> named capture in Story.URL_RE
   rule(:domain) { str("domain:") >> match("[A-Za-z0-9_\\-\\.]").repeat(1).as(:domain) >> space? }
   # User::VALID_USERNAME
@@ -28,9 +30,22 @@ class SearchParser < Parslet::Parser
   # catchall consumes ill-structured input
   rule(:catchall) { match("\\S").repeat(1).as(:term) >> space? }
 
-  # ordering:
-  #   title should be before quoted so that doesn't consume the quotes
-  #   catchall must be last because it consumes everything
-  rule(:expression) { space.maybe >> (domain | submitter | tag | title | url | term | quoted | negated | catchall).repeat(1) }
+  rule(:expression) {
+    space.maybe >> (
+      commenter |
+      domain |
+      submitter |
+      tag |
+      # title before quoted so that doesn't consume the quotes
+      title |
+      url |
+      # term and quoted after operators they would fail to consume
+      term |
+      quoted |
+      negated |
+      # catchall must be last because it consumes everything
+      catchall
+    ).repeat(1)
+  }
   root(:expression)
 end

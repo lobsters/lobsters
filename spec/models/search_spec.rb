@@ -250,4 +250,10 @@ describe Search do
 
     expect(search.results.length).to eq(2)
   end
+
+  it "can search for comments by commenter" do
+    search = Search.new({q: "commenter:bob", what: "comments"}, nil)
+
+    expect(search.results.length).to eq(3)
+  end
 end

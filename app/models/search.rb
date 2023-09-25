@@ -10,7 +10,7 @@
 
 class Search
   attr_reader :q, :what, :order, :page, :searcher
-  attr_reader :parse_tree
+  attr_reader :invalid_because, :parse_tree
 
   # takes untrusted params from controller, so sanitize
   def initialize params, user
@@ -40,6 +40,14 @@ class Search
 
     @results = nil
     @results_count = -1
+    @invalid_because = nil
+  end
+
+  # returns @results so perform_* can return from calling this
+  def invalid reason
+    @invalid_because = reason
+    @results_count = 0
+    @results = searched_model.none
   end
 
   def max_matches
@@ -117,13 +125,11 @@ class Search
       case type
       when :domain
         n_domains += 1
-        # TODO handle invalid search of multiple domains
-        # raise "too many cooks" if n_domains > 1
+        return invalid("A story can't be from multiple domains at once") if n_domains > 1
         query.joins!(story: [:domain]).where!(story: {domains: {domain: value.to_s}})
       when :submitter
         n_submitters += 1
-        # TODO handle invalid search of multiple submitters
-        # raise "too many cooks" if n_submitters > 1
+        return invalid("A story only has one submitter") if n_submitters > 1
         query.joins!(story: :user).where!(story: {users: {username: value.to_s}})
       when :tag
         n_tags += 1
@@ -176,8 +182,7 @@ class Search
 
     # don't allow blank searches for all records when strip_ removes all data
     if n_domains == 0 && n_submitters == 0 && n_tags == 0 && !url && !title && terms.empty?
-      @results_count = 0
-      return Comment.none
+      return invalid("No search terms recognized")
     end
 
     @results_count = query.dup.count
@@ -218,15 +223,15 @@ class Search
     parse_tree.each do |node|
       type, value = node.first
       case type
+      when :commenter
+        return invalid("Doesn't make sense to search Stories by commenter")
       when :domain
         n_domains += 1
-        # TODO handle invalid search of multiple domains
-        # raise "too many cooks" if n_domains > 1
+        return invalid("A story can't be from multiple domains at once") if n_domains > 1
         query.joins!(:domain).where!(domains: {domain: value.to_s})
       when :submitter
         n_submitters += 1
-        # TODO handle invalid search of multiple submitters
-        # raise "too many cooks" if n_submitters > 1
+        return invalid("A story only has one submitter") if n_submitters > 1
         query.joins!(:user).where!(user: {username: value.to_s})
       when :tag
         n_tags += 1
@@ -282,8 +287,7 @@ class Search
 
     # don't allow blank searches for all records when strip_ removes all data
     if n_domains == 0 && n_submitters == 0 && n_tags == 0 && !url && !title && terms.empty?
-      @results_count = 0
-      return Story.none
+      return invalid("No search terms recognized")
     end
 
     @results_count = query.dup.count

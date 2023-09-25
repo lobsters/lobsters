@@ -130,7 +130,7 @@
 
       <% page_numbers_for_pagination(@search.page_count, @search.page).each do |p| %>
         <% if p.is_a?(Integer) %>
-          <%= link_to p, search_path(@search.to_param), class: (@search.page == p ? 'cur' : '') %>
+          <%= link_to p, search_path(@search.to_param.merge({ page: p })), class: (@search.page == p ? 'cur' : '') %>
         <% else %>
           <span>...</span>
         <% end %>

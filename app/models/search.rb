@@ -124,7 +124,7 @@ class Search
     parse_tree.each do |node|
       type, value = node.first
       case type
-      when :commenter
+      when :commenter, :user
         n_commenters += 1
         return invalid("A comment only has one commenter") if n_commenters > 1
         query.joins!(:user).where!(users: {username: value.to_s})
@@ -240,7 +240,7 @@ class Search
         n_domains += 1
         return invalid("A story can't be from multiple domains at once") if n_domains > 1
         query.joins!(:domain).where!(domains: {domain: value.to_s})
-      when :submitter
+      when :submitter, :user
         n_submitters += 1
         return invalid("A story only has one submitter") if n_submitters > 1
         query.joins!(:user).where!(user: {username: value.to_s})

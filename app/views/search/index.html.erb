@@ -58,8 +58,10 @@
             type, value = node.first
 
             case type
-            when :domain
-        %>
+          when :commenter %>
+          <dt><span class="searchq">commenter:<%= value %></span></dt>
+          <dd>Comment by: <%= link_to value, user_path(value) %></dd>
+        <% when :domain %>
           <dt><span class="searchq">domain:<%= value %></span></dt>
           <dd>Domain: <%= link_to value, domain_path(value) %></dd>
         <% when :submitter %>
@@ -71,6 +73,9 @@
         <% when :title %>
           <dt><span class="searchq">title:<%= @search.flatten_title(value) %></span></dt>
           <dd>Title: <%= @search.flatten_title(value) %></dd>
+        <% when :user %>
+          <dt><span class="searchq">@<%= value %></span></dt>
+          <dd><%= @search.searched_model.name %> by: <%= link_to value, user_path(value) %></dd>
         <% when :negated %>
         <% when :quoted %>
           <dt><span class="searchq">"<%= value %>"</span></dt>

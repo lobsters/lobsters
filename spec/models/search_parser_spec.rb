@@ -65,6 +65,13 @@ describe SearchParser do
     it("parses multiple words") { expect(sp.quoted).to parse('"research words"') }
   end
 
+  describe "commenter rule" do
+    it("parses username") { expect(sp.commenter).to parse("commenter:alice") }
+    it("parses with @") { expect(sp.commenter).to parse("commenter:@bob") }
+    it("parses with ~") { expect(sp.commenter).to parse("commenter:~carol") }
+    it("doesn't parse blank") { expect(sp.commenter).to_not parse("commenter:") }
+  end
+
   describe "domain rule" do
     it("parses single") { expect(sp.domain).to parse("domain:example.com") }
     it("parses dash") { expect(sp.domain).to parse("domain:foo-bar.com") }
@@ -88,6 +95,14 @@ describe SearchParser do
   describe "url rule" do
     it("parses urls") { expect(sp.url).to parse("https://example.com/") }
     it("parses punctuation stripped from terms") { expect(sp.url).to parse("https://example.com/foo-bar&a=b") }
+  end
+
+  describe "user rule" do
+    it("parses with @") { expect(sp.user).to parse("@bob") }
+    it("parses with ~") { expect(sp.user).to parse("~carol") }
+    it("doesn't parse blank @") { expect(sp.user).to_not parse("@") }
+    it("doesn't parse emails") { expect(sp.user).to_not parse("user@example.com") }
+    it("doesn't parse blank ~") { expect(sp.user).to_not parse("~") }
   end
 
   describe "title rule" do

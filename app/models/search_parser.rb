@@ -25,6 +25,8 @@ class SearchParser < Parslet::Parser
       match("[A-Za-z0-9\\-_.:@/()%~?&=#]").repeat(1)
     ).as(:url) >> space?
   }
+  # User::VALID_USERNAME
+  rule(:user) { match("[@~]") >> match("[A-Za-z0-9_\\-]").repeat(1, 24).as(:user) >> space? }
   rule(:negated) { str("-") >> (domain | tag | quoted | term).as(:negated) >> space? }
 
   # catchall consumes ill-structured input
@@ -36,9 +38,9 @@ class SearchParser < Parslet::Parser
       domain |
       submitter |
       tag |
-      # title before quoted so that doesn't consume the quotes
-      title |
+      title | # title before quoted so that doesn't consume the quotes
       url |
+      user | # user must come after commenter and submitter
       # term and quoted after operators they would fail to consume
       term |
       quoted |

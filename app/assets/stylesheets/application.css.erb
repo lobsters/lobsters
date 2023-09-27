@@ -610,7 +610,6 @@ div#gravatar img {
 
 ol.stories,
 ol.comments,
-ol.search_results,
 ol.category_tags {
 	padding: 0;
 	list-style: none;
@@ -632,15 +631,9 @@ ol.comments.comments1 {
 ol.comments1 > li.comments_subtree {
 	margin-left: 11px;
 }
-
-ol.search_results {
-	margin-left: 20px;
-	margin-bottom: 0em;
-	padding-left: 6px;
-}
-
-ol.search_results li.story {
-	padding-bottom: 0.75em;
+ol.comments1 > li.comments_subtree > ol.comments {
+	margin-left: 0;
+	padding-left: 0;
 }
 
 div.voters {
@@ -843,6 +836,7 @@ li .comment_parent_tree_line {
 	top: 30px;
 	bottom: 0;
 }
+
 li .comment_parent_tree_line.score_shown {
 	top: 44px;
 }
@@ -1147,7 +1141,7 @@ div#story_box input#story_moderation_reason,
 div#story_box input#story_merge_story_short_id {
 	width: 600px;
 }
-#story_box .title-reminder {
+#story_box .title-reminder, #story_box .title-reminder-thanks {
 	display: none;
 }
 .slide-down {
@@ -1242,7 +1236,7 @@ ul.user_tree {
 	color: var(--color-fg-contrast-4-5);
 }
 
-/* /u/:username/standing */
+/* /~:username/standing */
 /* https://codepen.io/sosuke/pen/Pjoqqp */
 .unwarned {
 	filter: invert(36%) sepia(52%) saturate(0%) hue-rotate(292deg) brightness(96%) contrast(85%);
@@ -1579,6 +1573,26 @@ input[type="submit"].link_post.pushover_button {
 	text-decoration: none;
 	vertical-align: middle;
 }
+
+/* search */
+
+.searchresults summary .heading {
+	font-weight: bold;
+	font-size: 11pt; /* h2 */
+}
+.searchresults summary {
+	margin: 1em 0;
+}
+.search_parse dd {
+	margin-bottom: 0.5em;
+}
+.searchq {
+	background: var(--color-box-bg-shaded);
+	border-radius: 4px;
+	font-family: monospace;
+	padding: 2px;
+}
+
 
 @media screen and (min-width: 481px) {
 	body {

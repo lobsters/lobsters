@@ -1,13 +1,20 @@
+<%
+  # partial inputs:
+  story ||= raise "required Story missing" # the Story to render
+  # top of a single story page, eg /s/abc123, controls rendering additional info
+  # like list of merged stories, preview, users hiding, and flag summary
+  single_story ||= false
+%>
 <%#
   The h-entry, u-report-of, u-url and h-card css classes are necessary
   for the webmentions support. http://microformats.org/wiki/h-entry
-  
+
   This has apparently useless <span> tags explained in a comment in CSS
   around .negative_1 in CSS (introduced same commit as this comment).
 %>
 <li id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
-class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
-<%= story.vote && story.vote[:vote] == -1 ? "flagged" : "" %>
+class="story <%= story.current_upvoted? ? "upvoted" : "" %>
+<%= story.current_flagged? ? "flagged" : "" %>
 <%= story.score <= -1 ? "negative_1" : "" %>
 <%= story.score <= -3 ? "negative_3" : "" %>
 <%= story.score <= -5 ? "negative_5" : "" %>
@@ -25,6 +32,9 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
   </div>
   <div class="details">
     <span role="heading" aria-level="1" class="link h-cite u-repost-of">
+      <% if story.merged_story_id %>
+        <span class="merge"></span>
+      <% end %>
       <% if story.can_be_seen_by_user?(@user) %>
         <a class="u-url" href="<%= story.url_or_comments_path %>" rel="ugc <%= story.send_referrer? ? '' : 'noreferrer' %>"><%= story.title %></a>
       <% end %>
@@ -47,8 +57,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <a class="domain" href="<%= domain_path(story.domain) %>"><%= story.domain.domain %></a>
       <% end %>
 
-      <% if defined?(single_story) && single_story %>
-        <% story.merged_stories.not_deleted.includes(:domain, :user, :tags).each do |ms| %>
+      <% if single_story %>
+        <% story.merged_stories.not_deleted(nil).includes(:domain, :user, :tags).each do |ms| %>
           <br>
           <span class="merge"></span>
           <span class="link">
@@ -66,16 +76,14 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           <% end %>
           <span class="byline">
             <% if (@user && @user.show_avatars?) || !@user %>
-              <a href="/u/<%= ms.user.username %>"><%=
-                avatar_img(ms.user, 16) %></a>
+              <%= link_to avatar_img(ms.user, 16), ms.user %>
             <% end %>
             <% if ms.user_is_author? %>
               <span> authored by </span>
             <% else %>
               <span> via </span>
             <% end %>
-            <a href="/u/<%= ms.user.username %>" class="u-author h-card <%=
-              ms.html_class_for_user %>"><%= ms.user.username %></a>
+            <%= styled_user_link ms.user, story, class: ['u-author', 'h-card'] %>
 
             <%= time_ago_in_words_label(ms.created_at) %>
             <% if ms.is_editable_by_user?(@user) %>
@@ -87,8 +95,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
       <% end %>
     <% end %>
 
-    <% if !(defined?(single_story) && single_story) && @user &&
-    @user.show_story_previews? %>
+    <% if !single_story && @user && @user.show_story_previews? %>
       <% if (sc = story.description_or_story_text(500)).present? %>
         <div class="story_content">
           <%= sc %>
@@ -98,8 +105,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
 
     <div class="byline">
       <% if (@user && @user.show_avatars?) || !@user %>
-        <a href="/u/<%= story.user.username %>"><%=
-          avatar_img(story.user, 16) %></a>
+        <%= link_to avatar_img(story.user, 16), story.user %>
       <% end %>
       <% if story.previewing %>
         <% if story.user_is_author? %>
@@ -107,8 +113,8 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% else %>
           <span> via </span>
         <% end %>
-        <a class="u-author h-card <%= story.html_class_for_user %>"><%=
-          story.user.username %></a>
+
+        <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %>
         <span> just now </span>
       <% else %>
         <% if story.user_is_author? %>
@@ -116,8 +122,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
         <% else %>
           <span> via </span>
         <% end %>
-        <a href="/u/<%= story.user.username %>" class="u-author h-card <%=
-          story.html_class_for_user %>"><%= story.user.username %></a>
+        <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %>
 
         <%= time_ago_in_words_label(story.created_at) %>
 
@@ -131,9 +136,9 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             :class => "suggester" %>
         <% end %>
         <% if !story.is_gone? && @user %>
-          <% if @user && story.vote && story.vote[:vote] == -1 %>
+          <% if @user && story.current_flagged? %>
             <span> | </span><a class="flagger">unflag (<%=
-              Vote::STORY_REASONS[story.vote[:reason]].to_s.downcase %>)</a>
+              Vote::STORY_REASONS[story.current_vote[:reason]].to_s.downcase %>)</a>
           <% elsif @user && @user.can_flag?(story) %>
             <span> | </span>
             <span class="dropdown_parent">
@@ -147,7 +152,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
             <span> | </span><%= link_to "hide", story_hide_path(story.short_id),
               :class => "hider" %>
           <% end %>
-          <% if defined?(single_story) && single_story && story.hider_count > 0 %>
+          <% if single_story && story.hider_count > 0 %>
             (hidden by <%= pluralize(story.hider_count, "user") %>)
           <% end %>
           <% if story.is_saved_by_cur_user %>
@@ -182,7 +187,7 @@ class="story <%= story.vote && story.vote[:vote] == 1 ? "upvoted" : "" %>
           </span>
         <% end %>
 
-        <% if defined?(single_story) && single_story &&
+        <% if single_story &&
         ((story.flags > 0 && @user && @user.is_moderator?) ||
         (story.flags >= 3 || story.score <= 0)) %>
           <span> | <%= story.vote_summary_for(@user).downcase %> </span>

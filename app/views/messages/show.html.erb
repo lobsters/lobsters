@@ -4,14 +4,13 @@
   <h2>
     From
     <% if @message.author %>
-      <a href="/u/<%= @message.author.username %>"><%= @message.author.username %></a>
+      <%= styled_user_link @message.author %>
     <% else %>
       <%= @message.author_username %>
     <% end %>
     <%= @message.hat.to_html_label if @message.hat %>
     to
-    <a href="/u/<%= @message.recipient.username %>"><%=
-      @message.recipient.username %></a>
+    <%= styled_user_link @message.recipient %>
     <%= time_ago_in_words_label(@message.created_at) %>
   </h2>
 
@@ -57,6 +56,6 @@
 
     <%= render partial: 'form', locals: { new_message: @new_message, replying: true } %>
   <% else %>
-    For help with this message, contact <a href="/u?moderators=1">a moderator</a>.
+    For help with this message, contact <%= link_to 'a moderator', moderators_path %>.
   <% end %>
 </div>

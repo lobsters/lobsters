@@ -1,3 +1,11 @@
+<% if defined?(parents) %>
+  <ol class="comments comments1">
+    <li class="comments_subtree">
+      <%= render partial: 'threads', locals: { thread: parents, story: @story } %>
+  </li>
+</ol>
+<% end %>
+
 <div class="comment comment_form_container" data-shortid="<%= comment.short_id if comment.persisted? %>">
 <%= form_with url: comment do |f| %>
   <% if comment.errors.any? %>

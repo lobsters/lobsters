@@ -1,6 +1,8 @@
+# typed: false
+
 class HatsController < ApplicationController
-  before_action :require_logged_in_user, :except => [:index]
-  before_action :require_logged_in_moderator, :except => [:build_request, :index, :create_request]
+  before_action :require_logged_in_user, except: [:index]
+  before_action :require_logged_in_moderator, except: [:build_request, :index, :create_request]
   before_action :show_title_h1
 
   def build_request
@@ -32,7 +34,7 @@ class HatsController < ApplicationController
       return redirect_to "/hats"
     end
 
-    render :action => "build_request"
+    render action: "build_request"
   end
 
   def requests_index
@@ -49,7 +51,7 @@ class HatsController < ApplicationController
 
     flash[:success] = "Successfully approved hat request."
 
-    return redirect_to "/hats/requests"
+    redirect_to "/hats/requests"
   end
 
   def reject_request
@@ -58,6 +60,6 @@ class HatsController < ApplicationController
 
     flash[:success] = "Successfully rejected hat request."
 
-    return redirect_to "/hats/requests"
+    redirect_to "/hats/requests"
   end
 end

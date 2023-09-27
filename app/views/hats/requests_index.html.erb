@@ -11,7 +11,7 @@
         <p>
         <div class="boxline">
           <%= f.label :user_id, "User:", :class => "required" %>
-          <a href="/u/<%= hr.user.username %>"><%= hr.user.username %></a>
+          <%= styled_user_link hr.user %>
           <%= time_ago_in_words(hr.created_at) %>
         </div>
 
@@ -33,7 +33,7 @@
         <div class="boxline">
           <%= f.label :link, "Comment:", :class => "required" %>
           <div class="d">
-            <%= raw(h(hr.comment.to_s).gsub(/\n/, "<br>")) %>
+            <%= raw Markdowner.to_html(hr.comment || '') %>
           </div>
         </div>
       <% end %>

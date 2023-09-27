@@ -1,4 +1,6 @@
-require 'rails_helper'
+# typed: false
+
+require "rails_helper"
 
 RSpec.feature "Viewing Hats page", type: :feature do
   feature "when logged out" do

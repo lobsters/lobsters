@@ -1,7 +1,7 @@
 class MoveCommentCountsToStory < ActiveRecord::Migration
   def up
-    add_column :stories, :comments_count, :integer, :default => 0,
-      :null => false
+    add_column :stories, :comments_count, :integer, default: 0,
+      null: false
 
     Keystore.transaction do
       Story.lock(true).select(:id).each do |s|
@@ -9,7 +9,8 @@ class MoveCommentCountsToStory < ActiveRecord::Migration
       end
 
       Keystore.where(
-        Keystore.arel_table[:key].matches("story:%:comment_count")).delete_all
+        Keystore.arel_table[:key].matches("story:%:comment_count")
+      ).delete_all
     end
   end
 

@@ -9,71 +9,146 @@
     <div class="boxline">
       <label class="required">Search:</label>
 
-      <%= f.radio_button "what", "stories", :checked => @search.what == "stories" %>
+      <%= f.radio_button "what", "stories", :checked => @search.what == :stories %>
         <label for="what_stories" class="normal">Stories</label>
 
       &nbsp;
 
-      <%= f.radio_button "what", "comments", :checked => @search.what == "comments" %>
+      <%= f.radio_button "what", "comments", :checked => @search.what == :comments %>
         <label for="what_comments" class="normal">Comments</label>
 
       <br>
 
       <label class="required">Order By:</label>
 
-      <%= f.radio_button "order", "newest", :checked => @search.order == "newest" %>
+      <%= f.radio_button "order", "newest", :checked => @search.order == :newest %>
         <label for="order_newest" class="normal">Newest</label>
 
       &nbsp;
 
-      <%= f.radio_button "order", "relevance", :checked => @search.order == "relevance" %>
+      <%= f.radio_button "order", "relevance", :checked => @search.order == :relevance %>
         <label for="order_relevance" class="normal">Relevance</label>
 
       &nbsp;
 
-      <%= f.radio_button "order", "points", :checked => @search.order == "points" %>
-        <label for="order_points" class="normal">Points</label>
+      <%= f.radio_button "order", "score", :checked => @search.order == :score %>
+        <label for="order_score" class="normal">Score</label>
     </div>
   <% end %>
 </div>
 
-<% if @search.total_results > -1 %>
-  <div class="box">
-    <p>
-    <h2>
-      <%= @search.total_results %> result<%= @search.total_results == 1 ? "" :
-        "s" %> for "<%= @search.q %>"
-    </h2>
-    </p>
+<% if @search.results_count > -1 %>
+  <div class="box searchresults">
+    <details <%= "open" if @search.results_count == 0 %>>
+      <summary>
+        <span class="heading"><%= @search.results_count %> result<%= @search.results_count == 1 ? "" : "s" %> for </span>
+        <span class="searchq"><%= @search.q %></span>
+      </summary>
+
+      <% if @search.invalid_because %>
+        <div class="flash-error"><%= @search.invalid_because %></div>
+      <% end %>
+
+      <p>
+      Search query parsed to:
+      </p>
+      <dl class="search_parse">
+        <%
+          @search.parse_tree.each do |node|
+            type, value = node.first
+
+            case type
+          when :commenter %>
+          <dt><span class="searchq">commenter:<%= value %></span></dt>
+          <dd>Comment by: <%= link_to value, user_path(value) %></dd>
+        <% when :domain %>
+          <dt><span class="searchq">domain:<%= value %></span></dt>
+          <dd>Domain: <%= link_to value, domain_path(value) %></dd>
+        <% when :submitter %>
+          <dt><span class="searchq">submitter:<%= value %></span></dt>
+          <dd>Story submitted by: <%= link_to value, user_path(value) %></dd>
+        <% when :tag %>
+          <dt><span class="searchq">tag:<%= value %></span></dt>
+          <dd>Tag: <%= link_to value, tag_path(value) %></dd>
+        <% when :title %>
+          <dt><span class="searchq">title:<%= @search.flatten_title(value) %></span></dt>
+          <dd>Title: <%= @search.flatten_title(value) %></dd>
+        <% when :user %>
+          <dt><span class="searchq">@<%= value %></span></dt>
+          <dd><%= @search.searched_model.name %> by: <%= link_to value, user_path(value) %></dd>
+        <% when :negated %>
+        <% when :quoted %>
+          <dt><span class="searchq">"<%= value %>"</span></dt>
+          <dd>
+            Quote: <span class="searchq">"<%= @search.strip_operators(value) %>"</span>
+            <% if !value.to_s.include?(' ') %>
+              <br>Quoting a single word is redundant, terms are exact.
+            <% end %>
+            <% if value.to_s != @search.strip_operators(value) %>
+              <br>Punctuation that might have been taken as a <a href="https://mariadb.com/kb/ru/full-text-index-overview/#in-boolean-mode">SQL search operator</a> was stripped.
+            <% end %>
+          </dd>
+        <% when :term %>
+          <dt><span class="searchq"><%= value %></span></dt>
+          <dd>
+            Term: <span class="searchq"><%= @search.strip_short_terms(@search.strip_operators(value)) %></span>
+            <% if value.to_s != @search.strip_operators(value) %>
+              <br>Punctuation that might have been taken as a <a href="https://mariadb.com/kb/ru/full-text-index-overview/#in-boolean-mode">SQL search operator</a> was stripped.
+            <% end %>
+            <% if value.to_s != @search.strip_short_terms(value) %>
+              <br>1 and 2 character terms are not indexed.
+              <% if value.to_s.downcase =~ /\b(d\b|go\b|ml\b|c([+][+]|\b)?)/ %>
+                <% lang = $& %>
+                <br>For the
+                <% if value.to_s.downcase =~ /\bgo\b/ %>
+                  terribly-named
+                <% end %>
+                language, use <span class="searchq">tag:<%= lang %></span>
+              <% end %>
+              <% if value.to_s.downcase =~ /\b(ai|ml)\b/ %>
+                <br>Use <span class="searchq">tag:ai</span> for artificial intelligence/machine learning
+              <% end %>
+            <% end %>
+          </dd>
+        <% when :catchall %>
+          <dt><span class="searchq"><%= value %></span></dt>
+          <dd>
+            Catchall: <span class="searchq"><%= @search.strip_operators(value) %></span>
+            If you were trying to use a search operator, it wasn't recognized.
+          </dd>
+        <% end %>
+      <% end %>
+      </dl>
+    </details>
   </div>
 
-  <ol class="search_results">
-    <% @search.results.each do |res| %>
-      <% if res.class == Story %>
-        <%= render :partial => "stories/listdetail",
-          :locals => { :story => res } %>
-      <% elsif res.class == Comment %>
-        <li><%= render "comments/comment", :comment => res,
-          :show_story => true, :hide_voters => true %></li>
+  <% if @search.what == :stories %>
+    <ol class="stories list">
+      <% @search.results.each do |res| %>
+        <%= render :partial => "stories/listdetail", :locals => { :story => res } %>
       <% end %>
-    <% end %>
-  </ol>
+    </ol>
+  <% elsif @search.what == :comments %>
+    <ol class="comments comments1">
+      <% @search.results.each do |res| %>
+        <li><%= render "comments/comment", :comment => res, :show_story => true, :hide_voters => true %></li>
+      <% end %>
+    </ol>
+  <% end %>
 
-  <% if @search.total_results > @search.per_page %>
+  <% if @search.results_count > @search.per_page %>
     <div class="page_link_buttons">
       Page:
 
       <% page_numbers_for_pagination(@search.page_count, @search.page).each do |p| %>
         <% if p.is_a?(Integer) %>
-          <a href="/search?<%= raw(@search.to_url_params) %>&amp;page=<%= p
-            %>" class="<%= @search.page == p ? "cur" : "" %>"><%= p
-            %></a>
+          <%= link_to p, search_path(@search.to_param), class: (@search.page == p ? 'cur' : '') %>
         <% else %>
           <span>...</span>
         <% end %>
       <% end %>
     </div>
-  <% elsif @search.total_results == 1 %>
+  <% elsif @search.results_count == 1 %>
     <div class="page_link_buttons">
       <p>Hapax legomenon</p>
     </div>
@@ -82,9 +157,12 @@
   <div class="help">
     Search hints:
     <ul>
-      <li>Use <a href="https://mariadb.com/kb/en/full-text-index-overview/#in-boolean-mode">search operators</a> like <code>+</code> to require terms, <code>-</code> to ignore terms, and <code>"quotes for phrases"</code>.</li>
-      <li>Search by domain with <code>domain:example.com</code> (implicit <code>+</code>)</li>
-      <li>Search by <%= link_to 'tag', tags_path %> with <code>tag:meta</code> (implicit <code>+</code>)</li>
+      <li>Search terms are required. Use quote marks if you want <span class="searchq">"words together"</span></li>
+      <li>Terms are exact, so <span class="searchq">code</span> doesn't match <span class="searchq">coder</span> or <span class="searchq">coding</span>. You can approximate stemming with <span class="searchq">cod*</span></li>
+      <li>Search titles with <span class="searchq">title:kernel</span> or <span class="searchq">title:"linux kernel"</span></li>
+      <li>Search by domain with <span class="searchq">domain:example.com</span></li>
+      <li>Search by story submitter with <span class="searchq">submitter:alice</span></li>
+      <li>Search by <%= link_to 'tag', tags_path %> with <code>tag:meta</span></li>
     </ul>
   </div>
 <% end %>

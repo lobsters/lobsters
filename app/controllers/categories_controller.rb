@@ -1,3 +1,5 @@
+# typed: false
+
 class CategoriesController < ApplicationController
   before_action :require_logged_in_admin
 
@@ -12,33 +14,33 @@ class CategoriesController < ApplicationController
       flash[:success] = "Category #{category.category} has been created"
       redirect_to tags_path
     else
-      flash[:error] = "New category not created: #{category.errors.full_messages.join(', ')}"
+      flash[:error] = "New category not created: #{category.errors.full_messages.join(", ")}"
       redirect_to new_category_path
     end
   end
 
   def edit
-    @category = Category.where(:category => params[:category_name]).first!
+    @category = Category.where(category: params[:category_name]).first!
     @title = "Edit Category"
   end
 
   def update
-    category = Category.where(:category => params[:category_name]).first!
+    category = Category.where(category: params[:category_name]).first!
     if category.update(category_params)
       flash[:success] = "Category #{category.category} has been updated"
       redirect_to tags_path
     else
-      flash[:error] = "Category not updated: #{category.errors.full_messages.join(', ')}"
+      flash[:error] = "Category not updated: #{category.errors.full_messages.join(", ")}"
       redirect_to edit_category_path
     end
   end
 
-private
+  private
 
   def category_params
     params.require(:category).permit(
       :category_name,
-      :category,
+      :category
     ).merge(edit_user_id: @user.id)
   end
 end

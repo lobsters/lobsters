@@ -1,6 +1,8 @@
-require 'rails_helper'
+# typed: false
 
-describe 'csp violations', type: :request do
+require "rails_helper"
+
+describe "csp violations", type: :request do
   let(:document_uri) { "http://localhost:3000/s/izi825/hckr_news_hacker_news_sorted_by_time" }
   let(:post_body) do
     {
@@ -13,22 +15,22 @@ describe 'csp violations', type: :request do
           "script-src 'self' 'unsafe-inline'",
           "style-src 'self' 'unsafe-inline'",
           "form-action 'self'",
-          "report-uri http://localhost:3000/csp-violation-report",
-        ].join('; '),
+          "report-uri http://localhost:3000/csp-violation-report"
+        ].join("; "),
         "referrer" => "http://localhost:3000/",
-        "violated-directive" => "img-src",
-      },
+        "violated-directive" => "img-src"
+      }
     }
   end
 
-  it 'responds appropriately' do
-    post '/csp-violation-report', params: { body: post_body.to_json, format: :json }
+  it "responds appropriately" do
+    post "/csp-violation-report", params: {body: post_body.to_json, format: :json}
     expect(response).to have_http_status(:ok)
   end
 
-  it 'records the violation' do
+  it "records the violation" do
     allow(Rails.logger).to receive(:info)
-    post '/csp-violation-report', params: { body: post_body.to_json, format: :json }
+    post "/csp-violation-report", params: {body: post_body.to_json, format: :json}
     expect(Rails.logger).to have_received(:info).with(/#{document_uri}/)
   end
 end

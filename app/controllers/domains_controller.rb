@@ -1,8 +1,11 @@
+# typed: false
+
 class DomainsController < ApplicationController
   before_action :require_logged_in_admin
   before_action :find_domain, only: [:edit, :update]
 
-  def edit; end
+  def edit
+  end
 
   def update
     if domain_params[:banned_reason].present?
@@ -19,7 +22,7 @@ class DomainsController < ApplicationController
     end
   end
 
-private
+  private
 
   def domain_params
     params.require(:domain).permit(:banned_reason)
@@ -30,14 +33,14 @@ private
   end
 
   def path_of_form(domain)
-    prms = { name: domain.domain }
+    prms = {name: domain.domain}
     domain.banned_at ? unban_domain_path(prms) : update_domain_path(prms)
   end
 
   helper_method :path_of_form
 
   def caption_of_button(domain)
-    domain.banned_at ? 'Unban' : 'Ban'
+    domain.banned_at ? "Unban" : "Ban"
   end
 
   helper_method :caption_of_button

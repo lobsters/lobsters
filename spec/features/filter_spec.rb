@@ -1,11 +1,13 @@
-require 'rails_helper'
+# typed: false
+
+require "rails_helper"
 
 RSpec.feature "Filtering" do
   let!(:tag) { create(:tag) }
 
-  scenario 'Loading filter page' do
+  scenario "Loading filter page" do
     visit "/filters"
-    expect(page).to have_content('Filtered Tags')
+    expect(page).to have_content("Filtered Tags")
   end
 
   context "with a story with the tag" do

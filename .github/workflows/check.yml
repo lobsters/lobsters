@@ -1,13 +1,16 @@
-on: [push, pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   check:
-    environment: production
     runs-on: ubuntu-latest
 
     services:
       mariadb:
-        image: mariadb:10.5
+        image: mariadb:10.6
         env:
           MARIADB_ROOT_PASSWORD: root
           MARIADB_DATABASE: lobsters_dev
@@ -19,7 +22,7 @@ jobs:
       RAILS_ENV: test
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
@@ -31,8 +34,7 @@ jobs:
           bundle exec rspec spec/slow/*_spec.rb
       - name: Run linters
         run: |
-          bundle exec rubocop
-          bundle exec ruumba
+          bundle exec standardrb
       - name: Find leaky gems
         run: |
           gem install bundler-leak

@@ -4,9 +4,10 @@
   <% if @newest %>
     <p>
     Newest users:
-    <%= raw @newest.map{|u| "<a href=\"##{u.username}\" class=\"" <<
-      (u.is_new?? "new_user" : "") << "\">#{u.username}</a> " <<
-      "(#{u.karma})" }.join(", ") %>
+    <% @newest.each do |user| %>
+      <%= styled_user_link user %>
+      <%= user_karma(user) %><%= ',' if user != @newest.last %>
+    <% end %>
     </p>
   <% end %>
 
@@ -18,20 +19,9 @@
     <% while subtree %>
       <% if (user = subtree.pop) %>
         <li class="<%= user.invited_by_user_id ? "" : "noparent" %>">
-          <a name="<%= user.username %>" href="/u/<%= user.username %>"
-            <% if !user.is_active? %>
-              class="inactive_user"
-            <% elsif user.is_new? %>
-              class="new_user"
-            <% end %>
-            ><%= user.username %></a>
-          <% if user.is_admin? %>
-            (administrator)
-          <% elsif user.is_moderator? %>
-            (moderator)
-          <% else %>
-            (<%= user.karma %>)
-          <% end %>
+          <%= styled_user_link user, nil, name: user.username  %>
+          <%= user_karma(user) %>
+
           <% if (children = @users_by_parent[user.id]) %>
             <% # drill down deeper in the tree %>
             <% ancestors << subtree %>

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-APP_PATH = File.expand_path('../../config/application', __FILE__)
-require File.expand_path('../../config/boot', __FILE__)
+APP_PATH = File.expand_path("../../config/application", __FILE__)
+require File.expand_path("../../config/boot", __FILE__)
 require APP_PATH
 Rails.application.require_environment!
 
@@ -19,9 +19,9 @@ class String
       # Question marks are delimiters in q-encoding so must be escaped
       .gsub("?", "=3F") \
       # Spaces are insignificant in q-encoding so must be escaped
-      .gsub(/\s+/, ' _') \
+      .gsub(/\s+/, " _") \
       # Take each space-separated word, then q-encode
-      .split(' ').map(&q_encode_word) \
+      .split(" ").map(&q_encode_word) \
       # Recombine words then word wrap at 75 characters
       .join(" ").word_wrap(75) \
       # Compose final string, folding headers per rfc 2822 section 2.2.3
@@ -90,7 +90,8 @@ if __FILE__ == $PROGRAM_NAME
 
       IO.popen(
         [{}, "/usr/sbin/sendmail", "-i", "-f", "nobody@#{Rails.application.domain}", u.email],
-        "w") do |mail|
+        "w"
+      ) do |mail|
         mail.puts "From: #{s.user.username} <#{s.user.username}@#{Rails.application.domain}>"
         mail.puts "X-Is-Author: #{s.user_is_author?}"
         mail.puts "Reply-To: #{list}"
@@ -195,33 +196,15 @@ if __FILE__ == $PROGRAM_NAME
         mail.puts "Content-Transfer-Encoding: quoted-printable"
         mail.puts "Message-ID: <#{c.mailing_list_message_id}>"
 
-        refs = ["<#{c.story.mailing_list_message_id}>"]
-
         if c.parent_comment_id
           mail.puts "In-Reply-To: <#{c.parent_comment.mailing_list_message_id}>"
-
-          thread = []
-          indent_level = 0
-          Comment.where(:thread_id => c.thread_id).arrange_for_user(nil).reverse_each do |cc|
-            if indent_level > 0 && cc.indent_level < indent_level
-              thread.unshift cc
-              indent_level = cc.indent_level
-            elsif cc.id == c.id
-              indent_level = cc.indent_level
-            end
-          end
-
-          thread.each do |cc|
-            refs.push "<#{cc.mailing_list_message_id}>"
-          end
         else
           mail.puts "In-Reply-To: <#{c.story.mailing_list_message_id}>"
         end
 
-        mail.print "References:"
-        refs.each do |ref|
-          mail.puts " #{ref}"
-        end
+        refs = ["<#{c.story.mailing_list_message_id}>"] +
+          c.parents.map(&:mailing_list_message_id)
+        mail.print "References: #{refs.join(" ")}"
 
         mail.puts "Date: " << c.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
         mail.puts "Subject: " << story_subject(c.story, "Re: ")

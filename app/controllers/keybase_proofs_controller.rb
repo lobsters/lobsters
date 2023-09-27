@@ -1,3 +1,5 @@
+# typed: false
+
 class KeybaseProofsController < ApplicationController
   before_action :require_logged_in_user, only: [:new, :create, :destroy]
   before_action :check_new_params, only: :new
@@ -19,10 +21,10 @@ class KeybaseProofsController < ApplicationController
     if Keybase.proof_valid?(kb_username, kb_signature, @user.username)
       @user.add_or_update_keybase_proof(kb_username, kb_signature)
       @user.save!
-      return redirect_to Keybase.success_url(kb_username, kb_signature, kb_ua, @user.username)
+      redirect_to Keybase.success_url(kb_username, kb_signature, kb_ua, @user.username)
     else
       flash[:error] = "Failed to connect your account to Keybase. Try again from Keybase."
-      return redirect_to settings_path
+      redirect_to settings_path
     end
   end
 
@@ -44,14 +46,14 @@ class KeybaseProofsController < ApplicationController
     @contacts = ["admin@#{Keybase.DOMAIN}"]
     @prefill_url = "#{new_keybase_proof_url}?kb_username=%{kb_username}&" \
       "kb_signature=%{sig_hash}&kb_ua=%{kb_ua}&username=%{username}"
-    @profile_url = "#{u_url}/%{username}"
-    @check_url = "#{u_url}/%{username}.json"
+    @profile_url = "/~%{username}"
+    @check_url = "/~%{username}.json"
     @logo_black = "https://lobste.rs/small-black-logo.svg"
     @logo_full = "https://lobste.rs/full-color.logo.svg"
     @user_re = User.username_regex_s[1...-1]
   end
 
-private
+  private
 
   def force_to_json
     request.format = :json
@@ -60,7 +62,7 @@ private
   def check_user_matches
     unless case_insensitive_match?(@user.username, params[:username])
       flash[:error] = "not logged in as the correct user"
-      return redirect_to settings_path
+      redirect_to settings_path
     end
   end
 

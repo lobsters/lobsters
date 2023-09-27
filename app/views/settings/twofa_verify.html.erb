@@ -11,8 +11,13 @@
 
     <div class="boxline">
       <%= f.label :totp_code, "TOTP Code:", :class => "required" %>
-      <%= f.number_field :totp_code, :size => 10, :autocomplete => "off",
-          :autofocus => true, :class => "totp_code" %>
+      <%= f.text_field :totp_code,
+        :inputmode => "numeric",
+        :pattern => "[0-9]+",
+        :size => 10,
+        :autocomplete => "one-time-code",
+        :autofocus => true,
+        :class => "totp_code" %>
     </div>
 
     <p>

@@ -1,5 +1,5 @@
 <% content_for :subnav do %>
-  <a href="/u/<%= @user.username %>">Public Profile</a>
+  <%= link_to 'Public Profile', @user %>
   <a href="/filters">Filtered Tags</a> |
   <%= link_post 'Logout', logout_path, confirm: 'Are you sure you want to logout?' %>
 <% end %>
@@ -36,7 +36,7 @@
 
     <div class="boxline">
       <%= f.label :email, "E-mail Address:", :class => "required" %>
-      <%= f.email_field :email, :size => 40 %>
+      <%= f.email_field :email, :size => 40, :inputmode => "email" %>
     </div>
 
     <div class="boxline">
@@ -208,7 +208,7 @@
   <br>
   <br>
 
-  <h2>External Accounts</h2>
+  <h2 name="external">External Accounts</h2>
 
   <div class="boxline">
     <%= label_tag :gravatar,
@@ -311,7 +311,7 @@
         <li>
           Your comments with negative scores will be deleted, and you can check "disown comments"
           below if you want all of your stories and comments to change to list
-          <a href="/u/inactive-user">inactive-user</a> instead of your username.
+          <a href="/~inactive-user">inactive-user</a> instead of your username.
         </li>
       </ul>
 

@@ -1,3 +1,5 @@
+# typed: false
+
 require "rails_helper"
 
 describe Markdowner do
@@ -7,10 +9,10 @@ describe Markdowner do
   end
 
   it "turns @username into a link if @username exists" do
-    create(:user, :username => "blahblah")
+    create(:user, username: "blahblah")
 
     expect(Markdowner.to_html("hi @blahblah test"))
-      .to eq("<p>hi <a href=\"https://lobste.rs/u/blahblah\" rel=\"ugc\">" +
+      .to eq("<p>hi <a href=\"https://lobste.rs/~blahblah\" rel=\"ugc\">" \
              "@blahblah</a> test</p>\n")
 
     expect(Markdowner.to_html("hi @flimflam test"))
@@ -20,40 +22,40 @@ describe Markdowner do
   # bug#209
   it "keeps punctuation inside of auto-generated links when using brackets" do
     expect(Markdowner.to_html("hi <http://example.com/a.> test"))
-      .to eq("<p>hi <a href=\"http://example.com/a.\" rel=\"ugc\">" +
+      .to eq("<p>hi <a href=\"http://example.com/a.\" rel=\"ugc\">" \
             "http://example.com/a.</a> test</p>\n")
   end
 
   # bug#242
   it "does not expand @ signs inside urls" do
-    create(:user, :username => "blahblah")
+    create(:user, username: "blahblah")
 
     expect(Markdowner.to_html("hi http://example.com/@blahblah/ test"))
-      .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"ugc\">" +
+      .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"ugc\">" \
             "http://example.com/@blahblah/</a> test</p>\n")
 
     expect(Markdowner.to_html("hi [test](http://example.com/@blahblah/)"))
-      .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"ugc\">" +
+      .to eq("<p>hi <a href=\"http://example.com/@blahblah/\" rel=\"ugc\">" \
         "test</a></p>\n")
   end
 
   it "correctly adds ugc" do
     expect(Markdowner.to_html("[ex](http://example.com)"))
-      .to eq("<p><a href=\"http://example.com\" rel=\"ugc\">" +
+      .to eq("<p><a href=\"http://example.com\" rel=\"ugc\">" \
             "ex</a></p>\n")
 
     expect(Markdowner.to_html("[ex](//example.com)"))
-      .to eq("<p><a href=\"//example.com\" rel=\"ugc\">" +
+      .to eq("<p><a href=\"//example.com\" rel=\"ugc\">" \
             "ex</a></p>\n")
 
-    expect(Markdowner.to_html("[ex](/u/abc)"))
-      .to eq("<p><a href=\"/u/abc\">ex</a></p>\n")
+    expect(Markdowner.to_html("[ex](/~abc)"))
+      .to eq("<p><a href=\"/~abc\">ex</a></p>\n")
   end
 
   context "when images are not allowed" do
     subject { Markdowner.to_html(description, allow_images: false) }
 
-    let(:fake_img_url) { 'https://lbst.rs/fake.jpg' }
+    let(:fake_img_url) { "https://lbst.rs/fake.jpg" }
 
     context "when single inline image in description" do
       let(:description) { "![#{alt_text}](#{fake_img_url} \"#{title_text}\")" }
@@ -71,7 +73,7 @@ describe Markdowner do
       end
 
       context "with title text" do
-        let(:title_text) { 'title text' }
+        let(:title_text) { "title text" }
 
         it "turns inline image into links with title text" do
           expect(subject).to eq(target_html(title_text))
@@ -79,7 +81,7 @@ describe Markdowner do
       end
 
       context "with alt text" do
-        let(:alt_text) { 'alt text' }
+        let(:alt_text) { "alt text" }
 
         it "turns inline image into links with alt text" do
           expect(subject).to eq(target_html(alt_text))
@@ -87,7 +89,7 @@ describe Markdowner do
       end
 
       context "with title text and alt text" do
-        let(:title_text) { 'title text' }
+        let(:title_text) { "title text" }
 
         it "turns inline image into links, preferring title text" do
           expect(subject).to eq(target_html(title_text))
@@ -104,7 +106,7 @@ describe Markdowner do
         "![alt text](#{fake_img_url} \"title text 2\")"
       end
 
-      it 'turns all inline images into links' do
+      it "turns all inline images into links" do
         expect(subject).to eq(
           "<p>" \
           "<a href=\"#{fake_img_url}\" rel=\"ugc\">#{fake_img_url}</a>" \
@@ -121,8 +123,8 @@ describe Markdowner do
   context "when images are allowed" do
     subject { Markdowner.to_html("![](https://lbst.rs/fake.jpg)", allow_images: true) }
 
-    it 'allows image tags' do
-      expect(subject).to include '<img'
+    it "allows image tags" do
+      expect(subject).to include "<img"
     end
   end
 end

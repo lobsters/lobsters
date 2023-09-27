@@ -1,15 +1,17 @@
+# typed: false
+
 class ShortId
   attr_accessor :klass, :generation_attempts
 
   def initialize(klass)
-    self.klass               = klass
+    self.klass = klass
     self.generation_attempts = 0
   end
 
   def generate
-    until (generated_id = candidate_id) && generated_id.valid? do
+    until (generated_id = candidate_id) && generated_id.valid?
       self.generation_attempts += 1
-      raise 'too many hash collisions' if generation_attempts == 10
+      raise "too many hash collisions" if generation_attempts == 10
     end
     generated_id.to_s
   end
@@ -23,7 +25,7 @@ class ShortId
 
     def initialize(klass)
       self.klass = klass
-      self.id    = generate_id
+      self.id = generate_id
     end
 
     def to_s

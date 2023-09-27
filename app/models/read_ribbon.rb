@@ -1,14 +1,14 @@
+# typed: false
+
 class ReadRibbon < ApplicationRecord
   belongs_to :user
   belongs_to :story
-
-  validates :user, :story, presence: true
 
   # don't add callbacks to this model; for performance the read tracking in
   # StoriesController uses .bump and RepliesController uses update_all, etc.
 
   def self.expire_old_ribbons!
-    self.where("updated_at < ?", 1.year.ago).delete_all
+    where("updated_at < ?", 1.year.ago).delete_all
   end
 
   def self.hide_replies_for(story_id, user_id)
@@ -30,7 +30,7 @@ class ReadRibbon < ApplicationRecord
     if new_record?
       save
     else
-      self.update_column(:updated_at, Time.now.utc)
+      update_column(:updated_at, Time.now.utc)
     end
   end
 end

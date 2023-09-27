@@ -1,6 +1,6 @@
 <div class="box wide">
   <p>
-  If you don't know (or can't find) an <a href="/u/">existing user</a> from
+  If you don't know (or can't find) an <%= link_to 'existing_user', users_tree_path %> from
   whom to request an invitation, you can make a public request for one.  This
   will display your name and memo to all other logged-in users who can then
   send you an invitation if they recognize you.
@@ -19,7 +19,7 @@
     <br />
 
     <%= f.label :email, "E-mail Address:" %>
-    <%= f.email_field :email, :size => 30 %>
+    <%= f.email_field :email, :size => 30, :inputmode => "email" %>
     <br />
 
     <%= f.label :memo, "URL:" %>

@@ -1,66 +1,64 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 7.0.4.3"
+gem "rails"
 
 gem "mysql2"
-
-# uncomment to use PostgreSQL
-# gem "pg"
+gem "sidekiq"
 
 # rails
-gem 'scenic'
-gem 'scenic-mysql_adapter'
+gem "scenic"
+gem "scenic-mysql_adapter"
 gem "activerecord-typedstore"
-gem 'sprockets-rails', '2.3.3'
+gem "sprockets-rails", require: "sprockets/railtie"
 
 # js
-gem "jquery-rails", "~> 4.3"
 gem "json"
-gem "uglifier", ">= 1.3.0"
+gem "uglifier"
 
 # deployment
 gem "actionpack-page_caching"
 gem "exception_notification"
-gem "puma", ">= 5.6.2"
+gem "puma"
 
 # security
-gem "bcrypt", "~> 3.1.2"
+gem "bcrypt"
 gem "rotp"
 gem "rqrcode"
 
 # parsing
-gem "pdf-reader"
-gem "nokogiri", ">= 1.13.9"
+gem "commonmarker"
 gem "htmlentities"
-gem "commonmarker", ">= 0.23.6"
+gem "pdf-reader"
+gem "nokogiri"
+gem "parslet"
 
 # perf
-gem 'flamegraph'
-gem 'memory_profiler'
-gem 'rack-mini-profiler'
-gem 'stackprof'
+gem "flamegraph"
+gem "memory_profiler"
+gem "rack-mini-profiler"
+gem "stackprof"
 
 gem "oauth" # for twitter-posting bot
 gem "mail" # for parsing incoming mail
-gem "ruumba" # tests views
 gem "sitemap_generator" # for better search engine indexing
-gem "svg-graph", require: 'SVG/Graph/TimeSeries' # for charting, note workaround in lib/time_series.rb
-gem 'transaction_retry' # mitigate https://github.com/lobsters/lobsters-ansible/issues/39
-gem 'rack-attack' # rate-limiting
+gem "svg-graph", require: "SVG/Graph/TimeSeries" # for charting, note workaround in lib/time_series.rb
+gem "rack-attack" # rate-limiting
 
 group :test, :development do
-  gem 'capybara'
-  gem 'database_cleaner'
+  gem "benchmark-perf"
+  gem "capybara"
+  gem "database_cleaner"
   gem "listen"
-  gem 'rspec-rails', '~> 6.0.0.rc1'
+  gem "rspec-rails"
   gem "factory_bot_rails"
-  gem "rubocop", "0.81", require: false
-  gem "rubocop-rails", require: false
-  gem "rubocop-rspec", require: false
+  gem "standard"
+  gem "standard-performance"
+  gem "standard-rails"
+  gem "standard-sorbet"
   gem "faker"
   gem "byebug"
   gem "rb-readline"
   gem "vcr"
   gem "webmock" # used to support vcr
-  gem 'simplecov', require: false
+  gem "simplecov", require: false
 end

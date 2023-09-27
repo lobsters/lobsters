@@ -1,3 +1,5 @@
+# typed: false
+
 class Markdowner
   # opts[:allow_images] allows <img> tags
 
@@ -9,7 +11,7 @@ class Markdowner
     exts = [:tagfilter, :autolink, :strikethrough]
     root = CommonMarker.render_doc(text.to_s, [:SMART], exts)
 
-    walk_text_nodes(root) {|n| postprocess_text_node(n) }
+    walk_text_nodes(root) { |n| postprocess_text_node(n) }
 
     ng = Nokogiri::HTML(root.to_html([:DEFAULT], exts))
 
@@ -23,7 +25,11 @@ class Markdowner
 
     # make links have rel=ugc
     ng.css("a").each do |h|
-      h[:rel] = "ugc" unless (URI.parse(h[:href]).host.nil? rescue false)
+      h[:rel] = "ugc" unless begin
+        URI.parse(h[:href]).host.nil?
+      rescue
+        false
+      end
     end
 
     if ng.at_css("body")
@@ -44,14 +50,14 @@ class Markdowner
 
   def self.postprocess_text_node(node)
     while node
-      return unless node.string_content =~ /\B(@#{User::VALID_USERNAME})/
+      return unless node.string_content =~ /\B(@#{User::VALID_USERNAME})/o
       before, user, after = $`, $1, $'
 
       node.string_content = before
 
-      if User.exists?(:username => user[1..-1])
+      if User.exists?(username: user[1..])
         link = CommonMarker::Node.new(:link)
-        link.url = Rails.application.root_url + "u/#{user[1..-1]}"
+        link.url = Rails.application.root_url + "~#{user[1..]}"
         node.insert_after(link)
 
         link_text = CommonMarker::Node.new(:text)
@@ -77,13 +83,13 @@ class Markdowner
 
   def self.convert_images_to_links(node)
     node.css("img").each do |img|
-      link = node.create_element('a')
+      link = node.create_element("a")
 
-      link['href'], title, alt = img.attributes
-        .values_at('src', 'title', 'alt')
+      link["href"], title, alt = img.attributes
+        .values_at("src", "title", "alt")
         .map(&:to_s)
 
-      link.content = [title, alt, link['href']].find(&:present?)
+      link.content = [title, alt, link["href"]].find(&:present?)
 
       img.replace link
     end

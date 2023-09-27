@@ -17,8 +17,8 @@
 
   <% if @story.is_unavailable %>
     <% StoryText.cached?(@story) do |text| %>
-      <a id="story_text_expander">Source URL considered unavailable as of
-      <%= time_ago_in_words_label(@story.unavailable_at) %>, cached text available; also see archive links above</a>
+      <a class="story_text_expander">Source URL considered unavailable as of
+      <%= time_ago_in_words_label(@story.unavailable_at) %>, click for cached text - also see archive links above</a>
       <div id="collapsed_story_text">
         <p>
         <em>All story content copyright of its respective owner.</em>
@@ -31,13 +31,6 @@
         </div>
       </div>
 
-      <script>
-        document.getElementById("story_text_expander").addEventListener("click",
-          function() {
-            document.getElementById("collapsed_story_text").style.display = "block";
-            return false;
-          });
-      </script>
     <% end %>
   <% end %>
 </div>
@@ -48,41 +41,14 @@
       <li class="comments_subtree"><%= render "comments/commentbox", :comment => @comment %></li>
     <% end %>
 
-    <% comments_by_parent = @comments.group_by(&:parent_comment_id) %>
-    <% subtree = comments_by_parent[nil] %>
-    <% ancestors = [] %>
+    <li class="comments_subtree">
+      <%= render partial: 'comments/threads', locals: { thread: @comments, story: @story } %>
+    </li>
 
-    <% while subtree %>
-      <% if (comment = subtree.shift) %>
-        <li class="comments_subtree">
-
-        <% children = comments_by_parent[comment.id] %>
-        <%= render "comments/comment", :comment => comment,
-          :show_story => (comment.story_id != @story.id),
-          :show_tree_lines => true,
-          :was_merged => (comment.story_id != @story.id),
-          :children => children,
-          :is_unread => is_unread?(comment) %>
-
-        <% if ancestors.present? %>
-          <div class="comment_siblings_tree_line"></div>
-        <% end %>
-
-        <% if children %>
-          <% ancestors << subtree %>
-          <% subtree = children %>
-          <ol class="comments">
-        <% else %>
-          <ol class="comments"></ol></li>
-        <% end %>
-      <% elsif (subtree = ancestors.pop) %>
-        </ol></li>
-      <% end %>
-    <% end %>
   </ol>
 <% end %>
 
-<% if !@story.previewing && @story.public_similar_stories(@user).any? %>
+<% if !@story.previewing && @story.public_similar_stories(@user).length > 0 %>
   <div class="box wide">
     <h4>Stories with similar links:</h4>
     <%= render partial: "stories/similar", locals: { similar: @story.public_similar_stories(@user) } %>

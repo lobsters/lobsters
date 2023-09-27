@@ -2,10 +2,10 @@
 
 ENV["RAILS_ENV"] ||= "production"
 
-APP_PATH = File.expand_path('../../config/application', __FILE__)
-require File.expand_path('../../config/boot', __FILE__)
+APP_PATH = File.expand_path("../../config/application", __FILE__)
+require File.expand_path("../../config/boot", __FILE__)
 require APP_PATH
-require 'webrick'
+require "webrick"
 Rails.application.require_environment!
 
 LAST_STORY_KEY = "webmentions:last_story_id".freeze
@@ -13,12 +13,12 @@ LAST_STORY_KEY = "webmentions:last_story_id".freeze
 def endpoint_from_body(html)
   doc = Nokogiri::HTML(html)
 
-  if !doc.css('[rel~="webmention"]').css('[href]').empty?
-    doc.css('[rel~="webmention"]').css('[href]').attribute('href').value
-  elsif !doc.css('[rel="http://webmention.org/"]').css('[href]').empty?
-    doc.css('[rel="http://webmention.org/"]').css('[href]').attribute('href').value
-  elsif !doc.css('[rel="http://webmention.org"]').css('[href]').empty?
-    doc.css('[rel="http://webmention.org"]').css('[href]').attribute('href').value
+  if !doc.css('[rel~="webmention"]').css("[href]").empty?
+    doc.css('[rel~="webmention"]').css("[href]").attribute("href").value
+  elsif !doc.css('[rel="http://webmention.org/"]').css("[href]").empty?
+    doc.css('[rel="http://webmention.org/"]').css("[href]").attribute("href").value
+  elsif !doc.css('[rel="http://webmention.org"]').css("[href]").empty?
+    doc.css('[rel="http://webmention.org"]').css("[href]").attribute("href").value
   end
 end
 
@@ -26,17 +26,17 @@ def endpoint_from_headers(header)
   return unless header
 
   if (matches = header.match(/<([^>]+)>; rel="[^"]*\s?webmention\s?[^"]*"/))
-    return matches[1]
+    matches[1]
   elsif (matches = header.match(/<([^>]+)>; rel=webmention/))
-    return matches[1]
+    matches[1]
   elsif (matches = header.match(/rel="[^"]*\s?webmention\s?[^"]*"; <([^>]+)>/))
-    return matches[1]
+    matches[1]
   elsif (matches = header.match(/rel=webmention; <([^>]+)>/))
-    return matches[1]
+    matches[1]
   elsif (matches = header.match(/<([^>]+)>; rel="http:\/\/webmention\.org\/?"/))
-    return matches[1]
+    matches[1]
   elsif (matches = header.match(/rel="http:\/\/webmention\.org\/?"; <([^>]+)>/))
-    return matches[1]
+    matches[1]
   end
 end
 
@@ -46,12 +46,12 @@ def uri_to_absolute(uri, req_uri)
   abs_uri = URI.parse(uri)
   if abs_uri.host
     # Already absolute.
-    return uri
+    uri
   else
     abs_uri.host = req_uri.host
     abs_uri.scheme = req_uri.scheme
     abs_uri.port = req_uri.port
-    return abs_uri
+    abs_uri
   end
 end
 
@@ -63,27 +63,27 @@ def send_webmention(source, target, endpoint)
   sp.ssl_verify = false
   sp.fetch(endpoint.to_s, :post, {
     "source" => URI.encode_www_form_component(source),
-    "target" => URI.encode_www_form_component(target),
+    "target" => URI.encode_www_form_component(target)
   }, nil, {}, 3)
 end
 
 if __FILE__ == $PROGRAM_NAME
   last_story_id = (
     Keystore.value_for(LAST_STORY_KEY) ||
-    Story.order('id desc').limit(1).offset(1).pluck(:id).try(:first)
+    Story.order("id desc").limit(1).offset(1).pluck(:id).try(:first)
   ).to_i
 
   Story.where("id > ? AND is_deleted = ?", last_story_id, false).order(:id).each do |s|
     # mark it done so we don't hit them again if we or they crash
     Keystore.put(LAST_STORY_KEY, s.id)
 
-    next unless s.url.present?
+    next if s.url.blank?
 
     sp = Sponge.new
     sp.timeout = 10
     begin
       response = sp.fetch(WEBrick::HTTPUtils.escape(s.url), :get, nil, nil, {
-        "User-agent" => "#{Rails.application.domain} webmention endpoint lookup",
+        "User-agent" => "#{Rails.application.domain} webmention endpoint lookup"
       }, 3)
     rescue NoIPsError, DNSError
       # other people's DNS issues (usually transient); just skip the webmention
@@ -91,8 +91,8 @@ if __FILE__ == $PROGRAM_NAME
     end
     next unless response
 
-    wm_endpoint_raw = endpoint_from_headers(response['link']) ||
-                      endpoint_from_body(response.body.to_s)
+    wm_endpoint_raw = endpoint_from_headers(response["link"]) ||
+      endpoint_from_body(response.body.to_s)
     next unless wm_endpoint_raw
 
     wm_endpoint = uri_to_absolute(wm_endpoint_raw, URI.parse(s.url))

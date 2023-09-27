@@ -1,3 +1,5 @@
+# typed: false
+
 class StoryRepository
   def initialize(user = nil, params = {})
     @user = user
@@ -13,7 +15,7 @@ class StoryRepository
   def hottest
     hottest = Story.base(@user).positive_ranked.not_hidden_by(@user)
     hottest = hottest.filter_tags(@params[:exclude_tags] || [])
-    hottest.order('hotness')
+    hottest.order("hotness")
   end
 
   def hidden
@@ -33,24 +35,13 @@ class StoryRepository
         from comments
         where comments.story_id = stories.id
       ) as latest_comment_id')
-      .where('created_at >= ?', 3.days.ago)
-      .order('latest_comment_id desc')
+      .where("created_at >= ?", 3.days.ago)
+      .order("latest_comment_id desc")
   end
 
   def newest_by_user(user)
-    if @user == user
-      stories = Story.includes(:tags).not_deleted.left_joins(:merged_stories)
-      unmerged = stories.unmerged.where(user_id: user.id)
-      merged_into_others = stories.where(merged_stories_stories: { user_id: user.id })
-
-      unmerged.or(merged_into_others).order(id: :desc)
-    else
-      Story.base(@user).where(user_id: user.id).order("stories.id DESC")
-    end
-  end
-
-  def newest_including_deleted_by_user(user)
-    Story.includes(:tags).unmerged.where(user_id: user.id).order(id: :desc)
+    # Story.base without unmerged scope
+    Story.where(user: user).includes(:tags).not_deleted(@user).mod_preload?(@user).order(id: :desc)
   end
 
   def saved
@@ -64,7 +55,7 @@ class StoryRepository
   end
 
   def top(length)
-    top = Story.base(@user).where("created_at >= (NOW() - INTERVAL " <<
+    top = Story.base(@user).where("created_at >= (NOW() - INTERVAL " \
       "#{length[:dur]} #{length[:intv].upcase})")
     top.order("score DESC")
   end

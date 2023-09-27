@@ -1,4 +1,6 @@
-require 'rails_helper'
+# typed: false
+
+require "rails_helper"
 
 describe HatRequest do
   it "has a limit on the hat field" do

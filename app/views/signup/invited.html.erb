@@ -14,8 +14,7 @@
       <p>
       <%= f.label :invitation, "Invited By:", :class => "required" %>
       <span class="d">
-        <a href="/u/<%= @invitation.user.username %>" target="_blank"><%=
-          @invitation.user.username %></a>
+        <%= link_to @invitation.user.username, user_path(@invitation.user), target: '_blank' %>
       </span>
       </p>
     <% end %>
@@ -29,7 +28,7 @@
     <br />
 
     <%= f.label :email, "E-mail Address:", :class => "required" %>
-    <%= f.email_field :email, :size => 30 %>
+    <%= f.email_field :email, :size => 30, :inputmode => "email" %>
     <span class="hint">
       <a href="http://www.gravatar.com/" target="_blank">Gravatar</a>'ized
     </span>

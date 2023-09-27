@@ -1,3 +1,5 @@
+# typed: false
+
 require "rails"
 require "rubocop"
 
@@ -6,7 +8,7 @@ unless Rails.env.production?
     module Cop
       module Style
         class DisallowFormForandFormTag < Cop
-          MSG = 'Use `.form_with` and remove the `.form_tag` and `.form_for`'.freeze
+          MSG = "Use `.form_with` and remove the `.form_tag` and `.form_for`".freeze
 
           def_node_matcher :form_for_exists?, <<-PATTERN
             (send _ :form_for ...)

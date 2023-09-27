@@ -1,6 +1,8 @@
-require 'rails_helper'
+# typed: false
 
-describe 'stories', type: :request do
+require "rails_helper"
+
+describe "stories", type: :request do
   let(:user) { create(:user) }
   let(:story) { create(:story, user: user) }
   let(:mod) { create(:user, :moderator) }
@@ -11,7 +13,7 @@ describe 'stories', type: :request do
     context "json" do
       it "returns similar story matching URL" do
         post "/stories/check_url_dupe.json",
-             params: { story: { title: "some other title", url: story.url } }
+          params: {story: {title: "some other title", url: story.url}}
 
         expect(response).to be_successful
 
@@ -30,7 +32,7 @@ describe 'stories', type: :request do
 
       it "returns no matches if previously submitted URL is only partial match" do
         post "/stories/check_url_dupe.json",
-             params: { story: { title: "some other title", url: story.url[0...-1] } }
+          params: {story: {title: "some other title", url: story.url[0...-1]}}
 
         expect(response).to be_successful
 
@@ -42,7 +44,7 @@ describe 'stories', type: :request do
 
       it "returns no matches if no matching URL" do
         post "/stories/check_url_dupe.json",
-             params: { story: { title: "some other title", url: "invalid_url" } }
+          params: {story: {title: "some other title", url: "invalid_url"}}
 
         expect(response).to be_successful
 
@@ -55,12 +57,12 @@ describe 'stories', type: :request do
       it "throws a 400 if there's no URL present" do
         expect {
           post "/stories/check_url_dupe.json",
-               params: { story: { url: "" } }
+            params: {story: {url: ""}}
         }.to raise_error(ActionController::ParameterMissing)
 
         expect {
           post "/stories/check_url_dupe.json",
-               params: { story: {} }
+            params: {story: {}}
         }.to raise_error(ActionController::ParameterMissing)
       end
     end
@@ -73,9 +75,9 @@ describe 'stories', type: :request do
       expect {
         patch "/stories/#{story.short_id}/destroy", params: {
           id: story.short_id,
-          story:  {
-            title: story.title,
-          },
+          story: {
+            title: story.title
+          }
         }
       }.to change { user.stories_deleted_count }.by(1)
     end
@@ -90,9 +92,9 @@ describe 'stories', type: :request do
       expect {
         patch "/stories/#{deleted_story.short_id}/undelete", params: {
           id: deleted_story.short_id,
-          story:  {
-            title: deleted_story.title,
-          },
+          story: {
+            title: deleted_story.title
+          }
         }
       }.to change { user.stories_deleted_count }.by(-1)
     end
@@ -103,12 +105,12 @@ describe 'stories', type: :request do
       sign_in mod
       s = create(:story)
       put "/stories/#{s.short_id}",
-          params: {
-            story: {
-              merge_story_short_id: story.short_id,
-              moderation_reason: 'cuz',
-            },
+        params: {
+          story: {
+            merge_story_short_id: story.short_id,
+            moderation_reason: "cuz"
           }
+        }
       expect(response).to be_redirect
 
       s.reload
@@ -116,7 +118,7 @@ describe 'stories', type: :request do
 
       ml = Moderation.last
       expect(ml.story).to eq(s)
-      expect(ml.reason).to eq('cuz')
+      expect(ml.reason).to eq("cuz")
     end
 
     it "can't be done by submitter" do
@@ -124,12 +126,12 @@ describe 'stories', type: :request do
 
       s = create(:story)
       put "/stories/#{s.short_id}",
-          params: {
-            story: {
-              merge_story_short_id: story.short_id,
-              moderation_reason: 'anarchy!',
-            },
+        params: {
+          story: {
+            merge_story_short_id: story.short_id,
+            moderation_reason: "anarchy!"
           }
+        }
       expect(response).to be_redirect
       s.reload
       expect(s.merged_into_story).to be_nil
@@ -161,8 +163,8 @@ describe 'stories', type: :request do
 
         expect(response.status).to eq(404)
         expect(response.body).to_not include(story.title)
-        expect(response.body).to_not include('removed by moderator')
-        expect(response.body).to_not include('removed by submitter')
+        expect(response.body).to_not include("removed by moderator")
+        expect(response.body).to_not include("removed by submitter")
         expect(response.body).to_not include(story.user.username)
       end
 
@@ -172,7 +174,7 @@ describe 'stories', type: :request do
 
         expect(response.status).to eq(404)
         expect(response.body).to_not include(story.title)
-        expect(response.body).to include('removed by submitter')
+        expect(response.body).to include("removed by submitter")
         expect(response.body).to include(story.user.username)
       end
     end
@@ -197,7 +199,7 @@ describe 'stories', type: :request do
         expect(response.status).to eq(404)
         expect(response.body).to_not include(story.title)
         expect(response.body).to_not include(reason)
-        expect(response.body).to_not include('removed by submitter')
+        expect(response.body).to_not include("removed by submitter")
         expect(response.body).to_not include(story.user.username)
       end
 
@@ -212,7 +214,7 @@ describe 'stories', type: :request do
     end
 
     context "json" do
-      let(:headers) { { 'Content-Type' => 'application/json', 'Accept' => 'application/json' } }
+      let(:headers) { {"Content-Type" => "application/json", "Accept" => "application/json"} }
 
       context "for a story that merged into another story" do
         let(:merged_into_story) { create(:story) }
@@ -220,10 +222,10 @@ describe 'stories', type: :request do
 
         it "redirects to the merged story's json" do
           get "/stories/#{story.short_id}",
-              headers: headers
+            headers: headers
           expect(response).to redirect_to(action: :show,
-                                          id: merged_into_story.short_id,
-                                          format: :json)
+            id: merged_into_story.short_id,
+            format: :json)
         end
       end
     end
@@ -234,7 +236,7 @@ describe 'stories', type: :request do
 
     before { sign_in user }
 
-    it 'works' do
+    it "works" do
       expect {
         post "/stories/#{target.short_id}/upvote"
         expect(response.status).to eq(200)
@@ -242,7 +244,7 @@ describe 'stories', type: :request do
       expect(Vote.where(user: user).count).to eq(1)
     end
 
-    it 'does nothing to deleted comments' do
+    it "does nothing to deleted comments" do
       expect {
         target.is_deleted = true
         target.editor = target.user

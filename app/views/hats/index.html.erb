@@ -21,8 +21,7 @@
   <% @hat_groups.keys.sort_by{|a| a.downcase }.each do |hg| %>
     <% @hat_groups[hg].sort_by{|hh| hh.user.username.downcase }.each do |hh| %>
       <tr>
-        <td><a href="/u/<%= hh.user.username %>"><%= hh.user.username
-          %></a></td>
+        <td><%= styled_user_link hh.user %></td>
         <td><%= hh.to_html_label %></td>
         <td>
           <% if hh.link.to_s.match(/^http/) %>

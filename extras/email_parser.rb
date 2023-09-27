@@ -1,3 +1,5 @@
+# typed: false
+
 class EmailParser
   attr_reader :sender, :recipient, :email_text, :email
 
@@ -9,7 +11,7 @@ class EmailParser
     @email = nil
 
     begin
-      Utils.silence_stream(STDERR) do
+      Utils.silence_stream($stderr) do
         @email = Mail.read_from_string(email_text)
       end
     rescue
@@ -32,21 +34,21 @@ class EmailParser
     return @sending_user if @sending_user
 
     if (user = User.where("mailing_list_mode > 0 AND mailing_list_token = ?", user_token).first) &&
-       user.is_active?
+        user.is_active?
       @sending_user = user
-      return user
+      user
     end
   end
 
   def parent
     return @parent if @parent
 
-    irt = self.email[:in_reply_to].to_s.gsub(/[^A-Za-z0-9@\.]/, "")
+    irt = email[:in_reply_to].to_s.gsub(/[^A-Za-z0-9@\.]/, "")
 
     if (m = irt.match(/^comment\.([^\.]+)\.\d+@/))
-      @parent = Comment.where(:short_id => m[1]).first
+      @parent = Comment.where(short_id: m[1]).first
     elsif (m = irt.match(/^story\.([^\.]+)\.\d+@/))
-      @parent = Story.where(:short_id => m[1]).first
+      @parent = Story.where(short_id: m[1]).first
     end
 
     @parent
@@ -57,11 +59,11 @@ class EmailParser
 
     @possible_charset = nil
 
-    if self.email.multipart?
+    if email.multipart?
       # parts[0] - multipart/alternative
       #  parts[0].parts[0] - text/plain
       #  parts[0].parts[1] - text/html
-      if (found = self.email.parts.first.parts.select {|p| p.content_type.match(/text\/plain/i) }
+      if (found = email.parts.first.parts.select { |p| p.content_type.match(/text\/plain/i) }
          ).any?
         @body = found.first.body.to_s
 
@@ -71,7 +73,7 @@ class EmailParser
         end
 
       # parts[0] - text/plain
-      elsif (found = self.email.parts.select {|p| p.content_type.match(/text\/plain/i) }).any?
+      elsif (found = email.parts.select { |p| p.content_type.match(/text\/plain/i) }).any?
         @body = found.first.body.to_s
 
         begin
@@ -81,17 +83,17 @@ class EmailParser
       end
 
     # simple one-part
-    elsif self.email.content_type.to_s.match(/text\/plain/i)
-      @body = self.email.body.to_s
+    elsif /text\/plain/i.match?(email.content_type.to_s)
+      @body = email.body.to_s
 
       begin
-        @possible_charset = self.email.content_type_parameters["charset"]
+        @possible_charset = email.content_type_parameters["charset"]
       rescue
       end
 
-    elsif !self.email.content_type.to_s.present?
+    elsif email.content_type.to_s.blank?
       # no content-type header, assume it's text/plain
-      @body = self.email.body.to_s
+      @body = email.body.to_s
     end
 
     # TODO: use @possible_charset, but did previously forcing the entire

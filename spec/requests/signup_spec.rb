@@ -1,6 +1,8 @@
-require 'rails_helper'
+# typed: false
 
-describe 'signup', type: :request do
+require "rails_helper"
+
+describe "signup", type: :request do
   let!(:inactive_user) { create(:user, :inactive) }
   let(:sender) { create(:user) }
   let(:invitation) { create(:invitation, user: sender) }

@@ -1,8 +1,10 @@
-require 'rails_helper'
+# typed: false
 
-describe 'content security policy' do
-  it 'sets the correct headers' do
-    get '/'
+require "rails_helper"
+
+describe "content security policy" do
+  it "sets the correct headers" do
+    get "/"
 
     directives = [
       "default-src 'none'",
@@ -12,9 +14,9 @@ describe 'content security policy' do
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline'",
       "form-action 'self'",
-      "report-uri /csp-violation-report",
-    ].join('; ')
+      "report-uri /csp-violation-report"
+    ].join("; ")
 
-    expect(response.headers['Content-Security-Policy-Report-Only']).to eq(directives)
+    expect(response.headers["Content-Security-Policy-Report-Only"]).to eq(directives)
   end
 end

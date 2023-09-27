@@ -1,3 +1,5 @@
+# typed: false
+
 # activity: is the weighted sum of votes, comments, and stories in some time period
 # period: 15 minute block of time
 # range: high and low of periods in the last few months
@@ -30,10 +32,10 @@ module TrafficHelper
   end
 
   def self.cache_traffic!
-    low, high = self.traffic_range
-    Keystore.put('traffic:low', low)
-    Keystore.put('traffic:high', high)
-    Keystore.put('traffic:intensity', current_intensity(low, high))
+    low, high = traffic_range
+    Keystore.put("traffic:low", low)
+    Keystore.put("traffic:high", high)
+    Keystore.put("traffic:intensity", current_intensity(low, high))
   end
 
   def self.current_activity
@@ -50,14 +52,13 @@ module TrafficHelper
   def self.current_intensity(low, high)
     return 0.5 if low.nil? || high.nil? || high == low
     activity = [low, current_activity, high].sort[1]
-    [0, ((activity - low)*1.0/(high - low) * 100).round, 100].sort[1]
+    [0, ((activity - low) * 1.0 / (high - low) * 100).round, 100].sort[1]
   end
 
   def self.cached_current_intensity
-    Keystore.value_for('traffic:intensity') || 0.5
+    Keystore.value_for("traffic:intensity") || 0.5
   end
 
-  # rubocop:disable Layout/LineLength
   def self.novelty_logo
     time = Time.current
 
@@ -69,5 +70,4 @@ module TrafficHelper
 
     nil
   end
-  # rubocop:enable Layout/LineLength
 end

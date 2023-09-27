@@ -27,8 +27,7 @@
         <%= link_to("Category: #{mod.category.category}", mod.category) %>
       <% elsif mod.user_id %>
         <% if mod.user %>
-          <a href="/u/<%= mod.user.username %>">User
-            <%= mod.user.username %></a>
+          <%= link_to "User #{mod.user.username}", mod.user %>
         <% else %>
           User <%= mod.user_id %> (Deleted)
         <% end %>

@@ -1,3 +1,5 @@
+# typed: false
+
 class RepliesController < ApplicationController
   REPLIES_PER_PAGE = 25
 
@@ -10,9 +12,9 @@ class RepliesController < ApplicationController
     @title = "All Your Replies"
 
     @replies = ReplyingComment
-                 .for_user(@user.id)
-                 .offset((@page - 1) * REPLIES_PER_PAGE)
-                 .limit(REPLIES_PER_PAGE)
+      .for_user(@user.id)
+      .offset((@page - 1) * REPLIES_PER_PAGE)
+      .limit(REPLIES_PER_PAGE)
     apply_current_vote
     render :show
   end
@@ -20,9 +22,9 @@ class RepliesController < ApplicationController
   def comments
     @title = "Your Comment Replies"
     @replies = ReplyingComment
-                 .comment_replies_for(@user.id)
-                 .offset((@page - 1) * REPLIES_PER_PAGE)
-                 .limit(REPLIES_PER_PAGE)
+      .comment_replies_for(@user.id)
+      .offset((@page - 1) * REPLIES_PER_PAGE)
+      .limit(REPLIES_PER_PAGE)
     apply_current_vote
     render :show
   end
@@ -30,9 +32,9 @@ class RepliesController < ApplicationController
   def stories
     @title = "Your Story Replies"
     @replies = ReplyingComment
-                 .story_replies_for(@user.id)
-                 .offset((@page - 1) * REPLIES_PER_PAGE)
-                 .limit(REPLIES_PER_PAGE)
+      .story_replies_for(@user.id)
+      .offset((@page - 1) * REPLIES_PER_PAGE)
+      .limit(REPLIES_PER_PAGE)
     apply_current_vote
     render :show
   end
@@ -44,16 +46,16 @@ class RepliesController < ApplicationController
     render :show
   end
 
-private
+  private
 
   # comments/_comment expects Comment objects to have a comment_vote attribute
   # with the current user's vote added by StoriesController.load_user_votes
   def apply_current_vote
     @replies.each do |r|
-      next unless r.current_vote_vote.present?
+      next if r.current_vote_vote.blank?
       r.comment.current_vote = {
         vote: r.current_vote_vote,
-        reason: r.current_vote_reason.to_s,
+        reason: r.current_vote_reason.to_s
       }
     end
   end
@@ -70,7 +72,7 @@ private
     @page = params[:page].to_i
     if @page == 0
       @page = 1
-    elsif @page < 0 || @page > (2 ** 32)
+    elsif @page < 0 || @page > (2**32)
       raise ActionController::RoutingError.new("page out of bounds")
     end
   end

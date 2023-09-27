@@ -1,4 +1,6 @@
-require_relative 'boot'
+# typed: false
+
+require_relative "boot"
 
 require "rails"
 # Pick the frameworks you want:
@@ -12,7 +14,6 @@ require "action_mailer/railtie"
 # require "action_text/engine"
 require "action_view/railtie"
 # require "action_cable/engine"
-require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
@@ -34,7 +35,7 @@ module Lobsters
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
-    config.time_zone = 'Central Time (US & Canada)'
+    config.time_zone = "Central Time (US & Canada)"
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
@@ -43,11 +44,15 @@ module Lobsters
     # Raise an exception when using mass assignment with unpermitted attributes
     config.action_controller.action_on_unpermitted_parameters = :raise
 
+    # log where queries came from
+    config.active_record.query_log_tags_enabled = true
+    config.active_record.cache_query_log_tags = true
+
     # config.active_record.raise_in_transactional_callbacks = true
 
     config.cache_store = :file_store, "#{config.root}/tmp/cache/"
 
-    config.exceptions_app = self.routes
+    config.exceptions_app = routes
 
     config.skip_yarn = true
 
@@ -104,8 +109,8 @@ class << Rails.application
 
   def root_url
     Rails.application.routes.url_helpers.root_url(
-      :host => Rails.application.domain,
-      :protocol => Rails.application.ssl? ? "https" : "http",
+      host: Rails.application.domain,
+      protocol: Rails.application.ssl? ? "https" : "http"
     )
   end
 

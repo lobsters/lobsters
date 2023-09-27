@@ -237,6 +237,7 @@ class Comment < ApplicationRecord
     Comment.record_timestamps = false
 
     self.is_deleted = true
+    self.score = FLAGGABLE_MIN_SCORE # sort after other replies
 
     if user.is_moderator? && user.id != user_id
       self.is_moderated = true
@@ -574,6 +575,7 @@ class Comment < ApplicationRecord
     Comment.record_timestamps = false
 
     self.is_deleted = false
+    update_score_and_recalculate!(0, 0) # restore score for sorting
 
     if user.is_moderator?
       self.is_moderated = false

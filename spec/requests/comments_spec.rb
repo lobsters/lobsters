@@ -19,9 +19,9 @@ describe "comments", type: :request do
     end
 
     it "does nothing to deleted comments" do
+      comment.delete_for_user(comment.user)
+      comment.reload
       expect {
-        comment.delete_for_user(comment.user)
-        comment.reload
         expect(comment.is_deleted).to be true
         post "/comments/#{comment.short_id}/upvote"
         expect(response.status).to eq(400)

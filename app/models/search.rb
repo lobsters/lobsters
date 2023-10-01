@@ -266,7 +266,7 @@ class Search
       when :quoted
         terms.append '"' + strip_operators(value).gsub("'", "\\\\'") + '"'
       when :term, :catchall
-        val = strip_short_terms(strip_operators(value)).gsub("'", "\\'")
+        val = strip_short_terms(strip_operators(value)).gsub("'", "\\\\'")
         # if punctuation is replaced with a space, this would generate a terms search
         # AGAINST('+' in boolean mode)
         terms.append val if !val.empty?

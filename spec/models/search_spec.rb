@@ -92,6 +92,11 @@ describe Search do
         {what: "stories", q: "term", page: "2#{esc}"},
         {what: "stories#{esc}", q: "term"},
         {what: "stories", q: "term 'two apostrophes'"},
+        {what: "stories", q: "'go-sqlite'"},
+        # some real attack attempts:
+        {what: "stories", q: "tag:formalmethods tag:testing'' ORDER BY 1-- BjzD"},
+        {what: "stories", q: "tag:formalmethods tag:testing'fcvzLp<'\">UkDPPc"},
+        {what: "stories", q: "tag:formalmethods tag:testing') AND EXTRACTVALUE(4050,CONCAT(0x5c,0x7170787171,(SELECT (ELT(4050=4050,1))),0x71627a6b71)) AND ('pDUW'='pDUW"},
         # comments
         {what: "comments", q: "term#{esc}"},
         {what: "comments", q: "\"term#{esc}\""},

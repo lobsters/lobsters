@@ -14,4 +14,12 @@ RSpec.describe "search controller", type: :request do
     expect(response).to be_successful
     expect(response.body).to include("0 results")
   end
+
+  it "doesn't allow sql injection" do
+    # real query that threw a 500 in prod
+    get "/search", params: {q: "tag:formalmethods tag:testing') AND EXTRACTVALUE(4050,CONCAT(0x5c,0x7170787171,(SELECT (ELT(4050=4050,1))),0x71627a6b71)) AND ('pDUW'='pDUW", what: "stories", order: "newest"}
+
+    expect(response).to be_successful
+    expect(response.body).to include("0 results")
+  end
 end

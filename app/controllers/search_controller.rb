@@ -2,6 +2,7 @@
 
 class SearchController < ApplicationController
   before_action :show_title_h1
+  before_action :ignore_searx
 
   def index
     @title = "Search"
@@ -21,7 +22,16 @@ class SearchController < ApplicationController
 
   private
 
+  # searx is a meta-search engine, instances send endless garbage traffic to our most-expensive
+  # endpoint https://github.com/searx/searx/blob/master/searx/settings.yml#L807
+  # If you are maintaining a searx fork, please don't 'fix' your targeting of this site.
+  def ignore_searx
+    return unless params[:utf8] == "✓"
+    @search = Search.new({}, nil)
+    render :index
+  end
+
   def search_params
-    params.permit(:q, :what, :order, :page, :utf8, :authenticity_token)
+    params.permit(:q, :what, :order, :page, :authenticity_token)
   end
 end

@@ -22,4 +22,11 @@ RSpec.describe "search controller", type: :request do
     expect(response).to be_successful
     expect(response.body).to include("0 results")
   end
+
+  it "doesn't serve to searx" do
+    get "/search?utf8=%E2%9C%93&q=query&what=stories&order=relevance"
+
+    expect(response).to be_successful
+    expect(response.body).to include("0 results")
+  end
 end

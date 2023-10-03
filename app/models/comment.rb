@@ -601,8 +601,8 @@ class Comment < ApplicationRecord
 
     thread_ids = Comment
       .where(user: user)
-      .group(:thread_id)
-      .order("id desc")
+      .distinct(:thread_id)
+      .order(thread_id: :desc)
       .limit(20)
       .pluck(:thread_id)
     return Comment.none if thread_ids.empty?

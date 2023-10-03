@@ -39,7 +39,7 @@ class Search
     @searcher = user
 
     @results = nil
-    @results_count = -1
+    @results_count = params[:results_count] || -1
     @invalid_because = nil
   end
 

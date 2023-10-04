@@ -155,9 +155,7 @@ class StoriesController < ApplicationController
     end
 
     @user.try(:clear_unread_replies!)
-    @comments = get_arranged_comments_from_cache(params[:id]) do
-      Comment.story_threads(@story).for_presentation
-    end
+    @comments = Comment.story_threads(@story).for_presentation
 
     @title = @story.title
     @short_url = @story.short_id_url
@@ -389,14 +387,6 @@ class StoriesController < ApplicationController
   end
 
   private
-
-  def get_arranged_comments_from_cache(short_id, &block)
-    if Rails.env.development? || @user
-      yield
-    else
-      Rails.cache.fetch("story #{short_id}", expires_in: 60, &block)
-    end
-  end
 
   def story_params
     p = params.require(:story).permit(

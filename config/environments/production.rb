@@ -45,8 +45,10 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
-  # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
+  # Force all access to the app over SSL, use Strict-Transport-Security (HSTS), and use secure cookies.
   config.force_ssl = true
+  # expiration, preload, and subdomains for: https://hstspreload.org/
+  config.ssl_options = {expires: 63072000, preload: true, subdomains: true}
 
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).
@@ -124,6 +126,9 @@ Rails.application.configure do
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context =
   #   ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+
+  # why help timing attacks?
+  config.middleware.delete(Rack::Runtime)
 end
 
 # disable some excessive logging in production

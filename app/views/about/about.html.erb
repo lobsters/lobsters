@@ -200,7 +200,6 @@
   We have <a href="/stats">some basic stats</a> available,
   and Peter is happy to run queries against the <a href="https://github.com/lobsters/lobsters/blob/master/db/schema.rb">database</a> and Rails/MySQL/nginx logs (but not write them for you),
   as long as they don't reveal personal info like IPs, browsing, and voting or create “worst-of” leaderboards celebrating most-flagged users/comments/stories.
-  If you're an academic researcher, please <a href="https://lobste.rs/s/cqnzl5/lobste_rs_access_pattern_statistics_for">be like MIT</a>, not like <a href="https://github.com/lobsters/lobsters/issues/517">UChicago</a> secretly experimenting on maintainers without IRB review.
   </p>
 
   <p>
@@ -337,6 +336,25 @@
   Jordan Peterson, whose fans started to <a href="https://www.youtube.com/watch?v=hSNWkRw53Jo&t=2408s">call themselves "lobsters"</a>
   about six years after we started.
   </p></li>
+
+  <li>
+    <p>
+      As a Rails app that's big enough to have real-world complexity but small enough to be easily read,
+      our <a href="https://github.com/lobsters/lobsters">codebase</a> has seen a few interesting uses:
+    </p>
+    <ul>
+      <li>MIT researchers used <a href="https://lobste.rs/s/cqnzl5/lobste_rs_access_pattern_statistics_for">access patterns</a>
+        in development of a <a href="https://lobste.rs/s/uxgjha/noria_dynamic_partially_stateful_data">new database</a>.</li>
+      <li>University of Chicago researchers unethically <a href="https://github.com/lobsters/lobsters/issues/518">experimented</a>
+        on <a href="https://github.com/lobsters/lobsters/issues/517">maintainers</a>
+        with <a href="https://lobste.rs/s/3qgyzp/they_introduce_kernel_bugs_on_purpose#c_bxb4rk">institutional complicity</a>.</li>
+      <li>
+        Shopify's Ruby performance team <a href="https://lobste.rs/s/m9ivcf/we_turned_lobste_rs_into_rails_benchmark">performance tested</a>
+        the YJIT compiler they contributed to MRI Ruby.
+      </li>
+    </ul>
+    <p>Please do <a href="https://lobste.rs/~pushcx">reach out</a> if you find a use for our code!</p>
+  </li>
 
   <li><p>
   We have a backup domain <tt>lobsters.dev</tt> in case of issues with our primary domain.

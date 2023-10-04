@@ -5,6 +5,7 @@ ENV["RAILS_ENV"] ||= "test"
 require File.expand_path("../../config/environment", __FILE__)
 require "rspec/rails"
 require "simplecov"
+require "super_diff/rspec-rails"
 
 SimpleCov.start "rails"
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -79,3 +80,9 @@ RSpec::Expectations.configuration.on_potential_false_positives = :nothing
 
 # Checks for pending migration and applies them before tests are run.
 ActiveRecord::Migration.maintain_test_schema!
+
+SuperDiff.configure do |config|
+  config.diff_elision_enabled = false
+  config.diff_elision_maximum = 3
+  config.key_enabled = false
+end

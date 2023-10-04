@@ -75,6 +75,7 @@ GEM
       public_suffix (>= 2.0.2, < 6.0)
     afm (0.2.2)
     ast (2.4.2)
+    attr_extras (7.1.0)
     base64 (0.1.1)
     bcrypt (3.1.19)
     benchmark-perf (0.6.0)
@@ -170,11 +171,14 @@ GEM
       version_gem (~> 1.1)
     oauth-tty (1.0.5)
       version_gem (~> 1.1, >= 1.1.1)
+    optimist (3.1.0)
     parallel (1.23.0)
     parser (3.2.2.3)
       ast (~> 2.4.1)
       racc
     parslet (2.0.0)
+    patience_diff (1.2.0)
+      optimist (~> 3.0)
     pdf-reader (2.11.0)
       Ascii85 (~> 1.0)
       afm (~> 0.2.1)
@@ -325,6 +329,10 @@ GEM
     standard-sorbet (0.0.2)
       lint_roller (~> 1.1)
       rubocop-sorbet (~> 0.7.0)
+    super_diff (0.10.0)
+      attr_extras (>= 6.2.4)
+      diff-lcs
+      patience_diff
     svg-graph (2.2.2)
     thor (1.2.2)
     timeout (0.4.0)
@@ -393,6 +401,7 @@ DEPENDENCIES
   standard-performance
   standard-rails
   standard-sorbet
+  super_diff
   svg-graph
   uglifier
   vcr

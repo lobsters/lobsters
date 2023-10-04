@@ -48,7 +48,7 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security (HSTS), and use secure cookies.
   config.force_ssl = true
   # expiration, preload, and subdomains for: https://hstspreload.org/
-  config.ssl_options = {expires: 63072000, preload: true, subdomains: true}
+  config.ssl_options = {hsts: {expires: 63072000, preload: true, subdomains: true}}
 
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).

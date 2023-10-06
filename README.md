@@ -30,7 +30,7 @@ There's an external project [docker-lobsters](https://github.com/utensils/docker
 
 * Checkout the lobsters git tree from Github
     ```sh
-    $ git clone git://github.com/lobsters/lobsters.git
+    $ git clone git@github.com:lobsters/lobsters.git
     $ cd lobsters
     lobsters$
     ```

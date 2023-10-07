@@ -10,7 +10,9 @@ class ApplicationController < ActionController::Base
   before_action :prepare_exception_notifier
   before_action :set_traffic_style
 
-  after_action :clear_lobster_trap
+  # 2023-10-07 one user in one of their browser envs is getting a CSRF failure, I'm reverting
+  # because I'll be AFK a while.
+  # after_action :clear_lobster_trap
 
   # match this nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
@@ -67,6 +69,7 @@ class ApplicationController < ActionController::Base
   def clear_lobster_trap
     key = Rails.application.config.session_options[:key] # "lobster_trap"
     cookies.delete(key) if @user.blank?
+    # this probably should test session.empty? && controller...
     request.session_options[:skip] = @user.blank? && controller_name != "login"
   end
 

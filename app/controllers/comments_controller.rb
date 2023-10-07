@@ -51,7 +51,7 @@ class CommentsController < ApplicationController
         content_type: "text/html", locals: {comment: comment}
     end
 
-    if comment.valid? && params[:preview].blank? && ActiveRecord::Base.transaction { comment.save }
+    if comment.valid? && params[:preview].blank? && comment.save
       comment.current_vote = {vote: 1}
       render_created_comment(comment)
     else

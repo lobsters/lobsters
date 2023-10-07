@@ -29,10 +29,6 @@ class Comment < ApplicationRecord
   end
   after_create :record_initial_upvote, :mark_submitter, :deliver_reply_notifications,
     :deliver_mention_notifications, :log_hat_use
-  after_create do
-    # fire this once after record_initial_upvote
-    update_score_and_recalculate! 0, 0
-  end
   after_destroy :unassign_votes
 
   scope :deleted, -> { where(is_deleted: true) }
@@ -259,7 +255,7 @@ class Comment < ApplicationRecord
     save(validate: false)
     Comment.record_timestamps = true
 
-    story.update_comments_count!
+    story.update_cached_columns
     self.user.refresh_counts!
   end
 
@@ -371,7 +367,7 @@ class Comment < ApplicationRecord
         confidence_order = concat(lpad(char(65536 - floor(((confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(id & 0xff using binary))
       WHERE id = #{id.to_i}
     SQL
-    story.recalculate_hotness!
+    story.update_cached_columns
   end
 
   def gone_text
@@ -504,11 +500,11 @@ class Comment < ApplicationRecord
   end
 
   def record_initial_upvote
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      1, story_id, id, user_id, nil, false
-    )
+    # not calling vote_thusly to save round-trips of validations
+    Vote.create! story: story, comment: self, user: user, vote: 1
+    update_score_and_recalculate! 0, 0 # trigger db calculation
 
-    story.update_comments_count!
+    story.update_cached_columns
   end
 
   def score_for_user(u)
@@ -541,7 +537,7 @@ class Comment < ApplicationRecord
   end
 
   def unassign_votes
-    story.update_comments_count!
+    story.update_cached_columns
   end
 
   def url
@@ -592,7 +588,7 @@ class Comment < ApplicationRecord
     save(validate: false)
     Comment.record_timestamps = true
 
-    story.update_comments_count!
+    story.update_cached_columns
     self.user.refresh_counts!
   end
 

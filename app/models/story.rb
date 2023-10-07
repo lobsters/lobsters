@@ -157,7 +157,7 @@ class Story < ApplicationRecord
   before_save :log_moderation
   before_save :fix_bogus_chars
   after_create :mark_submitter, :record_initial_upvote
-  after_save :update_merged_into_story_comments, :recalculate_hotness!, :update_story_text
+  after_save :update_cached_columns, :update_story_text
 
   validate do
     if url.present?
@@ -270,8 +270,8 @@ class Story < ApplicationRecord
 
   def self.recalculate_all_hotnesses!
     # do the front page first, since find_each can't take an order
-    Story.order("id DESC").limit(100).each(&:recalculate_hotness!)
-    Story.find_each(&:recalculate_hotness!)
+    Story.order("id DESC").limit(100).each(&:update_cached_columns)
+    Story.find_each(&:update_cached_columns)
     true
   end
 
@@ -620,10 +620,6 @@ class Story < ApplicationRecord
     merged_story_id ? merged_into_story.try(:short_id) : nil
   end
 
-  def recalculate_hotness!
-    update_column :hotness, calculated_hotness
-  end
-
   def record_initial_upvote
     Vote.vote_thusly_on_story_or_comment_for_user_because(1, id, nil, user_id, nil, false)
   end
@@ -812,17 +808,11 @@ class Story < ApplicationRecord
     end
   end
 
-  def update_comments_count!
-    comments = merged_comments
+  def update_cached_columns
+    update_column :comments_count, merged_comments.active.count
+    merged_into_story&.update_cached_columns
 
-    # calculate count after removing deleted comments and threads
-    update_column :comments_count, (comments.count { |c| !c.is_gone? })
-    update_merged_into_story_comments
-    recalculate_hotness!
-  end
-
-  def update_merged_into_story_comments
-    merged_into_story&.update_comments_count!
+    update_column :hotness, calculated_hotness
   end
 
   def update_story_text

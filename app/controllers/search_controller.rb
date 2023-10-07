@@ -27,7 +27,7 @@ class SearchController < ApplicationController
   # If you are maintaining a searx fork, please don't 'fix' your targeting of this site.
   def ignore_searx
     return unless params[:utf8] == "✓"
-    @search = Search.new({}, nil)
+    @search = Search.new({results_count: 0}, nil)
     render :index
   end
 

@@ -16,7 +16,6 @@ Rails.application.configure do
 
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local = false
-  config.action_controller.perform_caching = true
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
@@ -103,6 +102,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # cache full pages for logged-out visitors without tag filters
+  config.action_controller.perform_caching = true
   config.action_controller.page_cache_directory = "#{Rails.root}/public/cache"
 
   # Inserts middleware to perform automatic connection switching.

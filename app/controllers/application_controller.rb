@@ -10,13 +10,11 @@ class ApplicationController < ActionController::Base
   before_action :prepare_exception_notifier
   before_action :set_traffic_style
 
-  # match this in your nginx config for bypassing the file cache
-  TAG_FILTER_COOKIE = :tag_filters
+  after_action :clear_lobster_trap
 
-  # returning false until 1. nginx wants to serve cached files
-  # 2. the "stay logged in" cookie is separated from rails session cookie
-  # (lobster_trap) which is sent even to logged-out visitors
-  CACHE_PAGE = proc { false && @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
+  # match this nginx config for bypassing the file cache
+  TAG_FILTER_COOKIE = :tag_filters
+  CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
 
   rescue_from ActionController::UnknownFormat do
     render plain: "404 Not Found", status: :not_found, content_type: "text/plain"
@@ -62,6 +60,14 @@ class ApplicationController < ActionController::Base
     end
 
     true
+  end
+
+  # clear Rails session cookie if not logged in so nginx uses the page cache
+  # https://ryanfb.xyz/etc/2021/08/29/going_cookie-free_with_rails.html
+  def clear_lobster_trap
+    key = Rails.application.config.session_options[:key] # "lobster_trap"
+    cookies.delete(key) if @user.blank?
+    request.session_options[:skip] = @user.blank? && controller_name != "login"
   end
 
   def find_user_from_rss_token

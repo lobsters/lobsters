@@ -3,7 +3,7 @@
 class HomeController < ApplicationController
   include IntervalHelper
 
-  caches_page :index, :newest, :newest_by_user, :recent, :top, if: CACHE_PAGE
+  caches_page :active, :index, :newest, :newest_by_user, :recent, :top, if: CACHE_PAGE
 
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, only: [:index, :newest, :saved, :upvoted]

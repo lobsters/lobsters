@@ -3,10 +3,10 @@
 require "rails_helper"
 
 RSpec.feature "Reading Stories", type: :feature do
-  let!(:story) { create(:story) }
-  let!(:comment) { create(:comment, story: story) }
-
   feature "when logged out" do
+    let!(:story) { create(:story) }
+    let!(:comment) { create(:comment, story:) }
+
     scenario "reading a story" do
       visit "/s/#{story.short_id}"
       expect(page).to have_content(story.title)
@@ -16,6 +16,8 @@ RSpec.feature "Reading Stories", type: :feature do
 
   feature "when logged in" do
     let(:user) { create(:user) }
+    let!(:story) { create(:story) }
+    let!(:comment) { create(:comment, story:) }
 
     before(:each) { stub_login_as user }
 
@@ -32,6 +34,8 @@ RSpec.feature "Reading Stories", type: :feature do
   end
 
   feature "reading merged stories" do
+    let!(:story) { create(:story) }
+    let!(:comment) { create(:comment, story:) }
     let!(:merged) { create(:story, merged_into_story: story) }
 
     it "redirects links" do
@@ -62,15 +66,14 @@ RSpec.feature "Reading Stories", type: :feature do
 
   feature "reading saved stories" do
     let(:user) { create(:user) }
+    let!(:user_edited_story) { create(:story, editor: user) }
 
     before do
-      story.update!(user:, editor: user)
       stub_login_as user
-      SavedStory.save_story_for_user(story.id, user.id)
+      SavedStory.save_story_for_user(user_edited_story.id, user.id)
     end
 
     scenario "when story is deleted" do
-      story.update!(is_deleted: true)
       visit "/saved"
 
       expect(page).not_to have_css("a.saver", text: "save", exact_text: true)
@@ -87,9 +90,9 @@ RSpec.feature "Reading Stories", type: :feature do
 
   feature "reading deleted stories" do
     let(:user) { create(:user) }
+    let!(:deleted_story) { create(:story, is_deleted: true) }
 
     before do
-      story.update!(is_deleted: true)
       stub_login_as user
       visit "/"
     end

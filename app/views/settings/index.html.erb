@@ -182,6 +182,12 @@
     <h2>Miscellaneous Settings</h2>
 
     <div class="boxline">
+      <%= f.label :show_email, "Show Email Address:",
+        :class => "required" %>
+      <%= f.check_box :show_email %>
+    </div>
+
+    <div class="boxline">
       <%= f.label :show_story_previews, "Show Story Previews:",
         :class => "required" %>
       <%= f.check_box :show_story_previews %>

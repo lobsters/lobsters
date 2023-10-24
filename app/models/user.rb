@@ -68,6 +68,7 @@ class User < ApplicationRecord
     s.boolean :pushover_messages, default: false
     s.boolean :email_mentions, default: false
     s.boolean :show_avatars, default: true
+    s.boolean :show_email, default: false
     s.boolean :show_story_previews, default: false
     s.boolean :show_submitted_story_threads, default: false
     s.string :totp_secret

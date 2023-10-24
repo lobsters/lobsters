@@ -100,6 +100,14 @@
     <div style="clear: both;"></div>
   <% end %>
 
+  <% if @user.is_admin? && @user.show_email? %>
+    <label class="required">E-Mail:</label>
+    <span class="d">
+      <%= @showing_user.email %>
+    </span>
+    <br>
+  <% end %>
+
   <% if @showing_user.homepage.present? %>
     <label class="required">Homepage:</label>
 
@@ -202,12 +210,6 @@
 
     <% if @user.is_admin? %>
       <h3>Admin Information</h3>
-
-      <label class="required">E-Mail:</label>
-      <span class="d">
-        <%= @showing_user.email %>
-      </span>
-      <br>
 
       <label class="required">Recent Votes:</label>
       <table class="data zebra clear tall">

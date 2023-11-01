@@ -155,13 +155,14 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <% if single_story && story.hider_count > 0 %>
             (hidden by <%= pluralize(story.hider_count, "user") %>)
           <% end %>
-          <% if story.is_saved_by_cur_user %>
-            <span> | </span><%= link_to "unsave", story_unsave_path(story.short_id),
-              :class => "saver" %>
-          <% else %>
+          <% if !story.is_saved_by_cur_user %>
             <span> | </span><%= link_to "save", story_save_path(story.short_id),
-              :class => "saver" %>
+                                       :class => "saver" %>
           <% end %>
+        <% end %>
+        <% if story.is_saved_by_cur_user %>
+          <span> | </span><%= link_to "unsave", story_unsave_path(story.short_id),
+                                      :class => "saver" %>
         <% end %>
         <% if story.url.present? %>
           <span> | </span>

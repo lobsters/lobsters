@@ -1,6 +1,6 @@
 <p>
   <%= @domain.domain %>:
-  <%= "#{@domain.stories.count} story".pluralize(@domain.stories.count) %> from
+  <%= "#{@stories.count} story".pluralize(@stories.count) %> from
   <%= "#{@domain.n_submitters} submitter".pluralize(@domain.n_submitters) %>
 
   <%= link_to 'Edit', edit_domain_path(@domain) if @user.try(:is_admin?)  %>

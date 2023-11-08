@@ -100,7 +100,7 @@
     <div style="clear: both;"></div>
   <% end %>
 
-  <% if @user.is_admin? && @user.show_email? %>
+  <% if @user&.is_admin? || @user&.show_email? %>
     <label class="required">E-Mail:</label>
     <span class="d">
       <%= @showing_user.email %>

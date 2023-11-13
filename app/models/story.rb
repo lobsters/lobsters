@@ -303,6 +303,7 @@ class Story < ApplicationRecord
       {description_plain: :description},
       :comments_url,
       {submitter_user: :user},
+      :user_is_author,
       {tags: tags.map(&:tag).sort}
     ]
 

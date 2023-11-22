@@ -79,16 +79,14 @@ class Vote < ApplicationRecord
   end
 
   def self.comment_votes_by_user_for_comment_ids_hash(user_id, comment_ids)
-    if comment_ids.empty?
-      {}
-    else
-      votes = where(
-        user_id: user_id,
-        comment_id: comment_ids
-      )
-      votes.each_with_object({}) do |v, memo|
-        memo[v.comment_id] = {vote: v.vote, reason: v.reason}
-      end
+    return {} if user_id.nil? || comment_ids.empty?
+
+    votes = where(
+      user_id: user_id,
+      comment_id: comment_ids
+    ).select(:comment_id, :vote, :reason)
+    votes.each_with_object({}) do |v, memo|
+      memo[v.comment_id] = {vote: v.vote, reason: v.reason}
     end
   end
 

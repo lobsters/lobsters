@@ -1,4 +1,4 @@
-<%= @comment.user.username %> has replied to you:
+<%= @comment.user.username %> has replied to <%= @replied_to %>:
 
   <%= word_wrap(@comment.plaintext_comment, :line_width => 72).gsub(/\n/, "\n  ") %>
 

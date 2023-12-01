@@ -32,11 +32,13 @@ describe "normalize_url" do
     "https://www.rfc-editor.org/rfc/rfc9338.pdf" => "rfc-editor.org/rfc/9338",
     "https://www.rfc-editor.org/rfc/rfc9338.xml" => "rfc-editor.org/rfc/9338",
     "https://www.rfc-editor.org/rfc/rfc9338" => "rfc-editor.org/rfc/9338",
+    "https://www.rfc-editor.org/info/rfc9338" => "rfc-editor.org/rfc/9338",
     "https://rfc-editor.org/rfc/rfc9338.html" => "rfc-editor.org/rfc/9338",
     "https://rfc-editor.org/rfc/rfc9338.txt" => "rfc-editor.org/rfc/9338",
     "https://rfc-editor.org/rfc/rfc9338.pdf" => "rfc-editor.org/rfc/9338",
     "https://rfc-editor.org/rfc/rfc9338.xml" => "rfc-editor.org/rfc/9338",
     "https://rfc-editor.org/rfc/rfc9338" => "rfc-editor.org/rfc/9338",
+    "https://rfc-editor.org/info/rfc9338" => "rfc-editor.org/rfc/9338",
 
     "https://youtube.com/watch?v=asdf" => "youtube.com/watch?v=asdf",
     "https://youtube.com/watch?v=asdf_123" => "youtube.com/watch?v=asdf_123",

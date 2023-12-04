@@ -202,8 +202,9 @@ if __FILE__ == $PROGRAM_NAME
           mail.puts "In-Reply-To: <#{c.story.mailing_list_message_id}>"
         end
 
-        refs = ["<#{c.story.mailing_list_message_id}>"] +
-          c.parents.map(&:mailing_list_message_id)
+        refs = ([c.story.mailing_list_message_id] +
+          c.parents.map(&:mailing_list_message_id))
+          .map { |r| "<#{r}>" }
         mail.puts "References: #{refs.join(" ")}"
 
         mail.puts "Date: " << c.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")

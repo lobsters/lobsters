@@ -204,7 +204,7 @@ if __FILE__ == $PROGRAM_NAME
 
         refs = ["<#{c.story.mailing_list_message_id}>"] +
           c.parents.map(&:mailing_list_message_id)
-        mail.print "References: #{refs.join(" ")}"
+        mail.puts "References: #{refs.join(" ")}"
 
         mail.puts "Date: " << c.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
         mail.puts "Subject: " << story_subject(c.story, "Re: ")

@@ -27,7 +27,7 @@ jobs:
         with:
           bundler-cache: true
       - name: Prepare database
-        run: ./bin/rails db:schema:load && ./bin/rails db:migrate
+        run: ./bin/rails db:prepare
       - name: Run tests
         run: |
           bundle exec rspec

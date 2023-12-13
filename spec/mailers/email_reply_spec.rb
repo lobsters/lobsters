@@ -3,6 +3,29 @@
 require "rails_helper"
 
 RSpec.describe EmailReply, type: :mailer do
+  it "has a stable message-id" do
+    comment = create(:comment)
+    user = comment.user
+
+    e1 = EmailReply.reply(comment, user)
+    e2 = EmailReply.reply(comment, user)
+    expect(e1["Message-ID"]).to_not be_nil
+    expect(e1["Message-ID"].to_s).to eq(e2["Message-ID"].to_s)
+  end
+
+  it "has parent in-reply-to and in references" do
+    user = create(:user)
+    comment = create(:comment)
+    reply = create(:comment, parent_comment: comment)
+
+    email = EmailReply.reply(reply, user)
+    expect(email["Message-ID"].to_s).to eq("<#{reply.mailing_list_message_id}>")
+    expect(email["In-Reply-To"].to_s).to eq("<#{comment.mailing_list_message_id}>")
+    expect(email["References"].to_s).to include(comment.mailing_list_message_id)
+    # test inconsistency - factory will create reply with different story id
+    expect(email["References"].to_s).to include(reply.story.mailing_list_message_id)
+  end
+
   it "addresses replies to receiver" do
     comment = create(:comment)
     user = comment.user

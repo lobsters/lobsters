@@ -13,14 +13,14 @@ class EmailReply < ApplicationMailer
     end
 
     # threading
-    headers "Message-Id" => @comment.mailing_list_message_id
-    if @comment.parent_comment.present?
-      headers "In-Reply-To" => @comment.parent_comment.mailing_list_message_id
-    end
-    headers "References" => (
-      ([@comment.story.mailing_list_message_id] + @comment.parents.map(&:mailing_list_message_id))
-      .map { |r| "<#{r}>" }
-    )
+    headers "Message-Id" => @comment.mailing_list_message_id,
+      "References" => (
+        ([@comment.story.mailing_list_message_id] + @comment.parents.map(&:mailing_list_message_id))
+        .map { |r| "<#{r}>" }
+      ),
+      "In-Reply-To" => @comment.parent_comment.present? ?
+        @comment.parent_comment.mailing_list_message_id :
+        @comment.story.mailing_list_message_id
 
     mail(
       to: user.email,

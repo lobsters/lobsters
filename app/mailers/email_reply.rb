@@ -12,6 +12,16 @@ class EmailReply < ApplicationMailer
       @replied_to = @comment.parent_comment.user.username
     end
 
+    # threading
+    headers "Message-Id" => @comment.mailing_list_message_id
+    if @comment.parent_comment.present?
+      headers "In-Reply-To" => @comment.parent_comment.mailing_list_message_id
+    end
+    headers "References" => (
+      ([@comment.story.mailing_list_message_id] + @comment.parents.map(&:mailing_list_message_id))
+      .map { |r| "<#{r}>" }
+    )
+
     mail(
       to: user.email,
       subject: "[#{Rails.application.name}] Reply from " \

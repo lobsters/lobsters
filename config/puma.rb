@@ -55,7 +55,7 @@ on_worker_boot { |index| sleep sleep_for_index(index, worker_boot_duration) }
 # before forking the application. This takes advantage of Copy On Write
 # process behavior so workers use less memory.
 if ENV.fetch("RAILS_ENV") == "production"
-  bind "unix:///srv/lobste.rs/run/puma.sock"
+  # bind "unix:///srv/lobste.rs/run/puma.sock"
 
   # phased restarts
   # https://github.com/puma/puma/blob/master/docs/restart.md

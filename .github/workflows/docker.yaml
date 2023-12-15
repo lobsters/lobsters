@@ -2,9 +2,9 @@ name: "Build and Push Docker Containers to Registry"
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 env:
   TAG_PREFIX: ""

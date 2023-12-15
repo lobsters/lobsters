@@ -2,13 +2,13 @@
 FROM ruby:3.2.2 as builder
 
 # Install NodeJS, Yarn, and MySQL client (libmysqlclient-dev for mysql2 gem)
-RUN apt-get update -qq && apt-get install -y nodejs yarn git libmariadb-dev
+RUN apt-get update -qq && apt-get install -y nodejs yarn libmariadb-dev
 
 # Set the work directory
 WORKDIR /lobsters
 
-# Clone the Lobsters repository
-RUN git clone https://github.com/lobsters/lobsters.git .
+# copy the codebase
+COPY . /lobsters
 
 # Install specific version of Bundler
 RUN gem install bundler:2.3.16
@@ -18,9 +18,6 @@ ENV BUNDLE_PATH=/lobsters/vendor/bundle
 
 # Install the gem dependencies
 RUN bundle install
-
-# Copy the database configuration file
-COPY config/database.yml config/database.yml
 
 # Precompile assets
 RUN bundle exec rake assets:precompile

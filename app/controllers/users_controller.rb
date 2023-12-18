@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   before_action :load_showing_user, only: [:show, :standing]
   before_action :require_logged_in_moderator,
     only: [:enable_invitation, :disable_invitation, :ban, :unban]
-  before_action :flag_warning, only: [:show]
+  before_action :flag_warning, only: [:show, :standing]
   before_action :require_logged_in_user, only: [:standing]
   before_action :only_user_or_moderator, only: [:standing]
   before_action :show_title_h1, only: [:show]
@@ -124,7 +124,6 @@ class UsersController < ApplicationController
   end
 
   def standing
-    flag_warning
     int = @flag_warning_int
 
     fc = FlaggedCommenters.new(int[:param], 1.day)

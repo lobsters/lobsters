@@ -261,4 +261,28 @@ describe Search do
 
     expect(search.results.length).to eq(3)
   end
+
+  describe "#flatten_title" do
+    it "flattens multiword searches to single sql term" do
+      s = Search.new({}, nil)
+      expect(s.flatten_title({quoted: [{term: "cool"}, {term: "beans"}]})).to eq("\"cool beans\"")
+    end
+
+    it "doesn't permit sql injection" do
+      s = Search.new({}, nil)
+      expect(s.flatten_title({term: "as'df"})).to eq("as\\'df")
+      expect(s.flatten_title({term: "hj\"kl"})).to eq("hj\\\"kl")
+      expect(s.flatten_title({quoted: [{term: "cat'"}, {term: "scare"}]})).to eq("\"cat\\' scare\"")
+    end
+  end
+
+  describe "#strip_operators" do
+    it "doesn't permit sql injection" do
+      s = Search.new({}, nil)
+      expect(s.strip_operators("as'df")).to eq("as\\'df")
+      expect(s.strip_operators("hj\"kl")).to eq("hj kl")
+      expect(s.strip_operators("li%ke")).to eq("li ke")
+      expect(s.strip_operators("\"blah\"")).to eq("blah")
+    end
+  end
 end

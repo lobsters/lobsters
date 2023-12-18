@@ -57,6 +57,8 @@ describe SearchParser do
     it("doesn't parse multiple words") { expect(sp.term).to_not parse("research multiple") }
     it("parses terms with numbers") { expect(sp.term).to parse("plan9") }
     it("parses terms with undescores") { expect(sp.term).to parse("foo_bar") }
+    # Search#flatten_title relies on this:
+    it("doesn't parse a quote") { expect(sp.term).to_not parse("a\"quote") }
   end
 
   describe "quoted rule" do

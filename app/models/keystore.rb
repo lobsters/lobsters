@@ -17,19 +17,7 @@ class Keystore < ApplicationRecord
 
   def self.put(key, value)
     validate_input_key(key)
-    if Keystore.connection.adapter_name == "SQLite"
-      Keystore.connection.execute("INSERT OR REPLACE INTO " \
-        "#{Keystore.table_name} (`key`, `value`) VALUES " \
-        "(#{q(key)}, #{q(value)})")
-    elsif /Mysql/.match?(Keystore.connection.adapter_name)
-      Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" \
-        "`key`, `value`) VALUES (#{q(key)}, #{q(value)}) ON DUPLICATE KEY " \
-        "UPDATE `value` = #{q(value)}")
-    else
-      kv = find_or_create_key_for_update(key, value)
-      kv.value = value
-      kv.save!
-    end
+    Keystore.upsert({key: key, value: value}, returning: false)
     true
   end
 
@@ -40,23 +28,7 @@ class Keystore < ApplicationRecord
   def self.incremented_value_for(key, amount = 1)
     validate_input_key(key)
     Keystore.transaction do
-      if Keystore.connection.adapter_name == "SQLite"
-        Keystore.connection.execute("INSERT OR IGNORE INTO " \
-          "#{Keystore.table_name} (`key`, `value`) VALUES " \
-          "(#{q(key)}, 0)")
-        Keystore.connection.execute("UPDATE #{Keystore.table_name} " \
-          "SET `value` = `value` + #{q(amount)} WHERE `key` = #{q(key)}")
-      elsif /Mysql/.match?(Keystore.connection.adapter_name)
-        Keystore.connection.execute("INSERT INTO #{Keystore.table_name} (" \
-          "`key`, `value`) VALUES (#{q(key)}, #{q(amount)}) ON DUPLICATE KEY " \
-          "UPDATE `value` = `value` + #{q(amount)}")
-      else
-        kv = find_or_create_key_for_update(key, 0)
-        kv.value = kv.value.to_i + amount
-        kv.save!
-        return kv.value
-      end
-
+      Keystore.upsert({key: key, value: amount}, on_duplicate: Arel.sql("value = value + 1"))
       value_for(key)
     end
   end

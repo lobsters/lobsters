@@ -46,6 +46,7 @@ gem "rack-attack" # rate-limiting
 
 group :test, :development do
   gem "benchmark-perf"
+  gem "brakeman"
   gem "capybara"
   gem "database_cleaner"
   gem "listen"

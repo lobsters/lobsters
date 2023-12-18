@@ -37,6 +37,9 @@ jobs:
       - name: Run linters
         run: |
           bundle exec standardrb
+      - name: Run brakeman
+        run: |
+          bundle exec brakeman --ensure-latest --ensure-ignore-notes
       - name: Find leaky gems
         run: |
           gem install bundler-leak

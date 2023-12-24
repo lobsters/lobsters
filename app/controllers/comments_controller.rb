@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
   caches_page :index, :threads, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,
-    only: [:create, :preview, :reply, :upvote, :flag, :unvote, :update]
+    only: [:create, :reply, :upvote, :flag, :unvote, :update]
   before_action :require_logged_in_user, only: [:upvoted]
   before_action :flag_warning, only: [:user_threads]
   before_action :show_title_h1

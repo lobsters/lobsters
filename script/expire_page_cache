@@ -1,4 +1,3 @@
 #!/bin/sh
 
 find /srv/lobste.rs/http/tmp/cache/ -type f -not -mmin 2 -not -name ".gitkeep" -delete
-find /srv/lobste.rs/http/tmp/cache/ -type d -empty -delete

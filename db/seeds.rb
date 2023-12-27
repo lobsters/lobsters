@@ -40,7 +40,7 @@ categories_with_tags = {
 
 # Iterate over the categories and their tags
 categories_with_tags.each do |category_name, tags|
-  c = Category.create(category: category_name)
+  c = Category.create!(category: category_name)
 
   tags.each do |tag_name|
     Tag.create(category: c, tag: tag_name)

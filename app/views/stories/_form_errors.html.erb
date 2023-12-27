@@ -2,7 +2,7 @@
   <div class="form_errors_header">
     <% if story.errors.any? %>
       <%= errors_for story %>
-    <% elsif !story.errors.any? && story.public_similar_stories(@user).any? %>
+    <% elsif !story.errors.any? && story.similar_stories.any? %>
       <div class="flash-notice">
         <h2>Note: This story was already submitted <%= time_ago_in_words_label(story.most_recent_similar.created_at) %></h2>
         <p>
@@ -20,7 +20,7 @@
       <% end %>
     <% end %>
 
-    <% if story.public_similar_stories(@user).any? %>
+    <% if story.similar_stories.any? %>
       <p>Previous discussions for this story:</p>
       <%= render partial: "stories/similar", locals: { similar: story.similar_stories } %>
     <% end %>

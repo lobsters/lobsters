@@ -1,44 +1,46 @@
-.#{$select-ns}-wrapper.plugin-remove_button{
+.#{$select-ns}-wrapper.plugin-remove_button {
 
-	.item{
-		display:		inline-flex;
-		align-items:	center;
-		padding-right:	0 !important;
-	}
+    .item {
+        display: inline-flex;
+        align-items: center;
+        padding-right: 0 !important;
+        font-family: 'Inter', sans-serif; /* Aqora's secondary font */
+    }
 
-	.item .remove {
-		color:				inherit;
-		text-decoration:	none;
-		vertical-align:		middle;
-		display:			inline-block;
-		padding:			0 $select-padding-item-x;
-		border-left:		1px solid $select-color-item-border;
-		border-radius:		0 2px 2px 0;
-		box-sizing:			border-box;
-		margin-left:		$select-padding-item-x;
-	}
+    .item .remove {
+        color: inherit;
+        text-decoration: none;
+        vertical-align: middle;
+        display: inline-block;
+        padding: 0 $select-padding-item-x;
+        border-left: 1px solid #4328E5; /* Aqora's indigo for item borders */
+        border-radius: 5px; /* Rounded shapes per Aqora style */
+        box-sizing: border-box;
+        margin-left: $select-padding-item-x;
+    }
 
-	.item .remove:hover {
-		background: rgba(0,0,0,0.05);
-	}
+    .item .remove:hover {
+        background: #BED4FA; /* Aqora's light purple for hover states */
+    }
 
-	.item.active .remove {
-		border-left-color: $select-color-item-active-border;
-	}
+    .item.active .remove {
+        border-left-color: #8F77FF; /* Aqora's purple for active item borders */
+    }
 
-	&.disabled .item .remove:hover {
-		background: none;
-	}
+    &.disabled .item .remove:hover {
+        background: none;
+    }
 
-	&.disabled .item .remove {
-		border-left-color: lighten(desaturate($select-color-item-border, 100%), $select-lighten-disabled-item-border);
-	}
+    &.disabled .item .remove {
+        border-left-color: #F2F2F2; /* Aqora's grey for disabled item borders */
+    }
 
-	.remove-single {
-		position: absolute;
-		right: 0;
-		top: 0;
-		font-size: 23px;
-	}
+    .remove-single {
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 23px;
+        color: #303030; /* Adjusted to Aqora's color palette */
+    }
 
 }

@@ -24,18 +24,18 @@ User.create(
 
 # Define categories and their corresponding tags
 categories_with_tags = {
-  "Quantum_Computing" => ["Superconducting_Qubits", "Trapped_Ions", "Neutral_Atoms", "Quantum_Dots", "Topological_Qubits", "Photonic_Quantum_Computing", "Quantum_Algorithms", "Error_Correction", "Quantum_Software", "Quantum_Supremacy"],
+  "Quantum_Computing" => ["Superconducting_Qubits", "Trapped_Ions", "Neutral_Atoms", "Quantum_Dots", "Topological_Qubits", "Photonics", "Quantum_Algorithms", "Error_Correction", "Quantum_Software", "Quantum_Supremacy"],
   "Quantum_Physics_Theory" => ["Quantum_Entanglement", "Quantum_Field_Theory", "Nonlocality", "Quantum_Gravity", "Bell_Tests"],
-  "Quantum_Engineering_Materials" => ["Nanofabrication", "Quantum_Dots", "Photonic_Chips", "Topological_Insulators", "Quantum_Metamaterials"],
+  "Quantum_Materials" => ["Nanofabrication", "Quantum_Dots", "Photonic_Chips", "Topological_Insulators", "Quantum_Metamaterials"],
   "Quantum_Applications" => ["Quantum_Sensing", "Quantum_Metrology", "Quantum_Imaging", "Quantum_Communications", "Quantum_Simulation"],
-  "Commercial_Quantum_Industry" => ["Quantum_Startups", "Venture_Capital", "Industry_Partnerships", "Patent_Landscape", "Market_Analysis"],
-  "Quantum_Education_Outreach" => ["MOOCs", "University_Programs", "Public_Lectures", "Educational_Initiatives", "Outreach_Programs"],
-  "Quantum_Policy_Ethics" => ["Data_Security", "Quantum_Ready_Regulations", "Ethical_AI", "Intellectual_Property_Rights", "Privacy_Issues"],
-  "Quantum_Research_Collaboration" => ["International_Collaborations", "Research_Grants", "Laboratory_Techniques", "Paper_Discussions", "Experimental_Setups"],
-  "Quantum_Information_Science" => ["Quantum_Cryptography", "QKD_Protocols", "Information_Theory", "Quantum_Coding", "Entropy_and_Information"],
-  "Quantum_Technologies_Future" => ["Quantum_Roadmaps", "Future_Predictions", "Theoretical_Breakthroughs", "Interdisciplinary_Approaches", "Quantum_AI"],
-  "Quantum_Networking_Communication" => ["Quantum_Repeaters", "Network_Protocols", "Satellite_QKD", "Teleportation_Experiments", "Quantum_Internet"],
-  "Events_Conferences_Workshops" => ["Upcoming_Conferences", "Workshop_Highlights", "Networking_Events", "Virtual_Seminars", "Community_Meetups"]
+  "Quantum_Industry" => ["Quantum_Startups", "Venture_Capital", "Industry_Partnerships", "Patent_Landscape", "Market_Analysis"],
+  "Quantum_Education" => ["MOOCs", "University_Programs", "Public_Lectures", "Educational_Initiatives", "Outreach_Programs"],
+  "Quantum_Policy_Ethics" => ["Data_Security", "Quantum_Ready_Regulations", "Ethical_AI", "IP_Rights", "Privacy_Issues"],
+  "Quantum_Research_Collab" => ["International_Collab", "Research_Grants", "Laboratory_Techniques", "Paper_Discussions", "Experimental_Setups"],
+  "Quantum_Information" => ["Quantum_Cryptography", "QKD_Protocols", "Information_Theory", "Quantum_Coding", "Entropy_and_Information"],
+  "Quantum_Technologies_Future" => ["Quantum_Roadmaps", "Future_Predictions", "Theoretical_Breakthroughs", "Interdisciplinary", "Quantum_AI"],
+  "Quantum_Networking" => ["Quantum_Repeaters", "Network_Protocols", "Satellite_QKD", "Teleportation_Experiments", "Quantum_Internet"],
+  "Events_Confs_Workshops" => ["Upcoming_Conferences", "Workshop_Highlights", "Networking_Events", "Virtual_Seminars", "Community_Meetups"]
 }
 
 # Iterate over the categories and their tags

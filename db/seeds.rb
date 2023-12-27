@@ -40,10 +40,10 @@ categories_with_tags = {
 
 # Iterate over the categories and their tags
 categories_with_tags.each do |category_name, tags|
-  category = Category.find_or_create_by!(name: category_name)
+  c = Category.create(category: category_name)
 
   tags.each do |tag_name|
-    Tag.find_or_create_by!(category: category, name: tag_name)
+    Tag.create(category: c, tag: tag_name)
   end
 end
 

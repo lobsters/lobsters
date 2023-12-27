@@ -6,181 +6,177 @@ after vendor css for easier overriding:
 *= require_self 
 */
 
-/* light and dark mode color schemes adapted for Aqora's brand guidelines */
+/* light and dark mode colorschemes */
 
 <%
 light = <<-LIGHT
-  /* Main Monochrome - Updated to Aqora's palette */
-  --palette-bg: 254, 254, 254; /* White background */
-  --palette-fg: 51, 51, 51; /* Midnight Blue foreground */
-  --palette-light: 255, 255, 255; /* White for lighter elements */
-  --palette-shadow: 0, 0, 0; /* Black for shadows */
+	/* main monochrome */
+	--palette-bg: 254, 254, 254;
+	--palette-fg: 51, 51, 51;
+	--palette-light: 255, 255, 255;
+	--palette-shadow: 0, 0, 0;
 
-  /* Blends of foreground color over the background */
-  --opacity-contrast-15: 100%;
-  --opacity-contrast-13: 94%;
-  --opacity-contrast-10: 84%;
-  --opacity-contrast-7-5: 75%;
-  --opacity-contrast-6: 67%;
-  --opacity-contrast-5: 63%;
-  --opacity-contrast-4-5: 59%; /* WCAG AA minimum 4.5:1 text contrast */
+	/* blends of foreground color over the background */
+	--opacity-contrast-15: 100%;
+	--opacity-contrast-13: 94%;
+	--opacity-contrast-10: 84%;
+	--opacity-contrast-7-5: 75%;
+	--opacity-contrast-6: 67%;
+	--opacity-contrast-5: 63%;
+	--opacity-contrast-4-5: 59%; /* WCAG AA minimum 4.5:1 text contrast */
 
-  --opacity-gradient-lit: 0%;
-  --opacity-gradient-shadowed: 13%;
+	--opacity-gradient-lit: 0%;
+	--opacity-gradient-shadowed: 13%;
 
-  /* Colored backgrounds and foregrounds */
-  --palette-bg-accent: 172, 19, 13; /* Accent color */
-  --palette-bg-target: 255, 252, 215; /* Target background */
+	/* colored backgrounds and foregrounds */
+	--palette-bg-accent: 172, 19, 13; /* behind light text */
+	--palette-bg-target: 255, 252, 215;
 
-  --palette-fg-link: 28, 89, 209; /* Link color */
-  --palette-fg-link-visited: 95, 134, 212; /* Visited link color */
-  --palette-fg-accent: 172, 19, 13; /* Accent foreground */
-  --palette-fg-negative: 139, 0, 0; /* Negative color */
-  --palette-fg-affirmative: 0, 128, 0; /* Affirmative color */
-  --palette-fg-author: 96, 129, 189; /* Author color */
-  --palette-fg-shape: 187, 187, 187; /* Shape color */
+	--palette-fg-link: 28, 89, 209;
+	--palette-fg-link-visited: 95, 134, 212;
+	--palette-fg-accent: 172, 19, 13; /* red as in lobste.rs */
+	--palette-fg-negative: 139, 0, 0; /* red as in warning */
+	--palette-fg-affirmative: 0, 128, 0;
+	--palette-fg-author: 96, 129, 189;
+	--palette-fg-shape: 187, 187, 187;
 
-  /* Explicit view colors */
-  --color-box-bg: #fff;
-  --color-box-bg-shaded: #eee;
-  --color-box-bg-shaded-rgb: 238, 238, 238;
-  --color-box-border: #ccc;
-  --color-box-border-focus: #808080;
+	/* explicit view colors */
+	--color-box-bg: #fff;
+	--color-box-bg-shaded: #eee;
+	--color-box-bg-shaded-rgb: 238, 238, 238;
+	--color-box-border: #ccc;
+	--color-box-border-focus: #808080;
 
-  --color-button-bg: #fafafa;
-  --color-button-bg-shaded: #e6e6e6;
+	--color-button-bg: #fafafa;
+	--color-button-bg-shaded: #e6e6e6;
 
-  --color-table-header-bg: #eaeaea;
-  --color-table-header-border: #cacaca;
-  --color-table-row-bg-even: #f8f8f8;
-  --color-table-row-bg-odd: #f5f5f5;
-  --color-table-row-border: #eaeaea;
+	--color-table-header-bg: #eaeaea;
+	--color-table-header-border: #cacaca;
+	--color-table-row-bg-even: #f8f8f8;
+	--color-table-row-bg-odd: #f5f5f5;
+	--color-table-row-border: #eaeaea;
 
-  --color-tag-bg: #fffcd7;
-  --color-tag-border: #d5d458;
-  --color-tag-media-bg: #ddebf9;
-  --color-tag-media-border: #b2ccf0;
-  --color-tag-meta-bg: #e0e0e0;
-  --color-tag-meta-border: #c8c8c8;
+	--color-tag-bg: #fffcd7;
+	--color-tag-border: #d5d458;
+	--color-tag-media-bg: #ddebf9;
+	--color-tag-media-border: #b2ccf0;
+	--color-tag-meta-bg: #e0e0e0;
+	--color-tag-meta-border: #c8c8c8;
 
-  --color-hat-crown-fill: #ddd;
-  --color-hat-crown-stroke: #eee;
-  --color-hat-brim-stroke: #bbb;
+	--color-hat-crown-fill: #ddd;
+	--color-hat-crown-stroke: #eee;
+	--color-hat-brim-stroke: #bbb;
 
-  --color-flash-bg-error: #fdcfcc;
-  --color-flash-bg-success: #dff0d8;
-  --color-flash-bg-notice: #cce6ee;
+	--color-flash-bg-error: #fdcfcc;
+	--color-flash-bg-success: #dff0d8;
+	--color-flash-bg-notice: #cce6ee;
 
-  --color-lobsters-fg-has-suggestions: #bd6060;
+	--color-lobsters-fg-has-suggestions: #bd6060;
 
-  --color-lobsters-tag-special-bg: #f9ddde;
-  --color-lobsters-tag-special-border: #f0b2b8;
+	--color-lobsters-tag-special-bg: #f9ddde;
+	--color-lobsters-tag-special-border: #f0b2b8;
 
-  --color-lobsters-hat-sysop-crown-fill: #ddc7c7;
-  --color-lobsters-hat-sysop-brim-stroke: #bbb2b2;
+	--color-lobsters-hat-sysop-crown-fill: #ddc7c7;
+	--color-lobsters-hat-sysop-brim-stroke: #bbb2b2;
 
-  /* Mobile */
-  --color-mobile-story-border: #e0e0e0;
-  --color-mobile-story-liner-bg: #fbfbfb;
-  --color-mobile-story-comments-bg: #e8e8e8;
-  --color-mobile-story-comments-bubble-fill: #ccc;
-  --color-mobile-story-comments-bubble-fill-zero: #d8d8d8;
+	/* mobile */
+	--color-mobile-story-border: #e0e0e0;
+	--color-mobile-story-liner-bg: #fbfbfb;
+	--color-mobile-story-comments-bg: #e8e8e8;
+	--color-mobile-story-comments-bubble-fill: #ccc;
+	--color-mobile-story-comments-bubble-fill-zero: #d8d8d8;
 LIGHT
 
 dark = <<-DARK
-  /* Dark mode - Adapted for Aqora's brand guidelines */
-  --palette-bg: 12, 12, 12; /* Dark background */
-  --palette-fg: 225, 225, 225; /* Light foreground */
-  --palette-light: 255, 255, 255; /* White for lighter elements */
-  --palette-shadow: 0, 0, 0; /* Black for shadows */
+	/* main monochrome */
+	--palette-bg: 12, 12, 12;
+	--palette-fg: 225, 225, 225;
+	--palette-light: 255, 255, 255;
+	--palette-shadow: 0, 0, 0;
 
-  /* Blends of foreground color over the background */
-  --opacity-contrast-15: 87%; /* Contrast capped at 10:1 for dark mode */
-  --opacity-contrast-13: 87%;
-  --opacity-contrast-10: 87%;
-  --opacity-contrast-7-5: 77%;
-  --opacity-contrast-6: 69%;
-  --opacity-contrast-5: 64%;
-  --opacity-contrast-4-5: 61%; /* WCAG AA minimum 4.5:1 text contrast */
+	/* blends of foreground color over the background */
+	--opacity-contrast-15: 87%; /* Contrast capped at 10:1 for dark mode */
+	--opacity-contrast-13: 87%; /* Contrast capped at 10:1 for dark mode */
+	--opacity-contrast-10: 87%;
+	--opacity-contrast-7-5: 77%;
+	--opacity-contrast-6: 69%;
+	--opacity-contrast-5: 64%;
+	--opacity-contrast-4-5: 61%; /* WCAG AA minimum 4.5:1 text contrast */
 
-  --opacity-gradient-lit: 13%;
-  --opacity-gradient-shadowed: 3%;
+	--opacity-gradient-lit: 13%;
+	--opacity-gradient-shadowed: 3%;
 
-  /* Colored backgrounds and foregrounds */
-  --palette-bg-accent: 253, 78, 72; /* Accent color */
-  --palette-bg-target: 27, 24, 11; /* Target background */
+	/* colored backgrounds and foregrounds */
+	--palette-bg-accent: 253, 78, 72; /* behind dark text */
+	--palette-bg-target: 27, 24, 11;
 
-  --palette-fg-link: 138, 177, 255; /* Link color */
-  --palette-fg-link-visited: 79, 138, 255; /* Visited link color */
-  --palette-fg-accent: 207, 54, 49; /* Accent foreground */
-  --palette-fg-negative: 190, 45, 45; /* Negative color */
-  --palette-fg-affirmative: 42, 180, 42; /* Affirmative color */
-  --palette-fg-author: 80, 112, 177; /* Author color */
-  --palette-fg-shape: 80, 80, 80; /* Shape color */
+	--palette-fg-link: 138, 177, 255;
+	--palette-fg-link-visited: 79, 138, 255;
+	--palette-fg-accent: 207, 54, 49; /* red as in lobste.rs */
+	--palette-fg-negative: 190, 45, 45; /* red as in warning */
+	--palette-fg-affirmative: 42, 180, 42;
+	--palette-fg-author: 80, 112, 177;
+	--palette-fg-shape: 80, 80, 80;
 
-  /* Explicit view colors */
-  --color-box-bg: #141414;
-  --color-box-bg-shaded: #202020;
-  --color-box-bg-shaded-rgb: 32, 32, 32;
-  --color-box-border: #303030;
-  --color-box-border-focus: #808080;
+	/* explicit view colors */
+	--color-box-bg: #141414;
+	--color-box-bg-shaded: #202020;
+	--color-box-bg-shaded-rgb: 32, 32, 32;
+	--color-box-border: #303030;
+	--color-box-border-focus: #808080;
 
-  --color-button-bg: #181818;
-  --color-button-bg-shaded: #242424;
+	--color-button-bg: #181818;
+	--color-button-bg-shaded: #242424;
 
-  --color-table-header-bg: #262626;
-  --color-table-header-border: #404040;
-  --color-table-row-bg-even: #181818;
-  --color-table-row-bg-odd: #1b1b1b;
-  --color-table-row-border: #262626;
+	--color-table-header-bg: #262626;
+	--color-table-header-border: #404040;
+	--color-table-row-bg-even: #181818;
+	--color-table-row-bg-odd: #1b1b1b;
+	--color-table-row-border: #262626;
 
-  --color-tag-bg: #3b320d;
-  --color-tag-border: #665501;
-  --color-tag-media-bg: #15293d;
-  --color-tag-media-border: #214669;
-  --color-tag-meta-bg: #2c2c2c;
-  --color-tag-meta-border: #484848;
+	--color-tag-bg: #3b320d;
+	--color-tag-border: #665501;
+	--color-tag-media-bg: #15293d;
+	--color-tag-media-border: #214669;
+	--color-tag-meta-bg: #2c2c2c;
+	--color-tag-meta-border: #484848;
 
-  --color-hat-crown-fill: #3b3b3b;
-  --color-hat-crown-stroke: #202020;
-  --color-hat-brim-stroke: #2a2a2a;
+	--color-hat-crown-fill: #3b3b3b;
+	--color-hat-crown-stroke: #202020;
+	--color-hat-brim-stroke: #2a2a2a;
 
-  --color-flash-bg-error: #451714;
-  --color-flash-bg-success: #273820;
-  --color-flash-bg-notice: #142e36;
+	--color-flash-bg-error: #451714;
+	--color-flash-bg-success: #273820;
+	--color-flash-bg-notice: #142e36;
 
-  --color-lobsters-fg-has-suggestions: #df7171;
+	--color-lobsters-fg-has-suggestions: #df7171;
 
-  --color-lobsters-tag-special-bg: #3b1719;
-  --color-lobsters-tag-special-border: #611a21;
+	--color-lobsters-tag-special-bg: #3b1719;
+	--color-lobsters-tag-special-border: #611a21;
 
-  --color-lobsters-hat-sysop-crown-fill: #3e2f2f;
-  --color-lobsters-hat-sysop-brim-stroke: #2c2222;
+	--color-lobsters-hat-sysop-crown-fill: #3e2f2f;
+	--color-lobsters-hat-sysop-brim-stroke: #2c2222;
 
-  /* Mobile */
-  --color-mobile-story-border: #1c1c1c;
-  --color-mobile-story-liner-bg: #0c0c0c;
-  --color-mobile-story-comments-bg: #101010;
-  --color-mobile-story-comments-bubble-fill: #282828;
-  --color-mobile-story-comments-bubble-fill-zero: #1c1c1c;
+	/* mobile */
+	--color-mobile-story-border: #1c1c1c;
+	--color-mobile-story-liner-bg: #0c0c0c;
+	--color-mobile-story-comments-bg: #101010;
+	--color-mobile-story-comments-bubble-fill: #282828;
+	--color-mobile-story-comments-bubble-fill-zero: #1c1c1c;
 DARK
 %>
 
 :root {
-  <%= light %>
+	<%= light %>
 }
 @media (prefers-color-scheme: dark) {
-  html.color-scheme-system {
-    <%= dark %>
-  }
+	html.color-scheme-system {
+		<%= dark %>
+	}
 }
 html.color-scheme-dark {
-  <%= dark %>
+	<%= dark %>
 }
-
-/* Update additional CSS styles here, ensuring alignment with Aqora's brand identity */
-/* For undefined values, best practices in design and readability are followed */
-
 
 /* overall page */
 

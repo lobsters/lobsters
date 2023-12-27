@@ -10,6 +10,42 @@ describe "stories", type: :request do
   describe "#check_url_dupe" do
     before { sign_in user }
 
+    context "html" do
+      it "returns an error when story URL is missing" do
+        expect {
+          post "/stories/check_url_dupe.html", params: {story: {url: ""}}
+        }.to raise_error(ActionController::ParameterMissing)
+      end
+
+      it "returns previous discussions for an existing story" do
+        post "/stories/check_url_dupe.html", params: {story: {url: story.url}}
+
+        expect(response).to be_successful
+
+        expect(response.body).to include("Previous discussions for this story")
+        expect(response.body).to include(story.title)
+        expect(response.body).to include(story.url)
+
+        expect(response.body).not_to include("merged into")
+      end
+
+      it "returns a story merged into an existing one" do
+        merged_story = create(:story, merged_story_id: story.id)
+
+        post "/stories/check_url_dupe.html", params: {story: {url: merged_story.url}}
+
+        expect(response).to be_successful
+
+        expect(response.body).to include("Previous discussions for this story")
+        expect(response.body).to include(merged_story.title)
+        expect(response.body).to include(merged_story.url)
+
+        expect(response.body).to include("merged into")
+        expect(response.body).to include(story.title)
+        expect(response.body).to include(story.url)
+      end
+    end
+
     context "json" do
       it "returns similar story matching URL" do
         post "/stories/check_url_dupe.json",

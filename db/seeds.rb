@@ -33,7 +33,7 @@ categories_with_tags = {
   "Quantum_Policy_Ethics" => ["Data_Security", "Quantum_Ready_Regulations", "Ethical_AI", "IP_Rights", "Privacy_Issues"],
   "Quantum_Research_Collab" => ["International_Collab", "Research_Grants", "Laboratory_Techniques", "Paper_Discussions", "Experimental_Setups"],
   "Quantum_Information" => ["Quantum_Cryptography", "QKD_Protocols", "Information_Theory", "Quantum_Coding", "Entropy_and_Information"],
-  "Quantum_Technologies_Future" => ["Quantum_Roadmaps", "Future_Predictions", "Theoretical_Breakthroughs", "Interdisciplinary", "Quantum_AI"],
+  "Quantum_Tech_Future" => ["Quantum_Roadmaps", "Future_Predictions", "Theoretical_Breakthroughs", "Interdisciplinary", "Quantum_AI"],
   "Quantum_Networking" => ["Quantum_Repeaters", "Network_Protocols", "Satellite_QKD", "Teleportation_Experiments", "Quantum_Internet"],
   "Events_Confs_Workshops" => ["Upcoming_Conferences", "Workshop_Highlights", "Networking_Events", "Virtual_Seminars", "Community_Meetups"]
 }

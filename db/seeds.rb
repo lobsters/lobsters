@@ -24,18 +24,18 @@ User.create(
 
 # Define categories and their corresponding tags
 categories_with_tags = {
-  "Quantum Computing" => ["Superconducting Qubits", "Trapped Ions", "Neutral Atoms", "Quantum Dots", "Topological Qubits", "Photonic Quantum Computing", "Quantum Algorithms", "Error Correction", "Quantum Software", "Quantum Supremacy"],
-  "Quantum Physics & Theory" => ["Quantum Entanglement", "Quantum Field Theory", "Nonlocality", "Quantum Gravity", "Bell Tests"],
-  "Quantum Engineering & Materials" => ["Nanofabrication", "Quantum Dots", "Photonic Chips", "Topological Insulators", "Quantum Metamaterials"],
-  "Quantum Applications" => ["Quantum Sensing", "Quantum Metrology", "Quantum Imaging", "Quantum Communications", "Quantum Simulation"],
-  "Commercial Quantum Industry" => ["Quantum Startups", "Venture Capital", "Industry Partnerships", "Patent Landscape", "Market Analysis"],
-  "Quantum Education & Outreach" => ["MOOCs", "University Programs", "Public Lectures", "Educational Initiatives", "Outreach Programs"],
-  "Quantum Policy & Ethics" => ["Data Security", "Quantum-Ready Regulations", "Ethical AI", "Intellectual Property Rights", "Privacy Issues"],
-  "Quantum Research & Collaboration" => ["International Collaborations", "Research Grants", "Laboratory Techniques", "Paper Discussions", "Experimental Setups"],
-  "Quantum Information Science" => ["Quantum Cryptography", "QKD Protocols", "Information Theory", "Quantum Coding", "Entropy and Information"],
-  "Quantum Technologies' Future" => ["Quantum Roadmaps", "Future Predictions", "Theoretical Breakthroughs", "Interdisciplinary Approaches", "Quantum AI"],
-  "Quantum Networking & Communication" => ["Quantum Repeaters", "Network Protocols", "Satellite QKD", "Teleportation Experiments", "Quantum Internet"],
-  "Events, Conferences & Workshops" => ["Upcoming Conferences", "Workshop Highlights", "Networking Events", "Virtual Seminars", "Community Meetups"]
+  "Quantum_Computing" => ["Superconducting_Qubits", "Trapped_Ions", "Neutral_Atoms", "Quantum_Dots", "Topological_Qubits", "Photonic_Quantum_Computing", "Quantum_Algorithms", "Error_Correction", "Quantum_Software", "Quantum_Supremacy"],
+  "Quantum_Physics_Theory" => ["Quantum_Entanglement", "Quantum_Field_Theory", "Nonlocality", "Quantum_Gravity", "Bell_Tests"],
+  "Quantum_Engineering_Materials" => ["Nanofabrication", "Quantum_Dots", "Photonic_Chips", "Topological_Insulators", "Quantum_Metamaterials"],
+  "Quantum_Applications" => ["Quantum_Sensing", "Quantum_Metrology", "Quantum_Imaging", "Quantum_Communications", "Quantum_Simulation"],
+  "Commercial_Quantum_Industry" => ["Quantum_Startups", "Venture_Capital", "Industry_Partnerships", "Patent_Landscape", "Market_Analysis"],
+  "Quantum_Education_Outreach" => ["MOOCs", "University_Programs", "Public_Lectures", "Educational_Initiatives", "Outreach_Programs"],
+  "Quantum_Policy_Ethics" => ["Data_Security", "Quantum_Ready_Regulations", "Ethical_AI", "Intellectual_Property_Rights", "Privacy_Issues"],
+  "Quantum_Research_Collaboration" => ["International_Collaborations", "Research_Grants", "Laboratory_Techniques", "Paper_Discussions", "Experimental_Setups"],
+  "Quantum_Information_Science" => ["Quantum_Cryptography", "QKD_Protocols", "Information_Theory", "Quantum_Coding", "Entropy_and_Information"],
+  "Quantum_Technologies_Future" => ["Quantum_Roadmaps", "Future_Predictions", "Theoretical_Breakthroughs", "Interdisciplinary_Approaches", "Quantum_AI"],
+  "Quantum_Networking_Communication" => ["Quantum_Repeaters", "Network_Protocols", "Satellite_QKD", "Teleportation_Experiments", "Quantum_Internet"],
+  "Events_Conferences_Workshops" => ["Upcoming_Conferences", "Workshop_Highlights", "Networking_Events", "Virtual_Seminars", "Community_Meetups"]
 }
 
 # Iterate over the categories and their tags

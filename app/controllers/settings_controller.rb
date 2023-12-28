@@ -156,7 +156,7 @@ class SettingsController < ApplicationController
       success: "#{Rails.application.root_url}settings/pushover_callback?" \
         "rand=#{session[:pushover_rand]}",
       failure: "#{Rails.application.root_url}settings/"
-    )
+    ), allow_other_host: true
   end
 
   def pushover_callback
@@ -188,7 +188,7 @@ class SettingsController < ApplicationController
 
   def github_auth
     session[:github_state] = SecureRandom.hex
-    redirect_to Github.oauth_auth_url(session[:github_state])
+    redirect_to Github.oauth_auth_url(session[:github_state]), allow_other_host: true
   end
 
   def github_callback
@@ -224,7 +224,7 @@ class SettingsController < ApplicationController
 
   def twitter_auth
     session[:twitter_state] = SecureRandom.hex
-    redirect_to Twitter.oauth_auth_url(session[:twitter_state])
+    redirect_to Twitter.oauth_auth_url(session[:twitter_state]), allow_other_host: true
   rescue OAuth::Unauthorized
     flash[:error] = "Twitter says we're not authenticating properly, please message the admin"
     redirect_to "/settings"

@@ -1,4 +1,4 @@
-class PrivateTags < ActiveRecord::Migration[7.1]
+class PrivateTags < ActiveRecord::Migration
   def up
     add_column :tags, :privileged, :boolean, default: false
 

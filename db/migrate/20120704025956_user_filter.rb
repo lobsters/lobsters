@@ -1,4 +1,4 @@
-class UserFilter < ActiveRecord::Migration[7.1]
+class UserFilter < ActiveRecord::Migration
   def up
     create_table :tag_filters do |t|
       t.timestamps null: false

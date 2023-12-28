@@ -1,4 +1,4 @@
-class RemoveCommentsDragon < ActiveRecord::Migration[7.1]
+class RemoveCommentsDragon < ActiveRecord::Migration
   def change
     remove_column :comments, :is_dragon
   end

@@ -1,4 +1,4 @@
-class RemoveTagFilteredByDefault < ActiveRecord::Migration[7.1]
+class RemoveTagFilteredByDefault < ActiveRecord::Migration
   def change
     remove_column :tags, :filtered_by_default
   end

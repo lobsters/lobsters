@@ -1,4 +1,4 @@
-class AddKarmaToUsers < ActiveRecord::Migration[7.1]
+class AddKarmaToUsers < ActiveRecord::Migration
   def up
     add_column :users, :karma, :integer, default: 0, null: false
 

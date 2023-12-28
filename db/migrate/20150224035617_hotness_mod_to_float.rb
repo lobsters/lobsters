@@ -1,4 +1,4 @@
-class HotnessModToFloat < ActiveRecord::Migration[7.1]
+class HotnessModToFloat < ActiveRecord::Migration
   def change
     change_column :tags, :hotness_mod, :float
   end

@@ -1,4 +1,4 @@
-class AddStoriesUserIndex < ActiveRecord::Migration[7.1]
+class AddStoriesUserIndex < ActiveRecord::Migration
   def change
     add_index "stories", ["user_id"]
   end

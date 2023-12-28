@@ -1,4 +1,4 @@
-class AddInvitationRequests < ActiveRecord::Migration[7.1]
+class AddInvitationRequests < ActiveRecord::Migration
   def up
     create_table :invitation_requests do |t|
       t.string :code

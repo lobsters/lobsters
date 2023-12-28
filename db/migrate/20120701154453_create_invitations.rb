@@ -4,7 +4,7 @@
 # Create your database with `rails db:schema:load`, not by running all these.
 # We have migrations to migrate live databases, not create them, and we do not
 # want a PR to 'fix' migrations.
-class CreateInvitations < ActiveRecord::Migration[7.1]
+class CreateInvitations < ActiveRecord::Migration
   def change
     create_table :invitations do |t|
       t.integer :user_id

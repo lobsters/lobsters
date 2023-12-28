@@ -1,4 +1,4 @@
-class AddFulltextIndicies < ActiveRecord::Migration[7.1]
+class AddFulltextIndicies < ActiveRecord::Migration
   def change
     add_index(:stories, :title, type: :fulltext)
     add_index(:stories, :description, type: :fulltext)

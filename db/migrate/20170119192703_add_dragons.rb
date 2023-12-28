@@ -1,4 +1,4 @@
-class AddDragons < ActiveRecord::Migration[7.1]
+class AddDragons < ActiveRecord::Migration
   def change
     add_column :comments, :is_dragon, :boolean, default: false
   end

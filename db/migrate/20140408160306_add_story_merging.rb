@@ -1,4 +1,4 @@
-class AddStoryMerging < ActiveRecord::Migration[7.1]
+class AddStoryMerging < ActiveRecord::Migration
   def change
     add_column :stories, :merged_story_id, :integer
     add_index "stories", ["merged_story_id"]

@@ -1,4 +1,4 @@
-class MoveCommentCountsToStory < ActiveRecord::Migration[7.1]
+class MoveCommentCountsToStory < ActiveRecord::Migration
   def up
     add_column :stories, :comments_count, :integer, default: 0,
       null: false

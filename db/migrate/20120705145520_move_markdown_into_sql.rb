@@ -1,4 +1,4 @@
-class MoveMarkdownIntoSql < ActiveRecord::Migration[7.1]
+class MoveMarkdownIntoSql < ActiveRecord::Migration
   def up
     add_column :comments, :markeddown_comment, :text
     add_column :stories, :markeddown_description, :text

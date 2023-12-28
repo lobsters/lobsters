@@ -1,4 +1,4 @@
-class InvitationMemo < ActiveRecord::Migration[7.1]
+class InvitationMemo < ActiveRecord::Migration
   def up
     add_column :invitations, :memo, :text
   end

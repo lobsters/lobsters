@@ -1,4 +1,4 @@
-class AddStoryUnavailable < ActiveRecord::Migration[7.1]
+class AddStoryUnavailable < ActiveRecord::Migration
   def change
     add_column :stories, :unavailable_at, :datetime
   end

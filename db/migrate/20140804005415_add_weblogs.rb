@@ -1,4 +1,4 @@
-class AddWeblogs < ActiveRecord::Migration[7.1]
+class AddWeblogs < ActiveRecord::Migration
   def change
     create_table :weblogs do |t|
       t.timestamps

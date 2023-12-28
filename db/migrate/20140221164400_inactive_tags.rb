@@ -1,4 +1,4 @@
-class InactiveTags < ActiveRecord::Migration[7.1]
+class InactiveTags < ActiveRecord::Migration
   def change
     add_column :tags, :inactive, :boolean, default: false
   end

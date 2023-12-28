@@ -10,81 +10,82 @@ after vendor css for easier overriding:
 
 <%
 light = <<-LIGHT
-  /* Main Monochrome - Updated to Aqora's palette */
-  --palette-bg: 255, 255, 255; /* White background */
-  --palette-fg: 10, 17, 40; /* Midnight Blue foreground */
+  /* ONLY DARK MODE COLORS FOR NOW - LIKED IT MORE */
+  /* Dark mode - Adapted for Aqora's brand guidelines */
+  --palette-bg: 10, 17, 40; /* Midnight Blue dark background */
+  --palette-fg: 255, 255, 255; /* White light foreground */
   --palette-light: 255, 255, 255; /* White for lighter elements */
   --palette-shadow: 0, 0, 0; /* Black for shadows */
-
+    
   /* Blends of foreground color over the background */
-  --opacity-contrast-15: 100%;
-  --opacity-contrast-13: 94%;
-  --opacity-contrast-10: 84%;
-  --opacity-contrast-7-5: 75%;
-  --opacity-contrast-6: 67%;
-  --opacity-contrast-5: 63%;
-  --opacity-contrast-4-5: 59%; /* WCAG AA minimum 4.5:1 text contrast */
-
-  --opacity-gradient-lit: 0%;
-  --opacity-gradient-shadowed: 13%;
-
+  --opacity-contrast-15: 87%; /* Contrast capped at 10:1 for dark mode */
+  --opacity-contrast-13: 87%;
+  --opacity-contrast-10: 87%;
+  --opacity-contrast-7-5: 77%;
+  --opacity-contrast-6: 69%;
+  --opacity-contrast-5: 64%;
+  --opacity-contrast-4-5: 61%; /* WCAG AA minimum 4.5:1 text contrast */
+  
+  --opacity-gradient-lit: 13%;
+  --opacity-gradient-shadowed: 3%;
+  
   /* Colored backgrounds and foregrounds */
   --palette-bg-accent: 143, 119, 255; /* Purple accent color */
-  --palette-bg-target: 190, 212, 250; /* Grey target background */
+  --palette-bg-target: 67, 40, 229; /* Indigo target background */
   
-  --palette-fg-link: 67, 40, 229; /* Indigo link color */
-  --palette-fg-link-visited: 143, 119, 255; /* Purple visited link color */
+  --palette-fg-link: 143, 119, 255; /* Purple link color */
+  --palette-fg-link-visited: 190, 212, 250; /* Grey visited link color */
   --palette-fg-accent: 143, 119, 255; /* Purple accent foreground */
   --palette-fg-negative: 190, 212, 250; /* Grey negative color */
   --palette-fg-affirmative: 67, 40, 229; /* Indigo affirmative color */
-  --palette-fg-author: 143, 119, 255; /* Purple author color */
-  --palette-fg-shape: 190, 212, 250; /* Grey shape color */
-
+  --palette-fg-author: 190, 212, 250; /* Grey author color */
+  --palette-fg-shape: 67, 40, 229; /* Indigo shape color */
+  
   /* Explicit view colors */
-  --color-box-bg: #fff;
-  --color-box-bg-shaded: #eee;
-  --color-box-bg-shaded-rgb: 238, 238, 238;
-  --color-box-border: #ccc;
+  --color-box-bg: #141414;
+  --color-box-bg-shaded: #202020;
+  --color-box-bg-shaded-rgb: 32, 32, 32;
+  --color-box-border: #303030;
   --color-box-border-focus: #808080;
-
-  --color-button-bg: #fafafa;
-  --color-button-bg-shaded: #e6e6e6;
-
-  --color-table-header-bg: #eaeaea;
-  --color-table-header-border: #cacaca;
-  --color-table-row-bg-even: #f8f8f8;
-  --color-table-row-bg-odd: #f5f5f5;
-  --color-table-row-border: #eaeaea;
-
-  --color-tag-bg: #fffcd7;
-  --color-tag-border: #d5d458;
-  --color-tag-media-bg: #ddebf9;
-  --color-tag-media-border: #b2ccf0;
-  --color-tag-meta-bg: #e0e0e0;
-  --color-tag-meta-border: #c8c8c8;
-
-  --color-hat-crown-fill: #ddd;
-  --color-hat-crown-stroke: #eee;
-  --color-hat-brim-stroke: #bbb;
-
-  --color-flash-bg-error: #fdcfcc;
-  --color-flash-bg-success: #dff0d8;
-  --color-flash-bg-notice: #cce6ee;
-
-  --color-lobsters-fg-has-suggestions: #bd6060;
-
-  --color-lobsters-tag-special-bg: #f9ddde;
-  --color-lobsters-tag-special-border: #f0b2b8;
-
-  --color-lobsters-hat-sysop-crown-fill: #ddc7c7;
-  --color-lobsters-hat-sysop-brim-stroke: #bbb2b2;
-
+  
+  --color-button-bg: #181818;
+  --color-button-bg-shaded: #242424;
+  
+  --color-table-header-bg: #262626;
+  --color-table-header-border: #404040;
+  --color-table-row-bg-even: #181818;
+  --color-table-row-bg-odd: #1b1b1b;
+  --color-table-row-border: #262626;
+  
+  --color-tag-bg: #3b320d;
+  --color-tag-border: #665501;
+  --color-tag-media-bg: #15293d;
+  --color-tag-media-border: #214669;
+  --color-tag-meta-bg: #2c2c2c;
+  --color-tag-meta-border: #484848;
+  
+  --color-hat-crown-fill: #3b3b3b;
+  --color-hat-crown-stroke: #202020;
+  --color-hat-brim-stroke: #2a2a2a;
+  
+  --color-flash-bg-error: #451714;
+  --color-flash-bg-success: #273820;
+  --color-flash-bg-notice: #142e36;
+  
+  --color-lobsters-fg-has-suggestions: #df7171;
+  
+  --color-lobsters-tag-special-bg: #3b1719;
+  --color-lobsters-tag-special-border: #611a21;
+  
+  --color-lobsters-hat-sysop-crown-fill: #3e2f2f;
+  --color-lobsters-hat-sysop-brim-stroke: #2c2222;
+  
   /* Mobile */
-  --color-mobile-story-border: #e0e0e0;
-  --color-mobile-story-liner-bg: #fbfbfb;
-  --color-mobile-story-comments-bg: #e8e8e8;
-  --color-mobile-story-comments-bubble-fill: #ccc;
-  --color-mobile-story-comments-bubble-fill-zero: #d8d8d8;
+  --color-mobile-story-border: #1c1c1c;
+  --color-mobile-story-liner-bg: #0c0c0c;
+  --color-mobile-story-comments-bg: #101010;
+  --color-mobile-story-comments-bubble-fill: #282828;
+  --color-mobile-story-comments-bubble-fill-zero: #1c1c1c;
 LIGHT
 
 dark = <<-DARK

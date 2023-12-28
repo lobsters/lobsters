@@ -1,4 +1,4 @@
-class AddUserListId < ActiveRecord::Migration
+class AddUserListId < ActiveRecord::Migration[7.1]
   def up
     add_column :users, :mailing_list_token, :string
     add_column :users, :mailing_list_enabled, :boolean, default: false

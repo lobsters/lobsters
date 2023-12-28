@@ -1,4 +1,4 @@
-class AddHats < ActiveRecord::Migration
+class AddHats < ActiveRecord::Migration[7.1]
   def change
     create_table :hats do |t|
       t.timestamps

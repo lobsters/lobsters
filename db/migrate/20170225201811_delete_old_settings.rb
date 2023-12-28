@@ -1,4 +1,4 @@
-class DeleteOldSettings < ActiveRecord::Migration
+class DeleteOldSettings < ActiveRecord::Migration[7.1]
   def change
     [
       :email_notifications,

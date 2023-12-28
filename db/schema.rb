@@ -18,24 +18,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
     t.index ["category"], name: "index_categories_on_category", unique: true
   end
 
-  create_table "comments", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "comments", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil
     t.string "short_id", limit: 10, default: "", null: false
-    t.bigint "story_id", null: false, unsigned: true
+    t.bigint "story_id", null: false
     t.binary "confidence_order", limit: 3, null: false
-    t.bigint "user_id", null: false, unsigned: true
-    t.bigint "parent_comment_id", unsigned: true
-    t.bigint "thread_id", unsigned: true
+    t.bigint "user_id", null: false
+    t.bigint "parent_comment_id"
+    t.bigint "thread_id"
     t.text "comment", size: :medium, null: false
     t.integer "score", default: 1, null: false
-    t.integer "flags", default: 0, null: false, unsigned: true
+    t.integer "flags", default: 0, null: false
     t.decimal "confidence", precision: 20, scale: 19, default: "0.0", null: false
     t.text "markeddown_comment", size: :medium
     t.boolean "is_deleted", default: false
     t.boolean "is_moderated", default: false
     t.boolean "is_from_email", default: false
-    t.bigint "hat_id", unsigned: true
+    t.bigint "hat_id"
     t.index ["comment"], name: "index_comments_on_comment", type: :fulltext
     t.index ["confidence"], name: "confidence_idx"
     t.index ["hat_id"], name: "comments_hat_id_fk"
@@ -56,21 +56,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
     t.string "banned_reason", limit: 200
   end
 
-  create_table "hat_requests", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "hat_requests", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
-    t.bigint "user_id", null: false, unsigned: true
+    t.bigint "user_id", null: false
     t.string "hat", null: false
     t.string "link", null: false
     t.text "comment", size: :medium, null: false
     t.index ["user_id"], name: "hat_requests_user_id_fk"
   end
 
-  create_table "hats", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "hats", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
-    t.bigint "user_id", null: false, unsigned: true
-    t.bigint "granted_by_user_id", null: false, unsigned: true
+    t.bigint "user_id", null: false
+    t.bigint "granted_by_user_id", null: false
     t.string "hat", null: false
     t.string "link"
     t.boolean "modlog_use", default: false
@@ -79,14 +79,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
     t.index ["user_id"], name: "hats_user_id_fk"
   end
 
-  create_table "hidden_stories", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "user_id", null: false, unsigned: true
-    t.bigint "story_id", null: false, unsigned: true
+  create_table "hidden_stories", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "story_id", null: false
     t.index ["story_id"], name: "hidden_stories_story_id_fk"
     t.index ["user_id", "story_id"], name: "index_hidden_stories_on_user_id_and_story_id", unique: true
   end
 
-  create_table "invitation_requests", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "invitation_requests", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "code"
     t.boolean "is_verified", default: false
     t.string "email", null: false
@@ -97,44 +97,44 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
     t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "invitations", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "user_id", null: false, unsigned: true
+  create_table "invitations", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
     t.string "email"
     t.string "code"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.text "memo", size: :medium
     t.datetime "used_at", precision: nil
-    t.bigint "new_user_id", unsigned: true
+    t.bigint "new_user_id"
     t.index ["new_user_id"], name: "invitations_new_user_id_fk"
     t.index ["user_id"], name: "invitations_user_id_fk"
   end
 
-  create_table "keystores", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "keystores", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "key", limit: 50, default: "", null: false
     t.bigint "value"
     t.index ["key"], name: "key", unique: true
   end
 
-  create_table "messages", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "messages", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil
-    t.bigint "author_user_id", unsigned: true
-    t.bigint "recipient_user_id", null: false, unsigned: true
+    t.bigint "author_user_id"
+    t.bigint "recipient_user_id", null: false
     t.boolean "has_been_read", default: false
     t.string "subject", limit: 100
     t.text "body", size: :medium
     t.string "short_id", limit: 30
     t.boolean "deleted_by_author", default: false
     t.boolean "deleted_by_recipient", default: false
-    t.bigint "hat_id", unsigned: true
+    t.bigint "hat_id"
     t.index ["hat_id"], name: "index_messages_on_hat_id"
     t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"
     t.index ["short_id"], name: "random_hash", unique: true
   end
 
-  create_table "mod_notes", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "moderator_user_id", null: false, unsigned: true
-    t.bigint "user_id", null: false, unsigned: true
+  create_table "mod_notes", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "moderator_user_id", null: false
+    t.bigint "user_id", null: false
     t.text "note", null: false
     t.text "markeddown_note", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -143,17 +143,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
     t.index ["user_id"], name: "mod_notes_user_id_fk"
   end
 
-  create_table "moderations", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "moderations", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.bigint "moderator_user_id", unsigned: true
-    t.bigint "story_id", unsigned: true
-    t.bigint "comment_id", unsigned: true
-    t.bigint "user_id", unsigned: true
+    t.bigint "moderator_user_id"
+    t.bigint "story_id"
+    t.bigint "comment_id"
+    t.bigint "user_id"
     t.text "action", size: :medium
     t.text "reason", size: :medium
     t.boolean "is_from_suggestions", default: false
-    t.bigint "tag_id", unsigned: true
+    t.bigint "tag_id"
     t.integer "domain_id"
     t.bigint "category_id"
     t.index ["comment_id"], name: "moderations_comment_id_fk"
@@ -165,28 +165,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
     t.index ["user_id"], name: "index_moderations_on_user_id"
   end
 
-  create_table "read_ribbons", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "read_ribbons", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.boolean "is_following", default: true
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.bigint "user_id", null: false, unsigned: true
-    t.bigint "story_id", null: false, unsigned: true
+    t.bigint "user_id", null: false
+    t.bigint "story_id", null: false
     t.index ["story_id"], name: "index_read_ribbons_on_story_id"
     t.index ["user_id"], name: "index_read_ribbons_on_user_id"
   end
 
-  create_table "saved_stories", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "saved_stories", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.bigint "user_id", null: false, unsigned: true
-    t.bigint "story_id", null: false, unsigned: true
+    t.bigint "user_id", null: false
+    t.bigint "story_id", null: false
     t.index ["story_id"], name: "saved_stories_story_id_fk"
     t.index ["user_id", "story_id"], name: "index_saved_stories_on_user_id_and_story_id", unique: true
   end
 
-  create_table "stories", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "stories", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil
-    t.bigint "user_id", null: false, unsigned: true
+    t.bigint "user_id", null: false
     t.string "url", limit: 250, default: ""
     t.string "normalized_url"
     t.string "title", limit: 150, default: "", null: false
@@ -194,12 +194,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
     t.string "short_id", limit: 6, default: "", null: false
     t.boolean "is_deleted", default: false, null: false
     t.integer "score", default: 1, null: false
-    t.integer "flags", default: 0, null: false, unsigned: true
+    t.integer "flags", default: 0, null: false
     t.boolean "is_moderated", default: false, null: false
     t.decimal "hotness", precision: 20, scale: 10, default: "0.0", null: false
     t.text "markeddown_description", size: :medium
     t.integer "comments_count", default: 0, null: false
-    t.bigint "merged_story_id", unsigned: true
+    t.bigint "merged_story_id"
     t.datetime "unavailable_at", precision: nil
     t.string "twitter_id", limit: 20
     t.boolean "user_is_author", default: false
@@ -227,40 +227,40 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
     t.index ["title"], name: "index_story_texts_on_title", type: :fulltext
   end
 
-  create_table "suggested_taggings", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "story_id", null: false, unsigned: true
-    t.bigint "tag_id", null: false, unsigned: true
-    t.bigint "user_id", null: false, unsigned: true
+  create_table "suggested_taggings", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "story_id", null: false
+    t.bigint "tag_id", null: false
+    t.bigint "user_id", null: false
     t.index ["story_id"], name: "suggested_taggings_story_id_fk"
     t.index ["tag_id"], name: "suggested_taggings_tag_id_fk"
     t.index ["user_id"], name: "suggested_taggings_user_id_fk"
   end
 
-  create_table "suggested_titles", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "story_id", null: false, unsigned: true
-    t.bigint "user_id", null: false, unsigned: true
+  create_table "suggested_titles", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "story_id", null: false
+    t.bigint "user_id", null: false
     t.string "title", limit: 150, default: "", null: false
     t.index ["story_id"], name: "suggested_titles_story_id_fk"
     t.index ["user_id"], name: "suggested_titles_user_id_fk"
   end
 
-  create_table "tag_filters", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "tag_filters", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.bigint "user_id", null: false, unsigned: true
-    t.bigint "tag_id", null: false, unsigned: true
+    t.bigint "user_id", null: false
+    t.bigint "tag_id", null: false
     t.index ["tag_id"], name: "tag_filters_tag_id_fk"
     t.index ["user_id", "tag_id"], name: "user_tag_idx"
   end
 
-  create_table "taggings", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "story_id", null: false, unsigned: true
-    t.bigint "tag_id", null: false, unsigned: true
+  create_table "taggings", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "story_id", null: false
+    t.bigint "tag_id", null: false
     t.index ["story_id", "tag_id"], name: "story_id_tag_id", unique: true
     t.index ["tag_id"], name: "taggings_tag_id_fk"
   end
 
-  create_table "tags", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "tags", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "tag", limit: 25, null: false
     t.string "description", limit: 100
     t.boolean "privileged", default: false, null: false
@@ -273,7 +273,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
     t.index ["tag"], name: "tag", unique: true
   end
 
-  create_table "users", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "users", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "username", limit: 50
     t.string "email", limit: 100
     t.string "password_digest", limit: 75
@@ -282,7 +282,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
     t.string "password_reset_token", limit: 75
     t.string "session_token", limit: 75, default: "", null: false
     t.text "about", size: :medium
-    t.bigint "invited_by_user_id", unsigned: true
+    t.bigint "invited_by_user_id"
     t.boolean "is_moderator", default: false
     t.boolean "pushover_mentions", default: false
     t.string "rss_token", limit: 75
@@ -290,11 +290,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
     t.integer "mailing_list_mode", default: 0
     t.integer "karma", default: 0, null: false
     t.datetime "banned_at", precision: nil
-    t.bigint "banned_by_user_id", unsigned: true
+    t.bigint "banned_by_user_id"
     t.string "banned_reason", limit: 200
     t.datetime "deleted_at", precision: nil
     t.datetime "disabled_invite_at", precision: nil
-    t.bigint "disabled_invite_by_user_id", unsigned: true
+    t.bigint "disabled_invite_by_user_id"
     t.string "disabled_invite_reason", limit: 200
     t.text "settings", size: :medium
     t.boolean "show_email", default: false, null: false
@@ -310,10 +310,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
     t.index ["username"], name: "username", unique: true
   end
 
-  create_table "votes", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "user_id", null: false, unsigned: true
-    t.bigint "story_id", null: false, unsigned: true
-    t.bigint "comment_id", unsigned: true
+  create_table "votes", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "story_id", null: false
+    t.bigint "comment_id"
     t.integer "vote", limit: 1, null: false
     t.string "reason", limit: 1
     t.datetime "updated_at", precision: nil, null: false

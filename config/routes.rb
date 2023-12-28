@@ -235,9 +235,6 @@ Rails.application.routes.draw do
 
   get "/privacy" => "about#privacy"
   get "/about" => "about#about"
-  get "/chat" => "about#chat"
-
-  get "/stats" => "stats#index"
 
   post "/csp-violation-report" => "csp#violation_report"
 end

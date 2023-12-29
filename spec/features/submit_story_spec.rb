@@ -69,7 +69,7 @@ RSpec.feature "Submitting Stories", type: :feature do
 
   scenario "new user submitting a never-before-seen domain" do
     inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
-    user.update(created_at: 1.day.ago)
+    user.update!(created_at: 1.day.ago)
     refute(Domain.where(domain: "example.net").exists?)
     expect {
       visit "/stories/new"
@@ -83,7 +83,7 @@ RSpec.feature "Submitting Stories", type: :feature do
   end
 
   scenario "new user resubmitting a link" do
-    user.update(created_at: 1.day.ago)
+    user.update!(created_at: 1.day.ago)
     s = create(:story, created_at: 1.year.ago)
     expect {
       visit "/stories/new"
@@ -100,7 +100,7 @@ RSpec.feature "Submitting Stories", type: :feature do
     inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
     drama = create(:tag, tag: "drama", permit_by_new_users: false)
     earlier_story = create(:story)
-    user.update(created_at: 1.day.ago)
+    user.update!(created_at: 1.day.ago)
     expect {
       visit "/stories/new"
       fill_in "URL", with: "https://#{earlier_story.domain.domain}/story"

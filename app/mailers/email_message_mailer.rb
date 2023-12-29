@@ -1,6 +1,6 @@
 # typed: false
 
-class EmailMessage < ApplicationMailer
+class EmailMessageMailer < ApplicationMailer
   def notify(message, user)
     @message = message
     @user = user

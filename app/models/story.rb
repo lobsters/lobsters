@@ -99,7 +99,7 @@ class Story < ApplicationRecord
     user.nil? ? none : joins(:savings).merge(SavedStory.by(user))
   }
   scope :to_tweet, -> {
-    hottest(nil, Tag.where(tag: "meta").pluck(:id))
+    hottest(nil, Tag.where(tag: "meta").ids)
       .where(twitter_id: nil)
       .where("score >= 2")
       .where("created_at >= ?", 2.days.ago)
@@ -153,9 +153,9 @@ class Story < ApplicationRecord
   attr_writer :fetched_response
 
   before_validation :assign_short_id_and_score, on: :create
-  before_create :assign_initial_hotness
   before_save :log_moderation
   before_save :fix_bogus_chars
+  before_create :assign_initial_hotness
   after_create :mark_submitter, :record_initial_upvote
   after_save :update_cached_columns, :update_story_text
 
@@ -591,7 +591,7 @@ class Story < ApplicationRecord
     }.join(", ")
 
     m.reason = moderation_reason
-    m.save
+    m.save!
 
     self.is_moderated = true
   end
@@ -614,7 +614,7 @@ class Story < ApplicationRecord
   end
 
   def merge_story_short_id=(sid)
-    self.merged_story_id = sid.present? ? Story.where(short_id: sid).pluck(:id).first : nil
+    self.merged_story_id = sid.present? ? Story.where(short_id: sid).pick(:id) : nil
   end
 
   def merge_story_short_id
@@ -676,7 +676,7 @@ class Story < ApplicationRecord
 
     st.each do |tagging|
       if !new_tag_names_a.include?(tagging.tag.tag)
-        tagging.destroy
+        tagging.destroy!
       end
     end
 

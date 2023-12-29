@@ -27,7 +27,7 @@
       show_story ||= @story.try(:id) != comment.story_id
       # show merge icon only on story page when merged
       was_merged = @story && (@story.id != comment.story_id)
-      is_unread = is_unread?(comment)
+      is_unread = @ribbon&.is_unread?(comment)
     %>
 
 <%#heinous_inline_partial(comments/_comment.html.erb)%>

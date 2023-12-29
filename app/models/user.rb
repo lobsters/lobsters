@@ -52,7 +52,7 @@ class User < ApplicationRecord
     through: :votes,
     source: :story
   has_many :hats, dependent: :destroy
-  has_many :wearable_hats, -> { where("doffed_at is null") },
+  has_many :wearable_hats, -> { where(doffed_at: nil) },
     class_name: "Hat",
     inverse_of: :user
 
@@ -184,7 +184,7 @@ class User < ApplicationRecord
     h = super(only: attrs)
 
     h[:avatar_url] = avatar_url
-    h[:invited_by_user] = User.where(id: invited_by_user_id).pluck(:username).first
+    h[:invited_by_user] = User.where(id: invited_by_user_id).pick(:username)
 
     if github_username.present?
       h[:github_username] = github_username
@@ -264,7 +264,7 @@ class User < ApplicationRecord
       self.banned_by_user_id = banner.id
       self.banned_reason = reason
 
-      BanNotification.notify(self, banner, reason) unless deleted_at?
+      BanNotificationMailer.notify(self, banner, reason) unless deleted_at?
       delete!
 
       m = Moderation.new
@@ -375,11 +375,11 @@ class User < ApplicationRecord
 
       sent_messages.each do |m|
         m.deleted_by_author = true
-        m.save
+        m.save!
       end
       received_messages.each do |m|
         m.deleted_by_recipient = true
-        m.save
+        m.save!
       end
 
       invitations.destroy_all
@@ -396,11 +396,11 @@ class User < ApplicationRecord
     User.transaction do
       sent_messages.each do |m|
         m.deleted_by_author = false
-        m.save
+        m.save!
       end
       received_messages.each do |m|
         m.deleted_by_recipient = false
-        m.save
+        m.save!
       end
 
       self.deleted_at = nil
@@ -449,7 +449,7 @@ class User < ApplicationRecord
     self.password_reset_token = "#{Time.current.to_i}-#{Utils.random_str(30)}"
     save!
 
-    PasswordReset.password_reset_link(self, ip).deliver_now
+    PasswordResetMailer.password_reset_link(self, ip).deliver_now
   end
 
   def has_2fa?

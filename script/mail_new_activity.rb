@@ -13,17 +13,17 @@ class String
 
     q_encode_word = ->(w) { "=?UTF-8?Q?#{w}?=" }
 
-    string \
+    string
       # Undo linebreaks from #pack("M") because we'll be adding characters
-      .gsub("=\n", "") \
+      .gsub("=\n", "")
       # Question marks are delimiters in q-encoding so must be escaped
-      .gsub("?", "=3F") \
+      .gsub("?", "=3F")
       # Spaces are insignificant in q-encoding so must be escaped
-      .gsub(/\s+/, " _") \
+      .gsub(/\s+/, " _")
       # Take each space-separated word, then q-encode
-      .split(" ").map(&q_encode_word) \
+      .split(" ").map(&q_encode_word)
       # Recombine words then word wrap at 75 characters
-      .join(" ").word_wrap(75) \
+      .join(" ").word_wrap(75)
       # Compose final string, folding headers per rfc 2822 section 2.2.3
       .lines.join("\t")
   end

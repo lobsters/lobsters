@@ -2,13 +2,13 @@
 
 require "rails_helper"
 
-RSpec.describe EmailReply, type: :mailer do
+RSpec.describe EmailReplyMailer, type: :mailer do
   it "has a stable message-id" do
     comment = create(:comment)
     user = comment.user
 
-    e1 = EmailReply.reply(comment, user)
-    e2 = EmailReply.reply(comment, user)
+    e1 = EmailReplyMailer.reply(comment, user)
+    e2 = EmailReplyMailer.reply(comment, user)
     expect(e1["Message-ID"]).to_not be_nil
     expect(e1["Message-ID"].to_s).to eq(e2["Message-ID"].to_s)
   end
@@ -18,7 +18,7 @@ RSpec.describe EmailReply, type: :mailer do
     comment = create(:comment)
     reply = create(:comment, parent_comment: comment)
 
-    email = EmailReply.reply(reply, user)
+    email = EmailReplyMailer.reply(reply, user)
     expect(email["Message-ID"].to_s).to eq("<#{reply.mailing_list_message_id}>")
     expect(email["In-Reply-To"].to_s).to eq("<#{comment.mailing_list_message_id}>")
     expect(email["References"].to_s).to include(comment.mailing_list_message_id)
@@ -31,7 +31,7 @@ RSpec.describe EmailReply, type: :mailer do
     user = comment.user
     reply = create(:comment, parent_comment: comment)
 
-    email = EmailReply.reply(reply, user)
+    email = EmailReplyMailer.reply(reply, user)
     expect(email.body.encoded).to match("replied to you")
   end
 
@@ -39,7 +39,7 @@ RSpec.describe EmailReply, type: :mailer do
     user = create(:story).user
     comment = create(:comment)
 
-    email = EmailReply.reply(comment, user)
+    email = EmailReplyMailer.reply(comment, user)
     expect(email.body.encoded).to match("replied to your story")
   end
 
@@ -48,7 +48,7 @@ RSpec.describe EmailReply, type: :mailer do
     comment = create(:comment, user: create(:user, username: "alice"))
     reply = create(:comment, parent_comment: comment)
 
-    email = EmailReply.reply(reply, user)
+    email = EmailReplyMailer.reply(reply, user)
     expect(email.body.encoded).to match("replied to alice")
   end
 end

@@ -97,7 +97,7 @@ RSpec.feature "Commenting" do
       comment.reload
       expect(comment.score).to eq(2)
 
-      story.update(merged_stories: [hot_take])
+      story.update!(merged_stories: [hot_take])
       visit "/s/#{story.short_id}"
       expect(page.find(:css, ".comment.upvoted .score")).to have_content("2")
     end

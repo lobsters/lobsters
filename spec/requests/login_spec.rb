@@ -160,7 +160,7 @@ describe "login", type: :request do
     end
 
     it "doesn't reset if token expired" do
-      user.update(password_reset_token: "#{2.days.ago.to_i}-#{Utils.random_str(30)}")
+      user.update!(password_reset_token: "#{2.days.ago.to_i}-#{Utils.random_str(30)}")
       expect {
         post "/login/set_new_password", params: {
           token: user.password_reset_token,

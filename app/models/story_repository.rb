@@ -7,7 +7,7 @@ class StoryRepository
   end
 
   def categories(cats)
-    tagged_story_ids = Tagging.select(:story_id).where(tag_id: Tag.where(category: cats).pluck(:id))
+    tagged_story_ids = Tagging.select(:story_id).where(tag_id: Tag.where(category: cats).select(:id))
 
     Story.base(@user).positive_ranked.where(id: tagged_story_ids).order(created_at: :desc)
   end
@@ -28,7 +28,7 @@ class StoryRepository
 
   def active
     Story.base(@user)
-      .where.not(id: Story.hidden_by(@user).pluck(:id))
+      .where.not(id: Story.hidden_by(@user).select(:id))
       .filter_tags(@params[:exclude_tags] || [])
       .select('stories.*, (
         select max(comments.id)

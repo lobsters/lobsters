@@ -84,7 +84,7 @@ class Moderation < ApplicationRecord
     m.body << "\n" \
       "*This is an automated message.*"
 
-    m.save
+    m.save!
   end
 
   protected

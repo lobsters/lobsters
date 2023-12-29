@@ -99,7 +99,7 @@ Rails.application.configure do
 
   # cache full pages for logged-out visitors without tag filters
   config.action_controller.perform_caching = true
-  config.action_controller.page_cache_directory = "#{Rails.root}/public/cache"
+  config.action_controller.page_cache_directory = Rails.public_path.join("cache").to_s
 
   # why help timing attacks?
   config.middleware.delete(Rack::Runtime)

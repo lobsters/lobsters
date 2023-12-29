@@ -78,7 +78,7 @@ class Message < ApplicationRecord
 
   def check_for_both_deleted
     if deleted_by_author? && deleted_by_recipient?
-      destroy
+      destroy!
     end
   end
 
@@ -91,7 +91,7 @@ class Message < ApplicationRecord
 
     if recipient.email_messages?
       begin
-        EmailMessage.notify(self, recipient).deliver_now
+        EmailMessageMailer.notify(self, recipient).deliver_now
       rescue => e
         Rails.logger.error "error e-mailing #{recipient.email}: #{e}"
       end

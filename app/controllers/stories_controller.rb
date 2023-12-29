@@ -21,7 +21,7 @@ class StoriesController < ApplicationController
 
     if @story.valid? && !(@story.already_posted_recently? && !@story.seen_previous)
       if @story.save
-        ReadRibbon.where(user: @user, story: @story).first_or_create
+        ReadRibbon.where(user: @user, story: @story).first_or_create!
         return redirect_to @story.comments_path
       end
     end
@@ -437,7 +437,7 @@ class StoriesController < ApplicationController
     @story = if @user.is_moderator?
       Story.where(short_id: params[:story_id] || params[:id]).first
     else
-      Story.where(user_id: @user.id, short_id: (params[:story_id] || params[:id])).first
+      Story.where(user_id: @user.id, short_id: params[:story_id] || params[:id]).first
     end
 
     if !@story
@@ -471,7 +471,7 @@ class StoriesController < ApplicationController
 
   def track_story_reads
     @story = Story.where(short_id: params[:id]).first!
-    @ribbon = ReadRibbon.where(user: @user, story: @story).first_or_create
+    @ribbon = ReadRibbon.where(user: @user, story: @story).first_or_create!
     yield
     @ribbon.bump
   end

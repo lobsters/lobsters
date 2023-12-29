@@ -1,6 +1,6 @@
 # typed: false
 
-class EmailReply < ApplicationMailer
+class EmailReplyMailer < ApplicationMailer
   def reply(comment, user)
     @comment = comment
     @user = user

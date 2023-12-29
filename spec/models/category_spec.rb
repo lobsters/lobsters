@@ -5,7 +5,7 @@ require "rails_helper"
 describe Category do
   context "validations" do
     it "allows a valid category to be created" do
-      category = Category.create(
+      category = Category.create!(
         category: Faker::Lorem.word
       )
       expect(category).to be_valid

@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
 
   def agent_is_spider?
     ua = request.env["HTTP_USER_AGENT"].to_s
-    (ua == "" || ua.match(/(Google|bing|Slack|Twitter)bot|Slurp|crawler|Feedly|FeedParser|RSS/))
+    ua == "" || ua.match(/(Google|bing|Slack|Twitter)bot|Slurp|crawler|Feedly|FeedParser|RSS/)
   end
 
   def authenticate_user

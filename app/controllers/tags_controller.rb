@@ -30,7 +30,7 @@ class TagsController < ApplicationController
   def create
     @title = "Create Tag"
     tag = Tag.create(tag_params)
-    if tag.valid?
+    if tag.persisted?
       flash[:success] = "Tag #{tag.tag} has been created"
       redirect_to tags_path
     else

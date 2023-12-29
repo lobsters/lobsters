@@ -78,12 +78,12 @@
 
   <label class="required">Stories Submitted:</label>
   <span class="d">
-    <%= stories_submitted_content(@showing_user) %>
+    <%= stories_submitted_content(@user, @showing_user) %>
   </span>
   <br>
 
   <label class="required">Comments Posted:</label>
-  <span class="d"><%= comments_posted_content(@showing_user) %></span>
+  <span class="d"><%= comments_posted_content(@user, @showing_user) %></span>
   <br>
 
   <% if @showing_user.hats.any? %>

@@ -76,7 +76,7 @@ Please don't use this to promote the story, summarize the post, or explain why y
 See the guidelines below for more." %>
     </div>
 
-    <%= tag.details class: "boxline actions", open: show_guidelines? ? true : nil do %>
+    <%= tag.details class: "boxline actions", open: show_guidelines?(@user) ? true : nil do %>
       <summary>Story submission guidelines</summary>
       <ul>
 

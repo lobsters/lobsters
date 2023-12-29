@@ -1,10 +1,17 @@
 ignore:
+  - '**/*':
+    # there's no "don't delete these records or shit will be on fire" option,
+    # just various "sure automatically destroy lots of data yolo" options
+    - Rails/HasManyOrHasOneDependent
+    # is a multimaster db while needing microsecond accurate sorting really 'standard'
+    - Rails/OrderById
   # it's mad about the class variables and I don't want to risk the refactor now
   - 'extras/**/*':
     - Naming/VariableName
-  # migrations are not live code; ignore those before standardrb
+  # migrations are not live code
   - 'db/migrate/201*'
   - 'db/migrate/2020*'
+  - 'db/migrate/2022*'
   - 'db/migrate/202309*'
 
 plugins:

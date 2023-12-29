@@ -1,6 +1,6 @@
 # typed: false
 
-class PasswordReset < ApplicationMailer
+class PasswordResetMailer < ApplicationMailer
   def password_reset_link(user, ip)
     @user = user
     @ip = ip

@@ -4,6 +4,12 @@ class ReadRibbon < ApplicationRecord
   belongs_to :user
   belongs_to :story
 
+  def is_unread? comment
+    return false if !user
+
+    (comment.created_at > updated_at) && (comment.user_id != user.id)
+  end
+
   # don't add callbacks to this model; for performance the read tracking in
   # StoriesController uses .bump and RepliesController uses update_all, etc.
 
@@ -28,7 +34,7 @@ class ReadRibbon < ApplicationRecord
   # save without callbacks, validation, or transaction
   def bump
     if new_record?
-      save
+      save!
     else
       update_column(:updated_at, Time.now.utc)
     end

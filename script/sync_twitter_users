@@ -36,7 +36,7 @@ our_users = User.active.where("settings LIKE '%twitter_username:%'")
 
 # ignore users that have previously been determined to have protected accounts,
 # which cannot be added to a public list
-Keystore.where("`key` LIKE 'user:%:twitter_private'").each do |ks|
+Keystore.where("`key` LIKE 'user:%:twitter_private'").find_each do |ks|
   our_users.reject! do |k, _v|
     k.downcase == ks.key.scan(/:(.+):/).first.first.downcase
   end

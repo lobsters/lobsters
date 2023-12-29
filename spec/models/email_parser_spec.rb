@@ -13,7 +13,7 @@ describe EmailParser do
     @emailer = create(:user, mailing_list_mode: 1)
 
     @emails = {}
-    Dir.glob("#{Rails.root}/spec/fixtures/inbound_emails/*.eml")
+    Dir.glob(Rails.root.join("spec/fixtures/inbound_emails/*.eml").to_s)
       .each do |f|
       @emails[File.basename(f).gsub(/\..*/, "")] = File.read(f)
         .gsub("##SHORTNAME##", Rails.application.shortname)

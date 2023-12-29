@@ -39,7 +39,7 @@ module Lobsters
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = "Central Time (US & Canada)"
 
-    # config.eager_load_paths << Rails.root.join("extras")
+    config.autoload_paths << "#{root}/extras"
 
     # Raise an exception when using mass assignment with unpermitted attributes
     config.action_controller.action_on_unpermitted_parameters = :raise
@@ -56,8 +56,8 @@ module Lobsters
     config.skip_yarn = true
 
     config.after_initialize do
-      require "#{Rails.root}/lib/monkey.rb"
-      require "#{Rails.root}/lib/time_series.rb"
+      require Rails.root.join("lib/monkey.rb").to_s
+      require Rails.root.join("lib/time_series.rb").to_s
     end
 
     config.generators do |g|

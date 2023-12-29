@@ -149,6 +149,29 @@
       "note": "Rendered markdown"
     },
     {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "438821a8545ab06b9a347e6e1307042b8c6c837b3325e4d0f932dbff7beb6228",
+      "check_name": "FileAccess",
+      "message": "Model attribute used in file name",
+      "file": "app/controllers/avatars_controller.rb",
+      "line": 53,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "File.rename(\"#{Rails.public_path.join(\"avatars/\").to_s}/.#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\", \"#{Rails.public_path.join(\"avatars/\").to_s}/#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "AvatarsController",
+        "method": "show"
+      },
+      "user_input": "User.where(:username => username).first!.username",
+      "confidence": "Medium",
+      "cwe_id": [
+        22
+      ],
+      "note": "User#username validated by User::VALID_USERNAME"
+    },
+    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "455575c070fc0b95bb68b3055efb408120950dc93c0d2fe47d37443531612465",
@@ -170,29 +193,6 @@
         89
       ],
       "note": "Search.flatten_title is a security control"
-    },
-    {
-      "warning_type": "File Access",
-      "warning_code": 16,
-      "fingerprint": "6b060ef0bd512b993bd2411b4e284fbc90bd7d7cd47fbfd7e3f01d8b2815a317",
-      "check_name": "FileAccess",
-      "message": "Model attribute used in file name",
-      "file": "app/controllers/avatars_controller.rb",
-      "line": 53,
-      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "File.rename(\"#{\"#{Rails.root}/public/avatars/\"}/.#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\", \"#{\"#{Rails.root}/public/avatars/\"}/#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "AvatarsController",
-        "method": "show"
-      },
-      "user_input": "User.where(:username => username).first!.username",
-      "confidence": "Medium",
-      "cwe_id": [
-        22
-      ],
-      "note": "User#username validated by User::VALID_USERNAME"
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -296,6 +296,29 @@
         89
       ],
       "note": "calculated_hotness returns float; id is an integer"
+    },
+    {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "a49c5ada804d39509938a1b7737994d697c646342f3ba6745571665724944958",
+      "check_name": "FileAccess",
+      "message": "Model attribute used in file name",
+      "file": "app/controllers/avatars_controller.rb",
+      "line": 49,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "File.open(\"#{Rails.public_path.join(\"avatars/\").to_s}/.#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\", \"wb+\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "AvatarsController",
+        "method": "show"
+      },
+      "user_input": "User.where(:username => username).first!.username",
+      "confidence": "Medium",
+      "cwe_id": [
+        22
+      ],
+      "note": "User#username validated by User::VALID_USERNAME"
     },
     {
       "warning_type": "SQL Injection",
@@ -502,29 +525,6 @@
       "note": "Search.strip_operators is a security control"
     },
     {
-      "warning_type": "File Access",
-      "warning_code": 16,
-      "fingerprint": "e50701db198ac5e2a90070b29ba5eee35ee4a2528d774c1176de2dc1516cc721",
-      "check_name": "FileAccess",
-      "message": "Model attribute used in file name",
-      "file": "app/controllers/avatars_controller.rb",
-      "line": 49,
-      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "File.open(\"#{\"#{Rails.root}/public/avatars/\"}/.#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\", \"wb+\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "AvatarsController",
-        "method": "show"
-      },
-      "user_input": "User.where(:username => username).first!.username",
-      "confidence": "Medium",
-      "cwe_id": [
-        22
-      ],
-      "note": "User#username validated by User::VALID_USERNAME"
-    },
-    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "ed6edc863b3d05ed041487a6c42052e07ffefa7daa03efd786b4d1409d64fc16",
@@ -571,6 +571,6 @@
       "note": "IntervalHelper#time_interval is a security control"
     }
   ],
-  "updated": "2023-12-17 20:12:30 -0600",
-  "brakeman_version": "6.1.0"
+  "updated": "2023-12-28 19:26:34 -0600",
+  "brakeman_version": "6.1.1"
 }

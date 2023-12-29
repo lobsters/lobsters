@@ -162,7 +162,7 @@ class Story < ApplicationRecord
   validate do
     if url.present?
       already_posted_recently?
-      check_not_tracking_domain
+      check_not_banned_domain
       check_not_new_domain_from_new_user
       errors.add(:url, "is not valid") unless url.match(URL_RE)
     elsif description.to_s.strip == ""
@@ -217,7 +217,7 @@ class Story < ApplicationRecord
     end
   end
 
-  def check_not_tracking_domain
+  def check_not_banned_domain
     return unless url.present? && new_record? && domain
 
     if domain.banned?

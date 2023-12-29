@@ -80,59 +80,34 @@ if __FILE__ == $PROGRAM_NAME
         # story has tags this user has filtered out
         next
       end
-
+    
       if s.is_hidden_by_user?(u)
         # user has hidden this story
         next
       end
-
-      list = "#{Rails.application.shortname}-#{u.mailing_list_token}@#{Rails.application.domain}"
-
-      IO.popen(
-        [{}, "/usr/sbin/sendmail", "-i", "-f", "quantumnews@aqora.io", u.email],
-        "w"
-      ) do |mail|
-        mail.puts "From: #{s.user.username} <#{s.user.username}@#{Rails.application.domain}>"
-        mail.puts "X-Is-Author: #{s.user_is_author?}"
-        mail.puts "Reply-To: #{list}"
-        mail.puts "To: #{list}"
-        mail.puts "X-BeenThere: #{list}"
-        mail.puts "List-Id: #{Rails.application.name} <#{list}>"
-        mail.puts "List-Unsubscribe: <#{Rails.application.root_url}settings>"
-        mail.puts "Precedence: list"
-        mail.puts "MIME-Version: 1.0"
-        mail.puts "Content-Type: text/plain; charset=\"utf-8\""
-        mail.puts "Content-Transfer-Encoding: quoted-printable"
-        mail.puts "Message-ID: <#{s.mailing_list_message_id}>"
-        mail.puts "Date: " << s.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
-        mail.puts "Subject: " << story_subject(s)
-        mail.puts ""
-
-        body = []
-
-        if s.description.present?
-          body.push s.description.to_s.word_wrap(EMAIL_WIDTH)
-        end
-
-        if s.url.present?
-          if s.description.present?
-            body.push ""
-          end
-
-          body.push "Via: #{s.url}"
-
-          StoryText.cached?(s) do |text|
-            body.push ""
-            body.push text.to_s.word_wrap(EMAIL_WIDTH)
-          end
-        end
-
-        body.push ""
-        body.push "-- "
-        body.push "Vote: #{s.short_id_url}"
-
-        mail.puts body.join("\n").quoted_printable
+    
+      body = []
+    
+      if s.description.present?
+        body.push s.description.to_s.word_wrap(EMAIL_WIDTH)
       end
+    
+      if s.url.present?
+        body.push "" if s.description.present?
+        body.push "Via: #{s.url}"
+    
+        StoryText.cached?(s) do |text|
+          body.push ""
+          body.push text.to_s.word_wrap(EMAIL_WIDTH)
+        end
+      end
+    
+      body.push ""
+      body.push "-- "
+      body.push "Vote: #{s.short_id_url}"
+    
+      # Send email using ActionMailer
+      MailingListMailer.story_email(u, s, body.join("\n").quoted_printable).deliver_now
     end
 
     last_story_id = s.id
@@ -164,71 +139,34 @@ if __FILE__ == $PROGRAM_NAME
         # stories only
         next
       end
-
+    
       if (c.story.tags.map(&:id) & u.tag_filters.map(&:tag_id)).any?
         # story has tags this user has filtered out
         next
       end
-
+    
       if c.story.is_hidden_by_user?(u)
         # user has hidden this story
         next
       end
-
-      domain = Rails.application.domain
-      list = "#{Rails.application.shortname}-#{u.mailing_list_token}@#{Rails.application.domain}"
-
-      IO.popen([{}, "/usr/sbin/sendmail", "-i", "-f", "quantumnews@aqora.io", u.email], "w") do |mail|
-        from = "From: \"#{c.user.username}"
-        if c.hat
-          from << " (#{c.hat.hat})"
-        end
-        from << "\" <#{c.user.username}@#{domain}>"
-        mail.puts from
-
-        mail.puts "Reply-To: #{list}"
-        mail.puts "To: #{list}"
-        mail.puts "List-Id: #{Rails.application.name} <#{list}>"
-        mail.puts "List-Unsubscribe: <#{Rails.application.root_url}settings>"
-        mail.puts "Precedence: list"
-        mail.puts "MIME-Version: 1.0"
-        mail.puts "Content-Type: text/plain; charset=\"utf-8\""
-        mail.puts "Content-Transfer-Encoding: quoted-printable"
-        mail.puts "Message-ID: <#{c.mailing_list_message_id}>"
-
-        if c.parent_comment_id
-          mail.puts "In-Reply-To: <#{c.parent_comment.mailing_list_message_id}>"
-        else
-          mail.puts "In-Reply-To: <#{c.story.mailing_list_message_id}>"
-        end
-
-        refs = ([c.story.mailing_list_message_id] +
-          c.parents.map(&:mailing_list_message_id))
-          .map { |r| "<#{r}>" }
-        mail.puts "References: #{refs.join(" ")}"
-
-        mail.puts "Date: " << c.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
-        mail.puts "Subject: " << story_subject(c.story, "Re: ")
-        mail.puts ""
-
-        body = []
-
-        # if the comment has hard line breaks at <80, it likely came from an
-        # email, so don't re-wrap it at something shorter
-        com = c.comment.to_s
-        com_lines = com.split("\n")
-        if com_lines.length > 1 && com_lines.first.length < 80
-          body.push com.word_wrap(80)
-        else
-          body.push com.word_wrap(EMAIL_WIDTH)
-        end
-
-        body.push ""
-        body.push "-- "
-        body.push "Vote: #{c.short_id_url}"
-
-        mail.puts body.join("\n").quoted_printable
+    
+      # Construct email body
+      body = []
+    
+      com = c.comment.to_s
+      com_lines = com.split("\n")
+      if com_lines.length > 1 && com_lines.first.length < 80
+        body.push com.word_wrap(80)
+      else
+        body.push com.word_wrap(EMAIL_WIDTH)
       end
+    
+      body.push ""
+      body.push "-- "
+      body.push "Vote: #{c.short_id_url}"
+    
+      # Send email using ActionMailer
+      MailingListMailer.comment_email(u, c, c.story, body.join("\n").quoted_printable).deliver_now
     end
 
     last_comment_id = c.id

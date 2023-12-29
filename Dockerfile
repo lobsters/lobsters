@@ -26,7 +26,7 @@ RUN bundle exec rake assets:precompile
 FROM ruby:3.2.2-slim
 
 # Install runtime dependencies for MariaDB and NodeJS
-RUN apt-get update && apt-get install -y libmariadb3 nodejs && rm -rf /var/lib/apt/lists/* 
+RUN apt-get update && apt-get install -y libmariadb3 nodejs sendmail && rm -rf /var/lib/apt/lists/* 
 
 # Set the work directory
 WORKDIR /lobsters

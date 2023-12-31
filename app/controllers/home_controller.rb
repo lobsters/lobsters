@@ -126,7 +126,11 @@ class HomeController < ApplicationController
     # our list is unstable because upvoted stories get removed, so point at /newest.rss
     @rss_link = {title: "RSS 2.0 - Newest Items", href: user_token_link("/newest.rss")}
 
-    render action: "index"
+    # render action: "index"
+    respond_to do |format|
+      format.html { render action: "index" }
+      format.json { render json: @stories }
+    end
   end
 
   def saved

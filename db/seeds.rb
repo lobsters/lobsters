@@ -7,10 +7,10 @@ User.create!(
 )
 
 User.create(
-  username: "stubbi",
-  email: "jannes@aqora.io",
-  password: "test",
-  password_confirmation: "test",
+  username: "quantumnews",
+  email: "quantumnews@aqora.io",
+  password: ENV.fetch('ADMIN_PASSWORD', 'quantumnews'),
+  password_confirmation: ENV.fetch('ADMIN_PASSWORD', 'quantumnews'),
   is_admin: true,
   is_moderator: true,
   karma: [

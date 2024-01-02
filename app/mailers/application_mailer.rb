@@ -1,5 +1,5 @@
 # typed: false
 
 class ApplicationMailer < ActionMailer::Base
-  default from: "quantumnews@aqora.io"
+  default from: '"Quantum News" <quantumnews@aqora.io>'
 end

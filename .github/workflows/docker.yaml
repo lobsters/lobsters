@@ -33,7 +33,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/aqora-io/news
+          images: ghcr.io/aqora-io/quantumnews
           flavor: |
             latest=false
           tags: |

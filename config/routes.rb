@@ -146,14 +146,14 @@ Rails.application.routes.draw do
     :as => "user_enable_invite"
 
   # 2023-07 redirect /u to /~username and /users (for tree)
-  get "/u", to: redirect("/users", status: 302)
-  get "/u/:username", to: redirect("/~%{username}", status: 302)
+  get "/u", to: redirect("/users", status: 301)
+  get "/u/:username", to: redirect("/~%{username}", status: 301)
   # we don't do /@alice but easy mistake with comments autolinking @alice
-  get "/@:username", to: redirect("/~%{username}", status: 302)
-  get "/u/:username/standing", to: redirect("~%{username}/standing", status: 302)
-  get "/newest/:user", to: redirect("~%{user}/stories", status: 302)
-  get "/newest/:user(/page/:page)", to: redirect("~%{user}/stories/page/%{page}", status: 302)
-  get "/threads/:user", to: redirect("~%{user}/threads", status: 302)
+  get "/@:username", to: redirect("/~%{username}", status: 301)
+  get "/u/:username/standing", to: redirect("~%{username}/standing", status: 301)
+  get "/newest/:user", to: redirect("~%{user}/stories", status: 301)
+  get "/newest/:user(/page/:page)", to: redirect("~%{user}/stories/page/%{page}", status: 301)
+  get "/threads/:user", to: redirect("~%{user}/threads", status: 301)
 
   get "/avatars/:username_size.png" => "avatars#show"
   post "/avatars/expire" => "avatars#expire"

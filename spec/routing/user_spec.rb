@@ -54,13 +54,4 @@ describe "user redirects", type: :request do
   it "threads" do
     expect(get("/threads/alice")).to redirect_to("/~alice/threads")
   end
-
-  # 2023-07: I'm deploying with 302 redirects so I don't have to worry about 301s getting
-  # indefinitely cached in case of error, but after some time to build confidence, it's appropriate
-  # to 301. I'm putting a time bomb test in here to remind me to finalize.
-  it "is temporarily temporary" do
-    expect(get("/u/alice")).to eq(302)
-
-    expect(Time.zone.today).to be_before(Date.new(2024, 1, 1))
-  end
 end

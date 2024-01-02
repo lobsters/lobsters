@@ -171,7 +171,7 @@
     <label class="required">Flagged (1m):</label>
     <span class="d">
       <% if (stats = FlaggedCommenters.new('1m').check_list_for(@showing_user)) %>
-        <a href="/mod/commenters/1m#<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % stats[:sigma] %> &sigma;
+        <a href="/mod/commenters/1m#<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % (stats[:sigma] || 0) %> &sigma;
       <% else %>
         No
       <% end %>

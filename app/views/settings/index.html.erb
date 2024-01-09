@@ -263,6 +263,24 @@
     </div>
   <% end %>
 
+  <% if Aqora.enabled? %>
+    <div class="boxline">
+      <span>
+      <%= label_tag :aqora_username,
+        raw("<a href=\"#{Aqora.host}\">aqora</a>:"),
+        :class => "required" %>
+      <% if @edit_user.aqora_username.present? %>
+        Linked to
+        <strong><a href="<%= h(Aqora.relative_url(@edit_user.aqora_username))
+          %>"><%= h(@edit_user.aqora_username) %></a></strong>
+          <%= link_post "Disconnect", "/settings/aqora_disconnect" %>
+      <% else %>
+        <a href="/settings/aqora_auth">Connect</a>
+      <% end %>
+      </span>
+    </div>
+  <% end %>
+
   <% if Twitter.enabled? %>
     <div class="boxline">
       <%= label_tag :twitter_username,

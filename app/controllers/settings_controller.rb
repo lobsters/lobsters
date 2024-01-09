@@ -222,6 +222,42 @@ class SettingsController < ApplicationController
     redirect_to "/settings"
   end
 
+  def aqora_auth
+    session[:aqora_state] = SecureRandom.hex
+    redirect_to Aqora.oauth_auth_url(session[:aqora_state]), allow_other_host: true
+  end
+
+  def aqora_callback
+    if session[:aqora_state].blank? ||
+        params[:code].blank? ||
+        (params[:state].to_s != session[:aqora_state].to_s)
+      flash[:error] = "Invalid OAuth state"
+      return redirect_to "/settings"
+    end
+
+    session.delete(:aqora_state)
+
+    tok, username = Aqora.token_and_user_from_code(request.url)
+    if tok.present? && username.present?
+      @user.aqora_oauth_token = tok
+      @user.aqora_username = username
+      @user.save!
+      flash[:success] = "Your account has been linked to aqora user #{username}."
+    else
+      return aqora_disconnect
+    end
+
+    redirect_to "/settings"
+  end
+
+  def aqora_disconnect
+    @user.aqora_oauth_token = nil
+    @user.aqora_username = nil
+    @user.save!
+    flash[:success] = "Your aqora association has been removed."
+    redirect_to "/settings"
+  end
+
   def twitter_auth
     session[:twitter_state] = SecureRandom.hex
     redirect_to Twitter.oauth_auth_url(session[:twitter_state]), allow_other_host: true

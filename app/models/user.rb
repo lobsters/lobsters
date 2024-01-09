@@ -77,6 +77,8 @@ class User < ApplicationRecord
     s.string :twitter_oauth_token
     s.string :twitter_oauth_token_secret
     s.string :twitter_username
+    s.string :aqora_oauth_token
+    s.string :aqora_username
     s.any :keybase_signatures, array: true
     s.string :homepage
   end
@@ -188,6 +190,10 @@ class User < ApplicationRecord
 
     if github_username.present?
       h[:github_username] = github_username
+    end
+
+    if aqora_username.present?
+      h[:aqora_username] = aqora_username
     end
 
     if twitter_username.present?

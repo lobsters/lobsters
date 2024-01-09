@@ -56,8 +56,6 @@ class User < ApplicationRecord
     class_name: "Hat",
     inverse_of: :user
 
-  has_secure_password
-
   typed_store :settings do |s|
     s.string :prefers_color_scheme, default: "system"
     s.boolean :email_notifications, default: false
@@ -96,16 +94,12 @@ class User < ApplicationRecord
     },
     allow_blank: true
 
-  validates :password, presence: true, on: :create
-
   VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/
   validates :username,
     format: {with: /\A#{VALID_USERNAME}\z/o},
     length: {maximum: 50},
     uniqueness: {case_sensitive: false}
 
-  validates :password_reset_token,
-    length: {maximum: 75}
   validates :session_token,
     length: {maximum: 75}
   validates :about,
@@ -451,13 +445,6 @@ class User < ApplicationRecord
     true
   end
 
-  def initiate_password_reset_for_ip(ip)
-    self.password_reset_token = "#{Time.current.to_i}-#{Utils.random_str(30)}"
-    save!
-
-    PasswordResetMailer.password_reset_link(self, ip).deliver_now
-  end
-
   def has_2fa?
     totp_secret.present?
   end
@@ -472,7 +459,7 @@ class User < ApplicationRecord
 
   # user was deleted/banned before a server move, see lib/tasks/privacy_wipe
   def is_wiped?
-    password_digest == "*"
+    false
   end
 
   def is_new?

@@ -134,17 +134,6 @@
     <br>
   <% end %>
 
-  <% if @showing_user.aqora_username.present? %>
-    <label class="required">Aqora:</label>
-
-    <span class="d">
-      <a href="<%= h(Aqora.relative_url(@showing_user.aqora_username)) %>"
-        rel="me ugc"><%= h(Aqora.relative_url(@showing_user.aqora_username))
-        %></a>
-    </span>
-    <br>
-  <% end %>
-
   <% if @showing_user.twitter_username.present? %>
     <label class="required">Twitter:</label>
 

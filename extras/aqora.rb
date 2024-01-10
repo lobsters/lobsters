@@ -29,6 +29,10 @@ class AqoraApi
       viewer {
         id
         username
+        email
+        website
+        bio
+        github
       }
     }
   GRAPHQL
@@ -56,6 +60,29 @@ class AqoraApi
   end
 end
 
+class GraphQLClientError < StandardError
+  attr_reader :errors
+
+  def initialize(message, errors)
+    super(message)
+    @errors = errors
+  end
+
+  def self.from_errors(errors)
+    begin
+      message = errors.messages['data'].join(' ')
+    rescue StandardError
+      message = 'GraphQL error'
+    end
+    new(message, errors)
+  end
+end
+
+class AqoraOAuth2TokenError < GraphQLClientError; end
+class AqoraOAuth2ViewerError < GraphQLClientError; end
+class AqoraOAuth2ClientError < StandardError; end
+class AqoraOAuth2UnauthorizedError < StandardError; end
+
 class Aqora
   cattr_reader :host
 
@@ -80,22 +107,22 @@ class Aqora
     @host.present?
   end
 
-  def self.token_and_user_from_code(callback_uri)
+  def self.oauth_callback_user(callback_uri)
     uri = URI.parse(callback_uri)
     code = CGI.parse(uri.query)['code'].first
     redirect_uri = uri.origin + uri.path
     oauth2_token = api.oauth2_token(code, redirect_uri)
 
-    raise "OAuth2 token error: #{oauth2_token.errors.messages['data'].join(' ')}" unless oauth2_token.errors.empty?
-    raise 'OAuth2 unauthorized' if oauth2_token.data.oauth2_token.unauthorized.present?
-    raise 'OAuth2 client error' if oauth2_token.data.oauth2_token.client_error.present?
+    raise AqoraOAuth2TokenError.from_errors(oauth2.token.errors) unless oauth2_token.errors.empty?
+    raise AqoraOAuth2UnauthorizedError if oauth2_token.data.oauth2_token.unauthorized.present?
+    raise AqoraOAuth2ClientError if oauth2_token.data.oauth2_token.client_error.present?
 
     access_token = oauth2_token.data.oauth2_token.issued.access_token
     viewer = api.viewer(access_token)
 
-    raise "OAuth2 viewer error: #{viewer.errors.messages['data'].join(' ')}" unless viewer.errors.empty?
+    raise AqoraOAuth2ViewerError.from_errors(viewer.errors) unless viewer.errors.empty?
 
-    [access_token, viewer.data.viewer.username]
+    viewer.data.viewer
   end
 
   def self.oauth_auth_url(state)

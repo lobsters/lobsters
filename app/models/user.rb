@@ -75,8 +75,6 @@ class User < ApplicationRecord
     s.string :twitter_oauth_token
     s.string :twitter_oauth_token_secret
     s.string :twitter_username
-    s.string :aqora_oauth_token
-    s.string :aqora_username
     s.any :keybase_signatures, array: true
     s.string :homepage
   end

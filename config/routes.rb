@@ -48,21 +48,26 @@ Rails.application.routes.draw do
   get "/replies/unread/page/:page" => "replies#unread"
 
   get "/login" => "login#index"
-  post "/login" => "login#login"
+  get "/signup" => "login#index"
+  # post "/login" => "login#login"
   post "/logout" => "login#logout"
-  get "/login/2fa" => "login#twofa"
-  post "/login/2fa_verify" => "login#twofa_verify", :as => "twofa_login"
 
-  get "/signup" => "signup#index"
-  post "/signup" => "signup#signup"
-  get "/signup/invite" => "signup#invite"
+  # get "/login/2fa" => "login#twofa"
+  # post "/login/2fa_verify" => "login#twofa_verify", :as => "twofa_login"
 
-  get "/login/forgot_password" => "login#forgot_password",
-    :as => "forgot_password"
-  post "/login/reset_password" => "login#reset_password",
-    :as => "reset_password"
-  match "/login/set_new_password" => "login#set_new_password",
-    :as => "set_new_password", :via => [:get, :post]
+  # get "/signup" => "signup#index"
+  # post "/signup" => "signup#signup"
+  # get "/signup/invite" => "signup#invite"
+
+  # get "/login/forgot_password" => "login#forgot_password",
+  #   :as => "forgot_password"
+  # post "/login/reset_password" => "login#reset_password",
+  #   :as => "reset_password"
+  # match "/login/set_new_password" => "login#set_new_password",
+  #   :as => "set_new_password", :via => [:get, :post]
+
+  get "/login/aqora_auth" => "login#aqora_auth"
+  get "/login/aqora_callback" => "login#aqora_callback"
 
   get "/t/:tag" => "home#single_tag", :as => "tag", :constraints => {tag: /[^,\.]+/}
   get "/t/:tag" => "home#multi_tag", :as => "multi_tag"
@@ -162,23 +167,21 @@ Rails.application.routes.draw do
   post "/settings" => "settings#update"
   post "/settings/delete_account" => "settings#delete_account",
     :as => "delete_account"
-  get "/settings/2fa" => "settings#twofa", :as => "twofa"
-  post "/settings/2fa_auth" => "settings#twofa_auth", :as => "twofa_auth"
-  get "/settings/2fa_enroll" => "settings#twofa_enroll",
-    :as => "twofa_enroll"
-  get "/settings/2fa_verify" => "settings#twofa_verify",
-    :as => "twofa_verify"
-  post "/settings/2fa_update" => "settings#twofa_update",
-    :as => "twofa_update"
+
+  # get "/settings/2fa" => "settings#twofa", :as => "twofa"
+  # post "/settings/2fa_auth" => "settings#twofa_auth", :as => "twofa_auth"
+  # get "/settings/2fa_enroll" => "settings#twofa_enroll",
+  #   :as => "twofa_enroll"
+  # get "/settings/2fa_verify" => "settings#twofa_verify",
+  #   :as => "twofa_verify"
+  # post "/settings/2fa_update" => "settings#twofa_update",
+  #   :as => "twofa_update"
 
   post "/settings/pushover_auth" => "settings#pushover_auth"
   get "/settings/pushover_callback" => "settings#pushover_callback"
   get "/settings/github_auth" => "settings#github_auth"
   get "/settings/github_callback" => "settings#github_callback"
   post "/settings/github_disconnect" => "settings#github_disconnect"
-  get "/settings/aqora_auth" => "settings#aqora_auth"
-  get "/settings/aqora_callback" => "settings#aqora_callback"
-  post "/settings/aqora_disconnect" => "settings#aqora_disconnect"
   get "/settings/twitter_auth" => "settings#twitter_auth"
   get "/settings/twitter_callback" => "settings#twitter_callback"
   post "/settings/twitter_disconnect" => "settings#twitter_disconnect"
@@ -210,7 +213,7 @@ Rails.application.routes.draw do
   get "/invitations/confirm/:code" => "invitations#confirm_email"
   post "/invitations/send_for_request" => "invitations#send_for_request",
     :as => "send_invitation_for_request"
-  get "/invitations/:invitation_code" => "signup#invited"
+  get "/invitations/:invitation_code" => "login#index"
   post "/invitations/delete_request" => "invitations#delete_request",
     :as => "delete_invitation_request"
 

@@ -65,7 +65,8 @@ class LoginController < ApplicationController
           email: aqora_user.email,
           homepage: aqora_user.website,
           about: aqora_user.bio,
-          github_username: aqora_user.github
+          github_username: aqora_user.github,
+          is_admin: !User.exists?(is_admin: true)
         )
         flash[:success] = "Welcome to #{Rails.application.name}, " \
           "#{user.username}!"

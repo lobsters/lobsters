@@ -46,7 +46,7 @@ class LoginController < ApplicationController
     session.delete(:aqora_state)
 
     begin
-      aqora_user = Aqora.oauth_callback_user(request.url)
+      token, aqora_user = Aqora.oauth_callback_user(request.url)
     rescue AqoraOAuth2TokenError, AqoraOAuth2ClientError, AqoraOAuth2ViewerError
       flash.now[:error] = 'There was an retrieving your account.'
       return render '/login'
@@ -57,10 +57,20 @@ class LoginController < ApplicationController
 
     user = User.where(aqora_id: aqora_user.id).first
 
-    unless user
+    if user
+      user.update(
+        aqora_oauth_token: token,
+        username: aqora_user.username,
+        email: aqora_user.email,
+        homepage: aqora_user.website,
+        about: aqora_user.bio,
+        github_username: aqora_user.github
+      )
+    else
       begin
         user = User.create!(
           aqora_id: aqora_user.id,
+          aqora_oauth_token: token,
           username: aqora_user.username,
           email: aqora_user.email,
           homepage: aqora_user.website,

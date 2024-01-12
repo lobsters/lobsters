@@ -19,6 +19,7 @@ class AqoraApi
         unauthorized
         issued {
           accessToken
+          refreshToken
         }
       }
     }
@@ -84,27 +85,23 @@ class AqoraOAuth2ClientError < StandardError; end
 class AqoraOAuth2UnauthorizedError < StandardError; end
 
 class Aqora
-  cattr_reader :host
+  cattr_reader :url
 
-  @host = 'https://app.aqora.io'
+  @url = 'https://app.aqora.io'
   @api = nil
 
-  def self.host=(host)
-    @host = host
+  def self.url=(url)
+    @url = url
     @api = nil
   end
 
   def self.relative_url(url)
-    URI.join(@host, url)
+    URI.join(@url, url)
   end
 
   def self.api
     @api = AqoraApi.new(relative_url('/graphql')) if @api.nil?
     @api
-  end
-
-  def self.enabled?
-    @host.present?
   end
 
   def self.oauth_callback_user(callback_uri)
@@ -118,11 +115,12 @@ class Aqora
     raise AqoraOAuth2ClientError if oauth2_token.data.oauth2_token.client_error.present?
 
     access_token = oauth2_token.data.oauth2_token.issued.access_token
+    refresh_token = oauth2_token.data.oauth2_token.issued.refresh_token
     viewer = api.viewer(access_token)
 
     raise AqoraOAuth2ViewerError.from_errors(viewer.errors) unless viewer.errors.empty?
 
-    viewer.data.viewer
+    [refresh_token, viewer.data.viewer]
   end
 
   def self.oauth_auth_url(state)

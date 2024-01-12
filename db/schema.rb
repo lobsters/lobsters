@@ -296,7 +296,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_09_170057) do
     t.string "disabled_invite_reason", limit: 200
     t.text "settings", size: :medium
     t.boolean "show_email", default: false, null: false
-    t.string "aqora_id", default: "0"
+    t.string "aqora_id"
+    t.string "aqora_oauth_token"
     t.index ["aqora_id"], name: "index_users_on_aqora_id", unique: true
     t.index ["banned_by_user_id"], name: "users_banned_by_user_id_fk"
     t.index ["disabled_invite_by_user_id"], name: "users_disabled_invite_by_user_id_fk"

@@ -25,6 +25,19 @@ class AqoraApi
     }
   GRAPHQL
 
+  OAuth2RefreshMutation = PARSER.parse <<~GRAPHQL
+    mutation($client_id: String!, $refresh_token: String!) {
+      oauth2Refresh(input: { refreshToken: $refresh_token, clientId: $client_id }) {
+        clientError
+        unauthorized
+        issued {
+          accessToken
+          refreshToken
+        }
+      }
+    }
+  GRAPHQL
+
   ViewerQuery = PARSER.parse <<~GRAPHQL
     query {
       viewer {
@@ -53,6 +66,12 @@ class AqoraApi
   def oauth2_token(code, redirect_uri)
     @client.query(OAuth2TokenMutation, variables: {
                     client_id: CLIENT_ID, code:, redirect_uri:
+                  }, context: {})
+  end
+
+  def oauth2_refresh(refresh_token)
+    @client.query(OAuth2RefreshMutation, variables: {
+                    client_id: CLIENT_ID, refresh_token:
                   }, context: {})
   end
 
@@ -85,10 +104,16 @@ class AqoraOAuth2ClientError < StandardError; end
 class AqoraOAuth2UnauthorizedError < StandardError; end
 
 class Aqora
-  cattr_reader :url
+  cattr_reader :url, :web_hook_id
+  cattr_accessor :secret
 
   @url = 'https://app.aqora.io'
+  @secret = nil
   @api = nil
+
+  def self.web_hook_id
+    'aqora'
+  end
 
   def self.url=(url)
     @url = url
@@ -104,26 +129,40 @@ class Aqora
     @api
   end
 
-  def self.oauth_callback_user(callback_uri)
+  def self.oauth_callback(callback_uri)
     uri = URI.parse(callback_uri)
     code = CGI.parse(uri.query)['code'].first
     redirect_uri = uri.origin + uri.path
+
     oauth2_token = api.oauth2_token(code, redirect_uri)
 
-    raise AqoraOAuth2TokenError.from_errors(oauth2.token.errors) unless oauth2_token.errors.empty?
-    raise AqoraOAuth2UnauthorizedError if oauth2_token.data.oauth2_token.unauthorized.present?
-    raise AqoraOAuth2ClientError if oauth2_token.data.oauth2_token.client_error.present?
+    raise AqoraOAuth2TokenError.from_errors(oauth2_token.errors) unless oauth2_token.errors.empty?
 
-    access_token = oauth2_token.data.oauth2_token.issued.access_token
-    refresh_token = oauth2_token.data.oauth2_token.issued.refresh_token
-    viewer = api.viewer(access_token)
+    process_token_response(oauth2_token.data.oauth2_token)
+  end
 
-    raise AqoraOAuth2ViewerError.from_errors(viewer.errors) unless viewer.errors.empty?
+  def self.oauth_refresh(refresh_token)
+    oauth2_refresh = api.oauth2_refresh(refresh_token)
 
-    [refresh_token, viewer.data.viewer]
+    raise AqoraOAuth2TokenError.from_errors(oauth2_refresh.errors) unless oauth2_refresh.errors.empty?
+
+    process_token_response(oauth2_refresh.data.oauth2_refresh)
   end
 
   def self.oauth_auth_url(state)
     relative_url("/oauth2/authorize?client_id=#{CLIENT_ID}&state=#{state}")
+  end
+
+  private
+
+  def self.process_token_response(token_response)
+    raise AqoraOAuth2UnauthorizedError if token_response.unauthorized.present?
+    raise AqoraOAuth2ClientError if token_response.client_error.present?
+
+    viewer = api.viewer(token_response.issued.access_token)
+
+    raise AqoraOAuth2ViewerError.from_errors(viewer.errors) unless viewer.errors.empty?
+
+    [token_response.issued.refresh_token, viewer.data.viewer]
   end
 end

@@ -243,4 +243,6 @@ Rails.application.routes.draw do
   get "/about" => "about#about"
 
   post "/csp-violation-report" => "csp#violation_report"
+
+  post "/api/v1/web_hooks" => "web_hooks#web_hook"
 end

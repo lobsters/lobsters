@@ -81,27 +81,8 @@ class User < ApplicationRecord
 
   validates :prefers_color_scheme, inclusion: %w[system light dark]
 
-  validates :email,
-    length: {maximum: 100},
-    format: {with: /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/},
-    uniqueness: {case_sensitive: false}
-
-  validates :homepage,
-    format: {
-      with: /\A(?:https?|gemini|gopher):\/\/[^\/\s]+\.[^.\/\s]+(\/.*)?\Z/
-    },
-    allow_blank: true
-
-  VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/
-  validates :username,
-    format: {with: /\A#{VALID_USERNAME}\z/o},
-    length: {maximum: 50},
-    uniqueness: {case_sensitive: false}
-
   validates :session_token,
     length: {maximum: 75}
-  validates :about,
-    length: {maximum: 16_777_215}
   validates :rss_token,
     length: {maximum: 75}
   validates :mailing_list_token,
@@ -110,12 +91,6 @@ class User < ApplicationRecord
     length: {maximum: 200}
   validates :disabled_invite_reason,
     length: {maximum: 200}
-
-  validates_each :username do |record, attr, value|
-    if BANNED_USERNAMES.include?(value.to_s.downcase) || value.starts_with?("tag-")
-      record.errors.add(attr, "is not permitted")
-    end
-  end
 
   scope :active, -> { where(banned_at: nil, deleted_at: nil) }
   scope :moderators, -> {
@@ -130,11 +105,6 @@ class User < ApplicationRecord
     create_rss_token
     create_mailing_list_token
   end
-
-  BANNED_USERNAMES = ["aqora", "admin", "administrator", "contact", "fraud", "guest",
-    "help", "hostmaster", "lobster", "lobsters", "mailer-daemon", "moderator",
-    "moderators", "nobody", "postmaster", "root", "security", "support",
-    "sysop", "webmaster", "enable", "new", "signup"].freeze
 
   # days old accounts are considered new for
   NEW_USER_DAYS = 0

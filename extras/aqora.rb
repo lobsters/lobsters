@@ -121,7 +121,7 @@ class Aqora
   end
 
   def self.relative_url(url)
-    URI.join(@url, url)
+    URI.join(@url, url).to_s
   end
 
   def self.api

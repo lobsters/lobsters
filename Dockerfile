@@ -1,5 +1,5 @@
 # --- Build Stage ---
-FROM ruby:3.2.2 as builder
+FROM ruby:3.3.0 as builder
 
 # Install NodeJS, Yarn, and MySQL client (libmysqlclient-dev for mysql2 gem)
 RUN apt-get update -qq && apt-get install -y nodejs yarn libmariadb-dev
@@ -23,7 +23,7 @@ RUN bundle install
 RUN bundle exec rake assets:precompile
 
 # --- Application Stage ---
-FROM ruby:3.2.2-slim
+FROM ruby:3.3.0-slim
 
 # Install runtime dependencies for MariaDB and NodeJS
 RUN apt-get update && apt-get install -y libmariadb3 nodejs sendmail && rm -rf /var/lib/apt/lists/* 

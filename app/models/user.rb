@@ -81,6 +81,8 @@ class User < ApplicationRecord
 
   validates :prefers_color_scheme, inclusion: %w[system light dark]
 
+  VALID_USERNAME = /[a-zA-Z0-9_]{3,20}/
+
   validates :session_token,
     length: {maximum: 75}
   validates :rss_token,

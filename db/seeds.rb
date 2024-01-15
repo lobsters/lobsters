@@ -1,25 +1,6 @@
-pwd = SecureRandom.base58
 User.create!(
   username: "inactive-user",
   email: "inactive-user@aqora.io",
-  password: pwd,
-  password_confirmation: pwd
-)
-
-User.create(
-  username: "quantumnews",
-  email: "quantumnews@aqora.io",
-  password: ENV.fetch('ADMIN_PASSWORD', 'quantumnews'),
-  password_confirmation: ENV.fetch('ADMIN_PASSWORD', 'quantumnews'),
-  is_admin: true,
-  is_moderator: true,
-  karma: [
-    User::MIN_KARMA_TO_SUGGEST,
-    User::MIN_KARMA_TO_FLAG,
-    User::MIN_KARMA_TO_SUBMIT_STORIES,
-    User::MIN_KARMA_FOR_INVITATION_REQUESTS
-  ].max,
-  created_at: User::NEW_USER_DAYS.days.ago
 )
 
 # Define categories and their corresponding tags

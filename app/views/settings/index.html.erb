@@ -8,83 +8,6 @@
   <%= form_with model: @edit_user, url: settings_path, method: :post, id: 'edit_user', namespace: 'edit_user' do |f| %>
     <%= errors_for f.object %>
 
-    <div class="boxline">
-      <%= f.label :username, "Username:", :class => "required" %>
-      <%= f.text_field :username, :size => 15 %>
-      <span class="hint indent">
-        <tt><%= User.username_regex_s %></tt>
-      </span>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :current_password, "Current Password:",
-        :class => "required" %>
-      <%= f.password_field :current_password, :name => "current_password", :size => 30, :autocomplete => "off" %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :password, "New Password:", :class => "required" %>
-      <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :password_confirmation, "Confirm Password:",
-        :class => "required" %>
-      <%= f.password_field :password_confirmation, :size => 40,
-        :autocomplete => "off" %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :email, "E-mail Address:", :class => "required" %>
-      <%= f.email_field :email, :size => 40, :inputmode => "email" %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :homepage, "Homepage:", :class => "required" %>
-      <%= f.url_field :homepage, :size => 40 %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :about, "About:", :class => "required" %>
-      <%= f.text_area :about, :size => "100x5", :style => "width: 600px;" %>
-    </div>
-
-    <div class="box">
-      <div class="boxline markdown_help_toggler" style="margin-left: 9em;
-      width: 600px;">
-        <div class="markdown_help_label">
-          Markdown formatting available
-        </div>
-
-        <div style="clear: both;"></div>
-
-        <%= render :partial => "global/markdownhelp" %>
-      </div>
-    </div>
-
-    <p>
-    <%= f.submit "Save Account Settings" %>
-    </p>
-
-    <br>
-
-    <h2>Security Settings</h2>
-
-    <div class="boxline">
-      <%= f.label :twofa, "Two-Factor Auth:", :class => "required" %>
-      <span>
-      <% if @edit_user.totp_secret.present? %>
-        <span style="color: green; font-weight: bold;">
-          Enabled
-        </span> (<a href="/settings/2fa">Disable</a>)
-      <% else %>
-        Disabled (<a href="/settings/2fa">Enroll</a>)
-      <% end %>
-      </span>
-    </div>
-
-    <br>
-
     <h2>Comment Reply Notification Settings</h2>
 
     <div class="boxline">
@@ -147,6 +70,12 @@
         :class => "required" %>
       <%= f.check_box :show_submitted_story_threads %>
     </div>
+
+    <br>
+
+    <p>
+    <%= f.submit "Save Account Settings" %>
+    </p>
 
     <br>
 
@@ -325,8 +254,8 @@
       </ul>
 
       <div class="boxline">
-        <%= f.label :password, "Verify Password:", :class => "required" %>
-        <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
+        <%= f.label :username_check, "Verify Username:", :class => "required" %>
+        <%= f.text_field :username_check, :autocomplete => "off" %>
       </div>
       <div class="boxline">
         <%= f.label :i_am_sure, "I am sure:", :class => "required" %>

@@ -16,8 +16,8 @@ class SettingsController < ApplicationController
       flash[:error] = 'You did not check the "I am sure" checkbox.'
       return redirect_to settings_path
     end
-    unless @user.try(:authenticate, params[:user][:password].to_s)
-      flash[:error] = "Given password doesn't match account."
+    unless @user.username == params[:user][:username_check].to_s
+      flash[:error] = "Given username doesn't match account."
       return redirect_to settings_path
     end
 
@@ -33,27 +33,11 @@ class SettingsController < ApplicationController
   end
 
   def update
-    previous_username = @user.username
     @edit_user = @user.clone
 
-    if params[:user][:password].empty? ||
-        @user.authenticate(params[:current_password].to_s)
-      @edit_user.roll_session_token if params[:user][:password]
-      if @edit_user.update(user_params)
-        if @edit_user.username != previous_username
-          Moderation.create!(
-            is_from_suggestions: true,
-            user: @edit_user,
-            action: "changed own username from \"#{previous_username}\" " \
-                    "to \"#{@edit_user.username}\""
-          )
-        end
-        session[:u] = @user.session_token if params[:user][:password]
-        flash.now[:success] = "Successfully updated settings."
-        @user = @edit_user
-      end
-    else
-      flash[:error] = "Your current password was not entered correctly."
+    if @edit_user.update(user_params)
+      flash.now[:success] = "Successfully updated settings."
+      @user = @edit_user
     end
 
     render action: "index"
@@ -268,7 +252,6 @@ class SettingsController < ApplicationController
 
   def user_params
     params.require(:user).permit(
-      :username, :email, :password, :password_confirmation, :homepage, :about,
       :email_replies, :email_messages, :email_mentions,
       :pushover_replies, :pushover_messages, :pushover_mentions,
       :mailing_list_mode, :show_email, :show_avatars, :show_story_previews,

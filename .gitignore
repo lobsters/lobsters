@@ -50,3 +50,5 @@ config/scout_apm.yml
 config/*.sphinx.conf
 config/unicorn.conf.rb
 lib/tasks/deploy.rake
+
+.env

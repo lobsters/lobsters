@@ -30,6 +30,100 @@ class LoginController < ApplicationController
     @referer ||= request.referer
   end
 
+  def aqora_auth
+    session[:aqora_state] = SecureRandom.hex
+    redirect_to Aqora.oauth_auth_url(session[:aqora_state]), allow_other_host: true
+  end
+
+  def aqora_callback
+    if session[:aqora_state].blank? ||
+        params[:code].blank? ||
+        (params[:state].to_s != session[:aqora_state].to_s)
+      flash[:error] = 'Invalid OAuth state'
+      return redirect_to '/settings'
+    end
+
+    session.delete(:aqora_state)
+
+    begin
+      token, aqora_user = Aqora.oauth_callback(request.url)
+    rescue AqoraOAuth2TokenError, AqoraOAuth2ClientError, AqoraOAuth2ViewerError
+      flash.now[:error] = 'There was an retrieving your account.'
+      return render '/login'
+    rescue AqoraOAuth2UnauthorizedError
+      flash.now[:error] = 'Your aqora account is not authorized to access this site.'
+      return render '/login'
+    end
+
+    user = User.where(aqora_id: aqora_user.id).first
+
+    if user
+      begin
+        user.update!(
+          aqora_oauth_token: token,
+          username: aqora_user.username,
+          email: aqora_user.email,
+          homepage: aqora_user.website,
+          about: aqora_user.bio,
+          github_username: aqora_user.github
+        )
+      rescue ActiveRecord::RecordInvalid => e
+        flash.now[:error] = "There was an error in logging into your account: #{e}"
+        return render '/login'
+      end
+    else
+      begin
+        user = User.create!(
+          aqora_id: aqora_user.id,
+          aqora_oauth_token: token,
+          username: aqora_user.username,
+          email: aqora_user.email,
+          homepage: aqora_user.website,
+          about: aqora_user.bio,
+          github_username: aqora_user.github,
+          is_admin: !User.exists?(is_admin: true)
+        )
+        flash[:success] = "Welcome to #{Rails.application.name}, " \
+          "#{user.username}!"
+      rescue ActiveRecord::RecordInvalid => e
+        flash.now[:error] = "There was an error creating your account: #{e}"
+        return render '/login'
+      end
+    end
+
+    if user.is_wiped?
+      flash.now[:error] = 'Your account was banned or deleted before the site changed admins. ' \
+        'Your email and password hash were wiped for privacy.'
+      return render 'index'
+    end
+
+    if user.is_banned?
+      flash.now[:error] = "Your account has been banned. Log: #{user.banned_reason}"
+      return render 'index'
+    end
+
+    unless user.is_active?
+      flash.now[:error] = 'Your account has been deleted.'
+      return render 'index'
+    end
+
+    session[:u] = user.session_token
+
+    if (rd = session[:redirect_to]).present?
+      session.delete(:redirect_to)
+      return redirect_to rd
+    elsif params[:referer].present?
+      begin
+        ru = URI.parse(params[:referer])
+        return redirect_to ru.to_s if ru.host == Rails.application.domain
+      rescue StandardError => e
+        Rails.logger.error "error parsing referer: #{e}"
+      end
+    end
+
+    redirect_to root_path
+  end
+
   def login
     @title = "Login"
     user = if /@/.match?(params[:email].to_s)

@@ -44,6 +44,11 @@ gem "sitemap_generator" # for better search engine indexing
 gem "svg-graph", require: "SVG/Graph/TimeSeries" # for charting, note workaround in lib/time_series.rb
 gem "rack-attack" # rate-limiting
 
+gem "graphql", '>= 2.0.27', '< 2.1'
+gem "graphql-client"
+
+gem "openssl"
+
 group :test, :development do
   gem "benchmark-perf"
   gem "brakeman"

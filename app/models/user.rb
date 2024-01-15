@@ -56,8 +56,6 @@ class User < ApplicationRecord
     class_name: "Hat",
     inverse_of: :user
 
-  has_secure_password
-
   typed_store :settings do |s|
     s.string :prefers_color_scheme, default: "system"
     s.boolean :email_notifications, default: false
@@ -83,31 +81,8 @@ class User < ApplicationRecord
 
   validates :prefers_color_scheme, inclusion: %w[system light dark]
 
-  validates :email,
-    length: {maximum: 100},
-    format: {with: /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/},
-    uniqueness: {case_sensitive: false}
-
-  validates :homepage,
-    format: {
-      with: /\A(?:https?|gemini|gopher):\/\/[^\/\s]+\.[^.\/\s]+(\/.*)?\Z/
-    },
-    allow_blank: true
-
-  validates :password, presence: true, on: :create
-
-  VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/
-  validates :username,
-    format: {with: /\A#{VALID_USERNAME}\z/o},
-    length: {maximum: 50},
-    uniqueness: {case_sensitive: false}
-
-  validates :password_reset_token,
-    length: {maximum: 75}
   validates :session_token,
     length: {maximum: 75}
-  validates :about,
-    length: {maximum: 16_777_215}
   validates :rss_token,
     length: {maximum: 75}
   validates :mailing_list_token,
@@ -116,12 +91,6 @@ class User < ApplicationRecord
     length: {maximum: 200}
   validates :disabled_invite_reason,
     length: {maximum: 200}
-
-  validates_each :username do |record, attr, value|
-    if BANNED_USERNAMES.include?(value.to_s.downcase) || value.starts_with?("tag-")
-      record.errors.add(attr, "is not permitted")
-    end
-  end
 
   scope :active, -> { where(banned_at: nil, deleted_at: nil) }
   scope :moderators, -> {
@@ -136,11 +105,6 @@ class User < ApplicationRecord
     create_rss_token
     create_mailing_list_token
   end
-
-  BANNED_USERNAMES = ["aqora", "admin", "administrator", "contact", "fraud", "guest",
-    "help", "hostmaster", "lobster", "lobsters", "mailer-daemon", "moderator",
-    "moderators", "nobody", "postmaster", "root", "security", "support",
-    "sysop", "webmaster", "enable", "new", "signup"].freeze
 
   # days old accounts are considered new for
   NEW_USER_DAYS = 0
@@ -188,6 +152,10 @@ class User < ApplicationRecord
 
     if github_username.present?
       h[:github_username] = github_username
+    end
+
+    if aqora_username.present?
+      h[:aqora_username] = aqora_username
     end
 
     if twitter_username.present?
@@ -445,13 +413,6 @@ class User < ApplicationRecord
     true
   end
 
-  def initiate_password_reset_for_ip(ip)
-    self.password_reset_token = "#{Time.current.to_i}-#{Utils.random_str(30)}"
-    save!
-
-    PasswordResetMailer.password_reset_link(self, ip).deliver_now
-  end
-
   def has_2fa?
     totp_secret.present?
   end
@@ -466,7 +427,7 @@ class User < ApplicationRecord
 
   # user was deleted/banned before a server move, see lib/tasks/privacy_wipe
   def is_wiped?
-    password_digest == "*"
+    false
   end
 
   def is_new?

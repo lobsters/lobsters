@@ -34,7 +34,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/aqora-io/quantumnews-scrapers
-          context: ./scrapers
+          context: "{{defaultContext}}:scrapers"
           flavor: |
             latest=false
           tags: |
@@ -49,7 +49,7 @@ jobs:
       - name: Docker
         uses: docker/build-push-action@v5
         with:
-          context: ./scrapers
+          context: "{{defaultContext}}:scrapers"
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

@@ -1,5 +1,6 @@
 import os
 import sys
+import logging
 from quantum_news_poster import QuantumNewsPoster
 
 from quantum_insider import scrape_quantum_insider
@@ -7,8 +8,11 @@ from hpc_wire import scrape_hpcwire
 from quanta_magazine import scrape_quanta_magazine
 
 def main():
+    # Configure logging
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
     if len(sys.argv) < 4:
-        print("Usage: python3 scrape.py [scraper_names/all] [username] [password]")
+        logging.error("Usage: python3 scrape.py [scraper_names/all] [username] [password]")
         return
 
     scraper_names_input = sys.argv[1]
@@ -37,8 +41,9 @@ def main():
             links = scraper_function()
             for link in links:
                 poster.post_story(link)
+                logging.info(f"Posted story from {scraper_name}: {link}")
         else:
-            print(f"Unknown scraper: {scraper_name}")
+            logging.error(f"Unknown scraper: {scraper_name}")
 
 if __name__ == "__main__":
     main()

@@ -7,19 +7,18 @@ from hpc_wire import scrape_hpcwire
 from quanta_magazine import scrape_quanta_magazine
 
 def main():
-    if len(sys.argv) < 5:
-        print("Usage: python3 scrape.py [scraper_names/all] [username] [password] [tag]")
+    if len(sys.argv) < 4:
+        print("Usage: python3 scrape.py [scraper_names/all] [username] [password]")
         return
 
     scraper_names_input = sys.argv[1]
     username = sys.argv[2]
     password = sys.argv[3]
-    tag = sys.argv[4]
 
     aqora_host = os.getenv('AQORA_HOST', 'https://app-staging.aqora-internal.io')
-    news_host = os.getenv('NEWS_HOST', 'https://news.aqora-internal.io')
+    quantumnews_host = os.getenv('QUANTUMNEWS_HOST', 'https://news.aqora-internal.io')
 
-    poster = QuantumNewsPoster(aqora_host, news_host)
+    poster = QuantumNewsPoster(aqora_host, quantumnews_host)
     poster.login_user(username, password)
 
     # List of all scrapers and their corresponding functions
@@ -37,7 +36,7 @@ def main():
         if scraper_function:
             links = scraper_function()
             for link in links:
-                poster.post_story(link, tag)
+                poster.post_story(link)
         else:
             print(f"Unknown scraper: {scraper_name}")
 

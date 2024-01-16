@@ -41,7 +41,7 @@ class QuantumNewsPoster:
         # Final authorization callback
         self.session.get(authorize_callback)
 
-    def post_story(self, url, tag):
+    def post_story(self, url):
         # Get CSRF token
         response = self.session.get(f"{self.news_host}/stories/new")
         csrf_token = response.text.split('csrf-token" content="')[1].split('"')[0]
@@ -66,7 +66,7 @@ class QuantumNewsPoster:
             "story[title]": url_title,
             "story[description]": "",
             "story[tags_a][]": "",
-            "story[tags_a][]": tag,
+            "story[tags_a][]": "announce",
             "story[user_is_author]": "0",
             "story[user_is_following]": "0",
             "commit": "Submit"

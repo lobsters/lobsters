@@ -39,6 +39,8 @@ def main():
         scraper_function = all_scrapers.get(scraper_name)
         if scraper_function:
             links = scraper_function()
+            if len(links) == 0:
+                logging.info(f"No new stories found from {scraper_name}")
             for link in links:
                 poster.post_story(link)
                 logging.info(f"Posted story from {scraper_name}: {link}")

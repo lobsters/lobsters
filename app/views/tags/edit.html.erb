@@ -3,5 +3,5 @@
     <%= link_to "Filter By Tag #{@tag.tag}", tag_path(@tag) %>
   </div>
 
-  <%= render partial: 'form' %>
+  <%= render partial: 'form', locals: { tag: @tag } %>
 </div>

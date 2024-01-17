@@ -1,9 +1,10 @@
+<%# locals: (story:, single_story: false) -%>
 <%
   # partial inputs:
-  story ||= raise "required Story missing" # the Story to render
-  # top of a single story page, eg /s/abc123, controls rendering additional info
-  # like list of merged stories, preview, users hiding, and flag summary
   single_story ||= false
+  # single_story: at the top of a single story page, eg /s/abc123, this
+  # controls rendering additional info like list of merged stories, preview,
+  # users hiding, and flag summary
 %>
 <%#
   The h-entry, u-report-of, u-url and h-card css classes are necessary

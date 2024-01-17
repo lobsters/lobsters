@@ -1,5 +1,5 @@
 <% if @user && @user.is_moderator? && @story.is_gone? %>
-  <%= render partial: 'stories/missing' %>
+  <%= render partial: 'stories/missing', locals: { story: @story, moderation: @moderation } %>
   <hr class="mod">
   <p>Full display for submitter and mods:</p>
 <% end %>
@@ -42,7 +42,7 @@
     <% end %>
 
     <li class="comments_subtree">
-      <%= render partial: 'comments/threads', locals: { thread: @comments, story: @story } %>
+      <%= render partial: 'comments/threads', locals: { thread: @comments, story: @story, ribbon: @ribbon } %>
     </li>
 
   </ol>

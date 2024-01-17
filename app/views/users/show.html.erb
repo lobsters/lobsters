@@ -1,4 +1,4 @@
-<%= render partial: 'users/flag_warning' if @showing_user == @user && @show_flag_warning %>
+<%= possible_flag_warning(@showing_user, @user) %>
 
 <% content_for :subnav do %>
   <% if @user && @showing_user.is_active? && @showing_user != @user %>

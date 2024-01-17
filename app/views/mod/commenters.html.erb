@@ -1,4 +1,4 @@
-<%= render partial: 'subnav' %>
+<%= render partial: 'subnav', locals: { periods: default_periods } %>
 
 <% if @commenters.present? %>
   <table class='data zebra' style='margin: 0 auto;'>

@@ -79,12 +79,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def flag_warning
-    @flag_warning_int ||= time_interval("1m")
-    return false if Rails.env.development? # expensive because Rails doesn't cache in dev
-    @show_flag_warning ||= @user && !!FlaggedCommenters.new(@flag_warning_int[:param], 1.day).check_list_for(@user)
-  end
-
   def heinous_inline_partials
     do_heinous_inline_partial_replacement
   end

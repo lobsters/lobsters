@@ -1,19 +1,20 @@
+<%# locals: (domain:, stories:) -%>
 <p>
-  <%= @domain.domain %>:
-  <%= "#{@stories.count} story".pluralize(@stories.count) %> from
-  <%= "#{@domain.n_submitters} submitter".pluralize(@domain.n_submitters) %>
+  <%= domain.domain %>:
+  <%= "#{stories.count} story".pluralize(stories.count) %> from
+  <%= "#{domain.n_submitters} submitter".pluralize(domain.n_submitters) %>
 
-  <%= link_to 'Edit', edit_domain_path(@domain) if @user.try(:is_admin?)  %>
+  <%= link_to 'Edit', edit_domain_path(domain) if @user.try(:is_admin?)  %>
 </p>
 
 
-<% if @domain.banned? %>
+<% if domain.banned? %>
   <p>
     Banned
-    <%= time_ago_in_words_label(@domain.banned_at) %>
-    <% if @domain.banned_by_user %>
-      by <%= link_to @domain.banned_by_user.try(:username), @domain.banned_by_user %>:
-      <em><%= @domain.banned_reason %></em>
+    <%= time_ago_in_words_label(domain.banned_at) %>
+    <% if domain.banned_by_user %>
+      by <%= link_to domain.banned_by_user.try(:username), domain.banned_by_user %>:
+      <em><%= domain.banned_reason %></em>
     <% end %>
   </p>
 <% end %>

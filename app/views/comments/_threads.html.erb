@@ -1,3 +1,4 @@
+<%# locals: (thread:, story: nil, ribbon: nil) -%>
 <% previous_depth = nil %>
 <% top_comment_depth = nil %>
 <% thread.each do |comment| %>
@@ -21,25 +22,25 @@
     <li class="comments_subtree">
 
     <%
-      force_option = true
+      force_open = true
       show_tree_lines = true
       # show "on: <title>" for comments from merged stories + on non-story pages
-      show_story ||= @story.try(:id) != comment.story_id
+      show_story ||= story.try(:id) != comment.story_id
       # show merge icon only on story page when merged
-      was_merged = @story && (@story.id != comment.story_id)
-      is_unread = @ribbon&.is_unread?(comment)
+      was_merged = story && (story.id != comment.story_id)
+      is_unread = ribbon&.is_unread?(comment)
     %>
 
 <%#heinous_inline_partial(comments/_comment.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
+<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false) -%>
 <%
   # partial inputs:
-  comment ||= raise "required Comment missing" # the Comment to render
-  force_open ||= false # this comment is allowed to collapse
-  show_tree_lines ||= false # render collapse button (misnamed?)
-  show_story ||= false # show "on: story title" end of byline
-  was_merged ||= false # show merged icon start of byline
-  is_unread ||= false # show (unread) in byline
+  # force_open: this comment is allowed to collapse
+  # show_tree_lines: render collapse button (misnamed?)
+  # show_story: show "on: story title" end of byline
+  # was_merged: show merged icon start of byline
+  # is_unread: show (unread) in byline
 %>
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"

@@ -1,4 +1,5 @@
-<%= form_with model: @tag, url: @tag.persisted? ? update_tag_path : tags_path, method: :post do |f| %>
+<%# locals: (tag:) -%>
+<%= form_with model: tag, url: tag.persisted? ? update_tag_path : tags_path, method: :post do |f| %>
   <div class="boxline">
     <%= f.label :tag, 'Name:', class: 'required' %>
     <%= f.text_field :tag  %>
@@ -6,7 +7,7 @@
 
   <div class="boxline">
     <%= f.label :category_name, 'Category:' %>
-    <%= f.select :category_name, options_for_select(Category.pluck(:category), @tag.category_name) %>
+    <%= f.select :category_name, options_for_select(Category.pluck(:category), tag.category_name) %>
   </div>
 
   <div class="boxline">
@@ -40,6 +41,6 @@
   </div>
 
   <div class="boxline">
-    <%= f.submit @tag.persisted? ? 'Update Tag' : 'Create Tag' %>
+    <%= f.submit tag.persisted? ? 'Update Tag' : 'Create Tag' %>
   </div>
 <% end %>

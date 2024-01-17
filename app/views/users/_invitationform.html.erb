@@ -1,3 +1,4 @@
+<%# locals: (return_home: false) -%>
 <p>
 Invitations are unlimited, but persons you invite will be associated with your account
 in the <%= link_to 'user tree', users_tree_path %>
@@ -6,7 +7,7 @@ Please use your discretion when inviting persons you don't personally know.
 </p>
 
 <%= form_with url: invitations_path, method: :post do |f| %>
-  <% if defined?(return_home) && return_home %>
+  <% if return_home %>
     <%= f.hidden_field :return_home, value: 1 %>
   <% end %>
 

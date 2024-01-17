@@ -1,6 +1,10 @@
 # typed: false
 
 module UsersHelper
+  def self_or_mod(showing_user, user)
+    user == showing_user || user.try(:is_moderator?)
+  end
+
   def stories_submitted_content(user, showing_user)
     tag = showing_user.most_common_story_tag
 

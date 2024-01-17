@@ -1,10 +1,11 @@
-<%= form_with model: @category, url: @category.persisted? ? update_category_path : categories_path, method: :post do |f| %>
+<%# locals: (category:) -%>
+<%= form_with model: category, url: category.persisted? ? update_category_path : categories_path, method: :post do |f| %>
   <div class="boxline">
     <%= f.label :category, 'Name:', class: 'required' %>
     <%= f.text_field :category  %>
   </div>
 
   <div class="boxline">
-    <%= f.submit @category.persisted? ? 'Update Category' : 'Create Category' %>
+    <%= f.submit category.persisted? ? 'Update Category' : 'Create Category' %>
   </div>
 <% end %>

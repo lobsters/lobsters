@@ -17,7 +17,7 @@ class HomeController < ApplicationController
     }
 
     @title = "Active Discussions"
-    @above = "active"
+    @above = {partial: "active"}
 
     respond_to do |format|
       format.html { render action: :index }
@@ -31,7 +31,7 @@ class HomeController < ApplicationController
     }
 
     @title = "Hidden Stories"
-    @above = "saved/subnav"
+    @above = {partial: "saved/subnav"}
 
     render action: "index"
   end
@@ -76,7 +76,7 @@ class HomeController < ApplicationController
     }
 
     @title = "Newest Stories"
-    @above = "stories/subnav"
+    @above = {partial: "stories/subnav"}
 
     @rss_link = {
       title: "RSS 2.0 - Newest Items",
@@ -102,8 +102,7 @@ class HomeController < ApplicationController
     @stories, @show_more = paginate stories.newest_by_user(by_user)
 
     @title = "Newest Stories by #{by_user.username}"
-    @newest_by_user = by_user
-    @above = "newest_by_user"
+    @above = {partial: "newest_by_user", locals: {newest_by_user: by_user}}
 
     respond_to do |format|
       format.html { render action: "index" }
@@ -120,8 +119,8 @@ class HomeController < ApplicationController
     }
 
     @title = "Recent Stories"
-    @above = "stories/subnav"
-    @below = "recent"
+    @above = {partial: "stories/subnav"}
+    @below = {partial: "recent"}
 
     # our list is unstable because upvoted stories get removed, so point at /newest.rss
     @rss_link = {title: "RSS 2.0 - Newest Items", href: user_token_link("/newest.rss")}
@@ -140,7 +139,7 @@ class HomeController < ApplicationController
     }
 
     @title = "Saved Stories"
-    @above = "saved/subnav"
+    @above = {partial: "saved/subnav"}
 
     respond_to do |format|
       format.html { render action: "index" }
@@ -156,16 +155,16 @@ class HomeController < ApplicationController
 
   def category
     category_params = params[:category].split(",")
-    @categories = Category.where(category: category_params)
+    categories = Category.where(category: category_params)
 
-    raise ActiveRecord::RecordNotFound unless @categories.length == category_params.length
+    raise ActiveRecord::RecordNotFound unless categories.length == category_params.length
 
     @stories, @show_more = get_from_cache(categories: category_params.sort.join(",")) do
-      paginate stories.categories(@categories)
+      paginate stories.categories(categories)
     end
 
-    @title = @categories.map(&:category).join(" ")
-    @above = "category"
+    @title = categories.map(&:category).join(" ")
+    @above = {partial: "category", locals: {categories: categories}}
 
     @rss_link = {
       title: "RSS 2.0 - Categorized #{@title}",
@@ -186,12 +185,12 @@ class HomeController < ApplicationController
       paginate stories.tagged([@tag])
     end
 
-    @title = [@tag.tag, @tag.description].compact.join(" - ")
-    @above = "single_tag"
     @related = Rails.cache.fetch("related_#{@tag.tag}", expires_in: 1.day) {
       Tag.related(@tag)
     }
-    @below = "tags/multi_tag_tip"
+    @title = [@tag.tag, @tag.description].compact.join(" - ")
+    @above = {partial: "single_tag", locals: {tag: @tag, related: @related}}
+    @below = {partial: "tags/multi_tag_tip"}
 
     @rss_link = {
       title: "RSS 2.0 - Tagged #{@tag.tag} (#{@tag.description})",
@@ -217,7 +216,7 @@ class HomeController < ApplicationController
     @title = @tags.map do |tag|
       [tag.tag, tag.description].compact.join(" - ")
     end.join(" ")
-    @above = "multi_tag"
+    @above = {partial: "multi_tag", locals: {tags: @tags}}
 
     @rss_link = {
       title: "RSS 2.0 - Tagged #{tags_with_description_for_rss(@tags)}",
@@ -239,7 +238,7 @@ class HomeController < ApplicationController
     end
 
     @title = @domain.domain
-    @above = "for_domain"
+    @above = {partial: "for_domain", locals: {domain: @domain, stories: @stories}}
 
     @rss_link = {
       title: "RSS 2.0 - For #{@domain.domain}",

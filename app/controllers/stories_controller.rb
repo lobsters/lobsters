@@ -149,7 +149,7 @@ class StoriesController < ApplicationController
     end
     if !@story.can_be_seen_by_user?(@user)
       respond_to do |format|
-        format.html { return render action: "_missing", status: 404 }
+        format.html { return render action: "_missing", status: 404, locals: {story: @story, moderation: @moderation} }
         format.json { raise ActiveRecord::RecordNotFound }
       end
     end

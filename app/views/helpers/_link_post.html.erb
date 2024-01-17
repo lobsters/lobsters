@@ -1,3 +1,4 @@
+<%# locals: (button_label:, link:, class_name: "", confirm: nil) -%>
 <%= form_tag url_for(link), class: 'link_post' do %>
   <%# redundant class on the submit_tag because the form_tag isn't printed if nested in another form %>
   <%= submit_tag button_label, class: "link_post #{class_name}", data: { confirm: confirm } %>

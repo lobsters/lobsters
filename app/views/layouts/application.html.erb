@@ -43,8 +43,13 @@
 <body data-username='<%= @user.try(:username) %>'>
   <header id="nav">
     <a id="logo" href="/" title="<%= Rails.application.name %>"></a>
-    
-    <h2 style="white-space: nowrap; margin: 0%;"><a style="color: inherit" href="/">Quantum News</a></h2>
+
+    <h2 style="white-space: nowrap; margin: 0%;">
+      <a style="color: inherit" href="/" title="<%= Rails.application.name %>">
+        <span class="site-title">Quantum News</span>
+        <span class="site-title-mobile">QN</span>
+      </a>
+    </h2>
 
     <div style="margin-left: 8px; margin-right: 8px;" class="navholder">
       <nav class="links">

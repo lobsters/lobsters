@@ -36,7 +36,19 @@ def scrape_hpcwire():
             if link_element and link_element.get('href'):
                 links.append(link_element.get('href'))
 
-    # Return the list of links
+    # Find and process the "Off the Wire" section
+    date_sections = soup.find_all('h4', class_='sidebar-title')
+    for date_section in date_sections:
+        date_text = date_section.get_text().strip()
+        if date_text == today:
+            ul = date_section.find_next_sibling('ul', class_='triangle')
+            if ul:
+                for li in ul.find_all('li'):
+                    link_element = li.find('a')
+                    if link_element and link_element.get('href'):
+                        links.append(link_element.get('href'))
+
+    # Return the list of unique links
     unique_links = list(set(links))
 
     return unique_links

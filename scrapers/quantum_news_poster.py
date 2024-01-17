@@ -1,11 +1,13 @@
 import requests
 import json
+from bs4 import BeautifulSoup
 
 class QuantumNewsPoster:
     def __init__(self, aqora_host, news_host):
         self.aqora_host = aqora_host
         self.news_host = news_host
         self.session = requests.Session()
+        self.existing_titles = self.get_story_titles()
 
     def login_user(self, username, password):
         login_query = {
@@ -41,6 +43,12 @@ class QuantumNewsPoster:
         # Final authorization callback
         self.session.get(authorize_callback)
 
+    def get_story_titles(self):
+        response = self.session.get(f"{self.news_host}/")  # Update with the correct URL if needed
+        soup = BeautifulSoup(response.text, 'html.parser')
+        story_titles = [a.get_text().strip() for a in soup.select('.story .details .link a')]
+        return story_titles
+
     def post_story(self, url):
         # Get CSRF token
         response = self.session.get(f"{self.news_host}/stories/new")
@@ -57,6 +65,11 @@ class QuantumNewsPoster:
             url_title = json.loads(response.text)['title']
         except json.JSONDecodeError:
             print("Failed to decode JSON. Response was:", response.text)
+            return
+
+        # Check if the story title is already in the list
+        if url_title in self.existing_titles:
+            print(f"Story '{url_title}' already exists. Not posting.")
             return
 
         # Post story

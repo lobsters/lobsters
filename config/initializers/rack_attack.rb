@@ -13,44 +13,44 @@
 
 # You're a commercial service? Slow down or email me. pushcx@ our domain.
 
-Rack::Attack.safelist("localhost") do |req|
-  req.ip == "127.0.0.1" || req.ip == "::1"
-end
+#Rack::Attack.safelist("localhost") do |req|
+#  req.ip == "127.0.0.1" || req.ip == "::1"
+#end
 
 # these will kick in way too early if serving assets via rack, so don't
-Rack::Attack.throttle("rate 1", limit: 5, period: 1) { |r| r.ip }
-Rack::Attack.throttle("rate 2", limit: 60, period: 60) { |r| r.ip }
-Rack::Attack.throttle("rate 3", limit: 200, period: 600) { |r| r.ip }
+#Rack::Attack.throttle("rate 1", limit: 5, period: 1) { |r| r.ip }
+#Rack::Attack.throttle("rate 2", limit: 60, period: 60) { |r| r.ip }
+#Rack::Attack.throttle("rate 3", limit: 200, period: 600) { |r| r.ip }
 
 # there's attackers enumeratng usernames, mostly via Tor
-Rack::Attack.throttle("user enumerator", limit: 30, period: 300) do |request|
-  request.ip if request.path.starts_with?("/u/") || request.path.starts_with?("/~")
-end
+#Rack::Attack.throttle("user enumerator", limit: 30, period: 300) do |request|
+#  request.ip if request.path.starts_with?("/u/") || request.path.starts_with?("/~")
+#end
 # at some point they'll proceed to testing credentials
-Rack::Attack.throttle("login", limit: 4, period: 60) do |request|
-  request.ip if request.post? &&
-    request.path.start_with?("/login", "/login/set_new_password")
-end
+#Rack::Attack.throttle("login", limit: 4, period: 60) do |request|
+#  request.ip if request.post? &&
+#    request.path.start_with?("/login", "/login/set_new_password")
+#end
 
-Rack::Attack.throttle("log4j probe", limit: 1, period: 1.week.to_i) do |request|
-  request.ip if request.user_agent.try(:include?, "${")
-end
+#Rack::Attack.throttle("log4j probe", limit: 1, period: 1.week.to_i) do |request|
+#  request.ip if request.user_agent.try(:include?, "${")
+#end
 
-Rack::Attack.throttle("a particular bad bot", limit: 1, period: 1.week.to_i) do |request|
-  request.ip if request.path.start_with?("//avatars")
-end
+#Rack::Attack.throttle("a particular bad bot", limit: 1, period: 1.week.to_i) do |request|
+#  request.ip if request.path.start_with?("//avatars")
+#end
 
 # explain the throttle
-Rack::Attack.throttled_response_retry_after_header = true
-Rack::Attack.throttled_responder = lambda do |request|
-  match_data = request.env["rack.attack.match_data"]
-  now = match_data[:epoch_time]
+#Rack::Attack.throttled_response_retry_after_header = true
+#Rack::Attack.throttled_responder = lambda do |request|
+#  match_data = request.env["rack.attack.match_data"]
+#  now = match_data[:epoch_time]
 
-  headers = {
-    "RateLimit-Limit" => match_data[:limit].to_s,
-    "RateLimit-Remaining" => "0",
-    "RateLimit-Reset" => (now + (match_data[:period] - now % match_data[:period])).to_s
-  }
+#  headers = {
+#    "RateLimit-Limit" => match_data[:limit].to_s,
+#    "RateLimit-Remaining" => "0",
+#    "RateLimit-Reset" => (now + (match_data[:period] - now % match_data[:period])).to_s
+#  }
 
-  [429, headers, ["Throttled, sleep(1) between hits; more in config/initializers/rack_attack.rb\n"]]
-end
+#  [429, headers, ["Throttled, sleep(1) between hits; more in config/initializers/rack_attack.rb\n"]]
+#end

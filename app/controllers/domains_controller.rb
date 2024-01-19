@@ -11,6 +11,9 @@ class DomainsController < ApplicationController
     redirect_to domain_path(@domain)
   end
 
+  def edit
+  end
+
   def update
     if domain_params[:banned_reason].present?
       if @domain.banned?

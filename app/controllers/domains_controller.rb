@@ -37,7 +37,6 @@ class DomainsController < ApplicationController
 
   def find_or_initialize_domain
     @domain = Domain.find_or_initialize_by(domain: params[:id])
-    session[:domain] = @domain
   end
 
   def path_of_form(domain)

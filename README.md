@@ -5,10 +5,10 @@ Welcome to [Quantum News](https://news.aqora.io), the community-driven platform 
 Quantum News is dedicated to creating a space where enthusiasts, professionals, and academics in the field of quantum computing and quantum physics can share news, discuss ideas, and collaborate. Our platform is built on the principles of open communication, knowledge sharing, and community growth.
 
 ## Features
-*Community-driven content:* Users can submit articles, news, and discussions related to quantum computing and physics.
-*Voting and Comments:* Engage with the community through upvotes, downvotes, and thoughtful discussions.
-*Tagging System:* Easily find content with our comprehensive tagging system, tailored to quantum topics.
-*Responsive Design:* Access Quantum News on any device with our mobile-friendly interface.
+* **Community-driven content:** Users can submit articles, news, and discussions related to quantum computing and physics.
+* **Voting and Comments:** Engage with the community through upvotes, downvotes, and thoughtful discussions.
+* **Tagging System:** Easily find content with our comprehensive tagging system, tailored to quantum topics.
+* **Responsive Design:** Access Quantum News on any device with our mobile-friendly interface.
 
 # Add Your Own Scraper
 If you're interested in contributing by adding a new scraper to automatically include the latest blog posts, please refer to the [/scrapers](https://github.com/aqora-io/quantumnews/tree/main/scrapers) directory. This directory contains a `README` with instructions and guidelines for adding your own scraper to Quantum News.

@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
     render plain: "404 Not Found", status: :not_found, content_type: "text/plain"
   end
   rescue_from ActionController::UnpermittedParameters do
-    render plain: "400 Unpermitted query or form paramater", status: :bad_request, content_type: "text/plain"
+    render plain: "400 Unpermitted query or form parameter", status: :bad_request, content_type: "text/plain"
   end
   rescue_from ActionDispatch::Http::MimeNegotiation::InvalidType do
     render plain: "fix the mime type in your HTTP_ACCEPT header",

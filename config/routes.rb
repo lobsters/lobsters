@@ -73,7 +73,7 @@ Rails.application.routes.draw do
     get "/domain/:id/page/:page", to: redirect("/domains/%{id}/page/%{page}")
     get "/domains/:id(.:format)" => "home#for_domain", :as => "domain"
     get "/domains/:id/page/:page" => "home#for_domain"
-    resources :domains, only: [:edit, :update]
+    resources :domains, only: [:create, :edit, :update]
   end
 
   get "/search" => "search#index"

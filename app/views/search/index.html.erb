@@ -339,7 +339,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
   <% elsif @search.what == :comments %>
     <ol class="comments comments1">
       <% @search.results.each do |res| %>
-        <li><%= render "comments/comment", :comment => res, :show_story => true, :hide_voters => true %></li>
+        <li><%= render "comments/comment", :comment => res, :show_story => true %></li>
       <% end %>
     </ol>
   <% end %>

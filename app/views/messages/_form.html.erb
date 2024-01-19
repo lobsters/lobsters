@@ -1,4 +1,4 @@
-<%# locals: (new_message:, replying) -%>
+<%# locals: (new_message:, replying:) -%>
 <%= form_with model: new_message, url: new_message, method: :post do |f| %>
   <%= errors_for new_message %>
 

@@ -1,8 +1,8 @@
-<%# locals: (story:, f:) -%>
+<%# locals: (story:, f:, suggesting: false) -%>
 <%= render :partial => "stories/form_errors", :locals => { :f => f, :story => f.object } %>
 
 <div class="box">
-  <% unless defined?(suggesting) %>
+  <% unless suggesting %>
     <div class="boxline">
     <% if f.object.url_is_editable_by_user?(@user) %>
       <%= f.label :url, "URL:", :class => "required" %>
@@ -29,7 +29,7 @@
     </p>
   </div>
 
-  <% if f.object.id && !defined?(suggesting) && f.object.suggested_title_times.any? %>
+  <% if f.object.id && !suggesting && f.object.suggested_title_times.any? %>
     <div class="boxline actions">
       Users have suggested setting this story's title to:
       <br>
@@ -58,7 +58,7 @@
     f.object.tags_a), {}, { :multiple => true } %>
   </div>
 
-  <% if f.object.id && !defined?(suggesting) && f.object.suggested_tagging_times.any? %>
+  <% if f.object.id && !suggesting && f.object.suggested_tagging_times.any? %>
     <div class="boxline actions">
       Users have suggested setting this story's tags to:
       <br>
@@ -68,7 +68,7 @@
     </div>
   <% end %>
 
-  <% unless defined?(suggesting) %>
+  <% unless suggesting %>
     <div class="boxline">
       <%= f.label :description, "Text:", :class => "required" %>
       <%= f.text_area :description, :rows => 8, :placeholder => "Use this for stories without a URL, to link additional context, or to paste abstracts from PDF papers.
@@ -123,7 +123,7 @@ See the guidelines below for more." %>
     <% end %>
   <% end %>
 </div>
-<% unless defined?(suggesting) %>
+<% unless suggesting %>
   <div class="box">
     <div class="boxline">
       <%= f.label :user_is_author, "Author:", :class => "required" %>

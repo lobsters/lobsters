@@ -44,7 +44,7 @@ def main():
 
     for entry in reversed(feed.entries):
         entry_time = datetime(*entry.published_parsed[:6])
-        if entry_time < threshold_time:
+        if entry_time >= threshold_time:
             post_tweet_and_reply(entry)
             time.sleep(10)  # Sleep to avoid hitting rate limits
 

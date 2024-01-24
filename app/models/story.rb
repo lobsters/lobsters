@@ -1017,6 +1017,12 @@ class Story < ApplicationRecord
     end
   end
 
+  def self.title_maximum_length
+    validators_on(:title)
+      .sole { |v| v.is_a? ActiveRecord::Validations::LengthValidator }
+      .options[:maximum]
+  end
+
   private
 
   def valid_canonical_uri?(url)

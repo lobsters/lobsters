@@ -79,7 +79,7 @@
 <% end %>
 <% if show_comment&.valid? %>
   <div class="preview">
-    <%= render "comments/comment", locals: {
+    <%= render partial: "_comment", locals: {
       comment: show_comment,
       show_tree_lines: show_tree_lines,
     } %>

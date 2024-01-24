@@ -114,8 +114,8 @@ class CommentsController < ApplicationController
       return render plain: "can't find comment", status: 400
     end
 
-    @story = parent_comment.story
-    comment = @story.comments.build
+    story = parent_comment.story
+    comment = story.comments.build
     comment.parent_comment = parent_comment
     comment.comment = params[:comment].to_s
     comment.user = @user
@@ -131,7 +131,7 @@ class CommentsController < ApplicationController
     end
 
     if request.xhr?
-      render partial: "commentbox", locals: {comment: comment}
+      render partial: "commentbox", locals: {comment: comment, story: story}
     else
       parents = comment.parents.with_thread_attributes.for_presentation
 
@@ -139,6 +139,7 @@ class CommentsController < ApplicationController
       parents.each { |c| c.current_vote = @votes[c.id] }
       render "_commentbox", locals: {
         comment: comment,
+        story: story,
         parents: parents
       }
     end

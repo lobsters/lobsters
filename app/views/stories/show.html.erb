@@ -38,7 +38,7 @@
 <% if !@story.previewing %>
   <ol class="comments comments1">
     <% if !@story.is_gone? && !@story.previewing && @story.accepting_comments? %>
-      <li class="comments_subtree"><%= render "comments/commentbox", :comment => @comment %></li>
+      <li class="comments_subtree"><%= render partial: "comments/commentbox", locals: { comment: @comment, story: @story } %></li>
     <% end %>
 
     <li class="comments_subtree">

@@ -12,7 +12,7 @@
         </p>
       </div>
 
-      <% if defined?(f) %>
+      <% if f %>
         <%= f.hidden_field :seen_previous %>
       <% else %>
         <%= form_with model: story do |f| %>

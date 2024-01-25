@@ -13,6 +13,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="always" />
   <meta name="theme-color" content="#202020" />
+  <% if Rails.application.config.google_analytics_id.present? && Rails.application.config.cookiebot_id.present? %>
+    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="<%= Rails.application.config.cookiebot_id %>" data-blockingmode="auto" type="text/javascript"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= Rails.application.config.google_analytics_id %>"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '<%= Rails.application.config.google_analytics_id %>');
+    </script>
+  <% end %>
   <% if @meta_tags %>
     <% @meta_tags.each do |k,v| %>
       <meta name="<%= k %>" content="<%= v %>" />

@@ -9,7 +9,10 @@
   target="_blank">TOTP</a> application of choice:
   </p>
 
-  <%= raw @qr_svg %>
+  <div id="qrsvg">
+    <%= raw @qr_svg %>
+  </div>
+
   <p>
     Or to add to a device manually enter the secret:
     <details>

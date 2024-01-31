@@ -300,7 +300,7 @@ class User < ApplicationRecord
   end
 
   def can_invite?
-    !is_new? && !banned_from_inviting? && can_submit_stories?
+    !banned_from_inviting? && can_submit_stories?
   end
 
   def can_offer_suggestions?

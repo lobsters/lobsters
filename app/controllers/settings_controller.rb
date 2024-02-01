@@ -188,11 +188,11 @@ class SettingsController < ApplicationController
 
   def mastodon_auth
     instance_name = params[:mastodon_instance_name].to_s
-    return redirect_to Mastodon.oauth_auth_url(instance_name)
+    redirect_to Mastodon.oauth_auth_url(instance_name)
   end
 
   def mastodon_callback
-    if !params[:code].present?
+    if params[:code].blank?
       flash[:error] = "Invalid OAuth state"
       return redirect_to "/settings"
     end
@@ -208,7 +208,7 @@ class SettingsController < ApplicationController
       return mastodon_disconnect
     end
 
-    return redirect_to "/settings"
+    redirect_to "/settings"
   end
 
   def mastodon_disconnect
@@ -216,7 +216,7 @@ class SettingsController < ApplicationController
     @user.mastodon_username = nil
     @user.save!
     flash[:success] = "Your Mastodon association has been removed."
-    return redirect_to "/settings"
+    redirect_to "/settings"
   end
 
   def github_auth

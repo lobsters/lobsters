@@ -1,3 +1,5 @@
+# typed: false
+
 class Mastodon
   def self.enabled?
     true
@@ -11,12 +13,12 @@ class Mastodon
     res = s.fetch(
       "https://#{instance}/oauth/token",
       :post,
-      :client_id => client_id,
-      :client_secret => client_secret,
-      :redirect_uri => "http://localhost:3000/settings/mastodon_callback?instance=#{instance}",
-      :grant_type => "authorization_code",
-      :code => code,
-      :scope => "read"
+      client_id: client_id,
+      client_secret: client_secret,
+      redirect_uri: "http://localhost:3000/settings/mastodon_callback?instance=#{instance}",
+      grant_type: "authorization_code",
+      code: code,
+      scope: "read"
     ).body
     ps = JSON.parse(res)
     puts "ps:", ps
@@ -24,13 +26,14 @@ class Mastodon
     puts "tok:", tok
 
     if tok.present?
-      headers = { "Authorization" => "Bearer #{tok}" }
+      headers = {"Authorization" => "Bearer #{tok}"}
       res = s.fetch(
         "https://#{instance}/api/v1/accounts/verify_credentials",
         :get,
         nil,
         nil,
-        headers).body
+        headers
+      ).body
       js = JSON.parse(res)
       puts "verify credentials:", js
       if js && js["username"].present?
@@ -38,7 +41,7 @@ class Mastodon
       end
     end
 
-    return [nil, nil]
+    [nil, nil]
   end
 
   def self.register_application(instance_name)
@@ -47,28 +50,29 @@ class Mastodon
     res = s.fetch(
       url,
       :post,
-      :client_name => "lobste.rs",
-      :redirect_uris => "http://localhost:3000/settings "\
+      client_name: "lobste.rs",
+      redirect_uris: "http://localhost:3000/settings " \
         "http://localhost:3000/settings/mastodon_callback?instance=#{instance_name}",
-      :scopes => "read",
-      :website => "https://lobste.rs"
+      scopes: "read",
+      website: "https://lobste.rs"
     ).body
     js = JSON.parse(res)
     if js && js["client_id"].present? && js["client_secret"].present?
-      MastodonInstance.create(
-        name: instance_name, client_id: js["client_id"], client_secret: js["client_secret"])
+      MastodonInstance.create!(
+        name: instance_name, client_id: js["client_id"], client_secret: js["client_secret"]
+      )
       return [js["client_id"], js["client_secret"]]
     end
-    return [nil, nil]
+    [nil, nil]
   end
 
   def self.sanitized_instance_name(instance_name)
     if instance_name.include? "://"
-      return URI.parse(instance_name).host
+      URI.parse(instance_name).host
     elsif instance_name.include? "/"
-      return instance_name.split("/").first
+      instance_name.split("/").first
     else
-      return instance_name
+      instance_name
     end
   end
 
@@ -78,9 +82,9 @@ class Mastodon
     if instance
       client_id = instance.client_id
     else
-      client_id, = self.register_application(instance_name)
+      client_id, = register_application(instance_name)
     end
-    "https://#{instance_name}/oauth/authorize?client_id=#{client_id}&scope=read&redirect_uri="\
+    "https://#{instance_name}/oauth/authorize?client_id=#{client_id}&scope=read&redirect_uri=" \
     "http://localhost:3000/settings/mastodon_callback?instance=#{instance_name}&response_type=code"
   end
 end

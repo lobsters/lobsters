@@ -116,9 +116,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
     t.index ["key"], name: "key", unique: true
   end
 
-<<<<<<< HEAD
-  create_table "messages", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-=======
   create_table "mastodon_instances", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "client_id", null: false
@@ -129,7 +126,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_155620) do
   end
 
   create_table "messages", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", force: :cascade do |t|
->>>>>>> dde47048 (Add MastodonInstance db migration)
     t.datetime "created_at", precision: nil
     t.bigint "author_user_id", unsigned: true
     t.bigint "recipient_user_id", null: false, unsigned: true

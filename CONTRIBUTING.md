@@ -7,14 +7,18 @@ MIT, ISC, etc.).
 
 ### Before Making Changes
 
-While this project's license allows for modification and use to run your own
-website, this source code repository is for the code running the website at
-[lobste.rs](https://lobste.rs/).
-
 If you're new to contributing, issues tagged [good first issue](https://github.com/lobsters/lobsters/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
 require little knowledge of the codebase or community. Please don't hesitate to
 ask questions in the issue or in [our chat room](https://lobste.rs/chat), we'd love
 to help you get involved.
+
+You can jump right in to issues tagged `good first issue`, you don't have to ask permission.
+Please don't post a comment asking because if you don't finish,
+the comment confuses a potential contributor who might not pick it up.
+
+While this project's license allows for modification and use to run your own
+website, this source code repository is for the code running the website at
+[lobste.rs](https://lobste.rs/).
 
 Not all changes or new features submitted will be accepted.  Please discuss
 your proposed changes on [/t/meta](https://lobste.rs/t/meta) or as a
@@ -27,7 +31,10 @@ to avoid wasted efforts.
 
 * (Optional) Create a branch to house your changes.
 
-* Run `bundle exec rubocop && bundle exec ruumba` to check the style of your Ruby.
+* Run `bundle exec standardrb` to check the style of your Ruby.
+    No messages means success.
+    Adding `--fix` will take care of most issues automatically, and there's excellent
+    <a href="https://github.com/standardrb/standard#user-content-editor-support">editor integration available</a>.
   (3rd party, externally-maintained code such as Javascript libraries can remain in their own style.)
 
 * Check for unnecessary whitespace with `git diff --check` before committing.
@@ -35,7 +42,7 @@ Commit whitespace and other code cleanups separately so that your actual
 changes can be easily understood.
 
 * Write a proper commit message with the first line being a short,
-present-tense explanation of the change.  Wrap all lines at 80 characters.
+present-tense explanation of the change.  Wrap message lines at 80 characters.
 
 * If applicable, add tests for your changes.  Not all changes require tests,
 and tests should not be added just for the sake of code coverage.

@@ -4,7 +4,7 @@ class AddSavedStories < ActiveRecord::Migration[5.1]
       t.timestamps
       t.integer :user_id
       t.integer :story_id
-      t.index ["user_id", "story_id"], :unique => true
+      t.index ["user_id", "story_id"], unique: true
     end
   end
 end

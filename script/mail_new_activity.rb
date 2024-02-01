@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-APP_PATH = File.expand_path('../../config/application', __FILE__)
-require File.expand_path('../../config/boot', __FILE__)
+APP_PATH = File.expand_path("../../config/application", __FILE__)
+require File.expand_path("../../config/boot", __FILE__)
 require APP_PATH
 Rails.application.require_environment!
 
@@ -13,17 +13,17 @@ class String
 
     q_encode_word = ->(w) { "=?UTF-8?Q?#{w}?=" }
 
-    string \
+    string
       # Undo linebreaks from #pack("M") because we'll be adding characters
-      .gsub("=\n", "") \
+      .gsub("=\n", "")
       # Question marks are delimiters in q-encoding so must be escaped
-      .gsub("?", "=3F") \
+      .gsub("?", "=3F")
       # Spaces are insignificant in q-encoding so must be escaped
-      .gsub(/\s+/, ' _') \
+      .gsub(/\s+/, " _")
       # Take each space-separated word, then q-encode
-      .split(' ').map(&q_encode_word) \
+      .split(" ").map(&q_encode_word)
       # Recombine words then word wrap at 75 characters
-      .join(" ").word_wrap(75) \
+      .join(" ").word_wrap(75)
       # Compose final string, folding headers per rfc 2822 section 2.2.3
       .lines.join("\t")
   end
@@ -66,7 +66,13 @@ if __FILE__ == $PROGRAM_NAME
 
   last_story_id = (Keystore.value_for(LAST_STORY_KEY) || Story.last && Story.last.id).to_i
 
-  Story.where("id > ? AND is_expired = ?", last_story_id, false).order(:id).each do |s|
+  # Paranoia: only search back three days so that if last_story_id is oddly low we don't start
+  # sending every story from the beginning of time, or if mailing list mode breaks for more than a
+  # few days we won't bury them in email.
+  Story
+    .where("id > ? AND is_deleted = ? AND created_at >= ?", last_story_id, false, 3.days.ago)
+    .order(:id)
+    .each do |s|
     StoryText.fill_cache!(s)
 
     mailing_list_users.each do |u|
@@ -84,8 +90,10 @@ if __FILE__ == $PROGRAM_NAME
 
       IO.popen(
         [{}, "/usr/sbin/sendmail", "-i", "-f", "nobody@#{Rails.application.domain}", u.email],
-        "w") do |mail|
+        "w"
+      ) do |mail|
         mail.puts "From: #{s.user.username} <#{s.user.username}@#{Rails.application.domain}>"
+        mail.puts "X-Is-Author: #{s.user_is_author?}"
         mail.puts "Reply-To: #{list}"
         mail.puts "To: #{list}"
         mail.puts "X-BeenThere: #{list}"
@@ -136,11 +144,15 @@ if __FILE__ == $PROGRAM_NAME
 
   last_comment_id = (Keystore.value_for(LAST_COMMENT_KEY) || Comment.last && Comment.last.id).to_i
 
+  # Paranoia: only search back three days so that if last_comment_id is oddly low we don't start
+  # sending every comment from the beginning of time, or if mailing list mode breaks for more than a
+  # few days we won't bury them in email.
   Comment.where(
-    "id > ? AND (is_deleted = ? AND is_moderated = ?)",
+    "id > ? AND (is_deleted = ? AND is_moderated = ?) AND created_at >= ?",
     last_comment_id,
     false,
-    false
+    false,
+    3.days.ago
   ).order(:id).each do |c|
     # allow some time for newer comments to be edited before sending them out
     if (Time.current - (c.updated_at || c.created_at)) < 2.minutes
@@ -184,33 +196,16 @@ if __FILE__ == $PROGRAM_NAME
         mail.puts "Content-Transfer-Encoding: quoted-printable"
         mail.puts "Message-ID: <#{c.mailing_list_message_id}>"
 
-        refs = ["<#{c.story.mailing_list_message_id}>"]
-
         if c.parent_comment_id
           mail.puts "In-Reply-To: <#{c.parent_comment.mailing_list_message_id}>"
-
-          thread = []
-          indent_level = 0
-          Comment.where(:thread_id => c.thread_id).arrange_for_user(nil).reverse_each do |cc|
-            if indent_level > 0 && cc.indent_level < indent_level
-              thread.unshift cc
-              indent_level = cc.indent_level
-            elsif cc.id == c.id
-              indent_level = cc.indent_level
-            end
-          end
-
-          thread.each do |cc|
-            refs.push "<#{cc.mailing_list_message_id}>"
-          end
         else
           mail.puts "In-Reply-To: <#{c.story.mailing_list_message_id}>"
         end
 
-        mail.print "References:"
-        refs.each do |ref|
-          mail.puts " #{ref}"
-        end
+        refs = ([c.story.mailing_list_message_id] +
+          c.parents.map(&:mailing_list_message_id))
+          .map { |r| "<#{r}>" }
+        mail.puts "References: #{refs.join(" ")}"
 
         mail.puts "Date: " << c.created_at.strftime("%a, %d %b %Y %H:%M:%S %z")
         mail.puts "Subject: " << story_subject(c.story, "Re: ")

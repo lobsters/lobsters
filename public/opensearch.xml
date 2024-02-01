@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+<ShortName>Lobsters</ShortName>
+<Description>Computing-focused community centered around link aggregation and discussion</Description>
+<Url type="text/html" method="GET" template="https://lobste.rs/search?what=stories&amp;order=newest&amp;q={searchTerms}" />
+<Url type="application/opensearchdescription+xml" rel="self" template="https://lobste.rs/opensearch.xml" />
+<Image height="64" width="64" type="image/x-icon">https://lobste.rs/favicon.ico</Image>
+<Language>en</Language>
+<moz:SearchForm>https://lobste.rs/search</moz:SearchForm>
+</OpenSearchDescription>

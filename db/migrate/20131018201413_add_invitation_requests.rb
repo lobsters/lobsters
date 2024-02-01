@@ -2,12 +2,12 @@ class AddInvitationRequests < ActiveRecord::Migration
   def up
     create_table :invitation_requests do |t|
       t.string :code
-      t.boolean :is_verified, :default => false
+      t.boolean :is_verified, default: false
       t.string :email
       t.string :name
       t.text :memo
       t.string :ip_address
-      t.timestamps :null => false
+      t.timestamps null: false
     end
   end
 

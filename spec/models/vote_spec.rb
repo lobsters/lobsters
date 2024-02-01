@@ -1,3 +1,5 @@
+# typed: false
+
 require "rails_helper"
 
 describe Vote do
@@ -17,7 +19,7 @@ describe Vote do
     let(:s) { create(:story) }
 
     it "-1 to 1" do
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, 'S')
+      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
       s.reload
       expect(s.score).to eq(0)
       expect(s.flags).to eq(1)
@@ -28,7 +30,7 @@ describe Vote do
     end
 
     it "-1 to 0" do
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, 'S')
+      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
       s.reload
       expect(s.score).to eq(0)
       expect(s.flags).to eq(1)
@@ -61,7 +63,7 @@ describe Vote do
     it "0 to -1" do
       expect(s.score).to eq(1)
       expect(s.flags).to eq(0)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, 'S')
+      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
       s.reload
       expect(s.score).to eq(0)
       expect(s.flags).to eq(1)
@@ -72,7 +74,7 @@ describe Vote do
       s.reload
       expect(s.score).to eq(2)
       expect(s.flags).to eq(0)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, 'S')
+      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
       s.reload
       expect(s.score).to eq(0)
       expect(s.flags).to eq(1)
@@ -134,7 +136,7 @@ describe Vote do
 
   it "removes karma and upvote when downvoting an upvote" do
     s = create(:story)
-    c = create(:comment, :story => s)
+    c = create(:comment, story: s)
     expect(c.user.karma).to eq(0)
 
     u = create(:user)
@@ -159,7 +161,7 @@ describe Vote do
 
   it "neutralizes karma and upvote when unvoting an upvote" do
     s = create(:story)
-    c = create(:comment, :story_id => s.id)
+    c = create(:comment, story_id: s.id)
     u = create(:user)
     expect(c.user.karma).to eq(0)
 

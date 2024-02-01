@@ -6,20 +6,8 @@
   <ul class="user_tree">
   <% @users.each do |user| %>
     <li>
-      <a href="/u/<%= user.username %>"
-        <% if !user.is_active? %>
-          class="inactive_user"
-        <% elsif user.is_new? %>
-          class="new_user"
-        <% end %>
-        ><%= user.username %></a>
-      <% if user.is_admin? %>
-        (administrator)
-      <% elsif user.is_moderator? %>
-        (moderator)
-      <% else %>
-        (<%= user.karma %>)
-      <% end %>
+      <%= styled_user_link(user) %>
+      <%= user_karma(user) %>
     </li>
   <% end %>
   </ul>

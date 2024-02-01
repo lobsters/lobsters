@@ -1,12 +1,9 @@
-<div class="box wide">
-  <div class="legend right">
-    <a href="/settings">Back to Settings</a>
-  </div>
-  <div class="legend">
-    <%= @title %>
-  </div>
+<% content_for :subnav do %>
+  <a href="/settings">Back to Settings</a>
+<% end %>
 
-  <%= form_with url: twofa_update_url, local: true do |f| %>
+<div class="box wide">
+  <%= form_with url: twofa_update_url do |f| %>
     <p>
     To enable Two-Factor Authentication on your account using your new TOTP
     secret, enter the six-digit code from your TOTP application:
@@ -14,8 +11,13 @@
 
     <div class="boxline">
       <%= f.label :totp_code, "TOTP Code:", :class => "required" %>
-      <%= f.number_field :totp_code, :size => 10, :autocomplete => "off",
-          :autofocus => true, :class => "totp_code" %>
+      <%= f.text_field :totp_code,
+        :inputmode => "numeric",
+        :pattern => "[0-9]+",
+        :size => 10,
+        :autocomplete => "one-time-code",
+        :autofocus => true,
+        :class => "totp_code" %>
     </div>
 
     <p>

@@ -1,10 +1,7 @@
 <div class="box wide">
-  <div class="legend">
-    Filtered Tags
-  </div>
-
   <p>
   To hide stories with certain <a href="/tags">tags</a> from across the site, check them below.
+  If you don't have an account, this will save to a cookie in your browser.
   </p>
 
   <% if !@user %>
@@ -15,7 +12,7 @@
     </p>
   <% end %>
 
-  <%= form_with url: '/filters', method: :post, local: true do |f| %>
+  <%= form_with url: '/filters', method: :post do |f| %>
     <table class="data zebra" cellspacing=0>
     <tr>
       <th>Hide</th>

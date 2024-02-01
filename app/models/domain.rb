@@ -1,19 +1,20 @@
+# typed: false
+
 class Domain < ApplicationRecord
-  has_many :stories # rubocop:disable Rails/HasManyOrHasOneDependent
+  has_many :stories
   belongs_to :banned_by_user,
-             :class_name => "User",
-             :inverse_of => false,
-             :optional => true
-  validates :banned_reason, :length => { :maximum => 200 }
+    class_name: "User",
+    inverse_of: false,
+    optional: true
+  validates :banned_reason, length: {maximum: 200}
 
   validates :domain, presence: true
-  validates :is_tracker, inclusion: { in: [true, false] }
 
   def ban_by_user_for_reason!(banner, reason)
     self.banned_at = Time.current
     self.banned_by_user_id = banner.id
     self.banned_reason = reason
-    self.save!
+    save!
 
     m = Moderation.new
     m.moderator_user_id = banner.id
@@ -23,12 +24,26 @@ class Domain < ApplicationRecord
     m.save!
   end
 
+  def unban_by_user_for_reason!(banner, reason)
+    self.banned_at = nil
+    self.banned_by_user_id = nil
+    self.banned_reason = nil
+    save!
+
+    m = Moderation.new
+    m.moderator_user_id = banner.id
+    m.domain = self
+    m.action = "Unbanned"
+    m.reason = reason
+    m.save!
+  end
+
   def banned?
     banned_at?
   end
 
   def n_submitters
-    self.stories.count('distinct user_id')
+    stories.count("distinct user_id")
   end
 
   def to_param

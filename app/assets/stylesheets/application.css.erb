@@ -108,7 +108,7 @@ dark = <<-DARK
 
 	/* colored backgrounds and foregrounds */
 	--palette-bg-accent: 253, 78, 72; /* behind dark text */
-	--palette-bg-target: 27, 24, 11;
+	--palette-bg-target: 61, 53, 11;
 
 	--palette-fg-link: 138, 177, 255;
 	--palette-fg-link-visited: 79, 138, 255;
@@ -741,6 +741,12 @@ supports it:  https://caniuse.com/?search=%3Ahas
 .comment:target, li:target, p:target, div:target, span:target {
 	background-color: var(--color-bg-target);
 	border-radius: 8px;
+}
+
+.showing-user-comment {
+	background-color: var(--color-bg-target);
+	border-radius: 8px;
+	padding: 3px;
 }
 
 li .link {

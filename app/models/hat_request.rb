@@ -25,7 +25,7 @@ class HatRequest < ApplicationRecord
       m.body = reason
       m.save!
 
-      destroy
+      destroy!
     end
   end
 
@@ -38,7 +38,7 @@ class HatRequest < ApplicationRecord
       m.body = reason
       m.save!
 
-      destroy
+      destroy!
     end
   end
 end

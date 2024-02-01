@@ -1,4 +1,4 @@
-<%= render partial: 'subnav' %>
+<%= render partial: 'subnav', locals: { periods: @periods } %>
 
 <% if @comments.present? %>
   <ol class="comments comments1">

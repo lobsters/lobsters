@@ -4,7 +4,6 @@ class UsersController < ApplicationController
   before_action :load_showing_user, only: [:show, :standing]
   before_action :require_logged_in_moderator,
     only: [:enable_invitation, :disable_invitation, :ban, :unban]
-  before_action :flag_warning, only: [:show]
   before_action :require_logged_in_user, only: [:standing]
   before_action :only_user_or_moderator, only: [:standing]
   before_action :show_title_h1, only: [:show]
@@ -124,10 +123,9 @@ class UsersController < ApplicationController
   end
 
   def standing
-    flag_warning
-    int = @flag_warning_int
+    @interval = time_interval("1m")
 
-    fc = FlaggedCommenters.new(int[:param], 1.day)
+    fc = FlaggedCommenters.new(@interval[:param], 1.day)
     @fc_flagged = fc.commenters.map { |_, c| c[:n_flags] }.sort
     @flagged_user_stats = fc.check_list_for(@showing_user)
 
@@ -140,7 +138,7 @@ class UsersController < ApplicationController
         from
           comments
         where
-          comments.created_at >= now() - interval #{int[:dur]} #{int[:intv]}
+          comments.created_at >= now() - interval #{@interval[:dur]} #{@interval[:intv]}
         group by comments.user_id) count_by_user
       group by 1
       order by 1 asc;
@@ -152,7 +150,7 @@ class UsersController < ApplicationController
     @flagged_comments = @showing_user.comments
       .where("
         comments.flags > 0 and
-        comments.created_at >= now() - interval #{int[:dur]} #{int[:intv]}")
+        comments.created_at >= now() - interval #{@interval[:dur]} #{@interval[:intv]}")
       .order("id DESC")
       .includes(:user, :hat, story: :user)
       .joins(:story)

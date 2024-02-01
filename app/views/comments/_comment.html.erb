@@ -1,11 +1,11 @@
+<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false) -%>
 <%
   # partial inputs:
-  comment ||= raise "required Comment missing" # the Comment to render
-  force_open ||= false # this comment is allowed to collapse
-  show_tree_lines ||= false # render collapse button (misnamed?)
-  show_story ||= false # show "on: story title" end of byline
-  was_merged ||= false # show merged icon start of byline
-  is_unread ||= false # show (unread) in byline
+  # force_open: this comment is allowed to collapse
+  # show_tree_lines: render collapse button (misnamed?)
+  # show_story: show "on: story title" end of byline
+  # was_merged: show merged icon start of byline
+  # is_unread: show (unread) in byline
 %>
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
@@ -59,28 +59,30 @@
         <span class="merge"></span>
       <% end %>
 
-      <% if (@user && @user.show_avatars?) || !@user %>
-        <%= link_to avatar_img(comment.user, 16), comment.user %>
-      <% end %>
-
-      <%= styled_user_link comment.user, comment %>
-
-      <% if comment.hat %>
-        <%= comment.hat.to_html_label %>
-      <% end %>
-
-      <% if comment.previewing %>
-        previewed
-        just now
-      <% else %>
-        <% if comment.has_been_edited? %>
-          edited
-        <% elsif comment.is_from_email? %>
-          e-mailed
+      <span class="<%= @showing_user == comment.user ? "showing-user-comment" : nil %>">
+        <% if (@user && @user.show_avatars?) || !@user %>
+          <%= link_to avatar_img(comment.user, 16), comment.user %>
         <% end %>
-        <%= time_ago_in_words_label(comment.has_been_edited? ? comment.updated_at : comment.created_at) %>
-        <%= raw "<span class='comment_unread'>(unread)</span>" if is_unread %>
-      <% end %>
+
+        <%= styled_user_link comment.user, comment %>
+
+        <% if comment.hat %>
+          <%= comment.hat.to_html_label %>
+        <% end %>
+
+        <% if comment.previewing %>
+          previewed
+          just now
+        <% else %>
+          <% if comment.has_been_edited? %>
+            edited
+          <% elsif comment.is_from_email? %>
+            e-mailed
+          <% end %>
+          <%= time_ago_in_words_label(comment.has_been_edited? ? comment.updated_at : comment.created_at) %>
+          <%= raw "<span class='comment_unread'>(unread)</span>" if is_unread %>
+        <% end %>
+      </span>
 
       <% if !comment.previewing %>
         |

@@ -16,7 +16,7 @@ class HatsController < ApplicationController
 
     @hat_groups = {}
 
-    Hat.active.includes(:user).each do |h|
+    Hat.active.includes(:user).find_each do |h|
       @hat_groups[h.hat] ||= []
       @hat_groups[h.hat].push h
     end

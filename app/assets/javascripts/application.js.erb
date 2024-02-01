@@ -325,7 +325,7 @@ class _LobstersFunction {
             '</div>';
         },
         item: function(data) {
-          return '<div class="data-ts-item">' + data.value + '</div>';
+          return '<a class="data-ts-item ' + data.tagCss + '">' + data.value + '</div>';
         }
       }
     });
@@ -594,6 +594,35 @@ onPageLoad(() => {
   });
 
   // Comment
+
+  // Remember story collapses; this is stored in localStorage for every story ID as an object
+  on('change', '.comment_folder_button', (e) => {
+    const commentId = e.target.getAttribute('data-shortid');
+    const storyId = qS('.story').getAttribute('data-shortid');
+    if (!storyId) return; // only remember or read these on story pages
+
+    var collapse = JSON.parse(localStorage.getItem("collapse_" + storyId) || '{}');
+    if (e.target.checked) {
+      collapse[commentId] = 1; // value unused, just truthy and short to serialize
+    } else {
+      delete collapse[commentId];
+    }
+    localStorage.setItem("collapse_" + storyId, JSON.stringify(collapse));
+  });
+
+  // Collapse stories on load; the actual hiding is done in CSS; just need to switch the checkbox
+  (function() {
+    const storyId  = qS('.story').getAttribute('data-shortid');
+    if (!storyId) return; // only remember or read these on story pages
+    const collapse = JSON.parse(localStorage.getItem("collapse_" + storyId) || '{}');
+
+    for (var k in collapse) {
+      var folder = qS('input#comment_folder_' + k);
+      // comment may have been deleted
+      if (folder)
+        folder.checked = true;
+    }
+  })();
 
   on('click', 'a.comment-disowner', (event) => {
     if (confirm("Are you sure you want to disown this comment?")) {

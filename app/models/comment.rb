@@ -27,8 +27,8 @@ class Comment < ApplicationRecord
     assign_initial_confidence
     assign_thread_id
   end
-  after_create :record_initial_upvote, :mark_submitter, :deliver_reply_notifications,
-    :deliver_mention_notifications, :log_hat_use
+  after_create :record_initial_upvote, :mark_submitter, :deliver_notifications,
+    :log_hat_use
   after_destroy :unassign_votes
 
   scope :deleted, -> { where(is_deleted: true) }
@@ -109,7 +109,7 @@ class Comment < ApplicationRecord
 
     Comment.all.find_each do |c|
       c.markeddown_comment = c.generated_markeddown_comment
-      c.save(validate: false)
+      c.save!(validate: false)
     end
 
     Comment.record_timestamps = true
@@ -194,7 +194,7 @@ class Comment < ApplicationRecord
     return false unless parent_comment_id
     return false if user.is_moderator?
 
-    parent_comment_ids = parent_comment.parents.pluck(:id).append(parent_comment.id)
+    parent_comment_ids = parent_comment.parents.ids.append(parent_comment.id)
     flag_count = Vote.comments_flags(parent_comment_ids).count
     commenter_flag_count = Vote.comments_flags(parent_comment_ids, user).count # double-count author
     delay = (2 + flag_count + commenter_flag_count).minutes
@@ -205,7 +205,7 @@ class Comment < ApplicationRecord
     return false if recent.blank?
 
     wait = ActionController::Base.helpers
-      .distance_of_time_in_words(Time.now, (recent.created_at + delay))
+      .distance_of_time_in_words(Time.zone.now, (recent.created_at + delay))
     Rails.logger.info "breaks_speed_limit: #{user.username} replying to https://lobste.rs/c/#{parent_comment.short_id} parent_comment_ids (#{parent_comment_ids.join(" ")}) flags #{flag_count} commenter_flag_count #{commenter_flag_count} delay #{delay} delay.ago #{delay.ago} recent #{recent.id}"
     errors.add(
       :comment,
@@ -247,20 +247,30 @@ class Comment < ApplicationRecord
         m.reason = reason
       end
 
-      m.save
+      m.save!
 
       User.update_counters user_id, karma: (votes.count * -2)
     end
 
-    save(validate: false)
+    save!(validate: false)
     Comment.record_timestamps = true
 
     story.update_cached_columns
     self.user.refresh_counts!
   end
 
-  def deliver_mention_notifications
-    plaintext_comment.scan(/\B@([\w\-]+)/).flatten.uniq.each do |mention|
+  def deliver_notifications
+    notified = deliver_reply_notifications
+    deliver_mention_notifications(notified)
+  end
+
+  def deliver_mention_notifications(notified = [])
+    to_notify = plaintext_comment.scan(/\B@([\w\-]+)/).flatten.uniq
+    (to_notify - notified).each do |mention|
+      if notified.include? mention
+        next
+      end
+
       if (u = User.active.find_by(username: mention))
         if u.id == user.id
           next
@@ -268,7 +278,7 @@ class Comment < ApplicationRecord
 
         if u.email_mentions?
           begin
-            EmailReply.mention(self, u).deliver_now
+            EmailReplyMailer.mention(self, u).deliver_now
           rescue => e
             Rails.logger.error "error e-mailing #{u.email}: #{e}"
           end
@@ -304,10 +314,13 @@ class Comment < ApplicationRecord
   end
 
   def deliver_reply_notifications
+    notified = []
+
     users_following_thread.each do |u|
       if u.email_replies?
         begin
-          EmailReply.reply(self, u).deliver_now
+          EmailReplyMailer.reply(self, u).deliver_now
+          notified << u.username
         rescue => e
           Rails.logger.error "error e-mailing #{u.email}: #{e}"
         end
@@ -321,8 +334,11 @@ class Comment < ApplicationRecord
           url: url,
           url_title: "Reply to #{user.username}"
         )
+        notified << u.username
       end
     end
+
+    notified
   end
 
   def depth_permits_reply?
@@ -581,11 +597,11 @@ class Comment < ApplicationRecord
         m.comment_id = id
         m.moderator_user_id = user.id
         m.action = "undeleted comment"
-        m.save
+        m.save!
       end
     end
 
-    save(validate: false)
+    save!(validate: false)
     Comment.record_timestamps = true
 
     story.update_cached_columns

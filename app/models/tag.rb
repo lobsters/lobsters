@@ -43,7 +43,7 @@ class Tag < ApplicationRecord
   def self.all_with_filtered_counts_for(user)
     counts = TagFilter.group(:tag_id).count
 
-    Tag.active.order(:tag).select { |t| t.valid_for?(user) }.map { |t|
+    Tag.active.order(:tag).select { |t| t.can_be_applied_by?(user) }.map { |t|
       t.filtered_count = counts[t.id].to_i
       t
     }
@@ -65,9 +65,10 @@ class Tag < ApplicationRecord
     active? && (!privileged? || user.try(:is_moderator?))
   end
 
-  def valid_for?(user)
+  def can_be_applied_by?(user)
     if privileged?
       !!user.try(:is_moderator?)
+    # do include tags they can't use so they submit and get error
     else
       true
     end

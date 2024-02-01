@@ -6,9 +6,8 @@ class CommentsController < ApplicationController
   caches_page :index, :threads, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,
-    only: [:create, :preview, :upvote, :flag, :unvote]
+    only: [:create, :reply, :upvote, :flag, :unvote, :update]
   before_action :require_logged_in_user, only: [:upvoted]
-  before_action :flag_warning, only: [:user_threads]
   before_action :show_title_h1
 
   # for rss feeds, load the user's tag filters if a token is passed
@@ -115,8 +114,8 @@ class CommentsController < ApplicationController
       return render plain: "can't find comment", status: 400
     end
 
-    @story = parent_comment.story
-    comment = @story.comments.build
+    story = parent_comment.story
+    comment = story.comments.build
     comment.parent_comment = parent_comment
     comment.comment = params[:comment].to_s
     comment.user = @user
@@ -132,14 +131,15 @@ class CommentsController < ApplicationController
     end
 
     if request.xhr?
-      render partial: "commentbox", locals: {comment: comment}
+      render partial: "commentbox", locals: {comment: comment, story: story}
     else
       parents = comment.parents.with_thread_attributes.for_presentation
 
-      @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, parents.map(&:id))
+      @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user&.id, parents.map(&:id))
       parents.each { |c| c.current_vote = @votes[c.id] }
       render "_commentbox", locals: {
         comment: comment,
+        story: story,
         parents: parents
       }
     end
@@ -272,11 +272,8 @@ class CommentsController < ApplicationController
       .limit(COMMENTS_PER_PAGE)
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 
-    if @user
-      @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, @comments.map(&:id))
-
-      @comments.each { |c| c.current_vote = @votes[c.id] }
-    end
+    @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user&.id, @comments.map(&:id))
+    @comments.each { |c| c.current_vote = @votes[c.id] } unless @votes.empty?
 
     respond_to do |format|
       format.html { render action: "index" }
@@ -318,9 +315,7 @@ class CommentsController < ApplicationController
     # TODO: respect hidden stories
 
     @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, @comments.map(&:id))
-    @comments.each do |c|
-      c.current_vote = @votes[c.id]
-    end
+    @comments.each { |c| c.current_vote = @votes[c.id] }
 
     respond_to do |format|
       format.html { render action: :index }

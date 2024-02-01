@@ -384,7 +384,7 @@ describe Story do
       create(:comment, story: story, score: -9, flags: 10)
       # stories stop accepting comments after a while, but this calculation is
       # based on created_at, so set that to a known value after posting comments
-      story.update(created_at: Time.zone.at(0))
+      story.update!(created_at: Time.zone.at(0))
     end
 
     context "with positive base" do
@@ -396,7 +396,7 @@ describe Story do
     context "with negative base" do
       before do
         tag = create(:tag, hotness_mod: -10)
-        story.update(tags: [tag])
+        story.update!(tags: [tag])
       end
 
       it "return correct score" do

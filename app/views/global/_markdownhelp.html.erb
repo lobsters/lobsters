@@ -1,3 +1,4 @@
+<%# locals: (allow_images: false) -%>
 <div class="markdown_help">
   <table>
   <tr>
@@ -31,7 +32,7 @@
   text</pre></td>
     <td>prefix text with at least<tt>&nbsp;&nbsp;&nbsp;&nbsp;4 spaces</tt></td>
   </tr>
-  <% if defined?(allow_images) && allow_images %>
+  <% if allow_images %>
     <tr>
       <td>(inline image)</td>
       <td><tt>![alt text](http://example.com/image.jpg)</tt></td>

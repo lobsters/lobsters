@@ -99,7 +99,7 @@ class Story < ApplicationRecord
     user.nil? ? none : joins(:savings).merge(SavedStory.by(user))
   }
   scope :to_tweet, -> {
-    hottest(nil, Tag.where(tag: "meta").pluck(:id))
+    hottest(nil, Tag.where(tag: "meta").ids)
       .where(twitter_id: nil)
       .where("score >= 2")
       .where("created_at >= ?", 2.days.ago)
@@ -153,16 +153,16 @@ class Story < ApplicationRecord
   attr_writer :fetched_response
 
   before_validation :assign_short_id_and_score, on: :create
-  before_create :assign_initial_hotness
   before_save :log_moderation
   before_save :fix_bogus_chars
+  before_create :assign_initial_hotness
   after_create :mark_submitter, :record_initial_upvote
   after_save :update_cached_columns, :update_story_text
 
   validate do
     if url.present?
       already_posted_recently?
-      check_not_tracking_domain
+      check_not_banned_domain
       check_not_new_domain_from_new_user
       errors.add(:url, "is not valid") unless url.match(URL_RE)
     elsif description.to_s.strip == ""
@@ -217,7 +217,7 @@ class Story < ApplicationRecord
     end
   end
 
-  def check_not_tracking_domain
+  def check_not_banned_domain
     return unless url.present? && new_record? && domain
 
     if domain.banned?
@@ -303,6 +303,7 @@ class Story < ApplicationRecord
       {description_plain: :description},
       :comments_url,
       {submitter_user: :user},
+      :user_is_author,
       {tags: tags.map(&:tag).sort}
     ]
 
@@ -407,8 +408,13 @@ class Story < ApplicationRecord
     end
 
     taggings.each do |t|
-      if !t.tag.valid_for?(u)
+      if !t.tag.can_be_applied_by?(u) && t.tag.privileged?
         raise "#{u.username} does not have permission to use privileged tag #{t.tag.tag}"
+      elsif !t.tag.can_be_applied_by?(u) && !t.tag.permit_by_new_users?
+        errors.add(:base, "New users can't submit #{t.tag.tag} stories, please wait. " \
+          "If the tag is appropriate, leaving it off to skirt this restriction is a bad idea.")
+        ModNote.tattle_on_story_domain!(self, "new user with protected tags")
+        raise "#{u.username} is too new to use tag #{t.tag.tag}"
       elsif !t.tag.active? && t.new_record? && !t.marked_for_destruction?
         # stories can have inactive tags as long as they existed before
         raise "#{u.username} cannot add inactive tag #{t.tag.tag}"
@@ -590,7 +596,7 @@ class Story < ApplicationRecord
     }.join(", ")
 
     m.reason = moderation_reason
-    m.save
+    m.save!
 
     self.is_moderated = true
   end
@@ -613,7 +619,7 @@ class Story < ApplicationRecord
   end
 
   def merge_story_short_id=(sid)
-    self.merged_story_id = sid.present? ? Story.where(short_id: sid).pluck(:id).first : nil
+    self.merged_story_id = sid.present? ? Story.where(short_id: sid).pick(:id) : nil
   end
 
   def merge_story_short_id
@@ -675,7 +681,7 @@ class Story < ApplicationRecord
 
     st.each do |tagging|
       if !new_tag_names_a.include?(tagging.tag.tag)
-        tagging.destroy
+        tagging.destroy!
       end
     end
 
@@ -685,7 +691,7 @@ class Story < ApplicationRecord
       # XXX: AR bug? st.exists?(:tag => tag_name) does not work
       if tag_name.to_s != "" && !st.map { |x| x.tag.tag }.include?(tag_name)
         if (t = Tag.active.find_by(tag: tag_name)) &&
-            t.valid_for?(user)
+            t.can_be_applied_by?(user)
           tg = suggested_taggings.build
           tg.user_id = user.id
           tg.tag_id = t.id
@@ -851,9 +857,9 @@ class Story < ApplicationRecord
     # strip out tracking query params
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))
       params = match[2].split(/[&\?]/)
-      # utm_ is google and many others; sk is medium
+      # utm_ is google and many others; sk is medium; si is youtube source id
       params.reject! { |p|
-        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=/x)
+        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=|^si=/x)
       }
       u = match[1] << (params.any? ? "?" << params.join("&") : "")
     end
@@ -1014,6 +1020,12 @@ class Story < ApplicationRecord
     rescue
       @fetched_attributes
     end
+  end
+
+  def self.title_maximum_length
+    validators_on(:title)
+      .sole { |v| v.is_a? ActiveRecord::Validations::LengthValidator }
+      .options[:maximum]
   end
 
   private

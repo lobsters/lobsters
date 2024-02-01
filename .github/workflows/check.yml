@@ -26,8 +26,10 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: Prepare database
+      - name: Load database schema
         run: ./bin/rails db:schema:load
+      - name: Run pending migrations
+        run: ./bin/rails db:migrate
       - name: Run tests
         run: |
           bundle exec rspec
@@ -35,6 +37,9 @@ jobs:
       - name: Run linters
         run: |
           bundle exec standardrb
+      - name: Run brakeman
+        run: |
+          bundle exec brakeman --ensure-latest --ensure-ignore-notes
       - name: Find leaky gems
         run: |
           gem install bundler-leak

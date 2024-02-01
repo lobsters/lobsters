@@ -5,7 +5,7 @@ require "rails_helper"
 describe Tag do
   context "validations" do
     it "allows a valid tag to be created" do
-      tag = Tag.create(
+      tag = Tag.create!(
         category: Category.first,
         tag: "tag_name",
         hotness_mod: 0.25,

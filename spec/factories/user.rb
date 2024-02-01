@@ -31,7 +31,7 @@ FactoryBot.define do
       deleted_at { Time.current }
     end
     trait(:new) do
-      deleted_at { Time.current - 1.day }
+      deleted_at { 1.day.ago }
     end
     # users who were banned/deleted before a server move
     # you must also add banned/deleted trait with this

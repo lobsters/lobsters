@@ -15,7 +15,9 @@ Dir["app/views/**/*.erb"].each do |filename|
   template = File.read(filename)
   next unless template.include? "heinous_inline_partial"
 
+  # puts "inspecting #{filename}"
   partial_match = template.match(/^<%#heinous_inline_partial\(([\w\/\.]+)\)%>/)
+  raise "#{filename} doesn't start a line with <%#heinous..." if partial_match.nil?
   partial_name = partial_match&.captures&.first
   HEINOUS_INLINE_PARTIALS[filename] = "app/views/" + partial_name
 end

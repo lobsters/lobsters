@@ -7,6 +7,10 @@ describe User do
     expect { create(:user, username: nil) }.to raise_error
     expect { create(:user, username: "") }.to raise_error
     expect { create(:user, username: "*") }.to raise_error
+    # security controls, usernames are used in queries and filenames
+    expect { create(:user, username: "a'b") }.to raise_error
+    expect { create(:user, username: "a\"b") }.to raise_error
+    expect { create(:user, username: "../b") }.to raise_error
 
     create(:user, username: "newbie")
     expect { create(:user, username: "newbie") }.to raise_error

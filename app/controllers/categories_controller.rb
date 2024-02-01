@@ -9,7 +9,7 @@ class CategoriesController < ApplicationController
   end
 
   def create
-    category = Category.create(category_params)
+    category = Category.create!(category_params)
     if category.valid?
       flash[:success] = "Category #{category.category} has been created"
       redirect_to tags_path

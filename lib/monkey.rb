@@ -1,17 +1,5 @@
 # typed: false
 
-module ActiveRecord
-  class Base
-    def self.q(str)
-      ActiveRecord::Base.connection.quote(str)
-    end
-
-    def q(str)
-      ActiveRecord::Base.connection.quote(str)
-    end
-  end
-end
-
 class String
   def forcibly_convert_to_utf8
     begin

@@ -1,4 +1,4 @@
-<%= render partial: 'subnav' %>
+<%= render partial: 'subnav', locals: { periods: @periods } %>
 
 <div class="box wide modmodlog">
   <%= render partial: 'moderations/table', locals: { moderations: @moderations } %>

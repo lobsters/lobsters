@@ -51,7 +51,7 @@ class Search
   end
 
   def max_matches
-    100
+    per_page * 20
   end
 
   def per_page
@@ -86,20 +86,26 @@ class Search
     end
   end
 
+  # security: must prevent sql injection
+  # it assumes SearchParser prevents "
   def flatten_title tree
     if tree.keys.first == :term
-      tree.values.first.to_s.gsub("'", "\\\\'")
+      ActiveRecord::Base.connection.quote_string(tree.values.first.to_s)
     elsif tree.keys.first == :quoted
       '"' + tree.values.first.map(&:values).flatten.join(" ").gsub("'", "\\\\'") + '"'
     end
   end
 
+  # security: must prevent sql injection
   # strip all nonword except -_' so people can search for contractions like "don't"
   # some of these are search operators, some sql injection
   # https://mariadb.com/kb/ru/full-text-index-overview/#in-boolean-mode
   # surprise: + is not in \p{Punct}
   def strip_operators s
-    s.to_s.gsub(/[^\p{Word}']/, " ").strip
+    s.to_s
+      .gsub(/[^\p{Word}']/, " ")
+      .gsub("'", "\\\\'")
+      .strip
   end
 
   # not security-sensitive, mariadb ignores 1 and 2 character terms and
@@ -160,9 +166,9 @@ class Search
       when :negated
         # TODO
       when :quoted
-        terms.append '"' + strip_operators(value).gsub("'", "\\\\'") + '"'
+        terms.append '"' + strip_operators(value) + '"'
       when :term, :catchall
-        val = strip_short_terms(strip_operators(value)).gsub("'", "\\\\'")
+        val = strip_short_terms(strip_operators(value))
         # if punctuation is replaced with a space, this would generate a terms search
         # AGAINST('+' in boolean mode)
         terms.append val if !val.empty?
@@ -264,9 +270,9 @@ class Search
       when :negated
         # TODO
       when :quoted
-        terms.append '"' + strip_operators(value).gsub("'", "\\\\'") + '"'
+        terms.append '"' + strip_operators(value) + '"'
       when :term, :catchall
-        val = strip_short_terms(strip_operators(value)).gsub("'", "\\\\'")
+        val = strip_short_terms(strip_operators(value))
         # if punctuation is replaced with a space, this would generate a terms search
         # AGAINST('+' in boolean mode)
         terms.append val if !val.empty?

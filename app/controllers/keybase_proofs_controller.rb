@@ -21,7 +21,7 @@ class KeybaseProofsController < ApplicationController
     if Keybase.proof_valid?(kb_username, kb_signature, @user.username)
       @user.add_or_update_keybase_proof(kb_username, kb_signature)
       @user.save!
-      redirect_to Keybase.success_url(kb_username, kb_signature, kb_ua, @user.username)
+      redirect_to Keybase.success_url(kb_username, kb_signature, kb_ua, @user.username), allow_other_host: true
     else
       flash[:error] = "Failed to connect your account to Keybase. Try again from Keybase."
       redirect_to settings_path

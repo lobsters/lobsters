@@ -16,7 +16,7 @@ end
 describe ReplyingComment do
   def followed_parent
     p = create(:comment)
-    ReadRibbon.create(user_id: p.user_id, story_id: p.story_id, updated_at: p.created_at - 1.second)
+    ReadRibbon.create!(user_id: p.user_id, story_id: p.story_id, updated_at: p.created_at - 1.second)
     p
   end
 

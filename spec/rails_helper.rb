@@ -81,6 +81,10 @@ RSpec::Expectations.configuration.on_potential_false_positives = :nothing
 # Checks for pending migration and applies them before tests are run.
 ActiveRecord::Migration.maintain_test_schema!
 
+def sent_emails
+  ActionMailer::Base.deliveries
+end
+
 SuperDiff.configure do |config|
   config.diff_elision_enabled = false
   config.diff_elision_maximum = 3

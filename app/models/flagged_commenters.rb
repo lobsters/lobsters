@@ -45,11 +45,11 @@ class FlaggedCommenters
   end
 
   def stddev_sum_flags
-    aggregates[:stddev].to_i
+    aggregates[:stddev].to_f
   end
 
   def avg_sum_flags
-    aggregates[:avg].to_i
+    aggregates[:avg].to_f
   end
 
   def commenters

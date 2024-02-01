@@ -89,6 +89,16 @@ module ApplicationHelper
     pages
   end
 
+  def possible_flag_warning(showing_user, user)
+    return render partial: "users/dev_flag_warning" unless Rails.env.production?
+    return unless self_or_mod(showing_user, user)
+
+    interval = time_interval("1m")
+    if FlaggedCommenters.new(interval[:param], 1.day).check_list_for(showing_user)
+      render partial: "users/flag_warning", locals: {showing_user: showing_user, interval: interval}
+    end
+  end
+
   def tag_link(tag)
     link_to tag.tag, tag_path(tag), class: tag.css_class, title: tag.description
   end

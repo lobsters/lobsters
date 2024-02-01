@@ -1,4 +1,4 @@
-<%= render partial: 'subnav' %>
+<%= render partial: 'subnav', locals: { periods: @periods } %>
 
 <% if @stories.present? %>
   <ol class="stories list">

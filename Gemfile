@@ -26,7 +26,7 @@ gem "rotp"
 gem "rqrcode"
 
 # parsing
-gem "commonmarker"
+gem "commonmarker", "<1"
 gem "htmlentities"
 gem "pdf-reader"
 gem "nokogiri"
@@ -47,6 +47,7 @@ gem "rack-attack" # rate-limiting
 
 group :test, :development do
   gem "benchmark-perf"
+  gem "brakeman"
   gem "capybara"
   gem "database_cleaner"
   gem "listen"

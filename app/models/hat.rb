@@ -29,11 +29,11 @@ class Hat < ApplicationRecord
     m.action = "Revoked hat \"#{hat}\": #{reason}"
     m.save!
 
-    destroy
+    destroy!
   end
 
   def to_html_label
-    hl = (link.present? && link.match(/^https?:\/\//))
+    hl = link.present? && link.match(/^https?:\/\//)
 
     h = "<span class=\"hat " \
       "hat_#{hat.gsub(/[^A-Za-z0-9]/, "_").downcase}\" " \
@@ -72,7 +72,7 @@ class Hat < ApplicationRecord
     m.moderator_user_id = granted_by_user_id
     m.action = "Granted hat \"#{hat}\"" + (link.present? ?
       " (#{link})" : "")
-    m.save
+    m.save!
   end
 
   def sanitized_link

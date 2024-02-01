@@ -1,7 +1,11 @@
 # typed: false
 
 module UsersHelper
-  def stories_submitted_content(showing_user)
+  def self_or_mod(showing_user, user)
+    user == showing_user || user.try(:is_moderator?)
+  end
+
+  def stories_submitted_content(user, showing_user)
     tag = showing_user.most_common_story_tag
 
     stories_submitted = showing_user.stories_submitted_count
@@ -11,7 +15,7 @@ module UsersHelper
     capture do
       concat link_to(stories_displayed, newest_by_user_path(showing_user))
 
-      concat(" (+#{stories_deleted} deleted)") if user_is_moderator? && stories_deleted > 0
+      concat(" (+#{stories_deleted} deleted)") if user&.is_moderator? && stories_deleted > 0
 
       if tag
         concat ", most commonly tagged "
@@ -20,13 +24,13 @@ module UsersHelper
     end
   end
 
-  def comments_posted_content(showing_user)
+  def comments_posted_content(user, showing_user)
     comments_deleted = showing_user.comments_deleted_count
 
     capture do
       concat link_to(showing_user.comments_posted_count, user_threads_path(showing_user))
 
-      if user_is_moderator? && comments_deleted > 0
+      if user&.is_moderator? && comments_deleted > 0
         concat " (+#{comments_deleted} deleted)"
       end
     end
@@ -61,11 +65,5 @@ module UsersHelper
     else
       "(#{user.karma})"
     end
-  end
-
-  private
-
-  def user_is_moderator?
-    @user&.is_moderator?
   end
 end

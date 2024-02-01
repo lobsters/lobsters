@@ -1,7 +1,8 @@
+<%# locals: (tags:) -%>
 <div class="box">
   Stories <a href="/tags">tagged</a> as<br>
 
-  <% @tags.each do |tag| %>
+  <% tags.each do |tag| %>
     <%= tag_link(tag) %>
     <%= tag.description %>
     <br>

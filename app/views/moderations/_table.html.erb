@@ -1,4 +1,5 @@
-<table class="data zebra" width="100%" cellspacing=0>
+<%# locals: (moderations:) -%>
+<table class="data zebra moderations" width="100%" cellspacing=0>
 <tr>
   <th>Date/Time</th>
   <th>Moderator</th>
@@ -6,8 +7,10 @@
 </tr>
 <% moderations.each do |mod| %>
   <tr class="nobottom <%= mod.moderator && 'mod' %>">
-    <td><%= raw mod.created_at.strftime("%Y-%m-%d&nbsp;%H:%M&nbsp;%z") %></td>
-    <td><% if mod.moderator %>
+    <td>
+      <%= mod.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+    <td>
+      <% if mod.moderator %>
       <a href="/messages?to=<%= mod.moderator.try(:username) %>"><%=
         mod.moderator.try(:username) %></a>
       <% elsif mod.is_from_suggestions? %>
@@ -37,7 +40,7 @@
   </tr>
   <tr class="<%= mod.reason.present?? "nobottom" : "" %>">
     <td colspan=2></td>
-    <td>Action: <em><%= mod.action %></em></td>
+    <td class="wrap">Action: <em><%= mod.action %></em></td>
   </tr>
   <% if mod.reason.present? %>
     <tr>

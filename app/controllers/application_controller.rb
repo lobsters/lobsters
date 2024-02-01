@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
     render plain: "404 Not Found", status: :not_found, content_type: "text/plain"
   end
   rescue_from ActionController::UnpermittedParameters do
-    render plain: "400 Unpermitted query or form paramater", status: :bad_request, content_type: "text/plain"
+    render plain: "400 Unpermitted query or form parameter", status: :bad_request, content_type: "text/plain"
   end
   rescue_from ActionDispatch::Http::MimeNegotiation::InvalidType do
     render plain: "fix the mime type in your HTTP_ACCEPT header",
@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
 
   def agent_is_spider?
     ua = request.env["HTTP_USER_AGENT"].to_s
-    (ua == "" || ua.match(/(Google|bing|Slack|Twitter)bot|Slurp|crawler|Feedly|FeedParser|RSS/))
+    ua == "" || ua.match(/(Google|bing|Slack|Twitter)bot|Slurp|crawler|Feedly|FeedParser|RSS/)
   end
 
   def authenticate_user
@@ -74,15 +74,9 @@ class ApplicationController < ActionController::Base
   end
 
   def find_user_from_rss_token
-    if !@user && request[:format] == "rss" && params[:token].to_s.present?
+    if !@user && params[:format] == "rss" && params[:token].to_s.present?
       @user = User.where(rss_token: params[:token].to_s).first
     end
-  end
-
-  def flag_warning
-    @flag_warning_int ||= time_interval("1m")
-    return false if Rails.env.development? # expensive because Rails doesn't cache in dev
-    @show_flag_warning ||= @user && !!FlaggedCommenters.new(@flag_warning_int[:param], 1.day).check_list_for(@user)
   end
 
   def heinous_inline_partials

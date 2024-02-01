@@ -1,7 +1,8 @@
-<% if defined?(parents) %>
+<%# locals: (comment:, story: nil, show_comment: nil, show_tree_lines: false, parents: nil) -%>
+<% if parents %>
   <ol class="comments comments1">
     <li class="comments_subtree">
-      <%= render partial: 'threads', locals: { thread: parents, story: @story } %>
+      <%= render partial: 'threads', locals: { thread: parents, story: story } %>
   </li>
 </ol>
 <% end %>
@@ -76,10 +77,12 @@
 
   <p></p>
 <% end %>
-<% if defined?(show_comment) && show_comment.valid? %>
+<% if show_comment&.valid? %>
   <div class="preview">
-    <%= render "comments/comment", :comment => show_comment,
-      :show_tree_lines => defined?(show_tree_lines) && show_tree_lines %>
+    <%= render partial: "comment", locals: {
+      comment: show_comment,
+      show_tree_lines: show_tree_lines,
+    } %>
   </div>
 <% end %>
 </div>

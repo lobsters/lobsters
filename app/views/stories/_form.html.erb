@@ -1,7 +1,8 @@
+<%# locals: (story:, f:, suggesting: false) -%>
 <%= render :partial => "stories/form_errors", :locals => { :f => f, :story => f.object } %>
 
 <div class="box">
-  <% unless defined?(suggesting) %>
+  <% unless suggesting %>
     <div class="boxline">
     <% if f.object.url_is_editable_by_user?(@user) %>
       <%= f.label :url, "URL:", :class => "required" %>
@@ -19,7 +20,7 @@
 
   <div class="boxline">
     <%= f.label :title, "Title:", :class => "required" %>
-    <%= f.text_field :title, :maxlength => 100 %>
+    <%= f.text_field :title, maxlength: Story.title_maximum_length %>
     <p class="actions title-reminder">
       Please remove extraneous components from titles such as the name of the site, blog, section, and author.
       <span class="title-reminder-thanks">
@@ -28,7 +29,7 @@
     </p>
   </div>
 
-  <% if f.object.id && !defined?(suggesting) && f.object.suggested_title_times.any? %>
+  <% if f.object.id && !suggesting && f.object.suggested_title_times.any? %>
     <div class="boxline actions">
       Users have suggested setting this story's title to:
       <br>
@@ -53,11 +54,11 @@
           (t.filtered_count == 1 ? "" : "s") << " filtering</em>"
       end
 
-      [ "#{t.tag} - #{t.description}", t.tag, { "data-title" => raw(html) } ]},
+      [ "#{t.tag} - #{t.description}", t.tag, { "data-title" => raw(html), "data-tag-css" => t.css_class } ]},
     f.object.tags_a), {}, { :multiple => true } %>
   </div>
 
-  <% if f.object.id && !defined?(suggesting) && f.object.suggested_tagging_times.any? %>
+  <% if f.object.id && !suggesting && f.object.suggested_tagging_times.any? %>
     <div class="boxline actions">
       Users have suggested setting this story's tags to:
       <br>
@@ -67,7 +68,7 @@
     </div>
   <% end %>
 
-  <% unless defined?(suggesting) %>
+  <% unless suggesting %>
     <div class="boxline">
       <%= f.label :description, "Text:", :class => "required" %>
       <%= f.text_area :description, :rows => 8, :placeholder => "Use this for stories without a URL, to link additional context, or to paste abstracts from PDF papers.
@@ -76,7 +77,7 @@ Please don't use this to promote the story, summarize the post, or explain why y
 See the guidelines below for more." %>
     </div>
 
-    <%= tag.details class: "boxline actions", open: show_guidelines? ? true : nil do %>
+    <%= tag.details class: "boxline actions", open: show_guidelines?(@user) ? true : nil do %>
       <summary>Story submission guidelines</summary>
       <ul>
 
@@ -122,7 +123,7 @@ See the guidelines below for more." %>
     <% end %>
   <% end %>
 </div>
-<% unless defined?(suggesting) %>
+<% unless suggesting %>
   <div class="box">
     <div class="boxline">
       <%= f.label :user_is_author, "Author:", :class => "required" %>

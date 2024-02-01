@@ -9,7 +9,7 @@ class InvitationRequest < ApplicationRecord
     presence: true,
     length: {maximum: 255}
   validates :memo,
-    format: {with: /https?:\/\//},
+    format: {with: Story::URL_RE},
     length: {maximum: 255}
   validates :code, :ip_address, length: {maximum: 255}
 

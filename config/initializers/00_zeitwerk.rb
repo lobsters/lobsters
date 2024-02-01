@@ -11,5 +11,5 @@ require Rails.root.join("lib/monkey.rb").to_s
 
 %w[extras lib].each do |dir|
   Rails.autoloaders.main.push_dir(Rails.root.join(dir))
-  Dir[File.join(Rails.root, dir, "*.rb")].sort.each { |l| require l }
+  Dir[Rails.root.join(dir, "*.rb").to_s].sort.each { |l| require l }
 end

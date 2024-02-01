@@ -1,6 +1,6 @@
 <%= render partial: 'messages/subnav' %>
 
-<%= render partial: 'users/flag_warning' if @show_flag_warning %>
+<%= possible_flag_warning(@user, @user) %>
 
 <% if @replies.present? %>
   <ol class="comments comments1">

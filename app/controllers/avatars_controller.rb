@@ -5,7 +5,7 @@ class AvatarsController < ApplicationController
 
   ALLOWED_SIZES = [16, 32, 100, 200].freeze
 
-  CACHE_DIR = "#{Rails.root}/public/avatars/".freeze
+  CACHE_DIR = Rails.public_path.join("avatars/").to_s.freeze
 
   def expire
     expired = 0
@@ -13,7 +13,7 @@ class AvatarsController < ApplicationController
     Dir.entries(CACHE_DIR).select { |f|
       f.match(/\A#{@user.username}-(\d+)\.png\z/)
     }.each do |f|
-      Rails.logger.debug "Expiring #{f}"
+      Rails.logger.debug { "Expiring #{f}" }
       File.unlink("#{CACHE_DIR}/#{f}")
       expired += 1
     rescue => e

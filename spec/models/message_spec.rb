@@ -1,3 +1,5 @@
+# typed: false
+
 require "rails_helper"
 
 describe Message do
@@ -8,7 +10,7 @@ describe Message do
 
   it "validates the length of short_id" do
     m_valid_short_id = create(:message)
-    m_valid_short_id.short_id = 'a' * 50
+    m_valid_short_id.short_id = "a" * 50
     expect(m_valid_short_id).not_to be_valid
   end
 
@@ -16,7 +18,7 @@ describe Message do
     it "can't be worn if user doesn't have that hat" do
       message = build(:message, hat: create(:hat))
       message.valid?
-      expect(message.errors[:hat]).to eq(['not wearable by author'])
+      expect(message.errors[:hat]).to eq(["not wearable by author"])
     end
 
     it "can be one of the user's hats" do

@@ -1,3 +1,5 @@
+# typed: false
+
 FactoryBot.define do
   factory :vote do
     association(:user)

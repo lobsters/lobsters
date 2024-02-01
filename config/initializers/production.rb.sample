@@ -12,6 +12,7 @@ if Rails.env.production?
     :ignore_exceptions => [
       "ActionController::UnknownFormat",
       "ActionController::BadRequest",
+      "ActionDispatch::Http::MimeNegotiation::InvalidType",
       "ActionDispatch::RemoteIp::IpSpoofAttackError",
     ] + ExceptionNotifier.ignored_exceptions,
     :email => {
@@ -23,7 +24,7 @@ if Rails.env.production?
   Pushover.API_TOKEN = "secret"
   Pushover.SUBSCRIPTION_CODE = "secret"
 
-  StoryCacher.DIFFBOT_API_KEY = "secret"
+  DiffBot.DIFFBOT_API_KEY = "secret"
 
   Twitter.CONSUMER_KEY = "secret"
   Twitter.CONSUMER_SECRET = "secret"

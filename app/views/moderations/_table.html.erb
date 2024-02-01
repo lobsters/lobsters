@@ -1,13 +1,16 @@
-<table class="data zebra" width="100%" cellspacing=0>
+<%# locals: (moderations:) -%>
+<table class="data zebra moderations" width="100%" cellspacing=0>
 <tr>
   <th>Date/Time</th>
   <th>Moderator</th>
-  <th>Story/Comment/User, Action, Reason</th>
+  <th>Story/Comment/User/Tag/Category, Action, Reason</th>
 </tr>
 <% moderations.each do |mod| %>
   <tr class="nobottom <%= mod.moderator && 'mod' %>">
-    <td><%= raw mod.created_at.strftime("%Y-%m-%d&nbsp;%H:%M&nbsp;%z") %></td>
-    <td><% if mod.moderator %>
+    <td>
+      <%= mod.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+    <td>
+      <% if mod.moderator %>
       <a href="/messages?to=<%= mod.moderator.try(:username) %>"><%=
         mod.moderator.try(:username) %></a>
       <% elsif mod.is_from_suggestions? %>
@@ -23,10 +26,11 @@
           <%= mod.comment.story.title %></a>
       <% elsif mod.tag %>
         <%= link_to("Tag: #{mod.tag.tag}", mod.tag) %>
+      <% elsif mod.category %>
+        <%= link_to("Category: #{mod.category.category}", mod.category) %>
       <% elsif mod.user_id %>
         <% if mod.user %>
-          <a href="/u/<%= mod.user.username %>">User
-            <%= mod.user.username %></a>
+          <%= link_to "User #{mod.user.username}", mod.user %>
         <% else %>
           User <%= mod.user_id %> (Deleted)
         <% end %>
@@ -36,7 +40,7 @@
   </tr>
   <tr class="<%= mod.reason.present?? "nobottom" : "" %>">
     <td colspan=2></td>
-    <td>Action: <em><%= mod.action %></em></td>
+    <td class="wrap">Action: <em><%= mod.action %></em></td>
   </tr>
   <% if mod.reason.present? %>
     <tr>

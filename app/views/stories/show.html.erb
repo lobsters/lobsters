@@ -1,3 +1,8 @@
+<% if @user && @user.is_moderator? && @story.is_gone? %>
+  <%= render partial: 'stories/missing', locals: { story: @story, moderation: @moderation } %>
+  <hr class="mod">
+  <p>Full display for submitter and mods:</p>
+<% end %>
 <ol class="stories">
   <%= render :partial => "stories/listdetail",
     :locals => { :story => @story, :single_story => true } %>
@@ -10,76 +15,42 @@
     </div>
   <% end %>
 
-  <% if @story.is_unavailable && @story.story_cache.present? %>
-    <a id="story_text_expander">Source URL considered unavailable as of <%=
-    time_ago_in_words_label(@story.unavailable_at) %>, cached text
-    available</a>
-    <div id="collapsed_story_text">
-      <p>
-      <em>All story content copyright of its respective owner.</em>
-      </p>
+  <% if @story.is_unavailable %>
+    <% StoryText.cached?(@story) do |text| %>
+      <a class="story_text_expander">Source URL considered unavailable as of
+      <%= time_ago_in_words_label(@story.unavailable_at) %>, click for cached text - also see archive links above</a>
+      <div id="collapsed_story_text">
+        <p>
+        <em>All story content copyright of its respective owner.</em>
+        </p>
 
-      <div class="story_text">
-        <blockquote>
-          <%= simple_format(@story.story_cache) %>
-        </blockquote>
+        <div class="story_text">
+          <blockquote>
+            <%= simple_format(text) %>
+          </blockquote>
+        </div>
       </div>
-    </div>
 
-    <script>
-      document.getElementById("story_text_expander").addEventListener("click",
-        function() {
-          document.getElementById("collapsed_story_text").style.display = "block";
-          return false;
-        });
-    </script>
+    <% end %>
   <% end %>
 </div>
 
 <% if !@story.previewing %>
   <ol class="comments comments1">
-    <% if !@story.is_gone? && !@story.previewing %>
-      <li class="comments_subtree"><%= render "comments/commentbox", :comment => @comment %></li>
-      <% if @user %><script>autosize($("#comment")[0]);</script><% end %>
+    <% if !@story.is_gone? && !@story.previewing && @story.accepting_comments? %>
+      <li class="comments_subtree"><%= render partial: "comments/commentbox", locals: { comment: @comment, story: @story } %></li>
     <% end %>
 
-    <% comments_by_parent = @comments.group_by(&:parent_comment_id) %>
-    <% subtree = comments_by_parent[nil] %>
-    <% ancestors = [] %>
+    <li class="comments_subtree">
+      <%= render partial: 'comments/threads', locals: { thread: @comments, story: @story, ribbon: @ribbon } %>
+    </li>
 
-    <% while subtree %>
-      <% if (comment = subtree.shift) %>
-        <li class="comments_subtree">
-
-        <% children = comments_by_parent[comment.id] %>
-        <%= render "comments/comment", :comment => comment,
-          :show_story => (comment.story_id != @story.id),
-          :show_tree_lines => true,
-          :was_merged => (comment.story_id != @story.id),
-          :children => children,
-          :is_unread => is_unread?(comment) %>
-
-        <% if ancestors.present? %>
-          <div class="comment_siblings_tree_line"></div>
-        <% end %>
-
-        <% if children %>
-          <% ancestors << subtree %>
-          <% subtree = children %>
-          <ol class="comments">
-        <% else %>
-          <ol class="comments"></ol></li>
-        <% end %>
-      <% elsif (subtree = ancestors.pop) %>
-        </ol></li>
-      <% end %>
-    <% end %>
   </ol>
 <% end %>
 
-<% if !@story.previewing && @story.public_similar_stories.any? %>
+<% if !@story.previewing && @story.public_similar_stories(@user).length > 0 %>
   <div class="box wide">
     <h4>Stories with similar links:</h4>
-    <%= render partial: "stories/similar", locals: { similar: @story.public_similar_stories } %>
+    <%= render partial: "stories/similar", locals: { similar: @story.public_similar_stories(@user) } %>
   </div>
 <% end %>

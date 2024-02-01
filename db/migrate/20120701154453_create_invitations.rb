@@ -10,7 +10,7 @@ class CreateInvitations < ActiveRecord::Migration
       t.integer :user_id
       t.string :email
       t.string :code
-      t.timestamps :null => false
+      t.timestamps null: false
     end
 
     add_column :users, :invited_by_user_id, :integer

@@ -1,6 +1,8 @@
-require_relative '../../script/mail_new_activity'
+# typed: false
 
-describe 'EmailSender' do
+require_relative "../../script/mail_new_activity"
+
+describe "EmailSender" do
   context "encoded words" do
     it "encodes text as quoted printable" do
       # Note two spaces after "Why" - following conventions in many other sites
@@ -15,13 +17,13 @@ describe 'EmailSender' do
     # desirable to encode more text than will fit in an 'encoded-word' of
     # 75 characters, multiple 'encoded-word's (separated by CRLF SPACE) may
     # be used.
-    it 'does not allow lines longer than 75 characters' do
+    it "does not allow lines longer than 75 characters" do
       string = ("foö " * 30).quoted_printable(true)
-      string.lines.each {|line| expect(line.length).to be <= 75 }
+      string.lines.each { |line| expect(line.length).to be <= 75 }
     end
 
-    it 'does not break on multibyte encoded characters' do
-      q_encoded = (1..30).map { 'ö' * 5 }.join(' ').quoted_printable(true)
+    it "does not break on multibyte encoded characters" do
+      q_encoded = (1..30).map { "ö" * 5 }.join(" ").quoted_printable(true)
 
       without_space, *remainder = q_encoded.split("\n\t")
 
@@ -29,12 +31,12 @@ describe 'EmailSender' do
       expect(remainder).to all eq "=?UTF-8?Q?_=C3=B6=C3=B6=C3=B6=C3=B6=C3=B6?="
     end
 
-    it 'handles really long words' do
+    it "handles really long words" do
       # it does not, in fact, handle long words because it would have to
       # potentially split in the middle of multibyte characters unless we
       # parsed the glyphs somehow. Current actual behavior is that it
       # simply does not line break at all.
-      long_string = 'àéîöuū' * 25
+      long_string = "àéîöuū" * 25
       q_encoded = long_string.quoted_printable(true)
       expect(q_encoded.length).to be > long_string.length
 

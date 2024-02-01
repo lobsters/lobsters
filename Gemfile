@@ -1,22 +1,19 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 6.0.3.2"
+gem "rails"
 
 gem "mysql2"
-
-# uncomment to use PostgreSQL
-# gem "pg"
+gem "sidekiq"
 
 # rails
-gem 'scenic'
-gem 'scenic-mysql_adapter'
+gem "scenic"
+gem "scenic-mysql_adapter"
 gem "activerecord-typedstore"
-gem 'sprockets-rails', '2.3.3'
+gem "sprockets-rails", require: "sprockets/railtie"
 
 # js
-gem "jquery-rails", "~> 4.3"
 gem "json"
-gem "uglifier", ">= 1.3.0"
+gem "uglifier"
 
 # deployment
 gem "actionpack-page_caching"
@@ -24,38 +21,46 @@ gem "exception_notification"
 gem "puma"
 
 # security
-gem "bcrypt", "~> 3.1.2"
+gem "bcrypt"
 gem "rotp"
 gem "rqrcode"
 
 # parsing
-gem "pdf-reader"
-gem "nokogiri", ">= 1.10.8"
+gem "commonmarker", "<1"
 gem "htmlentities"
-gem "commonmarker", "~> 0.14"
+gem "pdf-reader"
+gem "nokogiri"
+gem "parslet"
+
+# perf
+gem "flamegraph"
+gem "memory_profiler"
+gem "rack-mini-profiler"
+gem "stackprof"
 
 gem "oauth" # for twitter-posting bot
 gem "mail" # for parsing incoming mail
-gem "ruumba" # tests views
 gem "sitemap_generator" # for better search engine indexing
-gem "svg-graph", require: 'SVG/Graph/TimeSeries' # for charting, note workaround in lib/time_series.rb
-gem 'transaction_retry' # mitigate https://github.com/lobsters/lobsters-ansible/issues/39
+gem "svg-graph", require: "SVG/Graph/TimeSeries" # for charting, note workaround in lib/time_series.rb
+gem "rack-attack" # rate-limiting
 
 group :test, :development do
-  gem 'bullet'
-  gem 'capybara'
-  gem 'database_cleaner'
-  gem 'good_migrations'
+  gem "benchmark-perf"
+  gem "brakeman"
+  gem "capybara"
+  gem "database_cleaner"
   gem "listen"
   gem "rspec-rails"
   gem "factory_bot_rails"
-  gem "rubocop", "0.81", require: false
-  gem "rubocop-rails", require: false
-  gem "rubocop-rspec", require: false
+  gem "standard"
+  gem "standard-performance"
+  gem "standard-rails"
+  gem "standard-sorbet"
+  gem "super_diff"
   gem "faker"
   gem "byebug"
   gem "rb-readline"
   gem "vcr"
   gem "webmock" # used to support vcr
-  gem 'simplecov', require: false
+  gem "simplecov", require: false
 end

@@ -1,0 +1,9 @@
+<%= render partial: 'messages/subnav' %>
+
+<%= possible_flag_warning(@showing_user, @user) %>
+
+<ol class="comments comments1">
+  <li class="comments_subtree">
+    <%= render partial: 'threads', locals: { thread: @threads } %>
+  </li>
+</ol>

@@ -1,19 +1,15 @@
 <link rel="prefetch" href="<%= path_to_javascript 'application' %>" as="script" />
 
 <div class="box wide">
-  <div class="legend">
-    Login
-  </div>
-
   <% if Rails.application.read_only? %>
     <p>
     The site is currently in read-only mode for maintenance.
     </p>
   <% else %>
-    <%= form_with url: login_path, local: true do |form| %>
+    <%= form_with url: login_path do |form| %>
     <p>
       <%= form.label :email, "E-mail or Username:" %>
-      <%= form.text_field :email, :size => 30, :autofocus => "autofocus" %>
+      <%= form.text_field :email, :size => 40, :inputmode => "email", :autofocus => "autofocus" %>
       <br />
 
       <%= form.label :password, "Password:" %>
@@ -34,16 +30,14 @@
         <p>
           Not a user yet? <a href="/invitations/open">Sign up here</a>.
         </p>
+      <% elsif Rails.application.allow_invitation_requests? %>
+        Not a user yet? <a href="/invitations/request">Request an invite</a>.
       <% else %>
         <p>
-        Not a user yet?  Signup is by invitation only to combat spam and increase
-        accountability.  If you know <a href="/u/">a current user</a> of the site,
-        ask them for an invitation or
-        <% if Rails.application.allow_invitation_requests? %>
-          <a href="/invitations/request">request one publicly</a>.
-        <% else %>
-          request one in <a href="/chat">chat</a>.
-        <% end %>
+        Not a user yet?
+        Read about <a href="/about#invitations">how invitations work</a> and see if you know
+        <%= link_to 'a current user', users_tree_path %> of the site.
+        The <a href="/chat">chat room</a> does not require an invitation.
         </p>
       <% end %>
 

@@ -1,8 +1,4 @@
 <div class="box wide">
-  <div class="legend">
-    Request a Hat
-  </div>
-
   <p>
   A hat is a formal, verified way of speaking officially for a project, organization, or company on Lobsters.
   A user can have more than one hat, but only wear one at a time on a comment or private message.
@@ -20,8 +16,8 @@
   private comments that will be seen only by moderators during approval.
   </p>
   <p>
-  It's really helpful if you link your GitHub or Twitter account to your Lobsters account and,
-  in your comment, link to where the organization links to that public account.
+  It's really helpful if you <b>auth your GitHub</b> account from your <%= link_to 'settings', settings_path(anchor: 'external') %>
+  and, in your comment below, link to where the organization lists that account.
   Then we can instantly see you're legit without having to send a verification email.
   </p>
   <p>
@@ -29,16 +25,14 @@
   Old messages will still show it and you won't be able to use it again.
   </p>
 
-  <%= form_with model: @hat_request, url: create_hat_request_path, local: true do |f| %>
+  <%= form_with model: @hat_request, url: create_hat_request_path do |f| %>
     <p>
     <%= f.label :hat, "Hat:" %>
-    <%= f.text_field :hat, :size => 20,
-      :placeholder => "XYZ Project Member" %>
+    <%= f.text_field :hat, :size => 20, :placeholder => "XYZ Project Member" %>
     <br />
 
     <%= f.label :link, "Link:" %>
-    <%= f.text_field :link, :size => 50,
-      :placeholder => "user@project.org, or a URL to an employment page" %>
+    <%= f.text_field :link, :size => 50, :placeholder => "user@project.org, or a URL to an employment page" %>
     <br />
 
     <%= f.label :comment, "Comment:" %>

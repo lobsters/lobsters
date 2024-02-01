@@ -1,17 +1,18 @@
 <div class="box wide">
-  <div class="legend">
-    Login - Two Factor Authentication
-  </div>
-
-  <%= form_with url: twofa_login_url, local: true do |f| %>
+  <%= form_with url: twofa_login_url do |f| %>
     <p>
     Enter the current TOTP code from your TOTP application:
     </p>
 
     <p>
     <%= f.label :totp_code, "TOTP Code:" %>
-    <%= f.number_field :totp_code, :size => 10, :autocomplete => "off",
-        :autofocus => true, :class => "totp_code" %>
+    <%= f.text_field :totp_code,
+      :inputmode => "numeric",
+      :pattern => "[0-9]+",
+      :size => 10,
+      :autocomplete => "one-time-code",
+      :autofocus => true,
+      :class => "totp_code" %>
     <br />
     </p>
 

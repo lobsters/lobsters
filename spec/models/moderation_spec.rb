@@ -1,7 +1,9 @@
+# typed: false
+
 require "rails_helper"
 
 describe Moderation do
-  let(:value) { 'a' * 16_777_216 }
+  let(:value) { "a" * 16_777_216 }
 
   it "validates the length of action" do
     moderation = Moderation.new(action: value, reason: nil)
@@ -25,18 +27,18 @@ describe Moderation do
     tag = create :tag
 
     valid_moderations = [Moderation.new(comment: comment),
-                         Moderation.new(domain: domain),
-                         Moderation.new(story: story),
-                         Moderation.new(tag: tag),
-                         Moderation.new(user: user),]
+      Moderation.new(domain: domain),
+      Moderation.new(story: story),
+      Moderation.new(tag: tag),
+      Moderation.new(user: user)]
     expect(valid_moderations).to all(be_valid)
 
     invalid_moderations = [Moderation.new,
-                           Moderation.new(comment: comment, domain: domain),
-                           Moderation.new(comment: comment, domain: domain, story: story),
-                           Moderation.new(comment: comment, domain: domain, story: story, tag: tag),
-                           Moderation.new(comment: comment, domain: domain, story: story, tag: tag,
-                                          user: user),]
+      Moderation.new(comment: comment, domain: domain),
+      Moderation.new(comment: comment, domain: domain, story: story),
+      Moderation.new(comment: comment, domain: domain, story: story, tag: tag),
+      Moderation.new(comment: comment, domain: domain, story: story, tag: tag,
+        user: user)]
     invalid_moderations.each do |moderation|
       expect(moderation).not_to be_valid
       expect(moderation.errors.messages.dig(:base))

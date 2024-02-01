@@ -1,9 +1,5 @@
 <div class="box wide">
-  <div class="legend">
-    Requested Hats
-  </div>
-
-  <% if @hat_requests.count == 0 %>
+  <% if @hat_requests.length == 0 %>
     No hat requests.
   <% else %>
     <% @hat_requests.each_with_index do |hr,x| %>
@@ -11,11 +7,12 @@
         <hr>
       <% end %>
 
-      <%= form_with model: hr, url: approve_hat_request_url(id: hr), method: :post, local: true do |f| %>
+      <%= form_with model: hr, url: approve_hat_request_url(id: hr), method: :post do |f| %>
         <p>
         <div class="boxline">
           <%= f.label :user_id, "User:", :class => "required" %>
-          <a href="/u/<%= hr.user.username %>"><%= hr.user.username %></a>
+          <%= styled_user_link hr.user %>
+          <%= time_ago_in_words(hr.created_at) %>
         </div>
 
         <div class="boxline">
@@ -36,24 +33,19 @@
         <div class="boxline">
           <%= f.label :link, "Comment:", :class => "required" %>
           <div class="d">
-            <%= raw(h(hr.comment.to_s).gsub(/\n/, "<br>")) %>
+            <%= raw Markdowner.to_html(hr.comment || '') %>
           </div>
         </div>
-
-        <p style="clear: both;">
-        <%= f.submit "Approve Hat Request" %>
-        </p>
       <% end %>
-      <p>
-      or
-      </p>
-      <%= form_with model: hr, url: reject_hat_request_url(id: hr), method: :post, local: true do |f| %>
+
+      <%= form_with model: hr, url: reject_hat_request_url(id: hr), method: :post do |f| %>
         <div class="boxline">
           <%= f.label :link, "Reason:", :class => "required" %>
-          <%= f.text_area :rejection_comment, :rows => 4 %>
+          <%= f.text_area :reason, :rows => 4 %>
         </div>
         <p>
-        <%= f.submit "Reject Hat Request" %>
+          <%= f.submit "Approve Hat Request", formaction: approve_hat_request_url(id: hr) %>
+          <%= f.submit "Reject Hat Request", class: "deletion"  %>
         </p>
       <% end %>
     <% end %>

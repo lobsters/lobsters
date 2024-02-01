@@ -1,31 +1,27 @@
+# typed: false
+
 module ApplicationHelper
+  include TimeAgoInWords
+
   MAX_PAGES = 15
 
   def avatar_img(user, size)
     image_tag(
       user.avatar_path(size),
-      :srcset => "#{user.avatar_path(size)} 1x, #{user.avatar_path(size * 2)} 2x",
-      :class => "avatar",
-      :size => "#{size}x#{size}",
-      :alt => "#{user.username} avatar",
+      srcset: "#{user.avatar_path(size)} 1x, #{user.avatar_path(size * 2)} 2x",
+      class: "avatar",
+      size: "#{size}x#{size}",
+      alt: "#{user.username} avatar",
+      loading: "lazy",
+      decoding: "async"
     )
-  end
-
-  def break_long_words(str, len = 30)
-    safe_join(str.split(" ").map {|w|
-      if w.length > len
-        safe_join(w.split(/(.{#{len}})/), "<wbr>".html_safe)
-      else
-        w
-      end
-    }, " ")
   end
 
   def errors_for(object)
     html = ""
     unless object.errors.blank?
       html << "<div class=\"flash-error\">"
-      html << "<h2>#{pluralize(object.errors.count, 'error')} prohibited this \
+      html << "<h2>#{pluralize(object.errors.count, "error")} prohibited this \
                #{object.class.name.downcase} from being saved</h2>"
       html << "<p>There were the problems with the following fields:</p>"
       html << "<ul>"
@@ -38,94 +34,31 @@ module ApplicationHelper
     raw(html)
   end
 
-  def header_links
-    return @header_links if @header_links
+  # limitation: this can't handle generating links based on a hash of options,
+  # like { controller: ..., action: ... }
+  def link_to_different_page(text, path, options = {})
+    current = request.path.sub(/\/page\/\d+$/, "")
+    path.sub!(/\/page\/\d+$/, "")
+    options[:class] = :current_page if current == path
+    link_to text, path, options
+  end
 
-    @header_links = {
-      root_path => { :title => @cur_url == "/" ? Rails.application.name : "Home" },
-      recent_path => { :title => "Recent" },
-      comments_path => { :title => "Comments" },
+  def link_post button_label, link, options = {}
+    options.reverse_merge class_name: nil, confirm: nil
+    render partial: "helpers/link_post", locals: {
+      button_label: button_label,
+      link: link,
+      class_name: options[:class_name],
+      confirm: options[:confirm]
     }
-
-    if @user
-      @header_links[threads_path] = { :title => "Your Threads" }
-    end
-
-    if @user && @user.can_submit_stories?
-      @header_links[new_story_path] = { :title => "Submit Story" }
-    end
-
-    if @user
-      @header_links[saved_path] = { :title => "Saved" }
-    end
-
-    @header_links[search_path] = { :title => "Search" }
-
-    @header_links.each do |k, v|
-      v[:class] ||= []
-
-      if k == @cur_url
-        v[:class].push "cur_url"
-      end
-    end
-
-    @header_links
-  end
-
-  def right_header_links
-    return @right_header_links if @right_header_links
-
-    @right_header_links = {}
-
-    if @user
-      if (count = @user.unread_replies_count) > 0
-        @right_header_links[replies_unread_path] = {
-          :class => ["new_messages"],
-          :title => "#{@user.unread_replies_count} Reply".pluralize(count),
-        }
-      else
-        @right_header_links[replies_path] = { :title => "Replies" }
-      end
-
-      if (count = @user.unread_message_count) > 0
-        @right_header_links[messages_path] = {
-          :class => ["new_messages"],
-          :title => "#{@user.unread_message_count} Message".pluralize(count),
-        }
-      else
-        @right_header_links[messages_path] = { :title => "Messages" }
-      end
-
-      @right_header_links[settings_path] = { :title => "#{@user.username} (#{@user.karma})" }
-    else
-      @right_header_links[login_path] = { :title => "Login" }
-    end
-
-    @right_header_links.each do |k, v|
-      v[:class] ||= []
-
-      if k == @cur_url
-        v[:class].push "cur_url"
-      end
-    end
-
-    @right_header_links
-  end
-
-  def link_to_different_page(text, path)
-    if current_page? path
-      text
-    else
-      link_to(text, path)
-    end
   end
 
   def page_numbers_for_pagination(max, cur)
     if max <= MAX_PAGES
-      return (1 .. max).to_a
+      return (1..max).to_a
     end
 
-    pages = (cur - (MAX_PAGES / 2) + 1 .. cur + (MAX_PAGES / 2) - 1).to_a
+    pages = (cur - (MAX_PAGES / 2) + 1..cur + (MAX_PAGES / 2) - 1).to_a
 
     while pages[0] < 1
       pages.push pages.last + 1
@@ -156,34 +89,22 @@ module ApplicationHelper
     pages
   end
 
+  def possible_flag_warning(showing_user, user)
+    return render partial: "users/dev_flag_warning" unless Rails.env.production?
+    return unless self_or_mod(showing_user, user)
+
+    interval = time_interval("1m")
+    if FlaggedCommenters.new(interval[:param], 1.day).check_list_for(showing_user)
+      render partial: "users/flag_warning", locals: {showing_user: showing_user, interval: interval}
+    end
+  end
+
   def tag_link(tag)
     link_to tag.tag, tag_path(tag), class: tag.css_class, title: tag.description
   end
 
   def time_ago_in_words_label(time)
-    ago = ""
-    secs = (Time.current - time).to_i
-    if secs <= 5
-      ago = "just now"
-    elsif secs < 60
-      ago = "less than a minute ago"
-    elsif secs < (60 * 60)
-      mins = (secs / 60.0).floor
-      ago = "#{mins} #{'minute'.pluralize(mins)} ago"
-    elsif secs < (60 * 60 * 48)
-      hours = (secs / 60.0 / 60.0).floor
-      ago = "#{hours} #{'hour'.pluralize(hours)} ago"
-    elsif secs < (60 * 60 * 24 * 30)
-      days = (secs / 60.0 / 60.0 / 24.0).floor
-      ago = "#{days} #{'day'.pluralize(days)} ago"
-    elsif secs < (60 * 60 * 24 * 365)
-      months = (secs / 60.0 / 60.0 / 24.0 / 30.0).floor
-      ago = "#{months} #{'month'.pluralize(months)} ago"
-    else
-      years = (secs / 60.0 / 60.0 / 24.0 / 365.0).floor
-      ago = "#{years} #{'year'.pluralize(years)} ago"
-    end
-
-    raw(content_tag(:span, ago, title: time.strftime("%F %T %z")))
+    ago = time_ago_in_words(time)
+    content_tag(:span, ago, title: time.strftime("%F %T %z"))
   end
 end

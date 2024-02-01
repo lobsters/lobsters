@@ -1,18 +1,19 @@
+<%# locals: (return_home: false) -%>
 <p>
-Invitations are unlimited, but persons you invite will be associated with your
-account in the <a href="/u">user tree</a> and you may be responsible for them
-if they cause problems.  Please use your discretion when inviting persons you
-don't personally know.
+Invitations are unlimited, but persons you invite will be associated with your account
+in the <%= link_to 'user tree', users_tree_path %>
+and you may be responsible for them if they cause problems.
+Please use your discretion when inviting persons you don't personally know.
 </p>
 
-<%= form_with url: invitations_path, method: :post, local: true do |f| %>
-  <% if defined?(return_home) && return_home %>
+<%= form_with url: invitations_path, method: :post do |f| %>
+  <% if return_home %>
     <%= f.hidden_field :return_home, value: 1 %>
   <% end %>
 
   <div class="boxline">
     <%= f.label :email, "E-mail Address:", :class => "required" %>
-    <%= f.email_field :email, :size => 30, :autocomplete => "off" %>
+    <%= f.email_field :email, :size => 30, :autocomplete => "off", :inputmode => "email" %>
   </div>
 
   <div class="boxline">

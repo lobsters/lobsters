@@ -28,7 +28,7 @@ class Comment < ApplicationRecord
     assign_thread_id
   end
   after_create :record_initial_upvote, :mark_submitter, :deliver_notifications,
-    :deliver_mention_notifications, :log_hat_use
+    :log_hat_use
   after_destroy :unassign_votes
 
   scope :deleted, -> { where(is_deleted: true) }

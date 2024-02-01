@@ -51,7 +51,7 @@ class Search
   end
 
   def max_matches
-    100
+    per_page * 20
   end
 
   def per_page

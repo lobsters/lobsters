@@ -437,9 +437,7 @@ DEPENDENCIES
   standard-sorbet
   super_diff
   svg-graph
-  transaction_retry
-  uglifier (>= 1.3.0)
-  uri
+  uglifier
   vcr
   webmock
 

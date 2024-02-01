@@ -1,3 +1,5 @@
+# typed: false
+
 require "rails_helper"
 
 RSpec::Matchers.define :have_reply do |expected|
@@ -14,7 +16,7 @@ end
 describe ReplyingComment do
   def followed_parent
     p = create(:comment)
-    ReadRibbon.create(user_id: p.user_id, story_id: p.story_id, updated_at: p.created_at - 1.second)
+    ReadRibbon.create!(user_id: p.user_id, story_id: p.story_id, updated_at: p.created_at - 1.second)
     p
   end
 
@@ -24,7 +26,7 @@ describe ReplyingComment do
 
   def flag_comment(comment, by = create(:user))
     Vote.vote_thusly_on_story_or_comment_for_user_because(
-      -1, comment.story_id, comment.id, by.id, 'T'
+      -1, comment.story_id, comment.id, by.id, "T"
     )
   end
 
@@ -92,10 +94,10 @@ describe ReplyingComment do
       p = followed_parent
       r = reply_to p
       Vote.vote_thusly_on_story_or_comment_for_user_because(
-        -1, p.story_id, nil, create(:user).id, 'O'
+        -1, p.story_id, nil, create(:user).id, "O"
       )
       Vote.vote_thusly_on_story_or_comment_for_user_because(
-        -1, p.story_id, nil, create(:user).id, 'O'
+        -1, p.story_id, nil, create(:user).id, "O"
       )
 
       expect(p.story.reload.score).to be < 0

@@ -1,12 +1,9 @@
-<div class="box wide">
-  <div class="legend right">
-    <a href="/settings">Back to Settings</a>
-  </div>
-  <div class="legend">
-    <%= @title %>
-  </div>
+<% content_for :subnav do %>
+  <a href="/settings">Back to Settings</a>
+<% end %>
 
-  <%= form_with model: @user, url: twofa_auth_url, method: :post, local: true do |f| %>
+<div class="box wide">
+  <%= form_with model: @user, url: twofa_auth_url, method: :post do |f| %>
     <p>
     <% if @user.has_2fa? %>
       To turn off two-factor authentication for your account, enter your

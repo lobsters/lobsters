@@ -1,6 +1,9 @@
+# typed: false
+
 class HatsController < ApplicationController
-  before_action :require_logged_in_user, :except => [:index]
-  before_action :require_logged_in_moderator, :except => [:build_request, :index, :create_request]
+  before_action :require_logged_in_user, except: [:index]
+  before_action :require_logged_in_moderator, except: [:build_request, :index, :create_request]
+  before_action :show_title_h1
 
   def build_request
     @title = "Request a Hat"
@@ -13,7 +16,7 @@ class HatsController < ApplicationController
 
     @hat_groups = {}
 
-    Hat.all.includes(:user).each do |h|
+    Hat.active.includes(:user).find_each do |h|
       @hat_groups[h.hat] ||= []
       @hat_groups[h.hat].push h
     end
@@ -31,7 +34,7 @@ class HatsController < ApplicationController
       return redirect_to "/hats"
     end
 
-    render :action => "build_request"
+    render action: "build_request"
   end
 
   def requests_index
@@ -43,20 +46,20 @@ class HatsController < ApplicationController
   def approve_request
     @hat_request = HatRequest.find(params[:id])
     @hat_request.update!(params.require(:hat_request)
-      .permit(:hat, :link))
-    @hat_request.approve_by_user!(@user)
+      .permit(:hat, :link, :reason).except(:reason))
+    @hat_request.approve_by_user_for_reason!(@user, params[:hat_request][:reason])
 
     flash[:success] = "Successfully approved hat request."
 
-    return redirect_to "/hats/requests"
+    redirect_to "/hats/requests"
   end
 
   def reject_request
     @hat_request = HatRequest.find(params[:id])
-    @hat_request.reject_by_user_for_reason!(@user, params[:hat_request][:rejection_comment])
+    @hat_request.reject_by_user_for_reason!(@user, params[:hat_request][:reason])
 
     flash[:success] = "Successfully rejected hat request."
 
-    return redirect_to "/hats/requests"
+    redirect_to "/hats/requests"
   end
 end

@@ -1,22 +1,24 @@
+# typed: false
+
 require "rails_helper"
 
 describe EmailParser do
   before(:each) do
     @user = create(:user)
-    @story = create(:story, :user => @user)
+    @story = create(:story, user: @user)
 
     @commentor = create(:user)
-    @comment = create(:comment, :story => @story, :user => @commentor)
+    @comment = create(:comment, story: @story, user: @commentor)
 
-    @emailer = create(:user, :mailing_list_mode => 1)
+    @emailer = create(:user, mailing_list_mode: 1)
 
     @emails = {}
-    Dir.glob("#{Rails.root}/spec/fixtures/inbound_emails/*.eml")
-    .each do |f|
+    Dir.glob(Rails.root.join("spec/fixtures/inbound_emails/*.eml").to_s)
+      .each do |f|
       @emails[File.basename(f).gsub(/\..*/, "")] = File.read(f)
-        .gsub(/##SHORTNAME##/, Rails.application.shortname)
-        .gsub(/##MAILING_LIST_TOKEN##/, @emailer.mailing_list_token)
-        .gsub(/##COMMENT_ID##/, @comment.short_id)
+        .gsub("##SHORTNAME##", Rails.application.shortname)
+        .gsub("##MAILING_LIST_TOKEN##", @emailer.mailing_list_token)
+        .gsub("##COMMENT_ID##", @comment.short_id)
     end
   end
 
@@ -25,7 +27,8 @@ describe EmailParser do
       "user@example.com",
       Rails.application.shortname +
       "-#{@emailer.mailing_list_token}@example.org",
-      @emails["1"])
+      @emails["1"]
+    )
 
     expect(parser).to_not be_nil
     expect(parser.email).to_not be_nil
@@ -42,7 +45,8 @@ describe EmailParser do
       "user@example.com",
       Rails.application.shortname +
       "-#{@emailer.mailing_list_token}@example.org",
-      @emails["2"])
+      @emails["2"]
+    )
 
     expect(parser.email).to_not be_nil
     expect(parser.been_here?).to be true
@@ -53,11 +57,12 @@ describe EmailParser do
       "user@example.com",
       Rails.application.shortname +
       "-#{@emailer.mailing_list_token}@example.org",
-      @emails["3"])
+      @emails["3"]
+    )
 
     expect(parser.email).to_not be_nil
     expect(parser.body)
-      .to eq("It hasn't decreased any measurable amount but since the traffic to\n" <<
+      .to eq("It hasn't decreased any measurable amount but since the traffic to\n" \
              "the site is increasing a bit each week, it's hard to tell.")
   end
 
@@ -66,11 +71,12 @@ describe EmailParser do
       "user@example.com",
       Rails.application.shortname +
       "-#{@emailer.mailing_list_token}@example.org",
-      @emails["4"])
+      @emails["4"]
+    )
 
     expect(parser.email).to_not be_nil
     expect(parser.body)
-      .to eq("It hasn't decreased any measurable amount but since the traffic to\n" <<
+      .to eq("It hasn't decreased any measurable amount but since the traffic to\n" \
              "the site is increasing a bit each week, it's hard to tell.")
   end
 end

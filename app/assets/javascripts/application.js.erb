@@ -1,603 +1,780 @@
-//= require jquery
-//= require jquery_ujs
 //= require_tree .
+
+//= require tom-select.base.js
+//= require TomSelect_remove_button
+//= require TomSelect_caret_position
+//= require TomSelect_input_autogrow
 
 "use strict";
 
-var _Lobsters = Class.extend({
-  curUser: null,
+const csrfToken = () => {
+  return qS('meta[name="csrf-token"]').getAttribute('content');
+}
 
-  storyFlagReasons: { <%= Vote::STORY_REASONS.map{|k,v|
-      "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
-  commentFlagReasons: { <%= Vote::COMMENT_REASONS.map{|k,v|
-      "#{k.inspect}: #{v.inspect}" }.join(", ") %> },
-
-  upvoteStory: function(voterEl) {
-    Lobsters.vote("story", voterEl, 1);
-  },
-  flagStory: function(voterEl) {
-    Lobsters._showFlagWhyAt("story", voterEl, function(k) {
-      Lobsters.vote("story", voterEl, -1, k); });
-  },
-  hideStory: function(hiderEl) {
-    if (!Lobsters.curUser)
-      return Lobsters.bounceToLogin();
-
-    var li = $(hiderEl).closest(".story, .comment");
-    var act;
-
-    if (li.hasClass("hidden")) {
-      act = "unhide";
-      li.removeClass("hidden");
-      hiderEl.innerHTML = "hide";
-    }
-    else {
-      act = "hide";
-      li.addClass("hidden");
-      hiderEl.innerHTML = "unhide";
-    }
-
-    $.post("/stories/" + li.attr("data-shortid") + "/" + act);
-  },
-  saveStory: function(saverEl) {
-    if (!Lobsters.curUser)
-      return Lobsters.bounceToLogin();
-
-    var li = $(saverEl).closest(".story, .comment");
-    var act;
-
-    if (li.hasClass("saved")) {
-      act = "unsave";
-      li.removeClass("saved");
-      saverEl.innerHTML = "save";
-    }
-    else {
-      act = "save";
-      li.addClass("saved");
-      saverEl.innerHTML = "unsave";
-    }
-
-    $.post("/stories/" + li.attr("data-shortid") + "/" + act);
-  },
-
-  upvoteComment: function(voterEl) {
-    Lobsters.vote("comment", voterEl, 1);
-  },
-  flagComment: function(voterEl) {
-    Lobsters._showFlagWhyAt("comment", voterEl, function(k) {
-      Lobsters.vote("comment", voterEl, -1, k); });
-  },
-  _showFlagWhyAt: function(thingType, voterEl, onChooseWhy) {
-    if (!Lobsters.curUser)
-      return Lobsters.bounceToLogin();
-
-    var li = $(voterEl).closest(".story, .comment");
-    if (li.hasClass("flagged")) {
-      /* already upvoted, neutralize */
-      Lobsters.vote(thingType, voterEl, -1, null);
-      return;
-    }
-
-    if ($("#flag_why"))
-      $("#flag_why").remove();
-    if ($("#flag_why_shadow"))
-      $("#flag_why_shadow").remove();
-
-    var sh = $("<div id=\"flag_why_shadow\"></div>");
-    $(voterEl).after(sh);
-    sh.click(function() {
-      $("#flag_why_shadow").remove();
-      $("#flag_why").remove();
-    });
-
-    var d = $("<div id=\"flag_why\"></div>");
-
-    var reasons;
-    if (thingType == "comment")
-      reasons = Lobsters.commentFlagReasons;
-    else
-      reasons = Lobsters.storyFlagReasons;
-
-    $.each(reasons, function(k, v) {
-      var a = $("<a href=\"#\"" + (k == "" ? " class=\"cancelreason\"" : "") +
-        ">" + v + "</a>");
-
-      a.click(function() {
-        $("#flag_why").remove();
-        $("#flag_why_shadow").remove();
-
-        if (k != "")
-          onChooseWhy(k);
-
-        return false;
-      });
-
-      d.append(a);
-    });
-
-    if (thingType == "story") {
-      $(voterEl).closest("li").after(d);
-      d.position({
-        my: "left top",
-        at: "left bottom",
-        offset: "-2 -2",
-        of: $(voterEl),
-        collision: "none",
-      });
-      d.css("left", $(voterEl).position().left);
-    } else {
-      // place flag menu outside of the comment to avoid inheriting opacity
-      var voterPos = $(voterEl).position();
-      d.appendTo($(voterEl).closest(".comments_subtree"));
-      d.css({
-        left: voterPos.left,
-        top: voterPos.top + $(voterEl).outerHeight()
-      });
-    }
-  },
-
-  vote: function(thingType, voterEl, point, reason) {
-    if (!Lobsters.curUser)
-      return Lobsters.bounceToLogin();
-
-    var li = $(voterEl).closest(".story, .comment");
-    var scoreDiv = li.find("div.score").get(0);
-    var showScore = true;
-    var score = parseInt(scoreDiv.innerHTML);
-    if (isNaN(score)) {
-      showScore = false;
-      score = 0;
-    }
-    var action = "";
-
-    if (li.hasClass("upvoted") && point > 0) {
-      /* already upvoted, neutralize */
-      li.removeClass("upvoted");
-      score--;
-      action = "unvote";
-    }
-    else if (li.hasClass("flagged") && point < 0) {
-      /* already flagged, neutralize */
-      li.removeClass("flagged");
-      score++;
-      action = "unvote";
-    }
-    else if (point > 0) {
-      if (li.hasClass("flagged"))
-        /* flip flop */
-        score++;
-
-      li.removeClass("flagged").addClass("upvoted");
-      score++;
-      action = "upvote";
-    }
-    else if (point < 0) {
-      if (li.hasClass("upvoted"))
-        /* flip flop */
-        score--;
-
-      li.removeClass("upvoted").addClass("flagged");
-      li.prev("input.comment_folder_button").prop("checked", true);
-      showScore = false;
-      score--;
-      action = "flag";
-    }
-
-    if (showScore)
-      scoreDiv.innerHTML = score;
-    else
-      scoreDiv.innerHTML = '~';
-
-    if (action == "upvote" || action == "unvote") {
-      li.find(".reason").html("");
-
-      if (action == "unvote" && point < 0)
-        li.find(".flagger").text("flag");
-    }
-    else if (action == "flag") {
-      li.find(".flagger").text("unflag");
-      if (thingType == "comment")
-        li.find(".reason").html("| " + Lobsters.commentFlagReasons[reason].toLowerCase());
-    }
-
-    $.post("/" + (thingType == "story" ? "stories" : thingType + "s") + "/" +
-      li.attr("data-shortid") + "/" +
-      action, { reason: reason });
-  },
-
-  postComment: function(form) {
-    var params = $(form).serializeArray();
-    params.push({"name": "show_tree_lines", "value": "true"});
-
-    $.post($(form).attr("action"), params, function(data) {
-      // Clear form: Firefox will keep form values on reload (e.g. F5), which isn't too useful if
-      // it's already posted.
-      $(form).find('textarea').val('')
-
-      var parsedHTML = $.parseHTML(data);
-
-      var isEdit = $(form).hasClass("edit_comment");
-      var hasChildren = $(form).closest(".comments_subtree")
-        .find(".comments_subtree").length;
-      if (isEdit && hasChildren) {
-        $(parsedHTML).find(".comment_parent_tree_line:first")
-          .removeClass("no_children");
+function on(eventTypes, selector, callback) {
+  eventTypes.split(/ /).forEach( (eventType) => {
+    document.addEventListener(eventType, event => {
+      if (event.target.matches(selector)) {
+        callback(event);
       }
+    });
+  });
+}
 
-      if ($(form).find("#parent_comment_short_id").length) {
-        // reply to comment
-        $(form).closest(".comments_subtree")
-          .find(".comment_parent_tree_line:first").removeClass("no_children");
-        $(form).closest(".comment").replaceWith(parsedHTML);
+const onPageLoad = (callback) => {
+  document.addEventListener('DOMContentLoaded', callback);
+};
+
+const parentSelector = (target, selector) => {
+  let parent = target;
+  while (!parent.matches(selector)) {
+    parent = parent.parentElement;
+    if (parent === null) {
+      throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
+    }
+  }
+  return parent;
+};
+
+const qS = (context, selector) => {
+  if (selector === undefined) {
+    selector = context;
+    context = document;
+  }
+  return context.querySelector(selector);
+};
+
+const qSA = (context, selector) => {
+  if (selector === undefined) {
+    selector = context;
+    context = document;
+  }
+  return context.querySelectorAll(selector);
+};
+
+const replace = (oldElement, newHTMLString) => {
+  const placeHolder = document.createElement('div');
+  placeHolder.insertAdjacentHTML('afterBegin', newHTMLString);
+  const newElements = placeHolder.childNodes.values();
+  oldElement.replaceWith(...newElements);
+  removeExtraInputs();
+}
+
+const slideDownJS = (element) => {
+  if (element.classList.contains('slide-down'))
+    return;
+
+  element.classList.add('slide-down');
+  const cs = getComputedStyle(element);
+  const paddingHeight = parseInt(cs.paddingTop) + parseInt(cs.paddingBottom);
+  const height = (element.clientHeight - paddingHeight) + 'px';
+  element.style.height = '0px';
+  setTimeout(() => { element.style.height = height; }, 0);
+};
+
+const fetchWithCSRF = (url, params) => {
+  params = params || {};
+  params['headers'] = params['headers'] || new Headers;
+  params['headers'].append('X-CSRF-Token', csrfToken());
+  params['headers'].append('X-Requested-With', 'XMLHttpRequest'); // request.xhr?
+  return fetch(url, params);
+}
+
+const removeExtraInputs = () => {
+  // This deletion will resolve a bug that creates an extra hidden input when rendering the comment elements
+  const extraInputs = qSA('.comment_folder_button + .comment_folder_button');
+  for (const i of extraInputs) {
+    i.remove();
+  }
+}
+
+class _LobstersFunction {
+  constructor (username) {
+    this.curUser = null;
+
+    this.storyFlagReasons = ({
+      <%= Vote::STORY_REASONS.map{|k,v| "'#{k}': '#{v}'" }.join(", ") %>
+    });
+
+    this.commentFlagReasons = ({
+      <%= Vote::COMMENT_REASONS.map{|k,v| "'#{k}': '#{v}'" }.join(", ") %>
+    });
+  }
+
+  bounceToLogin() {
+    document.location = "/login?return=" + encodeURIComponent(document.location);
+  }
+
+  modalFlaggingDropDown(flaggedItemType, voterEl, reasons) {
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
+
+    const li = parentSelector(voterEl, '.story, .comment');
+    if (li.classList.contains('flagged')) {
+      /* already upvoted, neutralize */
+      if (li.classList.contains('story')) {
+        Lobster.voteStory(voterEl, -1, null);
       } else {
-        // reply to story
-        $(form).parent(".comment").replaceWith(parsedHTML);
+        Lobster.voteComment(voterEl, -1, null);
       }
-    });
-  },
-
-  previewComment: function(form) {
-    var params = $(form).serializeArray();
-    params.push({"name": "preview", "value": "true"});
-    params.push({"name": "show_tree_lines", "value": "true"});
-    $.post($(form).attr("action"), params, function(data) {
-      var da = $.parseHTML(data);
-      var ta = $(da).find("textarea");
-      $(form).closest(".comment").replaceWith(da);
-      autosize(ta);
-    });
-  },
-
-  previewStory: function(form) {
-    $("#inside").load("/stories/preview", $(form).serializeArray(),
-    function() {
-      Lobsters.runSelect2();
-    });
-  },
-
-  checkStoryDuplicate: function(form) {
-    var params = $(form).serializeArray();
-    $.post("/stories/check_url_dupe", params, function(formErrorsHtml) {
-      $(form).find(".form_errors_header").html(formErrorsHtml);
-    });
-  },
-
-  checkStoryTitle: function() {
-    var title = $("#story_title").val();
-    if (title === undefined || title === '') {
-      return;
+      return
     }
-    var m;
-    if (m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i)) {
-      var ta = $("#story_tags_a").data("select2");
-      if (ta.getVal().indexOf(m[1].toLowerCase()) < 0)
-        ta.addSelectedChoice({ id: m[1].toLowerCase() });
-      $("#story_title").val(m[2]);
+
+    if (qS('#flag_dropdown') || qS('#modal_backdrop')) {
+      Lobster.removeFlagModal()
+    }
+
+    const modalDiv = document.createElement("div");
+    modalDiv.setAttribute('id', 'modal_backdrop');
+    document.body.appendChild(modalDiv);
+
+    const flaggingDropDown = document.createElement('div');
+    flaggingDropDown.setAttribute('id', 'flag_dropdown');
+    voterEl.after(flaggingDropDown);
+
+    Object.keys(reasons).map(function(k, v) {
+      let a = document.createElement('a')
+      a.textContent = reasons[k]
+      a.setAttribute('data', k)
+      a.setAttribute('href', '#')
+      if (k === '') {
+        a.classList.add('cancel-reason')
+      }
+      flaggingDropDown.append(a);
+    });
+  }
+
+  checkStoryDuplicate(form) {
+    const formData = new FormData(form);
+    const action = '/stories/check_url_dupe';
+    fetchWithCSRF(action, {
+      method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData,
+    }).then (response => {
+      response.text().then(text => {
+        qS('.form_errors_header').innerHTML = text;
+      });
+    });
+  }
+
+  checkStoryTitle() {
+    const titleLocation = qS('#story_title');
+    if (!titleLocation) return;
+
+    const title = titleLocation.value;
+    if (!title) return;
+
+    // Check for common prefixes like "ask lobsters:", remove it, and add the appropriate tag
+    const m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i);
+    if (m) {
+      const titleEl = qS('#story_title');
+      Lobster.tom.addItem(m[1].toLowerCase());
+      titleEl.value = m[2];
     }
 
     // common separators or (parens) that don't enclose a 4-digit year
     if (title.match(/: | - | – | — | \| | · | • | by /) ||
-        title.match(/\([^\)]*\)/g).some(function (p) { return !p.match(/\(\d{4}\)/) })
-    ) {
-      $('.title-reminder').slideDown();
+       (title.match(/\([^\)]*\)/g) || []).some(function (p) { return !p.match(/\(\d{4}\)/) })) {
+          slideDownJS(qS('.title-reminder'));
+
+    // else if the title doesn't contain concerns and reminder is visible
+    } else if (qS('.title-reminder').classList.contains('slide-down')) {
+      qS('.title-reminder-thanks').style.display = 'inline';
     }
-  },
+  }
 
-  runSelect2: function() {
-    $("#story_tags_a").select2({
-    formatSelection: function(what) {
-      return what.id;
-    },
-    matcher: function(term, text) {
-      return text.toUpperCase().indexOf(term.toUpperCase()) >= 0;
-    },
-    sortResults: function(results, container, query) {
-        if (query.term) {
-          var tmatches = [];
-          var dmatches = [];
+  fetchURLTitle(button) {
+    const targetUrl = qS('#story_url').value;
+    const title_field = qS('#story_title');
+    const formData = new FormData();
+    const old_text = button.textContent;
 
-          /* prefer tag matches first, then description matches */
-          for (var x in results) {
-            var r = results[x];
-
-            if (r.id.toUpperCase().indexOf(query.term.toUpperCase()) == 0)
-              tmatches.push(r);
-            else
-              dmatches.push(r);
-          }
-
-          tmatches = tmatches.sort(function(a, b) {
-            return a.text.localeCompare(b.text);
-          });
-          dmatches = dmatches.sort(function(a, b) {
-            return a.text.localeCompare(b.text);
-          });
-
-          return tmatches.concat(dmatches);
-        }
-
-        return results;
-    }
-    });
-  },
-
-  moderateStory: function(link) {
-    var reason = $("#story_moderation_reason").val();
-    if (reason == null || reason == "")
-      return false;
-
-    var link = $(link);
-
-    /* $.rails.handleMethod() */
-    var href = $.rails.href(link),
-      method = link.data('method'),
-      target = link.attr('target'),
-      csrf_token = $("meta[name=csrf-token]").attr("content"),
-      csrf_param = $("meta[name=csrf-param]").attr("content"),
-      form = $("<form method=\"post\" action=\"" + href + "\"></form>"),
-      metadata_input = "<input name=\"_method\" value=\"" + method +
-        "\" type=\"hidden\" />";
-
-    if (csrf_param !== undefined && csrf_token !== undefined)
-      metadata_input += "<input name=\"" + csrf_param + "\" value=\"" +
-        csrf_token + "\" type=\"hidden\" />";
-
-    if (target)
-      form.attr("target", target);
-
-    var r = $("<input type=\"hidden\" name=\"reason\" />");
-    r.val(reason);
-    form.append(r);
-
-    form.hide().append(metadata_input).appendTo('body');
-    form.submit();
-
-    return false;
-  },
-
-  fetchURLTitle: function(button, url_field, title_field) {
-    if (url_field.val() == "")
+    if (targetUrl == "")
       return;
 
-    var old_value = button.val();
-    button.prop("disabled", true);
-    button.val("Fetching...");
+    button.setAttribute("disabled", true);
+    button.textContent = "Fetching...";
+    formData.append('fetch_url', targetUrl);
 
-    $.post("/stories/fetch_url_attributes", {
-      fetch_url: url_field.val(),
-    })
-    .success(function(data) {
-      if (data) {
-        if (data.title)
-          title_field.val(data.title.substr(0, title_field.maxLength));
-        if (data.url)
-          url_field.val(data.url);
-      }
-
-      button.val(old_value);
-      button.prop("disabled", false);
-    })
-    .error(function() {
-      button.val(old_value);
-      button.prop("disabled", false);
-    });
-  },
-
-  bounceToLogin: function() {
-    document.location = "/login?return=" +
-      encodeURIComponent(document.location);
-    return false;
-  },
-});
-
-var Lobsters = new _Lobsters();
-
-$(document).ready(function() {
-  var $olcomments = $("ol.comments");
-  $olcomments.on("click", ".comment a.flagger", function() {
-    Lobsters.flagComment(this);
-    return false;
-  });
-  $olcomments.on("click", ".comment a.upvoter", function() {
-    Lobsters.upvoteComment(this);
-    return false;
-  });
-
-  $("li.story a.flagger").click(function() {
-    Lobsters.flagStory(this);
-    return false;
-  });
-  $("li.story a.upvoter").click(function() {
-    Lobsters.upvoteStory(this);
-    return false;
-  });
-  $("li.story a.hider").click(function() {
-    Lobsters.hideStory(this);
-    return false;
-  });
-  $("li.story a.saver").click(function() {
-    Lobsters.saveStory(this);
-    return false;
-  });
-
-  $("a.mod_story_link").click(function() {
-    return Lobsters.moderateStory(this);
-  }),
-
-  $("select[name=message\\[hat_id\\]]").change(function() {
-    $(this).siblings("input[name=message\\[mod_note\\]]")
-      .prop("checked", !!$(this).find('option:selected').data('modnote'));
-  }),
-
-  $(document).on("click", "a.comment_replier", function() {
-    if (!Lobsters.curUser) {
-      Lobsters.bounceToLogin();
-      return false;
-    }
-
-    var comment = $(this).closest(".comment");
-    if ($("#reply_form_" + comment.attr("id")).length > 0)
-      return false;
-
-    var sel = "";
-    if (window.getSelection)
-      sel = window.getSelection().toString();
-    else if (document.selection && document.selection.type != "Control")
-      sel = document.selection.createRange().text;
-
-    if (sel != "") {
-      var t = "";
-      $.each(sel.split("\n"), function(k, v) {
-        t += (t == "" ? "" : "\n") + "> " + v;
+    fetchWithCSRF('/stories/fetch_url_attributes', {
+      method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData,})
+      .then (response => response.json())
+      .then (data => {
+        title_field.value = data.title
+        button.textContent = old_text
       });
-      sel = t;
+    button.removeAttribute("disabled");
+    Lobster.checkStoryTitle();
+  }
 
-      if (sel != "")
-        sel += "\n\n";
-    }
+  hideStory(hiderEl) {
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
 
-    var replies = comment.nextAll(".comments").first();
-    $.get("/comments/" + comment.attr("data-shortid") + "/reply",
-    function(data) {
-      var reply = $($.parseHTML(data));
-      reply.attr("id", "reply_form_" + comment.attr("id"));
-      replies.prepend(reply);
-      var ta = reply.find("textarea");
-      ta.focus().text(sel);
-      autosize(ta);
-    });
-
-    return false;
-  });
-
-  $(document).on("click", "button.comment-cancel", function() {
-    var comment = $(this).closest(".comment");
-    var comment_id = comment.attr("data-shortid");
-    if (comment_id != null && comment_id !== '') {
-      $.get("/comments/" + comment_id + "?show_tree_lines=true",
-        function(data) {
-          var parsedHTML = $.parseHTML(data);
-          var isEdit = comment.children("form").hasClass("edit_comment");
-          var hasChildren = comment.closest(".comments_subtree")
-            .find(".comments_subtree").length;
-          if (isEdit && hasChildren) {
-            $(parsedHTML).find(".comment_parent_tree_line:first")
-              .removeClass("no_children");
-          }
-          comment.replaceWith(parsedHTML);
-        });
+    const li = parentSelector(hiderEl, ".story, .comment");
+    let act;
+    if (li.classList.contains("hidden")) {
+      act = "unhide";
+      li.classList.remove("hidden");
+      hiderEl.innerHTML = "hide";
     } else {
-      comment.remove();
+      act = "hide";
+      li.classList.add("hidden");
+      hiderEl.innerHTML = "unhide";
     }
-  });
+    fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + act, {method: 'post'});
+  }
 
-  $(document).on("click", "a.comment_editor", function() {
-    var comment = $(this).closest(".comment");
-    $.get("/comments/" + comment.attr("data-shortid") + "/edit",
-    function(data) {
-      comment.replaceWith($.parseHTML(data));
+  removeFlagModal() {
+    qS('#flag_dropdown').remove();
+    qS('#modal_backdrop').remove();
+  }
+
+  postComment(form) {
+    const formData = new FormData(form);
+    const action = form.getAttribute('action');
+    formData.append('show_tree_lines', true);
+    fetchWithCSRF (action, {
+      method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData
+    })
+      .then(response => {
+        response.text().then(text => replace(form.parentElement, text));
+      })
+  }
+
+  previewComment(form) {
+    const formData = new FormData(form);
+    const action = form.getAttribute('action');
+    formData.append('preview', 'true');
+    formData.append('show_tree_lines', 'true');
+    fetchWithCSRF(action, {
+      method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData
+    })
+      .then(response => {
+        response.text().then(text => {
+          replace(form.parentElement, text);
+          autosize(qSA('textarea'));
+        });
+      });
+  }
+
+  previewStory(formElement) {
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
+
+    const formData = new FormData(formElement);
+    const previewElement = qS('#inside');
+    fetchWithCSRF('/stories/preview', {
+      method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData
+    }).then(response => {
+      response.text().then(text => {
+        previewElement.innerHTML = text;
+        Lobster.tomSelect();
+      });
     });
+  }
+
+  saveStory(saverEl) {
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
+
+    const li = parentSelector(saverEl, ".story, .comment");
+    let act;
+
+    if (li.classList.contains("saved")) {
+      act = "unsave";
+      li.classList.remove("saved");
+      saverEl.innerHTML = "save";
+    } else {
+      act = "save";
+      li.classList.add("saved");
+      saverEl.innerHTML = "unsave";
+    }
+    fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + act, {method: 'post'});
+  }
+
+  tomSelect(item) {
+    if (!qS('#story_tags_a')) {
+      return
+    }
+
+    TomSelect.define('caret_position', caret_position);
+    TomSelect.define('input_autogrow', input_autogrow);
+    TomSelect.define('remove_button', remove_button);
+    this.tom = new TomSelect('#story_tags_a', {
+      plugins: ['caret_position', 'input_autogrow', 'remove_button'],
+      maxOptions: 200,
+      maxItems: 10,
+      hideSelected: true,
+      closeAfterSelect: true,
+      selectOnTab: true,
+      sortField: {field: "data-value"},
+      onInitialize: function() {
+        const parent = qS('.ts-control');
+        parent.appendChild(qS('.ts-dropdown'));
+      },
+      render: {
+        option: function(data) {
+          return '<div>' +
+            '<span class="dropDownItem">' + data.title + '</span>' +
+            '</div>';
+        },
+        item: function(data) {
+          return '<a class="data-ts-item ' + data.tagCss + '">' + data.value + '</div>';
+        }
+      }
+    });
+  }
+
+  upvoteComment(voterEl) {
+    Lobster.voteComment(voterEl, 1);
+  }
+
+  upvoteStory(voterEl) {
+    Lobster.voteStory(voterEl, 1);
+  }
+
+  voteStory(voterEl, point, reason) {
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
+
+    const li = parentSelector(voterEl, '.story');
+    const scoreDiv = qS(li, 'div.score');
+    const formData = new FormData();
+    formData.append('reason', reason || '');
+    let showScore = true;
+    let score = parseInt(scoreDiv.innerHTML);
+    let action = "";
+
+    if (isNaN(score)) {
+      showScore = false;
+      score = 0;
+    }
+
+    if (li.classList.contains("upvoted") && point > 0) {
+      /* already upvoted, neutralize */
+      li.classList.remove("upvoted");
+      score--;
+      action = "unvote";
+    } else if (li.classList.contains("flagged") && point < 0) {
+      /* already flagged, neutralize */
+      li.classList.remove("flagged");
+      score++;
+      action = "unvote";
+    } else if (point > 0) {
+      if (li.classList.contains("flagged")) {
+        /* Give back the lost flagged point */
+        score++;
+      }
+      li.classList.remove("flagged");
+      li.classList.add("upvoted");
+      score++;
+      action = "upvote";
+    } else if (point < 0) {
+      if (li.classList.contains("upvoted")) {
+        /* Removes the upvote point this user already gave the story*/
+        score--;
+      }
+      li.classList.remove("upvoted");
+      li.classList.add("flagged");
+      if (qS(li.parentElement, '.comment_folder_button')) {
+        qS(li.parentElement, '.comment_folder_button').setAttribute('checked', true);
+      };
+      showScore = false;
+      score--;
+      action = "flag";
+    }
+    if (showScore) {
+      scoreDiv.innerHTML = score;
+    } else {
+      scoreDiv.innerHTML = '~';
+    }
+    if (action == "upvote" || action == "unvote") {
+      if (qS(li, '.reason')) {
+        qS(li, '.reason').innerHTML = '';
+      };
+
+      if (action == "unvote" && point < 0)
+        qS(li, '.flagger').textContent = 'flag';
+      } else if (action == "flag") {
+        qS(li, '.flagger').textContent = 'unflag';
+    }
+
+    fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + action, {
+      method: 'post',
+      body: formData });
+  }
+
+  voteComment(voterEl, point, reason) {
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
+
+    const li = parentSelector(voterEl, ".comment");
+    const scoreDiv = qS(li, 'div.score');
+    const formData = new FormData();
+    formData.append('reason', reason || '');
+    let showScore = true;
+    let score = parseInt(scoreDiv.innerHTML);
+    let action = "";
+
+    if (isNaN(score)) {
+      showScore = false;
+      score = 0;
+    }
+
+    if (li.classList.contains("upvoted") && point > 0) {
+      /* already upvoted, neutralize */
+      li.classList.remove("upvoted");
+      score--;
+      action = "unvote";
+    } else if (li.classList.contains("flagged") && point < 0) {
+      /* already flagged, neutralize */
+      li.classList.remove("flagged");
+      score++;
+      action = "unvote";
+    } else if (point > 0) {
+      if (li.classList.contains("flagged")) {
+        /* Give back the lost flagged point */
+        score++;
+      }
+      li.classList.remove("flagged");
+      li.classList.add("upvoted");
+      score++;
+      action = "upvote";
+    } else if (point < 0) {
+      if (li.classList.contains("upvoted")) {
+        /* Removes the upvote point this user already gave the story*/
+        score--;
+      }
+      li.classList.remove("upvoted");
+      li.classList.add("flagged");
+      li.parentElement.querySelector('.comment_folder_button').setAttribute("checked", true);
+      showScore = false;
+      score--;
+      action = "flag";
+    }
+    if (showScore) {
+      scoreDiv.innerHTML = score;
+    } else {
+      scoreDiv.innerHTML = '~';
+    }
+
+    if (action == "upvote" || action == "unvote") {
+      qS(li, '.reason').innerHTML = '';
+    }
+
+    if (action == "unvote" && point < 0) {
+      qS(li, '.flagger').textContent = 'flag';
+    } else if (action == "flag") {
+      qS(li, '.flagger').textContent = 'unflag';
+      qS(li, '.reason').innerHTML = "| " + Lobster.commentFlagReasons[reason].toLowerCase();
+    }
+
+    fetchWithCSRF("/comments/" + li.getAttribute("data-shortid") + "/" + action, {
+      method: 'post',
+      body: formData });
+  }
+}
+
+const Lobster = new _LobstersFunction();
+
+onPageLoad(() => {
+  Lobster.curUser = document.body.getAttribute('data-username'); // hack
+  autosize(qSA('textarea'));
+
+  // replace csrf token in forms that may be fragment caches with page token
+  for (const i of qSA('form input[name="authenticity_token"]')) {
+    i.value = csrfToken();
+  }
+
+  // Global
+
+  on('click', '.markdown_help_label', (event) => {
+    qS(parentSelector(event.target, '.markdown_help_toggler'), '.markdown_help').classList.toggle('display-block');
   });
 
-  $(document).on("click", "a.comment_deletor", function(event) {
-    event.preventDefault();
-    if (confirm("Are you sure you want to delete this comment?")) {
-      var li = $(this).closest(".comment");
-      $.post("/comments/" + $(li).attr("data-shortid") + "/delete",
-      function(d) {
-        $(li).replaceWith(d);
-      });
+  on('click', '#modal_backdrop', () => {
+    Lobster.removeFlagModal()
+  });
+
+  on('click', '[data-confirm]', (event) => {
+    if (!confirm(event.target.dataset.confirm)) {
+      event.preventDefault();
     }
   });
-  $(document).on("click", "a.comment_undeletor", function(event) {
+
+  // Account Settings
+
+  on('focusout', '#user_homepage', (event) => {
+    const homePage = event.target
+    if (homePage.value.trim() !== '' && !homePage.value.match('^[a-z]+:\/\/'))
+      homePage.value = 'https://' + homePage.value
+  });
+
+  // Inbox
+
+  on('change', '#message_hat_id', (event) => {
+    let selectedOption = event.target.selectedOptions[0];
+    qS('#message_mod_note').checked = (selectedOption.getAttribute('data-modnote') === 'true');
+  });
+
+  // Story
+
+  Lobster.checkStoryTitle()
+
+  Lobster.tomSelect();
+
+  if (qS('#story_url') && qS('#story_preview') && !qS('#story_preview').firstElementChild) {
+    qS('#story_url').focus()
+  }
+
+  on('change', '#story_title', Lobster.checkStoryTitle);
+
+  on('click', '.story #flag_dropdown a', (event) => {
     event.preventDefault();
-    if (confirm("Are you sure you want to undelete this comment?")) {
-      var li = $(this).closest(".comment");
-      $.post("/comments/" + $(li).attr("data-shortid") + "/undelete",
-      function(d) {
-        $(li).replaceWith(d);
-      });
+    if (event.target.getAttribute('data') != '') {
+      Lobster.voteStory(parentSelector(event.target, '.story'), -1,  event.target.getAttribute('data'));
     }
+    Lobster.removeFlagModal();
   });
 
-  $(document).on("click", "a.comment_disownor", function() {
-    if (confirm("Are you sure you want to disown this comment?")) {
-      var li = $(this).closest(".comment");
-      $.post("/comments/" + $(li).attr("data-shortid") + "/disown",
-      function(d) {
-        $(li).replaceWith(d);
-      });
-    }
+  on('click', '#story_fetch_title', (event) => {
+    Lobster.fetchURLTitle(event.target);
   });
 
-  $(document).on("click", "a.comment_moderator", function() {
-    var reason = prompt("Moderation reason:");
-    if (reason == null || reason == "")
-      return false;
-
-    var li = $(this).closest(".comment");
-    $.post("/comments/" + $(li).attr("data-shortid") + "/delete",
-      { reason: reason }, function(d) {
-        $(li).replaceWith(d);
-      });
-  });
-
-  Lobsters.runSelect2();
-
-  $(document).on("click", "div.markdown_help_toggler .markdown_help_label",
-  function() {
-    $(this).parents("div.markdown_help_toggler").first().
-      children(".markdown_help").toggle();
-  });
-
-  $(document).on("click", ".comment-post", function(event) {
+  on('click', 'li.story a.upvoter', (event) => {
     event.preventDefault();
-    Lobsters.postComment($(this).parents("form").first());
+    Lobster.upvoteStory(event.target);
   });
 
-  $(document).on("click", "button.comment-preview", function() {
-    Lobsters.previewComment($(this).parents("form").first());
+  on('click', 'li.story a.flagger', (event) => {
+    event.preventDefault();
+    const reasons = Lobster.storyFlagReasons;
+    Lobster.modalFlaggingDropDown("story", event.target, reasons);
   });
 
-  $(document).on("click", "button.story-preview", function() {
-    Lobsters.previewStory($(this).parents("form").first());
+  on('click', 'li.story a.hider', (event) => {
+    event.preventDefault();
+    Lobster.hideStory(event.target);
   });
 
-  $(document).on("blur", "#story_url", function() {
-    var url_tags = {
+  on('click', 'li.story a.saver', (event) => {
+    event.preventDefault();
+    Lobster.saveStory(event.target);
+  });
+
+  on('click', 'button.story-preview', (event) => {
+    Lobster.previewStory(parentSelector(event.target, 'form'));
+  });
+
+  on('focusout', '#story_url', () => {
+    let url_tags = {
       "\.pdf$": "pdf",
       "[\/\.]((youtube|vimeo)\.com|youtu\.be|twitch.tv)\/": "video",
       "[\/\.](slideshare\.net|speakerdeck\.com)\/": "slides",
       "[\/\.](soundcloud\.com)\/": "audio",
     };
 
-    for (var u in url_tags) {
-      var tag = url_tags[u];
-
-      if ($("#story_url").val().match(new RegExp(u, "i"))) {
-        var ta = $("#story_tags_a").data("select2");
-        if (ta.getVal().indexOf(tag) < 0)
-          ta.addSelectedChoice({ id: tag });
+    const storyUrlEl = qS('#story_url');
+    for (const [match, tag] of Object.entries(url_tags)) {
+      if (storyUrlEl.value.match(new RegExp(match, "i"))) {
+        Lobster.tom.addItem(tag.toLowerCase());
       }
     }
 
-    if ($("#story_url").val().length > 0) {
-      Lobsters.checkStoryDuplicate($(this).parents("form").first());
+    // check for dupe if there's a URL, but not when editing existing
+    if (storyUrlEl.value !== "" &&
+      (!qS('input[name="_method"]') ||
+      qS('input[name="_method"]').getAttribute('value') === 'put')) {
+        Lobster.checkStoryDuplicate(parentSelector(storyUrlEl, 'form'));
     }
   });
 
-  $(document).on("blur change", "#story_title", Lobsters.checkStoryTitle);
-  $(document).ready(Lobsters.checkStoryTitle);
+  // Comment
 
-  $(document).on("blur", "#user_homepage", function() {
-    if (this.value.trim() !== '' && !this.value.match('^https?:\/\/'))
-      this.value = 'http://' + this.value;
+  on('click', 'a.comment-disowner', (event) => {
+    if (confirm("Are you sure you want to disown this comment?")) {
+      let li = parentSelector(event.target, '.comment');
+      fetchWithCSRF('/comments/' + li.getAttribute('data-shortid') + '/disown', { method: 'post' })
+        .then(response => {
+          response.text().then(text => replace(li, text));
+        });
+    }
   });
 
-  $('textarea#comment').keydown(function (e) {
-    if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
-      $(".comment-post").click();
+  on("click", "a.comment_replier", (event) => {
+    event.preventDefault();
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
+
+    const comment = parentSelector(event.target, '.comment');
+    const commentId = comment.getAttribute('id');
+
+    // guard: don't create multiple reply boxes to one comment
+    if (qS('#reply_form_' + commentId)) { return false; }
+
+    // Inserts "> " on quoted text
+    let sel = document.getSelection().toString();
+    if (sel != "") {
+      sel = sel.split("\n").map(s => "> " + s + '\n\n').join('');
+      sel += "\n";
+    }
+
+    let div = document.createElement('div');
+    div.innerHTML = '';
+    comment.lastElementChild.append(div);
+
+    fetchWithCSRF('/comments/' + comment.getAttribute('data-shortid') + '/reply')
+      .then(response => {
+        response.text().then(text => {
+          // guard: don't create multiple reply boxes to one comment
+          if (qS('#reply_form_' + commentId)) { return false; }
+
+          div.innerHTML = text;
+          div.setAttribute('id', 'reply_form_' + commentId);
+
+          var ta = qS(div, 'textarea');
+          ta.textContent = sel;
+          // place the cursor at the end of the quoted string
+          ta.setSelectionRange(sel.length, sel.length);
+          ta.focus();
+          autosize(ta);
+        })
+      });
+  });
+
+  on('click', '.comment a.flagger', (event) => {
+    event.preventDefault();
+    const reasons = Lobster.commentFlagReasons
+    Lobster.modalFlaggingDropDown("comment", event.target, reasons);
+  });
+
+  on('click', '.comment #flag_dropdown a', (event) => {
+    event.preventDefault();
+    if (event.target.getAttribute('data') != '') {
+      Lobster.voteComment(parentSelector(event.target, '.comment'), -1,  event.target.getAttribute('data'));
+    }
+    Lobster.removeFlagModal()
+  });
+
+  on("click", '.comment a.upvoter', (event) => {
+    event.preventDefault();
+    Lobster.upvoteComment(event.target);
+  });
+
+  on('click', 'button.comment-preview', (event) => {
+    Lobster.previewComment(parentSelector(event.target, 'form'));
+  });
+
+  on('submit', '.comment_form_container form', (event) => {
+    event.preventDefault();
+    Lobster.postComment(event.target);
+  });
+
+  on('keydown', 'textarea#comment', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.keyCode == 13) {
+      Lobster.postComment(parentSelector(event.target, 'form'));
+    }
+  });
+
+  on('click', 'button.comment-cancel', (event) => {
+    const comment = (parentSelector(event.target, '.comment'));
+    const commentId = comment.getAttribute('data-shortid');
+    if (commentId !== null && commentId !== '') {
+      fetch('/comments/' + commentId + '?show_tree_lines=true')
+        .then(response => {
+          response.text().then(text => replace(comment, text));
+        });
+    } else {
+      comment.parentElement.remove();
+    }
+  });
+
+  on('click', 'a.comment_editor', (event) => {
+    let comment = parentSelector(event.target, '.comment');
+    const commentId = comment.getAttribute('data-shortid')
+    fetch('/comments/' + commentId + '/edit')
+      .then(response => {
+        response.text().then(text => {
+          replace(comment, text);
+          autosize(qSA('textarea'));
+        });
+      });
+    autosize(qSA('textarea'));
+  });
+
+  on("click", "a.comment_deletor", (event) => {
+    event.preventDefault();
+    if (confirm("Are you sure you want to delete this comment?")) {
+      const comment = parentSelector(event.target, '.comment');
+      const commentId = comment.getAttribute('data-shortid');
+      fetchWithCSRF('/comments/' + commentId + '/delete',{method: 'post'})
+        .then(response => {
+          response.text().then(text => replace(comment, text));
+        });
+    }
+  });
+
+  on('click', 'a.comment_undeletor', (event) => {
+    event.preventDefault();
+    if (confirm("Are you sure you want to undelete this comment?")) {
+      const comment = parentSelector(event.target, '.comment');
+      const commentId = comment.getAttribute('data-shortid');
+      fetchWithCSRF('/comments/' + commentId + '/undelete', {method: 'post'})
+        .then(response => {
+          response.text().then(text => replace(comment, text));
+        });
+    }
+  });
+
+  on('click', 'a.comment_moderator', (event) => {
+    const reason = prompt("Moderation reason:");
+    if (reason == null || reason == '')
+      return false;
+
+    const formData = new FormData();
+    formData.append('reason', reason);
+    const comment = parentSelector(event.target, '.comment');
+    const commentId = comment.getAttribute('data-shortid');
+    fetchWithCSRF('/comments/' + commentId + '/delete', { method: 'post', body: formData })
+      .then(response => {
+        response.text().then(text => replace(comment, text));
+      });
+  });
+
+  on('click', '.comment_unread', (event) => {
+    const nodes = qSA('.comment_unread')
+    const foundIndex = Array.from(nodes).findIndex(node => node === event.target)
+    const targetIndex = (foundIndex + 1) % nodes.length;
+    const targetY = nodes[targetIndex].getBoundingClientRect().top + window.scrollY
+    window.scrollTo({ top: targetY, behavior: 'smooth' })
+  });
+
+  // Story view
+
+  on('click', '.story_text_expander', (event) => {
+    event.preventDefault();
+    qS('#collapsed_story_text').style.display = 'block';
+  });
+
+  // Private messages
+
+  // inject js-only UI
+  const select_all = qSA('.with_select_all tr:first-child th:first-child');
+  for (const th of select_all) {
+    const checkbox = document.createElement('input');
+    checkbox.setAttribute('type', 'checkbox');
+    checkbox.classList.add('select_all');
+    th.append(checkbox);
+  }
+
+  on('click', '.select_all', (event) => {
+    const table = parentSelector(event.target, 'table');
+    const checkboxes = qSA(table, 'input[type=checkbox]');
+    for (const checkbox of checkboxes) {
+      checkbox.checked = event.target.checked;
     }
   });
 });
-

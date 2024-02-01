@@ -1,8 +1,9 @@
-### Lobsters Rails Project [![Build Status](https://travis-ci.org/lobsters/lobsters.svg?branch=master)](https://travis-ci.org/lobsters/lobsters)
+### Lobsters Rails Project ![build status](https://github.com/lobsters/lobsters/actions/workflows/check.yml/badge.svg)
 
 This is the
-[quite sad](https://www.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)
-source code to the site operating at
+[quite sad](https://web.archive.org/web/20230213161624/https://old.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)
+source code to the
+[ghost town](https://twitter.com/webshitweekly/status/1399935275057389571) at
 [https://lobste.rs](https://lobste.rs).
 It is a Rails codebase and uses a SQL (MariaDB in production) backend for the database.
 
@@ -16,8 +17,10 @@ As a volunteer project we're reluctant to take on work that's not useful to our 
 
 We'd love to have your help.
 Please see the [CONTRIBUTING](https://github.com/lobsters/lobsters/blob/master/CONTRIBUTING.md) file for details.
+If you have questions, there is usually someone in [our chat room](https://lobste.rs/chat) who's familiar with the code.
 
-#### Initial setup
+
+#### Development setup
 
 Use the steps below for a local install or
 [lobsters-ansible](https://github.com/lobsters/lobsters-ansible) for our production deployment config.
@@ -27,7 +30,7 @@ There's an external project [docker-lobsters](https://github.com/utensils/docker
 
 * Checkout the lobsters git tree from Github
     ```sh
-    $ git clone git://github.com/lobsters/lobsters.git
+    $ git clone git@github.com:lobsters/lobsters.git
     $ cd lobsters
     lobsters$
     ```
@@ -38,21 +41,7 @@ There's an external project [docker-lobsters](https://github.com/utensils/docker
     Ubuntu: sudo apt-get install nodejs
     OSX: brew install nodejs
     ```
-
-* Run Bundler to install/bundle gems needed by the project:
-
-    ```sh
-    lobsters$ bundle
-    ```
-    
-    * If when installing the `mysql2` gem on macOS, you see 
-      `ld: library not found for -l-lpthread` in the output, see 
-      [this solution](https://stackoverflow.com/a/44790834/204052) for a fix.
-      You might also see `ld: library not found for -lssl` if you're using
-      macOS 10.4+ and Homebrew `openssl`, in which case see
-      [this solution](https://stackoverflow.com/a/39628463/1042144).
-
-* Create a MySQL (other DBs supported by ActiveRecord may work, only MySQL and
+* Create a MariaDB (other DBs supported by ActiveRecord may work, only MySQL and
 MariaDB have been tested) database, username, and password and put them in a
 `config/database.yml` file.  You will also want a separate database for
 running tests:
@@ -77,29 +66,33 @@ running tests:
       password: *test_password*
     ```
 
-* Load the schema into the new database:
+* Run `bin/setup` to install dependencies and set up db
 
     ```sh
-    lobsters$ rails db:schema:load
+    lobsters$ bin/setup
     ```
+    
+    * If when installing the `mysql2` gem on macOS, you see 
+      `ld: library not found for -l-lpthread` in the output, see 
+      [this solution](https://stackoverflow.com/a/44790834/204052) for a fix.
+      You might also see `ld: library not found for -lssl` if you're using
+      macOS 10.4+ and Homebrew `openssl`, in which case see
+      [this solution](https://stackoverflow.com/a/39628463/1042144).
 
 * On your production server, copy `config/initializers/production.rb.sample`
   to `config/initalizers/production.rb` and customize it with your site's
   `domain` and `name`. (You don't need this on your dev machine).
 
-* Put your site's custom CSS in `app/assets/stylesheets/local`.
-
-* Seed the database to create an initial administrator user, the `inactive-user`, and at least one tag:
-
-    ```sh
-    lobsters$ rails db:seed
-    ```
-
-* On your personal computer, you can add some sample data and run the Rails server in development mode.
-  You should be able to login to `http://localhost:3000` with your new `test` user:
+* On your personal computer, you probably want to add some sample data.
 
     ```sh
     lobsters$ rails fake_data
+    ```
+
+* Run the Rails server in development mode.
+  You should be able to login to `http://localhost:3000` with your new `test` user:
+
+    ```sh
     lobsters$ rails server
     ```
 
@@ -114,6 +107,9 @@ running tests:
     ```
 
 * See `config/initializers/production.rb.sample` for GitHub/Twitter integration help.
+
+* You probably want to use [git-imerge](https://lobste.rs/s/dbm2d4) to pull in
+  changes from Lobsters to your site.
 
 #### Administration
 

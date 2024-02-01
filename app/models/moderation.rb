@@ -1,69 +1,77 @@
+# typed: false
+
 class Moderation < ApplicationRecord
   belongs_to :moderator,
-             :class_name => "User",
-             :foreign_key => "moderator_user_id",
-             :inverse_of => :moderations,
-             :optional => true
+    class_name: "User",
+    foreign_key: "moderator_user_id",
+    inverse_of: :moderations,
+    optional: true
   belongs_to :comment,
-             :optional => true
+    optional: true
   belongs_to :domain,
-             :optional => true
+    optional: true
   belongs_to :story,
-             :optional => true
+    optional: true
   belongs_to :tag,
-             :optional => true
+    optional: true
   belongs_to :user,
-             :optional => true
+    optional: true
+  belongs_to :category,
+    optional: true
 
   scope :for, ->(user) {
-    left_outer_joins(:story, :comment) .where("
-      moderations.user_id = ? OR
-      stories.user_id = ? OR
-      comments.user_id = ?", user, user, user)
+    left_outer_joins(:story, :comment)
+      .includes(:moderator, comment: [:user, :story], story: :user)
+      .where("
+        moderations.user_id = ? OR
+        stories.user_id = ? OR
+        comments.user_id = ?", user, user, user)
   }
 
-  validates :action, :reason, length: { maximum: 16_777_215 }
+  validates :action, :reason, length: {maximum: 16_777_215}
   validate :one_foreign_key_present
 
   after_create :send_message_to_moderated
 
   def send_message_to_moderated
     m = Message.new
-    m.author_user_id = self.moderator_user_id
+    m.author_user_id = moderator_user_id
 
     # mark as deleted by author so they don't fill up moderator message boxes
     m.deleted_by_author = true
 
-    if self.story
-      m.recipient_user_id = self.story.user_id
+    if story
+      m.recipient_user_id = story.user_id
       m.subject = "Your story has been edited by " <<
-                  (self.is_from_suggestions? ? "user suggestions" : "a moderator")
-      m.body = "Your story [#{self.story.title}](" <<
-               "#{self.story.comments_url}) has been edited with the following " <<
-               "changes:\n" <<
-               "\n" <<
-               "> *#{self.action}*\n"
+        (is_from_suggestions? ? "user suggestions" : "a moderator")
+      m.body = "Your story [#{story.title}](" \
+        "#{story.comments_url}) has been edited with the following " \
+        "changes:\n" \
+        "\n" \
+        "> *#{action}*\n"
 
-      if self.reason.present?
-        m.body << "\n" <<
-          "The reason given:\n" <<
-          "\n" <<
-          "> *#{self.reason}*\n"
+      if reason.present?
+        m.body << "\n" \
+          "The reason given:\n" \
+          "\n" \
+          "> *#{reason}*\n" \
+          "\n" \
+          "Maybe the guidelines on topicality are useful: https://lobste.rs/about#topicality"
       end
 
-    elsif self.comment
-      m.recipient_user_id = self.comment.user_id
+    elsif comment
+      m.recipient_user_id = comment.user_id
       m.subject = "Your comment has been moderated"
-      m.body = "Your comment on [#{self.comment.story.title}](" <<
-               "#{self.comment.story.comments_url}) has been moderated:\n" <<
-               "\n" <<
-               "> *#{self.comment.comment}*\n"
+      m.body = "Your comment on [#{comment.story.title}](" \
+        "#{comment.story.comments_url}) has been moderated:\n" \
+        "\n" <<
+        comment.comment.split("\n").map { |l| "> " << l }.join("\n")
 
-      if self.reason.present?
-        m.body << "\n" <<
-          "The reason given:\n" <<
-          "\n" <<
-          "> *#{self.reason}*\n"
+      if reason.present?
+        m.body << "\n" \
+          "The reason given:\n" \
+          "\n" \
+          "> *#{reason}*\n"
       end
 
     else
@@ -73,16 +81,16 @@ class Moderation < ApplicationRecord
 
     return if m.recipient_user_id == m.author_user_id
 
-    m.body << "\n" <<
+    m.body << "\n" \
       "*This is an automated message.*"
 
-    m.save
+    m.save!
   end
 
-protected
+  protected
 
   def one_foreign_key_present
-    fks = [comment_id, domain_id, story_id, tag_id, user_id].compact.length
+    fks = [comment_id, domain_id, story_id, category_id, tag_id, user_id].compact.length
     errors.add(:base, "moderation should be linked to only one object") if fks != 1
   end
 end

@@ -1,6 +1,6 @@
-<%= render partial: 'mod/nav' %>
+<%= render partial: 'subnav' %>
 
-<%= form_with url: mod_notes_path, method: :get, local: true do |f| %>
+<%= form_with url: mod_notes_path, method: :get do |f| %>
   <div class="boxline">
     <label class="normal" for="username">Username:</label>
     <input type="text" name="username" value="<%= @username %>">

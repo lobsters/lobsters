@@ -1,3 +1,5 @@
+# typed: false
+
 class InvitationMailer < ApplicationMailer
   def invitation(invitation)
     @invitation = invitation

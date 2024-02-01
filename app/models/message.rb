@@ -1,33 +1,47 @@
+# typed: false
+
 class Message < ApplicationRecord
   belongs_to :recipient,
-             :class_name => "User",
-             :foreign_key => "recipient_user_id",
-             :inverse_of => :received_messages
+    class_name: "User",
+    foreign_key: "recipient_user_id",
+    inverse_of: :received_messages
   belongs_to :author,
-             :class_name => "User",
-             :foreign_key => "author_user_id",
-             :inverse_of => :sent_messages,
-             :optional => true
+    class_name: "User",
+    foreign_key: "author_user_id",
+    inverse_of: :sent_messages,
+    optional: true
   belongs_to :hat,
-             :optional => true
+    optional: true
 
   attribute :mod_note, :boolean
   attr_reader :recipient_username
 
-  validates :subject, length: { :in => 1..100 }
-  validates :body, length: { :maximum => (64 * 1024) }
-  validates :short_id, length: { maximum: 30 }
+  validates :subject, length: {in: 1..100}
+  validates :body, length: {maximum: (64 * 1024)}
+  validates :short_id, length: {maximum: 30}
   validate :is_authored?
   validate :hat do
     next if hat.blank?
     if author.blank? || author.wearable_hats.exclude?(hat)
-      errors.add(:hat, 'not wearable by author')
+      errors.add(:hat, "not wearable by author")
     end
   end
 
-  scope :unread, -> { where(:has_been_read => false, :deleted_by_recipient => false) }
+  scope :inbox, ->(user) {
+    where(
+      recipient: user,
+      deleted_by_recipient: false
+    ).preload(:author, :hat, :recipient).order("id asc")
+  }
+  scope :outbox, ->(user) {
+    where(
+      author: user,
+      deleted_by_author: false
+    ).preload(:author, :hat, :recipient).order("id asc")
+  }
+  scope :unread, -> { where(has_been_read: false, deleted_by_recipient: false) }
 
-  before_validation :assign_short_id, :on => :create
+  before_validation :assign_short_id, on: :create
   after_create :deliver_email_notifications
   after_save :update_unread_counts
   after_save :check_for_both_deleted
@@ -40,13 +54,13 @@ class Message < ApplicationRecord
       :subject,
       :body,
       :deleted_by_author,
-      :deleted_by_recipient,
+      :deleted_by_recipient
     ]
 
-    h = super(:only => attrs)
+    h = super(only: attrs)
 
-    h[:author_username] = self.author.try(:username)
-    h[:recipient_username] = self.recipient.try(:username)
+    h[:author_username] = author.try(:username)
+    h[:recipient_username] = recipient.try(:username)
 
     h
   end
@@ -56,42 +70,42 @@ class Message < ApplicationRecord
   end
 
   def author_username
-    if self.author
-      self.author.username
+    if author
+      author.username
     else
       "System"
     end
   end
 
   def check_for_both_deleted
-    if self.deleted_by_author? && self.deleted_by_recipient?
-      self.destroy
+    if deleted_by_author? && deleted_by_recipient?
+      destroy!
     end
   end
 
   def update_unread_counts
-    self.recipient.update_unread_message_count!
+    recipient.update_unread_message_count!
   end
 
   def deliver_email_notifications
     return if Rails.env.development?
 
-    if self.recipient.email_messages?
+    if recipient.email_messages?
       begin
-        EmailMessage.notify(self, self.recipient).deliver_now
+        EmailMessageMailer.notify(self, recipient).deliver_now
       rescue => e
-        Rails.logger.error "error e-mailing #{self.recipient.email}: #{e}"
+        Rails.logger.error "error e-mailing #{recipient.email}: #{e}"
       end
     end
 
-    if self.recipient.pushover_messages?
-      self.recipient.pushover!(
-        :title => "#{Rails.application.name} message from " <<
-          "#{self.author_username}: #{self.subject}",
-        :message => self.plaintext_body,
-        :url => self.url,
-        :url_title => (self.author ? "Reply to #{self.author_username}" :
-          "View message"),
+    if recipient.pushover_messages?
+      recipient.pushover!(
+        title: "#{Rails.application.name} message from " \
+          "#{author_username}: #{subject}",
+        message: plaintext_body,
+        url: url,
+        url_title: (author ? "Reply to #{author_username}" :
+          "View message")
       )
     end
   end
@@ -99,7 +113,7 @@ class Message < ApplicationRecord
   def recipient_username=(username)
     self.recipient_user_id = nil
 
-    if (u = User.find_by(:username => username))
+    if (u = User.find_by(username: username))
       self.recipient_user_id = u.id
       @recipient_username = username
     else
@@ -108,20 +122,20 @@ class Message < ApplicationRecord
   end
 
   def linkified_body
-    Markdowner.to_html(self.body)
+    Markdowner.to_html(body)
   end
 
   def plaintext_body
     # TODO: linkify then strip tags and convert entities back
-    self.body.to_s
+    body.to_s
   end
 
   def to_param
-    self.short_id
+    short_id
   end
 
   def url
-    Rails.application.root_url + "messages/#{self.short_id}"
+    Rails.application.root_url + "messages/#{short_id}"
   end
 
   def is_authored?

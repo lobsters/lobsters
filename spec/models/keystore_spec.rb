@@ -1,8 +1,10 @@
+# typed: false
+
 require "rails_helper"
 
 describe Keystore do
-  let(:valid_key) { 'a' * 50 }
-  let(:invalid_key) { 'a' * 51 }
+  let(:valid_key) { "a" * 50 }
+  let(:invalid_key) { "a" * 51 }
   let(:value) { rand(100) }
 
   describe "should not raise any errors when" do

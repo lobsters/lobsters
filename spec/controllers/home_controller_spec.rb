@@ -1,3 +1,5 @@
+# typed: false
+
 require "rails_helper"
 
 describe HomeController do
@@ -6,12 +8,12 @@ describe HomeController do
   let(:mod) { create(:user, :moderator) }
 
   describe "#for_domain" do
-    it 'returns stories for a domain' do
-      get :for_domain, params: { name: story.domain.domain }
+    it "returns stories for a domain" do
+      get :for_domain, params: {id: story.domain.domain}
 
       expect(response).to be_successful
-      expect(@controller.view_assigns['title']).to include(story.domain.domain)
-      expect(@controller.view_assigns['stories']).to include(story)
+      expect(@controller.view_assigns["title"]).to include(story.domain.domain)
+      expect(@controller.view_assigns["stories"]).to include(story)
     end
   end
 
@@ -23,12 +25,12 @@ describe HomeController do
 
     context "when accessing RSS feeds" do
       it "supports session-based access" do
-        get :upvoted, as: :rss, session: { u: user.session_token }
+        get :upvoted, as: :rss, session: {u: user.session_token}
         expect(response).to be_successful
       end
 
       it "supports token-based access" do
-        get :upvoted, as: :rss, params: { token: user.rss_token }
+        get :upvoted, as: :rss, params: {token: user.rss_token}
         expect(response).to be_successful
       end
     end

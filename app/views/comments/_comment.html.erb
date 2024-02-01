@@ -1,17 +1,27 @@
-<% flagged = comment.current_vote && comment.current_vote[:vote] == -1 %>
+<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false) -%>
+<%
+  # partial inputs:
+  # force_open: this comment is allowed to collapse
+  # show_tree_lines: render collapse button (misnamed?)
+  # show_story: show "on: story title" end of byline
+  # was_merged: show merged icon start of byline
+  # is_unread: show (unread) in byline
+%>
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
-  <%= defined?(force_open) ||
+  <%= force_open ||
       @user.try(:is_moderator?) ||
-      (comment.score > Comment::COLLAPSE_SCORE && !flagged) ? "" : "checked" %>>
+      (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
 <div id="c_<%= comment.short_id %>"
-data-shortid="<%= comment.short_id if comment.persisted? %>"
-class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
-"upvoted" : "flagged") : "" %>
-  <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>">
+  data-shortid="<%= comment.short_id if comment.persisted? %>"
+  class="comment
+    <%= comment.current_upvoted? ? "upvoted" : "" %>
+    <%= comment.current_flagged? ? "flagged" : "" %>
+    <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
+  ">
 
-  <% if defined?(show_tree_lines) && show_tree_lines %>
+  <% if show_tree_lines %>
     <label for="comment_folder_<%= comment.short_id %>"
       class="comment_folder"></label>
   <% end %>
@@ -30,14 +40,14 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
     <div class="comment_parent_tree_line
       <%= can_flag ? "can_flag" : "" %>
       <%= score_display != "&nbsp;" ? "score_shown" : "" %>
-      <%= defined?(children) && children ? "" : "no_children" %>"></div>
+      <%= comment.reply_count.to_i == 0 ? "no_children" : "" %>"></div>
   <% end %>
 
   <div class="details">
     <div class="byline">
       <a name="c_<%= comment.short_id %>"></a>
 
-      <% if defined?(show_tree_lines) && show_tree_lines %>
+      <% if show_tree_lines %>
         <label for="comment_folder_<%= comment.short_id %>"
           class="comment_folder comment_folder_inline"></label>
       <% else %>
@@ -45,36 +55,34 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
           class="comment_folder comment_folder_inline force_inline"></label>
       <% end %>
 
-      <% if defined?(was_merged) && was_merged %>
+      <% if was_merged %>
         <span class="merge"></span>
       <% end %>
 
-      <% if (@user && @user.show_avatars?) || !@user %>
-        <a href="/u/<%= comment.user.username %>"><%=
-          avatar_img(comment.user, 16) %></a>
-      <% end %>
-
-      <a href="/u/<%= comment.user.username %>"
-        class="<%= comment.html_class_for_user %>"><%=
-        comment.user.username %></a>
-
-      <% if comment.hat %>
-        <%= comment.hat.to_html_label %>
-      <% end %>
-
-      <% if comment.previewing %>
-        previewed
-        just now
-      <% else %>
-        <% if comment.has_been_edited? %>
-          edited
-        <% elsif comment.is_from_email? %>
-          e-mailed
+      <span class="<%= @showing_user == comment.user ? "showing-user-comment" : nil %>">
+        <% if (@user && @user.show_avatars?) || !@user %>
+          <%= link_to avatar_img(comment.user, 16), comment.user %>
         <% end %>
-        <% is_unread ||= false %>
-        <%= time_ago_in_words_label(comment.has_been_edited? ? comment.updated_at : comment.created_at) %>
-        <%= raw "<span class='comment_unread'>(unread)</span>" if is_unread %>
-      <% end %>
+
+        <%= styled_user_link comment.user, comment %>
+
+        <% if comment.hat %>
+          <%= comment.hat.to_html_label %>
+        <% end %>
+
+        <% if comment.previewing %>
+          previewed
+          just now
+        <% else %>
+          <% if comment.has_been_edited? %>
+            edited
+          <% elsif comment.is_from_email? %>
+            e-mailed
+          <% end %>
+          <%= time_ago_in_words_label(comment.has_been_edited? ? comment.updated_at : comment.created_at) %>
+          <%= raw "<span class='comment_unread'>(unread)</span>" if is_unread %>
+        <% end %>
+      </span>
 
       <% if !comment.previewing %>
         |
@@ -97,23 +105,25 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
           <% end %>
         <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
           |
-          <a tabindex="0" class="comment_disownor" href="#">disown</a>
+          <a tabindex="0" class="comment-disowner" href="#">disown</a>
         <% end %>
 
-        <% if can_flag && !flagged %>
-          | <a class="flagger">flag</a>
-        <% elsif flagged %>
+        <% if can_flag && !comment.current_flagged? %>
+          <span class="dropdown_parent">
+            | <a class="flagger">flag</a>
+          </span>
+        <% elsif comment.current_flagged? %>
           | <a class="flagger">unflag</a>
         <% else %>
           <span class="flagger flagger_stub"></span>
         <% end %>
 
-        <% if @user && !comment.story.is_gone? && !comment.is_gone? %>
+        <% if @user && !comment.is_gone? && comment.story.accepting_comments? %>
             |
-            <a tabindex="0" class="comment_replier" unselectable="on">reply</a>
+            <a tabindex="0" class="comment_replier" unselectable="on" href="<%= reply_comment_path(comment) %>">reply</a>
         <% end %>
 
-        <% if defined?(show_story) && show_story %>
+        <% if show_story %>
           | on:
           <a href="<%= comment.story.comments_path %>"><%= comment.story.title %></a>
         <% end %>
@@ -125,14 +135,14 @@ class="comment <%= comment.current_vote ? (comment.current_vote[:vote] == 1 ?
             <% if (s = comment.vote_summary_for_user(@user).downcase).present? %>
               | <%= s %>
             <% end %>
-          <% elsif comment.current_vote && comment.current_vote[:vote] == -1 %>
+          <% elsif comment.current_flagged? %>
             | -1
             <%= Vote::ALL_COMMENT_REASONS[comment.current_vote[:reason]].downcase %>
           <% end %>
         </span>
       <% end %>
     </div>
-    <div class="comment_text">
+    <div role="heading" aria-level="3" class="comment_text">
       <% if comment.is_gone? %>
         <p>
         <span class="na">

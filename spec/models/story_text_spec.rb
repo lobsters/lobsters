@@ -1,11 +1,11 @@
-require 'rails_helper'
+# typed: false
+
+require "rails_helper"
 
 RSpec.describe StoryText, type: :model do
-  it "has a limit on the story cache field" do
+  it "truncates the story cache field" do
     s = StoryText.new
-    s.body = "Z" * 16_777_218
-
-    s.valid?
-    expect(s.errors[:body]).to eq(['is too long (maximum is 16777215 characters)'])
+    s.body = "Z" * 2**24
+    expect(s.body.length).to eq(2**24 - 1) # mediumtext
   end
 end

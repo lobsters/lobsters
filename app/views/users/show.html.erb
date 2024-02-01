@@ -1,22 +1,12 @@
-<%= render partial: 'users/flag_warning' if @show_flag_warning && @showing_user == @user %>
+<%= possible_flag_warning(@showing_user, @user) %>
+
+<% content_for :subnav do %>
+  <% if @user && @showing_user.is_active? && @showing_user != @user %>
+    <a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>
+  <% end %>
+<% end %>
 
 <div class="box wide">
-  <div class="legend">
-    <% if !@showing_user.is_active? %>
-      <span class="inactive_user">
-    <% elsif @showing_user.is_new? %>
-      <span class="new_user">
-    <% else %>
-      <span>
-    <% end %>
-      <%= @showing_user.username %>
-    </span>
-
-    <% if @user && @showing_user.is_active? %>
-      (<a href="/messages?to=<%= @showing_user.username %>">Send a Message</a>)
-    <% end %>
-  </div>
-
   <% if @showing_user.is_active? %>
     <div id="gravatar">
       <%= avatar_img(@showing_user, 100) %>
@@ -49,9 +39,8 @@
   <span class="d">
     <%= time_ago_in_words_label(@showing_user.created_at) %>
     <% if @showing_user.invited_by_user %>
-      by <a href="/u#<%= @showing_user.username %>">invitation</a> from
-      <%= link_to @showing_user.invited_by_user.try(:username),
-        @showing_user.invited_by_user %>
+      by <%= link_to 'invitation', users_tree_path(anchor: @showing_user.username) %> from
+      <%= link_to @showing_user.invited_by_user.try(:username), @showing_user.invited_by_user %>
     <% end %>
   </span>
   <br>
@@ -89,12 +78,12 @@
 
   <label class="required">Stories Submitted:</label>
   <span class="d">
-    <%= stories_submitted_content(@showing_user) %>
+    <%= stories_submitted_content(@user, @showing_user) %>
   </span>
   <br>
 
   <label class="required">Comments Posted:</label>
-  <span class="d"><%= comments_posted_content(@showing_user) %></span>
+  <span class="d"><%= comments_posted_content(@user, @showing_user) %></span>
   <br>
 
   <% if @showing_user.hats.any? %>
@@ -111,12 +100,25 @@
     <div style="clear: both;"></div>
   <% end %>
 
+  <% if @user&.is_admin? || @user&.show_email? %>
+    <label class="required">E-Mail:</label>
+    <span class="d">
+      <%= @showing_user.email %>
+    </span>
+    <br>
+  <% end %>
+
   <% if @showing_user.homepage.present? %>
     <label class="required">Homepage:</label>
 
     <span class="d">
       <a href="<%= h(@showing_user.homepage) %>"
         rel="me ugc"><%= h(@showing_user.homepage) %></a>
+      <% if @showing_user.homepage.start_with?('gemini://') %>
+        (<a href="https://portal.mozz.us/gemini/<% h(@showing_user.homepage[9..-1]) %>">proxy</a>)
+      <% elsif @showing_user.homepage.start_with?('gopher://') %>
+        (<a href="https://gopher.floodgap.com/gopher/gw?<% h(@showing_user.homepage[9..-1]) %>">proxy</a>)
+      <% end %>
     </span>
     <br>
   <% end %>
@@ -169,7 +171,7 @@
     <label class="required">Flagged (1m):</label>
     <span class="d">
       <% if (stats = FlaggedCommenters.new('1m').check_list_for(@showing_user)) %>
-        <a href="/mod/commenters/1m#<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % stats[:sigma] %> &sigma;
+        <a href="/mod/commenters/1m#<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % (stats[:sigma] || 0) %> &sigma;
       <% else %>
         No
       <% end %>
@@ -190,7 +192,7 @@
     <%= render partial: 'mod_notes/table', locals: {
       mod_notes: ModNote.for(@showing_user).limit(10),
     } %>
-    <%= form_with model: @mod_note, method: :post, local: true do |f| %>
+    <%= form_with model: @mod_note, method: :post do |f| %>
       <%= errors_for @mod_note %>
       <%= f.hidden_field :username %>
       <div class="boxline">
@@ -209,25 +211,19 @@
     <% if @user.is_admin? %>
       <h3>Admin Information</h3>
 
-      <label class="required">E-Mail:</label>
-      <span class="d">
-        <%= @showing_user.email %>
-      </span>
-      <br>
-
       <label class="required">Recent Votes:</label>
       <table class="data zebra clear tall">
         <% @showing_user.votes_for_others.limit(15).each do |v| %><tr>
           <td><%= v.vote == 1 ? '+' : v.reason %></td>
           <% if v.comment_id %>
-            <td><a href="/u/<%= v.comment.user.try(:username) %>"><%= v.comment.user.try(:username) %></a></td>
+            <td><a href="/~<%= v.comment.user.try(:username) %>"><%= v.comment.user.try(:username) %></a></td>
             <td>
               <%= v.story.title %>
               <a href="<%= v.comment.short_id_url %>">comment</a>:<br>
               <%= v.comment.comment.split[0..10].join(' ') %>
             </td>
           <% elsif v.story_id && !v.comment_id %>
-            <td><a href="/u/<%= v.story.user.try(:username) %>"><%= v.story.user.try(:username) %></a></td>
+            <td><a href="/~<%= v.story.user.try(:username) %>"><%= v.story.user.try(:username) %></a></td>
             <td><a href="<%= v.story.short_id_url %>"><%= v.story.title %></a></td>
           <% end %>
           </p>
@@ -235,9 +231,13 @@
       </table>
 
       <% if @showing_user.is_banned? || @showing_user.banned_from_inviting? %>
-        <%= form_with url: user_unban_path, method: :post, local: true do |f| %>
+        <%= form_with url: user_unban_path, method: :post do |f| %>
           <p>
             <% if @showing_user.is_banned? %>
+              <div class="boxline">
+                <%= f.label :reason, "Reason:", :class => "required" %>
+                <%= f.text_field :reason, :size => 40 %>
+              </div>
               <%= f.submit "Unban" %>
             <% end %>
             <% if @showing_user.banned_from_inviting? %>
@@ -252,7 +252,7 @@
           Banning or disabling invites for a user will send an e-mail to the user with the reason below,
           with your e-mail address as the Reply-To so the user can respond.
         </p>
-        <%= form_with url: user_ban_path, method: :post, local: true do |f| %>
+        <%= form_with url: user_ban_path, method: :post do |f| %>
           <div class="boxline">
             <%= f.label :reason, "Reason:", :class => "required" %>
             <%= f.text_field :reason, :size => 40 %>

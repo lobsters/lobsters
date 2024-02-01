@@ -1,5 +1,6 @@
+<%# locals: (showing_user:, interval:) -%>
 <div class="flash-error">
-  Your comments have been heavily flagged across several stories in the last <%= @flag_warning_int[:human] %>.
+  Your comments have been heavily flagged across several stories in the last <%= interval[:human] %>.
   Review <%= link_to 'your standing', user_standing_path(@user.username) %> for context on how unusual this is.
   Reconsider your behavior or <a href="https://xkcd.com/386">take a break</a>.
   <br><br>

@@ -1,6 +1,6 @@
 class AddKarmaToUsers < ActiveRecord::Migration
   def up
-    add_column :users, :karma, :integer, :default => 0, :null => false
+    add_column :users, :karma, :integer, default: 0, null: false
 
     Keystore.transaction do
       User.lock(true).select(:id).each do |u|

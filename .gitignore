@@ -25,9 +25,6 @@ vendor/bundle
 coverage/
 public/assets
 
-# let's encrypt
-public/.well-known
-
 # cache
 public/avatars
 public/sitemap*

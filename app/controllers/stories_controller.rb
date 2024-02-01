@@ -209,6 +209,28 @@ class StoriesController < ApplicationController
       return redirect_to @story.comments_path
     end
 
+    story_user = @story.user
+    inappropriate_tags = params[:story][:tags_a].reject { |t| t.to_s.strip == "" }
+      .map { |t| Tag.find_by tag: t }
+      .reject { |t| t.can_be_applied_by?(story_user) }
+    if inappropriate_tags.length > 0
+      tag_error = ""
+      inappropriate_tags.each do |t|
+        tag_error += if t.privileged?
+          "User #{story_user.username} cannot apply tag #{t.tag} as they are not a " \
+            "moderator so it has been removed from your suggestion.\n"
+        elsif !t.permit_by_new_users?
+          "User #{story_user.username} cannot apply tag #{t.tag} due to being a new " \
+            "user so it has been removed from your suggestion.\n"
+        else
+          "User #{story_user.username} cannot apply tag #{t.tag} " \
+            "so it has been removed from your suggestion.\n"
+        end
+      end
+      tag_error += ""
+      flash[:error] = tag_error
+    end
+
     ostory = @story.dup
 
     @story.title = params[:story][:title]
@@ -219,7 +241,11 @@ class StoriesController < ApplicationController
         dsug = true
       end
 
-      sugtags = params[:story][:tags_a].reject { |t| t.to_s.strip == "" }.sort
+      sugtags = params[:story][:tags_a].reject { |t| t.to_s.strip == "" }
+        .sort
+        .reject { |t|
+        !Tag.find_by(tag: t).can_be_applied_by?(story_user)
+      }
       if @story.tags_a.sort != sugtags
         @story.save_suggested_tags_a_for_user!(sugtags, @user)
         dsug = true

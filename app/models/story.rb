@@ -408,8 +408,13 @@ class Story < ApplicationRecord
     end
 
     taggings.each do |t|
-      if !t.tag.valid_for?(u)
+      if !t.tag.can_be_applied_by?(u) && t.tag.privileged?
         raise "#{u.username} does not have permission to use privileged tag #{t.tag.tag}"
+      elsif !t.tag.can_be_applied_by?(u) && !t.tag.permit_by_new_users?
+        errors.add(:base, "New users can't submit #{t.tag.tag} stories, please wait. " \
+          "If the tag is appropriate, leaving it off to skirt this restriction is a bad idea.")
+        ModNote.tattle_on_story_domain!(self, "new user with protected tags")
+        raise "#{u.username} is too new to use tag #{t.tag.tag}"
       elsif !t.tag.active? && t.new_record? && !t.marked_for_destruction?
         # stories can have inactive tags as long as they existed before
         raise "#{u.username} cannot add inactive tag #{t.tag.tag}"
@@ -686,7 +691,7 @@ class Story < ApplicationRecord
       # XXX: AR bug? st.exists?(:tag => tag_name) does not work
       if tag_name.to_s != "" && !st.map { |x| x.tag.tag }.include?(tag_name)
         if (t = Tag.active.find_by(tag: tag_name)) &&
-            t.valid_for?(user)
+            t.can_be_applied_by?(user)
           tg = suggested_taggings.build
           tg.user_id = user.id
           tg.tag_id = t.id

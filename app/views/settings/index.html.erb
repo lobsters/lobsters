@@ -263,6 +263,24 @@
     </div>
   <% end %>
 
+  <% if Mastodon.enabled? %>
+    <div class="boxline">
+      <span>
+        <%= label_tag :mastodon_username,
+          raw("<a href=\"https://joinmastodon.org/\">Mastodon</a>:"),
+          :class => "required" %>
+        <% if @edit_user.mastodon_username.present? %>
+          Linked to
+          <strong><a href="https://<%= @edit_user.mastodon_instance %>/@<%= h(@edit_user.mastodon_username)
+            %>">@<%= h(@edit_user.mastodon_username) %>@<%=@edit_user.mastodon_instance%></a></strong>
+            <%= link_post "Disconnect", "/settings/mastodon_disconnect" %>
+        <% else %>
+          <a href="/settings/mastodon_authentication">Connect</a>
+        <% end %>
+      </span>
+    </div>
+  <% end %>
+
   <% if Twitter.enabled? %>
     <div class="boxline">
       <%= label_tag :twitter_username,

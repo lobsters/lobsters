@@ -170,9 +170,13 @@ Rails.application.routes.draw do
     :as => "twofa_verify"
   post "/settings/2fa_update" => "settings#twofa_update",
     :as => "twofa_update"
+  get "/settings/mastodon_authentication" => "settings#mastodon_authentication"
 
   post "/settings/pushover_auth" => "settings#pushover_auth"
   get "/settings/pushover_callback" => "settings#pushover_callback"
+  get "/settings/mastodon_auth" => "settings#mastodon_auth"
+  get "/settings/mastodon_callback" => "settings#mastodon_callback"
+  post "/settings/mastodon_disconnect" => "settings#mastodon_disconnect"
   get "/settings/github_auth" => "settings#github_auth"
   get "/settings/github_callback" => "settings#github_callback"
   post "/settings/github_disconnect" => "settings#github_disconnect"

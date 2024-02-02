@@ -186,7 +186,7 @@ class SettingsController < ApplicationController
     redirect_to "/settings"
   end
 
-  def mastodon_auth
+  def mastodon_authentication
     app = MastodonApp.find_or_register(params[:mastodon_instance_name])
     redirect_to app.oauth_auth_url, allow_other_host: true
   end

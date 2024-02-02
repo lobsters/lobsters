@@ -66,14 +66,10 @@ class Mastodon
     [nil, nil]
   end
 
+  # extract hostname from possible URL
   def self.sanitized_instance_name(instance_name)
-    if instance_name.include? "://"
-      URI.parse(instance_name).host
-    elsif instance_name.include? "/"
-      instance_name.split("/").first
-    else
-      instance_name
-    end
+    instance_name.delete_prefix "https://"
+    instance_name.split("/").first
   end
 
   def self.oauth_auth_url(instance_name)

@@ -213,6 +213,10 @@ class SettingsController < ApplicationController
   end
 
   def mastodon_disconnect
+    if (app = MastodonApp.find_by(name: @user.mastodon_instance))
+      app.revoke_token(@user.mastodon_oauth_token)
+    end
+    @user.mastodon_instance = nil
     @user.mastodon_oauth_token = nil
     @user.mastodon_username = nil
     @user.save!

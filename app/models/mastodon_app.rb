@@ -72,6 +72,25 @@ class MastodonApp < ApplicationRecord
     [nil, nil]
   end
 
+  # https://docs.joinmastodon.org/methods/oauth/#revoke
+  def revoke_token(token)
+    return if token.blank?
+
+    s = Sponge.new
+    res = s.fetch(
+      "https://#{name}/oauth/revoke",
+      :post,
+      client_id: client_id,
+      client_secret: client_secret,
+      token: token
+    )
+    ps = JSON.parse(res.body)
+    if ps != {}
+      Rails.logger.info "Unexpected failure revoking token from #{name}, response was #{res.body}"
+    end
+    ps == {}
+  end
+
   def self.find_or_register(instance_name)
     name = sanitized_instance_name(instance_name)
     existing = find_by name: name

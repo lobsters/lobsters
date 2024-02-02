@@ -103,8 +103,13 @@ class MastodonApp < ApplicationRecord
     app
   end
 
+  # user may input hostname (foo.social), url (https://foo.social/@user), or user (@user@foo.social)
   # extract hostname from possible URL
   def self.sanitized_instance_name(instance_name)
-    instance_name.to_s.delete_prefix("https://").split("/").first
+    instance_name
+      .to_s
+      .delete_prefix("https://")
+      .split("/").first
+      .split("@").last
   end
 end

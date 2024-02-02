@@ -187,29 +187,29 @@ class SettingsController < ApplicationController
   end
 
   def mastodon_auth
-    instance_name = params[:mastodon_instance_name].to_s
-    redirect_to Mastodon.oauth_auth_url(instance_name), allow_other_host: true
+    app = MastodonApp.find_or_register(params[:mastodon_instance_name])
+    redirect_to app.oauth_auth_url, allow_other_host: true
   end
 
   def mastodon_callback
     if params[:code].blank?
       flash[:error] = "Invalid OAuth state"
-      return redirect_to "/settings"
+      return redirect_to settings_path
     end
 
-    mastodon_instance = MastodonInstance.find_by(name: params[:instance])
-    tok, username = Mastodon.token_and_user_from_code(params[:instance], params[:code])
+    app = MastodonApp.find_or_register(params[:instance])
+    tok, username = app.token_and_user_from_code(params[:code])
     if tok.present? && username.present?
       @user.mastodon_oauth_token = tok
       @user.mastodon_username = username
       @user.mastodon_instance = params[:instance]
       @user.save!
-      flash[:success] = "Linked to Mastodon user @#{username}@#{mastodon_instance.name}."
+      flash[:success] = "Linked to Mastodon user @#{username}@#{app.name}."
     else
       return mastodon_disconnect
     end
 
-    redirect_to "/settings"
+    redirect_to settings_path
   end
 
   def mastodon_disconnect
@@ -217,7 +217,7 @@ class SettingsController < ApplicationController
     @user.mastodon_username = nil
     @user.save!
     flash[:success] = "Your Mastodon association has been removed."
-    redirect_to "/settings"
+    redirect_to settings_path
   end
 
   def github_auth
@@ -230,7 +230,7 @@ class SettingsController < ApplicationController
         params[:code].blank? ||
         (params[:state].to_s != session[:github_state].to_s)
       flash[:error] = "Invalid OAuth state"
-      return redirect_to "/settings"
+      return redirect_to settings_path
     end
 
     session.delete(:github_state)
@@ -245,7 +245,7 @@ class SettingsController < ApplicationController
       return github_disconnect
     end
 
-    redirect_to "/settings"
+    redirect_to settings_path
   end
 
   def github_disconnect
@@ -253,7 +253,7 @@ class SettingsController < ApplicationController
     @user.github_username = nil
     @user.save!
     flash[:success] = "Your GitHub association has been removed."
-    redirect_to "/settings"
+    redirect_to settings_path
   end
 
   def twitter_auth

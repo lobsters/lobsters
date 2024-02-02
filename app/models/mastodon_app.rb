@@ -93,6 +93,7 @@ class MastodonApp < ApplicationRecord
 
   def self.find_or_register(instance_name)
     name = sanitized_instance_name(instance_name)
+    return nil if name.blank?
     existing = find_by name: name
     return existing if existing.present?
 
@@ -104,7 +105,6 @@ class MastodonApp < ApplicationRecord
 
   # extract hostname from possible URL
   def self.sanitized_instance_name(instance_name)
-    instance_name.delete_prefix "https://"
-    instance_name.split("/").first
+    instance_name.to_s.delete_prefix("https://").split("/").first
   end
 end

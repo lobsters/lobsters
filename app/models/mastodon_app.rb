@@ -1,5 +1,5 @@
 # typed: false
 
-class MastodonInstance < ApplicationRecord
+class MastodonApp < ApplicationRecord
   validates :name, :client_id, :client_secret, presence: true
 end

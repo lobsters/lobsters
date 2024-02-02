@@ -116,13 +116,13 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_23_155620) do
     t.index ["key"], name: "key", unique: true
   end
 
-  create_table "mastodon_instances", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "mastodon_apps", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "client_id", null: false
     t.string "client_secret", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_mastodon_instances_on_name", unique: true
+    t.index ["name"], name: "index_mastodon_apps_on_name", unique: true
   end
 
   create_table "messages", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

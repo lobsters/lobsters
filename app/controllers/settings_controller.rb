@@ -188,7 +188,7 @@ class SettingsController < ApplicationController
 
   def mastodon_auth
     instance_name = params[:mastodon_instance_name].to_s
-    redirect_to Mastodon.oauth_auth_url(instance_name)
+    redirect_to Mastodon.oauth_auth_url(instance_name), allow_other_host: true
   end
 
   def mastodon_callback
@@ -197,13 +197,14 @@ class SettingsController < ApplicationController
       return redirect_to "/settings"
     end
 
+    mastodon_instance = MastodonInstance.find_by(name: params[:instance])
     tok, username = Mastodon.token_and_user_from_code(params[:instance], params[:code])
     if tok.present? && username.present?
       @user.mastodon_oauth_token = tok
       @user.mastodon_username = username
       @user.mastodon_instance = params[:instance]
       @user.save!
-      flash[:success] = "Your account has been linked to Mastodon user #{username}."
+      flash[:success] = "Linked to Mastodon user @#{username}@#{mastodon_instance.name}."
     else
       return mastodon_disconnect
     end

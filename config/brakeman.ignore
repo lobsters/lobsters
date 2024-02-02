@@ -121,7 +121,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/users/show.html.erb",
-      "line": 160,
+      "line": 171,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "User.find_by(:username => params[:username]).linkified_about",
       "render_path": [
@@ -129,7 +129,7 @@
           "type": "controller",
           "class": "UsersController",
           "method": "show",
-          "line": 26,
+          "line": 25,
           "file": "app/controllers/users_controller.rb",
           "rendered": {
             "name": "users/show",
@@ -195,6 +195,29 @@
       "note": "Search.flatten_title is a security control"
     },
     {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "673f8272f9e74e133d3754ec864f7d04165872c40b19a74dff76d6a5110ac8dd",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/settings_controller.rb",
+      "line": 191,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(MastodonApp.find_or_register(params[:mastodon_instance_name]).oauth_auth_url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "SettingsController",
+        "method": "mastodon_authentication"
+      },
+      "user_input": "MastodonApp.find_or_register(params[:mastodon_instance_name]).oauth_auth_url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": "Redirecting to Mastodon instance as part of oauth flow"
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "7437561357336dcb1dde3dc263e2466a900b3ebf04793e9482e3eb7051c710f8",
@@ -258,7 +281,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/users_controller.rb",
-      "line": 154,
+      "line": 153,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "User.find_by(:username => params[:username]).comments.where(\"\\n        comments.flags > 0 and\\n        comments.created_at >= now() - interval #{time_interval(\"1m\")[:dur]} #{time_interval(\"1m\")[:intv]}\")",
       "render_path": null,
@@ -281,7 +304,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story.rb",
-      "line": 485,
+      "line": 490,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Story.connection.execute(\"UPDATE stories SET\\n  score = (select coalesce(sum(vote), 0) from votes where story_id = stories.id and comment_id is null),\\n  flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),\\n  hotness = #{calculated_hotness}\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -327,7 +350,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/comment.rb",
-      "line": 366,
+      "line": 382,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Comment.connection.execute(\"UPDATE comments SET\\n  score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),\\n  flags = (select count(*) from votes where comment_id = comments.id and vote = -1),\\n  confidence = #{calculated_confidence},\\n  confidence_order = concat(lpad(char(65536 - floor(((confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(id & 0xff using binary))\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -417,7 +440,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/settings/twofa_enroll.html.erb",
-      "line": 12,
+      "line": 13,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "ROTP::TOTP.new(ROTP::Base32.random, :issuer => Rails.application.name).provisioning_uri(User.find_by(:session_token => session[:u].to_s).email)",
       "render_path": [
@@ -451,7 +474,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/users_controller.rb",
-      "line": 142,
+      "line": 141,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.exec_query(\"\\n      select\\n        n_flags, count(*) as n_users\\n      from (\\n        select\\n          comments.user_id, sum(flags) as n_flags\\n        from\\n          comments\\n        where\\n          comments.created_at >= now() - interval #{time_interval(\"1m\")[:dur]} #{time_interval(\"1m\")[:intv]}\\n        group by comments.user_id) count_by_user\\n      group by 1\\n      order by 1 asc;\\n    \")",
       "render_path": null,
@@ -474,7 +497,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/settings/twofa_enroll.html.erb",
-      "line": 12,
+      "line": 13,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "RQRCode::QRCode.new(ROTP::TOTP.new(ROTP::Base32.random, :issuer => Rails.application.name).provisioning_uri(User.find_by(:session_token => session[:u].to_s).email)).as_svg(:offset => 0, :fill => \"ffffff\", :color => \"000\", :module_size => 5, :shape_rendering => \"crispEdges\")",
       "render_path": [
@@ -571,6 +594,6 @@
       "note": "IntervalHelper#time_interval is a security control"
     }
   ],
-  "updated": "2023-12-28 19:26:34 -0600",
+  "updated": "2024-02-02 13:07:00 -0600",
   "brakeman_version": "6.1.1"
 }

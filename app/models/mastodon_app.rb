@@ -64,7 +64,6 @@ class MastodonApp < ApplicationRecord
         headers
       ).body
       js = JSON.parse(res)
-      puts "verify credentials:", js
       if js && js["username"].present?
         return [tok, js["username"]]
       end

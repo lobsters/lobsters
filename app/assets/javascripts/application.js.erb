@@ -598,7 +598,7 @@ onPageLoad(() => {
   // Remember story collapses; this is stored in localStorage for every story ID as an object
   on('change', '.comment_folder_button', (e) => {
     const commentId = e.target.getAttribute('data-shortid');
-    const storyId = qS('.story').getAttribute('data-shortid');
+    const storyId = qS('.story')?.getAttribute('data-shortid');
     if (!storyId) return; // only remember or read these on story pages
 
     var collapse = JSON.parse(localStorage.getItem("collapse_" + storyId) || '{}');
@@ -612,7 +612,7 @@ onPageLoad(() => {
 
   // Collapse stories on load; the actual hiding is done in CSS; just need to switch the checkbox
   (function() {
-    const storyId  = qS('.story').getAttribute('data-shortid');
+    const storyId  = qS('.story')?.getAttribute('data-shortid');
     if (!storyId) return; // only remember or read these on story pages
     const collapse = JSON.parse(localStorage.getItem("collapse_" + storyId) || '{}');
 

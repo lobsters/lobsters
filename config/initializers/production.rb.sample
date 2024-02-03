@@ -34,6 +34,17 @@ if Rails.env.production?
   Github.CLIENT_ID = "secret"
   Github.CLIENT_SECRET = "secret"
 
+  # mastodon bot posting setup (this is independent of account linking)
+  # 1. visit instance to register your desired username
+  # 2. enter instance name and username in your production.rb
+  Mastodon.INSTANCE_NAME = "botsin.space" # you can use any, but this is very common
+  Mastodon.BOT_NAME = "lobsters"
+
+  # 3. run Mastodon.get_bot_credentials! in the prod rails console for these three values
+  Mastodon.CLIENT_ID = nil
+  Mastodon.CLIENT_SECRET = nil
+  Mastodon.TOKEN = nil
+
   BCrypt::Engine.cost = 12
 
   Keybase.DOMAIN = Rails.application.domain

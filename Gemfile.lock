@@ -89,7 +89,7 @@ GEM
     bcrypt (3.1.20)
     benchmark-perf (0.6.0)
     bigdecimal (3.1.5)
-    brakeman (6.1.1)
+    brakeman (6.1.2)
       racc
     builder (3.2.4)
     byebug (11.1.3)

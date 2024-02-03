@@ -2,6 +2,6 @@
 
 class Mastodon
   def self.enabled?
-    Rails.env.production?
+    true # Rails.env.production?
   end
 end

@@ -61,7 +61,10 @@ class MastodonApp < ApplicationRecord
       code: code,
       scope: "read:account"
     )
-    raise "mastodon getting user token failed, response from #{name} was nil" if res.nil?
+    if res.nil?
+      errors.add :base, "#{name} errored instead of giving a user token, is it a Mastodon instance?"
+      return
+    end
     ps = JSON.parse(res.body)
     tok = ps["access_token"]
 
@@ -81,6 +84,10 @@ class MastodonApp < ApplicationRecord
     end
 
     [nil, nil]
+  rescue OpenSSL::SSL::SSLError
+    errors.add :base, "#{name} isn't a working SSL server when fetching user token"
+  rescue JSON::ParserError
+    errors.add :base, "#{name} responded with non-parseable JSON for user token"
   end
 
   # https://docs.joinmastodon.org/methods/oauth/#revoke

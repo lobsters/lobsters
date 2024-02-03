@@ -213,6 +213,7 @@ class SettingsController < ApplicationController
       @user.save!
       flash[:success] = "Linked to Mastodon user @#{username}@#{app.name}."
     else
+      flash[:error] = app.errors.full_messages.join(" ")
       return mastodon_disconnect
     end
 
@@ -227,7 +228,8 @@ class SettingsController < ApplicationController
     @user.mastodon_oauth_token = nil
     @user.mastodon_username = nil
     @user.save!
-    flash[:success] = "Your Mastodon association has been removed."
+    # action may be called to tear down a failed auth
+    flash[:success] = "Your Mastodon association has been removed." if flash.empty?
     redirect_to settings_path
   end
 

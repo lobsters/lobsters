@@ -195,29 +195,6 @@
       "note": "Search.flatten_title is a security control"
     },
     {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "673f8272f9e74e133d3754ec864f7d04165872c40b19a74dff76d6a5110ac8dd",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/settings_controller.rb",
-      "line": 191,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(MastodonApp.find_or_register(params[:mastodon_instance_name]).oauth_auth_url, :allow_other_host => true)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "SettingsController",
-        "method": "mastodon_authentication"
-      },
-      "user_input": "MastodonApp.find_or_register(params[:mastodon_instance_name]).oauth_auth_url",
-      "confidence": "Weak",
-      "cwe_id": [
-        601
-      ],
-      "note": "Redirecting to Mastodon instance as part of oauth flow"
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "7437561357336dcb1dde3dc263e2466a900b3ebf04793e9482e3eb7051c710f8",
@@ -296,6 +273,29 @@
         89
       ],
       "note": "IntervalHelper#time_interval is a security control"
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "96e34cf6470885983badaf971f120a8a403618859640b5c07811a81852fae0e7",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/settings_controller.rb",
+      "line": 195,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(MastodonApp.find_or_register(params[:mastodon_instance_name]).oauth_auth_url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "SettingsController",
+        "method": "mastodon_auth"
+      },
+      "user_input": "MastodonApp.find_or_register(params[:mastodon_instance_name]).oauth_auth_url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": "Normal part of oauth flow"
     },
     {
       "warning_type": "SQL Injection",
@@ -594,6 +594,6 @@
       "note": "IntervalHelper#time_interval is a security control"
     }
   ],
-  "updated": "2024-02-02 13:07:00 -0600",
+  "updated": "2024-02-03 09:48:23 -0600",
   "brakeman_version": "6.1.1"
 }

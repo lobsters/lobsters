@@ -14,7 +14,9 @@ class MastodonApp < ApplicationRecord
     "https://#{Rails.application.domain}/settings/mastodon_callback?instance=#{name}"
   end
 
-  def register_app
+  # this (if needed) adds errors to the model or saves on success because calling .save after it
+  # runs will clear these errors
+  def register_app!
     raise "already registered, delete and recreate" if client_id.present?
 
     s = Sponge.new
@@ -30,13 +32,21 @@ class MastodonApp < ApplicationRecord
       scopes: "read:accounts",
       website: "https://#{Rails.application.domain}"
     )
+    if res.nil? || res.body.blank?
+      errors.add :base, "App registration failed, is #{name} a Mastodon instance?"
+      return
+    end
     js = JSON.parse(res.body)
     if js && js["client_id"].present? && js["client_secret"].present?
       self.client_id = js["client_id"]
       self.client_secret = js["client_secret"]
       return save!
     end
-    raise "registration failed, response was #{res.body}"
+    errors.add :base, "Mastodon instance didn't return a client_id and client_secret"
+  rescue OpenSSL::SSL::SSLError
+    errors.add :base, "#{name} isn't a working SSL server"
+  rescue JSON::ParserError
+    errors.add :base, "#{name} responded with non-parseable JSON"
   end
 
   def token_and_user_from_code(code)
@@ -51,6 +61,7 @@ class MastodonApp < ApplicationRecord
       code: code,
       scope: "read:account"
     )
+    raise "mastodon getting user token failed, response from #{name} was nil" if res.nil?
     ps = JSON.parse(res.body)
     tok = ps["access_token"]
 
@@ -98,8 +109,7 @@ class MastodonApp < ApplicationRecord
     return existing if existing.present?
 
     app = new name: name
-    app.register_app
-    app.save!
+    app.register_app!
     app
   end
 

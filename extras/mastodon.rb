@@ -6,13 +6,122 @@ class Mastodon
   end
 
   # these need to be overridden in config/initializers/production.rb
-  cattr_accessor :INSTANCE_NAME, :BOT_NAME, :CLIENT_ID, :CLIENT_SECRET, :TOKEN
+  cattr_accessor :INSTANCE_NAME, :BOT_NAME, :CLIENT_ID, :CLIENT_SECRET, :TOKEN, :LIST_ID
 
   @@INSTANCE_NAME = nil
   @@BOT_NAME = nil
   @@CLIENT_ID = nil
   @@CLIENT_SECRET = nil
   @@TOKEN = nil
+  @@LIST_ID = nil
+
+  def self.accept_follow_request(id)
+    s = Sponge.new
+    response = s.fetch(
+      "https://#{self.INSTANCE_NAME}/api/v1/follow_requests/#{id}/authorize",
+      :post,
+      {limit: 80},
+      nil,
+      {"Authorization" => "Bearer #{self.TOKEN}"}
+    )
+    raise "failed to accept follow request #{id}" if response.nil?
+  end
+
+  def self.add_list_accounts(accts)
+    s = Sponge.new
+    response = s.fetch(
+      "https://#{self.INSTANCE_NAME}/api/v1/lists/#{self.LIST_ID}/accounts",
+      :post,
+      {account_ids: accts},
+      nil,
+      {"Authorization" => "Bearer #{self.TOKEN}"}
+    )
+    raise "failed to add to list" if response.nil? || JSON.parse(response.body) != {}
+  end
+
+  def self.follow_account(id)
+    s = Sponge.new
+    response = s.fetch(
+      "https://#{self.INSTANCE_NAME}/api/v1/accounts/#{id}/follow",
+      :post,
+      {reblogs: false},
+      nil,
+      {"Authorization" => "Bearer #{self.TOKEN}"}
+    )
+    raise "failed to follow #{id}" if response.nil?
+  end
+
+  def self.get_account_id(acct)
+    s = Sponge.new
+    response = s.fetch(
+      "https://#{self.INSTANCE_NAME}/api/v1/accounts/search",
+      :get,
+      nil,
+      {q: acct, limit: 80, resolve: true},
+      {"Authorization" => "Bearer #{self.TOKEN}"}
+    )
+    raise "failed to lookup #{acct}" if response.nil?
+    accounts = JSON.parse(response.body)
+
+    account = accounts.find { |a| a["acct"] == acct }
+    # treehouse.systems is hosted at social.treehouse.systems
+    # no idea why that's inconsistent or a better way to reconcile
+    account = accounts.find { |a| acct.split("@").first } if account.nil?
+    raise "did not find acct #{acct} in #{accounts}" if account.nil?
+    account["id"]
+  end
+
+  # returns list of ids for accept_follow_request calls
+  def self.get_follow_requests
+    s = Sponge.new
+    response = s.fetch(
+      "https://#{self.INSTANCE_NAME}/api/v1/follow_requests",
+      :get,
+      nil,
+      nil,
+      {"Authorization" => "Bearer #{self.TOKEN}"}
+    )
+    accounts = JSON.parse(response.body)
+    accounts.pluck("id")
+  end
+
+  # returns { "user@example.com" => 123 } for remove_list_accounts call
+  def self.get_list_accounts
+    s = Sponge.new
+    response = s.fetch(
+      "https://#{self.INSTANCE_NAME}/api/v1/lists/#{self.LIST_ID}/accounts",
+      :get,
+      nil,
+      {limit: 0},
+      {"Authorization" => "Bearer #{self.TOKEN}"}
+    )
+    accounts = JSON.parse(response.body)
+    accounts.map { |a| [a["acct"], a["id"]] }.to_h
+  end
+
+  def self.remove_list_accounts(ids)
+    s = Sponge.new
+    response = s.fetch(
+      "https://#{self.INSTANCE_NAME}/api/v1/lists/#{self.LIST_ID}/accounts",
+      :delete,
+      nil,
+      {account_ids: ids},
+      {"Authorization" => "Bearer #{self.TOKEN}"}
+    )
+    raise "failed to remove from list" if response.nil? || JSON.parse(response.body) != {}
+  end
+
+  def self.unfollow_account(id)
+    s = Sponge.new
+    response = s.fetch(
+      "https://#{self.INSTANCE_NAME}/api/v1/accounts/#{id}/unfollow",
+      :post,
+      {account_ids: ids},
+      nil,
+      {"Authorization" => "Bearer #{self.TOKEN}"}
+    )
+    raise "failed to remove from list" if response.nil? || JSON.parse(response.body) != {}
+  end
 
   def self.get_bot_credentials!
     raise "instructions in production.rb.sample" unless self.INSTANCE_NAME && self.BOT_NAME

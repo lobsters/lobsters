@@ -39,11 +39,12 @@ if Rails.env.production?
   # 2. enter instance name and username in your production.rb
   Mastodon.INSTANCE_NAME = "botsin.space" # you can use any, but this is very common
   Mastodon.BOT_NAME = "lobsters"
-
   # 3. run Mastodon.get_bot_credentials! in the prod rails console for these three values
   Mastodon.CLIENT_ID = nil
   Mastodon.CLIENT_SECRET = nil
   Mastodon.TOKEN = nil
+  # 4. create a list in the web ui, see the ID in the URL when you edit
+  Mastodon.LIST_ID = nil
 
   BCrypt::Engine.cost = 12
 

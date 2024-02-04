@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# ENV["RAILS_ENV"] ||= "production"
+ENV["RAILS_ENV"] ||= "production"
 
 APP_PATH = File.expand_path("../../config/application", __FILE__)
 require File.expand_path("../../config/boot", __FILE__)

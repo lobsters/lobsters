@@ -37,9 +37,11 @@ if to_remove.any?
 end
 
 if to_add.any?
+  add_ids = []
   to_add.each do |a|
     id = Mastodon.get_account_id(a)
+    add_ids << id
     Mastodon.follow_account(id)
   end
-  Mastodon.add_list_accounts(to_add)
+  Mastodon.add_list_accounts(add_ids)
 end

@@ -32,11 +32,11 @@ class Mastodon
     response = s.fetch(
       "https://#{self.INSTANCE_NAME}/api/v1/lists/#{self.LIST_ID}/accounts",
       :post,
-      {account_ids: accts},
       nil,
+      accts.map { |i| "account_ids[]=#{i}" }.join("&"),
       {"Authorization" => "Bearer #{self.TOKEN}"}
     )
-    raise "failed to add to list" if response.nil? || JSON.parse(response.body) != {}
+    raise "failed to add to list" if response.nil? || puts(response.body) || JSON.parse(response.body) != {}
   end
 
   def self.follow_account(id)
@@ -91,8 +91,8 @@ class Mastodon
     response = s.fetch(
       "https://#{self.INSTANCE_NAME}/api/v1/lists/#{self.LIST_ID}/accounts",
       :get,
-      nil,
       {limit: 0},
+      nil,
       {"Authorization" => "Bearer #{self.TOKEN}"}
     )
     accounts = JSON.parse(response.body)
@@ -104,8 +104,8 @@ class Mastodon
     response = s.fetch(
       "https://#{self.INSTANCE_NAME}/api/v1/lists/#{self.LIST_ID}/accounts",
       :delete,
-      nil,
       {account_ids: ids},
+      nil,
       {"Authorization" => "Bearer #{self.TOKEN}"}
     )
     raise "failed to remove from list" if response.nil? || JSON.parse(response.body) != {}

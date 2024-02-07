@@ -2,7 +2,7 @@
 
 class Mastodon
   def self.enabled?
-    true # Rails.env.production?
+    Mastodon::TOKEN.present?
   end
 
   # these need to be overridden in config/initializers/production.rb

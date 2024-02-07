@@ -7,6 +7,8 @@ require File.expand_path("../../config/boot", __FILE__)
 require APP_PATH
 Rails.application.require_environment!
 
+exit unless Mastodon.enabled? && Mastodon::LIST_ID
+
 # accept all follow requests
 follow_requests = Mastodon.get_follow_requests
 follow_requests.each do |id|

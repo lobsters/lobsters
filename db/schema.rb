@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_23_155620) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_07_151341) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "category"
     t.datetime "created_at", precision: nil, null: false
@@ -116,7 +116,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_23_155620) do
     t.index ["key"], name: "key", unique: true
   end
 
-  create_table "mastodon_apps", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "mastodon_apps", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "client_id", null: false
     t.string "client_secret", null: false
@@ -214,10 +214,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_23_155620) do
     t.boolean "user_is_author", default: false
     t.boolean "user_is_following", default: false, null: false
     t.bigint "domain_id"
+    t.string "mastodon_id", limit: 25
     t.index ["created_at"], name: "index_stories_on_created_at"
     t.index ["domain_id"], name: "index_stories_on_domain_id"
     t.index ["hotness"], name: "hotness_idx"
     t.index ["id", "is_deleted"], name: "index_stories_on_id_and_is_deleted"
+    t.index ["mastodon_id"], name: "index_stories_on_mastodon_id"
     t.index ["merged_story_id"], name: "index_stories_on_merged_story_id"
     t.index ["normalized_url"], name: "index_stories_on_normalized_url"
     t.index ["score"], name: "index_stories_on_score"

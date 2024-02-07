@@ -15,6 +15,9 @@ class Mastodon
   @@TOKEN = nil
   @@LIST_ID = nil
 
+  MAX_STATUS_LENGTH = 500 # https://docs.joinmastodon.org/user/posting/#text
+  LINK_LENGTH = 23 # https://docs.joinmastodon.org/user/posting/#links
+
   def self.accept_follow_request(id)
     s = Sponge.new
     response = s.fetch(
@@ -97,6 +100,20 @@ class Mastodon
     )
     accounts = JSON.parse(response.body)
     accounts.map { |a| [a["acct"], a["id"]] }.to_h
+  end
+
+  def self.post(status)
+    s = Sponge.new
+    s.fetch(
+      "https://#{self.INSTANCE_NAME}/api/v1/statuses",
+      :post,
+      {
+        status: status,
+        visibility: "public"
+      },
+      nil,
+      {"Authorization" => "Bearer #{self.TOKEN}"}
+    )
   end
 
   def self.remove_list_accounts(ids)

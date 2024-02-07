@@ -98,6 +98,13 @@ class Story < ApplicationRecord
   scope :saved_by, ->(user) {
     user.nil? ? none : joins(:savings).merge(SavedStory.by(user))
   }
+  scope :to_mastodon, -> {
+    hottest(nil, Tag.where(tag: "meta").ids)
+      .where(mastodon_id: nil)
+      .where("score >= 2")
+      .where("created_at >= ?", 2.days.ago)
+      .limit(10)
+  }
   scope :to_tweet, -> {
     hottest(nil, Tag.where(tag: "meta").ids)
       .where(twitter_id: nil)
@@ -111,6 +118,7 @@ class Story < ApplicationRecord
   validates :url, length: {maximum: 250, allow_nil: true}
   validates :short_id, presence: true, length: {maximum: 6}
   validates :markeddown_description, length: {maximum: 16_777_215, allow_nil: true}
+  validates :mastodon_id, length: {maximum: 25, allow_nil: true}
   validates :twitter_id, length: {maximum: 20, allow_nil: true}
 
   validates_each :merged_story_id do |record, _attr, value|

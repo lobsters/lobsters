@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+# Mastodon lists aren't yet public, but 1. I'd rather leave it running in prod
+# than restart it from scratch and 2. the bot's followed users are roughly accurate.
+# https://github.com/mastodon/mastodon/issues/8208
+
 ENV["RAILS_ENV"] ||= "production"
 
 APP_PATH = File.expand_path("../../config/application", __FILE__)

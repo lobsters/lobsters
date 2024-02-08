@@ -105,13 +105,6 @@ class Story < ApplicationRecord
       .where("created_at >= ?", 2.days.ago)
       .limit(10)
   }
-  scope :to_tweet, -> {
-    hottest(nil, Tag.where(tag: "meta").ids)
-      .where(twitter_id: nil)
-      .where("score >= 2")
-      .where("created_at >= ?", 2.days.ago)
-      .limit(10)
-  }
 
   validates :title, length: {in: 3..150}
   validates :description, length: {maximum: (64 * 1024)}

@@ -77,9 +77,6 @@ class User < ApplicationRecord
     s.string :mastodon_instance
     s.string :mastodon_oauth_token
     s.string :mastodon_username
-    s.string :twitter_oauth_token
-    s.string :twitter_oauth_token_secret
-    s.string :twitter_username
     s.any :keybase_signatures, array: true
     s.string :homepage
   end
@@ -193,8 +190,8 @@ class User < ApplicationRecord
       h[:github_username] = github_username
     end
 
-    if twitter_username.present?
-      h[:twitter_username] = twitter_username
+    if mastodon_username.present?
+      h[:mastodon_username] = mastodon_username
     end
 
     if keybase_signatures.present?
@@ -505,6 +502,11 @@ class User < ApplicationRecord
 
   def linkified_about
     Markdowner.to_html(about)
+  end
+
+  def mastodon_acct
+    raise unless mastodon_username.present? && mastodon_instance.present?
+    "@#{mastodon_username}@#{mastodon_instance}"
   end
 
   def most_common_story_tag

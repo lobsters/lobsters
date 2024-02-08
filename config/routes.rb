@@ -179,9 +179,6 @@ Rails.application.routes.draw do
   get "/settings/github_auth" => "settings#github_auth"
   get "/settings/github_callback" => "settings#github_callback"
   post "/settings/github_disconnect" => "settings#github_disconnect"
-  get "/settings/twitter_auth" => "settings#twitter_auth"
-  get "/settings/twitter_callback" => "settings#twitter_callback"
-  post "/settings/twitter_disconnect" => "settings#twitter_disconnect"
 
   resources :keybase_proofs, only: [:new, :create, :destroy]
   get "/.well-known/keybase-proof-config" => "keybase_proofs#kbconfig", :as => "keybase_config"

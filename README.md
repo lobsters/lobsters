@@ -103,10 +103,10 @@ running tests:
 * Set up crontab or another scheduler to run regular jobs:
 
     ```
-    */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/post_to_twitter; bundle exec ruby script/traffic_range'
+    */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/mastodon_sync.rb; bundle exec ruby script/traffic_range'
     ```
 
-* See `config/initializers/production.rb.sample` for GitHub/Twitter integration help.
+* See `config/initializers/production.rb.sample` for GitHub/Mastodon integration help.
 
 * You probably want to use [git-imerge](https://lobste.rs/s/dbm2d4) to pull in
   changes from Lobsters to your site.

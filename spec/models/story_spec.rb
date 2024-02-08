@@ -19,14 +19,6 @@ describe Story do
     )
   end
 
-  it "has a limit on the twitter id field" do
-    s = build(:story)
-    s.twitter_id = "Z" * 25
-
-    s.valid?
-    expect(s.errors[:twitter_id]).to eq(["is too long (maximum is 20 characters)"])
-  end
-
   it "requires a url or a description" do
     expect { create(:story, title: "hello", url: "", description: "") }.to raise_error
 

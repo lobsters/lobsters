@@ -2,7 +2,7 @@
 
 class Mastodon
   def self.enabled?
-    Mastodon::TOKEN.present?
+    defined?(Mastodon::TOKEN.present?)
   end
 
   # these need to be overridden in config/initializers/production.rb

@@ -26,11 +26,6 @@ if Rails.env.production?
 
   DiffBot.DIFFBOT_API_KEY = "secret"
 
-  Twitter.CONSUMER_KEY = "secret"
-  Twitter.CONSUMER_SECRET = "secret"
-  Twitter.AUTH_TOKEN = "secret"
-  Twitter.AUTH_SECRET = "secret"
-
   Github.CLIENT_ID = "secret"
   Github.CLIENT_SECRET = "secret"
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_07_151341) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_08_024935) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "category"
     t.datetime "created_at", precision: nil, null: false
@@ -224,7 +224,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_07_151341) do
     t.index ["normalized_url"], name: "index_stories_on_normalized_url"
     t.index ["score"], name: "index_stories_on_score"
     t.index ["short_id"], name: "unique_short_id", unique: true
-    t.index ["twitter_id"], name: "index_stories_on_twitter_id"
     t.index ["url"], name: "url", length: 191
     t.index ["user_id"], name: "index_stories_on_user_id"
   end

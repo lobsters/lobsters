@@ -38,7 +38,7 @@ gem "memory_profiler"
 gem "rack-mini-profiler"
 gem "stackprof"
 
-gem "oauth" # for twitter-posting bot
+gem "oauth" # for linking accounts
 gem "mail" # for parsing incoming mail
 gem "sitemap_generator" # for better search engine indexing
 gem "svg-graph", require: "SVG/Graph/TimeSeries" # for charting, note workaround in lib/time_series.rb

@@ -7,7 +7,7 @@ require File.expand_path("../../config/boot", __FILE__)
 require APP_PATH
 Rails.application.require_environment!
 
-exit unless Mastodon.enabled? && Mastodon::BOT_NAME
+exit unless Mastodon.enabled? && Mastodon.BOT_NAME
 
 Story.to_mastodon.each_with_index do |s, i|
   if i > 0

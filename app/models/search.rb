@@ -281,9 +281,12 @@ class Search
     if terms.any?
       terms_sql = <<~SQL.tr("\n", " ")
         MATCH(story_texts.title, story_texts.description, story_texts.body)
-        AGAINST ('#{terms.map { |s| "+#{s}" }.join(", ")}' in boolean mode)
+        AGAINST (? in boolean mode)
+        OR MATCH(story_texts.title)
+        AGAINST (?)
       SQL
-      query.joins!(:story_text).where! terms_sql
+      sanitized_terms = terms.map { |s| "+#{s}" }.join(" ")
+      query.joins!(:story_text).where!(terms_sql, sanitized_terms, sanitized_terms)
     end
     if tags
       # This searches tags by subquery because otherwise Rails recognizes the join against tags and

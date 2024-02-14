@@ -4,7 +4,12 @@ Disallow: /search
 Disallow: /page/
 Disallow: /comments/page/
 
+# https://lobste.rs/s/ybowdq/great_gpt_firewall
 User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: Google-Extended
+User-agent: anthropic-ai
+User-agent: CCBot
 Disallow: /
 
 # SEO/spam tools

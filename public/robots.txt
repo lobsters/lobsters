@@ -5,29 +5,26 @@ Disallow: /page/
 Disallow: /comments/page/
 
 # https://lobste.rs/s/ybowdq/great_gpt_firewall
-User-agent: GPTBot
-User-agent: ChatGPT-User
-User-agent: Google-Extended
 User-agent: anthropic-ai
+User-agent: Bytespider
 User-agent: CCBot
-Disallow: /
+User-agent: ChatGPT-User
+User-agent: FacebookBot
+User-agent: Google-Extended
+User-agent: GPTBot
+User-agent: Omgili
+User-agent: Omgilibot
 
 # SEO/spam tools
+User-agent: BLEXBot
 User-agent: SemrushBot
-Disallow: /
-User-agent: SiteAuditBot
-Disallow: /
 User-agent: SemrushBot-BA
-Disallow: /
-User-agent: SemrushBot-SI
-Disallow: /
-User-agent: SemrushBot-SWA
-Disallow: /
+User-agent: SemrushBot-COUB
 User-agent: SemrushBot-CT
-Disallow: /
+User-agent: SemrushBot-SI
+User-agent: SemrushBot-SWA
+User-agent: SiteAuditBot
 User-agent: SplitSignalBot
 Disallow: /
-User-agent: SemrushBot-COUB
-Disallow: /
-User-agent: BLEXBot
-Disallow: /
+
+

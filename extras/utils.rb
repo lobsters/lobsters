@@ -10,8 +10,12 @@ class Utils
 
     url.slice! %r{#.*$} # remove anchor
     url.slice! %r{/$} # remove trailing slash
-    url.slice! %r{/index.html$} # remove index.html
     url = url.sub %r{\.htm$}, ".html" # fix microsoft naming
+
+    # remove some common "directory index" pages that are commonly served for dirs
+    url.slice! %r{/index\.html$}
+    url.slice! %r{/index\.php}
+    url.slice! %r{/Default\.aspx$}
 
     url.slice! %r{https?://} # consider http and https the same
     url.slice! %r{^(www\d*\.)} # remove www\d* from domain

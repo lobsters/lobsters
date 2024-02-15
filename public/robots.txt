@@ -14,6 +14,7 @@ User-agent: Google-Extended
 User-agent: GPTBot
 User-agent: Omgili
 User-agent: Omgilibot
+Disallow: /
 
 # SEO/spam tools
 User-agent: BLEXBot
@@ -26,5 +27,3 @@ User-agent: SemrushBot-SWA
 User-agent: SiteAuditBot
 User-agent: SplitSignalBot
 Disallow: /
-
-

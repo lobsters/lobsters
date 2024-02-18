@@ -17,7 +17,7 @@ Story.to_mastodon.each_with_index do |s, i|
   tags = s.tags.pluck(:tag).map { |t| " #" + t }.join("")
 
   via = if s.user.mastodon_username.present?
-    (s.user_is_author? ? "by" : "via") + " @#{s.user.mastodon_username}@#{s.user.mastodon_instance}"
+    (s.user_is_author? ? " by" : " via") + " @#{s.user.mastodon_username}@#{s.user.mastodon_instance}"
   else
     " "
   end

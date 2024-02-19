@@ -220,14 +220,6 @@ class User < ApplicationRecord
     )
   end
 
-  def average_karma
-    if karma == 0
-      0
-    else
-      karma.to_f / (stories_submitted_count + comments_posted_count)
-    end
-  end
-
   def disable_invite_by_user_for_reason!(disabler, reason)
     User.transaction do
       self.disabled_invite_at = Time.current

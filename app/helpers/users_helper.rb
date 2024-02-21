@@ -61,7 +61,7 @@ module UsersHelper
     if user.is_admin?
       "(administrator)"
     elsif user.is_moderator?
-      "(moderator"
+      "(moderator)"
     else
       "(#{user.karma})"
     end

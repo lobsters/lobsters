@@ -516,7 +516,7 @@ class Story < ApplicationRecord
       if is_moderated?
         false
       else
-        (Time.current.to_i - created_at.to_i < (60 * MAX_EDIT_MINS))
+        created_at.after?(MAX_EDIT_MINS.minutes.ago)
       end
     else
       false
@@ -871,6 +871,8 @@ class Story < ApplicationRecord
 
   def url_is_editable_by_user?(user)
     if new_record?
+      true
+    elsif !is_moderated? && created_at.after?(MAX_EDIT_MINS.minutes.ago)
       true
     else
       user&.is_moderator?

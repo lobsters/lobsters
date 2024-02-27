@@ -45,4 +45,16 @@ describe "home", type: :request do
       expect(response.body).to include('<span class="merge">')
     end
   end
+
+  describe "rss" do
+    it "renders" do
+      link = create(:story)
+      text = create(:story, url: nil, description: "text post")
+
+      get "/rss"
+      expect(response).to be_successful
+      expect(response.body).to include(link.title)
+      expect(response.body).to include(text.title)
+    end
+  end
 end

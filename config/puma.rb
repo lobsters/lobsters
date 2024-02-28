@@ -8,7 +8,7 @@ require "etc"
 # the maximum value specified for Puma. Default is set to 5 threads for minimum
 # and maximum; this matches the default thread size of Active Record.
 #
-threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
+threads_count = ENV.fetch("RAILS_MAX_THREADS") { 4 }
 threads threads_count, threads_count
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
@@ -32,7 +32,7 @@ pidfile ENV.fetch("PIDFILE") {
 # the concurrency of the application would be max `threads` * `workers`.
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
-workers ENV.fetch("PUMA_WORKERS") { 4 }
+workers ENV.fetch("PUMA_WORKERS") { 3 }
 
 # In prod we run dozens of workers on a 4 core cpu. Puma starts all of them at
 # the same time, pinning the CPU until the box is unresponsive. Where one

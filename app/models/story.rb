@@ -408,6 +408,7 @@ class Story < ApplicationRecord
       return
     end
 
+    Prosopite.pause
     taggings.each do |t|
       if !t.tag.can_be_applied_by?(u) && t.tag.privileged?
         raise "#{u.username} does not have permission to use privileged tag #{t.tag.tag}"
@@ -427,6 +428,7 @@ class Story < ApplicationRecord
         "tag.  If no tags apply to your content, it probably doesn't " \
         "belong here.")
     end
+    Prosopite.resume
   end
 
   def comments_path

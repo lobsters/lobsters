@@ -20,7 +20,54 @@
     <li>and <a href="#features">many more features</a> that have been added over the years.</li>
   </ul>
 
-  <h2 id="tagging">Tags and Topicality</h2>
+
+  <h2 id="guidelines">Guidelines</h2>
+
+  <p>
+    <strong>Climate</strong>:
+    Lobsters is more of a garden party than a debate club.
+    We're learning things we didn't know to be curious about and sharing what we've made.
+    Disagreements are normal but fights are not; it's OK to make your point, share a resource, and <a href="https://xkcd.com/386">let someone be wrong</a>.
+    Abuse and bigotry are unwelcome.
+  </p>
+
+  <div id="topicality">
+    <p>
+    <strong>Topicality</strong>:
+    Lobsters is focused pretty narrowly on computing; tags like <a href="/t/art">art</a> don't imply every piece of art is on-topic.
+    Some rules of thumb for great stories to submit:
+    Will this improve the reader's next program?
+    Will it deepen their understanding of their last program?
+    Will it be more interesting in five or ten years?
+    </p>
+
+    <p>
+    Some things that are off-topic here but popular on larger, similar sites:
+    entrepreneurship, management, news about companies that employ a lot of programmers,
+    investing, world events, anthropology, self-help, personal productivity systems,
+    last-resort customer service requests via public shaming,
+    "I wanted to see what this site's amazing users think about this off-topic thing",
+    and
+    defining the single morally correct economic and political system for the entire world when we can't even settle tabs vs. spaces.
+    </p>
+  </div>
+
+  <p>
+    <strong>Brigading</strong>:
+    Lobsters is not to be used to whip up an outrage mob and direct them at targets, especially individuals and small projects.
+    It always feels righteous at first and becomes an awful tool for abuse.
+    There isn't a clear-cut line between this and discussing trends and advocating for improvements in the field, so expect frustrating judgement calls.
+  </p>
+
+  <p id="self-promo">
+    <strong>Self-promotion</strong>:
+    It's great to have authors participate in the community,
+    but not to exploit it as a write-only tool for product announcements or driving traffic to their work.
+    As a rule of thumb, self-promo should be less than a quarter of one's stories and comments.
+  </p>
+
+
+  <h2 id="tagging">Tags</h2>
   <p>
   When links or stories are submitted, they must be tagged by the submitter from a list of predefined <a href="/tags">tags</a>.
   Users can choose to <a href="/filters">filter</a> out or
@@ -68,22 +115,6 @@
   Explain the scope, list existing stories that should have been tagged, make a case for why people would want to specifically filter it out, and justify the increased complexity for submitters and mods.
   </p>
 
-  <div id="topicality">
-    <p>
-    Lobsters is focused pretty narrowly on computing; tags like <a href="/t/art">art</a> don't imply every piece of art is on-topic.
-    Some rules of thumb for great stories to submit: Will this improve the reader's next program? Will it deepen their understanding of their last program? Will it be more interesting in five or ten years?
-    </p>
-
-    <p>
-    Some things that are off-topic here but popular on larger, similar sites:
-    entrepreneurship, management, news about companies that employ a lot of programmers,
-    investing, world events, anthropology, self-help, personal productivity systems,
-    last-resort customer service requests via public shaming,
-    "I wanted to see what this site's amazing users think about this off-topic thing",
-    and
-    defining the single morally correct economic and political system for the entire world when we can't even settle tabs vs. spaces.
-    </p>
-  </div>
 
   <h2 id="invitations">Invitation Tree</h2>
   <p>
@@ -112,7 +143,7 @@
 
   <p>
   The quickest way to receive an invitation is to talk to someone you <%= link_to 'recognize from the site', users_tree_path %>.
-  If you wrote a link that was posted, please reach out in <a href="/chat">chat</a>, we'd love to have you join the discussion.
+  If you wrote a link that was posted, please reach out in <a href="/chat">chat</a>, we'd love to have you <a href="#self-promo">join the community</a>.
   Finally, if you can't find anyone you know in the invitation tree and didn't author something posted to the site,
   <% if Rails.application.allow_invitation_requests? %>
     you can <a href="/invitations/request">request an invite</a>.
@@ -128,15 +159,16 @@
   moderators will consider disabling their inviter's ability to send invitations or, rarely, also ban them.
   </p>
 
+
   <h2 id="ranking">Ranking</h2>
   <p>
   All story and comment ranking on this site comes from user activity.
   All users have equal votes, with no special priorities or penalties for specific users or domains.
   Moderators have no ability to raise or <a href="http://www.righto.com/2013/11/how-hacker-news-ranking-really-works.html">lower</a> the rankings of stories or comments (besides voting like any user).
-  Per-tag <a href="/filters">hotness modifiers</a> affect all stories with
-  those tags, but these modifiers (and <a href="https://lobste.rs/moderations?utf8=%E2%9C%93&moderator=(All)&what[tags]=tags">changes</a> to them) are public.
+  Per-tag <a href="/filters">hotness modifiers</a> affect all stories with those tags;
+  these modifiers (and <a href="https://lobste.rs/moderations?utf8=%E2%9C%93&moderator=(All)&what[tags]=tags">changes</a> to them) are public.
   Domains used for marketing analytics are banned and tracking parameters are removed from links
-  (look for <tt>TRACKING_DOMAINS</tt> and <tt>utm_</tt> in <a href="https://github.com/lobsters/lobsters/blob/master/app/models/story.rb">story.rb</a>).
+  (look for <tt>utm_</tt> in <a href="https://github.com/lobsters/lobsters/blob/master/app/models/story.rb">story.rb</a>).
   </p>
 
   <div id="flags">
@@ -170,6 +202,7 @@
   Users whose stories or comments are getting flagged significantly more often are strongly encouraged to talk to mods about what's not working.
   (Please don't use flagging to try to push down topics or people you don't like; click "hide" on the story and <a href="https://xkcd.com/386">move on</a> rather than clutter up the mod dashboard with false alarms.)
   </p>
+
 
   <h2 id="transparency">Transparency Policy</h2>
   <p>
@@ -209,6 +242,7 @@
   <a href="https://en.wikipedia.org/wiki/Comp.*_hierarchy">comp.*</a>.
   Or you could use <a href="https://github.com/lobsters/lobsters/">our codebase</a> to start your own site.
   </p>
+
 
   <h2 id="features">Other Technical Features</h2>
 
@@ -301,6 +335,7 @@
   with a bleed &lt;= 1/16" (preferably full-bleed) directly to people who want them.
   </p></li>
   </ul>
+
 
   <h2 id="trivia">Trivia</h2>
 

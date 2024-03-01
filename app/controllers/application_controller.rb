@@ -103,10 +103,7 @@ class ApplicationController < ActionController::Base
     return true if Rails.application.read_only? ||
       agent_is_spider? ||
       %w[json rss].include?(params[:format])
-    if (skip = TrafficHelper.novelty_logo)
-      @traffic_style = skip
-      return
-    end
+    return if (@traffic_novelty = TrafficHelper.novelty_logo)
 
     @traffic_intensity = TrafficHelper.cached_current_intensity
     # map intensity to 80-255 so there's always a little red

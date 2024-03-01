@@ -61,11 +61,30 @@ module TrafficHelper
 
   def self.novelty_logo
     time = Time.current
+    h = ActionController::Base.helpers
 
-    if time.month == 6 && time.day == 28 # Stonewall riots
-      return "background: linear-gradient(180deg, #FE0000 16.66%, #FD8C00 16.66%, 33.32%, #FFE500 33.32%, 49.98%, #119F0B 49.98%, 66.64%, #0644B3 66.64%, 83.3%, #C22EDC 83.3%);"
+    if time.month == 3 && time.day <= 7 && time.monday?
+      return h.content_tag(:a,
+        "",
+        href: "https://en.wikipedia.org/wiki/Casimir_Pulaski_Day",
+        style: "
+          width: 17px;
+          height: 32px;
+          padding: 1px;
+          margin-left: -22px;
+          margin-bottom: -16px;
+          top: 16px;
+          background-image:
+            radial-gradient(circle at 18% 63%, var(--color-bg) 15%, transparent 12.8%),
+            radial-gradient(circle at 23% 70%, var(--color-fg) 15%, transparent 12.8%),
+            radial-gradient(circle at 82% 63%, var(--color-bg) 15%, transparent 12.8%),
+            radial-gradient(circle at 77% 70%, var(--color-fg) 15%, transparent 12.8%),
+            linear-gradient(180deg, var(--color-bg) 0, var(--color-bg) 100%);
+        ")
+    elsif time.month == 6 && time.day == 28 # Stonewall riots
+      return h.content_tag :style, "#logo { background: linear-gradient(180deg, #FE0000 16.66%, #FD8C00 16.66%, 33.32%, #FFE500 33.32%, 49.98%, #119F0B 49.98%, 66.64%, #0644B3 66.64%, 83.3%, #C22EDC 83.3%); }"
     elsif time.month == 12 && time.day == 25 # Christmas
-      return "background: conic-gradient(at 50% 0, #9f3631 157.5deg, #01c94f 0, #01c94f 202.5deg, #9f3631 0);"
+      return h.content_tag :style, "#logo { background: conic-gradient(at 50% 0, #9f3631 157.5deg, #01c94f 0, #01c94f 202.5deg, #9f3631 0); }"
     end
 
     nil

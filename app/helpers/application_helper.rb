@@ -26,7 +26,12 @@ module ApplicationHelper
       html << "<p>There were the problems with the following fields:</p>"
       html << "<ul>"
       object.errors.full_messages.each do |error|
-        html << "<li>#{error}</li>"
+        html << if error == "Comments is invalid"
+          # FIXME Ugly kludge, I don't know where this validation is defined to fix the wording
+          "<li>Comment is missing</li>"
+        else
+          "<li>#{error}</li>"
+        end
       end
       html << "</ul></div>"
     end

@@ -22,10 +22,7 @@ class CommentsController < ApplicationController
     comment = story.comments.build
     comment.comment = params[:comment].to_s
     comment.user = @user
-
-    if params[:hat_id] && @user.wearable_hats.where(id: params[:hat_id])
-      comment.hat_id = params[:hat_id]
-    end
+    comment.hat = @user.wearable_hats.find_by(id: params[:hat_id])
 
     if params[:parent_comment_short_id].present?
       # includes parent story_id to ensure this comment's story_id matches

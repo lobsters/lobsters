@@ -149,8 +149,7 @@ class Story < ApplicationRecord
 
   attr_accessor :current_vote, :editing_from_suggestions, :editor, :fetching_ip,
     :is_hidden_by_cur_user, :latest_comment_id,
-    :is_saved_by_cur_user, :moderation_reason, :previewing,
-    :seen_previous
+    :is_saved_by_cur_user, :moderation_reason, :previewing
   attr_writer :fetched_response
 
   before_validation :assign_short_id_and_score, on: :create
@@ -197,7 +196,7 @@ class Story < ApplicationRecord
     if most_recent_similar&.is_recent?
       errors.add(:url, "has already been submitted within the past #{RECENT_DAYS} days")
       true
-    elsif most_recent_similar && user&.is_new?
+    elsif user&.is_new? && most_recent_similar
       errors.add(:url, "cannot be resubmitted by new users")
       true
     else
@@ -225,6 +224,10 @@ class Story < ApplicationRecord
       ModNote.tattle_on_story_domain!(self, "banned")
       errors.add(:url, "is from banned domain #{domain.domain}: #{domain.banned_reason}")
     end
+  end
+
+  def comments_closing_soon?
+    created_at && (created_at - 1.hour).before?(Story::COMMENTABLE_DAYS.days.ago)
   end
 
   # current_vote is the vote loaded for the currently-viewing user
@@ -263,6 +266,10 @@ class Story < ApplicationRecord
 
   def public_similar_stories(user)
     @_public_similar_stories ||= similar_stories.base(user)
+  end
+
+  def is_resubmit?
+    !already_posted_recently? && similar_stories.any?
   end
 
   def most_recent_similar

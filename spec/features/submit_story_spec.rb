@@ -122,17 +122,41 @@ RSpec.feature "Submitting Stories", type: :feature do
       select :tag1, from: "Tags"
       click_button "Submit"
 
-      # TODO: would be nice if this had a specific error message
+      # TODO: would be nice if this had a specific error message #941
       expect(page).to have_content "has already been submitted"
     }.not_to(change { Story.count })
   end
 
-  scenario "resubmitting an old link" do
-    s = create(:story, created_at: (Story::RECENT_DAYS + 1).days.ago)
-    visit "/stories/new?url=#{s.url}"
+  context "resubmitting an old link" do
+    scenario "prompts user to start a conversation" do
+      s = create(:story, created_at: (Story::RECENT_DAYS + 1).days.ago)
+      visit "/stories/new?url=#{s.url}"
 
-    expect(page).to have_content "submit it again"
-    expect(page).to have_content "Previous discussions"
+      expect(page).to have_content "submitted before"
+      expect(page).to have_field :comment
+    end
+
+    scenario "without a comment doesn't work" do
+      s = create(:story, created_at: (Story::RECENT_DAYS + 1).days.ago)
+      visit "/stories/new?url=#{s.url}"
+      click_button "Submit"
+
+      expect(page).to have_content "submitted before"
+      expect(page).to have_content "is missing"
+    end
+
+    scenario "with a conversation starter works" do
+      s = create(:story, created_at: (Story::RECENT_DAYS + 1).days.ago)
+      visit "/stories/new?url=#{s.url}"
+      fill_in "comment", with: <<~COMMENT
+        Well, everyone knows Custer died at Little Bighorn.
+        What this book presupposes is... maybe he didn't.
+      COMMENT
+      click_button "Submit"
+
+      expect(page).to have_content s.title
+      expect(page).to have_content "maybe he didn't"
+    end
   end
 
   scenario "submitting a banned domain" do

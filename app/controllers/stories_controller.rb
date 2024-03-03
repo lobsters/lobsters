@@ -19,11 +19,25 @@ class StoriesController < ApplicationController
     @story = Story.new(user: @user)
     @story.attributes = story_params
 
-    if @story.valid? && !(@story.already_posted_recently? && !@story.seen_previous)
-      if @story.save
-        ReadRibbon.where(user: @user, story: @story).first_or_create!
-        return redirect_to @story.comments_path
+    if @story.is_resubmit?
+      @comment = @story.comments.new(user: @user)
+      @comment.comment = params[:comment]
+      @comment.hat = @user.wearable_hats.find_by(id: params[:hat_id])
+    end
+
+    if @story.valid? &&
+        !@story.already_posted_recently? &&
+        (!@story.is_resubmit? || @comment.valid?)
+
+      Story.transaction do
+        if @story.save && (!@story.is_resubmit? || @comment.save)
+          ReadRibbon.where(user: @user, story: @story).first_or_create!
+          redirect_to @story.comments_path
+        else
+          raise ActiveRecord::Rollback
+        end
       end
+      return if @story.persisted? # can't return out of transaction block
     end
 
     render action: "new"
@@ -97,6 +111,12 @@ class StoriesController < ApplicationController
         return redirect_to @story.most_recent_similar.comments_path
       end
 
+      if @story.is_resubmit?
+        @comment = @story.comments.new(user: @user)
+        @comment.comment = params[:comment]
+        @comment.hat = @user.wearable_hats.find_by(id: params[:hat_id])
+      end
+
       # ignore what the user brought unless we need it as a fallback
       @story.title = sattrs[:title]
       if @story.title.blank? && params[:title].present?
@@ -114,8 +134,6 @@ class StoriesController < ApplicationController
     @story.score = 1
 
     @story.valid?
-
-    @story.seen_previous = true
 
     render action: "new", layout: false
   end
@@ -416,7 +434,7 @@ class StoriesController < ApplicationController
 
   def story_params
     p = params.require(:story).permit(
-      :title, :url, :description, :moderation_reason, :seen_previous,
+      :title, :url, :description, :moderation_reason,
       :merge_story_short_id, :is_unavailable, :user_is_author, :user_is_following,
       tags_a: []
     )

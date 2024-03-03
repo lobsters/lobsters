@@ -292,4 +292,12 @@ describe "stories", type: :request do
       expect(Vote.where(user: user).count).to eq(0)
     end
   end
+
+  describe "adding suggestions to a story"
+
+  describe "user editing an editable story"
+
+  describe "user editing a story too late"
+
+  describe "mod editing a story"
 end

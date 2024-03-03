@@ -3,25 +3,28 @@
   <div class="form_errors_header">
     <% if story.errors.any? %>
       <%= errors_for story %>
-    <% elsif !story.errors.any? && story.similar_stories.any? %>
+    <% end %>
+    <% if story.is_resubmit? %>
       <div class="flash-notice">
-        <h2>Note: This story was already submitted <%= time_ago_in_words_label(story.most_recent_similar.created_at) %></h2>
         <p>
-        You can submit it again if the content has changed or warrants new discussion.
-        Please post a comment about that to start.
+          This story has been submitted before. You can resubmit it with a comment to start a fresh discussion.
         </p>
+
+        <%= render partial: "stories/similar", locals: { similar: story.similar_stories } %>
       </div>
 
-      <% if f %>
-        <%= f.hidden_field :seen_previous %>
-      <% else %>
-        <%= form_with model: story do |f| %>
-          <%= f.hidden_field :seen_previous %>
-        <% end %>
-      <% end %>
-    <% end %>
+      <div>
+        <div class="d">
+          <strong>What has changed or warrants new discussion?</strong><br>
+          (Not just that you think it's still interesting or read it for the first time.)
+          <br><br>
+        </div>
 
-    <% if story.similar_stories.any? %>
+        <%= label_tag :comment, "Comment:" %>
+        <%= text_area_tag "comment", @comment&.comment, :rows => 5 %>
+        <br><br>
+      </div>
+    <% elsif story.similar_stories.any? %>
       <p>Previous discussions for this story:</p>
       <%= render partial: "stories/similar", locals: { similar: story.similar_stories } %>
     <% end %>

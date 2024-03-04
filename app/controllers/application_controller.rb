@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :mini_profiler
   before_action :prepare_exception_notifier
   before_action :set_traffic_style
+  around_action :n_plus_one_detection
 
   # 2023-10-07 one user in one of their browser envs is getting a CSRF failure, I'm reverting
   # because I'll be AFK a while.
@@ -187,5 +188,12 @@ class ApplicationController < ActionController::Base
     @_tags_filtered ||= Tag.where(
       tag: cookies[TAG_FILTER_COOKIE].to_s.split(",")
     )
+  end
+
+  def n_plus_one_detection
+    Prosopite.scan
+    yield
+  ensure
+    Prosopite.finish
   end
 end

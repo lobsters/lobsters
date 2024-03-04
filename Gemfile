@@ -37,6 +37,7 @@ gem "flamegraph"
 gem "memory_profiler"
 gem "rack-mini-profiler"
 gem "stackprof"
+gem "prosopite"
 
 gem "oauth" # for linking accounts
 gem "mail" # for parsing incoming mail

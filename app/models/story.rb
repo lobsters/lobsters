@@ -415,6 +415,8 @@ class Story < ApplicationRecord
       return
     end
 
+    # ignored to manage tags_a for nicer UI and because the n is typically 2-5 tags
+    Prosopite.pause
     taggings.each do |t|
       if !t.tag.can_be_applied_by?(u) && t.tag.privileged?
         raise "#{u.username} does not have permission to use privileged tag #{t.tag.tag}"
@@ -428,6 +430,8 @@ class Story < ApplicationRecord
         raise "#{u.username} cannot add inactive tag #{t.tag.tag}"
       end
     end
+
+    Prosopite.resume
 
     if taggings.reject { |t| t.marked_for_destruction? || t.tag.is_media? }.empty?
       errors.add(:base, "Must have at least one non-media (PDF, video) " \

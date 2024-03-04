@@ -203,6 +203,7 @@ GEM
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
+    prosopite (1.4.2)
     psych (5.1.2)
       stringio
     public_suffix (5.0.4)
@@ -416,6 +417,7 @@ DEPENDENCIES
   oauth
   parslet
   pdf-reader
+  prosopite
   puma
   rack-attack
   rack-mini-profiler

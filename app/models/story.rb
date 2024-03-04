@@ -408,6 +408,7 @@ class Story < ApplicationRecord
       return
     end
 
+    # ignored to manage tags_a for nicer UI and because the n is typically 2-5 tags
     Prosopite.pause
     taggings.each do |t|
       if !t.tag.can_be_applied_by?(u) && t.tag.privileged?

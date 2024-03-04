@@ -67,11 +67,12 @@ module TrafficHelper
       return h.content_tag(:a,
         "",
         href: "https://en.wikipedia.org/wiki/Casimir_Pulaski_Day",
+        class: "casimir",
         style: "
           width: 17px;
           height: 32px;
           padding: 1px;
-          margin-left: -22px;
+          margin-left: -21px;
           margin-bottom: -16px;
           top: 16px;
           background-image:
@@ -79,8 +80,16 @@ module TrafficHelper
             radial-gradient(circle at 23% 70%, var(--color-fg) 15%, transparent 12.8%),
             radial-gradient(circle at 82% 63%, var(--color-bg) 15%, transparent 12.8%),
             radial-gradient(circle at 77% 70%, var(--color-fg) 15%, transparent 12.8%),
-            linear-gradient(180deg, var(--color-bg) 0, var(--color-bg) 100%);
-        ")
+            linear-gradient(180deg, transparent 0, transparent 100%);
+      ") <<
+          h.content_tag(:style, "@media only screen and (max-width: 480px) {.casimir {
+            background-image:
+              radial-gradient(circle at 18% 63%, var(--color-box-bg-shaded) 15%, transparent 12.8%),
+              radial-gradient(circle at 23% 70%, var(--color-fg) 15%, transparent 12.8%),
+              radial-gradient(circle at 82% 63%, var(--color-box-bg-shaded) 15%, transparent 12.8%),
+              radial-gradient(circle at 77% 70%, var(--color-fg) 15%, transparent 12.8%),
+              linear-gradient(180deg, transparent 0, transparent 100%) !important;
+} }")
     elsif time.month == 6 && time.day == 28 # Stonewall riots
       return h.content_tag :style, "#logo { background: linear-gradient(180deg, #FE0000 16.66%, #FD8C00 16.66%, 33.32%, #FFE500 33.32%, 49.98%, #119F0B 49.98%, 66.64%, #0644B3 66.64%, 83.3%, #C22EDC 83.3%); }"
     elsif time.month == 12 && time.day == 25 # Christmas

@@ -79,18 +79,25 @@ describe Comment do
     recipient = create(:user)
     recipient.settings["email_notifications"] = true
     recipient.settings["email_mentions"] = true
-    # Need to save, because deliver_mention_notifications re-fetches from DB.
     recipient.save!
 
     sender = create(:user)
-    # Story under which the comment is posted.
-    story = create(:story)
-    # The comment.
-    c = build(:comment, story: story, user: sender, comment: "@#{recipient.username}")
+    c = build(:comment, user: sender, comment: "@#{recipient.username}")
 
     c.save!
     expect(sent_emails.size).to eq(1)
     expect(sent_emails[0].subject).to match(/Mention from #{sender.username}/)
+  end
+
+  it "also sends mentions with ~username" do
+    recipient = create(:user)
+    recipient.settings["email_notifications"] = true
+    recipient.settings["email_mentions"] = true
+    recipient.save!
+
+    c = build(:comment, comment: "~#{recipient.username}")
+    c.save!
+    expect(sent_emails.size).to eq(1)
   end
 
   it "sends only reply notification on reply with mention" do

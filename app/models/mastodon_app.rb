@@ -49,6 +49,8 @@ class MastodonApp < ApplicationRecord
     errors.add :base, "#{name} isn't resolving to an IP"
   rescue OpenSSL::SSL::SSLError
     errors.add :base, "#{name} isn't a working SSL server"
+  rescue URI::InvalidURIError
+    errors.add :base, "#{name} isn't a valid URL"
   end
 
   def token_and_user_from_code(code)
@@ -127,6 +129,7 @@ class MastodonApp < ApplicationRecord
   def self.sanitized_instance_name(instance_name)
     instance_name
       .to_s
+      .strip
       .delete_prefix("https://")
       .split("/").first
       .split("@").last

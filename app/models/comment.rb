@@ -563,8 +563,7 @@ class Comment < ApplicationRecord
   def vote_summary_for_user(u)
     r_counts = {}
     r_users = {}
-    # don't includes(:user) here and assume the caller did this already
-    votes.each do |v|
+    votes.includes(:user).each do |v|
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += v.vote
 

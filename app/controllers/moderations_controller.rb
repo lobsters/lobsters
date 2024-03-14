@@ -22,7 +22,7 @@ class ModerationsController < ApplicationController
 
     @moderations = Moderation.all.eager_load(:moderator,
       :story,
-      :comment,
+      {comment: [:story, :user]},
       :tag,
       :user,
       :domain,

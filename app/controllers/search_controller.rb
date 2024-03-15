@@ -21,7 +21,7 @@ class SearchController < ApplicationController
       end
       @search.results.each do |r|
         r.current_vote = votes.try(:[], r.id)
-        r.vote_summary = summaries[r.id]
+        r.vote_summary = summaries[r.id] if params[:what] == "comments"
       end
     end
   end

@@ -17,6 +17,7 @@ class Story < ApplicationRecord
     autosave: true,
     dependent: :destroy
   has_many :suggested_taggings, dependent: :destroy
+  has_many :suggested_tags, source: :story, through: :suggested_taggings, dependent: :destroy
   has_many :suggested_titles, dependent: :destroy
   has_many :suggested_tagging_times,
     -> { group(:tag_id).select("count(*) as times, tag_id").order("times desc") },
@@ -38,9 +39,9 @@ class Story < ApplicationRecord
   has_many :savings, class_name: "SavedStory", inverse_of: :story, dependent: :destroy
   has_one :story_text, foreign_key: :id, dependent: :destroy, inverse_of: :story
 
-  scope :base, ->(user) { includes(:tags).not_deleted(user).unmerged.mod_preload?(user) }
+  scope :base, ->(user) { includes(:story_text, :user).not_deleted(user).unmerged.mod_preload?(user) }
   scope :for_presentation, -> {
-    includes(:domain, :user, taggings: :tag)
+    includes(:domain, :user, :tags, taggings: :tag)
   }
   scope :mod_preload?, ->(user) {
     user.try(:is_moderator?) ? preload(:suggested_taggings, :suggested_titles) : all
@@ -310,7 +311,7 @@ class Story < ApplicationRecord
       {description: :markeddown_description},
       {description_plain: :description},
       :comments_url,
-      {submitter_user: :user},
+      {submitter_user: user.username},
       :user_is_author,
       {tags: tags.map(&:tag).sort}
     ]
@@ -403,8 +404,8 @@ class Story < ApplicationRecord
     u = editor || user
 
     if u&.is_new? &&
-        (unpermitted = taggings.filter { |t| !t.tag.permit_by_new_users? }).any?
-      tags = unpermitted.map { |t| t.tag.tag }.to_sentence
+        (unpermitted = Tag.where(id: taggings.map(&:tag_id), permit_by_new_users: false)).any?
+      tags = unpermitted.map(&:tag).to_sentence
       errors.add :base, <<-EXPLANATION
         New users can't submit stories with the tag(s) #{tags}
         because they're for meta discussion or prone to off-topic stories.
@@ -666,7 +667,10 @@ class Story < ApplicationRecord
   end
 
   def tags_a
-    @_tags_a ||= taggings.reject(&:marked_for_destruction?).map { |t| t.tag.tag }
+    @_tags_a ||= taggings
+      .includes(:tag)
+      .reject(&:marked_for_destruction?)
+      .map { |t| t.tag.tag }
   end
 
   def tags_a=(new_tag_names_a)
@@ -676,45 +680,23 @@ class Story < ApplicationRecord
       end
     end
 
-    new_tag_names_a.uniq.each do |tag_name|
-      if tag_name.to_s != "" && !tags.exists?(tag: tag_name)
-        if (t = Tag.active.find_by(tag: tag_name))
-          # we can't lookup whether the user is allowed to use this tag yet
-          # because we aren't assured to have a user_id by now; we'll do it in
-          # the validation with check_tags
-          taggings.build(tag_id: t.id)
-        end
-      end
+    new_tags = Tag.where(tag: new_tag_names_a.uniq.compact_blank - tags.pluck(:tag))
+    new_tags.each do |t|
+      # we can't lookup whether the user is allowed to use this tag yet
+      # because we aren't assured to have a user_id by now; we'll do it in
+      # the validation with check_tags
+      taggings.build(tag_id: t.id)
     end
   end
 
   def save_suggested_tags_a_for_user!(new_tag_names_a, user)
-    st = suggested_taggings.where(user_id: user.id)
+    suggested_taggings.where(user_id: user.id).destroy_all
 
-    st.each do |tagging|
-      if !new_tag_names_a.include?(tagging.tag.tag)
-        tagging.destroy!
-      end
-    end
-
-    st.reload
-
-    new_tag_names_a.each do |tag_name|
-      # XXX: AR bug? st.exists?(:tag => tag_name) does not work
-      if tag_name.to_s != "" && !st.map { |x| x.tag.tag }.include?(tag_name)
-        if (t = Tag.active.find_by(tag: tag_name)) &&
-            t.can_be_applied_by?(user)
-          tg = suggested_taggings.build
-          tg.user_id = user.id
-          tg.tag_id = t.id
-          tg.save!
-
-          st.reload
-        else
-          next
-        end
-      end
-    end
+    new_tags = Tag
+      .active
+      .where(tag: new_tag_names_a.uniq.compact_blank)
+      .map { |t| {user: user, tag: t} }
+    suggested_taggings.create!(new_tags)
 
     # if enough users voted on the same set of replacement tags, do it
     tag_votes = {}

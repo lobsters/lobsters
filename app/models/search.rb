@@ -226,7 +226,7 @@ class Search
   end
 
   def perform_story_search!
-    query = Story.base(@user).for_presentation
+    query = Story.base(@searcher).for_presentation
 
     terms = []
     n_domains = 0

@@ -228,8 +228,8 @@ class StoriesController < ApplicationController
     end
 
     story_user = @story.user
-    inappropriate_tags = params[:story][:tags_a].reject { |t| t.to_s.strip == "" }
-      .map { |t| Tag.find_by tag: t }
+    inappropriate_tags = Tag
+      .where(tag: params[:story][:tags_a].reject { |t| t.to_s.blank? })
       .reject { |t| t.can_be_applied_by?(story_user) }
     if inappropriate_tags.length > 0
       tag_error = ""
@@ -259,12 +259,11 @@ class StoriesController < ApplicationController
         dsug = true
       end
 
-      sugtags = params[:story][:tags_a].reject { |t| t.to_s.strip == "" }
-        .sort
-        .reject { |t|
-        !Tag.find_by(tag: t).can_be_applied_by?(story_user)
-      }
-      if @story.tags_a.sort != sugtags
+      sugtags = Tag
+        .where(tag: params[:story][:tags_a].reject { |t| t.to_s.strip.blank? })
+        .reject { |t| !t.can_be_applied_by?(story_user) }
+        .map { |s| s.tag }
+      if @story.tags_a.sort != sugtags.sort
         @story.save_suggested_tags_a_for_user!(sugtags, @user)
         dsug = true
       end

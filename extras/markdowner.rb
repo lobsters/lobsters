@@ -51,6 +51,11 @@ class Markdowner
   end
 
   def self.postprocess_text_node(node)
+    # Allowing 1+n in username linkification in comments/bios because this works inorder on the
+    # parse tree rather than running once over the text. Proper fix: loop to find usernames, do one
+    # lookup, then loop again to manipulate the nodes for usernames that exist.
+    Prosopite.pause
+
     while node
       return unless node.string_content =~ /\B(@#{User::VALID_USERNAME})/o
       before, user, after = $`, $1, $'
@@ -81,6 +86,7 @@ class Markdowner
         node = nil
       end
     end
+    Prosopite.resume
   end
 
   def self.convert_images_to_links(node)

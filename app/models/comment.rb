@@ -132,7 +132,7 @@ class Comment < ApplicationRecord
       {comment_plain: (is_gone? ? gone_text : :comment)},
       :url,
       :depth,
-      {commenting_user: :user}
+      {commenting_user: user.username}
     ]
 
     js = {}
@@ -265,34 +265,24 @@ class Comment < ApplicationRecord
   end
 
   def deliver_mention_notifications(notified = [])
-    to_notify = plaintext_comment.scan(/\B[@~]([\w\-]+)/).flatten.uniq
-    (to_notify - notified).each do |mention|
-      if notified.include? mention
-        next
+    to_notify = plaintext_comment.scan(/\B[@~]([\w\-]+)/).flatten.uniq - notified - [user.username]
+    User.active.where(username: to_notify).find_each do |u|
+      if u.email_mentions?
+        begin
+          EmailReplyMailer.mention(self, u).deliver_now
+        rescue => e
+          Rails.logger.error "error e-mailing #{u.email}: #{e}"
+        end
       end
 
-      if (u = User.active.find_by(username: mention))
-        if u.id == user.id
-          next
-        end
-
-        if u.email_mentions?
-          begin
-            EmailReplyMailer.mention(self, u).deliver_now
-          rescue => e
-            Rails.logger.error "error e-mailing #{u.email}: #{e}"
-          end
-        end
-
-        if u.pushover_mentions?
-          u.pushover!(
-            title: "#{Rails.application.name} mention by " \
-              "#{user.username} on #{story.title}",
-            message: plaintext_comment,
-            url: url,
-            url_title: "Reply to #{user.username}"
-          )
-        end
+      if u.pushover_mentions?
+        u.pushover!(
+          title: "#{Rails.application.name} mention by " \
+            "#{user.username} on #{story.title}",
+          message: plaintext_comment,
+          url: url,
+          url_title: "Reply to #{user.username}"
+        )
       end
     end
   end
@@ -563,7 +553,7 @@ class Comment < ApplicationRecord
   def vote_summary_for_user(u)
     r_counts = {}
     r_users = {}
-    votes.includes(:user).each do |v|
+    votes.includes(:user).find_each do |v|
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += v.vote
 

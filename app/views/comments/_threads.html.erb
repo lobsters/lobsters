@@ -168,7 +168,7 @@
             <%# mods shouldn't see usernames for people flagging them %>
             <% if comment.user_id == @user&.id %>
               | <%= comment.vote_summary_for_user %>
-            <% elsif @user.is_moderator? %>
+            <% elsif @user&.is_moderator? %>
               | <%= comment.vote_summary_for_moderator %>
             <% end %>
           <% elsif comment.current_flagged? %>

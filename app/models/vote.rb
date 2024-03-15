@@ -5,6 +5,12 @@ class Vote < ApplicationRecord
   belongs_to :story, optional: false
   belongs_to :comment, optional: true
 
+  normalizes :reason, with: ->(r) { r.to_s }, apply_to_nil: true
+
+  # for comment_vote_summaries
+  attribute :count, :integer
+  attribute :usernames, :string
+
   validates :vote, presence: true
   validates :reason,
     length: {is: 1},
@@ -39,6 +45,32 @@ class Vote < ApplicationRecord
   ALL_STORY_REASONS = STORY_REASONS.merge({
     "Q" => "Low Quality"
   }).freeze
+
+  def on_comment?
+    comment_id.present?
+  end
+
+  def on_story?
+    comment_id.blank?
+  end
+
+  def reason_text
+    if on_story?
+      ALL_STORY_REASONS[reason]
+    else
+      ALL_COMMENT_REASONS[reason]
+    end
+  end
+
+  def self.comment_vote_summaries(comment_ids)
+    Vote
+      .joins(:user)
+      .select("comment_id, reason, count(1) as count, group_concat(username separator ', ') as usernames")
+      .where(comment_id: comment_ids)
+      .where.not(reason: "")
+      .group(:comment_id, :reason)
+      .group_by(&:comment_id)
+  end
 
   def self.votes_by_user_for_stories_hash(user, stories)
     votes = {}

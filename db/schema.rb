@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_08_024935) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_15_143804) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "category"
     t.datetime "created_at", precision: nil, null: false
@@ -325,7 +325,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_08_024935) do
     t.bigint "story_id", null: false, unsigned: true
     t.bigint "comment_id", unsigned: true
     t.integer "vote", limit: 1, null: false
-    t.string "reason", limit: 1
+    t.string "reason", limit: 1, default: "", null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["comment_id"], name: "index_votes_on_comment_id"
     t.index ["story_id"], name: "votes_story_id_fk"

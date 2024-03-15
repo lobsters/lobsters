@@ -132,8 +132,13 @@ class CommentsController < ApplicationController
     else
       parents = comment.parents.with_thread_attributes.for_presentation
 
-      @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user&.id, parents.map(&:id))
-      parents.each { |c| c.current_vote = @votes[c.id] }
+      parent_ids = parents.map(&:id)
+      @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user&.id, parent_ids)
+      summaries = Vote.comment_vote_summaries(parent_ids)
+      parents.each do |c|
+        c.current_vote = @votes[c.id]
+        c.vote_summary = summaries[c.id]
+      end
       render "_commentbox", locals: {
         comment: comment,
         story: story,
@@ -190,6 +195,7 @@ class CommentsController < ApplicationController
     if params[:preview].blank? && comment.save
       votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, [comment.id])
       comment.current_vote = votes[comment.id]
+      comment.vote_summary = Vote.comment_vote_summaries([comment.id])[comment.id]
 
       render partial: "comments/comment",
         layout: false,
@@ -269,8 +275,13 @@ class CommentsController < ApplicationController
       .limit(COMMENTS_PER_PAGE)
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 
-    @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user&.id, @comments.map(&:id))
-    @comments.each { |c| c.current_vote = @votes[c.id] } unless @votes.empty?
+    comment_ids = @comments.map(&:id)
+    @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user&.id, comment_ids)
+    summaries = Vote.comment_vote_summaries(comment_ids)
+    @comments.each do |c|
+      c.current_vote = @votes[c.id]
+      c.vote_summary = summaries[c.id]
+    end
 
     respond_to do |format|
       format.html { render action: "index" }
@@ -311,8 +322,13 @@ class CommentsController < ApplicationController
 
     # TODO: respect hidden stories
 
-    @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, @comments.map(&:id))
-    @comments.each { |c| c.current_vote = @votes[c.id] }
+    comment_ids = @comments.map(&:id)
+    @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, comment_ids)
+    summaries = Vote.comment_vote_summaries(comment_ids)
+    @comments.each do |c|
+      c.current_vote = @votes[c.id]
+      c.vote_summary = summaries[c.id]
+    end
 
     respond_to do |format|
       format.html { render action: :index }
@@ -345,8 +361,12 @@ class CommentsController < ApplicationController
     if @user
       @user.clear_unread_replies!
       @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @threads.map(&:story_id).uniq)
+      summaries = Vote.comment_vote_summaries(@threads.map(&:id))
 
-      @threads.each { |c| c.current_vote = @votes[c.id] }
+      @threads.each do |c|
+        c.current_vote = @votes[c.id]
+        c.vote_summary = summaries[c.id]
+      end
     end
   end
 
@@ -374,6 +394,7 @@ class CommentsController < ApplicationController
     if @user && comment
       comment.current_vote = Vote.where(user_id: @user.id,
         story_id: comment.story_id, comment_id: comment.id).first
+      comment.vote_summary = Vote.comment_vote_summaries([comment.id])
     end
 
     comment

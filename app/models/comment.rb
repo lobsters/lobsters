@@ -18,7 +18,7 @@ class Comment < ApplicationRecord
     optional: true
   has_many :taggings, through: :story
 
-  attr_accessor :current_vote, :previewing
+  attr_accessor :current_vote, :previewing, :vote_summary
   attribute :depth, :integer
   attribute :reply_count, :integer
 
@@ -550,26 +550,12 @@ class Comment < ApplicationRecord
     story.comments_url + "#c_#{short_id}"
   end
 
-  def vote_summary_for_user(u)
-    r_counts = {}
-    r_users = {}
-    votes.includes(:user).find_each do |v|
-      r_counts[v.reason.to_s] ||= 0
-      r_counts[v.reason.to_s] += v.vote
+  def vote_summary_for_user
+    (vote_summary || []).map { |v| "-#{v.count} #{v.reason_text.downcase}" }.join(", ")
+  end
 
-      r_users[v.reason.to_s] ||= []
-      r_users[v.reason.to_s].push v.user.username
-    end
-
-    r_counts.keys.map { |k|
-      next if k == ""
-
-      o = "#{r_counts[k]} #{Vote::ALL_COMMENT_REASONS[k]}"
-      if u && u.is_moderator? && user_id != u.id
-        o << " (#{r_users[k].join(", ")})"
-      end
-      o
-    }.compact.join(", ")
+  def vote_summary_for_moderator
+    (vote_summary || []).map { |v| "-#{v.count} #{v.reason_text.downcase} (#{v.usernames})" }.join(", ")
   end
 
   def undelete_for_user(user)

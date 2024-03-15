@@ -51,12 +51,14 @@ class RepliesController < ApplicationController
   # comments/_comment expects Comment objects to have a comment_vote attribute
   # with the current user's vote added by StoriesController.load_user_votes
   def apply_current_vote
+    summaries = Vote.comment_vote_summaries(@replies.map { |r| r.comment.id })
     @replies.each do |r|
       next if r.current_vote_vote.blank?
       r.comment.current_vote = {
         vote: r.current_vote_vote,
         reason: r.current_vote_reason.to_s
       }
+      r.comment.vote_summary = summaries[r.comment.id]
     end
   end
 

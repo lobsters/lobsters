@@ -129,11 +129,12 @@
         <% end %>
 
         <span class="reason">
-          <% if comment.flags > 0 &&
-          comment.show_score_to_user?(@user) &&
-          (comment.user_id == @user.try(:id) || @user.try("is_moderator?")) %>
-            <% if (s = comment.vote_summary_for_user(@user).downcase).present? %>
-              | <%= s %>
+          <% if comment.flags > 0 && comment.show_score_to_user?(@user) %>
+            <%# mods shouldn't see usernames for people flagging them %>
+            <% if comment.user_id == @user&.id %>
+              | <%= comment.vote_summary_for_user %>
+            <% elsif @user.is_moderator? %>
+              | <%= comment.vote_summary_for_moderator %>
             <% end %>
           <% elsif comment.current_flagged? %>
             | -1

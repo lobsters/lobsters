@@ -201,6 +201,7 @@ class StoriesController < ApplicationController
         render action: "show"
       }
       format.json {
+        @comments = @comments.includes(:parent_comments)
         render json: @story.as_json(with_comments: @comments)
       }
     end

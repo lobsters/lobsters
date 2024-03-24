@@ -43,10 +43,10 @@ class MastodonApp < ApplicationRecord
       return save!
     end
     errors.add :base, "Mastodon instance didn't return a client_id and client_secret"
+  rescue DNSError, NoIPsError
+    errors.add :base, "#{name} isn't resolving to an IP, check for typos?"
   rescue JSON::ParserError
     errors.add :base, "#{name} responded with non-parseable JSON"
-  rescue NoIPsError
-    errors.add :base, "#{name} isn't resolving to an IP"
   rescue OpenSSL::SSL::SSLError
     errors.add :base, "#{name} isn't a working SSL server"
   rescue URI::InvalidURIError

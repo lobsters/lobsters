@@ -81,7 +81,14 @@ class FakeDataGenerator
         description: description,
         tags_a: [tag.tag]
       }
-      stories << Story.create!(create_args)
+      story = Story.create!(create_args)
+      StoryText.create!({
+        id: story.id,
+        title: story.title,
+        description: story.description,
+        body: Faker::Lorem.paragraphs(number: 5).join("\n\n")
+      })
+      stories << story
     end
     puts
 

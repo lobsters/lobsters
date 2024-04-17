@@ -46,7 +46,6 @@ describe "comments", type: :request do
         -1, comment.story_id, comment.id, user.id, "T"
       )
       expect(comment.is_deletable_by_user?(author)).to be true
-      puts comment.vote_summary, comment.vote_summary.class
       post "/comments/#{comment.short_id}/delete"
       comment.reload
       expect(comment.is_deleted).to be true

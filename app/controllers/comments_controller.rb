@@ -394,7 +394,7 @@ class CommentsController < ApplicationController
     if @user && comment
       comment.current_vote = Vote.where(user_id: @user.id,
         story_id: comment.story_id, comment_id: comment.id).first
-      comment.vote_summary = Vote.comment_vote_summaries([comment.id])
+      comment.vote_summary = Vote.comment_vote_summaries([comment.id])[comment.id]
     end
 
     comment

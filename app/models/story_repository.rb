@@ -33,9 +33,10 @@ class StoryRepository
       .select('stories.*, (
         select max(comments.id)
         from comments
-        where comments.story_id = stories.id
+        where
+          comments.story_id = stories.id and
+          comments.created_at >= date_sub(now(), interval 3 day)
       ) as latest_comment_id')
-      .where("created_at >= ?", 3.days.ago)
       .order("latest_comment_id desc")
   end
 

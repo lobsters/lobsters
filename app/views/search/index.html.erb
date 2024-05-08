@@ -295,7 +295,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <span> | </span><%= link_to "unsave", story_unsave_path(story.short_id),
                                       :class => "saver" %>
         <% end %>
-        <% if story.url.present? %>
+        <% if story.url.present? && (!story.is_gone? || @user.try(:is_moderator?))  %>
           <span> | </span>
           <span class="dropdown_parent">
             <input id="archive_<%= story.short_id %>" class="archive_button" type="checkbox">

@@ -1,9 +1,3 @@
-User-agent: *
-Crawl-delay: 1
-Disallow: /search
-Disallow: /page/
-Disallow: /comments/page/
-
 # https://lobste.rs/s/ybowdq/great_gpt_firewall
 User-agent: anthropic-ai
 User-agent: Bytespider
@@ -27,3 +21,12 @@ User-agent: SemrushBot-SWA
 User-agent: SiteAuditBot
 User-agent: SplitSignalBot
 Disallow: /
+
+# Google refuses to support crawl-delay so when this was at the top they
+# combined it with the following (anti-LLM slop) rules and blocked the site
+# https://developers.google.com/search/blog/2019/07/a-note-on-unsupported-rules-in-robotstxt
+User-agent: *
+Crawl-delay: 1
+Disallow: /search
+Disallow: /page/
+Disallow: /comments/page/

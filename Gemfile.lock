@@ -167,7 +167,7 @@ GEM
     mini_portile2 (2.8.6)
     minitest (5.22.2)
     mutex_m (0.2.0)
-    mysql2 (0.5.5)
+    mysql2 (0.5.6)
     net-imap (0.4.10)
       date
       net-protocol
@@ -407,7 +407,7 @@ DEPENDENCIES
   listen
   mail
   memory_profiler
-  mysql2
+  mysql2 (~> 0.5.6)
   nokogiri
   oauth
   parslet
@@ -422,7 +422,7 @@ DEPENDENCIES
   rqrcode
   rspec-rails
   scenic
-  scenic-mysql_adapter
+  scenic-mysql_adapter (~> 1.0, >= 1.0.1)
   simplecov
   sitemap_generator
   sprockets-rails

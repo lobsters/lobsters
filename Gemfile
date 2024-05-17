@@ -2,11 +2,11 @@ source "https://rubygems.org"
 
 gem "rails"
 
-gem "mysql2"
+gem 'mysql2', '~> 0.5.6'
 
 # rails
 gem "scenic"
-gem "scenic-mysql_adapter"
+gem 'scenic-mysql_adapter', '~> 1.0', '>= 1.0.1'
 gem "activerecord-typedstore"
 gem "sprockets-rails", require: "sprockets/railtie"
 

@@ -1,17 +1,26 @@
 # https://lobste.rs/s/ybowdq/great_gpt_firewall
+User-agent: Amazonbot
+User-agent: Applebot
 User-agent: anthropic-ai
 User-agent: Bytespider
 User-agent: CCBot
 User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-Web
+User-agent: cohere-ai
 User-agent: FacebookBot
 User-agent: Google-Extended
 User-agent: GPTBot
 User-agent: Omgili
 User-agent: Omgilibot
+User-agent: PerplexityBot
+User-agent: YouBot
 Disallow: /
 
 # SEO/spam tools
+User-agent: AhrefsBot
 User-agent: BLEXBot
+User-agent: Clickagy
 User-agent: SemrushBot
 User-agent: SemrushBot-BA
 User-agent: SemrushBot-COUB

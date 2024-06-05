@@ -365,14 +365,10 @@ class User < ApplicationRecord
         .where("score < 0")
         .find_each { |c| c.delete_for_user(self) }
 
-      sent_messages.each do |m|
-        m.deleted_by_author = true
-        m.save!
-      end
-      received_messages.each do |m|
-        m.deleted_by_recipient = true
-        m.save!
-      end
+      # delete messages bypassing validation because a message may have a hat
+      # sender has doffed, which would fail validations
+      sent_messages.update_all(deleted_by_author: true)
+      received_messages.update_all(deleted_by_recipient: true)
 
       invitations.destroy_all
 
@@ -386,15 +382,6 @@ class User < ApplicationRecord
 
   def undelete!
     User.transaction do
-      sent_messages.each do |m|
-        m.deleted_by_author = false
-        m.save!
-      end
-      received_messages.each do |m|
-        m.deleted_by_recipient = false
-        m.save!
-      end
-
       self.deleted_at = nil
       save!
     end

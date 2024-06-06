@@ -27,7 +27,7 @@ class Utils
     end
 
     # unify arxiv page and pdf based on their identifier https://arxiv.org/help/arxiv_identifier
-    url = url.sub %r{^arxiv\.org/(?:abs|pdf)/(?<id>\d{4}\.\d{4,5})(?:\.pdf)?}, 'arxiv.org/abs/\k<id>'
+    url = url.sub %r{^arxiv\.org/(?:abs|pdf)/(?<id>\d{4}\.\d{4,5}(?:v\d)?)(?:\.pdf)?}, 'arxiv.org/abs/\k<id>'
 
     # unify rfc-editor.org pages based on their URL structures:
     # https://www.rfc-editor.org/rfc/rfc9338.html

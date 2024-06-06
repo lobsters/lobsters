@@ -26,6 +26,8 @@ describe "normalize_url" do
     "https://arxiv.org/abs/1234.12345" => "arxiv.org/abs/1234.12345",
     "https://arxiv.org/pdf/1234.12345" => "arxiv.org/abs/1234.12345",
     "https://arxiv.org/abs/1234.12345.pdf" => "arxiv.org/abs/1234.12345",
+    "https://arxiv.org/abs/2311.09394v2" => "arxiv.org/abs/2311.09394v2", # bug #954
+    "https://arxiv.org/pdf/2311.09394v2.pdf" => "arxiv.org/abs/2311.09394v2",
 
     "https://www.rfc-editor.org/rfc/rfc9338.html" => "rfc-editor.org/rfc/9338",
     "https://www.rfc-editor.org/rfc/rfc9338.txt" => "rfc-editor.org/rfc/9338",

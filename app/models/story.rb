@@ -107,13 +107,15 @@ class Story < ApplicationRecord
       .limit(10)
   }
 
-  validates :title, length: {in: 3..150}
+  validates :title, length: {in: 3..150}, presence: true
   validates :description, length: {maximum: (64 * 1024)}
   validates :url, length: {maximum: 250, allow_nil: true}
   validates :short_id, presence: true, length: {maximum: 6}
   validates :markeddown_description, length: {maximum: 16_777_215, allow_nil: true}
   validates :mastodon_id, length: {maximum: 25, allow_nil: true}
   validates :twitter_id, length: {maximum: 20, allow_nil: true}
+  validates :is_deleted, :is_moderated, :user_is_author, :user_is_following, inclusion: {in: [true, false]}
+  validates :score, :flags, :hotness, :comments_count, presence: true
 
   validates_each :merged_story_id do |record, _attr, value|
     if value.to_i == record.id
@@ -1020,7 +1022,7 @@ class Story < ApplicationRecord
 
   def self.title_maximum_length
     validators_on(:title)
-      .sole { |v| v.is_a? ActiveRecord::Validations::LengthValidator }
+      .find { |v| v.is_a? ActiveRecord::Validations::LengthValidator }
       .options[:maximum]
   end
 

@@ -21,7 +21,8 @@ class Tag < ApplicationRecord
     format: {with: /\A[A-Za-z0-9_\-\+]+\z/}
   validates :description, length: {maximum: 100}
   validates :hotness_mod, inclusion: {in: -10..10}
-  validates :permit_by_new_users, :privileged, inclusion: {in: [true, false]}
+  validates :permit_by_new_users, :privileged, :active, :is_media,
+    inclusion: {in: [true, false]}
 
   scope :active, -> { where(active: true) }
   scope :not_permitted_for_new_users, -> { where(permit_by_new_users: false) }

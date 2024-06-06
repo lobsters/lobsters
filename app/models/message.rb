@@ -19,6 +19,7 @@ class Message < ApplicationRecord
   validates :subject, length: {in: 1..100}
   validates :body, length: {maximum: (64 * 1024)}
   validates :short_id, length: {maximum: 30}
+  validates :has_been_read, :deleted_by_author, :deleted_by_recipient, inclusion: {in: [true, false]}
   validate :hat do
     next if hat.blank?
     if author.blank? || author.wearable_hats.exclude?(hat)

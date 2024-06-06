@@ -478,4 +478,10 @@ describe Story do
       expect(creator.reload.received_messages.length).to eq(1)
     end
   end
+
+  describe ".title_maximum_length" do
+    subject { Story.title_maximum_length }
+
+    it { is_expected.to eq(150) }
+  end
 end

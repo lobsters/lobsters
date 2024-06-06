@@ -14,7 +14,8 @@ class Vote < ApplicationRecord
   validates :vote, presence: true
   validates :reason,
     length: {is: 1},
-    allow_blank: true
+    allow_blank: true,
+    presence: true
 
   scope :comments_flags, ->(comments, user = nil) {
     q = where(comment: comments, vote: -1)

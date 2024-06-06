@@ -72,9 +72,11 @@ class Comment < ApplicationRecord
 
   SCORE_RANGE_TO_HIDE = (-2..4)
 
-  validates :short_id, length: {maximum: 10}
+  validates :short_id, length: {maximum: 10}, presence: true
   validates :markeddown_comment, length: {maximum: 16_777_215}
   validates :comment, presence: {with: true, message: "cannot be empty."}
+  validates :confidence, :confidence_order, :flags, :score, presence: true
+  validates :is_deleted, :is_moderated, :is_from_email, inclusion: {in: [true, false]}
 
   validate do
     parent_comment&.is_gone? &&

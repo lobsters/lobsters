@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_06_084311) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_08_224626) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "category", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -54,6 +54,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_06_084311) do
     t.datetime "banned_at", precision: nil
     t.integer "banned_by_user_id"
     t.string "banned_reason", limit: 200
+    t.index ["banned_by_user_id"], name: "index_domains_on_banned_by_user_id"
   end
 
   create_table "hat_requests", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -136,6 +137,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_06_084311) do
     t.boolean "deleted_by_author", default: false, null: false
     t.boolean "deleted_by_recipient", default: false, null: false
     t.bigint "hat_id", unsigned: true
+    t.index ["author_user_id"], name: "index_messages_on_author_user_id"
     t.index ["hat_id"], name: "index_messages_on_hat_id"
     t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"
     t.index ["short_id"], name: "random_hash", unique: true
@@ -165,6 +167,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_06_084311) do
     t.bigint "tag_id", unsigned: true
     t.integer "domain_id"
     t.bigint "category_id"
+    t.index ["category_id"], name: "index_moderations_on_category_id"
     t.index ["comment_id"], name: "moderations_comment_id_fk"
     t.index ["created_at"], name: "index_moderations_on_created_at"
     t.index ["domain_id"], name: "index_moderations_on_domain_id"

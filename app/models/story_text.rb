@@ -5,7 +5,8 @@ class StoryText < ApplicationRecord
 
   belongs_to :story, foreign_key: :id, inverse_of: :story_text
 
-  validates :title, presence: true
+  validates :title, presence: true, length: { maximum: 150 }
+  validates :description, :body, length: { maximum: 16_777_215 }
 
   def body=(s)
     # pass nil, truncate to column limit https://mariadb.com/kb/en/mediumtext/

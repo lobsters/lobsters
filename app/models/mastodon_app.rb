@@ -2,7 +2,9 @@
 
 # https://docs.joinmastodon.org/methods/apps/
 class MastodonApp < ApplicationRecord
-  validates :name, :client_id, :client_secret, presence: true
+  validates :name, :client_id, :client_secret,
+    presence: true,
+    length: {maximum: 255}
 
   # https://docs.joinmastodon.org/methods/oauth/
   def oauth_auth_url

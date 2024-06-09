@@ -116,6 +116,7 @@ class Story < ApplicationRecord
   validates :twitter_id, length: {maximum: 20, allow_nil: true}
   validates :is_deleted, :is_moderated, :user_is_author, :user_is_following, inclusion: {in: [true, false]}
   validates :score, :flags, :hotness, :comments_count, presence: true
+  validates :normalized_url, length: {maximum: 255, allow_nil: true}
 
   validates_each :merged_story_id do |record, _attr, value|
     if value.to_i == record.id

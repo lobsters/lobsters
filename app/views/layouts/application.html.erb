@@ -40,6 +40,7 @@
       title="<%= @comments_rss_link[:title] %>"
       href="<%= @comments_rss_link[:href] %>" />
   <% end %>
+  <meta name=”robots” content=”noai, noimageai”>
 </head>
 <body data-username='<%= @user.try(:username) %>'>
   <header id="nav">

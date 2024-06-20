@@ -12,7 +12,7 @@ end
 
 RSpec::Matchers.define :be_bytes do |bytes|
   match do |str|
-    str.eql?(bytes.force_encoding("binary"))
+    str.eql?(bytes.b)
   end
 end
 

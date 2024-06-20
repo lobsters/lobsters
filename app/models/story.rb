@@ -855,7 +855,7 @@ class Story < ApplicationRecord
       params.reject! { |p|
         p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=|^si=/x)
       }
-      u = match[1] << (params.any? ? "?" << params.join("&") : "")
+      u = match[1] << (params.any? ? "?#{params.join("&")}" : "")
     end
 
     self.normalized_url = Utils.normalize_url(u)

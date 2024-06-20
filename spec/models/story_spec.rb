@@ -213,8 +213,8 @@ describe Story do
 
     context "with unicode" do
       it "can fetch unicode titles properly" do
-        content = "<!DOCTYPE html><html><title>你好世界！ Here’s a fancy apostrophe</title></html>"
-          .force_encoding("ASCII-8BIT") # This is the encoding returned by Sponge#fetch
+        # Sponge#fetch returns a binary string
+        content = "<!DOCTYPE html><html><title>你好世界！ Here’s a fancy apostrophe</title></html>".b
         res = fake_response(content, "text/html")
         s = build(:story)
         s.fetched_response = res

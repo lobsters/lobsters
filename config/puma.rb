@@ -34,6 +34,8 @@ pidfile ENV.fetch("PIDFILE") {
 # processes).
 workers ENV.fetch("PUMA_WORKERS") { 3 }
 
+worker_boot_timeout 180
+
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
 # before forking the application. This takes advantage of Copy On Write

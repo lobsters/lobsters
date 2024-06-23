@@ -146,15 +146,12 @@ class _LobstersFunction {
   checkStoryDuplicate(form) {
     const formData = new FormData(form);
     const action = '/stories/check_url_dupe';
-    console.log('checkStoryDuplicate', form);
     fetchWithCSRF(action, {
       method: 'post',
       headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
       body: formData,
     }).then (response => {
-      console.log('checkStoryDuplicate', response);
       response.text().then(text => {
-        console.log('checkStoryDuplicate', text, qS('.form_errors_header'));
         // FIXME on second click of 'fetch title', this doesn't run
         qS('.form_errors_header').innerHTML = text;
       });

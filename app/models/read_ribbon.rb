@@ -4,7 +4,7 @@ class ReadRibbon < ApplicationRecord
   belongs_to :user
   belongs_to :story
 
-  validates :is_following, inclusion: { in: [true, false] }
+  validates :is_following, inclusion: {in: [true, false]}
 
   def is_unread? comment
     return false if !user

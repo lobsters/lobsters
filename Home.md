@@ -24,7 +24,7 @@ Other sites using the Lobsters [codebase](https://github.com/lobsters/lobsters):
 * [DataTau](https://datatau.net/) - Data science newsboard
 * [Khosenk](https://խօսենք.ցանցառներ.հայ/) - computing-focused (hy)
 * <s>[LeftRudder](https://leftrudder.net/)</s> - Aviation
-* [DTO](https://dto.pipecraft.net/) - Software development (zh-CN)
+* <s>[DTO](https://dto.pipecraft.net/)</s> - Software development (zh-CN)
 * [Quantum News](https://news.aqora.io) - Quantum Computing and Quantum Physics
 
 ## Cousin Sites

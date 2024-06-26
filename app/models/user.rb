@@ -117,6 +117,16 @@ class User < ApplicationRecord
   validates :disabled_invite_reason,
     length: {maximum: 200}
 
+  validates :show_email, :is_admin, :is_moderator, :pushover_mentions,
+    inclusion: {in: [true, false]}
+
+  validates :session_token,
+    allow_blank: true,
+    presence: true
+
+  validates :karma,
+    presence: true
+
   validates_each :username do |record, attr, value|
     if BANNED_USERNAMES.include?(value.to_s.downcase) || value.starts_with?("tag-")
       record.errors.add(attr, "is not permitted")

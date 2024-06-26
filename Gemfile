@@ -63,4 +63,6 @@ group :test, :development do
   gem "vcr"
   gem "webmock" # used to support vcr
   gem "simplecov", require: false
+  gem "active_record_doctor"
+  gem "database_consistency"
 end

@@ -8,6 +8,7 @@ class Hat < ApplicationRecord
 
   validates :hat, presence: true
   validates :hat, :link, length: {maximum: 255}
+  validates :modlog_use, inclusion: {in: [true, false]}
 
   scope :active, -> { joins(:user).where(doffed_at: nil).merge(User.active) }
 

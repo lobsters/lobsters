@@ -8,7 +8,7 @@ class Domain < ApplicationRecord
     optional: true
   validates :banned_reason, length: {maximum: 200}
 
-  validates :domain, presence: true
+  validates :domain, presence: true, length: {maximum: 255}
 
   def ban_by_user_for_reason!(banner, reason)
     self.banned_at = Time.current

@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_15_143804) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_08_224626) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "category"
+    t.string "category", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["category"], name: "index_categories_on_category", unique: true
@@ -32,9 +32,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_15_143804) do
     t.integer "flags", default: 0, null: false, unsigned: true
     t.decimal "confidence", precision: 20, scale: 19, default: "0.0", null: false
     t.text "markeddown_comment", size: :medium
-    t.boolean "is_deleted", default: false
-    t.boolean "is_moderated", default: false
-    t.boolean "is_from_email", default: false
+    t.boolean "is_deleted", default: false, null: false
+    t.boolean "is_moderated", default: false, null: false
+    t.boolean "is_from_email", default: false, null: false
     t.bigint "hat_id", unsigned: true
     t.index ["comment"], name: "index_comments_on_comment", type: :fulltext
     t.index ["confidence"], name: "confidence_idx"
@@ -48,12 +48,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_15_143804) do
   end
 
   create_table "domains", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "domain"
+    t.string "domain", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.datetime "banned_at", precision: nil
     t.integer "banned_by_user_id"
     t.string "banned_reason", limit: 200
+    t.index ["banned_by_user_id"], name: "index_domains_on_banned_by_user_id"
   end
 
   create_table "hat_requests", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -73,7 +74,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_15_143804) do
     t.bigint "granted_by_user_id", null: false, unsigned: true
     t.string "hat", null: false
     t.string "link"
-    t.boolean "modlog_use", default: false
+    t.boolean "modlog_use", default: false, null: false
     t.datetime "doffed_at", precision: nil
     t.index ["granted_by_user_id"], name: "hats_granted_by_user_id_fk"
     t.index ["user_id"], name: "hats_user_id_fk"
@@ -88,7 +89,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_15_143804) do
 
   create_table "invitation_requests", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "code"
-    t.boolean "is_verified", default: false
+    t.boolean "is_verified", default: false, null: false
     t.string "email", null: false
     t.string "name", null: false
     t.text "memo"
@@ -129,13 +130,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_15_143804) do
     t.datetime "created_at", precision: nil
     t.bigint "author_user_id", unsigned: true
     t.bigint "recipient_user_id", null: false, unsigned: true
-    t.boolean "has_been_read", default: false
+    t.boolean "has_been_read", default: false, null: false
     t.string "subject", limit: 100
     t.text "body", size: :medium
     t.string "short_id", limit: 30
-    t.boolean "deleted_by_author", default: false
-    t.boolean "deleted_by_recipient", default: false
+    t.boolean "deleted_by_author", default: false, null: false
+    t.boolean "deleted_by_recipient", default: false, null: false
     t.bigint "hat_id", unsigned: true
+    t.index ["author_user_id"], name: "index_messages_on_author_user_id"
     t.index ["hat_id"], name: "index_messages_on_hat_id"
     t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"
     t.index ["short_id"], name: "random_hash", unique: true
@@ -161,10 +163,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_15_143804) do
     t.bigint "user_id", unsigned: true
     t.text "action", size: :medium
     t.text "reason", size: :medium
-    t.boolean "is_from_suggestions", default: false
+    t.boolean "is_from_suggestions", default: false, null: false
     t.bigint "tag_id", unsigned: true
     t.integer "domain_id"
     t.bigint "category_id"
+    t.index ["category_id"], name: "index_moderations_on_category_id"
     t.index ["comment_id"], name: "moderations_comment_id_fk"
     t.index ["created_at"], name: "index_moderations_on_created_at"
     t.index ["domain_id"], name: "index_moderations_on_domain_id"
@@ -175,7 +178,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_15_143804) do
   end
 
   create_table "read_ribbons", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.boolean "is_following", default: true
+    t.boolean "is_following", default: true, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "user_id", null: false, unsigned: true
@@ -211,7 +214,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_15_143804) do
     t.bigint "merged_story_id", unsigned: true
     t.datetime "unavailable_at", precision: nil
     t.string "twitter_id", limit: 20
-    t.boolean "user_is_author", default: false
+    t.boolean "user_is_author", default: false, null: false
     t.boolean "user_is_following", default: false, null: false
     t.bigint "domain_id"
     t.string "mastodon_id", limit: 25
@@ -288,13 +291,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_15_143804) do
     t.string "email", limit: 100
     t.string "password_digest", limit: 75
     t.datetime "created_at", precision: nil
-    t.boolean "is_admin", default: false
+    t.boolean "is_admin", default: false, null: false
     t.string "password_reset_token", limit: 75
     t.string "session_token", limit: 75, default: "", null: false
     t.text "about", size: :medium
     t.bigint "invited_by_user_id", unsigned: true
-    t.boolean "is_moderator", default: false
-    t.boolean "pushover_mentions", default: false
+    t.boolean "is_moderator", default: false, null: false
+    t.boolean "pushover_mentions", default: false, null: false
     t.string "rss_token", limit: 75
     t.string "mailing_list_token", limit: 75
     t.integer "mailing_list_mode", default: 0

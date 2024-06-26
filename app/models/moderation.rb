@@ -29,6 +29,7 @@ class Moderation < ApplicationRecord
   }
 
   validates :action, :reason, length: {maximum: 16_777_215}
+  validates :is_from_suggestions, inclusion: {in: [true, false]}
   validate :one_foreign_key_present
 
   after_create :send_message_to_moderated

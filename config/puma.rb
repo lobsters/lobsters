@@ -38,7 +38,7 @@ worker_boot_timeout 180
 
 # https://github.com/Shopify/ruby/issues/556
 on_worker_boot do |worker_index|
-  if defined?(Ruby::YJIT) && worker_index == 0
+  if defined?(RubyVM::YJIT) && worker_index == 0
     Thread.new do
       loop do
         File.write("/tmp/yjit-stats.txt", [Time.current.iso8601, " ", RubyVM::YJIT.runtime_stats.to_json, "\n"].join, mode: "a+")

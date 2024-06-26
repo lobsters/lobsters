@@ -41,7 +41,7 @@ on_worker_boot do |worker_index|
   if defined?(RubyVM::YJIT) && worker_index == 0
     Thread.new do
       loop do
-        File.write("/tmp/yjit-stats.txt", [Time.current.iso8601, " ", RubyVM::YJIT.runtime_stats.to_json, "\n"].join, mode: "a+")
+        File.write("/tmp/yjit-stats.txt", [Time.now.strftime('%Y-%m-%dT%H:%M:%S.%L%z'), " ", RubyVM::YJIT.runtime_stats, "\n"].join, mode: "a+")
         sleep 300
       end
     end

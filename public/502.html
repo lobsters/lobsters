@@ -12,17 +12,19 @@
     <a href="ircs://irc.libera.chat/lobsters">IRC channel</a>
     (<a href="https://web.libera.chat/#lobsters">webchat</a>).
   </p>
+
   <p>
-    It is safe to reload until the page loads and resubmit a POST request,
-    you won't double-post a comment or anything.
+    <b>2024-06-27 note</b>:
+    Well, probably it's not a deploy, it's the puma workers getting an OOM kill.
+    We think it's probably a leak in <a href="https://github.com/Shopify/yjit">YJIT</a>
+    so we're <a href="https://lobste.rs/s/m9ivcf/we_turned_lobste_rs_into_rails_benchmark">giving back</a>
+    to the projects Lobsters is built on by experimenting and logging.
+    The tracking issue is <a href="https://github.com/Shopify/ruby/issues/556">Shopify/ruby#556</a>.
   </p>
 
   <p>
-  May 2024: We are seeing oomkills about twice daily because of a memory leak.
-  I'm sorry, I know it's irritating, but I don't have the attention to debug it
-  until after RailsConf May 7-9. If you have experience tracing Rails memory
-  leaks, let me know, because I'm new to it. Unfortunately,
-  <a href="https://github.com/lobsters/lobsters/commit/cc2deddeb2f7f441b4dd417571b73161f3c0c49c">it wasn't Ruby bug 20209</a>.
+    It is safe to reload until the page loads and resubmit a POST request,
+    you won't double-post a comment or anything.
   </p>
 </body>
 </html>

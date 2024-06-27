@@ -34,6 +34,10 @@ jobs:
         run: |
           bundle exec rspec
           bundle exec rspec spec/slow/*_spec.rb
+        env:
+          # Enabling frozen string literals in rspec only because brakeman
+          # isn't compatible yet: https://github.com/presidentbeef/brakeman/pull/1855
+          RUBYOPT: "--enable-frozen-string-literal --debug-frozen-string-literal"
       - name: Run linters
         run: |
           bundle exec standardrb

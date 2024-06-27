@@ -18,7 +18,7 @@ module ApplicationHelper
   end
 
   def errors_for(object)
-    html = ""
+    html = +""
     unless object.errors.blank?
       html << "<div class=\"flash-error\">"
       html << "<h2>#{pluralize(object.errors.count, "error")} prohibited this \

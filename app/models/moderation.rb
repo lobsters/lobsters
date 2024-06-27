@@ -43,7 +43,7 @@ class Moderation < ApplicationRecord
 
     if story
       m.recipient_user_id = story.user_id
-      m.subject = "Your story has been edited by " <<
+      m.subject = "Your story has been edited by " +
         (is_from_suggestions? ? "user suggestions" : "a moderator")
       m.body = "Your story [#{story.title}](" \
         "#{story.comments_url}) has been edited with the following " \
@@ -66,7 +66,7 @@ class Moderation < ApplicationRecord
       m.body = "Your comment on [#{comment.story.title}](" \
         "#{comment.story.comments_url}) has been moderated:\n" \
         "\n" <<
-        comment.comment.split("\n").map { |l| "> " << l }.join("\n")
+        comment.comment.split("\n").map { |l| "> #{l}" }.join("\n")
 
       if reason.present?
         m.body << "\n" \

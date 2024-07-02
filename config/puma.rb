@@ -43,7 +43,7 @@ on_worker_boot do |worker_index|
       loop do
         # rubocop doesn't know activesupport isn't available here
         # rubocop:disable Rails/TimeZone
-        File.write("/tmp/yjit-stats.txt", [Time.now.strftime("%Y-%m-%dT%H:%M:%S.%L%z"), " ", RubyVM::YJIT.runtime_stats, "\n"].join, mode: "a+")
+        File.write("/tmp/yjit-stats.txt", [Time.now.strftime("%Y-%m-%dT%H:%M:%S.%L%z"), " ", RubyVM::YJIT.runtime_stats, " ", GC.stat, "\n"].join, mode: "a+")
         # rubocop:enable Rails/TimeZone
         sleep 300
       end

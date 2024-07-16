@@ -9,6 +9,29 @@ class FakeDataGenerator
     @categories_count = categories_count
   end
 
+  # https://gist.github.com/searls/2859ad7e8941872edb9561eb965b7c76
+  def lorem_paragraphs(paragraphs = (1..4), sentences = (1..10), words = (3..20))
+    rand(paragraphs).times.map {
+      rand(sentences).times.map {
+        Faker::Lorem.sentence(word_count: rand(words))
+      }.join(" ")
+    }.join("\n\n")
+  end
+
+  def markdown_paragraphs
+    lorem_paragraphs.split("\n\n").map { |sentence|
+      sentence.split(" ").map { |word|
+        if rand(100) < 1
+          "_#{word}_"
+        elsif rand(100) < 2
+          "[#{word}](http://example.com/#{word})"
+        else
+          word
+        end
+      }.join(" ")
+    }.join("\n\n")
+  end
+
   def generate
     print "Users "
     users = []
@@ -71,7 +94,7 @@ class FakeDataGenerator
       url = Faker::Internet.url
       description = nil
       if i % 10 == 0
-        description = Faker::Lorem.paragraphs(number: 3).join("\n\n")
+        description = markdown_paragraphs
         url = nil unless i % 7 == 0
       end
       create_args = {
@@ -86,7 +109,7 @@ class FakeDataGenerator
         id: story.id,
         title: story.title,
         description: story.description,
-        body: Faker::Lorem.paragraphs(number: 5).join("\n\n")
+        body: markdown_paragraphs
       })
       stories << story
     end
@@ -106,7 +129,7 @@ class FakeDataGenerator
         user: user,
         title: title,
         url: url,
-        description: Faker::Lorem.paragraphs(number: 1),
+        description: markdown_paragraphs,
         tags_a: [tag.tag],
         is_deleted: true,
         editor: user
@@ -129,10 +152,10 @@ class FakeDataGenerator
     stories.each do |x|
       print "."
       next unless x.accepting_comments?
-      Random.rand(1..3).times do |i|
+      Random.rand(1..15).times do |i|
         create_args = {
           user: users[Random.rand(@users_count - 1)],
-          comment: Faker::Lorem.sentence(word_count: Random.rand(30..50)),
+          comment: markdown_paragraphs,
           story_id: x.id
         }
         comments << Comment.create!(create_args)
@@ -141,7 +164,7 @@ class FakeDataGenerator
         if i.odd?
           create_args = {
             user: x.user,
-            comment: Faker::Lorem.sentence(word_count: Random.rand(30..50)),
+            comment: markdown_paragraphs,
             story_id: x.id,
             parent_comment_id: comments.last.id
           }

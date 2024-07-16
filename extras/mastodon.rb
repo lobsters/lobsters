@@ -108,7 +108,7 @@ class Mastodon
       "https://#{self.INSTANCE_NAME}/api/v1/statuses",
       :post,
       {
-        status: status,
+        status: CGI.escape(status),
         visibility: "public"
       },
       nil,

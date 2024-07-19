@@ -2,8 +2,10 @@
 
 class HatsController < ApplicationController
   before_action :require_logged_in_user, except: [:index]
-  before_action :require_logged_in_moderator, except: [:build_request, :index, :create_request]
+  before_action :require_logged_in_moderator, except: [:build_request, :index, :create_request, :doff, :doff_by_user]
   before_action :show_title_h1
+  before_action :find_hat, only: [:doff, :doff_by_user]
+  before_action :only_hat_user_or_moderator, only: [:doff, :doff_by_user]
 
   def build_request
     @title = "Request a Hat"
@@ -61,5 +63,39 @@ class HatsController < ApplicationController
     flash[:success] = "Successfully rejected hat request."
 
     redirect_to "/hats/requests"
+  end
+
+  def doff
+    @title = "Doffing a Hat"
+  end
+
+  def doff_by_user
+    if params[:reason].blank?
+      flash[:error] = "You must give a reason for the doffing."
+      return redirect_to doff_hat_path(@hat)
+    end
+
+    @hat.doff_by_user_with_reason(@user, params[:reason])
+    redirect_to @user
+  end
+
+  private
+
+  def only_hat_user_or_moderator
+    if @hat.user == @user || @user.is_moderator?
+      true
+    else
+      redirect_to @user
+    end
+  end
+
+  def find_hat
+    if (@hat = Hat.where(id: params[:id]).first)
+      return true
+    end
+
+    flash[:error] = "Could not find hat."
+    redirect_to "/hats"
+    false
   end
 end

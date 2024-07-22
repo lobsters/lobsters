@@ -5,6 +5,8 @@ ignore:
     - Rails/HasManyOrHasOneDependent
     # is a multimaster db while needing microsecond accurate sorting really 'standard'
     - Rails/OrderById
+    # joins/extracted data doesn't need a timestamp
+    - Rails/CreateTableWithTimestamps
   # it's mad about the class variables and I don't want to risk the refactor now
   - 'extras/**/*':
     - Naming/VariableName

@@ -12,7 +12,7 @@ class SearchParser < Parslet::Parser
 
   # User::VALID_USERNAME
   rule(:commenter) { str("commenter:") >> match("[@~]").repeat(0, 1) >> match("[A-Za-z0-9_\\-]").repeat(1, 24).as(:commenter) >> space? }
-  # reproduce the <domain> named capture in Story.URL_RE
+  # reproduce the <domain> named capture in URL_RE
   rule(:domain) { str("domain:") >> match("[A-Za-z0-9_\\-\\.]").repeat(1).as(:domain) >> space? }
   # User::VALID_USERNAME
   rule(:submitter) { str("submitter:") >> match("[@~]").repeat(0, 1) >> match("[A-Za-z0-9_\\-]").repeat(1, 24).as(:submitter) >> space? }

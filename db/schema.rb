@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_08_224626) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_17_155412) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "category", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -115,6 +115,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_08_224626) do
     t.string "key", limit: 50, default: "", null: false
     t.bigint "value"
     t.index ["key"], name: "key", unique: true
+  end
+
+  create_table "links", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.string "url", null: false
+    t.string "normalized_url", null: false
+    t.string "title"
+    t.bigint "from_story_id"
+    t.bigint "from_comment_id"
+    t.bigint "to_story_id"
+    t.bigint "to_comment_id"
+    t.index ["from_comment_id"], name: "index_links_on_from_comment_id"
+    t.index ["from_story_id"], name: "index_links_on_from_story_id"
+    t.index ["normalized_url"], name: "index_links_on_normalized_url"
+    t.index ["to_comment_id"], name: "index_links_on_to_comment_id"
+    t.index ["to_story_id"], name: "index_links_on_to_story_id"
   end
 
   create_table "mastodon_apps", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

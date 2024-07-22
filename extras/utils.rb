@@ -1,12 +1,13 @@
 # typed: false
 
 class Utils
-  # URI.parse is not lenient enough
-  def self.normalize_url url
-    return "" if url == ""
-    return nil if url.nil?
+  # URI.parse is not very lenient, so we can't use it
+  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>(?:[^\.\/]+\.)+[a-z\-]+)(?<port>:\d+)?(?:\/|\z)/i
 
-    url = url.dup # copy in case frozen
+  # utility that works on stringlikes (for possibly invalid user input + searches)
+  def self.normalize(url)
+    return url if url.blank?
+    url = url.to_s.dup # in case passed a Url or frozen string
 
     url.slice! %r{#.*$} # remove anchor
     url.slice! %r{/$} # remove trailing slash
@@ -21,6 +22,7 @@ class Utils
     url.slice! %r{^(www\d*\.)} # remove www\d* from domain
 
     url, *args = url.split(/[&\?]/) # trivia: ?a=1?c=2 is a valid uri
+    url ||= "" # if original url was just '#', ''.split made url nil
     if args.any?
       url += "?"
       url += args.map { |arg| arg.split("=") }.sort.map { |arg| arg.join("=") }.join("&")

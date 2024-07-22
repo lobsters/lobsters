@@ -39,7 +39,10 @@ module Lobsters
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = "Central Time (US & Canada)"
 
-    config.autoload_paths << "#{root}/extras"
+    config.autoload_paths.push(
+      "#{root}/app/types",
+      "#{root}/extras"
+    )
 
     # Raise an exception when using mass assignment with unpermitted attributes
     config.action_controller.action_on_unpermitted_parameters = :raise

@@ -17,6 +17,11 @@ class Comment < ApplicationRecord
   belongs_to :hat,
     optional: true
   has_many :taggings, through: :story
+  has_many :links, inverse_of: :from_comment, dependent: :destroy
+  has_many :incoming_links,
+    class_name: "Link",
+    inverse_of: :to_comment,
+    dependent: :destroy
 
   attr_accessor :current_vote, :previewing, :vote_summary
   attribute :depth, :integer
@@ -30,6 +35,7 @@ class Comment < ApplicationRecord
   after_create :record_initial_upvote, :mark_submitter, :deliver_notifications,
     :log_hat_use
   after_destroy :unassign_votes
+  after_save :recreate_links
 
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, -> { where(is_deleted: false) }
@@ -544,6 +550,24 @@ class Comment < ApplicationRecord
 
   def to_param
     short_id
+  end
+
+  # this is less evil than it looks because commonmark produces consistent html:
+  # <a href="http://example.com/" rel="ugc">example</a>
+  def parsed_links
+    markeddown_comment
+      .scan(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/)
+      .map { |url, title|
+        Link.new({
+          from_comment_id: id,
+          url: url,
+          title: (url == title) ? nil : title
+        })
+      }.compact
+  end
+
+  def recreate_links
+    Link.recreate_from_comment!(self) if saved_change_to_attribute? :comment
   end
 
   def unassign_votes

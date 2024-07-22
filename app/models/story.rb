@@ -38,6 +38,11 @@ class Story < ApplicationRecord
   has_many :hidings, class_name: "HiddenStory", inverse_of: :story, dependent: :destroy
   has_many :savings, class_name: "SavedStory", inverse_of: :story, dependent: :destroy
   has_one :story_text, foreign_key: :id, dependent: :destroy, inverse_of: :story
+  has_many :links, inverse_of: :from_story, dependent: :destroy
+  has_many :incoming_links,
+    class_name: "Link",
+    inverse_of: :to_story,
+    dependent: :destroy
 
   scope :base, ->(user) { includes(:story_text, :user).not_deleted(user).unmerged.mod_preload?(user) }
   scope :for_presentation, -> {
@@ -145,9 +150,6 @@ class Story < ApplicationRecord
   # drop these words from titles when making URLs
   TITLE_DROP_WORDS = ["", "a", "an", "and", "but", "in", "of", "or", "that", "the", "to"].freeze
 
-  # URI.parse is not very lenient, so we can't use it
-  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>(?:[^\.\/]+\.)+[a-z\-]+)(?<port>:\d+)?(?:\/|\z)/i
-
   # Dingbats, emoji, and other graphics https://www.unicode.org/charts/
   GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}\u{2192}-\u{27BF}\u{1F000}-\u{1F9FF}]/
 
@@ -161,14 +163,14 @@ class Story < ApplicationRecord
   before_save :fix_bogus_chars
   before_create :assign_initial_hotness
   after_create :mark_submitter, :record_initial_upvote
-  after_save :update_cached_columns, :update_story_text
+  after_save :recreate_links, :update_cached_columns, :update_story_text
 
   validate do
     if url.present?
       already_posted_recently?
       check_not_banned_domain
       check_not_new_domain_from_new_user
-      errors.add(:url, "is not valid") unless url.match(URL_RE)
+      errors.add(:url, "is not valid") unless url.match(Utils::URL_RE)
     elsif description.to_s.strip == ""
       errors.add(:description, "must contain text if no URL posted")
     end
@@ -247,7 +249,7 @@ class Story < ApplicationRecord
   def self.find_similar_by_url(url)
     # if a previous submission was moderated, return it to block it from being
     # submitted again
-    Story.where(normalized_url: Utils.normalize_url(url))
+    Story.where(normalized_url: Utils.normalize(url))
       .where("is_deleted = ? OR is_moderated = ?", false, true)
   end
 
@@ -811,6 +813,37 @@ class Story < ApplicationRecord
     end
   end
 
+  # this is less evil than it looks because commonmark produces consistent html:
+  # <a href="http://example.com/" rel="ugc">example</a>
+  def parsed_links
+    if markeddown_description.blank?
+      []
+    else
+      markeddown_description
+        .scan(/<a href="([^"]+)" .*>([^<]+)<\/a>/)
+        .map { |url, title|
+          Link.new({
+            from_story_id: id,
+            url: url,
+            title: (url == title) ? nil : title
+          })
+        }.compact
+    end +
+      if url.blank?
+        []
+      else
+        [Link.new({
+          from_story_id: id,
+          url: url,
+          title: title
+        })]
+      end
+  end
+
+  def recreate_links
+    Link.recreate_from_story!(self) if saved_change_to_attribute?(:url) || saved_change_to_attribute?(:description)
+  end
+
   def update_cached_columns
     update_column :comments_count, merged_comments.active.count
     merged_into_story&.update_cached_columns
@@ -840,7 +873,7 @@ class Story < ApplicationRecord
   def url=(u)
     super(u.try(:strip)) or return if u.blank?
 
-    if (match = u.match(URL_RE))
+    if (match = u.match(Utils::URL_RE))
       # remove well-known port for http and https if present
       @url_port = match[:port]
       if match[:protocol] == "http" && match[:port] == ":80" ||
@@ -861,7 +894,7 @@ class Story < ApplicationRecord
       u = match[1] << (params.any? ? "?#{params.join("&")}" : "")
     end
 
-    self.normalized_url = Utils.normalize_url(u)
+    self.normalized_url = Utils.normalize(u)
     super(u)
   end
 

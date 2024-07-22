@@ -161,7 +161,7 @@ class Search
           .joins!(:story)
           .and!(
             Story.where(url: value.to_s)
-              .or(Story.where(normalized_url: Utils.normalize_url(value.to_s)))
+              .or(Story.where(normalized_url: Utils.normalize(value)))
           )
       when :negated
         # TODO
@@ -265,7 +265,7 @@ class Search
         url = true
         query.and!(
           Story.where(url: value.to_s)
-            .or(Story.where(normalized_url: Utils.normalize_url(value.to_s)))
+            .or(Story.where(normalized_url: Utils.normalize(value)))
         )
       when :negated
         # TODO

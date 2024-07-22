@@ -40,6 +40,19 @@ describe Comment do
     expect(comment).to_not be_valid
   end
 
+  it "extracts links from markdown" do
+    c = Comment.new comment: "a [link](https://example.com)"
+
+    # smoke test:
+    expect(c.markeddown_comment).to eq("<p>a <a href=\"https://example.com\" rel=\"ugc\">link</a></p>\n")
+
+    links = c.parsed_links
+    expect(links.count).to eq(1)
+    l = links.last
+    expect(l.url).to eq("https://example.com")
+    expect(l.title).to eq("link")
+  end
+
   describe ".accessible_to_user" do
     it "when user is a moderator" do
       moderator = build(:user, :moderator)

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "normalize_url" do
+describe "normalizing urls" do
   {
     "https://example.com" => "example.com", # basic
     "http://www.e.com" => "e.com", # http + https same
@@ -58,8 +58,8 @@ describe "normalize_url" do
     "https://wiki.freebsd.org/VCSWhy (" => "wiki.freebsd.org/VCSWhy ("
   }.each do |input, output|
     it "normalizes" do
-      ret = Utils.normalize_url(input)
-      expect(ret).to eq(output), "normalize_url(#{input}) expected #{output} but got #{ret}"
+      ret = Utils.normalize(input)
+      expect(ret).to eq(output), "normalize(#{input}) expected #{output} but got #{ret}"
     end
   end
 end

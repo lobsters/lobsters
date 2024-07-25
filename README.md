@@ -1,4 +1,4 @@
-### Lobsters Rails Project ![build status](https://github.com/lobsters/lobsters/actions/workflows/check.yml/badge.svg)
+### Lobsters Rails Project [![build status](https://github.com/lobsters/lobsters/actions/workflows/check.yml/badge.svg)](https://github.com/lobsters/lobsters/actions/workflows/check.yml)
 
 This is the
 [quite sad](https://web.archive.org/web/20230213161624/https://old.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)

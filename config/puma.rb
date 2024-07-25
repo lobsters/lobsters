@@ -44,7 +44,7 @@ on_worker_boot do |worker_index|
   if on_first_worker
     require "objspace"
     GC.start
-    File.open("/tmp/heap-boot.json", "w+") do |f|
+    File.open("/tmp/heap-boot.json", "w") do |f|
       ObjectSpace.dump_all(output: f)
     end
     if defined?(RubyVM::YJIT)
@@ -52,7 +52,7 @@ on_worker_boot do |worker_index|
         loop do
           # rubocop doesn't know activesupport isn't available here
           # rubocop:disable Rails/TimeZone
-          File.write("/tmp/yjit-stats.txt", [Time.now.strftime("%Y-%m-%dT%H:%M:%S.%L%z"), " ", RubyVM::YJIT.runtime_stats, " ", GC.stat, "\n"].join, mode: "a+")
+          # File.write("/tmp/yjit-stats.txt", [Time.now.strftime("%Y-%m-%dT%H:%M:%S.%L%z"), " ", RubyVM::YJIT.runtime_stats, " ", GC.stat, "\n"].join, mode: "a+")
           # rubocop:enable Rails/TimeZone
           sleep 300
         end
@@ -64,11 +64,11 @@ end
 heap_dumped = false
 out_of_band do
   if on_first_worker && !heap_dumped
-    if GC.stat(:heap_live_slots) > 750_000
+    if GC.stat(:heap_live_slots) > 500_000
       GC.start
-      if GC.stat(:heap_live_slots) > 750_000
+      if GC.stat(:heap_live_slots) > 500_000
         heap_dumped = true
-        File.open("/tmp/heap-bloated.json", "w+") do |f|
+        File.open("/tmp/heap-bloated.json", "w") do |f|
           ObjectSpace.dump_all(output: f)
         end
       end

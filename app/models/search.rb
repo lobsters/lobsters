@@ -166,7 +166,7 @@ class Search
       when :negated
         # TODO
       when :quoted
-        terms.append '"' + strip_operators(value) + '"'
+        terms.append '"' + strip_operators(value.pluck(:term).join(" ")) + '"'
       when :term, :catchall
         val = strip_short_terms(strip_operators(value))
         # if punctuation is replaced with a space, this would generate a terms search
@@ -177,7 +177,7 @@ class Search
     if terms.any?
       terms_sql = <<~SQL.tr("\n", " ")
         MATCH(comment)
-        AGAINST ('#{terms.map { |s| "+#{s}" }.join(", ")}' in boolean mode)
+        AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' in boolean mode)
       SQL
       query.where! terms_sql
     end

@@ -58,29 +58,6 @@
       "note": "these are integers returned by other queries in the class"
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "25962a7aeec83be43af95f65c696d95c19421f2cbee65117ad583179f7060088",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/search.rb",
-      "line": 215,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Arel.sql((\"MATCH(comment)\\nAGAINST ('#{[].map do\n \"+#{s}\"\n end.join(\", \")}' in boolean mode)\\n\".tr(\"\\n\", \" \") + \" DESC\"))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Search",
-        "method": "perform_comment_search!"
-      },
-      "user_input": "\"MATCH(comment)\\nAGAINST ('#{[].map do\n \"+#{s}\"\n end.join(\", \")}' in boolean mode)\\n\".tr(\"\\n\", \" \")",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "Search.strip_operators is a security control"
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "305ab5b7234aff45f564061140f604d2fada9fec1a5b7e45cfbd3296d64cca3e",
@@ -231,11 +208,34 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
+      "fingerprint": "7702b04f42183ee4e94e3e006ac70646a52b36fbc580f98099f13231ae4931c3",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/search.rb",
+      "line": 215,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Arel.sql((\"MATCH(comment)\\nAGAINST ('#{[].map do\n \"+#{s}\"\n end.join(\" \")}' in boolean mode)\\n\".tr(\"\\n\", \" \") + \" DESC\"))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Search",
+        "method": "perform_comment_search!"
+      },
+      "user_input": "\"MATCH(comment)\\nAGAINST ('#{[].map do\n \"+#{s}\"\n end.join(\" \")}' in boolean mode)\\n\".tr(\"\\n\", \" \")",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "inputs pass through strip_operators; has some injection tests"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
       "fingerprint": "9119c403612dd14e616bba623b2dbffa5c3cd0f5a4a9cb27d4374945adc92947",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story_repository.rb",
-      "line": 59,
+      "line": 60,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Story.base(@user).where(\"created_at >= (NOW() - INTERVAL #{length[:dur]} #{length[:intv].upcase})\")",
       "render_path": null,
@@ -327,7 +327,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story.rb",
-      "line": 503,
+      "line": 508,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Story.connection.execute(\"UPDATE stories SET\\n  score = (select coalesce(sum(vote), 0) from votes where story_id = stories.id and comment_id is null),\\n  flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),\\n  hotness = #{calculated_hotness}\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -373,7 +373,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/comment.rb",
-      "line": 372,
+      "line": 382,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Comment.connection.execute(\"UPDATE comments SET\\n  score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),\\n  flags = (select count(*) from votes where comment_id = comments.id and vote = -1),\\n  confidence = #{calculated_confidence},\\n  confidence_order = concat(lpad(char(65536 - floor(((confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(id & 0xff using binary))\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -594,6 +594,6 @@
       "note": "IntervalHelper#time_interval is a security control"
     }
   ],
-  "updated": "2024-03-15 13:36:39 -0500",
+  "updated": "2024-07-29 14:19:56 -0500",
   "brakeman_version": "6.1.2"
 }

@@ -50,7 +50,7 @@ describe Search do
       create(:comment, comment: "comment3",
         story_id: @stories[2].id,
         user_id: @bob.id),
-      create(:comment, comment: "comment4",
+      create(:comment, comment: "comment4 comment",
         story_id: @stories[4].id,
         user_id: @bob.id)
     ]
@@ -209,6 +209,32 @@ describe Search do
     search = Search.new({q: "comment1", what: "comments"}, @alice)
 
     expect(search.results).to include(@comments[1])
+  end
+
+  it "can search for comments with a quoted term" do
+    search = Search.new({q: '"comment1"', what: "comments"}, @alice)
+    expect(search.results.to_a).to eq([@comments[1]])
+  end
+
+  it "can search multi-word terms" do
+    search = Search.new({q: '"comment4 comment"', what: "comments"}, @alice)
+    expect(search.results).to eq([@comments[4]])
+  end
+
+  it "can search multi-word requiring all terms in order, not an OR search" do
+    search = Search.new({q: '"comment1 comment2"', what: "comments"}, @alice)
+    expect(search.results).to be_empty
+  end
+
+  it "prevents SQL injection in multi-word quoted searches" do
+    search = Search.new({q: '"comment1" OR 1=1--', what: "comments"}, @alice)
+    expect(search.results.to_a).to eq([@comments[1]])
+
+    search = Search.new({q: '"comment1"\'" OR 1=1--', what: "comments"}, @alice)
+    expect(search.results.to_a).to eq([@comments[1]])
+
+    search = Search.new({q: '"comment1\'" OR 1=1--', what: "comments"}, @alice)
+    expect(search.results.to_a).to eq([@comments[1]])
   end
 
   it "can search for comments by tag" do

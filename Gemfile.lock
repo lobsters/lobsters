@@ -156,6 +156,11 @@ GEM
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    lograge (0.14.0)
+      actionpack (>= 4)
+      activesupport (>= 4)
+      railties (>= 4)
+      request_store (~> 1.0)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -266,6 +271,8 @@ GEM
     regexp_parser (2.9.0)
     reline (0.4.2)
       io-console (~> 0.5)
+    request_store (1.7.0)
+      rack (>= 1.4)
     rexml (3.3.2)
       strscan
     rotp (6.3.0)
@@ -322,6 +329,7 @@ GEM
     scenic-mysql_adapter (1.0.1)
       mysql2
       scenic (>= 1.4.0)
+    silencer (2.0.0)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -411,6 +419,7 @@ DEPENDENCIES
   htmlentities
   json
   listen
+  lograge
   mail
   memory_profiler
   mysql2
@@ -429,6 +438,7 @@ DEPENDENCIES
   rspec-rails
   scenic
   scenic-mysql_adapter
+  silencer
   simplecov
   sitemap_generator
   sprockets-rails

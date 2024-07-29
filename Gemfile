@@ -43,6 +43,8 @@ gem "mail" # for parsing incoming mail
 gem "sitemap_generator" # for better search engine indexing
 gem "svg-graph", require: "SVG/Graph/TimeSeries" # for charting, note workaround in lib/time_series.rb
 gem "rack-attack" # rate-limiting
+gem "lograge" # for JSON logging
+gem "silencer" # to disable default logging in prod
 
 group :test, :development do
   gem "benchmark-perf"

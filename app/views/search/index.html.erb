@@ -82,13 +82,13 @@
           <dd><%= @search.searched_model.name %> by: <%= link_to value, user_path(value) %></dd>
         <% when :negated %>
         <% when :quoted %>
-          <dt><span class="searchq">"<%= value %>"</span></dt>
+          <dt><span class="searchq">"<%= value.pluck(:term).join(" ") %>"</span></dt>
           <dd>
-            Quote: <span class="searchq">"<%= @search.strip_operators(value) %>"</span>
+            Quote: <span class="searchq">"<%= @search.strip_operators(value.pluck(:term).join(" ")) %>"</span>
             <% if !value.to_s.include?(' ') %>
               <br>Quoting a single word is redundant, terms are exact.
             <% end %>
-            <% if value.to_s != @search.strip_operators(value) %>
+            <% if value.pluck(:term).join(" ").to_s != @search.strip_operators(value.pluck(:term).join(" ")) %>
               <br>Punctuation that might have been taken as a <a href="https://mariadb.com/kb/ru/full-text-index-overview/#in-boolean-mode">SQL search operator</a> was stripped.
             <% end %>
           </dd>

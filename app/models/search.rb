@@ -270,7 +270,7 @@ class Search
       when :negated
         # TODO
       when :quoted
-        terms.append '"' + strip_operators(value) + '"'
+        terms.append '"' + strip_operators(value.pluck(:term).join(" ")) + '"'
       when :term, :catchall
         val = strip_short_terms(strip_operators(value))
         # if punctuation is replaced with a space, this would generate a terms search

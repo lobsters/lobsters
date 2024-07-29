@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   TAG_FILTER_COOKIE = :tag_filters
   CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
 
-  rescue_from ActionController::UnknownFormat do
+  rescue_from ActionController::UnknownFormat, ActionView::MissingTemplate do
     render plain: "404 Not Found", status: :not_found, content_type: "text/plain"
   end
   rescue_from ActionController::UnpermittedParameters do

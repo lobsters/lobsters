@@ -14,7 +14,7 @@ Rails.application.configure do
   config.lograge.logger = config.logger
 
   config.lograge.custom_options = lambda do |event|
-    exceptions = %w[prototocol controller action id format] + event.payload[:path_parameters].keys
+    exceptions = %w[prototocol controller action id format]
     {
       timestamp: Time.now.utc.iso8601(3),
       params: event.payload[:params].except(*exceptions),

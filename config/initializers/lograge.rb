@@ -7,28 +7,27 @@ Rails.application.configure do
 
   # Use a custom logger to silence the Rails default metadata like:
   # I, [2024-07-30T04:15:03.397498 #582493]  INFO -- : [35da4f44-e8a4-49ec-bc6e-ee2e9f8d43b4]
-  # for production, this pulls the filename set in config/initializers/production.rb
-  # config.logger = ActiveSupport::Logger.new(Rails.logger.instance_variable_get(:@logdev)&.filename || $stdout)
   config.logger = ActiveSupport::Logger.new(Rails.env.production? ? "/srv/lobste.rs/log/production.log" : $stdout)
   config.logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
   config.lograge.logger = config.logger
 
+  filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
   config.lograge.custom_options = lambda do |event|
-    exceptions = %w[prototocol controller action id format]
     {
       timestamp: Time.now.utc.iso8601(3),
-      params: event.payload[:params].except(*exceptions),
+      query_params: filter.filter(event.payload[:request].query_parameters),
+      posts_params: filter.filter(event.payload[:request].request_parameters),
       exception: event.payload[:exception]&.first,
       exception_message: event.payload[:exception]&.last,
-      remote_ip: event.payload[:request].remote_ip,
-      path: event.payload[:request].original_fullpath || event.payload[:request].fullpath
+      remote_ip: event.payload[:request].remote_ip
     }
   end
 
   config.lograge.custom_payload do |controller|
     {
       user_id: controller.instance_variable_get(:@user)&.id || 0,
-      username: controller.instance_variable_get(:@user)&.username || "nobody"
+      username: controller.instance_variable_get(:@user)&.username || "nobody",
+      path: controller.instance_variable_get(:@requested_path) || controller.request.original_fullpath
     }
   end
 

@@ -3,16 +3,14 @@
 require "silencer/rails/logger"
 
 Rails.application.configure do
-  config.lograge.enabled = true
   config.lograge.formatter = Lograge::Formatters::Json.new
 
-  # Use a custom logger that doesn't add metadata
-  config.logger = ActiveSupport::Logger.new($stdout)
-  config.logger.formatter = proc { |severity, datetime, progname, msg|
-    "#{msg}\n"
-  }
-
-  # Set lograge to use our custom logger
+  # Use a custom logger to silence the Rails default metadata like:
+  # I, [2024-07-30T04:15:03.397498 #582493]  INFO -- : [35da4f44-e8a4-49ec-bc6e-ee2e9f8d43b4]
+  # for production, this pulls the filename set in config/initializers/production.rb
+  # config.logger = ActiveSupport::Logger.new(Rails.logger.instance_variable_get(:@logdev)&.filename || $stdout)
+  config.logger = ActiveSupport::Logger.new(Rails.env.production? ? "/srv/lobste.rs/log/production.log" : $stdout)
+  config.logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
   config.lograge.logger = config.logger
 
   config.lograge.custom_options = lambda do |event|

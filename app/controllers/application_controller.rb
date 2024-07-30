@@ -19,8 +19,13 @@ class ApplicationController < ActionController::Base
   TAG_FILTER_COOKIE = :tag_filters
   CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
 
+  # Rails misdesign: if the /recent route doesn't support .rss, Rails calls it anyways and then
+  # raises MissingTemplate when it's not handled, as if the app did something wrong (a prod 500!).
   rescue_from ActionController::UnknownFormat, ActionView::MissingTemplate do
-    render plain: "404 Not Found", status: :not_found, content_type: "text/plain"
+    request.format = :html # required, despite format.any
+    respond_to do |format|
+      format.any { render "about/404", status: :not_found, content_type: "text/html" }
+    end
   end
   rescue_from ActionController::UnpermittedParameters do
     render plain: "400 Unpermitted query or form parameter", status: :bad_request, content_type: "text/plain"

@@ -16,8 +16,7 @@ Rails.application.configure do
   config.lograge.custom_options = lambda do |event|
     {
       timestamp: Time.now.utc.iso8601(3),
-      query_params: filter.filter(event.payload[:request].query_parameters),
-      posts_params: filter.filter(event.payload[:request].request_parameters),
+      params: filter.filter(event.payload[:request].query_parameters.merge(event.payload[:request].request_parameters)),
       exception: event.payload[:exception]&.first,
       exception_message: event.payload[:exception]&.last,
       remote_ip: event.payload[:request].remote_ip

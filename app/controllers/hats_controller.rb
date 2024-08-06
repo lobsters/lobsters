@@ -70,16 +70,24 @@ class HatsController < ApplicationController
   end
 
   def doff_by_user
-    if params[:reason].blank?
-      flash[:error] = "You must give a reason for the doffing."
-      return redirect_to doff_hat_path(@hat)
+    if doff_with_reason(@hat, params[:reason])
+      redirect_to @user
+    else
+      redirect_to doff_hat_path(@hat)
     end
-
-    @hat.doff_by_user_with_reason(@user, params[:reason])
-    redirect_to @user
   end
 
   private
+
+  def doff_with_reason(hat, reason)
+    if reason.present?
+      hat.doff_by_user_with_reason(@user, reason)
+      true
+    else
+      flash[:error] = "You must give a reason for the doffing."
+      false
+    end
+  end
 
   def only_hat_user_or_moderator
     if @hat.user == @user || @user.is_moderator?

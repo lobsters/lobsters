@@ -1,5 +1,5 @@
 <div class="box wide">
-  <%= form_with url: doff_by_user_path(@hat) do |f| %>
+  <%= form_with url: doff_hat_by_user_path(@hat) do |f| %>
     <p>
       <%= f.label :user_id, "User:" %>
       <%= styled_user_link @hat.user %>

@@ -95,6 +95,8 @@ class LoginController < ApplicationController
       end
 
       return redirect_to "/"
+    rescue LoginFailedError
+      fail_reason = "Invalid e-mail address and/or password."
     rescue LoginWipedError
       fail_reason = "Your account was banned or deleted before the site changed admins. " \
         "Your email and password hash were wiped for privacy."
@@ -102,12 +104,12 @@ class LoginController < ApplicationController
       fail_reason = "BCrypt passwords need to be less than 72 bytes, you'll have to reset to set a shorter one, sorry for the hassle."
     rescue LoginBannedError
       fail_reason = "Your account has been banned. Log: #{user.banned_reason}"
+      ModNote.tattle_on_banned_login(user)
     rescue LoginDeletedError
-      fail_reason = "Your account has been deleted."
+      fail_reason = "You deleted your account."
+      ModNote.tattle_on_deleted_login(user)
     rescue LoginTOTPFailedError
       fail_reason = "Your TOTP code was invalid."
-    rescue LoginFailedError
-      fail_reason = "Invalid e-mail address and/or password."
     end
 
     flash.now[:error] = fail_reason

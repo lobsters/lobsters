@@ -53,6 +53,26 @@ class ModNote < ApplicationRecord
     )
   end
 
+  def self.tattle_on_banned_login(user)
+    # rubocop:disable Rails/SaveBang
+    create(
+      moderator: InactiveUser.inactive_user,
+      user: user,
+      note: "Attempted to log in while banned."
+    )
+    # rubocop:enable Rails/SaveBang
+  end
+
+  def self.tattle_on_deleted_login(user)
+    # rubocop:disable Rails/SaveBang
+    create(
+      moderator: InactiveUser.inactive_user,
+      user: user,
+      note: "Attempted to log in after deleting their account."
+    )
+    # rubocop:enable Rails/SaveBang
+  end
+
   def self.tattle_on_invited(redeemer, invitation_code)
     invitation = Invitation.find_by(code: invitation_code)
     return unless invitation

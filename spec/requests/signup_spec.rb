@@ -13,7 +13,7 @@ describe "signup", type: :request do
     it "creates a ModNote" do
       expect {
         get "/invitations/#{invitation.code}"
-      }.to(change { ModNote.count })
+      }.to change { ModNote.count }.by(1)
     end
   end
 end

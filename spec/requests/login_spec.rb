@@ -3,6 +3,7 @@
 require "rails_helper"
 
 describe "login", type: :request do
+  let!(:inactive_user) { create(:user, :inactive) }
   let(:user) { create(:user, password: "asdf") }
   let(:banned) { create(:user, :banned, password: "asdf") }
   let(:deleted) { create(:user, :deleted, password: "asdf") }
@@ -46,13 +47,17 @@ describe "login", type: :request do
     end
 
     it "doesn't allow login by banned users" do
-      post "/login", params: {email: banned.email, password: "asdf"}
+      expect {
+        post "/login", params: {email: banned.email, password: "asdf"}
+      }.to change { ModNote.count }.by(1)
       expect(session[:u]).to be_nil
       expect(flash[:error]).to match(/banned/)
     end
 
     it "doesn't allow login by deleted users" do
-      post "/login", params: {email: deleted.email, password: "asdf"}
+      expect {
+        post "/login", params: {email: deleted.email, password: "asdf"}
+      }.to change { ModNote.count }.by(1)
       expect(session[:u]).to be_nil
       expect(flash[:error]).to match(/deleted/)
     end

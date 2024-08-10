@@ -42,6 +42,17 @@
     <% end %>
 
     <li class="comments_subtree">
+      <% if @user %>
+        <div class="thread_summary">
+          <%= pluralize(@comments.size, "comment") %>,
+          <% if (@ribbon&.unread_count(@comments) || 0) > 0 %>
+            <%= raw "<span class='comment_unread'>#{@ribbon.unread_count(@comments)} unread</span>" %>
+          <% else %>
+            0 unread
+          <% end %>
+        </div>
+      <% end %>
+
       <%= render partial: 'comments/threads', locals: { thread: @comments, story: @story, ribbon: @ribbon } %>
     </li>
 

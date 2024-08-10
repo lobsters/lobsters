@@ -60,6 +60,40 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
+      "fingerprint": "2ac9917e793a6a5c4bf437a9c9f66c34255572f06d6620c6fed28d533b45ee22",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/stories/show.html.erb",
+      "line": 49,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "@ribbon.unread_count(Comment.story_threads(Story.where(:short_id => params[:id]).first!).for_presentation)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "StoriesController",
+          "method": "show",
+          "line": 201,
+          "file": "app/controllers/stories_controller.rb",
+          "rendered": {
+            "name": "stories/show",
+            "file": "app/views/stories/show.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "stories/show"
+      },
+      "user_input": "Comment.story_threads(Story.where(:short_id => params[:id]).first!).for_presentation",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": "false alarm, this passes the url param through AR's API"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
       "fingerprint": "305ab5b7234aff45f564061140f604d2fada9fec1a5b7e45cfbd3296d64cca3e",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
@@ -594,6 +628,6 @@
       "note": "IntervalHelper#time_interval is a security control"
     }
   ],
-  "updated": "2024-07-29 14:19:56 -0500",
+  "updated": "2024-08-10 13:41:12 -0500",
   "brakeman_version": "6.1.2"
 }

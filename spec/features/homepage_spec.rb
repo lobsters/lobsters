@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.feature "Reading Homepage", type: :feature do
-  let!(:story) { create(:story) }
+  let!(:story) { create(:story, description: "Preview shown") }
 
   feature "when logged out" do
     scenario "reading a story" do
@@ -20,6 +20,14 @@ RSpec.feature "Reading Homepage", type: :feature do
     scenario "reading a story" do
       visit "/"
       expect(page).to have_content(story.title)
+    end
+
+    scenario "shows previews if the user wants" do
+      # user.show_story_previews = true
+      user.save!
+
+      visit "/"
+      expect(page).to have_content(story.description)
     end
   end
 

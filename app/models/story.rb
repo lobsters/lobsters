@@ -895,7 +895,7 @@ class Story < ApplicationRecord
     end
 
     self.normalized_url = Utils.normalize(u)
-    super(u)
+    super
   end
 
   def url_is_editable_by_user?(user)

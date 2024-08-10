@@ -23,7 +23,7 @@ RSpec.feature "Reading Homepage", type: :feature do
     end
 
     scenario "shows previews if the user wants" do
-      # user.show_story_previews = true
+      user.show_story_previews = true
       user.save!
 
       visit "/"

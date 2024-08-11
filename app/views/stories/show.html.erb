@@ -42,7 +42,7 @@
     <% end %>
 
     <li class="comments_subtree">
-      <% if @user %>
+      <% if @user && @comments.size > 0 %>
         <div class="thread_summary">
           <%= pluralize(@comments.size, "comment") %>,
           <% if (@ribbon&.unread_count(@comments) || 0) > 0 %>

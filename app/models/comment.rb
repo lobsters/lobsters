@@ -184,10 +184,10 @@ class Comment < ApplicationRecord
   # http://evanmiller.org/how-not-to-sort-by-average-rating.html
   # https://github.com/reddit/reddit/blob/master/r2/r2/lib/db/_sorts.pyx
   def calculated_confidence
-    return 0 if self.score == 0 && flags == 0
-    n = (self.score + flags * 2).to_f
+    return 0 if self.score == 0
+    n = self.score.to_f
 
-    upvotes = self.score + flags
+    upvotes = self.score
     z = 1.281551565545 # 80% confidence
     p = upvotes.to_f / n
 
@@ -579,11 +579,11 @@ class Comment < ApplicationRecord
   end
 
   def vote_summary_for_user
-    (vote_summary || []).map { |v| "-#{v.count} #{v.reason_text.downcase}" }.join(", ")
+    (vote_summary || []).map { |v| "#{v.count} #{v.reason_text.downcase}" }.join(", ")
   end
 
   def vote_summary_for_moderator
-    (vote_summary || []).map { |v| "-#{v.count} #{v.reason_text.downcase} (#{v.usernames})" }.join(", ")
+    (vote_summary || []).map { |v| "#{v.count} #{v.reason_text.downcase} (#{v.usernames})" }.join(", ")
   end
 
   def undelete_for_user(user)

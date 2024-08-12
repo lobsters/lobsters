@@ -44,9 +44,9 @@ class Story < ApplicationRecord
     inverse_of: :to_story,
     dependent: :destroy
 
-  scope :base, ->(user) { includes(:story_text, :user).not_deleted(user).unmerged.mod_preload?(user) }
+  scope :base, ->(user) { includes(:hidings, :story_text, :user).not_deleted(user).unmerged.mod_preload?(user) }
   scope :for_presentation, -> {
-    includes(:domain, :user, :tags, taggings: :tag)
+    includes(:domain, :hidings, :user, :tags, taggings: :tag)
   }
   scope :mod_preload?, ->(user) {
     user.try(:is_moderator?) ? preload(:suggested_taggings, :suggested_titles) : all
@@ -245,6 +245,19 @@ class Story < ApplicationRecord
     current_vote.try(:[], :vote) == 1
   end
 
+  def negativity_class
+    @neg ||= score - hidings.size - flags
+    if @neg <= -5
+      "negative_5"
+    elsif @neg <= -3
+      "negative_3"
+    elsif @neg <= -1
+      "negative_1"
+    else
+      ""
+    end
+  end
+
   # all stories with similar urls
   def self.find_similar_by_url(url)
     # if a previous submission was moderated, return it to block it from being
@@ -356,18 +369,18 @@ class Story < ApplicationRecord
     base = tags.sum(:hotness_mod) + ((user_is_author? && url.present?) ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
-    sum_expression = (base < 0) ? "comments.flags * -0.5" : "comments.score + 1"
-    cpoints = merged_comments.where.not(user_id: user_id).sum(sum_expression).to_f * 0.5
+    cpoints = if base < 0
+      0
+    else
+      merged_comments.where.not(user_id: user_id).sum("comments.score + 1").to_f * 0.5
+    end
 
     # mix in any stories this one cannibalized
     cpoints += merged_stories.map(&:score).inject(&:+).to_f
 
     # if a story has many comments but few votes, it's probably a bad story, so
     # cap the comment points at the number of upvotes
-    upvotes = self.score + flags
-    if cpoints > upvotes
-      cpoints = upvotes
-    end
+    cpoints = [self.score, cpoints].min
 
     # don't immediately kill stories at 0 by bumping up score by one
     order = Math.log([(score + 1).abs + cpoints, 1].max, 10)
@@ -379,8 +392,7 @@ class Story < ApplicationRecord
       0
     end
 
-    -((order * sign) + base +
-      ((created_at || Time.current).to_f / HOTNESS_WINDOW)).round(7)
+    -((order * sign) + base + ((created_at || Time.current).to_f / HOTNESS_WINDOW)).round(7)
   end
 
   def can_be_seen_by_user?(user)
@@ -503,7 +515,19 @@ class Story < ApplicationRecord
     self.flags += flag_delta
     Story.connection.execute <<~SQL
       UPDATE stories SET
-        score = (select coalesce(sum(vote), 0) from votes where story_id = stories.id and comment_id is null),
+        score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -
+        -- subtract number of hidings where hider didn't vote or comment
+        (
+          select count(*) from hidden_stories hiding
+          where
+            story_id = #{id.to_i}
+            and not exists (  -- ignore hiding from a user who's voted the story or comments
+              select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = 1
+            )
+            and not exists ( -- ignore hiding from user who wrote a comment
+              select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id
+            )
+        ),
         flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),
         hotness = #{calculated_hotness}
       WHERE id = #{id.to_i}
@@ -922,7 +946,7 @@ class Story < ApplicationRecord
     votes.includes((user && user.is_moderator?) ? :user : nil).find_each do |v|
       next if v.vote == 0
       r_counts[v.reason.to_s] ||= 0
-      r_counts[v.reason.to_s] += v.vote
+      r_counts[v.reason.to_s] += 1
       if user&.is_moderator?
         r_whos[v.reason.to_s] ||= []
         r_whos[v.reason.to_s].push v.user.username

@@ -100,7 +100,7 @@ describe ReplyingComment do
         -1, p.story_id, nil, create(:user).id, "O"
       )
 
-      expect(p.story.reload.score).to be < 0
+      expect(p.story.reload.score).to be < p.story.flags
       expect(p).to_not have_reply(r)
     end
 

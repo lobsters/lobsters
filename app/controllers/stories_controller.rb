@@ -371,7 +371,7 @@ class StoriesController < ApplicationController
       return render plain: "story has been merged", status: 400
     end
 
-    HiddenStory.hide_story_for_user(story.id, @user.id)
+    HiddenStory.hide_story_for_user(story, @user)
 
     render plain: "ok"
   end
@@ -381,7 +381,7 @@ class StoriesController < ApplicationController
       return render plain: "can't find story", status: 400
     end
 
-    HiddenStory.unhide_story_for_user(story.id, @user.id)
+    HiddenStory.unhide_story_for_user(story, @user)
 
     render plain: "ok"
   end

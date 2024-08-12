@@ -6,13 +6,15 @@ class HiddenStory < ApplicationRecord
 
   scope :by, ->(user) { where(user: user) }
 
-  def self.hide_story_for_user(story_id, user_id)
-    HiddenStory.where(user_id: user_id, story_id: story_id).first_or_initialize.save!
-    ReadRibbon.hide_replies_for(story_id, user_id)
+  def self.hide_story_for_user(story, user)
+    HiddenStory.where(story: story, user: user).first_or_initialize.save!
+    story.update_score_and_recalculate!(0, 0)
+    ReadRibbon.hide_replies_for(story.id, user.id)
   end
 
-  def self.unhide_story_for_user(story_id, user_id)
-    HiddenStory.where(user_id: user_id, story_id: story_id).delete_all
-    ReadRibbon.unhide_replies_for(story_id, user_id)
+  def self.unhide_story_for_user(story, user)
+    HiddenStory.where(story: story, user: user).delete_all
+    story.update_score_and_recalculate!(0, 0)
+    ReadRibbon.unhide_replies_for(story.id, user.id)
   end
 end

@@ -16,9 +16,7 @@
 <li id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
 class="story <%= story.current_upvoted? ? "upvoted" : "" %>
 <%= story.current_flagged? ? "flagged" : "" %>
-<%= story.score <= -1 ? "negative_1" : "" %>
-<%= story.score <= -3 ? "negative_3" : "" %>
-<%= story.score <= -5 ? "negative_5" : "" %>
+<%= story.negativity_class %>
 <%= story.is_hidden_by_cur_user ? "hidden" : "" %>
 <%= story.is_saved_by_cur_user ? "saved" : "" %>
 <%= story.is_deleted? ? "deleted" : "" %>">

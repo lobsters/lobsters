@@ -397,6 +397,41 @@ describe Story do
     end
   end
 
+  describe "update_score_and_recalculate" do
+    let(:story) { create(:story) }
+
+    it "deducts from score when users hide" do
+      expect(story.score).to eq(1) # from submitter's upvote
+      HiddenStory.hide_story_for_user(story, create(:user))
+      expect(story.reload.score).to eq(0)
+    end
+
+    it "doesn't deduct from score if hiding user commented" do
+      expect(story.score).to eq(1) # from submitter's upvote
+      hider = create(:user)
+      create(:comment, story: story, user: hider)
+      HiddenStory.hide_story_for_user(story, hider)
+      expect(story.reload.score).to eq(1)
+    end
+
+    it "doesn't deduct from score if hiding user voted on the story" do
+      expect(story.score).to eq(1) # from submitter's upvote
+      hider = create(:user)
+      Vote.vote_thusly_on_story_or_comment_for_user_because(1, story.id, nil, hider.id, nil)
+      HiddenStory.hide_story_for_user(story, hider)
+      expect(story.reload.score).to eq(2)
+    end
+
+    it "doesn't deduct from score if hiding user voted on any comment" do
+      expect(story.score).to eq(1) # from submitter's upvote
+      hider = create(:user)
+      comment = create(:comment, story: story)
+      Vote.vote_thusly_on_story_or_comment_for_user_because(1, story.id, comment.id, hider.id, nil)
+      HiddenStory.hide_story_for_user(story, hider)
+      expect(story.reload.score).to eq(1)
+    end
+  end
+
   describe "#update_cached_columns" do
     context "with a merged_into_story" do
       let(:merged_into_story) { create(:story) }

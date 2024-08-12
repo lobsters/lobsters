@@ -92,6 +92,29 @@
       "note": "false alarm, this passes the url param through AR's API"
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "2d86a3f866c84a287fbd5ba280854c3e8374bfdceff48578dfee48e4ab6a53b9",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/story.rb",
+      "line": 532,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Story.connection.execute(\"UPDATE stories SET\\n  score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -\\n  -- subtract number of hidings where hider didn't vote or comment\\n  (\\n    select count(*) from hidden_stories hiding\\n    where\\n      story_id = #{id.to_i}\\n      and not exists (  -- ignore hiding from a user who's voted the story or comments\\n        select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = 1\\n      )\\n      and not exists ( -- ignore hiding from user who wrote a comment\\n        select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id\\n      )\\n  ),\\n  flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),\\n  hotness = #{calculated_hotness}\\nWHERE id = #{id.to_i}\\n\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Story",
+        "method": "update_score_and_recalculate!"
+      },
+      "user_input": "calculated_hotness",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "only uses story.id which is an integer and came out of the db, so there's no potential sql injection here"
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "305ab5b7234aff45f564061140f604d2fada9fec1a5b7e45cfbd3296d64cca3e",
@@ -355,29 +378,6 @@
       "note": "type comes from @what.keys, which are symbols for table names"
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "9eea6631f4cd5cbb5e75e3abd761f0ba5a1dc06454127077a3a1453421d21552",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/story.rb",
-      "line": 508,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Story.connection.execute(\"UPDATE stories SET\\n  score = (select coalesce(sum(vote), 0) from votes where story_id = stories.id and comment_id is null),\\n  flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),\\n  hotness = #{calculated_hotness}\\nWHERE id = #{id.to_i}\\n\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Story",
-        "method": "update_score_and_recalculate!"
-      },
-      "user_input": "calculated_hotness",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "calculated_hotness returns float; id is an integer"
-    },
-    {
       "warning_type": "File Access",
       "warning_code": 16,
       "fingerprint": "a49c5ada804d39509938a1b7737994d697c646342f3ba6745571665724944958",
@@ -628,6 +628,6 @@
       "note": "IntervalHelper#time_interval is a security control"
     }
   ],
-  "updated": "2024-08-10 13:41:12 -0500",
+  "updated": "2024-08-12 18:24:18 -0500",
   "brakeman_version": "6.1.2"
 }

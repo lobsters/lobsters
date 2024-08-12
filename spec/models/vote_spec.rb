@@ -9,10 +9,10 @@ describe Vote do
     v = build(:vote, user: u, story: s, vote: nil)
 
     v.valid?
-    expect(v.errors[:vote]).to eq(["can't be blank"])
+    expect(v.errors[:vote]).to include("can't be blank")
   end
 
-  context "upvoting a score and flags" do
+  context "upvoting a story and flags" do
     # don't need to test short-circuit where vote is "changed" to what it already is
 
     let(:u) { create(:user) }

@@ -11,7 +11,7 @@ class Vote < ApplicationRecord
   attribute :count, :integer
   attribute :usernames, :string
 
-  validates :vote, presence: true
+  validates :vote, presence: true, inclusion: {in: [1, -1]}
   validates :reason,
     length: {is: 1},
     allow_blank: true,

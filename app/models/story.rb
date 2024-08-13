@@ -521,7 +521,7 @@ class Story < ApplicationRecord
           select count(*) from hidden_stories hiding
           where
             story_id = #{id.to_i}
-            and hiding.created_at >= "#{created_at - FLAGGABLE_DAYS.days}"
+            and hiding.created_at >= str_to_date('#{(created_at - FLAGGABLE_DAYS.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')
             and not exists (  -- ignore hiding from a user who's voted the story or comments
               select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = 1
             )

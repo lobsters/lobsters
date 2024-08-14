@@ -516,16 +516,16 @@ class Story < ApplicationRecord
     Story.connection.execute <<~SQL
       UPDATE stories SET
         score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -
-        -- subtract number of hidings where hider didn't vote or comment
+        -- subtract number of hidings where hider flagged AND didn't comment (comment voting is ignored)
         (
           select count(*) from hidden_stories hiding
           where
             story_id = #{id.to_i}
             and hiding.created_at >= str_to_date('#{(created_at - FLAGGABLE_DAYS.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')
-            and not exists (  -- ignore hiding from a user who's voted the story or comments
-              select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = 1
+            and exists (    -- user flagged
+              select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1
             )
-            and not exists ( -- ignore hiding from user who wrote a comment
+            and not exists ( -- user didn't comment
               select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id
             )
         ),

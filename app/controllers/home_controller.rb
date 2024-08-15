@@ -94,6 +94,8 @@ class HomeController < ApplicationController
       }
       format.json { render json: @stories }
     end
+
+    @user&.touch(:last_read_newest)
   end
 
   def newest_by_user

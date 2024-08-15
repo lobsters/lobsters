@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_13_153242) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_15_145726) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "category", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -327,6 +327,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_13_153242) do
     t.string "disabled_invite_reason", limit: 200
     t.text "settings", size: :medium
     t.boolean "show_email", default: false, null: false
+    t.datetime "last_read_newest"
     t.index ["banned_by_user_id"], name: "users_banned_by_user_id_fk"
     t.index ["disabled_invite_by_user_id"], name: "users_disabled_invite_by_user_id_fk"
     t.index ["email"], name: "index_users_on_email", unique: true

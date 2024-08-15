@@ -1,8 +1,15 @@
 <%# locals: () -%>
 <%= render @above if @above %>
 
+<% already_printed_newest_line = false %>
 <ol class="stories list <%= action_name == "hidden" ? "show_hidden" : "" %>">
   <% @stories.each do |story| %>
+    <% if action_name == "newest" &&
+        !already_printed_newest_line &&
+        @user&.last_read_newest&.after?(story.created_at) %>
+      <div class="last_read_newest">Last Read</div>
+      <% already_printed_newest_line = true %>
+    <% end %>
 <%#heinous_inline_partial(stories/_listdetail.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
 <%# locals: (story:, single_story: false) -%>

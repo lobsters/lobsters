@@ -1,0 +1,14 @@
+---
+services:
+  db:
+    image: "docker.io/library/mariadb:11"
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: localdev
+    ports:
+      - 127.0.0.1:3306:3306
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data: {}

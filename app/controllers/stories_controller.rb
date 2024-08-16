@@ -430,16 +430,6 @@ class StoriesController < ApplicationController
     end
   end
 
-  def for_url
-    lookup_params = params.require(:story).permit(:url)
-    raise ActionController::ParameterMissing.new("No URL") if lookup_params[:url].blank?
-    respond_to do |format|
-      format.json {
-        render json: Story.find_similar_by_url(lookup_params[:url]).map(&:as_json)
-      }
-    end
-  end
-
   private
 
   def story_params

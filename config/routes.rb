@@ -79,7 +79,9 @@ Rails.application.routes.draw do
   get "/search" => "search#index"
   get "/search/:q" => "search#index"
 
-  get "/stories/for_url.json" => "stories#for_url", format: "json"
+  get "/stories/url/all" => "story_urls#all", :format => "json"
+  get "/stories/url/latest" => "story_urls#latest"
+
   resources :stories, except: [:index] do
     get "/stories/:short_id", to: redirect("/s/%{short_id}")
     post "upvote"

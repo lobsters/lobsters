@@ -79,7 +79,7 @@ Rails.application.routes.draw do
   get "/search" => "search#index"
   get "/search/:q" => "search#index"
 
-  get "/stories/url/all" => "story_urls#all", :format => "json"
+  get "/stories/url/all" => "story_urls#all"
   get "/stories/url/latest" => "story_urls#latest"
 
   resources :stories, except: [:index] do

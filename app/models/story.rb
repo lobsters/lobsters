@@ -246,7 +246,7 @@ class Story < ApplicationRecord
   end
 
   def negativity_class
-    @neg ||= score - hidings.size - flags
+    @neg ||= score - flags
     if @neg <= -5
       "negative_5"
     elsif @neg <= -3

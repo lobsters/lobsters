@@ -47,8 +47,17 @@ present-tense explanation of the change.  Wrap message lines at 80 characters.
 * If applicable, add tests for your changes.  Not all changes require tests,
 and tests should not be added just for the sake of code coverage.
 
-* Run _all_ tests (with `bundle exec rspec` in the root directory) to ensure
-nothing has been broken by your changes.
+* You can "run the build" (see `.github/workflows/check.yml`) locally with
+`bundle exec rspec && bundle exec standardrb --fix-unsafely && brakeman -q`.
+
+  * [rspec](https://rspec.info/documentation` is the test suite.
+    It's a big DSL so it has a pretty steep learning curve.
+    It's easiest to get started by duplicating existing tests.
+  * [standardrb](https://github.com/standardrb/standard) is the linter/formatter.
+  * [brakeman](https://brakemanscanner.org/) is the security linter.
+    You can run `brakeman -I` to interactively add a note if a new warning is a false positives.
+    It's conservatively configured to fail when a new version of brakeman is released.
+    If that happens when you're working on a PR, you can ping me and I'll update it.
 
 ### Submitting Changes
 

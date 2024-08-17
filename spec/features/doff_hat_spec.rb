@@ -15,7 +15,7 @@ RSpec.feature "Doffing Hats" do
 
     doffing_reason = "Left project"
     click_on "Doff"
-    visit "/hats/doff/#{hat.id}"
+    visit "/hats/#{hat.id}/doff"
     fill_in "reason", with: doffing_reason
     click_on "Doff Hat"
     expect(page).to have_content("doffed")

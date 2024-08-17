@@ -221,9 +221,9 @@ Rails.application.routes.draw do
     :as => "approve_hat_request"
   post "/hats/reject_request/:id" => "hats#reject_request",
     :as => "reject_hat_request"
-  get "/hats/doff/:id" => "hats#doff",
+  get "/hats/:id/doff" => "hats#doff",
     :as => "doff_hat"
-  post "/hats/doff/:id" => "hats#doff_by_user",
+  post "/hats/:id/doff" => "hats#doff_by_user",
     :as => "doff_hat_by_user"
 
   get "/moderations" => "moderations#index"

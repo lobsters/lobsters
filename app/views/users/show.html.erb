@@ -91,6 +91,10 @@
       <%= hat.to_html_label %>
       <% if hat.doffed_at? %>
         doffed <%= time_ago_in_words_label(hat.doffed_at) %>
+      <% else %>
+        <% if @user && ((hat.user == @user) || @user.is_moderator?) %>
+          <%= link_to 'Doff', doff_hat_path(hat) %>
+        <% end %>
       <% end %>
       <br>
     <% end %>

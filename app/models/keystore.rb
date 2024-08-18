@@ -12,7 +12,7 @@ class Keystore < ApplicationRecord
   end
 
   def self.value_for(key)
-    where(key: key).limit(1).pick(:value)
+    where(key: key).pick(:value)
   end
 
   def self.put(key, value)

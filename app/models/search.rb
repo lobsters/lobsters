@@ -111,7 +111,7 @@ class Search
   # not security-sensitive, mariadb ignores 1 and 2 character terms and
   # stripping them allows the frontend to explain they're ignored
   def strip_short_terms(s)
-    s.to_s.gsub(/\b\p{Word}\p{Word}?\b/, "").strip
+    s.to_s.strip.split(/\p{Space}/).filter { _1.size > 2 }.join(" ")
   end
 
   def perform_comment_search!

@@ -37,6 +37,30 @@ RSpec.feature "user threads page ~:user/threads" do
     expect(page).to_not have_content(comment.comment)
   end
 
+  scenario "a logged-in-user looks at their own user_threads" do
+    stub_login_as user
+    comment = create(:comment, user: user, story: story, comment: "Comment text visible")
+
+    story.editor = create(:user, :moderator)
+    story.is_deleted = true
+    story.save!
+
+    visit "/threads/#{user.username}"
+    expect(page).to have_content(comment.comment)
+  end
+
+  scenario "a logged-in-user looks at others' user_threads" do
+    stub_login_as create(:user)
+    comment = create(:comment, story: story, comment: "Comment text visible")
+
+    story.editor = create(:user, :moderator)
+    story.is_deleted = true
+    story.save!
+
+    visit "/threads/#{user.username}"
+    expect(page).to_not have_content(comment.comment)
+  end
+
   scenario "a moderator looks at user_threads" do
     stub_login_as create(:user, :moderator)
     comment = create(:comment, user: user, story: story, comment: "Comment text visible")

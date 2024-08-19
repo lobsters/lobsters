@@ -36,4 +36,12 @@ RSpec.feature "user threads page ~:user/threads" do
     visit "/threads/#{user.username}"
     expect(page).to_not have_content(comment.comment)
   end
+
+  scenario "a moderator looks at user_threads" do
+    stub_login_as create(:user, :moderator)
+    comment = create(:comment, user: user, story: story, comment: "Comment text visible")
+
+    visit "/threads/#{user.username}"
+    expect(page).to have_content(comment.comment)
+  end
 end

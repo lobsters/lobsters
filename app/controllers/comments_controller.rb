@@ -353,7 +353,7 @@ class CommentsController < ApplicationController
       @title = "Your Threads"
     end
 
-    story_filter = @user&.is_moderator? ? {} : {is_deleted: false}
+    story_filter = @user&.is_moderator? ? true : {is_deleted: false}
     @threads = Comment.recent_threads(@showing_user)
       .accessible_to_user(@user)
       .where(story: story_filter)

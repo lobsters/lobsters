@@ -373,7 +373,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
       <li>Terms are exact, so <span class="searchq">code</span> doesn't match <span class="searchq">coder</span> or <span class="searchq">coding</span>. You can approximate stemming with <span class="searchq">cod*</span></li>
       <li>Search titles with <span class="searchq">title:kernel</span> or <span class="searchq">title:"linux kernel"</span></li>
       <li>Search by domain with <span class="searchq">domain:example.com</span></li>
-      <li>Search by story submitter with <span class="searchq">submitter:alice</span></li>
+      <li>Search by story submitter with <span class="searchq">submitter:alice</span> or by comment author with <span class="searchq">commenter:bob</span></li>
       <li>Search by <%= link_to 'tag', tags_path %> with <span class="searchq">tag:meta</span></li>
     </ul>
   </div>

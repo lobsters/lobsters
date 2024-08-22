@@ -138,12 +138,12 @@ describe "sql assumptions" do
     it "initializes correctly" do
       c = create(:comment, id: 9, score: 1, flags: 0)
       c.reload
-      expect(c.confidence_order).to be_bytes("\xAE\x52\x09")
+      expect(c.confidence_order).to be_bytes("\xAER\x01")
     end
 
     it "increments correctly" do
       c = create(:comment, id: 4, score: 1, flags: 0)
-      expect(c.confidence_order).to be_bytes("\x00\x00\x00") # placeholder on creation
+      expect(c.confidence_order).to be_bytes("\xAER\x01")
       create(:vote, story: c.story, comment: c)
       c.update_score_and_recalculate!(1, 0)
       c.reload

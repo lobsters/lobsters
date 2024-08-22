@@ -81,6 +81,6 @@ class HatsController < ApplicationController
   end
 
   def find_hat!
-    @hat = @user.is_moderator? ? Hat.find(params[:id]) : @user.hats.find(params[:id])
+    @hat = @user.is_moderator? ? Hat.find(params[:id]) : @user.wearable_hats.find(params[:id])
   end
 end

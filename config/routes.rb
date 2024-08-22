@@ -214,26 +214,20 @@ Rails.application.routes.draw do
   post "/invitations/delete_request" => "invitations#delete_request",
     :as => "delete_invitation_request"
 
-  get "/hats" => "hats#index"
-  get "/hats/build_request" => "hats#build_request",
-    :as => "request_hat"
-  post "/hats/create_request" => "hats#create_request",
-    :as => "create_hat_request"
-  get "/hats/requests" => "hats#requests_index"
-  post "/hats/approve_request/:id" => "hats#approve_request",
-    :as => "approve_hat_request"
-  post "/hats/reject_request/:id" => "hats#reject_request",
-    :as => "reject_hat_request"
-  get "/hats/:id/doff" => "hats#doff",
-    :as => "doff_hat"
-  post "/hats/:id/doff" => "hats#doff_by_user",
-    :as => "doff_hat_by_user"
-  get "/hats/:id/edit" => "hats#edit",
-    :as => "edit_hat"
-  post "/hats/:id/edit_in_place" => "hats#edit_in_place",
-    :as => "edit_hat_in_place"
-  post "/hats/:id/doff_and_create_new" => "hats#doff_and_create_new",
-    :as => "doff_and_create_new_hat"
+  resources :hat_requests, except: [:edit] do
+    member do
+      post :update, as: :update
+      delete :delete, as: :destroy
+    end
+  end
+  resources :hats, except: [:new, :update, :destroy] do
+    member do
+      get :doff
+      post :doff_by_user
+      post :update_in_place
+      post :update_by_recreating
+    end
+  end
 
   get "/moderations" => "moderations#index"
   get "/moderations/page/:page" => "moderations#index"

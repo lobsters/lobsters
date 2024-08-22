@@ -264,13 +264,14 @@ class Story < ApplicationRecord
     # submitted again
     Story.where(normalized_url: Utils.normalize(url))
       .where("is_deleted = ? OR is_moderated = ?", false, true)
+      .order(id: :desc)
   end
 
   # doesn't include deleted/moderated/merged stories
   def similar_stories
     return Story.none if url.blank?
 
-    @_similar_stories ||= Story.find_similar_by_url(url).order("id DESC")
+    @_similar_stories ||= Story.find_similar_by_url(url).order(id: :desc)
     # do not include this story itself or any story merged into it
     if id?
       @_similar_stories = @_similar_stories.where.not(id: id)

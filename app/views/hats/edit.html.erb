@@ -1,0 +1,20 @@
+<div class="box wide">
+  <%= form_with model: @hat, url: edit_hat_in_place_path(@hat), method: :post do |f| %>
+    <p>
+      <%= f.label :user_id, "User:" %>
+      <%= styled_user_link @hat.user %>
+      <br />
+
+      <%= f.label :hat, "Hat:" %>
+      <%= f.text_field :hat, :size => 20 %>
+      <span class="hint indent">
+        XYZ Project Manager
+      </span>
+    </p>
+
+    <p>
+      <%= f.submit "Edit In-Place" %>
+      <%= f.submit "Doff & Create", formaction: doff_and_create_new_hat_path(@hat) %>
+    </p>
+  <% end %>
+</div>

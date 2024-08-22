@@ -17,6 +17,7 @@
     <th style="width: 130px;">User</th>
     <th>Hat</th>
     <th>Link</th>
+    <th>Action</th>
   </tr>
   <% @hat_groups.keys.sort_by{|a| a.downcase }.each do |hg| %>
     <% @hat_groups[hg].sort_by{|hh| hh.user.username.downcase }.each do |hh| %>
@@ -39,6 +40,7 @@
             doffed <%= time_ago_in_words_label(hh.doffed_at) %>
           <% end %>
         </td>
+        <td><%= link_to "Edit", edit_hat_path(hh) %></td>
       </tr>
     <% end %>
   <% end %>

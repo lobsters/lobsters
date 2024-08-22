@@ -6,7 +6,7 @@ RSpec.feature "Reading Homepage", type: :feature do
   let!(:story) { create(:story, description: "Preview shown") }
 
   feature "when logged out" do
-    scenario "reading a story" do
+    scenario "homepage" do
       visit "/"
       expect(page).to have_content(story.title)
     end
@@ -17,7 +17,7 @@ RSpec.feature "Reading Homepage", type: :feature do
 
     before(:each) { stub_login_as user }
 
-    scenario "reading a story" do
+    scenario "homepage" do
       visit "/"
       expect(page).to have_content(story.title)
     end
@@ -28,6 +28,23 @@ RSpec.feature "Reading Homepage", type: :feature do
 
       visit "/"
       expect(page).to have_content(story.description)
+    end
+  end
+
+  feature "as moderator" do
+    scenario "homepage as moderator" do
+      mod = create(:user, :moderator)
+      stub_login_as mod
+      visit "/"
+      expect(page).to have_content(story.title)
+    end
+
+    scenario "homepage as moderator with pending hat requests" do
+      create(:hat_request)
+      mod = create(:user, :moderator)
+      stub_login_as mod
+      visit "/"
+      expect(page).to have_content(story.title)
     end
   end
 

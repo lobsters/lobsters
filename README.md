@@ -41,39 +41,15 @@ There's an external project [docker-lobsters](https://github.com/utensils/docker
     Ubuntu: sudo apt-get install nodejs
     OSX: brew install nodejs
     ```
-* Create a MariaDB (other DBs supported by ActiveRecord may work, only MySQL and
-MariaDB have been tested) database, username, and password and put them in a
-`config/database.yml` file.  You will also want a separate database for
-running tests:
-
-    ```yaml
-    development:
-      adapter: mysql2
-      encoding: utf8mb4
-      reconnect: false
-      database: lobsters_dev
-      socket: /tmp/mysql.sock
-      username: *dev_username*
-      password: *dev_password*
-      
-    test:
-      adapter: mysql2
-      encoding: utf8mb4
-      reconnect: false
-      database: lobsters_test
-      socket: /tmp/mysql.sock
-      username: *test_username*
-      password: *test_password*
-    ```
 
 * Run `bin/setup` to install dependencies and set up db
 
     ```sh
     lobsters$ bin/setup
     ```
-    
-    * If when installing the `mysql2` gem on macOS, you see 
-      `ld: library not found for -l-lpthread` in the output, see 
+
+    * If when installing the `mysql2` gem on macOS, you see
+      `ld: library not found for -l-lpthread` in the output, see
       [this solution](https://stackoverflow.com/a/44790834/204052) for a fix.
       You might also see `ld: library not found for -lssl` if you're using
       macOS 10.4+ and Homebrew `openssl`, in which case see

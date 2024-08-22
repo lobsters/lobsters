@@ -228,6 +228,12 @@ Rails.application.routes.draw do
     :as => "doff_hat"
   post "/hats/:id/doff" => "hats#doff_by_user",
     :as => "doff_hat_by_user"
+  get "/hats/:id/edit" => "hats#edit",
+    :as => "edit_hat"
+  post "/hats/:id/edit_in_place" => "hats#edit_in_place",
+    :as => "edit_hat_in_place"
+  post "/hats/:id/doff_and_create_new" => "hats#doff_and_create_new",
+    :as => "doff_and_create_new_hat"
 
   get "/moderations" => "moderations#index"
   get "/moderations/page/:page" => "moderations#index"

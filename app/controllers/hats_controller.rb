@@ -4,7 +4,7 @@ class HatsController < ApplicationController
   before_action :require_logged_in_user, except: [:index]
   before_action :require_logged_in_moderator, except: [:build_request, :index, :create_request, :doff, :doff_by_user]
   before_action :show_title_h1
-  before_action :find_hat!, only: [:doff, :doff_by_user]
+  before_action :find_hat!, only: [:doff, :doff_by_user, :edit, :edit_in_place, :doff_and_create_new]
   before_action :only_hat_user_or_moderator, only: [:doff, :doff_by_user]
 
   def build_request
@@ -77,6 +77,45 @@ class HatsController < ApplicationController
 
     @hat.doff_by_user_with_reason(@user, params[:reason])
     redirect_to @user
+  end
+
+  def edit
+    @title = "Edit a Hat"
+  end
+
+  def edit_in_place
+    old_hat = @hat.hat
+    new_hat = params[:hat][:hat]
+
+    if @hat.update(hat: new_hat)
+      m = Moderation.new
+      m.user_id = @hat.user_id
+      m.moderator_user_id = @hat.user_id
+      m.action = "Renamed hat \"#{old_hat}\" to \"#{new_hat}\""
+      m.save!
+
+      redirect_to hats_url
+    else
+      flash[:error] = @hat.errors.full_messages.join(", ")
+      redirect_to edit_hat_path(@hat)
+    end
+  end
+
+  def doff_and_create_new
+    new_hat = params[:hat][:hat]
+
+    replaced_hat = @hat.dup
+    replaced_hat.hat = new_hat
+    replaced_hat.doffed_at = nil
+
+    if replaced_hat.save
+      @hat.doff_by_user_with_reason(@user, "To replace with \"#{new_hat}\"")
+
+      redirect_to hats_url
+    else
+      flash[:error] = replaced_hat.errors.full_messages.join(", ")
+      redirect_to edit_hat_path(@hat)
+    end
   end
 
   private

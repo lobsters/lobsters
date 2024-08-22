@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_15_145726) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_22_174547) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "category", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -76,6 +76,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_145726) do
     t.string "link"
     t.boolean "modlog_use", default: false, null: false
     t.datetime "doffed_at", precision: nil
+    t.string "short_id", null: false
     t.index ["granted_by_user_id"], name: "hats_granted_by_user_id_fk"
     t.index ["user_id"], name: "hats_user_id_fk"
   end

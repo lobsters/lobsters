@@ -21,7 +21,7 @@ RSpec.feature "Editing Hats" do
 
   scenario "editing hat in place" do
     click_on "Edit"
-    visit "/hats/#{hat.id}/edit"
+    visit "/hats/#{hat.short_id}/edit"
 
     renamed_hat_text = "new hat"
     expect(page).to have_selector(:link_or_button, "Edit In-Place")
@@ -37,7 +37,7 @@ RSpec.feature "Editing Hats" do
 
   scenario "doffing and replacing with new hat" do
     click_on "Edit"
-    visit "/hats/#{hat.id}/edit"
+    visit "/hats/#{hat.short_id}/edit"
 
     replaced_hat_text = "new hat"
     expect(page).to have_selector(:link_or_button, "Doff & Create")

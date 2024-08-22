@@ -26,7 +26,7 @@
     <div class="boxline">
       <%= f.label :hat_id, 'Put on hat:' %>
       <%= f.select :hat_id, options_for_select( [['','']] +
-        @user.wearable_hats.map{|h| [h.hat, { 'data-modnote' => h.modlog_use }, h.id] }
+        @user.wearable_hats.map{|h| [h.hat, { 'data-modnote' => h.modlog_use }, h.short_id] }
       ) %>
       <% if @user.is_moderator? %>
         &nbsp;&nbsp;

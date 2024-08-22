@@ -62,7 +62,7 @@
         <div style="display: inline-block; margin-left: 1em;">
         Put on hat:
         <%= f.select "hat_id",
-          options_from_collection_for_select(@user.wearable_hats, "id", "hat",
+          options_from_collection_for_select(@user.wearable_hats, "short_id", "hat",
           comment.hat_id), :include_blank => true %>
         </div>
       <% end %>

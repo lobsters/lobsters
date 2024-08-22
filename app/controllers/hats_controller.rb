@@ -73,7 +73,7 @@ class HatsController < ApplicationController
   private
 
   def only_hat_user_or_moderator
-    if @hat.user == @user || @user.is_moderator?
+    if @hat.user == @user || @user&.is_moderator?
       true
     else
       redirect_to @user
@@ -81,6 +81,10 @@ class HatsController < ApplicationController
   end
 
   def find_hat!
-    @hat = @user.is_moderator? ? Hat.find(params[:id]) : @user.wearable_hats.find(params[:id])
+    @hat = if @user.is_moderator?
+      Hat.find_by(short_id: params[:id])
+    else
+      @user.wearable_hats.find_by(short_id: params[:id])
+    end
   end
 end

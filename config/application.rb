@@ -39,6 +39,8 @@ module Lobsters
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = "Central Time (US & Canada)"
 
+    config.eager_load_namespaces << I18n
+
     config.autoload_paths.push(
       "#{root}/app/types",
       "#{root}/extras"

@@ -1,6 +1,6 @@
 ---
 development: &local
-  adapter: mysql2
+  adapter: trilogy
   host: 127.0.0.1
   port: 3306
   database: lobsters_dev

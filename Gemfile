@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "rails"
 
-gem "mysql2"
+gem "trilogy"
 
 # rails
 gem "scenic"

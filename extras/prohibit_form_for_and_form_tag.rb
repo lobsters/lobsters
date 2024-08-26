@@ -1,9 +1,10 @@
 # typed: false
 
 require "rails"
-require "rubocop"
 
 unless Rails.env.production?
+  require "rubocop"
+
   module RuboCop
     module Cop
       module Style

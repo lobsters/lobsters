@@ -188,9 +188,7 @@ class CommentsController < ApplicationController
 
     comment.comment = params[:comment]
     comment.hat_id = nil
-    if params[:hat_id] && @user.wearable_hats.where(id: params[:hat_id])
-      comment.hat_id = params[:hat_id]
-    end
+    comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
 
     if params[:preview].blank? && comment.save
       votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, [comment.id])

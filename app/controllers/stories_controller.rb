@@ -22,7 +22,7 @@ class StoriesController < ApplicationController
     if @story.is_resubmit?
       @comment = @story.comments.new(user: @user)
       @comment.comment = params[:comment]
-      @comment.hat = @user.wearable_hats.find_by(id: params[:hat_id])
+      @comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
     end
 
     if @story.valid? &&
@@ -114,7 +114,7 @@ class StoriesController < ApplicationController
       if @story.is_resubmit?
         @comment = @story.comments.new(user: @user)
         @comment.comment = params[:comment]
-        @comment.hat = @user.wearable_hats.find_by(id: params[:hat_id])
+        @comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
       end
 
       # ignore what the user brought unless we need it as a fallback

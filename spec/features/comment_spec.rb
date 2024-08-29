@@ -7,7 +7,7 @@ require "rails_helper"
 
 RSpec.feature "Commenting" do
   let(:user) { create(:user) }
-  let(:story) { create(:story, user: user) }
+  let(:story) { create(:story) }
 
   before(:each) { stub_login_as user }
 
@@ -18,6 +18,32 @@ RSpec.feature "Commenting" do
     click_on "Post"
     visit "/s/#{story.short_id}"
     expect(page).to have_content("example comment")
+  end
+
+  scenario "posting a comment with a hat" do
+    hat = create(:hat, user: user)
+    visit "/s/#{story.short_id}"
+    fill_in "comment", with: "An example comment"
+    select hat.hat, from: 'hat_id'
+    click_on "Post"
+    visit "/s/#{story.short_id}"
+    expect(page).to have_css("span.hat")
+  end
+
+  feature "editing comments" do
+    scenario "adding a hat to a comment" do
+      hat = create(:hat, user: user)
+      comment = create(:comment, story: story, user: user, hat: nil)
+      visit "/s/#{story.short_id}"
+      expect(page).to_not have_css("span.hat")
+
+      visit "/comments/#{comment.short_id}/edit"
+      select hat.hat, from: 'hat_id'
+      click_on "Update"
+
+      visit "/s/#{story.short_id}"
+      expect(page).to have_css("span.hat")
+    end
   end
 
   feature "deleting comments" do

@@ -53,7 +53,7 @@ class MessagesController < ApplicationController
 
     @new_message = Message.new(message_params)
     @new_message.author_user_id = @user.id
-    @new_message.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
+    @new_message.hat = @user.wearable_hats.find_by(short_id: params[:message][:hat_id])
 
     @direction = :out
 

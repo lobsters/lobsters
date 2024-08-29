@@ -56,6 +56,14 @@ class Comment < ApplicationRecord
   scope :with_thread_attributes, -> {
     select("comments.*, comments_recursive.depth as depth, comments_recursive.reply_count")
   }
+  scope :after, ->(cursor=nil) {
+    q = order(id: :desc).limit(COMMENTS_PER_PAGE + 1)
+    if cursor
+      q.where(id: ...Comment.find_by!(short_id: cursor).id)
+    else
+      q
+    end
+  }
 
   FLAGGABLE_DAYS = 7
   DELETEABLE_DAYS = FLAGGABLE_DAYS * 2
@@ -75,6 +83,8 @@ class Comment < ApplicationRecord
   # Stop accepting replies this deep. Recursive CTE requires a fixed max (COP_LENGTH),
   # but in practice all deep reply chains have gone off-topic and/or tuned into flamewars.
   MAX_DEPTH = 18
+
+  COMMENTS_PER_PAGE = 20
 
   SCORE_RANGE_TO_HIDE = (-2..4)
 

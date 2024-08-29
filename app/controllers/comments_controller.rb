@@ -1,7 +1,7 @@
 # typed: false
 
 class CommentsController < ApplicationController
-  COMMENTS_PER_PAGE = 20
+  COMMENTS_PER_PAGE = Comment::COMMENTS_PER_PAGE
 
   caches_page :index, :threads, if: CACHE_PAGE
 
@@ -303,9 +303,9 @@ class CommentsController < ApplicationController
       .joins(:story).where.not(stories: {is_deleted: true})
       .not_on_story_hidden_by(@user)
       .for_presentation
-      .order("id DESC")
+      .after(params[:after])
 
-    @page = 1
+    raise ActiveRecord::RecordNotFound if @comments.empty?
 
     render template: 'comments/index'
   end

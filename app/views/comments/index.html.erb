@@ -9,6 +9,7 @@
   <% end %>
 </ol>
 
+<% if @page %>
 <div class="morelink">
   <% if @comments.any? %>
     <% if @page && @page > 1 %>
@@ -21,3 +22,6 @@
     <%= link_to raw("Page #{@page + 1} &gt;&gt;"), { controller: controller_name, action: action_name, page: @page + 1 } %>
   <% end %>
 </div>
+<% else %>
+  new pagination
+<% end %>

@@ -111,6 +111,10 @@ Rails.application.routes.draw do
       post "delete"
       post "undelete"
       post "disown"
+
+    end
+    collection do
+      get "hats/:id" => "comments#by_hat"
     end
   end
   get "/comments/page/:page" => "comments#index"

@@ -296,6 +296,20 @@ class CommentsController < ApplicationController
     end
   end
 
+  def by_hat
+    hat = Hat.find_by!(short_id: params[:id])
+    @comments = hat.comments
+      .accessible_to_user(@user)
+      .joins(:story).where.not(stories: {is_deleted: true})
+      .not_on_story_hidden_by(@user)
+      .for_presentation
+      .order("id DESC")
+
+    @page = 1
+
+    render template: 'comments/index'
+  end
+
   def upvoted
     @rss_link ||= {
       title: "RSS 2.0 - Newest Comments",

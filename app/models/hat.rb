@@ -3,6 +3,8 @@
 class Hat < ApplicationRecord
   belongs_to :user
   belongs_to :granted_by_user, class_name: "User", inverse_of: false
+  has_many :comments
+  has_many :messages
 
   before_validation :assign_short_id, on: :create
   after_create :log_moderation

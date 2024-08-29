@@ -68,8 +68,11 @@ class CommentsController < ApplicationController
   end
 
   def show
-    if !((comment = find_comment) && comment.is_editable_by_user?(@user))
-      return render plain: "can't find comment", status: 400
+    if !(comment = find_comment)
+      return render plain: "can't find comment", status: 404
+    end
+    if !comment.is_editable_by_user?(@user)
+      return redirect_to comment.path
     end
 
     render partial: "comment",

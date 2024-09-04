@@ -59,7 +59,7 @@ GEM
       activemodel (= 7.2.1)
       activesupport (= 7.2.1)
       timeout (>= 0.4.0)
-    activerecord-typedstore (1.5.1)
+    activerecord-typedstore (1.6.0)
       activerecord (>= 6.1)
     activestorage (7.2.1)
       actionpack (= 7.2.1)

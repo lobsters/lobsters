@@ -24,7 +24,7 @@ RSpec.feature "Commenting" do
     hat = create(:hat, user: user)
     visit "/s/#{story.short_id}"
     fill_in "comment", with: "An example comment"
-    select hat.hat, from: 'hat_id'
+    select hat.hat, from: "hat_id"
     click_on "Post"
     visit "/s/#{story.short_id}"
     expect(page).to have_css("span.hat")
@@ -38,7 +38,7 @@ RSpec.feature "Commenting" do
       expect(page).to_not have_css("span.hat")
 
       visit "/comments/#{comment.short_id}/edit"
-      select hat.hat, from: 'hat_id'
+      select hat.hat, from: "hat_id"
       click_on "Update"
 
       visit "/s/#{story.short_id}"

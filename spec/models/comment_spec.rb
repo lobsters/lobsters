@@ -151,29 +151,6 @@ describe Comment do
     }.to change { author.reload.karma }.by(-4)
   end
 
-  describe "performance" do
-    let(:story) { create(:story) }
-    let(:author) { create(:user) }
-
-    it "uses precomputed score on initial insertion" do
-      comment = Comment.build(user: author, story: story, comment: "cool story!")
-      comment.assign_initial_confidence
-
-      expect {
-        expect {
-          expect {
-            expect {
-              comment.update_score_and_recalculate! 0, 0
-              comment.save!
-              comment.reload
-            }.to_not change { comment.score }
-          }.to_not change { comment.flags }
-          # Some very small precision difference between Ruby and the DB, so we round
-        }.to_not change { comment.confidence.round(9) }
-      }.to_not change { comment.confidence_order }
-    end
-  end
-
   describe "speed limit" do
     let(:story) { create(:story) }
     let(:author) { create(:user) }

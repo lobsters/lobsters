@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<% coder = HTMLEntities.new %>
 <rss version="2.0">
   <channel>
     <title><%= Rails.application.name %><%= @title.present? ?
@@ -9,14 +8,13 @@
 
     <% @comments.each do |comment| %>
       <item>
-        <title>on <%= raw coder.encode(comment.story.title, :decimal) %></title>
+        <title>on <%= raw HtmlEncoder.encode(comment.story.title) %></title>
         <link><%= comment.url %></link>
         <guid><%= comment.short_id_url %></guid>
         <author><%= comment.user.username %>@users.<%= Rails.application.domain %> (<%= comment.user.username %>)</author>
         <pubDate><%= comment.created_at.rfc2822 %></pubDate>
         <comments><%= comment.url %></comments>
-        <description><%= raw coder.encode(comment.markeddown_comment,
-          :decimal) %></description>
+        <description><%= raw HtmlEncoder.encode(comment.markeddown_comment) %></description>
       </item>
     <% end %>
   </channel>

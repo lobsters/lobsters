@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<% coder = HTMLEntities.new %>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title><%= Rails.application.name %><%= @title.present? ?
@@ -10,17 +9,17 @@
 
     <% @stories.each do |story| %>
       <item>
-        <title><%= raw coder.encode(story.title, :decimal) %></title>
+        <title><%= raw HtmlEncoder.encode(story.title) %></title>
         <link><%= story.url_or_comments_url %></link>
         <guid isPermaLink="false"><%= story.short_id_url %></guid>
         <author><%= story.domain&.domain %> <%= story.user_is_author? ? "by" : "via" %> <%= story.user.username %></author>
         <pubDate><%= story.created_at.rfc2822 %></pubDate>
         <comments><%= story.comments_url %></comments>
         <description>
-          <%= raw coder.encode(story.markeddown_description, :decimal) %>
+          <%= raw HtmlEncoder.encode(story.markeddown_description) %>
           <% if story.url.present? %>
-            <%= raw coder.encode("<p>" +
-              link_to("Comments", story.comments_url) + "</p>", :decimal) %>
+            <%= raw HtmlEncoder.encode("<p>" +
+              link_to("Comments", story.comments_url) + "</p>") %>
           <% end %>
         </description>
         <% story.taggings.each do |tagging| %>

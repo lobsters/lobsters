@@ -484,7 +484,7 @@ class Story < ApplicationRecord
       s = s.to_s[0, chars].gsub(/ [^ ]*\z/, "")
     end
 
-    HTMLEntities.new.decode(s.to_s)
+    HtmlEncoder.encode(s.to_s)
   end
 
   def domain_search_url

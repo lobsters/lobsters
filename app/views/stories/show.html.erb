@@ -45,8 +45,8 @@
       <% if @user && @comments.size > 0 %>
         <div class="thread_summary">
           <%= pluralize(@comments.size, "comment") %>,
-          <% unread = @ribbon&.unread_count(@comments) %>
-          <% if unread.nil? %>
+          <% unread = @ribbon.unread_count(@comments) %>
+          <% if @ribbon.new_record? %>
             all unread
           <% elsif unread > 0 %>
             <span class='comment_unread'><%= unread %> unread</span>

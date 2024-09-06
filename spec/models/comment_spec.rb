@@ -233,7 +233,7 @@ describe Comment do
     it "doesn't sort comments under the wrong parents when they haven't been voted on" do
       story = create(:story)
       a = create(:comment, story: story, parent_comment: nil)
-      b = create(:comment, story: story, parent_comment: nil)
+      create(:comment, story: story, parent_comment: nil)
       c = create(:comment, story: story, parent_comment: a)
       sorted = Comment.story_threads(story)
       # don't care if a or b is first, just care that c is immediately after a

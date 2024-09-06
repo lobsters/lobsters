@@ -61,8 +61,7 @@ class MessagesController < ApplicationController
       if @user.is_moderator? && @new_message.mod_note
         ModNote.create_from_message(@new_message, @user)
       end
-      flash[:success] = "Your message has been sent to " <<
-        @new_message.recipient.username.to_s << "."
+      flash[:success] = "Your message has been sent to #{@new_message.recipient.username}."
       redirect_to "/messages"
     else
       @messages = Message.inbox(@user).load

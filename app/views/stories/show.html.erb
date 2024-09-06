@@ -49,7 +49,7 @@
           <% if @ribbon.new_record? %>
             all unread
           <% elsif unread > 0 %>
-            <span class='comment_unread'><%= unread %> unread</span>
+            <span role='link' class='comment_unread'><%= unread %> unread</span>
           <% else %>
             0 unread
           <% end %>

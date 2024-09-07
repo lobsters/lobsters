@@ -26,6 +26,11 @@ Use the steps below for a local install or
 [lobsters-ansible](https://github.com/lobsters/lobsters-ansible) for our production deployment config.
 There's an external project [docker-lobsters](https://github.com/utensils/docker-lobsters) if you want to use Docker.
 
+* Install and start MariaDB.
+  On Linux use [your package manager](https://mariadb.com/kb/en/distributions-which-include-mariadb/).
+  On MacOS you can [install with brew](https://mariadb.com/kb/en/installing-mariadb-on-macos-using-homebrew/).
+  On Windows there's an [installer](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.5.2&os=Linux&cpu=x86_64&pkg=tar_gz&i=systemd&mirror=starburst_stlouis).
+
 * Install the Ruby version specified in [.ruby-version](https://github.com/lobsters/lobsters/blob/master/.ruby-version)
 
 * Checkout the lobsters git tree from Github

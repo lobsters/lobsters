@@ -60,40 +60,6 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
-      "fingerprint": "2ac9917e793a6a5c4bf437a9c9f66c34255572f06d6620c6fed28d533b45ee22",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/stories/show.html.erb",
-      "line": 49,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "@ribbon.unread_count(Comment.story_threads(Story.where(:short_id => params[:id]).first!).for_presentation)",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StoriesController",
-          "method": "show",
-          "line": 201,
-          "file": "app/controllers/stories_controller.rb",
-          "rendered": {
-            "name": "stories/show",
-            "file": "app/views/stories/show.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stories/show"
-      },
-      "user_input": "Comment.story_threads(Story.where(:short_id => params[:id]).first!).for_presentation",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": "false alarm, this passes the url param through AR's API"
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
       "fingerprint": "305ab5b7234aff45f564061140f604d2fada9fec1a5b7e45cfbd3296d64cca3e",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
@@ -132,7 +98,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story.rb",
-      "line": 524,
+      "line": 525,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Story.connection.execute(\"UPDATE stories SET\\n  score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -\\n  -- subtract number of hidings where hider flagged AND didn't comment (comment voting is ignored)\\n  (\\n    select count(*) from hidden_stories hiding\\n    where\\n      story_id = #{id.to_i}\\n      and hiding.created_at >= str_to_date('#{(created_at - 14.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')\\n      and exists (    -- user flagged\\n        select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1\\n      )\\n      and not exists ( -- user didn't comment\\n        select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id\\n      )\\n  ),\\n  flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),\\n  hotness = #{calculated_hotness}\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -155,7 +121,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/users/show.html.erb",
-      "line": 159,
+      "line": 163,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "User.find_by(:username => params[:username]).linkified_about",
       "render_path": [
@@ -628,6 +594,6 @@
       "note": "IntervalHelper#time_interval is a security control"
     }
   ],
-  "updated": "2024-08-14 12:52:58 -0500",
-  "brakeman_version": "6.1.2"
+  "updated": "2024-09-06 11:38:59 -0500",
+  "brakeman_version": "6.2.1"
 }

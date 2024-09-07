@@ -88,8 +88,6 @@ class Message < ApplicationRecord
   end
 
   def deliver_email_notifications
-    return if Rails.env.development?
-
     if recipient.email_messages?
       begin
         EmailMessageMailer.notify(self, recipient).deliver_now
@@ -97,6 +95,8 @@ class Message < ApplicationRecord
         Rails.logger.error "error e-mailing #{recipient.email}: #{e}"
       end
     end
+
+    return if Rails.env.development?
 
     if recipient.pushover_messages?
       recipient.pushover!(

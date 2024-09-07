@@ -7,7 +7,7 @@ class ReadRibbon < ApplicationRecord
   validates :is_following, inclusion: {in: [true, false]}
 
   def is_unread? comment
-    return false if !user
+    return false if !user || new_record?
 
     (comment.created_at > updated_at) && (comment.user_id != user.id)
   end

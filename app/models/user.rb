@@ -266,7 +266,7 @@ class User < ApplicationRecord
       self.banned_by_user_id = banner.id
       self.banned_reason = reason
 
-      BanNotificationMailer.notify(self, banner, reason) unless deleted_at?
+      BanNotificationMailer.notify(self, banner, reason).deliver_now unless deleted_at?
       delete!
 
       m = Moderation.new
@@ -371,9 +371,14 @@ class User < ApplicationRecord
 
   def delete!
     User.transaction do
+      # walks comments -> story -> merged stories; this is a rare event and likely
+      # to be fixed in a redesign of the story merging db model:
+      # https://github.com/lobsters/lobsters/issues/1298#issuecomment-2272179720
+      Prosopite.pause
       comments
         .where("score < 0")
         .find_each { |c| c.delete_for_user(self) }
+      Prosopite.resume
 
       # delete messages bypassing validation because a message may have a hat
       # sender has doffed, which would fail validations

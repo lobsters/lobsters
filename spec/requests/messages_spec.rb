@@ -17,26 +17,26 @@ describe "messages", type: :request do
         post "/messages", params: {
           message: {
             recipient_username: recipient.username,
-            subject: 'hello',
-            body: "I would like to subscribe to your newsletter",
+            subject: "hello",
+            body: "I would like to subscribe to your newsletter"
           }
         }
       }.to(change { Message.count }.by(1))
 
-      expect(recipient.received_messages.last.subject).to eq('hello')
+      expect(recipient.received_messages.last.subject).to eq("hello")
     end
 
     it "sets hats on messages" do
       post "/messages", params: {
         message: {
           recipient_username: recipient.username,
-          subject: 'hello',
+          subject: "hello",
           body: "I would like to subscribe to your newsletter",
           hat_id: hat.short_id
         }
       }
       m = recipient.received_messages.last
-      expect(m.subject).to eq('hello')
+      expect(m.subject).to eq("hello")
       expect(m.hat).to eq(hat)
     end
   end

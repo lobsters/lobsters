@@ -84,7 +84,7 @@ class ModNote < ApplicationRecord
       host: Rails.application.domain
     )
     redeemer_url = Rails.application.routes.url_helpers.user_url(
-      sender,
+      redeemer,
       host: Rails.application.domain
     )
     create_without_dupe!(

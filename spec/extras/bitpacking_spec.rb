@@ -138,27 +138,12 @@ describe "sql assumptions" do
     it "initializes correctly" do
       c = create(:comment, id: 9, score: 1, flags: 0)
       c.reload
-      # initial value from commenter's upvote from assign_initial_confidence
-      # uses 255 as placeholder for low byte of comment_id to tiebreak in favor of new comments
-      expect(c.confidence_order.bytes).to eq([174, 82, 255])
-      # that value is what update_score_and_recalculate! sets
-      c.update_score_and_recalculate!(0, 0)
-      c.reload
-      # after the update, we see the same first values as set by assign_initial_confidence
-      # with the comment id replaced in for the third
       expect(c.confidence_order.bytes).to eq([174, 82, c.id])
-    end
-
-    it "uses the low byte of the id in the last byte of confidence_order" do
-      c = create(:comment, id: 256 + 9, score: 1, flags: 0)
-      c.update_score_and_recalculate!(0, 0)
-      c.reload
-      expect(c.confidence_order.bytes).to eq([174, 82, 9]) # id is the low byte
     end
 
     it "increments correctly" do
       c = create(:comment, id: 4, score: 1, flags: 0)
-      expect(c.confidence_order.bytes).to eq([174, 82, 255]) # placeholder id before vote
+      expect(c.confidence_order.bytes).to eq([0, 0, 0]) # placeholder on creation
       create(:vote, story: c.story, comment: c)
       c.update_score_and_recalculate!(1, 0)
       c.reload

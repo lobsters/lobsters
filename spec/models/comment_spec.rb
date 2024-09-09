@@ -229,6 +229,24 @@ describe Comment do
     end
   end
 
+  describe "confidence" do
+    it "is low for flagged comments" do
+      conf = Comment.new(score: -4, flags: 5).calculated_confidence
+      expect(conf).to be < 0.3
+    end
+
+    it "it is high for upvoted comments" do
+      conf = Comment.new(score: 100, flags: 0).calculated_confidence
+      expect(conf).to be > 0.75
+    end
+
+    it "at the scame score, is higher for comments without flags" do
+      upvoted = Comment.new(score: 10, flags: 0).calculated_confidence
+      flagged = Comment.new(score: 10, flags: 4).calculated_confidence
+      expect(upvoted).to be > flagged
+    end
+  end
+
   describe "confidence_order_path" do
     it "doesn't sort comments under the wrong parents when they haven't been voted on" do
       story = create(:story)

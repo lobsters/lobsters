@@ -170,6 +170,7 @@ class Story < ApplicationRecord
       already_posted_recently?
       check_not_banned_domain
       check_not_new_domain_from_new_user
+      check_not_pushcx_stream
       errors.add(:url, "is not valid") unless url.match(Utils::URL_RE)
     elsif description.to_s.strip == ""
       errors.add(:description, "must contain text if no URL posted")
@@ -230,6 +231,12 @@ class Story < ApplicationRecord
       ModNote.tattle_on_story_domain!(self, "banned")
       errors.add(:url, "is from banned domain #{domain.domain}: #{domain.banned_reason}")
     end
+  end
+
+  def check_not_pushcx_stream
+    return unless url.present? && new_record? &&
+      url.start_with?("https://push.cx/stream", "https://twitch.tv/pushcx")
+    errors.add(:url, "is too meta, we don't need it twice every week. Details: https://lobste.rs/c/skuxo9")
   end
 
   def comments_closing_soon?

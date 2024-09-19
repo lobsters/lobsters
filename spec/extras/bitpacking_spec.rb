@@ -48,20 +48,22 @@ describe "sql assumptions" do
 
   describe "lpad" do
     it "pads null to null" do
+      # this is two ways of saying 'pad with nulls'; included to avoid padding with '0' instead of '\0'
       expect(one_result("lpad(null, 2, char(0 using binary))")).to eq(nil)
+      expect(one_result("lpad(null, 2, '\0')")).to eq(nil)
     end
 
     it "pads empty string to two bytes" do
-      expect(one_result("lpad('', 2, char(0 using binary))")).to be_bytes("\x00\x00")
+      expect(one_result("lpad('', 2, '\0')")).to be_bytes("\x00\x00")
     end
 
     it "pads one byte to two" do
-      expect(one_result("lpad(char(0 using binary), 2, char(0 using binary))")).to \
+      expect(one_result("lpad(char(0 using binary), 2, '\0')")).to \
         be_bytes("\x00\x00")
     end
 
     it "doesn't change two bytes" do
-      expect(one_result("lpad(char(258 using binary), 2, char(0 using binary))")).to \
+      expect(one_result("lpad(char(258 using binary), 2, '\0')")).to \
         be_bytes("\x01\x02")
     end
 
@@ -109,20 +111,26 @@ describe "sql assumptions" do
   describe "confidence_order" do
     it "is low for a high-voted comment" do
       expect(one_result("
-        lpad(char(65536 - floor(((0.99 - -0.2) * 65535) / 1.2) using binary), 2, '0')
-      ")).to be_bytes("\x02\x24")
+        lpad(char(65535 - floor(0.98 * 65535) using binary), 2, '\0')
+      ").bytes).to eq([5, 31])
     end
 
-    it "is middle for a zero-score comment" do
+    it "is middle for a low-score comment" do
       expect(one_result("
-        lpad(char(65536 - floor(((0 - -0.2) * 65535) / 1.2) using binary), 2, '0')
-      ")).to be_bytes("\xd5\x56")
+        lpad(char(65535 - floor(0.464 * 65535) using binary), 2, '\0')
+        ").bytes).to eq([137, 55])
     end
 
     it "is high for a heavily flagged comment" do
       expect(one_result("
-        lpad(char(65536 - floor(((-0.195 - -0.2) * 65535) / 1.2) using binary), 2, '0')
-      ")).to be_bytes("\xFE\xEF")
+        lpad(char(65535 - floor(0.05 * 65535) using binary), 2, '\0')
+      ").bytes).to eq([243, 51])
+    end
+
+    it "is close to ffff for the worst score" do
+      expect(one_result("
+        lpad(char(65535 - floor(0.00001 * 65535) using binary), 2, '\0')
+      ").bytes).to eq([255, 255])
     end
   end
 
@@ -138,27 +146,12 @@ describe "sql assumptions" do
     it "initializes correctly" do
       c = create(:comment, id: 9, score: 1, flags: 0)
       c.reload
-      # initial value from commenter's upvote from assign_initial_confidence
-      # uses 255 as placeholder for low byte of comment_id to tiebreak in favor of new comments
-      expect(c.confidence_order.bytes).to eq([174, 82, 255])
-      # that value is what update_score_and_recalculate! sets
-      c.update_score_and_recalculate!(0, 0)
-      c.reload
-      # after the update, we see the same first values as set by assign_initial_confidence
-      # with the comment id replaced in for the third
-      expect(c.confidence_order.bytes).to eq([174, 82, c.id])
-    end
-
-    it "uses the low byte of the id in the last byte of confidence_order" do
-      c = create(:comment, id: 256 + 9, score: 1, flags: 0)
-      c.update_score_and_recalculate!(0, 0)
-      c.reload
-      expect(c.confidence_order.bytes).to eq([174, 82, 9]) # id is the low byte
+      expect(c.confidence_order.bytes).to eq([159, 30, c.id])
     end
 
     it "increments correctly" do
       c = create(:comment, id: 4, score: 1, flags: 0)
-      expect(c.confidence_order.bytes).to eq([174, 82, 255]) # placeholder id before vote
+      expect(c.confidence_order.bytes).to eq([0, 0, 0]) # placeholder on creation
       create(:vote, story: c.story, comment: c)
       c.update_score_and_recalculate!(1, 0)
       c.reload

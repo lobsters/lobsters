@@ -60,40 +60,6 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
-      "fingerprint": "2ac9917e793a6a5c4bf437a9c9f66c34255572f06d6620c6fed28d533b45ee22",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/stories/show.html.erb",
-      "line": 49,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "@ribbon.unread_count(Comment.story_threads(Story.where(:short_id => params[:id]).first!).for_presentation)",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StoriesController",
-          "method": "show",
-          "line": 201,
-          "file": "app/controllers/stories_controller.rb",
-          "rendered": {
-            "name": "stories/show",
-            "file": "app/views/stories/show.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stories/show"
-      },
-      "user_input": "Comment.story_threads(Story.where(:short_id => params[:id]).first!).for_presentation",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": "false alarm, this passes the url param through AR's API"
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
       "fingerprint": "305ab5b7234aff45f564061140f604d2fada9fec1a5b7e45cfbd3296d64cca3e",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
@@ -132,7 +98,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story.rb",
-      "line": 524,
+      "line": 532,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Story.connection.execute(\"UPDATE stories SET\\n  score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -\\n  -- subtract number of hidings where hider flagged AND didn't comment (comment voting is ignored)\\n  (\\n    select count(*) from hidden_stories hiding\\n    where\\n      story_id = #{id.to_i}\\n      and hiding.created_at >= str_to_date('#{(created_at - 14.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')\\n      and exists (    -- user flagged\\n        select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1\\n      )\\n      and not exists ( -- user didn't comment\\n        select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id\\n      )\\n  ),\\n  flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),\\n  hotness = #{calculated_hotness}\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -155,7 +121,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/users/show.html.erb",
-      "line": 159,
+      "line": 163,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "User.find_by(:username => params[:username]).linkified_about",
       "render_path": [
@@ -378,6 +344,29 @@
       "note": "type comes from @what.keys, which are symbols for table names"
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "a245ef32a60feecfaf39de68bfb0ddb93f8034936f733f5e5326897ffad3a47c",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/comment.rb",
+      "line": 392,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Comment.connection.execute(\"UPDATE comments SET\\n  score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),\\n  flags = (select count(*) from votes where comment_id = comments.id and vote = -1),\\n  confidence = #{calculated_confidence},\\n  confidence_order = concat(lpad(char(65535 - floor(#{calculated_confidence} * 65535) using binary), 2, '\\x00'), char(id & 0xff using binary))\\nWHERE id = #{id.to_i}\\n\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Comment",
+        "method": "update_score_and_recalculate!"
+      },
+      "user_input": "calculated_confidence",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "calculated_confidence is a float and no user input is possible"
+    },
+    {
       "warning_type": "File Access",
       "warning_code": 16,
       "fingerprint": "a49c5ada804d39509938a1b7737994d697c646342f3ba6745571665724944958",
@@ -399,29 +388,6 @@
         22
       ],
       "note": "User#username validated by User::VALID_USERNAME"
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "a548b51c0a738fae124d34e3ab5f88f97aaf8f074998fa971e0752c7b026ecbd",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/comment.rb",
-      "line": 382,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Comment.connection.execute(\"UPDATE comments SET\\n  score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),\\n  flags = (select count(*) from votes where comment_id = comments.id and vote = -1),\\n  confidence = #{calculated_confidence},\\n  confidence_order = concat(lpad(char(65536 - floor(((confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(id & 0xff using binary))\\nWHERE id = #{id.to_i}\\n\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Comment",
-        "method": "update_score_and_recalculate!"
-      },
-      "user_input": "calculated_confidence",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "calculated_confidence is a float; id is an integer"
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -628,6 +594,6 @@
       "note": "IntervalHelper#time_interval is a security control"
     }
   ],
-  "updated": "2024-08-14 12:52:58 -0500",
-  "brakeman_version": "6.1.2"
+  "updated": "2024-09-12 09:45:57 -0500",
+  "brakeman_version": "6.2.1"
 }

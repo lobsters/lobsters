@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_22_174547) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_09_220644) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "category", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -119,7 +119,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_22_174547) do
     t.index ["key"], name: "key", unique: true
   end
 
-  create_table "links", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "links", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "url", null: false
     t.string "normalized_url", null: false
     t.string "title"

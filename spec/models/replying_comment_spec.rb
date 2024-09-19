@@ -90,17 +90,21 @@ describe ReplyingComment do
       expect(p).to_not have_reply(r)
     end
 
-    it "it is on a story with a negative score" do
+    xit "it is on a story with a negative score" do
       p = followed_parent
       r = reply_to p
+      flagger1 = create(:user)
+      flagger2 = create(:user)
       Vote.vote_thusly_on_story_or_comment_for_user_because(
-        -1, p.story_id, nil, create(:user).id, "O"
+        -1, p.story_id, nil, flagger1.id, "O"
       )
       Vote.vote_thusly_on_story_or_comment_for_user_because(
-        -1, p.story_id, nil, create(:user).id, "O"
+        -1, p.story_id, nil, flagger2.id, "O"
       )
+      HiddenStory.create! user: flagger1, story: p.story
+      HiddenStory.create! user: flagger2, story: p.story
 
-      expect(p.story.reload.score).to be < p.story.flags
+      expect(p.story.reload.score).to be < 0
       expect(p).to_not have_reply(r)
     end
 

@@ -151,29 +151,6 @@ describe Comment do
     }.to change { author.reload.karma }.by(-4)
   end
 
-  describe "performance" do
-    let(:story) { create(:story) }
-    let(:author) { create(:user) }
-
-    it "uses precomputed score on initial insertion" do
-      comment = Comment.build(user: author, story: story, comment: "cool story!")
-      comment.assign_initial_confidence
-
-      expect {
-        expect {
-          expect {
-            expect {
-              comment.update_score_and_recalculate! 0, 0
-              comment.save!
-              comment.reload
-            }.to_not change { comment.score }
-          }.to_not change { comment.flags }
-          # Some very small precision difference between Ruby and the DB, so we round
-        }.to_not change { comment.confidence.round(9) }
-      }.to_not change { comment.confidence_order }
-    end
-  end
-
   describe "speed limit" do
     let(:story) { create(:story) }
     let(:author) { create(:user) }
@@ -249,6 +226,38 @@ describe Comment do
         comment: "too fast"
       )
       expect(c.breaks_speed_limit?).to be false
+    end
+  end
+
+  describe "confidence" do
+    it "is low for flagged comments" do
+      conf = Comment.new(score: -4, flags: 5).calculated_confidence
+      expect(conf).to be < 0.3
+    end
+
+    it "it is high for upvoted comments" do
+      conf = Comment.new(score: 100, flags: 0).calculated_confidence
+      expect(conf).to be > 0.75
+    end
+
+    it "at the scame score, is higher for comments without flags" do
+      upvoted = Comment.new(score: 10, flags: 0).calculated_confidence
+      flagged = Comment.new(score: 10, flags: 4).calculated_confidence
+      expect(upvoted).to be > flagged
+    end
+  end
+
+  describe "confidence_order_path" do
+    it "doesn't sort comments under the wrong parents when they haven't been voted on" do
+      story = create(:story)
+      a = create(:comment, story: story, parent_comment: nil)
+      create(:comment, story: story, parent_comment: nil)
+      c = create(:comment, story: story, parent_comment: a)
+      sorted = Comment.story_threads(story)
+      # don't care if a or b is first, just care that c is immediately after a
+      # this uses each_cons to get each pair of records and ensures [a, c] appears
+      relationships = sorted.map(&:id).to_a.each_cons(2).to_a
+      expect(relationships).to include([a.id, c.id])
     end
   end
 end

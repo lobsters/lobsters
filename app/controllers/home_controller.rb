@@ -58,10 +58,10 @@ class HomeController < ApplicationController
       format.rss {
         if @user
           @title = "Private feed for #{@user.username}"
-          render action: "rss", layout: false
+          render action: "home/stories", layout: false
         else
           content = Rails.cache.fetch("rss", expires_in: (60 * 2)) {
-            render_to_string action: "rss", layout: false
+            render_to_string template: "home/stories", layout: false
           }
           render plain: content, layout: false
         end

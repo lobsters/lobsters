@@ -409,6 +409,7 @@ DEPENDENCIES
   bcrypt
   benchmark-perf
   brakeman
+  builder
   byebug
   capybara
   commonmarker (< 1)

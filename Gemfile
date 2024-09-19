@@ -38,6 +38,7 @@ gem "rack-mini-profiler"
 gem "stackprof"
 gem "prosopite"
 
+gem "builder" # for rss
 gem "oauth" # for linking accounts
 gem "mail" # for parsing incoming mail
 gem "sitemap_generator" # for better search engine indexing

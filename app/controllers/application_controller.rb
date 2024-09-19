@@ -21,10 +21,12 @@ class ApplicationController < ActionController::Base
 
   # Rails misdesign: if the /recent route doesn't support .rss, Rails calls it anyways and then
   # raises MissingTemplate when it's not handled, as if the app did something wrong (a prod 500!).
-  rescue_from ActionController::UnknownFormat, ActionView::MissingTemplate do
-    request.format = :html # required, despite format.any
-    respond_to do |format|
-      format.any { render "about/404", status: :not_found, content_type: "text/html" }
+  unless Rails.env.development?
+    rescue_from ActionController::UnknownFormat, ActionView::MissingTemplate do
+      request.format = :html # required, despite format.any
+      respond_to do |format|
+        format.any { render "about/404", status: :not_found, content_type: "text/html" }
+      end
     end
   end
   rescue_from ActionController::UnpermittedParameters do

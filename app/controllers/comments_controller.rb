@@ -289,9 +289,13 @@ class CommentsController < ApplicationController
       format.rss {
         if @user && params[:token].present?
           @title = "Private comments feed for #{@user.username}"
+          render action: "index", layout: false
+        else
+          content = Rails.cache.fetch("comments.rss", expires_in: (60 * 2)) {
+            render_to_string template: "index", layout: false
+          }
+          render plain: content, layout: false
         end
-
-        render action: "index", layout: false
       }
     end
   end

@@ -21,6 +21,7 @@ class InboxMailbox < ApplicationMailbox
   end
 
   private
+
   def required_info
     if mail.decoded == "" || sending_user.nil? || parent.nil?
       # We could email the user about the bounce, but that doesn't seem
@@ -55,7 +56,7 @@ class InboxMailbox < ApplicationMailbox
     return @sending_user if @sending_user
 
     if (user = User.where("mailing_list_mode > 0 AND mailing_list_token = ?", user_token).first) &&
-       user.is_active?
+        user.is_active?
       @sending_user = user
       user
     end

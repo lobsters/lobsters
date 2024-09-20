@@ -1,11 +1,13 @@
-require 'rails_helper'
+# typed: false
+
+require "rails_helper"
 
 RSpec.describe InboxMailbox, type: :mailbox do
   it "creates a comment on a story with a valid short id" do
     story = create(:story)
     user = create(:user)
 
-    user.update(mailing_list_mode: 2)
+    user.update!(mailing_list_mode: 2)
 
     to = "#{Rails.application.shortname}-#{user.mailing_list_token}@example.com"
     irt = "story.#{story.short_id}.1@"
@@ -15,7 +17,7 @@ RSpec.describe InboxMailbox, type: :mailbox do
       to: to,
       subject: "Test Comment on Story",
       in_reply_to: irt,
-      body: "Testing",
+      body: "Testing"
     )
 
     mail_processed = process(mail)
@@ -28,7 +30,7 @@ RSpec.describe InboxMailbox, type: :mailbox do
     comment = create(:comment)
     user = create(:user)
 
-    user.update(mailing_list_mode: 2)
+    user.update!(mailing_list_mode: 2)
 
     to = "#{Rails.application.shortname}-#{user.mailing_list_token}@example.com"
     irt = "comment.#{comment.short_id}.1@"
@@ -38,7 +40,7 @@ RSpec.describe InboxMailbox, type: :mailbox do
       to: to,
       subject: "Test Comment on Comment",
       in_reply_to: irt,
-      body: "Testing",
+      body: "Testing"
     )
 
     mail_processed = process(mail)
@@ -51,7 +53,7 @@ RSpec.describe InboxMailbox, type: :mailbox do
   it "bounces an email with an invalid in-reply-to" do
     user = create(:user)
 
-    user.update(mailing_list_mode: 2)
+    user.update!(mailing_list_mode: 2)
 
     to = "#{Rails.application.shortname}-#{user.mailing_list_token}@example.com"
     irt = "invalid@"
@@ -61,7 +63,7 @@ RSpec.describe InboxMailbox, type: :mailbox do
       to: to,
       subject: "Invalid irt",
       in_reply_to: irt,
-      body: "Testing",
+      body: "Testing"
     )
 
     mail_processed = process(mail)
@@ -75,7 +77,7 @@ RSpec.describe InboxMailbox, type: :mailbox do
       from: "invalid@example.com",
       to: to,
       subject: "Invalid user token",
-      body: "Testing",
+      body: "Testing"
     )
 
     mail_processed = process(mail)
@@ -86,7 +88,7 @@ RSpec.describe InboxMailbox, type: :mailbox do
     story = create(:story)
     user = create(:user)
 
-    user.update(mailing_list_mode: 2)
+    user.update!(mailing_list_mode: 2)
 
     to = "#{Rails.application.shortname}-#{user.mailing_list_token}@example.com"
     irt = "story.#{story.short_id}.1@"
@@ -96,7 +98,7 @@ RSpec.describe InboxMailbox, type: :mailbox do
       to: to,
       subject: "Test Comment on Story",
       in_reply_to: irt,
-      body: "",
+      body: ""
     )
 
     mail_processed = process(mail)

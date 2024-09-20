@@ -192,16 +192,16 @@ class Comment < ApplicationRecord
     return 0 if n == 0
     raise ArgumentError, "n should count number of upvotes + flags; that can't be a negative number" if n < 0
 
-    z = 1.281551565545 # 80% confidence
+    z = BigDecimal("1.281551565545") # 80% confidence
     p = BigDecimal(ups) / n
 
     left = p + (1 / (2 * n) * z * z)
-    right = z * Math.sqrt((p * ((1.0 - p) / n)) + (z * (z / (4.0 * n * n))))
+    right = z * Math.sqrt((p * ((1 - p) / n)) + (z * z / (4 * n * n)))
     under = 1.0 + ((1.0 / n) * z * z)
 
     confidence = (left - right) / under
-    raise "calculated_confidence #{confidence} out of range (0..1)" unless (0..1).cover? confidence
-    confidence
+    # raise "Comment #{id} calculated_confidence #{confidence} out of range (0..1)" unless (0..1).cover? confidence
+    confidence.clamp(0..1) # a handful of comments generate tiny negative numbers
   end
 
   # rate-limit users in heated reply chains, called by controller so that authors can preview

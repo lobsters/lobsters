@@ -127,8 +127,8 @@ Rails.application.routes.draw do
 
   get "/inbox" => "inbox#index"
 
-  get "/c/:id" => "comments#redirect_from_short_id"
   get "/c/:id.json" => "comments#show_short_id", :format => "json"
+  get "/c/:id" => "comments#redirect_from_short_id"
 
   # deprecated
   get "/s/:story_id/:title/comments/:id" => "comments#redirect_from_short_id"

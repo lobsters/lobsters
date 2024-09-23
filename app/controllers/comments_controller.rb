@@ -292,7 +292,7 @@ class CommentsController < ApplicationController
           render action: "index", layout: false
         else
           content = Rails.cache.fetch("comments.rss", expires_in: (60 * 2)) {
-            render_to_string template: "index", layout: false
+            render_to_string action: "index", layout: false
           }
           render plain: content, layout: false
         end

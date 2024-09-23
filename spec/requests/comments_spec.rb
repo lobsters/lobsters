@@ -51,4 +51,15 @@ describe "comments", type: :request do
       expect(comment.is_deleted).to be true
     end
   end
+
+  describe "rss" do
+    it "renders" do
+      comment = create(:comment)
+
+      get "/comments.rss"
+      expect(response).to be_successful
+      expect(response.body).to include(comment.comment[0..20])
+      expect(response.body).to include(comment.user.username)
+    end
+  end
 end

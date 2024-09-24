@@ -31,17 +31,14 @@ There's an external project [docker-lobsters](https://github.com/utensils/docker
   On MacOS you can [install with brew](https://mariadb.com/kb/en/installing-mariadb-on-macos-using-homebrew/).
   On Windows there's an [installer](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.5.2&os=Linux&cpu=x86_64&pkg=tar_gz&i=systemd&mirror=starburst_stlouis).
 
-* Start mysql and set the `root` user password
+* Start the mariadb server, open the console, and set the `root` user password (type `ctrl-d` to exit afterwards)
 
 ```sh
-# Start the server
 mysql.server start
-# open a mysql console
-mysql
+mariadb
 ```
 
 ```sql
-FLUSH PRIVILEGES;
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
 ```
 

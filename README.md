@@ -31,12 +31,9 @@ There's an external project [docker-lobsters](https://github.com/utensils/docker
   On MacOS you can [install with brew](https://mariadb.com/kb/en/installing-mariadb-on-macos-using-homebrew/).
   On Windows there's an [installer](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.5.2&os=Linux&cpu=x86_64&pkg=tar_gz&i=systemd&mirror=starburst_stlouis).
 
-* Start the mariadb server, open the console, and set the `root` user password (type `ctrl-d` to exit afterwards)
+* Start the mariadb server using one of the [methods mentioned in the mariadb knowledge base](https://mariadb.com/kb/en/starting-and-stopping-mariadb-automatically/).
 
-```sh
-mysql.server start
-mariadb
-```
+* Open the console using `mariadb`, and set the `root` user password (type `ctrl-d` to exit afterwards)
 
 ```sql
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';

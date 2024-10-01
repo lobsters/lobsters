@@ -223,9 +223,14 @@ html {
 
 /* generics */
 
-/* force a vertical scrollbar to avoid page-shifting */
 html {
+	/* force a vertical scrollbar to avoid page-shifting */
 	overflow-y: scroll;
+
+	/* avoid automatic resizing of some text elements on phones in landscape */
+	-moz-text-size-adjust: none;
+	-webkit-text-size-adjust: none;
+	text-size-adjust: none;
 }
 
 body, textarea, input, button {

@@ -898,9 +898,10 @@ class Story < ApplicationRecord
     created_at && created_at <= 1.hour && merged_story_id.nil?
   end
 
-  def set_domain(match)
+  def set_domain_and_origin(match)
     name = match ? match[:domain].sub(/^www\d*\./, "") : nil
     self.domain = name ? Domain.where(domain: name).first_or_initialize : nil
+    self.origin = domain&.origin(url)
   end
 
   def url=(u)
@@ -915,7 +916,7 @@ class Story < ApplicationRecord
         @url_port = nil
       end
     end
-    set_domain(match)
+    set_domain_and_origin(match)
 
     # strip out tracking query params
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))

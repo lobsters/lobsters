@@ -1,11 +1,24 @@
 # typed: false
 
 class DomainsController < ApplicationController
-  before_action :require_logged_in_admin
+  before_action :require_logged_in_moderator
   before_action :find_or_initialize_domain, only: [:edit, :update]
 
   def create
-    @domain = Domain.create!(domain: domain_params[:domain])
+    @domain = Domain.new(domain: params[:new_domain])
+    @domain.selector = domain_params[:selector]
+    @domain.replacement = domain_params[:replacement]
+
+    if @domain.save
+      flash[:success] = "Domain created"
+      redirect_to domain_path(@domain)
+    else
+      render :edit
+    end
+  end
+
+  def create_and_ban
+    @domain = Domain.create!(domain: params[:new_domain])
     @domain.ban_by_user_for_reason!(@user, domain_params[:banned_reason])
     flash[:success] = "Domain created and banned. Real short run."
     redirect_to domain_path(@domain)
@@ -15,16 +28,11 @@ class DomainsController < ApplicationController
   end
 
   def update
-    if domain_params[:banned_reason].present?
-      if @domain.banned?
-        @domain.unban_by_user_for_reason!(@user, domain_params[:banned_reason])
-      else
-        @domain.ban_by_user_for_reason!(@user, domain_params[:banned_reason])
-      end
-      flash[:success] = "Domain updated."
+    @domain.update(domain_params)
+    if @domain.save
+      flash[:success] = "Domain edited"
       redirect_to domain_path(@domain)
     else
-      flash.now[:error] = "Reason required for the modlog."
       render :edit
     end
   end
@@ -32,7 +40,7 @@ class DomainsController < ApplicationController
   private
 
   def domain_params
-    params.require(:domain).permit(:banned_reason, :domain)
+    params.require(:domain).permit(:banned_reason, :selector, :replacement)
   end
 
   def find_or_initialize_domain

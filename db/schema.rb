@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_09_220644) do
+ActiveRecord::Schema[7.2].define(version: 2024_09_26_150737) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "category", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -54,7 +54,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_09_220644) do
     t.datetime "banned_at", precision: nil
     t.integer "banned_by_user_id"
     t.string "banned_reason", limit: 200
+    t.string "selector"
+    t.string "replacement"
     t.index ["banned_by_user_id"], name: "index_domains_on_banned_by_user_id"
+    t.index ["domain"], name: "index_domains_on_domain", unique: true
   end
 
   create_table "hat_requests", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -192,6 +195,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_09_220644) do
     t.index ["story_id"], name: "moderations_story_id_fk"
     t.index ["tag_id"], name: "moderations_tag_id_fk"
     t.index ["user_id"], name: "index_moderations_on_user_id"
+  end
+
+  create_table "origins", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.bigint "domain_id", null: false
+    t.string "identifier", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain_id"], name: "index_origins_on_domain_id"
   end
 
   create_table "read_ribbons", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

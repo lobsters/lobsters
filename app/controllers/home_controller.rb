@@ -254,6 +254,28 @@ class HomeController < ApplicationController
     end
   end
 
+  def for_origin
+    @domain = Domain.find_by!(domain: params[:id])
+
+    @stories, @show_more = get_from_cache(domain: @domain.domain) do
+      paginate @domain.stories.base(@user).order("id desc")
+    end
+
+    @title = @domain.domain
+    @above = {partial: "for_domain", locals: {domain: @domain, stories: @stories}}
+
+    @rss_link = {
+      title: "RSS 2.0 - For #{@domain.domain}",
+      href: "/domain/#{@domain.domain}.rss"
+    }
+
+    respond_to do |format|
+      format.html { render action: "index" }
+      format.rss { render action: "stories", layout: false }
+      format.json { render json: @stories }
+    end
+  end
+
   def top
     length = time_interval(params[:length])
 

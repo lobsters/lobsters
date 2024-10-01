@@ -53,7 +53,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
         <% end %>
       </span>
       <% if story.domain.present? %>
-        <a class="domain" href="<%= domain_path(story.domain) %>"><%= story.domain.domain %></a>
+        <%= story.domain.origin(story.url) %>
       <% end %>
 
       <% if single_story %>

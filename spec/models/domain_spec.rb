@@ -3,6 +3,36 @@
 require "rails_helper"
 
 RSpec.describe Domain, type: :model do
+  describe "origin" do
+    it "takes a selector and replacement to generate an origin identifier" do
+      d = Domain.new domain: "github.com",
+        selector: "\\Ahttps://(github.com/[^/]+).*\\z",
+        replacement: "\\1"
+      expect(d.origin("https://github.com/foo")).to eq("github.com/foo")
+      expect(d.origin("https://github.com/foo/bar")).to eq("github.com/foo")
+    end
+
+    it "inserts start-and-end-of-line anchors to " do
+      d = Domain.new domain: "github.com",
+        selector: "https://github.com" # not a working selector
+      expect(d.selector).to eq("\\Ahttps://github.com\\z")
+    end
+
+    it "has a timeout on selector_regexp" do
+      d = Domain.new domain: "github.com",
+        selector: "https://github.com"
+      expect(d.selector_regexp.timeout).to be(0.1)
+    end
+
+    it "is invalid for invalid regexp" do
+      d = Domain.new domain: "github.com",
+        selector: "\\Ahttps://(github.com/[^/]+.*\\z", # missing ) on capture
+        replacement: "\\1"
+      expect(d.valid?).to be(false)
+      expect(d.errors[:selector].first).to include("invalid Regexp")
+    end
+  end
+
   describe "ban" do
     let(:user) { create(:user) }
     let(:domain) { create(:domain) }

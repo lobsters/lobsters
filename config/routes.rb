@@ -74,6 +74,7 @@ Rails.application.routes.draw do
     get "/domains/:id(.:format)" => "home#for_domain", :as => "domain"
     get "/domains/:id/page/:page" => "home#for_domain"
     resources :domains, only: [:create, :edit, :update]
+    post "/domains_ban" => "domains#create_and_ban", :only => [:update]
   end
 
   get "/search" => "search#index"

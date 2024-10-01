@@ -108,7 +108,7 @@ class Mastodon
       "https://#{self.INSTANCE_NAME}/api/v1/statuses",
       :post,
       {
-        status: CGI.escape(status),
+        status: status,
         visibility: "public"
       },
       nil,
@@ -190,7 +190,7 @@ class Mastodon
       :post,
       client_id: client_id,
       client_secret: client_secret,
-      redirect_uri: CGI.escape("https://#{Rails.application.domain}/settings"),
+      redirect_uri: "https://#{Rails.application.domain}/settings",
       grant_type: "authorization_code",
       code: code,
       scope: "read write"

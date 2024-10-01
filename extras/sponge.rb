@@ -180,7 +180,7 @@ class Sponge
         post_data = raw_post_data
         send_headers["Content-Type"] = "application/x-www-form-urlencoded"
       else
-        post_data = encode_fields(fields)
+        post_data = fields.to_query
       end
 
       send_headers["Content-Length"] = post_data.length.to_s
@@ -262,27 +262,5 @@ class Sponge
     if debug
       puts string
     end
-  end
-
-  def encode_fields(fields)
-    fields.map { |k, v|
-      if v.is_a?(Hash)
-        # :user => { :name => "hi", :age => "1" }
-        # becomes
-        # user[hame]=hi and user[age]=1
-        v.map { |vk, vv|
-          [CGI.escape("#{k}[#{vk}]"), CGI.escape(vv.to_s)].join("=")
-        }
-      elsif v.is_a?(Array)
-        # :user => [ "one", "two" ]
-        # becomes
-        # user[]=one and user[]=two
-        v.map { |vv|
-          [CGI.escape("#{k}[]"), CGI.escape(vv.to_s)].join("=")
-        }
-      else
-        [CGI.escape(k.to_s), CGI.escape(v.to_s)].join("=")
-      end
-    }.flatten.join("&")
   end
 end

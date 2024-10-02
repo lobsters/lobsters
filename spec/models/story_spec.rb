@@ -59,6 +59,7 @@ describe Story do
     expect(Story.new(url: "http://a.com?a=b").url).to eq("http://a.com?a=b")
     expect(Story.new(url: "http://a.com?utm_term=track&c=d").url).to eq("http://a.com?c=d")
     expect(Story.new(url: "http://a.com?a=b&utm_term=track&c=d").url).to eq("http://a.com?a=b&c=d")
+    expect(Story.new(url: "http://a.com?linkId=track").url).to eq("http://a.com")
   end
 
   it "checks for invalid urls" do

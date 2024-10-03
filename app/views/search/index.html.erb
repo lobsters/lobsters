@@ -188,8 +188,10 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <%= tag_link(tag) %>
         <% end %>
       </span>
-      <% if story.domain.present? %>
-        <%= story.domain.origin(story.url) %>
+      <% if story.origin.present? %>
+        <%= link_to story.origin.identifier, origin_path(story.origin), class: 'domain' %>
+      <% elsif story.domain.present? %>
+        <%= link_to story.domain.domain, domain_path(story.domain), class: 'domain' %>
       <% end %>
 
       <% if single_story %>

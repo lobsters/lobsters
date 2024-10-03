@@ -244,7 +244,7 @@ class HomeController < ApplicationController
 
     @rss_link = {
       title: "RSS 2.0 - For #{@domain.domain}",
-      href: "/domain/#{@domain.domain}.rss"
+      href: "/domains/#{@domain.domain}.rss"
     }
 
     respond_to do |format|
@@ -255,18 +255,18 @@ class HomeController < ApplicationController
   end
 
   def for_origin
-    @domain = Domain.find_by!(domain: params[:id])
+    @origin = Origin.find_by!(identifier: params[:identifier])
 
-    @stories, @show_more = get_from_cache(domain: @domain.domain) do
-      paginate @domain.stories.base(@user).order("id desc")
+    @stories, @show_more = get_from_cache(identifier: @origin.identifier) do
+      paginate @origin.stories.base(@user).order("id desc")
     end
 
-    @title = @domain.domain
-    @above = {partial: "for_domain", locals: {domain: @domain, stories: @stories}}
+    @title = @origin.identifier
+    @above = {partial: "for_origin", locals: {origin: @origin, stories: @stories}}
 
     @rss_link = {
-      title: "RSS 2.0 - For #{@domain.domain}",
-      href: "/domain/#{@domain.domain}.rss"
+      title: "RSS 2.0 - For #{@origin.identifier}",
+      href: "/origins/#{@origin.identifier}.rss"
     }
 
     respond_to do |format|

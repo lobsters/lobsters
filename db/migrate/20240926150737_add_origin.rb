@@ -17,10 +17,47 @@ class AddOrigin < ActiveRecord::Migration[7.2]
       t.references :domain, null: false
       t.string :identifier, null: false
 
+      t.datetime :banned_at, null: true, default: nil
+      t.integer :banned_by_user_id, null: true, default: nil
+      t.string :banned_reason, limit: 200
+
       t.timestamps
     end
+    add_column :moderations, :origin_id, :integer, null: true, default: nil
+    add_index :moderations, :origin_id
 
     add_reference :stories, :origin, null: true
-    add_index :stories, :origin
+
+    # make Domain selectors for our most common sites
+    if (d = Domain.find_by(domain: "github.com"))
+      puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
+      d.selector = "\\Ahttps://github.com/([^/]+).*\\z"
+      d.replacement = "github.com/\\1"
+      d.save!
+    end
+    if (d = Domain.find_by(domain: "github.io"))
+      puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
+      d.selector = "\\Ahttps://([^\\.]+).github.io/.*\\z"
+      d.replacement = "github.com/\\1"
+      d.save!
+    end
+    if (d = Domain.find_by(domain: "dev.to"))
+      puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
+      d.selector = "\\Ahttps://dev.to/([^/]+).*\\z"
+      d.replacement = "dev.to/\\1"
+      d.save!
+    end
+    if (d = Domain.find_by(domain: "medium.com"))
+      puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
+      d.selector = "\\Ahttps://medium.com/([^/]+).*\\z"
+      d.replacement = "medium.com/\\1"
+      d.save!
+    end
+    if (d = Domain.find_by(domain: "dataswamp.org"))
+      puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
+      d.selector = "\\Ahttps://dataswamp.org/([^/]+).*\\z"
+      d.replacement = "dataswamp.org/\\1"
+      d.save!
+    end
   end
 end

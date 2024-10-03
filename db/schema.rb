@@ -187,11 +187,13 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_26_150737) do
     t.bigint "tag_id", unsigned: true
     t.integer "domain_id"
     t.bigint "category_id"
+    t.integer "origin_id"
     t.index ["category_id"], name: "index_moderations_on_category_id"
     t.index ["comment_id"], name: "moderations_comment_id_fk"
     t.index ["created_at"], name: "index_moderations_on_created_at"
     t.index ["domain_id"], name: "index_moderations_on_domain_id"
     t.index ["moderator_user_id"], name: "moderations_moderator_user_id_fk"
+    t.index ["origin_id"], name: "index_moderations_on_origin_id"
     t.index ["story_id"], name: "moderations_story_id_fk"
     t.index ["tag_id"], name: "moderations_tag_id_fk"
     t.index ["user_id"], name: "index_moderations_on_user_id"
@@ -200,6 +202,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_26_150737) do
   create_table "origins", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.bigint "domain_id", null: false
     t.string "identifier", null: false
+    t.datetime "banned_at"
+    t.integer "banned_by_user_id"
+    t.string "banned_reason", limit: 200
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["domain_id"], name: "index_origins_on_domain_id"
@@ -246,6 +251,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_26_150737) do
     t.boolean "user_is_following", default: false, null: false
     t.bigint "domain_id"
     t.string "mastodon_id", limit: 25
+    t.bigint "origin_id"
     t.index ["created_at"], name: "index_stories_on_created_at"
     t.index ["domain_id"], name: "index_stories_on_domain_id"
     t.index ["hotness"], name: "hotness_idx"
@@ -253,6 +259,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_26_150737) do
     t.index ["mastodon_id"], name: "index_stories_on_mastodon_id"
     t.index ["merged_story_id"], name: "index_stories_on_merged_story_id"
     t.index ["normalized_url"], name: "index_stories_on_normalized_url"
+    t.index ["origin_id"], name: "index_stories_on_origin_id"
     t.index ["score"], name: "index_stories_on_score"
     t.index ["short_id"], name: "unique_short_id", unique: true
     t.index ["url"], name: "url", length: 191

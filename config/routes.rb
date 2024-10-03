@@ -71,10 +71,22 @@ Rails.application.routes.draw do
   constraints id: /([^\/]+?)(?=\.json|\.rss|$|\/)/ do
     get "/domain/:id(.:format)", to: redirect("/domains/%{id}")
     get "/domain/:id/page/:page", to: redirect("/domains/%{id}/page/%{page}")
+    get "/domain/:domain/:identifier(.:format)", to: redirect("/domains/%{domain}/%{identifier}")
+    get "/domain/:domain/:identifier/page/:page", to: redirect("/domains/%{domain}/%{idetifier}/page/%{page}")
     get "/domains/:id(.:format)" => "home#for_domain", :as => "domain"
     get "/domains/:id/page/:page" => "home#for_domain"
+    get "/domains/:id/:author", to: redirect("/origins/%{id}/%{author}")
+
     resources :domains, only: [:create, :edit, :update]
     post "/domains_ban" => "domains#create_and_ban", :only => [:update]
+  end
+
+  constraints identifier: /(.+)(?=\.json|\.rss|$|\/)/ do
+    get "/origins/:identifier(.:format)" => "home#for_origin", :as => "origin"
+    # leaving out pagination because identifiers (eg 'github.com/alice') can include slashes
+    # get "/origins/:identifier/page/:page" => "home#for_domain"
+
+    resources :origins, only: [:edit, :update]
   end
 
   get "/search" => "search#index"

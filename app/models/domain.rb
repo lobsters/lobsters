@@ -41,15 +41,15 @@ class Domain < ApplicationRecord
   end
 
   def update_origins
-    return unless selector_previously_changed? || replacement_previously_changed?
+    return unless saved_change_to_selector? || saved_change_to_replacement?
 
     stories.find_each do |story|
-      story.origin = origin(story.url)
+      story.update_column(:origin_id, story.domain.origin(story.url).id)
     end
   end
 
   def origin(url)
-    return domain if selector.blank? || replacement.blank?
+    return nil if selector.blank? || replacement.blank?
     valid?
     raise ArgumentError if errors.any?
 
@@ -57,10 +57,10 @@ class Domain < ApplicationRecord
     # github.com/foo/bar -> github.com/foo
     if url.match?(selector_regexp)
       identifier = url.sub(selector_regexp, replacement)
-      Origin.find_or_create_by(identifier: identifier)
+      Origin.find_or_create_by!(domain: self, identifier: identifier)
     else
       # if the URL isn't matched, the identifier is the bare domain (handles root + partial regexps)
-      Origin.find_or_create_by(identifier: domain)
+      Origin.find_or_create_by!(domain: self, identifier: domain)
     end
   end
 

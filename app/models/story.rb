@@ -3,6 +3,7 @@
 class Story < ApplicationRecord
   belongs_to :user
   belongs_to :domain, optional: true
+  belongs_to :origin, optional: true
   belongs_to :merged_into_story,
     class_name: "Story",
     foreign_key: "merged_story_id",
@@ -46,7 +47,7 @@ class Story < ApplicationRecord
 
   scope :base, ->(user) { includes(:hidings, :story_text, :user).not_deleted(user).unmerged.mod_preload?(user) }
   scope :for_presentation, -> {
-    includes(:domain, :hidings, :user, :tags, taggings: :tag)
+    includes(:domain, :origin, :hidings, :user, :tags, taggings: :tag)
   }
   scope :mod_preload?, ->(user) {
     user.try(:is_moderator?) ? preload(:suggested_taggings, :suggested_titles) : all

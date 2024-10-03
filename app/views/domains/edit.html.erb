@@ -8,7 +8,7 @@
     <div class="boxline">
       <%= f.label :selector, "Origin selector" %>
       <%= f.text_field :selector %>
-      <div class="d"><p class="help">Regexp with captures, must consume whole string like: <kbd>\Ahttps://github.com/([^/]+).*\z</kbd></p></div>
+      <div class="d"><p class="help">Regexp with captures, must consume whole string like: <kbd>\Ahttps?://github.com/+([^/]+).*\z</kbd></p></div>
     </div>
 
     <div class="boxline">

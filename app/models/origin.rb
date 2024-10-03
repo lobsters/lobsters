@@ -6,6 +6,10 @@ class Origin < ApplicationRecord
 
   validates :identifier, presence: true, length: {maximum: 255}
 
+  def identifier= s
+    super(s.downcase)
+  end
+
   def ban_by_user_for_reason!(banner, reason)
     self.banned_at = Time.current
     self.banned_by_user_id = banner.id

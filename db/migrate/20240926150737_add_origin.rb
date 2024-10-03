@@ -12,10 +12,13 @@ class AddOrigin < ActiveRecord::Migration[7.2]
     Domain.find_by(id: 20553, domain: "aaronhawley.livejournal.com")&.destroy
 
     add_index :domains, :domain, unique: true
+    add_column :domains, :stories_count, :integer, null: false, default: 0
 
     create_table :origins do |t|
       t.references :domain, null: false
       t.string :identifier, null: false
+
+      t.integer :stories_count, null: false, default: 0
 
       t.datetime :banned_at, null: true, default: nil
       t.integer :banned_by_user_id, null: true, default: nil
@@ -31,33 +34,36 @@ class AddOrigin < ActiveRecord::Migration[7.2]
     # make Domain selectors for our most common sites
     if (d = Domain.find_by(domain: "github.com"))
       puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
-      d.selector = "\\Ahttps://github.com/([^/]+).*\\z"
+      d.selector = "\\Ahttps?://github.com/+([^/]+).*\\z"
       d.replacement = "github.com/\\1"
       d.save!
     end
     if (d = Domain.find_by(domain: "github.io"))
       puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
-      d.selector = "\\Ahttps://([^\\.]+).github.io/.*\\z"
+      d.selector = "\\Ahttps?://([^\\.]+).github.io/+.*\\z"
       d.replacement = "github.com/\\1"
       d.save!
     end
     if (d = Domain.find_by(domain: "dev.to"))
       puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
-      d.selector = "\\Ahttps://dev.to/([^/]+).*\\z"
+      d.selector = "\\Ahttps?://dev.to/+([^/]+).*\\z"
       d.replacement = "dev.to/\\1"
       d.save!
     end
     if (d = Domain.find_by(domain: "medium.com"))
       puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
-      d.selector = "\\Ahttps://medium.com/([^/]+).*\\z"
+      d.selector = "\\Ahttps?://medium.com/+([^/]+).*\\z"
       d.replacement = "medium.com/\\1"
       d.save!
     end
     if (d = Domain.find_by(domain: "dataswamp.org"))
       puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
-      d.selector = "\\Ahttps://dataswamp.org/([^/]+).*\\z"
+      d.selector = "\\Ahttps?://dataswamp.org/+([^/]+).*\\z"
       d.replacement = "dataswamp.org/\\1"
       d.save!
     end
+
+    Domain.update_all("stories_count = (select count(*) from stories where domain_id = domains.id)")
+    Origin.update_all("stories_count = (select count(*) from stories where origin_id = origins.id)")
   end
 end

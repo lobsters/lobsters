@@ -1,13 +1,14 @@
 <%# locals: (domain:, stories:) -%>
 <p>
   <%= domain.domain %>:
-  <%= "#{stories.count} story".pluralize(stories.count) %> from
+  <%= "#{stories_count} story".pluralize(stories_count) %> from
   <%= "#{domain.n_submitters} submitter".pluralize(domain.n_submitters) %>
+  <% if domain.origins.count > 0 %>
+    with <%= link_to "#{domain.origins.count} origins", domain_origins_path(domain) %>
+  <% end %>
 
   <%= link_to 'Edit', edit_domain_path(domain) if @user&.is_moderator?  %>
 </p>
-
-
 
 <% if domain.banned? %>
   <p>

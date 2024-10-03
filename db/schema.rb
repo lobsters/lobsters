@@ -56,6 +56,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_26_150737) do
     t.string "banned_reason", limit: 200
     t.string "selector"
     t.string "replacement"
+    t.integer "stories_count", default: 0, null: false
     t.index ["banned_by_user_id"], name: "index_domains_on_banned_by_user_id"
     t.index ["domain"], name: "index_domains_on_domain", unique: true
   end
@@ -202,6 +203,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_26_150737) do
   create_table "origins", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.bigint "domain_id", null: false
     t.string "identifier", null: false
+    t.integer "stories_count", default: 0, null: false
     t.datetime "banned_at"
     t.integer "banned_by_user_id"
     t.string "banned_reason", limit: 200

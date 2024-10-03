@@ -2,8 +2,8 @@
 
 class Story < ApplicationRecord
   belongs_to :user
-  belongs_to :domain, optional: true
-  belongs_to :origin, optional: true
+  belongs_to :domain, optional: true, counter_cache: true
+  belongs_to :origin, optional: true, counter_cache: true
   belongs_to :merged_into_story,
     class_name: "Story",
     foreign_key: "merged_story_id",
@@ -45,7 +45,11 @@ class Story < ApplicationRecord
     inverse_of: :to_story,
     dependent: :destroy
 
-  scope :base, ->(user) { includes(:hidings, :story_text, :user).not_deleted(user).unmerged.mod_preload?(user) }
+  scope :base, ->(user, unmerged: false) {
+    q = includes(:hidings, :story_text, :user).not_deleted(user).mod_preload?(user)
+    q = q.unmerged if unmerged
+    q
+  }
   scope :for_presentation, -> {
     includes(:domain, :origin, :hidings, :user, :tags, taggings: :tag)
   }

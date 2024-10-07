@@ -7,7 +7,27 @@ RSpec.feature "Domains" do
 
   before(:each) { stub_login_as admin }
 
-  context "update" do
+  context "create" do
+    it "creates domains with selectors" do
+      visit "/domains/nogweii.net/edit"
+      fill_in "selector", with: "\\Ahttps?://nogweii.net/+([^/]+).*\\z"
+      fill_in "replacement", with: "nogweii.net/\\1"
+      click_on "Save"
+      expect(page).to have_text("Domain created")
+      expect(Domain.last.domain).to eq("nogweii.net")
+    end
+
+    it "updates domains with selectors" do
+      domain = create(:domain)
+      visit "/domains/#{domain.domain}/edit"
+      fill_in "selector", with: "\\Ahttps?://nogweii.net/+([^/]+).*\\z"
+      fill_in "replacement", with: "nogweii.net/\\1"
+      click_on "Save"
+      expect(page).to have_text("Domain edited")
+    end
+  end
+
+  context "domains_ban#update" do
     let(:domain) { create(:domain) }
 
     it "bans domain with valid params" do

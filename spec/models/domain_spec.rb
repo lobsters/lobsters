@@ -12,6 +12,14 @@ RSpec.describe Domain, type: :model do
       expect(d.origin("https://github.com/foo/bar").identifier).to eq("github.com/foo")
     end
 
+    it "creates a bare-domain origin for bare and trailing slash URLs" do
+      d = Domain.new domain: "github.com",
+        selector: "\\Ahttps://(github.com/[^/]+).*\\z",
+        replacement: "\\1"
+      expect(d.origin("https://github.com/").identifier).to eq("github.com")
+      expect(d.origin("https://github.com").identifier).to eq("github.com")
+    end
+
     it "inserts start-and-end-of-line anchors to " do
       d = Domain.new domain: "github.com",
         selector: "https://github.com" # not a working selector
@@ -30,6 +38,21 @@ RSpec.describe Domain, type: :model do
         replacement: "\\1"
       expect(d.valid?).to be(false)
       expect(d.errors[:selector].first).to include("invalid Regexp")
+    end
+
+    it "updates Origins on existing Stories if selector changes" do
+      story = create(:story, url: "https://example.com/foo/bar")
+      domain = story.domain
+      domain.selector = "\\Ahttps://(example.com/[^/]+).*\\z"
+      domain.replacement = "\\1"
+      domain.save!
+
+      # origin created
+      origin = domain.origins.last
+      expect(origin.identifier).to eq("example.com/foo")
+
+      # story updated with origin
+      expect(story.reload.origin).to eq(origin)
     end
   end
 

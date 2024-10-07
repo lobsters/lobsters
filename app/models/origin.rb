@@ -3,6 +3,7 @@
 class Origin < ApplicationRecord
   belongs_to :domain, optional: false
   has_many :stories
+  belongs_to :banned_by_user, class_name: "User", inverse_of: false, optional: true
 
   validates :identifier, presence: true, length: {maximum: 255}
 

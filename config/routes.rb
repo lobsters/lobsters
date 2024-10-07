@@ -83,11 +83,12 @@ Rails.application.routes.draw do
   end
 
   constraints identifier: /(.+)(?=\.json|\.rss|$|\/)/ do
+    # resources :origin, only: [:show, :edit, :update]
+    get "/origins/:identifier/edit(.:format)" => "origins#edit", :as => "edit_origin"
+    patch "/origins/:identifier" => "origins#update", :as => "update_origin"
     get "/origins/:identifier(.:format)" => "home#for_origin", :as => "origin"
     # leaving out pagination because identifiers (eg 'github.com/alice') can include slashes
     # get "/origins/:identifier/page/:page" => "home#for_domain"
-
-    resources :origins, only: [:edit, :update]
   end
 
   get "/search" => "search#index"

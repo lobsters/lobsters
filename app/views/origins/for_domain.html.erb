@@ -5,10 +5,11 @@ Domain <%= link_to @domain.domain, @domain %> has <%= "#{number_with_delimiter @
 <ul>
   <% @origins.each do |origin| %>
     <li>
-      <%= link_to origin.identifier, origin %> <%= "#{origin.stories_count} story".pluralize(origin.stories_count) %>
+      <%= link_to origin.identifier, origin_path(origin) %> <%= "#{origin.stories_count} story".pluralize(origin.stories_count) %>
       <% if origin.banned? %>
         banned
       <% end %>
+      <%= link_to 'Edit', edit_origin_path(origin) if @user&.is_moderator?  %>
     </li>
   <% end %>
 </ul>

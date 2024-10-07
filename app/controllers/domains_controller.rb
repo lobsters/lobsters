@@ -28,7 +28,7 @@ class DomainsController < ApplicationController
   end
 
   def update
-    @domain.update(domain_params)
+    @domain.assign_attributes(domain_params)
     if @domain.save
       flash[:success] = "Domain edited"
       redirect_to domain_path(@domain)

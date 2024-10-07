@@ -16,6 +16,7 @@ class ModerationsController < ApplicationController
       tags: params.dig(:what, :tags),
       users: params.dig(:what, :users),
       domains: params.dig(:what, :domains),
+      origins: params.dig(:what, :origins),
       categories: params.dig(:what, :categories)
     }
     @what.transform_values! { true } if @what.values.none?
@@ -26,6 +27,7 @@ class ModerationsController < ApplicationController
       :tag,
       :user,
       :domain,
+      :origin,
       :category)
 
     # filter based on target

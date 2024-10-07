@@ -1,5 +1,5 @@
 <p>
-Domain <%= link_to @domain.domain, @domain %> has <%= "#{@origins.count} origin".pluralize(@origins.count) %>
+Domain <%= link_to @domain.domain, @domain %> has <%= "#{number_with_delimiter @origins.count} origin".pluralize(@origins.count) %>
 </p>
 
 <ul>

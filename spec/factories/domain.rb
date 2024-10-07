@@ -9,5 +9,11 @@ FactoryBot.define do
       banned_at { Time.current }
       banned_reason { "some reason" }
     end
+
+    trait(:github_with_selector) do
+      domain { "github.com" }
+      selector { "\\Ahttps?://github.com/+([^/]+).*\\z" }
+      replacement { "github.com/\\1" }
+    end
   end
 end

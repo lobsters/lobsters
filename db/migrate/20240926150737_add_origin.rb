@@ -1,18 +1,19 @@
 class AddOrigin < ActiveRecord::Migration[7.2]
   def change
-    add_column :domains, :selector, :string, null: true
-    add_column :domains, :replacement, :string, null: true
-
     # bad data in prod lobsters; using &. so this runs clean on sister sites
     # unused extra domain
-    Domain.find_by(id: 20017, domain: "codingunicorn.dev")&.destroy
+    Domain.find_by(id: 20017, domain: "codingunicorn.dev")&.destroy!
     # duplicate for this domain
     story = Story.find_by(short_id: "5tw3fr")
     story&.update!(domain: Domain.find(20552))
-    Domain.find_by(id: 20553, domain: "aaronhawley.livejournal.com")&.destroy
+    Domain.find_by(id: 20553, domain: "aaronhawley.livejournal.com")&.destroy!
 
-    add_index :domains, :domain, unique: true
-    add_column :domains, :stories_count, :integer, null: false, default: 0
+    change_table :domains, bulk: true do
+      add_column :domains, :selector, :string, null: true
+      add_column :domains, :replacement, :string, null: true
+      add_index :domains, :domain, unique: true
+      add_column :domains, :stories_count, :integer, null: false, default: 0
+    end
 
     create_table :origins do |t|
       t.references :domain, null: false
@@ -26,38 +27,40 @@ class AddOrigin < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    add_column :moderations, :origin_id, :integer, null: true, default: nil
-    add_index :moderations, :origin_id
+    change_table :moderations, bulk: true do
+      add_column :moderations, :origin_id, :integer, null: true, default: nil
+      add_index :moderations, :origin_id
+    end
 
     add_reference :stories, :origin, null: true
 
     # make Domain selectors for our most common sites
     if (d = Domain.find_by(domain: "github.com"))
-      puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
+      Rails.logger.debug { "Adding selector to #{d.domain} and updating #{d.stories.count} stories" }
       d.selector = "\\Ahttps?://github.com/+([^/]+).*\\z"
       d.replacement = "github.com/\\1"
       d.save!
     end
     if (d = Domain.find_by(domain: "github.io"))
-      puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
+      Rails.logger.debug { "Adding selector to #{d.domain} and updating #{d.stories.count} stories" }
       d.selector = "\\Ahttps?://([^\\.]+).github.io/+.*\\z"
       d.replacement = "github.com/\\1"
       d.save!
     end
     if (d = Domain.find_by(domain: "dev.to"))
-      puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
+      Rails.logger.debug { "Adding selector to #{d.domain} and updating #{d.stories.count} stories" }
       d.selector = "\\Ahttps?://dev.to/+([^/]+).*\\z"
       d.replacement = "dev.to/\\1"
       d.save!
     end
     if (d = Domain.find_by(domain: "medium.com"))
-      puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
+      Rails.logger.debug { "Adding selector to #{d.domain} and updating #{d.stories.count} stories" }
       d.selector = "\\Ahttps?://medium.com/+([^/]+).*\\z"
       d.replacement = "medium.com/\\1"
       d.save!
     end
     if (d = Domain.find_by(domain: "dataswamp.org"))
-      puts "Adding selector to #{d.domain} and updating #{d.stories.count} stories"
+      Rails.logger.debug { "Adding selector to #{d.domain} and updating #{d.stories.count} stories" }
       d.selector = "\\Ahttps?://dataswamp.org/+([^/]+).*\\z"
       d.replacement = "dataswamp.org/\\1"
       d.save!

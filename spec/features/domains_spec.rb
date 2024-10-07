@@ -46,4 +46,16 @@ RSpec.feature "Domains" do
       expect(domain.reload).to be_banned
     end
   end
+
+  context "create and ban" do
+    let(:domain_name) { Faker::Internet.domain_name }
+
+    it "can create and ban at the same time" do
+      visit "/domains/#{domain_name}/edit"
+      fill_in "Create and Ban Reason", with: "Hasn't finished a Gameboy emulator"
+      click_on "Create and Ban"
+      expect(page).to have_text("Domain created and banned")
+      expect(Domain.last).to be_banned
+    end
+  end
 end

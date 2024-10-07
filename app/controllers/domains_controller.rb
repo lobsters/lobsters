@@ -1,7 +1,7 @@
 # typed: false
 
 class DomainsController < ApplicationController
-  before_action :require_logged_in_moderator
+  before_action :require_logged_in_moderator, only: [:edit, :update]
   before_action :find_or_initialize_domain, only: [:edit, :update]
 
   def create
@@ -15,13 +15,6 @@ class DomainsController < ApplicationController
     else
       render :edit
     end
-  end
-
-  def create_and_ban
-    @domain = Domain.create!(domain: params[:new_domain])
-    @domain.ban_by_user_for_reason!(@user, domain_params[:banned_reason])
-    flash[:success] = "Domain created and banned. Real short run."
-    redirect_to domain_path(@domain)
   end
 
   def edit

@@ -71,15 +71,18 @@ Rails.application.routes.draw do
   constraints id: /([^\/]+?)(?=\.json|\.rss|$|\/)/ do
     get "/domain/:id(.:format)", to: redirect("/domains/%{id}")
     get "/domain/:id/page/:page", to: redirect("/domains/%{id}/page/%{page}")
-    get "/domain/:domain/:identifier(.:format)", to: redirect("/domains/%{domain}/%{identifier}")
-    get "/domain/:domain/:identifier/page/:page", to: redirect("/domains/%{domain}/%{idetifier}/page/%{page}")
     get "/domains/:id(.:format)" => "home#for_domain", :as => "domain"
     get "/domains/:id/page/:page" => "home#for_domain"
     get "/domains/:id/origins" => "origins#for_domain", :as => "domain_origins"
-    get "/domains/:id/:author", to: redirect("/origins/%{id}/%{author}")
 
     resources :domains, only: [:create, :edit, :update]
-    post "/domains_ban" => "domains#create_and_ban", :only => [:update]
+    patch "/domains_ban/:id" => "domains_ban#update", :as => "ban_domain"
+    post "/domains_ban/:id" => "domains_ban#create_and_ban", :as => "create_and_ban_domain"
+
+    # below `resources` so that /edit isn't taken as an identifier
+    get "/domains/:id/:author", to: redirect("/origins/%{id}/%{author}")
+    get "/domain/:domain/:identifier(.:format)", to: redirect("/domains/%{domain}/%{identifier}")
+    get "/domain/:domain/:identifier/page/:page", to: redirect("/domains/%{domain}/%{idetifier}/page/%{page}")
   end
 
   constraints identifier: /(.+)(?=\.json|\.rss|$|\/)/ do

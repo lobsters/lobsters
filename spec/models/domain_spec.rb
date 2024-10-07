@@ -8,8 +8,8 @@ RSpec.describe Domain, type: :model do
       d = Domain.new domain: "github.com",
         selector: "\\Ahttps://(github.com/[^/]+).*\\z",
         replacement: "\\1"
-      expect(d.origin("https://github.com/foo")).to eq("github.com/foo")
-      expect(d.origin("https://github.com/foo/bar")).to eq("github.com/foo")
+      expect(d.origin("https://github.com/foo").identifier).to eq("github.com/foo")
+      expect(d.origin("https://github.com/foo/bar").identifier).to eq("github.com/foo")
     end
 
     it "inserts start-and-end-of-line anchors to " do

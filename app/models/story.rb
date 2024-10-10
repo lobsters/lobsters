@@ -2,7 +2,8 @@
 
 class Story < ApplicationRecord
   belongs_to :user
-  belongs_to :domain, optional: true
+  belongs_to :domain, optional: true, counter_cache: true
+  belongs_to :origin, optional: true, counter_cache: true
   belongs_to :merged_into_story,
     class_name: "Story",
     foreign_key: "merged_story_id",
@@ -44,9 +45,13 @@ class Story < ApplicationRecord
     inverse_of: :to_story,
     dependent: :destroy
 
-  scope :base, ->(user) { includes(:hidings, :story_text, :user).not_deleted(user).unmerged.mod_preload?(user) }
+  scope :base, ->(user, unmerged: false) {
+    q = includes(:hidings, :story_text, :user).not_deleted(user).mod_preload?(user)
+    q = q.unmerged if unmerged
+    q
+  }
   scope :for_presentation, -> {
-    includes(:domain, :hidings, :user, :tags, taggings: :tag)
+    includes(:domain, :origin, :hidings, :user, :tags, taggings: :tag)
   }
   scope :mod_preload?, ->(user) {
     user.try(:is_moderator?) ? preload(:suggested_taggings, :suggested_titles) : all
@@ -170,6 +175,8 @@ class Story < ApplicationRecord
       already_posted_recently?
       check_not_banned_domain
       check_not_new_domain_from_new_user
+      # This would probably have a too-high false-positive rate, I want to have approvals first.
+      # check_not_new_origin_from_new_user
       check_not_pushcx_stream
       errors.add(:url, "is not valid") unless url.match(Utils::URL_RE)
     elsif description.to_s.strip == ""
@@ -220,6 +227,21 @@ class Story < ApplicationRecord
         is an unseen domain from a new user. We restrict this to discourage
         self-promotion and give you time to learn about topicality. Skirting
         this with a URL shortener or tweet or something will probably earn a ban.
+      EXPLANATION
+    end
+  end
+
+  def check_not_new_origin_from_new_user
+    return unless url.present? && new_record? && domain && origin
+
+    if user&.is_new? && origin.stories.not_deleted(nil).count == 0
+      ModNote.tattle_on_story_origin!(self, "new user with new")
+      errors.add :url, <<-EXPLANATION
+        is from a domain that we know has multiple authors, like GitHub. We haven't
+        seen links from this origin '#{origin.identifier}' before.
+        We restrict new users from posting such links to discourage self-promotion and give
+        you time to learn about topicality. Skirting this with a URL shortener or tweet or something
+        will probably earn a ban.
       EXPLANATION
     end
   end
@@ -898,24 +920,20 @@ class Story < ApplicationRecord
     created_at && created_at <= 1.hour && merged_story_id.nil?
   end
 
-  def set_domain(match)
-    name = match ? match[:domain].sub(/^www\d*\./, "") : nil
-    self.domain = name ? Domain.where(domain: name).first_or_initialize : nil
+  def set_domain_and_origin(domain_name)
+    domain_name&.sub!(/^www\d*\./, "")
+    if domain_name.present?
+      self.domain = Domain.where(domain: domain_name).first_or_initialize
+      self.origin = domain&.origin(url)
+    else
+      self.domain = nil
+      self.origin = nil
+    end
   end
 
   def url=(u)
-    super(u.try(:strip)) or return if u.blank?
-
-    if (match = u.match(Utils::URL_RE))
-      # remove well-known port for http and https if present
-      @url_port = match[:port]
-      if match[:protocol] == "http" && match[:port] == ":80" ||
-          match[:protocol] == "https" && match[:port] == ":443"
-        u = u[0...match.begin(3)] + u[match.end(3)..]
-        @url_port = nil
-      end
-    end
-    set_domain(match)
+    return if u.blank?
+    u = u.strip
 
     # strip out tracking query params
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))
@@ -927,8 +945,22 @@ class Story < ApplicationRecord
       u = match[1] << (params.any? ? "?#{params.join("&")}" : "")
     end
 
-    self.normalized_url = Utils.normalize(u)
+    if (match = u.match(Utils::URL_RE))
+      # remove well-known port for http and https if present
+      @url_port = match[:port]
+      if match[:protocol] == "http" && match[:port] == ":80" ||
+          match[:protocol] == "https" && match[:port] == ":443"
+        u = u[0...match.begin(3)] + u[match.end(3)..]
+        @url_port = nil
+      end
+    end
+
+    # set field
     super
+
+    # set related fields
+    self.normalized_url = Utils.normalize(u)
+    set_domain_and_origin(match&.[](:domain))
   end
 
   def url_is_editable_by_user?(user)

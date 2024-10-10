@@ -417,14 +417,17 @@ class StoriesController < ApplicationController
     @story.already_posted_recently?
 
     respond_to do |format|
+      linking_comments = Link.recently_linked_from_comments(@story.url)
       format.html {
         return render partial: "stories/form_errors", layout: false,
-          content_type: "text/html", locals: {story: @story}
+          content_type: "text/html", locals: {
+            linking_comments: linking_comments,
+            story: @story
+          }
       }
       # json: https://github.com/lobsters/lobsters/pull/555
       format.json {
         similar_stories = @story.public_similar_stories(@user).map(&:as_json)
-
         render json: @story.as_json.merge(similar_stories: similar_stories)
       }
     end

@@ -6,9 +6,63 @@ class Domain < ApplicationRecord
     class_name: "User",
     inverse_of: false,
     optional: true
-  validates :banned_reason, length: {maximum: 200}
+  has_many :origins
 
-  validates :domain, presence: true, length: {maximum: 255}
+  validates :banned_reason, length: {maximum: 200}
+  validates :domain, presence: true, length: {maximum: 255}, uniqueness: {case_sensitive: false}
+  validates :selector, length: {maximum: 255}
+
+  validate :valid_selector
+
+  after_save :update_origins
+
+  def valid_selector
+    return if selector.nil?
+
+    if selector.include? "\n"
+      errors.add(:selector, "no newlines")
+      return
+    end
+
+    selector_regexp
+  rescue RegexpError => e
+    errors.add(:selector, "is an invalid Regexp: #{e.message}")
+  end
+
+  def selector=(s)
+    s = s.strip
+    s = "\\A#{s}" unless s.starts_with?("\\A")
+    s = "#{s}\\z" unless s.ends_with?("\\z")
+    super
+  end
+
+  def selector_regexp
+    Regexp.new(selector, Regexp::IGNORECASE, timeout: 0.1)
+  end
+
+  def update_origins
+    return unless saved_change_to_selector? || saved_change_to_replacement?
+
+    stories.find_each do |story|
+      story.update_column(:origin_id, story.domain.origin(story.url).id)
+    end
+  end
+
+  def origin(url)
+    return nil if selector.blank? || replacement.blank?
+    valid?
+    raise ArgumentError if errors.any?
+
+    # github.com/foo -> github.com/foo
+    # github.com/foo/bar -> github.com/foo
+    if url.match?(selector_regexp)
+      identifier = url.sub(selector_regexp, replacement)
+      Origin.find_or_create_by!(domain: self, identifier: identifier)
+    else
+      # if the URL isn't matched, the identifier is the bare domain (handles root + partial regexps)
+      Origin.find_or_create_by!(domain: self, identifier: domain)
+    end
+  end
 
   def ban_by_user_for_reason!(banner, reason)
     self.banned_at = Time.current

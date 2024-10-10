@@ -98,7 +98,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story.rb",
-      "line": 553,
+      "line": 554,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Story.connection.execute(\"UPDATE stories SET\\n  score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -\\n  -- subtract number of hidings where hider flagged AND didn't comment (comment voting is ignored)\\n  (\\n    select count(*) from hidden_stories hiding\\n    where\\n      story_id = #{id.to_i}\\n      and hiding.created_at >= str_to_date('#{(created_at - 14.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')\\n      and exists (    -- user flagged\\n        select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1\\n      )\\n      and not exists ( -- user didn't comment\\n        select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id\\n      )\\n  ),\\n  flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),\\n  hotness = #{calculated_hotness}\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -193,6 +193,40 @@
         89
       ],
       "note": "Search.flatten_title is a security control"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "6042237b560b898fc4f87d6f95bb5cfc5c3c5e09f1a264a9afdd5ab8f087d2a9",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/stories/_form_errors.html.erb",
+      "line": 40,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "excerpt_fragment_around_link(link.from_comment.markeddown_comment, Story.new(:user => User.find_by(:session_token => session[:u].to_s)).url)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "StoriesController",
+          "method": "check_url_dupe",
+          "line": 422,
+          "file": "app/controllers/stories_controller.rb",
+          "rendered": {
+            "name": "stories/_form_errors",
+            "file": "app/views/stories/_form_errors.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "stories/_form_errors"
+      },
+      "user_input": "Story.new(:user => User.find_by(:session_token => session[:u].to_s)).url",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": "False alarm: excerpt_fragment_around_url doesn't return Story.url."
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -327,7 +361,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/comment.rb",
-      "line": 388,
+      "line": 391,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Comment.connection.execute(\"UPDATE comments SET\\n  score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),\\n  flags = (select count(*) from votes where comment_id = comments.id and vote = -1),\\n  confidence = #{calculated_confidence},\\n  confidence_order = concat(lpad(char(65535 - floor(#{calculated_confidence} * 65535) using binary), 2, '\\x00'), char(id & 0xff using binary))\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -594,6 +628,6 @@
       "note": "type comes from @what.keys, which are symbols for table names"
     }
   ],
-  "updated": "2024-10-07 18:29:30 -0500",
+  "updated": "2024-10-10 12:31:25 -0500",
   "brakeman_version": "6.2.1"
 }

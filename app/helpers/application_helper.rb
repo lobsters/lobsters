@@ -39,6 +39,45 @@ module ApplicationHelper
     raw(html)
   end
 
+  def excerpt_fragment_around_link(html, url)
+    words = 8
+    url = Utils.normalize(url)
+    parsed = Nokogiri::HTML5.fragment(html)
+
+    # first loop: remove other tags by replacing them with their children
+    is_first_link = true
+    parsed.search("*").each do |tag|
+      if tag.name == "a" && Utils.normalize(tag["href"]) == url && is_first_link
+        # do not remove it, just mark that we've seen it
+        is_first_link = false
+      else
+        tag.replace(tag.children)
+      end
+    end
+    # link not found, return start of input
+    if parsed.search("a").empty?
+      return parsed.to_html.split.first(words * 2).join(" ")
+    end
+
+    # merge adjacent text nodes by reparsing
+    parsed = Nokogiri::HTML5.fragment(parsed.to_html)
+
+    # locate the html tag
+    index = parsed.children.find_index { |node| node.name == "a" }
+    # if link hast text to the left
+    if index != 0
+      t = parsed.children.first.text
+      parsed.children.first.replace(t.split.last(words).join(" ") + " ")
+    end
+    # if link has text to the right
+    if index != parsed.children.count - 1
+      t = parsed.children.last.text
+      parsed.children.last.replace(" " + t.split.last(words).join(" "))
+    end
+
+    parsed.to_html
+  end
+
   # limitation: this can't handle generating links based on a hash of options,
   # like { controller: ..., action: ... }
   def link_to_different_page(text, path, options = {})

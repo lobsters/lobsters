@@ -100,6 +100,9 @@ class Comment < ApplicationRecord
     comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
       errors.add(:base, "Wow!  A blue car!")
 
+    comment.to_s.strip.match(/\Abump/i) &&
+      errors.add(:base, "Don't bump threads.")
+
     comment.to_s.strip.match(/\A([[[:upper:]][[:punct:]]] )+[[[:upper:]][[:punct:]]]?$\z/) &&
       errors.add(:base, "D O N ' T")
 

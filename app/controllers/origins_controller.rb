@@ -1,7 +1,7 @@
 # typed: false
 
 class OriginsController < ApplicationController
-  before_action :require_logged_in_moderator
+  before_action :require_logged_in_moderator, only: [:edit, :update]
   before_action :find_or_initialize_origin, only: [:edit, :update]
 
   def edit

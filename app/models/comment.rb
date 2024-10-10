@@ -106,7 +106,7 @@ class Comment < ApplicationRecord
     comment.to_s.strip.match(/\A([[[:upper:]][[:punct:]]] )+[[[:upper:]][[:punct:]]]?$\z/) &&
       errors.add(:base, "D O N ' T")
 
-    comment.to_s.strip.match(/\A(me too|nice)([\.!])?\z/i) &&
+    comment.to_s.strip.match(/\A(me too|nice|\+1)([\.!])?\z/i) &&
       errors.add(:base, "Please just upvote the parent post instead.")
 
     hat.present? && user.wearable_hats.exclude?(hat) &&

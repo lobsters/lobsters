@@ -175,7 +175,8 @@ class Story < ApplicationRecord
       already_posted_recently?
       check_not_banned_domain
       check_not_new_domain_from_new_user
-      check_not_new_origin_from_new_user
+      # This would probably have a too-high false-positive rate, I want to have approvals first.
+      # check_not_new_origin_from_new_user
       check_not_pushcx_stream
       errors.add(:url, "is not valid") unless url.match(Utils::URL_RE)
     elsif description.to_s.strip == ""

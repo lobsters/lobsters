@@ -83,6 +83,8 @@ RSpec.feature "Submitting Stories", type: :feature do
   end
 
   scenario "new user submitting a new origin from a multi-author domain" do
+    pending "Story submission approval - this would probably have a high false-positive rate"
+
     inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
     create(:domain, :github_with_selector)
     create(:story, url: "https://github.com/alice")

@@ -184,7 +184,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
     <% end %>
     <% if story.can_be_seen_by_user?(@user) %>
       <span class="tags">
-        <% story.tags.each do |tag| %>
+        <% (story.previewing ? story.preview_tags : story.tags).each do |tag| %>
           <%= tag_link(tag) %>
         <% end %>
       </span>

@@ -749,6 +749,10 @@ class Story < ApplicationRecord
     end
   end
 
+  def preview_tags
+    Tag.where(id: taggings.map { |t| t.tag_id })
+  end
+
   def save_suggested_tags_a_for_user!(new_tag_names_a, user)
     suggested_taggings.where(user_id: user.id).destroy_all
 

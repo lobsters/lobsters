@@ -727,13 +727,13 @@ class Story < ApplicationRecord
   end
 
   def tags_a
-    @_tags_a ||= taggings
-      .includes(:tag)
-      .reject(&:marked_for_destruction?)
-      .map { |t| t.tag.tag }
+    @_tags_a ||= Tag
+      .where(id: taggings.reject(&:marked_for_destruction?).map { |t| t.tag_id })
+      .pluck(:tag)
   end
 
   def tags_a=(new_tag_names_a)
+    @_tags_a = nil
     taggings.each do |tagging|
       if !new_tag_names_a.include?(tagging.tag.tag)
         tagging.mark_for_destruction

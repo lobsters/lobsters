@@ -231,6 +231,13 @@ describe Story do
     expect(s.url).to eq("https://factorable.net/")
   end
 
+  it "sets tags_a properly on an unsaved story" do
+    s = build(:story, tags_a: [])
+    expect(s.tags_a).to eq([])
+    s.tags_a = ["tag1", "tag2"]
+    expect(s.tags_a).to eq(["tag1", "tag2"])
+  end
+
   it "calculates tag changes properly" do
     s = create(:story, title: "blah", tags_a: ["tag1", "tag2"])
 

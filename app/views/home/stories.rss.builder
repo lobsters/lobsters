@@ -8,7 +8,7 @@ xml.rss version: "2.0", "xmlns:atom": "http://www.w3.org/2005/Atom" do
     xml.link Rails.application.root_url
     xml.tag! "atom:link", nil, href: request.original_url, rel: :self
     xml.description @title
-    xml.pubDate @stories.first.created_at.rfc822
+    xml.pubDate @stories.first.created_at.rfc822 if @stories.any?
     xml.ttl 120
 
     @stories.each do |story|

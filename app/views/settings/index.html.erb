@@ -40,8 +40,17 @@
     </div>
 
     <div class="boxline">
-      <%= f.label :homepage, "Homepage:", :class => "required" %>
+      <%= f.label :homepage, "Homepage:" %>
       <%= f.url_field :homepage, :size => 40 %>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :avatar, "Avatar:" %>
+      <% if @edit_user.avatar.attached? %>
+        Avatar attached.
+        Replace:
+      <% end %>
+      <%= f.file_field :avatar %>
     </div>
 
     <div class="boxline">

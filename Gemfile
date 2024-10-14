@@ -39,13 +39,14 @@ gem "stackprof"
 gem "prosopite"
 
 gem "builder" # for rss
-gem "oauth" # for linking accounts
+gem "image_processing" # for avatars
+gem "lograge" # for JSON logging
 gem "mail" # for parsing incoming mail
+gem "oauth" # for linking accounts
+gem "rack-attack" # rate-limiting
+gem "silencer" # to disable default logging in prod
 gem "sitemap_generator" # for better search engine indexing
 gem "svg-graph", require: "SVG/Graph/TimeSeries" # for charting, note workaround in lib/time_series.rb
-gem "rack-attack" # rate-limiting
-gem "lograge" # for JSON logging
-gem "silencer" # to disable default logging in prod
 
 group :test, :development do
   gem "benchmark-perf"

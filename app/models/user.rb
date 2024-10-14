@@ -56,6 +56,15 @@ class User < ApplicationRecord
     class_name: "Hat",
     inverse_of: :user
 
+  has_one_attached :avatar do |attachable|
+    # 3 sizes each for our two uses https://iosref.com/res
+    attachable.variant :inline_1x, resize_to_limit: [16, 16]
+    attachable.variant :inline_2x, resize_to_limit: [32, 32]
+    attachable.variant :inline_3x, resize_to_limit: [48, 48]
+    attachable.variant :profile_1x, resize_to_limit: [128, 128]
+    attachable.variant :profile_2x, resize_to_limit: [256, 256]
+    attachable.variant :profile_3x, resize_to_limit: [384, 384]
+  end
   has_secure_password
 
   typed_store :settings do |s|

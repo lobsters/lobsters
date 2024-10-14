@@ -8,7 +8,7 @@ class SettingsController < ApplicationController
   def index
     @title = "Account Settings"
 
-    @edit_user = @user.dup
+    @edit_user = User.find(@user.id)
   end
 
   def delete_account
@@ -273,7 +273,7 @@ class SettingsController < ApplicationController
 
   def user_params
     params.require(:user).permit(
-      :username, :email, :password, :password_confirmation, :homepage, :about,
+      :username, :email, :password, :password_confirmation, :homepage, :avatar, :about,
       :email_replies, :email_messages, :email_mentions,
       :pushover_replies, :pushover_messages, :pushover_mentions,
       :mailing_list_mode, :show_email, :show_avatars, :show_story_previews,

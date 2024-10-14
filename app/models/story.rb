@@ -45,7 +45,7 @@ class Story < ApplicationRecord
     inverse_of: :to_story,
     dependent: :destroy
 
-  scope :base, ->(user, unmerged: false) {
+  scope :base, ->(user, unmerged: true) {
     q = includes(:hidings, :story_text, :user).not_deleted(user).mod_preload?(user)
     q = q.unmerged if unmerged
     q

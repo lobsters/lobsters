@@ -198,6 +198,10 @@ class Story < ApplicationRecord
     check_tags
   end
 
+  def is_disownable_by_user?(user)
+    user && user.id == user_id
+  end
+
   def accepting_comments?
     !is_gone? &&
       !previewing &&

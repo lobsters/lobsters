@@ -153,6 +153,10 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
             <span> | </span><%= link_to "hide", story_hide_path(story.short_id),
               :class => "hider" %>
           <% end %>
+          <% if story.is_disownable_by_user?(@user) %>
+          |
+          <a tabindex="0" class="story-disowner" href="#">disown</a>
+          <% end %>
           <% if single_story && story.hider_count > 0 %>
             (hidden by <%= pluralize(story.hider_count, "user") %>)
           <% end %>

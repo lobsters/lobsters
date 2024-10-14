@@ -121,7 +121,7 @@
 
       <% if !comment.previewing %>
         |
-        <a href="<%= comment.path %>">link</a>
+        <a tabindex="0" href="<%= comment.path %>">link</a>
 
         <% if comment.is_editable_by_user?(@user) %>
           |

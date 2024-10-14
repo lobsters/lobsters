@@ -178,6 +178,7 @@ Rails.application.routes.draw do
 
   get "/avatars/:username_size.png" => "avatars#show"
   post "/avatars/expire" => "avatars#expire"
+  delete "/avatars/delete" => "avatars#destroy", :as => :delete_avatar
 
   get "/settings" => "settings#index"
   post "/settings" => "settings#update"

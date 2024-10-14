@@ -46,11 +46,14 @@
 
     <div class="boxline">
       <%= f.label :avatar, "Avatar:" %>
-      <% if @edit_user.avatar.attached? %>
-        Avatar attached.
-        Replace:
-      <% end %>
-      <%= f.file_field :avatar %>
+      <span class="avatar_field">
+        <% if @edit_user.avatar.attached? %>
+          Avatar attached.
+          <%= link_to "Delete", "#", class: "avatar_deletor" %>
+          or replace:
+        <% end %>
+        <%= f.file_field :avatar %>
+      </span>
     </div>
 
     <div class="boxline">

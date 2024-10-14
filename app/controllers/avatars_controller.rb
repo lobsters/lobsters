@@ -1,11 +1,16 @@
 # typed: false
 
 class AvatarsController < ApplicationController
-  before_action :require_logged_in_user, only: [:expire]
+  before_action :require_logged_in_user, only: [:destroy, :expire]
 
   ALLOWED_SIZES = [16, 32, 100, 200].freeze
 
   CACHE_DIR = Rails.public_path.join("avatars/").to_s.freeze
+
+  def destroy
+    @user.avatar.purge
+    render layout: false, plain: "Avatar deleted", content_type: "text/plain"
+  end
 
   def expire
     expired = 0

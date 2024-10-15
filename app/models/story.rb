@@ -899,7 +899,19 @@ class Story < ApplicationRecord
   end
 
   def set_domain(match)
-    name = match ? match[:domain].sub(/^www\d*\./, "") : nil
+    if match
+      domain_parts = match[:domain].split(".")
+
+      # Supprimer le 'www' seulement si le domaine a exactement 3 parties
+      if domain_parts.size == 3 && domain_parts.first.match?(/^www\d*$/)
+        domain_parts.shift  # Retirer la première partie 'www'
+      end
+
+      name = domain_parts.join(".")
+    else
+      name = nil
+    end
+
     self.domain = name ? Domain.where(domain: name).first_or_initialize : nil
   end
 

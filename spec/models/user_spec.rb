@@ -14,6 +14,16 @@ describe User do
 
     create(:user, username: "newbie")
     expect { create(:user, username: "newbie") }.to raise_error
+
+    create(:user, username: "underscores_and-dashes")
+    expect { create(:user, username: "underscores-and_dashes") }.to raise_error
+    expect { create(:user, username: "underscores-and-dashes") }.to raise_error
+    expect { create(:user, username: "underscores_and_dashes") }.to raise_error
+
+    create(:user, username: "case_insensitive")
+    expect { create(:user, username: "CASE_INSENSITIVE") }.to raise_error
+    expect { create(:user, username: "case_Insensitive") }.to raise_error
+    expect { create(:user, username: "case-insensITive") }.to raise_error
   end
 
   it "has a valid email address" do

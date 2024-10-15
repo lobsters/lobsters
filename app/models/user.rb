@@ -133,6 +133,8 @@ class User < ApplicationRecord
     end
   end
 
+  validate :underscores_and_dashes_in_username
+
   scope :active, -> { where(banned_at: nil, deleted_at: nil) }
   scope :moderators, -> {
     where('
@@ -172,6 +174,14 @@ class User < ApplicationRecord
 
   # minimum number of submitted stories before checking self promotion
   MIN_STORIES_CHECK_SELF_PROMOTION = 2
+
+  def underscores_and_dashes_in_username
+    username = self.username.split(/_|-/)
+    return if username.length < 2
+
+    collisions = User.where('username REGEXP ?', username.join("[-_]"))
+    errors.add(:username, "is too similar to other usernames") if collisions.any?
+  end
 
   def self.username_regex_s
     "/^" + VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, "") + "$/"

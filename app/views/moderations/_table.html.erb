@@ -3,7 +3,7 @@
 <tr>
   <th>Date/Time</th>
   <th>Moderator</th>
-  <th>Story/Comment/User/Tag/Category, Action, Reason</th>
+  <th>Thing, Action, Reason</th>
 </tr>
 <% moderations.each do |mod| %>
   <tr class="nobottom <%= mod.moderator && 'mod' %>">
@@ -36,6 +36,10 @@
         <% end %>
       <% elsif mod.domain %>
         Domain <%= link_to mod.domain.domain,  domain_path(mod.domain) %>
+      <% elsif mod.origin %>
+        Origin <%= link_to mod.origin.identifier,  origin_path(mod.origin) %>
+      <% else %>
+        Unknown object moderated
       <% end %></td>
   </tr>
   <tr class="<%= mod.reason.present?? "nobottom" : "" %>">

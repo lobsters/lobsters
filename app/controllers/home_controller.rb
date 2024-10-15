@@ -244,7 +244,29 @@ class HomeController < ApplicationController
 
     @rss_link = {
       title: "RSS 2.0 - For #{@domain.domain}",
-      href: "/domain/#{@domain.domain}.rss"
+      href: "/domains/#{@domain.domain}.rss"
+    }
+
+    respond_to do |format|
+      format.html { render action: "index" }
+      format.rss { render action: "stories", layout: false }
+      format.json { render json: @stories }
+    end
+  end
+
+  def for_origin
+    @origin = Origin.find_by!(identifier: params[:identifier])
+
+    @stories, @show_more = get_from_cache(identifier: @origin.identifier) do
+      paginate @origin.stories.base(@user).order("id desc")
+    end
+
+    @title = @origin.identifier
+    @above = {partial: "for_origin", locals: {origin: @origin, stories: @stories}}
+
+    @rss_link = {
+      title: "RSS 2.0 - For #{@origin.identifier}",
+      href: "/origins/#{@origin.identifier}.rss"
     }
 
     respond_to do |format|

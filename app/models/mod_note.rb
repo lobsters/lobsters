@@ -159,6 +159,21 @@ class ModNote < ApplicationRecord
     )
   end
 
+  def self.tattle_on_story_origin!(story, reason)
+    create_without_dupe!(
+      moderator: InactiveUser.inactive_user,
+      user: story.user,
+      created_at: Time.current,
+      note: "Attempted to post a story from a #{reason} origin:\n" \
+        "- user joined: #{time_ago_in_words(story.user.created_at)}\n" \
+        "- url: #{story.url}\n" \
+        "- title: #{story.title}\n" \
+        "- user_is_author: #{story.user_is_author}\n" \
+        "- tags: #{story.tags_a.join(" ")}\n" \
+        "- description: #{story.description}\n"
+    )
+  end
+
   # story validations run on preview, check_url_dupe, title fetching
   # and save attempts, leading to duplicate notes
   def self.create_without_dupe!(attrs)

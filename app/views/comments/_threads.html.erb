@@ -121,26 +121,26 @@
 
       <% if !comment.previewing %>
         |
-        <a href="<%= comment.path %>">link</a>
+        <a tabindex="0" href="<%= comment.path %>">link</a>
 
         <% if comment.is_editable_by_user?(@user) %>
           |
-          <a tabindex="0" class="comment_editor">edit</a>
+          <a class="comment_editor">edit</a>
         <% end %>
 
         <% if comment.is_gone? && comment.is_undeletable_by_user?(@user) %>
           |
-          <a tabindex="0" class="comment_undeletor" href="#c_<%= comment.short_id %>">undelete</a>
+          <a class="comment_undeletor" href="#c_<%= comment.short_id %>">undelete</a>
         <% elsif !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
           |
           <% if @user && @user.is_moderator? && @user.id != comment.user_id %>
-            <a tabindex="0" class="comment_moderator" href="#c_<%= comment.short_id %>">delete</a>
+            <a class="comment_moderator" href="#c_<%= comment.short_id %>">delete</a>
           <% else %>
-            <a tabindex="0" class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>
+            <a class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>
           <% end %>
         <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
           |
-          <a tabindex="0" class="comment-disowner" href="#">disown</a>
+          <a class="comment-disowner" href="#">disown</a>
         <% end %>
 
         <% if can_flag && !comment.current_flagged? %>
@@ -155,7 +155,7 @@
 
         <% if @user && !comment.is_gone? && comment.story.accepting_comments? %>
             |
-            <a tabindex="0" class="comment_replier" unselectable="on" href="<%= reply_comment_path(comment) %>">reply</a>
+            <a class="comment_replier" unselectable="on" href="<%= reply_comment_path(comment) %>">reply</a>
         <% end %>
 
         <% if show_story %>

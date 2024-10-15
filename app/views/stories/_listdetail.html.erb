@@ -48,12 +48,14 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
     <% end %>
     <% if story.can_be_seen_by_user?(@user) %>
       <span class="tags">
-        <% story.tags.each do |tag| %>
+        <% (story.previewing ? story.preview_tags : story.tags).each do |tag| %>
           <%= tag_link(tag) %>
         <% end %>
       </span>
-      <% if story.domain.present? %>
-        <a class="domain" href="<%= domain_path(story.domain) %>"><%= story.domain.domain %></a>
+      <% if story.origin.present? %>
+        <%= link_to story.origin.identifier, origin_path(story.origin), class: 'domain' %>
+      <% elsif story.domain.present? %>
+        <%= link_to story.domain.domain, domain_path(story.domain), class: 'domain' %>
       <% end %>
 
       <% if single_story %>
@@ -167,7 +169,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <span> | </span>
           <span class="dropdown_parent">
             <input id="archive_<%= story.short_id %>" class="archive_button" type="checkbox">
-            <label for="archive_<%= story.short_id %>">archive</label>
+            <label for="archive_<%= story.short_id %>">caches</label>
             <div class="archive-dropdown">
               <a href="<%= story.archiveorg_url %>">Archive.org</a>
               <a href="<%= story.archivetoday_url %>">Archive.today</a>

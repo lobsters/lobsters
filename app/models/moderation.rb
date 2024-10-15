@@ -10,6 +10,8 @@ class Moderation < ApplicationRecord
     optional: true
   belongs_to :domain,
     optional: true
+  belongs_to :origin,
+    optional: true
   belongs_to :story,
     optional: true
   belongs_to :tag,
@@ -91,7 +93,7 @@ class Moderation < ApplicationRecord
   protected
 
   def one_foreign_key_present
-    fks = [comment_id, domain_id, story_id, category_id, tag_id, user_id].compact.length
+    fks = [comment_id, domain_id, origin_id, story_id, category_id, tag_id, user_id].compact.length
     errors.add(:base, "moderation should be linked to only one object") if fks != 1
   end
 end

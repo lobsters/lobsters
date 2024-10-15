@@ -1,0 +1,22 @@
+<%# locals: (origin:, stories:) -%>
+<p>
+  <%= origin.identifier %> (part of <%= link_to origin.domain.domain, origin.domain %>):
+  <%= "#{number_with_delimiter origin.stories_count} story".pluralize(origin.stories_count) %> from
+  <%= "#{number_with_delimiter origin.n_submitters} submitter".pluralize(origin.n_submitters) %>
+
+  <%= link_to 'Edit', edit_origin_path(origin) if @user&.is_moderator?  %>
+</p>
+
+
+
+<% if origin.banned? %>
+  <p>
+    Banned
+    <%= time_ago_in_words_label(origin.banned_at) %>
+    <% if origin.banned_by_user %>
+      by <%= link_to origin.banned_by_user.try(:username), origin.banned_by_user %>:
+      <em><%= origin.banned_reason %></em>
+    <% end %>
+  </p>
+<% end %>
+

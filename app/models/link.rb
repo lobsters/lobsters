@@ -22,6 +22,12 @@ class Link < ApplicationRecord
   validates :to_story, uniqueness: {scope: [:from_story, :from_comment]}, if: ->(l) { l.to_story.present? }
   # rubocop:enable Rails/UniqueValidationWithoutIndex
 
+  scope :recently_linked_from_comments, ->(url) {
+    joins(:from_comment).includes(:from_comment)
+      .where(from_comment: {created_at: (7.days.ago)..})
+      .where(normalized_url: Utils.normalize(url))
+  }
+
   def url=(u)
     return if u.blank?
 

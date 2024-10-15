@@ -136,6 +136,7 @@ class Story < ApplicationRecord
 
   COMMENTABLE_DAYS = 90
   FLAGGABLE_DAYS = 14
+  DELETEABLE_DAYS = FLAGGABLE_DAYS * 2
 
   # the lowest a score can go
   FLAGGABLE_MIN_SCORE = -5
@@ -196,10 +197,6 @@ class Story < ApplicationRecord
     end
 
     check_tags
-  end
-
-  def is_disownable_by_user?(user)
-    user && user.id == user_id
   end
 
   def accepting_comments?
@@ -575,6 +572,10 @@ class Story < ApplicationRecord
 
   def hider_count
     @hider_count ||= HiddenStory.where(story_id: id).count
+  end
+
+  def disownable_by_user?(user)
+    user && user.id == user_id && created_at < DELETEABLE_DAYS.days.ago
   end
 
   def is_flaggable?

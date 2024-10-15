@@ -434,7 +434,7 @@ class StoriesController < ApplicationController
   end
 
   def disown
-    if !((story = find_story) && story.is_disownable_by_user?(@user))
+    if !((story = find_story) && story.disownable_by_user?(@user))
       return render plain: "can't find story", status: 400
     end
 
@@ -444,8 +444,9 @@ class StoriesController < ApplicationController
 
     load_user_votes
 
-    render partial: "listdetail",  layout: false, content_type: "text/html", locals: {story: @story, :single_story => true}
+    render partial: "listdetail", layout: false, content_type: "text/html", locals: {story: @story, single_story: true}
   end
+
   private
 
   def story_params

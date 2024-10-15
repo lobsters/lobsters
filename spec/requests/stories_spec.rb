@@ -299,6 +299,8 @@ describe "stories", type: :request do
     before { sign_in user }
 
     it "disown story" do
+      story.update!(created_at: (Story::DELETEABLE_DAYS + 1).days.ago)
+
       expect {
         post "/stories/#{story.short_id}/disown"
         expect(response.status).to eq(200)

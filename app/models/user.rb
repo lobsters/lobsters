@@ -101,7 +101,7 @@ class User < ApplicationRecord
     format: {with: /\A#{VALID_USERNAME}\z/o},
     length: {maximum: 50},
     uniqueness: {case_sensitive: false}
-
+  validate :underscores_and_dashes_in_username
   validates :password_reset_token,
     length: {maximum: 75}
   validates :session_token,
@@ -132,8 +132,6 @@ class User < ApplicationRecord
       record.errors.add(attr, "is not permitted")
     end
   end
-
-  validate :underscores_and_dashes_in_username
 
   scope :active, -> { where(banned_at: nil, deleted_at: nil) }
   scope :moderators, -> {
@@ -176,11 +174,11 @@ class User < ApplicationRecord
   MIN_STORIES_CHECK_SELF_PROMOTION = 2
 
   def underscores_and_dashes_in_username
-    username = self.username.split(/_|-/)
-    return if username.length < 2
+    username_regex = username.gsub(/_|-/, "[-_]")
+    return unless username_regex.include?("[-_]")
 
-    collisions = User.where('username REGEXP ?', username.join("[-_]"))
-    errors.add(:username, "is too similar to other usernames") if collisions.any?
+    collisions = User.where("username REGEXP ?", username_regex)
+    errors.add(:username, "is already in use (perhaps swapping _ and -)") if collisions.any?
   end
 
   def self.username_regex_s

@@ -19,7 +19,7 @@ class Utils
     url.slice! %r{/Default\.aspx$}
 
     url.slice! %r{https?://} # consider http and https the same
-    if url.split('.').size > 2 # only removes www\d* if the url is not like www10.org, issue #1339
+    if url.split(".").size > 2 # only removes www\d* if the url is not like www10.org, issue #1339
       url.slice! %r{^(www\d*\.)} # remove www\d* from domain
     end
 

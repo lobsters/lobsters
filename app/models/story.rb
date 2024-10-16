@@ -925,8 +925,7 @@ class Story < ApplicationRecord
   end
 
   def set_domain_and_origin(domain_name)
-    # Vérifier si le domaine contient plus de deux parties
-    if domain_name.present? && domain_name.split('.').size > 2
+    if domain_name.present? && domain_name.split('.').size > 2 # only removes www\d* if the url is not like www10.org, issue #1339
       domain_name&.sub!(/^www\d*\./, "")
     end
     

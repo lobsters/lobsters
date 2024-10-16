@@ -925,7 +925,11 @@ class Story < ApplicationRecord
   end
 
   def set_domain_and_origin(domain_name)
-    domain_name&.sub!(/^www\d*\./, "")
+    # Vérifier si le domaine contient plus de deux parties
+    if domain_name.present? && domain_name.split('.').size > 2
+      domain_name&.sub!(/^www\d*\./, "")
+    end
+    
     if domain_name.present?
       self.domain = Domain.where(domain: domain_name).first_or_initialize
       self.origin = domain&.origin(url)

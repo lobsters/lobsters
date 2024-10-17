@@ -113,6 +113,7 @@ Rails.application.routes.draw do
     post "unsave"
     get "suggest"
     post "suggest", action: "submit_suggestions"
+    post "disown"
   end
   post "/stories/fetch_url_attributes", format: "json"
   post "/stories/preview" => "stories#preview"

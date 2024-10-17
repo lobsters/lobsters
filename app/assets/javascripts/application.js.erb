@@ -635,6 +635,16 @@ onPageLoad(() => {
     }
   });
 
+  on('click', 'a.story-disowner', (event) => {
+    if (confirm("Are you sure you want to disown this story?")) {
+      let li = parentSelector(event.target, '.story');
+      fetchWithCSRF('/stories/' + li.getAttribute('data-shortid') + '/disown', { method: 'post' })
+        .then(response => {
+          response.text().then(text => replace(li, text));
+        });
+    }
+  });
+
   on("click", "a.comment_replier", (event) => {
     event.preventDefault();
     if (!Lobster.curUser) return Lobster.bounceToLogin();

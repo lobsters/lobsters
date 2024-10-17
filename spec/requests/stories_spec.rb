@@ -293,6 +293,20 @@ describe "stories", type: :request do
     end
   end
 
+  describe "disowning" do
+    let(:inactive_user) { create(:user, :inactive) }
+
+    before { sign_in user }
+
+    it "disown story" do
+      story.update!(created_at: (Story::DELETEABLE_DAYS + 1).days.ago)
+
+      expect {
+        post "/stories/#{story.short_id}/disown"
+        expect(response.status).to eq(200)
+      }.to change { story.reload.user }.from(story.user).to(inactive_user)
+    end
+  end
   describe "adding suggestions to a story"
 
   describe "user editing an editable story"

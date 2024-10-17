@@ -3,20 +3,30 @@
 ActiveRecordDoctor.configure do
   detector :unindexed_foreign_keys,
     ignore_columns: [
-      "hats.short_id", # It's a unique key, but not a foreign key.
-      "stories.twitter_id", # It's not a foreign key.
-      "mastodon_apps.client_id" # It's not a foreign key.
+      "hats.short_id",
+      "stories.twitter_id",
+      "mastodon_apps.client_id"
     ]
 
   detector :missing_foreign_keys,
     ignore_columns: [
-      "messages.short_id", # It's a unique key, but not a foreign key.
-      "mastodon_apps.client_id", # It's not a foreign key.
-      "stories.short_id", # It's a unique key, but not a foreign key.
-      "stories.twitter_id", # It's not a foreign key.
-      "stories.mastodon_id", # Not sure if it should be a foreign key.
-      "hats.short_id", # It's a unique key, but not a foreign key.
-      "comments.short_id", # It's a unique key, but not a foreign key.
-      "comments.thread_id", # TODO: Can point to a comment or a Keystore.
+      "messages.short_id",
+      "mastodon_apps.client_id",
+      "stories.short_id",
+      "stories.twitter_id",
+      "stories.mastodon_id", # TODO: Not sure if it should be a foreign key.
+      "hats.short_id",
+      "comments.short_id",
+      "comments.thread_id" # TODO: Can be a comment or a Keystore.
+    ]
+
+  detector :missing_presence_validation,
+    ignore_models: [
+      "ReplyingComment", # This is a view, not a real table.
+      # ActiveStorage tables
+      "ActiveStorage::Blob", "ActiveStorage::Attachment", "ActiveStorage::VariantRecord"
+    ],
+    ignore_attributes: [
+      "Keystore.id" # id is not primary key.
     ]
 end

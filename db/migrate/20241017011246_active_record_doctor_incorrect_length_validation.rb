@@ -6,6 +6,8 @@ class ActiveRecordDoctorIncorrectLengthValidation < ActiveRecord::Migration[7.2]
     change_column :hat_requests, :comment, :text, limit: 65_535
     change_column :hats, :short_id, :string, limit: 10
     change_column :categories, :category, :string, limit: 25
+    change_column :stories, :description, :text, limit: 65_535
+    change_column :messages, :body, :text, limit: 65_535
   end
 
   def down
@@ -15,5 +17,7 @@ class ActiveRecordDoctorIncorrectLengthValidation < ActiveRecord::Migration[7.2]
     change_column :hat_requests, :comment, :text, size: :medium
     change_column :hats, :short_id, :string
     change_column :categories, :category, :string
+    change_column :stories, :description, :text
+    change_column :messages, :body, :text
   end
 end

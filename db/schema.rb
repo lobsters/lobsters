@@ -181,7 +181,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
     t.bigint "recipient_user_id", null: false, unsigned: true
     t.boolean "has_been_read", default: false, null: false
     t.string "subject", limit: 100
-    t.text "body", size: :medium
+    t.text "body"
     t.string "short_id", limit: 30
     t.boolean "deleted_by_author", default: false, null: false
     t.boolean "deleted_by_recipient", default: false, null: false
@@ -266,7 +266,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
     t.string "url", limit: 250, default: ""
     t.string "normalized_url"
     t.string "title", limit: 150, default: "", null: false
-    t.text "description", size: :medium
+    t.text "description"
     t.string "short_id", limit: 6, default: "", null: false
     t.boolean "is_deleted", default: false, null: false
     t.integer "score", default: 1, null: false

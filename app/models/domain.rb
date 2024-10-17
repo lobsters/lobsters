@@ -12,6 +12,7 @@ class Domain < ApplicationRecord
   validates :domain, presence: true, length: {maximum: 255}, uniqueness: {case_sensitive: false}
   validates :selector, length: {maximum: 255}
   validates :stories_count, numericality: {only_integer: true, greater_than_or_equal_to: 0}, presence: true
+  validates :replacement, length: {maximum: 255}
 
   validate :valid_selector
 

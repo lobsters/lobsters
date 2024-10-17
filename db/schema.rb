@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_16_194903) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -237,6 +237,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
     t.string "banned_reason", limit: 200
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["banned_by_user_id"], name: "index_origins_on_banned_by_user_id"
     t.index ["domain_id"], name: "index_origins_on_domain_id"
   end
 

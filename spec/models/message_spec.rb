@@ -29,4 +29,17 @@ describe Message do
       expect(message.errors[:hat]).to be_empty
     end
   end
+
+  describe "update_unread_counts" do
+    let(:user) { create(:user) }
+    let(:message) { create(:message, recipient: user) }
+
+    it "updates the unread message count" do
+      message.update_unread_counts
+      expect(user.reload.unread_message_count).to eq(1)
+
+      message.destroy!
+      expect(user.reload.unread_message_count).to eq(0)
+    end
+  end
 end

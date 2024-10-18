@@ -11,9 +11,10 @@
     <div class="boxline">
       <%= f.label :username, "Username:", :class => "required" %>
       <%= f.text_field :username, :size => 15 %>
-      <span class="hint indent">
-        <tt><%= User.username_regex_s %></tt>
-      </span>
+      <div class="hint indent">
+        Format: <tt><%= User.username_regex_s %></tt><br>
+        Creates a <%= link_to 'modlog', moderations_path %> entry like "changed own username from '<%= @edit_user.username %>' to 'NewUsername'"
+      </div>
     </div>
 
     <div class="boxline">

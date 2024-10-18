@@ -433,6 +433,20 @@ class StoriesController < ApplicationController
     end
   end
 
+  def disown
+    if !((story = find_story) && story.disownable_by_user?(@user))
+      return render plain: "can't find story", status: 400
+    end
+
+    InactiveUser.disown! story
+    @story = find_story
+    @comments = Comment.story_threads(@story).for_presentation
+
+    load_user_votes
+
+    render partial: "listdetail", layout: false, content_type: "text/html", locals: {story: @story, single_story: true}
+  end
+
   private
 
   def story_params

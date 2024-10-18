@@ -38,7 +38,7 @@ describe Message do
       message.update_unread_counts
       expect(user.reload.unread_message_count).to eq(1)
 
-      message.destroy
+      message.destroy!
       expect(user.reload.unread_message_count).to eq(0)
     end
   end

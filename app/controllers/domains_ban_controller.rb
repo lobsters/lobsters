@@ -5,7 +5,7 @@ class DomainsBanController < DomainsController
   before_action :find_or_initialize_domain
 
   def create_and_ban
-    @domain = Domain.create!(domain: params[:new_domain])
+    @domain = Domain.create!(domain: params[:id])
     @domain.ban_by_user_for_reason!(@user, domain_params[:banned_reason])
     flash[:success] = "Domain created and banned. Real short run."
     redirect_to domain_path(@domain)

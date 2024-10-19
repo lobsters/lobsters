@@ -43,6 +43,7 @@ class Message < ApplicationRecord
 
   before_validation :assign_short_id, on: :create
   after_create :deliver_email_notifications
+  after_destroy :update_unread_counts
   after_save :update_unread_counts
   after_save :check_for_both_deleted
 

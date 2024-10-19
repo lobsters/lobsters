@@ -167,6 +167,10 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
             <span> | </span><%= link_to "hide", story_hide_path(story.short_id),
               :class => "hider" %>
           <% end %>
+          <% if single_story && story.disownable_by_user?(@user) %>
+          |
+          <a class="story-disowner" href="#">disown</a>
+          <% end %>
           <% if single_story && story.hider_count > 0 %>
             (hidden by <%= pluralize(story.hider_count, "user") %>)
           <% end %>
@@ -183,7 +187,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <span> | </span>
           <span class="dropdown_parent">
             <input id="archive_<%= story.short_id %>" class="archive_button" type="checkbox">
-            <label for="archive_<%= story.short_id %>">archive</label>
+            <label for="archive_<%= story.short_id %>">caches</label>
             <div class="archive-dropdown">
               <a href="<%= story.archiveorg_url %>">Archive.org</a>
               <a href="<%= story.archivetoday_url %>">Archive.today</a>

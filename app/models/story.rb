@@ -930,10 +930,7 @@ class Story < ApplicationRecord
   end
 
   def set_domain_and_origin(domain_name)
-    if domain_name.present? && domain_name.split(".").size > 2 # only removes www\d* if the url is not like www10.org, issue #1339
-      domain_name&.sub!(/^www\d*\./, "")
-    end
-
+    domain_name&.sub!(/\Awww\d*\.(.+\.)/, "\1") # remove www\d* from domain if the url is not like www10.org
     if domain_name.present?
       self.domain = Domain.where(domain: domain_name).first_or_initialize
       self.origin = domain&.origin(url)

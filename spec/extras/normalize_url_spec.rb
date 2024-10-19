@@ -22,7 +22,7 @@ describe "normalizing urls" do
     "https://e.com?a=1?b=2" => "e.com?a=1&b=2", # normalize ? to &
     "https://e.com?c=3&a=1?b=2&" => "e.com?a=1&b=2&c=3", # combined; trailing &
     "https://www10.org" => "www10.org", # keep www10. since org alone doesn't fully describe the domain
-    "https://www10.example.org" => "example.org" # remove www10. 
+    "https://www10.example.org" => "example.org", # remove www10. 
 
     "https://www.arxiv.org" => "arxiv.org",
     "https://arxiv.org/abs/1234.12345" => "arxiv.org/abs/1234.12345",

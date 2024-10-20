@@ -136,6 +136,7 @@ class Story < ApplicationRecord
 
   COMMENTABLE_DAYS = 90
   FLAGGABLE_DAYS = 14
+  DELETEABLE_DAYS = FLAGGABLE_DAYS * 2
 
   # the lowest a score can go
   FLAGGABLE_MIN_SCORE = -5
@@ -573,6 +574,10 @@ class Story < ApplicationRecord
     @hider_count ||= HiddenStory.where(story_id: id).count
   end
 
+  def disownable_by_user?(user)
+    user && user.id == user_id && created_at < DELETEABLE_DAYS.days.ago
+  end
+
   def is_flaggable?
     if created_at && self.score > FLAGGABLE_MIN_SCORE
       Time.current - created_at <= FLAGGABLE_DAYS.days
@@ -925,11 +930,7 @@ class Story < ApplicationRecord
   end
 
   def set_domain_and_origin(domain_name)
-    # Vérifier si le domaine contient plus de deux parties
-    if domain_name.present? && domain_name.split(".").size > 2
-      domain_name&.sub!(/^www\d*\./, "")
-    end
-
+    domain_name&.sub!(/\Awww\d*\.(.+?\..+)/, '\1') # remove www\d* from domain if the url is not like www10.org
     if domain_name.present?
       self.domain = Domain.where(domain: domain_name).first_or_initialize
       self.origin = domain&.origin(url)

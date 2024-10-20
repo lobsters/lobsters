@@ -41,6 +41,7 @@ class SettingsController < ApplicationController
       @edit_user.roll_session_token if params[:user][:password]
       if @edit_user.update(user_params)
         if @edit_user.username != previous_username
+          # sync this message to username field app/views/settings/index.html
           Moderation.create!(
             is_from_suggestions: true,
             user: @edit_user,

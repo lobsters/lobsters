@@ -6,9 +6,9 @@ class Link < ApplicationRecord
   belongs_to :to_story, class_name: "Story", optional: true
   belongs_to :to_comment, class_name: "Comment", optional: true
 
-  validates :url, length: {maximum: 250, allow_nil: false}
+  validates :url, length: {maximum: 250, allow_nil: false}, presence: true
   validate :valid_url
-  validates :normalized_url, length: {maximum: 255, allow_nil: false}
+  validates :normalized_url, length: {maximum: 255, allow_nil: false}, presence: true
   validates :title, length: {maximum: 255}
   validate :validate_from_presence_xor
   validate :validate_only_one_to

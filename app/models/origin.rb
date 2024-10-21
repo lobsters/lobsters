@@ -6,6 +6,8 @@ class Origin < ApplicationRecord
   belongs_to :banned_by_user, class_name: "User", inverse_of: false, optional: true
 
   validates :identifier, presence: true, length: {maximum: 255}
+  validates :stories_count, numericality: {only_integer: true, greater_than_or_equal_to: 0}, presence: true
+  validates :banned_reason, length: {maximum: 200}
 
   def identifier= s
     super(s.downcase)

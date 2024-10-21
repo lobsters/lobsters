@@ -40,6 +40,7 @@ class SettingsController < ApplicationController
         @user.authenticate(params[:current_password].to_s)
       @edit_user.roll_session_token if params[:user][:password]
       @edit_user.attributes = user_params
+
       if @edit_user.save
         if @edit_user.username != previous_username
           Moderation.create!(
@@ -48,14 +49,6 @@ class SettingsController < ApplicationController
             action: "changed own username from \"#{previous_username}\" " \
                     "to \"#{@edit_user.username}\""
           )
-        end
-        if @edit_user.avatar
-          @edit_user.avatar.filename = "#{@edit_user.username}.#{@edit_user.avatar.filename.extension}"
-          @edit_user.avatar.save!
-          @edit_user.avatar.variant_records.each do |variant|
-            # TODO: include the variant_name here, eg. user_profile2x.jpg
-            variant.blob.filename = "#{@edit_user.username}.#{@edit_user.avatar.filename.extension}"
-          end
         end
         session[:u] = @user.session_token if params[:user][:password]
         flash.now[:success] = "Successfully updated settings."

@@ -17,6 +17,18 @@ module ApplicationHelper
     )
   end
 
+  def avatar_inline(user)
+    link_to image_tag(
+      user.avatar.variant(:inline_1x),
+      srcset: "#{user.avatar.variant(:inline_2x).url} 2x, #{user.avatar.variant(:inline_3x).url} 3x",
+      class: "avatar",
+      size: "16x16",
+      alt: "#{user.username} avatar}",
+      loading: "lazy",
+      decoding: "async"
+    ), user
+  end
+
   def errors_for(object)
     html = +""
     unless object.errors.blank?

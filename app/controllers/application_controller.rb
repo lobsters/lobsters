@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   include IntervalHelper
+  include ActiveStorage::SetCurrent # also see config/initalizers/active-storage-bug-40855
 
   protect_from_forgery
   before_action :authenticate_user

@@ -930,9 +930,11 @@ li .byline a.story_has_suggestions {
 	margin: 1em 0 1em 32px; /* matching div.detail */
 }
 
-li.story.hidden {
-	opacity: 0.25;
+li.story.hidden *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
+li.story.hidden .score{
+	opacity: 0.5;
 }
+
 ol.show_hidden li.story.hidden {
 	opacity: 1.0 !important;
 }

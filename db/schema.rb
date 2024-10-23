@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_16_200032) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -40,7 +40,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_16_200032) do
   end
 
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "category", null: false
+    t.string "category", limit: 25, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["category"], name: "index_categories_on_category", unique: true
@@ -95,7 +95,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_16_200032) do
     t.bigint "user_id", null: false, unsigned: true
     t.string "hat", null: false
     t.string "link", null: false
-    t.text "comment", size: :medium, null: false
+    t.text "comment", null: false
     t.index ["user_id"], name: "hat_requests_user_id_fk"
   end
 
@@ -108,7 +108,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_16_200032) do
     t.string "link"
     t.boolean "modlog_use", default: false, null: false
     t.datetime "doffed_at", precision: nil
-    t.string "short_id", null: false
+    t.string "short_id", limit: 10, null: false
     t.index ["granted_by_user_id"], name: "hats_granted_by_user_id_fk"
     t.index ["user_id"], name: "hats_user_id_fk"
   end
@@ -126,7 +126,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_16_200032) do
     t.boolean "is_verified", default: false, null: false
     t.string "email", null: false
     t.string "name", null: false
-    t.text "memo"
+    t.text "memo", size: :tiny
     t.string "ip_address"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -138,7 +138,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_16_200032) do
     t.string "code"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.text "memo", size: :medium
+    t.text "memo", size: :tiny
     t.datetime "used_at", precision: nil
     t.bigint "new_user_id", unsigned: true
     t.index ["new_user_id"], name: "invitations_new_user_id_fk"
@@ -152,7 +152,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_16_200032) do
   end
 
   create_table "links", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "url", null: false
+    t.string "url", limit: 250, null: false
     t.string "normalized_url", null: false
     t.string "title"
     t.bigint "from_story_id", unsigned: true
@@ -181,7 +181,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_16_200032) do
     t.bigint "recipient_user_id", null: false, unsigned: true
     t.boolean "has_been_read", default: false, null: false
     t.string "subject", limit: 100
-    t.text "body", size: :medium
+    t.text "body"
     t.string "short_id", limit: 30
     t.boolean "deleted_by_author", default: false, null: false
     t.boolean "deleted_by_recipient", default: false, null: false
@@ -266,7 +266,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_16_200032) do
     t.string "url", limit: 250, default: ""
     t.string "normalized_url"
     t.string "title", limit: 150, default: "", null: false
-    t.text "description", size: :medium
+    t.text "description"
     t.string "short_id", limit: 6, default: "", null: false
     t.boolean "is_deleted", default: false, null: false
     t.integer "score", default: 1, null: false

@@ -127,6 +127,9 @@ class User < ApplicationRecord
   validates :karma,
     presence: true
 
+  validates :settings,
+    length: {maximum: 16_777_215}
+
   validates_each :username do |record, attr, value|
     if BANNED_USERNAMES.include?(value.to_s.downcase) || value.starts_with?("tag-")
       record.errors.add(attr, "is not permitted")

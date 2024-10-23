@@ -118,7 +118,7 @@ class Story < ApplicationRecord
   }
 
   validates :title, length: {in: 3..150}, presence: true
-  validates :description, length: {maximum: (64 * 1024)}
+  validates :description, length: {maximum: 65_535}
   validates :url, length: {maximum: 250, allow_nil: true}
   validates :short_id, presence: true, length: {maximum: 6}
   validates :markeddown_description, length: {maximum: 16_777_215, allow_nil: true}

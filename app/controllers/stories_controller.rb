@@ -415,6 +415,7 @@ class StoriesController < ApplicationController
     @story = Story.new(user: @user)
     @story.attributes = story_params
     @story.already_posted_recently?
+    @story.valid?
 
     respond_to do |format|
       linking_comments = Link.recently_linked_from_comments(@story.url)

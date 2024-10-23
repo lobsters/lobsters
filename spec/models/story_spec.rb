@@ -97,7 +97,9 @@ describe Story do
       "http://example.com:8000" => "example.com",
       "http://example.com:8000/" => "example.com",
       "http://www3.example.com/goose" => "example.com",
-      "http://flub.example.com" => "flub.example.com"
+      "http://flub.example.com" => "flub.example.com",
+      "http://www10.org" => "www10.org",
+      "http://www10.example.org" => "example.org"
     }.each_pair do |url, domain|
       story.url = url
       expect(story.domain.domain).to eq(domain)

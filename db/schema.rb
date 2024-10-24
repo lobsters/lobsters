@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -40,7 +40,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
   end
 
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "category", null: false
+    t.string "category", limit: 25, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["category"], name: "index_categories_on_category", unique: true
@@ -80,7 +80,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.datetime "banned_at", precision: nil
-    t.integer "banned_by_user_id"
+    t.bigint "banned_by_user_id", unsigned: true
     t.string "banned_reason", limit: 200
     t.string "selector"
     t.string "replacement"
@@ -95,7 +95,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
     t.bigint "user_id", null: false, unsigned: true
     t.string "hat", null: false
     t.string "link", null: false
-    t.text "comment", size: :medium, null: false
+    t.text "comment", null: false
     t.index ["user_id"], name: "hat_requests_user_id_fk"
   end
 
@@ -108,7 +108,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
     t.string "link"
     t.boolean "modlog_use", default: false, null: false
     t.datetime "doffed_at", precision: nil
-    t.string "short_id", null: false
+    t.string "short_id", limit: 10, null: false
     t.index ["granted_by_user_id"], name: "hats_granted_by_user_id_fk"
     t.index ["user_id"], name: "hats_user_id_fk"
   end
@@ -126,7 +126,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
     t.boolean "is_verified", default: false, null: false
     t.string "email", null: false
     t.string "name", null: false
-    t.text "memo"
+    t.text "memo", size: :tiny
     t.string "ip_address"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -138,7 +138,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
     t.string "code"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.text "memo", size: :medium
+    t.text "memo", size: :tiny
     t.datetime "used_at", precision: nil
     t.bigint "new_user_id", unsigned: true
     t.index ["new_user_id"], name: "invitations_new_user_id_fk"
@@ -152,13 +152,13 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
   end
 
   create_table "links", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "url", null: false
+    t.string "url", limit: 250, null: false
     t.string "normalized_url", null: false
     t.string "title"
-    t.bigint "from_story_id"
-    t.bigint "from_comment_id"
-    t.bigint "to_story_id"
-    t.bigint "to_comment_id"
+    t.bigint "from_story_id", unsigned: true
+    t.bigint "from_comment_id", unsigned: true
+    t.bigint "to_story_id", unsigned: true
+    t.bigint "to_comment_id", unsigned: true
     t.index ["from_comment_id"], name: "index_links_on_from_comment_id"
     t.index ["from_story_id"], name: "index_links_on_from_story_id"
     t.index ["normalized_url"], name: "index_links_on_normalized_url"
@@ -181,7 +181,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
     t.bigint "recipient_user_id", null: false, unsigned: true
     t.boolean "has_been_read", default: false, null: false
     t.string "subject", limit: 100
-    t.text "body", size: :medium
+    t.text "body"
     t.string "short_id", limit: 30
     t.boolean "deleted_by_author", default: false, null: false
     t.boolean "deleted_by_recipient", default: false, null: false
@@ -214,9 +214,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
     t.text "reason", size: :medium
     t.boolean "is_from_suggestions", default: false, null: false
     t.bigint "tag_id", unsigned: true
-    t.integer "domain_id"
+    t.bigint "domain_id"
     t.bigint "category_id"
-    t.integer "origin_id"
+    t.bigint "origin_id"
     t.index ["category_id"], name: "index_moderations_on_category_id"
     t.index ["comment_id"], name: "moderations_comment_id_fk"
     t.index ["created_at"], name: "index_moderations_on_created_at"
@@ -233,10 +233,11 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
     t.string "identifier", null: false
     t.integer "stories_count", default: 0, null: false
     t.datetime "banned_at"
-    t.integer "banned_by_user_id"
+    t.bigint "banned_by_user_id", unsigned: true
     t.string "banned_reason", limit: 200
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["banned_by_user_id"], name: "index_origins_on_banned_by_user_id"
     t.index ["domain_id"], name: "index_origins_on_domain_id"
   end
 
@@ -265,7 +266,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
     t.string "url", limit: 250, default: ""
     t.string "normalized_url"
     t.string "title", limit: 150, default: "", null: false
-    t.text "description", size: :medium
+    t.text "description"
     t.string "short_id", limit: 6, default: "", null: false
     t.boolean "is_deleted", default: false, null: false
     t.integer "score", default: 1, null: false
@@ -408,6 +409,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
   add_foreign_key "comments", "hats", name: "comments_hat_id_fk"
   add_foreign_key "comments", "stories", name: "comments_story_id_fk"
   add_foreign_key "comments", "users", name: "comments_user_id_fk"
+  add_foreign_key "domains", "users", column: "banned_by_user_id"
   add_foreign_key "hat_requests", "users", name: "hat_requests_user_id_fk"
   add_foreign_key "hats", "users", column: "granted_by_user_id", name: "hats_granted_by_user_id_fk"
   add_foreign_key "hats", "users", name: "hats_user_id_fk"
@@ -415,19 +417,31 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
   add_foreign_key "hidden_stories", "users", name: "hidden_stories_user_id_fk"
   add_foreign_key "invitations", "users", column: "new_user_id", name: "invitations_new_user_id_fk"
   add_foreign_key "invitations", "users", name: "invitations_user_id_fk"
+  add_foreign_key "links", "comments", column: "from_comment_id"
+  add_foreign_key "links", "comments", column: "to_comment_id"
+  add_foreign_key "links", "stories", column: "from_story_id"
+  add_foreign_key "links", "stories", column: "to_story_id"
   add_foreign_key "messages", "hats", name: "messages_hat_id_fk"
+  add_foreign_key "messages", "users", column: "author_user_id"
   add_foreign_key "messages", "users", column: "recipient_user_id", name: "messages_recipient_user_id_fk"
   add_foreign_key "mod_notes", "users", column: "moderator_user_id", name: "mod_notes_moderator_user_id_fk"
   add_foreign_key "mod_notes", "users", name: "mod_notes_user_id_fk"
+  add_foreign_key "moderations", "categories"
   add_foreign_key "moderations", "comments", name: "moderations_comment_id_fk"
+  add_foreign_key "moderations", "domains"
+  add_foreign_key "moderations", "origins"
   add_foreign_key "moderations", "stories", name: "moderations_story_id_fk"
   add_foreign_key "moderations", "tags", name: "moderations_tag_id_fk"
+  add_foreign_key "moderations", "users"
   add_foreign_key "moderations", "users", column: "moderator_user_id", name: "moderations_moderator_user_id_fk"
+  add_foreign_key "origins", "domains"
+  add_foreign_key "origins", "users", column: "banned_by_user_id"
   add_foreign_key "read_ribbons", "stories", name: "read_ribbons_story_id_fk"
   add_foreign_key "read_ribbons", "users", name: "read_ribbons_user_id_fk"
   add_foreign_key "saved_stories", "stories", name: "saved_stories_story_id_fk"
   add_foreign_key "saved_stories", "users", name: "saved_stories_user_id_fk"
   add_foreign_key "stories", "domains"
+  add_foreign_key "stories", "origins"
   add_foreign_key "stories", "stories", column: "merged_story_id", name: "stories_merged_story_id_fk"
   add_foreign_key "stories", "users", name: "stories_user_id_fk"
   add_foreign_key "suggested_taggings", "stories", name: "suggested_taggings_story_id_fk"
@@ -439,6 +453,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_10_165823) do
   add_foreign_key "tag_filters", "users", name: "tag_filters_user_id_fk"
   add_foreign_key "taggings", "stories", name: "taggings_story_id_fk"
   add_foreign_key "taggings", "tags", name: "taggings_tag_id_fk", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "tags", "categories"
   add_foreign_key "users", "users", column: "banned_by_user_id", name: "users_banned_by_user_id_fk"
   add_foreign_key "users", "users", column: "disabled_invite_by_user_id", name: "users_disabled_invite_by_user_id_fk"
   add_foreign_key "users", "users", column: "invited_by_user_id", name: "users_invited_by_user_id_fk"

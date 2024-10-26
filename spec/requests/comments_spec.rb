@@ -62,4 +62,22 @@ describe "comments", type: :request do
       expect(response.body).to include(comment.user.username)
     end
   end
+
+  describe "upvoted" do
+    before do
+      sign_in user
+      Vote.vote_thusly_on_story_or_comment_for_user_because(
+        1, comment.story_id, comment.id, user.id, nil
+      )
+    end
+
+    context "json" do
+      it "renders" do
+        get "/upvoted/comments.json"
+        expect(response).to be_successful
+        expect(response.body).to include(comment.comment[0..20])
+        expect(response.body).to include(comment.user.username)
+      end
+    end
+  end
 end

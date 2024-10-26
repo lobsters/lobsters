@@ -344,6 +344,7 @@ class CommentsController < ApplicationController
 
         render action: "index", layout: false
       }
+      format.json { render json: @comments }
     end
   end
 

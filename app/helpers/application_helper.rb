@@ -5,19 +5,12 @@ module ApplicationHelper
 
   MAX_PAGES = 15
 
-  def avatar_img(user, size)
-    image_tag(
-      user.avatar_path(size),
-      srcset: "#{user.avatar_path(size)} 1x, #{user.avatar_path(size * 2)} 2x",
-      class: "avatar",
-      size: "#{size}x#{size}",
-      alt: "#{user.username} avatar",
-      loading: "lazy",
-      decoding: "async"
-    )
-  end
-
   def avatar_inline(user)
+    return unless !@user || @user.show_avatars?
+
+    # TODO placeholders instead
+    return unless user.avatar.attached?
+
     link_to image_tag(
       user.avatar.variant(:inline_1x),
       srcset: "#{user.avatar.variant(:inline_2x).url} 2x, #{user.avatar.variant(:inline_3x).url} 3x",
@@ -27,6 +20,18 @@ module ApplicationHelper
       loading: "lazy",
       decoding: "async"
     ), user
+  end
+
+  def avatar_profile(user)
+    image_tag(
+      user.avatar.variant(:profile_1x),
+      srcset: "#{user.avatar.variant(:profile_2x).url} 2x, #{user.avatar.variant(:profile_3x).url} 3x",
+      class: "avatar avatar_profile",
+      size: "384x384",
+      alt: "#{user.username} avatar}",
+      loading: "lazy",
+      decoding: "async"
+    )
   end
 
   def errors_for(object)

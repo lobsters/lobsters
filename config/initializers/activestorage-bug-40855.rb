@@ -18,3 +18,16 @@ Rails.application.config.after_initialize do
     port: Rails.env.production? ? nil : 3000
   }
 end
+
+# Add missing cache-control header; URL rolls if content changes anyways.
+# https://stackoverflow.com/a/77122990
+Rails.application.reloader.to_prepare do
+  ActiveStorage::DiskController.class_eval do
+    after_action only: [:show] do
+      # puts "before", response.get_header("Cache-Control")
+      # response.set_header("Cache-Control", "max-age=#{1.year.to_i}, public")
+      # puts "after", response.get_header("Cache-Control")
+      # expires_in 1.year.to_i, :public
+    end
+  end
+end

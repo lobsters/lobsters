@@ -8,10 +8,19 @@ class ApplicationRecord < ActiveRecord::Base
   # https://stackoverflow.com/questions/50026344/composing-activerecord-scopes-with-selects
   scope :select_fix, -> { select(arel_table.project(Arel.star)) }
 
+  # TODO https://github.com/rails/rails/pull/49231/files
   def self.has_one_attached_image(*args, &)
     name = args.first
 
     has_one_attached(*args, &)
+
+    # for preloading
+    define_singleton_method :"#{name}_includes" do
+      {
+        avatar_attachment: [blob: {variant_records: [:blob, :image_attachment, :image_blob]}],
+        avatar_blob: {variant_records: :blob}
+      }
+    end
 
     validate :"validate_#{name}_is_image"
 

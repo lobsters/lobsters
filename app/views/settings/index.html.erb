@@ -231,16 +231,6 @@
 
   <h2 name="external">External Accounts</h2>
 
-  <div class="boxline">
-    <%= label_tag :gravatar,
-      raw("<a href=\"https://gravatar.com/\">Gravatar</a>:"),
-      :class => "required" %>
-    <span>
-      Your avatar will be cached from the Gravatar icon for your e-mail address above.
-      <%= link_post "Expire cache", "/avatars/expire" %>
-    </span>
-  </div>
-
   <% if Pushover.enabled? %>
     <div class="boxline">
       <%= label_tag :pushover_user_key,

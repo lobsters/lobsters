@@ -51,7 +51,7 @@ class Story < ApplicationRecord
     q
   }
   scope :for_presentation, -> {
-    includes(:domain, :origin, :hidings, :user, :tags, taggings: :tag)
+    includes(:domain, :origin, :hidings, :tags, user: User.avatar_includes, taggings: :tag)
   }
   scope :mod_preload?, ->(user) {
     user.try(:is_moderator?) ? preload(:suggested_taggings, :suggested_titles) : all

@@ -8,9 +8,7 @@
 
 <div class="box wide">
   <% if @showing_user.is_active? %>
-    <div id="gravatar">
-      <%= image_tag @showing_user.avatar.variant(:profile_3x) %>
-    </div>
+    <%= avatar_profile(@showing_user) %>
   <% end %>
 
   <label class="required">Status:</label>

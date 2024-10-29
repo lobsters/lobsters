@@ -113,8 +113,8 @@ class Comment < ApplicationRecord
       errors.add(:hat, "not wearable by user")
 
     # .try so tests don't need to persist a story and user
-    story.try(:accepting_comments?) ||
-      errors.add(:base, "Story is no longer accepting comments.")
+    new_record? && (story.try(:accepting_comments?) ||
+      errors.add(:base, "Story is no longer accepting comments."))
   end
 
   def self.regenerate_markdown

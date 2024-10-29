@@ -138,7 +138,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
     t.string "code"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.text "memo", size: :tiny
+    t.text "memo"
     t.datetime "used_at", precision: nil
     t.bigint "new_user_id", unsigned: true
     t.index ["new_user_id"], name: "invitations_new_user_id_fk"
@@ -181,7 +181,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
     t.bigint "recipient_user_id", null: false, unsigned: true
     t.boolean "has_been_read", default: false, null: false
     t.string "subject", limit: 100
-    t.text "body"
+    t.text "body", size: :medium
     t.string "short_id", limit: 30
     t.boolean "deleted_by_author", default: false, null: false
     t.boolean "deleted_by_recipient", default: false, null: false

@@ -949,7 +949,13 @@ class Story < ApplicationRecord
       params = match[2].split(/[&\?]/)
       # utm_ is google and many others; sk is medium; si is youtube source id
       params.reject! { |p|
-        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=|^linkId=|^si=/x)
+        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=|^linkId=|^si=x/)
+      }
+      params.reject! { |p|
+        if /^lobsters|^src=lobsters|^ref=lobsters/x.match?(p)
+          ModNote.tattle_on_traffic_attribution!(self)
+          true
+        end
       }
       u = match[1] << (params.any? ? "?#{params.join("&")}" : "")
     end

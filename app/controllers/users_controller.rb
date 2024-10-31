@@ -61,10 +61,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def invite
-    @title = "Pass Along an Invitation"
-  end
-
   def disable_invitation
     target = User.where(username: params[:username]).first
     if !target

@@ -58,15 +58,6 @@ class CommentsController < ApplicationController
     end
   end
 
-  def render_created_comment(comment)
-    if request.xhr?
-      render partial: "comments/postedreply", layout: false,
-        content_type: "text/html", locals: {comment: comment}
-    else
-      redirect_to comment.path
-    end
-  end
-
   def show
     if !(comment = find_comment)
       return render plain: "can't find comment", status: 404
@@ -378,6 +369,20 @@ class CommentsController < ApplicationController
 
   private
 
+  def find_comment
+    comment = Comment.where(short_id: params[:id]).first
+    # convenience to use PK (from external queries) without generally permitting enumeration:
+    comment ||= Comment.find(params[:id]) if @user&.is_admin?
+
+    if @user && comment
+      comment.current_vote = Vote.where(user_id: @user.id,
+        story_id: comment.story_id, comment_id: comment.id).first
+      comment.vote_summary = Vote.comment_vote_summaries([comment.id])[comment.id]
+    end
+
+    comment
+  end
+
   def preview(comment)
     comment.previewing = true
     comment.is_deleted = false # show normal preview for deleted comments
@@ -392,17 +397,12 @@ class CommentsController < ApplicationController
       }
   end
 
-  def find_comment
-    comment = Comment.where(short_id: params[:id]).first
-    # convenience to use PK (from external queries) without generally permitting enumeration:
-    comment ||= Comment.find(params[:id]) if @user&.is_admin?
-
-    if @user && comment
-      comment.current_vote = Vote.where(user_id: @user.id,
-        story_id: comment.story_id, comment_id: comment.id).first
-      comment.vote_summary = Vote.comment_vote_summaries([comment.id])[comment.id]
+  def render_created_comment(comment)
+    if request.xhr?
+      render partial: "comments/postedreply", layout: false,
+        content_type: "text/html", locals: {comment: comment}
+    else
+      redirect_to comment.path
     end
-
-    comment
   end
 end

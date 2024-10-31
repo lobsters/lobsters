@@ -11,7 +11,7 @@ task update_banned_url_shorteners: :environment do
     response = URI.parse(url).open
     content = response.read
 
-    domains = content.split("\n").reject { |line| line.empty? || line.starts_with?("#") }
+    domains = content.split("\n")
 
     banned_by_user = User.find_by(username: Rails.application.banned_domains_admin)
     unless banned_by_user

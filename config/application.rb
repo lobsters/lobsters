@@ -128,4 +128,9 @@ class << Rails.application
   def ssl?
     true
   end
+
+  # username of the admin account used to ban domains automatically (e.g., URL shorteners)
+  def banned_domains_admin
+    ENV["BANNED_DOMAINS_ADMIN"] || "pushcx"
+  end
 end

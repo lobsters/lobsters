@@ -57,12 +57,14 @@ class Domain < ApplicationRecord
 
     # github.com/foo -> github.com/foo
     # github.com/foo/bar -> github.com/foo
-    if url.match?(selector_regexp)
-      identifier = url.sub(selector_regexp, replacement)
-      Origin.find_or_create_by!(domain: self, identifier: identifier)
-    else
-      # if the URL isn't matched, the identifier is the bare domain (handles root + partial regexps)
-      Origin.find_or_create_by!(domain: self, identifier: domain)
+    Prosopite.pause do
+      if url.match?(selector_regexp)
+        identifier = url.sub(selector_regexp, replacement)
+        Origin.find_or_create_by!(domain: self, identifier: identifier)
+      else
+        # if the URL isn't matched, the identifier is the bare domain (handles root + partial regexps)
+        Origin.find_or_create_by!(domain: self, identifier: domain)
+      end
     end
   end
 

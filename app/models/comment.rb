@@ -4,6 +4,7 @@ class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :story,
     inverse_of: :comments
+  # has_one :comment_stat, -> { where("date(created_at)",  }
   has_many :votes,
     dependent: :delete_all
   belongs_to :parent_comment,
@@ -42,6 +43,13 @@ class Comment < ApplicationRecord
   scope :not_moderated, -> { where(is_moderated: false) }
   scope :active, -> { not_deleted.not_moderated }
   scope :accessible_to_user, ->(user) { (user && user.is_moderator?) ? all : active }
+  scope :recent, -> { where(created_at: (6.months.ago..)) }
+  scope :above_average, -> {
+    joins(:story)
+      .joins("left outer join comment_stats on date(comments.created_at) = comment_stats.date")
+      .where.not(story: {user_is_author: true}) # TODO: authorship/beneficial idea
+      .where("comments.score > coalesce(comment_stats.`average`, 3)")
+  }
   scope :for_presentation, -> {
     includes(:user, :hat, moderation: :moderator, story: :user, votes: :user)
   }

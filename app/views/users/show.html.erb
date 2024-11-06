@@ -188,6 +188,10 @@
       <% else %>
         No
       <% end %>
+      <br>
+      Recent comments:
+        <%= @showing_user.comments.recent.count %>,
+        above average for the day: <%= @showing_user.comments.recent.above_average.count %>
     </span>
     <br>
 

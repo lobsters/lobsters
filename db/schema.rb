@@ -46,6 +46,12 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_06_160424) do
     t.index ["category"], name: "index_categories_on_category", unique: true
   end
 
+  create_table "comment_stats", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.date "date", null: false
+    t.integer "average", null: false
+    t.index ["date"], name: "index_comment_stats_on_date", unique: true
+  end
+
   create_table "comments", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil

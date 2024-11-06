@@ -9,7 +9,7 @@ Rails.autoloaders.main.ignore(Rails.root.join("extras/prohibit*rb"))
 Rails.autoloaders.main.ignore(Rails.root.join("lib/monkey.rb"))
 require Rails.root.join("lib/monkey.rb").to_s
 
-%w[extras lib].each do |dir|
+%w[lib].each do |dir|
   Rails.autoloaders.main.push_dir(Rails.root.join(dir))
   Dir[Rails.root.join(dir, "*.rb").to_s].sort.each { |l| require l }
 end

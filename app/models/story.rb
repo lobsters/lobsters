@@ -175,6 +175,7 @@ class Story < ApplicationRecord
     if url.present?
       already_posted_recently?
       check_not_banned_domain
+      check_not_banned_origin
       check_not_new_domain_from_new_user
       # This would probably have a too-high false-positive rate, I want to have approvals first.
       # check_not_new_origin_from_new_user
@@ -253,6 +254,15 @@ class Story < ApplicationRecord
     if domain.banned?
       ModNote.tattle_on_story_domain!(self, "banned")
       errors.add(:url, "is from banned domain #{domain.domain}: #{domain.banned_reason}")
+    end
+  end
+
+  def check_not_banned_origin
+    return unless url.present? && new_record? && origin
+
+    if origin.banned?
+      ModNote.tattle_on_story_origin!(self, "banned")
+      errors.add(:url, "is from banned origin #{origin.identifier}: #{origin.banned_reason}")
     end
   end
 

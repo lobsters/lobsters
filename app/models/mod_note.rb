@@ -167,6 +167,7 @@ class ModNote < ApplicationRecord
       note: "Attempted to post a story from a #{reason} origin:\n" \
         "- user joined: #{time_ago_in_words(story.user.created_at)}\n" \
         "- url: #{story.url}\n" \
+        "- origin: #{story.origin.identifier}\n" \
         "- title: #{story.title}\n" \
         "- user_is_author: #{story.user_is_author}\n" \
         "- tags: #{story.tags_a.join(" ")}\n" \

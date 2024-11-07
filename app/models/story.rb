@@ -943,7 +943,7 @@ class Story < ApplicationRecord
     domain_name&.sub!(/\Awww\d*\.(.+?\..+)/, '\1') # remove www\d* from domain if the url is not like www10.org
     if domain_name.present?
       self.domain = Domain.where(domain: domain_name).first_or_initialize
-      self.origin = domain&.origin(url)
+      self.origin = domain&.find_or_create_origin(url)
     else
       self.domain = nil
       self.origin = nil

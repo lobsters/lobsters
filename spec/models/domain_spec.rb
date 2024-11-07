@@ -5,19 +5,19 @@ require "rails_helper"
 RSpec.describe Domain, type: :model do
   describe "origin" do
     it "takes a selector and replacement to generate an origin identifier" do
-      d = Domain.new domain: "github.com",
+      d = Domain.create! domain: "github.com",
         selector: "\\Ahttps://(github.com/[^/]+).*\\z",
         replacement: "\\1"
-      expect(d.origin("https://github.com/foo").identifier).to eq("github.com/foo")
-      expect(d.origin("https://github.com/foo/bar").identifier).to eq("github.com/foo")
+      expect(d.find_or_create_origin("https://github.com/foo").identifier).to eq("github.com/foo")
+      expect(d.find_or_create_origin("https://github.com/foo/bar").identifier).to eq("github.com/foo")
     end
 
     it "creates a bare-domain origin for bare and trailing slash URLs" do
-      d = Domain.new domain: "github.com",
+      d = Domain.create! domain: "github.com",
         selector: "\\Ahttps://(github.com/[^/]+).*\\z",
         replacement: "\\1"
-      expect(d.origin("https://github.com/").identifier).to eq("github.com")
-      expect(d.origin("https://github.com").identifier).to eq("github.com")
+      expect(d.find_or_create_origin("https://github.com/").identifier).to eq("github.com")
+      expect(d.find_or_create_origin("https://github.com").identifier).to eq("github.com")
     end
 
     it "inserts start-and-end-of-line anchors to " do

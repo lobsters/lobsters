@@ -45,27 +45,33 @@ class Domain < ApplicationRecord
   def update_origins
     return unless saved_change_to_selector? || saved_change_to_replacement?
 
-    stories.find_each do |story|
-      story.update_column(:origin_id, story.domain.origin(story.url).id)
+    # only happens for rare, manual mod edits
+    Prosopite.pause do
+      stories.find_each do |story|
+        story.update_column(:origin_id, story.domain.find_or_create_origin(story.url)&.id)
+      end
     end
   end
 
-  def origin(url)
+  def find_or_create_origin(url)
     return nil if selector.blank? || replacement.blank?
     valid?
-    raise ArgumentError if errors.any?
+    raise ArgumentError, "Domain not valid: #{errors.full_messages.join(", ")}" if errors.any?
+    raise ArgumentError, "Can't create Origin until Domain is persisted" if new_record?
 
     # github.com/foo -> github.com/foo
     # github.com/foo/bar -> github.com/foo
-    Prosopite.pause do
-      if url.match?(selector_regexp)
-        identifier = url.sub(selector_regexp, replacement)
-        Origin.find_or_create_by!(domain: self, identifier: identifier)
-      else
-        # if the URL isn't matched, the identifier is the bare domain (handles root + partial regexps)
-        Origin.find_or_create_by!(domain: self, identifier: domain)
-      end
+    origin = if url.match?(selector_regexp)
+      identifier = url.sub(selector_regexp, replacement)
+      Origin.find_or_initialize_by(identifier: identifier)
+    else
+      # if the URL isn't matched, the identifier is the bare domain (handles root + partial regexps)
+      Origin.find_or_initialize_by(identifier: domain)
     end
+    # default the domain if Origin.identifier= didn't find one
+    origin.domain ||= self
+    origin.save!
+    origin
   end
 
   def ban_by_user_for_reason!(banner, reason)

@@ -13,7 +13,7 @@ class TidyDuplicateOrigins < ActiveRecord::Migration[7.2]
       end
     end
 
-    add_index :origins, :idenfifier, unique: true
+    add_index :origins, :identifier, unique: true
   end
 
   def down

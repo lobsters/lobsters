@@ -239,6 +239,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_06_160424) do
     t.datetime "updated_at", null: false
     t.index ["banned_by_user_id"], name: "index_origins_on_banned_by_user_id"
     t.index ["domain_id"], name: "index_origins_on_domain_id"
+    t.index ["identifier"], name: "index_origins_on_identifier", unique: true
   end
 
   create_table "read_ribbons", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

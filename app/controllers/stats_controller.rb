@@ -18,7 +18,7 @@ class StatsController < ApplicationController
       graph_title: "Active users by month",
       scale_y_divisions: 500
     }) {
-      User.connection.execute <<~SQL
+      User.connection.select_all <<~SQL
         SELECT ym, count(distinct user_id)
         FROM (
           SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM stories

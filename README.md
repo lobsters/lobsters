@@ -27,19 +27,25 @@ Use the steps below for a local install or
 There's an external project [docker-lobsters](https://github.com/utensils/docker-lobsters) if you want to use Docker.
 
 * Install and start MariaDB.
-  On Linux use [your package manager](https://mariadb.com/kb/en/distributions-which-include-mariadb/).
-  On MacOS you can [install with brew](https://mariadb.com/kb/en/installing-mariadb-on-macos-using-homebrew/).
-  On Windows there's an [installer](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.5.2&os=Linux&cpu=x86_64&pkg=tar_gz&i=systemd&mirror=starburst_stlouis).
+    ```
+    $ sudo apt-get update
+    $ sudo apt-get install mariadb-server
+    ```
 
-* Start the mariadb server using one of the [methods mentioned in the mariadb knowledge base](https://mariadb.com/kb/en/starting-and-stopping-mariadb-automatically/).
+* Start the mariadb server
+    ```
+    $ sudo service mysql start
+    ```
 
-* Open the console using `mariadb`, and set the `root` user password (type `ctrl-d` to exit afterwards)
-
-```sql
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
-```
+* Open the console using `sudo mysql -u root`, and set the `root` user password (type `ctrl-d` to exit afterwards)
+    ```sql
+    ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
+    ```
 
 * Install the Ruby version specified in [.ruby-version](https://github.com/lobsters/lobsters/blob/master/.ruby-version)
+    ```
+    lobsters$ rvm install ruby 3.3.1
+    ```
 
 * Checkout the lobsters git tree from Github
     ```sh
@@ -50,13 +56,10 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
 
 * Install Nodejs, needed (or other execjs) for uglifier
     ```sh
-    Fedora: sudo yum install nodejs
-    Ubuntu: sudo apt-get install nodejs
-    OSX: brew install nodejs
+    $ sudo apt-get install nodejs
     ```
 
 * Run `bin/setup` to install dependencies and set up db
-
     ```sh
     lobsters$ bin/setup
     ```
@@ -66,14 +69,12 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
   `domain` and `name`. (You don't need this on your dev machine).
 
 * On your personal computer, you probably want to add some sample data.
-
     ```sh
     lobsters$ rails fake_data
     ```
 
 * Run the Rails server in development mode.
   You should be able to login to `http://localhost:3000` with your new `test` user:
-
     ```sh
     lobsters$ rails server
     ```
@@ -83,15 +84,9 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
   The lobsters-ansible repo has our config files to crib from. Some app-specific notes:
 
 * Set up crontab or another scheduler to run regular jobs:
-
     ```
     */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/mastodon_sync.rb; bundle exec ruby script/traffic_range'
     ```
-
-* See `config/initializers/production.rb.sample` for GitHub/Mastodon integration help.
-
-* You probably want to use [git-imerge](https://lobste.rs/s/dbm2d4) to pull in
-  changes from Lobsters to your site.
 
 #### Administration
 

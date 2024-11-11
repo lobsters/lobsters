@@ -411,6 +411,23 @@ button:focus {
 	font-style: italic;
 }
 
+form.story-disowner-form {
+	display: inline;
+	button {
+		background: none;
+		border: none;
+		padding: 0;
+		color: var(--color-fg-contrast-4-5);
+		text-decoration: none;
+		cursor: pointer;
+		outline: none;
+		&:not(.disable):hover {
+			color: var(--color-fg-contrast-4-5);
+		}
+	}
+}
+
+
 button,
 input[type="button"],
 input[type="reset"],

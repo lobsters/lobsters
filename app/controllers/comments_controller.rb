@@ -169,10 +169,16 @@ class CommentsController < ApplicationController
     end
 
     InactiveUser.disown! comment
-    comment = find_comment
 
-    render partial: "comment", layout: false,
-      content_type: "text/html", locals: {comment: comment}
+    if request.xhr?
+      comment = find_comment
+      show_story = ActiveModel::Type::Boolean.new.cast(params[:show_story])
+      show_tree_lines = ActiveModel::Type::Boolean.new.cast(params[:show_tree_lines])
+
+      render partial: "comment", locals: {comment: comment, show_story: show_story, show_tree_lines: show_tree_lines}
+    else
+      redirect_back fallback_location: root_path
+    end
   end
 
   def update

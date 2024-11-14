@@ -169,7 +169,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <% end %>
           <% if single_story && story.disownable_by_user?(@user) %>
           |
-          <%= button_to("disown", story_disown_path(story.short_id), form_class: "story-disowner-form") %>
+          <%= button_to("disown", story_disown_path(story.short_id), form_class: "disowner-form", params: { type: 'story' }) %>
           <% end %>
           <% if single_story && story.hider_count > 0 %>
             (hidden by <%= pluralize(story.hider_count, "user") %>)

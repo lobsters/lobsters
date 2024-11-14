@@ -594,12 +594,17 @@ onPageLoad(() => {
     }
   });
 
-  on('submit', 'form.story-disowner-form', (event) => {
+  // Disown
+
+  on('submit', 'form.disowner-form', (event) => {
     event.preventDefault();
 
-    if (confirm("Are you sure you want to disown this story?")) {
-      let li = parentSelector(event.target, '.story');
-      fetchWithCSRF(event.target.action, { method: 'post' })
+    let type = event.target.elements['type'].value;
+
+    if (confirm(`Are you sure you want to disown this ${type}?`)) {
+      let li = parentSelector(event.target, `.${type}`);
+
+      fetchWithCSRF(event.target.action, { method: 'post', body: new FormData(event.target) })
         .then(response => {
           response.text().then(text => replace(li, text));
         });
@@ -636,16 +641,6 @@ onPageLoad(() => {
         folder.checked = true;
     }
   })();
-
-  on('click', 'a.comment-disowner', (event) => {
-    if (confirm("Are you sure you want to disown this comment?")) {
-      let li = parentSelector(event.target, '.comment');
-      fetchWithCSRF('/comments/' + li.getAttribute('data-shortid') + '/disown', { method: 'post' })
-        .then(response => {
-          response.text().then(text => replace(li, text));
-        });
-    }
-  });
 
   on("click", "a.comment_replier", (event) => {
     event.preventDefault();

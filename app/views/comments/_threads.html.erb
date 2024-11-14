@@ -140,7 +140,10 @@
           <% end %>
         <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
           |
-          <a class="comment-disowner" href="#">disown</a>
+          <%= button_to("disown", disown_comment_path(comment.short_id),
+          form_class: "disowner-form",
+          params: { type: 'comment', show_story: show_story, show_tree_lines: show_tree_lines })
+          %>
         <% end %>
 
         <% if can_flag && !comment.current_flagged? %>

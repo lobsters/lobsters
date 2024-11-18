@@ -57,7 +57,7 @@ class User < ApplicationRecord
     inverse_of: :user
 
   # As of Rails 8.0, `has_secure_password` generates a `password_reset_token`
-  # method that shaddows the explicit `password_reset_token` attribute.
+  # method that shadows the explicit `password_reset_token` attribute.
   # So we need to explictily disable that.
   has_secure_password(reset_token: false)
 

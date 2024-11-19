@@ -42,7 +42,6 @@ module Lobsters
     config.eager_load_namespaces << I18n
 
     config.autoload_paths.push(
-      "#{root}/app/types",
       "#{root}/extras",
       "#{root}/lib"
     )

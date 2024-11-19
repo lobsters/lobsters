@@ -59,7 +59,6 @@ group :test, :development do
   gem "standard"
   gem "standard-performance"
   gem "standard-rails"
-  gem "standard-sorbet"
   gem "super_diff"
   gem "faker"
   gem "byebug"

@@ -42,8 +42,8 @@ module Lobsters
     config.eager_load_namespaces << I18n
 
     config.autoload_paths.push(
-      "#{root}/app/types",
-      "#{root}/extras"
+      "#{root}/extras",
+      "#{root}/lib"
     )
 
     # Raise an exception when using mass assignment with unpermitted attributes

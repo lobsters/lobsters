@@ -8,6 +8,9 @@
 # to using that at some point.
 
 if Rails.env.production?
+  # load extras/ so we can set API keys
+  Dir[Rails.root.join("extras", "*.rb").to_s].each {|f| require f }
+
   Lobsters::Application.config.middleware.use ExceptionNotification::Rack,
     :ignore_exceptions => [
       "ActionController::UnknownFormat",

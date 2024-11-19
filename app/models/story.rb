@@ -1009,7 +1009,7 @@ class Story < ApplicationRecord
   def vote_summary_for(user)
     r_counts = {}
     r_whos = {}
-    votes.includes((user && user.is_moderator?) ? :user : nil).find_each do |v|
+    votes.includes(user&.is_moderator? ? :user : nil).find_each do |v|
       next if v.vote == 0
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += 1

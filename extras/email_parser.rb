@@ -6,7 +6,7 @@ class EmailParser
   def initialize(sender, recipient, email_text)
     @sender = sender
     @recipient = recipient
-    @email_text = email_text.forcibly_convert_to_utf8
+    @email_text = forcibly_convert_to_utf8(email_text)
 
     @email = nil
 
@@ -107,5 +107,20 @@ class EmailParser
     @body.gsub!(/^(On|on|at) .*\n\n?(>.*\n)+/, "")
 
     @body.strip!
+  end
+
+  private
+
+  def forcibly_convert_to_utf8(string)
+    if string.encoding == Encoding::UTF_8 && string.valid_encoding?
+      return string
+    end
+
+    str.b.encode(
+      Encoding::UTF_8,
+      invalid: :replace,
+      undef: :replace,
+      replace: "?"
+    )
   end
 end

@@ -5,8 +5,6 @@
 
 # prevent zeitwerk from failing on prod boot because these patches don't match
 # its expected filenames
-Rails.autoloaders.main.ignore(Rails.root.join("lib/monkey.rb"))
-require Rails.root.join("lib/monkey.rb").to_s
 
 if Rails.env.production? &&
     !File.read(Rails.root.join("config/initializers/production.rb").to_s).split("\n")[0..5].join(" ").include?("extras")

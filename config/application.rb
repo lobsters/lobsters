@@ -61,7 +61,6 @@ module Lobsters
     config.skip_yarn = true
 
     config.after_initialize do
-      require Rails.root.join("lib/monkey.rb").to_s
       require Rails.root.join("lib/time_series.rb").to_s
     end
 

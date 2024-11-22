@@ -1,20 +1,29 @@
-# typed: false
-
 class TagsController < ApplicationController
   before_action :require_logged_in_admin, except: [:index]
   before_action :show_title_h1, only: [:new, :edit]
 
   def index
     @title = "Tags"
-
-    @categories = Category.all.order("category asc").includes(:tags)
-    @tags = Tag.all
+  
+    @categories = Category.all
+      .order("category asc, tags.tag asc")
+      .eager_load(:tags)
+      .references(:tags)
+      .where("tags.active = true")
+  
 
     @filtered_tags = if @user
       @user.tag_filter_tags.index_by(&:id)
-    else
-      tags_filtered_by_cookie.index_by(&:id)
-    end
+      else
+        tags_filtered_by_cookie.index_by(&:id)
+      end
+  
+    # Perf: using grouped counts
+    @story_counts = Tagging.group(:tag_id).count
+    @filter_counts = TagFilter.group(:tag_id).count
+    @comment_counts = Comment.joins(story: :taggings)
+                             .group("taggings.tag_id")
+                             .count
 
     respond_to do |format|
       format.html { render action: "index" }

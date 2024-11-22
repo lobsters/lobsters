@@ -1,4 +1,5 @@
 <% is_admin = @user.try(:is_admin?) %>
+
 <div class="box wide">
   <p>
     You can <a href="/filters">filter out stories by tag</a>, even if you don't have an account.
@@ -13,28 +14,46 @@
       <% end %>
     </h2>
 
-    <% category.tags.each do |tag| %>
-      <ol class="category_tags">
+    <ol class="category_tags">
+      <% category.tags.each do |tag| %>
         <li id="<%= tag.tag %>">
-        <% filtered = @filtered_tags.include?(tag.id) %>
-        <%= link_to tag.tag, tag_path(tag), class: tag.css_class %>
-        <span class="<%= filtered || !tag.active ? 'inactive_tag' : '' %>"><%= tag.description %></span>
-        <span class="byline">
-        <% if !tag.active %>
-          | <em>inactive</em>
-        <% end %>
-        <% if filtered %>
-          | <%= link_to "filtered", filters_path(anchor: tag.tag) %>
-        <% end %>
-        <% if is_admin %>
-          | <%= link_to 'edit', edit_tag_path(tag.tag) %>
-        <% end %>
-        </span>
+          <% filtered = @filtered_tags.include?(tag.id) %>
+
+          <!-- Link to tag -->
+          <%= link_to tag.tag, tag_path(tag), class: tag.css_class %>
+
+          <!-- Tag description -->
+          <span class="<%= filtered || !tag.active ? 'inactive_tag' : '' %>">
+            <%= tag.description %>
+          </span>
+
+          <!-- Show inactive message if tag is inactive -->
+          <% if !tag.active %>
+            | <em>inactive</em>
+          <% end %>
+
+          <!-- Display hotness modifier if exists -->
+          <% if tag.hotness_mod != 0 %>
+            | <em>hotness mod <%= tag.hotness_mod > 0 ? "+" : "" %><%= tag.hotness_mod %></em>
+          <% end %>
+
+          <!-- Display story, comment, and filter counts -->
+          <span class="byline">
+            <strong>Stories:</strong> <%= number_with_delimiter(@story_counts[tag.id] || 0) %> |
+            <strong>Comments:</strong> <%= number_with_delimiter(@comment_counts[tag.id] || 0) %> |
+            <strong>Filtered By:</strong> <%= number_with_delimiter(@filter_counts[tag.id] || 0) %>
+          </span>
+
+          <!-- Admin edit link -->
+          <% if is_admin %>
+            | <%= link_to 'edit', edit_tag_path(tag.tag) %>
+          <% end %>
         </li>
-      </ol>
-    <% end %>
+      <% end %>
+    </ol>
   <% end %>
 
+  <!-- Admin Links to Create New Tags or Categories -->
   <% if is_admin %>
     <p>
       <%= link_to 'Create New Tag', new_tag_path %><br/>

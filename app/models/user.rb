@@ -399,7 +399,7 @@ class User < ApplicationRecord
       sent_messages.update_all(deleted_by_author: true)
       received_messages.update_all(deleted_by_recipient: true)
 
-      invitations.destroy_all
+      invitations.unused.update_all(used_at: Time.now.utc)
 
       roll_session_token
 

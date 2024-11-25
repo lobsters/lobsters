@@ -38,14 +38,14 @@
         </div>
       <% end %>
 
-      <%= form_with model: hr, method: :delete do |f| %>
+      <%= form_with model: hr, method: :post do |f| %>
         <div class="boxline">
           <%= f.label :link, "Reason:", :class => "required" %>
           <%= f.text_area :reason, :rows => 4 %>
         </div>
         <p>
-            <%= f.submit "Approve Hat Request", formaction: update_hat_request_path(hr) %>
-            <%= f.submit "Reject Hat Request", class: "deletion", formation: destroy_hat_request_path(hr)  %>
+            <%= f.submit "Approve Hat Request", formaction: approve_hat_request_path(hr) %>
+            <%= f.submit "Reject Hat Request", class: "deletion", formaction: reject_hat_request_path(hr)  %>
         </p>
       <% end %>
     <% end %>

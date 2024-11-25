@@ -10,8 +10,6 @@ RSpec.feature "Hat Request" do
 
   before do
     stub_login_as mod
-
-    hat_request.reload
     visit "/hat_requests"
   end
 

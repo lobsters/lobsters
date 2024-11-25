@@ -43,8 +43,6 @@ RSpec.feature "Hat Request" do
 
     m = Message.last
 
-    puts m.inspect
-
     expect(m.author_user_id).to be(mod.id)
     expect(m.subject).to eq("Your request for hat \"#{hat_request.hat}\" has been rejected")
     expect(m.body).to eq(reason)

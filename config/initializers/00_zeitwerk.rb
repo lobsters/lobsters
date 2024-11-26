@@ -1,23 +1,24 @@
 # typed: false
 
-# named 00_zeitwerk because Rails loads these in alphabetical order and
-# production.rb needs these classes loaded
+# This file is a relic of how Lobsters used to manage API keys and some other config variables.
+# It only exists to give developers and sisiter sites an error message as they setup.
 
-# prevent zeitwerk from failing on prod boot because these patches don't match
-# its expected filenames
+if Rails.application.credentials.secret_key_base.blank?
+  config = <<~CONFIG
+    ** SETUP REQUIRED
 
-if Rails.env.production? &&
-    !File.read(Rails.root.join("config/initializers/production.rb").to_s).split("\n")[0..5].join(" ").include?("extras")
-  raise <<~KLUDGE_APOLOGY
-    Sorry for the hassle, but to fix https://github.com/lobsters/lobsters/issues/1246
-    you need to copy this line of code to your config/initializers/production.rb:
+    The lobsters codebase manages API keys using the new (to us) Rails credentials feature.
 
-    Dir[Rails.root.join("extras", "*.rb").to_s].each {|f| require f }
+    Look for "credentials" in README.md for setup instructions and a template.
+  CONFIG
+  migrate = <<~MIGRATE
 
-    It goes inside the `if Rails.env.production`, see production.rb.sample.
+    If you used the old config/initializers/production.rb method, your API keys are there and can be removed from that file after copying them to credentials.
+  MIGRATE
 
-    Perhaps all of config/initalizers/production.rb should be moved into
-    config/environments/production.rb but that's more weird boot issues than I can
-    take on today.
-  KLUDGE_APOLOGY
+  if Rails.env.production?
+    raise config + migrate
+  else
+    raise config
+  end
 end

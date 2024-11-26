@@ -1,15 +1,10 @@
 # typed: false
 
 class Keybase
-  cattr_accessor :DOMAIN
-  cattr_accessor :BASE_URL
-
-  # these need to be overridden in config/initializers/production.rb
-  @@DOMAIN = nil
-  @@BASE_URL = nil
+  # see README.md on setting up credentials
 
   def self.enabled?
-    @@DOMAIN.present? || ENV["KEYBASE_BASE_URL"]
+    Rails.application.credentials.keybase.domain.present? || ENV["KEYBASE_BASE_URL"]
   end
 
   def self.avatar_url(kb_username)
@@ -28,7 +23,7 @@ class Keybase
     s = Sponge.new
     url = [
       File.join(base_url, "/_/api/1.0/sig/proof_valid.json?"),
-      "domain=#{@@DOMAIN}&",
+      "domain=#{Rails.application.credentials.keybase.domain}&",
       "kb_username=#{kb_username}&",
       "sig_hash=#{kb_signature}&",
       "username=#{username}"
@@ -39,7 +34,7 @@ class Keybase
   end
 
   def self.success_url(kb_username, kb_signature, kb_ua, username)
-    File.join(base_url, "/_/proof_creation_success?domain=#{@@DOMAIN}&" \
+    File.join(base_url, "/_/proof_creation_success?domain=#{Rails.application.credentials.keybase.domain}&" \
       "kb_username=#{kb_username}&username=#{username}&" \
       "sig_hash=#{kb_signature}&kb_ua=#{kb_ua}")
   end
@@ -49,6 +44,6 @@ class Keybase
   end
 
   def self.base_url
-    @@BASE_URL || "https://keybase.io"
+    Rails.application.credentials.keybase.base_url
   end
 end

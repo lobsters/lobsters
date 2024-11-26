@@ -1,19 +1,11 @@
 # typed: false
 
 class Mastodon
+  # see README.md on setting up credentials
+
   def self.enabled?
-    defined?(Mastodon.TOKEN)
+    Rails.application.credentials.mastodon.token.present?
   end
-
-  # these need to be overridden in config/initializers/production.rb
-  cattr_accessor :INSTANCE_NAME, :BOT_NAME, :CLIENT_ID, :CLIENT_SECRET, :TOKEN, :LIST_ID
-
-  @@INSTANCE_NAME = nil
-  @@BOT_NAME = nil
-  @@CLIENT_ID = nil
-  @@CLIENT_SECRET = nil
-  @@TOKEN = nil
-  @@LIST_ID = nil
 
   MAX_STATUS_LENGTH = 500 # https://docs.joinmastodon.org/user/posting/#text
   LINK_LENGTH = 23 # https://docs.joinmastodon.org/user/posting/#links
@@ -21,7 +13,7 @@ class Mastodon
   def self.accept_follow_request(id)
     s = Sponge.new
     response = s.fetch(
-      "https://#{self.INSTANCE_NAME}/api/v1/follow_requests/#{id}/authorize",
+      "https://#{Rails.application.credentials.mastodon.instance_name}/api/v1/follow_requests/#{id}/authorize",
       :post,
       {limit: 80},
       nil,
@@ -33,7 +25,7 @@ class Mastodon
   def self.add_list_accounts(accts)
     s = Sponge.new
     response = s.fetch(
-      "https://#{self.INSTANCE_NAME}/api/v1/lists/#{self.LIST_ID}/accounts",
+      "https://#{Rails.application.credentials.mastodon.instance_name}/api/v1/lists/#{Rails.application.credentials.mastodon.list_id}/accounts",
       :post,
       nil,
       accts.map { |i| "account_ids[]=#{i}" }.join("&"),
@@ -45,7 +37,7 @@ class Mastodon
   def self.follow_account(id)
     s = Sponge.new
     response = s.fetch(
-      "https://#{self.INSTANCE_NAME}/api/v1/accounts/#{id}/follow",
+      "https://#{Rails.application.credentials.mastodon.instance_name}/api/v1/accounts/#{id}/follow",
       :post,
       {reblogs: false},
       nil,
@@ -57,7 +49,7 @@ class Mastodon
   def self.get_account_id(acct)
     s = Sponge.new
     response = s.fetch(
-      "https://#{self.INSTANCE_NAME}/api/v1/accounts/search",
+      "https://#{Rails.application.credentials.mastodon.instance_name}/api/v1/accounts/search",
       :get,
       nil,
       {q: acct, limit: 80, resolve: true},
@@ -78,7 +70,7 @@ class Mastodon
   def self.get_follow_requests
     s = Sponge.new
     response = s.fetch(
-      "https://#{self.INSTANCE_NAME}/api/v1/follow_requests",
+      "https://#{Rails.application.credentials.mastodon.instance_name}/api/v1/follow_requests",
       :get,
       nil,
       nil,
@@ -92,7 +84,7 @@ class Mastodon
   def self.get_list_accounts
     s = Sponge.new
     response = s.fetch(
-      "https://#{self.INSTANCE_NAME}/api/v1/lists/#{self.LIST_ID}/accounts",
+      "https://#{Rails.application.credentials.mastodon.instance_name}/api/v1/lists/#{Rails.application.credentials.mastodon.list_id}/accounts",
       :get,
       {limit: 0},
       nil,
@@ -105,7 +97,7 @@ class Mastodon
   def self.post(status)
     s = Sponge.new
     s.fetch(
-      "https://#{self.INSTANCE_NAME}/api/v1/statuses",
+      "https://#{Rails.application.credentials.mastodon.instance_name}/api/v1/statuses",
       :post,
       {
         status: status,
@@ -119,7 +111,7 @@ class Mastodon
   def self.remove_list_accounts(ids)
     s = Sponge.new
     response = s.fetch(
-      "https://#{self.INSTANCE_NAME}/api/v1/lists/#{self.LIST_ID}/accounts",
+      "https://#{Rails.application.credentials.mastodon.instance_name}/api/v1/lists/#{Rails.application.credentials.mastodon.list_id}/accounts",
       :delete,
       {account_ids: ids},
       nil,
@@ -131,7 +123,7 @@ class Mastodon
   def self.unfollow_account(id)
     s = Sponge.new
     response = s.fetch(
-      "https://#{self.INSTANCE_NAME}/api/v1/accounts/#{id}/unfollow",
+      "https://#{Rails.application.credentials.mastodon.instance_name}/api/v1/accounts/#{id}/unfollow",
       :post,
       {account_ids: ids},
       nil,
@@ -141,11 +133,12 @@ class Mastodon
   end
 
   def self.get_bot_credentials!
-    raise "instructions in production.rb.sample" unless self.INSTANCE_NAME && self.BOT_NAME
+    raise "instructions in production.rb.sample" unless Rails.application.credentials.mastodon.instance_name && Rails.application.credentials.mastodon.bot_name
 
-    if !self.CLIENT_ID || !self.CLIENT_SECRET
+    if !Rails.application.credentials.mastodon.client_id ||
+        !Rails.application.credentials.mastodon.client_secret
       s = Sponge.new
-      url = "https://#{self.INSTANCE_NAME}/api/v1/apps"
+      url = "https://#{Rails.application.credentials.mastodon.instance_name}/api/v1/apps"
       res = s.fetch(
         url,
         :post,
@@ -157,7 +150,7 @@ class Mastodon
         website: "https://#{Rails.application.domain}"
       )
       if res.nil? || res.body.blank?
-        errors.add :base, "App registration failed, is #{self.INSTANCE_NAME} a Mastodon instance?"
+        errors.add :base, "App registration failed, is #{Rails.application.credentials.mastodon.instance_name} a Mastodon instance?"
         return
       end
       reg = JSON.parse(res.body)
@@ -165,17 +158,17 @@ class Mastodon
       raise "no client_id" if reg["client_id"].blank?
       raise "no client_secret" if reg["client_secret"].blank?
 
-      puts "Mastodon.CLIENT_ID = \"#{reg["client_id"]}\""
-      puts "Mastodon.CLIENT_SECRET = \"#{reg["client_secret"]}\""
+      puts "  mastodon.client_id: \"#{reg["client_id"]}\""
+      puts "  mastodon.client_secret: \"#{reg["client_secret"]}\""
     end
 
-    client_id = self.CLIENT_ID || reg["client_id"]
-    client_secret = self.CLIENT_SECRET || reg["client_secret"]
+    client_id = Rails.application.credentials.client_id || reg["client_id"]
+    client_secret = Rails.application.credentials.client_secret || reg["client_secret"]
 
     puts
     puts "open this URL and authorize read/write access for the bot account"
     puts "you'll get redirected to /settings?code=..."
-    puts "https://#{self.INSTANCE_NAME}/oauth/authorize?response_type=code&client_id=#{client_id}&scope=read+write&redirect_uri=" +
+    puts "https://#{Rails.application.credentials.mastodon.instance_name}/oauth/authorize?response_type=code&client_id=#{client_id}&scope=read+write&redirect_uri=" +
       CGI.escape(
         "https://#{Rails.application.domain}/settings"
       )
@@ -186,7 +179,7 @@ class Mastodon
 
     s = Sponge.new
     res = s.fetch(
-      "https://#{self.INSTANCE_NAME}/oauth/token",
+      "https://#{Rails.application.credentials.mastodon.instance_name}/oauth/token",
       :post,
       client_id: client_id,
       client_secret: client_secret,
@@ -195,26 +188,28 @@ class Mastodon
       code: code,
       scope: "read write"
     )
-    raise "mastodon getting user token failed, response from #{self.INSTANCE_NAME} was nil" if res.nil?
+    raise "mastodon getting user token failed, response from #{Rails.application.credentials.mastodon.instance_name} was nil" if res.nil?
     ps = JSON.parse(res.body)
     tok = ps["access_token"]
     raise "no token" if tok.blank?
 
     headers = {"Authorization" => "Bearer #{tok}"}
     res = s.fetch(
-      "https://#{self.INSTANCE_NAME}/api/v1/accounts/verify_credentials",
+      "https://#{Rails.application.credentials.mastodon.instance_name}/api/v1/accounts/verify_credentials",
       :get,
       nil,
       nil,
       headers
     ).body
     js = JSON.parse(res)
-    puts "uhh Mastodon.BOT_NAME='#{Mastodon.BOT_NAME}' but the instance thinks it's '#{js["username"]}' and the instance wins that disagreement" if Mastodon.BOT_NAME != js["username"]
+    if Rails.application.credentials.mastodon.bot_name != js["username"]
+      puts "uhh Rails.application.credentials.mastodon.bot_name='#{Rails.application.credentials.mastodon.bot_name}' but the instance thinks it's '#{js["username"]}' and the instance wins that disagreement"
+    end
 
     puts
-    puts "Mastodon.TOKEN = \"#{tok}\""
+    puts "  mastodon.token: \"#{tok}\""
     puts
-    puts "copy the three values above to your config/initializers/production.rb"
+    puts "run `rails credentials:edit` and copy these three values in"
     true
   end
 end

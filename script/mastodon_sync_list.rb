@@ -8,7 +8,7 @@ ENV["RAILS_ENV"] ||= "production"
 
 require File.expand_path("../../config/environment", __FILE__)
 
-exit unless Mastodon.enabled? && Mastodon.LIST_ID
+exit unless Mastodon.enabled? && Rails.application.credentials.mastodon.list_id
 
 # accept all follow requests
 follow_requests = Mastodon.get_follow_requests

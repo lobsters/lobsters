@@ -146,7 +146,7 @@ class SettingsController < ApplicationController
   # external services
 
   def pushover_auth
-    if !Pushover.SUBSCRIPTION_CODE
+    if !Pushover.enabled?
       flash[:error] = "This site is not configured for Pushover"
       return redirect_to "/settings"
     end

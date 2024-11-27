@@ -12,12 +12,8 @@ class InboxMailbox < ApplicationMailbox
       c.story_id = parent.id
     end
 
-    # TODO: Figure out what to do here.
-    if c.save
-      Rails.logger.info("comment saved")
-    else
-      Rails.logger.info("comment NOT saved")
-    end
+    # If we fail to parse the comment, just throw an exception.
+    c.save!
   end
 
   private
@@ -48,8 +44,7 @@ class InboxMailbox < ApplicationMailbox
   end
 
   def user_token
-    # RoR "to" gives us an array. Joining here might not be the best?
-    mail.to.join(" ").to_s.gsub(/^#{Rails.application.shortname}-/, "").gsub(/@.*/, "")
+    (mail.to.find { |e| e =~ /^#{Rails.application.shortname}-/ } || "")[/-([^@]*)@/, 1]
   end
 
   def sending_user

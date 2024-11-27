@@ -30,6 +30,9 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Workaround for inability to templatize credentials (#1380)
+        run: cp .github/workflows/check/* config/
+
       - name: Load database schema
         run: ./bin/rails db:schema:load db:migrate
 

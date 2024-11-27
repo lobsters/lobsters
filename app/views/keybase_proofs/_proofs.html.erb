@@ -1,5 +1,4 @@
-<%# locals: () -%>
-<% for_self = (user == @user) %>
+<%# locals: (user:, for_self:) -%>
 <% if user.keybase_signatures? %>
   <% user.keybase_signatures.each do |kbs| %>
     <%= link_to "@#{kbs[:kb_username]}", keybase_user_link(kbs) %>

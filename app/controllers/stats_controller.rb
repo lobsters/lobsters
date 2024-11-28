@@ -87,8 +87,17 @@ class StatsController < ApplicationController
         show_lines: false
       }
       graph = TimeSeries.new(defaults.merge(opts))
+
+      data = yield.map do |row|
+        if row.is_a?(Hash)
+          [Time.strptime(row["ym"], "%Y-%m").to_i, row["count(distinct user_id)"].to_i]
+        else
+          [Time.strptime(row[0], "%Y-%m").to_i, row[1].to_i]
+        end
+      end.flatten
+
       graph.add_data(
-        data: yield.to_a.flatten,
+        data: data,
         template: "%Y-%m"
       )
       graph.burn_svg_only

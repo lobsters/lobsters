@@ -151,4 +151,15 @@ module ApplicationHelper
     ago = time_ago_in_words(time)
     content_tag(:span, ago, title: time.strftime("%F %T %z"))
   end
+
+  def highlight_search_terms(text, search_terms)
+    return text if search_terms.blank?
+
+    terms = search_terms.split(/\s+/).map { |t| Regexp.escape(t) }
+    regex = terms.join("|")
+
+    text.gsub(/(#{regex})/i) do |match|
+      "<mark>#{match}</mark>"
+    end
+  end
 end

@@ -1,4 +1,4 @@
-<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false) -%>
+<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false, search_terms: nil) -%>
 <%
   # partial inputs:
   # force_open: this comment is allowed to collapse
@@ -154,10 +154,10 @@
         </span>
         </p>
         <% if @user && @user.is_moderator? %>
-          <%= raw comment.markeddown_comment %>
+          <%= raw highlight_search_terms(comment.markeddown_comment, search_terms) %>
         <% end %>
       <% else %>
-        <%= raw comment.markeddown_comment %>
+        <%= raw highlight_search_terms(comment.markeddown_comment, search_terms) %>
       <% end %>
     </div>
   </div>

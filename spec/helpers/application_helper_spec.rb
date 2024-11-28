@@ -71,4 +71,37 @@ describe ApplicationHelper do
         .to eq([1, "...", 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25])
     end
   end
+
+  describe "#highlight_search_terms" do
+    it "returns original text when search terms are blank" do
+      text = "This is a test comment"
+      expect(helper.highlight_search_terms(text, nil)).to eq(text)
+      expect(helper.highlight_search_terms(text, "")).to eq(text)
+      expect(helper.highlight_search_terms(text, " ")).to eq(text)
+    end
+
+    it "highlights single word case-insensitively" do
+      text = "This is a Test comment with test and TEST variations"
+      result = helper.highlight_search_terms(text, "test")
+      expect(result).to eq("This is a <mark>Test</mark> comment with <mark>test</mark> and <mark>TEST</mark> variations")
+    end
+
+    it "highlights multiple words" do
+      text = "The quick brown fox jumps over the lazy dog"
+      result = helper.highlight_search_terms(text, "quick dog")
+      expect(result).to eq("The <mark>quick</mark> brown fox jumps over the lazy <mark>dog</mark>")
+    end
+
+    it "handles special regex characters in search terms" do
+      text = "Testing (parentheses) and [brackets]"
+      result = helper.highlight_search_terms(text, "(parentheses)")
+      expect(result).to eq("Testing <mark>(parentheses)</mark> and [brackets]")
+    end
+
+    it "works with HTML in the source text" do
+      text = "A comment with <a href='http://example.com'>a link</a> and text"
+      result = helper.highlight_search_terms(text, "link text")
+      expect(result).to eq("A comment with <a href='http://example.com'>a <mark>link</mark></a> and <mark>text</mark>")
+    end
+  end
 end

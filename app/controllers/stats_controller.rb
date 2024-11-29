@@ -93,12 +93,8 @@ class StatsController < ApplicationController
       }
       graph = TimeSeries.new(defaults.merge(opts))
 
-      data = yield.map do |date_string, count|
-        [Time.strptime(date_string, "%Y-%m").to_i, count.to_i]
-      end.flatten
-
       graph.add_data(
-        data: data,
+        data: yield.to_a.flatten,
         template: "%Y-%m"
       )
       graph.burn_svg_only

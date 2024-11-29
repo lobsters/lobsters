@@ -213,7 +213,7 @@ class Search
       # relevance is undefined without search terms so sort by score
       if terms.any?
         terms_sql = <<~SQL.tr("\n", " ")
-        MATCH(comment) AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' IN BOOLEAN MODE) 
+          MATCH(comment) AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' IN BOOLEAN MODE) 
         SQL
         query.order!(Arel.sql(terms_sql + " DESC"))
       else
@@ -325,9 +325,9 @@ class Search
       if terms.any?
         # Assigns different weights: title (10), description (3), body (1) for scoring relevance.
         terms_sql = <<~SQL.tr("\n", " ")
-        MATCH(story_texts.title) AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' IN BOOLEAN MODE) * 10 +
-        MATCH(story_texts.description) AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' IN BOOLEAN MODE) * 3 +
-        MATCH(story_texts.body) AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' IN BOOLEAN MODE) * 1
+          MATCH(story_texts.title) AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' IN BOOLEAN MODE) * 10 +
+          MATCH(story_texts.description) AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' IN BOOLEAN MODE) * 3 +
+          MATCH(story_texts.body) AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' IN BOOLEAN MODE) * 1
         SQL
         query.order!(Arel.sql(terms_sql + " desc"))
       else

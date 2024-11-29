@@ -88,12 +88,11 @@ class StatsController < ApplicationController
       }
       graph = TimeSeries.new(defaults.merge(opts))
 
-      data = yield.map do |row|
-        if row.is_a?(Hash)
-          [Time.strptime(row["ym"], "%Y-%m").to_i, row["count(distinct user_id)"].to_i]
-        else
-          [Time.strptime(row[0], "%Y-%m").to_i, row[1].to_i]
-        end
+      # Convert ActiveRecord::Result to Hash when using select_all
+      result = yield.respond_to?(:rows) ? yield.rows.to_h : yield
+
+      data = result.map do |date_string, count|
+        [Time.strptime(date_string, "%Y-%m").to_i, count.to_i]
       end.flatten
 
       graph.add_data(

@@ -18,18 +18,23 @@ class StatsController < ApplicationController
       graph_title: "Active users by month",
       scale_y_divisions: 500
     }) {
-      User.connection.select_all <<~SQL
-        SELECT ym, count(distinct user_id)
-        FROM (
-          SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM stories
-          UNION
-          SELECT date_format(updated_at, '%Y-%m') as ym, user_id FROM votes
-          UNION
-          SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM comments
-        ) as active_users
-        GROUP BY 1
-        ORDER BY 1 asc;
-      SQL
+      date_format = "%Y-%m"
+      User.connection.select_all(
+        ActiveRecord::Base.sanitize_sql_array([<<~SQL, date_format, date_format, date_format])
+          SELECT 
+            ym,
+            COUNT(distinct user_id) as count
+          FROM (
+            SELECT date_format(created_at, ?) as ym, user_id FROM stories
+            UNION
+            SELECT date_format(updated_at, ?) as ym, user_id FROM votes
+            UNION
+            SELECT date_format(created_at, ?) as ym, user_id FROM comments
+          ) as active_users
+          GROUP BY 1
+          ORDER BY 1 asc;
+        SQL
+      ).rows.to_h
     }
 
     @stories_graph = monthly_graph("stories_graph", {
@@ -88,10 +93,7 @@ class StatsController < ApplicationController
       }
       graph = TimeSeries.new(defaults.merge(opts))
 
-      # Convert ActiveRecord::Result to Hash when using select_all
-      result = yield.respond_to?(:rows) ? yield.rows.to_h : yield
-
-      data = result.map do |date_string, count|
+      data = yield.map do |date_string, count|
         [Time.strptime(date_string, "%Y-%m").to_i, count.to_i]
       end.flatten
 

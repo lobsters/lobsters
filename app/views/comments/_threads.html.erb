@@ -25,7 +25,7 @@
       force_open = true
       show_tree_lines = true
       # show "on: <title>" for comments from merged stories + on non-story pages
-      show_story ||= story.try(:id) != comment.story_id
+      show_story ||= (story.try(:id) != comment.story_id) && !story.is_hidden_by_user?(@user)
       # show merge icon only on story page when merged
       was_merged = story && (story.id != comment.story_id)
       is_unread = ribbon&.is_unread?(comment)

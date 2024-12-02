@@ -1456,7 +1456,8 @@ table.moderations tr > td:nth-child(1) {
 
 div.flash-error,
 div.flash-notice,
-div.flash-success {
+div.flash-success,
+div.user-stats {
 	position: relative;
 	padding: 7px 15px;
 	margin-bottom: 18px;
@@ -1474,13 +1475,9 @@ div.flash-success a {
 }
 div.flash-error .similar a,
 div.flash-notice .similar a,
-div.flash-success .similar a {
+div.flash-success .similar a,
+div.user-stats a {
 	font-weight: normal;
-}
-div.flash-error p,
-div.flash-notice p,
-div.flash-success p {
-	margin-bottom: 0;
 }
 div.flash-error div,
 div.flash-notice div,
@@ -1501,10 +1498,14 @@ div.flash-notice {
 	background-color: var(--color-flash-bg-notice);
 	text-shadow: 0 -1px 0 var(--color-shadow-25);
 }
+div.user-stats {
+	background-color: var(--color-box-bg-shaded);
+}
 
 div.flash-error h2,
 div.flash-notice h2,
-div.flash-success h2 {
+div.flash-success h2,
+div.user-stats h2 {
 	font-size: 1.25em;
 	margin: 0;
 }

@@ -56,7 +56,10 @@ class User < ApplicationRecord
     class_name: "Hat",
     inverse_of: :user
 
-  has_secure_password
+  # As of Rails 8.0, `has_secure_password` generates a `password_reset_token`
+  # method that shadows the explicit `password_reset_token` attribute.
+  # So we need to explictily disable that.
+  has_secure_password(reset_token: false)
 
   typed_store :settings do |s|
     s.string :prefers_color_scheme, default: "system"
@@ -396,7 +399,7 @@ class User < ApplicationRecord
       sent_messages.update_all(deleted_by_author: true)
       received_messages.update_all(deleted_by_recipient: true)
 
-      invitations.destroy_all
+      invitations.unused.update_all(used_at: Time.now.utc)
 
       roll_session_token
 

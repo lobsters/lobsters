@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_06_160424) do
+  create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.integer "status", default: 0, null: false
+    t.string "message_id", null: false
+    t.string "message_checksum", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message_id", "message_checksum"], name: "index_action_mailbox_inbound_emails_uniqueness", unique: true
+  end
+
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -21,7 +30,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  create_table "active_storage_blobs", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "active_storage_blobs", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "key", null: false
     t.string "filename", null: false
     t.string "content_type"
@@ -33,7 +42,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "active_storage_variant_records", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
@@ -44,6 +53,12 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["category"], name: "index_categories_on_category", unique: true
+  end
+
+  create_table "comment_stats", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.date "date", null: false
+    t.integer "average", null: false
+    t.index ["date"], name: "index_comment_stats_on_date", unique: true
   end
 
   create_table "comments", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -138,7 +153,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
     t.string "code"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.text "memo", size: :tiny
+    t.text "memo"
     t.datetime "used_at", precision: nil
     t.bigint "new_user_id", unsigned: true
     t.index ["new_user_id"], name: "invitations_new_user_id_fk"
@@ -181,7 +196,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
     t.bigint "recipient_user_id", null: false, unsigned: true
     t.boolean "has_been_read", default: false, null: false
     t.string "subject", limit: 100
-    t.text "body"
+    t.text "body", size: :medium
     t.string "short_id", limit: 30
     t.boolean "deleted_by_author", default: false, null: false
     t.boolean "deleted_by_recipient", default: false, null: false
@@ -228,7 +243,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
     t.index ["user_id"], name: "index_moderations_on_user_id"
   end
 
-  create_table "origins", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "origins", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "domain_id", null: false
     t.string "identifier", null: false
     t.integer "stories_count", default: 0, null: false
@@ -239,6 +254,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_17_011246) do
     t.datetime "updated_at", null: false
     t.index ["banned_by_user_id"], name: "index_origins_on_banned_by_user_id"
     t.index ["domain_id"], name: "index_origins_on_domain_id"
+    t.index ["identifier"], name: "index_origins_on_identifier", unique: true
   end
 
   create_table "read_ribbons", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

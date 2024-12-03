@@ -411,6 +411,22 @@ button:focus {
 	font-style: italic;
 }
 
+form.disowner-form {
+	display: inline;
+	button {
+		background: none;
+		border: none;
+		padding: 0;
+		color: var(--color-fg-contrast-4-5);
+		text-decoration: none;
+		cursor: pointer;
+		outline: none;
+		&:not(.disable):hover {
+			color: var(--color-fg-contrast-4-5);
+		}
+	}
+}
+
 button,
 input[type="button"],
 input[type="reset"],
@@ -930,9 +946,11 @@ li .byline a.story_has_suggestions {
 	margin: 1em 0 1em 32px; /* matching div.detail */
 }
 
-li.story.hidden {
+li.story.hidden *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
+li.story.hidden .score {
 	opacity: 0.25;
 }
+
 ol.show_hidden li.story.hidden {
 	opacity: 1.0 !important;
 }

@@ -10,7 +10,7 @@ require "active_record/railtie"
 require "active_storage/engine"
 require "action_controller/railtie"
 require "action_mailer/railtie"
-# require "action_mailbox/engine"
+require "action_mailbox/engine"
 # require "action_text/engine"
 require "action_view/railtie"
 # require "action_cable/engine"
@@ -23,7 +23,7 @@ Bundler.require(*Rails.groups)
 module Lobsters
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
+    config.load_defaults 8.0
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
@@ -42,8 +42,8 @@ module Lobsters
     config.eager_load_namespaces << I18n
 
     config.autoload_paths.push(
-      "#{root}/app/types",
-      "#{root}/extras"
+      "#{root}/extras",
+      "#{root}/lib"
     )
 
     # Raise an exception when using mass assignment with unpermitted attributes
@@ -61,7 +61,6 @@ module Lobsters
     config.skip_yarn = true
 
     config.after_initialize do
-      require Rails.root.join("lib/monkey.rb").to_s
       require Rails.root.join("lib/time_series.rb").to_s
     end
 
@@ -127,5 +126,10 @@ class << Rails.application
   # config.force_ssl be on)
   def ssl?
     true
+  end
+
+  # username of the admin account used to ban domains automatically (e.g., URL shorteners)
+  def banned_domains_admin
+    ENV["BANNED_DOMAINS_ADMIN"] || "pushcx"
   end
 end

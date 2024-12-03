@@ -167,6 +167,22 @@ class ModNote < ApplicationRecord
       note: "Attempted to post a story from a #{reason} origin:\n" \
         "- user joined: #{time_ago_in_words(story.user.created_at)}\n" \
         "- url: #{story.url}\n" \
+        "- origin: #{story.origin.identifier}\n" \
+        "- title: #{story.title}\n" \
+        "- user_is_author: #{story.user_is_author}\n" \
+        "- tags: #{story.tags_a.join(" ")}\n" \
+        "- description: #{story.description}\n"
+    )
+  end
+
+  def self.tattle_on_traffic_attribution!(story)
+    create_without_dupe!(
+      moderator: InactiveUser.inactive_user,
+      user: story.user,
+      created_at: Time.current,
+      note: "Attempted to submit a URL attributing traffic:\n" \
+        "- user joined: #{time_ago_in_words(story.user.created_at)}\n" \
+        "- url: #{story.url}\n" \
         "- title: #{story.title}\n" \
         "- user_is_author: #{story.user_is_author}\n" \
         "- tags: #{story.tags_a.join(" ")}\n" \

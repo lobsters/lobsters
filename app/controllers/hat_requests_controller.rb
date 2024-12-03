@@ -2,7 +2,7 @@
 
 class HatRequestsController < ApplicationController
   before_action :require_logged_in_user
-  before_action :require_logged_in_moderator, only: [:update, :destroy]
+  before_action :require_logged_in_moderator, only: [:approve, :reject]
   before_action :show_title_h1
 
   def new
@@ -31,7 +31,7 @@ class HatRequestsController < ApplicationController
     @hat_requests = HatRequest.all.includes(:user)
   end
 
-  def update
+  def approve
     @hat_request = HatRequest.find(params[:id])
     @hat_request.update!(params.require(:hat_request)
       .permit(:hat, :link, :reason).except(:reason))
@@ -42,7 +42,7 @@ class HatRequestsController < ApplicationController
     redirect_to hat_requests_path
   end
 
-  def destroy
+  def reject
     @hat_request = HatRequest.find(params[:id])
     @hat_request.reject_by_user_for_reason!(@user, params[:hat_request][:reason])
 

@@ -17,7 +17,8 @@ class Message < ApplicationRecord
   attr_reader :recipient_username
 
   validates :subject, length: {in: 1..100}
-  validates :body, length: {maximum: 65_535}
+  validates :body, length: {maximum: 70_000}, on: :update # for weird old data
+  validates :body, length: {maximum: 8_192}, on: :create # for weird old data
   validates :short_id, length: {maximum: 30}
   validates :has_been_read, :deleted_by_author, :deleted_by_recipient, inclusion: {in: [true, false]}
   validate :hat do

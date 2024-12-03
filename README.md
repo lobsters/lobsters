@@ -55,6 +55,11 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
     OSX: brew install nodejs
     ```
 
+* Run `rails credentials:edit` to create and edit your encrypted credentials file.
+  This is where you store API keys for external services and features like linking accounts.
+  Copy and paste the contents of `config/credentials.yml.enc.sample` in.
+  On setup, Rails will give you new random value for `secret_key_base` and you can use `rails secret` any time you need to generate another.
+
 * Run `bin/setup` to install dependencies and set up db
 
     ```sh
@@ -88,12 +93,15 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
     */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/mastodon_sync.rb; bundle exec ruby script/traffic_range'
     ```
 
-* See `config/initializers/production.rb.sample` for GitHub/Mastodon integration help.
+* On production, run `rails credentials:edit` to set up the credentials there,
+  like you did for development.
+  On setup, Rails will give you new random value for `secret_key_base` and you can use `rails secret` any time you need to generate another.
+  Never `git commit` or share your `config/credentials.yml.enc`!
 
 * You probably want to use [git-imerge](https://lobste.rs/s/dbm2d4) to pull in
   changes from Lobsters to your site.
 
 #### Administration
 
-Basic moderation happens on-site, but most other administrative tasks require use of the rails console in production.
+Basic moderation happens on-site, but many administrative tasks require use of the rails console in production.
 Administrators can create and edit tags at `/tags`.

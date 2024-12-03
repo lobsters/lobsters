@@ -2,12 +2,9 @@
 
 ENV["RAILS_ENV"] ||= "production"
 
-APP_PATH = File.expand_path("../../config/application", __FILE__)
-require File.expand_path("../../config/boot", __FILE__)
-require APP_PATH
-Rails.application.require_environment!
+require File.expand_path("../../config/environment", __FILE__)
 
-exit unless Mastodon.enabled? && Mastodon.BOT_NAME
+exit unless Mastodon.enabled? && Rails.application.credentials.mastodon.bot_name
 
 Story.to_mastodon.each_with_index do |s, i|
   if i > 0

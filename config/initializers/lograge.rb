@@ -19,13 +19,7 @@ Rails.application.configure do
       params: filter.filter(event.payload[:request].query_parameters.merge(event.payload[:request].request_parameters)),
       exception: event.payload[:exception]&.first,
       exception_message: event.payload[:exception]&.last,
-      remote_ip: event.payload[:request].remote_ip,
-      perf: {
-        allocations: event.payload[:allocations],
-        duration: event.payload[:duration],
-        view: event.payload[:view_runtime],
-        db: event.payload[:db_runtime]
-      }
+      remote_ip: event.payload[:request].remote_ip
     }.tap do |options|
       event.payload.except!(:allocations, :duration, :view_runtime, :db_runtime)
     end

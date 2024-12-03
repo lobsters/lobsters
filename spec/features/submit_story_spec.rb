@@ -190,4 +190,18 @@ RSpec.feature "Submitting Stories", type: :feature do
       expect(page).to have_content "banned"
     }.not_to(change { Story.count })
   end
+
+  scenario "attributing lobsters traffic" do
+    inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
+
+    visit "/stories/new"
+    fill_in "URL", with: "https://example.com/?lobsters"
+    fill_in "Title", with: "Totally Not Marketing"
+    select :tag1, from: "Tags"
+    click_button "Submit"
+
+    # submitted but attribution stripped
+    expect(Story.last.url).to_not include("lobsters")
+    expect(ModNote.last.user).to eq(user)
+  end
 end

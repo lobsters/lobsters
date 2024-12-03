@@ -26,7 +26,7 @@ RSpec.feature "Stories" do
 
     scenario "shows disown in story page" do
       visit "/s/#{story.short_id}"
-      expect(page).to have_link("disown")
+      expect(page).to have_button("disown")
     end
 
     scenario "trying to disown non-deletable story" do

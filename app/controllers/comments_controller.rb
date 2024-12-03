@@ -58,15 +58,6 @@ class CommentsController < ApplicationController
     end
   end
 
-  def render_created_comment(comment)
-    if request.xhr?
-      render partial: "comments/postedreply", layout: false,
-        content_type: "text/html", locals: {comment: comment}
-    else
-      redirect_to comment.path
-    end
-  end
-
   def show
     if !(comment = find_comment)
       return render plain: "can't find comment", status: 404
@@ -178,10 +169,16 @@ class CommentsController < ApplicationController
     end
 
     InactiveUser.disown! comment
-    comment = find_comment
 
-    render partial: "comment", layout: false,
-      content_type: "text/html", locals: {comment: comment}
+    if request.xhr?
+      comment = find_comment
+      show_story = ActiveModel::Type::Boolean.new.cast(params[:show_story])
+      show_tree_lines = ActiveModel::Type::Boolean.new.cast(params[:show_tree_lines])
+
+      render partial: "comment", locals: {comment: comment, show_story: show_story, show_tree_lines: show_tree_lines}
+    else
+      redirect_back fallback_location: root_path
+    end
   end
 
   def update
@@ -378,6 +375,20 @@ class CommentsController < ApplicationController
 
   private
 
+  def find_comment
+    comment = Comment.where(short_id: params[:id]).first
+    # convenience to use PK (from external queries) without generally permitting enumeration:
+    comment ||= Comment.find(params[:id]) if @user&.is_admin?
+
+    if @user && comment
+      comment.current_vote = Vote.where(user_id: @user.id,
+        story_id: comment.story_id, comment_id: comment.id).first
+      comment.vote_summary = Vote.comment_vote_summaries([comment.id])[comment.id]
+    end
+
+    comment
+  end
+
   def preview(comment)
     comment.previewing = true
     comment.is_deleted = false # show normal preview for deleted comments
@@ -392,17 +403,12 @@ class CommentsController < ApplicationController
       }
   end
 
-  def find_comment
-    comment = Comment.where(short_id: params[:id]).first
-    # convenience to use PK (from external queries) without generally permitting enumeration:
-    comment ||= Comment.find(params[:id]) if @user&.is_admin?
-
-    if @user && comment
-      comment.current_vote = Vote.where(user_id: @user.id,
-        story_id: comment.story_id, comment_id: comment.id).first
-      comment.vote_summary = Vote.comment_vote_summaries([comment.id])[comment.id]
+  def render_created_comment(comment)
+    if request.xhr?
+      render partial: "comments/postedreply", layout: false,
+        content_type: "text/html", locals: {comment: comment}
+    else
+      redirect_to comment.path
     end
-
-    comment
   end
 end

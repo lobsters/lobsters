@@ -175,6 +175,7 @@ class Story < ApplicationRecord
     if url.present?
       already_posted_recently?
       check_not_banned_domain
+      check_not_banned_origin
       check_not_new_domain_from_new_user
       # This would probably have a too-high false-positive rate, I want to have approvals first.
       # check_not_new_origin_from_new_user
@@ -253,6 +254,15 @@ class Story < ApplicationRecord
     if domain.banned?
       ModNote.tattle_on_story_domain!(self, "banned")
       errors.add(:url, "is from banned domain #{domain.domain}: #{domain.banned_reason}")
+    end
+  end
+
+  def check_not_banned_origin
+    return unless url.present? && new_record? && origin
+
+    if origin.banned?
+      ModNote.tattle_on_story_origin!(self, "banned")
+      errors.add(:url, "is from banned origin #{origin.identifier}: #{origin.banned_reason}")
     end
   end
 
@@ -933,7 +943,7 @@ class Story < ApplicationRecord
     domain_name&.sub!(/\Awww\d*\.(.+?\..+)/, '\1') # remove www\d* from domain if the url is not like www10.org
     if domain_name.present?
       self.domain = Domain.where(domain: domain_name).first_or_initialize
-      self.origin = domain&.origin(url)
+      self.origin = domain&.find_or_create_origin(url)
     else
       self.domain = nil
       self.origin = nil
@@ -949,7 +959,13 @@ class Story < ApplicationRecord
       params = match[2].split(/[&\?]/)
       # utm_ is google and many others; sk is medium; si is youtube source id
       params.reject! { |p|
-        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=|^linkId=|^si=/x)
+        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=|^linkId=|^si=|^trk=/x)
+      }
+      params.reject! { |p|
+        if /^lobsters|^src=lobsters|^ref=lobsters/x.match?(p)
+          ModNote.tattle_on_traffic_attribution!(self)
+          true
+        end
       }
       u = match[1] << (params.any? ? "?#{params.join("&")}" : "")
     end
@@ -993,7 +1009,7 @@ class Story < ApplicationRecord
   def vote_summary_for(user)
     r_counts = {}
     r_whos = {}
-    votes.includes((user && user.is_moderator?) ? :user : nil).find_each do |v|
+    votes.includes(user&.is_moderator? ? :user : nil).find_each do |v|
       next if v.vote == 0
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += 1

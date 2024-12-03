@@ -235,8 +235,8 @@ Rails.application.routes.draw do
 
   resources :hat_requests, except: [:edit] do
     member do
-      post :update, as: :update
-      delete :delete, as: :destroy
+      post :approve
+      post :reject
     end
   end
   resources :hats, except: [:new, :update, :destroy] do

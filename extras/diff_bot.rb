@@ -1,15 +1,12 @@
 # typed: false
 
 class DiffBot
-  cattr_accessor :DIFFBOT_API_KEY
-
-  # this needs to be overridden in config/initializers/production.rb
-  @@DIFFBOT_API_KEY = nil
+  # see README.md on setting up credentials
 
   DIFFBOT_API_URL = "http://www.diffbot.com/api/article".freeze
 
   def self.get_story_text(story)
-    if !@@DIFFBOT_API_KEY
+    if !Rails.application.credentials.diffbot.api_key
       return
     end
 
@@ -20,7 +17,7 @@ class DiffBot
       return nil
     end
 
-    db_url = "#{DIFFBOT_API_URL}?token=#{@@DIFFBOT_API_KEY}&url=#{CGI.escape(story.url)}"
+    db_url = "#{DIFFBOT_API_URL}?token=#{Rails.application.credentials.diffbot.api_key}&url=#{CGI.escape(story.url)}"
 
     begin
       s = Sponge.new

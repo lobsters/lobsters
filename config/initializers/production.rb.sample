@@ -8,6 +8,9 @@
 # to using that at some point.
 
 if Rails.env.production?
+  # load extras/ so we can set API keys
+  Dir[Rails.root.join("extras", "*.rb").to_s].each {|f| require f }
+
   Lobsters::Application.config.middleware.use ExceptionNotification::Rack,
     :ignore_exceptions => [
       "ActionController::UnknownFormat",
@@ -21,30 +24,10 @@ if Rails.env.production?
       :exception_recipients => %w{},                 # fill in destination addresses
     }
 
-  Pushover.API_TOKEN = "secret"
-  Pushover.SUBSCRIPTION_CODE = "secret"
-
-  DiffBot.DIFFBOT_API_KEY = "secret"
-
-  Github.CLIENT_ID = "secret"
-  Github.CLIENT_SECRET = "secret"
-
-  # mastodon bot posting setup (this is independent of account linking)
-  # 1. visit instance to register your desired username
-  # 2. enter instance name and username in your production.rb
-  Mastodon.INSTANCE_NAME = "botsin.space" # you can use any, but this is very common
-  Mastodon.BOT_NAME = "lobsters"
-  # 3. run Mastodon.get_bot_credentials! in the prod rails console for these three values
-  Mastodon.CLIENT_ID = nil
-  Mastodon.CLIENT_SECRET = nil
-  Mastodon.TOKEN = nil
-  # 4. create a list in the web ui, see the ID in the URL when you edit
-  Mastodon.LIST_ID = nil
+  # This config file used to have placeholders for API keys. We now use the
+  # rails credentials feature to store API keys, see README.md.
 
   BCrypt::Engine.cost = 12
-
-  Keybase.DOMAIN = Rails.application.domain
-  Keybase.BASE_URL = ENV.fetch('KEYBASE_BASE_URL') { 'https://keybase.io' }
 
   ActionMailer::Base.delivery_method = :sendmail
 

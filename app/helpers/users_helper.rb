@@ -41,8 +41,7 @@ module UsersHelper
     if content.is_a?(Story) && content.user_is_author?
       html_options[:class].push "user_is_author"
     end
-    if content.is_a?(Comment) && content.story &&
-        content.story.user_is_author? && content.story.user_id == user.id
+    if content.is_a?(Comment) && content.story&.user_is_author? && content.story.user_id == user.id
       html_options[:class].push "user_is_author"
     end
 

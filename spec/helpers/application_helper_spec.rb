@@ -71,4 +71,23 @@ describe ApplicationHelper do
         .to eq([1, "...", 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25])
     end
   end
+  describe "#highlight_terms" do
+    it "highlights a single term in the text" do
+      text = "word1 word2 word3 word4"
+      terms = "word2"
+      expect(helper.highlight_terms(text, terms)).to eq('word1 <mark>word2</mark>')
+    end
+
+    it "highlights multiple terms in the text" do
+      text = "word1 word2 word3 word4"
+      terms = "word1 word3"
+      expect(helper.highlight_terms(text, terms)).to eq('<mark>word1</mark> word2 <mark>word3</mark> word4')
+    end
+
+    it "does not highlight if terms are not present" do
+      text = "word1 word2 word3 word4"
+      terms = "word5"
+      expect(helper.highlight_terms(text, terms)).to eq("word1 word2 word3 word4")
+    end
+end
 end

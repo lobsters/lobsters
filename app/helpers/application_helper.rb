@@ -151,4 +151,15 @@ module ApplicationHelper
     ago = time_ago_in_words(time)
     content_tag(:span, ago, title: time.strftime("%F %T %z"))
   end
+
+  def highlight_terms(text, terms)
+
+    terms = terms.split(" ")
+    terms.each do |term|
+      # Replace occurrences of terms with a highlighted version (using <mark> for HTML)
+      text = text.gsub(/(#{Regexp.escape(term)})/i, '<mark>\1</mark>')
+    end
+    text.html_safe  # Ensures the HTML is rendered safely
+  end
+
 end

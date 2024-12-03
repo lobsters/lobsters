@@ -172,8 +172,8 @@
     <div class="user-stats flash-notice">
       <p>
         Comments posted in the last 6 months: <%= @showing_user.comments.recent.count %><br>
-        &nbsp;&nbsp;...posted on others' stories: <%= @showing_user.comments.recent.on_others_stories.count %><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;...received above average score: <%= @showing_user.comments.recent.on_others_stories.above_average.count %>
+        &nbsp;&nbsp;...posted on others' stories: <%= @showing_user.comments.recent.on_others_stories(@showing_user).count %><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;...received above average score: <%= @showing_user.comments.recent.on_others_stories(@showing_user).above_average.count %>
       </p>
 
       <p>(This section is only visible to moderators and you. It helps us evaluate whether users are participating or exploiting the site for <a href="/about#self-promo">self-promo</a>.)</p>

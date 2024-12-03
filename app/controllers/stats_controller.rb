@@ -11,14 +11,14 @@ class StatsController < ApplicationController
       graph_title: "Users joining by month",
       scale_y_divisions: 100
     }) {
-      User.group("date_format(created_at, '%Y-%m')").count
+      User.group("date_format(created_at, '%Y-%m')").count.to_a.flatten
     }
 
     @active_users_graph = monthly_graph("active_users_graph", {
       graph_title: "Active users by month",
       scale_y_divisions: 500
     }) {
-      User.connection.select_all <<~SQL
+      User.connection.select_all(<<~SQL
         SELECT ym, count(distinct user_id)
         FROM (
           SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM stories
@@ -30,27 +30,28 @@ class StatsController < ApplicationController
         GROUP BY 1
         ORDER BY 1 asc;
       SQL
+                                ).to_a.map(&:values).flatten
     }
 
     @stories_graph = monthly_graph("stories_graph", {
       graph_title: "Stories submitted by month",
       scale_y_divisions: 250
     }) {
-      Story.group("date_format(created_at, '%Y-%m')").count
+      Story.group("date_format(created_at, '%Y-%m')").count.to_a.flatten
     }
 
     @comments_graph = monthly_graph("comments_graph", {
       graph_title: "Comments posted by month",
       scale_y_divisions: 1_000
     }) {
-      Comment.group("date_format(created_at, '%Y-%m')").count
+      Comment.group("date_format(created_at, '%Y-%m')").count.to_a.flatten
     }
 
     @votes_graph = monthly_graph("votes_graph", {
       graph_title: "Votes cast by month",
       scale_y_divisions: 10_000
     }) {
-      Vote.group("date_format(updated_at, '%Y-%m')").count
+      Vote.group("date_format(updated_at, '%Y-%m')").count.to_a.flatten
     }
   end
 
@@ -88,7 +89,7 @@ class StatsController < ApplicationController
       }
       graph = TimeSeries.new(defaults.merge(opts))
       graph.add_data(
-        data: yield.to_a.flatten,
+        data: yield,
         template: "%Y-%m"
       )
       graph.burn_svg_only

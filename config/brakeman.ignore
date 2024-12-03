@@ -197,6 +197,40 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
+      "fingerprint": "5b9474e39c006237ea020a2b3dcb840220a050f9e479457a79850f2ca8cf0023",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/stats/index.html.erb",
+      "line": 16,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "User.connection.select_all(\"SELECT ym, count(distinct user_id)\\nFROM (\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM stories\\n  UNION\\n  SELECT date_format(updated_at, '%Y-%m') as ym, user_id FROM votes\\n  UNION\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM comments\\n) as active_users\\nGROUP BY 1\\nORDER BY 1 asc;\\n\").to_a.map(&:values).flatten",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "StatsController",
+          "method": "index",
+          "line": 51,
+          "file": "app/controllers/stats_controller.rb",
+          "rendered": {
+            "name": "stats/index",
+            "file": "app/views/stats/index.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "stats/index"
+      },
+      "user_input": "User.connection.select_all(\"SELECT ym, count(distinct user_id)\\nFROM (\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM stories\\n  UNION\\n  SELECT date_format(updated_at, '%Y-%m') as ym, user_id FROM votes\\n  UNION\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM comments\\n) as active_users\\nGROUP BY 1\\nORDER BY 1 asc;\\n\")",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": "no variables so there's no user input, and the data is piped through the SVG charting library"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
       "fingerprint": "6042237b560b898fc4f87d6f95bb5cfc5c3c5e09f1a264a9afdd5ab8f087d2a9",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
@@ -327,7 +361,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/comment.rb",
-      "line": 399,
+      "line": 402,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Comment.connection.execute(\"UPDATE comments SET\\n  score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),\\n  flags = (select count(*) from votes where comment_id = comments.id and vote = -1),\\n  confidence = #{calculated_confidence},\\n  confidence_order = concat(lpad(char(65535 - floor(#{calculated_confidence} * 65535) using binary), 2, '\\x00'), char(id & 0xff using binary))\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -525,40 +559,6 @@
       "note": "Search.strip_operators is a security control"
     },
     {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "df45a603829a79f629a7106035fb9cf0506003a12b6a77c594ed8ade7687a267",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/stats/index.html.erb",
-      "line": 16,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "User.connection.select_all(\"SELECT ym, count(distinct user_id)\\nFROM (\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM stories\\n  UNION\\n  SELECT date_format(updated_at, '%Y-%m') as ym, user_id FROM votes\\n  UNION\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM comments\\n) as active_users\\nGROUP BY 1\\nORDER BY 1 asc;\\n\")",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StatsController",
-          "method": "index",
-          "line": 50,
-          "file": "app/controllers/stats_controller.rb",
-          "rendered": {
-            "name": "stats/index",
-            "file": "app/views/stats/index.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stats/index"
-      },
-      "user_input": "User.connection.select_all(\"SELECT ym, count(distinct user_id)\\nFROM (\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM stories\\n  UNION\\n  SELECT date_format(updated_at, '%Y-%m') as ym, user_id FROM votes\\n  UNION\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM comments\\n) as active_users\\nGROUP BY 1\\nORDER BY 1 asc;\\n\")",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": "query output goes into svg production, which sanitizes (though there is no user input used here)"
-    },
-    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "ed6edc863b3d05ed041487a6c42052e07ffefa7daa03efd786b4d1409d64fc16",
@@ -628,6 +628,6 @@
       "note": "type comes from @what.keys, which are symbols for table names"
     }
   ],
-  "updated": "2024-11-21 11:50:19 -0600",
+  "updated": "2024-12-03 17:25:37 -0600",
   "brakeman_version": "6.2.2"
 }

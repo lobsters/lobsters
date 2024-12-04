@@ -31,6 +31,10 @@ class Domain < ApplicationRecord
     errors.add(:selector, "is an invalid Regexp: #{e.message}")
   end
 
+  def self./(domain)
+    find_by! domain:
+  end
+
   def selector=(s)
     s = s.strip
     s = "\\A#{s}" unless s.starts_with?("\\A")

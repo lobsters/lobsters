@@ -16,6 +16,10 @@ class Origin < ApplicationRecord
   # weird that this isn't automatic for new records
   after_create { Origin.reset_counters(id, :stories) }
 
+  def self./(identifier)
+    find_by! identifier:
+  end
+
   def identifier= s
     super(s.downcase)
 

@@ -187,6 +187,10 @@ class User < ApplicationRecord
     errors.add(:username, "is already in use (perhaps swapping _ and -)") if collisions.any?
   end
 
+  def self./(username)
+    find_by! username:
+  end
+
   def self.username_regex_s
     "/^" + VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, "") + "$/"
   end

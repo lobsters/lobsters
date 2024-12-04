@@ -128,6 +128,10 @@ class Comment < ApplicationRecord
       errors.add(:base, "Story is no longer accepting comments."))
   end
 
+  def self./(short_id)
+    find_by! short_id:
+  end
+
   def self.regenerate_markdown
     Comment.record_timestamps = false
 

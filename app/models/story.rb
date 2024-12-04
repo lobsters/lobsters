@@ -200,6 +200,10 @@ class Story < ApplicationRecord
     check_tags
   end
 
+  def self./(short_id)
+    find_by! short_id:
+  end
+
   def accepting_comments?
     !is_gone? &&
       !previewing &&

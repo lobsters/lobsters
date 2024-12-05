@@ -168,7 +168,7 @@
     </div>
   <% end %>
 
-  <% if true || @user == @showing_user || @user&.is_moderator? %>
+  <% if Rails.env.development? || @user == @showing_user || @user&.is_moderator? %>
     <div class="user-stats flash-notice">
       <p>
         Comments posted in the last 6 months: <%= @showing_user.comments.recent.count %><br>

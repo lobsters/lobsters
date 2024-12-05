@@ -253,7 +253,7 @@
             <% if @showing_user.is_banned? %>
               <div class="boxline">
                 <%= f.label :reason, "Reason:", :class => "required" %>
-                <%= f.text_field :reason, :size => 40 %>
+                <%= f.text_field :reason, :size => 80 %>
               </div>
               <%= f.submit "Unban" %>
             <% end %>
@@ -272,7 +272,7 @@
         <%= form_with url: user_ban_path, method: :post do |f| %>
           <div class="boxline">
             <%= f.label :reason, "Reason:", :class => "required" %>
-            <%= f.text_field :reason, :size => 40 %>
+            <%= f.text_field :reason, :size => 80 %>
           </div>
           <p>
             <% if !@showing_user.is_banned? %>
@@ -284,6 +284,8 @@
           </p>
         <% end %>
       <% end %>
+
+      <%= link_to 'Reparent', new_mod_reparent_path({}, id: @showing_user) %>
     <% end %>
   <% end %>
 </div>

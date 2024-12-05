@@ -50,7 +50,8 @@ class UsersController < ApplicationController
       @title = "Moderators and Administrators"
       render action: "list"
     else
-      content = Rails.cache.fetch("users_tree_#{newest_user}", expires_in: (60 * 60 * 24)) {
+      # Mod::ReparentsController#create knows this key
+      content = Rails.cache.fetch("users_tree_#{newest_user}", expires_in: 12.hours) {
         users = User.select(*attrs).order("id DESC").to_a
         @user_count = users.length
         @users_by_parent = users.group_by(&:invited_by_user_id)

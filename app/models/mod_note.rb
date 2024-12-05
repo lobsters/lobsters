@@ -53,6 +53,28 @@ class ModNote < ApplicationRecord
     )
   end
 
+  def self.record_reparent!(reparent_user, mod, reason)
+    old_inviter_url = Rails.application.routes.url_helpers.user_url(
+      reparent_user.invited_by_user,
+      host: Rails.application.domain
+    )
+    create_without_dupe!(
+      moderator: mod,
+      user: reparent_user,
+      note: "Reparented from [#{reparent_user.invited_by_user.username}](#{old_inviter_url}) to #{mod.username} with reason: #{reason}"
+    )
+
+    reparent_user_url = Rails.application.routes.url_helpers.user_url(
+      reparent_user,
+      host: Rails.application.domain
+    )
+    create_without_dupe!(
+      moderator: mod,
+      user: reparent_user.invited_by_user,
+      note: "Admin reparented their invitee [#{reparent_user.username}](#{reparent_user_url}) to #{mod.username} with reason: #{reason}"
+    )
+  end
+
   def self.tattle_on_banned_login(user)
     # rubocop:disable Rails/SaveBang
     create(

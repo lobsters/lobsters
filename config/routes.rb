@@ -259,6 +259,10 @@ Rails.application.routes.draw do
   get "/mod/notes(/:period)" => "mod_notes#index", :as => "mod_notes"
   post "/mod/notes" => "mod_notes#create"
 
+  namespace :mod do
+    resources :reparents, only: [:new, :create]
+  end
+
   get "/privacy" => "about#privacy"
   get "/about" => "about#about"
   get "/chat" => "about#chat"

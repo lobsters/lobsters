@@ -1,0 +1,20 @@
+<h1>Reparent <%= @reparent_user.username %></h1>
+
+<%= form_with url: mod_reparents_path({}, id: @reparent_user), method: :post do |f| %>
+  <p>
+  This will reparent <%= @reparent_user.username %> to you in the invite tree, create a mod note on the user with their old inviter, and put an entry in the moderation log with the given reason.
+  </p>
+
+  <p>
+  This should be used rarely because it makes it harder to investigate sockpuppets and voting rings.
+  Currently the only known purpose is if this user was abused off-site by their inviter and we can't really do anything about it here except try to disassociate them.
+  Write a good reason here, it's going to get attention by virtue of being rare.
+  </p>
+
+  <div class="boxline">
+    <%= f.label :reason, "Reason:", :class => "required" %>
+    <%= f.text_field :reason, :size => 80 %>
+  </div>
+  <%= f.submit "Reparent" %>
+<% end %>
+

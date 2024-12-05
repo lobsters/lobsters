@@ -49,7 +49,7 @@ class Comment < ApplicationRecord
       .joins("left outer join comment_stats on date(comments.created_at) = comment_stats.date")
       .where("comments.score > coalesce(comment_stats.`average`, 3)")
   }
-  scope :on_others_stories, ->(user) {
+  scope :on_stories_not_authored_by, ->(user) {
     joins(:story)
       .merge(Story.where.not(user: user, user_is_author: true)) # TODO: authorship/beneficial idea
   }

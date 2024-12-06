@@ -1,4 +1,4 @@
-<%# locals: (thread:, story: nil, ribbon: nil) -%>
+<%# locals: (thread:, story: nil, ribbon: nil,search_terms: nil) -%>
 <% previous_depth = nil %>
 <% top_comment_depth = nil %>
 <% thread.each do |comment| %>
@@ -33,7 +33,7 @@
 
 <%#heinous_inline_partial(comments/_comment.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
-<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false) -%>
+<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false, search_terms: nil) -%>
 <%
   # partial inputs:
   # force_open: this comment is allowed to collapse
@@ -41,7 +41,9 @@
   # show_story: show "on: story title" end of byline
   # was_merged: show merged icon start of byline
   # is_unread: show (unread) in byline
+  # search_terms : terms
 %>
+
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
   <%= force_open ||
@@ -49,12 +51,14 @@
       (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
 <div id="c_<%= comment.short_id %>"
+  
   data-shortid="<%= comment.short_id if comment.persisted? %>"
   class="comment
     <%= comment.current_upvoted? ? "upvoted" : "" %>
     <%= comment.current_flagged? ? "flagged" : "" %>
     <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
   ">
+ 
 
   <% if show_tree_lines %>
     <label for="comment_folder_<%= comment.short_id %>"
@@ -140,10 +144,7 @@
           <% end %>
         <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
           |
-          <%= button_to("disown", disown_comment_path(comment.short_id),
-          form_class: "disowner-form",
-          params: { type: 'comment', show_story: show_story, show_tree_lines: show_tree_lines })
-          %>
+          <a class="comment-disowner" href="#">disown</a>
         <% end %>
 
         <% if can_flag && !comment.current_flagged? %>
@@ -189,10 +190,16 @@
         </span>
         </p>
         <% if @user && @user.is_moderator? %>
-          <%= raw comment.markeddown_comment %>
+              <%= raw comment.markeddown_comment %>
         <% end %>
       <% else %>
-        <%= raw comment.markeddown_comment %>
+      <p >
+        <% if search_terms.present? %>
+          <%= highlight_terms(comment.markeddown_comment, search_terms) %>
+        <% else %>
+          <%= raw comment.markeddown_comment %>
+        <% end %>
+      </p>
       <% end %>
     </div>
   </div>

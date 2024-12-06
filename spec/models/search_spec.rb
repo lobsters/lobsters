@@ -329,4 +329,22 @@ describe Search do
       expect(s.strip_short_terms("c++")).to eq("c++")
     end
   end
+
+  describe "comment search highlighting" do
+    let(:helper) { ApplicationController.helpers }
+
+    it "highlights search terms in comment results" do
+      # Using existing comment4 which contains "comment4 comment"
+      search_params = {q: "comment4", what: "comments"}
+      search = Search.new(search_params, @alice)
+      result = search.results.first
+
+      highlighted = helper.highlight_search_terms(
+        result.markeddown_comment,
+        search.strip_operators(search_params[:q])
+      )
+
+      expect(highlighted).to include("<mark>comment4</mark>")
+    end
+  end
 end

@@ -1,4 +1,4 @@
-<%# locals: (thread:, story: nil, ribbon: nil) -%>
+<%# locals: (thread:, story: nil, ribbon: nil, search_terms: nil) -%>
 <% previous_depth = nil %>
 <% top_comment_depth = nil %>
 <% thread.each do |comment| %>
@@ -33,7 +33,7 @@
 
 <%#heinous_inline_partial(comments/_comment.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
-<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false) -%>
+<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false, search_terms: nil) -%>
 <%
   # partial inputs:
   # force_open: this comment is allowed to collapse
@@ -189,10 +189,10 @@
         </span>
         </p>
         <% if @user && @user.is_moderator? %>
-          <%= raw comment.markeddown_comment %>
+          <%= raw highlight_search_terms(comment.markeddown_comment, search_terms) %>
         <% end %>
       <% else %>
-        <%= raw comment.markeddown_comment %>
+        <%= raw highlight_search_terms(comment.markeddown_comment, search_terms) %>
       <% end %>
     </div>
   </div>

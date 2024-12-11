@@ -17,7 +17,7 @@ class Mastodon
       :post,
       {limit: 80},
       nil,
-      {"Authorization" => "Bearer #{self.TOKEN}"}
+      {"Authorization" => "Bearer #{self.Rails.application.credentials.mastodon.token}"}
     )
     raise "failed to accept follow request #{id}" if response.nil?
   end
@@ -29,9 +29,22 @@ class Mastodon
       :post,
       nil,
       accts.map { |i| "account_ids[]=#{i}" }.join("&"),
-      {"Authorization" => "Bearer #{self.TOKEN}"}
+      {"Authorization" => "Bearer #{self.Rails.application.credentials.mastodon.token}"}
     )
     raise "failed to add to list" if response.nil? || puts(response.body) || JSON.parse(response.body) != {}
+  end
+
+  def self.delete_post(story)
+    return nil if story.mastodon_id.nil? || story.mastodon_id == "0"
+
+    s = Sponge.new
+    s.fetch(
+      "https://#{Rails.application.credentials.mastodon.instance_name}/api/v1/statuses/#{story.mastodon_id}",
+      :delete,
+      {},
+      nil,
+      {"Authorization" => "Bearer #{Rails.application.credentials.mastodon.token}"}
+    )
   end
 
   def self.follow_account(id)
@@ -41,7 +54,7 @@ class Mastodon
       :post,
       {reblogs: false},
       nil,
-      {"Authorization" => "Bearer #{self.TOKEN}"}
+      {"Authorization" => "Bearer #{Rails.application.credentials.mastodon.token}"}
     )
     raise "failed to follow #{id}" if response.nil?
   end
@@ -53,7 +66,7 @@ class Mastodon
       :get,
       nil,
       {q: acct, limit: 80, resolve: true},
-      {"Authorization" => "Bearer #{self.TOKEN}"}
+      {"Authorization" => "Bearer #{Rails.application.credentials.mastodon.token}"}
     )
     raise "failed to lookup #{acct}" if response.nil?
     accounts = JSON.parse(response.body)
@@ -74,7 +87,7 @@ class Mastodon
       :get,
       nil,
       nil,
-      {"Authorization" => "Bearer #{self.TOKEN}"}
+      {"Authorization" => "Bearer #{Rails.application.credentials.mastodon.token}"}
     )
     accounts = JSON.parse(response.body)
     accounts.pluck("id")
@@ -88,7 +101,7 @@ class Mastodon
       :get,
       {limit: 0},
       nil,
-      {"Authorization" => "Bearer #{self.TOKEN}"}
+      {"Authorization" => "Bearer #{Rails.application.credentials.mastodon.token}"}
     )
     accounts = JSON.parse(response.body)
     accounts.map { |a| [a["acct"], a["id"]] }.to_h
@@ -104,7 +117,7 @@ class Mastodon
         visibility: "public"
       },
       nil,
-      {"Authorization" => "Bearer #{self.TOKEN}"}
+      {"Authorization" => "Bearer #{Rails.application.credentials.mastodon.token}"}
     )
   end
 
@@ -115,7 +128,7 @@ class Mastodon
       :delete,
       {account_ids: ids},
       nil,
-      {"Authorization" => "Bearer #{self.TOKEN}"}
+      {"Authorization" => "Bearer #{Rails.application.credentials.mastodon.token}"}
     )
     raise "failed to remove from list" if response.nil? || JSON.parse(response.body) != {}
   end
@@ -127,13 +140,13 @@ class Mastodon
       :post,
       {account_ids: ids},
       nil,
-      {"Authorization" => "Bearer #{self.TOKEN}"}
+      {"Authorization" => "Bearer #{Rails.application.credentials.mastodon.token}"}
     )
     raise "failed to remove from list" if response.nil? || JSON.parse(response.body) != {}
   end
 
   def self.get_bot_credentials!
-    raise "instructions in production.rb.sample" unless Rails.application.credentials.mastodon.instance_name && Rails.application.credentials.mastodon.bot_name
+    raise "instructions in README.md" unless Rails.application.credentials.mastodon.instance_name && Rails.application.credentials.mastodon.bot_name
 
     if !Rails.application.credentials.mastodon.client_id ||
         !Rails.application.credentials.mastodon.client_secret
@@ -157,9 +170,6 @@ class Mastodon
       raise "no json" if !reg
       raise "no client_id" if reg["client_id"].blank?
       raise "no client_secret" if reg["client_secret"].blank?
-
-      puts "  mastodon.client_id: \"#{reg["client_id"]}\""
-      puts "  mastodon.client_secret: \"#{reg["client_secret"]}\""
     end
 
     client_id = Rails.application.credentials.client_id || reg["client_id"]
@@ -167,7 +177,7 @@ class Mastodon
 
     puts
     puts "open this URL and authorize read/write access for the bot account"
-    puts "you'll get redirected to /settings?code=..."
+    puts "you'll get redirected to your site's /settings?code=..."
     puts "https://#{Rails.application.credentials.mastodon.instance_name}/oauth/authorize?response_type=code&client_id=#{client_id}&scope=read+write&redirect_uri=" +
       CGI.escape(
         "https://#{Rails.application.domain}/settings"
@@ -207,9 +217,11 @@ class Mastodon
     end
 
     puts
-    puts "  mastodon.token: \"#{tok}\""
-    puts
-    puts "run `rails credentials:edit` and copy these three values in"
+
+    puts "add these values in into the 'mastodon:' section of 'rails credentials:edit'"
+    puts "  client_id: \"#{client_id}\""
+    puts "  client_secret: \"#{client_secret}\""
+    puts "  token: \"#{tok}\""
     true
   end
 end

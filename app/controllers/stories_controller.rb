@@ -61,6 +61,7 @@ class StoriesController < ApplicationController
 
     if @story.save
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted")
+      Mastodon.delete_post(@story)
     end
 
     redirect_to @story.comments_path

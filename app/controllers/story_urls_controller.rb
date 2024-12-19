@@ -9,6 +9,10 @@ class StoryUrlsController < ApplicationController
         render json: Story.find_similar_by_url(url).for_presentation
       }
     end
+  rescue ActionController::ParameterMissing
+    respond_to do |format|
+      format.json { render json: {}, status: :bad_request }
+    end
   end
 
   def latest

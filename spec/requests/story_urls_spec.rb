@@ -16,10 +16,9 @@ describe "stories", type: :request do
     end
 
     it "doesn't error if not given a url" do
-      expect {
-        get "/stories/url/all", params: {}
-        expect(response.status).to eq(400)
-      }.to raise_error(ActionController::ParameterMissing)
+      get "/stories/url/all.json", params: {}
+      expect(response).to have_http_status(:bad_request)
+      expect(JSON.parse(response.body)).to eq({"error" => "param is missing or the value is empty or invalid: url"})
     end
 
     it "doesn't error if the url hasn't been submitted" do

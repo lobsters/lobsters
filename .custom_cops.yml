@@ -1,0 +1,11 @@
+require:
+  - ./lib/custom_cops/inherits_moderator_controller.rb
+  # to use additional cops, list individual ruby files here
+  #   (listing directories or glob patterns doesn't seem to work)
+  # ex:
+  # - ./lib/custom_cops/<cop-filename>.rb
+
+CustomCops/InheritsModeratorController:
+  Enabled: true
+  Include:
+    - "app/controllers/mod/**/*.rb"

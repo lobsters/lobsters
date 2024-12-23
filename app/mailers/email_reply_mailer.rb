@@ -13,15 +13,8 @@ class EmailReplyMailer < ApplicationMailer
     end
 
     # threading
-    headers "Message-Id" => @comment.mailing_list_message_id,
-      "References" => (
-        ([@comment.story.mailing_list_message_id] + @comment.parents.map(&:mailing_list_message_id))
-        .map { |r| "<#{r}>" }
-      ),
-      "In-Reply-To" => @comment.parent_comment.present? ?
-        @comment.parent_comment.mailing_list_message_id :
-        @comment.story.mailing_list_message_id
-
+    set_heeaders
+  
     mail(
       to: user.email,
       subject: "[#{Rails.application.name}] Reply from " \
@@ -33,6 +26,17 @@ class EmailReplyMailer < ApplicationMailer
     @comment = comment
     @user = user
 
+    set_heeaders
+
+    mail(
+      to: user.email,
+      subject: "[#{Rails.application.name}] Mention from " \
+                  "#{comment.user.username} on #{comment.story.title}"
+    )
+  end
+
+  private
+  def set_heeaders
     headers "Message-Id" => @comment.mailing_list_message_id,
     "References" => (
       ([@comment.story.mailing_list_message_id] + @comment.parents.map(&:mailing_list_message_id))
@@ -41,11 +45,5 @@ class EmailReplyMailer < ApplicationMailer
     "In-Reply-To" => @comment.parent_comment.present? ?
       @comment.parent_comment.mailing_list_message_id :
       @comment.story.mailing_list_message_id
-
-    mail(
-      to: user.email,
-      subject: "[#{Rails.application.name}] Mention from " \
-                  "#{comment.user.username} on #{comment.story.title}"
-    )
   end
 end

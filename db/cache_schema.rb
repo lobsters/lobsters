@@ -11,3 +11,4 @@ ActiveRecord::Schema[8.0].define(version: 1) do
     t.index ["key_hash"], name: "index_solid_cache_entries_on_key_hash", unique: true
   end
 end
+

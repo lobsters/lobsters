@@ -4,6 +4,10 @@ gem "rails"
 
 gem "trilogy"
 
+gem "sqlite3"
+
+gem "solid_cache"
+
 # rails
 gem "scenic"
 gem "scenic-mysql_adapter"

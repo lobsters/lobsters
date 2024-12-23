@@ -38,6 +38,8 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
+  config.cache_store = :solid_cache_store
+
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_url_options = {
     host: "localhost",

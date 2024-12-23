@@ -419,7 +419,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["user_id", "story_id"], name: "user_id_story_id"
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "comments", column: "parent_comment_id", name: "comments_parent_comment_id_fk"
   add_foreign_key "comments", "hats", name: "comments_hat_id_fk"

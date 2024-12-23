@@ -14,9 +14,9 @@
 # You're a commercial service? Slow down or email me. pushcx@ our domain.
 
 
-# Rack::Attack.safelist("localhost") do |req|
-#   req.ip == "127.0.0.1" || req.ip == "::1"
-# end
+Rack::Attack.safelist("localhost") do |req|
+  req.ip == "127.0.0.1" || req.ip == "::1"
+end
 
 # these will kick in way too early if serving assets via rack, so don't
 Rack::Attack.throttle("rate 1", limit: 5, period: 1) { |r| r.ip }

@@ -7,8 +7,6 @@ RSpec.describe InboxMailbox, type: :mailbox do
     story = create(:story)
     user = create(:user)
 
-    user.update!(mailing_list_mode: 2)
-
     to = "#{Rails.application.shortname}-#{user.mailing_list_token}@example.com"
     irt = "story.#{story.short_id}.1@"
 
@@ -29,9 +27,7 @@ RSpec.describe InboxMailbox, type: :mailbox do
   it "creates a reply to a comment with a valid short id" do
     comment = create(:comment)
     user = create(:user)
-
-    user.update!(mailing_list_mode: 2)
-
+  
     to = "#{Rails.application.shortname}-#{user.mailing_list_token}@example.com"
     irt = "comment.#{comment.short_id}.1@"
 

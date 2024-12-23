@@ -13,7 +13,6 @@
 
 # You're a commercial service? Slow down or email me. pushcx@ our domain.
 
-
 Rack::Attack.safelist("localhost") do |req|
   req.ip == "127.0.0.1" || req.ip == "::1"
 end

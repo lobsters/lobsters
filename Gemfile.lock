@@ -128,7 +128,6 @@ GEM
     exception_notification (4.1.1)
       actionmailer (>= 3.0.4)
       activesupport (>= 3.0.4)
-    execjs (2.10.0)
     factory_bot (6.5.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.4)
@@ -147,6 +146,10 @@ GEM
     htmlentities (4.3.4)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
+    importmap-rails (2.1.0)
+      actionpack (>= 6.0.0)
+      activesupport (>= 6.0.0)
+      railties (>= 6.0.0)
     io-console (0.7.2)
     irb (1.14.1)
       rdoc (>= 4.0.0)
@@ -217,6 +220,11 @@ GEM
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
+    propshaft (1.1.0)
+      actionpack (>= 7.0.0)
+      activesupport (>= 7.0.0)
+      rack
+      railties (>= 7.0.0)
     prosopite (1.4.2)
     psych (5.2.0)
       stringio
@@ -340,13 +348,6 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
-    sprockets (4.2.1)
-      concurrent-ruby (~> 1.0)
-      rack (>= 2.2.4, < 4)
-    sprockets-rails (3.5.2)
-      actionpack (>= 6.1)
-      activesupport (>= 6.1)
-      sprockets (>= 3.0.0)
     stackprof (0.2.26)
     standard (1.42.1)
       language_server-protocol (~> 3.17.0.2)
@@ -376,8 +377,6 @@ GEM
       bigdecimal (~> 3.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    uglifier (4.2.1)
-      execjs (>= 0.3.0, < 3)
     unicode-display_width (2.6.0)
     uri (1.0.2)
     useragent (0.16.11)
@@ -417,6 +416,7 @@ DEPENDENCIES
   faker
   flamegraph
   htmlentities
+  importmap-rails (~> 2.0)
   json
   letter_opener
   listen
@@ -427,6 +427,7 @@ DEPENDENCIES
   oauth
   parslet
   pdf-reader
+  propshaft
   prosopite
   puma
   rack-attack
@@ -441,7 +442,6 @@ DEPENDENCIES
   silencer
   simplecov
   sitemap_generator
-  sprockets-rails
   stackprof
   standard
   standard-performance
@@ -449,7 +449,6 @@ DEPENDENCIES
   super_diff
   svg-graph
   trilogy
-  uglifier
   vcr
   webmock
 

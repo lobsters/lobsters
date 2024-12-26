@@ -8,11 +8,11 @@ gem "trilogy"
 gem "scenic"
 gem "scenic-mysql_adapter"
 gem "activerecord-typedstore"
-gem "sprockets-rails", require: "sprockets/railtie"
+gem "propshaft"
+gem "importmap-rails", "~> 2.0"
 
 # js
 gem "json"
-gem "uglifier"
 
 # deployment
 gem "actionpack-page_caching"

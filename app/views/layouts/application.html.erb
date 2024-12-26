@@ -27,9 +27,11 @@
   <% end %>
   <title><%= @title.present? ? "#{@title} | " : "" %><%=
     Rails.application.name %></title>
-  <%= stylesheet_link_tag "application", :media => "all" %>
+
+  <%# Includes all stylesheet files in app/assets/stylesheets %>
+  <%= stylesheet_link_tag :app %>
   <% if @user %>
-    <%= javascript_include_tag "application" %>
+    <%= javascript_importmap_tags %>
   <% end %>
   <%= csrf_meta_tags %>
   <% if @rss_link %>

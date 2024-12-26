@@ -8,8 +8,7 @@ after vendor css for easier overriding:
 
 /* light and dark mode colorschemes */
 
-<%
-light = <<-LIGHT
+:root {
 	/* main monochrome */
 	--palette-bg: 254, 254, 254;
 	--palette-fg: 51, 51, 51;
@@ -85,9 +84,11 @@ light = <<-LIGHT
 	--color-mobile-story-comments-bg: #e8e8e8;
 	--color-mobile-story-comments-bubble-fill: #ccc;
 	--color-mobile-story-comments-bubble-fill-zero: #d8d8d8;
-LIGHT
+}
 
-dark = <<-DARK
+@media (prefers-color-scheme: dark) {
+  html.color-scheme-system,
+  html.color-scheme-dark {
 	/* main monochrome */
 	--palette-bg: 12, 12, 12;
 	--palette-fg: 225, 225, 225;
@@ -163,19 +164,7 @@ dark = <<-DARK
 	--color-mobile-story-comments-bg: #101010;
 	--color-mobile-story-comments-bubble-fill: #282828;
 	--color-mobile-story-comments-bubble-fill-zero: #1c1c1c;
-DARK
-%>
-
-:root {
-	<%= light %>
-}
-@media (prefers-color-scheme: dark) {
-	html.color-scheme-system {
-		<%= dark %>
-	}
-}
-html.color-scheme-dark {
-	<%= dark %>
+  }
 }
 
 /* overall page */

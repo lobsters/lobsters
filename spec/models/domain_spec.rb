@@ -10,6 +10,10 @@ RSpec.describe Domain, type: :model do
         replacement: "\\1"
       expect(d.find_or_create_origin("https://github.com/foo").identifier).to eq("github.com/foo")
       expect(d.find_or_create_origin("https://github.com/foo/bar").identifier).to eq("github.com/foo")
+
+      expect(d.find_or_create_origin("https://github.com/FOO").identifier).to eq("github.com/foo")
+
+      expect(d.find_or_create_origin("https://github.com/BAZ").identifier).to eq("github.com/baz")
     end
 
     it "creates a bare-domain origin for bare and trailing slash URLs" do

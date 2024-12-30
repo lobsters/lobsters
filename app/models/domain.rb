@@ -70,7 +70,7 @@ class Domain < ApplicationRecord
     else
       # if the URL isn't matched, the identifier is the bare domain (handles root + partial regexps)
       domain
-    end
+    end.downcase
 
     # because of rails associations, `origins` is scoped to current domain object
     # find_or_create_by! returns the origin record, or raises if validations fail

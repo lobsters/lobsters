@@ -14,7 +14,7 @@ class Utils
     url.slice! %r{\.html?$} # remove .htm, .html
 
     # remove some common "directory index" pages that are commonly served for dirs
-    url.slice! %r{/index\.html$}
+    url.slice! %r{/index$} # includes index.html? from previous
     url.slice! %r{/index\.php}
     url.slice! %r{/Default\.aspx$}
 

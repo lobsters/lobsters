@@ -16,8 +16,8 @@ describe "normalizing urls" do
     "https://foo.e.com" => "foo.e.com", # keep subdomains
     "https://e.co.uk" => "e.co.uk", # keep other TLDs
     "https://e.com/index.html" => "e.com", # remove index.html
-    "https://e.com/asdf.html" => "e.com/asdf.html", # end .html ok
-    "https://e.com/asdf.htm" => "e.com/asdf.html", # .htm -> .html
+    "https://e.com/asdf.html" => "e.com/asdf", # strip trailing .html
+    "https://e.com/asdf.htm" => "e.com/asdf", # strip trailing .htm
     "https://e.com?b=2&a=1" => "e.com?a=1&b=2", # sort query args
     "https://e.com?a=1?b=2" => "e.com?a=1&b=2", # normalize ? to &
     "https://e.com?c=3&a=1?b=2&" => "e.com?a=1&b=2&c=3", # combined; trailing &

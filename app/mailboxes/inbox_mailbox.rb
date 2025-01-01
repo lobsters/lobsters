@@ -50,7 +50,7 @@ class InboxMailbox < ApplicationMailbox
   def sending_user
     return @sending_user if @sending_user
 
-    if (user = User.where("mailing_list_token = ?", user_token).first) &&
+    if (user = User.find_by(mailing_list_token: user_token)) &&
         user.is_active?
       @sending_user = user
       user

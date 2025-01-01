@@ -1,3 +1,5 @@
+// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
+
 //= require_tree .
 
 //= require tom-select.base.js
@@ -93,11 +95,11 @@ class _LobstersFunction {
     this.curUser = null;
 
     this.storyFlagReasons = ({
-      <%= Vote::STORY_REASONS.map{|k,v| "'#{k}': '#{v}'" }.join(", ") %>
+      "'O': 'Off-topic', 'A': 'Already Posted', 'B': 'Broken Link', 'S': 'Spam', '': 'Cancel'"
     });
 
     this.commentFlagReasons = ({
-      <%= Vote::COMMENT_REASONS.map{|k,v| "'#{k}': '#{v}'" }.join(", ") %>
+      "'O': 'Off-topic', 'M': 'Me-too', 'T': 'Troll', 'U': 'Unkind', 'S': 'Spam', '': 'Cancel'"
     });
   }
 

@@ -7,7 +7,7 @@ require "rails_helper"
 
 RSpec.feature "Commenting" do
   let(:user) { create(:user) }
-  let(:story) { create(:story, user: user) }
+  let(:story) { create(:story) }
 
   before(:each) { stub_login_as user }
 
@@ -18,6 +18,32 @@ RSpec.feature "Commenting" do
     click_on "Post"
     visit "/s/#{story.short_id}"
     expect(page).to have_content("example comment")
+  end
+
+  scenario "posting a comment with a hat" do
+    hat = create(:hat, user: user)
+    visit "/s/#{story.short_id}"
+    fill_in "comment", with: "An example comment"
+    select hat.hat, from: "hat_id"
+    click_on "Post"
+    visit "/s/#{story.short_id}"
+    expect(page).to have_css("span.hat")
+  end
+
+  feature "editing comments" do
+    scenario "adding a hat to a comment" do
+      hat = create(:hat, user: user)
+      comment = create(:comment, story: story, user: user, hat: nil)
+      visit "/s/#{story.short_id}"
+      expect(page).to_not have_css("span.hat")
+
+      visit "/comments/#{comment.short_id}/edit"
+      select hat.hat, from: "hat_id"
+      click_on "Update"
+
+      visit "/s/#{story.short_id}"
+      expect(page).to have_css("span.hat")
+    end
   end
 
   feature "deleting comments" do
@@ -54,7 +80,7 @@ RSpec.feature "Commenting" do
 
       comment = create(:comment, user_id: user.id, story_id: story.id, created_at: 90.days.ago)
       visit "/s/#{story.short_id}"
-      expect(page).to have_link("disown")
+      expect(page).to have_button("disown")
 
       page.driver.post "/comments/#{comment.short_id}/disown"
       comment.reload
@@ -100,18 +126,6 @@ RSpec.feature "Commenting" do
       story.update!(merged_stories: [hot_take])
       visit "/s/#{story.short_id}"
       expect(page.find(:css, ".comment.upvoted .score")).to have_content("2")
-    end
-  end
-
-  feature "user threads list" do
-    scenario "viewing user's threads" do
-      poster = create(:user)
-      parent = create(:comment, story: story, user: poster)
-      reply = create(:comment, story: story, user: user, parent_comment: parent)
-
-      visit "/threads/#{user.username}"
-      expect(page).to have_content(parent.comment)
-      expect(page).to have_content(reply.comment)
     end
   end
 end

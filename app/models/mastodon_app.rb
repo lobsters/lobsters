@@ -2,7 +2,9 @@
 
 # https://docs.joinmastodon.org/methods/apps/
 class MastodonApp < ApplicationRecord
-  validates :name, :client_id, :client_secret, presence: true
+  validates :name, :client_id, :client_secret,
+    presence: true,
+    length: {maximum: 255}
 
   # https://docs.joinmastodon.org/methods/oauth/
   def oauth_auth_url
@@ -65,8 +67,8 @@ class MastodonApp < ApplicationRecord
       code: code,
       scope: "read:account"
     )
-    if res.nil?
-      errors.add :base, "#{name} errored instead of giving a user token, is it a Mastodon instance?"
+    if res.nil? || res.body.nil?
+      errors.add :base, "#{name} errored instead of giving an access token, is it a Mastodon instance?"
       return
     end
     ps = JSON.parse(res.body)
@@ -80,8 +82,12 @@ class MastodonApp < ApplicationRecord
         nil,
         nil,
         headers
-      ).body
-      js = JSON.parse(res)
+      )
+      if res.nil? || res.body.nil?
+        errors.add :base, "#{name} errored instead of giving a user token, is it a Mastodon instance?"
+        return
+      end
+      js = JSON.parse(res.body)
       if js && js["username"].present?
         return [tok, js["username"]]
       end

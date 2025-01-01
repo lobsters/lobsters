@@ -1,0 +1,31 @@
+# This workflow warns and then closes PRs that have had no activity for a specified amount of time.
+#
+# You can adjust the behavior by modifying this file.
+# For more information, see:
+# https://github.com/actions/stale
+
+name: Mark and close stale pull requests
+on:
+  schedule:
+  - cron: '18 10 * * *'
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+    - uses: actions/stale@v5
+      with:
+        stale-pr-message: "This PR has had no activity for 21 days. Please leave a comment or commit to indicate you're still actively working on it."
+        close-pr-message: "This PR was closed because it was open for 28 days with no activity. Please reopen when you'd like to continue work on this."
+        days-before-pr-stale: 21
+        days-before-pr-close: 7
+        # Plan: https://github.com/lobsters/lobsters/issues/1368
+        # This GitHub Action doesn't address the feature we want of allowing
+        # users or assign themselves or being unassigned if an issue goes stale.
+        # So we have to configure it not to mark issues as stale. (Which
+        # defaults to 60 days, by inheritance from days-before-stale.)
+        days-before-issue-stale: -1
+        #include-only-assigned: true
+        #stale-issue-message: "This issue has been assigned without activity for 14 days. Please leave a comment if you're still working on it, or in another week it'll be unassigned so anyone can pick it up."

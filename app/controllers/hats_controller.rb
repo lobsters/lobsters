@@ -2,14 +2,9 @@
 
 class HatsController < ApplicationController
   before_action :require_logged_in_user, except: [:index]
-  before_action :require_logged_in_moderator, except: [:build_request, :index, :create_request]
   before_action :show_title_h1
-
-  def build_request
-    @title = "Request a Hat"
-
-    @hat_request = HatRequest.new
-  end
+  before_action :find_hat!, only: [:doff, :doff_by_user, :edit, :update_in_place, :update_by_recreating]
+  before_action :only_hat_user_or_moderator, only: [:edit, :update_in_place, :update_by_recreating, :doff, :doff_by_user]
 
   def index
     @title = "Hats"
@@ -22,44 +17,74 @@ class HatsController < ApplicationController
     end
   end
 
-  def create_request
-    @hat_request = HatRequest.new
-    @hat_request.user_id = @user.id
-    @hat_request.hat = params[:hat_request][:hat]
-    @hat_request.link = params[:hat_request][:link]
-    @hat_request.comment = params[:hat_request][:comment]
+  def doff
+    @title = "Doffing a Hat"
+  end
 
-    if @hat_request.save
-      flash[:success] = "Successfully submitted hat request."
-      return redirect_to "/hats"
+  def doff_by_user
+    if params[:reason].blank?
+      flash[:error] = "You must give a reason for the doffing."
+      return redirect_to doff_hat_path(@hat)
     end
 
-    render action: "build_request"
+    @hat.doff_by_user_with_reason(@user, params[:reason])
+    redirect_to @user
   end
 
-  def requests_index
-    @title = "Hat Requests"
-
-    @hat_requests = HatRequest.all.includes(:user)
+  def edit
+    @title = "Edit a Hat"
   end
 
-  def approve_request
-    @hat_request = HatRequest.find(params[:id])
-    @hat_request.update!(params.require(:hat_request)
-      .permit(:hat, :link, :reason).except(:reason))
-    @hat_request.approve_by_user_for_reason!(@user, params[:hat_request][:reason])
+  def update_in_place
+    old_hat = @hat.hat
+    new_hat = params[:hat][:hat]
 
-    flash[:success] = "Successfully approved hat request."
+    if @hat.update(hat: new_hat)
+      m = Moderation.new
+      m.user_id = @hat.user_id
+      m.moderator_user_id = @hat.user_id
+      m.action = "Renamed hat \"#{old_hat}\" to \"#{new_hat}\""
+      m.save!
 
-    redirect_to "/hats/requests"
+      redirect_to hats_url
+    else
+      flash[:error] = @hat.errors.full_messages.join(", ")
+      redirect_to edit_hat_path(@hat)
+    end
   end
 
-  def reject_request
-    @hat_request = HatRequest.find(params[:id])
-    @hat_request.reject_by_user_for_reason!(@user, params[:hat_request][:reason])
+  def update_by_recreating
+    new_hat = params[:hat][:hat]
 
-    flash[:success] = "Successfully rejected hat request."
+    replaced_hat = @hat.dup
+    replaced_hat.hat = new_hat
+    replaced_hat.doffed_at = nil
 
-    redirect_to "/hats/requests"
+    if replaced_hat.save
+      @hat.doff_by_user_with_reason(@user, "To replace with \"#{new_hat}\"")
+
+      redirect_to hats_url
+    else
+      flash[:error] = replaced_hat.errors.full_messages.join(", ")
+      redirect_to edit_hat_path(@hat)
+    end
+  end
+
+  private
+
+  def only_hat_user_or_moderator
+    if @hat.user == @user || @user&.is_moderator?
+      true
+    else
+      redirect_to @user
+    end
+  end
+
+  def find_hat!
+    @hat = if @user.is_moderator?
+      Hat.find_by(short_id: params[:id])
+    else
+      @user.wearable_hats.find_by(short_id: params[:id])
+    end
   end
 end

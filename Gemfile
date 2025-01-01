@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "rails"
 
-gem 'mysql2', '~> 0.5.6'
+gem "trilogy"
 
 # rails
 gem "scenic"
@@ -38,11 +38,14 @@ gem "rack-mini-profiler"
 gem "stackprof"
 gem "prosopite"
 
+gem "builder" # for rss
 gem "oauth" # for linking accounts
 gem "mail" # for parsing incoming mail
 gem "sitemap_generator" # for better search engine indexing
 gem "svg-graph", require: "SVG/Graph/TimeSeries" # for charting, note workaround in lib/time_series.rb
 gem "rack-attack" # rate-limiting
+gem "lograge" # for JSON logging
+gem "silencer" # to disable default logging in prod
 
 group :test, :development do
   gem "benchmark-perf"
@@ -50,12 +53,12 @@ group :test, :development do
   gem "capybara"
   gem "database_cleaner"
   gem "listen"
+  gem "letter_opener"
   gem "rspec-rails"
   gem "factory_bot_rails"
   gem "standard"
   gem "standard-performance"
   gem "standard-rails"
-  gem "standard-sorbet"
   gem "super_diff"
   gem "faker"
   gem "byebug"
@@ -63,4 +66,6 @@ group :test, :development do
   gem "vcr"
   gem "webmock" # used to support vcr
   gem "simplecov", require: false
+  gem "active_record_doctor"
+  gem "database_consistency"
 end

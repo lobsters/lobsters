@@ -146,15 +146,12 @@ class _LobstersFunction {
   checkStoryDuplicate(form) {
     const formData = new FormData(form);
     const action = '/stories/check_url_dupe';
-    console.log('checkStoryDuplicate', form);
     fetchWithCSRF(action, {
       method: 'post',
       headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
       body: formData,
     }).then (response => {
-      console.log('checkStoryDuplicate', response);
       response.text().then(text => {
-        console.log('checkStoryDuplicate', text, qS('.form_errors_header'));
         // FIXME on second click of 'fetch title', this doesn't run
         qS('.form_errors_header').innerHTML = text;
       });
@@ -597,6 +594,23 @@ onPageLoad(() => {
     }
   });
 
+  // Disown
+
+  on('submit', 'form.disowner-form', (event) => {
+    event.preventDefault();
+
+    let type = event.target.elements['type'].value;
+
+    if (confirm(`Are you sure you want to disown this ${type}?`)) {
+      let li = parentSelector(event.target, `.${type}`);
+
+      fetchWithCSRF(event.target.action, { method: 'post', body: new FormData(event.target) })
+        .then(response => {
+          response.text().then(text => replace(li, text));
+        });
+    }
+  });
+
   // Comment
 
   // Remember story collapses; this is stored in localStorage for every story ID as an object
@@ -627,16 +641,6 @@ onPageLoad(() => {
         folder.checked = true;
     }
   })();
-
-  on('click', 'a.comment-disowner', (event) => {
-    if (confirm("Are you sure you want to disown this comment?")) {
-      let li = parentSelector(event.target, '.comment');
-      fetchWithCSRF('/comments/' + li.getAttribute('data-shortid') + '/disown', { method: 'post' })
-        .then(response => {
-          response.text().then(text => replace(li, text));
-        });
-    }
-  });
 
   on("click", "a.comment_replier", (event) => {
     event.preventDefault();
@@ -782,7 +786,8 @@ onPageLoad(() => {
     const foundIndex = Array.from(nodes).findIndex(node => node === event.target)
     const targetIndex = (foundIndex + 1) % nodes.length;
     const targetY = nodes[targetIndex].getBoundingClientRect().top + window.scrollY
-    window.scrollTo({ top: targetY, behavior: 'smooth' })
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: targetY, behavior: reducedMotion ? 'instant' : 'smooth' })
   });
 
   // Story view

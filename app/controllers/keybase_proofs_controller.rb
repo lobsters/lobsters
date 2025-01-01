@@ -39,11 +39,11 @@ class KeybaseProofsController < ApplicationController
 
   def kbconfig
     return render json: {} unless Keybase.enabled?
-    @domain = Keybase.DOMAIN
+    @domain = Rails.application.credentials.keybase.domain
     @name = Rails.application.name
     @brand_color = "#AC130D"
     @description = "Computing-focused community centered around link aggregation and discussion"
-    @contacts = ["admin@#{Keybase.DOMAIN}"]
+    @contacts = ["admin@#{@domain}"]
     @prefill_url = "#{new_keybase_proof_url}?kb_username=%{kb_username}&" \
       "kb_signature=%{sig_hash}&kb_ua=%{kb_ua}&username=%{username}"
     @profile_url = "/~%{username}"

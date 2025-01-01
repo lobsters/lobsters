@@ -11,10 +11,11 @@ class Vote < ApplicationRecord
   attribute :count, :integer
   attribute :usernames, :string
 
-  validates :vote, presence: true
+  validates :vote, presence: true, inclusion: {in: [1, -1]}
   validates :reason,
     length: {is: 1},
-    allow_blank: true
+    allow_blank: true,
+    presence: true
 
   scope :comments_flags, ->(comments, user = nil) {
     q = where(comment: comments, vote: -1)
@@ -130,7 +131,20 @@ class Vote < ApplicationRecord
 
     return if !v.new_record? && v.vote == new_vote # done if there's no change
 
-    score_delta = new_vote - v.vote.to_i
+    # score deltas when flags no longer affect scores
+    # no vote  -> 1      1
+    # flag -> 1          1
+    # no vote  -> flag   0
+    # flag -> no vote    0
+    # 1  -> no vote     -1
+    # 1  -> flag        -1
+    score_delta = if new_vote == 1
+      1
+    elsif v.vote == 1
+      -1
+    else
+      0
+    end
     flag_delta = if v.vote == -1
       # we know there's a change, so we must be removing a flag
       -1

@@ -7,10 +7,10 @@ require "rails"
 require "active_model/railtie"
 require "active_job/railtie"
 require "active_record/railtie"
-# require "active_storage/engine"
+require "active_storage/engine"
 require "action_controller/railtie"
 require "action_mailer/railtie"
-# require "action_mailbox/engine"
+require "action_mailbox/engine"
 # require "action_text/engine"
 require "action_view/railtie"
 # require "action_cable/engine"
@@ -23,12 +23,12 @@ Bundler.require(*Rails.groups)
 module Lobsters
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.1
+    config.load_defaults 8.0
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w[assets tasks])
+    config.autoload_lib(ignore: %w[assets custom_cops tasks])
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -39,7 +39,12 @@ module Lobsters
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = "Central Time (US & Canada)"
 
-    config.autoload_paths << "#{root}/extras"
+    config.eager_load_namespaces << I18n
+
+    config.autoload_paths.push(
+      "#{root}/extras",
+      "#{root}/lib"
+    )
 
     # Raise an exception when using mass assignment with unpermitted attributes
     config.action_controller.action_on_unpermitted_parameters = :raise
@@ -56,7 +61,6 @@ module Lobsters
     config.skip_yarn = true
 
     config.after_initialize do
-      require Rails.root.join("lib/monkey.rb").to_s
       require Rails.root.join("lib/time_series.rb").to_s
     end
 
@@ -122,5 +126,10 @@ class << Rails.application
   # config.force_ssl be on)
   def ssl?
     true
+  end
+
+  # username of the admin account used to ban domains automatically (e.g., URL shorteners)
+  def banned_domains_admin
+    ENV["BANNED_DOMAINS_ADMIN"] || "pushcx"
   end
 end

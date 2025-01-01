@@ -9,9 +9,10 @@ class InvitationRequest < ApplicationRecord
     presence: true,
     length: {maximum: 255}
   validates :memo,
-    format: {with: Story::URL_RE},
+    format: {with: Utils::URL_RE},
     length: {maximum: 255}
   validates :code, :ip_address, length: {maximum: 255}
+  validates :is_verified, inclusion: {in: [true, false]}
 
   before_validation :create_code
   after_create :send_email

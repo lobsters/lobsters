@@ -1,0 +1,23 @@
+<div class="box wide">
+  <%= form_with url: doff_by_user_hat_path(@hat) do |f| %>
+    <p>
+      <%= f.label :user_id, "User:" %>
+      <%= styled_user_link @hat.user %>
+      <br />
+
+      <%= f.label :hat, "Hat:" %>
+      <%= @hat.to_html_label %>
+      <br />
+
+      <%= f.label :reason, "Reason:" %>
+      <%= f.text_field :reason, :size => 25 %>
+      <span class="hint indent">
+        Short public explanation, like "Left project"
+      </span>
+    </p>
+
+    <p>
+      <%= submit_tag "Doff Hat" %>
+    </p>
+  <% end %>
+</div>

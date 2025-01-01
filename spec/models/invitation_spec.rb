@@ -22,8 +22,8 @@ describe Invitation do
   end
 
   it "has a limit on the memo field" do
-    invitation = build(:invitation, memo: "a" * 256)
+    invitation = build(:invitation, memo: "a" * 376)
     invitation.valid?
-    expect(invitation.errors[:memo]).to eq(["is too long (maximum is 255 characters)"])
+    expect(invitation.errors[:memo]).to eq(["is too long (maximum is 375 characters)"])
   end
 end

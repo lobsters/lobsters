@@ -6,6 +6,12 @@ and you may be responsible for them if they cause problems.
 Please use your discretion when inviting persons you don't personally know.
 </p>
 
+<p>
+Note to trans users:
+User profiles list the user who invited them.
+If you want to avoid connecting your old and new usernames, ask <%= link_to 'a moderator', moderators_path %> to send you an invite.
+</p>
+
 <%= form_with url: invitations_path, method: :post do |f| %>
   <% if return_home %>
     <%= f.hidden_field :return_home, value: 1 %>

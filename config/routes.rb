@@ -73,11 +73,32 @@ Rails.application.routes.draw do
     get "/domain/:id/page/:page", to: redirect("/domains/%{id}/page/%{page}")
     get "/domains/:id(.:format)" => "home#for_domain", :as => "domain"
     get "/domains/:id/page/:page" => "home#for_domain"
+    get "/domains/:id/origins" => "origins#for_domain", :as => "domain_origins"
+
     resources :domains, only: [:create, :edit, :update]
+    patch "/domains_ban/:id" => "domains_ban#update", :as => "ban_domain"
+    post "/domains_ban/:id" => "domains_ban#create_and_ban", :as => "create_and_ban_domain"
+
+    # below `resources` so that /edit isn't taken as an identifier
+    get "/domains/:id/:author", to: redirect("/origins/%{id}/%{author}")
+    get "/domain/:domain/:identifier(.:format)", to: redirect("/domains/%{domain}/%{identifier}")
+    get "/domain/:domain/:identifier/page/:page", to: redirect("/domains/%{domain}/%{idetifier}/page/%{page}")
+  end
+
+  constraints identifier: /(.+)(?=\.json|\.rss|$|\/)/ do
+    # resources :origin, only: [:show, :edit, :update]
+    get "/origins/:identifier/edit(.:format)" => "origins#edit", :as => "edit_origin"
+    patch "/origins/:identifier" => "origins#update", :as => "update_origin"
+    get "/origins/:identifier(.:format)" => "home#for_origin", :as => "origin"
+    # leaving out pagination because identifiers (eg 'github.com/alice') can include slashes
+    # get "/origins/:identifier/page/:page" => "home#for_domain"
   end
 
   get "/search" => "search#index"
   get "/search/:q" => "search#index"
+
+  get "/stories/url/all" => "story_urls#all"
+  get "/stories/url/latest" => "story_urls#latest"
 
   resources :stories, except: [:index] do
     get "/stories/:short_id", to: redirect("/s/%{short_id}")
@@ -92,6 +113,7 @@ Rails.application.routes.draw do
     post "unsave"
     get "suggest"
     post "suggest", action: "submit_suggestions"
+    post "disown"
   end
   post "/stories/fetch_url_attributes", format: "json"
   post "/stories/preview" => "stories#preview"
@@ -124,8 +146,8 @@ Rails.application.routes.draw do
 
   get "/inbox" => "inbox#index"
 
-  get "/c/:id" => "comments#redirect_from_short_id"
   get "/c/:id.json" => "comments#show_short_id", :format => "json"
+  get "/c/:id" => "comments#redirect_from_short_id"
 
   # deprecated
   get "/s/:story_id/:title/comments/:id" => "comments#redirect_from_short_id"
@@ -211,16 +233,20 @@ Rails.application.routes.draw do
   post "/invitations/delete_request" => "invitations#delete_request",
     :as => "delete_invitation_request"
 
-  get "/hats" => "hats#index"
-  get "/hats/build_request" => "hats#build_request",
-    :as => "request_hat"
-  post "/hats/create_request" => "hats#create_request",
-    :as => "create_hat_request"
-  get "/hats/requests" => "hats#requests_index"
-  post "/hats/approve_request/:id" => "hats#approve_request",
-    :as => "approve_hat_request"
-  post "/hats/reject_request/:id" => "hats#reject_request",
-    :as => "reject_hat_request"
+  resources :hat_requests, except: [:edit] do
+    member do
+      post :approve
+      post :reject
+    end
+  end
+  resources :hats, except: [:new, :update, :destroy] do
+    member do
+      get :doff
+      post :doff_by_user
+      post :update_in_place
+      post :update_by_recreating
+    end
+  end
 
   get "/moderations" => "moderations#index"
   get "/moderations/page/:page" => "moderations#index"
@@ -232,6 +258,10 @@ Rails.application.routes.draw do
   get "/mod/commenters/:period" => "mod#commenters", :as => "mod_commenters"
   get "/mod/notes(/:period)" => "mod_notes#index", :as => "mod_notes"
   post "/mod/notes" => "mod_notes#create"
+
+  namespace :mod do
+    resources :reparents, only: [:new, :create]
+  end
 
   get "/privacy" => "about#privacy"
   get "/about" => "about#about"

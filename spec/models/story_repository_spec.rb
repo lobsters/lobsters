@@ -22,7 +22,7 @@ describe StoryRepository do
       create(:comment, story: hidden_story)
       normal_comment = create(:comment, story: normal_story)
 
-      HiddenStory.hide_story_for_user(hidden_story.id, hidden_story.user_id)
+      HiddenStory.hide_story_for_user(hidden_story, hidden_story.user)
       hidden_story_user = User.find_by(id: hidden_story.user_id)
 
       hidden_story_user_repo = StoryRepository.new(hidden_story_user)

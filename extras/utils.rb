@@ -1,33 +1,35 @@
 # typed: false
 
 class Utils
-  # URI.parse is not lenient enough
-  def self.normalize_url url
-    return "" if url == ""
-    return nil if url.nil?
+  # URI.parse is not very lenient, so we can't use it
+  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>(?:[^\.\/]+\.)+[a-z\-]+)(?<port>:\d+)?(?:\/(?:[\w.~:\/?#\[\]@!$&'()*+,;=%-]*))?\z/i
 
-    url = url.dup # copy in case frozen
+  # utility that works on stringlikes (for possibly invalid user input + searches)
+  def self.normalize(url)
+    return url if url.blank?
+    url = url.to_s.dup # in case passed a Url or frozen string
 
     url.slice! %r{#.*$} # remove anchor
     url.slice! %r{/$} # remove trailing slash
-    url = url.sub %r{\.htm$}, ".html" # fix microsoft naming
+    url.slice! %r{\.html?$} # remove .htm, .html
 
     # remove some common "directory index" pages that are commonly served for dirs
-    url.slice! %r{/index\.html$}
+    url.slice! %r{/index$} # includes index.html? from previous
     url.slice! %r{/index\.php}
     url.slice! %r{/Default\.aspx$}
 
     url.slice! %r{https?://} # consider http and https the same
-    url.slice! %r{^(www\d*\.)} # remove www\d* from domain
+    url.sub!(/\Awww\d*\.(.+?\..+)/, '\1') # remove www\d* from domain if the url is not like www10.org
 
     url, *args = url.split(/[&\?]/) # trivia: ?a=1?c=2 is a valid uri
+    url ||= "" # if original url was just '#', ''.split made url nil
     if args.any?
       url += "?"
       url += args.map { |arg| arg.split("=") }.sort.map { |arg| arg.join("=") }.join("&")
     end
 
     # unify arxiv page and pdf based on their identifier https://arxiv.org/help/arxiv_identifier
-    url = url.sub %r{^arxiv\.org/(?:abs|pdf)/(?<id>\d{4}\.\d{4,5})(?:\.pdf)?}, 'arxiv.org/abs/\k<id>'
+    url = url.sub %r{^arxiv\.org/(?:abs|pdf)/(?<id>\d{4}\.\d{4,5}(?:v\d)?)(?:\.pdf)?}, 'arxiv.org/abs/\k<id>'
 
     # unify rfc-editor.org pages based on their URL structures:
     # https://www.rfc-editor.org/rfc/rfc9338.html

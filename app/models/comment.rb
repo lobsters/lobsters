@@ -4,6 +4,7 @@ class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :story,
     inverse_of: :comments
+  # has_one :comment_stat, -> { where("date(created_at)",  }
   has_many :votes,
     dependent: :delete_all
   belongs_to :parent_comment,
@@ -17,6 +18,11 @@ class Comment < ApplicationRecord
   belongs_to :hat,
     optional: true
   has_many :taggings, through: :story
+  has_many :links, inverse_of: :from_comment, dependent: :destroy
+  has_many :incoming_links,
+    class_name: "Link",
+    inverse_of: :to_comment,
+    dependent: :destroy
 
   attr_accessor :current_vote, :previewing, :vote_summary
   attribute :depth, :integer
@@ -30,12 +36,23 @@ class Comment < ApplicationRecord
   after_create :record_initial_upvote, :mark_submitter, :deliver_notifications,
     :log_hat_use
   after_destroy :unassign_votes
+  after_save :recreate_links
 
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, -> { where(is_deleted: false) }
   scope :not_moderated, -> { where(is_moderated: false) }
   scope :active, -> { not_deleted.not_moderated }
   scope :accessible_to_user, ->(user) { (user && user.is_moderator?) ? all : active }
+  scope :recent, -> { where(created_at: (6.months.ago..)) }
+  scope :above_average, -> {
+    joins(:story)
+      .joins("left outer join comment_stats on date(comments.created_at) = comment_stats.date")
+      .where("comments.score > coalesce(comment_stats.`average`, 3)")
+  }
+  scope :on_stories_not_authored_by, ->(user) {
+    joins(:story)
+      .merge(Story.where.not(user: user, user_is_author: true)) # TODO: authorship/beneficial idea
+  }
   scope :for_presentation, -> {
     includes(:user, :hat, moderation: :moderator, story: :user, votes: :user)
   }
@@ -72,9 +89,13 @@ class Comment < ApplicationRecord
 
   SCORE_RANGE_TO_HIDE = (-2..4)
 
-  validates :short_id, length: {maximum: 10}
+  validates :short_id, length: {maximum: 10}, presence: true
   validates :markeddown_comment, length: {maximum: 16_777_215}
-  validates :comment, presence: {with: true, message: "cannot be empty."}
+  validates :comment,
+    presence: {with: true, message: "cannot be empty."},
+    length: {maximum: 16_777_215}
+  validates :confidence, :confidence_order, :flags, :score, presence: true
+  validates :is_deleted, :is_moderated, :is_from_email, inclusion: {in: [true, false]}
 
   validate do
     parent_comment&.is_gone? &&
@@ -90,18 +111,25 @@ class Comment < ApplicationRecord
     comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
       errors.add(:base, "Wow!  A blue car!")
 
+    comment.to_s.strip.match(/\Abump/i) &&
+      errors.add(:base, "Don't bump threads.")
+
     comment.to_s.strip.match(/\A([[[:upper:]][[:punct:]]] )+[[[:upper:]][[:punct:]]]?$\z/) &&
       errors.add(:base, "D O N ' T")
 
-    comment.to_s.strip.match(/\A(me too|nice)([\.!])?\z/i) &&
+    comment.to_s.strip.match(/\A(me too|nice|\+1)([\.!])?\z/i) &&
       errors.add(:base, "Please just upvote the parent post instead.")
 
     hat.present? && user.wearable_hats.exclude?(hat) &&
       errors.add(:hat, "not wearable by user")
 
     # .try so tests don't need to persist a story and user
-    story.try(:accepting_comments?) ||
-      errors.add(:base, "Story is no longer accepting comments.")
+    new_record? && (story.try(:accepting_comments?) ||
+      errors.add(:base, "Story is no longer accepting comments."))
+  end
+
+  def self./(short_id)
+    find_by! short_id:
   end
 
   def self.regenerate_markdown
@@ -174,18 +202,24 @@ class Comment < ApplicationRecord
   # http://evanmiller.org/how-not-to-sort-by-average-rating.html
   # https://github.com/reddit/reddit/blob/master/r2/r2/lib/db/_sorts.pyx
   def calculated_confidence
-    return 0 if self.score == 0 && flags == 0
-    n = (self.score + flags * 2).to_f
+    return 0 if is_deleted? || is_moderated?
+    # matching the reddit implementation by backing out these numbers from how we cache
+    ups = self.score + flags
+    downs = flags
+    n = BigDecimal(ups + downs) # the float version can accumulate enough error to go out of range
+    return 0 if n == 0
+    raise ArgumentError, "n should count number of upvotes + flags; that can't be a negative number" if n < 0
 
-    upvotes = self.score + flags
-    z = 1.281551565545 # 80% confidence
-    p = upvotes.to_f / n
+    z = BigDecimal("1.281551565545") # 80% confidence
+    p = BigDecimal(ups) / n
 
-    left = p + (1 / ((2.0 * n) * z * z))
-    right = z * Math.sqrt((p * ((1.0 - p) / n)) + (z * (z / (4.0 * n * n))))
+    left = p + (1 / (2 * n) * z * z)
+    right = z * Math.sqrt((p * ((1 - p) / n)) + (z * z / (4 * n * n)))
     under = 1.0 + ((1.0 / n) * z * z)
 
-    (left - right) / under
+    confidence = (left - right) / under
+    # raise "Comment #{id} calculated_confidence #{confidence} out of range (0..1)" unless (0..1).cover? confidence
+    confidence.clamp(0..1) # a handful of comments generate tiny negative numbers
   end
 
   # rate-limit users in heated reply chains, called by controller so that authors can preview
@@ -233,7 +267,6 @@ class Comment < ApplicationRecord
     Comment.record_timestamps = false
 
     self.is_deleted = true
-    self.score = FLAGGABLE_MIN_SCORE # sort after other replies
 
     if user.is_moderator? && user.id != user_id
       self.is_moderated = true
@@ -353,6 +386,7 @@ class Comment < ApplicationRecord
   def update_score_and_recalculate!(score_delta, flag_delta)
     self.score += score_delta
     self.flags += flag_delta
+    new_confidence = calculated_confidence
     # confidence_order allows sorting sibling comments by confidence in queries like story_threads.
     # confidence_order must sort in ascending order so that it's in the right order when
     # concatenated into confidence_order_path, which the database sorts lexiographically. It is 3
@@ -369,8 +403,8 @@ class Comment < ApplicationRecord
       UPDATE comments SET
         score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),
         flags = (select count(*) from votes where comment_id = comments.id and vote = -1),
-        confidence = #{calculated_confidence},
-        confidence_order = concat(lpad(char(65536 - floor(((confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(id & 0xff using binary))
+        confidence = #{new_confidence},
+        confidence_order = concat(lpad(char(65535 - floor(#{new_confidence} * 65535) using binary), 2, '\0'), char(id & 0xff using binary))
       WHERE id = #{id.to_i}
     SQL
     story.update_cached_columns
@@ -508,6 +542,7 @@ class Comment < ApplicationRecord
   def record_initial_upvote
     # not calling vote_thusly to save round-trips of validations
     Vote.create! story: story, comment: self, user: user, vote: 1
+
     update_score_and_recalculate! 0, 0 # trigger db calculation
 
     story.update_cached_columns
@@ -542,6 +577,24 @@ class Comment < ApplicationRecord
     short_id
   end
 
+  # this is less evil than it looks because commonmark produces consistent html:
+  # <a href="http://example.com/" rel="ugc">example</a>
+  def parsed_links
+    markeddown_comment
+      .scan(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/)
+      .map { |url, title|
+        Link.new({
+          from_comment_id: id,
+          url: url,
+          title: (url == title) ? nil : title
+        })
+      }.compact
+  end
+
+  def recreate_links
+    Link.recreate_from_comment!(self) if saved_change_to_attribute? :comment
+  end
+
   def unassign_votes
     story.update_cached_columns
   end
@@ -551,11 +604,11 @@ class Comment < ApplicationRecord
   end
 
   def vote_summary_for_user
-    (vote_summary || []).map { |v| "-#{v.count} #{v.reason_text.downcase}" }.join(", ")
+    (vote_summary || []).map { |v| "#{v.count} #{v.reason_text.downcase}" }.join(", ")
   end
 
   def vote_summary_for_moderator
-    (vote_summary || []).map { |v| "-#{v.count} #{v.reason_text.downcase} (#{v.usernames})" }.join(", ")
+    (vote_summary || []).map { |v| "#{v.count} #{v.reason_text.downcase} (#{v.usernames})" }.join(", ")
   end
 
   def undelete_for_user(user)

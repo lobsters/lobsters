@@ -50,7 +50,7 @@ describe Search do
       create(:comment, comment: "comment3",
         story_id: @stories[2].id,
         user_id: @bob.id),
-      create(:comment, comment: "comment4",
+      create(:comment, comment: "comment4 comment",
         story_id: @stories[4].id,
         user_id: @bob.id)
     ]
@@ -91,6 +91,8 @@ describe Search do
         {what: "stories", q: "term", order: "newest#{esc}"},
         {what: "stories", q: "term", page: "2#{esc}"},
         {what: "stories#{esc}", q: "term"},
+        {what: "stories", q: "o'caml"},
+        {what: "stories", q: "can't"},
         {what: "stories", q: "term 'two apostrophes'"},
         {what: "stories", q: "'go-sqlite'"},
         # some real attack attempts:
@@ -107,6 +109,10 @@ describe Search do
         {what: "comments", q: "title:titl#{esc}"},
         {what: "comments", q: "title:\"multi#{esc} titl\""},
         {what: "comments", q: "term#{esc}"},
+        {what: "comments", q: "o'caml"},
+        {what: "comments", q: "can't"},
+        {what: "comments", q: "c++"},
+        {what: "comments", q: "\"you can't\""},
         {what: "comments", q: "term", order: "newest#{esc}"},
         {what: "comments", q: "term", page: "2#{esc}"},
         {what: "comments#{esc}", q: "term"}
@@ -211,6 +217,32 @@ describe Search do
     expect(search.results).to include(@comments[1])
   end
 
+  it "can search for comments with a quoted term" do
+    search = Search.new({q: '"comment1"', what: "comments"}, @alice)
+    expect(search.results.to_a).to eq([@comments[1]])
+  end
+
+  it "can search multi-word terms" do
+    search = Search.new({q: '"comment4 comment"', what: "comments"}, @alice)
+    expect(search.results).to eq([@comments[4]])
+  end
+
+  it "can search multi-word requiring all terms in order, not an OR search" do
+    search = Search.new({q: '"comment1 comment2"', what: "comments"}, @alice)
+    expect(search.results).to be_empty
+  end
+
+  it "prevents SQL injection in multi-word quoted searches" do
+    search = Search.new({q: '"comment1" OR 1=1--', what: "comments"}, @alice)
+    expect(search.results.to_a).to eq([@comments[1]])
+
+    search = Search.new({q: '"comment1"\'" OR 1=1--', what: "comments"}, @alice)
+    expect(search.results.to_a).to eq([@comments[1]])
+
+    search = Search.new({q: '"comment1\'" OR 1=1--', what: "comments"}, @alice)
+    expect(search.results.to_a).to eq([@comments[1]])
+  end
+
   it "can search for comments by tag" do
     search = Search.new({q: "comment2 tag:tag1", what: "comments"}, @alice)
 
@@ -283,6 +315,18 @@ describe Search do
       expect(s.strip_operators("hj\"kl")).to eq("hj kl")
       expect(s.strip_operators("li%ke")).to eq("li ke")
       expect(s.strip_operators("\"blah\"")).to eq("blah")
+    end
+  end
+
+  describe "#strip_short_terms" do
+    it "removes short words that mariadb would ignore" do
+      s = Search.new({}, nil)
+      # removes both 1 and 2 char terms
+      expect(s.strip_short_terms("i")).to eq("")
+      expect(s.strip_short_terms("do")).to eq("")
+      expect(s.strip_short_terms("can't")).to eq("can't")
+      expect(s.strip_short_terms("o'caml")).to eq("o'caml")
+      expect(s.strip_short_terms("c++")).to eq("c++")
     end
   end
 end

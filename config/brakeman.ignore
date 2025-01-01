@@ -58,29 +58,6 @@
       "note": "these are integers returned by other queries in the class"
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "25962a7aeec83be43af95f65c696d95c19421f2cbee65117ad583179f7060088",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/search.rb",
-      "line": 215,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Arel.sql((\"MATCH(comment)\\nAGAINST ('#{[].map do\n \"+#{s}\"\n end.join(\", \")}' in boolean mode)\\n\".tr(\"\\n\", \" \") + \" DESC\"))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Search",
-        "method": "perform_comment_search!"
-      },
-      "user_input": "\"MATCH(comment)\\nAGAINST ('#{[].map do\n \"+#{s}\"\n end.join(\", \")}' in boolean mode)\\n\".tr(\"\\n\", \" \")",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "Search.strip_operators is a security control"
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "305ab5b7234aff45f564061140f604d2fada9fec1a5b7e45cfbd3296d64cca3e",
@@ -115,13 +92,36 @@
       "note": "Rendered markdown"
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "32f735baea875b9a40afff67bb92cd3db758912537122dea7ad5a78eb34f849e",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/story.rb",
+      "line": 565,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Story.connection.execute(\"UPDATE stories SET\\n  score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -\\n  -- subtract number of hidings where hider flagged AND didn't comment (comment voting is ignored)\\n  (\\n    select count(*) from hidden_stories hiding\\n    where\\n      story_id = #{id.to_i}\\n      and hiding.created_at >= str_to_date('#{(created_at - 14.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')\\n      and exists (    -- user flagged\\n        select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1\\n      )\\n      and not exists ( -- user didn't comment\\n        select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id\\n      )\\n  ),\\n  flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),\\n  hotness = #{calculated_hotness}\\nWHERE id = #{id.to_i}\\n\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Story",
+        "method": "update_score_and_recalculate!"
+      },
+      "user_input": "(created_at - 14.days).utc.iso8601",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "uses db-generated integers and dates only"
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "3a47978f859a2a59b906db058794d20f4258f8323a38eaa884fc2924aaee3e5a",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/users/show.html.erb",
-      "line": 159,
+      "line": 163,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "User.find_by(:username => params[:username]).linkified_about",
       "render_path": [
@@ -197,19 +197,19 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
-      "fingerprint": "7437561357336dcb1dde3dc263e2466a900b3ebf04793e9482e3eb7051c710f8",
+      "fingerprint": "5b9474e39c006237ea020a2b3dcb840220a050f9e479457a79850f2ca8cf0023",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/stats/index.html.erb",
       "line": 16,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "User.connection.execute(\"SELECT ym, count(distinct user_id)\\nFROM (\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM stories\\n  UNION\\n  SELECT date_format(updated_at, '%Y-%m') as ym, user_id FROM votes\\n  UNION\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM comments\\n) as active_users\\nGROUP BY 1\\nORDER BY 1 asc;\\n\")",
+      "code": "User.connection.select_all(\"SELECT ym, count(distinct user_id)\\nFROM (\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM stories\\n  UNION\\n  SELECT date_format(updated_at, '%Y-%m') as ym, user_id FROM votes\\n  UNION\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM comments\\n) as active_users\\nGROUP BY 1\\nORDER BY 1 asc;\\n\").to_a.map(&:values).flatten",
       "render_path": [
         {
           "type": "controller",
           "class": "StatsController",
           "method": "index",
-          "line": 50,
+          "line": 51,
           "file": "app/controllers/stats_controller.rb",
           "rendered": {
             "name": "stats/index",
@@ -221,12 +221,69 @@
         "type": "template",
         "template": "stats/index"
       },
-      "user_input": "User.connection.execute(\"SELECT ym, count(distinct user_id)\\nFROM (\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM stories\\n  UNION\\n  SELECT date_format(updated_at, '%Y-%m') as ym, user_id FROM votes\\n  UNION\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM comments\\n) as active_users\\nGROUP BY 1\\nORDER BY 1 asc;\\n\")",
+      "user_input": "User.connection.select_all(\"SELECT ym, count(distinct user_id)\\nFROM (\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM stories\\n  UNION\\n  SELECT date_format(updated_at, '%Y-%m') as ym, user_id FROM votes\\n  UNION\\n  SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM comments\\n) as active_users\\nGROUP BY 1\\nORDER BY 1 asc;\\n\")",
       "confidence": "Weak",
       "cwe_id": [
         79
       ],
-      "note": "svg graph"
+      "note": "no variables so there's no user input, and the data is piped through the SVG charting library"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "6042237b560b898fc4f87d6f95bb5cfc5c3c5e09f1a264a9afdd5ab8f087d2a9",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/stories/_form_errors.html.erb",
+      "line": 40,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "excerpt_fragment_around_link(link.from_comment.markeddown_comment, Story.new(:user => User.find_by(:session_token => session[:u].to_s)).url)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "StoriesController",
+          "method": "check_url_dupe",
+          "line": 422,
+          "file": "app/controllers/stories_controller.rb",
+          "rendered": {
+            "name": "stories/_form_errors",
+            "file": "app/views/stories/_form_errors.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "stories/_form_errors"
+      },
+      "user_input": "Story.new(:user => User.find_by(:session_token => session[:u].to_s)).url",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": "False alarm: excerpt_fragment_around_url doesn't return Story.url."
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "7702b04f42183ee4e94e3e006ac70646a52b36fbc580f98099f13231ae4931c3",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/search.rb",
+      "line": 215,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Arel.sql((\"MATCH(comment)\\nAGAINST ('#{[].map do\n \"+#{s}\"\n end.join(\" \")}' in boolean mode)\\n\".tr(\"\\n\", \" \") + \" DESC\"))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Search",
+        "method": "perform_comment_search!"
+      },
+      "user_input": "\"MATCH(comment)\\nAGAINST ('#{[].map do\n \"+#{s}\"\n end.join(\" \")}' in boolean mode)\\n\".tr(\"\\n\", \" \")",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "inputs pass through strip_operators; has some injection tests"
     },
     {
       "warning_type": "SQL Injection",
@@ -235,7 +292,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story_repository.rb",
-      "line": 59,
+      "line": 60,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Story.base(@user).where(\"created_at >= (NOW() - INTERVAL #{length[:dur]} #{length[:intv].upcase})\")",
       "render_path": null,
@@ -258,7 +315,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/users_controller.rb",
-      "line": 153,
+      "line": 149,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "User.find_by(:username => params[:username]).comments.where(\"\\n        comments.flags > 0 and\\n        comments.created_at >= now() - interval #{time_interval(\"1m\")[:dur]} #{time_interval(\"1m\")[:intv]}\")",
       "render_path": null,
@@ -281,7 +338,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/settings_controller.rb",
-      "line": 195,
+      "line": 196,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(MastodonApp.find_or_register(params[:mastodon_instance_name]).oauth_auth_url, :allow_other_host => true)",
       "render_path": null,
@@ -300,48 +357,25 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "9801e053f01fec138698d5378be7e042bd1f3200d8edab6fc3038e313546df85",
+      "fingerprint": "a245ef32a60feecfaf39de68bfb0ddb93f8034936f733f5e5326897ffad3a47c",
       "check_name": "SQL",
       "message": "Possible SQL injection",
-      "file": "app/controllers/moderations_controller.rb",
-      "line": 44,
+      "file": "app/models/comment.rb",
+      "line": 402,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "((Moderation.all.eager_load(:moderator, :story, { :comment => ([:story, :user]) }, :tag, :user, :domain, :category) or Moderation.all.eager_load(:moderator, :story, { :comment => ([:story, :user]) }, :tag, :user, :domain, :category).where(\"is_from_suggestions = true\")) or Moderation.all.eager_load(:moderator, :story, { :comment => ([:story, :user]) }, :tag, :user, :domain, :category).joins(:moderator).where(:users => ({ :username => params.fetch(\"moderator\", \"(All)\") }))).where(\"`moderations`.`#{type.to_s.singularize}_id` is null\")",
+      "code": "Comment.connection.execute(\"UPDATE comments SET\\n  score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),\\n  flags = (select count(*) from votes where comment_id = comments.id and vote = -1),\\n  confidence = #{calculated_confidence},\\n  confidence_order = concat(lpad(char(65535 - floor(#{calculated_confidence} * 65535) using binary), 2, '\\x00'), char(id & 0xff using binary))\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "ModerationsController",
-        "method": "index"
-      },
-      "user_input": "type.to_s.singularize",
-      "confidence": "Weak",
-      "cwe_id": [
-        89
-      ],
-      "note": "type comes from @what.keys, which are symbols for table names"
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "9eea6631f4cd5cbb5e75e3abd761f0ba5a1dc06454127077a3a1453421d21552",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/story.rb",
-      "line": 503,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Story.connection.execute(\"UPDATE stories SET\\n  score = (select coalesce(sum(vote), 0) from votes where story_id = stories.id and comment_id is null),\\n  flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),\\n  hotness = #{calculated_hotness}\\nWHERE id = #{id.to_i}\\n\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Story",
+        "class": "Comment",
         "method": "update_score_and_recalculate!"
       },
-      "user_input": "calculated_hotness",
+      "user_input": "calculated_confidence",
       "confidence": "Medium",
       "cwe_id": [
         89
       ],
-      "note": "calculated_hotness returns float; id is an integer"
+      "note": "calculated_confidence is a float and no user input is possible"
     },
     {
       "warning_type": "File Access",
@@ -365,29 +399,6 @@
         22
       ],
       "note": "User#username validated by User::VALID_USERNAME"
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "a548b51c0a738fae124d34e3ab5f88f97aaf8f074998fa971e0752c7b026ecbd",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/comment.rb",
-      "line": 372,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Comment.connection.execute(\"UPDATE comments SET\\n  score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),\\n  flags = (select count(*) from votes where comment_id = comments.id and vote = -1),\\n  confidence = #{calculated_confidence},\\n  confidence_order = concat(lpad(char(65536 - floor(((confidence - -0.2) * 65535) / 1.2) using binary), 2, '0'), char(id & 0xff using binary))\\nWHERE id = #{id.to_i}\\n\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Comment",
-        "method": "update_score_and_recalculate!"
-      },
-      "user_input": "calculated_confidence",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "calculated_confidence is a float; id is an integer"
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -448,7 +459,7 @@
           "type": "controller",
           "class": "SettingsController",
           "method": "twofa_enroll",
-          "line": 108,
+          "line": 109,
           "file": "app/controllers/settings_controller.rb",
           "rendered": {
             "name": "settings/twofa_enroll",
@@ -474,7 +485,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/users_controller.rb",
-      "line": 141,
+      "line": 137,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.exec_query(\"\\n      select\\n        n_flags, count(*) as n_users\\n      from (\\n        select\\n          comments.user_id, sum(flags) as n_flags\\n        from\\n          comments\\n        where\\n          comments.created_at >= now() - interval #{time_interval(\"1m\")[:dur]} #{time_interval(\"1m\")[:intv]}\\n        group by comments.user_id) count_by_user\\n      group by 1\\n      order by 1 asc;\\n    \")",
       "render_path": null,
@@ -505,7 +516,7 @@
           "type": "controller",
           "class": "SettingsController",
           "method": "twofa_enroll",
-          "line": 108,
+          "line": 109,
           "file": "app/controllers/settings_controller.rb",
           "rendered": {
             "name": "settings/twofa_enroll",
@@ -592,8 +603,31 @@
         89
       ],
       "note": "IntervalHelper#time_interval is a security control"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "fdd54f924c48f192955bf4ed6deea77708243f3e2dab34af1f2f245b96033b72",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/moderations_controller.rb",
+      "line": 46,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "((Moderation.all.eager_load(:moderator, :story, { :comment => ([:story, :user]) }, :tag, :user, :domain, :origin, :category) or Moderation.all.eager_load(:moderator, :story, { :comment => ([:story, :user]) }, :tag, :user, :domain, :origin, :category).where(\"is_from_suggestions = true\")) or Moderation.all.eager_load(:moderator, :story, { :comment => ([:story, :user]) }, :tag, :user, :domain, :origin, :category).joins(:moderator).where(:users => ({ :username => params.fetch(\"moderator\", \"(All)\") }))).where(\"`moderations`.`#{type.to_s.singularize}_id` is null\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ModerationsController",
+        "method": "index"
+      },
+      "user_input": "type.to_s.singularize",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": "type comes from @what.keys, which are symbols for table names"
     }
   ],
-  "updated": "2024-03-15 13:36:39 -0500",
-  "brakeman_version": "6.1.2"
+  "updated": "2024-12-03 17:25:37 -0600",
+  "brakeman_version": "6.2.2"
 }

@@ -111,7 +111,7 @@ class Search
   # not security-sensitive, mariadb ignores 1 and 2 character terms and
   # stripping them allows the frontend to explain they're ignored
   def strip_short_terms(s)
-    s.to_s.gsub(/\b\p{Word}\p{Word}?\b/, "").strip
+    s.to_s.strip.split(/\p{Space}/).filter { _1.size > 2 }.join(" ")
   end
 
   def perform_comment_search!
@@ -161,12 +161,12 @@ class Search
           .joins!(:story)
           .and!(
             Story.where(url: value.to_s)
-              .or(Story.where(normalized_url: Utils.normalize_url(value.to_s)))
+              .or(Story.where(normalized_url: Utils.normalize(value)))
           )
       when :negated
         # TODO
       when :quoted
-        terms.append '"' + strip_operators(value) + '"'
+        terms.append '"' + strip_operators(value.pluck(:term).join(" ")) + '"'
       when :term, :catchall
         val = strip_short_terms(strip_operators(value))
         # if punctuation is replaced with a space, this would generate a terms search
@@ -177,7 +177,7 @@ class Search
     if terms.any?
       terms_sql = <<~SQL.tr("\n", " ")
         MATCH(comment)
-        AGAINST ('#{terms.map { |s| "+#{s}" }.join(", ")}' in boolean mode)
+        AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' in boolean mode)
       SQL
       query.where! terms_sql
     end
@@ -265,12 +265,12 @@ class Search
         url = true
         query.and!(
           Story.where(url: value.to_s)
-            .or(Story.where(normalized_url: Utils.normalize_url(value.to_s)))
+            .or(Story.where(normalized_url: Utils.normalize(value)))
         )
       when :negated
         # TODO
       when :quoted
-        terms.append '"' + strip_operators(value) + '"'
+        terms.append '"' + strip_operators(value.pluck(:term).join(" ")) + '"'
       when :term, :catchall
         val = strip_short_terms(strip_operators(value))
         # if punctuation is replaced with a space, this would generate a terms search

@@ -4,12 +4,19 @@ class Hat < ApplicationRecord
   belongs_to :user
   belongs_to :granted_by_user, class_name: "User", inverse_of: false
 
+  before_validation :assign_short_id, on: :create
   after_create :log_moderation
 
   validates :hat, presence: true
   validates :hat, :link, length: {maximum: 255}
+  validates :modlog_use, inclusion: {in: [true, false]}
+  validates :short_id, length: {maximum: 10}, presence: true
 
   scope :active, -> { joins(:user).where(doffed_at: nil).merge(User.active) }
+
+  def assign_short_id
+    self.short_id = ShortId.new(self.class).generate
+  end
 
   def doff_by_user_with_reason(user, reason)
     m = Moderation.new
@@ -82,5 +89,9 @@ class Hat < ApplicationRecord
     else
       link
     end
+  end
+
+  def to_param
+    short_id
   end
 end

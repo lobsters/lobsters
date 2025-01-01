@@ -53,6 +53,48 @@ class ModNote < ApplicationRecord
     )
   end
 
+  def self.record_reparent!(reparent_user, mod, reason)
+    old_inviter_url = Rails.application.routes.url_helpers.user_url(
+      reparent_user.invited_by_user,
+      host: Rails.application.domain
+    )
+    create_without_dupe!(
+      moderator: mod,
+      user: reparent_user,
+      note: "Reparented from [#{reparent_user.invited_by_user.username}](#{old_inviter_url}) to #{mod.username} with reason: #{reason}"
+    )
+
+    reparent_user_url = Rails.application.routes.url_helpers.user_url(
+      reparent_user,
+      host: Rails.application.domain
+    )
+    create_without_dupe!(
+      moderator: mod,
+      user: reparent_user.invited_by_user,
+      note: "Admin reparented their invitee [#{reparent_user.username}](#{reparent_user_url}) to #{mod.username} with reason: #{reason}"
+    )
+  end
+
+  def self.tattle_on_banned_login(user)
+    # rubocop:disable Rails/SaveBang
+    create(
+      moderator: InactiveUser.inactive_user,
+      user: user,
+      note: "Attempted to log in while banned."
+    )
+    # rubocop:enable Rails/SaveBang
+  end
+
+  def self.tattle_on_deleted_login(user)
+    # rubocop:disable Rails/SaveBang
+    create(
+      moderator: InactiveUser.inactive_user,
+      user: user,
+      note: "Attempted to log in after deleting their account."
+    )
+    # rubocop:enable Rails/SaveBang
+  end
+
   def self.tattle_on_invited(redeemer, invitation_code)
     invitation = Invitation.find_by(code: invitation_code)
     return unless invitation
@@ -64,7 +106,7 @@ class ModNote < ApplicationRecord
       host: Rails.application.domain
     )
     redeemer_url = Rails.application.routes.url_helpers.user_url(
-      sender,
+      redeemer,
       host: Rails.application.domain
     )
     create_without_dupe!(
@@ -130,6 +172,37 @@ class ModNote < ApplicationRecord
       user: story.user,
       created_at: Time.current,
       note: "Attempted to post a story from a #{reason} domain:\n" \
+        "- user joined: #{time_ago_in_words(story.user.created_at)}\n" \
+        "- url: #{story.url}\n" \
+        "- title: #{story.title}\n" \
+        "- user_is_author: #{story.user_is_author}\n" \
+        "- tags: #{story.tags_a.join(" ")}\n" \
+        "- description: #{story.description}\n"
+    )
+  end
+
+  def self.tattle_on_story_origin!(story, reason)
+    create_without_dupe!(
+      moderator: InactiveUser.inactive_user,
+      user: story.user,
+      created_at: Time.current,
+      note: "Attempted to post a story from a #{reason} origin:\n" \
+        "- user joined: #{time_ago_in_words(story.user.created_at)}\n" \
+        "- url: #{story.url}\n" \
+        "- origin: #{story.origin.identifier}\n" \
+        "- title: #{story.title}\n" \
+        "- user_is_author: #{story.user_is_author}\n" \
+        "- tags: #{story.tags_a.join(" ")}\n" \
+        "- description: #{story.description}\n"
+    )
+  end
+
+  def self.tattle_on_traffic_attribution!(story)
+    create_without_dupe!(
+      moderator: InactiveUser.inactive_user,
+      user: story.user,
+      created_at: Time.current,
+      note: "Attempted to submit a URL attributing traffic:\n" \
         "- user joined: #{time_ago_in_words(story.user.created_at)}\n" \
         "- url: #{story.url}\n" \
         "- title: #{story.title}\n" \

@@ -53,6 +53,7 @@ class MessagesController < ApplicationController
 
     @new_message = Message.new(message_params)
     @new_message.author_user_id = @user.id
+    @new_message.hat = @user.wearable_hats.find_by(short_id: params[:message][:hat_id])
 
     @direction = :out
 
@@ -60,8 +61,7 @@ class MessagesController < ApplicationController
       if @user.is_moderator? && @new_message.mod_note
         ModNote.create_from_message(@new_message, @user)
       end
-      flash[:success] = "Your message has been sent to " <<
-        @new_message.recipient.username.to_s << "."
+      flash[:success] = "Your message has been sent to #{@new_message.recipient.username}."
       redirect_to "/messages"
     else
       @messages = Message.inbox(@user).load

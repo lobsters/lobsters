@@ -1,5 +1,28 @@
-<div class="box wide">
-  <h1><%= @domain.domain %></h1>
+<div id="domain_box" class="box wide">
+  <h1><%= "New domain" if @domain.new_record? %> <%= @domain.domain %></h1>
+
+  <%= form_with model: @domain do |f| %>
+    <%= errors_for @domain %>
+
+    <%= hidden_field_tag :new_domain, @domain.domain || params[:id] %>
+    <div class="boxline">
+      <%= f.label :selector, "Origin selector" %>
+      <%= f.text_field :selector %>
+      <div class="d"><p class="help">Regexp with captures, must consume whole string like: <kbd>\Ahttps?://github.com/+([^/]+).*\z</kbd></p></div>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :replacement, "Origin replacement" %>
+      <%= f.text_field :replacement %>
+      <div class="d"><p class="help"><kbd>github.com/\1</kbd></p></div>
+    </div>
+
+    <div class="boxline">
+      <%= f.submit 'Save' %>
+    </div>
+  <% end %>
+
+  <br><br><hr><br>
 
   <% if @domain.banned_at %>
     <label class="required">Status:</label>
@@ -26,8 +49,8 @@
     </span>
   <% end %>
 
-  <%= form_with model: @domain do |f| %>
-    <%= f.hidden_field :domain %>
+  <%= form_with model: @domain, url: @domain.new_record? ? create_and_ban_domain_path(id: @domain.domain) : ban_domain_path(id: @domain.domain) do |f| %>
+    <%= hidden_field_tag :new_domain, @domain.new_record? %>
 
     <div class="boxline">
       <%= f.label :banned_reason, "#{caption_of_button(@domain)} Reason:", class: 'required' %>
@@ -35,7 +58,7 @@
     </div>
 
     <div class="boxline">
-      <%= f.submit caption_of_button(@domain), class: 'deletion' %>
+        <%= f.submit caption_of_button(@domain), class: 'deletion' %>
     </div>
   <% end %>
 </div>

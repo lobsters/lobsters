@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "normalize_url" do
+describe "normalizing urls" do
   {
     "https://example.com" => "example.com", # basic
     "http://www.e.com" => "e.com", # http + https same
@@ -16,16 +16,20 @@ describe "normalize_url" do
     "https://foo.e.com" => "foo.e.com", # keep subdomains
     "https://e.co.uk" => "e.co.uk", # keep other TLDs
     "https://e.com/index.html" => "e.com", # remove index.html
-    "https://e.com/asdf.html" => "e.com/asdf.html", # end .html ok
-    "https://e.com/asdf.htm" => "e.com/asdf.html", # .htm -> .html
+    "https://e.com/asdf.html" => "e.com/asdf", # strip trailing .html
+    "https://e.com/asdf.htm" => "e.com/asdf", # strip trailing .htm
     "https://e.com?b=2&a=1" => "e.com?a=1&b=2", # sort query args
     "https://e.com?a=1?b=2" => "e.com?a=1&b=2", # normalize ? to &
     "https://e.com?c=3&a=1?b=2&" => "e.com?a=1&b=2&c=3", # combined; trailing &
+    "https://www10.org" => "www10.org", # keep www10. since org alone doesn't fully describe the domain
+    "https://www10.example.org" => "example.org", # remove www10.
 
     "https://www.arxiv.org" => "arxiv.org",
     "https://arxiv.org/abs/1234.12345" => "arxiv.org/abs/1234.12345",
     "https://arxiv.org/pdf/1234.12345" => "arxiv.org/abs/1234.12345",
     "https://arxiv.org/abs/1234.12345.pdf" => "arxiv.org/abs/1234.12345",
+    "https://arxiv.org/abs/2311.09394v2" => "arxiv.org/abs/2311.09394v2", # bug #954
+    "https://arxiv.org/pdf/2311.09394v2.pdf" => "arxiv.org/abs/2311.09394v2",
 
     "https://www.rfc-editor.org/rfc/rfc9338.html" => "rfc-editor.org/rfc/9338",
     "https://www.rfc-editor.org/rfc/rfc9338.txt" => "rfc-editor.org/rfc/9338",
@@ -56,8 +60,8 @@ describe "normalize_url" do
     "https://wiki.freebsd.org/VCSWhy (" => "wiki.freebsd.org/VCSWhy ("
   }.each do |input, output|
     it "normalizes" do
-      ret = Utils.normalize_url(input)
-      expect(ret).to eq(output), "normalize_url(#{input}) expected #{output} but got #{ret}"
+      ret = Utils.normalize(input)
+      expect(ret).to eq(output), "normalize(#{input}) expected #{output} but got #{ret}"
     end
   end
 end

@@ -74,18 +74,21 @@
         <% when :title %>
           <dt><span class="searchq">title:<%= @search.flatten_title(value) %></span></dt>
           <dd>Title: <%= @search.flatten_title(value) %></dd>
+        <% when :url %>
+          <dt><span class="searchq">url:<%= value %></span></dt>
+          <dd>URL: <%= value %></dd>
         <% when :user %>
           <dt><span class="searchq">@<%= value %></span></dt>
           <dd><%= @search.searched_model.name %> by: <%= link_to value, user_path(value) %></dd>
         <% when :negated %>
         <% when :quoted %>
-          <dt><span class="searchq">"<%= value %>"</span></dt>
+          <dt><span class="searchq">"<%= value.pluck(:term).join(" ") %>"</span></dt>
           <dd>
-            Quote: <span class="searchq">"<%= @search.strip_operators(value) %>"</span>
+            Quote: <span class="searchq">"<%= @search.strip_operators(value.pluck(:term).join(" ")) %>"</span>
             <% if !value.to_s.include?(' ') %>
               <br>Quoting a single word is redundant, terms are exact.
             <% end %>
-            <% if value.to_s != @search.strip_operators(value) %>
+            <% if value.pluck(:term).join(" ").to_s != @search.strip_operators(value.pluck(:term).join(" ")) %>
               <br>Punctuation that might have been taken as a <a href="https://mariadb.com/kb/ru/full-text-index-overview/#in-boolean-mode">SQL search operator</a> was stripped.
             <% end %>
           </dd>
@@ -117,6 +120,9 @@
             Catchall: <span class="searchq"><%= @search.strip_operators(value) %></span>
             If you were trying to use a search operator, it wasn't recognized.
           </dd>
+        <% else %>
+          <dt>oops</dt>
+          <dd>Implementer forgot to handle a search case, please file a bug with your search terms.</dd>
         <% end %>
       <% end %>
       </dl>
@@ -146,9 +152,7 @@
 <li id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
 class="story <%= story.current_upvoted? ? "upvoted" : "" %>
 <%= story.current_flagged? ? "flagged" : "" %>
-<%= story.score <= -1 ? "negative_1" : "" %>
-<%= story.score <= -3 ? "negative_3" : "" %>
-<%= story.score <= -5 ? "negative_5" : "" %>
+<%= story.negativity_class %>
 <%= story.is_hidden_by_cur_user ? "hidden" : "" %>
 <%= story.is_saved_by_cur_user ? "saved" : "" %>
 <%= story.is_deleted? ? "deleted" : "" %>">
@@ -180,12 +184,14 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
     <% end %>
     <% if story.can_be_seen_by_user?(@user) %>
       <span class="tags">
-        <% story.tags.each do |tag| %>
+        <% (story.previewing ? story.preview_tags : story.tags).each do |tag| %>
           <%= tag_link(tag) %>
         <% end %>
       </span>
-      <% if story.domain.present? %>
-        <a class="domain" href="<%= domain_path(story.domain) %>"><%= story.domain.domain %></a>
+      <% if story.origin.present? %>
+        <%= link_to story.origin.identifier, origin_path(story.origin), class: 'domain' %>
+      <% elsif story.domain.present? %>
+        <%= link_to story.domain.domain, domain_path(story.domain), class: 'domain' %>
       <% end %>
 
       <% if single_story %>
@@ -283,6 +289,10 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
             <span> | </span><%= link_to "hide", story_hide_path(story.short_id),
               :class => "hider" %>
           <% end %>
+          <% if single_story && story.disownable_by_user?(@user) %>
+          |
+          <%= button_to("disown", story_disown_path(story.short_id), form_class: "disowner-form", params: { type: 'story' }) %>
+          <% end %>
           <% if single_story && story.hider_count > 0 %>
             (hidden by <%= pluralize(story.hider_count, "user") %>)
           <% end %>
@@ -299,7 +309,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <span> | </span>
           <span class="dropdown_parent">
             <input id="archive_<%= story.short_id %>" class="archive_button" type="checkbox">
-            <label for="archive_<%= story.short_id %>">archive</label>
+            <label for="archive_<%= story.short_id %>">caches</label>
             <div class="archive-dropdown">
               <a href="<%= story.archiveorg_url %>">Archive.org</a>
               <a href="<%= story.archivetoday_url %>">Archive.today</a>
@@ -369,8 +379,8 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
       <li>Terms are exact, so <span class="searchq">code</span> doesn't match <span class="searchq">coder</span> or <span class="searchq">coding</span>. You can approximate stemming with <span class="searchq">cod*</span></li>
       <li>Search titles with <span class="searchq">title:kernel</span> or <span class="searchq">title:"linux kernel"</span></li>
       <li>Search by domain with <span class="searchq">domain:example.com</span></li>
-      <li>Search by story submitter with <span class="searchq">submitter:alice</span></li>
-      <li>Search by <%= link_to 'tag', tags_path %> with <code>tag:meta</span></li>
+      <li>Search by story submitter with <span class="searchq">submitter:alice</span> or by comment author with <span class="searchq">commenter:bob</span></li>
+      <li>Search by <%= link_to 'tag', tags_path %> with <span class="searchq">tag:meta</span></li>
     </ul>
   </div>
 <% end %>

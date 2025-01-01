@@ -1,9 +1,6 @@
 #!/usr/bin/env ruby
 
-APP_PATH = File.expand_path("../../config/application", __FILE__)
-require File.expand_path("../../config/boot", __FILE__)
-require APP_PATH
-Rails.application.require_environment!
+require File.expand_path("../../config/environment", __FILE__)
 
 class String
   def quoted_printable(encoded_word = false)

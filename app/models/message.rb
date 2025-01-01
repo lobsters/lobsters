@@ -17,8 +17,10 @@ class Message < ApplicationRecord
   attr_reader :recipient_username
 
   validates :subject, length: {in: 1..100}
-  validates :body, length: {maximum: (64 * 1024)}
+  validates :body, length: {maximum: 70_000}, on: :update # for weird old data
+  validates :body, length: {maximum: 8_192}, on: :create # for weird old data
   validates :short_id, length: {maximum: 30}
+  validates :has_been_read, :deleted_by_author, :deleted_by_recipient, inclusion: {in: [true, false]}
   validate :hat do
     next if hat.blank?
     if author.blank? || author.wearable_hats.exclude?(hat)
@@ -42,6 +44,7 @@ class Message < ApplicationRecord
 
   before_validation :assign_short_id, on: :create
   after_create :deliver_email_notifications
+  after_destroy :update_unread_counts
   after_save :update_unread_counts
   after_save :check_for_both_deleted
 
@@ -87,8 +90,6 @@ class Message < ApplicationRecord
   end
 
   def deliver_email_notifications
-    return if Rails.env.development?
-
     if recipient.email_messages?
       begin
         EmailMessageMailer.notify(self, recipient).deliver_now
@@ -96,6 +97,8 @@ class Message < ApplicationRecord
         Rails.logger.error "error e-mailing #{recipient.email}: #{e}"
       end
     end
+
+    return if Rails.env.development?
 
     if recipient.pushover_messages?
       recipient.pushover!(

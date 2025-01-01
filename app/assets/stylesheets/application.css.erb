@@ -181,10 +181,6 @@ html.color-scheme-dark {
 /* overall page */
 
 html {
-	/* environment colors */
-	--color-selection-fg: HighlightText;
-	--color-selection-bg: Highlight;
-
 	/* derived colors */
 
 	/* These colors are derived from the light or dark palette. This
@@ -227,9 +223,14 @@ html {
 
 /* generics */
 
-/* force a vertical scrollbar to avoid page-shifting */
 html {
+	/* force a vertical scrollbar to avoid page-shifting */
 	overflow-y: scroll;
+
+	/* avoid automatic resizing of some text elements on phones in landscape */
+	-moz-text-size-adjust: none;
+	-webkit-text-size-adjust: none;
+	text-size-adjust: none;
 }
 
 body, textarea, input, button {
@@ -337,6 +338,10 @@ div.shorten_first_p p:first-child {
 	margin-top: 0.5em;
 }
 
+hr {
+	border: none;
+	border-top: 1px dotted var(--color-fg-shape);
+}
 pre {
 	overflow-x: auto;
 }
@@ -410,6 +415,22 @@ button:focus {
 	font-style: italic;
 }
 
+form.disowner-form {
+	display: inline;
+	button {
+		background: none;
+		border: none;
+		padding: 0;
+		color: var(--color-fg-contrast-4-5);
+		text-decoration: none;
+		cursor: pointer;
+		outline: none;
+		&:not(.disable):hover {
+			color: var(--color-fg-contrast-4-5);
+		}
+	}
+}
+
 button,
 input[type="button"],
 input[type="reset"],
@@ -480,12 +501,6 @@ input.deletion {
 	-webkit-appearance: none;
 	margin: 0;
 }
-
-::selection {
-	color: var(--color-selection-fg);
-	background-color: var(--color-selection-bg);
-}
-
 
 
 /* header */
@@ -874,6 +889,12 @@ div.comment:target div.voters {
 	display: block !important;
 }
 
+.thread_summary {
+	color: var(--color-fg-contrast-4-5);
+	font-size: 9.5pt;
+	/* .comment_folder (-4px margin-left + 1.5em width) + .voters (30px width) */
+	margin-left: calc(-4px + 1.5em + 30px);
+}
 li .byline {
 	color: var(--color-fg-contrast-4-5);
 	font-size: 9.5pt;
@@ -921,9 +942,19 @@ li .byline a.story_has_suggestions {
 	color: var(--color-lobsters-fg-has-suggestions);
 }
 
-li.story.hidden {
+.last_read_newest {
+	border-bottom: 2px solid var(--color-fg-shape);
+	border-top: 0;
+	border-left: 0;
+	border-right: 0;
+	margin: 1em 0 1em 32px; /* matching div.detail */
+}
+
+li.story.hidden *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
+li.story.hidden .score {
 	opacity: 0.25;
 }
+
 ol.show_hidden li.story.hidden {
 	opacity: 1.0 !important;
 }
@@ -1149,11 +1180,15 @@ div#story_box button#story_fetch_title {
 }
 div#story_box input#story_title,
 div#story_box input#story_moderation_reason,
-div#story_box input#story_merge_story_short_id {
+div#story_box input#story_merge_story_short_id,
+div#domain_box input[type=text] {
 	width: 600px;
 }
 #story_box .title-reminder, #story_box .title-reminder-thanks {
 	display: none;
+}
+#story_box details ul {
+	padding-left: 1em;
 }
 .slide-down {
 	display: block !important;
@@ -1407,7 +1442,7 @@ table.moderations tr > td:nth-child(1) {
 	font-style: italic;
 }
 .hint.indent {
-	margin-left: 1em;
+	margin-left: 12em;
 }
 
 .box.wide label {
@@ -1425,7 +1460,8 @@ table.moderations tr > td:nth-child(1) {
 
 div.flash-error,
 div.flash-notice,
-div.flash-success {
+div.flash-success,
+div.user-stats {
 	position: relative;
 	padding: 7px 15px;
 	margin-bottom: 18px;
@@ -1443,13 +1479,9 @@ div.flash-success a {
 }
 div.flash-error .similar a,
 div.flash-notice .similar a,
-div.flash-success .similar a {
+div.flash-success .similar a,
+div.user-stats a {
 	font-weight: normal;
-}
-div.flash-error p,
-div.flash-notice p,
-div.flash-success p {
-	margin-bottom: 0;
 }
 div.flash-error div,
 div.flash-notice div,
@@ -1460,20 +1492,21 @@ div.flash-success div {
 }
 div.flash-error {
 	background-color: var(--color-flash-bg-error);
-	text-shadow: none;
 }
 div.flash-success {
 	background-color: var(--color-flash-bg-success);
-	text-shadow: none;
 }
 div.flash-notice {
 	background-color: var(--color-flash-bg-notice);
-	text-shadow: 0 -1px 0 var(--color-shadow-25);
+}
+div.user-stats {
+	background-color: var(--color-box-bg-shaded);
 }
 
 div.flash-error h2,
 div.flash-notice h2,
-div.flash-success h2 {
+div.flash-success h2,
+div.user-stats h2 {
 	font-size: 1.25em;
 	margin: 0;
 }
@@ -1953,5 +1986,14 @@ input[type="submit"].link_post.pushover_button {
 	footer {
 		text-align: center;
 		float: none;
+	}
+	.indent {
+		margin-left: 2em;
+	}
+}
+@media print {
+	.comment_folder,
+	.comment_form {
+		display: none;
 	}
 }

@@ -2,7 +2,7 @@
 
 class UsersController < ApplicationController
   before_action :load_showing_user, only: [:show, :standing]
-  before_action :require_logged_in_moderator,
+  before_action :require_logged_in_admin,
     only: [:enable_invitation, :disable_invitation, :ban, :unban]
   before_action :require_logged_in_user, only: [:standing]
   before_action :only_user_or_moderator, only: [:standing]
@@ -50,7 +50,8 @@ class UsersController < ApplicationController
       @title = "Moderators and Administrators"
       render action: "list"
     else
-      content = Rails.cache.fetch("users_tree_#{newest_user}", expires_in: (60 * 60 * 24)) {
+      # Mod::ReparentsController#create knows this key
+      content = Rails.cache.fetch("users_tree_#{newest_user}", expires_in: 12.hours) {
         users = User.select(*attrs).order("id DESC").to_a
         @user_count = users.length
         @users_by_parent = users.group_by(&:invited_by_user_id)
@@ -59,10 +60,6 @@ class UsersController < ApplicationController
       }
       render html: content.html_safe, layout: "application"
     end
-  end
-
-  def invite
-    @title = "Pass Along an Invitation"
   end
 
   def disable_invitation

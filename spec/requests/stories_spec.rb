@@ -12,9 +12,8 @@ describe "stories", type: :request do
 
     context "html" do
       it "returns an error when story URL is missing" do
-        expect {
-          post "/stories/check_url_dupe.html", params: {story: {url: ""}}
-        }.to raise_error(ActionController::ParameterMissing)
+        post "/stories/check_url_dupe.html", params: {story: {url: ""}}
+        expect(response).to have_attributes(status: 400, body: "400 param is missing or the value is empty or invalid: No URL")
       end
 
       it "returns previous discussions for an existing story" do
@@ -90,16 +89,18 @@ describe "stories", type: :request do
         expect(json.fetch("similar_stories").count).to eq(0)
       end
 
-      it "throws a 400 if there's no URL present" do
-        expect {
-          post "/stories/check_url_dupe.json",
-            params: {story: {url: ""}}
-        }.to raise_error(ActionController::ParameterMissing)
+      context "with invalid parameters" do
+        it "throws a 400 when URL is empty" do
+          post "/stories/check_url_dupe.json", params: {story: {url: ""}}
+          expect(response).to have_http_status(:bad_request)
+          expect(JSON.parse(response.body)).to eq({"error" => "param is missing or the value is empty or invalid: No URL"})
+        end
 
-        expect {
-          post "/stories/check_url_dupe.json",
-            params: {story: {}}
-        }.to raise_error(ActionController::ParameterMissing)
+        it "throws a 400 when URL parameter is missing" do
+          post "/stories/check_url_dupe.json", params: {story: {}}
+          expect(response).to have_http_status(:bad_request)
+          expect(JSON.parse(response.body)).to eq({"error" => "param is missing or the value is empty or invalid: story"})
+        end
       end
     end
   end
@@ -293,6 +294,28 @@ describe "stories", type: :request do
     end
   end
 
+  describe "disowning" do
+    let(:inactive_user) { create(:user, :inactive) }
+
+    before do
+      sign_in user
+      story.update!(created_at: (Story::DELETEABLE_DAYS + 1).days.ago)
+    end
+
+    it "returns 302 for non-xhr request" do
+      expect {
+        post "/stories/#{story.short_id}/disown"
+        expect(response.status).to eq(302)
+      }.to change { story.reload.user }.from(story.user).to(inactive_user)
+    end
+
+    it "returns 200 for xhr request" do
+      expect {
+        post "/stories/#{story.short_id}/disown", xhr: true
+        expect(response.status).to eq(200)
+      }.to change { story.reload.user }.from(story.user).to(inactive_user)
+    end
+  end
   describe "adding suggestions to a story"
 
   describe "user editing an editable story"

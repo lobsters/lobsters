@@ -1,0 +1,17 @@
+<div class="box wide">
+  <%= form_with model: @hat, url: update_in_place_hat_path(@hat), method: :post do |f| %>
+    <p>
+      <%= f.label :user_id, "User:" %>
+      <%= styled_user_link @hat.user %>
+      <br />
+
+      <%= f.label :hat, "Hat:" %>
+      <%= f.text_field :hat, :size => 20 %>
+    </p>
+
+    <p>
+      <%= f.submit "Edit In-Place", formaction: update_in_place_hat_path(@hat) %>
+      <%= f.submit "Doff & Create", formaction: update_by_recreating_hat_path(@hat) %>
+    </p>
+  <% end %>
+</div>

@@ -180,7 +180,7 @@ class Sponge
         post_data = raw_post_data
         send_headers["Content-Type"] = "application/x-www-form-urlencoded"
       else
-        post_data = fields.map { |k, v| "#{k}=#{v}" }.join("&")
+        post_data = fields.to_query
       end
 
       send_headers["Content-Length"] = post_data.length.to_s

@@ -2,7 +2,8 @@
 
 class Story < ApplicationRecord
   belongs_to :user
-  belongs_to :domain, optional: true
+  belongs_to :domain, optional: true, counter_cache: true
+  belongs_to :origin, optional: true, counter_cache: true
   belongs_to :merged_into_story,
     class_name: "Story",
     foreign_key: "merged_story_id",
@@ -38,17 +39,26 @@ class Story < ApplicationRecord
   has_many :hidings, class_name: "HiddenStory", inverse_of: :story, dependent: :destroy
   has_many :savings, class_name: "SavedStory", inverse_of: :story, dependent: :destroy
   has_one :story_text, foreign_key: :id, dependent: :destroy, inverse_of: :story
+  has_many :links, inverse_of: :from_story, dependent: :destroy
+  has_many :incoming_links,
+    class_name: "Link",
+    inverse_of: :to_story,
+    dependent: :destroy
 
-  scope :base, ->(user) { includes(:story_text, :user).not_deleted(user).unmerged.mod_preload?(user) }
+  scope :base, ->(user, unmerged: true) {
+    q = includes(:hidings, :story_text, :user).not_deleted(user).mod_preload?(user)
+    q = q.unmerged if unmerged
+    q
+  }
   scope :for_presentation, -> {
-    includes(:domain, :user, :tags, taggings: :tag)
+    includes(:domain, :origin, :hidings, :user, :tags, taggings: :tag)
   }
   scope :mod_preload?, ->(user) {
     user.try(:is_moderator?) ? preload(:suggested_taggings, :suggested_titles) : all
   }
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, ->(user) {
-    user.try(:is_moderator?) ? all : where("is_deleted = false or stories.user_id = ?", user.try(:id).to_i)
+    user.try(:is_moderator?) ? all : where(is_deleted: false).or(where(user_id: user.try(:id).to_i))
   }
   scope :unmerged, -> { where(merged_story_id: nil) }
   scope :positive_ranked, -> { where("score >= 0") }
@@ -107,13 +117,16 @@ class Story < ApplicationRecord
       .limit(10)
   }
 
-  validates :title, length: {in: 3..150}
-  validates :description, length: {maximum: (64 * 1024)}
+  validates :title, length: {in: 3..150}, presence: true
+  validates :description, length: {maximum: 65_535}
   validates :url, length: {maximum: 250, allow_nil: true}
   validates :short_id, presence: true, length: {maximum: 6}
   validates :markeddown_description, length: {maximum: 16_777_215, allow_nil: true}
   validates :mastodon_id, length: {maximum: 25, allow_nil: true}
   validates :twitter_id, length: {maximum: 20, allow_nil: true}
+  validates :is_deleted, :is_moderated, :user_is_author, :user_is_following, inclusion: {in: [true, false]}
+  validates :score, :flags, :hotness, :comments_count, presence: true
+  validates :normalized_url, length: {maximum: 255, allow_nil: true}
 
   validates_each :merged_story_id do |record, _attr, value|
     if value.to_i == record.id
@@ -123,6 +136,7 @@ class Story < ApplicationRecord
 
   COMMENTABLE_DAYS = 90
   FLAGGABLE_DAYS = 14
+  DELETEABLE_DAYS = FLAGGABLE_DAYS * 2
 
   # the lowest a score can go
   FLAGGABLE_MIN_SCORE = -5
@@ -142,9 +156,6 @@ class Story < ApplicationRecord
   # drop these words from titles when making URLs
   TITLE_DROP_WORDS = ["", "a", "an", "and", "but", "in", "of", "or", "that", "the", "to"].freeze
 
-  # URI.parse is not very lenient, so we can't use it
-  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>(?:[^\.\/]+\.)+[a-z\-]+)(?<port>:\d+)?(?:\/|\z)/i
-
   # Dingbats, emoji, and other graphics https://www.unicode.org/charts/
   GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}\u{2192}-\u{27BF}\u{1F000}-\u{1F9FF}]/
 
@@ -158,14 +169,18 @@ class Story < ApplicationRecord
   before_save :fix_bogus_chars
   before_create :assign_initial_hotness
   after_create :mark_submitter, :record_initial_upvote
-  after_save :update_cached_columns, :update_story_text
+  after_save :recreate_links, :update_cached_columns, :update_story_text
 
   validate do
     if url.present?
       already_posted_recently?
       check_not_banned_domain
+      check_not_banned_origin
       check_not_new_domain_from_new_user
-      errors.add(:url, "is not valid") unless url.match(URL_RE)
+      # This would probably have a too-high false-positive rate, I want to have approvals first.
+      # check_not_new_origin_from_new_user
+      check_not_pushcx_stream
+      errors.add(:url, "is not valid") unless url.match(Utils::URL_RE)
     elsif description.to_s.strip == ""
       errors.add(:description, "must contain text if no URL posted")
     end
@@ -183,6 +198,10 @@ class Story < ApplicationRecord
     end
 
     check_tags
+  end
+
+  def self./(short_id)
+    find_by! short_id:
   end
 
   def accepting_comments?
@@ -218,6 +237,21 @@ class Story < ApplicationRecord
     end
   end
 
+  def check_not_new_origin_from_new_user
+    return unless url.present? && new_record? && domain && origin
+
+    if user&.is_new? && origin.stories.not_deleted(nil).count == 0
+      ModNote.tattle_on_story_origin!(self, "new user with new")
+      errors.add :url, <<-EXPLANATION
+        is from a domain that we know has multiple authors, like GitHub. We haven't
+        seen links from this origin '#{origin.identifier}' before.
+        We restrict new users from posting such links to discourage self-promotion and give
+        you time to learn about topicality. Skirting this with a URL shortener or tweet or something
+        will probably earn a ban.
+      EXPLANATION
+    end
+  end
+
   def check_not_banned_domain
     return unless url.present? && new_record? && domain
 
@@ -225,6 +259,21 @@ class Story < ApplicationRecord
       ModNote.tattle_on_story_domain!(self, "banned")
       errors.add(:url, "is from banned domain #{domain.domain}: #{domain.banned_reason}")
     end
+  end
+
+  def check_not_banned_origin
+    return unless url.present? && new_record? && origin
+
+    if origin.banned?
+      ModNote.tattle_on_story_origin!(self, "banned")
+      errors.add(:url, "is from banned origin #{origin.identifier}: #{origin.banned_reason}")
+    end
+  end
+
+  def check_not_pushcx_stream
+    return unless url.present? && new_record? &&
+      url.start_with?("https://push.cx/stream", "https://twitch.tv/pushcx")
+    errors.add(:url, "is too meta, we don't need it twice every week. Details: https://lobste.rs/c/skuxo9")
   end
 
   def comments_closing_soon?
@@ -240,19 +289,33 @@ class Story < ApplicationRecord
     current_vote.try(:[], :vote) == 1
   end
 
+  def negativity_class
+    @neg ||= score - flags
+    if @neg <= -5
+      "negative_5"
+    elsif @neg <= -3
+      "negative_3"
+    elsif @neg <= -1
+      "negative_1"
+    else
+      ""
+    end
+  end
+
   # all stories with similar urls
   def self.find_similar_by_url(url)
     # if a previous submission was moderated, return it to block it from being
     # submitted again
-    Story.where(normalized_url: Utils.normalize_url(url))
+    Story.where(normalized_url: Utils.normalize(url))
       .where("is_deleted = ? OR is_moderated = ?", false, true)
+      .order(id: :desc)
   end
 
   # doesn't include deleted/moderated/merged stories
   def similar_stories
     return Story.none if url.blank?
 
-    @_similar_stories ||= Story.find_similar_by_url(url).order("id DESC")
+    @_similar_stories ||= Story.find_similar_by_url(url).order(id: :desc)
     # do not include this story itself or any story merged into it
     if id?
       @_similar_stories = @_similar_stories.where.not(id: id)
@@ -351,18 +414,18 @@ class Story < ApplicationRecord
     base = tags.sum(:hotness_mod) + ((user_is_author? && url.present?) ? 0.25 : 0.0)
 
     # give a story's comment votes some weight, ignoring submitter's comments
-    sum_expression = (base < 0) ? "comments.flags * -0.5" : "comments.score + 1"
-    cpoints = merged_comments.where.not(user_id: user_id).sum(sum_expression).to_f * 0.5
+    cpoints = if base < 0
+      0
+    else
+      merged_comments.where.not(user_id: user_id).sum("comments.score + 1").to_f * 0.5
+    end
 
     # mix in any stories this one cannibalized
     cpoints += merged_stories.map(&:score).inject(&:+).to_f
 
     # if a story has many comments but few votes, it's probably a bad story, so
     # cap the comment points at the number of upvotes
-    upvotes = self.score + flags
-    if cpoints > upvotes
-      cpoints = upvotes
-    end
+    cpoints = [self.score, cpoints].min
 
     # don't immediately kill stories at 0 by bumping up score by one
     order = Math.log([(score + 1).abs + cpoints, 1].max, 10)
@@ -374,8 +437,7 @@ class Story < ApplicationRecord
       0
     end
 
-    -((order * sign) + base +
-      ((created_at || Time.current).to_f / HOTNESS_WINDOW)).round(7)
+    -((order * sign) + base + ((created_at || Time.current).to_f / HOTNESS_WINDOW)).round(7)
   end
 
   def can_be_seen_by_user?(user)
@@ -466,7 +528,7 @@ class Story < ApplicationRecord
       s = s.to_s[0, chars].gsub(/ [^ ]*\z/, "")
     end
 
-    HTMLEntities.new.decode(s.to_s)
+    HtmlEncoder.decode(s.to_s)
   end
 
   def domain_search_url
@@ -498,7 +560,20 @@ class Story < ApplicationRecord
     self.flags += flag_delta
     Story.connection.execute <<~SQL
       UPDATE stories SET
-        score = (select coalesce(sum(vote), 0) from votes where story_id = stories.id and comment_id is null),
+        score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -
+        -- subtract number of hidings where hider flagged AND didn't comment (comment voting is ignored)
+        (
+          select count(*) from hidden_stories hiding
+          where
+            story_id = #{id.to_i}
+            and hiding.created_at >= str_to_date('#{(created_at - FLAGGABLE_DAYS.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')
+            and exists (    -- user flagged
+              select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1
+            )
+            and not exists ( -- user didn't comment
+              select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id
+            )
+        ),
         flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),
         hotness = #{calculated_hotness}
       WHERE id = #{id.to_i}
@@ -511,6 +586,10 @@ class Story < ApplicationRecord
 
   def hider_count
     @hider_count ||= HiddenStory.where(story_id: id).count
+  end
+
+  def disownable_by_user?(user)
+    user && user.id == user_id && created_at < DELETEABLE_DAYS.days.ago
   end
 
   def is_flaggable?
@@ -667,13 +746,13 @@ class Story < ApplicationRecord
   end
 
   def tags_a
-    @_tags_a ||= taggings
-      .includes(:tag)
-      .reject(&:marked_for_destruction?)
-      .map { |t| t.tag.tag }
+    @_tags_a ||= Tag
+      .where(id: taggings.reject(&:marked_for_destruction?).map { |t| t.tag_id })
+      .pluck(:tag)
   end
 
   def tags_a=(new_tag_names_a)
+    @_tags_a = nil
     taggings.each do |tagging|
       if !new_tag_names_a.include?(tagging.tag.tag)
         tagging.mark_for_destruction
@@ -687,6 +766,10 @@ class Story < ApplicationRecord
       # the validation with check_tags
       taggings.build(tag_id: t.id)
     end
+  end
+
+  def preview_tags
+    Tag.where(id: taggings.map { |t| t.tag_id })
   end
 
   def save_suggested_tags_a_for_user!(new_tag_names_a, user)
@@ -808,6 +891,37 @@ class Story < ApplicationRecord
     end
   end
 
+  # this is less evil than it looks because commonmark produces consistent html:
+  # <a href="http://example.com/" rel="ugc">example</a>
+  def parsed_links
+    if markeddown_description.blank?
+      []
+    else
+      markeddown_description
+        .scan(/<a href="([^"]+)" .*>([^<]+)<\/a>/)
+        .map { |url, title|
+          Link.new({
+            from_story_id: id,
+            url: url,
+            title: (url == title) ? nil : title
+          })
+        }.compact
+    end +
+      if url.blank?
+        []
+      else
+        [Link.new({
+          from_story_id: id,
+          url: url,
+          title: title
+        })]
+      end
+  end
+
+  def recreate_links
+    Link.recreate_from_story!(self) if saved_change_to_attribute?(:url) || saved_change_to_attribute?(:description)
+  end
+
   def update_cached_columns
     update_column :comments_count, merged_comments.active.count
     merged_into_story&.update_cached_columns
@@ -829,15 +943,38 @@ class Story < ApplicationRecord
     created_at && created_at <= 1.hour && merged_story_id.nil?
   end
 
-  def set_domain(match)
-    name = match ? match[:domain].sub(/^www\d*\./, "") : nil
-    self.domain = name ? Domain.where(domain: name).first_or_initialize : nil
+  def set_domain_and_origin(domain_name)
+    domain_name&.sub!(/\Awww\d*\.(.+?\..+)/, '\1') # remove www\d* from domain if the url is not like www10.org
+    if domain_name.present?
+      self.domain = Domain.where(domain: domain_name).first_or_initialize
+      self.origin = domain&.find_or_create_origin(url)
+    else
+      self.domain = nil
+      self.origin = nil
+    end
   end
 
   def url=(u)
-    super(u.try(:strip)) or return if u.blank?
+    return if u.blank?
+    u = u.strip
 
-    if (match = u.match(URL_RE))
+    # strip out tracking query params
+    if (match = u.match(/\A([^\?]+)\?(.+)\z/))
+      params = match[2].split(/[&\?]/)
+      # utm_ is google and many others; sk is medium; si is youtube source id
+      params.reject! { |p|
+        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=|^linkId=|^si=|^trk=/x)
+      }
+      params.reject! { |p|
+        if /^lobsters|^src=lobsters|^ref=lobsters/x.match?(p)
+          ModNote.tattle_on_traffic_attribution!(self)
+          true
+        end
+      }
+      u = match[1] << (params.any? ? "?#{params.join("&")}" : "")
+    end
+
+    if (match = u.match(Utils::URL_RE))
       # remove well-known port for http and https if present
       @url_port = match[:port]
       if match[:protocol] == "http" && match[:port] == ":80" ||
@@ -846,20 +983,13 @@ class Story < ApplicationRecord
         @url_port = nil
       end
     end
-    set_domain(match)
 
-    # strip out tracking query params
-    if (match = u.match(/\A([^\?]+)\?(.+)\z/))
-      params = match[2].split(/[&\?]/)
-      # utm_ is google and many others; sk is medium; si is youtube source id
-      params.reject! { |p|
-        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=|^si=/x)
-      }
-      u = match[1] << (params.any? ? "?" << params.join("&") : "")
-    end
+    # set field
+    super
 
-    self.normalized_url = Utils.normalize_url(u)
-    super(u)
+    # set related fields
+    self.normalized_url = Utils.normalize(u)
+    set_domain_and_origin(match&.[](:domain))
   end
 
   def url_is_editable_by_user?(user)
@@ -883,10 +1013,10 @@ class Story < ApplicationRecord
   def vote_summary_for(user)
     r_counts = {}
     r_whos = {}
-    votes.includes((user && user.is_moderator?) ? :user : nil).find_each do |v|
+    votes.includes(user&.is_moderator? ? :user : nil).find_each do |v|
       next if v.vote == 0
       r_counts[v.reason.to_s] ||= 0
-      r_counts[v.reason.to_s] += v.vote
+      r_counts[v.reason.to_s] += 1
       if user&.is_moderator?
         r_whos[v.reason.to_s] ||= []
         r_whos[v.reason.to_s].push v.user.username
@@ -1020,7 +1150,7 @@ class Story < ApplicationRecord
 
   def self.title_maximum_length
     validators_on(:title)
-      .sole { |v| v.is_a? ActiveRecord::Validations::LengthValidator }
+      .find { |v| v.is_a? ActiveRecord::Validations::LengthValidator }
       .options[:maximum]
   end
 

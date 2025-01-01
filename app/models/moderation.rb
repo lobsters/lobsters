@@ -10,6 +10,8 @@ class Moderation < ApplicationRecord
     optional: true
   belongs_to :domain,
     optional: true
+  belongs_to :origin,
+    optional: true
   belongs_to :story,
     optional: true
   belongs_to :tag,
@@ -29,6 +31,7 @@ class Moderation < ApplicationRecord
   }
 
   validates :action, :reason, length: {maximum: 16_777_215}
+  validates :is_from_suggestions, inclusion: {in: [true, false]}
   validate :one_foreign_key_present
 
   after_create :send_message_to_moderated
@@ -42,7 +45,7 @@ class Moderation < ApplicationRecord
 
     if story
       m.recipient_user_id = story.user_id
-      m.subject = "Your story has been edited by " <<
+      m.subject = "Your story has been edited by " +
         (is_from_suggestions? ? "user suggestions" : "a moderator")
       m.body = "Your story [#{story.title}](" \
         "#{story.comments_url}) has been edited with the following " \
@@ -65,7 +68,7 @@ class Moderation < ApplicationRecord
       m.body = "Your comment on [#{comment.story.title}](" \
         "#{comment.story.comments_url}) has been moderated:\n" \
         "\n" <<
-        comment.comment.split("\n").map { |l| "> " << l }.join("\n")
+        comment.comment.split("\n").map { |l| "> #{l}" }.join("\n")
 
       if reason.present?
         m.body << "\n" \
@@ -90,7 +93,7 @@ class Moderation < ApplicationRecord
   protected
 
   def one_foreign_key_present
-    fks = [comment_id, domain_id, story_id, category_id, tag_id, user_id].compact.length
+    fks = [comment_id, domain_id, origin_id, story_id, category_id, tag_id, user_id].compact.length
     errors.add(:base, "moderation should be linked to only one object") if fks != 1
   end
 end

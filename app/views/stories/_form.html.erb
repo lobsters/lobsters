@@ -1,5 +1,5 @@
 <%# locals: (story:, f:, suggesting: false) -%>
-<%= render :partial => "stories/form_errors", :locals => { :f => f, :story => f.object } %>
+<%= render :partial => "stories/form_errors", :locals => { :f => f, :story => f.object, suggesting: suggesting } %>
 
 <div class="box">
   <% unless suggesting %>
@@ -82,9 +82,14 @@ See the guidelines below for more." %>
       <ul>
 
         <li><p>
-        Keep the story's original title unless it's unclear or badly lacking context.
-        If you need to edit, don't sensationalize.
-        <strong>Please remove extraneous components from titles such as the name of the site, blog, event, section, and author.</strong>
+          Ideally, use the story's original title and
+          <strong>remove the name of the site, blog, event, section, and author</strong>.
+          We also tone down clickbait titles:
+          <ul>
+            <li>remove hyperbole and moralizing ("The reckless bug that caused the apocalypse" &rarr; "Debugging a null reference")</li>
+            <li>add missing information ("The bug at the heart of the npm ecosystem" &rarr; "Design flaw in npm manifests")</li>
+            <li>rewrite second person ("10 Ruby features you don't know" &rarr; "Uncommon Ruby hash methods")</li>
+          </ul>
         </p></li>
 
         <li><p>

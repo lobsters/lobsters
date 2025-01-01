@@ -59,6 +59,7 @@ describe Story do
     expect(Story.new(url: "http://a.com?a=b").url).to eq("http://a.com?a=b")
     expect(Story.new(url: "http://a.com?utm_term=track&c=d").url).to eq("http://a.com?c=d")
     expect(Story.new(url: "http://a.com?a=b&utm_term=track&c=d").url).to eq("http://a.com?a=b&c=d")
+    expect(Story.new(url: "http://a.com?linkId=track").url).to eq("http://a.com")
   end
 
   it "checks for invalid urls" do
@@ -96,7 +97,9 @@ describe Story do
       "http://example.com:8000" => "example.com",
       "http://example.com:8000/" => "example.com",
       "http://www3.example.com/goose" => "example.com",
-      "http://flub.example.com" => "flub.example.com"
+      "http://flub.example.com" => "flub.example.com",
+      "http://www10.org" => "www10.org",
+      "http://www10.example.org" => "example.org"
     }.each_pair do |url, domain|
       story.url = url
       expect(story.domain.domain).to eq(domain)
@@ -213,8 +216,8 @@ describe Story do
 
     context "with unicode" do
       it "can fetch unicode titles properly" do
-        content = "<!DOCTYPE html><html><title>你好世界！ Here’s a fancy apostrophe</title></html>"
-          .force_encoding("ASCII-8BIT") # This is the encoding returned by Sponge#fetch
+        # Sponge#fetch returns a binary string
+        content = "<!DOCTYPE html><html><title>你好世界！ Here’s a fancy apostrophe</title></html>".b
         res = fake_response(content, "text/html")
         s = build(:story)
         s.fetched_response = res
@@ -228,6 +231,13 @@ describe Story do
     s.url = "https://factorable.net/"
     s.valid?
     expect(s.url).to eq("https://factorable.net/")
+  end
+
+  it "sets tags_a properly on an unsaved story" do
+    s = build(:story, tags_a: [])
+    expect(s.tags_a).to eq([])
+    s.tags_a = ["tag1", "tag2"]
+    expect(s.tags_a).to eq(["tag1", "tag2"])
   end
 
   it "calculates tag changes properly" do
@@ -397,6 +407,33 @@ describe Story do
     end
   end
 
+  describe "update_score_and_recalculate" do
+    let(:story) { create(:story) }
+
+    it "deducts from score when users hide and flag" do
+      expect(story.score).to eq(1) # from submitter's upvote
+      hider = create(:user)
+      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, nil, hider.id, "S")
+      HiddenStory.hide_story_for_user(story, hider)
+      expect(story.reload.score).to eq(0)
+    end
+
+    it "doesn't deduct from score if hiding user commented" do
+      expect(story.score).to eq(1) # from submitter's upvote
+      hider = create(:user)
+      create(:comment, story: story, user: hider)
+      HiddenStory.hide_story_for_user(story, hider)
+      expect(story.reload.score).to eq(1)
+    end
+
+    it "doesn't deduct from score if hiding user didn't flag" do
+      expect(story.score).to eq(1) # from submitter's upvote
+      hider = create(:user)
+      HiddenStory.hide_story_for_user(story, hider)
+      expect(story.reload.score).to eq(1)
+    end
+  end
+
   describe "#update_cached_columns" do
     context "with a merged_into_story" do
       let(:merged_into_story) { create(:story) }
@@ -476,6 +513,21 @@ describe Story do
       story.save_suggested_title_for_user!("new title", user2)
 
       expect(creator.reload.received_messages.length).to eq(1)
+    end
+  end
+
+  describe ".title_maximum_length" do
+    subject { Story.title_maximum_length }
+
+    it { is_expected.to eq(150) }
+  end
+
+  describe "#preview_tags" do
+    it "allows accessing tags set by tags_a on unsaved stories" do
+      tag = Tag.find_by(tag: "tag1")
+      s = build(:story, tags_a: ["tag1"])
+      expect(s.preview_tags).to eq([tag])
+      expect(s.tags).to eq([])
     end
   end
 end

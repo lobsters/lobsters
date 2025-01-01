@@ -19,11 +19,24 @@ class ApplicationController < ActionController::Base
   TAG_FILTER_COOKIE = :tag_filters
   CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
 
-  rescue_from ActionController::UnknownFormat do
-    render plain: "404 Not Found", status: :not_found, content_type: "text/plain"
+  # Rails misdesign: if the /recent route doesn't support .rss, Rails calls it anyways and then
+  # raises MissingTemplate when it's not handled, as if the app did something wrong (a prod 500!).
+  unless Rails.env.development?
+    rescue_from ActionController::UnknownFormat, ActionView::MissingTemplate do
+      request.format = :html # required, despite format.any
+      respond_to do |format|
+        format.any { render "about/404", status: :not_found, content_type: "text/html" }
+      end
+    end
   end
   rescue_from ActionController::UnpermittedParameters do
     render plain: "400 Unpermitted query or form parameter", status: :bad_request, content_type: "text/plain"
+  end
+  rescue_from ActionController::ParameterMissing do |exception|
+    respond_to do |format|
+      format.html { render plain: "400 #{exception.message}", status: :bad_request }
+      format.json { render json: {error: exception.message.to_s}, status: :bad_request }
+    end
   end
   rescue_from ActionDispatch::Http::MimeNegotiation::InvalidType do
     render plain: "fix the mime type in your HTTP_ACCEPT header",
@@ -48,10 +61,6 @@ class ApplicationController < ActionController::Base
         user.is_active?
       @user = user
     end
-    Rails.logger.info(
-      "  Request #{request.remote_ip} #{request.request_method} #{request.fullpath} user: " +
-      (@user ? "#{@user.id} #{@user.username}" : "0 nobody")
-    )
 
     true
   end

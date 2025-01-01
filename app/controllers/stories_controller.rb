@@ -22,7 +22,7 @@ class StoriesController < ApplicationController
     if @story.is_resubmit?
       @comment = @story.comments.new(user: @user)
       @comment.comment = params[:comment]
-      @comment.hat = @user.wearable_hats.find_by(id: params[:hat_id])
+      @comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
     end
 
     if @story.valid? &&
@@ -61,6 +61,7 @@ class StoriesController < ApplicationController
 
     if @story.save
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted")
+      Mastodon.delete_post(@story)
     end
 
     redirect_to @story.comments_path
@@ -114,7 +115,7 @@ class StoriesController < ApplicationController
       if @story.is_resubmit?
         @comment = @story.comments.new(user: @user)
         @comment.comment = params[:comment]
-        @comment.hat = @user.wearable_hats.find_by(id: params[:hat_id])
+        @comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
       end
 
       # ignore what the user brought unless we need it as a fallback
@@ -189,7 +190,7 @@ class StoriesController < ApplicationController
           "twitter:description" => @story.comments_count.to_s + " " +
             "comment".pluralize(@story.comments_count),
           "twitter:image" => Rails.application.root_url +
-            "apple-touch-icon-144.png"
+            "touch-icon-144.png"
         }
 
         if @story.user.mastodon_username.present?
@@ -371,7 +372,7 @@ class StoriesController < ApplicationController
       return render plain: "story has been merged", status: 400
     end
 
-    HiddenStory.hide_story_for_user(story.id, @user.id)
+    HiddenStory.hide_story_for_user(story, @user)
 
     render plain: "ok"
   end
@@ -381,7 +382,7 @@ class StoriesController < ApplicationController
       return render plain: "can't find story", status: 400
     end
 
-    HiddenStory.unhide_story_for_user(story.id, @user.id)
+    HiddenStory.unhide_story_for_user(story, @user)
 
     render plain: "ok"
   end
@@ -417,16 +418,38 @@ class StoriesController < ApplicationController
     @story.already_posted_recently?
 
     respond_to do |format|
+      linking_comments = Link.recently_linked_from_comments(@story.url)
       format.html {
         return render partial: "stories/form_errors", layout: false,
-          content_type: "text/html", locals: {story: @story}
+          content_type: "text/html", locals: {
+            linking_comments: linking_comments,
+            story: @story
+          }
       }
       # json: https://github.com/lobsters/lobsters/pull/555
       format.json {
         similar_stories = @story.public_similar_stories(@user).map(&:as_json)
-
         render json: @story.as_json.merge(similar_stories: similar_stories)
       }
+    end
+  end
+
+  def disown
+    if !((story = find_story) && story.disownable_by_user?(@user))
+      return render plain: "can't find story", status: 400
+    end
+
+    InactiveUser.disown! story
+
+    if request.xhr?
+      @story = find_story
+      @comments = Comment.story_threads(@story).for_presentation
+
+      load_user_votes
+
+      render partial: "listdetail", layout: false, content_type: "text/html", locals: {story: @story, single_story: true}
+    else
+      redirect_to story.short_id_path
     end
   end
 
@@ -519,7 +542,7 @@ class StoriesController < ApplicationController
 
   def track_story_reads
     @story = Story.where(short_id: params[:id]).first!
-    @ribbon = ReadRibbon.where(user: @user, story: @story).first_or_create!
+    @ribbon = ReadRibbon.where(user: @user, story: @story).first_or_initialize
     yield
     @ribbon.bump
   end

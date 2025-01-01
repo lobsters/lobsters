@@ -91,6 +91,10 @@
       <%= hat.to_html_label %>
       <% if hat.doffed_at? %>
         doffed <%= time_ago_in_words_label(hat.doffed_at) %>
+      <% else %>
+        <% if @user && ((hat.user == @user) || @user.is_moderator?) %>
+          <%= link_to 'Doff', doff_hat_path(hat) %>
+        <% end %>
       <% end %>
       <br>
     <% end %>
@@ -161,6 +165,20 @@
         <span class="na">A mystery...</span>
       <% end %>
       <br>
+    </div>
+  <% end %>
+
+  <% if Rails.env.development? || @user == @showing_user || @user&.is_moderator? %>
+    <div class="user-stats flash-notice">
+      <p>
+        Comments posted in the last 6 months: <%= @showing_user.comments.recent.count %><br>
+        &nbsp;&nbsp;...posted on stories you didn't author: <%= @showing_user.comments.recent.on_stories_not_authored_by(@showing_user).count %><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;...received above average score: <%= @showing_user.comments.recent.on_stories_not_authored_by(@showing_user).above_average.count %>
+      </p>
+
+      <p>(This section is only visible to you and moderators.
+      Mods use it when evaluating whether 
+      users are participating in the community or exploiting the site for <a href="/about#self-promo">self-promo</a>. It's a red flag when someone never posts well-received comments outside of their own links.)
     </div>
   <% end %>
 
@@ -235,7 +253,7 @@
             <% if @showing_user.is_banned? %>
               <div class="boxline">
                 <%= f.label :reason, "Reason:", :class => "required" %>
-                <%= f.text_field :reason, :size => 40 %>
+                <%= f.text_field :reason, :size => 80 %>
               </div>
               <%= f.submit "Unban" %>
             <% end %>
@@ -254,7 +272,7 @@
         <%= form_with url: user_ban_path, method: :post do |f| %>
           <div class="boxline">
             <%= f.label :reason, "Reason:", :class => "required" %>
-            <%= f.text_field :reason, :size => 40 %>
+            <%= f.text_field :reason, :size => 80 %>
           </div>
           <p>
             <% if !@showing_user.is_banned? %>
@@ -266,6 +284,8 @@
           </p>
         <% end %>
       <% end %>
+
+      <%= link_to 'Reparent', new_mod_reparent_path({}, id: @showing_user) %>
     <% end %>
   <% end %>
 </div>

@@ -6,9 +6,77 @@ class Domain < ApplicationRecord
     class_name: "User",
     inverse_of: false,
     optional: true
-  validates :banned_reason, length: {maximum: 200}
+  has_many :origins
 
-  validates :domain, presence: true
+  validates :banned_reason, length: {maximum: 200}
+  validates :domain, presence: true, length: {maximum: 255}, uniqueness: {case_sensitive: false}
+  validates :selector, length: {maximum: 255}
+  validates :replacement, length: {maximum: 255}
+  validates :stories_count, numericality: {only_integer: true, greater_than_or_equal_to: 0}, presence: true
+
+  validate :valid_selector
+
+  after_save :update_origins
+
+  def valid_selector
+    return if selector.nil?
+
+    if selector.include? "\n"
+      errors.add(:selector, "no newlines")
+      return
+    end
+
+    selector_regexp
+  rescue RegexpError => e
+    errors.add(:selector, "is an invalid Regexp: #{e.message}")
+  end
+
+  def self./(domain)
+    find_by! domain:
+  end
+
+  def selector=(s)
+    s = s.strip
+    s = "\\A#{s}" unless s.starts_with?("\\A")
+    s = "#{s}\\z" unless s.ends_with?("\\z")
+    super
+  end
+
+  def selector_regexp
+    Regexp.new(selector, Regexp::IGNORECASE, timeout: 0.1)
+  end
+
+  def update_origins
+    return unless saved_change_to_selector? || saved_change_to_replacement?
+
+    # only happens for rare, manual mod edits
+    Prosopite.pause do
+      stories.find_each do |story|
+        story.update_column(:origin_id, story.domain.find_or_create_origin(story.url)&.id)
+      end
+    end
+  end
+
+  def find_or_create_origin(url)
+    return nil if selector.blank? || replacement.blank?
+    valid?
+    raise ArgumentError, "Domain not valid: #{errors.full_messages.join(", ")}" if errors.any?
+    raise ArgumentError, "Can't create Origin until Domain is persisted" if new_record?
+
+    # github.com/foo -> github.com/foo
+    # github.com/foo/bar -> github.com/foo
+    origin = if url.match?(selector_regexp)
+      identifier = url.sub(selector_regexp, replacement)
+      Origin.find_or_initialize_by(identifier: identifier)
+    else
+      # if the URL isn't matched, the identifier is the bare domain (handles root + partial regexps)
+      Origin.find_or_initialize_by(identifier: domain)
+    end
+    # default the domain if Origin.identifier= didn't find one
+    origin.domain ||= self
+    origin.save!
+    origin
+  end
 
   def ban_by_user_for_reason!(banner, reason)
     self.banned_at = Time.current

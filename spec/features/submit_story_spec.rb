@@ -67,7 +67,7 @@ RSpec.feature "Submitting Stories", type: :feature do
     }.not_to(change { Story.count })
   end
 
-  scenario "new user submitting a never-before-seen domain" do
+  scenario "new user submitting an unseen domain" do
     inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
     user.update!(created_at: 1.day.ago)
     refute(Domain.where(domain: "example.net").exists?)
@@ -79,6 +79,24 @@ RSpec.feature "Submitting Stories", type: :feature do
       click_button "Submit"
 
       expect(page).to have_content "unseen domain"
+    }.not_to(change { Story.count })
+  end
+
+  scenario "new user submitting a new origin from a multi-author domain" do
+    pending "Story submission approval - this would probably have a high false-positive rate"
+
+    inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
+    create(:domain, :github_with_selector)
+    create(:story, url: "https://github.com/alice")
+    user.update!(created_at: 1.day.ago)
+    refute(Origin.where(identifier: "github.com/bob").exists?)
+    expect {
+      visit "/stories/new"
+      fill_in "URL", with: "https://github.com/bob/cryptocurrency"
+      fill_in "Title", with: "Example Story"
+      select :tag1, from: "Tags"
+      click_button "Submit"
+      expect(page).to have_content "multiple authors"
     }.not_to(change { Story.count })
   end
 
@@ -171,5 +189,19 @@ RSpec.feature "Submitting Stories", type: :feature do
 
       expect(page).to have_content "banned"
     }.not_to(change { Story.count })
+  end
+
+  scenario "attributing lobsters traffic" do
+    inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
+
+    visit "/stories/new"
+    fill_in "URL", with: "https://example.com/?lobsters"
+    fill_in "Title", with: "Totally Not Marketing"
+    select :tag1, from: "Tags"
+    click_button "Submit"
+
+    # submitted but attribution stripped
+    expect(Story.last.url).to_not include("lobsters")
+    expect(ModNote.last.user).to eq(user)
   end
 end

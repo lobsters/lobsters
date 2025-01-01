@@ -51,4 +51,38 @@ describe "comments", type: :request do
       expect(comment.is_deleted).to be true
     end
   end
+
+  describe "rss" do
+    it "renders" do
+      comment = create(:comment)
+
+      get "/comments.rss"
+      expect(response).to be_successful
+      expect(response.body).to include(comment.comment[0..20])
+      expect(response.body).to include(comment.user.username)
+    end
+  end
+
+  describe "disowning" do
+    let(:inactive_user) { create(:user, :inactive) }
+
+    before do
+      sign_in author
+      comment.update!(created_at: (Comment::DELETEABLE_DAYS + 1).days.ago)
+    end
+
+    it "returns 302 for non-xhr request" do
+      expect {
+        post "/comments/#{comment.short_id}/disown"
+        expect(response.status).to eq(302)
+      }.to change { comment.reload.user }.from(comment.user).to(inactive_user)
+    end
+
+    it "returns 200 for xhr request" do
+      expect {
+        post "/comments/#{comment.short_id}/disown", xhr: true
+        expect(response.status).to eq(200)
+      }.to change { comment.reload.user }.from(comment.user).to(inactive_user)
+    end
+  end
 end

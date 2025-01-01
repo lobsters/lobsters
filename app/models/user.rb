@@ -56,7 +56,10 @@ class User < ApplicationRecord
     class_name: "Hat",
     inverse_of: :user
 
-  has_secure_password
+  # As of Rails 8.0, `has_secure_password` generates a `password_reset_token`
+  # method that shadows the explicit `password_reset_token` attribute.
+  # So we need to explictily disable that.
+  has_secure_password(reset_token: false)
 
   typed_store :settings do |s|
     s.string :prefers_color_scheme, default: "system"
@@ -101,7 +104,7 @@ class User < ApplicationRecord
     format: {with: /\A#{VALID_USERNAME}\z/o},
     length: {maximum: 50},
     uniqueness: {case_sensitive: false}
-
+  validate :underscores_and_dashes_in_username
   validates :password_reset_token,
     length: {maximum: 75}
   validates :session_token,
@@ -116,6 +119,19 @@ class User < ApplicationRecord
     length: {maximum: 200}
   validates :disabled_invite_reason,
     length: {maximum: 200}
+
+  validates :show_email, :is_admin, :is_moderator, :pushover_mentions,
+    inclusion: {in: [true, false]}
+
+  validates :session_token,
+    allow_blank: true,
+    presence: true
+
+  validates :karma,
+    presence: true
+
+  validates :settings,
+    length: {maximum: 16_777_215}
 
   validates_each :username do |record, attr, value|
     if BANNED_USERNAMES.include?(value.to_s.downcase) || value.starts_with?("tag-")
@@ -162,6 +178,18 @@ class User < ApplicationRecord
 
   # minimum number of submitted stories before checking self promotion
   MIN_STORIES_CHECK_SELF_PROMOTION = 2
+
+  def underscores_and_dashes_in_username
+    username_regex = username.gsub(/_|-/, "[-_]")
+    return unless username_regex.include?("[-_]")
+
+    collisions = User.where("username REGEXP ?", username_regex).where.not(id: id)
+    errors.add(:username, "is already in use (perhaps swapping _ and -)") if collisions.any?
+  end
+
+  def self./(username)
+    find_by! username:
+  end
 
   def self.username_regex_s
     "/^" + VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, "") + "$/"
@@ -256,7 +284,7 @@ class User < ApplicationRecord
       self.banned_by_user_id = banner.id
       self.banned_reason = reason
 
-      BanNotificationMailer.notify(self, banner, reason) unless deleted_at?
+      BanNotificationMailer.notify(self, banner, reason).deliver_now unless deleted_at?
       delete!
 
       m = Moderation.new
@@ -361,20 +389,21 @@ class User < ApplicationRecord
 
   def delete!
     User.transaction do
+      # walks comments -> story -> merged stories; this is a rare event and likely
+      # to be fixed in a redesign of the story merging db model:
+      # https://github.com/lobsters/lobsters/issues/1298#issuecomment-2272179720
+      Prosopite.pause
       comments
         .where("score < 0")
         .find_each { |c| c.delete_for_user(self) }
+      Prosopite.resume
 
-      sent_messages.each do |m|
-        m.deleted_by_author = true
-        m.save!
-      end
-      received_messages.each do |m|
-        m.deleted_by_recipient = true
-        m.save!
-      end
+      # delete messages bypassing validation because a message may have a hat
+      # sender has doffed, which would fail validations
+      sent_messages.update_all(deleted_by_author: true)
+      received_messages.update_all(deleted_by_recipient: true)
 
-      invitations.destroy_all
+      invitations.unused.update_all(used_at: Time.now.utc)
 
       roll_session_token
 
@@ -386,15 +415,6 @@ class User < ApplicationRecord
 
   def undelete!
     User.transaction do
-      sent_messages.each do |m|
-        m.deleted_by_author = false
-        m.save!
-      end
-      received_messages.each do |m|
-        m.deleted_by_recipient = false
-        m.save!
-      end
-
       self.deleted_at = nil
       save!
     end

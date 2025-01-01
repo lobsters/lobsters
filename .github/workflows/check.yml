@@ -1,3 +1,4 @@
+name: CI
 on:
   push:
     branches: [ master ]
@@ -5,8 +6,10 @@ on:
     branches: [ master ]
 
 jobs:
-  check:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
 
     services:
       mariadb:
@@ -18,7 +21,7 @@ jobs:
           - 3306:3306
 
     env:
-      DATABASE_URL: mysql2://root:root@127.0.0.1/lobsters_dev
+      DATABASE_URL: trilogy://root:root@127.0.0.1/lobsters_dev
       RAILS_ENV: test
 
     steps:
@@ -26,20 +29,63 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
+      - name: Workaround for inability to templatize credentials (#1380)
+        run: cp .github/workflows/check/* config/
+
       - name: Load database schema
-        run: ./bin/rails db:schema:load
-      - name: Run pending migrations
-        run: ./bin/rails db:migrate
+        run: ./bin/rails db:schema:load db:migrate
+
       - name: Run tests
         run: |
           bundle exec rspec
           bundle exec rspec spec/slow/*_spec.rb
+        env:
+          # Enabling frozen string literals in rspec only because brakeman
+          # isn't compatible yet: https://github.com/presidentbeef/brakeman/pull/1855
+          RUBYOPT: "--enable-frozen-string-literal --debug-frozen-string-literal"
+
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
       - name: Run linters
         run: |
           bundle exec standardrb
+
+  security:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
       - name: Run brakeman
         run: |
           bundle exec brakeman --ensure-latest --ensure-ignore-notes
+
+  leak-check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
       - name: Find leaky gems
         run: |
           gem install bundler-leak

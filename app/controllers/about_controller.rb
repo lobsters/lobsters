@@ -6,11 +6,8 @@ class AboutController < ApplicationController
 
   def four_oh_four
     @title = "Resource Not Found"
+    @requested_path = request.original_fullpath
     render action: "404", status: 404
-  rescue ActionView::MissingTemplate
-    render status: 404, html:
-      "<h1>404</h1><p>Resource not found</p>"
-        .html_safe, layout: "application"
   end
 
   def about

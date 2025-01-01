@@ -1,4 +1,4 @@
-### Lobsters Rails Project ![build status](https://github.com/lobsters/lobsters/actions/workflows/check.yml/badge.svg)
+### Lobsters Rails Project [![build status](https://github.com/lobsters/lobsters/actions/workflows/check.yml/badge.svg)](https://github.com/lobsters/lobsters/actions/workflows/check.yml)
 
 This is the
 [quite sad](https://web.archive.org/web/20230213161624/https://old.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)
@@ -26,6 +26,19 @@ Use the steps below for a local install or
 [lobsters-ansible](https://github.com/lobsters/lobsters-ansible) for our production deployment config.
 There's an external project [docker-lobsters](https://github.com/utensils/docker-lobsters) if you want to use Docker.
 
+* Install and start MariaDB.
+  On Linux use [your package manager](https://mariadb.com/kb/en/distributions-which-include-mariadb/).
+  On MacOS you can [install with brew](https://mariadb.com/kb/en/installing-mariadb-on-macos-using-homebrew/).
+  On Windows there's an [installer](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.5.2&os=Linux&cpu=x86_64&pkg=tar_gz&i=systemd&mirror=starburst_stlouis).
+
+* Start the mariadb server using one of the [methods mentioned in the mariadb knowledge base](https://mariadb.com/kb/en/starting-and-stopping-mariadb-automatically/).
+
+* Open the console using `mariadb`, and set the `root` user password (type `ctrl-d` to exit afterwards)
+
+```sql
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
+```
+
 * Install the Ruby version specified in [.ruby-version](https://github.com/lobsters/lobsters/blob/master/.ruby-version)
 
 * Checkout the lobsters git tree from Github
@@ -41,43 +54,17 @@ There's an external project [docker-lobsters](https://github.com/utensils/docker
     Ubuntu: sudo apt-get install nodejs
     OSX: brew install nodejs
     ```
-* Create a MariaDB (other DBs supported by ActiveRecord may work, only MySQL and
-MariaDB have been tested) database, username, and password and put them in a
-`config/database.yml` file.  You will also want a separate database for
-running tests:
 
-    ```yaml
-    development:
-      adapter: mysql2
-      encoding: utf8mb4
-      reconnect: false
-      database: lobsters_dev
-      socket: /tmp/mysql.sock
-      username: *dev_username*
-      password: *dev_password*
-      
-    test:
-      adapter: mysql2
-      encoding: utf8mb4
-      reconnect: false
-      database: lobsters_test
-      socket: /tmp/mysql.sock
-      username: *test_username*
-      password: *test_password*
-    ```
+* Run `rails credentials:edit` to create and edit your encrypted credentials file.
+  This is where you store API keys for external services and features like linking accounts.
+  Copy and paste the contents of `config/credentials.yml.enc.sample` in.
+  On setup, Rails will give you new random value for `secret_key_base` and you can use `rails secret` any time you need to generate another.
 
 * Run `bin/setup` to install dependencies and set up db
 
     ```sh
     lobsters$ bin/setup
     ```
-    
-    * If when installing the `mysql2` gem on macOS, you see 
-      `ld: library not found for -l-lpthread` in the output, see 
-      [this solution](https://stackoverflow.com/a/44790834/204052) for a fix.
-      You might also see `ld: library not found for -lssl` if you're using
-      macOS 10.4+ and Homebrew `openssl`, in which case see
-      [this solution](https://stackoverflow.com/a/39628463/1042144).
 
 * On your production server, copy `config/initializers/production.rb.sample`
   to `config/initalizers/production.rb` and customize it with your site's
@@ -106,12 +93,15 @@ running tests:
     */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/mastodon_sync.rb; bundle exec ruby script/traffic_range'
     ```
 
-* See `config/initializers/production.rb.sample` for GitHub/Mastodon integration help.
+* On production, run `rails credentials:edit` to set up the credentials there,
+  like you did for development.
+  On setup, Rails will give you new random value for `secret_key_base` and you can use `rails secret` any time you need to generate another.
+  Never `git commit` or share your `config/credentials.yml.enc`!
 
 * You probably want to use [git-imerge](https://lobste.rs/s/dbm2d4) to pull in
   changes from Lobsters to your site.
 
 #### Administration
 
-Basic moderation happens on-site, but most other administrative tasks require use of the rails console in production.
+Basic moderation happens on-site, but many administrative tasks require use of the rails console in production.
 Administrators can create and edit tags at `/tags`.

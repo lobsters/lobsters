@@ -22,7 +22,7 @@ class CommentsController < ApplicationController
     comment = story.comments.build
     comment.comment = params[:comment].to_s
     comment.user = @user
-    comment.hat = @user.wearable_hats.find_by(id: params[:hat_id])
+    comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
 
     if params[:parent_comment_short_id].present?
       # includes parent story_id to ensure this comment's story_id matches
@@ -58,18 +58,12 @@ class CommentsController < ApplicationController
     end
   end
 
-  def render_created_comment(comment)
-    if request.xhr?
-      render partial: "comments/postedreply", layout: false,
-        content_type: "text/html", locals: {comment: comment}
-    else
-      redirect_to comment.path
-    end
-  end
-
   def show
-    if !((comment = find_comment) && comment.is_editable_by_user?(@user))
-      return render plain: "can't find comment", status: 400
+    if !(comment = find_comment)
+      return render plain: "can't find comment", status: 404
+    end
+    if !comment.is_editable_by_user?(@user)
+      return redirect_to comment.path
     end
 
     render partial: "comment",
@@ -175,10 +169,16 @@ class CommentsController < ApplicationController
     end
 
     InactiveUser.disown! comment
-    comment = find_comment
 
-    render partial: "comment", layout: false,
-      content_type: "text/html", locals: {comment: comment}
+    if request.xhr?
+      comment = find_comment
+      show_story = ActiveModel::Type::Boolean.new.cast(params[:show_story])
+      show_tree_lines = ActiveModel::Type::Boolean.new.cast(params[:show_tree_lines])
+
+      render partial: "comment", locals: {comment: comment, show_story: show_story, show_tree_lines: show_tree_lines}
+    else
+      redirect_back fallback_location: root_path
+    end
   end
 
   def update
@@ -188,9 +188,7 @@ class CommentsController < ApplicationController
 
     comment.comment = params[:comment]
     comment.hat_id = nil
-    if params[:hat_id] && @user.wearable_hats.where(id: params[:hat_id])
-      comment.hat_id = params[:hat_id]
-    end
+    comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
 
     if params[:preview].blank? && comment.save
       votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, [comment.id])
@@ -288,9 +286,13 @@ class CommentsController < ApplicationController
       format.rss {
         if @user && params[:token].present?
           @title = "Private comments feed for #{@user.username}"
+          render action: "index", layout: false
+        else
+          content = Rails.cache.fetch("comments.rss", expires_in: (60 * 2)) {
+            render_to_string action: "index", layout: false
+          }
+          render plain: content, layout: false
         end
-
-        render action: "index", layout: false
       }
     end
   end
@@ -355,6 +357,7 @@ class CommentsController < ApplicationController
 
     @threads = Comment.recent_threads(@showing_user)
       .accessible_to_user(@user)
+      .merge(Story.not_deleted(@user))
       .for_presentation
       .joins(:story)
 
@@ -372,6 +375,20 @@ class CommentsController < ApplicationController
 
   private
 
+  def find_comment
+    comment = Comment.where(short_id: params[:id]).first
+    # convenience to use PK (from external queries) without generally permitting enumeration:
+    comment ||= Comment.find(params[:id]) if @user&.is_admin?
+
+    if @user && comment
+      comment.current_vote = Vote.where(user_id: @user.id,
+        story_id: comment.story_id, comment_id: comment.id).first
+      comment.vote_summary = Vote.comment_vote_summaries([comment.id])[comment.id]
+    end
+
+    comment
+  end
+
   def preview(comment)
     comment.previewing = true
     comment.is_deleted = false # show normal preview for deleted comments
@@ -386,17 +403,12 @@ class CommentsController < ApplicationController
       }
   end
 
-  def find_comment
-    comment = Comment.where(short_id: params[:id]).first
-    # convenience to use PK (from external queries) without generally permitting enumeration:
-    comment ||= Comment.find(params[:id]) if @user&.is_admin?
-
-    if @user && comment
-      comment.current_vote = Vote.where(user_id: @user.id,
-        story_id: comment.story_id, comment_id: comment.id).first
-      comment.vote_summary = Vote.comment_vote_summaries([comment.id])[comment.id]
+  def render_created_comment(comment)
+    if request.xhr?
+      render partial: "comments/postedreply", layout: false,
+        content_type: "text/html", locals: {comment: comment}
+    else
+      redirect_to comment.path
     end
-
-    comment
   end
 end

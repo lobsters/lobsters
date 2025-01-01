@@ -40,6 +40,19 @@ describe Comment do
     expect(comment).to_not be_valid
   end
 
+  it "extracts links from markdown" do
+    c = Comment.new comment: "a [link](https://example.com)"
+
+    # smoke test:
+    expect(c.markeddown_comment).to eq("<p>a <a href=\"https://example.com\" rel=\"ugc\">link</a></p>\n")
+
+    links = c.parsed_links
+    expect(links.count).to eq(1)
+    l = links.last
+    expect(l.url).to eq("https://example.com")
+    expect(l.title).to eq("link")
+  end
+
   describe ".accessible_to_user" do
     it "when user is a moderator" do
       moderator = build(:user, :moderator)
@@ -213,6 +226,38 @@ describe Comment do
         comment: "too fast"
       )
       expect(c.breaks_speed_limit?).to be false
+    end
+  end
+
+  describe "confidence" do
+    it "is low for flagged comments" do
+      conf = Comment.new(score: -4, flags: 5).calculated_confidence
+      expect(conf).to be < 0.3
+    end
+
+    it "it is high for upvoted comments" do
+      conf = Comment.new(score: 100, flags: 0).calculated_confidence
+      expect(conf).to be > 0.75
+    end
+
+    it "at the scame score, is higher for comments without flags" do
+      upvoted = Comment.new(score: 10, flags: 0).calculated_confidence
+      flagged = Comment.new(score: 10, flags: 4).calculated_confidence
+      expect(upvoted).to be > flagged
+    end
+  end
+
+  describe "confidence_order_path" do
+    it "doesn't sort comments under the wrong parents when they haven't been voted on" do
+      story = create(:story)
+      a = create(:comment, story: story, parent_comment: nil)
+      create(:comment, story: story, parent_comment: nil)
+      c = create(:comment, story: story, parent_comment: a)
+      sorted = Comment.story_threads(story)
+      # don't care if a or b is first, just care that c is immediately after a
+      # this uses each_cons to get each pair of records and ensures [a, c] appears
+      relationships = sorted.map(&:id).to_a.each_cons(2).to_a
+      expect(relationships).to include([a.id, c.id])
     end
   end
 end

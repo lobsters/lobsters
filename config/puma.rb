@@ -34,21 +34,47 @@ pidfile ENV.fetch("PIDFILE") {
 # processes).
 workers ENV.fetch("PUMA_WORKERS") { 3 }
 
-# In prod we run dozens of workers on a 4 core cpu. Puma starts all of them at
-# the same time, pinning the CPU until the box is unresponsive. Where one
-# worker takes 5-6.5s to start, starting 30 at the same time takes 90s for any
-# to start so we throw a lot of 502s.  This hook runs before the app boots and
-# sleeps a variable period to give other workers a chance to start.
-worker_boot_duration = 7 # seconds, conservatively
-# workers are numbered from zero, so:
-# (0..11).map {|i| (i / 3.0).floor } => [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3]
-def sleep_for_index index, worker_boot_duration
-  workers_to_start_at_a_time = Etc.nprocessors - 1 # leave one open for serving
-  (index / workers_to_start_at_a_time.to_f).floor * worker_boot_duration
+worker_boot_timeout 180
+
+# https://github.com/Shopify/ruby/issues/556
+on_first_worker = false
+on_worker_boot do |worker_index|
+  on_first_worker = worker_index == 0
+
+  if on_first_worker
+    require "objspace"
+    GC.start
+    File.open("/tmp/heap-boot.json", "w") do |f|
+      ObjectSpace.dump_all(output: f)
+    end
+    if defined?(RubyVM::YJIT)
+      Thread.new do
+        loop do
+          # rubocop doesn't know activesupport isn't available here
+          # rubocop:disable Rails/TimeZone
+          # File.write("/tmp/yjit-stats.txt", [Time.now.strftime("%Y-%m-%dT%H:%M:%S.%L%z"), " ", RubyVM::YJIT.runtime_stats, " ", GC.stat, "\n"].join, mode: "a+")
+          # rubocop:enable Rails/TimeZone
+          sleep 300
+        end
+      end
+    end
+  end
 end
-last_index = (ENV.fetch("PUMA_WORKERS") { 4 }).to_i - 1
-worker_boot_timeout sleep_for_index(last_index, worker_boot_duration) + worker_boot_duration * 3
-on_worker_boot { |index| sleep sleep_for_index(index, worker_boot_duration) }
+
+heap_dumped = false
+out_of_band do
+  if on_first_worker && !heap_dumped
+    if GC.stat(:heap_live_slots) > 500_000
+      GC.start
+      if GC.stat(:heap_live_slots) > 500_000
+        heap_dumped = true
+        File.open("/tmp/heap-bloated.json", "w") do |f|
+          ObjectSpace.dump_all(output: f)
+        end
+      end
+    end
+  end
+end
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code

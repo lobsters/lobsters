@@ -58,10 +58,10 @@ class HomeController < ApplicationController
       format.rss {
         if @user
           @title = "Private feed for #{@user.username}"
-          render action: "rss", layout: false
+          render action: "stories", layout: false
         else
           content = Rails.cache.fetch("rss", expires_in: (60 * 2)) {
-            render_to_string action: "rss", layout: false
+            render_to_string action: "stories", layout: false
           }
           render plain: content, layout: false
         end
@@ -90,10 +90,12 @@ class HomeController < ApplicationController
           @title += " - Private feed for #{@user.username}"
         end
 
-        render action: "rss", layout: false
+        render action: "stories", layout: false
       }
       format.json { render json: @stories }
     end
+
+    @user&.touch(:last_read_newest)
   end
 
   def newest_by_user
@@ -107,7 +109,7 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.html { render action: "index" }
       format.rss {
-        render action: "rss", layout: false
+        render action: "stories", layout: false
       }
       format.json { render json: @stories }
     end
@@ -147,7 +149,7 @@ class HomeController < ApplicationController
         if @user
           @title = "Private feed of saved stories for #{@user.username}"
         end
-        render action: "rss", layout: false
+        render action: "stories", layout: false
       }
       format.json { render json: @stories }
     end
@@ -173,7 +175,7 @@ class HomeController < ApplicationController
 
     respond_to do |format|
       format.html { render action: "index" }
-      format.rss { render action: "rss", layout: false }
+      format.rss { render action: "stories", layout: false }
       format.json { render json: @stories }
     end
   end
@@ -199,7 +201,7 @@ class HomeController < ApplicationController
 
     respond_to do |format|
       format.html { render action: "index" }
-      format.rss { render action: "rss", layout: false }
+      format.rss { render action: "stories", layout: false }
       format.json { render json: @stories }
     end
   end
@@ -225,7 +227,7 @@ class HomeController < ApplicationController
 
     respond_to do |format|
       format.html { render action: "index" }
-      format.rss { render action: "rss", layout: false }
+      format.rss { render action: "stories", layout: false }
       format.json { render json: @stories }
     end
   end
@@ -242,12 +244,34 @@ class HomeController < ApplicationController
 
     @rss_link = {
       title: "RSS 2.0 - For #{@domain.domain}",
-      href: "/domain/#{@domain.domain}.rss"
+      href: "/domains/#{@domain.domain}.rss"
     }
 
     respond_to do |format|
       format.html { render action: "index" }
-      format.rss { render action: "rss", layout: false }
+      format.rss { render action: "stories", layout: false }
+      format.json { render json: @stories }
+    end
+  end
+
+  def for_origin
+    @origin = Origin.find_by!(identifier: params[:identifier])
+
+    @stories, @show_more = get_from_cache(identifier: @origin.identifier) do
+      paginate @origin.stories.base(@user).order("id desc")
+    end
+
+    @title = @origin.identifier
+    @above = {partial: "for_origin", locals: {origin: @origin, stories: @stories}}
+
+    @rss_link = {
+      title: "RSS 2.0 - For #{@origin.identifier}",
+      href: "/origins/#{@origin.identifier}.rss"
+    }
+
+    respond_to do |format|
+      format.html { render action: "index" }
+      format.rss { render action: "stories", layout: false }
       format.json { render json: @stories }
     end
   end
@@ -273,7 +297,7 @@ class HomeController < ApplicationController
 
     respond_to do |format|
       format.html { render action: "index" }
-      format.rss { render action: "rss", layout: false }
+      format.rss { render action: "stories", layout: false }
     end
   end
 
@@ -297,7 +321,7 @@ class HomeController < ApplicationController
           @title += " - Private feed for #{@user.username}"
         end
 
-        render action: "rss", layout: false
+        render action: "stories", layout: false
       }
       format.json { render json: @stories }
     end
@@ -331,13 +355,13 @@ class HomeController < ApplicationController
     StoriesPaginator.new(scope, page, @user).get
   end
 
-  def get_from_cache(opts = {}, &block)
+  def get_from_cache(opts = {}, &)
     if Rails.env.development? || @user || tags_filtered_by_cookie.any?
       yield
     else
       key = opts.merge(page: page).sort.map { |k, v| "#{k}=#{v.to_param}" }.join(" ")
       begin
-        Rails.cache.fetch("stories #{key}", expires_in: 45, &block)
+        Rails.cache.fetch("stories #{key}", expires_in: 45, &)
       rescue Errno::ENOENT => e
         Rails.logger.error "error fetching stories #{key}: #{e}"
         yield

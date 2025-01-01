@@ -9,10 +9,10 @@ describe Vote do
     v = build(:vote, user: u, story: s, vote: nil)
 
     v.valid?
-    expect(v.errors[:vote]).to eq(["can't be blank"])
+    expect(v.errors[:vote]).to include("can't be blank")
   end
 
-  context "upvoting a score and flags" do
+  context "upvoting a story and flags" do
     # don't need to test short-circuit where vote is "changed" to what it already is
 
     let(:u) { create(:user) }
@@ -21,7 +21,7 @@ describe Vote do
     it "-1 to 1" do
       Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
       s.reload
-      expect(s.score).to eq(0)
+      expect(s.score).to eq(1)
       expect(s.flags).to eq(1)
       Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
       s.reload
@@ -32,7 +32,7 @@ describe Vote do
     it "-1 to 0" do
       Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
       s.reload
-      expect(s.score).to eq(0)
+      expect(s.score).to eq(1)
       expect(s.flags).to eq(1)
       Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id, nil, u.id, nil)
       s.reload
@@ -65,7 +65,7 @@ describe Vote do
       expect(s.flags).to eq(0)
       Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
       s.reload
-      expect(s.score).to eq(0)
+      expect(s.score).to eq(1)
       expect(s.flags).to eq(1)
     end
 
@@ -76,7 +76,7 @@ describe Vote do
       expect(s.flags).to eq(0)
       Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
       s.reload
-      expect(s.score).to eq(0)
+      expect(s.score).to eq(1)
       expect(s.flags).to eq(1)
     end
   end
@@ -134,7 +134,7 @@ describe Vote do
     expect(s.flags).to eq(0)
   end
 
-  it "removes karma and upvote when downvoting an upvote" do
+  it "removes upvote when downvoting an upvote" do
     s = create(:story)
     c = create(:comment, story: s)
     expect(c.user.karma).to eq(0)
@@ -154,7 +154,7 @@ describe Vote do
     )
     c.reload
 
-    expect(c.user.karma).to eq(-1)
+    expect(c.user.karma).to eq(0) # doesn't change bc flags don't affect score
     expect(c.score).to eq(0)
     expect(c.flags).to eq(1)
   end

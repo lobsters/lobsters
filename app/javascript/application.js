@@ -1,12 +1,5 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 
-//= require_tree .
-
-//= require tom-select.base.js
-//= require TomSelect_remove_button
-//= require TomSelect_caret_position
-//= require TomSelect_input_autogrow
-
 "use strict";
 
 const csrfToken = () => {

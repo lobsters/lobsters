@@ -1,4 +1,5 @@
 default: &default
+  database: cache
   store_options:
     # Cap age of oldest cache entry to fulfill retention policies
     max_age: <%= 2.weeks.to_i %>
@@ -7,11 +8,9 @@ default: &default
 
 development:
   <<: *default
-  database: cache
 
 test:
   <<: *default
 
 production:
-  database: cache
   <<: *default

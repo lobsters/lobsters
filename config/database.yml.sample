@@ -1,27 +1,35 @@
 ---
+trilogy: &trilogy
+  adapter: trilogy
+  encoding: utf8mb4
+  host: 127.0.0.1
+  port: 3306
+
+sqlite3: &sqlite3
+  adapter: sqlite3
+  pool: 5
+  timeout: 5000
+
 development:
-  primary: &local
-    adapter: trilogy
-    host: 127.0.0.1
-    port: 3306
+  primary:
+    <<: *trilogy
     database: lobsters_dev
     username: root
     password: localdev
   cache:
-    database: storage/development_cache.sqlite3
+    <<: *sqlite3
+    database: tmp/cache/cache.sqlite3
     migrations_paths: db/cache_migrate
-    adapter: sqlite3
-    pool: 5
-    timeout: 5000
 
 test:
-  <<: *local
-  database: lobsters_test
+  primary:
+    <<: *trilogy
+    database: lobsters_test
 
 production:
+  primary:
+    <<: *trilogy
   cache:
-    database: storage/development_cache.sqlite3
+    <<: *sqlite3
+    database: /srv/lobste.rs/cache/cache.sqlite3
     migrations_paths: db/cache_migrate
-    adapter: sqlite3
-    pool: 5
-    timeout: 5000

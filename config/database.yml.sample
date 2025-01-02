@@ -22,9 +22,10 @@ development:
     migrations_paths: db/cache_migrate
 
 test:
-  primary:
-    <<: *trilogy
-    database: lobsters_test
+  <<: *trilogy
+  database: lobsters_test
+  username: root
+  password: localdev
 
 production:
   primary:

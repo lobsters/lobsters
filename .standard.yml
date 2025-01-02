@@ -20,3 +20,6 @@ plugins:
 #  - use_form_with:
 #      require_path: extras/prohibit_form_for_and_form_tag
 #      plugin_class_name: RuboCop::Cop::Style::DisallowFormForandFormTag
+
+extend_config:
+  - .custom_cops.yml

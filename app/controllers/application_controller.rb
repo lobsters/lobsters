@@ -32,6 +32,12 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::UnpermittedParameters do
     render plain: "400 Unpermitted query or form parameter", status: :bad_request, content_type: "text/plain"
   end
+  rescue_from ActionController::ParameterMissing do |exception|
+    respond_to do |format|
+      format.html { render plain: "400 #{exception.message}", status: :bad_request }
+      format.json { render json: {error: exception.message.to_s}, status: :bad_request }
+    end
+  end
   rescue_from ActionDispatch::Http::MimeNegotiation::InvalidType do
     render plain: "fix the mime type in your HTTP_ACCEPT header",
       status: :bad_request, content_type: "text/plain"

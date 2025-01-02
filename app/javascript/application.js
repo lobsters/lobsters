@@ -2,10 +2,6 @@
 
 "use strict";
 
-import "tom-select"
-import "TomSelect_remove_button"
-import "TomSelect_caret_position"
-import "TomSelect_input_autogrow"
 import "autosize"
 
 const csrfToken = () => {

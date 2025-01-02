@@ -20,13 +20,6 @@ class Origin < ApplicationRecord
     find_by! identifier:
   end
 
-  def identifier= s
-    super(s.downcase)
-
-    identifier_domain = Utils::URL_RE.match("https://#{identifier}")[:domain]
-    self.domain = Domain.find_by(domain: identifier_domain)
-  end
-
   def ban_by_user_for_reason!(banner, reason)
     self.banned_at = Time.current
     self.banned_by_user_id = banner.id

@@ -42,7 +42,7 @@ RSpec.describe EmailReplyMailer, type: :mailer do
     reply = create(:comment, parent_comment: comment)
 
     email = EmailReplyMailer.reply(reply, user)
-    expect(email.body.encoded).to match("Also, you can reply to this email to join the discussion.")
+    expect(email.body.encoded).to match("Reply to this email or continue")
   end
 
   it "addresses top-level story responses" do

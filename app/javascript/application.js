@@ -2,6 +2,12 @@
 
 "use strict";
 
+import "tom-select"
+import "TomSelect_remove_button"
+import "TomSelect_caret_position"
+import "TomSelect_input_autogrow"
+import "autosize"
+
 const csrfToken = () => {
   return qS('meta[name="csrf-token"]').getAttribute('content');
 }
@@ -88,11 +94,11 @@ class _LobstersFunction {
     this.curUser = null;
 
     this.storyFlagReasons = ({
-      "'O': 'Off-topic', 'A': 'Already Posted', 'B': 'Broken Link', 'S': 'Spam', '': 'Cancel'"
+      'O': 'Off-topic', 'A': 'Already Posted', 'B': 'Broken Link', 'S': 'Spam', '': 'Cancel'
     });
 
     this.commentFlagReasons = ({
-      "'O': 'Off-topic', 'M': 'Me-too', 'T': 'Troll', 'U': 'Unkind', 'S': 'Spam', '': 'Cancel'"
+      'O': 'Off-topic', 'M': 'Me-too', 'T': 'Troll', 'U': 'Unkind', 'S': 'Spam', '': 'Cancel'
     });
   }
 

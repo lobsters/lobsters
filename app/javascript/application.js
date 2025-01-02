@@ -4,6 +4,11 @@
 
 import "autosize"
 
+import "TomSelect"
+import "TomSelect_remove_button"
+import "TomSelect_caret_position"
+import "TomSelect_input_autogrow"
+
 const csrfToken = () => {
   return qS('meta[name="csrf-token"]').getAttribute('content');
 }

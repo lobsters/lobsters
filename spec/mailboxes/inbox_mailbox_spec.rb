@@ -27,7 +27,7 @@ RSpec.describe InboxMailbox, type: :mailbox do
   it "creates a reply to a comment with a valid short id" do
     comment = create(:comment)
     user = create(:user)
-  
+
     to = "#{Rails.application.shortname}-#{user.mailing_list_token}@example.com"
     irt = "comment.#{comment.short_id}.1@"
 

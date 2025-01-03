@@ -35,6 +35,15 @@ RSpec.describe EmailReplyMailer, type: :mailer do
     expect(email.body.encoded).to match("replied to you")
   end
 
+  it "contains message about replying from email" do
+    comment = create(:comment)
+    user = comment.user
+    reply = create(:comment, parent_comment: comment)
+
+    email = EmailReplyMailer.reply(reply, user)
+    expect(email.body.encoded).to match("Reply to this email or continue")
+  end
+
   it "addresses top-level story responses" do
     user = create(:story).user
     comment = create(:comment)

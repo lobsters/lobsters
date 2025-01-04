@@ -1,6 +1,8 @@
 # typed: false
 
 Rails.application.routes.draw do
+  get "suggestions/create"
+  get "suggestions/new"
   root to: "home#index",
     protocol: (Rails.application.config.force_ssl ? "https://" : "http://"),
     as: "root"

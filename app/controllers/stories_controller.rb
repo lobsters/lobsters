@@ -2,7 +2,7 @@
 
 class StoriesController < ApplicationController
   include StoryFinder
- 
+
   caches_page :show, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,

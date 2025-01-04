@@ -112,12 +112,11 @@ Rails.application.routes.draw do
     post "save"
     post "unsave"
     post "disown"
+    resources :suggestions, only: [:new, :create]
   end
   post "/stories/fetch_url_attributes", format: "json"
   post "/stories/preview" => "stories#preview"
   post "/stories/check_url_dupe" => "stories#check_url_dupe"
-
-  resources :suggestions, only: [:new, :create]
 
   resources :comments, except: [:new, :destroy] do
     member do

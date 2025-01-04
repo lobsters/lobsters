@@ -23,4 +23,4 @@ module StoryFinder
       raise ActiveRecord::RecordNotFound
     end
   end
-end 
+end

@@ -75,5 +75,5 @@ class SuggestionsController < ApplicationController
     if (tt = @story.suggested_titles.where(user_id: @user.id).first)
       @story.title = tt.title
     end
-  end 
+  end
 end

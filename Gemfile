@@ -2,7 +2,10 @@ source "https://rubygems.org"
 
 gem "rails"
 
+# database and caching
 gem "trilogy"
+gem "sqlite3"
+gem "solid_cache"
 
 # rails
 gem "scenic"

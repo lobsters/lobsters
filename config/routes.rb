@@ -263,6 +263,9 @@ Rails.application.routes.draw do
     resources :reparents, only: [:new, :create]
   end
 
+  # only admin should be able to access it.. right ?
+  mount MissionControl::Jobs::Engine, at: "/jobs"
+
   get "/privacy" => "about#privacy"
   get "/about" => "about#about"
   get "/chat" => "about#chat"

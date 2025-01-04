@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 gem "sqlite3"
 gem "solid_queue"
+gem "mission_control-jobs"
 gem "rails"
 
 gem "trilogy"
@@ -58,6 +59,7 @@ group :test, :development do
   gem "letter_opener"
   gem "rspec-rails"
   gem "factory_bot_rails"
+  gem "foreman"
   gem "standard"
   gem "standard-performance"
   gem "standard-rails"

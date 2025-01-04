@@ -340,6 +340,10 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
+    solid_cache (1.0.6)
+      activejob (>= 7.2)
+      activerecord (>= 7.2)
+      railties (>= 7.2)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -347,6 +351,9 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
+    sqlite3 (2.4.1)
+      mini_portile2 (~> 2.8.0)
+    sqlite3 (2.4.1-x86_64-linux-gnu)
     stackprof (0.2.26)
     standard (1.42.1)
       language_server-protocol (~> 3.17.0.2)
@@ -441,7 +448,9 @@ DEPENDENCIES
   silencer
   simplecov
   sitemap_generator
+  solid_cache
   sprockets-rails
+  sqlite3
   stackprof
   standard
   standard-performance

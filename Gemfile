@@ -1,7 +1,8 @@
 source "https://rubygems.org"
 
-gem "rails"
+gem 'rails', '~> 8.0', '>= 8.0.1'
 
+gem "mysql2"
 gem "trilogy"
 
 # rails

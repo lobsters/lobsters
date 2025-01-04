@@ -1,5 +1,6 @@
 source "https://rubygems.org"
 
+gem "solid_queue"
 gem "rails"
 
 gem "trilogy"

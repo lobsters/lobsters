@@ -23,7 +23,7 @@ development:
 
 test:
   <<: *trilogy
-  database: lobsters_test
+  database: lobsters_dev
   username: root
   password: localdev
 

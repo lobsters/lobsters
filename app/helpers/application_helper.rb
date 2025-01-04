@@ -1,6 +1,8 @@
 # typed: false
 
 module ApplicationHelper
+  include TimeAgoInWords
+
   MAX_PAGES = 15
 
   def avatar_img(user, size)

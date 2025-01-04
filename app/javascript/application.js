@@ -93,7 +93,10 @@ const removeExtraInputs = () => {
 class _LobstersFunction {
   constructor (username) {
     this.curUser = null;
-
+    /*
+      This is duplicated from app/models/vote.rb. 
+      If updating it, make sure to update in both places.
+    */
     this.storyFlagReasons = ({
       'O': 'Off-topic', 'A': 'Already Posted', 'B': 'Broken Link', 'S': 'Spam', '': 'Cancel'
     });

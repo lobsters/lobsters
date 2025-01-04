@@ -6,7 +6,6 @@ pin_all_from "app/javascript"
 
 pin "autosize", to: "autosize.js"
 
-
 pin "TomSelect", to: "TomSelect_base.js"
 pin "TomSelect_caret_position", to: "TomSelect_caret_position.js"
 pin "TomSelect_input_autogrow", to: "TomSelect_input_autogrow.js"

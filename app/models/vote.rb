@@ -22,6 +22,9 @@ class Vote < ApplicationRecord
     user ? q.where(user: user) : q.all
   }
 
+  # This is duplicated from app/models/vote.rb.
+  # If updating it, make sure to update in both places.
+
   # don't forget to edit the explanations on /about
   COMMENT_REASONS = {
     "O" => "Off-topic",

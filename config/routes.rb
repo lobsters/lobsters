@@ -1,8 +1,6 @@
 # typed: false
 
 Rails.application.routes.draw do
-  get "suggestions/create"
-  get "suggestions/new"
   root to: "home#index",
     protocol: (Rails.application.config.force_ssl ? "https://" : "http://"),
     as: "root"
@@ -113,13 +111,13 @@ Rails.application.routes.draw do
     post "unhide"
     post "save"
     post "unsave"
-    get "suggest"
-    post "suggest", action: "submit_suggestions"
     post "disown"
   end
   post "/stories/fetch_url_attributes", format: "json"
   post "/stories/preview" => "stories#preview"
   post "/stories/check_url_dupe" => "stories#check_url_dupe"
+
+  resources :suggestions, only: [:new, :create]
 
   resources :comments, except: [:new, :destroy] do
     member do

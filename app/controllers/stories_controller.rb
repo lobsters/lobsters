@@ -1,6 +1,8 @@
 # typed: false
 
 class StoriesController < ApplicationController
+  include StoryFinder
+ 
   caches_page :show, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,
@@ -403,24 +405,6 @@ class StoriesController < ApplicationController
       story_params.except(:url)
     end
   end
-
-  def find_story
-    story = Story.find_by(short_id: params[:story_id])
-    # convenience to use PK (from external queries) without generally permitting enumeration:
-    story ||= Story.find(params[:id]) if @user&.is_admin?
-
-    if @user && story
-      story.current_vote = Vote.find_by(
-        user: @user,
-        story: story.id,
-        comment: nil
-      ).try(:vote)
-    end
-
-    story
-  end
-
-
 
   def find_user_story
     @story = if @user.is_moderator?

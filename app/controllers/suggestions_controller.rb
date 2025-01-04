@@ -1,4 +1,6 @@
 class SuggestionsController < ApplicationController
+  include StoryFinder
+
   before_action :find_story!, only: [:new, :create]
   before_action :require_logged_in_user, only: [:new]
   before_action :show_title_h1, only: [:new]
@@ -74,11 +76,4 @@ class SuggestionsController < ApplicationController
       @story.title = tt.title
     end
   end 
-
-  def find_story!
-    @story = find_story
-    if !@story
-      raise ActiveRecord::RecordNotFound
-    end
-  end
 end

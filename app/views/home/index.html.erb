@@ -147,7 +147,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
             story.has_suggestions? ? "story_has_suggestions" : "" %>">edit</a>
         <% end %>
         <% if story.can_have_suggestions_from_user?(@user) %>
-          <span> | </span><%= link_to "suggest", story_suggest_path(story.short_id),
+          <span> | </span><%= link_to "suggest", new_suggestion_path(story.short_id),
             :class => "suggester" %>
         <% end %>
         <% if !story.is_gone? && @user %>

@@ -65,17 +65,16 @@ class Domain < ApplicationRecord
 
     # github.com/foo -> github.com/foo
     # github.com/foo/bar -> github.com/foo
-    origin = if url.match?(selector_regexp)
-      identifier = url.sub(selector_regexp, replacement)
-      Origin.find_or_initialize_by(identifier: identifier)
+    identifier = if url.match?(selector_regexp)
+      url.sub(selector_regexp, replacement)
     else
       # if the URL isn't matched, the identifier is the bare domain (handles root + partial regexps)
-      Origin.find_or_initialize_by(identifier: domain)
-    end
-    # default the domain if Origin.identifier= didn't find one
-    origin.domain ||= self
-    origin.save!
-    origin
+      domain
+    end.downcase
+
+    # because of rails associations, `origins` is scoped to current domain object
+    # find_or_create_by! returns the origin record, or raises if validations fail
+    origins.find_or_create_by!(identifier: identifier)
   end
 
   def ban_by_user_for_reason!(banner, reason)

@@ -442,6 +442,12 @@ DEPENDENCIES
   silencer
   simplecov
   sitemap_generator
+<<<<<<< HEAD
+=======
+  solid_cache
+  sprockets-rails
+  sqlite3
+>>>>>>> master
   stackprof
   standard
   standard-performance

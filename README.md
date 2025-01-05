@@ -3,14 +3,16 @@
 This is the
 [quite sad](https://web.archive.org/web/20230213161624/https://old.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/)
 source code to the
-[ghost town](https://twitter.com/webshitweekly/status/1399935275057389571) at
-[https://lobste.rs](https://lobste.rs).
+[ghost town](https://xcancel.com/webshitweekly/status/1399935275057389571) at
+[https://lobste.rs](https://lobste.rs)
 It is a Rails codebase and uses a SQL (MariaDB in production) backend for the database.
+([No relation](https://lobste.rs/about#michaelbolton) to the self-help guru.)
 
 You are free to use this code to start your own [sister site](https://github.com/lobsters/lobsters/wiki)
 because the code is available under a [permissive license](https://github.com/lobsters/lobsters/blob/master/LICENSE) (3-clause BSD).
 We welcome bug reports and code contributions that help use improve [lobste.rs](https://lobste.rs).
 As a volunteer project we're reluctant to take on work that's not useful to our site, so please understand if we don't want to adopt your custom feature.
+
 
 
 #### Contributing bugfixes and new features

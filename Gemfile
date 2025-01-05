@@ -1,11 +1,15 @@
 source "https://rubygems.org"
 
-gem "sqlite3"
-gem "solid_queue"
-gem "mission_control-jobs"
 gem "rails"
 
+# database and caching
 gem "trilogy"
+gem "sqlite3"
+gem "solid_cache"
+
+# jobs
+gem "solid_queue"
+gem "mission_control-jobs"
 
 # rails
 gem "scenic"

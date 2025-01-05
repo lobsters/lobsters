@@ -157,7 +157,7 @@ class ModNote < ApplicationRecord
       user: story.user,
       created_at: Time.current,
       note: "Attempted to submit a story with tag(s) not allowed to new users:\n" \
-        "- user joined: #{time_ago_in_words(story.user.created_at)}\n" \
+        "- user joined: #{how_long_ago(story.user.created_at)}\n" \
         "- url: #{story.url}\n" \
         "- title: #{story.title}\n" \
         "- user_is_author: #{story.user_is_author}\n" \
@@ -172,7 +172,7 @@ class ModNote < ApplicationRecord
       user: story.user,
       created_at: Time.current,
       note: "Attempted to post a story from a #{reason} domain:\n" \
-        "- user joined: #{time_ago_in_words(story.user.created_at)}\n" \
+        "- user joined: #{how_long_ago(story.user.created_at)}\n" \
         "- url: #{story.url}\n" \
         "- title: #{story.title}\n" \
         "- user_is_author: #{story.user_is_author}\n" \
@@ -187,7 +187,7 @@ class ModNote < ApplicationRecord
       user: story.user,
       created_at: Time.current,
       note: "Attempted to post a story from a #{reason} origin:\n" \
-        "- user joined: #{time_ago_in_words(story.user.created_at)}\n" \
+        "- user joined: #{how_long_ago(story.user.created_at)}\n" \
         "- url: #{story.url}\n" \
         "- origin: #{story.origin.identifier}\n" \
         "- title: #{story.title}\n" \
@@ -203,7 +203,7 @@ class ModNote < ApplicationRecord
       user: story.user,
       created_at: Time.current,
       note: "Attempted to submit a URL attributing traffic:\n" \
-        "- user joined: #{time_ago_in_words(story.user.created_at)}\n" \
+        "- user joined: #{how_long_ago(story.user.created_at)}\n" \
         "- url: #{story.url}\n" \
         "- title: #{story.title}\n" \
         "- user_is_author: #{story.user_is_author}\n" \

@@ -30,7 +30,10 @@ class ApplicationController < ActionController::Base
     end
   end
   rescue_from ActionController::UnpermittedParameters do
-    render plain: "400 Unpermitted query or form parameter", status: :bad_request, content_type: "text/plain"
+    respond_to do |format|
+      format.html { render plain: "400 Unpermitted query or form parameter", status: :bad_request }
+      format.json { render json: {error: "400 Unpermitted query or form parameter"}, status: :bad_request }
+    end
   end
   rescue_from ActionController::ParameterMissing do |exception|
     respond_to do |format|

@@ -187,6 +187,7 @@ GEM
     memory_profiler (1.1.0)
     mini_mime (1.1.5)
     minitest (5.25.4)
+    mysql2 (0.5.6)
     net-imap (0.5.4)
       date
       net-protocol
@@ -357,6 +358,10 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
+    solid_cache (1.0.6)
+      activejob (>= 7.2)
+      activerecord (>= 7.2)
+      railties (>= 7.2)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -364,6 +369,14 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
+    sqlite3 (2.5.0-aarch64-linux-gnu)
+    sqlite3 (2.5.0-aarch64-linux-musl)
+    sqlite3 (2.5.0-arm-linux-gnu)
+    sqlite3 (2.5.0-arm-linux-musl)
+    sqlite3 (2.5.0-arm64-darwin)
+    sqlite3 (2.5.0-x86_64-darwin)
+    sqlite3 (2.5.0-x86_64-linux-gnu)
+    sqlite3 (2.5.0-x86_64-linux-musl)
     stackprof (0.2.26)
     standard (1.43.0)
       language_server-protocol (~> 3.17.0.2)
@@ -448,6 +461,7 @@ DEPENDENCIES
   lograge
   mail
   memory_profiler
+  mysql2
   nokogiri
   oauth
   parslet
@@ -456,17 +470,19 @@ DEPENDENCIES
   puma
   rack-attack
   rack-mini-profiler
-  rails (~> 8.0, >= 8.0.1)
+  rails
   rb-readline
   rotp
   rqrcode
   rspec-rails
   scenic
-  scenic-mysql_adapter (~> 1.0, >= 1.0.1)
+  scenic-mysql_adapter
   silencer
   simplecov
   sitemap_generator
+  solid_cache
   sprockets-rails
+  sqlite3
   stackprof
   standard
   standard-performance

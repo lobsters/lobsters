@@ -7,6 +7,9 @@ RUN apt-get update -qq && apt-get install -y mariadb-client
 # Set an environment variable to avoid installing gem documentation
 ENV BUNDLE_PATH /gems
 
+# Set the Rails environment variable
+ENV RAILS_ENV development
+
 # Set the working directory inside the container
 WORKDIR /app
 
@@ -25,6 +28,3 @@ COPY . .
 
 # Expose port 3000 to the outside world
 EXPOSE 3000
-
-# The command to run the Rails server
-CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

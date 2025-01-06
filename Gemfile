@@ -1,5 +1,7 @@
 source "https://gem.coop"
 
+ruby file: ".ruby-version"
+
 gem "rails"
 
 # database and caching

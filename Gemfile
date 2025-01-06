@@ -21,6 +21,7 @@ gem "uglifier"
 gem "actionpack-page_caching"
 gem "exception_notification"
 gem "puma"
+gem "kamal"
 
 # security
 gem "bcrypt"

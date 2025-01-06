@@ -1,13 +1,15 @@
 source "https://rubygems.org"
 
-gem 'rails', '~> 8.0', '>= 8.0.1'
+gem "rails"
 
-gem "mysql2"
+# database and caching
 gem "trilogy"
+gem "sqlite3"
+gem "solid_cache"
 
 # rails
 gem "scenic"
-gem 'scenic-mysql_adapter', '~> 1.0', '>= 1.0.1'
+gem "scenic-mysql_adapter"
 gem "activerecord-typedstore"
 gem "sprockets-rails", require: "sprockets/railtie"
 

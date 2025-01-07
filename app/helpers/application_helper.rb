@@ -146,7 +146,7 @@ module ApplicationHelper
   end
 
   def time_ago_in_words_label(time)
-    ago = time_ago_in_words(time)
+    ago = time_ago_in_words(time, include_seconds: true)
     content_tag(:span, ago, title: time.strftime("%F %T %z"))
   end
 end

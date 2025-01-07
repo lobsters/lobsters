@@ -1,7 +1,7 @@
 # typed: false
 
 class ModNote < ApplicationRecord
-  extend ActionView::Helpers::DateHelper
+  include ActionView::Helpers::DateHelper
 
   belongs_to :moderator,
     class_name: "User",
@@ -218,5 +218,10 @@ class ModNote < ApplicationRecord
     latest = attrs[:user].mod_notes.last
     return latest if latest && attrs[:moderator] == latest.moderator && attrs[:note] == latest.note
     ModNote.create!(attrs)
+  end
+
+  def self.time_ago_in_words(time_value)
+    instance = new
+    instance.time_ago_in_words(time_value, include_seconds: true)
   end
 end

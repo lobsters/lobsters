@@ -2,4 +2,4 @@
 
   <%= word_wrap(@comment.plaintext_comment, :line_width => 72).gsub(/\n/, "\n  ") %>
 
-Continue this discussion at <%= @comment.url %>
+Reply to this email or continue at <%= @comment.url %>

@@ -2,10 +2,10 @@
 
 class ApplicationController < ActionController::Base
   include IntervalHelper
+  include Authenticatable
 
   protect_from_forgery
   before_action :geoblock_uk
-  before_action :authenticate_user
   before_action :heinous_inline_partials, if: -> { Rails.env.development? }
   before_action :mini_profiler
   before_action :prepare_exception_notifier
@@ -50,23 +50,6 @@ class ApplicationController < ActionController::Base
   def agent_is_spider?
     ua = request.env["HTTP_USER_AGENT"].to_s
     ua == "" || ua.match(/(Google|bing|Slack|Twitter)bot|Slurp|crawler|Feedly|FeedParser|RSS/)
-  end
-
-  def authenticate_user
-    # eagerly evaluate, in case this triggers an IpSpoofAttackError
-    request.remote_ip
-
-    if Rails.application.read_only?
-      return true
-    end
-
-    if session[:u] &&
-        (user = User.find_by(session_token: session[:u].to_s)) &&
-        user.is_active?
-      @user = user
-    end
-
-    true
   end
 
   def check_for_read_only_mode
@@ -148,53 +131,6 @@ class ApplicationController < ActionController::Base
     end
     if color != :red
       Rails.logger.info "  Lucky user #{@user.username} saw #{color} logo"
-    end
-  end
-
-  def require_logged_in_user
-    if @user
-      true
-    else
-      if request.get?
-        session[:redirect_to] = request.original_fullpath
-      end
-
-      redirect_to "/login"
-    end
-  end
-
-  def require_logged_in_moderator
-    require_logged_in_user
-
-    if @user
-      if @user.is_moderator?
-        true
-      else
-        flash[:error] = "You are not authorized to access that resource."
-        redirect_to "/"
-      end
-    end
-  end
-
-  def require_logged_in_admin
-    require_logged_in_user
-
-    if @user
-      if @user.is_admin?
-        true
-      else
-        flash[:error] = "You are not authorized to access that resource."
-        redirect_to "/"
-      end
-    end
-  end
-
-  def require_logged_in_user_or_400
-    if @user
-      true
-    else
-      render plain: "not logged in", status: 400
-      false
     end
   end
 

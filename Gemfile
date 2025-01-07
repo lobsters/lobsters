@@ -3,9 +3,10 @@ source "https://rubygems.org"
 gem "rails"
 
 # database and caching
-gem "trilogy"
-gem "sqlite3"
+gem "maxminddb"
 gem "solid_cache"
+gem "sqlite3"
+gem "trilogy"
 
 # rails
 gem "scenic"

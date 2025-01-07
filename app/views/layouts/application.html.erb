@@ -133,7 +133,21 @@
     <% end %>
     <%= link_to 'Filter', filters_path %>
     <%= link_to 'Moderation Log', moderations_path %>
+
   </footer>
+
+  <% if Maxmind.uk?(request.remote_ip) || Rails.env.development? %>
+    <br>
+    <div id="uk-osa" class="flash-error">
+      <p>
+      <b>You appear to be in the UK.</b>
+      Lobsters urgently needs your help.
+      The risks of the UK Online Safety Act will require that Lobsters geoblock the UK on <b>March 16, 2025</b>.
+      Please visit <a href="https://lobste.rs/s/ukosa1">this story</a> and help us avoid this.
+      (<a href='https://db-ip.com'>IP Geolocation by DB-IP</a> <a href="https://db-ip.com/db/lite.php">Lite</a>)
+      </p>
+    </div>
+  <% end %>
   <span id="iab-pcm-sdk"></span><span id="iab-autofill-sdk"></span>
 </body>
 </html>

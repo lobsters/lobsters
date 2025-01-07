@@ -115,8 +115,8 @@ Rails.application.routes.draw do
     resources :suggestions, only: [:new, :create]
 
     # Mapping old routes to new routes. can be safely removed after the next deployment
-    get "suggest", to: "suggestions#new"
-    post "suggest", to: "suggestions#create"
+    get "suggest", to:redirect("/stories/suggestions/new", status: 302)
+    post "suggest", to:redirect("/stories/suggestions", status: 307)
   end
   post "/stories/fetch_url_attributes", format: "json"
   post "/stories/preview" => "stories#preview"

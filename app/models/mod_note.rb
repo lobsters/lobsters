@@ -1,7 +1,7 @@
 # typed: false
 
 class ModNote < ApplicationRecord
-  extend TimeAgoInWords
+  extend ActionView::Helpers::DateHelper
 
   belongs_to :moderator,
     class_name: "User",

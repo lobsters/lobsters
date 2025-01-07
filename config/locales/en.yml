@@ -29,5 +29,50 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 
+# see here for full list of keys available
+# https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml#L63-L101
+
+
 en:
   hello: "Hello world"
+
+  datetime:
+    distance_in_words:
+      less_than_x_seconds:
+        one:  just now
+        other: just now
+      about_x_hours:
+        one: "%{count} hour ago"
+        other: "%{count} hours ago"
+      about_x_months:
+        one: "%{count} month ago"
+        other: "%{count} months ago"
+      about_x_years:
+        one: "%{count} year ago"
+        other: "%{count} years ago"
+      almost_x_years:
+        one: "%{count} year ago"
+        other: "%{count} years ago"
+      half_a_minute: less than a minute ago
+
+      less_than_x_minutes:
+        one: less than a minute ago
+        other:  "%{count} minutes ago"
+      over_x_years:
+        one: "%{count} year ago"
+        other: "%{count} years ago"
+      x_seconds:
+        one: just now
+        other: just now
+      x_minutes:
+        one: "%{count} minute ago"
+        other: "%{count} minutes ago"
+      x_days:
+        one: "%{count} day ago"
+        other: "%{count} days ago"
+      x_months:
+        one: "%{count} month ago"
+        other: "%{count} months ago"
+      x_years:
+        one: "%{count} year ago"
+        other: "%{count} years ago"

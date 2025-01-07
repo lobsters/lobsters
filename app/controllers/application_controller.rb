@@ -53,7 +53,6 @@ class ApplicationController < ActionController::Base
     ua == "" || ua.match(/(Google|bing|Slack|Twitter)bot|Slurp|crawler|Feedly|FeedParser|RSS/)
   end
 
-
   def check_for_read_only_mode
     if Rails.application.read_only?
       flash.now[:error] = "Site is currently in read-only mode."

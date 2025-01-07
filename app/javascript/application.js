@@ -94,11 +94,9 @@ class _LobstersFunction {
   constructor (username) {
     this.curUser = null;
 
-    const storyMetaTag = document.querySelector('meta[name="story-flags"]');
-    this.storyFlagReasons = storyMetaTag.getAttribute("content");
+    this.storyFlagReasons = qS('meta[name="story-flags"]').getAttribute('content');
 
-    const commentMetaTag = document.querySelector('meta[name="comment-flags"]');
-    this.commentFlagReasons = commentMetaTag.getAttribute("content");
+    this.commentFlagReasons = qS('meta[name="comment-flags"]').getAttribute('content');
   }
 
   bounceToLogin() {

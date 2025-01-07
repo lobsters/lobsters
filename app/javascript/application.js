@@ -93,17 +93,12 @@ const removeExtraInputs = () => {
 class _LobstersFunction {
   constructor (username) {
     this.curUser = null;
-    /*
-      This is duplicated from app/models/vote.rb. 
-      If updating it, make sure to update in both places.
-    */
-    this.storyFlagReasons = ({
-      'O': 'Off-topic', 'A': 'Already Posted', 'B': 'Broken Link', 'S': 'Spam', '': 'Cancel'
-    });
 
-    this.commentFlagReasons = ({
-      'O': 'Off-topic', 'M': 'Me-too', 'T': 'Troll', 'U': 'Unkind', 'S': 'Spam', '': 'Cancel'
-    });
+    const storyMetaTag = document.querySelector('meta[name="story-flags"]');
+    this.storyFlagReasons = storyMetaTag.getAttribute("content");
+
+    const commentMetaTag = document.querySelector('meta[name="comment-flags"]');
+    this.commentFlagReasons = commentMetaTag.getAttribute("content");
   }
 
   bounceToLogin() {

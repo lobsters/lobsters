@@ -178,6 +178,7 @@ GEM
       net-smtp
     marcel (1.0.4)
     matrix (0.4.2)
+    maxminddb (0.1.22)
     memory_profiler (1.1.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
@@ -432,6 +433,7 @@ DEPENDENCIES
   listen
   lograge
   mail
+  maxminddb
   memory_profiler
   nokogiri
   oauth

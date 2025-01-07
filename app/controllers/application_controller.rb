@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   include IntervalHelper
 
   protect_from_forgery
+  before_action :geoblock_uk
   before_action :authenticate_user
   before_action :heinous_inline_partials, if: -> { Rails.env.development? }
   before_action :mini_profiler
@@ -90,6 +91,15 @@ class ApplicationController < ActionController::Base
     if !@user && params[:format] == "rss" && params[:token].to_s.present?
       @user = User.where(rss_token: params[:token].to_s).first
     end
+  end
+
+  # https://lobste.rs/s/ukosa1
+  def geoblock_uk
+    return unless Time.current.utc >= Date.new(2025, 3, 16)
+    return unless Maxmind.uk?(req.ip)
+
+    render body: "I'm very sorry, but the risks of the UK Online Safety Act have required that Lobsters geoblock the UK. <a href=\"https://web.archive.org/web/*/https://lobste.rs/s/ukosa1\">Discussion</a>", status: 451, content_type: "text/html"
+    false
   end
 
   def heinous_inline_partials

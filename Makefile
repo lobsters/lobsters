@@ -7,7 +7,7 @@ test:
 lint: 
 	bundle exec standardrb --fix-unsafely
 
-docker-run:
+docker-serve:
 	export RUBY_VERSION=`cat .ruby-version`
 	docker compose up --build
 

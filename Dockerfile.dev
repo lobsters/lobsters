@@ -1,5 +1,5 @@
 # Use an official Ruby image as a base
-FROM ruby:3.4
+FROM ruby:3.4.1
 
 # Install dependencies
 RUN apt-get update -qq && apt-get install -y \
@@ -19,8 +19,11 @@ COPY Gemfile Gemfile.lock ./
 # Install gems
 RUN bundle install
 
+
+ENV DATABASE_HOST db
+
 # Expose port for Rails server
 EXPOSE 3000
 
 # Command to start the Rails server
-CMD ["bin/dev"]
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

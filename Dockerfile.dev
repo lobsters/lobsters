@@ -1,0 +1,26 @@
+# Use an official Ruby image as a base
+FROM ruby:3.4
+
+# Install dependencies
+RUN apt-get update -qq && apt-get install -y \
+  build-essential \
+  mariadb-client \
+  vim
+
+# Set working directory
+WORKDIR /lobsters
+
+# Install Bundler
+RUN gem install bundler
+
+# Copy Gemfile and Gemfile.lock
+COPY Gemfile Gemfile.lock ./
+
+# Install gems
+RUN bundle install
+
+# Expose port for Rails server
+EXPOSE 3000
+
+# Command to start the Rails server
+CMD ["bin/dev"]

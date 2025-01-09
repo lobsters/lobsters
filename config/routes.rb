@@ -111,9 +111,12 @@ Rails.application.routes.draw do
     post "unhide"
     post "save"
     post "unsave"
-    get "suggest"
-    post "suggest", action: "submit_suggestions"
     post "disown"
+    resources :suggestions, only: [:new, :create]
+
+    # Mapping old routes to new routes. can be safely removed after the next deployment
+    get "suggest", to: redirect("/stories/suggestions/new", status: 302)
+    post "suggest", to: redirect("/stories/suggestions", status: 307)
   end
   post "/stories/fetch_url_attributes", format: "json"
   post "/stories/preview" => "stories#preview"

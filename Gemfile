@@ -60,9 +60,9 @@ group :test, :development do
   gem "letter_opener"
   gem "rspec-rails"
   gem "factory_bot_rails"
-  gem "standard"
-  gem "standard-performance"
-  gem "standard-rails"
+  gem "standard", require: false
+  gem "standard-performance", require: false
+  gem "standard-rails", require: false
   gem "super_diff"
   gem "faker"
   gem "byebug"

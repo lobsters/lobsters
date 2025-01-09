@@ -205,6 +205,9 @@ class _LobstersFunction {
       .then (response => response.json())
       .then (data => {
         title_field.value = data.title
+        if (url_field.value != data.url) {
+          slideDownJS(qS('.url-updated'));
+        }
         url_field.value = data.url
         button.textContent = old_text
       });

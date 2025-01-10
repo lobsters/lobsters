@@ -450,7 +450,7 @@ class Comment < ApplicationRecord
 
   def is_editable_by_user?(user)
     if user && user.id == user_id
-      if is_moderated?
+      if is_gone?
         false
       else
         (Time.current.to_i - (updated_at ? updated_at.to_i :

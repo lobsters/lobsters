@@ -63,7 +63,7 @@ class Utils
   def self.silence_stream(*streams)
     on_hold = streams.collect(&:dup)
     streams.each do |stream|
-      stream.reopen("/dev/null")
+      stream.reopen(File::NULL)
       stream.sync = true
     end
     yield

@@ -183,7 +183,8 @@ class _LobstersFunction {
   }
 
   fetchURLTitle(button) {
-    const targetUrl = qS('#story_url').value;
+    const url_field = qS('#story_url');
+    const targetUrl = url_field.value;
     const title_field = qS('#story_title');
     const formData = new FormData();
     const old_text = button.textContent;
@@ -202,6 +203,10 @@ class _LobstersFunction {
       .then (response => response.json())
       .then (data => {
         title_field.value = data.title
+        if (url_field.value != data.url) {
+          slideDownJS(qS('.url-updated'));
+        }
+        url_field.value = data.url
         button.textContent = old_text
       });
     button.removeAttribute("disabled");

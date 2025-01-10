@@ -63,6 +63,10 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
     Brakeman is conservatively configured to "fail" when a new version of brakeman is released.
     If that happens when you're working on a PR, you can ping me and I'll update it.
 
+    Brakeman also sometimes emits intimidating warnings about minor changes near known risky code.
+    So if brakeman warns you about code you didn't write, don't panic, it's probably fine.
+    Push your PR and @mention me, I'll help sort it out.
+
 
 ### Sharing your work
 

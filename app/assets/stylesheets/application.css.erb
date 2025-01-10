@@ -657,40 +657,48 @@ ol.comments1 > li.comments_subtree > ol.comments {
 }
 
 div.voters {
+  display: flex;
 	float: left;
 	margin-top: 0px;
 	width: 40px;
+	height: 40px;
 }
 
-div.voters div.score {
-	color: var(--color-fg-contrast-4-5);
-	font-size: 9pt;
-	margin-top: 1px;
-	margin-bottom: -3px;
-	text-align: center;
+div.voters span.score {
+  color: var(--color-fg-contrast-4-5);
+  font-size: 9pt;
+  margin-top: 2px;
+  text-align: center;
+  display: flex;
+  width: max-content;
+  justify-self: center;
 }
 
-li.story div.voters div.score {
+li.story div.voters span.score {
 	font-size: 9.5pt;
 	margin-top: 2px;
 }
 
 div.voters .upvoter {
+  text-decoration: none;
+  position: relative;
+  z-index: 23;
+}
+
+div.voters .upvote-arrow {
 	border-color: transparent transparent var(--color-fg-shape) transparent;
 	border-style: solid;
-	border-width: 6px;
+	border-width: 9px;
 	border-bottom-width: 11px;
 	text-decoration: none;
-	width: 0px;
-	height: 0;
-	margin-bottom: 0px;
-	margin-left: 14px;
+	width: max-content;
+	height: 100%;
 	padding: 0;
 	display: block;
 }
 
-div.voters .upvoter:hover,
-.upvoted div.voters .upvoter {
+div.voters .upvote-arrow:hover,
+.upvoted div.voters .upvote-arrow {
 	border-bottom-color: var(--color-fg-accent);
 }
 
@@ -1775,6 +1783,7 @@ input[type="submit"].link_post.pushover_button {
 		padding-left: 0;
 	}
 	div#inside {
+	    padding-top: 40px;
 		margin: 0.5rem;
 	}
 
@@ -1812,9 +1821,15 @@ input[type="submit"].link_post.pushover_button {
 		margin-left: 0.25em;
 		margin-top: 0px;
 		width: 30px;
+		height: auto;
 	}
+
 	div.voters a.upvoter {
-		margin-top: -5px;
+		width: 100%;
+		height: fit-content;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	div.comment_form_container {
@@ -1825,17 +1840,13 @@ input[type="submit"].link_post.pushover_button {
 		margin-left: 35px;
 	}
 
-	div.voters a.upvoter {
-		margin-left: 6px;
-		border-width: 9px;
-	}
 
 	/* explicitly reset color when not upvoted, since previously-upvoted arrow
 	 * will still be triggering :hover until next tap */
-	div.voters .upvoter:hover {
+	div.voters .upvote-arrow:hover {
 		border-bottom-color: var(--color-fg-shape);
 	}
-	.upvoted div.voters .upvoter {
+	.upvoted div.voters .upvote-arrow {
 		border-bottom-color: var(--color-fg-accent);
 	}
 

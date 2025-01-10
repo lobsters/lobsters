@@ -266,6 +266,8 @@ Rails.application.routes.draw do
     resources :reparents, only: [:new, :create]
   end
 
+  resources :moderate_stories, only: [:edit, :update]
+
   get "/privacy" => "about#privacy"
   get "/about" => "about#about"
   get "/chat" => "about#chat"

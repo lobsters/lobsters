@@ -414,7 +414,7 @@ class _LobstersFunction {
     if (!Lobster.curUser) return Lobster.bounceToLogin();
 
     const li = parentSelector(voterEl, ".comment");
-    const scoreDiv = qS(li, 'div.score');
+    const scoreDiv = qS(li, 'span.score');
     const formData = new FormData();
     formData.append('reason', reason || '');
     let showScore = true;

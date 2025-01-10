@@ -696,7 +696,7 @@ onPageLoad(() => {
     Lobster.removeFlagModal()
   });
 
-  on("click", '.comment a.upvoter', (event) => {
+  on('click', '.comment a.upvoter', (event) => {
     event.preventDefault();
     Lobster.upvoteComment(event.target);
   });

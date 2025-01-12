@@ -75,11 +75,6 @@ class StoriesController < ApplicationController
     end
 
     @title = "Edit Story"
-
-    if @story.merged_into_story
-      @story.merge_story_short_id = @story.merged_into_story.short_id
-      User.update_counters @story.user_id, karma: (@story.votes.count * -2)
-    end
   end
 
   def fetch_url_attributes

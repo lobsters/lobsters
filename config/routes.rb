@@ -264,9 +264,8 @@ Rails.application.routes.draw do
 
   namespace :mod do
     resources :reparents, only: [:new, :create]
+    resources :stories, only: [:edit, :update]
   end
-
-  resources :moderate_stories, only: [:edit, :update]
 
   get "/privacy" => "about#privacy"
   get "/about" => "about#about"

@@ -1,6 +1,7 @@
-class ModerateStoriesController < ApplicationController
-  before_action :require_logged_in_moderator
-  before_action :find_user_story!
+class Mod::StoriesController < Mod::ModeratorController
+  include StoryFinder
+
+  before_action :find_story!
   before_action :show_title_h1
 
   def edit
@@ -32,12 +33,5 @@ class ModerateStoriesController < ApplicationController
       :merge_story_short_id, :is_unavailable, :user_is_author, :user_is_following,
       tags_a: []
     )
-  end
-
-  def find_user_story!
-    @story = Story.where(short_id: params[:story_id] || params[:id]).first
-    if !@story
-      raise ActiveRecord::RecordNotFound
-    end
   end
 end

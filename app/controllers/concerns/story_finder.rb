@@ -2,7 +2,7 @@ module StoryFinder
   extend ActiveSupport::Concern
 
   def find_story
-    story = Story.find_by(short_id: params[:story_id])
+    story = Story.find_by(short_id: params[:story_id] || params[:id])
     # convenience to use PK (from external queries) without generally permitting enumeration:
     story ||= Story.find(params[:id]) if @user&.is_admin?
 

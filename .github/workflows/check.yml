@@ -9,6 +9,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  RUBYOPT: "--enable-frozen-string-literal --debug-frozen-string-literal"
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -46,10 +49,6 @@ jobs:
         run: |
           bundle exec rspec
           bundle exec rspec spec/slow/*_spec.rb
-        env:
-          # Enabling frozen string literals in rspec only because brakeman
-          # isn't compatible yet: https://github.com/presidentbeef/brakeman/pull/1855
-          RUBYOPT: "--enable-frozen-string-literal --debug-frozen-string-literal"
 
   lint:
     runs-on: ubuntu-latest

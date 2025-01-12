@@ -603,29 +603,6 @@
         89
       ],
       "note": "IntervalHelper#time_interval is a security control"
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "fdd54f924c48f192955bf4ed6deea77708243f3e2dab34af1f2f245b96033b72",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/controllers/moderations_controller.rb",
-      "line": 46,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "((Moderation.all.eager_load(:moderator, :story, { :comment => ([:story, :user]) }, :tag, :user, :domain, :origin, :category) or Moderation.all.eager_load(:moderator, :story, { :comment => ([:story, :user]) }, :tag, :user, :domain, :origin, :category).where(\"is_from_suggestions = true\")) or Moderation.all.eager_load(:moderator, :story, { :comment => ([:story, :user]) }, :tag, :user, :domain, :origin, :category).joins(:moderator).where(:users => ({ :username => params.fetch(\"moderator\", \"(All)\") }))).where(\"`moderations`.`#{type.to_s.singularize}_id` is null\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ModerationsController",
-        "method": "index"
-      },
-      "user_input": "type.to_s.singularize",
-      "confidence": "Weak",
-      "cwe_id": [
-        89
-      ],
-      "note": "type comes from @what.keys, which are symbols for table names"
     }
   ],
   "updated": "2024-12-03 17:25:37 -0600",

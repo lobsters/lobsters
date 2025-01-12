@@ -32,6 +32,22 @@ RSpec.describe "moderations", type: :request do
       end
     end
 
+    context "when filtering entries by type" do
+      let(:story) { create :story, title: "How to 10x your pipeline with this one weird trick" }
+
+      it "shows entries matching the filters" do
+        Moderation.create!(domain: domain)
+        Moderation.create!(story: story)
+
+        get "/moderations", params: {what: {domains: "1"}}
+
+        expect(response).to be_successful
+        expect(response.body).to include("Moderation Log")
+        expect(response.body).to include(domain.domain)
+        expect(response.body).not_to include(story.title)
+      end
+    end
+
     # https://github.com/lobsters/lobsters/issues/1425 - vulnerability scanner
     context "with extra params specified" do
       it "shows the page ignoring extra params", :aggregate_failures do

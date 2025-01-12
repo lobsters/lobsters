@@ -43,7 +43,7 @@ class ModerationsController < ApplicationController
     # filter based on type of thing moderated
     @what.each do |type, checked|
       next if checked
-      @moderations = @moderations.where("`moderations`.`#{type.to_s.singularize}_id` is null")
+      @moderations = @moderations.where("#{type.to_s.singularize}_id": nil)
     end
 
     # paginate

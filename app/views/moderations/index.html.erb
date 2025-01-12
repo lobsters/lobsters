@@ -15,12 +15,12 @@
 
 <div class="morelink">
   <% if @page > 1 %>
-    <%= link_to "<< Page #{@page - 1}", request.query_parameters.merge({:page => @page - 1}) %>
+    <%= link_to "<< Page #{@page - 1}", @moderation_params.merge({:page => @page - 1}) %>
   <% end %>
   <% if @pages > 1 && @page < @pages %>
     <% if @page > 1 %>
       |
     <% end %>
-    <%= link_to "Page #{@page + 1} >>", request.query_parameters.merge({:page => @page + 1}) %>
+    <%= link_to "Page #{@page + 1} >>", @moderation_params.merge({:page => @page + 1}) %>
   <% end %>
 </div>

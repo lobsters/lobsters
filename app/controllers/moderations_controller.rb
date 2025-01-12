@@ -9,15 +9,15 @@ class ModerationsController < ApplicationController
     @title = "Moderation Log"
     @moderators = ["(All)", "(Users)"] + User.moderators.map(&:username)
 
-    @moderator = params.fetch("moderator", "(All)")
+    @moderator = moderation_params.fetch("moderator", "(All)")
     @what = {
-      stories: params.dig(:what, :stories),
-      comments: params.dig(:what, :comments),
-      tags: params.dig(:what, :tags),
-      users: params.dig(:what, :users),
-      domains: params.dig(:what, :domains),
-      origins: params.dig(:what, :origins),
-      categories: params.dig(:what, :categories)
+      stories: moderation_params.dig(:what, :stories),
+      comments: moderation_params.dig(:what, :comments),
+      tags: moderation_params.dig(:what, :tags),
+      users: moderation_params.dig(:what, :users),
+      domains: moderation_params.dig(:what, :domains),
+      origins: moderation_params.dig(:what, :origins),
+      categories: moderation_params.dig(:what, :categories)
     }
     @what.transform_values! { true } if @what.values.none?
 
@@ -48,7 +48,7 @@ class ModerationsController < ApplicationController
 
     # paginate
     @pages = (@moderations.count / ENTRIES_PER_PAGE).ceil
-    @page = params[:page].to_i
+    @page = moderation_params[:page].to_i
     if @page == 0
       @page = 1
     elsif @page < 0 || @page > (2**32) || @page > @pages
@@ -59,5 +59,12 @@ class ModerationsController < ApplicationController
       .offset((@page - 1) * ENTRIES_PER_PAGE)
       .order("moderations.created_at desc")
       .limit(ENTRIES_PER_PAGE)
+  end
+
+  private
+
+  def moderation_params
+    @moderation_params ||= params.permit(:moderator, :page,
+      what: %i[stories comments tags users domains origins categories])
   end
 end

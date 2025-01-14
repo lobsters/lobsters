@@ -89,7 +89,7 @@
       "cwe_id": [
         79
       ],
-      "note": ""
+      "note": "False alarm: excerpt_fragment_around_url doesn't return Story.url"
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -270,7 +270,7 @@
       "cwe_id": [
         79
       ],
-      "note": ""
+      "note": "Rendered markdown"
     },
     {
       "warning_type": "Cross-Site Scripting",

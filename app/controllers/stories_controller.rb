@@ -380,17 +380,7 @@ class StoriesController < ApplicationController
   private
 
   def story_params
-    p = params.require(:story).permit(
-      :title, :url, :description, :moderation_reason,
-      :merge_story_short_id, :is_unavailable, :user_is_author, :user_is_following,
-      tags_a: []
-    )
-
-    if @user&.is_moderator?
-      p
-    else
-      p.except(:moderation_reason, :merge_story_short_id, :is_unavailable)
-    end
+    params.require(:story).permit(:title, :url, :description, :user_is_author, :user_is_following, tags_a: [])
   end
 
   def update_story_attributes

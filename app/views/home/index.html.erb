@@ -146,6 +146,11 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <a href="<%= edit_story_path(story.short_id) %>" class="<%=
             story.has_suggestions? ? "story_has_suggestions" : "" %>">edit</a>
         <% end %>
+        <% if @user.try(:is_moderator?) %>
+          <span> | </span><%= link_to "mod", mod_notes_path(username: story.user.username) %>
+          <span> | </span>
+          <a href="<%= edit_mod_story_path(story.short_id) %>">edit</a>
+        <% end %>
         <% if story.can_have_suggestions_from_user?(@user) %>
           <span> | </span><%= link_to "suggest", new_story_suggestion_path(story.short_id),
             :class => "suggester" %>

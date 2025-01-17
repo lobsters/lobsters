@@ -219,10 +219,8 @@
       <div class="boxline"><p></p><%= f.submit "ModNote" %></div>
     <% end %>
 
-    <label class="required">Last 10 Moderations:</label>
-    <%= render partial: 'moderations/table', locals: {
-      moderations: Moderation.for(@showing_user).order('id desc').limit(10),
-    } %>
+    <label class="required">Latest modlog for this user:</label>
+    <%= render partial: 'moderations/table', locals: { moderations: Moderation.for_user(@showing_user) } %>
 
 
     <% if @user.is_admin? %>

@@ -1,8 +1,7 @@
 <div class="box" id="story_box">
   <div id="story_holder">
-    <%= form_with model: @story do |f| %>
-      <%= render :partial => "stories/form", :locals => { :story => @story,
-        :f => f } %>
+    <%= form_with model: @story, url: mod_story_path(@story) do |f| %>
+      <%= render :partial => "stories/form", :locals => { :story => @story, :f => f } %>
 
       <br />
       <div class="box">
@@ -60,11 +59,9 @@
         </div>
       </div>
     <% end %>
-	</div>
+  </div>
 </div>
 
 <br />
-<label class="required">Last 10 Moderations:</label>
-<%= render partial: 'moderations/table', locals: {
-  moderations: Moderation.for(@story.user).where("stories.id = ?", @story.id).order('id desc').limit(10),
-} %>
+<label class="required">Latest modlog for this story, submitter, and discussion:</label>
+<%= render partial: 'moderations/table', locals: { moderations: Moderation.for_story(@story) } %>

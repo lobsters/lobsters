@@ -266,6 +266,7 @@ Rails.application.routes.draw do
     resources :reparents, only: [:new, :create]
     resources :stories, only: [:edit, :update] do
       patch "undelete"
+      patch "destroy"
     end
   end
 

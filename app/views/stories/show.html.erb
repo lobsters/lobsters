@@ -36,7 +36,7 @@
   <% end %>
 </div>
 
-<% if @user.is_moderator? %>
+<% if @user&.is_moderator? %>
 <br />
 <label class="required">Latest modlog for this story, submitter, and discussion:</label>
 <%= render partial: 'moderations/table', locals: { moderations: Moderation.for_story(@story) } %>

@@ -16,7 +16,7 @@ class Mod::StoriesController < Mod::ModeratorController
   def update
     @story.is_deleted = false
     @story.editor = @user
-    @story.attributes = story_params
+    update_story_attributes
 
     if @story.save
       redirect_to @story.comments_path
@@ -25,7 +25,23 @@ class Mod::StoriesController < Mod::ModeratorController
     end
   end
 
+  def undelete
+    update_story_attributes
+    @story.is_deleted = false
+    @story.editor = @user
+
+    if @story.save
+      Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted", -1)
+    end
+
+    redirect_to @story.comments_path
+  end
+
   private
+
+  def update_story_attributes
+    @story.attributes = story_params
+  end
 
   def story_params
     params.require(:story).permit(

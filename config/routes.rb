@@ -267,7 +267,6 @@ Rails.application.routes.draw do
     resources :stories, only: [:edit, :update]
   end
 
-  # only admin should be able to access it.. right ?
   mount MissionControl::Jobs::Engine, at: "/jobs"
 
   get "/privacy" => "about#privacy"

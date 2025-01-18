@@ -27,7 +27,7 @@
               <% end %>
             </div>
           </td>
-          <td><%= time_ago_in_words_label(message.created_at) %></td>
+          <td><%= how_long_ago_label(message.created_at) %></td>
           <td><a href="/messages/<%= message.short_id %>"><%= message.subject
             %></a></td>
         </tr>

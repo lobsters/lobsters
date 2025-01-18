@@ -147,7 +147,7 @@ module ApplicationHelper
     link_to tag.tag, tag_path(tag), class: tag.css_class, title: tag.description
   end
 
-  def time_ago_in_words_label(time)
+  def how_long_ago_label(time)
     ago = how_long_ago(time)
     content_tag(:span, ago, title: time.strftime("%F %T %z"))
   end

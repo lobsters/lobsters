@@ -11,7 +11,7 @@
     <%= @message.hat.to_html_label if @message.hat %>
     to
     <%= styled_user_link @message.recipient %>
-    <%= time_ago_in_words_label(@message.created_at) %>
+    <%= how_long_ago_label(@message.created_at) %>
   </h2>
 
   <div class="boxline comment_text">

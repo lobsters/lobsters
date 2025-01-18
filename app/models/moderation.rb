@@ -21,13 +21,28 @@ class Moderation < ApplicationRecord
   belongs_to :category,
     optional: true
 
-  scope :for, ->(user) {
+  scope :for_user, ->(user) {
     left_outer_joins(:story, :comment)
       .includes(:moderator, comment: [:user, :story], story: :user)
       .where("
         moderations.user_id = ? OR
         stories.user_id = ? OR
         comments.user_id = ?", user, user, user)
+      .order(id: :desc)
+      .limit(20)
+  }
+  scope :for_story, ->(story) {
+    left_outer_joins(:story, :comment)
+      .includes(:moderator, comment: [:user, :story], story: :user)
+      .where("
+        moderations.user_id = ? OR
+        stories.user_id = ? OR
+        comments.user_id = ? OR
+        moderations.story_id = ? OR
+        comments.story_id = ? ",
+        story.user, story.user, story.user, story, story)
+      .order(id: :desc)
+      .limit(20)
   }
 
   validates :action, :reason, length: {maximum: 16_777_215}

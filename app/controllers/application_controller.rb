@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
   before_action :geoblock_uk
-  before_action :authenticate_user
   before_action :heinous_inline_partials, if: -> { Rails.env.development? }
   before_action :mini_profiler
   before_action :prepare_exception_notifier

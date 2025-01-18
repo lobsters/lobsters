@@ -3,6 +3,7 @@
   <hr class="mod">
   <p>Full display for submitter and mods:</p>
 <% end %>
+
 <ol class="stories">
   <%= render :partial => "stories/listdetail",
     :locals => { :story => @story, :single_story => true } %>
@@ -34,6 +35,12 @@
     <% end %>
   <% end %>
 </div>
+
+<% if @user&.is_moderator? %>
+<br />
+<label class="required">Latest modlog for this story, submitter, and discussion:</label>
+<%= render partial: 'moderations/table', locals: { moderations: Moderation.for_story(@story) } %>
+<% end %>
 
 <% if !@story.previewing %>
   <ol class="comments comments1">

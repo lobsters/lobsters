@@ -1,17 +1,18 @@
 # typed: false
 
 class StoriesController < ApplicationController
+  include StoryFinder
+
   caches_page :show, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,
     only: [:upvote, :flag, :unvote, :hide, :unhide, :preview, :save, :unsave]
   before_action :require_logged_in_user,
-    only: [:destroy, :create, :edit, :fetch_url_attributes, :new, :suggest]
+    only: [:destroy, :create, :edit, :fetch_url_attributes, :new]
   before_action :verify_user_can_submit_stories, only: [:new, :create]
   before_action :find_user_story, only: [:destroy, :edit, :undelete, :update]
-  before_action :find_story!, only: [:suggest, :submit_suggestions]
   around_action :track_story_reads, only: [:show], if: -> { @user.present? }
-  before_action :show_title_h1, only: [:new, :edit, :suggest]
+  before_action :show_title_h1, only: [:new, :edit]
 
   def create
     @title = "Submit Story"
@@ -44,7 +45,7 @@ class StoriesController < ApplicationController
   end
 
   def destroy
-    if !@story.is_editable_by_user?(@user)
+    if !@story.is_editable_by_user?(@user) && !@user.is_moderator?
       flash[:error] = "You cannot edit that story."
       return redirect_to "/"
     end
@@ -74,11 +75,6 @@ class StoriesController < ApplicationController
     end
 
     @title = "Edit Story"
-
-    if @story.merged_into_story
-      @story.merge_story_short_id = @story.merged_into_story.short_id
-      User.update_counters @story.user_id, karma: (@story.votes.count * -2)
-    end
   end
 
   def fetch_url_attributes
@@ -205,78 +201,6 @@ class StoriesController < ApplicationController
         @comments = @comments.includes(:parent_comment)
         render json: @story.as_json(with_comments: @comments)
       }
-    end
-  end
-
-  def suggest
-    @title = "Suggest Story Changes"
-    if !@story.can_have_suggestions_from_user?(@user)
-      flash[:error] = "You are not allowed to offer suggestions on that story."
-      return redirect_to @story.comments_path
-    end
-
-    if (suggested_tags = @story.suggested_taggings.where(user_id: @user.id)).any?
-      @story.tags_a = suggested_tags.map { |st| st.tag.tag }
-    end
-    if (tt = @story.suggested_titles.where(user_id: @user.id).first)
-      @story.title = tt.title
-    end
-  end
-
-  def submit_suggestions
-    if !@story.can_have_suggestions_from_user?(@user)
-      flash[:error] = "You are not allowed to offer suggestions on that story."
-      return redirect_to @story.comments_path
-    end
-
-    story_user = @story.user
-    inappropriate_tags = Tag
-      .where(tag: params[:story][:tags_a].reject { |t| t.to_s.blank? })
-      .reject { |t| t.can_be_applied_by?(story_user) }
-    if inappropriate_tags.length > 0
-      tag_error = ""
-      inappropriate_tags.each do |t|
-        tag_error += if t.privileged?
-          "User #{story_user.username} cannot apply tag #{t.tag} as they are not a " \
-            "moderator so it has been removed from your suggestion.\n"
-        elsif !t.permit_by_new_users?
-          "User #{story_user.username} cannot apply tag #{t.tag} due to being a new " \
-            "user so it has been removed from your suggestion.\n"
-        else
-          "User #{story_user.username} cannot apply tag #{t.tag} " \
-            "so it has been removed from your suggestion.\n"
-        end
-      end
-      tag_error += ""
-      flash[:error] = tag_error
-    end
-
-    ostory = @story.dup
-
-    @story.title = params[:story][:title]
-    if @story.valid?
-      dsug = false
-      if @story.title != ostory.title
-        @story.save_suggested_title_for_user!(@story.title, @user)
-        dsug = true
-      end
-
-      sugtags = Tag
-        .where(tag: params[:story][:tags_a].reject { |t| t.to_s.strip.blank? })
-        .reject { |t| !t.can_be_applied_by?(story_user) }
-        .map { |s| s.tag }
-      if @story.tags_a.sort != sugtags.sort
-        @story.save_suggested_tags_a_for_user!(sugtags, @user)
-        dsug = true
-      end
-
-      if dsug
-        ostory = @story.reload
-        flash[:success] = "Your suggested changes have been noted."
-      end
-      redirect_to ostory.comments_path
-    else
-      render action: "suggest"
     end
   end
 
@@ -456,17 +380,7 @@ class StoriesController < ApplicationController
   private
 
   def story_params
-    p = params.require(:story).permit(
-      :title, :url, :description, :moderation_reason,
-      :merge_story_short_id, :is_unavailable, :user_is_author, :user_is_following,
-      tags_a: []
-    )
-
-    if @user&.is_moderator?
-      p
-    else
-      p.except(:moderation_reason, :merge_story_short_id, :is_unavailable)
-    end
+    params.require(:story).permit(:title, :url, :description, :user_is_author, :user_is_following, tags_a: [])
   end
 
   def update_story_attributes
@@ -474,29 +388,6 @@ class StoriesController < ApplicationController
       story_params
     else
       story_params.except(:url)
-    end
-  end
-
-  def find_story
-    story = Story.find_by(short_id: params[:story_id])
-    # convenience to use PK (from external queries) without generally permitting enumeration:
-    story ||= Story.find(params[:id]) if @user&.is_admin?
-
-    if @user && story
-      story.current_vote = Vote.find_by(
-        user: @user,
-        story: story.id,
-        comment: nil
-      ).try(:vote)
-    end
-
-    story
-  end
-
-  def find_story!
-    @story = find_story
-    if !@story
-      raise ActiveRecord::RecordNotFound
     end
   end
 

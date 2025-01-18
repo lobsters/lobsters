@@ -141,7 +141,7 @@ describe "stories", type: :request do
     it "can be merged by mod" do
       sign_in mod
       s = create(:story)
-      put "/stories/#{s.short_id}",
+      put "/mod/stories/#{s.short_id}",
         params: {
           story: {
             merge_story_short_id: story.short_id,

@@ -105,7 +105,7 @@ GEM
     childprocess (5.1.0)
       logger (~> 1.5)
     chunky_png (1.4.0)
-    commonmarker (0.23.10)
+    commonmarker (0.23.11)
     concurrent-ruby (1.3.4)
     connection_pool (2.4.1)
     crack (1.0.0)
@@ -118,7 +118,7 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    database_consistency (1.7.26)
+    database_consistency (2.0.3)
       activerecord (>= 3.2)
     date (3.4.1)
     diff-lcs (1.5.1)
@@ -181,9 +181,9 @@ GEM
     maxminddb (0.1.22)
     memory_profiler (1.1.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.8)
     minitest (5.25.4)
-    net-imap (0.5.5)
+    mysql2 (0.5.6)
+    net-imap (0.5.4)
       date
       net-protocol
     net-pop (0.1.2)
@@ -223,7 +223,7 @@ GEM
       date
       stringio
     public_suffix (6.0.1)
-    puma (6.4.3)
+    puma (6.5.0)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.8)
@@ -280,7 +280,7 @@ GEM
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
-    rexml (3.3.9)
+    rexml (3.4.0)
     rotp (6.3.0)
     rqrcode (2.2.0)
       chunky_png (~> 1.0)
@@ -302,7 +302,8 @@ GEM
       rspec-expectations (~> 3.13)
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
-    rspec-support (3.13.1)
+
+    rspec-support (3.13.2)
     rubocop (1.69.2)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
@@ -315,7 +316,7 @@ GEM
       unicode-display_width (>= 2.4.0, < 4.0)
     rubocop-ast (1.37.0)
       parser (>= 3.3.1.0)
-    rubocop-performance (1.23.1)
+    rubocop-performance (1.23.0)
       rubocop (>= 1.48.1, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
     rubocop-rails (2.26.2)
@@ -409,8 +410,14 @@ GEM
     zeitwerk (2.7.1)
 
 PLATFORMS
-  ruby
-  x86_64-linux
+  aarch64-linux-gnu
+  aarch64-linux-musl
+  arm-linux-gnu
+  arm-linux-musl
+  arm64-darwin
+  x86_64-darwin
+  x86_64-linux-gnu
+  x86_64-linux-musl
 
 DEPENDENCIES
   actionpack-page_caching
@@ -437,6 +444,7 @@ DEPENDENCIES
   mail
   maxminddb
   memory_profiler
+  mysql2
   nokogiri
   oauth
   parslet
@@ -470,4 +478,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.5.11
+   2.5.16

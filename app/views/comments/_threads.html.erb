@@ -66,12 +66,18 @@
     <% score_display = comment.score_for_user(@user) %>
     <div class="voters">
       <% if @user %>
-        <a class="upvoter"></a>
+        <a class="upvoter">
+          <span class="upvote-arrow"></span>
+          <span class="score"><%= score_display %></span>
+        </a>
       <% else %>
-        <%= link_to "", login_path, :class => "upvoter" %>
+        <%= link_to "", login_path, :class => "upvoter" do %>
+          <span class="upvote-arrow"></span>
+          <span class="score"><%= score_display %></span>
+        <% end %>
       <% end %>
-      <div class="score"><%= score_display %></div>
     </div>
+
     <div class="comment_parent_tree_line
       <%= can_flag ? "can_flag" : "" %>
       <%= score_display != "&nbsp;" ? "score_shown" : "" %>

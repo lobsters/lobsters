@@ -317,7 +317,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.string "title", limit: 150, default: "", null: false
     t.text "description", size: :medium
     t.text "body", size: :medium
-    t.timestamp "created_at", default: -> { "current_timestamp() ON UPDATE current_timestamp()" }, null: false
+    t.timestamp "created_at", default: -> { "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" }, null: false
     t.index ["title", "description", "body"], name: "index_story_texts_on_title_and_description_and_body", type: :fulltext
     t.index ["title"], name: "index_story_texts_on_title", type: :fulltext
   end

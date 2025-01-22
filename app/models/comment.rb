@@ -503,31 +503,13 @@ class Comment < ApplicationRecord
   def parents
     return Comment.none if parent_comment_id.nil?
 
-    # starts from parent_comment_id so it works on new records
-    @parents ||= Comment
-      .joins(<<~SQL
-        inner join (
-          with recursive parents as (
-            select
-              id target_id,
-              id,
-              parent_comment_id,
-              0 as depth,
-              (select count(*) from comments where parent_comment_id = id) as reply_count
-            from comments where id = #{parent_comment_id}
-            union all
-            select
-              parents.target_id,
-              c.id,
-              c.parent_comment_id,
-              depth - 1,
-              (select count(*) from comments where parent_comment_id = c.id)
-            from comments c join parents on parents.parent_comment_id = c.id
-          ) select id, depth, reply_count from parents
-        ) as comments_recursive on comments.id = comments_recursive.id
-      SQL
-            )
-      .order("id asc")
+    # going from botton to top to find all parents in the thread
+    @parents ||= Comment.with_recursive(
+      comments_recursive: [
+        Comment.where(id: parent_comment_id),
+        Comment.joins("JOIN comments_recursive ON comments_recursive.parent_comment_id = comments.id")
+      ]
+    ).from("comments_recursive AS comments").order(id: asc)
   end
 
   def path
@@ -647,40 +629,13 @@ class Comment < ApplicationRecord
       .pluck(:thread_id)
     return Comment.none if thread_ids.empty?
 
-    Comment
-      .joins(<<~SQL
-        inner join (
-          with recursive discussion as (
-          select
-            c.id,
-            0 as depth,
-            (select count(*) from comments where parent_comment_id = c.id) as reply_count,
-            cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
-            from comments c
-            where
-              thread_id in (#{thread_ids.join(", ")}) and
-              parent_comment_id is null
-          union all
-          select
-            c.id,
-            discussion.depth + 1,
-            (select count(*) from comments where parent_comment_id = c.id),
-            cast(concat(
-              left(discussion.confidence_order_path, 3 * (depth + 1)),
-              c.confidence_order
-            ) as char(#{Comment::COP_LENGTH}) character set binary)
-          from comments c join discussion on c.parent_comment_id = discussion.id
-          )
-          select * from discussion as comments
-        ) as comments_recursive on comments.id = comments_recursive.id
-      SQL
-            )
-      .order("comments.thread_id desc, comments_recursive.confidence_order_path")
-      .select('
-        comments.*,
-        comments_recursive.depth as depth,
-        comments_recursive.reply_count as reply_count
-      ')
+    # Going from top to botton to find all children in the thread
+    Comment.with_recursive(
+      comments_recursive: [
+        Comment.where(thread_id: thread_ids, parent_comment_id: nil),
+        Comment.joins("JOIN comments_recursive ON comments_recursive.id = comments.parent_comment_id")
+      ]
+    ).from("comments_recursive AS comments").order(thread_id: :desc)
   end
 
   # select in thread order with preloading for _comment.html.erb
@@ -690,40 +645,12 @@ class Comment < ApplicationRecord
 
     # If the story_ids predicate is in the outer select the query planner doesn't push it down into
     # the recursive CTE, so that subquery would build the tree for the entire comments table.
-    Comment
-      .joins(<<~SQL
-        inner join (
-          with recursive discussion as (
-          select
-            c.id,
-            0 as depth,
-            (select count(*) from comments where parent_comment_id = c.id) as reply_count,
-            cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
-            from comments c
-            join stories on stories.id = c.story_id
-            where
-              (stories.id = #{story.id} or stories.merged_story_id = #{story.id}) and
-              parent_comment_id is null
-          union all
-          select
-            c.id,
-            discussion.depth + 1,
-            (select count(*) from comments where parent_comment_id = c.id),
-            cast(concat(
-              left(discussion.confidence_order_path, 3 * (depth + 1)),
-              c.confidence_order
-            ) as char(#{Comment::COP_LENGTH}) character set binary)
-          from comments c join discussion on c.parent_comment_id = discussion.id
-          )
-          select * from discussion as comments
-        ) as comments_recursive on comments.id = comments_recursive.id
-      SQL
-            )
-      .order("comments_recursive.confidence_order_path")
-      .select('
-        comments.*,
-        comments_recursive.depth as depth,
-        comments_recursive.reply_count as reply_count
-      ')
+
+    Comment.with_recursive(
+      comments_recursive: [
+        Comment.where(story_id: story.id, parent_comment_id: nil),
+        Comment.joins("JOIN comments_recursive ON comments_recursive.id = comments.parent_comment_id")
+      ]
+    ).from("comments_recursive AS comments").order(thread_id: :desc)
   end
 end

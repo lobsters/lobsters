@@ -71,7 +71,7 @@ class FlaggedCommenters
             count(distinct comments.id)
           ) * 100 as percent_flagged")
         .having("n_comments > 4 and n_stories > 1 and n_flags >= 10 and percent_flagged > 10")
-        .order("sigma desc")
+        .order(sigma: :desc)
         .limit(30)
         .each_with_object({}) { |u, hash|
           hash[u.id] = {

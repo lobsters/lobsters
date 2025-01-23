@@ -37,7 +37,7 @@ class UsersController < ApplicationController
 
     if params[:by].to_s == "karma"
       content = Rails.cache.fetch("users_by_karma_#{newest_user}", expires_in: (60 * 60 * 24)) {
-        @users = User.select(*attrs).order("karma DESC, id ASC").to_a
+        @users = User.select(*attrs).order(karma: desc, id: asc).to_a
         @user_count = @users.length
         @title << " By Karma"
         render_to_string action: "list", layout: nil
@@ -45,17 +45,17 @@ class UsersController < ApplicationController
       render html: content.html_safe, layout: "application"
     elsif params[:moderators]
       @users = User.select(*attrs).where("is_admin = ? OR is_moderator = ?", true, true)
-        .order("id ASC").to_a
+        .order(id: :asc).to_a
       @user_count = @users.length
       @title = "Moderators and Administrators"
       render action: "list"
     else
       # Mod::ReparentsController#create knows this key
       content = Rails.cache.fetch("users_tree_#{newest_user}", expires_in: 12.hours) {
-        users = User.select(*attrs).order("id DESC").to_a
+        users = User.select(*attrs).order(id: :desc).to_a
         @user_count = users.length
         @users_by_parent = users.group_by(&:invited_by_user_id)
-        @newest = User.select(*attrs).order("id DESC").limit(10)
+        @newest = User.select(*attrs).order(id: :desc).limit(10)
         render_to_string action: "tree", layout: nil
       }
       render html: content.html_safe, layout: "application"
@@ -148,7 +148,7 @@ class UsersController < ApplicationController
       .where("
         comments.flags > 0 and
         comments.created_at >= now() - interval #{@interval[:dur]} #{@interval[:intv]}")
-      .order("id DESC")
+      .order(id: :desc)
       .includes(:user, :hat, story: :user)
       .joins(:story)
   end

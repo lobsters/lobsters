@@ -527,7 +527,7 @@ class Comment < ApplicationRecord
         ) as comments_recursive on comments.id = comments_recursive.id
       SQL
             )
-      .order("id asc")
+      .order(id: :asc)
   end
 
   def path

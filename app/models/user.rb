@@ -631,6 +631,6 @@ class User < ApplicationRecord
       .includes(comment: :user, story: :user)
       .where("(votes.comment_id is not null and comments.user_id <> votes.user_id) OR " \
              "(votes.comment_id is null and stories.user_id <> votes.user_id)")
-      .order("id DESC")
+      .order(id: :desc)
   end
 end

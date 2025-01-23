@@ -25,8 +25,6 @@ class Comment < ApplicationRecord
     dependent: :destroy
 
   attr_accessor :current_vote, :previewing, :vote_summary
-  attribute :depth, :integer
-  attribute :reply_count, :integer
 
   before_validation on: :create do
     assign_short_id_and_score
@@ -504,12 +502,12 @@ class Comment < ApplicationRecord
     return Comment.none if parent_comment_id.nil?
 
     # going from botton to top to find all parents in the thread
-    @parents ||= Comment.with_recursive(
+    Comment.with_recursive(
       comments_recursive: [
         Comment.where(id: parent_comment_id),
         Comment.joins("JOIN comments_recursive ON comments_recursive.parent_comment_id = comments.id")
       ]
-    ).from("comments_recursive AS comments").order(id: asc)
+    ).from("comments_recursive AS comments").order(id: :asc)
   end
 
   def path
@@ -643,12 +641,14 @@ class Comment < ApplicationRecord
   def self.story_threads(story)
     return Comment.none unless story.id # unsaved Stories have no comments
 
+    story_ids = Story.where(merged_story_id: story.id).pluck(:id)
+    story_ids << story.id
     # If the story_ids predicate is in the outer select the query planner doesn't push it down into
     # the recursive CTE, so that subquery would build the tree for the entire comments table.
 
     Comment.with_recursive(
       comments_recursive: [
-        Comment.where(story_id: story.id, parent_comment_id: nil),
+        Comment.where(story_id: story_ids, parent_comment_id: nil),
         Comment.joins("JOIN comments_recursive ON comments_recursive.id = comments.parent_comment_id")
       ]
     ).from("comments_recursive AS comments").order(thread_id: :desc)

@@ -28,6 +28,8 @@ class CommentsController < ApplicationController
       # includes parent story_id to ensure this comment's story_id matches
       comment.parent_comment =
         Comment.find_by(story_id: story.id, short_id: params[:parent_comment_short_id])
+      comment.depth = comment.parent_comment.depth + 1
+
       if !comment.parent_comment
         return render json: {error: "invalid parent comment", status: 400}
       end
@@ -50,6 +52,11 @@ class CommentsController < ApplicationController
     if comment.valid? && params[:preview].blank? && comment.save
       comment.current_vote = {vote: 1}
       render_created_comment(comment)
+
+      if comment.parent_comment
+        old_reply_count = comment.parent_comment.reply_count
+        comment.parent_comment.update_column(reply_count: old_reply_count + 1)
+      end
     else
       comment.score = 1
       comment.current_vote = {vote: 1}

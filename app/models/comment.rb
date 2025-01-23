@@ -61,10 +61,6 @@ class Comment < ApplicationRecord
       .by(user).arel.exists
     ) : where("true")
   }
-  # workaround: if this select is in #parents, calling .count produces invalid SQL
-  scope :with_thread_attributes, -> {
-    select("comments.*, comments_recursive.depth as depth, comments_recursive.reply_count")
-  }
 
   FLAGGABLE_DAYS = 7
   DELETEABLE_DAYS = FLAGGABLE_DAYS * 2

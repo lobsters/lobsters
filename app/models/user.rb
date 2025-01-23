@@ -428,11 +428,19 @@ class User < ApplicationRecord
   # ensures some users talk to a mod before reactivating
   def good_riddance?
     return if is_banned? # https://www.youtube.com/watch?v=UcZzlPGnKdU
+
+    recent_comments_count = comments
+      .where("created_at >= ?", 30.days.ago)
+      .where(is_deleted: true).count
+
+    recent_stories_count = stories
+      .where("created_at >= ?", 30.days.ago)
+      .where(is_deleted: true, is_moderated: true).count
+
+    total_count = recent_comments_count + recent_stories_count
+
     self.email = "#{username}@lobsters.example" if \
-      karma < 0 ||
-        (comments.where("created_at >= now() - interval 30 day AND is_deleted").count +
-         stories.where("created_at >= now() - interval 30 day AND is_deleted AND is_moderated")
-           .count >= 3) ||
+      karma < 0 || total_count > 3 ||
         FlaggedCommenters.new("90d").check_list_for(self)
   end
 

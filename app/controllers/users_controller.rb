@@ -44,7 +44,9 @@ class UsersController < ApplicationController
       }
       render html: content.html_safe, layout: "application"
     elsif params[:moderators]
-      @users = User.select(*attrs).where("is_admin = ? OR is_moderator = ?", true, true)
+      @users = User.select(*attrs)
+        .where(is_admin: true)
+        .or(where(is_moderator: true))
         .order(id: :asc).to_a
       @user_count = @users.length
       @title = "Moderators and Administrators"
@@ -145,7 +147,7 @@ class UsersController < ApplicationController
     @lookup = rows.to_h
 
     @flagged_comments = @showing_user.comments
-      .where("comments.flags > ?", 0)
+      .where({comments: {flags: 0..}})
       .where("comments.created_at >= ?", "now() - interval #{@interval[:dur]} #{@interval[:intv]}")
       .joins(:story)
       .includes(:user, :hat, story: :user)

@@ -430,11 +430,11 @@ class User < ApplicationRecord
     return if is_banned? # https://www.youtube.com/watch?v=UcZzlPGnKdU
 
     recent_comments_count = comments
-      .where("created_at >= ?", 30.days.ago)
+      .where(created_at: 30.days.ago..)
       .where(is_deleted: true).count
 
     recent_stories_count = stories
-      .where("created_at >= ?", 30.days.ago)
+      .where(created_at: 30.days.ago..)
       .where(is_deleted: true, is_moderated: true).count
 
     total_count = recent_comments_count + recent_stories_count
@@ -635,10 +635,11 @@ class User < ApplicationRecord
   end
 
   def votes_for_others
-    votes.left_outer_joins(:story, :comment)
+    votes
+      .left_outer_joins(:story, :comment)
       .includes(comment: :user, story: :user)
       .where("(votes.comment_id is not null and comments.user_id <> votes.user_id) OR " \
-             "(votes.comment_id is null and stories.user_id <> votes.user_id)")
+                 "(votes.comment_id is null and stories.user_id <> votes.user_id)")
       .order(id: :desc)
   end
 end

@@ -9,7 +9,7 @@ class FiltersController < ApplicationController
 
     @categories = Category.includes(:tags)
       .where(tags: {active: true})
-      .order("categories.category asc, tags.tag asc")
+      .order([categories: {category: :asc}, tags: {tag: :asc}])
 
     # perf: three queries is much faster than joining, grouping on tags.id for counts
     @story_counts = Tagging.group(:tag_id).count

@@ -18,9 +18,9 @@
 
   <% if @story.is_unavailable %>
     <% StoryText.cached?(@story) do |text| %>
-      <a class="story_text_expander">Source URL considered unavailable as of
-      <%= time_ago_in_words_label(@story.unavailable_at) %>, click for cached text - also see archive links above</a>
-      <div id="collapsed_story_text">
+      <details>
+        <summary>Source URL considered unavailable as of <%= time_ago_in_words_label(@story.unavailable_at) %>, click for cached text - also see archive links above</summary>
+
         <p>
         <em>All story content copyright of its respective owner.</em>
         </p>
@@ -30,7 +30,7 @@
             <%= simple_format(text) %>
           </blockquote>
         </div>
-      </div>
+      </details>
 
     <% end %>
   <% end %>

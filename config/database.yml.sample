@@ -7,7 +7,10 @@ trilogy: &trilogy
   pool: 5
 
 postgres: &postgres
+  adapter: postgresql
   host: 127.0.0.1
+  port: 5432
+  pool: 5
 
 sqlite3: &sqlite3
   adapter: sqlite3
@@ -15,7 +18,7 @@ sqlite3: &sqlite3
 
 development:
   primary:
-    <<: *trilogy
+    <<: *postgres
     database: lobsters_dev
     username: root
     password: localdev

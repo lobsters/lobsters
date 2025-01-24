@@ -7,6 +7,7 @@ gem "maxminddb"
 gem "solid_cache"
 gem "sqlite3"
 gem "trilogy"
+gem "pg"
 
 # rails
 gem "scenic"

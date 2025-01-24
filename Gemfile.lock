@@ -218,6 +218,7 @@ GEM
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
+    pg (1.5.9)
     prosopite (1.4.2)
     psych (5.2.2)
       date
@@ -441,6 +442,7 @@ DEPENDENCIES
   oauth
   parslet
   pdf-reader
+  pg
   prosopite
   puma
   rack-attack

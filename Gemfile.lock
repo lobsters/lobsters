@@ -227,6 +227,9 @@ GEM
     pg (1.5.9)
     pg_query (6.0.0)
       google-protobuf (>= 3.25.3)
+    pg_search (2.3.7)
+      activerecord (>= 6.1)
+      activesupport (>= 6.1)
     prosopite (1.4.2)
     psych (5.2.2)
       date
@@ -452,6 +455,7 @@ DEPENDENCIES
   pdf-reader
   pg
   pg_query
+  pg_search
   prosopite
   puma
   rack-attack

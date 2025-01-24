@@ -141,6 +141,12 @@ GEM
     flamegraph (0.9.5)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    google-protobuf (4.29.3)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.29.3-x86_64-linux)
+      bigdecimal
+      rake (>= 13)
     hashdiff (1.1.2)
     hashery (2.1.2)
     hashie (5.0.0)
@@ -219,6 +225,8 @@ GEM
       ruby-rc4
       ttfunk
     pg (1.5.9)
+    pg_query (6.0.0)
+      google-protobuf (>= 3.25.3)
     prosopite (1.4.2)
     psych (5.2.2)
       date
@@ -443,6 +451,7 @@ DEPENDENCIES
   parslet
   pdf-reader
   pg
+  pg_query
   prosopite
   puma
   rack-attack

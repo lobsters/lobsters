@@ -183,7 +183,7 @@ class User < ApplicationRecord
     username_regex = username.gsub(/_|-/, "[-_]")
     return unless username_regex.include?("[-_]")
 
-    collisions = User.where("username REGEXP ?", username_regex).where.not(id: id)
+    collisions = User.where("username ~ ?", username_regex).where.not(id: id)
     errors.add(:username, "is already in use (perhaps swapping _ and -)") if collisions.any?
   end
 

@@ -52,11 +52,6 @@ class CommentsController < ApplicationController
     if comment.valid? && params[:preview].blank? && comment.save
       comment.current_vote = {vote: 1}
       render_created_comment(comment)
-
-      if comment.parent_comment
-        old_reply_count = comment.parent_comment.reply_count
-        comment.parent_comment.update_column(reply_count: old_reply_count + 1)
-      end
     else
       comment.score = 1
       comment.current_vote = {vote: 1}

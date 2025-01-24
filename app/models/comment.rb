@@ -10,6 +10,7 @@ class Comment < ApplicationRecord
   belongs_to :parent_comment,
     class_name: "Comment",
     inverse_of: false,
+    counter_cache: :reply_count,
     optional: true
   has_one :moderation,
     class_name: "Moderation",

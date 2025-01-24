@@ -6,6 +6,9 @@ trilogy: &trilogy
   port: 3306
   pool: 5
 
+postgres: &postgres
+  host: 127.0.0.1
+
 sqlite3: &sqlite3
   adapter: sqlite3
   timeout: 5000

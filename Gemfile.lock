@@ -141,7 +141,6 @@ GEM
     flamegraph (0.9.5)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    gvl_timing (0.2.0)
     hashdiff (1.1.2)
     hashery (2.1.2)
     hashie (5.0.0)
@@ -430,7 +429,6 @@ DEPENDENCIES
   factory_bot_rails
   faker
   flamegraph
-  gvl_timing
   htmlentities
   json
   letter_opener

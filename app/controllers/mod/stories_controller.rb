@@ -16,7 +16,7 @@ class Mod::StoriesController < Mod::ModeratorController
   def update
     @story.is_deleted = false
     @story.editor = @user
-    update_story_attributes
+    @story.attributes = story_params
 
     if @story.save
       redirect_to @story.comments_path
@@ -26,9 +26,9 @@ class Mod::StoriesController < Mod::ModeratorController
   end
 
   def undelete
-    update_story_attributes
     @story.is_deleted = false
     @story.editor = @user
+    @story.attributes = story_params
 
     if @story.save
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted", -1)
@@ -38,7 +38,7 @@ class Mod::StoriesController < Mod::ModeratorController
   end
 
   def destroy
-    update_story_attributes
+    @story.attributes = story_params
 
     if @story.user_id != @user.id && @story.moderation_reason.blank?
       @story.errors.add(:moderation_reason, message: "is required")
@@ -57,10 +57,6 @@ class Mod::StoriesController < Mod::ModeratorController
   end
 
   private
-
-  def update_story_attributes
-    @story.attributes = story_params
-  end
 
   def story_params
     params.require(:story).permit(

@@ -45,7 +45,7 @@
           <% elsif !@story.is_gone? %>
             &nbsp; | &nbsp;
             <% if @story.user_id != @user.id %>
-              <%= f.submit "Delete", formaction: mod_story_destroy_path(@story.short_id),
+              <%= f.submit "Mod Delete", formaction: mod_story_destroy_path(@story.short_id),
                 :class => "deletion", :data => { :confirm => "Delete this story?" }  %>
             <% else %>
               <%= f.submit "Delete", formaction: mod_story_destroy_path(@story.short_id),

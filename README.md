@@ -59,14 +59,6 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
     $ cd lobsters
     lobsters$
     ```
-
-* Install Nodejs, needed (or other execjs) for uglifier
-    ```sh
-    Fedora: sudo yum install nodejs
-    Ubuntu: sudo apt-get install nodejs
-    OSX: brew install nodejs
-    ```
-
 * Run `rails credentials:edit` to create and edit your encrypted credentials file.
   This is where you store API keys for external services and features like linking accounts.
   Copy and paste the contents of `config/credentials.yml.enc.sample` in.

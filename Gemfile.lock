@@ -128,7 +128,6 @@ GEM
     exception_notification (4.1.1)
       actionmailer (>= 3.0.4)
       activesupport (>= 3.0.4)
-    execjs (2.10.0)
     factory_bot (6.5.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.4)
@@ -147,6 +146,10 @@ GEM
     htmlentities (4.3.4)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
+    importmap-rails (2.1.0)
+      actionpack (>= 6.0.0)
+      activesupport (>= 6.0.0)
+      railties (>= 6.0.0)
     io-console (0.8.0)
     irb (1.14.3)
       rdoc (>= 4.0.0)
@@ -218,6 +221,11 @@ GEM
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
+    propshaft (1.1.0)
+      actionpack (>= 7.0.0)
+      activesupport (>= 7.0.0)
+      rack
+      railties (>= 7.0.0)
     prosopite (1.4.2)
     psych (5.2.2)
       date
@@ -347,13 +355,6 @@ GEM
       activejob (>= 7.2)
       activerecord (>= 7.2)
       railties (>= 7.2)
-    sprockets (4.2.1)
-      concurrent-ruby (~> 1.0)
-      rack (>= 2.2.4, < 4)
-    sprockets-rails (3.5.2)
-      actionpack (>= 6.1)
-      activesupport (>= 6.1)
-      sprockets (>= 3.0.0)
     sqlite3 (2.5.0)
       mini_portile2 (~> 2.8.0)
     sqlite3 (2.5.0-x86_64-linux-gnu)
@@ -386,8 +387,6 @@ GEM
       bigdecimal (~> 3.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    uglifier (4.2.1)
-      execjs (>= 0.3.0, < 3)
     unicode-display_width (3.1.3)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
@@ -430,6 +429,7 @@ DEPENDENCIES
   faker
   flamegraph
   htmlentities
+  importmap-rails (~> 2.0)
   json
   letter_opener
   listen
@@ -441,6 +441,7 @@ DEPENDENCIES
   oauth
   parslet
   pdf-reader
+  propshaft
   prosopite
   puma
   rack-attack
@@ -456,7 +457,6 @@ DEPENDENCIES
   simplecov
   sitemap_generator
   solid_cache
-  sprockets-rails
   sqlite3
   stackprof
   standard
@@ -465,7 +465,6 @@ DEPENDENCIES
   super_diff
   svg-graph
   trilogy
-  uglifier
   vcr
   webmock
 

@@ -74,6 +74,9 @@ module Lobsters
 
     # rails stop putting js on everything
     config.action_view.form_with_generates_remote_forms = false
+
+    config.mission_control.jobs.base_controller_class = "JobsModController"
+    config.mission_control.jobs.http_basic_auth_enabled = false
   end
 end
 

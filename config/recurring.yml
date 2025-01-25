@@ -1,0 +1,19 @@
+production:
+  expire_old_ribbons:
+    class: ExpireOldRibbonsJob
+    queue: background
+    schedule: every day at 4:00am
+  populate_comment_stats:
+    class: PopulateCommentStatsJob
+    queue: background
+    schedule: every day at 4:00am
+
+development:
+  expire_old_ribbons:
+    class: ExpireOldRibbonsJob
+    queue: background
+    schedule: every day at 4:00am
+  populate_comment_stats:
+    class: PopulateCommentStatsJob
+    queue: background
+    schedule: every day at 4:00am

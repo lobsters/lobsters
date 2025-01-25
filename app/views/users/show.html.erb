@@ -37,7 +37,7 @@
 
   <label class="required">Joined:</label>
   <span class="d">
-    <%= time_ago_in_words_label(@showing_user.created_at) %>
+    <%= how_long_ago_label(@showing_user.created_at) %>
     <% if @showing_user.invited_by_user %>
       by <%= link_to 'invitation', users_tree_path(anchor: @showing_user.username) %> from
       <%= link_to @showing_user.invited_by_user.try(:username), @showing_user.invited_by_user %>
@@ -48,7 +48,7 @@
   <% if @showing_user.is_banned? %>
     <label class="required">Banned:</label>
     <span class="d">
-      <%= time_ago_in_words_label(@showing_user.banned_at) %>
+      <%= how_long_ago_label(@showing_user.banned_at) %>
       <% if @showing_user.banned_by_user %>
         by <%= link_to @showing_user.banned_by_user.try(:username),
           @showing_user.banned_by_user %>:
@@ -61,7 +61,7 @@
   <% if @showing_user.deleted_at? %>
     <label class="required">Left:</label>
     <span class="d">
-      <%= time_ago_in_words_label(@showing_user.deleted_at) %>
+      <%= how_long_ago_label(@showing_user.deleted_at) %>
     </span>
     <br>
   <% end %>
@@ -90,7 +90,7 @@
     <% @showing_user.hats.each do |hat| %>
       <%= hat.to_html_label %>
       <% if hat.doffed_at? %>
-        doffed <%= time_ago_in_words_label(hat.doffed_at) %>
+        doffed <%= how_long_ago_label(hat.doffed_at) %>
       <% else %>
         <% if @user && ((hat.user == @user) || @user.is_moderator?) %>
           <%= link_to 'Doff', doff_hat_path(hat) %>

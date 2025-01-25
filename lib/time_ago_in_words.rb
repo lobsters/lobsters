@@ -1,7 +1,7 @@
 # typed: false
 
 module TimeAgoInWords
-  def time_ago_in_words(time)
+  def how_long_ago(time)
     secs = (Time.current - time).to_i
     if secs <= 5
       "just now"

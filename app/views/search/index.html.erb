@@ -221,7 +221,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
             <% end %>
             <%= styled_user_link ms.user, story, class: ['u-author', 'h-card'] %>
 
-            <%= time_ago_in_words_label(ms.created_at) %>
+            <%= how_long_ago_label(ms.created_at) %>
             <% if ms.is_editable_by_user?(@user) %>
               <span> | </span>
               <a href="<%= edit_story_path(ms.short_id) %>">edit</a>
@@ -264,7 +264,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
         <% end %>
         <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %>
 
-        <%= time_ago_in_words_label(story.created_at) %>
+        <%= how_long_ago_label(story.created_at) %>
 
         <% if story.is_editable_by_user?(@user) %>
           <span> | </span>

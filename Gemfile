@@ -8,6 +8,10 @@ gem "solid_cache"
 gem "sqlite3"
 gem "trilogy"
 
+# jobs
+gem "solid_queue"
+gem "mission_control-jobs"
+
 # rails
 gem "scenic"
 gem "scenic-mysql_adapter"
@@ -60,9 +64,10 @@ group :test, :development do
   gem "letter_opener"
   gem "rspec-rails"
   gem "factory_bot_rails"
-  gem "standard", require: false
-  gem "standard-performance", require: false
-  gem "standard-rails", require: false
+  gem "foreman"
+  gem "standard"
+  gem "standard-performance"
+  gem "standard-rails"
   gem "super_diff"
   gem "faker"
   gem "byebug"

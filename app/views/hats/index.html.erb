@@ -36,7 +36,7 @@
             <% end %>
           <% end %>
           <% if hh.doffed_at? %>
-            doffed <%= time_ago_in_words_label(hh.doffed_at) %>
+            doffed <%= how_long_ago_label(hh.doffed_at) %>
           <% end %>
         </td>
         <% if @user&.is_moderator? %>

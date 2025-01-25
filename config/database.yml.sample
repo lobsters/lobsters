@@ -20,6 +20,10 @@ development:
     <<: *sqlite3
     database: tmp/cache/cache.sqlite3
     migrations_paths: db/cache_migrate
+  queue:
+    <<: *sqlite3
+    database: tmp/queue/queue.sqlite3
+    migrations_paths: db/queue_migrate
 
 test:
   <<: *trilogy
@@ -35,3 +39,7 @@ production:
     <<: *sqlite3
     database: /srv/lobste.rs/cache/cache.sqlite3
     migrations_paths: db/cache_migrate
+  queue:
+    <<: *sqlite3
+    database: /srv/lobste.rs/queue/queue.sqlite3
+    migrations_paths: db/queue_migrate

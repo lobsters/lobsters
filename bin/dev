@@ -1,0 +1,13 @@
+#!/bin/sh
+if ! gem list foreman -i > /dev/null; then
+  echo "Foreman gem not installed. Installing..."
+  bundle install
+fi
+
+
+# Default to port 3000 if not specified
+export PORT="${PORT:-3000}"
+
+echo "Starting application with Foreman..."
+
+bundle exec foreman start -f Procfile.dev "$@"

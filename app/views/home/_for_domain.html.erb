@@ -13,7 +13,7 @@
 <% if domain.banned? %>
   <p>
     Banned
-    <%= time_ago_in_words_label(domain.banned_at) %>
+    <%= how_long_ago_label(domain.banned_at) %>
     <% if domain.banned_by_user %>
       by <%= link_to domain.banned_by_user.try(:username), domain.banned_by_user %>:
       <em><%= domain.banned_reason %></em>

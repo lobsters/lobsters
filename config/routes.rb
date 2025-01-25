@@ -270,6 +270,8 @@ Rails.application.routes.draw do
     end
   end
 
+  mount MissionControl::Jobs::Engine, at: "/jobs"
+
   get "/privacy" => "about#privacy"
   get "/about" => "about#about"
   get "/chat" => "about#chat"

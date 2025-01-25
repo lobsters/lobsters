@@ -264,7 +264,10 @@ Rails.application.routes.draw do
 
   namespace :mod do
     resources :reparents, only: [:new, :create]
-    resources :stories, only: [:edit, :update]
+    resources :stories, only: [:edit, :update] do
+      patch "undelete"
+      patch "destroy"
+    end
   end
 
   mount MissionControl::Jobs::Engine, at: "/jobs"

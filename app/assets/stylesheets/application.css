@@ -1,181 +1,100 @@
-/*
-*= require tom-select
-*= require TomSelect_remove_button
-
-after vendor css for easier overriding:
-*= require_self 
-*/
 
 /* light and dark mode colorschemes */
 
-<%
-light = <<-LIGHT
-	/* main monochrome */
-	--palette-bg: 254, 254, 254;
-	--palette-fg: 51, 51, 51;
-	--palette-light: 255, 255, 255;
-	--palette-shadow: 0, 0, 0;
-
-	/* blends of foreground color over the background */
-	--opacity-contrast-15: 100%;
-	--opacity-contrast-13: 94%;
-	--opacity-contrast-10: 84%;
-	--opacity-contrast-7-5: 75%;
-	--opacity-contrast-6: 67%;
-	--opacity-contrast-5: 63%;
-	--opacity-contrast-4-5: 59%; /* WCAG AA minimum 4.5:1 text contrast */
-
-	--opacity-gradient-lit: 0%;
-	--opacity-gradient-shadowed: 13%;
-
-	/* colored backgrounds and foregrounds */
-	--palette-bg-accent: 172, 19, 13; /* behind light text */
-	--palette-bg-target: 255, 252, 215;
-
-	--palette-fg-link: 28, 89, 209;
-	--palette-fg-link-visited: 95, 134, 212;
-	--palette-fg-accent: 172, 19, 13; /* red as in lobste.rs */
-	--palette-fg-negative: 139, 0, 0; /* red as in warning */
-	--palette-fg-affirmative: 0, 128, 0;
-	--palette-fg-author: 96, 129, 189;
-	--palette-fg-shape: 187, 187, 187;
-
-	/* explicit view colors */
-	--color-box-bg: #fff;
-	--color-box-bg-shaded: #eee;
-	--color-box-bg-shaded-rgb: 238, 238, 238;
-	--color-box-border: #ccc;
-	--color-box-border-focus: #808080;
-
-	--color-button-bg: #fafafa;
-	--color-button-bg-shaded: #e6e6e6;
-
-	--color-table-header-bg: #eaeaea;
-	--color-table-header-border: #cacaca;
-	--color-table-row-bg-even: #f8f8f8;
-	--color-table-row-bg-odd: #f5f5f5;
-	--color-table-row-border: #eaeaea;
-
-	--color-tag-bg: #fffcd7;
-	--color-tag-border: #d5d458;
-	--color-tag-media-bg: #ddebf9;
-	--color-tag-media-border: #b2ccf0;
-	--color-tag-meta-bg: #e0e0e0;
-	--color-tag-meta-border: #c8c8c8;
-
-	--color-hat-crown-fill: #ddd;
-	--color-hat-crown-stroke: #eee;
-	--color-hat-brim-stroke: #bbb;
-
-	--color-flash-bg-error: #fdcfcc;
-	--color-flash-bg-success: #dff0d8;
-	--color-flash-bg-notice: #cce6ee;
-
-	--color-lobsters-fg-has-suggestions: #bd6060;
-
-	--color-lobsters-tag-special-bg: #f9ddde;
-	--color-lobsters-tag-special-border: #f0b2b8;
-
-	--color-lobsters-hat-sysop-crown-fill: #ddc7c7;
-	--color-lobsters-hat-sysop-brim-stroke: #bbb2b2;
-
-	/* mobile */
-	--color-mobile-story-border: #e0e0e0;
-	--color-mobile-story-liner-bg: #fbfbfb;
-	--color-mobile-story-comments-bg: #e8e8e8;
-	--color-mobile-story-comments-bubble-fill: #ccc;
-	--color-mobile-story-comments-bubble-fill-zero: #d8d8d8;
-LIGHT
-
-dark = <<-DARK
-	/* main monochrome */
-	--palette-bg: 12, 12, 12;
-	--palette-fg: 225, 225, 225;
-	--palette-light: 255, 255, 255;
-	--palette-shadow: 0, 0, 0;
-
-	/* blends of foreground color over the background */
-	--opacity-contrast-15: 87%; /* Contrast capped at 10:1 for dark mode */
-	--opacity-contrast-13: 87%; /* Contrast capped at 10:1 for dark mode */
-	--opacity-contrast-10: 87%;
-	--opacity-contrast-7-5: 77%;
-	--opacity-contrast-6: 69%;
-	--opacity-contrast-5: 64%;
-	--opacity-contrast-4-5: 61%; /* WCAG AA minimum 4.5:1 text contrast */
-
-	--opacity-gradient-lit: 13%;
-	--opacity-gradient-shadowed: 3%;
-
-	/* colored backgrounds and foregrounds */
-	--palette-bg-accent: 253, 78, 72; /* behind dark text */
-	--palette-bg-target: 61, 53, 11;
-
-	--palette-fg-link: 138, 177, 255;
-	--palette-fg-link-visited: 79, 138, 255;
-	--palette-fg-accent: 207, 54, 49; /* red as in lobste.rs */
-	--palette-fg-negative: 190, 45, 45; /* red as in warning */
-	--palette-fg-affirmative: 42, 180, 42;
-	--palette-fg-author: 80, 112, 177;
-	--palette-fg-shape: 80, 80, 80;
-
-	/* explicit view colors */
-	--color-box-bg: #141414;
-	--color-box-bg-shaded: #202020;
-	--color-box-bg-shaded-rgb: 32, 32, 32;
-	--color-box-border: #303030;
-	--color-box-border-focus: #808080;
-
-	--color-button-bg: #181818;
-	--color-button-bg-shaded: #242424;
-
-	--color-table-header-bg: #262626;
-	--color-table-header-border: #404040;
-	--color-table-row-bg-even: #181818;
-	--color-table-row-bg-odd: #1b1b1b;
-	--color-table-row-border: #262626;
-
-	--color-tag-bg: #3b320d;
-	--color-tag-border: #665501;
-	--color-tag-media-bg: #15293d;
-	--color-tag-media-border: #214669;
-	--color-tag-meta-bg: #2c2c2c;
-	--color-tag-meta-border: #484848;
-
-	--color-hat-crown-fill: #3b3b3b;
-	--color-hat-crown-stroke: #202020;
-	--color-hat-brim-stroke: #2a2a2a;
-
-	--color-flash-bg-error: #451714;
-	--color-flash-bg-success: #273820;
-	--color-flash-bg-notice: #142e36;
-
-	--color-lobsters-fg-has-suggestions: #df7171;
-
-	--color-lobsters-tag-special-bg: #3b1719;
-	--color-lobsters-tag-special-border: #611a21;
-
-	--color-lobsters-hat-sysop-crown-fill: #3e2f2f;
-	--color-lobsters-hat-sysop-brim-stroke: #2c2222;
-
-	/* mobile */
-	--color-mobile-story-border: #1c1c1c;
-	--color-mobile-story-liner-bg: #0c0c0c;
-	--color-mobile-story-comments-bg: #101010;
-	--color-mobile-story-comments-bubble-fill: #282828;
-	--color-mobile-story-comments-bubble-fill-zero: #1c1c1c;
-DARK
-%>
-
 :root {
-	<%= light %>
+	color-scheme: light dark;
+
+	/* main monochrome */
+	--palette-bg: light-dark(rgb(254, 254, 254), rgb(12, 12, 12));
+	--palette-fg: light-dark(rgb(51, 51, 51), rgb(225, 225, 225));
+	--palette-light: rgb(255, 255, 255);
+	--palette-shadow: rgb(0, 0, 0);
+
+	/* blends of foreground color over the background */
+	--opacity-contrast-15: light-dark(100%, 87%); /* Contrast capped at 10:1 for dark mode */
+	--opacity-contrast-13: light-dark(94%, 87%);
+	--opacity-contrast-10: light-dark(84%, 87%);
+	--opacity-contrast-7-5: light-dark(75%, 77%);
+	--opacity-contrast-6: light-dark(67%, 69%);
+	--opacity-contrast-5: light-dark(63%, 64%);
+	--opacity-contrast-4-5: light-dark(59%, 61%); /* WCAG AA minimum 4.5:1 text contrast */
+
+	--opacity-gradient-lit: light-dark(0%, 13%);
+	--opacity-gradient-shadowed: light-dark(13%, 3%);
+
+	/* colored backgrounds and foregrounds */
+	--palette-bg-accent: light-dark(rgb(172, 19, 13), rgb(253, 78, 72)); 
+	--palette-bg-target: light-dark(rgb(255, 252, 215), rgb(61, 53, 11));
+
+	--palette-fg-link: light-dark(rgb(28, 89, 209), rgb(138, 177, 255));
+	--palette-fg-link-visited: light-dark(rgb(95, 134, 212), rgb(79, 138, 255));
+	--palette-fg-accent: light-dark(rgb(172, 19, 13), rgb(207, 54, 49)); /* red as in lobste.rs */
+	--palette-fg-negative: light-dark(rgb(139, 0, 0), rgb(190, 45, 45)); /* red as in warning */
+	--palette-fg-affirmative: light-dark(rgb(0, 128, 0), rgb(42, 180, 42) );
+	--palette-fg-author: light-dark(rgb(96, 129, 189), rgb(80, 112, 177));
+	--palette-fg-shape: light-dark(rgb(187, 187, 187), rgb(80, 80, 80));
+
+	/* explicit view colors */
+	--color-box-bg: light-dark(#fff, #141414);
+	--color-box-bg-shaded: light-dark(#eee, #202020);
+	--color-box-bg-shaded-rgb: light-dark(rgb(238, 238, 238), rgb(32, 32, 32));
+	--color-box-border: light-dark(#ccc, #303030);
+	--color-box-border-focus: light-dark(#808080, #808080);
+
+	--color-button-bg: light-dark(#fafafa, #181818);
+	--color-button-bg-shaded: light-dark(#e6e6e6, #242424);
+
+	--color-table-header-bg: light-dark(#eaeaea, #262626);
+	--color-table-header-border: light-dark(#cacaca, #404040);
+	--color-table-row-bg-even: light-dark(#f8f8f8, #181818);
+	--color-table-row-bg-odd: light-dark(#f5f5f5, #1b1b1b);
+	--color-table-row-border: light-dark(#eaeaea, #262626);
+
+	--color-tag-bg: light-dark(#fffcd7, #3b320d);
+	--color-tag-border: light-dark(#d5d458, #665501);
+	--color-tag-media-bg: light-dark(#ddebf9, #15293d);
+	--color-tag-media-border: light-dark(#b2ccf0, #214669);
+	--color-tag-meta-bg: light-dark(#e0e0e0, #2c2c2c);
+	--color-tag-meta-border: light-dark(#c8c8c8, #484848);
+
+	--color-hat-crown-fill: light-dark(#ddd, #3b3b3b);
+	--color-hat-crown-stroke: light-dark(#eee, #202020);
+	--color-hat-brim-stroke: light-dark(#bbb, #2a2a2a);
+
+	--color-flash-bg-error: light-dark(#fdcfcc, #451714);
+	--color-flash-bg-success: light-dark(#dff0d8, #273820);
+	--color-flash-bg-notice: light-dark(#cce6ee, #142e36);
+
+	--color-lobsters-fg-has-suggestions: light-dark(#bd6060, #df7171);
+
+	--color-lobsters-tag-special-bg: light-dark(#f9ddde, #3b1719);
+	--color-lobsters-tag-special-border: light-dark(#f0b2b8, #611a21);
+
+	--color-lobsters-hat-sysop-crown-fill: light-dark(#ddc7c7, #3e2f2f);
+	--color-lobsters-hat-sysop-brim-stroke: light-dark(#bbb2b2, #2c2222);
+
+	/* mobile */
+	--color-mobile-story-border: light-dark(#e0e0e0, #1c1c1c);
+	--color-mobile-story-liner-bg: light-dark(#fbfbfb, #0c0c0c);
+	--color-mobile-story-comments-bg: light-dark(#e8e8e8, #101010);
+	--color-mobile-story-comments-bubble-fill: light-dark(#ccc, #282828);
+	--color-mobile-story-comments-bubble-fill-zero: light-dark(#d8d8d8, #1c1c1c);
 }
-@media (prefers-color-scheme: dark) {
-	html.color-scheme-system {
-		<%= dark %>
-	}
-}
+
+/*
+By default, in supporting browsers, the color returned by the light-dark() color function depends 
+on the user preference set through an operating system's settings (e.g., light or dark mode) or 
+from a user agent setting.
+
+This can be overridden by user by setting perferences in their account.
+*/
+
 html.color-scheme-dark {
-	<%= dark %>
+	color-scheme: dark;
+}
+
+html.color-scheme-light {
+	color-scheme: light;
 }
 
 /* overall page */
@@ -188,7 +107,7 @@ html {
 	   borders, so other colors are given explicitly per display mode. */
 
 	/* main monochrome and variants */
-	--color-bg: rgb(var(--palette-bg));
+	--color-bg: var(--palette-bg);
 	--color-bg-50: rgba(var(--palette-bg), 50%);
 
 	--color-fg: rgba(var(--palette-fg), var(--opacity-contrast-15)); /* primary text */
@@ -209,16 +128,16 @@ html {
 	--color-shadow-10: rgba(var(--palette-shadow), 10%);
 
 	/* colored backgrounds and foregrounds and variants */
-	--color-bg-accent: rgb(var(--palette-bg-accent));
-	--color-bg-target: rgb(var(--palette-bg-target));
+	--color-bg-accent: var(--palette-bg-accent);
+	--color-bg-target: var(--palette-bg-target);
 
-	--color-fg-link: rgb(var(--palette-fg-link));
-	--color-fg-link-visited: rgb(var(--palette-fg-link-visited));
-	--color-fg-accent: rgb(var(--palette-fg-accent));
-	--color-fg-negative: rgb(var(--palette-fg-negative));
-	--color-fg-affirmative: rgb(var(--palette-fg-affirmative));
-	--color-fg-author: rgb(var(--palette-fg-author));
-	--color-fg-shape: rgb(var(--palette-fg-shape));
+	--color-fg-link: var(--palette-fg-link);
+	--color-fg-link-visited: var(--palette-fg-link-visited);
+	--color-fg-accent: var(--palette-fg-accent);
+	--color-fg-negative: var(--palette-fg-negative);
+	--color-fg-affirmative: var(--palette-fg-affirmative);
+	--color-fg-author: var(--palette-fg-author);
+	--color-fg-shape: var(--palette-fg-shape);
 }
 
 /* generics */

@@ -18,13 +18,8 @@
               :data => { :confirm => "Undelete this story?" } %>
           <% elsif !@story.is_gone? %>
             &nbsp; | &nbsp;
-            <% if @story.user_id != @user.id && @user.is_moderator? %>
-              <%= f.submit "Delete", formaction: story_destroy_path(@story.short_id),
-                :class => "deletion", :data => { :confirm => "Delete this story?" }  %>
-            <% else %>
-              <%= f.submit "Delete", formaction: story_destroy_path(@story.short_id),
-                :class => "deletion", :data => { :confirm => "Delete this story?" } %>
-            <% end %>
+            <%= f.submit "Delete", formaction: story_destroy_path(@story.short_id),
+              :class => "deletion", :data => { :confirm => "Delete this story?" } %>
           <% end %>
 
           <div style="clear: both;"></div>

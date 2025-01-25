@@ -16,11 +16,11 @@ gem "mission_control-jobs"
 gem "scenic"
 gem "scenic-mysql_adapter"
 gem "activerecord-typedstore"
-gem "sprockets-rails", require: "sprockets/railtie"
+gem "propshaft"
+gem "importmap-rails", "~> 2.0"
 
 # js
 gem "json"
-gem "uglifier"
 
 # deployment
 gem "actionpack-page_caching"
@@ -45,7 +45,6 @@ gem "memory_profiler"
 gem "rack-mini-profiler"
 gem "stackprof"
 gem "prosopite"
-gem "gvl_timing"
 
 gem "builder" # for rss
 gem "oauth" # for linking accounts

@@ -15,6 +15,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="always" />
   <meta name="theme-color" content="#AC130D" />
+  <meta name="story-flags" content="<%=  Vote::STORY_REASONS.to_json %>">
+  <meta name="comment-flags" content="<%=  Vote::COMMENT_REASONS.to_json %>">
+
   <% if @meta_tags %>
     <% @meta_tags.each do |k,v| %>
       <meta name="<%= k %>" content="<%= v %>" />
@@ -27,10 +30,18 @@
   <% end %>
   <title><%= @title.present? ? "#{@title} | " : "" %><%=
     Rails.application.name %></title>
-  <%= stylesheet_link_tag "application", :media => "all" %>
+
+  <%# Includes all stylesheet files in app/assets/stylesheets %>
+  <%= stylesheet_link_tag :app %>
+  
+  <%= stylesheet_link_tag "tom-select", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "TomSelect_remove_button", "data-turbo-track": "reload" %>
+  
+
   <% if @user %>
-    <%= javascript_include_tag "application" %>
+    <%= javascript_importmap_tags %>
   <% end %>
+
   <%= csrf_meta_tags %>
   <% if @rss_link %>
     <link rel="alternate" type="application/rss+xml"

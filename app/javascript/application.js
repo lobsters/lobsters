@@ -1,11 +1,13 @@
-//= require_tree .
-
-//= require tom-select.base.js
-//= require TomSelect_remove_button
-//= require TomSelect_caret_position
-//= require TomSelect_input_autogrow
+// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 
 "use strict";
+
+import "autosize"
+
+import "TomSelect"
+import "TomSelect_remove_button"
+import "TomSelect_caret_position"
+import "TomSelect_input_autogrow"
 
 const csrfToken = () => {
   return qS('meta[name="csrf-token"]').getAttribute('content');
@@ -92,13 +94,9 @@ class _LobstersFunction {
   constructor (username) {
     this.curUser = null;
 
-    this.storyFlagReasons = ({
-      <%= Vote::STORY_REASONS.map{|k,v| "'#{k}': '#{v}'" }.join(", ") %>
-    });
+    this.storyFlagReasons = qS('meta[name="story-flags"]').getAttribute('content');
 
-    this.commentFlagReasons = ({
-      <%= Vote::COMMENT_REASONS.map{|k,v| "'#{k}': '#{v}'" }.join(", ") %>
-    });
+    this.commentFlagReasons = qS('meta[name="comment-flags"]').getAttribute('content');
   }
 
   bounceToLogin() {

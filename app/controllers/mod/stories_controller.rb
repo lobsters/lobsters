@@ -25,6 +25,37 @@ class Mod::StoriesController < Mod::ModeratorController
     end
   end
 
+  def undelete
+    @story.is_deleted = false
+    @story.editor = @user
+    @story.attributes = story_params
+
+    if @story.save
+      Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted", -1)
+    end
+
+    redirect_to @story.comments_path
+  end
+
+  def destroy
+    @story.attributes = story_params
+
+    if @story.user_id != @user.id && @story.moderation_reason.blank?
+      @story.errors.add(:moderation_reason, message: "is required")
+      return render action: "edit"
+    end
+
+    @story.is_deleted = true
+    @story.editor = @user
+
+    if @story.save
+      Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted")
+      Mastodon.delete_post(@story)
+    end
+
+    redirect_to @story.comments_path
+  end
+
   private
 
   def story_params

@@ -101,9 +101,6 @@ Rails.application.configure do
   # why help timing attacks?
   config.middleware.delete(Rack::Runtime)
 
-  require File.expand_path("../../extras/gvl_instrumentation", __FILE__)
-  config.middleware.insert 0, GvlInstrumentation, File.open(Rails.root.join("/srv/lobste.rs/log/production-gvl.log"), "a+")
-
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com

@@ -147,6 +147,7 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    gvl_timing (0.2.0)
     hashdiff (1.1.2)
     hashery (2.1.2)
     hashie (5.0.0)
@@ -463,6 +464,7 @@ DEPENDENCIES
   faker
   flamegraph
   foreman
+  gvl_timing
   htmlentities
   json
   letter_opener

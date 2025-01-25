@@ -795,13 +795,6 @@ onPageLoad(() => {
     window.scrollTo({ top: targetY, behavior: reducedMotion ? 'instant' : 'smooth' })
   });
 
-  // Story view
-
-  on('click', '.story_text_expander', (event) => {
-    event.preventDefault();
-    qS('#collapsed_story_text').style.display = 'block';
-  });
-
   // Private messages
 
   // inject js-only UI

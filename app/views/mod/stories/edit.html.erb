@@ -19,12 +19,10 @@
           <%= f.label :unavailable_at, "Source URL is unavailable, " <<
             "enable display of cached text", :class => "normal" %>
         </div>
-        <% if @story.user_id != @user.id %>
-          <div class="boxline">
-            <%= f.label :moderation_reason, "Mod Reason:", :class => "required" %>
-            <%= f.text_field :moderation_reason %>
-          </div>
-        <% end %>
+        <div class="boxline">
+          <%= f.label :moderation_reason, "Mod Reason:", :class => "required" %>
+          <%= f.text_field :moderation_reason %>
+        </div>
       </div>
 
       <p></p>
@@ -37,10 +35,9 @@
 
           <%= f.submit "Save" %>
 
-          <% if @story.is_gone? && @story.is_undeletable_by_user?(@user) %>
+          <% if @story.is_gone? %>
             &nbsp; | &nbsp;
-            <%= f.submit "Undelete", formaction: story_undelete_path(@story.short_id),
-              :data => { :confirm => "Undelete this story?" } %>
+            <%= f.submit "Undelete", formaction: story_undelete_path(@story.short_id), :data => { :confirm => "Undelete this story?" } %>
           <% elsif !@story.is_gone? %>
             &nbsp; | &nbsp;
             <% if @story.user_id != @user.id %>
@@ -54,8 +51,7 @@
 
           <div style="clear: both;"></div>
 
-          <%= render :partial => "global/markdownhelp",
-            :locals => { allow_images: @story.can_have_images? } %>
+          <%= render :partial => "global/markdownhelp", :locals => { allow_images: @story.can_have_images? } %>
         </div>
       </div>
     <% end %>

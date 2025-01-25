@@ -94,9 +94,9 @@ class _LobstersFunction {
   constructor (username) {
     this.curUser = null;
 
-    this.storyFlagReasons = qS('meta[name="story-flags"]').getAttribute('content');
+    this.storyFlagReasons = JSON.parse(qS('meta[name="story-flags"]').getAttribute('content'));
 
-    this.commentFlagReasons = qS('meta[name="comment-flags"]').getAttribute('content');
+    this.commentFlagReasons = JSON.parse(qS('meta[name="comment-flags"]').getAttribute('content'));
   }
 
   bounceToLogin() {

@@ -51,12 +51,6 @@ class StoriesController < ApplicationController
     end
 
     update_story_attributes
-
-    if @story.user_id != @user.id && @user.is_moderator? && @story.moderation_reason.blank?
-      @story.errors.add(:moderation_reason, message: "is required")
-      return render action: "edit"
-    end
-
     @story.is_deleted = true
     @story.editor = @user
 

@@ -1,6 +1,6 @@
 <div class="box" id="story_box">
   <div id="story_holder">
-    <%= form_with model: @story, url: mod_story_path(@story) do |f| %>
+    <%= form_with model: [:mod, @story] do |f| %>
       <%= render :partial => "stories/form", :locals => { :story => @story, :f => f } %>
 
       <br />
@@ -37,14 +37,14 @@
 
           <% if @story.is_gone? %>
             &nbsp; | &nbsp;
-            <%= f.submit "Undelete", formaction: story_undelete_path(@story.short_id), :data => { :confirm => "Undelete this story?" } %>
+            <%= f.submit "Undelete", formaction: mod_story_undelete_path(@story.short_id), :data => { :confirm => "Undelete this story?" } %>
           <% elsif !@story.is_gone? %>
             &nbsp; | &nbsp;
             <% if @story.user_id != @user.id %>
-              <%= f.submit "Delete", formaction: story_destroy_path(@story.short_id),
+              <%= f.submit "Mod Delete", formaction: mod_story_destroy_path(@story.short_id),
                 :class => "deletion", :data => { :confirm => "Delete this story?" }  %>
             <% else %>
-              <%= f.submit "Delete", formaction: story_destroy_path(@story.short_id),
+              <%= f.submit "Delete", formaction: mod_story_destroy_path(@story.short_id),
                 :class => "deletion", :data => { :confirm => "Delete this story?" } %>
             <% end %>
           <% end %>

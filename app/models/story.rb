@@ -601,9 +601,7 @@ class Story < ApplicationRecord
   end
 
   def is_editable_by_user?(user)
-    if user&.is_moderator?
-      true
-    elsif user && user.id == user_id
+    if user&.id == user_id
       if is_moderated?
         false
       else

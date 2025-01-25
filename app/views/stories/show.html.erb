@@ -3,6 +3,7 @@
   <hr class="mod">
   <p>Full display for submitter and mods:</p>
 <% end %>
+
 <ol class="stories">
   <%= render :partial => "stories/listdetail",
     :locals => { :story => @story, :single_story => true } %>
@@ -17,9 +18,9 @@
 
   <% if @story.is_unavailable %>
     <% StoryText.cached?(@story) do |text| %>
-      <a class="story_text_expander">Source URL considered unavailable as of
-      <%= time_ago_in_words_label(@story.unavailable_at) %>, click for cached text - also see archive links above</a>
-      <div id="collapsed_story_text">
+      <details>
+        <summary>Source URL considered unavailable as of <%= time_ago_in_words_label(@story.unavailable_at) %>, click for cached text - also see archive links above</summary>
+
         <p>
         <em>All story content copyright of its respective owner.</em>
         </p>
@@ -29,11 +30,17 @@
             <%= simple_format(text) %>
           </blockquote>
         </div>
-      </div>
+      </details>
 
     <% end %>
   <% end %>
 </div>
+
+<% if @user&.is_moderator? %>
+<br />
+<label class="required">Latest modlog for this story, submitter, and discussion:</label>
+<%= render partial: 'moderations/table', locals: { moderations: Moderation.for_story(@story) } %>
+<% end %>
 
 <% if !@story.previewing %>
   <ol class="comments comments1">

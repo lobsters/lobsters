@@ -1,8 +1,7 @@
 <div class="box" id="story_box">
   <div id="story_holder">
     <%= form_with model: [:mod, @story] do |f| %>
-      <%= render :partial => "stories/form", :locals => { :story => @story,
-        :f => f } %>
+      <%= render :partial => "stories/form", :locals => { :story => @story, :f => f } %>
 
       <br />
       <div class="box">
@@ -20,12 +19,10 @@
           <%= f.label :unavailable_at, "Source URL is unavailable, " <<
             "enable display of cached text", :class => "normal" %>
         </div>
-        <% if @story.user_id != @user.id %>
-          <div class="boxline">
-            <%= f.label :moderation_reason, "Mod Reason:", :class => "required" %>
-            <%= f.text_field :moderation_reason %>
-          </div>
-        <% end %>
+        <div class="boxline">
+          <%= f.label :moderation_reason, "Mod Reason:", :class => "required" %>
+          <%= f.text_field :moderation_reason %>
+        </div>
       </div>
 
       <p></p>
@@ -40,8 +37,7 @@
 
           <% if @story.is_gone? %>
             &nbsp; | &nbsp;
-            <%= f.submit "Undelete", formaction: mod_story_undelete_path(@story.short_id),
-              :data => { :confirm => "Undelete this story?" } %>
+            <%= f.submit "Undelete", formaction: mod_story_undelete_path(@story.short_id), :data => { :confirm => "Undelete this story?" } %>
           <% elsif !@story.is_gone? %>
             &nbsp; | &nbsp;
             <% if @story.user_id != @user.id %>
@@ -55,16 +51,13 @@
 
           <div style="clear: both;"></div>
 
-          <%= render :partial => "global/markdownhelp",
-            :locals => { allow_images: @story.can_have_images? } %>
+          <%= render :partial => "global/markdownhelp", :locals => { allow_images: @story.can_have_images? } %>
         </div>
       </div>
     <% end %>
-	</div>
+  </div>
 </div>
 
 <br />
-<label class="required">Last 10 Moderations:</label>
-<%= render partial: 'moderations/table', locals: {
-  moderations: Moderation.for(@story.user).where("stories.id = ?", @story.id).order('id desc').limit(10),
-} %>
+<label class="required">Latest modlog for this story, submitter, and discussion:</label>
+<%= render partial: 'moderations/table', locals: { moderations: Moderation.for_story(@story) } %>

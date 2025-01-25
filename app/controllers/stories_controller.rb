@@ -45,7 +45,7 @@ class StoriesController < ApplicationController
   end
 
   def destroy
-    if !@story.is_editable_by_user?(@user)
+    if !@story.is_editable_by_user?(@user) && !@user.is_moderator?
       flash[:error] = "You cannot edit that story."
       return redirect_to "/"
     end

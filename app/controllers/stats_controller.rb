@@ -11,7 +11,7 @@ class StatsController < ApplicationController
       graph_title: "Users joining by month",
       scale_y_divisions: 100
     }) {
-      User.group("date_format(created_at, '%Y-%m')").count.to_a.flatten
+      User.all.group_by { |x| x.created_at.strftime("%Y-%m") }.map { |month, users| [month, users.count] }.sort_by { |month, _| month }.flatten
     }
 
     @active_users_graph = monthly_graph("active_users_graph", {
@@ -37,21 +37,21 @@ class StatsController < ApplicationController
       graph_title: "Stories submitted by month",
       scale_y_divisions: 250
     }) {
-      Story.group("date_format(created_at, '%Y-%m')").count.to_a.flatten
+      Story.all.group_by { |x| x.created_at.strftime("%Y-%m") }.map { |month, stories| [month, stories.count] }.sort_by { |month, _| month }.flatten
     }
 
     @comments_graph = monthly_graph("comments_graph", {
       graph_title: "Comments posted by month",
       scale_y_divisions: 1_000
     }) {
-      Comment.group("date_format(created_at, '%Y-%m')").count.to_a.flatten
+      Comment.all.group_by { |x| x.created_at.strftime("%Y-%m") }.map { |month, comments| [month, comments.count] }.sort_by { |month, _| month }.flatten
     }
 
     @votes_graph = monthly_graph("votes_graph", {
       graph_title: "Votes cast by month",
       scale_y_divisions: 10_000
     }) {
-      Vote.group("date_format(updated_at, '%Y-%m')").count.to_a.flatten
+      Vote.all.group_by { |x| x.updated_at.strftime("%Y-%m") }.map { |month, votes| [month, votes.count] }.sort_by { |month, _| month }.flatten
     }
   end
 

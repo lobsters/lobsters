@@ -21,6 +21,16 @@ We'd love to have your help.
 Please see the [CONTRIBUTING](https://github.com/lobsters/lobsters/blob/master/CONTRIBUTING.md) file for details.
 If you have questions, there is usually someone in [our chat room](https://lobste.rs/chat) who's familiar with the code.
 
+Lobsters is a volunteer project with limited development time and a long time horizon, we hope to be running for decades.
+So our design philosophy is a little different than a typical commercial product:
+
+ * We started with Rails 3.2.2 in 2012, so we have a few dusty corners and places where we don't take advantage of features that were introduced since we started.
+ * We lean into using Rails features instead of custom code, and we'll write a couple dozen lines of narrow code for a feature rather than add a dependency that might require maintenance.
+ * We are especially reluctant to add new production services like queues, caches, and databases. We have almost eliminated third-party dependencies from production.
+ * We test to ensure functionality, but testing is a lot lighter for moderator and other non-core features.
+   We're trying to maximize the return on investment of testing rather than minimize errors.
+ * We're willing to take downtime for big code changes rather than try to make them seamless.
+
 
 #### Development setup
 

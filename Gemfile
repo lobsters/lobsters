@@ -41,6 +41,7 @@ gem "memory_profiler"
 gem "rack-mini-profiler"
 gem "stackprof"
 gem "prosopite"
+gem "gvl_timing"
 
 gem "builder" # for rss
 gem "oauth" # for linking accounts

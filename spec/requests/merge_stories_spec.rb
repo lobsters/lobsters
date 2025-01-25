@@ -11,7 +11,7 @@ describe "merged stories", type: :request do
   context "user votes on merged story" do
     before do
       sign_in mod
-      put "/stories/#{merged_story.short_id}", params: {
+      put "/mod/stories/#{merged_story.short_id}", params: {
         story: {
           merge_story_short_id: story.short_id,
           moderation_reason: "cuz"

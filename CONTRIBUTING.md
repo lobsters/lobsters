@@ -14,6 +14,9 @@ Drop by [the chat room](https://lobste.rs/chat) if you'd like a hand getting sta
 If you're new to Rails, the [official guides](https://guides.rubyonrails.org/) are good
 and there's a [complete API doc](https://api.rubyonrails.org/).
 
+We consider contributions to be gifts, and there's no gift you can give that obligates you to give more gifts.
+If you reported an issue or opened a PR but don't want to continue with it, especially when a maintainer is asking for more info or revisions, please do tell us you're done with it so we know to carry on with it ourselves.
+
 
 ### Getting oriented
 

@@ -45,7 +45,7 @@ class StoriesController < ApplicationController
   end
 
   def destroy
-    if !@story.is_editable_by_user?(@user)
+    if !@story.is_editable_by_user?(@user) && !@user.is_moderator?
       flash[:error] = "You cannot edit that story."
       return redirect_to "/"
     end
@@ -75,11 +75,6 @@ class StoriesController < ApplicationController
     end
 
     @title = "Edit Story"
-
-    if @story.merged_into_story
-      @story.merge_story_short_id = @story.merged_into_story.short_id
-      User.update_counters @story.user_id, karma: (@story.votes.count * -2)
-    end
   end
 
   def fetch_url_attributes
@@ -385,17 +380,7 @@ class StoriesController < ApplicationController
   private
 
   def story_params
-    p = params.require(:story).permit(
-      :title, :url, :description, :moderation_reason,
-      :merge_story_short_id, :is_unavailable, :user_is_author, :user_is_following,
-      tags_a: []
-    )
-
-    if @user&.is_moderator?
-      p
-    else
-      p.except(:moderation_reason, :merge_story_short_id, :is_unavailable)
-    end
+    params.require(:story).permit(:title, :url, :description, :user_is_author, :user_is_following, tags_a: [])
   end
 
   def update_story_attributes

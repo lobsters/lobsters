@@ -60,6 +60,40 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
+      "fingerprint": "1f74b5308b8e9f5215991e18f03779ea774e830af7b080d70c619e21567728a7",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/stories/_form_errors.html.erb",
+      "line": 40,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "excerpt_fragment_around_link(link.from_comment.markeddown_comment, Story.new(:user => (@user)).url)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "StoriesController",
+          "method": "check_url_dupe",
+          "line": 423,
+          "file": "app/controllers/stories_controller.rb",
+          "rendered": {
+            "name": "stories/_form_errors",
+            "file": "app/views/stories/_form_errors.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "stories/_form_errors"
+      },
+      "user_input": "Story.new(:user => (@user)).url",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": "False alarm: excerpt_fragment_around_url doesn't return Story.url"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
       "fingerprint": "305ab5b7234aff45f564061140f604d2fada9fec1a5b7e45cfbd3296d64cca3e",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
@@ -98,7 +132,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story.rb",
-      "line": 565,
+      "line": 569,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Story.connection.execute(\"UPDATE stories SET\\n  score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -\\n  -- subtract number of hidings where hider flagged AND didn't comment (comment voting is ignored)\\n  (\\n    select count(*) from hidden_stories hiding\\n    where\\n      story_id = #{id.to_i}\\n      and hiding.created_at >= str_to_date('#{(created_at - 14.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')\\n      and exists (    -- user flagged\\n        select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1\\n      )\\n      and not exists ( -- user didn't comment\\n        select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id\\n      )\\n  ),\\n  flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),\\n  hotness = #{calculated_hotness}\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -197,6 +231,50 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
+      "fingerprint": "4cfebafaf019d81a4eeef02d58a04a0e8aa6b3d099ec96ddf086db99338db4ae",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/stories/show.html.erb",
+      "line": 14,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Story.new(:user => (@user)).markeddown_description",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "StoriesController",
+          "method": "create",
+          "line": 43,
+          "file": "app/controllers/stories_controller.rb",
+          "rendered": {
+            "name": "stories/new",
+            "file": "app/views/stories/new.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "stories/new",
+          "line": 31,
+          "file": "app/views/stories/new.html.erb",
+          "rendered": {
+            "name": "stories/show",
+            "file": "app/views/stories/show.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "stories/show"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        79
+      ],
+      "note": "Rendered markdown"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
       "fingerprint": "5b9474e39c006237ea020a2b3dcb840220a050f9e479457a79850f2ca8cf0023",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
@@ -227,40 +305,6 @@
         79
       ],
       "note": "no variables so there's no user input, and the data is piped through the SVG charting library"
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "6042237b560b898fc4f87d6f95bb5cfc5c3c5e09f1a264a9afdd5ab8f087d2a9",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/stories/_form_errors.html.erb",
-      "line": 40,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "excerpt_fragment_around_link(link.from_comment.markeddown_comment, Story.new(:user => User.find_by(:session_token => session[:u].to_s)).url)",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StoriesController",
-          "method": "check_url_dupe",
-          "line": 422,
-          "file": "app/controllers/stories_controller.rb",
-          "rendered": {
-            "name": "stories/_form_errors",
-            "file": "app/views/stories/_form_errors.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stories/_form_errors"
-      },
-      "user_input": "Story.new(:user => User.find_by(:session_token => session[:u].to_s)).url",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": "False alarm: excerpt_fragment_around_url doesn't return Story.url."
     },
     {
       "warning_type": "SQL Injection",
@@ -315,7 +359,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/users_controller.rb",
-      "line": 149,
+      "line": 150,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "User.find_by(:username => params[:username]).comments.where(\"\\n        comments.flags > 0 and\\n        comments.created_at >= now() - interval #{time_interval(\"1m\")[:dur]} #{time_interval(\"1m\")[:intv]}\")",
       "render_path": null,
@@ -361,7 +405,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/comment.rb",
-      "line": 402,
+      "line": 406,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Comment.connection.execute(\"UPDATE comments SET\\n  score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),\\n  flags = (select count(*) from votes where comment_id = comments.id and vote = -1),\\n  confidence = #{calculated_confidence},\\n  confidence_order = concat(lpad(char(65535 - floor(#{calculated_confidence} * 65535) using binary), 2, '\\x00'), char(id & 0xff using binary))\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -401,91 +445,13 @@
       "note": "User#username validated by User::VALID_USERNAME"
     },
     {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "a7a1ca7467523961f138efb54cd55ccab09710504b57cdfffb7d6294c5d771b9",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/stories/show.html.erb",
-      "line": 14,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Story.new(:user => User.find_by(:session_token => session[:u].to_s)).markeddown_description",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StoriesController",
-          "method": "create",
-          "line": 43,
-          "file": "app/controllers/stories_controller.rb",
-          "rendered": {
-            "name": "stories/new",
-            "file": "app/views/stories/new.html.erb"
-          }
-        },
-        {
-          "type": "template",
-          "name": "stories/new",
-          "line": 31,
-          "file": "app/views/stories/new.html.erb",
-          "rendered": {
-            "name": "stories/show",
-            "file": "app/views/stories/show.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stories/show"
-      },
-      "user_input": null,
-      "confidence": "High",
-      "cwe_id": [
-        79
-      ],
-      "note": "Rendered markdown"
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "b29edfa75a5881856fbcb6575f6d4674a91f640031ded16761d617c754650151",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/settings/twofa_enroll.html.erb",
-      "line": 13,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "ROTP::TOTP.new(ROTP::Base32.random, :issuer => Rails.application.name).provisioning_uri(User.find_by(:session_token => session[:u].to_s).email)",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "SettingsController",
-          "method": "twofa_enroll",
-          "line": 109,
-          "file": "app/controllers/settings_controller.rb",
-          "rendered": {
-            "name": "settings/twofa_enroll",
-            "file": "app/views/settings/twofa_enroll.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "settings/twofa_enroll"
-      },
-      "user_input": "User.find_by(:session_token => session[:u].to_s).email",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": "Escaped by ActiveRecord"
-    },
-    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "b4a3e94583860f86ee25acf3591ee48d5d1bcccc071310b2ee0040aadca5cfca",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/users_controller.rb",
-      "line": 137,
+      "line": 138,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.exec_query(\"\\n      select\\n        n_flags, count(*) as n_users\\n      from (\\n        select\\n          comments.user_id, sum(flags) as n_flags\\n        from\\n          comments\\n        where\\n          comments.created_at >= now() - interval #{time_interval(\"1m\")[:dur]} #{time_interval(\"1m\")[:intv]}\\n        group by comments.user_id) count_by_user\\n      group by 1\\n      order by 1 asc;\\n    \")",
       "render_path": null,
@@ -500,40 +466,6 @@
         89
       ],
       "note": "IntervalHelper#time_interval is a security control"
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "c9d466a3c3067f9eb0eedf783a7a84350ad8e4e33439339e1d93215b6d15072a",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/settings/twofa_enroll.html.erb",
-      "line": 13,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "RQRCode::QRCode.new(ROTP::TOTP.new(ROTP::Base32.random, :issuer => Rails.application.name).provisioning_uri(User.find_by(:session_token => session[:u].to_s).email)).as_svg(:offset => 0, :fill => \"ffffff\", :color => \"000\", :module_size => 5, :shape_rendering => \"crispEdges\")",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "SettingsController",
-          "method": "twofa_enroll",
-          "line": 109,
-          "file": "app/controllers/settings_controller.rb",
-          "rendered": {
-            "name": "settings/twofa_enroll",
-            "file": "app/views/settings/twofa_enroll.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "settings/twofa_enroll"
-      },
-      "user_input": "User.find_by(:session_token => session[:u].to_s).email",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": "User.email has a validation it's a well-formatted email"
     },
     {
       "warning_type": "SQL Injection",
@@ -603,31 +535,7 @@
         89
       ],
       "note": "IntervalHelper#time_interval is a security control"
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "fdd54f924c48f192955bf4ed6deea77708243f3e2dab34af1f2f245b96033b72",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/controllers/moderations_controller.rb",
-      "line": 46,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "((Moderation.all.eager_load(:moderator, :story, { :comment => ([:story, :user]) }, :tag, :user, :domain, :origin, :category) or Moderation.all.eager_load(:moderator, :story, { :comment => ([:story, :user]) }, :tag, :user, :domain, :origin, :category).where(\"is_from_suggestions = true\")) or Moderation.all.eager_load(:moderator, :story, { :comment => ([:story, :user]) }, :tag, :user, :domain, :origin, :category).joins(:moderator).where(:users => ({ :username => params.fetch(\"moderator\", \"(All)\") }))).where(\"`moderations`.`#{type.to_s.singularize}_id` is null\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ModerationsController",
-        "method": "index"
-      },
-      "user_input": "type.to_s.singularize",
-      "confidence": "Weak",
-      "cwe_id": [
-        89
-      ],
-      "note": "type comes from @what.keys, which are symbols for table names"
     }
   ],
-  "updated": "2024-12-03 17:25:37 -0600",
-  "brakeman_version": "6.2.2"
+  "brakeman_version": "7.0.0"
 }

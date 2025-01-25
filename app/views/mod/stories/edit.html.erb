@@ -1,0 +1,63 @@
+<div class="box" id="story_box">
+  <div id="story_holder">
+    <%= form_with model: @story, url: mod_story_path(@story) do |f| %>
+      <%= render :partial => "stories/form", :locals => { :story => @story, :f => f } %>
+
+      <br />
+      <div class="box">
+        <div class="boxline">
+          <%= f.label :merge_story_short_id, "Merge Into:",
+            :class => "required" %>
+          <%= f.text_field :merge_story_short_id, :autocomplete => "off",
+            :placeholder => "Short id of story into which this story " <<
+            "be merged" %>
+        </div>
+        <div class="boxline">
+          <%= f.label :unavailable_at, "Unavailable:",
+            :class => "required" %>
+          <%= f.check_box :is_unavailable %>
+          <%= f.label :unavailable_at, "Source URL is unavailable, " <<
+            "enable display of cached text", :class => "normal" %>
+        </div>
+        <div class="boxline">
+          <%= f.label :moderation_reason, "Mod Reason:", :class => "required" %>
+          <%= f.text_field :moderation_reason %>
+        </div>
+      </div>
+
+      <p></p>
+
+      <div class="box">
+        <div class="boxline actions markdown_help_toggler">
+          <div class="markdown_help_label">
+            Markdown formatting available
+          </div>
+
+          <%= f.submit "Save" %>
+
+          <% if @story.is_gone? %>
+            &nbsp; | &nbsp;
+            <%= f.submit "Undelete", formaction: story_undelete_path(@story.short_id), :data => { :confirm => "Undelete this story?" } %>
+          <% elsif !@story.is_gone? %>
+            &nbsp; | &nbsp;
+            <% if @story.user_id != @user.id %>
+              <%= f.submit "Delete", formaction: story_destroy_path(@story.short_id),
+                :class => "deletion", :data => { :confirm => "Delete this story?" }  %>
+            <% else %>
+              <%= f.submit "Delete", formaction: story_destroy_path(@story.short_id),
+                :class => "deletion", :data => { :confirm => "Delete this story?" } %>
+            <% end %>
+          <% end %>
+
+          <div style="clear: both;"></div>
+
+          <%= render :partial => "global/markdownhelp", :locals => { allow_images: @story.can_have_images? } %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<br />
+<label class="required">Latest modlog for this story, submitter, and discussion:</label>
+<%= render partial: 'moderations/table', locals: { moderations: Moderation.for_story(@story) } %>

@@ -15,11 +15,11 @@ class StoryRepository
   def hottest
     hottest = Story.base(@user).positive_ranked.not_hidden_by(@user)
     hottest = hottest.filter_tags(@params[:exclude_tags] || [])
-    hottest.order("hotness")
+    hottest.order(:hotness)
   end
 
   def hidden
-    Story.base(@user).hidden_by(@user).filter_tags(@params[:exclude_tags] || []).order("hotness")
+    Story.base(@user).hidden_by(@user).filter_tags(@params[:exclude_tags] || []).order(:hotness)
   end
 
   def newest
@@ -30,14 +30,7 @@ class StoryRepository
     Story.base(@user)
       .where.not(id: Story.hidden_by(@user).select(:id))
       .filter_tags(@params[:exclude_tags] || [])
-      .select('stories.*, (
-        select max(comments.id)
-        from comments
-        where
-          comments.story_id = stories.id and
-          comments.created_at >= date_sub(now(), interval 3 day)
-      ) as latest_comment_id')
-      .order("latest_comment_id desc")
+      .order(last_comment_at: :desc)
   end
 
   def newest_by_user(user)
@@ -58,6 +51,6 @@ class StoryRepository
   def top(length)
     top = Story.base(@user).where("created_at >= (NOW() - INTERVAL " \
       "#{length[:dur]} #{length[:intv].upcase})")
-    top.order("score DESC")
+    top.order(score: :desc)
   end
 end

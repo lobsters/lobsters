@@ -48,7 +48,6 @@
 	/* explicit view colors */
 	--color-box-bg: light-dark(#fff, #141414);
 	--color-box-bg-shaded: light-dark(#eee, #202020);
-	--color-box-bg-shaded-rgb: light-dark(rgb(238, 238, 238), rgb(32, 32, 32));
 	--color-box-border: light-dark(#ccc, #303030);
 	--color-box-border-focus: light-dark(#808080, #808080);
 
@@ -85,9 +84,7 @@
 	--color-lobsters-hat-sysop-brim-stroke: light-dark(#bbb2b2, #2c2222);
 
 	/* mobile */
-	--color-mobile-story-border: light-dark(#e0e0e0, #1c1c1c);
 	--color-mobile-story-liner-bg: light-dark(#fbfbfb, #0c0c0c);
-	--color-mobile-story-comments-bg: light-dark(#e8e8e8, #101010);
 	--color-mobile-story-comments-bubble-fill: light-dark(#ccc, #282828);
 	--color-mobile-story-comments-bubble-fill-zero: light-dark(#d8d8d8, #1c1c1c);
 }

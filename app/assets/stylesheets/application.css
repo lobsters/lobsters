@@ -4,40 +4,50 @@
 :root {
 	color-scheme: light dark;
 
-	/* main monochrome */
-	--palette-bg: light-dark(rgb(254, 254, 254), rgb(12, 12, 12));
-	--palette-fg: light-dark(rgb(51, 51, 51), rgb(225, 225, 225));
-	--palette-light: rgb(255, 255, 255);
-	--palette-shadow: rgb(0, 0, 0);
+	/** main monochrome and variants **/
+	--base-bg-light: 254 254 254;
+	--base-bg-dark: 12 12 12;
 
-	/* blends of foreground color over the background */
-	--opacity-contrast-15: light-dark(100%, 87%); /* Contrast capped at 10:1 for dark mode */
-	--opacity-contrast-13: light-dark(94%, 87%);
-	--opacity-contrast-10: light-dark(84%, 87%);
-	--opacity-contrast-7-5: light-dark(75%, 77%);
-	--opacity-contrast-6: light-dark(67%, 69%);
-	--opacity-contrast-5: light-dark(63%, 64%);
-	--opacity-contrast-4-5: light-dark(59%, 61%); /* WCAG AA minimum 4.5:1 text contrast */
+	--color-bg: light-dark(rgb(var(--base-bg-light)), rgb(var(--base-bg-dark)));
+	--color-bg-50: color-mix(in srgb, var(--color-bg) 50%, transparent);
 
-	--opacity-gradient-lit: light-dark(0%, 13%);
-	--opacity-gradient-shadowed: light-dark(13%, 3%);
+	--base-fg-light: 51 51 51;
+	--base-fg-dark: 255 255 255;
+
+	--color-fg:              light-dark(rgb(var(--base-fg-light) / 100%), rgb(var(--base-fg-dark) / 87%)); /* primary text */
+	--color-fg-contrast-13:  light-dark(rgb(var(--base-fg-light) /  94%), rgb(var(--base-fg-dark) / 87%));
+	--color-fg-contrast-10:  light-dark(rgb(var(--base-fg-light) /  84%), rgb(var(--base-fg-dark) / 87%));
+	--color-fg-contrast-7-5: light-dark(rgb(var(--base-fg-light) /  75%), rgb(var(--base-fg-dark) / 77%));
+	--color-fg-contrast-6:   light-dark(rgb(var(--base-fg-light) /  67%), rgb(var(--base-fg-dark) / 69%));
+	--color-fg-contrast-5:   light-dark(rgb(var(--base-fg-light) /  63%), rgb(var(--base-fg-dark) / 64%));
+	--color-fg-contrast-4-5: light-dark(rgb(var(--base-fg-light) /  59%), rgb(var(--base-fg-dark) / 61%));
+
+	--color-fg-gradient-lit:      light-dark(rgb(var(--base-fg-light),  0%) / rgb(var(--base-fg-dark) / 13%));
+	--color-fg-gradient-shadowed: light-dark(rgb(var(--base-fg-light), 13%) / rgb(var(--base-fg-dark) /  3%));
+
+	--color-light: rgb(255, 255, 255);
+	--color-light-25: color-mix(in srgb, var(--color-light) 25%, transparent);
+
+	--color-shadow: rgb(0, 0, 0);
+	--color-shadow-80: color-mix(in srgb, var(--color-shadow) 80%, transparent);
+	--color-shadow-25: color-mix(in srgb, var(--color-shadow) 25%, transparent);
+	--color-shadow-10: color-mix(in srgb, var(--color-shadow) 10%, transparent);
 
 	/* colored backgrounds and foregrounds */
-	--palette-bg-accent: light-dark(rgb(172, 19, 13), rgb(253, 78, 72)); 
-	--palette-bg-target: light-dark(rgb(255, 252, 215), rgb(61, 53, 11));
+	--color-bg-accent: light-dark(rgb(172, 19, 13), rgb(253, 78, 72));
+	--color-bg-target: light-dark(rgb(255, 252, 215), rgb(61, 53, 11));
 
-	--palette-fg-link: light-dark(rgb(28, 89, 209), rgb(138, 177, 255));
-	--palette-fg-link-visited: light-dark(rgb(95, 134, 212), rgb(79, 138, 255));
-	--palette-fg-accent: light-dark(rgb(172, 19, 13), rgb(207, 54, 49)); /* red as in lobste.rs */
-	--palette-fg-negative: light-dark(rgb(139, 0, 0), rgb(190, 45, 45)); /* red as in warning */
-	--palette-fg-affirmative: light-dark(rgb(0, 128, 0), rgb(42, 180, 42) );
-	--palette-fg-author: light-dark(rgb(96, 129, 189), rgb(80, 112, 177));
-	--palette-fg-shape: light-dark(rgb(187, 187, 187), rgb(80, 80, 80));
+	--color-fg-link: light-dark(rgb(28, 89, 209), rgb(138, 177, 255));
+	--color-fg-link-visited: light-dark(rgb(95, 134, 212), rgb(79, 138, 255));
+	--color-fg-accent: light-dark(rgb(172, 19, 13), rgb(207, 54, 49)); /* red as in lobste.rs */
+	--color-fg-negative: light-dark(rgb(139, 0, 0), rgb(190, 45, 45)); /* red as in warning */
+	--color-fg-affirmative: light-dark(rgb(0, 128, 0), rgb(42, 180, 42) );
+	--color-fg-author: light-dark(rgb(96, 129, 189), rgb(80, 112, 177));
+	--color-fg-shape: light-dark(rgb(187, 187, 187), rgb(80, 80, 80));
 
 	/* explicit view colors */
 	--color-box-bg: light-dark(#fff, #141414);
 	--color-box-bg-shaded: light-dark(#eee, #202020);
-	--color-box-bg-shaded-rgb: light-dark(rgb(238, 238, 238), rgb(32, 32, 32));
 	--color-box-border: light-dark(#ccc, #303030);
 	--color-box-border-focus: light-dark(#808080, #808080);
 
@@ -74,9 +84,7 @@
 	--color-lobsters-hat-sysop-brim-stroke: light-dark(#bbb2b2, #2c2222);
 
 	/* mobile */
-	--color-mobile-story-border: light-dark(#e0e0e0, #1c1c1c);
 	--color-mobile-story-liner-bg: light-dark(#fbfbfb, #0c0c0c);
-	--color-mobile-story-comments-bg: light-dark(#e8e8e8, #101010);
 	--color-mobile-story-comments-bubble-fill: light-dark(#ccc, #282828);
 	--color-mobile-story-comments-bubble-fill-zero: light-dark(#d8d8d8, #1c1c1c);
 }
@@ -95,49 +103,6 @@ html.color-scheme-dark {
 
 html.color-scheme-light {
 	color-scheme: light;
-}
-
-/* overall page */
-
-html {
-	/* derived colors */
-
-	/* These colors are derived from the light or dark palette. This
-	   opacity-mixing technique is usually inappropriate for backgrounds and
-	   borders, so other colors are given explicitly per display mode. */
-
-	/* main monochrome and variants */
-	--color-bg: var(--palette-bg);
-	--color-bg-50: rgba(var(--palette-bg), 50%);
-
-	--color-fg: rgba(var(--palette-fg), var(--opacity-contrast-15)); /* primary text */
-	--color-fg-contrast-13: rgba(var(--palette-fg), var(--opacity-contrast-13));
-	--color-fg-contrast-10: rgba(var(--palette-fg), var(--opacity-contrast-10));
-	--color-fg-contrast-7-5: rgba(var(--palette-fg), var(--opacity-contrast-7-5));
-	--color-fg-contrast-6: rgba(var(--palette-fg), var(--opacity-contrast-6));
-	--color-fg-contrast-5: rgba(var(--palette-fg), var(--opacity-contrast-5));
-	--color-fg-contrast-4-5: rgba(var(--palette-fg), var(--opacity-contrast-4-5));
-
-	--color-fg-gradient-lit: rgba(var(--palette-fg), var(--opacity-gradient-lit));
-	--color-fg-gradient-shadowed: rgba(var(--palette-fg), var(--opacity-gradient-shadowed)); /* d7d7d7 */
-
-	--color-light-25: rgba(var(--palette-light), 25%);
-
-	--color-shadow-80: rgba(var(--palette-shadow), 80%);
-	--color-shadow-25: rgba(var(--palette-shadow), 25%);
-	--color-shadow-10: rgba(var(--palette-shadow), 10%);
-
-	/* colored backgrounds and foregrounds and variants */
-	--color-bg-accent: var(--palette-bg-accent);
-	--color-bg-target: var(--palette-bg-target);
-
-	--color-fg-link: var(--palette-fg-link);
-	--color-fg-link-visited: var(--palette-fg-link-visited);
-	--color-fg-accent: var(--palette-fg-accent);
-	--color-fg-negative: var(--palette-fg-negative);
-	--color-fg-affirmative: var(--palette-fg-affirmative);
-	--color-fg-author: var(--palette-fg-author);
-	--color-fg-shape: var(--palette-fg-shape);
 }
 
 /* generics */
@@ -1669,12 +1634,12 @@ input[type="submit"].link_post.pushover_button {
 		z-index: 1;
 	}
 	header#nav .navholder:before {
-		background: linear-gradient(to right, var(--color-box-bg-shaded), rgba(var(--color-box-bg-shaded-rgb), 0));
+		background: linear-gradient(to right, var(--color-box-bg-shaded), color-mix(in srgb, var(--color-box-bg-shaded) 0%, transparent));
 		left: -1em;
 	}
 	header#nav .navholder:after {
 		right: 0px;
-		background: linear-gradient(to right, rgba(var(--color-box-bg-shaded-rgb), 0), var(--color-box-bg-shaded));
+		background: linear-gradient(to right, color-mix(in srgb, var(--color-box-bg-shaded) 0%, transparent), var(--color-box-bg-shaded));
 	}
 	header#nav nav.links > .corner {
 		display: none;

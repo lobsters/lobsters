@@ -1634,12 +1634,12 @@ input[type="submit"].link_post.pushover_button {
 		z-index: 1;
 	}
 	header#nav .navholder:before {
-		background: linear-gradient(to right, var(--color-box-bg-shaded), color-mix(in srgb, var(--color-box-bg-shaded) 0%, transparent));
+		background: linear-gradient(to right, var(--color-box-bg-shaded), transparent);
 		left: -1em;
 	}
 	header#nav .navholder:after {
 		right: 0px;
-		background: linear-gradient(to right, color-mix(in srgb, var(--color-box-bg-shaded) 0%, transparent), var(--color-box-bg-shaded));
+		background: linear-gradient(to right, transparent, var(--color-box-bg-shaded));
 	}
 	header#nav nav.links > .corner {
 		display: none;

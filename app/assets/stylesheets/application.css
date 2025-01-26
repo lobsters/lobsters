@@ -5,25 +5,25 @@
 	color-scheme: light dark;
 
 	/** main monochrome and variants **/
-	--base-bg-light: 254, 254, 254;
-	--base-bg-dark: 12, 12, 12;
+	--base-bg-light: 254 254 254;
+	--base-bg-dark: 12 12 12;
 
 	--color-bg: light-dark(rgb(var(--base-bg-light)), rgb(var(--base-bg-dark)));
 	--color-bg-50: color-mix(in srgb, var(--color-bg) 50%, transparent);
 
-	--base-fg-light: 51, 51, 51;
-	--base-fg-dark: 255, 255, 255;
+	--base-fg-light: 51 51 51;
+	--base-fg-dark: 255 255 255;
 
-	--color-fg:              light-dark(rgba(var(--base-fg-light), 100%), rgba(var(--base-fg-dark), 87%)); /* primary text */
-	--color-fg-contrast-13:  light-dark(rgba(var(--base-fg-light),  94%), rgba(var(--base-fg-dark), 87%));
-	--color-fg-contrast-10:  light-dark(rgba(var(--base-fg-light),  84%), rgba(var(--base-fg-dark), 87%));
-	--color-fg-contrast-7-5: light-dark(rgba(var(--base-fg-light),  75%), rgba(var(--base-fg-dark), 77%));
-	--color-fg-contrast-6:   light-dark(rgba(var(--base-fg-light),  67%), rgba(var(--base-fg-dark), 69%));
-	--color-fg-contrast-5:   light-dark(rgba(var(--base-fg-light),  63%), rgba(var(--base-fg-dark), 64%));
-	--color-fg-contrast-4-5: light-dark(rgba(var(--base-fg-light),  59%), rgba(var(--base-fg-dark), 61%));
+	--color-fg:              light-dark(rgb(var(--base-fg-light) / 100%), rgb(var(--base-fg-dark) / 87%)); /* primary text */
+	--color-fg-contrast-13:  light-dark(rgb(var(--base-fg-light) /  94%), rgb(var(--base-fg-dark) / 87%));
+	--color-fg-contrast-10:  light-dark(rgb(var(--base-fg-light) /  84%), rgb(var(--base-fg-dark) / 87%));
+	--color-fg-contrast-7-5: light-dark(rgb(var(--base-fg-light) /  75%), rgb(var(--base-fg-dark) / 77%));
+	--color-fg-contrast-6:   light-dark(rgb(var(--base-fg-light) /  67%), rgb(var(--base-fg-dark) / 69%));
+	--color-fg-contrast-5:   light-dark(rgb(var(--base-fg-light) /  63%), rgb(var(--base-fg-dark) / 64%));
+	--color-fg-contrast-4-5: light-dark(rgb(var(--base-fg-light) /  59%), rgb(var(--base-fg-dark) / 61%));
 
-	--color-fg-gradient-lit:      light-dark(rgba(var(--base-fg-light),  0%), rgba(var(--base-fg-dark), 13%));
-	--color-fg-gradient-shadowed: light-dark(rgba(var(--base-fg-light), 13%), rgba(var(--base-fg-dark),  3%));
+	--color-fg-gradient-lit:      light-dark(rgb(var(--base-fg-light),  0%) / rgb(var(--base-fg-dark) / 13%));
+	--color-fg-gradient-shadowed: light-dark(rgb(var(--base-fg-light), 13%) / rgb(var(--base-fg-dark) /  3%));
 
 	--color-light: rgb(255, 255, 255);
 	--color-light-25: color-mix(in srgb, var(--color-light) 25%, transparent);

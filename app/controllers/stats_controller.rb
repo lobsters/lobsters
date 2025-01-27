@@ -11,47 +11,39 @@ class StatsController < ApplicationController
       graph_title: "Users joining by month",
       scale_y_divisions: 100
     }) {
-      User.group("date_format(created_at, '%Y-%m')").count.to_a.flatten
+      User.pluck(:created_at).map { |created_at| created_at.strftime("%Y-%m") }.tally.sort.flatten
     }
 
     @active_users_graph = monthly_graph("active_users_graph", {
       graph_title: "Active users by month",
       scale_y_divisions: 500
     }) {
-      User.connection.select_all(<<~SQL
-        SELECT ym, count(distinct user_id)
-        FROM (
-          SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM stories
-          UNION
-          SELECT date_format(updated_at, '%Y-%m') as ym, user_id FROM votes
-          UNION
-          SELECT date_format(created_at, '%Y-%m') as ym, user_id FROM comments
-        ) as active_users
-        GROUP BY 1
-        ORDER BY 1 asc;
-      SQL
-                                ).to_a.map(&:values).flatten
+      stories = Story.pluck(:created_at, :user_id).map { |created_at, user_id| [created_at.strftime("%Y-%m"), user_id] }
+      votes = Vote.pluck(:updated_at, :user_id).map { |updated_at, user_id| [updated_at.strftime("%Y-%m"), user_id] }
+      comments = Comment.pluck(:created_at, :user_id).map { |created_at, user_id| [created_at.strftime("%Y-%m"), user_id] }
+      combined = (stories + votes + comments).group_by(&:first).transform_values { |record| record.map(&:last).uniq.count }
+      combined.sort.flatten
     }
 
     @stories_graph = monthly_graph("stories_graph", {
       graph_title: "Stories submitted by month",
       scale_y_divisions: 250
     }) {
-      Story.group("date_format(created_at, '%Y-%m')").count.to_a.flatten
+      Story.pluck(:created_at).map { |created_at| created_at.strftime("%Y-%m") }.tally.sort.flatten
     }
 
     @comments_graph = monthly_graph("comments_graph", {
       graph_title: "Comments posted by month",
       scale_y_divisions: 1_000
     }) {
-      Comment.group("date_format(created_at, '%Y-%m')").count.to_a.flatten
+      Comment.pluck(:created_at).map { |created_at| created_at.strftime("%Y-%m") }.tally.sort.flatten
     }
 
     @votes_graph = monthly_graph("votes_graph", {
       graph_title: "Votes cast by month",
       scale_y_divisions: 10_000
     }) {
-      Vote.group("date_format(updated_at, '%Y-%m')").count.to_a.flatten
+      Vote.pluck(:updated_at).map { |updated_at| updated_at.strftime("%Y-%m") }.tally.sort.flatten
     }
   end
 

@@ -400,15 +400,16 @@ class Comment < ApplicationRecord
     # comments per weekday so seeing rollover between sibling comments is rare. Importantly, even
     # when it is 'wrong', it gives a stable sort.
     Comment.connection.execute <<~SQL
-      UPDATE comments SET
-        score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),
-        flags = (select count(*) from votes where comment_id = comments.id and vote = -1),
-        confidence = #{new_confidence},
-        confidence_order = concat(lpad(char(65535 - floor(#{new_confidence} * 65535) using binary), 2, '\0'), char(id & 0xff using binary))
-      WHERE id = #{id.to_i}
-    SQL
+    UPDATE comments SET
+      score = (SELECT COALESCE(SUM(vote), 0) FROM votes WHERE comment_id = comments.id),
+      flags = (SELECT COUNT(*) FROM votes WHERE comment_id = comments.id AND vote = -1),
+      confidence = #{new_confidence}
+    WHERE id = #{id.to_i}
+  SQL
+  
     story.update_cached_columns
   end
+
 
   def gone_text
     if is_moderated?

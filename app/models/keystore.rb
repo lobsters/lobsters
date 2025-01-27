@@ -28,11 +28,15 @@ class Keystore < ApplicationRecord
   def self.incremented_value_for(key, amount = 1)
     validate_input_key(key)
     Keystore.transaction do
-      Keystore.upsert({key: key, value: amount}, on_duplicate: Arel.sql("value = value + 1"))
+      Keystore.upsert(
+        { key: key, value: amount },
+        unique_by: :key,
+        on_duplicate: Arel.sql("value = keystores.value + EXCLUDED.value")
+      )
       value_for(key)
     end
   end
-
+  
   def self.find_or_create_key_for_update(key, init = nil)
     loop do
       found = lock(true).find_by(key: key)

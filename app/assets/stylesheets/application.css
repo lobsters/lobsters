@@ -25,26 +25,26 @@
 	--color-fg-gradient-lit:      light-dark(rgb(var(--base-fg-light) /  0%), rgb(var(--base-fg-dark) / 13%));
 	--color-fg-gradient-shadowed: light-dark(rgb(var(--base-fg-light) / 13%), rgb(var(--base-fg-dark) /  3%));
 
-	--color-light: rgb(255, 255, 255);
+	--color-light: rgb(255 255 255);
 	--color-light-25: color-mix(in srgb, var(--color-light) 25%, transparent);
 
-	--color-shadow: rgb(0, 0, 0);
+	--color-shadow: rgb(0 0 0);
 	--color-shadow-80: color-mix(in srgb, var(--color-shadow) 80%, transparent);
 	--color-shadow-25: color-mix(in srgb, var(--color-shadow) 25%, transparent);
 	--color-shadow-10: color-mix(in srgb, var(--color-shadow) 10%, transparent);
 
 	/* colored backgrounds and foregrounds */
-	--color-bg-accent: light-dark(rgb(172, 19, 13), rgb(253, 78, 72));
-	--color-bg-target: light-dark(rgb(255, 252, 215), rgb(61, 53, 11));
+	--color-bg-accent: light-dark(rgb(172 19 13), rgb(253 78 72));
+	--color-bg-target: light-dark(rgb(255 252 215), rgb(61 53 11));
 
-	--color-fg-link: light-dark(rgb(28, 89, 209), rgb(138, 177, 255));
-	--color-fg-link-visited: light-dark(rgb(95, 134, 212), rgb(79, 138, 255));
-	--color-fg-accent: light-dark(rgb(172, 19, 13), rgb(207, 54, 49)); /* red as in lobste.rs */
-	--color-fg-negative: light-dark(rgb(139, 0, 0), rgb(190, 45, 45)); /* red as in warning */
-	--color-fg-affirmative: light-dark(rgb(0, 128, 0), rgb(42, 180, 42) );
-	--color-fg-author: light-dark(rgb(96, 129, 189), rgb(80, 112, 177));
-	--color-fg-shape: light-dark(rgb(187, 187, 187), rgb(80, 80, 80));
-	--color-hr: light-dark(rgb(187, 187, 187), rgb(80, 80, 80));
+	--color-fg-link: light-dark(rgb(28 89 209), rgb(138 177 255));
+	--color-fg-link-visited: light-dark(rgb(95 134 212), rgb(79 138 255));
+	--color-fg-accent: light-dark(rgb(172 19 13), rgb(207 54 49)); /* red as in lobste.rs */
+	--color-fg-negative: light-dark(rgb(139 0 0), rgb(190 45 45)); /* red as in warning */
+	--color-fg-affirmative: light-dark(rgb(0 128 0), rgb(42 180 42) );
+	--color-fg-author: light-dark(rgb(96 129 189), rgb(80 112 177));
+	--color-fg-shape: light-dark(rgb(187 187 187), rgb(80 80 80));
+	--color-hr: light-dark(rgb(187 187 187), rgb(80 80 80));
 
 	/* explicit view colors */
 	--color-box-bg: light-dark(#fff, #141414);

@@ -223,8 +223,10 @@ div.shorten_first_p p:first-child {
 }
 
 hr {
+	/* make it lighter than the browser's default */
 	border: none;
-	border-top: 1px dotted var(--color-fg-shape);
+	height: 1px;
+	background-color: #BBB;
 }
 pre {
 	overflow-x: auto;

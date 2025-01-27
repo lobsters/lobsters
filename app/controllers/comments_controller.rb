@@ -28,6 +28,8 @@ class CommentsController < ApplicationController
       # includes parent story_id to ensure this comment's story_id matches
       comment.parent_comment =
         Comment.find_by(story_id: story.id, short_id: params[:parent_comment_short_id])
+      comment.depth = comment.parent_comment.depth + 1
+
       if !comment.parent_comment
         return render json: {error: "invalid parent comment", status: 400}
       end
@@ -124,7 +126,7 @@ class CommentsController < ApplicationController
     if request.xhr?
       render partial: "commentbox", locals: {comment: comment, story: story}
     else
-      parents = comment.parents.with_thread_attributes.for_presentation
+      parents = comment.parents.for_presentation
 
       parent_ids = parents.map(&:id)
       @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user&.id, parent_ids)

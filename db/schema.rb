@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_24_063340) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -79,6 +79,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.boolean "is_moderated", default: false, null: false
     t.boolean "is_from_email", default: false, null: false
     t.bigint "hat_id", unsigned: true
+    t.integer "reply_count", default: 0
+    t.integer "depth", default: 0
     t.index ["comment"], name: "index_comments_on_comment", type: :fulltext
     t.index ["confidence"], name: "confidence_idx"
     t.index ["hat_id"], name: "comments_hat_id_fk"

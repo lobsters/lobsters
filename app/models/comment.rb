@@ -655,8 +655,7 @@ class Comment < ApplicationRecord
           select
             c.id,
             0 as depth,
-            (select count(*) from comments where parent_comment_id = c.id) as reply_count,
-            cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
+            0 as confidence_order_path
             from comments c
             where
               thread_id in (#{thread_ids.join(", ")}) and
@@ -666,10 +665,7 @@ class Comment < ApplicationRecord
             c.id,
             discussion.depth + 1,
             (select count(*) from comments where parent_comment_id = c.id),
-            cast(concat(
-              left(discussion.confidence_order_path, 3 * (depth + 1)),
-              c.confidence_order
-            ) as char(#{Comment::COP_LENGTH}) character set binary)
+            0
           from comments c join discussion on c.parent_comment_id = discussion.id
           )
           select * from discussion as comments
@@ -699,7 +695,7 @@ class Comment < ApplicationRecord
             c.id,
             0 as depth,
             (select count(*) from comments where parent_comment_id = c.id) as reply_count,
-            cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
+            0 as confidence_order_path
             from comments c
             join stories on stories.id = c.story_id
             where
@@ -710,10 +706,7 @@ class Comment < ApplicationRecord
             c.id,
             discussion.depth + 1,
             (select count(*) from comments where parent_comment_id = c.id),
-            cast(concat(
-              left(discussion.confidence_order_path, 3 * (depth + 1)),
-              c.confidence_order
-            ) as char(#{Comment::COP_LENGTH}) character set binary)
+            0
           from comments c join discussion on c.parent_comment_id = discussion.id
           )
           select * from discussion as comments

@@ -66,11 +66,12 @@ class Vote < ApplicationRecord
   def self.comment_vote_summaries(comment_ids)
     Vote
       .joins(:user)
-      .select("comment_id, reason, count(1) as count, group_concat(username separator ', ') as usernames")
+      .select("comment_id, reason, count(1) as count, string_agg(users.username, ', ') as usernames")
       .where(comment_id: comment_ids)
       .where.not(reason: "")
       .group(:comment_id, :reason)
       .group_by(&:comment_id)
+  
   end
 
   def self.votes_by_user_for_stories_hash(user, stories)

@@ -1,8 +1,5 @@
 <!doctype html>
-<html
-  lang="en"
-  class='color-scheme-<%= @user&.prefers_color_scheme || 'system' %>'
->
+<html lang="en" >
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -31,8 +28,8 @@
   <title><%= @title.present? ? "#{@title} | " : "" %><%=
     Rails.application.name %></title>
 
-  <%# Includes all stylesheet files in app/assets/stylesheets %>
-  <%= stylesheet_link_tag :app %>
+  <%= stylesheet_link_tag "application" %>
+  <%= stylesheet_link_tag @user&.prefers_color_scheme || "system" %>
   
   <%= stylesheet_link_tag "tom-select", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag "TomSelect_remove_button", "data-turbo-track": "reload" %>

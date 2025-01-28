@@ -15,12 +15,12 @@ class CommentStat < ApplicationRecord
       insert low_priority into comment_stats (`date`, `average`)
       with avg_by_date as (
         select
-          date(created_at - interval 5 hour) as date, avg(score) as a
+          date(created_at - interval '5 hour') as date, avg(score) as a
         from comments
         where
-          (comments.created_at - interval 5 hour) >= now() - interval 30 day and
+          (comments.created_at - interval '5 hour') >= now() - interval '30 day' and
           comments.is_deleted = false
-        group by date(created_at - interval 5 hour)
+        group by date(created_at - interval '5 hour')
       )
       select date, a from avg_by_date
       on duplicate key update `average` = `a`

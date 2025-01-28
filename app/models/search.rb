@@ -152,9 +152,9 @@ class Search
         value = flatten_title value
         query.where!(
           story: Story.joins(:story_text).where(
-            "MATCH(story_texts.title) AGAINST ('+#{value}' in boolean mode)"
+            "story_texts.title ILIKE ?", "%#{value}%"
           )
-        )
+        )        
       when :url
         url = true
         query
@@ -175,12 +175,14 @@ class Search
       end
     end
     if terms.any?
-      terms_sql = <<~SQL.tr("\n", " ")
-        MATCH(comment)
-        AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' in boolean mode)
-      SQL
-      query.where! terms_sql
-    end
+      terms_sql = terms.map do |term|
+        "comment ILIKE :term_#{term.hash.abs}"
+      end.join(" OR ")
+    
+      query.where!(terms_sql, **terms.each_with_object({}) do |term, hash|
+        hash[:"term_#{term.hash.abs}"] = "%#{term}%"
+      end)
+    end    
     if tags
       query.where!(
         story: Story
@@ -259,8 +261,8 @@ class Search
         title = true
         value = flatten_title value
         query.joins!(:story_text).where!(
-          "MATCH(story_texts.title) AGAINST ('+#{value}' in boolean mode)"
-        )
+          "story_texts.title ILIKE ?", "%#{value}%"
+        )        
       when :url
         url = true
         query.and!(
@@ -279,12 +281,17 @@ class Search
       end
     end
     if terms.any?
-      terms_sql = <<~SQL.tr("\n", " ")
-        MATCH(story_texts.title, story_texts.description, story_texts.body)
-        AGAINST ('#{terms.map { |s| "+#{s}" }.join(", ")}' in boolean mode)
-      SQL
-      query.joins!(:story_text).where! terms_sql
+      terms_sql = terms.map do |term|
+        <<~SQL
+          story_texts.title ILIKE :term
+          OR story_texts.description ILIKE :term
+          OR story_texts.body ILIKE :term
+        SQL
+      end.join(" OR ")
+    
+      query.joins!(:story_text).where!(terms_sql, term: "%#{terms.join('%')}%")
     end
+    
     if tags
       # This searches tags by subquery because otherwise Rails recognizes the join against tags and
       # thinks the .tags association preload is satisfied, so returned stories will only have the

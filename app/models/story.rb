@@ -566,7 +566,7 @@ class Story < ApplicationRecord
           select count(*) from hidden_stories hiding
           where
             story_id = #{id.to_i}
-            and hiding.created_at >= str_to_date('#{(created_at - FLAGGABLE_DAYS.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')
+            and hiding.created_at >= to_timestamp('#{(created_at - FLAGGABLE_DAYS.days).utc.iso8601}', 'YYYY-MM-DD"T"HH24:MI:SS"Z"')
             and exists (    -- user flagged
               select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1
             )

@@ -13,7 +13,7 @@ class ModController < ApplicationController
     @moderations = Moderation.all
       .eager_load(:moderator, :story, :tag, :user, comment: [:story, :user])
       .where("moderator_user_id != ? or moderator_user_id is null", @user.id)
-      .where("moderations.created_at >= (NOW() - INTERVAL 1 MONTH)")
+      .where({moderations: {created_at: 1.month.ago..}})
       .order("moderations.id desc")
   end
 
@@ -53,7 +53,7 @@ class ModController < ApplicationController
 
   def period(query)
     length = time_interval(params[:period] || default_periods.first)
-    query.where("#{query.model.table_name}.created_at >=
-      (NOW() - INTERVAL #{length[:dur]} #{length[:intv].upcase})")
-  end
+    query.where("#{query.model.table_name}.created_at >= 
+      (NOW() - INTERVAL '#{length[:dur]} #{length[:intv].upcase}')")
+  end  
 end

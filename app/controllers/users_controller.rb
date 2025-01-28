@@ -135,7 +135,7 @@ class UsersController < ApplicationController
         from
           comments
         where
-          comments.created_at >= now() - interval #{@interval[:dur]} #{@interval[:intv]}
+          comments.created_at >= now() - interval '#{@interval[:dur]} #{@interval[:intv]}'
         group by comments.user_id) count_by_user
       group by 1
       order by 1 asc;
@@ -147,7 +147,7 @@ class UsersController < ApplicationController
     @flagged_comments = @showing_user.comments
       .where("
         comments.flags > 0 and
-        comments.created_at >= now() - interval #{@interval[:dur]} #{@interval[:intv]}")
+        comments.created_at >= now() - interval '#{@interval[:dur]} #{@interval[:intv]}'")
       .order("id DESC")
       .includes(:user, :hat, story: :user)
       .joins(:story)

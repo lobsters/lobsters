@@ -30,13 +30,13 @@ class StoryRepository
     Story.base(@user)
       .where.not(id: Story.hidden_by(@user).select(:id))
       .filter_tags(@params[:exclude_tags] || [])
-      .select('stories.*, (
+      .select("stories.*, (
         select max(comments.id)
         from comments
         where
           comments.story_id = stories.id and
-          comments.created_at >= date_sub(now(), interval 3 day)
-      ) as latest_comment_id')
+          comments.created_at >= date_sub(now(), interval '3 day')
+      ) as latest_comment_id")
       .order("latest_comment_id desc")
   end
 
@@ -57,7 +57,7 @@ class StoryRepository
 
   def top(length)
     top = Story.base(@user).where("created_at >= (NOW() - INTERVAL " \
-      "#{length[:dur]} #{length[:intv].upcase})")
+      "'#{length[:dur]} #{length[:intv].upcase})'")
     top.order("score DESC")
   end
 end

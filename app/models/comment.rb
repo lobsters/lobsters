@@ -405,14 +405,7 @@ class Comment < ApplicationRecord
           score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),
           flags = (select count(*) from votes where comment_id = comments.id and vote = -1),
           confidence = #{new_confidence},
-          confidence_order = concat(
-            lpad(
-              chr(65535 - floor(#{new_confidence} * 65535)::INTEGER), 
-              2, 
-              '\0'
-            ), 
-            chr(id & 255)
-          )
+          confidence_order = (CHR(65535 - floor(#{new_confidence} * 65535)::INTEGER) || CHR((id & 255)::INTEGER))::BYTEA
         WHERE id = #{id.to_i}
       SQL
     else

@@ -5,12 +5,6 @@ trilogy: &trilogy
   host: <%= ENV['DATABASE_HOST'] || "127.0.0.1" %>
   port: 3306
 
-postgres: &postgres
-  adapter: postgresql
-  host: 127.0.0.1
-  port: 5432
-  pool: 5
-
 sqlite3: &sqlite3
   adapter: sqlite3
   pool: 5
@@ -18,9 +12,9 @@ sqlite3: &sqlite3
 
 development:
   primary:
-    <<: *postgres
+    <<: *trilogy
     database: lobsters_dev
-    username: postgres
+    username: root
     password: localdev
   cache:
     <<: *sqlite3
@@ -32,9 +26,9 @@ development:
     migrations_paths: db/queue_migrate
 
 test:
-  <<: *postgres
+  <<: *trilogy
   database: lobsters_test
-  username: postgres
+  username: root
   password: localdev
 
 production:

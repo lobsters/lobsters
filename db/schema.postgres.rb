@@ -61,7 +61,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["date"], name: "index_comment_stats_on_date", unique: true
   end
 
-  create_table "comments", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "comments", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil
     t.string "short_id", limit: 10, default: "", null: false
@@ -79,7 +79,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.boolean "is_moderated", default: false, null: false
     t.boolean "is_from_email", default: false, null: false
     t.bigint "hat_id"
-#    t.index ["comment"], name: "index_comments_on_comment", type: :fulltext
+    #    t.index ["comment"], name: "index_comments_on_comment", type: :fulltext
     t.index ["confidence"], name: "confidence_idx"
     t.index ["hat_id"], name: "comments_hat_id_fk"
     t.index ["parent_comment_id"], name: "comments_parent_comment_id_fk"
@@ -104,7 +104,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["domain"], name: "index_domains_on_domain", unique: true
   end
 
-  create_table "hat_requests", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "hat_requests", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.bigint "user_id", null: false
@@ -114,7 +114,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["user_id"], name: "hat_requests_user_id_fk"
   end
 
-  create_table "hats", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "hats", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.bigint "user_id", null: false
@@ -128,7 +128,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["user_id"], name: "hats_user_id_fk"
   end
 
-  create_table "hidden_stories", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "hidden_stories", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "story_id", null: false
     t.datetime "created_at"
@@ -136,7 +136,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["user_id", "story_id"], name: "index_hidden_stories_on_user_id_and_story_id", unique: true
   end
 
-  create_table "invitation_requests", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "invitation_requests", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "code"
     t.boolean "is_verified", default: false, null: false
     t.string "email", null: false
@@ -147,7 +147,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "invitations", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "invitations", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "email"
     t.string "code"
@@ -160,7 +160,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["user_id"], name: "invitations_user_id_fk"
   end
 
-  create_table "keystores", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "keystores", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "key", limit: 50, default: "", null: false
     t.bigint "value"
     t.index ["key"], name: "key", unique: true
@@ -190,7 +190,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["name"], name: "index_mastodon_apps_on_name", unique: true
   end
 
-  create_table "messages", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "messages", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil
     t.bigint "author_user_id"
     t.bigint "recipient_user_id", null: false
@@ -207,7 +207,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["short_id"], name: "random_hash", unique: true
   end
 
-  create_table "mod_notes", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "mod_notes", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "moderator_user_id", null: false
     t.bigint "user_id", null: false
     t.text "note", null: false
@@ -218,7 +218,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["user_id"], name: "mod_notes_user_id_fk"
   end
 
-  create_table "moderations", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "moderations", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "moderator_user_id"
@@ -257,7 +257,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["identifier"], name: "index_origins_on_identifier", unique: true
   end
 
-  create_table "read_ribbons", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "read_ribbons", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.boolean "is_following", default: true, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -267,7 +267,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["user_id"], name: "index_read_ribbons_on_user_id"
   end
 
-  create_table "saved_stories", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "saved_stories", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "user_id", null: false
@@ -276,7 +276,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["user_id", "story_id"], name: "index_saved_stories_on_user_id_and_story_id", unique: true
   end
 
-  create_table "stories", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "stories", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil
     t.bigint "user_id", null: false
     t.string "url", limit: 250, default: ""
@@ -322,7 +322,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     # t.index ["title"], name: "index_story_texts_on_title", type: :fulltext
   end
 
-  create_table "suggested_taggings", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "suggested_taggings", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "story_id", null: false
     t.bigint "tag_id", null: false
     t.bigint "user_id", null: false
@@ -331,7 +331,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["user_id"], name: "suggested_taggings_user_id_fk"
   end
 
-  create_table "suggested_titles", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "suggested_titles", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "story_id", null: false
     t.bigint "user_id", null: false
     t.string "title", limit: 150, default: "", null: false
@@ -339,7 +339,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["user_id"], name: "suggested_titles_user_id_fk"
   end
 
-  create_table "tag_filters", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "tag_filters", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "user_id", null: false
@@ -348,14 +348,14 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["user_id", "tag_id"], name: "user_tag_idx"
   end
 
-  create_table "taggings", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "taggings", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "story_id", null: false
     t.bigint "tag_id", null: false
     t.index ["story_id", "tag_id"], name: "story_id_tag_id", unique: true
     t.index ["tag_id"], name: "taggings_tag_id_fk"
   end
 
-  create_table "tags", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "tags", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "tag", limit: 25, null: false
     t.string "description", limit: 100
     t.boolean "privileged", default: false, null: false
@@ -368,7 +368,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["tag"], name: "tag", unique: true
   end
 
-  create_table "users", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "users", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "username", limit: 50
     t.string "email", limit: 100
     t.string "password_digest", limit: 75
@@ -406,7 +406,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
     t.index ["username"], name: "username", unique: true
   end
 
-  create_table "votes", id: { type: :bigint }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "votes", id: {type: :bigint}, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "story_id", null: false
     t.bigint "comment_id"
@@ -477,64 +477,64 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_06_160424) do
   add_foreign_key "votes", "stories", name: "votes_story_id_fk"
   add_foreign_key "votes", "users", name: "votes_user_id_fk"
 
-  create_view "replying_comments", sql_definition: <<-SQL
-  SELECT read_ribbons.user_id                              AS user_id,
-       comments.id                                       AS comment_id,
-       read_ribbons.story_id                             AS story_id,
-       comments.parent_comment_id                        AS
-       parent_comment_id,
-       comments.created_at                               AS
-       comment_created_at,
-       parent_comments.user_id                           AS
-       parent_comment_author_id,
-       comments.user_id                                  AS
-       comment_author_id,
-       stories.user_id                                   AS
-       story_author_id,
-       read_ribbons.updated_at < comments.created_at AS is_unread,
-       (SELECT votes.vote
-        FROM   votes
-        WHERE  votes.user_id = read_ribbons.user_id
-               AND votes.comment_id = comments.id)   AS
-       current_vote_vote,
-       (SELECT votes.reason
-        FROM   votes
-        WHERE  votes.user_id = read_ribbons.user_id
-               AND votes.comment_id = comments.id)   AS
-       current_vote_reason
-FROM   (((read_ribbons
-          JOIN comments
-            ON( comments.story_id = read_ribbons.story_id ))
-         JOIN stories
-           ON( stories.id = comments.story_id ))
-        LEFT JOIN comments parent_comments
-               ON( parent_comments.id = comments.parent_comment_id ))
-WHERE  read_ribbons.is_following = true
-       AND comments.user_id <> read_ribbons.user_id
-       AND comments.is_deleted = false
-       AND comments.is_moderated = false
-       AND ( parent_comments.user_id = read_ribbons.user_id
-              OR parent_comments.user_id IS NULL
-                 AND stories.user_id = read_ribbons.user_id )
-       AND stories.score > stories.flags
-       AND comments.score > comments.flags
-       AND ( parent_comments.id IS NULL
-              OR parent_comments.score > parent_comments.flags
-                 AND parent_comments.is_moderated = false
-                 AND parent_comments.is_deleted = false )
-       AND NOT EXISTS(SELECT 1
-                     FROM   (votes f
-                             JOIN comments c
-                               ON( f.comment_id = c.id ))
-                     WHERE  f.vote < 0
-                            AND f.user_id = parent_comments.user_id
-                            AND c.user_id = comments.user_id
-                            AND f.story_id = comments.story_id
-                     LIMIT  1)
-       AND NOT EXISTS(SELECT 1
-                     FROM   hidden_stories h
-                     WHERE  h.story_id = stories.id
-                            AND h.user_id = parent_comments.user_id
-                     LIMIT  1) 
+  create_view "replying_comments", sql_definition: <<~SQL
+      SELECT read_ribbons.user_id                              AS user_id,
+           comments.id                                       AS comment_id,
+           read_ribbons.story_id                             AS story_id,
+           comments.parent_comment_id                        AS
+           parent_comment_id,
+           comments.created_at                               AS
+           comment_created_at,
+           parent_comments.user_id                           AS
+           parent_comment_author_id,
+           comments.user_id                                  AS
+           comment_author_id,
+           stories.user_id                                   AS
+           story_author_id,
+           read_ribbons.updated_at < comments.created_at AS is_unread,
+           (SELECT votes.vote
+            FROM   votes
+            WHERE  votes.user_id = read_ribbons.user_id
+                   AND votes.comment_id = comments.id)   AS
+           current_vote_vote,
+           (SELECT votes.reason
+            FROM   votes
+            WHERE  votes.user_id = read_ribbons.user_id
+                   AND votes.comment_id = comments.id)   AS
+           current_vote_reason
+    FROM   (((read_ribbons
+              JOIN comments
+                ON( comments.story_id = read_ribbons.story_id ))
+             JOIN stories
+               ON( stories.id = comments.story_id ))
+            LEFT JOIN comments parent_comments
+                   ON( parent_comments.id = comments.parent_comment_id ))
+    WHERE  read_ribbons.is_following = true
+           AND comments.user_id <> read_ribbons.user_id
+           AND comments.is_deleted = false
+           AND comments.is_moderated = false
+           AND ( parent_comments.user_id = read_ribbons.user_id
+                  OR parent_comments.user_id IS NULL
+                     AND stories.user_id = read_ribbons.user_id )
+           AND stories.score > stories.flags
+           AND comments.score > comments.flags
+           AND ( parent_comments.id IS NULL
+                  OR parent_comments.score > parent_comments.flags
+                     AND parent_comments.is_moderated = false
+                     AND parent_comments.is_deleted = false )
+           AND NOT EXISTS(SELECT 1
+                         FROM   (votes f
+                                 JOIN comments c
+                                   ON( f.comment_id = c.id ))
+                         WHERE  f.vote < 0
+                                AND f.user_id = parent_comments.user_id
+                                AND c.user_id = comments.user_id
+                                AND f.story_id = comments.story_id
+                         LIMIT  1)
+           AND NOT EXISTS(SELECT 1
+                         FROM   hidden_stories h
+                         WHERE  h.story_id = stories.id
+                                AND h.user_id = parent_comments.user_id
+                         LIMIT  1) 
   SQL
 end

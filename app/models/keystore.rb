@@ -30,7 +30,7 @@ class Keystore < ApplicationRecord
     Keystore.transaction do
       if ActiveRecord::Base.connection.adapter_name.downcase.include?("postgresql")
         Keystore.upsert(
-          { key: key, value: amount },
+          {key: key, value: amount},
           unique_by: :key,
           on_duplicate: Arel.sql("value = keystores.value + EXCLUDED.value")
         )

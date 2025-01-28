@@ -96,7 +96,7 @@ a.tag_meta {
 a.tag_announce, a.tag_ask, a.tag_show, a.tag_interview {
 	background-color: var(--color-lobsters-tag-special-bg);
 	border-color: var(--color-lobsters-tag-special-border);
-	color: var(--color-fg-67);
+	color: var(--color-fg-contrast-10);
 }
 
 span.hat {
@@ -127,7 +127,7 @@ span.hat_openbsd_developer span.crown {
 }
 span.hat_sysop {
 	border-color: var(--color-lobsters-hat-sysop-brim-stroke);
-	color: var(--color-fg-67);
+	color: var(--color-fg-contrast-10);
 }
 span.hat_sysop span.crown {
 	background-color: var(--color-lobsters-hat-sysop-crown-fill);

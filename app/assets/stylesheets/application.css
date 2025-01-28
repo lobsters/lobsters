@@ -44,6 +44,7 @@
 	--color-fg-affirmative: light-dark(rgb(0, 128, 0), rgb(42, 180, 42) );
 	--color-fg-author: light-dark(rgb(96, 129, 189), rgb(80, 112, 177));
 	--color-fg-shape: light-dark(rgb(187, 187, 187), rgb(80, 80, 80));
+	--color-hr: light-dark(rgb(187, 187, 187), rgb(80, 80, 80));
 
 	/* explicit view colors */
 	--color-box-bg: light-dark(#fff, #141414);
@@ -226,7 +227,7 @@ hr {
 	/* make it lighter than the browser's default */
 	border: none;
 	height: 1px;
-	background-color: #BBB;
+	background-color: var(--color-hr);
 }
 pre {
 	overflow-x: auto;

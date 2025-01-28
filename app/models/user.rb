@@ -183,7 +183,7 @@ class User < ApplicationRecord
     username_regex = username.gsub(/_|-/, "[-_]")
     return unless username_regex.include?("[-_]")
 
-    collisions = if ActiveRecord::Base.connection.adapter_name.downcase.include?("postgresql")
+    collisions = if ApplicationRecord.postgres?
       User.where("username ~* ?", username_regex).where.not(id: id)
     else
       User.where("username REGEXP ?", username_regex).where.not(id: id)

@@ -28,7 +28,7 @@ class Keystore < ApplicationRecord
   def self.incremented_value_for(key, amount = 1)
     validate_input_key(key)
     Keystore.transaction do
-      if ActiveRecord::Base.connection.adapter_name.downcase.include?("postgresql")
+      if ApplicationRecord.postgres?
         Keystore.upsert(
           {key: key, value: amount},
           unique_by: :key,

@@ -399,13 +399,16 @@ class Comment < ApplicationRecord
     # assigned sequentially, mostly the tiebreaker sorts earlier comments sooner. We average ~200
     # comments per weekday so seeing rollover between sibling comments is rare. Importantly, even
     # when it is 'wrong', it gives a stable sort.
-    if ActiveRecord::Base.connection.adapter_name.downcase.include?("postgresql")
+    if ApplicationRecord.postgres?
       Comment.connection.execute <<~SQL
         UPDATE comments SET
           score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),
           flags = (select count(*) from votes where comment_id = comments.id and vote = -1),
           confidence = #{new_confidence},
-          confidence_order = (CHR(65535 - floor(#{new_confidence} * 65535)::INTEGER) || CHR((id & 255)::INTEGER))::BYTEA
+          confidence_order = (lpad(
+              TO_HEX(65535 - floor(#{new_confidence} * 65535)::INTEGER), 4, '0' ) || 
+            TO_HEX((id & 255)::INTEGER)
+          )::BYTEA
         WHERE id = #{id.to_i}
       SQL
     else

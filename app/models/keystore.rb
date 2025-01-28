@@ -28,7 +28,15 @@ class Keystore < ApplicationRecord
   def self.incremented_value_for(key, amount = 1)
     validate_input_key(key)
     Keystore.transaction do
-      Keystore.upsert({key: key, value: amount}, on_duplicate: Arel.sql("value = value + 1"))
+      if ActiveRecord::Base.connection.adapter_name.downcase.include?("postgresql")
+        Keystore.upsert(
+          { key: key, value: amount },
+          unique_by: :key,
+          on_duplicate: Arel.sql("value = keystores.value + EXCLUDED.value")
+        )
+      else
+        Keystore.upsert({key: key, value: amount}, on_duplicate: Arel.sql("value = value + 1"))
+      end
       value_for(key)
     end
   end

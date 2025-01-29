@@ -209,6 +209,11 @@
       <label><%= f.radio_button :prefers_color_scheme, :dark %> Dark</label>
     </div>
 
+    <div class="boxline">
+      <%= f.label :prefers_contrast, "Increase Contrast:", :class => "required" %>
+      <%= f.check_box :prefers_contrast %>
+    </div>
+
     <br>
     <br>
 

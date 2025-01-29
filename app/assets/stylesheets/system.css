@@ -1,2 +1,4 @@
+/* system color scheme */
+
 @import url("light.css"); /* light is default */
 @import url("dark.css") (prefers-color-scheme: dark);

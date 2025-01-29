@@ -1,0 +1,79 @@
+/* dark color scheme (contrast) */
+
+:root {
+	/* monochrome */
+	--base-bg: 0 0 0;
+	--base-fg: 255 255 255;
+
+	--opacity-fg: 100%; /* primary text */
+	--opacity-fg-contrast-13: 100%;
+	--opacity-fg-contrast-10: 99%;
+	--opacity-fg-contrast-7-5: 98%;
+	--opacity-fg-contrast-6: 97%;
+	--opacity-fg-contrast-5: 96%;
+	--opacity-fg-contrast-4-5: 95%;
+
+	--opacity-gradient-lit: 20%;
+	--opacity-gradient-shadowed: 5%;
+
+	--opacity-shadow-80: 80%;
+	--opacity-shadow-25: 70%;
+	--opacity-shadow-10: 60%;
+
+	--opacity-deleted: 0.7;
+
+	/* backgrounds and foregrounds */
+	--color-bg-accent: rgb(255 50 50);
+	--color-bg-target: rgb(80 70 20);
+
+	--color-fg-link: rgb(150 190 255);
+	--color-fg-link-visited: rgb(130 160 255);
+	--color-fg-accent: rgb(255 70 70); /* red as in lobste.rs */
+	--color-fg-negative: rgb(255 60 60); /* red as in warning */
+	--color-fg-affirmative: rgb(60 200 60);
+	--color-fg-author: rgb(100 140 220);
+	--color-fg-shape: rgb(120 120 120);
+
+	/* elements */
+	--color-box-bg: #111;
+	--color-box-bg-shaded: #222;
+	--color-box-border: #444;
+	--color-box-border-focus: #999;
+
+	--color-button-bg: #222;
+	--color-button-bg-shaded: #333;
+
+	--color-table-header-bg: #333;
+	--color-table-header-border: #555;
+	--color-table-row-bg-even: #111;
+	--color-table-row-bg-odd: #222;
+	--color-table-row-border: #333;
+
+	--color-tag-bg: #4d4000;
+	--color-tag-border: #806600;
+	--color-tag-media-bg: #1a3d66;
+	--color-tag-media-border: #264d80;
+	--color-tag-meta-bg: #333;
+	--color-tag-meta-border: #555;
+
+	--color-hat-crown-fill: #595959;
+	--color-hat-crown-stroke: #333;
+	--color-hat-brim-stroke: #444;
+
+	--color-flash-bg-error: #660000;
+	--color-flash-bg-success: #006600;
+	--color-flash-bg-notice: #003366;
+
+	--color-lobsters-fg-has-suggestions: #ff8080;
+
+	--color-lobsters-tag-special-bg: #4d0000;
+	--color-lobsters-tag-special-border: #800000;
+
+	--color-lobsters-hat-sysop-crown-fill: #8a5252;
+	--color-lobsters-hat-sysop-brim-stroke: #6f4444;
+
+	/* mobile */
+	--color-mobile-story-liner-bg: #000;
+	--color-mobile-story-comments-bubble-fill: #333;
+	--color-mobile-story-comments-bubble-fill-zero: #222;
+}

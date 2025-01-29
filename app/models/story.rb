@@ -21,11 +21,11 @@ class Story < ApplicationRecord
   has_many :suggested_tags, source: :story, through: :suggested_taggings, dependent: :destroy
   has_many :suggested_titles, dependent: :destroy
   has_many :suggested_tagging_times,
-    -> { group(:tag_id).select("count(*) as times, tag_id").order("times desc") },
+    -> { group(:tag_id).select("count(*) as times, tag_id").order(times: :desc) },
     class_name: "SuggestedTagging",
     inverse_of: :story
   has_many :suggested_title_times,
-    -> { group(:title).select("count(*) as times, title").order("times desc") },
+    -> { group(:title).select("count(*) as times, title").order(times: :desc) },
     class_name: "SuggestedTitle",
     inverse_of: :story
   has_many :comments,
@@ -68,7 +68,7 @@ class Story < ApplicationRecord
     base(user).not_hidden_by(user)
       .filter_tags(exclude_tags || [])
       .positive_ranked
-      .order("hotness")
+      .order(:hotness)
   }
   scope :recent, ->(user = nil, exclude_tags = nil) {
     base(user).not_hidden_by(user)
@@ -342,7 +342,7 @@ class Story < ApplicationRecord
 
   def self.recalculate_all_hotnesses!
     # do the front page first, since find_each can't take an order
-    Story.order("id DESC").limit(100).each(&:update_cached_columns)
+    Story.order(id: :desc).limit(100).each(&:update_cached_columns)
     Story.find_each(&:update_cached_columns)
     true
   end

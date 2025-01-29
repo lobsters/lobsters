@@ -267,7 +267,7 @@ class CommentsController < ApplicationController
 
     @comments = Comment.accessible_to_user(@user)
       .not_on_story_hidden_by(@user)
-      .order("id DESC")
+      .order(id: :desc)
       .includes(:user, :hat, story: :user)
       .joins(:story).where.not(stories: {is_deleted: true})
       .limit(COMMENTS_PER_PAGE)
@@ -315,7 +315,7 @@ class CommentsController < ApplicationController
 
     @comments = Comment.accessible_to_user(@user)
       .where.not(user_id: @user.id)
-      .order("id DESC")
+      .order(id: :desc)
       .includes(:user, :hat, story: :user)
       .joins(:votes).where(votes: {user_id: @user.id, vote: 1})
       .joins(:story).where.not(stories: {is_deleted: true})

@@ -236,7 +236,7 @@ class HomeController < ApplicationController
     @domain = Domain.find_by!(domain: params[:id])
 
     @stories, @show_more = get_from_cache(domain: @domain.domain) do
-      paginate @domain.stories.base(@user).order("id desc")
+      paginate @domain.stories.base(@user).order(id: :desc)
     end
 
     @title = @domain.domain
@@ -258,7 +258,7 @@ class HomeController < ApplicationController
     @origin = Origin.find_by!(identifier: params[:identifier])
 
     @stories, @show_more = get_from_cache(identifier: @origin.identifier) do
-      paginate @origin.stories.base(@user).order("id desc")
+      paginate @origin.stories.base(@user).order(id: :desc)
     end
 
     @title = @origin.identifier

@@ -3,9 +3,11 @@
 require "rails_helper"
 
 RSpec.feature "Color scheme selection" do
-  scenario "logged out" do
+  scenario "logged out, defer to user's system" do
     visit "/"
-    expect(root_classes).to include("color-scheme-system")
+    expect(page.body).to match("system.*.css")
+    expect(page.body).to_not match("light.*.css")
+    expect(page.body).to_not match("dark.*.css")
   end
 
   context "logged in" do
@@ -13,11 +15,13 @@ RSpec.feature "Color scheme selection" do
 
     let(:user) { create(:user, prefers_color_scheme: preferred) }
 
-    context "with no preference set" do
+    context "with no preference set, user's system" do
       let(:preferred) { :system }
 
       it "uses the system colors" do
-        expect(root_classes).to include("color-scheme-system")
+        expect(page.body).to match("system.*.css")
+        expect(page.body).to_not match("light.*.css")
+        expect(page.body).to_not match("dark.*.css")
       end
     end
 
@@ -25,7 +29,9 @@ RSpec.feature "Color scheme selection" do
       let(:preferred) { :light }
 
       it "uses the system colors" do
-        expect(root_classes).to include("color-scheme-light")
+        expect(page.body).to_not match("system.*.css")
+        expect(page.body).to match("light.*.css")
+        expect(page.body).to_not match("dark.*.css")
       end
     end
 
@@ -33,12 +39,10 @@ RSpec.feature "Color scheme selection" do
       let(:preferred) { :dark }
 
       it "uses the system colors" do
-        expect(root_classes).to include("color-scheme-dark")
+        expect(page.body).to_not match("system.*.css")
+        expect(page.body).to_not match("light.*.css")
+        expect(page.body).to match("dark.*.css")
       end
     end
-  end
-
-  def root_classes
-    page.find("html")["class"].split(" ")
   end
 end

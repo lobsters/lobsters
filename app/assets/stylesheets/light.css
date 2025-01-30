@@ -1,0 +1,73 @@
+/* light color scheme */
+
+:root {
+	/* monochrome */
+	--base-bg: 254 254 254;
+	--base-fg: 51 51 51;
+
+	--opacity-fg: 100%; /* primary text */
+	--opacity-fg-contrast-13: 94%;
+	--opacity-fg-contrast-10: 84%;
+	--opacity-fg-contrast-7-5: 75%;
+	--opacity-fg-contrast-6: 67%;
+	--opacity-fg-contrast-5: 63%;
+	--opacity-fg-contrast-4-5: 59%;
+
+	--opacity-gradient-lit: 0%;
+	--opacity-gradient-shadowed: 13%;
+
+	/* backgrounds and foregrounds */
+	--color-bg-accent: rgb(172 19 13);
+	--color-bg-target: rgb(255 252 215);
+
+	--color-fg-link: rgb(28 89 209);
+	--color-fg-link-visited: rgb(95 134 212);
+	--color-fg-accent: rgb(172 19 13); /* red as in lobste.rs */
+	--color-fg-negative: rgb(139 0 0); /* red as in warning */
+	--color-fg-affirmative: rgb(0 128 0);
+	--color-fg-author: rgb(96 129 189);
+	--color-fg-shape: rgb(187 187 187);
+
+	/* elements */
+	--color-box-bg: #fff;
+	--color-box-bg-shaded: #eee;
+	--color-box-border: #ccc;
+	--color-box-border-focus: #808080;
+
+	--color-button-bg: #fafafa;
+	--color-button-bg-shaded: #e6e6e6;
+
+	--color-table-header-bg: #eaeaea;
+	--color-table-header-border: #cacaca;
+	--color-table-row-bg-even: #f8f8f8;
+	--color-table-row-bg-odd: #f5f5f5;
+	--color-table-row-border: #eaeaea;
+
+	--color-tag-bg: #fffcd7;
+	--color-tag-border: #d5d458;
+	--color-tag-media-bg: #ddebf9;
+	--color-tag-media-border: #b2ccf0;
+	--color-tag-meta-bg: #e0e0e0;
+	--color-tag-meta-border: #c8c8c8;
+
+	--color-hat-crown-fill: #ddd;
+	--color-hat-crown-stroke: #eee;
+	--color-hat-brim-stroke: #bbb;
+
+	--color-flash-bg-error: #fdcfcc;
+	--color-flash-bg-success: #dff0d8;
+	--color-flash-bg-notice: #cce6ee;
+
+	--color-lobsters-fg-has-suggestions: #bd6060;
+
+	--color-lobsters-tag-special-bg: #f9ddde;
+	--color-lobsters-tag-special-border: #f0b2b8;
+
+	--color-lobsters-hat-sysop-crown-fill: #ddc7c7;
+	--color-lobsters-hat-sysop-brim-stroke: #bbb2b2;
+
+	/* mobile */
+	--color-mobile-story-liner-bg: #fbfbfb;
+	--color-mobile-story-comments-bubble-fill: #ccc;
+	--color-mobile-story-comments-bubble-fill-zero: #d8d8d8;
+}

@@ -156,8 +156,16 @@ class UsersController < ApplicationController
   private
 
   def load_showing_user
+    # This is for the enumerator, a bot that agressively tries to enumerate accounts via Tor + VPNs.
+    # At least it's obvious from its outdated user agent? So let's lie to it.
+    @showing_user = if request.user_agent == "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:64.0) Gecko/20100101 Firefox/64.0"
+      if rand(0..100) == 23
+        User.new(username: params[:username], created_at: rand(0..9999).days.ago)
+      end
+    else
+      User.find_by(username: params[:username])
+    end
     # case-insensitive search by username
-    @showing_user = User.find_by(username: params[:username])
 
     if @showing_user.nil?
       @title = "User not found"

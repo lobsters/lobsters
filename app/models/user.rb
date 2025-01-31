@@ -63,6 +63,7 @@ class User < ApplicationRecord
 
   typed_store :settings do |s|
     s.string :prefers_color_scheme, default: "system"
+    s.boolean :prefers_contrast, default: false
     s.boolean :email_notifications, default: false
     s.boolean :email_replies, default: false
     s.boolean :pushover_replies, default: false

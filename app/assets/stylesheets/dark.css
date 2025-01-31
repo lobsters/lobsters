@@ -16,6 +16,12 @@
 	--opacity-gradient-lit: 13%;
 	--opacity-gradient-shadowed: 3%;
 
+	--opacity-shadow-80: 80%;
+	--opacity-shadow-25: 25%;
+	--opacity-shadow-10: 10%;
+
+	--opacity-deleted: 0.6;
+
 	/* backgrounds and foregrounds */
 	--color-bg-accent: rgb(253 78 72);
 	--color-bg-target: rgb(61 53 11);
@@ -24,7 +30,7 @@
 	--color-fg-link-visited: rgb(79 138 255);
 	--color-fg-accent: rgb(207 54 49); /* red as in lobste.rs */
 	--color-fg-negative: rgb(190 45 45); /* red as in warning */
-	--color-fg-affirmative: rgb(42 180 42) ;
+	--color-fg-affirmative: rgb(42 180 42);
 	--color-fg-author: rgb(80 112 177);
 	--color-fg-shape: rgb(80 80 80);
 

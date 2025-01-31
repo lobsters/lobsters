@@ -16,6 +16,12 @@
 	--opacity-gradient-lit: 0%;
 	--opacity-gradient-shadowed: 13%;
 
+	--opacity-shadow-80: 80%;
+	--opacity-shadow-25: 25%;
+	--opacity-shadow-10: 10%;
+
+	--opacity-deleted: 0.6;
+
 	/* backgrounds and foregrounds */
 	--color-bg-accent: rgb(172 19 13);
 	--color-bg-target: rgb(255 252 215);

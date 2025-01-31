@@ -97,6 +97,10 @@ module ApplicationHelper
     }
   end
 
+  def page_count(record_count, entries_per_page)
+    (record_count + entries_per_page - 1) / entries_per_page
+  end
+
   def page_numbers_for_pagination(max, cur)
     if max <= MAX_PAGES
       return (1..max).to_a

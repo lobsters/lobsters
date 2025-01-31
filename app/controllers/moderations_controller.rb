@@ -47,11 +47,10 @@ class ModerationsController < ApplicationController
     end
 
     # paginate
-    @pages = (@moderations.count / ENTRIES_PER_PAGE).ceil
-    @page = moderation_params[:page].to_i
-    if @page == 0
-      @page = 1
-    elsif @page < 0 || @page > (2**32) || @page > @pages
+    @pages = helpers.page_count(@moderations.count, ENTRIES_PER_PAGE)
+    @page = moderation_params.fetch(:page) { 1 }.to_i
+
+    if @page <= 0 || @page > (2**32) || @page > @pages
       raise ActionController::RoutingError.new("page out of bounds")
     end
 

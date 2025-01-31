@@ -27,6 +27,7 @@ Other sites using the Lobsters [codebase](https://github.com/lobsters/lobsters):
 * <s>[DTO](https://dto.pipecraft.net/)</s> - Software development (zh-CN)
 * [Quantum News](https://news.aqora.io) - Quantum Computing and Quantum Physics
 * [Commons News](https://commons.news/) - Progressive Politics
+* [Gamedev City](https://gamedev.city/) - Game Development
 
 ## Cousin Sites
 

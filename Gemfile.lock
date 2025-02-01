@@ -146,6 +146,12 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    google-protobuf (4.29.3)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.29.3-x86_64-linux)
+      bigdecimal
+      rake (>= 13)
     hashdiff (1.1.2)
     hashery (2.1.2)
     hashie (5.0.0)
@@ -237,6 +243,12 @@ GEM
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
+    pg (1.5.9)
+    pg_query (6.0.0)
+      google-protobuf (>= 3.25.3)
+    pg_search (2.3.7)
+      activerecord (>= 6.1)
+      activesupport (>= 6.1)
     propshaft (1.1.0)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
@@ -472,6 +484,9 @@ DEPENDENCIES
   oauth
   parslet
   pdf-reader
+  pg
+  pg_query
+  pg_search
   propshaft
   prosopite
   puma

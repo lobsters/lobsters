@@ -10,24 +10,10 @@ Check the [about page](https://lobste.rs/about) for a high-level overview of the
 
 Other sites using the Lobsters [codebase](https://github.com/lobsters/lobsters):
 
-* <s>[Barnacles](https://www.barnacl.es)</s> ([repo](https://github.com/pushcx/barnacl.es)) - Business
 * [Le Journal du Hacker](https://www.journalduhacker.net/) - Hacker News in French (fr)
-* <s>[CryptoBuzz](https://cryptobuzz.io/)</s> ([repo](https://github.com/lukehamilton/cryptobuzz)) - Cryptocurrency
-* <s>[Kind and Green News](http://news.kindandgreenworld.com/)</s> - Biology
 * [tilde news](https://tilde.news/) ([repo](https://tildegit.org/tildeverse/tilde.news)) - [tildeverse](https://tildeverse.org) links: unix, small web, decentralization
-* <s>[Standard](https://std.bz/)</s> - Cryptocurrency
-* <s>[Gambe.ro](https://gambe.ro)</s> - Software development (it)
-* <s>[Middlebit](https://middlebit.com/)</s> - Content curation for the "no-coast" region of the United States. Site online from late August 2019 through late September 2020.
-* <s>[ACRAB](https://acrab.isi.jhu.edu/)</s> - Applied Cryptography Publications
-* <s>[V2ETH](https://v2eth.com)</s> - Cryptocurrency (Ethereum)
-* <s>[Hipppo](https://hipppo.fm)</s> - Hip-hop
-* [MLN.dev](https://mln.dev/) - Machine learning
 * [DataTau](https://datatau.net/) - Data science newsboard
-* [Khosenk](https://խօսենք.ցանցառներ.հայ/) - computing-focused (hy)
-* <s>[LeftRudder](https://leftrudder.net/)</s> - Aviation
-* <s>[DTO](https://dto.pipecraft.net/)</s> - Software development (zh-CN)
 * [Quantum News](https://news.aqora.io) - Quantum Computing and Quantum Physics
-* [Commons News](https://commons.news/) - Progressive Politics
 * [Gamedev City](https://gamedev.city/) - Game Development
 
 ## Cousin Sites
@@ -40,3 +26,23 @@ Inspired by Lobsters, but not using the Lobsters codebase.
 * [Racket Stories](https://racket-stories.com/) ([repo](https://github.com/soegaard/racket-stories)) - Racket.
 * [Echo JS](https://www.echojs.com/) - Echo JS is a community-driven news site entirely focused on JavaScript development, HTML5, and front-end news
 * [sic](https://sic.pm/) ([repo](https://github.com/epilys/sic) `python3`/`django`) - sic is a community about everything that piques your curiosity and interest. To quote others before us: "anything that gratifies one's intellectual curiosity".
+
+## Defunct sister sites
+
+It's really hard to build up a community to the point that it's self-sustaining.
+Here's a few that didn't make it.
+
+* [Barnacles](https://www.barnacl.es) ([repo](https://github.com/pushcx/barnacl.es)) - Business
+* [CryptoBuzz](https://cryptobuzz.io/) ([repo](https://github.com/lukehamilton/cryptobuzz)) - Cryptocurrency
+* [Kind and Green News](http://news.kindandgreenworld.com/) - Biology
+* [Standard](https://std.bz/) - Cryptocurrency
+* [Gambe.ro](https://gambe.ro) - Software development (it)
+* [Middlebit](https://middlebit.com/) - Content curation for the "no-coast" region of the United States. Site online from late August 2019 through late September 2020.
+* [ACRAB](https://acrab.isi.jhu.edu/) - Applied Cryptography Publications
+* [V2ETH](https://v2eth.com) - Cryptocurrency (Ethereum)
+* [Hipppo](https://hipppo.fm) - Hip-hop
+* [LeftRudder](https://leftrudder.net/) - Aviation
+* [DTO](https://dto.pipecraft.net/) - Software development (zh-CN)
+* [MLN.dev](https://mln.dev/) - Machine learning
+* [Khosenk](https://խօսենք.ցանցառներ.հայ/) - computing-focused (hy)
+* [Commons News](https://commons.news/) - Progressive Politics

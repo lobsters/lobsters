@@ -6,6 +6,7 @@ class Story < ApplicationRecord
   belongs_to :origin, optional: true, counter_cache: true
   belongs_to :merged_into_story,
     class_name: "Story",
+    counter_cache: :stories_count,
     foreign_key: "merged_story_id",
     inverse_of: :merged_stories,
     optional: true

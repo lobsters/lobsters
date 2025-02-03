@@ -300,6 +300,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_24_063340) do
     t.string "mastodon_id", limit: 25
     t.bigint "origin_id"
     t.datetime "last_comment_at"
+    t.integer "stories_count", default: 0, null: false
     t.index ["created_at"], name: "index_stories_on_created_at"
     t.index ["domain_id"], name: "index_stories_on_domain_id"
     t.index ["hotness"], name: "hotness_idx"

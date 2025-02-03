@@ -1,1 +1,0 @@
-Page moved to: https://lobste.rs/chat

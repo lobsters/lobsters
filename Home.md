@@ -1,9 +1,10 @@
-Welcome to the [lobsters](https://lobste.rs/) wiki! Check the [about page](https://lobste.rs/about) for a high-level overview of the Lobsters community and its history.
+Welcome to the [lobsters](https://lobste.rs/) wiki!
+Check the [about page](https://lobste.rs/about) for a high-level overview of the Lobsters community and its history.
 
 ## Community
 
-* chat on [IRC](IRC)
-* follow on [twitter](https://twitter.com/lobsters)
+ * General chat on [IRC](https://lobste.rs)
+ * Code discussion and announcements for people who run sister sites [on Zulip](https://losbters.zulipchat.com)
 
 ## Sister Sites
 

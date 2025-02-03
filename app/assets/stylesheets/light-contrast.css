@@ -1,0 +1,79 @@
+/* light color scheme (contrast) */
+
+:root {
+	/* monochrome */
+	--base-bg: 255 255 255;
+	--base-fg: 0 0 0;
+
+	--opacity-fg: 100%; /* primary text */
+	--opacity-fg-contrast-13: 100%;
+	--opacity-fg-contrast-10: 99%;
+	--opacity-fg-contrast-7-5: 98%;
+	--opacity-fg-contrast-6: 97%;
+	--opacity-fg-contrast-5: 96%;
+	--opacity-fg-contrast-4-5: 95%;
+
+	--opacity-gradient-lit: 0%;
+	--opacity-gradient-shadowed: 20%;
+
+	--opacity-shadow-80: 80%;
+	--opacity-shadow-25: 70%;
+	--opacity-shadow-10: 60%;
+
+	--opacity-deleted: 0.7;
+
+	/* backgrounds and foregrounds */
+	--color-bg-accent: rgb(190 0 0);
+	--color-bg-target: rgb(255 255 200);
+
+	--color-fg-link: rgb(0 0 238);
+	--color-fg-link-visited: rgb(85 26 139);
+	--color-fg-accent: rgb(190 0 0); /* red as in lobste.rs */
+	--color-fg-negative: rgb(170 0 0); /* red as in warning */
+	--color-fg-affirmative: rgb(0 100 0);
+	--color-fg-author: rgb(47 84 150);
+	--color-fg-shape: rgb(128 128 128);
+
+	/* elements */
+	--color-box-bg: #fff;
+	--color-box-bg-shaded: #ddd;
+	--color-box-border: #666;
+	--color-box-border-focus: #000;
+
+	--color-button-bg: #fff;
+	--color-button-bg-shaded: #ddd;
+
+	--color-table-header-bg: #d0d0d0;
+	--color-table-header-border: #999;
+	--color-table-row-bg-even: #fff;
+	--color-table-row-bg-odd: #f0f0f0;
+	--color-table-row-border: #999;
+
+	--color-tag-bg: #fff7b3;
+	--color-tag-border: #b3a000;
+	--color-tag-media-bg: #cbe5ff;
+	--color-tag-media-border: #0066cc;
+	--color-tag-meta-bg: #e0e0e0;
+	--color-tag-meta-border: #666;
+
+	--color-hat-crown-fill: #dadada;
+	--color-hat-crown-stroke: #999;
+	--color-hat-brim-stroke: #bbb;
+
+	--color-flash-bg-error: #ffb8b8;
+	--color-flash-bg-success: #b5eab5;
+	--color-flash-bg-notice: #cbe5ff;
+
+	--color-lobsters-fg-has-suggestions: #990000;
+
+	--color-lobsters-tag-special-bg: #ffcccc;
+	--color-lobsters-tag-special-border: #cc0000;
+
+	--color-lobsters-hat-sysop-crown-fill: #eea7a7;
+	--color-lobsters-hat-sysop-brim-stroke: #cc8080;
+
+	/* mobile */
+	--color-mobile-story-liner-bg: #fff;
+	--color-mobile-story-comments-bubble-fill: #999;
+	--color-mobile-story-comments-bubble-fill-zero: #666;
+}

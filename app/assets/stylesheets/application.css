@@ -20,9 +20,9 @@
 
 	--base-shadow: 0 0 0;
 	--color-shadow: rgb(var(--base-shadow));
-	--color-shadow-80: rgb(var(--base-shadow) / 80%);
-	--color-shadow-25: rgb(var(--base-shadow) / 25%);
-	--color-shadow-10: rgb(var(--base-shadow) / 10%);
+	--color-shadow-80: rgb(var(--base-shadow) / var(--opacity-shadow-80));
+	--color-shadow-25: rgb(var(--base-shadow) / var(--opacity-shadow-25));
+	--color-shadow-10: rgb(var(--base-shadow) / var(--opacity-shadow-10));
 }
 
 /* generics */
@@ -769,7 +769,7 @@ li.story.saved a.saver {
 }
 
 li.story.deleted {
-	opacity: 0.6;
+	opacity: var(--opacity-deleted);
 }
 li.story.deleted a {
 	color: var(--color-fg-contrast-5) !important;

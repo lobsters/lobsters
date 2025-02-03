@@ -1,2 +1,6 @@
-@import url("light.css"); /* light is default */
-@import url("dark.css") (prefers-color-scheme: dark);
+/* system color scheme */
+
+@import url("light.css"); /* default */
+@import url("light-contrast.css") (not (prefers-color-scheme: dark)) and (prefers-contrast: more);
+@import url("dark.css") (prefers-color-scheme: dark) and (not (prefers-contrast: more));
+@import url("dark-contrast.css") (prefers-color-scheme: dark) and (prefers-contrast: more);

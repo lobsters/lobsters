@@ -180,6 +180,24 @@
 
     <br>
 
+    <h2>Color Settings</h2>
+
+    <div class="boxline">
+      <%= f.label :prefers_color_scheme, "Color Scheme:", :class => "required" %>
+      <label><%= f.radio_button :prefers_color_scheme, :system %> System (<a href="https://lobste.rs/s/eg1n75/dark_mode">details</a>)</label>
+      <label><%= f.radio_button :prefers_color_scheme, :light %> Light</label>
+      <label><%= f.radio_button :prefers_color_scheme, :dark %> Dark</label>
+    </div>
+
+    <div class="boxline">
+      <%= f.label :prefers_contrast, "Contrast:", :class => "required" %>
+      <label><%= f.radio_button :prefers_contrast, :false %> System</label>
+      <label><%= f.radio_button :prefers_contrast, :true %> High</label>
+    </div>
+
+    <br>
+    <br>
+
     <h2>Miscellaneous Settings</h2>
 
     <div class="boxline">
@@ -200,13 +218,6 @@
     <div class="boxline">
       <%= f.label :show_avatars, "Show User Avatars:", :class => "required" %>
       <%= f.check_box :show_avatars %>
-    </div>
-
-    <div class="boxline">
-      <%= f.label :prefers_color_scheme, "Color Scheme:", :class => "required" %>
-      <label><%= f.radio_button :prefers_color_scheme, :system %> System (<a href="https://lobste.rs/s/eg1n75/dark_mode">details</a>)</label>
-      <label><%= f.radio_button :prefers_color_scheme, :light %> Light</label>
-      <label><%= f.radio_button :prefers_color_scheme, :dark %> Dark</label>
     </div>
 
     <br>

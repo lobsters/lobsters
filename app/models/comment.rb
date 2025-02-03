@@ -3,7 +3,8 @@
 class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :story,
-    inverse_of: :comments
+    inverse_of: :comments,
+    touch: :last_comment_at
   # has_one :comment_stat, -> { where("date(created_at)",  }
   has_many :votes,
     dependent: :delete_all
@@ -527,7 +528,7 @@ class Comment < ApplicationRecord
         ) as comments_recursive on comments.id = comments_recursive.id
       SQL
             )
-      .order("id asc")
+      .order(id: :asc)
   end
 
   def path

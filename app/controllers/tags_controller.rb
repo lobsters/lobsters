@@ -7,7 +7,7 @@ class TagsController < ApplicationController
   def index
     @title = "Tags"
 
-    @categories = Category.all.order("category asc").includes(:tags)
+    @categories = Category.order(category: :asc).includes(:tags)
     @tags = Tag.all
 
     @filtered_tags = if @user

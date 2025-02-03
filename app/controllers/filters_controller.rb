@@ -7,11 +7,9 @@ class FiltersController < ApplicationController
   def index
     @title = "Filtered Tags"
 
-    @categories = Category.all
-      .order("category asc, tags.tag asc")
-      .eager_load(:tags)
-      .references(:tags)
-      .where("tags.active = true")
+    @categories = Category.includes(:tags)
+      .where(tags: {active: true})
+      .order([categories: {category: :asc}, tags: {tag: :asc}])
 
     # perf: three queries is much faster than joining, grouping on tags.id for counts
     @story_counts = Tagging.group(:tag_id).count

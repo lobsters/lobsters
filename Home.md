@@ -13,7 +13,6 @@ Other sites using the Lobsters [codebase](https://github.com/lobsters/lobsters):
 * [Le Journal du Hacker](https://www.journalduhacker.net/) - Hacker News in French (fr)
 * [tilde news](https://tilde.news/) ([repo](https://tildegit.org/tildeverse/tilde.news)) - [tildeverse](https://tildeverse.org) links: unix, small web, decentralization
 * [DataTau](https://datatau.net/) - Data science newsboard
-* [Quantum News](https://news.aqora.io) - Quantum Computing and Quantum Physics
 * [Gamedev City](https://gamedev.city/) - Game Development
 
 ## Cousin Sites
@@ -46,3 +45,4 @@ Here's a few that didn't make it.
 * [MLN.dev](https://mln.dev/) - Machine learning
 * [Khosenk](https://խօսենք.ցանցառներ.հայ/) - computing-focused (hy)
 * [Commons News](https://commons.news/) - Progressive Politics
+* [Quantum News](https://news.aqora.io) - Quantum Computing and Quantum Physics. Used to use lobste.rs, not anymore.

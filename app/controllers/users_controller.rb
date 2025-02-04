@@ -46,7 +46,7 @@ class UsersController < ApplicationController
     elsif params[:moderators]
       @users = User.select(*attrs)
         .where(is_admin: true)
-        .or(where(is_moderator: true))
+        .or(User.where(is_moderator: true))
         .order(id: :asc).to_a
       @user_count = @users.length
       @title = "Moderators and Administrators"

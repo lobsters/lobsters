@@ -13,6 +13,23 @@ describe "users controller" do
     end
   end
 
+  describe "tree" do
+    let!(:user) { create(:user, username: "alice") }
+    let!(:mod) { create(:user, :moderator, username: "bob") }
+
+    it "displays all users" do
+      get "/users"
+      expect(response.body).to include("alice")
+      expect(response.body).to include("bob")
+    end
+
+    it "lists mods" do
+      get "/users?moderators=1"
+      expect(response.body).to_not include("alice")
+      expect(response.body).to include("bob")
+    end
+  end
+
   describe "user standing" do
     let!(:bad_user) { create(:user) }
 

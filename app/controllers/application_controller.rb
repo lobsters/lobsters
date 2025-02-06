@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
 
   # match this nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
-  CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
+  CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? && !Maxmind.uk?(request.remote_ip) }
 
   # Rails misdesign: if the /recent route doesn't support .rss, Rails calls it anyways and then
   # raises MissingTemplate when it's not handled, as if the app did something wrong (a prod 500!).

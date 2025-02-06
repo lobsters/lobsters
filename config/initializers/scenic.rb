@@ -7,7 +7,17 @@ scenic_multidb_adapter = Class.new do
   end
 
   def method_missing(...)
-    adapter = case ActiveRecord::Base.connection
+    adapter.__send__(...)
+  end
+
+  def respond_to_missing? name, include_private
+    adapter.respond_to? name
+  end
+
+  private
+
+  def adapter
+    case ActiveRecord::Base.connection
     when ActiveRecord::ConnectionAdapters::TrilogyAdapter
       @mysql
     when ActiveRecord::ConnectionAdapters::SQLite3Adapter
@@ -15,8 +25,6 @@ scenic_multidb_adapter = Class.new do
     else
       raise "Unsupported adapter"
     end
-
-    adapter.__send__(...)
   end
 end
 

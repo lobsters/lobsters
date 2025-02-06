@@ -15,6 +15,7 @@ gem "mission_control-jobs"
 # rails
 gem "scenic"
 gem "scenic-mysql_adapter"
+gem "scenic_sqlite_adapter"
 gem "activerecord-typedstore"
 gem "propshaft"
 gem "importmap-rails", "~> 2.0"

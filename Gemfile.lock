@@ -355,6 +355,8 @@ GEM
       railties (>= 4.0.0)
     scenic-mysql_adapter (1.1.0)
       scenic (>= 1.4.0)
+    scenic_sqlite_adapter (0.1.0)
+      activerecord (>= 4.0.0)
     securerandom (0.4.1)
     silencer (2.0.0)
     simplecov (0.22.0)
@@ -484,6 +486,7 @@ DEPENDENCIES
   rspec-rails
   scenic
   scenic-mysql_adapter
+  scenic_sqlite_adapter
   silencer
   simplecov
   sitemap_generator

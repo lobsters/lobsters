@@ -191,8 +191,9 @@
 
     <div class="boxline">
       <%= f.label :prefers_contrast, "Contrast:", :class => "required" %>
-      <label><%= f.radio_button :prefers_contrast, :false %> System</label>
-      <label><%= f.radio_button :prefers_contrast, :true %> High</label>
+      <label><%= f.radio_button :prefers_contrast, :system %> System</label>
+      <label><%= f.radio_button :prefers_contrast, :normal %> Normal</label>
+      <label><%= f.radio_button :prefers_contrast, :high %> High</label>
     </div>
 
     <div class="boxline">

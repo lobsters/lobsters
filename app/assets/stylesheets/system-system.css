@@ -1,0 +1,6 @@
+/* system color scheme (system contrast) */
+
+@import url("light-normal.css"); /* default */
+@import url("light-high.css") (not (prefers-color-scheme: dark)) and (prefers-contrast: more);
+@import url("dark-normal.css") (prefers-color-scheme: dark) and (not (prefers-contrast: more));
+@import url("dark-high.css") (prefers-color-scheme: dark) and (prefers-contrast: more);

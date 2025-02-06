@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_03_223624) do
-  create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+ActiveRecord::Schema[8.0].define(version: 2025_02_06_172739) do
+  create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
     t.string "message_checksum", null: false
@@ -55,7 +55,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_03_223624) do
     t.index ["category"], name: "index_categories_on_category", unique: true
   end
 
-  create_table "comment_stats", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "comment_stats", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.date "date", null: false
     t.integer "average", null: false
     t.index ["date"], name: "index_comment_stats_on_date", unique: true

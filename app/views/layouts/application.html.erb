@@ -119,21 +119,28 @@
   </div>
 
   <footer>
-    <%= link_to 'About', about_path %>
-    <% if !@user && Rails.application.open_signups? %>
-      <a href="/invitations/open">Join <%= Rails.application.name %></a>
+    <% if File.exist?('tmp/office_hours_live.txt') %>
+      <span id="office-hours-live">
+      The <a href="https://lobste.rs/s/zzprkr/weekly_lobsters_office_hours">office hours stream</a> is <a href="https://twitch.tv/pushcx">currently live ⏵</a>
+      </span>
     <% end %>
-    <% if @user && @user.can_see_invitation_requests? &&
-          (iqc = InvitationRequest.verified_count) > 0 %>
-      <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
-    <% end %>
-    <%= link_to 'Tags', tags_path %>
-    <% if @user && @user.is_moderator? && (hrc = HatRequest.count) > 0 %>
-      <%= link_to "#{hrc} Hat Requests", hat_requests_path, class: 'mod' %>
-    <% end %>
-    <%= link_to 'Filter', filters_path %>
-    <%= link_to 'Moderation Log', moderations_path %>
 
+    <nav>
+      <%= link_to 'About', about_path %>
+      <% if !@user && Rails.application.open_signups? %>
+        <a href="/invitations/open">Join <%= Rails.application.name %></a>
+      <% end %>
+      <% if @user && @user.can_see_invitation_requests? &&
+            (iqc = InvitationRequest.verified_count) > 0 %>
+        <a href="/invitations">Invitation Queue (<%= iqc %>)</a>
+      <% end %>
+      <%= link_to 'Tags', tags_path %>
+      <% if @user && @user.is_moderator? && (hrc = HatRequest.count) > 0 %>
+        <%= link_to "#{hrc} Hat Requests", hat_requests_path, class: 'mod' %>
+      <% end %>
+      <%= link_to 'Filter', filters_path %>
+      <%= link_to 'Moderation Log', moderations_path %>
+    </nav>
   </footer>
 
   <% if Maxmind.uk?(request.remote_ip) || Rails.env.development? %>

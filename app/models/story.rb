@@ -274,7 +274,7 @@ class Story < ApplicationRecord
   def check_not_pushcx_stream
     return unless url.present? && new_record? &&
       url.start_with?("https://push.cx/stream", "https://twitch.tv/pushcx")
-    errors.add(:url, "is too meta, we don't need it twice every week. Details: https://lobste.rs/c/skuxo9")
+    errors.add(:url, "is too much meta, we don't need it twice every week. Details: https://lobste.rs/c/skuxo9")
   end
 
   def comments_closing_soon?

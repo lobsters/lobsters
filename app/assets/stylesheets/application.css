@@ -406,14 +406,16 @@ footer {
 	display: flex;
 	height: 2em;
 	line-height: 1em;
-	padding: 0.5em;
-	justify-content: end;
+	padding: 2em 0.5em;
+	justify-content: space-between;
 	width: 100%;
 }
 footer a {
 	color: var(--color-fg-contrast-4-5);
-	text-decoration: none;
+}
+footer nav a {
 	padding-left: 0.75em;
+	text-decoration: none;
 }
 
 

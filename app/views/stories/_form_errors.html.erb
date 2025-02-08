@@ -36,7 +36,7 @@
           <% linking_comments.each do |link| %>
             <li>
               Comment <%= link_to link.from_comment.short_id, link.from_comment.url %>
-              <%= time_ago_in_words link.from_comment.updated_at %>:
+              <%= time_ago_in_words link.from_comment.last_edited_at %>:
               <%= raw excerpt_fragment_around_link(link.from_comment.markeddown_comment, story.url) %>
             </li>
           <% end %>

@@ -138,6 +138,42 @@ describe Comment do
     expect(sent_emails[0].subject).to match(/Reply from #{sender.username}/)
   end
 
+  context "parent_comment last_reply_at" do
+    let(:parent_comment) { create(:comment) }
+
+    it "correctly sets last_reply_at of parent comment and doesn't update it when child comment updates" do
+      expect(parent_comment.last_reply_at).to be_nil
+
+      reply1 = nil
+      Timecop.travel(5) do
+        reply1 = create(:comment, parent_comment: parent_comment)
+
+        expect(parent_comment.last_reply_at).to eq(reply1.created_at)
+        # but updated_at remains unchanged
+        expect(parent_comment.updated_at).to eq(parent_comment.created_at)
+      end
+
+      Timecop.travel(10) do
+        reply1.update!(comment: reply1.comment + "\nEDIT\n")
+
+        expect(reply1.updated_at).to be >= (reply1.created_at + 5.seconds)
+
+        # last_reply_at and updated_at remain unchanged
+        expect(parent_comment.last_reply_at).to eq(reply1.created_at)
+        expect(parent_comment.updated_at).to eq(parent_comment.created_at)
+      end
+
+      Timecop.travel(20) do
+        reply2 = create(:comment, parent_comment: parent_comment)
+
+        # last_reply_at is updated
+        expect(parent_comment.last_reply_at).to eq(reply2.created_at)
+        # but updated_at remains unchanged
+        expect(parent_comment.updated_at).to eq(parent_comment.created_at)
+      end
+    end
+  end
+
   it "subtracts karma if mod intervenes" do
     author = create(:user)
     voter = create(:user)

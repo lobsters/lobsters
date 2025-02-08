@@ -70,6 +70,7 @@ group :test, :development do
   gem "standard-performance"
   gem "standard-rails"
   gem "super_diff"
+  gem "timecop"
   gem "faker"
   gem "byebug"
   gem "rb-readline"

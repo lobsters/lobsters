@@ -12,8 +12,7 @@ class Comment < ApplicationRecord
     class_name: "Comment",
     inverse_of: false,
     optional: true,
-    counter_cache: :reply_count,
-    touch: :last_reply_at
+    counter_cache: :reply_count
   has_one :moderation,
     class_name: "Moderation",
     inverse_of: :comment,
@@ -35,7 +34,7 @@ class Comment < ApplicationRecord
     assign_thread_id_and_depth
   end
   after_create :record_initial_upvote, :mark_submitter, :deliver_notifications,
-    :log_hat_use
+    :log_hat_use, :update_parent_comment_last_reply_at
   after_destroy :unassign_votes
   after_save :recreate_links
 
@@ -483,6 +482,12 @@ class Comment < ApplicationRecord
 
   def mark_submitter
     Keystore.increment_value_for("user:#{user_id}:comments_posted")
+  end
+
+  def update_parent_comment_last_reply_at
+    return if parent_comment.nil?
+
+    parent_comment.update_column(:last_reply_at, created_at)
   end
 
   def mailing_list_message_id

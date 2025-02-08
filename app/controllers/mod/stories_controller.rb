@@ -14,6 +14,7 @@ class Mod::StoriesController < Mod::ModeratorController
   end
 
   def update
+    @story.last_edited_at = Time.current
     @story.is_deleted = false
     @story.editor = @user
     @story.attributes = story_params

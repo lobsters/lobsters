@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_06_172739) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_08_222418) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -82,6 +82,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_06_172739) do
     t.integer "depth", default: 0, null: false
     t.integer "reply_count", default: 0, null: false
     t.datetime "last_reply_at"
+    t.datetime "last_edited_at", null: false
     t.index ["comment"], name: "index_comments_on_comment", type: :fulltext
     t.index ["confidence"], name: "confidence_idx"
     t.index ["hat_id"], name: "comments_hat_id_fk"
@@ -304,6 +305,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_06_172739) do
     t.bigint "origin_id"
     t.datetime "last_comment_at"
     t.integer "stories_count", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.datetime "last_edited_at", null: false
     t.index ["created_at"], name: "index_stories_on_created_at"
     t.index ["domain_id"], name: "index_stories_on_domain_id"
     t.index ["hotness"], name: "hotness_idx"

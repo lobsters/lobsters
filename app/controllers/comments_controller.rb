@@ -187,6 +187,7 @@ class CommentsController < ApplicationController
     end
 
     comment.comment = params[:comment]
+    comment.last_edited_at = Time.current
     comment.hat_id = nil
     comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
 

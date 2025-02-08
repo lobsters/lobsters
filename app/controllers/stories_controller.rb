@@ -222,6 +222,7 @@ class StoriesController < ApplicationController
       return redirect_to "/"
     end
 
+    @story.last_edited_at = Time.current
     @story.is_deleted = false
     @story.editor = @user
     update_story_attributes

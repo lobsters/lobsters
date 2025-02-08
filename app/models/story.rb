@@ -128,6 +128,7 @@ class Story < ApplicationRecord
   validates :is_deleted, :is_moderated, :user_is_author, :user_is_following, inclusion: {in: [true, false]}
   validates :score, :flags, :hotness, :comments_count, presence: true
   validates :normalized_url, length: {maximum: 255, allow_nil: true}
+  validates :last_edited_at, presence: true
 
   validates_each :merged_story_id do |record, _attr, value|
     if value.to_i == record.id
@@ -165,10 +166,9 @@ class Story < ApplicationRecord
     :is_saved_by_cur_user, :moderation_reason, :previewing
   attr_writer :fetched_response
 
-  before_validation :assign_short_id_and_score, on: :create
+  before_validation :assign_initial_attributes, on: :create
   before_save :log_moderation
   before_save :fix_bogus_chars
-  before_create :assign_initial_hotness
   after_create :mark_submitter, :record_initial_upvote
   after_save :recreate_links, :update_cached_columns, :update_story_text
 
@@ -400,13 +400,11 @@ class Story < ApplicationRecord
     js
   end
 
-  def assign_initial_hotness
-    self.hotness = calculated_hotness
-  end
-
-  def assign_short_id_and_score
+  def assign_initial_attributes
     self.short_id = ShortId.new(self.class).generate
     self.score ||= 1 # tests are allowed to fake out the score
+    self.hotness = calculated_hotness
+    self.last_edited_at = Time.current
   end
 
   def calculated_hotness

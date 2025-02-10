@@ -404,8 +404,6 @@ header .inbox_unread {
 footer {
 	box-sizing: border-box;
 	display: flex;
-	height: 2em;
-	line-height: 1em;
 	padding: 2em 0.5em;
 	justify-content: space-between;
 	width: 100%;
@@ -1793,9 +1791,8 @@ input[type="submit"].link_post.pushover_button {
 		margin-left: 0rem;
 	}
 
-	footer {
-		text-align: center;
-		float: none;
+	footer nav {
+		text-align: right;
 	}
 	.indent {
 		margin-left: 2em;

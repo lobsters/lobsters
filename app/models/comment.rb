@@ -4,7 +4,7 @@ class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :story,
     inverse_of: :comments,
-    touch: :last_comment_at
+    touch: true
   # has_one :comment_stat, -> { where("date(created_at)",  }
   has_many :votes,
     dependent: :delete_all
@@ -13,7 +13,7 @@ class Comment < ApplicationRecord
     inverse_of: false,
     optional: true,
     counter_cache: :reply_count,
-    touch: :last_reply_at
+    touch: true
   has_one :moderation,
     class_name: "Moderation",
     inverse_of: :comment,
@@ -30,10 +30,11 @@ class Comment < ApplicationRecord
   attr_accessor :current_vote, :previewing, :vote_summary
 
   before_validation :assign_initial_attributes, on: :create
-  after_create :record_initial_upvote, :mark_submitter, :deliver_notifications,
-    :log_hat_use
   after_destroy :unassign_votes
-  after_save :recreate_links
+  # Calling :record_initial_upvote from after_commit instead of after_create minimizes how many
+  # queries happen inside the transaction, which seems to be the cause of bug #1238.
+  after_commit :deliver_notifications, :log_hat_use, :mark_submitter, :record_initial_upvote, on: :create
+  after_commit :recreate_links
 
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, -> { where(is_deleted: false) }
@@ -171,9 +172,6 @@ class Comment < ApplicationRecord
     end
 
     js
-  end
-
-  def assign_initial_confidence
   end
 
   def assign_initial_attributes

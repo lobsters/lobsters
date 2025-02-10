@@ -49,6 +49,10 @@ class CommentsController < ApplicationController
 
     if comment.valid? && params[:preview].blank? && comment.save
       comment.current_vote = {vote: 1}
+      comment.story.touch(:last_comment_at)
+      # not using .touch because the :touch on the parent_comment association will already touch the
+      # upated_at columns up the reply chain to the story once
+      comment.parent_comment&.update_column(:last_reply_at, Time.current)
       render_created_comment(comment)
     else
       comment.score = 1
@@ -195,6 +199,9 @@ class CommentsController < ApplicationController
       votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, [comment.id])
       comment.current_vote = votes[comment.id]
       comment.vote_summary = Vote.comment_vote_summaries([comment.id])[comment.id]
+      # not using .touch because the :touch on the parent_comment association will already touch the
+      # upated_at columns up the reply chain to the story once
+      comment.parent_comment&.touch(:last_reply_at)
 
       render partial: "comments/comment",
         layout: false,
@@ -225,7 +232,7 @@ class CommentsController < ApplicationController
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
-      1, comment.story_id, comment.id, @user.id, params[:reason]
+      1, comment.story_id, comment.id, @user.id, nil
     )
 
     render plain: "ok"

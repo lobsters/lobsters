@@ -129,6 +129,14 @@ class Vote < ApplicationRecord
     v = Vote.where(user_id: user_id, story_id: story_id,
       comment_id: comment_id).first_or_initialize
 
+    # AR wraps a transaction around INSERTing to votes. I don't know why, but it also SELECTs the
+    # associated story even though there isn't a touch: or callback on the association. This can
+    # lead to a rare deadlock if someone is creating a story at the some time, because that has to
+    # lock the stories table and then votes. This next line eagerly loads the associated story so
+    # the SELECT doesn't happen during the transaction INSERTing to votes. Oddly, this doesn't
+    # happen with associated comments.
+    v.story if story_id.present?
+
     return if !v.new_record? && v.vote == new_vote # done if there's no change
 
     # score deltas when flags no longer affect scores

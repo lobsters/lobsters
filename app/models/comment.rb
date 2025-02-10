@@ -532,8 +532,6 @@ class Comment < ApplicationRecord
     Vote.create! story: story, comment: self, user: user, vote: 1
 
     update_score_and_recalculate! 0, 0 # trigger db calculation
-
-    story.update_cached_columns
   end
 
   def score_for_user(u)

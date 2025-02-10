@@ -13,9 +13,8 @@ because the code is available under a [permissive license](https://github.com/lo
 We welcome bug reports and code contributions that help use improve [lobste.rs](https://lobste.rs).
 As a volunteer project we're reluctant to take on work that's not useful to our site, so please understand if we don't want to adopt your custom feature.
 
-As of February 2025 we have a [Zulip-based chat room]() to discuss the codebase and offer limited support to owners of sister sites like warnings about breaking changes and vulnerability announcements.
+As of February 2025 we have a [Zulip-based chat room](https://lobsters.zulipchat.com) to discuss the codebase and offer limited support to owners of sister sites like warnings about breaking changes and vulnerability announcements.
 If you run a site using the codebase, you will benefit from joining!
-
 
 #### Contributing bugfixes and new features
 

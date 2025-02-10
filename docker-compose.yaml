@@ -1,5 +1,17 @@
----
+
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        RUBY_VERSION: ${RUBY_VERSION}
+    volumes:
+      - .:/lobsters
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
   db:
     image: "docker.io/library/mariadb:11"
     restart: always

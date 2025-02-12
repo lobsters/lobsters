@@ -1,0 +1,32 @@
+# Use an official Ruby image as a base
+ARG RUBY_VERSION
+FROM ruby:${RUBY_VERSION}
+
+# Install dependencies
+RUN apt-get update -qq && apt-get install -y \
+  build-essential \
+  libjemalloc2 \
+  libvips \
+  mariadb-client \
+  vim
+
+# Set working directory
+WORKDIR /lobsters
+
+# Install Bundler
+RUN gem install bundler
+
+# Copy Gemfile and Gemfile.lock
+COPY Gemfile Gemfile.lock ./
+
+# Install gems
+RUN bundle install
+
+
+ENV DATABASE_HOST db
+
+# Expose port for Rails server
+EXPOSE 3000
+
+# Command to start the Rails server
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

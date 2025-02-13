@@ -147,6 +147,11 @@ module ApplicationHelper
     end
   end
 
+  # https://discuss.rubyonrails.org/t/proposal-changing-default-value-of-open-to-true-in-the-tag-method-in-actionview-taghelper/82297/2
+  def tag name = nil, options = nil, open = true, escape = true
+    super
+  end
+
   def tag_link(tag)
     link_to tag.tag, tag_path(tag), class: tag.css_class, title: tag.description
   end

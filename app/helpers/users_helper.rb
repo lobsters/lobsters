@@ -53,7 +53,7 @@ module UsersHelper
     end
     html_options.delete(:class) if html_options[:class].empty?
 
-    link_to(user.username, user, html_options)
+    link_to(user.username, user_path(user), html_options)
   end
 
   def user_karma(user)

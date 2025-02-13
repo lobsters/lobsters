@@ -48,6 +48,7 @@ gem "stackprof"
 gem "prosopite"
 
 gem "builder" # for rss
+gem "faker" # for factory data and /cabinet
 gem "oauth" # for linking accounts
 gem "mail" # for parsing incoming mail
 gem "sitemap_generator" # for better search engine indexing
@@ -70,7 +71,6 @@ group :test, :development do
   gem "standard-performance"
   gem "standard-rails"
   gem "super_diff"
-  gem "faker"
   gem "byebug"
   gem "rb-readline"
   gem "vcr"

@@ -244,7 +244,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
 
     <div class="byline">
       <% if (@user && @user.show_avatars?) || !@user %>
-        <%= link_to avatar_img(story.user, 16), story.user %>
+        <%= link_to avatar_img(story.user, 16), user_path(story.user) %>
       <% end %>
       <% if story.previewing %>
         <% if story.user_is_author? %>

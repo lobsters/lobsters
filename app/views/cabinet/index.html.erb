@@ -1,0 +1,54 @@
+<p>
+This page renders site components with test data in various states and contexts for easier debugging.
+It's public because why not.
+</p>
+
+<%
+moderator = User.new(username: Faker::Internet.user_name, is_moderator: true)
+
+story_without_merges = Story.new(
+  short_id: 'st0mrg',
+  user: User.new(username: Faker::Internet.user_name, created_at: 1.year.ago),
+  title: Faker::Lorem.sentence(word_count: rand(3..12)),
+  tags_a: [Tag.last],
+  url: Faker::Internet.url,
+  created_at: Time.current,
+)
+
+story_with_merges = story_without_merges.dup
+# dup doesn't copy associations or default timestamps
+story_with_merges.user = story_without_merges.user
+story_with_merges.created_at = story_without_merges.created_at
+# add merged stories
+story_with_merges.stories_count = 2
+story_with_merges.merged_stories << story_without_merges
+story_with_merges.merged_stories << story_without_merges
+
+%>
+
+<h1>story _listdetail in a list, as on homepage, 0 merged stories, visitor</h1>
+<ol class="stories">
+<%= render partial: 'stories/listdetail', locals: { story: story_without_merges } %>
+</ol>
+
+<% as_user moderator do %>
+  <h1>story _listdetail, as header for single story view, 0 merged stories, moderator</h1>
+  <ol class="stories">
+  <%= render partial: 'stories/listdetail', locals: { story: story_without_merges, single_story: true } %>
+  </ol>
+<% end %>
+
+<h1>story _listdetail in a list, as on homepage, 0 merged stories, visitor</h1>
+<ol class="stories">
+<%= render partial: 'stories/listdetail', locals: { story: story_without_merges } %>
+</ol>
+
+<h1>story _listdetail in a list, as on homepage, with 2 stories merged in, visitor</h1>
+<ol class="stories">
+<%= render partial: 'stories/listdetail', locals: { story: story_with_merges } %>
+</ol>
+
+<h1>story _listdetail, as header for single story view, with 2 stories merged in, visitor</h1>
+<ol class="stories">
+<%= render partial: 'stories/listdetail', locals: { story: story_with_merges, single_story: true } %>
+</ol>

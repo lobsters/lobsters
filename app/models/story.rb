@@ -600,6 +600,8 @@ class Story < ApplicationRecord
   end
 
   def is_editable_by_user?(user)
+    return false if user.nil? || user.new_record? # assumption: cabinet view
+
     if user&.id == user_id
       if is_moderated?
         false
@@ -990,7 +992,7 @@ class Story < ApplicationRecord
   end
 
   def url_is_editable_by_user?(user)
-    if new_record?
+    if new_record? # assumption: can only see it previewing a new story
       true
     elsif !is_moderated? && created_at.after?(MAX_EDIT_MINS.minutes.ago)
       true

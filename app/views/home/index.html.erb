@@ -92,13 +92,9 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
             <a class="domain" href="<%= domain_path(ms.domain) %>"><%= ms.domain.domain %></a>
           <% end %>
           <span class="byline">
+            <span><%= ms.user_is_author? ? "authored by" : "via" %></span>
             <% if (@user && @user.show_avatars?) || !@user %>
               <%= link_to avatar_img(ms.user, 16), ms.user %>
-            <% end %>
-            <% if ms.user_is_author? %>
-              <span> authored by </span>
-            <% else %>
-              <span> via </span>
             <% end %>
             <%= styled_user_link ms.user, story, class: ['u-author', 'h-card'] %>
 

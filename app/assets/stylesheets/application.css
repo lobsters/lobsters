@@ -703,9 +703,6 @@ li .byline img.avatar {
 li.story .byline {
 	margin-top: 1px;
 }
-li.story span.byline {
-	margin-left: 0.5em;
-}
 .byline a {
 	color: var(--color-fg-contrast-4-5);
 	text-decoration: none;

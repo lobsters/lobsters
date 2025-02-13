@@ -14,7 +14,7 @@ xml.rss version: "2.0", "xmlns:atom": "http://www.w3.org/2005/Atom" do
         xml.link comment.url
         xml.guid comment.short_id_url
         xml.author "#{comment.user.username}@#{Rails.application.domain} (#{comment.user.username})"
-        xml.pubDate comment.created_at.rfc822
+        xml.pubDate comment.last_edited_at.rfc822
         xml.comments comment.url
         xml.description comment.markeddown_comment
       end

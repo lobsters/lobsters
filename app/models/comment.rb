@@ -145,7 +145,7 @@ class Comment < ApplicationRecord
       :short_id,
       :short_id_url,
       :created_at,
-      :updated_at,
+      :last_edited_at,
       :is_deleted,
       :is_moderated,
       :score,
@@ -443,8 +443,7 @@ class Comment < ApplicationRecord
       if is_gone?
         false
       else
-        (Time.current.to_i - (updated_at ? updated_at.to_i :
-          created_at.to_i) < (60 * MAX_EDIT_MINS))
+        (Time.current - last_edited_at) < MAX_EDIT_MINS.minutes
       end
     else
       false

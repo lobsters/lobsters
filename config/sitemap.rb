@@ -16,10 +16,7 @@ SitemapGenerator::Sitemap.create! do
   add comments_path, changefreq: "always", priority: 1
 
   Story.order("id desc").find_each do |story|
-    last_comment = story.comments.order("id desc").first
-
-    lastmod = story.created_at
-    lastmod = last_comment.updated_at if last_comment && last_comment.updated_at > lastmod
+    lastmod = story.last_comment_at || story.created_at
 
     changefreq = "monthly"
     changefreq = "daily" if lastmod >= check_daily

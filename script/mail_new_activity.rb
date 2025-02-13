@@ -152,7 +152,7 @@ if __FILE__ == $PROGRAM_NAME
     3.days.ago
   ).order(:id).each do |c|
     # allow some time for newer comments to be edited before sending them out
-    if (Time.current - (c.updated_at || c.created_at)) < 2.minutes
+    if (Time.current - c.last_edited_at) < 2.minutes
       break
     end
 

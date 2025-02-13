@@ -160,4 +160,9 @@ module ApplicationHelper
     ago = how_long_ago(time)
     content_tag(:span, ago, title: time.strftime("%F %T %z"))
   end
+
+  def how_long_ago_link(url, time)
+    ago = how_long_ago(time)
+    content_tag(:a, ago, href: url, title: time.strftime("%F %T %z"))
+  end
 end

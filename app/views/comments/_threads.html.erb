@@ -115,15 +115,16 @@
           <% elsif comment.is_from_email? %>
             e-mailed
           <% end %>
-          <%= how_long_ago_label(comment.last_edited_at) %>
+          <% if comment.previewing %>
+            <%= how_long_ago_label(comment.last_edited_at) %>
+          <% else %>
+            <%= how_long_ago_link(comment.path, comment.last_edited_at) %>
+          <% end %>
           <%= raw "<span class='comment_unread'>(unread)</span>" if is_unread %>
         <% end %>
       </span>
 
       <% if !comment.previewing %>
-        |
-        <a tabindex="0" href="<%= comment.path %>">link</a>
-
         <% if comment.is_editable_by_user?(@user) %>
           |
           <a class="comment_editor">edit</a>

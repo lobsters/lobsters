@@ -147,7 +147,7 @@ class UsersController < ApplicationController
     @lookup = rows.to_h
 
     @flagged_comments = @showing_user.comments
-      .where({comments: {flags: 0..}})
+      .where({comments: {flags: 1..}})
       .where("comments.created_at >= ?", "now() - interval #{@interval[:dur]} #{@interval[:intv]}")
       .joins(:story)
       .includes(:user, :hat, story: :user)

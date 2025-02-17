@@ -28,7 +28,7 @@ module TrafficHelper
           s.period = c.period and
           s.period = v.period) act;
     SQL
-    result.to_a.first
+    result.to_a.first.values
   end
 
   def self.cache_traffic!
@@ -46,7 +46,7 @@ module TrafficHelper
         (SELECT count(1) AS n_comment FROM comments WHERE created_at >= '#{start_at}') * 10 +
         (SELECT count(1) AS n_stories FROM stories  WHERE created_at >= '#{start_at}') * 20
     SQL
-    result.to_a.first.first
+    result.to_a.first.first.second
   end
 
   def self.current_intensity(low, high)

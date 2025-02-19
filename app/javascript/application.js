@@ -27,13 +27,21 @@ const onPageLoad = (callback) => {
   document.addEventListener('DOMContentLoaded', callback);
 };
 
-const parentSelector = (target, selector) => {
+const parentSelectorOrNull = (target, selector) => {
   let parent = target;
   while (!parent.matches(selector)) {
     parent = parent.parentElement;
     if (parent === null) {
-      throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
+      return null;
     }
+  }
+  return parent;
+};
+
+const parentSelector = (target, selector) => {
+  let parent = parentSelectorOrNull(target, selector)
+  if (parent === null) {
+    throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
   }
   return parent;
 };
@@ -90,13 +98,12 @@ const removeExtraInputs = () => {
   }
 }
 
-const createChildList = (comment) => {
-  let children = qS(comment, '.comments')
+const createChildList = (parent) => {
+  let children = qS(parent, '.comments')
   if (!children) {
     children = document.createElement('ol')
     children.classList.add('comments')
-    // currently this is the layout
-    comment.append(children)
+    parent.append(children)
   }
   return children
 }
@@ -256,7 +263,57 @@ class _LobstersFunction {
       body: formData
     })
       .then(response => {
-        response.text().then(text => replace(form.parentElement, text));
+        response.text().then(text => {
+
+          // must keep this behavior up to date as the website's templates change:
+          //   app/views/comments/_comment.html.erb
+          //   app/views/comments/_threads.html.erb
+          //   app/views/stories/show.html.erb
+
+          const wrappedComment = document.createElement('p')
+          wrappedComment.innerHTML = text
+          const comment = qS(wrappedComment, '.comments_subtree')
+
+          const replyForm = parentSelectorOrNull(form, '.reply_form_temporary')
+          if (replyForm) {
+            // user submitted from a temporary reply form, so this is a reply to an existing comment
+            const parentComment = parentSelector(replyForm, '.comments_subtree')
+            replyForm.remove()
+
+            const children = createChildList(parentComment)
+            children.prepend(comment)
+
+            /// update styles to exactly reflect what would be generated on the backend
+
+            // comments/_comment.html.erb:
+            //   <%= comment.reply_count.to_i == 0 ? "no_children" : "" %>
+            const parentTreeline = qS(parentComment, '.comment_parent_tree_line')
+            parentTreeline.classList.remove('no_children')
+
+            // comments/_threads.html.erb:
+            //   <% if comment.depth != top_comment_depth %>
+            //     <div class="comment_siblings_tree_line"></div>
+            //   <% end %>
+            const treeline = document.createElement('div')
+            treeline.classList.add('comment_siblings_tree_line')
+            comment.append(treeline)
+
+            // comments/_threads.html.erb:
+            //   <% if !previous_depth || comment.depth > previous_depth %>
+            //     <span class="prior_comment_has_children"></span>
+            const span = document.createElement('span')
+            span.classList.add("prior_comment_has_children")
+            parentComment.insertBefore(span, children)
+
+          } else {
+            // there is no temporary reply form, so user must have created a "top-level" comment
+            parentSelector(form, '.comment_form_container').remove()
+            const storyComments = qS('#story_comments')
+            const comments = createChildList(storyComments)
+            comments.prepend(comment)
+          }
+
+        })
       })
   }
 
@@ -660,8 +717,8 @@ onPageLoad(() => {
     event.preventDefault();
     if (!Lobster.curUser) return Lobster.bounceToLogin();
 
-    const comment = parentSelector(event.target, '.comment');
-    const commentId = comment.getAttribute('id');
+    const commentInfo = parentSelector(event.target, '.comment');
+    const commentId = commentInfo.getAttribute('id');
 
     // guard: don't create multiple reply boxes to one comment
     if (qS('#reply_form_' + commentId)) { return false; }
@@ -675,11 +732,12 @@ onPageLoad(() => {
 
     let div = document.createElement('div');
     div.innerHTML = '';
-    div.classList.add('reply_form_root')
+    div.classList.add('reply_form_temporary')
+    const comment = parentSelector(commentInfo, '.comments_subtree');
     const children = createChildList(comment)
     children.prepend(div)
 
-    fetchWithCSRF('/comments/' + comment.getAttribute('data-shortid') + '/reply')
+    fetchWithCSRF('/comments/' + commentInfo.getAttribute('data-shortid') + '/reply')
       .then(response => {
         response.text().then(text => {
           // guard: don't create multiple reply boxes to one comment

@@ -27,13 +27,21 @@ const onPageLoad = (callback) => {
   document.addEventListener('DOMContentLoaded', callback);
 };
 
-const parentSelector = (target, selector) => {
+const parentSelectorOrNull = (target, selector) => {
   let parent = target;
   while (!parent.matches(selector)) {
     parent = parent.parentElement;
     if (parent === null) {
-      throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
+      return null;
     }
+  }
+  return parent;
+};
+
+const parentSelector = (target, selector) => {
+  let parent = parentSelectorOrNull(target, selector)
+  if (parent === null) {
+    throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
   }
   return parent;
 };
@@ -245,7 +253,72 @@ class _LobstersFunction {
       body: formData
     })
       .then(response => {
-        response.text().then(text => replace(form.parentElement, text));
+        response.text().then(text => {
+
+          // must keep this behavior up to date as the website's templates change:
+          //   app/views/comments/_comment.html.erb
+          //   app/views/comments/_threads.html.erb
+          //   app/views/stories/show.html.erb
+
+          // The string `text` contains the HTML code of the rendered reply.
+          // But we need a HTMLElement object to use DOM functions,
+          // so create a temporary element to make the browser parse the text
+          // as a HTMLElement object.
+          // `p` is just an arbitrarily chosen tag type, and shouldn't matter
+          // because `wrappedComment` is never added to the page.
+          const wrappedComment = document.createElement('p')
+          wrappedComment.innerHTML = text
+          // Get the parsed HTMLElement object.
+          const commentSubtree = qS(wrappedComment, '.comments_subtree')
+
+          const replyForm = parentSelectorOrNull(form, '.reply_form_temporary')
+          if (replyForm) {
+            // user submitted from a temporary reply form, so this is a reply to an existing comment
+            const parentSubtree = parentSelector(replyForm, '.comments_subtree')
+            replyForm.remove()
+
+            const children = qS(parentSubtree, '.comments')
+            children.prepend(commentSubtree)
+
+            /// update styles to exactly reflect what would be generated on the backend
+
+            // comments/_comment.html.erb:
+            //   <%= comment.reply_count.to_i == 0 ? "no_children" : "" %>
+            const parentTreeline = qS(parentSubtree, '.comment_parent_tree_line')
+            parentTreeline.classList.remove('no_children')
+
+            // comments/_threads.html.erb:
+            //   <% if comment.depth > previous_depth %>
+            //     <span class="prior_comment_has_children"></span>
+            // We have to query first, to only create the element once.
+            if (!qS(parentSubtree, '.prior_comment_has_children')) {
+              const span = document.createElement('span')
+              span.classList.add("prior_comment_has_children")
+              parentSubtree.insertBefore(span, children)
+            }
+          } else {
+            // There is no temporary reply form, so user must have created a "top-level" comment.
+            // Currently the template stories/show.html.erb puts the top-level comment box
+            // in a different DOM subtree from the list of story comments,
+            // so we have to manually remove the form and add the reply elsewhere on the page
+            parentSelector(form, '.comment_form_container').remove()
+            const storyComments = qS('#story_comments')
+            const comments = qS(storyComments, '.comments')
+            comments.prepend(commentSubtree)
+
+            // comments/_threads.html.erb:
+            //   <% if thread.any? %>
+            //     <span class="prior_comment_has_children"></span>
+            //   <% end %>
+            // We have to query first, to only create the element once.
+            if (!qS(storyComments, '.prior_comment_has_children')) {
+              const span = document.createElement('span')
+              span.classList.add("prior_comment_has_children")
+              storyComments.insertBefore(span, comments)
+            }
+          }
+
+        })
       })
   }
 
@@ -664,7 +737,10 @@ onPageLoad(() => {
 
     let div = document.createElement('div');
     div.innerHTML = '';
-    comment.lastElementChild.append(div);
+    div.classList.add('reply_form_temporary')
+    const commentSubtree = parentSelector(comment, '.comments_subtree');
+    const children = qS(commentSubtree, '.comments')
+    children.prepend(div)
 
     fetchWithCSRF('/comments/' + comment.getAttribute('data-shortid') + '/reply')
       .then(response => {

@@ -48,7 +48,7 @@
       <li class="comments_subtree"><%= render partial: "comments/commentbox", locals: { comment: @comment, story: @story } %></li>
     <% end %>
 
-    <li class="comments_subtree">
+    <li class="comments_subtree" id="story_comments">
       <% if @user && @comments.size > 0 %>
         <div class="thread_summary">
           <%= pluralize(@comments.size, "comment") %>,

@@ -90,6 +90,17 @@ const removeExtraInputs = () => {
   }
 }
 
+const createChildList = (comment) => {
+  let children = qS(comment, '.comments')
+  if (!children) {
+    children = document.createElement('ol')
+    children.classList.add('comments')
+    // currently this is the layout
+    comment.append(children)
+  }
+  return children
+}
+
 class _LobstersFunction {
   constructor (username) {
     this.curUser = null;
@@ -664,7 +675,9 @@ onPageLoad(() => {
 
     let div = document.createElement('div');
     div.innerHTML = '';
-    comment.lastElementChild.append(div);
+    div.classList.add('reply_form_root')
+    const children = createChildList(comment)
+    children.prepend(div)
 
     fetchWithCSRF('/comments/' + comment.getAttribute('data-shortid') + '/reply')
       .then(response => {

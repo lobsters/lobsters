@@ -477,10 +477,9 @@ class Story < ApplicationRecord
       return
     end
 
-    marked_for_destruction = Set.new(taggings.filter { |t| t.marked_for_destruction? }.map(&:id))
-
     # ignored to manage tags_a for nicer UI and because the n is typically 2-5 tags
-    taggings.eager_load(:tag).each do |t|
+    Prosopite.pause
+    taggings.each do |t|
       if !t.tag.can_be_applied_by?(u) && t.tag.privileged?
         raise "#{u.username} does not have permission to use privileged tag #{t.tag.tag}"
       elsif !t.tag.can_be_applied_by?(u) && !t.tag.permit_by_new_users?
@@ -488,13 +487,15 @@ class Story < ApplicationRecord
           "If the tag is appropriate, leaving it off to skirt this restriction is a bad idea.")
         ModNote.tattle_on_story_domain!(self, "new user with protected tags")
         raise "#{u.username} is too new to use tag #{t.tag.tag}"
-      elsif !t.tag.active? && t.new_record? && !marked_for_destruction.include(t.id)
+      elsif !t.tag.active? && t.new_record? && !t.marked_for_destruction?
         # stories can have inactive tags as long as they existed before
         raise "#{u.username} cannot add inactive tag #{t.tag.tag}"
       end
     end
 
-    if taggings.eager_load(:tag).reject { |t| marked_for_destruction.include?(t.id) || t.tag.is_media? }.empty?
+    Prosopite.resume
+
+    if taggings.reject { |t| t.marked_for_destruction? || t.tag.is_media? }.empty?
       errors.add(:base, "Must have at least one non-media (PDF, video) " \
         "tag.  If no tags apply to your content, it probably doesn't " \
         "belong here.")
@@ -797,7 +798,7 @@ class Story < ApplicationRecord
 
     if final_tags.any? && (final_tags.sort != tags_a.sort)
       # Rails.logger.info "[s#{id}] promoting suggested tags " \
-      #   "#{final_tags.inspect} instead of #{tags_a.inspect}"
+      #  "#{final_tags.inspect} instead of #{tags_a.inspect}"
       self.editor = nil
       self.editing_from_suggestions = true
       self.moderation_reason = "Automatically changed from user suggestions"
@@ -827,7 +828,7 @@ class Story < ApplicationRecord
     title_votes.sort_by { |_k, v| v }.reverse_each do |kv|
       if kv[1] >= SUGGESTION_QUORUM
         # Rails.logger.info "[s#{id}] promoting suggested title " \
-        #  "#{kv[0].inspect} instead of #{self.title.inspect}"
+        #   "#{kv[0].inspect} instead of #{self.title.inspect}"
         self.editor = nil
         self.editing_from_suggestions = true
         self.moderation_reason = "Automatically changed from user suggestions"

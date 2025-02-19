@@ -56,7 +56,7 @@ class InvitationsController < ApplicationController
       flash[:success] = "Successfully e-mailed invitation to " <<
         params[:email].to_s << "."
     rescue => e
-      Rails.logger.error "Error creating invitation for #{params[:email]}: #{e.message}"
+      # Rails.logger.error "Error creating invitation for #{params[:email]}: #{e.message}"
       flash[:error] = "Could not send invitation, verify the e-mail " \
         "address is valid."
     end
@@ -109,8 +109,7 @@ class InvitationsController < ApplicationController
     flash[:success] = "Successfully e-mailed invitation to " <<
       ir.name.to_s << "."
 
-    Rails.logger.info "[u#{@user.id}] sent invitiation for request " <<
-      ir.inspect
+    # Rails.logger.info "[u#{@user.id}] sent invitiation for request " << ir.inspect
 
     redirect_to "/invitations"
   end
@@ -129,8 +128,7 @@ class InvitationsController < ApplicationController
     flash[:success] = "Successfully deleted invitation request from " <<
       ir.name.to_s << "."
 
-    Rails.logger.info "[u#{@user.id}] deleted invitation request " \
-      "from #{ir.inspect}"
+    # Rails.logger.info "[u#{@user.id}] deleted invitation request from #{ir.inspect}"
 
     redirect_to "/invitations"
   end

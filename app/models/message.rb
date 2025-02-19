@@ -94,7 +94,7 @@ class Message < ApplicationRecord
       begin
         EmailMessageMailer.notify(self, recipient).deliver_now
       rescue => e
-        Rails.logger.error "error e-mailing #{recipient.email}: #{e}"
+        # Rails.logger.error "error e-mailing #{recipient.email}: #{e}"
       end
     end
 

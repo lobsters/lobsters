@@ -363,7 +363,7 @@ class HomeController < ApplicationController
       begin
         Rails.cache.fetch("stories #{key}", expires_in: 45, &)
       rescue Errno::ENOENT => e
-        Rails.logger.error "error fetching stories #{key}: #{e}"
+        # Rails.logger.error "error fetching stories #{key}: #{e}"
         yield
       end
     end

@@ -114,7 +114,7 @@ class MastodonApp < ApplicationRecord
     )
     ps = JSON.parse(res.body)
     if ps != {}
-      Rails.logger.info "Unexpected failure revoking token from #{name}, response was #{res.body}"
+      # Rails.logger.info "Unexpected failure revoking token from #{name}, response was #{res.body}"
     end
     ps == {}
   end

@@ -1,6 +1,6 @@
 class CabinetController < ApplicationController
   def index
     render
-    puts "controller after render @user - #{@user}"
+    Rails.logger.debug { "controller after render @user - #{@user}" }
   end
 end

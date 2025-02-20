@@ -18,7 +18,7 @@ class StoriesController < ApplicationController
     @title = "Submit Story"
 
     @story = Story.new(user: @user)
-    @story.attributes = story_params
+    update_story_attributes
 
     if @story.is_resubmit?
       @comment = @story.comments.new(user: @user)
@@ -117,7 +117,8 @@ class StoriesController < ApplicationController
   end
 
   def preview
-    @story = Story.new(story_params)
+    @story = Story.new
+    update_story_attributers
     @story.user_id = @user.id
     @story.previewing = true
 
@@ -331,9 +332,9 @@ class StoriesController < ApplicationController
   end
 
   def check_url_dupe
-    raise ActionController::ParameterMissing.new("No URL") if story_params[:url].blank?
+    raise ActionController::ParameterMissing.new("No URL") if params.dig(:story, :url).blank?
     @story = Story.new(user: @user)
-    @story.attributes = story_params
+    update_story_attributes
     @story.already_posted_recently?
 
     respond_to do |format|
@@ -375,10 +376,13 @@ class StoriesController < ApplicationController
   private
 
   def story_params
-    params.require(:story).permit(:title, :url, :description, :user_is_author, :user_is_following, tags_a: [])
+    ps = params.require(:story).permit(:title, :url, :description, :user_is_author, :user_is_following, tags: [])
+    ps[:tags] = Tag.where(tag: ps[:tags] || @story.tags.map(&:tag), active: true)
+    ps
   end
 
   def update_story_attributes
+    @story.tags_was = @story.tags.to_a
     @story.attributes = if @story.url_is_editable_by_user?(@user)
       story_params
     else

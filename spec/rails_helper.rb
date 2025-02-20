@@ -34,7 +34,9 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with :truncation
 
     c = Category.create! category: "category1"
-    c.tags.create!([{tag: "tag1"}, {tag: "tag2"}])
+    # 'placeholder' is so factory_bot can instantiate valid Story objects, but tests must replace
+    # that with their own tags if they care what a story is tagged
+    c.tags.create!([{tag: "placeholder"}, {tag: "tag1"}, {tag: "tag2"}])
   end
 
   config.before(:example) do

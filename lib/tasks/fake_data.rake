@@ -102,7 +102,7 @@ class FakeDataGenerator
         title: title,
         url: url,
         description: description,
-        tags_a: [tag.tag]
+        tags: [tag]
       }
       story = Story.create!(create_args)
       StoryText.create!({
@@ -130,7 +130,7 @@ class FakeDataGenerator
         title: title,
         url: url,
         description: markdown_paragraphs,
-        tags_a: [tag.tag],
+        tags: [tag],
         is_deleted: true,
         editor: user
       }

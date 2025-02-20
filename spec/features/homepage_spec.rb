@@ -51,9 +51,9 @@ RSpec.feature "Reading Homepage", type: :feature do
   feature "browsing stories by tag" do
     let(:tag_a) { Category.first.tags.create!(tag: "A1").tag }
     let(:tag_b) { Category.first.tags.create!(tag: "B2").tag }
-    let!(:ab_story) { create(:story, tags_a: [tag_a, tag_b]) }
-    let!(:a_story) { create(:story, tags_a: [tag_a]) }
-    let!(:b_story) { create(:story, tags_a: [tag_b]) }
+    let!(:ab_story) { create(:story, tags: Tag.where(tag: [tag_a, tag_b])) }
+    let!(:a_story) { create(:story, tags: Tag.where(tag: [tag_a])) }
+    let!(:b_story) { create(:story, tags: Tag.where(tag: [tag_b])) }
 
     scenario "viewing one tag at a time" do
       visit "/t/#{tag_a}"

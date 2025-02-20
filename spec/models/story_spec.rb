@@ -42,10 +42,14 @@ describe Story do
   end
 
   it "must have at least one tag" do
-    expect { create(:story, tags_a: nil) }.to raise_error
-    expect { create(:story, tags_a: ["", " "]) }.to raise_error
+    s = Story.new(tags: [])
+    s.valid?
+    expect s.errors[:base].select { |e| e.include? "at least one" }.any?
 
-    expect { create(:story, tags_a: ["", "tag1"]) }.to_not raise_error
+    # passing an empty string to mirror the controller looking up tags by user input
+    s = Story.new(tags: Tag.where(tag: ["", "tag1"]))
+    s.valid?
+    expect s.errors[:base].select { |e| e.include? "at least one" }.none?
   end
 
   it "removes redundant http port 80 and https port 443" do
@@ -233,35 +237,23 @@ describe Story do
     expect(s.url).to eq("https://factorable.net/")
   end
 
-  it "sets tags_a properly on an unsaved story" do
-    s = build(:story, tags_a: [])
-    expect(s.tags_a).to eq([])
-    s.tags_a = ["tag1", "tag2"]
-    expect(s.tags_a).to eq(["tag1", "tag2"])
-  end
-
   it "calculates tag changes properly" do
-    s = create(:story, title: "blah", tags_a: ["tag1", "tag2"])
+    s = create(:story, title: "blah", tags: Tag.where(tag: ["tag1", "tag2"]))
 
-    s.tags_a = ["tag2"]
-    expect(s.tagging_changes).to eq("tags" => ["tag1 tag2", "tag2"])
-  end
-
-  it "assigning new tags_a should create new_record taggings" do
-    s = create(:story, tags_a: ["tag1"])
-    s.tags_a = ["tag1", "tag2"]
-    expect(s.taggings.map(&:new_record?)).to eq([false, true])
+    s.tags_was = s.tags.to_a
+    s.tags = Tag.where(tag: ["tag2"])
+    expect(s.tag_changes).to eq("tags" => ["tag1 tag2", "tag2"])
   end
 
   it "logs tag additions from user suggestions properly" do
-    s = create(:story, title: "blah", tags_a: ["tag1"], description: "desc")
+    s = create(:story, title: "blah", tags: Tag.where(tag: ["tag1"]), description: "desc")
 
     u1 = create(:user)
-    s.save_suggested_tags_a_for_user!(["tag1", "tag2"], u1)
+    s.save_suggested_tags_for_user!(["tag1", "tag2"], u1)
     s.reload
 
     u2 = create(:user)
-    s.save_suggested_tags_a_for_user!(["tag1", "tag2"], u2)
+    s.save_suggested_tags_for_user!(["tag1", "tag2"], u2)
 
     mod_log = Moderation.last
     expect(mod_log.moderator_user_id).to eq(nil)
@@ -273,12 +265,13 @@ describe Story do
   it "logs moderations properly" do
     mod = create(:user, :moderator)
 
-    s = create(:story, title: "blah", tags_a: ["tag1", "tag2"],
+    s = create(:story, title: "blah", tags: Tag.where(tag: ["tag1", "tag2"]),
       description: "desc")
 
     s.title = "changed title"
     s.description = nil
-    s.tags_a = ["tag1"]
+    s.tags_was = s.tags.to_a
+    s.tags = Tag.where(tag: ["tag1"])
 
     s.editor = mod
     s.moderation_reason = "not about tag2"
@@ -298,6 +291,7 @@ describe Story do
     s = create(:story, url: "https://example.com/1")
 
     s.url = "https://example.com/2"
+    s.tags_was = s.tags.to_a
     s.editor = mod
     s.moderation_reason = "fixed link"
     s.save!
@@ -520,14 +514,5 @@ describe Story do
     subject { Story.title_maximum_length }
 
     it { is_expected.to eq(150) }
-  end
-
-  describe "#preview_tags" do
-    it "allows accessing tags set by tags_a on unsaved stories" do
-      tag = Tag.find_by(tag: "tag1")
-      s = build(:story, tags_a: ["tag1"])
-      expect(s.preview_tags).to eq([tag])
-      expect(s.tags).to eq([])
-    end
   end
 end

@@ -11,7 +11,7 @@ RSpec.feature "Filtering" do
   end
 
   context "with a story with the tag" do
-    let!(:story) { create(:story, tags_a: [tag.tag]) }
+    let!(:story) { create(:story, tags: Tag.where(tag: [tag.tag])) }
 
     context "as a logged-out visitor" do
       scenario "adding a filter" do

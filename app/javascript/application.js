@@ -376,14 +376,14 @@ class _LobstersFunction {
   }
 
   tomSelect(item) {
-    if (!qS('#story_tags_a')) {
+    if (!qS('#story_tags')) {
       return
     }
 
     TomSelect.define('caret_position', caret_position);
     TomSelect.define('input_autogrow', input_autogrow);
     TomSelect.define('remove_button', remove_button);
-    this.tom = new TomSelect('#story_tags_a', {
+    this.tom = new TomSelect('#story_tags', {
       plugins: ['caret_position', 'input_autogrow', 'remove_button'],
       maxOptions: 200,
       maxItems: 10,

@@ -17,7 +17,7 @@ class Mod::StoriesController < Mod::ModeratorController
     @story.last_edited_at = Time.current
     @story.is_deleted = false
     @story.editor = @user
-    @story.attributes = story_params
+    update_story_attributes
 
     if @story.save
       redirect_to @story.comments_path
@@ -29,7 +29,7 @@ class Mod::StoriesController < Mod::ModeratorController
   def undelete
     @story.is_deleted = false
     @story.editor = @user
-    @story.attributes = story_params
+    update_story_attributes
 
     if @story.save
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted", -1)
@@ -39,7 +39,7 @@ class Mod::StoriesController < Mod::ModeratorController
   end
 
   def destroy
-    @story.attributes = story_params
+    update_story_attributes
 
     if @story.user_id != @user.id && @story.moderation_reason.blank?
       @story.errors.add(:moderation_reason, message: "is required")
@@ -60,10 +60,17 @@ class Mod::StoriesController < Mod::ModeratorController
   private
 
   def story_params
-    params.require(:story).permit(
+    ps = params.require(:story).permit(
       :title, :url, :description, :moderation_reason,
       :merge_story_short_id, :is_unavailable, :user_is_author, :user_is_following,
-      tags_a: []
+      tags: []
     )
+    ps[:tags] = Tag.where(tag: ps[:tags] || @story.tags.map(&:tag))
+    ps
+  end
+
+  def update_story_attributes
+    @story.tags_was = @story.tags.to_a
+    @story.attributes = story_params
   end
 end

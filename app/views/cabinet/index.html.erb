@@ -10,7 +10,7 @@ story_without_merges = Story.new(
   short_id: 'st0mrg',
   user: User.new(username: Faker::Internet.user_name, created_at: 1.year.ago),
   title: Faker::Lorem.sentence(word_count: rand(3..12)),
-  tags_a: [Tag.last],
+  tags: [Tag.last],
   url: Faker::Internet.url,
   created_at: Time.current,
 )

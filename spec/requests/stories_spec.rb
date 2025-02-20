@@ -19,7 +19,8 @@ describe "stories", type: :request do
       it "returns previous discussions for an existing story" do
         post "/stories/check_url_dupe.html", params: {story: {url: story.url}}
 
-        expect(response).to be_successful
+        # workaround: https://github.com/rspec/rspec-rails/issues/2592
+        expect(response).to have_http_status(200)
 
         expect(response.body).to include("Previous discussions for this story")
         expect(response.body).to include(story.title)
@@ -33,7 +34,7 @@ describe "stories", type: :request do
 
         post "/stories/check_url_dupe.html", params: {story: {url: merged_story.url}}
 
-        expect(response).to be_successful
+        expect(response).to have_http_status(200)
 
         expect(response.body).to include("Previous discussions for this story")
         expect(response.body).to include(merged_story.title)
@@ -50,7 +51,7 @@ describe "stories", type: :request do
         post "/stories/check_url_dupe.json",
           params: {story: {title: "some other title", url: story.url}}
 
-        expect(response).to be_successful
+        expect(response).to have_http_status(200)
 
         json = JSON.parse(response.body)
 
@@ -69,7 +70,7 @@ describe "stories", type: :request do
         post "/stories/check_url_dupe.json",
           params: {story: {title: "some other title", url: story.url[0...-1]}}
 
-        expect(response).to be_successful
+        expect(response).to have_http_status(200)
 
         json = JSON.parse(response.body)
 
@@ -81,7 +82,7 @@ describe "stories", type: :request do
         post "/stories/check_url_dupe.json",
           params: {story: {title: "some other title", url: "invalid_url"}}
 
-        expect(response).to be_successful
+        expect(response).to have_http_status(200)
 
         json = JSON.parse(response.body)
 
@@ -99,7 +100,7 @@ describe "stories", type: :request do
         it "throws a 400 when URL parameter is missing" do
           post "/stories/check_url_dupe.json", params: {story: {}}
           expect(response).to have_http_status(:bad_request)
-          expect(JSON.parse(response.body)).to eq({"error" => "param is missing or the value is empty or invalid: story"})
+          expect(JSON.parse(response.body)).to eq({"error" => "param is missing or the value is empty or invalid: No URL"})
         end
       end
     end
@@ -180,7 +181,7 @@ describe "stories", type: :request do
       story = create(:story)
       get story_path(story)
 
-      expect(response).to be_successful
+      expect(response).to have_http_status(200)
       expect(response.body).to include(story.title)
     end
 
@@ -192,6 +193,7 @@ describe "stories", type: :request do
       before do
         story.is_deleted = true
         story.editor = story.user
+        story.tags_was = story.tags.to_a
         story.save!
       end
 
@@ -226,6 +228,7 @@ describe "stories", type: :request do
       before do
         story.moderation_reason = reason
         story.is_deleted = true
+        story.tags_was = story.tags.to_a
         story.editor = mod
         story.save!
       end

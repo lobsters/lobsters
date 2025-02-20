@@ -25,6 +25,8 @@ RSpec.feature "user threads page ~:user/threads" do
     visit "/threads/#{user.username}"
     expect(page).to have_content(comment.comment)
 
+    # mutate story because comment can't be posted on a deleted story
+    story.tags_was = story.tags.to_a
     story.editor = create(:user, :moderator)
     story.is_deleted = true
     story.save!
@@ -41,6 +43,8 @@ RSpec.feature "user threads page ~:user/threads" do
     stub_login_as user
     comment = create(:comment, user: user, story: story, comment: "Comment text visible")
 
+    # mutate story because comment can't be posted on a deleted story
+    story.tags_was = story.tags.to_a
     story.editor = create(:user, :moderator)
     story.is_deleted = true
     story.save!
@@ -53,6 +57,8 @@ RSpec.feature "user threads page ~:user/threads" do
     stub_login_as create(:user)
     comment = create(:comment, story: story, comment: "Comment text visible")
 
+    # mutate story because comment can't be posted on a deleted story
+    story.tags_was = story.tags.to_a
     story.editor = create(:user, :moderator)
     story.is_deleted = true
     story.save!

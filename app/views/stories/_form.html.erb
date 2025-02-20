@@ -43,9 +43,9 @@
   <% end %>
 
   <div class="boxline" style="margin-bottom: 2px;">
-  <%= f.label :tags_a, "Tags:", :class => "required",
+  <%= f.label :tags, "Tags:", :class => "required",
     :style => "line-height: 2.3em;" %>
-  <%= f.select "tags_a", options_for_select(
+  <%= f.select "tags", options_for_select(
     Tag.all_with_filtered_counts_for(@user).map{|t|
       html = "<strong>#{h(t.tag)}</strong> - #{h(t.description.to_s)}"
 
@@ -58,7 +58,7 @@
       end
 
       [ "#{t.tag} - #{t.description}", t.tag, { "data-title" => raw(html), "data-tag-css" => t.css_class } ]},
-    f.object.tags_a), {}, { :multiple => true } %>
+    f.object.tags.map(&:tag)), {}, { :multiple => true } %>
   </div>
 
   <% if f.object.id && !suggesting && f.object.suggested_tagging_times.any? %>

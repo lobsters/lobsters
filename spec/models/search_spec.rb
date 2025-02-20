@@ -14,25 +14,25 @@ describe Search do
     @multi_tag = create(:story, title: "multitag term1 t1 t2",
       url: "https://example.com/3",
       user_id: @alice.id,
-      tags_a: ["tag1", "tag2"])
+      tags: Tag.where(tag: ["tag1", "tag2"]))
     @stories = [
       create(:story, title: "unique",
         url: "https://example.com/unique",
         user_id: @bob.id,
-        tags_a: ["tag1"]),
+        tags: Tag.where(tag: ["tag1"])),
       create(:story, title: "term1 domain1",
         url: "https://example.com/1",
         user_id: @alice.id,
-        tags_a: ["tag1"]),
+        tags: Tag.where(tag: ["tag1"])),
       create(:story, title: "term1 t2",
         url: "https://example.com/2",
         user_id: @bob.id,
-        tags_a: ["tag2"]),
+        tags: Tag.where(tag: ["tag2"])),
       @multi_tag,
       create(:story, title: "term1 domain2",
         url: "https://lobste.rs/1",
         user_id: @alice.id,
-        tags_a: ["tag1"])
+        tags: Tag.where(tag: ["tag1"]))
     ]
     @stories.each do |s|
       StoryText.create id: s.id, title: s.title, description: s.description

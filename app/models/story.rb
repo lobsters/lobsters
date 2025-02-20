@@ -163,7 +163,7 @@ class Story < ApplicationRecord
 
   attr_accessor :current_vote, :editing_from_suggestions, :editor, :fetching_ip,
     :is_hidden_by_cur_user, :latest_comment_id,
-    :is_saved_by_cur_user, :moderation_reason, :previewing
+    :is_saved_by_cur_user, :moderation_reason, :previewing, :tags_was
   attr_writer :fetched_response
 
   before_validation :assign_initial_attributes, on: :create
@@ -186,7 +186,7 @@ class Story < ApplicationRecord
       errors.add(:description, "must contain text if no URL posted")
     end
 
-    if title.starts_with?("Ask") && tags_a.include?("ask")
+    if title.starts_with?("Ask") && tags.map(&:tag).include?("ask")
       errors.add(:title, " starting 'Ask #{Rails.application.name}' or similar is redundant " \
                           "with the ask tag.")
     end
@@ -459,16 +459,15 @@ class Story < ApplicationRecord
     true
   end
 
-  # this has to happen just before save rather than in tags_a= because we need
-  # to have a valid user_id; remember it fills .taggings, not .tags
+  # this has to happen just before save because it depends on user/editor
   def check_tags
     u = editor || user
 
     if u&.is_new? &&
-        (unpermitted = Tag.where(id: taggings.map(&:tag_id), permit_by_new_users: false)).any?
-      tags = unpermitted.map(&:tag).to_sentence
+        (unpermitted = tags.select { |t| t.permit_by_new_users == false }).any?
+      tags_str = unpermitted.map(&:tag).to_sentence
       errors.add :base, <<-EXPLANATION
-        New users can't submit stories with the tag(s) #{tags}
+        New users can't submit stories with the tag(s) #{tags_str}
         because they're for meta discussion or prone to off-topic stories.
         If a tag is appropriate for the story, leaving it off to skirt this
         restriction can earn a ban.
@@ -477,25 +476,18 @@ class Story < ApplicationRecord
       return
     end
 
-    # ignored to manage tags_a for nicer UI and because the n is typically 2-5 tags
-    Prosopite.pause
-    taggings.each do |t|
-      if !t.tag.can_be_applied_by?(u) && t.tag.privileged?
-        raise "#{u.username} does not have permission to use privileged tag #{t.tag.tag}"
-      elsif !t.tag.can_be_applied_by?(u) && !t.tag.permit_by_new_users?
-        errors.add(:base, "New users can't submit #{t.tag.tag} stories, please wait. " \
+    tags.each do |t|
+      if !t.can_be_applied_by?(u) && t.privileged?
+        raise "#{u.username} does not have permission to use privileged tag #{t.tag}"
+      elsif !t.can_be_applied_by?(u) && !t.permit_by_new_users?
+        errors.add(:base, "New users can't submit #{t.tag} stories, please wait. " \
           "If the tag is appropriate, leaving it off to skirt this restriction is a bad idea.")
         ModNote.tattle_on_story_domain!(self, "new user with protected tags")
-        raise "#{u.username} is too new to use tag #{t.tag.tag}"
-      elsif !t.tag.active? && t.new_record? && !t.marked_for_destruction?
-        # stories can have inactive tags as long as they existed before
-        raise "#{u.username} cannot add inactive tag #{t.tag.tag}"
+        raise "#{u.username} is too new to use tag #{t.tag}"
       end
     end
 
-    Prosopite.resume
-
-    if taggings.reject { |t| t.marked_for_destruction? || t.tag.is_media? }.empty?
+    if tags.reject { |t| t.is_media? }.empty?
       errors.add(:base, "Must have at least one non-media (PDF, video) " \
         "tag.  If no tags apply to your content, it probably doesn't " \
         "belong here.")
@@ -653,9 +645,10 @@ class Story < ApplicationRecord
       return
     end
 
-    all_changes = changes.merge(tagging_changes)
+    all_changes = changes.merge(tag_changes)
     all_changes.delete("normalized_url")
     all_changes.delete("unavailable_at")
+    all_changes.delete("last_edited_at")
 
     if !all_changes.any?
       return
@@ -733,45 +726,22 @@ class Story < ApplicationRecord
     u&.is_moderator? || !current_flagged?
   end
 
-  def tagging_changes
-    old_tags_a = taggings.reject(&:new_record?).map { |tg| tg.tag.tag }.join(" ")
-    new_tags_a = taggings.reject(&:marked_for_destruction?).map { |tg| tg.tag.tag }.join(" ")
+  def tag_changes
+    # 'tags_was' is bad grammar but is named to mirror ActiveModel::Dirty's convention of providing
+    # a 'attribute_was' reader
 
-    if old_tags_a == new_tags_a
+    raise "Controller didn't save tags_was for edit logging" if tags_was.nil?
+    old_tag_names = tags_was.map(&:tag).join(" ")
+    new_tag_names = tags.map(&:tag).join(" ")
+
+    if old_tag_names == new_tag_names
       {}
     else
-      {"tags" => [old_tags_a, new_tags_a]}
+      {"tags" => [old_tag_names, new_tag_names]}
     end
   end
 
-  def tags_a
-    @_tags_a ||= Tag
-      .where(id: taggings.reject(&:marked_for_destruction?).map { |t| t.tag_id })
-      .pluck(:tag)
-  end
-
-  def tags_a=(new_tag_names_a)
-    @_tags_a = nil
-    taggings.each do |tagging|
-      if !new_tag_names_a.include?(tagging.tag.tag)
-        tagging.mark_for_destruction
-      end
-    end
-
-    new_tags = Tag.where(tag: new_tag_names_a.uniq.compact_blank - tags.pluck(:tag))
-    new_tags.each do |t|
-      # we can't lookup whether the user is allowed to use this tag yet
-      # because we aren't assured to have a user_id by now; we'll do it in
-      # the validation with check_tags
-      taggings.build(tag_id: t.id)
-    end
-  end
-
-  def preview_tags
-    Tag.where(id: taggings.map { |t| t.tag_id })
-  end
-
-  def save_suggested_tags_a_for_user!(new_tag_names_a, user)
+  def save_suggested_tags_for_user!(new_tag_names_a, user)
     suggested_taggings.where(user_id: user.id).destroy_all
 
     new_tags = Tag
@@ -796,13 +766,14 @@ class Story < ApplicationRecord
       end
     end
 
-    if final_tags.any? && (final_tags.sort != tags_a.sort)
+    if final_tags.any? && (final_tags.sort != tags.map(&:tag).sort)
       # Rails.logger.info "[s#{id}] promoting suggested tags " \
-      #  "#{final_tags.inspect} instead of #{tags_a.inspect}"
+      #  "#{final_tags.inspect} instead of #{tags.map(&:tag).inspect}"
       self.editor = nil
       self.editing_from_suggestions = true
       self.moderation_reason = "Automatically changed from user suggestions"
-      self.tags_a = final_tags.sort
+      self.tags_was = tags.to_a
+      self.tags = Tag.where(tag: final_tags)
       if !save
         # Rails.logger.error "[s#{id}] failed auto promoting: " << errors.inspect
       end
@@ -833,6 +804,7 @@ class Story < ApplicationRecord
         self.editing_from_suggestions = true
         self.moderation_reason = "Automatically changed from user suggestions"
         self.title = kv[0]
+        self.tags_was = tags.to_a
         if !save
           # Rails.logger.error "[s#{id}] failed auto promoting: " << errors.inspect
         end

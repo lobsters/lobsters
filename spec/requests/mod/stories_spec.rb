@@ -16,7 +16,9 @@ describe "Mod::StoriesController", type: :request do
       renamed_title_text = "New Title"
 
       patch "/mod/stories/#{story.short_id}", params: {
-        story: {title: renamed_title_text}
+        story: {
+          title: renamed_title_text
+        }
       }
 
       story.reload

@@ -13,19 +13,21 @@ class SuggestionsController < ApplicationController
 
     story_user = @story.user
     inappropriate_tags = Tag
-      .where(tag: params[:story][:tags_a].reject { |t| t.to_s.blank? })
+      .where(tag: params[:story][:tags])
       .reject { |t| t.can_be_applied_by?(story_user) }
     if inappropriate_tags.length > 0
       tag_error = ""
       inappropriate_tags.each do |t|
         tag_error += if t.privileged?
-          "User #{story_user.username} cannot apply tag #{t.tag} as they are not a " \
-            "moderator so it has been removed from your suggestion.\n"
+          "User #{story_user.username} cannot suggest tag #{t.tag} as they are not a " \
+            "moderator, so it has been removed from your suggestion.\n"
         elsif !t.permit_by_new_users?
-          "User #{story_user.username} cannot apply tag #{t.tag} due to being a new " \
-            "user so it has been removed from your suggestion.\n"
+          "User #{story_user.username} cannot suggest tag #{t.tag} due to being a new " \
+            "user, so it has been removed from your suggestion.\n"
+        elsif !t.active?
+          "Cannot suggest tag #{t.tag} because it's inactive"
         else
-          "User #{story_user.username} cannot apply tag #{t.tag} " \
+          "User #{story_user.username} cannot suggest tag #{t.tag} " \
             "so it has been removed from your suggestion.\n"
         end
       end
@@ -44,11 +46,11 @@ class SuggestionsController < ApplicationController
       end
 
       sugtags = Tag
-        .where(tag: params[:story][:tags_a].reject { |t| t.to_s.strip.blank? })
+        .where(tag: params[:story][:tags])
         .reject { |t| !t.can_be_applied_by?(story_user) }
         .map { |s| s.tag }
-      if @story.tags_a.sort != sugtags.sort
-        @story.save_suggested_tags_a_for_user!(sugtags, @user)
+      if @story.tags.map(&:tag).sort != sugtags.sort
+        @story.save_suggested_tags_for_user!(sugtags, @user)
         dsug = true
       end
 
@@ -70,7 +72,7 @@ class SuggestionsController < ApplicationController
     end
 
     if (suggested_tags = @story.suggested_taggings.where(user_id: @user.id)).any?
-      @story.tags_a = suggested_tags.map { |st| st.tag.tag }
+      @story.tags = suggested_tags.map(&:tag)
     end
     if (tt = @story.suggested_titles.where(user_id: @user.id).first)
       @story.title = tt.title

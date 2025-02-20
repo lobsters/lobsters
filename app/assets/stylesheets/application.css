@@ -984,7 +984,7 @@ div#domain_box input[type=text] {
 	display: block !important;
 	transition: height .5s ease !important;
 }
-div#story_box #story_tags_a {
+div#story_box #story_tags {
 	width: 624px;
 }
 div#story_box textarea {
@@ -1752,12 +1752,12 @@ input[type="submit"].link_post.pushover_button {
 	div#story_box input,
 	div#story_box button,
 	div#story_box textarea,
-	div#story_box #story_tags_a,
+	div#story_box #story_tagsa,
 	div.actions {
 		margin: 0 !important;
 	}
 
-	div#story_box #story_tags_a {
+	div#story_box #story_tags {
 		min-width: 305px !important;
 	}
 

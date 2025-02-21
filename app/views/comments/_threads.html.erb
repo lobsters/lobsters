@@ -15,20 +15,25 @@
         <%# brittle - see li.comments_subtree > .comment:nth-last-child(2) in css %>
         <span class="prior_comment_has_children"></span>
 
+        <%# open tree of replies to the previous comment %>
         <ol class="comments">
       <% elsif previous_depth == comment.depth %>
+        <%# close previous subtree %>
         </li>
       <% else %>
+        <%# close tree of replies %>
         <% (previous_depth - comment.depth).times do %>
             </li>
           </ol>
         <% end %>
+        <%# close previous subtree %>
         </li>
       <% end %>
     <% end %>
     <% previous_depth = comment.depth %>
     <% top_comment_depth ||= comment.depth %>
 
+    <%# open current subtree %>
     <li class="comments_subtree">
 
     <%
@@ -222,10 +227,15 @@
 
 <% end %>
 
-<%# close tree of replies %>
-<% top_comment_depth && (previous_depth - top_comment_depth + 1).times do %>
-    </li>
-  </ol>
+<% if top_comment_depth %>
+  <%# close tree of replies %>
+  <% (previous_depth - top_comment_depth).times do %>
+      </li>
+    </ol>
+  <% end %>
+
+  <%# close top subtree %>
+  </li>
 <% end %>
 
 <%# close list of threads %>

@@ -2,8 +2,10 @@
 <% previous_depth = nil %>
 <% top_comment_depth = nil %>
 
-<%# brittle - see li.comments_subtree > .comment:nth-last-child(2) in css %>
-<span class="prior_comment_has_children"></span>
+<% if thread.any? %>
+  <%# brittle - see li.comments_subtree > .comment:nth-last-child(2) in css %>
+  <span class="prior_comment_has_children"></span>
+<% end %>
 
 <ol class="comments">
 <% thread.each do |comment| %>

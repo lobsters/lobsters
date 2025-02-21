@@ -289,7 +289,7 @@ class _LobstersFunction {
             comment.append(treeline)
 
             // comments/_threads.html.erb:
-            //   <% if !previous_depth || comment.depth > previous_depth %>
+            //   <% if comment.depth > previous_depth %>
             //     <span class="prior_comment_has_children"></span>
             const span = document.createElement('span')
             span.classList.add("prior_comment_has_children")
@@ -301,6 +301,17 @@ class _LobstersFunction {
             const storyComments = qS('#story_comments')
             const comments = qS(storyComments, '.comments')
             comments.prepend(comment)
+
+            // comments/_threads.html.erb:
+            //   <% if thread.any? %>
+            //     <span class="prior_comment_has_children"></span>
+            //   <% end %>
+            // we have to query first, to only create the element once
+            if (!qS(storyComments, '.prior_comment_has_children')) {
+              const span = document.createElement('span')
+              span.classList.add("prior_comment_has_children")
+              storyComments.insertBefore(span, comments)
+            }
           }
 
         })

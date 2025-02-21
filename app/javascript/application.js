@@ -260,8 +260,15 @@ class _LobstersFunction {
           //   app/views/comments/_threads.html.erb
           //   app/views/stories/show.html.erb
 
+          // The string `text` contains the HTML code of the rendered reply.
+          // But we need a HTMLElement object to use DOM functions,
+          // so create a temporary element to make the browser parse the text
+          // as a HTMLElement object.
+          // `p` is just an arbitrarily chosen tag type, and shouldn't matter
+          // because `wrappedComment` is never added to the page.
           const wrappedComment = document.createElement('p')
           wrappedComment.innerHTML = text
+          // Get the parsed HTMLElement object.
           const commentSubtree = qS(wrappedComment, '.comments_subtree')
 
           const replyForm = parentSelectorOrNull(form, '.reply_form_temporary')
@@ -296,7 +303,10 @@ class _LobstersFunction {
             parentSubtree.insertBefore(span, children)
 
           } else {
-            // there is no temporary reply form, so user must have created a "top-level" comment
+            // There is no temporary reply form, so user must have created a "top-level" comment.
+            // Currently the template stories/show.html.erb puts the top-level comment box
+            // in a different DOM subtree from the list of story comments,
+            // so we have to manually remove the form and add the reply elsewhere on the page
             parentSelector(form, '.comment_form_container').remove()
             const storyComments = qS('#story_comments')
             const comments = qS(storyComments, '.comments')
@@ -306,7 +316,10 @@ class _LobstersFunction {
             //   <% if thread.any? %>
             //     <span class="prior_comment_has_children"></span>
             //   <% end %>
-            // we have to query first, to only create the element once
+            // We have to query first, to only create the element once.
+            // Due to how comments/_threads.html.erb currently works,
+            // the other code path (replying to an existing comment)
+            // doesn't need this query
             if (!qS(storyComments, '.prior_comment_has_children')) {
               const span = document.createElement('span')
               span.classList.add("prior_comment_has_children")

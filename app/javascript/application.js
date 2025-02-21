@@ -290,10 +290,12 @@ class _LobstersFunction {
             // comments/_threads.html.erb:
             //   <% if comment.depth > previous_depth %>
             //     <span class="prior_comment_has_children"></span>
-            const span = document.createElement('span')
-            span.classList.add("prior_comment_has_children")
-            parentSubtree.insertBefore(span, children)
-
+            // We have to query first, to only create the element once.
+            if (!qS(parentSubtree, '.prior_comment_has_children')) {
+              const span = document.createElement('span')
+              span.classList.add("prior_comment_has_children")
+              parentSubtree.insertBefore(span, children)
+            }
           } else {
             // There is no temporary reply form, so user must have created a "top-level" comment.
             // Currently the template stories/show.html.erb puts the top-level comment box
@@ -309,9 +311,6 @@ class _LobstersFunction {
             //     <span class="prior_comment_has_children"></span>
             //   <% end %>
             // We have to query first, to only create the element once.
-            // Due to how comments/_threads.html.erb currently works,
-            // the other code path (replying to an existing comment)
-            // doesn't need this query
             if (!qS(storyComments, '.prior_comment_has_children')) {
               const span = document.createElement('span')
               span.classList.add("prior_comment_has_children")

@@ -214,9 +214,7 @@
 <% end %>
 
 <%# close tree of replies %>
-<% top_comment_depth && (previous_depth - top_comment_depth).times do %>
+<% top_comment_depth && (previous_depth - top_comment_depth + 1).times do %>
     </li>
   </ol>
 <% end %>
-</li>
-</ol> <%# matches very first comment %>

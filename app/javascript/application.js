@@ -288,14 +288,6 @@ class _LobstersFunction {
             parentTreeline.classList.remove('no_children')
 
             // comments/_threads.html.erb:
-            //   <% if comment.depth != top_comment_depth %>
-            //     <div class="comment_siblings_tree_line"></div>
-            //   <% end %>
-            const treeline = document.createElement('div')
-            treeline.classList.add('comment_siblings_tree_line')
-            commentSubtree.append(treeline)
-
-            // comments/_threads.html.erb:
             //   <% if comment.depth > previous_depth %>
             //     <span class="prior_comment_has_children"></span>
             const span = document.createElement('span')

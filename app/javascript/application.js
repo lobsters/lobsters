@@ -262,22 +262,22 @@ class _LobstersFunction {
 
           const wrappedComment = document.createElement('p')
           wrappedComment.innerHTML = text
-          const comment = qS(wrappedComment, '.comments_subtree')
+          const commentSubtree = qS(wrappedComment, '.comments_subtree')
 
           const replyForm = parentSelectorOrNull(form, '.reply_form_temporary')
           if (replyForm) {
             // user submitted from a temporary reply form, so this is a reply to an existing comment
-            const parentComment = parentSelector(replyForm, '.comments_subtree')
+            const parentSubtree = parentSelector(replyForm, '.comments_subtree')
             replyForm.remove()
 
-            const children = qS(parentComment, '.comments')
-            children.prepend(comment)
+            const children = qS(parentSubtree, '.comments')
+            children.prepend(commentSubtree)
 
             /// update styles to exactly reflect what would be generated on the backend
 
             // comments/_comment.html.erb:
             //   <%= comment.reply_count.to_i == 0 ? "no_children" : "" %>
-            const parentTreeline = qS(parentComment, '.comment_parent_tree_line')
+            const parentTreeline = qS(parentSubtree, '.comment_parent_tree_line')
             parentTreeline.classList.remove('no_children')
 
             // comments/_threads.html.erb:
@@ -286,21 +286,21 @@ class _LobstersFunction {
             //   <% end %>
             const treeline = document.createElement('div')
             treeline.classList.add('comment_siblings_tree_line')
-            comment.append(treeline)
+            commentSubtree.append(treeline)
 
             // comments/_threads.html.erb:
             //   <% if comment.depth > previous_depth %>
             //     <span class="prior_comment_has_children"></span>
             const span = document.createElement('span')
             span.classList.add("prior_comment_has_children")
-            parentComment.insertBefore(span, children)
+            parentSubtree.insertBefore(span, children)
 
           } else {
             // there is no temporary reply form, so user must have created a "top-level" comment
             parentSelector(form, '.comment_form_container').remove()
             const storyComments = qS('#story_comments')
             const comments = qS(storyComments, '.comments')
-            comments.prepend(comment)
+            comments.prepend(commentSubtree)
 
             // comments/_threads.html.erb:
             //   <% if thread.any? %>
@@ -718,8 +718,8 @@ onPageLoad(() => {
     event.preventDefault();
     if (!Lobster.curUser) return Lobster.bounceToLogin();
 
-    const commentInfo = parentSelector(event.target, '.comment');
-    const commentId = commentInfo.getAttribute('id');
+    const comment = parentSelector(event.target, '.comment');
+    const commentId = comment.getAttribute('id');
 
     // guard: don't create multiple reply boxes to one comment
     if (qS('#reply_form_' + commentId)) { return false; }
@@ -734,11 +734,11 @@ onPageLoad(() => {
     let div = document.createElement('div');
     div.innerHTML = '';
     div.classList.add('reply_form_temporary')
-    const comment = parentSelector(commentInfo, '.comments_subtree');
-    const children = qS(comment, '.comments')
+    const commentSubtree = parentSelector(comment, '.comments_subtree');
+    const children = qS(commentSubtree, '.comments')
     children.prepend(div)
 
-    fetchWithCSRF('/comments/' + commentInfo.getAttribute('data-shortid') + '/reply')
+    fetchWithCSRF('/comments/' + comment.getAttribute('data-shortid') + '/reply')
       .then(response => {
         response.text().then(text => {
           // guard: don't create multiple reply boxes to one comment

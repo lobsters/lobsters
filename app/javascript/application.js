@@ -282,11 +282,6 @@ class _LobstersFunction {
 
             /// update styles to exactly reflect what would be generated on the backend
 
-            // comments/_comment.html.erb:
-            //   <%= comment.reply_count.to_i == 0 ? "no_children" : "" %>
-            const parentTreeline = qS(parentSubtree, '.comment_parent_tree_line')
-            parentTreeline.classList.remove('no_children')
-
             // comments/_threads.html.erb:
             //   <% if comment.depth > previous_depth %>
             //     <span class="prior_comment_has_children"></span>

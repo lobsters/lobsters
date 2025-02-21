@@ -272,46 +272,21 @@ class _LobstersFunction {
           const commentSubtree = qS(wrappedComment, '.comments_subtree')
 
           const replyForm = parentSelectorOrNull(form, '.reply_form_temporary')
+          let comments = null
           if (replyForm) {
             // user submitted from a temporary reply form, so this is a reply to an existing comment
             const parentSubtree = parentSelector(replyForm, '.comments_subtree')
             replyForm.remove()
-
-            const children = qS(parentSubtree, '.comments')
-            children.prepend(commentSubtree)
-
-            /// update styles to exactly reflect what would be generated on the backend
-
-            // comments/_threads.html.erb:
-            //   <% if comment.depth > previous_depth %>
-            //     <span class="prior_comment_has_children"></span>
-            // We have to query first, to only create the element once.
-            if (!qS(parentSubtree, '.prior_comment_has_children')) {
-              const span = document.createElement('span')
-              span.classList.add("prior_comment_has_children")
-              parentSubtree.insertBefore(span, children)
-            }
+            comments = qS(parentSubtree, '.comments')
           } else {
             // There is no temporary reply form, so user must have created a "top-level" comment.
             // Currently the template stories/show.html.erb puts the top-level comment box
             // in a different DOM subtree from the list of story comments,
             // so we have to manually remove the form and add the reply elsewhere on the page
             parentSelector(form, '.comment_form_container').remove()
-            const storyComments = qS('#story_comments')
-            const comments = qS(storyComments, '.comments')
-            comments.prepend(commentSubtree)
-
-            // comments/_threads.html.erb:
-            //   <% if thread.any? %>
-            //     <span class="prior_comment_has_children"></span>
-            //   <% end %>
-            // We have to query first, to only create the element once.
-            if (!qS(storyComments, '.prior_comment_has_children')) {
-              const span = document.createElement('span')
-              span.classList.add("prior_comment_has_children")
-              storyComments.insertBefore(span, comments)
-            }
+            comments = qS('#story_comments > .comments')
           }
+          comments.prepend(commentSubtree)
 
         })
       })

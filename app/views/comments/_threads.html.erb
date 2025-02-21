@@ -1,21 +1,12 @@
 <%# locals: (thread:, story: nil, ribbon: nil) -%>
 <% previous_depth = nil %>
 <% top_comment_depth = nil %>
-
-<% if thread.any? %>
-  <%# brittle - see li.comments_subtree > .comment:nth-last-child(2) in css %>
-  <span class="prior_comment_has_children"></span>
-<% end %>
-
 <%# open list of threads %>
 <ol class="comments">
 <% thread.each do |comment| %>
 
     <% if previous_depth %>
       <% if comment.depth > previous_depth %>
-        <%# brittle - see li.comments_subtree > .comment:nth-last-child(2) in css %>
-        <span class="prior_comment_has_children"></span>
-
         <%# open tree of replies to the previous comment %>
         <ol class="comments">
       <% else %>
@@ -93,7 +84,7 @@
     <div class="comment_parent_tree_line
       <%= can_flag ? "can_flag" : "" %>
       <%= score_display != "&nbsp;" ? "score_shown" : "" %>
-      <%= comment.reply_count.to_i == 0 ? "no_children" : "" %>"></div>
+      "></div>
   <% end %>
 
   <div class="details">

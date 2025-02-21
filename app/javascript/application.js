@@ -98,16 +98,6 @@ const removeExtraInputs = () => {
   }
 }
 
-const createChildList = (parent) => {
-  let children = qS(parent, '.comments')
-  if (!children) {
-    children = document.createElement('ol')
-    children.classList.add('comments')
-    parent.append(children)
-  }
-  return children
-}
-
 class _LobstersFunction {
   constructor (username) {
     this.curUser = null;
@@ -280,7 +270,7 @@ class _LobstersFunction {
             const parentComment = parentSelector(replyForm, '.comments_subtree')
             replyForm.remove()
 
-            const children = createChildList(parentComment)
+            const children = qS(parentComment, '.comments')
             children.prepend(comment)
 
             /// update styles to exactly reflect what would be generated on the backend
@@ -309,7 +299,7 @@ class _LobstersFunction {
             // there is no temporary reply form, so user must have created a "top-level" comment
             parentSelector(form, '.comment_form_container').remove()
             const storyComments = qS('#story_comments')
-            const comments = createChildList(storyComments)
+            const comments = qS(storyComments, '.comments')
             comments.prepend(comment)
           }
 
@@ -734,7 +724,7 @@ onPageLoad(() => {
     div.innerHTML = '';
     div.classList.add('reply_form_temporary')
     const comment = parentSelector(commentInfo, '.comments_subtree');
-    const children = createChildList(comment)
+    const children = qS(comment, '.comments')
     children.prepend(div)
 
     fetchWithCSRF('/comments/' + commentInfo.getAttribute('data-shortid') + '/reply')

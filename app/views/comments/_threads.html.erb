@@ -1,21 +1,28 @@
 <%# locals: (thread:, story: nil, ribbon: nil) -%>
 <% previous_depth = nil %>
 <% top_comment_depth = nil %>
+
+<%# brittle - see li.comments_subtree > .comment:nth-last-child(2) in css %>
+<span class="prior_comment_has_children"></span>
+
+<ol class="comments">
 <% thread.each do |comment| %>
 
-    <% if !previous_depth || comment.depth > previous_depth %>
-      <%# brittle - see li.comments_subtree > .comment:nth-last-child(2) in css %>
-      <span class="prior_comment_has_children"></span>
+    <% if previous_depth %>
+      <% if comment.depth > previous_depth %>
+        <%# brittle - see li.comments_subtree > .comment:nth-last-child(2) in css %>
+        <span class="prior_comment_has_children"></span>
 
-      <ol class="comments">
-    <% elsif previous_depth == comment.depth %>
-      </li>
-    <% else %>
-      <% (previous_depth - comment.depth).times do %>
-          </li>
-        </ol>
+        <ol class="comments">
+      <% elsif previous_depth == comment.depth %>
+        </li>
+      <% else %>
+        <% (previous_depth - comment.depth).times do %>
+            </li>
+          </ol>
+        <% end %>
+        </li>
       <% end %>
-      </li>
     <% end %>
     <% previous_depth = comment.depth %>
     <% top_comment_depth ||= comment.depth %>
@@ -218,3 +225,6 @@
     </li>
   </ol>
 <% end %>
+
+<%# close list of threads %>
+</ol>

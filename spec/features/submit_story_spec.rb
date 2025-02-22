@@ -204,4 +204,17 @@ RSpec.feature "Submitting Stories", type: :feature do
     expect(Story.last.url).to_not include("lobsters")
     expect(ModNote.last.user).to eq(user)
   end
+
+  scenario "brigading" do
+    inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
+
+    expect {
+      visit "/stories/new"
+      fill_in "URL", with: "https://github.com/xkcd/comic/issues/1172"
+      fill_in "Title", with: "Yell at this maintainer about my bug"
+      select :tag1, from: "Tags"
+      click_button "Submit"
+    }.not_to(change { Story.count })
+    expect(ModNote.last.user).to eq(user)
+  end
 end

@@ -276,7 +276,7 @@ class Story < ApplicationRecord
     return if url.blank? || !new_record? || !(
       url.match?(%r{^https://bitbucket.org/[^/]+/[^/]+/(issues|pull-requests)/}) ||
       url.match?(%r{^https://bugs.launchpad.net/[^/]+/\+bug/}) ||
-      url.match?(%r{^https://chiselapp/user/[^/]+/repository/[^/]+/tktview/}) ||
+      url.match?(%r{^https://chiselapp.com/user/[^/]+/repository/[^/]+/tktview/}) ||
       url.match?(%r{^https://codeberg.org/[^/]+/[^/]+/(issues|pulls)/}) ||
       url.match?(%r{^https://github.com/[^/]+/[^/]+/(discussions|issues|pull)/}) ||
       url.match?(%r{^https://gitlab.com/.+/(issues|merge_requests)/}) ||

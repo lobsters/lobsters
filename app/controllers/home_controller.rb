@@ -77,6 +77,7 @@ class HomeController < ApplicationController
 
     @title = "Newest Stories"
     @above = {partial: "stories/subnav"}
+    @last_read_story = find_last_read_story
 
     @rss_link = {
       title: "RSS 2.0 - Newest Items",
@@ -95,7 +96,7 @@ class HomeController < ApplicationController
       format.json { render json: @stories }
     end
 
-    @user&.touch(:last_read_newest)
+    @user&.touch(:last_read_newest) if @last_read_story || @user&.last_read_newest.nil?
   end
 
   def newest_by_user
@@ -375,5 +376,9 @@ class HomeController < ApplicationController
 
   def tags_with_description_for_rss(tags)
     tags.map { |tag| "#{tag.tag} (#{tag.description})" }.join(" ")
+  end
+
+  def find_last_read_story
+    @stories.find { |story| @user&.last_read_newest&.after?(story.created_at) }
   end
 end

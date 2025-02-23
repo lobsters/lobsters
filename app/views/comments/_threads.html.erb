@@ -1,25 +1,33 @@
 <%# locals: (thread:, story: nil, ribbon: nil) -%>
 <% previous_depth = nil %>
 <% top_comment_depth = nil %>
+<%# open list of threads %>
+<ol class="comments">
 <% thread.each do |comment| %>
 
-    <% if !previous_depth || comment.depth > previous_depth %>
-      <%# brittle - see li.comments_subtree > .comment:nth-last-child(2) in css %>
-      <span class="prior_comment_has_children"></span>
+    <% if previous_depth %>
+      <% if comment.depth > previous_depth %>
+        <%# open tree of replies to the previous comment %>
+        <ol class="comments">
+      <% else %>
+        <%# previous comment is the deepest comment in its subtree,
+            so it has no replies, only an empty list of replies %>
+        <ol class="comments"></ol>
 
-      <ol class="comments">
-    <% elsif previous_depth == comment.depth %>
-      </li>
-    <% else %>
-      <% (previous_depth - comment.depth).times do %>
-          </li>
-        </ol>
+        <%# close tree of replies %>
+        <% (previous_depth - comment.depth).times do %>
+            </li>
+          </ol>
+        <% end %>
+
+        <%# close previous subtree %>
+        </li>
       <% end %>
-      </li>
     <% end %>
     <% previous_depth = comment.depth %>
     <% top_comment_depth ||= comment.depth %>
 
+    <%# open current subtree %>
     <li class="comments_subtree">
 
     <%
@@ -76,7 +84,7 @@
     <div class="comment_parent_tree_line
       <%= can_flag ? "can_flag" : "" %>
       <%= score_display != "&nbsp;" ? "score_shown" : "" %>
-      <%= comment.reply_count.to_i == 0 ? "no_children" : "" %>"></div>
+      "></div>
   <% end %>
 
   <div class="details">
@@ -213,10 +221,21 @@
 
 <% end %>
 
-<%# close tree of replies %>
-<% top_comment_depth && (previous_depth - top_comment_depth).times do %>
-    </li>
-  </ol>
+<% if top_comment_depth %>
+
+  <%# previous comment is the deepest comment in its subtree,
+      so it has no replies, only an empty list of replies %>
+  <ol class="comments"></ol>
+
+  <%# close tree of replies %>
+  <% (previous_depth - top_comment_depth).times do %>
+      </li>
+    </ol>
+  <% end %>
+
+  <%# close top subtree %>
+  </li>
 <% end %>
-</li>
-</ol> <%# matches very first comment %>
+
+<%# close list of threads %>
+</ol>

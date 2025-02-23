@@ -659,7 +659,8 @@ li .comment_parent_tree_line.score_shown {
 li .comment_parent_tree_line.can_flag {
 	top: 56px;
 }
-li .comment_parent_tree_line.no_children {
+/* hide for comments that don't have children */
+li:not(:has(> .comments > li)) > .comment > .comment_parent_tree_line {
 	border-left-color: transparent;
 }
 li .comment_siblings_tree_line {

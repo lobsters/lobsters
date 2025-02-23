@@ -85,6 +85,21 @@ class ModNote < ApplicationRecord
     # rubocop:enable Rails/SaveBang
   end
 
+  def self.tattle_on_brigading!(story)
+    create_without_dupe!(
+      moderator: InactiveUser.inactive_user,
+      user: story.user,
+      created_at: Time.current,
+      note: "Attempted to submit a project's bug tracker or discussion:\n" \
+        "- user joined: #{how_long_ago(story.user.created_at)}\n" \
+        "- url: #{story.url}\n" \
+        "- title: #{story.title}\n" \
+        "- user_is_author: #{story.user_is_author}\n" \
+        "- tags: #{story.tags.map(&:tag).join(" ")}\n" \
+        "- description: #{story.description}\n"
+    )
+  end
+
   def self.tattle_on_deleted_login(user)
     # rubocop:disable Rails/SaveBang
     create(

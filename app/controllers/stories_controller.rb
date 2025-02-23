@@ -118,7 +118,7 @@ class StoriesController < ApplicationController
 
   def preview
     @story = Story.new
-    update_story_attributers
+    update_story_attributes
     @story.user_id = @user.id
     @story.previewing = true
 

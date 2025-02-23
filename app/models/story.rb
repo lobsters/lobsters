@@ -194,6 +194,9 @@ class Story < ApplicationRecord
     if title.match(GRAPHICS_RE)
       errors.add(:title, " may not contain graphic codepoints")
     end
+    if title == title.upcase
+      errors.add(:title, " doesn't need to scream, ASCII has supported lowercase since June 17, 1963.")
+    end
 
     if !errors.any? && url.blank?
       self.user_is_author = true

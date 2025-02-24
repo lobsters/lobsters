@@ -754,9 +754,11 @@ class Story < ApplicationRecord
 
   def tag_changes
     # 'tags_was' is bad grammar but is named to mirror ActiveModel::Dirty's convention of providing
-    # a 'attribute_was' reader
-
+    # a 'attribute_was' reader. The AR associations API is pretty broad, so rather than try to
+    # override all the methods to maintain state, this exception should prompt you to only use
+    # the tags= method. See StoriesController#update for an example.
     raise "Controller didn't save tags_was for edit logging" if tags_was.nil?
+
     old_tag_names = tags_was.map(&:tag).join(" ")
     new_tag_names = tags.map(&:tag).join(" ")
 

@@ -180,6 +180,7 @@ class Story < ApplicationRecord
       check_not_new_domain_from_new_user
       # This would probably have a too-high false-positive rate, I want to have approvals first.
       # check_not_new_origin_from_new_user
+      check_not_brigading
       check_not_pushcx_stream
       errors.add(:url, "is not valid") unless url.match(Utils::URL_RE)
     elsif description.to_s.strip == ""
@@ -192,6 +193,9 @@ class Story < ApplicationRecord
     end
     if title.match(GRAPHICS_RE)
       errors.add(:title, " may not contain graphic codepoints")
+    end
+    if title == title.upcase
+      errors.add(:title, " doesn't need to scream, ASCII has supported lowercase since June 17, 1963.")
     end
 
     if !errors.any? && url.blank?
@@ -269,6 +273,28 @@ class Story < ApplicationRecord
       ModNote.tattle_on_story_origin!(self, "banned")
       errors.add(:url, "is from banned origin #{origin.identifier}: #{origin.banned_reason}")
     end
+  end
+
+  def check_not_brigading
+    return if url.blank? || !new_record? || !(
+      url.match?(%r{^https://bitbucket.org/[^/]+/[^/]+/(issues|pull-requests)/}) ||
+      url.match?(%r{^https://bugs.launchpad.net/[^/]+/\+bug/}) ||
+      url.match?(%r{^https://chiselapp.com/user/[^/]+/repository/[^/]+/tktview/}) ||
+      url.match?(%r{^https://codeberg.org/[^/]+/[^/]+/(issues|pulls)/}) ||
+      url.match?(%r{^https://github.com/[^/]+/[^/]+/(discussions|issues|pull)/}) ||
+      url.match?(%r{^https://gitlab.com/.+/(issues|merge_requests)/}) ||
+      url.match?(%r{^https://savannah.gnu.org/bugs/}) ||
+      url.match?(%r{^https://sourceforge.net/p/[^/]+/(support|tickets)/})
+    )
+
+    ModNote.tattle_on_brigading!(self)
+    errors.add :url, <<~EXPLANATION
+      is to a project's bug tracker or discussions; see the Guidelines on brigading. It's bad for
+      projects when we dump 100k+ people into their community spaces, and Lobsters doesn't have good
+      threads when we're dropped without context into the middle of a controvery. If you weren't
+      trying to brigade the site into a fight you are involved in: find an overview, preferably from
+      a neutral third party. If you were trying to do that: don't.
+    EXPLANATION
   end
 
   def check_not_pushcx_stream

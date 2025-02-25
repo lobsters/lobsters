@@ -37,7 +37,7 @@ class UsersController < ApplicationController
 
     if params[:by].to_s == "karma"
       content = Rails.cache.fetch("users_by_karma_#{newest_user}", expires_in: (60 * 60 * 24)) {
-        @users = User.select(*attrs).order(karma: :desc, id: asc).to_a
+        @users = User.select(*attrs).order(karma: :desc, id: :asc).to_a
         @user_count = @users.length
         @title << " By Karma"
         render_to_string action: "list", layout: nil

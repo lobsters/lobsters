@@ -1,6 +1,6 @@
 ignore:
   - '**/*':
-    # stop deleting variables in the midddle of a refactor you meddling fuck
+    # stop deleting variables in the middle of a refactor you meddling fuck
     - Lint/UselessAssignment
     # there's no "don't delete these records or shit will be on fire" option,
     # just various "sure automatically destroy lots of data yolo" options

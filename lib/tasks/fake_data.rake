@@ -248,6 +248,7 @@ class FakeDataGenerator
         story.editor = User.moderators.sample
         story.moderation_reason = Faker::Lorem.sentence(word_count: 5)
       end
+      story.tags_was = story.tags.to_a
       story.update!(is_deleted: true)
     end
     puts
@@ -283,6 +284,7 @@ class FakeDataGenerator
       story.merged_story_id = second_story.id
       story.editing_from_suggestions = true
       story.moderation_reason = Faker::Lorem.sentence(word_count: 5)
+      story.tags_was = story.tags.to_a
       story.save!
     end
     puts
@@ -294,6 +296,7 @@ class FakeDataGenerator
       story.title = Faker::Lorem.sentence(word_count: 4)
       story.editing_from_suggestions = true
       story.moderation_reason = Faker::Lorem.sentence(word_count: 5)
+      story.tags_was = story.tags.to_a
       story.save!
     end
     puts
@@ -305,6 +308,7 @@ class FakeDataGenerator
       story.is_deleted = true
       story.editing_from_suggestions = true
       story.moderation_reason = Faker::Lorem.sentence(word_count: 5)
+      story.tags_was = story.tags.to_a
       story.save!
     end
     puts

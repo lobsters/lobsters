@@ -5,7 +5,6 @@ license](https://github.com/lobsters/lobsters/blob/master/LICENSE).  All code
 submitted must be licensed under these or more-permissive terms (2-clause BSD,
 MIT, ISC, etc.).
 
-
 ### The most important thing
 
 Thanks for considering spending your time contributing to the codebase.
@@ -16,7 +15,6 @@ and there's a [complete API doc](https://api.rubyonrails.org/).
 
 We consider contributions to be gifts, and there's no gift you can give that obligates you to give more gifts.
 If you reported an issue or opened a PR but don't want to continue with it, especially when a maintainer is asking for more info or revisions, please do tell us you're done with it so we know to carry on with it ourselves.
-
 
 ### Getting oriented
 
@@ -36,14 +34,13 @@ If you have ideas, please come discuss them on [/t/meta](https://lobste.rs/t/met
 in [the chat room](https://lobste.rs/chat),
 or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid wasted effort.
 
-
 ### Making your change
 
 * Fork [lobsters/lobsters](https://github.com/lobsters/lobsters) on Github.
 
 * Run through the setup steps in `README.md`
 
-* Create a branch to work on: `git checkout -b ...' 
+* Create a branch to work on: `git checkout -b ...'
 
 * Write your commit messages in present tense ("fix foo", not "fixed foo").
   [Mention a GitHub issue number](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/using-keywords-in-issues-and-pull-requests) if there is one.
@@ -56,11 +53,11 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
 * You can "run the build" (see `.github/workflows/check.yml`) locally with
   `bundle exec rspec && bundle exec standardrb --fix-unsafely && brakeman -q`.
 
-  * [rspec](https://rspec.info/documentation` is the test suite.
+  * [rspec](https://rspec.info/documentation) is the test suite.
     It's a big DSL so it has a pretty steep learning curve.
     It's easiest to get started by duplicating existing tests.
   * [standardrb](https://github.com/standardrb/standard) is the linter/formatter.
-    There's very nice <a href="https://github.com/standardrb/standard#user-content-editor-support">editor integration available</a>.
+    There's very nice [editor integration available](https://github.com/standardrb/standard#user-content-editor-support).
   * [brakeman](https://brakemanscanner.org/) is the security linter.
     You can run `brakeman -I` to interactively add a note if a new warning is a false positives.
     Brakeman is conservatively configured to "fail" when a new version of brakeman is released.
@@ -70,7 +67,6 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
     So if brakeman warns you about code you didn't write, don't panic, it's probably fine.
     Push your PR and @mention me, I'll help sort it out.
 
-
 ### Sharing your work
 
 * Push your changes to your fork of the repository: `git push origin`
@@ -78,4 +74,3 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
 * Open a pull request to [lobsters/lobsters](https://github.com/lobsters/lobsters).
   You're welcome to open a PR for a work in progress if you want to share progress or ask for help.
   It's a big help if you explicitly write in a comment when you think the code is done!
-

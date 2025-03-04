@@ -1,7 +1,14 @@
 <%= render partial: @above if @above %>
 
+<% already_printed_newest_line = false %>
 <ol class="comments comments1">
   <% @comments.each do |comment| %>
+    <% if action_name == "index" && 
+       !already_printed_newest_line && 
+       @last_read_comment == comment %>
+       <div class="last_read_newest">Last Read</div>
+       <% already_printed_newest_line = true %>
+    <% end %>
     <li><%= render "comments/comment", :comment => comment,
       :show_story => true %>
       <ol class="comments"></ol>

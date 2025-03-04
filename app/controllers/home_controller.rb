@@ -96,7 +96,7 @@ class HomeController < ApplicationController
       format.json { render json: @stories }
     end
 
-    @user&.touch(:last_read_newest) if @last_read_story || @user&.last_read_newest.nil?
+    @user&.touch(:last_read_newest_story) if @last_read_story || @user&.last_read_newest_story.nil?
   end
 
   def newest_by_user
@@ -379,6 +379,6 @@ class HomeController < ApplicationController
   end
 
   def find_last_read_story
-    @stories.find { |story| @user&.last_read_newest&.after?(story.created_at) }
+    @stories.find { |story| @user&.last_read_newest_story&.after?(story.created_at) }
   end
 end

@@ -288,6 +288,7 @@ class CommentsController < ApplicationController
       c.current_vote = @votes[c.id]
       c.vote_summary = summaries[c.id]
     end
+    @last_read_comment = find_last_read_comment
 
     respond_to do |format|
       format.html { render action: "index" }
@@ -303,6 +304,8 @@ class CommentsController < ApplicationController
         end
       }
     end
+
+    @user&.touch(:last_read_newest_comment) if @last_read_comment || @user&.last_read_newest_comment.nil?
   end
 
   def upvoted
@@ -418,5 +421,9 @@ class CommentsController < ApplicationController
     else
       redirect_to comment.path
     end
+  end
+
+  def find_last_read_comment
+    @comments.find { |comment| @user&.last_read_newest_comment&.after?(comment.created_at) }
   end
 end

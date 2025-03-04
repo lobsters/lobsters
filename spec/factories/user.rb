@@ -7,7 +7,8 @@ FactoryBot.define do
     sequence(:username) { |n| "username#{n}" }
     password { "blah blah" }
     password_confirmation(&:password)
-    last_read_newest { 1.hour.ago }
+    last_read_newest_story { 1.hour.ago }
+    last_read_newest_comment { 1.hour.ago }
     trait(:banned) do
       transient do
         banner { nil }

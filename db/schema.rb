@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_10_214901) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_02_102016) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -402,7 +402,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_10_214901) do
     t.string "disabled_invite_reason", limit: 200
     t.text "settings", size: :medium
     t.boolean "show_email", default: false, null: false
-    t.datetime "last_read_newest"
+    t.datetime "last_read_newest_story"
+    t.datetime "last_read_newest_comment"
     t.index ["banned_by_user_id"], name: "users_banned_by_user_id_fk"
     t.index ["disabled_invite_by_user_id"], name: "users_disabled_invite_by_user_id_fk"
     t.index ["email"], name: "index_users_on_email", unique: true

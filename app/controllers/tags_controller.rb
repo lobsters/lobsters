@@ -8,7 +8,7 @@ class TagsController < ApplicationController
     @title = "Tags"
 
     @categories = Category.order(category: :asc).includes(:tags)
-    @tags = Tag.all
+    @tags = Tag.all.preload(:category)
 
     @filtered_tags = if @user
       @user.tag_filter_tags.index_by(&:id)

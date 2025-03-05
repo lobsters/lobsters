@@ -91,4 +91,20 @@ class Tag < ApplicationRecord
       m.tag_id = id
     end
   end
+
+  def as_json
+    h = super(
+      only: [
+        :tag,
+        :description,
+        :privileged,
+        :is_media,
+        :active,
+        :hotness_mod,
+        :permit_by_new_user
+      ]
+    )
+    h[:category] = category.category
+    h
+  end
 end

@@ -117,6 +117,8 @@ class MastodonApp < ApplicationRecord
       # Rails.logger.info "Unexpected failure revoking token from #{name}, response was #{res.body}"
     end
     ps == {}
+  rescue OpenSSL::SSL::SSLError
+    errors.add :base, "#{name} isn't a working SSL server when fetching user token"
   end
 
   def self.find_or_register(instance_name)

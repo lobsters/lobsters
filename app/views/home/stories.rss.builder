@@ -1,9 +1,6 @@
 xml.instruct! :xml, version: "1.0"
 xml.rss version: "2.0", "xmlns:atom": "http://www.w3.org/2005/Atom" do
   xml.channel do
-    title = Rails.application.domain
-    title += ": " + title if @title.present?
-    xml.title title
     xml.title Rails.application.name + (@title.present? ? ": #{@title}" : "")
     xml.link Rails.application.root_url
     xml.tag! "atom:link", nil, href: request.original_url, rel: :self

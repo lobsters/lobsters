@@ -234,14 +234,14 @@ class User < ApplicationRecord
 
   def authenticate_totp_recovery(code)
     return false unless totp_recovery_codes.include?(code)
-    
+
     totp_recovery_codes.delete(code)
     save!
   end
 
   def authenticate_totp(code)
-      totp = ROTP::TOTP.new(totp_secret)
-      totp.verify(code)
+    totp = ROTP::TOTP.new(totp_secret)
+    totp.verify(code)
   end
 
   def avatar_path(size = 100)

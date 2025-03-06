@@ -207,7 +207,7 @@ class LoginController < ApplicationController
 
       session[:u] = tmpu.session_token
       session.delete(:twofa_u)
-      
+
       redirect_to "/settings/2fa"
     else
       flash[:error] = "Your TOTP code did not match.  Please try again."

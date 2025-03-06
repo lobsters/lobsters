@@ -2,5 +2,8 @@
 <li class="comments_subtree">
   <%= render "comments/comment", :comment => comment,
     :show_tree_lines => true %>
+  <% if comment.parent_comment %>
+    <div class="comment_siblings_tree_line"></div>
+  <% end %>
   <ol class="comments"></ol>
 </li>

@@ -83,6 +83,7 @@ class User < ApplicationRecord
     s.string :mastodon_username
     s.any :keybase_signatures, array: true
     s.string :homepage
+    s.string :totp_recovery_codes, array: true, default: [], null: false
   end
 
   validates :prefers_color_scheme, inclusion: %w[system light dark]
@@ -231,9 +232,16 @@ class User < ApplicationRecord
     h
   end
 
+  def authenticate_totp_recovery(code)
+    return false unless totp_recovery_codes.include?(code)
+    
+    totp_recovery_codes.delete(code)
+    save!
+  end
+
   def authenticate_totp(code)
-    totp = ROTP::TOTP.new(totp_secret)
-    totp.verify(code)
+      totp = ROTP::TOTP.new(totp_secret)
+      totp.verify(code)
   end
 
   def avatar_path(size = 100)

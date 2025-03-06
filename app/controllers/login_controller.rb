@@ -202,6 +202,13 @@ class LoginController < ApplicationController
       session[:u] = tmpu.session_token
       session.delete(:twofa_u)
       redirect_to "/"
+    elsif (tmpu = find_twofa_user) && tmpu.authenticate_totp_recovery(params[:totp_code])
+      flash[:error] = "You used a OTP recovery code to log in. Please update your OTP device to ensure continued access to your account."
+
+      session[:u] = tmpu.session_token
+      session.delete(:twofa_u)
+      
+      redirect_to "/settings/2fa"
     else
       flash[:error] = "Your TOTP code did not match.  Please try again."
       redirect_to "/login/2fa"

@@ -57,6 +57,9 @@ class Story < ApplicationRecord
   scope :mod_preload?, ->(user) {
     user.try(:is_moderator?) ? preload(:suggested_taggings, :suggested_titles) : all
   }
+  scope :mod_single_preload?, ->(user) {
+    user.try(:is_moderator?) ? preload(:suggested_taggings, :suggested_titles, hidings: :user) : all
+  }
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, ->(user) {
     user.try(:is_moderator?) ? all : where(is_deleted: false).or(where(user_id: user.try(:id).to_i))

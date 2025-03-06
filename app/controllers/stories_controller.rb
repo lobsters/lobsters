@@ -431,7 +431,7 @@ class StoriesController < ApplicationController
   end
 
   def track_story_reads
-    @story = Story.where(short_id: params[:id]).first!
+    @story = Story.where(short_id: params[:id]).mod_single_preload?(@user).first!
     @ribbon = ReadRibbon.where(user: @user, story: @story).first_or_initialize
     yield
     @ribbon.bump

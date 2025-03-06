@@ -288,27 +288,27 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
             </span>
           <% end %>
           <% if story.is_hidden_by_cur_user %>
-            <span> | </span><%= link_to "unhide", story_unhide_path(story.short_id),
-              :class => "hider" %>
+            <span> | </span><%= link_to "unhide", story_unhide_path(story.short_id), :class => "hider" %>
           <% else %>
-            <span> | </span><%= link_to "hide", story_hide_path(story.short_id),
-              :class => "hider" %>
+            <span> | </span><%= link_to "hide", story_hide_path(story.short_id), :class => "hider" %>
           <% end %>
           <% if single_story && story.disownable_by_user?(@user) %>
           |
           <%= button_to("disown", story_disown_path(story.short_id), form_class: "disowner-form", params: { type: 'story' }) %>
           <% end %>
           <% if single_story && story.hider_count > 0 %>
-            (hidden by <%= pluralize(story.hider_count, "user") %>)
+            <% if story.is_hidden_by_cur_user %>
+              (hidden by you and <%= pluralize(story.hider_count - 1, "other user") %> )
+            <% else %>
+              (hidden by <%= pluralize(story.hider_count, "user") %>)
+            <% end %>
           <% end %>
           <% if !story.is_saved_by_cur_user %>
-            <span> | </span><%= link_to "save", story_save_path(story.short_id),
-                                       :class => "saver" %>
+            <span> | </span><%= link_to "save", story_save_path(story.short_id), :class => "saver" %>
           <% end %>
         <% end %>
         <% if story.is_saved_by_cur_user %>
-          <span> | </span><%= link_to "unsave", story_unsave_path(story.short_id),
-                                      :class => "saver" %>
+          <span> | </span><%= link_to "unsave", story_unsave_path(story.short_id), :class => "saver" %>
         <% end %>
         <% if story.url.present? && (!story.is_gone? || @user.try(:is_moderator?))  %>
           <span> | </span>

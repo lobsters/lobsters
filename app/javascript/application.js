@@ -779,6 +779,7 @@ onPageLoad(() => {
   });
 
   on('click', 'a.comment_editor', (event) => {
+    event.preventDefault();
     let comment = parentSelector(event.target, '.comment');
     const commentId = comment.getAttribute('data-shortid')
     fetch('/comments/' + commentId + '/edit')

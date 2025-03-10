@@ -135,7 +135,7 @@
       <% if !comment.previewing %>
         <% if comment.is_editable_by_user?(@user) %>
           |
-          <a class="comment_editor">edit</a>
+          <%= link_to 'edit', edit_comment_path(comment), class: :comment_editor %>
         <% end %>
 
         <% if comment.is_gone? && comment.is_undeletable_by_user?(@user) %>

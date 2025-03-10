@@ -100,8 +100,12 @@ class CommentsController < ApplicationController
       return render plain: "can't find comment", status: 400
     end
 
-    render partial: "commentbox", layout: false,
-      content_type: "text/html", locals: {comment: comment}
+    if request.xhr?
+      render partial: "commentbox", layout: false,
+        content_type: "text/html", locals: {comment: comment}
+    else
+      render "_commentbox", locals: {comment: comment, parents: comment.parents}
+    end
   end
 
   def reply

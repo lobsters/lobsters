@@ -76,13 +76,8 @@
   </div>
 
   <p></p>
-<% end %>
-<% if show_comment&.valid? %>
-  <div class="preview">
-    <%= render partial: "comment", locals: {
-      comment: show_comment,
-      show_tree_lines: show_tree_lines,
-    } %>
-  </div>
+
+  <%# placeholder to render preview into %>
+  <%= render partial: 'comments/preview', locals: { comment: show_comment } %>
 <% end %>
 </div>

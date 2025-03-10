@@ -304,7 +304,7 @@ class _LobstersFunction {
     })
       .then(response => {
         response.text().then(text => {
-          replace(form.parentElement, text);
+          replace(qS(form.parentElement, '.preview'), text);
           autosize(qSA('textarea'));
         });
       });

@@ -401,12 +401,11 @@ class CommentsController < ApplicationController
     comment.previewing = true
     comment.is_deleted = false # show normal preview for deleted comments
 
-    render partial: "comments/commentbox",
+    render partial: "comments/preview",
       layout: false,
       content_type: "text/html",
       locals: {
         comment: comment,
-        show_comment: comment,
         show_tree_lines: params[:show_tree_lines]
       }
   end

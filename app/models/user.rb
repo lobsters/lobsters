@@ -441,7 +441,7 @@ class User < ApplicationRecord
 
     total_count = recent_comments_count + recent_stories_count
 
-    self.email = "#{username}@lobsters.example" if \
+    self.email = "#{username}@lobsters.example" if
       karma < 0 || total_count > 3 ||
         FlaggedCommenters.new("90d").check_list_for(self)
   end

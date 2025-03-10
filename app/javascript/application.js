@@ -279,7 +279,7 @@ class _LobstersFunction {
             replyForm.remove()
             comments = qS(parentSubtree, '.comments')
           } else {
-            // There is no temporary reply form, so user must have created a "top-level" comment.
+            // There is no temporary reply form, so user created a "top-level" comment or edited a comment.
             // Currently the template stories/show.html.erb puts the top-level comment box
             // in a different DOM subtree from the list of story comments,
             // so we have to manually remove the form and add the reply elsewhere on the page

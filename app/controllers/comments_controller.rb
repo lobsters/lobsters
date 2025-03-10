@@ -199,14 +199,11 @@ class CommentsController < ApplicationController
       votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, [comment.id])
       comment.current_vote = votes[comment.id]
       comment.vote_summary = Vote.comment_vote_summaries([comment.id])[comment.id]
-      # not using .touch because the :touch on the parent_comment association will already touch the
-      # upated_at columns up the reply chain to the story once
+      # not calling comment.touch because the :touch on the parent_comment association will already
+      # touch the updated_at columns up the reply chain to the story once
       comment.parent_comment&.touch(:last_reply_at)
 
-      render partial: "comments/comment",
-        layout: false,
-        content_type: "text/html",
-        locals: {comment: comment, show_tree_lines: params[:show_tree_lines]}
+      render_created_comment(comment, params[:show_tree_lines])
     else
       comment.current_vote = {vote: 1}
 
@@ -414,10 +411,10 @@ class CommentsController < ApplicationController
       }
   end
 
-  def render_created_comment(comment)
+  def render_created_comment(comment, show_tree_lines = true)
     if request.xhr?
       render partial: "comments/postedreply", layout: false,
-        content_type: "text/html", locals: {comment: comment}
+        content_type: "text/html", locals: {comment:, show_tree_lines:}
     else
       redirect_to comment.path
     end

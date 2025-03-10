@@ -1,7 +1,6 @@
-<%# locals: (comment:) -%>
+<%# locals: (comment:, show_tree_lines: true) -%>
 <li class="comments_subtree">
-  <%= render "comments/comment", :comment => comment,
-    :show_tree_lines => true %>
+  <%= render "comments/comment", :comment => comment, :show_tree_lines => show_tree_lines %>
   <% if comment.parent_comment %>
     <div class="comment_siblings_tree_line"></div>
   <% end %>

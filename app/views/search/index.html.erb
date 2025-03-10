@@ -100,7 +100,7 @@
               <br>Punctuation that might have been taken as a <a href="https://mariadb.com/kb/ru/full-text-index-overview/#in-boolean-mode">SQL search operator</a> was stripped.
             <% end %>
             <% if value.to_s != @search.strip_short_terms(value) %>
-              <br>1 and 2 character terms are not indexed.
+              <br>Terms must be at least 4 characters long.
               <% if value.to_s.downcase =~ /\b(d\b|go\b|ml\b|c([+][+]|\b)?)/ %>
                 <% lang = $& %>
                 <br>For the
@@ -113,6 +113,13 @@
                 <br>Use <span class="searchq">tag:ai</span> for artificial intelligence/machine learning
               <% end %>
             <% end %>
+          </dd>
+        <% when :shortword %>
+          <dt><span class="searchq"><%= value %></span></dt>
+          <dd>
+            Shortword: <span class="searchq"><%= value %></span>
+              <br>Terms must be at least 4 characters long.
+              If you're searching for a phrase, use quotes, like <span class="searchq">"Files are hard"</span>.
           </dd>
         <% when :catchall %>
           <dt><span class="searchq"><%= value %></span></dt>

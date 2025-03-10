@@ -7,8 +7,10 @@ class SearchParser < Parslet::Parser
   rule(:space?) { space.maybe }
 
   # this regexp should invert punctuation stripped by Search.strip_operators
-  rule(:term) { match('[\p{Word}_\\-\']').repeat(1).as(:term) >> space? }
-  rule(:quoted) { str('"') >> term.repeat(1).as(:quoted) >> str('"') >> space? }
+  rule(:term) { match('[\p{Word}_\\-\']').repeat(4).as(:term) >> space? }
+  # can't search for short terms https://github.com/lobsters/lobsters/issues/1237
+  rule(:shortword) { match('[\p{Word}_\\-\']').repeat(1, 3).as(:shortword) >> space? }
+  rule(:quoted) { str('"') >> (term | shortword).repeat(1).as(:quoted) >> str('"') >> space? }
 
   # User::VALID_USERNAME
   rule(:commenter) { str("commenter:") >> match("[@~]").repeat(0, 1) >> match("[A-Za-z0-9_\\-]").repeat(1, 24).as(:commenter) >> space? }
@@ -43,6 +45,7 @@ class SearchParser < Parslet::Parser
       user | # user must come after commenter and submitter
       # term and quoted after operators they would fail to consume
       term |
+      shortword |
       quoted |
       negated |
       # catchall must be last because it consumes everything

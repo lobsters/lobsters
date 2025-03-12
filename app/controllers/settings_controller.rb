@@ -134,7 +134,7 @@ class SettingsController < ApplicationController
 
       session[:u] = @user.session_token
 
-      flash[:success] = "Two-Factor Authentication has been enabled on your account. Your recovery codes are #{@user.totp_recovery_codes.join(", ")}. They can be used to access your account in the event that you loose access to your TOTP device. Store these in a safe place, "
+      flash[:success] = "Two-Factor Authentication has been enabled on your account. Your recovery codes are #{@user.totp_recovery_codes.join(", ")}. They can be used to access your account in the event that you lose access to your TOTP device. Store these in a safe place, separate from your TOTP device."
       session.delete(:totp_secret)
       redirect_to "/settings"
     else

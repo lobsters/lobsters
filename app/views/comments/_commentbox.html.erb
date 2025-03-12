@@ -1,4 +1,4 @@
-<%# locals: (comment:, story: nil, show_comment: nil, show_tree_lines: false, parents: nil) -%>
+<%# locals: (comment:, story: nil, show_comment: nil, show_tree_lines: false, redirect_on_submit: false, parents: nil) -%>
 <% if parents %>
   <ol class="comments comments1">
     <li class="comments_subtree">
@@ -15,6 +15,10 @@
 
   <%= f.hidden_field "story_id", value: comment.story.short_id %>
   <%= f.hidden_field "_method", value: "#{comment.new_record?? 'post' : 'patch'}" %>
+
+  <% if redirect_on_submit %>
+    <%= f.hidden_field "redirect_on_submit", value: true %>
+  <% end %>
 
   <% if comment.parent_comment %>
     <%= f.hidden_field "parent_comment_short_id", value: comment.parent_comment.short_id %>

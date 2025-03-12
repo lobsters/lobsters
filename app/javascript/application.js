@@ -289,8 +289,11 @@ class _LobstersFunction {
             // Currently the template stories/show.html.erb puts the top-level comment box
             // in a different DOM subtree from the list of story comments,
             // so we have to manually remove the form and add the reply elsewhere on the page
+
+            // Prefer iterating up the comments tree to the nearest parent. If there isn't one, we are creating
+            // a top-level comment, so fall back to the top of the comments tree.
+            comments = parentSelectorOrNull(form, '#story_comments .comments') || qS('#story_comments > .comments')
             parentSelector(form, '.comment_form_container').remove()
-            comments = qS('#story_comments > .comments')
           }
           comments.prepend(commentSubtree)
 

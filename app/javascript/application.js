@@ -782,7 +782,7 @@ onPageLoad(() => {
     event.preventDefault();
     let comment = parentSelector(event.target, '.comment');
     const commentId = comment.getAttribute('data-shortid')
-    fetch('/comments/' + commentId + '/edit')
+    fetchWithCSRF('/comments/' + commentId + '/edit')
       .then(response => {
         response.text().then(text => {
           replace(comment, text);

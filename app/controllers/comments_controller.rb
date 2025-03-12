@@ -104,7 +104,7 @@ class CommentsController < ApplicationController
       render partial: "commentbox", layout: false,
         content_type: "text/html", locals: {comment: comment}
     else
-      render "_commentbox", locals: {comment: comment, parents: comment.parents}
+      render "_commentbox", locals: {comment: comment, parents: comment.parents, redirect_on_submit: true}
     end
   end
 
@@ -207,7 +207,15 @@ class CommentsController < ApplicationController
       # touch the updated_at columns up the reply chain to the story once
       comment.parent_comment&.touch(:last_reply_at)
 
-      render_created_comment(comment, params[:show_tree_lines])
+      if !request.xhr?
+        return redirect_to comment.path
+      end
+
+      if params[:redirect_on_submit].present?
+        head :ok, x_location: comment.path
+      else
+        render_created_comment(comment, params[:show_tree_lines])
+      end
     else
       comment.current_vote = {vote: 1}
 

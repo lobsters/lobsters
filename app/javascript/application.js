@@ -87,7 +87,13 @@ const fetchWithCSRF = (url, params) => {
   params['headers'] = params['headers'] || new Headers;
   params['headers'].append('X-CSRF-Token', csrfToken());
   params['headers'].append('X-Requested-With', 'XMLHttpRequest'); // request.xhr?
-  return fetch(url, params);
+  return fetch(url, params).then(response => {
+    const x_location = response.headers.get('X-Location');
+    if(x_location !== null) {
+      window.location.replace(x_location);
+    }
+    return response;
+  });
 }
 
 const removeExtraInputs = () => {

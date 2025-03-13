@@ -59,9 +59,9 @@ describe SearchParser do
     it("parses terms with undescores") { expect(sp.term).to parse("foo_bar") }
     # Search#flatten_title relies on this:
     it("doesn't parse a quote") { expect(sp.term).to_not parse("a\"quote") }
-    # can't search for short terms https://github.com/lobsters/lobsters/issues/1237
+    # see shortword test below
     it("parses 4-character words") { expect(sp.term).to parse("hard") }
-    it("doesn't parse 3-character words") { expect(sp.term).to_not parse("are") }
+    it("parses 3-character words") { expect(sp.term).to parse("lua") }
     it("doesn't parse 2-character words") { expect(sp.term).to_not parse("of") }
     it("doesn't parse 1-character words") { expect(sp.term).to_not parse("i") }
   end
@@ -69,7 +69,7 @@ describe SearchParser do
   # can't search for short terms https://github.com/lobsters/lobsters/issues/1237
   describe "shortword rule" do
     it("doesn't parse 4-character words") { expect(sp.shortword).to_not parse("blob") }
-    it("parses 3-character words") { expect(sp.shortword).to parse("are") }
+    it("doesn't parse 3-character words") { expect(sp.shortword).to_not parse("lua") }
     it("parses 2-character words") { expect(sp.shortword).to parse("of") }
     it("parses 1-character words") { expect(sp.shortword).to parse("i") }
   end
@@ -170,8 +170,8 @@ describe SearchParser do
     end
 
     it "parses terms and quotes" do
-      expect('scrum "hot garbage" meeting').to parse_to(
-        [{term: "scrum"}, {quoted: [{shortword: "hot"}, {term: "garbage"}]}, {term: "meeting"}]
+      expect('scrum "my garbage" meeting').to parse_to(
+        [{term: "scrum"}, {quoted: [{shortword: "my"}, {term: "garbage"}]}, {term: "meeting"}]
       )
     end
   end

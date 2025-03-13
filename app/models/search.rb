@@ -281,7 +281,7 @@ class Search
     if terms.any?
       terms_sql = <<~SQL.tr("\n", " ")
         MATCH(story_texts.title, story_texts.description, story_texts.body)
-        AGAINST ('#{terms.map { |s| "+#{s}" }.join(", ")}' in boolean mode)
+        AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' in boolean mode)
       SQL
       query.joins!(:story_text).where! terms_sql
     end

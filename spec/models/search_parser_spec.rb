@@ -50,7 +50,9 @@ describe SearchParser do
   end
 
   describe "stopwords" do
-    it("parses a stopword") { expect(sp.stopword).to parse("of") }
+    it("parses a stopword") { expect(sp.stopword).to parse("to") }
+    it("parses a stopword followed by whitespace") { expect(sp.stopword).to parse("or ") }
+    it("doesn't a stopword prefixing a term") { expect(sp.stopword).to_not parse("off") }
     it("doesn't parse a random short non-stopword") { expect(sp.stopword).to_not parse("jk") }
   end
 

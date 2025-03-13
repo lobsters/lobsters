@@ -118,8 +118,16 @@
           <dt><span class="searchq"><%= value %></span></dt>
           <dd>
             Shortword: <span class="searchq"><%= value %></span>
-              <br>Terms must be at least 4 characters long.
+              <br>Terms must be at least 3 characters long.
               If you're searching for a phrase, use quotes, like <span class="searchq">"Files are hard"</span>.
+          </dd>
+        <% when :stopword %>
+          <dt><span class="searchq"><%= value %></span></dt>
+          <dd>
+            Stopword: <span class="searchq"><%= value %></span>
+            <br>A <a href="https://mariadb.com/kb/en/full-text-index-stopwords/#innodb-stopwords">very common word</a> was excluded by the search engine
+            If you're searching for a phrase, use quotes, like <span class="searchq">"zombo com"</span>.
+            (Odd limitation: MariaDB still ignores stopwords when they're the first word in a quote.)
           </dd>
         <% when :catchall %>
           <dt><span class="searchq"><%= value %></span></dt>

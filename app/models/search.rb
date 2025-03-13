@@ -146,7 +146,7 @@ class Search
         n_tags += 1
         tags ||= Tag.none.select(:id)
         tags.or!(Tag.where(tag: value.to_s))
-        # TODO unknown tag
+      # TODO unknown tag
       when :title
         title = true
         value = flatten_title value
@@ -167,6 +167,7 @@ class Search
         # TODO
       when :quoted
         terms.append '"' + strip_operators(value.pluck(:term).join(" ")) + '"'
+      # no 'when' for stopword or shortword, they're not searchable
       when :term, :catchall
         val = strip_short_terms(strip_operators(value))
         # if punctuation is replaced with a space, this would generate a terms search
@@ -254,7 +255,7 @@ class Search
         n_tags += 1
         tags ||= Tag.none.select(:id)
         tags.or!(Tag.where(tag: value.to_s))
-        # TODO unknown tag
+      # TODO unknown tag
       when :title
         title = true
         value = flatten_title value
@@ -271,6 +272,7 @@ class Search
         # TODO
       when :quoted
         terms.append '"' + strip_operators(value.pluck(:term).join(" ")) + '"'
+      # no 'when' for stopword or shortword, they're not searchable
       when :term, :catchall
         val = strip_short_terms(strip_operators(value))
         # if punctuation is replaced with a space, this would generate a terms search

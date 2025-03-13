@@ -49,6 +49,11 @@ describe SearchParser do
     sp.parse("hello world")
   end
 
+  describe "stopwords" do
+    it("parses a stopword") { expect(sp.stopword).to parse("of") }
+    it("doesn't parse a random short non-stopword") { expect(sp.stopword).to_not parse("jk") }
+  end
+
   describe "term rule" do
     it("parses single words") { expect(sp.term).to parse("research") }
     it("parses contractions") { expect(sp.term).to parse("don't") }
@@ -154,6 +159,10 @@ describe SearchParser do
 
     it "parses a tag and a term" do
       expect("tag:pdf research").to parse_to [{tag: "pdf"}, {term: "research"}]
+    end
+
+    it "parses a stopword and a term" do
+      expect("an post").to parse_to [{stopword: "an"}, {term: "post"}]
     end
 
     it "parses a shortword and a term" do

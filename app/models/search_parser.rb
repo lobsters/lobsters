@@ -2,10 +2,14 @@
 
 require "parslet"
 
+# https://mariadb.com/kb/en/full-text-index-stopwords/#innodb-stopwords
+MYISAM_STOPWORDS = %w[a about an are as at be by com de en for from how i in is it la of on or that the this to was what when where who will with und the www].sort_by { it.length }.reverse.freeze
+
 class SearchParser < Parslet::Parser
   rule(:space) { match('\s').repeat(1) }
   rule(:space?) { space.maybe }
 
+  rule(:stopword) { Parslet::Atoms::Alternative.new(*MYISAM_STOPWORDS.map { str(it) }).as(:stopword) >> space? }
   # this regexp should invert punctuation stripped by Search.strip_operators
   rule(:term) { match('[\p{Word}_\\-\']').repeat(3).as(:term) >> space? }
   # can't search for short terms https://github.com/lobsters/lobsters/issues/1237
@@ -43,6 +47,7 @@ class SearchParser < Parslet::Parser
       title | # title before quoted so that doesn't consume the quotes
       url |
       user | # user must come after commenter and submitter
+      stopword |
       # term and quoted after operators they would fail to consume
       term |
       shortword |

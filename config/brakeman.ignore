@@ -92,6 +92,29 @@
       "note": "These model attributes aren't user-controlled, aren't strings, and get passed to the graphing library."
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "1d17190e964847fbe71134408c2c15e8cb8287bf79aa68648a2831c2df8390cf",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/search.rb",
+      "line": 325,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Arel.sql((\"MATCH(story_texts.title, story_texts.description, story_texts.body)\\nAGAINST ('#{[].map do\n \"+#{s}\"\n end.join(\" \")}' in boolean mode)\\n\".tr(\"\\n\", \" \") + \" desc\"))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Search",
+        "method": "perform_story_search!"
+      },
+      "user_input": "\"MATCH(story_texts.title, story_texts.description, story_texts.body)\\nAGAINST ('#{[].map do\n \"+#{s}\"\n end.join(\" \")}' in boolean mode)\\n\".tr(\"\\n\", \" \")",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "Search.strip_operators is a security control"
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "1f74b5308b8e9f5215991e18f03779ea774e830af7b080d70c619e21567728a7",
@@ -106,7 +129,7 @@
           "type": "controller",
           "class": "StoriesController",
           "method": "check_url_dupe",
-          "line": 341,
+          "line": 343,
           "file": "app/controllers/stories_controller.rb",
           "rendered": {
             "name": "stories/_form_errors",
@@ -200,7 +223,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story.rb",
-      "line": 570,
+      "line": 589,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Story.connection.execute(\"UPDATE stories SET\\n  score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -\\n  -- subtract number of hidings where hider flagged AND didn't comment (comment voting is ignored)\\n  (\\n    select count(*) from hidden_stories hiding\\n    where\\n      story_id = #{id.to_i}\\n      and hiding.created_at >= str_to_date('#{(created_at - 14.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')\\n      and exists (    -- user flagged\\n        select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1\\n      )\\n      and not exists ( -- user didn't comment\\n        select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id\\n      )\\n  ),\\n  flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),\\n  hotness = #{calculated_hotness}\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -381,7 +404,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/search.rb",
-      "line": 215,
+      "line": 216,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Arel.sql((\"MATCH(comment)\\nAGAINST ('#{[].map do\n \"+#{s}\"\n end.join(\" \")}' in boolean mode)\\n\".tr(\"\\n\", \" \") + \" DESC\"))",
       "render_path": null,
@@ -450,7 +473,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/comment.rb",
-      "line": 407,
+      "line": 396,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Comment.connection.execute(\"UPDATE comments SET\\n  score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),\\n  flags = (select count(*) from votes where comment_id = comments.id and vote = -1),\\n  confidence = #{calculated_confidence},\\n  confidence_order = concat(lpad(char(65535 - floor(#{calculated_confidence} * 65535) using binary), 2, '\\x00'), char(id & 0xff using binary))\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -613,29 +636,6 @@
         79
       ],
       "note": "These model attributes aren't user-controlled, aren't strings, and get passed to the graphing library."
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "d579fdf82e59a1183a9703ed8cf973302416db97927c3d5a8742fa19b5156122",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/search.rb",
-      "line": 323,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Arel.sql((\"MATCH(story_texts.title, story_texts.description, story_texts.body)\\nAGAINST ('#{[].map do\n \"+#{s}\"\n end.join(\", \")}' in boolean mode)\\n\".tr(\"\\n\", \" \") + \" desc\"))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Search",
-        "method": "perform_story_search!"
-      },
-      "user_input": "\"MATCH(story_texts.title, story_texts.description, story_texts.body)\\nAGAINST ('#{[].map do\n \"+#{s}\"\n end.join(\", \")}' in boolean mode)\\n\".tr(\"\\n\", \" \")",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "Search.strip_operators is a security control"
     },
     {
       "warning_type": "SQL Injection",

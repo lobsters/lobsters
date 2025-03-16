@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
   include Authenticatable
 
   protect_from_forgery
-  before_action :geoblock_uk
   before_action :heinous_inline_partials, if: -> { Rails.env.development? }
   before_action :mini_profiler
   before_action :prepare_exception_notifier
@@ -18,7 +17,7 @@ class ApplicationController < ActionController::Base
 
   # match this nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
-  CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? && !Maxmind.uk?(request.remote_ip) }
+  CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
 
   # Rails misdesign: if the /recent route doesn't support .rss, Rails calls it anyways and then
   # raises MissingTemplate when it's not handled, as if the app did something wrong (a prod 500!).
@@ -74,15 +73,6 @@ class ApplicationController < ActionController::Base
     if !@user && params[:format] == "rss" && params[:token].to_s.present?
       @user = User.where(rss_token: params[:token].to_s).first
     end
-  end
-
-  # https://lobste.rs/s/ukosa1
-  def geoblock_uk
-    return unless Time.current.utc >= Date.new(2025, 3, 17)
-    return unless Maxmind.uk?(req.ip)
-
-    render body: "I'm very sorry, but the risks of the UK Online Safety Act have required that Lobsters geoblock the UK. <a href=\"https://web.archive.org/web/*/https://lobste.rs/s/ukosa1\">Discussion</a>", status: 451, content_type: "text/html"
-    false
   end
 
   def heinous_inline_partials

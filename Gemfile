@@ -3,7 +3,6 @@ source "https://rubygems.org"
 gem "rails"
 
 # database and caching
-gem "maxminddb"
 gem "solid_cache"
 gem "sqlite3"
 gem "trilogy"

@@ -261,41 +261,24 @@ class _LobstersFunction {
       .then(response => {
         response.text().then(text => {
 
-          // must keep this behavior up to date as the website's templates change:
+          // this powers comment posting and replying on many pages with
+          // different HTML structures to render the comment into
           //   app/views/comments/_comment.html.erb
+          //   app/views/comments/show.html.erb
           //   app/views/comments/_threads.html.erb
           //   app/views/stories/show.html.erb
 
-          // The string `text` contains the HTML code of the rendered reply.
-          // But we need a HTMLElement object to use DOM functions,
-          // so create a temporary element to make the browser parse the text
-          // as a HTMLElement object.
-          // `p` is just an arbitrarily chosen tag type, and shouldn't matter
-          // because `wrappedComment` is never added to the page.
-          const wrappedComment = document.createElement('p')
-          wrappedComment.innerHTML = text
-          // Get the parsed HTMLElement object.
-          const commentSubtree = qS(wrappedComment, '.comments_subtree')
-
           const replyForm = parentSelectorOrNull(form, '.reply_form_temporary')
-          let comments = null
           if (replyForm) {
             // user submitted from a temporary reply form, so this is a reply to an existing comment
-            const parentSubtree = parentSelector(replyForm, '.comments_subtree')
-            replyForm.remove()
-            comments = qS(parentSubtree, '.comments')
+            replace(replyForm, text)
           } else {
-            // There is no temporary reply form, so user created a "top-level" comment or edited a comment.
-            // Currently the template stories/show.html.erb puts the top-level comment box
-            // in a different DOM subtree from the list of story comments,
-            // so we have to manually remove the form and add the reply elsewhere on the page
-
-            // Prefer iterating up the comments tree to the nearest parent. If there isn't one, we are creating
-            // a top-level comment, so fall back to the top of the comments tree.
-            comments = parentSelectorOrNull(form, '#story_comments .comments') || qS('#story_comments > .comments')
+            // Iterating up the comments tree to the nearest parent. If there isn't one, we are creating
+            // a top-level comment, so find the top of the comments tree.
+            const comments = parentSelectorOrNull(form, '.comments') || qS('.comments')
             parentSelector(form, '.comment_form_container').remove()
+            comments.insertAdjacentHTML("afterbegin", text)
           }
-          comments.prepend(commentSubtree)
 
         })
       })
@@ -717,8 +700,7 @@ onPageLoad(() => {
     let div = document.createElement('div');
     div.innerHTML = '';
     div.classList.add('reply_form_temporary')
-    const commentSubtree = parentSelector(comment, '.comments_subtree');
-    const children = qS(commentSubtree, '.comments')
+    const children = qS(comment.parentElement, '#' + comment.id + '~ .comments')
     children.prepend(div)
 
     fetchWithCSRF('/comments/' + comment.getAttribute('data-shortid') + '/reply')

@@ -367,11 +367,13 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
       <% end %>
     </ol>
   <% elsif @search.what == :comments %>
-    <ol class="comments comments1">
-      <% @search.results.each do |res| %>
-        <li><%= render "comments/comment", :comment => res, :show_story => true %></li>
-      <% end %>
-    </ol>
+    <div id="story_comments">
+      <ol class="comments comments1">
+        <% @search.results.each do |res| %>
+          <li class="comments_subtree"><%= render "comments/comment", :comment => res, :show_story => true %></li>
+        <% end %>
+      </ol>
+    </div>
   <% end %>
 
   <% if @search.results_count > @search.per_page %>

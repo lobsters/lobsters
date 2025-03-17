@@ -3,18 +3,20 @@
 <%= possible_flag_warning(@user, @user) %>
 
 <% if @replies.present? %>
-  <ol class="comments comments1">
-    <% @replies.each do |reply| %>
-      <li class="comments_subtree">
-        <%= render "comments/comment",
-            comment: reply.comment,
-            show_story: true,
-            is_unread: reply.is_unread,
-            show_tree_lines: false %>
-        <ol class="comments"></ol>
-      </li>
-    <% end %>
-  </ol>
+  <div id="story_comments">
+    <ol class="comments comments1">
+      <% @replies.each do |reply| %>
+        <li class="comments_subtree">
+          <%= render "comments/comment",
+              comment: reply.comment,
+              show_story: true,
+              is_unread: reply.is_unread,
+              show_tree_lines: false %>
+          <ol class="comments"></ol>
+        </li>
+      <% end %>
+    </ol>
+  </div>
 <% else %>
   <p class="help">No replies to show.</p>
 <% end %>

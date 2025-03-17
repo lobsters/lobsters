@@ -1,20 +1,22 @@
 <%= render partial: @above if @above %>
 
 <% already_printed_newest_line = false %>
-<ol class="comments comments1">
-  <% @comments.each do |comment| %>
-    <% if action_name == "index" && 
-       !already_printed_newest_line && 
-       @last_read_comment == comment %>
-       <div class="last_read_newest">Last Read</div>
-       <% already_printed_newest_line = true %>
+<div id="story_comments">
+  <ol class="comments comments1">
+    <% @comments.each do |comment| %>
+      <% if action_name == "index" &&
+         !already_printed_newest_line &&
+         @last_read_comment == comment %>
+         <div class="last_read_newest">Last Read</div>
+         <% already_printed_newest_line = true %>
+      <% end %>
+      <li class="comments_subtree"><%= render "comments/comment", :comment => comment,
+        :show_story => true %>
+        <ol class="comments"></ol>
+      </li>
     <% end %>
-    <li><%= render "comments/comment", :comment => comment,
-      :show_story => true %>
-      <ol class="comments"></ol>
-    </li>
-  <% end %>
-</ol>
+  </ol>
+</div>
 
 <div class="morelink">
   <% if @comments.any? %>

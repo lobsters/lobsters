@@ -141,6 +141,21 @@
     </nav>
   </footer>
 
+  <% if Time.current.utc < Date.new(2025, 3, 24) %>
+    <div id="uk-osa" style="
+      margin-left: calc(
+              10px +   /* header#nav padding-left */
+              18px +   /* #logo width + padding l/r */
+              0.25rem + /* header#nav a margin-right for logo */
+              0.25rem   /* header#nav a margin-left for first link in header#nav */
+      );
+      ">
+      <p>
+      🇬🇧 <!-- If see the letters "GB" instead of the UK flag on this warning about their censorship, it's because your OS and browser enforce a different country's censorship demands. https://geyer.dev/blog/windows-flag-emojis/ -->
+      <a href="https://lobste.rs/c/xevn8a">The UK geoblock is lifted</a>, hopefully permanently.
+      </p>
+    </div>
+  <% end %>
   <span id="iab-pcm-sdk"></span><span id="iab-autofill-sdk"></span>
 </body>
 </html>

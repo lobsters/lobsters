@@ -157,8 +157,8 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
             <span> | </span><%= link_to "hide", story_hide_path(story.short_id), :class => "hider" %>
           <% end %>
           <% if single_story && story.disownable_by_user?(@user) %>
-          |
-          <%= button_to("disown", story_disown_path(story.short_id), form_class: "disowner-form", params: { type: 'story' }) %>
+            |
+            <%= link_post "disown", story_disown_path(story.short_id), { class_name: "disowner-form", confirm: "Are you sure you want to disown this story?"} %>
           <% end %>
           <% if single_story && story.hider_count > 0 %>
             <% if story.is_hidden_by_cur_user %>

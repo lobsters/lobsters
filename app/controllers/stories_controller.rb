@@ -369,16 +369,7 @@ class StoriesController < ApplicationController
 
     InactiveUser.disown! story
 
-    if request.xhr?
-      @story = find_story
-      @comments = Comment.story_threads(@story).for_presentation
-
-      load_user_votes
-
-      render partial: "listdetail", layout: false, content_type: "text/html", locals: {story: @story, single_story: true}
-    else
-      redirect_to story.short_id_path
-    end
+    redirect_to story.short_id_path
   end
 
   private

@@ -223,17 +223,18 @@ button:focus {
 
 form.disowner-form {
 	display: inline;
-	button {
-		background: none;
-		border: none;
-		padding: 0;
+}
+
+input[type="submit"].disowner-form {
+	background: none;
+	border: none;
+	padding: 0;
+	color: var(--color-fg-contrast-4-5);
+	text-decoration: none;
+	cursor: pointer;
+	outline: none;
+	&:not(.disable):hover {
 		color: var(--color-fg-contrast-4-5);
-		text-decoration: none;
-		cursor: pointer;
-		outline: none;
-		&:not(.disable):hover {
-			color: var(--color-fg-contrast-4-5);
-		}
 	}
 }
 

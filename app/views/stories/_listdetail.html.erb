@@ -1,11 +1,7 @@
-<%# locals: (story:, single_story: false) -%>
-<%
-  # partial inputs:
-  single_story ||= false
-  # single_story: at the top of a single story page, eg /s/abc123, this
-  # controls rendering additional info like list of merged stories, preview,
-  # users hiding, and flag summary
-%>
+<%# locals: (story:) -%>
+
+<%# remember: _singledetail replicates a lot of this for the single-story view %>
+
 <%#
   The h-entry, u-report-of, u-url and h-card css classes are necessary
   for the webmentions support. http://microformats.org/wiki/h-entry
@@ -31,9 +27,6 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
   </div>
   <div class="details">
     <span role="heading" aria-level="1" class="link h-cite u-repost-of">
-      <% if story.merged_story_id %>
-        <span class="merge"></span>
-      <% end %>
       <% if story.can_be_seen_by_user?(@user) %>
         <a class="u-url" href="<%= story.url_or_comments_path %>" rel="ugc <%= story.send_referrer? ? '' : 'noreferrer' %>"><%= story.title %></a>
       <% end %>
@@ -59,46 +52,9 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
       <% elsif story.domain.present? %>
         <%= link_to story.domain.domain, domain_path(story.domain), class: 'domain' %>
       <% end %>
-
-      <% if single_story %>
-        <% story.visible_merged_stories(@user).each do |ms| %>
-          <br>
-          <span class="merge"></span>
-          <span class="link">
-            <a href="<%= ms.url_or_comments_path %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>"><%= ms.title %></a>
-          </span>
-          <span class="tags">
-            <% ms.tags.each do |tag| %>
-              <a href="<%= tag_path(tag) %>"
-                class="<%= tag.css_class %>"
-                title="<%= tag.description %>"><%= tag.tag %></a>
-            <% end %>
-          </span>
-          <% if ms.domain_id.present? %>
-            <a class="domain" href="<%= domain_path(ms.domain) %>"><%= ms.domain.domain %></a>
-          <% end %>
-          <span class="byline">
-            <span><%= ms.user_is_author? ? "authored by" : "via" %></span>
-            <% if (@user && @user.show_avatars?) || !@user %>
-              <%= link_to avatar_img(ms.user, 16), user_path(ms.user) %>
-            <% end %>
-            <%= styled_user_link ms.user, story, class: ['u-author', 'h-card'] %>
-
-            <%= how_long_ago_label(ms.created_at) %>
-            <% if ms.is_editable_by_user?(@user) %>
-              <span> | </span>
-              <a href="<%= edit_story_path(ms.short_id) %>">edit</a>
-            <% end %>
-            <% if @user&.is_moderator? %>
-              <span> | </span>
-              <a href="<%= edit_mod_story_path(ms.short_id) %>">mod edit</a>
-            <% end %>
-          </span>
-        <% end %>
-      <% end %>
     <% end %>
 
-    <% if !single_story && @user && @user.show_story_previews? %>
+    <% if @user&.show_story_previews? %>
       <% if (sc = story.description_or_story_text(500)).present? %>
         <div class="story_content">
           <%= sc %>
@@ -156,17 +112,6 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <% else %>
             <span> | </span><%= link_to "hide", story_hide_path(story.short_id), :class => "hider" %>
           <% end %>
-          <% if single_story && story.disownable_by_user?(@user) %>
-            |
-            <%= link_post "disown", story_disown_path(story.short_id), { class_name: "disowner-form", confirm: "Are you sure you want to disown this story?"} %>
-          <% end %>
-          <% if single_story && story.hider_count > 0 %>
-            <% if story.is_hidden_by_cur_user %>
-              (hidden by you and <%= pluralize(story.hider_count - 1, "other user") %> )
-            <% else %>
-              (hidden by <%= pluralize(story.hider_count, "user") %>)
-            <% end %>
-          <% end %>
           <% if !story.is_saved_by_cur_user %>
             <span> | </span><%= link_to "save", story_save_path(story.short_id), :class => "saver" %>
           <% end %>
@@ -196,12 +141,6 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
               <%= story.comments_count %> <%= 'comment'.pluralize(story.comments_count) %></a>
             <% end %>
           </span>
-        <% end %>
-
-        <% if single_story &&
-        ((story.flags > 0 && @user && @user.is_moderator?) ||
-        (story.flags >= 3 || story.score <= 0)) %>
-          <span> | <%= story.vote_summary_for(@user).downcase %> </span>
         <% end %>
       <% end %>
     </div>

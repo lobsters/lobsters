@@ -1,20 +1,6 @@
-<%# locals: () -%>
-<%= render @above if @above %>
-
-<% already_printed_newest_line = false %>
-<ol class="stories list <%= action_name == "hidden" ? "show_hidden" : "" %>">
-  <% @stories.each do |story| %>
-    <% if action_name == "newest" && 
-      !already_printed_newest_line && 
-      @last_read_story == story %>
-      <div class="last_read_newest">Last Read</div>
-      <% already_printed_newest_line = true %>
-    <% end %>
-<%#heinous_inline_partial(stories/_listdetail.html.erb)%>
-<%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
 <%# locals: (story:) -%>
 
-<%# remember: _singledetail replicates a lot of this for the single-story view %>
+<%# remember: _listdetail replicates a lot of this for lists of stories %>
 
 <%#
   The h-entry, u-report-of, u-url and h-card css classes are necessary
@@ -66,13 +52,40 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
       <% elsif story.domain.present? %>
         <%= link_to story.domain.domain, domain_path(story.domain), class: 'domain' %>
       <% end %>
-    <% end %>
 
-    <% if @user&.show_story_previews? %>
-      <% if (sc = story.description_or_story_text(500)).present? %>
-        <div class="story_content">
-          <%= sc %>
-        </div>
+      <% story.visible_merged_stories(@user).each do |ms| %>
+        <br>
+        <span class="merge"></span>
+        <span class="link">
+          <a href="<%= ms.url_or_comments_path %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>"><%= ms.title %></a>
+        </span>
+        <span class="tags">
+          <% ms.tags.each do |tag| %>
+            <a href="<%= tag_path(tag) %>"
+              class="<%= tag.css_class %>"
+              title="<%= tag.description %>"><%= tag.tag %></a>
+          <% end %>
+        </span>
+        <% if ms.domain_id.present? %>
+          <a class="domain" href="<%= domain_path(ms.domain) %>"><%= ms.domain.domain %></a>
+        <% end %>
+        <span class="byline">
+          <span><%= ms.user_is_author? ? "authored by" : "via" %></span>
+          <% if (@user && @user.show_avatars?) || !@user %>
+            <%= link_to avatar_img(ms.user, 16), user_path(ms.user) %>
+          <% end %>
+          <%= styled_user_link ms.user, story, class: ['u-author', 'h-card'] %>
+
+          <%= how_long_ago_label(ms.created_at) %>
+          <% if ms.is_editable_by_user?(@user) %>
+            <span> | </span>
+            <a href="<%= edit_story_path(ms.short_id) %>">edit</a>
+          <% end %>
+          <% if @user&.is_moderator? %>
+            <span> | </span>
+            <a href="<%= edit_mod_story_path(ms.short_id) %>">mod edit</a>
+          <% end %>
+        </span>
       <% end %>
     <% end %>
 
@@ -126,6 +139,17 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <% else %>
             <span> | </span><%= link_to "hide", story_hide_path(story.short_id), :class => "hider" %>
           <% end %>
+          <% if story.disownable_by_user?(@user) %>
+            |
+            <%= link_post "disown", story_disown_path(story.short_id), { class_name: "disowner-form", confirm: "Are you sure you want to disown this story?"} %>
+          <% end %>
+          <% if story.hider_count > 0 %>
+            <% if story.is_hidden_by_cur_user %>
+              (hidden by you and <%= pluralize(story.hider_count - 1, "other user") %> )
+            <% else %>
+              (hidden by <%= pluralize(story.hider_count, "user") %>)
+            <% end %>
+          <% end %>
           <% if !story.is_saved_by_cur_user %>
             <span> | </span><%= link_to "save", story_save_path(story.short_id), :class => "saver" %>
           <% end %>
@@ -156,6 +180,11 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
             <% end %>
           </span>
         <% end %>
+
+        <% if ((story.flags > 0 && @user && @user.is_moderator?) ||
+               (story.flags >= 3 || story.score <= 0)) %>
+          <span> | <%= story.vote_summary_for(@user).downcase %> </span>
+        <% end %>
       <% end %>
     </div>
   </div>
@@ -164,22 +193,3 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
   <span><%= story.comments_count %></span>
 </a>
 </li>
-
-<%#/heinous_inline_partial(stories/_listdetail.html.erb)%>
-  <% end %>
-</ol>
-
-<%= render @below if @below %>
-
-<div class="morelink">
-  <% if @page && @page > 1 %>
-    <%= link_to raw("&lt;&lt; Page #{@page - 1}"), @root_path ? "/page/#{@page - 1}" : { controller: controller_name, action: action_name, page: @page - 1 } %>
-  <% end %>
-
-  <% if @show_more %>
-    <% if @page && @page > 1 %>
-      |
-    <% end %>
-    <%= link_to raw("Page #{@page + 1} &gt;&gt;"), @root_path ? "/page/#{@page + 1}" : { controller: controller_name, action: action_name, page: @page + 1 } %>
-  <% end %>
-</div>

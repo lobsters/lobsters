@@ -56,13 +56,6 @@ end
   </ol>
   <% end %>
 
-<% as_user moderator do %>
-  <h1>story _listdetail, as header for single story view, 0 merged stories, moderator</h1>
-  <ol class="stories">
-  <%= render partial: 'stories/listdetail', locals: { story: story_without_merges, single_story: true } %>
-  </ol>
-<% end %>
-
 <% as_user nil do %>
   <h1>story _listdetail in a list, as on homepage, 0 merged stories, visitor</h1>
   <ol class="stories">
@@ -77,9 +70,18 @@ end
   </ol>
 <% end %>
 
-<% as_user nil do %>
-  <h1>story _listdetail, as header for single story view, with 2 stories merged in, visitor</h1>
+<hr>
+
+<% as_user moderator do %>
+  <h1>story _singledetail, as header for single story view, 0 merged stories, moderator</h1>
   <ol class="stories">
-  <%= render partial: 'stories/listdetail', locals: { story: story_with_merges, single_story: true } %>
+  <%= render partial: 'stories/singledetail', locals: { story: story_without_merges } %>
+  </ol>
+<% end %>
+
+<% as_user nil do %>
+  <h1>story _singledetail, as header for single story view, with 2 stories merged in, visitor</h1>
+  <ol class="stories">
+  <%= render partial: 'stories/singledetail', locals: { story: story_with_merges } %>
   </ol>
 <% end %>

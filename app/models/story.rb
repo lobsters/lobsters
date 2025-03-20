@@ -1010,6 +1010,10 @@ class Story < ApplicationRecord
     url.presence || comments_url
   end
 
+  def visible_merged_stories(user)
+    merged_stories.not_deleted(user).for_presentation
+  end
+
   def vote_summary_for(user)
     r_counts = {}
     r_whos = {}

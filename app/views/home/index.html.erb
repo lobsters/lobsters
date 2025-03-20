@@ -75,7 +75,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
       <% end %>
 
       <% if single_story %>
-        <% story.merged_stories.not_deleted(nil).includes(:domain, :user, :tags).each do |ms| %>
+        <% story.visible_merged_stories(@user).each do |ms| %>
           <br>
           <span class="merge"></span>
           <span class="link">
@@ -94,7 +94,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <span class="byline">
             <span><%= ms.user_is_author? ? "authored by" : "via" %></span>
             <% if (@user && @user.show_avatars?) || !@user %>
-              <%= link_to avatar_img(ms.user, 16), ms.user %>
+              <%= link_to avatar_img(ms.user, 16), user_path(ms.user) %>
             <% end %>
             <%= styled_user_link ms.user, story, class: ['u-author', 'h-card'] %>
 

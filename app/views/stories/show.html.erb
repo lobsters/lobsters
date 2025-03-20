@@ -36,10 +36,8 @@
   <% end %>
 
   <% if @story.is_hidden_by_cur_user %>
-    <p>
     You have <a href="/about#story-hiding">hidden this links to this story</a> and its comments from your view of the site.
-    You can <%= link_to "unhide", story_unhide_path(@story.short_id) %> it to make them visible again.
-    </p>
+    You can <%= link_post "unhide", story_unhide_path(@story.short_id) %> it to make them visible again.
   <% end %>
 </div>
 

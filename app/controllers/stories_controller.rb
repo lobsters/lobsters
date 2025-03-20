@@ -294,7 +294,11 @@ class StoriesController < ApplicationController
 
     HiddenStory.hide_story_for_user(story, @user)
 
-    render plain: "ok"
+    if request.xhr?
+      render plain: "ok"
+    else
+      redirect_to story_path(story)
+    end
   end
 
   def unhide
@@ -304,7 +308,11 @@ class StoriesController < ApplicationController
 
     HiddenStory.unhide_story_for_user(story, @user)
 
-    render plain: "ok"
+    if request.xhr?
+      render plain: "ok"
+    else
+      redirect_to story_path(story)
+    end
   end
 
   def save

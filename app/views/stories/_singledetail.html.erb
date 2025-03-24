@@ -59,11 +59,6 @@ classes = [
         <% if (@user && @user.show_avatars?) || !@user %>
           <%= link_to avatar_img(ms.user, 16), user_path(ms.user) %>
         <% end %>
-        <% if ms.user_is_author? %>
-          <span> authored by </span>
-        <% else %>
-          <span> via </span>
-        <% end %>
         <%= styled_user_link ms.user, ms, class: ['u-author', 'h-card'] %>
 
         <% if ms.previewing %>

@@ -172,7 +172,7 @@
     <div class="user-stats flash-notice">
       <p>
         Comments posted in the last 6 months: <%= @showing_user.comments.recent.count %><br>
-        &nbsp;&nbsp;...posted on stories you didn't author: <%= @showing_user.comments.recent.on_stories_not_authored_by(@showing_user).count %><br>
+        &nbsp;&nbsp;...posted on stories you didn't mark as self-authored: <%= @showing_user.comments.recent.on_stories_not_authored_by(@showing_user).count %><br>
         &nbsp;&nbsp;&nbsp;&nbsp;...received above average score: <%= @showing_user.comments.recent.on_stories_not_authored_by(@showing_user).above_average.count %>
       </p>
 

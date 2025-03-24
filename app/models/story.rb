@@ -58,7 +58,7 @@ class Story < ApplicationRecord
     user.try(:is_moderator?) ? preload(:suggested_taggings, :suggested_titles) : all
   }
   scope :mod_single_preload?, ->(user) {
-    user.try(:is_moderator?) ? preload(:suggested_taggings, :suggested_titles, hidings: :user) : all
+    user.try(:is_moderator?) ? preload(:suggested_taggings, :suggested_titles, hidings: :user, votes: :user) : all
   }
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, ->(user) {
@@ -1014,7 +1014,7 @@ class Story < ApplicationRecord
   def vote_summary_for(user)
     r_counts = {}
     r_whos = {}
-    votes.includes(user&.is_moderator? ? :user : nil).find_each do |v|
+    votes.each do |v|
       next if v.vote == 0
       r_counts[v.reason.to_s] ||= 0
       r_counts[v.reason.to_s] += 1

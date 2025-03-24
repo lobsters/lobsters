@@ -146,7 +146,7 @@ classes = [
             <%= (ms.comments_count == 0) ? "no" : ms.comments_count %> <%= 'comment'.pluralize(ms.comments_count) %></a>
           </span>
 
-          <% if ((ms.flags > 0 && @user && @user.is_moderator?) || (ms.flags >= 3 || ms.score <= 0)) %>
+          <% if ((@user&.is_moderator? && ms.flags > 0) || (ms.flags >= 3 || ms.score <= 0)) %>
             <span> | <%= ms.vote_summary_for(@user).downcase %> </span>
           <% end %>
         <% end %>

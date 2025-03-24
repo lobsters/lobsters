@@ -195,7 +195,7 @@ class Story < ApplicationRecord
                           "with the ask tag.")
     end
     if title.match(GRAPHICS_RE)
-      errors.add(:title, " may not contain graphic codepoints")
+      errors.add(:title, " may not contain emoji, dingbats, or other graphics")
     end
     if title == title.upcase
       errors.add(:title, " doesn't need to scream, ASCII has supported lowercase since June 17, 1963.")

@@ -604,8 +604,9 @@ class Story < ApplicationRecord
     suggested_taggings.any? || suggested_titles.any?
   end
 
+  # calling .count on a preloaded association still triggers a count query
   def hider_count
-    @hider_count ||= HiddenStory.where(story_id: id).count
+    @hider_count ||= hidings.to_a.size
   end
 
   def disownable_by_user?(user)
@@ -1008,10 +1009,6 @@ class Story < ApplicationRecord
 
   def url_or_comments_url
     url.presence || comments_url
-  end
-
-  def visible_merged_stories(user)
-    merged_stories.not_deleted(user).for_presentation
   end
 
   def vote_summary_for(user)

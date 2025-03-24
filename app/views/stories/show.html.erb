@@ -5,7 +5,7 @@
 <% end %>
 
 <ol class="stories">
-  <%= render :partial => "stories/singledetail", :locals => { :story => @story } %>
+  <%= render :partial => "stories/singledetail", :locals => { merged_stories: @merged_stories } %>
 </ol>
 
 <div class="story_content">

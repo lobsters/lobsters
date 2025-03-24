@@ -190,6 +190,7 @@ class StoriesController < ApplicationController
 
         load_user_votes
 
+        @merged_stories = [@story, @story.merged_stories.not_deleted(@user).mod_single_preload?(@user).for_presentation].flatten
         render action: "show"
       }
       format.json {

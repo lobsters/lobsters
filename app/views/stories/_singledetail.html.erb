@@ -6,7 +6,7 @@ classes = [
   :story,
   merged_stories.first.negativity_class,
   merged_stories.first.current_upvoted? && 'upvoted',
-  merged_stories.first.current_flagged? && 'flageed',
+  merged_stories.first.current_flagged? && 'flagged',
   merged_stories.first.is_hidden_by_cur_user && 'hidden',
   merged_stories.first.is_saved_by_cur_user && 'saved',
   merged_stories.first.is_deleted? && 'deleted',

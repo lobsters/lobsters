@@ -96,6 +96,7 @@ classes = [
             <span> | </span><%= link_to "unhide", story_unhide_path(ms.short_id), :class => "hider" %>
           <% else %>
             <span> | </span><%= link_to "hide", story_hide_path(ms.short_id), :class => "hider" %>
+          <% end %>
 
           <% if ms.disownable_by_user?(@user) %>
             |
@@ -144,8 +145,7 @@ classes = [
             <span> | <%= ms.vote_summary_for(@user).downcase %> </span>
           <% end %>
         <% end %>
-      <% end %>
-    </div>
+      </div>
     </div>
   <% end %>
 

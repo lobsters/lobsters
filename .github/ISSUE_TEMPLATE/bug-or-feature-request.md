@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 <!--
-Bug reports: It's really helpful to know if you were logged in, and if you can include screenshots.
+Bug reports: It's really helpful to know if you were logged in. If you can, include screenshots.
 
 Feature requests: Please discuss them in the chat room or a meta thread before posting. We're deliberate about community design, so this helps you learn if we've considered similar ideas and build consensus around your idea.
 

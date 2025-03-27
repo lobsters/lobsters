@@ -20,6 +20,17 @@ RSpec.feature "Submitting Stories", type: :feature do
     }.to(change { Story.count })
   end
 
+  scenario "previewing" do
+    visit "/stories/new"
+    fill_in "URL", with: "https://example.com/page"
+    fill_in "Title", with: "Example Story"
+    select :tag1, from: "Tags"
+    click_button "Preview"
+
+    # preview of a story uses 'just now' instead of "X hours ago" timestamp
+    expect(page).to have_content "just now"
+  end
+
   context "submitting an inline image" do
     context "as a user who is not a moderator" do
       scenario "results in a link, not an image" do

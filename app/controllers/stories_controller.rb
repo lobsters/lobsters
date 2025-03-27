@@ -15,6 +15,8 @@ class StoriesController < ApplicationController
   before_action :show_title_h1, only: [:new, :edit]
 
   def create
+    return preview if params[:preview]
+
     @title = "Submit Story"
 
     @story = Story.new(user: @user)
@@ -126,8 +128,9 @@ class StoriesController < ApplicationController
     @story.score = 1
 
     @story.valid?
+    @merged_stories = [@story]
 
-    render action: "new", layout: false
+    render action: "new", layout: !request.xhr?
   end
 
   def show

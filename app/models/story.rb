@@ -197,7 +197,7 @@ class Story < ApplicationRecord
     if title.match(GRAPHICS_RE)
       errors.add(:title, " may not contain emoji, dingbats, or other graphics")
     end
-    if title == title.upcase
+    if !title.empty? && title == title.upcase
       errors.add(:title, " doesn't need to scream, ASCII has supported lowercase since June 17, 1963.")
     end
 
@@ -610,7 +610,7 @@ class Story < ApplicationRecord
   end
 
   def disownable_by_user?(user)
-    user && user.id == user_id && created_at < DELETEABLE_DAYS.days.ago
+    !new_record? && user&.id == user_id && created_at < DELETEABLE_DAYS.days.ago
   end
 
   def is_flaggable?
@@ -622,7 +622,8 @@ class Story < ApplicationRecord
   end
 
   def is_editable_by_user?(user)
-    return false if user.nil? || user.new_record? # assumption: cabinet view
+    return false if user.nil? || user.new_record? || # assumption: cabinet view
+      new_record? # assumption: previewing
 
     if user&.id == user_id
       if is_moderated?

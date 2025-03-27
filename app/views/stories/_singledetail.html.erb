@@ -109,14 +109,6 @@ classes = [
           <% end %>
         <% end %>
 
-        <% if merged_stories.count == 1 %>
-          <span class="comments_label">
-            |
-            <% cc = merged_stories.map(&:comments_count).sum %>
-            <%= (cc == 0) ? "no" : cc %> <%= 'comment'.pluralize(cc) %></a>
-          </span>
-        <% end %>
-
         <% if ms.hider_count > 0 %>
           <% if ms.is_hidden_by_cur_user %>
             (hidden by you and <%= pluralize(ms.hider_count - 1, "other user") %> )
@@ -141,10 +133,12 @@ classes = [
             </span>
           <% end %>
 
-          <span class="comments_label">
-            |
-            <%= (ms.comments_count == 0) ? "no" : ms.comments_count %> <%= 'comment'.pluralize(ms.comments_count) %></a>
-          </span>
+          <% if merged_stories.count == 1 %>
+            <span class="comments_label">
+              |
+              <%= (ms.comments_count == 0) ? "no" : ms.comments_count %> <%= 'comment'.pluralize(ms.comments_count) %></a>
+            </span>
+          <% end %>
 
           <% if ((@user&.is_moderator? && ms.flags > 0) || (ms.flags >= 3 || ms.score <= 0)) %>
             <span> | <%= ms.vote_summary_for(@user).downcase %> </span>

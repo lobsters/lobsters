@@ -1,34 +1,33 @@
 <%# locals: (return_home: false) -%>
-<p>
-Invitations are unlimited, but persons you invite will be associated with your account
-in the <%= link_to 'user tree', users_tree_path %>
-and you may be responsible for them if they cause problems.
-Please use your discretion when inviting persons you don't personally know.
-</p>
+<div class="breakout">
+  <p>
+  Invitations are unlimited, but persons you invite will be associated with your account
+  in the <%= link_to 'user tree', users_tree_path %>
+  and you may be responsible for them if they cause problems.
+  Please use your discretion when inviting persons you don't personally know.
+  </p>
 
-<p>
-Note to trans users:
-User profiles list the user who invited them.
-If you want to avoid connecting your old and new usernames, ask <%= link_to 'a moderator', moderators_path %> to send you an invite.
-</p>
+  <p>
+  Note to trans users:
+  User profiles list the user who invited them.
+  If you want to avoid connecting your old and new usernames, ask <%= link_to 'a moderator', moderators_path %> to send you an invite.
+  </p>
+</div>
 
 <%= form_with url: invitations_path, method: :post do |f| %>
   <% if return_home %>
     <%= f.hidden_field :return_home, value: 1 %>
   <% end %>
 
-  <div class="boxline">
+  <div class="todo_subgrid">
     <%= f.label :email, "E-mail Address:", :class => "required" %>
-    <%= f.email_field :email, :size => 30, :autocomplete => "off", :inputmode => "email" %>
-  </div>
+    <%= f.email_field :email, :autocomplete => "off", :inputmode => "email" %>
 
-  <div class="boxline">
     <%= f.label :memo, "Memo to User:", :class => "required" %>
-    <%= f.text_field :memo, :size => 60 %>
+    <%= f.text_field :memo %>
   </div>
 
-  <div class="boxline">
-    <p></p>
+  <div class="breakout">
     <%= f.submit "Send Invitation" %>
   </div>
 <% end %>

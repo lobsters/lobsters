@@ -6,205 +6,195 @@
   <% end %>
 <% end %>
 
-<div class="box wide">
+<div class="todo_spread">
   <% if @showing_user.is_active? %>
     <div id="gravatar">
       <%= avatar_img(@showing_user, 100) %>
     </div>
   <% end %>
 
-  <label class="required">Status:</label>
-  <span class="d"
-  <%= @showing_user.is_banned? ? raw("style=\"color: red;\"") : "" %>>
+  <div class="todo_grid">
+    <label class="required">Status:</label>
+    <span>
+    <%= @showing_user.is_banned? ? raw("style=\"color: red;\"") : "" %>
+      <% if @showing_user.is_banned? %>
+        Banned user
+      <% elsif !@showing_user.is_active? %>
+        Inactive user
+      <% else %>
+        Active
+        <%= @showing_user.is_admin? ? "administrator" :
+          (@showing_user.is_moderator? ? "moderator" : "user") %>
+        <% if !@showing_user.can_invite? %>
+          with invites
+          <% if !@showing_user.can_submit_stories? %>
+            and story submissions
+          <% end %>
+          disabled
+        <% end %>
+      <% end %>
+    </span>
+
+    <label class="required">Joined:</label>
+    <span>
+      <%= how_long_ago_label(@showing_user.created_at) %>
+      <% if @showing_user.invited_by_user %>
+        by <%= link_to 'invitation', users_tree_path(anchor: @showing_user.username) %> from
+        <%= link_to @showing_user.invited_by_user.try(:username), @showing_user.invited_by_user %>
+      <% end %>
+    </span>
+
     <% if @showing_user.is_banned? %>
-      Banned user
-    <% elsif !@showing_user.is_active? %>
-      Inactive user
-    <% else %>
-      Active
-      <%= @showing_user.is_admin? ? "administrator" :
-        (@showing_user.is_moderator? ? "moderator" : "user") %>
-      <% if !@showing_user.can_invite? %>
-        with invites
-        <% if !@showing_user.can_submit_stories? %>
-          and story submissions
+      <label class="required">Banned:</label>
+      <span>
+        <%= how_long_ago_label(@showing_user.banned_at) %>
+        <% if @showing_user.banned_by_user %>
+          by <%= link_to @showing_user.banned_by_user.try(:username),
+            @showing_user.banned_by_user %>:
+            <em><%= @showing_user.banned_reason %></em>
         <% end %>
-        disabled
-      <% end %>
+      </span>
     <% end %>
-  </span>
-  <br>
 
-  <label class="required">Joined:</label>
-  <span class="d">
-    <%= how_long_ago_label(@showing_user.created_at) %>
-    <% if @showing_user.invited_by_user %>
-      by <%= link_to 'invitation', users_tree_path(anchor: @showing_user.username) %> from
-      <%= link_to @showing_user.invited_by_user.try(:username), @showing_user.invited_by_user %>
+    <% if @showing_user.deleted_at? %>
+      <label class="required">Left:</label>
+      <span>
+        <%= how_long_ago_label(@showing_user.deleted_at) %>
+      </span>
     <% end %>
-  </span>
-  <br>
 
-  <% if @showing_user.is_banned? %>
-    <label class="required">Banned:</label>
-    <span class="d">
-      <%= how_long_ago_label(@showing_user.banned_at) %>
-      <% if @showing_user.banned_by_user %>
-        by <%= link_to @showing_user.banned_by_user.try(:username),
-          @showing_user.banned_by_user %>:
-          <em><%= @showing_user.banned_reason %></em>
-      <% end %>
+    <% if !@showing_user.is_admin? %>
+      <label class="required">Karma:</label>
+      <span>
+        <%= @showing_user.karma %>
+      </span>
+    <% end %>
+
+    <label class="required">Stories Submitted:</label>
+    <span>
+      <%= stories_submitted_content(@user, @showing_user) %>
     </span>
-    <br>
-  <% end %>
 
-  <% if @showing_user.deleted_at? %>
-    <label class="required">Left:</label>
-    <span class="d">
-      <%= how_long_ago_label(@showing_user.deleted_at) %>
-    </span>
-    <br>
-  <% end %>
+    <label class="required">Comments Posted:</label>
+    <span><%= comments_posted_content(@user, @showing_user) %></span>
 
-  <% if !@showing_user.is_admin? %>
-    <label class="required">Karma:</label>
-    <span class="d">
-      <%= @showing_user.karma %>
-    </span>
-    <br>
-  <% end %>
-
-  <label class="required">Stories Submitted:</label>
-  <span class="d">
-    <%= stories_submitted_content(@user, @showing_user) %>
-  </span>
-  <br>
-
-  <label class="required">Comments Posted:</label>
-  <span class="d"><%= comments_posted_content(@user, @showing_user) %></span>
-  <br>
-
-  <% if @showing_user.hats.any? %>
-    <label class="required">Hats:</label>
-    <div class="d">
-    <% @showing_user.hats.each do |hat| %>
-      <%= hat.to_html_label %>
-      <% if hat.doffed_at? %>
-        doffed <%= how_long_ago_label(hat.doffed_at) %>
-      <% else %>
-        <% if @user && ((hat.user == @user) || @user.is_moderator?) %>
-          <%= link_to 'Doff', doff_hat_path(hat) %>
+    <% if @showing_user.hats.any? %>
+      <label class="required">Hats:</label>
+      <div>
+      <% @showing_user.hats.each do |hat| %>
+        <%= hat.to_html_label %>
+        <% if hat.doffed_at? %>
+          doffed <%= how_long_ago_label(hat.doffed_at) %>
+        <% else %>
+          <% if @user && ((hat.user == @user) || @user.is_moderator?) %>
+            <%= link_to 'Doff', doff_hat_path(hat) %>
+          <% end %>
         <% end %>
       <% end %>
-      <br>
+      </div>
     <% end %>
-    </div>
-    <div style="clear: both;"></div>
+
+    <% if @user&.is_admin? || @user&.show_email? %>
+      <label class="required">E-Mail:</label>
+      <span>
+        <%= @showing_user.email %>
+      </span>
+    <% end %>
+
+    <% if @showing_user.homepage.present? %>
+      <label class="required">Homepage:</label>
+
+      <span>
+        <a href="<%= h(@showing_user.homepage) %>"
+          rel="me ugc"><%= h(@showing_user.homepage) %></a>
+        <% if @showing_user.homepage.start_with?('gemini://') %>
+          (<a href="https://portal.mozz.us/gemini/<% h(@showing_user.homepage[9..-1]) %>">proxy</a>)
+        <% elsif @showing_user.homepage.start_with?('gopher://') %>
+          (<a href="https://gopher.floodgap.com/gopher/gw?<% h(@showing_user.homepage[9..-1]) %>">proxy</a>)
+        <% end %>
+      </span>
+    <% end %>
+
+    <% if @showing_user.github_username.present? %>
+      <label class="required">GitHub:</label>
+
+      <span>
+        <a href="https://github.com/<%= h(@showing_user.github_username) %>"
+          rel="me ugc">https://github.com/<%= h(@showing_user.github_username)
+          %></a>
+      </span>
+    <% end %>
+
+    <% if @showing_user.mastodon_username.present? && @showing_user.mastodon_instance.present? %>
+      <label class="required">Mastodon:</label>
+
+      <span>
+        <a href="https://<%= h(@showing_user.mastodon_instance)%>/@<%= h(@showing_user.mastodon_username)%>"
+          rel="me ugc">@<%= h(@showing_user.mastodon_username)%>@<%= h(@showing_user.mastodon_instance)%>
+          </a>
+      </span>
+    <% end %>
+
+    <% if Keybase.enabled? && @showing_user.keybase_signatures? %>
+      <label class="required">Keybase:</label>
+      <span>
+        <%= render :partial => "keybase_proofs/proofs", locals: { user: @showing_user, for_self: false } %>
+      </span>
+    <% end %>
+
+    <% if @showing_user.is_active? %>
+      <label class="required">About:</label>
+
+      <div class="d shorten_first_p">
+        <% if @showing_user.about.present? %>
+          <%= raw @showing_user.linkified_about %>
+        <% else %>
+          <span class="na">A mystery...</span>
+        <% end %>
+      </div>
+    <% end %>
+
+  </div>
+</div>
+
+<% if Rails.env.development? || @user == @showing_user || @user&.is_moderator? %>
+  <div class="todo_spread user-stats flash-notice">
+    <p>
+      Comments posted in the last 6 months: <%= @showing_user.comments.recent.count %><br>
+      &nbsp;&nbsp;...posted on stories you didn't mark as self-authored: <%= @showing_user.comments.recent.on_stories_not_authored_by(@showing_user).count %><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;...received above average score: <%= @showing_user.comments.recent.on_stories_not_authored_by(@showing_user).above_average.count %>
+    </p>
+
+    <p>(This section is only visible to you and moderators.
+    Mods use it when evaluating whether 
+    users are participating in the community or exploiting the site for <a href="/about#self-promo">self-promo</a>. It's a red flag when someone never posts well-received comments outside of their own links.)
+  </div>
   <% end %>
 
-  <% if @user&.is_admin? || @user&.show_email? %>
-    <label class="required">E-Mail:</label>
-    <span class="d">
-      <%= @showing_user.email %>
-    </span>
-    <br>
-  <% end %>
+<% if @user && @user.is_moderator? && !@showing_user.is_moderator? %>
+  <h2>Moderator Information</h2>
 
-  <% if @showing_user.homepage.present? %>
-    <label class="required">Homepage:</label>
-
-    <span class="d">
-      <a href="<%= h(@showing_user.homepage) %>"
-        rel="me ugc"><%= h(@showing_user.homepage) %></a>
-      <% if @showing_user.homepage.start_with?('gemini://') %>
-        (<a href="https://portal.mozz.us/gemini/<% h(@showing_user.homepage[9..-1]) %>">proxy</a>)
-      <% elsif @showing_user.homepage.start_with?('gopher://') %>
-        (<a href="https://gopher.floodgap.com/gopher/gw?<% h(@showing_user.homepage[9..-1]) %>">proxy</a>)
-      <% end %>
-    </span>
-    <br>
-  <% end %>
-
-  <% if @showing_user.github_username.present? %>
-    <label class="required">GitHub:</label>
-
-    <span class="d">
-      <a href="https://github.com/<%= h(@showing_user.github_username) %>"
-        rel="me ugc">https://github.com/<%= h(@showing_user.github_username)
-        %></a>
-    </span>
-    <br>
-  <% end %>
-
-  <% if @showing_user.mastodon_username.present? && @showing_user.mastodon_instance.present? %>
-    <label class="required">Mastodon:</label>
-
-    <span class="d">
-      <a href="https://<%= h(@showing_user.mastodon_instance)%>/@<%= h(@showing_user.mastodon_username)%>"
-        rel="me ugc">@<%= h(@showing_user.mastodon_username)%>@<%= h(@showing_user.mastodon_instance)%>
-        </a>
-    </span>
-    <br>
-  <% end %>
-
-  <% if Keybase.enabled? && @showing_user.keybase_signatures? %>
-    <label class="required">Keybase:</label>
-    <span class="d">
-      <%= render :partial => "keybase_proofs/proofs", locals: { user: @showing_user, for_self: false } %>
-    </span>
-    <br>
-  <% end %>
-
-  <% if @showing_user.is_active? %>
-    <label class="required">About:</label>
-
-    <div class="d shorten_first_p">
-      <% if @showing_user.about.present? %>
-        <%= raw @showing_user.linkified_about %>
-      <% else %>
-        <span class="na">A mystery...</span>
-      <% end %>
-      <br>
-    </div>
-  <% end %>
-
-  <% if Rails.env.development? || @user == @showing_user || @user&.is_moderator? %>
-    <div class="user-stats flash-notice">
-      <p>
-        Comments posted in the last 6 months: <%= @showing_user.comments.recent.count %><br>
-        &nbsp;&nbsp;...posted on stories you didn't mark as self-authored: <%= @showing_user.comments.recent.on_stories_not_authored_by(@showing_user).count %><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;...received above average score: <%= @showing_user.comments.recent.on_stories_not_authored_by(@showing_user).above_average.count %>
-      </p>
-
-      <p>(This section is only visible to you and moderators.
-      Mods use it when evaluating whether 
-      users are participating in the community or exploiting the site for <a href="/about#self-promo">self-promo</a>. It's a red flag when someone never posts well-received comments outside of their own links.)
-    </div>
-  <% end %>
-
-  <% if @user && @user.is_moderator? && !@showing_user.is_moderator? %>
-    <h2>Moderator Information</h2>
-
+  <div class="todo_spread todo_grid">
     <label class="required">Flagged (1m):</label>
-    <span class="d">
+    <span>
       <% if (stats = FlaggedCommenters.new('1m').check_list_for(@showing_user)) %>
         <a href="/mod/commenters/1m#<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % (stats[:sigma] || 0) %> &sigma;
       <% else %>
         No
       <% end %>
     </span>
-    <br>
 
     <label class="required">Self Promoter:</label>
-    <span class="d">
+    <span>
       <% if @showing_user.is_heavy_self_promoter? %>
         <strong>Yes</strong>
       <% else %>
         No
       <% end %>
     </span>
-    <br>
+  </div>
 
+  <div class="todo_spread">
     <label class="required">Last 10 Notes:</label>
     <%= render partial: 'mod_notes/table', locals: {
       mod_notes: ModNote.for(@showing_user).limit(10),
@@ -212,18 +202,21 @@
     <%= form_with model: @mod_note, method: :post do |f| %>
       <%= errors_for @mod_note %>
       <%= f.hidden_field :username %>
-      <div class="boxline">
+      <div class="todo_grid">
         <%= f.label :note, "New Note:", :class => "required" %>
-        <%= f.text_area :note, :style => "width: 500px;", :rows => 5 %>
+        <%= f.text_area :note, :rows => 5 %>
       </div>
-      <div class="boxline"><p></p><%= f.submit "ModNote" %></div>
+      <%= f.submit "ModNote" %>
     <% end %>
+  </div>
 
+  <div class="todo_spread">
     <label class="required">Latest modlog for this user:</label>
     <%= render partial: 'moderations/table', locals: { moderations: Moderation.for_user(@showing_user) } %>
+  </div>
 
-
-    <% if @user.is_admin? %>
+  <% if @user.is_admin? %>
+    <div class="todo_spread">
       <h3>Admin Information</h3>
 
       <label class="required">Recent Votes:</label>
@@ -249,7 +242,7 @@
         <%= form_with url: user_unban_path, method: :post do |f| %>
           <p>
             <% if @showing_user.is_banned? %>
-              <div class="boxline">
+              <div class="todo_grid">
                 <%= f.label :reason, "Reason:", :class => "required" %>
                 <%= f.text_field :reason, :size => 80 %>
               </div>
@@ -268,9 +261,9 @@
           with your e-mail address as the Reply-To so the user can respond.
         </p>
         <%= form_with url: user_ban_path, method: :post do |f| %>
-          <div class="boxline">
+          <div class="todo_grid">
             <%= f.label :reason, "Reason:", :class => "required" %>
-            <%= f.text_field :reason, :size => 80 %>
+            <%= f.text_field :reason %>
           </div>
           <p>
             <% if !@showing_user.is_banned? %>
@@ -285,5 +278,5 @@
 
       <%= link_to 'Reparent', new_mod_reparent_path({}, id: @showing_user) %>
     <% end %>
-  <% end %>
-</div>
+  </div>
+<% end %>

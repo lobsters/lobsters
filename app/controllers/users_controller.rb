@@ -10,7 +10,7 @@ class UsersController < ApplicationController
 
   def show
     @title = @showing_user.username
-    if @showing_user.is_active?
+    if !@showing_user.is_active?
       @title_class = :inactive_user
     elsif @showing_user.is_new?
       @title_class = :new_user

@@ -127,7 +127,7 @@ class SettingsController < ApplicationController
 
     @user.totp_secret = session[:totp_secret]
     if @user.authenticate_totp(params[:totp_code])
-      @user.totp_recovery_codes = Array.new(3).map { |_| Utils.random_str(20) }
+      @user.totp_recovery_codes = Array.new(6) { |_| Utils.random_str(20) }
       # re-roll, just in case
       @user.session_token = nil
       @user.save!

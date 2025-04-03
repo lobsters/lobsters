@@ -186,4 +186,16 @@ describe SearchParser do
       )
     end
   end
+
+  describe "bugs I've seen in prod" do
+    it "parses an exploit engine search" do
+      assert SearchParser.new.parse 'foo:"bar of" quux' # minimal repro, then full
+      assert SearchParser.new.parse '(intitle:"index of" "credentials") AND -intitle:dork AND -intitle:dorks AND -intitle:Dork'
+    end
+
+    it "parses a search that uses a few stopwords" do
+      assert SearchParser.new.parse "Notes on structured concurrency, or: Go statement considered harmful"
+      assert SearchParser.new.parse "a  Simple Serialization System"
+    end
+  end
 end

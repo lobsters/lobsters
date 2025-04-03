@@ -13,7 +13,7 @@ class SearchParser < Parslet::Parser
   rule(:non_wordchar) { match('[^\p{Word}_\\-\']') }
   rule(:eof) { any.absent? }
 
-  rule(:stopword) { Parslet::Atoms::Alternative.new(*MYISAM_STOPWORDS.map { str(it) }).as(:stopword) >> (non_wordchar | eof) }
+  rule(:stopword) { Parslet::Atoms::Alternative.new(*MYISAM_STOPWORDS.map { str(it) }).as(:stopword) >> (non_wordchar | eof) >> space? }
   # this regexp should invert punctuation stripped by Search.strip_operators
   rule(:term) { wordchar.repeat(3).as(:term) >> space? }
   # can't search for short terms https://github.com/lobsters/lobsters/issues/1237

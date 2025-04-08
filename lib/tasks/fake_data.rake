@@ -174,11 +174,14 @@ class FakeDataGenerator
     end
     puts
 
-    print "Comment Flags "
+    print "Comment Flags and Votes "
     comments.each do |c|
       print "."
+      upvotes = Random.rand(20)
+      # Take one extra user to have a chance to flag the comment
+      voting_users = users.sample(upvotes + 1)
       if Random.rand(100) > 95
-        u = users[Random.rand(@users_count - 1)]
+        u = voting_users[0]
         Vote.vote_thusly_on_story_or_comment_for_user_because(
           -1,
           c.story_id,
@@ -187,20 +190,43 @@ class FakeDataGenerator
           Vote::COMMENT_REASONS.keys[Random.rand(Vote::COMMENT_REASONS.keys.length)]
         )
       end
+
+      voting_users.slice(1..).each do |u|
+        Vote.vote_thusly_on_story_or_comment_for_user_because(
+          1,
+          c.story_id,
+          c.id,
+          u.id,
+          nil
+        )
+      end
     end
     puts
 
-    print "Story Flags "
+    print "Story Flags and Votes "
     stories.each do |s|
       print "."
+      upvotes = Random.rand(20)
+      # Take one extra user to have a chance to flag the story
+      voting_users = users.sample(upvotes + 1)
       if Random.rand(100) > 95
-        u = users[Random.rand(@users_count - 1)]
+        u = voting_users[0]
         Vote.vote_thusly_on_story_or_comment_for_user_because(
           -1,
           s.id,
           nil,
           u.id,
           Vote::STORY_REASONS.keys[Random.rand(Vote::STORY_REASONS.keys.length)]
+        )
+      end
+
+      voting_users.slice(1..).each do |u|
+        Vote.vote_thusly_on_story_or_comment_for_user_because(
+          1,
+          s.id,
+          nil,
+          u.id,
+          nil
         )
       end
     end

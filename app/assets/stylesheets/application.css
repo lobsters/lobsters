@@ -1249,7 +1249,13 @@ label.required {
 	word-break: break-word;
 }
 
-.labelled_grid {
+.labelled_grid *:has(.labelled_subgrid), .labelled_subgrid {
+	display: grid;
+	grid-template-columns: subgrid;
+	grid-column: 1 / -1;
+}
+
+.labelled_grid, .labelled_subgrid {
 	column-gap: 1rem;
 	row-gap: 12px;
 }
@@ -1537,7 +1543,7 @@ input[type="submit"].link_post.pushover_button {
 		margin-right: 0.5rem;
 	}
 
-	.labelled_grid > label:after {
+	.labelled_grid > label:after, .labelled_subgrid > label:after {
 		content: ':';
 	}
 
@@ -1843,7 +1849,7 @@ input[type="submit"].link_post.pushover_button {
 		row-gap: 2px;
 	}
 
-	.labelled_grid > * + label {
+	.labelled_grid > * + label, .labelled_subgrid > * + label {
 		margin-top: 12px;
 	}
 }

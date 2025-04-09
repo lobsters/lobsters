@@ -136,7 +136,10 @@ classes = [
 
           <span class="comments_label">
             |
-            <%= (ms.comments_count == 0) ? "no" : ms.comments_count %> <%= 'comment'.pluralize(ms.comments_count) %></a>
+            <a role="heading" aria-level="2" href="<%= ms.comments_path %>">
+              <%= ms.comments_count.zero? ? "no" : ms.comments_count %>
+              <%= 'comment'.pluralize(ms.comments_count) %>
+            </a>
           </span>
 
           <% if ((@user&.is_moderator? && ms.flags > 0) || (ms.flags >= 3 || ms.score <= 0)) %>

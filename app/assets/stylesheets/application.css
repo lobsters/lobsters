@@ -399,7 +399,7 @@ header .inbox_unread {
 	padding: 0 0.5rem 0 0;
 }
 
-#inside:has(ol.stories) > * {
+#inside:has(ol.stories) > *, #inside:has(ol.comments) > * {
 	grid-column: 2;
 }
 
@@ -439,7 +439,8 @@ div#gravatar img {
 
 /* stories */
 
-#inside ol.stories {
+#inside ol.stories,
+#inside ol.comments {
 	grid-column: 1 / -1;
 	display: grid;
 	grid-template-columns: subgrid;
@@ -454,23 +455,33 @@ ol.category_tags {
 }
 
 ol.comments {
-	margin-left: 20px;
-	margin-bottom: 0em;
-	padding-left: 6px;
+	margin-bottom: 0;
+}
+ol.comments > li {
+	display: grid;
+	grid-column: 1 / -1;
+	grid-template-columns: subgrid;
 }
 ol.comments1 {
-	margin-left: -40px;
 	padding-left: 0;
 }
 ol.comments.comments1 {
 	border-left-color: transparent;
 }
-ol.comments1 > li.comments_subtree {
-	margin-left: 11px;
-}
 ol.comments1 > li.comments_subtree > ol.comments {
 	margin-left: 0;
 	padding-left: 0;
+}
+
+div.comment_foldable {
+	display: grid;
+	column-gap: 0.5rem;
+}
+
+div.comment_gutter {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 div.voters {
@@ -635,11 +646,9 @@ li .comment_folder {
 	font-size: 9pt;
 	color: var(--color-fg-contrast-4-5);
 	letter-spacing: 0.1em;
-	width: 1.5em;
- 	cursor: pointer;
-	float: left;
+	cursor: pointer;
 	text-align: center;
-	margin-left: -4px;
+	justify-self: center;
 }
 li .comment_folder.comment_folder_inline {
 	display: none;
@@ -655,40 +664,30 @@ li .comment_folder.comment_folder_inline.force_inline {
 li .comment_folder:before {
 	content: "[−]";
 }
-li .comment_folder_button:checked ~ .comment .comment_folder:before {
+.comment_folder:has(~ .comment_foldable > .comment_folder_button:checked):before,
+*:has(> .comment_folder_button:checked) > .comment .comment_folder:before {
 	content: "[+]";
 }
-li .comment_folder_button:checked ~ div.comment div.comment_text {
- 	display: none;
-}
-li .comment_folder_button:checked ~ div.comment div.voters {
-	visibility: hidden;
-	margin-bottom: -15px;
-}
-li .comment_folder_button:checked ~ ol.comments ol,
-li .comment_folder_button:checked ~ ol.comments div.comment,
-li .comment_folder_button:checked ~ ol.comments li {
- 	display: none;
+li .comment_folder_button:checked ~ .comment div.comment_text,
+li .comment_folder_button:checked ~ .comment .comment_gutter > *,
+li .comment_folder_button:checked ~ .comment ol.comments ol,
+li .comment_folder_button:checked ~ .comment ol.comments div.comment,
+li .comment_folder_button:checked ~ ol.comments {
+	display: none;
 }
 
 li.comments_subtree {
-	position: relative;
+	grid-column: 1 / -1;
+	display: grid;
+	grid-template-columns: subgrid;
 }
 
 li .comment_parent_tree_line {
-	position: absolute;
-	left: 30px;
+	flex-grow: 1;
+	width: 0;
 	border-left: 1px dotted var(--color-fg-shape);
-	top: 30px;
-	bottom: 0;
 }
 
-li .comment_parent_tree_line.score_shown {
-	top: 44px;
-}
-li .comment_parent_tree_line.can_flag {
-	top: 56px;
-}
 /* hide for comments that don't have children */
 li:not(:has(> .comments > li)) > .comment > .comment_parent_tree_line {
 	border-left-color: transparent;
@@ -711,10 +710,9 @@ div.comment:target div.voters {
 }
 
 .thread_summary {
+	grid-column: 2;
 	color: var(--color-fg-contrast-4-5);
 	font-size: 9.5pt;
-	/* .comment_folder (-4px margin-left + 1.5em width) + .voters (30px width) */
-	margin-left: calc(-4px + 1.5em + 30px);
 }
 li .byline {
 	color: var(--color-fg-contrast-4-5);
@@ -832,7 +830,6 @@ div.page_link_buttons span {
 
 div.story_text {
 	margin-bottom: 1.5em;
-	max-width: 700px;
 	word-wrap: break-word;
 }
 div.story_text p {
@@ -848,7 +845,6 @@ a#story_text_expander {
 
 div.comment_text {
 	font-size: 10.5pt;
-	max-width: 700px;
 	word-wrap: break-word;
 	overflow: hidden;
 }
@@ -1016,12 +1012,7 @@ div#story_box textarea {
 }
 
 div.comment_form_container {
-	margin-left: -11px;
-}
-
-div.comment_form_container form {
-	margin-left: 40px;
-	max-width: 700px;
+	grid-column: 2;
 }
 
 div.comment_form_container textarea {
@@ -1483,16 +1474,9 @@ input[type="submit"].link_post.pushover_button {
 		margin-right: 0.5rem;
 	}
 
-	/* hang voters into left margin to center under logo */
-	#inside > ol.comments {
-		/* .voters width + .voters padding-right */
-		margin-left: -32px;
-	}
-	#inside > ol.comments div.voters {
-		width: 30px;
-	}
-	#inside > ol.comments .upvoter {
-		margin-left: 9px;
+	div.comment_foldable {
+		grid-column: 2 / -1;
+		grid-template-columns: minmax(1.5rem, max-content) 1fr;
 	}
 
 	.help {
@@ -1600,10 +1584,23 @@ input[type="submit"].link_post.pushover_button {
 		padding-left: 25px;
 	}
 
-	ol.comments { margin-left: 10px }
+	.comment .details {
+		grid-column: 2 / -1;
+	}
+
+	div.comment_foldable {
+		grid-column: 1 / -1;
+		display: grid;
+		grid-template-columns: subgrid;
+	}
+
+	div.comment_foldable > ol.comments {
+		grid-column: 2 / -1;
+		grid-template-columns: minmax(1.5rem, max-content) 1fr;
+	}
+
 	ol.stories,
 	div#inside > ol.comments {
-		margin: 0 0.5rem 0 -0.5rem;
 		padding-left: 0;
 	}
 	ol.comments1 > li.comments_subtree {

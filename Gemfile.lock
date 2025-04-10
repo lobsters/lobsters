@@ -89,7 +89,7 @@ GEM
     benchmark (0.4.0)
     benchmark-perf (0.6.0)
     bigdecimal (3.1.9)
-    brakeman (7.0.0)
+    brakeman (7.0.2)
       racc
     builder (3.3.0)
     byebug (11.1.3)

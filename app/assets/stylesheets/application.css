@@ -474,15 +474,19 @@ ol.comments1 > li.comments_subtree > ol.comments {
 	padding-left: 0;
 }
 
-div.comment_foldable {
-	display: grid;
+#inside .comment + ol.comments {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: minmax(1.5rem, max-content) 1fr;
 	column-gap: 0.5rem;
 }
 
 div.comment_gutter {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+    align-items: center;
+    gap: 0.25rem;
+    grid-row-end: span 2;
 }
 
 div.voters {
@@ -543,7 +547,7 @@ ol.stories li.story div.story_liner .details {
 .comment {
 	padding-top: 0.4em;
 	padding-bottom: 0.4em;
-	grid-column: 1 / -1;
+	grid-column: 2;
 	display: grid;
 	grid-template-columns: subgrid;
 }
@@ -665,15 +669,15 @@ li .comment_folder.comment_folder_inline.force_inline {
 li .comment_folder:before {
 	content: "[−]";
 }
-.comment_folder:has(~ .comment_foldable > .comment_folder_button:checked):before,
+.comment_folder_button:checked ~ .comment_gutter .comment_folder:before,
 *:has(> .comment_folder_button:checked) > .comment .comment_folder:before {
 	content: "[+]";
 }
-li .comment_folder_button:checked ~ .comment div.comment_text,
-li .comment_folder_button:checked ~ .comment .comment_gutter > *,
-li .comment_folder_button:checked ~ .comment ol.comments ol,
-li .comment_folder_button:checked ~ .comment ol.comments div.comment,
-li .comment_folder_button:checked ~ ol.comments {
+#inside li .comment_folder_button:checked ~ .comment div.comment_text,
+#inside li .comment_folder_button:checked ~ .comment_gutter > *:not(.comment_folder),
+#inside li .comment_folder_button:checked ~ .comment ol.comments ol,
+#inside li .comment_folder_button:checked ~ .comment ol.comments div.comment,
+#inside li .comment_folder_button:checked ~ ol.comments {
 	display: none;
 }
 
@@ -1657,34 +1661,12 @@ input[type="submit"].link_post.pushover_button {
 		padding-left: 25px;
 	}
 
-	.comment .details {
-		grid-column: 2 / -1;
-	}
-
-	div.comment_foldable {
-		grid-column: 1 / -1;
-		display: grid;
-		grid-template-columns: subgrid;
-	}
-
-	div.comment_foldable > ol.comments {
-		grid-column: 2 / -1;
-		grid-template-columns: minmax(1.5rem, max-content) 1fr;
-	}
-
 	ol.stories,
 	div#inside > ol.comments {
 		padding-left: 0;
 	}
 	ol.comments1 > li.comments_subtree {
 		margin-left: 0;
-	}
-
-	li .comment_folder {
-		display: none;
-	}
-	li .comment_folder.comment_folder_inline {
-		display: inline-block;
 	}
 
 	li .comment_parent_tree_line,

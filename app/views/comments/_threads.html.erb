@@ -41,13 +41,6 @@
     %>
 
 
-    <% if show_tree_lines %>
-      <label for="comment_folder_<%= comment.short_id %>"
-        class="comment_folder"></label>
-    <% end %>
-
-
-    <div class="comment_foldable">
 <%#heinous_inline_partial(comments/_comment.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
 <%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false) -%>
@@ -65,15 +58,9 @@
       @user.try(:is_moderator?) ||
       (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
-<div id="c_<%= comment.short_id %>"
-  data-shortid="<%= comment.short_id if comment.persisted? %>"
-  class="comment
-    <%= comment.current_upvoted? ? "upvoted" : "" %>
-    <%= comment.current_flagged? ? "flagged" : "" %>
-    <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
-  ">
-
   <div class="comment_gutter">
+    <label for="comment_folder_<%= comment.short_id %>"
+        class="comment_folder"></label>
     <% if !comment.is_gone? %>
       <% can_flag = @user && @user.can_flag?(comment) %>
       <% score_display = comment.score_for_user(@user) %>
@@ -93,17 +80,19 @@
       "></div>
   </div>
 
+
+
+<div id="c_<%= comment.short_id %>"
+  data-shortid="<%= comment.short_id if comment.persisted? %>"
+  class="comment
+    <%= comment.current_upvoted? ? "upvoted" : "" %>
+    <%= comment.current_flagged? ? "flagged" : "" %>
+    <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
+  ">
+
   <div class="details">
     <div class="byline">
       <a name="c_<%= comment.short_id %>"></a>
-
-      <% if show_tree_lines %>
-        <label for="comment_folder_<%= comment.short_id %>"
-          class="comment_folder comment_folder_inline"></label>
-      <% else %>
-        <label for="comment_folder_<%= comment.short_id %>"
-          class="comment_folder comment_folder_inline force_inline"></label>
-      <% end %>
 
       <% if was_merged %>
         <span class="merge"></span>
@@ -235,13 +224,11 @@
 
   <%# close tree of replies %>
   <% (previous_depth - top_comment_depth).times do %>
-        </div>
       </li>
     </ol>
   <% end %>
 
   <%# close top subtree %>
-    </div>
   </li>
 <% end %>
 

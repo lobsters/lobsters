@@ -15,7 +15,7 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-    - uses: actions/stale@v5
+    - uses: actions/stale@v9
       with:
         stale-pr-message: "This PR has had no activity for 21 days. Please leave a comment or commit to indicate you're still actively working on it."
         close-pr-message: "This PR was closed because it was open for 28 days with no activity. Please reopen when you'd like to continue work on this."

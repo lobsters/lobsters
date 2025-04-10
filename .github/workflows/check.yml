@@ -34,7 +34,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.4.1
           bundler-cache: true
 
       - name: Workaround for inability to templatize credentials (#1380)

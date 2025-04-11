@@ -236,6 +236,7 @@ GEM
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
+    prism (1.4.0)
     propshaft (1.1.0)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
@@ -472,6 +473,7 @@ DEPENDENCIES
   oauth
   parslet
   pdf-reader
+  prism
   propshaft
   prosopite
   puma

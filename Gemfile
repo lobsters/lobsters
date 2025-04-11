@@ -63,6 +63,7 @@ group :test, :development do
   gem "database_cleaner"
   gem "listen"
   gem "letter_opener"
+  gem "prism"
   gem "rspec-rails"
   gem "factory_bot_rails"
   gem "foreman"

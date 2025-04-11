@@ -40,6 +40,7 @@
       is_unread = ribbon&.is_unread?(comment)
     %>
 
+
 <%#heinous_inline_partial(comments/_comment.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
 <%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false) -%>
@@ -57,6 +58,31 @@
       @user.try(:is_moderator?) ||
       (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
+  <div class="comment_gutter">
+    <% if !comment.is_gone? %>
+      <% can_flag = @user && @user.can_flag?(comment) %>
+      <% score_display = comment.score_for_user(@user) %>
+      <div class="voters">
+        <% if @user %>
+          <a class="upvoter"></a>
+        <% else %>
+          <%= link_to "", login_path, :class => "upvoter" %>
+        <% end %>
+        <div class="score"><%= score_display %></div>
+      </div>
+    <% end %>
+
+    <label for="comment_folder_<%= comment.short_id %>"
+      class="comment_folder"></label>
+
+    <div class="comment_parent_tree_line
+      <%= can_flag ? "can_flag" : "" %>
+      <%= score_display != "&nbsp;" ? "score_shown" : "" %>
+      "></div>
+  </div>
+
+
+
 <div id="c_<%= comment.short_id %>"
   data-shortid="<%= comment.short_id if comment.persisted? %>"
   class="comment
@@ -65,39 +91,9 @@
     <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
   ">
 
-  <% if show_tree_lines %>
-    <label for="comment_folder_<%= comment.short_id %>"
-      class="comment_folder"></label>
-  <% end %>
-
-  <% if !comment.is_gone? %>
-    <% can_flag = @user && @user.can_flag?(comment) %>
-    <% score_display = comment.score_for_user(@user) %>
-    <div class="voters">
-      <% if @user %>
-        <a class="upvoter"></a>
-      <% else %>
-        <%= link_to "", login_path, :class => "upvoter" %>
-      <% end %>
-      <div class="score"><%= score_display %></div>
-    </div>
-    <div class="comment_parent_tree_line
-      <%= can_flag ? "can_flag" : "" %>
-      <%= score_display != "&nbsp;" ? "score_shown" : "" %>
-      "></div>
-  <% end %>
-
   <div class="details">
     <div class="byline">
       <a name="c_<%= comment.short_id %>"></a>
-
-      <% if show_tree_lines %>
-        <label for="comment_folder_<%= comment.short_id %>"
-          class="comment_folder comment_folder_inline"></label>
-      <% else %>
-        <label for="comment_folder_<%= comment.short_id %>"
-          class="comment_folder comment_folder_inline force_inline"></label>
-      <% end %>
 
       <% if was_merged %>
         <span class="merge"></span>

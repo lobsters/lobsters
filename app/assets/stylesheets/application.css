@@ -674,11 +674,21 @@ li .comment_folder:before {
 	content: "[+]";
 }
 #inside li .comment_folder_button:checked ~ .comment div.comment_text,
-#inside li .comment_folder_button:checked ~ .comment_gutter > *:not(.comment_folder),
+#inside li .comment_folder_button:checked ~ .comment_gutter .comment_parent_tree_line,
 #inside li .comment_folder_button:checked ~ .comment ol.comments ol,
 #inside li .comment_folder_button:checked ~ .comment ol.comments div.comment,
 #inside li .comment_folder_button:checked ~ ol.comments {
 	display: none;
+}
+
+.comment_gutter .voters {
+    overflow: hidden;
+    transition: max-height 100ms linear;
+    max-height: 2rem;
+}
+
+#inside li .comment_folder_button:checked ~ .comment_gutter > .voters {
+    max-height: 0;
 }
 
 li.comments_subtree {

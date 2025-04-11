@@ -14,8 +14,6 @@
       (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
   <div class="comment_gutter">
-    <label for="comment_folder_<%= comment.short_id %>"
-        class="comment_folder"></label>
     <% if !comment.is_gone? %>
       <% can_flag = @user && @user.can_flag?(comment) %>
       <% score_display = comment.score_for_user(@user) %>
@@ -28,6 +26,9 @@
         <div class="score"><%= score_display %></div>
       </div>
     <% end %>
+
+    <label for="comment_folder_<%= comment.short_id %>"
+      class="comment_folder"></label>
 
     <div class="comment_parent_tree_line
       <%= can_flag ? "can_flag" : "" %>

@@ -63,7 +63,7 @@ group :test, :development do
   gem "database_cleaner"
   gem "listen"
   gem "letter_opener"
-  gem "prism"
+  gem "prism" # rm after https://github.com/presidentbeef/brakeman/issues/1909 closes
   gem "rspec-rails"
   gem "factory_bot_rails"
   gem "foreman"

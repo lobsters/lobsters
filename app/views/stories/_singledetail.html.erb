@@ -56,9 +56,7 @@ classes = [
 
       <div class="byline">
         <span><%= ms.user_is_author? ? "authored by" : "via" %></span>
-        <% if (@user && @user.show_avatars?) || !@user %>
-          <%= link_to avatar_img(ms.user, 16), user_path(ms.user) %>
-        <% end %>
+        <%= inline_avatar_for @user, ms.user %>
         <%= styled_user_link ms.user, ms, class: ['u-author', 'h-card'] %>
 
         <% if ms.previewing %>

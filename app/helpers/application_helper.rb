@@ -78,6 +78,12 @@ module ApplicationHelper
     parsed.to_html
   end
 
+  def inline_avatar_for(viewer, user)
+    if !viewer || viewer.show_avatars?
+      link_to avatar_img(user, 16), user_path(user)
+    end
+  end
+
   # limitation: this can't handle generating links based on a hash of options,
   # like { controller: ..., action: ... }
   def link_to_different_page(text, path, options = {})

@@ -60,10 +60,7 @@
       <% end %>
 
       <span class="<%= @showing_user == comment.user ? "showing-user-comment" : nil %>">
-        <% if (@user && @user.show_avatars?) || !@user %>
-          <%= link_to avatar_img(comment.user, 16), comment.user %>
-        <% end %>
-
+        <%= inline_avatar_for @user, comment.user %>
         <%= styled_user_link comment.user, comment %>
 
         <% if comment.hat %>

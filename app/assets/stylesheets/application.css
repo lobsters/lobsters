@@ -452,6 +452,7 @@ ol.comments1 > li.comments_subtree > ol.comments {
 div.voters {
 	float: left;
 	margin-top: 0px;
+	text-align: center;
 	width: 40px;
 }
 
@@ -460,7 +461,6 @@ div.voters div.score {
 	font-size: 9pt;
 	margin-top: 1px;
 	margin-bottom: -3px;
-	text-align: center;
 }
 
 li.story div.voters div.score {

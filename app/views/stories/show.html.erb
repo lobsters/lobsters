@@ -21,7 +21,7 @@
         <summary>Source URL considered unavailable as of <%= how_long_ago_label(@story.unavailable_at) %>, click for cached text - also see archive links above</summary>
 
         <p>
-        <em>All story content copyright of its respective owner.</em>
+          <em>All story content copyright of its respective owner.</em>
         </p>
 
         <div class="story_text">
@@ -50,41 +50,121 @@
     <% end %>
   </p>
 <% end %>
+
 <br />
 <label class="required">Latest modlog for this story, submitter, and discussion:</label>
 <%= render partial: 'moderations/table', locals: { moderations: Moderation.for_story(@story) } %>
 <% end %>
 
 <% if !@story.previewing %>
-  <ol class="comments comments1">
-    <% if !@story.is_gone? && !@story.previewing && @story.accepting_comments? %>
-      <li class="comments_subtree"><%= render partial: "comments/commentbox", locals: { comment: @comment, story: @story } %></li>
-    <% end %>
+  <% @merged_stories.select { !it.is_gone? }.each do |ms| %>
+    <ol class="stories">
+      <li>
+        <div class="story_liner h-entry">
+          <div class="voters">
+            <span class="merge"></span>
+          </div>
+          <div class="details">
+            <span role="heading" aria-level="2" class="link h-cite u-repost-of">
+              <% if ms.can_be_seen_by_user?(@user) %>
+                <a class="u-url" href="<%= ms.url_or_comments_path %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>"><%= ms.title %></a>
+              <% end %>
+              <% if ms.is_gone? %>
+                [Story removed by <%= ms.is_moderated? ? "moderator" : "submitter" %>]
+              <% end %>
+            </span>
 
-    <li class="comments_subtree" id="story_comments">
-      <% if @user && @comments.size > 0 %>
-        <div class="thread_summary">
-          <%= pluralize(@comments.size, "comment") %>,
-          <% unread = @ribbon.unread_count(@comments) %>
-          <% if @ribbon.new_record? %>
-            all unread
-          <% elsif unread > 0 %>
-            <span role='link' class='comment_unread'><%= unread %> unread</span>
-          <% else %>
-            0 unread
-          <% end %>
+            <span class="byline">
+              <span>&nbsp;</span>
+              <%= inline_avatar_for @user, ms.user %>
+              <%= styled_user_link ms.user, ms, class: ['u-author', 'h-card'] %>
+
+              <span> | </span>
+              <span class="dropdown_parent">
+                <input id="archive_<%= ms.short_id %>" class="archive_button" type="checkbox">
+                <label for="archive_<%= ms.short_id %>">caches</label>
+                <div class="archive-dropdown">
+                  <a href="<%= ms.archiveorg_url %>">Archive.org</a>
+                  <a href="<%= ms.archivetoday_url %>">Archive.today</a>
+                  <a href="<%= ms.ghost_url %>">Ghostarchive</a>
+                </div>
+              </span>
+
+              <span> | </span>
+              <span class="comments_label">
+                <a role="heading" aria-level="2" href="<%= ms.comments_path %>">
+                <% if ms.comments_count == 0 %>
+                  no comments</a>
+                <% else %>
+                  <%= ms.comments_count %> <%= 'comment'.pluralize(ms.comments_count) %></a>
+                <% end %>
+              </span>
+            </span>
+          </div>
+        </div>
+      </li>
+    </ol>
+
+
+    <div class="story_content">
+      <% if ms.markeddown_description.present? %>
+        <div class="story_text">
+        <%= raw ms.markeddown_description %>
         </div>
       <% end %>
 
-      <%= render partial: 'comments/threads', locals: { thread: @comments, story: @story, ribbon: @ribbon } %>
-    </li>
+      <% if ms.is_unavailable %>
+        <% StoryText.cached?(ms) do |text| %>
+          <details>
+            <summary>Source URL considered unavailable as of <%= how_long_ago_label(ms.unavailable_at) %>, click for cached text - also see archive links above</summary>
 
-  </ol>
-<% end %>
+            <p>
+            <em>All story content copyright of its respective owner.</em>
+            </p>
 
-<% if !@story.previewing && @story.public_similar_stories(@user).length > 0 %>
-  <div class="box wide">
-    <h4>Stories with similar links:</h4>
-    <%= render partial: "stories/similar", locals: { similar: @story.public_similar_stories(@user) } %>
-  </div>
+            <div class="story_text">
+              <blockquote>
+                <%= simple_format(text) %>
+              </blockquote>
+            </div>
+          </details>
+
+        <% end %>
+      <% end %>
+    </div>
+
+    <ol class="comments comments1">
+      <%# deliberately checking the top-level story, either all have comment forms or none do, less confusing %>
+      <% if @story.accepting_comments? %>
+        <li class="comments_subtree"><%= render partial: "comments/commentbox", locals: { comment: @comment, story: ms } %></li>
+      <% end %>
+
+      <li class="comments_subtree" id="story_comments">
+        <% if @user && @comments.size > 0 %>
+          <div class="thread_summary">
+            <%= pluralize(@comments.select { it.story_id == ms.id }.size, "comment") %>,
+            <% unread = @ribbon.unread_count(@comments.select { it.story_id == ms.id }) %>
+            <% if @ribbon.new_record? %>
+              all unread
+            <% elsif unread > 0 %>
+              <span role='link' class='comment_unread'><%= unread %> unread</span>
+            <% else %>
+              0 unread
+            <% end %>
+          </div>
+        <% end %>
+
+        <%= render partial: 'comments/threads', locals: { thread: @comments.select { it.story_id == ms.id }, story: ms, ribbon: @ribbon } %>
+      </li>
+
+    </ol>
+    <br>
+  <% end %>
+
+  <% if @story.public_similar_stories(@user).length > 0 %>
+    <div class="box wide">
+      <h4>Stories with similar links:</h4>
+      <%= render partial: "stories/similar", locals: { similar: @story.public_similar_stories(@user) } %>
+    </div>
+  <% end %>
 <% end %>

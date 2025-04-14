@@ -118,7 +118,7 @@ class HomeController < ApplicationController
 
   def recent
     @stories, @show_more = get_from_cache(recent: true) {
-      paginate Story.recent(@user, filtered_tag_ids)
+      paginate Story.recent(@user, filtered_tag_ids, unmerged: false)
     }
 
     @title = "Recent Stories"

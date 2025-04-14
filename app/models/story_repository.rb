@@ -23,7 +23,7 @@ class StoryRepository
   end
 
   def newest
-    Story.base(@user).filter_tags(@params[:exclude_tags] || []).order(id: :desc)
+    Story.base(@user, unmerged: false).filter_tags(@params[:exclude_tags] || []).order(id: :desc)
   end
 
   def active

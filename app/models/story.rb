@@ -74,8 +74,8 @@ class Story < ApplicationRecord
       .positive_ranked
       .order(:hotness)
   }
-  scope :recent, ->(user = nil, exclude_tags = nil) {
-    base(user).not_hidden_by(user)
+  scope :recent, ->(user = nil, exclude_tags = nil, unmerged: true) {
+    base(user, unmerged: unmerged).not_hidden_by(user)
       .filter_tags(exclude_tags || [])
       .low_scoring
       .where("created_at >= ?", 10.days.ago)

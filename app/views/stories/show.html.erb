@@ -105,34 +105,34 @@
           </div>
         </li>
       </ol>
-    <% end %>
 
-    <div class="story_content">
-      <% if ms.markeddown_description.present? %>
-        <div class="story_text">
-        <%= raw ms.markeddown_description %>
-        </div>
-      <% end %>
-
-      <% if ms.is_unavailable %>
-        <% StoryText.cached?(ms) do |text| %>
-          <details>
-            <summary>Source URL considered unavailable as of <%= how_long_ago_label(ms.unavailable_at) %>, click for cached text - also see archive links above</summary>
-
-            <p>
-            <em>All story content copyright of its respective owner.</em>
-            </p>
-
-            <div class="story_text">
-              <blockquote>
-                <%= simple_format(text) %>
-              </blockquote>
-            </div>
-          </details>
-
+      <div class="story_content">
+        <% if ms.markeddown_description.present? %>
+          <div class="story_text">
+          <%= raw ms.markeddown_description %>
+          </div>
         <% end %>
-      <% end %>
-    </div>
+
+        <% if ms.is_unavailable %>
+          <% StoryText.cached?(ms) do |text| %>
+            <details>
+              <summary>Source URL considered unavailable as of <%= how_long_ago_label(ms.unavailable_at) %>, click for cached text - also see archive links above</summary>
+
+              <p>
+              <em>All story content copyright of its respective owner.</em>
+              </p>
+
+              <div class="story_text">
+                <blockquote>
+                  <%= simple_format(text) %>
+                </blockquote>
+              </div>
+            </details>
+
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
 
     <ol class="comments comments1">
       <%# deliberately checking the top-level story, either all have comment forms or none do, less confusing %>

@@ -60,7 +60,7 @@
   <% @merged_stories.select { !it.is_gone? }.each do |ms| %>
     <% if @story.stories_count > 0 %>
       <ol class="stories">
-        <li>
+        <li class="story">
           <div class="story_liner h-entry">
             <div class="voters">
               <span class="merge"></span>

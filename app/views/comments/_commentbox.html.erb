@@ -13,7 +13,7 @@
     <%= errors_for comment %>
   <% end %>
 
-  <%= f.hidden_field "story_id", value: comment.story.short_id %>
+  <%= f.hidden_field "story_id", value: story&.short_id || comment.story.short_id %>
   <%= f.hidden_field "_method", value: "#{comment.new_record?? 'post' : 'patch'}" %>
 
   <% if redirect_on_submit %>

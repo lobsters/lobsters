@@ -137,7 +137,7 @@
     <ol class="comments comments1">
       <%# deliberately checking the top-level story, either all have comment forms or none do, less confusing %>
       <% if @story.accepting_comments? %>
-        <li class="comments_subtree"><%= render partial: "comments/commentbox", locals: { comment: @comment, story: ms } %></li>
+        <li class="comments_subtree"><%= render partial: "comments/commentbox", locals: { comment: ms.comments.build, story: ms } %></li>
       <% end %>
 
       <li class="comments_subtree" id="story_comments">

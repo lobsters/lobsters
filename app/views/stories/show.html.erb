@@ -9,7 +9,7 @@
 </ol>
 
 <div class="story_content">
-  <% if @story.markeddown_description.present? %>
+  <% if @story.markeddown_description.present? && @story.stories_count == 0 %>
     <div class="story_text">
     <%= raw @story.markeddown_description %>
     </div>
@@ -105,34 +105,34 @@
           </div>
         </li>
       </ol>
-
-      <div class="story_content">
-        <% if ms.markeddown_description.present? %>
-          <div class="story_text">
-          <%= raw ms.markeddown_description %>
-          </div>
-        <% end %>
-
-        <% if ms.is_unavailable %>
-          <% StoryText.cached?(ms) do |text| %>
-            <details>
-              <summary>Source URL considered unavailable as of <%= how_long_ago_label(ms.unavailable_at) %>, click for cached text - also see archive links above</summary>
-
-              <p>
-              <em>All story content copyright of its respective owner.</em>
-              </p>
-
-              <div class="story_text">
-                <blockquote>
-                  <%= simple_format(text) %>
-                </blockquote>
-              </div>
-            </details>
-
-          <% end %>
-        <% end %>
-      </div>
     <% end %>
+
+    <div class="story_content">
+      <% if ms.markeddown_description.present? %>
+        <div class="story_text">
+        <%= raw ms.markeddown_description %>
+        </div>
+      <% end %>
+
+      <% if ms.is_unavailable %>
+        <% StoryText.cached?(ms) do |text| %>
+          <details>
+            <summary>Source URL considered unavailable as of <%= how_long_ago_label(ms.unavailable_at) %>, click for cached text - also see archive links above</summary>
+
+            <p>
+            <em>All story content copyright of its respective owner.</em>
+            </p>
+
+            <div class="story_text">
+              <blockquote>
+                <%= simple_format(text) %>
+              </blockquote>
+            </div>
+          </details>
+
+        <% end %>
+      <% end %>
+    </div>
 
     <ol class="comments comments1">
       <%# deliberately checking the top-level story, either all have comment forms or none do, less confusing %>

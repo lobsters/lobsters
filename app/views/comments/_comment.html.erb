@@ -19,41 +19,31 @@
     <%= comment.current_upvoted? ? "upvoted" : "" %>
     <%= comment.current_flagged? ? "flagged" : "" %>
     <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
-  ">
-
-  <% if show_tree_lines %>
-    <label for="comment_folder_<%= comment.short_id %>"
+        ">
+  <label for="comment_folder_<%= comment.short_id %>"
       class="comment_folder"></label>
-  <% end %>
 
-  <% if !comment.is_gone? %>
-    <% can_flag = @user && @user.can_flag?(comment) %>
-    <% score_display = comment.score_for_user(@user) %>
-    <div class="voters">
-      <% if @user %>
-        <a class="upvoter"></a>
-      <% else %>
-        <%= link_to "", login_path, :class => "upvoter" %>
-      <% end %>
-      <div class="score"><%= score_display %></div>
-    </div>
-    <div class="comment_parent_tree_line
-      <%= can_flag ? "can_flag" : "" %>
-      <%= score_display != "&nbsp;" ? "score_shown" : "" %>
-      "></div>
-  <% end %>
+  <div class="comment_gutter">
+    <% if !comment.is_gone? %>
+      <% score_display = comment.score_for_user(@user) %>
+      <div class="voters">
+        <% if @user %>
+          <a class="upvoter"></a>
+        <% else %>
+          <%= link_to "", login_path, :class => "upvoter" %>
+        <% end %>
+        <div class="score"><%= score_display %></div>
+      </div>
+    <% end %>
+
+    <% if show_tree_lines %>
+      <div class="comment_parent_tree_line"></div>
+    <% end %>
+  </div>
 
   <div class="details">
     <div class="byline">
       <a name="c_<%= comment.short_id %>"></a>
-
-      <% if show_tree_lines %>
-        <label for="comment_folder_<%= comment.short_id %>"
-          class="comment_folder comment_folder_inline"></label>
-      <% else %>
-        <label for="comment_folder_<%= comment.short_id %>"
-          class="comment_folder comment_folder_inline force_inline"></label>
-      <% end %>
 
       <% if was_merged %>
         <span class="merge"></span>
@@ -109,6 +99,7 @@
           %>
         <% end %>
 
+        <% can_flag = @user && @user.can_flag?(comment) %>
         <% if can_flag && !comment.current_flagged? %>
           <span class="dropdown_parent">
             | <a class="flagger">flag</a>

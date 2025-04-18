@@ -41,7 +41,6 @@
 </div>
 
 <% if @user&.is_moderator? %>
-<br />
 <% if @story.hider_count > 0 %>
   <p>
     Users hiding this story:
@@ -51,7 +50,6 @@
   </p>
 <% end %>
 
-<br />
 <label class="required">Latest modlog for this story, submitter, and discussion:</label>
 <%= render partial: 'moderations/table', locals: { moderations: Moderation.for_story(@story) } %>
 <% end %>

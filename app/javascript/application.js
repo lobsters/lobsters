@@ -382,11 +382,11 @@ class _LobstersFunction {
     if (!Lobster.curUser) return Lobster.bounceToLogin();
 
     const li = parentSelector(voterEl, '.story');
-    const scoreDiv = qS(li, 'div.score');
+    const scoreLink = qS(li, '.upvoter');
     const formData = new FormData();
     formData.append('reason', reason || '');
     let showScore = true;
-    let score = parseInt(scoreDiv.innerHTML);
+    let score = parseInt(scoreLink.innerHTML);
     let action = "";
 
     if (isNaN(score)) {
@@ -428,9 +428,9 @@ class _LobstersFunction {
       action = "flag";
     }
     if (showScore) {
-      scoreDiv.innerHTML = score;
+      scoreLink.innerHTML = score;
     } else {
-      scoreDiv.innerHTML = '~';
+      scoreLink.innerHTML = '~';
     }
     if (action == "upvote" || action == "unvote") {
       if (qS(li, '.reason')) {
@@ -452,11 +452,11 @@ class _LobstersFunction {
     if (!Lobster.curUser) return Lobster.bounceToLogin();
 
     const li = parentSelector(voterEl, ".comment");
-    const scoreDiv = qS(li, 'div.score');
+    const scoreLink = qS(li, '.upvoter');
     const formData = new FormData();
     formData.append('reason', reason || '');
     let showScore = true;
-    let score = parseInt(scoreDiv.innerHTML);
+    let score = parseInt(scoreLink.innerHTML);
     let action = "";
 
     if (isNaN(score)) {
@@ -496,9 +496,9 @@ class _LobstersFunction {
       action = "flag";
     }
     if (showScore) {
-      scoreDiv.innerHTML = score;
+      scoreLink.innerHTML = score;
     } else {
-      scoreDiv.innerHTML = '~';
+      scoreLink.innerHTML = '~';
     }
 
     if (action == "upvote" || action == "unvote") {

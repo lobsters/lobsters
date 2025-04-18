@@ -32,12 +32,8 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
 <%= story.is_deleted? ? "deleted" : "" %>">
 <div class="story_liner h-entry">
   <div class="voters">
-    <% if @user %>
-      <a class="upvoter" title="Add upvote"></a>
-    <% else %>
-      <%= link_to "", login_path, :class => "upvoter" %>
-    <% end %>
-    <div class="score"><%= story.show_score_to_user?(@user) ? story.score : '~' %></div>
+    <%= link_to (story.show_score_to_user?(@user) ? story.score : '~'),
+                (@user ? '': login_path), :class => "upvoter" %>
   </div>
   <div class="details">
     <span role="heading" aria-level="1" class="link h-cite u-repost-of">

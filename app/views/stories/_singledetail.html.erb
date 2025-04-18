@@ -10,7 +10,7 @@ classes = [
   merged_stories.first.is_hidden_by_cur_user && 'hidden',
   merged_stories.first.is_saved_by_cur_user && 'saved',
   merged_stories.first.is_deleted? && 'deleted',
-].compact
+].filter(&:present?)
 %>
 
 <%# remember: _listdetail replicates a lot of this for lists of stories %>
@@ -25,12 +25,8 @@ classes = [
 <li id="story_<%= short_id %>" data-shortid="<%= short_id %>" class="<%= classes.join(' ') %>">
 <div class="story_liner h-entry">
   <div class="voters">
-    <% if @user %>
-      <a class="upvoter" title="Add upvote"></a>
-    <% else %>
-      <%= link_to "", login_path, :class => "upvoter" %>
-    <% end %>
-    <div class="score"><%= merged_stories.first.show_score_to_user?(@user) ? merged_stories.first.score : '~' %></div>
+    <%= link_to (merged_stories.first.show_score_to_user?(@user) ? merged_stories.first.score : '~'),
+                (@user ? '': login_path), :class => "upvoter" %>
   </div>
 
   <% merged_stories.filter {it.can_be_seen_by_user?(@user)}.each do |ms| %>

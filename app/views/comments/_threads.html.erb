@@ -70,14 +70,8 @@
 
   <div class="comment_gutter">
     <% if !comment.is_gone? %>
-      <% score_display = comment.score_for_user(@user) %>
       <div class="voters">
-        <% if @user %>
-          <a class="upvoter"></a>
-        <% else %>
-          <%= link_to "", login_path, :class => "upvoter" %>
-        <% end %>
-        <div class="score"><%= score_display %></div>
+        <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
       </div>
     <% end %>
 

@@ -27,6 +27,7 @@
       class="comment_folder"></label>
   <% end %>
 
+<<<<<<< HEAD
   <% if !comment.is_gone? %>
     <% can_flag = @user && @user.can_flag?(comment) %>
     <% score_display = comment.score_for_user(@user) %>
@@ -43,6 +44,37 @@
       <%= score_display != "&nbsp;" ? "score_shown" : "" %>
       "></div>
   <% end %>
+||||||| parent of ea2ae098 (fix #642 upvoters hard to tap on mobile)
+  <div class="comment_gutter">
+    <% if !comment.is_gone? %>
+      <% score_display = comment.score_for_user(@user) %>
+      <div class="voters">
+        <% if @user %>
+          <a class="upvoter"></a>
+        <% else %>
+          <%= link_to "", login_path, :class => "upvoter" %>
+        <% end %>
+        <div class="score"><%= score_display %></div>
+      </div>
+    <% end %>
+
+    <% if show_tree_lines %>
+      <div class="comment_parent_tree_line"></div>
+    <% end %>
+  </div>
+=======
+  <div class="comment_gutter">
+    <% if !comment.is_gone? %>
+      <div class="voters">
+        <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
+      </div>
+    <% end %>
+
+    <% if show_tree_lines %>
+      <div class="comment_parent_tree_line"></div>
+    <% end %>
+  </div>
+>>>>>>> ea2ae098 (fix #642 upvoters hard to tap on mobile)
 
   <div class="details">
     <div class="byline">

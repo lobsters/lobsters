@@ -40,6 +40,7 @@
       is_unread = ribbon&.is_unread?(comment)
     %>
 
+
 <%#heinous_inline_partial(comments/_comment.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
 <%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false) -%>
@@ -63,41 +64,31 @@
     <%= comment.current_upvoted? ? "upvoted" : "" %>
     <%= comment.current_flagged? ? "flagged" : "" %>
     <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
-  ">
-
-  <% if show_tree_lines %>
-    <label for="comment_folder_<%= comment.short_id %>"
+        ">
+  <label for="comment_folder_<%= comment.short_id %>"
       class="comment_folder"></label>
-  <% end %>
 
-  <% if !comment.is_gone? %>
-    <% can_flag = @user && @user.can_flag?(comment) %>
-    <% score_display = comment.score_for_user(@user) %>
-    <div class="voters">
-      <% if @user %>
-        <a class="upvoter"></a>
-      <% else %>
-        <%= link_to "", login_path, :class => "upvoter" %>
-      <% end %>
-      <div class="score"><%= score_display %></div>
-    </div>
-    <div class="comment_parent_tree_line
-      <%= can_flag ? "can_flag" : "" %>
-      <%= score_display != "&nbsp;" ? "score_shown" : "" %>
-      "></div>
-  <% end %>
+  <div class="comment_gutter">
+    <% if !comment.is_gone? %>
+      <% score_display = comment.score_for_user(@user) %>
+      <div class="voters">
+        <% if @user %>
+          <a class="upvoter"></a>
+        <% else %>
+          <%= link_to "", login_path, :class => "upvoter" %>
+        <% end %>
+        <div class="score"><%= score_display %></div>
+      </div>
+    <% end %>
+
+    <% if show_tree_lines %>
+      <div class="comment_parent_tree_line"></div>
+    <% end %>
+  </div>
 
   <div class="details">
     <div class="byline">
       <a name="c_<%= comment.short_id %>"></a>
-
-      <% if show_tree_lines %>
-        <label for="comment_folder_<%= comment.short_id %>"
-          class="comment_folder comment_folder_inline"></label>
-      <% else %>
-        <label for="comment_folder_<%= comment.short_id %>"
-          class="comment_folder comment_folder_inline force_inline"></label>
-      <% end %>
 
       <% if was_merged %>
         <span class="merge"></span>
@@ -153,6 +144,7 @@
           %>
         <% end %>
 
+        <% can_flag = @user && @user.can_flag?(comment) %>
         <% if can_flag && !comment.current_flagged? %>
           <span class="dropdown_parent">
             | <a class="flagger">flag</a>
@@ -206,16 +198,6 @@
 </div>
 
 <%#/heinous_inline_partial(comments/_comment.html.erb)%>
-
-    <%
-    #  If you edit this structure, update the incredibly brittle css selector
-    #    li.comments_subtree > .comment:nth-last-of-type(2) .comment_parent_tree_line
-    #  (or refactor the whole parent/sibling lines implementation)
-    %>
-    <% if comment.depth != top_comment_depth %>
-      <div class="comment_siblings_tree_line"></div>
-    <% end %>
-
 <% end %>
 
 <% if top_comment_depth %>

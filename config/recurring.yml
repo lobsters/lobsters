@@ -7,6 +7,10 @@ production:
     class: PopulateCommentStatsJob
     queue: background
     schedule: every day at 4:00am
+  stats_graphs:
+    class: StatsGraphsJob
+    queue: background
+    schedule: every day at 4:15am
 
 development:
   expire_old_ribbons:
@@ -17,3 +21,7 @@ development:
     class: PopulateCommentStatsJob
     queue: background
     schedule: every day at 4:00am
+  stats_graphs:
+    class: StatsGraphsJob
+    queue: background
+    schedule: every day at 4:15am

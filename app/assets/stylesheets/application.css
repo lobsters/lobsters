@@ -1555,7 +1555,7 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	body {
-		grid-template-columns: [begin] max-content [main] 1fr [right] max-content [end] 0.5rem;
+		grid-template-columns: [begin] max-content [main] 1fr [right] max-content [end] 0.5rem [padding];
 	}
 
 	#inside {
@@ -1580,6 +1580,7 @@ input[type="submit"].link_post.pushover_button {
 		height: 44px;
 		min-width: 100%;
 		padding-top: 0.75rem;
+		grid-column: begin / padding;
 	}
 	header#nav nav.links {
 		flex-wrap: nowrap;
@@ -1612,7 +1613,7 @@ input[type="submit"].link_post.pushover_button {
 	}
 	header#subnav {
 		background-color: var(--color-box-bg-shaded);
-		grid-column: begin / -1;
+		grid-column: begin / padding;
 	}
 	header#subnav a:last-child {
 		margin-right: 0.5rem;

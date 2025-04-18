@@ -649,17 +649,6 @@ li .comment_folder {
 	text-align: center;
 	justify-self: center;
 }
-li .comment_folder.comment_folder_inline {
-	display: none;
-	color: inherit;
-	width: 1.4em;
-	float: none;
-	text-align: left;
-	margin: 0;
-}
-li .comment_folder.comment_folder_inline.force_inline {
-	display: inline-block;
-}
 li .comment_folder:before {
 	content: "[−]";
 }

@@ -430,6 +430,7 @@ div#gravatar {
 	float: right;
 	height: 100px;
 	width: 100px;
+	margin-bottom: 1rem;
 }
 div#gravatar img {
 	border-radius: 50px;
@@ -1201,7 +1202,7 @@ table.moderations tr > td:nth-child(1) {
 	margin-bottom: 4px;
 }
 
-.box label.required {
+label.required {
 	font-weight: bold;
 }
 .box img {
@@ -1255,6 +1256,74 @@ table.moderations tr > td:nth-child(1) {
 
 .box span.d a.tag {
 	vertical-align: middle;
+}
+
+.labelled_grid {
+	display: grid;
+	grid-template-columns: minmax(10rem, min-content) 1fr;
+	word-break: break-word;
+}
+
+.labelled_grid *:has(.labelled_subgrid), .labelled_subgrid {
+	display: grid;
+	grid-template-columns: subgrid;
+	grid-column: 1 / -1;
+}
+
+.labelled_grid, .labelled_subgrid {
+	column-gap: 1rem;
+	row-gap: 12px;
+}
+
+.labelled_grid .breakout {
+	grid-column: 1 / -1;
+}
+
+.labelled_grid textarea {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.labelled_grid input[type="checkbox"] {
+	margin: 0;
+	vertical-align: middle;
+}
+
+.labelled_grid input[type="radio"] {
+	margin: 0;
+	vertical-align: middle;
+}
+
+.labelled_grid select {
+	margin: 0;
+}
+
+section + section {
+	margin-top: 2rem;
+}
+
+section section + section {
+	margin-top: 1.5rem;
+}
+
+input[type="submit"]:not(span input) {
+	margin-top: 1rem;
+}
+
+span.hint {
+	margin-left: 0.25rem;
+}
+
+div.hint {
+	margin-top: 0.25rem;
+}
+
+.user-stats p {
+	margin-top: 1em;
+}
+
+.user-stats br {
+	line-height: 2em;
 }
 
 .hint {
@@ -1484,6 +1553,8 @@ input[type="submit"].link_post.pushover_button {
 		margin-right: 0.5rem;
 	}
 
+	.labelled_grid > label:after, .labelled_subgrid > label:after {
+		content: ':';
 	}
 
 	.help {
@@ -1696,8 +1767,7 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	div.boxline textarea,
-	div.boxline input[type="text"],
-	div.comment textarea {
+	div.boxline input[type="text"] {
 		max-width: 90%;
 	}
 
@@ -1738,6 +1808,15 @@ input[type="submit"].link_post.pushover_button {
 	}
 	.indent {
 		margin-left: 2em;
+	}
+
+	.labelled_grid {
+		grid-template-columns: 1fr;
+		row-gap: 2px;
+	}
+
+	.labelled_grid > * + label, .labelled_subgrid > * + label {
+		margin-top: 12px;
 	}
 }
 @media print {

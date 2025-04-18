@@ -125,7 +125,7 @@ RSpec.feature "Commenting" do
 
       story.update!(merged_stories: [hot_take])
       visit "/s/#{story.short_id}"
-      expect(page.find(:css, ".comment.upvoted .score")).to have_content("2")
+      expect(page.find(:css, ".comment.upvoted .upvoter")).to have_content("2")
     end
   end
 end

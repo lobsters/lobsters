@@ -60,19 +60,19 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
-      "fingerprint": "0bbc5b5311960f1900712f508ad271f0aba17952f0addffd2fd00b674762282e",
+      "fingerprint": "11dcb787f96443f5a028b191fa6582c1876b1c3cd3a2ba833996f01c252f8985",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/stats/index.html.erb",
-      "line": 16,
+      "line": 19,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "((Story.pluck(:created_at, :user_id).map do\n [created_at.strftime(\"%Y-%m\"), user_id]\n end + Vote.pluck(:updated_at, :user_id).map do\n [updated_at.strftime(\"%Y-%m\"), user_id]\n end) + Comment.pluck(:created_at, :user_id).map do\n [created_at.strftime(\"%Y-%m\"), user_id]\n end).group_by(&:first).transform_values do\n record.map(&:last).uniq.count\n end.sort.flatten",
+      "code": "Stats.get_cached_graph(:stories)",
       "render_path": [
         {
           "type": "controller",
           "class": "StatsController",
           "method": "index",
-          "line": 43,
+          "line": 6,
           "file": "app/controllers/stats_controller.rb",
           "rendered": {
             "name": "stats/index",
@@ -84,12 +84,12 @@
         "type": "template",
         "template": "stats/index"
       },
-      "user_input": "Story.pluck(:created_at, :user_id).map",
-      "confidence": "Weak",
+      "user_input": null,
+      "confidence": "Medium",
       "cwe_id": [
         79
       ],
-      "note": "These model attributes aren't user-controlled, aren't strings, and get passed to the graphing library."
+      "note": "these are integers returned by other queries in the class"
     },
     {
       "warning_type": "SQL Injection",
@@ -129,7 +129,7 @@
           "type": "controller",
           "class": "StoriesController",
           "method": "check_url_dupe",
-          "line": 343,
+          "line": 353,
           "file": "app/controllers/stories_controller.rb",
           "rendered": {
             "name": "stories/_form_errors",
@@ -147,40 +147,6 @@
         79
       ],
       "note": "False alarm: excerpt_fragment_around_url doesn't return Story.url"
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "287360040a8169c6fc7da2ab1e2975ff30fdf17ae6f379e5dc9909ce3e70a7e9",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/stats/index.html.erb",
-      "line": 16,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Comment.pluck(:created_at, :user_id).map",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StatsController",
-          "method": "index",
-          "line": 43,
-          "file": "app/controllers/stats_controller.rb",
-          "rendered": {
-            "name": "stats/index",
-            "file": "app/views/stats/index.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stats/index"
-      },
-      "user_input": "Comment.pluck(:created_at, :user_id).map",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": "These model attributes aren't user-controlled, aren't strings, and get passed to the graphing library."
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -242,19 +208,19 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
-      "fingerprint": "4301a72a62fd8fa6a7ef6437cc751647976493091eec5b5ffde01eb7bb0d7627",
+      "fingerprint": "418752d650242566394cae8cb4cd90cf30d5895f5443e871eaada646a55ccb26",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/stats/index.html.erb",
-      "line": 16,
+      "line": 22,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Story.pluck(:created_at, :user_id).map",
+      "code": "Stats.get_cached_graph(:comments)",
       "render_path": [
         {
           "type": "controller",
           "class": "StatsController",
           "method": "index",
-          "line": 43,
+          "line": 6,
           "file": "app/controllers/stats_controller.rb",
           "rendered": {
             "name": "stats/index",
@@ -266,12 +232,12 @@
         "type": "template",
         "template": "stats/index"
       },
-      "user_input": "Story.pluck(:created_at, :user_id).map",
-      "confidence": "Weak",
+      "user_input": null,
+      "confidence": "Medium",
       "cwe_id": [
         79
       ],
-      "note": "These model attributes aren't user-controlled, aren't strings, and get passed to the graphing library."
+      "note": "These aren't user-controlled, aren't strings and get passed to the graphing library."
     },
     {
       "warning_type": "File Access",
@@ -322,11 +288,45 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
+      "fingerprint": "4a754960fbe7f93c32538141ee24e9007358dba0baa49ec319a1ac5053a1b365",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/stats/index.html.erb",
+      "line": 16,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Stats.get_cached_graph(:active_users)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "StatsController",
+          "method": "index",
+          "line": 6,
+          "file": "app/controllers/stats_controller.rb",
+          "rendered": {
+            "name": "stats/index",
+            "file": "app/views/stats/index.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "stats/index"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        79
+      ],
+      "note": "These aren't user-controlled, aren't strings and get passed to the graphing library."
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
       "fingerprint": "4cfebafaf019d81a4eeef02d58a04a0e8aa6b3d099ec96ddf086db99338db4ae",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/stories/show.html.erb",
-      "line": 15,
+      "line": 14,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Story.new(:user => (@user)).markeddown_description",
       "render_path": [
@@ -334,7 +334,7 @@
           "type": "controller",
           "class": "StoriesController",
           "method": "create",
-          "line": 44,
+          "line": 46,
           "file": "app/controllers/stories_controller.rb",
           "rendered": {
             "name": "stories/new",
@@ -513,40 +513,6 @@
       "note": "User#username validated by User::VALID_USERNAME"
     },
     {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "a4ddf815ef34cce1e31a104df780b3d486366e5bed4f74cb7d0f2c8bc4c34c1c",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/stats/index.html.erb",
-      "line": 16,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Vote.pluck(:updated_at, :user_id).map",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StatsController",
-          "method": "index",
-          "line": 43,
-          "file": "app/controllers/stats_controller.rb",
-          "rendered": {
-            "name": "stats/index",
-            "file": "app/views/stats/index.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stats/index"
-      },
-      "user_input": "Vote.pluck(:updated_at, :user_id).map",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": "These model attributes aren't user-controlled, aren't strings, and get passed to the graphing library."
-    },
-    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "b4a3e94583860f86ee25acf3591ee48d5d1bcccc071310b2ee0040aadca5cfca",
@@ -572,53 +538,19 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
-      "fingerprint": "bfbb5ed308a109694f57664c69d8c39ff5283f93355acbc6b6562fab4d5142b7",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/stats/index.html.erb",
-      "line": 19,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Story.pluck(:created_at).map do\n created_at.strftime(\"%Y-%m\")\n end.tally.sort.flatten",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StatsController",
-          "method": "index",
-          "line": 43,
-          "file": "app/controllers/stats_controller.rb",
-          "rendered": {
-            "name": "stats/index",
-            "file": "app/views/stats/index.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stats/index"
-      },
-      "user_input": "Story.pluck(:created_at).map",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": "These model attributes aren't user-controlled, aren't strings, and get passed to the graphing library."
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "d416fc341df18eab8c4a3bd1cdc53cea45d52a6b170834a12291a4fa1da8a985",
+      "fingerprint": "be0c7c6e5fd646ebe1ea5279e2f8ea69d3c837da77e69e9bd4830ff63d1abb09",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/stats/index.html.erb",
       "line": 12,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "User.pluck(:created_at).map do\n created_at.strftime(\"%Y-%m\")\n end.tally.sort.flatten",
+      "code": "Stats.get_cached_graph(:users)",
       "render_path": [
         {
           "type": "controller",
           "class": "StatsController",
           "method": "index",
-          "line": 43,
+          "line": 6,
           "file": "app/controllers/stats_controller.rb",
           "rendered": {
             "name": "stats/index",
@@ -630,12 +562,46 @@
         "type": "template",
         "template": "stats/index"
       },
-      "user_input": "User.pluck(:created_at).map",
-      "confidence": "Weak",
+      "user_input": null,
+      "confidence": "Medium",
       "cwe_id": [
         79
       ],
-      "note": "These model attributes aren't user-controlled, aren't strings, and get passed to the graphing library."
+      "note": "These aren't user-controlled, aren't strings and get passed to the graphing library."
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "e92e4fe6b8799de8cc9a894252b10a90391ce5ca00724b2d6e5b7b54ce065c89",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/stats/index.html.erb",
+      "line": 25,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Stats.get_cached_graph(:votes)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "StatsController",
+          "method": "index",
+          "line": 6,
+          "file": "app/controllers/stats_controller.rb",
+          "rendered": {
+            "name": "stats/index",
+            "file": "app/views/stats/index.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "stats/index"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        79
+      ],
+      "note": "These aren't user-controlled, aren't strings and get passed to the graphing library."
     },
     {
       "warning_type": "SQL Injection",
@@ -682,41 +648,7 @@
         89
       ],
       "note": "IntervalHelper#time_interval is a security control"
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "fb77e19b654c0fdce3d32eda7d0a1acb0bd008504aa94c13fa94c484cb74e87e",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/stats/index.html.erb",
-      "line": 16,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "((Story.pluck(:created_at, :user_id).map do\n [created_at.strftime(\"%Y-%m\"), user_id]\n end + Vote.pluck(:updated_at, :user_id).map do\n [updated_at.strftime(\"%Y-%m\"), user_id]\n end) + Comment.pluck(:created_at, :user_id).map do\n [created_at.strftime(\"%Y-%m\"), user_id]\n end).group_by(&:first).transform_values",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StatsController",
-          "method": "index",
-          "line": 43,
-          "file": "app/controllers/stats_controller.rb",
-          "rendered": {
-            "name": "stats/index",
-            "file": "app/views/stats/index.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stats/index"
-      },
-      "user_input": "Story.pluck(:created_at, :user_id).map",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": "These model attributes aren't user-controlled, aren't strings, and get passed to the graphing library."
     }
   ],
-  "brakeman_version": "7.0.0"
+  "brakeman_version": "7.0.2"
 }

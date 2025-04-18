@@ -4,7 +4,7 @@ Check the [about page](https://lobste.rs/about) for a high-level overview of the
 ## Community
 
  * General chat on [IRC](https://lobste.rs)
- * Code discussion and announcements for people who run sister sites [on Zulip](https://losbters.zulipchat.com)
+ * Code discussion and announcements for people who run sister sites [on Zulip](https://lobsters.zulipchat.com)
 
 ## Sister Sites
 

@@ -5,7 +5,8 @@
   <% @comments.each do |comment| %>
     <% if action_name == "index" && 
        !already_printed_newest_line && 
-       @last_read_comment == comment %>
+       @last_read_timestamp &&
+       @last_read_timestamp.after?(comment.created_at) %>
        <div class="last_read_newest">Last Read</div>
        <% already_printed_newest_line = true %>
     <% end %>
@@ -19,12 +20,12 @@
 <div class="morelink">
   <% if @comments.any? %>
     <% if @page && @page > 1 %>
-      <%= link_to raw("&lt;&lt; Page #{@page - 1}"), { controller: controller_name, action: action_name, page: @page - 1 } %>
+      <%= link_to raw("&lt;&lt; Page #{@page - 1}"), { controller: controller_name, action: action_name, page: @page - 1 }.merge(@next_page_params || {}) %>
     <% end %>
 
     <% if @page && @page > 1 %>
       |
     <% end %>
-    <%= link_to raw("Page #{@page + 1} &gt;&gt;"), { controller: controller_name, action: action_name, page: @page + 1 } %>
+    <%= link_to raw("Page #{@page + 1} &gt;&gt;"), { controller: controller_name, action: action_name, page: @page + 1 }.merge(@next_page_params || {}) %>
   <% end %>
 </div>

@@ -69,16 +69,17 @@ RSpec.feature "Reading Homepage", type: :feature do
 
       visit "/comments"
       expect(page.body).not_to include("Last Read")
-      expect(user.reload.last_read_newest_comment).not_to be_within(1.second).of Time.zone.now
+      expect(user.reload.last_read_newest_comment).to be_within(1.second).of Time.zone.now
 
-      visit "/comments/page/2"
+      expect(page).to have_link("Page 2 >>", href: /last_read_timestamp=\d+/)
+      click_link "Page 2 >>"
       expect(page.body).to include("Last Read")
       page_html = page.body
       last_read_index = page_html.index("Last Read")
       comment_2_index = page_html.index("comment 2")
-
       expect(last_read_index).to be < comment_2_index, "'Last Read' should appear before 'comment 2'"
       expect(user.reload.last_read_newest_comment).to be_within(1.second).of Time.zone.now
+      expect(page).not_to have_link(href: /last_read_timestamp=\d+/)
     end
   end
 end

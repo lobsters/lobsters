@@ -77,12 +77,24 @@ class HomeController < ApplicationController
 
     @title = "Newest Stories"
     @above = {partial: "stories/subnav"}
-    @last_read_story = find_last_read_story
 
     @rss_link = {
       title: "RSS 2.0 - Newest Items",
       href: user_token_link("/newest.rss")
     }
+
+    @last_read_timestamp = if params[:last_read_timestamp]
+      Time.zone.at(params[:last_read_timestamp].to_i)
+    else
+      @user&.last_read_newest_story
+    end
+
+    @user&.touch(:last_read_newest_story)
+
+    last_read_marker_shown = @stories.any? { |story| @last_read_timestamp&.after?(story.created_at) }
+    unless last_read_marker_shown
+      @next_page_params = {last_read_timestamp: @last_read_timestamp.to_i}
+    end
 
     respond_to do |format|
       format.html { render action: "index" }
@@ -95,8 +107,6 @@ class HomeController < ApplicationController
       }
       format.json { render json: @stories }
     end
-
-    @user&.touch(:last_read_newest_story) if @last_read_story || @user&.last_read_newest_story.nil?
   end
 
   def newest_by_user
@@ -376,9 +386,5 @@ class HomeController < ApplicationController
 
   def tags_with_description_for_rss(tags)
     tags.map { |tag| "#{tag.tag} (#{tag.description})" }.join(" ")
-  end
-
-  def find_last_read_story
-    @stories.find { |story| @user&.last_read_newest_story&.after?(story.created_at) }
   end
 end

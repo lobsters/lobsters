@@ -4,9 +4,10 @@
 <% already_printed_newest_line = false %>
 <ol class="stories list <%= action_name == "hidden" ? "show_hidden" : "" %>">
   <% @stories.each do |story| %>
-    <% if action_name == "newest" && 
-      !already_printed_newest_line && 
-      @last_read_story == story %>
+    <% if action_name == "newest" &&
+      !already_printed_newest_line &&
+      @last_read_timestamp &&
+      @last_read_timestamp.after?(story.created_at) %>
       <div class="last_read_newest">Last Read</div>
       <% already_printed_newest_line = true %>
     <% end %>
@@ -169,13 +170,13 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
 
 <div class="morelink">
   <% if @page && @page > 1 %>
-    <%= link_to raw("&lt;&lt; Page #{@page - 1}"), @root_path ? "/page/#{@page - 1}" : { controller: controller_name, action: action_name, page: @page - 1 } %>
+    <%= link_to raw("&lt;&lt; Page #{@page - 1}"), @root_path ? "/page/#{@page - 1}" : { controller: controller_name, action: action_name, page: @page - 1 }.merge(@next_page_params || {}) %>
   <% end %>
 
   <% if @show_more %>
     <% if @page && @page > 1 %>
       |
     <% end %>
-    <%= link_to raw("Page #{@page + 1} &gt;&gt;"), @root_path ? "/page/#{@page + 1}" : { controller: controller_name, action: action_name, page: @page + 1 } %>
+    <%= link_to raw("Page #{@page + 1} &gt;&gt;"), @root_path ? "/page/#{@page + 1}" : { controller: controller_name, action: action_name, page: @page + 1 }.merge(@next_page_params || {}) %>
   <% end %>
 </div>

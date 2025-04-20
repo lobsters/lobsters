@@ -297,7 +297,19 @@ class CommentsController < ApplicationController
       c.current_vote = @votes[c.id]
       c.vote_summary = summaries[c.id]
     end
-    @last_read_comment = find_last_read_comment
+
+    @last_read_timestamp = if params[:last_read_timestamp]
+      Time.zone.at(params[:last_read_timestamp].to_i)
+    else
+      @user&.last_read_newest_comment
+    end
+
+    @user&.touch(:last_read_newest_comment)
+
+    last_read_marker_shown = @comments.any? { |comment| @last_read_timestamp&.after?(comment.created_at) }
+    unless last_read_marker_shown
+      @next_page_params = {last_read_timestamp: @last_read_timestamp.to_i}
+    end
 
     respond_to do |format|
       format.html { render action: "index" }
@@ -313,8 +325,6 @@ class CommentsController < ApplicationController
         end
       }
     end
-
-    @user&.touch(:last_read_newest_comment) if @last_read_comment || @user&.last_read_newest_comment.nil?
   end
 
   def upvoted
@@ -429,9 +439,5 @@ class CommentsController < ApplicationController
     else
       redirect_to comment.path
     end
-  end
-
-  def find_last_read_comment
-    @comments.find { |comment| @user&.last_read_newest_comment&.after?(comment.created_at) }
   end
 end

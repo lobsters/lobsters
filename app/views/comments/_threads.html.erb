@@ -8,16 +8,16 @@
     <% if previous_depth %>
       <% if comment.depth > previous_depth %>
         <%# open tree of replies to the previous comment %>
-        <ol class="comments">
+        <div><ol class="comments">
       <% else %>
         <%# previous comment is the deepest comment in its subtree,
             so it has no replies, only an empty list of replies %>
-        <ol class="comments"></ol>
+        <div><ol class="comments"></ol></div>
 
         <%# close tree of replies %>
         <% (previous_depth - comment.depth).times do %>
             </li>
-          </ol>
+          </ol></div>
         <% end %>
 
         <%# close previous subtree %>
@@ -198,12 +198,12 @@
 
   <%# previous comment is the deepest comment in its subtree,
       so it has no replies, only an empty list of replies %>
-  <ol class="comments"></ol>
+  <div><ol class="comments"></ol></div>
 
   <%# close tree of replies %>
   <% (previous_depth - top_comment_depth).times do %>
       </li>
-    </ol>
+    </ol></div>
   <% end %>
 
   <%# close top subtree %>

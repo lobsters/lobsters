@@ -228,7 +228,8 @@ form.disowner-form {
 	display: inline;
 }
 
-input[type="submit"].disowner-form {
+input[type="submit"].disowner-form,
+.disowner-form button[type="submit"] {
 	background: none;
 	border: none;
 	padding: 0;

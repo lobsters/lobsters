@@ -15,8 +15,7 @@
 
   <div class="labelled_grid">
     <label class="required">Status</label>
-    <span>
-    <%= @showing_user.is_banned? ? raw("style=\"color: red;\"") : "" %>
+    <span <%= @showing_user.is_banned? ? raw("style=\"color: red;\"") : "" %>>
       <% if @showing_user.is_banned? %>
         Banned user
       <% elsif !@showing_user.is_active? %>

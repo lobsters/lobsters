@@ -483,8 +483,7 @@ ol.comments1 > li.comments_subtree > ol.comments {
 	padding-left: 0;
 }
 
-
-#inside .comment ~ div > ol.comments {
+#inside .comment ~ ol.comments {
 	grid-column: main / end;
 	display: grid;
 	grid-template-columns: [begin] max-content [main] 1fr [end];
@@ -664,7 +663,7 @@ li .comment_folder:before {
 }
 #inside li .comment_folder_button:checked ~ .comment div.comment_text,
 #inside li .comment_folder_button:checked ~ .comment .comment_gutter > *:not(.comment_folder),
-#inside li .comment_folder_button:checked ~ div ol.comments {
+#inside li .comment_folder_button:checked ~ ol.comments {
 	display: none;
 }
 

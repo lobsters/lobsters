@@ -700,7 +700,7 @@ onPageLoad(() => {
     let div = document.createElement('div');
     div.innerHTML = '';
     div.classList.add('reply_form_temporary')
-    const children = qS(comment.parentElement, '#' + comment.id + '~ div .comments')
+    const children = qS(comment.parentElement, '#' + comment.id + '~ .comments')
     children.prepend(div)
 
     fetchWithCSRF('/comments/' + comment.getAttribute('data-shortid') + '/reply')

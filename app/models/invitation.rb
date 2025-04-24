@@ -7,6 +7,8 @@ class Invitation < ApplicationRecord
   scope :used, -> { where.not(used_at: nil) }
   scope :unused, -> { where(used_at: nil) }
 
+  include Slug
+
   validate do
     unless /\A[^@ ]+@[^ @]+\.[^ @]+\z/.match?(email.to_s)
       errors.add(:email, "is not valid")

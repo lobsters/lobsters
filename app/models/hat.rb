@@ -7,6 +7,8 @@ class Hat < ApplicationRecord
   before_validation :assign_short_id, on: :create
   after_create :log_moderation
 
+  include Slug
+
   validates :hat, presence: true
   validates :hat, :link, length: {maximum: 255}
   validates :modlog_use, inclusion: {in: [true, false]}

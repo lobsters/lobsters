@@ -27,6 +27,7 @@ class Comment < ApplicationRecord
     inverse_of: :to_comment,
     dependent: :destroy
 
+  include Slug
   attr_accessor :current_vote, :previewing, :vote_summary
 
   before_validation :assign_initial_attributes, on: :create

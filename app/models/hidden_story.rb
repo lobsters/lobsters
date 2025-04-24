@@ -6,6 +6,8 @@ class HiddenStory < ApplicationRecord
 
   scope :by, ->(user) { where(user: user) }
 
+  include Slug
+
   def self.hide_story_for_user(story, user)
     HiddenStory.where(story: story, user: user).first_or_initialize.save!
     story.update_score_and_recalculate!(0, 0)

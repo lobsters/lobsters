@@ -13,6 +13,8 @@ class Origin < ApplicationRecord
   validates :stories_count, numericality: {only_integer: true, greater_than_or_equal_to: 0}, presence: true
   validates :banned_reason, length: {maximum: 200}
 
+  include Slug
+
   # weird that this isn't automatic for new records
   after_create { Origin.reset_counters(id, :stories) }
 

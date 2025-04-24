@@ -416,6 +416,8 @@ GEM
     turbo-rails (2.0.11)
       actionpack (>= 6.0.0)
       railties (>= 6.0.0)
+    typeid (0.2.2)
+      uuid7 (~> 0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (3.1.3)
@@ -423,6 +425,8 @@ GEM
     unicode-emoji (4.0.4)
     uri (1.0.3)
     useragent (0.16.11)
+    uuid7 (0.2.0)
+      zeitwerk (~> 2.4)
     vcr (6.3.1)
       base64
     version_gem (1.1.4)
@@ -500,6 +504,7 @@ DEPENDENCIES
   super_diff
   svg-graph
   trilogy
+  typeid
   vcr
   webmock
 

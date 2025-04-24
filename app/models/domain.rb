@@ -8,6 +8,8 @@ class Domain < ApplicationRecord
     optional: true
   has_many :origins
 
+  include Slug
+
   validates :banned_reason, length: {maximum: 200}
   validates :domain, presence: true, length: {maximum: 255}, uniqueness: {case_sensitive: false}
   validates :selector, length: {maximum: 255}

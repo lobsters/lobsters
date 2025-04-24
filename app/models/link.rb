@@ -28,6 +28,8 @@ class Link < ApplicationRecord
       .where(normalized_url: Utils.normalize(url))
   }
 
+  include Slug
+
   def url=(u)
     return if u.blank?
 

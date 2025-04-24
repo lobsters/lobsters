@@ -12,12 +12,13 @@ gem "solid_queue"
 gem "mission_control-jobs"
 
 # rails
+gem "activerecord-typedstore"
+gem "importmap-rails", "~> 2.0"
+gem "propshaft"
 gem "scenic"
 gem "scenic-mysql_adapter"
 gem "scenic_sqlite_adapter"
-gem "activerecord-typedstore"
-gem "propshaft"
-gem "importmap-rails", "~> 2.0"
+gem "typeid"
 
 # js
 gem "json"

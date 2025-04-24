@@ -56,6 +56,8 @@ class User < ApplicationRecord
     class_name: "Hat",
     inverse_of: :user
 
+  include Slug
+
   # As of Rails 8.0, `has_secure_password` generates a `password_reset_token`
   # method that shadows the explicit `password_reset_token` attribute.
   # So we need to explictily disable that.

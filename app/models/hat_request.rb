@@ -7,6 +7,8 @@ class HatRequest < ApplicationRecord
   validates :link, presence: true, length: {maximum: 255}
   validates :comment, presence: true, length: {maximum: 65_535}
 
+  include Slug
+
   attr_accessor :rejection_comment
 
   def approve_by_user_for_reason!(user, reason)

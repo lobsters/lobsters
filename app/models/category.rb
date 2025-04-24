@@ -9,6 +9,7 @@ class Category < ApplicationRecord
 
   after_save :log_modifications
 
+  include Slug
   attr_accessor :edit_user_id
 
   validates :category, length: {maximum: 25}, presence: true,

@@ -13,6 +13,8 @@ class Message < ApplicationRecord
   belongs_to :hat,
     optional: true
 
+  include Slug
+
   attribute :mod_note, :boolean
   attr_reader :recipient_username
 

@@ -119,7 +119,7 @@ class MastodonApp < ApplicationRecord
     ps == {}
   rescue OpenSSL::SSL::SSLError
     errors.add :base, "#{name} isn't a working SSL server when fetching user token"
-  rescue NoIpsError
+  rescue NoIPsError
     errors.add :base, "#{name} doesn't resolve to an IP address"
   end
 

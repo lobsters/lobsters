@@ -1,6 +1,13 @@
 @charset "UTF-8";
-/* common color scheme */
 
+/*
+Lobsters doesn't use CSS features until the "Widely available" Baseline standard:
+https://web-platform-dx.github.io/web-features/
+
+But I make an unprincipled exception for :has because it solves so many big problems.
+*/
+
+/* common color scheme */
 :root {
 	--color-bg: rgb(var(--base-bg));
 	--color-bg-50: rgb(var(--base-bg) / 50%);

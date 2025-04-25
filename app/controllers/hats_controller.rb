@@ -56,9 +56,14 @@ class HatsController < ApplicationController
   def update_by_recreating
     new_hat = params[:hat][:hat]
 
-    replaced_hat = @hat.dup
-    replaced_hat.hat = new_hat
-    replaced_hat.doffed_at = nil
+    replaced_hat = Hat.new({
+      hat: new_hat,
+      doffed_at: nil,
+      user_id: @hat.user_id,
+      granted_by_user_id: @hat.granted_by_user_id,
+      link: @hat.link,
+      modlog_use: @hat.modlog_use
+    })
 
     if replaced_hat.save
       @hat.doff_by_user_with_reason(@user, "To replace with \"#{new_hat}\"")

@@ -11,6 +11,10 @@ production:
     class: StatsGraphsJob
     queue: background
     schedule: every day at 4:15am
+  clear_finished_jobs:
+    class: ClearFinishedJobsJob
+    queue: background
+    schedule: every day at 3:00am
 
 development:
   expire_old_ribbons:
@@ -25,3 +29,7 @@ development:
     class: StatsGraphsJob
     queue: background
     schedule: every day at 4:15am
+  clear_finished_jobs:
+    class: ClearFinishedJobs
+    queue: background
+    schedule: every day at 3:00am

@@ -74,6 +74,8 @@ Rails.application.configure do
 
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = {database: {writing: :queue}}
+  config.solid_queue.supervisor_pidfile = "/srv/lobste.rs/run/solid_queue.pid"
+  config.solid_queue.clear_finished_jobs_after = 90.days
 
   config.action_mailer.perform_caching = false
   config.action_mailer.default_url_options = {

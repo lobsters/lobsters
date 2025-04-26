@@ -75,8 +75,8 @@ class Domain < ApplicationRecord
     end.downcase
 
     # because of rails associations, `origins` is scoped to current domain object
-    # find_or_create_by! returns the origin record, or raises if validations fail
-    origins.find_or_create_by!(identifier: identifier)
+    # create_or_find_by! returns the origin record, or raises if validations fail
+    origins.create_or_find_by!(identifier: identifier)
   end
 
   def ban_by_user_for_reason!(banner, reason)

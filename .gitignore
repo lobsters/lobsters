@@ -6,9 +6,8 @@
 /.bundle
 
 # default databases
-/db/*.sqlite3
-/db/*.sqlite3-journal
-/db/sphinx
+db/**/*.sqlite3
+db/**/*.sqlite3-journal
 
 # log and tmpfiles
 .byebug*

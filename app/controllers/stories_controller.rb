@@ -171,7 +171,6 @@ class StoriesController < ApplicationController
     @comments = Comment.story_threads(@story).for_presentation
 
     @title = @story.title
-    @short_url = @story.short_id_url
 
     respond_to do |format|
       format.html {

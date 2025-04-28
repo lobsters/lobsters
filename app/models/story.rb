@@ -395,7 +395,6 @@ class Story < ApplicationRecord
   def as_json(options = {})
     h = [
       :short_id,
-      :short_id_url,
       :created_at,
       :title,
       :url,
@@ -405,7 +404,6 @@ class Story < ApplicationRecord
       {comment_count: :comments_count},
       {description: :markeddown_description},
       {description_plain: :description},
-      :comments_url,
       {submitter_user: user.username},
       :user_is_author,
       {tags: tags.map(&:tag).sort}
@@ -414,6 +412,8 @@ class Story < ApplicationRecord
     if options && options[:with_comments]
       h.push(comments: options[:with_comments])
     end
+    h[:short_id_url] = Routes.story_short_id_url self
+    h[:comments_url] = Routes.story_title_url self
 
     js = {}
     h.each do |k|
@@ -523,14 +523,6 @@ class Story < ApplicationRecord
         "tag.  If no tags apply to your content, it probably doesn't " \
         "belong here.")
     end
-  end
-
-  def comments_path
-    "#{short_id_path}/#{title_as_url}"
-  end
-
-  def comments_url
-    "#{short_id_url}/#{title_as_url}"
   end
 
   def description=(desc)
@@ -1004,14 +996,6 @@ class Story < ApplicationRecord
     else
       user&.is_moderator?
     end
-  end
-
-  def url_or_comments_path
-    url.presence || comments_path
-  end
-
-  def url_or_comments_url
-    url.presence || comments_url
   end
 
   def vote_summary_for(user)

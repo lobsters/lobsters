@@ -62,9 +62,9 @@ RSpec.describe Link, type: :model do
 
     it "recognizes a link to a site story by title url" do
       target = create(:story)
-      c = create(:comment, comment: "see [story](#{target.comments_url})")
+      c = create(:comment, comment: "see [story](#{Routes.story_title_url target})")
       link = c.links.last
-      expect(link.url).to eq(target.comments_url)
+      expect(link.url).to eq(Routes.story_title_url(target))
       expect(link.to_story_id).to eq(target.id)
     end
 

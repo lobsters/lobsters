@@ -32,7 +32,7 @@ classes = [
   <% merged_stories.filter {it.can_be_seen_by_user?(@user)}.each do |ms| %>
     <div class="details">
       <span role="heading" class="link" aria-level="1" class="link h-cite u-repost-of">
-        <a href="<%= ms.url_or_comments_path %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>" class="u-url"><%= ms.title %></a>
+        <a href="<%= Routes.story_url_or_comments_path(ms) %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>" class="u-url"><%= ms.title %></a>
       </span>
 
       <% if ms.markeddown_description.present? %>

@@ -66,7 +66,7 @@
             <div class="details">
               <span role="heading" aria-level="2" class="link h-cite u-repost-of">
                 <% if ms.can_be_seen_by_user?(@user) %>
-                  <a class="u-url" href="<%= ms.url_or_comments_path %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>"><%= ms.title %></a>
+                  <a class="u-url" href="<%= Routes.story_url_or_comments_path(ms) %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>"><%= ms.title %></a>
                 <% end %>
                 <% if ms.is_gone? %>
                   [Story removed by <%= ms.is_moderated? ? "moderator" : "submitter" %>]

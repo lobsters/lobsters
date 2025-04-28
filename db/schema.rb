@@ -57,7 +57,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_28_193204) do
     t.index ["token"], name: "index_categories_on_token", unique: true
   end
 
-  create_table "comment_stats", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "comment_stats", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.date "date", null: false
     t.integer "average", null: false
     t.index ["date"], name: "index_comment_stats_on_date", unique: true
@@ -463,7 +463,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_28_193204) do
     t.index ["user_id", "story_id"], name: "user_id_story_id"
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "comments", column: "parent_comment_id", name: "comments_parent_comment_id_fk"
   add_foreign_key "comments", "hats", name: "comments_hat_id_fk"

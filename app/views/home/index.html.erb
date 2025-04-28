@@ -39,7 +39,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
   <div class="details">
     <span role="heading" aria-level="1" class="link h-cite u-repost-of">
       <% if story.can_be_seen_by_user?(@user) %>
-        <a class="u-url" href="<%= story.url_or_comments_path %>" rel="ugc <%= story.send_referrer? ? '' : 'noreferrer' %>"><%= story.title %></a>
+        <a class="u-url" href="<%= Routes.story_url_or_comments_path(story) %>" rel="ugc <%= story.send_referrer? ? '' : 'noreferrer' %>"><%= story.title %></a>
       <% end %>
       <% if story.is_gone? %>
         [Story removed by <%= story.is_moderated? ? "moderator" : "submitter" %>]

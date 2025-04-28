@@ -88,7 +88,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
     lobsters$ rails server
     ```
 
-* Deploying the site in production requires setting up a web server and running the app in production mode.
+* Deploying the site in production requires setting up a web server, [SolidQueue](https://github.com/rails/solid_queue/) service, and running the app in production mode.
   There are more tools and options available than we can describe; find a guide or an expert.
   The lobsters-ansible repo has our config files to crib from. Some app-specific notes:
 
@@ -97,6 +97,8 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
     ```
     */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/mastodon_sync.rb; bundle exec ruby script/traffic_range'
     ```
+
+* On production, run `rails db:setup` to create the cache and queue databases (`config/database.yml` sets their location).
 
 * On production, run `rails credentials:edit` to set up the credentials there,
   like you did for development.

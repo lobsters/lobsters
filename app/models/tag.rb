@@ -13,7 +13,7 @@ class Tag < ApplicationRecord
 
   after_save :log_modifications
 
-  include Slug
+  include Token
 
   attr_accessor :edit_user_id, :stories_count
   attr_writer :filtered_count

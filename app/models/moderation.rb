@@ -45,7 +45,7 @@ class Moderation < ApplicationRecord
       .limit(20)
   }
 
-  include Slug
+  include Token
 
   validates :action, :reason, length: {maximum: 16_777_215}
   validates :is_from_suggestions, inclusion: {in: [true, false]}

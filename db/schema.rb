@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_28_193204) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -52,9 +52,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.string "category", limit: 25, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.string "slug", null: false
+    t.string "token", null: false
     t.index ["category"], name: "index_categories_on_category", unique: true
-    t.index ["slug"], name: "index_categories_on_slug", unique: true
+    t.index ["token"], name: "index_categories_on_token", unique: true
   end
 
   create_table "comment_stats", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
@@ -85,16 +85,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.integer "reply_count", default: 0, null: false
     t.datetime "last_reply_at"
     t.datetime "last_edited_at", null: false
-    t.string "slug", null: false
+    t.string "token", null: false
     t.index ["comment"], name: "index_comments_on_comment", type: :fulltext
     t.index ["confidence"], name: "confidence_idx"
     t.index ["hat_id"], name: "comments_hat_id_fk"
     t.index ["parent_comment_id"], name: "comments_parent_comment_id_fk"
     t.index ["score"], name: "index_comments_on_score"
     t.index ["short_id"], name: "short_id", unique: true
-    t.index ["slug"], name: "index_comments_on_slug", unique: true
     t.index ["story_id", "short_id"], name: "story_id_short_id"
     t.index ["thread_id"], name: "thread_id"
+    t.index ["token"], name: "index_comments_on_token", unique: true
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
@@ -108,10 +108,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.string "selector"
     t.string "replacement"
     t.integer "stories_count", default: 0, null: false
-    t.string "slug", null: false
+    t.string "token", null: false
     t.index ["banned_by_user_id"], name: "index_domains_on_banned_by_user_id"
     t.index ["domain"], name: "index_domains_on_domain", unique: true
-    t.index ["slug"], name: "index_domains_on_slug", unique: true
+    t.index ["token"], name: "index_domains_on_token", unique: true
   end
 
   create_table "hat_requests", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -121,8 +121,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.string "hat", null: false
     t.string "link", null: false
     t.text "comment", null: false
-    t.string "slug", null: false
-    t.index ["slug"], name: "index_hat_requests_on_slug", unique: true
+    t.string "token", null: false
+    t.index ["token"], name: "index_hat_requests_on_token", unique: true
     t.index ["user_id"], name: "hat_requests_user_id_fk"
   end
 
@@ -136,9 +136,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.boolean "modlog_use", default: false, null: false
     t.datetime "doffed_at", precision: nil
     t.string "short_id", limit: 10, null: false
-    t.string "slug", null: false
+    t.string "token", null: false
     t.index ["granted_by_user_id"], name: "hats_granted_by_user_id_fk"
-    t.index ["slug"], name: "index_hats_on_slug", unique: true
+    t.index ["token"], name: "index_hats_on_token", unique: true
     t.index ["user_id"], name: "hats_user_id_fk"
   end
 
@@ -146,9 +146,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.bigint "user_id", null: false, unsigned: true
     t.bigint "story_id", null: false, unsigned: true
     t.datetime "created_at"
-    t.string "slug", null: false
-    t.index ["slug"], name: "index_hidden_stories_on_slug", unique: true
+    t.string "token", null: false
     t.index ["story_id"], name: "hidden_stories_story_id_fk"
+    t.index ["token"], name: "index_hidden_stories_on_token", unique: true
     t.index ["user_id", "story_id"], name: "index_hidden_stories_on_user_id_and_story_id", unique: true
   end
 
@@ -161,8 +161,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.string "ip_address"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.string "slug", null: false
-    t.index ["slug"], name: "index_invitation_requests_on_slug", unique: true
+    t.string "token", null: false
+    t.index ["token"], name: "index_invitation_requests_on_token", unique: true
   end
 
   create_table "invitations", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -174,9 +174,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.text "memo"
     t.datetime "used_at", precision: nil
     t.bigint "new_user_id", unsigned: true
-    t.string "slug", null: false
+    t.string "token", null: false
     t.index ["new_user_id"], name: "invitations_new_user_id_fk"
-    t.index ["slug"], name: "index_invitations_on_slug", unique: true
+    t.index ["token"], name: "index_invitations_on_token", unique: true
     t.index ["user_id"], name: "invitations_user_id_fk"
   end
 
@@ -194,13 +194,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.bigint "from_comment_id", unsigned: true
     t.bigint "to_story_id", unsigned: true
     t.bigint "to_comment_id", unsigned: true
-    t.string "slug", null: false
+    t.string "token", null: false
     t.index ["from_comment_id"], name: "index_links_on_from_comment_id"
     t.index ["from_story_id"], name: "index_links_on_from_story_id"
     t.index ["normalized_url"], name: "index_links_on_normalized_url"
-    t.index ["slug"], name: "index_links_on_slug", unique: true
     t.index ["to_comment_id"], name: "index_links_on_to_comment_id"
     t.index ["to_story_id"], name: "index_links_on_to_story_id"
+    t.index ["token"], name: "index_links_on_token", unique: true
   end
 
   create_table "mastodon_apps", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -223,12 +223,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.boolean "deleted_by_author", default: false, null: false
     t.boolean "deleted_by_recipient", default: false, null: false
     t.bigint "hat_id", unsigned: true
-    t.string "slug", null: false
+    t.string "token", null: false
     t.index ["author_user_id"], name: "index_messages_on_author_user_id"
     t.index ["hat_id"], name: "index_messages_on_hat_id"
     t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"
     t.index ["short_id"], name: "random_hash", unique: true
-    t.index ["slug"], name: "index_messages_on_slug", unique: true
+    t.index ["token"], name: "index_messages_on_token", unique: true
   end
 
   create_table "mod_notes", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -237,10 +237,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.text "note", null: false
     t.text "markeddown_note", null: false
     t.datetime "created_at", precision: nil, null: false
-    t.string "slug", null: false
+    t.string "token", null: false
     t.index ["id", "user_id"], name: "index_mod_notes_on_id_and_user_id"
     t.index ["moderator_user_id"], name: "mod_notes_moderator_user_id_fk"
-    t.index ["slug"], name: "index_mod_notes_on_slug", unique: true
+    t.index ["token"], name: "index_mod_notes_on_token", unique: true
     t.index ["user_id"], name: "mod_notes_user_id_fk"
   end
 
@@ -258,16 +258,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.bigint "domain_id"
     t.bigint "category_id"
     t.bigint "origin_id"
-    t.string "slug", null: false
+    t.string "token", null: false
     t.index ["category_id"], name: "index_moderations_on_category_id"
     t.index ["comment_id"], name: "moderations_comment_id_fk"
     t.index ["created_at"], name: "index_moderations_on_created_at"
     t.index ["domain_id"], name: "index_moderations_on_domain_id"
     t.index ["moderator_user_id"], name: "moderations_moderator_user_id_fk"
     t.index ["origin_id"], name: "index_moderations_on_origin_id"
-    t.index ["slug"], name: "index_moderations_on_slug", unique: true
     t.index ["story_id"], name: "moderations_story_id_fk"
     t.index ["tag_id"], name: "moderations_tag_id_fk"
+    t.index ["token"], name: "index_moderations_on_token", unique: true
     t.index ["user_id"], name: "index_moderations_on_user_id"
   end
 
@@ -280,11 +280,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.string "banned_reason", limit: 200
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "slug", null: false
+    t.string "token", null: false
     t.index ["banned_by_user_id"], name: "index_origins_on_banned_by_user_id"
     t.index ["domain_id"], name: "index_origins_on_domain_id"
     t.index ["identifier"], name: "index_origins_on_identifier", unique: true
-    t.index ["slug"], name: "index_origins_on_slug", unique: true
+    t.index ["token"], name: "index_origins_on_token", unique: true
   end
 
   create_table "read_ribbons", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -302,9 +302,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "user_id", null: false, unsigned: true
     t.bigint "story_id", null: false, unsigned: true
-    t.string "slug", null: false
-    t.index ["slug"], name: "index_saved_stories_on_slug", unique: true
+    t.string "token", null: false
     t.index ["story_id"], name: "saved_stories_story_id_fk"
+    t.index ["token"], name: "index_saved_stories_on_token", unique: true
     t.index ["user_id", "story_id"], name: "index_saved_stories_on_user_id_and_story_id", unique: true
   end
 
@@ -335,7 +335,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.integer "stories_count", default: 0, null: false
     t.datetime "updated_at", null: false
     t.datetime "last_edited_at", null: false
-    t.string "slug", null: false
+    t.string "token", null: false
     t.index ["created_at"], name: "index_stories_on_created_at"
     t.index ["domain_id"], name: "index_stories_on_domain_id"
     t.index ["hotness"], name: "hotness_idx"
@@ -347,7 +347,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.index ["origin_id"], name: "index_stories_on_origin_id"
     t.index ["score"], name: "index_stories_on_score"
     t.index ["short_id"], name: "unique_short_id", unique: true
-    t.index ["slug"], name: "index_stories_on_slug", unique: true
+    t.index ["token"], name: "index_stories_on_token", unique: true
     t.index ["url"], name: "url", length: 191
     t.index ["user_id"], name: "index_stories_on_user_id"
   end
@@ -403,10 +403,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.float "hotness_mod", default: 0.0
     t.boolean "permit_by_new_users", default: true, null: false
     t.bigint "category_id", null: false
-    t.string "slug", null: false
+    t.string "token", null: false
     t.index ["category_id"], name: "index_tags_on_category_id"
-    t.index ["slug"], name: "index_tags_on_slug", unique: true
     t.index ["tag"], name: "tag", unique: true
+    t.index ["token"], name: "index_tags_on_token", unique: true
   end
 
   create_table "users", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -436,7 +436,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.boolean "show_email", default: false, null: false
     t.datetime "last_read_newest_story"
     t.datetime "last_read_newest_comment"
-    t.string "slug", null: false
+    t.string "token", null: false
     t.index ["banned_by_user_id"], name: "users_banned_by_user_id_fk"
     t.index ["disabled_invite_by_user_id"], name: "users_disabled_invite_by_user_id_fk"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -446,7 +446,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_24_165830) do
     t.index ["password_reset_token"], name: "password_reset_token", unique: true
     t.index ["rss_token"], name: "rss_token", unique: true
     t.index ["session_token"], name: "session_hash", unique: true
-    t.index ["slug"], name: "index_users_on_slug", unique: true
+    t.index ["token"], name: "index_users_on_token", unique: true
     t.index ["username"], name: "username", unique: true
   end
 

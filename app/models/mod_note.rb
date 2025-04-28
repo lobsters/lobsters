@@ -13,7 +13,7 @@ class ModNote < ApplicationRecord
   scope :recent, -> { where("created_at >= ?", 1.week.ago).order(created_at: :desc) }
   scope :for, ->(user) { includes(:moderator).where(user_id: user).order(created_at: :desc) }
 
-  include Slug
+  include Token
 
   validates :note, :markeddown_note, presence: true, length: {maximum: 65_535}
 

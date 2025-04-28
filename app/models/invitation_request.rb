@@ -14,7 +14,7 @@ class InvitationRequest < ApplicationRecord
   validates :code, :ip_address, length: {maximum: 255}
   validates :is_verified, inclusion: {in: [true, false]}
 
-  include Slug
+  include Token
 
   before_validation :create_code
   after_create :send_email

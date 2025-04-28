@@ -7,7 +7,7 @@ class HatRequest < ApplicationRecord
   validates :link, presence: true, length: {maximum: 255}
   validates :comment, presence: true, length: {maximum: 65_535}
 
-  include Slug
+  include Token
 
   attr_accessor :rejection_comment
 

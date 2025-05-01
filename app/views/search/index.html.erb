@@ -183,7 +183,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
     </span>
     <% if story.stories_count > 0 %>
       <span class="merge"></span><%= story.stories_count + 1 %>
-    <% elsif story.merged_into_story %>
+    <% elsif story.merged_story_id %>
       <span class="merge"></span>merged
     <% end %>
     <% if story.markeddown_description.present? %>

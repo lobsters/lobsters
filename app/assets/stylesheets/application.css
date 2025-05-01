@@ -1283,7 +1283,7 @@ section section + section {
 	margin-top: 1.5rem;
 }
 
-input[type="submit"]:not(span input) {
+input[type="submit"]:not(.link_post) {
 	margin-top: 1rem;
 }
 

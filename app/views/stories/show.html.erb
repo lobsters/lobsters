@@ -55,7 +55,7 @@
 <% end %>
 
 <% if !@story.previewing %>
-  <% @merged_stories.select { !it.is_gone? }.each do |ms| %>
+  <% @merged_stories.select { it.can_be_seen_by_user?(@user) }.each do |ms| %>
     <% if @story.stories_count > 0 %>
       <ol class="stories">
         <li class="story">

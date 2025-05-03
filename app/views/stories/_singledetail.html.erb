@@ -22,12 +22,12 @@ classes = [
   This has apparently useless <span> tags explained in a comment in CSS
   around .negative_1 in CSS (introduced same commit as this comment).
 %>
-<% merged_stories.filter {it.can_be_seen_by_user?(@user)}.each do |ms| %>
+<% merged_stories.filter {it.can_be_seen_by_user?(@user)}.each_with_index do |ms, ix| %>
 <li>
   <article id="story_<%= short_id %>" data-shortid="<%= short_id %>" class="story_liner h-entry <%= classes.join(' ') %>">
-    <% if ms == merged_stories.first %>
-    <%= link_to (merged_stories.first.show_score_to_user?(@user) ? merged_stories.first.score : '~'),
-        (@user ? '': login_path), :class => "upvoter" %>
+    <% if ix == 0 %>
+      <%= link_to (merged_stories.first.show_score_to_user?(@user) ? merged_stories.first.score : '~'),
+          (@user ? '': login_path), :class => "upvoter" %>
     <% else %>
       <div class="merge"></div>
     <% end %>

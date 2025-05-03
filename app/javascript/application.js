@@ -381,8 +381,8 @@ class _LobstersFunction {
   voteStory(voterEl, point, reason) {
     if (!Lobster.curUser) return Lobster.bounceToLogin();
 
-    const li = parentSelector(voterEl, '.story');
-    const scoreLink = qS(li, '.upvoter');
+    const story = parentSelector(voterEl, '.story');
+    const scoreLink = qS(story, '.upvoter');
     const formData = new FormData();
     formData.append('reason', reason || '');
     let showScore = true;
@@ -394,34 +394,34 @@ class _LobstersFunction {
       score = 0;
     }
 
-    if (li.classList.contains("upvoted") && point > 0) {
+    if (story.classList.contains("upvoted") && point > 0) {
       /* already upvoted, neutralize */
-      li.classList.remove("upvoted");
+      story.classList.remove("upvoted");
       score--;
       action = "unvote";
-    } else if (li.classList.contains("flagged") && point < 0) {
+    } else if (story.classList.contains("flagged") && point < 0) {
       /* already flagged, neutralize */
-      li.classList.remove("flagged");
+      story.classList.remove("flagged");
       score++;
       action = "unvote";
     } else if (point > 0) {
-      if (li.classList.contains("flagged")) {
+      if (story.classList.contains("flagged")) {
         /* Give back the lost flagged point */
         score++;
       }
-      li.classList.remove("flagged");
-      li.classList.add("upvoted");
+      story.classList.remove("flagged");
+      story.classList.add("upvoted");
       score++;
       action = "upvote";
     } else if (point < 0) {
-      if (li.classList.contains("upvoted")) {
+      if (story.classList.contains("upvoted")) {
         /* Removes the upvote point this user already gave the story*/
         score--;
       }
-      li.classList.remove("upvoted");
-      li.classList.add("flagged");
-      if (qS(li.parentElement, '.comment_folder_button')) {
-        qS(li.parentElement, '.comment_folder_button').setAttribute('checked', true);
+      story.classList.remove("upvoted");
+      story.classList.add("flagged");
+      if (qS(story.parentElement, '.comment_folder_button')) {
+        qS(story.parentElement, '.comment_folder_button').setAttribute('checked', true);
       };
       showScore = false;
       score--;
@@ -433,17 +433,17 @@ class _LobstersFunction {
       scoreLink.innerHTML = '~';
     }
     if (action == "upvote" || action == "unvote") {
-      if (qS(li, '.reason')) {
-        qS(li, '.reason').innerHTML = '';
+      if (qS(story, '.reason')) {
+        qS(story, '.reason').innerHTML = '';
       };
 
       if (action == "unvote" && point < 0)
-        qS(li, '.flagger').textContent = 'flag';
+        qS(story, '.flagger').textContent = 'flag';
       } else if (action == "flag") {
-        qS(li, '.flagger').textContent = 'unflag';
+        qS(story, '.flagger').textContent = 'unflag';
     }
 
-    fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + action, {
+    fetchWithCSRF("/stories/" + story.getAttribute("data-shortid") + "/" + action, {
       method: 'post',
       body: formData });
   }
@@ -451,8 +451,9 @@ class _LobstersFunction {
   voteComment(voterEl, point, reason) {
     if (!Lobster.curUser) return Lobster.bounceToLogin();
 
-    const li = parentSelector(voterEl, ".comment");
-    const scoreLink = qS(li, '.upvoter');
+    const subtree = parentSelector(voterEl, ".comments_subtree");
+    const comment = qS(subtree, ".comment");
+    const scoreLink = qS(subtree, '.upvoter');
     const formData = new FormData();
     formData.append('reason', reason || '');
     let showScore = true;
@@ -464,33 +465,33 @@ class _LobstersFunction {
       score = 0;
     }
 
-    if (li.classList.contains("upvoted") && point > 0) {
+    if (comment.classList.contains("upvoted") && point > 0) {
       /* already upvoted, neutralize */
-      li.classList.remove("upvoted");
+      comment.classList.remove("upvoted");
       score--;
       action = "unvote";
-    } else if (li.classList.contains("flagged") && point < 0) {
+    } else if (comment.classList.contains("flagged") && point < 0) {
       /* already flagged, neutralize */
-      li.classList.remove("flagged");
+      comment.classList.remove("flagged");
       score++;
       action = "unvote";
     } else if (point > 0) {
-      if (li.classList.contains("flagged")) {
+      if (comment.classList.contains("flagged")) {
         /* Give back the lost flagged point */
         score++;
       }
-      li.classList.remove("flagged");
-      li.classList.add("upvoted");
+      comment.classList.remove("flagged");
+      comment.classList.add("upvoted");
       score++;
       action = "upvote";
     } else if (point < 0) {
-      if (li.classList.contains("upvoted")) {
+      if (comment.classList.contains("upvoted")) {
         /* Removes the upvote point this user already gave the story*/
         score--;
       }
-      li.classList.remove("upvoted");
-      li.classList.add("flagged");
-      li.parentElement.querySelector('.comment_folder_button').setAttribute("checked", true);
+      comment.classList.remove("upvoted");
+      comment.classList.add("flagged");
+      qS(subtree, '.comment_folder_button').setAttribute("checked", true);
       showScore = false;
       score--;
       action = "flag";
@@ -502,17 +503,17 @@ class _LobstersFunction {
     }
 
     if (action == "upvote" || action == "unvote") {
-      qS(li, '.reason').innerHTML = '';
+      qS(comment, '.reason').innerHTML = '';
     }
 
     if (action == "unvote" && point < 0) {
-      qS(li, '.flagger').textContent = 'flag';
+      qS(comment, '.flagger').textContent = 'flag';
     } else if (action == "flag") {
-      qS(li, '.flagger').textContent = 'unflag';
-      qS(li, '.reason').innerHTML = "| " + Lobster.commentFlagReasons[reason].toLowerCase();
+      qS(comment, '.flagger').textContent = 'unflag';
+      qS(comment, '.reason').innerHTML = "| " + Lobster.commentFlagReasons[reason].toLowerCase();
     }
 
-    fetchWithCSRF("/comments/" + li.getAttribute("data-shortid") + "/" + action, {
+    fetchWithCSRF("/comments/" + comment.getAttribute("data-shortid") + "/" + action, {
       method: 'post',
       body: formData });
   }
@@ -584,23 +585,23 @@ onPageLoad(() => {
     Lobster.fetchURLTitle(event.target);
   });
 
-  on('click', 'li.story a.upvoter', (event) => {
+  on('click', '.story a.upvoter', (event) => {
     event.preventDefault();
     Lobster.upvoteStory(event.target);
   });
 
-  on('click', 'li.story a.flagger', (event) => {
+  on('click', '.story a.flagger', (event) => {
     event.preventDefault();
     const reasons = Lobster.storyFlagReasons;
     Lobster.modalFlaggingDropDown("story", event.target, reasons);
   });
 
-  on('click', 'li.story a.hider', (event) => {
+  on('click', '.story a.hider', (event) => {
     event.preventDefault();
     Lobster.hideStory(event.target);
   });
 
-  on('click', 'li.story a.saver', (event) => {
+  on('click', '.story a.saver', (event) => {
     event.preventDefault();
     Lobster.saveStory(event.target);
   });
@@ -736,7 +737,7 @@ onPageLoad(() => {
     Lobster.removeFlagModal()
   });
 
-  on("click", '.comment a.upvoter', (event) => {
+  on("click", '.comments_subtree a.upvoter', (event) => {
     event.preventDefault();
     Lobster.upvoteComment(event.target);
   });

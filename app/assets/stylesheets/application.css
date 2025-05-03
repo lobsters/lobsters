@@ -476,7 +476,7 @@ ol.comments > li + li {
 	color: var(--color-fg-shape);
 	font-size: 12pt;
 }
-.upvoted .upvoter:before,
+.comments_gutter:has(~ .comments_body > .comment.upvoted) .upvoter:before,
 .upvoter:hover:before {
 	color: var(--color-fg-accent);
 }

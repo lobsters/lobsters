@@ -4,311 +4,300 @@
   <%= link_post 'Logout', logout_path, confirm: 'Are you sure you want to logout?' %>
 <% end %>
 
-<div class="labelled_grid">
-  <section>
-    <%= form_with model: @edit_user, url: settings_path, method: :post, id: 'edit_user', namespace: 'edit_user' do |f| %>
-      <%= errors_for f.object %>
+<section>
+  <%= form_with model: @edit_user, url: settings_path, method: :post, id: 'edit_user', namespace: 'edit_user' do |f| %>
+    <%= errors_for f.object %>
 
-      <section>
-        <div class="labelled_subgrid">
-          <%= f.label :username, "Username", :class => "required" %>
-          <div>
-            <%= f.text_field :username, :size => 15 %>
-            <div class="hint">
-              Format: <tt><%= User.username_regex_s %></tt><br>
-              Creates a <%= link_to 'modlog', moderations_path %> entry like "changed own username from '<%= @edit_user.username %>' to 'NewUsername'"
-            </div>
-          </div>
-
-          <%= f.label :current_password, "Current Password",
-            :class => "required" %>
-          <%= f.password_field :current_password, :name => "current_password", :autocomplete => "off" %>
-
-          <%= f.label :password, "New Password", :class => "required" %>
-          <%= f.password_field :password, :autocomplete => "off" %>
-
-          <%= f.label :password_confirmation, "Confirm Password",
-            :class => "required" %>
-          <%= f.password_field :password_confirmation, :autocomplete => "off" %>
-
-          <%= f.label :email, "E-mail Address", :class => "required" %>
-          <%= f.email_field :email, :inputmode => "email" %>
-
-          <%= f.label :homepage, "Homepage", :class => "required" %>
-          <%= f.url_field :homepage %>
-
-          <%= f.label :about, "About", :class => "required" %>
-          <div>
-            <%= f.text_area :about %>
-
-            <div class="markdown_help_toggler">
-              <div class="markdown_help_label">
-                Markdown formatting available
-              </div>
-
-              <%= render :partial => "global/markdownhelp" %>
-            </div>
-          </div>
-        </div>
-
-        <div class="breakout">
-          <%= f.submit "Save Account Settings" %>
-        </div>
-      </section>
-
-      <section>
-        <h2 class="breakout">Security Settings</h2>
-
-        <div class="labelled_subgrid">
-          <%= f.label :twofa, "Two-Factor Auth", :class => "required" %>
-          <span>
-          <% if @edit_user.totp_secret.present? %>
-            <span style="color: green; font-weight: bold;">
-              Enabled
-            </span> (<a href="/settings/2fa">Disable</a>)
-          <% else %>
-            Disabled (<a href="/settings/2fa">Enroll</a>)
-          <% end %>
-          </span>
-        </div>
-      </section>
-
-      <section>
-        <h2 class="breakout">Comment Reply Notification Settings</h2>
-
-        <div class="labelled_subgrid">
-          <%= f.label :email_replies, "Receive E-mail", :class => "required" %>
-          <span><%= f.check_box :email_replies %></span>
-          <%= f.label :pushover_replies, "Receive Pushover Alert",
-            :class => "required" %>
-          <span>
-            <%= f.check_box :pushover_replies %>
-            <span class="hint">
-              Requires Pushover subscription below
-            </span>
-          </span>
-        </div>
-      </section>
-
-      <section>
-        <h2 class="breakout">Comment Mention Notification Settings</h2>
-
-        <div class="labelled_subgrid">
-          <%= f.label :email_mentions, "Receive E-mail", :class => "required" %>
-          <span><%= f.check_box :email_mentions %></span>
-          <%= f.label :pushover_mentions, "Receive Pushover Alert",
-            :class => "required" %>
-          <span>
-            <%= f.check_box :pushover_mentions %>
-            <span class="hint">
-              Requires Pushover subscription below
-            </span>
-          </span>
-        </div>
-      </section>
-
-      <section>
-        <h2 class="breakout">Private Message Notification Settings</h2>
-
-        <div class="labelled_subgrid">
-          <%= f.label :email_messages, "Receive E-mail", :class => "required" %>
-          <span><%= f.check_box :email_messages %></span>
-          <%= f.label :pushover_messages, "Receive Pushover Alert",
-            :class => "required" %>
-          <span>
-            <%= f.check_box :pushover_messages %>
-            <span class="hint">
-              Requires Pushover subscription below
-            </span>
-          </span>
-        </div>
-      </section>
-
-      <section>
-        <h2 class="breakout">Submitted Story Comment Settings</h2>
-
-        <div class="labelled_subgrid">
-          <%= f.label :show_submitted_story_threads,
-            raw("Show in <a href=\"/threads\">Your Threads</a>"),
-            :class => "required" %>
-          <span><%= f.check_box :show_submitted_story_threads %></span>
-        </div>
-      </section>
-
-      <section>
-        <div class="breakout">
-          <h2>Mailing List Settings</h2>
-
-          <p>
-          When enabled, you will receive all newly submitted stories and comments to
-          your e-mail address entered above, except the stories and comments filtered
-          by your <a href="/filters">tag filters</a>.
-          All e-mail messages will appear to be sent to your private list address
-          shown below which you can filter on, and e-mails you send to that address
-          will be posted under your account on this website.  You should keep your
-          unique list address private to prevent others from posting comments as you.
-          </p>
-        </div>
-
-        <div class="labelled_subgrid">
-          <%= f.label :mailing_list_mode, "Receive List E-mails",
-            :class => "required" %>
-          <%= f.select :mailing_list_mode, [ [ "No e-mails", 0 ],
-            [ "All stories and comments", 1 ], [ "Only stories", 2 ] ] %>
-          <label class="required">List Address</label>
-          <span>
-            <tt><%= Rails.application.shortname %>-<%=
-              @edit_user.mailing_list_token %>@<%= Rails.application.domain %></tt>
-          </span>
-        </div>
-      </section>
-
-      <section>
-        <h2 class="breakout">Miscellaneous Settings</h2>
-
-        <div class="labelled_subgrid">
-          <%= f.label :prefers_color_scheme, "Color Scheme", :class => "required" %>
-          <span>
-            <label><%= f.radio_button :prefers_color_scheme, :system %> System (<a href="https://lobste.rs/s/eg1n75/dark_mode">details</a>)</label>
-            <label><%= f.radio_button :prefers_color_scheme, :light %> Light</label>
-            <label><%= f.radio_button :prefers_color_scheme, :dark %> Dark</label>
-          </span>
-
-          <%= f.label :prefers_contrast, "Contrast", :class => "required" %>
-          <span>
-            <label><%= f.radio_button :prefers_contrast, :system %> System</label>
-            <label><%= f.radio_button :prefers_contrast, :normal %> Normal</label>
-            <label><%= f.radio_button :prefers_contrast, :high %> High</label>
-          </span>
-
-          <%= f.label :show_email, "Show Email Address",
-            :class => "required" %>
-          <span>
-            <%= f.check_box :show_email %>
-            <span class="hint">
-              Only shown to logged-in users
-            </span>
-          </span>
-
-          <%= f.label :show_story_previews, "Show Story Previews",
-            :class => "required" %>
-          <span><%= f.check_box :show_story_previews %></span>
-
-          <%= f.label :show_avatars, "Show User Avatars", :class => "required" %>
-          <span><%= f.check_box :show_avatars %></span>
-        </div>
-
-        <div class="breakout">
-          <%= f.submit "Save Account Settings" %>
-        </div>
-      </section>
-    <% end %>
-  </section>
-
-  <section>
-    <h2 name="external">External Accounts</h2>
-
-    <div class="labelled_subgrid">
-      <%= label_tag :gravatar,
-        raw("<a href=\"https://gravatar.com/\">Gravatar</a>"),
-        :class => "required" %>
-      <span>
-        Your avatar will be cached from the Gravatar icon for your e-mail address above.
-        <%= link_post "Expire cache", "/avatars/expire" %>
-      </span>
-      <% if Pushover.enabled? %>
-        <%= label_tag :pushover_user_key,
-            raw("<a href=\"https://pushover.net/\">Pushover</a>"),
-            :class => "required" %>
-        <span>
-          <%= link_post((@edit_user.pushover_user_key.present? ?
-              "Manage Pushover Subscription" : "Subscribe With Pushover"),
-              "/settings/pushover_auth", class_name: "pushover_button") %>
+    <section>
+      <div class="labelled_grid">
+        <%= f.label :username, "Username", :class => "required" %>
+        <div>
+          <%= f.text_field :username, :size => 15 %>
           <div class="hint">
-            For optional comment and message notifications above
+            Format: <tt><%= User.username_regex_s %></tt><br>
+            Creates a <%= link_to 'modlog', moderations_path %> entry like "changed own username from '<%= @edit_user.username %>' to 'NewUsername'"
           </div>
-        </span>
-      <% end %>
-      <% if Github.enabled? %>
-        <%= label_tag :github_username,
-          raw("<a href=\"https://github.com/\">GitHub</a>"),
-            :class => "required" %>
-        <span>
-          <% if @edit_user.github_username.present? %>
-            Linked to
-            <strong><a href="https://github.com/<%= h(@edit_user.github_username)
-              %>"><%= h(@edit_user.github_username) %></a></strong>
-              <%= link_post "Disconnect", "/settings/github_disconnect" %>
-          <% else %>
-            <a href="/settings/github_auth">Connect</a>
-          <% end %>
-        </span>
-        <% end %>
-      <% if Mastodon.enabled? %>
-        <%= label_tag :mastodon_username,
-          raw("<a href=\"https://joinmastodon.org/\">Mastodon</a>"),
-            :class => "required" %>
-        <span>
-          <% if @edit_user.mastodon_username.present? %>
-            Linked to
-            <strong><a href="https://<%= @edit_user.mastodon_instance %>/@<%= h(@edit_user.mastodon_username)
-              %>">@<%= h(@edit_user.mastodon_username) %>@<%=@edit_user.mastodon_instance%></a></strong>
-              <%= link_post "Disconnect", "/settings/mastodon_disconnect" %>
-          <% else %>
-            <a href="/settings/mastodon_authentication">Connect</a>
-          <% end %>
-        </span>
-      <% end %>
-      <% if Keybase.enabled? %>
-        <%= label_tag :kb_username, raw("<a href=\"https://keybase.io/\">Keybase</a>"), :class => "required" %>
-        <span>
-          <%= render :partial => "keybase_proofs/proofs", locals: {user: @edit_user, for_self: true} %>
-        </span>
-      <% end %>
-    </div>
-  </section>
+        </div>
 
-  <section>
-    <h2 class="breakout" name="invite">Invite a New User</h2>
+        <%= f.label :current_password, "Current Password",
+          :class => "required" %>
+        <%= f.password_field :current_password, :name => "current_password", :autocomplete => "off" %>
 
-    <% if @user.can_invite? %>
-      <%= render :partial => "users/invitationform" %>
-    <% else %>
-        You cannot send invitations: <%= @user.disabled_invite_reason %>
-    <% end %>
-  </section>
-
-  <section>
-    <%= form_with model: @edit_user, url: delete_account_path, method: :post, id: 'delete_user', namespace: 'delete_user' do |f| %>
-      <div class="breakout">
-        <h2>Delete Account</h2>
-        <p>
-        To permanently delete your account, verify your current password below.
-        </p>
-        <ul>
-          <li>Your account will be put into a deleted state.</li>
-          <li>Your username will remain reserved and will not be available for any other account.</li>
-          <li>Your private messages will be deleted.</li>
-          <li>Your submitted stories will not be deleted.</li>
-          <li>
-            Your comments with negative scores will be deleted, and you can check "disown comments"
-            below if you want all of your stories and comments to change to list
-            <a href="/~inactive-user">inactive-user</a> instead of your username.
-          </li>
-        </ul>
-      </div>
-
-      <div class="labelled_subgrid">
-        <%= f.label :password, "Verify Password", :class => "required" %>
+        <%= f.label :password, "New Password", :class => "required" %>
         <%= f.password_field :password, :autocomplete => "off" %>
-        <%= f.label :i_am_sure, "I am sure", :class => "required" %>
-        <span><%= f.check_box :i_am_sure %></span>
-        <%= f.label :disown, "Disown stories/comments" %>
-        <span><%= f.check_box :disown %> <span class="hint">(optional)</span></span>
+
+        <%= f.label :password_confirmation, "Confirm Password",
+          :class => "required" %>
+        <%= f.password_field :password_confirmation, :autocomplete => "off" %>
+
+        <%= f.label :email, "E-mail Address", :class => "required" %>
+        <%= f.email_field :email, :inputmode => "email" %>
+
+        <%= f.label :homepage, "Homepage", :class => "required" %>
+        <%= f.url_field :homepage %>
+
+        <%= f.label :about, "About", :class => "required" %>
+        <div>
+          <%= f.text_area :about %>
+
+          <div class="markdown_help_toggler">
+            <div class="markdown_help_label">
+              Markdown formatting available
+            </div>
+
+            <%= render :partial => "global/markdownhelp" %>
+          </div>
+        </div>
       </div>
-      <div class="breakout">
-        <%= f.submit "Yes, Delete My Account", :class => "deletion" %>
+
+      <%= f.submit "Save Account Settings" %>
+    </section>
+
+    <section>
+      <h2>Security Settings</h2>
+
+      <div class="labelled_grid">
+        <%= f.label :twofa, "Two-Factor Auth", :class => "required" %>
+        <span>
+        <% if @edit_user.totp_secret.present? %>
+          <span style="color: green; font-weight: bold;">
+            Enabled
+          </span> (<a href="/settings/2fa">Disable</a>)
+        <% else %>
+          Disabled (<a href="/settings/2fa">Enroll</a>)
+        <% end %>
+        </span>
       </div>
+    </section>
+
+    <section>
+      <h2>Comment Reply Notification Settings</h2>
+
+      <div class="labelled_grid">
+        <%= f.label :email_replies, "Receive E-mail", :class => "required" %>
+        <span><%= f.check_box :email_replies %></span>
+        <%= f.label :pushover_replies, "Receive Pushover Alert",
+          :class => "required" %>
+        <span>
+          <%= f.check_box :pushover_replies %>
+          <span class="hint">
+            Requires Pushover subscription below
+          </span>
+        </span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Comment Mention Notification Settings</h2>
+
+      <div class="labelled_grid">
+        <%= f.label :email_mentions, "Receive E-mail", :class => "required" %>
+        <span><%= f.check_box :email_mentions %></span>
+        <%= f.label :pushover_mentions, "Receive Pushover Alert",
+          :class => "required" %>
+        <span>
+          <%= f.check_box :pushover_mentions %>
+          <span class="hint">
+            Requires Pushover subscription below
+          </span>
+        </span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Private Message Notification Settings</h2>
+
+      <div class="labelled_grid">
+        <%= f.label :email_messages, "Receive E-mail", :class => "required" %>
+        <span><%= f.check_box :email_messages %></span>
+        <%= f.label :pushover_messages, "Receive Pushover Alert",
+          :class => "required" %>
+        <span>
+          <%= f.check_box :pushover_messages %>
+          <span class="hint">
+            Requires Pushover subscription below
+          </span>
+        </span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Submitted Story Comment Settings</h2>
+
+      <div class="labelled_grid">
+        <%= f.label :show_submitted_story_threads,
+          raw("Show in <a href=\"/threads\">Your Threads</a>"),
+          :class => "required" %>
+        <span><%= f.check_box :show_submitted_story_threads %></span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Mailing List Settings</h2>
+
+      <p>
+      When enabled, you will receive all newly submitted stories and comments to
+      your e-mail address entered above, except the stories and comments filtered
+      by your <a href="/filters">tag filters</a>.
+      All e-mail messages will appear to be sent to your private list address
+      shown below which you can filter on, and e-mails you send to that address
+      will be posted under your account on this website.  You should keep your
+      unique list address private to prevent others from posting comments as you.
+      </p>
+
+      <div class="labelled_grid">
+        <%= f.label :mailing_list_mode, "Receive List E-mails",
+          :class => "required" %>
+        <%= f.select :mailing_list_mode, [ [ "No e-mails", 0 ],
+          [ "All stories and comments", 1 ], [ "Only stories", 2 ] ] %>
+        <label class="required">List Address</label>
+        <span>
+          <tt><%= Rails.application.shortname %>-<%=
+            @edit_user.mailing_list_token %>@<%= Rails.application.domain %></tt>
+        </span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Miscellaneous Settings</h2>
+
+      <div class="labelled_grid">
+        <%= f.label :prefers_color_scheme, "Color Scheme", :class => "required" %>
+        <span>
+          <label><%= f.radio_button :prefers_color_scheme, :system %> System (<a href="https://lobste.rs/s/eg1n75/dark_mode">details</a>)</label>
+          <label><%= f.radio_button :prefers_color_scheme, :light %> Light</label>
+          <label><%= f.radio_button :prefers_color_scheme, :dark %> Dark</label>
+        </span>
+
+        <%= f.label :prefers_contrast, "Contrast", :class => "required" %>
+        <span>
+          <label><%= f.radio_button :prefers_contrast, :system %> System</label>
+          <label><%= f.radio_button :prefers_contrast, :normal %> Normal</label>
+          <label><%= f.radio_button :prefers_contrast, :high %> High</label>
+        </span>
+
+        <%= f.label :show_email, "Show Email Address",
+          :class => "required" %>
+        <span>
+          <%= f.check_box :show_email %>
+          <span class="hint">
+            Only shown to logged-in users
+          </span>
+        </span>
+
+        <%= f.label :show_story_previews, "Show Story Previews",
+          :class => "required" %>
+        <span><%= f.check_box :show_story_previews %></span>
+
+        <%= f.label :show_avatars, "Show User Avatars", :class => "required" %>
+        <span><%= f.check_box :show_avatars %></span>
+      </div>
+
+      <%= f.submit "Save Account Settings" %>
+    </section>
+  <% end %>
+</section>
+
+<section>
+  <h2 name="external">External Accounts</h2>
+
+  <div class="labelled_grid">
+    <%= label_tag :gravatar,
+      raw("<a href=\"https://gravatar.com/\">Gravatar</a>"),
+      :class => "required" %>
+    <span>
+      Your avatar will be cached from the Gravatar icon for your e-mail address above.
+      <%= link_post "Expire cache", "/avatars/expire" %>
+    </span>
+    <% if Pushover.enabled? %>
+      <%= label_tag :pushover_user_key,
+          raw("<a href=\"https://pushover.net/\">Pushover</a>"),
+          :class => "required" %>
+      <span>
+        <%= link_post((@edit_user.pushover_user_key.present? ?
+            "Manage Pushover Subscription" : "Subscribe With Pushover"),
+            "/settings/pushover_auth", class_name: "pushover_button") %>
+        <div class="hint">
+          For optional comment and message notifications above
+        </div>
+      </span>
     <% end %>
-  </section>
-</div>
+    <% if Github.enabled? %>
+      <%= label_tag :github_username,
+        raw("<a href=\"https://github.com/\">GitHub</a>"),
+          :class => "required" %>
+      <span>
+        <% if @edit_user.github_username.present? %>
+          Linked to
+          <strong><a href="https://github.com/<%= h(@edit_user.github_username)
+            %>"><%= h(@edit_user.github_username) %></a></strong>
+            <%= link_post "Disconnect", "/settings/github_disconnect" %>
+        <% else %>
+          <a href="/settings/github_auth">Connect</a>
+        <% end %>
+      </span>
+      <% end %>
+    <% if Mastodon.enabled? %>
+      <%= label_tag :mastodon_username,
+        raw("<a href=\"https://joinmastodon.org/\">Mastodon</a>"),
+          :class => "required" %>
+      <span>
+        <% if @edit_user.mastodon_username.present? %>
+          Linked to
+          <strong><a href="https://<%= @edit_user.mastodon_instance %>/@<%= h(@edit_user.mastodon_username)
+            %>">@<%= h(@edit_user.mastodon_username) %>@<%=@edit_user.mastodon_instance%></a></strong>
+            <%= link_post "Disconnect", "/settings/mastodon_disconnect" %>
+        <% else %>
+          <a href="/settings/mastodon_authentication">Connect</a>
+        <% end %>
+      </span>
+    <% end %>
+    <% if Keybase.enabled? %>
+      <%= label_tag :kb_username, raw("<a href=\"https://keybase.io/\">Keybase</a>"), :class => "required" %>
+      <span>
+        <%= render :partial => "keybase_proofs/proofs", locals: {user: @edit_user, for_self: true} %>
+      </span>
+    <% end %>
+  </div>
+</section>
+
+<section>
+  <h2 name="invite">Invite a New User</h2>
+
+  <% if @user.can_invite? %>
+    <%= render :partial => "users/invitationform" %>
+  <% else %>
+      You cannot send invitations: <%= @user.disabled_invite_reason %>
+  <% end %>
+</section>
+
+<section>
+  <%= form_with model: @edit_user, url: delete_account_path, method: :post, id: 'delete_user', namespace: 'delete_user' do |f| %>
+    <h2>Delete Account</h2>
+    <p>
+    To permanently delete your account, verify your current password below.
+    </p>
+    <ul>
+      <li>Your account will be put into a deleted state.</li>
+      <li>Your username will remain reserved and will not be available for any other account.</li>
+      <li>Your private messages will be deleted.</li>
+      <li>Your submitted stories will not be deleted.</li>
+      <li>
+        Your comments with negative scores will be deleted, and you can check "disown comments"
+        below if you want all of your stories and comments to change to list
+        <a href="/~inactive-user">inactive-user</a> instead of your username.
+      </li>
+    </ul>
+
+    <div class="labelled_grid">
+      <%= f.label :password, "Verify Password", :class => "required" %>
+      <%= f.password_field :password, :autocomplete => "off" %>
+      <%= f.label :i_am_sure, "I am sure", :class => "required" %>
+      <span><%= f.check_box :i_am_sure %></span>
+      <%= f.label :disown, "Disown stories/comments" %>
+      <span><%= f.check_box :disown %> <span class="hint">(optional)</span></span>
+    </div>
+
+    <%= f.submit "Yes, Delete My Account", :class => "deletion" %>
+  <% end %>
+</section>

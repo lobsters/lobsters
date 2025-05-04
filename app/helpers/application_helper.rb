@@ -168,7 +168,6 @@ module ApplicationHelper
   end
 
   def how_long_ago_link(url, time)
-    ago = how_long_ago(time)
     content_tag(:a, how_long_ago_label(time), href: url)
   end
 end

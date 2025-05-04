@@ -1,25 +1,23 @@
 <%# locals: (return_home: false) -%>
-<div class="breakout">
-  <p>
-  Invitations are unlimited, but persons you invite will be associated with your account
-  in the <%= link_to 'user tree', users_tree_path %>
-  and you may be responsible for them if they cause problems.
-  Please use your discretion when inviting persons you don't personally know.
-  </p>
+<p>
+Invitations are unlimited, but persons you invite will be associated with your account
+in the <%= link_to 'user tree', users_tree_path %>
+and you may be responsible for them if they cause problems.
+Please use your discretion when inviting persons you don't personally know.
+</p>
 
-  <p>
-  Note to trans users:
-  User profiles list the user who invited them.
-  If you want to avoid connecting your old and new usernames, ask <%= link_to 'a moderator', moderators_path %> to send you an invite.
-  </p>
-</div>
+<p>
+Note to trans users:
+User profiles list the user who invited them.
+If you want to avoid connecting your old and new usernames, ask <%= link_to 'a moderator', moderators_path %> to send you an invite.
+</p>
 
 <%= form_with url: invitations_path, method: :post do |f| %>
   <% if return_home %>
     <%= f.hidden_field :return_home, value: 1 %>
   <% end %>
 
-  <div class="labelled_subgrid">
+  <div class="labelled_grid">
     <%= f.label :email, "E-mail Address", :class => "required" %>
     <%= f.email_field :email, :autocomplete => "off", :inputmode => "email" %>
 
@@ -27,8 +25,6 @@
     <%= f.text_field :memo %>
   </div>
 
-  <div class="breakout">
-    <%= f.submit "Send Invitation" %>
-  </div>
+  <%= f.submit "Send Invitation" %>
 <% end %>
 

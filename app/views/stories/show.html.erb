@@ -8,6 +8,20 @@
   <%= render :partial => "stories/singledetail", :locals => { merged_stories: @merged_stories } %>
 </ol>
 
+<% if @merged_stories.count > 1 %>
+  <div class="details byline">
+    <span class="merge"></span><%= @merged_stories.count %> merged
+
+    <% if !@merged_stories.first.is_gone? || @user&.is_moderator? %>
+    <span class="comments_label">
+      |
+      <% cc = @merged_stories.map(&:comments_count).sum %>
+      <%= (cc == 0) ? "no" : "total: #{cc}" %> <%= 'comment'.pluralize(cc) %></a>
+    </span>
+    <% end %>
+  </div>
+<% end %>
+
 <div class="story_content">
   <% if @story.markeddown_description.present? && @story.stories_count == 0 %>
     <div class="story_text">
@@ -57,12 +71,8 @@
 <% if !@story.previewing %>
   <% @merged_stories.select { it.can_be_seen_by_user?(@user) }.each do |ms| %>
     <% if @story.stories_count > 0 %>
-      <ol class="stories">
-        <li class="story">
-          <div class="story_liner h-entry">
-            <div class="voters">
-              <span class="merge"></span>
-            </div>
+          <article class="story story_liner h-entry">
+            <div class="merge"></div>
             <div class="details">
               <span role="heading" aria-level="2" class="link h-cite u-repost-of">
                 <% if ms.can_be_seen_by_user?(@user) %>
@@ -100,9 +110,7 @@
                 </span>
               </span>
             </div>
-          </div>
-        </li>
-      </ol>
+</article>
 
       <div class="story_content">
         <% if ms.markeddown_description.present? %>
@@ -132,30 +140,29 @@
       </div>
     <% end %>
 
+    <%# deliberately checking the top-level story, either all have comment forms or none do, less confusing %>
+    <% if @story.accepting_comments? %>
+      <%= render partial: "comments/commentbox", locals: { comment: ms.comments.build, story: ms } %>
+    <% end %>
+
     <ol class="comments comments1">
-      <%# deliberately checking the top-level story, either all have comment forms or none do, less confusing %>
-      <% if @story.accepting_comments? %>
-        <li class="comments_subtree"><%= render partial: "comments/commentbox", locals: { comment: ms.comments.build, story: ms } %></li>
+      <% if @user && @comments.size > 0 %>
+        <div class="thread_summary">
+          <%= pluralize(@comments.select { it.story_id == ms.id }.size, "comment") %>,
+          <% unread = @ribbon.unread_count(@comments.select { it.story_id == ms.id }) %>
+          <% if @ribbon.new_record? %>
+            all unread
+          <% elsif unread > 0 %>
+            <span role='link' class='comment_unread'><%= unread %> unread</span>
+          <% else %>
+            0 unread
+          <% end %>
+        </div>
       <% end %>
 
       <li class="comments_subtree" id="story_comments">
-        <% if @user && @comments.size > 0 %>
-          <div class="thread_summary">
-            <%= pluralize(@comments.select { it.story_id == ms.id }.size, "comment") %>,
-            <% unread = @ribbon.unread_count(@comments.select { it.story_id == ms.id }) %>
-            <% if @ribbon.new_record? %>
-              all unread
-            <% elsif unread > 0 %>
-              <span role='link' class='comment_unread'><%= unread %> unread</span>
-            <% else %>
-              0 unread
-            <% end %>
-          </div>
-        <% end %>
-
         <%= render partial: 'comments/threads', locals: { thread: @comments.select { it.story_id == ms.id }, story: ms, ribbon: @ribbon } %>
       </li>
-
     </ol>
     <br>
   <% end %>

@@ -24,142 +24,140 @@
   This has apparently useless <span> tags explained in a comment in CSS
   around .negative_1 in CSS (introduced same commit as this comment).
 %>
-<li id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
-class="story <%= story.current_upvoted? ? "upvoted" : "" %>
-<%= story.current_flagged? ? "flagged" : "" %>
-<%= story.negativity_class %>
-<%= story.is_hidden_by_cur_user ? "hidden" : "" %>
-<%= story.is_saved_by_cur_user ? "saved" : "" %>
-<%= story.is_deleted? ? "deleted" : "" %>">
-<div class="story_liner h-entry">
-  <div class="voters">
+<li>
+  <article id="story_<%= story.short_id %>" data-shortid="<%= story.short_id %>"
+  class="story story_liner h-entry <%= story.current_upvoted? ? "upvoted" : "" %>
+  <%= story.current_flagged? ? "flagged" : "" %>
+  <%= story.negativity_class %>
+  <%= story.is_hidden_by_cur_user ? "hidden" : "" %>
+  <%= story.is_saved_by_cur_user ? "saved" : "" %>
+  <%= story.is_deleted? ? "deleted" : "" %>">
     <%= link_to (story.show_score_to_user?(@user) ? story.score : '~'),
                 (@user ? '': login_path), :class => "upvoter" %>
-  </div>
-  <div class="details">
-    <span role="heading" aria-level="1" class="link h-cite u-repost-of">
-      <% if story.can_be_seen_by_user?(@user) %>
-        <a class="u-url" href="<%= story.url_or_comments_path %>" rel="ugc <%= story.send_referrer? ? '' : 'noreferrer' %>"><%= story.title %></a>
-      <% end %>
-      <% if story.is_gone? %>
-        [Story removed by <%= story.is_moderated? ? "moderator" : "submitter" %>]
-      <% end %>
-    </span>
-    <% if story.stories_count > 0 %>
-      <span class="merge"></span><%= story.stories_count + 1 %>
-    <% elsif story.merged_story_id %>
-      <span class="merge"></span>merged
-    <% end %>
-    <% if story.markeddown_description.present? %>
-      <a class="description_present" title="<%= truncate(story.description,
-        :length => 500) %>" href="<%= story.comments_path %>">&#x2636;</a>
-    <% end %>
-    <% if story.can_be_seen_by_user?(@user) %>
-      <span class="tags">
-        <% story.tags.each do |tag| %>
-          <%= tag_link(tag) %>
+    <div class="details">
+      <span role="heading" aria-level="1" class="link h-cite u-repost-of">
+        <% if story.can_be_seen_by_user?(@user) %>
+          <a class="u-url" href="<%= story.url_or_comments_path %>" rel="ugc <%= story.send_referrer? ? '' : 'noreferrer' %>"><%= story.title %></a>
+        <% end %>
+        <% if story.is_gone? %>
+          [Story removed by <%= story.is_moderated? ? "moderator" : "submitter" %>]
         <% end %>
       </span>
-      <% if story.origin.present? %>
-        <%= link_to story.origin.identifier, origin_path(story.origin), class: 'domain' %>
-      <% elsif story.domain.present? %>
-        <%= link_to story.domain.domain, domain_path(story.domain), class: 'domain' %>
+      <% if story.stories_count > 0 %>
+        <span class="merge"></span><%= story.stories_count + 1 %>
+      <% elsif story.merged_story_id %>
+        <span class="merge"></span>merged
       <% end %>
-    <% end %>
-
-    <% if @user&.show_story_previews? %>
-      <% if (sc = story.description_or_story_text(500)).present? %>
-        <div class="story_content">
-          <%= sc %>
-        </div>
+      <% if story.markeddown_description.present? %>
+        <a class="description_present" title="<%= truncate(story.description,
+          :length => 500) %>" href="<%= story.comments_path %>">&#x2636;</a>
       <% end %>
-    <% end %>
+      <% if story.can_be_seen_by_user?(@user) %>
+        <span class="tags">
+          <% story.tags.each do |tag| %>
+            <%= tag_link(tag) %>
+          <% end %>
+        </span>
+        <% if story.origin.present? %>
+          <%= link_to story.origin.identifier, origin_path(story.origin), class: 'domain' %>
+        <% elsif story.domain.present? %>
+          <%= link_to story.domain.domain, domain_path(story.domain), class: 'domain' %>
+        <% end %>
+      <% end %>
 
-    <div class="byline">
-      <%= inline_avatar_for @user, story.user %>
-      <% if story.previewing %>
-        <% if story.user_is_author? %>
-          <span> authored by </span>
+      <% if @user&.show_story_previews? %>
+        <% if (sc = story.description_or_story_text(500)).present? %>
+          <div class="story_content">
+            <%= sc %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <div class="byline">
+        <%= inline_avatar_for @user, story.user %>
+        <% if story.previewing %>
+          <% if story.user_is_author? %>
+            <span> authored by </span>
+          <% else %>
+            <span> via </span>
+          <% end %>
+
+          <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %>
+          <span> just now </span>
         <% else %>
-          <span> via </span>
-        <% end %>
+          <% if story.user_is_author? %>
+            <span> authored by </span>
+          <% else %>
+            <span> via </span>
+          <% end %>
+          <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %>
 
-        <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %>
-        <span> just now </span>
-      <% else %>
-        <% if story.user_is_author? %>
-          <span> authored by </span>
-        <% else %>
-          <span> via </span>
-        <% end %>
-        <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %>
+          <%= how_long_ago_label(story.created_at) %>
 
-        <%= how_long_ago_label(story.created_at) %>
-
-        <% if story.is_editable_by_user?(@user) %>
-          <span> | </span>
-          <a href="<%= edit_story_path(story.short_id) %>" class="<%= story.has_suggestions? ? "story_has_suggestions" : "" %>">edit</a>
-        <% end %>
-        <% if @user&.is_moderator? %>
-          <span> | </span>
-          <a href="<%= edit_mod_story_path(story.short_id) %>" class="<%= story.has_suggestions? ? "story_has_suggestions" : "" %>">mod edit</a>
-        <% end %>
-        <% if story.can_have_suggestions_from_user?(@user) %>
-          <span> | </span><%= link_to "suggest", new_story_suggestion_path(story.short_id),
-            :class => "suggester" %>
-        <% end %>
-        <% if !story.is_gone? && @user %>
-          <% if @user && story.current_flagged? %>
-            <span> | </span><a class="flagger">unflag (<%=
-              Vote::STORY_REASONS[story.current_vote[:reason]].to_s.downcase %>)</a>
-          <% elsif @user && @user.can_flag?(story) %>
+          <% if story.is_editable_by_user?(@user) %>
+            <span> | </span>
+            <a href="<%= edit_story_path(story.short_id) %>" class="<%= story.has_suggestions? ? "story_has_suggestions" : "" %>">edit</a>
+          <% end %>
+          <% if @user&.is_moderator? %>
+            <span> | </span>
+            <a href="<%= edit_mod_story_path(story.short_id) %>" class="<%= story.has_suggestions? ? "story_has_suggestions" : "" %>">mod edit</a>
+          <% end %>
+          <% if story.can_have_suggestions_from_user?(@user) %>
+            <span> | </span><%= link_to "suggest", new_story_suggestion_path(story.short_id),
+              :class => "suggester" %>
+          <% end %>
+          <% if !story.is_gone? && @user %>
+            <% if @user && story.current_flagged? %>
+              <span> | </span><a class="flagger">unflag (<%=
+                Vote::STORY_REASONS[story.current_vote[:reason]].to_s.downcase %>)</a>
+            <% elsif @user && @user.can_flag?(story) %>
+              <span> | </span>
+              <span class="dropdown_parent">
+                <a class="flagger">flag</a>
+              </span>
+            <% end %>
+            <% if story.is_hidden_by_cur_user %>
+              <span> | </span><%= link_to "unhide", story_unhide_path(story.short_id), :class => "hider" %>
+            <% else %>
+              <span> | </span><%= link_to "hide", story_hide_path(story.short_id), :class => "hider" %>
+            <% end %>
+            <% if !story.is_saved_by_cur_user %>
+              <span> | </span><%= link_to "save", story_save_path(story.short_id), :class => "saver" %>
+            <% end %>
+          <% end %>
+          <% if story.is_saved_by_cur_user %>
+            <span> | </span><%= link_to "unsave", story_unsave_path(story.short_id), :class => "saver" %>
+          <% end %>
+          <% if story.url.present? && (!story.is_gone? || @user.try(:is_moderator?))  %>
             <span> | </span>
             <span class="dropdown_parent">
-              <a class="flagger">flag</a>
+              <input id="archive_<%= story.short_id %>" class="archive_button" type="checkbox">
+              <label for="archive_<%= story.short_id %>">caches</label>
+              <div class="archive-dropdown">
+                <a href="<%= story.archiveorg_url %>">Archive.org</a>
+                <a href="<%= story.archivetoday_url %>">Archive.today</a>
+                <a href="<%= story.ghost_url %>">Ghostarchive</a>
+              </div>
             </span>
           <% end %>
-          <% if story.is_hidden_by_cur_user %>
-            <span> | </span><%= link_to "unhide", story_unhide_path(story.short_id), :class => "hider" %>
-          <% else %>
-            <span> | </span><%= link_to "hide", story_hide_path(story.short_id), :class => "hider" %>
+          <% if !story.is_gone? || @user.try(:is_moderator?) %>
+            <span class="comments_label">
+              <span> | </span>
+              <a role="heading" aria-level="2" href="<%= story.comments_path %>">
+              <% if story.comments_count == 0 %>
+                no comments</a>
+              <% else %>
+                <%= story.comments_count %> <%= 'comment'.pluralize(story.comments_count) %></a>
+              <% end %>
+            </span>
           <% end %>
-          <% if !story.is_saved_by_cur_user %>
-            <span> | </span><%= link_to "save", story_save_path(story.short_id), :class => "saver" %>
-          <% end %>
         <% end %>
-        <% if story.is_saved_by_cur_user %>
-          <span> | </span><%= link_to "unsave", story_unsave_path(story.short_id), :class => "saver" %>
-        <% end %>
-        <% if story.url.present? && (!story.is_gone? || @user.try(:is_moderator?))  %>
-          <span> | </span>
-          <span class="dropdown_parent">
-            <input id="archive_<%= story.short_id %>" class="archive_button" type="checkbox">
-            <label for="archive_<%= story.short_id %>">caches</label>
-            <div class="archive-dropdown">
-              <a href="<%= story.archiveorg_url %>">Archive.org</a>
-              <a href="<%= story.archivetoday_url %>">Archive.today</a>
-              <a href="<%= story.ghost_url %>">Ghostarchive</a>
-            </div>
-          </span>
-        <% end %>
-        <% if !story.is_gone? || @user.try(:is_moderator?) %>
-          <span class="comments_label">
-            <span> | </span>
-            <a role="heading" aria-level="2" href="<%= story.comments_path %>">
-            <% if story.comments_count == 0 %>
-              no comments</a>
-            <% else %>
-              <%= story.comments_count %> <%= 'comment'.pluralize(story.comments_count) %></a>
-            <% end %>
-          </span>
-        <% end %>
-      <% end %>
+      </div>
     </div>
-  </div>
-</div>
-<a href="<%= story.comments_path %>" class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>" style="display: none;">
-  <span><%= story.comments_count %></span>
-</a>
+    <a href="<%= story.comments_path %>" class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>" style="display: none;">
+      <span><%= story.comments_count %></span>
+    </a>
+  </article>
 </li>
 
 <%#/heinous_inline_partial(stories/_listdetail.html.erb)%>

@@ -1,19 +1,13 @@
-<div class="labelled_grid">
-  <div class="breakout">
-    <p>
-    Now that you are a member you can invite people you think would be a good fit.
-    This is available anytime from <a href="/settings#invite">your settings page</a>.
-    </p>
-  </div>
+<p>
+Now that you are a member you can invite people you think would be a good fit.
+This is available anytime from <a href="/settings#invite">your settings page</a>.
+</p>
 
-  <%= render :partial => "users/invitationform",
-    :locals => { :return_home => true } %>
+<%= render :partial => "users/invitationform",
+  :locals => { :return_home => true } %>
 
-  <div class="breakout">
-    or
+<p>or</p>
 
-    <p>
-    <%= button_to "Skip", "/", :method => :get %>
-    </p>
-  </div>
-</div>
+<p>
+<%= button_to "Skip", "/", :method => :get %>
+</p>

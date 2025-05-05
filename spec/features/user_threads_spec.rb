@@ -32,7 +32,7 @@ RSpec.feature "user threads page ~:user/threads" do
     story.save!
 
     # check that story was really deleted because the above code is brittle
-    visit story.short_id_url
+    visit Routes.story_title_path story
     expect(page).to have_content("was removed")
 
     visit "/threads/#{user.username}"

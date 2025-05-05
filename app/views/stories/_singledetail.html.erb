@@ -36,7 +36,7 @@ classes = [
       </span>
 
       <% if ms.markeddown_description.present? %>
-        <a class="description_present" title="<%= truncate(ms.description, :length => 500) %>" href="<%= ms.comments_path %>">&#x2636;</a>
+        <a class="description_present" title="<%= truncate(ms.description, :length => 500) %>" href="<%= Routes.story_title_path ms %>">&#x2636;</a>
       <% end %>
 
       <span class="tags">
@@ -130,7 +130,7 @@ classes = [
 
           <span class="comments_label">
             |
-            <a role="heading" aria-level="2" href="<%= ms.comments_path %>">
+            <a role="heading" aria-level="2" href="<%= Routes.story_title_path ms %>">
               <%= ms.comments_count.zero? ? "no" : ms.comments_count %>
               <%= 'comment'.pluralize(ms.comments_count) %>
             </a>

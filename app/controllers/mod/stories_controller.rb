@@ -20,7 +20,7 @@ class Mod::StoriesController < Mod::ModeratorController
     update_story_attributes
 
     if @story.save
-      redirect_to @story.comments_path
+      redirect_to Routes.story_title_path @story
     else
       render action: "edit"
     end
@@ -35,7 +35,7 @@ class Mod::StoriesController < Mod::ModeratorController
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted", -1)
     end
 
-    redirect_to @story.comments_path
+    redirect_to Routes.story_title_path @story
   end
 
   def destroy
@@ -54,7 +54,7 @@ class Mod::StoriesController < Mod::ModeratorController
       Mastodon.delete_post(@story)
     end
 
-    redirect_to @story.comments_path
+    redirect_to Routes.story_title_path @story
   end
 
   private

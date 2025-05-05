@@ -126,7 +126,7 @@ if __FILE__ == $PROGRAM_NAME
 
         body.push ""
         body.push "-- "
-        body.push "Vote: #{s.short_id_url}"
+        body.push "Vote: #{Routes.story_short_id_url s}"
 
         mail.puts body.join("\n").quoted_printable
       end

@@ -96,7 +96,7 @@ if __FILE__ == $PROGRAM_NAME
     next unless wm_endpoint_raw
 
     wm_endpoint = uri_to_absolute(wm_endpoint_raw, URI.parse(s.url))
-    send_webmention(s.short_id_url, s.url, wm_endpoint)
+    send_webmention(Routes.story_short_id_url(s), s.url, wm_endpoint)
     last_story_id = s.id
   end
 end

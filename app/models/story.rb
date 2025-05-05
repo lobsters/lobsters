@@ -739,14 +739,6 @@ class Story < ApplicationRecord
     Vote.vote_thusly_on_story_or_comment_for_user_because(1, id, nil, user_id, nil, false)
   end
 
-  def short_id_path
-    Rails.application.routes.url_helpers.root_path + "s/#{short_id}"
-  end
-
-  def short_id_url
-    Rails.application.root_url + "s/#{short_id}"
-  end
-
   def show_score_to_user?(u)
     u&.is_moderator? || !current_flagged?
   end

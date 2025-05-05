@@ -34,7 +34,7 @@ describe "stories", type: :request do
     it "redirects to latest subsmission of the given url" do
       get "/stories/url/latest", params: {url: "https://example.com/1"}
       expect(response.status).to eq(302)
-      expect(response).to redirect_to(story2.comments_path)
+      expect(response).to redirect_to(Routes.story_title_path(story2))
     end
 
     describe "a url that hasn't been submitted" do

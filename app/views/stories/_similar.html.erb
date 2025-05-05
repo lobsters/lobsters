@@ -15,7 +15,7 @@
       </span>
       <span class="comments_label">
         |
-        <a href="<%= story.comments_path %>">
+        <a href="<%= Routes.story_title_path story %>">
           <% if story.comments_count == 0 %>
             no comments</a>
           <% else %>

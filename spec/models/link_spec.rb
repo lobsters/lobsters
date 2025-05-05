@@ -54,9 +54,9 @@ RSpec.describe Link, type: :model do
 
     it "recognizes a link to a site story by short id" do
       target = create(:story)
-      c = create(:comment, comment: "see [story](#{target.short_id_url})")
+      c = create(:comment, comment: "see [story](#{story_short_id_url target})")
       link = c.links.last
-      expect(link.url).to eq(target.short_id_url)
+      expect(link.url).to eq(story_short_id_url(story))
       expect(link.to_story_id).to eq(target.id)
     end
 

@@ -154,7 +154,7 @@
 
         <% if show_story %>
           | on:
-          <a href="<%= comment.story.comments_path %>"><%= comment.story.title %></a>
+          <a href="<%= Routes.story_title_path comment.story %>"><%= comment.story.title %></a>
         <% end %>
 
         <span class="reason">

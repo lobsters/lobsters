@@ -23,6 +23,6 @@ SitemapGenerator::Sitemap.create! do
     changefreq = "hourly" if lastmod >= check_hourly
 
     priority = 1.0 * story.score / top_score
-    add story.comments_path, lastmod: lastmod, changefreq: changefreq, priority: priority
+    add Routes.story_title_path story, lastmod: lastmod, changefreq: changefreq, priority: priority
   end
 end

@@ -19,7 +19,7 @@
     <td><% if mod.story %>
         <a href="<%= Routes.story_title_path mod.story %>">Story: <%= mod.story.title %></a>
       <% elsif mod.comment %>
-        <a href="<%= mod.comment.path %>">Comment by
+        <a href="<%= Routes.comment_target_path(mod.comment) %>">Comment by
           <%= mod.comment.user.username %>
           on
           <%= mod.comment.story.title %></a>

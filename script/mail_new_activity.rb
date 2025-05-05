@@ -222,7 +222,7 @@ if __FILE__ == $PROGRAM_NAME
 
         body.push ""
         body.push "-- "
-        body.push "Vote: #{c.short_id_url}"
+        body.push "Vote: #{Routes.comment_short_id_url c}"
 
         mail.puts body.join("\n").quoted_printable
       end

@@ -228,7 +228,7 @@
             <td><a href="/~<%= v.comment.user.try(:username) %>"><%= v.comment.user.try(:username) %></a></td>
             <td>
               <%= v.story.title %>
-              <a href="<%= v.comment.short_id_url %>">comment</a>:<br>
+              <a href="<%= Routes.comment_target_path(v.comment) %>">comment</a>:<br>
               <%= v.comment.comment.split[0..10].join(' ') %>
             </td>
           <% elsif v.story_id && !v.comment_id %>

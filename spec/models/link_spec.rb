@@ -38,17 +38,17 @@ RSpec.describe Link, type: :model do
 
     it "recognizes a short link to a site comment" do
       target = create(:comment)
-      c = create(:comment, comment: "see [redir](#{target.short_id_url})")
+      c = create(:comment, comment: "see [redir](#{Routes.comment_short_id_url target})")
       link = c.links.last
-      expect(link.url).to eq(target.short_id_url)
+      expect(link.url).to eq(Routes.comment_short_id_url(target))
       expect(link.to_comment_id).to eq(target.id)
     end
 
-    it "recognizes a long link to a site comment" do
+    it "recognizes a #c_abc123 link to a site comment" do
       target = create(:comment)
-      c = create(:comment, comment: "see [long](#{target.url})")
+      c = create(:comment, comment: "see [anchor](#{Routes.comment_target_url(target, true)})")
       link = c.links.last
-      expect(link.url).to eq(target.url)
+      expect(link.url).to eq(Routes.comment_target_url(target, true))
       expect(link.to_comment_id).to eq(target.id)
     end
 
@@ -70,7 +70,7 @@ RSpec.describe Link, type: :model do
 
     it "only Links once from a comment to a comment" do
       target = create(:comment)
-      c = create(:comment, comment: "#{target.short_id_url} #{target.url}")
+      c = create(:comment, comment: "#{Routes.comment_short_id_url target} #{Routes.comment_short_id_url target}")
       expect(c.links.count).to eq(1)
       expect(c.links.last.to_comment_id).to eq(target.id)
     end

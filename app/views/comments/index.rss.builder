@@ -11,11 +11,11 @@ xml.rss version: "2.0", "xmlns:atom": "http://www.w3.org/2005/Atom" do
     @comments.each do |comment|
       xml.item do
         xml.title comment.story.title
-        xml.link comment.url
-        xml.guid comment.short_id_url
+        xml.link Routes.comment_short_id_url comment
+        xml.guid Routes.comment_short_id_url comment
         xml.author "#{comment.user.username}@#{Rails.application.domain} (#{comment.user.username})"
         xml.pubDate comment.last_edited_at.rfc822
-        xml.comments comment.url
+        xml.comments Routes.comment_short_id_url comment
         xml.description comment.markeddown_comment
       end
     end

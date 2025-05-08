@@ -153,7 +153,6 @@ class Comment < ApplicationRecord
       {parent_comment: parent_comment&.short_id},
       {comment: (is_gone? ? "<em>#{gone_text}</em>" : :markeddown_comment)},
       {comment_plain: (is_gone? ? gone_text : :comment)},
-      :url,
       :depth,
       {commenting_user: user.username}
     ]
@@ -171,6 +170,7 @@ class Comment < ApplicationRecord
       end
     end
     json[:short_id_url] = Routes.comment_short_id_url self
+    json[:url] = Routes.comment_target_url self, true
 
     json
   end

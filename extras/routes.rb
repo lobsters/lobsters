@@ -47,7 +47,7 @@ end
 # x comment.short_id_url, short_id_path
 # x comment.path
 # x comment.url
-#   message.url (no path)
+# x message.url (no path)
 #   url_for
 #   link_to
 #   rename Routes.story_title_url/_path to just title_url? seems redundant

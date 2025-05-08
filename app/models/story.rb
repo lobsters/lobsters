@@ -426,7 +426,7 @@ class Story < ApplicationRecord
     end
 
     json[:short_id_url] = Routes.story_short_id_url self
-    json[:comments_url] = Routes.story_title_url self
+    json[:comments_url] = Routes.title_url self
 
     json
   end

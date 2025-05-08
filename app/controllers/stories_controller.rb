@@ -35,7 +35,7 @@ class StoriesController < ApplicationController
       Story.transaction do
         if @story.save && (!@story.is_resubmit? || @comment.save)
           ReadRibbon.where(user: @user, story: @story).first_or_create!
-          redirect_to Routes.story_title_path @story
+          redirect_to Routes.title_path @story
         else
           raise ActiveRecord::Rollback
         end
@@ -61,7 +61,7 @@ class StoriesController < ApplicationController
       Mastodon.delete_post(@story)
     end
 
-    redirect_to Routes.story_title_path @story
+    redirect_to Routes.title_path @story
   end
 
   def edit
@@ -101,7 +101,7 @@ class StoriesController < ApplicationController
         # user won't be able to submit this story as new, so just redirect
         # them to the previous story
         flash[:success] = "This URL has already been submitted recently."
-        return redirect_to Routes.story_title_path @story.most_recent_similar
+        return redirect_to Routes.title_path @story.most_recent_similar
       end
 
       if @story.is_resubmit?
@@ -140,7 +140,7 @@ class StoriesController < ApplicationController
       respond_to do |format|
         format.html {
           flash[:success] = "\"#{@story.title}\" has been merged into this story."
-          return redirect_to Routes.story_title_path @story.merged_into_story
+          return redirect_to Routes.title_path @story.merged_into_story
         }
         format.json {
           return redirect_to(story_path(@story.merged_into_story, format: :json))
@@ -150,7 +150,7 @@ class StoriesController < ApplicationController
 
     # if asking with a title and it's been edited, 302
     if params[:title] && params[:title] != @story.title_as_slug
-      return redirect_to(Routes.story_title_path(@story))
+      return redirect_to(Routes.title_path(@story))
     end
 
     if @story.is_gone?
@@ -215,7 +215,7 @@ class StoriesController < ApplicationController
       Keystore.increment_value_for("user:#{@story.user.id}:stories_deleted", -1)
     end
 
-    redirect_to Routes.story_title_path @story
+    redirect_to Routes.title_path @story
   end
 
   def update
@@ -230,7 +230,7 @@ class StoriesController < ApplicationController
     update_story_attributes
 
     if @story.save
-      redirect_to Routes.story_title_path @story
+      redirect_to Routes.title_path @story
     else
       render action: "edit"
     end
@@ -370,7 +370,7 @@ class StoriesController < ApplicationController
 
     InactiveUser.disown! story
 
-    redirect_to Routes.story_title_path story
+    redirect_to Routes.title_path story
   end
 
   private

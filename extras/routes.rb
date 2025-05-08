@@ -19,20 +19,20 @@ class Routes
       story_short_id_url(comment.story, title ? {title: comment.story.title_as_slug} : nil, anchor: "c_#{comment.short_id}")
     end
 
-    def story_title_path story
+    def title_path story
       story_short_id_path(story, title: story.title_as_slug)
     end
 
-    def story_title_url story
+    def title_url story
       story_short_id_url(story, title: story.title_as_slug)
     end
 
-    def story_url_or_comments_path story
-      story.url.presence || story_title_path(story)
+    def url_or_comments_path story
+      story.url.presence || title_path(story)
     end
 
-    def story_url_or_comments_url story
-      story.url.presence || story_title_url(story)
+    def url_or_comments_url story
+      story.url.presence || title_url(story)
     end
   end
 end
@@ -48,9 +48,9 @@ end
 # x comment.path
 # x comment.url
 # x message.url (no path)
-#   url_for
-#   link_to
-#   rename Routes.story_title_url/_path to just title_url? seems redundant
+# x url_for
+# x link_to
+# x rename Routes.story_title_url/_path to just title_url? seems redundant
 #   merged stories: anchor to :target _singledetail for highlight
 #   ModNote: update use of Rails.application...
 #   don't forget to run tests...

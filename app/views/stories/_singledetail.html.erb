@@ -32,11 +32,11 @@ classes = [
   <% merged_stories.filter {it.can_be_seen_by_user?(@user)}.each do |ms| %>
     <div class="details">
       <span role="heading" class="link" aria-level="1" class="link h-cite u-repost-of">
-        <a href="<%= Routes.story_url_or_comments_path(ms) %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>" class="u-url"><%= ms.title %></a>
+        <a href="<%= Routes.url_or_comments_path(ms) %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>" class="u-url"><%= ms.title %></a>
       </span>
 
       <% if ms.markeddown_description.present? %>
-        <a class="description_present" title="<%= truncate(ms.description, :length => 500) %>" href="<%= Routes.story_title_path ms %>">&#x2636;</a>
+        <a class="description_present" title="<%= truncate(ms.description, :length => 500) %>" href="<%= Routes.title_path ms %>">&#x2636;</a>
       <% end %>
 
       <span class="tags">
@@ -130,7 +130,7 @@ classes = [
 
           <span class="comments_label">
             |
-            <a role="heading" aria-level="2" href="<%= Routes.story_title_path ms %>">
+            <a role="heading" aria-level="2" href="<%= Routes.title_path ms %>">
               <%= ms.comments_count.zero? ? "no" : ms.comments_count %>
               <%= 'comment'.pluralize(ms.comments_count) %>
             </a>

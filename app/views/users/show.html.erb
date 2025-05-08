@@ -233,7 +233,7 @@
             </td>
           <% elsif v.story_id && !v.comment_id %>
             <td><a href="/~<%= v.story.user.try(:username) %>"><%= v.story.user.try(:username) %></a></td>
-            <td><a href="<%= Routes.story_title_path v.story %>"><%= v.story.title %></a></td>
+            <td><a href="<%= Routes.title_path v.story %>"><%= v.story.title %></a></td>
           <% end %>
           </p>
         </tr><% end %>

@@ -393,9 +393,8 @@ class Story < ApplicationRecord
   end
 
   def as_json(options = {})
-    h = [
+    keys = [
       :short_id,
-      :short_id_url,
       :created_at,
       :title,
       :url,
@@ -405,22 +404,20 @@ class Story < ApplicationRecord
       {comment_count: :comments_count},
       {description: :markeddown_description},
       {description_plain: :description},
-      :comments_url,
       {submitter_user: user.username},
       :user_is_author,
       {tags: tags.map(&:tag).sort}
     ]
-
     if options && options[:with_comments]
-      h.push(comments: options[:with_comments])
+      keys.push(comments: options[:with_comments])
     end
 
-    js = {}
-    h.each do |k|
+    json = {}
+    keys.each do |k|
       if k.is_a?(Symbol)
-        js[k] = send(k)
+        json[k] = send(k)
       elsif k.is_a?(Hash)
-        js[k.keys.first] = if k.values.first.is_a?(Symbol)
+        json[k.keys.first] = if k.values.first.is_a?(Symbol)
           send(k.values.first)
         else
           k.values.first
@@ -428,7 +425,10 @@ class Story < ApplicationRecord
       end
     end
 
-    js
+    json[:short_id_url] = Routes.story_short_id_url self
+    json[:comments_url] = Routes.title_url self
+
+    json
   end
 
   def assign_initial_attributes
@@ -525,12 +525,8 @@ class Story < ApplicationRecord
     end
   end
 
-  def comments_path
-    "#{short_id_path}/#{title_as_url}"
-  end
-
-  def comments_url
-    "#{short_id_url}/#{title_as_url}"
+  def comments_anchor
+    "comments_#{token}"
   end
 
   def description=(desc)
@@ -604,6 +600,10 @@ class Story < ApplicationRecord
 
   def has_suggestions?
     suggested_taggings.any? || suggested_titles.any?
+  end
+
+  def header_anchor
+    "header_#{token}"
   end
 
   # calling .count on a preloaded association still triggers a count query
@@ -747,14 +747,6 @@ class Story < ApplicationRecord
     Vote.vote_thusly_on_story_or_comment_for_user_because(1, id, nil, user_id, nil, false)
   end
 
-  def short_id_path
-    Rails.application.routes.url_helpers.root_path + "s/#{short_id}"
-  end
-
-  def short_id_url
-    Rails.application.root_url + "s/#{short_id}"
-  end
-
   def show_score_to_user?(u)
     u&.is_moderator? || !current_flagged?
   end
@@ -854,7 +846,7 @@ class Story < ApplicationRecord
     self[:title] = t.to_s.strip.gsub(/[\.,;:!]*$/, "")
   end
 
-  def title_as_url
+  def title_as_slug
     max_len = 35
     wl = 0
     words = []
@@ -1004,14 +996,6 @@ class Story < ApplicationRecord
     else
       user&.is_moderator?
     end
-  end
-
-  def url_or_comments_path
-    url.presence || comments_path
-  end
-
-  def url_or_comments_url
-    url.presence || comments_url
   end
 
   def vote_summary_for(user)

@@ -137,8 +137,4 @@ class Message < ApplicationRecord
   def to_param
     short_id
   end
-
-  def url
-    Rails.application.root_url + "messages/#{short_id}"
-  end
 end

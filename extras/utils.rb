@@ -2,6 +2,7 @@
 
 class Utils
   # URI.parse is not very lenient, so we can't use it
+  # requires a . in domain because we don't want people submitting links to internal hostnames
   URL_RE = /\A(?<protocol>https?):\/\/(?<domain>(?:[^\.\/]+\.)+[a-z\-]+)(?<port>:\d+)?(?:\/(?:[\w.~:\/?#\[\]@!$&'()*+,;=%-]*))?\z/i
 
   # utility that works on stringlikes (for possibly invalid user input + searches)

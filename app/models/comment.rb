@@ -142,9 +142,8 @@ class Comment < ApplicationRecord
   end
 
   def as_json(_options = {})
-    h = [
+    keys = [
       :short_id,
-      :short_id_url,
       :created_at,
       :last_edited_at,
       :is_deleted,
@@ -159,20 +158,21 @@ class Comment < ApplicationRecord
       {commenting_user: user.username}
     ]
 
-    js = {}
-    h.each do |k|
+    json = {}
+    keys.each do |k|
       if k.is_a?(Symbol)
-        js[k] = send(k)
+        json[k] = send(k)
       elsif k.is_a?(Hash)
-        js[k.keys.first] = if k.values.first.is_a?(Symbol)
+        json[k.keys.first] = if k.values.first.is_a?(Symbol)
           send(k.values.first)
         else
           k.values.first
         end
       end
     end
+    json[:short_id_url] = Routes.comment_short_id_url self
 
-    js
+    json
   end
 
   def assign_initial_attributes
@@ -516,10 +516,6 @@ class Comment < ApplicationRecord
       .order(id: :asc)
   end
 
-  def path
-    story.comments_path + "#c_#{short_id}"
-  end
-
   def plaintext_comment
     # TODO: linkify then strip tags and convert entities back
     comment
@@ -540,10 +536,6 @@ class Comment < ApplicationRecord
     else
       ""
     end
-  end
-
-  def short_id_url
-    Rails.application.root_url + "c/#{short_id}"
   end
 
   def show_score_to_user?(u)
@@ -581,10 +573,6 @@ class Comment < ApplicationRecord
 
   def unassign_votes
     story.update_cached_columns
-  end
-
-  def url
-    story.comments_url + "#c_#{short_id}"
   end
 
   def vote_summary_for_user

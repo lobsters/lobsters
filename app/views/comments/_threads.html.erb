@@ -106,7 +106,7 @@
           <% if comment.previewing %>
             <%= how_long_ago_label(comment.last_edited_at) %>
           <% else %>
-            <%= how_long_ago_link(comment.path, comment.last_edited_at) %>
+            <%= how_long_ago_link(comment_short_id_path(comment), comment.last_edited_at) %>
           <% end %>
           <%= raw "<span class='comment_unread'>(unread)</span>" if is_unread %>
         <% end %>
@@ -154,7 +154,7 @@
 
         <% if show_story %>
           | on:
-          <a href="<%= comment.story.comments_path %>"><%= comment.story.title %></a>
+          <a href="<%= Routes.title_path comment.story %>"><%= comment.story.title %></a>
         <% end %>
 
         <span class="reason">

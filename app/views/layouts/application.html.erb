@@ -20,9 +20,8 @@
     <% end %>
   <% end %>
   <link rel="shortcut icon" href="/favicon.ico">
-  <% if @short_url %>
-    <link rev="canonical" rel="self alternate shorter shorturl shortlink"
-      href="<%= @short_url %>">
+  <% if controller_name == "stories" && action_name == "show" %>
+    <%= tag :link, href: Routes.title_url(@story), rev: :canonical, rel: "self alternate shorter shorturl shortlink" %>
   <% end %>
   <title><%= @title.present? ? "#{@title} | " : "" %><%=
     Rails.application.name %></title>

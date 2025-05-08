@@ -67,7 +67,7 @@ class CommentsController < ApplicationController
       return render plain: "can't find comment", status: 404
     end
     if !comment.is_editable_by_user?(@user)
-      return redirect_to comment.path
+      return redirect_to Routes.comment_target_path(comment, true)
     end
 
     render partial: "comment",
@@ -89,7 +89,7 @@ class CommentsController < ApplicationController
 
   def redirect_from_short_id
     if (comment = find_comment)
-      redirect_to comment.path
+      redirect_to Routes.comment_target_path(comment, true)
     else
       render plain: "can't find comment", status: 400
     end
@@ -208,11 +208,11 @@ class CommentsController < ApplicationController
       comment.parent_comment&.touch(:last_reply_at)
 
       if !request.xhr?
-        return redirect_to comment.path
+        return redirect_to Routes.comment_target_path(comment, true)
       end
 
       if params[:redirect_on_submit].present?
-        head :ok, x_location: comment.path
+        head :ok, x_location: Routes.comment_target_path(comment, true)
       else
         render_created_comment(comment, params[:show_tree_lines])
       end
@@ -437,7 +437,7 @@ class CommentsController < ApplicationController
       render partial: "comments/postedreply", layout: false,
         content_type: "text/html", locals: {comment:, show_tree_lines:}
     else
-      redirect_to comment.path
+      redirect_to Routes.comment_target_path(comment, true)
     end
   end
 end

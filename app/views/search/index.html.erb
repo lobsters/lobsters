@@ -175,7 +175,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
   <div class="details">
     <span role="heading" aria-level="1" class="link h-cite u-repost-of">
       <% if story.can_be_seen_by_user?(@user) %>
-        <a class="u-url" href="<%= story.url_or_comments_path %>" rel="ugc <%= story.send_referrer? ? '' : 'noreferrer' %>"><%= story.title %></a>
+        <a class="u-url" href="<%= Routes.url_or_comments_path(story) %>" rel="ugc <%= story.send_referrer? ? '' : 'noreferrer' %>"><%= story.title %></a>
       <% end %>
       <% if story.is_gone? %>
         [Story removed by <%= story.is_moderated? ? "moderator" : "submitter" %>]
@@ -188,7 +188,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
     <% end %>
     <% if story.markeddown_description.present? %>
       <a class="description_present" title="<%= truncate(story.description,
-        :length => 500) %>" href="<%= story.comments_path %>">&#x2636;</a>
+        :length => 500) %>" href="<%= Routes.title_path story %>">&#x2636;</a>
     <% end %>
     <% if story.can_be_seen_by_user?(@user) %>
       <span class="tags">
@@ -281,7 +281,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
         <% if !story.is_gone? || @user.try(:is_moderator?) %>
           <span class="comments_label">
             <span> | </span>
-            <a role="heading" aria-level="2" href="<%= story.comments_path %>">
+            <a role="heading" aria-level="2" href="<%= Routes.title_path story %>">
             <% if story.comments_count == 0 %>
               no comments</a>
             <% else %>
@@ -293,7 +293,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
     </div>
   </div>
 </div>
-<a href="<%= story.comments_path %>" class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>" style="display: none;">
+<a href="<%= Routes.title_path story %>" class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>" style="display: none;">
   <span><%= story.comments_count %></span>
 </a>
 </li>

@@ -16,7 +16,7 @@ class StoryUrlsController < ApplicationController
 
     similar_stories = Story.find_similar_by_url(url)
     if similar_stories.any?
-      redirect_to similar_stories.first.comments_path
+      redirect_to Routes.title_path similar_stories.first
     elsif @user
       redirect_to new_story_path, url: url
     else

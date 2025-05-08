@@ -56,24 +56,16 @@ class ModNote < ApplicationRecord
   end
 
   def self.record_reparent!(reparent_user, mod, reason)
-    old_inviter_url = Rails.application.routes.url_helpers.user_url(
-      reparent_user.invited_by_user,
-      host: Rails.application.domain
-    )
     create_without_dupe!(
       moderator: mod,
       user: reparent_user,
-      note: "Reparented from [#{reparent_user.invited_by_user.username}](#{old_inviter_url}) to #{mod.username} with reason: #{reason}"
+      note: "Reparented from [#{reparent_user.invited_by_user.username}](#{Routes.user_url reparent_user.invited_by_user}) to #{mod.username} with reason: #{reason}"
     )
 
-    reparent_user_url = Rails.application.routes.url_helpers.user_url(
-      reparent_user,
-      host: Rails.application.domain
-    )
     create_without_dupe!(
       moderator: mod,
       user: reparent_user.invited_by_user,
-      note: "Admin reparented their invitee [#{reparent_user.username}](#{reparent_user_url}) to #{mod.username} with reason: #{reason}"
+      note: "Admin reparented their invitee [#{reparent_user.username}](#{Routes.user_url reparent_user}) to #{mod.username} with reason: #{reason}"
     )
   end
 
@@ -118,20 +110,12 @@ class ModNote < ApplicationRecord
     invitation.update!(used_at: Time.current, new_user: nil)
 
     sender = invitation.user
-    sender_url = Rails.application.routes.url_helpers.user_url(
-      sender,
-      host: Rails.application.domain
-    )
-    redeemer_url = Rails.application.routes.url_helpers.user_url(
-      redeemer,
-      host: Rails.application.domain
-    )
     create_without_dupe!(
       moderator: InactiveUser.inactive_user,
       user: redeemer,
       created_at: Time.current,
       note: "Attempted to redeem invitation code #{invitation.code} while logged in:\n" \
-        "- sent by: [#{sender.username}](#{sender_url})\n" \
+        "- sent by: [#{sender.username}](#{Routes.user_url sender})\n" \
         "- created_at: #{invitation.created_at}\n" \
         "- used_at: #{invitation.used_at || "unused"}\n" \
         "- email: #{invitation.email}\n" \
@@ -142,7 +126,7 @@ class ModNote < ApplicationRecord
       user: sender,
       created_at: Time.current,
       note: "Sent invitation #{invitation.code} another user tried to redeem while logged in:\n" \
-        "- attempted redeemer: [#{redeemer.username}](#{redeemer_url})\n" \
+        "- attempted redeemer: [#{redeemer.username}](#{Routes.user_url redeemer})\n" \
         "- created_at: #{invitation.created_at}\n" \
         "- used_at: #{invitation.used_at || "unused"}\n" \
         "- email: #{invitation.email}\n" \
@@ -151,20 +135,12 @@ class ModNote < ApplicationRecord
   end
 
   def self.tattle_on_max_depth_limit(user, parent_comment)
-    parent_author_url = Rails.application.routes.url_helpers.user_url(
-      parent_comment.user,
-      host: Rails.application.domain
-    )
-    comment_url = Rails.application.routes.url_helpers.comment_url(
-      parent_comment,
-      host: Rails.application.domain
-    )
     create_without_dupe!(
       moderator: InactiveUser.inactive_user,
       user: user,
       created_at: Time.current,
-      note: "Hit max comment depth replying to [#{parent_comment.short_id}](#{comment_url}) " \
-        "by [#{parent_comment.user.username}](#{parent_author_url})"
+      note: "Hit max comment depth replying to [#{parent_comment.short_id}](#{Routes.comment_target_url parent_comment}) " \
+        "by [#{parent_comment.user.username}](#{Routes.user_url parent_comment.user})"
     )
   end
 

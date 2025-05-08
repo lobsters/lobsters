@@ -11,14 +11,14 @@ xml.rss version: "2.0", "xmlns:atom": "http://www.w3.org/2005/Atom" do
     @stories.each do |story|
       xml.item do
         xml.title story.title
-        xml.link story.url_or_comments_url
-        xml.guid story.short_id_url
+        xml.link Routes.url_or_comments_url(story)
+        xml.guid Routes.story_short_id_url(story)
         xml.author "#{story.domain&.domain} #{story.user_is_author? ? "by" : "via"} #{story.user.username}"
         xml.pubDate story.created_at.rfc822
-        xml.comments story.comments_url
+        xml.comments Routes.title_url(story)
         description = story.markeddown_description.to_s
         if story.url.present?
-          description += "<p>#{link_to("Comments", story.comments_url)}</p>"
+          description += "<p>#{link_to("Comments", Routes.title_url(story))}</p>"
         end
         xml.description description
         story.taggings.each do |tagging|

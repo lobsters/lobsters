@@ -8,7 +8,7 @@ class SuggestionsController < ApplicationController
   def create
     if !@story.can_have_suggestions_from_user?(@user)
       flash[:error] = "You are not allowed to offer suggestions on that story."
-      return redirect_to @story.comments_path
+      return redirect_to Routes.title_path @story
     end
 
     story_user = @story.user
@@ -58,7 +58,7 @@ class SuggestionsController < ApplicationController
         ostory = @story.reload
         flash[:success] = "Your suggested changes have been noted."
       end
-      redirect_to ostory.comments_path
+      redirect_to Routes.title_path ostory
     else
       render action: "suggest"
     end
@@ -68,7 +68,7 @@ class SuggestionsController < ApplicationController
     @title = "Suggest Story Changes"
     if !@story.can_have_suggestions_from_user?(@user)
       flash[:error] = "You are not allowed to offer suggestions on that story."
-      return redirect_to @story.comments_path
+      return redirect_to Routes.title_path @story
     end
 
     if (suggested_tags = @story.suggested_taggings.where(user_id: @user.id)).any?

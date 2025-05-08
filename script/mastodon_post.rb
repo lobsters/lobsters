@@ -23,7 +23,7 @@ Story.to_mastodon.each_with_index do |s, i|
     ("X" * Mastodon::LINK_LENGTH) + tags +
     (s.url.present? ? "\n" + ("X" * Mastodon::LINK_LENGTH) : "")
 
-  status = via + " " + s.short_id_url + tags +
+  status = via + " " + Routes.story_short_id_url(s) + tags +
     (s.url.present? ? "\n" + s.url : "")
 
   left_len = Mastodon::MAX_STATUS_LENGTH - link_status.length

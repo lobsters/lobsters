@@ -120,18 +120,18 @@ describe Story do
     expect(s.domain).to be_nil
   end
 
-  it "converts a title to a url properly" do
+  it "converts a title to a url slug properly" do
     s = create(:story, title: "Hello there, this is a title")
-    expect(s.title_as_url).to eq("hello_there_this_is_title")
+    expect(s.title_as_slug).to eq("hello_there_this_is_title")
 
     s = create(:story, title: "Hello _ underscore")
-    expect(s.title_as_url).to eq("hello_underscore")
+    expect(s.title_as_slug).to eq("hello_underscore")
 
     s = create(:story, title: "Hello, underscore")
-    expect(s.title_as_url).to eq("hello_underscore")
+    expect(s.title_as_slug).to eq("hello_underscore")
 
     s = build(:story, title: "The One-second War (What Time Will You Die?) ")
-    expect(s.title_as_url).to eq("one_second_war_what_time_will_you_die")
+    expect(s.title_as_slug).to eq("one_second_war_what_time_will_you_die")
   end
 
   it "is not editable by another non-admin user" do

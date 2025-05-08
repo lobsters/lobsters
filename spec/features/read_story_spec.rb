@@ -39,24 +39,24 @@ RSpec.feature "Reading Stories", type: :feature do
     let!(:merged) { create(:story, merged_into_story: story) }
 
     it "redirects links" do
-      visit merged.comments_path
-      expect(page).to have_current_path(story.comments_path)
+      visit Routes.title_path merged
+      expect(page).to have_current_path(Routes.title_path(story))
     end
 
     it "shows merged story at the top" do
-      visit story.comments_path
+      visit Routes.title_path story
       expect(page).to have_content(merged.title)
     end
 
     it "shows comments from merged_into story" do
-      visit story.comments_path
+      visit Routes.title_path story
       expect(page).to have_content(comment.comment)
     end
 
     it "shows comments from merged story" do
       merged_comment = create(:comment, story: merged)
       merged_reply = create(:comment, story: merged, parent_comment: merged_comment)
-      visit story.comments_path
+      visit Routes.title_path story
 
       expect(page).to have_content(merged_comment.comment)
       expect(page).to have_content(merged_reply.comment)

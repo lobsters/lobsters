@@ -22,7 +22,7 @@ describe "Mod::StoriesController", type: :request do
       }
 
       story.reload
-      expect(response).to redirect_to(story.comments_path)
+      expect(response).to redirect_to(Routes.title_path(story))
       follow_redirect!
 
       expect(response.body).to include(renamed_title_text)
@@ -38,7 +38,7 @@ describe "Mod::StoriesController", type: :request do
       }
 
       story.reload
-      expect(response).to redirect_to(story.comments_path)
+      expect(response).to redirect_to(Routes.title_path(story))
       follow_redirect!
 
       expect(response.body).to include("Story removed by moderator")
@@ -57,7 +57,7 @@ describe "Mod::StoriesController", type: :request do
       }
 
       deleted_story.reload
-      expect(response).to redirect_to(deleted_story.comments_path)
+      expect(response).to redirect_to(Routes.title_path(deleted_story))
       expect(deleted_story.is_deleted).to be_falsey
     end
   end

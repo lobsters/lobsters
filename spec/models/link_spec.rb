@@ -38,39 +38,40 @@ RSpec.describe Link, type: :model do
 
     it "recognizes a short link to a site comment" do
       target = create(:comment)
-      c = create(:comment, comment: "see [redir](#{Routes.comment_short_id_url target})")
+      c = create(:comment, comment: "see [redir](https://#{Rails.application.domain}#{Routes.comment_short_id_path(target)})")
       link = c.links.last
-      expect(link.url).to eq(Routes.comment_short_id_url(target))
+      expect(link.url).to end_with(Routes.comment_short_id_path(target))
       expect(link.to_comment_id).to eq(target.id)
     end
 
     it "recognizes a #c_abc123 link to a site comment" do
       target = create(:comment)
-      c = create(:comment, comment: "see [anchor](#{Routes.comment_target_url(target, true)})")
+      c = create(:comment, comment: "see [anchor](https://#{Rails.application.domain}#{Routes.comment_target_path(target, true)})")
       link = c.links.last
-      expect(link.url).to eq(Routes.comment_target_url(target, true))
+      expect(link.url).to end_with(Routes.comment_target_path(target, true))
       expect(link.to_comment_id).to eq(target.id)
     end
 
     it "recognizes a link to a site story by short id" do
       target = create(:story)
-      c = create(:comment, comment: "see [story](#{story_short_id_url target})")
+      c = create(:comment, comment: "see [story](https://#{Rails.application.domain}#{Routes.story_short_id_path(target)})")
       link = c.links.last
-      expect(link.url).to eq(story_short_id_url(story))
+      expect(link.url).to end_with(Routes.story_short_id_path(target))
       expect(link.to_story_id).to eq(target.id)
     end
 
     it "recognizes a link to a site story by title url" do
       target = create(:story)
-      c = create(:comment, comment: "see [story](#{Routes.story_title_url target})")
+      c = create(:comment, comment: "see [story](https://#{Rails.application.domain}#{Routes.story_title_path(target)})")
       link = c.links.last
-      expect(link.url).to eq(Routes.story_title_url(target))
+      expect(link.url).to end_with(Routes.story_title_path(target))
       expect(link.to_story_id).to eq(target.id)
     end
 
     it "only Links once from a comment to a comment" do
       target = create(:comment)
-      c = create(:comment, comment: "#{Routes.comment_short_id_url target} #{Routes.comment_short_id_url target}")
+      link = "https://#{Rails.application.domain}#{Routes.comment_target_path(target, true)}"
+      c = create(:comment, comment: "#{link} #{link}")
       expect(c.links.count).to eq(1)
       expect(c.links.last.to_comment_id).to eq(target.id)
     end

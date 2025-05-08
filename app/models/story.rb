@@ -393,7 +393,7 @@ class Story < ApplicationRecord
   end
 
   def as_json(options = {})
-    h = [
+    keys = [
       :short_id,
       :created_at,
       :title,
@@ -408,19 +408,16 @@ class Story < ApplicationRecord
       :user_is_author,
       {tags: tags.map(&:tag).sort}
     ]
-
     if options && options[:with_comments]
-      h.push(comments: options[:with_comments])
+      keys.push(comments: options[:with_comments])
     end
-    h[:short_id_url] = Routes.story_short_id_url self
-    h[:comments_url] = Routes.story_title_url self
 
-    js = {}
-    h.each do |k|
+    json = {}
+    keys.each do |k|
       if k.is_a?(Symbol)
-        js[k] = send(k)
+        json[k] = send(k)
       elsif k.is_a?(Hash)
-        js[k.keys.first] = if k.values.first.is_a?(Symbol)
+        json[k.keys.first] = if k.values.first.is_a?(Symbol)
           send(k.values.first)
         else
           k.values.first
@@ -428,7 +425,10 @@ class Story < ApplicationRecord
       end
     end
 
-    js
+    json[:short_id_url] = Routes.story_short_id_url self
+    json[:comments_url] = Routes.story_title_url self
+
+    json
   end
 
   def assign_initial_attributes
@@ -838,7 +838,7 @@ class Story < ApplicationRecord
     self[:title] = t.to_s.strip.gsub(/[\.,;:!]*$/, "")
   end
 
-  def title_as_url
+  def title_as_slug
     max_len = 35
     wl = 0
     words = []

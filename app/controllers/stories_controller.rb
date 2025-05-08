@@ -149,7 +149,7 @@ class StoriesController < ApplicationController
     end
 
     # if asking with a title and it's been edited, 302
-    if params[:title] && params[:title] != @story.title_as_url
+    if params[:title] && params[:title] != @story.title_as_slug
       return redirect_to(Routes.story_title_path(@story))
     end
 

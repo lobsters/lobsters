@@ -62,7 +62,7 @@ describe "stories", type: :request do
         expect(similar_story.fetch("title")).to eq story.title
         expect(similar_story.fetch("short_id")).to eq story.short_id
         expect(similar_story.fetch("url")).to eq story.url
-        expect(similar_story.fetch("comments_url")).to eq "/s/#{story.short_id}/some-other-title"
+        expect(similar_story.fetch("comments_url")).to eq "http://localhost:3000/s/#{story.short_id}/#{story.title_as_slug}"
         expect(similar_story.fetch("comment_count")).to eq story.comments_count
       end
 

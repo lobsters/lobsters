@@ -61,7 +61,7 @@
           <% if comment.previewing %>
             <%= how_long_ago_label(comment.last_edited_at) %>
           <% else %>
-            <%= how_long_ago_link(comment_short_id_path comment, comment.last_edited_at) %>
+            <%= how_long_ago_link(comment_short_id_path(comment), comment.last_edited_at) %>
           <% end %>
           <%= raw "<span class='comment_unread'>(unread)</span>" if is_unread %>
         <% end %>

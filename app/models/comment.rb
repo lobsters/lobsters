@@ -142,7 +142,7 @@ class Comment < ApplicationRecord
   end
 
   def as_json(_options = {})
-    h = [
+    keys = [
       :short_id,
       :created_at,
       :last_edited_at,
@@ -157,22 +157,22 @@ class Comment < ApplicationRecord
       :depth,
       {commenting_user: user.username}
     ]
-    h[:short_id_url] = Routes.comment_short_id_url self
 
-    js = {}
-    h.each do |k|
+    json = {}
+    keys.each do |k|
       if k.is_a?(Symbol)
-        js[k] = send(k)
+        json[k] = send(k)
       elsif k.is_a?(Hash)
-        js[k.keys.first] = if k.values.first.is_a?(Symbol)
+        json[k.keys.first] = if k.values.first.is_a?(Symbol)
           send(k.values.first)
         else
           k.values.first
         end
       end
     end
+    json[:short_id_url] = Routes.comment_short_id_url self
 
-    js
+    json
   end
 
   def assign_initial_attributes

@@ -18,7 +18,7 @@ xml.rss version: "2.0", "xmlns:atom": "http://www.w3.org/2005/Atom" do
         xml.comments Routes.story_title_url(story)
         description = story.markeddown_description.to_s
         if story.url.present?
-          description += "<p>#{link_to("Comments", Routes.story_title_url)}</p>"
+          description += "<p>#{link_to("Comments", Routes.story_title_url(story))}</p>"
         end
         xml.description description
         story.taggings.each do |tagging|

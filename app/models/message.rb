@@ -107,7 +107,7 @@ class Message < ApplicationRecord
         title: "#{Rails.application.name} message from " \
           "#{author_username}: #{subject}",
         message: plaintext_body,
-        url: url,
+        url: Routes.message_url(self),
         url_title: (author ? "Reply to #{author_username}" :
           "View message")
       )

@@ -308,7 +308,7 @@ class Comment < ApplicationRecord
           title: "#{Rails.application.name} mention by " \
             "#{user.username} on #{story.title}",
           message: plaintext_comment,
-          url: url,
+          url: Routes.comment_target_path(self),
           url_title: "Reply to #{user.username}"
         )
       end

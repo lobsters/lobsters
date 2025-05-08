@@ -140,7 +140,7 @@ class StoriesController < ApplicationController
       respond_to do |format|
         format.html {
           flash[:success] = "\"#{@story.title}\" has been merged into this story."
-          return redirect_to Routes.title_path @story.merged_into_story
+          return redirect_to Routes.title_path @story.merged_into_story, anchor: @story.header_anchor
         }
         format.json {
           return redirect_to(story_path(@story.merged_into_story, format: :json))

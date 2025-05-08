@@ -30,7 +30,7 @@ classes = [
   </div>
 
   <% merged_stories.filter {it.can_be_seen_by_user?(@user)}.each do |ms| %>
-    <div class="details">
+    <div class="details" id="<%= ms.header_anchor %>">
       <span role="heading" class="link" aria-level="1" class="link h-cite u-repost-of">
         <a href="<%= Routes.url_or_comments_path(ms) %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>" class="u-url"><%= ms.title %></a>
       </span>
@@ -130,7 +130,7 @@ classes = [
 
           <span class="comments_label">
             |
-            <a role="heading" aria-level="2" href="<%= Routes.title_path ms %>">
+            <a role="heading" aria-level="2" href="<%= Routes.title_path(merged_stories.first, anchor: ms.comments_anchor) %>">
               <%= ms.comments_count.zero? ? "no" : ms.comments_count %>
               <%= 'comment'.pluralize(ms.comments_count) %>
             </a>

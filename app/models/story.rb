@@ -525,6 +525,10 @@ class Story < ApplicationRecord
     end
   end
 
+  def comments_anchor
+    "comments_#{token}"
+  end
+
   def description=(desc)
     self[:description] = desc.to_s.rstrip
     self.markeddown_description = generated_markeddown_description
@@ -596,6 +600,10 @@ class Story < ApplicationRecord
 
   def has_suggestions?
     suggested_taggings.any? || suggested_titles.any?
+  end
+
+  def header_anchor
+    "header_#{token}"
   end
 
   # calling .count on a preloaded association still triggers a count query

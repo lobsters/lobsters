@@ -20,73 +20,26 @@
     <%= comment.current_flagged? ? "flagged" : "" %>
     <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
   ">
-  <label for="comment_folder_<%= comment.short_id %>" class="comment_folder" tabindex="0"></label>
 
   <% if show_tree_lines %>
-    <label for="comment_folder_<%= comment.short_id %>"
-      class="comment_folder"></label>
+    <label for="comment_folder_<%= comment.short_id %>" class="comment_folder"></label>
   <% end %>
 
-<<<<<<< HEAD
+  <% can_flag = @user && @user.can_flag?(comment) %>
+  <% score_display = comment.score_for_user(@user) %>
   <% if !comment.is_gone? %>
-    <% can_flag = @user && @user.can_flag?(comment) %>
-    <% score_display = comment.score_for_user(@user) %>
     <div class="voters">
-      <% if @user %>
-        <a class="upvoter"></a>
-      <% else %>
-        <%= link_to "", login_path, :class => "upvoter" %>
-      <% end %>
-      <div class="score"><%= score_display %></div>
+      <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
     </div>
     <div class="comment_parent_tree_line
       <%= can_flag ? "can_flag" : "" %>
       <%= score_display != "&nbsp;" ? "score_shown" : "" %>
-      "></div>
+    "></div>
   <% end %>
-||||||| parent of ea2ae098 (fix #642 upvoters hard to tap on mobile)
-  <div class="comment_gutter">
-    <% if !comment.is_gone? %>
-      <% score_display = comment.score_for_user(@user) %>
-      <div class="voters">
-        <% if @user %>
-          <a class="upvoter"></a>
-        <% else %>
-          <%= link_to "", login_path, :class => "upvoter" %>
-        <% end %>
-        <div class="score"><%= score_display %></div>
-      </div>
-    <% end %>
-
-    <% if show_tree_lines %>
-      <div class="comment_parent_tree_line"></div>
-    <% end %>
-  </div>
-=======
-  <div class="comment_gutter">
-    <% if !comment.is_gone? %>
-      <div class="voters">
-        <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
-      </div>
-    <% end %>
-
-    <% if show_tree_lines %>
-      <div class="comment_parent_tree_line"></div>
-    <% end %>
-  </div>
->>>>>>> ea2ae098 (fix #642 upvoters hard to tap on mobile)
 
   <div class="details">
     <div class="byline">
       <a name="c_<%= comment.short_id %>"></a>
-
-      <% if show_tree_lines %>
-        <label for="comment_folder_<%= comment.short_id %>"
-          class="comment_folder comment_folder_inline"></label>
-      <% else %>
-        <label for="comment_folder_<%= comment.short_id %>"
-          class="comment_folder comment_folder_inline force_inline"></label>
-      <% end %>
 
       <% if was_merged %>
         <span class="merge"></span>

@@ -471,57 +471,10 @@ div.voters {
 }
 .upvoter {
 	color: var(--color-fg-contrast-4-5);
-<<<<<<< HEAD
-	font-size: 9pt;
-	margin-top: 1px;
-	margin-bottom: -3px;
-}
-
-li.story div.voters div.score {
-	font-size: 9.5pt;
-	margin-top: 2px;
-}
-
-div.voters .upvoter {
-	display: block;
-	height: 0;
-	margin-bottom: 0px;
-	margin-left: 14px;
-	padding: 0;
-||||||| parent of ea2ae098 (fix #642 upvoters hard to tap on mobile)
-	font-size: 9pt;
-	text-align: center;
-}
-
-li.story div.voters div.score {
-	font-size: 9.5pt;
-	margin-top: 2px;
-}
-
-div.voters .upvoter {
-	border-color: transparent transparent var(--color-fg-shape) transparent;
-	border-style: solid;
-	border-width: 0 6px 11px;
-	text-decoration: none;
-	width: 0px;
-	height: 0;
-	padding: 0;
-	display: block;
-}
-
-.story div.voters .upvoter {
-	margin-top: 25%;
-}
-
-div.voters .upvoter:hover,
-.upvoted div.voters .upvoter {
-	border-bottom-color: var(--color-fg-accent);
-=======
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-self: center;
->>>>>>> ea2ae098 (fix #642 upvoters hard to tap on mobile)
 	text-decoration: none;
 }
 

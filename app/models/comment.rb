@@ -534,7 +534,7 @@ class Comment < ApplicationRecord
     elsif u&.can_flag?(self)
       "~"
     else
-      ""
+      "&nbsp;".html_safe
     end
   end
 

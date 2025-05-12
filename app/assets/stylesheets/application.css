@@ -149,7 +149,7 @@ span.na {
 }
 
 div.shorten_first_p p:first-child {
-	margin-top: 0;
+	margin-top: 0.5em;
 }
 
 hr {
@@ -397,13 +397,13 @@ header .inbox_unread {
 	grid-column: main / end;
 }
 
-#inside:has(ol.stories), #inside:has(ol.comments) {
+#inside:has(ol.stories) {
 	display: grid;
 	grid-column: begin / end;
 	grid-template-columns: subgrid;
 }
 
-#inside:has(ol.stories) > *, #inside:has(ol.comments) > * {
+#inside:has(ol.stories) > * {
 	grid-column: main / end;
 }
 
@@ -443,8 +443,7 @@ div#gravatar img {
 
 /* stories */
 
-#inside ol.stories,
-#inside ol.comments {
+#inside ol.stories {
 	grid-column: begin / end;
 	display: grid;
 	grid-template-columns: subgrid;
@@ -459,41 +458,23 @@ ol.category_tags {
 }
 
 ol.comments {
-	margin-bottom: 0;
-}
-ol.comments > li {
-	display: grid;
-	grid-column: begin / end;
-	grid-template-columns: subgrid;
-	row-gap: 0.25rem;
-}
-ol.comments > li + li {
-	margin-top: 0.4rem;
+	margin-left: 20px;
+	margin-bottom: 0em;
+	padding-left: 6px;
 }
 ol.comments1 {
+	margin-left: -40px;
 	padding-left: 0;
 }
 ol.comments.comments1 {
 	border-left-color: transparent;
 }
+ol.comments1 > li.comments_subtree {
+	margin-left: 11px;
+}
 ol.comments1 > li.comments_subtree > ol.comments {
 	margin-left: 0;
 	padding-left: 0;
-}
-
-#inside .comment ~ ol.comments {
-	grid-column: main / end;
-	display: grid;
-	grid-template-columns: [begin] max-content [main] 1fr [end];
-	column-gap: 0.3rem;
-}
-
-div.comment_gutter {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	grid-column: begin;
-	grid-row-end: span 2;
 }
 
 div.voters {
@@ -539,18 +520,14 @@ ol.stories li.story div.story_liner .details {
 	grid-column: main / end;
 }
 .comment {
-	display: contents;
+	clear: both;
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
+	position: relative;
 }
 
 .comment a {
 	color: var(--color-fg-contrast-7-5);
-}
-
-.comment .details {
-	grid-column: main / end;
-	display: grid;
-	grid-template-rows: subgrid;
-	grid-row: 1 / 3;
 }
 
 ol.stories li:first-child div.story_liner {
@@ -648,44 +625,64 @@ li .comment_folder {
 	font-size: 9pt;
 	color: var(--color-fg-contrast-4-5);
 	letter-spacing: 0.1em;
-	cursor: pointer;
+	width: 1.5em;
+ 	cursor: pointer;
+	float: left;
 	text-align: center;
-	justify-self: center;
+	margin-left: -4px;
 }
 li .comment_folder:before {
 	content: "[−]";
 }
-.comment_folder_button:checked ~ .comment_gutter .comment_folder:before,
-*:has(> .comment_folder_button:checked) > .comment .comment_folder:before {
+li .comment_folder_button:checked ~ .comment .comment_folder:before {
 	content: "[+]";
 }
-#inside li .comment_folder_button:checked ~ .comment div.comment_text,
-#inside li .comment_folder_button:checked ~ .comment .comment_gutter > *:not(.comment_folder),
-#inside li .comment_folder_button:checked ~ ol.comments {
-	display: none;
+li .comment_folder_button:checked ~ div.comment div.comment_text {
+ 	display: none;
+}
+li .comment_folder_button:checked ~ div.comment div.voters {
+	visibility: hidden;
+	margin-bottom: -15px;
+}
+li .comment_folder_button:checked ~ ol.comments ol,
+li .comment_folder_button:checked ~ ol.comments div.comment,
+li .comment_folder_button:checked ~ ol.comments li {
+ 	display: none;
 }
 
 li.comments_subtree {
-	grid-column: begin / end;
-	display: grid;
-	grid-template-columns: subgrid;
+	position: relative;
 }
 
 li .comment_parent_tree_line {
-	flex: 0.5rem 1;
-	width: 0;
+	position: absolute;
+	left: 30px;
 	border-left: 1px dotted var(--color-fg-shape);
+	top: 30px;
+	bottom: 0;
 }
 
-/*
-   hide tree line for comments that either
-   - don't have children, or
-   - don't have a next sibling
-*/
-li:not(:has(> .comments > li)) > .comment .comment_parent_tree_line,
-li:not(:has(+ li)) > .comment .comment_parent_tree_line {
+li .comment_parent_tree_line.score_shown {
+	top: 44px;
+}
+li .comment_parent_tree_line.can_flag {
+	top: 56px;
+}
+/* hide for comments that don't have children */
+li:not(:has(> .comments > li)) > .comment > .comment_parent_tree_line {
 	border-left-color: transparent;
 }
+li .comment_siblings_tree_line {
+	position: absolute;
+	left: 4px;
+	border-left: 1px dotted var(--color-fg-shape);
+	top: 2em;
+	bottom: 0;
+}
+li:last-child > .comment_siblings_tree_line {
+	border-left-color: transparent;
+}
+
 /* try to force a highlighted comment to stay visible */
 div.comment:target div.comment_text,
 div.comment:target div.voters {
@@ -693,9 +690,10 @@ div.comment:target div.voters {
 }
 
 .thread_summary {
-	grid-column: main / end;
 	color: var(--color-fg-contrast-4-5);
 	font-size: 9.5pt;
+	/* .comment_folder (-4px margin-left + 1.5em width) + .voters (30px width) */
+	margin-left: calc(-4px + 1.5em + 30px);
 }
 li .byline {
 	color: var(--color-fg-contrast-4-5);
@@ -742,11 +740,11 @@ li .byline a.story_has_suggestions {
 }
 
 .last_read_newest {
-	grid-column: main / end;
 	border-bottom: 2px solid var(--color-fg-shape);
 	border-top: 0;
 	border-left: 0;
 	border-right: 0;
+	margin: 1em 0 1em 32px; /* matching div.detail */
 }
 
 li.story.hidden *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
@@ -829,7 +827,7 @@ a#story_text_expander {
 
 div.comment_text {
 	font-size: 10.5pt;
-	max-width: 90ch;
+	max-width: 700px;
 	word-wrap: break-word;
 	overflow: hidden;
 }
@@ -870,7 +868,7 @@ div.comment_text p {
 	margin: 0.5em 0;
 }
 div.comment_text p:first-child {
-	margin-top: 0;
+	margin-top: 0.3em;
 }
 
 div.comment_text code {
@@ -997,22 +995,17 @@ div#story_box textarea {
 }
 
 div.comment_form_container {
-	grid-column: main / end;
+	margin-left: -11px;
 }
 
 div.comment_form_container form {
-	grid-column: main / end;
+	margin-left: 40px;
+	max-width: 700px;
 }
 
 div.comment_form_container textarea {
 	box-sizing: border-box;
 	width: 100%;
-}
-
-div.reply_form_temporary {
-	grid-column: begin / end;
-	display: grid;
-	grid-template-columns: subgrid;
 }
 
 span.comment_unread {
@@ -1464,6 +1457,16 @@ input[type="submit"].link_post.pushover_button {
 		margin-right: 0.5rem;
 	}
 
+	/* hang voters into left margin to center under logo */
+	#inside > ol.comments {
+		/* .voters width + .voters padding-right */
+		margin-left: -32px;
+	}
+	#inside > ol.comments div.voters {
+		width: 30px;
+	}
+	#inside > ol.comments .upvoter {
+		margin-left: 9px;
 	}
 
 	.help {
@@ -1569,12 +1572,34 @@ input[type="submit"].link_post.pushover_button {
 		padding-left: 25px;
 	}
 
+	ol.comments { margin-left: 10px }
 	ol.stories,
 	div#inside > ol.comments {
+		margin: 0 0.5rem 0 -0.5rem;
 		padding-left: 0;
 	}
 	ol.comments1 > li.comments_subtree {
 		margin-left: 0;
+	}
+
+	li .comment_folder {
+		display: none;
+	}
+	li .comment_folder.comment_folder_inline {
+		display: inline-block;
+	}
+
+	li .comment_parent_tree_line,
+	li .comment_siblings_tree_line {
+		border-left-color: transparent;
+	}
+
+	div.comment_form_container {
+		margin-left: 0;
+	}
+
+	div.comment_form_container form {
+		margin-left: 35px;
 	}
 
 	/* explicitly reset color when not upvoted, since previously-upvoted arrow

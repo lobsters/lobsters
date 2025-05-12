@@ -597,9 +597,7 @@ li .comment_folder {
 	letter-spacing: 0.1em;
 	width: 1.5em;
  	cursor: pointer;
-	float: left;
 	text-align: center;
-	margin-left: -4px;
 }
 li .comment_folder:before {
 	content: "[−]";
@@ -610,7 +608,7 @@ li .comment_folder_button:checked ~ .comment .comment_folder:before {
 li .comment_folder_button:checked ~ div.comment div.comment_text {
  	display: none;
 }
-li .comment_folder_button:checked ~ div.comment div.voters {
+li .comment_folder_button:checked ~ div.comment div.voters .upvoter {
 	visibility: hidden;
 	margin-bottom: -15px;
 }
@@ -626,17 +624,14 @@ li.comments_subtree {
 
 li .comment_parent_tree_line {
 	position: absolute;
-	left: 30px;
 	border-left: 1px dotted var(--color-fg-shape);
-	top: 30px;
+	top: 0.5em;
+        left: 1em;
 	bottom: 0;
 }
 
 li .comment_parent_tree_line.score_shown {
-	top: 44px;
-}
-li .comment_parent_tree_line.can_flag {
-	top: 56px;
+	top: 3.6lh;
 }
 /* hide for comments that don't have children */
 li:not(:has(> .comments > li)) > .comment > .comment_parent_tree_line {
@@ -644,13 +639,13 @@ li:not(:has(> .comments > li)) > .comment > .comment_parent_tree_line {
 }
 li .comment_siblings_tree_line {
 	position: absolute;
-	left: 4px;
+	left: -1em;
 	border-left: 1px dotted var(--color-fg-shape);
-	top: 2em;
+	top: 0;
 	bottom: 0;
 }
 li:last-child > .comment_siblings_tree_line {
-	border-left-color: transparent;
+	border-left-color: var(--color-bg);
 }
 
 /* try to force a highlighted comment to stay visible */
@@ -1460,10 +1455,6 @@ input[type="submit"].link_post.pushover_button {
 	#inside > ol.comments div.voters {
 		width: 30px;
 	}
-	ol.stories .upvoter,
-	#inside > ol.comments .upvoter {
-		margin-left: 9px;
-	}
 
 	.help {
 		margin-top: 2em;
@@ -1569,22 +1560,14 @@ input[type="submit"].link_post.pushover_button {
 		margin-left: 0;
 	}
 
-	li .comment_folder {
-		display: none;
-	}
-	li .comment_folder.comment_folder_inline {
-		display: inline-block;
-	}
-
-	li .comment_parent_tree_line,
 	li .comment_siblings_tree_line {
-		border-left-color: transparent;
+		border-left: transparent;
 	}
 
 	div.voters {
 		margin-left: 0.25em;
 		margin-top: 0px;
-		width: 30px;
+		width: 20px;
 	}
 	div.voters a.upvoter {
 		margin-top: -5px;
@@ -1596,11 +1579,6 @@ input[type="submit"].link_post.pushover_button {
 
 	div.comment_form_container form {
 		margin-left: 35px;
-	}
-
-	div.voters a.upvoter {
-		margin-left: 6px;
-		border-width: 9px;
 	}
 
 	/* explicitly reset color when not upvoted, since previously-upvoted arrow
@@ -1692,7 +1670,7 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	li div.details {
-		margin: 0 0 0 36px;
+		margin: 0 0 0 26px;
 	}
 	div.story_content {
 		margin: 0 0 0 28px;

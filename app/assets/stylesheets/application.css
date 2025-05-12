@@ -235,8 +235,7 @@ form.disowner-form {
 	display: inline;
 }
 
-input[type="submit"].disowner-form,
-.disowner-form button[type="submit"] {
+input[type="submit"].disowner-form {
 	background: none;
 	border: none;
 	padding: 0;
@@ -435,7 +434,6 @@ div#gravatar {
 	float: right;
 	height: 100px;
 	width: 100px;
-	margin-bottom: 1rem;
 }
 div#gravatar img {
 	border-radius: 50px;
@@ -483,8 +481,7 @@ ol.comments1 > li.comments_subtree > ol.comments {
 	padding-left: 0;
 }
 
-
-#inside .comment ~ div > ol.comments {
+#inside .comment ~ ol.comments {
 	grid-column: main / end;
 	display: grid;
 	grid-template-columns: [begin] max-content [main] 1fr [end];
@@ -664,7 +661,7 @@ li .comment_folder:before {
 }
 #inside li .comment_folder_button:checked ~ .comment div.comment_text,
 #inside li .comment_folder_button:checked ~ .comment .comment_gutter > *:not(.comment_folder),
-#inside li .comment_folder_button:checked ~ div ol.comments {
+#inside li .comment_folder_button:checked ~ ol.comments {
 	display: none;
 }
 
@@ -685,7 +682,7 @@ li .comment_parent_tree_line {
    - don't have children, or
    - don't have a next sibling
 */
-li:not(:has(> div > .comments > li)) > .comment .comment_parent_tree_line,
+li:not(:has(> .comments > li)) > .comment .comment_parent_tree_line,
 li:not(:has(+ li)) > .comment .comment_parent_tree_line {
 	border-left-color: transparent;
 }
@@ -959,6 +956,11 @@ div.markdown_help_label {
 	padding-left: 17px;
 }
 
+div#story_preview {
+	margin-top: 2em;
+	margin-left: 3.5em;
+}
+
 div#story_box input#story_url {
 	width: 512px;
 }
@@ -1179,7 +1181,7 @@ table.moderations tr > td:nth-child(1) {
 	margin-bottom: 4px;
 }
 
-label.required {
+.box label.required {
 	font-weight: bold;
 }
 .box img {
@@ -1233,74 +1235,6 @@ label.required {
 
 .box span.d a.tag {
 	vertical-align: middle;
-}
-
-.labelled_grid {
-	display: grid;
-	grid-template-columns: minmax(10rem, min-content) 1fr;
-	word-break: break-word;
-}
-
-.labelled_grid *:has(.labelled_subgrid), .labelled_subgrid {
-	display: grid;
-	grid-template-columns: subgrid;
-	grid-column: 1 / -1;
-}
-
-.labelled_grid, .labelled_subgrid {
-	column-gap: 1rem;
-	row-gap: 12px;
-}
-
-.labelled_grid .breakout {
-	grid-column: 1 / -1;
-}
-
-.labelled_grid textarea {
-	width: 100%;
-	box-sizing: border-box;
-}
-
-.labelled_grid input[type="checkbox"] {
-	margin: 0;
-	vertical-align: middle;
-}
-
-.labelled_grid input[type="radio"] {
-	margin: 0;
-	vertical-align: middle;
-}
-
-.labelled_grid select {
-	margin: 0;
-}
-
-section + section {
-	margin-top: 2rem;
-}
-
-section section + section {
-	margin-top: 1.5rem;
-}
-
-input[type="submit"]:not(.link_post) {
-	margin-top: 1rem;
-}
-
-span.hint {
-	margin-left: 0.25rem;
-}
-
-div.hint {
-	margin-top: 0.25rem;
-}
-
-.user-stats p {
-	margin-top: 1em;
-}
-
-.user-stats br {
-	line-height: 2em;
 }
 
 .hint {
@@ -1530,8 +1464,6 @@ input[type="submit"].link_post.pushover_button {
 		margin-right: 0.5rem;
 	}
 
-	.labelled_grid > label:after, .labelled_subgrid > label:after {
-		content: ':';
 	}
 
 	.help {
@@ -1556,7 +1488,7 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	body {
-		grid-template-columns: [begin] max-content [main] 1fr [right] max-content [end] 0.5rem [padding];
+		grid-template-columns: [begin] max-content [main] 1fr [right] max-content [end] 0.5rem;
 	}
 
 	#inside {
@@ -1581,7 +1513,6 @@ input[type="submit"].link_post.pushover_button {
 		height: 44px;
 		min-width: 100%;
 		padding-top: 0.75rem;
-		grid-column: begin / padding;
 	}
 	header#nav nav.links {
 		flex-wrap: nowrap;
@@ -1614,7 +1545,7 @@ input[type="submit"].link_post.pushover_button {
 	}
 	header#subnav {
 		background-color: var(--color-box-bg-shaded);
-		grid-column: begin / padding;
+		grid-column: begin / -1;
 	}
 	header#subnav a:last-child {
 		margin-right: 0.5rem;
@@ -1745,7 +1676,8 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	div.boxline textarea,
-	div.boxline input[type="text"] {
+	div.boxline input[type="text"],
+	div.comment textarea {
 		max-width: 90%;
 	}
 
@@ -1786,15 +1718,6 @@ input[type="submit"].link_post.pushover_button {
 	}
 	.indent {
 		margin-left: 2em;
-	}
-
-	.labelled_grid {
-		grid-template-columns: 1fr;
-		row-gap: 2px;
-	}
-
-	.labelled_grid > * + label, .labelled_subgrid > * + label {
-		margin-top: 12px;
 	}
 }
 @media print {

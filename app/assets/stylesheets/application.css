@@ -397,16 +397,6 @@ header .inbox_unread {
 	grid-column: main / end;
 }
 
-#inside:has(ol.stories) {
-	display: grid;
-	grid-column: begin / end;
-	grid-template-columns: subgrid;
-}
-
-#inside:has(ol.stories) > * {
-	grid-column: main / end;
-}
-
 /* footer */
 
 footer {
@@ -443,12 +433,6 @@ div#gravatar img {
 
 /* stories */
 
-#inside ol.stories {
-	grid-column: begin / end;
-	display: grid;
-	grid-template-columns: subgrid;
-}
-
 ol.stories,
 ol.comments,
 ol.category_tags {
@@ -478,11 +462,10 @@ ol.comments1 > li.comments_subtree > ol.comments {
 }
 
 div.voters {
+	float: left;
 	margin-top: 0px;
-	justify-self: center;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+	text-align: center;
+	width: 40px;
 }
 
 .upvoter:before {
@@ -496,28 +479,45 @@ div.voters {
 }
 .upvoter {
 	color: var(--color-fg-contrast-4-5);
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-self: center;
+	font-size: 9pt;
+	margin-top: 1px;
+	margin-bottom: -3px;
+}
+
+li.story div.voters div.score {
+	font-size: 9.5pt;
+	margin-top: 2px;
+}
+
+div.voters .upvoter {
+	border-color: transparent transparent var(--color-fg-shape) transparent;
+	border-style: solid;
+	border-width: 6px;
 	text-decoration: none;
+	width: 0px;
+	height: 0;
+	margin-bottom: 0px;
+	margin-left: 14px;
+	padding: 0;
+	display: block;
+}
+
+div.voters .upvoter:hover,
+.upvoted div.voters .upvoter {
+	border-bottom-color: var(--color-fg-accent);
+}
+
+div.voters .upvoter {
+	border-bottom-width: 11px;
 }
 
 li.story {
-	grid-column: begin / end;
-	display: grid;
-	grid-template-columns: subgrid;
+	clear: both;
 }
 ol.stories li.story div.story_liner {
 	padding-top: 0.25em;
 	padding-bottom: 0.25em;
 	word-break: break-word;
-	grid-column: begin / end;
-	display: grid;
-	grid-template-columns: subgrid;
-}
-ol.stories li.story div.story_liner .details {
-	grid-column: main / end;
 }
 .comment {
 	clear: both;
@@ -532,6 +532,9 @@ ol.stories li.story div.story_liner .details {
 
 ol.stories li:first-child div.story_liner {
 	padding-top: 0.5em;
+}
+li div.details {
+	padding-top: 0.1em;
 }
 
 /*
@@ -766,15 +769,22 @@ li.story.deleted a {
 	color: var(--color-fg-contrast-5) !important;
 }
 
+li div.details {
+	margin-left: 32px;
+}
 div.story_content {
 	margin-bottom: 1em;
 }
 ol.stories.list div.story_content {
 	color: var(--color-fg-contrast-6);
 	max-height: 2.6em;
-	max-width: 90ch;
+	margin: 0.25em 40px 0.25em 0;
 	overflow: hidden;
 	text-overflow: clip;
+}
+
+div.morelink {
+	float: left;
 }
 
 div.morelink,
@@ -811,7 +821,7 @@ div.page_link_buttons span {
 
 div.story_text {
 	margin-bottom: 1.5em;
-	max-width: 90ch;
+	max-width: 700px;
 	word-wrap: break-word;
 }
 div.story_text p {
@@ -1458,13 +1468,16 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	/* hang voters into left margin to center under logo */
+	ol.stories,
 	#inside > ol.comments {
 		/* .voters width + .voters padding-right */
 		margin-left: -32px;
 	}
+	ol.stories div.voters,
 	#inside > ol.comments div.voters {
 		width: 30px;
 	}
+	ol.stories .upvoter,
 	#inside > ol.comments .upvoter {
 		margin-left: 9px;
 	}
@@ -1594,12 +1607,26 @@ input[type="submit"].link_post.pushover_button {
 		border-left-color: transparent;
 	}
 
+	div.voters {
+		margin-left: 0.25em;
+		margin-top: 0px;
+		width: 30px;
+	}
+	div.voters a.upvoter {
+		margin-top: -5px;
+	}
+
 	div.comment_form_container {
 		margin-left: 0;
 	}
 
 	div.comment_form_container form {
 		margin-left: 35px;
+	}
+
+	div.voters a.upvoter {
+		margin-left: 6px;
+		border-width: 9px;
 	}
 
 	/* explicitly reset color when not upvoted, since previously-upvoted arrow
@@ -1615,19 +1642,23 @@ input[type="submit"].link_post.pushover_button {
 		margin-top: 0;
 	}
 
+	ol.stories.list li.story {
+		display: table;
+	}
 	ol.stories.list li.story div.story_liner {
 		background-color: var(--color-mobile-story-liner-bg);
-	}
-	ol.stories.list li.story div.story_liner:has(~ .mobile_comments) {
-		grid-column: begin / right;
+		display: table-cell;
+		padding-top: 0.5em;
+		padding-bottom: 0.75em;
+		width: 100%;
 	}
 	ol.stories.list li.story .mobile_comments {
-		display: initial !important;
+		display: table-cell !important;
 		font-size: 11pt;
 		min-width: 40px;
 		text-align: center;
 		text-decoration: none;
-		align-self: center;
+		vertical-align: middle;
 	}
 	ol.stories.list li.story .mobile_comments span:before {
 		border-style: solid;
@@ -1686,6 +1717,16 @@ input[type="submit"].link_post.pushover_button {
 		display: none;
 	}
 
+	li div.details {
+		margin: 0 0 0 36px;
+	}
+	div.story_content {
+		margin: 0 0 0 28px;
+	}
+	div.morelink {
+		margin-left: 28px;
+		float: none;
+	}
 	li.story div.byline {
 		font-size: 10pt;
 	}

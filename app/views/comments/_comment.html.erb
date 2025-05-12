@@ -20,8 +20,7 @@
     <%= comment.current_flagged? ? "flagged" : "" %>
     <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
         ">
-  <label for="comment_folder_<%= comment.short_id %>"
-      class="comment_folder"></label>
+  <label for="comment_folder_<%= comment.short_id %>" class="comment_folder" tabindex="0"></label>
 
   <div class="comment_gutter">
     <% if !comment.is_gone? %>

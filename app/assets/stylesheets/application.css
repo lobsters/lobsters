@@ -482,25 +482,12 @@ li.story div.voters div.score {
 }
 
 div.voters .upvoter {
-	border-color: transparent transparent var(--color-fg-shape) transparent;
-	border-style: solid;
-	border-width: 6px;
-	text-decoration: none;
-	width: 0px;
+	display: block;
 	height: 0;
 	margin-bottom: 0px;
 	margin-left: 14px;
 	padding: 0;
-	display: block;
-}
-
-div.voters .upvoter:hover,
-.upvoted div.voters .upvoter {
-	border-bottom-color: var(--color-fg-accent);
-}
-
-div.voters .upvoter {
-	border-bottom-width: 11px;
+	text-decoration: none;
 }
 
 li.story {

@@ -55,9 +55,7 @@ body, textarea, input, button {
 body {
 	background-color: var(--color-bg);
 	margin: 0 auto;
-	display: grid;
-	grid-template-columns: [begin] max-content [main] 1fr [end] 0.5rem;
-	max-width: 900px;
+	padding-bottom: 2em;
 }
 
 a {
@@ -325,15 +323,19 @@ header {
 }
 
 #logo {
+	background-position: center;
+	flex: 0 0 16px; /* width; no padding l/r */
+	float: left;
+	display: block;
 	width: 16px;
 	height: 16px;
 	padding: 1px;
-	margin: 0 0.5rem;
-	justify-self: center;
+	margin-left: 4px;
+	margin-right: 11px;
+	position: relative;
 }
 #logo {
 	background: transparent url(logo-transparent.svg) no-repeat center;
-	grid-column: begin;
 }
 
 header#nav .navholder {
@@ -346,20 +348,18 @@ header#nav .navholder {
 }
 header#nav {
 	box-sizing: border-box;
-	grid-column: begin / end;
-	display: grid;
-	grid-template-columns: subgrid;
+	display: flex;
+	padding: 0.5rem 0.5rem 0 0.5rem;
 }
 header#nav nav.links {
 	display: flex;
-	gap: 0.5rem;
 	width: 100%
 }
-header#nav nav a, header#subnav a, header#subnav input[type="submit"] {
+header#nav a, header#subnav a, header#subnav input[type="submit"] {
 	color: var(--color-fg-contrast-6);
 	font-weight: bold;
+	margin: 0 0.25rem;
 	text-decoration: none;
-	margin: 0;
 }
 header#subnav {
 	box-sizing: border-box;
@@ -368,23 +368,16 @@ header#subnav {
 	padding: 0.5rem 0.25rem;
 	text-align: right;
 	width: 100%;
-	grid-column: main / end;
-	display: flex;
-	gap: 0.5rem;
-	justify-content: end;
-	align-items: start;
 }
 header#subnav a.current_page:last-child {
 	margin-right: 0.375rem;
 }
-/* Hacky repeated styling to be more specific than general submit selector */
-header#subnav input[type="submit"] {
-	line-height: 1em;
-	padding-bottom: 0.1rem;
-}
 header a.current_page {
 	border-bottom: 0.25em solid var(--color-fg-accent);
 	padding: 0 0.25rem 0.25rem;
+}
+header#nav #logo, header#nav #logo ~ a {
+	margin-left: 0;
 }
 header#nav a:last-child {
 	margin-right: 0;
@@ -394,7 +387,7 @@ header .inbox_unread {
 }
 
 #inside {
-	grid-column: main / end;
+	margin: 0.5rem 0;
 }
 
 /* footer */
@@ -405,7 +398,6 @@ footer {
 	padding: 2em 0.5em;
 	justify-content: space-between;
 	width: 100%;
-	grid-column: begin / end;
 }
 footer a {
 	color: var(--color-fg-contrast-4-5);
@@ -1449,8 +1441,14 @@ input[type="submit"].link_post.pushover_button {
 
 
 @media screen and (min-width: 481px) {
+	body {
+		max-width: 900px;
+		padding-bottom: 2em;
+	}
+
 	header#nav {
-		padding: 1rem 0;
+		margin: 1em 0 0.5rem 0;
+		padding: 5px 10px;
 	}
 	header#nav nav.links {
 		flex-flow: row wrap;
@@ -1465,6 +1463,16 @@ input[type="submit"].link_post.pushover_button {
 	}
 	header#subnav a:last-child {
 		margin-right: 0.5rem;
+	}
+
+	div#inside {
+		margin-left: calc(
+			10px +   /* header#nav padding-left */
+			18px +   /* #logo width + padding l/r */
+			0.25rem + /* header#nav a margin-right for logo */
+			0.25rem   /* header#nav a margin-left for first link in header#nav */
+		);
+		margin-right: 10px; /* header#nav padding-right */
 	}
 
 	/* hang voters into left margin to center under logo */
@@ -1501,18 +1509,6 @@ input[type="submit"].link_post.pushover_button {
 @media only screen and (max-width: 480px) {
 	html {
 		-webkit-text-size-adjust: none;
-	}
-
-	body {
-		grid-template-columns: [begin] max-content [main] 1fr [right] max-content [end] 0.5rem;
-	}
-
-	#inside {
-		grid-column: begin / end;
-	}
-
-	header#nav .corner {
-		justify-self: center;
 	}
 
 	header#nav .corner .inbox {
@@ -1561,10 +1557,9 @@ input[type="submit"].link_post.pushover_button {
 	}
 	header#subnav {
 		background-color: var(--color-box-bg-shaded);
-		grid-column: begin / -1;
 	}
 	header#subnav a:last-child {
-		margin-right: 0.5rem;
+		margin-right: 0.75rem;
 	}
 
 	header#nav .user {
@@ -1574,7 +1569,11 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	header#nav a {
+		padding-right: 0.25em;
 		padding-left: 0;
+	}
+	div#inside {
+		margin: 0.5rem;
 	}
 
 	.comment {
@@ -1780,7 +1779,7 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	footer nav {
-		text-align: right;
+          text-align: right;
 	}
 	.indent {
 		margin-left: 2em;

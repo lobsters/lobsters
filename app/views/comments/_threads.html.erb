@@ -8,16 +8,16 @@
     <% if previous_depth %>
       <% if comment.depth > previous_depth %>
         <%# open tree of replies to the previous comment %>
-        <div><ol class="comments">
+        <ol class="comments">
       <% else %>
         <%# previous comment is the deepest comment in its subtree,
             so it has no replies, only an empty list of replies %>
-        <div><ol class="comments"></ol></div>
+        <ol class="comments"></ol>
 
         <%# close tree of replies %>
         <% (previous_depth - comment.depth).times do %>
             </li>
-          </ol></div>
+          </ol>
         <% end %>
 
         <%# close previous subtree %>
@@ -40,7 +40,6 @@
       is_unread = ribbon&.is_unread?(comment)
     %>
 
-
 <%#heinous_inline_partial(comments/_comment.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
 <%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false) -%>
@@ -58,29 +57,31 @@
       @user.try(:is_moderator?) ||
       (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
+      <% can_flag = @user && @user.can_flag?(comment) %>
+      <% score_display = comment.score_for_user(@user) %>
+      <div class="comment_parent_tree_line
+        <%= can_flag ? "can_flag" : "" %>
+        <%= score_display != "&nbsp;" ? "score_shown" : "" %>
+      "></div>
 <div id="c_<%= comment.short_id %>"
   data-shortid="<%= comment.short_id if comment.persisted? %>"
   class="comment
     <%= comment.current_upvoted? ? "upvoted" : "" %>
     <%= comment.current_flagged? ? "flagged" : "" %>
     <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
-        ">
-  <label for="comment_folder_<%= comment.short_id %>" class="comment_folder" tabindex="0"></label>
+  ">
 
-  <div class="comment_gutter">
-    <% if !comment.is_gone? %>
-      <div class="voters">
-        <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
-      </div>
-    <% end %>
-
-    <% if show_tree_lines %>
-      <div class="comment_parent_tree_line"></div>
-    <% end %>
-  </div>
+  <% if !comment.is_gone? %>
+    <div class="voters">
+      <label for="comment_folder_<%= comment.short_id %>" class="comment_folder"></label>
+      <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
+    </div>
+  <% end %>
 
   <div class="details">
     <div class="byline">
+      <a name="c_<%= comment.short_id %>"></a>
+
       <% if was_merged %>
         <span class="merge"></span>
       <% end %>
@@ -135,7 +136,6 @@
           %>
         <% end %>
 
-        <% can_flag = @user && @user.can_flag?(comment) %>
         <% if can_flag && !comment.current_flagged? %>
           <span class="dropdown_parent">
             | <a class="flagger">flag</a>
@@ -189,18 +189,28 @@
 </div>
 
 <%#/heinous_inline_partial(comments/_comment.html.erb)%>
+
+    <%
+    #  If you edit this structure, update the incredibly brittle css selector
+    #    li.comments_subtree > .comment:nth-last-of-type(2) .comment_parent_tree_line
+    #  (or refactor the whole parent/sibling lines implementation)
+    %>
+    <% if comment.depth != top_comment_depth %>
+      <div class="comment_siblings_tree_line"></div>
+    <% end %>
+
 <% end %>
 
 <% if top_comment_depth %>
 
   <%# previous comment is the deepest comment in its subtree,
       so it has no replies, only an empty list of replies %>
-  <div><ol class="comments"></ol></div>
+  <ol class="comments"></ol>
 
   <%# close tree of replies %>
   <% (previous_depth - top_comment_depth).times do %>
       </li>
-    </ol></div>
+    </ol>
   <% end %>
 
   <%# close top subtree %>

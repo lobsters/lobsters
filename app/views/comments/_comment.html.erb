@@ -13,29 +13,31 @@
       @user.try(:is_moderator?) ||
       (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
+      <% can_flag = @user && @user.can_flag?(comment) %>
+      <% score_display = comment.score_for_user(@user) %>
+      <div class="comment_parent_tree_line
+        <%= can_flag ? "can_flag" : "" %>
+        <%= score_display != "&nbsp;" ? "score_shown" : "" %>
+      "></div>
 <div id="c_<%= comment.short_id %>"
   data-shortid="<%= comment.short_id if comment.persisted? %>"
   class="comment
     <%= comment.current_upvoted? ? "upvoted" : "" %>
     <%= comment.current_flagged? ? "flagged" : "" %>
     <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
-        ">
-  <label for="comment_folder_<%= comment.short_id %>" class="comment_folder" tabindex="0"></label>
+  ">
 
-  <div class="comment_gutter">
-    <% if !comment.is_gone? %>
-      <div class="voters">
-        <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
-      </div>
-    <% end %>
-
-    <% if show_tree_lines %>
-      <div class="comment_parent_tree_line"></div>
-    <% end %>
-  </div>
+  <% if !comment.is_gone? %>
+    <div class="voters">
+      <label for="comment_folder_<%= comment.short_id %>" class="comment_folder"></label>
+      <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
+    </div>
+  <% end %>
 
   <div class="details">
     <div class="byline">
+      <a name="c_<%= comment.short_id %>"></a>
+
       <% if was_merged %>
         <span class="merge"></span>
       <% end %>
@@ -90,7 +92,6 @@
           %>
         <% end %>
 
-        <% can_flag = @user && @user.can_flag?(comment) %>
         <% if can_flag && !comment.current_flagged? %>
           <span class="dropdown_parent">
             | <a class="flagger">flag</a>

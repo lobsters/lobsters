@@ -2,6 +2,11 @@
 
 require "etc"
 
+# workaround for 'unitinitalized constant SolidQueue' caused by not calling
+# preload_app! so we can have phased restarts
+# https://github.com/rails/solid_queue/issues/77#issuecomment-1866593286
+require File.expand_path("environment", File.dirname(__FILE__))
+
 # Puma can serve each request in a thread from an internal thread pool.
 # The `threads` method setting takes two numbers: a minimum and maximum.
 # Any libraries that use thread pools should be configured to match

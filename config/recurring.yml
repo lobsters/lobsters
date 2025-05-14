@@ -30,6 +30,6 @@ development:
     queue: background
     schedule: every day at 4:15am
   clear_finished_jobs:
-    class: ClearFinishedJobs
+    class: ClearFinishedJobsJob
     queue: background
     schedule: every day at 3:00am

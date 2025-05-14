@@ -10,7 +10,7 @@ production:
   stats_graphs:
     class: StatsGraphsJob
     queue: background
-    schedule: every day at 4:15am
+    schedule: every day at 12:00am
   clear_finished_jobs:
     class: ClearFinishedJobsJob
     queue: background
@@ -28,7 +28,7 @@ development:
   stats_graphs:
     class: StatsGraphsJob
     queue: background
-    schedule: every day at 4:15am
+    schedule: every day at 12:00am
   clear_finished_jobs:
     class: ClearFinishedJobsJob
     queue: background

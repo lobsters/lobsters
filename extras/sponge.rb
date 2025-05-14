@@ -181,7 +181,7 @@ class Sponge
       send_headers["Content-Type"] = "application/x-www-form-urlencoded"
     end
 
-    if method == :post
+    if method != :get
       if raw_post_data
         post_data = raw_post_data
         send_headers["Content-Type"] = "application/x-www-form-urlencoded"
@@ -213,10 +213,17 @@ class Sponge
     res = nil
     begin
       Timeout.timeout(timeout) do
-        res = if method == :post
-          host.post(path, post_data, send_headers)
-        else
+        res = case method
+        when :get
           host.get(path, send_headers)
+        when :delete
+          host.delete(path, send_headers)
+        when :patch
+          host.patch(path, send_headers)
+        when :put
+          host.put(path, send_headers)
+        when :post
+          host.post(path, post_data, send_headers)
         end
       end
     rescue Timeout::Error

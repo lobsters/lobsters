@@ -41,6 +41,10 @@ class Comment < ApplicationRecord
   scope :not_deleted, -> { where(is_deleted: false) }
   scope :not_moderated, -> { where(is_moderated: false) }
   scope :active, -> { not_deleted.not_moderated }
+  # Only use accessible_to_user in views that render comments in the flat style. The optimizations
+  # in comments/_threads fail if there's a gap in depth. This could be fixed, but the visual display
+  # would still be misleading, in A -> B -> C if B is deleted it looks like C is replying directly
+  # to A. We have to render the 'comment was deleted' placeholder.
   scope :accessible_to_user, ->(user) { (user && user.is_moderator?) ? all : active }
   scope :recent, -> { where(created_at: (6.months.ago..)) }
   scope :above_average, -> {
@@ -105,7 +109,7 @@ class Comment < ApplicationRecord
       errors.add(:base, ((m[1] == "T") ? "N" : "n") + "ope" + m[2].to_s)
 
     comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
-      errors.add(:base, "Wow!  A blue car!")
+      errors.add(:base, "Wow!  A blue car!") # https://www.youtube.com/watch?v=tjYePPvWYPU
 
     comment.to_s.strip.match(/\Abump/i) &&
       errors.add(:base, "Don't bump threads.")

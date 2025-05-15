@@ -386,7 +386,6 @@ class CommentsController < ApplicationController
     end
 
     @threads = Comment.recent_threads(@showing_user)
-      .accessible_to_user(@user)
       .merge(Story.not_deleted(@user))
       .for_presentation
       .joins(:story)

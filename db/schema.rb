@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_28_193204) do
-  create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+ActiveRecord::Schema[8.0].define(version: 2025_05_16_035743) do
+  create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
     t.string "message_checksum", null: false
@@ -427,7 +427,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_28_193204) do
     t.integer "karma", default: 0, null: false
     t.datetime "banned_at", precision: nil
     t.bigint "banned_by_user_id", unsigned: true
-    t.string "banned_reason", limit: 200
+    t.string "banned_reason", limit: 256
     t.datetime "deleted_at", precision: nil
     t.datetime "disabled_invite_at", precision: nil
     t.bigint "disabled_invite_by_user_id", unsigned: true

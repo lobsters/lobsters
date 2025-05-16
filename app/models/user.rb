@@ -120,7 +120,7 @@ class User < ApplicationRecord
   validates :mailing_list_token,
     length: {maximum: 75}
   validates :banned_reason,
-    length: {maximum: 200}
+    length: {maximum: 256}
   validates :disabled_invite_reason,
     length: {maximum: 200}
 

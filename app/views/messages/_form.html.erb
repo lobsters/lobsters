@@ -2,42 +2,31 @@
 <%= form_with model: new_message, url: new_message, method: :post do |f| %>
   <%= errors_for new_message %>
 
-  <% if replying %>
-      <%= f.hidden_field :recipient_username  %>
-  <% else %>
-    <div class="boxline">
-      <%= f.label :recipient_username, "To:", :class => "required" %>
-      <%= f.text_field :recipient_username, :size => 20 %>
-    </div>
-  <% end %>
+  <div class="labelled_grid">
+    <% if replying %>
+        <%= f.hidden_field :recipient_username  %>
+    <% else %>
+      <%= f.label :recipient_username, "To", :class => "required" %>
+      <%= f.text_field :recipient_username %>
+    <% end %>
 
-  <div class="boxline">
-    <%= f.label :subject, "Subject:", :class => "required" %>
-    <%= f.text_field :subject, :style => "width: 500px;",
-      :maxlength => 100 %>
-  </div>
+    <%= f.label :subject, "Subject", :class => "required" %>
+    <%= f.text_field :subject, :maxlength => 100 %>
 
-  <div class="boxline">
-    <%= f.label :body, "Message:", :class => "required" %>
-    <%= f.text_area :body, :style => "width: 500px;", :rows => 5 %>
-  </div>
+    <%= f.label :body, "Message", :class => "required" %>
+    <%= f.text_area :body, :rows => 5 %>
 
-  <% if @user.wearable_hats.load.any? %>
-    <div class="boxline">
-      <%= f.label :hat_id, 'Put on hat:' %>
+    <% if @user.wearable_hats.load.any? %>
+      <%= f.label :hat_id, 'Put on hat' %>
       <%= f.select :hat_id, options_for_select( [['','']] +
         @user.wearable_hats.map{|h| [h.hat, { 'data-modnote' => h.modlog_use }, h.short_id] }
       ) %>
       <% if @user.is_moderator? %>
-        &nbsp;&nbsp;
-        <%= f.check_box 'mod_note', class: 'normal' %>
         <%= f.label :mod_note, 'ModNote', class: 'normal' %>
+        <%= f.check_box 'mod_note', class: 'normal' %>
       <% end %>
-    </div>
-  <% end %>
-
-  <div class="boxline">
-    <p></p>
-    <%= f.submit replying ? "Reply" : "Send Message" %>
+    <% end %>
   </div>
+
+  <%= f.submit replying ? "Reply" : "Send Message" %>
 <% end %>

@@ -1203,6 +1203,12 @@ label.required {
 	vertical-align: middle;
 }
 
+.row {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
 .labelled_grid {
 	display: grid;
 	grid-template-columns: minmax(10rem, min-content) 1fr;
@@ -1211,7 +1217,8 @@ label.required {
 	row-gap: 12px;
 }
 
-.labelled_grid textarea {
+.labelled_grid textarea,
+.labelled_grid input[type="text"] {
 	width: 100%;
 	box-sizing: border-box;
 }
@@ -1219,6 +1226,7 @@ label.required {
 .labelled_grid input[type="checkbox"] {
 	margin: 0;
 	vertical-align: middle;
+	width: min-content;
 }
 
 .labelled_grid input[type="radio"] {

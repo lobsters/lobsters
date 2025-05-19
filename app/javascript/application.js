@@ -1,5 +1,7 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 
+// in console: app await import("application")
+
 "use strict";
 
 import "autosize"
@@ -9,11 +11,11 @@ import "TomSelect_remove_button"
 import "TomSelect_caret_position"
 import "TomSelect_input_autogrow"
 
-const csrfToken = () => {
+export const csrfToken = () => {
   return qS('meta[name="csrf-token"]').getAttribute('content');
 }
 
-function on(eventTypes, selector, callback) {
+export const on = (eventTypes, selector, callback) => {
   eventTypes.split(/ /).forEach( (eventType) => {
     document.addEventListener(eventType, event => {
       if (event.target.matches(selector)) {
@@ -23,11 +25,11 @@ function on(eventTypes, selector, callback) {
   });
 }
 
-const onPageLoad = (callback) => {
+export const onPageLoad = (callback) => {
   document.addEventListener('DOMContentLoaded', callback);
 };
 
-const parentSelectorOrNull = (target, selector) => {
+export const parentSelectorOrNull = (target, selector) => {
   let parent = target;
   while (!parent.matches(selector)) {
     parent = parent.parentElement;
@@ -38,7 +40,7 @@ const parentSelectorOrNull = (target, selector) => {
   return parent;
 };
 
-const parentSelector = (target, selector) => {
+export const parentSelector = (target, selector) => {
   let parent = parentSelectorOrNull(target, selector)
   if (parent === null) {
     throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
@@ -46,7 +48,7 @@ const parentSelector = (target, selector) => {
   return parent;
 };
 
-const qS = (context, selector) => {
+export const qS = (context, selector) => {
   if (selector === undefined) {
     selector = context;
     context = document;
@@ -54,7 +56,7 @@ const qS = (context, selector) => {
   return context.querySelector(selector);
 };
 
-const qSA = (context, selector) => {
+export const qSA = (context, selector) => {
   if (selector === undefined) {
     selector = context;
     context = document;
@@ -62,7 +64,7 @@ const qSA = (context, selector) => {
   return context.querySelectorAll(selector);
 };
 
-const replace = (oldElement, newHTMLString) => {
+export const replace = (oldElement, newHTMLString) => {
   const placeHolder = document.createElement('div');
   placeHolder.insertAdjacentHTML('afterBegin', newHTMLString);
   const newElements = placeHolder.childNodes.values();
@@ -70,7 +72,7 @@ const replace = (oldElement, newHTMLString) => {
   removeExtraInputs();
 }
 
-const slideDownJS = (element) => {
+export const slideDownJS = (element) => {
   if (element.classList.contains('slide-down'))
     return;
 
@@ -82,7 +84,7 @@ const slideDownJS = (element) => {
   setTimeout(() => { element.style.height = height; }, 0);
 };
 
-const fetchWithCSRF = (url, params) => {
+export const fetchWithCSRF = (url, params) => {
   params = params || {};
   params['headers'] = params['headers'] || new Headers;
   params['headers'].append('X-CSRF-Token', csrfToken());
@@ -96,7 +98,7 @@ const fetchWithCSRF = (url, params) => {
   });
 }
 
-const removeExtraInputs = () => {
+export const removeExtraInputs = () => {
   // This deletion will resolve a bug that creates an extra hidden input when rendering the comment elements
   const extraInputs = qSA('.comment_folder_button + .comment_folder_button');
   for (const i of extraInputs) {
@@ -104,7 +106,7 @@ const removeExtraInputs = () => {
   }
 }
 
-class _LobstersFunction {
+export class _LobstersFunction {
   constructor (username) {
     this.curUser = null;
 

@@ -1,49 +1,47 @@
 <% render partial: 'about/subnav' %>
 
-<div class="box wide">
-  <p>
-  A hat is a formal, verified, way of posting a comment while speaking for a
-  project, organization, or company.  Each user may have multiple hats, one of
-  which may be selected to be worn when posting a comment or sending a private
-  message. Doffed hats are not listed in this table, check a user's profile page.
-  </p>
+<p>
+A hat is a formal, verified, way of posting a comment while speaking for a
+project, organization, or company.  Each user may have multiple hats, one of
+which may be selected to be worn when posting a comment or sending a private
+message. Doffed hats are not listed in this table, check a user's profile page.
+</p>
 
-  <% if @user %>
-    <h2><a href="<%= new_hat_request_path %>">Request Hat</a></h2>
-  <% end %>
+<% if @user %>
+  <h2><a href="<%= new_hat_request_path %>">Request Hat</a></h2>
+<% end %>
 
-  <table class="data zebra" width="100%" cellspacing=0>
-  <tr>
-    <th style="width: 130px;">User</th>
-    <th>Hat</th>
-    <th>Link</th>
-  </tr>
-  <% @hat_groups.keys.sort_by{|a| a.downcase }.each do |hg| %>
-    <% @hat_groups[hg].sort_by{|hh| hh.user.username.downcase }.each do |hh| %>
-      <tr>
-        <td><%= styled_user_link hh.user %></td>
-        <td><%= hh.to_html_label %></td>
-        <td>
-          <% if hh.link.to_s.match(/^http/) %>
-            <a href="<%= hh.link %>" rel="ugc"><%= hh.link %></a>
-          <% elsif hh.link.blank? %>
-            <span class="na">None</span>
+<table class="data zebra" width="100%" cellspacing=0>
+<tr>
+  <th style="width: 130px;">User</th>
+  <th>Hat</th>
+  <th>Link</th>
+</tr>
+<% @hat_groups.keys.sort_by{|a| a.downcase }.each do |hg| %>
+  <% @hat_groups[hg].sort_by{|hh| hh.user.username.downcase }.each do |hh| %>
+    <tr>
+      <td><%= styled_user_link hh.user %></td>
+      <td><%= hh.to_html_label %></td>
+      <td>
+        <% if hh.link.to_s.match(/^http/) %>
+          <a href="<%= hh.link %>" rel="ugc"><%= hh.link %></a>
+        <% elsif hh.link.blank? %>
+          <span class="na">None</span>
+        <% else %>
+          <% if @user %>
+            <%= hh.link %>
           <% else %>
-            <% if @user %>
-              <%= hh.link %>
-            <% else %>
-              <%= hh.sanitized_link %>
-            <% end %>
+            <%= hh.sanitized_link %>
           <% end %>
-          <% if hh.doffed_at? %>
-            doffed <%= how_long_ago_label(hh.doffed_at) %>
-          <% end %>
-        </td>
-        <% if @user&.is_moderator? %>
-          <td><%= link_to "Edit", edit_hat_path(hh) %></td>
         <% end %>
-      </tr>
-    <% end %>
+        <% if hh.doffed_at? %>
+          doffed <%= how_long_ago_label(hh.doffed_at) %>
+        <% end %>
+      </td>
+      <% if @user&.is_moderator? %>
+        <td><%= link_to "Edit", edit_hat_path(hh) %></td>
+      <% end %>
+    </tr>
   <% end %>
-  </table>
-</div>
+<% end %>
+</table>

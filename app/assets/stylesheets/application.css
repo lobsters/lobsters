@@ -148,7 +148,7 @@ span.na {
 }
 
 div.shorten_first_p p:first-child {
-	margin-top: 0.5em;
+	margin-top: 0;
 }
 
 hr {

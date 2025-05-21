@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_16_035743) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_21_131204) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -194,13 +194,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_16_035743) do
     t.bigint "from_comment_id", unsigned: true
     t.bigint "to_story_id", unsigned: true
     t.bigint "to_comment_id", unsigned: true
-    t.string "token", null: false
     t.index ["from_comment_id"], name: "index_links_on_from_comment_id"
     t.index ["from_story_id"], name: "index_links_on_from_story_id"
     t.index ["normalized_url"], name: "index_links_on_normalized_url"
     t.index ["to_comment_id"], name: "index_links_on_to_comment_id"
     t.index ["to_story_id"], name: "index_links_on_to_story_id"
-    t.index ["token"], name: "index_links_on_token", unique: true
   end
 
   create_table "mastodon_apps", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -404,6 +402,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_16_035743) do
     t.boolean "permit_by_new_users", default: true, null: false
     t.bigint "category_id", null: false
     t.string "token", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_tags_on_category_id"
     t.index ["tag"], name: "tag", unique: true
     t.index ["token"], name: "index_tags_on_token", unique: true
@@ -463,6 +463,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_16_035743) do
     t.index ["user_id", "story_id"], name: "user_id_story_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "comments", column: "parent_comment_id", name: "comments_parent_comment_id_fk"
   add_foreign_key "comments", "hats", name: "comments_hat_id_fk"

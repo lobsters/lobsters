@@ -28,8 +28,6 @@ class Link < ApplicationRecord
       .where(normalized_url: Utils.normalize(url))
   }
 
-  include Token
-
   def url=(u)
     return if u.blank?
 

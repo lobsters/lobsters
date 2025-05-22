@@ -1,4 +1,5 @@
-<% if @user && @user.is_moderator? && @story.is_gone? %>
+<%# StoriesController#show renders show or _missing if story.can_be_seen_by_user %>
+<% if @story.is_gone? %>
   <%= render partial: 'stories/missing', locals: { story: @story, moderation: @moderation } %>
   <hr class="mod">
   <p>Full display for submitter and mods:</p>
@@ -41,19 +42,19 @@
 </div>
 
 <% if @user&.is_moderator? %>
-<br />
-<% if @story.hider_count > 0 %>
-  <p>
-    Users hiding this story:
-    <% @story.hidings.each do |hiding| %>
-      <%= styled_user_link(hiding.user) %>
-    <% end %>
-  </p>
-<% end %>
+  <br />
+  <% if @story.hider_count > 0 %>
+    <p>
+      Users hiding this story:
+      <% @story.hidings.each do |hiding| %>
+        <%= styled_user_link(hiding.user) %>
+      <% end %>
+    </p>
+  <% end %>
 
-<br />
-<label class="required">Latest modlog for this story, submitter, and discussion:</label>
-<%= render partial: 'moderations/table', locals: { moderations: Moderation.for_story(@story) } %>
+  <br />
+  <label class="required">Latest modlog for this story, submitter, and discussion:</label>
+  <%= render partial: 'moderations/table', locals: { moderations: Moderation.for_story(@story) } %>
 <% end %>
 
 <% if !@story.previewing %>

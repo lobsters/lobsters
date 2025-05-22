@@ -88,16 +88,43 @@ RSpec.feature "Reading Stories", type: :feature do
     end
   end
 
-  feature "reading deleted stories" do
-    let(:user) { create(:user) }
-    let!(:deleted_story) { create(:story, is_deleted: true) }
+  feature "reading mod-deleted stories" do
+    let(:submitter) { create(:user) }
+    let(:deleted_story) { create(:story, user: submitter, is_deleted: true, is_moderated: true, title: "Gone Girl") }
+    let!(:deletion) { Moderation.create! story: deleted_story, reason: "Ben Affleck has his revenge", action: "Deleted story" }
+    let(:other_user) { create(:user) }
+    let(:moderator) { create(:user, :moderator) }
 
-    before do
-      stub_login_as user
-      visit "/"
+    it "is visible to submitter" do
+      stub_login_as submitter
+      visit "/s/#{deleted_story.short_id}"
+      expect(page).to have_text("Gone Girl")
+      expect(page).to have_text("Ben Affleck")
+    end
+
+    it "is visible to a moderator" do
+      stub_login_as moderator
+      visit "/s/#{deleted_story.short_id}"
+      expect(page).to have_text("Gone Girl")
+      expect(page).to have_text("Ben Affleck")
+    end
+
+    it "shows moderation but not title/link to other users" do
+      stub_login_as other_user
+      visit "/s/#{deleted_story.short_id}"
+      expect(page).to_not have_text("Gone Girl")
+      expect(page).to have_text("Ben Affleck")
+    end
+
+    it "shows 'removed' to visitors" do
+      visit "/s/#{deleted_story.short_id}"
+      expect(page).to_not have_text("Gone Girl")
+      expect(page).to_not have_text("Ben Affleck")
     end
 
     it "does not display saver links" do
+      stub_login_as submitter
+      visit "/s/#{deleted_story.short_id}"
       expect(page).not_to have_css("a.saver", text: "save", exact_text: true)
       expect(page).not_to have_link("unsave")
     end

@@ -39,7 +39,7 @@ class TemporalTokens < ActiveRecord::Migration[8.0]
       Tag,
       User
     ].each do |model|
-      puts "#{model} #{model.all.count}"
+      Rails.logger.warn "#{model} #{model.all.count}"
       model.all.select(:id, :created_at).find_each do |record|
         timestamp = record.created_at.to_i * 1000 + rand(1000) # invent milliseconds
         record.update_column :token, TypeID.new(model.to_s.parameterize, timestamp:)

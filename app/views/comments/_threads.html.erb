@@ -121,7 +121,7 @@
         <% if comment.is_gone? && comment.is_undeletable_by_user?(@user) %>
           |
           <a class="comment_undeletor" href="#c_<%= comment.short_id %>">undelete</a>
-        <% elsif !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
+        <% elsif false && !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
           |
           <% if @user && @user.is_moderator? && @user.id != comment.user_id %>
             <a class="comment_moderator" href="#c_<%= comment.short_id %>">delete</a>
@@ -130,8 +130,7 @@
           <% end %>
         <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
           |
-          <%= button_to("disown", disown_comment_path(comment.short_id),
-          form_class: "disowner-form",
+          <%= link_post("disown", disown_comment_path(comment.short_id),
           params: { type: 'comment', show_story: show_story, show_tree_lines: show_tree_lines })
           %>
         <% end %>

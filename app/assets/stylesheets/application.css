@@ -208,10 +208,15 @@ textarea::placeholder {
 input[type="submit"].link_post {
 	background: none;
 	border: none;
-	padding: 0;
 	color: var(--color-fg-link);
-	text-decoration: underline;
 	cursor: pointer;
+	outline: none;
+	padding: 0;
+	text-decoration: underline;
+}
+.byline input[type="submit"].link_post {
+	color: var(--color-fg-contrast-4-5);
+	text-decoration: none;
 }
 
 input[type="submit"]:focus,
@@ -228,20 +233,6 @@ button:focus {
 :-moz-placeholder {
 	color: var(--color-fg-contrast-5);
 	font-style: italic;
-}
-
-form.disowner-form {
-	display: inline;
-}
-
-input[type="submit"].disowner-form {
-	background: none;
-	border: none;
-	padding: 0;
-	color: var(--color-fg-contrast-4-5);
-	text-decoration: none;
-	cursor: pointer;
-	outline: none;
 }
 
 button,

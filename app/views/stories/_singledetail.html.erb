@@ -94,7 +94,7 @@ classes = [
 
           <% if ms.disownable_by_user?(@user) %>
             |
-            <%= link_post "disown", story_disown_path(ms.short_id), { class_name: "disowner-form", confirm: "Are you sure you want to disown this story?"} %>
+            <%= link_post "disown", story_disown_path(ms.short_id), { confirm: "Are you sure you want to disown this story?"} %>
           <% end %>
 
           <% if !ms.is_saved_by_cur_user %>

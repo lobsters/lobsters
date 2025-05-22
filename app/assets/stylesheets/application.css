@@ -107,14 +107,15 @@ a.tag_announce, a.tag_ask, a.tag_show, a.tag_interview {
 	color: var(--color-fg-contrast-10);
 }
 
-span.hat {
+.hat {
+	width: min-content;
 	border-bottom: 6px solid var(--color-hat-brim-stroke);
 	border-radius: 0px 0px 4px 4px;
 	padding: 1px 8px;
 	vertical-align: super;
 	white-space: nowrap;
 }
-span.hat span.crown {
+.hat .crown {
 	background-color: var(--color-hat-crown-fill);
 	border: 1px solid var(--color-hat-crown-stroke);
 	border-bottom: 0;
@@ -125,19 +126,19 @@ span.hat span.crown {
 	vertical-align: text-top;
 }
 
-span.hat span.crown, span.hat a {
+.hat .crown, .hat a {
 	color: var(--color-fg-contrast-6);
 	text-decoration: none;
 }
-span.hat_openbsd_developer span.crown {
+.hat_openbsd_developer .crown {
 	font-family: comic sans ms, comic sans, comic neue, sans-serif;
 	font-size: 7pt;
 }
-span.hat_sysop {
+.hat_sysop {
 	border-color: var(--color-lobsters-hat-sysop-brim-stroke);
 	color: var(--color-fg-contrast-10);
 }
-span.hat_sysop span.crown {
+.hat_sysop .crown {
 	background-color: var(--color-lobsters-hat-sysop-crown-fill);
 }
 
@@ -147,7 +148,7 @@ span.na {
 }
 
 div.shorten_first_p p:first-child {
-	margin-top: 0.5em;
+	margin-top: 0;
 }
 
 hr {

@@ -1,53 +1,46 @@
-<div class="box wide">
-  <% if @hat_requests.length == 0 %>
-    No hat requests.
-  <% else %>
-    <% @hat_requests.each_with_index do |hr,x| %>
-      <% if x > 0 %>
-        <hr>
-      <% end %>
+<% if @hat_requests.length == 0 %>
+  No hat requests.
+<% else %>
+  <% @hat_requests.each_with_index do |hr,x| %>
+    <% if x > 0 %>
+      <hr>
+    <% end %>
 
-      <%= form_with model: hr, method: :post do |f| %>
-        <p>
-        <div class="boxline">
-          <%= f.label :user_id, "User:", :class => "required" %>
+    <%= form_with model: hr, method: :post do |f| %>
+      <div class="labelled_grid">
+        <%= f.label :user_id, "User", :class => "required" %>
+        <span>
           <%= styled_user_link hr.user %>
           <%= how_long_ago(hr.created_at) %>
-        </div>
+        </span>
 
-        <div class="boxline">
-          <%= f.label :hat, "Hat:", :class => "required" %>
-          <%= f.text_field "hat", :size => 25 %>
-        </div>
+        <%= f.label :hat, "Hat", :class => "required" %>
+        <%= f.text_field "hat" %>
 
-        <div class="boxline">
-          <%= f.label :link, "Link:", :class => "required" %>
-          <%= f.text_field "link", :size => 75 %>
-          <% if hr.link.to_s.match(/^http/) %>
-            <br>
-            <%= f.label :link, "Link:", :class => "required" %>
-            <a href="<%= hr.link %>" rel="ugc"><%= hr.link %></a>
-          <% end %>
-        </div>
+        <%= f.label :link, "Link", :class => "required" %>
+        <%= f.text_field "link" %>
+        <% if hr.link.to_s.match(/^http/) %>
+          <%= f.label :link, "Link", :class => "required" %>
+          <a href="<%= hr.link %>" rel="ugc"><%= hr.link %></a>
+        <% end %>
 
-        <div class="boxline">
-          <%= f.label :link, "Comment:", :class => "required" %>
-          <div class="d">
-            <%= raw Markdowner.to_html(hr.comment || '') %>
-          </div>
+        <%= f.label :link, "Comment", :class => "required" %>
+        <div class="shorten_first_p">
+          <%= raw Markdowner.to_html(hr.comment || '') %>
         </div>
-      <% end %>
+      </div>
+    <% end %>
 
-      <%= form_with model: hr, method: :post do |f| %>
-        <div class="boxline">
-          <%= f.label :link, "Reason:", :class => "required" %>
-          <%= f.text_area :reason, :rows => 4 %>
-        </div>
-        <p>
-            <%= f.submit "Approve Hat Request", formaction: approve_hat_request_path(hr) %>
-            <%= f.submit "Reject Hat Request", class: "deletion", formaction: reject_hat_request_path(hr)  %>
-        </p>
-      <% end %>
+    <%= form_with model: hr, method: :post do |f| %>
+      <div class="labelled_grid">
+        <%= f.label :link, "Reason", :class => "required" %>
+        <%= f.text_area :reason %>
+      </div>
+      <div class="row">
+        <%= f.submit "Approve Hat Request", formaction: approve_hat_request_path(hr) %>
+        <%= f.submit "Reject Hat Request", class: "deletion", formaction: reject_hat_request_path(hr)  %>
+      </div>
     <% end %>
   <% end %>
-</div>
+<% end %>
+

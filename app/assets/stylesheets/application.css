@@ -598,10 +598,11 @@ li .comment_folder:before {
 li .comment_folder_button:checked ~ .comment .comment_folder:before {
 	content: "[+]";
 }
-li .comment_folder_button:checked ~ div.comment div.comment_text {
- 	display: none;
+/* folding a comment hides the text and voters, but #c_abc123 anchors override */
+li .comment_folder_button:checked ~ div.comment:not(:target) div.comment_text {
+	display: none;
 }
-li .comment_folder_button:checked ~ div.comment div.voters .upvoter {
+li .comment_folder_button:checked ~ div.comment:not(:target) div.voters .upvoter {
 	visibility: hidden;
 	margin-bottom: -15px;
 }
@@ -639,12 +640,6 @@ li .comment_siblings_tree_line {
 }
 li:last-child > .comment_siblings_tree_line {
 	border-left-color: var(--color-bg);
-}
-
-/* try to force a highlighted comment to stay visible */
-div.comment:target div.comment_text,
-div.comment:target div.voters {
-	display: block !important;
 }
 
 .thread_summary {

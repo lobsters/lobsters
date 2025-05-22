@@ -71,12 +71,12 @@
     <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
   ">
 
-  <% if !comment.is_gone? %>
-    <div class="voters">
-      <label for="comment_folder_<%= comment.short_id %>" class="comment_folder"></label>
+  <div class="voters">
+    <label for="comment_folder_<%= comment.short_id %>" class="comment_folder"></label>
+    <% if !comment.is_gone? %>
       <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 
   <div class="details">
     <div class="byline">
@@ -121,7 +121,7 @@
         <% if comment.is_gone? && comment.is_undeletable_by_user?(@user) %>
           |
           <a class="comment_undeletor" href="#c_<%= comment.short_id %>">undelete</a>
-        <% elsif false && !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
+        <% elsif !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
           |
           <% if @user && @user.is_moderator? && @user.id != comment.user_id %>
             <a class="comment_moderator" href="#c_<%= comment.short_id %>">delete</a>

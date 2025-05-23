@@ -72,7 +72,7 @@ class ApplicationController < ActionController::Base
   def find_user_from_rss_token
     if !@user && params[:format] == "rss" && params[:token].to_s.present?
       @user = User.where(rss_token: params[:token].to_s).first
-      Telebugs.user id: @user.token, username: @user.username, email: @user.email, ip_address: request.remote_ip
+      Telebugs.user id: @user&.token, username: @user&.username, email: @user&.email, ip_address: request.remote_ip
     end
   end
 

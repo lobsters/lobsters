@@ -17,6 +17,7 @@ module Authenticatable
         (user = User.find_by(session_token: session[:u].to_s)) &&
         user.is_active?
       @user = user
+      Telebugs.user id: @user.token, username: @user.username, email: @user.email, ip_address: request.remote_ip
     end
 
     true

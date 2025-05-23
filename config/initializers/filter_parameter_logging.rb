@@ -1,12 +1,22 @@
 # typed: false
 
-# Be sure to restart your server when you modify this file.
+# include a comment explaining where each token is used, or 'preventative' if it's obviously
+# sensitive and likely to be used, or used in a popular tool like Devise
 
-# Configure parameters to be partially matched (e.g. passw matches password) and filtered from the log file.
-# Use this to limit dissemination of sensitive information.
 # See the ActiveSupport::ParameterFilter documentation for supported notations and behaviors.
 Rails.application.config.filter_parameters += [
-  :passw, :secret, :token, :_key, :crypt, :salt, :certificate, :otp, :ssn,
-  :password, :password_confirmation, :totp_code,
-  :authenticity_token, :lobster_trap, :session_token
+  :authenticity_token, # all forms
+  :certificate, # preventative
+  :crypt, # preventative
+  :_key, # preventative
+  :lobster_trap, # session cookie
+  :otp, # preventative
+  :password_confirmation, # LoginController (redundant with passw)
+  :password, # LoginController (redundant with passw)
+  :password_token, # LoginController
+  :passw, # preventative
+  :salt, # preventative
+  :secret, # preventative
+  :session_token, # auth cookie value
+  :totp_code # LoginController
 ]

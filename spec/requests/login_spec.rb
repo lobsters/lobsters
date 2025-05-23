@@ -136,7 +136,7 @@ describe "login", type: :request do
       user.initiate_password_reset_for_ip("127.0.0.1")
       expect {
         post "/login/set_new_password", params: {
-          token: user.password_reset_token,
+          password_reset_token: user.password_reset_token,
           password: "new",
           password_confirmation: "new"
         }

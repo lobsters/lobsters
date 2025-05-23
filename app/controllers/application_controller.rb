@@ -6,8 +6,8 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
   before_action :heinous_inline_partials, if: -> { Rails.env.development? }
-  before_action :mini_profiler
   before_action :prepare_exception_notifier
+  before_action :mini_profiler
   before_action :set_traffic_style
   around_action :n_plus_one_detection
 
@@ -72,6 +72,7 @@ class ApplicationController < ActionController::Base
   def find_user_from_rss_token
     if !@user && params[:format] == "rss" && params[:token].to_s.present?
       @user = User.where(rss_token: params[:token].to_s).first
+      Telebugs.user id: @user.token, username: @user.username, email: @user.email, ip_address: request.remote_ip
     end
   end
 
@@ -90,6 +91,12 @@ class ApplicationController < ActionController::Base
     exception_data[:username] = @user.username unless @user.nil?
 
     request.env["exception_notifier.exception_data"] = exception_data
+
+    Telebugs.context requested_path: @requested_path
+    Telebugs.context original_fullpath: request.original_fullpath
+    Telebugs.context query_parameters: request.query_parameters # protected by filter_parameters
+    Telebugs.context request_parameters: request.request_parameters # protected by filter_parameters
+    Telebugs.user id: nil, username: nil, email: nil, ip_address: nil # authenticate_user overwrites
   end
 
   # https://web.archive.org/web/20180108083712/http://umaine.edu/lobsterinstitute/files/2011/12/LobsterColorsWeb.pdf

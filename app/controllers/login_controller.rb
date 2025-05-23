@@ -151,9 +151,9 @@ class LoginController < ApplicationController
   def set_new_password
     @title = "Set New Password"
 
-    if (m = params[:token].to_s.match(/^(\d+)-/)) &&
+    if (m = params[:password_reset_token].to_s.match(/^(\d+)-/)) &&
         (Time.current - Time.zone.at(m[1].to_i)) < 24.hours
-      @reset_user = User.where(password_reset_token: params[:token].to_s).first
+      @reset_user = User.where(password_reset_token: params[:password_reset_token].to_s).first
     end
 
     if @reset_user && !@reset_user.is_banned?

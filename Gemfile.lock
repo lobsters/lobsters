@@ -502,7 +502,6 @@ DEPENDENCIES
   scenic-mysql_adapter
   scenic_sqlite_adapter
   sentry-rails
-  sentry-ruby
   silencer
   simplecov
   sitemap_generator

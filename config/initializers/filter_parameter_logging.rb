@@ -18,5 +18,6 @@ Rails.application.config.filter_parameters += [
   :salt, # preventative
   :secret, # preventative
   :session_token, # auth cookie value
+  :token, # rss token - need to transition this to a typeid
   :totp_code # LoginController
 ]

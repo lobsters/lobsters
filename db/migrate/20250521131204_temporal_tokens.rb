@@ -12,8 +12,8 @@ class TemporalTokens < ActiveRecord::Migration[8.0]
       first_use = tag.stories.order(created_at: :asc).pick(:created_at)
       latest_edit = Moderation.where(tag: tag).order(created_at: :desc).pick(:created_at)
       tag.update_columns({
-        created_at: first_use,
-        updated_at: latest_edit || first_use
+        created_at: first_use || Time.current,
+        updated_at: latest_edit || first_use || Time.current
       })
     end
     change_column :tags, :created_at, :datetime, null: false

@@ -96,6 +96,7 @@ class ApplicationController < ActionController::Base
     Telebugs.context original_fullpath: request.original_fullpath
     Telebugs.context query_parameters: request.query_parameters # protected by filter_parameters
     Telebugs.context request_parameters: request.request_parameters # protected by filter_parameters
+    Telebugs.context git_head: LOBSTERS_GIT_HEAD
     Telebugs.user id: nil, username: nil, email: nil, ip_address: nil # authenticate_user overwrites
   end
 

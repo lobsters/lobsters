@@ -39,3 +39,5 @@ if Rails.application.credentials.telebugs.present?
     end
   end
 end
+
+LOBSTERS_GIT_HEAD = `git show --pretty=%H -q`.chomp

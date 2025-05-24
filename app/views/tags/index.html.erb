@@ -1,44 +1,42 @@
 <% is_admin = @user.try(:is_admin?) %>
-<div class="box wide">
-  <p>
-    You can <a href="/filters">filter out stories by tag</a>, even if you don't have an account.
-    Inactive tags can no longer be used on new stories.
-  </p>
+<p>
+  You can <a href="/filters">filter out stories by tag</a>, even if you don't have an account.
+  Inactive tags can no longer be used on new stories.
+</p>
 
-  <% @categories.each do |category| %>
-    <h2 id="<%= category.category %>">
-      <%= link_to category.category, category_path(category) %>
-      <% if is_admin %>
-        <span class="byline">| <%= link_to 'edit', edit_category_path(category.category) %></span>
-      <% end %>
-    </h2>
-
-    <% category.tags.each do |tag| %>
-      <ol class="category_tags">
-        <li id="<%= tag.tag %>">
-        <% filtered = @filtered_tags.include?(tag.id) %>
-        <%= link_to tag.tag, tag_path(tag), class: tag.css_class %>
-        <span class="<%= filtered || !tag.active ? 'inactive_tag' : '' %>"><%= tag.description %></span>
-        <span class="byline">
-        <% if !tag.active %>
-          | <em>inactive</em>
-        <% end %>
-        <% if filtered %>
-          | <%= link_to "filtered", filters_path(anchor: tag.tag) %>
-        <% end %>
-        <% if is_admin %>
-          | <%= link_to 'edit', edit_tag_path(tag.tag) %>
-        <% end %>
-        </span>
-        </li>
-      </ol>
+<% @categories.each do |category| %>
+  <h2 id="<%= category.category %>">
+    <%= link_to category.category, category_path(category) %>
+    <% if is_admin %>
+      <span class="byline">| <%= link_to 'edit', edit_category_path(category.category) %></span>
     <% end %>
-  <% end %>
+  </h2>
 
-  <% if is_admin %>
-    <p>
-      <%= link_to 'Create New Tag', new_tag_path %><br/>
-      <%= link_to 'Create New Category', new_category_path %>
-    </p>
+  <% category.tags.each do |tag| %>
+    <ol class="category_tags">
+      <li id="<%= tag.tag %>">
+      <% filtered = @filtered_tags.include?(tag.id) %>
+      <%= link_to tag.tag, tag_path(tag), class: tag.css_class %>
+      <span class="<%= filtered || !tag.active ? 'inactive_tag' : '' %>"><%= tag.description %></span>
+      <span class="byline">
+      <% if !tag.active %>
+        | <em>inactive</em>
+      <% end %>
+      <% if filtered %>
+        | <%= link_to "filtered", filters_path(anchor: tag.tag) %>
+      <% end %>
+      <% if is_admin %>
+        | <%= link_to 'edit', edit_tag_path(tag.tag) %>
+      <% end %>
+      </span>
+      </li>
+    </ol>
   <% end %>
-</div>
+<% end %>
+
+<% if is_admin %>
+  <p>
+    <%= link_to 'Create New Tag', new_tag_path %><br/>
+    <%= link_to 'Create New Category', new_category_path %>
+  </p>
+<% end %>

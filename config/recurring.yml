@@ -15,6 +15,10 @@ production:
     class: ClearFinishedJobsJob
     queue: background
     schedule: every day at 3:00am
+  fill_flagged_cache:
+    class: FillFlaggedCacheJob
+    queue: background
+    schedule: every 10 minutes
 
 development:
   expire_old_ribbons:
@@ -33,3 +37,7 @@ development:
     class: ClearFinishedJobsJob
     queue: background
     schedule: every day at 3:00am
+  fill_flagged_cache:
+    class: FillFlaggedCacheJob
+    queue: background
+    schedule: every 10 minutes

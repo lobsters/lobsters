@@ -4,5 +4,8 @@
 
 # match this in nginx config for bypassing the file cache
 Lobsters::Application.config.session_store :cookie_store,
+  expire_after: 1.month,
+  httponly: true,
   key: "lobster_trap",
-  expire_after: 1.month
+  same_site: :strict,
+  secure: true

@@ -4,4 +4,4 @@ local:
 
 production:
   service: Disk
-  root: /srv/lobste.rs/storage
+  root: /home/deploy/lobsters/shared/shared/storage

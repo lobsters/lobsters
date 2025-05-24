@@ -6,11 +6,15 @@ require "silencer/rails/logger"
 Rails.application.configure do
   config.lograge.formatter = Lograge::Formatters::Json.new
 
+  # https://www.joshmcarthur.com/til/2018/08/16/logging-to-multiple-destinations-using-activesupport-4.html
+  stdout_logger = ActiveSupport::Logger.new($stdout) # for Hatchbox
+  lograge_logger = ActiveSupport::Logger.new(Rails.env.production? ? "/tmp/production.log" : $stdout)
+  combined_logger = stdout_logger.extend(ActiveSupport::Logger.broadcast(lograge_logger))
+
   # Use a custom logger to silence the Rails default metadata like:
   # I, [2024-07-30T04:15:03.397498 #582493]  INFO -- : [35da4f44-e8a4-49ec-bc6e-ee2e9f8d43b4]
-  config.logger = ActiveSupport::Logger.new(Rails.env.production? ? "/srv/lobste.rs/log/production.log" : $stdout)
-  config.logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
-  config.lograge.logger = config.logger
+  combined_logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
+  config.lograge.logger = combined_logger
 
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
   config.lograge.custom_options = lambda do |event|

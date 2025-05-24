@@ -52,13 +52,13 @@ production:
     database: lobsters
   cache:
     <<: *sqlite3
-    database: /srv/lobste.rs/db/cache.sqlite3
+    database: /home/deploy/lobsters/shared/storage/cache.sqlite3
     migrations_paths: db/cache_migrate
   errors:
     <<: *sqlite3
-    database: /srv/lobste.rs/db/errors.sqlite3
+    database: /home/deploy/lobsters/shared/storage/errors.sqlite3
     migrations_paths: db/errors_migrate
   queue:
     <<: *sqlite3
-    database: /srv/lobste.rs/db/queue.sqlite3
+    database: /home/deploy/lobsters/shared/storage/queue.sqlite3
     migrations_paths: db/queue_migrate

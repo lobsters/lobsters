@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :prepare_exception_notifier
   before_action :mini_profiler
   before_action :set_traffic_style
-  around_action :n_plus_one_detection
+  around_action :n_plus_one_detection, unless: -> { Rails.env.production? }
 
   # 2023-10-07 one user in one of their browser envs is getting a CSRF failure, I'm reverting
   # because I'll be AFK a while.

@@ -58,11 +58,9 @@ Rails.application.configure do
   # Can be used together with config.force_ssl for Strict-Transport-Security and secure cookies.
   config.assume_ssl = true
 
-  # Include generic and useful information about system operation, but avoid logging too much
-  # information to avoid inadvertent exposure of personally identifiable information (PII).
   config.log_level = :info
   config.lograge.enabled = true
-  config.logger = Logger.new("/srv/lobste.rs/log/production.log")
+  # see config/initializers/lograge.rb
 
   # Info include generic and useful information about system operation, but avoids logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII). If you
@@ -74,7 +72,6 @@ Rails.application.configure do
 
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = {database: {writing: :queue}}
-  config.solid_queue.supervisor_pidfile = "/srv/lobste.rs/run/solid_queue.pid"
   config.solid_queue.clear_finished_jobs_after = 90.days
 
   config.action_mailer.perform_caching = false

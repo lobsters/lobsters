@@ -7,14 +7,14 @@ Rails.application.configure do
   config.lograge.formatter = Lograge::Formatters::Json.new
 
   # https://www.joshmcarthur.com/til/2018/08/16/logging-to-multiple-destinations-using-activesupport-4.html
-  stdout_logger = ActiveSupport::Logger.new($stdout) # for Hatchbox
-  lograge_logger = ActiveSupport::Logger.new(Rails.env.production? ? "/tmp/production.log" : $stdout)
-  combined_logger = stdout_logger.extend(ActiveSupport::Logger.broadcast(lograge_logger))
-
+  config.lograge = ActiveSupport::Logger.new(Rails.env.production? ? "/tmp/production.log" : $stdout)
   # Use a custom logger to silence the Rails default metadata like:
   # I, [2024-07-30T04:15:03.397498 #582493]  INFO -- : [35da4f44-e8a4-49ec-bc6e-ee2e9f8d43b4]
-  combined_logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
+  config.lograge.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
   config.lograge.logger = combined_logger
+
+  config.lograge.logger = ActiveSupport::Logger.new(Rails.env.production? ? "/home/deploy/lobsters/shared/log/production.log" : $stdout)
+  config.logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
 
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
   config.lograge.custom_options = lambda do |event|

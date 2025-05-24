@@ -66,6 +66,12 @@ Rails.application.configure do
   # information to avoid inadvertent exposure of personally identifiable information (PII). If you
   # want to log everything, set the level to "debug".
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
+  # https://hatchbox.relationkit.io/articles/61-accessing-your-server-logs-in-hatchbox
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    logger = ActiveSupport::Logger.new($stdout)
+    logger.formatter = config.log_formatter
+    config.logger = ActiveSupport::TaggedLogging.new(logger)
+  end
 
   # Use a different cache store in production.
   config.cache_store = :solid_cache_store

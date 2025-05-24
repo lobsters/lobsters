@@ -40,4 +40,4 @@ if Rails.application.credentials.telebugs.present?
   end
 end
 
-LOBSTERS_GIT_HEAD = `git show --pretty=%H -q`.chomp
+LOBSTERS_GIT_HEAD = ENV["REVISION"] || "unknown" # https://hatchbox.relationkit.io/articles/73-deploy-script-variables

@@ -4,17 +4,17 @@ require "active_support/parameter_filter"
 require "silencer/rails/logger"
 
 Rails.application.configure do
+  # https://hatchbox.relationkit.io/articles/61-accessing-your-server-logs-in-hatchbox
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    stdout_logger = ActiveSupport::Logger.new($stdout)
+    stdout_logger.formatter = config.log_formatter
+    config.logger = ActiveSupport::TaggedLogging.new(stdout_logger)
+  end
+
+  lograge_logger = ActiveSupport::Logger.new(Rails.env.production? ? "/tmp/production.log" : $stdout)
   config.lograge.formatter = Lograge::Formatters::Json.new
-
-  # https://www.joshmcarthur.com/til/2018/08/16/logging-to-multiple-destinations-using-activesupport-4.html
-  config.lograge = ActiveSupport::Logger.new(Rails.env.production? ? "/tmp/production.log" : $stdout)
-  # Use a custom logger to silence the Rails default metadata like:
-  # I, [2024-07-30T04:15:03.397498 #582493]  INFO -- : [35da4f44-e8a4-49ec-bc6e-ee2e9f8d43b4]
-  config.lograge.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
-  config.lograge.logger = combined_logger
-
-  config.lograge.logger = ActiveSupport::Logger.new(Rails.env.production? ? "/home/deploy/lobsters/shared/log/production.log" : $stdout)
-  config.logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
+  broadcast = ActiveSupport::BroadcastLogger.new(stdout_logger, lograge_logger)
+  config.logger = broadcast
 
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
   config.lograge.custom_options = lambda do |event|

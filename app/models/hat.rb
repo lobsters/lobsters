@@ -23,7 +23,7 @@ class Hat < ApplicationRecord
   def doff_by_user_with_reason(user, reason)
     m = Moderation.new
     m.user_id = user_id
-    m.moderator_user_id = user.id
+    m.moderator_user_id = user.is_moderator? ? user : nil
     m.action = "Doffed hat \"#{hat}\": #{reason}"
     m.save!
 
@@ -34,7 +34,7 @@ class Hat < ApplicationRecord
   def destroy_by_user_with_reason(user, reason)
     m = Moderation.new
     m.user_id = user_id
-    m.moderator_user_id = user.id
+    m.moderator_user_id = user.is_moderator? ? user : nil
     m.action = "Revoked hat \"#{hat}\": #{reason}"
     m.save!
 

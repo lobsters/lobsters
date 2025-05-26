@@ -4,7 +4,8 @@ class HatsController < ApplicationController
   before_action :require_logged_in_user, except: [:index]
   before_action :show_title_h1
   before_action :find_hat!, only: [:doff, :doff_by_user, :edit, :update_in_place, :update_by_recreating]
-  before_action :only_hat_user_or_moderator, only: [:edit, :update_in_place, :update_by_recreating, :doff, :doff_by_user]
+  before_action :only_hat_user_or_moderator, only: [:doff, :doff_by_user]
+  before_action :require_logged_in_moderator, only: [:edit, :update_in_place, :update_by_recreating]
 
   def index
     @title = "Hats"
@@ -42,7 +43,7 @@ class HatsController < ApplicationController
     if @hat.update(hat: new_hat)
       m = Moderation.new
       m.user_id = @hat.user_id
-      m.moderator_user_id = @hat.user_id
+      m.moderator_user_id = @user
       m.action = "Renamed hat \"#{old_hat}\" to \"#{new_hat}\""
       m.save!
 

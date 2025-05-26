@@ -1,0 +1,63 @@
+
+prep
+x turn down DNS ttl
+x connect repo
+x stand up web03 in hatchbox
+x add DATABASE_URL
+x copy SECRET_KEY_BASE
+x DO vpc peering
+x db01 firewall mariadb from anything except web03; ansible changed mariadb to listen to all
+x dnsimple: losbters.dev A -> web03
+x bump svg-graph
+x update prod log path
+x hatchbox custom pre-build script:
+    cp /home/deploy/lobsters/shared/credentials.enc.yml config/credentials.enc.yml
+    cp /home/deploy/lobsters/shared/master.key config/master.key
+    cp /home/deploy/lobsters/shared/database.yml config/database.yml
+x big blue deploy button
+x sidequest: mariadb recovery scare
+x initialize queue and cache dbs
+    queue and cache dbs had wrong path so hatchbox didn't initalize them
+    initializing failed because of an activerecord bug https://github.com/rails/rails/issues/50672
+    workaround worked https://github.com/rails/solid_queue/issues/365#issuecomment-2548639056
+x test puma from web03: curl http://127.0.0.1:9000/about
+x hatchbox add job worker process to 'worker' role: bundle exec rails solid_queue:start
+    systemctl status lobsters-solid_queue --user -M deploy@
+    sudo -u deploy journalctl --user --user-unit=lobsters-solid_queue
+x doublecheck that /stats is still good
+x hatchbox test maintenance page
+x locate Caddyfile: visible in activity -> 'Apps::Caddy' -> Server Logs
+x understand logrotate config: /etc/logrotate.d/hatchbox_logrotate.conf rotate daily, keep 7 (eek!)
+x turn off/firewall yoeng.hatchboxapp.com
+x configure caddy to serve avatars
+x telebugs works?
+x configure caddy to serve from full-page cache wo cookies https://app.hatchbox.io/clusters/7952/settings
+x caddy move to imoprt
+x hatchbox env var SITESLUG=lobsters
+x hatchbox app pre-script setting: hatchbox/pre-build
+x get caddy logging to shared/log
+  locate rails default logger
+  locate lograge logs: ~/lobsters/shared/log/production.log
+  locate solid_queue log
+  overwrite logrotate config to rotate weekly keep 13
+  puma worker count is 3?? doublecheck nateperkopec recent skeets
+  web03 peter's bare minimum shell config from lobsters-ansible
+  cron job https://app.hatchbox.io/apps/10006/cron_jobs/new
+  postfix send email
+  DO rename web03 -> lobste.rs I bet
+  merge hatchbox -> master, update hatchbox deploy branch
+
+changeover
+  web01 enable read-only
+  change over DNS for lobste.rs
+  web03 disable read-only
+  web03 write our redirect from lobsters.dev -> lobste.rs
+  dnsimple: lobsters.dev AAAA -> web03
+  merge down hatchbox branch
+  update hatchbox to deploy master branch
+  idea: logs -> DO durable obj -> duckdb?
+  turn up DNS ttl to 3600
+  write up notes to setup instructions
+
+note:
+  to update caddy files, deploy them, then go to app settings and click 'Update Caddy' to pick up the change

@@ -24,7 +24,8 @@ class Hat < ApplicationRecord
     m = Moderation.new
     m.user_id = user_id
     m.moderator_user_id = user.is_moderator? ? user : nil
-    m.action = "Doffed hat \"#{hat}\": #{reason}"
+    m.action = "Doffed hat \"#{hat}\""
+    m.reason = reason
     m.save!
 
     self.doffed_at = Time.current

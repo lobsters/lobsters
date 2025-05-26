@@ -1,11 +1,11 @@
 #!/bin/bash
 
 if [ -z "${SITESLUG:-}" ]; then
-    echo "SITESLUG environment variable is not set, must match the app name setting (like 'lobsters')"
+    echo "SITESLUG environment variable is not set, set it in hatchbox app env vars to match your app name setting (like 'lobsters')"
     exit 1
 fi
 if [ ! -d "/home/deploy/$SITESLUG" ]; then
-    echo "/home/deploy/$SITESLUG does not exist, SITESLUG env var must not match app name setting"
+    echo "/home/deploy/$SITESLUG does not exist, set SITESLUG env var to match your app name setting"
     exit 1
 fi
 

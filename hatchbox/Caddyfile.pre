@@ -1,0 +1,27 @@
+log disk-log {
+  output file /home/deploy/{$SITESLUG:lobsters}/shared/log/caddy.log
+  format json
+}
+
+# Matches used for various blocks and reconfigurations
+@hatchboxapp_domain {
+  host *.hatchboxapp.com
+}
+respond @hatchboxapp_domain 403 {
+  body "Use the prod domain, not hatchbox fallback."
+  close
+}
+
+@visitor {
+  host lobsters.dev
+  not {
+    header_regexp Cookie `.*=.*`
+  }
+  file {
+    root /home/deploy/{$SITESLUG:lobsters}/current/public/cache/
+    try_files {path} {path}.html {path}/index.html
+  }
+}
+# header @visitor X-Lobsters-Visitor "True"
+# header X-Lobsters-Hello "World 8"
+rewrite @visitor {file_match.relative}

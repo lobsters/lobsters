@@ -1,0 +1,15 @@
+# have to manually copy this into the 'Caddyfile' text area on hatchbox's web panel
+import /home/deploy/*/current/hatchbox/Caddyfile.pre
+import /home/deploy/*/shared/etc/Caddyfile.pre
+
+# {encode}
+%{encode}
+
+# {file_server}
+%{file_server}
+
+# {default}
+%{default}
+
+import /home/deploy/*/current/hatchbox/Caddyfile.post
+import /home/deploy/*/shared/etc/Caddyfile.post

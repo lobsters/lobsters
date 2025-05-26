@@ -354,7 +354,10 @@ export class _LobstersFunction {
       hideSelected: true,
       closeAfterSelect: true,
       selectOnTab: true,
-      sortField: {field: "data-value"},
+      sortField: [
+        {field: "sortWeight", direction: "desc"},
+        {field: "value", direction: "asc"}
+      ],
       onInitialize: function() {
         const parent = qS('.ts-control');
         parent.appendChild(qS('.ts-dropdown'));

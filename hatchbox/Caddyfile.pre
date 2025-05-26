@@ -1,9 +1,9 @@
 log disk-log {
-  output file /home/deploy/{$SITESLUG:lobsters}/shared/log/caddy.log
+  output file /home/deploy/{$SITESLUG}/shared/log/caddy.log
   format json
 }
 
-# Matches used for various blocks and reconfigurations
+# Hatchbox dupes the site for people who don't have DNS set up right
 @hatchboxapp_domain {
   host *.hatchboxapp.com
 }
@@ -12,13 +12,14 @@ respond @hatchboxapp_domain 403 {
   close
 }
 
+# full page caching with actionpack-page_caching
 @visitor {
   host lobsters.dev
   not {
     header_regexp Cookie `.*=.*`
   }
   file {
-    root /home/deploy/{$SITESLUG:lobsters}/current/public/cache/
+    root /home/deploy/{$SITESLUG}/current/public/cache/
     try_files {path} {path}.html {path}/index.html
   }
 }

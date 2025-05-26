@@ -571,6 +571,9 @@ onPageLoad(() => {
   if (qS('#story_url') && qS('#story_preview') && !qS('#story_preview').firstElementChild) {
     qS('#story_url').focus()
   }
+  if (qS('#totp_code')) {
+    qS('#totp_code').focus();
+  }
 
   on('change', '#story_title', Lobster.checkStoryTitle);
 

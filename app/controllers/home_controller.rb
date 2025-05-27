@@ -27,7 +27,7 @@ class HomeController < ApplicationController
 
   def hidden
     @stories, @show_more = get_from_cache(hidden: true) {
-      paginate Story.hidden(@user, filtered_tag_ids) # should be replaced with #stories when https://github.com/lobsters/lobsters/issues/1523 is done
+      paginate Story.hidden(@user, filtered_tag_ids)
     }
 
     @title = "Hidden Stories"

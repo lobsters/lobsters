@@ -472,6 +472,46 @@ describe Story do
         expect(Story.recent).to_not include(Story.front_page)
       end
     end
+
+    describe "hidden" do
+      let(:tag) { create :tag }
+      let(:story1) { create(:story, title: "Hello 1", url: "http://example.com/1", tags: [tag]) }
+      let(:story2) { create(:story, title: "Hello 2", url: "http://example.com/2", tags: [tag]) }
+      let(:user) { create(:user) }
+
+      before do
+        create_list(:comment, 2, story: story2, score: 2, flags: 5)
+        story1.update!(created_at: Time.zone.at(0))
+        story2.update!(created_at: Time.zone.at(0))
+
+        [story1, story2].each { |story| HiddenStory.hide_story_for_user(story, user) }
+
+        Story.recalculate_all_hotnesses!
+      end
+
+      context "exclude tags are empty" do
+        subject(:stories) { Story.hidden(user) }
+
+        it { expect(stories.size).to eq(2) }
+
+        it { expect(stories.first).to eq(story2) }
+
+        it { expect(stories.last).to eq(story1) }
+      end
+
+      context "excluded tags are provided" do
+        let(:excluded_tag) { create :tag }
+        let!(:story3) { create :story, title: "Hello 3", tags: [excluded_tag] }
+
+        subject(:stories) { Story.hidden(user, [excluded_tag]) }
+
+        it { expect(stories.size).to eq(2) }
+
+        it { expect(stories.first).to eq(story2) }
+
+        it { expect(stories.last).to eq(story1) }
+      end
+    end
   end
 
   describe "suggestions" do
@@ -507,46 +547,6 @@ describe Story do
       story.save_suggested_title_for_user!("new title", user2)
 
       expect(creator.reload.received_messages.length).to eq(1)
-    end
-  end
-
-  describe "hidden" do
-    let(:tag) { create :tag }
-    let(:story1) { create(:story, title: "Hello 1", url: "http://example.com/1", tags: [tag]) }
-    let(:story2) { create(:story, title: "Hello 2", url: "http://example.com/2", tags: [tag]) }
-    let(:user) { create(:user) }
-
-    before do
-      create_list(:comment, 2, story: story2, score: 2, flags: 5)
-      story1.update!(created_at: Time.zone.at(0))
-      story2.update!(created_at: Time.zone.at(0))
-
-      [story1, story2].each { |story| HiddenStory.hide_story_for_user(story, user) }
-
-      Story.recalculate_all_hotnesses!
-    end
-
-    context "exclude tags are empty" do
-      subject(:stories) { Story.hidden(user) }
-
-      it { expect(stories.size).to eq(2) }
-
-      it { expect(stories.first).to eq(story2) }
-
-      it { expect(stories.last).to eq(story1) }
-    end
-
-    context "excluded tags are provided" do
-      let(:excluded_tag) { create :tag }
-      let!(:story3) { create :story, title: "Hello 3", tags: [excluded_tag] }
-
-      subject(:stories) { Story.hidden(user, [excluded_tag]) }
-
-      it { expect(stories.size).to eq(2) }
-
-      it { expect(stories.first).to eq(story2) }
-
-      it { expect(stories.last).to eq(story1) }
     end
   end
 

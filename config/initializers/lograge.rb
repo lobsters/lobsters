@@ -4,17 +4,10 @@ require "active_support/parameter_filter"
 require "silencer/rails/logger"
 
 Rails.application.configure do
-  # https://hatchbox.relationkit.io/articles/61-accessing-your-server-logs-in-hatchbox
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
-    stdout_logger = ActiveSupport::Logger.new($stdout)
-    stdout_logger.formatter = config.log_formatter
-    config.logger = ActiveSupport::TaggedLogging.new(stdout_logger)
-  end
+  config.lograge.enabled = true
 
-  lograge_logger = ActiveSupport::Logger.new(Rails.env.production? ? "/tmp/production.log" : $stdout)
   config.lograge.formatter = Lograge::Formatters::Json.new
-  broadcast = ActiveSupport::BroadcastLogger.new(stdout_logger, lograge_logger)
-  config.logger = broadcast
+  config.lograge.logger = ActiveSupport::Logger.new(Rails.env.production? ? "/home/deploy/lobsters/shared/log/action.log" : $stdout, skip_header: true)
 
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
   config.lograge.custom_options = lambda do |event|

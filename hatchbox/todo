@@ -35,9 +35,9 @@ x configure caddy to serve from full-page cache wo cookies https://app.hatchbox.
 x caddy move to imoprt
 x hatchbox env var SITESLUG=lobsters
 x hatchbox app pre-script setting: hatchbox/pre-build
-x get caddy logging to shared/log
-  locate rails default logger
-  locate lograge logs: ~/lobsters/shared/log/production.log
+x locate rails default logger: stdout to journald
+x locate lograge logs: ~/lobsters/shared/log/action.log
+  get caddy logging to shared/log
   locate solid_queue log
   kludge to run scripts as root https://askubuntu.com/questions/659267/how-do-i-override-or-configure-systemd-services
   overwrite logrotate config to rotate weekly keep 13

@@ -58,10 +58,6 @@ Rails.application.configure do
   # Can be used together with config.force_ssl for Strict-Transport-Security and secure cookies.
   config.assume_ssl = true
 
-  config.log_level = :info
-  config.lograge.enabled = true
-  # see config/initializers/lograge.rb
-
   # Info include generic and useful information about system operation, but avoids logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII). If you
   # want to log everything, set the level to "debug".
@@ -72,6 +68,7 @@ Rails.application.configure do
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
+  # see config/initializers/lograge.rb for json action logs
 
   # Use a different cache store in production.
   config.cache_store = :solid_cache_store

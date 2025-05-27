@@ -62,13 +62,21 @@ Rails.application.configure do
   # information to avoid inadvertent exposure of personally identifiable information (PII). If you
   # want to log everything, set the level to "debug".
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
-  # https://hatchbox.relationkit.io/articles/61-accessing-your-server-logs-in-hatchbox
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
-    logger = ActiveSupport::Logger.new($stdout)
-    logger.formatter = config.log_formatter
-    config.logger = ActiveSupport::TaggedLogging.new(logger)
-  end
+
+  # Rails log goes to stdout for hatchbox UI and a file for grep.
   # see config/initializers/lograge.rb for json action logs
+  # https://hatchbox.relationkit.io/articles/61-accessing-your-server-logs-in-hatchbox
+  config.logger = ActiveSupport::BroadcastLogger.new(
+    ActiveSupport::Logger.new($stdout),
+    ActiveSupport::Logger.new("/home/deploy/lobsters/shared/log/rails.log")
+  )
+  config.logger.formatter = config.log_formatter
+
+  # SolidQueue log to stdout for hatchbox UI and a file for grep
+  config.solid_queue.logger = ActiveSupport::BroadcastLogger.new(
+    ActiveSupport::Logger.new($stdout),
+    ActiveSupport::Logger.new("/home/deploy/lobsters/shared/log/solid_queue.log")
+  )
 
   # Use a different cache store in production.
   config.cache_store = :solid_cache_store

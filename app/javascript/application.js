@@ -354,10 +354,8 @@ export class _LobstersFunction {
       hideSelected: true,
       closeAfterSelect: true,
       selectOnTab: true,
-      sortField: [
-        {field: "sortWeight", direction: "desc"},
-        {field: "value", direction: "asc"}
-      ],
+      searchField: ["value", "title", "vibe"], // sort vibecoding above ai tag for 'ai'
+      sortField: [ {field: "value", direction: "asc"} ],
       onInitialize: function() {
         const parent = qS('.ts-control');
         parent.appendChild(qS('.ts-dropdown'));

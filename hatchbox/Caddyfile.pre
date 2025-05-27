@@ -1,8 +1,3 @@
-log disk-log {
-  output file /home/deploy/{$SITESLUG}/shared/log/caddy.log
-  format json
-}
-
 # Hatchbox dupes the site for people who don't have DNS set up right
 @hatchboxapp_domain {
   host *.hatchboxapp.com
@@ -19,7 +14,7 @@ respond @hatchboxapp_domain 403 {
     header_regexp Cookie `.*=.*`
   }
   file {
-    root /home/deploy/{$SITESLUG}/current/public/cache/
+    root /home/deploy/lobsters/current/public/cache/
     try_files {path} {path}.html {path}/index.html
   }
 }

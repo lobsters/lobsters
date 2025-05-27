@@ -1,0 +1,4 @@
+log disk-log {
+  output file /home/deploy/lobsters/shared/log/caddy.log
+  format json
+}

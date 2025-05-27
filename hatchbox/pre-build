@@ -1,14 +1,5 @@
 #!/bin/bash
 
-if [ -z "${SITESLUG:-}" ]; then
-    echo "SITESLUG environment variable is not set, set it in hatchbox app env vars to match your app name setting (like 'lobsters')"
-    exit 1
-fi
-if [ ! -d "/home/deploy/$SITESLUG" ]; then
-    echo "/home/deploy/$SITESLUG does not exist, set SITESLUG env var to match your app name setting"
-    exit 1
-fi
-
-cp /home/deploy/$SITESLUG/shared/etc/credentials.yml.enc config/credentials.yml.enc
-cp /home/deploy/$SITESLUG/shared/etc/master.key config/master.key
-cp /home/deploy/$SITESLUG/shared/etc/database.yml config/database.yml
+cp /home/deploy/lobsters/shared/etc/credentials.yml.enc config/credentials.yml.enc
+cp /home/deploy/lobsters/shared/etc/master.key config/master.key
+cp /home/deploy/lobsters/shared/etc/database.yml config/database.yml

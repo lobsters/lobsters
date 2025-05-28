@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# prod keys
 cp /home/deploy/lobsters/shared/etc/credentials.yml.enc config/credentials.yml.enc
 cp /home/deploy/lobsters/shared/etc/master.key config/master.key
 cp /home/deploy/lobsters/shared/etc/database.yml config/database.yml
+
+# confirm unattended upgrades is on and configured
+if cmp -s hatchbox/20auto-upgrades /etc/apt/apt.conf.d/20auto-upgrades; then
+    echo "Ubuntu unattended security updates are enabled, good."
+else
+    echo "Ubuntu unattended security updates are NOT enabled or the config has changed."
+    echo "as root, run: dpkg-reconfigure --priority=low unattended-upgrades"
+    echo "more info: https://help.ubuntu.com/community/AutomaticSecurityUpdates"
+    exit 1
+fi

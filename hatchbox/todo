@@ -38,6 +38,7 @@ x locate rails default logger: stdout to journald
 x locate lograge logs: ~/lobsters/shared/log/action.log
 x get caddy logging to shared/log
 x locate solid_queue log
+x confirm unattended upgrades
   kludge to run scripts as root https://askubuntu.com/questions/659267/how-do-i-override-or-configure-systemd-services
   overwrite logrotate config to rotate weekly keep 13
   puma worker count is 3?? doublecheck nateperkopec recent skeets

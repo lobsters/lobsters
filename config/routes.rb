@@ -129,7 +129,6 @@ Rails.application.routes.draw do
     end
   end
   get "/comments/page/:page" => "comments#index"
-  get "/comments" => "comments#index"
 
   get "/messages/sent" => "messages#sent"
   get "/messages" => "messages#index"

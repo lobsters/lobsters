@@ -284,6 +284,7 @@ class CommentsController < ApplicationController
 
     @comments = Comment.accessible_to_user(@user)
       .not_on_story_hidden_by(@user)
+      .filter_tags(filtered_tag_ids)
       .order(id: :desc)
       .includes(:user, :hat, story: :user)
       .joins(:story).where.not(stories: {is_deleted: true})
@@ -403,6 +404,14 @@ class CommentsController < ApplicationController
   end
 
   private
+
+  def filtered_tag_ids
+    if @user
+      @user.tag_filters.map(&:tag_id)
+    else
+      tags_filtered_by_cookie.map(&:id)
+    end
+  end
 
   def find_comment
     comment = Comment.where(short_id: params[:id]).first

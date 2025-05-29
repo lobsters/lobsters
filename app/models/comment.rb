@@ -59,6 +59,22 @@ class Comment < ApplicationRecord
   scope :for_presentation, -> {
     includes(:user, :hat, moderation: :moderator, story: :user, votes: :user)
   }
+  scope :filter_tags, ->(tags) {
+    tags.empty? ? all : joins(:story).where(
+      Story.arel_table[:id].not_in(
+        Tagging.where(tag_id: tags).select(:story_id).arel
+      )
+    )
+  }
+  scope :filter_tags_for, ->(user) {
+    user.nil? ? all : joins(:story).where(
+      Story.arel_table[:id].not_in(
+        Tagging.joins(tag: :tag_filters)
+          .where(tag_filters: {user_id: user})
+          .select(:story_id).arel
+      )
+    )
+  }
   scope :not_on_story_hidden_by, ->(user) {
     user ? where.not(
       HiddenStory.select("TRUE")

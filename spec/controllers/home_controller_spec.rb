@@ -42,4 +42,49 @@ describe HomeController do
       expect(response).to have_http_status(:not_found)
     end
   end
+
+  describe "#hidden" do
+    context "when user is not authenticated" do
+      it "redirects to the login page" do
+        get :hidden
+
+        expect(response).to be_redirect
+      end
+    end
+
+    describe "when user is authenticated" do
+      it "renders the hidden page" do
+        get :hidden, session: {u: user.session_token}
+        expect(response).to be_successful
+      end
+
+      it "does not be redirected" do
+        get :hidden, session: {u: user.session_token}
+        expect(response).not_to be_redirect
+      end
+
+      it "the page has a correct title" do
+        get :hidden, session: {u: user.session_token}
+        expect(@controller.view_assigns["title"]).to eq("Hidden Stories")
+      end
+
+      context "the story is not hidden" do
+        it "no stories" do
+          get :hidden, session: {u: user.session_token}
+
+          expect(@controller.view_assigns["stories"]).not_to include(story)
+        end
+      end
+
+      context "the story is hidden" do
+        before { HiddenStory.hide_story_for_user(story, user) }
+
+        it "story has been shown" do
+          get :hidden, session: {u: user.session_token}
+
+          expect(@controller.view_assigns["stories"]).to include(story)
+        end
+      end
+    end
+  end
 end

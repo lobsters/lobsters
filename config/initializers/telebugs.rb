@@ -10,6 +10,8 @@ class Telebugs
 end
 
 if Rails.application.credentials.telebugs.present?
+  Rails.application.config.telebugs = true
+
   Sentry.init do |config|
     config.dsn = Rails.application.credentials.telebugs.dsn
 

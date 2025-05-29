@@ -87,17 +87,20 @@ class ApplicationController < ActionController::Base
   end
 
   def prepare_exception_notifier
-    exception_data = {}
-    exception_data[:username] = @user.username unless @user.nil?
+    if Rails.application.config.exception_notifier
+      exception_data = {}
+      exception_data[:username] = @user.username unless @user.nil?
+      request.env["exception_notifier.exception_data"] = exception_data
+    end
 
-    request.env["exception_notifier.exception_data"] = exception_data
-
-    Telebugs.context requested_path: @requested_path
-    Telebugs.context original_fullpath: request.original_fullpath
-    Telebugs.context query_parameters: request.query_parameters # protected by filter_parameters
-    Telebugs.context request_parameters: request.request_parameters # protected by filter_parameters
-    Telebugs.context git_head: LOBSTERS_GIT_HEAD
-    Telebugs.user id: nil, username: nil, email: nil, ip_address: nil # authenticate_user overwrites
+    if Rails.application.config.telebugs
+      Telebugs.context requested_path: @requested_path
+      Telebugs.context original_fullpath: request.original_fullpath
+      Telebugs.context query_parameters: request.query_parameters # protected by filter_parameters
+      Telebugs.context request_parameters: request.request_parameters # protected by filter_parameters
+      Telebugs.context git_head: LOBSTERS_GIT_HEAD
+      Telebugs.user id: nil, username: nil, email: nil, ip_address: nil # authenticate_user overwrites
+    end
   end
 
   # https://web.archive.org/web/20180108083712/http://umaine.edu/lobsterinstitute/files/2011/12/LobsterColorsWeb.pdf

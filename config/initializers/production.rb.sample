@@ -11,21 +11,28 @@ if Rails.env.production?
   # load extras/ so we can set API keys
   Dir[Rails.root.join("extras", "*.rb").to_s].each {|f| require f }
 
-  Lobsters::Application.config.middleware.use ExceptionNotification::Rack,
-    :ignore_exceptions => [
-      "ActionController::UnknownFormat",
-      "ActionController::BadRequest",
-      "ActionDispatch::Http::MimeNegotiation::InvalidType",
-      "ActionDispatch::RemoteIp::IpSpoofAttackError",
-    ] + ExceptionNotifier.ignored_exceptions,
-    :email => {
-      :email_prefix => "[site] ",                    # fill in site name
-      :sender_address => %{"Exception Notifier" <>}, # fill in from address
-      :exception_recipients => %w{},                 # fill in destination addresses
-    }
+  # Lobsters used to use this. It should still work if you uncomment
+  # and in your Gemfile, add: 'gem "exception_notification"
+  # Lobsters now uses https://Telebugs.com in prod, see initializer.
+  #
+  # Rails.application.config.exception_notifier = true
+  # Lobsters::Application.config.middleware.use ExceptionNotification::Rack,
+  #   :ignore_exceptions => [
+  #     "ActionController::UnknownFormat",
+  #     "ActionController::BadRequest",
+  #     "ActionDispatch::Http::MimeNegotiation::InvalidType",
+  #     "ActionDispatch::RemoteIp::IpSpoofAttackError",
+  #   ] + ExceptionNotifier.ignored_exceptions,
+  #   :email => {
+  #     :email_prefix => "[site] ",                    # fill in site name
+  #     :sender_address => %{"Exception Notifier" <>}, # fill in from address
+  #     :exception_recipients => %w{},                 # fill in destination addresses
+  #   }
 
   # This config file used to have placeholders for API keys. We now use the
   # rails credentials feature to store API keys, see README.md.
+
+  Lobsters::Application.config.force_ssl = true
 
   BCrypt::Engine.cost = 12
 

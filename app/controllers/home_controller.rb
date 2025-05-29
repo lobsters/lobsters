@@ -289,7 +289,7 @@ class HomeController < ApplicationController
 
   def top
     length = time_interval(params[:length])
-    if length.placeholder?
+    if length[:placeholder]
       return redirect_to(top_path(length: "1w"))
     end
 

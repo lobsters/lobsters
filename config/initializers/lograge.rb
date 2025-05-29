@@ -4,8 +4,6 @@ require "active_support/parameter_filter"
 require "silencer/rails/logger"
 
 Rails.application.configure do
-  config.lograge.enabled = true
-
   config.lograge.formatter = Lograge::Formatters::Json.new
   config.lograge.logger = ActiveSupport::Logger.new(Rails.env.production? ? "/home/deploy/lobsters/shared/log/action.log" : $stdout, skip_header: true)
 

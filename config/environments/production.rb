@@ -64,13 +64,15 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Rails log goes to stdout for hatchbox UI and a file for grep.
-  # see config/initializers/lograge.rb for json action logs
   # https://hatchbox.relationkit.io/articles/61-accessing-your-server-logs-in-hatchbox
   config.logger = ActiveSupport::BroadcastLogger.new(
     ActiveSupport::Logger.new($stdout),
     ActiveSupport::Logger.new("/home/deploy/lobsters/shared/log/rails.log")
   )
   config.logger.formatter = config.log_formatter
+
+  # see config/initializers/lograge.rb for json action logs
+  config.lograge.enabled = true
 
   # SolidQueue log to stdout for hatchbox UI and a file for grep
   config.solid_queue.logger = ActiveSupport::BroadcastLogger.new(

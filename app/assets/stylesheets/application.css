@@ -469,6 +469,7 @@ div.voters {
 	align-items: center;
 	justify-self: center;
 	text-decoration: none;
+	font-size: 9.5pt;
 }
 
 li.story {
@@ -1621,7 +1622,7 @@ input[type="submit"].link_post.pushover_button {
 	div.voters {
 		margin-left: 0.25em;
 		margin-top: 0px;
-		width: 20px;
+		width: 30px;
 	}
 
 	div.comment_form_container {
@@ -1721,7 +1722,7 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	li div.details {
-		margin: 0 0 0 26px;
+		margin: 0 0 0 36px;
 	}
 	div.story_content {
 		margin: 0 0 0 28px;

@@ -471,6 +471,8 @@ div.voters {
 	text-decoration: none;
 	font-size: 9.5pt;
 }
+.upvoter:focus { outline: none; } /* don't outline after upvote click */
+.upvoter:focus-visible { outline: 2px solid var(--color-fg-link); } /* do outline when tabbing */
 
 li.story {
 	clear: both;

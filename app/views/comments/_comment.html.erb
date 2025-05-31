@@ -29,7 +29,7 @@
 
   <div class="voters">
     <label for="comment_folder_<%= comment.short_id %>" class="comment_folder"></label>
-    <% if !comment.is_gone? %>
+    <% if comment.show_score_to_user?(@user) %>
       <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
     <% end %>
   </div>

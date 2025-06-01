@@ -19,6 +19,10 @@ production:
     class: FillFlaggedCacheJob
     queue: background
     schedule: every 10 minutes
+  refresh_sitemap:
+    class: RefreshSitemapJob
+    queue: background
+    schedule: every day at 12:00am
 
 development:
   expire_old_ribbons:
@@ -41,3 +45,7 @@ development:
     class: FillFlaggedCacheJob
     queue: background
     schedule: every 10 minutes
+  refresh_sitemap:
+    class: RefreshSitemapJob
+    queue: background
+    schedule: every day at 12:00am

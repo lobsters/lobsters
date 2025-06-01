@@ -1,4 +1,5 @@
 # typed: false
+
 require "rails_helper"
 
 describe "Top page and RSS", type: :request do
@@ -15,4 +16,3 @@ describe "Top page and RSS", type: :request do
     expect(response.body).to include("<rss")
   end
 end
-# This test checks that the top page and the RSS feed for the top stories load correctly.

@@ -94,12 +94,14 @@ class ApplicationController < ActionController::Base
     end
 
     if Rails.application.config.telebugs
-      Telebugs.context requested_path: @requested_path
-      Telebugs.context original_fullpath: request.original_fullpath
-      Telebugs.context query_parameters: request.query_parameters # protected by filter_parameters
-      Telebugs.context request_parameters: request.request_parameters # protected by filter_parameters
-      Telebugs.context git_head: LOBSTERS_GIT_HEAD
-      Telebugs.user id: nil, username: nil, email: nil, ip_address: nil # authenticate_user overwrites
+      Telebugs.context "request", {
+        requested_path: @requested_path,
+        original_fullpath: request.original_fullpath,
+        query_parameters: request.query_parameters, # protected by filter_parameters
+        request_parameters: request.request_parameters, # protected by filter_parameters
+        git_head: LOBSTERS_GIT_HEAD
+      }
+      Telebugs.user id: nil, username: nil, email: nil, ip_address: request.remote_ip # authenticate_user overwrites
     end
   end
 

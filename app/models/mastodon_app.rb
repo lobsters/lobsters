@@ -112,6 +112,7 @@ class MastodonApp < ApplicationRecord
       client_secret: client_secret,
       token: token
     )
+    return true if res.nil? # sponge returns nil for server timeout
     ps = JSON.parse(res.body)
     if ps != {}
       # Rails.logger.info "Unexpected failure revoking token from #{name}, response was #{res.body}"

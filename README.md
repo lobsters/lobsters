@@ -8,7 +8,7 @@ source code to the
 It is a Rails codebase and uses a SQL (MariaDB in production) backend for the database.
 ([No relation](https://lobste.rs/about#michaelbolton) to the self-help guru.)
 
-You are free to use this code to start your own [sister site](/sister sites.md)
+You are free to use this code to start your own [sister site](/sister_sites.md)
 because the code is available under a [permissive license](https://github.com/lobsters/lobsters/blob/master/LICENSE) (3-clause BSD).
 We welcome bug reports and code contributions that help use improve [lobste.rs](https://lobste.rs).
 As a volunteer project we're reluctant to take on work that's not useful to our site, so please understand if we don't want to adopt your custom feature.

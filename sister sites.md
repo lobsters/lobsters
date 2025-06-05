@@ -1,7 +1,7 @@
 # Sister Sites
 
 Other sites using the Lobsters [codebase](https://github.com/lobsters/lobsters).
-If you start a site, please PR yourself into the list!
+If you start a site, please PR yourself into the list and join us [on Zulip](https://lobsters.zulipchat.com)!
 
 * [Le Journal du Hacker](https://www.journalduhacker.net/) - Hacker News in French (fr)
 * [tilde news](https://tilde.news/) ([repo](https://tildegit.org/tildeverse/tilde.news)) - [tildeverse](https://tildeverse.org) links: unix, small web, decentralization

@@ -18,10 +18,6 @@ class StoryRepository
     hottest.order(:hotness)
   end
 
-  def newest
-    Story.base(@user, unmerged: false).filter_tags(@params[:exclude_tags] || []).order(id: :desc)
-  end
-
   def active
     Story.base(@user)
       .where.not(id: Story.hidden_by(@user).select(:id))

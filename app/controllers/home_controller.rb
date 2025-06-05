@@ -72,7 +72,7 @@ class HomeController < ApplicationController
 
   def newest
     @stories, @show_more = get_from_cache(newest: true) {
-      paginate stories.newest
+      paginate Story.newest(@user, filtered_tag_ids)
     }
 
     @title = "Newest Stories"

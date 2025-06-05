@@ -1610,7 +1610,7 @@ input[type="submit"].link_post.pushover_button {
 	ol.comments { margin-left: 10px }
 	ol.stories,
 	div#inside > ol.comments {
-		margin: 0 -0.5rem;
+		margin: 0 0 0 -0.5rem;
 		padding-left: 0;
 	}
 	ol.comments1 > li.comments_subtree {

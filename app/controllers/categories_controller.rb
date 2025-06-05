@@ -6,6 +6,7 @@ class CategoriesController < ApplicationController
   def new
     @category = Category.new
     @title = "Create Category"
+    @title_h1 = true
   end
 
   def create
@@ -22,6 +23,7 @@ class CategoriesController < ApplicationController
   def edit
     @category = Category.where(category: params[:category_name]).first!
     @title = "Edit Category"
+    @title_h1 = true
   end
 
   def update

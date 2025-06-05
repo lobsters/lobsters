@@ -64,23 +64,23 @@ class ApplicationController < ActionController::Base
 
   # clear Rails session cookie if not logged in so nginx uses the page cache
   # https://ryanfb.xyz/etc/2021/08/29/going_cookie-free_with_rails.html
-  +  # Remove all cookies except tag filter and session cookie
-+  def remove_unknown_cookies
-+    allowed = [TAG_FILTER_COOKIE.to_s, Rails.application.config.session_options[:key]]
-+    cookies.each do |k, _|
-+      cookies.delete(k) unless allowed.include?(k)
-+    end
-+  end
-+
-+  # Clear Rails session cookie if not logged in or session is empty
-+  def clear_session_cookie
-+    key = Rails.application.config.session_options[:key]
-+    # Remove session cookie if user is not logged in or session is empty
-+    if @user.blank? || (session.respond_to?(:empty?) && session.empty?)
-+      cookies.delete(key)
-+      request.session_options[:skip] = true unless controller_name == "login"
-+    end
-   end
+  # Remove all cookies except tag filter and session cookie
+  def remove_unknown_cookies
+    allowed = [TAG_FILTER_COOKIE.to_s, Rails.application.config.session_options[:key]]
+    cookies.each do |k, _|
+      cookies.delete(k) unless allowed.include?(k)
+    end
+  end
+
+  # Clear Rails session cookie if not logged in or session is empty
+  def clear_session_cookie
+    key = Rails.application.config.session_options[:key]
+    # Remove session cookie if user is not logged in or session is empty
+    if @user.blank? || (session.respond_to?(:empty?) && session.empty?)
+      cookies.delete(key)
+      request.session_options[:skip] = true unless controller_name == "login"
+    end
+  end
 
   def find_user_from_rss_token
     if !@user && params[:format] == "rss" && params[:token].to_s.present?

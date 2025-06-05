@@ -1,0 +1,15 @@
+[Unit]
+Description=root-deploy service
+After=caddy.service
+PartOf=caddy.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/deploy/lobsters/current/hatchbox/root-deploy
+ExecStartPost=/bin/echo "Ran root-deploy hook"
+RemainAfterExit=no
+# Do not be considered 'running' after start; path units can only start
+# services, not restart.
+
+[Install]
+WantedBy=multi-user.target

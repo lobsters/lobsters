@@ -39,27 +39,41 @@ x locate lograge logs: ~/lobsters/shared/log/action.log
 x get caddy logging to shared/log
 x locate solid_queue log
 x confirm unattended upgrades
-  kludge to run scripts as root https://askubuntu.com/questions/659267/how-do-i-override-or-configure-systemd-services
-    overwrite logrotate config to rotate weekly keep 13
 x puma worker count is 3?? doublecheck nateperkopec recent skeets
-  web03 peter's bare minimum shell config from lobsters-ansible
-  cron job https://app.hatchbox.io/apps/10006/cron_jobs/new
-  postfix send email
-  DO rename web03 -> lobste.rs I bet
-  merge hatchbox -> master, update hatchbox deploy branch
+x cron jobs https://app.hatchbox.io/apps/10006/cron_jobs/new
+x service to hook deploys:
+    overwrite logrotate config to rotate weekly keep 13
+    web03 peter's bare minimum shell config from lobsters-ansible
+    postfix send email
+x   /etc restic
+  recurring task for app restic
+
+setup:
+  # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.service /etc/systemd/system
+  # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.path /etc/systemd/system
+  # systemctl daemon-reload
+  # systemctl enable root-deploy.service
+  # systemctl enable root-deploy.path
+  # systemctl start root-deploy.service
+  # systemctl start root-deploy.path
 
 changeover
+  merge hatchbox -> master, update hatchbox deploy branch
   web01 enable read-only
   change over DNS for lobste.rs
   web03 disable read-only
   web03 write our redirect from lobsters.dev -> lobste.rs
-  dnsimple: lobsters.dev AAAA -> web03
+  DO rename web03 -> lobste.rs I bet
+  dnsimple: lobsters.dev A, AAAA -> web03
+  hatchbox web ui: uncomment lobsters-cron job to run every 5m
   merge down hatchbox branch
   update hatchbox to deploy master branch
-  idea: logs -> DO durable obj -> duckdb?
   turn up DNS ttl to 3600
   write up notes to setup instructions
+
+later
   tune config/puma thread count based on prod usage
+  idea: logs -> DO durable obj -> duckdb?
 
 note:
   to update caddy files, deploy them, then go to app settings and click 'Update Caddy' to pick up the change

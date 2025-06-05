@@ -1,5 +1,6 @@
 # typed: false
 
+require "fileutils"
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
@@ -128,3 +129,6 @@ end
 %w[render_template render_partial render_collection].each do |event|
   ActiveSupport::Notifications.unsubscribe "#{event}.action_view"
 end
+
+# see hatchbox/root-deploy
+FileUtils.touch "/home/deploy/lobsters/current"

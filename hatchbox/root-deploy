@@ -1,0 +1,36 @@
+#!/usr/bin/bash
+
+# This is a series of workarounds for misdesigns:
+#
+# 1. Hatchbox can't run scripts as root on deploy. This script provisions and
+#    configures system services and such an important script must live in the
+#    repo.
+#
+# 2. A service unit can't use PathChanged itself, it requires a path unit.
+#    That's root-deploy.path.
+#
+# 3. A path unit can't use ExecStart itself, it requires a service unit.
+#    That's root-deploy.service.
+#
+# 4. Path units have an unfixed bug: https://github.com/systemd/systemd/issues/17727
+#    Systemd fails to consider a replaced symlink as 'changed' or 'modified'.
+#    So config/environments/production.rb touches the symlink on boot.
+#
+# 5. https://i.imgur.com/MCHXwyi.jpeg
+
+APP_ETC=/home/deploy/lobsters/shared/etc
+
+# pick up changes to root-deploy.service and .path
+systemctl daemon-reload
+
+
+# server packages
+apt install iptables-persistent postfix restic
+
+# run restic to back up /etc as root
+source $APP_ETC/restic-env
+restic self-update
+restic backup --cleanup-cache -no-scan /etc
+
+# shell quality of life
+apt install exa fd-find tmux tree

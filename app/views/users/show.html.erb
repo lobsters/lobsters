@@ -135,13 +135,6 @@
       </span>
     <% end %>
 
-    <% if Keybase.enabled? && @showing_user.keybase_signatures? %>
-      <label class="required">Keybase</label>
-      <span>
-        <%= render :partial => "keybase_proofs/proofs", locals: { user: @showing_user, for_self: false } %>
-      </span>
-    <% end %>
-
     <% if @showing_user.is_active? %>
       <label class="required">About</label>
 

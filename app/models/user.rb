@@ -83,7 +83,6 @@ class User < ApplicationRecord
     s.string :mastodon_instance
     s.string :mastodon_oauth_token
     s.string :mastodon_username
-    s.any :keybase_signatures, array: true
     s.string :homepage
   end
 
@@ -224,10 +223,6 @@ class User < ApplicationRecord
 
     if mastodon_username.present?
       h[:mastodon_username] = mastodon_username
-    end
-
-    if keybase_signatures.present?
-      h[:keybase_signatures] = keybase_signatures
     end
 
     h
@@ -496,17 +491,6 @@ class User < ApplicationRecord
   def is_new?
     return true unless created_at # unsaved object; in signup flow or a test
     created_at > NEW_USER_DAYS.days.ago
-  end
-
-  def add_or_update_keybase_proof(kb_username, kb_signature)
-    self.keybase_signatures ||= []
-    remove_keybase_proof(kb_username)
-    self.keybase_signatures.push("kb_username" => kb_username, "sig_hash" => kb_signature)
-  end
-
-  def remove_keybase_proof(kb_username)
-    self.keybase_signatures ||= []
-    self.keybase_signatures.reject! { |kbsig| kbsig["kb_username"] == kb_username }
   end
 
   def roll_session_token

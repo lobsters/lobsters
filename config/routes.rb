@@ -197,10 +197,6 @@ Rails.application.routes.draw do
   get "/settings/github_callback" => "settings#github_callback"
   post "/settings/github_disconnect" => "settings#github_disconnect"
 
-  resources :keybase_proofs, only: [:new, :create]
-  post "/keybase_proofs/:id" => "keybase_proofs#destroy", :as => :keybase_proof
-  get "/.well-known/keybase-proof-config" => "keybase_proofs#kbconfig", :as => "keybase_config"
-
   get "/filters" => "filters#index"
   post "/filters" => "filters#update"
 

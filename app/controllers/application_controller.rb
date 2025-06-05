@@ -9,11 +9,13 @@ class ApplicationController < ActionController::Base
   before_action :prepare_exception_notifier
   before_action :mini_profiler
   before_action :set_traffic_style
+  before_action :remove_unknown_cookies
+  before_action :clear_session_cookie
   around_action :n_plus_one_detection
 
   # 2023-10-07 one user in one of their browser envs is getting a CSRF failure, I'm reverting
   # because I'll be AFK a while.
-  # after_action :clear_lobster_trap
+  # after_action :clear_session_cookie
 
   # match this nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
@@ -62,12 +64,23 @@ class ApplicationController < ActionController::Base
 
   # clear Rails session cookie if not logged in so nginx uses the page cache
   # https://ryanfb.xyz/etc/2021/08/29/going_cookie-free_with_rails.html
-  def clear_lobster_trap
-    key = Rails.application.config.session_options[:key] # "lobster_trap"
-    cookies.delete(key) if @user.blank?
-    # this probably should test session.empty? && controller...
-    request.session_options[:skip] = @user.blank? && controller_name != "login"
-  end
+  +  # Remove all cookies except tag filter and session cookie
++  def remove_unknown_cookies
++    allowed = [TAG_FILTER_COOKIE.to_s, Rails.application.config.session_options[:key]]
++    cookies.each do |k, _|
++      cookies.delete(k) unless allowed.include?(k)
++    end
++  end
++
++  # Clear Rails session cookie if not logged in or session is empty
++  def clear_session_cookie
++    key = Rails.application.config.session_options[:key]
++    # Remove session cookie if user is not logged in or session is empty
++    if @user.blank? || (session.respond_to?(:empty?) && session.empty?)
++      cookies.delete(key)
++      request.session_options[:skip] = true unless controller_name == "login"
++    end
+end
 
   def find_user_from_rss_token
     if !@user && params[:format] == "rss" && params[:token].to_s.present?

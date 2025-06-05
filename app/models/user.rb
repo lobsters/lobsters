@@ -184,7 +184,7 @@ class User < ApplicationRecord
   MIN_STORIES_CHECK_SELF_PROMOTION = 2
 
   def underscores_and_dashes_in_username
-    username_regex = username.gsub(/_|-/, "[-_]")
+    username_regex = "^" + username.gsub(/_|-/, "[-_]") + "$"
     return unless username_regex.include?("[-_]")
 
     collisions = User.where("username REGEXP ?", username_regex).where.not(id: id)

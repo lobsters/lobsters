@@ -40,8 +40,8 @@ x get caddy logging to shared/log
 x locate solid_queue log
 x confirm unattended upgrades
   kludge to run scripts as root https://askubuntu.com/questions/659267/how-do-i-override-or-configure-systemd-services
-  overwrite logrotate config to rotate weekly keep 13
-  puma worker count is 3?? doublecheck nateperkopec recent skeets
+    overwrite logrotate config to rotate weekly keep 13
+x puma worker count is 3?? doublecheck nateperkopec recent skeets
   web03 peter's bare minimum shell config from lobsters-ansible
   cron job https://app.hatchbox.io/apps/10006/cron_jobs/new
   postfix send email
@@ -59,6 +59,7 @@ changeover
   idea: logs -> DO durable obj -> duckdb?
   turn up DNS ttl to 3600
   write up notes to setup instructions
+  tune config/puma thread count based on prod usage
 
 note:
   to update caddy files, deploy them, then go to app settings and click 'Update Caddy' to pick up the change

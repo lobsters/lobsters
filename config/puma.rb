@@ -1,5 +1,7 @@
 # typed: false
 
+require "etc"
+
 # Puma can serve each request in a thread from an internal thread pool.
 # The `threads` method setting takes two numbers: a minimum and maximum.
 # Any libraries that use thread pools should be configured to match
@@ -30,7 +32,7 @@ pidfile ENV.fetch("PIDFILE") {
 # the concurrency of the application would be max `threads` * `workers`.
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
-workers ENV.fetch("PUMA_WORKERS") { 3 }
+workers ENV.fetch("PUMA_WORKERS") { Etc.nprocessors }
 
 worker_boot_timeout 180
 

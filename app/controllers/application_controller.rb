@@ -80,7 +80,7 @@ class ApplicationController < ActionController::Base
 +      cookies.delete(key)
 +      request.session_options[:skip] = true unless controller_name == "login"
 +    end
-end
+   end
 
   def find_user_from_rss_token
     if !@user && params[:format] == "rss" && params[:token].to_s.present?

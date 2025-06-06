@@ -1,35 +1,27 @@
 production:
+  clear_finished_jobs:
+    command: SolidQueue::Job.clear_finished_in_batches
+    schedule: every day at 3:00am
   expire_old_ribbons:
-    class: ExpireOldRibbonsJob
-    queue: background
+    command: ReadRibbon.expire_old_ribbons!
     schedule: every day at 4:00am
   populate_comment_stats:
-    class: PopulateCommentStatsJob
-    queue: background
+    command: CommentStat.daily_fill!
     schedule: every day at 4:00am
   stats_graphs:
     class: StatsGraphsJob
-    queue: background
     schedule: every day at 12:00am
-  clear_finished_jobs:
-    class: ClearFinishedJobsJob
-    queue: background
-    schedule: every day at 3:00am
 
 development:
+  clear_finished_jobs:
+    command: SolidQueue::Job.clear_finished_in_batches
+    schedule: every day at 3:00am
   expire_old_ribbons:
-    class: ExpireOldRibbonsJob
-    queue: background
+    command: ReadRibbon.expire_old_ribbons!
     schedule: every day at 4:00am
   populate_comment_stats:
-    class: PopulateCommentStatsJob
-    queue: background
+    command: CommentStat.daily_fill!
     schedule: every day at 4:00am
   stats_graphs:
     class: StatsGraphsJob
-    queue: background
     schedule: every day at 12:00am
-  clear_finished_jobs:
-    class: ClearFinishedJobsJob
-    queue: background
-    schedule: every day at 3:00am

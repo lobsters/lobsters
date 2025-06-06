@@ -542,6 +542,31 @@ describe Story do
         end
       end
     end
+
+    describe "active" do
+      let(:user) { create :user }
+
+      it "is ordered by most-recent comment" do
+        older_story = create(:story)
+        newer_story = create(:story)
+        older_comment = create(:comment, story: newer_story)
+        newer_comment = create(:comment, story: older_story)
+
+        expect(Story.active(user)).to eq([newer_comment.story, older_comment.story])
+      end
+
+      it "does not show hidden stories" do
+        hidden_story = create(:story)
+        normal_story = create(:story)
+        create(:comment, story: hidden_story)
+        normal_comment = create(:comment, story: normal_story)
+
+        HiddenStory.hide_story_for_user(hidden_story, hidden_story.user)
+        hidden_story_user = User.find_by(id: hidden_story.user_id)
+
+        expect(Story.active(hidden_story_user)).to eq([normal_comment.story])
+      end
+    end
   end
 
   describe "suggestions" do

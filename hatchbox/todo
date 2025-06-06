@@ -42,8 +42,8 @@ x confirm unattended upgrades
 x puma worker count is 3?? doublecheck nateperkopec recent skeets
 x cron jobs https://app.hatchbox.io/apps/10006/cron_jobs/new
 x service to hook deploys:
-    overwrite logrotate config to rotate weekly keep 13
-    web03 peter's bare minimum shell config from lobsters-ansible
+x   logrotate config to override hatchbox
+    bare minimum shell config from lobsters-ansible
     postfix send email
 x   /etc restic
   recurring task for app restic

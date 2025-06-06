@@ -1,5 +1,8 @@
 #!/usr/bin/bash
 
+set -e
+cd /home/deploy/lobsters/current
+
 # This is a series of workarounds for misdesigns:
 #
 # 1. Hatchbox can't run scripts as root on deploy. This script provisions and
@@ -23,7 +26,6 @@ APP_ETC=/home/deploy/lobsters/shared/etc
 # pick up changes to root-deploy.service and .path
 systemctl daemon-reload
 
-
 # server packages
 apt install iptables-persistent postfix restic
 
@@ -31,6 +33,9 @@ apt install iptables-persistent postfix restic
 source $APP_ETC/restic-env
 restic self-update
 restic backup --cleanup-cache -no-scan /etc
+
+# configure logrotate
+cp hatchbox/logrotate.conf /etc/logrotate.d/
 
 # shell quality of life
 apt install exa fd-find tmux tree

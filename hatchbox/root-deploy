@@ -30,8 +30,11 @@ apt install iptables-persistent opendkim postfix restic
 cp opendkim /etc/default/
 cp opendkim.conf /etc/
 cp opendkim.service /etc/systemd/system/
+if [ !-f /etc/dkimkeys/mail.private ]; then
+  opendkim-genkey --verbose --restrict --selector=mail --subdomains --domain=lobste.rs --directory=/etc/dkimkeys/
+fi
 mkdir -p /var/spool/postfix/opendkim
-chown opendkim:opendkim /var/spool/postfix/opendkim
+chown -R opendkim:opendkim /var/spool/postfix/opendkim /etc/dkimkeys
 
 # I get bounces daily from journalduhacker.net who left my email in their config.
 cp aliases /etc/

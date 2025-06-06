@@ -8,6 +8,7 @@ root: ADMIN_EMAIL
 abuse: root
 admin: root
 contact: root
+deploy: root
 help: root
 postmaster: root
 security: root

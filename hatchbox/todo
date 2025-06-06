@@ -60,6 +60,7 @@ setup:
 
 changeover
   merge hatchbox -> master, update hatchbox deploy branch
+  Caddyfile.pre: 'host lobste.rs'
   web01 enable read-only
   change over DNS for lobste.rs
   web03 disable read-only
@@ -71,6 +72,7 @@ changeover
   update hatchbox to deploy master branch
   turn up DNS ttl to 3600
   write up notes to setup instructions
+  https://guides.rubyonrails.org/v7.1/action_mailbox_basics.html#postfix
   test postfix outgoing
   test postfix incoming
 

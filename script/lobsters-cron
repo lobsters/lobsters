@@ -1,0 +1,25 @@
+#!/bin/bash
+
+err=0
+report() {
+  err=1
+  echo -n "error at line ${BASH_LINENO[0]}, in call to "
+  sed -n ${BASH_LINENO[0]}p $0
+} >&2
+trap report ERR
+
+cd /home/deploy/lobsters/current
+eval "$(/home/deploy/.asdf/bin/asdf vars)"
+
+if [ -f public/maintenance.html ];
+then
+  exit 0
+fi
+
+bundle exec ruby script/mail_new_activity.rb &
+bundle exec ruby script/mastodon_post.rb &
+bundle exec ruby script/mastodon_sync_users.rb &
+bundle exec ruby script/send_new_webmentions &
+bundle exec ruby script/traffic_range &
+
+exit $err

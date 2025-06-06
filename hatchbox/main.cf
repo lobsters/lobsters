@@ -1,0 +1,53 @@
+# See /usr/share/postfix/main.cf.dist for a commented, more complete version
+compatibility_level = 3.6
+
+# DKIM - paths relative to chroot /var/spool/postfix
+smtpd_milters = unix:/opendkim/opendkim.socket
+non_smtpd_milters = unix:/opendkim/opendkim.socket
+milter_default_action = accept
+
+smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
+biff = no
+append_dot_mydomain = no
+readme_directory = no
+
+# TLS parameters
+smtpd_tls_cert_file=/home/deploy/.local/share/caddy/certificates/acme-v02.api.letsencrypt.org-directory/lobste.rs/lobste.rs.crt
+smtpd_tls_key_file=/home/deploy/.local/share/caddy/certificates/acme-v02.api.letsencrypt.org-directory/lobste.rs/lobste.rs.key
+smtpd_tls_CAfile=/etc/ssl/certs/ca-certificates.crt
+smtpd_tls_security_level=may
+smtpd_use_tls=yes
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_loglevel = 1
+smtp_tls_security_level=may
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+# See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
+# information on enabling SSL in the smtp client.
+
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+
+# lobsters config:
+
+# 1. accept mail for lobsters and forward it on (root@ etc) according to /etc/aliases
+mydomain = lobste.rs
+myhostname = lobste.rs
+mydestination = $myhostname, localhost, lobsters
+relayhost = 
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+mailbox_size_limit = 0
+inet_interfaces = all
+inet_protocols = all
+
+# 2. mailing list mode - take mail for lobsters-(key)@, send it to 'lobsters'
+# local user which has a .forward piping to parse_inbound_mail
+
+# handles aliases before local users to forward for admin
+local_recipient_maps = $alias_maps proxy:unix:passwd.byname
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+# split recipient email on - so mailing list mode emails to lobsters-key@ work
+recipient_delimiter = +-
+
+# don't pass on mail to any remote hosts
+relay_domains =

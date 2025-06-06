@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 set -e
-cd /home/deploy/lobsters/current
+cd /home/deploy/lobsters/current/hatchbox
 
 # This is a series of workarounds for misdesigns:
 #
@@ -23,24 +23,53 @@ cd /home/deploy/lobsters/current
 
 APP_ETC=/home/deploy/lobsters/shared/etc
 
-# pick up changes to root-deploy.service and .path
+# server packages
+apt install iptables-persistent opendkim postfix restic
+
+# configure opendkim for postfix
+cp opendkim /etc/default/
+cp opendkim.conf /etc/
+cp opendkim.service /etc/systemd/system/
+mkdir -p /var/spool/postfix/opendkim
+chown opendkim:opendkim /var/spool/postfix/opendkim
+
+# I get bounces daily from journalduhacker.net who left my email in their config.
+cp aliases /etc/
+ADMIN_EMAIL=$(cat $APP_ETC/admin_email)
+sed -i "s/ADMIN_EMAIL/$ADMIN_EMAIL/g" /etc/aliases
+newaliases
+
+# configure postfix
+adduser postfix opendkim
+cp main.cf /etc/postfix/
+cp master.cf /etc/postfix/
+postfix reload
+
+# add lobsters@ user for mailing list mode; see main.cf
+if [ !-d /home/lobsters ]; then
+  useradd -m -s /bin/false lobsters
+fi
+cp forward ~lobsters/.forward
+chown lobsters:lobsters ~lobsters/.forward
+
+# pick up changes to opendkim, root-deploy.service, and root-deploy.path
 systemctl daemon-reload
 
-# server packages
-apt install iptables-persistent postfix restic
-
-# run restic to back up /etc as root
-source $APP_ETC/restic-env
-restic self-update
-restic backup --cleanup-cache --no-scan /etc
+systemctl enable --now opendkim
+systemctl enable --now postfix
 
 # configure logrotate
-cp hatchbox/logrotate.conf /etc/logrotate.d/
+cp logrotate.conf /etc/logrotate.d/
 
 # shell quality of life
-apt install exa fd-find tmux tree
+apt install eza fd-find tmux tree
 
 # shell config; the default .bashrc sources this
-cp hatchbox/bash_aliases /root/.bash_aliases
-cp hatchbox/bash_aliases ~deploy/.bash_aliases
+cp bash_aliases /root/.bash_aliases
+cp bash_aliases ~deploy/.bash_aliases
 chown deploy:deploy ~deploy/.bash_aliases
+
+# run restic to back up /etc
+HOME=/root
+source $APP_ETC/restic-env
+restic backup --cleanup-cache --no-scan /etc

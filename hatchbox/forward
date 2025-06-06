@@ -1,0 +1,1 @@
+| "/bin/bash -c 'eval "$(/home/deploy/.asdf/bin/asdf vars)" ; /home/deploy/lobsters/current/script/parse_inbound_mail $RECIPIENT $SENDER'"

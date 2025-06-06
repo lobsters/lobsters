@@ -44,9 +44,10 @@ x cron jobs https://app.hatchbox.io/apps/10006/cron_jobs/new
 x service to hook deploys:
 x   logrotate config to override hatchbox
 x   bare minimum shell config from lobsters-ansible
-    postfix send email
+x   postfix send email
 x   /etc restic
 x recurring task for app restic
+  DO: reserve IP
 
 setup:
   # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.service /etc/systemd/system
@@ -70,6 +71,8 @@ changeover
   update hatchbox to deploy master branch
   turn up DNS ttl to 3600
   write up notes to setup instructions
+  test postfix outgoing
+  test postfix incoming
 
 later
   archive lobsters-ansible

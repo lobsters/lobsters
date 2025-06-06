@@ -1,0 +1,4 @@
+# Use an inet socket, not a unix socket, so chrooted.
+# postfix can talk to the DKIM milter.
+#
+SOCKET="path:/run/opendkim/opendkim.socket"

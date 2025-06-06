@@ -47,7 +47,8 @@ x   bare minimum shell config from lobsters-ansible
 x   postfix send email
 x   /etc restic
 x recurring task for app restic
-  DO: reserve IP
+x DO: reserve IP
+  https://guides.rubyonrails.org/v7.1/action_mailbox_basics.html#postfix
 
 setup:
   # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.service /etc/systemd/system
@@ -59,25 +60,26 @@ setup:
   # systemctl start root-deploy.path
 
 changeover
-  merge hatchbox -> master, update hatchbox deploy branch
-  Caddyfile.pre: 'host lobste.rs'
+  web03 enable read-only
   web01 enable read-only
-  change over DNS for lobste.rs
+  Caddyfile.pre: 'host lobste.rs'
+  merge hatchbox -> master
+  hatchbox: update hatchbox deploy branch, disable maintenance mode
+  hatchbox: run deploy
+  hatchbox: hit 'update caddyfile' button
+  dnsimple: lobsters.dev A, AAAA -> web03
   web03 disable read-only
   web03 write our redirect from lobsters.dev -> lobste.rs
   DO rename web03 -> lobste.rs I bet
-  dnsimple: lobsters.dev A, AAAA -> web03
-  hatchbox web ui: uncomment lobsters-cron job to run every 5m
-  merge down hatchbox branch
-  update hatchbox to deploy master branch
-  turn up DNS ttl to 3600
-  write up notes to setup instructions
-  https://guides.rubyonrails.org/v7.1/action_mailbox_basics.html#postfix
+  hatchbox: uncomment lobsters-cron job to run every 5m
+  dnsimple: turn up DNS ttl to 3600
   test postfix outgoing
   test postfix incoming
 
 later
   archive lobsters-ansible
+  power off web01
+  write up notes to setup instructions
   tune config/puma thread count based on prod usage
   idea: logs -> DO durable obj -> duckdb?
 

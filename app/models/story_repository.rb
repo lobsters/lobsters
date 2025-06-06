@@ -18,13 +18,6 @@ class StoryRepository
     hottest.order(:hotness)
   end
 
-  def active
-    Story.base(@user)
-      .where.not(id: Story.hidden_by(@user).select(:id))
-      .filter_tags(@params[:exclude_tags] || [])
-      .order(last_comment_at: :desc)
-  end
-
   def newest_by_user(user)
     # Story.base without unmerged scope
     Story.where(user: user).includes(:tags).not_deleted(@user).mod_preload?(@user).order(id: :desc)

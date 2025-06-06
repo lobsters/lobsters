@@ -13,7 +13,7 @@ class HomeController < ApplicationController
 
   def active
     @stories, @show_more = get_from_cache(active: true) {
-      paginate stories.active
+      paginate Story.active(@user, filtered_tag_ids)
     }
 
     @title = "Active Discussions"

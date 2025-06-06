@@ -6,30 +6,6 @@ describe StoryRepository do
   let(:submitter) { create(:user) }
   let(:repo) { StoryRepository.new(submitter) }
 
-  describe ".active" do
-    it "is ordered by most-recent comment" do
-      older_story = create(:story)
-      newer_story = create(:story)
-      older_comment = create(:comment, story: newer_story)
-      newer_comment = create(:comment, story: older_story)
-
-      expect(repo.active).to eq([newer_comment.story, older_comment.story])
-    end
-
-    it "does not show hidden stories" do
-      hidden_story = create(:story)
-      normal_story = create(:story)
-      create(:comment, story: hidden_story)
-      normal_comment = create(:comment, story: normal_story)
-
-      HiddenStory.hide_story_for_user(hidden_story, hidden_story.user)
-      hidden_story_user = User.find_by(id: hidden_story.user_id)
-
-      hidden_story_user_repo = StoryRepository.new(hidden_story_user)
-      expect(hidden_story_user_repo.active).to eq([normal_comment.story])
-    end
-  end
-
   describe ".newest_by_user" do
     context "when submitter is viewing their own stories" do
       it "sees their stories" do

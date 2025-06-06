@@ -87,4 +87,35 @@ describe HomeController do
       end
     end
   end
+
+  describe "#active" do
+    let!(:active_story) { create :story, user: }
+    let!(:hidden_story) { create :story, user: }
+
+    it "renders successful" do
+      get :active, session: {u: user.session_token}
+
+      expect(response).to be_successful
+    end
+
+    it "the page has a correct title" do
+      get :active, session: {u: user.session_token}
+
+      expect(@controller.view_assigns["title"]).to eq("Active Discussions")
+    end
+
+    it "active story has been available" do
+      get :active, session: {u: user.session_token}
+
+      expect(@controller.view_assigns["stories"]).to include(active_story)
+    end
+
+    it "hidden story has not been available" do
+      HiddenStory.hide_story_for_user hidden_story, user
+
+      get :active, session: {u: user.session_token}
+
+      expect(@controller.view_assigns["stories"]).not_to include(hidden_story)
+    end
+  end
 end

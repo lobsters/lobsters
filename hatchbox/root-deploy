@@ -39,3 +39,8 @@ cp hatchbox/logrotate.conf /etc/logrotate.d/
 
 # shell quality of life
 apt install exa fd-find tmux tree
+
+# shell config; the default .bashrc sources this
+cp hatchbox/bash_aliases /root/.bash_aliases
+cp hatchbox/bash_aliases ~deploy/.bash_aliases
+chown deploy:deploy ~deploy/.bash_aliases

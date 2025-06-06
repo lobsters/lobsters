@@ -43,7 +43,7 @@ x puma worker count is 3?? doublecheck nateperkopec recent skeets
 x cron jobs https://app.hatchbox.io/apps/10006/cron_jobs/new
 x service to hook deploys:
 x   logrotate config to override hatchbox
-    bare minimum shell config from lobsters-ansible
+x   bare minimum shell config from lobsters-ansible
     postfix send email
 x   /etc restic
   recurring task for app restic
@@ -72,6 +72,7 @@ changeover
   write up notes to setup instructions
 
 later
+  archive lobsters-ansible
   tune config/puma thread count based on prod usage
   idea: logs -> DO durable obj -> duckdb?
 

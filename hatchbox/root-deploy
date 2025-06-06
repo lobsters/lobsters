@@ -32,7 +32,7 @@ apt install iptables-persistent postfix restic
 # run restic to back up /etc as root
 source $APP_ETC/restic-env
 restic self-update
-restic backup --cleanup-cache -no-scan /etc
+restic backup --cleanup-cache --no-scan /etc
 
 # configure logrotate
 cp hatchbox/logrotate.conf /etc/logrotate.d/

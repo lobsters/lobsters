@@ -8,6 +8,9 @@ production:
   populate_comment_stats:
     command: CommentStat.daily_fill!
     schedule: every day at 4:00am
+  restic:
+    command: ResticJob
+    schedule: every day at 1 am
   stats_graphs:
     class: StatsGraphsJob
     schedule: every day at 12:00am

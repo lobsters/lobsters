@@ -46,7 +46,7 @@ x   logrotate config to override hatchbox
 x   bare minimum shell config from lobsters-ansible
     postfix send email
 x   /etc restic
-  recurring task for app restic
+x recurring task for app restic
 
 setup:
   # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.service /etc/systemd/system

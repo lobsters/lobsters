@@ -512,6 +512,7 @@ describe Story do
         it { expect(stories.last).to eq(story1) }
       end
     end
+
     describe "newest" do
       let(:tag) { create :tag }
       let!(:story1) { create :story, title: "Hello 1", url: "http://example.com/1", tags: [tag] }

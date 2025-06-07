@@ -81,5 +81,20 @@ RSpec.feature "Reading Homepage", type: :feature do
       expect(user.reload.last_read_newest_comment).to be_within(1.second).of Time.zone.now
       expect(page).not_to have_link(href: /last_read_timestamp=\d+/)
     end
+
+    it "filters out comments by tag" do
+      create(:comment, comment: "shown", created_at: 2.hours.ago)
+      filtered_tag = create(:tag)
+      tagged_story = create(:story, tags: [filtered_tag])
+      create(:comment, story: tagged_story, comment: "filteredout", created_at: 1.hour.ago)
+
+      user = create(:user)
+      user.tag_filters.create!(tag: filtered_tag)
+      stub_login_as user
+
+      visit "/comments"
+      expect(page.body).to include("shown")
+      expect(page.body).to_not include("filteredout")
+    end
   end
 end

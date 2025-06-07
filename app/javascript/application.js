@@ -354,7 +354,8 @@ export class _LobstersFunction {
       hideSelected: true,
       closeAfterSelect: true,
       selectOnTab: true,
-      sortField: {field: "data-value"},
+      searchField: ["value", "title", "vibe"], // sort vibecoding above ai tag for 'ai'
+      sortField: [ {field: "value", direction: "asc"} ],
       onInitialize: function() {
         const parent = qS('.ts-control');
         parent.appendChild(qS('.ts-dropdown'));
@@ -570,6 +571,9 @@ onPageLoad(() => {
 
   if (qS('#story_url') && qS('#story_preview') && !qS('#story_preview').firstElementChild) {
     qS('#story_url').focus()
+  }
+  if (qS('#totp_code')) {
+    qS('#totp_code').focus();
   }
 
   on('change', '#story_title', Lobster.checkStoryTitle);

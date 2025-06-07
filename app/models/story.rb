@@ -121,6 +121,19 @@ class Story < ApplicationRecord
       .limit(10)
   }
 
+  scope :hidden, ->(user, exclude_tags = nil) {
+    base(user)
+      .hidden_by(user)
+      .filter_tags(exclude_tags || [])
+      .order(:hotness)
+  }
+
+  scope :newest, ->(user, exclude_tags = nil) {
+    base(user, unmerged: false)
+      .filter_tags(exclude_tags || [])
+      .order(id: :desc)
+  }
+
   include Token
 
   validates :title, length: {in: 3..150}, presence: true

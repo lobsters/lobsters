@@ -1,7 +1,7 @@
 # typed: false
 
 module IntervalHelper
-  PLACEHOLDER = {param: "1w", dur: 1, intv: "Week", human: "week"}
+  PLACEHOLDER = {param: "1w", dur: 1, intv: "Week", human: "week", placeholder: true}
   TIME_INTERVALS = {"h" => "Hour",
                     "d" => "Day",
                     "w" => "Week",
@@ -20,7 +20,8 @@ module IntervalHelper
         param: "#{dur}#{m[2]}",
         dur: dur,
         intv: intv,
-        human: "#{(dur == 1) ? "" : dur} #{intv}".downcase.pluralize(dur).chomp
+        human: "#{(dur == 1) ? "" : dur} #{intv}".downcase.pluralize(dur).chomp,
+        placeholder: false
       }
     else
       PLACEHOLDER

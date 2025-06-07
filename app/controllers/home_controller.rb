@@ -27,7 +27,7 @@ class HomeController < ApplicationController
 
   def hidden
     @stories, @show_more = get_from_cache(hidden: true) {
-      paginate stories.hidden
+      paginate Story.hidden(@user, filtered_tag_ids)
     }
 
     @title = "Hidden Stories"
@@ -72,7 +72,7 @@ class HomeController < ApplicationController
 
   def newest
     @stories, @show_more = get_from_cache(newest: true) {
-      paginate stories.newest
+      paginate Story.newest(@user, filtered_tag_ids)
     }
 
     @title = "Newest Stories"
@@ -289,17 +289,21 @@ class HomeController < ApplicationController
 
   def top
     length = time_interval(params[:length])
+    if length[:placeholder]
+      return redirect_to(top_path(length: "1w"))
+    end
 
     @stories, @show_more = get_from_cache(top: true, length: length) {
       paginate stories.top(length)
     }
 
     @title = if length[:dur] > 1
-      "Top Stories of the Past #{length[:dur]} #{length[:intv]}"
+      "Top Stories of the Past #{length[:dur]} #{length[:intv].pluralize(length[:dur])}"
     else
       "Top Stories of the Past #{length[:intv]}"
     end
     @above = "stories/subnav"
+    @below = "home/top"
 
     @rss_link ||= {
       title: "RSS 2.0 - " + @title,

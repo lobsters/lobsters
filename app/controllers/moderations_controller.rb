@@ -7,7 +7,7 @@ class ModerationsController < ApplicationController
 
   def index
     @title = "Moderation Log"
-    @moderators = ["(All)", "(Users)"] + User.moderators.map(&:username)
+    @moderators = ["(All)", "(Moderators)", "(Users)"] + User.moderators.map(&:username)
 
     @moderator = moderation_params.fetch("moderator", "(All)")
     @what = {
@@ -34,6 +34,8 @@ class ModerationsController < ApplicationController
     @moderations = case @moderator
     when "(All)"
       @moderations
+    when "(Moderators)"
+      @moderations.joins(:moderator).where(moderator_user_id: @moderators)
     when "(Users)"
       @moderations.where(is_from_suggestions: true)
     else

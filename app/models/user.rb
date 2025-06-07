@@ -83,7 +83,6 @@ class User < ApplicationRecord
     s.string :mastodon_instance
     s.string :mastodon_oauth_token
     s.string :mastodon_username
-    s.any :keybase_signatures, array: true
     s.string :homepage
   end
 
@@ -145,10 +144,10 @@ class User < ApplicationRecord
 
   scope :active, -> { where(banned_at: nil, deleted_at: nil) }
   scope :moderators, -> {
-    where('
+    where("
       is_moderator = True OR
-      users.id IN (select distinct moderator_user_id from moderations)
-    ')
+      users.id IN (select distinct moderator_user_id from moderations where token not in (?))
+    ", Moderation::BAD_DOFFING_ENTRIES)
   }
 
   before_save :check_session_token
@@ -184,7 +183,7 @@ class User < ApplicationRecord
   MIN_STORIES_CHECK_SELF_PROMOTION = 2
 
   def underscores_and_dashes_in_username
-    username_regex = username.gsub(/_|-/, "[-_]")
+    username_regex = "^" + username.gsub(/_|-/, "[-_]") + "$"
     return unless username_regex.include?("[-_]")
 
     collisions = User.where("username REGEXP ?", username_regex).where.not(id: id)
@@ -224,10 +223,6 @@ class User < ApplicationRecord
 
     if mastodon_username.present?
       h[:mastodon_username] = mastodon_username
-    end
-
-    if keybase_signatures.present?
-      h[:keybase_signatures] = keybase_signatures
     end
 
     h
@@ -496,17 +491,6 @@ class User < ApplicationRecord
   def is_new?
     return true unless created_at # unsaved object; in signup flow or a test
     created_at > NEW_USER_DAYS.days.ago
-  end
-
-  def add_or_update_keybase_proof(kb_username, kb_signature)
-    self.keybase_signatures ||= []
-    remove_keybase_proof(kb_username)
-    self.keybase_signatures.push("kb_username" => kb_username, "sig_hash" => kb_signature)
-  end
-
-  def remove_keybase_proof(kb_username)
-    self.keybase_signatures ||= []
-    self.keybase_signatures.reject! { |kbsig| kbsig["kb_username"] == kb_username }
   end
 
   def roll_session_token

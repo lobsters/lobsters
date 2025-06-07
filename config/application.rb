@@ -77,6 +77,9 @@ module Lobsters
 
     config.mission_control.jobs.base_controller_class = "JobsModController"
     config.mission_control.jobs.http_basic_auth_enabled = false
+
+    config.exception_notifier = false           # see config/initializers/production.rb(.sample)
+    Rails.application.config.telebugs = false   # see config/initializers/telebugs.rb
   end
 end
 

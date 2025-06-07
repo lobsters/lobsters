@@ -67,3 +67,6 @@ Crawl-delay: 1
 Disallow: /search
 Disallow: /page/
 Disallow: /comments/page/
+
+# https://developers.google.com/search/docs/crawling-indexing/robots/create-robots-txt
+Sitemap: https://lobste.rs/sitemap.xml.gz

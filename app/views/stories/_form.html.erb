@@ -57,7 +57,7 @@
           (t.filtered_count == 1 ? "" : "s") << " filtering</em>"
       end
 
-      [ "#{t.tag} - #{t.description}", t.tag, { "data-title" => raw(html), "data-tag-css" => t.css_class } ]},
+      [ "#{t.tag} - #{t.description}", t.tag, { "data-title" => raw(html), "data-tag-css" => t.css_class, "data-vibe" => (t.tag == "vibecoding") ? 'ai' : '' } ]},
     f.object.tags.map(&:tag)), {}, { :multiple => true } %>
   </div>
 

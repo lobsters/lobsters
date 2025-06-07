@@ -47,6 +47,22 @@ class Moderation < ApplicationRecord
 
   include Token
 
+  # A bug mistakenly recorded 10 users who doffed hats as moderators. To be able to say we don't
+  # edit or remove modlog entries without adding a caveat, I've listed the tokens for those and the
+  # frontend can explain that error when they appear. https://github.com/lobsters/lobsters/issues/1591
+  BAD_DOFFING_ENTRIES = %w[
+    moderation_01j6ax48wpfb4vas8qgv8vmg20
+    moderation_01j79djrajfa5a56bbpmb6msde
+    moderation_01j8myn90rey8axkbw0hntxfqe
+    moderation_01j8n06kdrf5n92txy802evnz3
+    moderation_01jajsjdd5fva8qdwgmc2es9gp
+    moderation_01jat93zq7fgmr8dm6fc411g2c
+    moderation_01jdgt4btvfvear3hphy79104f
+    moderation_01jhzbz2mafxrsbmmr3trh760c
+    moderation_01jmsbwaqxf2bbwws92cv8688k
+    moderation_01jnywh2rxekqa61seqmk8z3f7
+  ].freeze
+
   validates :action, :reason, length: {maximum: 16_777_215}
   validates :is_from_suggestions, inclusion: {in: [true, false]}
   validate :one_foreign_key_present

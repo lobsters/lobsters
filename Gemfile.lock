@@ -127,9 +127,6 @@ GEM
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
-    exception_notification (4.1.1)
-      actionmailer (>= 3.0.4)
-      activesupport (>= 3.0.4)
     factory_bot (6.5.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.4)
@@ -255,7 +252,7 @@ GEM
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.8.1)
-    rack (3.1.14)
+    rack (3.1.16)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
     rack-mini-profiler (3.3.1)
@@ -469,7 +466,6 @@ DEPENDENCIES
   commonmarker (< 1)
   database_cleaner
   database_consistency
-  exception_notification
   factory_bot_rails
   faker
   flamegraph

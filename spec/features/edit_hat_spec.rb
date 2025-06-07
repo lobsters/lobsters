@@ -52,6 +52,7 @@ RSpec.feature "Editing Hats" do
     expect(story.comments.second.hat.hat).to eq(new_hat.hat)
 
     mod_log = Moderation.last
-    expect(mod_log.action).to match(/Doffed hat "#{hat.hat}": To replace with "#{new_hat.hat}"/)
+    expect(mod_log.action).to eq("Doffed hat \"#{hat.hat}\"")
+    expect(mod_log.reason).to eq("To replace with \"#{new_hat.hat}\"")
   end
 end

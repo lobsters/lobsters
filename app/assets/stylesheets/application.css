@@ -469,7 +469,10 @@ div.voters {
 	align-items: center;
 	justify-self: center;
 	text-decoration: none;
+	font-size: 9.5pt;
 }
+.upvoter:focus { outline: none; } /* don't outline after upvote click */
+.upvoter:focus-visible { outline: 2px solid var(--color-fg-link); } /* do outline when tabbing */
 
 li.story {
 	clear: both;
@@ -1607,7 +1610,7 @@ input[type="submit"].link_post.pushover_button {
 	ol.comments { margin-left: 10px }
 	ol.stories,
 	div#inside > ol.comments {
-		margin: 0 -0.5rem;
+		margin: 0 0 0 -0.5rem;
 		padding-left: 0;
 	}
 	ol.comments1 > li.comments_subtree {
@@ -1621,7 +1624,7 @@ input[type="submit"].link_post.pushover_button {
 	div.voters {
 		margin-left: 0.25em;
 		margin-top: 0px;
-		width: 20px;
+		width: 30px;
 	}
 
 	div.comment_form_container {
@@ -1721,7 +1724,7 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	li div.details {
-		margin: 0 0 0 26px;
+		margin: 0 0 0 36px;
 	}
 	div.story_content {
 		margin: 0 0 0 28px;

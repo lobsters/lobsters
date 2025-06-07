@@ -26,7 +26,6 @@ gem "json"
 
 # deployment
 gem "actionpack-page_caching"
-gem "exception_notification"
 gem "puma"
 
 # security

@@ -13,6 +13,13 @@
   <%= render partial: 'table', locals: { moderations: @moderations } %>
 </div>
 
+<% if @moderations.map(&:token).intersect? Moderation::BAD_DOFFING_ENTRIES  %>
+  <p>
+    This table includes 1 or more entries where a user who doffed a hat was <a href="https://github.com/lobsters/lobsters/issues/1591">wrongly listed as a moderator</a>.
+    We don't want to edit or delete from the modlog, so we've annotated this display to explain the bad data.
+  </p>
+<% end %>
+
 <div class="morelink">
   <% if @page > 1 %>
     <%= link_to "<< Page #{@page - 1}", @moderation_params.merge({:page => @page - 1}) %>

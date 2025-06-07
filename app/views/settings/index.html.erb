@@ -252,12 +252,6 @@
         <% end %>
       </span>
     <% end %>
-    <% if Keybase.enabled? %>
-      <%= label_tag :kb_username, raw("<a href=\"https://keybase.io/\">Keybase</a>"), :class => "required" %>
-      <span>
-        <%= render :partial => "keybase_proofs/proofs", locals: {user: @edit_user, for_self: true} %>
-      </span>
-    <% end %>
   </div>
 </section>
 

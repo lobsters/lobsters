@@ -22,6 +22,6 @@ RSpec.feature "Doffing Hats" do
 
     mod = Moderation.last
     expect(mod.action).to start_with "Doffed hat"
-    expect(mod.action).to include doffing_reason
+    expect(mod.reason).to eq(doffing_reason)
   end
 end

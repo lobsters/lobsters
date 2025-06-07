@@ -30,11 +30,8 @@ Rails.application.routes.draw do
   get "/upvoted", to: redirect("/upvoted/stories")
   get "/upvoted/page/:page", to: redirect("/upvoted/stories/page/%{page}")
 
-  get "/top" => "home#top"
   get "/top/rss" => "home#top", :format => "rss"
-  get "/top/page/:page" => "home#top"
-  get "/top/:length" => "home#top"
-  get "/top/:length/page/:page" => "home#top"
+  get "/top(/:length(/page/:page))" => "home#top", :as => "top"
 
   get "/threads" => "comments#user_threads"
 
@@ -132,7 +129,6 @@ Rails.application.routes.draw do
     end
   end
   get "/comments/page/:page" => "comments#index"
-  get "/comments" => "comments#index"
 
   get "/messages/sent" => "messages#sent"
   get "/messages" => "messages#index"
@@ -200,10 +196,6 @@ Rails.application.routes.draw do
   get "/settings/github_auth" => "settings#github_auth"
   get "/settings/github_callback" => "settings#github_callback"
   post "/settings/github_disconnect" => "settings#github_disconnect"
-
-  resources :keybase_proofs, only: [:new, :create]
-  post "/keybase_proofs/:id" => "keybase_proofs#destroy", :as => :keybase_proof
-  get "/.well-known/keybase-proof-config" => "keybase_proofs#kbconfig", :as => "keybase_config"
 
   get "/filters" => "filters#index"
   post "/filters" => "filters#update"

@@ -27,6 +27,9 @@ respond @lobsters_dev_domain 200 {
   close
 }
 
+@www_domain `host('www.lobste.rs', 'www.lobsters.dev')`
+redir @www_domain https://lobste.rs{uri} 302
+
 # full page caching with actionpack-page_caching
 @visitor {
   host lobste.rs

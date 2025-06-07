@@ -117,6 +117,7 @@ later
   write up notes to setup instructions
   tune config/puma thread count based on prod usage
   idea: logs -> DO durable obj -> duckdb?
+  lobsters.dev fix content-type
 
 note:
   to update caddy files, deploy them, then go to app settings and click 'Update Caddy' to pick up the change

@@ -67,7 +67,7 @@ changeover
   hatchbox: update hatchbox deploy branch, disable maintenance mode
   hatchbox: run deploy
   hatchbox: hit 'update caddyfile' button
-  dnsimple: lobsters.dev A, AAAA -> web03
+  DO: move reserved IP web01 -> web03
   web03 disable read-only
   web03 write our redirect from lobsters.dev -> lobste.rs
   DO rename web03 -> lobste.rs I bet

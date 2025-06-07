@@ -1,0 +1,3 @@
+#!/bin/bash
+
+find /home/deploy/lobsters/current/public/cache/ -type f -delete

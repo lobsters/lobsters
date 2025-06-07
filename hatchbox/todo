@@ -101,7 +101,7 @@ x DO: db01 firewall remove web03, web01
 x DO rename web03 -> lobste.rs? yes, for PTR https://docs.digitalocean.com/products/networking/dns/how-to/manage-records/#ptr-rdns-records
   dnsimple: check dkim DNS record matches (on .rs and .dev)
   dnsimple: ptr
-  db01: remove grants to web01, web03
+x db01: remove grants to web01, web03 (drop user 'lobsters'@'10.116.0.5';)
   root-deploy has some kind of race and often runs against old checkout instead of current
   debug actionmailbox routing
 x DO: delete web03

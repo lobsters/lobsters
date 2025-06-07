@@ -71,6 +71,7 @@ x hatchbox: set up web04
 x db: permit access from web04
 x hatchbox: create new lobsters app in cluster, copy settings
 x hatchbox: run provisioning
+x hatchbox: create process for bundle exec rails solid_queue:start
 x DO: move reserved IP web01 -> web03
 x hatchbox: add lobste.rs domain
 x web04 run apt update+upgrade
@@ -90,6 +91,7 @@ x web04 disable read-only
 x see the site load in my browser
 x hatchbox: uncomment lobsters-cron job to run every 5m
 x hatchbox: deploy while watching 'journalctl -e -f -u root-deploy' to see it run
+x lobste.rs/jobs: see worker running, manually run recurring tasks to fill queues etc
   test postfix outgoing
   test postfix incoming
   dnsimple: turn up DNS ttl to 3600

@@ -27,7 +27,7 @@ APP_ETC=/home/deploy/lobsters/shared/etc
 apt install iptables-persistent opendkim postfix restic
 
 # configure opendkim for postfix
-cp opendkim /etc/default/
+cp opendkim.m4 /etc/mail/m4/
 cp opendkim.conf /etc/
 cp opendkim.service /etc/systemd/system/
 if [ ! -f /etc/dkimkeys/mail.private ]; then
@@ -35,6 +35,7 @@ if [ ! -f /etc/dkimkeys/mail.private ]; then
 fi
 mkdir -p /var/spool/postfix/opendkim
 chown -R opendkim:opendkim /var/spool/postfix/opendkim /etc/dkimkeys
+systemctl restart opendkim
 
 # configure postfix
 adduser postfix opendkim

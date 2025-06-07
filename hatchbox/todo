@@ -95,22 +95,24 @@ x lobste.rs/jobs: see worker running, manually run recurring tasks to fill queue
 x test postfix outgoing
 x test postfix incoming
 x hatchbox add www.lobste.rs www.lobsters.dev
-  check www.lobste.rs -> lobste.rs
-  check www.lobstersd.dev -> lobste.rs
-  DO: db01 firewall remove web03, web01
+x check www.lobste.rs -> lobste.rs
+x check www.lobstersd.dev -> lobste.rs
+x DO: db01 firewall remove web03, web01
+x DO rename web03 -> lobste.rs? yes, for PTR https://docs.digitalocean.com/products/networking/dns/how-to/manage-records/#ptr-rdns-records
   dnsimple: check dkim DNS record matches (on .rs and .dev)
   dnsimple: ptr
   db01: remove grants to web01, web03
   root-deploy has some kind of race and often runs against old checkout instead of current
   debug actionmailbox routing
-  DO: delete web03
-  DO: delete lobsters-nyc3 cluster
-  DO: delete lobsters-nyc3 app
+x DO: delete web03
+  take a final backup of web01
+  DO: delete web01
+  hatchbox: delete lobsters-nyc3 cluster
+  hatchbox: delete lobsters-nyc3 app
   dnsimple: turn up DNS ttl to 3600
 
 later
   restic: delete web03 backups
-  DO rename web03 -> lobste.rs?
   hatchbox support: report bug of reserved ip
   archive lobsters-ansible
   power off web01

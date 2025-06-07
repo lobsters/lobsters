@@ -23,6 +23,10 @@ cd /home/deploy/lobsters/current/hatchbox
 
 APP_ETC=/home/deploy/lobsters/shared/etc
 
+# the only way to get a PTR on DO name the VPS with the fqdn, ugh
+# https://docs.digitalocean.com/products/networking/dns/how-to/manage-records/#ptr-rdns-records
+echo "lobste.rs" > /etc/hostname
+
 # server packages
 apt install iptables-persistent opendkim postfix restic
 

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd /home/deploy/lobsters/current
+
+$HOME/.asdf/asdf.sh
+eval "$(/home/deploy/.asdf/bin/asdf vars)"
+
+# INGRESS_PASSWORD is in a hatchbox env var
+bundle exec rails action_mailbox:ingress:postfix URL=https://lobste.rs/rails/action_mailbox/relay/inbound_emails

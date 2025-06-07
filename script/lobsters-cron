@@ -9,7 +9,7 @@ report() {
 trap report ERR
 
 cd /home/deploy/lobsters/current
-eval "$(/home/deploy/.asdf/bin/asdf vars)"
+/home/deploy/.asdf/asdf.sh
 
 if [ -f public/maintenance.html ];
 then

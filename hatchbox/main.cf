@@ -1,6 +1,9 @@
 # See /usr/share/postfix/main.cf.dist for a commented, more complete version
 compatibility_level = 3.6
 
+maillog_file_prefixes = /home/deploy/lobsters/shared/log/
+maillog_file = /home/deploy/lobsters/shared/log/mail.log
+
 # DKIM - paths relative to chroot /var/spool/postfix
 smtpd_milters = unix:/opendkim/opendkim.socket
 non_smtpd_milters = unix:/opendkim/opendkim.socket
@@ -28,26 +31,26 @@ smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
 
 # lobsters config:
-
-# 1. accept mail for lobsters and forward it on (root@ etc) according to /etc/aliases
 mydomain = lobste.rs
 myhostname = lobste.rs
 mydestination = $myhostname, localhost, lobsters
-relayhost = 
 mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 mailbox_size_limit = 0
 inet_interfaces = all
 inet_protocols = all
+# don't pass on mail to any remote hosts
+relayhost =
+relay_domains =
 
-# 2. mailing list mode - take mail for lobsters-(key)@, send it to 'lobsters'
-# local user which has a .forward piping to parse_inbound_mail
-
-# handles aliases before local users to forward for admin
+# handle aliases before rails ingress
 local_recipient_maps = $alias_maps proxy:unix:passwd.byname
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
-# split recipient email on - so mailing list mode emails to lobsters-key@ work
+
+# mailing list emails are 'lobsters-(key)@lobste.rs'
 recipient_delimiter = +-
 
-# don't pass on mail to any remote hosts
-relay_domains =
+# https://guides.rubyonrails.org/v7.1/action_mailbox_basics.html#postfix
+# https://serverfault.com/questions/258469/how-to-configure-postfix-to-pipe-all-incoming-email-to-a-script
+transport_maps = hash:/etc/postfix/transport
+virtual_alias_maps = hash:/etc/postfix/virtual_aliases

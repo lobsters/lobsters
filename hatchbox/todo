@@ -48,7 +48,7 @@ x   postfix send email
 x   /etc restic
 x recurring task for app restic
 x DO: reserve IP
-  https://guides.rubyonrails.org/v7.1/action_mailbox_basics.html#postfix
+x https://guides.rubyonrails.org/v7.1/action_mailbox_basics.html#postfix
 
 setup:
   # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.service /etc/systemd/system

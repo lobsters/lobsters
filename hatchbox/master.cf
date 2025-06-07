@@ -122,5 +122,6 @@ mailman   unix  -       n       n       -       -       pipe
   flags=FR user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
   ${nexthop} ${user}
 
-lobsters  unix  -       n       n       -       2       pipe
-  flags=Fqhu user=lobsters size=1024000 argv=/srv/lobste.rs/http/script/parse_inbound_mail ${recipient} ${sender}
+lobsters-ingress   unix  -       n       n       -       -       pipe
+  flags=FR user=deploy argv=/home/deploy/lobsters/current/script/lobsters-ingress
+  ${nexthop} ${user}

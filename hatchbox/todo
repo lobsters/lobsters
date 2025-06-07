@@ -50,36 +50,62 @@ x recurring task for app restic
 x DO: reserve IP
 x https://guides.rubyonrails.org/v7.1/action_mailbox_basics.html#postfix
 
-setup:
+root-deploy hook setup:
   # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.service /etc/systemd/system
   # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.path /etc/systemd/system
   # systemctl daemon-reload
-  # systemctl enable root-deploy.service
-  # systemctl enable root-deploy.path
-  # systemctl start root-deploy.service
-  # systemctl start root-deploy.path
+  # systemctl enable --now root-deploy.service # first backup takes 10ish min
+  # systemctl enable --now root-deploy.path
 
 changeover
 x web03 enable read-only
 x web01 enable read-only
 x take a db backup
 x Caddyfile.pre: 'host lobste.rs'; uncomment lobsters.dev placeholder
-  merge hatchbox -> master
-  hatchbox: update hatchbox deploy branch, disable maintenance mode
-  hatchbox: run deploy
-  hatchbox: hit 'update caddyfile' button
-  DO: move reserved IP web01 -> web03
-  hatchbox: add lobste.rs domain
-  web03 uncomment our redirect from lobsters.dev -> lobste.rs
-  web03 disable read-only
-  see the site load in my browser
-  DO rename web03 -> lobste.rs I bet
-  hatchbox: uncomment lobsters-cron job to run every 5m
+x merge hatchbox -> master
+x hatchbox: update hatchbox deploy branch, disable maintenance mode
+x hatchbox: run deploy
+x hatchbox: hit 'update caddyfile' button
+x hatchbox: create new cluster
+x hatchbox: set up web04
+x db: permit access from web04
+x hatchbox: create new lobsters app in cluster, copy settings
+x hatchbox: run provisioning
+x DO: move reserved IP web01 -> web03
+x hatchbox: add lobste.rs domain
+x web04 run apt update+upgrade
+x hatchbox: deploy (fail, no secrets, but creates dir structure)
+x rsync -vaP --delete ~/notes/lobsters/hatchbox-shared-etc/ deploy@web04:lobsters/shared/etc
+x DO: db01 firewall permit web04
+x db01: mariadb
+x   use lobsters;
+x   create or replace user lobsters@'[public ip web04]' identified by '[password]';
+x   show grants for lobsters@'[public ip web04];
+x   flush privileges;
+x hatchbox: deploy
+  web04 run root-deploy hook setup
+x web04 uncomment our placeholder for lobsters.dev
+x web01 disable cron jobs
+  web04 disable read-only
+x see the site load in my browser
+x hatchbox: uncomment lobsters-cron job to run every 5m
+  hatchbox: deploy while watching 'journalctl -e -f -u root-deploy' to see it run
   test postfix outgoing
   test postfix incoming
   dnsimple: turn up DNS ttl to 3600
+  DO: delete web03
+  DO: delete lobsters-nyc3 cluster
+  DO: delete lobsters-nyc3 app
+  check www.lobste.rs -> lobste.rs
+  check www.lobstersd.dev -> lobste.rs
+  DO: db01 firewall remove web03, web01
+  check dkim DNS record matches (on .rs and .dev)
+  db01: remove grants to web01, web03
 
 later
+  restic: delete web03 backups
+  DO rename web03 -> lobste.rs?
+  hatchbox support: report bug of reserved ip
   archive lobsters-ansible
   power off web01
   write up notes to setup instructions

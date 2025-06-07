@@ -60,21 +60,24 @@ setup:
   # systemctl start root-deploy.path
 
 changeover
-  web03 enable read-only
-  web01 enable read-only
-  Caddyfile.pre: 'host lobste.rs'
+x web03 enable read-only
+x web01 enable read-only
+x take a db backup
+x Caddyfile.pre: 'host lobste.rs'; uncomment lobsters.dev placeholder
   merge hatchbox -> master
   hatchbox: update hatchbox deploy branch, disable maintenance mode
   hatchbox: run deploy
   hatchbox: hit 'update caddyfile' button
   DO: move reserved IP web01 -> web03
+  hatchbox: add lobste.rs domain
+  web03 uncomment our redirect from lobsters.dev -> lobste.rs
   web03 disable read-only
-  web03 write our redirect from lobsters.dev -> lobste.rs
+  see the site load in my browser
   DO rename web03 -> lobste.rs I bet
   hatchbox: uncomment lobsters-cron job to run every 5m
-  dnsimple: turn up DNS ttl to 3600
   test postfix outgoing
   test postfix incoming
+  dnsimple: turn up DNS ttl to 3600
 
 later
   archive lobsters-ansible

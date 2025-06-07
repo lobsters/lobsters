@@ -8,15 +8,15 @@ respond @hatchboxapp_domain 403 {
 }
 
 # placeholder for lobsters.dev
-#lobsters.dev {
-#  respond /home/deploy/lobsters/current/public/lobsters.dev.html 200 {
-#    content-type text/html
-#  }
-#}
+lobsters.dev {
+  respond /home/deploy/lobsters/current/public/lobsters.dev.html 200 {
+    content-type text/html
+  }
+}
 
 # full page caching with actionpack-page_caching
 @visitor {
-  host lobsters.dev
+  host lobste.rs
   not {
     header_regexp Cookie `.*=.*`
   }

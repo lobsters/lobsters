@@ -33,7 +33,7 @@ smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_una
 # lobsters config:
 mydomain = lobste.rs
 myhostname = lobste.rs
-mydestination = $myhostname, localhost, lobsters
+mydestination = $myhostname, localhost
 mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 mailbox_size_limit = 0
 inet_interfaces = all

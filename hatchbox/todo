@@ -99,16 +99,17 @@ x check www.lobste.rs -> lobste.rs
 x check www.lobstersd.dev -> lobste.rs
 x DO: db01 firewall remove web03, web01
 x DO rename web03 -> lobste.rs? yes, for PTR https://docs.digitalocean.com/products/networking/dns/how-to/manage-records/#ptr-rdns-records
-  dnsimple: check dkim DNS record matches (on .rs and .dev)
-  dnsimple: ptr
+x dnsimple: check dkim DNS record matches (on .rs and .dev)
+x dnsimple: ptr
 x db01: remove grants to web01, web03 (drop user 'lobsters'@'10.116.0.5';)
+x DO: delete web03
+x hatchbox: delete lobsters-nyc3 cluster
+x hatchbox: delete lobsters-nyc3 app
+x archive lobsters-ansible
   root-deploy has some kind of race and often runs against old checkout instead of current
   debug actionmailbox routing
-x DO: delete web03
   take a final backup of web01
   DO: delete web01
-  hatchbox: delete lobsters-nyc3 cluster
-  hatchbox: delete lobsters-nyc3 app
   dnsimple: turn up DNS ttl to 3600
 
 later
@@ -120,6 +121,7 @@ later
   tune config/puma thread count based on prod usage
   idea: logs -> DO durable obj -> duckdb?
   lobsters.dev fix content-type
+  confirm logrotate is rotating weekly
 
 note:
   to update caddy files, deploy them, then go to app settings and click 'Update Caddy' to pick up the change

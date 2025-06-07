@@ -86,10 +86,10 @@ x hatchbox: deploy
   web04 run root-deploy hook setup
 x web04 uncomment our placeholder for lobsters.dev
 x web01 disable cron jobs
-  web04 disable read-only
+x web04 disable read-only
 x see the site load in my browser
 x hatchbox: uncomment lobsters-cron job to run every 5m
-  hatchbox: deploy while watching 'journalctl -e -f -u root-deploy' to see it run
+x hatchbox: deploy while watching 'journalctl -e -f -u root-deploy' to see it run
   test postfix outgoing
   test postfix incoming
   dnsimple: turn up DNS ttl to 3600

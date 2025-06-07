@@ -1,9 +1,6 @@
 # See /usr/share/postfix/main.cf.dist for a commented, more complete version
 compatibility_level = 3.6
 
-maillog_file_prefixes = /home/deploy/lobsters/shared/log/
-maillog_file = /home/deploy/lobsters/shared/log/mail.log
-
 # DKIM - paths relative to chroot /var/spool/postfix
 smtpd_milters = unix:/opendkim/opendkim.socket
 non_smtpd_milters = unix:/opendkim/opendkim.socket

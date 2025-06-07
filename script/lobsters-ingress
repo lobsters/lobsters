@@ -2,7 +2,7 @@
 
 cd /home/deploy/lobsters/current
 
-$HOME/.asdf/asdf.sh
+/home/deploy/.asdf/asdf.sh
 eval "$(/home/deploy/.asdf/bin/asdf vars)"
 
 # INGRESS_PASSWORD is in a hatchbox env var

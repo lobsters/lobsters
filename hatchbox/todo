@@ -103,6 +103,7 @@ x lobste.rs/jobs: see worker running, manually run recurring tasks to fill queue
   DO: db01 firewall remove web03, web01
   check dkim DNS record matches (on .rs and .dev)
   db01: remove grants to web01, web03
+  root-deploy has some kind of race and often runs against old checkout instead of current
 
 later
   restic: delete web03 backups

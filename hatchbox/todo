@@ -92,18 +92,21 @@ x see the site load in my browser
 x hatchbox: uncomment lobsters-cron job to run every 5m
 x hatchbox: deploy while watching 'journalctl -e -f -u root-deploy' to see it run
 x lobste.rs/jobs: see worker running, manually run recurring tasks to fill queues etc
-  test postfix outgoing
-  test postfix incoming
-  dnsimple: turn up DNS ttl to 3600
-  DO: delete web03
-  DO: delete lobsters-nyc3 cluster
-  DO: delete lobsters-nyc3 app
+x test postfix outgoing
+x test postfix incoming
+x hatchbox add www.lobste.rs www.lobsters.dev
   check www.lobste.rs -> lobste.rs
   check www.lobstersd.dev -> lobste.rs
   DO: db01 firewall remove web03, web01
-  check dkim DNS record matches (on .rs and .dev)
+  dnsimple: check dkim DNS record matches (on .rs and .dev)
+  dnsimple: ptr
   db01: remove grants to web01, web03
   root-deploy has some kind of race and often runs against old checkout instead of current
+  debug actionmailbox routing
+  DO: delete web03
+  DO: delete lobsters-nyc3 cluster
+  DO: delete lobsters-nyc3 app
+  dnsimple: turn up DNS ttl to 3600
 
 later
   restic: delete web03 backups

@@ -1,7 +1,6 @@
 # See man 5 aliases for format
 
-# do not include 'lobsters' here - must use .forward to run as 'lobsters'
-# more info on mailing list mode in main.cf
+# do not include 'lobsters' here - main.cf has ingress configured for mailing list
 
 # system
 root: ADMIN_EMAIL

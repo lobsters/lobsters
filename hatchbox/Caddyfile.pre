@@ -8,10 +8,23 @@ respond @hatchboxapp_domain 403 {
 }
 
 # placeholder for lobsters.dev
-lobsters.dev {
-  respond /home/deploy/lobsters/current/public/lobsters.dev.html 200 {
-    content-type text/html
-  }
+@lobsters_dev_domain {
+  host lobsters.dev
+}
+respond @lobsters_dev_domain 200 {
+  body <<HTML
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Lobsters.dev</title>
+    </head>
+    <body>
+      <h1>Lobsters.dev</h1>
+      <p>This is a backup domain for <a href="https://lobste.rs">lobste.rs</a> in case of serious DNS issues. It is not currently in use.</p>
+    </body>
+    </html>
+  HTML
+  close
 }
 
 # full page caching with actionpack-page_caching

@@ -106,6 +106,7 @@ x DO: delete web03
 x hatchbox: delete lobsters-nyc3 cluster
 x hatchbox: delete lobsters-nyc3 app
 x archive lobsters-ansible
+  caddy's not serving avatars
   root-deploy has some kind of race and often runs against old checkout instead of current
   debug actionmailbox routing
   take a final backup of web01

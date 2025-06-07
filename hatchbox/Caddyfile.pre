@@ -31,16 +31,16 @@ respond @lobsters_dev_domain 200 {
 redir @www_domain https://lobste.rs{uri} 302
 
 # full page caching with actionpack-page_caching
-@visitor {
-  host lobste.rs
-  not {
-    header_regexp Cookie `.*=.*`
-  }
-  file {
-    root /home/deploy/lobsters/current/public/cache/
-    try_files {path} {path}.html {path}/index.html
-  }
-}
+#@visitor {
+#  host lobste.rs
+#  not {
+#    header_regexp Cookie `.*=.*`
+#  }
+#  file {
+#    root /home/deploy/lobsters/current/public/cache/
+#    try_files {path} {path}.html {path}/index.html
+#  }
+#}
 # header @visitor X-Lobsters-Visitor "True"
 # header X-Lobsters-Hello "World 8"
-rewrite @visitor {file_match.relative}
+#rewrite @visitor {file_match.relative}

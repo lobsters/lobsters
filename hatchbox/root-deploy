@@ -17,7 +17,7 @@ cd /home/deploy/lobsters/current/hatchbox
 #
 # 4. Path units have an unfixed bug: https://github.com/systemd/systemd/issues/17727
 #    Systemd fails to consider a replaced symlink as 'changed' or 'modified'.
-#    So config/environments/production.rb touches the symlink on boot.
+#    So hatchbox/post-deploy touches the symlink on boot.
 #
 # 5. https://i.imgur.com/MCHXwyi.jpeg
 

@@ -11,6 +11,7 @@ respond @hatchboxapp_domain 403 {
 @lobsters_dev_domain {
   host lobsters.dev
 }
+header @lobsters_dev_domain content-type "text/html; charset=utf-8"
 respond @lobsters_dev_domain 200 {
   body <<HTML
     <!DOCTYPE html>

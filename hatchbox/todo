@@ -108,8 +108,8 @@ x hatchbox: delete lobsters-nyc3 app
 x archive lobsters-ansible
 x lobsters.dev fix content-type
   fix http -> https redirects
-  caddy's not serving avatars
-  fix full-page cache
+x caddy's not serving avatars
+x fix full-page cache
   root-deploy has some kind of race and often runs against old checkout instead of current
   debug actionmailbox routing
   take a final backup of web01

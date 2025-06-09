@@ -115,6 +115,8 @@ x take a final backup of web01
   debug actionmailbox routing
   DO: delete web01
   dnsimple: turn up DNS ttl to 3600
+  update /about
+  tune puma threads via env var next couple days; record final into config/puma.rb
 
 later
   restic: delete web03 backups

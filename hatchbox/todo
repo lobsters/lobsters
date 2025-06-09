@@ -107,12 +107,12 @@ x hatchbox: delete lobsters-nyc3 cluster
 x hatchbox: delete lobsters-nyc3 app
 x archive lobsters-ansible
 x lobsters.dev fix content-type
-  fix http -> https redirects
+x fix http -> https redirects
 x caddy's not serving avatars
 x fix full-page cache
+x take a final backup of web01
   root-deploy has some kind of race and often runs against old checkout instead of current
   debug actionmailbox routing
-  take a final backup of web01
   DO: delete web01
   dnsimple: turn up DNS ttl to 3600
 

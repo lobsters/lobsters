@@ -10,16 +10,16 @@
     <%= f.label :description, 'Description' %>
     <%= f.text_field :description %>
 
-    <%= f.label :permit_by_new_users, 'Permit by new users' %>
+    <%= f.label :permit_by_new_users, 'Permit by new users', :class => "for_checkbox" %>
     <%= f.check_box :permit_by_new_users %>
 
-    <%= f.label :privileged, 'Privileged' %>
+    <%= f.label :privileged, 'Privileged', :class => "for_checkbox" %>
     <%= f.check_box :privileged %>
 
-    <%= f.label :is_media, 'Is Media' %>
+    <%= f.label :is_media, 'Is Media', :class => "for_checkbox" %>
     <%= f.check_box :is_media %>
 
-    <%= f.label :active, 'Active' %>
+    <%= f.label :active, 'Active', :class => "for_checkbox" %>
     <%= f.check_box :active %>
 
     <%= f.label :hotness_mod, 'Hotness Mod' %>

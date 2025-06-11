@@ -32,7 +32,13 @@ pidfile ENV.fetch("PIDFILE") {
 # the concurrency of the application would be max `threads` * `workers`.
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
-workers ENV.fetch("PUMA_WORKERS") { Etc.nprocessors }
+workers ENV.fetch("PUMA_WORKERS") {
+  if ENV.fetch("RAILS_ENV") == "production"
+    Etc.nprocessors
+  else
+    2
+  end
+}
 
 worker_boot_timeout 180
 

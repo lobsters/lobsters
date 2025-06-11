@@ -7,5 +7,6 @@ class StatsGraphsJob < ApplicationJob
     Stats.fill_stories_graph_cache
     Stats.fill_comments_graph_cache
     Stats.fill_votes_graph_cache
+    nil
   end
 end

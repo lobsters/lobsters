@@ -1790,6 +1790,10 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 
+        .labelled_grid {
+            grid-template-columns: minmax(5rem, min-content) 1fr;
+        }
+
 	/* For the mobile view of the grid, we want most things to be full-width */
 	.labelled_grid > * {
 		grid-column: 1 / -1;

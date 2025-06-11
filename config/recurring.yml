@@ -15,7 +15,7 @@ production:
     command: ResticJob
     schedule: every day at 1 am
   sitemap:
-    command: SitemapGenerator::Interpreter.run(config_file: ENV["CONFIG_FILE"], verbose: false)
+    command: 'SitemapGenerator::Interpreter.run(config_file: ENV["CONFIG_FILE"], verbose: false)'
     schedule: every day at 2 am
   stats_graphs:
     class: StatsGraphsJob

@@ -7,7 +7,7 @@ production:
     schedule: every day at 4:00am
   fill_flagged_cache:
     command: FlaggedCommenters.new("1m").commenters
-    schedule: every 8 hours
+    schedule: every 15 minutes
   populate_comment_stats:
     command: CommentStat.daily_fill!
     schedule: every day at 4:00am

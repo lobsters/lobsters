@@ -328,7 +328,7 @@ class Comment < ApplicationRecord
           title: "#{Rails.application.name} mention by " \
             "#{user.username} on #{story.title}",
           message: plaintext_comment,
-          url: Routes.comment_target_path(self),
+          url: Routes.comment_target_url(self),
           url_title: "Reply to #{user.username}"
         )
       end
@@ -369,7 +369,7 @@ class Comment < ApplicationRecord
           title: "#{Rails.application.name} reply from " \
             "#{user.username} on #{story.title}",
           message: plaintext_comment,
-          url: Routes.comment_target_path(self),
+          url: Routes.comment_target_url(self),
           url_title: "Reply to #{user.username}"
         )
         notified << u.username

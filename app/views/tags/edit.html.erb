@@ -1,7 +1,3 @@
-<div class="box wide">
-  <div class="boxline">
-    <%= link_to "Filter By Tag #{@tag.tag}", tag_path(@tag) %>
-  </div>
+<p><%= link_to "Filter By Tag #{@tag.tag}", tag_path(@tag) %></p>
 
-  <%= render partial: 'form', locals: { tag: @tag } %>
-</div>
+<%= render partial: 'form', locals: { tag: @tag } %>

@@ -74,10 +74,10 @@
       <h2>Comment Reply Notification Settings</h2>
 
       <div class="labelled_grid">
-        <%= f.label :email_replies, "Receive E-mail", :class => "required" %>
+        <%= f.label :email_replies, "Receive E-mail", :class => "required for_checkbox" %>
         <span><%= f.check_box :email_replies %></span>
         <%= f.label :pushover_replies, "Receive Pushover Alert",
-          :class => "required" %>
+          :class => "required for_checkbox" %>
         <span>
           <%= f.check_box :pushover_replies %>
           <span class="hint">
@@ -91,10 +91,10 @@
       <h2>Comment Mention Notification Settings</h2>
 
       <div class="labelled_grid">
-        <%= f.label :email_mentions, "Receive E-mail", :class => "required" %>
+        <%= f.label :email_mentions, "Receive E-mail", :class => "required for_checkbox" %>
         <span><%= f.check_box :email_mentions %></span>
         <%= f.label :pushover_mentions, "Receive Pushover Alert",
-          :class => "required" %>
+          :class => "required for_checkbox" %>
         <span>
           <%= f.check_box :pushover_mentions %>
           <span class="hint">
@@ -108,10 +108,10 @@
       <h2>Private Message Notification Settings</h2>
 
       <div class="labelled_grid">
-        <%= f.label :email_messages, "Receive E-mail", :class => "required" %>
+        <%= f.label :email_messages, "Receive E-mail", :class => "required for_checkbox" %>
         <span><%= f.check_box :email_messages %></span>
         <%= f.label :pushover_messages, "Receive Pushover Alert",
-          :class => "required" %>
+          :class => "required for_checkbox" %>
         <span>
           <%= f.check_box :pushover_messages %>
           <span class="hint">
@@ -127,7 +127,7 @@
       <div class="labelled_grid">
         <%= f.label :show_submitted_story_threads,
           raw("Show in <a href=\"/threads\">Your Threads</a>"),
-          :class => "required" %>
+          :class => "required for_checkbox" %>
         <span><%= f.check_box :show_submitted_story_threads %></span>
       </div>
     </section>
@@ -177,7 +177,7 @@
         </span>
 
         <%= f.label :show_email, "Show Email Address",
-          :class => "required" %>
+          :class => "required for_checkbox" %>
         <span>
           <%= f.check_box :show_email %>
           <span class="hint">
@@ -186,10 +186,10 @@
         </span>
 
         <%= f.label :show_story_previews, "Show Story Previews",
-          :class => "required" %>
+          :class => "required for_checkbox" %>
         <span><%= f.check_box :show_story_previews %></span>
 
-        <%= f.label :show_avatars, "Show User Avatars", :class => "required" %>
+        <%= f.label :show_avatars, "Show User Avatars", :class => "required for_checkbox" %>
         <span><%= f.check_box :show_avatars %></span>
       </div>
 
@@ -286,9 +286,9 @@
     <div class="labelled_grid">
       <%= f.label :password, "Verify Password", :class => "required" %>
       <%= f.password_field :password, :autocomplete => "off" %>
-      <%= f.label :i_am_sure, "I am sure", :class => "required" %>
+      <%= f.label :i_am_sure, "I am sure", :class => "required for_checkbox" %>
       <span><%= f.check_box :i_am_sure %></span>
-      <%= f.label :disown, "Disown stories/comments" %>
+      <%= f.label :disown, "Disown stories/comments", :class => "for_checkbox" %>
       <span><%= f.check_box :disown %> <span class="hint">(optional)</span></span>
     </div>
 

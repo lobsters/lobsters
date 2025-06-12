@@ -118,4 +118,42 @@ describe HomeController do
       expect(@controller.view_assigns["stories"]).not_to include(hidden_story)
     end
   end
+
+  describe "#index" do
+    let!(:active_story) { create :story, user: }
+    let!(:hidden_story) { create :story, user: }
+    let!(:negative_story) { create :story, user:, score: -1 }
+
+    it "renders successful" do
+      get :index, session: {u: user.session_token}
+
+      expect(response).to be_successful
+    end
+
+    it "the page has a correct title" do
+      get :index, session: {u: user.session_token}
+
+      expect(@controller.view_assigns["title"]).to eq("")
+    end
+
+    it "active story has been available" do
+      get :index, session: {u: user.session_token}
+
+      expect(@controller.view_assigns["stories"]).to include(active_story)
+    end
+
+    it "hidden story has not been available" do
+      HiddenStory.hide_story_for_user hidden_story, user
+
+      get :index, session: {u: user.session_token}
+
+      expect(@controller.view_assigns["stories"]).not_to include(hidden_story)
+    end
+
+    it "story with negative score has not been available" do
+      get :index, session: {u: user.session_token}
+
+      expect(@controller.view_assigns["stories"]).not_to include(negative_story)
+    end
+  end
 end

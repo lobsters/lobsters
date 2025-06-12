@@ -38,7 +38,7 @@ class HomeController < ApplicationController
 
   def index
     @stories, @show_more = get_from_cache(hottest: true) {
-      paginate stories.hottest
+      paginate Story.hottest(@user, filtered_tag_ids)
     }
 
     @rss_link ||= {

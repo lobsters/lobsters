@@ -20,6 +20,9 @@ production:
   stats_graphs:
     class: StatsGraphsJob
     schedule: every day at 12:00am
+  traffic_helper:
+    command: TrafficHelper.cache_traffic!
+    schedule: every 5 minutes
 
 development:
   clear_finished_jobs:

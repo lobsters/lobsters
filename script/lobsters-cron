@@ -21,6 +21,5 @@ bundle exec ruby script/mail_new_activity.rb &
 bundle exec ruby script/mastodon_post.rb &
 bundle exec ruby script/mastodon_sync_users.rb &
 bundle exec ruby script/send_new_webmentions &
-bundle exec ruby script/traffic_range &
 
 exit $err

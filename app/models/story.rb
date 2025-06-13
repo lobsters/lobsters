@@ -141,6 +141,13 @@ class Story < ApplicationRecord
       .order(last_comment_at: :desc)
   }
 
+  scope :saved, ->(user, exclude_tags = []) {
+    base(user)
+      .saved_by(user)
+      .filter_tags(exclude_tags)
+      .order(:hotness)
+  }
+
   include Token
 
   validates :title, length: {in: 3..150}, presence: true

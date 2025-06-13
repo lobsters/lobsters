@@ -568,6 +568,35 @@ describe Story do
         expect(Story.active(hidden_story_user)).to eq([normal_comment.story])
       end
     end
+
+    describe "saved" do
+      let(:user) { create(:user) }
+      let(:first_story) { create(:story) }
+      let(:second_story) { create(:story) }
+
+      before do
+        create_list(:comment, 2, story: second_story, score: 2)
+        [first_story, second_story].each do |story|
+          story.update!(created_at: Time.zone.at(0))
+        end
+
+        Story.recalculate_all_hotnesses!
+      end
+
+      it "is ordered by hotness" do
+        [first_story, second_story].each do |story|
+          SavedStory.create!(user: user, story: story)
+        end
+
+        expect(Story.saved(user)).to eq([second_story, first_story])
+      end
+
+      it "shows only saved stories" do
+        SavedStory.create!(user: user, story: first_story)
+
+        expect(Story.saved(user)).to eq([first_story])
+      end
+    end
   end
 
   describe "suggestions" do

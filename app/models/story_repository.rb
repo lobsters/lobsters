@@ -17,10 +17,6 @@ class StoryRepository
     Story.where(user: user).includes(:tags).not_deleted(@user).mod_preload?(@user).order(id: :desc)
   end
 
-  def saved
-    Story.base(@user).saved_by(@user).filter_tags(@params[:exclude_tags] || []).order(:hotness)
-  end
-
   def tagged(tags)
     tagged_story_ids = Tagging.select(:story_id).where(tag_id: tags.map(&:id))
 

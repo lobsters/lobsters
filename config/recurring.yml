@@ -8,6 +8,9 @@ production:
   fill_flagged_cache:
     command: FlaggedCommenters.new("1m").commenters
     schedule: every 15 minutes
+  mastodon_sync_list:
+    class: MastodonSyncListJob
+    schedule: every 1 hour
   populate_comment_stats:
     command: CommentStat.daily_fill!
     schedule: every day at 4:00am
@@ -20,6 +23,9 @@ production:
   stats_graphs:
     class: StatsGraphsJob
     schedule: every day at 12:00am
+  traffic_helper:
+    command: TrafficHelper.cache_traffic!
+    schedule: every 5 minutes
 
 development:
   clear_finished_jobs:

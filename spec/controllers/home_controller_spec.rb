@@ -108,4 +108,21 @@ describe HomeController do
       expect(@controller.view_assigns["stories"]).not_to include(negative_story)
     end
   end
+
+  describe "#saved" do
+    it "includes only saved stories by user" do
+      saved_story = create(:story)
+      other_story = create(:story)
+
+      SavedStory.create!(user: user, story: saved_story)
+
+      stub_login_as user
+      get :saved
+
+      expect(response).to be_successful
+      expect(@controller.view_assigns["title"]).to eq("Saved Stories")
+      expect(@controller.view_assigns["stories"]).to include(saved_story)
+      expect(@controller.view_assigns["stories"]).not_to include(other_story)
+    end
+  end
 end

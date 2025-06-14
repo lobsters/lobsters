@@ -3,6 +3,12 @@
 require "rails_helper"
 
 describe MessagesController do
+  include ActiveJob::TestHelper
+
+  after do
+    clear_enqueued_jobs
+  end
+
   let(:recipient) { create(:user) }
   let(:sender) { create(:user) }
 

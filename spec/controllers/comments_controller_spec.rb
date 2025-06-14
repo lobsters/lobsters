@@ -3,6 +3,12 @@
 require "rails_helper"
 
 describe CommentsController do
+  include ActiveJob::TestHelper
+
+  after do
+    clear_enqueued_jobs
+  end
+
   let(:author) { create(:user) }
   let(:story) { create(:story, user: author) }
   let(:reader) { create(:user) }

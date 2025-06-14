@@ -512,6 +512,7 @@ describe Story do
         it { expect(stories.last).to eq(story1) }
       end
     end
+
     describe "newest" do
       let(:tag) { create :tag }
       let!(:story1) { create :story, title: "Hello 1", url: "http://example.com/1", tags: [tag] }
@@ -540,6 +541,60 @@ describe Story do
         it "returns only one story without tag" do
           expect(stories).to eq([story2])
         end
+      end
+    end
+
+    describe "active" do
+      let(:user) { create :user }
+
+      it "is ordered by most-recent comment" do
+        older_story = create(:story)
+        newer_story = create(:story)
+        older_comment = create(:comment, story: newer_story)
+        newer_comment = create(:comment, story: older_story)
+
+        expect(Story.active(user)).to eq([newer_comment.story, older_comment.story])
+      end
+
+      it "does not show hidden stories" do
+        hidden_story = create(:story)
+        normal_story = create(:story)
+        create(:comment, story: hidden_story)
+        normal_comment = create(:comment, story: normal_story)
+
+        HiddenStory.hide_story_for_user(hidden_story, hidden_story.user)
+        hidden_story_user = User.find_by(id: hidden_story.user_id)
+
+        expect(Story.active(hidden_story_user)).to eq([normal_comment.story])
+      end
+    end
+
+    describe "saved" do
+      let(:user) { create(:user) }
+      let(:first_story) { create(:story) }
+      let(:second_story) { create(:story) }
+
+      before do
+        create_list(:comment, 2, story: second_story, score: 2)
+        [first_story, second_story].each do |story|
+          story.update!(created_at: Time.zone.at(0))
+        end
+
+        Story.recalculate_all_hotnesses!
+      end
+
+      it "is ordered by hotness" do
+        [first_story, second_story].each do |story|
+          SavedStory.create!(user: user, story: story)
+        end
+
+        expect(Story.saved(user)).to eq([second_story, first_story])
+      end
+
+      it "shows only saved stories" do
+        SavedStory.create!(user: user, story: first_story)
+
+        expect(Story.saved(user)).to eq([first_story])
       end
     end
   end

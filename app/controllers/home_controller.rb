@@ -13,7 +13,7 @@ class HomeController < ApplicationController
 
   def active
     @stories, @show_more = get_from_cache(active: true) {
-      paginate stories.active
+      paginate Story.active(@user, filtered_tag_ids)
     }
 
     @title = "Active Discussions"
@@ -38,7 +38,7 @@ class HomeController < ApplicationController
 
   def index
     @stories, @show_more = get_from_cache(hottest: true) {
-      paginate stories.hottest
+      paginate Story.hottest(@user, filtered_tag_ids)
     }
 
     @rss_link ||= {
@@ -143,7 +143,7 @@ class HomeController < ApplicationController
 
   def saved
     @stories, @show_more = get_from_cache(hidden: true) {
-      paginate stories.saved
+      paginate Story.saved(@user, filtered_tag_ids)
     }
 
     @rss_link ||= {

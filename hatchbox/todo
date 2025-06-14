@@ -1,0 +1,133 @@
+
+prep
+x turn down DNS ttl
+x connect repo
+x stand up web03 in hatchbox
+x add DATABASE_URL
+x copy SECRET_KEY_BASE
+x DO vpc peering
+x db01 firewall mariadb from anything except web03; ansible changed mariadb to listen to all
+x dnsimple: losbters.dev A -> web03
+x bump svg-graph
+x update prod log path
+x hatchbox custom pre-build script:
+    cp /home/deploy/lobsters/shared/credentials.enc.yml config/credentials.enc.yml
+    cp /home/deploy/lobsters/shared/master.key config/master.key
+    cp /home/deploy/lobsters/shared/database.yml config/database.yml
+x big blue deploy button
+x sidequest: mariadb recovery scare
+x initialize queue and cache dbs
+    queue and cache dbs had wrong path so hatchbox didn't initalize them
+    initializing failed because of an activerecord bug https://github.com/rails/rails/issues/50672
+    workaround worked https://github.com/rails/solid_queue/issues/365#issuecomment-2548639056
+x test puma from web03: curl http://127.0.0.1:9000/about
+x hatchbox add job worker process to 'worker' role: bundle exec rails solid_queue:start
+    systemctl status lobsters-solid_queue --user -M deploy@
+    sudo -u deploy journalctl --user --user-unit=lobsters-solid_queue
+x doublecheck that /stats is still good
+x hatchbox test maintenance page
+x locate Caddyfile: visible in activity -> 'Apps::Caddy' -> Server Logs
+x understand logrotate config: /etc/logrotate.d/hatchbox_logrotate.conf rotate daily, keep 7 (eek!)
+x turn off/firewall yoeng.hatchboxapp.com
+x configure caddy to serve avatars
+x telebugs works?
+x configure caddy to serve from full-page cache wo cookies https://app.hatchbox.io/clusters/7952/settings
+x caddy move to imoprt
+x hatchbox app pre-script setting: hatchbox/pre-build
+x locate rails default logger: stdout to journald
+x locate lograge logs: ~/lobsters/shared/log/action.log
+x get caddy logging to shared/log
+x locate solid_queue log
+x confirm unattended upgrades
+x puma worker count is 3?? doublecheck nateperkopec recent skeets
+x cron jobs https://app.hatchbox.io/apps/10006/cron_jobs/new
+x service to hook deploys:
+x   logrotate config to override hatchbox
+x   bare minimum shell config from lobsters-ansible
+x   postfix send email
+x   /etc restic
+x recurring task for app restic
+x DO: reserve IP
+x https://guides.rubyonrails.org/v7.1/action_mailbox_basics.html#postfix
+
+root-deploy hook setup:
+  # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.service /etc/systemd/system
+  # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.path /etc/systemd/system
+  # systemctl daemon-reload
+  # systemctl enable --now root-deploy.service # first backup takes 10ish min
+  # systemctl enable --now root-deploy.path
+
+changeover
+x web03 enable read-only
+x web01 enable read-only
+x take a db backup
+x Caddyfile.pre: 'host lobste.rs'; uncomment lobsters.dev placeholder
+x merge hatchbox -> master
+x hatchbox: update hatchbox deploy branch, disable maintenance mode
+x hatchbox: run deploy
+x hatchbox: hit 'update caddyfile' button
+x hatchbox: create new cluster
+x hatchbox: set up web04
+x db: permit access from web04
+x hatchbox: create new lobsters app in cluster, copy settings
+x hatchbox: run provisioning
+x hatchbox: create process for bundle exec rails solid_queue:start
+x DO: move reserved IP web01 -> web03
+x hatchbox: add lobste.rs domain
+x web04 run apt update+upgrade
+x hatchbox: deploy (fail, no secrets, but creates dir structure)
+x rsync -vaP --delete ~/notes/lobsters/hatchbox-shared-etc/ deploy@web04:lobsters/shared/etc
+x DO: db01 firewall permit web04
+x db01: mariadb
+x   use lobsters;
+x   create or replace user lobsters@'[public ip web04]' identified by '[password]';
+x   show grants for lobsters@'[public ip web04];
+x   flush privileges;
+x hatchbox: deploy
+  web04 run root-deploy hook setup
+x web04 uncomment our placeholder for lobsters.dev
+x web01 disable cron jobs
+x web04 disable read-only
+x see the site load in my browser
+x hatchbox: uncomment lobsters-cron job to run every 5m
+x hatchbox: deploy while watching 'journalctl -e -f -u root-deploy' to see it run
+x lobste.rs/jobs: see worker running, manually run recurring tasks to fill queues etc
+x test postfix outgoing
+x test postfix incoming
+x hatchbox add www.lobste.rs www.lobsters.dev
+x check www.lobste.rs -> lobste.rs
+x check www.lobstersd.dev -> lobste.rs
+x DO: db01 firewall remove web03, web01
+x DO rename web03 -> lobste.rs? yes, for PTR https://docs.digitalocean.com/products/networking/dns/how-to/manage-records/#ptr-rdns-records
+x dnsimple: check dkim DNS record matches (on .rs and .dev)
+x dnsimple: ptr
+x db01: remove grants to web01, web03 (drop user 'lobsters'@'10.116.0.5';)
+x DO: delete web03
+x hatchbox: delete lobsters-nyc3 cluster
+x hatchbox: delete lobsters-nyc3 app
+x archive lobsters-ansible
+x lobsters.dev fix content-type
+x fix http -> https redirects
+x caddy's not serving avatars
+x fix full-page cache
+x take a final backup of web01
+  root-deploy has some kind of race and often runs against old checkout instead of current
+  debug actionmailbox routing
+  DO: delete web01
+  dnsimple: turn up DNS ttl to 3600
+  update /about
+  tune puma threads via env var next couple days; record final into config/puma.rb
+
+later
+  restic: delete web03 backups
+  hatchbox support: report bug of reserved ip
+  archive lobsters-ansible
+  power off web01
+  write up notes to setup instructions
+  tune config/puma thread count based on prod usage
+  idea: logs -> DO durable obj -> duckdb?
+  lobsters.dev fix content-type
+  confirm logrotate is rotating weekly
+
+note:
+  to update caddy files, deploy them, then go to app settings and click 'Update Caddy' to pick up the change

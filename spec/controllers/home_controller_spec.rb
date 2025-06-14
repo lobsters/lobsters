@@ -25,7 +25,8 @@ describe HomeController do
 
     context "when accessing RSS feeds" do
       it "supports session-based access" do
-        get :upvoted, as: :rss, session: {u: user.session_token}
+        stub_login_as user
+        get :upvoted, as: :rss
         expect(response).to be_successful
       end
 
@@ -54,37 +55,74 @@ describe HomeController do
 
     describe "when user is authenticated" do
       it "renders the hidden page" do
-        get :hidden, session: {u: user.session_token}
+        stub_login_as user
+        get :hidden
         expect(response).to be_successful
-      end
-
-      it "does not be redirected" do
-        get :hidden, session: {u: user.session_token}
         expect(response).not_to be_redirect
-      end
-
-      it "the page has a correct title" do
-        get :hidden, session: {u: user.session_token}
         expect(@controller.view_assigns["title"]).to eq("Hidden Stories")
       end
 
-      context "the story is not hidden" do
-        it "no stories" do
-          get :hidden, session: {u: user.session_token}
-
-          expect(@controller.view_assigns["stories"]).not_to include(story)
-        end
+      it "doesn't list stories that aren't hidden" do
+        stub_login_as user
+        get :hidden
+        expect(@controller.view_assigns["stories"]).not_to include(story)
       end
 
-      context "the story is hidden" do
-        before { HiddenStory.hide_story_for_user(story, user) }
-
-        it "story has been shown" do
-          get :hidden, session: {u: user.session_token}
-
-          expect(@controller.view_assigns["stories"]).to include(story)
-        end
+      it "lists stories the user has hiddden" do
+        stub_login_as user
+        HiddenStory.hide_story_for_user(story, user)
+        get :hidden
+        expect(@controller.view_assigns["stories"]).to include(story)
       end
+    end
+  end
+
+  describe "#active" do
+    it "shows recent, unhidden stories" do
+      active_story = create :story
+      hidden_story = create :story, user: user
+      HiddenStory.hide_story_for_user hidden_story, user
+      stub_login_as user
+
+      get :active
+      expect(response).to be_successful
+      expect(@controller.view_assigns["title"]).to eq("Active Discussions")
+      expect(@controller.view_assigns["stories"]).to include(active_story)
+      expect(@controller.view_assigns["stories"]).not_to include(hidden_story)
+    end
+  end
+
+  describe "#index" do
+    it "includes stories that are not hidden or having negative score" do
+      active_story = create :story
+      hidden_story = create :story
+      HiddenStory.hide_story_for_user hidden_story, user
+      negative_story = create :story, score: -1
+      stub_login_as user
+      get :index
+
+      expect(response).to be_successful
+      expect(@controller.view_assigns["title"]).to eq("")
+      expect(@controller.view_assigns["stories"]).to include(active_story)
+      expect(@controller.view_assigns["stories"]).not_to include(hidden_story)
+      expect(@controller.view_assigns["stories"]).not_to include(negative_story)
+    end
+  end
+
+  describe "#saved" do
+    it "includes only saved stories by user" do
+      saved_story = create(:story)
+      other_story = create(:story)
+
+      SavedStory.create!(user: user, story: saved_story)
+
+      stub_login_as user
+      get :saved
+
+      expect(response).to be_successful
+      expect(@controller.view_assigns["title"]).to eq("Saved Stories")
+      expect(@controller.view_assigns["stories"]).to include(saved_story)
+      expect(@controller.view_assigns["stories"]).not_to include(other_story)
     end
   end
 end

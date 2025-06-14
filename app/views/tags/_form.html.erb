@@ -1,46 +1,29 @@
 <%# locals: (tag:) -%>
 <%= form_with model: tag, url: tag.persisted? ? update_tag_path : tags_path, method: :post do |f| %>
-  <div class="boxline">
-    <%= f.label :tag, 'Name:', class: 'required' %>
+  <div class="labelled_grid">
+    <%= f.label :tag, 'Name', class: 'required' %>
     <%= f.text_field :tag  %>
-  </div>
 
-  <div class="boxline">
-    <%= f.label :category_name, 'Category:' %>
+    <%= f.label :category_name, 'Category' %>
     <%= f.select :category_name, options_for_select(Category.pluck(:category), tag.category_name) %>
-  </div>
 
-  <div class="boxline">
-    <%= f.label :description, 'Description:' %>
+    <%= f.label :description, 'Description' %>
     <%= f.text_field :description %>
-  </div>
 
-  <div class="boxline">
-    <%= f.label :permit_by_new_users, 'Permit by new users:' %>
+    <%= f.label :permit_by_new_users, 'Permit by new users', :class => "for_checkbox" %>
     <%= f.check_box :permit_by_new_users %>
-  </div>
 
-  <div class="boxline">
-    <%= f.label :privileged, 'Privileged:' %>
+    <%= f.label :privileged, 'Privileged', :class => "for_checkbox" %>
     <%= f.check_box :privileged %>
-  </div>
 
-  <div class="boxline">
-    <%= f.label :is_media, 'Is Media:' %>
+    <%= f.label :is_media, 'Is Media', :class => "for_checkbox" %>
     <%= f.check_box :is_media %>
-  </div>
 
-  <div class="boxline">
-    <%= f.label :active, 'Active:' %>
+    <%= f.label :active, 'Active', :class => "for_checkbox" %>
     <%= f.check_box :active %>
-  </div>
 
-  <div class="boxline">
-    <%= f.label :hotness_mod, 'Hotness Mod:' %>
+    <%= f.label :hotness_mod, 'Hotness Mod' %>
     <%= f.number_field :hotness_mod, step: 0.01 %>
   </div>
-
-  <div class="boxline">
-    <%= f.submit tag.persisted? ? 'Update Tag' : 'Create Tag' %>
-  </div>
+  <%= f.submit tag.persisted? ? 'Update Tag' : 'Create Tag' %>
 <% end %>

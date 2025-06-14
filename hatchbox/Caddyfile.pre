@@ -1,0 +1,59 @@
+# hatchbox config bug? auto_https complains and indeed http -> https doesn't happen:
+#
+# 2025/06/09 03:32:27.240       INFO    http.auto_https server is listening only on the HTTPS port but has no TLS connection policies; adding one to enable TLS {"server_name": "srv0", "https_port": 443}
+# 2025/06/09 03:32:27.240       INFO    http.auto_https enabling automatic HTTP->HTTPS redirects        {"server_name": "srv0"}
+# 2025/06/09 03:32:27.240       WARN    http.auto_https server is listening only on the HTTP port, so no automatic HTTPS will be applied to this server {"server_name": "srv1", "http_port": 80}
+#
+@needs_tls protocol http
+redir @needs_tls https://{host}{uri} 308
+
+# Hatchbox dupes the site for people who don't have DNS set up right
+@hatchboxapp_domain {
+  host *.hatchboxapp.com
+}
+respond @hatchboxapp_domain 403 {
+  body "Use the prod domain, not hatchbox fallback."
+  close
+}
+
+# placeholder for lobsters.dev
+@lobsters_dev_domain {
+  host lobsters.dev
+}
+header @lobsters_dev_domain content-type "text/html; charset=utf-8"
+respond @lobsters_dev_domain 200 {
+  body <<HTML
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Lobsters.dev</title>
+    </head>
+    <body>
+      <h1>Lobsters.dev</h1>
+      <p>This is a backup domain for <a href="https://lobste.rs">lobste.rs</a> in case of serious DNS issues. It is not currently in use.</p>
+    </body>
+    </html>
+  HTML
+  close
+}
+
+@www_domain `host('www.lobste.rs', 'www.lobsters.dev')`
+redir @www_domain https://lobste.rs{uri} 302
+
+# full page caching with actionpack-page_caching
+@visitor {
+  host lobste.rs
+  not {
+    header_regexp Cookie `.*=.*`
+  }
+  file {
+    root /home/deploy/lobsters/current/public/cache/
+    try_files {path} {path}.html {path}/index.html
+  }
+}
+# the hatchbox {default} uses a root of public/, serves files that exist with
+# file_server, then passes those that don't exist to Rails. This runs first and
+# rewrites to request from the full-page cache
+rewrite @visitor /cache/{file_match.relative}
+# header @visitor X-Lobsters-Visitor {file_match.relative}
+# header X-Lobsters-Hello "World 8"

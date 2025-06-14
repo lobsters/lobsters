@@ -2,6 +2,11 @@
 
 require "faker"
 
+# Disable launchy when populating with fake_data to prevent browser tabs from opening.
+# As described in https://github.com/ryanb/letter_opener?tab=readme-ov-file#remote-alternatives
+ENV["LAUNCHY_DRY_RUN"] = "true"
+ENV["BROWSER"] = File::NULL
+
 class FakeDataGenerator
   def initialize(users_count = 50, stories_count = 100, categories_count = 5)
     @users_count = users_count

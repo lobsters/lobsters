@@ -1,0 +1,6 @@
+#!/bin/bash
+
+find /home/deploy/lobsters/current/public/cache/ -type f -delete
+
+# see hatchbox/root-deploy
+touch /home/deploy/lobsters/current

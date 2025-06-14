@@ -21,12 +21,7 @@ class StoriesController < ApplicationController
 
     @story = Story.new(user: @user)
     update_story_attributes
-
-    if @story.is_resubmit?
-      @comment = @story.comments.new(user: @user)
-      @comment.comment = params[:comment]
-      @comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
-    end
+    update_resubmit_comment_attributes
 
     if @story.valid? &&
         !@story.already_posted_recently? &&
@@ -104,11 +99,7 @@ class StoriesController < ApplicationController
         return redirect_to Routes.title_path @story.most_recent_similar
       end
 
-      if @story.is_resubmit?
-        @comment = @story.comments.new(user: @user)
-        @comment.comment = params[:comment]
-        @comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
-      end
+      update_resubmit_comment_attributes
 
       # ignore what the user brought unless we need it as a fallback
       @story.title = sattrs[:title]
@@ -121,6 +112,7 @@ class StoriesController < ApplicationController
   def preview
     @story = Story.new
     update_story_attributes
+    update_resubmit_comment_attributes
     @story.user_id = @user.id
     @story.previewing = true
 
@@ -344,6 +336,7 @@ class StoriesController < ApplicationController
     raise ActionController::ParameterMissing.new("No URL") if params.dig(:story, :url).blank?
     @story = Story.new(user: @user)
     update_story_attributes
+    update_resubmit_comment_attributes
     @story.already_posted_recently?
 
     respond_to do |format|
@@ -387,6 +380,14 @@ class StoriesController < ApplicationController
       story_params
     else
       story_params.except(:url)
+    end
+  end
+
+  def update_resubmit_comment_attributes
+    if @story.is_resubmit?
+      @comment = @story.comments.new(user: @user)
+      @comment.comment = params[:comment]
+      @comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
     end
   end
 

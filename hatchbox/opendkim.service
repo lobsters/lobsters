@@ -1,0 +1,15 @@
+[Unit]
+Description=OpenDKIM Milter
+Documentation=man:opendkim(8) man:opendkim.conf(5) man:opendkim-lua(3) man:opendkim-genkey(8) man:opendkim-genzone(8) man:opendkim-testkey(8) http://www.opendkim.org/docs.html
+After=network.target nss-lookup.target
+
+[Service]
+User=opendkim
+Group=opendkim
+Type=forking
+ExecStart=/usr/sbin/opendkim
+ExecReload=/bin/kill -USR1 $MAINPID
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

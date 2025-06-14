@@ -9,9 +9,13 @@ class ApplicationController < ActionController::Base
   before_action :prepare_exception_notifier
   before_action :mini_profiler
   before_action :set_traffic_style
+<<<<<<< HEAD
   before_action :remove_unknown_cookies
   before_action :clear_session_cookie
   around_action :n_plus_one_detection
+=======
+  around_action :n_plus_one_detection, unless: -> { Rails.env.production? }
+>>>>>>> master
 
   # 2023-10-07 one user in one of their browser envs is getting a CSRF failure, I'm reverting
   # because I'll be AFK a while.
@@ -45,6 +49,10 @@ class ApplicationController < ActionController::Base
   end
   rescue_from ActionDispatch::Http::MimeNegotiation::InvalidType do
     render plain: "fix the mime type in your HTTP_ACCEPT header",
+      status: :bad_request, content_type: "text/plain"
+  end
+  rescue_from ActionDispatch::RemoteIp::IpSpoofAttackError do
+    render plain: "You have some kind of weird, implausible VPN setup. If you are not doing something naughty, please contact the admin to start debugging.",
       status: :bad_request, content_type: "text/plain"
   end
 

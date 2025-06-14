@@ -1,5 +1,6 @@
 # typed: false
 
+require "fileutils"
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
@@ -58,23 +59,33 @@ Rails.application.configure do
   # Can be used together with config.force_ssl for Strict-Transport-Security and secure cookies.
   config.assume_ssl = true
 
-  # Include generic and useful information about system operation, but avoid logging too much
-  # information to avoid inadvertent exposure of personally identifiable information (PII).
-  config.log_level = :info
-  config.lograge.enabled = true
-  config.logger = Logger.new("/srv/lobste.rs/log/production.log")
-
   # Info include generic and useful information about system operation, but avoids logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII). If you
   # want to log everything, set the level to "debug".
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
+
+  # Rails log goes to stdout for hatchbox UI and a file for grep.
+  # https://hatchbox.relationkit.io/articles/61-accessing-your-server-logs-in-hatchbox
+  config.logger = ActiveSupport::BroadcastLogger.new(
+    ActiveSupport::Logger.new($stdout),
+    ActiveSupport::Logger.new("/home/deploy/lobsters/shared/log/rails.log")
+  )
+  config.logger.formatter = config.log_formatter
+
+  # see config/initializers/lograge.rb for json action logs
+  config.lograge.enabled = true
+
+  # SolidQueue log to stdout for hatchbox UI and a file for grep
+  config.solid_queue.logger = ActiveSupport::BroadcastLogger.new(
+    ActiveSupport::Logger.new($stdout),
+    ActiveSupport::Logger.new("/home/deploy/lobsters/shared/log/solid_queue.log")
+  )
 
   # Use a different cache store in production.
   config.cache_store = :solid_cache_store
 
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = {database: {writing: :queue}}
-  config.solid_queue.supervisor_pidfile = "/srv/lobste.rs/run/solid_queue.pid"
   config.solid_queue.clear_finished_jobs_after = 90.days
 
   config.action_mailer.perform_caching = false

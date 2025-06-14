@@ -1,0 +1,17 @@
+export EDITOR=vim
+export HISTSIZE=100000
+export HISTFILESIZE=$HISTSIZE
+export HISTIGNORE=[fb]g
+export PAGER="less -R"
+
+alias c="cd ~deploy/lobsters/current; bundle exec rails console"
+alias be=bundle exec
+alias db="cd ~deploy/lobsters/current; bundle exec rails db -p"
+alias e=exa
+alias et="exa -snew"
+alias fd=fdfind
+alias g=git
+alias gerp=grep
+alias vi=vim
+
+set -o vi

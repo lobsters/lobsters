@@ -1,0 +1,77 @@
+#!/usr/bin/bash
+
+set -e
+cd /home/deploy/lobsters/current/hatchbox
+
+# This is a series of workarounds for misdesigns:
+#
+# 1. Hatchbox can't run scripts as root on deploy. This script provisions and
+#    configures system services and such an important script must live in the
+#    repo.
+#
+# 2. A service unit can't use PathChanged itself, it requires a path unit.
+#    That's root-deploy.path.
+#
+# 3. A path unit can't use ExecStart itself, it requires a service unit.
+#    That's root-deploy.service.
+#
+# 4. Path units have an unfixed bug: https://github.com/systemd/systemd/issues/17727
+#    Systemd fails to consider a replaced symlink as 'changed' or 'modified'.
+#    So hatchbox/post-deploy touches the symlink on boot.
+#
+# 5. https://i.imgur.com/MCHXwyi.jpeg
+
+APP_ETC=/home/deploy/lobsters/shared/etc
+
+# the only way to get a PTR on DO name the VPS with the fqdn, ugh
+# https://docs.digitalocean.com/products/networking/dns/how-to/manage-records/#ptr-rdns-records
+echo "lobste.rs" > /etc/hostname
+
+# server packages
+apt install iptables-persistent opendkim postfix restic
+
+# configure opendkim for postfix
+cp opendkim.m4 /etc/mail/m4/
+cp opendkim.conf /etc/
+cp opendkim.service /etc/systemd/system/
+if [ ! -f /etc/dkimkeys/mail.private ]; then
+  opendkim-genkey --verbose --restrict --selector=mail --subdomains --domain=lobste.rs --directory=/etc/dkimkeys/
+fi
+mkdir -p /var/spool/postfix/opendkim
+chown -R opendkim:opendkim /var/spool/postfix/opendkim /etc/dkimkeys
+systemctl restart opendkim
+
+# configure postfix
+adduser postfix opendkim
+cp main.cf master.cf virtual_aliases transport /etc/postfix/
+postmap /etc/postfix/virtual_aliases
+postmap /etc/postfix/transport
+postfix reload
+
+# I get bounces daily from journalduhacker.net who left my email in their config.
+cp aliases /etc/
+ADMIN_EMAIL=$(cat $APP_ETC/admin_email)
+sed -i "s/ADMIN_EMAIL/$ADMIN_EMAIL/g" /etc/aliases
+newaliases
+
+# pick up changes to opendkim, root-deploy.service, and root-deploy.path
+systemctl daemon-reload
+
+systemctl enable --now opendkim
+systemctl enable --now postfix
+
+# configure logrotate
+cp logrotate.conf /etc/logrotate.d/
+
+# shell quality of life
+apt install eza fd-find tmux tree
+
+# shell config; the default .bashrc sources this
+cp bash_aliases /root/.bash_aliases
+cp bash_aliases ~deploy/.bash_aliases
+chown deploy:deploy ~deploy/.bash_aliases
+
+# run restic to back up /etc
+export HOME=/root
+source $APP_ETC/restic-env
+restic backup --cleanup-cache --no-scan /etc

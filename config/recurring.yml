@@ -1,51 +1,42 @@
 production:
+  clear_finished_jobs:
+    command: SolidQueue::Job.clear_finished_in_batches
+    schedule: every day at 3:00am
   expire_old_ribbons:
-    class: ExpireOldRibbonsJob
-    queue: background
+    command: ReadRibbon.expire_old_ribbons!
     schedule: every day at 4:00am
+  fill_flagged_cache:
+    command: FlaggedCommenters.new("1m").commenters
+    schedule: every 15 minutes
+  mastodon_sync_list:
+    class: MastodonSyncListJob
+    schedule: every 1 hour
   populate_comment_stats:
-    class: PopulateCommentStatsJob
-    queue: background
+    command: CommentStat.daily_fill!
     schedule: every day at 4:00am
+  restic:
+    command: ResticJob
+    schedule: every day at 1 am
+  sitemap:
+    command: 'SitemapGenerator::Interpreter.run(config_file: ENV["CONFIG_FILE"], verbose: false)'
+    schedule: every day at 2 am
   stats_graphs:
     class: StatsGraphsJob
-    queue: background
     schedule: every day at 12:00am
-  clear_finished_jobs:
-    class: ClearFinishedJobsJob
-    queue: background
-    schedule: every day at 3:00am
-  fill_flagged_cache:
-    class: FillFlaggedCacheJob
-    queue: background
-    schedule: every 10 minutes
-  refresh_sitemap:
-    class: RefreshSitemapJob
-    queue: background
-    schedule: every day at 12:00am
+  traffic_helper:
+    command: TrafficHelper.cache_traffic!
+    schedule: every 5 minutes
 
 development:
+  clear_finished_jobs:
+    command: SolidQueue::Job.clear_finished_in_batches
+    schedule: every day at 3:00am
   expire_old_ribbons:
-    class: ExpireOldRibbonsJob
-    queue: background
+    command: ReadRibbon.expire_old_ribbons!
     schedule: every day at 4:00am
   populate_comment_stats:
-    class: PopulateCommentStatsJob
-    queue: background
+    command: CommentStat.daily_fill!
     schedule: every day at 4:00am
   stats_graphs:
     class: StatsGraphsJob
-    queue: background
-    schedule: every day at 12:00am
-  clear_finished_jobs:
-    class: ClearFinishedJobsJob
-    queue: background
-    schedule: every day at 3:00am
-  fill_flagged_cache:
-    class: FillFlaggedCacheJob
-    queue: background
-    schedule: every 10 minutes
-  refresh_sitemap:
-    class: RefreshSitemapJob
-    queue: background
     schedule: every day at 12:00am

@@ -1,0 +1,10 @@
+[Unit]
+Description=root-deploy path hook
+
+[Path]
+PathModified=/home/deploy/lobsters/current
+PathChanged=/home/deploy/lobsters/current
+Unit=root-deploy.service
+
+[Install]
+WantedBy=multi-user.target

@@ -6,7 +6,7 @@ if Rails.env.production?
     port: Integer(ENV.fetch("SMTP_PORT", 25)),
     domain: Rails.application.domain,
     enable_starttls_auto: (ENV["SMTP_STARTTLS_AUTO"] == "true"),
-    user_name: ENV.fetch("SMTP_USERNAME", ""),
-    password: ENV.fetch("SMTP_PASSWORD", "")
+    user_name: ENV.fetch("SMTP_USERNAME", nil),
+    password: ENV.fetch("SMTP_PASSWORD", nil)
   }
 end

@@ -1,0 +1,21 @@
+# See man 5 aliases for format
+
+# do not include 'lobsters' here - main.cf has ingress configured for mailing list
+
+# system
+root: ADMIN_EMAIL
+abuse: root
+admin: root
+contact: root
+deploy: root
+help: root
+postmaster: root
+security: root
+support: root
+webmaster: root
+
+# personal
+peter: ADMIN_EMAIL
+pushcx: ADMIN_EMAIL
+
+nobody: /dev/null

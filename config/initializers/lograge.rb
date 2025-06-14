@@ -5,12 +5,7 @@ require "silencer/rails/logger"
 
 Rails.application.configure do
   config.lograge.formatter = Lograge::Formatters::Json.new
-
-  # Use a custom logger to silence the Rails default metadata like:
-  # I, [2024-07-30T04:15:03.397498 #582493]  INFO -- : [35da4f44-e8a4-49ec-bc6e-ee2e9f8d43b4]
-  config.logger = ActiveSupport::Logger.new(Rails.env.production? ? "/srv/lobste.rs/log/production.log" : $stdout)
-  config.logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
-  config.lograge.logger = config.logger
+  config.lograge.logger = ActiveSupport::Logger.new(Rails.env.production? ? "/home/deploy/lobsters/shared/log/action.log" : $stdout, skip_header: true)
 
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
   config.lograge.custom_options = lambda do |event|

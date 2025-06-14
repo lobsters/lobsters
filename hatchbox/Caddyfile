@@ -1,0 +1,18 @@
+# Must manually copy this into the 'Caddyfile' text area on hatchbox's web panel
+# and click 'Update Caddy'.
+#
+# The regular app deploy does not update Caddy config.
+import /home/deploy/lobsters/current/hatchbox/Caddyfile.pre*
+import /home/deploy/lobsters/shared/etc/Caddyfile.pre*
+
+# {encode}
+%{encode}
+
+# {file_server}
+%{file_server}
+
+# {default}
+%{default}
+
+import /home/deploy/lobsters/current/hatchbox/Caddyfile.post*
+import /home/deploy/lobsters/shared/etc/Caddyfile.post*

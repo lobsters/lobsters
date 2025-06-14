@@ -5,21 +5,14 @@ class ApplicationController < ActionController::Base
   include Authenticatable
 
   protect_from_forgery
+  skip_before_action :clear_session_cookie
   before_action :heinous_inline_partials, if: -> { Rails.env.development? }
   before_action :prepare_exception_notifier
   before_action :mini_profiler
   before_action :set_traffic_style
-<<<<<<< HEAD
   before_action :remove_unknown_cookies
   before_action :clear_session_cookie
-  around_action :n_plus_one_detection
-=======
   around_action :n_plus_one_detection, unless: -> { Rails.env.production? }
->>>>>>> master
-
-  # 2023-10-07 one user in one of their browser envs is getting a CSRF failure, I'm reverting
-  # because I'll be AFK a while.
-  # after_action :clear_session_cookie
 
   # match this nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
@@ -70,13 +63,11 @@ class ApplicationController < ActionController::Base
     true
   end
 
-  # clear Rails session cookie if not logged in so nginx uses the page cache
-  # https://ryanfb.xyz/etc/2021/08/29/going_cookie-free_with_rails.html
   # Remove all cookies except tag filter and session cookie
   def remove_unknown_cookies
     allowed = [TAG_FILTER_COOKIE.to_s, Rails.application.config.session_options[:key]]
-    cookies.each do |k, _|
-      cookies.delete(k) unless allowed.include?(k)
+    (cookies.keys - allowed).each do |k|
+      cookies.delete(k)
     end
   end
 
@@ -84,11 +75,12 @@ class ApplicationController < ActionController::Base
   def clear_session_cookie
     key = Rails.application.config.session_options[:key]
     # Remove session cookie if user is not logged in or session is empty
-    if @user.blank? || (session.respond_to?(:empty?) && session.empty?)
+    if @user.blank? || session&.empty?
       cookies.delete(key)
-      request.session_options[:skip] = true unless controller_name == "login"
+      request.session_options[:skip] = true
     end
   end
+  
 
   def find_user_from_rss_token
     if !@user && params[:format] == "rss" && params[:token].to_s.present?

@@ -89,7 +89,7 @@ module ApplicationHelper
   def link_to_different_page(text, path, options = {})
     current = request.path.sub(/\/page\/\d+$/, "")
     path.sub!(/\/page\/\d+$/, "")
-    options[:class] = :current_page if current == path
+    options[:class] = class_names(options[:class], current_page: current == path)
     link_to text, path, options
   end
 

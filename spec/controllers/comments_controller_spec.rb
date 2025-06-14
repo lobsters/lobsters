@@ -12,7 +12,7 @@ describe CommentsController do
       stub_login_as reader
       post :create, params: {story_id: story.short_id, comment: "great story!"}
       expect(response.status).to eq(302)
-      expect(NotifyFollowersJob).to have_been_enqueued.exactly(:once)
+      expect(NotifyJob).to have_been_enqueued.exactly(:once)
     end
   end
 end

@@ -31,7 +31,7 @@
   <%= stylesheet_link_tag "tom-select", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag "TomSelect_remove_button", "data-turbo-track": "reload" %>
 
-  <% if @user %>
+  <% if @user || @new_user %>
     <%= javascript_importmap_tags %>
   <% end %>
 

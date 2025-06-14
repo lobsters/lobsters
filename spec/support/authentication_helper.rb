@@ -11,8 +11,8 @@ module AuthenticationHelper
     def stub_login_as user
       # feature specs don't have access to the session store
       visit "/login"
-      fill_in "E-mail or Username:", with: user.email
-      fill_in "Password:", with: user.password
+      fill_in "E-mail or Username", with: user.email
+      fill_in "Password", with: user.password
       click_button "Login"
     end
   end

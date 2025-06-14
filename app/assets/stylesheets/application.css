@@ -1208,7 +1208,8 @@ label.required {
 }
 
 .labelled_grid textarea,
-.labelled_grid input[type="text"] {
+.labelled_grid input[type="text"],
+.labelled_grid input[type="email"] {
 	width: 100%;
 	box-sizing: border-box;
 }
@@ -1226,6 +1227,10 @@ label.required {
 
 .labelled_grid select {
 	margin: 0;
+}
+
+.labelled_grid > p {
+	grid-column: 1 / -1;
 }
 
 section + section {

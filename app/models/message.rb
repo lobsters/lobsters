@@ -45,7 +45,6 @@ class Message < ApplicationRecord
   scope :unread, -> { where(has_been_read: false, deleted_by_recipient: false) }
 
   before_validation :assign_short_id, on: :create
-  after_create :deliver_email_notifications
   after_destroy :update_unread_counts
   after_save :update_unread_counts
   after_save :check_for_both_deleted
@@ -89,29 +88,6 @@ class Message < ApplicationRecord
 
   def update_unread_counts
     recipient.update_unread_message_count!
-  end
-
-  def deliver_email_notifications
-    if recipient.email_messages?
-      begin
-        EmailMessageMailer.notify(self, recipient).deliver_now
-      rescue => e
-        # Rails.logger.error "error e-mailing #{recipient.email}: #{e}"
-      end
-    end
-
-    return if Rails.env.development?
-
-    if recipient.pushover_messages?
-      recipient.pushover!(
-        title: "#{Rails.application.name} message from " \
-          "#{author_username}: #{subject}",
-        message: plaintext_body,
-        url: Routes.message_url(self),
-        url_title: (author ? "Reply to #{author_username}" :
-          "View message")
-      )
-    end
   end
 
   def recipient_username=(username)

@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe NotifyJob, type: :job do
   describe "comment notifications" do

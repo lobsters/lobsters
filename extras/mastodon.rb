@@ -17,7 +17,7 @@ class Mastodon
       :post,
       {limit: 80},
       nil,
-      {"Authorization" => "Bearer #{self.Rails.application.credentials.mastodon.token}"}
+      {"Authorization" => "Bearer #{Rails.application.credentials.mastodon.token}"}
     )
     raise "failed to accept follow request #{id}" if response.nil?
   end
@@ -29,7 +29,7 @@ class Mastodon
       :post,
       nil,
       accts.map { |i| "account_ids[]=#{i}" }.join("&"),
-      {"Authorization" => "Bearer #{self.Rails.application.credentials.mastodon.token}"}
+      {"Authorization" => "Bearer #{Rails.application.credentials.mastodon.token}"}
     )
     raise "failed to add to list" if response.nil? || puts(response.body) || JSON.parse(response.body) != {}
   end

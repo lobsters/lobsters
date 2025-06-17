@@ -13,7 +13,7 @@ class Markdowner
     commonmarker_options = {
       parse: {smart: true},
       extension: {tagfilter: true, autolink: true, strikethrough: true},
-      render: {hardbreaks: false},
+      render: {escape: true, hardbreaks: false},
       plugins: {syntax_highlighter: nil}
     }
 

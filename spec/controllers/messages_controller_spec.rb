@@ -17,7 +17,7 @@ describe MessagesController do
       stub_login_as sender
       post :create, params: {message: {recipient_username: recipient.username, subject: "hello", body: "secret message"}}
       expect(response.status).to eq(302)
-      expect(NotifyJob).to have_been_enqueued.exactly(:once)
+      expect(NotifyMessageJob).to have_been_enqueued.exactly(:once)
     end
   end
 end

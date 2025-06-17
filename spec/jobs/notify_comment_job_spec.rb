@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe NotifyJob, type: :job do
+RSpec.describe NotifyCommentJob, type: :job do
   describe "comment notifications" do
     it "sends reply notification" do
       recipient = create(:user)
@@ -19,7 +19,7 @@ RSpec.describe NotifyJob, type: :job do
       c2 = build(:comment, story: story, user: sender, parent_comment: c)
       c2.save!
 
-      NotifyJob.perform_now(c2)
+      NotifyCommentJob.perform_now(c2)
 
       expect(sent_emails.size).to eq(1)
       expect(sent_emails[0].subject).to match(/Reply from #{sender.username}/)
@@ -36,7 +36,7 @@ RSpec.describe NotifyJob, type: :job do
 
       c.save!
 
-      NotifyJob.perform_now(c)
+      NotifyCommentJob.perform_now(c)
 
       expect(sent_emails.size).to eq(1)
       expect(sent_emails[0].subject).to match(/Mention from #{sender.username}/)
@@ -51,7 +51,7 @@ RSpec.describe NotifyJob, type: :job do
       c = build(:comment, comment: "~#{recipient.username}")
       c.save!
 
-      NotifyJob.perform_now(c)
+      NotifyCommentJob.perform_now(c)
 
       expect(sent_emails.size).to eq(1)
     end
@@ -77,22 +77,10 @@ RSpec.describe NotifyJob, type: :job do
         comment: "@#{recipient.username}")
       c2.save!
 
-      NotifyJob.perform_now(c2)
+      NotifyCommentJob.perform_now(c2)
 
       expect(sent_emails.size).to eq(1)
       expect(sent_emails[0].subject).to match(/Reply from #{sender.username}/)
-    end
-  end
-
-  describe "message notifications" do
-    it "sends a message notification" do
-      recipient = create(:user)
-      recipient.settings["email_messages"] = true
-      recipient.save!
-      message = create(:message, recipient: recipient)
-      NotifyJob.perform_now(message)
-      expect(sent_emails.size).to eq(1)
-      expect(sent_emails[0].subject).to match(/Private Message from #{message.author_username}/)
     end
   end
 end

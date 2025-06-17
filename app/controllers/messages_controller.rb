@@ -62,7 +62,7 @@ class MessagesController < ApplicationController
         ModNote.create_from_message(@new_message, @user)
       end
       flash[:success] = "Your message has been sent to #{@new_message.recipient.username}."
-      NotifyJob.perform_later(@new_message)
+      NotifyMessageJob.perform_later(@new_message)
       redirect_to "/messages"
     else
       @messages = Message.inbox(@user).load

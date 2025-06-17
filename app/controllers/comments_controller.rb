@@ -53,7 +53,7 @@ class CommentsController < ApplicationController
       # not using .touch because the :touch on the parent_comment association will already touch the
       # upated_at columns up the reply chain to the story once
       comment.parent_comment&.update_column(:last_reply_at, Time.current)
-      NotifyJob.perform_later(comment)
+      NotifyCommentJob.perform_later(comment)
       render_created_comment(comment)
     else
       comment.score = 1

@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
   include Authenticatable
 
   protect_from_forgery
-  skip_before_action :clear_session_cookie
   before_action :heinous_inline_partials, if: -> { Rails.env.development? }
   before_action :prepare_exception_notifier
   before_action :mini_profiler

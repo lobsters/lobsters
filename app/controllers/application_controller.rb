@@ -65,7 +65,7 @@ class ApplicationController < ActionController::Base
   # Remove all cookies except tag filter and session cookie
   def remove_unknown_cookies
     allowed = [TAG_FILTER_COOKIE.to_s, Rails.application.config.session_options[:key]]
-    (cookies.keys - allowed).each do |k|
+    (cookies.to_hash.keys - allowed).each do |k|
       cookies.delete(k)
     end
   end

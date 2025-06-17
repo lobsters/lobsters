@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# runs in dir of new release before it's symlinked into place
+
+# avatars live in a shrared dir (until #547) and we don't want to flush that
+# cache every deploy; this mirrors the symlinking in hatchbox's deploy script
+mkdir -p ../../shared/public/avatars
+ln -s ../../../shared/public/avatars public/avatars
+
 # prod keys
 cp /home/deploy/lobsters/shared/etc/credentials.yml.enc config/credentials.yml.enc
 cp /home/deploy/lobsters/shared/etc/master.key config/master.key

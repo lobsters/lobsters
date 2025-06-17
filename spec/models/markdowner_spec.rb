@@ -52,6 +52,22 @@ describe Markdowner do
       .to eq("<p><a href=\"/~abc\">ex</a></p>\n")
   end
 
+  it "escapes raw HTML" do
+    # Examples adapted from https://cheatsheetseries.owasp.org/cheatsheets/XSS_Filter_Evasion_Cheat_Sheet.html
+
+    expect(Markdowner.to_html("hi <script src=\"https://lobste.rs\"></script> bye"))
+      .to eq("<p>hi &lt;script src=\"https://lobste.rs\"&gt;&lt;/script&gt; bye</p>\n")
+
+    expect(Markdowner.to_html("hi <a onmouseover=\"alert('xss')\">xss</a> bye"))
+      .to eq("<p>hi &lt;a onmouseover=\"alert('xss')\"&gt;xss&lt;/a&gt; bye</p>\n")
+
+    expect(Markdowner.to_html("hi <img \"\"\"><script>alert('xss')</script> bye\">"))
+      .to eq("<p>hi &lt;img \"\"\"&gt;&lt;script&gt;alert('xss')&lt;/script&gt; bye\"&gt;</p>\n")
+
+    expect(Markdowner.to_html("hi <iframe src=\"javascript:alert('xss');\"></iframe> bye"))
+      .to eq("<p>hi &lt;iframe src=\"javascript:alert('xss');\"&gt;&lt;/iframe&gt; bye</p>\n")
+  end
+
   context "when images are not allowed" do
     subject { Markdowner.to_html(description, allow_images: false) }
 

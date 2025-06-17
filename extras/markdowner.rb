@@ -19,6 +19,7 @@ class Markdowner
         shortcodes: nil
       },
       render: {
+        escape: true,
         hardbreaks: false,
         escaped_char_spans: false
       }

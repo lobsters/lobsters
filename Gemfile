@@ -34,7 +34,7 @@ gem "rotp"
 gem "rqrcode"
 
 # parsing
-gem "commonmarker", "<1"
+gem "commonmarker"
 gem "htmlentities"
 gem "pdf-reader"
 gem "nokogiri"

@@ -57,3 +57,5 @@ redir @www_domain https://lobste.rs{uri} 302
 rewrite @visitor /cache/{file_match.relative}
 # header @visitor X-Lobsters-Visitor {file_match.relative}
 # header X-Lobsters-Hello "World 8"
+
+header @visitor ?Content-Security-Policy-Report-Only "default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; report-uri /csp-violation-report"

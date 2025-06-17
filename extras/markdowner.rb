@@ -10,12 +10,28 @@ class Markdowner
       return ""
     end
 
-    exts = [:tagfilter, :autolink, :strikethrough]
-    root = CommonMarker.render_doc(text.to_s, [:SMART], exts)
+    commonmarker_options = {
+      extension: {
+        tagfilter: true,
+        autolink: true,
+        strikethrough: true,
+        header_ids: nil,
+        shortcodes: nil
+      },
+      render: {
+        hardbreaks: false,
+        escaped_char_spans: false
+      }
+    }
+
+    root = Commonmarker.parse(text.to_s, options: commonmarker_options)
 
     walk_text_nodes(root) { |n| postprocess_text_node(n) }
 
-    ng = Nokogiri::HTML(root.to_html([:DEFAULT], exts))
+    ng = Nokogiri::HTML(root.to_html(
+      options: commonmarker_options,
+      plugins: {syntax_highlighter: nil}
+    ))
 
     # change <h1>, <h2>, etc. headings to just bold tags
     ng.css("h1, h2, h3, h4, h5, h6").each do |h|
@@ -63,11 +79,10 @@ class Markdowner
       node.string_content = before
 
       if User.exists?(username: user[1..])
-        link = CommonMarker::Node.new(:link)
-        link.url = Rails.application.root_url + "~#{user[1..]}"
+        link = Commonmarker::Node.new(:link, url: Rails.application.root_url + "~#{user[1..]}")
         node.insert_after(link)
 
-        link_text = CommonMarker::Node.new(:text)
+        link_text = Commonmarker::Node.new(:text)
         link_text.string_content = user
         link.append_child(link_text)
 
@@ -77,7 +92,7 @@ class Markdowner
       end
 
       if after.length > 0
-        remainder = CommonMarker::Node.new(:text)
+        remainder = Commonmarker::Node.new(:text)
         remainder.string_content = after
         node.insert_after(remainder)
 

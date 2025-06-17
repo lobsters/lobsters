@@ -12,7 +12,8 @@ class Markdowner
 
     commonmarker_options = {
       parse: {smart: true},
-      extension: {tagfilter: true, autolink: true, strikethrough: true}
+      extension: {tagfilter: true, autolink: true, strikethrough: true},
+      render: {escape: true}
     }
 
     root = Commonmarker.parse(text.to_s, options: commonmarker_options)

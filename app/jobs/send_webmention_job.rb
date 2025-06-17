@@ -3,7 +3,7 @@ class SendWebmentionJob < ApplicationJob
 
   def endpoint_from_body(html)
     doc = Nokogiri::HTML(html)
-  
+
     if !doc.css('[rel~="webmention"]').css("[href]").empty?
       doc.css('[rel~="webmention"]').css("[href]").attribute("href").value
     elsif !doc.css('[rel="http://webmention.org/"]').css("[href]").empty?
@@ -12,10 +12,10 @@ class SendWebmentionJob < ApplicationJob
       doc.css('[rel="http://webmention.org"]').css("[href]").attribute("href").value
     end
   end
-  
+
   def endpoint_from_headers(header)
     return unless header
-  
+
     if (matches = header.match(/<([^>]+)>; rel="[^"]*\s?webmention\s?[^"]*"/))
       matches[1]
     elsif (matches = header.match(/<([^>]+)>; rel=webmention/))
@@ -30,7 +30,7 @@ class SendWebmentionJob < ApplicationJob
       matches[1]
     end
   end
-  
+
   # Some pages could return a relative link as their webmention endpoint.
   # We need to translate this relative likn to an absolute one.
   def uri_to_absolute(uri, req_uri)
@@ -45,7 +45,7 @@ class SendWebmentionJob < ApplicationJob
       abs_uri
     end
   end
-  
+
   def send_webmention(source, target, endpoint)
     sp = Sponge.new
     sp.timeout = 10
@@ -67,7 +67,7 @@ class SendWebmentionJob < ApplicationJob
     sp = Sponge.new
     sp.timeout = 10
     begin
-      response = sp.fetch(ERB::Util.url_encode(story.url), :get, nil, nil, {
+      response = sp.fetch(WEBrick::HTTPUtils.escape(story.url), :get, nil, nil, {
         "User-agent" => "#{Rails.application.domain} webmention endpoint lookup"
       }, 3)
     rescue NoIPsError, DNSError

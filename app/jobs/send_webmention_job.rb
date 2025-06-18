@@ -69,7 +69,7 @@ class SendWebmentionJob < ApplicationJob
     sp = Sponge.new
     sp.timeout = 10
     begin
-      response = sp.fetch(WEBrick::HTTPUtils.escape(story.url), :get, nil, nil, {
+      response = sp.fetch(URI::RFC2396_PARSER.escape(story.url), :get, nil, nil, {
         "User-agent" => "#{Rails.application.domain} webmention endpoint lookup"
       }, 3)
     rescue NoIPsError, DNSError

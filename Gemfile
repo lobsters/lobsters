@@ -57,7 +57,6 @@ gem "rexml" # no release for https://github.com/lumean/svg-graph2/pull/48/files
 gem "rack-attack" # rate-limiting
 gem "lograge" # for JSON logging
 gem "silencer" # to disable default logging in prod
-gem "webrick", "~> 1.9" # for specifically URL escaping in jobs
 
 group :test, :development do
   gem "benchmark-perf"

@@ -60,9 +60,11 @@ class SendWebmentionJob < ApplicationJob
 
   def perform(story)
     # Could have been deleted between creation and now
-    return unless story.persisted?
+    return if story.is_gone?
     # Need a URL to send the webmention to
     return if story.url.blank?
+    # Don't try to send webmentions in dev
+    return if Rails.env.development?
 
     sp = Sponge.new
     sp.timeout = 10

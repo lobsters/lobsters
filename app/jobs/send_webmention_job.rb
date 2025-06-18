@@ -32,7 +32,7 @@ class SendWebmentionJob < ApplicationJob
   end
 
   # Some pages could return a relative link as their webmention endpoint.
-  # We need to translate this relative likn to an absolute one.
+  # We need to translate this relative link to an absolute one.
   def uri_to_absolute(uri, req_uri)
     abs_uri = URI.parse(uri)
     if abs_uri.host

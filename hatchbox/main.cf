@@ -17,6 +17,7 @@ smtpd_tls_key_file=/home/deploy/.local/share/caddy/certificates/acme-v02.api.let
 smtpd_tls_CAfile=/etc/ssl/certs/ca-certificates.crt
 smtpd_tls_security_level=may
 smtpd_use_tls=yes
+postscreen_tls_security_level=may
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 smtp_tls_loglevel = 1
 smtp_tls_security_level=may
@@ -26,6 +27,29 @@ smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 # information on enabling SSL in the smtp client.
 
 smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+
+# postscreen - pre-SMTP client screening
+# https://www.postfix.org/POSTSCREEN_README.html
+postscreen_access_list = permit_mynetworks
+postscreen_dnsbl_sites =
+    bl.spamcop.net*1
+    b.barracudacentral.org*1
+    cbl.abuseat.org=127.0.0.2*3
+    b.barracudacentral.org=127.0.0.2*3
+    bl.spamcop.net=127.0.0.2*2
+    hostkarma.junkemailfilter.com=127.0.0.2*2
+    hostkarma.junkemailfilter.com=127.0.0.4*1
+    bl.nosolicitado.org*3
+    hostkarma.junkemailfilter.com=127.0.0.[1;5]*-5
+    ips.whitelisted.org=127.0.0.2*-3
+    list.dnswl.org=127.[0..255].[0..255].0*-2
+    list.dnswl.org=127.[0..255].[0..255].1*-3
+    list.dnswl.org=127.[0..255].[0..255].[2..255]*-4
+postscreen_dnsbl_threshold = 4          # resize accordingly to postscreen_dnsbl_sites updates
+postscreen_dnsbl_action = enforce
+postscreen_greet_action = enforce       # consider changing to "drop" after logs inspection
+postscreen_blacklist_action = enforce   # consider changing to "drop" after logs inspection
+postscreen_tls_security_level = may
 
 # lobsters config:
 mydomain = lobste.rs

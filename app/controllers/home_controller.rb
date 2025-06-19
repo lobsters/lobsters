@@ -290,7 +290,11 @@ class HomeController < ApplicationController
   def top
     length = time_interval(params[:length])
     if length[:placeholder]
-      return redirect_to(top_path(length: "1w"))
+      respond_to do |format|
+        format.html { redirect_to top_path(length: "1w") }
+        format.rss { redirect_to "/top/1w/rss" }
+      end
+      return
     end
 
     @stories, @show_more = get_from_cache(top: true, length: length) {
@@ -307,7 +311,7 @@ class HomeController < ApplicationController
 
     @rss_link ||= {
       title: "RSS 2.0 - " + @title,
-      href: "/top/rss"
+      href: "/top/#{length[:param]}/rss"
     }
 
     respond_to do |format|

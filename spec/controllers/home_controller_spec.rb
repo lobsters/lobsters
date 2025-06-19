@@ -125,4 +125,94 @@ describe HomeController do
       expect(@controller.view_assigns["stories"]).not_to include(other_story)
     end
   end
+
+  describe "#top" do
+    let(:old_story) { create(:story, created_at: 10.days.ago, updated_at: 10.days.ago) }
+    let(:recent_stories) do
+      # Create descending by score so they are sorted in this order from controller
+      num = StoriesPaginator::STORIES_PER_PAGE + 5
+      Array.new(num) { |n| create :story, score: (num - n) }
+    end
+
+    before do
+      story
+      old_story
+    end
+
+    describe "/top redirect" do
+      it "redirects to default length path" do
+        get :top
+
+        expect(response).to redirect_to("/top/1w")
+      end
+    end
+
+    describe "/top/rss redirect" do
+      it "redirects default length path maintaining format" do
+        get :top, format: "rss"
+
+        expect(response).to redirect_to("/top/1w/rss")
+      end
+    end
+
+    describe "/top/:length" do
+      it "renders HTML page successfully for 1 week" do
+        get :top, params: {length: "1w"}
+
+        expect(response).to be_successful
+        expect(response.content_type).to include("text/html")
+        expect(@controller.view_assigns["title"]).to eq("Top Stories of the Past Week")
+        expect(@controller.view_assigns["rss_link"]).to eq(
+          title: "RSS 2.0 - Top Stories of the Past Week",
+          href: "/top/1w/rss"
+        )
+        expect(@controller.view_assigns["stories"]).to include(story)
+        expect(@controller.view_assigns["stories"]).not_to include(old_story)
+      end
+    end
+
+    describe "/top/:length/rss" do
+      it "returns RSS feed successfully for 1 week" do
+        get :top, format: "rss", params: {length: "1w"}
+
+        expect(response).to be_successful
+        expect(response.content_type).to include("application/rss+xml")
+        expect(@controller.view_assigns["title"]).to eq("Top Stories of the Past Week")
+        expect(@controller.view_assigns["stories"]).to include(story)
+        expect(@controller.view_assigns["stories"]).not_to include(old_story)
+      end
+    end
+
+    describe "/top/:length/page/2" do
+      before { recent_stories }
+
+      it "returns HTML data for page 2 with 1 week length" do
+        get :top, params: {length: "1w", page: "2"}
+
+        expect(response).to be_successful
+        expect(response.content_type).to include("text/html")
+        expect(@controller.view_assigns["title"]).to eq("Top Stories of the Past Week")
+        expect(@controller.view_assigns["rss_link"]).to eq(
+          title: "RSS 2.0 - Top Stories of the Past Week",
+          href: "/top/1w/rss"
+        )
+        expect(@controller.view_assigns["stories"]).to include(recent_stories[StoriesPaginator::STORIES_PER_PAGE + 1])
+        expect(@controller.view_assigns["stories"]).not_to include(old_story)
+      end
+    end
+
+    describe "/top/:length/page/2/rss" do
+      before { recent_stories }
+
+      it "returns RSS feed for page 2 with 1 week length" do
+        get :top, format: "rss", params: {length: "1w", page: "2"}
+
+        expect(response).to be_successful
+        expect(response.content_type).to include("application/rss+xml")
+        expect(@controller.view_assigns["title"]).to eq("Top Stories of the Past Week")
+        expect(@controller.view_assigns["stories"]).to include(recent_stories[StoriesPaginator::STORIES_PER_PAGE + 1])
+        expect(@controller.view_assigns["stories"]).not_to include(old_story)
+      end
+    end
+  end
 end

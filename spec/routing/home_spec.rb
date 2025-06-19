@@ -16,4 +16,30 @@ describe "home routing" do
       "/domains/example.com.rss"
     )
   end
+
+  describe "top" do
+    it "routes /top" do
+      expect(get("/top")).to route_to("home#top")
+    end
+
+    it "routes /top/rss" do
+      expect(get("/top/rss")).to route_to("home#top", format: "rss")
+    end
+
+    it "routes /top/1w" do
+      expect(get("/top/1w")).to route_to("home#top", length: "1w")
+    end
+
+    it "routes /top/1w/rss" do
+      expect(get("/top/1w/rss")).to route_to("home#top", length: "1w", format: "rss")
+    end
+
+    it "routes /top/1w/page/2" do
+      expect(get("/top/1w/page/2")).to route_to("home#top", length: "1w", page: "2")
+    end
+
+    it "routes /top/1w/page/2/rss" do
+      expect(get("/top/1w/page/2/rss")).to route_to("home#top", length: "1w", page: "2", format: "rss")
+    end
+  end
 end

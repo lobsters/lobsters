@@ -4,7 +4,7 @@ require "rails_helper"
 
 describe HomeController do
   let(:user) { create(:user) }
-  let(:story) { create(:story, user: user) }
+  let!(:story) { create(:story, user: user) }
   let(:mod) { create(:user, :moderator) }
 
   describe "#for_domain" do
@@ -127,16 +127,11 @@ describe HomeController do
   end
 
   describe "#top" do
-    let(:old_story) { create(:story, created_at: 10.days.ago, updated_at: 10.days.ago) }
+    let!(:old_story) { create(:story, created_at: 10.days.ago, updated_at: 10.days.ago) }
     let(:recent_stories) do
       # Create descending by score so they are sorted in this order from controller
       num = StoriesPaginator::STORIES_PER_PAGE + 5
       Array.new(num) { |n| create :story, score: (num - n) }
-    end
-
-    before do
-      story
-      old_story
     end
 
     describe "/top redirect" do

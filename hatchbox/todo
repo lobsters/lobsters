@@ -84,7 +84,7 @@ x   create or replace user lobsters@'[public ip web04]' identified by '[password
 x   show grants for lobsters@'[public ip web04];
 x   flush privileges;
 x hatchbox: deploy
-  web04 run root-deploy hook setup
+x web04 run root-deploy hook setup
 x web04 uncomment our placeholder for lobsters.dev
 x web01 disable cron jobs
 x web04 disable read-only
@@ -111,23 +111,23 @@ x fix http -> https redirects
 x caddy's not serving avatars
 x fix full-page cache
 x take a final backup of web01
-  root-deploy has some kind of race and often runs against old checkout instead of current
-  debug actionmailbox routing
-  DO: delete web01
-  dnsimple: turn up DNS ttl to 3600
-  update /about
-  tune puma threads via env var next couple days; record final into config/puma.rb
+x root-deploy has some kind of race and often runs against old checkout instead of current
+x debug actionmailbox routing
+x DO: delete web01
+x dnsimple: turn up DNS ttl to 3600
+x update /about
+x tune puma threads via env var next couple days; record final into config/puma.rb
 
 later
-  restic: delete web03 backups
-  hatchbox support: report bug of reserved ip
-  archive lobsters-ansible
-  power off web01
-  write up notes to setup instructions
-  tune config/puma thread count based on prod usage
-  idea: logs -> DO durable obj -> duckdb?
-  lobsters.dev fix content-type
+x restic: delete web03 backups
+x archive lobsters-ansible
+x power off web01
+x tune config/puma thread count based on prod usage
+- idea: logs -> DO durable obj -> duckdb?
+x lobsters.dev fix content-type
   confirm logrotate is rotating weekly
+  hatchbox support: report bug of reserved ip
+  write up notes to setup instructions
 
 note:
   to update caddy files, deploy them, then go to app settings and click 'Update Caddy' to pick up the change

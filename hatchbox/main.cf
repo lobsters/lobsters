@@ -17,7 +17,6 @@ smtpd_tls_key_file=/home/deploy/.local/share/caddy/certificates/acme-v02.api.let
 smtpd_tls_CAfile=/etc/ssl/certs/ca-certificates.crt
 smtpd_tls_security_level=may
 smtpd_use_tls=yes
-postscreen_tls_security_level=may
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 smtp_tls_loglevel = 1
 smtp_tls_security_level=may

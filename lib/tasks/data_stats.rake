@@ -18,15 +18,15 @@ task data_stats: :environment do
 
         case column.sql_type_metadata.type
         when :binary
-          descendant.connection.exec_query("select avg(length(`#{column.name}`)) avg_length, stddev_pop(length(`#{column.name}`)) stddev_pop_length from `#{descendant.table_name}`").to_a.first
+          descendant.connection.exec_query("select avg(length(`#{column.name}`)) avg_length, stddev_pop(length(`#{column.name}`)) stddev_pop_length, count(`#{column.name}`) column_count from `#{descendant.table_name}`").to_a.first
         when :boolean
-          descendant.connection.exec_query("select count(case `#{column.name}` when 0 then 1 end) count_false, count(case `#{column.name}` when 1 then 1 end) count_true from `#{descendant.table_name}`").to_a.first
+          descendant.connection.exec_query("select count(case `#{column.name}` when 0 then 1 end) count_false, count(case `#{column.name}` when 1 then 1 end) count_true, count(`#{column.name}`) column_count from `#{descendant.table_name}`").to_a.first
         when :date, :datetime
-          descendant.connection.exec_query("select count(`#{column.name}`) count_, min(`#{column.name}`) min_, max(`#{column.name}`) max_ from `#{descendant.table_name}`").to_a.first
+          descendant.connection.exec_query("select count(`#{column.name}`) count_, min(`#{column.name}`) min_, max(`#{column.name}`) max_, count(`#{column.name}`) column_count from `#{descendant.table_name}`").to_a.first
         when :decimal, :float, :integer
-          descendant.connection.exec_query("select avg(`#{column.name}`) avg_, stddev_pop(`#{column.name}`) stddev_pop_, min(`#{column.name}`) min_, max(`#{column.name}`) max_ from `#{descendant.table_name}`").to_a.first.map { |k, v| [k, v.to_f] }.to_h
+          descendant.connection.exec_query("select avg(`#{column.name}`) avg_, stddev_pop(`#{column.name}`) stddev_pop_, min(`#{column.name}`) min_, max(`#{column.name}`) max_, count(`#{column.name}`) column_count from `#{descendant.table_name}`").to_a.first.map { |k, v| [k, v.to_f] }.to_h
         when :string
-          descendant.connection.exec_query("select avg(char_length(`#{column.name}`)) avg_char_length, stddev_pop(char_length(`#{column.name}`)) stddev_pop_char_length from `#{descendant.table_name}`").to_a.first
+          descendant.connection.exec_query("select avg(char_length(`#{column.name}`)) avg_char_length, stddev_pop(char_length(`#{column.name}`)) stddev_pop_char_length, count(`#{column.name}`) column_count from `#{descendant.table_name}`").to_a.first
         when :text
           descendant.connection.exec_query(
             <<~SQL
@@ -34,7 +34,8 @@ task data_stats: :environment do
                 avg(char_length(`#{column.name}`)) avg_char_length,
                 stddev_pop(char_length(`#{column.name}`)) stddev_pop_char_length,
                 avg(char_length(`#{column.name}`) - char_length(replace(`#{column.name}`, ' ', '')) + 1) avg_word_count,
-                stddev_pop(char_length(`#{column.name}`) - char_length(replace(`#{column.name}`, ' ', '')) + 1) stddev_pop_word_count
+                stddev_pop(char_length(`#{column.name}`) - char_length(replace(`#{column.name}`, ' ', '')) + 1) stddev_pop_word_count,
+                count(`#{column.name}`) column_count
               from `#{descendant.table_name}`
             SQL
           ).to_a.first

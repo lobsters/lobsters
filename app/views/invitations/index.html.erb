@@ -29,7 +29,7 @@
       <td><%= form_with url: delete_invitation_request_path do |f| %>
         <%= f.hidden_field "code", :value => ir.code %>
         <%= f.submit "Delete" %>
-      <% end %>
+      <% end %></td>
     </tr>
   <% end %>
   <% if @invitation_requests.length == 0 %>

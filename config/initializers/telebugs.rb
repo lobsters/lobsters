@@ -5,6 +5,9 @@ class Telebugs
   def self.context *args, **kwargs
   end
 
+  def self.message *args, **kwargs
+  end
+
   def self.user *args, **kwargs
   end
 end
@@ -34,6 +37,10 @@ if Rails.application.credentials.telebugs.present?
       Sentry.configure_scope do |scope|
         scope.set_context(name, value)
       end
+    end
+
+    def message msg
+      Sentry.capture_message msg
     end
 
     def user id:, username:, email:, ip_address:

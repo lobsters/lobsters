@@ -1,5 +1,5 @@
 <div class="box" id="story_box">
-	<div id="story_holder">
+  <div id="story_holder">
     <%= form_with model: @story, id: 'edit_story' do |f| %>
       <%= render :partial => "stories/form", :locals => { :story => @story,
         :f => f } %>
@@ -29,5 +29,5 @@
         </div>
       </div>
     <% end %>
-	</div>
+  </div>
 </div>

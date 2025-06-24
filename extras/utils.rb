@@ -53,7 +53,7 @@ class Utils
       ord = chr.unpack1("C")
 
       #          0            9              A            Z              a            z
-      if (ord >= 48 && ord <= 57) || (ord >= 65 && ord <= 90) || (ord >= 97 && ord <= 122)
+      if ord.between?(48, 57) || ord.between?(65, 90) || ord.between?(97, 122)
         str += chr
       end
     end

@@ -597,6 +597,53 @@ describe Story do
         expect(Story.saved(user)).to eq([first_story])
       end
     end
+
+    describe "newest_by_user" do
+      let(:user) { create(:user) }
+      let(:submitter) { create(:user) }
+
+      def story_titles_from(submitter:, basic: user)
+        Story.newest_by_user(basic, submitter).map(&:title)
+      end
+
+      context "when submitter is viewing their own stories" do
+        it "sees their stories" do
+          create(:story, user: submitter, title: "Own story")
+          expect(story_titles_from(submitter:)).to include("Own story")
+        end
+
+        it "sees their own deleted stories" do
+          create(:story, user: submitter, title: "deleted story", is_deleted: 1)
+          expect(story_titles_from(basic: submitter, submitter:)).to include("deleted story")
+        end
+
+        it "sees stories that were merged into others' stories" do
+          by_other = create(:story, title: "other story")
+          create(:story, user: submitter, title: "merged story", merged_into_story: by_other)
+
+          expect(story_titles_from(submitter:)).to include("merged story")
+          expect(story_titles_from(submitter:)).to_not include("other story")
+        end
+
+        it "sees their own stories merged into a story they submitted" do
+          own = create(:story, user: submitter, title: "own story")
+          create(:story, user: submitter, title: "merged story", merged_into_story: own)
+          expect(story_titles_from(submitter:)).to include("own story")
+          expect(story_titles_from(submitter:)).to include("merged story")
+        end
+
+        it "does not see stories by others merged into a story they submitted" do
+          own = create(:story, user: submitter, title: "own story")
+          create(:story, title: "by other", merged_into_story: own)
+          expect(story_titles_from(basic: nil, submitter:)).to_not include("by other")
+        end
+      end
+
+      it "users don't see others' deleted stories" do
+        create(:story, user: submitter, title: "deleted story", is_deleted: 1)
+        expect(story_titles_from(basic: nil, submitter:)).not_to include("deleted story")
+      end
+    end
   end
 
   describe "suggestions" do

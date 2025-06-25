@@ -148,6 +148,14 @@ class Story < ApplicationRecord
       .order(:hotness)
   }
 
+  scope :newest_by_user, ->(user, submitter) {
+    where(user: submitter)
+      .includes(:tags)
+      .not_deleted(user)
+      .mod_preload?(user)
+      .order(id: :desc)
+  }
+
   include Token
 
   validates :title, length: {in: 3..150}, presence: true

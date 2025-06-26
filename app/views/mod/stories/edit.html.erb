@@ -28,10 +28,8 @@
       <p></p>
 
       <div class="box">
-        <div class="boxline actions markdown_help_toggler">
-          <div class="markdown_help_label">
-            Markdown formatting available
-          </div>
+        <div class="boxline actions">
+          <%= render :partial => "global/markdownhelp", :locals => { allow_images: @story.can_have_images? } %>
 
           <%= f.submit "Save" %>
 
@@ -48,10 +46,6 @@
                 :class => "deletion", :data => { :confirm => "Delete this story?" } %>
             <% end %>
           <% end %>
-
-          <div style="clear: both;"></div>
-
-          <%= render :partial => "global/markdownhelp", :locals => { allow_images: @story.can_have_images? } %>
         </div>
       </div>
     <% end %>

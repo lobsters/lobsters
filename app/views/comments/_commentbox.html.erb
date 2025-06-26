@@ -40,15 +40,9 @@
 
     <p></p>
 
-    <div class="markdown_help_toggler">
+    <div>
       <% if @user %>
-        <div class="markdown_help_label">
-          Markdown formatting available
-        </div>
-        <div class="markdown_help_label markdown_help_label_mobile"
-        style="display: none;">
-          [M&darr;]
-        </div>
+        <%= render :partial => "global/markdownhelp" %>
       <% end %>
 
       <%= f.submit "#{comment.new_record?? "Post" : "Update"}",
@@ -69,12 +63,6 @@
           options_from_collection_for_select(@user.wearable_hats, "short_id", "hat",
           comment.hat&.short_id), :include_blank => true %>
         </div>
-      <% end %>
-
-      <div style="clear: both;"></div>
-
-      <% if @user %>
-        <%= render :partial => "global/markdownhelp" %>
       <% end %>
     </div>
   </div>

@@ -112,7 +112,7 @@ class HomeController < ApplicationController
   def newest_by_user
     by_user = User.find_by!(username: params[:user])
 
-    @stories, @show_more = paginate stories.newest_by_user(by_user)
+    @stories, @show_more = paginate Story.newest_by_user(@user, by_user)
 
     @title = "Newest Stories by #{by_user.username}"
     @above = {partial: "newest_by_user", locals: {newest_by_user: by_user}}

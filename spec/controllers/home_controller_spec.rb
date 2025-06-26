@@ -109,6 +109,21 @@ describe HomeController do
     end
   end
 
+  describe "#newest_by_user" do
+    it "includes stories" do
+      by_user = create :user, username: "by_user"
+
+      story = create :story, user: by_user, title: "By user story"
+
+      stub_login_as user
+      get :newest_by_user, params: {user: by_user}
+
+      expect(response).to be_successful
+      expect(@controller.view_assigns["title"]).to eq("Newest Stories by #{by_user.username}")
+      expect(@controller.view_assigns["stories"].map(&:title)).to include(story.title)
+    end
+  end
+
   describe "#saved" do
     it "includes only saved stories by user" do
       saved_story = create(:story)

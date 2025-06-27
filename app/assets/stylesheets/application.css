@@ -7,8 +7,8 @@ https://web-platform-dx.github.io/web-features/
 But I make an unprincipled exception for :has because it solves so many big problems.
 */
 
-/* common color scheme */
 :root {
+	/* common color scheme */
 	--color-bg: rgb(var(--base-bg));
 	--color-bg-50: rgb(var(--base-bg) / 50%);
 
@@ -1209,9 +1209,10 @@ label.required {
 
 .labelled_grid textarea,
 .labelled_grid input[type="text"],
-.labelled_grid input[type="email"] {
+.labelled_grid input[type="password"] {
 	width: 100%;
 	box-sizing: border-box;
+	height: 1.5rlh;
 }
 
 .labelled_grid input[type="checkbox"] {

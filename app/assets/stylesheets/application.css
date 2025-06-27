@@ -1212,6 +1212,9 @@ label.required {
 .labelled_grid input[type="password"] {
 	width: 100%;
 	box-sizing: border-box;
+}
+.labelled_grid input[type="text"],
+.labelled_grid input[type="password"] {
 	height: 1.5rlh;
 }
 

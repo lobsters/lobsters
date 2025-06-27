@@ -42,19 +42,21 @@
 </div>
 
 <% if @user&.is_moderator? %>
-  <br />
-  <% if @story.hider_count > 0 %>
-    <p>
-      Users hiding this story:
-      <% @story.hidings.each do |hiding| %>
-        <%= styled_user_link(hiding.user) %>
-      <% end %>
-    </p>
-  <% end %>
+  <p>
+    Users hiding this story:
+    <% if @story.hidings.count == 0 %>(none)<% end %>
+    <% @story.hidings.each do |hiding| %>
+      <%= styled_user_link(hiding.user) %>
+    <% end %>
+  </p>
 
-  <br />
-  <label class="required">Latest modlog for this story, submitter, and discussion:</label>
-  <%= render partial: 'moderations/table', locals: { moderations: Moderation.for_story(@story) } %>
+  <label class="required">Recent modlog for this story, submitter, and discussion:</label>
+  <% older_log, recent_log = Moderation.for_story(@story).partition { it.created_at.before? 3.months.ago } %>
+  <%= render partial: 'moderations/table', locals: { moderations: recent_log } %>
+  <details>
+    <summary><%= older_log.count %> older</summary>
+    <%= render partial: 'moderations/table', locals: { moderations: older_log } %>
+  </details>
 <% end %>
 
 <% if !@story.previewing %>

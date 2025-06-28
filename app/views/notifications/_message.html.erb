@@ -1,0 +1,16 @@
+<div class="message">
+  <div class="voters">✉</div>
+  <div class="details">
+    <div class="byline">
+      <%= inline_avatar_for @user, message.author %> <%= styled_user_link message.author %>
+      <a href="/messages/<%= message.short_id %>"><%= how_long_ago_label(message.created_at) %></a>
+      <%= raw "<span class='comment_unread'>(unread)</span>" if is_unread %>
+    </div>
+    <div class="message-subject">
+      <%= message.subject %>
+    </div>
+    <div class="message-body">
+      <%= message.body %>
+    </div>
+  </div>
+</div>

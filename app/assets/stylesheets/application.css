@@ -315,7 +315,7 @@ header {
 }
 
 #logo {
-	background-position: center;
+	background: transparent url(logo-transparent.svg) no-repeat center;
 	flex: 0 0 16px; /* width; no padding l/r */
 	float: left;
 	display: block;
@@ -325,9 +325,6 @@ header {
 	margin-left: 4px;
 	margin-right: 11px;
 	position: relative;
-}
-#logo {
-	background: transparent url(logo-transparent.svg) no-repeat center;
 }
 
 header#nav .navholder {

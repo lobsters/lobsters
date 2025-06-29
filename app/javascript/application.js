@@ -534,10 +534,6 @@ onPageLoad(() => {
 
   // Global
 
-  on('click', '.markdown_help_label', (event) => {
-    qS(parentSelector(event.target, '.markdown_help_toggler'), '.markdown_help').classList.toggle('display-block');
-  });
-
   on('click', '#modal_backdrop', () => {
     Lobster.removeFlagModal()
   });

@@ -9,12 +9,6 @@
   <%= errors_for(@new_user) %>
 
   <div class="labelled_grid">
-    <% if not Rails.application.open_signups? %>
-      <%= f.hidden_field "invitation_code", :value => @invitation.code, :name => :invitation_code %>
-      <%= f.label :invitation, "Invited By", :class => "required" %>
-      <%= link_to @invitation.user.username, user_path(@invitation.user), target: '_blank' %>
-    <% end %>
-
     <%= f.label :username, "Username", :class => "required" %>
     <div>
       <%= f.text_field :username %>
@@ -47,13 +41,7 @@
     <div>
       <%= f.text_area :about%>
 
-      <div class="markdown_help_toggler">
-        <div class="markdown_help_label">
-          Markdown formatting available
-        </div>
-
-        <%= render :partial => "global/markdownhelp" %>
-      </div>
+      <%= render :partial => "global/markdownhelp" %>
     </div>
   </div>
 

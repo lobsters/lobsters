@@ -139,6 +139,9 @@ Rails.application.routes.draw do
     post "mod_note"
   end
 
+  get "/notifications(/page/:page)" => "notifications#all", :as => "notifications"
+  get "/notifications/unread" => "notifications#unread"
+
   get "/inbox" => "inbox#index"
 
   get "/c/:id.json" => "comments#show_short_id", :format => "json"

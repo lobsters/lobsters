@@ -3,9 +3,10 @@ require "rails_helper"
 RSpec.describe NotifyCommentJob, type: :job do
   describe "comment notifications" do
     it "sends reply notification" do
-      recipient = create(:user)
+      recipient = build(:user)
       recipient.settings["email_notifications"] = true
       recipient.settings["email_replies"] = true
+      recipient.save!
 
       sender = create(:user)
       # Story under which the comments are posted.
@@ -23,10 +24,12 @@ RSpec.describe NotifyCommentJob, type: :job do
 
       expect(sent_emails.size).to eq(1)
       expect(sent_emails[0].subject).to match(/Reply from #{sender.username}/)
+      expect(recipient.notifications.count).to eq(1)
+      expect(recipient.notifications.first.notifiable).to eq(c2)
     end
 
     it "sends mention notification" do
-      recipient = create(:user)
+      recipient = build(:user)
       recipient.settings["email_notifications"] = true
       recipient.settings["email_mentions"] = true
       recipient.save!
@@ -40,10 +43,12 @@ RSpec.describe NotifyCommentJob, type: :job do
 
       expect(sent_emails.size).to eq(1)
       expect(sent_emails[0].subject).to match(/Mention from #{sender.username}/)
+      expect(recipient.notifications.count).to eq(1)
+      expect(recipient.notifications.first.notifiable).to eq(c)
     end
 
     it "also sends mentions with ~username" do
-      recipient = create(:user)
+      recipient = build(:user)
       recipient.settings["email_notifications"] = true
       recipient.settings["email_mentions"] = true
       recipient.save!
@@ -54,11 +59,13 @@ RSpec.describe NotifyCommentJob, type: :job do
       NotifyCommentJob.perform_now(c)
 
       expect(sent_emails.size).to eq(1)
+      expect(recipient.notifications.count).to eq(1)
+      expect(recipient.notifications.first.notifiable).to eq(c)
     end
 
     it "sends only reply notification on reply with mention" do
       # User being mentioned and replied to.
-      recipient = create(:user)
+      recipient = build(:user)
       recipient.settings["email_notifications"] = true
       recipient.settings["email_mentions"] = true
       recipient.settings["email_replies"] = true
@@ -81,6 +88,8 @@ RSpec.describe NotifyCommentJob, type: :job do
 
       expect(sent_emails.size).to eq(1)
       expect(sent_emails[0].subject).to match(/Reply from #{sender.username}/)
+      expect(recipient.notifications.count).to eq(1)
+      expect(recipient.notifications.first.notifiable).to eq(c2)
     end
   end
 end

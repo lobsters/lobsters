@@ -58,6 +58,15 @@ gem "rack-attack" # rate-limiting
 gem "lograge" # for JSON logging
 gem "silencer" # to disable default logging in prod
 
+# mockturtle
+gem "ircinch"
+gem "json"
+gem "nokogiri"
+gem "open-uri"
+gem "rss"
+gem "sqlite3"
+gem "time"
+
 group :test, :development do
   gem "benchmark-perf"
   gem "brakeman"

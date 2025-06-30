@@ -5,7 +5,17 @@ class CspController < ApplicationController
   skip_before_action :authenticate_user
 
   def violation_report
-    Rails.logger.info(request.body.read)
+    json = JSON.parse(request.body.read)
+
+    return head :bad_request unless
+      request.content_type == "application/csp-report" && json&.is_a?(Hash) && json["csp-report"].is_a?(Hash)
+
+    report = json["csp-report"]
+    Telebugs.message report, fingerprint: ["csp-violation", report.dig("blocked-uri"), report.dig("effective-directive")]
+
     head :ok
+  rescue JSON::ParserError
+    head :bad_request
+    nil
   end
 end

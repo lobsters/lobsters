@@ -1,0 +1,17 @@
+source "https://rubygems.org"
+
+# database and caching
+gem "sqlite3"
+
+# js
+gem "json"
+
+# parsing
+gem "nokogiri"
+
+# mockturtle
+gem "ircinch"
+gem "rss"
+
+# performance monitoring
+gem "sentry-ruby"

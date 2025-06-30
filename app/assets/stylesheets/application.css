@@ -294,6 +294,10 @@ input.deletion {
 	border: 1px solid var(--color-fg-negative);
 }
 
+summary {
+	cursor: pointer;
+}
+
 #qrsvg {
 	background-color: white;
 	display: inline-block;
@@ -793,7 +797,7 @@ div.comment_text {
 }
 
 div.comment_text blockquote,
-div.markdown_help blockquote,
+.markdown_help blockquote,
 div.story_text blockquote {
 	font-style: italic;
 	margin: 0.25em 0 0 0.5em;
@@ -803,7 +807,7 @@ div.story_text blockquote {
 
 /* un-italicize italics inside a blockquote */
 div.comment_text blockquote em, 
-div.markdown_help blockquote em, 
+.markdown_help blockquote em,
 div.story_text blockquote em {
 	font-style: normal
 }
@@ -812,7 +816,7 @@ div#collapsed_story_text div.story_text blockquote {
 	font-style: normal;
 }
 div.comment_text pre,
-div.markdown_help pre {
+.markdown_help pre {
 	margin-left: 1em;
 }
 div.comment_text ol {
@@ -896,18 +900,11 @@ div.comment_text code {
 .markdown_help {
 	background-color: var(--color-box-bg-shaded);
 	border: 1px solid var(--color-box-border);
-	padding: 0 1em;
-	margin-top: 0.5em;
-	display: none;
+	padding-left: 0.25rem;
 }
 
-div.markdown_help_label {
-	float: right;
+.markdown_help summary {
 	font-size: 9pt;
-	line-height: 2em;
-	color: var(--color-fg-contrast-4-5);
-	text-decoration: underline;
-	cursor: pointer;
 }
 
 .comment .preview {
@@ -1757,14 +1754,6 @@ input[type="submit"].link_post.pushover_button {
 	div.boxline input[type="text"],
 	div.comment textarea {
 		max-width: 90%;
-	}
-
-	div.markdown_help_label {
-		display: none;
-	}
-	div.markdown_help_label_mobile {
-		display: inline !important;
-		margin-right: 2em;
 	}
 
 	div#story_box input,

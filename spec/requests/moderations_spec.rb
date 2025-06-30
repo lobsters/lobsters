@@ -6,7 +6,7 @@ RSpec.describe "moderations", type: :request do
 
     context "with fewer entries than two pages" do
       it "shows the first page", :aggregate_failures do
-        Moderation.create!(domain: domain)
+        Moderation.create!(domain: domain, action: "Unbanned domain")
         get "/moderations"
 
         expect(response).to be_successful
@@ -20,7 +20,7 @@ RSpec.describe "moderations", type: :request do
       it "shows the page ignoring extra params", :aggregate_failures do
         # Ensure we end up with two pages of results
         (ModerationsController::ENTRIES_PER_PAGE * 2).times do
-          Moderation.create!(domain: domain)
+          Moderation.create!(domain: domain, action: "Banned domain")
         end
 
         get "/moderations"
@@ -36,8 +36,8 @@ RSpec.describe "moderations", type: :request do
       let(:story) { create :story, title: "How to 10x your pipeline with this one weird trick" }
 
       it "shows entries matching the filters" do
-        Moderation.create!(domain: domain)
-        Moderation.create!(story: story)
+        Moderation.create!(domain: domain, action: "Updated origin regex")
+        Moderation.create!(story: story, action: "Edited title")
 
         get "/moderations", params: {what: {domains: "1"}}
 
@@ -53,7 +53,7 @@ RSpec.describe "moderations", type: :request do
       it "shows the page ignoring extra params", :aggregate_failures do
         # Ensure we end up with two pages of results
         (ModerationsController::ENTRIES_PER_PAGE * 2).times do
-          Moderation.create!(domain: domain)
+          Moderation.create!(domain: domain, action: "Did something useful, hopefully")
         end
 
         get "/moderations", params: {action: "u99p5"}

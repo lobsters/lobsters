@@ -24,13 +24,29 @@ describe "csp violations", type: :request do
   end
 
   it "responds appropriately" do
-    post "/csp-violation-report", params: {body: post_body.to_json, format: :json}
+    post "/csp-violation-report", params: post_body.to_json, headers: {"Content-Type": "application/csp-report"}
     expect(response).to have_http_status(:ok)
   end
 
-  it "records the violation" do
-    allow(Rails.logger).to receive(:info)
-    post "/csp-violation-report", params: {body: post_body.to_json, format: :json}
-    expect(Rails.logger).to have_received(:info).with(/#{document_uri}/)
+  it "requires correct content type" do
+    post "/csp-violation-report", params: post_body.to_json, headers: {"Content-Type": "application/json"}
+    expect(response).to have_http_status(:bad_request)
+
+    post "/csp-violation-report", params: post_body.to_json
+    expect(response).to have_http_status(:bad_request)
+  end
+
+  it "requires csp-report child" do
+    post "/csp-violation-report", params: "[1,2,3]", headers: {"Content-Type": "application/csp-report"}
+    expect(response).to have_http_status(:bad_request)
+
+    post "/csp-violation-report", params: '{"key": 5}', headers: {"Content-Type": "application/csp-report"}
+    expect(response).to have_http_status(:bad_request)
+
+    post "/csp-violation-report", params: '{"csp-report": 5}', headers: {"Content-Type": "application/csp-report"}
+    expect(response).to have_http_status(:bad_request)
+
+    post "/csp-violation-report", params: '{"csp-report": [1,2,3]}', headers: {"Content-Type": "application/csp-report"}
+    expect(response).to have_http_status(:bad_request)
   end
 end

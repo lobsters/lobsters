@@ -39,8 +39,8 @@ if Rails.application.credentials.telebugs.present?
       end
     end
 
-    def message msg
-      Sentry.capture_message msg
+    def message msg, **options
+      Sentry.capture_message(msg, **options)
     end
 
     def user id:, username:, email:, ip_address:

@@ -742,6 +742,8 @@ class Story < ApplicationRecord
         else
           "unmerged from another story"
         end
+      elsif v[0].is_a?(String) && v[1].is_a?(String) && v[0].present? && v[1].blank?
+        "blanked #{k} from #{v[0].inspect}"
       else
         "changed #{k} from #{v[0].inspect} to #{v[1].inspect}"
       end

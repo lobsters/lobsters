@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_05_141223) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_30_123615) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -249,7 +249,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_05_141223) do
     t.bigint "story_id", unsigned: true
     t.bigint "comment_id", unsigned: true
     t.bigint "user_id", unsigned: true
-    t.text "action", size: :medium
+    t.text "action", size: :long, null: false
     t.text "reason", size: :medium
     t.boolean "is_from_suggestions", default: false, null: false
     t.bigint "tag_id", unsigned: true

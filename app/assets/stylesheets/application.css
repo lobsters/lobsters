@@ -459,6 +459,10 @@ div.voters {
 	color: var(--color-fg-shape);
 	font-size: 12pt;
 }
+/* hotfix for https://github.com/lobsters/lobsters/issues/1641 */
+.upvoted .upvoter {
+	font-weight: bold;
+}
 .upvoted .upvoter:before,
 .upvoter:hover:before {
 	color: var(--color-fg-accent);

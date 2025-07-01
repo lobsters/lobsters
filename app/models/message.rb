@@ -46,8 +46,6 @@ class Message < ApplicationRecord
   scope :unread, -> { where(has_been_read: false, deleted_by_recipient: false) }
 
   before_validation :assign_short_id, on: :create
-  after_destroy :update_unread_counts
-  after_save :update_unread_counts
   after_save :check_for_both_deleted
 
   def as_json(_options = {})
@@ -85,10 +83,6 @@ class Message < ApplicationRecord
     if deleted_by_author? && deleted_by_recipient?
       destroy!
     end
-  end
-
-  def update_unread_counts
-    recipient.update_unread_message_count!
   end
 
   def recipient_username=(username)

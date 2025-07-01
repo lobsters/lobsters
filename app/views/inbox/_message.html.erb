@@ -13,7 +13,7 @@
       <span class="message-subject"><a href="/messages/<%= message.short_id %>">Subject: <%= message.subject %></a></span>
     </div>
     <div class="message-body">
-      <%= message.body %>
+      <%= raw message.linkified_body %>
     </div>
   </div>
 </div>

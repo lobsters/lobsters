@@ -352,13 +352,6 @@ GEM
       rubocop-ast (>= 1.31.1, < 2.0)
     ruby-progressbar (1.13.0)
     ruby-rc4 (0.1.5)
-    scenic (1.8.0)
-      activerecord (>= 4.0.0)
-      railties (>= 4.0.0)
-    scenic-mysql_adapter (1.1.0)
-      scenic (>= 1.4.0)
-    scenic_sqlite_adapter (0.1.0)
-      activerecord (>= 4.0.0)
     securerandom (0.4.1)
     sentry-rails (5.24.0)
       railties (>= 5.0)
@@ -495,9 +488,6 @@ DEPENDENCIES
   rotp
   rqrcode
   rspec-rails
-  scenic
-  scenic-mysql_adapter
-  scenic_sqlite_adapter
   sentry-rails
   silencer
   simplecov

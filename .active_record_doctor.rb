@@ -24,8 +24,7 @@ ActiveRecordDoctor.configure do
     ignore_models: [
       "ActiveStorage::Attachment",
       "ActiveStorage::Blob",
-      "ActiveStorage::VariantRecord",
-      "ReplyingComment"
+      "ActiveStorage::VariantRecord"
     ],
     ignore_attributes: [
       "Keystore.id"
@@ -35,8 +34,7 @@ ActiveRecordDoctor.configure do
     ignore_models: [
       "ActiveStorage::Attachment",
       "ActiveStorage::Blob",
-      "ActiveStorage::VariantRecord",
-      "ReplyingComment"
+      "ActiveStorage::VariantRecord"
     ],
     ignore_attributes: [
       "User.password_digest",

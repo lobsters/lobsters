@@ -11,7 +11,8 @@ class CspController < ApplicationController
       request.content_type == "application/csp-report" && json&.is_a?(Hash) && json["csp-report"].is_a?(Hash)
 
     report = json["csp-report"]
-    Telebugs.message report, fingerprint: ["csp-violation", report.dig("blocked-uri"), report.dig("effective-directive")]
+    Telebugs.context :report, report
+    Telebugs.message sample, fingerprint: ["csp-violation", report.dig("blocked-uri"), report.dig("effective-directive")]
 
     head :ok
   rescue JSON::ParserError

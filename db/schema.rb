@@ -269,6 +269,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_30_123615) do
     t.index ["user_id"], name: "index_moderations_on_user_id"
   end
 
+  create_table "notifications", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false, unsigned: true
+    t.string "notifiable_type", null: false
+    t.bigint "notifiable_id", null: false, unsigned: true
+    t.datetime "read_at"
+    t.string "token", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
+    t.index ["token"], name: "index_notifications_on_token", unique: true
+    t.index ["user_id", "notifiable_type", "notifiable_id"], name: "idx_on_user_id_notifiable_type_notifiable_id_ffac34041e", unique: true
+  end
+
   create_table "origins", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "domain_id", null: false
     t.string "identifier", null: false
@@ -494,6 +507,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_30_123615) do
   add_foreign_key "moderations", "tags", name: "moderations_tag_id_fk"
   add_foreign_key "moderations", "users"
   add_foreign_key "moderations", "users", column: "moderator_user_id", name: "moderations_moderator_user_id_fk"
+  add_foreign_key "notifications", "users"
   add_foreign_key "origins", "domains"
   add_foreign_key "origins", "users", column: "banned_by_user_id"
   add_foreign_key "read_ribbons", "stories", name: "read_ribbons_story_id_fk"

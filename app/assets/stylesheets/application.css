@@ -447,6 +447,14 @@ ol.comments1 > li.comments_subtree > ol.comments {
 	padding-left: 0;
 }
 
+.message .voters {
+	font-size: 20px;
+}
+
+.message .message-subject {
+	font-weight: bold;
+}
+
 div.voters {
 	float: left;
 	margin-top: 0px;
@@ -806,7 +814,7 @@ div.story_text blockquote {
 }
 
 /* un-italicize italics inside a blockquote */
-div.comment_text blockquote em, 
+div.comment_text blockquote em,
 .markdown_help blockquote em,
 div.story_text blockquote em {
 	font-style: normal

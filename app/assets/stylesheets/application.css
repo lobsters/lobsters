@@ -455,6 +455,16 @@ ol.comments1 > li.comments_subtree > ol.comments {
 	font-weight: bold;
 }
 
+.hidden-notification {
+	padding-top: 0.4em;
+    padding-bottom: 0.4em;
+}
+
+.hidden-notification .icon {
+	float: left;
+	font-size: 20px;
+}
+
 div.voters {
 	float: left;
 	margin-top: 0px;

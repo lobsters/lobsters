@@ -3,13 +3,13 @@
 require "rails_helper"
 
 describe Notification do
-  describe "good?" do
+  describe "check_good_faith" do
     context "messages" do
       it "is good for all messages" do
         user = create(:user)
         message = create(:message)
         notification = create(:notification, user: user, notifiable: message)
-        expect(notification.good?).to eq(true)
+        expect(notification.check_good_faith.good_faith?).to eq(true)
       end
     end
 
@@ -24,7 +24,9 @@ describe Notification do
         expect(story.flags).to eq(1)
         comment = create(:comment, user: reader, story: story)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good?).to eq(false)
+        result = notification.check_good_faith
+        expect(result.good_faith?).to eq(false)
+        expect(result.bad_properties).to eq([:bad_story])
       end
 
       it "is good for stories with more upvotes than flags" do
@@ -35,7 +37,7 @@ describe Notification do
         expect(story.flags).to eq(0)
         comment = create(:comment, user: reader, story: story)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good?).to eq(true)
+        expect(notification.check_good_faith.good_faith?).to eq(true)
       end
 
       it "is not good for comments with more flags than upvotes" do
@@ -47,7 +49,9 @@ describe Notification do
         comment.reload
         expect(comment.flags).to eq(1)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good?).to eq(false)
+        result = notification.check_good_faith
+        expect(result.good_faith?).to eq(false)
+        expect(result.bad_properties).to eq([:bad_comment, :user_has_flagged_replier])
       end
 
       it "is not good for deleted comments" do
@@ -56,7 +60,9 @@ describe Notification do
         reader = create(:user)
         comment = create(:comment, user: reader, story: story, is_deleted: true)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good?).to eq(false)
+        result = notification.check_good_faith
+        expect(result.good_faith?).to eq(false)
+        expect(result.bad_properties).to eq([:bad_comment])
       end
 
       it "is not good for moderated comments" do
@@ -65,7 +71,9 @@ describe Notification do
         reader = create(:user)
         comment = create(:comment, user: reader, story: story, is_moderated: true)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good?).to eq(false)
+        result = notification.check_good_faith
+        expect(result.good_faith?).to eq(false)
+        expect(result.bad_properties).to eq([:bad_comment])
       end
 
       it "is good for other comments" do
@@ -74,7 +82,7 @@ describe Notification do
         reader = create(:user)
         comment = create(:comment, user: reader, story: story)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good?).to eq(true)
+        expect(notification.check_good_faith.good_faith?).to eq(true)
       end
 
       it "is not good for comments with parent comments with more flags than upvotes" do
@@ -88,7 +96,9 @@ describe Notification do
         comment1.reload
         expect(comment1.flags).to eq(1)
         notification = create(:notification, user: reader1, notifiable: comment2)
-        expect(notification.good?).to eq(false)
+        result = notification.check_good_faith
+        expect(result.good_faith?).to eq(false)
+        expect(result.bad_properties).to eq([:bad_parent_comment])
       end
 
       it "is not good for comments with parent comments that are deleted" do
@@ -101,7 +111,9 @@ describe Notification do
         comment1.is_deleted = true
         comment1.save!
         notification = create(:notification, user: reader1, notifiable: comment2)
-        expect(notification.good?).to eq(false)
+        result = notification.check_good_faith
+        expect(result.good_faith?).to eq(false)
+        expect(result.bad_properties).to eq([:bad_parent_comment])
       end
 
       it "is not good for comments with parent comments that are moderated" do
@@ -114,7 +126,9 @@ describe Notification do
         comment1.is_moderated = true
         comment1.save!
         notification = create(:notification, user: reader1, notifiable: comment2)
-        expect(notification.good?).to eq(false)
+        result = notification.check_good_faith
+        expect(result.good_faith?).to eq(false)
+        expect(result.bad_properties).to eq([:bad_parent_comment])
       end
 
       it "is good for comments with all other parent comments" do
@@ -125,7 +139,7 @@ describe Notification do
         reader2 = create(:user)
         comment2 = create(:comment, user: reader2, story: story, parent_comment: comment1)
         notification = create(:notification, user: reader1, notifiable: comment2)
-        expect(notification.good?).to eq(true)
+        expect(notification.check_good_faith.good_faith?).to eq(true)
       end
 
       it "is not good if the recipient has flagged the any comment belong to the author" do
@@ -137,9 +151,11 @@ describe Notification do
         comment2 = create(:comment, user: reader2, story: story, parent_comment: comment1)
         comment3 = create(:comment, user: reader2, story: story)
         notification = create(:notification, user: author, notifiable: comment3)
-        expect(notification.good?).to eq(true)
+        expect(notification.check_good_faith.good_faith?).to eq(true)
         Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, comment2.id, author.id, nil)
-        expect(notification.good?).to eq(false)
+        result = notification.check_good_faith
+        expect(result.good_faith?).to eq(false)
+        expect(result.bad_properties).to eq([:user_has_flagged_replier])
       end
 
       it "is not good if the recipient has hidden the story" do
@@ -148,9 +164,11 @@ describe Notification do
         reader = create(:user)
         comment = create(:comment, user: reader, story: story)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good?).to eq(true)
+        expect(notification.check_good_faith.good_faith?).to eq(true)
         _hidden_story = create(:hidden_story, user: author, story: story)
-        expect(notification.good?).to eq(false)
+        result = notification.check_good_faith
+        expect(result.good_faith?).to eq(false)
+        expect(result.bad_properties).to eq([:user_has_hidden_story])
       end
 
       it "is not good if the recipient has filtered the story tag" do
@@ -159,12 +177,14 @@ describe Notification do
         reader = create(:user)
         comment = create(:comment, user: reader, story: story)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good?).to eq(true)
+        expect(notification.check_good_faith.good_faith?).to eq(true)
         tag = create(:tag)
         story.tags << tag
         _tag_filter = TagFilter.create!(tag: tag, user: author)
         notification.reload
-        expect(notification.good?).to eq(false)
+        result = notification.check_good_faith
+        expect(result.good_faith?).to eq(false)
+        expect(result.bad_properties).to eq([:user_has_filtered_tags_on_story])
       end
     end
   end

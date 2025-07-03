@@ -152,6 +152,20 @@ describe Notification do
         _hidden_story = create(:hidden_story, user: author, story: story)
         expect(notification.good?).to eq(false)
       end
+
+      it "is not good if the recipient has filtered the story tag" do
+        author = create(:user)
+        story = create(:story, user: author)
+        reader = create(:user)
+        comment = create(:comment, user: reader, story: story)
+        notification = create(:notification, user: author, notifiable: comment)
+        expect(notification.good?).to eq(true)
+        tag = create(:tag)
+        story.tags << tag
+        _tag_filter = TagFilter.create!(tag: tag, user: author)
+        notification.reload
+        expect(notification.good?).to eq(false)
+      end
     end
   end
 end

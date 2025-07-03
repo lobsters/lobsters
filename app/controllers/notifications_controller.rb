@@ -13,7 +13,7 @@ class NotificationsController < ApplicationController
       .offset((@page - 1) * notifications_per_page)
       .limit(notifications_per_page)
       .order(created_at: :desc)
-      .includes(notifiable: [:user, :author])
+      .includes(notifiable: {story: [:tags, :user], user: [], author: []})
 
     @has_more = @user.notifications.count > (@page * notifications_per_page)
 
@@ -28,7 +28,7 @@ class NotificationsController < ApplicationController
       .notifications
       .where(read_at: nil)
       .order(created_at: :desc)
-      .includes(notifiable: [:user, :author])
+      .includes(notifiable: {story: [:tags, :user], user: [], author: []})
 
     respond_to do |format|
       format.html { render :all }

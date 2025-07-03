@@ -458,10 +458,10 @@ div.voters {
 	content: "\25b2";
 	color: transparent;
 	font-size: 12pt;
-	-webkit-text-stroke: 1px var(--color-fg-shape);}
-.upvoted .upvoter:before,
-.upvoter:hover:before {
-   	 color: var(--color-fg-accent);
+	-webkit-text-stroke: 1px var(--color-fg-shape);
+}
+.upvoted .upvoter:before, .upvoter:hover:before {
+	color: var(--color-fg-accent);
 	-webkit-text-stroke: 1px var(--color-fg-accent);
 }
 .upvoter {

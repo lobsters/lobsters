@@ -455,14 +455,15 @@ div.voters {
 }
 
 .upvoter:before {
-	content: "\25b3";
-	color: var(--color-fg-shape);
+	content: "\25b2";
+	color: transparent;
+	-webkit-text-stroke: 1px var(--color-fg-shape);
 	font-size: 12pt;
 }
 .upvoted .upvoter:before,
 .upvoter:hover:before {
-	content: "\25b2";
-	color: var(--color-fg-accent);
+    -webkit-text-stroke: 1px var(--color-fg-accent);
+    color: var(--color-fg-accent);
 }
 .upvoter {
 	color: var(--color-fg-contrast-4-5);

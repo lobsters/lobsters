@@ -142,7 +142,7 @@ describe Notification do
         expect(notification.check_good_faith.good_faith?).to eq(true)
       end
 
-      it "is not good if the recipient has flagged the any comment belong to the author" do
+      it "is not good if the recipient has flagged any comment belonging to the author" do
         author = create(:user)
         story = create(:story, user: author)
         reader1 = create(:user)
@@ -153,6 +153,7 @@ describe Notification do
         notification = create(:notification, user: author, notifiable: comment3)
         expect(notification.check_good_faith.good_faith?).to eq(true)
         Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, comment2.id, author.id, nil)
+        notification.reload
         result = notification.check_good_faith
         expect(result.good_faith?).to eq(false)
         expect(result.bad_properties).to eq([:user_has_flagged_replier])
@@ -166,6 +167,7 @@ describe Notification do
         notification = create(:notification, user: author, notifiable: comment)
         expect(notification.check_good_faith.good_faith?).to eq(true)
         _hidden_story = create(:hidden_story, user: author, story: story)
+        notification.reload
         result = notification.check_good_faith
         expect(result.good_faith?).to eq(false)
         expect(result.bad_properties).to eq([:user_has_hidden_story])

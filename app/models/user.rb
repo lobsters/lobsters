@@ -56,6 +56,10 @@ class User < ApplicationRecord
     class_name: "Hat",
     inverse_of: :user
   has_many :notifications
+  has_many :hidings,
+    class_name: "HiddenStory",
+    inverse_of: :user,
+    dependent: :destroy
 
   include Token
 

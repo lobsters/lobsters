@@ -908,10 +908,6 @@ div.comment_text code {
 	font-size: 9pt;
 }
 
-.comment .preview {
-	padding-left: 17px;
-}
-
 div#story_preview {
 	margin-top: 2em;
 	margin-left: 3.5em;
@@ -952,9 +948,6 @@ div#story_box textarea {
 	width: 600px;
 }
 
-div.comment_form_container {
-	margin-left: -11px;
-}
 
 div.comment_form_container form {
 	margin-left: 40px;

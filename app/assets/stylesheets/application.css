@@ -461,7 +461,7 @@ div.voters {
 	-webkit-text-stroke: 1px var(--color-fg-shape);
 }
 .upvoted .upvoter:before, .upvoter:hover:before {
-	color: var(--color-fg-accent);
+	color: var(--color-fg-accent) !important;
 	-webkit-text-stroke: 1px var(--color-fg-accent);
 }
 .upvoter {

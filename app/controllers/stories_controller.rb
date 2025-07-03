@@ -337,7 +337,7 @@ class StoriesController < ApplicationController
     @story = Story.new(user: @user)
     update_story_attributes
     update_resubmit_comment_attributes
-    @story.already_posted_recently?
+    @story.check_already_posted_recently?
 
     respond_to do |format|
       linking_comments = Link.recently_linked_from_comments(@story.url)

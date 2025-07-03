@@ -214,7 +214,7 @@ class Story < ApplicationRecord
 
   validate do
     if url.present?
-      already_posted_recently?
+      check_already_posted_recently?
       check_not_banned_domain
       check_not_banned_origin
       check_not_new_domain_from_new_user
@@ -259,13 +259,21 @@ class Story < ApplicationRecord
     return false unless url.present? && new_record?
 
     if most_recent_similar&.is_recent?
-      errors.add(:url, "has already been submitted within the past #{RECENT_DAYS} days")
       true
     elsif user&.is_new? && most_recent_similar
-      errors.add(:url, "cannot be resubmitted by new users")
       true
     else
       false
+    end
+  end
+
+  def check_already_posted_recently?
+    return unless url.present? && new_record?
+
+    if most_recent_similar&.is_recent?
+      errors.add(:url, "has already been submitted within the past #{RECENT_DAYS} days")
+    elsif user&.is_new? && most_recent_similar
+      errors.add(:url, "cannot be resubmitted by new users")
     end
   end
 

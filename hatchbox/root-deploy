@@ -56,9 +56,11 @@ newaliases
 
 # pick up changes to opendkim, root-deploy.service, and root-deploy.path
 systemctl daemon-reload
-
 systemctl enable --now opendkim
 systemctl enable --now postfix
+
+# quiet logins
+cp sshd_config /etc/ssh/sshd_config
 
 # configure logrotate
 cp logrotate.conf /etc/logrotate.d/

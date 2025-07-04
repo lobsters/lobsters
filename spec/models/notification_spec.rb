@@ -62,7 +62,7 @@ describe Notification do
         notification = create(:notification, user: author, notifiable: comment)
         result = notification.check_good_faith
         expect(result.good_faith?).to eq(false)
-        expect(result.bad_properties).to eq([:bad_comment])
+        expect(result.bad_properties).to eq([:is_gone])
       end
 
       it "is not good for moderated comments" do
@@ -73,7 +73,7 @@ describe Notification do
         notification = create(:notification, user: author, notifiable: comment)
         result = notification.check_good_faith
         expect(result.good_faith?).to eq(false)
-        expect(result.bad_properties).to eq([:bad_comment])
+        expect(result.bad_properties).to eq([:is_gone])
       end
 
       it "is good for other comments" do

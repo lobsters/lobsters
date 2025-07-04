@@ -15,7 +15,10 @@
 
       <% can_flag = @user && @user.can_flag?(comment) %>
       <% score_display = comment.score_for_user(@user) %>
-      <div class="comment_parent_tree_line
+      <% tree_line = !comment.previewing && comment.reply_count > 0 %>
+
+      <div class="
+        <%= tree_line ? "comment_parent_tree_line" : "" %>
         <%= can_flag ? "can_flag" : "" %>
         <%= score_display != "&nbsp;" ? "score_shown" : "" %>
       "></div>

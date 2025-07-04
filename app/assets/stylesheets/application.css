@@ -899,13 +899,16 @@ div.comment_text code {
 
 
 .markdown_help {
-	background-color: var(--color-box-bg-shaded);
-	border: 1px solid var(--color-box-border);
 	padding-left: 0.25rem;
 }
 
 .markdown_help summary {
+	color: var(--color-fg-contrast-4-5);
 	font-size: 9pt;
+	text-align: right;
+}
+#story_box .markdown_help summary {
+	width: calc(7em + 610px);
 }
 
 .comment .preview {

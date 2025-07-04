@@ -457,7 +457,7 @@ div.voters {
 .upvoter:before {
   content: "\25b2";
 	color: transparent;
-	font-size: 14pt;
+	font-size: 1.2rem;
 	-webkit-text-stroke: 1px var(--color-fg-contrast-4-5);
 }
 .upvoted .upvoter:before, .upvoter:hover:before {

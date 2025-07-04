@@ -1,0 +1,53 @@
+# typed: false
+
+class NotificationsController < ApplicationController
+  before_action :require_logged_in_user
+  before_action :set_page, only: [:all]
+  after_action :update_read_at, only: [:unread]
+
+  def all
+    notifications_per_page = 25
+
+    @notifications = @user
+      .notifications
+      .offset((@page - 1) * notifications_per_page)
+      .limit(notifications_per_page)
+      .order(created_at: :desc)
+      .includes(user: [:hidings, :votes], notifiable: {story: [:tags, :user], user: [:comments], author: [], parent_comment: []})
+
+    @has_more = @user.notifications.count > (@page * notifications_per_page)
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @notifications }
+    end
+  end
+
+  def unread
+    @notifications = @user
+      .notifications
+      .where(read_at: nil)
+      .order(created_at: :desc)
+      .includes(user: [:hidings, :votes], notifiable: {story: [:tags, :user], user: [:comments], author: [], parent_comment: []})
+
+    respond_to do |format|
+      format.html { render :all }
+      format.json { render json: @notifications }
+    end
+  end
+
+  private
+
+  def update_read_at
+    @notifications.update_all(read_at: Time.current)
+  end
+
+  def set_page
+    @page = params[:page].to_i
+    if @page == 0
+      @page = 1
+    elsif @page < 0 || @page > (2**32)
+      raise ActionController::RoutingError.new("page out of bounds")
+    end
+  end
+end

@@ -55,6 +55,11 @@ class User < ApplicationRecord
   has_many :wearable_hats, -> { where(doffed_at: nil) },
     class_name: "Hat",
     inverse_of: :user
+  has_many :notifications
+  has_many :hidings,
+    class_name: "HiddenStory",
+    inverse_of: :user,
+    dependent: :destroy
 
   include Token
 

@@ -1,9 +1,9 @@
 class NotifyCommentJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
-    args.each do |arg|
-      deliver_comment_notifications(arg)
+  def perform(*comments)
+    comments.each do |comment|
+      deliver_comment_notifications(comment)
     end
   end
 
@@ -15,6 +15,8 @@ class NotifyCommentJob < ApplicationJob
   def deliver_mention_notifications(comment, notified)
     to_notify = comment.plaintext_comment.scan(/\B[@~]([\w\-]+)/).flatten.uniq - notified - [comment.user.username]
     User.active.where(username: to_notify).find_each do |u|
+      u.notifications.create(notifiable: comment)
+
       if u.email_mentions?
         begin
           EmailReplyMailer.mention(comment, u).deliver_now
@@ -55,6 +57,8 @@ class NotifyCommentJob < ApplicationJob
     notified = []
 
     users_following_thread(comment).each do |u|
+      u.notifications.create(notifiable: comment)
+
       if u.email_replies?
         begin
           EmailReplyMailer.reply(comment, u).deliver_now

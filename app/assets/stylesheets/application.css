@@ -640,13 +640,8 @@ li .comment_parent_tree_line {
 	left: 1em;
 	bottom: 0;
 }
-
 li .comment_parent_tree_line.score_shown {
 	top: 3.6lh;
-}
-/* hide for comments that don't have children */
-li:not(:has(> .comments > li)) > .comment > .comment_parent_tree_line {
-	border-left-color: transparent;
 }
 li .comment_siblings_tree_line {
 	position: absolute;
@@ -923,10 +918,6 @@ div.comment_text code {
 	width: calc(7em + 610px);
 }
 
-.comment .preview {
-	padding-left: 17px;
-}
-
 div#story_preview {
 	margin-top: 2em;
 	margin-left: 3.5em;
@@ -967,9 +958,6 @@ div#story_box textarea {
 	width: 600px;
 }
 
-div.comment_form_container {
-	margin-left: -11px;
-}
 
 div.comment_form_container form {
 	margin-left: 40px;

@@ -89,6 +89,7 @@ class User < ApplicationRecord
     s.string :mastodon_oauth_token
     s.string :mastodon_username
     s.string :homepage
+    s.string :totp_recovery_codes, array: true, default: [], null: false
   end
 
   validates :prefers_color_scheme, inclusion: %w[system light dark]
@@ -231,6 +232,13 @@ class User < ApplicationRecord
     end
 
     h
+  end
+
+  def authenticate_totp_recovery(code)
+    return false unless totp_recovery_codes.include?(code)
+
+    totp_recovery_codes.delete(code)
+    save!
   end
 
   def authenticate_totp(code)

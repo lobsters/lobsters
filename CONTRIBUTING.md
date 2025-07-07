@@ -36,6 +36,9 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
 
 ### Making your change
 
+Do not submit code written by LLM-powered coding tools because of the uncertainty around their output's copyright: 
+https://en.wikipedia.org/wiki/Artificial_intelligence_and_copyright
+
 * Fork [lobsters/lobsters](https://github.com/lobsters/lobsters) on Github.
 
 * Run through the setup steps in `README.md`

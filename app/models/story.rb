@@ -74,6 +74,16 @@ class Story < ApplicationRecord
       .positive_ranked
       .order(:hotness)
   }
+
+  scope :tagged, ->(user, tags) {
+    tagged_story_ids = Tagging.select(:story_id).where(tag_id: tags.map(&:id))
+
+    base(user)
+      .positive_ranked
+      .where(id: tagged_story_ids)
+      .order(created_at: :desc)
+  }
+
   scope :recent, ->(user = nil, exclude_tags = nil, unmerged: true) {
     base(user, unmerged: unmerged).not_hidden_by(user)
       .filter_tags(exclude_tags || [])

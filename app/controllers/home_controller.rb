@@ -195,7 +195,7 @@ class HomeController < ApplicationController
     @tag = Tag.find_by!(tag: params[:tag])
 
     @stories, @show_more = get_from_cache(tag: @tag.tag) do
-      paginate stories.tagged([@tag])
+      paginate Story.tagged(@user, [@tag])
     end
 
     @related = Rails.cache.fetch("related_#{@tag.tag}", expires_in: 1.day) {
@@ -223,7 +223,7 @@ class HomeController < ApplicationController
     raise ActiveRecord::RecordNotFound unless @tags.length == tag_params.length
 
     @stories, @show_more = get_from_cache(tags: tag_params.sort.join(",")) do
-      paginate stories.tagged(@tags)
+      paginate Story.tagged(@user, @tags)
     end
 
     @title = @tags.map do |tag|

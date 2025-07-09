@@ -644,6 +644,21 @@ describe Story do
         expect(story_titles_from(basic: nil, submitter:)).not_to include("deleted story")
       end
     end
+
+    describe ".tagged" do
+      let(:user) { create :user }
+
+      it "selects unique tagged stories" do
+        tag1 = create(:tag)
+        tag2 = create(:tag)
+        story = create(:story, user:, title: "A story", tags: [tag1, tag2])
+
+        tagged = Story.tagged(user, [tag1, tag2])
+
+        expect(tagged.count).to be 1
+        expect(tagged.first).to eq story
+      end
+    end
   end
 
   describe "suggestions" do

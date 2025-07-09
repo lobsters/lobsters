@@ -4,7 +4,7 @@
 * Create a fork of the repo
 * Clone repo `git clone https://github.com/[USER_NAME]/lobsters.git`
 * Run `make docker-serve`
-  * This will put mariadb image and start two containers: one for web and another for the database
+  * This will pull a mariadb image and start two containers: one for web and another for the database
 * Change the credentials:
   * Create a new terminal tab
   * Run `docker compose run app bash`
@@ -19,20 +19,22 @@
   * Change line 5 to `host: db`
   * Add the below code to yoru development primary and test primary:
 
-    ```
-      username: root
-      password: localdev
-    ```
+```
+  username: root
+  password: localdev
+```
 
   * It should look like something like this:
 
-    ```
-      development:
-      primary:
-        <<: *trilogy
-        database: lobsters_development
-        username: root
-        password: localdev
+```
+  development:
+  primary:
+    <<: *trilogy
+    database: lobsters_development
+    username: root
+    password: localdev
+```
+
 * Switch back to the tab running the mariadb image and restart the server by:
   * Holding down `control` and `c`
   * Run `make docker-serve`
@@ -40,7 +42,7 @@
   ![server output](./server_output.jpg)
 * In another terminal, Run `docker compose run app bin/setup`
 * Create the fake data by running `docker compose run app rails fake_data`
-  * Note: this will take a bit of time
+  * Note: this will take 2-5 minutes
 * Confirm the server is running by navigating to `http://0.0.0.0:3000`
 
 # Common errors

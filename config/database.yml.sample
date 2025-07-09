@@ -20,10 +20,6 @@ development:
     <<: *sqlite3
     database: db/development/cache.sqlite3
     migrations_paths: db/development/cache_migrate
-  errors:
-    <<: *sqlite3
-    database: db/development/errors.sqlite3
-    migrations_paths: db/development/errors_migrate
   queue:
     <<: *sqlite3
     database: db/development/queue.sqlite3
@@ -37,10 +33,6 @@ test:
     <<: *sqlite3
     database: db/test/cache.sqlite3
     migrations_paths: db/test/cache_migrate
-  errors:
-    <<: *sqlite3
-    database: db/test/errors.sqlite3
-    migrations_paths: db/test/errors_migrate
   queue:
     <<: *sqlite3
     database: db/test/queue.sqlite3
@@ -54,10 +46,6 @@ production:
     <<: *sqlite3
     database: /home/deploy/lobsters/shared/storage/cache.sqlite3
     migrations_paths: db/cache_migrate
-  errors:
-    <<: *sqlite3
-    database: /home/deploy/lobsters/shared/storage/errors.sqlite3
-    migrations_paths: db/errors_migrate
   queue:
     <<: *sqlite3
     database: /home/deploy/lobsters/shared/storage/queue.sqlite3

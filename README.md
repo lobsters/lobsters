@@ -88,25 +88,21 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
     lobsters$ rails server
     ```
 
-* Deploying the site in production requires setting up a web server, [SolidQueue](https://github.com/rails/solid_queue/) service, and running the app in production mode.
-  There are more tools and options available than we can describe; find a guide or an expert.
-  The lobsters-ansible repo has our config files to crib from. Some app-specific notes:
+## Production
 
-* Set up crontab or another scheduler to run regular jobs:
+Running Lobsters has kept me busy over the years, so I have been reluctant to take on the work to make the codebase really easy to reuse.
+These instructions assume you know the basics of web development with Ruby on Rails on a Linux server.
 
-    ```
-    */5 * * * *  cd /path/to/lobsters && env RAILS_ENV=production sh -c 'bundle exec ruby script/mail_new_activity; bundle exec ruby script/mastodon_sync.rb; bundle exec ruby script/traffic_range'
-    ```
+1. Edit `config/application.rb` to put in your site's name and domain name.
 
-* On production, run `rails db:setup` to create the cache and queue databases (`config/database.yml` sets their location).
+2. We recently started using a service called [Hatchbox](https://hatchbox.io) to set up and deploy the server.
+Reusing this config will be easier than Heroku/Render/etc.
+I am still writing up instructions, but if you are handy you can see our config in the [hatchbox directory](https://github.com/lobsters/lobsters/tree/master/hatchbox).
 
-* On production, run `rails credentials:edit` to set up the credentials there,
-  like you did for development.
+* On production, run `rails credentials:edit` to set up credentials there, like you did for development.
   On setup, Rails will give you new random value for `secret_key_base` and you can use `rails secret` any time you need to generate another.
-  Never `git commit` or share your `config/credentials.yml.enc`!
+  Never `git commit` or share your `config/credentials.yml.enc` or `config/master.key`.
 
-* You probably want to use [git-imerge](https://lobste.rs/s/dbm2d4) to pull in
-  changes from Lobsters to your site.
 
 #### Administration
 

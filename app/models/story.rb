@@ -84,6 +84,13 @@ class Story < ApplicationRecord
       .order(created_at: :desc)
   }
 
+  scope :top, ->(user, dur:, intv:) {
+    top = base(user)
+      .where("created_at >= (NOW() - INTERVAL " \
+             "#{dur} #{intv.upcase})")
+    top.order(score: :desc)
+  }
+
   scope :recent, ->(user = nil, exclude_tags = nil, unmerged: true) {
     base(user, unmerged: unmerged).not_hidden_by(user)
       .filter_tags(exclude_tags || [])

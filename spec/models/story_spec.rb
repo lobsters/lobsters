@@ -659,6 +659,20 @@ describe Story do
         expect(tagged.first).to eq story
       end
     end
+
+    describe "top" do
+      let(:user) { create :user }
+
+      it "selects stories from the given invterval" do
+        create_list :story, 2, user:, created_at: 3.months.ago
+        story = create :story, user:, created_at: 2.days.ago
+
+        stories = Story.top(user, dur: 7, intv: "day")
+
+        expect(stories.count).to eq(1)
+        expect(stories.first).to eq(story)
+      end
+    end
   end
 
   describe "suggestions" do

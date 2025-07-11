@@ -645,7 +645,7 @@ describe Story do
       end
     end
 
-    describe ".tagged" do
+    describe "tagged" do
       let(:user) { create :user }
 
       it "selects unique tagged stories" do

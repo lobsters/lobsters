@@ -60,11 +60,11 @@ Solution:
 
 * Open a new terminal
 * Run your app server:
-  * IF your app server is running, Run `Docker attach <CONTAINER_NAME>`
+  * IF your app server is running, Run `docker attach <CONTAINER_NAME>`
     * Example: `docker attach lobsters-app`
     * You can check if it is running by running `docker ps` and if you see something similiar by the below image, then the app server is running
     ![docker ps](./docker_ps.jpg)
   * IF you app server is not running, Run `docker compose run --rm --service-ports app`
     * `--rm` ensures that you do not create orphaned containers
-* Add `byebug` to the file you wish to add a break point and debug. 
-* Happy debugging! 
+* Add `byebug` to the file you wish to add a break point and debug.
+* Happy debugging!

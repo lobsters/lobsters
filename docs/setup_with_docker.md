@@ -24,7 +24,7 @@
   password: localdev
 ```
 
-  * It should look like something like this:
+* It should look like something like this:
 
 ```
   development:
@@ -55,3 +55,16 @@ Solution:
 
 * Run `docker compose run app db:drop`
 * Redo steps starting at "Switch back to the tab running the mariadb image and restart the server by:"
+
+# Debugging in Docker
+
+* Open a new terminal
+* Run your app server:
+  * IF your app server is running, Run `Docker attach <CONTAINER_NAME>`
+    * Example: `docker attach lobsters-app`
+    * You can check if it is running by running `docker ps` and if you see something similiar by the below image, then the app server is running
+    ![docker ps](./docker_ps.jpg)
+  * IF you app server is not running, Run `docker compose run --rm --service-ports app`
+    * `--rm` ensures that you do not create orphaned containers
+* Add `byebug` to the file you wish to add a break point and debug. 
+* Happy debugging! 

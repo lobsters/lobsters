@@ -243,7 +243,6 @@ GEM
       activesupport (>= 7.0.0)
       rack
       railties (>= 7.0.0)
-    prosopite (1.4.2)
     psych (5.2.6)
       date
       stringio
@@ -485,7 +484,6 @@ DEPENDENCIES
   pdf-reader
   prism
   propshaft
-  prosopite
   puma
   rack-attack
   rack-mini-profiler

@@ -26,6 +26,8 @@ You can jump right in to issues tagged `good first issue`, you don't have to ask
 Please don't post a comment to "claim" an issue.
 If an issue then doesn't get finished it stalls out for years because nobody wants to be rude and "steal" it.
 
+Do not submit code written by LLM-powered coding tools because of the [uncertainty around their output's copyright](https://en.wikipedia.org/wiki/Artificial_intelligence_and_copyright).
+
 While this project's license allows for modification and use to run your own website,
 this source code repository is specifically for the code running the website at [lobste.rs](https://lobste.rs/).
 
@@ -35,9 +37,6 @@ in [the chat room](https://lobste.rs/chat),
 or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid wasted effort.
 
 ### Making your change
-
-Do not submit code written by LLM-powered coding tools because of the uncertainty around their output's copyright: 
-https://en.wikipedia.org/wiki/Artificial_intelligence_and_copyright
 
 * Fork [lobsters/lobsters](https://github.com/lobsters/lobsters) on Github.
 

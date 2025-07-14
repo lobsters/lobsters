@@ -84,10 +84,10 @@ class Story < ApplicationRecord
       .order(created_at: :desc)
   }
 
-  scope :top, ->(user, dur:, intv:) {
+  scope :top, ->(user, length) {
     top = base(user)
       .where("created_at >= (NOW() - INTERVAL " \
-             "#{dur} #{intv.upcase})")
+             "#{length[:dur]} #{length[:intv].upcase})")
     top.order(score: :desc)
   }
 

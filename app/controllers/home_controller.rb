@@ -298,7 +298,7 @@ class HomeController < ApplicationController
     end
 
     @stories, @show_more = get_from_cache(top: true, length: length) {
-      paginate stories.top(length)
+      paginate Story.top(@user, length)
     }
 
     @title = if length[:dur] > 1

@@ -25,7 +25,7 @@ describe "comments", type: :request do
       expect {
         expect(comment.is_deleted).to be true
         post "/comments/#{comment.short_id}/upvote"
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(404)
       }.to change { comment.reload.score }.by(0)
       expect(Vote.where(user: user).count).to eq(0)
     end

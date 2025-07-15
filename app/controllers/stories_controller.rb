@@ -5,7 +5,7 @@ class StoriesController < ApplicationController
 
   caches_page :show, if: CACHE_PAGE
 
-  before_action :require_logged_in_user_or_400,
+  before_action :require_logged_in_user_or_401,
     only: [:upvote, :flag, :unvote, :hide, :unhide, :preview, :save, :unsave]
   before_action :require_logged_in_user,
     only: [:destroy, :create, :edit, :fetch_url_attributes, :new]
@@ -230,65 +230,118 @@ class StoriesController < ApplicationController
 
   def unvote
     if !(story = find_story) || story.is_gone?
-      return render plain: "can't find story", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find story", status: 404 }
+        format.json { render json: {error: "can't find story"}, status: 404 }
+      end
+      return
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      0, story.id, nil, @user.id, nil
-    )
-
-    render plain: "ok"
+    if Vote.vote_thusly_on_story_or_comment_for_user_because(0, story.id, nil, @user.id, nil)
+      respond_to do |format|
+        format.html { render plain: "ok" }
+        format.json { render json: {status: "ok"} }
+      end
+    else
+      respond_to do |format|
+        format.html { render plain: "already unvoted", status: 400 }
+        format.json { render json: {error: "already unvoted"}, status: 400 }
+      end
+    end
   end
 
   def upvote
     if !(story = find_story) || story.is_gone?
-      return render plain: "can't find story", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find story", status: 404 }
+        format.json { render json: {error: "can't find story"}, status: 404 }
+      end
+      return
     end
 
     if story.merged_into_story
-      return render plain: "story has been merged", status: 400
+      respond_to do |format|
+        format.html { render plain: "story has been merged", status: 400 }
+        format.json { render json: {error: "story has been merged"}, status: 400 }
+      end
+      return
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      1, story.id, nil, @user.id, nil
-    )
-
-    render plain: "ok"
+    if Vote.vote_thusly_on_story_or_comment_for_user_because(1, story.id, nil, @user.id, nil)
+      respond_to do |format|
+        format.html { render plain: "ok" }
+        format.json { render json: {status: "ok"} }
+      end
+    else
+      respond_to do |format|
+        format.html { render plain: "already upvoted", status: 400 }
+        format.json { render json: {error: "already upvoted"}, status: 400 }
+      end
+    end
   end
 
   def flag
     if !(story = find_story) || story.is_gone?
-      return render plain: "can't find story", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find story", status: 404 }
+        format.json { render json: {error: "can't find story"}, status: 404 }
+      end
+      return
     end
 
     if !Vote::STORY_REASONS[params[:reason]]
-      return render plain: "invalid reason", status: 400
+      respond_to do |format|
+        format.html { render plain: "invalid reason", status: 400 }
+        format.json { render json: {error: "invalid reason"}, status: 400 }
+      end
+      return
     end
 
     if !@user.can_flag?(story)
-      return render plain: "not permitted to flag", status: 400
+      respond_to do |format|
+        format.html { render plain: "not permitted to flag", status: 400 }
+        format.json { render json: {error: "not permitted to flag"}, status: 400 }
+      end
+      return
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      -1, story.id, nil, @user.id, params[:reason]
-    )
-
-    render plain: "ok"
+    if Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, nil, @user.id, params[:reason])
+      respond_to do |format|
+        format.html { render plain: "ok" }
+        format.json { render json: {status: "ok"} }
+      end
+    else
+      respond_to do |format|
+        format.html { render plain: "already flagged", status: 400 }
+        format.json { render json: {error: "already flagged"}, status: 400 }
+      end
+    end
   end
 
   def hide
     if !(story = find_story)
-      return render plain: "can't find story", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find story", status: 404 }
+        format.json { render json: {error: "can't find story"}, status: 404 }
+      end
+      return
     end
 
     if story.merged_into_story
-      return render plain: "story has been merged", status: 400
+      respond_to do |format|
+        format.html { render plain: "story has been merged", status: 400 }
+        format.json { render json: {error: "story has been merged"}, status: 400 }
+      end
+      return
     end
 
     HiddenStory.hide_story_for_user(story, @user)
 
     if request.xhr?
-      render plain: "ok"
+      respond_to do |format|
+        format.html { render plain: "ok" }
+        format.json { render json: {status: "ok"} }
+      end
     else
       redirect_to story_path(story)
     end
@@ -296,13 +349,20 @@ class StoriesController < ApplicationController
 
   def unhide
     if !(story = find_story)
-      return render plain: "can't find story", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find story", status: 404 }
+        format.json { render json: {error: "can't find story"}, status: 404 }
+      end
+      return
     end
 
     HiddenStory.unhide_story_for_user(story, @user)
 
     if request.xhr?
-      render plain: "ok"
+      respond_to do |format|
+        format.html { render plain: "ok" }
+        format.json { render json: {status: "ok"} }
+      end
     else
       redirect_to story_path(story)
     end
@@ -310,26 +370,44 @@ class StoriesController < ApplicationController
 
   def save
     if !(story = find_story)
-      return render plain: "can't find story", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find story", status: 404 }
+        format.json { render json: {error: "can't find story"}, status: 404 }
+      end
+      return
     end
 
     if story.merged_into_story
-      return render plain: "story has been merged", status: 400
+      respond_to do |format|
+        format.html { render plain: "story has been merged", status: 400 }
+        format.json { render json: {error: "story has been merged"}, status: 400 }
+      end
+      return
     end
 
     SavedStory.save_story_for_user(story.id, @user.id)
 
-    render plain: "ok"
+    respond_to do |format|
+      format.html { render plain: "ok" }
+      format.json { render json: {status: "ok"} }
+    end
   end
 
   def unsave
     if !(story = find_story)
-      return render plain: "can't find story", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find story", status: 404 }
+        format.json { render json: {error: "can't find story"}, status: 404 }
+      end
+      return
     end
 
     SavedStory.where(user_id: @user.id, story_id: story.id).delete_all
 
-    render plain: "ok"
+    respond_to do |format|
+      format.html { render plain: "ok" }
+      format.json { render json: {status: "ok"} }
+    end
   end
 
   def check_url_dupe
@@ -358,7 +436,11 @@ class StoriesController < ApplicationController
 
   def disown
     if !((story = find_story) && story.disownable_by_user?(@user))
-      return render plain: "can't find story", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find story", status: 404 }
+        format.json { render json: {error: "can't find story"}, status: 404 }
+      end
+      return
     end
 
     InactiveUser.disown! story

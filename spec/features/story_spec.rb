@@ -34,7 +34,7 @@ RSpec.feature "Stories" do
       expect(page).not_to have_link("disown")
 
       page.driver.post "/stories/#{non_deletable_story.short_id}/disown"
-      expect(page.driver.status_code).to eq(400)
+      expect(page.driver.status_code).to eq(404)
       expect(page.html).to include("can't find story")
     end
 

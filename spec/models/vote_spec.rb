@@ -111,14 +111,45 @@ describe Vote do
 
     u = create(:user)
 
-    2.times do
-      Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
+    result1 = Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
+    expect(result1).to eq(true)
 
-      s.reload
+    result2 = Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
+    expect(result2).to eq(false)
 
-      expect(s.score).to eq(2)
-      expect(s.user.karma).to eq(1)
-    end
+    s.reload
+
+    expect(s.score).to eq(2)
+    expect(s.user.karma).to eq(1)
+  end
+
+  it "returns appropriate status for duplicate unvotes" do
+    s = create(:story)
+    u = create(:user)
+
+    # First upvote
+    Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
+
+    # First unvote (should succeed)
+    result1 = Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id, nil, u.id, nil)
+    expect(result1).to eq(true)
+
+    # Duplicate unvote (should return false for no change)
+    result2 = Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id, nil, u.id, nil)
+    expect(result2).to eq(false)
+  end
+
+  it "no change when upvoting twice" do
+    s = create(:story)
+    u = create(:user)
+
+    # First upvote (should succeed)
+    result1 = Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
+    expect(result1).to eq(true)
+
+    # Duplicate upvote (should return false for no change)
+    result2 = Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
+    expect(result2).to eq(false)
   end
 
   it "has no effect on a story score when casting a hide vote" do

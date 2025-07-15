@@ -291,7 +291,7 @@ describe "stories", type: :request do
         target.save!
 
         post "/stories/#{target.short_id}/upvote"
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(404)
       }.to change { target.reload.score }.by(0)
       expect(Vote.where(user: user).count).to eq(0)
     end

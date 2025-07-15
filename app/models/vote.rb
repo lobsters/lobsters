@@ -137,7 +137,13 @@ class Vote < ApplicationRecord
     # happen with associated comments.
     v.story if story_id.present?
 
-    return if !v.new_record? && v.vote == new_vote # done if there's no change
+    if !v.new_record? && v.vote == new_vote
+      # existing vote with same value - no change
+      return false
+    elsif v.new_record? && new_vote == 0
+      # trying to unvote when no vote exists - no change
+      return false
+    end
 
     # score deltas when flags no longer affect scores
     # no vote  -> 1      1
@@ -179,6 +185,8 @@ class Vote < ApplicationRecord
       end
       t.update_score_and_recalculate!(score_delta, flag_delta)
     end
+
+    true
   end
 
   def target

@@ -61,11 +61,14 @@ module Authenticatable
     end
   end
 
-  def require_logged_in_user_or_400
+  def require_logged_in_user_or_401
     if @user
       true
     else
-      render plain: "not logged in", status: 400
+      respond_to do |format|
+        format.html { render plain: "not logged in", status: 401 }
+        format.json { render json: {error: "not logged in"}, status: 401 }
+      end
       false
     end
   end

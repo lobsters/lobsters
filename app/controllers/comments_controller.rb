@@ -5,7 +5,7 @@ class CommentsController < ApplicationController
 
   caches_page :index, :threads, if: CACHE_PAGE
 
-  before_action :require_logged_in_user_or_400,
+  before_action :require_logged_in_user_or_401,
     only: [:create, :reply, :upvote, :flag, :unvote, :update]
   before_action :require_logged_in_user, only: [:upvoted]
   before_action :show_title_h1
@@ -16,7 +16,11 @@ class CommentsController < ApplicationController
   def create
     if !(story = Story.where(short_id: params[:story_id]).first) ||
         story.is_gone?
-      return render plain: "can't find story", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find story", status: 404 }
+        format.json { render json: {error: "can't find story"}, status: 404 }
+      end
+      return
     end
 
     comment = story.comments.build
@@ -65,7 +69,10 @@ class CommentsController < ApplicationController
 
   def show
     if !(comment = find_comment)
-      return render plain: "can't find comment", status: 404
+      respond_to do |format|
+        format.html { render plain: "can't find comment", status: 404 }
+        format.json { render json: {error: "can't find comment"}, status: 404 }
+      end
     end
     if !comment.is_editable_by_user?(@user)
       return redirect_to Routes.comment_target_path(comment, true)
@@ -82,7 +89,11 @@ class CommentsController < ApplicationController
 
   def show_short_id
     if !(comment = find_comment)
-      return render plain: "can't find comment", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find comment", status: 404 }
+        format.json { render json: {error: "can't find comment"}, status: 404 }
+      end
+      return
     end
 
     render json: comment.as_json
@@ -92,13 +103,20 @@ class CommentsController < ApplicationController
     if (comment = find_comment)
       redirect_to Routes.comment_target_path(comment, true)
     else
-      render plain: "can't find comment", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find comment", status: 404 }
+        format.json { render json: {error: "can't find comment"}, status: 404 }
+      end
     end
   end
 
   def edit
     if !((comment = find_comment) && comment.is_editable_by_user?(@user))
-      return render plain: "can't find comment", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find comment", status: 404 }
+        format.json { render json: {error: "can't find comment"}, status: 404 }
+      end
+      return
     end
 
     if request.xhr?
@@ -111,7 +129,11 @@ class CommentsController < ApplicationController
 
   def reply
     if !(parent_comment = find_comment)
-      return render plain: "can't find comment", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find comment", status: 404 }
+        format.json { render json: {error: "can't find comment"}, status: 404 }
+      end
+      return
     end
 
     story = parent_comment.story
@@ -152,7 +174,11 @@ class CommentsController < ApplicationController
 
   def delete
     if !((comment = find_comment) && comment.is_deletable_by_user?(@user))
-      return render plain: "can't find comment", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find comment", status: 404 }
+        format.json { render json: {error: "can't find comment"}, status: 404 }
+      end
+      return
     end
 
     comment.delete_for_user(@user, params[:reason])
@@ -163,7 +189,11 @@ class CommentsController < ApplicationController
 
   def undelete
     if !((comment = find_comment) && comment.is_undeletable_by_user?(@user))
-      return render plain: "can't find comment", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find comment", status: 404 }
+        format.json { render json: {error: "can't find comment"}, status: 404 }
+      end
+      return
     end
 
     comment.undelete_for_user(@user)
@@ -174,7 +204,11 @@ class CommentsController < ApplicationController
 
   def disown
     if !((comment = find_comment) && comment.is_disownable_by_user?(@user))
-      return render plain: "can't find comment", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find comment", status: 404 }
+        format.json { render json: {error: "can't find comment"}, status: 404 }
+      end
+      return
     end
 
     InactiveUser.disown! comment
@@ -192,7 +226,11 @@ class CommentsController < ApplicationController
 
   def update
     if !((comment = find_comment) && comment.is_editable_by_user?(@user))
-      return render plain: "can't find comment", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find comment", status: 404 }
+        format.json { render json: {error: "can't find comment"}, status: 404 }
+      end
+      return
     end
 
     comment.comment = params[:comment]
@@ -226,46 +264,84 @@ class CommentsController < ApplicationController
 
   def unvote
     if !(comment = find_comment) || comment.is_gone?
-      return render plain: "can't find comment", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find comment", status: 404 }
+        format.json { render json: {error: "can't find comment"}, status: 404 }
+      end
+      return
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      0, comment.story_id, comment.id, @user.id, nil
-    )
-
-    render plain: "ok"
+    if Vote.vote_thusly_on_story_or_comment_for_user_because(0, comment.story_id, comment.id, @user.id, nil)
+      respond_to do |format|
+        format.html { render plain: "ok" }
+        format.json { render json: {status: "ok"} }
+      end
+    else
+      respond_to do |format|
+        format.html { render plain: "already unvoted", status: 409 }
+        format.json { render json: {error: "already unvoted"}, status: 409 }
+      end
+    end
   end
 
   def upvote
     if !(comment = find_comment) || comment.is_gone?
-      return render plain: "can't find comment", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find comment", status: 404 }
+        format.json { render json: {error: "can't find comment"}, status: 404 }
+      end
+      return
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      1, comment.story_id, comment.id, @user.id, nil
-    )
-
-    render plain: "ok"
+    if Vote.vote_thusly_on_story_or_comment_for_user_because(1, comment.story_id, comment.id, @user.id, nil)
+      respond_to do |format|
+        format.html { render plain: "ok" }
+        format.json { render json: {status: "ok"} }
+      end
+    else
+      respond_to do |format|
+        format.html { render plain: "already upvoted", status: 409 }
+        format.json { render json: {error: "already upvoted"}, status: 409 }
+      end
+    end
   end
 
   def flag
     if !(comment = find_comment) || comment.is_gone?
-      return render plain: "can't find comment", status: 400
+      respond_to do |format|
+        format.html { render plain: "can't find comment", status: 404 }
+        format.json { render json: {error: "can't find comment"}, status: 404 }
+      end
+      return
     end
 
     if !Vote::COMMENT_REASONS[params[:reason]]
-      return render plain: "invalid reason", status: 400
+      respond_to do |format|
+        format.html { render plain: "invalid reason", status: 400 }
+        format.json { render json: {error: "invalid reason"}, status: 400 }
+      end
+      return
     end
 
     if !@user.can_flag?(comment)
-      return render plain: "not permitted to flag", status: 400
+      respond_to do |format|
+        format.html { render plain: "not permitted to flag", status: 400 }
+        format.json { render json: {error: "not permitted to flag"}, status: 400 }
+      end
+      return
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      -1, comment.story_id, comment.id, @user.id, params[:reason]
-    )
-
-    render plain: "ok"
+    if Vote.vote_thusly_on_story_or_comment_for_user_because(-1, comment.story_id, comment.id, @user.id, params[:reason])
+      respond_to do |format|
+        format.html { render plain: "ok" }
+        format.json { render json: {status: "ok"} }
+      end
+    else
+      respond_to do |format|
+        format.html { render plain: "already flagged", status: 409 }
+        format.json { render json: {error: "already flagged"}, status: 409 }
+      end
+    end
   end
 
   def index

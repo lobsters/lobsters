@@ -244,7 +244,7 @@ class Story < ApplicationRecord
     if title.match(GRAPHICS_RE)
       errors.add(:title, " may not contain emoji, dingbats, or other graphics")
     end
-    if !title.empty? && title == title.upcase
+    if !title.empty? && title.ascii_only? && title == title.upcase
       errors.add(:title, " doesn't need to scream, ASCII has supported lowercase since June 17, 1963.")
     end
 

@@ -84,10 +84,15 @@ class Story < ApplicationRecord
       .order(created_at: :desc)
   }
 
+  ALLOWED_INTERVALS = %w[MICROSECOND SECOND MINUTE HOUR DAY WEEK MONTH QUARTER YEAR SECOND_MICROSECOND
+    MINUTE_MICROSECOND MINUTE_SECOND HOUR_MICROSECOND HOUR_SECOND HOUR_MINUTE DAY_MICROSECOND DAY_SECOND
+    DAY_MINUTE DAY_HOUR YEAR_MONTH].freeze
+
   scope :top, ->(user, length) {
+    raise ArgumentError, "Incorrect interval" unless ALLOWED_INTERVALS.include?(length[:intv].upcase)
+
     top = base(user)
-      .where("created_at >= (NOW() - INTERVAL " \
-             "#{length[:dur]} #{length[:intv].upcase})")
+      .where("created_at >= (NOW() - INTERVAL ? #{length[:intv].upcase})", length[:dur])
     top.order(score: :desc)
   }
 

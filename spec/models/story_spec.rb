@@ -672,6 +672,10 @@ describe Story do
         expect(stories.count).to eq(1)
         expect(stories.first).to eq(story)
       end
+
+      it "raise the ArgumentError exception when inveral unit value is invalid" do
+        expect { Story.top(user, dur: 7, intv: "wrong") }.to raise_error(ArgumentError)
+      end
     end
   end
 

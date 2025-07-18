@@ -66,8 +66,8 @@ class ApplicationController < ActionController::Base
       next if key == TAG_FILTER_COOKIE.to_s # don't clear tag filters cookie
       next if key == Rails.application.config.session_options[:key] # don't clear session cookie
       cookies.delete(key)
-    end 
-  end 
+    end
+  end
 
   # clear Rails session cookie if not logged in so nginx uses the page cache
   # https://ryanfb.xyz/etc/2021/08/29/going_cookie-free_with_rails.html

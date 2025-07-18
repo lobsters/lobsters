@@ -8,6 +8,9 @@ RSpec.feature "Reading Homepage", type: :feature do
   feature "when logged out" do
     scenario "homepage" do
       visit "/"
+
+      expect(page.driver.request.cookies).to be_empty
+
       expect(page).to have_content(story.title)
     end
   end
@@ -19,6 +22,11 @@ RSpec.feature "Reading Homepage", type: :feature do
 
     scenario "homepage" do
       visit "/"
+
+      expect(page.driver.request.cookies.length).to be(2)
+      expect(page.driver.request.cookies["lobster_trap"]).to_not be_nil
+      expect(page.driver.request.cookies["__profilin"]).to_not be_nil
+
       expect(page).to have_content(story.title)
     end
 

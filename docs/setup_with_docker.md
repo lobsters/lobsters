@@ -68,3 +68,7 @@ Solution:
     * `--rm` ensures that you do not create orphaned containers
 * Add `byebug` to the file you wish to add a break point and debug.
 * Happy debugging!
+
+# Running tests in Docker
+
+* Run `docker compose run app rspec`

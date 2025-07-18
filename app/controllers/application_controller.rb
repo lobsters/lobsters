@@ -9,10 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :prepare_exception_notifier
   before_action :mini_profiler
   before_action :set_traffic_style
-
   before_action :remove_non_lobster_cookies
-  # 2023-10-07 one user in one of their browser envs is getting a CSRF failure, I'm reverting
-  # because I'll be AFK a while.
   after_action :clear_session_cookie
 
   # match this nginx config for bypassing the file cache

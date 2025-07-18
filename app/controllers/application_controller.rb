@@ -65,9 +65,8 @@ class ApplicationController < ActionController::Base
   end
 
   def remove_non_lobster_cookies
-    # clear all cookies except the tag filters cookie and the session cookie
     cookies.each do |key, _value|
-      next if key == TAG_FILTER_COOKIE # don't clear tag filters cookie
+      next if key == TAG_FILTER_COOKIE.to_s # don't clear tag filters cookie
       next if key == Rails.application.config.session_options[:key] # don't clear session cookie
       cookies.delete(key)
     end 

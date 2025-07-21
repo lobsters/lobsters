@@ -165,11 +165,13 @@ Setup:
 
 4. SSH into your server as the `root` user to set up the deploy hook.
 
-    # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.service /etc/systemd/system
-    # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.path /etc/systemd/system
-    # systemctl daemon-reload
-    # systemctl enable --now root-deploy.service # first backup takes 10ish min
-    # systemctl enable --now root-deploy.path
+    ```
+    ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.service /etc/systemd/system
+    ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.path /etc/systemd/system
+    systemctl daemon-reload
+    systemctl enable --now root-deploy.service # first backup takes 10ish min
+    systemctl enable --now root-deploy.path
+    ```
 
 5. Deploy again with Hatchbox to run the hook and finish the server provisioning.
 

@@ -18,7 +18,7 @@ So our design philosophy is a little different than a typical commercial product
 
  * We started with Rails 3.2.2 in 2012, so we have a few dusty corners and places where we don't take advantage of features that were introduced since we started.
  * We lean into using Rails features instead of custom code, and we'll write a couple dozen lines of narrow code for a feature rather than add a dependency that might require maintenance.
- * We are especially reluctant to add new production services like queues, caches, and databases. We have almost eliminated third-party dependencies from production.
+ * We are especially reluctant to add new production services like queues, caches, databases, or SAAS services.
  * We test to ensure functionality, but testing is a lot lighter for moderator and other non-core features.
    We're trying to maximize the return on investment of testing rather than minimize errors.
  * We're willing to take downtime for big code changes rather than try to make them seamless.
@@ -26,9 +26,7 @@ So our design philosophy is a little different than a typical commercial product
 
 #### Development setup
 
-Use the steps below for a local install or
-[lobsters-ansible](https://github.com/lobsters/lobsters-ansible) for our production deployment config.
-Follow the [Docker installation guide](./docs/setup_with_docker.md) if you want to use Docker.
+We have a [Docker setup guide](./docs/setup_with_docker.md) if you use that for development, but you can also set up directly on your machine:
 
 * Install and start MariaDB.
   On Linux use [your package manager](https://mariadb.com/kb/en/distributions-which-include-mariadb/).
@@ -127,7 +125,7 @@ Setup:
     * Activity: This is logs, nothing to change.
     * Repository: Connect your GitHub repo.
     * Domains & SSL: Add your domain names, include both `example.org` and `www.example.org`.
-    * Environment: Many settings in `config/` can be overridden with env vars.
+    * Environment:
 
       ```
       BUNDLE_WITHOUT      development:test
@@ -141,6 +139,8 @@ Setup:
       SECRET_KEY_BASE     [random generated key]
       ```
 
+      Search the codebase for uses of the `ENV` global for more that can be easily configured.
+
     * Databases: We manage this independely of Hatchbox for historal reasons, see `#539`.
     * Cron Jobs:
 
@@ -151,7 +151,7 @@ Setup:
 
     * Settings:
       We have tweaks of production config files and we want those [tracked in our git repo](https://github.com/lobsters/lobsters/tree/master/hatchbox).
-      We have rigged up settings to run an (unfortunately) clever script to update those on deploy.
+      We have rigged up settings to run an (unfortunately) clever hook to update those on deploy, see below.
 
       Pre-build script: `hatchbox/pre-build`
       Custom build script: blank
@@ -163,15 +163,32 @@ Setup:
 
   * Make a deployment with Hatchbox. Whew!
 
-4. On production, cd into `sitename/current` and run `rails credentials:edit` to set up credentials there, like you did for development.
-   On setup, Rails will give you new random value for `secret_key_base` and you can use `rails secret` any time you need to generate another.
-   Never `git commit` or share your `config/credentials.yml.enc` or `config/master.key`.
+4. SSH into your server as the `root` user to set up the deploy hook.
 
-5. [Test your mail config for spamminess](https://www.mail-tester.com/).
-   On prod root shell, run `echo "Test Postfix email, visit scnenic https://example.com" | mail -s "Postfix Test" test-whatever@srv1.mailtester.com`
+    # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.service /etc/systemd/system
+    # ln -s /home/deploy/lobsters/current/hatchbox/root-deploy.path /etc/systemd/system
+    # systemctl daemon-reload
+    # systemctl enable --now root-deploy.service # first backup takes 10ish min
+    # systemctl enable --now root-deploy.path
+
+5. Deploy again with Hatchbox to run the hook and finish the server provisioning.
+
+6. SSH into your server as the `deploy` user
+
+   1. Run `rails credentials:edit` to set up credentials there, like you did for development.
+      Use `config/credentials.yml.sample` for a template.
+      On setup, Rails will give you new random value for `secret_key_base` and you can use `rails secret` any time you need to generate another.
+      Never `git commit` or share your `config/credentials.yml.enc` or `config/master.key`.
+   2. [Test your mail config for spamminess](https://www.mail-tester.com/).
+      Run `echo "Test Postfix email, visit scnenic https://example.com" | mail -s "Postfix Test" test-whatever@srv1.mailtester.com`
+   3. Run `rails console` and create a `User` for yourself, set `is_admin = true`.
+      You'll probably also have to create a `Category` and one `Tag` for the site to run at all.
+   4. See logs in `~deploy/sitename/shared/log`.
+
+If everything worked, you should have a running instance now.
 
 
 #### Administration
 
-Basic moderation happens on-site, but many administrative tasks require use of the rails console in production.
-Administrators can create and edit tags at `/tags`.
+Basic moderation happens on-site, but some administrative tasks require use of the rails console in production.
+Administrators can create and edit tags at `/tags`, the mod dashboard is at `/mod`.

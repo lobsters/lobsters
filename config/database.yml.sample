@@ -44,9 +44,9 @@ production:
     database: lobsters
   cache:
     <<: *sqlite3
-    database: /home/deploy/lobsters/shared/storage/cache.sqlite3
+    database: storage/cache.sqlite3
     migrations_paths: db/cache_migrate
   queue:
     <<: *sqlite3
-    database: /home/deploy/lobsters/shared/storage/queue.sqlite3
+    database: storage/queue.sqlite3
     migrations_paths: db/queue_migrate

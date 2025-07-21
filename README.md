@@ -129,7 +129,7 @@ Setup:
 
       ```
       BUNDLE_WITHOUT      development:test
-      DATABSE_URL         trilogy://[username]:[password]@[1.2.3.4]/lobsters
+      DATABASE_URL        trilogy://[username]:[password]@[1.2.3.4]/lobsters
       INGRESS_PASSWORD    [random generated key]
       PORT                9000
       RACK_ENV            production
@@ -141,7 +141,7 @@ Setup:
 
       Search the codebase for uses of the `ENV` global for more that can be easily configured.
 
-    * Databases: We manage this independely of Hatchbox for historal reasons, see `#539`.
+    * Databases: We manage this independely of Hatchbox for historic reasons, see `#539`.
     * Cron Jobs:
 
       ```

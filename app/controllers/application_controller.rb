@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :prepare_exception_notifier
   before_action :mini_profiler
   before_action :set_traffic_style
-  before_action :remove_non_lobster_cookies
+  before_action :remove_unknown_cookies
   after_action :clear_session_cookie
 
   # match this nginx config for bypassing the file cache
@@ -61,7 +61,7 @@ class ApplicationController < ActionController::Base
     true
   end
 
-  def remove_non_lobster_cookies
+  def remove_unknown_cookies
     cookies.each do |key, _value|
       next if key == TAG_FILTER_COOKIE.to_s # don't clear tag filters cookie
       next if key == Rails.application.config.session_options[:key] # don't clear session cookie

@@ -23,11 +23,17 @@ RSpec.feature "Reading Homepage", type: :feature do
     scenario "homepage" do
       visit "/"
 
+      expect(page).to have_content(story.title)
+    end
+    
+    scenario "homepage with unknown cookies" do
+      page.driver.request.cookies[:unknown_cookie] = "value"
+      visit "/" # should clear unknown cookies    
+
       expect(page.driver.request.cookies.length).to be(2)
       expect(page.driver.request.cookies["lobster_trap"]).to_not be_nil
-      expect(page.driver.request.cookies["__profilin"]).to_not be_nil
-
-      expect(page).to have_content(story.title)
+      expect(page.driver.request.cookies["__profilin"]).to_not be_nil # Cookie set by Rack::MiniProfiler. This can not be cleared.
+      expect(page.driver.request.cookies["unknown_cookie"]).to be_nil # should be cleared
     end
 
     scenario "shows previews if the user wants" do

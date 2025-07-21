@@ -25,10 +25,10 @@ RSpec.feature "Reading Homepage", type: :feature do
 
       expect(page).to have_content(story.title)
     end
-    
+
     scenario "homepage with unknown cookies" do
       page.driver.request.cookies[:unknown_cookie] = "value"
-      visit "/" # should clear unknown cookies    
+      visit "/" # should clear unknown cookies
 
       expect(page.driver.request.cookies.length).to be(2)
       expect(page.driver.request.cookies["lobster_trap"]).to_not be_nil

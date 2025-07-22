@@ -89,7 +89,7 @@ class Story < ApplicationRecord
     DAY_MINUTE DAY_HOUR YEAR_MONTH].freeze
 
   scope :top, ->(user, length) {
-    raise ArgumentError, "Incorrect interval" unless ALLOWED_INTERVALS.include?(length[:intv].upcase)
+    raise ArgumentError, "Invalid interval" unless IntervalHelper::TIME_INTERVALS.values.include?(length[:intv].upcase)
 
     top = base(user)
       .where("created_at >= (NOW() - INTERVAL ? #{length[:intv].upcase})", length[:dur])

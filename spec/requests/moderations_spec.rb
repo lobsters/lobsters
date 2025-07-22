@@ -64,5 +64,19 @@ RSpec.describe "moderations", type: :request do
         expect(response.body).to include("Page 2")
       end
     end
+    
+    context "when filtering with no matching results" do
+      it "shows an empty page without error", :aggregate_failures do
+        # Create some domain moderations but no user moderations
+        Moderation.create!(domain: domain, action: "Updated domain")
+        
+        # Filter for user moderations which don't exist
+        get "/moderations", params: {what: {users: "users"}}
+        
+        expect(response).to be_successful
+        expect(response.body).to include("Moderation Log")
+        expect(response.body).not_to include(domain.domain)
+      end
+    end
   end
 end

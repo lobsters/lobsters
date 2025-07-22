@@ -84,10 +84,6 @@ class Story < ApplicationRecord
       .order(created_at: :desc)
   }
 
-  ALLOWED_INTERVALS = %w[MICROSECOND SECOND MINUTE HOUR DAY WEEK MONTH QUARTER YEAR SECOND_MICROSECOND
-    MINUTE_MICROSECOND MINUTE_SECOND HOUR_MICROSECOND HOUR_SECOND HOUR_MINUTE DAY_MICROSECOND DAY_SECOND
-    DAY_MINUTE DAY_HOUR YEAR_MONTH].freeze
-
   scope :top, ->(user, length) {
     raise ArgumentError, "Invalid interval" unless IntervalHelper::TIME_INTERVALS.values.include?(length[:intv].upcase)
 

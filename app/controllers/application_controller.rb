@@ -65,6 +65,7 @@ class ApplicationController < ActionController::Base
     cookies.each do |key, _value|
       next if key == TAG_FILTER_COOKIE.to_s # don't clear tag filters cookie
       next if key == Rails.application.config.session_options[:key] # don't clear session cookie
+      next if key == "__profilin" && (Rails.env.development? || @user&.is_moderator?) # don't clear Rack::MiniProfiler cookie
       cookies.delete(key)
     end
   end

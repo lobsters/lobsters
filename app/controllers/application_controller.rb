@@ -9,10 +9,8 @@ class ApplicationController < ActionController::Base
   before_action :prepare_exception_notifier
   before_action :mini_profiler
   before_action :set_traffic_style
-
-  # 2023-10-07 one user in one of their browser envs is getting a CSRF failure, I'm reverting
-  # because I'll be AFK a while.
-  # after_action :clear_lobster_trap
+  before_action :remove_unknown_cookies
+  after_action :clear_session_cookie
 
   # match this nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
@@ -63,9 +61,18 @@ class ApplicationController < ActionController::Base
     true
   end
 
+  def remove_unknown_cookies
+    cookies.each do |key, _value|
+      next if key == TAG_FILTER_COOKIE.to_s # don't clear tag filters cookie
+      next if key == Rails.application.config.session_options[:key] # don't clear session cookie
+      next if key == "__profilin" && (Rails.env.development? || @user&.is_moderator?) # don't clear Rack::MiniProfiler cookie
+      cookies.delete(key)
+    end
+  end
+
   # clear Rails session cookie if not logged in so nginx uses the page cache
   # https://ryanfb.xyz/etc/2021/08/29/going_cookie-free_with_rails.html
-  def clear_lobster_trap
+  def clear_session_cookie
     key = Rails.application.config.session_options[:key] # "lobster_trap"
     cookies.delete(key) if @user.blank?
     # this probably should test session.empty? && controller...

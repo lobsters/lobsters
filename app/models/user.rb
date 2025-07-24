@@ -55,6 +55,11 @@ class User < ApplicationRecord
   has_many :wearable_hats, -> { where(doffed_at: nil) },
     class_name: "Hat",
     inverse_of: :user
+  has_many :notifications
+  has_many :hidings,
+    class_name: "HiddenStory",
+    inverse_of: :user,
+    dependent: :destroy
 
   include Token
 
@@ -210,10 +215,11 @@ class User < ApplicationRecord
       attrs.push :karma
     end
 
-    attrs.push :homepage, :about
+    attrs.push :homepage
 
     h = super(only: attrs)
 
+    h[:about] = linkified_about
     h[:avatar_url] = avatar_url
     h[:invited_by_user] = User.where(id: invited_by_user_id).pick(:username)
 
@@ -391,11 +397,9 @@ class User < ApplicationRecord
       # walks comments -> story -> merged stories; this is a rare event and likely
       # to be fixed in a redesign of the story merging db model:
       # https://github.com/lobsters/lobsters/issues/1298#issuecomment-2272179720
-      Prosopite.pause
       comments
         .where("score < 0")
         .find_each { |c| c.delete_for_user(self) }
-      Prosopite.resume
 
       # delete messages bypassing validation because a message may have a hat
       # sender has doffed, which would fail validations

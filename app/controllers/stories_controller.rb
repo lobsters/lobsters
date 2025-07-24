@@ -161,6 +161,7 @@ class StoriesController < ApplicationController
 
     @user.try(:clear_unread_replies!)
     @comments = Comment.story_threads(@story).for_presentation
+    @read_by_notifications = @user ? Comment.where(story_id: [@story.id] + @story.merged_stories.pluck(:id)).where(id: @user.notifications.read.of_comments) : []
 
     @title = @story.title
 

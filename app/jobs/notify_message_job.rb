@@ -1,13 +1,15 @@
 class NotifyMessageJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
-    args.each do |arg|
-      deliver_message_notifications(arg)
+  def perform(*messages)
+    messages.each do |message|
+      deliver_message_notifications(message)
     end
   end
 
   def deliver_message_notifications(message)
+    message.recipient.notifications.create(notifiable: message)
+
     if message.recipient.email_messages?
       begin
         EmailMessageMailer.notify(message, message.recipient).deliver_now

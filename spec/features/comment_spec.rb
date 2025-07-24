@@ -128,4 +128,23 @@ RSpec.feature "Commenting" do
       expect(page.find(:css, ".comment.upvoted .upvoter")).to have_content("2")
     end
   end
+
+  describe "short_id redirection" do
+    it "redirects /c/shortid to the story with anchor" do
+      story = create(:story, title: "story")
+      comment = create(:comment, story:)
+
+      visit "/c/#{comment.short_id}"
+      expect(current_url).to eq("http://www.example.com/s/#{story.short_id}/story#c_#{comment.short_id}")
+    end
+
+    it "redirects /c/shortid to merged stories with anchor" do
+      parent = create(:story, title: "parent")
+      merged = create(:story, merged_into_story: parent, title: "merged")
+      comment = create(:comment, story: merged)
+
+      visit "/c/#{comment.short_id}"
+      expect(current_url).to eq("http://www.example.com/s/#{parent.short_id}/parent#c_#{comment.short_id}")
+    end
+  end
 end

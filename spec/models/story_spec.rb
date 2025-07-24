@@ -644,6 +644,39 @@ describe Story do
         expect(story_titles_from(basic: nil, submitter:)).not_to include("deleted story")
       end
     end
+
+    describe "tagged" do
+      let(:user) { create :user }
+
+      it "selects unique tagged stories" do
+        tag1 = create(:tag)
+        tag2 = create(:tag)
+        story = create(:story, user:, title: "A story", tags: [tag1, tag2])
+
+        tagged = Story.tagged(user, [tag1, tag2])
+
+        expect(tagged.count).to be 1
+        expect(tagged.first).to eq story
+      end
+    end
+
+    describe "top" do
+      let(:user) { create :user }
+
+      it "selects stories from the given interval" do
+        create_list :story, 2, user:, created_at: 3.months.ago
+        story = create :story, user:, created_at: 2.days.ago
+
+        stories = Story.top(user, dur: 7, intv: "day")
+
+        expect(stories.count).to eq(1)
+        expect(stories.first).to eq(story)
+      end
+
+      it "raise the ArgumentError exception when inveral unit value is invalid" do
+        expect { Story.top(user, dur: 7, intv: "wrong") }.to raise_error(ArgumentError)
+      end
+    end
   end
 
   describe "suggestions" do

@@ -74,6 +74,24 @@ class Story < ApplicationRecord
       .positive_ranked
       .order(:hotness)
   }
+
+  scope :tagged, ->(user, tags) {
+    tagged_story_ids = Tagging.select(:story_id).where(tag_id: tags.map(&:id))
+
+    base(user)
+      .positive_ranked
+      .where(id: tagged_story_ids)
+      .order(created_at: :desc)
+  }
+
+  scope :top, ->(user, length) {
+    raise ArgumentError, "Invalid interval" unless IntervalHelper::TIME_INTERVALS.value?(length[:intv].capitalize)
+
+    top = base(user)
+      .where("created_at >= (NOW() - INTERVAL ? #{length[:intv].upcase})", length[:dur])
+    top.order(score: :desc)
+  }
+
   scope :recent, ->(user = nil, exclude_tags = nil, unmerged: true) {
     base(user, unmerged: unmerged).not_hidden_by(user)
       .filter_tags(exclude_tags || [])
@@ -234,7 +252,7 @@ class Story < ApplicationRecord
     if title.match(GRAPHICS_RE)
       errors.add(:title, " may not contain emoji, dingbats, or other graphics")
     end
-    if !title.empty? && title == title.upcase
+    if !title.empty? && title.ascii_only? && title == title.upcase
       errors.add(:title, " doesn't need to scream, ASCII has supported lowercase since June 17, 1963.")
     end
 

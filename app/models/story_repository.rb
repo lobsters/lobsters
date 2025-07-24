@@ -11,16 +11,4 @@ class StoryRepository
 
     Story.base(@user).positive_ranked.where(id: tagged_story_ids).order(created_at: :desc)
   end
-
-  def tagged(tags)
-    tagged_story_ids = Tagging.select(:story_id).where(tag_id: tags.map(&:id))
-
-    Story.base(@user).positive_ranked.where(id: tagged_story_ids).order(created_at: :desc)
-  end
-
-  def top(length)
-    top = Story.base(@user).where("created_at >= (NOW() - INTERVAL " \
-      "#{length[:dur]} #{length[:intv].upcase})")
-    top.order(score: :desc)
-  end
 end

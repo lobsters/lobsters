@@ -7,7 +7,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/messages/show.html.erb",
-      "line": 18,
+      "line": 17,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Message.where(:short_id => ((params[:message_id] or params[:id]))).first.linkified_body",
       "render_path": [
@@ -15,7 +15,7 @@
           "type": "controller",
           "class": "MessagesController",
           "method": "show",
-          "line": 92,
+          "line": 93,
           "file": "app/controllers/messages_controller.rb",
           "rendered": {
             "name": "messages/show",
@@ -129,7 +129,7 @@
           "type": "controller",
           "class": "StoriesController",
           "method": "check_url_dupe",
-          "line": 353,
+          "line": 345,
           "file": "app/controllers/stories_controller.rb",
           "rendered": {
             "name": "stories/_form_errors",
@@ -189,7 +189,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story.rb",
-      "line": 589,
+      "line": 648,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Story.connection.execute(\"UPDATE stories SET\\n  score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -\\n  -- subtract number of hidings where hider flagged AND didn't comment (comment voting is ignored)\\n  (\\n    select count(*) from hidden_stories hiding\\n    where\\n      story_id = #{id.to_i}\\n      and hiding.created_at >= str_to_date('#{(created_at - 14.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')\\n      and exists (    -- user flagged\\n        select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1\\n      )\\n      and not exists ( -- user didn't comment\\n        select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id\\n      )\\n  ),\\n  flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),\\n  hotness = #{calculated_hotness}\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -246,7 +246,7 @@
       "check_name": "FileAccess",
       "message": "Model attribute used in file name",
       "file": "app/controllers/avatars_controller.rb",
-      "line": 53,
+      "line": 55,
       "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
       "code": "File.rename(\"#{Rails.public_path.join(\"avatars/\").to_s}/.#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\", \"#{Rails.public_path.join(\"avatars/\").to_s}/#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\")",
       "render_path": null,
@@ -326,7 +326,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/stories/show.html.erb",
-      "line": 14,
+      "line": 15,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Story.new(:user => (@user)).markeddown_description",
       "render_path": [
@@ -334,7 +334,7 @@
           "type": "controller",
           "class": "StoriesController",
           "method": "create",
-          "line": 46,
+          "line": 41,
           "file": "app/controllers/stories_controller.rb",
           "rendered": {
             "name": "stories/new",
@@ -344,7 +344,7 @@
         {
           "type": "template",
           "name": "stories/new",
-          "line": 31,
+          "line": 25,
           "file": "app/views/stories/new.html.erb",
           "rendered": {
             "name": "stories/show",
@@ -370,7 +370,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/users/show.html.erb",
-      "line": 163,
+      "line": 143,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "(if (rand((0..100)) == 23) then\n  User.new(:username => params[:username], :created_at => rand((0..9999)).days.ago)\nend or User.find_by(:username => params[:username])).linkified_about",
       "render_path": [
@@ -421,29 +421,6 @@
       "note": "inputs pass through strip_operators; has some injection tests"
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "9119c403612dd14e616bba623b2dbffa5c3cd0f5a4a9cb27d4374945adc92947",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/story_repository.rb",
-      "line": 53,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Story.base(@user).where(\"created_at >= (NOW() - INTERVAL #{length[:dur]} #{length[:intv].upcase})\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "StoryRepository",
-        "method": "top"
-      },
-      "user_input": "length[:dur]",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "IntervalHelper#time_interval is a security control"
-    },
-    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "96e34cf6470885983badaf971f120a8a403618859640b5c07811a81852fae0e7",
@@ -473,7 +450,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/comment.rb",
-      "line": 396,
+      "line": 346,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Comment.connection.execute(\"UPDATE comments SET\\n  score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),\\n  flags = (select count(*) from votes where comment_id = comments.id and vote = -1),\\n  confidence = #{calculated_confidence},\\n  confidence_order = concat(lpad(char(65535 - floor(#{calculated_confidence} * 65535) using binary), 2, '\\x00'), char(id & 0xff using binary))\\nWHERE id = #{id.to_i}\\n\")",
       "render_path": null,
@@ -496,7 +473,7 @@
       "check_name": "FileAccess",
       "message": "Model attribute used in file name",
       "file": "app/controllers/avatars_controller.rb",
-      "line": 49,
+      "line": 51,
       "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
       "code": "File.open(\"#{Rails.public_path.join(\"avatars/\").to_s}/.#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\", \"wb+\")",
       "render_path": null,
@@ -568,6 +545,29 @@
         79
       ],
       "note": "These aren't user-controlled, aren't strings and get passed to the graphing library."
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "da2f97fde431a750254179b7afe87790344ca451fbbc25ddf9e926d30c6b41e2",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/story.rb",
+      "line": 91,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "base(user).where(\"created_at >= (NOW() - INTERVAL ? #{length[:intv].upcase})\", length[:dur])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Story",
+        "method": "top"
+      },
+      "user_input": "length[:intv].upcase",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": "IntervalHelper#time_interval is a security control"
     },
     {
       "warning_type": "Cross-Site Scripting",

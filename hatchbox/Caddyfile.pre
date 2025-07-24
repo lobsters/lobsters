@@ -40,6 +40,9 @@ respond @lobsters_dev_domain 200 {
 @www_domain `host('www.lobste.rs', 'www.lobsters.dev')`
 redir @www_domain https://lobste.rs{uri} 302
 
+# Site should always be HTTPS https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security
+header Strict-Transport-Security max-age=31536000
+
 # full page caching with actionpack-page_caching
 @visitor {
   host lobste.rs
@@ -58,4 +61,5 @@ rewrite @visitor /cache/{file_match.relative}
 # header @visitor X-Lobsters-Visitor {file_match.relative}
 # header X-Lobsters-Hello "World 8"
 
+# add CSP header when serving from cache; Rails adds when it renders pages
 header @visitor ?Content-Security-Policy-Report-Only "default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; report-uri /csp-violation-report"

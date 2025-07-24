@@ -447,6 +447,14 @@ ol.comments1 > li.comments_subtree > ol.comments {
 	padding-left: 0;
 }
 
+.message .voters {
+	font-size: 20px;
+}
+
+.notifications li {
+	margin-bottom: 1lh;
+}
+
 div.voters {
 	float: left;
 	margin-top: 0px;
@@ -457,11 +465,11 @@ div.voters {
 .upvoter:before {
 	content: "\25b2";
 	color: transparent;
-	font-size: 12pt;
-	-webkit-text-stroke: 1px var(--color-fg-shape);
+	font-size: 1.2rem;
+	-webkit-text-stroke: 1px var(--color-fg-contrast-4-5);
 }
 .upvoted .upvoter:before, .upvoter:hover:before {
-	color: var(--color-fg-accent);
+	color: var(--color-fg-accent) !important;
 	-webkit-text-stroke: 1px var(--color-fg-accent);
 }
 .upvoter {
@@ -516,21 +524,21 @@ supports it:  https://caniuse.com/?search=%3Ahas
 */
 .negative_1 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
 .negative_1 .score {
-  opacity: 0.7;
-  }
+	opacity: 0.7;
+}
 
 .negative_3 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
 .negative_3 .score {
-  opacity: 0.6;
+	opacity: 0.6;
 }
 
 .negative_5 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
 .negative_5 .score {
-  opacity: 0.5;
+	opacity: 0.5;
 }
 
 .comment.bad *:not(div, .dropdown_parent, .dropdown_parent *) {
-  opacity: 0.7;
+	opacity: 0.7;
 }
 
 .comment:target, li:target, p:target, div:target, span:target {
@@ -594,7 +602,7 @@ li .comment_folder {
 	color: var(--color-fg-contrast-4-5);
 	letter-spacing: 0.1em;
 	width: 1.5em;
- 	cursor: pointer;
+	cursor: pointer;
 	text-align: center;
 }
 li .comment_folder:before {
@@ -614,7 +622,7 @@ li .comment_folder_button:checked ~ div.comment:not(:target) div.voters .upvoter
 li .comment_folder_button:checked ~ ol.comments ol,
 li .comment_folder_button:checked ~ ol.comments div.comment,
 li .comment_folder_button:checked ~ ol.comments li {
- 	display: none;
+	display: none;
 }
 
 li.comments_subtree {
@@ -625,16 +633,11 @@ li .comment_parent_tree_line {
 	position: absolute;
 	border-left: 1px dotted var(--color-fg-shape);
 	top: 0.5em;
-        left: 1em;
+	left: 1em;
 	bottom: 0;
 }
-
 li .comment_parent_tree_line.score_shown {
 	top: 3.6lh;
-}
-/* hide for comments that don't have children */
-li:not(:has(> .comments > li)) > .comment > .comment_parent_tree_line {
-	border-left-color: transparent;
 }
 li .comment_siblings_tree_line {
 	position: absolute;
@@ -807,7 +810,7 @@ div.story_text blockquote {
 }
 
 /* un-italicize italics inside a blockquote */
-div.comment_text blockquote em, 
+div.comment_text blockquote em,
 .markdown_help blockquote em,
 div.story_text blockquote em {
 	font-style: normal
@@ -899,17 +902,16 @@ div.comment_text code {
 
 
 .markdown_help {
-	background-color: var(--color-box-bg-shaded);
-	border: 1px solid var(--color-box-border);
 	padding-left: 0.25rem;
 }
 
 .markdown_help summary {
+	color: var(--color-fg-contrast-4-5);
 	font-size: 9pt;
+	text-align: right;
 }
-
-.comment .preview {
-	padding-left: 17px;
+#story_box .markdown_help summary {
+	width: calc(7em + 610px);
 }
 
 div#story_preview {
@@ -952,9 +954,6 @@ div#story_box textarea {
 	width: 600px;
 }
 
-div.comment_form_container {
-	margin-left: -11px;
-}
 
 div.comment_form_container form {
 	margin-left: 40px;
@@ -966,7 +965,7 @@ div.comment_form_container textarea {
 	width: 100%;
 }
 
-span.comment_unread {
+.comment_unread {
 	color: var(--color-fg-accent);
 	font-weight: 600;
 	cursor: pointer;
@@ -1782,16 +1781,16 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	footer nav {
-          text-align: right;
+		text-align: right;
 	}
 	.indent {
 		margin-left: 2em;
 	}
 
 
-        .labelled_grid {
-            grid-template-columns: minmax(5rem, min-content) 1fr;
-        }
+	.labelled_grid {
+		grid-template-columns: minmax(5rem, min-content) 1fr;
+	}
 
 	/* For the mobile view of the grid, we want most things to be full-width */
 	.labelled_grid > * {

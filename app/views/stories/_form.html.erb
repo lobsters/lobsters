@@ -78,7 +78,9 @@
 
 Please don't use this to promote the story, summarize the post, or explain why you posted it.
 See the guidelines below for more." %>
+    <%= render :partial => "global/markdownhelp", :locals => { allow_images: @story.can_have_images? } %>
     </div>
+
 
     <%= tag.details class: "boxline actions", open: show_guidelines?(@user) ? true : nil do %>
       <summary>Story submission guidelines</summary>

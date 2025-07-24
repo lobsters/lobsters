@@ -161,7 +161,12 @@
           </div>
         <% end %>
 
-        <%= render partial: 'comments/threads', locals: { thread: @comments.select { it.story_id == ms.id }, story: ms, ribbon: @ribbon } %>
+        <%= render partial: 'comments/threads', locals: {
+          thread: @comments.select { it.story_id == ms.id },
+          story: ms,
+          ribbon: @ribbon,
+          read_by_notifications: @read_by_notifications
+        } %>
       </li>
 
     </ol>

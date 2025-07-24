@@ -356,5 +356,8 @@ task fake_data: :environment do
     fail "Cancelled" if $stdin.gets.chomp != "y"
   end
 
-  FakeDataGenerator.new.generate
+  # Disable transactions for better performance
+  ActiveRecord::Base.transaction(requires_new: false) do
+    FakeDataGenerator.new.generate
+  end
 end

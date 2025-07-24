@@ -3,7 +3,7 @@
 # This file is a relic of how Lobsters used to manage API keys and some other config variables.
 # It only exists to give developers and sister sites an error message as they setup.
 
-if Rails.application.credentials.secret_key_base.blank?
+if ENV["SECRET_KEY_BASE_DUMMY"].blank? && Rails.application.credentials.secret_key_base.blank?
   config = <<~CONFIG
     ** SETUP REQUIRED
 

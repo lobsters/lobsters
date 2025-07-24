@@ -1,11 +1,17 @@
+# This script is mostly correct but not running in production because:
+#  1. Mastodon lists aren't public, so there's no value to it maintaining a list:
+#     https://github.com/mastodon/mastodon/issues/8208
+#  2. It needs more error-handling. in prod it throws errors about linked accounts that have since
+#     been deleted, or are on instances that are down (temporarilty or permanently, etc).
+#
+# I'm going to leave this code alone until #1 is sorted, then think about how to handle errors:
+# we could unlink accounts (bad for temp failures), warn in settings (good but have to figure out
+# where to save that state), ignore (probably ok, but a waste of resources for perm failures).
+
 class MastodonSyncListJob < ApplicationJob
   queue_as :default
 
   def perform(*args)
-    # Mastodon lists aren't yet public, but 1. I'd rather leave it running in prod
-    # than restart it from scratch and 2. the bot's followed users are roughly accurate.
-    # https://github.com/mastodon/mastodon/issues/8208
-
     return unless Mastodon.enabled? && Rails.application.credentials.mastodon.list_id
 
     # accept all follow requests

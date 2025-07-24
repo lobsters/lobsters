@@ -26,6 +26,7 @@ class Comment < ApplicationRecord
     class_name: "Link",
     inverse_of: :to_comment,
     dependent: :destroy
+  has_many :notifications, as: :notifiable
 
   include Token
   attr_accessor :current_vote, :previewing, :vote_summary
@@ -254,7 +255,7 @@ class Comment < ApplicationRecord
     return false if recent.blank?
 
     wait = ActionController::Base.helpers
-      .distance_of_time_in_words(Time.zone.now, (recent.created_at + delay))
+      .distance_of_time_in_words(Time.zone.now, recent.created_at + delay)
     # Rails.logger.info "breaks_speed_limit: #{user.username} replying to https://lobste.rs/c/#{parent_comment.short_id} parent_comment_ids (#{parent_comment_ids.join(" ")}) flags #{flag_count} commenter_flag_count #{commenter_flag_count} delay #{delay} delay.ago #{delay.ago} recent #{recent.id}"
     errors.add(
       :comment,

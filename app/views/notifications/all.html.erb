@@ -1,0 +1,78 @@
+<%= render partial: 'messages/subnav' %>
+
+<p>
+This is a <a href="https://github.com/lobsters/lobsters/issues/1076">new display of notifications</a> to replace <tt>/replies</tt>.
+Please try it out and discuss in the issue comments/chat room.
+(It tracks 'unread' separately from the existing replies pages, so clearing one won't clear the other. This is a little confusing while both systems exist, sorry.)
+</p>
+
+<%= possible_flag_warning(@user, @user) %>
+
+<% if @notifications.present? %>
+  <ol class="comments comments1 notifications">
+    <% @notifications.each do |notification| %>
+      <% good_faith_result = notification.check_good_faith %>
+      <% if good_faith_result.good_faith? %>
+        <% case notification.notifiable %>
+        <% when Comment %>
+        <% comment = notification.notifiable %>
+          <li class="comments_subtree">
+            <%= render "comments/comment", comment: comment, show_story: true, is_unread: notification.read_at.nil?, show_tree_lines: false, show_folder_control: false %>
+            <ol class="comments"></ol>
+          </li>
+        <% when Message %>
+        <% message = notification.notifiable %>
+          <li class="comments_subtree">
+            <%= render "message", message: message, is_unread: notification.read_at.nil? %>
+          </li>
+        <% end %>
+      <% else %>
+        <li class="comments_subtree">
+          <div class="hidden-notification">
+            <div class="voters">○</div>
+            <div class="details">
+              <% good_faith_result.bad_properties.each do |bad_property| %>
+                <% case bad_property %>
+                <% when :bad_story %>
+                  The story has been flagged too many times.
+                <% when :is_gone %>
+                  The author removed this comment.
+                <% when :bad_comment %>
+                  The comment has been flagged too many times.
+                <% when :bad_parent_comment %>
+                  The parent comment has been flagged too many times or is gone.
+                <% when :user_has_flagged_replier %>
+                  You have previously flagged another comment belonging to this comment's author.
+                <% when :user_has_hidden_story %>
+                  You have hidden the story for this comment.
+                <% when :user_has_filtered_tags_on_story %>
+                  You have filtered tags that are on this comment's story.
+                <% else %>
+                  Hidden for a different reason: <%= bad_property %>
+                <% end %>
+              <% end%>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    <% end %>
+  </ol>
+<% else %>
+  <p class="help">No notifications to show.</p>
+<% end %>
+
+<% if @has_more || (@page && @page > 1)%>
+  <div class="morelink">
+    <% if @page && @page > 1 %>
+      <a href="/notifications<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt; Page <%= @page - 1 %></a>
+    <% end %>
+
+    <% if @has_more %>
+      <% if @page && @page > 1 %>
+        |
+      <% end %>
+
+      <a href="/notifications/page/<%= @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
+    <% end %>
+  </div>
+<% end %>

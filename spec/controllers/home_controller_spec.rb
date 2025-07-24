@@ -141,6 +141,46 @@ describe HomeController do
     end
   end
 
+  describe "#single_tag" do
+    it "includes only story with the tag" do
+      tag = create :tag
+      tagged_story = create(:story, tags: [tag])
+      other_story = create :story
+
+      stub_login_as user
+      get :single_tag, params: {tag: tag.tag}
+
+      expect(response).to be_successful
+      expect(@controller.view_assigns["title"]).to eq([tag.tag, tag.description].join(" - "))
+      expect(@controller.view_assigns["stories"]).to include(tagged_story)
+      expect(@controller.view_assigns["stories"]).not_to include(other_story)
+    end
+  end
+
+  describe "#multi_tag" do
+    it "includes only stories with the given tags" do
+      tag1 = create :tag
+      tag2 = create :tag
+
+      story1 = create :story, tags: [tag1]
+      story2 = create :story, tags: [tag2]
+      story3 = create :story, tags: [tag1, tag2]
+      story4 = create :story
+
+      stub_login_as user
+      get :multi_tag, params: {tag: [tag1, tag2].map(&:tag).join(",")}
+
+      title = [tag1, tag2].map { [it.tag, it.description].join(" - ") }.join(" ")
+
+      expect(response).to be_successful
+      expect(@controller.view_assigns["title"]).to eq(title)
+      [story1, story2, story3].each do |story|
+        expect(@controller.view_assigns["stories"]).to include(story)
+      end
+      expect(@controller.view_assigns["stories"]).not_to include(story4)
+    end
+  end
+
   describe "#top" do
     let!(:old_story) { create(:story, created_at: 10.days.ago, updated_at: 10.days.ago) }
     let(:recent_stories) do

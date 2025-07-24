@@ -567,7 +567,7 @@
       "cwe_id": [
         89
       ],
-      "note": ""
+      "note": "IntervalHelper#time_interval is a security control"
     },
     {
       "warning_type": "Cross-Site Scripting",

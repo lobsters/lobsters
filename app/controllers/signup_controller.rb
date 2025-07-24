@@ -3,7 +3,7 @@
 class SignupController < ApplicationController
   before_action :require_logged_in_user, :check_new_users, :check_can_invite, only: :invite
   before_action :check_for_read_only_mode, :show_title_h1
-  skip_before_action :clear_session_cookie
+  skip_after_action :clear_session_cookie
 
   def index
     @title = "Create an Account"

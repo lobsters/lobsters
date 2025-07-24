@@ -3,7 +3,7 @@
 class CspController < ApplicationController
   skip_before_action :verify_authenticity_token
   skip_before_action :authenticate_user
-  skip_before_action :clear_session_cookie
+  skip_after_action :clear_session_cookie
 
   # adapted from https://github.com/getsentry/sentry/blob/15544d9be92922ef09ae59d04fd60bc0982f52e5/src/sentry/interfaces/security.py#L13
   IGNORED_SCHEMES = [

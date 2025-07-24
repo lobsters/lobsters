@@ -2,6 +2,11 @@ class Notification < ApplicationRecord
   belongs_to :user
   belongs_to :notifiable, polymorphic: true
 
+  scope :of_comments, -> { where(notifiable_type: "Comment") }
+  scope :of_messages, -> { where(notifiable_type: "Message") }
+  scope :read, -> { where.not(read_at: nil) }
+  scope :unread, -> { where(read_at: nil) }
+
   include Token
 
   GoodFaithResult = Data.define(:good_faith?, :bad_properties)

@@ -451,10 +451,6 @@ ol.comments1 > li.comments_subtree > ol.comments {
 	font-size: 20px;
 }
 
-.message .message-subject {
-	font-weight: bold;
-}
-
 .notifications li {
 	margin-bottom: 1lh;
 }

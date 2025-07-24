@@ -1,4 +1,4 @@
-<%# locals: (thread:, story: nil, ribbon: nil, show_folder_control: true) -%>
+<%# locals: (thread:, story: nil, ribbon: nil, read_by_notifications: [], show_folder_control: true) -%>
 <% previous_depth = nil %>
 <% top_comment_depth = nil %>
 <%# open list of threads %>
@@ -37,7 +37,7 @@
       show_story ||= story.try(:id) != comment.story_id
       # show merge icon only on story page when merged
       was_merged = story && (story.id != comment.story_id)
-      is_unread = ribbon&.is_unread?(comment)
+      is_unread = ribbon&.is_unread?(comment) && @read_by_notifications.exclude?(comment.id)
     %>
 
 <%#heinous_inline_partial(comments/_comment.html.erb)%>

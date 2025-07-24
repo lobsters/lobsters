@@ -9,9 +9,8 @@
       <% end %>
       <a href="/messages/<%= message.short_id %>"><%= how_long_ago_label(message.created_at) %></a>
       <% if is_unread %><span class='comment_unread'>(unread)</span><% end %>
-    </div>
-    <div class="message-subject">
-      <%= message.subject %>
+      |
+      <span class="message-subject"><a href="/messages/<%= message.short_id %>">Subject: <%= message.subject %></a></span>
     </div>
     <div class="message-body">
       <%= message.body %>

@@ -7,9 +7,6 @@
   |
   <%= link_to_different_page 'Messages', messages_path %>
   <%= link_to_different_page 'Sent', messages_sent_path %>
-  <% if controller_name == 'notifications' || @user&.is_moderator? %>
-    |
-    <%= link_to_different_page 'All Notifications', notifications_path %>
-    <%= link_to_different_page 'Unread Notifications', notifications_unread_path %>
-  <% end %>
+  <%= link_to_different_page 'All Notifications', notifications_path %>
+  <%= link_to_different_page 'Unread Notifications', notifications_unread_path %>
 <% end %>

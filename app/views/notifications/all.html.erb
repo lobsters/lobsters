@@ -1,5 +1,11 @@
 <%= render partial: 'messages/subnav' %>
 
+<p>
+This is a <a href="https://github.com/lobsters/lobsters/issues/1076">new display of notifications</a> to replace <tt>/replies</tt>.
+Please try it out and discuss in the issue comments/chat room.
+(It tracks 'unread' separately from the existing replies pages, so clearing one won't clear the other. This is a little confusing while both systems exist, sorry.)
+</p>
+
 <%= possible_flag_warning(@user, @user) %>
 
 <% if @notifications.present? %>

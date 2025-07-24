@@ -18,6 +18,7 @@ class LoginController < ApplicationController
   before_action :require_no_user_or_redirect,
     only: [:index, :login, :forgot_password, :reset_password]
   before_action :show_title_h1
+  skip_before_action :clear_session_cookie
 
   def logout
     if @user

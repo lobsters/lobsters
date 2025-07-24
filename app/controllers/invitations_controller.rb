@@ -3,6 +3,7 @@
 class InvitationsController < ApplicationController
   before_action :require_logged_in_user, except: [:build, :create_by_request, :confirm_email]
   before_action :show_title_h1
+  skip_before_action :clear_session_cookie
 
   def build
     @title = "Request an Invitation"

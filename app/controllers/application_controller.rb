@@ -74,9 +74,8 @@ class ApplicationController < ActionController::Base
   # https://ryanfb.xyz/etc/2021/08/29/going_cookie-free_with_rails.html
   def clear_session_cookie
     key = Rails.application.config.session_options[:key] # "lobster_trap"
-    cookies.delete(key) if @user.blank?
-    # this probably should test session.empty? && controller...
-    request.session_options[:skip] = @user.blank? && controller_name != "login"
+    cookies.delete(key) if @user.blank? && session.empty?
+    request.session_options[:skip] = @user.blank? && session.empty?
   end
 
   def find_user_from_rss_token

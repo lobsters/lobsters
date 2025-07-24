@@ -663,7 +663,7 @@ describe Story do
     describe "top" do
       let(:user) { create :user }
 
-      it "selects stories from the given invterval" do
+      it "selects stories from the given interval" do
         create_list :story, 2, user:, created_at: 3.months.ago
         story = create :story, user:, created_at: 2.days.ago
 

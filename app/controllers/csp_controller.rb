@@ -35,15 +35,9 @@ class CspController < ApplicationController
 
     report = json["csp-report"]
 
-    source_file = report.dig("source-file")
-    if source_file
-      begin
-        uri = URI.parse(source_file)
-
-        if IGNORED_SCHEMES.include? uri.scheme
-          return head :ok
-        end
-      rescue URI::InvalidURIError
+    if (source_file = report.dig("source-file"))
+      if IGNORED_SCHEMES.any? { source_file.starts_with? it }
+        return head :ok
       end
     end
 

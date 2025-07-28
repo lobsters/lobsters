@@ -12,7 +12,7 @@ class Message < ApplicationRecord
     optional: true
   belongs_to :hat,
     optional: true
-  has_many :notifications, as: :notifiable
+  has_one :notification, as: :notifiable
 
   include Token
 

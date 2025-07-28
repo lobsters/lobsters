@@ -8,7 +8,8 @@ class NotifyMessageJob < ApplicationJob
   end
 
   def deliver_message_notifications(message)
-    message.recipient.notifications.create(notifiable: message)
+    read_at = message.has_been_read ? Time.current : nil
+    message.recipient.notifications.create(notifiable: message, read_at: read_at)
 
     if message.recipient.email_messages?
       begin

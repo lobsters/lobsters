@@ -92,6 +92,14 @@ classes = [
             <span> | </span><%= link_to "hide", story_hide_path(ms.short_id), :class => "hider" %>
           <% end %>
 
+          <% if ms.hider_count > 0 %>
+            <% if ms.is_hidden_by_cur_user %>
+              (hidden by you and <%= pluralize(ms.hider_count - 1, "other user") %>)
+            <% else %>
+              (hidden by <%= pluralize(ms.hider_count, "user") %>)
+            <% end %>
+          <% end %>
+
           <% if ms.disownable_by_user?(@user) %>
             |
             <%= link_post "disown", story_disown_path(ms.short_id), { confirm: "Are you sure you want to disown this story?"} %>
@@ -101,14 +109,6 @@ classes = [
             <span> | </span><%= link_to "save", story_save_path(ms.short_id), :class => "saver" %>
           <% else %>
             <span> | </span><%= link_to "unsave", story_unsave_path(ms.short_id), :class => "saver" %>
-          <% end %>
-        <% end %>
-
-        <% if ms.hider_count > 0 %>
-          <% if ms.is_hidden_by_cur_user %>
-            (hidden by you and <%= pluralize(ms.hider_count - 1, "other user") %> )
-          <% else %>
-            (hidden by <%= pluralize(ms.hider_count, "user") %>)
           <% end %>
         <% end %>
 

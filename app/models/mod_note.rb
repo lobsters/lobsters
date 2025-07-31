@@ -31,7 +31,7 @@ class ModNote < ApplicationRecord
   end
 
   def note=(n)
-    self[:note] = n.to_s.strip
+    self[:note] = n
     self.markeddown_note = generated_markeddown
   end
 
@@ -209,7 +209,7 @@ class ModNote < ApplicationRecord
   # and save attempts, leading to duplicate notes
   def self.create_without_dupe!(attrs)
     latest = attrs[:user].mod_notes.last
-    return latest if latest && attrs[:moderator] == latest.moderator && attrs[:note].strip == latest.note
+    return latest if latest && attrs[:moderator] == latest.moderator && attrs[:note] == latest.note
     ModNote.create!(attrs)
   end
 end

@@ -84,7 +84,7 @@ describe Notification do
         comment1 = create(:comment, user: reader1, story: story)
         reader2 = create(:user)
         comment2 = create(:comment, user: reader2, story: story, parent_comment: comment1)
-        Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, comment1.id, reader2.id, nil)
+        Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, comment1.id, create(:user), nil)
         comment1.reload
         expect(comment1.flags).to eq(1)
         notification = create(:notification, user: reader1, notifiable: comment2)

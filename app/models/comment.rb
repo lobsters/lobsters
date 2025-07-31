@@ -29,7 +29,7 @@ class Comment < ApplicationRecord
   has_one :notification, as: :notifiable
 
   include Token
-  attr_accessor :current_vote, :previewing, :vote_summary
+  attr_accessor :current_vote, :current_reply, :previewing, :vote_summary
 
   before_validation :assign_initial_attributes, on: :create
   after_destroy :unassign_votes
@@ -113,6 +113,7 @@ class Comment < ApplicationRecord
   validates :confidence, :confidence_order, :flags, :score, presence: true
   validates :is_deleted, :is_moderated, :is_from_email, inclusion: {in: [true, false]}
   validates :last_edited_at, presence: true
+  validate :validate_commenter_hasnt_flagged_parent, on: :create
 
   validate do
     parent_comment&.is_gone? &&
@@ -522,6 +523,12 @@ class Comment < ApplicationRecord
 
   def unassign_votes
     story.update_cached_columns
+  end
+
+  def validate_commenter_hasnt_flagged_parent
+    if parent_comment && Vote.where(user: user, vote: -1, comment: parent_comment).exists?
+      errors.add(:base, "You've flagged that comment for the mods, so you can leave it for the mods.")
+    end
   end
 
   def vote_summary_for_user

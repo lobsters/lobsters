@@ -16,6 +16,7 @@ class Vote < ApplicationRecord
     length: {is: 1},
     allow_blank: true,
     presence: true
+  validate :validate_flagger_hasnt_replied
 
   scope :comments_flags, ->(comments, user = nil) {
     q = where(comment: comments, vote: -1)
@@ -186,6 +187,12 @@ class Vote < ApplicationRecord
       Comment.find(comment_id)
     else
       Story.find(story_id)
+    end
+  end
+
+  def validate_flagger_hasnt_replied
+    if vote == -1 && comment_id && Comment.where(user_id: user_id, parent_comment_id: comment_id).exists?
+      errors.add(:base, "You've already replied to the comment.")
     end
   end
 end

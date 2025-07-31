@@ -416,10 +416,13 @@ class StoriesController < ApplicationController
       @votes = Vote.comment_votes_by_user_for_story_hash(
         @user.id, @story.merged_stories.ids.push(@story.id)
       )
-      vote_summaries = Vote.comment_vote_summaries(@comments.map(&:id))
+      comment_ids = @comments.map(&:id)
+      vote_summaries = Vote.comment_vote_summaries(comment_ids)
+      current_user_reply_parents = @user&.ids_replied_to(comment_ids) || Hash.new { false }
       @comments.each do |c|
         c.current_vote = @votes[c.id]
         c.vote_summary = vote_summaries[c.id]
+        c.current_reply = current_user_reply_parents.has_key? c.id
       end
     end
   end

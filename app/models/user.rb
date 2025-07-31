@@ -497,6 +497,17 @@ class User < ApplicationRecord
     created_at > NEW_USER_DAYS.days.ago
   end
 
+  def ids_replied_to(comment_ids)
+    h = Hash.new { false }
+    comments
+      .where(parent_comment_id: comment_ids)
+      .pluck(:parent_comment_id)
+      .each do
+        h[it] = true
+      end
+    h
+  end
+
   def roll_session_token
     self.session_token = Utils.random_str(60)
   end

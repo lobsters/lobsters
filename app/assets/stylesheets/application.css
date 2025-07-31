@@ -678,6 +678,16 @@ li.story .byline {
 	color: var(--color-fg-contrast-4-5);
 	text-decoration: none;
 }
+.comment.replied .flagger,
+.comment.flagged .comment_replier {
+	color: var(--color-fg);
+	cursor: default;
+	pointer-events: none;
+	text-decoration: line-through;
+}
+.comment.replied .flagger {
+	color: var(--color-fg-contrast-4-5);
+}
 /* preserve selection made elsewhere when clicking */
 li .byline a.comment_replier {
 	user-select: none;

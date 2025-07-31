@@ -440,10 +440,11 @@ export class _LobstersFunction {
         qS(li, '.reason').innerHTML = '';
       };
 
-      if (action == "unvote" && point < 0)
+      if (action == "unvote" && point < 0) {
         qS(li, '.flagger').textContent = 'flag';
       } else if (action == "flag") {
         qS(li, '.flagger').textContent = 'unflag';
+      }
     }
 
     fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + action, {

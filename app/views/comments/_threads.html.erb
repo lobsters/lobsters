@@ -72,6 +72,7 @@
   class="comment
     <%= comment.current_upvoted? ? "upvoted" : "" %>
     <%= comment.current_flagged? ? "flagged" : "" %>
+    <%= comment.current_reply ? "replied" : "" %>
     <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
   ">
 
@@ -154,8 +155,8 @@
         <% end %>
 
         <% if @user && !comment.is_gone? && comment.story.accepting_comments? %>
-            |
-            <a class="comment_replier" unselectable="on" href="<%= reply_comment_path(comment) %>">reply</a>
+          |
+          <a class="comment_replier" unselectable="on" href="<%= reply_comment_path(comment) %>">reply</a>
         <% end %>
 
         <% if show_story %>

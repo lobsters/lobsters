@@ -21,7 +21,7 @@
 </div>
 
 <div id="story_preview">
-  <% if @story.previewing && @story.valid? %>
+  <% if @story.previewing && @story.errors.empty? %>
     <%= render :template => "stories/show" %>
   <% end %>
 </div>

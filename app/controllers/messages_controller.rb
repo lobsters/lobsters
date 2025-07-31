@@ -139,8 +139,6 @@ class MessagesController < ApplicationController
 
     flash[:success] = "Deleted #{deleted} #{"message".pluralize(deleted)}"
 
-    @user.update_unread_message_count!
-
     redirect_to "/messages"
   end
 

@@ -2,7 +2,7 @@
 
 [Lobsters](https://lobste.rs) is a Rails codebase and uses a SQL (MariaDB in production) backend for the database.
 The code is open source as part of our [commitment to transparency](https://lobste.rs/about#transparency).
-It's been used to run [sister sites](https://github.com/lobsters/lobsters/blob/master/sister_sites.md), but mostly we want people to be able to understand and improve what's happening on Lobsters itself.
+It's been used to run [sister sites](https://github.com/lobsters/lobsters/blob/main/sister_sites.md), but mostly we want people to be able to understand and improve what's happening on Lobsters itself.
 
 (Despite the site being a [ghost town](https://xcancel.com/webshitweekly/status/1399935275057389571) running on a [quite sad codebase](https://web.archive.org/web/20230213161624/https://old.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/), at least we have [no relation](https://lobste.rs/about#michaelbolton) to the self-help guru.)
 
@@ -10,7 +10,7 @@ It's been used to run [sister sites](https://github.com/lobsters/lobsters/blob/m
 #### Contributing bugfixes and new features
 
 We'd love to have your help.
-Please see the [CONTRIBUTING](https://github.com/lobsters/lobsters/blob/master/CONTRIBUTING.md) file for details.
+Please see the [CONTRIBUTING](https://github.com/lobsters/lobsters/blob/main/CONTRIBUTING.md) file for details.
 If you have questions, there is usually someone in [our chat room](https://lobste.rs/chat) who's familiar with the code.
 
 Lobsters is a volunteer project with limited development time and a long time horizon, we hope to be running for decades.
@@ -41,7 +41,7 @@ We have a [Docker setup guide](./docs/setup_with_docker.md) if you use that for 
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
 ```
 
-* Install the Ruby version specified in [.ruby-version](https://github.com/lobsters/lobsters/blob/master/.ruby-version)
+* Install the Ruby version specified in [.ruby-version](https://github.com/lobsters/lobsters/blob/main/.ruby-version)
 
 * Checkout the lobsters git tree from Github
     ```sh
@@ -80,7 +80,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
 ## Production
 
 You are free to use this code to start your own [sister site](/sister_sites.md)
-because the code is available under a [permissive license](https://github.com/lobsters/lobsters/blob/master/LICENSE) (3-clause BSD).
+because the code is available under a [permissive license](https://github.com/lobsters/lobsters/blob/main/LICENSE) (3-clause BSD).
 We welcome bug reports and code contributions that help use improve [lobste.rs](https://lobste.rs).
 As a volunteer project we're reluctant to take on work that's not useful to our site, so please understand if we don't want to adopt your custom feature.
 These instructions assume you know the basics of web development with Ruby on Rails on a Linux server.
@@ -150,7 +150,7 @@ Setup:
       ```
 
     * Settings:
-      We have tweaks of production config files and we want those [tracked in our git repo](https://github.com/lobsters/lobsters/tree/master/hatchbox).
+      We have tweaks of production config files and we want those [tracked in our git repo](https://github.com/lobsters/lobsters/tree/main/hatchbox).
       We have rigged up settings to run an (unfortunately) clever hook to update those on deploy, see below.
 
       Pre-build script: `hatchbox/pre-build`

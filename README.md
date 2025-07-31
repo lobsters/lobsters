@@ -85,7 +85,7 @@ We welcome bug reports and code contributions that help use improve [lobste.rs](
 As a volunteer project we're reluctant to take on work that's not useful to our site, so please understand if we don't want to adopt your custom feature.
 These instructions assume you know the basics of web development with Ruby on Rails on a Linux server.
 
-Important: the hard part about starting a sister site is not the codebase.
+Important: the hard part about starting an online community is not the codebase.
 A new social site has to solve a chicken-and-egg problem:
 nobody will want to participate on a new site until other people are participating.
 Before you start working with the code, make a plan for how you'll reach potential community members and what they'll find engaging about the early days.

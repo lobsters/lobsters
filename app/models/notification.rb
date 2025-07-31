@@ -9,22 +9,20 @@ class Notification < ApplicationRecord
 
   include Token
 
-  GoodFaithResult = Data.define(:good_faith?, :bad_properties)
-
-  def check_good_faith
+  def good_faith?
     case notifiable
     when Message
-      check_good_faith_message
+      good_faith_message?
     when Comment
-      check_good_faith_comment
+      good_faith_comment?
     end
   end
 
-  def check_good_faith_message
-    GoodFaithResult.new(true, {})
+  def good_faith_message?
+    true
   end
 
-  def check_good_faith_comment
+  def good_faith_comment?
     comment = notifiable
     story = comment.story
     parent_comment = comment.parent_comment
@@ -40,6 +38,6 @@ class Notification < ApplicationRecord
       user_has_filtered_tags_on_story: !(story.tags & user.tag_filter_tags).empty?
     }.compact_blank
 
-    GoodFaithResult.new(bad_properties.empty?, bad_properties.keys)
+    bad_properties.empty?
   end
 end

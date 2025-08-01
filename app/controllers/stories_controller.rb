@@ -35,7 +35,11 @@ class StoriesController < ApplicationController
           raise ActiveRecord::Rollback
         end
       end
-      return if @story.persisted? # can't return out of transaction block
+
+      if @story.persisted?
+        SendWebmentionJob.set(wait: 5.minutes).perform_later(@story)
+        return # can't return out of transaction block
+      end
     end
 
     render action: "new"

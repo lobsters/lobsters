@@ -14,6 +14,7 @@ class NotificationsController < ApplicationController
       .limit(notifications_per_page)
       .order(created_at: :desc)
       .preload(user: [:hidings, :votes], notifiable: {story: [:tags, :user], user: [:comments], author: [], parent_comment: []})
+    apply_current_vote
 
     @has_more = @user.notifications.count > (@page * notifications_per_page)
 
@@ -29,6 +30,7 @@ class NotificationsController < ApplicationController
       .where(read_at: nil)
       .order(created_at: :desc)
       .preload(user: [:hidings, :votes], notifiable: {story: [:tags, :user], user: [:comments], author: [], parent_comment: []})
+    apply_current_vote
 
     respond_to do |format|
       format.html { render :all }
@@ -50,6 +52,19 @@ class NotificationsController < ApplicationController
       @page = 1
     elsif @page < 0 || @page > (2**32)
       raise ActionController::RoutingError.new("page out of bounds")
+    end
+  end
+
+  def apply_current_vote
+    comment_notifications = @notifications.filter { |n| n.notifiable_type == "Comment" }
+    comment_ids = comment_notifications.map { |n| n.notifiable_id }
+    summaries = Vote.comment_vote_summaries(comment_ids)
+    votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, comment_ids)
+
+    comment_notifications.each do |n|
+      comment = n.notifiable
+      comment.current_vote = votes[comment.id]
+      comment.vote_summary = summaries[comment.id]
     end
   end
 end

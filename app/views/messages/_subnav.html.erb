@@ -1,7 +1,7 @@
 <%# locals: () -%>
 <% content_for :subnav do %>
-  <%= link_to_different_page 'Messages', messages_path %>
-  <%= link_to_different_page 'Sent', messages_sent_path %>
   <%= link_to_different_page 'Inbox', inbox_all_path %>
   <%= link_to_different_page 'Unread', inbox_unread_path %>
+  <%= link_to_different_page 'Messages', messages_path %>
+  <%= link_to_different_page 'Sent', messages_sent_path %>
 <% end %>

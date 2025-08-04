@@ -342,6 +342,7 @@ class HomeController < ApplicationController
 
         render action: "stories", layout: false
       }
+      format.json { render json: @stories }
     end
   end
 

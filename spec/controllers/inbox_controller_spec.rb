@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe NotificationsController do
+describe InboxController do
   let(:author) { create(:user) }
   let(:recipient) { create(:user) }
 

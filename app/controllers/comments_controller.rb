@@ -393,7 +393,6 @@ class CommentsController < ApplicationController
       .joins(:story)
 
     if @user
-      @user.clear_unread_replies!
       @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @threads.map(&:story_id).uniq)
       summaries = Vote.comment_vote_summaries(@threads.map(&:id))
 

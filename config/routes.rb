@@ -35,14 +35,14 @@ Rails.application.routes.draw do
 
   get "/threads" => "comments#user_threads"
 
-  get "/replies" => "replies#all"
-  get "/replies/page/:page" => "replies#all"
-  get "/replies/comments" => "replies#comments"
-  get "/replies/comments/page/:page" => "replies#comments"
-  get "/replies/stories" => "replies#stories"
-  get "/replies/stories/page/:page" => "replies#stories"
-  get "/replies/unread" => "replies#unread"
-  get "/replies/unread/page/:page" => "replies#unread"
+  get "/replies", to: redirect("/inbox/all")
+  get "/replies/page/:page", to: redirect("/inbox/all")
+  get "/replies/comments", to: redirect("/inbox/all")
+  get "/replies/comments/page/:page", to: redirect("/inbox/all")
+  get "/replies/stories", to: redirect("/inbox/all")
+  get "/replies/stories/page/:page", to: redirect("/inbox/all")
+  get "/replies/unread", to: redirect("/inbox/unread")
+  get "/replies/unread/page/:page", to: redirect("/inbox/unread")
 
   get "/login" => "login#index"
   post "/login" => "login#login"
@@ -139,10 +139,9 @@ Rails.application.routes.draw do
     post "mod_note"
   end
 
-  get "/notifications(/page/:page)" => "notifications#all", :as => "notifications"
-  get "/notifications/unread" => "notifications#unread"
-
   get "/inbox" => "inbox#index"
+  get "/inbox/all(/page/:page)" => "inbox#all", :as => "inbox_all"
+  get "/inbox/unread" => "inbox#unread"
 
   get "/c/:id.json" => "comments#show_short_id", :format => "json"
   get "/c/:id" => "comments#redirect_from_short_id", :as => "comment_short_id"

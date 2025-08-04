@@ -3,7 +3,7 @@
 class InboxController < ApplicationController
   before_action :require_logged_in_user
   before_action :set_page, only: [:all]
-  after_action :update_read_at
+  after_action :update_read_at, only: [:all, :unread]
 
   def index
     if @user.inbox_count > 0

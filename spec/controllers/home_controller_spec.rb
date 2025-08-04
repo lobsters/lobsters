@@ -23,6 +23,19 @@ describe HomeController do
       expect(response).to be_redirect
     end
 
+    context "when linking to RSS feeds" do
+      it "returns a link that routes to the RSS feed" do
+        stub_login_as user
+        get :upvoted
+        expect(get: @controller.view_assigns["rss_link"][:href]).to route_to(
+          controller: "home",
+          action: "upvoted",
+          format: "rss",
+          token: user.rss_token
+        )
+      end
+    end
+
     context "when accessing RSS feeds" do
       it "supports session-based access" do
         stub_login_as user

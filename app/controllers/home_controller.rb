@@ -330,7 +330,7 @@ class HomeController < ApplicationController
 
     @rss_link = {
       title: "RSS 2.0 - Upvoted Stories",
-      href: user_token_link("/upvoted.rss")
+      href: user_token_link(upvoted_stories_path(format: :rss))
     }
 
     respond_to do |format|
@@ -342,6 +342,7 @@ class HomeController < ApplicationController
 
         render action: "stories", layout: false
       }
+      format.json { render json: @stories }
     end
   end
 

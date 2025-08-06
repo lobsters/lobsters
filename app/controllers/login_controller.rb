@@ -128,19 +128,19 @@ class LoginController < ApplicationController
 
     if !@found_user
       flash.now[:error] = "Unknown e-mail address or username."
-      return forgot_password
+      render :forgot_password and return
     end
 
     if @found_user.is_banned?
       flash.now[:error] = "Your account has been banned."
-      return forgot_password
+      render :forgot_password and return
     end
 
     if @found_user.is_wiped?
       flash.now[:error] = "It's not possible to reset your password " \
         "because your account was deleted before the site changed admins " \
         "and your email address was wiped for privacy."
-      return forgot_password
+      render :forgot_password and return
     end
 
     @found_user.initiate_password_reset_for_ip(request.remote_ip)

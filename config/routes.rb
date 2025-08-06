@@ -270,6 +270,4 @@ Rails.application.routes.draw do
   get "/stats" => "stats#index"
 
   get "/cabinet" => "cabinet#index"
-
-  post "/csp-violation-report" => "csp#violation_report"
 end

@@ -82,7 +82,7 @@
       <label class="required">Hats</label>
       <div>
       <% @showing_user.hats.each do |hat| %>
-        <%= hat.to_html_label %>
+        <%= hat_html_label(hat) %>
         <% if hat.doffed_at? %>
           doffed <%= how_long_ago_label(hat.doffed_at) %>
         <% else %>

@@ -100,7 +100,7 @@
         <%= styled_user_link comment.user, comment %>
 
         <% if comment.hat %>
-          <%= comment.hat.to_html_label %>
+          <%= hat_html_label(comment.hat) %>
         <% end %>
 
         <% if comment.previewing %>

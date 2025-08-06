@@ -677,6 +677,26 @@ describe Story do
         expect { Story.top(user, dur: 7, intv: "wrong") }.to raise_error(ArgumentError)
       end
     end
+
+    describe ".categories" do
+      let(:user) { create :user }
+
+      it "selects unique stories based on categories" do
+        tag1 = create(:tag)
+        tag2 = create(:tag)
+
+        category1 = create(:category, tags: [tag1])
+        _category2 = create(:category, tags: [tag2])
+
+        story1 = create(:story, user:, title: "A story", tags: [tag1])
+        _story2 = create(:story, user:, title: "Another story", tags: [tag2])
+
+        stories = Story.categories(user, [category1])
+
+        expect(stories.count).to eq 1
+        expect(stories.first).to eq story1
+      end
+    end
   end
 
   describe "suggestions" do

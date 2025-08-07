@@ -2,6 +2,11 @@
 
 require "faker"
 
+# This script creates real-ish fake data in your development database so it's easier to understand
+# how a feature will work in real-world use. It has been written and expanded as needed, rather than
+# try to perfectly simulate real-world data from scratch. If you need it for your project, please do
+# improve it (no need for a separate PR).
+
 # Disable launchy when populating with fake_data to prevent browser tabs from opening.
 # As described in https://github.com/ryanb/letter_opener?tab=readme-ov-file#remote-alternatives
 ENV["LAUNCHY_DRY_RUN"] = "true"
@@ -154,6 +159,7 @@ class FakeDataGenerator
 
     print "Comments "
     comments = []
+    replies = {}
     stories.each do |x|
       print "."
       next unless x.accepting_comments?
@@ -174,6 +180,7 @@ class FakeDataGenerator
             parent_comment_id: comments.last.id
           }
           comments << Comment.create!(create_args)
+          replies[[x.user.id, comments.last.id]] = true
         end
       end
     end
@@ -187,6 +194,8 @@ class FakeDataGenerator
       voting_users = users.sample(upvotes + 1)
       if Random.rand(100) > 95
         u = voting_users[0]
+        # can't flag if you've already replied, just skip
+        next if replies.has_key? [u.id, c.id]
         Vote.vote_thusly_on_story_or_comment_for_user_because(
           -1,
           c.story_id,

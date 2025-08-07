@@ -5,7 +5,7 @@ FactoryBot.define do
     association(:user)
     hat { "foobar hat" }
     link { "https://lobste.rs" }
-    sequence(:comment) { |n| "comment text #{n}" }
+    sequence(:comment) { |n| "comment text #{n} #{"pad " * 10}" }
     created_at { Time.current }
   end
 end

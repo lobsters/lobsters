@@ -6,7 +6,7 @@ RSpec.feature "Hat Request" do
   let(:user) { create(:user) }
   let!(:hat_request) { create(:hat_request, user: user) }
   let(:mod) { create(:user, :moderator) }
-  let(:reason) { "An example reason" }
+  let(:reason) { "An example reason. That reaches a minimum character count." }
 
   before do
     stub_login_as mod

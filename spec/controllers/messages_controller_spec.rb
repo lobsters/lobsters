@@ -37,7 +37,7 @@ describe MessagesController do
   describe "POST create" do
     it "schedules a notification job" do
       stub_login_as sender
-      post :create, params: {message: {recipient_username: recipient.username, subject: "hello", body: "secret message"}}
+      post :create, params: {message: {recipient_username: recipient.username, subject: "hello", body: "Private message. #{"pad " * 10}"}}
       expect(response.status).to eq(302)
       expect(NotifyMessageJob).to have_been_enqueued.exactly(:once)
     end

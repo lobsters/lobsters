@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_28_030009) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_07_160046) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -227,6 +227,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_28_030009) do
     t.index ["recipient_user_id"], name: "messages_recipient_user_id_fk"
     t.index ["short_id"], name: "random_hash", unique: true
     t.index ["token"], name: "index_messages_on_token", unique: true
+  end
+
+  create_table "mod_activities", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.bigint "item_id", null: false, unsigned: true
+    t.string "token", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_type", "item_id"], name: "index_mod_activities_on_item"
+    t.index ["item_type", "item_id"], name: "index_mod_activities_on_item_type_and_item_id", unique: true
+    t.index ["token"], name: "index_mod_activities_on_token", unique: true
   end
 
   create_table "mod_notes", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

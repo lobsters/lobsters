@@ -378,7 +378,7 @@
           "type": "controller",
           "class": "UsersController",
           "method": "show",
-          "line": 25,
+          "line": 27,
           "file": "app/controllers/users_controller.rb",
           "rendered": {
             "name": "users/show",
@@ -392,6 +392,114 @@
       },
       "user_input": "User.new(:username => params[:username], :created_at => rand((0..9999)).days.ago)",
       "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": "Rendered markdown."
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "5a23e7df4682cd1814c104bb64c46b2c669e19b4e46af07d04ac70d5ceb452d2",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/comments/_comment.html.erb",
+      "line": 146,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Moderation.comment.markeddown_comment",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Mod::ActivitiesController",
+          "method": "index",
+          "line": 7,
+          "file": "app/controllers/mod/activities_controller.rb",
+          "rendered": {
+            "name": "mod/activities/index",
+            "file": "app/views/mod/activities/index.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "mod/activities/index",
+          "line": 2,
+          "file": "app/views/mod/activities/index.html.erb",
+          "rendered": {
+            "name": "mod/activities/_table",
+            "file": "app/views/mod/activities/_table.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "mod/activities/_table",
+          "line": 69,
+          "file": "app/views/mod/activities/_table.html.erb",
+          "rendered": {
+            "name": "comments/_comment",
+            "file": "app/views/comments/_comment.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "comments/_comment"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        79
+      ],
+      "note": "Rendered markdown."
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "5a23e7df4682cd1814c104bb64c46b2c669e19b4e46af07d04ac70d5ceb452d2",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/comments/_comment.html.erb",
+      "line": 149,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Moderation.comment.markeddown_comment",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Mod::ActivitiesController",
+          "method": "index",
+          "line": 7,
+          "file": "app/controllers/mod/activities_controller.rb",
+          "rendered": {
+            "name": "mod/activities/index",
+            "file": "app/views/mod/activities/index.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "mod/activities/index",
+          "line": 2,
+          "file": "app/views/mod/activities/index.html.erb",
+          "rendered": {
+            "name": "mod/activities/_table",
+            "file": "app/views/mod/activities/_table.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "mod/activities/_table",
+          "line": 69,
+          "file": "app/views/mod/activities/_table.html.erb",
+          "rendered": {
+            "name": "comments/_comment",
+            "file": "app/views/comments/_comment.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "comments/_comment"
+      },
+      "user_input": null,
+      "confidence": "Medium",
       "cwe_id": [
         79
       ],
@@ -519,7 +627,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/users_controller.rb",
-      "line": 140,
+      "line": 142,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.exec_query(\"\\n      select\\n        n_flags, count(*) as n_users\\n      from (\\n        select\\n          comments.user_id, sum(flags) as n_flags\\n        from\\n          comments\\n        where\\n          comments.created_at >= now() - interval #{time_interval(\"1m\")[:dur]} #{time_interval(\"1m\")[:intv]}\\n        group by comments.user_id) count_by_user\\n      group by 1\\n      order by 1 asc;\\n    \")",
       "render_path": null,
@@ -568,6 +676,50 @@
         79
       ],
       "note": "These aren't user-controlled, aren't strings and get passed to the graphing library."
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "c91426e2eb2ba38f8a577fa3708af8b89da43180ff5aa84caa426630e6f450cc",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/mod/activities/_table.html.erb",
+      "line": 94,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "ModNote.markeddown_note",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Mod::ActivitiesController",
+          "method": "index",
+          "line": 7,
+          "file": "app/controllers/mod/activities_controller.rb",
+          "rendered": {
+            "name": "mod/activities/index",
+            "file": "app/views/mod/activities/index.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "mod/activities/index",
+          "line": 2,
+          "file": "app/views/mod/activities/index.html.erb",
+          "rendered": {
+            "name": "mod/activities/_table",
+            "file": "app/views/mod/activities/_table.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "mod/activities/_table"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        79
+      ],
+      "note": "Rendered markdown."
     },
     {
       "warning_type": "SQL Injection",

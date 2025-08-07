@@ -17,6 +17,8 @@ class UsersController < ApplicationController
     end
 
     if @user.try(:is_moderator?)
+      @mod_activities = ModActivity.user(@showing_user).order(created_at: :desc).limit(20)
+
       @mod_note = ModNote.new(user: @showing_user)
       @mod_note.note = params[:note]
     end

@@ -247,12 +247,12 @@ Rails.application.routes.draw do
   get "/moderators" => "users#tree", :moderators => true
 
   namespace :mod do
-    get "/" => "flagged#index"
+    get "/" => "activities#index", :as => "mod_activity"
     get "flagged_stories/:period" => "flagged#flagged_stories", :as => "flagged_stories"
     get "flagged_comments/:period" => "flagged#flagged_comments", :as => "flagged_comments"
     get "commenters/:period" => "flagged#commenters", :as => "commenters"
 
-    get "notes(/:period)" => "notes#index", :as => "notes"
+    get "notes(/:period)", to: redirect("/mod/")
     post "notes" => "notes#create"
 
     resources :reparents, only: [:new, :create]

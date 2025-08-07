@@ -19,6 +19,8 @@ class ModNote < ApplicationRecord
 
   delegate :username, to: :user
 
+  after_create -> { ModActivity.create_for! self }
+
   def username=(username)
     self.user_id = nil
 

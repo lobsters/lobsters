@@ -1073,6 +1073,13 @@ td.warned div, td.unwarned div {
 	font-size: 2em;
 	text-align: center;
 }
+.mod_activities {
+	padding: 0;
+}
+.mod_activities li ul {
+	list-style-type: none;
+	padding: 0;
+}
 
 /* data tables */
 
@@ -1100,11 +1107,13 @@ table.data tr.bold td {
 	font-weight: bold;
 }
 
-table.data.zebra tr:nth-child(even) td {
+table.data.zebra tr:nth-child(even) td,
+.mod_activities li:nth-child(even) {
 	background-color: var(--color-table-row-bg-even);
 	border-bottom: 1px solid var(--color-table-row-border);
 }
-table.data.zebra tr:nth-child(odd) td {
+table.data.zebra tr:nth-child(odd) td,
+.mod_activities li:nth-child(odd) {
 	background-color: var(--color-table-row-bg-odd);
 	border-bottom: 1px solid var(--color-table-row-border);
 }

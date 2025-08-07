@@ -43,6 +43,9 @@ class FakeDataGenerator
   end
 
   def generate
+    # not create! because fake_data can be run multiple times
+    User.create username: "inactive-user", password: "inactive", email: "inactive-user@#{Rails.application.domain}"
+
     print "Users "
     users = []
     0.upto(@users_count).each do |i|
@@ -274,7 +277,7 @@ class FakeDataGenerator
       print "."
       comment_mod = User.moderators.sample
       if i % 7 == 0
-        comment.delete_for_user(comment_mod, Faker::Lorem.paragraphs(number: 1))
+        comment.delete_for_user(comment_mod, Faker::Lorem.sentence(word_count: 8))
         comment.undelete_for_user(comment_mod) if i.even?
       end
     end

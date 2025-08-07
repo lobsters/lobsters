@@ -1,23 +1,6 @@
 # typed: false
 
 class Mod::NotesController < Mod::ModController
-  def index
-    @title = "Mod Notes"
-    @username = params[:username]
-    query = ModNote.order(created_at: :desc).includes(:moderator, :user)
-    if (@username = params[:username])
-      if (user = User.find_by(username: @username))
-        @title = "#{@username} Mod Notes"
-        @notes = query.where(user: user)
-      else
-        @notes = []
-        flash[:error] = "User not found"
-      end
-    else
-      @notes = period(query)
-    end
-  end
-
   def create
     @title = "Create Mod Note"
     @mod_note = ModNote.new(mod_note_params)

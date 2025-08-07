@@ -6,16 +6,6 @@
 class Mod::FlaggedController < Mod::ModController
   include IntervalHelper
 
-  def index
-    @title = "Activity by Other Mods"
-    @moderations = Moderation
-      .eager_load(:category, :moderator, :story, :tag, :user, comment: [:story, :user])
-      .where.not(moderator_user_id: @user.id)
-      .or(Moderation.where(moderator_user_id: nil))
-      .where({moderations: {created_at: 1.month.ago..}})
-      .order({moderations: {id: :desc}})
-  end
-
   def flagged_stories
     @title = "Flagged Stories"
     @stories = period(Story.base(@user).unmerged

@@ -1,4 +1,4 @@
-class Mod::ReparentsController < Mod::ModeratorController
+class Mod::ReparentsController < Mod::ModController
   before_action :require_logged_in_admin
   before_action :load_user
 

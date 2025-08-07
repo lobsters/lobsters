@@ -5,7 +5,7 @@ require "active_support/core_ext/string" # String.underscore
 module CustomCops
   class InheritsModeratorController < RuboCop::Cop::Base
     MOD_DIRECTORY = "app/controllers/mod/"
-    MOD_CONTROLLER = "Mod::ModeratorController"
+    MOD_CONTROLLER = "Mod::ModController"
     MSG = "All controllers in the Mod namespace should inherit from #{MOD_CONTROLLER}"
 
     def on_class(node)

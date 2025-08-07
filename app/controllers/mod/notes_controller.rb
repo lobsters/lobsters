@@ -1,6 +1,6 @@
 # typed: false
 
-class Mod::NotesController < Mod::ModeratorController
+class Mod::NotesController < Mod::ModController
   def index
     @title = "Mod Notes"
     @username = params[:username]

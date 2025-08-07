@@ -1,4 +1,4 @@
-class Mod::StoriesController < Mod::ModeratorController
+class Mod::StoriesController < Mod::ModController
   include StoryFinder
 
   before_action :find_story!

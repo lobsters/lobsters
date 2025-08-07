@@ -1,4 +1,4 @@
-class Mod::ModeratorController < ApplicationController
+class Mod::ModController < ApplicationController
   before_action :require_logged_in_moderator
   before_action :default_periods, :show_title_h1
 

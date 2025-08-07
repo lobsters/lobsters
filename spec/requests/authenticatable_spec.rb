@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "login", type: :request do
+describe "Authenticatable", type: :request do
   let(:user) { create(:user, password: "asdf") }
   let(:moderator) { create(:user, :moderator, password: "asdf") }
 

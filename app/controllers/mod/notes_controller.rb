@@ -1,8 +1,6 @@
 # typed: false
 
-class ModNotesController < ModController
-  before_action :require_logged_in_moderator
-
+class Mod::NotesController < Mod::ModeratorController
   def index
     @title = "Mod Notes"
     @username = params[:username]

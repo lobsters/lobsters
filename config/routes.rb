@@ -246,14 +246,15 @@ Rails.application.routes.draw do
   get "/moderations/page/:page" => "moderations#index"
   get "/moderators" => "users#tree", :moderators => true
 
-  get "/mod" => "mod#index"
-  get "/mod/flagged_stories/:period" => "mod#flagged_stories", :as => "mod_flagged_stories"
-  get "/mod/flagged_comments/:period" => "mod#flagged_comments", :as => "mod_flagged_comments"
-  get "/mod/commenters/:period" => "mod#commenters", :as => "mod_commenters"
-  get "/mod/notes(/:period)" => "mod_notes#index", :as => "mod_notes"
-  post "/mod/notes" => "mod_notes#create"
-
   namespace :mod do
+    get "/" => "flagged#index"
+    get "flagged_stories/:period" => "flagged#flagged_stories", :as => "flagged_stories"
+    get "flagged_comments/:period" => "flagged#flagged_comments", :as => "flagged_comments"
+    get "commenters/:period" => "flagged#commenters", :as => "commenters"
+
+    get "notes(/:period)" => "notes#index", :as => "notes"
+    post "notes" => "notes#create"
+
     resources :reparents, only: [:new, :create]
     resources :stories, only: [:edit, :update] do
       patch "undelete"

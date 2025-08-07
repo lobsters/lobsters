@@ -3,10 +3,8 @@
 # This controller is going to have a lot of one-off queries. If they do need
 # to be used elsewhere, remember to make them into model scopes.
 
-class ModController < ApplicationController
+class Mod::FlaggedController < Mod::ModeratorController
   include IntervalHelper
-
-  before_action :require_logged_in_moderator, :default_periods, :show_title_h1
 
   def index
     @title = "Activity by Other Mods"
@@ -44,17 +42,5 @@ class ModController < ApplicationController
     @interval = fc.interval
     @agg = fc.aggregates
     @commenters = fc.commenters
-  end
-
-  private
-
-  def default_periods
-    @periods = %w[1d 2d 3d 1w 1m]
-  end
-
-  def period(query)
-    length = time_interval(params[:period] || default_periods.first)
-    query.where("#{query.model.table_name}.created_at >=
-      (NOW() - INTERVAL #{length[:dur]} #{length[:intv].upcase})")
   end
 end

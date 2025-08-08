@@ -469,7 +469,7 @@ div.voters {
 	-webkit-text-stroke: 1px var(--color-fg-contrast-4-5);
 }
 .upvoted .upvoter:before, .upvoter:hover:before {
-	color: var(--color-fg-accent) !important;
+	color: var(--color-fg-accent);
 	-webkit-text-stroke: 1px var(--color-fg-accent);
 }
 .upvoter {
@@ -1651,10 +1651,12 @@ input[type="submit"].link_post.pushover_button {
 	/* explicitly reset color when not upvoted, since previously-upvoted arrow
 	 * will still be triggering :hover until next tap */
 	div.voters .upvoter:hover:before {
-		color: var(--color-fg-shape);
+		color: transparent;
+		-webkit-text-stroke: 1px var(--color-fg-contrast-4-5);
 	}
 	.upvoted div.voters .upvoter:before {
 		color: var(--color-fg-accent);
+		-webkit-text-stroke: 1px var(--color-fg-accent);
 	}
 
 	ol.stories.list {

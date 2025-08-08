@@ -2,32 +2,28 @@
   <a href="/settings">Back to Settings</a>
 <% end %>
 
-<div class="box wide">
-  <p>
-  Scan the QR code below or click on it to open in your <a
-  href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm"
-  target="_blank">TOTP</a> application of choice:
-  </p>
+<p>
+Scan the QR code below or click on it to open in your <a
+href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm"
+target="_blank">TOTP</a> application of choice:
+</p>
 
-  <div id="qrsvg">
-    <%= raw @qr_svg %>
-  </div>
-
-  <p>
-    Or to add to a device manually enter the secret:
-    <details>
-      <summary>Reveal Secret</summary>
-      <%= raw @qr_secret %>
-    </details>
-  </p>
-
-  <p>
-  Once you have finished registering with your TOTP application, proceed to
-  the next screen to verify your current TOTP code and actually enable
-  Two-Factor Authentication on your account.
-  </p>
-
-  <p>
-  <%= button_to "Verify and Enable", twofa_verify_url, :method => :get %>
-  </p>
+<div id="qrsvg">
+  <%= raw @qr_svg %>
 </div>
+
+<p>
+  Or to add to a device manually enter the secret:
+  <details>
+    <summary>Reveal Secret</summary>
+    <%= raw @qr_secret %>
+  </details>
+</p>
+
+<p>
+Once you have finished registering with your TOTP application, proceed to
+the next screen to verify your current TOTP code and actually enable
+Two-Factor Authentication on your account.
+</p>
+
+<%= button_to "Verify and Enable", twofa_verify_url, :method => :get %>

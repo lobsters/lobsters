@@ -173,14 +173,15 @@ class FakeDataGenerator
 
         # Replies to comments
         if i.odd?
+          parent_comment_id = comments.last.id
           create_args = {
             user: x.user,
             comment: markdown_paragraphs,
             story_id: x.id,
-            parent_comment_id: comments.last.id
+            parent_comment_id: parent_comment_id
           }
           comments << Comment.create!(create_args)
-          replies[[x.user.id, comments.last.id]] = true
+          replies[[x.user.id, parent_comment_id]] = true
         end
       end
     end

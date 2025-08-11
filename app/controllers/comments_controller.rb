@@ -138,7 +138,7 @@ class CommentsController < ApplicationController
       parent_ids = parents.map(&:id)
       @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user&.id, parent_ids)
       summaries = Vote.comment_vote_summaries(parent_ids)
-      current_user_reply_parents = @user&.ids_replied_to(comment_ids) || Hash.new { false }
+      current_user_reply_parents = @user&.ids_replied_to(parent_ids) || Hash.new { false }
       parents.each do |c|
         c.current_vote = @votes[c.id]
         c.vote_summary = summaries[c.id]

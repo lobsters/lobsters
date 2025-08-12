@@ -1080,6 +1080,12 @@ td.warned div, td.unwarned div {
 	list-style-type: none;
 	padding: 0;
 }
+.mod_activities .moderation {
+	list-style: '🕮';
+}
+.mod_activities .mod_note {
+	list-style: '🔑';
+}
 
 /* data tables */
 

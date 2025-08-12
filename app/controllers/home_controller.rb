@@ -173,7 +173,7 @@ class HomeController < ApplicationController
     raise ActiveRecord::RecordNotFound unless categories.length == category_params.length
 
     @stories, @show_more = get_from_cache(categories: category_params.sort.join(",")) do
-      paginate stories.categories(categories)
+      paginate Story.categories(@user, categories)
     end
 
     @title = categories.map(&:category).join(" ")

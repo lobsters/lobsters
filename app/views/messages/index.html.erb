@@ -20,7 +20,7 @@
               <% else %>
                 <%= message.author_username %>
               <% end %>
-              <%= hat_html_label(message.hat) if message.hat %>
+              <%= styled_hat(message.hat) if message.hat %>
             <% else %>
               <%= styled_user_link message.recipient %>
             <% end %>

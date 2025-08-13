@@ -356,10 +356,6 @@ class HomeController < ApplicationController
     end
   end
 
-  def stories
-    StoryRepository.new(@user, exclude_tags: filtered_tag_ids)
-  end
-
   def page
     p = params[:page].to_i
     if p == 0

@@ -218,6 +218,34 @@ describe HomeController do
       end
     end
 
+    describe "/categories/:category" do
+      let(:tag1) { create :tag }
+      let(:tag2) { create :tag }
+
+      let!(:category1) { create(:category, tags: [tag1]) }
+      let!(:category2) { create(:category, tags: [tag2]) }
+
+      let!(:story1) { create(:story, user:, tags: [tag1]) }
+      let!(:story2) { create(:story, user:, tags: [tag2]) }
+
+      it "shows stories for categories only" do
+        categories = [category1]
+
+        get :category, params: {category: categories.map(&:category).join(",")}
+
+        expect(response).to be_successful
+        expect(@controller.view_assigns["title"]).to eq categories.map(&:category).join(" ")
+        expect(@controller.view_assigns["stories"]).to include(story1)
+        expect(@controller.view_assigns["stories"]).not_to include(story2)
+      end
+
+      it "raises RecordNotFound error when unknown category has been passed" do
+        categories = [category1.category, category2.category, "unknown-category"]
+
+        expect { get :category, params: {category: categories.join(",")} }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
     describe "/top/:length" do
       it "renders HTML page successfully for 1 week" do
         get :top, params: {length: "1w"}

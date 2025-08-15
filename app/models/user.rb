@@ -62,6 +62,7 @@ class User < ApplicationRecord
     dependent: :destroy
 
   include Token
+  include EmailBlocklistHelper
 
   # As of Rails 8.0, `has_secure_password` generates a `password_reset_token`
   # method that shadows the explicit `password_reset_token` attribute.
@@ -98,6 +99,8 @@ class User < ApplicationRecord
     length: {maximum: 100},
     format: {with: /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/},
     uniqueness: {case_sensitive: false}
+
+  validate :email_blocklist
 
   validates :homepage,
     format: {
@@ -626,5 +629,11 @@ class User < ApplicationRecord
       .where("(votes.comment_id is not null and comments.user_id <> votes.user_id) OR " \
                  "(votes.comment_id is null and stories.user_id <> votes.user_id)")
       .order(id: :desc)
+  end
+
+  def email_blocklist
+    if email_on_blocklist?(email)
+      errors.add(:email, "disposable emails are blocked")
+    end
   end
 end

@@ -76,11 +76,14 @@ class Story < ApplicationRecord
   }
 
   scope :tagged, ->(user, tags) {
-    tagged_story_ids = Tagging.select(:story_id).where(tag_id: tags.map(&:id))
-
     base(user)
       .positive_ranked
-      .where(id: tagged_story_ids)
+      .where(
+        Tagging
+          .where("story_id = stories.id")
+          .where(tag_id: tags)
+          .arel.exists
+      )
       .order(created_at: :desc)
   }
 
@@ -95,8 +98,13 @@ class Story < ApplicationRecord
   scope :categories, ->(user, categories) {
     base(user)
       .positive_ranked
-      .joins(:tags)
-      .where(tags: {category: categories})
+      .where(
+        Tagging
+          .joins(:tag)
+          .where("story_id = stories.id")
+          .where(tag: {category_id: categories})
+          .arel.exists
+      )
       .order(created_at: :desc)
   }
 

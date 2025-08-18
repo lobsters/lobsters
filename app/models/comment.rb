@@ -32,14 +32,14 @@ class Comment < ApplicationRecord
   attr_accessor :current_vote, :current_reply, :previewing, :vote_summary
 
   before_validation :assign_initial_attributes, on: :create
+  after_create :create_fts
+  after_update :update_fts
+  after_destroy :destroy_fts
   after_destroy :unassign_votes
   # Calling :record_initial_upvote from after_commit instead of after_create minimizes how many
   # queries happen inside the transaction, which seems to be the cause of bug #1238.
   after_commit :log_hat_use, :mark_submitter, :record_initial_upvote, on: :create
   after_commit :recreate_links
-  after_create :create_fts
-  after_update :update_fts
-  after_destroy :destroy_fts
 
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, -> { where(is_deleted: false) }
@@ -537,17 +537,17 @@ class Comment < ApplicationRecord
   end
 
   def create_fts
-    ActiveRecord::Base.connection.exec_insert("INSERT INTO comments_fts (rowid, comment) values (?, ?)", nil, [self.id, self.comment])
+    ActiveRecord::Base.connection.exec_insert("INSERT INTO comments_fts (rowid, comment) values (?, ?)", nil, [id, comment])
   end
 
   def update_fts
     if saved_change_to_attribute(:comment)
-      ActiveRecord::Base.connection.exec_update("UPDATE comments_fts set comment = ? where rowid = ?", nil, [self.comment, self.id])
+      ActiveRecord::Base.connection.exec_update("UPDATE comments_fts set comment = ? where rowid = ?", nil, [comment, id])
     end
   end
 
   def destroy_fts
-    ActiveRecord::Base.connection.exec_delete("DELETE FROM comments_fts where rowid = ?", nil, [self.id])
+    ActiveRecord::Base.connection.exec_delete("DELETE FROM comments_fts where rowid = ?", nil, [id])
   end
 
   def validate_commenter_hasnt_flagged_parent

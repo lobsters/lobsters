@@ -92,6 +92,14 @@ class Story < ApplicationRecord
     top.order(score: :desc)
   }
 
+  scope :categories, ->(user, categories) {
+    base(user)
+      .positive_ranked
+      .joins(:tags)
+      .where(tags: {category: categories})
+      .order(created_at: :desc)
+  }
+
   scope :recent, ->(user = nil, exclude_tags = nil, unmerged: true) {
     base(user, unmerged: unmerged).not_hidden_by(user)
       .filter_tags(exclude_tags || [])

@@ -1,7 +1,7 @@
 # typed: false
 
 module IntervalHelper
-  PLACEHOLDER = {param: "1w", dur: 1, intv: "Week", human: "week", placeholder: true}
+  PLACEHOLDER = {param: "1w", dur: 7, intv: "Day", human: "week", placeholder: true}
   TIME_INTERVALS = {"h" => "Hour",
                     "d" => "Day",
                     "w" => "Week",
@@ -17,7 +17,7 @@ module IntervalHelper
       intv = TIME_INTERVALS[m[2]]
 
       sqlite_dur, sqlite_intv =
-        if intv == "week"
+        if intv == "Week"
           [dur * 7, "Day"]
         else
           [dur, intv]
@@ -28,7 +28,7 @@ module IntervalHelper
         param: "#{dur}#{m[2]}",
         dur: sqlite_dur,
         intv: sqlite_intv,
-        human: "#{(dur == 1) ? "" : dur} #{intv}".downcase.pluralize(dur).chomp,
+        human: "#{(dur == 1) ? "" : "#{dur} "}#{intv.capitalize}".pluralize(dur).chomp,
         placeholder: false
       }
     else

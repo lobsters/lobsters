@@ -37,6 +37,9 @@ class Comment < ApplicationRecord
   # queries happen inside the transaction, which seems to be the cause of bug #1238.
   after_commit :log_hat_use, :mark_submitter, :record_initial_upvote, on: :create
   after_commit :recreate_links
+  after_create :create_fts
+  after_update :update_fts
+  after_destroy :destroy_fts
 
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, -> { where(is_deleted: false) }
@@ -527,6 +530,20 @@ class Comment < ApplicationRecord
 
   def unassign_votes
     story.update_cached_columns
+  end
+
+  def create_fts
+    ActiveRecord::Base.connection.exec_insert("INSERT INTO comments_fts (rowid, comment) values (?, ?)", nil, [self.id, self.comment])
+  end
+
+  def update_fts
+    if saved_change_to_attribute(:comment)
+      ActiveRecord::Base.connection.exec_update("UPDATE comments_fts set comment = ? where rowid = ?", nil, [self.comment, self.id])
+    end
+  end
+
+  def destroy_fts
+    ActiveRecord::Base.connection.exec_delete("DELETE FROM comments_fts where rowid = ?", nil, [self.id])
   end
 
   def validate_commenter_hasnt_flagged_parent

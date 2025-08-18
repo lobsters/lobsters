@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_07_160046) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_18_183847) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -431,7 +431,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_07_160046) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username", limit: 50, collation: 'NOCASE'
+    t.string "username", limit: 50, collation: "NOCASE"
     t.string "email", limit: 100
     t.string "password_digest", limit: 75
     t.datetime "created_at", precision: nil
@@ -542,4 +542,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_07_160046) do
   add_foreign_key "votes", "comments", on_update: :cascade, on_delete: :cascade
   add_foreign_key "votes", "stories"
   add_foreign_key "votes", "users"
+
+  # Virtual tables defined in this database.
+  # Note that virtual tables may not work with other database engines. Be careful if changing database.
+  create_virtual_table "comments_fts", "fts5", ["comment", "content=''", "contentless_delete=1"]
+  create_virtual_table "story_texts_fts", "fts5", ["title", "description", "body", "content=''", "contentless_delete=1"]
 end

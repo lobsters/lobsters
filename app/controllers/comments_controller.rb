@@ -412,6 +412,11 @@ class CommentsController < ApplicationController
         c.current_reply = current_user_reply_parents.has_key? c.id
       end
     end
+
+    @threads = CommentHierarchy.new(@threads)
+      .order_hierarchy_by_confidence_order
+      .sort_top_level_comments_by_thread_id_desc
+      .comments
   end
 
   private

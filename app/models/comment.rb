@@ -96,11 +96,7 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
-  # story_threads builds a confidence_order_path in SQL this many characters long:
-  # the longest reply chain in prod data is 31 comments (so, depth 30) * 3b confidence_order
-  COP_LENGTH = 31 * 3
-  # Stop accepting replies this deep. Recursive CTE requires a fixed max (COP_LENGTH),
-  # but in practice all deep reply chains have gone off-topic and/or tuned into flamewars.
+  # Stop accepting replies this deep. In practice all deep reply chains have gone off-topic and/or tuned into flamewars.
   MAX_DEPTH = 18
 
   SCORE_RANGE_TO_HIDE = (-2..4)
@@ -583,65 +579,12 @@ class Comment < ApplicationRecord
       .pluck(:thread_id)
     return Comment.none if thread_ids.empty?
 
-    Comment
-      .joins(<<~SQL
-        inner join (
-          with recursive discussion as (
-          select
-            c.id,
-            cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
-            from comments c
-            where
-              thread_id in (#{thread_ids.join(", ")}) and
-              parent_comment_id is null
-          union all
-          select
-            c.id,
-            cast(concat(
-              left(discussion.confidence_order_path, 3 * (depth + 1)),
-              c.confidence_order
-            ) as char(#{Comment::COP_LENGTH}) character set binary)
-          from comments c join discussion on c.parent_comment_id = discussion.id
-          )
-          select * from discussion as comments
-        ) as comments_recursive on comments.id = comments_recursive.id
-      SQL
-            )
-      .order("comments.thread_id desc, comments_recursive.confidence_order_path")
+    Comment.where(thread_id: thread_ids)
   end
 
-  # select in thread order with preloading for _comment.html.erb
-  # eventually confidence_order_path can go away: https://modern-sql.com/caniuse/search_(recursion)
   def self.story_threads(story)
     return Comment.none unless story.id # unsaved Stories have no comments
 
-    # If the story_ids predicate is in the outer select the query planner doesn't push it down into
-    # the recursive CTE, so that subquery would build the tree for the entire comments table.
-    Comment
-      .joins(<<~SQL
-        inner join (
-          with recursive discussion as (
-          select
-            c.id,
-            cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
-            from comments c
-            join stories on stories.id = c.story_id
-            where
-              (stories.id = #{story.id} or stories.merged_story_id = #{story.id}) and
-              parent_comment_id is null
-          union all
-          select
-            c.id,
-            cast(concat(
-              left(discussion.confidence_order_path, 3 * (depth + 1)),
-              c.confidence_order
-            ) as char(#{Comment::COP_LENGTH}) character set binary)
-          from comments c join discussion on c.parent_comment_id = discussion.id
-          )
-          select * from discussion as comments
-        ) as comments_recursive on comments.id = comments_recursive.id
-      SQL
-            )
-      .order("comments_recursive.confidence_order_path")
+    Comment.joins(:story).where(story: {id: story.id}).or(Comment.where(story: {merged_story_id: story.id}))
   end
 end

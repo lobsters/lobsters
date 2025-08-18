@@ -166,6 +166,9 @@ class StoriesController < ApplicationController
 
     respond_to do |format|
       format.html {
+        @comments = CommentHierarchy.new(@comments)
+          .order_hierarchy_by_confidence_order
+          .comments
         @meta_tags = {
           "twitter:card" => "summary",
           "twitter:site" => "@lobsters",
@@ -187,6 +190,9 @@ class StoriesController < ApplicationController
       }
       format.json {
         @comments = @comments.includes(:parent_comment)
+        @comments = CommentHierarchy.new(@comments)
+          .order_hierarchy_by_confidence_order
+          .comments
         render json: @story.as_json(with_comments: @comments)
       }
     end

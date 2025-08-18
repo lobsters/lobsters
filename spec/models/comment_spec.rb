@@ -182,7 +182,10 @@ describe Comment do
       a = create(:comment, story: story, parent_comment: nil)
       create(:comment, story: story, parent_comment: nil)
       c = create(:comment, story: story, parent_comment: a)
-      sorted = Comment.story_threads(story)
+      comments = Comment.story_threads(story)
+      sorted = CommentHierarchy.new(comments)
+        .order_hierarchy_by_confidence_order
+        .comments
       # don't care if a or b is first, just care that c is immediately after a
       # this uses each_cons to get each pair of records and ensures [a, c] appears
       relationships = sorted.map(&:id).to_a.each_cons(2).to_a

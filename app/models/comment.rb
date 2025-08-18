@@ -86,6 +86,10 @@ class Comment < ApplicationRecord
       .by(user).arel.exists
     ) : where("true")
   }
+  scope :search, ->(query) {
+    joins("join comments_fts idx on comments.id = idx.rowid")
+      .where("comments_fts match ?", query)
+  }
 
   FLAGGABLE_DAYS = 7
   DELETEABLE_DAYS = FLAGGABLE_DAYS * 2

@@ -174,6 +174,11 @@ class Story < ApplicationRecord
       .order(id: :desc)
   }
 
+  scope :search, ->(query) {
+    joins("join story_texts_fts idx on stories.id = idx.rowid")
+      .where("story_texts_fts match ?", query)
+  }
+
   include Token
 
   validates :title, length: {in: 3..150}, presence: true

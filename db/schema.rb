@@ -431,7 +431,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_07_160046) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username", limit: 50
+    t.string "username", limit: 50, collation: 'NOCASE'
     t.string "email", limit: 100
     t.string "password_digest", limit: 75
     t.datetime "created_at", precision: nil

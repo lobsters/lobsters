@@ -15,11 +15,19 @@ module IntervalHelper
       return PLACEHOLDER unless dur > 0
       return PLACEHOLDER unless TIME_INTERVALS.include? m[2]
       intv = TIME_INTERVALS[m[2]]
+
+      sqlite_dur, sqlite_intv =
+        if intv == "week"
+          [dur * 7, "Day"]
+        else
+          [dur, intv]
+        end
+
       {
         # recreate param with parsed values to prevent passing malicious user input
         param: "#{dur}#{m[2]}",
-        dur: dur,
-        intv: intv,
+        dur: sqlite_dur,
+        intv: sqlite_intv,
         human: "#{(dur == 1) ? "" : dur} #{intv}".downcase.pluralize(dur).chomp,
         placeholder: false
       }

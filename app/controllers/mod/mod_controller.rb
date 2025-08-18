@@ -10,7 +10,6 @@ class Mod::ModController < ApplicationController
 
   def period(query)
     length = time_interval(params[:period] || default_periods.first)
-    query.where("#{query.model.table_name}.created_at >=
-      (NOW() - INTERVAL #{length[:dur]} #{length[:intv].upcase})")
+    query.where("#{query.model.table_name}.created_at >= datetime('now', '-#{length[:dur]} #{length[:intv]}')")
   end
 end

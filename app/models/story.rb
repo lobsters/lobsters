@@ -88,7 +88,7 @@ class Story < ApplicationRecord
     raise ArgumentError, "Invalid interval" unless IntervalHelper::TIME_INTERVALS.value?(length[:intv].capitalize)
 
     top = base(user)
-      .where("created_at >= (NOW() - INTERVAL ? #{length[:intv].upcase})", length[:dur])
+      .where("created_at >= datetime('now', '-#{length[:dur]} #{length[:intv].upcase}')")
     top.order(score: :desc)
   }
 
@@ -637,15 +637,15 @@ class Story < ApplicationRecord
   def update_score_and_recalculate!(score_delta, flag_delta)
     self.score += score_delta
     self.flags += flag_delta
-    Story.connection.execute <<~SQL
+    update_query = <<~SQL
       UPDATE stories SET
         score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -
         -- subtract number of hidings where hider flagged AND didn't comment (comment voting is ignored)
         (
           select count(*) from hidden_stories hiding
           where
-            story_id = #{id.to_i}
-            and hiding.created_at >= str_to_date('#{(created_at - FLAGGABLE_DAYS.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')
+            story_id = ?
+            and hiding.created_at >= datetime(?)
             and exists (    -- user flagged
               select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1
             )
@@ -654,9 +654,10 @@ class Story < ApplicationRecord
             )
         ),
         flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),
-        hotness = #{calculated_hotness}
-      WHERE id = #{id.to_i}
+        hotness = ?
+      WHERE id = ?
     SQL
+    Story.connection.exec_update(update_query, nil, [id, (created_at - FLAGGABLE_DAYS.days).utc.iso8601, calculated_hotness, id])
   end
 
   def has_suggestions?

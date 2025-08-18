@@ -93,11 +93,10 @@ class Story < ApplicationRecord
   }
 
   scope :categories, ->(user, categories) {
-    tagged_story_ids = Tagging.select(:story_id).where(tag_id: Tag.where(category: categories).select(:id))
-
     base(user)
       .positive_ranked
-      .where(id: tagged_story_ids)
+      .joins(:tags)
+      .where(tags: {category: categories})
       .order(created_at: :desc)
   }
 

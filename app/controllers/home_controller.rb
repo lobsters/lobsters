@@ -173,7 +173,7 @@ class HomeController < ApplicationController
     raise ActiveRecord::RecordNotFound unless categories.length == category_params.length
 
     @stories, @show_more = get_from_cache(categories: category_params.sort.join(",")) do
-      paginate stories.categories(categories)
+      paginate Story.categories(@user, categories)
     end
 
     @title = categories.map(&:category).join(" ")
@@ -350,10 +350,6 @@ class HomeController < ApplicationController
     else
       tags_filtered_by_cookie.map(&:id)
     end
-  end
-
-  def stories
-    StoryRepository.new(@user, exclude_tags: filtered_tag_ids)
   end
 
   def page

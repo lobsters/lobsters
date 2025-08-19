@@ -648,6 +648,17 @@ describe Story do
     describe "tagged" do
       let(:user) { create :user }
 
+      it "only selects tagged stories" do
+        other_story = create(:story)
+        tag = create(:tag)
+        story = create(:story, user:, title: "A story", tags: [tag])
+
+        tagged = Story.tagged(user, [tag])
+
+        expect(tagged.count).to be 1
+        expect(tagged.first).to eq story
+      end
+
       it "selects unique tagged stories" do
         tag1 = create(:tag)
         tag2 = create(:tag)
@@ -675,6 +686,22 @@ describe Story do
 
       it "raise the ArgumentError exception when inveral unit value is invalid" do
         expect { Story.top(user, dur: 7, intv: "wrong") }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe ".categories" do
+      let(:user) { create :user }
+
+      it "selects unique stories based on categories" do
+        tag1 = create(:tag)
+        tag2 = create(:tag)
+        category = create(:category, tags: [tag1, tag2])
+        story = create(:story, user:, title: "A story", tags: [tag1, tag2])
+
+        stories = Story.categories(user, [category])
+
+        expect(stories.count).to eq 1
+        expect(stories.first).to eq story
       end
     end
   end

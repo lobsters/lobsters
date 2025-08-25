@@ -16,6 +16,9 @@ class ApplicationController < ActionController::Base
   TAG_FILTER_COOKIE = :tag_filters
   CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
 
+  # copied from https://github.com/rack/rack/blob/main/lib/rack/utils.rb
+  VALID_COOKIE_KEY = /\A[!#$%&'*+\-\.\^_`|~0-9a-zA-Z]+\z/
+
   # Rails misdesign: if the /recent route doesn't support .rss, Rails calls it anyways and then
   # raises MissingTemplate when it's not handled, as if the app did something wrong (a prod 500!).
   unless Rails.env.development?
@@ -66,6 +69,7 @@ class ApplicationController < ActionController::Base
       next if key == TAG_FILTER_COOKIE.to_s # don't clear tag filters cookie
       next if key == Rails.application.config.session_options[:key] # don't clear session cookie
       next if key == "__profilin" && (Rails.env.development? || @user&.is_moderator?) # don't clear Rack::MiniProfiler cookie
+      next unless VALID_COOKIE_KEY.match?(key)
       cookies.delete(key)
     end
   end

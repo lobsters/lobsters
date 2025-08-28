@@ -3,6 +3,7 @@
 class ApplicationController < ActionController::Base
   include IntervalHelper
   include Authenticatable
+  include ApplicationHelper
 
   protect_from_forgery
   before_action :heinous_inline_partials, if: -> { Rails.env.development? }
@@ -156,11 +157,5 @@ class ApplicationController < ActionController::Base
 
   def show_title_h1
     @title_h1 = true
-  end
-
-  def tags_filtered_by_cookie
-    @_tags_filtered ||= Tag.where(
-      tag: cookies[TAG_FILTER_COOKIE].to_s.split(",")
-    )
   end
 end

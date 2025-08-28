@@ -92,6 +92,10 @@ a.tag {
 	text-decoration: none;
 	white-space: nowrap;
 }
+a.tag.filtered {
+	border: 1.5px dotted;
+	font-style: italic;
+}
 a.tag_is_media {
 	background-color: var(--color-tag-media-bg);
 	border-color: var(--color-tag-media-border);

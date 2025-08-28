@@ -1,12 +1,12 @@
 <%# locals: (story:, moderation: nil) -%>
 <div class="box"><p>
-  <% if !@user %>
-    Story was removed.
-  <% elsif story.is_moderated? %>
-    <% if moderation %>
-      Story removed by moderator: <%= moderation.reason %>
+  <% if story.is_moderated? %>
+    <% if !@user %>
+      Story was removed by a moderator.
+    <% elsif moderation %>
+      Story removed by a moderator: <%= moderation.reason %>
     <% else %>
-      Story removed by moderator but no log message was found.
+      Story removed by a moderator but no log message was found.
       Please report this bug.
     <% end %>
 

@@ -16,7 +16,7 @@
     <ol class="category_tags">
       <li id="<%= tag.tag %>">
       <% filtered = @filtered_tags.include?(tag.id) %>
-      <%= link_to tag.tag, tag_path(tag), class: tag.css_class %>
+      <%= tag_link tag %>
       <span class="<%= filtered || !tag.active ? 'inactive_tag' : '' %>"><%= tag.description %></span>
       <span class="byline">
       <% if !tag.active %>

@@ -31,6 +31,9 @@ But I make an unprincipled exception for :has because it solves so many big prob
 	--color-shadow-80: rgb(var(--base-shadow) / var(--opacity-shadow-80));
 	--color-shadow-25: rgb(var(--base-shadow) / var(--opacity-shadow-25));
 	--color-shadow-10: rgb(var(--base-shadow) / var(--opacity-shadow-10));
+
+	/* dimensions */
+	--comment-controls-height: 1.2lh;
 }
 
 /* generics */
@@ -813,6 +816,16 @@ div.comment_text {
 	word-wrap: break-word;
 	overflow: hidden;
 }
+.controls {
+	display: flex;
+	flex-flow: row;
+	flex-wrap: wrap;
+	justify-content: start;
+	margin-top: 1rem;
+}
+.controls .buttons, .controls .hats, .controls .markdown_help summary {
+	height: var(--comment-controls-height);
+}
 
 div.comment_text blockquote,
 .markdown_help blockquote,
@@ -915,17 +928,19 @@ div.comment_text code {
 
 
 
-.markdown_help {
-	padding-left: 0.25rem;
+.controls details {
+	margin-left: auto;
 }
-
+#story_box .markdown_help summary {
+	width: calc(7em + 610px);
+}
 .markdown_help summary {
 	color: var(--color-fg-contrast-4-5);
 	font-size: 9pt;
 	text-align: right;
 }
-#story_box .markdown_help summary {
-	width: calc(7em + 610px);
+.controls .markdown_help[open] summary {
+	margin-top: calc(var(--comment-controls-height) * -1);
 }
 
 div#story_preview {
@@ -1266,10 +1281,6 @@ section + section {
 
 section section + section {
 	margin-top: 1.5rem;
-}
-
-input[type="submit"]:not(.link_post) {
-	margin-top: 1rem;
 }
 
 span.hint {

@@ -36,8 +36,15 @@
   <% end %>
 
   <% if @story.is_hidden_by_cur_user %>
-    You have <a href="/about#story-hiding">hidden this.</a> Links to this story and its comments will not be shown elsewhere on the site for you.
+    You have <a href="/about#story-hiding">hidden this</a> story.
+  Links to this story and its comments will not be shown elsewhere on the site for you.
     You can <%= link_post "unhide", story_unhide_path(@story.short_id) %> it to make them visible again.
+  <% end %>
+
+  <% if (matched_filtered_tags = @story.tags & filtered_tags).any? %>
+    This story has <%= matched_filtered_tags.count > 1 ? "tags" : "a tag" %> you filtered.
+    Links to this story and its comments will not be shown elsewhere on the site for you.
+    You can <%= link_to "stop filtering", filters_path %> to make them visible again.
   <% end %>
 </div>
 

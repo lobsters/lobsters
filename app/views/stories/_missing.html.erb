@@ -11,7 +11,7 @@
     <% end %>
 
     <p>
-      (Logged-out visitors only see "Story was removed" because we don't want give trolls a convenient public monument to content that was so bad or bizarre we removed it.)
+      (Logged-out visitors only see "Story was removed" because we don't want to give trolls a convenient public monument to content that was so bad or bizarre we removed it.)
     </p>
   <% else %>
     Story was removed by submitter<% if @user %> <%= link_to story.user.username, user_path(story.user) %><% end %>.

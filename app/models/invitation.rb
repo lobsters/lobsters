@@ -8,7 +8,7 @@ class Invitation < ApplicationRecord
   scope :unused, -> { where(used_at: nil) }
 
   include Token
-  include EmailBlocklistHelper
+  include EmailBlocklistValidation
 
   validate do
     unless /\A[^@ ]+@[^ @]+\.[^ @]+\z/.match?(email.to_s)
@@ -19,8 +19,6 @@ class Invitation < ApplicationRecord
   validates :code, :email, length: {maximum: 255}
   validates :memo, length: {maximum: 375}
 
-  validate :email_blocklist
-
   before_validation :create_code, on: :create
 
   def create_code
@@ -29,12 +27,6 @@ class Invitation < ApplicationRecord
       return unless Invitation.exists?(code: code)
     end
     raise "too many hash collisions"
-  end
-
-  def email_blocklist
-    if email_on_blocklist?(email)
-      errors.add(:email, "disposable emails are blocked")
-    end
   end
 
   def send_email

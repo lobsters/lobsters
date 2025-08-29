@@ -8,7 +8,6 @@ class InvitationRequest < ApplicationRecord
     format: {with: /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/},
     presence: true,
     length: {maximum: 255}
-  validate :email_blocklist
   validates :memo,
     format: {with: Utils::URL_RE},
     length: {maximum: 255}
@@ -16,7 +15,7 @@ class InvitationRequest < ApplicationRecord
   validates :is_verified, inclusion: {in: [true, false]}
 
   include Token
-  include EmailBlocklistHelper
+  include EmailBlocklistValidation
 
   before_validation :create_code
   after_create :send_email
@@ -31,12 +30,6 @@ class InvitationRequest < ApplicationRecord
       return unless InvitationRequest.exists?(code: code)
     end
     raise "too many hash collisions"
-  end
-
-  def email_blocklist
-    if email_on_blocklist?(email)
-      errors.add(:email, "disposable emails are blocked")
-    end
   end
 
   def markeddown_memo

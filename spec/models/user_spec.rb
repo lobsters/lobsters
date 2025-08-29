@@ -41,6 +41,10 @@ describe User do
 
     # address too long
     expect(build(:user, email: "a" * 95 + "@example.com")).to_not be_valid
+
+    # not a disposable email
+    allow(File).to receive(:read).with(FetchEmailBlocklistJob::STORAGE_PATH).and_return("disposable.com")
+    expect(build(:user, email: "user@disposable.com")).to_not be_valid
   end
 
   it "has a limit on the password reset token field" do

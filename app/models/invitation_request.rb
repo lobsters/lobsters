@@ -15,6 +15,7 @@ class InvitationRequest < ApplicationRecord
   validates :is_verified, inclusion: {in: [true, false]}
 
   include Token
+  include EmailBlocklistValidation
 
   before_validation :create_code
   after_create :send_email

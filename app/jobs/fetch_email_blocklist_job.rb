@@ -16,7 +16,7 @@ class FetchEmailBlocklistJob < ApplicationJob
     end
 
     email_blocklist_content = decode_response(response)
-    File.write(STORAGE_PATH, email_blocklist_content)
+    write_blocklist(email_blocklist_content)
   end
 
   private
@@ -47,5 +47,12 @@ class FetchEmailBlocklistJob < ApplicationJob
     return false unless blocklist["type"] == "file"
 
     true
+  end
+
+  def write_blocklist(email_blocklist_content)
+    unless Dir.exist?("storage")
+      Dir.mkdir("storage")
+    end
+    File.write(STORAGE_PATH, email_blocklist_content)
   end
 end

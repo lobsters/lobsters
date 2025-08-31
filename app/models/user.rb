@@ -78,6 +78,7 @@ class User < ApplicationRecord
     s.boolean :email_messages, default: false
     s.boolean :pushover_messages, default: false
     s.boolean :email_mentions, default: false
+    s.boolean :inbox_mentions, default: true
     s.boolean :show_avatars, default: true
     s.boolean :show_email, default: false
     s.boolean :show_story_previews, default: false

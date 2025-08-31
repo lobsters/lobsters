@@ -47,6 +47,35 @@ RSpec.describe NotifyCommentJob, type: :job do
       expect(recipient.notifications.first.notifiable).to eq(c)
     end
 
+    it "creates inbox notification when inbox_mentions is true" do
+      recipient = build(:user)
+      recipient.settings["inbox_mentions"] = true
+      recipient.save!
+
+      sender = create(:user)
+      c = build(:comment, user: sender, comment: "@#{recipient.username}")
+      c.save!
+
+      NotifyCommentJob.perform_now(c)
+
+      expect(recipient.notifications.count).to eq(1)
+      expect(recipient.notifications.first.notifiable).to eq(c)
+    end
+
+    it "does not create inbox notification when inbox_mentions is false" do
+      recipient = build(:user)
+      recipient.settings["inbox_mentions"] = false
+      recipient.save!
+
+      sender = create(:user)
+      c = build(:comment, user: sender, comment: "@#{recipient.username}")
+      c.save!
+
+      NotifyCommentJob.perform_now(c)
+
+      expect(recipient.notifications.count).to eq(0)
+    end
+
     it "also sends mentions with ~username" do
       recipient = build(:user)
       recipient.settings["email_notifications"] = true

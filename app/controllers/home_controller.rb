@@ -246,6 +246,8 @@ class HomeController < ApplicationController
   def for_domain
     @domain = Domain.find_by!(domain: params[:id])
 
+    return render "about/404", status: :not_found if @domain.active_stories_count.zero? && !@user&.is_moderator?
+
     @stories, @show_more = get_from_cache(domain: @domain.domain) do
       paginate @domain.stories.base(@user).order(id: :desc)
     end

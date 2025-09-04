@@ -820,6 +820,7 @@ div.comment_text {
 	display: flex;
 	flex-flow: row;
 	flex-wrap: wrap;
+	gap: 0.5rem;
 	justify-content: start;
 	margin-top: 1rem;
 }

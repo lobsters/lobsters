@@ -14,9 +14,17 @@ class NotifyCommentJob < ApplicationJob
 
   def deliver_mention_notifications(comment, notified)
     to_notify = comment.plaintext_comment.scan(/\B[@~]([\w\-]+)/).flatten.uniq - notified - [comment.user.username]
-    User.active.where(username: to_notify).find_each do |u|
-      u.notifications.create(notifiable: comment)
 
+    # every user gets a Notification, which may be filtered out from those views so that unhiding a
+    # story reveals the notifications
+    to_notify = User.active.where(username: to_notify)
+    to_notify.find_each do |u|
+      u.notifications.create(notifiable: comment)
+    end
+
+    # but there's no recalling an email or pushover, so sending those has to reflect story hiding
+    not_hiding_users = to_notify.left_outer_joins(:hidings).where(hidden_stories: {id: nil})
+    not_hiding_users.find_each do |u|
       if u.email_mentions?
         begin
           EmailReplyMailer.mention(comment, u).deliver_now
@@ -56,8 +64,14 @@ class NotifyCommentJob < ApplicationJob
   def deliver_reply_notifications(comment)
     notified = []
 
-    users_following_thread(comment).each do |u|
+    to_notify = users_following_thread(comment)
+    to_notify.each do |u|
       u.notifications.create(notifiable: comment)
+    end
+
+    hiding_users = HiddenStory.where(story: comment.story).pluck(:user_id)
+    to_notify.each do |u|
+      next if hiding_users.include? u.id
 
       if u.email_replies?
         begin

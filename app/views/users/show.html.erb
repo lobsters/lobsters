@@ -18,9 +18,9 @@
     <span
     <%= @showing_user.is_banned? ? raw("style=\"color: red;\"") : "" %>>
       <% if @showing_user.is_banned? %>
-        Banned user
+        Banned by a moderator
       <% elsif !@showing_user.is_active? %>
-        Inactive user
+        User deactivated own account
       <% else %>
         Active
         <%= @showing_user.is_admin? ? "administrator" :
@@ -57,9 +57,13 @@
     <% end %>
 
     <% if @showing_user.deleted_at? %>
-      <label class="required">Left</label>
+      <label class="required">Deactivated</label>
       <span>
         <%= how_long_ago_label(@showing_user.deleted_at) %>
+        <% if @showing_user.deleted_at <= Time.new(2025, 9, 9) %>
+          <br>
+          (This user deactivated before deactivations were added to the moderation log.)
+        <% end %>
       </span>
     <% end %>
 

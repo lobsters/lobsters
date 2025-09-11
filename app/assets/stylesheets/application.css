@@ -1248,7 +1248,8 @@ label.required {
 
 .labelled_grid textarea,
 .labelled_grid input[type="text"],
-.labelled_grid input[type="password"] {
+.labelled_grid input[type="password"],
+.labelled_grid input[type="email"] {
 	width: 100%;
 	box-sizing: border-box;
 }

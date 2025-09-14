@@ -31,7 +31,14 @@
         <%= f.password_field :password_confirmation, :autocomplete => "off" %>
 
         <%= f.label :email, "E-mail Address", :class => "required" %>
+        <div>
         <%= f.email_field :email, :inputmode => "email" %>
+          <% if EmailBlocklistValidation.email_on_blocklist?(@edit_user.email) %>
+            <div class="hint">
+              We don't send email to disposable email domains; change your email address.
+            </div>    
+          <% end %>
+        </div>
 
         <%= f.label :homepage, "Homepage", :class => "required" %>
         <%= f.url_field :homepage %>

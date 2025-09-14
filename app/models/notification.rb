@@ -25,20 +25,20 @@ class Notification < ApplicationRecord
   def should_display_comment?
     return false unless user_wants_notification?
     return false unless is_high_quality?
-    
+
     true
   end
 
-private
+  private
 
   def user_wants_notification?
     comment = notifiable
-    
+
     # Check if this is a mention notification
     if comment.plaintext_comment.match?(/\B[@~]#{Regexp.escape(user.username)}\b/)
       return user.inbox_mentions?
     end
-    
+
     # For reply notifications, always show (user settings handled elsewhere)
     true
   end

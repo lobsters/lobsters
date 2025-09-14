@@ -15,6 +15,7 @@ class Domain < ApplicationRecord
   validates :selector, length: {maximum: 255}
   validates :replacement, length: {maximum: 255}
   validates :stories_count, numericality: {only_integer: true, greater_than_or_equal_to: 0}, presence: true
+  validates :active_stories_count, numericality: {only_integer: true, greater_than_or_equal_to: 0}, presence: true
 
   validate :valid_selector
 
@@ -108,8 +109,8 @@ class Domain < ApplicationRecord
     banned_at?
   end
 
-  def n_submitters
-    stories.count("distinct user_id")
+  def n_submitters(user)
+    stories.not_deleted(user).count("distinct user_id")
   end
 
   def to_param

@@ -15,9 +15,7 @@ class NotifyCommentJob < ApplicationJob
   def deliver_mention_notifications(comment, notified)
     to_notify = comment.plaintext_comment.scan(/\B[@~]([\w\-]+)/).flatten.uniq - notified - [comment.user.username]
     User.active.where(username: to_notify).find_each do |u|
-      if u.inbox_mentions?
-        u.notifications.create(notifiable: comment)
-      end
+      u.notifications.create(notifiable: comment)
 
       if u.email_mentions?
         begin

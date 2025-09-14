@@ -164,11 +164,20 @@ class LoginController < ApplicationController
         @reset_user.password_reset_token = nil
         @reset_user.roll_session_token
 
+        reactivated = false
         if !@reset_user.is_active? && !@reset_user.is_banned?
           @reset_user.deleted_at = nil
+          reactivated = true
         end
 
         if @reset_user.save && @reset_user.is_active?
+          if reactivated
+            Moderation.create!(
+              moderator: nil,
+              user: @reset_user,
+              action: "reactivated"
+            )
+          end
           if @reset_user.has_2fa?
             flash[:success] = "Your password has been reset."
             redirect_to "/login"

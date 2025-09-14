@@ -11,7 +11,7 @@ class SettingsController < ApplicationController
     @edit_user = @user.dup
   end
 
-  def delete_account
+  def deactivate
     unless params[:user][:i_am_sure] == "1"
       flash[:error] = 'You did not check the "I am sure" checkbox.'
       return redirect_to settings_path
@@ -21,14 +21,17 @@ class SettingsController < ApplicationController
       return redirect_to settings_path
     end
 
+    disown = params[:user][:disown] == "1"
     @user.delete!
-    disown_text = ""
-    if params[:user][:disown] == "1"
-      disown_text = " and disowned your stories and comments."
-      InactiveUser.disown_all_by_author! @user
-    end
+    InactiveUser.disown_all_by_author!(@user) if disown
+
+    Moderation.create!(
+      moderator: nil,
+      user: @user,
+      action: "deactivated#{disown ? ", disowning their stories and comments" : nil}"
+    )
     reset_session
-    flash[:success] = "You have deleted your account#{disown_text}. Bye."
+    flash[:success] = "You have deleted your account#{disown ? " and disowned your stories and comments." : nil}. Bye."
     redirect_to "/"
   end
 

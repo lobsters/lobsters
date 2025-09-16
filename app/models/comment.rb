@@ -32,6 +32,9 @@ class Comment < ApplicationRecord
   attr_accessor :current_vote, :current_reply, :previewing, :vote_summary
 
   before_validation :assign_initial_attributes, on: :create
+  after_create :create_fts
+  after_update :update_fts
+  after_destroy :destroy_fts
   after_destroy :unassign_votes
   # Calling :record_initial_upvote from after_commit instead of after_create minimizes how many
   # queries happen inside the transaction, which seems to be the cause of bug #1238.
@@ -83,6 +86,10 @@ class Comment < ApplicationRecord
       .by(user).arel.exists
     ) : where("true")
   }
+  scope :search, ->(query) {
+    joins("join comments_fts idx on comments.id = idx.rowid")
+      .where("comments_fts match ?", query)
+  }
 
   FLAGGABLE_DAYS = 7
   DELETEABLE_DAYS = FLAGGABLE_DAYS * 2
@@ -96,11 +103,7 @@ class Comment < ApplicationRecord
   # after this many minutes old, a comment cannot be edited
   MAX_EDIT_MINS = (60 * 6)
 
-  # story_threads builds a confidence_order_path in SQL this many characters long:
-  # the longest reply chain in prod data is 31 comments (so, depth 30) * 3b confidence_order
-  COP_LENGTH = 31 * 3
-  # Stop accepting replies this deep. Recursive CTE requires a fixed max (COP_LENGTH),
-  # but in practice all deep reply chains have gone off-topic and/or tuned into flamewars.
+  # Stop accepting replies this deep. In practice all deep reply chains have gone off-topic and/or tuned into flamewars.
   MAX_DEPTH = 18
 
   SCORE_RANGE_TO_HIDE = (-2..4)
@@ -322,6 +325,13 @@ class Comment < ApplicationRecord
     Markdowner.to_html(comment)
   end
 
+  def self.confidence_order(confidence, id)
+    first_two_bytes = [65535 - (confidence * 65535).floor].pack("n")
+    last_byte = [id & 0xff].pack("C")
+
+    "#{first_two_bytes}#{last_byte}".unpack1("H*")
+  end
+
   # TODO: race condition: if two votes arrive at the same time, the second one
   # won't take the first's score change into effect for calculated_confidence
   def update_score_and_recalculate!(score_delta, flag_delta)
@@ -340,14 +350,15 @@ class Comment < ApplicationRecord
     # assigned sequentially, mostly the tiebreaker sorts earlier comments sooner. We average ~200
     # comments per weekday so seeing rollover between sibling comments is rare. Importantly, even
     # when it is 'wrong', it gives a stable sort.
-    Comment.connection.execute <<~SQL
+    update_query = <<~SQL
       UPDATE comments SET
         score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),
         flags = (select count(*) from votes where comment_id = comments.id and vote = -1),
-        confidence = #{new_confidence},
-        confidence_order = concat(lpad(char(65535 - floor(#{new_confidence} * 65535) using binary), 2, '\0'), char(id & 0xff using binary))
-      WHERE id = #{id.to_i}
+        confidence = ?,
+        confidence_order = unhex(?)
+      WHERE id = ?
     SQL
+    Comment.connection.exec_update(update_query, nil, [new_confidence, Comment.confidence_order(new_confidence, id), id])
     story.update_cached_columns
   end
 
@@ -525,6 +536,20 @@ class Comment < ApplicationRecord
     story.update_cached_columns
   end
 
+  def create_fts
+    ActiveRecord::Base.connection.exec_insert("INSERT INTO comments_fts (rowid, comment) values (?, ?)", nil, [id, comment])
+  end
+
+  def update_fts
+    if saved_change_to_attribute(:comment)
+      ActiveRecord::Base.connection.exec_update("UPDATE comments_fts set comment = ? where rowid = ?", nil, [comment, id])
+    end
+  end
+
+  def destroy_fts
+    ActiveRecord::Base.connection.exec_delete("DELETE FROM comments_fts where rowid = ?", nil, [id])
+  end
+
   def validate_commenter_hasnt_flagged_parent
     if parent_comment && Vote.where(user: user, vote: -1, comment: parent_comment).exists?
       errors.add(:base, "You've flagged that comment for the mods, so you can leave it for the mods.")
@@ -575,65 +600,12 @@ class Comment < ApplicationRecord
       .pluck(:thread_id)
     return Comment.none if thread_ids.empty?
 
-    Comment
-      .joins(<<~SQL
-        inner join (
-          with recursive discussion as (
-          select
-            c.id,
-            cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
-            from comments c
-            where
-              thread_id in (#{thread_ids.join(", ")}) and
-              parent_comment_id is null
-          union all
-          select
-            c.id,
-            cast(concat(
-              left(discussion.confidence_order_path, 3 * (depth + 1)),
-              c.confidence_order
-            ) as char(#{Comment::COP_LENGTH}) character set binary)
-          from comments c join discussion on c.parent_comment_id = discussion.id
-          )
-          select * from discussion as comments
-        ) as comments_recursive on comments.id = comments_recursive.id
-      SQL
-            )
-      .order("comments.thread_id desc, comments_recursive.confidence_order_path")
+    Comment.where(thread_id: thread_ids)
   end
 
-  # select in thread order with preloading for _comment.html.erb
-  # eventually confidence_order_path can go away: https://modern-sql.com/caniuse/search_(recursion)
   def self.story_threads(story)
     return Comment.none unless story.id # unsaved Stories have no comments
 
-    # If the story_ids predicate is in the outer select the query planner doesn't push it down into
-    # the recursive CTE, so that subquery would build the tree for the entire comments table.
-    Comment
-      .joins(<<~SQL
-        inner join (
-          with recursive discussion as (
-          select
-            c.id,
-            cast(confidence_order as char(#{Comment::COP_LENGTH}) character set binary) as confidence_order_path
-            from comments c
-            join stories on stories.id = c.story_id
-            where
-              (stories.id = #{story.id} or stories.merged_story_id = #{story.id}) and
-              parent_comment_id is null
-          union all
-          select
-            c.id,
-            cast(concat(
-              left(discussion.confidence_order_path, 3 * (depth + 1)),
-              c.confidence_order
-            ) as char(#{Comment::COP_LENGTH}) character set binary)
-          from comments c join discussion on c.parent_comment_id = discussion.id
-          )
-          select * from discussion as comments
-        ) as comments_recursive on comments.id = comments_recursive.id
-      SQL
-            )
-      .order("comments_recursive.confidence_order_path")
+    Comment.joins(:story).where(story: {id: story.id}).or(Comment.where(story: {merged_story_id: story.id}))
   end
 end

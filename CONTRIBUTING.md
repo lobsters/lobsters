@@ -31,7 +31,7 @@ Do not submit code written by LLM-powered coding tools because of the [uncertain
 While this project's license allows for modification and use to run your own website,
 this source code repository is specifically for the code running the website at [lobste.rs](https://lobste.rs/).
 
-We're very deliberate about new features and behavior changes because they have difficult-to-forsee social effects or maintenance costs.
+We're very deliberate about new features and behavior changes because they have difficult-to-foresee social effects or maintenance costs.
 If you have ideas, please come discuss them on [/t/meta](https://lobste.rs/t/meta),
 in [the chat room](https://lobste.rs/chat),
 or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid wasted effort.

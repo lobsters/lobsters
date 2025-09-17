@@ -71,7 +71,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
     ```
 
 * Run the Rails server in development mode.
-  You should be able to login to `http://localhost:3000` with your new `test` user:
+  You should be able to login to `http://localhost:3000` with your new `test` user (with password `test`):
 
     ```sh
     lobsters$ rails server

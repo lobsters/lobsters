@@ -41,6 +41,16 @@ We have a [Docker setup guide](./docs/setup_with_docker.md) if you use that for 
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
 ```
 
+* Add the username and password to `config/database.yml`. `primary` under both `development` and `test` should look like this:
+
+```
+  primary:
+    <<: *trilogy
+    database: lobsters_development
+    username: root
+    password: localdev
+```
+
 * Install the Ruby version specified in [.ruby-version](https://github.com/lobsters/lobsters/blob/main/.ruby-version)
 
 * Checkout the lobsters git tree from Github

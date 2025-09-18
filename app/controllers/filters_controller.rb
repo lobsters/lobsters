@@ -15,11 +15,7 @@ class FiltersController < ApplicationController
     @story_counts = Tagging.group(:tag_id).count
     @filter_counts = TagFilter.group(:tag_id).count
 
-    @filtered_tags = if @user
-      @user.tag_filter_tags.index_by(&:id)
-    else
-      tags_filtered_by_cookie.index_by(&:id)
-    end
+    @filtered_tags = filtered_tags.index_by(&:id)
   end
 
   def update

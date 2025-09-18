@@ -78,7 +78,9 @@
 
 Please don't use this to promote the story, summarize the post, or explain why you posted it.
 See the guidelines below for more." %>
+    <%= render :partial => "global/markdownhelp", :locals => { allow_images: @story.can_have_images? } %>
     </div>
+
 
     <%= tag.details class: "boxline actions", open: show_guidelines?(@user) ? true : nil do %>
       <summary>Story submission guidelines</summary>
@@ -109,9 +111,8 @@ See the guidelines below for more." %>
         </p></li>
 
         <li><p>
-        If no <a href="/tags">tags</a> clearly apply to the story you are submitting, chances
-        are it does not belong here.  Do not overreach with tags if they
-        are not the primary focus of the story.
+          If no <a href="/tags">tags</a> clearly apply to the story you are submitting, chances are it does not belong here.
+          There's a <a href="/about#topicality">topicality guideline</a> and you can skim the <a href="/moderations?moderator=%28All%29&what%5Bstories%5D=stories">modlog</a> for example removals.
         </p></li>
 
         <li><p>

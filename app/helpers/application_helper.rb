@@ -78,6 +78,16 @@ module ApplicationHelper
     parsed.to_html
   end
 
+  def filtered_tags
+    @_filtered_tags ||= if @user
+      @user.tag_filter_tags
+    else
+      Tag.where(
+        tag: cookies[ApplicationController::TAG_FILTER_COOKIE].to_s.split(",")
+      )
+    end
+  end
+
   def inline_avatar_for(viewer, user)
     if !viewer || viewer.show_avatars?
       link_to avatar_img(user, 16), user_path(user)
@@ -89,7 +99,7 @@ module ApplicationHelper
   def link_to_different_page(text, path, options = {})
     current = request.path.sub(/\/page\/\d+$/, "")
     path.sub!(/\/page\/\d+$/, "")
-    options[:class] = :current_page if current == path
+    options[:class] = class_names(options[:class], current_page: current == path)
     link_to text, path, options
   end
 
@@ -159,7 +169,10 @@ module ApplicationHelper
   end
 
   def tag_link(tag)
-    link_to tag.tag, tag_path(tag), class: tag.css_class, title: tag.description
+    link_to tag.tag,
+      tag_path(tag),
+      class: [tag.css_class, filtered_tags.include?(tag) ? "filtered" : nil],
+      title: tag.description
   end
 
   def how_long_ago_label(time)

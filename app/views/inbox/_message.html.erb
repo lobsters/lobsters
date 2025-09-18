@@ -1,0 +1,19 @@
+<div class="message">
+  <div class="voters <%= 'comment_unread' if is_unread %>">✉</div>
+  <div class="details">
+    <div class="byline">
+      <% if message.author %>
+        <%= inline_avatar_for @user, message.author %> <%= styled_user_link message.author %>
+      <% else %>
+        <%= message.author_username %>
+      <% end %>
+      <a href="/messages/<%= message.short_id %>"><%= how_long_ago_label(message.created_at) %></a>
+      <% if is_unread %><span class='comment_unread'>(unread)</span><% end %>
+      |
+      <span class="message-subject"><a href="/messages/<%= message.short_id %>">Subject: <%= message.subject %></a></span>
+    </div>
+    <div class="message-body">
+      <%= raw message.linkified_body %>
+    </div>
+  </div>
+</div>

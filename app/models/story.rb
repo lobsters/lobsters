@@ -74,6 +74,40 @@ class Story < ApplicationRecord
       .positive_ranked
       .order(:hotness)
   }
+
+  scope :tagged, ->(user, tags) {
+    base(user)
+      .positive_ranked
+      .where(
+        Tagging
+          .where("story_id = stories.id")
+          .where(tag_id: tags)
+          .arel.exists
+      )
+      .order(created_at: :desc)
+  }
+
+  scope :top, ->(user, length) {
+    raise ArgumentError, "Invalid interval" unless IntervalHelper::TIME_INTERVALS.value?(length[:intv].capitalize)
+
+    top = base(user)
+      .where("created_at >= (NOW() - INTERVAL ? #{length[:intv].upcase})", length[:dur])
+    top.order(score: :desc)
+  }
+
+  scope :categories, ->(user, categories) {
+    base(user)
+      .positive_ranked
+      .where(
+        Tagging
+          .joins(:tag)
+          .where("story_id = stories.id")
+          .where(tag: {category_id: categories})
+          .arel.exists
+      )
+      .order(created_at: :desc)
+  }
+
   scope :recent, ->(user = nil, exclude_tags = nil, unmerged: true) {
     base(user, unmerged: unmerged).not_hidden_by(user)
       .filter_tags(exclude_tags || [])
@@ -148,6 +182,14 @@ class Story < ApplicationRecord
       .order(:hotness)
   }
 
+  scope :newest_by_user, ->(user, submitter) {
+    where(user: submitter)
+      .includes(:tags)
+      .not_deleted(user)
+      .mod_preload?(user)
+      .order(id: :desc)
+  }
+
   include Token
 
   validates :title, length: {in: 3..150}, presence: true
@@ -206,7 +248,7 @@ class Story < ApplicationRecord
 
   validate do
     if url.present?
-      already_posted_recently?
+      check_already_posted_recently?
       check_not_banned_domain
       check_not_banned_origin
       check_not_new_domain_from_new_user
@@ -226,7 +268,7 @@ class Story < ApplicationRecord
     if title.match(GRAPHICS_RE)
       errors.add(:title, " may not contain emoji, dingbats, or other graphics")
     end
-    if !title.empty? && title == title.upcase
+    if !title.empty? && title.ascii_only? && title == title.upcase
       errors.add(:title, " doesn't need to scream, ASCII has supported lowercase since June 17, 1963.")
     end
 
@@ -251,13 +293,21 @@ class Story < ApplicationRecord
     return false unless url.present? && new_record?
 
     if most_recent_similar&.is_recent?
-      errors.add(:url, "has already been submitted within the past #{RECENT_DAYS} days")
       true
     elsif user&.is_new? && most_recent_similar
-      errors.add(:url, "cannot be resubmitted by new users")
       true
     else
       false
+    end
+  end
+
+  def check_already_posted_recently?
+    return unless url.present? && new_record?
+
+    if most_recent_similar&.is_recent?
+      errors.add(:url, "has already been submitted within the past #{RECENT_DAYS} days")
+    elsif user&.is_new? && most_recent_similar
+      errors.add(:url, "cannot be resubmitted by new users")
     end
   end
 
@@ -734,6 +784,8 @@ class Story < ApplicationRecord
         else
           "unmerged from another story"
         end
+      elsif v[0].is_a?(String) && v[1].is_a?(String) && v[0].present? && v[1].blank?
+        "blanked #{k} from #{v[0].inspect}"
       else
         "changed #{k} from #{v[0].inspect} to #{v[1].inspect}"
       end

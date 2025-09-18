@@ -440,10 +440,11 @@ export class _LobstersFunction {
         qS(li, '.reason').innerHTML = '';
       };
 
-      if (action == "unvote" && point < 0)
+      if (action == "unvote" && point < 0) {
         qS(li, '.flagger').textContent = 'flag';
       } else if (action == "flag") {
         qS(li, '.flagger').textContent = 'unflag';
+      }
     }
 
     fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + action, {
@@ -534,10 +535,6 @@ onPageLoad(() => {
 
   // Global
 
-  on('click', '.markdown_help_label', (event) => {
-    qS(parentSelector(event.target, '.markdown_help_toggler'), '.markdown_help').classList.toggle('display-block');
-  });
-
   on('click', '#modal_backdrop', () => {
     Lobster.removeFlagModal()
   });
@@ -617,7 +614,7 @@ onPageLoad(() => {
 
   on('focusout', '#story_url', () => {
     let url_tags = {
-      "\.pdf$": "pdf",
+      "\.pdf($|\\?|#)": "pdf",
       "[\/\.](asciinema\.org|(youtube|vimeo)\.com|youtu\.be|twitch.tv)\/": "video",
       "[\/\.](slideshare\.net|speakerdeck\.com)\/": "slides",
       "[\/\.](soundcloud\.com)\/": "audio",

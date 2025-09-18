@@ -5,7 +5,7 @@ require "silencer/rails/logger"
 
 Rails.application.configure do
   config.lograge.formatter = Lograge::Formatters::Json.new
-  config.lograge.logger = ActiveSupport::Logger.new(Rails.env.production? ? "/home/deploy/lobsters/shared/log/action.log" : $stdout, skip_header: true)
+  config.lograge.logger = ActiveSupport::Logger.new(Rails.env.production? ? Rails.root.join("log/action.log") : $stdout, skip_header: true)
 
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
   config.lograge.custom_options = lambda do |event|

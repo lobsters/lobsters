@@ -1,4 +1,4 @@
-<%# locals: (thread:, story: nil, ribbon: nil) -%>
+<%# locals: (thread:, story: nil, ribbon: nil, read_by_notifications: [], show_folder_control: true) -%>
 <% previous_depth = nil %>
 <% top_comment_depth = nil %>
 <%# open list of threads %>
@@ -37,12 +37,12 @@
       show_story ||= story.try(:id) != comment.story_id
       # show merge icon only on story page when merged
       was_merged = story && (story.id != comment.story_id)
-      is_unread = ribbon&.is_unread?(comment)
+      is_unread = ribbon&.is_unread?(comment) && @read_by_notifications.exclude?(comment.id)
     %>
 
 <%#heinous_inline_partial(comments/_comment.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
-<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false) -%>
+<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false, show_folder_control: true) -%>
 <%
   # partial inputs:
   # force_open: this comment is allowed to collapse
@@ -50,6 +50,7 @@
   # show_story: show "on: story title" end of byline
   # was_merged: show merged icon start of byline
   # is_unread: show (unread) in byline
+  # show_folder_control: whether to display the control to hide the comment
 %>
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
@@ -59,7 +60,10 @@
 
       <% can_flag = @user && @user.can_flag?(comment) %>
       <% score_display = comment.score_for_user(@user) %>
-      <div class="comment_parent_tree_line
+      <% draw_tree_line = comment.reply_count > 0 %>
+
+      <div class="
+        <%= draw_tree_line ? "comment_parent_tree_line" : "" %>
         <%= can_flag ? "can_flag" : "" %>
         <%= score_display != "&nbsp;" ? "score_shown" : "" %>
       "></div>
@@ -68,11 +72,14 @@
   class="comment
     <%= comment.current_upvoted? ? "upvoted" : "" %>
     <%= comment.current_flagged? ? "flagged" : "" %>
+    <%= comment.current_reply ? "replied" : "" %>
     <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
   ">
 
   <div class="voters">
-    <label for="comment_folder_<%= comment.short_id %>" class="comment_folder"></label>
+    <% if show_folder_control %>
+      <label for="comment_folder_<%= comment.short_id %>" class="comment_folder"></label>
+    <% end %>
     <% if !comment.is_gone? %>
       <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
     <% elsif @user&.is_moderator? %>
@@ -93,7 +100,7 @@
         <%= styled_user_link comment.user, comment %>
 
         <% if comment.hat %>
-          <%= comment.hat.to_html_label %>
+          <%= styled_hat(comment.hat) %>
         <% end %>
 
         <% if comment.previewing %>
@@ -148,8 +155,8 @@
         <% end %>
 
         <% if @user && !comment.is_gone? && comment.story.accepting_comments? %>
-            |
-            <a class="comment_replier" unselectable="on" href="<%= reply_comment_path(comment) %>">reply</a>
+          |
+          <a class="comment_replier" unselectable="on" href="<%= reply_comment_path(comment) %>">reply</a>
         <% end %>
 
         <% if show_story %>
@@ -191,11 +198,6 @@
 
 <%#/heinous_inline_partial(comments/_comment.html.erb)%>
 
-    <%
-    #  If you edit this structure, update the incredibly brittle css selector
-    #    li.comments_subtree > .comment:nth-last-of-type(2) .comment_parent_tree_line
-    #  (or refactor the whole parent/sibling lines implementation)
-    %>
     <% if comment.depth != top_comment_depth %>
       <div class="comment_siblings_tree_line"></div>
     <% end %>

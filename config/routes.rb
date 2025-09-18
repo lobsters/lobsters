@@ -30,19 +30,19 @@ Rails.application.routes.draw do
   get "/upvoted", to: redirect("/upvoted/stories")
   get "/upvoted/page/:page", to: redirect("/upvoted/stories/page/%{page}")
 
-  get "/top/rss" => "home#top", :format => "rss"
+  get "/top(/:length)/rss" => "home#top", :format => "rss"
   get "/top(/:length(/page/:page))" => "home#top", :as => "top"
 
   get "/threads" => "comments#user_threads"
 
-  get "/replies" => "replies#all"
-  get "/replies/page/:page" => "replies#all"
-  get "/replies/comments" => "replies#comments"
-  get "/replies/comments/page/:page" => "replies#comments"
-  get "/replies/stories" => "replies#stories"
-  get "/replies/stories/page/:page" => "replies#stories"
-  get "/replies/unread" => "replies#unread"
-  get "/replies/unread/page/:page" => "replies#unread"
+  get "/replies", to: redirect("/inbox/all")
+  get "/replies/page/:page", to: redirect("/inbox/all")
+  get "/replies/comments", to: redirect("/inbox/all")
+  get "/replies/comments/page/:page", to: redirect("/inbox/all")
+  get "/replies/stories", to: redirect("/inbox/all")
+  get "/replies/stories/page/:page", to: redirect("/inbox/all")
+  get "/replies/unread", to: redirect("/inbox/unread")
+  get "/replies/unread/page/:page", to: redirect("/inbox/unread")
 
   get "/login" => "login#index"
   post "/login" => "login#login"
@@ -140,6 +140,8 @@ Rails.application.routes.draw do
   end
 
   get "/inbox" => "inbox#index"
+  get "/inbox/all(/page/:page)" => "inbox#all", :as => "inbox_all"
+  get "/inbox/unread" => "inbox#unread"
 
   get "/c/:id.json" => "comments#show_short_id", :format => "json"
   get "/c/:id" => "comments#redirect_from_short_id", :as => "comment_short_id"
@@ -177,8 +179,7 @@ Rails.application.routes.draw do
 
   get "/settings" => "settings#index"
   post "/settings" => "settings#update"
-  post "/settings/delete_account" => "settings#delete_account",
-    :as => "delete_account"
+  post "/settings/deactivate" => "settings#deactivate", :as => "deactivate"
   get "/settings/2fa" => "settings#twofa", :as => "twofa"
   post "/settings/2fa_auth" => "settings#twofa_auth", :as => "twofa_auth"
   get "/settings/2fa_enroll" => "settings#twofa_enroll",
@@ -244,14 +245,15 @@ Rails.application.routes.draw do
   get "/moderations/page/:page" => "moderations#index"
   get "/moderators" => "users#tree", :moderators => true
 
-  get "/mod" => "mod#index"
-  get "/mod/flagged_stories/:period" => "mod#flagged_stories", :as => "mod_flagged_stories"
-  get "/mod/flagged_comments/:period" => "mod#flagged_comments", :as => "mod_flagged_comments"
-  get "/mod/commenters/:period" => "mod#commenters", :as => "mod_commenters"
-  get "/mod/notes(/:period)" => "mod_notes#index", :as => "mod_notes"
-  post "/mod/notes" => "mod_notes#create"
-
   namespace :mod do
+    get "/" => "activities#index", :as => "mod_activity"
+    get "flagged_stories/:period" => "flagged#flagged_stories", :as => "flagged_stories"
+    get "flagged_comments/:period" => "flagged#flagged_comments", :as => "flagged_comments"
+    get "commenters/:period" => "flagged#commenters", :as => "commenters"
+
+    get "notes(/:period)", to: redirect("/mod/")
+    post "notes" => "notes#create"
+
     resources :reparents, only: [:new, :create]
     resources :stories, only: [:edit, :update] do
       patch "undelete"
@@ -268,6 +270,4 @@ Rails.application.routes.draw do
   get "/stats" => "stats#index"
 
   get "/cabinet" => "cabinet#index"
-
-  post "/csp-violation-report" => "csp#violation_report"
 end

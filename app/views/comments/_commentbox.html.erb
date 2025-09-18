@@ -38,40 +38,25 @@
       :placeholder => (@user ? "" : "You must be logged in to leave a comment.")
     %>
 
-    <p></p>
-
-    <div class="markdown_help_toggler">
-      <% if @user %>
-        <div class="markdown_help_label">
-          Markdown formatting available
-        </div>
-        <div class="markdown_help_label markdown_help_label_mobile"
-        style="display: none;">
-          [M&darr;]
-        </div>
-      <% end %>
-
-      <%= f.submit "#{comment.new_record?? "Post" : "Update"}",
-        :class => "comment-post", :disabled => !@user %>
-      &nbsp;
-      <%= f.button "Preview", :class => "comment-preview",
-        :type => "button", :disabled => !@user %>
-      <% if comment.persisted? || comment.parent_comment_id %>
+    <div class="controls">
+      <div class="buttons">
+        <%= f.submit "#{comment.new_record?? "Post" : "Update"}", :class => "comment-post", :disabled => !@user %>
         &nbsp;
-        <%= f.button "Cancel", :class => "comment-cancel",
-          :type => "button" %>
-      <% end %>
+        <%= f.button "Preview", :class => "comment-preview", :type => "button", :disabled => !@user %>
+        <% if comment.persisted? || comment.parent_comment_id %>
+          &nbsp;
+          <%= f.button "Cancel", :class => "comment-cancel", :type => "button" %>
+        <% end %>
+      </div>
 
       <% if @user && @user.wearable_hats.any? %>
-        <div style="display: inline-block; margin-left: 1em;">
-        Put on hat:
-        <%= f.select "hat_id",
-          options_from_collection_for_select(@user.wearable_hats, "short_id", "hat",
-          comment.hat&.short_id), :include_blank => true %>
+        <div class="hats">
+          Put on hat:
+          <%= f.select "hat_id",
+            options_from_collection_for_select(@user.wearable_hats, "short_id", "hat",
+            comment.hat&.short_id), :include_blank => true %>
         </div>
       <% end %>
-
-      <div style="clear: both;"></div>
 
       <% if @user %>
         <%= render :partial => "global/markdownhelp" %>
@@ -80,8 +65,8 @@
   </div>
 
   <p></p>
-
-  <%# placeholder to render preview into %>
-  <%= render partial: 'comments/preview', locals: { comment: show_comment } %>
 <% end %>
+
+<%# placeholder to render preview into %>
+<%= render partial: 'comments/preview', locals: { comment: show_comment } %>
 </div>

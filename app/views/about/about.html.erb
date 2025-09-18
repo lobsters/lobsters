@@ -169,7 +169,7 @@
   Per-tag <a href="/filters">hotness modifiers</a> affect all stories with those tags;
   these modifiers (and <a href="https://lobste.rs/moderations?moderator=(All)&what[tags]=tags">changes</a> to them) are public.
   Domains used for marketing analytics are banned and tracking parameters are removed from links
-  (look for <tt>utm_</tt> in <a href="https://github.com/lobsters/lobsters/blob/master/app/models/story.rb">story.rb</a>).
+  (look for <tt>utm_</tt> in <a href="https://github.com/lobsters/lobsters/blob/main/app/models/story.rb">story.rb</a>).
   </p>
 
   <div id="flags">
@@ -223,14 +223,14 @@
   The <a href="https://github.com/lobsters/lobsters">source code to this site</a> and
   its <a href="https://github.com/lobsters/lobsters-ansible">provisioning and deployment</a> are
   made available under a 3-clause BSD license for viewing, auditing, forking, or contributing to.
-  The codebase is used to run a dozen or so sister sites (that we know of) and we <a href="https://github.com/lobsters/lobsters/wiki">keep a list</a>;
+  The codebase is used to run a dozen or so sister sites (that we know of) and we <a href="https://github.com/lobsters/lobsters/blob/main/sister_sites.md">keep a list</a>;
   please get in touch if you've launched one.
   </p>
 
   <p id="queries">
   The Lobsters community is in a sweet spot that it's large enough to be worth asking questions about and small enough the answers make sense.
   We have <a href="/stats">some basic stats</a> available,
-  and Peter is happy to run queries against the <a href="https://github.com/lobsters/lobsters/blob/master/db/schema.rb">database</a> and Rails/MySQL/nginx logs (but not write them for you),
+  and Peter is happy to run queries against the <a href="https://github.com/lobsters/lobsters/blob/main/db/schema.rb">database</a> and Rails/MySQL/nginx logs (but not write them for you),
   as long as they don't reveal personal info like IPs, browsing, and voting or create “worst-of” leaderboards celebrating most-flagged users/comments/stories.
   </p>
 
@@ -349,7 +349,7 @@
   a <tt>s-1vcpu-1gb</tt> for the <a href="/chat">IRC bot</a>.
   DNS is hosted at <a href="https://dnsimple.com/">DNSimple</a> and
   we use <a href="https://restic.net/">restic</a> for backups to <a href="https://www.backblaze.com/b2">b2</a>.
-  (Setup details are available in our <a href="https://github.com/lobsters/lobsters-ansible">ansible repo</a>.)
+  Our servers are provisioned/deployed with <a href="https://hatchbox.io">Hatchbox</a> and our config is <a href="https://github.com/lobsters/lobsters/tree/main/hatchbox">in our repo</a>.
   Lobsters is cheap to run, so we <a href="https://lobste.rs/s/95uler/would_there_be_interest_patreon_for#c_9l58ia">don't</a> <a href="https://lobste.rs/s/udj6qf/hosting_update#c_jgro9y">take</a> donations.
   </p></li>
 
@@ -361,7 +361,7 @@
 
   <li id="emoji" style="list-style: '🦞';">
   <p>
-  <a href="https://unicode.org/consortium/adopted-characters.html#s1f99E">Sponsor of the lobster emoji</a>:
+  <a href="https://aac.unicode.org/sponsors#silver-1f99e">Sponsor of the lobster emoji</a>:
   In February 2018, Lobsters <a href="https://lobste.rs/s/pnysdr/lobsters_emoji_adoption">held a fundraiser</a>
   to officially adopt the new lobster emoji in support of the Unicode Foundation.
   </p></li>

@@ -22,7 +22,7 @@
         @user.wearable_hats.map{|h| [h.hat, { 'data-modnote' => h.modlog_use }, h.short_id] }
       ) %>
       <% if @user.is_moderator? %>
-        <%= f.label :mod_note, 'ModNote', class: 'normal for_checkbox' %>
+        <%= f.label :mod_note, 'ModNote 🔑', class: 'normal for_checkbox' %>
         <%= f.check_box 'mod_note', class: 'normal' %>
       <% end %>
     <% end %>

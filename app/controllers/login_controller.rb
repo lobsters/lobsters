@@ -18,6 +18,7 @@ class LoginController < ApplicationController
   before_action :require_no_user_or_redirect,
     only: [:index, :login, :forgot_password, :reset_password]
   before_action :show_title_h1
+  skip_after_action :clear_session_cookie
 
   def logout
     if @user
@@ -127,19 +128,19 @@ class LoginController < ApplicationController
 
     if !@found_user
       flash.now[:error] = "Unknown e-mail address or username."
-      return forgot_password
+      render :forgot_password and return
     end
 
     if @found_user.is_banned?
       flash.now[:error] = "Your account has been banned."
-      return forgot_password
+      render :forgot_password and return
     end
 
     if @found_user.is_wiped?
       flash.now[:error] = "It's not possible to reset your password " \
         "because your account was deleted before the site changed admins " \
         "and your email address was wiped for privacy."
-      return forgot_password
+      render :forgot_password and return
     end
 
     @found_user.initiate_password_reset_for_ip(request.remote_ip)
@@ -163,11 +164,20 @@ class LoginController < ApplicationController
         @reset_user.password_reset_token = nil
         @reset_user.roll_session_token
 
+        reactivated = false
         if !@reset_user.is_active? && !@reset_user.is_banned?
           @reset_user.deleted_at = nil
+          reactivated = true
         end
 
         if @reset_user.save && @reset_user.is_active?
+          if reactivated
+            Moderation.create!(
+              moderator: nil,
+              user: @reset_user,
+              action: "reactivated"
+            )
+          end
           if @reset_user.has_2fa?
             flash[:success] = "Your password has been reset."
             redirect_to "/login"

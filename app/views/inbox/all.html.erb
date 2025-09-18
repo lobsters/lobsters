@@ -1,0 +1,41 @@
+<%= render partial: 'messages/subnav' %>
+
+<%= possible_flag_warning(@user, @user) %>
+
+<% if @notifications.present? %>
+  <ol class="comments comments1 notifications">
+    <% @notifications.filter { |n| n.good_faith? }.each do |notification| %>
+      <% case notification.notifiable %>
+      <% when Comment %>
+      <% comment = notification.notifiable %>
+        <li class="comments_subtree">
+          <%= render "comments/comment", comment: comment, show_story: true, is_unread: notification.read_at.nil?, show_tree_lines: false, show_folder_control: false %>
+          <ol class="comments"></ol>
+        </li>
+      <% when Message %>
+      <% message = notification.notifiable %>
+        <li class="comments_subtree">
+          <%= render "message", message: message, is_unread: notification.read_at.nil? %>
+        </li>
+      <% end %>
+    <% end %>
+  </ol>
+<% else %>
+  <p class="help">No notifications to show.</p>
+<% end %>
+
+<% if @has_more || (@page && @page > 1)%>
+  <div class="morelink">
+    <% if @page && @page > 1 %>
+      <a href="/notifications<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt; Page <%= @page - 1 %></a>
+    <% end %>
+
+    <% if @has_more %>
+      <% if @page && @page > 1 %>
+        |
+      <% end %>
+
+      <a href="/notifications/page/<%= @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
+    <% end %>
+  </div>
+<% end %>

@@ -51,11 +51,8 @@ class Domain < ApplicationRecord
   def update_origins
     return unless saved_change_to_selector? || saved_change_to_replacement?
 
-    # only happens for rare, manual mod edits
-    Prosopite.pause do
-      stories.find_each do |story|
-        story.update_column(:origin_id, story.domain.find_or_create_origin(story.url)&.id)
-      end
+    stories.find_each do |story|
+      story.update_column(:origin_id, story.domain.find_or_create_origin(story.url)&.id)
     end
   end
 

@@ -163,8 +163,8 @@ class StoriesController < ApplicationController
       end
     end
 
-    @user.try(:clear_unread_replies!)
     @comments = Comment.story_threads(@story).for_presentation
+    @read_by_notifications = @user ? Comment.where(story_id: [@story.id] + @story.merged_stories.pluck(:id)).where(id: @user.notifications.read.of_comments) : []
 
     @title = @story.title
 
@@ -341,7 +341,7 @@ class StoriesController < ApplicationController
     @story = Story.new(user: @user)
     update_story_attributes
     update_resubmit_comment_attributes
-    @story.already_posted_recently?
+    @story.check_already_posted_recently?
 
     respond_to do |format|
       linking_comments = Link.recently_linked_from_comments(@story.url)
@@ -420,10 +420,13 @@ class StoriesController < ApplicationController
       @votes = Vote.comment_votes_by_user_for_story_hash(
         @user.id, @story.merged_stories.ids.push(@story.id)
       )
-      vote_summaries = Vote.comment_vote_summaries(@comments.map(&:id))
+      comment_ids = @comments.map(&:id)
+      vote_summaries = Vote.comment_vote_summaries(comment_ids)
+      current_user_reply_parents = @user&.ids_replied_to(comment_ids) || Hash.new { false }
       @comments.each do |c|
         c.current_vote = @votes[c.id]
         c.vote_summary = vote_summaries[c.id]
+        c.current_reply = current_user_reply_parents.has_key? c.id
       end
     end
   end

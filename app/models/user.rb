@@ -55,8 +55,14 @@ class User < ApplicationRecord
   has_many :wearable_hats, -> { where(doffed_at: nil) },
     class_name: "Hat",
     inverse_of: :user
+  has_many :notifications
+  has_many :hidings,
+    class_name: "HiddenStory",
+    inverse_of: :user,
+    dependent: :destroy
 
   include Token
+  include EmailBlocklistValidation
 
   # As of Rails 8.0, `has_secure_password` generates a `password_reset_token`
   # method that shadows the explicit `password_reset_token` attribute.
@@ -210,10 +216,11 @@ class User < ApplicationRecord
       attrs.push :karma
     end
 
-    attrs.push :homepage, :about
+    attrs.push :homepage
 
     h = super(only: attrs)
 
+    h[:about] = linkified_about
     h[:avatar_url] = avatar_url
     h[:invited_by_user] = User.where(id: invited_by_user_id).pick(:username)
 
@@ -391,11 +398,9 @@ class User < ApplicationRecord
       # walks comments -> story -> merged stories; this is a rare event and likely
       # to be fixed in a redesign of the story merging db model:
       # https://github.com/lobsters/lobsters/issues/1298#issuecomment-2272179720
-      Prosopite.pause
       comments
         .where("score < 0")
         .find_each { |c| c.delete_for_user(self) }
-      Prosopite.resume
 
       # delete messages bypassing validation because a message may have a hat
       # sender has doffed, which would fail validations
@@ -491,6 +496,17 @@ class User < ApplicationRecord
   def is_new?
     return true unless created_at # unsaved object; in signup flow or a test
     created_at > NEW_USER_DAYS.days.ago
+  end
+
+  def ids_replied_to(comment_ids)
+    h = Hash.new { false }
+    comments
+      .where(parent_comment_id: comment_ids)
+      .pluck(:parent_comment_id)
+      .each do
+        h[it] = true
+      end
+    h
   end
 
   def roll_session_token
@@ -600,28 +616,8 @@ class User < ApplicationRecord
     true
   end
 
-  def unread_message_count
-    @unread_message_count ||= Keystore.value_for("user:#{id}:unread_messages").to_i
-  end
-
-  def update_unread_message_count!
-    @unread_message_count = received_messages.unread.count
-    Keystore.put("user:#{id}:unread_messages", @unread_message_count)
-  end
-
-  def clear_unread_replies!
-    Rails.cache.delete("user:#{id}:unread_replies")
-  end
-
-  def unread_replies_count
-    @unread_replies_count ||=
-      Rails.cache.fetch("user:#{id}:unread_replies", expires_in: 2.minutes) {
-        ReplyingComment.where(user_id: id, is_unread: true).count
-      }
-  end
-
   def inbox_count
-    unread_message_count + unread_replies_count
+    notifications.where(read_at: nil).count
   end
 
   def votes_for_others

@@ -19,6 +19,8 @@ class ModNote < ApplicationRecord
 
   delegate :username, to: :user
 
+  after_create -> { ModActivity.create_for! self }
+
   def username=(username)
     self.user_id = nil
 
@@ -31,7 +33,7 @@ class ModNote < ApplicationRecord
   end
 
   def note=(n)
-    self[:note] = n.to_s.strip
+    self[:note] = n
     self.markeddown_note = generated_markeddown
   end
 

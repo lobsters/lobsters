@@ -4,7 +4,7 @@
     <%= styled_user_link @hat.user %>
 
     <%= f.label :hat, "Hat" %>
-    <%= @hat.to_html_label %>
+    <%= styled_hat(@hat) %>
 
     <%= f.label :reason, "Reason" %>
     <span>

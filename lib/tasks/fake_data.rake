@@ -2,6 +2,11 @@
 
 require "faker"
 
+# This script creates real-ish fake data in your development database so it's easier to understand
+# how a feature will work in real-world use. It has been written and expanded as needed, rather than
+# try to perfectly simulate real-world data from scratch. If you need it for your project, please do
+# improve it (no need for a separate PR).
+
 # Disable launchy when populating with fake_data to prevent browser tabs from opening.
 # As described in https://github.com/ryanb/letter_opener?tab=readme-ov-file#remote-alternatives
 ENV["LAUNCHY_DRY_RUN"] = "true"
@@ -38,6 +43,9 @@ class FakeDataGenerator
   end
 
   def generate
+    # not create! because fake_data can be run multiple times
+    User.create username: "inactive-user", password: "inactive", email: "inactive-user@#{Rails.application.domain}"
+
     print "Users "
     users = []
     0.upto(@users_count).each do |i|
@@ -154,6 +162,7 @@ class FakeDataGenerator
 
     print "Comments "
     comments = []
+    replies = {}
     stories.each do |x|
       print "."
       next unless x.accepting_comments?
@@ -167,13 +176,15 @@ class FakeDataGenerator
 
         # Replies to comments
         if i.odd?
+          parent_comment_id = comments.last.id
           create_args = {
             user: x.user,
             comment: markdown_paragraphs,
             story_id: x.id,
-            parent_comment_id: comments.last.id
+            parent_comment_id: parent_comment_id
           }
           comments << Comment.create!(create_args)
+          replies[[x.user.id, parent_comment_id]] = true
         end
       end
     end
@@ -187,6 +198,8 @@ class FakeDataGenerator
       voting_users = users.sample(upvotes + 1)
       if Random.rand(100) > 95
         u = voting_users[0]
+        # can't flag if you've already replied, just skip
+        next if replies.has_key? [u.id, c.id]
         Vote.vote_thusly_on_story_or_comment_for_user_because(
           -1,
           c.story_id,
@@ -264,7 +277,7 @@ class FakeDataGenerator
       print "."
       comment_mod = User.moderators.sample
       if i % 7 == 0
-        comment.delete_for_user(comment_mod, Faker::Lorem.paragraphs(number: 1))
+        comment.delete_for_user(comment_mod, Faker::Lorem.sentence(word_count: 8))
         comment.undelete_for_user(comment_mod) if i.even?
       end
     end
@@ -356,5 +369,8 @@ task fake_data: :environment do
     fail "Cancelled" if $stdin.gets.chomp != "y"
   end
 
-  FakeDataGenerator.new.generate
+  # Disable transactions for better performance
+  ActiveRecord::Base.transaction(requires_new: false) do
+    FakeDataGenerator.new.generate
+  end
 end

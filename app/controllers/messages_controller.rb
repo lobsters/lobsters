@@ -62,6 +62,7 @@ class MessagesController < ApplicationController
         ModNote.create_from_message(@new_message, @user)
       end
       flash[:success] = "Your message has been sent to #{@new_message.recipient.username}."
+      NotifyMessageJob.perform_later(@new_message)
       redirect_to "/messages"
     else
       @messages = Message.inbox(@user).load
@@ -87,6 +88,7 @@ class MessagesController < ApplicationController
     if @message.recipient_user_id == @user.id
       @message.has_been_read = true
       @message.save!
+      @message.notification&.touch(:read_at)
     end
     Rails.cache.delete("user:#{@user.id}:unread_replies")
   end
@@ -137,14 +139,13 @@ class MessagesController < ApplicationController
 
     flash[:success] = "Deleted #{deleted} #{"message".pluralize(deleted)}"
 
-    @user.update_unread_message_count!
-
     redirect_to "/messages"
   end
 
   def keep_as_new
     @message.has_been_read = false
     @message.save!
+    @message.notification&.update(read_at: nil)
 
     redirect_to "/messages"
   end

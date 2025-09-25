@@ -82,6 +82,8 @@
       <li class="mod_note">
         <div class="byline">
           Note
+          <%= inline_avatar_for @user, ma.item.moderator %>
+          <%= link_to ma.item.user.username, ma.item.user %>
 
           <%= how_long_ago_label ma.item.created_at %>
 

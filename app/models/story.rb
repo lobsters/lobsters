@@ -243,7 +243,7 @@ class Story < ApplicationRecord
   before_validation :assign_initial_attributes, on: :create
   before_save :log_moderation
   before_save :fix_bogus_chars
-  after_create :mark_submitter, :record_initial_upvote
+  after_create :mark_submitter, :record_initial_upvote, :increment_domain_active_stories_count
   after_save :recreate_links, :update_cached_columns, :update_story_text
 
   validate do
@@ -1219,6 +1219,23 @@ class Story < ApplicationRecord
     validators_on(:title)
       .find { |v| v.is_a? ActiveRecord::Validations::LengthValidator }
       .options[:maximum]
+  end
+
+  def increment_domain_active_stories_count
+    return if is_deleted? || !domain
+
+    domain.increment!(:active_stories_count)
+  end
+
+  def is_deleted=(deleted)
+    return if deleted == is_deleted? || !domain
+
+    super(deleted)
+    if deleted
+      domain.decrement!(:active_stories_count)
+    else
+      domain.increment!(:active_stories_count)
+    end
   end
 
   private

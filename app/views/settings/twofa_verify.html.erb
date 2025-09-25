@@ -9,13 +9,14 @@
   </p>
 
   <div class="labelled_grid">
-    <%= f.label :totp_code, "TOTP Code", :class => "required" %>
+    <%= f.label :totp_code, "TOTP Code" %>
     <%= f.text_field :totp_code,
-      :inputmode => "numeric",
-      :pattern => "[0-9]+",
-      :autocomplete => "one-time-code",
-      :autofocus => true,
-      :class => "totp_code" %>
+      required: true,
+      inputmode: "numeric",
+      pattern: "[0-9]+",
+      autocomplete: "one-time-code",
+      autofocus: true,
+      class: "totp_code" %>
   </div>
   <%= f.submit "Verify and Enable" %>
 <% end %>

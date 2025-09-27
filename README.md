@@ -60,16 +60,6 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
     lobsters$ bin/setup
     ```
 
-* After `bin/setup` raises an error when it tries set up the database, add the database username and password to `config/database.yml`. `primary` (in two places, under `development` and `test`) should look like this:
-
-```
-  primary:
-    <<: *trilogy
-    database: lobsters_development
-    username: root
-    password: localdev
-```
-
 * On your production server, copy `config/initializers/production.rb.sample`
   to `config/initalizers/production.rb` and customize it with your site's
   `domain` and `name`. (You don't need this on your dev machine).

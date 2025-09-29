@@ -1036,9 +1036,9 @@ class Story < ApplicationRecord
     # strip out tracking query params
     if (match = u.match(/\A([^\?]+)\?(.+)\z/))
       params = match[2].split(/[&\?]/)
-      # utm_ is google and many others; sk is medium; si is youtube source id
+      # utm_ is google and many others; sk is medium; si/pp is youtube
       params.reject! { |p|
-        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=|^linkId=|^si=|^trk=/x)
+        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=|^linkId=|^pp=|^si=|^trk=/x)
       }
       params.reject! { |p|
         if /^lobsters|^src=lobsters|^ref=lobsters/x.match?(p)

@@ -95,10 +95,16 @@ describe SearchParser do
   end
 
   describe "domain rule" do
-    it("parses single") { expect(sp.domain).to parse("domain:example.com") }
-    it("parses dash") { expect(sp.domain).to parse("domain:foo-bar.com") }
-    it("parses numbers") { expect(sp.domain).to parse("domain:9to5mac.com") }
-    it("doesn't parse blank") { expect(sp.domain).to_not parse("domain:") }
+    it("parses single") { expect(sp.domain).to parse("example.com") }
+    it("parses dash") { expect(sp.domain).to parse("foo-bar.com") }
+    it("parses numbers") { expect(sp.domain).to parse("9to5mac.com") }
+    it("parses short tld") { expect(sp.domain).to parse("test.co") }
+    it("parses exotic tld") { expect(sp.domain).to parse("pong.ping") }
+    it("parses subdomains") { expect(sp.domain).to parse("my.cool.net") }
+    it("doesn't parse non-existing tld") { expect(sp.domain).to_not parse("foobar.foobar") }
+    it("doesn't parse just the tld") { expect(sp.domain).to_not parse("com") }
+    it("doesn't parse empty domain") { expect(sp.domain).to_not parse(".com") }
+    it("doesn't parse invalid domain") { expect(sp.domain).to_not parse("example..com") }
   end
 
   describe "submitter rule" do

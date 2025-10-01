@@ -60,7 +60,7 @@
       <label class="required">Deactivated</label>
       <span>
         <%= how_long_ago_label(@showing_user.deleted_at) %>
-        <% if @showing_user.deleted_at <= Time.new(2025, 9, 9) %>
+        <% if @showing_user.deleted_at <= Time.new(2025, 9, 9) && !@showing_user.is_banned? %>
           <br>
           (This user deactivated before deactivations were added to the moderation log.)
         <% end %>

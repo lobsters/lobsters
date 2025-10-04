@@ -14,8 +14,8 @@
   </p>
 
   <div class="labelled_grid">
-    <%= f.label :password, "Current Password", :class => "required" %>
-    <%= f.password_field :password, :autocomplete => "off" %>
+    <%= f.label :password, "Current Password" %>
+    <%= f.password_field :password, required: true, autocomplete: "off" %>
   </div>
 
   <% if @user.has_2fa? %>

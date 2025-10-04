@@ -18,11 +18,11 @@ If you want to avoid connecting your old and new usernames, ask <%= link_to 'a m
   <% end %>
 
   <div class="labelled_grid">
-    <%= f.label :email, "E-mail Address", :class => "required" %>
-    <%= f.email_field :email, :autocomplete => "off", :inputmode => "email" %>
+    <%= f.label :email, "E-mail Address" %>
+    <%= f.email_field :email, autocomplete: "off", inputmode: "email", required: true %>
 
-    <%= f.label :memo, "Memo to User", :class => "required" %>
-    <%= f.text_field :memo %>
+    <%= f.label :memo, "Memo to User" %>
+    <%= f.text_field :memo, required: true %>
   </div>
 
   <%= f.submit "Send Invitation" %>

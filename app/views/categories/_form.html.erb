@@ -1,8 +1,8 @@
 <%# locals: (category:) -%>
 <%= form_with model: category, url: category.persisted? ? update_category_path : categories_path, method: :post do |f| %>
   <div class="labelled_grid">
-    <%= f.label :category, 'Name', class: 'required' %>
-    <%= f.text_field :category  %>
+    <%= f.label :category, 'Name' %>
+    <%= f.text_field :category, required: true %>
   </div>
 
   <%= f.submit category.persisted? ? 'Update Category' : 'Create Category' %>

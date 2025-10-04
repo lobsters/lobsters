@@ -14,7 +14,7 @@
   <% end %>
 
   <div class="labelled_grid">
-    <label class="required">Status</label>
+    <label class="bold">Status</label>
     <span
     <%= @showing_user.is_banned? ? raw("style=\"color: red;\"") : "" %>>
       <% if @showing_user.is_banned? %>
@@ -35,7 +35,7 @@
       <% end %>
     </span>
 
-    <label class="required">Joined</label>
+    <label class="bold">Joined</label>
     <span>
       <%= how_long_ago_label(@showing_user.created_at) %>
       <% if @showing_user.invited_by_user %>
@@ -45,7 +45,7 @@
     </span>
 
     <% if @showing_user.is_banned? %>
-      <label class="required">Banned</label>
+      <label class="bold">Banned</label>
       <span>
         <%= how_long_ago_label(@showing_user.banned_at) %>
         <% if @showing_user.banned_by_user %>
@@ -57,7 +57,7 @@
     <% end %>
 
     <% if @showing_user.deleted_at? %>
-      <label class="required">Deactivated</label>
+      <label class="bold">Deactivated</label>
       <span>
         <%= how_long_ago_label(@showing_user.deleted_at) %>
         <% if @showing_user.deleted_at <= Time.new(2025, 9, 9) && !@showing_user.is_banned? %>
@@ -68,22 +68,22 @@
     <% end %>
 
     <% if !@showing_user.is_admin? %>
-      <label class="required">Karma</label>
+      <label class="bold">Karma</label>
       <span>
         <%= @showing_user.karma %>
       </span>
     <% end %>
 
-    <label class="required">Stories Submitted</label>
+    <label class="bold">Stories Submitted</label>
     <span>
       <%= stories_submitted_content(@user, @showing_user) %>
     </span>
 
-    <label class="required">Comments Posted</label>
+    <label class="bold">Comments Posted</label>
     <span><%= comments_posted_content(@user, @showing_user) %></span>
 
     <% if @showing_user.hats.any? %>
-      <label class="required">Hats</label>
+      <label class="bold">Hats</label>
       <div>
       <% @showing_user.hats.each do |hat| %>
         <%= styled_hat(hat) %>
@@ -99,14 +99,14 @@
     <% end %>
 
     <% if @user&.is_admin? || @user&.show_email? %>
-      <label class="required">E-Mail</label>
+      <label class="bold">E-Mail</label>
       <span>
         <%= @showing_user.email %>
       </span>
     <% end %>
 
     <% if @showing_user.homepage.present? %>
-      <label class="required">Homepage</label>
+      <label class="bold">Homepage</label>
 
       <span>
         <a href="<%= h(@showing_user.homepage) %>"
@@ -120,7 +120,7 @@
     <% end %>
 
     <% if @showing_user.github_username.present? %>
-      <label class="required">GitHub</label>
+      <label class="bold">GitHub</label>
 
       <span>
         <a href="https://github.com/<%= h(@showing_user.github_username) %>"
@@ -130,7 +130,7 @@
     <% end %>
 
     <% if @showing_user.mastodon_username.present? && @showing_user.mastodon_instance.present? %>
-      <label class="required">Mastodon</label>
+      <label class="bold">Mastodon</label>
 
       <span>
         <a href="https://<%= h(@showing_user.mastodon_instance)%>/@<%= h(@showing_user.mastodon_username)%>"
@@ -140,7 +140,7 @@
     <% end %>
 
     <% if @showing_user.is_active? %>
-      <label class="required">About</label>
+      <label class="bold">About</label>
 
       <div class="shorten_first_p">
         <% if @showing_user.about.present? %>
@@ -164,7 +164,7 @@
       </p>
 
       <p>(This section is only visible to you and moderators.
-      Mods use it when evaluating whether 
+      Mods use it when evaluating whether
       users are participating in the community or exploiting the site for <a href="/about#self-promo">self-promo</a>. It's a red flag when someone never posts well-received comments outside of their own links.)
       </p>
     </div>
@@ -175,7 +175,7 @@
   <h2>Moderator Information</h2>
 
   <section class="labelled_grid">
-    <label class="required">Flagged (1m)</label>
+    <label class="bold">Flagged (1m)</label>
     <span>
       <% if (stats = FlaggedCommenters.new('1m').check_list_for(@showing_user)) %>
         <a href="/mod/commenters/1m#<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % (stats[:sigma] || 0) %> &sigma;
@@ -184,7 +184,7 @@
       <% end %>
     </span>
 
-    <label class="required">Self Promoter</label>
+    <label class="bold">Self Promoter</label>
     <span>
       <% if @showing_user.is_heavy_self_promoter? %>
         <strong>Yes</strong>
@@ -195,15 +195,15 @@
   </section>
 
   <section>
-    <label class="required">Last 20 Mod Activities</label>
+    <label class="bold">Last 20 Mod Activities</label>
     <%= render partial: 'mod/activities/table', locals: { mod_activities: @mod_activities } %>
 
     <%= form_with model: @mod_note, method: :post do |f| %>
       <%= errors_for @mod_note %>
       <%= f.hidden_field :username %>
       <div class="labelled_grid">
-        <%= f.label :note, "New Note", :class => "required" %>
-        <%= f.text_area :note, :rows => 5 %>
+        <%= f.label :note, "New Note" %>
+        <%= f.text_area :note, required: true, rows: 5 %>
       </div>
       <%= f.submit "ModNote 🔑" %>
     <% end %>
@@ -213,7 +213,7 @@
     <section>
       <h3>Admin Information</h3>
 
-      <label class="required">Recent Votes</label>
+      <label class="bold">Recent Votes</label>
       <table class="data zebra clear tall">
         <% @showing_user.votes_for_others.limit(15).each do |v| %><tr>
           <td><%= v.vote == 1 ? '+' : v.reason %></td>
@@ -237,8 +237,8 @@
           <p>
             <% if @showing_user.is_banned? %>
               <div class="labelled_grid">
-                <%= f.label :reason, "Reason", :class => "required" %>
-                <%= f.text_field :reason, :size => 80 %>
+                <%= f.label :reason, "Reason" %>
+                <%= f.text_field :reason, required: true, size: 80 %>
               </div>
               <%= f.submit "Unban" %>
             <% end %>
@@ -256,8 +256,8 @@
         </p>
         <%= form_with url: user_ban_path, method: :post do |f| %>
           <div class="labelled_grid">
-            <%= f.label :reason, "Reason", :class => "required" %>
-            <%= f.text_field :reason %>
+            <%= f.label :reason, "Reason" %>
+            <%= f.text_field :reason, required: true %>
           </div>
           <p>
             <% if !@showing_user.is_banned? %>

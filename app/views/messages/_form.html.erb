@@ -6,15 +6,15 @@
     <% if replying %>
         <%= f.hidden_field :recipient_username  %>
     <% else %>
-      <%= f.label :recipient_username, "To", :class => "required" %>
-      <%= f.text_field :recipient_username %>
+      <%= f.label :recipient_username, "To" %>
+      <%= f.text_field :recipient_username, required: true %>
     <% end %>
 
-    <%= f.label :subject, "Subject", :class => "required" %>
-    <%= f.text_field :subject, :maxlength => 100 %>
+    <%= f.label :subject, "Subject" %>
+    <%= f.text_field :subject, required: true, maxlength: 100 %>
 
-    <%= f.label :body, "Message", :class => "required" %>
-    <%= f.text_area :body, :rows => 5 %>
+    <%= f.label :body, "Message" %>
+    <%= f.text_area :body, required: true, rows: 5 %>
 
     <% if @user.wearable_hats.load.any? %>
       <%= f.label :hat_id, 'Put on hat' %>

@@ -922,7 +922,7 @@ class Story < ApplicationRecord
 
   def title=(t)
     # change unicode whitespace characters into real spaces
-    self[:title] = t.to_s.strip.gsub(/[\.,;:!]*$/, "")
+    self[:title] = t.to_s.strip.gsub(/[.,;:!]*$/, "")
   end
 
   def title_as_slug
@@ -1034,8 +1034,8 @@ class Story < ApplicationRecord
     u = u.strip
 
     # strip out tracking query params
-    if (match = u.match(/\A([^\?]+)\?(.+)\z/))
-      params = match[2].split(/[&\?]/)
+    if (match = u.match(/\A([^?]+)\?(.+)\z/))
+      params = match[2].split(/[&?]/)
       # utm_ is google and many others; sk is medium; si/pp is youtube
       params.reject! { |p|
         p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=|^linkId=|^pp=|^si=|^trk=/x)
@@ -1140,7 +1140,7 @@ class Story < ApplicationRecord
         title = title[0, title.length - site_name.length]
 
         # remove title/site name separator
-        if / [ \-\|\u2013] $/.match?(title)
+        if / [ \-|\u2013] $/.match?(title)
           title = title[0, title.length - 3]
         end
       end

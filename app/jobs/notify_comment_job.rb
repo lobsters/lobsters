@@ -13,7 +13,7 @@ class NotifyCommentJob < ApplicationJob
   end
 
   def deliver_mention_notifications(comment, notified)
-    to_notify = comment.plaintext_comment.scan(/\B[@~]([\w\-]+)/).flatten.uniq - notified - [comment.user.username]
+    to_notify = comment.plaintext_comment.scan(/\B[@~]([\w-]+)/).flatten.uniq - notified - [comment.user.username]
 
     # every user gets a Notification, which may be filtered out from those views so that unhiding a
     # story reveals the notifications

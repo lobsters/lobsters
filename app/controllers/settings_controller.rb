@@ -28,10 +28,10 @@ class SettingsController < ApplicationController
     Moderation.create!(
       moderator: nil,
       user: @user,
-      action: "deactivated#{disown ? ", disowning their stories and comments" : nil}"
+      action: "deactivated#{", disowning their stories and comments" if disown}"
     )
     reset_session
-    flash[:success] = "You have deleted your account#{disown ? " and disowned your stories and comments." : nil}. Bye."
+    flash[:success] = "You have deleted your account#{" and disowned your stories and comments." if disown}. Bye."
     redirect_to "/"
   end
 

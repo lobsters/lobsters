@@ -16,7 +16,7 @@ Dir["app/views/**/*.erb"].each do |filename|
   next unless template.include? "heinous_inline_partial"
 
   # puts "inspecting #{filename}"
-  partial_match = template.match(/^<%#heinous_inline_partial\(([\w\/\.]+)\)%>/)
+  partial_match = template.match(/^<%#heinous_inline_partial\(([\w\/.]+)\)%>/)
   raise "#{filename} doesn't start a line with <%#heinous..." if partial_match.nil?
   partial_name = partial_match&.captures&.first
   HEINOUS_INLINE_PARTIALS[filename] = "app/views/" + partial_name
@@ -33,9 +33,9 @@ def do_heinous_inline_partial_replacement
 
     template = File.read(filename)
     template.sub!(/
-      ^<%\#heinous_inline_partial\(([\w\/\.]+)\)%>
+      ^<%\#heinous_inline_partial\(([\w\/.]+)\)%>
       (.+)
-      ^<%\#\/heinous_inline_partial\(([\w\/\.]+)\)%>\n
+      ^<%\#\/heinous_inline_partial\(([\w\/.]+)\)%>\n
       /xm) { |_match|
       raise "Template name didn't match in open and closing tags. One per file!" unless $1 == $3
       # puts "  .sub! matched, replacing"

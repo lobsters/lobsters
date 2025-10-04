@@ -61,7 +61,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
     ```
 
 * On your production server, copy `config/initializers/production.rb.sample`
-  to `config/initalizers/production.rb` and customize it with your site's
+  to `config/initializers/production.rb` and customize it with your site's
   `domain` and `name`. (You don't need this on your dev machine).
 
 * On your personal computer, you probably want to add some sample data.
@@ -71,7 +71,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
     ```
 
 * Run the Rails server in development mode.
-  You should be able to login to `http://localhost:3000` with your new `test` user:
+  You should be able to login to `http://localhost:3000` with your new `test` user (with password `test`):
 
     ```sh
     lobsters$ rails server
@@ -141,7 +141,7 @@ Setup:
 
       Search the codebase for uses of the `ENV` global for more that can be easily configured.
 
-    * Databases: We manage this independely of Hatchbox for historic reasons, see `#539`.
+    * Databases: We manage this independently of Hatchbox for historic reasons, see `#539`.
     * Cron Jobs:
 
       ```

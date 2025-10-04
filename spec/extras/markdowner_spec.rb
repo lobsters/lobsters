@@ -19,6 +19,16 @@ describe Markdowner do
       .to eq("<p>hi @flimflam test</p>\n")
   end
 
+  it "turns ~username into a link if ~username exists" do
+    create(:user, username: "blahblah")
+
+    expect(Markdowner.to_html("hi ~blahblah test"))
+      .to eq("<p>hi <a href=\"https://#{Rails.application.domain}/~blahblah\" rel=\"ugc\">" \
+             "~blahblah</a> test</p>\n")
+
+    expect(Markdowner.to_html("hi ~flimflam test")).to eq("<p>hi ~flimflam test</p>\n")
+  end
+
   # bug#209
   it "keeps punctuation inside of auto-generated links when using brackets" do
     expect(Markdowner.to_html("hi <http://example.com/a.> test"))

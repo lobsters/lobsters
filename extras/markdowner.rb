@@ -73,7 +73,7 @@ class Markdowner
     # one lookup, then loop again to manipulate the nodes for usernames that exist.
 
     while node
-      return unless node.string_content =~ /\B(@#{User::VALID_USERNAME})/o
+      return unless node.string_content =~ /\B([@~]#{User::VALID_USERNAME})/o
       before, user, after = $`, $1, $'
 
       node.string_content = before

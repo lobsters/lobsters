@@ -26,15 +26,16 @@ class Comment < ApplicationRecord
     class_name: "Link",
     inverse_of: :to_comment,
     dependent: :destroy
+  has_one :notification, as: :notifiable
 
   include Token
-  attr_accessor :current_vote, :previewing, :vote_summary
+  attr_accessor :current_vote, :current_reply, :previewing, :vote_summary
 
   before_validation :assign_initial_attributes, on: :create
   after_destroy :unassign_votes
   # Calling :record_initial_upvote from after_commit instead of after_create minimizes how many
   # queries happen inside the transaction, which seems to be the cause of bug #1238.
-  after_commit :deliver_notifications, :log_hat_use, :mark_submitter, :record_initial_upvote, on: :create
+  after_commit :log_hat_use, :mark_submitter, :record_initial_upvote, on: :create
   after_commit :recreate_links
 
   scope :deleted, -> { where(is_deleted: true) }
@@ -112,6 +113,7 @@ class Comment < ApplicationRecord
   validates :confidence, :confidence_order, :flags, :score, presence: true
   validates :is_deleted, :is_moderated, :is_from_email, inclusion: {in: [true, false]}
   validates :last_edited_at, presence: true
+  validate :validate_commenter_hasnt_flagged_parent, on: :create
 
   validate do
     parent_comment&.is_gone? &&
@@ -254,7 +256,7 @@ class Comment < ApplicationRecord
     return false if recent.blank?
 
     wait = ActionController::Base.helpers
-      .distance_of_time_in_words(Time.zone.now, (recent.created_at + delay))
+      .distance_of_time_in_words(Time.zone.now, recent.created_at + delay)
     # Rails.logger.info "breaks_speed_limit: #{user.username} replying to https://lobste.rs/c/#{parent_comment.short_id} parent_comment_ids (#{parent_comment_ids.join(" ")}) flags #{flag_count} commenter_flag_count #{commenter_flag_count} delay #{delay} delay.ago #{delay.ago} recent #{recent.id}"
     errors.add(
       :comment,
@@ -305,78 +307,6 @@ class Comment < ApplicationRecord
 
     story.update_cached_columns
     self.user.refresh_counts!
-  end
-
-  def deliver_notifications
-    notified = deliver_reply_notifications
-    deliver_mention_notifications(notified)
-  end
-
-  def deliver_mention_notifications(notified = [])
-    to_notify = plaintext_comment.scan(/\B[@~]([\w\-]+)/).flatten.uniq - notified - [user.username]
-    User.active.where(username: to_notify).find_each do |u|
-      if u.email_mentions?
-        begin
-          EmailReplyMailer.mention(self, u).deliver_now
-        rescue => e
-          # Rails.logger.error "error e-mailing #{u.email}: #{e}"
-        end
-      end
-
-      if u.pushover_mentions?
-        u.pushover!(
-          title: "#{Rails.application.name} mention by " \
-            "#{user.username} on #{story.title}",
-          message: plaintext_comment,
-          url: Routes.comment_target_url(self),
-          url_title: "Reply to #{user.username}"
-        )
-      end
-    end
-  end
-
-  def users_following_thread
-    users_following_thread = Set.new
-    if user.id != story.user.id && story.user_is_following
-      users_following_thread << story.user
-    end
-
-    if parent_comment_id &&
-        (u = parent_comment.try(:user)) &&
-        u.id != user.id &&
-        u.is_active?
-      users_following_thread << u
-    end
-
-    users_following_thread
-  end
-
-  def deliver_reply_notifications
-    notified = []
-
-    users_following_thread.each do |u|
-      if u.email_replies?
-        begin
-          EmailReplyMailer.reply(self, u).deliver_now
-          notified << u.username
-        rescue => e
-          # Rails.logger.error "error e-mailing #{u.email}: #{e}"
-        end
-      end
-
-      if u.pushover_replies?
-        u.pushover!(
-          title: "#{Rails.application.name} reply from " \
-            "#{user.username} on #{story.title}",
-          message: plaintext_comment,
-          url: Routes.comment_target_url(self),
-          url_title: "Reply to #{user.username}"
-        )
-        notified << u.username
-      end
-    end
-
-    notified
   end
 
   def depth_permits_reply?
@@ -593,6 +523,12 @@ class Comment < ApplicationRecord
 
   def unassign_votes
     story.update_cached_columns
+  end
+
+  def validate_commenter_hasnt_flagged_parent
+    if parent_comment && Vote.where(user: user, vote: -1, comment: parent_comment).exists?
+      errors.add(:base, "You've flagged that comment for the mods, so you can leave it for the mods.")
+    end
   end
 
   def vote_summary_for_user

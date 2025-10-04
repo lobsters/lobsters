@@ -2,25 +2,20 @@
   <a href="/settings">Back to Settings</a>
 <% end %>
 
-<div class="box wide">
-  <%= form_with url: "/settings/mastodon_auth", method: :get do |f| %>
-    <p>
-    Enter the name or URL of your Mastodon instance (for example, mastodon.social):
-    </p>
+<%= form_with url: "/settings/mastodon_auth", method: :get do |f| %>
+  <p>
+  Enter the name or URL of your Mastodon instance (for example, mastodon.social):
+  </p>
 
-    <div class="boxline">
-      <%= f.label :mastodon_instance_name, "Name or URL:", :class => "required" %>
-      <%= f.text_field :mastodon_instance_name, :autofocus => true  %>
-    </div>
+  <div class="labelled_grid">
+    <%= f.label :mastodon_instance_name, "Name or URL", :class => "required" %>
+    <%= f.text_field :mastodon_instance_name, :autofocus => true  %>
+  </div>
+  <%= f.submit "Continue" %>
 
-    <p>
-    <%= f.submit "Continue" %>
-
-    <p class="help">
-      We request the
-      <a href="https://docs.joinmastodon.org/api/oauth-scopes/#read"><tt>read:accounts</tt></a> scope to confirm your username,
-        which includes <a href="https://docs.joinmastodon.org/methods/accounts/#get">basic profile info</a>.
-    </p>
-
-  <% end %>
-</div>
+  <p class="help">
+    We request the
+    <a href="https://docs.joinmastodon.org/api/oauth-scopes/#read"><tt>read:accounts</tt></a> scope to confirm your username,
+      which includes <a href="https://docs.joinmastodon.org/methods/accounts/#get">basic profile info</a>.
+  </p>
+<% end %>

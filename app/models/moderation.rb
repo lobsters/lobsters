@@ -68,6 +68,7 @@ class Moderation < ApplicationRecord
   validate :one_foreign_key_present
 
   after_create :send_message_to_moderated
+  after_create -> { ModActivity.create_for! self }
 
   def send_message_to_moderated
     m = Message.new

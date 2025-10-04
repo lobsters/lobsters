@@ -6,20 +6,11 @@
       <p></p>
 
       <div class="box">
-        <div class="boxline actions markdown_help_toggler">
-          <div class="markdown_help_label">
-            Markdown formatting available
-          </div>
-
+        <div class="boxline actions">
           <%= f.submit "Submit" %>
 
           &nbsp;
           <%= f.submit "Preview", class: 'story-preview', name: 'preview' %>
-
-          <div style="clear: both;"></div>
-
-          <%= render :partial => "global/markdownhelp",
-            :locals => { allow_images: @story.can_have_images? } %>
         </div>
       </div>
     <% end %>
@@ -27,7 +18,7 @@
 </div>
 
 <div id="story_preview">
-  <% if @story.previewing && @story.valid? %>
+  <% if @story.previewing && @story.errors.empty? %>
     <%= render :template => "stories/show" %>
   <% end %>
 </div>

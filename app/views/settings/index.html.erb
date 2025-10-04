@@ -31,7 +31,14 @@
         <%= f.password_field :password_confirmation, :autocomplete => "off" %>
 
         <%= f.label :email, "E-mail Address", :class => "required" %>
+        <div>
         <%= f.email_field :email, :inputmode => "email" %>
+          <% if EmailBlocklistValidation.email_on_blocklist?(@edit_user.email) %>
+            <div class="hint">
+              We don't send email to disposable email domains; change your email address.
+            </div>    
+          <% end %>
+        </div>
 
         <%= f.label :homepage, "Homepage", :class => "required" %>
         <%= f.url_field :homepage %>
@@ -40,13 +47,7 @@
         <div>
           <%= f.text_area :about %>
 
-          <div class="markdown_help_toggler">
-            <div class="markdown_help_label">
-              Markdown formatting available
-            </div>
-
-            <%= render :partial => "global/markdownhelp" %>
-          </div>
+          <%= render :partial => "global/markdownhelp" %>
         </div>
       </div>
 
@@ -266,15 +267,16 @@
 </section>
 
 <section>
-  <%= form_with model: @edit_user, url: delete_account_path, method: :post, id: 'delete_user', namespace: 'delete_user' do |f| %>
-    <h2>Delete Account</h2>
+  <%= form_with model: @edit_user, url: deactivate_path, method: :post, id: 'deactivate_user', namespace: 'deactivate_user' do |f| %>
+    <h2>Deactivate Account</h2>
     <p>
-    To permanently delete your account, verify your current password below.
+    To deactivate your account, verify your current password below.
     </p>
     <ul>
-      <li>Your account will be put into a deleted state.</li>
+      <li>Your profile will show that you deactivated your account.</li>
+      <li>You will not be able to log in, but you can reset your password if you want to reactivate your account.</li>
       <li>Your username will remain reserved and will not be available for any other account.</li>
-      <li>Your private messages will be deleted.</li>
+      <li>Your private messages will be deleted (recipients will keep their copies of messages).</li>
       <li>Your submitted stories will not be deleted.</li>
       <li>
         Your comments with negative scores will be deleted, and you can check "disown comments"
@@ -292,6 +294,6 @@
       <span><%= f.check_box :disown %> <span class="hint">(optional)</span></span>
     </div>
 
-    <%= f.submit "Yes, Delete My Account", :class => "deletion" %>
+    <%= f.submit "Yes, Deactivate My Account", :class => "deletion" %>
   <% end %>
 </section>

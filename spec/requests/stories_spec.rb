@@ -202,18 +202,19 @@ describe "stories", type: :request do
 
         expect(response.status).to eq(404)
         expect(response.body).to_not include(story.title)
-        expect(response.body).to_not include("removed by moderator")
-        expect(response.body).to_not include("removed by submitter")
-        expect(response.body).to_not include(story.user.username)
       end
 
-      it "shows submitter removed to logged-in user" do
+      it "shows whether a story was removed by a submitter or moderator" do
+        # visitor
+        get story_path(story)
+        expect(response.body).to include("removed by submitter")
+        expect(response.body).to_not include("removed by moderator")
+
+        # user
         sign_in create(:user)
         get story_path(story)
-
-        expect(response.status).to eq(404)
-        expect(response.body).to_not include(story.title)
         expect(response.body).to include("removed by submitter")
+        expect(response.body).to_not include("removed by moderator")
         expect(response.body).to include(story.user.username)
       end
     end
@@ -241,6 +242,7 @@ describe "stories", type: :request do
         expect(response.body).to_not include(reason)
         expect(response.body).to_not include("removed by submitter")
         expect(response.body).to_not include(story.user.username)
+        expect(response.body).to include("removed by a moderator")
       end
 
       it "shows mod log to logged-in user" do
@@ -249,6 +251,7 @@ describe "stories", type: :request do
 
         expect(response.status).to eq(404)
         expect(response.body).to_not include(story.title)
+        expect(response.body).to include("removed by a moderator")
         expect(response.body).to include(reason)
       end
     end

@@ -7,8 +7,8 @@ https://web-platform-dx.github.io/web-features/
 But I make an unprincipled exception for :has because it solves so many big problems.
 */
 
-/* common color scheme */
 :root {
+	/* common color scheme */
 	--color-bg: rgb(var(--base-bg));
 	--color-bg-50: rgb(var(--base-bg) / 50%);
 
@@ -31,6 +31,9 @@ But I make an unprincipled exception for :has because it solves so many big prob
 	--color-shadow-80: rgb(var(--base-shadow) / var(--opacity-shadow-80));
 	--color-shadow-25: rgb(var(--base-shadow) / var(--opacity-shadow-25));
 	--color-shadow-10: rgb(var(--base-shadow) / var(--opacity-shadow-10));
+
+	/* dimensions */
+	--comment-controls-height: 1.2lh;
 }
 
 /* generics */
@@ -91,6 +94,10 @@ a.tag {
 	padding: 0px 0.4em 1px 0.4em;
 	text-decoration: none;
 	white-space: nowrap;
+}
+a.tag.filtered {
+	border: 1.5px dotted;
+	font-style: italic;
 }
 a.tag_is_media {
 	background-color: var(--color-tag-media-bg);
@@ -294,6 +301,10 @@ input.deletion {
 	border: 1px solid var(--color-fg-negative);
 }
 
+summary {
+	cursor: pointer;
+}
+
 #qrsvg {
 	background-color: white;
 	display: inline-block;
@@ -315,7 +326,7 @@ header {
 }
 
 #logo {
-	background-position: center;
+	background: transparent url(logo-transparent.svg) no-repeat center;
 	flex: 0 0 16px; /* width; no padding l/r */
 	float: left;
 	display: block;
@@ -325,9 +336,6 @@ header {
 	margin-left: 4px;
 	margin-right: 11px;
 	position: relative;
-}
-#logo {
-	background: transparent url(logo-transparent.svg) no-repeat center;
 }
 
 header#nav .navholder {
@@ -446,6 +454,14 @@ ol.comments1 > li.comments_subtree > ol.comments {
 	padding-left: 0;
 }
 
+.message .voters {
+	font-size: 20px;
+}
+
+.notifications li {
+	margin-bottom: 1lh;
+}
+
 div.voters {
 	float: left;
 	margin-top: 0px;
@@ -455,12 +471,13 @@ div.voters {
 
 .upvoter:before {
 	content: "\25b2";
-	color: var(--color-fg-shape);
-	font-size: 12pt;
+	color: transparent;
+	font-size: 1.2rem;
+	-webkit-text-stroke: 1px var(--color-fg-contrast-4-5);
 }
-.upvoted .upvoter:before,
-.upvoter:hover:before {
+.upvoted .upvoter:before, .upvoter:hover:before {
 	color: var(--color-fg-accent);
+	-webkit-text-stroke: 1px var(--color-fg-accent);
 }
 .upvoter {
 	color: var(--color-fg-contrast-4-5);
@@ -514,21 +531,21 @@ supports it:  https://caniuse.com/?search=%3Ahas
 */
 .negative_1 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
 .negative_1 .score {
-  opacity: 0.7;
-  }
+	opacity: 0.7;
+}
 
 .negative_3 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
 .negative_3 .score {
-  opacity: 0.6;
+	opacity: 0.6;
 }
 
 .negative_5 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
 .negative_5 .score {
-  opacity: 0.5;
+	opacity: 0.5;
 }
 
 .comment.bad *:not(div, .dropdown_parent, .dropdown_parent *) {
-  opacity: 0.7;
+	opacity: 0.7;
 }
 
 .comment:target, li:target, p:target, div:target, span:target {
@@ -592,7 +609,7 @@ li .comment_folder {
 	color: var(--color-fg-contrast-4-5);
 	letter-spacing: 0.1em;
 	width: 1.5em;
- 	cursor: pointer;
+	cursor: pointer;
 	text-align: center;
 }
 li .comment_folder:before {
@@ -612,7 +629,7 @@ li .comment_folder_button:checked ~ div.comment:not(:target) div.voters .upvoter
 li .comment_folder_button:checked ~ ol.comments ol,
 li .comment_folder_button:checked ~ ol.comments div.comment,
 li .comment_folder_button:checked ~ ol.comments li {
- 	display: none;
+	display: none;
 }
 
 li.comments_subtree {
@@ -623,16 +640,11 @@ li .comment_parent_tree_line {
 	position: absolute;
 	border-left: 1px dotted var(--color-fg-shape);
 	top: 0.5em;
-        left: 1em;
+	left: 1em;
 	bottom: 0;
 }
-
 li .comment_parent_tree_line.score_shown {
 	top: 3.6lh;
-}
-/* hide for comments that don't have children */
-li:not(:has(> .comments > li)) > .comment > .comment_parent_tree_line {
-	border-left-color: transparent;
 }
 li .comment_siblings_tree_line {
 	position: absolute;
@@ -672,6 +684,16 @@ li.story .byline {
 .byline a {
 	color: var(--color-fg-contrast-4-5);
 	text-decoration: none;
+}
+.comment.replied .flagger,
+.comment.flagged .comment_replier {
+	color: var(--color-fg);
+	cursor: default;
+	pointer-events: none;
+	text-decoration: line-through;
+}
+.comment.replied .flagger {
+	color: var(--color-fg-contrast-4-5);
 }
 /* preserve selection made elsewhere when clicking */
 li .byline a.comment_replier {
@@ -794,9 +816,20 @@ div.comment_text {
 	word-wrap: break-word;
 	overflow: hidden;
 }
+.controls {
+	display: flex;
+	flex-flow: row;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	justify-content: start;
+	margin-top: 1rem;
+}
+.controls .buttons, .controls .hats, .controls .markdown_help summary {
+	height: var(--comment-controls-height);
+}
 
 div.comment_text blockquote,
-div.markdown_help blockquote,
+.markdown_help blockquote,
 div.story_text blockquote {
 	font-style: italic;
 	margin: 0.25em 0 0 0.5em;
@@ -805,8 +838,8 @@ div.story_text blockquote {
 }
 
 /* un-italicize italics inside a blockquote */
-div.comment_text blockquote em, 
-div.markdown_help blockquote em, 
+div.comment_text blockquote em,
+.markdown_help blockquote em,
 div.story_text blockquote em {
 	font-style: normal
 }
@@ -815,7 +848,7 @@ div#collapsed_story_text div.story_text blockquote {
 	font-style: normal;
 }
 div.comment_text pre,
-div.markdown_help pre {
+.markdown_help pre {
 	margin-left: 1em;
 }
 div.comment_text ol {
@@ -896,25 +929,19 @@ div.comment_text code {
 
 
 
-.markdown_help {
-	background-color: var(--color-box-bg-shaded);
-	border: 1px solid var(--color-box-border);
-	padding: 0 1em;
-	margin-top: 0.5em;
-	display: none;
+.controls details {
+	margin-left: auto;
 }
-
-div.markdown_help_label {
-	float: right;
-	font-size: 9pt;
-	line-height: 2em;
+#story_box .markdown_help summary {
+	width: calc(7em + 610px);
+}
+.markdown_help summary {
 	color: var(--color-fg-contrast-4-5);
-	text-decoration: underline;
-	cursor: pointer;
+	font-size: 9pt;
+	text-align: right;
 }
-
-.comment .preview {
-	padding-left: 17px;
+.controls .markdown_help[open] summary {
+	margin-top: calc(var(--comment-controls-height) * -1);
 }
 
 div#story_preview {
@@ -957,9 +984,6 @@ div#story_box textarea {
 	width: 600px;
 }
 
-div.comment_form_container {
-	margin-left: -11px;
-}
 
 div.comment_form_container form {
 	margin-left: 40px;
@@ -971,7 +995,7 @@ div.comment_form_container textarea {
 	width: 100%;
 }
 
-span.comment_unread {
+.comment_unread {
 	color: var(--color-fg-accent);
 	font-weight: 600;
 	cursor: pointer;
@@ -1069,6 +1093,19 @@ td.warned div, td.unwarned div {
 	font-size: 2em;
 	text-align: center;
 }
+.mod_activities {
+	padding: 0;
+}
+.mod_activities li ul {
+	list-style-type: none;
+	padding: 0;
+}
+.mod_activities .moderation {
+	list-style: '🕮';
+}
+.mod_activities .mod_note {
+	list-style: '🔑';
+}
 
 /* data tables */
 
@@ -1096,11 +1133,13 @@ table.data tr.bold td {
 	font-weight: bold;
 }
 
-table.data.zebra tr:nth-child(even) td {
+table.data.zebra tr:nth-child(even) td,
+.mod_activities li:nth-child(even) {
 	background-color: var(--color-table-row-bg-even);
 	border-bottom: 1px solid var(--color-table-row-border);
 }
-table.data.zebra tr:nth-child(odd) td {
+table.data.zebra tr:nth-child(odd) td,
+.mod_activities li:nth-child(odd) {
 	background-color: var(--color-table-row-bg-odd);
 	border-bottom: 1px solid var(--color-table-row-border);
 }
@@ -1209,9 +1248,14 @@ label.required {
 
 .labelled_grid textarea,
 .labelled_grid input[type="text"],
+.labelled_grid input[type="password"],
 .labelled_grid input[type="email"] {
 	width: 100%;
 	box-sizing: border-box;
+}
+.labelled_grid input[type="text"],
+.labelled_grid input[type="password"] {
+	height: 1.5rlh;
 }
 
 .labelled_grid input[type="checkbox"] {
@@ -1239,10 +1283,6 @@ section + section {
 
 section section + section {
 	margin-top: 1.5rem;
-}
-
-input[type="submit"]:not(.link_post) {
-	margin-top: 1rem;
 }
 
 span.hint {
@@ -1643,10 +1683,12 @@ input[type="submit"].link_post.pushover_button {
 	/* explicitly reset color when not upvoted, since previously-upvoted arrow
 	 * will still be triggering :hover until next tap */
 	div.voters .upvoter:hover:before {
-		color: var(--color-fg-shape);
+		color: transparent;
+		-webkit-text-stroke: 1px var(--color-fg-contrast-4-5);
 	}
 	.upvoted div.voters .upvoter:before {
 		color: var(--color-fg-accent);
+		-webkit-text-stroke: 1px var(--color-fg-accent);
 	}
 
 	ol.stories.list {
@@ -1758,14 +1800,6 @@ input[type="submit"].link_post.pushover_button {
 		max-width: 90%;
 	}
 
-	div.markdown_help_label {
-		display: none;
-	}
-	div.markdown_help_label_mobile {
-		display: inline !important;
-		margin-right: 2em;
-	}
-
 	div#story_box input,
 	div#story_box button,
 	div#story_box textarea,
@@ -1791,16 +1825,16 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	footer nav {
-          text-align: right;
+		text-align: right;
 	}
 	.indent {
 		margin-left: 2em;
 	}
 
 
-        .labelled_grid {
-            grid-template-columns: minmax(5rem, min-content) 1fr;
-        }
+	.labelled_grid {
+		grid-template-columns: minmax(5rem, min-content) 1fr;
+	}
 
 	/* For the mobile view of the grid, we want most things to be full-width */
 	.labelled_grid > * {

@@ -12,6 +12,9 @@ class Message < ApplicationRecord
     optional: true
   belongs_to :hat,
     optional: true
+  has_one :notification,
+    as: :notifiable,
+    dependent: :destroy
 
   include Token
 
@@ -20,7 +23,7 @@ class Message < ApplicationRecord
 
   validates :subject, length: {in: 1..100}
   validates :body, length: {maximum: 70_000}, on: :update # for weird old data
-  validates :body, length: {maximum: 8_192}, on: :create # for weird old data
+  validates :body, length: {within: 20..8_192}, on: :create # max from 2024-10-28 on
   validates :short_id, length: {maximum: 30}
   validates :has_been_read, :deleted_by_author, :deleted_by_recipient, inclusion: {in: [true, false]}
   validate :hat do
@@ -45,9 +48,6 @@ class Message < ApplicationRecord
   scope :unread, -> { where(has_been_read: false, deleted_by_recipient: false) }
 
   before_validation :assign_short_id, on: :create
-  after_create :deliver_email_notifications
-  after_destroy :update_unread_counts
-  after_save :update_unread_counts
   after_save :check_for_both_deleted
 
   def as_json(_options = {})
@@ -84,33 +84,6 @@ class Message < ApplicationRecord
   def check_for_both_deleted
     if deleted_by_author? && deleted_by_recipient?
       destroy!
-    end
-  end
-
-  def update_unread_counts
-    recipient.update_unread_message_count!
-  end
-
-  def deliver_email_notifications
-    if recipient.email_messages?
-      begin
-        EmailMessageMailer.notify(self, recipient).deliver_now
-      rescue => e
-        # Rails.logger.error "error e-mailing #{recipient.email}: #{e}"
-      end
-    end
-
-    return if Rails.env.development?
-
-    if recipient.pushover_messages?
-      recipient.pushover!(
-        title: "#{Rails.application.name} message from " \
-          "#{author_username}: #{subject}",
-        message: plaintext_body,
-        url: Routes.message_url(self),
-        url_title: (author ? "Reply to #{author_username}" :
-          "View message")
-      )
     end
   end
 

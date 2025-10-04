@@ -12,7 +12,7 @@
 <div class="story_content">
   <% if @story.markeddown_description.present? && @story.stories_count == 0 %>
     <div class="story_text">
-    <%= raw @story.markeddown_description %>
+      <%= raw @story.markeddown_description %>
     </div>
   <% end %>
 
@@ -36,25 +36,38 @@
   <% end %>
 
   <% if @story.is_hidden_by_cur_user %>
-    You have <a href="/about#story-hiding">hidden this.</a> Links to this story and its comments will not be shown elsewhere on the site for you.
+    You have <a href="/about#story-hiding">hidden this</a> story.
+  Links to this story and its comments will not be shown elsewhere on the site for you.
     You can <%= link_post "unhide", story_unhide_path(@story.short_id) %> it to make them visible again.
+  <% end %>
+
+  <% if (matched_filtered_tags = @story.tags & filtered_tags).any? %>
+    This story has <%= matched_filtered_tags.count > 1 ? "tags" : "a tag" %> you filtered.
+    Links to this story and its comments will not be shown elsewhere on the site for you.
+    You can <%= link_to "stop filtering", filters_path %> to make them visible again.
   <% end %>
 </div>
 
 <% if @user&.is_moderator? %>
-  <br />
-  <% if @story.hider_count > 0 %>
-    <p>
-      Users hiding this story:
-      <% @story.hidings.each do |hiding| %>
-        <%= styled_user_link(hiding.user) %>
-      <% end %>
-    </p>
-  <% end %>
+  <p>
+    Users hiding this story:
+    <% if @story.hidings.count == 0 %>(none)<% end %>
+    <% @story.hidings.each do |hiding| %>
+      <%= styled_user_link(hiding.user) %>
+    <% end %>
+  </p>
 
-  <br />
-  <label class="required">Latest modlog for this story, submitter, and discussion:</label>
-  <%= render partial: 'moderations/table', locals: { moderations: Moderation.for_story(@story) } %>
+  <% older_log, recent_log = Moderation.for_story(@story).partition { it.created_at.before? 3.months.ago } %>
+  <% if recent_log.count > 0 %>
+    <label class="required">Recent modlog for this submitter, this story, and this story's comments:</label>
+    <%= render partial: 'moderations/table', locals: { moderations: recent_log } %>
+  <% else %>
+    <label class="required">No recent modlog entries</label>
+  <% end %>
+  <details>
+    <summary><%= older_log.count %> older</summary>
+    <%= render partial: 'moderations/table', locals: { moderations: older_log } %>
+  </details>
 <% end %>
 
 <% if !@story.previewing %>
@@ -155,7 +168,12 @@
           </div>
         <% end %>
 
-        <%= render partial: 'comments/threads', locals: { thread: @comments.select { it.story_id == ms.id }, story: ms, ribbon: @ribbon } %>
+        <%= render partial: 'comments/threads', locals: {
+          thread: @comments.select { it.story_id == ms.id },
+          story: ms,
+          ribbon: @ribbon,
+          read_by_notifications: @read_by_notifications
+        } %>
       </li>
 
     </ol>

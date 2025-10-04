@@ -1,18 +1,18 @@
 <%# locals: (story:, moderation: nil) -%>
 <div class="box"><p>
-  <% if !@user %>
-    <%
-      # Logged-out visitors don't get details so we don't make a convenient
-      # public monument to content that was so bad or bizarre we removed it.
-    %>
-    Story was removed.
-  <% elsif story.is_moderated? %>
-    <% if moderation %>
-      Story removed by moderator: <%= moderation.reason %>
+  <% if story.is_moderated? %>
+    <% if !@user %>
+      Story was removed by a moderator.
+    <% elsif moderation %>
+      Story removed by a moderator: <%= moderation.reason %>
     <% else %>
-      Story removed by moderator but no log message was found.
+      Story removed by a moderator but no log message was found.
       Please report this bug.
     <% end %>
+
+    <p>
+      (Logged-out visitors only see "Story was removed" because we don't want to give trolls a convenient public monument to content that was so bad or bizarre we removed it.)
+    </p>
   <% else %>
     Story was removed by submitter<% if @user %> <%= link_to story.user.username, user_path(story.user) %><% end %>.
   <% end %>

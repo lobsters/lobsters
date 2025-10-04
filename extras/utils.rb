@@ -30,7 +30,7 @@ class Utils
     end
 
     # unify arxiv page and pdf based on their identifier https://arxiv.org/help/arxiv_identifier
-    url = url.sub %r{^arxiv\.org/(?:abs|pdf)/(?<id>\d{4}\.\d{4,5}(?:v\d)?)(?:\.pdf)?}, 'arxiv.org/abs/\k<id>'
+    url = url.sub %r{^arxiv\.org/(?:abs|html|pdf)/(?<id>\d{4}\.\d{4,5}(?:v\d)?)(?:\.pdf)?}, 'arxiv.org/abs/\k<id>'
 
     # unify rfc-editor.org pages based on their URL structures:
     # https://www.rfc-editor.org/rfc/rfc9338.html
@@ -53,7 +53,7 @@ class Utils
       ord = chr.unpack1("C")
 
       #          0            9              A            Z              a            z
-      if (ord >= 48 && ord <= 57) || (ord >= 65 && ord <= 90) || (ord >= 97 && ord <= 122)
+      if ord.between?(48, 57) || ord.between?(65, 90) || ord.between?(97, 122)
         str += chr
       end
     end

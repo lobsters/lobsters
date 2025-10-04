@@ -7,22 +7,21 @@
 # https://guides.rubyonrails.org/security.html#content-security-policy-header
 
 Rails.application.configure do
-  #  18 inline styles to clean up before enabling this
-  #  config.content_security_policy do |policy|
-  #    policy.connect_src :self, :https
-  #    policy.default_src :self, :https
-  #    policy.font_src :self, :https, :data
-  #    policy.img_src :self, :https, :data
-  #    policy.object_src :none
-  #    policy.script_src :self, :https
-  #    policy.style_src :self, :https
-  #    policy.report_uri "/csp-violation-report"
-  #  end
+  config.content_security_policy do |policy|
+    policy.default_src :none
 
-  # Generate session nonces for permitted importmap, inline scripts, and inline styles.
-  config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
-  config.content_security_policy_nonce_directives = %w[script-src style-src]
+    # Needed for AJAX calls, mini-profiler
+    policy.connect_src :self
 
-  # Report violations without enforcing the policy.
-  config.content_security_policy_report_only = true
+    # Data URL used for Pushover logo in settings
+    policy.img_src :self, :data
+    policy.script_src :self
+
+    # 18 inline styles to clean up before enabling this
+    policy.style_src :self, :unsafe_inline
+  end
+
+  # Generate session nonces for permitted importmap and inline scripts.
+  config.content_security_policy_nonce_generator = ->(request) { SecureRandom.base64(16) }
+  config.content_security_policy_nonce_directives = %w[script-src]
 end

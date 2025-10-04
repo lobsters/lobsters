@@ -13,14 +13,16 @@ class Routes
     # routes, alphabetically
     def comment_target_path comment, title = false
       options = {anchor: "c_#{comment.short_id}"}
-      options[:title] = comment.story.title_as_slug if title
-      story_short_id_path(comment.story, options)
+      story = comment.story.merged_into_story || comment.story
+      options[:title] = story.title_as_slug if title
+      story_short_id_path(story, options)
     end
 
     def comment_target_url comment, title = false
       options = {anchor: "c_#{comment.short_id}"}
-      options[:title] = comment.story.title_as_slug if title
-      story_short_id_url(comment.story, options)
+      story = comment.story.merged_into_story || comment.story
+      options[:title] = story.title_as_slug if title
+      story_short_id_url(story, options)
     end
 
     def title_path story, anchor: nil

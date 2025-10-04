@@ -31,6 +31,22 @@ RSpec.feature "Submitting Stories", type: :feature do
     expect(page).to have_content "just now"
   end
 
+  scenario "new user previewing an unseen domain" do
+    inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
+    user.update!(created_at: 1.day.ago)
+    refute(Domain.where(domain: "example.net").exists?)
+    expect {
+      visit "/stories/new"
+      fill_in "URL", with: "https://example.net/story"
+      fill_in "Title", with: "Example Story"
+      select :tag1, from: "Tags"
+      click_button "Preview"
+
+      expect(page).to have_content "unseen domain"
+    }.to(change { ModNote.count }.by(1))
+    expect(ModNote.last.user).to eq(user)
+  end
+
   context "submitting an inline image" do
     context "as a user who is not a moderator" do
       scenario "results in a link, not an image" do

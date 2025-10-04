@@ -1,8 +1,11 @@
-class Telebugs
+module Telebugs
   def self.breadcrumb *args, **kwargs
   end
 
   def self.context *args, **kwargs
+  end
+
+  def self.message *args, **kwargs
   end
 
   def self.user *args, **kwargs
@@ -23,20 +26,24 @@ if Rails.application.credentials.telebugs.present?
     config.send_default_pii = true
   end
 
-  class Telebugs
+  module Telebugs
     # https://docs.sentry.io/platforms/ruby/guides/rails/enriching-events/breadcrumbs/
-    def breadcrumb *args
+    def self.breadcrumb *args
       Sentry.add_breadcrumb(Sentry::Breadcrumb.new(*args))
     end
 
     # https://docs.sentry.io/platforms/ruby/guides/rails/enriching-events/context/
-    def context name, value
+    def self.context name, value
       Sentry.configure_scope do |scope|
         scope.set_context(name, value)
       end
     end
 
-    def user id:, username:, email:, ip_address:
+    def self.message msg, **options
+      Sentry.capture_message(msg, **options)
+    end
+
+    def self.user id:, username:, email:, ip_address:
       Sentry.set_user id:, username:, email:, ip_address:
     end
   end

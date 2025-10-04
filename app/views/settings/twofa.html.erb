@@ -2,28 +2,25 @@
   <a href="/settings">Back to Settings</a>
 <% end %>
 
-<div class="box wide">
-  <%= form_with model: @user, url: twofa_auth_url, method: :post do |f| %>
-    <p>
-    <% if @user.has_2fa? %>
-      To turn off two-factor authentication for your account, enter your
-      current password:
-    <% else %>
-      To begin the two-factor authentication enrollment for your account,
-      enter your current password:
-    <% end %>
-    </p>
-
-    <div class="boxline">
-      <%= f.label :password, "Current Password:", :class => "required" %>
-      <%= f.password_field :password, :size => 40, :autocomplete => "off" %>
-    </div>
-
-    <p>
-    <% if @user.has_2fa? %>
-      <%= f.submit "Disable Two-Factor Authentication" %>
-    <% else %>
-      <%= f.submit "Continue" %>
-    <% end %>
+<%= form_with model: @user, url: twofa_auth_url, method: :post do |f| %>
+  <p>
+  <% if @user.has_2fa? %>
+    To turn off two-factor authentication for your account, enter your
+    current password:
+  <% else %>
+    To begin the two-factor authentication enrollment for your account,
+    enter your current password:
   <% end %>
-</div>
+  </p>
+
+  <div class="labelled_grid">
+    <%= f.label :password, "Current Password", :class => "required" %>
+    <%= f.password_field :password, :autocomplete => "off" %>
+  </div>
+
+  <% if @user.has_2fa? %>
+    <%= f.submit "Disable Two-Factor Authentication" %>
+  <% else %>
+    <%= f.submit "Continue" %>
+  <% end %>
+<% end %>

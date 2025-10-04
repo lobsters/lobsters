@@ -68,7 +68,7 @@ Rails.application.configure do
   # https://hatchbox.relationkit.io/articles/61-accessing-your-server-logs-in-hatchbox
   config.logger = ActiveSupport::BroadcastLogger.new(
     ActiveSupport::Logger.new($stdout),
-    ActiveSupport::Logger.new("/home/deploy/lobsters/shared/log/rails.log")
+    ActiveSupport::Logger.new(Rails.root.join("log/rails.log"))
   )
   config.logger.formatter = config.log_formatter
 
@@ -78,7 +78,7 @@ Rails.application.configure do
   # SolidQueue log to stdout for hatchbox UI and a file for grep
   config.solid_queue.logger = ActiveSupport::BroadcastLogger.new(
     ActiveSupport::Logger.new($stdout),
-    ActiveSupport::Logger.new("/home/deploy/lobsters/shared/log/solid_queue.log")
+    ActiveSupport::Logger.new(Rails.root.join("log/solid_queue.log"))
   )
 
   # Use a different cache store in production.
@@ -122,7 +122,7 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
-  config.active_storage.service = :production
+  config.active_storage.service = :local
 end
 
 # disable some excessive logging in production

@@ -3,21 +3,22 @@
 class ApplicationController < ActionController::Base
   include IntervalHelper
   include Authenticatable
+  include ApplicationHelper
 
   protect_from_forgery
   before_action :heinous_inline_partials, if: -> { Rails.env.development? }
   before_action :prepare_exception_notifier
   before_action :mini_profiler
   before_action :set_traffic_style
-  around_action :n_plus_one_detection, unless: -> { Rails.env.production? }
-
-  # 2023-10-07 one user in one of their browser envs is getting a CSRF failure, I'm reverting
-  # because I'll be AFK a while.
-  # after_action :clear_lobster_trap
+  before_action :remove_unknown_cookies
+  after_action :clear_session_cookie
 
   # match this nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
   CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
+
+  # copied from https://github.com/rack/rack/blob/main/lib/rack/utils.rb
+  VALID_COOKIE_KEY = /\A[!#$%&'*+\-\.\^_`|~0-9a-zA-Z]+\z/
 
   # Rails misdesign: if the /recent route doesn't support .rss, Rails calls it anyways and then
   # raises MissingTemplate when it's not handled, as if the app did something wrong (a prod 500!).
@@ -64,13 +65,22 @@ class ApplicationController < ActionController::Base
     true
   end
 
+  def remove_unknown_cookies
+    cookies.each do |key, _value|
+      next if key == TAG_FILTER_COOKIE.to_s # don't clear tag filters cookie
+      next if key == Rails.application.config.session_options[:key] # don't clear session cookie
+      next if key == "__profilin" && (Rails.env.development? || @user&.is_moderator?) # don't clear Rack::MiniProfiler cookie
+      next unless VALID_COOKIE_KEY.match?(key)
+      cookies.delete(key)
+    end
+  end
+
   # clear Rails session cookie if not logged in so nginx uses the page cache
   # https://ryanfb.xyz/etc/2021/08/29/going_cookie-free_with_rails.html
-  def clear_lobster_trap
+  def clear_session_cookie
     key = Rails.application.config.session_options[:key] # "lobster_trap"
-    cookies.delete(key) if @user.blank?
-    # this probably should test session.empty? && controller...
-    request.session_options[:skip] = @user.blank? && controller_name != "login"
+    cookies.delete(key) if @user.blank? && session.empty?
+    request.session_options[:skip] = @user.blank? && session.empty?
   end
 
   def find_user_from_rss_token
@@ -147,18 +157,5 @@ class ApplicationController < ActionController::Base
 
   def show_title_h1
     @title_h1 = true
-  end
-
-  def tags_filtered_by_cookie
-    @_tags_filtered ||= Tag.where(
-      tag: cookies[TAG_FILTER_COOKIE].to_s.split(",")
-    )
-  end
-
-  def n_plus_one_detection
-    Prosopite.scan
-    yield
-  ensure
-    Prosopite.finish
   end
 end

@@ -10,11 +10,7 @@ class TagsController < ApplicationController
     @categories = Category.order(category: :asc).includes(:tags)
     @tags = Tag.all.preload(:category)
 
-    @filtered_tags = if @user
-      @user.tag_filter_tags.index_by(&:id)
-    else
-      tags_filtered_by_cookie.index_by(&:id)
-    end
+    @filtered_tags = filtered_tags.index_by(&:id)
 
     respond_to do |format|
       format.html { render action: "index" }

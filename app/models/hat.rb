@@ -42,35 +42,6 @@ class Hat < ApplicationRecord
     destroy!
   end
 
-  def to_html_label
-    hl = link.present? && link.match(/^https?:\/\//)
-
-    h = "<span class=\"hat " \
-      "hat_#{hat.gsub(/[^A-Za-z0-9]/, "_").downcase}\" " \
-      "title=\"Granted #{created_at.strftime("%Y-%m-%d")}"
-
-    if !hl && link.present?
-      h << " - #{ERB::Util.html_escape(sanitized_link)}"
-    end
-
-    h << "\">" \
-      "<span class=\"crown\">"
-
-    if hl
-      h << "<a href=\"#{ERB::Util.html_escape(link)}\" target=\"_blank\">"
-    end
-
-    h << ERB::Util.html_escape(hat)
-
-    if hl
-      h << "</a>"
-    end
-
-    h << "</span></span>"
-
-    h.html_safe
-  end
-
   def to_txt
     "(#{hat}) "
   end

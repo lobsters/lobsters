@@ -1,0 +1,11 @@
+<%= render partial: 'mod/subnav', locals: { periods: @periods } %>
+
+<% if @stories.present? %>
+  <ol class="stories list">
+    <%= render :partial => "stories/listdetail",
+              :collection => @stories,
+              :as => :story %>
+  </ol>
+<% else %>
+  <div class="nominal">🦞</div>
+<% end %>

@@ -19,7 +19,7 @@ module UsersHelper
 
       if tag
         concat ", most commonly tagged "
-        concat link_to(tag.tag, tag_path(tag), class: tag.css_class, title: tag.description)
+        concat tag_link(tag)
       end
     end
   end

@@ -91,7 +91,7 @@ module TrafficHelper
               linear-gradient(180deg, transparent 0, transparent 100%) !important;
 } }")
     elsif time.month == 6 && time.day == 28 # Stonewall riots
-      return h.content_tag :style, "#logo { background: linear-gradient(180deg, #FE0000 16.66%, #FD8C00 16.66%, 33.32%, #FFE500 33.32%, 49.98%, #119F0B 49.98%, 66.64%, #0644B3 66.64%, 83.3%, #C22EDC 83.3%); }"
+      return h.content_tag :style, "#logo { background: url(#{ActionController::Base.helpers.asset_path("logo-transparent.svg")}) no-repeat center, linear-gradient(180deg, #FE0000 16.66%, #FD8C00 16.66%, 33.32%, #FFE500 33.32%, 49.98%, #119F0B 49.98%, 66.64%, #0644B3 66.64%, 83.3%, #C22EDC 83.3%); }"
     elsif time.month == 12 && time.day == 25 # Christmas
       return h.content_tag :style, "#logo { background: conic-gradient(at 50% 0, #9f3631 157.5deg, #01c94f 0, #01c94f 202.5deg, #9f3631 0); }"
     end

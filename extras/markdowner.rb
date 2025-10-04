@@ -3,6 +3,8 @@
 require "commonmarker"
 
 class Markdowner
+  USERNAME_MENTION = /\B([@~]#{User::VALID_USERNAME})\b/o
+
   # opts[:allow_images] allows <img> tags
 
   def self.to_html(text, opts = {})
@@ -73,7 +75,7 @@ class Markdowner
     # one lookup, then loop again to manipulate the nodes for usernames that exist.
 
     while node
-      return unless node.string_content =~ /\B([@~]#{User::VALID_USERNAME})/o
+      return unless node.string_content =~ USERNAME_MENTION
       before, user, after = $`, $1, $'
 
       node.string_content = before

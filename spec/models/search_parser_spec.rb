@@ -95,6 +95,9 @@ describe SearchParser do
   end
 
   describe "domain rule" do
+    before do
+      allow(File).to receive(:read).with(FetchIanaTldsJob::STORAGE_PATH).and_return("co com net ping")
+    end
     it("parses single") { expect(sp.domain).to parse("example.com") }
     it("parses dash") { expect(sp.domain).to parse("foo-bar.com") }
     it("parses numbers") { expect(sp.domain).to parse("9to5mac.com") }

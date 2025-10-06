@@ -153,6 +153,8 @@ describe Search do
   end
 
   it "can search for stories by domain" do
+    allow(File).to receive(:read).with(FetchIanaTldsJob::STORAGE_PATH).and_return("rs")
+
     search = Search.new({q: "term1 lobste.rs", what: "stories"}, @alice)
 
     expect(search.results.length).to eq(1)
@@ -270,6 +272,8 @@ describe Search do
   end
 
   it "should only return comments with stories in domain if domain present" do
+    allow(File).to receive(:read).with(FetchIanaTldsJob::STORAGE_PATH).and_return("rs")
+
     search = Search.new({q: "lobste.rs", what: "comments"}, @alice)
 
     expect(search.results).to include(@comments[4])

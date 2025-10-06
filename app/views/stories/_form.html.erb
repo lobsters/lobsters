@@ -6,7 +6,7 @@
     <div class="boxline">
     <% if f.object.url_is_editable_by_user?(@user) %>
       <%= f.label :url, "URL:" %>
-      <%= f.text_field :url, required: true %>
+      <%= f.text_field :url %>
       <%= button_tag raw("Fetch&nbsp;Title"), :id => "story_fetch_title",
         :type => "button" %>
     <% elsif !f.object.new_record? && !f.object.url.blank? %>
@@ -74,7 +74,7 @@
   <% unless suggesting %>
     <div class="boxline">
       <%= f.label :description, "Text:" %>
-      <%= f.text_area :description, required: true, rows: 8, placeholder: "Use this for stories without a URL, to link additional context, or to paste abstracts from PDF papers.
+      <%= f.text_area :description, rows: 8, placeholder: "Use this for stories without a URL, to link additional context, or to paste abstracts from PDF papers.
 
 Please don't use this to promote the story, summarize the post, or explain why you posted it.
 See the guidelines below for more." %>
@@ -135,7 +135,7 @@ See the guidelines below for more." %>
   <div class="box">
     <div class="boxline">
       <%= f.label :user_is_author, "Author:" %>
-      <%= f.check_box :user_is_author, required: true %>
+      <%= f.check_box :user_is_author %>
       <%= f.label :user_is_author,
         (f.object.id && f.object.user_id != @user.id ? "Submitter is" : "I am") +
         " the author of the story at this URL (or this text)",
@@ -143,7 +143,7 @@ See the guidelines below for more." %>
     </div>
     <div class="boxline">
       <%= f.label :user_is_following, "Follow:" %>
-      <%= f.check_box :user_is_following, required: true %>
+      <%= f.check_box :user_is_following %>
       <%= f.label :user_is_following,
         (f.object.id && f.object.user_id == @user.id ? 'Follow' : "Submitter is following") +
         " this story to receive replies via e-mail and Pushover",

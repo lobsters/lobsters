@@ -26,6 +26,9 @@ production:
   fetch_email_blocklist:
     class: FetchEmailBlocklistJob
     schedule: every 7 days
+  fetch_iana_tlds:
+    class: FetchIanaTldsJob
+    schedule: every 1 month
 
 development:
   clear_finished_jobs:
@@ -43,3 +46,6 @@ development:
   fetch_email_blocklist:
     command: FetchEmailBlocklistJob
     schedule: every 7 days
+  fetch_iana_tlds:
+    class: FetchIanaTldsJob
+    schedule: every 1 month

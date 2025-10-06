@@ -47,5 +47,5 @@ development:
     command: FetchEmailBlocklistJob
     schedule: every 7 days
   fetch_iana_tlds:
-    command: FetchIanaTldsJob
+    class: FetchIanaTldsJob
     schedule: every 1 month

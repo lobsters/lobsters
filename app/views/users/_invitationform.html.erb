@@ -22,7 +22,7 @@ If you want to avoid connecting your old and new usernames, ask <%= link_to 'a m
     <%= f.email_field :email, autocomplete: "off", inputmode: "email", required: true %>
 
     <%= f.label :memo, "Memo to User" %>
-    <%= f.text_field :memo, required: true %>
+    <%= f.text_field :memo %>
   </div>
 
   <%= f.submit "Send Invitation" %>

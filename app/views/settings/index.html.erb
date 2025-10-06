@@ -20,13 +20,13 @@
         </div>
 
         <%= f.label :current_password, "Current Password" %>
-        <%= f.password_field :current_password, required: true, name: "current_password", autocomplete: "off" %>
+        <%= f.password_field :current_password, name: "current_password", autocomplete: "off" %>
 
         <%= f.label :password, "New Password" %>
-        <%= f.password_field :password, required: true, autocomplete: "off" %>
+        <%= f.password_field :password, autocomplete: "off" %>
 
         <%= f.label :password_confirmation, "Confirm Password" %>
-        <%= f.password_field :password_confirmation, required: true, autocomplete: "off" %>
+        <%= f.password_field :password_confirmation, autocomplete: "off" %>
 
         <%= f.label :email, "E-mail Address" %>
         <div>
@@ -39,11 +39,11 @@
         </div>
 
         <%= f.label :homepage, "Homepage" %>
-        <%= f.url_field :homepage, required: true %>
+        <%= f.url_field :homepage %>
 
         <%= f.label :about, "About" %>
         <div>
-          <%= f.text_area :about, required: true %>
+          <%= f.text_area :about %>
 
           <%= render :partial => "global/markdownhelp" %>
         </div>
@@ -74,11 +74,11 @@
 
       <div class="labelled_grid">
         <%= f.label :email_replies, "Receive E-mail", class: "for_checkbox" %>
-        <span><%= f.check_box :email_replies, required: true %></span>
+        <span><%= f.check_box :email_replies %></span>
         <%= f.label :pushover_replies, "Receive Pushover Alert",
           class: "for_checkbox" %>
         <span>
-          <%= f.check_box :pushover_replies, required: true %>
+          <%= f.check_box :pushover_replies %>
           <span class="hint">
             Requires Pushover subscription below
           </span>
@@ -91,11 +91,11 @@
 
       <div class="labelled_grid">
         <%= f.label :email_mentions, "Receive E-mail", class: "for_checkbox" %>
-        <span><%= f.check_box :email_mentions, required: true %></span>
+        <span><%= f.check_box :email_mentions %></span>
         <%= f.label :pushover_mentions, "Receive Pushover Alert",
           class: "for_checkbox" %>
         <span>
-          <%= f.check_box :pushover_mentions, required: true %>
+          <%= f.check_box :pushover_mentions %>
           <span class="hint">
             Requires Pushover subscription below
           </span>
@@ -108,11 +108,11 @@
 
       <div class="labelled_grid">
         <%= f.label :email_messages, "Receive E-mail", class: "for_checkbox" %>
-        <span><%= f.check_box :email_messages, required: true %></span>
+        <span><%= f.check_box :email_messages %></span>
         <%= f.label :pushover_messages, "Receive Pushover Alert",
           class: "for_checkbox" %>
         <span>
-          <%= f.check_box :pushover_messages, required: true %>
+          <%= f.check_box :pushover_messages %>
           <span class="hint">
             Requires Pushover subscription below
           </span>
@@ -127,7 +127,7 @@
         <%= f.label :show_submitted_story_threads,
           raw("Show in <a href=\"/threads\">Your Threads</a>"),
           class: "for_checkbox" %>
-        <span><%= f.check_box :show_submitted_story_threads, required: true %></span>
+        <span><%= f.check_box :show_submitted_story_threads %></span>
       </div>
     </section>
 
@@ -178,7 +178,7 @@
         <%= f.label :show_email, "Show Email Address",
           class: "for_checkbox" %>
         <span>
-          <%= f.check_box :show_email, required: true %>
+          <%= f.check_box :show_email %>
           <span class="hint">
             Only shown to logged-in users
           </span>
@@ -186,10 +186,10 @@
 
         <%= f.label :show_story_previews, "Show Story Previews",
           class: "for_checkbox" %>
-        <span><%= f.check_box :show_story_previews, required: true %></span>
+        <span><%= f.check_box :show_story_previews %></span>
 
         <%= f.label :show_avatars, "Show User Avatars", class: "for_checkbox" %>
-        <span><%= f.check_box :show_avatars, required: true %></span>
+        <span><%= f.check_box :show_avatars %></span>
       </div>
 
       <%= f.submit "Save Account Settings" %>

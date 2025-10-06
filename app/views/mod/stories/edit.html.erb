@@ -7,13 +7,13 @@
       <div class="box">
         <div class="boxline">
           <%= f.label :merge_story_short_id, "Merge Into:" %>
-          <%= f.text_field :merge_story_short_id, required: true, autocomplete: "off",
+          <%= f.text_field :merge_story_short_id, autocomplete: "off",
             placeholder: "Short id of story into which this story " <<
             "will be merged" %>
         </div>
         <div class="boxline">
           <%= f.label :unavailable_at, "Unavailable:" %>
-          <%= f.check_box :is_unavailable, required: true %>
+          <%= f.check_box :is_unavailable %>
           <%= f.label :unavailable_at, "Source URL is unavailable, " <<
             "enable display of cached text", :class => "normal" %>
         </div>

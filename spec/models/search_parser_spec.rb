@@ -105,6 +105,7 @@ describe SearchParser do
     it("doesn't parse just the tld") { expect(sp.domain).to_not parse("com") }
     it("doesn't parse empty domain") { expect(sp.domain).to_not parse(".com") }
     it("doesn't parse invalid domain") { expect(sp.domain).to_not parse("example..com") }
+    it("supports legacy domain: syntax") { expect(sp.domain).to parse("domain:example.com") }
   end
 
   describe "submitter rule" do

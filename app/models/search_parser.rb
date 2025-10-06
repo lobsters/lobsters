@@ -25,10 +25,11 @@ class SearchParser < Parslet::Parser
   # User::VALID_USERNAME
   rule(:commenter) { str("commenter:") >> match("[@~]").repeat(0, 1) >> match("[A-Za-z0-9_\\-]").repeat(1, 24).as(:commenter) >> space? }
   rule(:domain) {
-    (
-      (match("[a-z0-9]") >> match("[a-z0-9\\-]").repeat(1, 62) >> str(".")).repeat(1) >>
-      Parslet::Atoms::Alternative.new(*IANA_TLDS.sort_by{-it.length}.map{ str(it) }) # Consider lengthier TLDs first because Parslet is greedy (and would match "co" before "com")
-    ).as(:domain) >> space?
+    str("domain:").maybe >>
+      (
+        (match("[a-z0-9]") >> match("[a-z0-9\\-]").repeat(1, 62) >> str(".")).repeat(1) >>
+        Parslet::Atoms::Alternative.new(*IANA_TLDS.sort_by { -it.length }.map { str(it) }) # Consider lengthier TLDs first because Parslet is greedy (and would match "co" before "com")
+      ).as(:domain) >> space?
   }
   # User::VALID_USERNAME
   rule(:submitter) { str("submitter:") >> match("[@~]").repeat(0, 1) >> match("[A-Za-z0-9_\\-]").repeat(1, 24).as(:submitter) >> space? }

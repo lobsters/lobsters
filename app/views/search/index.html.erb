@@ -2,7 +2,7 @@
 <div class="box">
   <%= form_with url: '/search', method: :get do |f| %>
     <div class="boxline">
-        <%= f.text_field "q", { :value => @search.q, :size => 40 }.
+        <%= f.text_field "q", { :value => @search.q, :size => 40, :autocapitalize => "none" }.
         merge(@search.q.present? ? {} : { :autofocus => "autofocus" }) %>
       <input type="submit" value="Search">
     </div>

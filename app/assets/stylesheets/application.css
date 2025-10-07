@@ -1176,13 +1176,14 @@ table.moderations tr > td:nth-child(1) {
 	margin-bottom: 4px;
 }
 
-label:has(+ *:required),
-label:has(+ *:not(label) *:required),
-label:has(+ *[type="hidden"] + *:required),
-/* Explicit class for labels that don't precede an input
-but need to match the styling of labels that do */
-label.bold {
-	font-weight: bold;
+label:has(+ *:required)::after,
+label:has(+ *:not(label) *:required)::after,
+label:has(+ *[type="hidden"] + *:required)::after,
+label.bold::after {
+	content: "*";
+	margin-left: 0.15em;
+	font-size: 150%;
+	vertical-align: middle;
 }
 .box img {
 	vertical-align: middle;

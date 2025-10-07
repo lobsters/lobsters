@@ -6,19 +6,19 @@
       <br />
       <div class="box">
         <div class="boxline">
-          <%= f.label :merge_story_short_id, "Merge Into:" %>
+          <%= f.label :merge_story_short_id, "Merge Into" %>
           <%= f.text_field :merge_story_short_id, autocomplete: "off",
             placeholder: "Short id of story into which this story " <<
             "will be merged" %>
         </div>
         <div class="boxline">
-          <%= f.label :unavailable_at, "Unavailable:" %>
+          <%= f.label :unavailable_at, "Unavailable" %>
           <%= f.check_box :is_unavailable %>
           <%= f.label :unavailable_at, "Source URL is unavailable, " <<
             "enable display of cached text", :class => "normal" %>
         </div>
         <div class="boxline">
-          <%= f.label :moderation_reason, "Mod Reason:" %>
+          <%= f.label :moderation_reason, "Mod Reason" %>
           <%= f.text_field :moderation_reason, required: true %>
         </div>
       </div>
@@ -49,5 +49,5 @@
 </div>
 
 <br />
-<label>Latest modlog for this story, submitter, and discussion:</label>
+<label>Latest modlog for this story, submitter, and discussion</label>
 <%= render partial: 'moderations/table', locals: { moderations: Moderation.for_story(@story) } %>

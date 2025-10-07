@@ -1559,9 +1559,6 @@ input[type="submit"].link_post.pushover_button {
 	#inside > ol.comments div.voters {
 		width: 30px;
 	}
-	.labelled_grid > label:after {
-		content: ':';
-	}
 
 	.help {
 		margin-top: 2em;
@@ -1856,11 +1853,6 @@ input[type="submit"].link_post.pushover_button {
 	.labelled_grid > input[type="checkbox"],
 	.labelled_grid > *:has(input[type="checkbox"]) {
 		grid-column: 2;
-	}
-
-	/* Add a colon to the label for checkboxes, as in the desktop view */
-	.labelled_grid	label.for_checkbox:after {
-		content: ":";
 	}
 
 	/* Force hints onto the next line, with no indent */

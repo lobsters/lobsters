@@ -1,6 +1,6 @@
 <div class="box wide">
   <%= form_with url: moderations_path, method: :get do |f| %>
-    <label class="normal" for="moderator">Moderator:</label>
+    <label class="normal" for="moderator">Moderator</label>
     <%= f.select 'moderator', options_for_select(@moderators, @moderator) %>
     <% @what.each do |type, checked| %>
       <%= check_box_tag "what[#{type}]", type, checked %>

@@ -1178,8 +1178,7 @@ table.moderations tr > td:nth-child(1) {
 
 label:has(+ *:required)::after,
 label:has(+ *:not(label) *:required)::after,
-label:has(+ *[type="hidden"] + *:required)::after,
-label.bold::after {
+label:has(+ *[type="hidden"] + *:required)::after {
 	content: "*";
 	margin-left: 0.15em;
 	font-size: 150%;

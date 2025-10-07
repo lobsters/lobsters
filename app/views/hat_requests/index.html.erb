@@ -8,7 +8,7 @@
 
     <%= form_with model: hr, method: :post do |f| %>
       <div class="labelled_grid">
-        <%= f.label :user_id, "User", class: "bold" %>
+        <%= f.label :user_id, "User" %>
         <span>
           <%= styled_user_link hr.user %>
           <%= how_long_ago(hr.created_at) %>
@@ -20,11 +20,11 @@
         <%= f.label :link, "Link" %>
         <%= f.text_field "link", required: true, autocapitalize: :off %>
         <% if hr.link.to_s.match(/^http/) %>
-          <%= f.label :link, "Link", class: "bold" %>
+          <%= f.label :link, "Link" %>
           <a href="<%= hr.link %>" rel="ugc"><%= hr.link %></a>
         <% end %>
 
-        <%= f.label :link, "Comment", class: "bold" %>
+        <%= f.label :link, "Comment" %>
         <div class="shorten_first_p">
           <%= raw Markdowner.to_html(hr.comment || '') %>
         </div>

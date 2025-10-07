@@ -11,7 +11,7 @@
   <div class="labelled_grid">
     <% if not Rails.application.open_signups? %>
       <%= f.hidden_field "invitation_code", :value => @invitation.code, :name => :invitation_code %>
-      <%= f.label :invitation, "Invited By", class: "bold" %>
+      <%= f.label :invitation, "Invited By" %>
       <%= link_to @invitation.user.username, user_path(@invitation.user), target: '_blank' %>
     <% end %>
 

@@ -25,25 +25,25 @@
   <br><br><hr><br>
 
   <% if @domain.banned_at %>
-    <label class="bold">Status:</label>
+    <label>Status:</label>
     <span class="d">
       Banned
     </span>
     <br>
 
-    <label class="bold">Banned Reason:</label>
+    <label>Banned Reason:</label>
     <span class="d">
       <%= @domain.banned_reason %>
     </span>
     <br>
 
-    <label class="bold">Banned At:</label>
+    <label>Banned At:</label>
     <span class="d">
       <%= @domain.banned_at %>
     </span>
     <br>
 
-    <label class="bold">Banned by User:</label>
+    <label>Banned by User:</label>
     <span class="d">
       <%= @domain.banned_by_user.username %>
     </span>

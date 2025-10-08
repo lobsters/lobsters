@@ -163,16 +163,16 @@
       <div class="labelled_grid">
         <%= f.label :prefers_color_scheme, "Color Scheme" %>
         <span>
-          <label><%= f.radio_button :prefers_color_scheme, :system, required: true %> System (<a href="https://lobste.rs/s/eg1n75/dark_mode">details</a>)</label>
-          <label><%= f.radio_button :prefers_color_scheme, :light, required: true %> Light</label>
-          <label><%= f.radio_button :prefers_color_scheme, :dark, required: true %> Dark</label>
+          <label><%= f.radio_button :prefers_color_scheme, :system %> System (<a href="https://lobste.rs/s/eg1n75/dark_mode">details</a>)</label>
+          <label><%= f.radio_button :prefers_color_scheme, :light %> Light</label>
+          <label><%= f.radio_button :prefers_color_scheme, :dark %> Dark</label>
         </span>
 
         <%= f.label :prefers_contrast, "Contrast" %>
         <span>
-          <label><%= f.radio_button :prefers_contrast, :system, required: true %> System</label>
-          <label><%= f.radio_button :prefers_contrast, :normal, required: true %> Normal</label>
-          <label><%= f.radio_button :prefers_contrast, :high, required: true %> High</label>
+          <label><%= f.radio_button :prefers_contrast, :system %> System</label>
+          <label><%= f.radio_button :prefers_contrast, :normal %> Normal</label>
+          <label><%= f.radio_button :prefers_contrast, :high %> High</label>
         </span>
 
         <%= f.label :show_email, "Show Email Address", class: "for_checkbox" %>

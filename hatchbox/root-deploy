@@ -54,6 +54,10 @@ ADMIN_EMAIL=$(cat $APP_ETC/admin_email)
 sed -i "s/ADMIN_EMAIL/$ADMIN_EMAIL/g" /etc/aliases
 newaliases
 
+# https://github.com/lobsters/lobsters/issues/1739
+cp syslog.conf  /usr/lib/systemd/journald.conf.d/yslog.conf
+systemctl restart syslog
+
 # pick up changes to opendkim, root-deploy.service, and root-deploy.path
 systemctl daemon-reload
 systemctl enable --now opendkim

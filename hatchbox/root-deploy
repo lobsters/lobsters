@@ -56,7 +56,7 @@ newaliases
 
 # https://github.com/lobsters/lobsters/issues/1739
 cp syslog.conf  /usr/lib/systemd/journald.conf.d/
-systemctl restart syslog
+systemctl force-reload systemd-journald
 
 # pick up changes to opendkim, root-deploy.service, and root-deploy.path
 systemctl daemon-reload

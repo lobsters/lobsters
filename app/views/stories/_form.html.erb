@@ -5,12 +5,12 @@
   <% unless suggesting %>
     <div class="boxline">
     <% if f.object.url_is_editable_by_user?(@user) %>
-      <%= f.label :url, "URL:" %>
+      <%= f.label :url, "URL" %>
       <%= f.text_field :url %>
       <%= button_tag raw("Fetch&nbsp;Title"), :id => "story_fetch_title",
         :type => "button" %>
     <% elsif !f.object.new_record? && !f.object.url.blank? %>
-      <%= f.label :url, "URL:" %>
+      <%= f.label :url, "URL" %>
       <div class="d">
       <a href="<%= f.object.url %>"><%= f.object.url %></a>
       </div>
@@ -22,7 +22,7 @@
   <% end %>
 
   <div class="boxline">
-    <%= f.label :title, "Title:" %>
+    <%= f.label :title, "Title" %>
     <%= f.text_field :title, required: true, maxlength: Story.title_maximum_length %>
     <p class="actions title-reminder">
       Please remove extraneous components from titles such as the name of the site, blog, section, and author.
@@ -43,7 +43,7 @@
   <% end %>
 
   <div class="boxline" style="margin-bottom: 2px;">
-  <%= f.label :tags, "Tags:",
+  <%= f.label :tags, "Tags",
     :style => "line-height: 2.3em;" %>
   <%= f.select "tags", options_for_select(
     Tag.all_with_filtered_counts_for(@user).map{|t|
@@ -73,7 +73,7 @@
 
   <% unless suggesting %>
     <div class="boxline">
-      <%= f.label :description, "Text:" %>
+      <%= f.label :description, "Text" %>
       <%= f.text_area :description, rows: 8, placeholder: "Use this for stories without a URL, to link additional context, or to paste abstracts from PDF papers.
 
 Please don't use this to promote the story, summarize the post, or explain why you posted it.
@@ -134,7 +134,7 @@ See the guidelines below for more." %>
 <% unless suggesting %>
   <div class="box">
     <div class="boxline">
-      <%= f.label :user_is_author, "Author:" %>
+      <%= f.label :user_is_author, "Author" %>
       <%= f.check_box :user_is_author %>
       <%= f.label :user_is_author,
         (f.object.id && f.object.user_id != @user.id ? "Submitter is" : "I am") +
@@ -142,7 +142,7 @@ See the guidelines below for more." %>
         :class => "normal" %>
     </div>
     <div class="boxline">
-      <%= f.label :user_is_following, "Follow:" %>
+      <%= f.label :user_is_following, "Follow" %>
       <%= f.check_box :user_is_following %>
       <%= f.label :user_is_following,
         (f.object.id && f.object.user_id == @user.id ? 'Follow' : "Submitter is following") +

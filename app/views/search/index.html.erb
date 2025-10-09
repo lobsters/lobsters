@@ -8,24 +8,24 @@
     </div>
 
     <div class="boxline">
-      <label>Search:</label>
+      <label>Search</label>
 
       <span>
-        <label class="normal"><%= f.radio_button "what", "stories", required: true, checked: @search.what == :stories %> Stories</label>
+        <label class="normal"><%= f.radio_button "what", "stories", checked: @search.what == :stories %> Stories</label>
         &nbsp;
-        <label class="normal"><%= f.radio_button "what", "comments", required: true, checked: @search.what == :comments %> Comments</label>
+        <label class="normal"><%= f.radio_button "what", "comments", checked: @search.what == :comments %> Comments</label>
       </span>
 
       <br>
 
-      <label>Order By:</label>
+      <label>Order By</label>
 
       <span>
-        <label class="normal"><%= f.radio_button "order", "newest", required: true, checked: @search.order == :newest %> Newest</label>
+        <label class="normal"><%= f.radio_button "order", "newest", checked: @search.order == :newest %> Newest</label>
         &nbsp;
-        <label class="normal"><%= f.radio_button "order", "relevance", required: true, checked: @search.order == :relevance %> Relevance</label>
+        <label class="normal"><%= f.radio_button "order", "relevance", checked: @search.order == :relevance %> Relevance</label>
         &nbsp;
-        <label class="normal"><%= f.radio_button "order", "score", required: true, checked: @search.order == :score %> Score</label>
+        <label class="normal"><%= f.radio_button "order", "score", checked: @search.order == :score %> Score</label>
       </span>
     </div>
   <% end %>
@@ -321,7 +321,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
   <% end %>
 <% else %>
   <div class="help">
-    Search hints:
+    <label>Search hints:</label>
     <ul>
       <li>Search terms are required. Use quote marks if you want <span class="searchq">"words together"</span></li>
       <li>Terms are exact, so <span class="searchq">code</span> doesn't match <span class="searchq">coder</span> or <span class="searchq">coding</span>. You can approximate stemming with <span class="searchq">cod*</span></li>

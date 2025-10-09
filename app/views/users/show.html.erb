@@ -6,7 +6,7 @@
   <% end %>
 <% end %>
 
-<section>
+<section class="profile">
   <% if @showing_user.is_active? %>
     <div id="gravatar">
       <%= avatar_img(@showing_user, 100) %>
@@ -14,7 +14,7 @@
   <% end %>
 
   <div class="labelled_grid">
-    <label class="bold">Status</label>
+    <label>Status</label>
     <span
     <%= @showing_user.is_banned? ? raw("style=\"color: red;\"") : "" %>>
       <% if @showing_user.is_banned? %>
@@ -35,7 +35,7 @@
       <% end %>
     </span>
 
-    <label class="bold">Joined</label>
+    <label>Joined</label>
     <span>
       <%= how_long_ago_label(@showing_user.created_at) %>
       <% if @showing_user.invited_by_user %>
@@ -45,7 +45,7 @@
     </span>
 
     <% if @showing_user.is_banned? %>
-      <label class="bold">Banned</label>
+      <label>Banned</label>
       <span>
         <%= how_long_ago_label(@showing_user.banned_at) %>
         <% if @showing_user.banned_by_user %>
@@ -57,7 +57,7 @@
     <% end %>
 
     <% if @showing_user.deleted_at? %>
-      <label class="bold">Deactivated</label>
+      <label>Deactivated</label>
       <span>
         <%= how_long_ago_label(@showing_user.deleted_at) %>
         <% if @showing_user.deleted_at <= Time.new(2025, 9, 9) && !@showing_user.is_banned? %>
@@ -68,22 +68,22 @@
     <% end %>
 
     <% if !@showing_user.is_admin? %>
-      <label class="bold">Karma</label>
+      <label>Karma</label>
       <span>
         <%= @showing_user.karma %>
       </span>
     <% end %>
 
-    <label class="bold">Stories Submitted</label>
+    <label>Stories Submitted</label>
     <span>
       <%= stories_submitted_content(@user, @showing_user) %>
     </span>
 
-    <label class="bold">Comments Posted</label>
+    <label>Comments Posted</label>
     <span><%= comments_posted_content(@user, @showing_user) %></span>
 
     <% if @showing_user.hats.any? %>
-      <label class="bold">Hats</label>
+      <label>Hats</label>
       <div>
       <% @showing_user.hats.each do |hat| %>
         <%= styled_hat(hat) %>
@@ -99,14 +99,14 @@
     <% end %>
 
     <% if @user&.is_admin? || @user&.show_email? %>
-      <label class="bold">E-Mail</label>
+      <label>E-Mail</label>
       <span>
         <%= @showing_user.email %>
       </span>
     <% end %>
 
     <% if @showing_user.homepage.present? %>
-      <label class="bold">Homepage</label>
+      <label>Homepage</label>
 
       <span>
         <a href="<%= h(@showing_user.homepage) %>"
@@ -120,7 +120,7 @@
     <% end %>
 
     <% if @showing_user.github_username.present? %>
-      <label class="bold">GitHub</label>
+      <label>GitHub</label>
 
       <span>
         <a href="https://github.com/<%= h(@showing_user.github_username) %>"
@@ -130,7 +130,7 @@
     <% end %>
 
     <% if @showing_user.mastodon_username.present? && @showing_user.mastodon_instance.present? %>
-      <label class="bold">Mastodon</label>
+      <label>Mastodon</label>
 
       <span>
         <a href="https://<%= h(@showing_user.mastodon_instance)%>/@<%= h(@showing_user.mastodon_username)%>"
@@ -140,7 +140,7 @@
     <% end %>
 
     <% if @showing_user.is_active? %>
-      <label class="bold">About</label>
+      <label>About</label>
 
       <div class="shorten_first_p">
         <% if @showing_user.about.present? %>
@@ -155,7 +155,7 @@
 </section>
 
 <% if Rails.env.development? || @user == @showing_user || @user&.is_moderator? %>
-  <section>
+  <section class="profile">
     <div class="user-stats flash-notice">
       <p>
         Comments posted in the last 6 months: <%= @showing_user.comments.recent.count %><br>
@@ -174,8 +174,8 @@
 <% if @user && @user.is_moderator? && !@showing_user.is_moderator? %>
   <h2>Moderator Information</h2>
 
-  <section class="labelled_grid">
-    <label class="bold">Flagged (1m)</label>
+  <section class="labelled_grid profile">
+    <label>Flagged (1m)</label>
     <span>
       <% if (stats = FlaggedCommenters.new('1m').check_list_for(@showing_user)) %>
         <a href="/mod/commenters/1m#<%= @showing_user.username %>">#<%= stats[:rank] %></a> at <%= '%.2f' % (stats[:sigma] || 0) %> &sigma;
@@ -184,7 +184,7 @@
       <% end %>
     </span>
 
-    <label class="bold">Self Promoter</label>
+    <label>Self Promoter</label>
     <span>
       <% if @showing_user.is_heavy_self_promoter? %>
         <strong>Yes</strong>
@@ -194,8 +194,8 @@
     </span>
   </section>
 
-  <section>
-    <label class="bold">Last 20 Mod Activities</label>
+  <section class="profile">
+    <label>Last 20 Mod Activities</label>
     <%= render partial: 'mod/activities/table', locals: { mod_activities: @mod_activities } %>
 
     <%= form_with model: @mod_note, method: :post do |f| %>
@@ -210,10 +210,10 @@
   </section>
 
   <% if @user.is_admin? %>
-    <section>
+    <section class="profile">
       <h3>Admin Information</h3>
 
-      <label class="bold">Recent Votes</label>
+      <label>Recent Votes</label>
       <table class="data zebra clear tall">
         <% @showing_user.votes_for_others.limit(15).each do |v| %><tr>
           <td><%= v.vote == 1 ? '+' : v.reason %></td>

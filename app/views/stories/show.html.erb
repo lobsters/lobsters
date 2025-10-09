@@ -59,10 +59,10 @@
 
   <% older_log, recent_log = Moderation.for_story(@story).partition { it.created_at.before? 3.months.ago } %>
   <% if recent_log.count > 0 %>
-    <label class="bold">Recent modlog for this submitter, this story, and this story's comments:</label>
+    <label>Recent modlog for this submitter, this story, and this story's comments</label>
     <%= render partial: 'moderations/table', locals: { moderations: recent_log } %>
   <% else %>
-    <label class="bold">No recent modlog entries</label>
+    <label>No recent modlog entries</label>
   <% end %>
   <details>
     <summary><%= older_log.count %> older</summary>

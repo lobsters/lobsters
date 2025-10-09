@@ -1176,13 +1176,17 @@ table.moderations tr > td:nth-child(1) {
 	margin-bottom: 4px;
 }
 
-label:has(+ *:required),
-label:has(+ *:not(label) *:required),
-label:has(+ *[type="hidden"] + *:required),
-/* Explicit class for labels that don't precede an input
-but need to match the styling of labels that do */
-label.bold {
-	font-weight: bold;
+label:has(+ *:required)::after,
+label:has(+ *:not(label) *:required)::after,
+label:has(+ *[type="hidden"] + *:required)::after {
+	content: "*";
+	margin-left: 0.15em;
+	font-size: 150%;
+	vertical-align: middle;
+}
+/* Labels on the (read-only) Profile page get extra contrast */
+.profile label::after {
+	content: ":";
 }
 .box img {
 	vertical-align: middle;
@@ -1559,9 +1563,6 @@ input[type="submit"].link_post.pushover_button {
 	#inside > ol.comments div.voters {
 		width: 30px;
 	}
-	.labelled_grid > label:after {
-		content: ':';
-	}
 
 	.help {
 		margin-top: 2em;
@@ -1647,6 +1648,10 @@ input[type="submit"].link_post.pushover_button {
 	}
 	div#inside {
 		margin: 0.5rem;
+	}
+
+	label:not(:has(> input[type="radio"])) {
+		font-weight: bold;
 	}
 
 	.comment {
@@ -1856,11 +1861,6 @@ input[type="submit"].link_post.pushover_button {
 	.labelled_grid > input[type="checkbox"],
 	.labelled_grid > *:has(input[type="checkbox"]) {
 		grid-column: 2;
-	}
-
-	/* Add a colon to the label for checkboxes, as in the desktop view */
-	.labelled_grid	label.for_checkbox:after {
-		content: ":";
 	}
 
 	/* Force hints onto the next line, with no indent */

@@ -56,7 +56,7 @@
       <h2>Security Settings</h2>
 
       <div class="labelled_grid">
-        <%= f.label :twofa, "Two-Factor Auth", class: "bold" %>
+        <%= f.label :twofa, "Two-Factor Auth" %>
         <span>
         <% if @edit_user.totp_secret.present? %>
           <span style="color: green; font-weight: bold;">
@@ -149,7 +149,7 @@
         <%= f.select :mailing_list_mode, [ [ "No e-mails", 0 ],
           [ "All stories and comments", 1 ], [ "Only stories", 2 ] ],
           required: true %>
-        <label class="bold">List Address</label>
+        <label>List Address</label>
         <span>
           <tt><%= Rails.application.shortname %>-<%=
             @edit_user.mailing_list_token %>@<%= Rails.application.domain %></tt>
@@ -163,16 +163,16 @@
       <div class="labelled_grid">
         <%= f.label :prefers_color_scheme, "Color Scheme" %>
         <span>
-          <label><%= f.radio_button :prefers_color_scheme, :system, required: true %> System (<a href="https://lobste.rs/s/eg1n75/dark_mode">details</a>)</label>
-          <label><%= f.radio_button :prefers_color_scheme, :light, required: true %> Light</label>
-          <label><%= f.radio_button :prefers_color_scheme, :dark, required: true %> Dark</label>
+          <label><%= f.radio_button :prefers_color_scheme, :system %> System (<a href="https://lobste.rs/s/eg1n75/dark_mode">details</a>)</label>
+          <label><%= f.radio_button :prefers_color_scheme, :light %> Light</label>
+          <label><%= f.radio_button :prefers_color_scheme, :dark %> Dark</label>
         </span>
 
         <%= f.label :prefers_contrast, "Contrast" %>
         <span>
-          <label><%= f.radio_button :prefers_contrast, :system, required: true %> System</label>
-          <label><%= f.radio_button :prefers_contrast, :normal, required: true %> Normal</label>
-          <label><%= f.radio_button :prefers_contrast, :high, required: true %> High</label>
+          <label><%= f.radio_button :prefers_contrast, :system %> System</label>
+          <label><%= f.radio_button :prefers_contrast, :normal %> Normal</label>
+          <label><%= f.radio_button :prefers_contrast, :high %> High</label>
         </span>
 
         <%= f.label :show_email, "Show Email Address", class: "for_checkbox" %>
@@ -201,16 +201,14 @@
 
   <div class="labelled_grid">
     <%= label_tag :gravatar,
-      raw("<a href=\"https://gravatar.com/\">Gravatar</a>"),
-      class: "bold" %>
+      raw("<a href=\"https://gravatar.com/\">Gravatar</a>") %>
     <span>
       Your avatar will be cached from the Gravatar icon for your e-mail address above.
       <%= link_post "Expire cache", "/avatars/expire" %>
     </span>
     <% if Pushover.enabled? %>
       <%= label_tag :pushover_user_key,
-          raw("<a href=\"https://pushover.net/\">Pushover</a>"),
-          class: "bold" %>
+          raw("<a href=\"https://pushover.net/\">Pushover</a>") %>
       <span>
         <%= link_post((@edit_user.pushover_user_key.present? ?
             "Manage Pushover Subscription" : "Subscribe With Pushover"),
@@ -222,8 +220,7 @@
     <% end %>
     <% if Github.enabled? %>
       <%= label_tag :github_username,
-        raw("<a href=\"https://github.com/\">GitHub</a>"),
-        class: "bold" %>
+        raw("<a href=\"https://github.com/\">GitHub</a>") %>
       <span>
         <% if @edit_user.github_username.present? %>
           Linked to
@@ -237,8 +234,7 @@
       <% end %>
     <% if Mastodon.enabled? %>
       <%= label_tag :mastodon_username,
-        raw("<a href=\"https://joinmastodon.org/\">Mastodon</a>"),
-        class: "bold" %>
+        raw("<a href=\"https://joinmastodon.org/\">Mastodon</a>") %>
       <span>
         <% if @edit_user.mastodon_username.present? %>
           Linked to

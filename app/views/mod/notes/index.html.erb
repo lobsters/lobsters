@@ -3,7 +3,7 @@
 <%= form_with url: mod_notes_path, method: :get do |f| %>
   <div class="boxline">
     <label class="normal" for="username">Username:</label>
-    <input type="text" name="username" value="<%= @username %>">
+    <input type="text" name="username" value="<%= @username %>" autocapitalize="off">
     <%= f.submit 'Filter' %>
   </div>
 <% end %>

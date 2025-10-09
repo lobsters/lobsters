@@ -1184,6 +1184,10 @@ label:has(+ *[type="hidden"] + *:required)::after {
 	font-size: 150%;
 	vertical-align: middle;
 }
+/* Labels on the (read-only) Profile page get extra contrast */
+.profile label::after {
+	content: ":";
+}
 .box img {
 	vertical-align: middle;
 }
@@ -1644,6 +1648,10 @@ input[type="submit"].link_post.pushover_button {
 	}
 	div#inside {
 		margin: 0.5rem;
+	}
+
+	label:not(:has(> input[type="radio"])) {
+		font-weight: bold;
 	}
 
 	.comment {

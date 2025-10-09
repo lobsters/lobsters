@@ -6,7 +6,7 @@
   <% end %>
 <% end %>
 
-<section>
+<section class="profile">
   <% if @showing_user.is_active? %>
     <div id="gravatar">
       <%= avatar_img(@showing_user, 100) %>
@@ -155,7 +155,7 @@
 </section>
 
 <% if Rails.env.development? || @user == @showing_user || @user&.is_moderator? %>
-  <section>
+  <section class="profile">
     <div class="user-stats flash-notice">
       <p>
         Comments posted in the last 6 months: <%= @showing_user.comments.recent.count %><br>
@@ -174,7 +174,7 @@
 <% if @user && @user.is_moderator? && !@showing_user.is_moderator? %>
   <h2>Moderator Information</h2>
 
-  <section class="labelled_grid">
+  <section class="labelled_grid profile">
     <label>Flagged (1m)</label>
     <span>
       <% if (stats = FlaggedCommenters.new('1m').check_list_for(@showing_user)) %>
@@ -194,7 +194,7 @@
     </span>
   </section>
 
-  <section>
+  <section class="profile">
     <label>Last 20 Mod Activities</label>
     <%= render partial: 'mod/activities/table', locals: { mod_activities: @mod_activities } %>
 
@@ -210,7 +210,7 @@
   </section>
 
   <% if @user.is_admin? %>
-    <section>
+    <section class="profile">
       <h3>Admin Information</h3>
 
       <label>Recent Votes</label>

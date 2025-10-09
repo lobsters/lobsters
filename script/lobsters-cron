@@ -19,6 +19,5 @@ fi
 
 bundle exec ruby script/mail_new_activity.rb &
 bundle exec ruby script/mastodon_post.rb &
-bundle exec ruby script/send_new_webmentions &
 
 exit $err

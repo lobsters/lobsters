@@ -310,7 +310,7 @@ class Comment < ApplicationRecord
       m.save!
 
       User.update_counters user_id, karma: (votes.count * -2)
-    end    
+    end
 
     save!(validate: false)
     Comment.record_timestamps = true

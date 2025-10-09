@@ -814,7 +814,7 @@ onPageLoad(() => {
     const reason = prompt("Moderation reason:");
     if (reason == null || reason == '')
       return false;
-    
+
     const formData = new FormData();
     formData.append('reason', reason);
     const comment = parentSelector(event.target, '.comment');

@@ -2,7 +2,7 @@
 <%= form_with model: category, url: category.persisted? ? update_category_path : categories_path, method: :post do |f| %>
   <div class="labelled_grid">
     <%= f.label :category, 'Name' %>
-    <%= f.text_field :category, required: true %>
+    <%= f.text_field :category, required: true, autocapitalize: :off %>
   </div>
 
   <%= f.submit category.persisted? ? 'Update Category' : 'Create Category' %>

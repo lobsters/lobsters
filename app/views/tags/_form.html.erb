@@ -2,7 +2,7 @@
 <%= form_with model: tag, url: tag.persisted? ? update_tag_path : tags_path, method: :post do |f| %>
   <div class="labelled_grid">
     <%= f.label :tag, 'Name' %>
-    <%= f.text_field :tag, required: true %>
+    <%= f.text_field :tag, required: true, autocapitalize: :off %>
 
     <%= f.label :category_name, 'Category' %>
     <%= f.select :category_name, options_for_select(Category.pluck(:category), tag.category_name) %>

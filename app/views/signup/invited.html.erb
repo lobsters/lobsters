@@ -17,7 +17,7 @@
 
     <%= f.label :username, "Username" %>
     <div>
-      <%= f.text_field :username, required: true %>
+      <%= f.text_field :username, required: true, autocapitalize: :off %>
       <div class="hint">
         <tt><%= User.username_regex_s %></tt>
       </div>
@@ -25,7 +25,7 @@
 
     <%= f.label :email, "E-mail Address" %>
     <div>
-      <%= f.email_field :email, required: true %>
+      <%= f.email_field :email, required: true, autocapitalize: :off %>
       <div class="hint">
         <a href="http://www.gravatar.com/" target="_blank">Gravatar</a>'ized
       </div>

@@ -18,7 +18,7 @@
         <%= f.text_field "hat", required: true %>
 
         <%= f.label :link, "Link" %>
-        <%= f.text_field "link", required: true %>
+        <%= f.text_field "link", required: true, autocapitalize: :off %>
         <% if hr.link.to_s.match(/^http/) %>
           <%= f.label :link, "Link", class: "bold" %>
           <a href="<%= hr.link %>" rel="ugc"><%= hr.link %></a>

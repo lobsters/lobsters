@@ -12,7 +12,7 @@
       <div class="labelled_grid">
         <%= f.label :username, "Username" %>
         <div>
-          <%= f.text_field :username, required: true, size: 15 %>
+          <%= f.text_field :username, required: true, size: 15, autocapitalize: :off %>
           <div class="hint">
             Format: <tt><%= User.username_regex_s %></tt><br>
             Creates a <%= link_to 'modlog', moderations_path %> entry like "changed own username from '<%= @edit_user.username %>' to 'NewUsername'"
@@ -30,7 +30,7 @@
 
         <%= f.label :email, "E-mail Address" %>
         <div>
-        <%= f.email_field :email, required: true, inputmode: "email" %>
+        <%= f.email_field :email, required: true, inputmode: "email", autocapitalize: :off %>
           <% if EmailBlocklistValidation.email_on_blocklist?(@edit_user.email) %>
             <div class="hint">
               We don't send email to disposable email domains; change your email address.
@@ -39,7 +39,7 @@
         </div>
 
         <%= f.label :homepage, "Homepage" %>
-        <%= f.url_field :homepage %>
+        <%= f.url_field :homepage, autocapitalize: :off %>
 
         <%= f.label :about, "About" %>
         <div>
@@ -175,8 +175,7 @@
           <label><%= f.radio_button :prefers_contrast, :high, required: true %> High</label>
         </span>
 
-        <%= f.label :show_email, "Show Email Address",
-          class: "for_checkbox" %>
+        <%= f.label :show_email, "Show Email Address", class: "for_checkbox" %>
         <span>
           <%= f.check_box :show_email %>
           <span class="hint">

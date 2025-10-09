@@ -30,7 +30,7 @@ Old messages will still show it and you won't be able to use it again.
     <%= f.text_field :hat, :placeholder => "XYZ Project Member" %>
 
     <%= f.label :link, "Link" %>
-    <%= f.text_field :link, :placeholder => "user@project.org, or a URL to an employment page" %>
+    <%= f.text_field :link, :placeholder => "user@project.org, or a URL to an employment page", autocapitalize: :off %>
 
     <%= f.label :comment, "Comment" %>
     <%= f.text_area :comment, :placeholder => "Will only be shown to moderators during approval. Please link to discussions where this hat would be useful for speaking on behalf of your project." %>

@@ -7,13 +7,13 @@
     <%= hidden_field_tag :new_domain, @domain.domain || params[:id] %>
     <div class="boxline">
       <%= f.label :selector, "Origin selector" %>
-      <%= f.text_field :selector %>
+      <%= f.text_field :selector, autocapitalize: :off %>
       <div class="d"><p class="help">Regexp with captures, must consume whole string like: <kbd>\Ahttps?://github.com/+([^/]+).*\z</kbd></p></div>
     </div>
 
     <div class="boxline">
       <%= f.label :replacement, "Origin replacement" %>
-      <%= f.text_field :replacement %>
+      <%= f.text_field :replacement, autocapitalize: :off %>
       <div class="d"><p class="help"><kbd>github.com/\1</kbd></p></div>
     </div>
 

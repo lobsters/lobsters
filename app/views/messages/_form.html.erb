@@ -7,7 +7,7 @@
         <%= f.hidden_field :recipient_username  %>
     <% else %>
       <%= f.label :recipient_username, "To" %>
-      <%= f.text_field :recipient_username, required: true %>
+      <%= f.text_field :recipient_username, required: true, autocapitalize: :off %>
     <% end %>
 
     <%= f.label :subject, "Subject" %>

@@ -133,12 +133,12 @@
           <a class="comment_undeletor" href="#c_<%= comment.short_id %>">undelete</a>
         <% elsif !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
           |
-        <% if @user && @user.is_moderator? %>
+        <% if @user && @user.is_moderator? && @user.id == comment.user_id %>
           <a class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>          
           |
           <a class="comment_moderator" href="#c_<%= comment.short_id %>">mod delete</a>
           <% else %>
-          <a class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>
+          <a class="comment_moderator" href="#c_<%= comment.short_id %>">delete</a>
         <% end %>
         <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
           |

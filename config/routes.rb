@@ -253,7 +253,8 @@ Rails.application.routes.draw do
 
     get "notes(/:period)", to: redirect("/mod/")
     post "notes" => "notes#create"
-
+    
+    resources :comments, only: [:destroy]
     resources :reparents, only: [:new, :create]
     resources :stories, only: [:edit, :update] do
       patch "undelete"

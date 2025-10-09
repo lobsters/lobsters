@@ -283,10 +283,19 @@ class Comment < ApplicationRecord
 
   def delete_for_user(user, reason = nil)
     Comment.record_timestamps = false
-
     self.is_deleted = true
 
-    if user.is_moderator? && user.id != user_id
+    save!(validate: false)
+    Comment.record_timestamps = true
+
+    story.update_cached_columns
+    self.user.refresh_counts!
+  end
+
+  def delete_by_moderator(user, reason = nil)
+    self.is_deleted = true
+
+    if user.is_moderator?
       self.is_moderated = true
 
       m = Moderation.new
@@ -301,7 +310,7 @@ class Comment < ApplicationRecord
       m.save!
 
       User.update_counters user_id, karma: (votes.count * -2)
-    end
+    end    
 
     save!(validate: false)
     Comment.record_timestamps = true

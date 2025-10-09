@@ -1704,7 +1704,6 @@ input[type="submit"].link_post.pushover_button {
 		display: table;
 	}
 	ol.stories.list li.story div.story_liner {
-		background-color: var(--color-mobile-story-liner-bg);
 		display: table-cell;
 		padding-top: 0.5em;
 		padding-bottom: 0.75em;

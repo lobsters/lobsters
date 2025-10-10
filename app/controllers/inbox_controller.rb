@@ -62,17 +62,7 @@ class InboxController < ApplicationController
   end
 
   def apply_current_vote
-    comment_notifications = @notifications.filter { |n| n.notifiable_type == "Comment" }
-    comment_ids = comment_notifications.map { |n| n.notifiable_id }
-    votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, comment_ids)
-    summaries = Vote.comment_vote_summaries(comment_ids)
-    current_user_reply_parents = @user&.ids_replied_to(comment_ids) || Hash.new { false }
-
-    comment_notifications.each do |n|
-      comment = n.notifiable
-      comment.current_vote = votes[comment.id]
-      comment.vote_summary = summaries[comment.id]
-      comment.current_reply = current_user_reply_parents.has_key? comment.id
-    end
+    comment_notifications = @notifications.filter { |n| n.notifiable_type == "Comment" }.map(&:notifiable)
+    CommentVoteHydrator.new(comment_notifications, @user).get
   end
 end

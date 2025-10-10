@@ -19,15 +19,7 @@ class SearchController < ApplicationController
         end
       end
       if params[:what] == "comments"
-        comment_ids = @search.results.map(&:id)
-        votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, comment_ids)
-        summaries = Vote.comment_vote_summaries(comment_ids)
-        current_user_reply_parents = @user.ids_replied_to(comment_ids) if @user
-        @search.results.each do |r|
-          r.current_vote = votes.try(:[], r.id)
-          r.vote_summary = summaries[r.id]
-          r.current_reply = current_user_reply_parents.has_key? r.id
-        end
+        @search.results = CommentVoteHydrator.new(@search.results, @user).get
       end
     end
   end

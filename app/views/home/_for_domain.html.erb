@@ -1,8 +1,12 @@
 <%# locals: (domain:, stories:) -%>
 <p>
   <%= domain.domain %>:
-  <%= "#{number_with_delimiter domain.stories_count} story".pluralize(domain.stories_count) %> from
-  <%= "#{number_with_delimiter domain.n_submitters} submitter".pluralize(domain.n_submitters) %>
+  <% if @user&.is_moderator? %>
+    <%= "#{number_with_delimiter domain.stories_count} story".pluralize(domain.stories_count) %> from
+  <% else %>
+    <%= "#{number_with_delimiter domain.active_stories_count} story".pluralize(domain.active_stories_count) %> from
+  <% end %>
+  <%= "#{number_with_delimiter domain.n_submitters(@user)} submitter".pluralize(domain.n_submitters(@user)) %>
   <% if domain.origins.count > 0 %>
     with <%= link_to "#{number_with_delimiter domain.origins.count} origins", domain_origins_path(domain) %>
   <% end %>

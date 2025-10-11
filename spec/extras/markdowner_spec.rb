@@ -49,17 +49,30 @@ describe Markdowner do
         "test</a></p>\n")
   end
 
-  it "correctly adds ugc" do
-    expect(Markdowner.to_html("[ex](http://example.com)"))
-      .to eq("<p><a href=\"http://example.com\" rel=\"ugc\">" \
-            "ex</a></p>\n")
+  it "adds ugc" do
+    expect(Markdowner.to_html("[full URL](http://example.com)"))
+      .to eq("<p><a href=\"http://example.com\" rel=\"ugc\">full URL</a></p>\n")
 
-    expect(Markdowner.to_html("[ex](//example.com)"))
-      .to eq("<p><a href=\"//example.com\" rel=\"ugc\">" \
-            "ex</a></p>\n")
+    expect(Markdowner.to_html("[protocol-relative URL](//example.com)"))
+      .to eq("<p><a href=\"//example.com\" rel=\"ugc\">protocol-relative URL</a></p>\n")
 
-    expect(Markdowner.to_html("[ex](/~abc)"))
-      .to eq("<p><a href=\"/~abc\">ex</a></p>\n")
+    # invalid URLs that are still parsed as links (not an exhaustive list)
+    expect(Markdowner.to_html("[missing protocol](example.com)"))
+      .to eq("<p><a href=\"example.com\" rel=\"ugc\">missing protocol</a></p>\n")
+
+    expect(Markdowner.to_html("[wrong number of slashes after protocol](http:/example.com)"))
+      .to eq("<p><a href=\"http:/example.com\" rel=\"ugc\">wrong number of slashes after protocol</a></p>\n")
+
+    # relative links
+    expect(Markdowner.to_html("[relative link](/example)"))
+      .to eq("<p><a href=\"/example\" rel=\"ugc\">relative link</a></p>\n")
+
+    expect(Markdowner.to_html("[relative link to user profile](/~abc)"))
+      .to eq("<p><a href=\"/~abc\" rel=\"ugc\">relative link to user profile</a></p>\n")
+
+    # autolink
+    expect(Markdowner.to_html("www.example.com"))
+      .to eq("<p><a href=\"http://www.example.com\" rel=\"ugc\">www.example.com</a></p>\n")
   end
 
   it "escapes raw HTML" do

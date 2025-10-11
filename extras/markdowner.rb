@@ -46,11 +46,7 @@ class Markdowner
 
     # make links have rel=ugc
     ng.css("a").each do |h|
-      h[:rel] = "ugc" unless begin
-        URI.parse(h[:href]).host.nil?
-      rescue
-        false
-      end
+      h[:rel] = "ugc"
     end
 
     if ng.at_css("body")

@@ -1,9 +1,8 @@
 class ModActivity < ApplicationRecord
-  ITEM_TYPES = [Moderation, ModNote].freeze
   belongs_to :item, polymorphic: true
 
   validates :item_id, uniqueness: {scope: [:item_type]}
-  validates :item_type, inclusion: {in: ITEM_TYPES}
+  validates :item_type, presence: true
 
   scope :with_item, -> {
     joins("left outer join moderations on (item_type = 'Moderation' and item_id = moderations.id)")

@@ -8,7 +8,7 @@ module EmailBlocklistValidation
   end
 
   def email_blocklist
-    if email_on_blocklist?(email)
+    if email && email_on_blocklist?(email)
       errors.add(:email, "disposable emails are blocked")
     end
   end

@@ -59,6 +59,7 @@ RSpec.feature "Reading Homepage", type: :feature do
       stub_login_as mod
       visit "/"
       expect(page).to have_content(story.title)
+      expect(page).to have_content("1 Hat Request")
     end
   end
 

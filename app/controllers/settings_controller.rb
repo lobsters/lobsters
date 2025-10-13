@@ -36,20 +36,18 @@ class SettingsController < ApplicationController
   end
 
   def update
-    previous_username = @user.username
     @edit_user = @user.clone
 
     if params[:user][:password].empty? ||
         @user.authenticate(params[:current_password].to_s)
       @edit_user.roll_session_token if params[:user][:password]
       if @edit_user.update(user_params)
-        if @edit_user.username != previous_username
-          # sync this message to username field app/views/settings/index.html
-          Moderation.create!(
-            is_from_suggestions: true,
+        if @edit_user.username_changed?
+          Username.rename!(
             user: @edit_user,
-            action: "changed own username from \"#{previous_username}\" " \
-                    "to \"#{@edit_user.username}\""
+            from: @edit_user.changed_atributes[:username],
+            to: @edit_user.username,
+            by: @user
           )
         end
         session[:u] = @user.session_token if params[:user][:password]

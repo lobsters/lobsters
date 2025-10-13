@@ -40,6 +40,7 @@ class User < ApplicationRecord
   has_many :moderations,
     inverse_of: :moderator,
     dependent: :restrict_with_exception
+  has_many :usernames, dependent: :destroy
   has_many :votes, dependent: :destroy
   has_many :voted_stories, -> { where("votes.comment_id" => nil) },
     through: :votes,
@@ -61,8 +62,9 @@ class User < ApplicationRecord
     inverse_of: :user,
     dependent: :destroy
 
-  include Token
   include EmailBlocklistValidation
+  include Token
+  include UsernameAttribute
 
   # As of Rails 8.0, `has_secure_password` generates a `password_reset_token`
   # method that shadows the explicit `password_reset_token` attribute.
@@ -96,6 +98,7 @@ class User < ApplicationRecord
   validates :prefers_color_scheme, inclusion: %w[system light dark]
   validates :prefers_contrast, inclusion: %w[system normal high]
 
+  validates :username, uniqueness: {case_sensitive: false}
   validates :email,
     length: {maximum: 100},
     format: {with: /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/},
@@ -109,12 +112,6 @@ class User < ApplicationRecord
 
   validates :password, presence: true, on: :create
 
-  VALID_USERNAME = /[A-Za-z0-9][A-Za-z0-9_-]{0,24}/
-  validates :username,
-    format: {with: /\A#{VALID_USERNAME}\z/o},
-    length: {maximum: 50},
-    uniqueness: {case_sensitive: false}
-  validate :underscores_and_dashes_in_username
   validates :password_reset_token,
     length: {maximum: 75}
   validates :session_token,
@@ -143,12 +140,6 @@ class User < ApplicationRecord
   validates :settings,
     length: {maximum: 16_777_215}
 
-  validates_each :username do |record, attr, value|
-    if BANNED_USERNAMES.include?(value.to_s.downcase) || value.starts_with?("tag-")
-      record.errors.add(attr, "is not permitted")
-    end
-  end
-
   scope :active, -> { where(banned_at: nil, deleted_at: nil) }
   scope :moderators, -> {
     where("
@@ -162,11 +153,9 @@ class User < ApplicationRecord
     create_rss_token
     create_mailing_list_token
   end
-
-  BANNED_USERNAMES = ["admin", "administrator", "contact", "fraud", "guest",
-    "help", "hostmaster", "lobster", "lobsters", "mailer-daemon", "moderator",
-    "moderators", "nobody", "postmaster", "root", "security", "support",
-    "sysop", "webmaster", "enable", "new", "signup"].freeze
+  after_create do
+    Username.create!({username:, user: self, created_at:})
+  end
 
   # days old accounts are considered new for
   NEW_USER_DAYS = 70
@@ -189,20 +178,8 @@ class User < ApplicationRecord
   # minimum number of submitted stories before checking self promotion
   MIN_STORIES_CHECK_SELF_PROMOTION = 2
 
-  def underscores_and_dashes_in_username
-    username_regex = "^" + username.gsub(/_|-/, "[-_]") + "$"
-    return unless username_regex.include?("[-_]")
-
-    collisions = User.where("username REGEXP ?", username_regex).where.not(id: id)
-    errors.add(:username, "is already in use (perhaps swapping _ and -)") if collisions.any?
-  end
-
   def self./(username)
     find_by! username:
-  end
-
-  def self.username_regex_s
-    "/^" + VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, "") + "$/"
   end
 
   def as_json(_options = {})

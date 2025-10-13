@@ -16,4 +16,13 @@ describe "signup", type: :request do
       }.to change { ModNote.count }.by(2) # one on inviter, one on invitee (though redundnant here)
     end
   end
+
+  it "records a Username" do
+    post "/signup", params: {invitation_code: invitation.code, user: {username: "new_user", email: "new_user@example.com", password: "example", password_confirmation: "example"}}
+
+    username = Username.last
+    expect(username.username).to eq("new_user")
+    expect(username.created_at).to eq(username.user.created_at)
+    expect(username.renamed_away_at).to be_nil
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_07_160046) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_13_204007) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -229,7 +229,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_07_160046) do
     t.index ["token"], name: "index_messages_on_token", unique: true
   end
 
-  create_table "mod_activities", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+  create_table "mod_activities", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "item_type", null: false
     t.bigint "item_id", null: false, unsigned: true
     t.string "token", null: false
@@ -280,7 +280,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_07_160046) do
     t.index ["user_id"], name: "index_moderations_on_user_id"
   end
 
-  create_table "notifications", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "notifications", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "user_id", null: false, unsigned: true
     t.string "notifiable_type", null: false
     t.bigint "notifiable_id", null: false, unsigned: true
@@ -431,6 +431,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_07_160046) do
     t.index ["category_id"], name: "index_tags_on_category_id"
     t.index ["tag"], name: "tag", unique: true
     t.index ["token"], name: "index_tags_on_token", unique: true
+  end
+
+  create_table "usernames", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.string "username", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "renamed_away_at"
   end
 
   create_table "users", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

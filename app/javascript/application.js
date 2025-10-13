@@ -537,26 +537,26 @@ onPageLoad(() => {
   const now = parseInt(qS('body').dataset.nowUnix) || Date.now();
   for (const t of qSA('time[data-at-unix]')) {
     // parallel implementation in lib/time_ago_in_words.rb
-    secs = now - parseInt(t.dataset.atUnix);
+    const secs = now - parseInt(t.dataset.atUnix);
     if (secs <= 5) {
       t.innerText = "just now"
     } else if (secs < 60) {
       t.innerText = "less than a minute ago"
     } else if (secs < (60 * 60)) {
-      mins = (secs / 60.0).floor
-      t.innerText = "#{mins} #{"minute".pluralize(mins)} ago"
+      const mins = Math.floor(secs / 60.0)
+      t.innerText = mins + " minute" + (mins > 1 ? "s" : "") + " ago"
     } else if (secs < (60 * 60 * 48)) {
-      hours = (secs / 60.0 / 60.0).floor
-      t.innerText = "#{hours} #{"hour".pluralize(hours)} ago"
+      const hours = Math.floor(secs / 60.0 / 60.0)
+      t.innerText = hours + " hour" + (hours > 1 ? "s" : "") + " ago"
     } else if (secs < (60 * 60 * 24 * 30)) {
-      days = (secs / 60.0 / 60.0 / 24.0).floor
-      t.innerText = "#{days} #{"day".pluralize(days)} ago"
+      const days = Math.floor(secs / 60.0 / 60.0 / 24.0)
+      t.innerText = days + " day" + (days > 1 ? "s" : "") + " ago"
     } else if (secs < (60 * 60 * 24 * 365)) {
-      months = (secs / 60.0 / 60.0 / 24.0 / 30.0).floor
-      t.innerText = "#{months} #{"month".pluralize(months)} ago"
+      const months = Math.floor(secs / 60.0 / 60.0 / 24.0 / 30.0)
+      t.innerText = months + " month" + (months > 1 ? "s" : "") + " ago"
     } else {
-      years = (secs / 60.0 / 60.0 / 24.0 / 365.0).floor
-      t.innerText = "#{years} #{"year".pluralize(years)} ago"
+      const years = Math.floor(secs / 60.0 / 60.0 / 24.0 / 365.0)
+      t.innerText = years + " year" + (years > 1 ? "s" : "") + " ago"
     }
   }
 

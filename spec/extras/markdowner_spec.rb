@@ -91,6 +91,15 @@ describe Markdowner do
       .to eq("<p>hi &lt;iframe src=\"javascript:alert('xss');\"&gt;&lt;/iframe&gt; bye</p>\n")
   end
 
+  # issue #1727
+  it "doesn't autolink bare triggers" do
+    expect(Markdowner.to_html("hi www. bye"))
+      .to eq("<p>hi www. bye</p>\n")
+
+    expect(Markdowner.to_html("hi http:// bye"))
+      .to eq("<p>hi http:// bye</p>\n")
+  end
+
   context "when images are not allowed" do
     subject { Markdowner.to_html(description, allow_images: false) }
 

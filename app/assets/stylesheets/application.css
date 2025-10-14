@@ -1650,7 +1650,8 @@ input[type="submit"].link_post.pushover_button {
 		margin: 0.5rem;
 	}
 
-	label:not(:has(> input[type="radio"])) {
+	form label:not(:has(> input[type="radio"])),
+	.profile label {
 		font-weight: bold;
 	}
 

@@ -105,6 +105,8 @@ GEM
     childprocess (5.1.0)
       logger (~> 1.5)
     chunky_png (1.4.0)
+    commonmarker (2.5.0)
+      rb_sys (~> 0.9)
     commonmarker (2.5.0-x86_64-linux)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.4)
@@ -188,6 +190,7 @@ GEM
     matrix (0.4.2)
     memory_profiler (1.1.0)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.9)
     minitest (5.25.5)
     mission_control-jobs (1.1.0)
       actioncable (>= 7.1)
@@ -209,6 +212,9 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.4)
+    nokogiri (1.18.10)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.18.10-x86_64-linux-gnu)
       racc (~> 1.4)
     oauth (1.1.2)
@@ -292,10 +298,13 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.3.0)
+    rake-compiler-dock (1.9.1)
     rb-fsevent (0.11.2)
     rb-inotify (0.11.1)
       ffi (~> 1.0)
     rb-readline (0.5.5)
+    rb_sys (0.9.117)
+      rake-compiler-dock (= 1.9.1)
     rdoc (6.15.0)
       erb
       psych (>= 4.0.0)
@@ -384,6 +393,8 @@ GEM
       fugit (~> 1.11.0)
       railties (>= 7.1)
       thor (>= 1.3.1)
+    sqlite3 (2.7.4)
+      mini_portile2 (~> 2.8.0)
     sqlite3 (2.7.4-x86_64-linux-gnu)
     stackprof (0.2.27)
     standard (1.51.1)
@@ -445,6 +456,7 @@ GEM
     zeitwerk (2.7.3)
 
 PLATFORMS
+  ruby
   x86_64-linux
 
 DEPENDENCIES

@@ -7,6 +7,15 @@ class Markdowner
 
   # opts[:allow_images] allows <img> tags
 
+  # Rerender all markdown (#1627) cached in db columns, a pattern that predates Rails frament
+  # caching and our adoption of the feature (6ce15c4f in 2025-10). As we build confidence in
+  # fragment caching we should drop these columns.
+  def self.rerender_db_markdown!
+    Comment.all.find_each { |c| c.update_columns markeddown_comment: Markdowner.to_html(c.comment) }
+    ModNote.all.find_each { |n| n.update_columns markeddown_note: Markdowner.to_html(n.note) }
+    Story.where.not(description: "").find_each { |s| s.update_columns markeddown_description: Markdowner.to_html(s.description) }
+  end
+
   def self.to_html(text, opts = {})
     if text.blank?
       return ""

@@ -28,56 +28,54 @@ So our design philosophy is a little different than a typical commercial product
 
 We have a [Docker setup guide](./docs/setup_with_docker.md) if you use that for development, but you can also set up directly on your machine:
 
-* Install MariaDB:
-  * On Linux use [your package manager](https://mariadb.com/kb/en/distributions-which-include-mariadb/).
-  * On MacOS you can [install with brew](https://mariadb.com/kb/en/installing-mariadb-on-macos-using-homebrew/).
-  * On Windows there's an [installer](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.5.2&os=Linux&cpu=x86_64&pkg=tar_gz&i=systemd&mirror=starburst_stlouis).
+* Install and start MariaDB.
+  On Linux use [your package manager](https://mariadb.com/kb/en/distributions-which-include-mariadb/).
+  On MacOS you can [install with brew](https://mariadb.com/kb/en/installing-mariadb-on-macos-using-homebrew/).
+  On Windows there's an [installer](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.5.2&os=Linux&cpu=x86_64&pkg=tar_gz&i=systemd&mirror=starburst_stlouis).
 
-* Start the MariaDB server using one of the [methods mentioned in the MariaDB knowledge base](https://mariadb.com/kb/en/starting-and-stopping-mariadb-automatically/).
+* Start the mariadb server using one of the [methods mentioned in the mariadb knowledge base](https://mariadb.com/kb/en/starting-and-stopping-mariadb-automatically/).
 
-* Open the console using `mariadb`, and set the `root` user password (type `ctrl-d` to exit afterwards):
+* Open the console using `mariadb`, and set the `root` user password (type `ctrl-d` to exit afterwards)
 
-  ```sql
-  ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
-  ```
+```sql
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
+```
 
-* Install the Ruby version specified in [.ruby-version](https://github.com/lobsters/lobsters/blob/main/.ruby-version).
+* Install the Ruby version specified in [.ruby-version](https://github.com/lobsters/lobsters/blob/main/.ruby-version)
 
-* Checkout the lobsters Git tree from GitHub:
-
-  ```sh
-  $ git clone git@github.com:lobsters/lobsters.git
-  $ cd lobsters
-  lobsters$
-  ```
-
+* Checkout the lobsters git tree from Github
+    ```sh
+    $ git clone git@github.com:lobsters/lobsters.git
+    $ cd lobsters
+    lobsters$
+    ```
 * Run `rails credentials:edit` to create and edit your encrypted credentials file.
   This is where you store API keys for external services and features like linking accounts.
-  Copy and paste in the contents of `config/credentials.yml.enc.sample`.
+  Copy and paste the contents of `config/credentials.yml.enc.sample` in.
   On setup, Rails will give you new random value for `secret_key_base` and you can use `rails secret` any time you need to generate another.
 
-* Run `bin/setup` to install dependencies and set up the database:
+* Run `bin/setup` to install dependencies and set up db
 
-  ```sh
-  lobsters$ bin/setup
-  ```
+    ```sh
+    lobsters$ bin/setup
+    ```
 
 * On your production server, copy `config/initializers/production.rb.sample`
   to `config/initializers/production.rb` and customize it with your site's
-  `domain` and `name`. (You don't need this on your dev machine.)
+  `domain` and `name`. (You don't need this on your dev machine).
 
-* On your personal computer, you probably want to add some sample data:
+* On your personal computer, you probably want to add some sample data.
 
-  ```sh
-  lobsters$ rails fake_data
-  ```
+    ```sh
+    lobsters$ rails fake_data
+    ```
 
 * Run the Rails server in development mode.
-  You should be able to log in to `http://localhost:3000` with your new `test` user (with password `test`):
+  You should be able to login to `http://localhost:3000` with your new `test` user (with password `test`):
 
-  ```sh
-  lobsters$ rails server
-  ```
+    ```sh
+    lobsters$ rails server
+    ```
 
 ## Production
 

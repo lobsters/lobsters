@@ -14,26 +14,23 @@
   <% end %>
 
   <div class="labelled_grid">
-    <label>Status</label>
-    <span
-    <%= @showing_user.is_banned? ? raw("style=\"color: red;\"") : "" %>>
-      <% if @showing_user.is_banned? %>
-        Banned by a moderator
-      <% elsif !@showing_user.is_active? %>
-        User deactivated own account
-      <% else %>
-        Active
-        <%= @showing_user.is_admin? ? "administrator" :
-          (@showing_user.is_moderator? ? "moderator" : "user") %>
-        <% if !@showing_user.can_invite? %>
-          with invites
-          <% if !@showing_user.can_submit_stories? %>
-            and story submissions
-          <% end %>
-          disabled
+  <label>Status</label>
+    <% if @showing_user.is_banned? %>
+      Banned by a moderator
+    <% elsif !@showing_user.is_active? %>
+      User deactivated own account
+    <% else %>
+      Active
+      <%= @showing_user.is_admin? ? "administrator" :
+        (@showing_user.is_moderator? ? "moderator" : "user") %>
+      <% if !@showing_user.can_invite? %>
+        with invites
+        <% if !@showing_user.can_submit_stories? %>
+          and story submissions
         <% end %>
+        disabled
       <% end %>
-    </span>
+    <% end %>
 
     <label>Joined</label>
     <span>

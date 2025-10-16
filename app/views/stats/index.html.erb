@@ -35,9 +35,14 @@ Want more info?
 .graphBackground { fill: var(--color-bg); }
 .xAxisLabels { fill: var(--color-fg); }
 .yAxisLabels { fill: var(--color-fg); }
-.key1, .dataPoint1 { fill: #ac130d; }
-circle:last-of-type { fill: #cccccc; }
-.line1 { fill: #ac130d; }
+.key1, .dataPoint1 { fill: var(--color-fg-accent); }
+circle:nth-last-of-type(2), circle:last-of-type {
+  fill: none;
+  stroke: var(--color-fg-accent);
+  stroke-width: 1;
+}
+circle:last-of-type { stroke-dasharray: 1; }
+.line1 { fill: var(--color-fg-accent); }
 .guideLines { stroke: var(--color-bg); stroke-dasharray: none; }
 .dataPointPopupMask { fill: var(--color-fg); stroke: var(--color-bg); }
 .dataPointPopup { fill: var(--color-fg); }

@@ -46,6 +46,21 @@
       href="<%= @comments_rss_link[:href] %>">
   <% end %>
   <meta name="robots" content="noai, noimageai">
+<% # only for logged-out users so we don't speculatively advance ReadRibbons %>
+  <% if !@user %>
+    <script type="speculationrules" nonce="<%= content_security_policy_nonce %>">
+      {
+        "prefetch": [
+          {
+            "where": {
+              "href_matches": "/*"
+            },
+            "eagerness": "moderate"
+          }
+        ]
+      }
+    </script>
+  <% end %>
 </head>
 <body data-username='<%= @user.try(:username) %>' data-now-unix='<%= Time.current.to_i  %>'>
   <header id="nav">

@@ -1176,8 +1176,17 @@ table.moderations tr > td:nth-child(1) {
 	margin-bottom: 4px;
 }
 
-label.required {
-	font-weight: bold;
+label:has(+ *:required)::after,
+label:has(+ *:not(label) *:required)::after,
+label:has(+ *[type="hidden"] + *:required)::after {
+	content: "*";
+	margin-left: 0.15em;
+	font-size: 150%;
+	vertical-align: middle;
+}
+/* Labels on the (read-only) Profile page get extra contrast */
+.profile label::after {
+	content: ":";
 }
 .box img {
 	vertical-align: middle;
@@ -1554,9 +1563,6 @@ input[type="submit"].link_post.pushover_button {
 	#inside > ol.comments div.voters {
 		width: 30px;
 	}
-	.labelled_grid > label:after {
-		content: ':';
-	}
 
 	.help {
 		margin-top: 2em;
@@ -1644,6 +1650,11 @@ input[type="submit"].link_post.pushover_button {
 		margin: 0.5rem;
 	}
 
+	form label:not(:has(> input[type="radio"])),
+	.profile label {
+		font-weight: bold;
+	}
+
 	.comment {
 		padding-left: 0;
 	}
@@ -1699,7 +1710,6 @@ input[type="submit"].link_post.pushover_button {
 		display: table;
 	}
 	ol.stories.list li.story div.story_liner {
-		background-color: var(--color-mobile-story-liner-bg);
 		display: table-cell;
 		padding-top: 0.5em;
 		padding-bottom: 0.75em;
@@ -1852,11 +1862,6 @@ input[type="submit"].link_post.pushover_button {
 	.labelled_grid > input[type="checkbox"],
 	.labelled_grid > *:has(input[type="checkbox"]) {
 		grid-column: 2;
-	}
-
-	/* Add a colon to the label for checkboxes, as in the desktop view */
-	.labelled_grid	label.for_checkbox:after {
-		content: ":";
 	}
 
 	/* Force hints onto the next line, with no indent */

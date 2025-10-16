@@ -20,7 +20,7 @@ module IntervalHelper
         param: "#{dur}#{m[2]}",
         dur: dur,
         intv: intv,
-        human: "#{(dur == 1) ? "" : dur} #{intv}".downcase.pluralize(dur).chomp,
+        human: "#{dur unless dur == 1} #{intv}".downcase.pluralize(dur).chomp,
         placeholder: false
       }
     else

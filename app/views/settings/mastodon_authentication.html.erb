@@ -8,8 +8,8 @@
   </p>
 
   <div class="labelled_grid">
-    <%= f.label :mastodon_instance_name, "Name or URL", :class => "required" %>
-    <%= f.text_field :mastodon_instance_name, :autofocus => true  %>
+    <%= f.label :mastodon_instance_name, "Name or URL" %>
+    <%= f.text_field :mastodon_instance_name, required: true, autofocus: true, autocapitalize: :off %>
   </div>
   <%= f.submit "Continue" %>
 

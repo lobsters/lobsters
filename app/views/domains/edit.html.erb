@@ -7,13 +7,13 @@
     <%= hidden_field_tag :new_domain, @domain.domain || params[:id] %>
     <div class="boxline">
       <%= f.label :selector, "Origin selector" %>
-      <%= f.text_field :selector %>
+      <%= f.text_field :selector, autocapitalize: :off %>
       <div class="d"><p class="help">Regexp with captures, must consume whole string like: <kbd>\Ahttps?://github.com/+([^/]+).*\z</kbd></p></div>
     </div>
 
     <div class="boxline">
       <%= f.label :replacement, "Origin replacement" %>
-      <%= f.text_field :replacement %>
+      <%= f.text_field :replacement, autocapitalize: :off %>
       <div class="d"><p class="help"><kbd>github.com/\1</kbd></p></div>
     </div>
 
@@ -25,25 +25,25 @@
   <br><br><hr><br>
 
   <% if @domain.banned_at %>
-    <label class="required">Status:</label>
+    <label>Status</label>
     <span class="d">
       Banned
     </span>
     <br>
 
-    <label class="required">Banned Reason:</label>
+    <label>Banned Reason</label>
     <span class="d">
       <%= @domain.banned_reason %>
     </span>
     <br>
 
-    <label class="required">Banned At:</label>
+    <label>Banned At</label>
     <span class="d">
       <%= @domain.banned_at %>
     </span>
     <br>
 
-    <label class="required">Banned by User:</label>
+    <label>Banned by User</label>
     <span class="d">
       <%= @domain.banned_by_user.username %>
     </span>
@@ -53,8 +53,8 @@
     <%= hidden_field_tag :new_domain, @domain.new_record? %>
 
     <div class="boxline">
-      <%= f.label :banned_reason, "#{caption_of_button(@domain)} Reason:", class: 'required' %>
-      <%= f.text_field :banned_reason, value: '' %>
+      <%= f.label :banned_reason, "#{caption_of_button(@domain)} Reason" %>
+      <%= f.text_field :banned_reason, required: true, value: '' %>
     </div>
 
     <div class="boxline">

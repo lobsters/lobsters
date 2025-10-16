@@ -1,6 +1,6 @@
 # Installation
 
-* Install docker on your machine. Follow the offical guideline on docker.com.
+* Install docker on your machine. Follow the official guideline on docker.com.
 * Create a fork of the repo
 * Clone repo `git clone https://github.com/[USER_NAME]/lobsters.git`
 * Run `make docker-serve`
@@ -12,28 +12,11 @@
     * Note: This will open vim in the container
     * Copy content from `config/credentials.yml.enc.sample` and paste it in the vim editor by right clicking on your mouse and clicking paste
     * To save your changes and exit vim press `:` key, type `wq` and press enter
-    * You should get a similiar image like this:
-   ![sucessful vim](./vim_result.jpg)
+    * You should get a similar image like this:
+   ![successful vim](./vim_result.jpg)
 
 * Update `database.yml`
   * Change line 5 to `host: db`
-  * Add the below code to yoru development primary and test primary:
-
-```
-  username: root
-  password: localdev
-```
-
-* It should look like something like this:
-
-```
-  development:
-  primary:
-    <<: *trilogy
-    database: lobsters_development
-    username: root
-    password: localdev
-```
 
 * Switch back to the tab running the mariadb image and restart the server by:
   * Holding down `control` and `c`
@@ -62,7 +45,7 @@ Solution:
 * Run your app server:
   * IF your app server is running, Run `docker attach <CONTAINER_NAME>`
     * Example: `docker attach lobsters-app`
-    * You can check if it is running by running `docker ps` and if you see something similiar by the below image, then the app server is running
+    * You can check if it is running by running `docker ps` and if you see something similar by the below image, then the app server is running
     ![docker ps](./docker_ps.jpg)
   * IF you app server is not running, Run `docker compose run --rm --service-ports app`
     * `--rm` ensures that you do not create orphaned containers

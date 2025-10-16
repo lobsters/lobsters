@@ -29,6 +29,7 @@ class Comment < ApplicationRecord
   has_one :notification, as: :notifiable
 
   include Token
+
   attr_accessor :current_vote, :current_reply, :previewing, :vote_summary
 
   before_validation :assign_initial_attributes, on: :create
@@ -123,7 +124,7 @@ class Comment < ApplicationRecord
       ModNote.tattle_on_max_depth_limit(user, parent_comment) &&
       errors.add(:base, "You have replied too greedily and too deep.")
 
-    (m = comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
+    (m = comment.to_s.strip.match(/\A(t)his([.!])?$\z/i)) &&
       errors.add(:base, ((m[1] == "T") ? "N" : "n") + "ope" + m[2].to_s)
 
     comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
@@ -135,7 +136,7 @@ class Comment < ApplicationRecord
     comment.to_s.strip.match(/\A([[[:upper:]][[:punct:]]] )+[[[:upper:]][[:punct:]]]?$\z/) &&
       errors.add(:base, "D O N ' T")
 
-    comment.to_s.strip.match(/\A(me too|nice|\+1)([\.!])?\z/i) &&
+    comment.to_s.strip.match(/\A(me too|nice|\+1)([.!])?\z/i) &&
       errors.add(:base, "Please just upvote the parent post instead.")
 
     hat.present? && user.wearable_hats.exclude?(hat) &&

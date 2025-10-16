@@ -50,7 +50,7 @@ class ModNote < ApplicationRecord
       user: user,
       created_at: message.created_at,
       note: <<~NOTE
-        *#{message.author ? message.author.username : "(System)"} #{message.hat ? message.hat.to_txt : ""}-> #{message.recipient.username}*: #{message.subject}
+        *#{message.author ? message.author.username : "(System)"} #{message.hat&.to_txt}-> #{message.recipient.username}*: #{message.subject}
 
         #{message.body}
       NOTE

@@ -61,7 +61,7 @@ Rails.application.routes.draw do
   match "/login/set_new_password" => "login#set_new_password",
     :as => "set_new_password", :via => [:get, :post]
 
-  get "/t/:tag" => "home#single_tag", :as => "tag", :constraints => {tag: /[^,\.]+/}
+  get "/t/:tag" => "home#single_tag", :as => "tag", :constraints => {tag: /[^,.]+/}
   get "/t/:tag" => "home#multi_tag", :as => "multi_tag"
   get "/t/:tag/page/:page" => "home#tagged"
 

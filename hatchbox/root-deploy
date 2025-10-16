@@ -54,6 +54,10 @@ ADMIN_EMAIL=$(cat $APP_ETC/admin_email)
 sed -i "s/ADMIN_EMAIL/$ADMIN_EMAIL/g" /etc/aliases
 newaliases
 
+# https://github.com/lobsters/lobsters/issues/1739
+cp syslog.conf  /usr/lib/systemd/journald.conf.d/
+systemctl force-reload systemd-journald
+
 # pick up changes to opendkim, root-deploy.service, and root-deploy.path
 systemctl daemon-reload
 systemctl enable --now opendkim
@@ -66,7 +70,7 @@ cp sshd_config /etc/ssh/sshd_config
 cp logrotate.conf /etc/logrotate.d/
 
 # shell quality of life
-apt install eza fd-find tmux tree
+apt install eza fd-find ncdu tmux tree
 
 # shell config; the default .bashrc sources this
 cp bash_aliases /root/.bash_aliases

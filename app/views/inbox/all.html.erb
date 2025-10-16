@@ -27,7 +27,7 @@
 <% if @has_more || (@page && @page > 1)%>
   <div class="morelink">
     <% if @page && @page > 1 %>
-      <a href="/notifications<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt; Page <%= @page - 1 %></a>
+      <a href="/inbox/all<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt; Page <%= @page - 1 %></a>
     <% end %>
 
     <% if @has_more %>
@@ -35,7 +35,7 @@
         |
       <% end %>
 
-      <a href="/notifications/page/<%= @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
+      <a href="/inbox/all/page/<%= @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
     <% end %>
   </div>
 <% end %>

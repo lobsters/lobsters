@@ -19,6 +19,16 @@ describe Markdowner do
       .to eq("<p>hi @flimflam test</p>\n")
   end
 
+  it "turns ~username into a link if ~username exists" do
+    create(:user, username: "blahblah")
+
+    expect(Markdowner.to_html("hi ~blahblah test"))
+      .to eq("<p>hi <a href=\"https://#{Rails.application.domain}/~blahblah\" rel=\"ugc\">" \
+             "~blahblah</a> test</p>\n")
+
+    expect(Markdowner.to_html("hi ~flimflam test")).to eq("<p>hi ~flimflam test</p>\n")
+  end
+
   # bug#209
   it "keeps punctuation inside of auto-generated links when using brackets" do
     expect(Markdowner.to_html("hi <http://example.com/a.> test"))
@@ -39,17 +49,55 @@ describe Markdowner do
         "test</a></p>\n")
   end
 
-  it "correctly adds ugc" do
-    expect(Markdowner.to_html("[ex](http://example.com)"))
-      .to eq("<p><a href=\"http://example.com\" rel=\"ugc\">" \
-            "ex</a></p>\n")
+  it "adds ugc" do
+    expect(Markdowner.to_html("[full URL](http://example.com)"))
+      .to eq("<p><a href=\"http://example.com\" rel=\"ugc\">full URL</a></p>\n")
 
-    expect(Markdowner.to_html("[ex](//example.com)"))
-      .to eq("<p><a href=\"//example.com\" rel=\"ugc\">" \
-            "ex</a></p>\n")
+    expect(Markdowner.to_html("[protocol-relative URL](//example.com)"))
+      .to eq("<p><a href=\"//example.com\" rel=\"ugc\">protocol-relative URL</a></p>\n")
 
-    expect(Markdowner.to_html("[ex](/~abc)"))
-      .to eq("<p><a href=\"/~abc\">ex</a></p>\n")
+    # invalid URLs that are still parsed as links (not an exhaustive list)
+    expect(Markdowner.to_html("[missing protocol](example.com)"))
+      .to eq("<p><a href=\"example.com\" rel=\"ugc\">missing protocol</a></p>\n")
+
+    expect(Markdowner.to_html("[wrong number of slashes after protocol](http:/example.com)"))
+      .to eq("<p><a href=\"http:/example.com\" rel=\"ugc\">wrong number of slashes after protocol</a></p>\n")
+
+    # relative links
+    expect(Markdowner.to_html("[relative link](/example)"))
+      .to eq("<p><a href=\"/example\" rel=\"ugc\">relative link</a></p>\n")
+
+    expect(Markdowner.to_html("[relative link to user profile](/~abc)"))
+      .to eq("<p><a href=\"/~abc\" rel=\"ugc\">relative link to user profile</a></p>\n")
+
+    # autolink
+    expect(Markdowner.to_html("www.example.com"))
+      .to eq("<p><a href=\"http://www.example.com\" rel=\"ugc\">www.example.com</a></p>\n")
+  end
+
+  it "escapes raw HTML" do
+    # Examples adapted from https://cheatsheetseries.owasp.org/cheatsheets/XSS_Filter_Evasion_Cheat_Sheet.html
+
+    expect(Markdowner.to_html("hi <script src=\"https://lobste.rs\"></script> bye"))
+      .to eq("<p>hi &lt;script src=\"https://lobste.rs\"&gt;&lt;/script&gt; bye</p>\n")
+
+    expect(Markdowner.to_html("hi <a onmouseover=\"alert('xss')\">xss</a> bye"))
+      .to eq("<p>hi &lt;a onmouseover=\"alert('xss')\"&gt;xss&lt;/a&gt; bye</p>\n")
+
+    expect(Markdowner.to_html("hi <img \"\"\"><script>alert('xss')</script> bye\">"))
+      .to eq("<p>hi &lt;img \"\"\"&gt;&lt;script&gt;alert('xss')&lt;/script&gt; bye\"&gt;</p>\n")
+
+    expect(Markdowner.to_html("hi <iframe src=\"javascript:alert('xss');\"></iframe> bye"))
+      .to eq("<p>hi &lt;iframe src=\"javascript:alert('xss');\"&gt;&lt;/iframe&gt; bye</p>\n")
+  end
+
+  # issue #1727
+  it "doesn't autolink bare triggers" do
+    expect(Markdowner.to_html("hi www. bye"))
+      .to eq("<p>hi www. bye</p>\n")
+
+    expect(Markdowner.to_html("hi http:// bye"))
+      .to eq("<p>hi http:// bye</p>\n")
   end
 
   context "when images are not allowed" do

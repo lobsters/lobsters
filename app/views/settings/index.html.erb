@@ -10,40 +10,38 @@
 
     <section>
       <div class="labelled_grid">
-        <%= f.label :username, "Username", :class => "required" %>
+        <%= f.label :username, "Username" %>
         <div>
-          <%= f.text_field :username, :size => 15 %>
+          <%= f.text_field :username, required: true, size: 15, autocapitalize: :off %>
           <div class="hint">
             Format: <tt><%= User.username_regex_s %></tt><br>
             Creates a <%= link_to 'modlog', moderations_path %> entry like "changed own username from '<%= @edit_user.username %>' to 'NewUsername'"
           </div>
         </div>
 
-        <%= f.label :current_password, "Current Password",
-          :class => "required" %>
-        <%= f.password_field :current_password, :name => "current_password", :autocomplete => "off" %>
+        <%= f.label :current_password, "Current Password" %>
+        <%= f.password_field :current_password, name: "current_password", autocomplete: "off" %>
 
-        <%= f.label :password, "New Password", :class => "required" %>
-        <%= f.password_field :password, :autocomplete => "off" %>
+        <%= f.label :password, "New Password" %>
+        <%= f.password_field :password, autocomplete: "off" %>
 
-        <%= f.label :password_confirmation, "Confirm Password",
-          :class => "required" %>
-        <%= f.password_field :password_confirmation, :autocomplete => "off" %>
+        <%= f.label :password_confirmation, "Confirm Password" %>
+        <%= f.password_field :password_confirmation, autocomplete: "off" %>
 
-        <%= f.label :email, "E-mail Address", :class => "required" %>
+        <%= f.label :email, "E-mail Address" %>
         <div>
-        <%= f.email_field :email, :inputmode => "email" %>
+        <%= f.email_field :email, required: true, inputmode: "email", autocapitalize: :off %>
           <% if EmailBlocklistValidation.email_on_blocklist?(@edit_user.email) %>
             <div class="hint">
               We don't send email to disposable email domains; change your email address.
-            </div>    
+            </div>
           <% end %>
         </div>
 
-        <%= f.label :homepage, "Homepage", :class => "required" %>
-        <%= f.url_field :homepage %>
+        <%= f.label :homepage, "Homepage" %>
+        <%= f.url_field :homepage, autocapitalize: :off %>
 
-        <%= f.label :about, "About", :class => "required" %>
+        <%= f.label :about, "About" %>
         <div>
           <%= f.text_area :about %>
 
@@ -58,7 +56,7 @@
       <h2>Security Settings</h2>
 
       <div class="labelled_grid">
-        <%= f.label :twofa, "Two-Factor Auth", :class => "required" %>
+        <%= f.label :twofa, "Two-Factor Auth" %>
         <span>
         <% if @edit_user.totp_secret.present? %>
           <span style="color: green; font-weight: bold;">
@@ -75,10 +73,10 @@
       <h2>Comment Reply Notification Settings</h2>
 
       <div class="labelled_grid">
-        <%= f.label :email_replies, "Receive E-mail", :class => "required for_checkbox" %>
+        <%= f.label :email_replies, "Receive E-mail", class: "for_checkbox" %>
         <span><%= f.check_box :email_replies %></span>
         <%= f.label :pushover_replies, "Receive Pushover Alert",
-          :class => "required for_checkbox" %>
+          class: "for_checkbox" %>
         <span>
           <%= f.check_box :pushover_replies %>
           <span class="hint">
@@ -92,12 +90,12 @@
       <h2>Comment Mention Notification Settings</h2>
 
       <div class="labelled_grid">
-        <%= f.label :inbox_mentions, "Show in Inbox", :class => "required for_checkbox" %>
+        <%= f.label :inbox_mentions, "Show in Inbox", :class => "for_checkbox" %>
         <span><%= f.check_box :inbox_mentions %></span>
-        <%= f.label :email_mentions, "Receive E-mail", :class => "required for_checkbox" %>
+        <%= f.label :email_mentions, "Receive E-mail", :class => "for_checkbox" %>
         <span><%= f.check_box :email_mentions %></span>
         <%= f.label :pushover_mentions, "Receive Pushover Alert",
-          :class => "required for_checkbox" %>
+          class: "for_checkbox" %>
         <span>
           <%= f.check_box :pushover_mentions %>
           <span class="hint">
@@ -111,10 +109,10 @@
       <h2>Private Message Notification Settings</h2>
 
       <div class="labelled_grid">
-        <%= f.label :email_messages, "Receive E-mail", :class => "required for_checkbox" %>
+        <%= f.label :email_messages, "Receive E-mail", class: "for_checkbox" %>
         <span><%= f.check_box :email_messages %></span>
         <%= f.label :pushover_messages, "Receive Pushover Alert",
-          :class => "required for_checkbox" %>
+          class: "for_checkbox" %>
         <span>
           <%= f.check_box :pushover_messages %>
           <span class="hint">
@@ -130,7 +128,7 @@
       <div class="labelled_grid">
         <%= f.label :show_submitted_story_threads,
           raw("Show in <a href=\"/threads\">Your Threads</a>"),
-          :class => "required for_checkbox" %>
+          class: "for_checkbox" %>
         <span><%= f.check_box :show_submitted_story_threads %></span>
       </div>
     </section>
@@ -149,11 +147,11 @@
       </p>
 
       <div class="labelled_grid">
-        <%= f.label :mailing_list_mode, "Receive List E-mails",
-          :class => "required" %>
+        <%= f.label :mailing_list_mode, "Receive List E-mails" %>
         <%= f.select :mailing_list_mode, [ [ "No e-mails", 0 ],
-          [ "All stories and comments", 1 ], [ "Only stories", 2 ] ] %>
-        <label class="required">List Address</label>
+          [ "All stories and comments", 1 ], [ "Only stories", 2 ] ],
+          required: true %>
+        <label>List Address</label>
         <span>
           <tt><%= Rails.application.shortname %>-<%=
             @edit_user.mailing_list_token %>@<%= Rails.application.domain %></tt>
@@ -165,22 +163,21 @@
       <h2>Miscellaneous Settings</h2>
 
       <div class="labelled_grid">
-        <%= f.label :prefers_color_scheme, "Color Scheme", :class => "required" %>
+        <%= f.label :prefers_color_scheme, "Color Scheme" %>
         <span>
           <label><%= f.radio_button :prefers_color_scheme, :system %> System (<a href="https://lobste.rs/s/eg1n75/dark_mode">details</a>)</label>
           <label><%= f.radio_button :prefers_color_scheme, :light %> Light</label>
           <label><%= f.radio_button :prefers_color_scheme, :dark %> Dark</label>
         </span>
 
-        <%= f.label :prefers_contrast, "Contrast", :class => "required" %>
+        <%= f.label :prefers_contrast, "Contrast" %>
         <span>
           <label><%= f.radio_button :prefers_contrast, :system %> System</label>
           <label><%= f.radio_button :prefers_contrast, :normal %> Normal</label>
           <label><%= f.radio_button :prefers_contrast, :high %> High</label>
         </span>
 
-        <%= f.label :show_email, "Show Email Address",
-          :class => "required for_checkbox" %>
+        <%= f.label :show_email, "Show Email Address", class: "for_checkbox" %>
         <span>
           <%= f.check_box :show_email %>
           <span class="hint">
@@ -189,10 +186,10 @@
         </span>
 
         <%= f.label :show_story_previews, "Show Story Previews",
-          :class => "required for_checkbox" %>
+          class: "for_checkbox" %>
         <span><%= f.check_box :show_story_previews %></span>
 
-        <%= f.label :show_avatars, "Show User Avatars", :class => "required for_checkbox" %>
+        <%= f.label :show_avatars, "Show User Avatars", class: "for_checkbox" %>
         <span><%= f.check_box :show_avatars %></span>
       </div>
 
@@ -206,16 +203,14 @@
 
   <div class="labelled_grid">
     <%= label_tag :gravatar,
-      raw("<a href=\"https://gravatar.com/\">Gravatar</a>"),
-      :class => "required" %>
+      raw("<a href=\"https://gravatar.com/\">Gravatar</a>") %>
     <span>
       Your avatar will be cached from the Gravatar icon for your e-mail address above.
       <%= link_post "Expire cache", "/avatars/expire" %>
     </span>
     <% if Pushover.enabled? %>
       <%= label_tag :pushover_user_key,
-          raw("<a href=\"https://pushover.net/\">Pushover</a>"),
-          :class => "required" %>
+          raw("<a href=\"https://pushover.net/\">Pushover</a>") %>
       <span>
         <%= link_post((@edit_user.pushover_user_key.present? ?
             "Manage Pushover Subscription" : "Subscribe With Pushover"),
@@ -227,8 +222,7 @@
     <% end %>
     <% if Github.enabled? %>
       <%= label_tag :github_username,
-        raw("<a href=\"https://github.com/\">GitHub</a>"),
-          :class => "required" %>
+        raw("<a href=\"https://github.com/\">GitHub</a>") %>
       <span>
         <% if @edit_user.github_username.present? %>
           Linked to
@@ -242,8 +236,7 @@
       <% end %>
     <% if Mastodon.enabled? %>
       <%= label_tag :mastodon_username,
-        raw("<a href=\"https://joinmastodon.org/\">Mastodon</a>"),
-          :class => "required" %>
+        raw("<a href=\"https://joinmastodon.org/\">Mastodon</a>") %>
       <span>
         <% if @edit_user.mastodon_username.present? %>
           Linked to
@@ -288,10 +281,10 @@
     </ul>
 
     <div class="labelled_grid">
-      <%= f.label :password, "Verify Password", :class => "required" %>
-      <%= f.password_field :password, :autocomplete => "off" %>
-      <%= f.label :i_am_sure, "I am sure", :class => "required for_checkbox" %>
-      <span><%= f.check_box :i_am_sure %></span>
+      <%= f.label :password, "Verify Password" %>
+      <%= f.password_field :password, required: true, autocomplete: "off" %>
+      <%= f.label :i_am_sure, "I am sure", class: "for_checkbox" %>
+      <span><%= f.check_box :i_am_sure, required: true %></span>
       <%= f.label :disown, "Disown stories/comments", :class => "for_checkbox" %>
       <span><%= f.check_box :disown %> <span class="hint">(optional)</span></span>
     </div>

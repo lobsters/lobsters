@@ -32,11 +32,11 @@ class InboxMailbox < ApplicationMailbox
     # Emails In-Reply-To formatted like
     # story.<short_id>.<timestamp of story creation>@<app domain>
     # We throw away the timestamp, since we only care about the short ID.
-    irt = mail.in_reply_to.to_s.gsub(/[^A-Za-z0-9@\.]/, "")
+    irt = mail.in_reply_to.to_s.gsub(/[^A-Za-z0-9@.]/, "")
 
-    if (m = irt.match(/^comment\.([^\.]+)\.\d+@/))
+    if (m = irt.match(/^comment\.([^.]+)\.\d+@/))
       @parent = Comment.where(short_id: m[1]).first
-    elsif (m = irt.match(/^story\.([^\.]+)\.\d+@/))
+    elsif (m = irt.match(/^story\.([^.]+)\.\d+@/))
       @parent = Story.where(short_id: m[1]).first
     end
 

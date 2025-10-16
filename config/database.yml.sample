@@ -14,8 +14,8 @@ development:
   primary:
     <<: *trilogy
     database: lobsters_development
-    username: 
-    password: 
+    username: root
+    password: localdev
   cache:
     <<: *sqlite3
     database: db/development/cache.sqlite3
@@ -29,6 +29,8 @@ test:
   primary:
     <<: *trilogy
     database: lobsters_test
+    username: root
+    password: localdev
   cache:
     <<: *sqlite3
     database: db/test/cache.sqlite3

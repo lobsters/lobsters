@@ -93,11 +93,23 @@ class Stats
   def self.cache_monthly_graph(name, opts)
     graph = TimeSeries.new(DEFAULTS.merge(opts))
     graph.add_data(
-      data: yield,
+      data: data_with_extrapolated_month(yield),
       template: "%Y-%m"
     )
     svg = graph.burn_svg_only
 
     Rails.cache.write(cache_key(name), svg, expires_in: 2.days)
+  end
+
+  def self.data_with_extrapolated_month(data)
+    current_month = data[-2]
+    current_month_extrapolated_value = (
+      data.last / (
+        Time.now.utc.day.to_f /
+        Time.days_in_month(Time.now.utc.month, Time.now.utc.year)
+      )
+    ).round
+
+    [*data, current_month, current_month_extrapolated_value]
   end
 end

@@ -25,7 +25,6 @@
       "></div>
 <div id="c_<%= comment.short_id %>"
   data-shortid="<%= comment.short_id if comment.persisted? %>"
-  data-id="<%= comment.id %>"
   class="comment
     <%= comment.current_upvoted? ? "upvoted" : "" %>
     <%= comment.current_flagged? ? "flagged" : "" %>
@@ -93,8 +92,10 @@
           <a class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>          
           |
           <a class="comment_moderator" href="#c_<%= comment.short_id %>">mod delete</a>
-          <% else %>
-          <a class="comment_moderator" href="#c_<%= comment.short_id %>">delete</a>
+          <% elsif @user && @user.is_moderator? %>
+            <a class="comment_moderator" href="#c_<%= comment.short_id %>">delete</a>
+         <% else %> 
+            <a class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>         
         <% end %>
         <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
           |

@@ -818,7 +818,7 @@ onPageLoad(() => {
     const formData = new FormData();
     formData.append('reason', reason);
     const comment = parentSelector(event.target, '.comment');
-    const commentId = comment.getAttribute('data-id');
+    const commentId = comment.getAttribute('data-shortid');
     fetchWithCSRF('/mod/comments/' + commentId, { method: 'delete', body: formData })
       .then(response => {
         response.text().then(text => replace(comment, text));

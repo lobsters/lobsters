@@ -15,17 +15,6 @@ class Mod::CommentsController < Mod::ModController
   private
 
   def find_comment
-    comment = Comment.where(short_id: params[:id]).first
-    # convenience to use PK (from external queries) without generally permitting enumeration:
-    comment ||= Comment.find(params[:id]) if @user&.is_admin?
-
-    if @user && comment
-      comment.current_vote = Vote.where(user_id: @user.id,
-        story_id: comment.story_id, comment_id: comment.id).first
-      comment.vote_summary = Vote.comment_vote_summaries([comment.id])[comment.id]
-      comment.current_reply = @user.ids_replied_to([comment.id])
-    end
-
-    comment
+    Comment.find_by(short_id: params[:id])
   end
 end

@@ -46,7 +46,7 @@
       href="<%= @comments_rss_link[:href] %>">
   <% end %>
   <meta name="robots" content="noai, noimageai">
-
+<% # only for logged-out users so we don't speculatively advance ReadRibbons %>
   <% if !@user %>
     <script type="speculationrules" nonce="<%= content_security_policy_nonce %>">
       {

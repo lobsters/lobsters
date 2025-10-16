@@ -35,7 +35,7 @@ class Notification < ApplicationRecord
     comment = notifiable
 
     # Check if this is a mention notification
-    if comment.plaintext_comment.match?(/\B[@~]#{Regexp.escape(user.username)}\b/)
+    if comment.plaintext_comment.match?(Markdowner::USERNAME_MENTION)
       return user.inbox_mentions?
     end
 

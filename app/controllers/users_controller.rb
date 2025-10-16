@@ -154,13 +154,7 @@ class UsersController < ApplicationController
       .joins(:story)
       .includes(:user, :hat, story: :user)
       .order(id: :desc)
-    comment_ids = @flagged_comments.map(&:id)
-    votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, comment_ids)
-    summaries = Vote.comment_vote_summaries(comment_ids)
-    @flagged_comments.each do |c|
-      c.current_vote = votes[c.id]
-      c.vote_summary = summaries[c.id]
-    end
+    CommentVoteHydrator.new(@flagged_comments, @user).get
   end
 
   private

@@ -7,6 +7,10 @@ class Notification < ApplicationRecord
   scope :read, -> { where.not(read_at: nil) }
   scope :unread, -> { where(read_at: nil) }
 
+  before_validation on: :create do
+    self.read_at = Time.current if !should_display?
+  end
+
   include Token
 
   def should_display?

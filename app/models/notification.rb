@@ -7,22 +7,47 @@ class Notification < ApplicationRecord
   scope :read, -> { where.not(read_at: nil) }
   scope :unread, -> { where(read_at: nil) }
 
+  before_validation on: :create do
+    self.read_at = Time.current if !should_display?
+  end
+
   include Token
 
-  def good_faith?
+  def should_display?
     case notifiable
     when Message
-      good_faith_message?
+      should_display_message?
     when Comment
-      good_faith_comment?
+      should_display_comment?
     end
   end
 
-  def good_faith_message?
+  def should_display_message?
     true
   end
 
-  def good_faith_comment?
+  def should_display_comment?
+    return false unless user_wants_notification?
+    return false unless is_high_quality?
+
+    true
+  end
+
+  private
+
+  def user_wants_notification?
+    comment = notifiable
+
+    # Check if this is a mention notification
+    if comment.plaintext_comment.match?(Markdowner::USERNAME_MENTION)
+      return user.inbox_mentions?
+    end
+
+    # For reply notifications, always show (user settings handled elsewhere)
+    true
+  end
+
+  def is_high_quality?
     comment = notifiable
     story = comment.story
     parent_comment = comment.parent_comment

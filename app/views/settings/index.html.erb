@@ -90,7 +90,9 @@
       <h2>Comment Mention Notification Settings</h2>
 
       <div class="labelled_grid">
-        <%= f.label :email_mentions, "Receive E-mail", class: "for_checkbox" %>
+        <%= f.label :inbox_mentions, "Show in Inbox", :class => "for_checkbox" %>
+        <span><%= f.check_box :inbox_mentions %></span>
+        <%= f.label :email_mentions, "Receive E-mail", :class => "for_checkbox" %>
         <span><%= f.check_box :email_mentions %></span>
         <%= f.label :pushover_mentions, "Receive Pushover Alert",
           class: "for_checkbox" %>

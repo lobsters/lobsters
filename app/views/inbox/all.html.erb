@@ -4,7 +4,7 @@
 
 <% if @notifications.present? %>
   <ol class="comments comments1 notifications">
-    <% @notifications.filter { |n| n.good_faith? }.each do |notification| %>
+    <% @notifications.filter { |n| n.should_display? }.each do |notification| %>
       <% case notification.notifiable %>
       <% when Comment %>
       <% comment = notification.notifiable %>

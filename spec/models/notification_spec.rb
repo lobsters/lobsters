@@ -3,18 +3,18 @@
 require "rails_helper"
 
 describe Notification do
-  describe "check_good_faith" do
+  describe "should_display?" do
     context "messages" do
-      it "is good for all messages" do
+      it "should display all messages" do
         user = create(:user)
         message = create(:message)
         notification = create(:notification, user: user, notifiable: message)
-        expect(notification.good_faith?).to eq(true)
+        expect(notification.should_display?).to eq(true)
       end
     end
 
     context "comments" do
-      it "is not good for stories with more flags than upvotes" do
+      it "should not display for comments on stories with more flags than upvotes" do
         author = create(:user)
         story = create(:story, user: author)
         reader = create(:user)
@@ -24,10 +24,10 @@ describe Notification do
         expect(story.flags).to eq(1)
         comment = create(:comment, user: reader, story: story)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good_faith?).to eq(false)
+        expect(notification.should_display?).to eq(false)
       end
 
-      it "is good for stories with more upvotes than flags" do
+      it "should display for comments on stories with more upvotes than flags" do
         author = create(:user)
         story = create(:story, user: author)
         reader = create(:user)
@@ -35,10 +35,10 @@ describe Notification do
         expect(story.flags).to eq(0)
         comment = create(:comment, user: reader, story: story)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good_faith?).to eq(true)
+        expect(notification.should_display?).to eq(true)
       end
 
-      it "is not good for comments with more flags than upvotes" do
+      it "should not display for comments with more flags than upvotes" do
         author = create(:user)
         story = create(:story, user: author)
         reader = create(:user)
@@ -47,37 +47,54 @@ describe Notification do
         comment.reload
         expect(comment.flags).to eq(1)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good_faith?).to eq(false)
+        expect(notification.should_display?).to eq(false)
       end
 
-      it "is not good for deleted comments" do
+      it "should not display for deleted comments" do
         author = create(:user)
         story = create(:story, user: author)
         reader = create(:user)
         comment = create(:comment, user: reader, story: story, is_deleted: true)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good_faith?).to eq(false)
+        expect(notification.should_display?).to eq(false)
       end
 
-      it "is not good for moderated comments" do
+      it "should not display for moderated comments" do
         author = create(:user)
         story = create(:story, user: author)
         reader = create(:user)
         comment = create(:comment, user: reader, story: story, is_moderated: true)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good_faith?).to eq(false)
+        expect(notification.should_display?).to eq(false)
       end
 
-      it "is good for other comments" do
+      it "should display for other comments" do
         author = create(:user)
         story = create(:story, user: author)
         reader = create(:user)
         comment = create(:comment, user: reader, story: story)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good_faith?).to eq(true)
+        expect(notification.should_display?).to eq(true)
       end
 
-      it "is not good for comments with parent comments with more flags than upvotes" do
+      it "respects inbox_mentions setting for mention notifications" do
+        user = create(:user)
+        commenter = create(:user)
+        story = create(:story)
+        comment = create(:comment, user: commenter, story: story, comment: "@#{user.username} hello")
+        notification = create(:notification, user: user, notifiable: comment)
+
+        user.settings["inbox_mentions"] = true
+        user.save!
+        expect(notification.should_display?).to eq(true)
+
+        user.settings["inbox_mentions"] = false
+        user.save!
+        notification.reload
+        expect(notification.should_display?).to eq(false)
+      end
+
+      it "should not display for comments with parent comments with more flags than upvotes" do
         author = create(:user)
         story = create(:story, user: author)
         reader1 = create(:user)
@@ -88,10 +105,10 @@ describe Notification do
         comment1.reload
         expect(comment1.flags).to eq(1)
         notification = create(:notification, user: reader1, notifiable: comment2)
-        expect(notification.good_faith?).to eq(false)
+        expect(notification.should_display?).to eq(false)
       end
 
-      it "is not good for comments with parent comments that are deleted" do
+      it "should not display for comments with parent comments that are deleted" do
         author = create(:user)
         story = create(:story, user: author)
         reader1 = create(:user)
@@ -101,10 +118,10 @@ describe Notification do
         comment1.is_deleted = true
         comment1.save!
         notification = create(:notification, user: reader1, notifiable: comment2)
-        expect(notification.good_faith?).to eq(false)
+        expect(notification.should_display?).to eq(false)
       end
 
-      it "is not good for comments with parent comments that are moderated" do
+      it "should not display for comments with parent comments that are moderated" do
         author = create(:user)
         story = create(:story, user: author)
         reader1 = create(:user)
@@ -114,10 +131,10 @@ describe Notification do
         comment1.is_moderated = true
         comment1.save!
         notification = create(:notification, user: reader1, notifiable: comment2)
-        expect(notification.good_faith?).to eq(false)
+        expect(notification.should_display?).to eq(false)
       end
 
-      it "is good for comments with all other parent comments" do
+      it "should display for comments with all other parent comments" do
         author = create(:user)
         story = create(:story, user: author)
         reader1 = create(:user)
@@ -125,10 +142,10 @@ describe Notification do
         reader2 = create(:user)
         comment2 = create(:comment, user: reader2, story: story, parent_comment: comment1)
         notification = create(:notification, user: reader1, notifiable: comment2)
-        expect(notification.good_faith?).to eq(true)
+        expect(notification.should_display?).to eq(true)
       end
 
-      it "is not good if the recipient has flagged any comment belonging to the author" do
+      it "should not display if the recipient has flagged any comment belonging to the author" do
         author = create(:user)
         story = create(:story, user: author)
         reader1 = create(:user)
@@ -137,36 +154,36 @@ describe Notification do
         comment2 = create(:comment, user: reader2, story: story, parent_comment: comment1)
         comment3 = create(:comment, user: reader2, story: story)
         notification = create(:notification, user: author, notifiable: comment3)
-        expect(notification.good_faith?).to eq(true)
+        expect(notification.should_display?).to eq(true)
         Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, comment2.id, author.id, nil)
         notification.reload
-        expect(notification.good_faith?).to eq(false)
+        expect(notification.should_display?).to eq(false)
       end
 
-      it "is not good if the recipient has hidden the story" do
+      it "should not display if the recipient has hidden the story" do
         author = create(:user)
         story = create(:story, user: author)
         reader = create(:user)
         comment = create(:comment, user: reader, story: story)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good_faith?).to eq(true)
+        expect(notification.should_display?).to eq(true)
         _hidden_story = create(:hidden_story, user: author, story: story)
         notification.reload
-        expect(notification.good_faith?).to eq(false)
+        expect(notification.should_display?).to eq(false)
       end
 
-      it "is not good if the recipient has filtered the story tag" do
+      it "should not display if the recipient has filtered the story tag" do
         author = create(:user)
         story = create(:story, user: author)
         reader = create(:user)
         comment = create(:comment, user: reader, story: story)
         notification = create(:notification, user: author, notifiable: comment)
-        expect(notification.good_faith?).to eq(true)
+        expect(notification.should_display?).to eq(true)
         tag = create(:tag)
         story.tags << tag
         _tag_filter = TagFilter.create!(tag: tag, user: author)
         notification.reload
-        expect(notification.good_faith?).to eq(false)
+        expect(notification.should_display?).to eq(false)
       end
     end
   end

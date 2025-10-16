@@ -36,8 +36,12 @@ Want more info?
 .xAxisLabels { fill: var(--color-fg); }
 .yAxisLabels { fill: var(--color-fg); }
 .key1, .dataPoint1 { fill: var(--color-fg-accent); }
-circle:nth-last-of-type(2) { fill: var(--color-fg-contrast-4-5); }
-circle:last-of-type { fill: var(--color-fg-affirmative); }
+circle:nth-last-of-type(2), circle:last-of-type {
+  fill: none;
+  stroke: var(--color-fg-accent);
+  stroke-width: 1;
+}
+circle:last-of-type { stroke-dasharray: 1; }
 .line1 { fill: var(--color-fg-accent); }
 .guideLines { stroke: var(--color-bg); stroke-dasharray: none; }
 .dataPointPopupMask { fill: var(--color-fg); stroke: var(--color-bg); }

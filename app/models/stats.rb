@@ -17,7 +17,7 @@ class Stats
     cache_monthly_graph(:active_users, {
       graph_title: "Active users by month",
       scale_y_divisions: 500
-    }) {
+    }, extrapolate: false) {
       stories = Story.pluck(:created_at, :user_id).map { |created_at, user_id| [created_at.strftime("%Y-%m"), user_id] }
       votes = Vote.pluck(:updated_at, :user_id).map { |updated_at, user_id| [updated_at.strftime("%Y-%m"), user_id] }
       comments = Comment.pluck(:created_at, :user_id).map { |created_at, user_id| [created_at.strftime("%Y-%m"), user_id] }
@@ -90,13 +90,14 @@ class Stats
     show_lines: false
   }
 
-  def self.cache_monthly_graph(name, opts)
+  def self.cache_monthly_graph(name, opts, extrapolate: true)
     graph = TimeSeries.new(DEFAULTS.merge(opts))
+    data = extrapolate ? data_with_extrapolated_month(yield) : yield
     graph.add_data(
-      data: data_with_extrapolated_month(yield),
+      data:,
       template: "%Y-%m"
     )
-    svg = graph.burn_svg_only
+    svg = graph.burn_svg_only(add_no_extrapolation_css_class: !extrapolate)
 
     Rails.cache.write(cache_key(name), svg, expires_in: 2.days)
   end

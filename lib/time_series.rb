@@ -20,4 +20,16 @@ class TimeSeries < SVG::Graph::TimeSeries
   def get_y_labels
     get_y_values.collect { |v| number_with_delimiter(v.to_i) }
   end
+
+  # Override to add a custom CSS class to the SVG element, for graphs
+  # that should omit an extrapolated value for the current month.
+  def burn_svg_only(add_no_extrapolation_css_class: false)
+    svg = super()
+
+    if add_no_extrapolation_css_class
+      svg.sub!("<svg", "<svg class='no-extrapolation'")
+    end
+
+    svg
+  end
 end

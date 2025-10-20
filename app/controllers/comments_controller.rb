@@ -145,7 +145,7 @@ class CommentsController < ApplicationController
       render partial: "commentbox", locals: {comment: comment, story: story}
     else
       parents = comment.parents.for_presentation
-      CommentVoteHydrator.new(parents, @user).get
+      @vote_hydrator = CommentVoteHydrator.new(parents, @user)
       render "_commentbox", locals: {
         comment: comment,
         story: story,
@@ -298,7 +298,7 @@ class CommentsController < ApplicationController
       .limit(COMMENTS_PER_PAGE)
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 
-    CommentVoteHydrator.new(@comments, @user).get
+    @vote_hydrator = CommentVoteHydrator.new(@comments, @user)
 
     @last_read_timestamp = if params[:last_read_timestamp]
       Time.zone.at(params[:last_read_timestamp].to_i)
@@ -355,7 +355,7 @@ class CommentsController < ApplicationController
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 
     # TODO: respect hidden stories
-    CommentVoteHydrator.new(@comments, @user).get
+    @vote_hydrator = CommentVoteHydrator.new(@comments, @user)
     respond_to do |format|
       format.html { render action: :index }
       format.rss {
@@ -383,7 +383,7 @@ class CommentsController < ApplicationController
       .merge(Story.not_deleted(@user))
       .for_presentation
       .joins(:story)
-    CommentVoteHydrator.new(@threads, @user).get
+    @vote_hydrator = CommentVoteHydrator.new(@threads, @user)
   end
 
   private

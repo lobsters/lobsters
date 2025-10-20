@@ -10,7 +10,7 @@
        <div class="last_read_newest">Last Read</div>
        <% already_printed_newest_line = true %>
     <% end %>
-    <li><%= render "comments/comment", :comment => comment,
+    <li><%= render "comments/comment", :comment => comment, :vote_hydrator => @vote_hydrator,
       :show_story => true %>
       <ol class="comments"></ol>
     </li>

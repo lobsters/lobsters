@@ -1,4 +1,4 @@
-<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false, show_folder_control: true) -%>
+<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false, show_folder_control: true, vote_hydrator:) -%>
 <%
   # partial inputs:
   # force_open: this comment is allowed to collapse
@@ -7,6 +7,10 @@
   # was_merged: show merged icon start of byline
   # is_unread: show (unread) in byline
   # show_folder_control: whether to display the control to hide the comment
+  # vote_hydrator: a VoteHydrator to use for vote lookups
+%>
+<%
+  comment = vote_hydrator[comment]
 %>
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"

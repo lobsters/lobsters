@@ -17,7 +17,7 @@ class SearchController < ApplicationController
         end
       end
       if params[:what] == "comments"
-        @search.results = CommentVoteHydrator.new(@search.results, @user).get
+        @vote_hydrator = CommentVoteHydrator.new(@search.results, @user)
       end
     end
   end

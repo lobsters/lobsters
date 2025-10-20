@@ -65,6 +65,6 @@
 
 <ol class="comments comments1">
   <% @flagged_comments.each do |comment| %>
-    <li><%= render "comments/comment", :comment => comment, :show_story => true, force_open: true %></li>
+    <li><%= render "comments/comment", :comment => comment, :show_story => true, :vote_hydrator => @vote_hydrator, force_open: true %></li>
   <% end %>
 </ol>

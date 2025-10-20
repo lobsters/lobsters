@@ -43,12 +43,12 @@ p svg { height: 10px; width: 10px; }
 .xAxisLabels { fill: var(--color-fg); }
 .yAxisLabels { fill: var(--color-fg); }
 .key1, .dataPoint1 { fill: var(--color-fg-accent); }
-circle:nth-last-of-type(2), circle:last-of-type, .outline circle {
+svg.extrapolate circle:nth-last-of-type(2), circle:last-of-type, .outline circle {
   fill: none;
   stroke: var(--color-fg-accent);
   stroke-width: 1;
 }
-svg:not(.outline) circle:last-of-type, .dashed circle { stroke-dasharray: 1; }
+svg.extrapolate circle:last-of-type, .dashed circle { stroke-dasharray: 1; }
 .line1 { fill: var(--color-fg-accent); }
 .guideLines { stroke: var(--color-bg); stroke-dasharray: none; }
 .dataPointPopupMask { fill: var(--color-fg); stroke: var(--color-bg); }

@@ -414,7 +414,7 @@ class StoriesController < ApplicationController
 
       @story.is_hidden_by_cur_user = @story.is_hidden_by_user?(@user)
       @story.is_saved_by_cur_user = @story.is_saved_by_user?(@user)
-      @comments = CommentVoteHydrator.new(@comments, @user).get
+      @vote_hydrator = CommentVoteHydrator.new(@comments, @user)
     end
   end
 

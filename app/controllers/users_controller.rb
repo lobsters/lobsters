@@ -154,7 +154,7 @@ class UsersController < ApplicationController
       .joins(:story)
       .includes(:user, :hat, story: :user)
       .order(id: :desc)
-    CommentVoteHydrator.new(@flagged_comments, @user).get
+    @vote_hydrator = CommentVoteHydrator.new(@flagged_comments, @user)
   end
 
   private

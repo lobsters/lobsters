@@ -1,4 +1,4 @@
-<%# locals: (thread:, story: nil, ribbon: nil, read_by_notifications: [], show_folder_control: true, vote_hydrator:) -%>
+<%# locals: (thread:, story: nil, ribbon: nil, read_by_notifications: [], show_folder_control: true, vote_hydrator: nil) -%>
 <% previous_depth = nil %>
 <% top_comment_depth = nil %>
 <%# open list of threads %>
@@ -42,7 +42,7 @@
 
 <%#heinous_inline_partial(comments/_comment.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
-<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false, show_folder_control: true, vote_hydrator:) -%>
+<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false, show_folder_control: true, vote_hydrator: nil) -%>
 <%
   # partial inputs:
   # force_open: this comment is allowed to collapse
@@ -51,10 +51,12 @@
   # was_merged: show merged icon start of byline
   # is_unread: show (unread) in byline
   # show_folder_control: whether to display the control to hide the comment
-  # vote_hydrator: a VoteHydrator to use for vote lookups
+  # vote_hydrator: an optional VoteHydrator to use for vote lookups
 %>
 <%
-  comment = vote_hydrator[comment]
+  if vote_hydrator && vote_hydrator[comment]
+    comment = vote_hydrator[comment]
+  end
 %>
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"

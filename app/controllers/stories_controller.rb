@@ -167,17 +167,16 @@ class StoriesController < ApplicationController
     respond_to do |format|
       format.html {
         @meta_tags = {
-          "twitter:card" => "summary",
-          "twitter:site" => "@lobsters",
-          "twitter:title" => @story.title,
-          "twitter:description" => @story.comments_count.to_s + " " +
+          "og:type" => "article",
+          "og:site_name" => "Lobsters",
+          "og:title" => @story.title,
+          "og:description" => @story.comments_count.to_s + " " +
             "comment".pluralize(@story.comments_count),
-          "twitter:image" => Rails.application.root_url +
-            "touch-icon-144.png"
+          "og:image" => Rails.application.root_url + "touch-icon-144.png"
         }
 
         if @story.user.mastodon_username.present?
-          @meta_tags["twitter:creator"] = @story.user.mastodon_acct
+          @meta_tags["article:author"] = @story.user.mastodon_acct
         end
 
         load_user_votes

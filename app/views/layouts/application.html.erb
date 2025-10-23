@@ -16,7 +16,7 @@
 
   <% if @meta_tags %>
     <% @meta_tags.each do |k,v| %>
-      <meta name="<%= k %>" content="<%= v %>">
+      <meta property="<%= k %>" content="<%= v %>">
     <% end %>
   <% end %>
   <link rel="shortcut icon" href="/favicon.ico">

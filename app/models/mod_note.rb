@@ -38,7 +38,7 @@ class ModNote < ApplicationRecord
   end
 
   def generated_markeddown
-    Markdowner.to_html(note)
+    Markdowner.to_html(note, as_of: created_at)
   end
 
   def self.create_from_message(message, moderator)

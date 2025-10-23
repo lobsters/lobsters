@@ -320,7 +320,7 @@ class Comment < ApplicationRecord
   end
 
   def generated_markeddown_comment
-    Markdowner.to_html(comment)
+    Markdowner.to_html(comment, as_of: created_at)
   end
 
   # TODO: race condition: if two votes arrive at the same time, the second one

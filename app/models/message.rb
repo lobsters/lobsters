@@ -99,7 +99,7 @@ class Message < ApplicationRecord
   end
 
   def linkified_body
-    Markdowner.to_html(body)
+    Markdowner.to_html(body, as_of: created_at)
   end
 
   def plaintext_body

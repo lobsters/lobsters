@@ -645,7 +645,7 @@ class Story < ApplicationRecord
   end
 
   def generated_markeddown_description
-    Markdowner.to_html(description, allow_images: can_have_images?)
+    Markdowner.to_html(description, allow_images: can_have_images?, as_of: created_at)
   end
 
   # TODO: race condition: if two votes arrive at the same time, the second one

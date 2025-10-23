@@ -5,18 +5,18 @@ require "commonmarker"
 class Markdowner
   USERNAME_MENTION = /\B([@~]#{User::VALID_USERNAME})\b/o
 
-  # opts[:allow_images] allows <img> tags
-
   # Rerender all markdown (#1627) cached in db columns, a pattern that predates Rails frament
   # caching and our adoption of the feature (6ce15c4f in 2025-10). As we build confidence in
   # fragment caching we should drop these columns.
   def self.rerender_db_markdown!
-    Comment.all.find_each { |c| c.update_columns markeddown_comment: Markdowner.to_html(c.comment) }
-    ModNote.all.find_each { |n| n.update_columns markeddown_note: Markdowner.to_html(n.note) }
-    Story.where.not(description: "").find_each { |s| s.update_columns markeddown_description: Markdowner.to_html(s.description) }
+    Comment.all.find_each { |c| c.update_columns markeddown_comment: Markdowner.to_html(c.comment, as_of: c.created_at) }
+    ModNote.all.find_each { |n| n.update_columns markeddown_note: Markdowner.to_html(n.note, as_of: n.created_at) }
+    Story.where.not(description: "").find_each { |s| s.update_columns markeddown_description: Markdowner.to_html(s.description, as_of: s.created_at) }
   end
 
-  def self.to_html(text, opts = {})
+  # allow_images: transform ![](example.com/img.jpg) to a hotlinked image; default is to print a link to the URL
+  # as_of: what timestamp to add @mention links as of, because users rename; default Time.current
+  def self.to_html(text, allow_images: false, as_of: Time.current)
     if text.blank?
       return ""
     end
@@ -38,7 +38,7 @@ class Markdowner
 
     root = Commonmarker.parse(text.to_s, options: commonmarker_options)
 
-    walk_text_nodes(root) { |n| postprocess_text_node(n) }
+    walk_text_nodes(root) { |n| link_username_mentions(n, as_of:) }
 
     ng = Nokogiri::HTML(root.to_html(
       options: commonmarker_options,
@@ -51,7 +51,7 @@ class Markdowner
     end
 
     # This should happen before adding rel=ugc to all links
-    convert_images_to_links(ng) unless opts[:allow_images]
+    convert_images_to_links(ng) unless allow_images
 
     # make links have rel=ugc
     ng.css("a").each do |h|
@@ -74,7 +74,7 @@ class Markdowner
     end
   end
 
-  def self.postprocess_text_node(node)
+  def self.link_username_mentions(node, as_of:)
     # This does 1+n queries in username linkification in comments/bios because this works inorder on
     # the parse tree rather than running once over the text. Proper fix: loop to find usernames, do
     # one lookup, then loop again to manipulate the nodes for usernames that exist.
@@ -85,7 +85,7 @@ class Markdowner
 
       node.string_content = before
 
-      if User.exists?(username: user[1..])
+      if Username.where("created_at < ? and (? < renamed_away_at or renamed_away_at is null)", as_of, as_of).exists?(username: user[1..])
         link = Commonmarker::Node.new(:link, url: Rails.application.root_url + "~#{user[1..]}")
         node.insert_after(link)
 

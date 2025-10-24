@@ -55,7 +55,7 @@
 %>
 <%
   if vote_hydrator && vote_hydrator[comment]
-    comment = vote_hydrator[comment]
+    vote_hydrator[comment]
   end
 %>
 <input id="comment_folder_<%= comment.short_id %>"

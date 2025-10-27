@@ -51,7 +51,6 @@ class InboxController < ApplicationController
   def update_read_at
     @notifications.touch_all(:read_at)
     message_ids = @notifications.of_messages.pluck(:notifiable_id)
-    Message.where(id: message_ids).update_all(has_been_read: true)
   end
 
   def set_page

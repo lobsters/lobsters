@@ -25,7 +25,7 @@ class Message < ApplicationRecord
   validates :body, length: {maximum: 70_000}, on: :update # for weird old data
   validates :body, length: {within: 20..8_192}, on: :create # max from 2024-10-28 on
   validates :short_id, length: {maximum: 30}
-  validates :has_been_read, :deleted_by_author, :deleted_by_recipient, inclusion: {in: [true, false]}
+  validates :deleted_by_author, :deleted_by_recipient, inclusion: {in: [true, false]}
   validate :hat do
     next if hat.blank?
     if author.blank? || author.wearable_hats.exclude?(hat)
@@ -45,7 +45,6 @@ class Message < ApplicationRecord
       deleted_by_author: false
     ).preload(:author, :hat, :recipient).order(id: :asc)
   }
-  scope :unread, -> { where(has_been_read: false, deleted_by_recipient: false) }
 
   before_validation :assign_short_id, on: :create
   after_save :check_for_both_deleted
@@ -54,7 +53,6 @@ class Message < ApplicationRecord
     attrs = [
       :short_id,
       :created_at,
-      :has_been_read,
       :subject,
       :body,
       :deleted_by_author,

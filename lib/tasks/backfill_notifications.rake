@@ -32,7 +32,7 @@ task backfill_notifications: :environment do
       Notification.create(
         user: message.recipient,
         notifiable: message,
-        read_at: message.has_been_read ? read_at : nil
+        read_at: nil
       )
     rescue ActiveRecord::RecordNotUnique
     end

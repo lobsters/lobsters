@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_13_204007) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_27_163517) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -214,7 +214,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_13_204007) do
     t.datetime "created_at", precision: nil
     t.bigint "author_user_id", unsigned: true
     t.bigint "recipient_user_id", null: false, unsigned: true
-    t.boolean "has_been_read", default: false, null: false
     t.string "subject", limit: 100
     t.text "body", size: :medium
     t.string "short_id", limit: 30

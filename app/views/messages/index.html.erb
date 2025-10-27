@@ -10,7 +10,7 @@
       <th width="60%">Subject</th>
     </tr>
     <% @messages.each do |message| %>
-      <tr class="<%= message.has_been_read? ? "" : "bold" %>">
+      <tr class="<%= message.notification&.read_at ? "" : "bold" %>">
         <td><%= check_box_tag "delete_#{message.short_id}" %></td>
         <td>
           <div style="white-space:nowrap;">

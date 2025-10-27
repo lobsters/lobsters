@@ -13,7 +13,6 @@ describe InboxController do
       stub_login_as recipient
       get :all
       unread_message.reload
-      expect(unread_message.has_been_read).to eq(true)
       unread_notification.reload
       expect(unread_notification.read_at).to_not be_nil
     end

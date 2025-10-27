@@ -14,6 +14,7 @@ alias et="exa -snew"
 alias fd="fdfind"
 alias gerp="grep"
 alias g="git"
+alias log="cd ~deploy/lobsters/shared/log"
 alias vi="vim"
 
 set -o vi

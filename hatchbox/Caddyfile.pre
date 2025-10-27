@@ -51,7 +51,7 @@ header Strict-Transport-Security max-age=31536000
   }
   file {
     root /home/deploy/lobsters/current/public/cache/
-    try_files {path} {path}.html {path}/index.html
+    try_files {path}.html {path}/index.html {path}
   }
 }
 # the hatchbox {default} uses a root of public/, serves files that exist with

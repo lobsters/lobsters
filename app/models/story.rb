@@ -244,7 +244,7 @@ class Story < ApplicationRecord
   before_save :log_moderation
   before_save :fix_bogus_chars
   after_create :mark_submitter, :record_initial_upvote
-  after_save :recreate_links, :update_cached_columns, :update_story_text
+  after_save :bust_comment_redirect_cache, :recreate_links, :update_cached_columns, :update_story_text
 
   validate do
     if url.present?
@@ -299,6 +299,14 @@ class Story < ApplicationRecord
     else
       false
     end
+  end
+
+  # on merge, bust the cache for redirecting /c/abc123 -> /s/def456/title#c_abc123
+  # see CommentsController#redirect_from_short_id
+  def bust_comment_redirect_cache
+    return unless merged_story_id_previously_changed?
+
+    Rails.cache.delete_multi comments.pluck(:short_id).map { "c_#{it}" }
   end
 
   def check_already_posted_recently?

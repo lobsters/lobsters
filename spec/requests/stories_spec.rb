@@ -272,6 +272,34 @@ describe "stories", type: :request do
         end
       end
     end
+
+    context "can have images" do
+      it "puts https CSP header" do
+        moderator = create(:user, :moderator)
+
+        story = create(:story, user: moderator, title: "test", url: "http://example.com/")
+        expect(story.can_have_images?).to eq(true)
+
+        get story_path(story)
+
+        expect(response.headers).to have_key("Content-Security-Policy")
+        expect(response.headers["Content-Security-Policy"]).to include("img-src 'self' data: https:")
+      end
+    end
+
+    context "can't have images" do
+      it "don't put https CSP header" do
+        user = create(:user)
+
+        story = create(:story, user: user, title: "test", url: "http://example.com/")
+        expect(story.can_have_images?).to eq(false)
+
+        get story_path(story)
+
+        expect(response.headers).to have_key("Content-Security-Policy")
+        expect(response.headers["Content-Security-Policy"]).to_not include("img-src 'self' data: https:")
+      end
+    end
   end
 
   describe "upvoting" do

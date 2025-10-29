@@ -3,6 +3,10 @@
 class StoriesController < ApplicationController
   include StoryFinder
 
+  content_security_policy(only: :show) do |policy|
+    policy.img_src :self, :data, -> { @story&.can_have_images? ? "https:" : "" }
+  end
+
   caches_page :show, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,

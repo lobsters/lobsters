@@ -30,14 +30,7 @@ export const onPageLoad = (callback) => {
 };
 
 export const parentSelectorOrNull = (target, selector) => {
-  let parent = target;
-  while (!parent.matches(selector)) {
-    parent = parent.parentElement;
-    if (parent === null) {
-      return null;
-    }
-  }
-  return parent;
+	return target.closest(selector);
 };
 
 export const parentSelector = (target, selector) => {

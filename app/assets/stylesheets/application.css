@@ -750,13 +750,19 @@ li div.details {
 div.story_content {
 	margin-bottom: 1em;
 }
-ol.stories.list div.story_content {
+ol.stories.list details.story_content {
 	color: var(--color-fg-contrast-6);
-	max-height: 2.6em;
 	margin: 0.25em 40px 0.25em 0;
-	overflow: hidden;
-	text-overflow: clip;
 }
+ol.stories.list details.story_content:open {
+	color: var(--color-fg-contrast-10);
+}
+
+ol.stories.list details.story_content:open summary {
+	color: var(--color-fg-contrast-4-5);
+	font-size: 8pt;
+}
+
 
 div.morelink {
 	float: left;

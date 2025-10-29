@@ -53,10 +53,11 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
     <% end %>
 
     <% if @user&.show_story_previews? %>
-      <% if (sc = story.description_or_story_text(500)).present? %>
-        <div class="story_content">
+      <% if (sc = story.description_or_story_text()).present? %>
+        <details class="story_content">
+          <summary><span><%= story.description_or_story_text(250) %></span></summary>
           <%= sc %>
-        </div>
+        </details>
       <% end %>
     <% end %>
 

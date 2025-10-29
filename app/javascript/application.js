@@ -29,19 +29,8 @@ export const onPageLoad = (callback) => {
   document.addEventListener('DOMContentLoaded', callback);
 };
 
-export const parentSelectorOrNull = (target, selector) => {
-  let parent = target;
-  while (!parent.matches(selector)) {
-    parent = parent.parentElement;
-    if (parent === null) {
-      return null;
-    }
-  }
-  return parent;
-};
-
 export const parentSelector = (target, selector) => {
-  let parent = parentSelectorOrNull(target, selector)
+  let parent = target.closest(selector);
   if (parent === null) {
     throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
   }
@@ -270,14 +259,14 @@ export class _LobstersFunction {
           //   app/views/comments/_threads.html.erb
           //   app/views/stories/show.html.erb
 
-          const replyForm = parentSelectorOrNull(form, '.reply_form_temporary')
+          const replyForm = form.closest('.reply_form_temporary');
           if (replyForm) {
             // user submitted from a temporary reply form, so this is a reply to an existing comment
             replace(replyForm, text)
           } else {
             // Iterating up the comments tree to the nearest parent. If there isn't one, we are creating
             // a top-level comment, so find the top of the comments tree.
-            const comments = parentSelectorOrNull(form, '.comments') || qS('.comments')
+            const comments = form.closest('.comments') || qS('.comments')
             parentSelector(form, '.comment_form_container').remove()
             comments.insertAdjacentHTML("afterbegin", text)
           }

@@ -233,6 +233,8 @@ class User < ApplicationRecord
   end
 
   def disable_invite_by_user_for_reason!(disabler, reason)
+    return unless disabler
+
     User.transaction do
       self.disabled_invite_at = Time.current
       self.disabled_invite_by_user_id = disabler.id
@@ -427,6 +429,8 @@ class User < ApplicationRecord
   end
 
   def grant_moderatorship_by_user!(user)
+    return unless user
+
     User.transaction do
       self.is_moderator = true
       save!

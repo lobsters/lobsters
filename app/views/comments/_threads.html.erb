@@ -65,7 +65,7 @@
       <div class="
         <%= draw_tree_line ? "comment_parent_tree_line" : "" %>
         <%= can_flag ? "can_flag" : "" %>
-        <%= score_display != "&nbsp;" ? "score_shown" : "" %>
+        <%= score_display[:score_value] != "&nbsp;" ? "score_shown" : "" %>
       "></div>
 <div id="c_<%= comment.short_id %>"
   data-shortid="<%= comment.short_id if comment.persisted? %>"
@@ -82,9 +82,9 @@
     <% end %>
     <% score = comment_score_for_user(comment, @user)%>
     <% if !comment.is_gone? %>
-      <%= link_to score, (@user ? '': login_path), :class => "upvoter" %>
+      <%= link_to score[:score_formatted], (@user ? '': login_path), :class => "upvoter", :title => score[:score_value] %>
     <% elsif @user&.is_moderator? %>
-      <span class="upvoter"><%= score %></span>
+      <span class="upvoter"><%= score[:score_formatted] %></span>
     <% end %>
   </div>
 

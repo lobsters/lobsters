@@ -188,4 +188,22 @@ module ApplicationHelper
   def how_long_ago_link(url, time)
     content_tag(:a, how_long_ago_label(time), href: url)
   end
+
+  ##
+  # This replaces comment.score_for_user(user)
+  # Returns the score value, if the user can see the comment's score
+  # Returns "~", if the user can flag the comment
+  def comment_score_for_user(comment, user)
+    return nil unless user
+    return nil unless comment
+
+    score = if comment.show_score_to_user?(user)
+              comment.score
+            elsif user&.can_flag?(comment)
+              "~"
+            else
+              "&nbsp;".html_safe
+            end
+    score
+  end
 end

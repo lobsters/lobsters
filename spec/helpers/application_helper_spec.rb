@@ -81,4 +81,36 @@ describe ApplicationHelper do
       expect(page_count(100, 50)).to eq(2)
     end
   end
+
+  describe "comment_score_for_user" do
+    let(:comment) { create(:comment, score: 4)}
+    let(:user) { create(:user)}
+
+    it 'when user can see the score' do
+      allow_any_instance_of(Comment).to receive(:show_score_to_user?).and_return(true)
+      expect(helper.comment_score_for_user(comment, user)).to eq 4
+    end
+
+    it 'when user cannot see the score' do
+      allow_any_instance_of(Comment).to receive(:show_score_to_user?).and_return(false)
+      expect(helper.comment_score_for_user(comment, user)).to eq "&nbsp;"
+    end
+
+    it 'when user is moderator' do
+      expect(helper.comment_score_for_user(comment, create(:user, :moderator))).to eq 4
+    end
+
+    it 'when user can flag the comment' do
+      allow_any_instance_of(User).to receive(:can_flag?).and_return(true)
+      expect(helper.comment_score_for_user(comment, user)).to eq '~'
+    end
+
+    it 'when no user' do
+      expect(helper.comment_score_for_user(comment, nil)).to eq nil
+    end
+
+    it 'when no comment' do
+      expect(helper.comment_score_for_user(nil, user)).to eq nil
+    end
+  end
 end

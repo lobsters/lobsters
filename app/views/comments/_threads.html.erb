@@ -59,7 +59,7 @@
       (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
       <% can_flag = @user && @user.can_flag?(comment) %>
-      <% score_display = comment.score_for_user(@user) %>
+      <% score_display = comment_score_for_user(comment, @user) %>
       <% draw_tree_line = comment.reply_count > 0 %>
 
       <div class="
@@ -80,10 +80,11 @@
     <% if show_folder_control %>
       <label for="comment_folder_<%= comment.short_id %>" class="comment_folder"></label>
     <% end %>
+    <% score = comment_score_for_user(comment, @user)%>
     <% if !comment.is_gone? %>
-      <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
+      <%= link_to score, (@user ? '': login_path), :class => "upvoter" %>
     <% elsif @user&.is_moderator? %>
-      <span class="upvoter"><%= comment.score_for_user(@user) %></span>
+      <span class="upvoter"><%= score %></span>
     <% end %>
   </div>
 

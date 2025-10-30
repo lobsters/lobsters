@@ -1,0 +1,18 @@
+/**
+ * Rules for high contrast mode forced by the OS.
+ */
+
+.upvoter:before {
+	content: "\25b3";
+	color: var(--color-fg);
+	-webkit-text-stroke: initial;
+}
+
+.upvoted .upvoter:before {
+	content: "\25b2";
+	color: var(--color-fg-accent);
+}
+
+#logo {
+	background-color: var(--color-fg) !important;
+}

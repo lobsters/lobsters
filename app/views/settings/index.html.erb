@@ -172,22 +172,25 @@
 
     <section>
       <h2>Miscellaneous Settings</h2>
+        <fieldset class="radio-group-container grid-fieldset">
+          <legend>Color Scheme</legend>
+          <div class="radio-group grid-fieldset">
+            <label><%= f.radio_button :prefers_color_scheme, :system, aria: {describedby: "color-scheme-details"} %> System (<a href="https://lobste.rs/s/eg1n75/dark_mode" id="color-scheme-details">details</a>)</label>
+            <label><%= f.radio_button :prefers_color_scheme, :light %> Light</label>
+            <label><%= f.radio_button :prefers_color_scheme, :dark %> Dark</label>
+          </div>
+        </fieldset>
+
+        <fieldset class="radio-group-container grid-fieldset">
+          <legend>Contrast</legend>
+          <div class="radio-group">
+            <label><%= f.radio_button :prefers_contrast, :system %> System</label>
+            <label><%= f.radio_button :prefers_contrast, :normal %> Normal</label>
+            <label><%= f.radio_button :prefers_contrast, :high %> High</label>
+          </div>
+        </fieldset>
 
       <div class="labelled_grid">
-        <%= f.label :prefers_color_scheme, "Color Scheme" %>
-        <span>
-          <label><%= f.radio_button :prefers_color_scheme, :system %> System (<a href="https://lobste.rs/s/eg1n75/dark_mode">details</a>)</label>
-          <label><%= f.radio_button :prefers_color_scheme, :light %> Light</label>
-          <label><%= f.radio_button :prefers_color_scheme, :dark %> Dark</label>
-        </span>
-
-        <%= f.label :prefers_contrast, "Contrast" %>
-        <span>
-          <label><%= f.radio_button :prefers_contrast, :system %> System</label>
-          <label><%= f.radio_button :prefers_contrast, :normal %> Normal</label>
-          <label><%= f.radio_button :prefers_contrast, :high %> High</label>
-        </span>
-
         <%= f.label :show_story_previews, "Show Story Previews",
           class: "for_checkbox" %>
         <span><%= f.check_box :show_story_previews %></span>

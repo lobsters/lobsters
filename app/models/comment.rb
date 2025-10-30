@@ -479,16 +479,6 @@ class Comment < ApplicationRecord
     update_score_and_recalculate! 0, 0 # trigger db calculation
   end
 
-  def score_for_user(u)
-    if show_score_to_user?(u)
-      score
-    elsif u&.can_flag?(self)
-      "~"
-    else
-      "&nbsp;".html_safe
-    end
-  end
-
   def show_score_to_user?(u)
     return true if u&.is_moderator?
 

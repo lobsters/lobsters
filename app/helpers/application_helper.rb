@@ -100,6 +100,10 @@ module ApplicationHelper
     current = request.path.sub(/\/page\/\d+$/, "")
     path.sub!(/\/page\/\d+$/, "")
     options[:class] = class_names(options[:class], current_page: current == path)
+    if current == path
+      options[:aria] ||= {}
+      options[:aria][:current] = "page"
+    end
     link_to text, path, options
   end
 

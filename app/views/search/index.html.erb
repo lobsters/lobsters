@@ -1,35 +1,28 @@
 <%# locals: () -%>
-<div class="box">
-  <%= form_with url: '/search', method: :get do |f| %>
-    <div class="boxline">
-        <%= f.text_field "q", { value: @search.q, size: 40, autocapitalize: :off }.
-        merge(@search.q.present? ? {} : { :autofocus => "autofocus" }) %>
-      <input type="submit" value="Search">
+<%= form_with url: '/search', method: :get, html: { aria: {label: "Search"} }, class: "search-form" do |f| %>
+  <div class="boxline">
+    <%= f.text_field "q", { aria: { label: "Search query" }, value: @search.q, size: 40, autocapitalize: :off, type: "search" }.
+      merge(@search.q.present? ? {} : { :autofocus => "autofocus" }) %>
+    <input type="submit" value="Search">
+  </div>
+
+  <fieldset class="radio-group-container">
+    <legend>Search</legend>
+    <div class="radio-group">
+      <label><%= f.radio_button "what", "stories", checked: @search.what == :stories %> Stories</label>
+      <label><%= f.radio_button "what", "comments", checked: @search.what == :comments %> Comments</label>
     </div>
+  </fieldset>
 
-    <div class="boxline">
-      <label>Search</label>
-
-      <span>
-        <label class="normal"><%= f.radio_button "what", "stories", checked: @search.what == :stories %> Stories</label>
-        &nbsp;
-        <label class="normal"><%= f.radio_button "what", "comments", checked: @search.what == :comments %> Comments</label>
-      </span>
-
-      <br>
-
-      <label>Order By</label>
-
-      <span>
-        <label class="normal"><%= f.radio_button "order", "newest", checked: @search.order == :newest %> Newest</label>
-        &nbsp;
-        <label class="normal"><%= f.radio_button "order", "relevance", checked: @search.order == :relevance %> Relevance</label>
-        &nbsp;
-        <label class="normal"><%= f.radio_button "order", "score", checked: @search.order == :score %> Score</label>
-      </span>
+  <fieldset class="radio-group-container">
+    <legend>Order By</legend>
+    <div class="radio-group">
+      <label><%= f.radio_button "order", "newest", checked: @search.order == :newest %> Newest</label>
+      <label><%= f.radio_button "order", "relevance", checked: @search.order == :relevance %> Relevance</label>
+      <label><%= f.radio_button "order", "score", checked: @search.order == :score %> Score</label>
     </div>
-  <% end %>
-</div>
+  </fieldset>
+<% end %>
 
 <% if @search.results_count > -1 %>
   <div class="box searchresults">

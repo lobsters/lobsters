@@ -1147,6 +1147,7 @@ table.data.zebra tr:nth-child(odd) td,
 table.data tr.nobottom td {
 	border-bottom: 0px;
 	padding-bottom: 0px;
+
 }
 table.data tr.nobottom td.wrap {
 	overflow-wrap: anywhere;
@@ -1500,7 +1501,6 @@ input[type="submit"].link_post.pushover_button {
 }
 
 /* search */
-
 .searchresults summary .heading {
 	font-weight: bold;
 	font-size: 11pt; /* h2 */
@@ -1518,6 +1518,53 @@ input[type="submit"].link_post.pushover_button {
 	padding: 2px;
 }
 
+.radio-group-container {
+	border: 0;
+	padding: 0;
+	margin: 1rem 0 0.5rem;
+}
+
+.radio-group-container legend {
+	float: left;
+	width: 7em;
+	padding: 0;
+}
+
+.radio-group-container input[type=radio] {
+	margin: 0 0.25rem 0 0;
+	vertical-align: text-bottom;
+}
+
+.radio-group-container .radio-group {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+}
+
+/* Used in the user settings page */
+.radio-group-container.grid-fieldset {
+	margin-bottom: 0.75rem;
+}
+
+.radio-group-container.grid-fieldset legend {
+	width: 10rem;
+	margin-right: 1rem;
+}
+
+@media only screen and (max-width: 480px) {
+	.radio-group-container legend {
+		float: none;
+		margin-bottom: 0.5rem;
+	}
+
+	.radio-group-container .radio-group {
+		gap: 1rem;
+	}
+
+	.radio-group-container .radio-group	label {
+		display: inline;
+	}
+}
 
 @media screen and (min-width: 481px) {
 	body {
@@ -1651,6 +1698,7 @@ input[type="submit"].link_post.pushover_button {
 		margin: 0.5rem;
 	}
 
+	legend,
 	form label:not(:has(> input[type="radio"])),
 	.profile label {
 		font-weight: bold;

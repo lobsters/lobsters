@@ -12,7 +12,3 @@
 	content: "\25b2";
 	color: var(--color-fg-accent);
 }
-
-#logo {
-	background-color: var(--color-fg) !important;
-}

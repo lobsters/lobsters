@@ -282,7 +282,6 @@ class Comment < ApplicationRecord
   end
 
   def delete_for_user(user, reason = nil)
-    Comment.record_timestamps = false
     self.is_deleted = true
 
     save!(validate: false)

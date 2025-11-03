@@ -91,7 +91,7 @@
             |
             <a class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>
           <% end %>
-          <% if @user && @user.is_moderator? %>
+          <% if @user&.is_moderator? %>
             |
             <a class="comment_moderator" href="#c_<%= comment.short_id %>">mod delete</a>
           <% end %>

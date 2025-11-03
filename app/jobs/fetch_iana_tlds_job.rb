@@ -28,6 +28,7 @@ class FetchIanaTldsJob < ApplicationJob
 
   def decode_response(response)
     response.body
+      .split
       .reject { it.start_with?("#") }
       .map { it.chomp.downcase }
       .join(" ")

@@ -190,21 +190,15 @@ input[type="url"],
 textarea {
 	border: 1px solid var(--color-box-border);
 }
-input:focus, textarea:focus {
-	outline-style: solid;
-	outline-width: 2px;
-}
 input[type="checkbox"] {
 	margin-top: 0.5em;
 }
-select {
-	border: 1px solid var(--color-box-border);
-}
+select:focus,
 input:focus,
 textarea:focus {
-	border-color: var(--color-box-border-focus);
+	outline: 2px solid var(--color-box-border-focus);
+	border-color: transparent;
 	color: var(--color-fg);
-	outline: 0;
 }
 textarea::placeholder {
 	color: var(--color-fg-contrast-7-5);
@@ -274,13 +268,9 @@ input[type="submit"]:hover {
 }
 
 select {
+	border: 1px solid var(--color-box-border);
 	margin-top: 3px;
 	min-width: 100px;
-}
-select:focus {
-	border-color: var(--color-box-border-focus);
-	color: var(--color-fg);
-	outline: 0;
 }
 select::-moz-focus-inner {
 	border: 0;

@@ -4,6 +4,7 @@
 
 # local bundler config
 /.bundle
+bundle/
 
 # default databases
 db/**/*.sqlite3

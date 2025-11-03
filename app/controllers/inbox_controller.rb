@@ -49,7 +49,7 @@ class InboxController < ApplicationController
   private
 
   def update_read_at
-    @notifications.touch_all(:read_at)
+    @notifications.where(read_at: nil).touch_all(:read_at)
   end
 
   def set_page

@@ -87,7 +87,7 @@
           |
           <a class="comment_undeletor" href="#c_<%= comment.short_id %>">undelete</a>
         <% elsif !comment.is_gone? %>
-          <% if @user && @user.id == comment.user_id && comment.is_deletable_by_user?(@user) %>
+          <% if comment.is_deletable_by_user?(@user) %>
             |
             <a class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>
           <% end %>

@@ -285,7 +285,6 @@ class Comment < ApplicationRecord
     self.is_deleted = true
 
     save!(validate: false)
-    Comment.record_timestamps = true
 
     story.update_cached_columns
     self.user.refresh_counts!

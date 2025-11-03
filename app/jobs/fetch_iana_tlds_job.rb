@@ -35,7 +35,7 @@ class FetchIanaTldsJob < ApplicationJob
   end
 
   def write_iana_tlds(iana_tlds_content)
-    Dir.mkdir_p("storage")
+    FileUtils.mkdir_p("storage") unless Rails.env.production?
     File.write(STORAGE_PATH, iana_tlds_content)
   end
 end

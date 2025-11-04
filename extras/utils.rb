@@ -6,6 +6,7 @@ class Utils
   URL_RE = /\A(?<protocol>https?):\/\/(?<domain>(?:[^.\/]+\.)+[a-z-]+)(?<port>:\d+)?(?:\/(?:[\w.~:\/?#\[\]@!$&'()*+,;=%-]*))?\z/i
 
   # utility that works on stringlikes (for possibly invalid user input + searches)
+  # If this function changes, you should run Story.refresh_normalized_urls! and Link.refresh_normalized_urls!
   def self.normalize(url)
     return url if url.blank?
     url = url.to_s.dup # in case passed a Url or frozen string

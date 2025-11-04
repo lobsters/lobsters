@@ -37,7 +37,7 @@ class Message < ApplicationRecord
     where(
       recipient: user,
       deleted_by_recipient: false
-    ).preload(:author, :hat, :notifiction, :recipient).order(id: :asc)
+    ).preload(:author, :hat, :notification, :recipient).order(id: :asc)
   }
   scope :outbox, ->(user) {
     where(

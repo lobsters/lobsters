@@ -131,11 +131,16 @@
           |
           <a class="comment_undeletor" href="#c_<%= comment.short_id %>">undelete</a>
         <% elsif !comment.is_gone? %>
-          <% if @user && @user.id == comment.user_id && comment.is_deletable_by_user?(@user) %>
+          <% if comment.is_deletable_by_user?(@user) %>
             |
             <a class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>
+          <% elsif comment.is_disownable_by_user?(@user) %>
+            |
+            <%= link_post("disown", disown_comment_path(comment.short_id),
+            params: { type: 'comment', show_story: show_story, show_tree_lines: show_tree_lines })
+            %>
           <% end %>
-          <% if @user && @user.is_moderator? %>
+          <% if @user&.is_moderator? %>
             |
             <a class="comment_moderator" href="#c_<%= comment.short_id %>">mod delete</a>
           <% end %>

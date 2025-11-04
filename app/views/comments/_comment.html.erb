@@ -90,6 +90,11 @@
           <% if comment.is_deletable_by_user?(@user) %>
             |
             <a class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>
+          <% elsif comment.is_disownable_by_user?(@user) %>
+            |
+            <%= link_post("disown", disown_comment_path(comment.short_id),
+            params: { type: 'comment', show_story: show_story, show_tree_lines: show_tree_lines })
+            %>
           <% end %>
           <% if @user&.is_moderator? %>
             |

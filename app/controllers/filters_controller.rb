@@ -4,6 +4,9 @@ class FiltersController < ApplicationController
   before_action :authenticate_user
   before_action :show_title_h1
 
+  # Keep session alive until `update` for CSRF token verification to succeed
+  skip_after_action :clear_session_cookie, only: [:index]
+
   def index
     @title = "Filtered Tags"
 

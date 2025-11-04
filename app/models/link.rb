@@ -76,7 +76,7 @@ class Link < ApplicationRecord
   def self.refresh_normalized_urls!
     # Note that we assume normalization doesn't affect whether a URL links to a comment or story
     # on site, as calculated in url=
-    Link.where.not(url: "").find_each { |l| l.update_columns normalized_url: Utils.normalize(l.url) }
+    Link.find_each { |l| l.update_columns normalized_url: Utils.normalize(l.url) }
   end
 
   private

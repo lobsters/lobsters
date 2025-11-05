@@ -89,7 +89,7 @@ class ApplicationController < ActionController::Base
   def clear_session_cookie?
     # If the session has been loaded, it will contain some default keys and not
     # be `empty?`
-    !@user && session.keys.all?{|k| SESSION_DEFAULT_KEYS.include?(k.to_s) }
+    !@user && session.keys.all? { |k| SESSION_DEFAULT_KEYS.include?(k.to_s) }
   end
 
   def find_user_from_rss_token

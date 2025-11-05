@@ -419,6 +419,12 @@ class Story < ApplicationRecord
     end
   end
 
+  # Recalculates the cached normalized URL for each story, should be run whenever
+  # Utils.normalize changes so that new stories can locate old similar ones correctly.
+  def self.refresh_normalized_urls!
+    Story.where.not(url: "").find_each { |s| s.update_columns normalized_url: Utils.normalize(s.url) }
+  end
+
   # all stories with similar urls
   def self.find_similar_by_url(url)
     # if a previous submission was moderated, return it to block it from being

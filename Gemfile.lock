@@ -494,7 +494,6 @@ DEPENDENCIES
   oauth
   parslet
   pdf-reader
-  prism
   propshaft
   puma
   rack-attack

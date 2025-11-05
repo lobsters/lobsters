@@ -68,7 +68,6 @@ group :test, :development do
   gem "foreman"
   gem "letter_opener"
   gem "listen"
-  gem "prism" # rm after https://github.com/presidentbeef/brakeman/issues/1909 closes
   gem "rb-readline"
   gem "rspec-rails"
   gem "simplecov", require: false

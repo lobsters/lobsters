@@ -757,6 +757,7 @@ ol.stories.list details.story_content:open summary {
 
 ol.stories.list details.story_content:open summary span {
 	display: none;
+}
 
 div.morelink {
 	float: left;

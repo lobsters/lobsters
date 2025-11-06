@@ -1,0 +1,23 @@
+<%= form_with(model: mod_mail) do |form| %>
+  <% if mod_mail.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(mod_mail.errors.count, "error") %> prohibited this mod_mail from being saved:</h2>
+
+      <ul>
+        <% mod_mail.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="labelled_grid">
+    <%= form.label :subject, style: "display: block" %>
+    <%= form.text_field :subject %>
+
+    <%= form.label :recipient_usernames, "To" %>
+    <%= form.text_field :recipient_usernames, required: true, autocapitalize: :off %>
+  </div>
+
+  <%= form.submit %>
+<% end %>

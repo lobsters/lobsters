@@ -343,7 +343,7 @@ header#nav {
 }
 header#nav nav.links {
 	display: flex;
-	width: 100%
+	width: 100%;
 }
 header#nav a, header#subnav a, header#subnav input[type="submit"] {
 	color: var(--color-fg-contrast-6);
@@ -671,10 +671,20 @@ li .byline img.avatar {
 li.story .byline {
 	margin-top: 1px;
 }
+
+.byline button,
 .byline a {
 	color: var(--color-fg-contrast-4-5);
 	text-decoration: none;
+	border: 0;
+	padding: 0;
+	line-height: 1;
+	outline: revert;
 }
+.byline button:hover {
+	background-color: var(--color-bg);
+}
+
 .comment.replied .flagger,
 .comment.flagged .comment_replier {
 	color: var(--color-fg);
@@ -874,6 +884,7 @@ div.comment_text code {
 
 .dropdown_parent {
 	position: relative;
+	display: inline-block;
 }
 
 .comments_subtree .dropdown_parent > #flag_dropdown {
@@ -889,6 +900,37 @@ div.comment_text code {
 	border-bottom: 0;
 	z-index: 15;
 }
+
+@position-try --custom-left {
+	position-area: left;
+	margin-right: 0.25rem;
+}
+
+@position-try --custom-bottom {
+	top: anchor(bottom);
+	justify-self: anchor-center;
+	position-area: none;
+}
+
+.archive-dropdown {
+	/* Reset width, so max() will work. */
+	width: auto;
+	width: max(100px, max-content);
+	inset: auto;
+	padding: 0;
+	margin: 5px 0 0 0;
+	position-area: bottom span-right;
+	overflow: visible; /* Allow focus ring to be visible */
+	position-try-fallbacks: --custom-left, --custom-bottom
+}
+
+@supports (position-area: left) {
+	.archive-dropdown {
+		word-break: normal;
+	}
+}
+
+
 #flag_dropdown a, .archive-dropdown a {
 	background-color: var(--color-box-bg);
 	border-bottom: 1px solid var(--color-box-border);
@@ -916,19 +958,6 @@ div.comment_text code {
 	right: 0;
 	z-index: 1;
 }
-
-/* archive; dropdown styling is with #flag_dropdown to match it */
-.archive_button {
-	display: none;
-}
-.archive_button:not(:checked) ~ .archive-dropdown {
-	display: none;
-}
-.archive_button ~ label{
-	cursor: pointer;
-}
-
-
 
 .controls details {
 	margin-left: auto;

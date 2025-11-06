@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   before_action :remove_unknown_cookies
   after_action :clear_session_cookie
 
+  SESSION_DEFAULT_KEYS = %w[session_id _csrf_token]
   # match this nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
   CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
@@ -78,9 +79,17 @@ class ApplicationController < ActionController::Base
   # clear Rails session cookie if not logged in so nginx uses the page cache
   # https://ryanfb.xyz/etc/2021/08/29/going_cookie-free_with_rails.html
   def clear_session_cookie
-    key = Rails.application.config.session_options[:key] # "lobster_trap"
-    cookies.delete(key) if @user.blank? && session.empty?
-    request.session_options[:skip] = @user.blank? && session.empty?
+    if clear_session_cookie?
+      key = Rails.application.config.session_options[:key] # "lobster_trap"
+      cookies.delete(key)
+      request.session_options[:skip] = true
+    end
+  end
+
+  def clear_session_cookie?
+    # If the session has been loaded, it will contain some default keys and not
+    # be `empty?`
+    !@user && session.keys.all? { |k| SESSION_DEFAULT_KEYS.include?(k.to_s) }
   end
 
   def find_user_from_rss_token

@@ -887,6 +887,10 @@ div.comment_text code {
 	display: inline-block;
 }
 
+.archive-button {
+	font-weight: normal;
+}
+
 .comments_subtree .dropdown_parent > #flag_dropdown {
 	position: absolute;
 	left: 0.25rem;

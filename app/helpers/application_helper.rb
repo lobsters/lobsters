@@ -194,20 +194,16 @@ module ApplicationHelper
   # Returns the score value, if the user can see the comment's score
   # Returns "~" otherwise
   def comment_score_for_user(comment, user)
-    return {} unless comment
+    return nil unless comment
 
-    score = if comment.show_score_to_user?(user)
+    if comment.show_score_to_user?(user)
       comment.score
     else
       "~"
     end
+  end
 
-    score_formatted = if score.is_a?(Integer)
-      number_to_human(score, format: "%n%u")
-    else
-      score
-    end
-
-    {score_value: score, score_formatted: score_formatted}
+  def upvoter_score(score)
+    number_to_human(score, format: "%n%u") if score.is_a? Integer
   end
 end

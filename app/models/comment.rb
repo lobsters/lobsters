@@ -282,11 +282,18 @@ class Comment < ApplicationRecord
   end
 
   def delete_for_user(user, reason = nil)
-    Comment.record_timestamps = false
-
     self.is_deleted = true
 
-    if user.is_moderator? && user.id != user_id
+    save!(validate: false)
+
+    story.update_cached_columns
+    self.user.refresh_counts!
+  end
+
+  def delete_by_moderator(user, reason = nil)
+    self.is_deleted = true
+
+    if user.is_moderator?
       self.is_moderated = true
 
       m = Moderation.new

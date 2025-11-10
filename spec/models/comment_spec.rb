@@ -76,7 +76,7 @@ describe Comment do
       Vote.vote_thusly_on_story_or_comment_for_user_because(1, c.story_id, c.id, voter.id, nil)
     }.to change { author.reload.karma }.by(1)
     expect {
-      c.delete_for_user(mod, "Troll")
+      c.delete_by_moderator(mod, "Troll")
     }.to change { author.reload.karma }.by(-4)
   end
 

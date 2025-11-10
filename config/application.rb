@@ -98,6 +98,10 @@ class << Rails.application
     false
   end
 
+  # This codebase does not have the antispam features needed to protect it from spambots. You should
+  # only enable this for a few days or weeks so that people can sign up in direct response to you
+  # marketing your new site. If you leave signups open indefinitely, you will be overwhelmed with
+  # spam.
   def open_signups?
     ENV["OPEN_SIGNUPS"] == "true"
   end

@@ -33,16 +33,18 @@ class StoriesController < ApplicationController
 
       Story.transaction do
         if @story.save && (!@story.is_resubmit? || @comment.save)
-          ReadRibbon.where(user: @user, story: @story).first_or_create!
           redirect_to Routes.title_path @story
+
+          if !Rails.env.development?
+            SendWebmentionJob.set(wait: 5.minutes).perform_later(@story)
+          end
         else
           raise ActiveRecord::Rollback
         end
       end
-      return if @story.persisted? # can't return out of transaction block
+    else
+      render action: "new"
     end
-
-    render action: "new"
   end
 
   def destroy

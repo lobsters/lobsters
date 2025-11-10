@@ -84,7 +84,7 @@
     <% if !comment.is_gone? %>
       <%= link_to upvoter_score(score), (@user ? '': login_path), :class => "upvoter", :title => score %>
     <% elsif @user&.is_moderator? %>
-      <span class="upvoter"><%= upvoter_score(score) %></span>
+      <span class="upvoter"><%= score[:score_formatted] %></span>
     <% end %>
   </div>
 

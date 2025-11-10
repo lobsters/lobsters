@@ -192,17 +192,14 @@ module ApplicationHelper
   ##
   # This replaces comment.score_for_user(user)
   # Returns the score value, if the user can see the comment's score
-  # Returns "~", if the user can flag the comment
+  # Returns "~" otherwise
   def comment_score_for_user(comment, user)
-    return {} unless user
     return {} unless comment
 
     score = if comment.show_score_to_user?(user)
       comment.score
-    elsif user&.can_flag?(comment)
-      "~"
     else
-      "&nbsp;".html_safe
+      "~"
     end
 
     score_formatted = if score.is_a?(Integer)

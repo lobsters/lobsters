@@ -93,20 +93,15 @@ describe ApplicationHelper do
 
     it "when user cannot see the score" do
       allow_any_instance_of(Comment).to receive(:show_score_to_user?).and_return(false)
-      expect(helper.comment_score_for_user(comment, user)[:score_value]).to eq "&nbsp;"
+      expect(helper.comment_score_for_user(comment, user)[:score_value]).to eq "~"
     end
 
     it "when user is moderator" do
       expect(helper.comment_score_for_user(comment, create(:user, :moderator))[:score_value]).to eq 4
     end
 
-    it "when user can flag the comment" do
-      allow_any_instance_of(User).to receive(:can_flag?).and_return(true)
-      expect(helper.comment_score_for_user(comment, user)[:score_value]).to eq "~"
-    end
-
     it "when no user" do
-      expect(helper.comment_score_for_user(comment, nil)[:score_value]).to eq nil
+      expect(helper.comment_score_for_user(comment, nil)[:score_value]).to eq 4
     end
 
     it "when no comment" do

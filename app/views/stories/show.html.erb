@@ -96,8 +96,9 @@
 
                 <span> | </span>
                 <span class="dropdown_parent">
-                  <button type="button" class="archive_button" popovertarget="archive_<%= ms.short_id %>_main">caches</button>
-                  <div class="archive-dropdown" popover id="archive_<%= ms.short_id %>_main">
+                  <input id="archive_<%= ms.short_id %>" class="archive_button" type="checkbox">
+                  <label for="archive_<%= ms.short_id %>" tabindex="0">caches</label>
+                  <div class="archive-dropdown">
                     <a href="<%= ms.archiveorg_url %>">Archive.org</a>
                     <a href="<%= ms.archivetoday_url %>">Archive.today</a>
                     <a href="<%= ms.ghost_url %>">Ghostarchive</a>

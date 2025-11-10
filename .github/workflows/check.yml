@@ -81,7 +81,7 @@ jobs:
 
       - name: Run brakeman
         run: |
-          bundle exec brakeman --ensure-latest --ensure-ignore-notes
+          bundle exec brakeman --ensure-ignore-notes
 
   leak-check:
     runs-on: ubuntu-latest

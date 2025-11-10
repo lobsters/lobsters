@@ -59,13 +59,13 @@
       (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
       <% can_flag = @user && @user.can_flag?(comment) %>
-      <% score_display = comment.score_for_user(@user) %>
+      <% score = comment_score_for_user(comment, @user) %>
       <% draw_tree_line = comment.reply_count > 0 %>
 
       <div class="
         <%= draw_tree_line ? "comment_parent_tree_line" : "" %>
         <%= can_flag ? "can_flag" : "" %>
-        <%= score_display != "&nbsp;" ? "score_shown" : "" %>
+        <%= score != "~" ? "score_shown" : "" %>
       "></div>
 <div id="c_<%= comment.short_id %>"
   data-shortid="<%= comment.short_id if comment.persisted? %>"
@@ -80,10 +80,11 @@
     <% if show_folder_control %>
       <label for="comment_folder_<%= comment.short_id %>" class="comment_folder"></label>
     <% end %>
+    <% score = comment_score_for_user(comment, @user)%>
     <% if !comment.is_gone? %>
-      <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
+      <%= link_to upvoter_score(score), (@user ? '': login_path), :class => "upvoter", :title => score %>
     <% elsif @user&.is_moderator? %>
-      <span class="upvoter"><%= comment.score_for_user(@user) %></span>
+      <span class="upvoter"><%= upvoter_score(score) %></span>
     <% end %>
   </div>
 

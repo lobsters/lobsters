@@ -13,14 +13,15 @@
   can_flag = @user && @user.can_flag?(comment)
   score = comment_score_for_user(comment, @user)
   draw_tree_line = comment.reply_count > 0
-  collapsed = force_open ||
+  is_open = force_open ||
     @user.try(:is_moderator?) ||
     (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?)
+  collapsed = !is_open
 %>
 
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
-  <% unless collapsed %>checked<% end %>
+  <% if collapsed %>checked<% end %>
 >
 <div class="<%= class_names(
   draw_tree_line && "comment_parent_tree_line",

@@ -90,7 +90,7 @@ module ApplicationHelper
 
   def inline_avatar_for(viewer, user)
     if !viewer || viewer.show_avatars?
-      link_to avatar_img(user, 16), user_path(user)
+      link_to avatar_img(user, 16), user_path(user), {tabindex: "-1", aria: {hidden: true}}
     end
   end
 

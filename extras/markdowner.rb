@@ -11,7 +11,14 @@ class Markdowner
   def self.rerender_db_markdown!
     Comment.all.find_each { |c| c.update_columns markeddown_comment: Markdowner.to_html(c.comment, as_of: c.created_at) }
     ModNote.all.find_each { |n| n.update_columns markeddown_note: Markdowner.to_html(n.note, as_of: n.created_at) }
-    Story.where.not(description: "").find_each { |s| s.update_columns markeddown_description: Markdowner.to_html(s.description, as_of: s.created_at) }
+    Story.where.not(description: "")
+      .find_each { |s|
+        s.update_columns markeddown_description: Markdowner.to_html(
+          s.description,
+          allow_images: s.can_have_images?,
+          as_of: s.created_at
+        )
+      }
   end
 
   # allow_images: transform ![](example.com/img.jpg) to a hotlinked image; default is to print a link to the URL

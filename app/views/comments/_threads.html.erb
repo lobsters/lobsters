@@ -52,20 +52,23 @@
   # is_unread: show (unread) in byline
   # show_folder_control: whether to display the control to hide the comment
 %>
+
+<%
+  can_flag = @user && @user.can_flag?(comment)
+  score = comment_score_for_user(comment, @user)
+  draw_tree_line = comment.reply_count > 0
+%>
+
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
   <%= force_open ||
       @user.try(:is_moderator?) ||
       (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
-      <% can_flag = @user && @user.can_flag?(comment) %>
-      <% score = comment_score_for_user(comment, @user) %>
-      <% draw_tree_line = comment.reply_count > 0 %>
-
       <div class="
         <%= draw_tree_line ? "comment_parent_tree_line" : "" %>
         <%= can_flag ? "can_flag" : "" %>
-        <%= score != "~" ? "score_shown" : "" %>
+        <%= score ? "score_shown" : "" %>
       "></div>
 <div id="c_<%= comment.short_id %>"
   data-shortid="<%= comment.short_id if comment.persisted? %>"
@@ -80,11 +83,15 @@
     <% if show_folder_control %>
       <label for="comment_folder_<%= comment.short_id %>" class="comment_folder"></label>
     <% end %>
-    <% score = comment_score_for_user(comment, @user)%>
     <% if !comment.is_gone? %>
-      <%= link_to upvoter_score(score), (@user ? '': login_path), :class => "upvoter", :title => score %>
+      <%= link_to(
+        upvoter_score(score),
+        (@user ? '': login_path),
+        class: "upvoter",
+        title: score
+      ) %>
     <% elsif @user&.is_moderator? %>
-      <span class="upvoter"><%= score[:score_formatted] %></span>
+      <span class="upvoter"><%= comment.score %></span>
     <% end %>
   </div>
 

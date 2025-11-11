@@ -1,6 +1,6 @@
 class Mod::CommentsController < Mod::ModController
   def destroy
-    if !((comment = find_comment) && comment.is_deletable_by_user?(@user))
+    if !comment = find_comment
       return render plain: "can't find comment", status: 400
     end
 

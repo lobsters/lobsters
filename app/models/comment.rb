@@ -376,9 +376,7 @@ class Comment < ApplicationRecord
   end
 
   def is_deletable_by_user?(user)
-    if user&.is_moderator?
-      true
-    elsif user && user.id == user_id
+    if user&.id == user_id
       created_at >= DELETEABLE_DAYS.days.ago
     else
       false

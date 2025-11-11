@@ -196,8 +196,6 @@ module ApplicationHelper
   def comment_score_for_user(comment, user)
     if comment.show_score_to_user?(user)
       comment.score
-    else
-      nil
     end
   end
 

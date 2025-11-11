@@ -1147,7 +1147,6 @@ table.data.zebra tr:nth-child(odd) td,
 table.data tr.nobottom td {
 	border-bottom: 0px;
 	padding-bottom: 0px;
-
 }
 table.data tr.nobottom td.wrap {
 	overflow-wrap: anywhere;

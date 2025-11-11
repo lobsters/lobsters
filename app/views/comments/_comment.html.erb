@@ -13,27 +13,30 @@
   can_flag = @user && @user.can_flag?(comment)
   score = comment_score_for_user(comment, @user)
   draw_tree_line = comment.reply_count > 0
+  collapsed = force_open ||
+    @user.try(:is_moderator?) ||
+    (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?)
 %>
 
 <input id="comment_folder_<%= comment.short_id %>"
   class="comment_folder_button" type="checkbox"
-  <%= force_open ||
-      @user.try(:is_moderator?) ||
-      (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
+  <% unless collapsed %>checked<% end %>
+>
+<div class="<%= class_names(
+  draw_tree_line && "comment_parent_tree_line",
+  can_flag && "can_flag",
+  score && "score_shown"
+)%>"></div>
 
-      <div class="
-        <%= draw_tree_line ? "comment_parent_tree_line" : "" %>
-        <%= can_flag ? "can_flag" : "" %>
-        <%= score ? "score_shown" : "" %>
-      "></div>
 <div id="c_<%= comment.short_id %>"
   data-shortid="<%= comment.short_id if comment.persisted? %>"
-  class="comment
-    <%= comment.current_upvoted? ? "upvoted" : "" %>
-    <%= comment.current_flagged? ? "flagged" : "" %>
-    <%= comment.current_reply ? "replied" : "" %>
-    <%= comment.score < Comment::SCORE_RANGE_TO_HIDE.first ? "bad" : "" %>
-  ">
+  class="<%= class_names(
+    'comment',
+    comment.current_upvoted? && "upvoted",
+    comment.current_flagged? && "flagged",
+    comment.current_reply && "replied",
+    (comment.score < Comment::SCORE_RANGE_TO_HIDE.first) && "bad"
+  ) %>">
 
   <div class="voters">
     <% if show_folder_control %>

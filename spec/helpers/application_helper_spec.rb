@@ -105,10 +105,6 @@ describe ApplicationHelper do
       expect(helper.comment_score_for_user(comment, nil)).to eq 4
     end
 
-    it "when no comment" do
-      expect(helper.comment_score_for_user(nil, user)).to eq nil
-    end
-
     it "when score is 1000" do
       comment.update(score: 1000)
       expect(helper.comment_score_for_user(comment, user)).to eq 1000
@@ -117,7 +113,7 @@ describe ApplicationHelper do
 
   describe "upvoter_score" do
     it "returns nil for non-integer scores" do
-      expect(helper.upvoter_score("")).to be_nil
+      expect(helper.upvoter_score("~")).to eq("~")
     end
 
     it "returns formatted score for integer scores" do

@@ -189,13 +189,7 @@ module ApplicationHelper
     content_tag(:a, how_long_ago_label(time), href: url)
   end
 
-  ##
-  # This replaces comment.score_for_user(user)
-  # Returns the score value, if the user can see the comment's score
-  # Returns "~" otherwise
   def comment_score_for_user(comment, user)
-    return nil unless comment
-
     if comment.show_score_to_user?(user)
       comment.score
     else
@@ -204,6 +198,10 @@ module ApplicationHelper
   end
 
   def upvoter_score(score)
-    number_to_human(score, format: "%n%u") if score.is_a? Integer
+    if score.is_a? Integer
+      number_to_human(score, format: "%n%u")
+    else
+      "~"
+    end
   end
 end

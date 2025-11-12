@@ -139,6 +139,9 @@ class Comment < ApplicationRecord
     comment.to_s.strip.match(/\A(me too|nice|\+1)([.!])?\z/i) &&
       errors.add(:base, "Please just upvote the parent post instead.")
 
+    comment.to_s.remove(Story::GRAPHICS_RE).blank? &&
+      errors.add(:base, "🚫")
+
     hat.present? && user.wearable_hats.exclude?(hat) &&
       errors.add(:hat, "not wearable by user")
 

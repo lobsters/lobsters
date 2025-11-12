@@ -172,11 +172,13 @@ module ApplicationHelper
     super
   end
 
-  def tag_link(tag)
+  def tag_link(tag, options = {})
     link_to tag.tag,
       tag_path(tag),
-      class: [tag.css_class, filtered_tags.include?(tag) ? "filtered" : nil],
-      title: tag.description
+      options.merge({
+        class: [tag.css_class, filtered_tags.include?(tag) ? "filtered" : nil],
+        title: tag.description
+      })
   end
 
   def how_long_ago_label(time)

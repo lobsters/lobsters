@@ -9,6 +9,7 @@
     <%= errors_for f.object %>
 
     <section>
+      <h2>Public Profile Information</h2>
       <div class="labelled_grid">
         <%= f.label :username, "Username" %>
         <div>
@@ -19,16 +20,7 @@
           </div>
         </div>
 
-        <%= f.label :current_password, "Current Password" %>
-        <%= f.password_field :current_password, name: "current_password", autocomplete: "off" %>
-
-        <%= f.label :password, "New Password" %>
-        <%= f.password_field :password, autocomplete: "off" %>
-
-        <%= f.label :password_confirmation, "Confirm Password" %>
-        <%= f.password_field :password_confirmation, autocomplete: "off" %>
-
-        <%= f.label :email, "E-mail Address" %>
+        <%= f.label :email, "Email" %>
         <div>
         <%= f.email_field :email, required: true, inputmode: "email", autocapitalize: :off %>
           <% if EmailBlocklistValidation.email_on_blocklist?(@edit_user.email) %>
@@ -38,8 +30,18 @@
           <% end %>
         </div>
 
+        <%= f.label :show_email, "Show Email on profile", class: "for_checkbox" %>
+        <span>
+          <%= f.check_box :show_email %>
+          <span class="hint">
+            Only shown to logged-in users
+          </span>
+        </span>
+
         <%= f.label :homepage, "Homepage" %>
-        <%= f.url_field :homepage, autocapitalize: :off %>
+        <span><%= f.url_field :homepage, autocapitalize: :off %>
+        <span class="hint">Link external accounts below</span>
+        </span>
 
         <%= f.label :about, "About" %>
         <div>
@@ -56,6 +58,15 @@
       <h2>Security Settings</h2>
 
       <div class="labelled_grid">
+        <%= f.label :current_password, "Current Password" %>
+        <%= f.password_field :current_password, name: "current_password", autocomplete: "off" %>
+
+        <%= f.label :password, "New Password" %>
+        <%= f.password_field :password, autocomplete: "off" %>
+
+        <%= f.label :password_confirmation, "Confirm Password" %>
+        <%= f.password_field :password_confirmation, autocomplete: "off" %>
+
         <%= f.label :twofa, "Two-Factor Auth" %>
         <span>
         <% if @edit_user.totp_secret.present? %>
@@ -177,14 +188,6 @@
           <label><%= f.radio_button :prefers_contrast, :high %> High</label>
         </span>
 
-        <%= f.label :show_email, "Show Email Address", class: "for_checkbox" %>
-        <span>
-          <%= f.check_box :show_email %>
-          <span class="hint">
-            Only shown to logged-in users
-          </span>
-        </span>
-
         <%= f.label :show_story_previews, "Show Story Previews",
           class: "for_checkbox" %>
         <span><%= f.check_box :show_story_previews %></span>
@@ -193,6 +196,7 @@
         <span><%= f.check_box :show_avatars %></span>
       </div>
 
+      <br><br>
       <%= f.submit "Save Account Settings" %>
     </section>
   <% end %>

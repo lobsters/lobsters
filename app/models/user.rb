@@ -103,6 +103,7 @@ class User < ApplicationRecord
     length: {maximum: 100},
     format: {with: /\A[^@ ]+@[^@ ]+\.[^@ ]+\Z/},
     uniqueness: {case_sensitive: false}
+  validate :validate_username_timeouts
 
   validates :homepage,
     format: {
@@ -596,6 +597,16 @@ class User < ApplicationRecord
 
   def inbox_count
     notifications.where(read_at: nil).count
+  end
+
+  def validate_username_timeouts
+    return unless username_changed?
+
+    at = usernames.where("created_at <= ?", 1.year.ago).order(created_at: :desc).first&.created_at
+    errors.add(:username, "has already been changed in the last year (#{at.strftime("%Y-%m-%d")})") if at
+
+    recently_used = Username.where(username: username).where("renamed_away_at >= ?", 5.years.ago).order(renamed_away_at: :desc).first&.renamed_away_at
+    errors.add(:username, "has been used in the last 5 years (#{recently_used.strftime("%Y-%m-%d")})") if recently_used
   end
 
   def votes_for_others

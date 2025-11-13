@@ -30,6 +30,28 @@ describe User do
     expect { create(:user, username: "case-insensITive") }.to raise_error
   end
 
+  it "doesn't allow changing username in < 1.year" do
+    user = create(:user, username: "alice", created_at: 2.years.ago)
+    Username.rename! user: user, from: "alice", to: "cool_alice", by: user, at: 6.months.ago
+    user.update_attribute :username, "cool_alice"
+    expect(User.find_by(username: "alice")).to be(nil)
+
+    user.username = "really_cool_alice"
+    user.valid?
+    expect(user.errors[:username].select { |e| e =~ /changed in the last year/ }).to_not be_empty
+  end
+
+  it "doesn't allow changing to a username someone else stopped using in the last 5 years" do
+    old = create(:user, username: "alice", created_at: 7.years.ago)
+    Username.rename! user: old, from: "alice", to: "bob", by: old, at: 4.years.ago
+    old.update_attribute :username, "bob"
+    expect(User.find_by(username: "alice")).to be(nil)
+
+    new_user = build(:user, username: "alice")
+    new_user.valid?
+    expect(new_user.errors[:username].select { |e| e =~ /has been used/ }).to_not be_empty
+  end
+
   it "has a valid email address" do
     create(:user, email: "user@example.com")
 

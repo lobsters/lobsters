@@ -4,6 +4,7 @@ class Notification < ApplicationRecord
 
   scope :of_comments, -> { where(notifiable_type: "Comment") }
   scope :of_messages, -> { where(notifiable_type: "Message") }
+  scope :of_mod_mail_messages, -> { where(notifiable_type: "ModMailMessage") }
   scope :read, -> { where.not(read_at: nil) }
   scope :unread, -> { where(read_at: nil) }
 
@@ -17,6 +18,8 @@ class Notification < ApplicationRecord
     case notifiable
     when Message
       should_display_message?
+    when ModMailMessage
+      true
     when Comment
       should_display_comment?
     end

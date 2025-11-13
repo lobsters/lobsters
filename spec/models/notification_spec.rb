@@ -13,6 +13,15 @@ describe Notification do
       end
     end
 
+    context "mod_mail_messages" do
+      it "should display all ModMail messages" do
+        user = create(:user)
+        mod_mail_message = create(:mod_mail_message)
+        notification = create(:notification, user: user, notifiable: mod_mail_message)
+        expect(notification.should_display?).to eq(true)
+      end
+    end
+
     context "comments" do
       it "should not display for comments on stories with more flags than upvotes" do
         author = create(:user)

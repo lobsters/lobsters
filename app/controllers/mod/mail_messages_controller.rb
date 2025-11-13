@@ -7,7 +7,8 @@ class Mod::MailMessagesController < Mod::ModController
     @mod_mail_message = ModMailMessage.new(mod_mail_message_params.merge({ user: @user }))
 
     if @mod_mail_message.save
-      redirect_to @mod_mail_message.mod_mail, notice: "Mod mail message was successfully created."
+      NotifyModMailMessageJob.perform_later(@mod_mail_message)
+      redirect_to @mod_mail_message.mod_mail, notice: "Your mod mail message has been sent."
     else
       redirect_to @mod_mail_message.mod_mail, notice: "Your mod mail message failed: #{@mod_mail_message.errors.full_messages}"
     end

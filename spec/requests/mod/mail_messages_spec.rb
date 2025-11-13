@@ -35,6 +35,7 @@ RSpec.describe "/mod/mail_messages", type: :request do
       it "redirects to the created mod_mail_message" do
         post mod_mail_messages_url, params: { mod_mail_message: valid_attributes }
         expect(response).to redirect_to(mod_mail_url(mod_mail))
+        expect(NotifyModMailMessageJob).to have_been_enqueued.exactly(:once)
       end
     end
 

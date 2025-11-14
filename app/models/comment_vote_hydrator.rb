@@ -8,9 +8,9 @@ class CommentVoteHydrator
 
   def [](comment)
     hydrate unless @hydrated
-    comment.instance_variable_set(:@current_vote, @votes&.dig(comment.id))
-    comment.instance_variable_set(:@vote_summary, @vote_summaries&.dig(comment.id))
-    comment.instance_variable_set(:@current_reply, @current_user_reply_parents&.key?(comment.id) || false)
+    comment.current_vote = @votes&.dig(comment.id)
+    comment.vote_summary = @vote_summaries&.dig(comment.id)
+    comment.current_reply = @current_user_reply_parents&.key?(comment.id) || false
   end
 
   private

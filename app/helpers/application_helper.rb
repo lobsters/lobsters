@@ -176,7 +176,8 @@ module ApplicationHelper
     link_to tag.tag,
       tag_path(tag),
       class: [tag.css_class, filtered_tags.include?(tag) ? "filtered" : nil],
-      title: tag.description
+      title: tag.description,
+      id: "tag-#{tag.tag}"
   end
 
   def how_long_ago_label(time)

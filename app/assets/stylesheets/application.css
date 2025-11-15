@@ -1518,6 +1518,17 @@ input[type="submit"].link_post.pushover_button {
 	padding: 2px;
 }
 
+/* For the "Tags" page. */
+.tag-title {
+	display: flex;
+	gap: 0.5rem;
+	align-items: baseline;
+}
+
+.tag-title:first-of-type {
+ margin-top: -0.75rem;
+}
+
 
 @media screen and (min-width: 481px) {
 	body {

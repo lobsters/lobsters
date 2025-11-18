@@ -510,10 +510,10 @@ li div.details {
 /*
 Stories with negative scores are dimmed by decreasing their opacity.
 However, if the flag or archive dropdowns have an opacity set, it creates a "stacking context",
-which overides the Z index, so the drop down appears under textareas, making them unclickable.
+which overrides the Z index, so the drop down appears under textareas, making them unclickable.
 Thus, the selector for opacity must not target those divs or any of their direct parents.
 We must also becareful to apply to only children and not any of the parents.
-Otherwise it will double apply, resulting in invidual elements being darker.
+Otherwise it will double apply, resulting in individual elements being darker.
 
 We'd like to write the following selector to express that directly, but can't until Firefox
 supports it:  https://caniuse.com/?search=%3Ahas
@@ -1081,7 +1081,7 @@ td.warned div, td.unwarned div {
 	width: 1em;
 }
 
-/* /mod dashbaord */
+/* /mod dashboard */
 
 .mod {
 	color: var(--color-fg-accent);

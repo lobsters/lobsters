@@ -94,7 +94,7 @@
                 <%= inline_avatar_for @user, ms.user %>
                 <%= styled_user_link ms.user, ms, class: ['u-author', 'h-card'] %>
 
-                <span> | </span>
+                <%= divider_tag %>
                 <span class="dropdown_parent">
                   <input id="archive_<%= ms.short_id %>" class="archive_button" type="checkbox">
                   <label for="archive_<%= ms.short_id %>" tabindex="0">caches</label>
@@ -105,7 +105,7 @@
                   </div>
                 </span>
 
-                <span> | </span>
+                <%= divider_tag %>
                 <span class="comments_label">
                   <% if ms.comments_count == 0 %>
                     no comments

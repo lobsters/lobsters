@@ -204,4 +204,8 @@ module ApplicationHelper
       "~"
     end
   end
+
+  def divider_tag
+    content_tag(:span, " | ", aria: {hidden: "true"})
+  end
 end

@@ -38,6 +38,8 @@ class StoriesController < ApplicationController
           if !Rails.env.development?
             SendWebmentionJob.set(wait: 5.minutes).perform_later(@story)
           end
+
+          CreateStoryCardJob.perform_later(@story)
         else
           raise ActiveRecord::Rollback
         end
@@ -224,6 +226,10 @@ class StoriesController < ApplicationController
     update_story_attributes
 
     if @story.save
+      if @story.saved_change_to_url?
+        CreateStoryCardJob.perform_later(@story)
+      end
+
       redirect_to Routes.title_path @story
     else
       render action: "edit"

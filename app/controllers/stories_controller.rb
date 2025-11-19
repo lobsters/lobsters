@@ -179,7 +179,7 @@ class StoriesController < ApplicationController
           {property: "og:site_name", content: "Lobsters"},
           {property: "og:title", content: @story.title},
           {property: "og:description", content: @story.comments_count.to_s + " " + "comment".pluralize(@story.comments_count)},
-          {property: "og:image", content: Rails.application.root_url + "touch-icon-144.png"},
+          {property: "og:image", content: Routes.story_image_url(@story)},
           {property: "article:author", content: Routes.user_url(@story.user)}
         ]
         @meta_tags << {property: "article:author", content: "https://#{@story.user.mastodon_instance}/@#{@story.user.mastodon_username}"} if @story.user.mastodon_username.present?

@@ -328,6 +328,26 @@ header {
 	position: relative;
 }
 
+@media (prefers-contrast: more) {
+	#logo {
+		background-image: none;
+		text-align: center;
+	}
+
+	#logo:before {
+		content: "L";
+		font-family: serif;
+		color: var(--color-bg);
+		font-size: 1.05rem;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		#logo:before {
+			color: var(--color-fg);
+		}
+	}
+}
+
 header#nav .navholder {
 	display: flex;
 	flex-wrap: nowrap;
@@ -460,13 +480,15 @@ div.voters {
 }
 
 .upvoter:before {
-	content: "\25b2";
-	color: transparent;
+	content: "\25b3";
+	color: var(--color-fg);
 	font-size: 1.2rem;
-	-webkit-text-stroke: 1px var(--color-fg-contrast-4-5);
 }
-.upvoted .upvoter:before, .upvoter:hover:before {
+.upvoter:hover:before,
+.upvoted .upvoter:before {
+	content: "\25b2";
 	color: var(--color-fg-accent);
+	font-size: 1.35rem;
 	-webkit-text-stroke: 1px var(--color-fg-accent);
 }
 .upvoter {

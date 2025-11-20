@@ -387,6 +387,7 @@ class User < ApplicationRecord
       received_messages.update_all(deleted_by_recipient: true)
 
       invitations.unused.update_all(used_at: Time.now.utc)
+      wearable_hats.where(modlog_use: true).update_all(doffed_at: Time.current)
 
       roll_session_token
 

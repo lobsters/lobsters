@@ -8,6 +8,7 @@ RUN apt-get update -qq && apt-get install -y \
   libjemalloc2 \
   libvips \
   mariadb-client \
+  clang \
   vim
 
 # Set working directory

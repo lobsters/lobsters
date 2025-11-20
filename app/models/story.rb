@@ -571,6 +571,14 @@ class Story < ApplicationRecord
     user.try(:is_moderator?)
   end
 
+  def posted_as_moderator?
+    granted_at = user.try(:granted_moderator_at)
+    return false if granted_at.blank?
+    return false if created_at.blank?
+
+    granted_at <= created_at
+  end
+
   def can_have_suggestions_from_user?(user)
     if !user || (user.id == user_id) || !user.can_offer_suggestions?
       return false

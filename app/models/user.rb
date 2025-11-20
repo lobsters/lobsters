@@ -431,6 +431,7 @@ class User < ApplicationRecord
   def grant_moderatorship_by_user!(user)
     User.transaction do
       self.is_moderator = true
+      self.granted_moderator_at = Time.current
       save!
 
       m = Moderation.new

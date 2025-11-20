@@ -145,16 +145,7 @@ class CommentsController < ApplicationController
       render partial: "commentbox", locals: {comment: comment, story: story}
     else
       parents = comment.parents.for_presentation
-
-      parent_ids = parents.map(&:id)
-      @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user&.id, parent_ids)
-      summaries = Vote.comment_vote_summaries(parent_ids)
-      current_user_reply_parents = @user&.ids_replied_to(parent_ids) || Hash.new { false }
-      parents.each do |c|
-        c.current_vote = @votes[c.id]
-        c.vote_summary = summaries[c.id]
-        c.current_reply = current_user_reply_parents.has_key? c.id
-      end
+      parents = CommentVoteHydrator.new(parents, @user)
       render "_commentbox", locals: {
         comment: comment,
         story: story,
@@ -307,15 +298,7 @@ class CommentsController < ApplicationController
       .limit(COMMENTS_PER_PAGE)
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 
-    comment_ids = @comments.map(&:id)
-    @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user&.id, comment_ids)
-    summaries = Vote.comment_vote_summaries(comment_ids)
-    current_user_reply_parents = @user&.ids_replied_to(comment_ids) || Hash.new { false }
-    @comments.each do |c|
-      c.current_vote = @votes[c.id]
-      c.vote_summary = summaries[c.id]
-      c.current_reply = current_user_reply_parents.has_key? c.id
-    end
+    @comments = CommentVoteHydrator.new(@comments, @user)
 
     @last_read_timestamp = if params[:last_read_timestamp]
       Time.zone.at(params[:last_read_timestamp].to_i)
@@ -372,17 +355,7 @@ class CommentsController < ApplicationController
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 
     # TODO: respect hidden stories
-
-    comment_ids = @comments.map(&:id)
-    @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, comment_ids)
-    summaries = Vote.comment_vote_summaries(comment_ids)
-    current_user_reply_parents = @user&.ids_replied_to(comment_ids) || Hash.new { false }
-    @comments.each do |c|
-      c.current_vote = @votes[c.id]
-      c.vote_summary = summaries[c.id]
-      c.current_reply = current_user_reply_parents.has_key? c.id
-    end
-
+    @comments = CommentVoteHydrator.new(@comments, @user)
     respond_to do |format|
       format.html { render action: :index }
       format.rss {
@@ -410,19 +383,7 @@ class CommentsController < ApplicationController
       .merge(Story.not_deleted(@user))
       .for_presentation
       .joins(:story)
-
-    if @user
-      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @threads.map(&:story_id).uniq)
-      comment_ids = @threads.map(&:id)
-      summaries = Vote.comment_vote_summaries(comment_ids)
-      current_user_reply_parents = @user&.ids_replied_to(comment_ids) || Hash.new { false }
-
-      @threads.each do |c|
-        c.current_vote = @votes[c.id]
-        c.vote_summary = summaries[c.id]
-        c.current_reply = current_user_reply_parents.has_key? c.id
-      end
-    end
+    @threads = CommentVoteHydrator.new(@threads, @user)
   end
 
   private

@@ -15,8 +15,8 @@ class CommentVoteHydrator
   end
 
   def [](comment)
-    comment.current_vote = @votes&.dig(comment.id)
-    comment.vote_summary = @vote_summaries&.dig(comment.id)
-    comment.current_reply = @current_user_reply_parents&.key?(comment.id) || false
+    comment.current_vote ||= @votes[comment.id]
+    comment.vote_summary ||= @vote_summaries[comment.id]
+    comment.current_reply ||= @current_user_reply_parents.key?(comment.id)
   end
 end

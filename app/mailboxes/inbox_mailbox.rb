@@ -49,7 +49,25 @@ class InboxMailbox < ApplicationMailbox
   end
 
   def required_info
-    @decoded = tidy(forcibly_convert_to_utf8(mail.decoded))
+    body = if mail.content_type.blank? # old, non-multipart message
+      mail.decoded.to_s
+    elsif /text\/plain/.match?(email.content_type.to_s)
+      body.to_s
+    elsif email.multipart?
+      # parts[0] - multipart/alternative
+      #  parts[0].parts[0] - text/plain
+      #  parts[0].parts[1] - text/html
+      if (found = mail.parts.first.parts.select { |p| p.content_type.match(/text\/plain/i) }
+         ).any?
+        found.first.body.to_s
+      elsif (found = mail.parts.select { |p| p.content_type.match(/text\/plain/i) }).any?
+        found.first.body.to_s
+      else
+        bounced!
+      end
+    end
+
+    @decoded = tidy(forcibly_convert_to_utf8(body))
 
     if @decoded == "" || sending_user.nil? || parent.nil?
       # We could email the user about the bounce, but that doesn't seem

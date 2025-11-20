@@ -23,7 +23,7 @@ class InboxMailbox < ApplicationMailbox
       return string
     end
 
-    str.b.encode(
+    string.b.encode(
       Encoding::UTF_8,
       invalid: :replace,
       undef: :replace,

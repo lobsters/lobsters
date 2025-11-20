@@ -132,7 +132,7 @@
 
   <% if @search.what == :stories %>
     <ol class="stories list">
-      <% @search.results.each do |story| %>
+      <% @results.each do |story| %>
 <%#heinous_inline_partial(stories/_listdetail.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
 <%# locals: (story:) -%>
@@ -291,7 +291,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
     </ol>
   <% elsif @search.what == :comments %>
     <ol class="comments comments1">
-      <% @search.results.each do |res| %>
+      <% @results.each do |res| %>
         <li><%= render "comments/comment", :comment => res, :show_story => true %></li>
       <% end %>
     </ol>

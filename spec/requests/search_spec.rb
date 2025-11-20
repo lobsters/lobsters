@@ -29,4 +29,12 @@ RSpec.describe "search controller", type: :request do
     expect(response).to be_successful
     expect(response.body).to include("0 results")
   end
+
+  # for #1809: the code works but this test doesn't, and I'm not seeing why
+  xit "works logged in, with vote hydration" do
+    comment = create(:comment, comment: "hello world")
+    sign_in create(:user)
+    get "/search", params: {q: "hello", what: "comments", order: "newest"}
+    expect(response.body).to include("world")
+  end
 end

@@ -8,6 +8,7 @@ class SearchController < ApplicationController
     @title = "Search"
 
     @search = Search.new(search_params, @user)
+    @results = @search.results
 
     if @user && @search.results
       if params[:what] == "stories"
@@ -16,8 +17,10 @@ class SearchController < ApplicationController
           r.current_vote = votes.try(:[], r.id)
         end
       end
-      if params[:what] == "comments"
-        @search.results = CommentVoteHydrator.new(@search.results, @user)
+      @results = if params[:what] == "comments"
+        CommentVoteHydrator.new(@search.results, @user)
+      else
+        @search.results
       end
     end
   end
@@ -30,6 +33,7 @@ class SearchController < ApplicationController
   def ignore_searx
     return unless params[:utf8] == "✓"
     @search = Search.new({results_count: 0}, nil)
+    @results = []
     render :index
   end
 

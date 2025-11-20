@@ -51,9 +51,9 @@ class InboxMailbox < ApplicationMailbox
   def required_info
     body = if mail.content_type.blank? # old, non-multipart message
       mail.decoded.to_s
-    elsif /text\/plain/.match?(email.content_type.to_s)
+    elsif /text\/plain/.match?(mail.content_type.to_s)
       body.to_s
-    elsif email.multipart?
+    elsif mail.multipart?
       # parts[0] - multipart/alternative
       #  parts[0].parts[0] - text/plain
       #  parts[0].parts[1] - text/html

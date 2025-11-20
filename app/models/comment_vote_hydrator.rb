@@ -1,4 +1,8 @@
 class CommentVoteHydrator
+  include Enumerable
+
+  delegate :size, :length, :empty?, :any?, to: :@comments
+
   def initialize(comments, user)
     @comments = comments
     @user = user
@@ -14,9 +18,14 @@ class CommentVoteHydrator
     end
   end
 
+  def each
+    @comments.each { |c| yield self[c] }
+  end
+
   def [](comment)
     comment.current_vote ||= @votes[comment.id]
     comment.vote_summary ||= @vote_summaries[comment.id]
     comment.current_reply ||= @current_user_reply_parents.key?(comment.id)
+    comment
   end
 end

@@ -22,6 +22,8 @@ class CommentVoteHydrator
     @comments.each { |c| yield self[c] }
   end
 
+  private
+
   def [](comment)
     comment.current_vote ||= @votes[comment.id]
     comment.vote_summary ||= @vote_summaries[comment.id]

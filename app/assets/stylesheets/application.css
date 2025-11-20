@@ -1573,6 +1573,17 @@ input[type="submit"].link_post.pushover_button {
 	margin-right: 1rem;
 }
 
+/* Tags page */
+.tag-title {
+	display: flex;
+	gap: 0.5rem;
+	align-items: baseline;
+}
+
+.tag-title:first-of-type {
+	margin-top: -0.75rem;
+}
+
 @media only screen and (max-width: 480px) {
 	.radio-group-container legend {
 		float: none;

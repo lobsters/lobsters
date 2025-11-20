@@ -71,7 +71,7 @@ class Sponge
   def self.fetch(url, headers = {}, limit = 10)
     s = Sponge.new
     s.ssl_verify = false # backward compatibility
-    s.fetch(url, "get", nil, nil, headers, limit)
+    s.fetch(url, :get, {}, nil, headers, limit)
   end
 
   def initialize
@@ -257,16 +257,16 @@ class Sponge
         dputs "following relative redirection to " + newuri.to_s
       end
 
-      fetch(newuri.to_s, "get", nil, nil, headers, limit - 1)
+      fetch(newuri.to_s, :get, {}, nil, headers, limit - 1)
     end
   end
 
   def get(url)
-    fetch(url, "get")
+    fetch(url, :get)
   end
 
   def post(url, fields)
-    fetch(url, "post", fields)
+    fetch(url, :post, fields)
   end
 
   private

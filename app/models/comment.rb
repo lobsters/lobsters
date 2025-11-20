@@ -33,11 +33,10 @@ class Comment < ApplicationRecord
   attr_accessor :current_vote, :current_reply, :previewing, :vote_summary
 
   before_validation :assign_initial_attributes, on: :create
-  after_destroy :unassign_votes
   # Calling :record_initial_upvote from after_commit instead of after_create minimizes how many
   # queries happen inside the transaction, which seems to be the cause of bug #1238.
   after_commit :log_hat_use, :mark_submitter, :record_initial_upvote, on: :create
-  after_commit :recreate_links
+  after_commit :recreate_links, :update_associated_caches
 
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, -> { where(is_deleted: false) }
@@ -288,9 +287,6 @@ class Comment < ApplicationRecord
     self.is_deleted = true
 
     save!(validate: false)
-
-    story.update_cached_columns
-    self.user.refresh_counts!
   end
 
   def delete_by_moderator(user, reason = nil)
@@ -315,9 +311,6 @@ class Comment < ApplicationRecord
 
     save!(validate: false)
     Comment.record_timestamps = true
-
-    story.update_cached_columns
-    self.user.refresh_counts!
   end
 
   def depth_permits_reply?
@@ -359,7 +352,6 @@ class Comment < ApplicationRecord
         confidence_order = concat(lpad(char(65535 - floor(#{new_confidence} * 65535) using binary), 2, '\0'), char(id & 0xff using binary))
       WHERE id = #{id.to_i}
     SQL
-    story.update_cached_columns
   end
 
   def gone_text
@@ -520,8 +512,9 @@ class Comment < ApplicationRecord
     Link.recreate_from_comment!(self) if saved_change_to_attribute? :comment
   end
 
-  def unassign_votes
+  def update_associated_caches
     story.update_cached_columns
+    user.refresh_counts!
   end
 
   def validate_commenter_hasnt_flagged_parent
@@ -558,9 +551,6 @@ class Comment < ApplicationRecord
 
     save!(validate: false)
     Comment.record_timestamps = true
-
-    story.update_cached_columns
-    self.user.refresh_counts!
   end
 
   def self.recent_threads(user)

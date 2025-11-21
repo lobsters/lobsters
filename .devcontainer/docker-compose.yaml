@@ -4,14 +4,15 @@ services:
     stdin_open: true
     tty: true
     build:
-      context: .
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: ../Dockerfile.dev
       args:
-        RUBY_VERSION: ${RUBY_VERSION}
+        RUBY_VERSION: 3.4.7
+    command: sleep infinity
     environment:
       DATABASE_HOST: db
     volumes:
-      - .:/lobsters
+      - ..:/lobsters
     ports:
       - "3000:3000"
     depends_on:

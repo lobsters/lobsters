@@ -1,4 +1,4 @@
-source "https://gem.coop"
+source "https://rubygems.org"
 
 ruby file: ".ruby-version"
 

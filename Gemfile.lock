@@ -1,5 +1,5 @@
 GEM
-  remote: https://gem.coop/
+  remote: https://rubygems.org/
   specs:
     Ascii85 (2.0.1)
     actioncable (8.0.3)

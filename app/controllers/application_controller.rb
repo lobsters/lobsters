@@ -6,8 +6,8 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper
 
   protect_from_forgery
+  prepend_before_action :prepare_exception_notifier # first in case others raise
   before_action :heinous_inline_partials, if: -> { Rails.env.development? }
-  before_action :prepare_exception_notifier
   before_action :mini_profiler
   before_action :set_traffic_style
   before_action :remove_unknown_cookies

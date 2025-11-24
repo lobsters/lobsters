@@ -175,7 +175,7 @@ module ApplicationHelper
   def tag_link(tag, options = {})
     link_to tag.tag,
       tag_path(tag),
-      options.merge({
+      options.reverse_merge({
         class: [tag.css_class, filtered_tags.include?(tag) ? "filtered" : nil],
         title: tag.description
       })

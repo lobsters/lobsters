@@ -222,6 +222,8 @@ class SettingsController < ApplicationController
 
   def mastodon_disconnect
     if (app = MastodonApp.find_by(name: @user.mastodon_instance))
+      # revoke_token swallow exceptions about networking errors because indie instances often
+      # disappear, so the only thing we can do is delete the record on this side
       app.revoke_token(@user.mastodon_oauth_token)
     end
     @user.mastodon_instance = nil

@@ -26,7 +26,7 @@ class Comment < ApplicationRecord
     class_name: "Link",
     inverse_of: :to_comment,
     dependent: :destroy
-  has_one :notification, as: :notifiable
+  has_many :notifications, as: :notifiable
 
   include Token
 

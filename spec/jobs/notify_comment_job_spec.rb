@@ -105,23 +105,20 @@ RSpec.describe NotifyCommentJob, type: :job do
       recipient.save!
 
       sender = create(:user)
-      # The story under which the comments are posted.
       story = create(:story)
-      # The parent comment.
-      c = build(:comment, user: recipient, story: story)
-      c.save! # Comment needs to get an ID so it can have a child (c2).
+      parent = build(:comment, user: recipient, story: story)
+      parent.save!
 
-      # The child comment.
-      c2 = build(:comment, user: sender, story: story, parent_comment: c,
-        comment: "@#{recipient.username}")
-      c2.save!
+      reply = build(:comment, user: sender, story: story, parent_comment: parent,
+        comment: "hi @#{recipient.username} thanks")
+      reply.save!
 
-      NotifyCommentJob.perform_now(c2)
+      NotifyCommentJob.perform_now(reply)
 
       expect(sent_emails.size).to eq(1)
       expect(sent_emails[0].subject).to match(/Reply from #{sender.username}/)
       expect(recipient.notifications.count).to eq(1)
-      expect(recipient.notifications.first.notifiable).to eq(c2)
+      expect(recipient.notifications.first.notifiable).to eq(reply)
     end
   end
 end

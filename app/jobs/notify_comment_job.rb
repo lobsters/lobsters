@@ -13,7 +13,11 @@ class NotifyCommentJob < ApplicationJob
   end
 
   def deliver_mention_notifications(comment, notified)
-    to_notify = comment.comment.scan(/\B[@~]([\w-]+)/).flatten.uniq - notified - [comment.user.username]
+    mentions = comment.comment.scan(/\B[@~]([\w-]+)/).flatten.uniq
+    # Remove username of author and anyone already notified about the reply.
+    # If they have email_replies off, a reply that @mentions them will not generate a
+    # mention email. email_replies trumps email_mentions to minimize unwanted emails.
+    to_notify = mentions - [comment.user.username] - notified
 
     # every user gets a Notification, which may be filtered out from those views so that unhiding a
     # story reveals the notifications
@@ -67,6 +71,7 @@ class NotifyCommentJob < ApplicationJob
     to_notify = users_following_thread(comment)
     to_notify.each do |u|
       u.notifications.create(notifiable: comment)
+      notified << u.username
     end
 
     hiding_users = HiddenStory.where(story: comment.story).pluck(:user_id)
@@ -76,7 +81,6 @@ class NotifyCommentJob < ApplicationJob
       if u.email_replies?
         begin
           EmailReplyMailer.reply(comment, u).deliver_now
-          notified << u.username
         rescue => e
           # Rails.logger.error "error e-mailing #{u.email}: #{e}"
         end
@@ -90,7 +94,6 @@ class NotifyCommentJob < ApplicationJob
           url: Routes.comment_target_url(comment),
           url_title: "Reply to #{comment.user.username}"
         )
-        notified << u.username
       end
     end
 

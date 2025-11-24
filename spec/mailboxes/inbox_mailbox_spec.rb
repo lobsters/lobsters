@@ -62,7 +62,6 @@ RSpec.describe InboxMailbox, type: :mailbox do
     )
 
     mail_processed = process(mail)
-    puts mail_processed.inspect
     comment = Comment.last
     expect(comment.comment).to_not include("quoted")
     expect(comment.comment).to_not include("iPhone")

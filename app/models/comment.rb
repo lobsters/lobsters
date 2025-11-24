@@ -467,11 +467,6 @@ class Comment < ApplicationRecord
       .order(id: :asc)
   end
 
-  def plaintext_comment
-    # TODO: linkify then strip tags and convert entities back
-    comment
-  end
-
   def record_initial_upvote
     # not calling vote_thusly to save round-trips of validations
     Vote.create! story: story, comment: self, user: user, vote: 1

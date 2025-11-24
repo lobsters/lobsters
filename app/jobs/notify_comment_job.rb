@@ -13,7 +13,7 @@ class NotifyCommentJob < ApplicationJob
   end
 
   def deliver_mention_notifications(comment, notified)
-    to_notify = comment.plaintext_comment.scan(/\B[@~]([\w-]+)/).flatten.uniq - notified - [comment.user.username]
+    to_notify = comment.comment.scan(/\B[@~]([\w-]+)/).flatten.uniq - notified - [comment.user.username]
 
     # every user gets a Notification, which may be filtered out from those views so that unhiding a
     # story reveals the notifications
@@ -37,7 +37,7 @@ class NotifyCommentJob < ApplicationJob
         u.pushover!(
           title: "#{Rails.application.name} mention by " \
             "#{comment.user.username} on #{comment.story.title}",
-          message: comment.plaintext_comment,
+          message: comment.comment,
           url: Routes.comment_target_url(comment),
           url_title: "Reply to #{comment.user.username}"
         )
@@ -86,7 +86,7 @@ class NotifyCommentJob < ApplicationJob
         u.pushover!(
           title: "#{Rails.application.name} reply from " \
             "#{comment.user.username} on #{comment.story.title}",
-          message: comment.plaintext_comment,
+          message: comment.comment,
           url: Routes.comment_target_url(comment),
           url_title: "Reply to #{comment.user.username}"
         )

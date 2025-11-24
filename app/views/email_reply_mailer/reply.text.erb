@@ -1,5 +1,5 @@
 <%= @comment.user.username %> has replied to <%= @replied_to %>:
 
-  <%= word_wrap(@comment.plaintext_comment, :line_width => 72).gsub(/\n/, "\n  ") %>
+  <%= word_wrap(@comment.comment, :line_width => 72).gsub(/\n/, "\n  ") %>
 
 Reply to this email or continue at <%= Routes.comment_short_id_url @comment %>

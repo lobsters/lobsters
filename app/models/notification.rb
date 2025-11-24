@@ -39,7 +39,7 @@ class Notification < ApplicationRecord
     comment = notifiable
 
     # Check if this is a mention notification
-    if comment.plaintext_comment.match?(Markdowner::USERNAME_MENTION)
+    if comment.comment.match?(Markdowner::USERNAME_MENTION)
       return user.inbox_mentions?
     end
 

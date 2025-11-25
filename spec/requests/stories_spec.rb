@@ -276,6 +276,7 @@ describe "stories", type: :request do
     context "can have images" do
       it "puts https CSP header" do
         moderator = create(:user, :moderator)
+        create(:hat, user: moderator, modlog_use: true)
 
         story = create(:story, user: moderator, title: "test", url: "http://example.com/")
         expect(story.can_have_images?).to eq(true)
@@ -298,6 +299,53 @@ describe "stories", type: :request do
 
         expect(response.headers).to have_key("Content-Security-Policy")
         expect(response.headers["Content-Security-Policy"]).to_not include("img-src 'self' data: https:")
+      end
+    end
+  end
+
+  describe "images" do
+    context "allow" do
+      it "if poster was a moderator at the time of creation" do
+        moderator = create(:user, :moderator)
+        hat = create(:hat, user: moderator, modlog_use: true)
+
+        story = create(:story, user: moderator)
+
+        expect(story.can_have_images?).to eq(true)
+      end
+
+      it "if poster was a moderator at creation, even after hat doff" do
+        moderator = create(:user, :moderator)
+        hat = create(:hat, user: moderator, modlog_use: true)
+
+        story = create(:story, user: moderator)
+
+        hat.doff_by_user_with_reason(moderator, "Testing")
+
+        expect(story.can_have_images?).to eq(true)
+      end
+    end
+
+    context "doesn't allow" do
+      it "if created after user is no longer moderator" do
+        moderator = create(:user, :moderator)
+        hat = create(:hat, user: moderator, modlog_use: true)
+        hat.doff_by_user_with_reason(moderator, "Testing")
+
+        story = create(:story, user: moderator, created_at: 1.second.since)
+
+        expect(story.can_have_images?).to eq(false)
+      end
+
+      it "if created before the user became moderator" do
+        moderator = create(:user)
+
+        story = create(:story, user: moderator, created_at: 1.day.ago)
+
+        moderator.update!(is_moderator: true)
+        hat = create(:hat, user: moderator, modlog_use: true)
+
+        expect(story.can_have_images?).to eq(false)
       end
     end
   end

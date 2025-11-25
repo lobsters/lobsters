@@ -64,7 +64,10 @@ RSpec.feature "Submitting Stories", type: :feature do
     end
 
     context "as a user who is a moderator" do
-      before { user.update(is_moderator: true) }
+      before {
+        user.update(is_moderator: true)
+        create(:hat, user: user, modlog_use: true)
+      }
 
       scenario "results in an image, not a link" do
         expect {

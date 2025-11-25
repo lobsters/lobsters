@@ -15,11 +15,14 @@ class Markdowner
   end
 
   # allow_images: transform ![](example.com/img.jpg) to a hotlinked image; default is to print a link to the URL
-  # as_of: what timestamp to add @mention links as of, because users rename; default Time.current
-  def self.to_html(text, allow_images: false, as_of: Time.current)
+  # as_of: what timestamp to add @mention links as of, because users rename; default is nil which is overridden
+  #        to Time.current for newly created models passing their nil created_at
+  def self.to_html(text, allow_images: false, as_of: nil)
     if text.blank?
       return ""
     end
+
+    as_of ||= Time.current
 
     commonmarker_options = {
       extension: {

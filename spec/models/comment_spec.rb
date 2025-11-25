@@ -53,6 +53,22 @@ describe Comment do
     expect(l.title).to eq("link")
   end
 
+  it "links to users during and after creation" do
+    create(:user, username: "alice", created_at: 2.weeks.ago)
+    c = Comment.new(
+      user: create(:user),
+      story: create(:story),
+      comment: "hello @alice and @bob"
+    )
+
+    expect(c.created_at).to be_nil
+    expect(c.generated_markeddown_comment).to eq("<p>hello <a href=\"https://lobste.rs/~alice\" rel=\"ugc\">@alice</a> and @bob</p>\n")
+
+    c.save!
+    expect(c.created_at).not_to be_nil
+    expect(c.generated_markeddown_comment).to eq("<p>hello <a href=\"https://lobste.rs/~alice\" rel=\"ugc\">@alice</a> and @bob</p>\n")
+  end
+
   describe ".accessible_to_user" do
     it "when user is a moderator" do
       moderator = build(:user, :moderator)

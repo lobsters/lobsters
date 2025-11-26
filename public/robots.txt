@@ -1,72 +1,26 @@
-# https://lobste.rs/s/ybowdq/great_gpt_firewall
-User-agent: AI2Bot
-User-agent: Ai2Bot-Dolma
-User-agent: Amazonbot
-User-agent: anthropic-ai
+# PR https://github.com/lobsters/lobsters to be added to the list.
 User-agent: Applebot
-User-agent: Applebot-Extended
-User-agent: Bytespider
-User-agent: CCBot
-User-agent: ChatGPT-User
-User-agent: Claude-Web
-User-agent: ClaudeBot
-User-agent: cohere-ai
-User-agent: cohere-training-data-crawler
-User-agent: Crawlspace
-User-agent: Diffbot
-User-agent: DuckAssistBot
-User-agent: FacebookBot
-User-agent: FriendlyCrawler
-User-agent: Google-Extended
-User-agent: GoogleOther
-User-agent: GoogleOther-Image
-User-agent: GoogleOther-Video
-User-agent: GPTBot
-User-agent: iaskspider/2.0
-User-agent: ICC-Crawler
-User-agent: ImagesiftBot
-User-agent: img2dataset
-User-agent: ISSCyberRiskCrawler
-User-agent: Kangaroo Bot
-User-agent: Meta-ExternalAgent
-User-agent: Meta-ExternalFetcher
-User-agent: OAI-SearchBot
-User-agent: omgili
-User-agent: omgilibot
-User-agent: PanguBot
-User-agent: PerplexityBot
-User-agent: PetalBot
-User-agent: Scrapy
-User-agent: SemrushBot
-User-agent: Sidetrade indexer bot
-User-agent: Timpibot
-User-agent: VelenPublicWebCrawler
-User-agent: Webzio-Extended
-User-agent: YouBot
-Disallow: /
-
-# SEO/spam tools
-User-agent: AhrefsBot
-User-agent: BLEXBot
-User-agent: Clickagy
-User-agent: SemrushBot
-User-agent: SemrushBot-BA
-User-agent: SemrushBot-COUB
-User-agent: SemrushBot-CT
-User-agent: SemrushBot-SI
-User-agent: SemrushBot-SWA
-User-agent: SiteAuditBot
-User-agent: SplitSignalBot
-Disallow: /
-
-# Google refuses to support crawl-delay so when this was at the top they
-# combined it with the following (anti-LLM slop) rules and blocked the site
-# https://developers.google.com/search/blog/2019/07/a-note-on-unsupported-rules-in-robotstxt
-User-agent: *
-Crawl-delay: 1
+User-agent: BingBot
+User-agent: DuckDuckBot
+User-agent: GoogleBot
+User-agent: ia_archiver
+User-agent: Kagibot
+User-agent: Slurp
+Allow: /
 Disallow: /search
 Disallow: /page/
 Disallow: /comments/page/
+
+Content-Signal: ai-input=no, ai-train=no, search=yes
+
+User-agent: *
+Crawl-delay: 1
+Disallow: /
+
+# https://lobste.rs/c/kxd3ji Please stop "respecting" robots.txt and start
+# honestly following the standard.
+User-agent: Brave
+Disallow: /
 
 # https://developers.google.com/search/docs/crawling-indexing/robots/create-robots-txt
 Sitemap: https://lobste.rs/sitemap.xml.gz

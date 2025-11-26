@@ -40,7 +40,7 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
 
 * Fork [lobsters/lobsters](https://github.com/lobsters/lobsters) on Github.
 
-* Run through the setup steps in `README.md`
+* Setup up your [development environment locally](#development-setup), with [docker](/docs/setup_with_docker.md), or using a [devcontainer](/docs/SETUP_DEVCONTAINER.md).
 
 * Create a branch to work on: `git checkout -b ...'
 
@@ -76,3 +76,58 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
 * Open a pull request to [lobsters/lobsters](https://github.com/lobsters/lobsters).
   You're welcome to open a PR for a work in progress if you want to share progress or ask for help.
   It's a big help if you explicitly write in a comment when you think the code is done!
+
+### Development setup
+
+We have a [Docker setup guide](./docs/setup_with_docker.md) and [devcontainer setup guide](/docs/SETUP_DEVCONTAINER.md) if you use that for development, but you can also set up directly on your machine:
+
+* Install MariaDB:
+  * On Linux use [your package manager](https://mariadb.com/kb/en/distributions-which-include-mariadb/).
+  * On MacOS you can [install with brew](https://mariadb.com/kb/en/installing-mariadb-on-macos-using-homebrew/).
+  * On Windows there's an [installer](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.5.2&os=Linux&cpu=x86_64&pkg=tar_gz&i=systemd&mirror=starburst_stlouis).
+
+* Start the MariaDB server using one of the [methods mentioned in the MariaDB knowledge base](https://mariadb.com/kb/en/starting-and-stopping-mariadb-automatically/).
+
+* Open the console using `mariadb`, and set the `root` user password (type `ctrl-d` to exit afterwards):
+
+  ```sql
+  ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
+  ```
+
+* Install the Ruby version specified in [.ruby-version](https://github.com/lobsters/lobsters/blob/main/.ruby-version).
+
+* Checkout the lobsters Git tree from GitHub:
+
+  ```sh
+  $ git clone git@github.com:lobsters/lobsters.git
+  $ cd lobsters
+  lobsters$
+  ```
+
+* Run `rails credentials:edit` to create and edit your encrypted credentials file.
+  This is where you store API keys for external services and features like linking accounts.
+  Copy and paste in the contents of `config/credentials.yml.enc.sample`.
+  On setup, Rails will give you new random value for `secret_key_base` and you can use `rails secret` any time you need to generate another.
+
+* Run `bin/setup` to install dependencies and set up the database:
+
+  ```sh
+  lobsters$ bin/setup
+  ```
+
+* On your production server, copy `config/initializers/production.rb.sample`
+  to `config/initializers/production.rb` and customize it with your site's
+  `domain` and `name`. (You don't need this on your dev machine.)
+
+* On your personal computer, you probably want to add some sample data:
+
+  ```sh
+  lobsters$ rails fake_data
+  ```
+
+* Run the Rails server in development mode.
+  You should be able to log in to `http://localhost:3000` with your new `test` user (with password `test`):
+
+  ```sh
+  lobsters$ rails server
+  ```

@@ -648,25 +648,13 @@ li.comments_subtree {
 	position: relative;
 }
 
-li .comment_parent_tree_line {
+li.comments_subtree:has(+ li.comments_subtree):not(:has(> .comment_form_container))::before {
+	content: "";
 	position: absolute;
-	border-left: 1px dotted var(--color-fg-shape);
-	top: 0.5em;
+	top: 3.6lh;
 	left: 1em;
 	bottom: 0;
-}
-li .comment_parent_tree_line.score_shown {
-	top: 3.6lh;
-}
-li .comment_siblings_tree_line {
-	position: absolute;
-	left: -1em;
 	border-left: 1px dotted var(--color-fg-shape);
-	top: 0;
-	bottom: 0;
-}
-li:last-child > .comment_siblings_tree_line {
-	border-left-color: var(--color-bg);
 }
 
 .thread_summary {
@@ -1753,10 +1741,6 @@ input[type="submit"].link_post.pushover_button {
 	}
 	ol.comments1 > li.comments_subtree {
 		margin-left: 0;
-	}
-
-	li .comment_siblings_tree_line {
-		border-left: transparent;
 	}
 
 	div.voters {

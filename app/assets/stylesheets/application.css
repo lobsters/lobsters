@@ -648,7 +648,12 @@ li.comments_subtree {
 	position: relative;
 }
 
-li.comments_subtree:has(+ li.comments_subtree):not(:has(> .comment_form_container))::before {
+/*  Render a dotted line between second-level siblings
+ *  This works by finding the top-level .comments_subtree, then starting 2
+ *  levels below that. There is an intermediate level rendered by the views
+ *  that render the comments/_threads partial that has to be accounted for.
+ */
+:not(li.comments_subtree) li.comments_subtree li.comments_subtree li.comments_subtree:has(+ li.comments_subtree)::before {
 	content: "";
 	position: absolute;
 	top: 3.6lh;

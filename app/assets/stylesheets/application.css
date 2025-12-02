@@ -648,7 +648,7 @@ li.comments_subtree {
 	position: relative;
 }
 
-/*  Render a dotted line between second-level siblings
+/*  Render a dotted line between second+ level siblings
  *  This works by finding the top-level .comments_subtree, then starting 2
  *  levels below that. There is an intermediate level rendered by the views
  *  that render the comments/_threads partial that has to be accounted for.

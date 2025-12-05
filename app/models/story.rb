@@ -1183,6 +1183,25 @@ class Story < ApplicationRecord
       @fetched_attributes[:url] = cu if valid_canonical_uri?(cu)
     rescue
     end
+    # parse image from html tags
+    # follows the same logic of fetching title
+    # try <og:image> meta tag first
+    image_url = ""
+    begin
+      image_url = parsed.at_css("meta[property='og:image']")
+        .attributes["content"].text
+    rescue
+    end
+
+    # then try <meta name="image">
+    if image_url.to_s == ""
+      begin
+        image_url = parsed.at_css("meta[name='image']").attributes["content"].text
+      rescue
+      end
+    end
+
+    @fetched_attributes[:image_url] = image_url
 
     @fetched_attributes
   end
@@ -1205,7 +1224,8 @@ class Story < ApplicationRecord
 
     @fetched_attributes = {
       url: url,
-      title: ""
+      title: "",
+      image_url: ""
     }
 
     # security: do not connect to arbitrary user-submitted ports
@@ -1214,17 +1234,7 @@ class Story < ApplicationRecord
     begin
       # if we haven't had a test inject a response into us
       if !@fetched_response
-        s = Sponge.new
-        s.timeout = 3
-        # User submitted URLs may have an incorrect https certificate, but we
-        # don't want to fail the retrieval for this. Security risk is minimal.
-        s.ssl_verify = false
-        headers = {
-          "User-agent" => "#{Rails.application.domain} for #{fetching_ip}",
-          "Referer" => Rails.application.domain
-        }
-        res = s.fetch(url, :get, nil, nil, headers, 3)
-        @fetched_response = res
+        @fetched_response = fetch_url(url)
       end
 
       case @fetched_response["content-type"]
@@ -1238,6 +1248,16 @@ class Story < ApplicationRecord
     end
   end
 
+  def generated_image
+    fetched_attributes
+    return nil if fetched_attributes.blank?
+
+    res = fetch_story_image(@fetched_attributes[:image_url])
+    return nil unless res
+
+    add_logo(res)
+  end
+
   def self.title_maximum_length
     validators_on(:title)
       .find { |v| v.is_a? ActiveRecord::Validations::LengthValidator }
@@ -1245,6 +1265,54 @@ class Story < ApplicationRecord
   end
 
   private
+
+  def fetch_story_image(url)
+    return nil if url.blank?
+
+    res = fetch_url(url)
+    return nil if res.blank?
+
+    # Limit the image size according to Meta developer docs
+    # https://developers.facebook.com/docs/sharing/webmasters/images/
+    return nil if res.body.length >= 8.megabytes
+
+    res
+  rescue => e
+    Rails.logger.error "Error fetching story image: #{e.message}"
+    nil
+  end
+
+  def add_logo(res)
+    image = res.body
+
+    lobsters_logo = Vips::Image.new_from_file(Rails.public_path.join("touch-icon-144.png").to_s)
+    image = Vips::Image.new_from_buffer(image, "")
+
+    # since the lobsters icon image is a RGB, we need to ensure the image is RGB as well.
+    image = image.flatten(background: [255, 255, 255]) if image.bands > 3
+
+    combined_image = image.insert(lobsters_logo, 0, image.height - lobsters_logo.height)
+    combined_image.write_to_buffer(".png")
+  rescue Vips::Error => e
+    Rails.logger.error "Vips error while generating image: #{e.message}"
+    nil
+  rescue => e
+    Rails.logger.error "Error while creating story image: #{e.message}"
+    nil
+  end
+
+  def fetch_url(url)
+    s = Sponge.new
+    s.timeout = 3
+    # User submitted URLs may have an incorrect https certificate, but we
+    # don't want to fail the retrieval for this. Security risk is minimal.
+    s.ssl_verify = false
+    headers = {
+      "User-agent" => "#{Rails.application.domain} for #{fetching_ip}",
+      "Referer" => Rails.application.domain
+    }
+    s.fetch(url, :get, nil, nil, headers, 3)
+  end
 
   def valid_canonical_uri?(url)
     ucu = URI.parse(url)

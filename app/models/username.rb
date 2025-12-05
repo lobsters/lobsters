@@ -4,6 +4,7 @@ class Username < ApplicationRecord
   belongs_to :user
   validates :created_at, presence: true
 
+  # This takes 'from' and 'at' for the big backfill, that could get dropped/defaulted sometime
   def self.rename!(user:, from:, to:, by:, at: Time.current, reason: nil)
     Username.transaction do
       if by == user

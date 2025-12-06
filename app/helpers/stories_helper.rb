@@ -21,4 +21,14 @@ module StoriesHelper
 
     false
   end
+
+  def is_youtube_url?(url)
+    return false if url.blank?
+    url.to_s.include?('youtube.com/watch?v=') or url.to_s.include?('youtu.be')
+  end
+
+  def extract_youtube_video_id(url)
+    return nil if url.blank?
+    url.to_s[/youtube\.com\/watch\?v=([A-Za-z0-9\-_]+)/, 1]
+  end
 end

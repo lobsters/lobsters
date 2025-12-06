@@ -10,6 +10,10 @@
 </ol>
 
 <div class="story_content">
+  <% if is_youtube_url?(@story.url) %>
+    <%= render partial: 'stories/youtube_embed', locals: { video_id: extract_youtube_video_id(@story.url) } %>
+  <% end %>
+
   <% if @story.markeddown_description.present? && @story.stories_count == 0 %>
     <div class="story_text">
       <%= raw @story.markeddown_description %>
@@ -120,6 +124,10 @@
       </ol>
 
       <div class="story_content">
+        <% if is_youtube_url?(ms.url) %>
+          <%= render partial: 'stories/youtube_embed', locals: { video_id: extract_youtube_video_id(ms.url) } %>
+        <% end %>
+
         <% if ms.markeddown_description.present? %>
           <div class="story_text">
           <%= raw ms.markeddown_description %>

@@ -29,6 +29,10 @@ module StoriesHelper
 
   def extract_youtube_video_id(url)
     return nil if url.blank?
-    url.to_s[/youtube\.com\/watch\?v=([A-Za-z0-9\-_]+)/, 1]
+    if url.to_s.include?('youtube.com/watch?v=')
+      url.to_s[/youtube\.com\/watch\?v=([A-Za-z0-9\-_]+)/, 1]
+    else
+      url.to_s[/youtu\.be\/([A-Za-z0-9\-_]+)/, 1]
+    end
   end
 end

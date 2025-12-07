@@ -63,3 +63,21 @@ rewrite @visitor /cache/{file_match.relative}
 
 # add CSP header when serving from cache; Rails adds when it renders pages
 header @visitor ?Content-Security-Policy "default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'"
+
+# Send un-cached requests for anonymous users through iocane.
+@iocaine_target {
+  host lobste.rs
+
+  not {
+    header_regexp Cookie `.*=.*`
+  }
+
+  not {
+    path cache/*
+  }
+}
+
+reverse_proxy @iocaine_target 127.0.0.1:42069 {
+  @fallback status 421
+  handle_response @fallback
+}

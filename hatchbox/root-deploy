@@ -27,8 +27,15 @@ APP_ETC=/home/deploy/lobsters/shared/etc
 # https://docs.digitalocean.com/products/networking/dns/how-to/manage-records/#ptr-rdns-records
 echo "lobste.rs" > /etc/hostname
 
+# Set up iocane package repository
+if [ ! -f /etc/apt/sources.list.d/iocaine.sources ]; then
+  curl -s https://iocaine.madhouse-project.org/_/debian/iocaine.sources \
+         -o /etc/apt/sources.list.d/iocaine.sources
+  apt update
+fi
+
 # server packages
-apt install iptables-persistent opendkim postfix restic
+apt install iptables-persistent opendkim postfix restic iocaine
 
 # configure opendkim for postfix
 cp opendkim.m4 /etc/mail/m4/
@@ -62,6 +69,7 @@ systemctl force-reload systemd-journald
 systemctl daemon-reload
 systemctl enable --now opendkim
 systemctl enable --now postfix
+systemctl enable --now iocaine
 
 # quiet logins
 cp sshd_config /etc/ssh/sshd_config

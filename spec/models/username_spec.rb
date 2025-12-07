@@ -6,11 +6,11 @@ RSpec.describe Username, type: :model do
 
     Username.rename! user:, from: "alice", to: "bob", by: user
     moderation = Moderation.last
-    expect(moderation.reason).to include("own username")
+    expect(moderation.action).to include("own username")
 
     u1 = Username.first
     expect(u1.username).to eq("alice")
-    expect(u1.renamed_away_at).to not_eq(nil)
+    expect(u1.renamed_away_at).to_not eq(nil)
 
     u2 = Username.last
     expect(u2.username).to eq("bob")

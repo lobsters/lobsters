@@ -63,3 +63,26 @@ rewrite @visitor /cache/{file_match.relative}
 
 # add CSP header when serving from cache; Rails adds when it renders pages
 header @visitor ?Content-Security-Policy "default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'"
+
+# There's a spambot attempting GETs to /stories/new?title=...&url=.... with a
+# real article from a news site at a rate averaging 11/s. Even though Rails 302s
+# these to /login very quickly (average 3ms) the high rate is enough to bog down
+# the server.
+# Right now their very odd/old user-agent gives them away. We have to be
+# cautious here because users who are not currently logged-in do GET
+# /stories/new with a title and url by using the submission bookmarklet.
+@submission_spambot {
+  host lobste.rs
+  header "User-Agent" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+  method GET
+  path /stories/new
+  query title=*
+  query url=*
+}
+header @submission_spambot Content-Type text/html
+respond @submission_spambot 403 {
+  body `
+  You need to <a href="/login">login</a> to submit a story.
+  `
+  close
+}

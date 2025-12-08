@@ -59,14 +59,6 @@
       (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
       <% can_flag = @user && @user.can_flag?(comment) %>
-      <% score = comment_score_for_user(comment, @user) %>
-      <% draw_tree_line = comment.reply_count > 0 %>
-
-      <div class="
-        <%= draw_tree_line ? "comment_parent_tree_line" : "" %>
-        <%= can_flag ? "can_flag" : "" %>
-        <%= score != "~" ? "score_shown" : "" %>
-      "></div>
 <div id="c_<%= comment.short_id %>"
   data-shortid="<%= comment.short_id if comment.persisted? %>"
   class="comment
@@ -205,10 +197,6 @@
 </div>
 
 <%#/heinous_inline_partial(comments/_comment.html.erb)%>
-
-    <% if comment.depth != top_comment_depth %>
-      <div class="comment_siblings_tree_line"></div>
-    <% end %>
 
 <% end %>
 

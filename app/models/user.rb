@@ -597,7 +597,7 @@ class User < ApplicationRecord
   end
 
   def inbox_count
-    @inbox_count = notifications.where(read_at: nil).count
+    @inbox_count ||= notifications.where(read_at: nil).count
   end
 
   def validate_username_timeouts

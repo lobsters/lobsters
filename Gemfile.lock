@@ -92,7 +92,7 @@ GEM
     brakeman (7.1.1)
       racc
     builder (3.3.0)
-    byebug (11.1.3)
+    byebug (12.0.0)
     capybara (3.40.0)
       addressable
       matrix
@@ -105,6 +105,7 @@ GEM
     childprocess (5.1.0)
       logger (~> 1.5)
     chunky_png (1.4.0)
+    coderay (1.1.3)
     commonmarker (2.5.0)
       rb_sys (~> 0.9)
     commonmarker (2.5.0-x86_64-linux)
@@ -190,8 +191,8 @@ GEM
     marcel (1.1.0)
     matrix (0.4.2)
     memory_profiler (1.1.0)
+    method_source (1.1.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.9)
     minitest (5.25.5)
     mission_control-jobs (1.1.0)
       actioncable (>= 7.1)
@@ -213,9 +214,6 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.4)
-    nokogiri (1.18.10)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
     nokogiri (1.18.10-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.18.10-x86_64-linux-gnu)
@@ -249,6 +247,14 @@ GEM
       activesupport (>= 7.0.0)
       rack
       railties (>= 7.0.0)
+    pry (0.15.2)
+      coderay (~> 1.1)
+      method_source (~> 1.0)
+    pry-byebug (3.11.0)
+      byebug (~> 12.0)
+      pry (>= 0.13, < 0.16)
+    pry-rails (0.3.11)
+      pry (>= 0.13.0)
     psych (5.2.6)
       date
       stringio
@@ -396,8 +402,6 @@ GEM
       fugit (~> 1.11.0)
       railties (>= 7.1)
       thor (>= 1.3.1)
-    sqlite3 (2.7.4)
-      mini_portile2 (~> 2.8.0)
     sqlite3 (2.7.4-arm64-darwin)
     sqlite3 (2.7.4-x86_64-linux-gnu)
     stackprof (0.2.27)
@@ -461,7 +465,6 @@ GEM
 
 PLATFORMS
   arm64-darwin
-  ruby
   x86_64-linux
 
 DEPENDENCIES
@@ -472,7 +475,6 @@ DEPENDENCIES
   benchmark-perf
   brakeman
   builder
-  byebug
   capybara
   commonmarker
   database_cleaner
@@ -495,6 +497,8 @@ DEPENDENCIES
   parslet
   pdf-reader
   propshaft
+  pry-byebug
+  pry-rails
   puma
   rack-attack
   rack-mini-profiler
@@ -549,10 +553,11 @@ CHECKSUMS
   bigdecimal (3.2.3) sha256=ffd11d1ac67a0d3b2f44aec0a6487210b3f813f363dd11f1fcccf5ba00da4e1b
   brakeman (7.1.1) sha256=629426b5d6496c75e3ffa2299e1ab1bb3ba721fea03d8808414c083660439498
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
-  byebug (11.1.3) sha256=2485944d2bb21283c593d562f9ae1019bf80002143cc3a255aaffd4e9cf4a35b
+  byebug (12.0.0) sha256=d4a150d291cca40b66ec9ca31f754e93fed8aa266a17335f71bb0afa7fca1a1e
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   childprocess (5.1.0) sha256=9a8d484be2fd4096a0e90a0cd3e449a05bc3aa33f8ac9e4d6dcef6ac1455b6ec
   chunky_png (1.4.0) sha256=89d5b31b55c0cf4da3cf89a2b4ebc3178d8abe8cbaf116a1dba95668502fdcfe
+  coderay (1.1.3) sha256=dc530018a4684512f8f38143cd2a096c9f02a1fc2459edcfe534787a7fc77d4b
   commonmarker (2.5.0) sha256=fc84f9e01b271298691a7cfc298cbbaadb893395dc92e9b51644675abff248b5
   commonmarker (2.5.0-x86_64-linux) sha256=9b0d79a883a5df132291c181253cbe31254e6c5c6f131dc7e7a321f872b10db9
   concurrent-ruby (1.3.5) sha256=813b3e37aca6df2a21a3b9f1d497f8cbab24a2b94cab325bffe65ee0f6cbebc6
@@ -601,8 +606,8 @@ CHECKSUMS
   marcel (1.1.0) sha256=fdcfcfa33cc52e93c4308d40e4090a5d4ea279e160a7f6af988260fa970e0bee
   matrix (0.4.2) sha256=71083ccbd67a14a43bfa78d3e4dc0f4b503b9cc18e5b4b1d686dc0f9ef7c4cc0
   memory_profiler (1.1.0) sha256=79a17df7980a140c83c469785905409d3027ca614c42c086089d128b805aa8f8
+  method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
-  mini_portile2 (2.8.9) sha256=0cd7c7f824e010c072e33f68bc02d85a00aeb6fce05bb4819c03dfd3c140c289
   minitest (5.25.5) sha256=391b6c6cb43a4802bfb7c93af1ebe2ac66a210293f4a3fb7db36f2fc7dc2c756
   mission_control-jobs (1.1.0) sha256=b13da9cde3344fec7c744b79d2a34c3ecd454f45d4d593d4c968ba762315e84c
   net-imap (0.5.11) sha256=761143adaf153208c49e8e9d52e1b18ce17a24dc4f7f4f367480b5b98010f221
@@ -610,7 +615,6 @@ CHECKSUMS
   net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8
   net-smtp (0.5.1) sha256=ed96a0af63c524fceb4b29b0d352195c30d82dd916a42f03c62a3a70e5b70736
   nio4r (2.7.4) sha256=d95dee68e0bb251b8ff90ac3423a511e3b784124e5db7ff5f4813a220ae73ca9
-  nokogiri (1.18.10) sha256=d5cc0731008aa3b3a87b361203ea3d19b2069628cb55e46ac7d84a0445e69cc1
   nokogiri (1.18.10-arm64-darwin) sha256=c2b0de30770f50b92c9323fa34a4e1cf5a0af322afcacd239cd66ee1c1b22c85
   nokogiri (1.18.10-x86_64-linux-gnu) sha256=ff5ba26ba2dbce5c04b9ea200777fd225061d7a3930548806f31db907e500f72
   oauth (1.1.2) sha256=e29a96f9accd2b269caa5941d82f37d484ffe5da777a699feb766c51c856fb86
@@ -625,6 +629,9 @@ CHECKSUMS
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prism (1.4.0) sha256=dc0e3e00e93160213dc2a65519d9002a4a1e7b962db57d444cf1a71565bb703e
   propshaft (1.1.0) sha256=d389361faf66aeb17e8d204828962c1e506edd14a1a17adb3fa475435c070f6b
+  pry (0.15.2) sha256=12d54b8640d3fa29c9211dd4ffb08f3fd8bf7a4fd9b5a73ce5b59c8709385b6b
+  pry-byebug (3.11.0) sha256=0b0abb7d309bc7f00044d512a3c8567274f7012b944b38becc8440439a1cea72
+  pry-rails (0.3.11) sha256=a69e28e24a34d75d1f60bcf241192a54253f8f7ef8a62cba1e75750a9653593d
   psych (5.2.6) sha256=814328aa5dcb6d604d32126a20bc1cbcf05521a5b49dbb1a8b30a07e580f316e
   public_suffix (6.0.1) sha256=61d44e1cab5cbbbe5b31068481cf16976dd0dc1b6b07bd95617ef8c5e3e00c6f
   puma (6.6.0) sha256=f25c06873eb3d5de5f0a4ebc783acc81a4ccfe580c760cfe323497798018ad87
@@ -677,7 +684,6 @@ CHECKSUMS
   snaky_hash (2.0.3) sha256=25a3d299566e8153fb02fa23fd9a9358845950f7a523ddbbe1fa1e0d79a6d456
   solid_cache (1.0.7) sha256=58e690ccee057be7351f21b1940d5f9cf6bb132074316e70478e554a79e6a490
   solid_queue (1.2.1) sha256=7976b3690a08080ef63d1b11281f0b77398f7697dbeda0e2c5532682639d4b15
-  sqlite3 (2.7.4) sha256=7fbc1fdb18ba1c0798fb298cb3c35c35bb1743b832a9aeb91add026a5614889c
   sqlite3 (2.7.4-arm64-darwin) sha256=d5b09cd4e9542aa05f0db0eb7dd868102cc23072ae378e0453e59e0efaed89b8
   sqlite3 (2.7.4-x86_64-linux-gnu) sha256=0755b458f5501e89c0d5a0003afc4fdd6fd059eb1fb1424221532917096da4be
   stackprof (0.2.27) sha256=aff6d28656c852e74cf632cc2046f849033dc1dedffe7cb8c030d61b5745e80c

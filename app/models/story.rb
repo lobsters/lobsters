@@ -773,8 +773,7 @@ class Story < ApplicationRecord
   end
 
   def log_moderation
-    if new_record? ||
-        (!editing_from_suggestions && (!editor || editor.id == user_id))
+    if new_record? || (!editing_from_suggestions && (!editor || editor.id == user_id))
       return
     end
 
@@ -871,13 +870,13 @@ class Story < ApplicationRecord
   end
 
   def save_suggested_tags_for_user!(new_tag_names_a, user)
-    suggested_taggings.where(user_id: user.id).destroy_all
+    suggested_taggings.where(user_id: user.id).delete_all
 
-    new_tags = Tag
+    new_suggested_tags = Tag
       .active
       .where(tag: new_tag_names_a.uniq.compact_blank)
-      .map { |t| {user: user, tag: t} }
-    suggested_taggings.create!(new_tags)
+      .map { |t| {user: user, story: self, tag: t} }
+    SuggestedTagging.create!(new_suggested_tags)
 
     # if enough users voted on the same set of replacement tags, do it
     tag_votes = {}
@@ -902,9 +901,9 @@ class Story < ApplicationRecord
       self.editing_from_suggestions = true
       self.moderation_reason = "Automatically changed from user suggestions"
       self.tags_was = tags.to_a
-      self.tags = Tag.where(tag: final_tags)
-      if !save
-        # Rails.logger.error "[s#{id}] failed auto promoting: " << errors.inspect
+      Story.transaction do
+        self.tags = Tag.where(tag: final_tags)
+        save!
       end
     end
   end

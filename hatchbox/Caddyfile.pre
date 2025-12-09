@@ -72,7 +72,6 @@ header @visitor ?Content-Security-Policy "default-src 'none'; img-src 'self' dat
 # cautious here because users who are not currently logged-in do GET
 # /stories/new with a title and url by using the submission bookmarklet.
 @submission_spambot {
-  host lobste.rs
   not {
     header_regexp Cookie `.*=.*`
   }
@@ -99,7 +98,6 @@ respond @submission_spambot 403 {
 # presumably it will update its user-agent at some point, so:
 # grep 'path":"/[0-9a-f]*\.[a-z0-9]*"' ~/lobsters/shared/log/action.log | jq -c '.headers."user-agent" | sort | uniq -c | sort -rn
 @media_scraper {
-  host lobste.rs
   header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
   method GET
   path_regexp /[^/.]*\.(avi|flac|flv|mka|mkv|mov|mp4|mpeg|mpg|ogg|webm|webp|wmv)
@@ -108,6 +106,33 @@ header @media_scraper Content-Type text/html
 respond @media_scraper 404 {
   body `
   I can't find the stationary. Come and help me look?
+  `
+  close
+}
+
+
+@user_enumerator {
+  # https://github.com/smicallef/spiderfoot/blob/master/sf.py#L59
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0"
+  # agents that have caught 1k/d 404s for user profiles
+  header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.102 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/116.0"
+  header User-Agent "Mozilla/5.0 (X11; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0"
+  header User-Agent "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:64.0) Gecko/20100101 Firefox/64.0"
+  header User-Agent "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1"
+  method GET
+  path /u/*
+  path /~*
+
+}
+header @user_enumerator Content-Type text/html
+respond @user_enumerator 404 {
+  body `
+  I'm Spartacus.
   `
   close
 }

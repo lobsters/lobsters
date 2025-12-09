@@ -1,3 +1,3 @@
 #!/bin/sh
 
-find /home/deploy/lobsters/current/public/cache/ -type f -not -mmin 2 -delete
+find /home/deploy/lobsters/current/public/cache/ -type f -not -mmin 5 -delete

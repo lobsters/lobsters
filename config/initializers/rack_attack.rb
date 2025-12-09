@@ -38,7 +38,8 @@ end
 
 Rack::Attack.throttle("SEO/spam tools", limit: 1, period: 1.week.to_i) do |request|
   request.ip if request.user_agent.try(:include?, "www.semrush.com/bot") ||
-    request.user_agent.try(:include?, "webmeup-crawler.com")
+    request.user_agent.try(:include?, "webmeup-crawler.com") ||
+    request.user_agent.try(:include?, "ChatGPT-User")
 end
 
 Rack::Attack.throttle("a particular bad bot", limit: 1, period: 1.week.to_i) do |request|

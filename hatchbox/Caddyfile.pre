@@ -94,3 +94,20 @@ respond @submission_spambot 403 {
   `
   close
 }
+
+@media_scraper {
+  host lobste.rs
+  not {
+    header_regexp Cookie `.*=.*`
+  }
+  header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" 
+  method GET
+  path_regexp /[^/.]*.(.avi|.flac|.flv|.mka|.mkv|.mov|.mp4|.mpeg|.mpg|.ogg|.webm|.webp|.wmv)
+}
+header @media_scraper Content-Type text/html
+respond @media_scraper 404 {
+  body `
+  I can't find the stationary. Come and help me look?
+  `
+  close
+}

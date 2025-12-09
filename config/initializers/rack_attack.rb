@@ -40,16 +40,6 @@ Rack::Attack.throttle("log4j probe", limit: 1, period: 1.week.to_i) do |request|
   request.ip if request.user_agent.try(:include?, "${")
 end
 
-# a very distributed scraper trying to find media files ~46k/day, but each IP is only used 1-15/d
-# presumably it will update its user-agent at some point, so:
-# grep 'path":"/[0-9a-f]*\.[a-z0-9]*"' ~/lobsters/shared/log/action.log | jq -c '.headers."user-agent" | sort | uniq -c | sort -rn
-media3 = %w[.ogg .mov .flv .mkv .mp4 .wmv .avi .mpg .mka]
-media4 = %w[.flac .mpeg .webm .webp]
-Rack::Attack.throttle("media scraper", limit: 2, period: 1.day.to_i) do |request|
-  request.ip if request.user_agent == "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" &&
-    (media3.include?(request.path[-4..]) || media4.include?(request.path[-5..]))
-end
-
 Rack::Attack.throttle("SEO/spam tools", limit: 1, period: 1.week.to_i) do |request|
   request.ip if request.user_agent.try(:include?, "www.semrush.com/bot") ||
     request.user_agent.try(:include?, "webmeup-crawler.com") ||

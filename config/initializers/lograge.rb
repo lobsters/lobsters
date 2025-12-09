@@ -13,7 +13,7 @@ Rails.application.configure do
       timestamp: Time.now.utc.iso8601(3),
       # Rack loses the raw client headers to an old API based on Common Gateway Interface so this
       # kludgily recreates a degraded version for the log :(
-      headers: event.payload[:request].headers.env.select { it.start_with? "HTTP_" }.map { |k, v| [k[5..].downcase.dasherize, v] }.to_h,
+      headers: event.payload[:request].headers.env.select { (it.start_with? it) && (it != "HTTP_COOKIE") }.map { |k, v| [k[5..].downcase.dasherize, v] }.to_h,
       params: filter.filter(event.payload[:request].query_parameters.merge(event.payload[:request].request_parameters)),
       exception: event.payload[:exception]&.first,
       exception_message: event.payload[:exception]&.last,

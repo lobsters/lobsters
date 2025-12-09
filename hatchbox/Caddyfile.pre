@@ -68,12 +68,17 @@ header @visitor ?Content-Security-Policy "default-src 'none'; img-src 'self' dat
 # real article from a news site at a rate averaging 11/s. Even though Rails 302s
 # these to /login very quickly (average 3ms) the high rate is enough to bog down
 # the server.
-# Right now their very odd/old user-agent gives them away. We have to be
+# Right now their very odd/old user-agents give them away. We have to be
 # cautious here because users who are not currently logged-in do GET
 # /stories/new with a title and url by using the submission bookmarklet.
 @submission_spambot {
   host lobste.rs
-  header "User-Agent" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+  not { header_regexp Cookie `.*=.*` }
+  # "Different header fields within the same set are AND-ed. Multiple values per field are OR'ed."
+  header User-Agent "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"
+  header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
   method GET
   path /stories/new
   query title=*

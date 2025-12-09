@@ -13,14 +13,18 @@
 
 # You're a commercial service? Slow down or email me. pushcx@ our domain.
 
+# Otherwise, check the RateLimit headers you get back. RateLimit-Reset tells you how many seconds to
+# wait if you get a 429.
+
 Rack::Attack.safelist("localhost") do |req|
   req.ip == "127.0.0.1" || req.ip == "::1"
 end
 
 # these will kick in way too early if serving assets via rack, so don't
-Rack::Attack.throttle("rate 1", limit: 5, period: 1) { |r| r.ip }
-Rack::Attack.throttle("rate 2", limit: 60, period: 60) { |r| r.ip }
-Rack::Attack.throttle("rate 3", limit: 200, period: 600) { |r| r.ip }
+Rack::Attack.throttle("rate 1 second", limit: 4, period: 1) { |r| r.ip }
+Rack::Attack.throttle("rate 1 minute", limit: 30, period: 60) { |r| r.ip }
+Rack::Attack.throttle("rate 10 minutes", limit: 100, period: 600) { |r| r.ip }
+Rack::Attack.throttle("rate 1 hour", limit: 400, period: 3600) { |r| r.ip }
 
 # there's attackers enumeratng usernames, mostly via Tor
 Rack::Attack.throttle("user enumerator", limit: 30, period: 300) do |request|

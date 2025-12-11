@@ -15,6 +15,15 @@
             <%= comment.story.title %></a>
         </li>
       <% end %>
+      <% mod_mail.story_references.each do |story| %>
+        <li>
+          <a href="<%= Routes.story_path(story) %>">Story
+            (<%= story.title %>)
+            submitted by
+            <%= story.user.username %>
+          </a>
+        </li>
+      <% end %>
     </ul>
   </p>
 

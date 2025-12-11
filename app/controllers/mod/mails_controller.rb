@@ -1,6 +1,8 @@
 class Mod::MailsController < Mod::ModController
   before_action :set_mod_mail, only: %i[ show edit update]
+  before_action :new_mod_mail, only: %i[ create ]
   before_action :require_logged_in_moderator_or_recipient, only: :show
+  before_action :parse_references_and_recipients, only: %i[ update create ]
   skip_before_action :require_logged_in_moderator, only: :show
 
   # GET /mod_mails
@@ -25,9 +27,6 @@ class Mod::MailsController < Mod::ModController
 
   # POST /mod_mails
   def create
-    @mod_mail = ModMail.new(mod_mail_params)
-    @mod_mail.recipients = User.where(username: params["mod_mail"]["recipient_usernames"].split(' ')) if params["mod_mail"]["recipient_usernames"].present?
-
     if @mod_mail.save
       redirect_to @mod_mail, notice: "Mod mail was successfully created."
     else
@@ -37,7 +36,6 @@ class Mod::MailsController < Mod::ModController
 
   # PATCH/PUT /mod_mails/1
   def update
-    @mod_mail.recipients = User.where(username: params["mod_mail"]["recipient_usernames"].split(' ')) if params["mod_mail"]["recipient_usernames"].present?
     if @mod_mail.update(mod_mail_params)
       redirect_to @mod_mail, notice: "Mod mail was successfully updated.", status: :see_other
     else
@@ -49,6 +47,16 @@ class Mod::MailsController < Mod::ModController
     # Use callbacks to share common setup or constraints between actions.
     def set_mod_mail
       @mod_mail = ModMail.find(params.expect(:id))
+    end
+
+    def new_mod_mail
+      @mod_mail = ModMail.new(mod_mail_params)
+    end
+
+    def parse_references_and_recipients
+      @mod_mail.recipients = User.where(username: params["mod_mail"]["recipient_usernames"].split(' ')) if params["mod_mail"]["recipient_usernames"].present?
+      @mod_mail.comment_references = Comment.where(short_id: params["mod_mail"]["comment_reference_short_ids"].split(' ')) if params["mod_mail"]["comment_reference_short_ids"].present?
+      @mod_mail.story_references = Story.where(short_id: params["mod_mail"]["story_reference_short_ids"].split(' ')) if params["mod_mail"]["story_reference_short_ids"].present?
     end
 
     # Only allow a list of trusted parameters through.

@@ -113,7 +113,6 @@ if __FILE__ == $PROGRAM_NAME
         end
 
         body.push "Vote: #{Routes.story_short_id_url s}"
-        body.push "-- "
 
         if s.url.present?
           body.push ""

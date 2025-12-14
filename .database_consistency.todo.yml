@@ -13,11 +13,17 @@ Category:
     LengthConstraintChecker:
       enabled: false
 Comment:
+  hat:
+    MissingDependentDestroyChecker:
+      enabled: false
   index_comments_on_token:
     UniqueIndexChecker:
       enabled: false
   moderation:
     MissingIndexChecker:
+      enabled: false
+  parent_comment:
+    MissingDependentDestroyChecker:
       enabled: false
   short_id:
     UniqueIndexChecker:
@@ -30,6 +36,9 @@ CommentStat:
     UniqueIndexChecker:
       enabled: false
 Domain:
+  banned_by_user:
+    MissingDependentDestroyChecker:
+      enabled: false
   index_domains_on_domain:
     UniqueIndexChecker:
       enabled: false
@@ -55,6 +64,9 @@ HatRequest:
       enabled: false
   token:
     LengthConstraintChecker:
+      enabled: false
+  user:
+    MissingDependentDestroyChecker:
       enabled: false
 HiddenStory:
   index_hidden_stories_on_token:
@@ -104,6 +116,9 @@ MastodonApp:
     UniqueIndexChecker:
       enabled: false
 Message:
+  hat:
+    MissingDependentDestroyChecker:
+      enabled: false
   index_messages_on_token:
     UniqueIndexChecker:
       enabled: false
@@ -137,8 +152,23 @@ Moderation:
   action:
     NullConstraintChecker:
       enabled: false
+  category:
+    MissingDependentDestroyChecker:
+      enabled: false
+  domain:
+    MissingDependentDestroyChecker:
+      enabled: false
   index_moderations_on_token:
     UniqueIndexChecker:
+      enabled: false
+  origin:
+    MissingDependentDestroyChecker:
+      enabled: false
+  story:
+    MissingDependentDestroyChecker:
+      enabled: false
+  tag:
+    MissingDependentDestroyChecker:
       enabled: false
   token:
     LengthConstraintChecker:
@@ -156,12 +186,28 @@ Notification:
   token:
     LengthConstraintChecker:
       enabled: false
+  user:
+    MissingDependentDestroyChecker:
+      enabled: false
 Origin:
+  banned_by_user:
+    MissingDependentDestroyChecker:
+      enabled: false
+  domain:
+    MissingDependentDestroyChecker:
+      enabled: false
   index_origins_on_token:
     UniqueIndexChecker:
       enabled: false
   token:
     LengthConstraintChecker:
+      enabled: false
+ReadRibbon:
+  story:
+    MissingDependentDestroyChecker:
+      enabled: false
+  user:
+    MissingDependentDestroyChecker:
       enabled: false
 SavedStory:
   index_saved_stories_on_token:
@@ -173,12 +219,21 @@ SavedStory:
   token:
     LengthConstraintChecker:
       enabled: false
+  user:
+    MissingDependentDestroyChecker:
+      enabled: false
 Story:
+  domain:
+    MissingDependentDestroyChecker:
+      enabled: false
   index_stories_on_token:
     UniqueIndexChecker:
       enabled: false
   merged_stories:
     ForeignKeyCascadeChecker:
+      enabled: false
+  origin:
+    MissingDependentDestroyChecker:
       enabled: false
   story_text:
     MissingIndexChecker:
@@ -189,12 +244,23 @@ Story:
   unique_short_id:
     UniqueIndexChecker:
       enabled: false
-StoryText:
-  index_story_texts_on_title:
-    RedundantIndexChecker:
+  user:
+    MissingDependentDestroyChecker:
       enabled: false
+StoryText:
   story:
     ForeignKeyChecker:
+      enabled: false
+SuggestedTagging:
+  tag:
+    MissingDependentDestroyChecker:
+      enabled: false
+  user:
+    MissingDependentDestroyChecker:
+      enabled: false
+SuggestedTitle:
+  user:
+    MissingDependentDestroyChecker:
       enabled: false
 Tag:
   index_tags_on_token:
@@ -208,11 +274,20 @@ Tagging:
     UniqueIndexChecker:
       enabled: false
 User:
+  banned_by_user:
+    MissingDependentDestroyChecker:
+      enabled: false
+  disabled_invite_by_user:
+    MissingDependentDestroyChecker:
+      enabled: false
   index_users_on_email:
     UniqueIndexChecker:
       enabled: false
   index_users_on_token:
     UniqueIndexChecker:
+      enabled: false
+  invited_by_user:
+    MissingDependentDestroyChecker:
       enabled: false
   lower(email):
     MissingUniqueIndexChecker:
@@ -257,4 +332,7 @@ Username:
 Vote:
   reason:
     ColumnPresenceChecker:
+      enabled: false
+  story:
+    MissingDependentDestroyChecker:
       enabled: false

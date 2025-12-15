@@ -102,7 +102,7 @@ describe User do
   it "has a limit on the banned reason field" do
     user = build(:user, banned_reason: "a" * 300)
     user.valid?
-    expect(user.errors[:banned_reason]).to eq(["is too long (maximum is 256 characters)"])
+    expect(user.errors[:banned_reason]).to eq(["is too long (maximum is 255 characters)"])
   end
 
   it "has a limit on the disabled invite reason field" do

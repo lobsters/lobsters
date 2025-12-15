@@ -130,7 +130,7 @@ class User < ApplicationRecord
     uniqueness: {case_sensitive: false},
     length: {maximum: 75}
   validates :banned_reason,
-    length: {maximum: 256}
+    length: {maximum: 255}
   validates :disabled_invite_reason,
     length: {maximum: 200}
 

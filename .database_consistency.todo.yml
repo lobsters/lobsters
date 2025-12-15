@@ -23,9 +23,6 @@ Category:
   lower(token):
     MissingUniqueIndexChecker:
       enabled: false
-  token:
-    LengthConstraintChecker:
-      enabled: false
 Comment:
   hat:
     MissingDependentDestroyChecker:
@@ -48,9 +45,6 @@ Comment:
   short_id:
     UniqueIndexChecker:
       enabled: false
-  token:
-    LengthConstraintChecker:
-      enabled: false
 Domain:
   banned_by_user:
     MissingDependentDestroyChecker:
@@ -67,9 +61,6 @@ Domain:
   lower(token):
     MissingUniqueIndexChecker:
       enabled: false
-  token:
-    LengthConstraintChecker:
-      enabled: false
 Hat:
   index_hats_on_token:
     UniqueIndexChecker:
@@ -77,18 +68,12 @@ Hat:
   lower(token):
     MissingUniqueIndexChecker:
       enabled: false
-  token:
-    LengthConstraintChecker:
-      enabled: false
 HatRequest:
   index_hat_requests_on_token:
     UniqueIndexChecker:
       enabled: false
   lower(token):
     MissingUniqueIndexChecker:
-      enabled: false
-  token:
-    LengthConstraintChecker:
       enabled: false
   user:
     MissingDependentDestroyChecker:
@@ -100,18 +85,12 @@ HiddenStory:
   lower(token):
     MissingUniqueIndexChecker:
       enabled: false
-  token:
-    LengthConstraintChecker:
-      enabled: false
 Invitation:
   index_invitations_on_token:
     UniqueIndexChecker:
       enabled: false
   lower(token):
     MissingUniqueIndexChecker:
-      enabled: false
-  token:
-    LengthConstraintChecker:
       enabled: false
 InvitationRequest:
   index_invitation_requests_on_token:
@@ -120,16 +99,11 @@ InvitationRequest:
   lower(token):
     MissingUniqueIndexChecker:
       enabled: false
-  token:
-    LengthConstraintChecker:
-      enabled: false
 Keystore:
   id:
     NullConstraintChecker:
       enabled: false
   key:
-    LengthConstraintChecker:
-      enabled: false
     PrimaryKeyTypeChecker:
       enabled: false
     UniqueIndexChecker:
@@ -160,9 +134,6 @@ Message:
   random_hash:
     UniqueIndexChecker:
       enabled: false
-  token:
-    LengthConstraintChecker:
-      enabled: false
 ModActivity:
   index_mod_activities_on_item:
     RedundantIndexChecker:
@@ -170,14 +141,8 @@ ModActivity:
   index_mod_activities_on_token:
     UniqueIndexChecker:
       enabled: false
-  item_type:
-    LengthConstraintChecker:
-      enabled: false
   lower(token):
     MissingUniqueIndexChecker:
-      enabled: false
-  token:
-    LengthConstraintChecker:
       enabled: false
 ModNote:
   index_mod_notes_on_token:
@@ -185,9 +150,6 @@ ModNote:
       enabled: false
   lower(token):
     MissingUniqueIndexChecker:
-      enabled: false
-  token:
-    LengthConstraintChecker:
       enabled: false
 Moderation:
   action:
@@ -214,21 +176,12 @@ Moderation:
   tag:
     MissingDependentDestroyChecker:
       enabled: false
-  token:
-    LengthConstraintChecker:
-      enabled: false
 Notification:
   index_notifications_on_token:
     UniqueIndexChecker:
       enabled: false
   lower(token):
     MissingUniqueIndexChecker:
-      enabled: false
-  notifiable_type:
-    LengthConstraintChecker:
-      enabled: false
-  token:
-    LengthConstraintChecker:
       enabled: false
   user:
     MissingDependentDestroyChecker:
@@ -252,9 +205,6 @@ Origin:
   lower(token):
     MissingUniqueIndexChecker:
       enabled: false
-  token:
-    LengthConstraintChecker:
-      enabled: false
 ReadRibbon:
   story:
     MissingDependentDestroyChecker:
@@ -268,9 +218,6 @@ SavedStory:
       enabled: false
   lower(token):
     MissingUniqueIndexChecker:
-      enabled: false
-  token:
-    LengthConstraintChecker:
       enabled: false
   user:
     MissingDependentDestroyChecker:
@@ -296,9 +243,6 @@ Story:
       enabled: false
   story_text:
     MissingIndexChecker:
-      enabled: false
-  token:
-    LengthConstraintChecker:
       enabled: false
   unique_short_id:
     UniqueIndexChecker:
@@ -327,9 +271,6 @@ Tag:
       enabled: false
   lower(token):
     MissingUniqueIndexChecker:
-      enabled: false
-  token:
-    LengthConstraintChecker:
       enabled: false
 User:
   banned_by_user:
@@ -371,9 +312,6 @@ User:
   mailing_list_token:
     UniqueIndexChecker:
       enabled: false
-  password_digest:
-    LengthConstraintChecker:
-      enabled: false
   password_reset_token:
     UniqueIndexChecker:
       enabled: false
@@ -385,9 +323,6 @@ User:
       enabled: false
   session_token:
     ColumnPresenceChecker:
-      enabled: false
-  token:
-    LengthConstraintChecker:
       enabled: false
   username:
     UniqueIndexChecker:

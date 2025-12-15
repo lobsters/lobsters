@@ -7,6 +7,10 @@ describe "tag routing" do
     assert_recognizes({controller: "home", action: "single_tag", tag: "foo"}, "/t/foo")
   end
 
+  it "routes a single tag, page 2" do
+    assert_recognizes({controller: "home", action: "single_tag", tag: "foo", page: "2"}, "/t/foo/page/2")
+  end
+
   it "routes a single tag rss feed" do
     assert_recognizes(
       {controller: "home", action: "single_tag", tag: "foo", format: "rss"},
@@ -18,6 +22,13 @@ describe "tag routing" do
     assert_recognizes(
       {controller: "home", action: "multi_tag", tag: "foo,bar"},
       "/t/foo,bar"
+    )
+  end
+
+  it "routes multiple tags, page 2" do
+    assert_recognizes(
+      {controller: "home", action: "multi_tag", tag: "foo,bar", page: "2"},
+      "/t/foo,bar/page/2"
     )
   end
 

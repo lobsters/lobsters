@@ -61,9 +61,10 @@ Rails.application.routes.draw do
   match "/login/set_new_password" => "login#set_new_password",
     :as => "set_new_password", :via => [:get, :post]
 
-  get "/t/:tag" => "home#single_tag", :as => "tag", :constraints => {tag: /[^,.]+/}
+  get "/t/:tag" => "home#single_tag", :as => "tag", :constraints => {tag: /[^,.\/]+/}
+  get "/t/:tag/page/:page" => "home#single_tag", :constraints => {tag: /[^,.\/]+/}
   get "/t/:tag" => "home#multi_tag", :as => "multi_tag"
-  get "/t/:tag/page/:page" => "home#tagged"
+  get "/t/:tag/page/:page" => "home#multi_tag"
 
   constraints id: /([^\/]+?)(?=\.json|\.rss|$|\/)/ do
     get "/domain/:id(.:format)", to: redirect("/domains/%{id}")
@@ -79,7 +80,7 @@ Rails.application.routes.draw do
     # below `resources` so that /edit isn't taken as an identifier
     get "/domains/:id/:author", to: redirect("/origins/%{id}/%{author}")
     get "/domain/:domain/:identifier(.:format)", to: redirect("/domains/%{domain}/%{identifier}")
-    get "/domain/:domain/:identifier/page/:page", to: redirect("/domains/%{domain}/%{idetifier}/page/%{page}")
+    get "/domain/:domain/:identifier/page/:page", to: redirect("/domains/%{domain}/%{identifier}/page/%{page}")
   end
 
   constraints identifier: /(.+)(?=\.json|\.rss|$|\/)/ do

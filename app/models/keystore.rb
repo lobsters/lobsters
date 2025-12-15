@@ -5,7 +5,9 @@ class Keystore < ApplicationRecord
 
   self.primary_key = "key"
 
-  validates :key, presence: true, length: {maximum: MAX_KEY_LENGTH}
+  validates :key,
+    presence: true,
+    uniqueness: {case_sensitive: false}
 
   def self.get(key)
     find_by(key: key)

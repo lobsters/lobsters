@@ -1,3 +1,14 @@
+# Reasons why these checks are disabled:
+#
+# - UniqueIndexChecker: The model actually has a uniqueness validation, but
+#   database_consistency is unable to match it with the DB index. That's
+#   because the validation is case-insensitive (`case_sensitive: false`),
+#   whereas the DB index is not explicitly case-insensitive, but in reality
+#   is case-insensitive because the collation of all columns is case-
+#   insensitive. In schema.rb, "ci" means case-insensitive in `collation:
+#   "utf8mb4_general_ci"`.
+# - MissingUniqueIndexChecker: For `lower(column)` indexes, the reason is the
+#   same as for UniqueIndexChecker.
 ---
 Category:
   index_categories_on_category:
@@ -7,6 +18,9 @@ Category:
     UniqueIndexChecker:
       enabled: false
   lower(category):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(token):
     MissingUniqueIndexChecker:
       enabled: false
   token:
@@ -19,6 +33,12 @@ Comment:
   index_comments_on_token:
     UniqueIndexChecker:
       enabled: false
+  lower(short_id):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
   moderation:
     MissingIndexChecker:
       enabled: false
@@ -30,10 +50,6 @@ Comment:
       enabled: false
   token:
     LengthConstraintChecker:
-      enabled: false
-CommentStat:
-  index_comment_stats_on_date:
-    UniqueIndexChecker:
       enabled: false
 Domain:
   banned_by_user:
@@ -48,6 +64,9 @@ Domain:
   lower(domain):
     MissingUniqueIndexChecker:
       enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
   token:
     LengthConstraintChecker:
       enabled: false
@@ -55,12 +74,18 @@ Hat:
   index_hats_on_token:
     UniqueIndexChecker:
       enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
   token:
     LengthConstraintChecker:
       enabled: false
 HatRequest:
   index_hat_requests_on_token:
     UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
       enabled: false
   token:
     LengthConstraintChecker:
@@ -72,8 +97,8 @@ HiddenStory:
   index_hidden_stories_on_token:
     UniqueIndexChecker:
       enabled: false
-  index_hidden_stories_on_user_id_and_story_id:
-    UniqueIndexChecker:
+  lower(token):
+    MissingUniqueIndexChecker:
       enabled: false
   token:
     LengthConstraintChecker:
@@ -82,12 +107,18 @@ Invitation:
   index_invitations_on_token:
     UniqueIndexChecker:
       enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
   token:
     LengthConstraintChecker:
       enabled: false
 InvitationRequest:
   index_invitation_requests_on_token:
     UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
       enabled: false
   token:
     LengthConstraintChecker:
@@ -97,23 +128,21 @@ Keystore:
     NullConstraintChecker:
       enabled: false
   key:
+    LengthConstraintChecker:
+      enabled: false
     PrimaryKeyTypeChecker:
       enabled: false
     UniqueIndexChecker:
       enabled: false
-Link:
-  to_comment_id+from_story_id+from_comment_id:
-    MissingUniqueIndexChecker:
-      enabled: false
-  to_story_id+from_story_id+from_comment_id:
-    MissingUniqueIndexChecker:
-      enabled: false
-  url+from_story_id+from_comment_id:
+  lower(key):
     MissingUniqueIndexChecker:
       enabled: false
 MastodonApp:
   index_mastodon_apps_on_name:
     UniqueIndexChecker:
+      enabled: false
+  lower(name):
+    MissingUniqueIndexChecker:
       enabled: false
 Message:
   hat:
@@ -121,6 +150,12 @@ Message:
       enabled: false
   index_messages_on_token:
     UniqueIndexChecker:
+      enabled: false
+  lower(short_id):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
       enabled: false
   random_hash:
     UniqueIndexChecker:
@@ -138,12 +173,18 @@ ModActivity:
   item_type:
     LengthConstraintChecker:
       enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
   token:
     LengthConstraintChecker:
       enabled: false
 ModNote:
   index_mod_notes_on_token:
     UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
       enabled: false
   token:
     LengthConstraintChecker:
@@ -161,6 +202,9 @@ Moderation:
   index_moderations_on_token:
     UniqueIndexChecker:
       enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
   origin:
     MissingDependentDestroyChecker:
       enabled: false
@@ -174,11 +218,11 @@ Moderation:
     LengthConstraintChecker:
       enabled: false
 Notification:
-  idx_on_user_id_notifiable_type_notifiable_id_ffac34041e:
-    UniqueIndexChecker:
-      enabled: false
   index_notifications_on_token:
     UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
       enabled: false
   notifiable_type:
     LengthConstraintChecker:
@@ -196,8 +240,17 @@ Origin:
   domain:
     MissingDependentDestroyChecker:
       enabled: false
+  index_origins_on_identifier:
+    UniqueIndexChecker:
+      enabled: false
   index_origins_on_token:
     UniqueIndexChecker:
+      enabled: false
+  lower(identifier):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
       enabled: false
   token:
     LengthConstraintChecker:
@@ -213,8 +266,8 @@ SavedStory:
   index_saved_stories_on_token:
     UniqueIndexChecker:
       enabled: false
-  index_saved_stories_on_user_id_and_story_id:
-    UniqueIndexChecker:
+  lower(token):
+    MissingUniqueIndexChecker:
       enabled: false
   token:
     LengthConstraintChecker:
@@ -228,6 +281,12 @@ Story:
       enabled: false
   index_stories_on_token:
     UniqueIndexChecker:
+      enabled: false
+  lower(short_id):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
       enabled: false
   merged_stories:
     ForeignKeyCascadeChecker:
@@ -266,12 +325,11 @@ Tag:
   index_tags_on_token:
     UniqueIndexChecker:
       enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
   token:
     LengthConstraintChecker:
-      enabled: false
-Tagging:
-  story_id_tag_id:
-    UniqueIndexChecker:
       enabled: false
 User:
   banned_by_user:
@@ -290,6 +348,21 @@ User:
     MissingDependentDestroyChecker:
       enabled: false
   lower(email):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(mailing_list_token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(password_reset_token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(rss_token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(session_token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(token):
     MissingUniqueIndexChecker:
       enabled: false
   lower(username):

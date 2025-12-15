@@ -6,7 +6,10 @@ module Token
       self.token ||= TypeID.new(self.class.to_s.parameterize) if new_record? || attributes.include?(:token)
     end
 
-    validates :token, presence: true, uniqueness: {case_sensitive: false}
+    validates :token,
+      presence: true,
+      uniqueness: {case_sensitive: false},
+      length: {maximum: 255}
   end
 
   def token=(new)

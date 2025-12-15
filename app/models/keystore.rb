@@ -7,7 +7,8 @@ class Keystore < ApplicationRecord
 
   validates :key,
     presence: true,
-    uniqueness: {case_sensitive: false}
+    uniqueness: {case_sensitive: false},
+    length: {maximum: MAX_KEY_LENGTH}
 
   def self.get(key)
     find_by(key: key)

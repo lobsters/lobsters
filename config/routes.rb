@@ -271,5 +271,7 @@ Rails.application.routes.draw do
 
   get "/stats" => "stats#index"
 
+  get "/banned-ips" => "banned_ips#index"
+
   get "/cabinet" => "cabinet#index"
 end

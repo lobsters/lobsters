@@ -15,23 +15,28 @@
 
 require "actionpack/page_caching"
 
-ActiveSupport.on_load(:action_controller) do
-  class ActionController::Caching::Pages::PageCache
-    def cache_file(path, extension)
-      name = if path.empty? || path =~ %r{\A/+\z}
-        "/index"
-      else
-        URI::DEFAULT_PARSER.unescape(path.chomp("/"))
-      end
+# rubocop:disable Lint/ConstantDefinitionInBlock
 
-      # original:
-      #   if File.extname(name).empty?
-      # monkeypatch:
-      if File.extname(name) != ".html"
-        name + (extension || default_extension)
-      else
-        name
+ActiveSupport.on_load(:action_controller) do
+  module ActionController::Caching::Pages
+    class PageCache
+      def cache_file(path, extension)
+        name = if path.empty? || path =~ %r{\A/+\z}
+          "/index"
+        else
+          URI::DEFAULT_PARSER.unescape(path.chomp("/"))
+        end
+
+        # original:
+        #   if File.extname(name).empty?
+        # monkeypatch:
+        if File.extname(name) != ".html"
+          name + (extension || default_extension)
+        else
+          name
+        end
       end
     end
   end
 end
+# rubocop:enable Lint/ConstantDefinitionInBlock

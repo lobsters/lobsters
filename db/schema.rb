@@ -197,8 +197,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
     t.index ["from_comment_id"], name: "index_links_on_from_comment_id"
     t.index ["from_story_id"], name: "index_links_on_from_story_id"
     t.index ["normalized_url"], name: "index_links_on_normalized_url"
-    t.index ["to_comment_id"], name: "index_links_on_to_comment_id"
-    t.index ["to_story_id"], name: "index_links_on_to_story_id"
+    t.index ["to_comment_id", "from_story_id", "from_comment_id"], name: "idx_links_on_to_comment_id_and_from_story_id_and_from_comment_id", unique: true
+    t.index ["to_story_id", "from_story_id", "from_comment_id"], name: "index_links_on_to_story_id_and_from_story_id_and_from_comment_id", unique: true
+    t.index ["url", "from_story_id", "from_comment_id"], name: "index_links_on_url_and_from_story_id_and_from_comment_id", unique: true
   end
 
   create_table "mastodon_apps", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -216,7 +217,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
     t.bigint "recipient_user_id", null: false, unsigned: true
     t.string "subject", limit: 100
     t.text "body", size: :medium
-    t.string "short_id", limit: 30
+    t.string "short_id", limit: 30, default: "", null: false
     t.boolean "deleted_by_author", default: false, null: false
     t.boolean "deleted_by_recipient", default: false, null: false
     t.bigint "hat_id", unsigned: true

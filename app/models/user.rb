@@ -112,16 +112,22 @@ class User < ApplicationRecord
     allow_blank: true
 
   validates :password, presence: true, on: :create
+  validates :password_digest, length: {maximum: 75}
 
   validates :password_reset_token,
-    length: {maximum: 75}
+    uniqueness: {case_sensitive: false},
+    length: {maximum: 75},
+    allow_blank: true # because the column does not have a non-null constraint
   validates :session_token,
+    uniqueness: {case_sensitive: false},
     length: {maximum: 75}
   validates :about,
     length: {maximum: 16_777_215}
   validates :rss_token,
+    uniqueness: {case_sensitive: false},
     length: {maximum: 75}
   validates :mailing_list_token,
+    uniqueness: {case_sensitive: false},
     length: {maximum: 75}
   validates :banned_reason,
     length: {maximum: 256}

@@ -114,9 +114,6 @@ InvitationRequest:
     MissingUniqueIndexChecker:
       enabled: false
 Keystore:
-  id:
-    NullConstraintChecker:
-      enabled: false
   key:
     PrimaryKeyTypeChecker:
       enabled: false
@@ -166,9 +163,6 @@ ModNote:
     MissingUniqueIndexChecker:
       enabled: false
 Moderation:
-  action:
-    NullConstraintChecker:
-      enabled: false
   index_moderations_on_token:
     UniqueIndexChecker:
       enabled: false
@@ -310,10 +304,6 @@ User:
       enabled: false
   username:
     UniqueIndexChecker:
-      enabled: false
-Username:
-  username:
-    NullConstraintChecker:
       enabled: false
 Vote:
   reason:

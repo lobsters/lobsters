@@ -9,6 +9,10 @@ class Keystore < ApplicationRecord
     presence: true,
     uniqueness: {case_sensitive: false},
     length: {maximum: MAX_KEY_LENGTH}
+  # Active Record does not automatically validate the presence of id when it is
+  # not the primary key, so the validation must be explicit. The validation is
+  # analogous to the DB null constraint on id.
+  validates :id, presence: true
 
   def self.get(key)
     find_by(key: key)

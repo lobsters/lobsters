@@ -473,9 +473,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
 
   create_table "usernames", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "username", null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id", null: false, unsigned: true
     t.datetime "created_at", null: false
     t.datetime "renamed_away_at"
+    t.index ["user_id"], name: "fk_rails_74bbef8f63"
   end
 
   create_table "users", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -589,6 +590,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
   add_foreign_key "taggings", "stories", name: "taggings_story_id_fk"
   add_foreign_key "taggings", "tags", name: "taggings_tag_id_fk", on_update: :cascade, on_delete: :cascade
   add_foreign_key "tags", "categories"
+  add_foreign_key "usernames", "users"
   add_foreign_key "users", "users", column: "banned_by_user_id", name: "users_banned_by_user_id_fk"
   add_foreign_key "users", "users", column: "disabled_invite_by_user_id", name: "users_disabled_invite_by_user_id_fk"
   add_foreign_key "users", "users", column: "invited_by_user_id", name: "users_invited_by_user_id_fk"

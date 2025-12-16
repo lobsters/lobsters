@@ -16,6 +16,10 @@
 #   and/or make sure the foreign key has `on_delete: :nullify`.) Other
 #   exceptions: a `has_many` with `dependent: :nullify` (Story#merged_stories),
 #   and a case where child records should remain (User#stories).
+# - MissingIndexChecker: The `moderations` table actually does have an index
+#   for each of Moderation's `belongs_to` associations.
+# - ForeignKeyChecker: StoryText#story uses `story_texts.id` in place of a
+#   foreign key.
 ---
 Category:
   index_categories_on_category:
@@ -307,13 +311,7 @@ User:
   username:
     UniqueIndexChecker:
       enabled: false
-  usernames:
-    MissingIndexChecker:
-      enabled: false
 Username:
-  user:
-    ForeignKeyChecker:
-      enabled: false
   username:
     NullConstraintChecker:
       enabled: false

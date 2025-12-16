@@ -33,7 +33,7 @@ class Story < ApplicationRecord
     inverse_of: :story,
     dependent: :destroy
   has_many :tags, -> { order("tags.is_media desc, tags.tag") }, through: :taggings
-  has_many :votes, -> { where(comment_id: nil) }, inverse_of: :story
+  has_many :votes, -> { where(comment_id: nil) }, inverse_of: :story, dependent: :destroy
   has_many :voters, -> { where("votes.comment_id" => nil) },
     through: :votes,
     source: :user
@@ -45,6 +45,9 @@ class Story < ApplicationRecord
     class_name: "Link",
     inverse_of: :to_story,
     dependent: :destroy
+  has_one :moderation, dependent: :destroy
+  has_many :read_ribbons, dependent: :destroy
+  has_many :saved_stories, dependent: :destroy
 
   validates :short_id,
     presence: true,

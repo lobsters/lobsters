@@ -9,6 +9,13 @@
 #   "utf8mb4_general_ci"`.
 # - MissingUniqueIndexChecker: For `lower(column)` indexes, the reason is the
 #   same as for UniqueIndexChecker.
+# - MissingDependentDestroyChecker: Most of the referenced associations have
+#   `optional: true` set, so it wouldn't be appropriate to follow this
+#   suggestion and add a corresponding `has_many` with `dependent: :destroy`.
+#   (It might make sense to add `dependent: :nullify` on the `belongs_to` side,
+#   and/or make sure the foreign key has `on_delete: :nullify`.) Other
+#   exceptions: a `has_many` with `dependent: :nullify` (Story#merged_stories),
+#   and a case where child records should remain (User#stories).
 ---
 Category:
   index_categories_on_category:
@@ -22,6 +29,9 @@ Category:
       enabled: false
   lower(token):
     MissingUniqueIndexChecker:
+      enabled: false
+  moderation:
+    MissingIndexChecker:
       enabled: false
 Comment:
   hat:
@@ -61,6 +71,9 @@ Domain:
   lower(token):
     MissingUniqueIndexChecker:
       enabled: false
+  moderation:
+    MissingIndexChecker:
+      enabled: false
 Hat:
   index_hats_on_token:
     UniqueIndexChecker:
@@ -74,9 +87,6 @@ HatRequest:
       enabled: false
   lower(token):
     MissingUniqueIndexChecker:
-      enabled: false
-  user:
-    MissingDependentDestroyChecker:
       enabled: false
 HiddenStory:
   index_hidden_stories_on_token:
@@ -155,26 +165,11 @@ Moderation:
   action:
     NullConstraintChecker:
       enabled: false
-  category:
-    MissingDependentDestroyChecker:
-      enabled: false
-  domain:
-    MissingDependentDestroyChecker:
-      enabled: false
   index_moderations_on_token:
     UniqueIndexChecker:
       enabled: false
   lower(token):
     MissingUniqueIndexChecker:
-      enabled: false
-  origin:
-    MissingDependentDestroyChecker:
-      enabled: false
-  story:
-    MissingDependentDestroyChecker:
-      enabled: false
-  tag:
-    MissingDependentDestroyChecker:
       enabled: false
 Notification:
   index_notifications_on_token:
@@ -183,14 +178,8 @@ Notification:
   lower(token):
     MissingUniqueIndexChecker:
       enabled: false
-  user:
-    MissingDependentDestroyChecker:
-      enabled: false
 Origin:
   banned_by_user:
-    MissingDependentDestroyChecker:
-      enabled: false
-  domain:
     MissingDependentDestroyChecker:
       enabled: false
   index_origins_on_identifier:
@@ -205,12 +194,8 @@ Origin:
   lower(token):
     MissingUniqueIndexChecker:
       enabled: false
-ReadRibbon:
-  story:
-    MissingDependentDestroyChecker:
-      enabled: false
-  user:
-    MissingDependentDestroyChecker:
+  moderation:
+    MissingIndexChecker:
       enabled: false
 SavedStory:
   index_saved_stories_on_token:
@@ -218,9 +203,6 @@ SavedStory:
       enabled: false
   lower(token):
     MissingUniqueIndexChecker:
-      enabled: false
-  user:
-    MissingDependentDestroyChecker:
       enabled: false
 Story:
   domain:
@@ -238,6 +220,9 @@ Story:
   merged_stories:
     ForeignKeyCascadeChecker:
       enabled: false
+  moderation:
+    MissingIndexChecker:
+      enabled: false
   origin:
     MissingDependentDestroyChecker:
       enabled: false
@@ -254,23 +239,15 @@ StoryText:
   story:
     ForeignKeyChecker:
       enabled: false
-SuggestedTagging:
-  tag:
-    MissingDependentDestroyChecker:
-      enabled: false
-  user:
-    MissingDependentDestroyChecker:
-      enabled: false
-SuggestedTitle:
-  user:
-    MissingDependentDestroyChecker:
-      enabled: false
 Tag:
   index_tags_on_token:
     UniqueIndexChecker:
       enabled: false
   lower(token):
     MissingUniqueIndexChecker:
+      enabled: false
+  moderation:
+    MissingIndexChecker:
       enabled: false
 User:
   banned_by_user:
@@ -312,6 +289,9 @@ User:
   mailing_list_token:
     UniqueIndexChecker:
       enabled: false
+  moderation:
+    MissingIndexChecker:
+      enabled: false
   password_reset_token:
     UniqueIndexChecker:
       enabled: false
@@ -340,7 +320,4 @@ Username:
 Vote:
   reason:
     ColumnPresenceChecker:
-      enabled: false
-  story:
-    MissingDependentDestroyChecker:
       enabled: false

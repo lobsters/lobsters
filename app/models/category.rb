@@ -6,6 +6,7 @@ class Category < ApplicationRecord
     dependent: :restrict_with_error,
     inverse_of: :category
   has_many :stories, through: :tags
+  has_one :moderation, dependent: :destroy
 
   after_save :log_modifications
 

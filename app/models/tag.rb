@@ -10,6 +10,8 @@ class Tag < ApplicationRecord
     through: :tag_filters,
     source: :user,
     dependent: :delete_all
+  has_one :moderation, dependent: :destroy
+  has_many :suggested_taggings, dependent: :destroy
 
   after_save :log_modifications
 

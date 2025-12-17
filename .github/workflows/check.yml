@@ -118,4 +118,4 @@ jobs:
 
       - name: Check consistency of DB and models
         run: |
-          bundle exec database_consistency --config .database_consistency.todo.yml
+          bundle exec database_consistency --config .database_consistency.ignore.yml

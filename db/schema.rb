@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_16_222804) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_17_035703) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -535,7 +535,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_16_222804) do
   add_foreign_key "saved_stories", "users", name: "saved_stories_user_id_fk"
   add_foreign_key "stories", "domains"
   add_foreign_key "stories", "origins"
-  add_foreign_key "stories", "stories", column: "merged_story_id", name: "stories_merged_story_id_fk"
+  add_foreign_key "stories", "stories", column: "merged_story_id", name: "stories_merged_story_id_fk", on_delete: :nullify
   add_foreign_key "stories", "users", name: "stories_user_id_fk"
   add_foreign_key "suggested_taggings", "stories", name: "suggested_taggings_story_id_fk"
   add_foreign_key "suggested_taggings", "tags", name: "suggested_taggings_tag_id_fk"

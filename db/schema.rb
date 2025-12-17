@@ -578,7 +578,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
   add_foreign_key "saved_stories", "users", name: "saved_stories_user_id_fk"
   add_foreign_key "stories", "domains"
   add_foreign_key "stories", "origins"
-  add_foreign_key "stories", "stories", column: "merged_story_id", name: "stories_merged_story_id_fk"
+  add_foreign_key "stories", "stories", column: "merged_story_id", name: "stories_merged_story_id_fk", on_delete: :nullify
   add_foreign_key "stories", "users", name: "stories_user_id_fk"
   add_foreign_key "suggested_taggings", "stories", name: "suggested_taggings_story_id_fk"
   add_foreign_key "suggested_taggings", "tags", name: "suggested_taggings_tag_id_fk"

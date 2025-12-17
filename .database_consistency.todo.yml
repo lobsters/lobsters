@@ -20,6 +20,8 @@
 #   for each of Moderation's `belongs_to` associations.
 # - ForeignKeyChecker: StoryText#story uses `story_texts.id` in place of a
 #   foreign key.
+# - PrimaryKeyTypeChecker: Keystore intentionally uses a string primary key
+#   instead of the default bigint/bigserial.
 ---
 Category:
   index_categories_on_category:
@@ -214,9 +216,6 @@ Story:
       enabled: false
   lower(token):
     MissingUniqueIndexChecker:
-      enabled: false
-  merged_stories:
-    ForeignKeyCascadeChecker:
       enabled: false
   moderation:
     MissingIndexChecker:

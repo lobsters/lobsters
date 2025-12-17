@@ -25,20 +25,24 @@ describe Moderation do
     domain = create :domain
     story = create :story, user: user
     tag = create :tag
+    action = "edited"
 
-    valid_moderations = [Moderation.new(comment: comment),
-      Moderation.new(domain: domain),
-      Moderation.new(story: story),
-      Moderation.new(tag: tag),
-      Moderation.new(user: user)]
+    valid_moderations = [
+      Moderation.new(comment:, action:),
+      Moderation.new(domain:, action:),
+      Moderation.new(story:, action:),
+      Moderation.new(tag:, action:),
+      Moderation.new(user:, action:)
+    ]
     expect(valid_moderations).to all(be_valid)
 
-    invalid_moderations = [Moderation.new,
-      Moderation.new(comment: comment, domain: domain),
-      Moderation.new(comment: comment, domain: domain, story: story),
-      Moderation.new(comment: comment, domain: domain, story: story, tag: tag),
-      Moderation.new(comment: comment, domain: domain, story: story, tag: tag,
-        user: user)]
+    invalid_moderations = [
+      Moderation.new,
+      Moderation.new(comment:, domain:, action:),
+      Moderation.new(comment:, domain:, story:, action:),
+      Moderation.new(comment:, domain:, story:, tag:, action:),
+      Moderation.new(comment:, domain:, story:, tag:, user:, action:)
+    ]
     invalid_moderations.each do |moderation|
       expect(moderation).not_to be_valid
       expect(moderation.errors.messages.dig(:base))

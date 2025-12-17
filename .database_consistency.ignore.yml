@@ -1,25 +1,29 @@
-# Reasons why these checks are disabled:
+# This file lists exceptions for database_consistency checks at build time.
+# This file was created by running `bundle exec database_consistency -g`,
+# manually adding these comments, and renaming from ".todo" to ".ignore".
 #
-# - UniqueIndexChecker: The model actually has a uniqueness validation, but
+# Reasons for each type of exception:
+#
+# - UniqueIndexChecker: These models actually have a uniqueness validation, but
 #   database_consistency is unable to match it with the DB index. That's
 #   because the validation is case-insensitive (`case_sensitive: false`),
 #   whereas the DB index is not explicitly case-insensitive, but in reality
-#   is case-insensitive because the collation of all columns is case-
-#   insensitive. In schema.rb, "ci" means case-insensitive in `collation:
-#   "utf8mb4_general_ci"`.
+#   it *is* case-insensitive because the collation of all columns is case-
+#   insensitive. In schema.rb at `collation: "utf8mb4_general_ci"`, "ci" means
+#   case-insensitive.
 # - MissingUniqueIndexChecker: For `lower(column)` indexes, the reason is the
-#   same as for UniqueIndexChecker.
+#   same as for UniqueIndexChecker above.
 # - MissingDependentDestroyChecker: Most of the referenced associations have
-#   `optional: true` set, so it wouldn't be appropriate to follow this
-#   suggestion and add a corresponding `has_many` with `dependent: :destroy`.
-#   (It might make sense to add `dependent: :nullify` on the `belongs_to` side,
-#   and/or make sure the foreign key has `on_delete: :nullify`.) Other
-#   exceptions: a `has_many` with `dependent: :nullify` (Story#merged_stories),
-#   and a case where child records should remain (User#stories).
-# - MissingIndexChecker: The `moderations` table actually does have an index
-#   for each of Moderation's `belongs_to` associations.
+#   `optional: true`, so it wouldn't be appropriate to follow this suggestion
+#   and add a corresponding `has_many` with `dependent: :destroy`. (It might
+#   make sense to add `dependent: :nullify` on the `belongs_to` side, and/or
+#   make sure the foreign key has `on_delete: :nullify`.) Other exceptions:
+#   a `has_many` with `dependent: :nullify` (Story#merged_stories), and a case
+#   where child records should remain when parents are deleted (User#stories).
+# - MissingIndexChecker: False positives. The `moderations` table actually does
+#   have an index for each of Moderation's `belongs_to` associations.
 # - ForeignKeyChecker: StoryText#story uses `story_texts.id` in place of a
-#   foreign key.
+#   foreign key. Nonstandard but intentional.
 # - PrimaryKeyTypeChecker: Keystore intentionally uses a string primary key
 #   instead of the default bigint/bigserial.
 # - ColumnPresenceChecker: Vote#reason and User#session_token intentionally

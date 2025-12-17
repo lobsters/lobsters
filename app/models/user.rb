@@ -127,6 +127,8 @@ class User < ApplicationRecord
     length: {maximum: 75},
     allow_blank: true # because the column does not have a non-null constraint
   validates :session_token,
+    allow_blank: true,
+    presence: true,
     uniqueness: {case_sensitive: false},
     length: {maximum: 75}
   validates :about,
@@ -144,10 +146,6 @@ class User < ApplicationRecord
 
   validates :show_email, :is_admin, :is_moderator, :pushover_mentions,
     inclusion: {in: [true, false]}
-
-  validates :session_token,
-    allow_blank: true,
-    presence: true
 
   validates :karma,
     presence: true

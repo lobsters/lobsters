@@ -22,6 +22,9 @@
 #   foreign key.
 # - PrimaryKeyTypeChecker: Keystore intentionally uses a string primary key
 #   instead of the default bigint/bigserial.
+# - ColumnPresenceChecker: Vote#reason and User#session_token intentionally
+#   have `allow_blank: true` and `presence: true` validations. (This checker
+#   wants only `presence: true`.)
 ---
 Category:
   index_categories_on_category:
@@ -148,9 +151,6 @@ Message:
     UniqueIndexChecker:
       enabled: false
 ModActivity:
-  index_mod_activities_on_item:
-    RedundantIndexChecker:
-      enabled: false
   index_mod_activities_on_token:
     UniqueIndexChecker:
       enabled: false

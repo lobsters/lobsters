@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_17_035703) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_17_042744) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -235,7 +235,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_17_035703) do
     t.string "token", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["item_type", "item_id"], name: "index_mod_activities_on_item"
     t.index ["item_type", "item_id"], name: "index_mod_activities_on_item_type_and_item_id", unique: true
     t.index ["token"], name: "index_mod_activities_on_token", unique: true
   end

@@ -235,7 +235,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
     t.string "token", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["item_type", "item_id"], name: "index_mod_activities_on_item"
     t.index ["item_type", "item_id"], name: "index_mod_activities_on_item_type_and_item_id", unique: true
     t.index ["token"], name: "index_mod_activities_on_token", unique: true
   end

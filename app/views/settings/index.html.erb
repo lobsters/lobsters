@@ -122,6 +122,13 @@
       <div class="labelled_grid">
         <%= f.label :email_messages, "Receive E-mail", class: "for_checkbox" %>
         <span><%= f.check_box :email_messages %></span>
+        <%= f.label :modmail_messages, "Receive E-mail for ModMail", class: "for_checkbox" %>
+        <span>
+          <%= f.check_box :email_messages, { disabled: true, checked: true } %>
+          <span class="hint">
+            Notifications from Moderators are mandatory
+          </span>
+        </span>
         <%= f.label :pushover_messages, "Receive Pushover Alert",
           class: "for_checkbox" %>
         <span>

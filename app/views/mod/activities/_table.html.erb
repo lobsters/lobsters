@@ -3,82 +3,76 @@
 <% cache [mod_activities.first, @user.id] do %>
   <ul class="mod_activities">
     <% mod_activities.each do |ma| %>
-      <% cache [ma, ma.item, ma.item.user_id == @user.id] do %>
-        <% case ma.item
-          when Moderation %>
-        <li class="moderation">
-          <div class="byline">
-            Public Log
+      <% cache [ma, ma.item, @user.is_moderator?] do %>
+        <% case ma.item %>
+        <% when Moderation %>
+          <li class="moderation">
+            <div class="byline">
+              Public Log
 
-            <%= how_long_ago_label ma.created_at %>
+              <%= how_long_ago_label ma.created_at %>
 
-            <% if ma.item.moderator %>
-              <%= inline_avatar_for @user, ma.item.moderator %>
-              <%= link_to(ma.item.moderator.username, user_path(ma.item.moderator)) %>
-            <% elsif ma.item.is_from_suggestions? %>
-              <em>(Users)</em>
-            <% else %>
-              <em>System</em>
-            <% end %>
-            |
-
-            <span class="target">
-              <% if ma.item.story %>
-                <a href="<%= Routes.title_path ma.item.story %>">Story: <%= ma.item.story.title %></a>
-              <% elsif ma.item.comment %>
-                <a href="<%= Routes.comment_target_path(ma.item.comment) %>">Comment by
-                  <%= ma.item.comment.user.username %>
-                  on
-                  <%= ma.item.comment.story.title %></a>
-              <% elsif ma.item.user_id %>
-                <% if ma.item.user %>
-                  <%= link_to "User #{ma.item.user.username}", ma.item.user %>
-                <% else %>
-                  User <%= ma.item.user_id %> (Deleted)
-                <% end %>
-              <% elsif ma.item.tag %>
-                <%= link_to("Tag: #{ma.item.tag.tag}", ma.item.tag) %>
-              <% elsif ma.item.category %>
-                <%= link_to("Category: #{ma.item.category.category}", ma.item.category) %>
-              <% elsif ma.item.user_id %>
-                <% if ma.item.user %>
-                  <%= link_to "User #{ma.item.user.username}", ma.item.user %>
-                <% else %>
-                  User <%= ma.item.user_id %> (Deleted)
-                <% end %>
-              <% elsif ma.item.domain %>
-                Domain <%= link_to ma.item.domain.domain, domain_path(ma.item.domain) %>
-              <% elsif ma.item.origin %>
-                Origin <%= link_to ma.item.origin.identifier, origin_path(ma.item.origin) %>
+              <% if ma.item.moderator %>
+                <%= inline_avatar_for @user, ma.item.moderator %>
+                <%= link_to(ma.item.moderator.username, user_path(ma.item.moderator)) %>
+              <% elsif ma.item.is_from_suggestions? %>
+                <em>(Users)</em>
               <% else %>
-                Unknown object moderated
+                <em>System</em>
               <% end %>
-            </span>
-          </div>
+              |
 
-          <p>
-            Action: <%= ma.item.action %>
-            <% if ma.item.reason %>
-              <br>
-              Reason: <%= ma.item.reason %>
-            <% end %>
+              <span class="target">
+                <% if ma.item.story %>
+                  <a href="<%= Routes.title_path ma.item.story %>">Story: <%= ma.item.story.title %></a>
+                <% elsif ma.item.comment %>
+                  <a href="<%= Routes.comment_target_path(ma.item.comment) %>">Comment by
+                    <%= ma.item.comment.user.username %>
+                    on
+                    <%= ma.item.comment.story.title %></a>
+                <% elsif ma.item.user_id %>
+                  <% if ma.item.user %>
+                    <%= link_to "User #{ma.item.user.username}", ma.item.user %>
+                  <% else %>
+                    User <%= ma.item.user_id %> (Deleted)
+                  <% end %>
+                <% elsif ma.item.tag %>
+                  <%= link_to("Tag: #{ma.item.tag.tag}", ma.item.tag) %>
+                <% elsif ma.item.category %>
+                  <%= link_to("Category: #{ma.item.category.category}", ma.item.category) %>
+                <% elsif ma.item.domain %>
+                  Domain <%= link_to ma.item.domain.domain,  domain_path(ma.item.domain) %>
+                <% elsif ma.item.origin %>
+                  Origin <%= link_to ma.item.origin.identifier,  origin_path(ma.item.origin) %>
+                <% else %>
+                  Unknown object moderated
+                <% end %>
+              </span>
+            </div>
 
-            <% if ma.item.story %>
-              <ul>
-              <%= render :partial => "stories/listdetail", locals: { story: ma.item.story } %>
-              </ul>
-            <% elsif ma.item.comment %>
-              <%= render :partial => "comments/comment", locals: {
-                comment: ma.item.comment,
-                show_story: false,
-                show_folder_control: false,
-                show_tree_lines: false,
-                force_open: true
-              } %>
-            <% end %>
+            <p>
+              Action: <%= ma.item.action %>
+              <% if ma.item.reason %>
+                <br>
+                Reason: <%= ma.item.reason %>
+              <% end %>
 
-          </p>
-        </li>
+              <% if ma.item.story %>
+                <ul>
+                <%= render :partial => "stories/listdetail", locals: { story: ma.item.story } %>
+                </ul>
+              <% elsif ma.item.comment %>
+                <%= render :partial => "comments/comment", locals: {
+                  comment: ma.item.comment,
+                  show_story: false,
+                  show_folder_control: false,
+                  show_tree_lines: false,
+                  force_open: true
+                } %>
+              <% end %>
+
+            </p>
+          </li>
 
         <% when ModNote %>
           <li class="mod_note">
@@ -96,6 +90,21 @@
             </div>
 
             <%= raw ma.item.markeddown_note %>
+          </li>
+
+        <% when ModMail %>
+          <li class="mod_mail">
+            <div class="byline">
+              Mail
+              <%= how_long_ago_label ma.item.created_at %> |
+              <%= link_to ma.item.subject, ma.item %>
+              (<%= pluralize ma.item.mod_mail_messages.count, 'Message' %>)
+              <div>Recipients:
+                <% ma.item.recipients.each do |recipient| %>
+                  <%= inline_avatar_for @user, recipient %><%= link_to recipient.username, recipient %>
+                <% end %>
+              </div>
+            </div>
           </li>
         <% end %>
       <% end %>

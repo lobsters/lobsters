@@ -6,7 +6,11 @@ class ModMail < ApplicationRecord
   has_many :recipients, through: :mod_mail_recipients, source: :user, class_name: 'User'
   has_many :mod_mail_messages
 
+  has_one :mod_activity, inverse_of: :item
+
   validates :recipients, presence: true
+
+  after_create_commit -> { ModActivity.create_for! self }
 
   def comment_reference_short_ids
     comment_references.pluck(:short_id).join(' ')

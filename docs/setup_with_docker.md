@@ -15,9 +15,6 @@
     * You should get a similar image like this:
    ![successful vim](./vim_result.jpg)
 
-* Update `database.yml`
-  * Change line 5 to `host: db`
-
 * Switch back to the tab running the mariadb image and restart the server by:
   * Holding down `control` and `c`
   * Run `make docker-serve`

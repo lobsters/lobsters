@@ -36,11 +36,64 @@ If you have ideas, please come discuss them on [/t/meta](https://lobste.rs/t/met
 in [the chat room](https://lobste.rs/chat),
 or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid wasted effort.
 
-### Making your change
+### Setting up your environment
 
 * Fork [lobsters/lobsters](https://github.com/lobsters/lobsters) on Github.
 
-* Run through the setup steps in `README.md`
+* Clone your fork locally.
+
+  ```sh
+  $ git clone git@github.com:<your_gh_username>/lobsters.git
+  $ cd lobsters
+  lobsters$
+  ```
+
+* We have a [Docker setup guide](./docs/setup_with_docker.md) if you use that for development, but you can also set up directly on your machine:
+
+* Install MariaDB:
+  * On Linux use [your package manager](https://mariadb.com/kb/en/distributions-which-include-mariadb/).
+  * On MacOS you can [install with brew](https://mariadb.com/kb/en/installing-mariadb-on-macos-using-homebrew/).
+  * On Windows there's an [installer](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.5.2&os=Linux&cpu=x86_64&pkg=tar_gz&i=systemd&mirror=starburst_stlouis).
+
+* Start the MariaDB server using one of the [methods mentioned in the MariaDB knowledge base](https://mariadb.com/kb/en/starting-and-stopping-mariadb-automatically/).
+
+* Open the console using `mariadb`, and set the `root` user password (type `ctrl-d` to exit afterwards):
+
+  ```sql
+  ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
+  ```
+
+* Install the Ruby version specified in [.ruby-version](https://github.com/lobsters/lobsters/blob/main/.ruby-version).
+
+* Run `bin/setup` to install dependencies and set up the database:
+
+  ```sh
+  lobsters$ bin/setup
+  ```
+
+* Run `rails credentials:edit` to create and edit your encrypted credentials file.
+  This is where you store API keys for external services and features like linking accounts.
+  Copy and paste in the contents of `config/credentials.yml.enc.sample`.
+  On setup, Rails will give you new random value for `secret_key_base` and you can use `rails secret` any time you need to generate another.
+
+* If you intend to setup a production server, copy `config/initializers/production.rb.sample`
+  to `config/initializers/production.rb` and customize it with your site's
+  `domain` and `name`. (You don't need this on your dev machine.)
+
+* On your personal computer, you probably want to add some sample data:
+
+  ```sh
+  lobsters$ rails fake_data
+  ```
+
+* Run the Rails server in development mode.
+  You should be able to log in to `http://localhost:3000` with your new `test` user (with password `test`):
+
+  ```sh
+  lobsters$ rails server
+  ```
+
+### Making your change
 
 * Create a branch to work on: `git checkout -b ...'
 

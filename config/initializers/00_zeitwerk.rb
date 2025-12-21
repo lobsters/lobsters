@@ -19,6 +19,6 @@ if ENV["SECRET_KEY_BASE_DUMMY"].blank? && Rails.application.credentials.secret_k
   if Rails.env.production?
     raise config + migrate
   else
-    raise config
+    puts config
   end
 end

@@ -192,14 +192,17 @@ class SettingsController < ApplicationController
   def mastodon_auth
     app = MastodonApp.find_or_register(params[:mastodon_instance_name])
     if app.persisted?
-      redirect_to app.oauth_auth_url, allow_other_host: true
+      session[:mastodon_state] = SecureRandom.hex
+      redirect_to app.oauth_auth_url(session[:mastodon_state]), allow_other_host: true
     else
       redirect_to settings_path, flash: {error: app.errors.full_messages.join(" ")}
     end
   end
 
   def mastodon_callback
-    if params[:code].blank?
+    if params[:code].blank? ||
+        params[:state].blank? ||
+        (params[:state].to_s != session[:mastodon_state].to_s)
       flash[:error] = "Invalid OAuth state"
       return redirect_to settings_path
     end

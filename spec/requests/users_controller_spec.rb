@@ -11,6 +11,20 @@ describe "users controller" do
 
       expect(response.body).to include(user.username)
     end
+
+    context "when moderator viewing" do
+      before { sign_in create(:user, :moderator) }
+
+      it "Displays Activity Log" do
+        user = create(:user)
+
+        mod_mail = create(:mod_mail, recipients: [user])
+
+        get "/~#{user.username}"
+
+        expect(response.body).to include(mod_mail.subject)
+      end
+    end
   end
 
   describe "tree" do

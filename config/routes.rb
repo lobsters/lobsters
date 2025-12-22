@@ -256,6 +256,8 @@ Rails.application.routes.draw do
     post "notes" => "notes#create"
 
     resources :comments, only: [:destroy]
+    resources :mails, except: [:destroy]
+    resources :mail_messages, only: :create
     resources :reparents, only: [:new, :create]
     resources :stories, only: [:edit, :update] do
       patch "undelete"

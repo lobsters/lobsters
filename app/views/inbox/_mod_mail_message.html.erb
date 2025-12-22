@@ -1,0 +1,19 @@
+<div class="message" id="<%= dom_id mod_mail_message %>">
+  <div class="voters <%= 'comment_unread' if is_unread %>">🔑</div>
+  <div class="details">
+    <div class="byline">
+      <% if mod_mail_message.user %>
+        <%= inline_avatar_for @user, mod_mail_message.user %> <%= styled_user_link mod_mail_message.user %>
+      <% else %>
+        <%= mod_mail_message.user.username %>
+      <% end %>
+      <a href="<%= mod_mail_path(mod_mail_message.mod_mail) %>"><%= how_long_ago_label(mod_mail_message.created_at) %></a>
+      <% if is_unread %><span class="comment_unread">(unread)</span><% end %>
+      |
+      <span class="message-subject"><a href="<%= mod_mail_path(mod_mail_message.mod_mail) %>">Subject: <%= mod_mail_message.mod_mail.subject %></a></span>
+    </div>
+    <div class="message-body">
+      <%= raw mod_mail_message.linkified_message %>
+    </div>
+  </div>
+</div>

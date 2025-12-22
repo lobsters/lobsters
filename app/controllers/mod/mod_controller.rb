@@ -1,3 +1,5 @@
+# This is the parent class of all controllers under /mod. Standardrb enforces this in
+# CustomCops/InheritsModeratorController so that we can't forget the auth check.
 class Mod::ModController < ApplicationController
   before_action :require_logged_in_moderator
   before_action :default_periods, :show_title_h1

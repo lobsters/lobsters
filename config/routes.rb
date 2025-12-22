@@ -1,5 +1,8 @@
 # typed: false
 
+DOMAINS_IDENTIFIER = /([^\/]+?)(?=\.json|\.rss|$|\/)/ # match example.com but not example.com.rss
+ORIGINS_IDENTIFIER = /(.+)(?=\.json|\.rss|$|\/)/ # match github.com/user but not github.com/user.rss
+
 Rails.application.routes.draw do
   root to: "home#index",
     protocol: (Rails.application.config.force_ssl ? "https://" : "http://"),
@@ -66,30 +69,19 @@ Rails.application.routes.draw do
   get "/t/:tag" => "home#multi_tag", :as => "multi_tag"
   get "/t/:tag/page/:page" => "home#multi_tag"
 
-  constraints id: /([^\/]+?)(?=\.json|\.rss|$|\/)/ do
+  constraints id: DOMAINS_IDENTIFIER do
     get "/domain/:id(.:format)", to: redirect("/domains/%{id}")
     get "/domain/:id/page/:page", to: redirect("/domains/%{id}/page/%{page}")
     get "/domains/:id(.:format)" => "home#for_domain", :as => "domain"
     get "/domains/:id/page/:page" => "home#for_domain"
     get "/domains/:id/origins" => "origins#for_domain", :as => "domain_origins"
-
-    resources :domains, only: [:create, :edit, :update]
-    patch "/domains_ban/:id" => "domains_ban#update", :as => "ban_domain"
-    post "/domains_ban/:id" => "domains_ban#create_and_ban", :as => "create_and_ban_domain"
-
-    # below `resources` so that /edit isn't taken as an identifier
     get "/domains/:id/:author", to: redirect("/origins/%{id}/%{author}")
     get "/domain/:domain/:identifier(.:format)", to: redirect("/domains/%{domain}/%{identifier}")
     get "/domain/:domain/:identifier/page/:page", to: redirect("/domains/%{domain}/%{identifier}/page/%{page}")
   end
 
-  constraints identifier: /(.+)(?=\.json|\.rss|$|\/)/ do
-    # resources :origin, only: [:show, :edit, :update]
-    get "/origins/:identifier/edit(.:format)" => "origins#edit", :as => "edit_origin"
-    patch "/origins/:identifier" => "origins#update", :as => "update_origin"
+  constraints identifier: ORIGINS_IDENTIFIER do
     get "/origins/:identifier(.:format)" => "home#for_origin", :as => "origin"
-    # leaving out pagination because identifiers (eg 'github.com/alice') can include slashes
-    # get "/origins/:identifier/page/:page" => "home#for_domain"
   end
 
   get "/search" => "search#index"
@@ -247,16 +239,27 @@ Rails.application.routes.draw do
   get "/moderators" => "users#tree", :moderators => true
 
   namespace :mod do
+    # dashboards
     get "/" => "activities#index", :as => "mod_activity"
     get "flagged_stories/:period" => "flagged#flagged_stories", :as => "flagged_stories"
     get "flagged_comments/:period" => "flagged#flagged_comments", :as => "flagged_comments"
     get "commenters/:period" => "flagged#commenters", :as => "commenters"
 
+    # tools
     get "notes(/:period)", to: redirect("/mod/")
     post "notes" => "notes#create"
-
-    resources :comments, only: [:destroy]
     resources :reparents, only: [:new, :create]
+
+    # site data
+    resources :comments, only: [:destroy]
+    constraints id: DOMAINS_IDENTIFIER do
+      resources :domains, only: [:create, :edit, :update]
+      patch "/domains_ban/:id" => "domains_ban#update", :as => "ban_domain"
+      post "/domains_ban/:id" => "domains_ban#create_and_ban", :as => "create_and_ban_domain"
+    end
+    constraints identifier: ORIGINS_IDENTIFIER do
+      resources :origins, only: [:create, :edit, :update]
+    end
     resources :stories, only: [:edit, :update] do
       patch "undelete"
       patch "destroy"

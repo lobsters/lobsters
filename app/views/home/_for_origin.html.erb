@@ -4,7 +4,7 @@
   <%= "#{number_with_delimiter origin.stories_count} story".pluralize(origin.stories_count) %> from
   <%= "#{number_with_delimiter origin.n_submitters} submitter".pluralize(origin.n_submitters) %>
 
-  <%= link_to 'Edit', edit_origin_path(origin) if @user&.is_moderator?  %>
+  <%= link_to 'Edit', edit_mod_origin_path(origin) if @user&.is_moderator?  %>
 </p>
 
 

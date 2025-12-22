@@ -1,7 +1,6 @@
 # typed: false
 
-class DomainsBanController < DomainsController
-  before_action :require_logged_in_moderator
+class Mod::DomainsBanController < Mod::ModController
   before_action :find_or_initialize_domain
 
   def create_and_ban
@@ -24,5 +23,15 @@ class DomainsBanController < DomainsController
       flash.now[:error] = "Reason required for the modlog."
       render :edit
     end
+  end
+
+  private
+
+  def domain_params
+    params.require(:domain).permit(:banned_reason, :selector, :replacement)
+  end
+
+  def find_or_initialize_domain
+    @domain = Domain.find_or_initialize_by(domain: params[:id])
   end
 end

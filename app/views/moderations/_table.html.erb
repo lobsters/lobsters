@@ -33,9 +33,9 @@
           User <%= mod.user_id %> (Deleted)
         <% end %>
       <% elsif mod.domain %>
-        Domain <%= link_to mod.domain.domain,  domain_path(mod.domain) %>
+        Domain <%= link_to mod.domain.domain, domain_path(mod.domain) %>
       <% elsif mod.origin %>
-        Origin <%= link_to mod.origin.identifier,  origin_path(mod.origin) %>
+        Origin <%= link_to mod.origin.identifier, origin_path(mod.origin) %>
       <% else %>
         Unknown object moderated
       <% end %></td>

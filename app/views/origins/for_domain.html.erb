@@ -9,7 +9,7 @@ Domain <%= link_to @domain.domain, @domain %> has <%= "#{number_with_delimiter @
       <% if origin.banned? %>
         banned
       <% end %>
-      <%= link_to 'Edit', edit_origin_path(origin) if @user&.is_moderator?  %>
+      <%= link_to 'Edit', edit_mod_origin_path(origin) if @user&.is_moderator?  %>
     </li>
   <% end %>
 </ul>

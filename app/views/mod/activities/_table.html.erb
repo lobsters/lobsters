@@ -47,9 +47,9 @@
                   User <%= ma.item.user_id %> (Deleted)
                 <% end %>
               <% elsif ma.item.domain %>
-                Domain <%= link_to ma.item.domain.domain,  domain_path(ma.item.domain) %>
+                Domain <%= link_to ma.item.domain.domain, domain_path(ma.item.domain) %>
               <% elsif ma.item.origin %>
-                Origin <%= link_to ma.item.origin.identifier,  origin_path(ma.item.origin) %>
+                Origin <%= link_to ma.item.origin.identifier, origin_path(ma.item.origin) %>
               <% else %>
                 Unknown object moderated
               <% end %>

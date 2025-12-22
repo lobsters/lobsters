@@ -1,7 +1,7 @@
 <div id="domain_box" class="box wide">
   <h1><%= "New domain" if @domain.new_record? %> <%= @domain.domain %></h1>
 
-  <%= form_with model: @domain do |f| %>
+  <%= form_with model: [:mod, @domain] do |f| %>
     <%= errors_for @domain %>
 
     <%= hidden_field_tag :new_domain, @domain.domain || params[:id] %>
@@ -49,7 +49,7 @@
     </span>
   <% end %>
 
-  <%= form_with model: @domain, url: @domain.new_record? ? create_and_ban_domain_path(id: @domain.domain) : ban_domain_path(id: @domain.domain) do |f| %>
+  <%= form_with model: @domain, url: @domain.new_record? ? mod_create_and_ban_domain_path(id: @domain.domain) : mod_ban_domain_path(id: @domain.domain) do |f| %>
     <%= hidden_field_tag :new_domain, @domain.new_record? %>
 
     <div class="boxline">

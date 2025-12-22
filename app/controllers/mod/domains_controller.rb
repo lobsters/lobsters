@@ -1,7 +1,4 @@
-# typed: false
-
-class DomainsController < ApplicationController
-  before_action :require_logged_in_moderator, only: [:edit, :update]
+class Mod::DomainsController < Mod::ModController
   before_action :find_or_initialize_domain, only: [:edit, :update]
 
   def create

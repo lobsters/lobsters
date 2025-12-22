@@ -7,7 +7,7 @@
     with <%= link_to "#{number_with_delimiter domain.origins.count} origins", domain_origins_path(domain) %>
   <% end %>
 
-  <%= link_to 'Edit', edit_domain_path(domain) if @user&.is_moderator?  %>
+  <%= link_to 'Edit', edit_mod_domain_path(domain) if @user&.is_moderator?  %>
 </p>
 
 <% if domain.banned? %>

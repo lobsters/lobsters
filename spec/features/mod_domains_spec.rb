@@ -9,7 +9,7 @@ RSpec.feature "Domains" do
 
   context "create" do
     it "creates domains with selectors" do
-      visit "/domains/nogweii.net/edit"
+      visit "/mod/domains/nogweii.net/edit"
       fill_in "selector", with: "\\Ahttps?://nogweii.net/+([^/]+).*\\z"
       fill_in "replacement", with: "nogweii.net/\\1"
       click_on "Save"
@@ -19,7 +19,7 @@ RSpec.feature "Domains" do
 
     it "updates domains with selectors" do
       domain = create(:domain)
-      visit "/domains/#{domain.domain}/edit"
+      visit "/mod/domains/#{domain.domain}/edit"
       fill_in "selector", with: "\\Ahttps?://nogweii.net/+([^/]+).*\\z"
       fill_in "replacement", with: "nogweii.net/\\1"
       click_on "Save"
@@ -31,7 +31,7 @@ RSpec.feature "Domains" do
     let(:domain) { create(:domain) }
 
     it "bans domain with valid params" do
-      visit "/domains/#{domain.domain}/edit"
+      visit "/mod/domains/#{domain.domain}/edit"
       fill_in "Reason", with: "just because"
       click_on "Ban"
       expect(page).to have_text("Domain updated")
@@ -39,7 +39,7 @@ RSpec.feature "Domains" do
     end
 
     it "does not ban domain when the reason is blank" do
-      visit "/domains/#{domain.domain}/edit"
+      visit "/mod/domains/#{domain.domain}/edit"
       fill_in "Reason", with: ""
       click_on "Ban"
       expect(page).to have_text("Reason required")
@@ -51,7 +51,7 @@ RSpec.feature "Domains" do
     let(:domain) { create(:domain, :banned) }
 
     it "unbans domain with valid params" do
-      visit "/domains/#{domain.domain}/edit"
+      visit "/mod/domains/#{domain.domain}/edit"
       fill_in "Reason", with: "am i not merciful"
       click_on "Unban"
       expect(page).to have_text("Domain updated")
@@ -59,7 +59,7 @@ RSpec.feature "Domains" do
     end
 
     it "unbans domain when the reason is blank" do
-      visit "/domains/#{domain.domain}/edit"
+      visit "/mod/domains/#{domain.domain}/edit"
       fill_in "Reason", with: ""
       click_on "Unban"
       expect(page).to have_text("Reason required")
@@ -71,7 +71,7 @@ RSpec.feature "Domains" do
     let(:domain_name) { Faker::Internet.domain_name }
 
     it "can create and ban at the same time" do
-      visit "/domains/#{domain_name}/edit"
+      visit "/mod/domains/#{domain_name}/edit"
       fill_in "Create and Ban Reason", with: "Hasn't finished a Gameboy emulator"
       click_on "Create and Ban"
       expect(page).to have_text("Domain created and banned")

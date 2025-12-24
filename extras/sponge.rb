@@ -202,7 +202,7 @@ class Sponge
       "Host" => uri.host,
       "Cookie" => cookies(uri.host),
       "Referer" => url.to_s,
-      "User-Agent" => "Mozilla/5.0 (compatible)"
+      "User-Agent" => "Mozilla/5.0 (compatible) #{Rails.application.domain}"
     }.merge(send_headers || {})
 
     if uri.user

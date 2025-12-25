@@ -11,11 +11,12 @@ message. Doffed hats are not listed in this table, check a user's profile page.
   <h2><a href="<%= new_hat_request_path %>">Request Hat</a></h2>
 <% end %>
 
-<table class="data zebra" width="100%" cellspacing=0>
+<table class="data zebra" width="100%" cellspacing="0">
 <tr>
   <th style="width: 130px;">User</th>
   <th>Hat</th>
   <th>Link</th>
+  <th></th>
 </tr>
 <% @hat_groups.keys.sort_by{|a| a.downcase }.each do |hg| %>
   <% @hat_groups[hg].sort_by{|hh| hh.user.username.downcase }.each do |hh| %>

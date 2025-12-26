@@ -408,6 +408,8 @@ GEM
       fugit (~> 1.11.0)
       railties (>= 7.1)
       thor (>= 1.3.1)
+    sqlite3 (2.7.4)
+      mini_portile2 (~> 2.8.0)
     sqlite3 (2.7.4-arm64-darwin)
     sqlite3 (2.7.4-x86_64-linux-gnu)
     stackprof (0.2.27)
@@ -694,6 +696,7 @@ CHECKSUMS
   snaky_hash (2.0.3) sha256=25a3d299566e8153fb02fa23fd9a9358845950f7a523ddbbe1fa1e0d79a6d456
   solid_cache (1.0.7) sha256=58e690ccee057be7351f21b1940d5f9cf6bb132074316e70478e554a79e6a490
   solid_queue (1.2.1) sha256=7976b3690a08080ef63d1b11281f0b77398f7697dbeda0e2c5532682639d4b15
+  sqlite3 (2.7.4) sha256=7fbc1fdb18ba1c0798fb298cb3c35c35bb1743b832a9aeb91add026a5614889c
   sqlite3 (2.7.4-arm64-darwin) sha256=d5b09cd4e9542aa05f0db0eb7dd868102cc23072ae378e0453e59e0efaed89b8
   sqlite3 (2.7.4-x86_64-linux-gnu) sha256=0755b458f5501e89c0d5a0003afc4fdd6fd059eb1fb1424221532917096da4be
   stackprof (0.2.27) sha256=aff6d28656c852e74cf632cc2046f849033dc1dedffe7cb8c030d61b5745e80c

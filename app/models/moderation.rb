@@ -63,7 +63,8 @@ class Moderation < ApplicationRecord
     moderation_01jnywh2rxekqa61seqmk8z3f7
   ].freeze
 
-  validates :action, :reason, length: {maximum: 16_777_215}
+  validates :action, presence: true, length: {maximum: 16_777_215}
+  validates :reason, length: {maximum: 16_777_215}
   validates :is_from_suggestions, inclusion: {in: [true, false]}
   validate :one_foreign_key_present
 

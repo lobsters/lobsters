@@ -456,8 +456,7 @@ GEM
     useragent (0.16.11)
     uuid7 (0.2.0)
       zeitwerk (~> 2.4)
-    vcr (6.3.1)
-      base64
+    vcr (6.4.0)
     version_gem (1.1.9)
     webmock (3.25.1)
       addressable (>= 2.8.0)
@@ -721,7 +720,7 @@ CHECKSUMS
   uri (1.0.4) sha256=34485d137c079f8753a0ca1d883841a7ba2e5fae556e3c30c2aab0dde616344b
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
   uuid7 (0.2.0) sha256=7d61753c2c8eb79f60c60a5afa1a3ef181492d74b11d3067af88898704ddac43
-  vcr (6.3.1) sha256=37b56e157e720446a3f4d2d39919cabef8cb7b6c45936acffd2ef8229fec03ed
+  vcr (6.4.0) sha256=077ac92cc16efc5904eb90492a18153b5e6ca5398046d8a249a7c96a9ea24ae6
   version_gem (1.1.9) sha256=0c1a0962ae543c84a00889bb018d9f14d8f8af6029d26b295d98774e3d2eb9a4
   webmock (3.25.1) sha256=ab9d5d9353bcbe6322c83e1c60a7103988efc7b67cd72ffb9012629c3d396323
   websocket-driver (0.8.0) sha256=ed0dba4b943c22f17f9a734817e808bc84cdce6a7e22045f5315aa57676d4962

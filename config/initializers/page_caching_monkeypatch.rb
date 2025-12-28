@@ -31,7 +31,7 @@ ActiveSupport.on_load(:action_controller) do
         #   if File.extname(name).empty?
         # monkeypatch:
         if File.extname(name) != ".html"
-          name + (extension || default_extension)
+            name + "." + (extension || default_extension)
         else
           name
         end

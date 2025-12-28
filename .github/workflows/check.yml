@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  RUBYOPT: "--enable-frozen-string-literal --debug-frozen-string-literal"
+  RUBYOPT: "--yjit --enable-frozen-string-literal --debug-frozen-string-literal"
 
 jobs:
   test:
@@ -31,7 +31,6 @@ jobs:
     env:
       DATABASE_URL: trilogy://root:root@127.0.0.1/lobsters_dev
       RAILS_ENV: test
-      RUBY_YJIT_ENABLE: "1"
 
     steps:
       - uses: actions/checkout@v5

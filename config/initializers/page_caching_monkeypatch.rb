@@ -15,10 +15,8 @@
 
 require "actionpack/page_caching"
 
-# rubocop:disable Lint/ConstantDefinitionInBlock
-
 ActiveSupport.on_load(:action_controller) do
-  module ActionController::Caching::Pages
+  module ActionController::Caching::Pages # standard:disable Lint/ConstantDefinitionInBlock
     class PageCache
       def cache_file(path, extension)
         name = if path.empty? || path =~ %r{\A/+\z}
@@ -48,4 +46,3 @@ ActiveSupport.on_load(:action_controller) do
     end
   end
 end
-# rubocop:enable Lint/ConstantDefinitionInBlock

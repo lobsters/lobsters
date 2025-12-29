@@ -6,8 +6,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-      args:
-        RUBY_VERSION: ${RUBY_VERSION}
     environment:
       DATABASE_HOST: db
     volumes:

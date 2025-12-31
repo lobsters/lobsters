@@ -190,7 +190,7 @@ class CommentsController < ApplicationController
 
       render partial: "comment", locals: {comment: comment, show_story: show_story, show_tree_lines: show_tree_lines}
     else
-      redirect_back fallback_location: root_path
+      redirect_back_or_to(root_path)
     end
   end
 

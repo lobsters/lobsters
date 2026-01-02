@@ -1,6 +1,6 @@
 # Use an official Ruby image as a base
 ARG RUBY_VERSION
-FROM ruby:3.4.7
+FROM ruby:4.0.0
 
 # Install dependencies
 RUN apt-get update -qq && apt-get install -y \

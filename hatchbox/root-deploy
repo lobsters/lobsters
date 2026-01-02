@@ -30,6 +30,11 @@ echo "lobste.rs" > /etc/hostname
 # server packages
 apt install iptables-persistent opendkim postfix restic
 
+# 2026-01-02 workaround failure to build commonmarker because there aren't
+# precompiled gems for ruby 4.0.0 yet
+# https://github.com/gjtorikian/commonmarker/issues/427
+apt install libclang-dev
+
 # configure opendkim for postfix
 cp opendkim.m4 /etc/mail/m4/
 cp opendkim.conf /etc/

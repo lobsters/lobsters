@@ -6,7 +6,8 @@ class Domain < ApplicationRecord
     class_name: "User",
     inverse_of: false,
     optional: true
-  has_many :origins
+  has_many :origins, dependent: :destroy
+  has_one :moderation, dependent: :destroy
 
   include Token
 

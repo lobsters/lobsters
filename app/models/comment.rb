@@ -32,6 +32,8 @@ class Comment < ApplicationRecord
 
   attr_accessor :current_vote, :current_reply, :previewing, :vote_summary
 
+  validates :short_id, presence: true, uniqueness: {case_sensitive: false}
+
   before_validation :assign_initial_attributes, on: :create
   # Calling :record_initial_upvote from after_commit instead of after_create minimizes how many
   # queries happen inside the transaction, which seems to be the cause of bug #1238.

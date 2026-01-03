@@ -5,7 +5,7 @@
 class CommentStat < ApplicationRecord
   # has_many :comments # date(comments.created_at)
 
-  validates :date, presence: true
+  validates :date, presence: true, uniqueness: true
   validates :average, presence: true
 
   # Fills daily records for the last 30 days, updating existing rows (in case the job runs don't

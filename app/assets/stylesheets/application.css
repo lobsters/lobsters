@@ -479,6 +479,10 @@ div.voters {
 	width: 40px;
 }
 
+.voters .merge {
+	vertical-align: middle;
+}
+
 .upvoter:before {
 	content: "\25b3";
 	color: var(--color-fg);
@@ -606,10 +610,10 @@ li .domain {
 
 .merge {
 	background: url(merge.svg) no-repeat;
-	width: 0.6875lh;
-	height: 1lh;
+	padding-left: 0.6875lh;
+	min-height: 1lh;
 	display: inline-block;
-	vertical-align: middle;
+	vertical-align: bottom;
 }
 
 li input.comment_folder_button {

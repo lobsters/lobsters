@@ -146,11 +146,11 @@ classes = [
 
   <% if merged_stories.count > 1 %>
     <div class="details byline">
-      <span class="merge"></span><%= merged_stories.count %> merged
+      <span class="merge"><%= merged_stories.count %> merged</span>
 
       <% if !merged_stories.first.is_gone? || @user&.is_moderator? %>
         <span class="comments_label">
-          |
+          <%= divider_tag %>
           <% cc = merged_stories.map(&:comments_count).sum %>
           <%= (cc == 0) ? "no" : "total: #{cc}" %> <%= 'comment'.pluralize(cc) %>
         </span>

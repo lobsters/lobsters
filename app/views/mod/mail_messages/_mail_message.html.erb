@@ -1,0 +1,11 @@
+<div class="message" id="<%= dom_id mod_mail_message %>">
+  <div class="details">
+    <div class="byline">
+      <%= inline_avatar_for @user, mod_mail_message.user %> <%= styled_user_link mod_mail_message.user %>
+      <%= how_long_ago_label(mod_mail_message.created_at) %>
+    </div>
+    <div class="message-body">
+      <%= raw mod_mail_message.linkified_message %>
+    </div>
+  </div>
+</div>

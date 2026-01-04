@@ -1121,6 +1121,9 @@ td.warned div, td.unwarned div {
 .mod_activities .moderation {
 	list-style: '🕮';
 }
+.mod_activities .mod_mail {
+	list-style: '✉';
+}
 .mod_activities .mod_note {
 	list-style: '🔑';
 }

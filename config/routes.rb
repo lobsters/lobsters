@@ -248,6 +248,10 @@ Rails.application.routes.draw do
     # tools
     get "notes(/:period)", to: redirect("/mod/")
     post "notes" => "notes#create"
+
+    resources :comments, only: [:destroy]
+    resources :mails, except: [:destroy]
+    resources :mail_messages, only: :create
     resources :reparents, only: [:new, :create]
 
     # site data

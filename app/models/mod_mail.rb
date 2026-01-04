@@ -8,7 +8,7 @@ class ModMail < ApplicationRecord
 
   has_one :mod_activity, inverse_of: :item
 
-  validates :recipients, presence: true
+  validates :recipients, :subject, presence: true
 
   after_create_commit -> { ModActivity.create_for! self }
 

@@ -219,7 +219,7 @@ Rails.application.routes.draw do
   post "/invitations/delete_request" => "invitations#delete_request",
     :as => "delete_invitation_request"
 
-  resources :hat_requests do
+  resources :hat_requests, except: [:edit] do
     member do
       post :approve
       post :reject

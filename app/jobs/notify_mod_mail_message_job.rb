@@ -15,7 +15,7 @@ class NotifyModMailMessageJob < ApplicationJob
     recipient.notifications.create(notifiable: mod_mail_message, read_at: read_at)
 
     begin
-      EmailModMailMessageMailer.notify(mod_mail_message, recipient).deliver_now
+      EmailModMailMessageMailer.notify(mod_mail_message, recipient).deliver_later
     rescue => e
       # Rails.logger.error "error e-mailing #{recipient.email}: #{e}"
     end

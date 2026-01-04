@@ -3,7 +3,7 @@ class ModMailMessage < ApplicationRecord
   belongs_to :user
   has_many :notifications,
     as: :notifiable,
-    dependent: :destroy
+    dependent: :restrict_with_exception
 
   validates :message, length: {within: 20..8_192}
 

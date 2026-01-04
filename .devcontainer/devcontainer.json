@@ -1,0 +1,33 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-docker-compose
+{
+	"name": "Lobsters Dev Container",
+	"dockerComposeFile": [
+		"../docker-compose.yaml"
+	],
+	// The 'service' property is the name of the service for the container that VS Code should
+	// use. Update this value and .devcontainer/docker-compose.yml to the real service name.
+	"service": "app",
+
+	// The optional 'workspaceFolder' property is the path VS Code should open by default when
+	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
+	"workspaceFolder": "/lobsters",
+  // Run `sleep infinity` instead of the default CMD
+  "overrideCommand": true,
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {}, // Add git
+		"ghcr.io/devcontainers/features/github-cli:1": {} // Add GitHub CLI for easy auth
+	},
+
+	// Forward 3000 automatically, so localhost:3000 maps to the container
+	"forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Lobsters Web Server",
+      "onAutoForward": "notify"
+    }
+  },
+	// Seed the database
+	"postStartCommand": "bin/rails fake_data"
+}

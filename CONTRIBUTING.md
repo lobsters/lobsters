@@ -48,7 +48,7 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
   lobsters$
   ```
 
-* We have a [Docker setup guide](./docs/setup_with_docker.md) if you use that for development, but you can also set up directly on your machine:
+* Setup up your development environment with [docker](/docs/setup_with_docker.md), using a [devcontainer](/docs/SETUP_DEVCONTAINER.md), or locally:
 
 * Install MariaDB:
   * On Linux use [your package manager](https://mariadb.com/kb/en/distributions-which-include-mariadb/).

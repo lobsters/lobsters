@@ -49,3 +49,5 @@ config/*.sphinx.conf
 config/unicorn.conf.rb
 lib/tasks/deploy.rake
 storage/
+
+/config/master.key

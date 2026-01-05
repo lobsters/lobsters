@@ -38,6 +38,7 @@ gem "htmlentities"
 gem "pdf-reader"
 gem "nokogiri"
 gem "parslet"
+gem "cgi"
 
 # perf
 gem "flamegraph"

@@ -738,7 +738,8 @@ li .byline a.story_has_suggestions {
 	.dropdown_parent > label, /* Caches button */
 	.byline > :not(.dropdown_parent),
 	.details > :not(.byline),
-	.voters
+	.voters,
+	.mobile_comments
 ) {
 	opacity: 0.25;
 }

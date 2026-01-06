@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "/mod/mails", type: :request do
   let(:mod_mail) { create :mod_mail }
@@ -42,7 +42,7 @@ RSpec.describe "/mod/mails", type: :request do
     context "with valid parameters" do
       it "creates a new ModMail", :aggregate_failures do
         expect {
-          post mod_mails_url, params: { mod_mail: { subject: "No more Spam, thx", recipient_usernames: create(:user).username } }
+          post mod_mails_url, params: {mod_mail: {subject: "No more Spam, thx", recipient_usernames: create(:user).username}}
         }.to change(ModMail, :count).by(1)
         expect(response).to redirect_to(mod_mail_url(ModMail.find_by(subject: "No more Spam, thx")))
       end
@@ -51,7 +51,7 @@ RSpec.describe "/mod/mails", type: :request do
     context "with invalid parameters" do
       it "does not create a new ModMail", :aggregate_failures do
         expect {
-          post mod_mails_url, params: { mod_mail: { subject: "Message to a username that doesn't exist", recipient_usernames: "chaelcodes" } }
+          post mod_mails_url, params: {mod_mail: {subject: "Message to a username that doesn't exist", recipient_usernames: "chaelcodes"}}
         }.to change(ModMail, :count).by(0)
         expect(response).to have_http_status(:unprocessable_content)
       end
@@ -61,7 +61,7 @@ RSpec.describe "/mod/mails", type: :request do
   describe "PATCH /update" do
     context "with valid parameters" do
       it "updates the requested mod_mail", :aggregate_failures do
-        patch mod_mail_url(mod_mail), params: { mod_mail: { subject: "New Subject for Moderation" } }
+        patch mod_mail_url(mod_mail), params: {mod_mail: {subject: "New Subject for Moderation"}}
         mod_mail.reload
 
         expect(mod_mail.subject).to eq "New Subject for Moderation"
@@ -71,7 +71,7 @@ RSpec.describe "/mod/mails", type: :request do
 
     context "with invalid parameters" do
       it "renders a response with 422 status (i.e. to display the 'edit' template)" do
-        patch mod_mail_url(mod_mail), params: { mod_mail: { subject: "" } }
+        patch mod_mail_url(mod_mail), params: {mod_mail: {subject: ""}}
         expect(response).to have_http_status(:unprocessable_content)
       end
     end

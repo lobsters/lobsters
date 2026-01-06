@@ -1,7 +1,7 @@
 class Mod::MailMessagesController < Mod::ModController
   # POST /mod_mail_messages
   def create
-    @mod_mail_message = ModMailMessage.new(mod_mail_message_params.merge({ user: @user }))
+    @mod_mail_message = ModMailMessage.new(mod_mail_message_params.merge({user: @user}))
 
     if @mod_mail_message.save
       NotifyModMailMessageJob.perform_later(@mod_mail_message)
@@ -12,8 +12,9 @@ class Mod::MailMessagesController < Mod::ModController
   end
 
   private
-    # Only allow a list of trusted parameters through.
-    def mod_mail_message_params
-      params.expect(mod_mail_message: [ :mod_mail_id, :message ])
-    end
+
+  # Only allow a list of trusted parameters through.
+  def mod_mail_message_params
+    params.expect(mod_mail_message: [:mod_mail_id, :message])
+  end
 end

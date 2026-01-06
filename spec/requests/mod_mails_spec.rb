@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "/mod_mails", type: :request do
   let(:mod_mail) { create :mod_mail }

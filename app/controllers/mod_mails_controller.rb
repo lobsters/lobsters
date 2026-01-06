@@ -10,14 +10,15 @@ class ModMailsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_mod_mail
-      @mod_mail = ModMail.find(params.expect(:id))
-    end
 
-    def require_recipient_or_mod
-      unless @mod_mail.recipients.include?(@user) || @user.moderator?
-        redirect_to :root, error: "You are not authorized to access that resource."
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_mod_mail
+    @mod_mail = ModMail.find(params.expect(:id))
+  end
+
+  def require_recipient_or_mod
+    unless @mod_mail.recipients.include?(@user) || @user.moderator?
+      redirect_to :root, error: "You are not authorized to access that resource."
     end
+  end
 end

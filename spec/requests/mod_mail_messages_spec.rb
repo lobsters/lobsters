@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "/mod/mail_messages", type: :request do
   let(:user) { create :user }
@@ -28,12 +28,12 @@ RSpec.describe "/mod/mail_messages", type: :request do
     context "with valid parameters" do
       it "creates a new ModMailMessage" do
         expect {
-          post mod_mail_messages_url, params: { mod_mail_message: valid_attributes }
+          post mod_mail_messages_url, params: {mod_mail_message: valid_attributes}
         }.to change(ModMailMessage, :count).by(1)
       end
 
       it "redirects to the created mod_mail_message" do
-        post mod_mail_messages_url, params: { mod_mail_message: valid_attributes }
+        post mod_mail_messages_url, params: {mod_mail_message: valid_attributes}
         expect(response).to redirect_to(mod_mail_url(mod_mail))
         expect(NotifyModMailMessageJob).to have_been_enqueued.exactly(:once)
       end
@@ -42,12 +42,12 @@ RSpec.describe "/mod/mail_messages", type: :request do
     context "with invalid parameters" do
       it "does not create a new ModMailMessage" do
         expect {
-          post mod_mail_messages_url, params: { mod_mail_message: invalid_attributes }
+          post mod_mail_messages_url, params: {mod_mail_message: invalid_attributes}
         }.to change(ModMailMessage, :count).by(0)
       end
 
       it "renders a response with 422 status (i.e. to display the 'new' template)" do
-        post mod_mail_messages_url, params: { mod_mail_message: invalid_attributes }
+        post mod_mail_messages_url, params: {mod_mail_message: invalid_attributes}
         expect(response).to redirect_to mod_mail
       end
     end

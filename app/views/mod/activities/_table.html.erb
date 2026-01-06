@@ -3,7 +3,7 @@
 <% cache [mod_activities.first, @user.id] do %>
   <ul class="mod_activities">
     <% mod_activities.each do |ma| %>
-      <% cache [ma, ma.item, @user.is_moderator?] do %>
+      <% cache [ma, ma.item, @user] do %>
         <% case ma.item %>
         <% when Moderation %>
           <li class="moderation">

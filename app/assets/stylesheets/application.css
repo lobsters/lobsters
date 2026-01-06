@@ -609,11 +609,10 @@ li .domain {
 }
 
 .merge {
-	background: url(merge.svg) no-repeat;
+	background: url(merge.svg) no-repeat center left;
 	padding-left: 0.6875lh;
-	min-height: 1lh;
 	display: inline-block;
-	vertical-align: bottom;
+	color: var(--color-fg-contrast-4-5);
 }
 
 li input.comment_folder_button {

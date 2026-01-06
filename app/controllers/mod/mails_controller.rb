@@ -1,9 +1,7 @@
 class Mod::MailsController < Mod::ModController
   before_action :set_mod_mail, only: %i[ show edit update]
   before_action :new_mod_mail, only: %i[ create ]
-  before_action :require_logged_in_moderator_or_recipient, only: :show
   before_action :parse_references_and_recipients, only: %i[ update create ]
-  skip_before_action :require_logged_in_moderator, only: :show
 
   # GET /mod_mails
   def index
@@ -53,25 +51,15 @@ class Mod::MailsController < Mod::ModController
       @mod_mail = ModMail.new(mod_mail_params)
     end
 
+    # Convert space-separated short IDs into references.
     def parse_references_and_recipients
-      @mod_mail.recipients = User.where(username: params["mod_mail"]["recipient_usernames"].split(' ')) if params["mod_mail"]["recipient_usernames"].present?
-      @mod_mail.comment_references = Comment.where(short_id: params["mod_mail"]["comment_reference_short_ids"].split(' ')) if params["mod_mail"]["comment_reference_short_ids"].present?
-      @mod_mail.story_references = Story.where(short_id: params["mod_mail"]["story_reference_short_ids"].split(' ')) if params["mod_mail"]["story_reference_short_ids"].present?
+      @mod_mail.recipients = User.where(username: params.dig("mod_mail", "recipient_usernames").split(' '))
+      @mod_mail.comment_references = Comment.where(short_id: params.dig("mod_mail", "comment_reference_short_ids").split(' '))
+      @mod_mail.story_references = Story.where(short_id: params.dig("mod_mail", "story_reference_short_ids").split(' '))
     end
 
     # Only allow a list of trusted parameters through.
     def mod_mail_params
       params.expect(mod_mail: [:subject, :recipients, :references])
-    end
-
-    def require_logged_in_moderator_or_recipient
-      require_logged_in_user
-
-      if @user.is_moderator? || @mod_mail.recipients.include?(@user)
-        true
-      else
-        flash[:error] = "You are not authorized to access that resource."
-        redirect_to "/"
-      end
     end
 end

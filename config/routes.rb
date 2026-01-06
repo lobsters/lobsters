@@ -238,6 +238,9 @@ Rails.application.routes.draw do
   get "/moderations/page/:page" => "moderations#index"
   get "/moderators" => "users#tree", :moderators => true
 
+  resources :mod_mails, only: :show
+  resources :mod_mail_messages, only: :create
+
   namespace :mod do
     # dashboards
     get "/" => "activities#index", :as => "mod_activity"

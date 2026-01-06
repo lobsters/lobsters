@@ -1,4 +1,6 @@
-class Mod::MailMessagesController < Mod::ModController
+class ModMailMessagesController < ApplicationController
+  before_action :require_logged_in_user
+
   # POST /mod_mail_messages
   def create
     @mod_mail_message = ModMailMessage.new(mod_mail_message_params.merge({ user: @user }))

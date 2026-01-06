@@ -5,9 +5,9 @@ class Mod::MailMessagesController < Mod::ModController
 
     if @mod_mail_message.save
       NotifyModMailMessageJob.perform_later(@mod_mail_message)
-      redirect_to @mod_mail_message.mod_mail, notice: "Your mod mail message has been sent."
+      redirect_to mod_mod_mail_path(@mod_mail_message.mod_mail), notice: "Your mod mail message has been sent."
     else
-      redirect_to @mod_mail_message.mod_mail, notice: "Your mod mail message failed: #{@mod_mail_message.errors.full_messages}"
+      redirect_to mod_mod_mail_path(@mod_mail_message.mod_mail), notice: "Your mod mail message failed: #{@mod_mail_message.errors.full_messages}"
     end
   end
 

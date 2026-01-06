@@ -13,7 +13,7 @@ class ModMailsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_mod_mail
-    @mod_mail = ModMail.find(params.expect(:id))
+    @mod_mail = ModMail.find_by(short_id: params.expect(:id))
   end
 
   def require_recipient_or_mod

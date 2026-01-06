@@ -26,7 +26,7 @@ class Mod::MailsController < Mod::ModController
   # POST /mod_mails
   def create
     if @mod_mail.save
-      redirect_to @mod_mail, notice: "Mod mail was successfully created."
+      redirect_to mod_mod_mail_path(@mod_mail), notice: "Mod mail was successfully created."
     else
       render :new, status: :unprocessable_content
     end
@@ -35,7 +35,7 @@ class Mod::MailsController < Mod::ModController
   # PATCH/PUT /mod_mails/1
   def update
     if @mod_mail.update(mod_mail_params)
-      redirect_to @mod_mail, notice: "Mod mail was successfully updated.", status: :see_other
+      redirect_to mod_mod_mail_path(@mod_mail), notice: "Mod mail was successfully updated.", status: :see_other
     else
       render :edit, status: :unprocessable_content
     end
@@ -45,7 +45,7 @@ class Mod::MailsController < Mod::ModController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_mod_mail
-    @mod_mail = ModMail.find(params.expect(:id))
+    @mod_mail = ModMail.find_by(short_id: params.expect(:id))
   end
 
   def new_mod_mail

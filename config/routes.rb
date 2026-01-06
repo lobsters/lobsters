@@ -253,8 +253,8 @@ Rails.application.routes.draw do
     post "notes" => "notes#create"
 
     resources :comments, only: [:destroy]
-    resources :mails, except: [:destroy]
-    resources :mail_messages, only: :create
+    resources :mails, except: [:destroy], as: "mod_mails"
+    resources :mail_messages, only: :create, as: "mod_mail_messages"
     resources :reparents, only: [:new, :create]
 
     # site data

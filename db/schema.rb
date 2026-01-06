@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_06_162222) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -273,6 +273,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_06_162222) do
     t.datetime "remind_mods_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "short_id", null: false
+    t.index ["short_id"], name: "index_mod_mails_on_short_id", unique: true
   end
 
   create_table "mod_notes", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

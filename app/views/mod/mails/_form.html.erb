@@ -1,4 +1,4 @@
-<%= form_with(model: mod_mail) do |form| %>
+<%= form_with(model: [:mod, mod_mail]) do |form| %>
   <% if mod_mail.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(mod_mail.errors.count, "error") %> prohibited this mod_mail from being saved:</h2>

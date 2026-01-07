@@ -18,10 +18,14 @@ So our design philosophy is a little different than a typical commercial product
 
  * We started with Rails 3.2.2 in 2012, so we have a few dusty corners and places where we don't take advantage of features that were introduced since we started.
  * We lean into using Rails features instead of custom code, and we'll write a couple dozen lines of narrow code for a feature rather than add a dependency that might require maintenance.
- * We are especially reluctant to add new production services like queues, caches, databases, or SAAS services.
+ * We are very reluctant to add new production services and almost entirely unwilling to depend on external services.
+   We take pride in self-hosting from the VPS up, which necessitates reducing the number of moving parts.
  * We test to ensure functionality, but testing is a lot lighter for moderator and other non-core features.
    We're trying to maximize the return on investment of testing rather than minimize errors.
  * We're willing to take downtime for big code changes rather than try to make them seamless.
+ * We don't serve JavaScript to logged-out visitors, we use as little JS as possible for users with a vanilla/jQuery-style of DOM attachment, we are (very slowly) making JS entirely optional for users, and we accept JS for mod features.
+   Keeping JS small and optional helps keep the site fast, and an unusually high proportion of visitors use old, odd, and homebrew browsers.
+   We do not want JavaScript in our build chain, it requires too much maintenance.
 
 Please see [CONTRIBUTING.md](/CONTRIBUTING.md) for setup.
 

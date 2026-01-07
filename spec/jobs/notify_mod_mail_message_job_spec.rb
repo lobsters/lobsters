@@ -6,14 +6,14 @@ RSpec.describe NotifyModMailMessageJob, type: :job do
     let(:mod_mail) { create :mod_mail, recipients: [user] }
     let(:mod_mail_message) { create :mod_mail_message, :sent_by_mod, mod_mail: }
 
-    it "creates & sends a message notification" do
+    it "creates & sends a message notification", :aggregate_failures do
       user.settings["email_messages"] = true
       user.save!
-      NotifyModMailMessageJob.perform_now(mod_mail_message)
+      expect do
+        NotifyModMailMessageJob.perform_now(mod_mail_message)
+      end.to have_enqueued_mail(EmailModMailMessageMailer, :notify).with(mod_mail_message, user)
       expect(user.notifications.count).to eq(1)
       expect(user.notifications.first.notifiable).to eq(mod_mail_message)
-      expect(sent_emails.size).to eq(1)
-      expect(sent_emails[0].subject).to match(/Mod Mail Message from #{mod_mail_message.user.username}/)
     end
   end
 end

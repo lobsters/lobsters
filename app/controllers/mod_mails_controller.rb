@@ -17,7 +17,7 @@ class ModMailsController < ApplicationController
   end
 
   def require_recipient_or_mod
-    unless @mod_mail.recipients.include?(@user) || @user.moderator?
+    unless @mod_mail.recipients.include?(@user) || @user.is_moderator?
       redirect_to :root, error: "You are not authorized to access that resource."
     end
   end

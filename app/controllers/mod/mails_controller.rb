@@ -54,9 +54,9 @@ class Mod::MailsController < Mod::ModController
 
   # Convert space-separated short IDs into references.
   def parse_references_and_recipients
-    @mod_mail.recipients = User.where(username: params.dig("mod_mail", "recipient_usernames").split(" "))
-    @mod_mail.comment_references = Comment.where(short_id: params.dig("mod_mail", "comment_reference_short_ids").split(" "))
-    @mod_mail.story_references = Story.where(short_id: params.dig("mod_mail", "story_reference_short_ids").split(" "))
+    @mod_mail.recipients = User.where(username: params.dig("mod_mail", "recipient_usernames")&.split(" "))
+    @mod_mail.comment_references = Comment.where(short_id: params.dig("mod_mail", "comment_reference_short_ids")&.split(" "))
+    @mod_mail.story_references = Story.where(short_id: params.dig("mod_mail", "story_reference_short_ids")&.split(" "))
   end
 
   # Only allow a list of trusted parameters through.

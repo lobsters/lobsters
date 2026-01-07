@@ -15,5 +15,11 @@ RSpec.describe "/mod_mails", type: :request do
       get mod_mail_url(mod_mail)
       expect(response).to redirect_to :root
     end
+
+    it "shows to mods" do
+      sign_in create(:user, :moderator)
+      get mod_mail_url(mod_mail)
+      expect(response).to be_successful
+    end
   end
 end

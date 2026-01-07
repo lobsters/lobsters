@@ -127,7 +127,7 @@ Rails.application.routes.draw do
   get "/messages" => "messages#index"
   post "/messages/batch_delete" => "messages#batch_delete",
     :as => "batch_delete_messages"
-  resources :messages do
+  resources :messages, except: %i[new edit update] do
     post "keep_as_new"
     post "mod_note"
   end
@@ -225,7 +225,7 @@ Rails.application.routes.draw do
       post :reject
     end
   end
-  resources :hats, except: [:new, :update, :destroy] do
+  resources :hats, only: %i[index edit] do
     member do
       get :doff
       post :doff_by_user
@@ -258,7 +258,7 @@ Rails.application.routes.draw do
       post "/domains_ban/:id" => "domains_ban#create_and_ban", :as => "create_and_ban_domain"
     end
     constraints identifier: ORIGINS_IDENTIFIER do
-      resources :origins, only: [:create, :edit, :update]
+      resources :origins, only: %i[edit update]
     end
     resources :stories, only: [:edit, :update] do
       patch "undelete"

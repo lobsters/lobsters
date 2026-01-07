@@ -33,12 +33,12 @@ gem "rotp"
 gem "rqrcode"
 
 # parsing
+gem "cgi"
 gem "commonmarker"
 gem "htmlentities"
 gem "pdf-reader"
 gem "nokogiri"
 gem "parslet"
-gem "cgi"
 
 # perf
 gem "flamegraph"
@@ -70,6 +70,7 @@ group :test, :development do
   gem "foreman"
   gem "letter_opener"
   gem "listen"
+  gem "ostruct" # for foreman on Ruby 4, probably safe to delete after 2026-06
   gem "rb-readline"
   gem "rspec-rails"
   gem "simplecov", require: false

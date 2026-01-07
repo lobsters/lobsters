@@ -85,7 +85,7 @@
       <a name="c_<%= comment.short_id %>"></a>
 
       <% if was_merged %>
-        <span class="merge"></span>
+        <span class="merge" aria-label="Merged"></span>
       <% end %>
 
       <span class="<%= @showing_user == comment.user ? "showing-user-comment" : nil %>">

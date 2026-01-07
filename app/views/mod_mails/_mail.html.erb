@@ -1,0 +1,48 @@
+<div id="<%= dom_id mod_mail %>">
+  <p>
+    <strong>Subject:</strong>
+    <%= mod_mail.subject %>
+  </p>
+
+  <p>
+    <strong>References:</strong>
+    <ul>
+      <% mod_mail.comment_references.each do |comment| %>
+        <li>
+          <a href="<%= Routes.comment_target_path(comment) %>">Comment by
+            <%= comment.user.username %>
+            on
+            <%= comment.story.title %></a>
+        </li>
+      <% end %>
+      <% mod_mail.story_references.each do |story| %>
+        <li>
+          <a href="<%= Routes.story_path(story) %>">Story
+            (<%= story.title %>)
+            submitted by
+            <%= story.user.username %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+  </p>
+
+  <p>
+    <strong>Recipients:</strong>
+    <ul>
+      <% mod_mail.recipients.each do |recipient| %>
+        <li><%= link_to(recipient.username, user_path(recipient)) %></li>
+      <% end %>
+    </ul>
+  </p>
+
+  <section>
+    <h3>Messages</h3>
+    <% @messages.each do |message| %>
+      <%= render "mod/mail_messages/mail_message", mod_mail_message: message %>
+    <% end %>
+
+    <h3>Compose Message</h3>
+    <%= render "mod_mail_messages/form", mod_mail_message: @mod_mail_message %>
+  </section>
+</div>

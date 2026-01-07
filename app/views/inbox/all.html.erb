@@ -17,6 +17,10 @@
         <li class="comments_subtree">
           <%= render "message", message: message, is_unread: notification.read_at.nil? %>
         </li>
+      <% when ModMailMessage %>
+        <li class="comments_subtree">
+          <%= render "mod_mail_message", mod_mail_message: notification.notifiable, is_unread: notification.read_at.nil? %>
+        </li>
       <% end %>
     <% end %>
   </ol>
@@ -24,7 +28,7 @@
   <p class="help">No notifications to show.</p>
 <% end %>
 
-<% if @has_more || (@page && @page > 1)%>
+<% if @has_more || (@page && @page > 1) %>
   <div class="morelink">
     <% if @page && @page > 1 %>
       <a href="/inbox/all<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt; Page <%= @page - 1 %></a>

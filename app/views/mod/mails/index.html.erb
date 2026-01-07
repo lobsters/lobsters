@@ -1,0 +1,12 @@
+<% content_for :title, "ModMail" %>
+
+<h1>Mod Mailbox</h1>
+
+<div id="mod_mails">
+  <% @mod_mails.each do |mod_mail| %>
+    <div><%= link_to mod_mail.subject, mod_mod_mail_path(mod_mail) %></div>
+    <%# TODO: Add last message and last message author %>
+  <% end %>
+</div>
+
+<%= link_to "New ModMail", new_mod_mod_mail_path %>

@@ -1,0 +1,12 @@
+<%= form_with(model: [:mod, mod_mail_message]) do |form| %>
+  <%= errors_for mod_mail_message %>
+
+  <div class="labelled_grid">
+    <%= form.hidden_field :mod_mail_id %>
+
+    <%= form.label :message, style: "display: block" %>
+    <%= form.text_area :message %>
+  </div>
+
+  <%= form.submit "Send Message" %>
+<% end %>

@@ -1,0 +1,3 @@
+  <%= word_wrap(@mod_mail_message.plaintext_message, :line_width => 72).gsub(/\n/, "\n  ") %>
+
+Reply at <%= Routes.mod_mail_url @mod_mail %>

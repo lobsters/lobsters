@@ -238,6 +238,9 @@ Rails.application.routes.draw do
   get "/moderations/page/:page" => "moderations#index"
   get "/moderators" => "users#tree", :moderators => true
 
+  resources :mod_mails, only: :show
+  resources :mod_mail_messages, only: :create
+
   namespace :mod do
     # dashboards
     get "/" => "activities#index", :as => "mod_activity"
@@ -248,6 +251,10 @@ Rails.application.routes.draw do
     # tools
     get "notes(/:period)", to: redirect("/mod/")
     post "notes" => "notes#create"
+
+    resources :comments, only: [:destroy]
+    resources :mails, except: [:destroy], as: "mod_mails"
+    resources :mail_messages, only: :create, as: "mod_mail_messages"
     resources :reparents, only: [:new, :create]
 
     # site data

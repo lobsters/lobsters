@@ -105,11 +105,11 @@ classes = [
             <%= link_post "disown", story_disown_path(ms.short_id), { confirm: "Are you sure you want to disown this story?"} %>
           <% end %>
 
-          <% if !ms.is_saved_by_cur_user %>
-            <%= divider_tag %><%= link_to "save", story_save_path(ms.short_id), :class => "saver" %>
-          <% else %>
-            <%= divider_tag %><%= link_to "unsave", story_unsave_path(ms.short_id), :class => "saver" %>
+          <%= divider_tag %>
+          <%= form_with :class => "saver", url: merged_stories.first.is_saved_by_cur_user ? story_unsave_path(ms.short_id) : story_save_path(ms.short_id) do |form| %>
+            <%= form.submit merged_stories.first.is_saved_by_cur_user ? "unsave" : "save", :class => "btn-link" %>
           <% end %>
+
         <% end %>
 
         <% if ms.is_gone? %>

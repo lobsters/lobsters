@@ -29,17 +29,17 @@
 <% end %>
 
 <% if @has_more || (@page && @page > 1) %>
-  <div class="morelink">
+  <nav class="morelink">
     <% if @page && @page > 1 %>
-      <a href="/inbox/all<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt; Page <%= @page - 1 %></a>
+      <a rel="prev" href="/inbox/all<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">Page <%= @page - 1 %></a>
     <% end %>
 
     <% if @has_more %>
       <% if @page && @page > 1 %>
-        |
+        <%= divider_tag %>
       <% end %>
 
-      <a href="/inbox/all/page/<%= @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
+      <a h rel="next" ref="/inbox/all/page/<%= @page + 1 %>">Page <%= @page + 1 %></a>
     <% end %>
-  </div>
+  </nav>
 <% end %>

@@ -173,15 +173,15 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
 
 <%= render @below if @below %>
 
-<div class="morelink">
+<nav class="morelink">
   <% if @page && @page > 1 %>
-    <%= link_to raw("&lt;&lt; Page #{@page - 1}"), @root_path ? "/page/#{@page - 1}" : { controller: controller_name, action: action_name, page: @page - 1 }.merge(@next_page_params || {}) %>
+    <%= link_to raw("Page #{@page - 1}"), @root_path ? "/page/#{@page - 1}" : { controller: controller_name, action: action_name, page: @page - 1 }.merge(@next_page_params || {}), rel: "prev" %>
   <% end %>
 
   <% if @show_more %>
     <% if @page && @page > 1 %>
-      |
+      <%= divider_tag %>
     <% end %>
-    <%= link_to raw("Page #{@page + 1} &gt;&gt;"), @root_path ? "/page/#{@page + 1}" : { controller: controller_name, action: action_name, page: @page + 1 }.merge(@next_page_params || {}) %>
+    <%= link_to raw("Page #{@page + 1}"), @root_path ? "/page/#{@page + 1}" : { controller: controller_name, action: action_name, page: @page + 1 }.merge(@next_page_params || {}), rel: "next" %>
   <% end %>
-</div>
+</nav>

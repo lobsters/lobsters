@@ -32,8 +32,8 @@ RSpec.feature "Reading Homepage", type: :feature do
       expect(page.body).not_to include("Last Read")
       expect(user.reload.last_read_newest_story).to be_within(1.second).of Time.zone.now
 
-      expect(page).to have_link("Page 2 >>", href: /last_read_timestamp=\d+/)
-      click_link "Page 2 >>"
+      expect(page).to have_link("Page 2", href: /last_read_timestamp=\d+/)
+      click_link "Page 2"
       expect(page.body).to include("Last Read")
       page_html = page.body
       last_read_index = page_html.index("Last Read")
@@ -71,8 +71,8 @@ RSpec.feature "Reading Homepage", type: :feature do
       expect(page.body).not_to include("Last Read")
       expect(user.reload.last_read_newest_comment).to be_within(1.second).of Time.zone.now
 
-      expect(page).to have_link("Page 2 >>", href: /last_read_timestamp=\d+/)
-      click_link "Page 2 >>"
+      expect(page).to have_link("Page 2", href: /last_read_timestamp=\d+/)
+      click_link "Page 2"
       expect(page.body).to include("Last Read")
       page_html = page.body
       last_read_index = page_html.index("Last Read")

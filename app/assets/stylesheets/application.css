@@ -780,19 +780,27 @@ ol.stories.list details.story_content:open summary span {
 	display: none;
 }
 
-div.morelink {
+nav.morelink {
 	float: left;
 }
 
-div.morelink,
+nav.morelink,
 div.page_link_buttons {
 	margin-top: 1.5em;
 }
-div.morelink a {
+nav.morelink a {
 	color: var(--color-fg-contrast-7-5);
 	font-weight: bold;
 	text-decoration: none;
 }
+
+nav.morelink a[rel="prev"]::before {
+	content: "<< "/"";
+}
+nav.morelink a[rel="next"]::after {
+	content: " >>"/"";
+}
+
 div.page_link_buttons {
 	font-weight: bold;
 	margin-top: 2em;
@@ -1866,7 +1874,7 @@ input[type="submit"].link_post.pushover_button {
 	div.story_content {
 		margin: 0 0 0 28px;
 	}
-	div.morelink {
+	nav.morelink {
 		margin-left: 28px;
 		float: none;
 	}

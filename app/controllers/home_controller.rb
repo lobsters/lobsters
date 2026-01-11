@@ -54,7 +54,14 @@ class HomeController < ApplicationController
     @root_path = true
 
     respond_to do |format|
-      format.html { render action: "index" }
+      format.html {
+        @meta_tags = [
+          {property: "og:type", content: "website"},
+          {property: "og:title", content: Rails.application.name},
+          {property: "og:image", content: Rails.application.root_url + "touch-icon-144.png"}
+        ]
+        render action: "index"
+      }
       format.rss {
         if @user
           @title = "Private feed for #{@user.username}"

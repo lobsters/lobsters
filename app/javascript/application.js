@@ -631,7 +631,7 @@ onPageLoad(() => {
   on('focusout', '#story_url', () => {
     let url_tags = {
       "\.pdf($|\\?|#)": "pdf",
-      "[\/\.](asciinema\.org|(youtube|vimeo)\.com|youtu\.be|twitch\.tv)\/": "video",
+      "[\/\.](asciinema\.org|(youtube|vimeo)\.com|youtu\.be|twitch\.tv|media\.ccc\.de)\/": "video",
       "[\/\.](slideshare\.net|speakerdeck\.com)\/": "slides",
       "[\/\.](soundcloud\.com)\/": "audio",
     };

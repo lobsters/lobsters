@@ -43,13 +43,16 @@ module UsersHelper
     end
     if content.is_a?(Comment) && content.story&.user_is_author? && content.story.user_id == user.id
       html_options[:class].push "user_is_author"
+      html_options[:aria] = {label: "#{user.username} - Author"}
     end
 
     if !user.is_active?
       html_options[:class].push "inactive_user"
+      html_options[:aria] = {label: "#{user.username} - Inactive user"}
     end
     if user.is_new?
       html_options[:class].push "new_user"
+      html_options[:aria] = {label: "#{user.username} - New user"}
     end
     html_options.delete(:class) if html_options[:class].empty?
 

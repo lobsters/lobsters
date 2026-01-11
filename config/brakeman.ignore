@@ -722,6 +722,29 @@
       "note": "Rendered markdown."
     },
     {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "441fa70d868e3b1b7eabd502bd34fd802955cb5016678eea7a63c8cd9180e68f",
+      "check_name": "SendFile",
+      "message": "Model attribute used in file name",
+      "file": "app/controllers/story_image_controller.rb",
+      "line": 11,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "send_file(StoryImage.new(Story.where(:short_id => params[:short_id]).first!).path, :type => \"image/png\", :disposition => \"inline\")",
+      "render_path": null,
+      "location": {
+          "type": "method",
+          "class": "StoryImageController",
+          "method": "show"
+      },
+      "user_input": "StoryImage.new(Story.where(:short_id => params[:short_id]).first!).path",
+      "confidence": "Medium",
+      "cwe_id": [
+          22
+      ],
+      "note": "Story#short_id is safely created internally, and File.basename ensures no relative paths."
+    },
+    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "da2f97fde431a750254179b7afe87790344ca451fbbc25ddf9e926d30c6b41e2",

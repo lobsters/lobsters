@@ -30,6 +30,7 @@ public/assets
 # cache
 public/avatars
 public/sitemap*
+public/story_image
 
 # templates to be created per-site
 app/views/about/about.*

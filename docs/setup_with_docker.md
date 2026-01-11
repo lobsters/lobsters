@@ -36,6 +36,15 @@ Solution:
 * Run `docker compose run app db:drop`
 * Redo steps starting at "Switch back to the tab running the mariadb image and restart the server by:"
 
+![database error](./database_error.png)
+[Solution](https://www.jeffgeerling.com/blog/2017/how-fix-host-1721801-not-allowed-connect-mysql-docker/):
+
+* Replace this in your `docker-compose.yaml` file:
+```diff
+-      - db_data:/var/lib/mysql
++      - ./sql_data:/var/lib/mysql:rw,delegated
+```
+
 # Debugging in Docker
 
 * Open a new terminal

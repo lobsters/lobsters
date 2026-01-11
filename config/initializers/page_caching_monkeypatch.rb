@@ -15,10 +15,8 @@
 
 require "actionpack/page_caching"
 
-# rubocop:disable Lint/ConstantDefinitionInBlock
-
 ActiveSupport.on_load(:action_controller) do
-  module ActionController::Caching::Pages
+  module ActionController::Caching::Pages # standard:disable Lint/ConstantDefinitionInBlock
     class PageCache
       def cache_file(path, extension)
         name = if path.empty? || path =~ %r{\A/+\z}
@@ -30,13 +28,21 @@ ActiveSupport.on_load(:action_controller) do
         # original:
         #   if File.extname(name).empty?
         # monkeypatch:
-        if File.extname(name) != ".html"
-          name + (extension || default_extension)
+        full_name =
+          if File.extname(name) != ".html"
+            name + "." + (extension || default_extension)
+          else
+            name
+          end
+
+        # Work around names being too long - we only allow names under 255 bytes long
+        if full_name.length <= 255
+          full_name
         else
-          name
+          # Generate a SHA256 digest of the value and use that instead, ensuring extension is HTML
+          "#{Digest::SHA256.hexdigest(full_name)}.html"
         end
       end
     end
   end
 end
-# rubocop:enable Lint/ConstantDefinitionInBlock

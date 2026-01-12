@@ -23,7 +23,7 @@ class Message < ApplicationRecord
 
   validates :subject, length: {in: 1..100}
   validates :body, length: {maximum: 70_000}, on: :update # for weird old data
-  validates :body, length: {within: 20..8_192}, on: :create # max from 2024-10-28 on
+  validates :body, length: {within: 5..8_192}, on: :create # max from 2024-10-28 on, min changed 2026-01-12
   validates :short_id, length: {maximum: 30}
   validates :deleted_by_author, :deleted_by_recipient, inclusion: {in: [true, false]}
   validate :hat do

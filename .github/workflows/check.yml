@@ -98,3 +98,38 @@ jobs:
           gem install bundler-leak
           bundle leak update
           bundle leak check
+
+  database-consistency-check:
+    runs-on: "ubuntu-latest"
+    timeout-minutes: 15
+    strategy:
+      fail-fast: true
+
+    services:
+      mariadb:
+        image: "mariadb:10.11.11"
+        env:
+          MARIADB_ROOT_PASSWORD: "root"
+          MARIADB_DATABASE: "lobsters_dev"
+        ports:
+          - "3306:3306"
+
+    env:
+      DATABASE_URL: "trilogy://root:root@127.0.0.1/lobsters_dev"
+      RAILS_ENV: "test"
+
+    steps:
+      - uses: "actions/checkout@v5"
+      - uses: "ruby/setup-ruby@v1"
+        with:
+          bundler-cache: true
+
+      - name: Workaround for inability to templatize credentials (#1380)
+        run: cp .github/workflows/check/* config/
+
+      - name: Load database schema
+        run: ./bin/rails db:schema:load db:migrate
+
+      - name: "Check database consistency"
+        run: |
+          bundle exec database_consistency --config=.database_consistency.todo.yml

@@ -3,8 +3,17 @@
 require "rails_helper"
 
 RSpec.describe "page caching monkeypatch" do
+  # Give each example a new temprary folder to cache into
+  around do |example|
+    Dir.mktmpdir("rspec-") do |dir|
+      @cache_dir = dir
+      example.run
+    end
+  end
+
+  let(:cache_dir) { @cache_dir }
   # (cache_directory, default_extension)
-  let(:page_cache) { ActionController::Caching::Pages::PageCache.new(File::NULL, "html") }
+  let(:page_cache) { ActionController::Caching::Pages::PageCache.new(cache_dir, "html") }
 
   describe "#cache_file" do
     context "with a non-html extension" do
@@ -18,19 +27,16 @@ RSpec.describe "page caching monkeypatch" do
         expect(page_cache.cache_file("youtube.com.html", "html")).to eq("youtube.com.html")
       end
     end
+  end
 
-    context "with a generated filename fewer than 256 characters" do
-      it "returns the generated file path" do
-        expect(page_cache.cache_file("something-goes-here", "html")).to eq("something-goes-here.html")
-      end
-    end
+  describe "#cache" do
+    context "with a filename longer than filesystem can handle" do
+      let(:path) { "#{"a" * 249}.html" } # 254 in length
 
-    context "with a generated filename equal or greater than 256 characters" do
-      it "returns the generated file path" do
-        aaaaa_path = "a" * 255
-        expect(page_cache.cache_file(aaaaa_path, "html")).to eq(
-          Digest::SHA256.hexdigest(aaaaa_path + ".html") + ".html"
-        )
+      before { allow(File).to receive(:open).and_raise(Errno::ENAMETOOLONG, "File name too long - #{path}") }
+
+      it "does not cache the file" do
+        expect(page_cache.cache("something here\n", path, nil, nil)).to be_nil
       end
     end
   end

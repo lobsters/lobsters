@@ -12,12 +12,28 @@
 # report or contribute a fix upstream.
 #
 # We only cache HTML pages, so this monkeypatch forces the '.html' extension.
+#
+# We also catch an error when caching files if the computed filename on disk is too long, due to the
+# filesystem used in production only supporting 254 character names.
 
 require "actionpack/page_caching"
 
 ActiveSupport.on_load(:action_controller) do
   module ActionController::Caching::Pages # standard:disable Lint/ConstantDefinitionInBlock
     class PageCache
+      module WritePatch
+        # Override: refuse to cache paths with long filenames
+        def write(...)
+          super
+        rescue Errno::ENAMETOOLONG => e
+          # #1826 - Handle write errors from filenames being longer than 255 bytes
+          Rails.logger.info "Failed to cache page #{e.inspect}"
+          nil
+        end
+      end
+
+      prepend WritePatch
+
       def cache_file(path, extension)
         name = if path.empty? || path =~ %r{\A/+\z}
           "/index"
@@ -28,19 +44,10 @@ ActiveSupport.on_load(:action_controller) do
         # original:
         #   if File.extname(name).empty?
         # monkeypatch:
-        full_name =
-          if File.extname(name) != ".html"
-            name + "." + (extension || default_extension)
-          else
-            name
-          end
-
-        # Work around names being too long - we only allow names under 255 bytes long
-        if full_name.length <= 255
-          full_name
+        if File.extname(name) != ".html"
+          name + "." + (extension || default_extension)
         else
-          # Generate a SHA256 digest of the value and use that instead, ensuring extension is HTML
-          "#{Digest::SHA256.hexdigest(full_name)}.html"
+          name
         end
       end
     end

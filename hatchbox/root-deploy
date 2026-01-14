@@ -83,8 +83,8 @@ cp bash_aliases ~deploy/.bash_aliases
 chown deploy:deploy ~deploy/.bash_aliases
 
 # make iptables record readable for transparency
-chmod go+r /etc/iptables/rules.v4
-chmod go+r /etc/iptables/rules.v6
+netfilter-persistent save
+chmod go+r /etc/iptables/rules.v4 /etc/iptables/rules.v6
 
 # run restic to back up /etc
 export HOME=/root

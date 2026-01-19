@@ -58,7 +58,8 @@ class HomeController < ApplicationController
         @meta_tags = [
           {property: "og:type", content: "website"},
           {property: "og:title", content: Rails.application.name},
-          {property: "og:image", content: Rails.application.root_url + "touch-icon-144.png"}
+          {property: "og:image", content: Rails.application.root_url + "touch-icon-144.png"},
+          {property: "og:description", content: Rails.application.og_description}
         ]
         render action: "index"
       }

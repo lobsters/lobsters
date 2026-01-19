@@ -51,6 +51,10 @@ if Rails.env.production?
       "example.org"
     end
 
+    def og_description
+      "A forum."
+    end
+
     def name
       "Sitename"
     end

@@ -24,7 +24,15 @@ class UsersController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { render action: "show" }
+      format.html {
+        @meta_tags = [
+          {property: "og:type", content: "user"},
+          {property: "og:site_name", content: Rails.application.name},
+          {property: "og:title", content: @showing_user.username},
+          {property: "og:image", content: @showing_user.avatar_path(100)}
+        ]
+        render action: "show"
+      }
       format.json { render json: @showing_user }
     end
   end

@@ -176,7 +176,7 @@ class StoriesController < ApplicationController
       format.html {
         @meta_tags = [
           {property: "og:type", content: "article"},
-          {property: "og:site_name", content: "Lobsters"},
+          {property: "og:site_name", content: Rails.application.name},
           {property: "og:title", content: @story.title},
           {property: "og:description", content: @story.comments_count.to_s + " " + "comment".pluralize(@story.comments_count)},
           {property: "og:image", content: Routes.story_image_url(@story)},

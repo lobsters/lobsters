@@ -8,7 +8,12 @@ class Mod::CommentsController < Mod::ModController
     comment.delete_by_moderator(@user, reason)
 
     if request.xhr?
-      head :ok, x_location: request.referer || comments_path
+      render partial: "comments/comment",
+        layout: false,
+        content_type: "text/html",
+        locals: {comment:}
+    else
+      redirect_to comment_path(comment)
     end
   end
 

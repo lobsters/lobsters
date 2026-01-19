@@ -827,6 +827,7 @@ onPageLoad(() => {
   });
 
   on('click', 'a.comment_moderator', (event) => {
+    event.preventDefault();
     const reason = prompt("Moderation reason:");
     if (reason == null || reason == '')
       return false;

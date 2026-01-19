@@ -20,14 +20,14 @@
   </p>
 <% end %>
 
-<div class="morelink">
+<nav class="morelink">
   <% if @page > 1 %>
-    <%= link_to "<< Page #{@page - 1}", @moderation_params.merge({:page => @page - 1}) %>
+    <%= link_to "Page #{@page - 1}", @moderation_params.merge({:page => @page - 1}), rel: "prev" %>
   <% end %>
   <% if @pages > 1 && @page < @pages %>
     <% if @page > 1 %>
-      |
+      <%= divider_tag %>
     <% end %>
-    <%= link_to "Page #{@page + 1} >>", @moderation_params.merge({:page => @page + 1}) %>
+    <%= link_to "Page #{@page + 1}", @moderation_params.merge({:page => @page + 1}), rel: "next"%>
   <% end %>
-</div>
+</nav>

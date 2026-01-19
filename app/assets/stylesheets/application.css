@@ -1658,7 +1658,6 @@ input[type="submit"].link_post.pushover_button {
 	}
 	#story_holder .ts-control {
 		display: inline-block;
-		position: absolute;
 		width: 611px;
 	}
 }

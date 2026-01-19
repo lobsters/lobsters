@@ -254,11 +254,6 @@ Rails.application.routes.draw do
     get "notes(/:period)", to: redirect("/mod/")
     post "notes" => "notes#create"
 
-    resources :comments, only: [:destroy]
-    resources :mails, except: [:destroy], as: "mod_mails"
-    resources :mail_messages, only: :create, as: "mod_mail_messages"
-    resources :reparents, only: [:new, :create]
-
     # site data
     resources :comments, only: [:destroy]
     constraints id: DOMAINS_IDENTIFIER do
@@ -269,6 +264,9 @@ Rails.application.routes.draw do
     constraints identifier: ORIGINS_IDENTIFIER do
       resources :origins, only: %i[edit update]
     end
+    resources :mails, except: [:destroy], as: "mod_mails"
+    resources :mail_messages, only: :create, as: "mod_mail_messages"
+    resources :reparents, only: [:new, :create]
     resources :stories, only: [:edit, :update] do
       patch "undelete"
       patch "destroy"

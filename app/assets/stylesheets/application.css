@@ -1497,7 +1497,8 @@ div.user-stats h2 {
 
 #story_holder .ts-dropdown .option {
 	color: var(--color-fg);
-	font-family: "helvetica neue", arial, sans-serif;
+        /* supposed to be inherited from body, but TS overwrites */
+	font-family: "Helvetica Neue", Arial, sans-serif;
 	line-height: 80%;
 	margin: 0px;
 	padding: 7px 7px 8px;
@@ -1512,7 +1513,6 @@ input[type="submit"].link_post.pushover_button {
 	border-radius: 3px;
 	color: var(--color-fg);
 	display: inline-block;
-	font: 11px/18px "Helvetica Neue",Arial,sans-serif;
 	font-weight: bold;
 	cursor: pointer;
 	height: 22px;

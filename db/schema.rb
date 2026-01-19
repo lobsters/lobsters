@@ -239,7 +239,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
     t.index ["token"], name: "index_mod_activities_on_token", unique: true
   end
 
-  create_table "mod_mail_messages", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+  create_table "mod_mail_messages", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.bigint "mod_mail_id", null: false
     t.text "message", size: :medium, null: false
     t.bigint "user_id", null: false, unsigned: true
@@ -249,7 +249,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
     t.index ["user_id"], name: "fk_rails_40fa20cab5"
   end
 
-  create_table "mod_mail_recipients", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+  create_table "mod_mail_recipients", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.bigint "mod_mail_id", null: false
     t.bigint "user_id", null: false, unsigned: true
     t.datetime "created_at", null: false
@@ -258,7 +258,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
     t.index ["user_id"], name: "fk_rails_7a6d5232be"
   end
 
-  create_table "mod_mail_references", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+  create_table "mod_mail_references", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.bigint "mod_mail_id", null: false
     t.string "reference_type", null: false
     t.bigint "reference_id", null: false
@@ -268,12 +268,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
     t.index ["reference_type", "reference_id"], name: "index_mod_mail_references_on_reference"
   end
 
-  create_table "mod_mails", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+  create_table "mod_mails", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "subject", null: false
     t.datetime "remind_mods_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "short_id", null: false
+    t.string "short_id", limit: 10, null: false
     t.index ["short_id"], name: "index_mod_mails_on_short_id", unique: true
   end
 
@@ -470,7 +470,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
     t.index ["token"], name: "index_tags_on_token", unique: true
   end
 
-  create_table "usernames", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "usernames", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "username", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false

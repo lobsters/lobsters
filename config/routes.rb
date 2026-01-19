@@ -170,6 +170,8 @@ Rails.application.routes.draw do
   get "/avatars/:username_size.png" => "avatars#show"
   post "/avatars/expire" => "avatars#expire"
 
+  get "/story_image/:short_id.png" => "story_image#show", :as => :story_image
+
   get "/settings" => "settings#index"
   post "/settings" => "settings#update"
   post "/settings/deactivate" => "settings#deactivate", :as => "deactivate"

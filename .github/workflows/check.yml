@@ -38,6 +38,11 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Install libvips dependency
+        run: |
+          sudo apt update
+          sudo apt install -y libvips
+
       - name: Workaround for inability to templatize credentials (#1380)
         run: cp .github/workflows/check/* config/
 

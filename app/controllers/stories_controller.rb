@@ -38,6 +38,8 @@ class StoriesController < ApplicationController
           if !Rails.env.development?
             SendWebmentionJob.set(wait: 5.minutes).perform_later(@story)
           end
+
+          CreateStoryCardJob.perform_later(@story)
         else
           raise ActiveRecord::Rollback
         end
@@ -177,7 +179,7 @@ class StoriesController < ApplicationController
           {property: "og:site_name", content: "Lobsters"},
           {property: "og:title", content: @story.title},
           {property: "og:description", content: @story.comments_count.to_s + " " + "comment".pluralize(@story.comments_count)},
-          {property: "og:image", content: Rails.application.root_url + "touch-icon-144.png"},
+          {property: "og:image", content: Routes.story_image_url(@story)},
           {property: "article:author", content: Routes.user_url(@story.user)}
         ]
         @meta_tags << {property: "article:author", content: "https://#{@story.user.mastodon_instance}/@#{@story.user.mastodon_username}"} if @story.user.mastodon_username.present?
@@ -224,6 +226,10 @@ class StoriesController < ApplicationController
     update_story_attributes
 
     if @story.save
+      if @story.saved_change_to_url?
+        CreateStoryCardJob.perform_later(@story)
+      end
+
       redirect_to Routes.title_path @story
     else
       render action: "edit"

@@ -45,4 +45,25 @@ class Github
     "https://github.com/login/oauth/authorize?client_id=#{Rails.application.credentials.github.client_id}&" \
       "state=#{state}"
   end
+
+  def self.revoke_token(token)
+    return if token.blank?
+
+    s = Sponge.new
+    headers = {
+      "Accept" => "application/vnd.github+json",
+      "Content-Type" => "application/json",
+      "X-GitHub-Api-Version" => "2022-11-28"
+    }
+    uri = URI::HTTPS.build(
+      userinfo: [
+        Rails.application.credentials.github.client_id,
+        Rails.application.credentials.github.client_secret
+      ].join(":"),
+      host: "api.github.com",
+      path: "/applications/#{Rails.application.credentials.github.client_id}/grant"
+    )
+    res = s.fetch(uri, :delete, {}, JSON.generate({access_token: token}), headers)
+    res.is_a? Net::HTTPSuccess
+  end
 end

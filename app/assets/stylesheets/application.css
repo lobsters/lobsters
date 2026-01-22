@@ -807,7 +807,7 @@ div.page_link_buttons span {
 
 div.story_text {
 	margin-bottom: 1.5em;
-	max-width: 700px;
+	max-width: 45rem;
 	word-wrap: break-word;
 }
 div.story_text p {
@@ -822,7 +822,7 @@ a#story_text_expander {
 }
 
 div.comment_text {
-	max-width: 700px;
+	max-width: 45rem;
 	word-wrap: break-word;
 	overflow: hidden;
 }
@@ -994,7 +994,7 @@ div#story_box textarea {
 
 div.comment_form_container form {
 	margin-left: 40px;
-	max-width: 700px;
+	max-width: 45rem;
 }
 
 div.comment_form_container textarea {
@@ -1582,7 +1582,7 @@ input[type="submit"].link_post.pushover_button {
 
 @media screen and (min-width: 481px) {
 	body {
-		max-width: 900px;
+		max-width: 60rem;
 		padding-bottom: 2em;
 	}
 

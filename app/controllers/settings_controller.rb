@@ -267,6 +267,9 @@ class SettingsController < ApplicationController
   end
 
   def github_disconnect
+    unless Github.revoke_token(@user.github_oauth_token)
+      flash[:notice] = "We asked GitHub to revoke our auth token and got an API error, if it still exists you should delete it: https://github.com/settings/applications"
+    end
     @user.github_oauth_token = nil
     @user.github_username = nil
     @user.save!

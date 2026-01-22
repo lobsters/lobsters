@@ -208,6 +208,7 @@ input[type="submit"].link_post {
 	border: none;
 	color: var(--color-fg-link);
 	cursor: pointer;
+	font-size: inherit;
 	outline: none;
 	padding: 0;
 	text-decoration: underline;
@@ -244,6 +245,7 @@ a.button {
 	color: var(--color-fg);
 	cursor: pointer;
 	display: inline-block;
+	font-size: inherit;
 	line-height: 18px;
 	padding: 2px 10px 2px 10px;
 	text-align: center;

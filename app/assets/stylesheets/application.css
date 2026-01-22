@@ -590,7 +590,6 @@ li .tags {
 
 li .domain {
 	color: var(--color-fg-contrast-4-5);
-	font-size: var(--font-size-tags);
 	font-style: italic;
 	text-decoration: none;
 	vertical-align: middle;
@@ -749,20 +748,18 @@ div.story_content {
 ol.stories.list details.story_content {
 	color: var(--color-fg-contrast-6);
 	margin: 0.25em 40px 0.25em 0;
+	/* https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/line-clamp */
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	line-clamp: 3;
+	overflow: hidden;
 }
 
 ol.stories.list details.story_content:open {
 	color: var(--color-fg-contrast-10);
-}
-
-ol.stories.list details.story_content:open summary {
-	float: left;
-	line-height: 1;
-	margin-top: 0.2rem;
-}
-
-ol.stories.list details.story_content:open summary span {
-	display: none;
+	-webkit-line-clamp: none;
+	line-clamp: none;
 }
 
 nav.morelink {

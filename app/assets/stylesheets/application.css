@@ -747,7 +747,6 @@ div.story_content {
 }
 ol.stories.list details.story_content {
 	color: var(--color-fg-contrast-6);
-	margin: 0.25em 40px 0.25em 0;
 	/* https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/line-clamp */
 	display: -webkit-box;
 	-webkit-box-orient: vertical;

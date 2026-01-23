@@ -605,7 +605,7 @@ class Comment < ApplicationRecord
       order by comments.thread_id desc, discussion.confidence_order_path
     SQL
 
-    Comment.select('comments.*').from("(#{query}) as comments")
+    Comment.select("comments.*").from("(#{query}) as comments")
   end
 
   def self.story_threads(story)
@@ -632,6 +632,6 @@ class Comment < ApplicationRecord
       order by confidence.confidence_order_path
     SQL
 
-    Comment.select('comments.*').from("(#{query}) as comments")
+    Comment.select("comments.*").from("(#{query}) as comments")
   end
 end

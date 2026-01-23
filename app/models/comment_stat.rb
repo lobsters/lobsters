@@ -12,7 +12,7 @@ class CommentStat < ApplicationRecord
   # line up to date boundaries).
   def self.daily_fill!
     Comment.connection.execute <<~SQL
-      insert low_priority into comment_stats (`date`, `average`)
+      insert or replace into comment_stats (`date`, `average`)
       with avg_by_date as (
         select
           date(created_at, '-5 hours') as date, avg(score) as a
@@ -23,7 +23,6 @@ class CommentStat < ApplicationRecord
         group by date(created_at, '-5 hours')
       )
       select date, a from avg_by_date
-      on duplicate key update `average` = `a`
     SQL
   end
 end

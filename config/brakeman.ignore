@@ -123,7 +123,7 @@
       "cwe_id": [
         79
       ],
-      "note": ""
+      "note": "False alarm: excerpt_fragment_around_url doesn't return Story.url"
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -338,7 +338,7 @@
       "cwe_id": [
         79
       ],
-      "note": ""
+      "note": "Rendered markdown"
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -483,6 +483,29 @@
       "note": "Rendered markdown."
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "6809b3722a2d39223bec0abf2b02358b3149e322261a2b40afe3bfee65528220",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/search.rb",
+      "line": 312,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Arel.sql(\"#{[].first} desc\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Search",
+        "method": "perform_story_search!"
+      },
+      "user_input": "[].first",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "sanitized term"
+    },
+    {
       "warning_type": "File Access",
       "warning_code": 16,
       "fingerprint": "a49c5ada804d39509938a1b7737994d697c646342f3ba6745571665724944958",
@@ -584,29 +607,6 @@
         79
       ],
       "note": "These aren't user-controlled, aren't strings and get passed to the graphing library."
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "c6cf4e709c2441f21eb7649620383daf06eab777bd648041b590684b69a2a5ab",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/search.rb",
-      "line": 312,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Arel.sql((terms_sql + \" desc\"))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Search",
-        "method": "perform_story_search!"
-      },
-      "user_input": "terms_sql",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "Unused"
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -712,25 +712,25 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "f4cdaf40d16ef9a005b1cf2012ef1dfa785f0150bd587b823581210522b0e50e",
+      "fingerprint": "f055ed3611ca9e62fd4bb5f84f0833ee11470a74c6213b777962607d7b9f1573",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/search.rb",
       "line": 209,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Arel.sql((terms_sql + \" DESC\"))",
+      "code": "Arel.sql(\"#{[].first} DESC\")",
       "render_path": null,
       "location": {
         "type": "method",
         "class": "Search",
         "method": "perform_comment_search!"
       },
-      "user_input": "terms_sql",
+      "user_input": "[].first",
       "confidence": "Medium",
       "cwe_id": [
         89
       ],
-      "note": ""
+      "note": "sanitized term"
     },
     {
       "warning_type": "SQL Injection",
@@ -753,7 +753,7 @@
       "cwe_id": [
         89
       ],
-      "note": ""
+      "note": "These are all values validated by time_interval"
     }
   ],
   "brakeman_version": "7.1.2"

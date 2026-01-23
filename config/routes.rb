@@ -1,5 +1,8 @@
 # typed: false
 
+DOMAINS_IDENTIFIER = /([^\/]+?)(?=\.json|\.rss|$|\/)/ # match example.com but not example.com.rss
+ORIGINS_IDENTIFIER = /(.+)(?=\.json|\.rss|$|\/)/ # match github.com/user but not github.com/user.rss
+
 Rails.application.routes.draw do
   root to: "home#index",
     protocol: (Rails.application.config.force_ssl ? "https://" : "http://"),
@@ -61,34 +64,24 @@ Rails.application.routes.draw do
   match "/login/set_new_password" => "login#set_new_password",
     :as => "set_new_password", :via => [:get, :post]
 
-  get "/t/:tag" => "home#single_tag", :as => "tag", :constraints => {tag: /[^,\.]+/}
+  get "/t/:tag" => "home#single_tag", :as => "tag", :constraints => {tag: /[^,.\/]+/}
+  get "/t/:tag/page/:page" => "home#single_tag", :constraints => {tag: /[^,.\/]+/}
   get "/t/:tag" => "home#multi_tag", :as => "multi_tag"
-  get "/t/:tag/page/:page" => "home#tagged"
+  get "/t/:tag/page/:page" => "home#multi_tag"
 
-  constraints id: /([^\/]+?)(?=\.json|\.rss|$|\/)/ do
+  constraints id: DOMAINS_IDENTIFIER do
     get "/domain/:id(.:format)", to: redirect("/domains/%{id}")
     get "/domain/:id/page/:page", to: redirect("/domains/%{id}/page/%{page}")
     get "/domains/:id(.:format)" => "home#for_domain", :as => "domain"
     get "/domains/:id/page/:page" => "home#for_domain"
     get "/domains/:id/origins" => "origins#for_domain", :as => "domain_origins"
-
-    resources :domains, only: [:create, :edit, :update]
-    patch "/domains_ban/:id" => "domains_ban#update", :as => "ban_domain"
-    post "/domains_ban/:id" => "domains_ban#create_and_ban", :as => "create_and_ban_domain"
-
-    # below `resources` so that /edit isn't taken as an identifier
     get "/domains/:id/:author", to: redirect("/origins/%{id}/%{author}")
     get "/domain/:domain/:identifier(.:format)", to: redirect("/domains/%{domain}/%{identifier}")
-    get "/domain/:domain/:identifier/page/:page", to: redirect("/domains/%{domain}/%{idetifier}/page/%{page}")
+    get "/domain/:domain/:identifier/page/:page", to: redirect("/domains/%{domain}/%{identifier}/page/%{page}")
   end
 
-  constraints identifier: /(.+)(?=\.json|\.rss|$|\/)/ do
-    # resources :origin, only: [:show, :edit, :update]
-    get "/origins/:identifier/edit(.:format)" => "origins#edit", :as => "edit_origin"
-    patch "/origins/:identifier" => "origins#update", :as => "update_origin"
+  constraints identifier: ORIGINS_IDENTIFIER do
     get "/origins/:identifier(.:format)" => "home#for_origin", :as => "origin"
-    # leaving out pagination because identifiers (eg 'github.com/alice') can include slashes
-    # get "/origins/:identifier/page/:page" => "home#for_domain"
   end
 
   get "/search" => "search#index"
@@ -134,7 +127,7 @@ Rails.application.routes.draw do
   get "/messages" => "messages#index"
   post "/messages/batch_delete" => "messages#batch_delete",
     :as => "batch_delete_messages"
-  resources :messages do
+  resources :messages, except: %i[new edit update] do
     post "keep_as_new"
     post "mod_note"
   end
@@ -177,10 +170,11 @@ Rails.application.routes.draw do
   get "/avatars/:username_size.png" => "avatars#show"
   post "/avatars/expire" => "avatars#expire"
 
+  get "/story_image/:short_id.png" => "story_image#show", :as => :story_image
+
   get "/settings" => "settings#index"
   post "/settings" => "settings#update"
-  post "/settings/delete_account" => "settings#delete_account",
-    :as => "delete_account"
+  post "/settings/deactivate" => "settings#deactivate", :as => "deactivate"
   get "/settings/2fa" => "settings#twofa", :as => "twofa"
   post "/settings/2fa_auth" => "settings#twofa_auth", :as => "twofa_auth"
   get "/settings/2fa_enroll" => "settings#twofa_enroll",
@@ -233,7 +227,7 @@ Rails.application.routes.draw do
       post :reject
     end
   end
-  resources :hats, except: [:new, :update, :destroy] do
+  resources :hats, only: %i[index edit] do
     member do
       get :doff
       post :doff_by_user
@@ -246,15 +240,32 @@ Rails.application.routes.draw do
   get "/moderations/page/:page" => "moderations#index"
   get "/moderators" => "users#tree", :moderators => true
 
+  resources :mod_mails, only: :show
+  resources :mod_mail_messages, only: :create
+
   namespace :mod do
+    # dashboards
     get "/" => "activities#index", :as => "mod_activity"
     get "flagged_stories/:period" => "flagged#flagged_stories", :as => "flagged_stories"
     get "flagged_comments/:period" => "flagged#flagged_comments", :as => "flagged_comments"
     get "commenters/:period" => "flagged#commenters", :as => "commenters"
 
+    # tools
     get "notes(/:period)", to: redirect("/mod/")
     post "notes" => "notes#create"
 
+    # site data
+    resources :comments, only: [:destroy]
+    constraints id: DOMAINS_IDENTIFIER do
+      resources :domains, only: [:create, :edit, :update]
+      patch "/domains_ban/:id" => "domains_ban#update", :as => "ban_domain"
+      post "/domains_ban/:id" => "domains_ban#create_and_ban", :as => "create_and_ban_domain"
+    end
+    constraints identifier: ORIGINS_IDENTIFIER do
+      resources :origins, only: %i[edit update]
+    end
+    resources :mails, except: [:destroy], as: "mod_mails"
+    resources :mail_messages, only: :create, as: "mod_mail_messages"
     resources :reparents, only: [:new, :create]
     resources :stories, only: [:edit, :update] do
       patch "undelete"
@@ -269,6 +280,8 @@ Rails.application.routes.draw do
   get "/chat" => "about#chat"
 
   get "/stats" => "stats#index"
+
+  get "/banned-ips" => "banned_ips#index"
 
   get "/cabinet" => "cabinet#index"
 end

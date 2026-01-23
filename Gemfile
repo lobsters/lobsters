@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+ruby file: ".ruby-version"
+
 gem "rails"
 
 # database and caching
@@ -30,7 +32,8 @@ gem "rotp"
 gem "rqrcode"
 
 # parsing
-gem "commonmarker", "<1"
+gem "cgi"
+gem "commonmarker"
 gem "htmlentities"
 gem "pdf-reader"
 gem "nokogiri"
@@ -53,11 +56,15 @@ gem "rack-attack" # rate-limiting
 gem "lograge" # for JSON logging
 gem "silencer" # to disable default logging in prod
 
+# image
+gem "ruby-vips"
+
 group :test, :development do
   gem "active_record_doctor"
   gem "benchmark-perf"
   gem "brakeman"
-  gem "byebug"
+  gem "pry-byebug"
+  gem "pry-rails"
   gem "capybara"
   gem "database_cleaner"
   gem "database_consistency"
@@ -65,7 +72,7 @@ group :test, :development do
   gem "foreman"
   gem "letter_opener"
   gem "listen"
-  gem "prism" # rm after https://github.com/presidentbeef/brakeman/issues/1909 closes
+  gem "ostruct" # for foreman on Ruby 4, probably safe to delete after 2026-06
   gem "rb-readline"
   gem "rspec-rails"
   gem "simplecov", require: false

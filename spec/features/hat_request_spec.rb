@@ -27,7 +27,7 @@ RSpec.feature "Hat Request" do
     m = Message.last
     expect(m.author_user_id).to be(mod.id)
     expect(m.subject).to eq("Your hat \"#{hat.hat}\" has been approved")
-    expect(m.body).to eq(reason)
+    expect(m.body).to include(reason)
   end
 
   scenario "rejecting hat request" do

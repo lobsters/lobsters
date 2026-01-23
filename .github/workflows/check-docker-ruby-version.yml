@@ -1,0 +1,22 @@
+name: "Check Dockerfile Ruby version"
+
+on:
+  # Catch if a mismatched version is pushed to the main branch
+  push:
+    branches: [main]
+    paths: 
+      - .ruby-version
+      - Dockerfile.dev
+  # Check PRs that modify .ruby-version or Dockerfile.dev
+  pull_request:
+    paths: 
+      - .ruby-version
+      - Dockerfile.dev
+
+jobs:
+  check-ruby-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: script/check_dockerfile_ruby_version.sh
+    

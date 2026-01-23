@@ -53,6 +53,22 @@ describe Comment do
     expect(l.title).to eq("link")
   end
 
+  it "links to users during and after creation" do
+    create(:user, username: "alice", created_at: 2.weeks.ago)
+    c = Comment.new(
+      user: create(:user),
+      story: create(:story),
+      comment: "hello @alice and @bob"
+    )
+
+    expect(c.created_at).to be_nil
+    expect(c.generated_markeddown_comment).to eq("<p>hello <a href=\"https://lobste.rs/~alice\" rel=\"ugc\">@alice</a> and @bob</p>\n")
+
+    c.save!
+    expect(c.created_at).not_to be_nil
+    expect(c.generated_markeddown_comment).to eq("<p>hello <a href=\"https://lobste.rs/~alice\" rel=\"ugc\">@alice</a> and @bob</p>\n")
+  end
+
   describe ".accessible_to_user" do
     it "when user is a moderator" do
       moderator = build(:user, :moderator)
@@ -76,7 +92,7 @@ describe Comment do
       Vote.vote_thusly_on_story_or_comment_for_user_because(1, c.story_id, c.id, voter.id, nil)
     }.to change { author.reload.karma }.by(1)
     expect {
-      c.delete_for_user(mod, "Troll")
+      c.delete_by_moderator(mod, "Troll")
     }.to change { author.reload.karma }.by(-4)
   end
 
@@ -182,10 +198,7 @@ describe Comment do
       a = create(:comment, story: story, parent_comment: nil)
       create(:comment, story: story, parent_comment: nil)
       c = create(:comment, story: story, parent_comment: a)
-      comments = Comment.story_threads(story)
-      sorted = CommentHierarchy.new(comments)
-        .order_hierarchy_by_confidence_order
-        .comments
+      sorted = Comment.story_threads(story)
       # don't care if a or b is first, just care that c is immediately after a
       # this uses each_cons to get each pair of records and ensures [a, c] appears
       relationships = sorted.map(&:id).to_a.each_cons(2).to_a

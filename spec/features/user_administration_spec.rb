@@ -51,11 +51,11 @@ RSpec.feature "User Administration" do
     expect(sent_emails[0].subject).to match(/You have been banned/)
   end
 
-  scenario "banning deleted user doesn't email" do
+  scenario "banning deactivated user doesn't email" do
     user = create(:user, :deleted)
     expect(user.is_banned?).to be(false) # don't want to couple by naming all the fields
     visit user_path(user)
-    expect(page).to have_content("Left")
+    expect(page).to have_content("Deactivated")
     fill_in "Reason", with: "And stay out"
     click_on "Ban"
     expect(page).to have_content("banned")

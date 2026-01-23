@@ -86,8 +86,6 @@ class MessagesController < ApplicationController
     end
 
     if @message.recipient_user_id == @user.id
-      @message.has_been_read = true
-      @message.save!
       @message.notification&.touch(:read_at)
     end
     Rails.cache.delete("user:#{@user.id}:unread_replies")
@@ -143,8 +141,6 @@ class MessagesController < ApplicationController
   end
 
   def keep_as_new
-    @message.has_been_read = false
-    @message.save!
     @message.notification&.update(read_at: nil)
 
     redirect_to "/messages"

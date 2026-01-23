@@ -217,6 +217,7 @@
   absolutely, given notice of their banning, and their disabled user profile
   will indicate which moderator banned them and why.
   There will be no <a href="https://en.wikipedia.org/wiki/Shadow_banning">shadow banning</a> or other secret moderation actions.
+  The list of <a href="/banned-ips">banned IPs</a> is likewise public.
   </p>
 
   <p>
@@ -260,7 +261,7 @@
   client.  These e-mails are then converted and submitted to the website as
   comments, just as if the comment was posted through a web browser.
   <%- raise "Don't just delete that error message. You didn't set up mailing list mode, right? This really isn't your about page, write one from scratch." if Rails.env.production? and Rails.application.name != 'Lobsters' -%>
-  </p>
+  </p></li>
 
   <li><p>
   <strong>Private messaging</strong> enables users to communicate privately

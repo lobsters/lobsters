@@ -11,41 +11,41 @@
   <div class="labelled_grid">
     <% if not Rails.application.open_signups? %>
       <%= f.hidden_field "invitation_code", :value => @invitation.code, :name => :invitation_code %>
-      <%= f.label :invitation, "Invited By", :class => "required" %>
+      <%= f.label :invitation, "Invited By" %>
       <%= link_to @invitation.user.username, user_path(@invitation.user), target: '_blank' %>
     <% end %>
 
-    <%= f.label :username, "Username", :class => "required" %>
+    <%= f.label :username, "Username" %>
     <div>
-      <%= f.text_field :username %>
+      <%= f.text_field :username, required: true, autocapitalize: :off %>
       <div class="hint">
-        <tt><%= User.username_regex_s %></tt>
+        <tt><%= Username.username_regex_s %></tt>
       </div>
     </div>
 
-    <%= f.label :email, "E-mail Address", :class => "required" %>
+    <%= f.label :email, "E-mail Address" %>
     <div>
-      <%= f.email_field :email %>
+      <%= f.email_field :email, required: true, autocapitalize: :off %>
       <div class="hint">
         <a href="http://www.gravatar.com/" target="_blank">Gravatar</a>'ized
       </div>
     </div>
 
-    <%= f.label :password, "Password", :class => "required" %>
-    <%= f.password_field :password, :autocomplete => "off" %>
+    <%= f.label :password, "Password" %>
+    <%= f.password_field :password, required: true, autocomplete: "off" %>
 
     <%= f.label :password_confirmation, "Password (again)",
-      :class => "required" %>
-    <%= f.password_field :password_confirmation, :autocomplete => "off" %>
+      required: true %>
+    <%= f.password_field :password_confirmation, required: true, autocomplete: "off" %>
 
     <p>
     Want to tell us about yourself?  It's optional, but it will be visible in
     your public profile and can be changed at any time.
     </p>
 
-    <%= f.label :about, "About", :class => "required" %>
+    <%= f.label :about, "About" %>
     <div>
-      <%= f.text_area :about%>
+      <%= f.text_area :about, required: true %>
 
       <%= render :partial => "global/markdownhelp" %>
     </div>

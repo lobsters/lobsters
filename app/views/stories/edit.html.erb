@@ -1,14 +1,10 @@
 <div class="box" id="story_box">
   <div id="story_holder">
     <%= form_with model: @story, id: 'edit_story' do |f| %>
-      <%= render :partial => "stories/form", :locals => { :story => @story,
-        :f => f } %>
+      <%= render :partial => "stories/form", :locals => { :story => @story, :f => f } %>
 
       <div class="box">
         <div class="boxline actions">
-          <%= render :partial => "global/markdownhelp",
-            :locals => { allow_images: @story.can_have_images? } %>
-
           <%= f.submit "Save" %>
 
           <% if @story.is_gone? && @story.is_undeletable_by_user?(@user) %>

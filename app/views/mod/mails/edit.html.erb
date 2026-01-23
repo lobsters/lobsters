@@ -1,0 +1,12 @@
+<% content_for :title, "Editing mod mail" %>
+
+<h1>Editing mod mail</h1>
+
+<%= render "form", mod_mail: @mod_mail %>
+
+<br>
+
+<div>
+  <%= link_to "Show this mod mail", mod_mod_mails_path(@mod_mail) %> |
+  <%= link_to "Back to mod mails", mod_mod_mails_path %>
+</div>

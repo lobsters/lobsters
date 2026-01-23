@@ -26,9 +26,10 @@ class Comment < ApplicationRecord
     class_name: "Link",
     inverse_of: :to_comment,
     dependent: :destroy
-  has_one :notification, as: :notifiable
+  has_many :notifications, as: :notifiable
 
   include Token
+
   attr_accessor :current_vote, :current_reply, :previewing, :vote_summary
 
   before_validation :assign_initial_attributes, on: :create
@@ -39,7 +40,7 @@ class Comment < ApplicationRecord
   # Calling :record_initial_upvote from after_commit instead of after_create minimizes how many
   # queries happen inside the transaction, which seems to be the cause of bug #1238.
   after_commit :log_hat_use, :mark_submitter, :record_initial_upvote, on: :create
-  after_commit :recreate_links
+  after_commit :recreate_links, :update_associated_caches
 
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, -> { where(is_deleted: false) }
@@ -126,7 +127,7 @@ class Comment < ApplicationRecord
       ModNote.tattle_on_max_depth_limit(user, parent_comment) &&
       errors.add(:base, "You have replied too greedily and too deep.")
 
-    (m = comment.to_s.strip.match(/\A(t)his([\.!])?$\z/i)) &&
+    (m = comment.to_s.strip.match(/\A(t)his([.!])?$\z/i)) &&
       errors.add(:base, ((m[1] == "T") ? "N" : "n") + "ope" + m[2].to_s)
 
     comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
@@ -138,8 +139,11 @@ class Comment < ApplicationRecord
     comment.to_s.strip.match(/\A([[[:upper:]][[:punct:]]] )+[[[:upper:]][[:punct:]]]?$\z/) &&
       errors.add(:base, "D O N ' T")
 
-    comment.to_s.strip.match(/\A(me too|nice|\+1)([\.!])?\z/i) &&
+    comment.to_s.strip.match(/\A(me too|nice|\+1)([.!])?\z/i) &&
       errors.add(:base, "Please just upvote the parent post instead.")
+
+    comment.to_s.remove(Story::GRAPHICS_RE).blank? &&
+      errors.add(:base, "🚫")
 
     hat.present? && user.wearable_hats.exclude?(hat) &&
       errors.add(:hat, "not wearable by user")
@@ -284,11 +288,15 @@ class Comment < ApplicationRecord
   end
 
   def delete_for_user(user, reason = nil)
-    Comment.record_timestamps = false
-
     self.is_deleted = true
 
-    if user.is_moderator? && user.id != user_id
+    save!(validate: false)
+  end
+
+  def delete_by_moderator(user, reason = nil)
+    self.is_deleted = true
+
+    if user.is_moderator?
       self.is_moderated = true
 
       m = Moderation.new
@@ -307,9 +315,6 @@ class Comment < ApplicationRecord
 
     save!(validate: false)
     Comment.record_timestamps = true
-
-    story.update_cached_columns
-    self.user.refresh_counts!
   end
 
   def depth_permits_reply?
@@ -322,7 +327,7 @@ class Comment < ApplicationRecord
   end
 
   def generated_markeddown_comment
-    Markdowner.to_html(comment)
+    Markdowner.to_html(comment, as_of: created_at)
   end
 
   def self.confidence_order(confidence, id)
@@ -379,9 +384,7 @@ class Comment < ApplicationRecord
   end
 
   def is_deletable_by_user?(user)
-    if user&.is_moderator?
-      true
-    elsif user && user.id == user_id
+    if user&.id == user_id
       created_at >= DELETEABLE_DAYS.days.ago
     else
       false
@@ -477,26 +480,11 @@ class Comment < ApplicationRecord
       .order(id: :asc)
   end
 
-  def plaintext_comment
-    # TODO: linkify then strip tags and convert entities back
-    comment
-  end
-
   def record_initial_upvote
     # not calling vote_thusly to save round-trips of validations
     Vote.create! story: story, comment: self, user: user, vote: 1
 
     update_score_and_recalculate! 0, 0 # trigger db calculation
-  end
-
-  def score_for_user(u)
-    if show_score_to_user?(u)
-      score
-    elsif u&.can_flag?(self)
-      "~"
-    else
-      "&nbsp;".html_safe
-    end
   end
 
   def show_score_to_user?(u)
@@ -532,8 +520,9 @@ class Comment < ApplicationRecord
     Link.recreate_from_comment!(self) if saved_change_to_attribute? :comment
   end
 
-  def unassign_votes
+  def update_associated_caches
     story.update_cached_columns
+    user.refresh_counts!
   end
 
   def create_fts
@@ -584,9 +573,6 @@ class Comment < ApplicationRecord
 
     save!(validate: false)
     Comment.record_timestamps = true
-
-    story.update_cached_columns
-    self.user.refresh_counts!
   end
 
   def self.recent_threads(user)

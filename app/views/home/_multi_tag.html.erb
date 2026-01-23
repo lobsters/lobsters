@@ -7,5 +7,10 @@
     <%= tag.description %>
     <br>
   <% end %>
+
+  <% if (matched_filtered_tags = tags & filtered_tags).any? %>
+    You have <%= link_to "filtered", filters_path %> <%= matched_filtered_tags.count > 1 ? "some" : "one" %> of these tags.
+    Links to tagged stories and their comments will not be shown elsewhere on the site for you.
+  <% end %>
 </div>
 

@@ -3,7 +3,7 @@
 class HomeController < ApplicationController
   include IntervalHelper
 
-  caches_page :active, :index, :newest, :newest_by_user, :recent, :top, if: CACHE_PAGE
+  caches_page :active, :category, :for_domain, :for_origin, :index, :multi_tag, :newest, :newest_by_user, :recent, :single_tag, :top, if: CACHE_PAGE
 
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, only: [:index, :newest, :saved, :upvoted]
@@ -13,7 +13,7 @@ class HomeController < ApplicationController
 
   def active
     @stories, @show_more = get_from_cache(active: true) {
-      paginate Story.active(@user, filtered_tag_ids)
+      paginate Story.active(@user, filtered_tags.map(&:id))
     }
 
     @title = "Active Discussions"
@@ -27,7 +27,7 @@ class HomeController < ApplicationController
 
   def hidden
     @stories, @show_more = get_from_cache(hidden: true) {
-      paginate Story.hidden(@user, filtered_tag_ids)
+      paginate Story.hidden(@user, filtered_tags.map(&:id))
     }
 
     @title = "Hidden Stories"
@@ -38,7 +38,7 @@ class HomeController < ApplicationController
 
   def index
     @stories, @show_more = get_from_cache(hottest: true) {
-      paginate Story.hottest(@user, filtered_tag_ids)
+      paginate Story.hottest(@user, filtered_tags.map(&:id))
     }
 
     @rss_link ||= {
@@ -54,7 +54,15 @@ class HomeController < ApplicationController
     @root_path = true
 
     respond_to do |format|
-      format.html { render action: "index" }
+      format.html {
+        @meta_tags = [
+          {property: "og:type", content: "website"},
+          {property: "og:title", content: Rails.application.name},
+          {property: "og:image", content: Rails.application.root_url + "touch-icon-144.png"},
+          {property: "og:description", content: Rails.application.og_description}
+        ]
+        render action: "index"
+      }
       format.rss {
         if @user
           @title = "Private feed for #{@user.username}"
@@ -72,7 +80,7 @@ class HomeController < ApplicationController
 
   def newest
     @stories, @show_more = get_from_cache(newest: true) {
-      paginate Story.newest(@user, filtered_tag_ids)
+      paginate Story.newest(@user, filtered_tags.map(&:id))
     }
 
     @title = "Newest Stories"
@@ -128,7 +136,7 @@ class HomeController < ApplicationController
 
   def recent
     @stories, @show_more = get_from_cache(recent: true) {
-      paginate Story.recent(@user, filtered_tag_ids, unmerged: false)
+      paginate Story.recent(@user, filtered_tags.map(&:id), unmerged: false)
     }
 
     @title = "Recent Stories"
@@ -143,7 +151,7 @@ class HomeController < ApplicationController
 
   def saved
     @stories, @show_more = get_from_cache(hidden: true) {
-      paginate Story.saved(@user, filtered_tag_ids)
+      paginate Story.saved(@user, filtered_tags.map(&:id))
     }
 
     @rss_link ||= {
@@ -344,14 +352,6 @@ class HomeController < ApplicationController
 
   private
 
-  def filtered_tag_ids
-    if @user
-      @user.tag_filters.map(&:tag_id)
-    else
-      tags_filtered_by_cookie.map(&:id)
-    end
-  end
-
   def page
     p = params[:page].to_i
     if p == 0
@@ -367,7 +367,8 @@ class HomeController < ApplicationController
   end
 
   def get_from_cache(opts = {}, &)
-    if Rails.env.development? || @user || tags_filtered_by_cookie.any?
+    # don't cache if there's a user because they can have hidden stories; visitors can filter tags by cookie
+    if Rails.env.development? || @user || filtered_tags.any?
       yield
     else
       key = opts.merge(page: page).sort.map { |k, v| "#{k}=#{v.to_param}" }.join(" ")

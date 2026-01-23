@@ -3,6 +3,10 @@
 class StoriesController < ApplicationController
   include StoryFinder
 
+  content_security_policy(only: :show) do |policy|
+    policy.img_src :self, :data, -> { @story&.can_have_images? ? "https:" : "" }
+  end
+
   caches_page :show, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,
@@ -29,16 +33,20 @@ class StoriesController < ApplicationController
 
       Story.transaction do
         if @story.save && (!@story.is_resubmit? || @comment.save)
-          ReadRibbon.where(user: @user, story: @story).first_or_create!
           redirect_to Routes.title_path @story
+
+          if !Rails.env.development?
+            SendWebmentionJob.set(wait: 5.minutes).perform_later(@story)
+          end
+
+          CreateStoryCardJob.perform_later(@story)
         else
           raise ActiveRecord::Rollback
         end
       end
-      return if @story.persisted? # can't return out of transaction block
+    else
+      render action: "new"
     end
-
-    render action: "new"
   end
 
   def destroy
@@ -166,22 +174,15 @@ class StoriesController < ApplicationController
 
     respond_to do |format|
       format.html {
-        @comments = CommentHierarchy.new(@comments)
-          .order_hierarchy_by_confidence_order
-          .comments
-        @meta_tags = {
-          "twitter:card" => "summary",
-          "twitter:site" => "@lobsters",
-          "twitter:title" => @story.title,
-          "twitter:description" => @story.comments_count.to_s + " " +
-            "comment".pluralize(@story.comments_count),
-          "twitter:image" => Rails.application.root_url +
-            "touch-icon-144.png"
-        }
-
-        if @story.user.mastodon_username.present?
-          @meta_tags["twitter:creator"] = @story.user.mastodon_acct
-        end
+        @meta_tags = [
+          {property: "og:type", content: "article"},
+          {property: "og:site_name", content: Rails.application.name},
+          {property: "og:title", content: @story.title},
+          {property: "og:description", content: @story.comments_count.to_s + " " + "comment".pluralize(@story.comments_count)},
+          {property: "og:image", content: Routes.story_image_url(@story)},
+          {property: "article:author", content: Routes.user_url(@story.user)}
+        ]
+        @meta_tags << {property: "article:author", content: "https://#{@story.user.mastodon_instance}/@#{@story.user.mastodon_username}"} if @story.user.mastodon_username.present?
 
         load_user_votes
 
@@ -190,9 +191,6 @@ class StoriesController < ApplicationController
       }
       format.json {
         @comments = @comments.includes(:parent_comment)
-        @comments = CommentHierarchy.new(@comments)
-          .order_hierarchy_by_confidence_order
-          .comments
         render json: @story.as_json(with_comments: @comments)
       }
     end
@@ -228,6 +226,10 @@ class StoriesController < ApplicationController
     update_story_attributes
 
     if @story.save
+      if @story.saved_change_to_url?
+        CreateStoryCardJob.perform_later(@story)
+      end
+
       redirect_to Routes.title_path @story
     else
       render action: "edit"
@@ -418,18 +420,7 @@ class StoriesController < ApplicationController
 
       @story.is_hidden_by_cur_user = @story.is_hidden_by_user?(@user)
       @story.is_saved_by_cur_user = @story.is_saved_by_user?(@user)
-
-      @votes = Vote.comment_votes_by_user_for_story_hash(
-        @user.id, @story.merged_stories.ids.push(@story.id)
-      )
-      comment_ids = @comments.map(&:id)
-      vote_summaries = Vote.comment_vote_summaries(comment_ids)
-      current_user_reply_parents = @user&.ids_replied_to(comment_ids) || Hash.new { false }
-      @comments.each do |c|
-        c.current_vote = @votes[c.id]
-        c.vote_summary = vote_summaries[c.id]
-        c.current_reply = current_user_reply_parents.has_key? c.id
-      end
+      @comments = CommentVoteHydrator.new(@comments, @user)
     end
   end
 

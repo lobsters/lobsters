@@ -29,19 +29,8 @@ export const onPageLoad = (callback) => {
   document.addEventListener('DOMContentLoaded', callback);
 };
 
-export const parentSelectorOrNull = (target, selector) => {
-  let parent = target;
-  while (!parent.matches(selector)) {
-    parent = parent.parentElement;
-    if (parent === null) {
-      return null;
-    }
-  }
-  return parent;
-};
-
 export const parentSelector = (target, selector) => {
-  let parent = parentSelectorOrNull(target, selector)
+  let parent = target.closest(selector);
   if (parent === null) {
     throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
   }
@@ -270,14 +259,14 @@ export class _LobstersFunction {
           //   app/views/comments/_threads.html.erb
           //   app/views/stories/show.html.erb
 
-          const replyForm = parentSelectorOrNull(form, '.reply_form_temporary')
+          const replyForm = form.closest('.reply_form_temporary');
           if (replyForm) {
             // user submitted from a temporary reply form, so this is a reply to an existing comment
             replace(replyForm, text)
           } else {
             // Iterating up the comments tree to the nearest parent. If there isn't one, we are creating
             // a top-level comment, so find the top of the comments tree.
-            const comments = parentSelectorOrNull(form, '.comments') || qS('.comments')
+            const comments = form.closest('.comments') || qS('.comments')
             parentSelector(form, '.comment_form_container').remove()
             comments.insertAdjacentHTML("afterbegin", text)
           }
@@ -533,6 +522,33 @@ onPageLoad(() => {
     i.value = csrfToken();
   }
 
+  // replace absolute <time> with relative
+  const now = parseInt(qS('body').dataset.nowUnix) || Date.now();
+  for (const t of qSA('time[data-at-unix]')) {
+    // parallel implementation in lib/time_ago_in_words.rb
+    const secs = now - parseInt(t.dataset.atUnix);
+    if (secs <= 5) {
+      t.innerText = "just now"
+    } else if (secs < 60) {
+      t.innerText = "less than a minute ago"
+    } else if (secs < (60 * 60)) {
+      const mins = Math.floor(secs / 60.0)
+      t.innerText = mins + " minute" + (mins > 1 ? "s" : "") + " ago"
+    } else if (secs < (60 * 60 * 48)) {
+      const hours = Math.floor(secs / 60.0 / 60.0)
+      t.innerText = hours + " hour" + (hours > 1 ? "s" : "") + " ago"
+    } else if (secs < (60 * 60 * 24 * 30)) {
+      const days = Math.floor(secs / 60.0 / 60.0 / 24.0)
+      t.innerText = days + " day" + (days > 1 ? "s" : "") + " ago"
+    } else if (secs < (60 * 60 * 24 * 365)) {
+      const months = Math.floor(secs / 60.0 / 60.0 / 24.0 / 30.0)
+      t.innerText = months + " month" + (months > 1 ? "s" : "") + " ago"
+    } else {
+      const years = Math.floor(secs / 60.0 / 60.0 / 24.0 / 365.0)
+      t.innerText = years + " year" + (years > 1 ? "s" : "") + " ago"
+    }
+  }
+
   // Global
 
   on('click', '#modal_backdrop', () => {
@@ -615,7 +631,7 @@ onPageLoad(() => {
   on('focusout', '#story_url', () => {
     let url_tags = {
       "\.pdf($|\\?|#)": "pdf",
-      "[\/\.](asciinema\.org|(youtube|vimeo)\.com|youtu\.be|twitch.tv)\/": "video",
+      "[\/\.](asciinema\.org|(youtube|vimeo)\.com|youtu\.be|twitch\.tv|media\.ccc\.de)\/": "video",
       "[\/\.](slideshare\.net|speakerdeck\.com)\/": "slides",
       "[\/\.](soundcloud\.com)\/": "audio",
     };
@@ -811,6 +827,7 @@ onPageLoad(() => {
   });
 
   on('click', 'a.comment_moderator', (event) => {
+    event.preventDefault();
     const reason = prompt("Moderation reason:");
     if (reason == null || reason == '')
       return false;
@@ -819,7 +836,7 @@ onPageLoad(() => {
     formData.append('reason', reason);
     const comment = parentSelector(event.target, '.comment');
     const commentId = comment.getAttribute('data-shortid');
-    fetchWithCSRF('/comments/' + commentId + '/delete', { method: 'post', body: formData })
+    fetchWithCSRF('/mod/comments/' + commentId, { method: 'delete', body: formData })
       .then(response => {
         response.text().then(text => replace(comment, text));
       });

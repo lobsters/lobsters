@@ -4,6 +4,9 @@ class FiltersController < ApplicationController
   before_action :authenticate_user
   before_action :show_title_h1
 
+  # Keep session alive until `update` for CSRF token verification to succeed
+  skip_after_action :clear_session_cookie, only: [:index]
+
   def index
     @title = "Filtered Tags"
 
@@ -15,11 +18,7 @@ class FiltersController < ApplicationController
     @story_counts = Tagging.group(:tag_id).count
     @filter_counts = TagFilter.group(:tag_id).count
 
-    @filtered_tags = if @user
-      @user.tag_filter_tags.index_by(&:id)
-    else
-      tags_filtered_by_cookie.index_by(&:id)
-    end
+    @filtered_tags = filtered_tags.index_by(&:id)
   end
 
   def update

@@ -6,7 +6,7 @@ module CustomCops
   class InheritsModeratorController < RuboCop::Cop::Base
     MOD_DIRECTORY = "app/controllers/mod/"
     MOD_CONTROLLER = "Mod::ModController"
-    MSG = "All controllers in the Mod namespace should inherit from #{MOD_CONTROLLER}"
+    MSG = "All controllers in the Mod namespace must inherit from #{MOD_CONTROLLER} to enforce auth."
 
     def on_class(node)
       rel_path = RuboCop::PathUtil.relative_path(filename(node))

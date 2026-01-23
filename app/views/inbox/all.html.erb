@@ -4,7 +4,7 @@
 
 <% if @notifications.present? %>
   <ol class="comments comments1 notifications">
-    <% @notifications.filter { |n| n.good_faith? }.each do |notification| %>
+    <% @notifications.filter { |n| n.should_display? }.each do |notification| %>
       <% case notification.notifiable %>
       <% when Comment %>
       <% comment = notification.notifiable %>
@@ -17,6 +17,10 @@
         <li class="comments_subtree">
           <%= render "message", message: message, is_unread: notification.read_at.nil? %>
         </li>
+      <% when ModMailMessage %>
+        <li class="comments_subtree">
+          <%= render "mod_mail_message", mod_mail_message: notification.notifiable, is_unread: notification.read_at.nil? %>
+        </li>
       <% end %>
     <% end %>
   </ol>
@@ -24,18 +28,18 @@
   <p class="help">No notifications to show.</p>
 <% end %>
 
-<% if @has_more || (@page && @page > 1)%>
-  <div class="morelink">
+<% if @has_more || (@page && @page > 1) %>
+  <nav class="morelink">
     <% if @page && @page > 1 %>
-      <a href="/notifications<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">&lt;&lt; Page <%= @page - 1 %></a>
+      <a rel="prev" href="/inbox/all<%= @page == 2 ? "" : "/page/#{@page - 1}" %>">Page <%= @page - 1 %></a>
     <% end %>
 
     <% if @has_more %>
       <% if @page && @page > 1 %>
-        |
+        <%= divider_tag %>
       <% end %>
 
-      <a href="/notifications/page/<%= @page + 1 %>">Page <%= @page + 1 %> &gt;&gt;</a>
+      <a h rel="next" ref="/inbox/all/page/<%= @page + 1 %>">Page <%= @page + 1 %></a>
     <% end %>
-  </div>
+  </nav>
 <% end %>

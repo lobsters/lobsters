@@ -7,8 +7,8 @@ class MastodonApp < ApplicationRecord
     length: {maximum: 255}
 
   # https://docs.joinmastodon.org/methods/oauth/
-  def oauth_auth_url
-    "https://#{name}/oauth/authorize?response_type=code&client_id=#{client_id}&scope=read:accounts&redirect_uri=" +
+  def oauth_auth_url(mastodon_state)
+    "https://#{name}/oauth/authorize?response_type=code&client_id=#{client_id}&scope=read:accounts&state=#{mastodon_state}&redirect_uri=" +
       CGI.escape(redirect_uri)
   end
 
@@ -120,7 +120,7 @@ class MastodonApp < ApplicationRecord
     ps == {}
   rescue OpenSSL::SSL::SSLError
     errors.add :base, "#{name} isn't a working SSL server when fetching user token"
-  rescue NoIPsError
+  rescue DNSError, NoIPsError
     errors.add :base, "#{name} doesn't resolve to an IP address"
   end
 

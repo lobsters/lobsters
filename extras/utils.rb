@@ -3,9 +3,10 @@
 class Utils
   # URI.parse is not very lenient, so we can't use it
   # requires a . in domain because we don't want people submitting links to internal hostnames
-  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>(?:[^\.\/]+\.)+[a-z\-]+)(?<port>:\d+)?(?:\/(?:[\w.~:\/?#\[\]@!$&'()*+,;=%-]*))?\z/i
+  URL_RE = /\A(?<protocol>https?):\/\/(?<domain>(?:[^.\/]+\.)+[a-z-]+)(?<port>:\d+)?(?:\/(?:[\w.~:\/?#\[\]@!$&'()*+,;=%-]*))?\z/i
 
   # utility that works on stringlikes (for possibly invalid user input + searches)
+  # If this function changes, you should run Story.refresh_normalized_urls! and Link.refresh_normalized_urls!
   def self.normalize(url)
     return url if url.blank?
     url = url.to_s.dup # in case passed a Url or frozen string
@@ -22,7 +23,7 @@ class Utils
     url.slice! %r{https?://} # consider http and https the same
     url.sub!(/\Awww\d*\.(.+?\..+)/, '\1') # remove www\d* from domain if the url is not like www10.org
 
-    url, *args = url.split(/[&\?]/) # trivia: ?a=1?c=2 is a valid uri
+    url, *args = url.split(/[&?]/) # trivia: ?a=1?c=2 is a valid uri
     url ||= "" # if original url was just '#', ''.split made url nil
     if args.any?
       url += "?"

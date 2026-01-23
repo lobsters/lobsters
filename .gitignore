@@ -4,6 +4,7 @@
 
 # local bundler config
 /.bundle
+bundle/
 
 # default databases
 db/**/*.sqlite3
@@ -29,6 +30,7 @@ public/assets
 # cache
 public/avatars
 public/sitemap*
+public/story_image
 
 # templates to be created per-site
 app/views/about/about.*
@@ -48,3 +50,5 @@ config/*.sphinx.conf
 config/unicorn.conf.rb
 lib/tasks/deploy.rake
 storage/
+
+/config/master.key

@@ -202,18 +202,19 @@ describe "stories", type: :request do
 
         expect(response.status).to eq(404)
         expect(response.body).to_not include(story.title)
-        expect(response.body).to_not include("removed by moderator")
-        expect(response.body).to_not include("removed by submitter")
-        expect(response.body).to_not include(story.user.username)
       end
 
-      it "shows submitter removed to logged-in user" do
+      it "shows whether a story was removed by a submitter or moderator" do
+        # visitor
+        get story_path(story)
+        expect(response.body).to include("removed by submitter")
+        expect(response.body).to_not include("removed by moderator")
+
+        # user
         sign_in create(:user)
         get story_path(story)
-
-        expect(response.status).to eq(404)
-        expect(response.body).to_not include(story.title)
         expect(response.body).to include("removed by submitter")
+        expect(response.body).to_not include("removed by moderator")
         expect(response.body).to include(story.user.username)
       end
     end
@@ -241,6 +242,7 @@ describe "stories", type: :request do
         expect(response.body).to_not include(reason)
         expect(response.body).to_not include("removed by submitter")
         expect(response.body).to_not include(story.user.username)
+        expect(response.body).to include("removed by a moderator")
       end
 
       it "shows mod log to logged-in user" do
@@ -249,6 +251,7 @@ describe "stories", type: :request do
 
         expect(response.status).to eq(404)
         expect(response.body).to_not include(story.title)
+        expect(response.body).to include("removed by a moderator")
         expect(response.body).to include(reason)
       end
     end
@@ -267,6 +270,82 @@ describe "stories", type: :request do
             id: merged_into_story.short_id,
             format: :json)
         end
+      end
+    end
+
+    context "can have images" do
+      it "puts https CSP header" do
+        moderator = create(:user, :moderator)
+        create(:hat, user: moderator, modlog_use: true)
+
+        story = create(:story, user: moderator, title: "test", url: "http://example.com/")
+        expect(story.can_have_images?).to eq(true)
+
+        get story_path(story)
+
+        expect(response.headers).to have_key("Content-Security-Policy")
+        expect(response.headers["Content-Security-Policy"]).to include("img-src 'self' data: https:")
+      end
+    end
+
+    context "can't have images" do
+      it "don't put https CSP header" do
+        user = create(:user)
+
+        story = create(:story, user: user, title: "test", url: "http://example.com/")
+        expect(story.can_have_images?).to eq(false)
+
+        get story_path(story)
+
+        expect(response.headers).to have_key("Content-Security-Policy")
+        expect(response.headers["Content-Security-Policy"]).to_not include("img-src 'self' data: https:")
+      end
+    end
+  end
+
+  describe "images" do
+    context "allow" do
+      it "if poster was a moderator at the time of creation" do
+        moderator = create(:user, :moderator)
+        hat = create(:hat, user: moderator, modlog_use: true)
+
+        story = create(:story, user: moderator)
+
+        expect(story.can_have_images?).to eq(true)
+      end
+
+      it "if poster was a moderator at creation, even after hat doff" do
+        moderator = create(:user, :moderator)
+        hat = create(:hat, user: moderator, modlog_use: true)
+
+        story = create(:story, user: moderator)
+
+        hat.doff_by_user_with_reason(moderator, "Testing")
+
+        expect(story.can_have_images?).to eq(true)
+      end
+    end
+
+    context "doesn't allow" do
+      it "if created after user is no longer moderator" do
+        moderator = create(:user, :moderator)
+        hat = create(:hat, user: moderator, modlog_use: true)
+        hat.doff_by_user_with_reason(moderator, "Testing")
+
+        story = create(:story, user: moderator, created_at: 1.second.since)
+
+        expect(story.can_have_images?).to eq(false)
+      end
+
+      it "if created before the user became moderator" do
+        moderator = create(:user)
+
+        story = create(:story, user: moderator, created_at: 1.day.ago)
+
+        moderator.update!(is_moderator: true)
+        hat = create(:hat, user: moderator, modlog_use: true)
+
+        expect(story.can_have_images?).to eq(false)
       end
     end
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_18_183847) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -239,6 +239,44 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_18_183847) do
     t.index ["token"], name: "index_mod_activities_on_token", unique: true
   end
 
+  create_table "mod_mail_messages", force: :cascade do |t|
+    t.bigint "mod_mail_id", null: false
+    t.text "message", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mod_mail_id"], name: "index_mod_mail_messages_on_mod_mail_id"
+    t.index ["user_id"], name: "fk_rails_40fa20cab5"
+  end
+
+  create_table "mod_mail_recipients", force: :cascade do |t|
+    t.bigint "mod_mail_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mod_mail_id"], name: "index_mod_mail_recipients_on_mod_mail_id"
+    t.index ["user_id"], name: "fk_rails_7a6d5232be"
+  end
+
+  create_table "mod_mail_references", force: :cascade do |t|
+    t.bigint "mod_mail_id", null: false
+    t.string "reference_type", null: false
+    t.bigint "reference_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mod_mail_id"], name: "index_mod_mail_references_on_mod_mail_id"
+    t.index ["reference_type", "reference_id"], name: "index_mod_mail_references_on_reference"
+  end
+
+  create_table "mod_mails", force: :cascade do |t|
+    t.string "subject", null: false
+    t.datetime "remind_mods_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "short_id", limit: 10, null: false
+    t.index ["short_id"], name: "index_mod_mails_on_short_id", unique: true
+  end
+
   create_table "mod_notes", force: :cascade do |t|
     t.bigint "moderator_user_id", null: false
     t.bigint "user_id", null: false
@@ -430,6 +468,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_18_183847) do
     t.index ["token"], name: "index_tags_on_token", unique: true
   end
 
+  create_table "usernames", force: :cascade do |t|
+    t.string "username", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "renamed_away_at"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username", limit: 50, collation: "NOCASE"
     t.string "email", limit: 100
@@ -504,9 +549,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_18_183847) do
   add_foreign_key "links", "stories", column: "to_story_id"
   add_foreign_key "messages", "hats"
   add_foreign_key "messages", "users", column: "author_user_id"
-  add_foreign_key "messages", "users", column: "recipient_user_id"
-  add_foreign_key "mod_notes", "users"
-  add_foreign_key "mod_notes", "users", column: "moderator_user_id"
+  add_foreign_key "messages", "users", column: "recipient_user_id", name: "messages_recipient_user_id_fk"
+  add_foreign_key "mod_mail_messages", "mod_mails"
+  add_foreign_key "mod_mail_messages", "users"
+  add_foreign_key "mod_mail_recipients", "mod_mails"
+  add_foreign_key "mod_mail_recipients", "users"
+  add_foreign_key "mod_mail_references", "mod_mails"
+  add_foreign_key "mod_notes", "users", column: "moderator_user_id", name: "mod_notes_moderator_user_id_fk"
+  add_foreign_key "mod_notes", "users", name: "mod_notes_user_id_fk"
   add_foreign_key "moderations", "categories"
   add_foreign_key "moderations", "comments"
   add_foreign_key "moderations", "domains"

@@ -6,12 +6,10 @@ class SettingsController < ApplicationController
   TOTP_SESSION_TIMEOUT = (60 * 15)
 
   def index
-    @title = "Account Settings"
-
     @edit_user = @user.dup
   end
 
-  def delete_account
+  def deactivate
     unless params[:user][:i_am_sure] == "1"
       flash[:error] = 'You did not check the "I am sure" checkbox.'
       return redirect_to settings_path
@@ -21,32 +19,33 @@ class SettingsController < ApplicationController
       return redirect_to settings_path
     end
 
+    disown = params[:user][:disown] == "1"
     @user.delete!
-    disown_text = ""
-    if params[:user][:disown] == "1"
-      disown_text = " and disowned your stories and comments."
-      InactiveUser.disown_all_by_author! @user
-    end
+    InactiveUser.disown_all_by_author!(@user) if disown
+
+    Moderation.create!(
+      moderator: nil,
+      user: @user,
+      action: "deactivated#{", disowning their stories and comments" if disown}"
+    )
     reset_session
-    flash[:success] = "You have deleted your account#{disown_text}. Bye."
+    flash[:success] = "You have deleted your account#{" and disowned your stories and comments." if disown}. Bye."
     redirect_to "/"
   end
 
   def update
-    previous_username = @user.username
     @edit_user = @user.clone
 
     if params[:user][:password].empty? ||
         @user.authenticate(params[:current_password].to_s)
       @edit_user.roll_session_token if params[:user][:password]
       if @edit_user.update(user_params)
-        if @edit_user.username != previous_username
-          # sync this message to username field app/views/settings/index.html
-          Moderation.create!(
-            is_from_suggestions: true,
+        if @edit_user.username_changed?
+          Username.rename!(
             user: @edit_user,
-            action: "changed own username from \"#{previous_username}\" " \
-                    "to \"#{@edit_user.username}\""
+            from: @edit_user.changed_atributes[:username],
+            to: @edit_user.username,
+            by: @user
           )
         end
         session[:u] = @user.session_token if params[:user][:password]
@@ -193,14 +192,17 @@ class SettingsController < ApplicationController
   def mastodon_auth
     app = MastodonApp.find_or_register(params[:mastodon_instance_name])
     if app.persisted?
-      redirect_to app.oauth_auth_url, allow_other_host: true
+      session[:mastodon_state] = SecureRandom.hex
+      redirect_to app.oauth_auth_url(session[:mastodon_state]), allow_other_host: true
     else
       redirect_to settings_path, flash: {error: app.errors.full_messages.join(" ")}
     end
   end
 
   def mastodon_callback
-    if params[:code].blank?
+    if params[:code].blank? ||
+        params[:state].blank? ||
+        (params[:state].to_s != session[:mastodon_state].to_s)
       flash[:error] = "Invalid OAuth state"
       return redirect_to settings_path
     end
@@ -223,6 +225,8 @@ class SettingsController < ApplicationController
 
   def mastodon_disconnect
     if (app = MastodonApp.find_by(name: @user.mastodon_instance))
+      # revoke_token swallow exceptions about networking errors because indie instances often
+      # disappear, so the only thing we can do is delete the record on this side
       app.revoke_token(@user.mastodon_oauth_token)
     end
     @user.mastodon_instance = nil
@@ -275,7 +279,7 @@ class SettingsController < ApplicationController
   def user_params
     params.require(:user).permit(
       :username, :email, :password, :password_confirmation, :homepage, :about,
-      :email_replies, :email_messages, :email_mentions,
+      :email_replies, :email_messages, :email_mentions, :inbox_mentions,
       :pushover_replies, :pushover_messages, :pushover_mentions,
       :mailing_list_mode, :show_email, :show_avatars, :show_story_previews,
       :show_submitted_story_threads, :prefers_color_scheme, :prefers_contrast

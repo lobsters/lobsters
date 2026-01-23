@@ -1,6 +1,7 @@
 # typed: false
 
 module TimeAgoInWords
+  # parallel implementation in application.js
   def how_long_ago(time)
     secs = (Time.current - time).to_i
     if secs <= 5

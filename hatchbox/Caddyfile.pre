@@ -51,7 +51,7 @@ header Strict-Transport-Security max-age=31536000
   }
   file {
     root /home/deploy/lobsters/current/public/cache/
-    try_files {path} {path}.html {path}/index.html
+    try_files {path}.html {path}/index.html {path}
   }
 }
 # the hatchbox {default} uses a root of public/, serves files that exist with
@@ -63,3 +63,95 @@ rewrite @visitor /cache/{file_match.relative}
 
 # add CSP header when serving from cache; Rails adds when it renders pages
 header @visitor ?Content-Security-Policy "default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'"
+
+# There's a spambot attempting GETs to /stories/new?title=...&url=.... with a
+# real article from a news site at a rate averaging 11/s. Even though Rails 302s
+# these to /login very quickly (average 3ms) the high rate is enough to bog down
+# the server.
+# Right now their very odd/old user-agents give them away. We have to be
+# cautious here because users who are not currently logged-in do GET
+# /stories/new with a title and url by using the submission bookmarklet.
+@submission_spambot {
+  not {
+    header_regexp Cookie `.*=.*`
+  }
+  # "Different header fields within the same set are AND-ed. Multiple values per field are OR'ed."
+  header User-Agent "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"
+  header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+  method GET
+  path /stories/new
+  query title=*
+  query url=*
+}
+header @submission_spambot Content-Type text/html
+respond @submission_spambot 403 {
+  body `
+  You need to <a href="/login">login</a> to submit a story.
+  `
+  close
+}
+
+# a very distributed scraper trying to find media files ~46k/day, but each IP is only used 1-15/d
+# presumably it will update its user-agent at some point, so:
+# grep 'path":"/[0-9a-f]*\.[a-z0-9]*"' ~/lobsters/shared/log/action.log | jq -c '.headers."user-agent" | sort | uniq -c | sort -rn
+@media_scraper {
+  header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+  method GET
+  path_regexp /[^/.]*\.(avi|flac|flv|mka|mkv|mov|mp4|mpeg|mpg|ogg|webm|webp|wmv)
+}
+header @media_scraper Content-Type text/html
+respond @media_scraper 404 {
+  body `
+  I can't find the stationary. Come and help me look?
+  `
+  close
+}
+
+
+@user_enumerator {
+  # https://github.com/smicallef/spiderfoot/blob/master/sf.py#L59
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0"
+  # agents that have caught 1k/d 404s for user profiles
+  header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.102 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; yie11; rv:11.0) like Gecko"
+  header User-Agent "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/116.0"
+  header User-Agent "Mozilla/5.0 (X11; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0"
+  header User-Agent "Mozilla/5.0 (X11; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0"
+  header User-Agent "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:64.0) Gecko/20100101 Firefox/64.0"
+  header User-Agent "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1"
+  method GET
+  path /u/*
+  path /~*
+
+}
+header @user_enumerator Content-Type text/html
+respond @user_enumerator 404 {
+  body `
+  I'm Spartacus.
+  `
+  close
+}
+
+# a bot with 470k IPs (mostly .cn) is confused by the /c/ redirects and hits us 480k/d
+@redirect_scraper {
+  header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+  method GET
+}
+header @redirect_scraper Content-Type text/html
+respond @redirect_scraper 404 {
+  body `
+  You'll have to speak up, I'm wearing a towel.
+  `
+  close
+}

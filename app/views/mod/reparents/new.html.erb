@@ -12,8 +12,8 @@
   </p>
 
   <div class="boxline">
-    <%= f.label :reason, "Reason:", :class => "required" %>
-    <%= f.text_field :reason, :size => 80 %>
+    <%= f.label :reason, "Reason" %>
+    <%= f.text_field :reason, required: true, size: 80 %>
   </div>
   <%= f.submit "Reparent" %>
 <% end %>

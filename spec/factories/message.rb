@@ -6,7 +6,5 @@ FactoryBot.define do
     association(:author, factory: :user)
     sequence(:subject) { |n| "message subject #{n}" }
     sequence(:body) { |n| "message body #{n} #{"x " * 60}" } # padidng for length
-
-    has_been_read { false }
   end
 end

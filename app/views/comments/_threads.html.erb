@@ -59,14 +59,6 @@
       (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
       <% can_flag = @user && @user.can_flag?(comment) %>
-      <% score_display = comment.score_for_user(@user) %>
-      <% draw_tree_line = comment.reply_count > 0 %>
-
-      <div class="
-        <%= draw_tree_line ? "comment_parent_tree_line" : "" %>
-        <%= can_flag ? "can_flag" : "" %>
-        <%= score_display != "&nbsp;" ? "score_shown" : "" %>
-      "></div>
 <div id="c_<%= comment.short_id %>"
   data-shortid="<%= comment.short_id if comment.persisted? %>"
   class="comment
@@ -80,10 +72,11 @@
     <% if show_folder_control %>
       <label for="comment_folder_<%= comment.short_id %>" class="comment_folder"></label>
     <% end %>
+    <% score = comment_score_for_user(comment, @user)%>
     <% if !comment.is_gone? %>
-      <%= link_to comment.score_for_user(@user), (@user ? '': login_path), :class => "upvoter" %>
+      <%= link_to upvoter_score(score), (@user ? '': login_path), :class => "upvoter", :title => score %>
     <% elsif @user&.is_moderator? %>
-      <span class="upvoter"><%= comment.score_for_user(@user) %></span>
+      <span class="upvoter"><%= score %></span>
     <% end %>
   </div>
 
@@ -92,7 +85,7 @@
       <a name="c_<%= comment.short_id %>"></a>
 
       <% if was_merged %>
-        <span class="merge"></span>
+        <span class="merge" aria-label="Merged"></span>
       <% end %>
 
       <span class="<%= @showing_user == comment.user ? "showing-user-comment" : nil %>">
@@ -130,12 +123,19 @@
         <% if comment.is_gone? && comment.is_undeletable_by_user?(@user) %>
           |
           <a class="comment_undeletor" href="#c_<%= comment.short_id %>">undelete</a>
-        <% elsif !comment.is_gone? && comment.is_deletable_by_user?(@user) %>
-          |
-          <% if @user && @user.is_moderator? && @user.id != comment.user_id %>
-            <a class="comment_moderator" href="#c_<%= comment.short_id %>">delete</a>
-          <% else %>
+        <% elsif !comment.is_gone? %>
+          <% if comment.is_deletable_by_user?(@user) %>
+            |
             <a class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>
+          <% elsif comment.is_disownable_by_user?(@user) %>
+            |
+            <%= link_post("disown", disown_comment_path(comment.short_id),
+            params: { type: 'comment', show_story: show_story, show_tree_lines: show_tree_lines })
+            %>
+          <% end %>
+          <% if @user&.is_moderator? %>
+            |
+            <a class="comment_moderator" href="#c_<%= comment.short_id %>">mod delete</a>
           <% end %>
         <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
           |
@@ -197,10 +197,6 @@
 </div>
 
 <%#/heinous_inline_partial(comments/_comment.html.erb)%>
-
-    <% if comment.depth != top_comment_depth %>
-      <div class="comment_siblings_tree_line"></div>
-    <% end %>
 
 <% end %>
 

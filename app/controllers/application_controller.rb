@@ -3,21 +3,23 @@
 class ApplicationController < ActionController::Base
   include IntervalHelper
   include Authenticatable
+  include ApplicationHelper
 
   protect_from_forgery
+  prepend_before_action :prepare_exception_notifier # first in case others raise
   before_action :heinous_inline_partials, if: -> { Rails.env.development? }
-  before_action :prepare_exception_notifier
   before_action :mini_profiler
   before_action :set_traffic_style
   before_action :remove_unknown_cookies
   after_action :clear_session_cookie
 
+  SESSION_DEFAULT_KEYS = %w[session_id _csrf_token]
   # match this nginx config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
   CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
 
   # copied from https://github.com/rack/rack/blob/main/lib/rack/utils.rb
-  VALID_COOKIE_KEY = /\A[!#$%&'*+\-\.\^_`|~0-9a-zA-Z]+\z/
+  VALID_COOKIE_KEY = /\A[!#$%&'*+\-.\^_`|~0-9a-zA-Z]+\z/
 
   # Rails misdesign: if the /recent route doesn't support .rss, Rails calls it anyways and then
   # raises MissingTemplate when it's not handled, as if the app did something wrong (a prod 500!).
@@ -49,6 +51,9 @@ class ApplicationController < ActionController::Base
     render plain: "You have some kind of weird, implausible VPN setup. If you are not doing something naughty, please contact the admin to start debugging.",
       status: :bad_request, content_type: "text/plain"
   end
+  rescue_from ActiveRecord::ConnectionNotEstablished do
+    render plain: "500 The database is not taking our calls.", status: 500, content_type: "text/plain"
+  end
 
   def agent_is_spider?
     ua = request.env["HTTP_USER_AGENT"].to_s
@@ -77,9 +82,17 @@ class ApplicationController < ActionController::Base
   # clear Rails session cookie if not logged in so nginx uses the page cache
   # https://ryanfb.xyz/etc/2021/08/29/going_cookie-free_with_rails.html
   def clear_session_cookie
-    key = Rails.application.config.session_options[:key] # "lobster_trap"
-    cookies.delete(key) if @user.blank? && session.empty?
-    request.session_options[:skip] = @user.blank? && session.empty?
+    if clear_session_cookie?
+      key = Rails.application.config.session_options[:key] # "lobster_trap"
+      cookies.delete(key)
+      request.session_options[:skip] = true
+    end
+  end
+
+  def clear_session_cookie?
+    # If the session has been loaded, it will contain some default keys and not
+    # be `empty?`
+    !@user && session.keys.all? { |k| SESSION_DEFAULT_KEYS.include?(k.to_s) }
   end
 
   def find_user_from_rss_token
@@ -156,11 +169,5 @@ class ApplicationController < ActionController::Base
 
   def show_title_h1
     @title_h1 = true
-  end
-
-  def tags_filtered_by_cookie
-    @_tags_filtered ||= Tag.where(
-      tag: cookies[TAG_FILTER_COOKIE].to_s.split(",")
-    )
   end
 end

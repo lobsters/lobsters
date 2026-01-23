@@ -1,5 +1,7 @@
 # typed: false
 
+require "cgi"
+
 class Github
   # see README.md on setting up credentials
 

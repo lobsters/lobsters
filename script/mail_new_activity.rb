@@ -109,13 +109,13 @@ if __FILE__ == $PROGRAM_NAME
 
         if s.description.present?
           body.push s.description.to_s.word_wrap(EMAIL_WIDTH)
+          body.push ""
         end
 
-        if s.url.present?
-          if s.description.present?
-            body.push ""
-          end
+        body.push "Vote: #{Routes.story_short_id_url s}"
 
+        if s.url.present?
+          body.push ""
           body.push "Via: #{s.url}"
 
           StoryText.cached?(s) do |text|
@@ -123,10 +123,6 @@ if __FILE__ == $PROGRAM_NAME
             body.push text.to_s.word_wrap(EMAIL_WIDTH)
           end
         end
-
-        body.push ""
-        body.push "-- "
-        body.push "Vote: #{Routes.story_short_id_url s}"
 
         mail.puts body.join("\n").quoted_printable
       end

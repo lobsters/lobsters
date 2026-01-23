@@ -9,6 +9,9 @@ But I make an unprincipled exception for :has because it solves so many big prob
 
 :root {
 	/* common color scheme */
+	--font-size-default: 1rem;
+        --font-size-tags: 0.66rem;
+
 	--color-bg: rgb(var(--base-bg));
 	--color-bg-50: rgb(var(--base-bg) / 50%);
 
@@ -31,11 +34,15 @@ But I make an unprincipled exception for :has because it solves so many big prob
 	--color-shadow-80: rgb(var(--base-shadow) / var(--opacity-shadow-80));
 	--color-shadow-25: rgb(var(--base-shadow) / var(--opacity-shadow-25));
 	--color-shadow-10: rgb(var(--base-shadow) / var(--opacity-shadow-10));
+
+	/* dimensions */
+	--comment-controls-height: 1.2lh;
 }
 
 /* generics */
 
 html {
+	font-size: var(--font-size-default);
 	/* force a vertical scrollbar to avoid page-shifting */
 	overflow-y: scroll;
 
@@ -47,7 +54,6 @@ html {
 
 body, textarea, input, button {
 	font-family: "helvetica neue", arial, sans-serif;
-	font-size: 10pt;
 	color: var(--color-fg);
 	line-height: 1.45em;
 }
@@ -68,13 +74,9 @@ li.story div.details span.link a:visited {
 }
 
 h1 {
-	font-size: 12pt;
 	font-weight: bold;
 	margin: 0.5em 0 1em 0;
 	padding: 0;
-}
-h2 {
-	font-size: 11pt;
 }
 
 .clear {
@@ -86,11 +88,15 @@ a.tag {
 	border: 1px solid var(--color-tag-border);
 	border-radius: 5px;
 	color: var(--color-fg-contrast-10);
-	font-size: 8pt;
+	font-size: var(--font-size-tags);
 	margin-left: 0.25em;
 	padding: 0px 0.4em 1px 0.4em;
 	text-decoration: none;
 	white-space: nowrap;
+}
+a.tag.filtered {
+	border: 1.5px dotted;
+	font-style: italic;
 }
 a.tag_is_media {
 	background-color: var(--color-tag-media-bg);
@@ -120,7 +126,6 @@ a.tag_announce, a.tag_ask, a.tag_show, a.tag_interview {
 	border: 1px solid var(--color-hat-crown-stroke);
 	border-bottom: 0;
 	border-radius: 5px 5px 0px 0px;
-	font-size: 8pt;
 	padding: 3px 5px 2px 5px;
 	text-decoration: none;
 	vertical-align: text-top;
@@ -132,7 +137,6 @@ a.tag_announce, a.tag_ask, a.tag_show, a.tag_interview {
 }
 .hat_openbsd_developer .crown {
 	font-family: comic sans ms, comic sans, comic neue, sans-serif;
-	font-size: 7pt;
 }
 .hat_sysop {
 	border-color: var(--color-lobsters-hat-sysop-brim-stroke);
@@ -183,21 +187,15 @@ input[type="url"],
 textarea {
 	border: 1px solid var(--color-box-border);
 }
-input:focus, textarea:focus {
-	outline-style: solid;
-	outline-width: 2px;
-}
 input[type="checkbox"] {
 	margin-top: 0.5em;
 }
-select {
-	border: 1px solid var(--color-box-border);
-}
+select:focus,
 input:focus,
 textarea:focus {
-	border-color: var(--color-box-border-focus);
+	outline: 2px solid var(--color-box-border-focus);
+	border-color: transparent;
 	color: var(--color-fg);
-	outline: 0;
 }
 textarea::placeholder {
 	color: var(--color-fg-contrast-7-5);
@@ -210,6 +208,7 @@ input[type="submit"].link_post {
 	border: none;
 	color: var(--color-fg-link);
 	cursor: pointer;
+	font-size: inherit;
 	outline: none;
 	padding: 0;
 	text-decoration: underline;
@@ -246,6 +245,7 @@ a.button {
 	color: var(--color-fg);
 	cursor: pointer;
 	display: inline-block;
+	font-size: inherit;
 	line-height: 18px;
 	padding: 2px 10px 2px 10px;
 	text-align: center;
@@ -267,13 +267,9 @@ input[type="submit"]:hover {
 }
 
 select {
+	border: 1px solid var(--color-box-border);
 	margin-top: 3px;
 	min-width: 100px;
-}
-select:focus {
-	border-color: var(--color-box-border-focus);
-	color: var(--color-fg);
-	outline: 0;
 }
 select::-moz-focus-inner {
 	border: 0;
@@ -329,6 +325,25 @@ header {
 	margin-left: 4px;
 	margin-right: 11px;
 	position: relative;
+}
+
+@media (prefers-contrast: more) {
+	#logo {
+		background-image: none;
+		text-align: center;
+	}
+
+	#logo:before {
+		content: "L";
+		font-family: serif;
+		color: var(--color-bg);
+	}
+
+	@media (prefers-color-scheme: dark) {
+		#logo:before {
+			color: var(--color-fg);
+		}
+	}
 }
 
 header#nav .navholder {
@@ -447,10 +462,6 @@ ol.comments1 > li.comments_subtree > ol.comments {
 	padding-left: 0;
 }
 
-.message .voters {
-	font-size: 20px;
-}
-
 .notifications li {
 	margin-bottom: 1lh;
 }
@@ -462,13 +473,17 @@ div.voters {
 	width: 40px;
 }
 
-.upvoter:before {
-	content: "\25b2";
-	color: transparent;
-	font-size: 1.2rem;
-	-webkit-text-stroke: 1px var(--color-fg-contrast-4-5);
+.voters .merge {
+	vertical-align: middle;
 }
-.upvoted .upvoter:before, .upvoter:hover:before {
+
+.upvoter:before {
+	content: "\25b3";
+	color: var(--color-fg);
+}
+.upvoter:hover:before,
+.upvoted .upvoter:before {
+	content: "\25b2";
 	color: var(--color-fg-accent);
 	-webkit-text-stroke: 1px var(--color-fg-accent);
 }
@@ -479,7 +494,6 @@ div.voters {
 	align-items: center;
 	justify-self: center;
 	text-decoration: none;
-	font-size: 9.5pt;
 }
 .upvoter:focus { outline: none; } /* don't outline after upvote click */
 .upvoter:focus-visible { outline: 2px solid var(--color-fg-link); } /* do outline when tabbing */
@@ -558,7 +572,6 @@ li .link {
 }
 
 li .link a {
-	font-size: 11.5pt;
 	text-decoration: none;
 }
 
@@ -580,17 +593,15 @@ li .tags {
 li .domain {
 	color: var(--color-fg-contrast-4-5);
 	font-style: italic;
-	font-size: 9pt;
 	text-decoration: none;
 	vertical-align: middle;
 }
 
 .merge {
-	background: url(merge.svg) no-repeat;
-	width: 0.6875lh;
-	height: 1lh;
+	background: url(merge.svg) no-repeat center left;
+	padding-left: 0.6875lh;
 	display: inline-block;
-	vertical-align: middle;
+	color: var(--color-fg-contrast-4-5);
 }
 
 li input.comment_folder_button {
@@ -598,7 +609,6 @@ li input.comment_folder_button {
 }
 li .comment_folder {
 	display: inline-block;
-	font-size: 9pt;
 	color: var(--color-fg-contrast-4-5);
 	letter-spacing: 0.1em;
 	width: 1.5em;
@@ -629,36 +639,27 @@ li.comments_subtree {
 	position: relative;
 }
 
-li .comment_parent_tree_line {
+/*  Render a dotted line between second+ level siblings
+ *  This works by finding the top-level .comments_subtree, then starting 2
+ *  levels below that. There is an intermediate level rendered by the views
+ *  that render the comments/_threads partial that has to be accounted for.
+ */
+:not(li.comments_subtree) li.comments_subtree li.comments_subtree li.comments_subtree:has(+ li.comments_subtree)::before {
+	content: "";
 	position: absolute;
-	border-left: 1px dotted var(--color-fg-shape);
-	top: 0.5em;
+	top: 3.6lh;
 	left: 1em;
 	bottom: 0;
-}
-li .comment_parent_tree_line.score_shown {
-	top: 3.6lh;
-}
-li .comment_siblings_tree_line {
-	position: absolute;
-	left: -1em;
 	border-left: 1px dotted var(--color-fg-shape);
-	top: 0;
-	bottom: 0;
-}
-li:last-child > .comment_siblings_tree_line {
-	border-left-color: var(--color-bg);
 }
 
 .thread_summary {
 	color: var(--color-fg-contrast-4-5);
-	font-size: 9.5pt;
 	/* .comment_folder (-4px margin-left + 1.5em width) + .voters (30px width) */
 	margin-left: calc(-4px + 1.5em + 30px);
 }
 li .byline {
 	color: var(--color-fg-contrast-4-5);
-	font-size: 9.5pt;
 }
 li .byline > img.avatar {
 	margin-bottom: -5px;
@@ -718,14 +719,17 @@ li .byline a.story_has_suggestions {
 	margin: 1em 0 1em 32px; /* matching div.detail */
 }
 
-li.story.hidden *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
-li.story.hidden .score {
+:is(ol:not(.show_hidden) li.story.hidden:not(:only-child)) :is(
+	.dropdown_parent > .flagger, /* Flag button */
+	.dropdown_parent > label, /* Caches button */
+	.byline > :not(.dropdown_parent),
+	.details > :not(.byline),
+	.voters,
+	.mobile_comments
+) {
 	opacity: 0.25;
 }
 
-ol.show_hidden li.story.hidden {
-	opacity: 1.0 !important;
-}
 li.story.saved a.saver {
 	color: var(--color-fg-affirmative);
 }
@@ -743,27 +747,43 @@ li div.details {
 div.story_content {
 	margin-bottom: 1em;
 }
-ol.stories.list div.story_content {
+ol.stories.list details.story_content {
 	color: var(--color-fg-contrast-6);
-	max-height: 2.6em;
-	margin: 0.25em 40px 0.25em 0;
+	/* https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/line-clamp */
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	line-clamp: 3;
 	overflow: hidden;
-	text-overflow: clip;
 }
 
-div.morelink {
+ol.stories.list details.story_content:open {
+	color: var(--color-fg-contrast-10);
+	-webkit-line-clamp: none;
+	line-clamp: none;
+}
+
+nav.morelink {
 	float: left;
 }
 
-div.morelink,
+nav.morelink,
 div.page_link_buttons {
 	margin-top: 1.5em;
 }
-div.morelink a {
+nav.morelink a {
 	color: var(--color-fg-contrast-7-5);
 	font-weight: bold;
 	text-decoration: none;
 }
+
+nav.morelink a[rel="prev"]::before {
+	content: "<< "/"";
+}
+nav.morelink a[rel="next"]::after {
+	content: " >>"/"";
+}
+
 div.page_link_buttons {
 	font-weight: bold;
 	margin-top: 2em;
@@ -789,7 +809,7 @@ div.page_link_buttons span {
 
 div.story_text {
 	margin-bottom: 1.5em;
-	max-width: 700px;
+	max-width: 45rem;
 	word-wrap: break-word;
 }
 div.story_text p {
@@ -804,10 +824,20 @@ a#story_text_expander {
 }
 
 div.comment_text {
-	font-size: 10.5pt;
-	max-width: 700px;
+	max-width: 45rem;
 	word-wrap: break-word;
 	overflow: hidden;
+}
+.controls {
+	display: flex;
+	flex-flow: row;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	justify-content: start;
+	margin-top: 1rem;
+}
+.controls .buttons, .controls .hats, .controls .markdown_help summary {
+	height: var(--comment-controls-height);
 }
 
 div.comment_text blockquote,
@@ -875,7 +905,6 @@ div.comment_text code {
 	border-bottom: 1px solid var(--color-box-border);
 	color: var(--color-fg-contrast-10);
 	display: block;
-	font-size: 9pt;
 	padding: 3px;
 	text-decoration: underline;
 }
@@ -884,7 +913,6 @@ div.comment_text code {
 }
 #flag_dropdown a.cancel-reason {
 	background-color: var(--color-box-bg-shaded);
-	font-size: 8pt;
 }
 
 #modal_backdrop {
@@ -911,17 +939,18 @@ div.comment_text code {
 
 
 
-.markdown_help {
-	padding-left: 0.25rem;
-}
-
-.markdown_help summary {
-	color: var(--color-fg-contrast-4-5);
-	font-size: 9pt;
-	text-align: right;
+.controls details {
+	margin-left: auto;
 }
 #story_box .markdown_help summary {
 	width: calc(7em + 610px);
+}
+.markdown_help summary {
+	color: var(--color-fg-contrast-4-5);
+	text-align: right;
+}
+.controls .markdown_help[open] summary {
+	margin-top: calc(var(--comment-controls-height) * -1);
 }
 
 div#story_preview {
@@ -967,7 +996,7 @@ div#story_box textarea {
 
 div.comment_form_container form {
 	margin-left: 40px;
-	max-width: 700px;
+	max-width: 45rem;
 }
 
 div.comment_form_container textarea {
@@ -1070,7 +1099,6 @@ td.warned div, td.unwarned div {
 }
 .nominal {
 	color: var(--color-fg-accent);
-	font-size: 2em;
 	text-align: center;
 }
 .mod_activities {
@@ -1082,6 +1110,9 @@ td.warned div, td.unwarned div {
 }
 .mod_activities .moderation {
 	list-style: '🕮';
+}
+.mod_activities .mod_mail {
+	list-style: '✉';
 }
 .mod_activities .mod_note {
 	list-style: '🔑';
@@ -1126,6 +1157,7 @@ table.data.zebra tr:nth-child(odd) td,
 table.data tr.nobottom td {
 	border-bottom: 0px;
 	padding-bottom: 0px;
+
 }
 table.data tr.nobottom td.wrap {
 	overflow-wrap: anywhere;
@@ -1156,8 +1188,16 @@ table.moderations tr > td:nth-child(1) {
 	margin-bottom: 4px;
 }
 
-label.required {
-	font-weight: bold;
+label:has(+ *:required)::after,
+label:has(+ *:not(label) *:required)::after,
+label:has(+ *[type="hidden"] + *:required)::after {
+	content: "*";
+	margin-left: 0.15em;
+	vertical-align: middle;
+}
+/* Labels on the (read-only) Profile page get extra contrast */
+.profile label::after {
+	content: ":";
 }
 .box img {
 	vertical-align: middle;
@@ -1228,7 +1268,8 @@ label.required {
 
 .labelled_grid textarea,
 .labelled_grid input[type="text"],
-.labelled_grid input[type="password"] {
+.labelled_grid input[type="password"],
+.labelled_grid input[type="email"] {
 	width: 100%;
 	box-sizing: border-box;
 }
@@ -1262,10 +1303,6 @@ section + section {
 
 section section + section {
 	margin-top: 1.5rem;
-}
-
-input[type="submit"]:not(.link_post) {
-	margin-top: 1rem;
 }
 
 span.hint {
@@ -1354,7 +1391,6 @@ div.flash-error h2,
 div.flash-notice h2,
 div.flash-success h2,
 div.user-stats h2 {
-	font-size: 1.25em;
 	margin: 0;
 }
 
@@ -1370,7 +1406,6 @@ div.user-stats h2 {
 	padding: 2px 0 0px 5px;
 	/* supposed to be inherited from body, but TS overwrites */
 	font-family: "helvetica neue", arial, sans-serif;
-	font-size: 13.33px;
 	color: var(--color-fg);
 	line-height: 1.5rem;
 }
@@ -1407,7 +1442,6 @@ div.user-stats h2 {
 	display: block;
 	position: absolute;
 	color: grey;
-	font-size: 10px;
 	outline: none;
 	padding-right: 3px;
 	top: 0px;
@@ -1445,7 +1479,8 @@ div.user-stats h2 {
 
 #story_holder .ts-dropdown .option {
 	color: var(--color-fg);
-	font-family: "helvetica neue", arial, sans-serif;
+        /* supposed to be inherited from body, but TS overwrites */
+	font-family: "Helvetica Neue", Arial, sans-serif;
 	line-height: 80%;
 	margin: 0px;
 	padding: 7px 7px 8px;
@@ -1460,7 +1495,6 @@ input[type="submit"].link_post.pushover_button {
 	border-radius: 3px;
 	color: var(--color-fg);
 	display: inline-block;
-	font: 11px/18px "Helvetica Neue",Arial,sans-serif;
 	font-weight: bold;
 	cursor: pointer;
 	height: 22px;
@@ -1473,10 +1507,8 @@ input[type="submit"].link_post.pushover_button {
 }
 
 /* search */
-
 .searchresults summary .heading {
 	font-weight: bold;
-	font-size: 11pt; /* h2 */
 }
 .searchresults summary {
 	margin: 1em 0;
@@ -1491,10 +1523,68 @@ input[type="submit"].link_post.pushover_button {
 	padding: 2px;
 }
 
+.radio-group-container {
+	border: 0;
+	padding: 0;
+	margin: 1rem 0 0.5rem;
+}
+
+.radio-group-container legend {
+	float: left;
+	width: 7em;
+	padding: 0;
+}
+
+.radio-group-container input[type=radio] {
+	margin: 0 0.25rem 0 0;
+	vertical-align: text-bottom;
+}
+
+.radio-group-container .radio-group {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+}
+
+/* Used in the user settings page */
+.radio-group-container.grid-fieldset {
+	margin-bottom: 0.75rem;
+}
+
+.radio-group-container.grid-fieldset legend {
+	width: 10rem;
+	margin-right: 1rem;
+}
+
+/* Tags page */
+.tag-title {
+	display: flex;
+	gap: 0.5rem;
+	align-items: baseline;
+}
+
+.tag-title:first-of-type {
+	margin-top: -0.75rem;
+}
+
+@media only screen and (max-width: 480px) {
+	.radio-group-container legend {
+		float: none;
+		margin-bottom: 0.5rem;
+	}
+
+	.radio-group-container .radio-group {
+		gap: 1rem;
+	}
+
+	.radio-group-container .radio-group	label {
+		display: inline;
+	}
+}
 
 @media screen and (min-width: 481px) {
 	body {
-		max-width: 900px;
+		max-width: 60rem;
 		padding-bottom: 2em;
 	}
 
@@ -1537,9 +1627,6 @@ input[type="submit"].link_post.pushover_button {
 	#inside > ol.comments div.voters {
 		width: 30px;
 	}
-	.labelled_grid > label:after {
-		content: ':';
-	}
 
 	.help {
 		margin-top: 2em;
@@ -1552,7 +1639,6 @@ input[type="submit"].link_post.pushover_button {
 	}
 	#story_holder .ts-control {
 		display: inline-block;
-		position: absolute;
 		width: 611px;
 	}
 }
@@ -1563,11 +1649,7 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	header#nav .corner .inbox {
-		font-size: 18px;
 		vertical-align: bottom;
-	}
-	header#nav .corner .inbox .inbox_unread {
-		font-size: 10pt;
 	}
 	header#nav {
 		background-color: var(--color-box-bg-shaded);
@@ -1627,6 +1709,12 @@ input[type="submit"].link_post.pushover_button {
 		margin: 0.5rem;
 	}
 
+	legend,
+	form label:not(:has(> input[type="radio"])),
+	.profile label {
+		font-weight: bold;
+	}
+
 	.comment {
 		padding-left: 0;
 	}
@@ -1643,10 +1731,6 @@ input[type="submit"].link_post.pushover_button {
 	}
 	ol.comments1 > li.comments_subtree {
 		margin-left: 0;
-	}
-
-	li .comment_siblings_tree_line {
-		border-left: transparent;
 	}
 
 	div.voters {
@@ -1682,7 +1766,6 @@ input[type="submit"].link_post.pushover_button {
 		display: table;
 	}
 	ol.stories.list li.story div.story_liner {
-		background-color: var(--color-mobile-story-liner-bg);
 		display: table-cell;
 		padding-top: 0.5em;
 		padding-bottom: 0.75em;
@@ -1690,7 +1773,6 @@ input[type="submit"].link_post.pushover_button {
 	}
 	ol.stories.list li.story .mobile_comments {
 		display: table-cell !important;
-		font-size: 11pt;
 		min-width: 40px;
 		text-align: center;
 		text-decoration: none;
@@ -1730,7 +1812,6 @@ input[type="submit"].link_post.pushover_button {
 		border-radius: 5px;
 		color: var(--color-fg);
 		display: block;
-		font-size: 9pt;
 		margin: 0 0.5em;
 		padding: 2px;
 		position: relative;
@@ -1759,12 +1840,9 @@ input[type="submit"].link_post.pushover_button {
 	div.story_content {
 		margin: 0 0 0 28px;
 	}
-	div.morelink {
+	nav.morelink {
 		margin-left: 28px;
 		float: none;
-	}
-	li.story div.byline {
-		font-size: 10pt;
 	}
 
 	div.box label,
@@ -1835,11 +1913,6 @@ input[type="submit"].link_post.pushover_button {
 	.labelled_grid > input[type="checkbox"],
 	.labelled_grid > *:has(input[type="checkbox"]) {
 		grid-column: 2;
-	}
-
-	/* Add a colon to the label for checkboxes, as in the desktop view */
-	.labelled_grid	label.for_checkbox:after {
-		content: ":";
 	}
 
 	/* Force hints onto the next line, with no indent */

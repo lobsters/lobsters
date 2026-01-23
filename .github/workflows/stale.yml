@@ -17,10 +17,10 @@ jobs:
     steps:
     - uses: actions/stale@v9
       with:
-        stale-pr-message: "This PR has had no activity for 21 days. Please leave a comment or commit to indicate you're still actively working on it."
-        close-pr-message: "This PR was closed because it was open for 28 days with no activity. Please reopen when you'd like to continue work on this."
-        days-before-pr-stale: 21
-        days-before-pr-close: 7
+        stale-pr-message: "This PR has had no activity for 30 days. Please leave a comment or commit to indicate you're still actively working on it."
+        close-pr-message: "This PR was closed because it was open for 40 days with no activity. Please reopen when you'd like to continue work on this."
+        days-before-pr-stale: 30
+        days-before-pr-close: 10
         # Plan: https://github.com/lobsters/lobsters/issues/1368
         # This GitHub Action doesn't address the feature we want of allowing
         # users or assign themselves or being unassigned if an issue goes stale.

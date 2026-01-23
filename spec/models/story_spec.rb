@@ -707,6 +707,20 @@ describe Story do
   end
 
   describe "suggestions" do
+    it "replaces a user's suggestion when they suggest again" do
+      # ActiveRecord::Base.logger = Logger.new STDOUT
+
+      story = create :story, tags: Tag.where(tag: "tag1")
+      user = create(:user)
+
+      # simulate two POSTs to /s/abc123/suggestions
+      story.save_suggested_tags_for_user!(["tag2"], user)
+      story.save_suggested_tags_for_user!(["tag2"], user)
+
+      story.reload
+      expect(story.tags.map(&:tag)).to eq(["tag1"])
+    end
+
     it "does not auto-accept suggestion if quorum is not met" do
       story = create(:story, title: "hello", url: "http://example.com/")
       user = create(:user)

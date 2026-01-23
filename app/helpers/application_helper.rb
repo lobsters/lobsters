@@ -78,9 +78,19 @@ module ApplicationHelper
     parsed.to_html
   end
 
+  def filtered_tags
+    @_filtered_tags ||= if @user
+      @user.tag_filter_tags
+    else
+      Tag.where(
+        tag: cookies[ApplicationController::TAG_FILTER_COOKIE].to_s.split(",")
+      )
+    end
+  end
+
   def inline_avatar_for(viewer, user)
     if !viewer || viewer.show_avatars?
-      link_to avatar_img(user, 16), user_path(user)
+      link_to avatar_img(user, 16), user_path(user), {tabindex: "-1", aria: {hidden: true}}
     end
   end
 
@@ -90,6 +100,10 @@ module ApplicationHelper
     current = request.path.sub(/\/page\/\d+$/, "")
     path.sub!(/\/page\/\d+$/, "")
     options[:class] = class_names(options[:class], current_page: current == path)
+    if current == path
+      options[:aria] ||= {}
+      options[:aria][:current] = "page"
+    end
     link_to text, path, options
   end
 
@@ -158,16 +172,42 @@ module ApplicationHelper
     super
   end
 
-  def tag_link(tag)
-    link_to tag.tag, tag_path(tag), class: tag.css_class, title: tag.description
+  def tag_link(tag, options = {})
+    link_to tag.tag,
+      tag_path(tag),
+      options.reverse_merge({
+        class: [tag.css_class, filtered_tags.include?(tag) ? "filtered" : nil],
+        title: tag.description
+      })
   end
 
   def how_long_ago_label(time)
     ago = how_long_ago(time)
-    content_tag(:time, ago, title: time.strftime("%F %T %z"), datetime: time.strftime("%F %T%z"))
+    at = time.strftime("%F %T")
+    content_tag(:time, ago, title: at, datetime: at, "data-at-unix": time.to_i)
   end
 
   def how_long_ago_link(url, time)
     content_tag(:a, how_long_ago_label(time), href: url)
+  end
+
+  def comment_score_for_user(comment, user)
+    if comment.show_score_to_user?(user)
+      comment.score
+    else
+      "~"
+    end
+  end
+
+  def upvoter_score(score)
+    if score.is_a? Integer
+      number_to_human(score, format: "%n%u")
+    else
+      "~"
+    end
+  end
+
+  def divider_tag
+    content_tag(:span, " | ", aria: {hidden: "true"})
   end
 end

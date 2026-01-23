@@ -10,7 +10,7 @@ It's been used to run [sister sites](https://github.com/lobsters/lobsters/blob/m
 #### Contributing bugfixes and new features
 
 We'd love to have your help.
-Please see the [CONTRIBUTING](https://github.com/lobsters/lobsters/blob/main/CONTRIBUTING.md) file for details.
+Please see the [CONTRIBUTING](https://github.com/lobsters/lobsters/blob/main/CONTRIBUTING.md) file for details and dev environment setup.
 If you have questions, there is usually someone in [our chat room](https://lobste.rs/chat) who's familiar with the code.
 
 Lobsters is a volunteer project with limited development time and a long time horizon, we hope to be running for decades.
@@ -18,64 +18,16 @@ So our design philosophy is a little different than a typical commercial product
 
  * We started with Rails 3.2.2 in 2012, so we have a few dusty corners and places where we don't take advantage of features that were introduced since we started.
  * We lean into using Rails features instead of custom code, and we'll write a couple dozen lines of narrow code for a feature rather than add a dependency that might require maintenance.
- * We are especially reluctant to add new production services like queues, caches, databases, or SAAS services.
+ * We are very reluctant to add new production services and almost entirely unwilling to depend on external services.
+   We take pride in self-hosting from the VPS up, which necessitates reducing the number of moving parts.
  * We test to ensure functionality, but testing is a lot lighter for moderator and other non-core features.
    We're trying to maximize the return on investment of testing rather than minimize errors.
  * We're willing to take downtime for big code changes rather than try to make them seamless.
+ * We don't serve JavaScript to logged-out visitors, we use as little JS as possible for users with a vanilla/jQuery-style of DOM attachment, we are (very slowly) making JS entirely optional for users, and we accept JS for mod features.
+   Keeping JS small and optional helps keep the site fast, and an unusually high proportion of visitors use old, odd, and homebrew browsers.
+   We do not want JavaScript in our build chain, it requires too much maintenance.
 
-
-#### Development setup
-
-We have a [Docker setup guide](./docs/setup_with_docker.md) if you use that for development, but you can also set up directly on your machine:
-
-* Install and start MariaDB.
-  On Linux use [your package manager](https://mariadb.com/kb/en/distributions-which-include-mariadb/).
-  On MacOS you can [install with brew](https://mariadb.com/kb/en/installing-mariadb-on-macos-using-homebrew/).
-  On Windows there's an [installer](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.5.2&os=Linux&cpu=x86_64&pkg=tar_gz&i=systemd&mirror=starburst_stlouis).
-
-* Start the mariadb server using one of the [methods mentioned in the mariadb knowledge base](https://mariadb.com/kb/en/starting-and-stopping-mariadb-automatically/).
-
-* Open the console using `mariadb`, and set the `root` user password (type `ctrl-d` to exit afterwards)
-
-```sql
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
-```
-
-* Install the Ruby version specified in [.ruby-version](https://github.com/lobsters/lobsters/blob/main/.ruby-version)
-
-* Checkout the lobsters git tree from Github
-    ```sh
-    $ git clone git@github.com:lobsters/lobsters.git
-    $ cd lobsters
-    lobsters$
-    ```
-* Run `rails credentials:edit` to create and edit your encrypted credentials file.
-  This is where you store API keys for external services and features like linking accounts.
-  Copy and paste the contents of `config/credentials.yml.enc.sample` in.
-  On setup, Rails will give you new random value for `secret_key_base` and you can use `rails secret` any time you need to generate another.
-
-* Run `bin/setup` to install dependencies and set up db
-
-    ```sh
-    lobsters$ bin/setup
-    ```
-
-* On your production server, copy `config/initializers/production.rb.sample`
-  to `config/initalizers/production.rb` and customize it with your site's
-  `domain` and `name`. (You don't need this on your dev machine).
-
-* On your personal computer, you probably want to add some sample data.
-
-    ```sh
-    lobsters$ rails fake_data
-    ```
-
-* Run the Rails server in development mode.
-  You should be able to login to `http://localhost:3000` with your new `test` user:
-
-    ```sh
-    lobsters$ rails server
-    ```
+Please see [CONTRIBUTING.md](/CONTRIBUTING.md) for setup.
 
 ## Production
 
@@ -141,7 +93,7 @@ Setup:
 
       Search the codebase for uses of the `ENV` global for more that can be easily configured.
 
-    * Databases: We manage this independely of Hatchbox for historic reasons, see `#539`.
+    * Databases: We manage this independently of Hatchbox for historic reasons, see `#539`.
     * Cron Jobs:
 
       ```

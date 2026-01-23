@@ -16,6 +16,11 @@
     <% end %>
   </p>
 
+  <% if filtered_tags.include? tag %>
+    You have <%= link_to "filtered", filters_path %> this tag.
+    Links to tagged stories and their comments will not be shown elsewhere on the site for you.
+  <% end %>
+
 
   <p>
     Most often also tagged with

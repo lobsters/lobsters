@@ -1,6 +1,5 @@
 # Use an official Ruby image as a base
-ARG RUBY_VERSION
-FROM ruby:${RUBY_VERSION}
+FROM ruby:4.0.0
 
 # Install dependencies
 RUN apt-get update -qq && apt-get install -y \
@@ -8,22 +7,29 @@ RUN apt-get update -qq && apt-get install -y \
   libjemalloc2 \
   libvips \
   mariadb-client \
+  clang \
   vim
 
 # Set working directory
 WORKDIR /lobsters
 
+# Set database hostname
+ENV DATABASE_HOST db
+
 # Install Bundler
 RUN gem install bundler
 
 # Copy Gemfile and Gemfile.lock
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile Gemfile.lock .ruby-version ./
 
-# Install gems
-RUN bundle install
+# Copy bin/setup
+COPY bin/setup ./bin/
 
+# Copy database configuration
+COPY config/database.yml.sample ./config/
 
-ENV DATABASE_HOST db
+# Setup the application
+RUN bin/setup
 
 # Expose port for Rails server
 EXPOSE 3000

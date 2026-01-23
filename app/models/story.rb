@@ -249,7 +249,7 @@ class Story < ApplicationRecord
   before_save :log_moderation
   before_save :fix_bogus_chars
   after_create :mark_submitter, :record_initial_upvote
-  after_save :recreate_links, :update_cached_columns, :update_story_text
+  after_save :bust_comment_redirect_cache, :recreate_links, :update_cached_columns, :update_story_text
 
   validate do
     if url.present?
@@ -304,6 +304,14 @@ class Story < ApplicationRecord
     else
       false
     end
+  end
+
+  # on merge, bust the cache for redirecting /c/abc123 -> /s/def456/title#c_abc123
+  # see CommentsController#redirect_from_short_id
+  def bust_comment_redirect_cache
+    return unless merged_story_id_previously_changed?
+
+    Rails.cache.delete_multi comments.pluck(:short_id).map { "c_#{it}" }
   end
 
   def check_already_posted_recently?
@@ -414,6 +422,12 @@ class Story < ApplicationRecord
     else
       ""
     end
+  end
+
+  # Recalculates the cached normalized URL for each story, should be run whenever
+  # Utils.normalize changes so that new stories can locate old similar ones correctly.
+  def self.refresh_normalized_urls!
+    Story.where.not(url: "").find_each { |s| s.update_columns normalized_url: Utils.normalize(s.url) }
   end
 
   # all stories with similar urls
@@ -559,7 +573,16 @@ class Story < ApplicationRecord
   def can_have_images?
     # doesn't test self.editor so a user can't trick a mod into editing a
     # story to enable an image
-    user.try(:is_moderator?)
+    return false if user.nil?
+
+    return user.is_moderator? if previewing
+
+    current_time = Time.current
+    check_at = created_at || current_time
+
+    Hat.where(user_id: user.id, modlog_use: true).any? do |hat|
+      check_at.between?(hat.created_at, hat.doffed_at || current_time)
+    end
   end
 
   def can_have_suggestions_from_user?(user)
@@ -650,7 +673,7 @@ class Story < ApplicationRecord
   end
 
   def generated_markeddown_description
-    Markdowner.to_html(description, allow_images: can_have_images?)
+    Markdowner.to_html(description, allow_images: can_have_images?, as_of: created_at)
   end
 
   # TODO: race condition: if two votes arrive at the same time, the second one
@@ -756,8 +779,7 @@ class Story < ApplicationRecord
   end
 
   def log_moderation
-    if new_record? ||
-        (!editing_from_suggestions && (!editor || editor.id == user_id))
+    if new_record? || (!editing_from_suggestions && (!editor || editor.id == user_id))
       return
     end
 
@@ -854,13 +876,13 @@ class Story < ApplicationRecord
   end
 
   def save_suggested_tags_for_user!(new_tag_names_a, user)
-    suggested_taggings.where(user_id: user.id).destroy_all
+    suggested_taggings.where(user_id: user.id).delete_all
 
-    new_tags = Tag
+    new_suggested_tags = Tag
       .active
       .where(tag: new_tag_names_a.uniq.compact_blank)
-      .map { |t| {user: user, tag: t} }
-    suggested_taggings.create!(new_tags)
+      .map { |t| {user: user, story: self, tag: t} }
+    SuggestedTagging.create!(new_suggested_tags)
 
     # if enough users voted on the same set of replacement tags, do it
     tag_votes = {}
@@ -885,9 +907,9 @@ class Story < ApplicationRecord
       self.editing_from_suggestions = true
       self.moderation_reason = "Automatically changed from user suggestions"
       self.tags_was = tags.to_a
-      self.tags = Tag.where(tag: final_tags)
-      if !save
-        # Rails.logger.error "[s#{id}] failed auto promoting: " << errors.inspect
+      Story.transaction do
+        self.tags = Tag.where(tag: final_tags)
+        save!
       end
     end
   end
@@ -928,7 +950,7 @@ class Story < ApplicationRecord
 
   def title=(t)
     # change unicode whitespace characters into real spaces
-    self[:title] = t.to_s.strip.gsub(/[\.,;:!]*$/, "")
+    self[:title] = t.to_s.strip.gsub(/[.,;:!]*$/, "")
   end
 
   def title_as_slug
@@ -1040,11 +1062,11 @@ class Story < ApplicationRecord
     u = u.strip
 
     # strip out tracking query params
-    if (match = u.match(/\A([^\?]+)\?(.+)\z/))
-      params = match[2].split(/[&\?]/)
-      # utm_ is google and many others; sk is medium; si is youtube source id
+    if (match = u.match(/\A([^?]+)\?(.+)\z/))
+      params = match[2].split(/[&?]/)
+      # utm_ is google and many others; sk is medium; si/pp is youtube
       params.reject! { |p|
-        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=|^linkId=|^si=|^trk=/x)
+        p.match(/^utm_(source|medium|campaign|term|content|referrer)=|^sk=|^gclid=|^fbclid=|^linkId=|^pp=|^si=|^trk=/x)
       }
       params.reject! { |p|
         if /^lobsters|^src=lobsters|^ref=lobsters/x.match?(p)
@@ -1146,7 +1168,7 @@ class Story < ApplicationRecord
         title = title[0, title.length - site_name.length]
 
         # remove title/site name separator
-        if / [ \-\|\u2013] $/.match?(title)
+        if / [ \-|\u2013] $/.match?(title)
           title = title[0, title.length - 3]
         end
       end

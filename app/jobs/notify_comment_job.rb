@@ -13,10 +13,22 @@ class NotifyCommentJob < ApplicationJob
   end
 
   def deliver_mention_notifications(comment, notified)
-    to_notify = comment.plaintext_comment.scan(/\B[@~]([\w\-]+)/).flatten.uniq - notified - [comment.user.username]
-    User.active.where(username: to_notify).find_each do |u|
-      u.notifications.create(notifiable: comment)
+    mentions = comment.comment.scan(/\B[@~]([\w-]+)/).flatten.uniq
+    # Remove username of author and anyone already notified about the reply.
+    # If they have email_replies off, a reply that @mentions them will not generate a
+    # mention email. email_replies trumps email_mentions to minimize unwanted emails.
+    to_notify = mentions - [comment.user.username] - notified
 
+    # every user gets a Notification, which may be filtered out from those views so that unhiding a
+    # story reveals the notifications
+    to_notify = User.active.where(username: to_notify)
+    to_notify.find_each do |u|
+      u.notifications.create(notifiable: comment)
+    end
+
+    # but there's no recalling an email or pushover, so sending those has to reflect story hiding
+    not_hiding_users = to_notify.left_outer_joins(:hidings).where(hidden_stories: {id: nil})
+    not_hiding_users.find_each do |u|
       if u.email_mentions?
         begin
           EmailReplyMailer.mention(comment, u).deliver_now
@@ -29,7 +41,7 @@ class NotifyCommentJob < ApplicationJob
         u.pushover!(
           title: "#{Rails.application.name} mention by " \
             "#{comment.user.username} on #{comment.story.title}",
-          message: comment.plaintext_comment,
+          message: comment.comment,
           url: Routes.comment_target_url(comment),
           url_title: "Reply to #{comment.user.username}"
         )
@@ -56,13 +68,19 @@ class NotifyCommentJob < ApplicationJob
   def deliver_reply_notifications(comment)
     notified = []
 
-    users_following_thread(comment).each do |u|
+    to_notify = users_following_thread(comment)
+    to_notify.each do |u|
       u.notifications.create(notifiable: comment)
+      notified << u.username
+    end
+
+    hiding_users = HiddenStory.where(story: comment.story).pluck(:user_id)
+    to_notify.each do |u|
+      next if hiding_users.include? u.id
 
       if u.email_replies?
         begin
           EmailReplyMailer.reply(comment, u).deliver_now
-          notified << u.username
         rescue => e
           # Rails.logger.error "error e-mailing #{u.email}: #{e}"
         end
@@ -72,11 +90,10 @@ class NotifyCommentJob < ApplicationJob
         u.pushover!(
           title: "#{Rails.application.name} reply from " \
             "#{comment.user.username} on #{comment.story.title}",
-          message: comment.plaintext_comment,
+          message: comment.comment,
           url: Routes.comment_target_url(comment),
           url_title: "Reply to #{comment.user.username}"
         )
-        notified << u.username
       end
     end
 

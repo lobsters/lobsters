@@ -24,7 +24,7 @@ class HatRequest < ApplicationRecord
       m.author_user_id = user.id
       m.recipient_user_id = user_id
       m.subject = "Your hat \"#{hat}\" has been approved"
-      m.body = reason
+      m.body = reason + (" " * 20) # kludge to ensure there are 20 characters
       m.save!
 
       destroy!

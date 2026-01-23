@@ -70,6 +70,15 @@ class Link < ApplicationRecord
     end
   end
 
+  # Recalculates the cached normalized URL for each link, should be run whenever
+  # Utils.normalize changes so that new story submissions can locate links in old
+  # discussions correctly.
+  def self.refresh_normalized_urls!
+    # Note that we assume normalization doesn't affect whether a URL links to a comment or story
+    # on site, as calculated in url=
+    Link.find_each { |l| l.update_columns normalized_url: Utils.normalize(l.url) }
+  end
+
   private
 
   def valid_url

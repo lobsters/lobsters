@@ -9,6 +9,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  RUBYOPT: "--yjit --enable-frozen-string-literal --debug-frozen-string-literal"
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -19,13 +22,17 @@ jobs:
     env:
       DATABASE_URL: "sqlite3::///tmp/test.sqlite3"
       RAILS_ENV: test
-      RUBY_YJIT_ENABLE: "1"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
+      - name: Install libvips dependency
+        run: |
+          sudo apt update
+          sudo apt install -y libvips
 
       - name: Workaround for inability to templatize credentials (#1380)
         run: cp .github/workflows/check/* config/
@@ -37,10 +44,6 @@ jobs:
         run: |
           bundle exec rspec
           bundle exec rspec spec/slow/*_spec.rb
-        env:
-          # Enabling frozen string literals in rspec only because brakeman
-          # isn't compatible yet: https://github.com/presidentbeef/brakeman/pull/1855
-          RUBYOPT: "--enable-frozen-string-literal --debug-frozen-string-literal"
 
   lint:
     runs-on: ubuntu-latest
@@ -49,7 +52,7 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
@@ -65,14 +68,14 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
 
       - name: Run brakeman
         run: |
-          bundle exec brakeman --ensure-latest --ensure-ignore-notes
+          bundle exec brakeman --ensure-ignore-notes
 
   leak-check:
     runs-on: ubuntu-latest
@@ -81,7 +84,7 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true

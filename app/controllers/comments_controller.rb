@@ -89,11 +89,22 @@ class CommentsController < ApplicationController
   end
 
   def redirect_from_short_id
-    if (comment = find_comment)
-      redirect_to Routes.comment_target_path(comment, true)
-    else
-      render plain: "can't find comment", status: 400
+    if @user&.is_admin? && params[:id] =~ /\A\d+\z/
+      redirect_to Routes.comment_target_path(Comment.find(params[:id]), true)
     end
+
+    url = Rails.cache.fetch("c_#{params[:id]}", expires_in: nil) do
+      story = Story.joins("join stories as s2 on stories.id = coalesce(s2.merged_story_id, s2.id) join comments on comments.story_id = s2.id")
+        .where(comments: {short_id: params[:id]})
+        .select(:short_id, :title)
+        .first
+
+      render plain: "can't find comment", status: 400 and return unless story
+      Routes.title_path story, anchor: "c_#{params[:id]}"
+    end
+
+    # having looked up the given id as a comment short_id, we know it's safe to interpolate
+    redirect_to url
   end
 
   def edit
@@ -134,16 +145,7 @@ class CommentsController < ApplicationController
       render partial: "commentbox", locals: {comment: comment, story: story}
     else
       parents = comment.parents.for_presentation
-
-      parent_ids = parents.map(&:id)
-      @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user&.id, parent_ids)
-      summaries = Vote.comment_vote_summaries(parent_ids)
-      current_user_reply_parents = @user&.ids_replied_to(parent_ids) || Hash.new { false }
-      parents.each do |c|
-        c.current_vote = @votes[c.id]
-        c.vote_summary = summaries[c.id]
-        c.current_reply = current_user_reply_parents.has_key? c.id
-      end
+      parents = CommentVoteHydrator.new(parents, @user)
       render "_commentbox", locals: {
         comment: comment,
         story: story,
@@ -188,7 +190,7 @@ class CommentsController < ApplicationController
 
       render partial: "comment", locals: {comment: comment, show_story: show_story, show_tree_lines: show_tree_lines}
     else
-      redirect_back fallback_location: root_path
+      redirect_back_or_to(root_path)
     end
   end
 
@@ -289,22 +291,14 @@ class CommentsController < ApplicationController
 
     @comments = Comment.accessible_to_user(@user)
       .not_on_story_hidden_by(@user)
-      .filter_tags(filtered_tag_ids)
+      .filter_tags(filtered_tags.map(&:id))
       .order(id: :desc)
       .includes(:user, :hat, story: :user)
       .joins(:story).where.not(stories: {is_deleted: true})
       .limit(COMMENTS_PER_PAGE)
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 
-    comment_ids = @comments.map(&:id)
-    @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user&.id, comment_ids)
-    summaries = Vote.comment_vote_summaries(comment_ids)
-    current_user_reply_parents = @user&.ids_replied_to(comment_ids) || Hash.new { false }
-    @comments.each do |c|
-      c.current_vote = @votes[c.id]
-      c.vote_summary = summaries[c.id]
-      c.current_reply = current_user_reply_parents.has_key? c.id
-    end
+    @comments = CommentVoteHydrator.new(@comments, @user)
 
     @last_read_timestamp = if params[:last_read_timestamp]
       Time.zone.at(params[:last_read_timestamp].to_i)
@@ -361,17 +355,7 @@ class CommentsController < ApplicationController
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 
     # TODO: respect hidden stories
-
-    comment_ids = @comments.map(&:id)
-    @votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, comment_ids)
-    summaries = Vote.comment_vote_summaries(comment_ids)
-    current_user_reply_parents = @user&.ids_replied_to(comment_ids) || Hash.new { false }
-    @comments.each do |c|
-      c.current_vote = @votes[c.id]
-      c.vote_summary = summaries[c.id]
-      c.current_reply = current_user_reply_parents.has_key? c.id
-    end
-
+    @comments = CommentVoteHydrator.new(@comments, @user)
     respond_to do |format|
       format.html { render action: :index }
       format.rss {
@@ -399,35 +383,10 @@ class CommentsController < ApplicationController
       .merge(Story.not_deleted(@user))
       .for_presentation
       .joins(:story)
-
-    if @user
-      @votes = Vote.comment_votes_by_user_for_story_hash(@user.id, @threads.map(&:story_id).uniq)
-      comment_ids = @threads.map(&:id)
-      summaries = Vote.comment_vote_summaries(comment_ids)
-      current_user_reply_parents = @user&.ids_replied_to(comment_ids) || Hash.new { false }
-
-      @threads.each do |c|
-        c.current_vote = @votes[c.id]
-        c.vote_summary = summaries[c.id]
-        c.current_reply = current_user_reply_parents.has_key? c.id
-      end
-    end
-
-    @threads = CommentHierarchy.new(@threads)
-      .order_hierarchy_by_confidence_order
-      .sort_top_level_comments_by_thread_id_desc
-      .comments
+    @threads = CommentVoteHydrator.new(@threads, @user)
   end
 
   private
-
-  def filtered_tag_ids
-    if @user
-      @user.tag_filters.map(&:tag_id)
-    else
-      tags_filtered_by_cookie.map(&:id)
-    end
-  end
 
   def find_comment
     comment = Comment.where(short_id: params[:id]).first

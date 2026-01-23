@@ -8,6 +8,7 @@ class Invitation < ApplicationRecord
   scope :unused, -> { where(used_at: nil) }
 
   include Token
+  include EmailBlocklistValidation
 
   validate do
     unless /\A[^@ ]+@[^ @]+\.[^ @]+\z/.match?(email.to_s)

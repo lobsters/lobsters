@@ -71,7 +71,7 @@ class Sponge
   def self.fetch(url, headers = {}, limit = 10)
     s = Sponge.new
     s.ssl_verify = false # backward compatibility
-    s.fetch(url, "get", nil, nil, headers, limit)
+    s.fetch(url, :get, {}, nil, headers, limit)
   end
 
   def initialize
@@ -112,7 +112,7 @@ class Sponge
     end
   end
 
-  def fetch(url, method = :get, fields = nil, raw_post_data = nil, headers = {}, limit = 10)
+  def fetch(url, method = :get, fields = {}, raw_post_data = nil, headers = {}, limit = 10)
     raise ArgumentError.new("http redirection too deep") if limit <= 0
 
     uri = URI.parse(url)
@@ -202,7 +202,7 @@ class Sponge
       "Host" => uri.host,
       "Cookie" => cookies(uri.host),
       "Referer" => url.to_s,
-      "User-Agent" => "Mozilla/5.0 (compatible)"
+      "User-Agent" => "Mozilla/5.0 (compatible) #{Rails.application.domain}"
     }.merge(send_headers || {})
 
     if uri.user
@@ -257,16 +257,16 @@ class Sponge
         dputs "following relative redirection to " + newuri.to_s
       end
 
-      fetch(newuri.to_s, "get", nil, nil, headers, limit - 1)
+      fetch(newuri.to_s, :get, {}, nil, headers, limit - 1)
     end
   end
 
   def get(url)
-    fetch(url, "get")
+    fetch(url, :get)
   end
 
   def post(url, fields)
-    fetch(url, "post", fields)
+    fetch(url, :post, fields)
   end
 
   private

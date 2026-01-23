@@ -3,6 +3,16 @@
 require "rails_helper"
 
 RSpec.describe "search controller", type: :request do
+  # Create a comment we can search for. Rspec wraps tests in individual transactions, and
+  # mariadb doesn't update fulltext indexes until the end of the transaction. before(:context)
+  # runs before the test transaction, so we can manually create and clean up a comment.
+  before(:context) do
+    @hello_world_comment = create(:comment, comment: "hello world")
+  end
+  after(:context) do
+    @hello_world_comment.destroy!
+  end
+
   it "loads the search form" do
     get "/search"
     expect(response).to be_successful
@@ -28,5 +38,13 @@ RSpec.describe "search controller", type: :request do
 
     expect(response).to be_successful
     expect(response.body).to include("0 results")
+  end
+
+  it "works logged in, with vote hydration" do
+    sign_in(user = create(:user))
+    Vote.vote_thusly_on_story_or_comment_for_user_because 1, @hello_world_comment.story.id, @hello_world_comment.id, user.id, nil
+
+    get "/search", params: {q: "hello", what: "comments", order: "newest"}
+    expect(response.body).to include("world")
   end
 end

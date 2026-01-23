@@ -7,43 +7,64 @@ RSpec.describe InboxMailbox, type: :mailbox do
     story = create(:story)
     user = create(:user)
 
-    to = "#{Rails.application.shortname}-#{user.mailing_list_token}@example.com"
-    irt = "story.#{story.short_id}.1@"
-
     mail = Mail.new(
       from: user.email,
-      to: to,
+      to: "#{Rails.application.shortname}-#{user.mailing_list_token}@example.com",
       subject: "Test Comment on Story",
-      in_reply_to: irt,
+      in_reply_to: "story.#{story.short_id}.1@",
       body: "Testing"
     )
 
     mail_processed = process(mail)
     expect(mail_processed).to have_been_delivered
-
-    story.update_cached_columns
+    story.reload
     expect(story.comments_count).to eq 1
   end
-  it "creates a reply to a comment with a valid short id" do
-    comment = create(:comment)
-    user = create(:user)
 
-    to = "#{Rails.application.shortname}-#{user.mailing_list_token}@example.com"
-    irt = "comment.#{comment.short_id}.1@"
+  it "creates a reply to a comment with a valid short id" do
+    parent = create(:comment)
+    user = create(:user)
 
     mail = Mail.new(
       from: user.email,
-      to: to,
+      to: "#{Rails.application.shortname}-#{user.mailing_list_token}@example.com",
       subject: "Test Comment on Comment",
-      in_reply_to: irt,
+      in_reply_to: "comment.#{parent.short_id}.1@",
       body: "Testing"
     )
 
     mail_processed = process(mail)
     expect(mail_processed).to have_been_delivered
 
-    created_comment = Comment.where(parent_comment: comment)
+    created_comment = Comment.where(parent_comment: parent)
     expect(created_comment).to exist
+  end
+
+  it "strips the quote from top-posting" do
+    story = create(:story)
+    user = create(:user)
+
+    mail = Mail.new(
+      from: user.email,
+      to: "#{Rails.application.shortname}-#{user.mailing_list_token}@example.com",
+      subject: "Test Comment on Story",
+      in_reply_to: "story.#{story.short_id}.1@",
+      body: <<~BODY
+        test
+
+        On 2025-11-20 some guy wrote:
+        > quoted
+
+        -- 
+        Sent from my iPhone
+
+      BODY
+    )
+
+    mail_processed = process(mail)
+    comment = Comment.last
+    expect(comment.comment).to_not include("quoted")
+    expect(comment.comment).to_not include("iPhone")
   end
 
   it "bounces an email with an invalid in-reply-to" do
@@ -100,7 +121,6 @@ RSpec.describe InboxMailbox, type: :mailbox do
     mail_processed = process(mail)
     expect(mail_processed).to have_bounced
 
-    story.update_cached_columns
     expect(story.comments_count).to eq 0
   end
 end

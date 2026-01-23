@@ -15,7 +15,7 @@
           "type": "controller",
           "class": "MessagesController",
           "method": "show",
-          "line": 94,
+          "line": 92,
           "file": "app/controllers/messages_controller.rb",
           "rendered": {
             "name": "messages/show",
@@ -64,7 +64,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/stats/index.html.erb",
-      "line": 19,
+      "line": 25,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Stats.get_cached_graph(:stories)",
       "render_path": [
@@ -90,40 +90,6 @@
         79
       ],
       "note": "these are integers returned by other queries in the class"
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "1f74b5308b8e9f5215991e18f03779ea774e830af7b080d70c619e21567728a7",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/stories/_form_errors.html.erb",
-      "line": 40,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "excerpt_fragment_around_link(link.from_comment.markeddown_comment, Story.new(:user => (@user)).url)",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StoriesController",
-          "method": "check_url_dupe",
-          "line": 351,
-          "file": "app/controllers/stories_controller.rb",
-          "rendered": {
-            "name": "stories/_form_errors",
-            "file": "app/views/stories/_form_errors.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stories/_form_errors"
-      },
-      "user_input": "Story.new(:user => (@user)).url",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": "False alarm: excerpt_fragment_around_url doesn't return Story.url"
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -166,7 +132,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/stats/index.html.erb",
-      "line": 22,
+      "line": 28,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Stats.get_cached_graph(:comments)",
       "render_path": [
@@ -217,13 +183,36 @@
       "note": "User#username validated by User::VALID_USERNAME"
     },
     {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "441fa70d868e3b1b7eabd502bd34fd802955cb5016678eea7a63c8cd9180e68f",
+      "check_name": "SendFile",
+      "message": "Model attribute used in file name",
+      "file": "app/controllers/story_image_controller.rb",
+      "line": 11,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "send_file(StoryImage.new(Story.where(:short_id => params[:short_id]).first!).path, :type => \"image/png\", :disposition => \"inline\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "StoryImageController",
+        "method": "show"
+      },
+      "user_input": "StoryImage.new(Story.where(:short_id => params[:short_id]).first!).path",
+      "confidence": "Medium",
+      "cwe_id": [
+        22
+      ],
+      "note": "Story#short_id is safely created internally, and File.basename ensures no relative paths."
+    },
+    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "459e2f616ea96e7b77520486a352dc2b1c6d251a1d5148b9f18eaf5ad542f76a",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/users_controller.rb",
-      "line": 142,
+      "line": 150,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.exec_query(\"\\n      select\\n        n_flags, count(*) as n_users\\n      from (\\n        select\\n          comments.user_id, sum(flags) as n_flags\\n        from\\n          comments\\n        where\\n          comments.created_at >= datetime('now', '-#{time_interval(\"1m\")[:dur]} #{time_interval(\"1m\")[:intv]}')\\n        group by comments.user_id) count_by_user\\n      group by 1\\n      order by 1 asc;\\n    \")",
       "render_path": null,
@@ -246,7 +235,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/stats/index.html.erb",
-      "line": 16,
+      "line": 22,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Stats.get_cached_graph(:active_users)",
       "render_path": [
@@ -276,55 +265,11 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
-      "fingerprint": "4cfebafaf019d81a4eeef02d58a04a0e8aa6b3d099ec96ddf086db99338db4ae",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/stories/show.html.erb",
-      "line": 15,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Story.new(:user => (@user)).markeddown_description",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StoriesController",
-          "method": "create",
-          "line": 41,
-          "file": "app/controllers/stories_controller.rb",
-          "rendered": {
-            "name": "stories/new",
-            "file": "app/views/stories/new.html.erb"
-          }
-        },
-        {
-          "type": "template",
-          "name": "stories/new",
-          "line": 25,
-          "file": "app/views/stories/new.html.erb",
-          "rendered": {
-            "name": "stories/show",
-            "file": "app/views/stories/show.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stories/show"
-      },
-      "user_input": null,
-      "confidence": "High",
-      "cwe_id": [
-        79
-      ],
-      "note": "Rendered markdown"
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
       "fingerprint": "4e0d4385f603daebab2dfb62cef88ba6a6791e8a8d041a4b62239939e93b8fb5",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/users/show.html.erb",
-      "line": 143,
+      "line": 144,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "(if (rand((0..100)) == 23) then\n  User.new(:username => params[:username], :created_at => rand((0..9999)).days.ago)\nend or User.find_by(:username => params[:username])).linkified_about",
       "render_path": [
@@ -332,7 +277,7 @@
           "type": "controller",
           "class": "UsersController",
           "method": "show",
-          "line": 27,
+          "line": 34,
           "file": "app/controllers/users_controller.rb",
           "rendered": {
             "name": "users/show",
@@ -376,7 +321,7 @@
         {
           "type": "template",
           "name": "mod/activities/index",
-          "line": 2,
+          "line": 4,
           "file": "app/views/mod/activities/index.html.erb",
           "rendered": {
             "name": "mod/activities/_table",
@@ -386,7 +331,7 @@
         {
           "type": "template",
           "name": "mod/activities/_table",
-          "line": 69,
+          "line": 65,
           "file": "app/views/mod/activities/_table.html.erb",
           "rendered": {
             "name": "comments/_comment",
@@ -430,7 +375,7 @@
         {
           "type": "template",
           "name": "mod/activities/index",
-          "line": 2,
+          "line": 4,
           "file": "app/views/mod/activities/index.html.erb",
           "rendered": {
             "name": "mod/activities/_table",
@@ -440,7 +385,7 @@
         {
           "type": "template",
           "name": "mod/activities/_table",
-          "line": 69,
+          "line": 65,
           "file": "app/views/mod/activities/_table.html.erb",
           "rendered": {
             "name": "comments/_comment",
@@ -458,29 +403,6 @@
         79
       ],
       "note": "Rendered markdown."
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "96e34cf6470885983badaf971f120a8a403618859640b5c07811a81852fae0e7",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/settings_controller.rb",
-      "line": 196,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(MastodonApp.find_or_register(params[:mastodon_instance_name]).oauth_auth_url, :allow_other_host => true)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "SettingsController",
-        "method": "mastodon_auth"
-      },
-      "user_input": "MastodonApp.find_or_register(params[:mastodon_instance_name]).oauth_auth_url",
-      "confidence": "Weak",
-      "cwe_id": [
-        601
-      ],
-      "note": "Normal part of oauth flow"
     },
     {
       "warning_type": "File Access",
@@ -506,13 +428,36 @@
       "note": "User#username validated by User::VALID_USERNAME"
     },
     {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "b3467f2146b6b91a5424f987286ca596ebe6b7fd67f429118b06b634edb12cae",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/settings_controller.rb",
+      "line": 196,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(MastodonApp.find_or_register(params[:mastodon_instance_name]).oauth_auth_url(SecureRandom.hex), :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "SettingsController",
+        "method": "mastodon_auth"
+      },
+      "user_input": "MastodonApp.find_or_register(params[:mastodon_instance_name]).oauth_auth_url(SecureRandom.hex)",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": "Normal part of oauth flow"
+    },
+    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "b7b38263d53adbf429b0ab4aff64a4739b1b8cd26d81347a0565322561c8a022",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story.rb",
-      "line": 91,
+      "line": 94,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "base(user).where(\"created_at >= datetime('now', '-#{length[:dur]} #{length[:intv].upcase}')\")",
       "render_path": null,
@@ -535,7 +480,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/stats/index.html.erb",
-      "line": 12,
+      "line": 18,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Stats.get_cached_graph(:users)",
       "render_path": [
@@ -592,7 +537,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/mod/activities/_table.html.erb",
-      "line": 94,
+      "line": 92,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "ModNote.markeddown_note",
       "render_path": [
@@ -610,7 +555,7 @@
         {
           "type": "template",
           "name": "mod/activities/index",
-          "line": 2,
+          "line": 4,
           "file": "app/views/mod/activities/index.html.erb",
           "rendered": {
             "name": "mod/activities/_table",
@@ -636,7 +581,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/stats/index.html.erb",
-      "line": 25,
+      "line": 31,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Stats.get_cached_graph(:votes)",
       "render_path": [
@@ -707,7 +652,7 @@
       "cwe_id": [
         89
       ],
-      "note": "Unused"
+      "note": ""
     },
     {
       "warning_type": "SQL Injection",
@@ -716,7 +661,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/mod/mod_controller.rb",
-      "line": 13,
+      "line": 15,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "query.where(\"#{query.model.table_name}.created_at >= datetime('now', '-#{time_interval((params[:period] or default_periods.first))[:dur]} #{time_interval((params[:period] or default_periods.first))[:intv]}')\")",
       "render_path": null,
@@ -730,8 +675,8 @@
       "cwe_id": [
         89
       ],
-      "note": "Using proper interval helper"
+      "note": ""
     }
   ],
-  "brakeman_version": "7.1.0"
+  "brakeman_version": "7.1.2"
 }

@@ -1,0 +1,260 @@
+---
+Category:
+  index_categories_on_category:
+    UniqueIndexChecker:
+      enabled: false
+  index_categories_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(category):
+    MissingUniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+Comment:
+  index_comments_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  moderation:
+    MissingIndexChecker:
+      enabled: false
+  short_id:
+    UniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+CommentStat:
+  index_comment_stats_on_date:
+    UniqueIndexChecker:
+      enabled: false
+Domain:
+  index_domains_on_domain:
+    UniqueIndexChecker:
+      enabled: false
+  index_domains_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(domain):
+    MissingUniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+Hat:
+  index_hats_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+HatRequest:
+  index_hat_requests_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+HiddenStory:
+  index_hidden_stories_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  index_hidden_stories_on_user_id_and_story_id:
+    UniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+Invitation:
+  index_invitations_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+InvitationRequest:
+  index_invitation_requests_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+Keystore:
+  id:
+    NullConstraintChecker:
+      enabled: false
+  key:
+    PrimaryKeyTypeChecker:
+      enabled: false
+    UniqueIndexChecker:
+      enabled: false
+Link:
+  to_comment_id+from_story_id+from_comment_id:
+    MissingUniqueIndexChecker:
+      enabled: false
+  to_story_id+from_story_id+from_comment_id:
+    MissingUniqueIndexChecker:
+      enabled: false
+  url+from_story_id+from_comment_id:
+    MissingUniqueIndexChecker:
+      enabled: false
+MastodonApp:
+  index_mastodon_apps_on_name:
+    UniqueIndexChecker:
+      enabled: false
+Message:
+  index_messages_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  random_hash:
+    UniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+ModActivity:
+  index_mod_activities_on_item:
+    RedundantIndexChecker:
+      enabled: false
+  index_mod_activities_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  item_type:
+    LengthConstraintChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+ModNote:
+  index_mod_notes_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+Moderation:
+  action:
+    NullConstraintChecker:
+      enabled: false
+  index_moderations_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+Notification:
+  idx_on_user_id_notifiable_type_notifiable_id_ffac34041e:
+    UniqueIndexChecker:
+      enabled: false
+  index_notifications_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  notifiable_type:
+    LengthConstraintChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+Origin:
+  index_origins_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+SavedStory:
+  index_saved_stories_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  index_saved_stories_on_user_id_and_story_id:
+    UniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+Story:
+  index_stories_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  merged_stories:
+    ForeignKeyCascadeChecker:
+      enabled: false
+  story_text:
+    MissingIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+  unique_short_id:
+    UniqueIndexChecker:
+      enabled: false
+StoryText:
+  index_story_texts_on_title:
+    RedundantIndexChecker:
+      enabled: false
+  story:
+    ForeignKeyChecker:
+      enabled: false
+Tag:
+  index_tags_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+Tagging:
+  story_id_tag_id:
+    UniqueIndexChecker:
+      enabled: false
+User:
+  index_users_on_email:
+    UniqueIndexChecker:
+      enabled: false
+  index_users_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(email):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(username):
+    MissingUniqueIndexChecker:
+      enabled: false
+  mailing_list_token:
+    UniqueIndexChecker:
+      enabled: false
+  password_digest:
+    LengthConstraintChecker:
+      enabled: false
+  password_reset_token:
+    UniqueIndexChecker:
+      enabled: false
+  rss_token:
+    UniqueIndexChecker:
+      enabled: false
+  session_hash:
+    UniqueIndexChecker:
+      enabled: false
+  session_token:
+    ColumnPresenceChecker:
+      enabled: false
+  token:
+    LengthConstraintChecker:
+      enabled: false
+  username:
+    UniqueIndexChecker:
+      enabled: false
+  usernames:
+    MissingIndexChecker:
+      enabled: false
+Username:
+  user:
+    ForeignKeyChecker:
+      enabled: false
+  username:
+    NullConstraintChecker:
+      enabled: false
+Vote:
+  reason:
+    ColumnPresenceChecker:
+      enabled: false

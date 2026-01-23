@@ -6,8 +6,8 @@ class BanNotificationMailer < ApplicationMailer
     @reason = reason
 
     mail(
-      from: "#{@banner.username} <nobody@#{Rails.application.domain}>",
-      replyto: "#{@banner.username} <#{@banner.email}>",
+      from: "#{@banner.username} <reply-to@#{Rails.application.domain}>",
+      reply_to: "#{@banner.username} <#{@banner.email}>",
       to: user.email,
       subject: "[#{Rails.application.name}] You have been banned"
     )

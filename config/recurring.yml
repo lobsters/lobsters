@@ -12,7 +12,7 @@ production:
     command: CommentStat.daily_fill!
     schedule: every day at 4:00am
   restic:
-    command: ResticJob
+    class: ResticJob
     schedule: every day at 1 am
   sitemap:
     command: 'SitemapGenerator::Interpreter.run(config_file: ENV["CONFIG_FILE"], verbose: false)'
@@ -23,6 +23,12 @@ production:
   traffic_helper:
     command: TrafficHelper.cache_traffic!
     schedule: every 5 minutes
+  fetch_email_blocklist:
+    class: FetchEmailBlocklistJob
+    schedule: every 7 days
+  fetch_iana_tlds:
+    class: FetchIanaTldsJob
+    schedule: every 1 month
 
 development:
   clear_finished_jobs:
@@ -37,3 +43,9 @@ development:
   stats_graphs:
     class: StatsGraphsJob
     schedule: every day at 12:00am
+  fetch_email_blocklist:
+    command: FetchEmailBlocklistJob
+    schedule: every 7 days
+  fetch_iana_tlds:
+    class: FetchIanaTldsJob
+    schedule: every 1 month

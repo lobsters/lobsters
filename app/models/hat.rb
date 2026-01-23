@@ -32,16 +32,6 @@ class Hat < ApplicationRecord
     save!
   end
 
-  def destroy_by_user_with_reason(user, reason)
-    m = Moderation.new
-    m.user_id = user_id
-    m.moderator_user_id = user.is_moderator? ? user : nil
-    m.action = "Revoked hat \"#{hat}\": #{reason}"
-    m.save!
-
-    destroy!
-  end
-
   def to_txt
     "(#{hat}) "
   end

@@ -42,7 +42,6 @@ But I make an unprincipled exception for :has because it solves so many big prob
 /* generics */
 
 html {
-	font-size: var(--font-size-default);
 	/* force a vertical scrollbar to avoid page-shifting */
 	overflow-y: scroll;
 
@@ -54,6 +53,7 @@ html {
 
 body, textarea, input, button {
 	font-family: "helvetica neue", arial, sans-serif;
+	font-size: var(--font-size-default);
 	color: var(--color-fg);
 	line-height: 1.45em;
 }

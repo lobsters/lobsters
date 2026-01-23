@@ -36,7 +36,6 @@ class Comment < ApplicationRecord
   after_create :create_fts
   after_update :update_fts
   after_destroy :destroy_fts
-  after_destroy :unassign_votes
   # Calling :record_initial_upvote from after_commit instead of after_create minimizes how many
   # queries happen inside the transaction, which seems to be the cause of bug #1238.
   after_commit :log_hat_use, :mark_submitter, :record_initial_upvote, on: :create

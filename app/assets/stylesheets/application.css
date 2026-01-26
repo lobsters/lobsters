@@ -297,6 +297,19 @@ summary {
 	cursor: pointer;
 }
 
+/* Remove style from button to so it will look like a link */
+input.btn-link:hover,
+input.btn-link {
+	border: 0;
+	padding: 0;
+	background-color: var(--color-bg);
+	color: var(--color-fg-contrast-4-5);
+	line-height: 1;
+}
+input.btn-link:focus-visible {
+	outline: auto;
+}
+
 #qrsvg {
 	background-color: white;
 	display: inline-block;
@@ -309,6 +322,17 @@ summary {
 	margin: 0;
 }
 
+#toast {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}
 
 /* header */
 
@@ -714,6 +738,10 @@ li .byline a.story_has_suggestions {
 	color: var(--color-lobsters-fg-has-suggestions);
 }
 
+li .byline form {
+	display: inline-block;
+}
+
 .last_read_newest {
 	border-bottom: 2px solid var(--color-fg-shape);
 	border-top: 0;
@@ -733,7 +761,7 @@ li .byline a.story_has_suggestions {
 	opacity: 0.25;
 }
 
-li.story.saved a.saver {
+li.story.saved .saver .btn-link {
 	color: var(--color-fg-affirmative);
 }
 

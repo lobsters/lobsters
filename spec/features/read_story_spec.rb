@@ -76,15 +76,15 @@ RSpec.feature "Reading Stories", type: :feature do
     scenario "when story is deleted" do
       visit "/saved"
 
-      expect(page).not_to have_css("a.saver", text: "save", exact_text: true)
-      expect(page).to have_link("unsave")
+      expect(page).not_to have_css("form.saver input.btn-link", text: "save", exact_text: true)
+      expect(page).to have_button("unsave")
     end
 
     scenario "when story is available" do
       visit "/saved"
 
-      expect(page).not_to have_css("a.saver", text: "save", exact_text: true)
-      expect(page).to have_link("unsave")
+      expect(page).not_to have_css("form.saver input.btn-link", text: "save", exact_text: true)
+      expect(page).to have_button("unsave")
     end
   end
 

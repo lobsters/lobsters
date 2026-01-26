@@ -508,7 +508,7 @@ div.voters {
 	content: "\25b3";
 	color: var(--color-fg);
 	font-size: 1.2rem;
-	font-family: system-ui, monospace, sans-serif
+	font-family: system-ui, monospace, sans-serif;
 }
 .upvoter:hover:before,
 .upvoted .upvoter:before {

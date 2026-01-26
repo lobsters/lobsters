@@ -184,7 +184,7 @@ class Sponge
     if method != :get
       if raw_post_data
         post_data = raw_post_data
-        send_headers["Content-Type"] = "application/x-www-form-urlencoded"
+        send_headers["Content-Type"] ||= "application/x-www-form-urlencoded"
       else
         post_data = fields.to_query
       end
@@ -217,7 +217,12 @@ class Sponge
         when :get
           host.get(path, send_headers)
         when :delete
-          host.delete(path, send_headers)
+          # The Net::HTTP#delete convenience method doesn't support sending a
+          # body, which we need for certain API endpoints (for example, GitHub
+          # token revocation).
+          req = Net::HTTP::Delete.new(path, send_headers)
+          req.body = post_data if post_data
+          host.request(req)
         when :patch
           host.patch(path, send_headers)
         when :put

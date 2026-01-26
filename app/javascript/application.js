@@ -116,9 +116,9 @@ function isObject(obj) {
 
 /** @param {string} msg */
 function notify(msg) {
-		const toast = qS("#toast");
-		if (toast) {
-			toast.textContent = msg;
+		const ariaAnnounce = qS("#aria-announce");
+		if (ariaAnnounce) {
+			airaAnnounce.textContent = msg;
 		}
 }
 
@@ -653,10 +653,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Append an element where xhr fetches can publish their results. Used by screen readers.
-  const toast = document.createElement("div");
-  toast.ariaLive = "polite";
-  toast.id = "toast";
-  document.body.appendChild(toast);
+  const ariaAnnounce = document.createElement("div");
+  ariaAnnounce.ariaLive = "polite";
+  ariaAnnounce.id = "aria-announce";
+  document.body.appendChild(ariaAnnounce);
 
   // Global
 

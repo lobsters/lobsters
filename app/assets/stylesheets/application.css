@@ -322,7 +322,7 @@ input.btn-link:focus-visible {
 	margin: 0;
 }
 
-#toast {
+#aria-announce {
 	position: absolute;
 	width: 1px;
 	height: 1px;

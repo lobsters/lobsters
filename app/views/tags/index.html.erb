@@ -28,7 +28,7 @@
             <%= divider_tag %> <%= link_to "filtered", filters_path(anchor: tag.tag) %>
           <% end %>
           <% if is_admin %>
-            <%= divider_tag %> <%= link_to 'edit', edit_tag_path(tag.tag), id: "editlink-#{tag.tag}", aria: {labelledby: "editlink-#{tag.tag} tag-#{tag.tag}"} %>
+            <%= divider_tag %> <%= link_to 'edit', edit_mod_tag_path(tag.tag), id: "editlink-#{tag.tag}", aria: {labelledby: "editlink-#{tag.tag} tag-#{tag.tag}"} %>
           <% end %>
         </span>
       </li>
@@ -38,7 +38,7 @@
 
 <% if is_admin %>
   <p>
-    <%= link_to 'Create New Tag', new_tag_path %><br/>
+    <%= link_to 'Create New Tag', new_mod_tag_path %><br/>
     <%= link_to 'Create New Category', new_category_path %>
   </p>
 <% end %>

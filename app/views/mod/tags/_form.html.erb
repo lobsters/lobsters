@@ -1,5 +1,5 @@
 <%# locals: (tag:) -%>
-<%= form_with model: tag, url: tag.persisted? ? update_tag_path : tags_path, method: :post do |f| %>
+<%= form_with model: [:mod, tag] do |f| %>
   <div class="labelled_grid">
     <%= f.label :tag, 'Name' %>
     <%= f.text_field :tag, required: true, autocapitalize: :off %>

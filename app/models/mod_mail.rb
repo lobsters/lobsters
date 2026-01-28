@@ -1,15 +1,16 @@
 class ModMail < ApplicationRecord
-  has_many :mod_mail_references
+  has_many :mod_mail_references, dependent: :restrict_with_error
   has_many :comment_references, through: :mod_mail_references, source: :reference, source_type: "Comment"
   has_many :story_references, through: :mod_mail_references, source: :reference, source_type: "Story"
-  has_many :mod_mail_recipients
-  has_many :recipients, through: :mod_mail_recipients, source: :user, class_name: "User"
-  has_many :mod_mail_messages
+  has_many :mod_mail_recipients, dependent: :restrict_with_error
+  has_many :recipients, through: :mod_mail_recipients, source: :user, class_name: "User", dependent: :restrict_with_error
+  has_many :mod_mail_messages, dependent: :restrict_with_error
 
   has_one :mod_activity, inverse_of: :item
 
-  validates :short_id, length: {maximum: 10}, presence: true
+  validates :short_id, length: {maximum: 10}, presence: true, uniqueness: true
   validates :recipients, :subject, presence: true
+  validates :subject, length: {maximum: 255}
 
   before_validation :assign_short_id, on: :create
   after_create_commit -> { ModActivity.create_for! self }

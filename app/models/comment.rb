@@ -569,53 +569,51 @@ class Comment < ApplicationRecord
       .pluck(:thread_id)
     return Comment.none if thread_ids.empty?
 
-    query = <<~SQL
-      with recursive discussion as (
-        select
-          c.id,
-          cast(confidence_order as blob) as confidence_order_path
-        from comments c
-        where thread_id in (#{thread_ids.join(", ")}) and parent_comment_id is null
-        union all
-        select
-          c.id,
-          cast(concat(substring(discussion.confidence_order_path, 1, 3 * (depth + 1)), c.confidence_order) as blob)
-        from comments c join discussion on c.parent_comment_id = discussion.id
-      )
-      select comments.*
-      from comments
-      join discussion
-        on comments.id = discussion.id
-      order by comments.thread_id desc, discussion.confidence_order_path
+    inner_join = <<~SQL
+      inner join (
+        with recursive discussion as (
+          select
+            c.id,
+            cast(confidence_order as blob) as confidence_order_path
+          from comments c
+          where thread_id in (#{thread_ids.join(", ")}) and parent_comment_id is null
+          union all
+          select
+            c.id,
+            cast(concat(substring(discussion.confidence_order_path, 1, 3 * (depth + 1)), c.confidence_order) as blob)
+          from comments c join discussion on c.parent_comment_id = discussion.id
+        )
+        select * from discussion
+      ) discussions
+      on comments.id = discussions.id
     SQL
 
-    Comment.select("comments.*").from("(#{query}) as comments")
+    Comment.joins(inner_join).order("comments.thread_id desc, discussions.confidence_order_path")
   end
 
   def self.story_threads(story)
     return Comment.none unless story.id # unsaved Stories have no comments
 
-    query = <<~SQL
-      with recursive confidence as (
-        select
-          c.id,
-          cast(confidence_order as blob) as confidence_order_path
-          from comments c
-          join stories on stories.id = c.story_id
-          where (stories.id = #{story.id} or stories.merged_story_id = #{story.id}) and parent_comment_id is null
-        union all
-        select
-          c.id,
-          cast(concat(substring(confidence.confidence_order_path, 1, 3 * (depth + 1)), c.confidence_order) as blob)
-        from comments c join confidence on c.parent_comment_id = confidence.id
-      )
-      select comments.*
-      from comments
-      join confidence
-        on comments.id = confidence.id
-      order by confidence.confidence_order_path
+    inner_join = <<~SQL
+      inner join (
+        with recursive confidence as (
+          select
+            c.id,
+            cast(confidence_order as blob) as confidence_order_path
+            from comments c
+            join stories on stories.id = c.story_id
+            where (stories.id = #{story.id} or stories.merged_story_id = #{story.id}) and parent_comment_id is null
+          union all
+          select
+            c.id,
+            cast(concat(substring(confidence.confidence_order_path, 1, 3 * (depth + 1)), c.confidence_order) as blob)
+          from comments c join confidence on c.parent_comment_id = confidence.id
+        )
+        select * from confidence
+      ) confidence
+      on comments.id = confidence.id
     SQL
 
-    Comment.select("comments.*").from("(#{query}) as comments")
+    Comment.joins(inner_join).order("confidence.confidence_order_path")
   end
 end

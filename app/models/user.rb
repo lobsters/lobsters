@@ -42,7 +42,7 @@ class User < ApplicationRecord
     dependent: :restrict_with_exception
   has_one :moderation,
     inverse_of: :user,
-    dependent: :destroy
+    dependent: :restrict_with_exception
   has_many :usernames, dependent: :destroy
   has_many :votes, dependent: :destroy
   has_many :voted_stories, -> { where("votes.comment_id" => nil) },
@@ -59,16 +59,16 @@ class User < ApplicationRecord
   has_many :wearable_hats, -> { where(doffed_at: nil) },
     class_name: "Hat",
     inverse_of: :user
-  has_many :hat_requests, dependent: :destroy
-  has_many :notifications, dependent: :destroy
+  has_many :hat_requests, dependent: :restrict_with_exception
+  has_many :notifications, dependent: :restrict_with_exception
   has_many :hidings,
     class_name: "HiddenStory",
     inverse_of: :user,
     dependent: :destroy
-  has_many :read_ribbons, dependent: :destroy
-  has_many :saved_stories, dependent: :destroy
-  has_many :suggested_taggings, dependent: :destroy
-  has_many :suggested_titles, dependent: :destroy
+  has_many :read_ribbons, dependent: :restrict_with_exception
+  has_many :saved_stories, dependent: :restrict_with_exception
+  has_many :suggested_taggings, dependent: :restrict_with_exception
+  has_many :suggested_titles, dependent: :restrict_with_exception
 
   include EmailBlocklistValidation
   include Token

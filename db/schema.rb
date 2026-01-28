@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_28_183915) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -49,7 +49,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
   end
 
   create_table "categories", force: :cascade do |t|
-    t.string "category", limit: 25, null: false
+    t.string "category", limit: 25, null: false, collation: "NOCASE"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "token", null: false
@@ -452,7 +452,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
   end
 
   create_table "tags", force: :cascade do |t|
-    t.string "tag", limit: 25, null: false
+    t.string "tag", limit: 25, null: false, collation: "NOCASE"
     t.string "description", limit: 100
     t.boolean "privileged", default: false, null: false
     t.boolean "is_media", default: false, null: false
@@ -549,14 +549,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_182240) do
   add_foreign_key "links", "stories", column: "to_story_id"
   add_foreign_key "messages", "hats"
   add_foreign_key "messages", "users", column: "author_user_id"
-  add_foreign_key "messages", "users", column: "recipient_user_id", name: "messages_recipient_user_id_fk"
+  add_foreign_key "messages", "users", column: "recipient_user_id"
   add_foreign_key "mod_mail_messages", "mod_mails"
   add_foreign_key "mod_mail_messages", "users"
   add_foreign_key "mod_mail_recipients", "mod_mails"
   add_foreign_key "mod_mail_recipients", "users"
   add_foreign_key "mod_mail_references", "mod_mails"
-  add_foreign_key "mod_notes", "users", column: "moderator_user_id", name: "mod_notes_moderator_user_id_fk"
-  add_foreign_key "mod_notes", "users", name: "mod_notes_user_id_fk"
+  add_foreign_key "mod_notes", "users"
+  add_foreign_key "mod_notes", "users", column: "moderator_user_id"
   add_foreign_key "moderations", "categories"
   add_foreign_key "moderations", "comments"
   add_foreign_key "moderations", "domains"

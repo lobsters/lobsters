@@ -167,8 +167,6 @@ class Search
       # no 'when' for stopword or shortword, they're not searchable
       when :term, :catchall
         val = strip_short_terms(strip_operators(value))
-        # if punctuation is replaced with a space, this would generate a terms search
-        # AGAINST('+' in boolean mode)
         terms.append "\"#{val}\"" if !val.empty?
       end
     end

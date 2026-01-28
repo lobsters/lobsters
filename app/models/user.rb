@@ -69,6 +69,8 @@ class User < ApplicationRecord
   has_many :saved_stories, dependent: :restrict_with_exception
   has_many :suggested_taggings, dependent: :restrict_with_exception
   has_many :suggested_titles, dependent: :restrict_with_exception
+  has_many :mod_mail_recipients, dependent: :restrict_with_exception
+  has_many :mod_mail_messages, dependent: :restrict_with_exception
 
   include EmailBlocklistValidation
   include Token

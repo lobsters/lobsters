@@ -21,7 +21,9 @@
 #   a `has_many` with `dependent: :nullify` (Story#merged_stories), and a case
 #   where child records should remain when parents are deleted (User#stories).
 # - MissingIndexChecker: False positives. The `moderations` table actually does
-#   have an index for each of Moderation's `belongs_to` associations.
+#   have an index for each of Moderation's `belongs_to` associations. The
+#   `mod_activies` table actually does have an index for `belongs_to :item`
+#   (ModMail's `has_one :mod_activity`).
 # - ForeignKeyChecker: StoryText#story uses `story_texts.id` in place of a
 #   foreign key. Nonstandard but intentional.
 # - PrimaryKeyTypeChecker: Keystore intentionally uses a string primary key
@@ -160,6 +162,10 @@ ModActivity:
       enabled: false
   lower(token):
     MissingUniqueIndexChecker:
+      enabled: false
+ModMail:
+  mod_activity:
+    MissingIndexChecker:
       enabled: false
 ModNote:
   index_mod_notes_on_token:

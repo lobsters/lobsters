@@ -115,6 +115,7 @@ class Comment < ApplicationRecord
   validates :is_deleted, :is_moderated, :is_from_email, inclusion: {in: [true, false]}
   validates :last_edited_at, presence: true
   validate :validate_commenter_hasnt_flagged_parent, on: :create
+  validates :flags, numericality: { greater_than_or_equal_to: 0 }
 
   validate do
     parent_comment&.is_gone? &&

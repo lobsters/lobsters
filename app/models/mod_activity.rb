@@ -2,7 +2,7 @@ class ModActivity < ApplicationRecord
   belongs_to :item, polymorphic: true
 
   validates :item_id, uniqueness: {scope: [:item_type]}
-  validates :item_type, presence: true
+  validates :item_type, presence: true, length: {maximum: 255}
 
   scope :with_item, -> {
     joins("left outer join moderations on (item_type = 'Moderation' and item_id = moderations.id)")

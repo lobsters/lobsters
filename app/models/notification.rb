@@ -2,6 +2,9 @@ class Notification < ApplicationRecord
   belongs_to :user
   belongs_to :notifiable, polymorphic: true
 
+  validates :user_id, uniqueness: {scope: [:notifiable_type, :notifiable_id]}
+  validates :notifiable_type, presence: true, length: {maximum: 255}
+
   scope :of_comments, -> { where(notifiable_type: "Comment") }
   scope :of_messages, -> { where(notifiable_type: "Message") }
   scope :of_mod_mail_messages, -> { where(notifiable_type: "ModMailMessage") }

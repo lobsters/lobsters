@@ -5,7 +5,7 @@ class ModMailMessage < ApplicationRecord
     as: :notifiable,
     dependent: :restrict_with_exception
 
-  validates :message, length: {within: 20..8_192}
+  validates :message, presence: true, length: {within: 20..8_192}
 
   def linkified_message
     Markdowner.to_html(message, as_of: created_at)

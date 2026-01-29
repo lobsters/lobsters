@@ -356,7 +356,13 @@ export class _LobstersFunction {
             // a top-level comment, so find the top of the comments tree.
             const comments = form.closest('.comments') || qS('.comments')
             parentSelector(form, '.comment_form_container').remove()
-            comments.insertAdjacentHTML("afterbegin", text)
+
+            // if comments is .comments1, it is top-level comment: insert it deeper
+            if (comments.classList.contains('comments1')) {
+              comments.querySelector('#story_comments .comments').insertAdjacentHTML("afterbegin", text)
+            } else {
+              comments.insertAdjacentHTML("afterbegin", text)
+            }
           }
 
         })

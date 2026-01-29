@@ -277,7 +277,7 @@ class CommentsController < ApplicationController
   def index
     @rss_link ||= {
       title: "RSS 2.0 - Newest Comments",
-      href: "/comments.rss" + (@user ? "?token=#{@user.rss_token}" : "")
+      href: user_token_link(comments_url(format: :rss))
     }
 
     @title = "Newest Comments"
@@ -332,7 +332,7 @@ class CommentsController < ApplicationController
   def upvoted
     @rss_link ||= {
       title: "RSS 2.0 - Newest Comments",
-      href: upvoted_comments_path(format: :rss) + (@user ? "?token=#{@user.rss_token}" : "")
+      href: user_token_link(upvoted_comments_url(format: :rss))
     }
 
     @title = "Upvoted Comments"

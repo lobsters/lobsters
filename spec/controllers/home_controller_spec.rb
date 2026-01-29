@@ -214,7 +214,7 @@ describe HomeController do
       it "redirects default length path maintaining format" do
         get :top, format: "rss"
 
-        expect(response).to redirect_to("/top/1w/rss")
+        expect(response).to redirect_to("/top/1w.rss")
       end
     end
 

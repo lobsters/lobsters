@@ -213,7 +213,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_28_183915) do
     t.datetime "created_at", precision: nil
     t.bigint "author_user_id"
     t.bigint "recipient_user_id", null: false
-    t.boolean "has_been_read", default: false, null: false
     t.string "subject", limit: 100
     t.text "body"
     t.string "short_id", limit: 30

@@ -34,6 +34,7 @@ class Comment < ApplicationRecord
 
   before_validation :assign_initial_attributes, on: :create
   include FullTextSearch[:comment]
+
   # Calling :record_initial_upvote from after_commit instead of after_create minimizes how many
   # queries happen inside the transaction, which seems to be the cause of bug #1238.
   after_commit :log_hat_use, :mark_submitter, :record_initial_upvote, on: :create
@@ -115,7 +116,7 @@ class Comment < ApplicationRecord
   validates :is_deleted, :is_moderated, :is_from_email, inclusion: {in: [true, false]}
   validates :last_edited_at, presence: true
   validate :validate_commenter_hasnt_flagged_parent, on: :create
-  validates :flags, numericality: { greater_than_or_equal_to: 0 }
+  validates :flags, numericality: {greater_than_or_equal_to: 0}
 
   validate do
     parent_comment&.is_gone? &&

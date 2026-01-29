@@ -1,6 +1,29 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "00a8c3982cfd9ba224d123185581f725272b51dedb17af70a55a0664bc6c9e90",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/full_text_search.rb",
+      "line": 15,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ActiveRecord::Base.connection.exec_insert(\"INSERT INTO #{\"#{record.class.table_name}_fts\"} (rowid, #{cols.join(\", \")}) values (?, #{([\"?\"] * cols.length).join(\", \")})\", nil, ([record.id] + cols.map do\n record.public_send(c)\n end))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "FullTextSearch",
+        "method": "FullTextSearch.[]"
+      },
+      "user_input": "cols.join(\", \")",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "Uses AR injection for user values"
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "046e27cd0b77e13d3d1b13dc4b29196574c446cb0657ca39319f9c435d1ff423",
@@ -489,7 +512,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/search.rb",
-      "line": 312,
+      "line": 310,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Arel.sql(\"#{[].first} desc\")",
       "render_path": null,
@@ -504,6 +527,29 @@
         89
       ],
       "note": "sanitized term"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "811cfe3483c201ecedd2498c7e2ac07d06f53b12dd962c57e431407998df165a",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/full_text_search.rb",
+      "line": 29,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ActiveRecord::Base.connection.exec_update(\"UPDATE #{\"#{record.class.table_name}_fts\"} set #{cols.map do\n \"#{c} = ?\"\n end.join(\", \")} where rowid = ?\", nil, (cols.map do\n record.public_send(c)\n end + [record.id]))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "FullTextSearch",
+        "method": "FullTextSearch.[]"
+      },
+      "user_input": "cols.map do\n \"#{c} = ?\"\n end.join(\", \")",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "Uses AR injection for user values"
     },
     {
       "warning_type": "File Access",
@@ -716,7 +762,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/search.rb",
-      "line": 209,
+      "line": 207,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Arel.sql(\"#{[].first} DESC\")",
       "render_path": null,

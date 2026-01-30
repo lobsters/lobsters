@@ -33,7 +33,7 @@ class Story < ApplicationRecord
     inverse_of: :story,
     dependent: :destroy
   has_many :tags, -> { order("tags.is_media desc, tags.tag") }, through: :taggings
-  has_many :votes, -> { where(comment_id: nil) }, inverse_of: :story, dependent: :restrict_with_exception
+  has_many :votes, -> { where(comment_id: nil) }, inverse_of: :story, dependent: :destroy
   has_many :voters, -> { where("votes.comment_id" => nil) },
     through: :votes,
     source: :user

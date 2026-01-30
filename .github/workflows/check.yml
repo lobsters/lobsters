@@ -103,3 +103,46 @@ jobs:
           gem install bundler-leak
           bundle leak update
           bundle leak check
+
+  database-consistency:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+
+    # DB setup (`services` and `env`) copied from `test` job above
+    services:
+      mariadb:
+        image: mariadb:10.11.11
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: lobsters_dev
+        ports:
+          - 3306:3306
+
+    env:
+      DATABASE_URL: trilogy://root:root@127.0.0.1/lobsters_dev
+      RAILS_ENV: test
+      RUBY_YJIT_ENABLE: "1"
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      # The next three steps also copied from `test` job above
+      - name: Install libvips dependency
+        run: |
+          sudo apt update
+          sudo apt install -y libvips
+
+      - name: Workaround for inability to templatize credentials (#1380)
+        run: cp .github/workflows/check/* config/
+
+      - name: Load database schema
+        run: ./bin/rails db:schema:load db:migrate
+
+      - name: Check consistency of DB and models
+        run: |
+          bundle exec database_consistency --config .database_consistency.ignore.yml

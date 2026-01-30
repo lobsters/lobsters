@@ -5,11 +5,15 @@
 # foo.github.io and github.com/foo have two different Domains that both produce the Origin with
 # identifier github.com/foo. That Origin's domain is set to github.com.
 class Origin < ApplicationRecord
-  belongs_to :domain, optional: false
+  belongs_to :domain
   has_many :stories
-  belongs_to :banned_by_user, class_name: "User", inverse_of: false, optional: true
+  belongs_to :banned_by_user,
+    class_name: "User",
+    inverse_of: false,
+    optional: true
+  has_one :moderation, dependent: :restrict_with_exception
 
-  validates :identifier, presence: true, length: {maximum: 255}, uniqueness: true
+  validates :identifier, presence: true, length: {maximum: 255}, uniqueness: {case_sensitive: false}
   validates :stories_count, numericality: {only_integer: true, greater_than_or_equal_to: 0}, presence: true
   validates :banned_reason, length: {maximum: 200}
 

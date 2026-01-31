@@ -198,10 +198,6 @@ Rails.application.routes.draw do
 
   get "/tags" => "tags#index"
   get "/tags.json" => "tags#index", :format => "json"
-  get "/tags/new" => "tags#new", :as => "new_tag"
-  get "/tags/:tag_name/edit" => "tags#edit", :as => "edit_tag"
-  post "/tags" => "tags#create"
-  post "/tags/:tag_name" => "tags#update", :as => "update_tag"
 
   get "/categories/new" => "categories#new", :as => "new_category"
   get "/categories/:category_name/edit" => "categories#edit", :as => "edit_category"
@@ -271,6 +267,7 @@ Rails.application.routes.draw do
       patch "undelete"
       patch "destroy"
     end
+    resources :tags, only: [:create, :edit, :new, :update]
   end
 
   mount MissionControl::Jobs::Engine, at: "/jobs"

@@ -1,10 +1,16 @@
 <div class="box wide">
   <p>
   To hide stories with certain <a href="/tags">tags</a> from across the site, check them below.
-  If you don't have an account, this will save to a cookie in your browser.
   </p>
 
-  <% if !@user %>
+  <% if @user %>
+    <p>
+    To apply your filters in your feed reader, use an RSS URL that includes your `rss_token`.
+    There's <%= link_to "all stories", user_token_link(rss_url) %> and
+    <%= link_to "all comments", user_token_link(comments_url(format: :rss)) %>,
+    and more feeds URLs appear in page <code>&lt;head&gt;</code> tags for your browser.
+    </p>
+  <% else %>
     <p>
     Since you are not logged in, your filters will be stored in a long-lasting
     browser cookie.  To permanently store your tag filters and have them work

@@ -1,8 +1,8 @@
 # typed: false
 
 class Vote < ApplicationRecord
-  belongs_to :user, optional: false
-  belongs_to :story, optional: false
+  belongs_to :user
+  belongs_to :story
   belongs_to :comment, optional: true
 
   normalizes :reason, with: ->(r) { r.to_s }, apply_to_nil: true

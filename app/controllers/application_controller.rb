@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
   after_action :clear_session_cookie
 
   SESSION_DEFAULT_KEYS = %w[session_id _csrf_token]
-  # match this nginx config for bypassing the file cache
+  # match this in caddy config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
   CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
 
@@ -79,7 +79,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # clear Rails session cookie if not logged in so nginx uses the page cache
+  # clear Rails session cookie if not logged in so caddy uses the page cache
   # https://ryanfb.xyz/etc/2021/08/29/going_cookie-free_with_rails.html
   def clear_session_cookie
     if clear_session_cookie?

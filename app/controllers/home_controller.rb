@@ -43,11 +43,11 @@ class HomeController < ApplicationController
 
     @rss_link ||= {
       title: "RSS 2.0",
-      href: user_token_link("/rss")
+      href: user_token_link(rss_url)
     }
     @comments_rss_link ||= {
       title: "Comments - RSS 2.0",
-      href: user_token_link("/comments.rss")
+      href: user_token_link(comments_url(format: :rss))
     }
 
     @title = ""
@@ -88,7 +88,7 @@ class HomeController < ApplicationController
 
     @rss_link = {
       title: "RSS 2.0 - Newest Items",
-      href: user_token_link("/newest.rss")
+      href: user_token_link(newest_url(format: :rss))
     }
 
     @last_read_timestamp = if params[:last_read_timestamp]
@@ -144,7 +144,7 @@ class HomeController < ApplicationController
     @below = {partial: "recent"}
 
     # our list is unstable because upvoted stories get removed, so point at /newest.rss
-    @rss_link = {title: "RSS 2.0 - Newest Items", href: user_token_link("/newest.rss")}
+    @rss_link = {title: "RSS 2.0 - Newest Items", href: user_token_link(newest_url(format: :rss))}
 
     render action: "index"
   end
@@ -156,7 +156,7 @@ class HomeController < ApplicationController
 
     @rss_link ||= {
       title: "RSS 2.0",
-      href: user_token_link("/saved.rss")
+      href: user_token_link(saved_url(format: :rss))
     }
 
     @title = "Saved Stories"
@@ -215,7 +215,7 @@ class HomeController < ApplicationController
 
     @rss_link = {
       title: "RSS 2.0 - Tagged #{@tag.tag} (#{@tag.description})",
-      href: "/t/#{@tag.tag}.rss"
+      href: tag_url(@tag, format: :rss)
     }
 
     respond_to do |format|
@@ -241,7 +241,7 @@ class HomeController < ApplicationController
 
     @rss_link = {
       title: "RSS 2.0 - Tagged #{tags_with_description_for_rss(@tags)}",
-      href: "/t/#{params[:tag]}.rss"
+      href: multi_tag_url(params[:tag], format: :rss)
     }
 
     respond_to do |format|
@@ -263,7 +263,7 @@ class HomeController < ApplicationController
 
     @rss_link = {
       title: "RSS 2.0 - For #{@domain.domain}",
-      href: "/domains/#{@domain.domain}.rss"
+      href: domain_url(@domain, format: :rss)
     }
 
     respond_to do |format|
@@ -285,7 +285,7 @@ class HomeController < ApplicationController
 
     @rss_link = {
       title: "RSS 2.0 - For #{@origin.identifier}",
-      href: "/origins/#{@origin.identifier}.rss"
+      href: origin_url(@origin, format: :rss)
     }
 
     respond_to do |format|
@@ -300,7 +300,7 @@ class HomeController < ApplicationController
     if length[:placeholder]
       respond_to do |format|
         format.html { redirect_to top_path(length: "1w") }
-        format.rss { redirect_to "/top/1w/rss" }
+        format.rss { redirect_to top_path(length: "1w", format: :rss) }
       end
       return
     end
@@ -379,10 +379,6 @@ class HomeController < ApplicationController
         yield
       end
     end
-  end
-
-  def user_token_link(url)
-    @user ? "#{url}?token=#{@user.rss_token}" : url
   end
 
   def tags_with_description_for_rss(tags)

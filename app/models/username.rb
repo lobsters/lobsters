@@ -2,6 +2,7 @@ class Username < ApplicationRecord
   include UsernameAttribute
 
   belongs_to :user
+  validates :username, presence: true
   validates :created_at, presence: true
 
   # This takes 'from' and 'at' for the big backfill, that could get dropped/defaulted sometime

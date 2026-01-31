@@ -4,7 +4,7 @@
 The code is open source as part of our [commitment to transparency](https://lobste.rs/about#transparency).
 It's been used to run [sister sites](https://github.com/lobsters/lobsters/blob/main/sister_sites.md), but mostly we want people to be able to understand and improve what's happening on Lobsters itself.
 
-(Despite the site being a [ghost town](https://xcancel.com/webshitweekly/status/1399935275057389571) running on a [quite sad codebase](https://web.archive.org/web/20230213161624/https://old.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/), at least we have [no relation](https://lobste.rs/about#michaelbolton) to the self-help guru.)
+Despite the site being an [uber mega cringe](https://bsky.app/profile/anirudh.fi/post/3mdikk6u2w22e) [ghost town](https://xcancel.com/webshitweekly/status/1399935275057389571) running on a [quite sad codebase](https://web.archive.org/web/20230213161624/https://old.reddit.com/r/rails/comments/6jz7tq/source_code_lobsters_a_hacker_news_clone_built/), at least we have [no relation](https://lobste.rs/about#michaelbolton) to the self-help guru.
 
 
 #### Contributing bugfixes and new features

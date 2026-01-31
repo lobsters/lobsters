@@ -318,26 +318,64 @@ class StoriesController < ApplicationController
 
   def save
     if !(story = find_story)
-      return render plain: "can't find story", status: 400
+      flash[:error] = "Can't find story"
+    elsif story.merged_into_story
+      flash[:error] = "Story has been merged"
     end
 
-    if story.merged_into_story
-      return render plain: "story has been merged", status: 400
+    if flash[:error]
+      respond_to do |format|
+        format.html { redirect_to "/" }
+        format.json {
+          render json: flash.to_hash, status: 400
+          flash.clear
+        }
+      end
+      return
     end
 
     SavedStory.save_story_for_user(story.id, @user.id)
 
-    render plain: "ok"
+    flash[:action] = story_unsave_path(story.short_id)
+    flash[:success] = "Story saved."
+    flash[:cta] = "unsave"
+
+    respond_to do |format|
+      format.html { redirect_back_or_to Routes.title_path(story) }
+      format.json {
+        render json: flash.to_hash, status: :ok
+        flash.clear
+      }
+    end
   end
 
   def unsave
     if !(story = find_story)
-      return render plain: "can't find story", status: 400
+      flash[:error] = "Can't find story."
+
+      respond_to do |format|
+        format.html { redirect_to "/" }
+        format.json {
+          render json: flash.to_hash, status: 400
+          flash.clear
+        }
+      end
+      return
     end
 
     SavedStory.where(user_id: @user.id, story_id: story.id).delete_all
 
-    render plain: "ok"
+    flash[:action] = story_save_path(story.short_id)
+    flash[:success] = "Story unsaved."
+    flash[:cta] = "save"
+
+    respond_to do |format|
+      format.html { redirect_back_or_to Routes.title_path(story) }
+      format.json {
+        render json: flash.to_hash, status: :ok
+        flash.clear
+      }
+    end
   end
 
   def check_url_dupe

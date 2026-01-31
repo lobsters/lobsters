@@ -17,6 +17,10 @@ module ApplicationHelper
     )
   end
 
+  def divider_tag
+    content_tag(:span, " | ", aria: {hidden: "true"})
+  end
+
   def errors_for(object)
     html = +""
     unless object.errors.blank?
@@ -207,7 +211,7 @@ module ApplicationHelper
     end
   end
 
-  def divider_tag
-    content_tag(:span, " | ", aria: {hidden: "true"})
+  def user_token_link(url)
+    @user ? "#{url}?token=#{@user.rss_token}" : url
   end
 end

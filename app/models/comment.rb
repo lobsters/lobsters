@@ -32,6 +32,8 @@ class Comment < ApplicationRecord
 
   attr_accessor :current_vote, :current_reply, :previewing, :vote_summary
 
+  validates :short_id, presence: true, uniqueness: {case_sensitive: false}
+
   before_validation :assign_initial_attributes, on: :create
   include FullTextSearch[:comment]
 

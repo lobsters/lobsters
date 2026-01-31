@@ -37,6 +37,7 @@ But I make an unprincipled exception for :has because it solves so many big prob
 
 	/* dimensions */
 	--comment-controls-height: 1.2lh;
+	--input-outline-width: 2px;
 }
 
 /* generics */
@@ -167,13 +168,24 @@ pre {
 
 /* default form styling */
 
+a.button,
 input,
 button,
 select,
 textarea {
 	color: var(--color-fg-contrast-10);
+	font: inherit;
 	background-color: var(--color-box-bg);
 	padding: 3px 5px;
+	margin: var(--input-outline-width);
+}
+input:focus,
+button:focus,
+select:focus,
+textarea:focus {
+	outline: var(--input-outline-width) solid var(--color-box-border-focus);
+	border-color: transparent;
+	color: var(--color-fg);
 }
 textarea {
 	resize: vertical;
@@ -190,13 +202,6 @@ textarea {
 input[type="checkbox"] {
 	margin-top: 0.5em;
 }
-select:focus,
-input:focus,
-textarea:focus {
-	outline: 2px solid var(--color-box-border-focus);
-	border-color: transparent;
-	color: var(--color-fg);
-}
 textarea::placeholder {
 	color: var(--color-fg-contrast-7-5);
 }
@@ -208,7 +213,6 @@ input[type="submit"].link_post {
 	border: none;
 	color: var(--color-fg-link);
 	cursor: pointer;
-	font-size: inherit;
 	outline: none;
 	padding: 0;
 	text-decoration: underline;
@@ -245,7 +249,6 @@ a.button {
 	color: var(--color-fg);
 	cursor: pointer;
 	display: inline-block;
-	font-size: inherit;
 	line-height: 18px;
 	padding: 2px 10px 2px 10px;
 	text-align: center;
@@ -294,6 +297,19 @@ summary {
 	cursor: pointer;
 }
 
+/* Remove style from button to so it will look like a link */
+input.btn-link:hover,
+input.btn-link {
+	border: 0;
+	padding: 0;
+	background-color: var(--color-bg);
+	color: var(--color-fg-contrast-4-5);
+	line-height: 1;
+}
+input.btn-link:focus-visible {
+	outline: auto;
+}
+
 #qrsvg {
 	background-color: white;
 	display: inline-block;
@@ -306,6 +322,17 @@ summary {
 	margin: 0;
 }
 
+#aria-announce {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}
 
 /* header */
 
@@ -480,6 +507,8 @@ div.voters {
 .upvoter:before {
 	content: "\25b3";
 	color: var(--color-fg);
+	font-size: 1.2rem;
+	font-family: system-ui, monospace, sans-serif;
 }
 .upvoter:hover:before,
 .upvoted .upvoter:before {
@@ -711,6 +740,10 @@ li .byline a.story_has_suggestions {
 	color: var(--color-lobsters-fg-has-suggestions);
 }
 
+li .byline form {
+	display: inline-block;
+}
+
 .last_read_newest {
 	border-bottom: 2px solid var(--color-fg-shape);
 	border-top: 0;
@@ -730,7 +763,7 @@ li .byline a.story_has_suggestions {
 	opacity: 0.25;
 }
 
-li.story.saved a.saver {
+li.story.saved .saver .btn-link {
 	color: var(--color-fg-affirmative);
 }
 
@@ -1745,17 +1778,6 @@ input[type="submit"].link_post.pushover_button {
 
 	div.comment_form_container form {
 		margin-left: 35px;
-	}
-
-	/* explicitly reset color when not upvoted, since previously-upvoted arrow
-	 * will still be triggering :hover until next tap */
-	div.voters .upvoter:hover:before {
-		color: transparent;
-		-webkit-text-stroke: 1px var(--color-fg-contrast-4-5);
-	}
-	.upvoted div.voters .upvoter:before {
-		color: var(--color-fg-accent);
-		-webkit-text-stroke: 1px var(--color-fg-accent);
 	}
 
 	ol.stories.list {

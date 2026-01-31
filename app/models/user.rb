@@ -40,6 +40,9 @@ class User < ApplicationRecord
   has_many :moderations,
     inverse_of: :moderator,
     dependent: :restrict_with_exception
+  has_one :moderation,
+    inverse_of: :user,
+    dependent: :restrict_with_exception
   has_many :usernames, dependent: :destroy
   has_many :votes, dependent: :destroy
   has_many :voted_stories, -> { where("votes.comment_id" => nil) },
@@ -56,11 +59,18 @@ class User < ApplicationRecord
   has_many :wearable_hats, -> { where(doffed_at: nil) },
     class_name: "Hat",
     inverse_of: :user
-  has_many :notifications
+  has_many :hat_requests, dependent: :restrict_with_exception
+  has_many :notifications, dependent: :restrict_with_exception
   has_many :hidings,
     class_name: "HiddenStory",
     inverse_of: :user,
     dependent: :destroy
+  has_many :read_ribbons, dependent: :restrict_with_exception
+  has_many :saved_stories, dependent: :restrict_with_exception
+  has_many :suggested_taggings, dependent: :restrict_with_exception
+  has_many :suggested_titles, dependent: :restrict_with_exception
+  has_many :mod_mail_recipients, dependent: :restrict_with_exception
+  has_many :mod_mail_messages, dependent: :restrict_with_exception
 
   include EmailBlocklistValidation
   include Token
@@ -112,28 +122,32 @@ class User < ApplicationRecord
     allow_blank: true
 
   validates :password, presence: true, on: :create
+  validates :password_digest, length: {maximum: 75}
 
   validates :password_reset_token,
-    length: {maximum: 75}
+    uniqueness: {case_sensitive: false},
+    length: {maximum: 75},
+    allow_blank: true # because the column does not have a non-null constraint
   validates :session_token,
+    allow_blank: true,
+    presence: true,
+    uniqueness: {case_sensitive: false},
     length: {maximum: 75}
   validates :about,
     length: {maximum: 16_777_215}
   validates :rss_token,
+    uniqueness: {case_sensitive: false},
     length: {maximum: 75}
   validates :mailing_list_token,
+    uniqueness: {case_sensitive: false},
     length: {maximum: 75}
   validates :banned_reason,
-    length: {maximum: 256}
+    length: {maximum: 255}
   validates :disabled_invite_reason,
     length: {maximum: 200}
 
   validates :show_email, :is_admin, :is_moderator, :pushover_mentions,
     inclusion: {in: [true, false]}
-
-  validates :session_token,
-    allow_blank: true,
-    presence: true
 
   validates :karma,
     presence: true

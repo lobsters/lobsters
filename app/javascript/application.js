@@ -1,3 +1,5 @@
+// @ts-check
+
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 
 // in console: app await import("application")
@@ -25,33 +27,28 @@ export const on = (eventTypes, selector, callback) => {
   });
 }
 
-export const onPageLoad = (callback) => {
-  document.addEventListener('DOMContentLoaded', callback);
-};
-
+/** @param {HTMLElement} target @param {string} selector */
 export const parentSelector = (target, selector) => {
-  let parent = target.closest(selector);
-  if (parent === null) {
+  const parent = target.closest(selector);
+  if (parent == null) {
     throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
   }
   return parent;
 };
 
-export const qS = (context, selector) => {
-  if (selector === undefined) {
-    selector = context;
-    context = document;
-  }
-  return context.querySelector(selector);
+/** @type {(...args: ( [ string ] | [ParentNode,string] )) => Element|null} */
+export const qS = (...args) => {
+  return args.length === 1 ?
+    document.querySelector(args[0]) :
+    args[0].querySelector(args[1]);
 };
 
-export const qSA = (context, selector) => {
-  if (selector === undefined) {
-    selector = context;
-    context = document;
-  }
-  return context.querySelectorAll(selector);
-};
+/** @type {(...args: ( [ string ] | [ParentNode,string] )) => NodeListOf<Element>} */
+export const qSA = (...args) => {
+  return args.length === 1 ?
+    document.querySelectorAll(args[0]) :
+    args[0].querySelectorAll(args[1]);
+}
 
 export const replace = (oldElement, newHTMLString) => {
   const placeHolder = document.createElement('div');
@@ -95,8 +92,91 @@ export const removeExtraInputs = () => {
   }
 }
 
+/**
+ * @template {string} K
+ * @param {unknown} obj
+ * @param {K[]} keys
+ * @returns {obj is {[P in K]: string}}
+ */
+function hasProperties(obj, keys) {
+	return (
+		isObject(obj) &&
+		keys.every(
+			(key) =>
+				key in obj &&
+				typeof (/** @type {{[key]: unknown}} */ (obj)[key]) === "string",
+		)
+	);
+}
+
+/** @param {unknown} obj @returns obj is object */
+function isObject(obj) {
+	return typeof obj === "object" && !!obj;
+}
+
+/** @param {string} msg */
+function notify(msg) {
+		const ariaAnnounce = qS("#aria-announce");
+		if (ariaAnnounce) {
+			airaAnnounce.textContent = msg;
+		}
+}
+
+/** @param {HTMLFormElement} form @param {HTMLInputElement} submitter */
+async function asyncFormSubmit(form, submitter) {
+	// Prevent double submissions
+	if (submitter.disabled) {
+		return;
+	}
+
+	submitter.disabled = true;
+
+	try {
+		const response = await fetch(form.action, {
+			method: "POST",
+			body: new FormData(form),
+			headers: {
+				Accept: "application/json",
+			},
+		});
+
+		let body;
+
+		try {
+			body = await response.json();
+		} catch {
+			body = await response.text();
+		}
+
+		if (!response.ok) {
+			throw new Error(
+				typeof body === "string"
+					? body
+					: hasProperties(body, ["error"])
+						? body.error
+						: "Bad response",
+			);
+		}
+
+		return {
+			ok: true,
+			body,
+		};
+	} catch (err) {
+		const error = err instanceof Error ? err : new Error(JSON.stringify(err));
+		notify(error.message);
+		return {
+			ok: false,
+			error: error,
+		};
+	} finally {
+		submitter.disabled = false;
+	}
+}
+
+
 export class _LobstersFunction {
-  constructor (username) {
+  constructor () {
     this.curUser = null;
 
     this.storyFlagReasons = JSON.parse(qS('meta[name="story-flags"]').getAttribute('content'));
@@ -108,7 +188,7 @@ export class _LobstersFunction {
     document.location = "/login?return=" + encodeURIComponent(document.location);
   }
 
-  modalFlaggingDropDown(flaggedItemType, voterEl, reasons) {
+  modalFlaggingDropDown(_flaggedItemType, voterEl, reasons) {
     if (!Lobster.curUser) return Lobster.bounceToLogin();
 
     const li = parentSelector(voterEl, '.story, .comment');
@@ -134,7 +214,7 @@ export class _LobstersFunction {
     flaggingDropDown.setAttribute('id', 'flag_dropdown');
     voterEl.after(flaggingDropDown);
 
-    Object.keys(reasons).map(function(k, v) {
+    Object.keys(reasons).map(function(k) {
       let a = document.createElement('a')
       a.textContent = reasons[k]
       a.setAttribute('data', k)
@@ -310,25 +390,48 @@ export class _LobstersFunction {
     });
   }
 
-  saveStory(saverEl) {
-    if (!Lobster.curUser) return Lobster.bounceToLogin();
+  /** @param {SubmitEvent} ev */
+  async saveStory(ev) {
+    ev.preventDefault();
 
-    const li = parentSelector(saverEl, ".story, .comment");
-    let act;
+    const target = /** @type {HTMLFormElement} */ (ev.target);
+    const submitter = /** @type {HTMLInputElement} */ (ev.submitter);
 
-    if (li.classList.contains("saved")) {
-      act = "unsave";
-      li.classList.remove("saved");
-      saverEl.innerHTML = "save";
-    } else {
-      act = "save";
-      li.classList.add("saved");
-      saverEl.innerHTML = "unsave";
+    // Make sure to handle all "save" buttons in merged stories.
+    const story = parentSelector(target, ".story");
+    const forms = Array.from(qSA(story, ".saver")).filter(
+      (f) => f instanceof HTMLFormElement,
+    );
+    const btns = Array.from(qSA(story, ".saver input[type='submit']")).filter(
+      (b) => b instanceof HTMLInputElement,
+    );
+
+    for (const b of btns) {
+      if (b !== submitter) {
+        b.disabled = true;
+      }
     }
-    fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + act, {method: 'post'});
+
+    const data = await asyncFormSubmit(target, submitter);
+
+    if (data?.ok && hasProperties(data.body, ["action", "cta"])) {
+      for (const f of forms) {
+        f.action = data.body.action;
+      }
+
+      for (const b of btns) {
+        b.value = data.body.cta;
+      }
+
+      story.classList.toggle("saved");
+    }
+
+    for (const b of btns) {
+      b.disabled = false;
+    }
   }
 
-  tomSelect(item) {
+  tomSelect(_item) {
     if (!qS('#story_tags')) {
       return
     }
@@ -513,7 +616,7 @@ export class _LobstersFunction {
 
 const Lobster = new _LobstersFunction();
 
-onPageLoad(() => {
+document.addEventListener("DOMContentLoaded", () => {
   Lobster.curUser = document.body.getAttribute('data-username'); // hack
   autosize(qSA('textarea'));
 
@@ -548,6 +651,12 @@ onPageLoad(() => {
       t.innerText = years + " year" + (years > 1 ? "s" : "") + " ago"
     }
   }
+
+  // Append an element where xhr fetches can publish their results. Used by screen readers.
+  const ariaAnnounce = document.createElement("div");
+  ariaAnnounce.ariaLive = "polite";
+  ariaAnnounce.id = "aria-announce";
+  document.body.appendChild(ariaAnnounce);
 
   // Global
 
@@ -619,10 +728,7 @@ onPageLoad(() => {
     Lobster.hideStory(event.target);
   });
 
-  on('click', 'li.story a.saver', (event) => {
-    event.preventDefault();
-    Lobster.saveStory(event.target);
-  });
+  on('submit', 'li.story .saver', Lobster.saveStory)
 
   on('click', 'button.story-preview', (event) => {
     Lobster.previewStory(parentSelector(event.target, 'form'));

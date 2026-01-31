@@ -5,6 +5,7 @@ class MastodonApp < ApplicationRecord
   validates :name, :client_id, :client_secret,
     presence: true,
     length: {maximum: 255}
+  validates :name, uniqueness: {case_sensitive: false}
 
   # https://docs.joinmastodon.org/methods/oauth/
   def oauth_auth_url(mastodon_state)

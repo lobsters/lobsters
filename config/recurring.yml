@@ -17,9 +17,21 @@ production:
   sitemap:
     command: 'SitemapGenerator::Interpreter.run(config_file: ENV["CONFIG_FILE"], verbose: false)'
     schedule: every day at 2 am
-  stats_graphs:
-    class: StatsGraphsJob
+  fill_users_graph_cache:
+    command: 'Stats.fill_users_graph_cache'
     schedule: every day at 12:00am
+  fill_active_users_graph_cache:
+    command: 'Stats.fill_active_users_graph_cache'
+    schedule: every day at 12:03am
+  fill_stories_graph_cache:
+    command: 'Stats.fill_stories_graph_cache'
+    schedule: every day at 12:06am
+  fill_comments_graph_cache:
+    command: 'Stats.fill_comments_graph_cache'
+    schedule: every day at 12:09am
+  fill_votes_graph_cache:
+    command: 'Stats.fill_votes_graph_cache'
+    schedule: every day at 12:12am
   traffic_helper:
     command: TrafficHelper.cache_traffic!
     schedule: every 5 minutes
@@ -40,9 +52,21 @@ development:
   populate_comment_stats:
     command: CommentStat.daily_fill!
     schedule: every day at 4:00am
-  stats_graphs:
-    class: StatsGraphsJob
+  fill_users_graph_cache:
+    command: 'Stats.fill_users_graph_cache'
     schedule: every day at 12:00am
+  fill_active_users_graph_cache:
+    command: 'Stats.fill_active_users_graph_cache'
+    schedule: every day at 12:03am
+  fill_stories_graph_cache:
+    command: 'Stats.fill_stories_graph_cache'
+    schedule: every day at 12:06am
+  fill_comments_graph_cache:
+    command: 'Stats.fill_comments_graph_cache'
+    schedule: every day at 12:09am
+  fill_votes_graph_cache:
+    command: 'Stats.fill_votes_graph_cache'
+    schedule: every day at 12:12am
   fetch_email_blocklist:
     command: FetchEmailBlocklistJob
     schedule: every 7 days

@@ -17,10 +17,10 @@ class Story < ApplicationRecord
     dependent: :nullify
   has_many :taggings,
     autosave: true,
-    dependent: :destroy
-  has_many :suggested_taggings, dependent: :destroy
-  has_many :suggested_tags, source: :story, through: :suggested_taggings, dependent: :destroy
-  has_many :suggested_titles, dependent: :destroy
+    dependent: :destroy # tests fail if :restrict_with_exception
+  has_many :suggested_taggings, dependent: :restrict_with_exception
+  has_many :suggested_tags, source: :story, through: :suggested_taggings, dependent: :restrict_with_exception
+  has_many :suggested_titles, dependent: :restrict_with_exception
   has_many :suggested_tagging_times,
     -> { group(:tag_id).select("count(*) as times, tag_id").order(times: :desc) },
     class_name: "SuggestedTagging",
@@ -31,20 +31,24 @@ class Story < ApplicationRecord
     inverse_of: :story
   has_many :comments,
     inverse_of: :story,
-    dependent: :destroy
+    dependent: :restrict_with_exception
   has_many :tags, -> { order("tags.is_media desc, tags.tag") }, through: :taggings
-  has_many :votes, -> { where(comment_id: nil) }, inverse_of: :story, dependent: :destroy
+  has_many :votes, -> { where(comment_id: nil) },
+    inverse_of: :story,
+    dependent: :destroy # tests fail if :restrict_with_exception
   has_many :voters, -> { where("votes.comment_id" => nil) },
     through: :votes,
     source: :user
-  has_many :hidings, class_name: "HiddenStory", inverse_of: :story, dependent: :destroy
-  has_many :savings, class_name: "SavedStory", inverse_of: :story, dependent: :destroy
-  has_one :story_text, foreign_key: :id, dependent: :destroy, inverse_of: :story
-  has_many :links, inverse_of: :from_story, dependent: :destroy
+  has_many :hidings, class_name: "HiddenStory", inverse_of: :story, dependent: :restrict_with_exception
+  has_many :savings, class_name: "SavedStory", inverse_of: :story, dependent: :restrict_with_exception
+  has_one :story_text, foreign_key: :id, dependent: :restrict_with_exception, inverse_of: :story
+  has_many :links,
+    inverse_of: :from_story,
+    dependent: :destroy # tests fail if :restrict_with_exception
   has_many :incoming_links,
     class_name: "Link",
     inverse_of: :to_story,
-    dependent: :destroy
+    dependent: :restrict_with_exception
   has_one :moderation, dependent: :restrict_with_exception
   has_many :read_ribbons, dependent: :restrict_with_exception
   has_many :saved_stories, dependent: :restrict_with_exception

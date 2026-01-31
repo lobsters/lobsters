@@ -129,7 +129,7 @@
           "type": "controller",
           "class": "StoriesController",
           "method": "check_url_dupe",
-          "line": 353,
+          "line": 391,
           "file": "app/controllers/stories_controller.rb",
           "rendered": {
             "name": "stories/_form_errors",
@@ -604,7 +604,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story.rb",
-      "line": 94,
+      "line": 102,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "base(user).where(\"created_at >= datetime('now', '-#{length[:dur]} #{length[:intv].upcase}')\")",
       "render_path": null,
@@ -653,6 +653,29 @@
         79
       ],
       "note": "These aren't user-controlled, aren't strings and get passed to the graphing library."
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "bec995b8026744f2fc1b9166249eb0f9cbe262c97c81ddc9b7aaad069d97e2f1",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/jobs/restic_job.rb",
+      "line": 12,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"sqlite3 #{Rails.root.join(\"storage/primary.sqlite3\")} \\\".backup '#{\"/home/deploy/lobsters/shared\"}/database-backups/primary.sqlite3'\\\"\", :exception => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ResticJob",
+        "method": "perform"
+      },
+      "user_input": "Rails.root.join(\"storage/primary.sqlite3\")",
+      "confidence": "Medium",
+      "cwe_id": [
+        77
+      ],
+      "note": "sqlite backup command"
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -802,5 +825,5 @@
       "note": "These are all values validated by time_interval"
     }
   ],
-  "brakeman_version": "7.1.2"
+  "brakeman_version": "8.0.0"
 }

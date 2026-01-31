@@ -112,7 +112,7 @@ jobs:
           - 3306:3306
 
     env:
-      DATABASE_URL: trilogy://root:root@127.0.0.1/lobsters_dev
+      DATABASE_URL: "sqlite3::///tmp/test.sqlite3"
       RAILS_ENV: test
       RUBY_YJIT_ENABLE: "1"
 

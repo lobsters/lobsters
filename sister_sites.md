@@ -6,6 +6,8 @@ If you start a site, please PR yourself into the list and join us [on Zulip](htt
 * [Le Journal du Hacker](https://www.journalduhacker.net/) - Hacker News in French (fr)
 * [tilde news](https://tilde.news/) ([repo](https://tildegit.org/tildeverse/tilde.news)) - [tildeverse](https://tildeverse.org) links: unix, small web, decentralization
 * [Gamedev City](https://gamedev.city/) - Game Development
+* [Commons News](https://commons.news/) - Progressive Politics
+
 
 # Defunct sister sites
 
@@ -25,7 +27,6 @@ Here's a few that didn't make it.
 * [DTO](https://dto.pipecraft.net/) - Software development (zh-CN)
 * [MLN.dev](https://mln.dev/) - Machine learning
 * [Khosenk](https://խօսենք.ցանցառներ.հայ/) - computing-focused (hy)
-* [Commons News](https://commons.news/) - Progressive Politics
 * [Quantum News](https://news.aqora.io) - Quantum Computing and Quantum Physics. Used to use lobste.rs, not anymore.
 * [DataTau](https://datatau.net/) - Data science newsboard
 

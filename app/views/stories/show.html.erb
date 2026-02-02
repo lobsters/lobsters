@@ -36,9 +36,15 @@
   <% end %>
 
   <% if @story.is_hidden_by_cur_user %>
-    You have <a href="/about#story-hiding">hidden this</a> story.
-  Links to this story and its comments will not be shown elsewhere on the site for you.
-    You can <%= link_post "unhide", story_unhide_path(@story.short_id) %> it to make them visible again.
+    <div id="hide-alert">
+      You have <a href="/about#story-hiding">hidden this</a> story.
+      Links to this story and its comments will not be shown elsewhere on the site for you.
+      You can
+      <%= form_with :class => "hider", url: story_unhide_path(@story.short_id) do |form| %>
+        <%= form.submit "unhide", :class => "btn-link" %>
+      <% end %>
+      it to make them visible again.
+    </div>
   <% end %>
 
   <% if (matched_filtered_tags = @story.tags & filtered_tags).any? %>

@@ -93,20 +93,13 @@ export const removeExtraInputs = () => {
 }
 
 /**
- * @template {string} K
+ * @template T
  * @param {unknown} obj
- * @param {K[]} keys
- * @returns {obj is {[P in K]: string}}
+ * @param {Array<keyof T>} props
+ * @returns {obj is T}
  */
-function hasProperties(obj, keys) {
-	return (
-		isObject(obj) &&
-		keys.every(
-			(key) =>
-				key in obj &&
-				typeof (/** @type {{[key]: unknown}} */ (obj)[key]) === "string",
-		)
-	);
+function hasProperties(obj, props) {
+  return isObject(obj) && props.every((p) => p in obj);
 }
 
 /** @param {unknown} obj @returns obj is object */
@@ -122,58 +115,52 @@ function notify(msg) {
 		}
 }
 
-/** @param {HTMLFormElement} form @param {HTMLInputElement} submitter */
-async function asyncFormSubmit(form, submitter) {
-	// Prevent double submissions
-	if (submitter.disabled) {
-		return;
-	}
+/** @param {SubmitEvent} ev */
+export async function asyncFormSubmit(ev) {
+  ev.preventDefault();
 
-	submitter.disabled = true;
+  const submitter = /** @type {HTMLInputElement} */ (ev.submitter);
+  const form = /** @type {HTMLFormElement} */ (ev.target);
 
-	try {
-		const response = await fetch(form.action, {
-			method: "POST",
-			body: new FormData(form),
-			headers: {
-				Accept: "application/json",
-			},
-		});
+  // Prevent double submissions
+  if (submitter.disabled) {
+    return;
+  }
 
-		let body;
+  submitter.disabled = true;
 
-		try {
-			body = await response.json();
-		} catch {
-			body = await response.text();
-		}
+  try {
+    const response = await fetch(form.action, {
+      method: form.method,
+      body: new FormData(form),
+      headers: {
+        Accept: "application/json",
+      },
+    });
 
-		if (!response.ok) {
-			throw new Error(
-				typeof body === "string"
-					? body
-					: hasProperties(body, ["error"])
-						? body.error
-						: "Bad response",
-			);
-		}
+    const textBody = await response.text();
 
-		return {
-			ok: true,
-			body,
-		};
-	} catch (err) {
-		const error = err instanceof Error ? err : new Error(JSON.stringify(err));
-		notify(error.message);
-		return {
-			ok: false,
-			error: error,
-		};
-	} finally {
-		submitter.disabled = false;
-	}
+    const body = JSON.parse(textBody);
+
+    if (response.ok && isObject(body)) {
+      return body;
+    }
+
+    // Received valid error from server?
+    if (isObject(body) && "message" in body) {
+      throw new Error(`${body.message}`);
+    }
+
+    // Let's hope server explained what happened.
+    throw new Error(textBody);
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error(JSON.stringify(err));
+    notify(error.message);
+    throw error;
+  } finally {
+    submitter.disabled = false;
+  }
 }
-
 
 export class _LobstersFunction {
   constructor () {
@@ -308,23 +295,6 @@ export class _LobstersFunction {
     Lobster.checkStoryTitle();
   }
 
-  hideStory(hiderEl) {
-    if (!Lobster.curUser) return Lobster.bounceToLogin();
-
-    const li = parentSelector(hiderEl, ".story, .comment");
-    let act;
-    if (li.classList.contains("hidden")) {
-      act = "unhide";
-      li.classList.remove("hidden");
-      hiderEl.innerHTML = "hide";
-    } else {
-      act = "hide";
-      li.classList.add("hidden");
-      hiderEl.innerHTML = "unhide";
-    }
-    fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + act, {method: 'post'});
-  }
-
   removeFlagModal() {
     qS('#flag_dropdown').remove();
     qS('#modal_backdrop').remove();
@@ -407,43 +377,77 @@ export class _LobstersFunction {
   }
 
   /** @param {SubmitEvent} ev */
+  async hideStory(ev) {
+    await Lobster._handleStoryAction(ev, {
+      selector: ".hider",
+      stateProp: "hidden",
+      classToggle: "hidden",
+      activeText: "unhide",
+      inactiveText: "hide",
+    });
+  }
+
+  /** @param {SubmitEvent} ev */
   async saveStory(ev) {
-    ev.preventDefault();
+    await Lobster._handleStoryAction(ev, {
+      selector: ".saver",
+      stateProp: "saved",
+      classToggle: "saved",
+      activeText: "unsave",
+      inactiveText: "save",
+    });
+  }
 
-    const target = /** @type {HTMLFormElement} */ (ev.target);
+  /**
+   * @param {SubmitEvent} ev
+   * @param {{selector: string, stateProp: string, classToggle: string, activeText: string, inactiveText: string}} config
+   */
+  async _handleStoryAction(ev, config) {
     const submitter = /** @type {HTMLInputElement} */ (ev.submitter);
+    const story = parentSelector(submitter, ".story");
+    const btns = Array.from(
+      qSA(story, `${config.selector} input[type=submit]`),
+    ).filter((el) => el instanceof HTMLInputElement);
 
-    // Make sure to handle all "save" buttons in merged stories.
-    const story = parentSelector(target, ".story");
-    const forms = Array.from(qSA(story, ".saver")).filter(
-      (f) => f instanceof HTMLFormElement,
-    );
-    const btns = Array.from(qSA(story, ".saver input[type='submit']")).filter(
-      (b) => b instanceof HTMLInputElement,
-    );
-
-    for (const b of btns) {
-      if (b !== submitter) {
-        b.disabled = true;
+    const setButtonsDisabled = (/** @type boolean */ state) => {
+      for (const btn of btns) {
+        if (btn !== submitter) btn.disabled = state;
       }
-    }
+    };
 
-    const data = await asyncFormSubmit(target, submitter);
+    setButtonsDisabled(true);
 
-    if (data?.ok && hasProperties(data.body, ["action", "cta"])) {
-      for (const f of forms) {
-        f.action = data.body.action;
-      }
+    try {
+      const data = await asyncFormSubmit(ev);
 
-      for (const b of btns) {
-        b.value = data.body.cta;
+      const { stateProp } = config;
+
+      if (!hasProperties(data, [stateProp, "nextAction"])) {
+        return;
       }
 
-      story.classList.toggle("saved");
-    }
+      const isTrue = data[stateProp];
+      const nextAction = data["nextAction"];
 
-    for (const b of btns) {
-      b.disabled = false;
+      if (typeof isTrue !== "boolean" || typeof nextAction !== "string") {
+        throw new Error(`Bad response for ${config.selector}`);
+      }
+
+      qSA(story, config.selector).forEach((el) => {
+        if (el instanceof HTMLFormElement) {
+          el.action = nextAction;
+        }
+      });
+
+      story.classList.toggle(config.classToggle, isTrue);
+
+      btns.forEach((b) => {
+        b.value = isTrue ? config.activeText : config.inactiveText;
+      });
+    } catch (err) {
+      console.error(`${err}`);
+    } finally {
+      setButtonsDisabled(false);
     }
   }
 
@@ -743,10 +747,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Lobster.modalFlaggingDropDown("story", event.target, reasons);
   });
 
-  on('click', 'li.story a.hider', (event) => {
-    event.preventDefault();
-    Lobster.hideStory(event.target);
-  });
+  on('submit', 'li.story .hider', Lobster.hideStory);
 
   on('submit', 'li.story .saver', Lobster.saveStory)
 

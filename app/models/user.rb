@@ -522,6 +522,10 @@ class User < ApplicationRecord
     Markdowner.to_html(about)
   end
 
+  def raw_about
+    Markdowner.to_raw(about)
+  end
+
   def mastodon_acct
     raise unless mastodon_username.present? && mastodon_instance.present?
     "@#{mastodon_username}@#{mastodon_instance}"

@@ -75,6 +75,42 @@ class Markdowner
     end
   end
 
+  def self.to_raw(text)
+    if text.blank?
+      return ""
+    end
+
+    commonmarker_options = {
+      extension: {
+        tagfilter: true,
+        autolink: true,
+        strikethrough: true,
+        header_ids: nil,
+        shortcodes: nil
+      },
+      render: {
+        escape: false,
+        hardbreaks: false,
+        escaped_char_spans: false
+      }
+    }
+
+    root = Commonmarker.parse(text.to_s.force_encoding("utf-8"), options: commonmarker_options)
+
+    root.walk do |node|
+      if node.type == :image ||
+          node.type == :link ||
+          node.type == :emph ||
+          node.type == :strong ||
+          node.type == :strikethrough
+        node.insert_before(node.first_child)
+        node.delete
+      end
+    end
+
+    root.to_commonmark
+  end
+
   def self.walk_text_nodes(node, &block)
     return if node.type == :link
     return block.call(node) if node.type == :text

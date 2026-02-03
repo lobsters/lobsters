@@ -118,7 +118,7 @@ function isObject(obj) {
 function notify(msg) {
 		const ariaAnnounce = qS("#aria-announce");
 		if (ariaAnnounce) {
-			airaAnnounce.textContent = msg;
+			ariaAnnounce.textContent = msg;
 		}
 }
 

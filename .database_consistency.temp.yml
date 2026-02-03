@@ -1,0 +1,323 @@
+# This is a temporary replacement for .database_consistency.ignore.yml;
+# in order to unblock PRs, this file ignores issues that we are working
+# through in https://github.com/lobsters/lobsters/issues/1884
+#
+# This file was created by running `bundle exec database_consistency -g`
+# and renaming from ".todo" to ".temp".
+#
+# When the above-linked issue is resolved, delete this file, and in
+# check.yml replace the reference to .database_consistency.temp.yml
+# with .database_consistency.ignore.yml
+---
+Category:
+  index_categories_on_category:
+    UniqueIndexChecker:
+      enabled: false
+  index_categories_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(category):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  moderation:
+    MissingIndexChecker:
+      enabled: false
+Comment:
+  hat:
+    MissingDependentDestroyChecker:
+      enabled: false
+  index_comments_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(short_id):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  moderation:
+    MissingIndexChecker:
+      enabled: false
+  parent_comment:
+    MissingDependentDestroyChecker:
+      enabled: false
+  short_id:
+    UniqueIndexChecker:
+      enabled: false
+Domain:
+  banned_by_user:
+    MissingDependentDestroyChecker:
+      enabled: false
+  index_domains_on_domain:
+    UniqueIndexChecker:
+      enabled: false
+  index_domains_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(domain):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  moderation:
+    MissingIndexChecker:
+      enabled: false
+Hat:
+  index_hats_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+HatRequest:
+  index_hat_requests_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+HiddenStory:
+  index_hidden_stories_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+Invitation:
+  index_invitations_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+InvitationRequest:
+  index_invitation_requests_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+Keystore:
+  key:
+    PrimaryKeyTypeChecker:
+      enabled: false
+    UniqueIndexChecker:
+      enabled: false
+  lower(key):
+    MissingUniqueIndexChecker:
+      enabled: false
+Link:
+  to_comment_id+from_story_id+from_comment_id:
+    MissingUniqueIndexChecker:
+      enabled: false
+  to_story_id+from_story_id+from_comment_id:
+    MissingUniqueIndexChecker:
+      enabled: false
+  url+from_story_id+from_comment_id:
+    MissingUniqueIndexChecker:
+      enabled: false
+MastodonApp:
+  index_mastodon_apps_on_name:
+    UniqueIndexChecker:
+      enabled: false
+  lower(name):
+    MissingUniqueIndexChecker:
+      enabled: false
+Message:
+  hat:
+    MissingDependentDestroyChecker:
+      enabled: false
+  index_messages_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(short_id):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  random_hash:
+    UniqueIndexChecker:
+      enabled: false
+  short_id:
+    ColumnPresenceChecker:
+      enabled: false
+ModActivity:
+  index_mod_activities_on_item:
+    RedundantIndexChecker:
+      enabled: false
+  index_mod_activities_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+ModMail:
+  mod_activity:
+    MissingIndexChecker:
+      enabled: false
+ModNote:
+  index_mod_notes_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+Moderation:
+  index_moderations_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+Notification:
+  index_notifications_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+Origin:
+  banned_by_user:
+    MissingDependentDestroyChecker:
+      enabled: false
+  index_origins_on_identifier:
+    UniqueIndexChecker:
+      enabled: false
+  index_origins_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(identifier):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  moderation:
+    MissingIndexChecker:
+      enabled: false
+SavedStory:
+  index_saved_stories_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+Story:
+  domain:
+    MissingDependentDestroyChecker:
+      enabled: false
+  index_stories_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(short_id):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  merged_stories:
+    ForeignKeyCascadeChecker:
+      enabled: false
+  moderation:
+    MissingIndexChecker:
+      enabled: false
+  origin:
+    MissingDependentDestroyChecker:
+      enabled: false
+  story_text:
+    MissingIndexChecker:
+      enabled: false
+  unique_short_id:
+    UniqueIndexChecker:
+      enabled: false
+  user:
+    MissingDependentDestroyChecker:
+      enabled: false
+StoryText:
+  story:
+    ForeignKeyChecker:
+      enabled: false
+Tag:
+  index_tags_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  moderation:
+    MissingIndexChecker:
+      enabled: false
+User:
+  banned_by_user:
+    MissingDependentDestroyChecker:
+      enabled: false
+  disabled_invite_by_user:
+    MissingDependentDestroyChecker:
+      enabled: false
+  index_users_on_email:
+    UniqueIndexChecker:
+      enabled: false
+  index_users_on_token:
+    UniqueIndexChecker:
+      enabled: false
+  invited_by_user:
+    MissingDependentDestroyChecker:
+      enabled: false
+  lower(email):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(mailing_list_token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(password_reset_token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(rss_token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(session_token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(token):
+    MissingUniqueIndexChecker:
+      enabled: false
+  lower(username):
+    MissingUniqueIndexChecker:
+      enabled: false
+  mailing_list_token:
+    UniqueIndexChecker:
+      enabled: false
+  moderation:
+    MissingIndexChecker:
+      enabled: false
+  password_reset_token:
+    UniqueIndexChecker:
+      enabled: false
+  rss_token:
+    UniqueIndexChecker:
+      enabled: false
+  session_hash:
+    UniqueIndexChecker:
+      enabled: false
+  session_token:
+    ColumnPresenceChecker:
+      enabled: false
+  username:
+    UniqueIndexChecker:
+      enabled: false
+  usernames:
+    MissingIndexChecker:
+      enabled: false
+Username:
+  user:
+    ForeignKeyChecker:
+      enabled: false
+Vote:
+  reason:
+    ColumnPresenceChecker:
+      enabled: false

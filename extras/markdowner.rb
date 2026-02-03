@@ -95,7 +95,7 @@ class Markdowner
       }
     }
 
-    root = Commonmarker.parse(text.to_s.force_encoding("utf-8"), options: commonmarker_options)
+    root = Commonmarker.parse(text.to_s.dup.force_encoding("utf-8"), options: commonmarker_options)
 
     root.walk do |node|
       if node.type == :image ||

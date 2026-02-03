@@ -11,6 +11,8 @@ class DNSError < StandardError; end
 
 class NoIPsError < StandardError; end
 
+class TooManyRedirects < StandardError; end
+
 module Net
   class HTTP
     attr_accessor :address, :custom_conn_address, :skip_close
@@ -113,7 +115,7 @@ class Sponge
   end
 
   def fetch(url, method = :get, fields = {}, raw_post_data = nil, headers = {}, limit = 10)
-    raise ArgumentError.new("http redirection too deep") if limit <= 0
+    raise TooManyRedirects.new("http redirection too deep") if limit <= 0
 
     uri = URI.parse(url)
 

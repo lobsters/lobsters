@@ -3,6 +3,7 @@
 require "rspec/core/rake_task"
 require "standard/cli"
 require "brakeman/commandline"
+require "bundler/plumber/cli"
 require "database_consistency"
 
 RSpec::Core::RakeTask.new(:spec)
@@ -28,6 +29,11 @@ task build: :environment do
 
   puts "\n◾ Running database consistency checks (DatabaseConsistency)..."
   DatabaseConsistency.run([".database_consistency.ignore.yml"])
+
+  puts "\n◾ Running gem memory leak checks (bundler-leak)..."
+  bundler_plumber_cli = Bundler::Plumber::CLI.new
+  bundler_plumber_cli.update
+  bundler_plumber_cli.check
 
   puts "\n◾ Running tests (RSpec)..."
   Rake::Task["spec"].invoke

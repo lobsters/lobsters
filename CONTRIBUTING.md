@@ -115,6 +115,7 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
     Brakeman is conservatively configured to "fail" when a new version of brakeman is released.
     If that happens when you're working on a PR, you can ping me and I'll update it.
   * [DatabaseConsistency](https://github.com/djezzzl/database_consistency) checks for inconsistencies between the database schema and Active Record models.
+  * [bundler-leak](https://github.com/rubymem/bundler-leak) checks if any bundled gems are reported to have memory leaks.
   * [RSpec](https://rspec.info/documentation) is the test suite.
     It's a big DSL so it has a pretty steep learning curve.
     It's easiest to get started by duplicating existing tests.

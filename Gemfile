@@ -64,6 +64,7 @@ group :test, :development do
   gem "active_record_doctor"
   gem "benchmark-perf"
   gem "brakeman"
+  gem "bundler-leak"
   gem "pry-byebug"
   gem "pry-rails"
   gem "capybara"

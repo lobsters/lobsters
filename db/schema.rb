@@ -196,8 +196,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_28_183915) do
     t.index ["from_comment_id"], name: "index_links_on_from_comment_id"
     t.index ["from_story_id"], name: "index_links_on_from_story_id"
     t.index ["normalized_url"], name: "index_links_on_normalized_url"
-    t.index ["to_comment_id"], name: "index_links_on_to_comment_id"
-    t.index ["to_story_id"], name: "index_links_on_to_story_id"
+    t.index ["to_comment_id", "from_story_id", "from_comment_id"], name: "idx_links_on_to_comment_id_and_from_story_id_and_from_comment_id", unique: true
+    t.index ["to_story_id", "from_story_id", "from_comment_id"], name: "index_links_on_to_story_id_and_from_story_id_and_from_comment_id", unique: true
+    t.index ["url", "from_story_id", "from_comment_id"], name: "index_links_on_url_and_from_story_id_and_from_comment_id", unique: true
   end
 
   create_table "mastodon_apps", force: :cascade do |t|
@@ -215,7 +216,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_28_183915) do
     t.bigint "recipient_user_id", null: false
     t.string "subject", limit: 100
     t.text "body"
-    t.string "short_id", limit: 30
+    t.string "short_id", limit: 30, default: "", null: false
     t.boolean "deleted_by_author", default: false, null: false
     t.boolean "deleted_by_recipient", default: false, null: false
     t.bigint "hat_id"
@@ -233,7 +234,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_28_183915) do
     t.string "token", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["item_type", "item_id"], name: "index_mod_activities_on_item"
     t.index ["item_type", "item_id"], name: "index_mod_activities_on_item_type_and_item_id", unique: true
     t.index ["token"], name: "index_mod_activities_on_token", unique: true
   end
@@ -472,6 +472,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_28_183915) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "renamed_away_at"
+    t.index ["user_id"], name: "fk_rails_74bbef8f63"
   end
 
   create_table "users", force: :cascade do |t|
@@ -573,7 +574,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_28_183915) do
   add_foreign_key "saved_stories", "users"
   add_foreign_key "stories", "domains"
   add_foreign_key "stories", "origins"
-  add_foreign_key "stories", "stories", column: "merged_story_id"
+  add_foreign_key "stories", "stories", column: "merged_story_id", on_delete: :nullify
   add_foreign_key "stories", "users"
   add_foreign_key "suggested_taggings", "stories"
   add_foreign_key "suggested_taggings", "tags"
@@ -585,6 +586,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_28_183915) do
   add_foreign_key "taggings", "stories"
   add_foreign_key "taggings", "tags", on_update: :cascade, on_delete: :cascade
   add_foreign_key "tags", "categories"
+  add_foreign_key "usernames", "users"
   add_foreign_key "users", "users", column: "banned_by_user_id"
   add_foreign_key "users", "users", column: "disabled_invite_by_user_id"
   add_foreign_key "users", "users", column: "invited_by_user_id"

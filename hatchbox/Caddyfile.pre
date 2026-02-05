@@ -92,6 +92,24 @@ respond @submission_spambot 403 {
   close
 }
 
+# spambot hitting the search engines with a URL, very much like previous but
+# more plausible user-agents
+@search_spambot {
+  not {
+    header_regexp Cookie `.*=.*`
+  }
+  header referer "https://www.google.com/"
+  method GET
+  path /search
+}
+header @search_spambot Content-Type text/html
+respond @search_spambot 403 {
+  body `
+  Never heard of him.
+  `
+  close
+}
+
 # a very distributed scraper trying to find media files ~46k/day, but each IP is only used 1-15/d
 # presumably it will update its user-agent at some point, so:
 # grep 'path":"/[0-9a-f]*\.[a-z0-9]*"' ~/lobsters/shared/log/action.log | jq -c '.headers."user-agent" | sort | uniq -c | sort -rn

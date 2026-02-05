@@ -72,7 +72,7 @@ class SendWebmentionJob < ApplicationJob
       response = sp.fetch(URI::RFC2396_PARSER.escape(story.url), :get, {}, nil, {
         "User-agent" => "#{Rails.application.domain} webmention endpoint lookup"
       }, 3)
-    rescue NoIPsError, DNSError, Errno::ECONNREFUSED
+    rescue BadIPsError, NoIPsError, DNSError, Errno::ECONNREFUSED, OpenSSL::SSL::SSLError, TooManyRedirects, Zlib::DataError
       # other people's DNS/hosting issues (usually transient); just drop the webmention on the floor
       return
     end

@@ -106,17 +106,18 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
   Not all changes require tests, but most bug fixes benefit from it.
 
 * You can "run the build" (see `.github/workflows/check.yml`) locally with
-  `bundle exec rspec && bundle exec standardrb --fix-unsafely && brakeman -q`.
+  `bundle exec rake build`.
 
-  * [rspec](https://rspec.info/documentation) is the test suite.
-    It's a big DSL so it has a pretty steep learning curve.
-    It's easiest to get started by duplicating existing tests.
-  * [standardrb](https://github.com/standardrb/standard) is the linter/formatter.
+  * [Standard](https://github.com/standardrb/standard) is the linter/formatter.
     There's very nice [editor integration available](https://github.com/standardrb/standard#user-content-editor-support).
-  * [brakeman](https://brakemanscanner.org/) is the security linter.
+  * [Brakeman](https://brakemanscanner.org/) is the security linter.
     You can run `brakeman -I` to interactively add a note if a new warning is a false positives.
     Brakeman is conservatively configured to "fail" when a new version of brakeman is released.
     If that happens when you're working on a PR, you can ping me and I'll update it.
+  * [DatabaseConsistency](https://github.com/djezzzl/database_consistency) checks for inconsistencies between the database schema and Active Record models.
+  * [RSpec](https://rspec.info/documentation) is the test suite.
+    It's a big DSL so it has a pretty steep learning curve.
+    It's easiest to get started by duplicating existing tests.
 
     Brakeman also sometimes emits intimidating warnings about minor changes near known risky code.
     So if brakeman warns you about code you didn't write, don't panic, it's probably fine.

@@ -1,3 +1,6 @@
+# If any steps below are added or changed, make sure to keep build.rake in sync.
+# build.rake is a local development version of these CI commands.
+
 name: CI
 on:
   push:

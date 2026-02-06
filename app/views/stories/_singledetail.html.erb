@@ -93,11 +93,13 @@ classes = [
           <% end %>
 
           <% if ms.hider_count > 0 %>
-            <% if ms.is_hidden_by_cur_user %>
-              (hidden by you and <%= pluralize(ms.hider_count - 1, "other user") %>)
-            <% else %>
-              (hidden by <%= pluralize(ms.hider_count, "user") %>)
-            <% end %>
+            <span>
+              <% if ms.is_hidden_by_cur_user %>
+                (hidden by you and <%= pluralize(ms.hider_count - 1, "other user") %>)
+              <% else %>
+                (hidden by <%= pluralize(ms.hider_count, "user") %>)
+              <% end %>
+            </span>
           <% end %>
 
           <% if ms.disownable_by_user?(@user) %>

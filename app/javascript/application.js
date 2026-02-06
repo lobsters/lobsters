@@ -738,8 +738,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let url_tags = {
       "\.pdf($|\\?|#)": "pdf",
       "[\/\.](asciinema\.org|(youtube|vimeo)\.com|youtu\.be|twitch\.tv|media\.ccc\.de)\/": "video",
+      "\.(mp4|avi|mkv|webm)($|\\?|#)": "video",
       "[\/\.](slideshare\.net|speakerdeck\.com)\/": "slides",
       "[\/\.](soundcloud\.com)\/": "audio",
+      "\.(mp3|wav|ogg|flac)($|\\?|#)": "audio",
     };
 
     const storyUrlEl = qS('#story_url');

@@ -102,6 +102,13 @@ class StoryImage
       lobsters_logo = lobsters_logo.resize((image.height / 5.0) / lobsters_logo.height)
     end
 
+    # If it looks like the logo is mispositioned, it is likely due to social media
+    # cropping behaviors on preview cards.
+    #
+    # References:
+    # https://docs.joinmastodon.org/entities/PreviewCard/
+    # https://docs.joinmastodon.org/entities/MediaAttachment/#image
+    # https://mastodon.online/@mastodonmigration/109440513681868009
     combined_image = image.insert(lobsters_logo, 0, image.height - lobsters_logo.height)
     combined_image.write_to_buffer(".png")
   rescue Vips::Error => e

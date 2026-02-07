@@ -188,4 +188,53 @@ describe Markdowner do
       expect(subject).to include "<img"
     end
   end
+
+  context "markdown to raw" do
+    it "simple markdown" do
+      expect(Markdowner.to_raw("hello there *italics* and **bold**!"))
+        .to eq("hello there italics and bold\\!\n")
+    end
+
+    it "link to a user" do
+      create(:user, username: "blahblah")
+
+      expect(Markdowner.to_raw("hi @blahblah test"))
+        .to eq("hi \\@blahblah test\n")
+    end
+
+    # to_commonmark adds a bunch of escape backslashes to characters
+    # This comes directly from comrak, not commonmarker
+    it "bunch of symbols" do
+      expect(Markdowner.to_raw("\\this is a !@*_ string\\"))
+        .to eq("\\\\this is a \\!\\@\\*\\_ string\\\\\n")
+    end
+
+    it "url links" do
+      expect(Markdowner.to_raw("[full URL](http://example.com)"))
+        .to eq("full URL\n")
+
+      expect(Markdowner.to_raw("[protocol-relative URL](//example.com)"))
+        .to eq("protocol-relative URL\n")
+
+      expect(Markdowner.to_raw("[missing protocol](example.com)"))
+        .to eq("missing protocol\n")
+
+      expect(Markdowner.to_raw("[wrong number of slashes after protocol](http:/example.com)"))
+        .to eq("wrong number of slashes after protocol\n")
+
+      expect(Markdowner.to_raw("[relative link](/example)"))
+        .to eq("relative link\n")
+
+      expect(Markdowner.to_raw("[relative link to user profile](/~abc)"))
+        .to eq("relative link to user profile\n")
+
+      expect(Markdowner.to_raw("www.example.com"))
+        .to eq("www.example.com\n")
+    end
+
+    it "image link" do
+      expect(Markdowner.to_raw("![Example image](https://lbst.rs/fake.jpg)"))
+        .to eq("Example image\n")
+    end
+  end
 end

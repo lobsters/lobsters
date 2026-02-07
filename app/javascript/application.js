@@ -267,6 +267,14 @@ export class _LobstersFunction {
     }
   }
 
+  checkSelfPromo(input) {
+    if (input.checked) {
+      slideDownJS(qS('.self-promo-warning'));
+    } else if (qS('.self-promo-warning').classList.contains('slide-down')) {
+      qS('.self-promo-warning').classList.remove('slide-down');
+    }
+  }
+
   fetchURLTitle(button) {
     const url_field = qS('#story_url');
     const targetUrl = url_field.value;
@@ -687,7 +695,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Story
 
-  Lobster.checkStoryTitle()
+  Lobster.checkStoryTitle();
+  Lobster.checkSelfPromo(qS('#story_user_is_author'));
 
   Lobster.tomSelect();
 
@@ -699,6 +708,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   on('change', '#story_title', Lobster.checkStoryTitle);
+  on('change', '#story_user_is_author', (event) => {
+    Lobster.checkSelfPromo(event.target);
+  });
 
   on('click', '.story #flag_dropdown a', (event) => {
     event.preventDefault();

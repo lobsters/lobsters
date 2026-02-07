@@ -1008,7 +1008,8 @@ div#domain_box input[type=text] {
 }
 #story_box .url-updated,
 #story_box .title-reminder,
-#story_box .title-reminder-thanks
+#story_box .title-reminder-thanks,
+#story_box .self-promo-warning
 {
 	display: none;
 }

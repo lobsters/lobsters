@@ -94,15 +94,7 @@ respond @submission_spambot 403 {
 
 # spambot hitting the search engines with a URL, very much like previous but
 # more plausible user-agents
-@search_spambot {
-  not {
-    header_regexp Cookie `.*=.*`
-  }
-  header referer ""
-  header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-  method GET
-  path /search
-}
+@search_spambot `method("GET") && path("/search") && !header_regexp("Cookie", ".*=.*") && (header({"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}) || header({"referer": ""}) || header({"x-vercel-id": "*"}))`
 header @search_spambot Content-Type text/html
 respond @search_spambot 403 {
   body `

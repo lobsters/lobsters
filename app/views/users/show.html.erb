@@ -15,6 +15,7 @@
 
   <div class="labelled_grid">
   <label>Status</label>
+  <span>
     <% if @showing_user.is_banned? %>
       Banned by a moderator
     <% elsif !@showing_user.is_active? %>
@@ -31,6 +32,7 @@
         disabled
       <% end %>
     <% end %>
+  </span>
 
     <label>Joined</label>
     <span>

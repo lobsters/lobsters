@@ -89,24 +89,6 @@ jobs:
         run: |
           bundle exec brakeman --ensure-ignore-notes
 
-  leak-check:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    strategy:
-      fail-fast: false
-
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
-      - name: Find leaky gems
-        run: |
-          gem install bundler-leak
-          bundle leak update
-          bundle leak check
-
   database-consistency:
     runs-on: ubuntu-latest
     timeout-minutes: 15

@@ -3,6 +3,20 @@
 require "commonmarker"
 
 class Markdowner
+  COMMONMARKER_OPTIONS = {
+    extension: {
+      tagfilter: true,
+      autolink: true,
+      strikethrough: true,
+      header_ids: nil,
+      shortcodes: nil
+    },
+    render: {
+      escape: true,
+      hardbreaks: false,
+      escaped_char_spans: false
+    }
+  }
   USERNAME_MENTION = /\B([@~]#{User::VALID_USERNAME})\b/o
 
   # Rerender all markdown (#1627) cached in db columns, a pattern that predates Rails frament
@@ -31,27 +45,12 @@ class Markdowner
 
     as_of ||= Time.current
 
-    commonmarker_options = {
-      extension: {
-        tagfilter: true,
-        autolink: true,
-        strikethrough: true,
-        header_ids: nil,
-        shortcodes: nil
-      },
-      render: {
-        escape: true,
-        hardbreaks: false,
-        escaped_char_spans: false
-      }
-    }
-
-    root = Commonmarker.parse(text.to_s, options: commonmarker_options)
+    root = Commonmarker.parse(text.to_s, options: COMMONMARKER_OPTIONS)
 
     walk_text_nodes(root) { |n| link_username_mentions(n, as_of:) }
 
     ng = Nokogiri::HTML(root.to_html(
-      options: commonmarker_options,
+      options: COMMONMARKER_OPTIONS,
       plugins: {syntax_highlighter: nil}
     ))
 
@@ -80,22 +79,7 @@ class Markdowner
       return ""
     end
 
-    commonmarker_options = {
-      extension: {
-        tagfilter: true,
-        autolink: true,
-        strikethrough: true,
-        header_ids: nil,
-        shortcodes: nil
-      },
-      render: {
-        escape: false,
-        hardbreaks: false,
-        escaped_char_spans: false
-      }
-    }
-
-    root = Commonmarker.parse(text.to_s.dup.force_encoding("utf-8"), options: commonmarker_options)
+    root = Commonmarker.parse(text.to_s.dup.force_encoding("utf-8"), options: COMMONMARKER_OPTIONS)
 
     root.walk do |node|
       if node.type == :image ||

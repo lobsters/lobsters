@@ -33,6 +33,8 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with :truncation
 
+    User.create!(username: "System", email: "system@example.com", password: "test")
+
     c = Category.create! category: "category1"
     # 'placeholder' is so factory_bot can instantiate valid Story objects, but tests must replace
     # that with their own tags if they care what a story is tagged

@@ -197,6 +197,10 @@ class User < ApplicationRecord
     find_by! username:
   end
 
+  def self.system_user
+    @system_user ||= User.find_by!(username: "System")
+  end
+
   def as_json(_options = {})
     attrs = [
       :username,

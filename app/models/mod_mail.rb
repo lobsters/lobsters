@@ -34,4 +34,12 @@ class ModMail < ApplicationRecord
   def to_param
     short_id
   end
+
+  def self.create_inviter_discussion! user:, message:
+    inviter = user.invited_by_user || User.system_user
+
+    mail = ModMail.create! recipients: [user, inviter], subject: "New user story submission"
+    mail.mod_mail_messages.create! user: User.system_user, message: message
+    mail
+  end
 end

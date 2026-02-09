@@ -248,8 +248,8 @@ class Story < ApplicationRecord
   GRAPHICS_RE = /[\u{0000}-\u{001F}\u{2190}\u{2192}-\u{27BF}\u{1F000}-\u{1F9FF}]/
 
   attr_accessor :current_vote, :editing_from_suggestions, :editor, :fetching_ip,
-    :is_hidden_by_cur_user, :latest_comment_id,
-    :is_saved_by_cur_user, :moderation_reason, :previewing, :tags_was
+    :is_hidden_by_cur_user, :latest_comment_id, :is_saved_by_cur_user, :moderation_reason,
+    :new_user_acculturation_error, :previewing, :tags_was
   attr_writer :fetched_response
 
   before_validation :assign_initial_attributes, on: :create
@@ -264,8 +264,6 @@ class Story < ApplicationRecord
       check_not_banned_domain
       check_not_banned_origin
       check_not_new_domain_from_new_user
-      # This would probably have a too-high false-positive rate, I want to have approvals first.
-      # check_not_new_origin_from_new_user
       check_not_brigading
       check_not_pushcx_stream
       errors.add(:url, "is not valid") unless url.match(Utils::URL_RE)
@@ -335,27 +333,19 @@ class Story < ApplicationRecord
     return unless url.present? && new_record? && domain
 
     if user&.is_new? && domain.stories.not_deleted(nil).count == 0
-      ModNote.tattle_on_story_domain!(self, "new user with new")
-      errors.add :url, <<-EXPLANATION
-        is an unseen domain from a new user. We restrict this to discourage
-        self-promotion and give you time to learn about topicality. Skirting
-        this with a URL shortener or tweet or something will probably earn a ban.
-      EXPLANATION
-    end
-  end
+      errors.add :url, "is an unseen domain from a new user."
+      self.new_user_acculturation_error = ModMail.create_inviter_discussion! user: user, message: <<~MESSAGE
+        Hi,
 
-  def check_not_new_origin_from_new_user
-    return unless url.present? && new_record? && domain && origin
+        #{user.username}: This has a high false-positive rate, but we don't allow new users to submit links to domains we haven't seen before.
+        This is to give you a time to learn about topicality and to discourage immediate self-promotion.
 
-    if user&.is_new? && origin.stories.not_deleted(nil).count == 0
-      ModNote.tattle_on_story_origin!(self, "new user with new")
-      errors.add :url, <<-EXPLANATION
-        is from a domain that we know has multiple authors, like GitHub. We haven't
-        seen links from this origin '#{origin.identifier}' before.
-        We restrict new users from posting such links to discourage self-promotion and give
-        you time to learn about topicality. Skirting this with a URL shortener or tweet or something
-        will probably earn a ban.
-      EXPLANATION
+        #{user.invited_by_user&.username}: This is a good opportunity for you to introduce #{user.username} to the [site guideline](https://lobste.rs/about#guidelines) around topicality and self-promo.
+
+        If you need, you can talk to the mods in this conversation, but we'll probably stay out of it unless asked.
+
+        #{submission_markdown}
+      MESSAGE
     end
   end
 
@@ -379,24 +369,40 @@ class Story < ApplicationRecord
 
   def check_not_brigading
     return if url.blank? || !new_record? || !(
-      url.match?(%r{^https://bitbucket.org/[^/]+/[^/]+/(issues|pull-requests)/}) ||
-      url.match?(%r{^https://bugs.launchpad.net/[^/]+/\+bug/}) ||
-      url.match?(%r{^https://chiselapp.com/user/[^/]+/repository/[^/]+/tktview/}) ||
-      url.match?(%r{^https://codeberg.org/[^/]+/[^/]+/(issues|pulls)/}) ||
-      url.match?(%r{^https://github.com/[^/]+/[^/]+/(discussions|issues|pull)/}) ||
-      url.match?(%r{^https://gitlab.com/.+/(issues|merge_requests)/}) ||
-      url.match?(%r{^https://savannah.gnu.org/bugs/}) ||
-      url.match?(%r{^https://sourceforge.net/p/[^/]+/(support|tickets)/})
+      url.match?(%r{^https?://bitbucket.org/[^/]+/[^/]+/(issues|pull-requests)/}) ||
+      url.match?(%r{^https?://bugs.launchpad.net/[^/]+/\+bug/}) ||
+      url.match?(%r{^https?://chiselapp.com/user/[^/]+/repository/[^/]+/tktview/}) ||
+      url.match?(%r{^https?://codeberg.org/[^/]+/[^/]+/(issues|pulls)/}) ||
+      url.match?(%r{^https?://github.com/[^/]+/[^/]+/(discussions|issues|pull)/}) ||
+      url.match?(%r{^https?://gitlab.com/.+/(issues|merge_requests)/}) ||
+      url.match?(%r{^https?://savannah.gnu.org/bugs/}) ||
+      url.match?(%r{^https?://sourceforge.net/p/[^/]+/(support|tickets)/})
     )
 
-    ModNote.tattle_on_brigading!(self)
-    errors.add :url, <<~EXPLANATION
-      is to a project's bug tracker or discussions; see the Guidelines on brigading. It's bad for
-      projects when we dump 100k+ people into their community spaces, and Lobsters doesn't have good
-      threads when we're dropped without context into the middle of a controvery. If you weren't
-      trying to brigade the site into a fight you are involved in: find an overview, preferably from
-      a neutral third party. If you were trying to do that: don't.
-    EXPLANATION
+    if user.is_new?
+      errors.add :url, "is a project's bug tracker or discussions"
+      self.new_user_acculturation_error = ModMail.create_inviter_discussion! user: user, message: <<~MESSAGE
+        Hi,
+
+        #{user.username}: We don't accept links into projects' bug trackers or discussions to avoid brigading our readers into their community spaces,
+        and because Lobsters doesn't have good threads when we're dropped without context into the middle of a controversey.
+
+        #{user.invited_by_user&.username}: This is a good opportunity for you to introduce #{user.username} to the [brigading guideline](https://lobste.rs/about#brigading) and maybe help them find a better link, like an overview from a neutral third party.
+
+        If you need, you can talk to the mods in this conversation, but we'll probably stay out of it unless asked.
+
+        #{submission_markdown}
+      MESSAGE
+    else
+      errors.add :url, <<~EXPLANATION
+        is to a project's bug tracker or discussions; see the Guidelines on brigading. It's bad for
+        projects when we dump 100k+ people into their community spaces, and Lobsters doesn't have good
+        threads when we're dropped without context into the middle of a controvery. If you weren't
+        trying to brigade the site into a fight you are involved in: find an overview, preferably from
+        a neutral third party. If you were trying to do that: don't.
+      EXPLANATION
+      ModNote.tattle_on_brigading!(self)
+    end
   end
 
   def check_not_pushcx_stream
@@ -609,13 +615,19 @@ class Story < ApplicationRecord
     if u&.is_new? &&
         (unpermitted = tags.select { |t| t.permit_by_new_users == false }).any?
       tags_str = unpermitted.map(&:tag).to_sentence
-      errors.add :base, <<-EXPLANATION
-        New users can't submit stories with the tag(s) #{tags_str}
-        because they're for meta discussion or prone to off-topic stories.
-        If a tag is appropriate for the story, leaving the tag off to skirt this
-        restriction can earn a ban.
-      EXPLANATION
-      ModNote.tattle_on_new_user_tagging!(self)
+      errors.add :base, "New users can't submit stories with the tag(s) #{tags_str}"
+      self.new_user_acculturation_error = ModMail.create_inviter_discussion! user: u, message: <<~MESSAGE
+        Hi,
+
+        #{u.username}: New users can't submit stories with the tag(s) #{tags_str} because they're for meta discussion or prone to off-topic stories.
+        If a tag is appropriate for the story, leaving the tag off to skirt this restriction can earn a ban.
+
+        #{u.invited_by_user&.username}: This is a good opportunity for you introduce #{u.username} to what's [topical](https://lobste.rs/about#topicality) in the community.
+
+        If you need, you can talk to the mods in this conversation, but we'll probably stay out of it unless asked.
+
+        #{submission_markdown}
+      MESSAGE
       return
     end
 
@@ -1102,6 +1114,19 @@ class Story < ApplicationRecord
     else
       user&.is_moderator?
     end
+  end
+
+  def submission_markdown
+    <<~INFO
+
+      Story submission info:
+
+      - Title: #{title}
+      - URL: #{url}
+      - Tags: #{tags.map(&:tag).join(" ")}
+      - Is author: #{user_is_author}
+      - Description: #{description}
+    INFO
   end
 
   def vote_summary_for(user)

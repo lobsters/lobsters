@@ -1,3 +1,5 @@
+require "active_record/connection_adapters/sqlite3_adapter"
+
 ActiveSupport.on_load(:active_record) do
   ActiveRecord::ConnectionAdapters::SQLite3Adapter.class_eval do
     alias_method :orig_initialize, :initialize

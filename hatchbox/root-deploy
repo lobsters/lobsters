@@ -27,6 +27,12 @@ APP_ETC=/home/deploy/lobsters/shared/etc
 # https://docs.digitalocean.com/products/networking/dns/how-to/manage-records/#ptr-rdns-records
 echo "lobste.rs" > /etc/hostname
 
+if [ ! -f /tmp/anubis_1.24.0_amd64.deb ]; then
+  curl -Ls https://github.com/TecharoHQ/anubis/releases/download/v1.24.0/anubis_1.24.0_amd64.deb \
+         -o /tmp/anubis_1.24.0_amd64.deb
+  apt install /tmp/anubis_1.24.0_amd64.deb
+fi
+
 # server packages
 apt install iptables-persistent opendkim postfix restic
 

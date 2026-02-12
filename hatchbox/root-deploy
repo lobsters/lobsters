@@ -27,6 +27,7 @@ APP_ETC=/home/deploy/lobsters/shared/etc
 # https://docs.digitalocean.com/products/networking/dns/how-to/manage-records/#ptr-rdns-records
 echo "lobste.rs" > /etc/hostname
 
+# Install Anubis
 if [ ! -f /tmp/anubis_1.24.0_amd64.deb ]; then
   curl -Ls https://github.com/TecharoHQ/anubis/releases/download/v1.24.0/anubis_1.24.0_amd64.deb \
          -o /tmp/anubis_1.24.0_amd64.deb
@@ -93,6 +94,11 @@ chown deploy:deploy ~deploy/.bash_aliases
 # make iptables record readable for transparency
 netfilter-persistent save
 chmod go+r /etc/iptables/rules.v4 /etc/iptables/rules.v6
+
+# Configure Anubis
+cp lobsters.anubis.env /etc/anubis/lobsters.env
+cp lobsters.botPolicies.yaml /etc/anubis/lobsters.botPolicies.yaml
+sudo systemctl enable --now anubis@lobsters.service
 
 # run restic to back up /etc
 export HOME=/root

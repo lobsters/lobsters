@@ -129,4 +129,10 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
 
 * Open a pull request to [lobsters/lobsters](https://github.com/lobsters/lobsters).
   You're welcome to open a PR for a work in progress if you want to share progress or ask for help.
-  It's a big help if you explicitly write in a comment when you think the code is done!
+  It's a big help if you explicitly write in a comment whether the code is a draft or is ready to merge!
+
+* If I request changes to the PR, you can add more commits or edit your existing and force-push, whatever you prefer.
+  I usually squash and rebase small PRs and merge PRs where the commits are big enough to be individually useful in future debugging.
+  I don't have a particularly strong opinion and I want to treat your work respectfully, so please do let me know if you prefer squash/rebase/merge.
+
+

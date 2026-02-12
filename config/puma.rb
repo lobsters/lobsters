@@ -21,7 +21,12 @@ threads threads_count, threads_count
 # port        ENV.fetch("PORT") { 3000 }
 # bind 'tcp://127.0.0.1:3000'
 
-port        ENV.fetch("PORT") { 3001 }
+# Handle our Hatchbox -> Anubis -> Rails chain
+if ENV['ON_HATCHBOX']
+  port 9001
+else
+  port ENV.fetch("PORT") { 3000 }
+end
 
 # Specifies the `environment` that Puma will run in.
 environment ENV.fetch("RAILS_ENV") { "development" }

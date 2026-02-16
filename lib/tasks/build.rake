@@ -1,9 +1,7 @@
 # Local development version of the commands run in CI (check.yml).
 
-require "rspec/core/rake_task"
-require "standard/cli"
+return unless Rails.env.local?
 require "brakeman/commandline"
-require "database_consistency"
 
 # Override to prevent RSpec from exiting this entire task on RSpec's completion.
 module RSpec

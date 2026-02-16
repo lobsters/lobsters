@@ -761,4 +761,183 @@ describe Story do
 
     it { is_expected.to eq(150) }
   end
+
+  describe ".filter_tag_combinations_for" do
+    let(:user) { create(:user) }
+    let(:tag1) { create(:tag) }
+    let(:tag2) { create(:tag) }
+    let(:tag3) { create(:tag) }
+
+    it "returns all stories when user is nil" do
+      story1 = create(:story)
+      story2 = create(:story)
+      expect(Story.filter_tag_combinations_for(nil)).to contain_exactly(story1, story2)
+    end
+
+    it "returns all stories when user has no combinations" do
+      story1 = create(:story)
+      story2 = create(:story)
+      expect(Story.filter_tag_combinations_for(user)).to contain_exactly(story1, story2)
+    end
+
+    it "filters out stories with all tags in a combination" do
+      story_with_both = create(:story, tags: [tag1, tag2])
+      story_with_one = create(:story, tags: [tag1])
+      story_with_other = create(:story, tags: [tag3])
+
+      user.tag_filter_combinations.create!(tags: [tag1, tag2])
+
+      filtered = Story.filter_tag_combinations_for(user)
+      expect(filtered).to contain_exactly(story_with_one, story_with_other)
+      expect(filtered).not_to include(story_with_both)
+    end
+
+    it "keeps stories that have only some of the tags" do
+      story_with_all_three = create(:story, tags: [tag1, tag2, tag3])
+      story_with_tag1_only = create(:story, tags: [tag1])
+      story_with_tag2_only = create(:story, tags: [tag2])
+      story_with_tag1_and_tag3 = create(:story, tags: [tag1, tag3])
+
+      user.tag_filter_combinations.create!(tags: [tag1, tag2])
+
+      filtered = Story.filter_tag_combinations_for(user)
+      expect(filtered).to contain_exactly(
+        story_with_tag1_only,
+        story_with_tag2_only,
+        story_with_tag1_and_tag3
+      )
+      expect(filtered).not_to include(story_with_all_three)
+    end
+
+    it "handles multiple combinations" do
+      story1 = create(:story, tags: [tag1, tag2])
+      story2 = create(:story, tags: [tag2, tag3])
+      story3 = create(:story, tags: [tag1])
+      story4 = create(:story, tags: [tag3])
+
+      user.tag_filter_combinations.create!(tags: [tag1, tag2])
+      user.tag_filter_combinations.create!(tags: [tag2, tag3])
+
+      filtered = Story.filter_tag_combinations_for(user)
+      expect(filtered).to contain_exactly(story3, story4)
+      expect(filtered).not_to include(story1, story2)
+    end
+
+    it "updates tag_hash when story tags change" do
+      story = create(:story, tags: [tag1])
+      initial_hash = story.tag_hash
+
+      story.tags << tag2
+      story.save!
+
+      expect(story.reload.tag_hash).not_to eq(initial_hash)
+      expect(story.tag_hash).to eq((1 << (tag1.id % 64)) | (1 << (tag2.id % 64)))
+    end
+
+    it "updates tag_hash when tags are removed" do
+      story = create(:story, tags: [tag1, tag2, tag3])
+      initial_hash = story.tag_hash
+
+      story.tags.delete(tag2)
+      story.save!
+
+      expect(story.reload.tag_hash).not_to eq(initial_hash)
+      expected_hash = (1 << (tag1.id % 64)) | (1 << (tag3.id % 64))
+      expected_hash = expected_hash >= 2**63 ? expected_hash - 2**64 : expected_hash
+      expect(story.tag_hash).to eq(expected_hash)
+    end
+
+    it "updates tag_hash when reduced to one tag" do
+      story = create(:story, tags: [tag1, tag2, tag3])
+      initial_hash = story.tag_hash
+
+      # Remove all but one tag (stories require at least one tag)
+      story.tags = [tag1]
+      story.save!
+
+      expect(story.reload.tag_hash).not_to eq(initial_hash)
+      expected_hash = (1 << (tag1.id % 64))
+      expected_hash = expected_hash >= 2**63 ? expected_hash - 2**64 : expected_hash
+      expect(story.tag_hash).to eq(expected_hash)
+    end
+
+    it "handles bloom filter false positives correctly" do
+      # tags with (id % 64) collision
+      tag_a = tag1
+      target_remainder = tag_a.id % 64
+
+      # find existing collision
+      existing_collision = Tag.where.not(id: tag_a.id).find { |t| (t.id % 64) == target_remainder }
+
+      unless existing_collision
+        # calc next collision id
+        max_tag_id = Tag.maximum(:id) || 0
+        next_collision_id = ((max_tag_id / 64) + 1) * 64 + target_remainder
+
+        # create tags to reach it
+        tags_to_create = next_collision_id - max_tag_id + 5
+
+        tags_to_create.times do
+          tag = create(:tag)
+          if (tag.id % 64) == target_remainder && tag.id != tag_a.id
+            existing_collision = tag
+            break
+          end
+        end
+      end
+
+      expect(existing_collision).to be_present,
+        "failed to create colliding tag for tag_a.id=#{tag_a.id}"
+
+      # bloom matches but sql should reject (false positive)
+      story_with_tag_a = create(:story, tags: [tag_a])
+      user.tag_filter_combinations.create!(tags: [existing_collision, tag2])
+
+      filtered = Story.filter_tag_combinations_for(user)
+      expect(filtered).to include(story_with_tag_a)
+    end
+
+    it "handles signed integers correctly in bitwise comparisons" do
+      # need 2 tags with (id % 64) == 63 to produce negative hash
+      tag_63_a = find_or_create_tag_with_remainder(63)
+      tag_63_b = find_or_create_tag_with_remainder(63)
+
+      # if both calls returned the same tag, create more until we get a second
+      if tag_63_a == tag_63_b
+        70.times do
+          t = create(:tag)
+          if (t.id % 64) == 63 && t.id != tag_63_a.id
+            tag_63_b = t
+            break
+          end
+        end
+      end
+
+      test_tags = [tag_63_a, tag_63_b].uniq
+      expect(test_tags.size).to be >= 2,
+        "failed to create 2 tags with bit 63 set"
+
+      # negative hashes should still filter correctly
+      combo = user.tag_filter_combinations.create!(tags: test_tags)
+      expect(combo.combo_hash).to be < 0
+
+      story_with_negative_hash = create(:story, tags: test_tags)
+      expect(story_with_negative_hash.tag_hash).to be < 0
+
+      filtered = Story.filter_tag_combinations_for(user)
+      expect(filtered).not_to include(story_with_negative_hash)
+
+      story_with_one_tag = create(:story, tags: [test_tags.first])
+      expect(Story.filter_tag_combinations_for(user)).to include(story_with_one_tag)
+    end
+
+    it "handles stories with single tag not in combination" do
+      tag_unrelated = create(:tag)
+      story_single_tag = create(:story, tags: [tag_unrelated])
+      user.tag_filter_combinations.create!(tags: [tag1, tag2])
+
+      filtered = Story.filter_tag_combinations_for(user)
+      expect(filtered).to include(story_single_tag)
+    end
+  end
 end

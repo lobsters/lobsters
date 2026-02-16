@@ -268,6 +268,8 @@ export class _LobstersFunction {
   }
 
   checkSelfPromo(input) {
+    if (!input) return;
+
     if (input.checked) {
       slideDownJS(qS('.self-promo-warning'));
     } else if (qS('.self-promo-warning').classList.contains('slide-down')) {

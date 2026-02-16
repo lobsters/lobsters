@@ -1,6 +1,7 @@
 <div class="box wide">
   <p>
   To hide stories with certain <a href="/tags">tags</a> from across the site, check them below.
+  You can also <%= link_to "filter by tag combinations", tag_filter_combinations_path %> to hide stories that have multiple specific tags together.
   </p>
 
   <% if @user %>

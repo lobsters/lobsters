@@ -196,6 +196,8 @@ Rails.application.routes.draw do
   get "/filters" => "filters#index"
   post "/filters" => "filters#update"
 
+  resources :tag_filter_combinations, only: [:index, :create, :destroy]
+
   get "/tags" => "tags#index"
   get "/tags.json" => "tags#index", :format => "json"
 

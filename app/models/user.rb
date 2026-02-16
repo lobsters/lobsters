@@ -21,6 +21,7 @@ class User < ApplicationRecord
     through: :tag_filters,
     source: :tag,
     dependent: :delete_all
+  has_many :tag_filter_combinations, dependent: :destroy
   belongs_to :invited_by_user,
     class_name: "User",
     inverse_of: false,

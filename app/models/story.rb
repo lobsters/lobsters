@@ -608,7 +608,7 @@ class Story < ApplicationRecord
       errors.add :base, <<-EXPLANATION
         New users can't submit stories with the tag(s) #{tags_str}
         because they're for meta discussion or prone to off-topic stories.
-        If a tag is appropriate for the story, leaving it off to skirt this
+        If a tag is appropriate for the story, leaving the tag off to skirt this
         restriction can earn a ban.
       EXPLANATION
       ModNote.tattle_on_new_user_tagging!(self)

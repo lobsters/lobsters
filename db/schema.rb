@@ -395,6 +395,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_16_202600) do
     t.datetime "updated_at", null: false
     t.datetime "last_edited_at", null: false
     t.string "token", null: false
+    t.bigint "tag_hash", default: 0, null: false
     t.index ["created_at"], name: "index_stories_on_created_at"
     t.index ["domain_id"], name: "index_stories_on_domain_id"
     t.index ["hotness"], name: "hotness_idx"
@@ -406,6 +407,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_16_202600) do
     t.index ["origin_id"], name: "index_stories_on_origin_id"
     t.index ["score"], name: "index_stories_on_score"
     t.index ["short_id"], name: "unique_short_id", unique: true
+    t.index ["tag_hash"], name: "index_stories_on_tag_hash"
     t.index ["token"], name: "index_stories_on_token", unique: true
     t.index ["url"], name: "url", length: 191
     t.index ["user_id"], name: "index_stories_on_user_id"
@@ -435,6 +437,27 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_16_202600) do
     t.string "title", limit: 150, default: "", null: false
     t.index ["story_id"], name: "suggested_titles_story_id_fk"
     t.index ["user_id"], name: "suggested_titles_user_id_fk"
+  end
+
+  create_table "tag_filter_combination_tags", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+    t.bigint "tag_filter_combination_id", null: false, unsigned: true
+    t.bigint "tag_id", null: false, unsigned: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tag_filter_combination_id", "tag_id"], name: "index_combination_tags_unique", unique: true
+    t.index ["tag_filter_combination_id"], name: "index_tag_filter_combination_tags_on_tag_filter_combination_id"
+    t.index ["tag_id"], name: "index_tag_filter_combination_tags_on_tag_id"
+  end
+
+  create_table "tag_filter_combinations", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false, unsigned: true
+    t.bigint "combo_hash", null: false
+    t.integer "tag_count", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["combo_hash"], name: "index_tag_filter_combinations_on_combo_hash"
+    t.index ["user_id", "updated_at"], name: "index_tag_filter_combinations_on_user_id_and_updated_at"
+    t.index ["user_id"], name: "index_tag_filter_combinations_on_user_id"
   end
 
   create_table "tag_filters", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -584,6 +607,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_16_202600) do
   add_foreign_key "suggested_taggings", "users", name: "suggested_taggings_user_id_fk"
   add_foreign_key "suggested_titles", "stories", name: "suggested_titles_story_id_fk"
   add_foreign_key "suggested_titles", "users", name: "suggested_titles_user_id_fk"
+  add_foreign_key "tag_filter_combination_tags", "tag_filter_combinations"
+  add_foreign_key "tag_filter_combination_tags", "tags"
+  add_foreign_key "tag_filter_combinations", "users"
   add_foreign_key "tag_filters", "tags", name: "tag_filters_tag_id_fk"
   add_foreign_key "tag_filters", "users", name: "tag_filters_user_id_fk"
   add_foreign_key "taggings", "stories", name: "taggings_story_id_fk"

@@ -119,15 +119,12 @@ classes = [
         <% else %>
           <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?))  %>
             <%= divider_tag %>
-            <span class="dropdown_parent">
-              <input id="archive_<%= ms.short_id %>" class="archive_button" type="checkbox">
-              <label for="archive_<%= ms.short_id %>" tabindex="0">caches</label>
-              <div class="archive-dropdown">
-                <a href="<%= ms.archiveorg_url %>">Archive.org</a>
-                <a href="<%= ms.archivetoday_url %>">Archive.today</a>
-                <a href="<%= ms.ghost_url %>">Ghostarchive</a>
-              </div>
-            </span>
+            <button popovertarget="archive_<%= ms.short_id %>" class="archive-button" style="anchor-name: --archive-<%= ms.short_id %>">caches</button>
+            <div popover id="archive_<%= ms.short_id %>" class="archive-dropdown" style="position-anchor: --archive-<%= ms.short_id %>">
+              <a href="<%= ms.archiveorg_url %>">Archive.org</a>
+              <a href="<%= ms.archivetoday_url %>">Archive.today</a>
+              <a href="<%= ms.ghost_url %>">Ghostarchive</a>
+            </div>
           <% end %>
 
           <span class="comments_label">

@@ -299,15 +299,26 @@ summary {
 
 /* Remove style from button to so it will look like a link */
 input.btn-link:hover,
-input.btn-link {
+input.btn-link,
+button.archive-button:hover,
+button.archive-button {
 	border: 0;
 	padding: 0;
 	background-color: var(--color-bg);
 	color: var(--color-fg-contrast-4-5);
 	line-height: 1;
 }
-input.btn-link:focus-visible {
+input.btn-link:focus-visible,
+button.archive-button:focus-visible {
 	outline: auto;
+}
+
+button.archive-button {
+	margin: 0
+}
+
+button.archive-button:focus {
+	outline: none;
 }
 
 #qrsvg {
@@ -753,7 +764,6 @@ li .byline form {
 
 :is(ol:not(.show_hidden) li.story.hidden:not(:only-child)) :is(
 	.dropdown_parent > .flagger, /* Flag button */
-	.dropdown_parent > label, /* Caches button */
 	.byline > :not(.dropdown_parent),
 	.details > :not(.byline),
 	.voters,
@@ -924,7 +934,7 @@ div.comment_text code {
 	left: 0.25rem;
 }
 
-#flag_dropdown, .archive-dropdown {
+#flag_dropdown {
 	position: absolute;
 	left: -0.125rem;
 	width: 100px;
@@ -958,18 +968,15 @@ div.comment_text code {
 	z-index: 1;
 }
 
-/* archive; dropdown styling is with #flag_dropdown to match it */
-.archive_button {
-	display: none;
+.archive-dropdown {
+	position: fixed;
+	position-area: bottom span-left;
+	margin: 3px 0 0 0;
+	width: 100px;
+	border: 1px solid var(--color-box-border);
+	border-bottom: 0;
+	padding: 0;
 }
-.archive_button:not(:checked) ~ .archive-dropdown {
-	display: none;
-}
-.archive_button ~ label{
-	cursor: pointer;
-}
-
-
 
 .controls details {
 	margin-left: auto;

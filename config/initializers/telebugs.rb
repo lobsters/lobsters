@@ -2,6 +2,9 @@ module Telebugs
   def self.breadcrumb *args, **kwargs
   end
 
+  def self.capture *args, **kwargs
+  end
+
   def self.context *args, **kwargs
   end
 
@@ -30,6 +33,10 @@ if Rails.application.credentials.telebugs.present?
     # https://docs.sentry.io/platforms/ruby/guides/rails/enriching-events/breadcrumbs/
     def self.breadcrumb *args
       Sentry.add_breadcrumb(Sentry::Breadcrumb.new(*args))
+    end
+
+    def self.capture *args, **kwargs
+      Sentry.capture_exception(*args)
     end
 
     # https://docs.sentry.io/platforms/ruby/guides/rails/enriching-events/context/

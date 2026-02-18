@@ -6,4 +6,9 @@ class ApplicationJob < ActiveJob::Base
 
   # Most jobs are safe to ignore if the underlying records are no longer available
   # discard_on ActiveJob::DeserializationError
+
+  rescue_from(Exception) do |exception|
+    Telebugs.capture(exception)
+    raise exception
+  end
 end

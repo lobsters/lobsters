@@ -10,7 +10,7 @@ But I make an unprincipled exception for :has because it solves so many big prob
 :root {
 	/* common color scheme */
 	--font-size-default: 1rem;
-        --font-size-tags: 0.66rem;
+	--font-size-tags: 0.66rem;
 
 	--color-bg: rgb(var(--base-bg));
 	--color-bg-50: rgb(var(--base-bg) / 50%);
@@ -506,7 +506,6 @@ div.voters {
 
 .upvoter:before {
 	content: "\25b3";
-	color: var(--color-fg);
 	font-size: 1.2rem;
 	font-family: system-ui, monospace, sans-serif;
 }
@@ -542,7 +541,7 @@ ol.stories li.story div.story_liner {
 	position: relative;
 }
 
-.comment a {
+.comment .details a {
 	color: var(--color-fg-contrast-7-5);
 }
 
@@ -565,22 +564,22 @@ We'd like to write the following selector to express that directly, but can't un
 supports it:  https://caniuse.com/?search=%3Ahas
 .negative_1 *:not(.dropdown_parent, :has(*)) { ... }
 */
-.negative_1 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
+.negative_1 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img, form),
 .negative_1 .score {
 	opacity: 0.7;
 }
 
-.negative_3 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
+.negative_3 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img, form),
 .negative_3 .score {
 	opacity: 0.6;
 }
 
-.negative_5 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img),
+.negative_5 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img, form),
 .negative_5 .score {
 	opacity: 0.5;
 }
 
-.comment.bad *:not(div, .dropdown_parent, .dropdown_parent *) {
+.comment.bad :is(.voters, .byline > :not(.dropdown_parent), .byline .flagger, .details .comment_text) {
 	opacity: 0.7;
 }
 
@@ -1008,7 +1007,8 @@ div#domain_box input[type=text] {
 }
 #story_box .url-updated,
 #story_box .title-reminder,
-#story_box .title-reminder-thanks
+#story_box .title-reminder-thanks,
+#story_box .self-promo-warning
 {
 	display: none;
 }

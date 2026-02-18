@@ -10,11 +10,11 @@
       <%= styled_user_link story.user, story %>
       <%= how_long_ago_label(story.created_at) %>
       <span>
-        |
+        <%= divider_tag %>
         <%= story.show_score_to_user?(@user) ? "#{story.score} point".pluralize(story.score) : '~' %>
       </span>
       <span class="comments_label">
-        |
+        <%= divider_tag %>
         <a href="<%= Routes.title_path story %>">
           <% if story.comments_count == 0 %>
             no comments

@@ -613,22 +613,15 @@ class Story < ApplicationRecord
       errors.add :base, <<-EXPLANATION
         New users can't submit stories with the tag(s) #{tags_str}
         because they're for meta discussion or prone to off-topic stories.
-        If a tag is appropriate for the story, leaving it off to skirt this
+        If a tag is appropriate for the story, leaving the tag off to skirt this
         restriction can earn a ban.
       EXPLANATION
       ModNote.tattle_on_new_user_tagging!(self)
       return
     end
 
-    tags.each do |t|
-      if !t.can_be_applied_by?(u) && t.privileged?
-        raise "#{u.username} does not have permission to use privileged tag #{t.tag}"
-      elsif !t.can_be_applied_by?(u) && !t.permit_by_new_users?
-        errors.add(:base, "New users can't submit #{t.tag} stories, please wait. " \
-          "If the tag is appropriate, leaving it off to skirt this restriction is a bad idea.")
-        ModNote.tattle_on_story_domain!(self, "new user with protected tags")
-        raise "#{u.username} is too new to use tag #{t.tag}"
-      end
+    if (privileged = tags.select { |t| !t.can_be_applied_by?(u) }).any?
+      raise "#{u.username} does not have permission to use privileged tag(s): #{privileged.map(&:tag).join(" ")}"
     end
 
     if tags.reject { |t| t.is_media? }.empty?

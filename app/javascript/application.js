@@ -118,7 +118,7 @@ function isObject(obj) {
 function notify(msg) {
 		const ariaAnnounce = qS("#aria-announce");
 		if (ariaAnnounce) {
-			airaAnnounce.textContent = msg;
+			ariaAnnounce.textContent = msg;
 		}
 }
 
@@ -267,6 +267,16 @@ export class _LobstersFunction {
     }
   }
 
+  checkSelfPromo(input) {
+    if (!input) return;
+
+    if (input.checked) {
+      slideDownJS(qS('.self-promo-warning'));
+    } else if (qS('.self-promo-warning').classList.contains('slide-down')) {
+      qS('.self-promo-warning').classList.remove('slide-down');
+    }
+  }
+
   fetchURLTitle(button) {
     const url_field = qS('#story_url');
     const targetUrl = url_field.value;
@@ -348,7 +358,13 @@ export class _LobstersFunction {
             // a top-level comment, so find the top of the comments tree.
             const comments = form.closest('.comments') || qS('.comments')
             parentSelector(form, '.comment_form_container').remove()
-            comments.insertAdjacentHTML("afterbegin", text)
+
+            // if comments is .comments1, it is top-level comment: insert it deeper
+            if (comments.classList.contains('comments1')) {
+              comments.querySelector('#story_comments .comments').insertAdjacentHTML("afterbegin", text)
+            } else {
+              comments.insertAdjacentHTML("afterbegin", text)
+            }
           }
 
         })
@@ -687,7 +703,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Story
 
-  Lobster.checkStoryTitle()
+  Lobster.checkStoryTitle();
+  Lobster.checkSelfPromo(qS('#story_user_is_author'));
 
   Lobster.tomSelect();
 
@@ -699,6 +716,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   on('change', '#story_title', Lobster.checkStoryTitle);
+  on('change', '#story_user_is_author', (event) => {
+    Lobster.checkSelfPromo(event.target);
+  });
 
   on('click', '.story #flag_dropdown a', (event) => {
     event.preventDefault();
@@ -738,8 +758,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let url_tags = {
       "\.pdf($|\\?|#)": "pdf",
       "[\/\.](asciinema\.org|(youtube|vimeo)\.com|youtu\.be|twitch\.tv|media\.ccc\.de)\/": "video",
+      "\.(mp4|avi|mkv|webm)($|\\?|#)": "video",
       "[\/\.](slideshare\.net|speakerdeck\.com)\/": "slides",
       "[\/\.](soundcloud\.com)\/": "audio",
+      "\.(mp3|wav|ogg|flac)($|\\?|#)": "audio",
     };
 
     const storyUrlEl = qS('#story_url');

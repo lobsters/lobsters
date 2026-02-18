@@ -93,15 +93,17 @@ classes = [
           <% end %>
 
           <% if ms.hider_count > 0 %>
-            <% if ms.is_hidden_by_cur_user %>
-              (hidden by you and <%= pluralize(ms.hider_count - 1, "other user") %>)
-            <% else %>
-              (hidden by <%= pluralize(ms.hider_count, "user") %>)
-            <% end %>
+            <span>
+              <% if ms.is_hidden_by_cur_user %>
+                (hidden by you and <%= pluralize(ms.hider_count - 1, "other user") %>)
+              <% else %>
+                (hidden by <%= pluralize(ms.hider_count, "user") %>)
+              <% end %>
+            </span>
           <% end %>
 
           <% if ms.disownable_by_user?(@user) %>
-            |
+            <%= divider_tag %>
             <%= link_post "disown", story_disown_path(ms.short_id), { confirm: "Are you sure you want to disown this story?"} %>
           <% end %>
 
@@ -129,7 +131,7 @@ classes = [
           <% end %>
 
           <span class="comments_label">
-            |
+            <%= divider_tag %>
             <a role="heading" aria-level="2" href="<%= Routes.title_path(merged_stories.first, anchor: ms.comments_anchor) %>">
               <%= ms.comments_count.zero? ? "no" : ms.comments_count %>
               <%= 'comment'.pluralize(ms.comments_count) %>
@@ -137,7 +139,7 @@ classes = [
           </span>
 
           <% if ((@user&.is_moderator? && ms.flags > 0) || (ms.flags >= 3 || ms.score <= 0)) %>
-            <span> | <%= ms.vote_summary_for(@user).downcase %> </span>
+            <span> <%= divider_tag %><%= ms.vote_summary_for(@user).downcase %> </span>
           <% end %>
         <% end %>
       </div>

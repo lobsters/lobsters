@@ -970,7 +970,7 @@ div.comment_text code {
 
 .archive-dropdown {
 	position: fixed;
-	position-area: bottom span-left;
+	position-area: bottom span-right;
 	margin: 3px 0 0 0;
 	width: 100px;
 	border: 1px solid var(--color-box-border);

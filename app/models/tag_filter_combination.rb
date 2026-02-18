@@ -5,6 +5,9 @@ class TagFilterCombination < ApplicationRecord
   has_many :tag_filter_combination_tags, dependent: :destroy, inverse_of: :tag_filter_combination
   has_many :tags, through: :tag_filter_combination_tags
 
+  MAX_TAGS_PER_COMBINATION = 15
+  MAX_COMBINATIONS_PER_USER = 15
+
   validates :user_id, presence: true
   validates :combo_hash, presence: true
   validates :tag_count, presence: true, numericality: {greater_than: 1}
@@ -33,18 +36,18 @@ class TagFilterCombination < ApplicationRecord
   def tags_count_within_limits
     if tags.size < 2
       errors.add(:tags, "must have at least 2 tags")
-    elsif tags.size > 15
-      errors.add(:tags, "must have at most 15 tags")
+    elsif tags.size > MAX_TAGS_PER_COMBINATION
+      errors.add(:tags, "must have at most #{MAX_TAGS_PER_COMBINATION} tags")                                                                                                                
     end
   end
 
   def user_combinations_limit
     return unless user
 
-    # max 15 combos per user
+    # max combos per user
     existing_count = user.tag_filter_combinations.where.not(id: id).count
-    if existing_count >= 15
-      errors.add(:base, "cannot have more than 15 tag filter combinations")
+    if existing_count >= MAX_COMBINATIONS_PER_USER
+      errors.add(:base, "cannot have more than #{MAX_COMBINATIONS_PER_USER} tag filter combinations")
     end
   end
 end

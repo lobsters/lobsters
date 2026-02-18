@@ -5,7 +5,7 @@
   </p>
 
   <% if @combinations.any? %>
-    <h3>Your Active Combination Filters (<%= @combinations.size %>/15)</h3>
+    <h3>Your Active Combination Filters (<%= @combinations.size %>/<%= TagFilterCombination::MAX_COMBINATIONS_PER_USER %>)</h3>
     <table class="data zebra" cellspacing=0>
       <tr>
         <th>Tags</th>
@@ -24,10 +24,10 @@
     </table>
   <% end %>
 
-  <% if @combinations.size < 15 %>
+  <% if @combinations.size < TagFilterCombination::MAX_COMBINATIONS_PER_USER %>
     <h3>Add New Combination Filter</h3>
     <p>
-      Click tags to select them (need 2-15), then click "Create Combination Filter".
+      Click tags to select them (need 2-<%= TagFilterCombination::MAX_TAGS_PER_COMBINATION %>), then click "Create Combination Filter".
       <span id="selection_status"></span>
     </p>
 
@@ -81,7 +81,7 @@
     <% end %>
   <% else %>
     <p>
-      <strong>Maximum 15 combinations reached.</strong> Remove some above to create new ones.
+      <strong>Maximum <%= TagFilterCombination::MAX_COMBINATIONS_PER_USER %> combinations reached.</strong> Remove some above to create new ones.
     </p>
   <% end %>
 
@@ -175,9 +175,9 @@ function initTagCombinations() {
     const row = checkbox.closest('tr');
 
     if (checkbox.checked) {
-      if (selectedTags.size >= 15) {
+      if (selectedTags.size >= <%= TagFilterCombination::MAX_TAGS_PER_COMBINATION %>) {
         checkbox.checked = false;
-        alert('Maximum 15 tags allowed');
+        alert('Maximum <%= TagFilterCombination::MAX_TAGS_PER_COMBINATION %> tags allowed');
         return;
       }
       selectedTags.set(tagId, tagName);
@@ -228,7 +228,7 @@ function initTagCombinations() {
       .join('');
 
     // Update submit button
-    submitButton.disabled = count < 2 || count > 15;
+    submitButton.disabled = count < 2 || count > <%= TagFilterCombination::MAX_TAGS_PER_COMBINATION %>;
   }
 
   // Search functionality

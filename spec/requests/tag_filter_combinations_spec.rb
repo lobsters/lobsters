@@ -57,10 +57,9 @@ RSpec.describe "TagFilterCombinations", type: :request do
       expect(flash[:error]).to include("at least 2 tags")
     end
 
-    it "rejects when user already has 15 combinations" do
+    it "rejects when user already has #{TagFilterCombination::MAX_COMBINATIONS_PER_USER} combinations" do
       sign_in user
-      # Create 15 combinations
-      15.times do |i|
+      TagFilterCombination::MAX_COMBINATIONS_PER_USER.times do |i|
         tags = [create(:tag), create(:tag)]
         user.tag_filter_combinations.create!(tags: tags)
       end
@@ -70,7 +69,7 @@ RSpec.describe "TagFilterCombinations", type: :request do
       }.not_to change { user.tag_filter_combinations.count }
 
       expect(response).to redirect_to(tag_filter_combinations_path)
-      expect(flash[:error]).to include("more than 15 tag filter combinations")
+      expect(flash[:error]).to include("more than #{TagFilterCombination::MAX_COMBINATIONS_PER_USER} tag filter combinations")
     end
 
     it "removes duplicate tag_ids" do

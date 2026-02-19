@@ -119,15 +119,7 @@ classes = [
         <% else %>
           <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?))  %>
             <%= divider_tag %>
-            <span class="dropdown_parent">
-              <input id="archive_<%= ms.short_id %>" class="archive_button" type="checkbox">
-              <label for="archive_<%= ms.short_id %>" tabindex="0">caches</label>
-              <div class="archive-dropdown">
-                <a href="<%= ms.archiveorg_url %>">Archive.org</a>
-                <a href="<%= ms.archivetoday_url %>">Archive.today</a>
-                <a href="<%= ms.ghost_url %>">Ghostarchive</a>
-              </div>
-            </span>
+            <label for="archive_<%= ms.short_id %>" tabindex="0">caches</label>
           <% end %>
 
           <span class="comments_label">
@@ -143,6 +135,14 @@ classes = [
           <% end %>
         <% end %>
       </div>
+      <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
+        <input id="archive_<%= ms.short_id %>" class="archive_button" type="checkbox">
+        <div class="archive-dropdown">
+          <a href="<%= ms.archiveorg_url %>">Archive.org</a>
+          <a href="<%= ms.archivetoday_url %>">Archive.today</a>
+          <a href="<%= ms.ghost_url %>">Ghostarchive</a>
+        </div>
+      <% end %>
     </div>
   <% end %>
 
@@ -159,5 +159,6 @@ classes = [
       <% end %>
     </div>
   <% end %>
+
 </div>
 </li>

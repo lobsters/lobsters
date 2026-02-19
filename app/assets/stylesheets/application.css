@@ -989,6 +989,7 @@ div.comment_text code {
 }
 label[for^="archive_"] {
 	cursor: pointer;
+	white-space: nowrap;
 }
 
 

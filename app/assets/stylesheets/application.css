@@ -945,7 +945,8 @@ div.comment_text code {
 }
 
 .archive-dropdown {
-	padding-left: 18px;
+	width: fit-content;
+	margin: 0 auto;
 }
 
 .archive-dropdown a {

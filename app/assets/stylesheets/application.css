@@ -961,6 +961,10 @@ div.comment_text code {
 	text-decoration: underline;
 }
 
+.details:has(> .archive_button:checked) label[for^="archive_"]::before {
+	content: "▾ ";
+}
+
 #flag_dropdown a.cancel-reason {
 	background-color: var(--color-box-bg-shaded);
 }

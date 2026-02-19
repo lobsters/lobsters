@@ -15,7 +15,7 @@ class User < ApplicationRecord
     foreign_key: "recipient_user_id",
     inverse_of: :recipient,
     dependent: :restrict_with_exception
-  has_many :tag_filters, dependent: :destroy
+  has_many :tag_filters, dependent: :restrict_with_exception
   has_many :tag_filter_tags,
     class_name: "Tag",
     through: :tag_filters,
@@ -33,7 +33,7 @@ class User < ApplicationRecord
     class_name: "User",
     inverse_of: false,
     optional: true
-  has_many :invitations, dependent: :destroy
+  has_many :invitations, dependent: :restrict_with_exception
   has_many :mod_notes,
     inverse_of: :user,
     dependent: :restrict_with_exception
@@ -43,8 +43,8 @@ class User < ApplicationRecord
   has_one :moderation,
     inverse_of: :user,
     dependent: :restrict_with_exception
-  has_many :usernames, dependent: :destroy
-  has_many :votes, dependent: :destroy
+  has_many :usernames, dependent: :destroy # tests fail if :restrict_with_exception
+  has_many :votes, dependent: :restrict_with_exception
   has_many :voted_stories, -> { where("votes.comment_id" => nil) },
     through: :votes,
     source: :story
@@ -55,7 +55,7 @@ class User < ApplicationRecord
     },
     through: :votes,
     source: :story
-  has_many :hats, dependent: :destroy
+  has_many :hats, dependent: :restrict_with_exception
   has_many :wearable_hats, -> { where(doffed_at: nil) },
     class_name: "Hat",
     inverse_of: :user
@@ -64,7 +64,7 @@ class User < ApplicationRecord
   has_many :hidings,
     class_name: "HiddenStory",
     inverse_of: :user,
-    dependent: :destroy
+    dependent: :restrict_with_exception
   has_many :read_ribbons, dependent: :restrict_with_exception
   has_many :saved_stories, dependent: :restrict_with_exception
   has_many :suggested_taggings, dependent: :restrict_with_exception

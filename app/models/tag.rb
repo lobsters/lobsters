@@ -4,7 +4,7 @@ class Tag < ApplicationRecord
   belongs_to :category
   has_many :taggings, dependent: :delete_all
   has_many :stories, through: :taggings
-  has_many :tag_filters, dependent: :destroy
+  has_many :tag_filters, dependent: :restrict_with_exception
   has_many :filtering_users,
     class_name: "User",
     through: :tag_filters,

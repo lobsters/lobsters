@@ -17,15 +17,15 @@ class Comment < ApplicationRecord
   has_one :moderation,
     class_name: "Moderation",
     inverse_of: :comment,
-    dependent: :destroy
+    dependent: :restrict_with_exception
   belongs_to :hat,
     optional: true
   has_many :taggings, through: :story
-  has_many :links, inverse_of: :from_comment, dependent: :destroy
+  has_many :links, inverse_of: :from_comment, dependent: :restrict_with_exception
   has_many :incoming_links,
     class_name: "Link",
     inverse_of: :to_comment,
-    dependent: :destroy
+    dependent: :restrict_with_exception
   has_many :notifications, as: :notifiable
 
   include Token

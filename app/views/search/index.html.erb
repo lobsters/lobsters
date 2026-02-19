@@ -276,7 +276,9 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
       <input id="archive_<%= story.short_id %>" class="archive_button" type="checkbox">
       <div class="archive-dropdown">
         <a href="<%= story.archiveorg_url %>">Archive.org</a>
+        <%= divider_tag %>
         <a href="<%= story.archivetoday_url %>">Archive.today</a>
+        <%= divider_tag %>
         <a href="<%= story.ghost_url %>">Ghostarchive</a>
       </div>
     <% end %>

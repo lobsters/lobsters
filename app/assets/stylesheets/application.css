@@ -953,10 +953,6 @@ div.comment_text code {
 	text-decoration: none;
 }
 
-.archive-dropdown a + a::before {
-	content: " | ";
-}
-
 .archive-dropdown a:hover {
 	text-decoration: underline;
 }

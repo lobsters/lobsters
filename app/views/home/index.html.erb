@@ -139,7 +139,6 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
             <label for="archive_<%= story.short_id %>" tabindex="0">caches</label>
             <div class="archive-dropdown">
               <a href="<%= story.archiveorg_url %>">Archive.org</a>
-              <a href="<%= story.archivetoday_url %>">Archive.today</a>
               <a href="<%= story.ghost_url %>">Ghostarchive</a>
             </div>
           </span>

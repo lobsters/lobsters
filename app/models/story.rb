@@ -493,10 +493,6 @@ class Story < ApplicationRecord
     "https://web.archive.org/web/3/#{CGI.escape(url)}"
   end
 
-  def archivetoday_url
-    "https://archive.today/#{CGI.escape(url)}"
-  end
-
   def ghost_url
     "https://ghostarchive.org/search?term=#{CGI.escape(url)}"
   end

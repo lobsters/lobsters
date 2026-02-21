@@ -6,7 +6,23 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+    environment:
+      DATABASE_HOST: db
     volumes:
       - .:/lobsters
     ports:
       - "3000:3000"
+    depends_on:
+      - db
+  db:
+    image: "docker.io/library/mariadb:11"
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: localdev
+    ports:
+      - 127.0.0.1:3306:3306
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data: {}

@@ -1,7 +1,7 @@
 # typed: false
 
 module IntervalHelper
-  PLACEHOLDER = {param: "1w", dur: 7, intv: "Day", human: "Week", placeholder: true}
+  PLACEHOLDER = {param: "1w", dur: 1, intv: "Week", human: "week", placeholder: true}
   TIME_INTERVALS = {"h" => "Hour",
                     "d" => "Day",
                     "w" => "Week",
@@ -15,20 +15,12 @@ module IntervalHelper
       return PLACEHOLDER unless dur > 0
       return PLACEHOLDER unless TIME_INTERVALS.include? m[2]
       intv = TIME_INTERVALS[m[2]]
-
-      sqlite_dur, sqlite_intv =
-        if intv == "Week"
-          [dur * 7, "Day"]
-        else
-          [dur, intv]
-        end
-
       {
         # recreate param with parsed values to prevent passing malicious user input
         param: "#{dur}#{m[2]}",
-        dur: sqlite_dur,
-        intv: sqlite_intv,
-        human: "#{dur unless dur == 1} #{intv}".pluralize(dur).strip,
+        dur: dur,
+        intv: intv,
+        human: "#{dur unless dur == 1} #{intv}".downcase.pluralize(dur).chomp,
         placeholder: false
       }
     else

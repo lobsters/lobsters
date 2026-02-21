@@ -10,7 +10,10 @@ ignore:
     # joins/extracted data doesn't need a timestamp
     - Rails/CreateTableWithTimestamps
   # migrations are not live code
-  - 'db/old_migrations/*'
+  - 'db/migrate/201*'
+  - 'db/migrate/2020*'
+  - 'db/migrate/2022*'
+  - 'db/migrate/202309*'
 
 plugins:
   - standard-performance

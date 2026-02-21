@@ -51,7 +51,7 @@ class ApplicationController < ActionController::Base
     render plain: "You have some kind of weird, implausible VPN setup. If you are not doing something naughty, please contact the admin to start debugging.",
       status: :bad_request, content_type: "text/plain"
   end
-  rescue_from ActiveRecord::ConnectionNotEstablished do
+  rescue_from ActiveRecord::ConnectionNotEstablished, Trilogy::SyscallError::ECONNREFUSED do
     render plain: "500 The database is not taking our calls.", status: 500, content_type: "text/plain"
   end
 

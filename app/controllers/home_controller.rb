@@ -309,7 +309,11 @@ class HomeController < ApplicationController
       paginate Story.top(@user, length)
     }
 
-    @title = "Top Stories of the Past #{length[:human]}"
+    @title = if length[:dur] > 1
+      "Top Stories of the Past #{length[:dur]} #{length[:intv].pluralize(length[:dur])}"
+    else
+      "Top Stories of the Past #{length[:intv]}"
+    end
     @above = "stories/subnav"
     @below = "home/top"
 

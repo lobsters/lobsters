@@ -625,7 +625,7 @@ class User < ApplicationRecord
   def validate_username_timeouts
     return unless username_changed?
 
-    at = usernames.where("created_at <= ?", 1.year.ago).order(created_at: :desc).first&.created_at
+    at = usernames.where("created_at >= ?", 1.year.ago).order(created_at: :desc).first&.created_at
     errors.add(:username, "has already been changed in the last year (#{at.strftime("%Y-%m-%d")})") if at
 
     recently_used = Username.where(username: username).where("renamed_away_at >= ?", 5.years.ago).order(renamed_away_at: :desc).first&.renamed_away_at

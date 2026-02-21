@@ -8,11 +8,11 @@ RSpec.describe Username, type: :model do
     moderation = Moderation.last
     expect(moderation.action).to include("own username")
 
-    u1 = Username.first
+    u1 = user.usernames.first
     expect(u1.username).to eq("alice")
     expect(u1.renamed_away_at).to_not eq(nil)
 
-    u2 = Username.last
+    u2 = user.usernames.last
     expect(u2.username).to eq("bob")
     expect(u2.renamed_away_at).to eq(nil)
   end

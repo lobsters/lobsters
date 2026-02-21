@@ -4,41 +4,41 @@
     <%= mod_mail.subject %>
   </p>
 
-  <p>
-    <strong>References:</strong>
-    <ul>
-      <% mod_mail.comment_references.each do |comment| %>
-        <li>
-          <a href="<%= Routes.comment_target_path(comment) %>">Comment by
-            <%= comment.user.username %>
-            on
-            <%= comment.story.title %></a>
-        </li>
-      <% end %>
-      <% mod_mail.story_references.each do |story| %>
-        <li>
-          <a href="<%= Routes.story_path(story) %>">Story
-            (<%= story.title %>)
-            submitted by
-            <%= story.user.username %>
-          </a>
-        </li>
-      <% end %>
-    </ul>
-  </p>
+  <% if mod_mail.comment_references.any? || mod_mail.story_references.any? %>
+    <p>
+      <strong>References:</strong>
+      <ul>
+        <% mod_mail.comment_references.each do |comment| %>
+          <li>
+            <a href="<%= Routes.comment_target_path(comment) %>">Comment by
+              <%= comment.user.username %>
+              on
+              <%= comment.story.title %></a>
+          </li>
+        <% end %>
+        <% mod_mail.story_references.each do |story| %>
+          <li>
+            <a href="<%= Routes.story_path(story) %>">Story
+              (<%= story.title %>)
+              submitted by
+              <%= story.user.username %>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+    </p>
+  <% end %>
 
   <p>
     <strong>Recipients:</strong>
-    <ul>
-      <% mod_mail.recipients.each do |recipient| %>
-        <li><%= link_to(recipient.username, user_path(recipient)) %></li>
-      <% end %>
-    </ul>
+    <% mod_mail.recipients.each do |recipient| %>
+      <%= link_to(recipient.username, user_path(recipient)) %>
+    <% end %>
   </p>
 
   <section>
-    <h3>Messages</h3>
     <% @messages.each do |message| %>
+      <hr>
       <%= render "mod/mail_messages/mail_message", mod_mail_message: message %>
     <% end %>
 

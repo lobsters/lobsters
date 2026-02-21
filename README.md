@@ -23,6 +23,7 @@ So our design philosophy is a little different than a typical commercial product
  * We test to ensure functionality, but testing is a lot lighter for moderator and other non-core features.
    We're trying to maximize the return on investment of testing rather than minimize errors.
  * We're willing to take downtime for big code changes rather than try to make them seamless.
+ * We have users that are unusually likely to use old, experimental, and even homemade browsers, so we only use CSS in the [widely available baseline](https://web-platform-dx.github.io/web-features/).
  * We don't serve JavaScript to logged-out visitors, we use as little JS as possible for users with a vanilla/jQuery-style of DOM attachment, we are (very slowly) making JS entirely optional for users, and we accept JS for mod features.
    Keeping JS small and optional helps keep the site fast, and an unusually high proportion of visitors use old, odd, and homebrew browsers.
    We do not want JavaScript in our build chain, it requires too much maintenance.

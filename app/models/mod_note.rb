@@ -146,21 +146,6 @@ class ModNote < ApplicationRecord
     )
   end
 
-  def self.tattle_on_new_user_tagging!(story)
-    create_without_dupe!(
-      moderator: InactiveUser.inactive_user,
-      user: story.user,
-      created_at: Time.current,
-      note: "Attempted to submit a story with tag(s) not allowed to new users:\n" \
-        "- user joined: #{how_long_ago(story.user.created_at)}\n" \
-        "- url: #{story.url}\n" \
-        "- title: #{story.title}\n" \
-        "- user_is_author: #{story.user_is_author}\n" \
-        "- tags: #{story.tags.map(&:tag).join(" ")}\n" \
-        "- description: #{story.description}\n"
-    )
-  end
-
   def self.tattle_on_story_domain!(story, reason)
     create_without_dupe!(
       moderator: InactiveUser.inactive_user,
@@ -169,22 +154,6 @@ class ModNote < ApplicationRecord
       note: "Attempted to post a story from a #{reason} domain:\n" \
         "- user joined: #{how_long_ago(story.user.created_at)}\n" \
         "- url: #{story.url}\n" \
-        "- title: #{story.title}\n" \
-        "- user_is_author: #{story.user_is_author}\n" \
-        "- tags: #{story.tags.map(&:tag).join(" ")}\n" \
-        "- description: #{story.description}\n"
-    )
-  end
-
-  def self.tattle_on_story_origin!(story, reason)
-    create_without_dupe!(
-      moderator: InactiveUser.inactive_user,
-      user: story.user,
-      created_at: Time.current,
-      note: "Attempted to post a story from a #{reason} origin:\n" \
-        "- user joined: #{how_long_ago(story.user.created_at)}\n" \
-        "- url: #{story.url}\n" \
-        "- origin: #{story.origin.identifier}\n" \
         "- title: #{story.title}\n" \
         "- user_is_author: #{story.user_is_author}\n" \
         "- tags: #{story.tags.map(&:tag).join(" ")}\n" \

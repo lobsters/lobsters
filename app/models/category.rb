@@ -3,7 +3,7 @@
 class Category < ApplicationRecord
   has_many :tags,
     -> { order("tag asc") },
-    dependent: :restrict_with_error,
+    dependent: :restrict_with_exception,
     inverse_of: :category
   has_many :stories, through: :tags
   has_one :moderation, dependent: :restrict_with_exception

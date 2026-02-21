@@ -489,7 +489,7 @@ ol.comments1 > li.comments_subtree > ol.comments {
 	padding-left: 0;
 }
 
-.notifications li {
+.notifications > li {
 	margin-bottom: 1lh;
 }
 
@@ -692,7 +692,7 @@ li .byline {
 li .byline > img.avatar {
 	margin-bottom: -5px;
 }
-li .byline img.avatar {
+img.avatar {
 	border-radius: 8px;
 	height: 16px;
 	margin-bottom: 2px;

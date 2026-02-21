@@ -44,6 +44,9 @@ class StoriesController < ApplicationController
           raise ActiveRecord::Rollback
         end
       end
+    elsif @story.new_user_acculturation_error
+      flash[:error] = @story.errors.full_messages.join(" ")
+      redirect_to mod_mail_path(id: @story.new_user_acculturation_error)
     else
       render action: "new"
     end

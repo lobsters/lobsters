@@ -924,7 +924,7 @@ div.comment_text code {
 	left: 0.25rem;
 }
 
-#flag_dropdown, .archive-dropdown {
+#flag_dropdown {
 	position: absolute;
 	left: -0.125rem;
 	width: 100px;
@@ -932,7 +932,7 @@ div.comment_text code {
 	border-bottom: 0;
 	z-index: 15;
 }
-#flag_dropdown a, .archive-dropdown a {
+#flag_dropdown a {
 	background-color: var(--color-box-bg);
 	border-bottom: 1px solid var(--color-box-border);
 	color: var(--color-fg-contrast-10);
@@ -940,9 +940,28 @@ div.comment_text code {
 	padding: 3px;
 	text-decoration: underline;
 }
-#flag_dropdown a:hover, .archive-dropdown a:hover {
+#flag_dropdown a:hover {
 	background-color: var(--color-box-bg-shaded);
 }
+
+.archive-dropdown {
+	width: fit-content;
+	margin: 0 auto;
+}
+
+.archive-dropdown a {
+	color: var(--color-fg-contrast-4-5);
+	text-decoration: none;
+}
+
+.archive-dropdown a:hover {
+	text-decoration: underline;
+}
+
+.details:has(> .archive_button:checked) label[for^="archive_"]::before {
+	content: "▾ ";
+}
+
 #flag_dropdown a.cancel-reason {
 	background-color: var(--color-box-bg-shaded);
 }
@@ -958,15 +977,16 @@ div.comment_text code {
 	z-index: 1;
 }
 
-/* archive; dropdown styling is with #flag_dropdown to match it */
+/* archive caches */
 .archive_button {
 	display: none;
 }
 .archive_button:not(:checked) ~ .archive-dropdown {
 	display: none;
 }
-.archive_button ~ label{
+label[for^="archive_"] {
 	cursor: pointer;
+	white-space: nowrap;
 }
 
 

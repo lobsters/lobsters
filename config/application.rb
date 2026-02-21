@@ -121,7 +121,7 @@ class << Rails.application
   # to force everyone to be considered logged-out (without destroying
   # sessions) and refuse new logins
   def read_only?
-    false
+    true
   end
 
   def root_url

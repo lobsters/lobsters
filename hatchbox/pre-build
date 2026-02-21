@@ -7,6 +7,8 @@
 mkdir -p ../../shared/public/avatars
 ln -s ../../../shared/public/avatars public/avatars
 
+mkdir -p /home/deploy/lobsters/shared/database-backups
+
 # prod keys
 cp /home/deploy/lobsters/shared/etc/credentials.yml.enc config/credentials.yml.enc
 cp /home/deploy/lobsters/shared/etc/master.key config/master.key

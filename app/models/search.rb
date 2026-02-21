@@ -90,9 +90,9 @@ class Search
   # it assumes SearchParser prevents "
   def flatten_title tree
     if tree.keys.first == :term
-      ActiveRecord::Base.connection.quote_string(tree.values.first.to_s)
+      '"' + ActiveRecord::Base.connection.quote_string(tree.values.first.to_s).gsub('"', '""') + '"'
     elsif tree.keys.first == :quoted
-      '"' + tree.values.first.map(&:values).flatten.join(" ").gsub("'", "\\\\'") + '"'
+      '"' + tree.values.first.map(&:values).flatten.join(" ") + '"'
     end
   end
 
@@ -104,7 +104,6 @@ class Search
   def strip_operators s
     s.to_s
       .gsub(/[^\p{Word}']/, " ")
-      .gsub("'", "\\\\'")
       .strip
   end
 
@@ -151,9 +150,7 @@ class Search
         title = true
         value = flatten_title value
         query.where!(
-          story: Story.joins(:story_text).where(
-            "MATCH(story_texts.title) AGAINST ('+#{value}' in boolean mode)"
-          )
+          story: Story.search("title: #{value}")
         )
       when :url
         url = true
@@ -170,17 +167,11 @@ class Search
       # no 'when' for stopword or shortword, they're not searchable
       when :term, :catchall
         val = strip_short_terms(strip_operators(value))
-        # if punctuation is replaced with a space, this would generate a terms search
-        # AGAINST('+' in boolean mode)
-        terms.append val if !val.empty?
+        terms.append "\"#{val}\"" if !val.empty?
       end
     end
     if terms.any?
-      terms_sql = <<~SQL.tr("\n", " ")
-        MATCH(comment)
-        AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' in boolean mode)
-      SQL
-      query.where! terms_sql
+      query = query.search(terms.join(" and "))
     end
     if tags
       query.where!(
@@ -213,7 +204,7 @@ class Search
     when :relevance
       # relevance is undefined without search terms so sort by score
       if terms.any?
-        query.order!(Arel.sql(terms_sql + " DESC"))
+        query.order!(Arel.sql("#{terms.first} DESC"))
       else
         query.order!(score: :desc)
       end
@@ -259,9 +250,7 @@ class Search
       when :title
         title = true
         value = flatten_title value
-        query.joins!(:story_text).where!(
-          "MATCH(story_texts.title) AGAINST ('+#{value}' in boolean mode)"
-        )
+        query = query.search("title: #{value}")
       when :url
         url = true
         query.and!(
@@ -277,15 +266,11 @@ class Search
         val = strip_short_terms(strip_operators(value))
         # if punctuation is replaced with a space, this would generate a terms search
         # AGAINST('+' in boolean mode)
-        terms.append val if !val.empty?
+        terms.append "\"#{val}\"" if !val.empty?
       end
     end
     if terms.any?
-      terms_sql = <<~SQL.tr("\n", " ")
-        MATCH(story_texts.title, story_texts.description, story_texts.body)
-        AGAINST ('#{terms.map { |s| "+#{s}" }.join(" ")}' in boolean mode)
-      SQL
-      query.joins!(:story_text).where! terms_sql
+      query = query.search(terms.join(" and "))
     end
     if tags
       # This searches tags by subquery because otherwise Rails recognizes the join against tags and
@@ -322,7 +307,7 @@ class Search
     when :relevance
       # relevance is undefined without search terms so sort by score
       if terms.any?
-        query.order!(Arel.sql(terms_sql + " desc"))
+        query.order!(Arel.sql("#{terms.first} desc"))
       else
         query.order!(score: :desc)
       end

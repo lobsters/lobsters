@@ -14,7 +14,7 @@ class Message < ApplicationRecord
     optional: true
   has_one :notification,
     as: :notifiable,
-    dependent: :destroy
+    dependent: :restrict_with_exception
 
   include Token
 

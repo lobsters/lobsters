@@ -1,10 +1,10 @@
 class ModMail < ApplicationRecord
-  has_many :mod_mail_references, dependent: :restrict_with_error
+  has_many :mod_mail_references, dependent: :restrict_with_exception
   has_many :comment_references, through: :mod_mail_references, source: :reference, source_type: "Comment"
   has_many :story_references, through: :mod_mail_references, source: :reference, source_type: "Story"
-  has_many :mod_mail_recipients, dependent: :restrict_with_error
-  has_many :recipients, through: :mod_mail_recipients, source: :user, class_name: "User", dependent: :restrict_with_error
-  has_many :mod_mail_messages, dependent: :restrict_with_error
+  has_many :mod_mail_recipients, dependent: :restrict_with_exception
+  has_many :recipients, through: :mod_mail_recipients, source: :user, class_name: "User", dependent: :restrict_with_exception
+  has_many :mod_mail_messages, dependent: :restrict_with_exception
 
   has_one :mod_activity, inverse_of: :item
 
@@ -33,5 +33,13 @@ class ModMail < ApplicationRecord
 
   def to_param
     short_id
+  end
+
+  def self.create_inviter_discussion! user:, message:
+    inviter = user.invited_by_user || User.system_user
+
+    mail = ModMail.create! recipients: [user, inviter], subject: "New user story submission"
+    mail.mod_mail_messages.create! user: User.system_user, message: message
+    mail
   end
 end

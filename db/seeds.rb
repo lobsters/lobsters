@@ -1,5 +1,11 @@
 pwd = SecureRandom.base58
 User.create!(
+  username: "System",
+  email: "system@example.com",
+  password: pwd,
+  password_confirmation: pwd
+)
+User.create!(
   username: "inactive-user",
   email: "inactive-user@example.com",
   password: pwd,

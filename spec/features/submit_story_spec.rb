@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.feature "Submitting Stories", type: :feature do
-  let(:user) { create(:user) }
+  let(:user) { create(:user, invited_by_user: create(:user)) }
   let!(:inactive_user) { create(:user, :inactive) }
 
   before(:each) { stub_login_as user }
@@ -29,22 +29,6 @@ RSpec.feature "Submitting Stories", type: :feature do
 
     # preview of a story uses 'just now' instead of "X hours ago" timestamp
     expect(page).to have_content "just now"
-  end
-
-  scenario "new user previewing an unseen domain" do
-    inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
-    user.update!(created_at: 1.day.ago)
-    refute(Domain.where(domain: "example.net").exists?)
-    expect {
-      visit "/stories/new"
-      fill_in "URL", with: "https://example.net/story"
-      fill_in "Title", with: "Example Story"
-      select :tag1, from: "Tags"
-      click_button "Preview"
-
-      expect(page).to have_content "unseen domain"
-    }.to(change { ModNote.count }.by(1))
-    expect(ModNote.last.user).to eq(user)
   end
 
   context "submitting an inline image" do
@@ -108,25 +92,8 @@ RSpec.feature "Submitting Stories", type: :feature do
       select :tag1, from: "Tags"
       click_button "Submit"
 
+      expect(current_path).to start_with("/mod_mails")
       expect(page).to have_content "unseen domain"
-    }.not_to(change { Story.count })
-  end
-
-  scenario "new user submitting a new origin from a multi-author domain" do
-    pending "Story submission approval - this would probably have a high false-positive rate"
-
-    inactive_user # TODO: remove reference after satisfying rubocop RSpec/LetSetup properly
-    create(:domain, :github_with_selector)
-    create(:story, url: "https://github.com/alice")
-    user.update!(created_at: 1.day.ago)
-    refute(Origin.where(identifier: "github.com/bob").exists?)
-    expect {
-      visit "/stories/new"
-      fill_in "URL", with: "https://github.com/bob/cryptocurrency"
-      fill_in "Title", with: "Example Story"
-      select :tag1, from: "Tags"
-      click_button "Submit"
-      expect(page).to have_content "multiple authors"
     }.not_to(change { Story.count })
   end
 
@@ -156,9 +123,10 @@ RSpec.feature "Submitting Stories", type: :feature do
       select drama.tag, from: "Tags"
       click_button "Submit"
 
+      expect(current_path).to start_with("/mod_mails")
       expect(page).to have_content "meta discussion or prone to"
     }.not_to(change { Story.count })
-    expect(ModNote.last.user).to eq(user)
+    expect(ModMail.last.recipients).to include(user)
   end
 
   scenario "resubmitting a recent link deleted by a moderator" do

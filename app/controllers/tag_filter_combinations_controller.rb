@@ -6,7 +6,10 @@ class TagFilterCombinationsController < ApplicationController
 
   def index
     @combinations = @user.tag_filter_combinations.includes(:tags)
-    @tags = Tag.active.includes(:category).order(:tag)
+    @categories = Category.includes(:tags)
+      .where(tags: {active: true})
+      .order([categories: {category: :asc}, tags: {tag: :asc}])
+    @story_counts = Tagging.group(:tag_id).count
   end
 
   def create

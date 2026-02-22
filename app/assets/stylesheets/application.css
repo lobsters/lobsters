@@ -1600,6 +1600,37 @@ input[type="submit"].link_post.pushover_button {
 	margin-top: -0.75rem;
 }
 
+/* Tag combination filters */
+#tags_table {
+	width: 100%;
+}
+.tag_combo_search {
+	margin-bottom: 0.5em;
+}
+.tag_combo_selected {
+	margin-bottom: 1em;
+	padding: 0.5em;
+	background: var(--color-box-bg-shaded);
+	border: 1px solid var(--color-box-border);
+	border-radius: 3px;
+}
+.tag_combo_selected a.tag {
+	cursor: pointer;
+	margin: 0.2em;
+}
+.tag_combo_row:hover {
+	background: var(--color-bg-target);
+	cursor: pointer;
+}
+.tag_combo_row.selected {
+	background: var(--color-box-bg-shaded);
+	border-left: 3px solid var(--color-fg-link);
+}
+.tag_combo_row.hidden,
+.tag_combo_category.hidden {
+	display: none;
+}
+
 @media only screen and (max-width: 480px) {
 	.radio-group-container legend {
 		float: none;

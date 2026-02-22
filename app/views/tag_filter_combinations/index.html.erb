@@ -9,15 +9,13 @@
     <table class="data zebra" cellspacing=0>
       <tr>
         <th>Tags</th>
-        <th style="width: 100px;"></th>
+        <th></th>
       </tr>
       <% @combinations.each do |combination| %>
         <tr>
-          <td><%= combination.tags.map(&:tag).sort.join(" + ") %></td>
+          <td><%= combination.tags.map { |t| tag_link(t) }.join(" + ").html_safe %></td>
           <td>
-            <%= button_to "Remove", tag_filter_combination_path(combination),
-                method: :delete,
-                data: { confirm: "Remove this filter?" } %>
+            <%= button_to "Remove", tag_filter_combination_path(combination), method: :delete %>
           </td>
         </tr>
       <% end %>
@@ -29,248 +27,136 @@
     <p>
       Click tags to select them (need 2-<%= TagFilterCombination::MAX_TAGS_PER_COMBINATION %>), then click "Create Combination Filter".
       <span id="selection_status"></span>
+      <span id="selected_count"></span>
     </p>
 
-    <%= form_with url: tag_filter_combinations_path, method: :post, id: "combination_form" do |f| %>
-      <p>
-        <input
-          type="text"
-          id="tag_search"
-          placeholder="Filter tags by name..."
-          size="40"
-          style="padding: 0.5em; font-size: 0.95em;"
-        >
-        <span id="selected_count" style="margin-left: 1em; font-weight: bold;"></span>
-      </p>
-
-      <div id="selected_tags" style="margin-bottom: 1em; padding: 0.5em; min-height: 2em; display: none;">
-        <strong>Selected:</strong> <span id="selected_list"></span>
-      </div>
+    <%= form_with url: tag_filter_combinations_path, method: :post do |f| %>
+      <div id="selected_tags" class="tag_combo_selected" hidden></div>
 
       <table class="data zebra" cellspacing=0 id="tags_table">
         <tr>
-          <th style="width: 30px;"></th>
+          <th>Select</th>
           <th>Tag</th>
           <th>Description</th>
+          <th style="text-align: right; padding-right: 1em;">Stories</th>
         </tr>
-        <% @tags.group_by(&:category).each do |category, tags| %>
-          <tr class="category_row">
+        <% @categories.each do |category| %>
+          <tr class="tag_combo_category">
             <th></th>
-            <th colspan=2><%= category&.category || "Uncategorized" %></th>
+            <th colspan=3><%= category.category %></th>
           </tr>
-          <% tags.sort_by(&:tag).each do |tag| %>
-            <tr class="tag_row" data-tag-id="<%= tag.id %>" data-tag-name="<%= tag.tag.downcase %>">
-              <td style="text-align: center;">
-                <input type="checkbox" class="tag_checkbox" data-tag-id="<%= tag.id %>" data-tag-name="<%= tag.tag %>" style="cursor: pointer;">
+          <% category.tags.each do |tag| %>
+            <tr class="tag_combo_row" data-tag-name="<%= tag.tag.downcase %>">
+              <td>
+                <%= check_box_tag "tag_ids[]", tag.id, false, id: "tag_ids_#{tag.id}", class: "tag_combo_check" %>
               </td>
-              <td style="cursor: pointer;" class="tag_cell">
-                <strong><%= tag.tag %></strong>
+              <td><%= tag_link(tag) %></td>
+              <td>
+                <%= label_tag "tag_ids_#{tag.id}" do %>
+                  <%= tag.description %>
+                <% end %>
               </td>
-              <td style="cursor: pointer;" class="tag_cell"><%= tag.description %></td>
+              <td style="text-align: right; padding-right: 1em;"><%= number_with_delimiter(@story_counts[tag.id]) %></td>
             </tr>
           <% end %>
         <% end %>
       </table>
-
-      <div id="hidden_inputs"></div>
-
       <p>
-        <%= f.submit "Create Combination Filter", id: "submit_button", disabled: true %>
-        <a href="/filters">Cancel</a>
+        <%= f.submit "Create Combination Filter" %>
       </p>
     <% end %>
   <% else %>
     <p>
-      <strong>Maximum <%= TagFilterCombination::MAX_COMBINATIONS_PER_USER %> combinations reached.</strong> Remove some above to create new ones.
+      <strong>Maximum <%= TagFilterCombination::MAX_COMBINATIONS_PER_USER %> combinations reached.</strong>
+      Remove some above to create new ones.
     </p>
   <% end %>
 
   <p>
-    <a href="/filters">← Back to Tag Filters</a>
+    <a href="/filters">&larr; Back to Tag Filters</a>
   </p>
 </div>
 
-<style>
-  #tags_table tr.tag_row:hover {
-    background: var(--color-bg-target) !important;
-    cursor: pointer;
-  }
-  #tags_table tr.tag_row.selected {
-    background: var(--color-box-bg-shaded) !important;
-    border-left: 3px solid var(--color-fg-link);
-  }
-  .tag_row.hidden {
-    display: none;
-  }
-  .category_row.hidden {
-    display: none;
-  }
-  #selected_tags {
-    background: var(--color-box-bg-shaded);
-    border: 1px solid var(--color-box-border);
-    border-radius: 3px;
-  }
-  #selected_tags .selected_tag {
-    display: inline-block;
-    background: var(--color-tag-bg);
-    border: 1px solid var(--color-tag-border);
-    padding: 0.3em 0.6em;
-    margin: 0.2em;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 0.9em;
-  }
-  #selected_tags .selected_tag:hover {
-    background: var(--color-tag-border);
-  }
-</style>
-
+<%# inline: progressive enhancement only, not worth adding to the application.js monolith because it will load on every page. %>
 <script nonce="<%= content_security_policy_nonce %>">
-document.addEventListener('DOMContentLoaded', function() {
-  initTagCombinations();
-});
+document.addEventListener('DOMContentLoaded', () => {
+  const table = document.getElementById('tags_table');
+  if (!table) return;
 
-// Also listen for Turbo navigation
-document.addEventListener('turbo:load', function() {
-  initTagCombinations();
-});
+  const selected = document.getElementById('selected_tags');
+  const count = document.getElementById('selected_count');
+  const rows = table.querySelectorAll('.tag_combo_row');
 
-function initTagCombinations() {
-  const searchBox = document.getElementById('tag_search');
-  const rows = document.querySelectorAll('.tag_row');
-  const categoryRows = document.querySelectorAll('.category_row');
-  const checkboxes = document.querySelectorAll('.tag_checkbox');
-  const submitButton = document.getElementById('submit_button');
-  const selectedCountSpan = document.getElementById('selected_count');
-  const selectedTagsDiv = document.getElementById('selected_tags');
-  const selectedListSpan = document.getElementById('selected_list');
-  const hiddenInputs = document.getElementById('hidden_inputs');
+  const search = document.createElement('input');
+  search.type = 'search';
+  search.placeholder = 'Filter tags by name...';
+  search.className = 'tag_combo_search';
+  table.parentNode.insertBefore(search, table);
 
-  // Exit if elements don't exist
-  if (!searchBox || !submitButton) return;
-
-  let selectedTags = new Map();
-
-  // Make entire row clickable
   rows.forEach(row => {
-    const checkbox = row.querySelector('.tag_checkbox');
-    const cells = row.querySelectorAll('.tag_cell');
-
-    cells.forEach(cell => {
-      cell.addEventListener('click', function(e) {
-        e.preventDefault();
-        checkbox.checked = !checkbox.checked;
-        updateSelection(checkbox);
-      });
-    });
-
-    checkbox.addEventListener('change', function() {
-      updateSelection(this);
+    row.addEventListener('click', e => {
+      if (e.target.tagName === 'A' || e.target.tagName === 'INPUT') return;
+      const cb = row.querySelector('.tag_combo_check');
+      cb.checked = !cb.checked;
+      sync();
     });
   });
 
-  function updateSelection(checkbox) {
-    const tagId = checkbox.dataset.tagId;
-    const tagName = checkbox.dataset.tagName;
-    const row = checkbox.closest('tr');
+  table.addEventListener('change', e => {
+    if (e.target.classList.contains('tag_combo_check')) sync();
+  });
 
-    if (checkbox.checked) {
-      if (selectedTags.size >= <%= TagFilterCombination::MAX_TAGS_PER_COMBINATION %>) {
-        checkbox.checked = false;
-        alert('Maximum <%= TagFilterCombination::MAX_TAGS_PER_COMBINATION %> tags allowed');
-        return;
-      }
-      selectedTags.set(tagId, tagName);
-      row.classList.add('selected');
-    } else {
-      selectedTags.delete(tagId);
-      row.classList.remove('selected');
-    }
+  function sync() {
+    const checked = table.querySelectorAll('.tag_combo_check:checked');
 
-    updateDisplay();
-  }
-
-  function updateDisplay() {
-    const count = selectedTags.size;
-
-    // Update count
-    if (count === 0) {
-      selectedCountSpan.textContent = '';
-      selectedTagsDiv.style.display = 'none';
-    } else {
-      selectedCountSpan.textContent = `(${count} selected)`;
-      selectedTagsDiv.style.display = 'block';
-
-      // build selected tags display safely
-      selectedListSpan.innerHTML = '';
-      selectedTags.forEach((name, id) => {
-        const pill = document.createElement('span');
-        pill.className = 'selected_tag';
-        pill.dataset.tagId = id;
-        pill.textContent = name;
-        selectedListSpan.appendChild(pill);
-      });
-
-      // Make pills clickable to remove
-      selectedListSpan.querySelectorAll('.selected_tag').forEach(pill => {
-        pill.addEventListener('click', function() {
-          const tagId = this.dataset.tagId;
-          const checkbox = document.querySelector(`.tag_checkbox[data-tag-id="${tagId}"]`);
-          checkbox.checked = false;
-          updateSelection(checkbox);
-        });
-      });
-    }
-
-    // Update hidden inputs
-    hiddenInputs.innerHTML = Array.from(selectedTags.keys())
-      .map(id => `<input type="hidden" name="tag_ids[]" value="${id}">`)
-      .join('');
-
-    // Update submit button
-    submitButton.disabled = count < 2 || count > <%= TagFilterCombination::MAX_TAGS_PER_COMBINATION %>;
-  }
-
-  // Search functionality
-  if (searchBox) {
-    searchBox.addEventListener('input', function() {
-      const query = this.value.toLowerCase().trim();
-
-      if (query === '') {
-        rows.forEach(row => row.classList.remove('hidden'));
-        categoryRows.forEach(row => row.classList.remove('hidden'));
-        return;
-      }
-
-      const visibleCategories = new Set();
-
-      rows.forEach(row => {
-        const tagName = row.dataset.tagName;
-        if (tagName && tagName.includes(query)) {
-          row.classList.remove('hidden');
-          // find the category row above this tag row
-          let prevRow = row.previousElementSibling;
-          while (prevRow) {
-            if (prevRow.classList.contains('category_row')) {
-              visibleCategories.add(prevRow);
-              break;
-            }
-            prevRow = prevRow.previousElementSibling;
-          }
-        } else {
-          row.classList.add('hidden');
-        }
-      });
-
-      // Show/hide category headers
-      categoryRows.forEach(row => {
-        if (visibleCategories.has(row)) {
-          row.classList.remove('hidden');
-        } else {
-          row.classList.add('hidden');
-        }
-      });
+    rows.forEach(row => {
+      row.classList.toggle('selected', row.querySelector('.tag_combo_check').checked);
     });
+
+    count.textContent = checked.length > 0 ? '(' + checked.length + ' selected)' : '';
+
+    if (checked.length === 0) {
+      selected.hidden = true;
+    } else {
+      selected.hidden = false;
+      selected.innerHTML = '<strong>Selected:</strong> ';
+      checked.forEach(cb => {
+        const pill = cb.closest('.tag_combo_row').querySelector('a.tag').cloneNode(true);
+        pill.href = '#';
+        pill.addEventListener('click', e => {
+          e.preventDefault();
+          cb.checked = false;
+          sync();
+        });
+        selected.appendChild(pill);
+      });
+    }
   }
-}
+
+  search.addEventListener('input', () => {
+    const q = search.value.toLowerCase().trim();
+    const cats = table.querySelectorAll('.tag_combo_category');
+
+    if (!q) {
+      rows.forEach(r => r.classList.remove('hidden'));
+      cats.forEach(r => r.classList.remove('hidden'));
+      return;
+    }
+
+    const visible = new Set();
+    rows.forEach(row => {
+      if (row.dataset.tagName.includes(q)) {
+        row.classList.remove('hidden');
+        let prev = row.previousElementSibling;
+        while (prev) {
+          if (prev.classList.contains('tag_combo_category')) { visible.add(prev); break; }
+          prev = prev.previousElementSibling;
+        }
+      } else {
+        row.classList.add('hidden');
+      }
+    });
+    cats.forEach(r => r.classList.toggle('hidden', !visible.has(r)));
+  });
+});
 </script>

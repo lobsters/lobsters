@@ -676,9 +676,9 @@ li.comments_subtree {
 	content: "";
 	position: absolute;
 	top: 3.6lh;
-	left: 1em;
+	left: calc(1em - 1px);
 	bottom: 0;
-	border-left: 1px dotted var(--color-fg-shape);
+	border-left: 2px dotted var(--color-fg-shape);
 }
 
 .thread_summary {

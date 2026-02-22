@@ -3,7 +3,7 @@
 class TagFilterCombination < ApplicationRecord
   belongs_to :user
   has_many :tag_filter_combination_tags, dependent: :destroy, inverse_of: :tag_filter_combination
-  has_many :tags, through: :tag_filter_combination_tags
+  has_many :tags, -> { order(:id) }, through: :tag_filter_combination_tags
 
   MAX_TAGS_PER_COMBINATION = 15
   MAX_COMBINATIONS_PER_USER = 15

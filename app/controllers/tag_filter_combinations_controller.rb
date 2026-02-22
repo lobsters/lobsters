@@ -22,6 +22,17 @@ class TagFilterCombinationsController < ApplicationController
       return
     end
 
+    sorted_ids = tag_ids.sort
+    # tags association is ordered by id, so no sort needed on existing
+    existing = @user.tag_filter_combinations.includes(:tags).any? { |c|
+      c.tags.map(&:id) == sorted_ids
+    }
+    if existing
+      flash[:error] = "You already have this tag combination filtered"
+      redirect_to tag_filter_combinations_path
+      return
+    end
+
     @combination.tags = Tag.where(id: tag_ids)
 
     if @combination.save

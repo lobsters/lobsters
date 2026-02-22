@@ -144,6 +144,34 @@ class Story < ApplicationRecord
       )
     )
   }
+  scope :filter_tag_combinations_for, ->(user) {
+    begin
+      combinations = user&.tag_filter_combinations&.includes(:tags)&.to_a
+    rescue ActiveRecord::StatementInvalid
+      next all
+    end
+    next all if combinations.blank?
+
+    filtered = all
+    combinations.each do |combo|
+      # bloom filter fast reject, then sql verify
+      # 避免 n+1
+      filtered = filtered.where(
+        "(CAST(stories.tag_hash & ? AS SIGNED) != ?) OR NOT EXISTS (
+          SELECT 1 FROM taggings t
+          WHERE t.story_id = stories.id
+          GROUP BY t.story_id
+          HAVING COUNT(DISTINCT CASE WHEN t.tag_id IN (?) THEN t.tag_id END) = ?
+        )",
+        combo.combo_hash,
+        combo.combo_hash,
+        combo.tags.map(&:id),
+        combo.tag_count
+      )
+    end
+
+    filtered
+  }
   scope :hidden_by, ->(user) {
     user.nil? ? none : joins(:hidings).merge(HiddenStory.by(user))
   }
@@ -257,6 +285,8 @@ class Story < ApplicationRecord
   before_save :fix_bogus_chars
   after_create :mark_submitter, :record_initial_upvote
   after_save :bust_comment_redirect_cache, :recreate_links, :update_cached_columns, :update_story_text
+  after_save :update_tag_hash_if_tags_changed
+  after_touch :update_tag_hash_if_needed
 
   validate do
     if url.present?
@@ -1287,5 +1317,19 @@ class Story < ApplicationRecord
 
   def canonical_target(parsed)
     parsed.at_css("link[rel='canonical']").attributes["href"].text
+  end
+
+  def update_tag_hash_if_tags_changed
+    update_tag_hash if has_attribute?(:tag_hash)
+  end
+
+  def update_tag_hash_if_needed
+    update_tag_hash if has_attribute?(:tag_hash) && tag_hash.nil?
+  end
+
+  def update_tag_hash
+    return unless has_attribute?(:tag_hash)
+    new_hash = TagFilterCombination.compute_tag_hash(tags)
+    update_column(:tag_hash, new_hash) unless tag_hash == new_hash
   end
 end

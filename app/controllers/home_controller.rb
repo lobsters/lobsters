@@ -367,6 +367,7 @@ class HomeController < ApplicationController
   end
 
   def paginate(scope)
+    scope = scope.filter_tag_combinations_for(@user) if @user
     StoriesPaginator.new(scope, page, @user).get
   end
 

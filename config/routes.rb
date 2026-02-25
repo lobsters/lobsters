@@ -258,7 +258,7 @@ Rails.application.routes.draw do
       post "/domains_ban/:id" => "domains_ban#create_and_ban", :as => "create_and_ban_domain"
     end
     constraints identifier: ORIGINS_IDENTIFIER do
-      resources :origins, only: %i[edit update]
+      resources :origins, param: :identifier, only: %i[edit update]
     end
     resources :mails, except: [:destroy], as: "mod_mails"
     resources :mail_messages, only: :create, as: "mod_mail_messages"

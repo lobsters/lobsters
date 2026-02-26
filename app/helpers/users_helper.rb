@@ -63,7 +63,7 @@ module UsersHelper
           "(you invited)"
         end
       end
-    ], " ")
+    ].compact, " ")
   end
 
   def user_karma(user)

@@ -89,15 +89,10 @@
                 <% end %>
               </span>
 
-              <span class="byline">
+              <div class="byline">
                 <span>&nbsp;</span>
                 <%= inline_avatar_for @user, ms.user %>
                 <%= styled_user_link ms.user, ms, class: ['u-author', 'h-card'] %>
-
-                <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
-                  <%= divider_tag %>
-                  <label for="caches_<%= ms.short_id %>" class="caches" tabindex="0">caches</label>
-                <% end %>
 
                 <%= divider_tag %>
                 <span class="comments_label">
@@ -107,15 +102,18 @@
                     <%= ms.comments_count %> <%= 'comment'.pluralize(ms.comments_count) %>
                   <% end %>
                 </span>
-              </span>
-              <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
-                <input id="caches_<%= ms.short_id %>" class="caches_button" type="checkbox">
-                <div class="caches-dropdown">
-                  <a href="<%= ms.archiveorg_url %>">Archive.org</a>
+                <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
                   <%= divider_tag %>
-                  <a href="<%= ms.ghost_url %>">Ghostarchive</a>
-                </div>
-              <% end %>
+                  <details class="caches-details">
+                    <summary>caches</summary>
+                    <div class="caches-dropdown">
+                      <a href="<%= ms.archiveorg_url %>">Archive.org</a>
+                      <%= divider_tag %>
+                      <a href="<%= ms.ghost_url %>">Ghostarchive</a>
+                    </div>
+                  </details>
+                <% end %>
+              </div>
             </div>
           </div>
         </li>

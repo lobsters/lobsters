@@ -117,11 +117,6 @@ classes = [
         <% if ms.is_gone? %>
           [Story removed by <%= ms.is_moderated? ? "moderator" : "submitter" %>]
         <% else %>
-          <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?))  %>
-            <%= divider_tag %>
-            <label for="caches_<%= ms.short_id %>" class="caches" tabindex="0">caches</label>
-          <% end %>
-
           <span class="comments_label">
             <%= divider_tag %>
             <a role="heading" aria-level="2" href="<%= Routes.title_path(merged_stories.first, anchor: ms.comments_anchor) %>">
@@ -133,16 +128,19 @@ classes = [
           <% if ((@user&.is_moderator? && ms.flags > 0) || (ms.flags >= 3 || ms.score <= 0)) %>
             <span> <%= divider_tag %><%= ms.vote_summary_for(@user).downcase %> </span>
           <% end %>
+          <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
+            <%= divider_tag %>
+            <details class="caches-details">
+              <summary>caches</summary>
+              <div class="caches-dropdown">
+                <a href="<%= ms.archiveorg_url %>">Archive.org</a>
+                <%= divider_tag %>
+                <a href="<%= ms.ghost_url %>">Ghostarchive</a>
+              </div>
+            </details>
+          <% end %>
         <% end %>
       </div>
-      <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
-        <input id="caches_<%= ms.short_id %>" class="caches_button" type="checkbox">
-        <div class="caches-dropdown">
-          <a href="<%= ms.archiveorg_url %>">Archive.org</a>
-          <%= divider_tag %>
-          <a href="<%= ms.ghost_url %>">Ghostarchive</a>
-        </div>
-      <% end %>
     </div>
   <% end %>
 

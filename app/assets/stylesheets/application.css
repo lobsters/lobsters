@@ -948,9 +948,23 @@ div.comment_text code {
 	background-color: var(--color-box-bg-shaded);
 }
 
+.caches-details {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.caches-details > summary {
+	display: block;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.caches-details[open] > summary::before {
+	content: "▾ ";
+}
+
 .caches-dropdown {
-	width: fit-content;
-	margin: 0 auto;
+	white-space: nowrap;
 }
 
 .caches-dropdown a {
@@ -962,8 +976,8 @@ div.comment_text code {
 	text-decoration: underline;
 }
 
-.details:has(> .caches_button:checked) label.caches::before {
-	content: "▾ ";
+.byline .comments_label {
+	vertical-align: top;
 }
 
 #flag_dropdown a.cancel-reason {
@@ -979,17 +993,6 @@ div.comment_text code {
 	bottom: 0;
 	right: 0;
 	z-index: 1;
-}
-
-.caches_button {
-	display: none;
-}
-.caches_button:not(:checked) ~ .caches-dropdown {
-	display: none;
-}
-label.caches {
-	cursor: pointer;
-	white-space: nowrap;
 }
 
 .controls details {

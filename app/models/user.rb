@@ -175,6 +175,9 @@ class User < ApplicationRecord
   # days old accounts are considered new for
   NEW_USER_DAYS = 70
 
+  # days old accounts are considered "mentored" by the user that invited them
+  MENTORSHIP_DAYS = NEW_USER_DAYS * 2
+
   # minimum karma required to be able to offer title/tag suggestions
   MIN_KARMA_TO_SUGGEST = 10
 
@@ -642,6 +645,6 @@ class User < ApplicationRecord
   end
 
   def recently_invited_by?(user)
-    invited_by_user == user && created_at.after?(NEW_USER_DAYS.days.ago)
+    invited_by_user == user && created_at.after?(MENTORSHIP_DAYS.days.ago)
   end
 end

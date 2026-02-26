@@ -739,7 +739,7 @@ li .byline a.story_has_suggestions {
 	color: var(--color-lobsters-fg-has-suggestions);
 }
 
-span.new-invitee {
+span.you_invited {
     font-weight: bold;
 }
 

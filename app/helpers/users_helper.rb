@@ -58,16 +58,12 @@ module UsersHelper
 
     safe_join([
       link_to(user.username, user_path(user), html_options),
-      @user && newly_invited_notice(invitee: user, inviter: @user)
-    ], " ")
-  end
-
-  def newly_invited_notice(inviter:, invitee:)
-    if invitee.recently_invited_by?(inviter)
-      tag.span(class: "new-invitee") do
-        "👶 (your invitee)"
+      if @user && user.recently_invited_by?(@user)
+        tag.span(class: "you_invited") do
+          "(you invited)"
+        end
       end
-    end
+    ], " ")
   end
 
   def user_karma(user)

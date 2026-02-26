@@ -32,7 +32,7 @@ RSpec.feature "Editing Hats" do
     expect(story.comments.first.hat.hat).to eq(renamed_hat_text)
 
     mod_log = Moderation.last
-    expect(mod_log.action).to match(/Renamed hat "#{hat.hat}" to "#{renamed_hat_text}"/)
+    expect(mod_log.action).to match(/renamed hat "#{hat.hat}" to "#{renamed_hat_text}"/)
   end
 
   scenario "doffing and replacing with new hat" do

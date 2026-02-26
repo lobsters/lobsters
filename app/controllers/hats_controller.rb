@@ -37,14 +37,14 @@ class HatsController < ApplicationController
   end
 
   def update_in_place
-    old_hat = @hat.hat
-    new_hat = params[:hat][:hat]
-
-    if @hat.update(hat: new_hat)
+    if @hat.update(hat: params[:hat][:hat], link: params[:hat][:link])
       m = Moderation.new
       m.user_id = @hat.user_id
       m.moderator_user_id = @user
-      m.action = "Renamed hat \"#{old_hat}\" to \"#{new_hat}\""
+      m.action = [
+        @hat.hat_previously_changed? && "renamed hat \"#{@hat.hat_previously_was}\" to \"#{@hat.hat}\"",
+        @hat.link_previously_changed? && "changed link from \"#{@hat.link_previously_was}\" to \"#{@hat.link}\""
+      ].select { it }.join(", ")
       m.save!
 
       redirect_to hats_url

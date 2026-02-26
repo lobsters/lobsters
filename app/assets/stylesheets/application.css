@@ -960,7 +960,7 @@ div.comment_text code {
 }
 
 .caches-details[open] > summary::before {
-	content: "▾ ";
+	content: "▾ " / ""; /* make '▾' invisible to screen readers by setting alt txt */
 }
 
 .caches-dropdown {

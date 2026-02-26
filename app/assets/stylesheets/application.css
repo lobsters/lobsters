@@ -944,21 +944,21 @@ div.comment_text code {
 	background-color: var(--color-box-bg-shaded);
 }
 
-.archive-dropdown {
+.caches-dropdown {
 	width: fit-content;
 	margin: 0 auto;
 }
 
-.archive-dropdown a {
+.caches-dropdown a {
 	color: var(--color-fg-contrast-4-5);
 	text-decoration: none;
 }
 
-.archive-dropdown a:hover {
+.caches-dropdown a:hover {
 	text-decoration: underline;
 }
 
-.details:has(> .archive_button:checked) label[for^="archive_"]::before {
+.details:has(> .caches_button:checked) label.caches::before {
 	content: "▾ ";
 }
 
@@ -977,19 +977,16 @@ div.comment_text code {
 	z-index: 1;
 }
 
-/* archive caches */
-.archive_button {
+.caches_button {
 	display: none;
 }
-.archive_button:not(:checked) ~ .archive-dropdown {
+.caches_button:not(:checked) ~ .caches-dropdown {
 	display: none;
 }
-label[for^="archive_"] {
+label.caches {
 	cursor: pointer;
 	white-space: nowrap;
 }
-
-
 
 .controls details {
 	margin-left: auto;

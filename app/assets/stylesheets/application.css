@@ -739,6 +739,10 @@ li .byline a.story_has_suggestions {
 	color: var(--color-lobsters-fg-has-suggestions);
 }
 
+span.new-invitee {
+    font-weight: bold;
+}
+
 li .byline form {
 	display: inline-block;
 }

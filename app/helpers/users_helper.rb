@@ -57,9 +57,9 @@ module UsersHelper
     html_options.delete(:class) if html_options[:class].empty?
 
     safe_join([
-                link_to(user.username, user_path(user), html_options),
-                @user && newly_invited_notice(invitee: user, inviter: @user)
-              ], " ")
+      link_to(user.username, user_path(user), html_options),
+      @user && newly_invited_notice(invitee: user, inviter: @user)
+    ], " ")
   end
 
   def newly_invited_notice(inviter:, invitee:)

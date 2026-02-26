@@ -640,4 +640,8 @@ class User < ApplicationRecord
                  "(votes.comment_id is null and stories.user_id <> votes.user_id)")
       .order(id: :desc)
   end
+
+  def recently_invited_by?(user)
+    invited_by_user == user && created_at.after?(NEW_USER_DAYS.days.ago)
+  end
 end

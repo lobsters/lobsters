@@ -56,7 +56,18 @@ module UsersHelper
     end
     html_options.delete(:class) if html_options[:class].empty?
 
-    link_to(user.username, user_path(user), html_options)
+    safe_join([
+                link_to(user.username, user_path(user), html_options),
+                @user && newly_invited_notice(invitee: user, inviter: @user)
+              ], " ")
+  end
+
+  def newly_invited_notice(inviter:, invitee:)
+    if invitee.recently_invited_by?(inviter)
+      tag.span(class: "new-invitee") do
+        "👶 (your invitee)"
+      end
+    end
   end
 
   def user_karma(user)

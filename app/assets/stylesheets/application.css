@@ -676,7 +676,7 @@ li.comments_subtree {
 	content: "";
 	position: absolute;
 	top: 3.6lh;
-	left: calc(1em - 1px);
+	left: calc(0.9em - 1px);
 	bottom: 0;
 	border-left: 2px dotted var(--color-fg-shape);
 }

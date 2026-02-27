@@ -385,7 +385,7 @@ class Story < ApplicationRecord
         Hi,
 
         #{user.username}: We don't accept links into projects' bug trackers or discussions to avoid brigading our readers into their community spaces,
-        and because Lobsters doesn't have good threads when we're dropped without context into the middle of a controversey.
+        and because Lobsters doesn't have good threads when we're dropped without context into the middle of a controversy.
 
         #{user.invited_by_user&.username}: This is a good opportunity for you to introduce #{user.username} to the [brigading guideline](https://lobste.rs/about#brigading) and maybe help them find a better link, like an overview from a neutral third party.
 
@@ -397,7 +397,7 @@ class Story < ApplicationRecord
       errors.add :url, <<~EXPLANATION
         is to a project's bug tracker or discussions; see the Guidelines on brigading. It's bad for
         projects when we dump 100k+ people into their community spaces, and Lobsters doesn't have good
-        threads when we're dropped without context into the middle of a controvery. If you weren't
+        threads when we're dropped without context into the middle of a controversy. If you weren't
         trying to brigade the site into a fight you are involved in: find an overview, preferably from
         a neutral third party. If you were trying to do that: don't.
       EXPLANATION

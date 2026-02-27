@@ -134,14 +134,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
         <% end %>
         <% if story.url.present? && (!story.is_gone? || @user.try(:is_moderator?))  %>
           <%= divider_tag %>
-          <span class="dropdown_parent">
-            <input id="archive_<%= story.short_id %>" class="archive_button" type="checkbox">
-            <label for="archive_<%= story.short_id %>" tabindex="0">caches</label>
-            <div class="archive-dropdown">
-              <a href="<%= story.archiveorg_url %>">Archive.org</a>
-              <a href="<%= story.ghost_url %>">Ghostarchive</a>
-            </div>
-          </span>
+          <label for="caches_<%= story.short_id %>" class="caches" tabindex="0">caches</label>
         <% end %>
         <% if !story.is_gone? || @user.try(:is_moderator?) %>
           <span class="comments_label">
@@ -157,6 +150,14 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
         <% end %>
       <% end %>
     </div>
+    <% if story.url.present? && (!story.is_gone? || @user.try(:is_moderator?)) %>
+      <input id="caches_<%= story.short_id %>" class="caches_button" type="checkbox">
+      <div class="caches-dropdown">
+        <a href="<%= story.archiveorg_url %>">Archive.org</a>
+        <%= divider_tag %>
+        <a href="<%= story.ghost_url %>">Ghostarchive</a>
+      </div>
+    <% end %>
   </div>
 </div>
 <a href="<%= Routes.title_path story %>" class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>" style="display: none;">

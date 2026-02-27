@@ -94,15 +94,10 @@
                 <%= inline_avatar_for @user, ms.user %>
                 <%= styled_user_link ms.user, ms, class: ['u-author', 'h-card'] %>
 
-                <%= divider_tag %>
-                <span class="dropdown_parent">
-                  <input id="archive_<%= ms.short_id %>" class="archive_button" type="checkbox">
-                  <label for="archive_<%= ms.short_id %>" tabindex="0">caches</label>
-                  <div class="archive-dropdown">
-                    <a href="<%= ms.archiveorg_url %>">Archive.org</a>
-                    <a href="<%= ms.ghost_url %>">Ghostarchive</a>
-                  </div>
-                </span>
+                <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
+                  <%= divider_tag %>
+                  <label for="caches_<%= ms.short_id %>" class="caches" tabindex="0">caches</label>
+                <% end %>
 
                 <%= divider_tag %>
                 <span class="comments_label">
@@ -113,6 +108,14 @@
                   <% end %>
                 </span>
               </span>
+              <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
+                <input id="caches_<%= ms.short_id %>" class="caches_button" type="checkbox">
+                <div class="caches-dropdown">
+                  <a href="<%= ms.archiveorg_url %>">Archive.org</a>
+                  <%= divider_tag %>
+                  <a href="<%= ms.ghost_url %>">Ghostarchive</a>
+                </div>
+              <% end %>
             </div>
           </div>
         </li>

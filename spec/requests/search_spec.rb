@@ -7,10 +7,14 @@ RSpec.describe "search controller", type: :request do
   # mariadb doesn't update fulltext indexes until the end of the transaction. before(:context)
   # runs before the test transaction, so we can manually create and clean up a comment.
   before(:context) do
-    @hello_world_comment = create(:comment, comment: "hello world")
+    @foo_bar_story = create(:story, title: "foo bar")
+    StoryText.fill_cache! @foo_bar_story # normally a bg job
+    @hello_world_comment = create(:comment, comment: "hello world", story: @foo_bar_story)
   end
   after(:context) do
     @hello_world_comment.destroy!
+    @foo_bar_story.comments.reload
+    @foo_bar_story.destroy!
   end
 
   it "loads the search form" do
@@ -23,6 +27,20 @@ RSpec.describe "search controller", type: :request do
 
     expect(response).to be_successful
     expect(response.body).to include("0 results")
+  end
+
+  it "can find a comment" do
+    get "/search", params: {q: "hello", what: "comments", order: "newest"}
+
+    expect(response).to be_successful
+    expect(response.body).to include("world")
+  end
+
+  it "can search stories" do
+    get "/search", params: {q: "foo", what: "stories", order: "newest"}
+
+    expect(response).to be_successful
+    expect(response.body).to include("bar")
   end
 
   it "doesn't allow sql injection" do

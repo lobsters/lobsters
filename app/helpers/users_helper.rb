@@ -36,7 +36,7 @@ module UsersHelper
     end
   end
 
-  def styled_user_link user, content = nil, html_options = {}
+  def styled_user_link user, content = nil, viewing_user = @user, html_options = {}
     html_options[:class] ||= []
     if content.is_a?(Story) && content.user_is_author?
       html_options[:class].push "user_is_author"
@@ -58,7 +58,7 @@ module UsersHelper
 
     safe_join([
       link_to(user.username, user_path(user), html_options),
-      if @user && user.recently_invited_by?(@user)
+      if viewing_user && user.recently_invited_by?(viewing_user)
         tag.span(class: "you_invited") do
           "(you invited)"
         end

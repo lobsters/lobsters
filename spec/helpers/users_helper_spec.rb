@@ -14,7 +14,10 @@ describe UsersHelper do
       create(:user, created_at: (User::MENTORSHIP_DAYS + 1).days.ago,
         invited_by_user: viewing_user)
     }
-    let(:new_unrelated_user) { create(:user, created_at: 1.days.ago) }
+    let(:new_unrelated_user) {
+      create(:user, created_at: 1.days.ago,
+        invited_by_user: unrelated_user)
+    }
 
     it "shows the user name as a link for normal users" do
       assign(:user, viewing_user)
@@ -39,6 +42,16 @@ describe UsersHelper do
            aria: {label: "#{new_invited_user.username} - New user"}}),
           tag.span(class: "you_invited") { "(you invited)" }],
           " "))
+      )
+    end
+
+    it "allows overriding the viewing user" do
+      assign(:user, viewing_user)
+
+      expect(helper.styled_user_link(new_invited_user, nil, nil)).to(
+        eq(link_to(new_invited_user.username, user_path(new_invited_user),
+          {class: "new_user",
+           aria: {label: "#{new_invited_user.username} - New user"}}))
       )
     end
 

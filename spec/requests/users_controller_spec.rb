@@ -30,17 +30,32 @@ describe "users controller" do
   describe "tree" do
     let!(:user) { create(:user, username: "alice") }
     let!(:mod) { create(:user, :moderator, username: "bob") }
+    let!(:invited) {
+      create(:user, username: "chris",
+        invited_by_user: user,
+        created_at: 1.days.ago)
+    }
 
     it "displays all users" do
       get "/users"
       expect(response.body).to include("alice")
       expect(response.body).to include("bob")
+      expect(response.body).to include("chris")
     end
 
     it "lists mods" do
       get "/users?moderators=1"
       expect(response.body).to_not include("alice")
       expect(response.body).to include("bob")
+    end
+
+    it "doesn't include \"you invited\" indicators" do
+      # because the response is cached and we don't want to send the
+      # same response to an unrelated user
+      sign_in user
+      get "/users"
+      expect(response.body).to include("chris")
+      expect(response.body).to_not include("you invited")
     end
   end
 

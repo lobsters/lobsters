@@ -5,7 +5,7 @@
     <p>
     Newest users:
     <% @newest.each do |user| %>
-      <%= styled_user_link user %>
+      <%= styled_user_link user, nil, nil %>
       <%= user_karma(user) %><%= ',' if user != @newest.last %>
     <% end %>
     </p>
@@ -19,7 +19,7 @@
     <% while subtree %>
       <% if (user = subtree.pop) %>
         <li class="<%= user.invited_by_user_id ? "" : "noparent" %>">
-          <%= styled_user_link user, nil, name: user.username  %>
+          <%= styled_user_link user, nil, nil, name: user.username  %>
           <%= user_karma(user) %>
 
           <% if (children = @users_by_parent[user.id]) %>

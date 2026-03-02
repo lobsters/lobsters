@@ -175,6 +175,9 @@ class User < ApplicationRecord
   # days old accounts are considered new for
   NEW_USER_DAYS = 70
 
+  # days old accounts are considered "mentored" by the user that invited them
+  MENTORSHIP_DAYS = NEW_USER_DAYS * 2
+
   # minimum karma required to be able to offer title/tag suggestions
   MIN_KARMA_TO_SUGGEST = 10
 
@@ -625,7 +628,7 @@ class User < ApplicationRecord
   def validate_username_timeouts
     return unless username_changed?
 
-    at = usernames.where("created_at <= ?", 1.year.ago).order(created_at: :desc).first&.created_at
+    at = usernames.where("created_at >= ?", 1.year.ago).order(created_at: :desc).first&.created_at
     errors.add(:username, "has already been changed in the last year (#{at.strftime("%Y-%m-%d")})") if at
 
     recently_used = Username.where(username: username).where("renamed_away_at >= ?", 5.years.ago).order(renamed_away_at: :desc).first&.renamed_away_at
@@ -639,5 +642,9 @@ class User < ApplicationRecord
       .where("(votes.comment_id is not null and comments.user_id <> votes.user_id) OR " \
                  "(votes.comment_id is null and stories.user_id <> votes.user_id)")
       .order(id: :desc)
+  end
+
+  def recently_invited_by?(user)
+    invited_by_user == user && created_at.after?(MENTORSHIP_DAYS.days.ago)
   end
 end

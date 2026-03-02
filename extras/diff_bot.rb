@@ -6,7 +6,7 @@ class DiffBot
   DIFFBOT_API_URL = "http://www.diffbot.com/api/article".freeze
 
   def self.get_story_text(story)
-    if !Rails.application.credentials.diffbot.api_key
+    if !Rails.application.credentials.diffbot.api_key || Rails.env.test?
       return
     end
 

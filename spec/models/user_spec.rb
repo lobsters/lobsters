@@ -30,15 +30,31 @@ describe User do
     expect { create(:user, username: "case-insensITive") }.to raise_error
   end
 
-  it "doesn't allow changing username in < 1.year" do
-    user = create(:user, username: "alice", created_at: 2.years.ago)
-    Username.rename! user: user, from: "alice", to: "cool_alice", by: user, at: 6.months.ago
-    user.update_attribute :username, "cool_alice"
-    expect(User.find_by(username: "alice")).to be(nil)
-
-    user.username = "really_cool_alice"
+  it "doesn't allow new users to change in < 1 year" do
+    user = create(:user, username: "alice", created_at: 6.months.ago)
+    user.username = "betty"
     user.valid?
     expect(user.errors[:username].select { |e| e =~ /changed in the last year/ }).to_not be_empty
+  end
+
+  it "doesn't allow changing usernames in < 1 year of last change" do
+    user = create(:user, username: "alice", created_at: 3.years.ago)
+    Username.rename! user: user, from: "alice", to: "betty", by: user, at: 6.months.ago
+    user.update_attribute :username, "betty"
+
+    user.username = "eve"
+    user.valid?
+    expect(user.errors[:username].select { |e| e =~ /changed in the last year/ }).to_not be_empty
+  end
+
+  it "allows changing username with no creation/changing in < 1 year" do
+    user = create(:user, username: "alice", created_at: 3.years.ago)
+    Username.rename! user: user, from: "betty", to: "cool_betty", by: user, at: 2.years.ago
+    user.update_attribute :username, "betty"
+
+    user.username = "eve"
+    user.valid?
+    expect(user.errors[:username].select { |e| e =~ /changed in the last year/ }).to be_empty
   end
 
   it "doesn't allow changing to a username someone else stopped using in the last 5 years" do

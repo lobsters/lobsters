@@ -48,7 +48,7 @@ describe UsersHelper do
     it "allows overriding the viewing user" do
       assign(:user, viewing_user)
 
-      expect(helper.styled_user_link(new_invited_user, nil, nil)).to(
+      expect(helper.styled_user_link(new_invited_user, nil, {}, nil)).to(
         eq(link_to(new_invited_user.username, user_path(new_invited_user),
           {class: "new_user",
            aria: {label: "#{new_invited_user.username} - New user"}}))

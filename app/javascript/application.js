@@ -330,6 +330,7 @@ export class _LobstersFunction {
     qS('#modal_backdrop').remove();
   }
 
+  /** @param { HTMLFormElement } form */
   postComment(form) {
     const formData = new FormData(form);
     const action = form.getAttribute('action');
@@ -357,6 +358,8 @@ export class _LobstersFunction {
             // Iterating up the comments tree to the nearest parent. If there isn't one, we are creating
             // a top-level comment, so find the top of the comments tree.
             const comments = form.closest('.comments') || qS('.comments')
+            const textArea = form.querySelector('textarea');
+            if (textArea) { textArea.value = "" }
             parentSelector(form, '.comment_form_container').remove()
 
             // if comments is .comments1, it is top-level comment: insert it deeper

@@ -17,6 +17,7 @@ Rails.application.config.filter_parameters += [
   :passw, # preventative
   :salt, # preventative
   :secret, # preventative
+  :settings, # contains secrets for pushover, totp, github, mastodon
   :session_token, # auth cookie value
   :token, # rss token - need to transition this to a typeid
   :totp_code # LoginController

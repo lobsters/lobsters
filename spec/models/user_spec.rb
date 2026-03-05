@@ -153,6 +153,21 @@ describe User do
     expect(u.authenticate("hunteR2")).to be false
   end
 
+  it "allows totp codes from the surrounding time steps" do
+    u = create(:user)
+    u.totp_secret = ROTP::Base32.random
+
+    totp = ROTP::TOTP.new(u.totp_secret)
+
+    travel_to Time.current do
+      past_code = totp.at(Time.current - totp.interval)
+      expect(u.authenticate_totp(past_code)).to be_truthy
+
+      future_code = totp.at(Time.current + totp.interval)
+      expect(u.authenticate_totp(future_code)).to be_truthy
+    end
+  end
+
   it "gets an error message after registering banned name" do
     expect { create(:user, username: "admin") }
       .to raise_error("Validation failed: Username is not permitted")

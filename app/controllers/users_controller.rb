@@ -52,6 +52,7 @@ class UsersController < ApplicationController
       @users = User.select(*attrs).order(karma: :desc, id: :asc).to_a
       @user_count = @users.length
       @title << " By Karma"
+      @for = :karma
       render action: "list"
     elsif params[:moderators]
       @users = User.select(*attrs)
@@ -60,6 +61,7 @@ class UsersController < ApplicationController
         .order(id: :asc).to_a
       @user_count = @users.length
       @title = "Moderators and Administrators"
+      @for = :moderators
       render action: "list"
     else
       users = User.select(*attrs).order(id: :desc).to_a

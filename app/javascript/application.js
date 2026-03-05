@@ -214,12 +214,12 @@ export class _LobstersFunction {
     flaggingDropDown.setAttribute('id', 'flag_dropdown');
     voterEl.after(flaggingDropDown);
 
-    Object.keys(reasons).map(function(k) {
-      let a = document.createElement('a')
-      a.textContent = reasons[k]
-      a.setAttribute('data', k)
+    Object.entries(reasons).forEach(([ key, reason ]) => {
+      const a = document.createElement('a')
+      a.textContent = reason
+      a.dataset[ "key" ] = key;
       a.setAttribute('href', '#')
-      if (k === '') {
+      if (key === '') {
         a.classList.add('cancel-reason')
       }
       flaggingDropDown.append(a);
@@ -538,20 +538,33 @@ export class _LobstersFunction {
       score--;
       action = "flag";
     }
+
     if (showScore) {
       scoreLink.innerHTML = score;
     } else {
       scoreLink.innerHTML = '~';
     }
-    if (action == "upvote" || action == "unvote") {
-      if (qS(li, '.reason')) {
-        qS(li, '.reason').innerHTML = '';
-      };
 
-      if (action == "unvote" && point < 0) {
-        qS(li, '.flagger').textContent = 'flag';
-      } else if (action == "flag") {
-        qS(li, '.flagger').textContent = 'unflag';
+    const flagger = qS(li, '.flagger');
+
+    switch (action) {
+      case "upvote": {
+        const reasonEl = qS(li, '.reason');
+        if (reasonEl) {
+          reasonEl.innerHTML = ''
+        }
+        break;
+      }
+      case "unvote": {
+        if (point < 0 && flagger) {
+          flagger.textContent = 'flag';
+        }
+        break;
+      }
+      case "flag": {
+        if (flagger) {
+          flagger.textContent = `unflag (${Lobster.storyFlagReasons[reason]})`;
+        }
       }
     }
 
@@ -720,10 +733,10 @@ document.addEventListener("DOMContentLoaded", () => {
     Lobster.checkSelfPromo(event.target);
   });
 
-  on('click', '.story #flag_dropdown a', (event) => {
+  on('click', '.story #flag_dropdown a', (/** @type MouseEvent */ event) => {
     event.preventDefault();
-    if (event.target.getAttribute('data') != '') {
-      Lobster.voteStory(parentSelector(event.target, '.story'), -1,  event.target.getAttribute('data'));
+    if (event.target instanceof HTMLElement && event.target.dataset["key"] !== '') {
+      Lobster.voteStory(parentSelector(event.target, '.story'), -1,  event.target.dataset["key"]);
     }
     Lobster.removeFlagModal();
   });

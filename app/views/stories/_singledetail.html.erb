@@ -86,10 +86,9 @@ classes = [
             </span>
           <% end %>
 
-          <% if ms.is_hidden_by_cur_user %>
-            <%= divider_tag %><%= link_to "unhide", story_unhide_path(ms.short_id), :class => "hider" %>
-          <% else %>
-            <%= divider_tag %><%= link_to "hide", story_hide_path(ms.short_id), :class => "hider" %>
+          <%= divider_tag %>
+          <%= form_with :class => "hider", url: ms.is_hidden_by_cur_user ? story_unhide_path(ms.short_id) : story_hide_path(ms.short_id) do |form| %>
+            <%= form.submit ms.is_hidden_by_cur_user ? "unhide" : "hide", :class => "btn-link" %>
           <% end %>
 
           <% if ms.hider_count > 0 %>

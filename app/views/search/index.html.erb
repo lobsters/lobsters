@@ -243,10 +243,9 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
               <a class="flagger">flag</a>
             </span>
           <% end %>
-          <% if story.is_hidden_by_cur_user %>
-            <%= divider_tag %><%= link_to "unhide", story_unhide_path(story.short_id), :class => "hider" %>
-          <% else %>
-            <%= divider_tag %><%= link_to "hide", story_hide_path(story.short_id), :class => "hider" %>
+          <%= divider_tag %>
+          <%= form_with :class => "hider", url: story.is_hidden_by_cur_user ? story_unhide_path(story.short_id) : story_hide_path(story.short_id) do |form| %>
+            <%= form.submit story.is_hidden_by_cur_user ? "unhide" : "hide", :class => "btn-link" %>
           <% end %>
           <%= divider_tag %>
           <%= form_with :class => "saver", url: story.is_saved_by_cur_user ? story_unsave_path(story.short_id) : story_save_path(story.short_id) do |form| %>

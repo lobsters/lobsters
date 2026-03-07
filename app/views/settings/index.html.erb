@@ -49,6 +49,15 @@
 
           <%= render :partial => "global/markdownhelp" %>
         </div>
+
+        <%= f.label :avatar_preference, "Avatar" %>
+        <div>
+          <div>
+            <span>Choose your preferred method of avatar display</span>
+          </div>
+
+          <%= f.select :avatar_preference, [["Gravatar", 0], ["GitHub", 1]] %>
+        </div>
       </div>
 
       <%= f.submit "Save Account Settings" %>

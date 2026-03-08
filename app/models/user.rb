@@ -373,7 +373,7 @@ class User < ApplicationRecord
     url = "https://www.gravatar.com/avatar/" <<
       Digest::MD5.hexdigest(email.strip.downcase) <<
       "?r=pg&d=identicon&s=#{size}"
-    if avatar_preference == "1"
+    if !github_username.blank? && avatar_preference == "1"
       url = "https://www.github.com/" << github_username << ".png?size=#{size}"
     end
 

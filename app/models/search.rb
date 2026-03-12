@@ -204,7 +204,7 @@ class Search
     when :relevance
       # relevance is undefined without search terms so sort by score
       if terms.any?
-        query.order!(Arel.sql("rank"))
+        query.order!(:rank)
       else
         query.order!(score: :desc)
       end
@@ -307,7 +307,7 @@ class Search
     when :relevance
       # relevance is undefined without search terms so sort by score
       if terms.any?
-        query.order!(Arel.sql("rank"))
+        query.order!(:rank)
       else
         query.order!(score: :desc)
       end

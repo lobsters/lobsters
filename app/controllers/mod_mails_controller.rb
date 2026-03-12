@@ -1,9 +1,12 @@
 class ModMailsController < ApplicationController
   before_action :set_mod_mail, only: :show
   before_action :require_logged_in_user
-  before_action :require_recipient_or_mod
+  before_action :require_recipient_or_mod, only: :show
 
-  # GET /mod_mails/1
+  def index
+    @mod_mails = @user.mod_mails.order(updated_at: :desc)
+  end
+
   def show
     @mod_mail_message = ModMailMessage.new(user: @user, mod_mail: @mod_mail)
     @messages = @mod_mail.mod_mail_messages.order(:created_at)

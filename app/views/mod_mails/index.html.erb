@@ -1,0 +1,26 @@
+<%= render partial: 'messages/subnav' %>
+<% content_for :title, "ModMail" %>
+
+<h1>ModMails</h1>
+
+<div id="mod_mails">
+  <table class="data zebra" width="100%" cellspacing=0>
+    <tr>
+      <th>Subject</th>
+      <th>Last message from</th>
+      <th>at</th>
+    </tr>
+
+    <% @mod_mails.each do |mod_mail| %>
+      <% last_message = mod_mail.mod_mail_messages.order(created_at: :desc).last %>
+      <tr>
+        <td><%= link_to mod_mail.subject, mod_mail_path(mod_mail) %></td>
+        <td>
+          <%= inline_avatar_for @user, last_message.user %>
+          <%= styled_user_link last_message.user, last_message %>
+        </td>
+        <td><%= how_long_ago_label(last_message.created_at) %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>

@@ -34,7 +34,7 @@ gem "rqrcode"
 
 # parsing
 gem "cgi"
-gem "commonmarker"
+gem "commonmarker", "~> 2.6.3"
 gem "htmlentities"
 gem "pdf-reader"
 gem "nokogiri"

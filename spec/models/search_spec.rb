@@ -219,6 +219,13 @@ describe Search do
     expect(search.results.first.title).to eq("term1 domain2")
   end
 
+  it "can search for stories ordering by relevance" do
+    search = Search.new({q: "unique", what: "stories", order: "relevance"}, @alice)
+
+    expect(search.results.length).to eq(1)
+    expect(search.results.first.title).to eq("unique")
+  end
+
   it "can search for comments" do
     search = Search.new({q: "comment1", what: "comments"}, @alice)
 
@@ -308,6 +315,12 @@ describe Search do
     search = Search.new({q: "commenter:bob", what: "comments"}, nil)
 
     expect(search.results.length).to eq(3)
+  end
+
+  it "can search for comments ordering by relevance" do
+    search = Search.new({q: "comment1", what: "comments", order: "relevance"}, @alice)
+
+    expect(search.results).to include(@comments[1])
   end
 
   describe "#flatten_title" do

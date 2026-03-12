@@ -8,6 +8,8 @@ class UsersController < ApplicationController
   before_action :only_user_or_moderator, only: [:standing]
   before_action :show_title_h1, only: [:show]
 
+  caches_page :tree, if: CACHE_PAGE
+
   def show
     @title = @showing_user.username
     if !@showing_user.is_active?
@@ -40,20 +42,18 @@ class UsersController < ApplicationController
 
   def tree
     @title = "Users"
-    newest_user = User.last.id
+    @newest_user = User.last.id
 
     # pulling 10k+ users is significant enough memory pressure this is worthwhile
     attrs = %w[banned_at created_at deleted_at id invited_by_user_id is_admin is_moderator karma
       username]
 
     if params[:by].to_s == "karma"
-      content = Rails.cache.fetch("users_by_karma_#{newest_user}", expires_in: (60 * 60 * 24)) {
-        @users = User.select(*attrs).order(karma: :desc, id: :asc).to_a
-        @user_count = @users.length
-        @title << " By Karma"
-        render_to_string action: "list", layout: nil
-      }
-      render html: content.html_safe, layout: "application"
+      @users = User.select(*attrs).order(karma: :desc, id: :asc).to_a
+      @user_count = @users.length
+      @title << " By Karma"
+      @for = :karma
+      render action: "list"
     elsif params[:moderators]
       @users = User.select(*attrs)
         .where(is_admin: true)
@@ -61,17 +61,14 @@ class UsersController < ApplicationController
         .order(id: :asc).to_a
       @user_count = @users.length
       @title = "Moderators and Administrators"
+      @for = :moderators
       render action: "list"
     else
-      # Mod::ReparentsController#create knows this key
-      content = Rails.cache.fetch("users_tree_#{newest_user}", expires_in: 12.hours) {
-        users = User.select(*attrs).order(id: :desc).to_a
-        @user_count = users.length
-        @users_by_parent = users.group_by(&:invited_by_user_id)
-        @newest = User.select(*attrs).order(id: :desc).limit(10)
-        render_to_string action: "tree", layout: nil
-      }
-      render html: content.html_safe, layout: "application"
+      users = User.select(*attrs).order(id: :desc).to_a
+      @user_count = users.length
+      @users_by_parent = users.group_by(&:invited_by_user_id)
+      @newest = User.select(*attrs).order(id: :desc).limit(10)
+      render action: "tree"
     end
   end
 

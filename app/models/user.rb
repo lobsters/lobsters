@@ -237,7 +237,7 @@ class User < ApplicationRecord
 
   def authenticate_totp(code)
     totp = ROTP::TOTP.new(totp_secret)
-    totp.verify(code)
+    totp.verify(code, drift_behind: totp.interval, drift_ahead: totp.interval)
   end
 
   def avatar_path(size = 100)

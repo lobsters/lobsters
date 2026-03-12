@@ -134,6 +134,9 @@ class Comment < ApplicationRecord
     comment.to_s.strip.match(/\Atl;?dr.?$\z/i) &&
       errors.add(:base, "Wow!  A blue car!") # https://www.youtube.com/watch?v=tjYePPvWYPU
 
+    comment.to_s.strip.match(/\A(> *?\n?)+\z/) &&
+      errors.add(:base, "If a tree falls in the woods and no one hears it, does it make a sound?")
+
     comment.to_s.strip.match(/\Abump/i) &&
       errors.add(:base, "Don't bump threads.")
 

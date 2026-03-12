@@ -288,50 +288,84 @@ class StoriesController < ApplicationController
   end
 
   def hide
-    if !(story = find_story)
-      return render plain: "can't find story", status: 400
-    end
+    error =
+      if !(story = find_story)
+        "Can't find story"
+      elsif story.merged_into_story
+        "Story has been merged"
+      end
 
-    if story.merged_into_story
-      return render plain: "story has been merged", status: 400
+    if error
+      respond_to do |format|
+        format.html {
+          flash[:error] = error
+          redirect_to "/"
+        }
+        format.json {
+          render json: {message: error}, status: 400
+        }
+      end
+      return
     end
 
     HiddenStory.hide_story_for_user(story, @user)
 
-    if request.xhr?
-      render plain: "ok"
-    else
-      redirect_to story_path(story)
+    respond_to do |format|
+      format.html {
+        flash[:success] = "Story hidden."
+        redirect_back_or_to Routes.title_path(story)
+      }
+      format.json {
+        render json: {hidden: true, nextAction: story_unhide_path(story.short_id)}, status: :ok
+      }
     end
   end
 
   def unhide
     if !(story = find_story)
-      return render plain: "can't find story", status: 400
+      error = "Can't find story"
+
+      respond_to do |format|
+        format.html {
+          flash[:error] = error
+          redirect_to "/"
+        }
+        format.json {
+          render json: {message: error}, status: 400
+        }
+      end
+      return
     end
 
     HiddenStory.unhide_story_for_user(story, @user)
 
-    if request.xhr?
-      render plain: "ok"
-    else
-      redirect_to story_path(story)
+    respond_to do |format|
+      format.html {
+        flash[:success] = "Story unhidden."
+        redirect_back_or_to Routes.title_path(story)
+      }
+      format.json {
+        render json: {hidden: false, nextAction: story_hide_path(story.short_id)}, status: :ok
+      }
     end
   end
 
   def save
-    if !(story = find_story)
-      flash[:error] = "Can't find story"
-    elsif story.merged_into_story
-      flash[:error] = "Story has been merged"
-    end
+    error =
+      if !(story = find_story)
+        "Can't find story"
+      elsif story.merged_into_story
+        "Story has been merged"
+      end
 
-    if flash[:error]
+    if error
       respond_to do |format|
-        format.html { redirect_to "/" }
+        format.html {
+          flash[:error] = error
+          redirect_to "/"
+        }
         format.json {
-          render json: flash.to_hash, status: 400
-          flash.clear
+          render json: {message: error}, status: 400
         }
       end
       return
@@ -339,28 +373,28 @@ class StoriesController < ApplicationController
 
     SavedStory.save_story_for_user(story.id, @user.id)
 
-    flash[:action] = story_unsave_path(story.short_id)
-    flash[:success] = "Story saved."
-    flash[:cta] = "unsave"
-
     respond_to do |format|
-      format.html { redirect_back_or_to Routes.title_path(story) }
+      format.html {
+        flash[:success] = "Story saved."
+        redirect_back_or_to Routes.title_path(story)
+      }
       format.json {
-        render json: flash.to_hash, status: :ok
-        flash.clear
+        render json: {saved: true, nextAction: story_unsave_path(story.short_id)}, status: :ok
       }
     end
   end
 
   def unsave
     if !(story = find_story)
-      flash[:error] = "Can't find story."
+      error = "Can't find story."
 
       respond_to do |format|
-        format.html { redirect_to "/" }
+        format.html {
+          flash[:error] = error
+          redirect_to "/"
+        }
         format.json {
-          render json: flash.to_hash, status: 400
-          flash.clear
+          render json: {message: error}, status: 400
         }
       end
       return
@@ -368,15 +402,13 @@ class StoriesController < ApplicationController
 
     SavedStory.where(user_id: @user.id, story_id: story.id).delete_all
 
-    flash[:action] = story_save_path(story.short_id)
-    flash[:success] = "Story unsaved."
-    flash[:cta] = "save"
-
     respond_to do |format|
-      format.html { redirect_back_or_to Routes.title_path(story) }
+      format.html {
+        flash[:success] = "Story unsaved."
+        redirect_back_or_to Routes.title_path(story)
+      }
       format.json {
-        render json: flash.to_hash, status: :ok
-        flash.clear
+        render json: {saved: false, nextAction: story_save_path(story.short_id)}, status: :ok
       }
     end
   end

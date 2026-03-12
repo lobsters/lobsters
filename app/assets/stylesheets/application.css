@@ -995,9 +995,6 @@ label.caches {
 .controls details {
 	margin-left: auto;
 }
-#story_box .markdown_help summary {
-	width: calc(7em + 610px);
-}
 .markdown_help summary {
 	color: var(--color-fg-contrast-4-5);
 	text-align: right;
@@ -1694,6 +1691,10 @@ input[type="submit"].link_post.pushover_button {
 	#story_holder .ts-control {
 		display: inline-block;
 		width: 611px;
+	}
+
+	#story_box .markdown_help summary {
+		width: calc(7em + 610px);
 	}
 }
 

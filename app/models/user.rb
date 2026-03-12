@@ -75,6 +75,7 @@ class User < ApplicationRecord
   include EmailBlocklistValidation
   include Token
   include UsernameAttribute
+  include AvatarType
 
   # As of Rails 8.0, `has_secure_password` generates a `password_reset_token`
   # method that shadows the explicit `password_reset_token` attribute.
@@ -373,7 +374,7 @@ class User < ApplicationRecord
     url = "https://www.gravatar.com/avatar/" <<
       Digest::MD5.hexdigest(email.strip.downcase) <<
       "?r=pg&d=identicon&s=#{size}"
-    if !github_username.blank? && avatar_preference == "1"
+    if !github_username.blank? && avatar_preference.to_i == AvatarType::GITHUB
       url = "https://www.github.com/" << github_username << ".png?size=#{size}"
     end
 

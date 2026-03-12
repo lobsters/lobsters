@@ -27,8 +27,7 @@
           </div>
         </td>
         <td><%= how_long_ago_label(message.created_at) %></td>
-        <td><a href="/messages/<%= message.short_id %>"><%= message.subject
-          %></a></td>
+        <td><%= link_to message.subject, message_path, message %></td>
       </tr>
     <% end %>
     </table>

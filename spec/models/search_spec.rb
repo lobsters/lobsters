@@ -219,6 +219,13 @@ describe Search do
     expect(search.results.first.title).to eq("term1 domain2")
   end
 
+  it "can search for stories ordering by relevance" do
+    search = Search.new({q: "unique", what: "stories", order: "relevance"}, @alice)
+
+    expect(search.results.length).to eq(1)
+    expect(search.results.first.title).to eq("unique")
+  end
+
   it "can search for comments" do
     search = Search.new({q: "comment1", what: "comments"}, @alice)
 
@@ -310,6 +317,12 @@ describe Search do
     expect(search.results.length).to eq(3)
   end
 
+  it "can search for comments ordering by relevance" do
+    search = Search.new({q: "comment1", what: "comments", order: "relevance"}, @alice)
+
+    expect(search.results).to include(@comments[1])
+  end
+
   describe "#flatten_title" do
     it "flattens multiword searches to single sql term" do
       s = Search.new({}, nil)
@@ -318,16 +331,16 @@ describe Search do
 
     it "doesn't permit sql injection" do
       s = Search.new({}, nil)
-      expect(s.flatten_title({term: "as'df"})).to eq("as\\'df")
-      expect(s.flatten_title({term: "hj\"kl"})).to eq("hj\\\"kl")
-      expect(s.flatten_title({quoted: [{term: "cat'"}, {term: "scare"}]})).to eq("\"cat\\' scare\"")
+      expect(s.flatten_title({term: "as'df"})).to eq("\"as''df\"")
+      expect(s.flatten_title({term: "hj\"kl"})).to eq("\"hj\"\"kl\"")
+      expect(s.flatten_title({quoted: [{term: "cat'"}, {term: "scare"}]})).to eq("\"cat' scare\"")
     end
   end
 
   describe "#strip_operators" do
     it "doesn't permit sql injection" do
       s = Search.new({}, nil)
-      expect(s.strip_operators("as'df")).to eq("as\\'df")
+      expect(s.strip_operators("as'df")).to eq("as'df")
       expect(s.strip_operators("hj\"kl")).to eq("hj kl")
       expect(s.strip_operators("li%ke")).to eq("li ke")
       expect(s.strip_operators("\"blah\"")).to eq("blah")

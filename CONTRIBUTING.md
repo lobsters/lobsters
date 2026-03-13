@@ -65,6 +65,21 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
 
 * Install the Ruby version specified in [.ruby-version](https://github.com/lobsters/lobsters/blob/main/.ruby-version).
 
+* Install [libvips](https://www.libvips.org/)
+
+  Ubuntu/Debian: 
+  
+  ```sh
+  lobsters$ sudo apt install libvips
+  ```
+  
+  Mac: 
+  
+  ```sh
+  lobsters$ brew install vips
+  ```
+
+
 * Run `bin/setup` to install dependencies and set up the database:
 
   ```sh

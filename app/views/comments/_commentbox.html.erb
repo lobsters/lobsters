@@ -7,7 +7,7 @@
   </ol>
 <% end %>
 
-<div class="comment comment_form_container" data-shortid="<%= comment.short_id if comment.persisted? %>">
+<div class="comment_form_container" data-shortid="<%= comment.short_id if comment.persisted? %>">
 <%= form_with url: comment do |f| %>
   <% if comment.errors.any? %>
     <%= errors_for comment %>

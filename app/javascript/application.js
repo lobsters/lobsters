@@ -323,18 +323,26 @@ export class _LobstersFunction {
           if (replyForm) {
             // user submitted from a temporary reply form, so this is a reply to an existing comment
             replace(replyForm, text)
-          } else {
-            // Iterating up the comments tree to the nearest parent. If there isn't one, we are creating
-            // a top-level comment, so find the top of the comments tree.
-            const comments = form.closest('.comments') || qS('.comments')
-            parentSelector(form, '.comment_form_container').remove()
+            return;
+          }
 
-            // if comments is .comments1, it is top-level comment: insert it deeper
-            if (comments.classList.contains('comments1')) {
-              comments.querySelector('#story_comments .comments').insertAdjacentHTML("afterbegin", text)
-            } else {
-              comments.insertAdjacentHTML("afterbegin", text)
-            }
+          const commentContainer = form.closest('.comment');
+          if (commentContainer) {
+            // User is editing comment.
+            replace(commentContainer, text);
+            return;
+          }
+
+          // Iterating up the comments tree to the nearest parent. If there isn't one, we are creating
+          // a top-level comment, so find the top of the comments tree.
+          const comments = form.closest('.comments') || qS('.comments')
+          parentSelector(form, '.comment_form_container').remove()
+
+          // if comments is .comments1, it is top-level comment: insert it deeper
+          if (comments.classList.contains('comments1')) {
+            comments.querySelector('#story_comments .comments').insertAdjacentHTML("afterbegin", text)
+          } else {
+            comments.insertAdjacentHTML("afterbegin", text)
           }
 
         })
@@ -932,12 +940,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   on('click', 'a.comment_editor', (event) => {
     event.preventDefault();
-    let comment = parentSelector(event.target, '.comment');
+    const comment = parentSelector(event.target, '.comment');
+    const commentText = qS(comment, '.comment_text');
     const commentId = comment.getAttribute('data-shortid')
+
     fetchWithCSRF('/comments/' + commentId + '/edit')
       .then(response => {
         response.text().then(text => {
-          replace(comment, text);
+          replace(commentText, text);
           autosize(qSA('textarea'));
         });
       });

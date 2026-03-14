@@ -228,7 +228,7 @@
         Lobsters fetches and serves avatars directly for visitor privacy
       </span>
 
-      <%= f.select :avatar_preference, [["Gravatar", 0], ["GitHub", 1]] %>
+      <%= f.select :avatar_preference, Avatar.types.map {|k, v| [k, v]} %>
 
       <%= f.submit "Save Avatar Settings" %>
     <% end %>

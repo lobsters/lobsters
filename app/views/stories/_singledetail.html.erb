@@ -87,15 +87,17 @@ classes = [
           <% end %>
 
           <%= divider_tag %>
-          <%= form_with :class => "hider", url: ms.is_hidden_by_cur_user ? story_unhide_path(ms.short_id) : story_hide_path(ms.short_id) do |form| %>
-            <%= form.submit ms.is_hidden_by_cur_user ? "unhide" : "hide", :class => "btn-link" %>
+          <%= form_with :class => "hider", url: merged_stories.first.is_hidden_by_cur_user ? story_unhide_path(merged_stories.first.short_id) : story_hide_path(merged_stories.first.short_id) do |form| %>
+            <%= form.submit merged_stories.first.is_hidden_by_cur_user ? "unhide" : "hide", :class => "btn-link" %>
           <% end %>
 
           <% if ms.hider_count > 0 %>
             <span>
-              <% if ms.is_hidden_by_cur_user %>
-                (hidden by you and <%= pluralize(ms.hider_count - 1, "other user") %>)
-              <% else %>
+              <% if ms.is_hidden_by_cur_user && ( ms.hider_count - 1 ) > 0 %>
+                (hidden by <span class="hidden-by-you">you and</span>
+                <%= pluralize(ms.hider_count - 1, "other user") %>)
+              <% end %>
+              <% if !ms.is_hidden_by_cur_user %>
                 (hidden by <%= pluralize(ms.hider_count, "user") %>)
               <% end %>
             </span>
@@ -107,7 +109,7 @@ classes = [
           <% end %>
 
           <%= divider_tag %>
-          <%= form_with :class => "saver", url: merged_stories.first.is_saved_by_cur_user ? story_unsave_path(ms.short_id) : story_save_path(ms.short_id) do |form| %>
+          <%= form_with :class => "saver", url: merged_stories.first.is_saved_by_cur_user ? story_unsave_path(merged_stories.first.short_id) : story_save_path(merged_stories.first.short_id) do |form| %>
             <%= form.submit merged_stories.first.is_saved_by_cur_user ? "unsave" : "save", :class => "btn-link" %>
           <% end %>
 

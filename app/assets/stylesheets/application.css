@@ -301,8 +301,9 @@ summary {
 input.btn-link:hover,
 input.btn-link {
 	border: 0;
+	margin: 0;
 	padding: 0;
-	background-color: var(--color-bg);
+	background-color: inherit;
 	color: var(--color-fg-contrast-4-5);
 	line-height: 1;
 }
@@ -769,6 +770,24 @@ li .byline form {
 li.story.saved .saver .btn-link {
 	color: var(--color-fg-affirmative);
 }
+
+li.story .hidden-by-you {
+	display: none;
+}
+
+li.story.hidden .hidden-by-you {
+	display: inline;
+}
+
+#hide-alert .hider {
+	display: inline-block;
+}
+
+#hide-alert .hider .btn-link {
+	color: var(--color-fg-link);
+	text-decoration: underline;
+}
+
 
 li.story.deleted {
 	opacity: var(--opacity-deleted);

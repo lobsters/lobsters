@@ -102,9 +102,9 @@ function hasProperties(obj, props) {
   return isObject(obj) && props.every((p) => p in obj);
 }
 
-/** @param {unknown} obj @returns obj is object */
+/** @param {unknown} obj */
 function isObject(obj) {
-	return typeof obj === "object" && !!obj;
+	return !!obj && typeof obj === "object"
 }
 
 /** @param {string} msg */
@@ -118,16 +118,7 @@ function notify(msg) {
 /** @param {SubmitEvent} ev */
 export async function asyncFormSubmit(ev) {
   ev.preventDefault();
-
-  const submitter = /** @type {HTMLInputElement} */ (ev.submitter);
   const form = /** @type {HTMLFormElement} */ (ev.target);
-
-  // Prevent double submissions
-  if (submitter.disabled) {
-    return;
-  }
-
-  submitter.disabled = true;
 
   try {
     const response = await fetch(form.action, {
@@ -157,8 +148,6 @@ export async function asyncFormSubmit(ev) {
     const error = err instanceof Error ? err : new Error(JSON.stringify(err));
     notify(error.message);
     throw error;
-  } finally {
-    submitter.disabled = false;
   }
 }
 
@@ -378,76 +367,86 @@ export class _LobstersFunction {
 
   /** @param {SubmitEvent} ev */
   async hideStory(ev) {
-    await Lobster._handleStoryAction(ev, {
-      selector: ".hider",
-      stateProp: "hidden",
-      classToggle: "hidden",
-      activeText: "unhide",
-      inactiveText: "hide",
-    });
+    const submitter = /** @type HTMLInputElement */ ( ev.submitter );
+    const story = submitter.closest('.story');
+
+    // If no .story, action was triggered by #hide-alert.
+    const submitters = ( story ?
+      [...qSA(story, '.hider [type="submit"]'), qS('#hide-alert .hider [type="submit"]')] :
+      [...qSA('.hider [type="submit"]'), submitter] ).filter(btn => btn instanceof HTMLInputElement)
+
+    const data = await Lobster._handleStoryAction(ev, submitters);
+
+    if (!(data && "hidden" in data)) { return }
+
+    const isHidden = !!data.hidden;
+    const cta = isHidden ? "unhide" : "hide"
+
+    if (!isHidden) {
+      document.getElementById("hide-alert")?.setAttribute("hidden", "true");
+    } else {
+      document.getElementById("hide-alert")?.removeAttribute("hidden");
+    }
+
+
+    for (const submitter of submitters) {
+      submitter.value = cta;
+    }
+
+    ( story ? parentSelector(submitter, '.story') : qS('.story') )?.classList.toggle("hidden", isHidden);
   }
 
   /** @param {SubmitEvent} ev */
   async saveStory(ev) {
-    await Lobster._handleStoryAction(ev, {
-      selector: ".saver",
-      stateProp: "saved",
-      classToggle: "saved",
-      activeText: "unsave",
-      inactiveText: "save",
-    });
+    const submitter = /** @type HTMLInputElement */ ( ev.submitter );
+    const submitters = /** @type NodeListOf<HTMLInputElement> */ ( qSA(parentSelector(submitter, ".story"), ".saver [type='submit']") );
+
+    const data = await Lobster._handleStoryAction(ev, submitters);
+
+    if (!(data && "saved" in data)) { return }
+
+    const isSaved = !!data.saved;
+    const cta = isSaved ? "unsave" : "save"
+
+    for (const submitter of submitters) {
+      submitter.value = cta;
+    }
+
+    parentSelector(submitter, '.story')?.classList.toggle("saved", isSaved)
   }
 
   /**
    * @param {SubmitEvent} ev
-   * @param {{selector: string, stateProp: string, classToggle: string, activeText: string, inactiveText: string}} config
+   * @param {HTMLInputElement[] | NodeListOf<HTMLInputElement>} submitters
    */
-  async _handleStoryAction(ev, config) {
-    const submitter = /** @type {HTMLInputElement} */ (ev.submitter);
-    const story = parentSelector(submitter, ".story");
-    const btns = Array.from(
-      qSA(story, `${config.selector} input[type=submit]`),
-    ).filter((el) => el instanceof HTMLInputElement);
-
-    const setButtonsDisabled = (/** @type boolean */ state) => {
-      for (const btn of btns) {
-        if (btn !== submitter) btn.disabled = state;
-      }
-    };
-
-    setButtonsDisabled(true);
+  async _handleStoryAction(ev, submitters) {
+    for (const btn of submitters) {
+      btn.disabled = true;
+    }
 
     try {
       const data = await asyncFormSubmit(ev);
 
-      const { stateProp } = config;
+      const nextAction = "nextAction" in data && typeof data.nextAction === "string" ? data.nextAction : null;
 
-      if (!hasProperties(data, [stateProp, "nextAction"])) {
-        return;
-      }
+      if (!nextAction) { throw new Error("Bad response") }
 
-      const isTrue = data[stateProp];
-      const nextAction = data["nextAction"];
-
-      if (typeof isTrue !== "boolean" || typeof nextAction !== "string") {
-        throw new Error(`Bad response for ${config.selector}`);
-      }
-
-      qSA(story, config.selector).forEach((el) => {
-        if (el instanceof HTMLFormElement) {
-          el.action = nextAction;
+      for (const btn of submitters) {
+        const form = btn.closest("form");
+        if (form) {
+          form.action = nextAction;
         }
-      });
+      }
 
-      story.classList.toggle(config.classToggle, isTrue);
+      return data
 
-      btns.forEach((b) => {
-        b.value = isTrue ? config.activeText : config.inactiveText;
-      });
     } catch (err) {
       console.error(`${err}`);
+      return;
     } finally {
-      setButtonsDisabled(false);
+      for (const btn of submitters) {
+        btn.disabled = false;
+      }
     }
   }
 
@@ -760,7 +759,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Lobster.modalFlaggingDropDown("story", event.target, reasons);
   });
 
-  on('submit', 'li.story .hider', Lobster.hideStory);
+  on('submit', 'li.story .hider, #hide-alert .hider', Lobster.hideStory);
 
   on('submit', 'li.story .saver', Lobster.saveStory)
 

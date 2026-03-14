@@ -103,6 +103,7 @@ class User < ApplicationRecord
     s.string :mastodon_instance
     s.string :mastodon_oauth_token
     s.string :mastodon_username
+    s.integer :avatar_preference
     s.string :homepage
   end
 
@@ -370,19 +371,22 @@ class User < ApplicationRecord
   end
 
   def fetched_avatar(size = 100)
-    gravatar_url = "https://www.gravatar.com/avatar/" <<
+    url = "https://www.gravatar.com/avatar/" <<
       Digest::MD5.hexdigest(email.strip.downcase) <<
       "?r=pg&d=identicon&s=#{size}"
+    if !github_username.blank? && avatar_preference == Avatar.types[:GitHub]
+      url = "https://www.github.com/" << github_username << ".png?size=#{size}"
+    end
 
     begin
       s = Sponge.new
       s.timeout = 3
-      res = s.fetch(gravatar_url).body
+      res = s.fetch(url).body
       if res.present?
         return res
       end
     rescue => e
-      # Rails.logger.error "error fetching #{gravatar_url}: #{e.message}"
+      # Rails.logger.error "error fetching #{url}: #{e.message}"
     end
 
     nil

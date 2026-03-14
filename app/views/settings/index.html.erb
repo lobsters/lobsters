@@ -222,6 +222,16 @@
       Your avatar will be cached from the Gravatar icon for your e-mail address above.
       <%= link_post "Expire cache", "/avatars/expire" %>
     </span>
+    <%= label_tag :avatar_preference, "Avatar" %>
+    <%= form_with model: @edit_user, url: update_avatar_preference_path, method: :post, id: 'update_avatar_preference', namespace: 'update_avatar_preference' do |f| %>
+      <span class="hint">
+        Lobsters fetches and serves avatars directly for visitor privacy
+      </span>
+
+      <%= f.select :avatar_preference, Avatar.types.map {|k, v| [k, v]} %>
+
+      <%= f.submit "Save Avatar Settings" %>
+    <% end %>
     <% if Pushover.enabled? %>
       <%= label_tag :pushover_user_key,
           raw("<a href=\"https://pushover.net/\">Pushover</a>") %>

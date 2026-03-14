@@ -174,6 +174,7 @@ Rails.application.routes.draw do
 
   get "/settings" => "settings#index"
   post "/settings" => "settings#update"
+  post "/settings/update_avatar_preference" => "settings#update_avatar_preference", :as => "update_avatar_preference"
   post "/settings/deactivate" => "settings#deactivate", :as => "deactivate"
   get "/settings/2fa" => "settings#twofa", :as => "twofa"
   post "/settings/2fa_auth" => "settings#twofa_auth", :as => "twofa_auth"

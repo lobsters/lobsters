@@ -33,6 +33,12 @@ class SettingsController < ApplicationController
     redirect_to "/"
   end
 
+  def update_avatar_preference
+    flash[:success] = "Updated avatar preference. Your avatar isn't updated, press the Clear Cache button next to Gravatar."
+    @user.update(user_params)
+    redirect_to "/settings"
+  end
+
   def update
     @edit_user = @user.clone
 
@@ -281,7 +287,7 @@ class SettingsController < ApplicationController
 
   def user_params
     params.require(:user).permit(
-      :username, :email, :password, :password_confirmation, :homepage, :about,
+      :username, :email, :password, :password_confirmation, :homepage, :about, :avatar_preference,
       :email_replies, :email_messages, :email_mentions, :inbox_mentions,
       :pushover_replies, :pushover_messages, :pushover_mentions,
       :mailing_list_mode, :show_email, :show_avatars, :show_story_previews,

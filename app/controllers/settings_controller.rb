@@ -33,6 +33,12 @@ class SettingsController < ApplicationController
     redirect_to "/"
   end
 
+  def update_avatar_preference
+    flash[:success] = "Updated avatar preference. Your avatar isn't updated, press the Clear Cache button next to Gravatar."
+    @user.update(user_params)
+    redirect_to "/settings"
+  end
+
   def update
     @edit_user = @user.clone
 

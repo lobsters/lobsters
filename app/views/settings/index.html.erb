@@ -49,15 +49,6 @@
 
           <%= render :partial => "global/markdownhelp" %>
         </div>
-
-        <%= f.label :avatar_preference, "Avatar" %>
-        <div>
-          <span class="hint">
-            Lobsters fetches and serves avatars directly for visitor privacy
-          </span>
-
-          <%= f.select :avatar_preference, [["Gravatar", 0], ["GitHub", 1]] %>
-        </div>
       </div>
 
       <%= f.submit "Save Account Settings" %>
@@ -231,6 +222,16 @@
       Your avatar will be cached from the Gravatar icon for your e-mail address above.
       <%= link_post "Expire cache", "/avatars/expire" %>
     </span>
+    <%= label_tag :avatar_preference, "Avatar" %>
+    <%= form_with model: @edit_user, url: update_avatar_preference_path, method: :post, id: 'update_avatar_preference', namespace: 'update_avatar_preference' do |f| %>
+      <span class="hint">
+        Lobsters fetches and serves avatars directly for visitor privacy
+      </span>
+
+      <%= f.select :avatar_preference, [["Gravatar", 0], ["GitHub", 1]] %>
+
+      <%= f.submit "Save Avatar Settings" %>
+    <% end %>
     <% if Pushover.enabled? %>
       <%= label_tag :pushover_user_key,
           raw("<a href=\"https://pushover.net/\">Pushover</a>") %>

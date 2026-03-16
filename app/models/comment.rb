@@ -35,9 +35,12 @@ class Comment < ApplicationRecord
   validates :short_id, presence: true, uniqueness: {case_sensitive: false}
 
   before_validation :assign_initial_attributes, on: :create
+
+  # We log hats before the transaction ends so we can accurately check whether the model changed
+  after_save :log_hat_use
   # Calling :record_initial_upvote from after_commit instead of after_create minimizes how many
   # queries happen inside the transaction, which seems to be the cause of bug #1238.
-  after_commit :log_hat_use, :mark_submitter, :record_initial_upvote, on: :create
+  after_commit :mark_submitter, :record_initial_upvote, on: :create
   after_commit :recreate_links, :update_associated_caches
 
   scope :deleted, -> { where(is_deleted: true) }
@@ -423,6 +426,7 @@ class Comment < ApplicationRecord
 
   def log_hat_use
     return unless hat&.modlog_use
+    return unless previously_new_record? || hat_previously_changed?
 
     m = Moderation.new
     m.created_at = created_at

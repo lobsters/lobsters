@@ -388,6 +388,9 @@ class Comment < ApplicationRecord
   end
 
   def is_flaggable?
+    if is_gone?
+      return false
+    end
     if created_at && self.score > FLAGGABLE_MIN_SCORE
       Time.current - created_at <= FLAGGABLE_DAYS.days
     else

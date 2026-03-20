@@ -889,10 +889,10 @@ document.addEventListener("DOMContentLoaded", () => {
     Lobster.modalFlaggingDropDown("comment", event.target, reasons);
   });
 
-  on('click', '.comment #flag_dropdown a', (event) => {
+  on('click', '.comment #flag_dropdown a', (/** @type MouseEvent */ event) => {
     event.preventDefault();
-    if (event.target.getAttribute('data') != '') {
-      Lobster.voteComment(parentSelector(event.target, '.comment'), -1,  event.target.getAttribute('data'));
+    if  (event.target instanceof HTMLElement && event.target.dataset["key"] !== '') {
+      Lobster.voteComment(parentSelector(event.target, '.comment'), -1,  event.target.dataset["key"]);
     }
     Lobster.removeFlagModal()
   });

@@ -23,9 +23,12 @@
       <%= link_to raw("Page #{@page - 1}"), { controller: controller_name, action: action_name, page: @page - 1 }.merge(@next_page_params || {}), rel: "prev" %>
     <% end %>
 
-    <% if @page && @page > 1 %>
-      <%= divider_tag %>
+    <% if @has_more %>
+      <% if @page && @page > 1 %>
+        <%= divider_tag %>
+      <% end %>
+
+      <%= link_to raw("Page #{@page + 1}"), { controller: controller_name, action: action_name, page: @page + 1 }.merge(@next_page_params || {}), rel: "next" %>
     <% end %>
-    <%= link_to raw("Page #{@page + 1}"), { controller: controller_name, action: action_name, page: @page + 1 }.merge(@next_page_params || {}), rel: "next" %>
   <% end %>
 </nav>

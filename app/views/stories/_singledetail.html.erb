@@ -79,7 +79,7 @@ classes = [
         <% if !ms.is_gone? && @user %>
           <% if ms.current_flagged? %>
             <%= divider_tag %><a class="flagger">unflag (<%= Vote::STORY_REASONS[ms.current_vote[:reason]].to_s.downcase %>)</a>
-          <% elsif @user.can_flag?(ms) %>
+          <% elsif @user.can_flag?(ms, @user) %>
             <%= divider_tag %>
             <span class="dropdown_parent">
               <a class="flagger">flag</a>

@@ -387,8 +387,11 @@ class Comment < ApplicationRecord
     user && user.id == user_id && created_at && created_at < DELETEABLE_DAYS.days.ago
   end
 
-  def is_flaggable?
+  def is_flaggable?(user)
     if is_gone?
+      return false
+    end
+    if user && user.id == user_id
       return false
     end
     if created_at && self.score > FLAGGABLE_MIN_SCORE

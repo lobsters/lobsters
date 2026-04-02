@@ -509,11 +509,17 @@ div.voters {
 	font-size: 1.2rem;
 	font-family: system-ui, monospace, sans-serif;
 }
-.upvoter:hover:before,
 .upvoted .upvoter:before {
 	content: "\25b2";
 	color: var(--color-fg-accent);
 	-webkit-text-stroke: 1px var(--color-fg-accent);
+}
+@media (hover: hover) {
+	.upvoter:hover:before {
+		content: "\25b2";
+		color: var(--color-fg-accent);
+		-webkit-text-stroke: 1px var(--color-fg-accent);
+	}
 }
 .upvoter {
 	color: var(--color-fg-contrast-4-5);

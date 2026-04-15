@@ -52,7 +52,7 @@ class FakeDataGenerator
       print "."
       mod = User.moderators.sample
       name = Faker::Name.name
-      password = Faker::Internet.password
+      password = "fake"
       create_args = {
         email: Faker::Internet.email(name: name),
         password: password,

@@ -773,6 +773,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "\.pdf($|\\?|#)": "pdf",
       "[\/\.](asciinema\.org|(youtube|vimeo)\.com|youtu\.be|twitch\.tv|media\.ccc\.de)\/": "video",
       "\.(mp4|avi|mkv|webm)($|\\?|#)": "video",
+      "(https:\/\/(github\.com|codeberg\.org)\/[^\/]+\/[^\/]+\/releases)": "release",
       "[\/\.](slideshare\.net|speakerdeck\.com)\/": "slides",
       "[\/\.](soundcloud\.com)\/": "audio",
       "\.(mp3|wav|ogg|flac)($|\\?|#)": "audio",

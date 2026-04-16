@@ -115,7 +115,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <% if @user && story.current_flagged? %>
             <%= divider_tag %><a class="flagger">unflag (<%=
               Vote::STORY_REASONS[story.current_vote[:reason]].to_s.downcase %>)</a>
-          <% elsif @user && @user.can_flag?(story, @user) %>
+          <% elsif @user && @user.can_flag?(story) %>
             <%= divider_tag %>
             <span class="dropdown_parent">
               <a class="flagger">flag</a>

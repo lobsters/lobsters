@@ -14,7 +14,7 @@
       @user.try(:is_moderator?) ||
       (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
 
-      <% can_flag = @user && @user.can_flag?(comment, @user) %>
+      <% can_flag = @user && @user.can_flag?(comment) %>
 <div id="c_<%= comment.short_id %>"
   data-shortid="<%= comment.short_id if comment.persisted? %>"
   class="comment

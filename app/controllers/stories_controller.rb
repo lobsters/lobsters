@@ -276,7 +276,7 @@ class StoriesController < ApplicationController
       return render plain: "invalid reason", status: 400
     end
 
-    if !@user.can_flag?(story, @user)
+    if !@user.can_flag?(story)
       return render plain: "not permitted to flag", status: 400
     end
 

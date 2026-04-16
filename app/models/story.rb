@@ -729,9 +729,7 @@ class Story < ApplicationRecord
   end
 
   def is_flaggable?(user)
-    if user && user.id == user_id
-      return false
-    end
+    return false if user&.id == user_id
     if created_at && self.score > FLAGGABLE_MIN_SCORE
       Time.current - created_at <= FLAGGABLE_DAYS.days
     else

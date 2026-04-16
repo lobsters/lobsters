@@ -309,17 +309,17 @@ class User < ApplicationRecord
     disabled_invite_at?
   end
 
-  def can_flag?(obj, user)
+  def can_flag?(obj)
     if is_new?
       return false
     elsif obj.is_a?(Story)
-      if obj.is_flaggable?(user)
+      if obj.is_flaggable?(self)
         return true
       elsif obj.current_flagged?
         # user can unvote
         return true
       end
-    elsif obj.is_a?(Comment) && obj.is_flaggable?(user)
+    elsif obj.is_a?(Comment) && obj.is_flaggable?(self)
       return karma >= MIN_KARMA_TO_FLAG
     end
 

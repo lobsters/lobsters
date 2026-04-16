@@ -263,7 +263,7 @@ class CommentsController < ApplicationController
       return render plain: "invalid reason", status: 400
     end
 
-    if !@user.can_flag?(comment, @user)
+    if !@user.can_flag?(comment)
       return render plain: "not permitted to flag", status: 400
     end
 

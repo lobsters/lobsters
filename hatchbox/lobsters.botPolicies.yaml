@@ -34,6 +34,11 @@ store:
   parameters: {}
 
 thresholds:
+  - name: allow-non-search
+    action: ALLOW
+    expression:
+      all:
+        - '!path.startsWith("/search")'
   - name: minimal-suspicion 
     expression: weight <= 0 
     action: ALLOW

@@ -58,8 +58,20 @@ describe Search do
 
   after(:all) do
     @comments.each(&:destroy!)
-    @stories.flat_map(&:votes).each(&:destroy!)
+    @stories.each { |s|
+      s.taggings.destroy_all
+      s.votes.destroy_all
+      s.links.destroy_all
+      s.suggested_taggings.destroy_all
+      s.suggested_titles.destroy_all
+      s.hidings.destroy_all
+      s.savings.destroy_all
+      s.read_ribbons.destroy_all
+      s.saved_stories.destroy_all
+    }
     @stories.each(&:destroy!)
+    @alice&.usernames&.destroy_all
+    @bob&.usernames&.destroy_all
     @alice&.destroy!
     @bob&.destroy!
   end

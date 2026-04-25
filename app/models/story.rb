@@ -17,7 +17,7 @@ class Story < ApplicationRecord
     dependent: :nullify
   has_many :taggings,
     autosave: true,
-    dependent: :destroy # tests fail if :restrict_with_exception
+    dependent: :restrict_with_exception
   has_many :suggested_taggings, dependent: :restrict_with_exception
   has_many :suggested_tags, source: :story, through: :suggested_taggings, dependent: :restrict_with_exception
   has_many :suggested_titles, dependent: :restrict_with_exception
@@ -35,7 +35,7 @@ class Story < ApplicationRecord
   has_many :tags, -> { order("tags.is_media desc, tags.tag") }, through: :taggings
   has_many :votes, -> { where(comment_id: nil) },
     inverse_of: :story,
-    dependent: :destroy # tests fail if :restrict_with_exception
+    dependent: :restrict_with_exception
   has_many :voters, -> { where("votes.comment_id" => nil) },
     through: :votes,
     source: :user
@@ -44,7 +44,7 @@ class Story < ApplicationRecord
   has_one :story_text, foreign_key: :id, dependent: :restrict_with_exception, inverse_of: :story
   has_many :links,
     inverse_of: :from_story,
-    dependent: :destroy # tests fail if :restrict_with_exception
+    dependent: :restrict_with_exception
   has_many :incoming_links,
     class_name: "Link",
     inverse_of: :to_story,

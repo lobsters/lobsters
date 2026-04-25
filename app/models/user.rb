@@ -43,7 +43,7 @@ class User < ApplicationRecord
   has_one :moderation,
     inverse_of: :user,
     dependent: :restrict_with_exception
-  has_many :usernames, dependent: :destroy # tests fail if :restrict_with_exception
+  has_many :usernames, dependent: :restrict_with_exception
   has_many :votes, dependent: :restrict_with_exception
   has_many :voted_stories, -> { where("votes.comment_id" => nil) },
     through: :votes,

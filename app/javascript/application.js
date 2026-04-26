@@ -344,7 +344,41 @@ export class _LobstersFunction {
           } else {
             comments.insertAdjacentHTML("afterbegin", text)
           }
+          // Update comment counters
+          const newCommentEl = qS(comments, '[data-story-short-id]')
 
+          if (newCommentEl) {
+            const storyShortId = newCommentEl.getAttribute('data-story-short-id')
+            const newCount = newCommentEl.getAttribute('data-new-comment-count')
+            const countLabel = parseInt(newCount) === 1 ? 'comment' : 'comments'
+            
+            // Update byline counter
+            const commentsLabels = qSA('.comments_label')
+            for (const label of commentsLabels) {
+              if (parseInt(newCount) === 0) {
+                label.textContent = 'no comments'
+              } else {
+                label.textContent = newCount + ' ' + countLabel
+              }
+            }
+            
+            // Update thread summary counter
+            const threadSummaries = qSA('.thread_summary')
+            for (const summary of threadSummaries) {
+              const text = summary.textContent
+              if (text.includes('comment')) {
+                if (parseInt(newCount) === 0) {
+                  summary.textContent = 'no comments,' + text.substring(text.indexOf(','))
+                } else {
+                  summary.textContent = newCount + ' ' + countLabel + ',' + text.substring(text.indexOf(','))
+                }
+              }
+            }
+            
+            // Remove the data attributes after processing
+            newCommentEl.removeAttribute('data-story-short-id')
+            newCommentEl.removeAttribute('data-new-comment-count')
+          }
         })
       })
   }

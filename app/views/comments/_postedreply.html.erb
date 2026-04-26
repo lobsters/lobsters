@@ -1,5 +1,6 @@
-<%# locals: (comment:, show_tree_lines: true) -%>
-<li class="comments_subtree">
+<%# locals: (comment:, story: nil, show_tree_lines: true) -%>
+<% story ||= comment.story %>
+<li class="comments_subtree" data-story-short-id="<%= story.short_id %>" data-new-comment-count="<%= story.comments_count %>">
   <%= render "comments/comment", :comment => comment, :show_tree_lines => show_tree_lines %>
   <ol class="comments"></ol>
 </li>

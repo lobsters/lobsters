@@ -32,5 +32,29 @@ describe "merged stories", type: :request do
       merged_story.reload
       expect(merged_story.savings.count).to eq(0)
     end
+
+    it "renders merged stories in recent with disabled upvote control" do
+      create_list(:story, StoriesPaginator::STORIES_PER_PAGE + 1, score: 50)
+
+      merged_parent = create(:story, score: 60)
+      merged_story = create(
+        :story,
+        merged_into_story: merged_parent,
+        score: 1,
+        created_at: 1.day.ago,
+        updated_at: 1.day.ago
+      )
+
+      get "/recent"
+
+      expect(response).to be_successful
+
+      doc = Nokogiri::HTML.parse(response.body)
+      merged_row = doc.at_css("li#story_#{merged_story.short_id}")
+      expect(merged_row).to be_present
+      expect(merged_row.at_css(".merge")&.text).to include("merged")
+      expect(merged_row.at_css(".voters a.upvoter")).to be_nil
+      expect(merged_row.at_css(".voters .upvoter.disabled[aria-disabled='true']")).to be_present
+    end
   end
 end

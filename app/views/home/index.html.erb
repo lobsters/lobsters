@@ -33,8 +33,12 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
 <%= story.is_deleted? ? "deleted" : "" %>">
 <div class="story_liner h-entry">
   <div class="voters">
-    <%= link_to (story.show_score_to_user?(@user) ? story.score : '~'),
-                (@user ? '': login_path), :class => "upvoter" %>
+    <% if story.merged_story_id? %>
+      <span class="upvoter disabled" aria-disabled="true"><%= story.show_score_to_user?(@user) ? story.score : "~" %></span>
+    <% else %>
+      <%= link_to (story.show_score_to_user?(@user) ? story.score : "~"),
+                  (@user ? "" : login_path), :class => "upvoter" %>
+    <% end %>
   </div>
   <div class="details">
     <span role="heading" aria-level="1" class="link h-cite u-repost-of">

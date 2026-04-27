@@ -99,10 +99,11 @@ class Story < ApplicationRecord
       .order(created_at: :desc)
   }
 
-  scope :top, ->(user, length) {
+  scope :top, ->(user, length, exclude_tags = nil) {
     raise ArgumentError, "Invalid interval" unless IntervalHelper::TIME_INTERVALS.value?(length[:intv].capitalize)
 
     top = base(user)
+      .filter_tags(exclude_tags || [])
       .where("created_at >= (NOW() - INTERVAL ? #{length[:intv].upcase})", length[:dur])
     top.order(score: :desc)
   }

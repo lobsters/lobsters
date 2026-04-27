@@ -260,6 +260,21 @@ describe HomeController do
         expect(@controller.view_assigns["stories"]).to include(story)
         expect(@controller.view_assigns["stories"]).not_to include(old_story)
       end
+
+      it "excludes stories with tags filtered by the logged-in user" do
+        filtered_tag = create(:tag)
+        visible_tag = create(:tag)
+        filtered_story = create(:story, user:, tags: [filtered_tag], score: 100)
+        visible_story = create(:story, user:, tags: [visible_tag], score: 99)
+        user.tag_filters.create!(tag: filtered_tag)
+        stub_login_as user
+
+        get :top, params: {length: "1w"}
+
+        expect(response).to be_successful
+        expect(@controller.view_assigns["stories"]).to include(visible_story)
+        expect(@controller.view_assigns["stories"]).not_to include(filtered_story)
+      end
     end
 
     describe "/top/:length/rss" do

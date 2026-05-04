@@ -518,7 +518,9 @@ div.voters {
 	flex-direction: column;
 	align-items: center;
 	justify-self: center;
+	min-width: 3ch;
 	text-decoration: none;
+	white-space: nowrap;
 }
 .upvoter:focus { outline: none; } /* don't outline after upvote click */
 .upvoter:focus-visible { outline: 2px solid var(--color-fg-link); } /* do outline when tabbing */

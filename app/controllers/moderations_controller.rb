@@ -35,7 +35,7 @@ class ModerationsController < ApplicationController
     when "(All)"
       @moderations
     when "(Moderators)"
-      @moderations.joins(:moderator).where(moderator_user_id: @moderators)
+      @moderations.where.not(moderator_user_id: nil)
     when "(Users)"
       @moderations.where(is_from_suggestions: true)
     else

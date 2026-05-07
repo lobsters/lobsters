@@ -298,6 +298,8 @@ class CommentsController < ApplicationController
       .limit(COMMENTS_PER_PAGE)
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 
+    @has_more = true # don't bother querying for the number of comments here
+
     @comments = CommentVoteHydrator.new(@comments, @user)
 
     @last_read_timestamp = if params[:last_read_timestamp]
@@ -345,12 +347,16 @@ class CommentsController < ApplicationController
       raise ActionController::RoutingError.new("page out of bounds")
     end
 
-    @comments = Comment.accessible_to_user(@user)
+    comment_query = Comment.accessible_to_user(@user)
       .where.not(user_id: @user.id)
       .order(id: :desc)
       .includes(:user, :hat, story: :user)
       .joins(:votes).where(votes: {user_id: @user.id, vote: 1})
       .joins(:story).where.not(stories: {is_deleted: true})
+
+    @has_more = comment_query.count > (@page * COMMENTS_PER_PAGE)
+
+    @comments = comment_query
       .limit(COMMENTS_PER_PAGE)
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 

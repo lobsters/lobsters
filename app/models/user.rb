@@ -313,13 +313,13 @@ class User < ApplicationRecord
     if is_new?
       return false
     elsif obj.is_a?(Story)
-      if obj.is_flaggable?
+      if obj.is_flaggable?(self)
         return true
       elsif obj.current_flagged?
         # user can unvote
         return true
       end
-    elsif obj.is_a?(Comment) && obj.is_flaggable?
+    elsif obj.is_a?(Comment) && obj.is_flaggable?(self)
       return karma >= MIN_KARMA_TO_FLAG
     end
 
@@ -327,7 +327,7 @@ class User < ApplicationRecord
   end
 
   def can_invite?
-    !banned_from_inviting? && can_submit_stories?
+    !is_new? && !banned_from_inviting? && can_submit_stories?
   end
 
   def can_offer_suggestions?

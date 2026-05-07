@@ -50,7 +50,6 @@ html {
 	/* avoid automatic resizing of some text elements on phones in landscape */
 	-moz-text-size-adjust: none;
 	-webkit-text-size-adjust: none;
-	text-size-adjust: none;
 }
 
 body, textarea, input, button {
@@ -187,9 +186,6 @@ textarea:focus {
 	border-color: transparent;
 	color: var(--color-fg);
 }
-textarea {
-	resize: vertical;
-}
 input[type="text"],
 input[type="search"],
 input[type="password"],
@@ -301,8 +297,9 @@ summary {
 input.btn-link:hover,
 input.btn-link {
 	border: 0;
+	margin: 0;
 	padding: 0;
-	background-color: var(--color-bg);
+	background-color: inherit;
 	color: var(--color-fg-contrast-4-5);
 	line-height: 1;
 }
@@ -329,7 +326,7 @@ input.btn-link:focus-visible {
 	padding: 0;
 	margin: -1px;
 	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
+	clip-path: inset(50%);
 	white-space: nowrap;
 	border-width: 0;
 }
@@ -717,8 +714,9 @@ li.story .byline {
 .comment.replied .flagger {
 	color: var(--color-fg-contrast-4-5);
 }
-/* preserve selection made elsewhere when clicking */
+/* preserve user's selection of a quote when clicking 'reply' */
 li .byline a.comment_replier {
+	-webkit-user-select: none;
 	user-select: none;
 }
 span.new_user, a.new_user,
@@ -770,6 +768,24 @@ li.story.saved .saver .btn-link {
 	color: var(--color-fg-affirmative);
 }
 
+li.story .hidden-by-you {
+	display: none;
+}
+
+li.story.hidden .hidden-by-you {
+	display: inline;
+}
+
+#hide-alert .hider {
+	display: inline-block;
+}
+
+#hide-alert .hider .btn-link {
+	color: var(--color-fg-link);
+	text-decoration: underline;
+}
+
+
 li.story.deleted {
 	opacity: var(--opacity-deleted);
 }
@@ -789,14 +805,12 @@ ol.stories.list details.story_content {
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 3;
-	line-clamp: 3;
 	overflow: hidden;
 }
 
-ol.stories.list details.story_content:open {
+ol.stories.list details.story_content[open] {
 	color: var(--color-fg-contrast-10);
 	-webkit-line-clamp: none;
-	line-clamp: none;
 }
 
 nav.morelink {
@@ -846,7 +860,7 @@ div.page_link_buttons span {
 div.story_text {
 	margin-bottom: 1.5em;
 	max-width: 45rem;
-	word-wrap: break-word;
+	overflow-wrap: break-word;
 }
 div.story_text p {
 	margin: 0.75em 0;
@@ -861,7 +875,7 @@ a#story_text_expander {
 
 div.comment_text {
 	max-width: 45rem;
-	word-wrap: break-word;
+	overflow-wrap: break-word;
 	overflow: hidden;
 }
 .controls {
@@ -948,22 +962,42 @@ div.comment_text code {
 	background-color: var(--color-box-bg-shaded);
 }
 
-.caches-dropdown {
-	width: fit-content;
-	margin: 0 auto;
+.caches {
+	display: inline-block;
+	position: relative;
 }
 
-.caches-dropdown a {
-	color: var(--color-fg-contrast-4-5);
+.caches summary {
+	list-style: none;
+}
+
+.caches ul {
+	position: absolute;
+	background: var(--color-bg);
+	border: 1px solid var(--color-box-border);
+	white-space: nowrap;
+	list-style: none;
+	padding: 0;
+	z-index: 1;
+}
+
+.caches li {
+	border-bottom: 1px solid var(--color-box-border);
+}
+
+.caches li:last-child {
+	border-bottom: 0;
+}
+
+.caches a {
+	color: var(--color-fg-contrast-7-5);
 	text-decoration: none;
+	display: block;
+	padding: 3px 7px;
 }
 
-.caches-dropdown a:hover {
+.caches a:hover {
 	text-decoration: underline;
-}
-
-.details:has(> .caches_button:checked) label.caches::before {
-	content: "▾ ";
 }
 
 #flag_dropdown a.cancel-reason {
@@ -979,17 +1013,6 @@ div.comment_text code {
 	bottom: 0;
 	right: 0;
 	z-index: 1;
-}
-
-.caches_button {
-	display: none;
-}
-.caches_button:not(:checked) ~ .caches-dropdown {
-	display: none;
-}
-label.caches {
-	cursor: pointer;
-	white-space: nowrap;
 }
 
 .controls details {
@@ -1041,6 +1064,7 @@ div#story_box #story_tags {
 	width: 624px;
 }
 div#story_box textarea {
+	height: 2rem;
 	width: 600px;
 }
 

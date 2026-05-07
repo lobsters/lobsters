@@ -67,6 +67,7 @@ group :test, :development do
   gem "pry-byebug"
   gem "pry-rails"
   gem "capybara"
+  gem "crass"
   gem "database_cleaner"
   gem "database_consistency"
   gem "factory_bot_rails"

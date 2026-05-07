@@ -38,6 +38,7 @@
   <% if @story.is_hidden_by_cur_user %>
     <div id="hide-alert">
       You have <a href="/about#story-hiding">hidden this</a> story.
+      You won't be notified of replies or @mentions.
       Links to this story and its comments will not be shown elsewhere on the site for you.
       You can
       <%= form_with :class => "hider", url: story_unhide_path(@story.short_id) do |form| %>
@@ -102,7 +103,13 @@
 
                 <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
                   <%= divider_tag %>
-                  <label for="caches_<%= ms.short_id %>" class="caches" tabindex="0">caches</label>
+                  <details class="caches" name="caches">
+                    <summary>caches</summary>
+                    <ul>
+                      <li><a href="<%= ms.archiveorg_url %>">Archive.org</a></li>
+                      <li><a href="<%= ms.ghost_url %>">Ghostarchive</a></li>
+                    </ul>
+                  </details>
                 <% end %>
 
                 <%= divider_tag %>
@@ -114,14 +121,6 @@
                   <% end %>
                 </span>
               </span>
-              <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
-                <input id="caches_<%= ms.short_id %>" class="caches_button" type="checkbox">
-                <div class="caches-dropdown">
-                  <a href="<%= ms.archiveorg_url %>">Archive.org</a>
-                  <%= divider_tag %>
-                  <a href="<%= ms.ghost_url %>">Ghostarchive</a>
-                </div>
-              <% end %>
             </div>
           </div>
         </li>
@@ -157,7 +156,7 @@
 
     <ol class="comments comments1">
       <%# deliberately checking the top-level story, either all have comment forms or none do, less confusing %>
-      <% if @story.accepting_comments? %>
+      <% if ms.accepting_comments? %>
         <li class="comments_subtree"><%= render partial: "comments/commentbox", locals: { comment: ms.comments.build, story: ms } %></li>
       <% end %>
 

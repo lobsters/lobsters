@@ -47,8 +47,11 @@ header Strict-Transport-Security max-age=31536000
 
 @use_cached_file {
   host lobste.rs
-  not {
+  not { # don't serve cached when user is logged in
     header_regexp Cookie `.*=.*`
+  }
+  not { # don't serve cached when we see a user's ?token=...
+    query token=*
   }
   file {
     root /home/deploy/lobsters/current/public/cache/
@@ -80,10 +83,13 @@ header @use_cached_file ?Content-Security-Policy "default-src 'none'; img-src 's
 
 @use_rss_cached_file {
   host lobste.rs
-  not {
+  not { # don't serve cached when user is logged in
     header_regexp Cookie `.*=.*`
   }
   path /rss
+  not { # don't serve cached when we see a user's ?token=...
+    query token=*
+  }
   file {
     root /home/deploy/lobsters/current/public/cache/
     try_files rss.rss

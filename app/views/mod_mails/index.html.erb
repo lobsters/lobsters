@@ -17,7 +17,7 @@
         <td><%= link_to mod_mail.subject, mod_mail_path(mod_mail) %></td>
         <td>
           <%= inline_avatar_for @user, last_message.user %>
-          <%= styled_user_link last_message.user, last_message %>
+          <%= styled_user_link last_message.user, last_message %> <%= you_invited you: @user, user: last_message.user %>
         </td>
         <td><%= how_long_ago_label(last_message.created_at) %></td>
       </tr>

@@ -99,7 +99,7 @@
               <span class="byline">
                 <span>&nbsp;</span>
                 <%= inline_avatar_for @user, ms.user %>
-                <%= styled_user_link ms.user, ms, class: ['u-author', 'h-card'] %>
+                <%= styled_user_link ms.user, ms, class: ['u-author', 'h-card'] %> <%= you_invited you: @user, user: ms.user %>
 
                 <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
                   <%= divider_tag %>

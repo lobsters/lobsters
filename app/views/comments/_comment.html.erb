@@ -47,6 +47,7 @@
       <span class="<%= @showing_user == comment.user ? "showing-user-comment" : nil %>">
         <%= inline_avatar_for @user, comment.user %>
         <%= styled_user_link comment.user, comment %>
+        <%= you_invited you: @user, user: comment.user %>
 
         <% if comment.hat %>
           <%= styled_hat(comment.hat) %>

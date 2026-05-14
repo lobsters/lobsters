@@ -64,8 +64,7 @@ group :test, :development do
   gem "active_record_doctor"
   gem "benchmark-perf"
   gem "brakeman"
-  gem "pry-byebug"
-  gem "pry-rails"
+  gem "debug"
   gem "capybara"
   gem "crass"
   gem "database_cleaner"
@@ -75,7 +74,6 @@ group :test, :development do
   gem "letter_opener"
   gem "listen"
   gem "ostruct" # for foreman on Ruby 4, probably safe to delete after 2026-06
-  gem "rb-readline"
   gem "rspec-rails"
   gem "simplecov", require: false
   gem "standard"

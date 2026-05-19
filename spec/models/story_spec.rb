@@ -404,20 +404,21 @@ describe Story do
   describe "update_score_and_recalculate" do
     let(:story) { create(:story) }
 
-    it "deducts from score when users hide and flag" do
+    it "deducts from score when users flag" do
       expect(story.score).to eq(1) # from submitter's upvote
-      hider = create(:user)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, nil, hider.id, "S")
-      HiddenStory.hide_story_for_user(story, hider)
+      flagger = create(:user)
+      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, nil, flagger.id, "S")
       expect(story.reload.score).to eq(0)
+      expect(story.reload.flags).to eq(1)
     end
 
-    it "doesn't deduct from score if hiding user commented" do
+    it "doesn't deduct from score if flagging user commented" do
       expect(story.score).to eq(1) # from submitter's upvote
-      hider = create(:user)
-      create(:comment, story: story, user: hider)
-      HiddenStory.hide_story_for_user(story, hider)
+      flagger = create(:user)
+      create(:comment, story: story, user: flagger)
+      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, nil, flagger.id, "S")
       expect(story.reload.score).to eq(1)
+      expect(story.reload.flags).to eq(0)
     end
 
     it "doesn't deduct from score if hiding user didn't flag" do
@@ -425,6 +426,7 @@ describe Story do
       hider = create(:user)
       HiddenStory.hide_story_for_user(story, hider)
       expect(story.reload.score).to eq(1)
+      expect(story.reload.flags).to eq(0)
     end
   end
 

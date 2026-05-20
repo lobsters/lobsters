@@ -140,8 +140,10 @@ RSpec.feature "Commenting" do
 
     it "redirects /c/shortid to merged stories with anchor" do
       parent = create(:story, title: "parent")
-      merged = create(:story, merged_into_story: parent, title: "merged")
+      merged = create(:story, title: "merged")
       comment = create(:comment, story: merged)
+      merged.merged_into_story = parent
+      merged.save!
 
       visit "/c/#{comment.short_id}"
       expect(current_url).to eq("http://www.example.com/s/#{parent.short_id}/parent#c_#{comment.short_id}")

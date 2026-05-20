@@ -54,8 +54,13 @@ RSpec.feature "Reading Stories", type: :feature do
     end
 
     it "shows comments from merged story" do
+      merged.merged_into_story = nil
+      merged.save!
+
       merged_comment = create(:comment, story: merged)
       merged_reply = create(:comment, story: merged, parent_comment: merged_comment)
+      merged.merged_into_story = story
+      merged.save!
       visit Routes.title_path story
 
       expect(page).to have_content(merged_comment.comment)

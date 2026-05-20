@@ -296,7 +296,8 @@ class Story < ApplicationRecord
   def accepting_comments?
     !is_gone? &&
       !previewing &&
-      (new_record? || created_at.after?(COMMENTABLE_DAYS.days.ago))
+      (new_record? || created_at.after?(COMMENTABLE_DAYS.days.ago)) &&
+      !merged_story_id
   end
 
   def already_posted_recently?

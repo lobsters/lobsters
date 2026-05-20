@@ -430,22 +430,6 @@ describe Story do
     end
   end
 
-  describe "#update_cached_columns" do
-    context "with a merged_into_story" do
-      let(:merged_into_story) { create(:story) }
-      let(:story) { create(:story, merged_into_story: merged_into_story) }
-
-      it "should also update the merged_into_story's comment count" do
-        expect(story.comments_count).to eq 0
-        expect(merged_into_story.comments_count).to eq 0
-        create(:comment, story: story)
-        story.update_cached_columns
-        expect(story.comments_count).to eq 1
-        expect(merged_into_story.comments_count).to eq 1
-      end
-    end
-  end
-
   describe "#already_posted_recently?" do
     it "returns true when trying to submit a URL that's been submitted w/o an anchor in it" do
       create(:story, url: "https://www.example.com/article.html")

@@ -79,81 +79,6 @@
 
 <% if !@story.previewing %>
   <% @merged_stories.select { it.can_be_seen_by_user?(@user) }.each do |ms| %>
-    <% if @story.stories_count > 0 %>
-      <ol class="stories">
-        <li class="story">
-          <div class="story_liner h-entry">
-            <div class="voters">
-              <span class="merge"></span>
-            </div>
-            <div class="details" id="<%= ms.comments_anchor %>">
-              <span role="heading" aria-level="2" class="link h-cite u-repost-of">
-                <% if ms.can_be_seen_by_user?(@user) %>
-                  <a class="u-url" href="<%= Routes.url_or_comments_path(ms) %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>"><%= ms.title %></a>
-                <% end %>
-                <% if ms.is_gone? %>
-                  [Story removed by <%= ms.is_moderated? ? "moderator" : "submitter" %>]
-                <% end %>
-              </span>
-
-              <span class="byline">
-                <span>&nbsp;</span>
-                <%= inline_avatar_for @user, ms.user %>
-                <%= styled_user_link ms.user, ms, class: ['u-author', 'h-card'] %> <%= you_invited you: @user, user: ms.user %>
-
-                <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
-                  <%= divider_tag %>
-                  <details class="caches" name="caches">
-                    <summary>caches</summary>
-                    <ul>
-                      <li><a href="<%= ms.archiveorg_url %>">Archive.org</a></li>
-                      <li><a href="<%= ms.ghost_url %>">Ghostarchive</a></li>
-                    </ul>
-                  </details>
-                <% end %>
-
-                <%= divider_tag %>
-                <span class="comments_label">
-                  <% if ms.comments_count == 0 %>
-                    no comments
-                  <% else %>
-                    <%= ms.comments_count %> <%= 'comment'.pluralize(ms.comments_count) %>
-                  <% end %>
-                </span>
-              </span>
-            </div>
-          </div>
-        </li>
-      </ol>
-
-      <div class="story_content">
-        <% if ms.markeddown_description.present? %>
-          <div class="story_text">
-          <%= raw ms.markeddown_description %>
-          </div>
-        <% end %>
-
-        <% if ms.is_unavailable %>
-          <% StoryText.cached?(ms) do |text| %>
-            <details>
-              <summary>Source URL considered unavailable as of <%= how_long_ago_label(ms.unavailable_at) %>, click for cached text - also see archive links above</summary>
-
-              <p>
-              <em>All story content copyright of its respective owner.</em>
-              </p>
-
-              <div class="story_text">
-                <blockquote>
-                  <%= simple_format(text) %>
-                </blockquote>
-              </div>
-            </details>
-
-          <% end %>
-        <% end %>
-      </div>
-    <% end %>
-
     <ol class="comments comments1">
       <%# deliberately checking the top-level story, either all have comment forms or none do, less confusing %>
       <% if ms.accepting_comments? %>
@@ -161,9 +86,9 @@
       <% end %>
 
       <li class="comments_subtree" id="story_comments">
-        <% if @user && @comments.size > 0 %>
+        <% if @user && @comments.size > 0 && ms == @merged_stories.first %>
           <div class="thread_summary">
-            <%= pluralize(@comments.select { it.story_id == ms.id }.size, "comment") %>,
+            <%= pluralize(ms.comments_count, "comment") %>,
             <% unread = @ribbon.unread_count(@comments.select { it.story_id == ms.id }) %>
             <% if @ribbon.new_record? %>
               all unread

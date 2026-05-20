@@ -129,6 +129,7 @@ classes = [
             </details>
         <% end %>
 
+        <% if ms == merged_stories.first %>
           <span class="comments_label">
             <%= divider_tag %>
             <a role="heading" aria-level="2" href="<%= Routes.title_path(merged_stories.first, anchor: ms.comments_anchor) %>">
@@ -136,6 +137,7 @@ classes = [
               <%= 'comment'.pluralize(ms.comments_count) %>
             </a>
           </span>
+        <% end %>
 
           <% if ((@user&.is_moderator? && ms.flags > 0) || (ms.flags >= 3 || ms.score <= 0)) %>
             <span> <%= divider_tag %><%= ms.vote_summary_for(@user).downcase %> </span>
@@ -148,14 +150,6 @@ classes = [
   <% if merged_stories.count > 1 %>
     <div class="details byline">
       <span class="merge"><%= merged_stories.count %> merged</span>
-
-      <% if !merged_stories.first.is_gone? || @user&.is_moderator? %>
-        <span class="comments_label">
-          <%= divider_tag %>
-          <% cc = merged_stories.map(&:comments_count).sum %>
-          <%= (cc == 0) ? "no" : "total: #{cc}" %> <%= 'comment'.pluralize(cc) %>
-        </span>
-      <% end %>
     </div>
   <% end %>
 

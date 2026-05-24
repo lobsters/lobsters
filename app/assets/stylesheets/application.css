@@ -585,6 +585,11 @@ supports it:  https://caniuse.com/?search=%3Ahas
 	border-radius: 8px;
 }
 
+.comments_subtree:target {
+	background: transparent;
+	border-radius: 0;
+}
+
 .showing-user-comment {
 	background-color: var(--color-bg-target);
 	border-radius: 8px;

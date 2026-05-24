@@ -113,13 +113,13 @@
                 <% end %>
 
                 <%= divider_tag %>
-                <span class="comments_label">
+                <a href="#comments-<%= ms.short_id %>">
                   <% if ms.comments_count == 0 %>
                     no comments
                   <% else %>
                     <%= ms.comments_count %> <%= 'comment'.pluralize(ms.comments_count) %>
                   <% end %>
-                </span>
+                </a>
               </span>
             </div>
           </div>
@@ -160,7 +160,7 @@
         <li class="comments_subtree"><%= render partial: "comments/commentbox", locals: { comment: ms.comments.build, story: ms } %></li>
       <% end %>
 
-      <li class="comments_subtree" id="story_comments">
+      <li class="comments_subtree" id="<%= "comments-#{ms.short_id}" %>">
         <% if @user && @comments.size > 0 %>
           <div class="thread_summary">
             <%= pluralize(@comments.select { it.story_id == ms.id }.size, "comment") %>,

@@ -30,6 +30,7 @@ class Vote < ApplicationRecord
     "T" => "Troll",
     "U" => "Unkind",
     "S" => "Spam",
+    "P" => "Personal-attack",
     "" => "Cancel"
   }.freeze
   ALL_COMMENT_REASONS = COMMENT_REASONS.merge({

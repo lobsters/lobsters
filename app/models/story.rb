@@ -1266,6 +1266,12 @@ class Story < ApplicationRecord
     end
   end
 
+  def self.title_minimum_length
+    validators_on(:title)
+      .find { |v| v.is_a? ActiveRecord::Validations::LengthValidator }
+      .options[:minimum]
+  end
+
   def self.title_maximum_length
     validators_on(:title)
       .find { |v| v.is_a? ActiveRecord::Validations::LengthValidator }

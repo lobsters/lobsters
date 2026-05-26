@@ -542,6 +542,12 @@ ol.stories li.story div.story_liner {
 	color: var(--color-fg-contrast-7-5);
 }
 
+.comment .user_is_submitter::after {
+	content: " [OP]"/"";
+	font-size: var(--font-size-tags);
+	vertical-align: top;
+}
+
 ol.stories li:first-child div.story_liner {
 	padding-top: 0.5em;
 }

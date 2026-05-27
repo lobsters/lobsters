@@ -1,4 +1,7 @@
 log disk-log {
-  output file /home/deploy/lobsters/shared/log/caddy.log
+  # let logrotate manage rotation
+  output file /home/deploy/lobsters/shared/log/caddy.log {
+    roll_disabled
+  }
   format json
 }

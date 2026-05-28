@@ -3,13 +3,15 @@ User.create!(
   username: "System",
   email: "system@example.com",
   password: pwd,
-  password_confirmation: pwd
+  password_confirmation: pwd,
+  created_at: User::NEW_USER_DAYS.days.ago
 )
 User.create!(
   username: "inactive-user",
   email: "inactive-user@example.com",
   password: pwd,
-  password_confirmation: pwd
+  password_confirmation: pwd,
+  created_at: User::NEW_USER_DAYS.days.ago
 )
 
 User.create!(

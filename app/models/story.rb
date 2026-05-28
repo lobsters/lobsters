@@ -697,7 +697,7 @@ class Story < ApplicationRecord
     update_query = <<~SQL
       UPDATE stories SET
         score = (
-          select sum(vote) from votes where story_id = stories.id and comment_id is null and (
+          select coalesce(sum(vote), 0) from votes where story_id = stories.id and comment_id is null and (
             (vote = 1) or
             (
               vote = -1 and

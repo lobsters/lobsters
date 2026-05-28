@@ -759,7 +759,7 @@ describe Story do
   end
 
   describe ".title_maximum_length" do
-    subject { Story.title_maximum_length }
+    subject { Story::TITLE_MAX_LENGTH }
 
     it { is_expected.to eq(150) }
   end

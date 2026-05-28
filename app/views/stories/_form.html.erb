@@ -23,7 +23,7 @@
 
   <div class="boxline">
     <%= f.label :title, "Title" %>
-    <%= f.text_field :title, required: true, minlength: Story.title_minimum_length, maxlength: Story.title_maximum_length %>
+    <%= f.text_field :title, required: true, minlength: Story::TITLE_MIN_LENGTH, maxlength: Story::TITLE_MAX_LENGTH %>
     <p class="actions title-reminder">
       Please remove extraneous components from titles such as the name of the site, blog, section, and author.
       <span class="title-reminder-thanks">

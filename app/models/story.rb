@@ -692,21 +692,23 @@ class Story < ApplicationRecord
     self.flags += flag_delta
     Story.connection.execute <<~SQL
       UPDATE stories SET
-        score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -
-        -- subtract number of hidings where hider flagged AND didn't comment (comment voting is ignored)
-        (
-          select count(*) from hidden_stories hiding
-          where
-            story_id = #{id.to_i}
-            and hiding.created_at >= str_to_date('#{(created_at - FLAGGABLE_DAYS.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')
-            and exists (    -- user flagged
-              select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1
+        score = (
+          select sum(vote) from votes where story_id = stories.id and comment_id is null and (
+            (vote = 1) or
+            (
+              vote = -1 and
+              not exists ( -- user didn't comment
+                select 1 from comments where votes.user_id = comments.user_id and comments.story_id = stories.id
+              )
             )
-            and not exists ( -- user didn't comment
-              select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id
-            )
+          )
         ),
-        flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),
+        flags = (select count(*) from votes where story_id = stories.id and comment_id is null and
+          vote = -1 and
+          not exists ( -- user didn't comment
+            select 1 from comments where votes.user_id = comments.user_id and comments.story_id = stories.id
+          )
+        ),
         hotness = #{calculated_hotness}
       WHERE id = #{id.to_i}
     SQL
@@ -973,15 +975,15 @@ class Story < ApplicationRecord
       .split("_")
       .reject { |z| TITLE_DROP_WORDS.include?(z) }
       .each do |w|
-      if wl + w.length <= max_len
-        words.push w
-        wl += w.length
-      else
-        if wl == 0
-          words.push w[0, max_len]
+        if wl + w.length <= max_len
+          words.push w
+          wl += w.length
+        else
+          if wl == 0
+            words.push w[0, max_len]
+          end
+          break
         end
-        break
-      end
     end
 
     if words.empty?

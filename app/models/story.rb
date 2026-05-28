@@ -205,7 +205,10 @@ class Story < ApplicationRecord
 
   include Token
 
-  validates :title, length: {in: 3..150}, presence: true
+  TITLE_MIN_LENGTH = 3
+  TITLE_MAX_LENGTH = 150
+
+  validates :title, length: {in: TITLE_MIN_LENGTH..TITLE_MAX_LENGTH}, presence: true
   validates :description, length: {maximum: 65_535}
   validates :url, length: {maximum: 250, allow_nil: true}
   validates :short_id, presence: true, length: {maximum: 6}
@@ -1359,18 +1362,6 @@ class Story < ApplicationRecord
     rescue
       @fetched_attributes
     end
-  end
-
-  def self.title_minimum_length
-    validators_on(:title)
-      .find { |v| v.is_a? ActiveRecord::Validations::LengthValidator }
-      .options[:minimum]
-  end
-
-  def self.title_maximum_length
-    validators_on(:title)
-      .find { |v| v.is_a? ActiveRecord::Validations::LengthValidator }
-      .options[:maximum]
   end
 
   private

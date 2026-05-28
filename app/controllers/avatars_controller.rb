@@ -24,10 +24,6 @@ class AvatarsController < ApplicationController
     redirect_to "/settings"
   end
 
-  def content_type_for(data)
-    data.start_with?("\xFF\xD8\xFF".b) ? "image/jpeg" : "image/png"
-  end
-
   def show
     username, size = params[:username_size].to_s.scan(/\A(.+)-(\d+)\z/).first
     size = size.to_i
@@ -60,5 +56,11 @@ class AvatarsController < ApplicationController
 
     response.headers["Expires"] = 1.hour.from_now.httpdate
     send_data av, type: content_type_for(av), disposition: "inline"
+  end
+
+  private
+
+  def content_type_for(data)
+    data.start_with?("\xFF\xD8\xFF".b) ? "image/jpeg" : "image/png"
   end
 end

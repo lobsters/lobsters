@@ -974,15 +974,15 @@ class Story < ApplicationRecord
       .split("_")
       .reject { |z| TITLE_DROP_WORDS.include?(z) }
       .each do |w|
-        if wl + w.length <= max_len
-          words.push w
-          wl += w.length
-        else
-          if wl == 0
-            words.push w[0, max_len]
-          end
-          break
+      if wl + w.length <= max_len
+        words.push w
+        wl += w.length
+      else
+        if wl == 0
+          words.push w[0, max_len]
         end
+        break
+      end
     end
 
     if words.empty?

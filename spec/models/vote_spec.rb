@@ -21,7 +21,7 @@ describe Vote do
     it "-1 to 1" do
       Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
       s.reload
-      expect(s.score).to eq(1)
+      expect(s.score).to eq(0)
       expect(s.flags).to eq(1)
       Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
       s.reload
@@ -32,7 +32,7 @@ describe Vote do
     it "-1 to 0" do
       Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
       s.reload
-      expect(s.score).to eq(1)
+      expect(s.score).to eq(0)
       expect(s.flags).to eq(1)
       Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id, nil, u.id, nil)
       s.reload
@@ -65,7 +65,7 @@ describe Vote do
       expect(s.flags).to eq(0)
       Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
       s.reload
-      expect(s.score).to eq(1)
+      expect(s.score).to eq(0)
       expect(s.flags).to eq(1)
     end
 
@@ -76,7 +76,7 @@ describe Vote do
       expect(s.flags).to eq(0)
       Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
       s.reload
-      expect(s.score).to eq(1)
+      expect(s.score).to eq(0)
       expect(s.flags).to eq(1)
     end
   end

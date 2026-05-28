@@ -3,25 +3,25 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "01fb46929f85689fc7a2696d605c5a4e1a25fb137aa22b885ee3487a88156eec",
+      "fingerprint": "00a8c3982cfd9ba224d123185581f725272b51dedb17af70a55a0664bc6c9e90",
       "check_name": "SQL",
       "message": "Possible SQL injection",
-      "file": "app/models/story.rb",
-      "line": 711,
+      "file": "app/models/full_text_search.rb",
+      "line": 15,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Story.connection.execute(\"UPDATE stories SET\\n  score = (\\n    select sum(vote) from votes where story_id = stories.id and comment_id is null and (\\n      (vote = 1) or\\n      (\\n        vote = -1 and\\n        not exists ( -- user didn't comment\\n          select 1 from comments where votes.user_id = comments.user_id and comments.story_id = stories.id\\n        )\\n      )\\n    )\\n  ),\\n  flags = (select count(*) from votes where story_id = stories.id and comment_id is null and\\n    vote = -1 and\\n    not exists ( -- user didn't comment\\n      select 1 from comments where votes.user_id = comments.user_id and comments.story_id = stories.id\\n    )\\n  ),\\n  hotness = #{calculated_hotness}\\nWHERE id = #{id.to_i}\\n\")",
+      "code": "ActiveRecord::Base.connection.exec_insert(\"INSERT INTO #{\"#{record.class.table_name}_fts\"} (rowid, #{cols.join(\", \")}) values (?, #{([\"?\"] * cols.length).join(\", \")})\", nil, ([record.id] + cols.map do\n record.public_send(c)\n end))",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "Story",
-        "method": "update_score_and_recalculate!"
+        "class": "FullTextSearch",
+        "method": "FullTextSearch.[]"
       },
-      "user_input": "calculated_hotness",
+      "user_input": "cols.join(\", \")",
       "confidence": "Medium",
       "cwe_id": [
         89
       ],
-      "note": "safe, is a float"
+      "note": "cols is not a user specified value"
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -129,7 +129,7 @@
           "type": "controller",
           "class": "StoriesController",
           "method": "check_url_dupe",
-          "line": 426,
+          "line": 427,
           "file": "app/controllers/stories_controller.rb",
           "rendered": {
             "name": "stories/_form_errors",
@@ -269,7 +269,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/users_controller.rb",
-      "line": 150,
+      "line": 148,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.exec_query(\"\\n      select\\n        n_flags, count(*) as n_users\\n      from (\\n        select\\n          comments.user_id, sum(flags) as n_flags\\n        from\\n          comments\\n        where\\n          comments.created_at >= datetime('now', '-#{time_interval(\"1m\")[:dur]} #{time_interval(\"1m\")[:intv]}')\\n        group by comments.user_id) count_by_user\\n      group by 1\\n      order by 1 asc;\\n    \")",
       "render_path": null,
@@ -508,34 +508,11 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "6809b3722a2d39223bec0abf2b02358b3149e322261a2b40afe3bfee65528220",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/search.rb",
-      "line": 310,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Arel.sql(\"#{[].first} desc\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Search",
-        "method": "perform_story_search!"
-      },
-      "user_input": "[].first",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "sanitized term"
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
       "fingerprint": "811cfe3483c201ecedd2498c7e2ac07d06f53b12dd962c57e431407998df165a",
       "check_name": "SQL",
       "message": "Possible SQL injection",
-      "file": "app/controllers/mod/mod_controller.rb",
-      "line": 16,
+      "file": "app/models/full_text_search.rb",
+      "line": 29,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.exec_update(\"UPDATE #{\"#{record.class.table_name}_fts\"} set #{cols.map do\n \"#{c} = ?\"\n end.join(\", \")} where rowid = ?\", nil, (cols.map do\n record.public_send(c)\n end + [record.id]))",
       "render_path": null,
@@ -550,29 +527,6 @@
         89
       ],
       "note": "IntervalHelper#time_interval is a security control"
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "a245ef32a60feecfaf39de68bfb0ddb93f8034936f733f5e5326897ffad3a47c",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/comment.rb",
-      "line": 359,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Comment.connection.execute(\"UPDATE comments SET\\n  score = (select coalesce(sum(vote), 0) from votes where comment_id = comments.id),\\n  flags = (select count(*) from votes where comment_id = comments.id and vote = -1),\\n  confidence = #{calculated_confidence},\\n  confidence_order = concat(lpad(char(65535 - floor(#{calculated_confidence} * 65535) using binary), 2, '\\x00'), char(id & 0xff using binary))\\nWHERE id = #{id.to_i}\\n\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Comment",
-        "method": "update_score_and_recalculate!"
-      },
-      "user_input": "calculated_confidence",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "calculated_confidence is a float and no user input is possible"
     },
     {
       "warning_type": "File Access",
@@ -626,8 +580,8 @@
       "fingerprint": "b7b38263d53adbf429b0ab4aff64a4739b1b8cd26d81347a0565322561c8a022",
       "check_name": "SQL",
       "message": "Possible SQL injection",
-      "file": "app/controllers/users_controller.rb",
-      "line": 148,
+      "file": "app/models/story.rb",
+      "line": 106,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "base(user).where(\"created_at >= datetime('now', '-#{length[:dur]} #{length[:intv].upcase}')\")",
       "render_path": null,
@@ -745,29 +699,6 @@
       "note": "Rendered markdown."
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "da2f97fde431a750254179b7afe87790344ca451fbbc25ddf9e926d30c6b41e2",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/story.rb",
-      "line": 106,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "base(user).where(\"created_at >= (NOW() - INTERVAL ? #{length[:intv].upcase})\", length[:dur])",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Story",
-        "method": "top"
-      },
-      "user_input": "length[:intv].upcase",
-      "confidence": "Weak",
-      "cwe_id": [
-        89
-      ],
-      "note": "IntervalHelper#time_interval is a security control"
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "e92e4fe6b8799de8cc9a894252b10a90391ce5ca00724b2d6e5b7b54ce065c89",
@@ -823,6 +754,29 @@
         89
       ],
       "note": "these are integers returned by other queries in the class"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "f758ba6d8ba52d8f1063490bb081ab2117d637503e3cc98308a521db1f9b51c6",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/mod/mod_controller.rb",
+      "line": 15,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "query.where(\"#{query.model.table_name}.created_at >= datetime('now', '-#{time_interval((params[:period] or default_periods.first))[:dur]} #{time_interval((params[:period] or default_periods.first))[:intv]}')\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Mod::ModController",
+        "method": "period"
+      },
+      "user_input": "params[:period]",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "period is a prespecified value"
     }
   ],
   "brakeman_version": "8.0.4"

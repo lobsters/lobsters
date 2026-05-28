@@ -63,6 +63,9 @@ newaliases
 cp syslog.conf  /usr/lib/systemd/journald.conf.d/
 systemctl force-reload systemd-journald
 
+# keep Caddy's per-request access logs out of journald (they're in caddy.log).
+cp caddy-no-access-journal.conf /etc/systemd/system/caddy.service.d/
+
 # pick up changes to opendkim, root-deploy.service, and root-deploy.path
 systemctl daemon-reload
 systemctl enable --now opendkim

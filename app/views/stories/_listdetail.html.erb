@@ -72,7 +72,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <span> via </span>
         <% end %>
 
-        <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %>
+        <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %> <%= you_invited you: @user, user: story.user %>
         <span> just now </span>
       <% else %>
         <% if story.user_is_author? %>
@@ -80,7 +80,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
         <% else %>
           <span> via </span>
         <% end %>
-        <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %>
+        <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %> <%= you_invited you: @user, user: story.user %>
 
         <%= how_long_ago_label(story.created_at) %>
 

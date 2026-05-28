@@ -928,7 +928,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   on('click', 'button.comment-cancel', (event) => {
-    const comment = (parentSelector(event.target, '.comment'));
+    const comment = (parentSelector(event.target, '.reply_form_temporary'));
     const commentId = comment.getAttribute('data-shortid');
     if (commentId !== null && commentId !== '') {
       fetch('/comments/' + commentId + '?show_tree_lines=true')

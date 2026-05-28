@@ -56,14 +56,15 @@ module UsersHelper
     end
     html_options.delete(:class) if html_options[:class].empty?
 
-    safe_join([
-      link_to(user.username, user_path(user), html_options),
-      if @user && user.recently_invited_by?(@user)
-        tag.span(class: "you_invited") do
-          "(you invited)"
-        end
-      end
-    ].compact, " ")
+    link_to(user.username, user_path(user), html_options)
+  end
+
+  def you_invited you:, user:
+    return unless you && user.recently_invited_by?(you)
+
+    tag.span(class: "you_invited") do
+      "(you invited)"
+    end
   end
 
   def user_karma(user)

@@ -696,25 +696,27 @@ class Story < ApplicationRecord
     self.flags += flag_delta
     update_query = <<~SQL
       UPDATE stories SET
-        score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -
-        -- subtract number of hidings where hider flagged AND didn't comment (comment voting is ignored)
-        (
-          select count(*) from hidden_stories hiding
-          where
-            story_id = ?
-            and hiding.created_at >= datetime(?)
-            and exists (    -- user flagged
-              select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1
+        score = (
+          select sum(vote) from votes where story_id = stories.id and comment_id is null and (
+            (vote = 1) or
+            (
+              vote = -1 and
+              not exists ( -- user didn't comment
+                select 1 from comments where votes.user_id = comments.user_id and comments.story_id = stories.id
+              )
             )
-            and not exists ( -- user didn't comment
-              select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id
-            )
+          )
         ),
-        flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),
+        flags = (select count(*) from votes where story_id = stories.id and comment_id is null and
+          vote = -1 and
+          not exists ( -- user didn't comment
+            select 1 from comments where votes.user_id = comments.user_id and comments.story_id = stories.id
+          )
+        ),
         hotness = ?
       WHERE id = ?
     SQL
-    Story.connection.exec_update(update_query, nil, [id, (created_at - FLAGGABLE_DAYS.days).utc.iso8601, calculated_hotness, id])
+    Story.connection.exec_update(update_query, nil, [calculated_hotness, id])
   end
 
   def has_suggestions?

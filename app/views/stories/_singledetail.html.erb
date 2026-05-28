@@ -53,7 +53,7 @@ classes = [
       <div class="byline">
         <span><%= ms.user_is_author? ? "authored by" : "via" %></span>
         <%= inline_avatar_for @user, ms.user %>
-        <%= styled_user_link ms.user, ms, class: ['u-author', 'h-card'] %>
+        <%= styled_user_link ms.user, ms, class: ['u-author', 'h-card'] %> <%= you_invited you: @user, user: ms.user %>
 
         <% if ms.previewing %>
           <span>just now</span>

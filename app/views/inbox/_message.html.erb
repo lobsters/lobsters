@@ -3,7 +3,7 @@
   <div class="details">
     <div class="byline">
       <% if message.author %>
-        <%= inline_avatar_for @user, message.author %> <%= styled_user_link message.author %>
+        <%= inline_avatar_for @user, message.author %> <%= styled_user_link message.author %> <%= you_invited you: @user, user: message.author %>
       <% else %>
         <%= message.author_username %>
       <% end %>

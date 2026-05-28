@@ -306,7 +306,7 @@ class HomeController < ApplicationController
     end
 
     @stories, @show_more = get_from_cache(top: true, length: length) {
-      paginate Story.top(@user, length)
+      paginate Story.top(@user, length, filtered_tags.map(&:id))
     }
 
     @title = "Top Stories of the Past #{length[:human]}"

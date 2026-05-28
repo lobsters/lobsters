@@ -99,11 +99,12 @@ class Story < ApplicationRecord
       .order(created_at: :desc)
   }
 
-  scope :top, ->(user, length) {
+  scope :top, ->(user, length, exclude_tags = nil) {
     raise ArgumentError, "Invalid interval" unless IntervalHelper::TIME_INTERVALS.value?(length[:intv].capitalize)
 
     top = base(user)
       .where("created_at >= datetime('now', '-#{length[:dur]} #{length[:intv].upcase}')")
+      .filter_tags(exclude_tags || [])
     top.order(score: :desc)
   }
 
@@ -1270,6 +1271,12 @@ class Story < ApplicationRecord
     rescue
       @fetched_attributes
     end
+  end
+
+  def self.title_minimum_length
+    validators_on(:title)
+      .find { |v| v.is_a? ActiveRecord::Validations::LengthValidator }
+      .options[:minimum]
   end
 
   def self.title_maximum_length

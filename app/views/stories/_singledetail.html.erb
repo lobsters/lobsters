@@ -131,7 +131,7 @@ classes = [
 
           <span class="comments_label">
             <%= divider_tag %>
-            <a role="heading" aria-level="2" href="<%= Routes.title_path(merged_stories.first, anchor: ms.comments_anchor) %>">
+            <a role="heading" aria-level="2" href="<%= merged_stories.count > 1 ? Routes.title_path(merged_stories.first, anchor: ms.comments_anchor) : "#comments-#{merged_stories.first.short_id}" %>">
               <%= ms.comments_count.zero? ? "no" : ms.comments_count %>
               <%= 'comment'.pluralize(ms.comments_count) %>
             </a>

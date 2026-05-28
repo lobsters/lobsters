@@ -178,25 +178,25 @@
           Users can flag stories and comments when there is a problem that needs moderator attention.
           If a story or comment is flagged at least twice, it is added to the moderation review queue.
           Note that, at any time users can always <a href="/moderators">contact a moderator</a> about issues they perceive surrounding content on the site.
-  
+
           To guide usage and head off distracting meta-conversations ("Why was this flagged!?", etc), flagging requires selecting from a preset list of reasons.
           Users must reach <%= User::MIN_KARMA_TO_FLAG %> karma to flag.
       </p>
-  
+
       <p>
           For stories, these are:
-  
+
           <ul>
-              <li><b>Off-topic</b> which should be used when stores which do meet the site's definition of <a href="#topicality">topicality</a>.</li>
+              <li><b>Off-topic</b> which should be used when stories do not meet the site's definition of <a href="#topicality">topicality</a>.</li>
               <li><b>Already Posted</b> which should be used when there is a duplicate submission on the same topic or submissions which elaborate on another submission that is less than a week old (see <a href="#merging">merging</a>).</li>
               <li><b>Broken Link</b> which should be used for links that present a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">client or server error response</a> or present a "paywall" which requires registration or payment to pass.</li>
               <li><b>Spam</b> which should be used for content that either is designed to promote a commercial service or for content that is created without meaningful human authorship.</li>
           </ul>
       </p>
-  
+
       <p>
           For comments, these are:
-  
+
           <ul>
               <li><b>Off-topic</b> which should be used when a comment is drifting into meta or topics that aren't related to the story.</li>
               <li><b>Me-too</b> which should be used when a comment doesn't add new information, typically a single sentence of appreciation, agreement, or humor.</li>

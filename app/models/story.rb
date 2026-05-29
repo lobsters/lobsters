@@ -103,7 +103,7 @@ class Story < ApplicationRecord
     raise ArgumentError, "Invalid interval" unless IntervalHelper::TIME_INTERVALS.value?(length[:intv].capitalize)
 
     top = base(user)
-      .where("created_at >= (NOW() - INTERVAL ? #{length[:intv].upcase})", length[:dur])
+      .where("created_at >= datetime('now', '-#{length[:dur]} #{length[:intv].upcase}')")
       .filter_tags(exclude_tags || [])
     top.order(score: :desc)
   }
@@ -201,6 +201,11 @@ class Story < ApplicationRecord
       .not_deleted(user)
       .mod_preload?(user)
       .order(id: :desc)
+  }
+
+  scope :search, ->(query) {
+    joins("join story_texts_fts idx on stories.id = idx.rowid")
+      .where("story_texts_fts match ?", query)
   }
 
   include Token
@@ -690,10 +695,10 @@ class Story < ApplicationRecord
   def update_score_and_recalculate!(score_delta, flag_delta)
     self.score += score_delta
     self.flags += flag_delta
-    Story.connection.execute <<~SQL
+    update_query = <<~SQL
       UPDATE stories SET
         score = (
-          select sum(vote) from votes where story_id = stories.id and comment_id is null and (
+          select coalesce(sum(vote), 0) from votes where story_id = stories.id and comment_id is null and (
             (vote = 1) or
             (
               vote = -1 and
@@ -709,9 +714,10 @@ class Story < ApplicationRecord
             select 1 from comments where votes.user_id = comments.user_id and comments.story_id = stories.id
           )
         ),
-        hotness = #{calculated_hotness}
-      WHERE id = #{id.to_i}
+        hotness = ?
+      WHERE id = ?
     SQL
+    Story.connection.exec_update(update_query, nil, [calculated_hotness, id])
   end
 
   def has_suggestions?

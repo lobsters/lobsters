@@ -8,6 +8,8 @@ class StoryText < ApplicationRecord
   validates :title, presence: true, length: {maximum: 150}
   validates :description, :body, length: {maximum: 16_777_215}
 
+  include FullTextSearch[:title, :description, :body]
+
   def body=(s)
     # pass nil, truncate to column limit https://mariadb.com/kb/en/mediumtext/
     super(s ? s[...(2**24 - 1)] : s)

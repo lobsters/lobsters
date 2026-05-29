@@ -599,7 +599,7 @@ class Comment < ApplicationRecord
       on comments.id = discussions.id
     SQL
 
-    Comment.joins(inner_join).order("comments.thread_id desc, discussions.confidence_order_path")
+    Comment.joins(inner_join).where(thread_id: thread_ids).order("comments.thread_id desc, discussions.confidence_order_path")
   end
 
   def self.story_threads(story)

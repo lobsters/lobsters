@@ -605,6 +605,8 @@ class Comment < ApplicationRecord
   def self.story_threads(story)
     return Comment.none unless story.id # unsaved Stories have no comments
 
+    story_ids = [story.id] + Story.where(merged_story_id: story.id).pluck(:id)
+
     inner_join = <<~SQL
       inner join (
         with recursive confidence as (
@@ -613,7 +615,7 @@ class Comment < ApplicationRecord
             cast(confidence_order as blob) as confidence_order_path
             from comments c
             join stories on stories.id = c.story_id
-            where (stories.id = #{story.id} or stories.merged_story_id = #{story.id}) and parent_comment_id is null
+            where stories.id in (#{story_ids.join(", ")}) and parent_comment_id is null
           union all
           select
             c.id,
@@ -625,6 +627,6 @@ class Comment < ApplicationRecord
       on comments.id = confidence.id
     SQL
 
-    Comment.joins(inner_join).order("confidence.confidence_order_path")
+    Comment.joins(inner_join).where(story_id: story_ids).order("confidence.confidence_order_path")
   end
 end

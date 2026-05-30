@@ -2,13 +2,14 @@
 <%= form_with model: [:mod, tag] do |f| %>
   <div class="labelled_grid">
     <%= f.label :tag, 'Name' %>
-    <%= f.text_field :tag, required: true, autocapitalize: :off %>
+    <%= f.text_field :tag, required: true, autocapitalize: :off, pattern: Tag::TAG_FORMAT.source.gsub(/\\A|\\z/,
+ "").sub("-]", "\\-]"), maxlength: Tag::NAME_MAXLENGTH  %>
 
     <%= f.label :category_name, 'Category' %>
     <%= f.select :category_name, options_for_select(Category.pluck(:category), tag.category_name) %>
 
     <%= f.label :description, 'Description' %>
-    <%= f.text_field :description %>
+    <%= f.text_field :description, maxlength: Tag::DESCRIPTION_MAXLENGTH %>
 
     <%= f.label :permit_by_new_users, 'Permit by new users', :class => "for_checkbox" %>
     <%= f.check_box :permit_by_new_users %>

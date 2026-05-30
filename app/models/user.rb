@@ -102,7 +102,7 @@ class User < ApplicationRecord
     s.string :mastodon_instance
     s.string :mastodon_oauth_token
     s.string :mastodon_username
-    s.integer :avatar_preference
+    s.integer :avatar_source
     s.string :homepage
   end
 
@@ -373,7 +373,7 @@ class User < ApplicationRecord
     url = "https://www.gravatar.com/avatar/" <<
       Digest::MD5.hexdigest(email.strip.downcase) <<
       "?r=pg&d=identicon&s=#{size}"
-    if !github_username.blank? && avatar_preference == Avatar.types[:GitHub]
+    if !github_username.blank? && avatar_source == Avatar.types[:GitHub]
       url = "https://www.github.com/" << github_username << ".png?size=#{size}"
     end
 

@@ -14,9 +14,12 @@ class Category < ApplicationRecord
 
   attr_accessor :edit_user_id
 
-  validates :category, length: {maximum: 25}, presence: true,
+  NAME_FORMAT = /\A[A-Za-z0-9_-]+\z/
+  NAME_MAXLENGTH = 25
+
+  validates :category, length: {maximum: NAME_MAXLENGTH}, presence: true,
     uniqueness: {case_sensitive: false},
-    format: {with: /\A[A-Za-z0-9_-]+\z/}
+    format: {with: NAME_FORMAT}
 
   def to_param
     category

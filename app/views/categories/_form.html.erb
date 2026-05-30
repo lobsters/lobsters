@@ -2,7 +2,7 @@
 <%= form_with model: category, url: category.persisted? ? update_category_path : categories_path, method: :post do |f| %>
   <div class="labelled_grid">
     <%= f.label :category, 'Name' %>
-    <%= f.text_field :category, required: true, autocapitalize: :off %>
+    <%= f.text_field :category, required: true, autocapitalize: :off, pattern: Category::NAME_FORMAT.source.gsub(/\\A|\\z/, "").sub("-]", "\\-]"), maxlength: Category::NAME_MAXLENGTH %>
   </div>
 
   <%= f.submit category.persisted? ? 'Update Category' : 'Create Category' %>

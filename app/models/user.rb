@@ -197,6 +197,12 @@ class User < ApplicationRecord
   # minimum number of submitted stories before checking self promotion
   MIN_STORIES_CHECK_SELF_PROMOTION = 2
 
+  # enum for avatar source
+  AVATAR_SOURCES = {
+    Gravatar: 0,
+    GitHub: 1
+  }
+
   def self./(username)
     find_by! username:
   end
@@ -369,11 +375,15 @@ class User < ApplicationRecord
     Keystore.value_for("user:#{id}:comments_deleted").to_i
   end
 
+  def get_avatar_values
+    AVATAR_SOURCES
+  end
+
   def fetched_avatar(size = 100)
     url = "https://www.gravatar.com/avatar/" <<
       Digest::MD5.hexdigest(email.strip.downcase) <<
       "?r=pg&d=identicon&s=#{size}"
-    if !github_username.blank? && avatar_source == Avatar.types[:GitHub]
+    if !github_username.blank? && avatar_source == AVATAR_SOURCES[:GitHub]
       url = "https://www.github.com/" << github_username << ".png?size=#{size}"
     end
 

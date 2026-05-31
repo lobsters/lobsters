@@ -329,7 +329,7 @@ export class _LobstersFunction {
 
           // if comments is .comments1, it is top-level comment: insert it deeper
           if (comments.classList.contains('comments1')) {
-            comments.querySelector('#story_comments .comments').insertAdjacentHTML("afterbegin", text)
+            comments.querySelector('#story_comments').insertAdjacentHTML("afterbegin", text)
           } else {
             comments.insertAdjacentHTML("afterbegin", text)
           }

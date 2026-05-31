@@ -66,15 +66,17 @@ module TrafficHelper
     if time.month == 3 && time.day <= 7 && time.monday?
       return h.content_tag(:a,
         "",
+        aria: {label: "Casimir Pulaski Day"},
         href: "https://en.wikipedia.org/wiki/Casimir_Pulaski_Day",
-        class: "casimir",
         style: "
+          position: absolute;
           width: 17px;
           height: 32px;
           padding: 1px;
           margin-left: -21px;
           margin-bottom: -16px;
-          top: 16px;
+          top: 1px;
+          left: 1.3rem;
           background-image:
             radial-gradient(circle at 18% 63%, var(--color-bg) 15%, transparent 12.8%),
             radial-gradient(circle at 23% 70%, var(--color-fg) 15%, transparent 12.8%),

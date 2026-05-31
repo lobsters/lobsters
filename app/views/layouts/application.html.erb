@@ -61,59 +61,53 @@
   <% end %>
 </head>
 <body data-username='<%= @user.try(:username) %>' data-now-unix='<%= Time.current.to_i  %>'>
-  <header id="nav">
-    <a id="logo" style="<%= @traffic_style %>" href="/" title="<%= Rails.application.name %> (Current traffic: <%= @traffic_intensity.to_i %>%)"></a>
-    <%= @traffic_novelty %>
+  <header id="header">
+    <div id="header-top">
+      <h1 style="<%= @traffic_style %>" id="logo">
+        <a href="/" title="<%= Rails.application.name %> (Current traffic: <%= @traffic_intensity.to_i %>%)">
+          <b class="sr-only" aria-hidden="true"><%= Rails.application.name %></b>
+        </a>
+        <%= @traffic_novelty %>
+      </h1>
 
-    <div class="navholder">
-      <nav class="links">
-        <%= link_to_different_page 'Active', active_path %>
-        <%= link_to_different_page 'Recent', recent_path %>
-        <%= link_to_different_page 'Comments', comments_path %>
+      <nav aria-label="Menu">
+        <ul>
+          <li><%= link_to_different_page 'Active', active_path %></li>
+          <li><%= link_to_different_page 'Recent', recent_path %>
+          <li><%= link_to_different_page 'Comments', comments_path %>
 
-        <% if @user && @user.can_submit_stories? %>
-          <%= link_to_different_page 'Submit', new_story_path %>
-        <% end %>
-
-        <%= link_to_different_page 'Search', search_path %>
-
-
-        <% if @user %>
-          <% if @user.inbox_count > 0 %>
-            <%= link_to raw("Inbox&nbsp;<span class='inbox_unread'>#{@user.inbox_count}</span>"), inbox_path, class: 'inbox corner' %>
-          <% else %>
-            <%= link_to "Inbox", inbox_path, class: 'inbox corner' %>
+          <% if @user && @user.can_submit_stories? %>
+            <li><%= link_to_different_page 'Submit', new_story_path %>
           <% end %>
 
-          <%= link_to_different_page 'Threads', threads_path %>
-          <%= link_to_different_page 'Saved', saved_path %>
-          <%= link_to_different_page raw("#{@user.username}&nbsp;<span class='karma'>(#{@user.karma})</span>"), settings_path %>
-        <% else %>
-          <%= link_to_different_page 'Login', login_path, class: 'corner' %>
-        <% end %>
+          <li><%= link_to_different_page 'Search', search_path %>
+
+
+          <% if @user %>
+            <li class="push-right inbox">
+              <%= link_to inbox_path do %>
+                <% # Make sure two keep those two b in the same line. %>
+                <b>Inbox</b><b aria-hidden="true">✉</b> <% if @user.inbox_count > 0 %>&nbsp;<b class="inbox-unread"><%= @user.inbox_count %></b><% end %>
+              <% end %>
+            </li>
+
+            <li><%= link_to_different_page 'Threads', threads_path %></li>
+            <li><%= link_to_different_page 'Saved', saved_path %></li>
+            <li><%= link_to_different_page raw("#{@user.username}&nbsp;<span class='karma' aria-label='(karma: #{@user.karma})'>(#{@user.karma})</span>"), settings_path %></li>
+          <% else %>
+            <li class="push-right"><%= link_to_different_page 'Login', login_path %></li>
+          <% end %>
+        </ul>
       </nav>
     </div>
 
-    <nav class="corner">
-      <% if @user %>
-        <% if @user.inbox_count > 0 %>
-          <%= link_to raw("&#9993;&nbsp;<span class='inbox_unread'>#{@user.inbox_count}</span>"), inbox_path, class: 'inbox' %>
-        <% else %>
-          <%= link_to raw("&#9993;"), inbox_path, class: 'inbox' %>
-        <% end %>
-      <% else %>
-        <%= link_to 'Login', login_path, class: 'corner' %>
-      <% end %>
-    </nav>
+    <% if content_for? :subnav %>
+      <%= yield :subnav %>
+    <% end %>
+
   </header>
 
-  <% if content_for? :subnav %>
-    <header id="subnav">
-      <%= yield :subnav %>
-    </header>
-  <% end %>
-
-  <div id="inside">
+  <main id="inside">
     <% if @title.present? && @title_h1 %>
       <h1 class="<%= @title_class %>"><%= @title %></h1>
     <% end %>
@@ -125,7 +119,7 @@
     <% end %>
 
     <%= yield %>
-  </div>
+  </main>
 
   <footer>
     <span id="office-hours-live">

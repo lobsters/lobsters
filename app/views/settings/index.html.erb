@@ -1,7 +1,14 @@
 <% content_for :subnav do %>
-  <%= link_to 'Public Profile', @user %>
-  <a href="/filters">Filtered Tags</a> |
-  <%= link_post 'Logout', logout_path, confirm: 'Are you sure you want to logout?' %>
+  <nav id="subnav">
+    <ul>
+      <li class="push-right"><%= link_to "Public Profile", @user %></li>
+      <li><a href="/filters">Filtered Tags</a></li>
+      <li id="logout"><%= link_post "Logout",
+        logout_path,
+        confirm: "Are you sure you want to logout?",
+        class_name: "btn-link" %></li>
+    </ul>
+  </nav>
 <% end %>
 
 <section>

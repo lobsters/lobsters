@@ -553,7 +553,9 @@ describe Story do
         older_story = create(:story)
         newer_story = create(:story)
         older_comment = create(:comment, story: newer_story)
+        newer_story.touch(:last_comment_at)
         newer_comment = create(:comment, story: older_story)
+        older_story.touch(:last_comment_at)
 
         expect(Story.active(user)).to eq([newer_comment.story, older_comment.story])
       end

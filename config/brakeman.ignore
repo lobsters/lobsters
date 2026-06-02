@@ -129,7 +129,7 @@
           "type": "controller",
           "class": "StoriesController",
           "method": "check_url_dupe",
-          "line": 427,
+          "line": 426,
           "file": "app/controllers/stories_controller.rb",
           "rendered": {
             "name": "stories/_form_errors",
@@ -508,6 +508,29 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
+      "fingerprint": "70fb2c23133b3ba2efa0c14ce3844b172a34637faf734620732b11709ee877df",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/comment.rb",
+      "line": 630,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Comment.joins(\"inner join (\\n  with recursive confidence as (\\n    select\\n      c.id,\\n      cast(confidence_order as blob) as confidence_order_path\\n      from comments c\\n      join stories on stories.id = c.story_id\\n      where stories.id in (#{([story.id] + Story.where(:merged_story_id => story.id).pluck(:id)).join(\", \")}) and parent_comment_id is null\\n    union all\\n    select\\n      c.id,\\n      cast(concat(substring(confidence.confidence_order_path, 1, 3 * (depth + 1)), c.confidence_order) as blob)\\n    from comments c join confidence on c.parent_comment_id = confidence.id\\n  )\\n  select * from confidence\\n) confidence\\non comments.id = confidence.id\\n\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Comment",
+        "method": "Comment.story_threads"
+      },
+      "user_input": "Story.where(:merged_story_id => story.id).pluck(:id)",
+      "confidence": "High",
+      "cwe_id": [
+        89
+      ],
+      "note": "Using internal ids which is fine."
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
       "fingerprint": "811cfe3483c201ecedd2498c7e2ac07d06f53b12dd962c57e431407998df165a",
       "check_name": "SQL",
       "message": "Possible SQL injection",
@@ -581,7 +604,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story.rb",
-      "line": 106,
+      "line": 108,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "base(user).where(\"created_at >= datetime('now', '-#{length[:dur]} #{length[:intv].upcase}')\")",
       "render_path": null,

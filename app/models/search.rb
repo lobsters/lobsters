@@ -91,9 +91,15 @@ class Search
   def flatten_title tree
     if tree.keys.first == :term
       ActiveRecord::Base.connection.quote_string(tree.values.first.to_s)
+    elsif tree.keys.first == :shortword
+      ActiveRecord::Base.connection.quote_string(tree.values.first.to_s)
     elsif tree.keys.first == :quoted
       '"' + tree.values.first.map(&:values).flatten.join(" ").gsub("'", "\\\\'") + '"'
     end
+  end
+
+  def title_shortword? tree
+    tree.keys.first == :shortword
   end
 
   # security: must prevent sql injection
@@ -148,6 +154,7 @@ class Search
         tags.or!(Tag.where(tag: value.to_s))
       # TODO unknown tag
       when :title
+        next if title_shortword? value
         title = true
         value = flatten_title value
         query.where!(
@@ -257,6 +264,7 @@ class Search
         tags.or!(Tag.where(tag: value.to_s))
       # TODO unknown tag
       when :title
+        next if title_shortword? value
         title = true
         value = flatten_title value
         query.joins!(:story_text).where!(

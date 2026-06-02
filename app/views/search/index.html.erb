@@ -59,7 +59,14 @@
           <dd>Tag: <%= link_to value, tag_path(value) %></dd>
         <% when :title %>
           <dt><span class="searchq">title:<%= @search.flatten_title(value) %></span></dt>
-          <dd>Title: <%= @search.flatten_title(value) %></dd>
+          <% if @search.title_shortword?(value) %>
+            <dd>
+              Title shortword: <span class="searchq"><%= @search.flatten_title(value) %></span>
+              <br>Title terms must be at least 3 characters long.
+            </dd>
+          <% else %>
+            <dd>Title: <%= @search.flatten_title(value) %></dd>
+          <% end %>
         <% when :url %>
           <dt><span class="searchq">url:<%= value %></span></dt>
           <dd>URL: <%= value %></dd>

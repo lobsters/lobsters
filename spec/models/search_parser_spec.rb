@@ -139,6 +139,7 @@ describe SearchParser do
 
   describe "title rule" do
     it("parses single") { expect(sp.title).to parse("title:seven") }
+    it("parses shortwords") { expect(sp.title).to parse("title:xz") }
     it("does parse single word quote") { expect(sp.title).to parse('title:"tips"') }
     it("does parse multi word quote") { expect(sp.title).to parse('title:"for fast tests"') }
     it("doesn't parse multi word") { expect(sp.title).to_not parse("title:in 2023") }
@@ -206,6 +207,10 @@ describe SearchParser do
     it "parses a search that uses a few stopwords" do
       assert SearchParser.new.parse "Notes on structured concurrency, or: Go statement considered harmful"
       assert SearchParser.new.parse "a  Simple Serialization System"
+    end
+
+    it "associates title: with a shortword search" do
+      expect("title:xz").to parse_to [{title: {shortword: "xz"}}]
     end
   end
 end

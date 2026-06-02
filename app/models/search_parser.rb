@@ -33,7 +33,7 @@ class SearchParser < Parslet::Parser
   rule(:submitter) { str("submitter:") >> match("[@~]").repeat(0, 1) >> match("[A-Za-z0-9_\\-]").repeat(1, 24).as(:submitter) >> space? }
   # reproduce the 'validates :tag, format:' regexp from Tag
   rule(:tag) { str("tag:") >> match("[A-Za-z0-9\\-_+]").repeat(1).as(:tag) >> space? }
-  rule(:title) { str("title:") >> (term | quoted).as(:title) >> space? }
+  rule(:title) { str("title:") >> (term | shortword | quoted).as(:title) >> space? }
   rule(:url) {
     (
       str("http") >> str("s").repeat(0, 1) >> str("://") >>

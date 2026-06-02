@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_19_183300) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_02_222249) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -400,6 +400,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_183300) do
     t.index ["id", "is_deleted"], name: "index_stories_on_id_and_is_deleted"
     t.index ["last_comment_at"], name: "index_stories_on_last_comment_at"
     t.index ["mastodon_id"], name: "index_stories_on_mastodon_id"
+    t.index ["merged_story_id", "hotness"], name: "index_stories_on_merged_story_id_and_hotness"
     t.index ["merged_story_id"], name: "index_stories_on_merged_story_id"
     t.index ["normalized_url"], name: "index_stories_on_normalized_url"
     t.index ["origin_id"], name: "index_stories_on_origin_id"

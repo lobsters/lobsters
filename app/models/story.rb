@@ -85,6 +85,8 @@ class Story < ApplicationRecord
       .filter_tags(exclude_tags || [])
       .positive_ranked
       .order(:hotness)
+      # solves n+1 user query in home#index
+      .includes(user: [:invited_by_user])
   }
 
   scope :tagged, ->(user, tags) {

@@ -401,7 +401,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_02_222249) do
     t.index ["last_comment_at"], name: "index_stories_on_last_comment_at"
     t.index ["mastodon_id"], name: "index_stories_on_mastodon_id"
     t.index ["merged_story_id", "hotness"], name: "index_stories_on_merged_story_id_and_hotness"
-    t.index ["merged_story_id"], name: "index_stories_on_merged_story_id"
     t.index ["normalized_url"], name: "index_stories_on_normalized_url"
     t.index ["origin_id"], name: "index_stories_on_origin_id"
     t.index ["score"], name: "index_stories_on_score"

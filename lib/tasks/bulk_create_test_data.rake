@@ -13,7 +13,7 @@ task :bulk_create_users, [:count] => :environment do |t, args|
       karma: Random.rand(User::MIN_KARMA_TO_FLAG * 2),
       about: Faker::Lorem.sentence(word_count: 7),
       homepage: Faker::Internet.url,
-      invited_by_user: User.select(&:can_invite?).sample,
+      invited_by_user: User.select(&:can_invite?).sample
     })
   end
 end
@@ -24,7 +24,7 @@ task :bulk_create_categories, [:count] => :environment do |t, args|
 
   1.upto(category_count).map do |i|
     Category.create!({
-      category: "#{Faker::Lorem.word.capitalize}_#{i}", # Add a number since I've encountered duplicates in even a small sample size
+      category: "#{Faker::Lorem.word.capitalize}_#{i}" # Add a number since I've encountered duplicates in even a small sample size
     })
   end
 end
@@ -84,7 +84,7 @@ task :bulk_create_stories, [:count] => :environment do |t, args|
 end
 
 desc "create story_texts"
-task :bulk_create_story_texts => :environment do |t, args|
+task bulk_create_story_texts: :environment do |t, args|
   Story.where.missing(:story_text).map do |story|
     StoryText.create!({
       id: story.id,
@@ -112,7 +112,7 @@ task :bulk_create_comments, [:count] => :environment do |t, args|
     all_comments << Comment.create!({
       user: users.sample,
       comment: markdown_paragraphs,
-      story_id: stories.sample.id,
+      story_id: stories.sample.id
     })
   end
 
@@ -123,11 +123,10 @@ task :bulk_create_comments, [:count] => :environment do |t, args|
       user: users.sample,
       comment: markdown_paragraphs,
       story_id: comment_to_reply_to.story_id,
-      parent_comment_id: comment_to_reply_to.id,
+      parent_comment_id: comment_to_reply_to.id
     })
   end
 end
-
 
 desc "create votes"
 task :bulk_create_votes, [:count_for_stories, :count_for_comments] => :environment do |t, args|

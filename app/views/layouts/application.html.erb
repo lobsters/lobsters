@@ -21,6 +21,14 @@
   <% if controller_name == "stories" && action_name == "show" %>
     <%= tag :link, href: Routes.title_url(@story), rev: :canonical, rel: "self alternate shorter shorturl shortlink" %>
   <% end %>
+  <% if @page && @page > 1 %>
+    <%= tag :link, rel: "prev", href: @root_path ? "/page/#{@page - 1}" : url_for({ controller: controller_name, action: action_name, page: @page - 1 }.merge(@next_page_params || {})) %>
+  <% end %>
+
+  <% if @show_more %>
+    <%= tag :link, rel: "next", href: @root_path ? "/page/#{@page + 1}" : url_for({ controller: controller_name, action: action_name, page: @page + 1 }.merge(@next_page_params || {})) %>
+  <% end %>
+
   <title><%= @title.present? ? "#{@title} | " : "" %><%=
     Rails.application.name %></title>
 

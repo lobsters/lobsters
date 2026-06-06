@@ -299,6 +299,7 @@ class CommentsController < ApplicationController
       .offset((@page - 1) * COMMENTS_PER_PAGE)
 
     @has_more = true # don't bother querying for the number of comments here
+    @show_more = true # see above
 
     @comments = CommentVoteHydrator.new(@comments, @user)
 

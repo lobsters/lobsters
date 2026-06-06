@@ -11,7 +11,8 @@ module ApplicationHelper
       srcset: "#{user.avatar_path(size)} 1x, #{user.avatar_path(size * 2)} 2x",
       class: "avatar",
       size: "#{size}x#{size}",
-      alt: "#{user.username} avatar",
+      # No need for alt since avatars are hidden by aria-hidden.
+      alt: "",
       loading: "lazy",
       decoding: "async"
     )

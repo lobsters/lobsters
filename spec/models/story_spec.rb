@@ -763,4 +763,20 @@ describe Story do
 
     it { is_expected.to eq(150) }
   end
+
+  describe "PREVENTING ALL-CAPS TITLES" do
+    it "can't be all caps" do
+      s = build(:story, title: "MICROSOFT ACQUIRES LINUX")
+      s.valid?
+      expect(s.errors[:title].first).to include("ASCII")
+    end
+
+    it "but calvin is allowed to scream in his traditional WWDC posts" do
+      s = build(:story, title: "WWDC 3000")
+      s.valid?
+      expect(s.errors[:title].first).to include("ASCII")
+      s.user = build(:user, username: "calvin")
+      assert s.valid?
+    end
+  end
 end

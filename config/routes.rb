@@ -8,6 +8,8 @@ Rails.application.routes.draw do
     protocol: (Rails.application.config.force_ssl ? "https://" : "http://"),
     as: "root"
 
+  get "/.well-known/apple-app-site-association" => "well_known#apple_app_site_association"
+
   get "/404" => "about#four_oh_four", :via => :all
 
   get "/rss" => "home#index", :format => "rss"

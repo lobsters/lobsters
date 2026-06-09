@@ -101,8 +101,8 @@ module ApplicationHelper
   # limitation: this can't handle generating links based on a hash of options,
   # like { controller: ..., action: ... }
   def link_to_different_page(text, path, options = {})
-    current = request.path.sub(/\/page\/\d+$/, "")
-    path.sub!(/\/page\/\d+$/, "")
+    current = request.path.sub(/\/page\/\d+$/, "").sub(/\/\d+[dwmy]$/, "")
+    path = path.sub(/\/page\/\d+$/, "").sub(/\/\d+[dwmy]$/, "")
     options[:class] = class_names(options[:class], current_page: current == path)
     if current == path
       options[:aria] ||= {}

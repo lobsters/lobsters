@@ -30,7 +30,14 @@
     <% end %>
     <% score = comment_score_for_user(comment, @user)%>
     <% if !comment.is_gone? and !comment.previewing %>
-      <%= link_to upvoter_score(score), (@user ? '': login_path), :class => "upvoter", :title => score %>
+      <% if @user %>
+        <%= form_tag("/comments/#{comment.short_id}/#{comment.current_upvoted? ? "unvote" : "upvote"}") do %>
+          <input type="hidden" name="nojs", value="true" />
+          <button type="submit" class="upvoter" title="<%= score %>"><%= score %></button>
+        <% end %>
+      <% else %>
+        <%= link_to upvoter_score(score), login_path, :class => "upvoter", :title => score %>
+      <% end %>
     <% elsif @user&.is_moderator? %>
       <span class="upvoter"><%= score %></span>
     <% end %>

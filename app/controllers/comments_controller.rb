@@ -239,7 +239,11 @@ class CommentsController < ApplicationController
       0, comment.story_id, comment.id, @user.id, nil
     )
 
-    render plain: "ok"
+    if params[:nojs]
+      redirect_to(Routes.comment_target_path(comment, true))
+    else
+      render plain: "ok"
+    end
   end
 
   def upvote
@@ -251,7 +255,11 @@ class CommentsController < ApplicationController
       1, comment.story_id, comment.id, @user.id, nil
     )
 
-    render plain: "ok"
+    if params[:nojs]
+      redirect_to(Routes.comment_target_path(comment, true))
+    else
+      render plain: "ok"
+    end
   end
 
   def flag

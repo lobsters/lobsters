@@ -519,6 +519,7 @@ div.voters {
 	align-items: center;
 	justify-self: center;
 	text-decoration: none;
+	border: none;
 }
 .upvoter:focus { outline: none; } /* don't outline after upvote click */
 .upvoter:focus-visible { outline: 2px solid var(--color-fg-link); } /* do outline when tabbing */

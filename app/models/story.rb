@@ -239,7 +239,7 @@ class Story < ApplicationRecord
   # days a story is considered recent, for resubmitting
   RECENT_DAYS = 30
 
-  # users needed to make similar suggestions go live
+  # users needed to make story suggestions go live
   SUGGESTION_QUORUM = 2
 
   # let a hot story linger for this many seconds
@@ -900,16 +900,20 @@ class Story < ApplicationRecord
 
     # if enough users voted on the same set of replacement tags, do it
     tag_votes = {}
+    tag_quorums = {}
+    
     suggested_taggings.group_by(&:user_id).each do |_u, stg|
       stg.each do |s|
         tag_votes[s.tag.tag] ||= 0
         tag_votes[s.tag.tag] += 1
+
+        tag_quorums[s.tag.tag] = s.tag.quorum
       end
     end
 
     final_tags = []
     tag_votes.each do |k, v|
-      if v >= SUGGESTION_QUORUM
+      if v >= tag_quorums[k]
         final_tags.push k
       end
     end

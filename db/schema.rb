@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_19_183300) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_13_002038) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -465,6 +465,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_19_183300) do
     t.string "token", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "quorum", default: 2
     t.index ["category_id"], name: "index_tags_on_category_id"
     t.index ["tag"], name: "tag", unique: true
     t.index ["token"], name: "index_tags_on_token", unique: true

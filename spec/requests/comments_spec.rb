@@ -63,6 +63,21 @@ describe "comments", type: :request do
     end
   end
 
+  describe "previewing" do
+    let(:story) { create(:story) }
+
+    before { sign_in user }
+
+    it "doesn't render the collapse checkbox" do
+      post "/comments", params: {
+        story_id: story.short_id, comment: "preview me", preview: "true",
+      }
+      expect(response.status).to eq(200)
+      expect(response.body).to include("preview")
+      expect(response.body).to_not include("comment_folder_button")
+    end
+  end
+
   describe "disowning" do
     let(:inactive_user) { create(:user, :inactive) }
 

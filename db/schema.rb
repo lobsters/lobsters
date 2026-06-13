@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_13_002038) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_13_004304) do
   create_table "action_mailbox_inbound_emails", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -424,6 +424,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_13_002038) do
     t.bigint "story_id", null: false, unsigned: true
     t.bigint "tag_id", null: false, unsigned: true
     t.bigint "user_id", null: false, unsigned: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["story_id"], name: "suggested_taggings_story_id_fk"
     t.index ["tag_id"], name: "suggested_taggings_tag_id_fk"
     t.index ["user_id"], name: "suggested_taggings_user_id_fk"

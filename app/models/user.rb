@@ -266,7 +266,7 @@ class User < ApplicationRecord
       msg.deleted_by_author = true
       msg.author_user_id = disabler.id
       msg.recipient_user_id = id
-      msg.subject = "Your invite privileges have been revoked"
+      msg.subject = "Your invite and suggestion privileges have been revoked"
       msg.body = "The reason given:\n" \
         "\n" \
         "> *#{reason}*\n" \
@@ -277,7 +277,7 @@ class User < ApplicationRecord
       m = Moderation.new
       m.moderator_user_id = disabler.id
       m.user_id = id
-      m.action = "Disabled invitations"
+      m.action = "Disabled invitations and suggestions"
       m.reason = reason
       m.save!
     end

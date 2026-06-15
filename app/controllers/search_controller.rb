@@ -8,7 +8,8 @@ class SearchController < ApplicationController
     @title = "Search"
 
     @search = Search.new(search_params, @user)
-    if !@user && params[:q].to_s.starts_with?("https://")
+
+    if !@user && @search.parse_tree.any? { |node| node.key?(:url) }
       flash[:error] = "Sorry, you have to log in to search for a URL. We're getting hammered by a spambot with many thousands of IPs. More info at https://github.com/lobsters/lobsters/issues/1814"
       @search.invalid("You have to log in to search for a URL.")
     end

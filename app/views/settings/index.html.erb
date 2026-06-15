@@ -13,8 +13,8 @@
       <div class="labelled_grid">
         <%= f.label :username, "Username" %>
         <div>
-          <%= f.text_field :username, required: true, size: 15, autocapitalize: :off %>
-          <div class="hint">
+          <%= f.text_field :username, required: true, size: 15, autocapitalize: :off, pattern: Username.username_regex_html, aria: {describedby: "usernamehint"} %>
+          <div class="hint" id="usernamehint">
             Format: <tt><%= Username.username_regex_s %></tt><br>
             Creates a <%= link_to 'modlog', moderations_path %> entry like "changed own username from '<%= @edit_user.username %>' to 'NewUsername'"
           </div>
@@ -32,15 +32,15 @@
 
         <%= f.label :show_email, "Show Email on profile", class: "for_checkbox" %>
         <span>
-          <%= f.check_box :show_email %>
-          <span class="hint">
+          <%= f.check_box :show_email, aria: {describedby: "emailhint"} %>
+          <span class="hint" id="emailhint">
             Only shown to logged-in users
           </span>
         </span>
 
         <%= f.label :homepage, "Homepage" %>
-        <span><%= f.url_field :homepage, autocapitalize: :off %>
-        <span class="hint">Link external accounts below</span>
+        <span><%= f.url_field :homepage, autocapitalize: :off, aria: {describedby: "homepagehint"} %>
+        <span class="hint" id="homepagehint">Link external accounts below</span>
         </span>
 
         <%= f.label :about, "About" %>
@@ -89,8 +89,8 @@
         <%= f.label :pushover_replies, "Receive Pushover Alert",
           class: "for_checkbox" %>
         <span>
-          <%= f.check_box :pushover_replies %>
-          <span class="hint">
+          <%= f.check_box :pushover_replies, aria: {describedby: "pushoverhintreply"} %>
+          <span class="hint" id="pushoverhintreply">
             Requires Pushover subscription below
           </span>
         </span>
@@ -108,8 +108,8 @@
         <%= f.label :pushover_mentions, "Receive Pushover Alert",
           class: "for_checkbox" %>
         <span>
-          <%= f.check_box :pushover_mentions %>
-          <span class="hint">
+          <%= f.check_box :pushover_mentions, aria: {describedby: "pushoverhintmention"} %>
+          <span class="hint" id="pushoverhintmention">
             Requires Pushover subscription below
           </span>
         </span>
@@ -124,16 +124,16 @@
         <span><%= f.check_box :email_messages %></span>
         <%= f.label :modmail_messages, "Receive E-mail for ModMail", class: "for_checkbox" %>
         <span>
-          <%= f.check_box :email_messages, { disabled: true, checked: true } %>
-          <span class="hint">
+          <%= f.check_box :email_messages, { disabled: true, checked: true }, aria: {describedby: "notificationmodhint"} %>
+          <span class="hint" id="notificationmodhint">
             Notifications from Moderators are mandatory
           </span>
         </span>
         <%= f.label :pushover_messages, "Receive Pushover Alert",
           class: "for_checkbox" %>
         <span>
-          <%= f.check_box :pushover_messages %>
-          <span class="hint">
+          <%= f.check_box :pushover_messages, aria: {describedby: "pushoverhintmessage"} %>
+          <span class="hint" id="pushoverhintmessage">
             Requires Pushover subscription below
           </span>
         </span>
@@ -300,7 +300,7 @@
       <%= f.label :i_am_sure, "I am sure", class: "for_checkbox" %>
       <span><%= f.check_box :i_am_sure, required: true %></span>
       <%= f.label :disown, "Disown stories/comments", :class => "for_checkbox" %>
-      <span><%= f.check_box :disown %> <span class="hint">(optional)</span></span>
+      <span><%= f.check_box :disown, aria: {describedby: "disownhint"}%> <span class="hint" id="disownhint">(optional)</span></span>
     </div>
 
     <%= f.submit "Yes, Deactivate My Account", :class => "deletion" %>

@@ -22,11 +22,12 @@
   <% end %>
 
 
-  <p>
-    Most often also tagged with
-    <% related.each do |tag| %>
-      <%= tag_link(tag) %>
-    <% end %>
-  </p>
+  <% if related.length > 0 %>
+    <p>
+      Most often also tagged with
+      <% related.each do |tag| %>
+        <%= tag_link(tag) %>
+      <% end %>
+    </p>
+  <% end %>
 </div>
-

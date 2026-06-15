@@ -1112,6 +1112,7 @@ div#domain_box input[type=text] {
 }
 div#story_box #story_tags {
 	width: 624px;
+	overflow-x: auto;
 }
 div#story_box textarea {
 	height: 2rem;

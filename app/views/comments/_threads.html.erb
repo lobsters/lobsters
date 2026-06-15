@@ -73,7 +73,7 @@
       <label for="comment_folder_<%= comment.short_id %>" class="comment_folder"></label>
     <% end %>
     <% score = comment_score_for_user(comment, @user)%>
-    <% if !comment.is_gone? %>
+    <% if !comment.is_gone? and !comment.previewing %>
       <%= link_to upvoter_score(score), (@user ? '': login_path), :class => "upvoter", :title => score %>
     <% elsif @user&.is_moderator? %>
       <span class="upvoter"><%= score %></span>

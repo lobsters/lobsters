@@ -14,6 +14,8 @@ ALLOWED_AT_RULES = Set.new(%w[])
 # writing comments, that is the beating heart of the site.
 ALLOWED_PROPERTIES = Set.new(%w[user-select])
 
+ALLOWED_PROPERTY_VALUES = Set.new(%w[])
+
 # :has() https://caniuse.com/css-has
 # Unprincipled exception because it solves so many big problems.
 ALLOWED_SELECTORS = Set.new(%w[has])
@@ -24,6 +26,8 @@ WANTED_PROPERTIES = Set.new(%w[field-sizing resize])
 BaselineAtRule = Data.define(:name)
 BaselineProperty = Data.define(:name)
 BaselineSelector = Data.define(:name)
+
+BaselinePropertyValue = Data.define(:property, :value)
 
 Violation = Data.define(:line, :kind, :name) do
   def to_s
@@ -38,14 +42,14 @@ def fetch_feature_data
 
   cache_file = Rails.root.join("tmp/web_feature_availibility.json")
   data = if cache_file.exist? && cache_file.mtime.after?(1.week.ago)
-    cache_file.read
-  else
-    response = Sponge.fetch(DATA_URL)
-    raise "Failed to download availability data" unless response
-    # puts response.inspect
-    File.binwrite(cache_file, response.body)
-    response.body
-  end
+           cache_file.read
+         else
+           response = Sponge.fetch(DATA_URL)
+           raise "Failed to download availability data" unless response
+           # puts response.inspect
+           File.binwrite(cache_file, response.body)
+           response.body
+         end
 
   JSON.parse(data)
 ensure
@@ -68,42 +72,53 @@ end
 #   }
 # }
 def extract_widely_available(data:)
-  data["features"].each_value.flat_map { |feature|
-    (feature.dig("status", "by_compat_key") || {}).filter_map { |key, status|
-      next unless status["baseline"] == "high"
+  baseline = []
+  restricted_values = []
 
+  data["features"].each_value { |feature|
+    (feature.dig("status", "by_compat_key") || {}).each { |key, status|
       parts = key.split(".")
+
       next unless parts[0] == "css" && parts.length >= 3
 
       case parts[1]
-      when "at-rules" then BaselineAtRule.new(name: parts[2])
-      when "properties" then BaselineProperty.new(name: parts[2])
-      when "selectors" then BaselineSelector.new(name: parts[2])
+      when "at-rules" then
+        baseline << BaselineAtRule.new(name: parts[2]) if status["baseline"] == "high"
+      when "properties" then
+        if parts.length == 3
+          baseline << BaselineProperty.new(name: parts[2]) if status["baseline"] == "high"
+        elsif parts.length == 4
+          restricted_values << BaselinePropertyValue.new(property: parts[2], value: parts[3]) if status["baseline"] != "high"
+        end
+      when "selectors" then
+        baseline << BaselineSelector.new(name: parts[2]) if status["baseline"] == "high"
       end
     }
   }
+
+  [baseline.to_set, restricted_values.to_set]
 end
 
-def find_violations(baseline:, css_file:)
+def find_violations(baseline:, restricted_values:, css_file:)
   css = File.read(css_file)
   tree = Crass.parse(css)
-  check_nodes(baseline:, nodes: tree, css:)
+  check_nodes(baseline:, restricted_values:, nodes: tree, css:)
 end
 
-def check_nodes(baseline:, nodes:, css:)
+def check_nodes(baseline:, restricted_values:, nodes:, css:)
   return [] unless nodes
 
   nodes.flat_map { |node|
     violation = case node[:node]
-    when :property then check_property(baseline:, node:, css:)
-    when :style_rule then check_selector(baseline:, node:, css:)
-    when :at_rule then check_at_rule(baseline:, node:, css:)
-    end
+                when :property then check_property(baseline:, node:, css:) || check_property_value(restricted_values:, node:, css:)
+                when :style_rule then check_selector(baseline:, node:, css:)
+                when :at_rule then check_at_rule(baseline:, node:, css:)
+                end
 
     [
       *violation,
-      *check_nodes(baseline:, nodes: node[:children], css:),
-      *check_nodes(baseline:, nodes: node[:block], css:)
+      *check_nodes(baseline:, restricted_values:, nodes: node[:children], css:),
+      *check_nodes(baseline:, restricted_values:, nodes: node[:block], css:)
     ]
   }
 end
@@ -137,6 +152,17 @@ def check_property(baseline:, node:, css:)
   Violation.new(kind: :property, line:, name:)
 end
 
+def check_property_value(restricted_values:, node:, css:)
+  value = node[:value].to_s.strip
+  name = node[:name]
+
+  return if ALLOWED_PROPERTY_VALUES.include?(name)
+  return unless restricted_values.include?(BaselinePropertyValue.new(property: name, value:))
+
+  line = token_line(tokens: node[:tokens], css:)
+  Violation.new(kind: :property_value, line:, name: "#{name}: #{value}")
+end
+
 def check_selector(baseline:, node:, css:)
   node.dig(:selector, :value).scan(/::?([\w-]+)/).filter_map { |match|
     name = match[0]
@@ -153,38 +179,38 @@ end
 
 RSpec.describe "CSS" do
   css_files = Dir.glob("app/assets/stylesheets/**/*.css").sort
-  baseline = extract_widely_available(data: fetch_feature_data)
+  baseline, restricted_values = extract_widely_available(data: fetch_feature_data)
 
   css_files.each do |css_file|
     it "#{css_file} uses only Baseline widely available features" do
-      violations = find_violations(baseline:, css_file:)
+      violations = find_violations(baseline:, restricted_values:, css_file:)
       expect(violations).to be_empty,
-        "CSS features not Baseline widely available:\n  #{violations.join("\n  ")}\n" \
-        "See: https://web-platform-dx.github.io/web-features/"
+                            "CSS features not Baseline widely available:\n  #{violations.join("\n  ")}\n" \
+                              "See: https://web-platform-dx.github.io/web-features/"
     end
   end
 
   ALLOWED_AT_RULES.each do |at_rule|
     it "exception '#{at_rule}' is still not Baseline widely available" do
       expect(baseline).not_to include(BaselineAtRule.new(name: at_rule)),
-        "At rule '#{at_rule}' is now Baseline widely available! " \
-        "Remove it from ALLOWED_AT_RULES in #{__FILE__} and rejoice."
+                              "At rule '#{at_rule}' is now Baseline widely available! " \
+                                "Remove it from ALLOWED_AT_RULES in #{__FILE__} and rejoice."
     end
   end
 
   ALLOWED_PROPERTIES.each do |prop|
     it "exception '#{prop}' is still not Baseline widely available" do
       expect(baseline).not_to include(BaselineProperty.new(name: prop)),
-        "Property '#{prop}' is now Baseline widely available! " \
-        "Remove it from ALLOWED_PROPERTIES in #{__FILE__} and rejoice."
+                              "Property '#{prop}' is now Baseline widely available! " \
+                                "Remove it from ALLOWED_PROPERTIES in #{__FILE__} and rejoice."
     end
   end
 
   ALLOWED_SELECTORS.each do |sel|
     it "exception ':#{sel}' is still not Baseline widely available" do
       expect(baseline).not_to include(BaselineSelector.new(name: sel)),
-        "Selector ':#{sel}' is now Baseline widely available! " \
-        "Remove it from ALLOWED_SELECTORS in #{__FILE__} and rejoice."
+                              "Selector ':#{sel}' is now Baseline widely available! " \
+                                "Remove it from ALLOWED_SELECTORS in #{__FILE__} and rejoice."
     end
   end
 
@@ -193,8 +219,8 @@ RSpec.describe "CSS" do
   WANTED_PROPERTIES.each do |prop|
     it "wanted property '#{prop}' is not yet Baseline widely available" do
       expect(baseline).not_to include(BaselineProperty.new(name: prop)),
-        "Property '#{prop}' is now Baseline widely available! " \
-        "See comment in this spec for where we wanted to use it."
+                              "Property '#{prop}' is now Baseline widely available! " \
+                                "See comment in this spec for where we wanted to use it."
     end
   end
 end

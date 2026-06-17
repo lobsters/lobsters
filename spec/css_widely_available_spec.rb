@@ -14,7 +14,8 @@ ALLOWED_AT_RULES = Set.new(%w[])
 # writing comments, that is the beating heart of the site.
 ALLOWED_PROPERTIES = Set.new(%w[user-select])
 
-ALLOWED_PROPERTY_VALUES = Set.new([])
+# See https://github.com/lobsters/lobsters/pull/2079#issuecomment-4730563102 for reasoning.
+ALLOWED_PROPERTY_VALUES = Set.new([["cursor", "pointer"], ["cursor", "default"], ["user-select", "none"]])
 
 # :has() https://caniuse.com/css-has
 # Unprincipled exception because it solves so many big problems.
@@ -227,7 +228,7 @@ RSpec.describe "CSS" do
 
   WANTED_PROPERTY_VALUES.each do |prop_val|
     it "wanted property_value '#{prop_val[0]}: #{prop_val[1]}' is not yet Baseline widely available" do
-      expect(restricted_values).to include(BaselinePropertyValue.new(property: prop_val[0], value: prop_val[1])),
+      expect(restricted_values).to include(BaselinePropertyValue.new(name: prop_val[0], value: prop_val[1])),
         "Property Value '#{prop_val[0]}: #{prop_val[1]}' is now Baseline widely available! " \
           "See comment in this spec for where we wanted to use it."
     end

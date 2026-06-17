@@ -529,7 +529,7 @@ li.story {
 ol.stories li.story div.story_liner {
 	padding-top: 0.25em;
 	padding-bottom: 0.25em;
-	word-break: break-word;
+	overflow-wrap: break-word;
 }
 .comment {
 	clear: both;
@@ -1387,7 +1387,7 @@ label:has(+ *[type="hidden"] + *:required)::after {
 .labelled_grid {
 	display: grid;
 	grid-template-columns: minmax(10rem, min-content) 1fr;
-	word-break: break-word;
+	overflow-wrap: break-word;
 	column-gap: 1rem;
 	row-gap: 12px;
 }

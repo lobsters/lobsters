@@ -70,7 +70,7 @@ describe "comments", type: :request do
 
     it "doesn't render the collapse checkbox" do
       post "/comments", params: {
-        story_id: story.short_id, comment: "preview me", preview: "true",
+        story_id: story.short_id, comment: "preview me", preview: "true"
       }
       expect(response.status).to eq(200)
       expect(response.body).to include("preview")

@@ -32,8 +32,7 @@
     <% if !comment.is_gone? and !comment.previewing %>
       <% if @user %>
         <%= form_tag("/comments/#{comment.short_id}/#{comment.current_upvoted? ? "unvote" : "upvote"}") do %>
-          <input type="hidden" name="nojs", value="true" />
-          <button type="submit" class="upvoter" title="<%= score %>"><%= score %></button>
+          <button type="submit" class="upvoter" title="<%= upvoter_score(score) %>"><%= upvoter_score(score) %></button>
         <% end %>
       <% else %>
         <%= link_to upvoter_score(score), login_path, :class => "upvoter", :title => score %>

@@ -239,10 +239,10 @@ class CommentsController < ApplicationController
       0, comment.story_id, comment.id, @user.id, nil
     )
 
-    if params[:nojs]
-      redirect_to(Routes.comment_target_path(comment, true))
-    else
+    if request.xhr?
       render plain: "ok"
+    else
+      redirect_to(Routes.comment_target_path(comment, true))
     end
   end
 
@@ -255,10 +255,10 @@ class CommentsController < ApplicationController
       1, comment.story_id, comment.id, @user.id, nil
     )
 
-    if params[:nojs]
-      redirect_to(Routes.comment_target_path(comment, true))
-    else
+    if request.xhr?
       render plain: "ok"
+    else
+      redirect_to(Routes.comment_target_path(comment, true))
     end
   end
 

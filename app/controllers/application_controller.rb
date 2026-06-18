@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   SESSION_DEFAULT_KEYS = %w[session_id _csrf_token]
   # match this in caddy config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
-  CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
+  CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? && clear_session_cookie? }
 
   # copied from https://github.com/rack/rack/blob/main/lib/rack/utils.rb
   VALID_COOKIE_KEY = /\A[!#$%&'*+\-.\^_`|~0-9a-zA-Z]+\z/

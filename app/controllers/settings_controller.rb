@@ -29,7 +29,7 @@ class SettingsController < ApplicationController
       action: "deactivated#{", disowning their stories and comments" if disown}"
     )
     reset_session
-    flash[:success] = "You have deleted your account#{" and disowned your stories and comments." if disown}. Bye."
+    flash[:success] = "You have deactivated your account#{" and disowned your stories and comments." if disown}. Bye."
     redirect_to "/"
   end
 

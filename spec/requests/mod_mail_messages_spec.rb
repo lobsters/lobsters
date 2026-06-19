@@ -2,26 +2,23 @@ require "rails_helper"
 
 RSpec.describe "/mod/mail_messages", type: :request do
   let(:user) { create :user }
-  let(:moderator) { create :user, :moderator }
   let(:mod_mail) { create :mod_mail, recipients: [user] }
 
   let(:valid_attributes) {
     {
       mod_mail_id: mod_mail.id,
-      message: "I have concerns about your recent behavior.",
-      user_id: moderator.id
+      message: "I have concerns about your recent behavior."
     }
   }
 
   let(:invalid_attributes) {
     {
-      mod_mail_id: mod_mail.id,
-      user_id: moderator.id
+      mod_mail_id: mod_mail.id
     }
   }
 
   before {
-    sign_in moderator
+    sign_in user
   }
 
   describe "POST /create" do

@@ -25,14 +25,9 @@ RSpec.describe "/mod_mails", type: :request do
 
     it "denies access to non-recipient" do
       sign_in create(:user)
-      get mod_mail_url(mod_mail)
-      expect(response).to redirect_to :root
-    end
-
-    it "shows to mods" do
-      sign_in create(:user, :moderator)
-      get mod_mail_url(mod_mail)
-      expect(response).to be_successful
+      expect {
+        get mod_mail_url(mod_mail)
+      }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end

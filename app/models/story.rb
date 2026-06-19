@@ -759,7 +759,7 @@ class Story < ApplicationRecord
   end
 
   def is_gone?
-    is_deleted? || (user.is_banned? && score < 0)
+    is_deleted? || (user.is_banned? && score < 0 && is_moderated = false)
   end
 
   def is_hidden_by_user?(user)

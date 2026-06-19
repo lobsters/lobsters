@@ -29,14 +29,14 @@ FactoryBot.define do
       username { "inactive-user" }
       to_create { |user| user.save(validate: false) }
     end
-    trait(:deleted) do
+    trait(:deactivated) do
       deleted_at { Time.current }
     end
     trait(:new) do
       deleted_at { 1.day.ago }
     end
-    # users who were banned/deleted before a server move
-    # you must also add banned/deleted trait with this
+    # users who were banned/deactivated before a server move
+    # you must also add banned/deactivated trait with this
     trait(:wiped) do
       password_digest { "*" }
     end

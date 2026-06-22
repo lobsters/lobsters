@@ -110,7 +110,7 @@ Rails.application.routes.draw do
   post "/stories/preview" => "stories#preview"
   post "/stories/check_url_dupe" => "stories#check_url_dupe"
 
-  get '/comments/rss', to: redirect('/comments.rss')
+  get "/comments/rss", to: redirect("/comments.rss")
   resources :comments, except: [:new, :destroy] do
     member do
       get "/comments/:id" => "comments#redirect_from_short_id"

@@ -255,7 +255,7 @@ describe HomeController do
         expect(@controller.view_assigns["title"]).to eq("Top Stories of the Past Week")
         expect(@controller.view_assigns["rss_link"]).to eq(
           title: "RSS 2.0 - Top Stories of the Past Week",
-          href: "/top/1w/rss"
+          href: "/top/1w.rss"
         )
         expect(@controller.view_assigns["stories"]).to include(story)
         expect(@controller.view_assigns["stories"]).not_to include(old_story)
@@ -285,7 +285,7 @@ describe HomeController do
         expect(@controller.view_assigns["title"]).to eq("Top Stories of the Past Week")
         expect(@controller.view_assigns["rss_link"]).to eq(
           title: "RSS 2.0 - Top Stories of the Past Week",
-          href: "/top/1w/rss"
+          href: "/top/1w.rss"
         )
         expect(@controller.view_assigns["stories"]).to include(recent_stories[StoriesPaginator::STORIES_PER_PAGE + 1])
         expect(@controller.view_assigns["stories"]).not_to include(old_story)

@@ -30,8 +30,8 @@ describe "home routing" do
       expect(get("/top/1w")).to route_to("home#top", length: "1w")
     end
 
-    it "routes /top/1w/rss" do
-      expect(get("/top/1w/rss")).to route_to("home#top", length: "1w", format: "rss")
+    it "routes /top/1w.rss" do
+      expect(get("/top/1w.rss")).to route_to("home#top", length: "1w", format: "rss")
     end
 
     it "routes /top/1w/page/2" do

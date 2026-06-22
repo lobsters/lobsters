@@ -16,6 +16,7 @@ But I make an unprincipled exception for :has because it solves so many big prob
 	--color-bg-50: rgb(var(--base-bg) / 50%);
 
 	--color-fg: rgb(var(--base-fg) / var(--opacity-fg)); /* primary text */
+	--color-fg-accent: currentColor;
 	--color-fg-contrast-13: rgb(var(--base-fg) / var(--opacity-fg-contrast-13));
 	--color-fg-contrast-10: rgb(var(--base-fg) / var(--opacity-fg-contrast-10));
 	--color-fg-contrast-7-5: rgb(var(--base-fg) / var(--opacity-fg-contrast-7-5));

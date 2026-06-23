@@ -931,8 +931,7 @@ div.comment_text {
 }
 .controls {
 	display: flex;
-	flex-flow: row;
-	flex-wrap: wrap;
+	flex-flow: row wrap;
 	gap: 0.5rem;
 	justify-content: start;
 	margin-top: 1rem;
@@ -1694,21 +1693,6 @@ input[type="submit"].link_post.pushover_button {
 	margin-top: -0.75rem;
 }
 
-@media only screen and (max-width: 480px) {
-	.radio-group-container legend {
-		float: none;
-		margin-bottom: 0.5rem;
-	}
-
-	.radio-group-container .radio-group {
-		gap: 1rem;
-	}
-
-	.radio-group-container .radio-group	label {
-		display: inline;
-	}
-}
-
 @media screen and (min-width: 481px) {
 	body {
 		max-width: 60rem;
@@ -2041,6 +2025,32 @@ input[type="submit"].link_post.pushover_button {
 	}
 	.labelled_grid input[type="checkbox"] + .hint {
 		margin-left: 0;
+	}
+
+	.radio-group-container legend {
+		float: none;
+		margin-bottom: 0.5rem;
+	}
+
+	.radio-group-container .radio-group {
+		gap: 1rem;
+	}
+
+	.radio-group-container .radio-group	label {
+		display: inline;
+	}
+
+	.controls {
+		flex-flow: column;
+	}
+
+	.controls .markdown_help[open] summary,
+	.controls details {
+		margin: 0;
+	}
+
+	.markdown_help summary {
+		text-align: left;
 	}
 }
 @media print {

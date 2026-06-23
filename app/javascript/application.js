@@ -936,7 +936,7 @@ document.addEventListener("DOMContentLoaded", () => {
           response.text().then(text => replace(comment, text));
         });
     } else {
-      comment.parentElement.remove();
+      comment.remove();
     }
   });
 

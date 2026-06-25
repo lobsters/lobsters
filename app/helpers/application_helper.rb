@@ -72,12 +72,13 @@ module ApplicationHelper
     # if link hast text to the left
     if index != 0
       t = parsed.children.first.text
-      parsed.children.first.replace(t.split.last(words).join(" ") + " ")
+      # use .content not .replace(str), .replace reparses strings so would turn &lt; into < for XSS
+      parsed.children.first.content = t.split.last(words).join(" ") + " "
     end
     # if link has text to the right
     if index != parsed.children.count - 1
       t = parsed.children.last.text
-      parsed.children.last.replace(" " + t.split.last(words).join(" "))
+      parsed.children.last.content = " " + t.split.last(words).join(" ")
     end
 
     parsed.to_html

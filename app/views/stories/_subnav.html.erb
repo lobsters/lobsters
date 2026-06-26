@@ -1,5 +1,9 @@
 <%# locals: () -%>
 <% content_for :subnav do %>
-  <%= link_to_different_page 'Newest', newest_path %>
-  <%= link_to_different_page 'Top', top_path %>
+  <nav id="subnav" aria-label="Subnavigation">
+    <ul>
+      <li class="push-right"><%= link_to_different_page 'Newest', newest_path %></li>
+      <li><%= link_to_different_page 'Top', top_path %></li>
+    </ul>
+  </nav>
 <% end %>

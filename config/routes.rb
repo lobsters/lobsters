@@ -33,7 +33,9 @@ Rails.application.routes.draw do
   get "/upvoted", to: redirect("/upvoted/stories")
   get "/upvoted/page/:page", to: redirect("/upvoted/stories/page/%{page}")
 
-  get "/top(/:length)/rss" => "home#top", :format => "rss"
+  get "/top/:length/rss", to: redirect("/top/%{length}.rss", status: 301)
+  get "/top/:length/page/:page/rss", to: redirect("/top/%{length}/page/%{page}.rss", status: 301)
+  get "/top/rss" => "home#top", :format => "rss"
   get "/top(/:length(/page/:page))" => "home#top", :as => "top"
 
   get "/threads" => "comments#user_threads"
@@ -108,6 +110,7 @@ Rails.application.routes.draw do
   post "/stories/preview" => "stories#preview"
   post "/stories/check_url_dupe" => "stories#check_url_dupe"
 
+  get "/comments/rss", to: redirect("/comments.rss")
   resources :comments, except: [:new, :destroy] do
     member do
       get "/comments/:id" => "comments#redirect_from_short_id"

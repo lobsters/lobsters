@@ -11,6 +11,9 @@
     <%= f.label :description, 'Description' %>
     <%= f.text_field :description, maxlength: Tag::DESCRIPTION_MAXLENGTH %>
 
+    <%= f.label :quorum, 'Quorum' %>
+    <%= f.text_field :quorum %>
+
     <%= f.label :permit_by_new_users, 'Permit by new users', :class => "for_checkbox" %>
     <%= f.check_box :permit_by_new_users %>
 

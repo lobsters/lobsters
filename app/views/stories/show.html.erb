@@ -64,6 +64,25 @@
     <% end %>
   </p>
 
+  <details>
+      <summary><%= @story.suggested_taggings.count %> tag suggestions</summary>
+      
+      <table class="data zebra moderations" width="100%" cellspacing=0>
+        <tr>
+          <th>User</th>
+          <th>Tag</th>
+          <th>Created At</th>
+        </tr>
+        <% @story.suggested_taggings.each do |suggestion| %>
+        <tr>
+          <td><%= link_to(suggestion.user.username, user_path(suggestion.user)) %></td>
+          <td><pre><%= suggestion.tag.tag %></pre></td>
+          <td><pre><%= suggestion.created_at %></pre></td>
+        </tr>
+        <% end %>
+      </table>
+  </details>
+
   <% older_log, recent_log = Moderation.for_story(@story).partition { it.created_at.before? 3.months.ago } %>
   <% if recent_log.count > 0 %>
     <label>Recent modlog for this submitter, this story, and this story's comments</label>

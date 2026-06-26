@@ -48,7 +48,8 @@ class Mod::TagsController < Mod::ModController
       :privileged,
       :is_media,
       :active,
-      :hotness_mod
+      :hotness_mod,
+      :quorum
     ).merge(edit_user_id: @user.id)
   end
 end

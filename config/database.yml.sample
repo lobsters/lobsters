@@ -1,21 +1,12 @@
 ---
-trilogy: &trilogy
-  adapter: trilogy
-  encoding: utf8mb4
-  host: <%= ENV.fetch('DATABASE_HOST') { "127.0.0.1" } %>
-  port: 3306
-  pool: 5
-
 sqlite3: &sqlite3
   adapter: sqlite3
   timeout: 1000
 
 development:
   primary:
-    <<: *trilogy
-    database: lobsters_development
-    username: root
-    password: localdev
+    <<: *sqlite3
+    database: db/development/primary.sqlite3
   cache:
     <<: *sqlite3
     database: db/development/cache.sqlite3
@@ -27,10 +18,8 @@ development:
 
 test:
   primary:
-    <<: *trilogy
-    database: lobsters_test
-    username: root
-    password: localdev
+    <<: *sqlite3
+    database: db/test/primary.sqlite3
   cache:
     <<: *sqlite3
     database: db/test/cache.sqlite3
@@ -42,8 +31,8 @@ test:
 
 production:
   primary:
-    <<: *trilogy
-    database: lobsters
+    <<: *sqlite3
+    database: storage/primary.sqlite3
   cache:
     <<: *sqlite3
     database: storage/cache.sqlite3

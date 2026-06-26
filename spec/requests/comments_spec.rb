@@ -61,6 +61,15 @@ describe "comments", type: :request do
       expect(response.body).to include(comment.comment[0..20])
       expect(response.body).to include(comment.user.username)
     end
+
+    it "/~user/threads.rss renders" do
+      comment = create(:comment)
+      get user_threads_path(comment.user, format: :rss)
+
+      expect(response).to be_successful
+      expect(response.body).to include(comment.comment[0..20])
+      expect(response.body).to include(comment.user.username)
+    end
   end
 
   describe "previewing" do

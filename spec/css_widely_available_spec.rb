@@ -17,9 +17,7 @@ ALLOWED_PROPERTIES = Set.new(%w[user-select])
 # See https://github.com/lobsters/lobsters/pull/2079#issuecomment-4730563102 for reasoning.
 ALLOWED_PROPERTY_VALUES = Set.new([["cursor", "pointer"], ["cursor", "default"], ["user-select", "none"]])
 
-# :has() https://caniuse.com/css-has
-# Unprincipled exception because it solves so many big problems.
-ALLOWED_SELECTORS = Set.new(%w[has])
+ALLOWED_SELECTORS = Set.new(%w[])
 
 # textarea { field-sizing: content; resize: vertical; } would let us delete autosize.js
 WANTED_PROPERTIES = Set.new(%w[field-sizing resize])

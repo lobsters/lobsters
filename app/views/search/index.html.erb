@@ -300,17 +300,18 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
   <% end %>
 
   <% if @search.results_count > @search.per_page %>
-    <div class="page_link_buttons">
-      Page:
-
+    <nav aria-label="Pagination" id="page-link-buttons">
+      <ul>
+        <li aria-hidden="true">Page:</li>
       <% page_numbers_for_pagination(@search.page_count, @search.page).each do |p| %>
         <% if p.is_a?(Integer) %>
-          <%= link_to p, search_path(@search.to_param.merge(page: p)), class: (@search.page == p ? 'cur' : '') %>
+          <li><%= link_to p, search_path(@search.to_param.merge(page: p)), aria: {current: (@search.page == p ? 'page' : '')} %></li>
         <% else %>
-          <span>...</span>
+          <li aria-hidden="true">...</li>
         <% end %>
       <% end %>
-    </div>
+      </ul>
+    </nav>
   <% elsif @search.results_count == 1 %>
     <div class="page_link_buttons">
       <p>Hapax legomenon</p>

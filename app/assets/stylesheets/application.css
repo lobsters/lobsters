@@ -868,10 +868,12 @@ nav.morelink {
 	float: left;
 }
 
-nav.morelink,
-div.page_link_buttons {
+nav.morelink {
 	margin-top: 1.5em;
 }
+
+#page-link-buttons,
+#page-link-buttons a,
 nav.morelink a {
 	color: var(--color-fg-contrast-7-5);
 	font-weight: bold;
@@ -885,28 +887,27 @@ nav.morelink a[rel="next"]::after {
 	content: " >>"/"";
 }
 
-div.page_link_buttons {
-	font-weight: bold;
-	margin-top: 2em;
-}
-div.page_link_buttons a,
-div.page_link_buttons span {
-	border: 1px solid var(--color-box-border);
-	background-color: var(--color-button-bg);
-	color: var(--color-fg-contrast-7-5);
-	padding: 0.25em 0.5em;
-	font-weight: bold;
-	text-decoration: none;
-	margin-left: 0.5em;
-}
-div.page_link_buttons a.cur,
-div.page_link_buttons span {
-	background-color: transparent;
-	border-color: transparent;
-	margin-left: 0.25em;
-	padding-right: 0.25em;
+#page-link-buttons ul {
+	margin: 2rem 0 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
 }
 
+#page-link-buttons ul > * {
+	margin-bottom: 0.5rem;
+}
+
+#page-link-buttons li > * {
+	padding: 0.25em 0.5em;
+}
+
+#page-link-buttons a:not([aria-current="page"]) {
+	border: 1px solid var(--color-box-border);
+	background-color: var(--color-button-bg);
+}
 
 div.story_text {
 	margin-bottom: 1.5em;

@@ -11,7 +11,8 @@ echo "Destination: $BACKUP_DIR"
 # Backup Database
 echo " Backing up Database..."
 SQL_FILE="$BACKUP_DIR/lobsters_$TIMESTAMP.sql"
-docker exec lobsters-db-1 mysqldump --no-tablespaces -u root -plobsters lobsters > "$SQL_FILE"
+# docker exec lobsters-db-1 mysqldump --no-tablespaces -u root -plobsters lobsters > "$SQL_FILE"
+docker exec lobsters-db-1   mariadb-dump -u root -plobsters --all-databases > "$SQL_FILE"
 gzip "$SQL_FILE"
 echo " Database backup created: $SQL_FILE.gz"
 

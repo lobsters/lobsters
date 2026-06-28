@@ -1,26 +1,3 @@
-# PR https://github.com/lobsters/lobsters to be added to the list.
-User-agent: Applebot
-User-agent: BingBot
-User-agent: DuckDuckBot
-User-agent: GoogleBot
-User-agent: ia_archiver
-User-agent: Kagibot
-User-agent: Slurp
-Allow: /
-Disallow: /search
-Disallow: /page/
-Disallow: /comments/page/
-
-Content-Signal: ai-input=no, ai-train=no, search=yes
-
 User-agent: *
-Crawl-delay: 1
 Disallow: /
 
-# https://lobste.rs/c/kxd3ji Please stop "respecting" robots.txt and start
-# honestly following the standard.
-User-agent: Brave
-Disallow: /
-
-# https://developers.google.com/search/docs/crawling-indexing/robots/create-robots-txt
-Sitemap: https://lobste.rs/sitemap.xml.gz

@@ -52,3 +52,5 @@ lib/tasks/deploy.rake
 storage/
 
 /config/master.key
+
+.env

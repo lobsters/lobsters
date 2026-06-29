@@ -174,7 +174,7 @@ class User < ApplicationRecord
   end
 
   # days old accounts are considered new for
-  NEW_USER_DAYS = 2
+  NEW_USER_DAYS = 1
 
   # days old accounts are considered "mentored" by the user that invited them
   MENTORSHIP_DAYS = NEW_USER_DAYS * 2

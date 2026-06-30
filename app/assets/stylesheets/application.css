@@ -1022,7 +1022,7 @@ div.comment_text code {
 	list-style: none;
 }
 
-.caches ul {
+.caches[open] ul {
 	position: absolute;
 	background: var(--color-bg);
 	border: 1px solid var(--color-box-border);
@@ -1033,6 +1033,7 @@ div.comment_text code {
 }
 
 .caches li {
+	display: inline-block; /* Netsurf */
 	border-bottom: 1px solid var(--color-box-border);
 }
 

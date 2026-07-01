@@ -39,11 +39,11 @@ classes = [
         <a class="description_present" title="<%= truncate(ms.description, :length => 500) %>" href="<%= Routes.title_path ms %>">&#x2636;</a>
       <% end %>
 
-      <span class="tags">
+      <ul class="tags" aria-label="Tags">
         <% ms.tags.each do |tag| %>
-          <%= tag_link tag %>
+          <li><%= tag_link tag %></li>
         <% end %>
-      </span>
+      </ul>
       <% if ms.origin.present? %>
         <%= link_to ms.origin.identifier, origin_path(ms.origin), class: 'domain' %>
       <% elsif ms.domain.present? %>

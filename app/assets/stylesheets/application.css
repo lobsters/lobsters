@@ -663,6 +663,13 @@ li.story a.tag {
 
 li .tags {
 	margin-right: 0.25em;
+	display: inline-block;
+	vertical-align: middle;
+	padding: 0;
+}
+
+li .tags li {
+	display: inline-block;
 }
 
 li .domain {

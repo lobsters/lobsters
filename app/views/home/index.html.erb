@@ -58,11 +58,11 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
         href="<%= Routes.title_path story %>">&#x2636;</a>
     <% end %>
     <% if story.can_be_seen_by_user?(@user) %>
-      <span class="tags">
+      <ul class="tags" aria-label="Tags">
         <% story.tags.each do |tag| %>
-          <%= tag_link(tag) %>
+          <li><%= tag_link tag %></li>
         <% end %>
-      </span>
+      </ul>
       <% if story.origin.present? %>
         <%= link_to story.origin.identifier, origin_path(story.origin), class: 'domain' %>
       <% elsif story.domain.present? %>

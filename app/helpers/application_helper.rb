@@ -182,6 +182,7 @@ module ApplicationHelper
     link_to tag.tag,
       tag_path(tag),
       options.reverse_merge({
+        aria: {label: "Tag #{tag.tag}"},
         class: [tag.css_class, filtered_tags.include?(tag) ? "filtered" : nil],
         title: tag.description
       })

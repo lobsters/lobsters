@@ -533,7 +533,6 @@ ol.stories li.story div.story_liner {
 	overflow-wrap: break-word;
 }
 .comment {
-	clear: both;
 	padding-top: 0.4em;
 	padding-bottom: 0.4em;
 	position: relative;
@@ -712,6 +711,7 @@ li .comment_folder_button:checked ~ ol.comments li {
 }
 
 li.comments_subtree {
+	clear: both;
 	position: relative;
 }
 

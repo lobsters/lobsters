@@ -1402,7 +1402,7 @@ label:has(+ *[type="hidden"] + *:required)::after {
 }
 .labelled_grid input[type="text"],
 .labelled_grid input[type="password"] {
-	height: 1.5rlh;
+	height: 1.8rem;
 }
 
 .labelled_grid input[type="checkbox"] {

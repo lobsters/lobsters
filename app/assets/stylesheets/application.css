@@ -755,6 +755,19 @@ li.story .byline {
 	color: var(--color-fg-contrast-4-5);
 	text-decoration: none;
 }
+
+.details input:hover,
+.details input:focus-visible,
+.details summary:hover,
+.details summary:focus-visible,
+.details a:hover:not(details *),
+.details a:focus-visible:not(details *) {
+	position: relative;
+	z-index: 10;
+	background: var(--color-bg);
+	box-shadow: 0 0 0 0.25rem var(--color-bg);
+}
+
 .comment.replied .flagger,
 .comment.flagged .comment_replier {
 	color: var(--color-fg);

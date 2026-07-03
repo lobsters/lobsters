@@ -1610,50 +1610,33 @@ input[type="submit"].link_post.pushover_button {
 .color_cyan { color: #00FFFF !important }
 .color_the { color: #FFCE1B !important }
 .color_i_eat_toothpaste_for_fun { color: #00FDBF !important }
+
 .color_gay {
-	background: linear-gradient(
-		to right,
-		rgb(237, 34, 36),
-		rgb(243, 91, 34),
-		rgb(249, 150, 33),
-		rgb(245, 193, 30),
-		rgb(241, 235, 27) 27%,
-		rgb(241, 235, 27),
-		rgb(241, 235, 27) 33%,
-		rgb(99, 199, 32),
-		rgb(12, 155, 73),
-		rgb(33, 135, 141),
-		rgb(57, 84, 165),
-		rgb(97, 55, 155),
-		rgb(147, 40, 142)
-	);
-
-	background-size: 120% 100%;
-	background-position: 0 0;
-
-	-webkit-background-clip: text;
-	background-clip: text;
-	-webkit-text-fill-color: transparent;
-
-	display: inline-block;
-
-	animation: prideShift 2s ease-in-out infinite alternate;
+	background: linear-gradient( to right, rgb(237, 34, 36), rgb(243, 91, 34), rgb(249, 150, 33), rgb(245, 193, 30), rgb(241, 235, 27) 27%, rgb(241, 235, 27), rgb(241, 235, 27) 33%, rgb(99, 199, 32), rgb(12, 155, 73), rgb(33, 135, 141), rgb(57, 84, 165), rgb(97, 55, 155), rgb(147, 40, 142));
 }
-
 .color_yuri {
-	background: linear-gradient(
-		to right,
-		rgb(214, 41, 0),
-		rgb(226, 88, 34),
-		rgb(255, 154, 86),
-		rgb(255, 255, 255) 43%,
-		rgb(255, 255, 255),
-		rgb(255, 255, 255) 57%,
-		rgb(209, 98, 164),
-		rgb(181, 86, 144),
-		rgb(163, 2, 98)
-	);
+	background: linear-gradient( to right, rgb(214, 41, 0), rgb(226, 88, 34), rgb(255, 154, 86), rgb(255, 255, 255) 43%, rgb(255, 255, 255), rgb(255, 255, 255) 57%, rgb(209, 98, 164), rgb(181, 86, 144), rgb(163, 2, 98));
+}
+.color_genderfluid {
+	background: linear-gradient(to right, rgb(255, 120, 166), rgb(247, 196, 210), rgb(255, 255, 255) 23%, rgb(255, 255, 255), rgb(255, 255, 255) 28%, rgb(219, 148, 213), rgb(190, 20, 215), rgb(89, 22, 85), rgb(0, 0, 0) 73%, rgb(0, 0, 0), rgb(0, 0, 0) 78%, rgb(51, 36, 87), rgb(50, 60, 191)); 
+}
+.color_trans {
+	background: linear-gradient(to right, rgb(85, 205, 252), rgb(179, 157, 233), rgb(247, 168, 184), rgb(246, 216, 221), rgb(255, 255, 255) 45%, rgb(255, 255, 255), rgb(255, 255, 255) 55%, rgb(246, 216, 221), rgb(247, 168, 184), rgb(179, 157, 233), rgb(85, 205, 252));
+}
+.color_bi {
+	background: linear-gradient(to right, rgb(255, 0, 128), rgb(200, 37, 157), rgb(140, 71, 153), rgb(68, 46, 159), rgb(0, 50, 160));
+}
+.color_ace {
+	background: linear-gradient(to right, rgb(0, 0, 0), rgb(81, 81, 80), rgb(163, 162, 160), rgb(209, 208, 208), rgb(255, 255, 255) 60%, rgb(255, 255, 255), rgb(255, 255, 255) 70%, rgb(185, 151, 185), rgb(101, 46, 129));
+}
+.color_pan {
+	background: linear-gradient(to right, rgb(255, 30, 140) 10%, rgb(255, 102, 57), rgb(255, 230, 29) 40%, rgb(255, 230, 29), rgb(255, 230, 29) 60%, rgb(87, 229, 98), rgb(31, 179, 253) 85%, rgb(31, 179, 253), rgb(31, 179, 253));
+}
+.color_enby {
+	background: linear-gradient(to right, rgb(253, 219, 0), rgb(238, 212, 143), rgb(255, 255, 255) 30%, rgb(255, 255, 255), rgb(255, 255, 255) 36%, rgb(212, 181, 222), rgb(156, 92, 212), rgb(88, 50, 96), rgb(0, 0, 0));
+}
 
+.color_enby, .color_pan, .color_ace, .color_bi, .color_trans, .color_genderfluid, .color_yuri, .color_gay {
 	background-size: 120% 100%;
 	background-position: 0 0;
 
@@ -1666,7 +1649,8 @@ input[type="submit"].link_post.pushover_button {
 	animation: prideShift 2s ease-in-out infinite alternate;
 }
 
-h1.color_yuri, h1.color_gay {
+h1.color_enby, h1.color_pan, h1.color_ace, h1.color_bi, h1.color_trans,
+h1.color_genderfluid, h1.color_yuri, h1.color_gay {
 	line-height: 1.1; /* or 1.2 if needed */
 }
 

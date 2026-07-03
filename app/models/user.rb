@@ -119,6 +119,7 @@ class User < ApplicationRecord
     the: 9,
     gay: 69,
     yuri: 42,
+    enby: 55, pan: 56, ace: 57, bi: 58, trans: 59, genderfluid: 60,
     i_eat_toothpaste_for_fun: 67,
   }, default: :default
 

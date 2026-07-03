@@ -774,11 +774,14 @@ span.new_user, a.new_user,
 li .byline a.new_user {
 	color: var(--color-fg-affirmative);
 }
-span.inactive_user, a.inactive_user,
-li .byline a.inactive_user,
+a.inactive_user,
 .inactive_tag {
 	color: var(--color-fg-contrast-5);
 	text-decoration: line-through;
+}
+a.inactive_user:focus-visible,
+a.inactive_user:hover {
+	text-decoration: none;
 }
 span.user_is_author, a.user_is_author,
 li .byline a.user_is_author {

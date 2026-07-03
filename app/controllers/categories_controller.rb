@@ -22,8 +22,6 @@ class CategoriesController < ApplicationController
 
   def edit
     @category = Category.where(category: params[:category_name]).first!
-    @title = "Edit Category"
-    @title_h1 = true
   end
 
   def update

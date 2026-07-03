@@ -5,7 +5,6 @@ class AboutController < ApplicationController
   before_action :show_title_h1, except: [:four_oh_four]
 
   def four_oh_four
-    @title = "Resource Not Found"
     @requested_path = request.original_fullpath
     render action: "404", status: 404
   end

@@ -1,4 +1,5 @@
 <%# locals: (tag:, related:) -%>
+<% content_for :title, "Tag #{tag.tag}" %>
 <div class="box">
   <p>
     Stories <a href="/tags#<%= tag.tag %>">tagged</a> as

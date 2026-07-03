@@ -186,7 +186,6 @@ describe HomeController do
       title = [tag1, tag2].map { [it.tag, it.description].join(" - ") }.join(" ")
 
       expect(response).to be_successful
-      expect(@controller.view_assigns["title"]).to eq(title)
       [story1, story2, story3].each do |story|
         expect(@controller.view_assigns["stories"]).to include(story)
       end

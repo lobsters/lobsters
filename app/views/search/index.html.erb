@@ -1,4 +1,5 @@
 <%# locals: () -%>
+<% content_for :title, @search.results_count > -1 ? "Search results" : "Search" %>
 <%= form_with url: '/search', method: :get, html: { aria: {label: "Search"} }, class: "search-form" do |f| %>
   <div class="boxline">
     <%= f.text_field "q", { aria: { label: "Search query" }, value: @search.q, size: 40, autocapitalize: :off, type: "search" }.

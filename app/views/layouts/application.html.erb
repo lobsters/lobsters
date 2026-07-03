@@ -21,8 +21,11 @@
   <% if controller_name == "stories" && action_name == "show" %>
     <%= tag :link, href: Routes.title_url(@story), rev: :canonical, rel: "self alternate shorter shorturl shortlink" %>
   <% end %>
-  <title><%= @title.present? ? "#{@title} | " : "" %><%=
-    Rails.application.name %></title>
+
+  <title>
+    <% t = content_for?(:title) ? yield(:title) : @title %>
+    <%= [t.to_s.strip.presence, Rails.application.name].compact.join(' | ') %>
+  </title>
 
   <%= stylesheet_link_tag "application" %>
   <%= stylesheet_link_tag (@user&.prefers_color_scheme || "system") + "-" + (@user&.prefers_contrast || "system") %>
@@ -114,7 +117,9 @@
   <% end %>
 
   <div id="inside">
-    <% if @title.present? && @title_h1 %>
+    <% if content_for?(:title_h1) %>
+      <h1 class="<%= @title_class %>"><%= yield(:title_h1) %></h1>
+    <% elsif @title.present? && @title_h1 %>
       <h1 class="<%= @title_class %>"><%= @title %></h1>
     <% end %>
 

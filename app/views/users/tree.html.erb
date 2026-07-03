@@ -1,7 +1,9 @@
+<%# locals: (user_count:) -%>
+<% content_for :title, "Users" %>
+<% content_for :title_h1, "Users (#{user_count})" %>
+
 <% cache [@newest_user] do %>
 <div class="box wide">
-  <h1><%= @title %> (<%= number_with_delimiter(@user_count) %>)</h1>
-
   <% if @newest %>
     <p>
     Newest users:

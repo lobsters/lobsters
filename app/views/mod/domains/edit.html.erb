@@ -1,5 +1,6 @@
+<% content_for :title, @domain.new_record? ? "Edit New Domain" : "Edit Domain #{@domain.domain}" %>
+<% content_for :title_h1, @domain.new_record? ? "New Domain" : @domain.domain %>
 <div id="domain_box" class="box wide">
-  <h1><%= "New domain" if @domain.new_record? %> <%= @domain.domain %></h1>
 
   <%= form_with model: [:mod, @domain] do |f| %>
     <%= errors_for @domain %>

@@ -1,9 +1,16 @@
+<%# locals: (user_count:) -%>
+<% title = "" %>
+<% if params[:by].to_s == "karma" %>
+  <% title = "Users By Karma" %>
+<% end %>
+<% if params[:moderators] %>
+  <% title = "Moderators and Administrators" %>
+<% end %>
+
+<% content_for :title, title  %>
+<% content_for :title_h1, "#{title} (#{user_count})" %>
 <% cache [@newest_user, @for] do %>
 <div class="box wide">
-  <p>
-  <strong><%= @title %> (<%= @user_count %>)</strong>
-  </p>
-
   <ul class="user_tree">
   <% @users.each do |user| %>
     <li>

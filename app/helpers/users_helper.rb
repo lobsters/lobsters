@@ -54,6 +54,7 @@ module UsersHelper
       html_options[:class].push "new_user"
       html_options[:aria] = {label: "#{user.username} - New user"}
     end
+    html_options[:class].push user.custom_color_classname
     html_options.delete(:class) if html_options[:class].empty?
 
     safe_join([

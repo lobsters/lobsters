@@ -43,6 +43,17 @@
         <span class="hint">Link external accounts below</span>
         </span>
 
+        <div>
+          <div>
+          <%= f.label :custom_color, "Custom Color" %>
+          </div>
+          <div>
+            Looks like:
+            <span class="<%= @user.custom_color_classname %>"><%= @user.username %></span>
+          </div>
+        </div>
+
+        <%= f.select :custom_color, User.custom_colors.map { |k, v| [k.humanize.capitalize, k] } %>
         <%= f.label :about, "About" %>
         <div>
           <%= f.text_area :about %>

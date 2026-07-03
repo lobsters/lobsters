@@ -1600,13 +1600,84 @@ input[type="submit"].link_post.pushover_button {
 /* used for username colors */
 
 .color_default {}
-.color_green { color: var(--color-fg-affirmative) }
-.color_red { color: red }
-.color_pink { color: pink }
-.color_blellow { color: #4CAF50 }
-.color_blurple { color: #5865F2 }
-.color_cyan { color: #00FFFF }
-.color_the { color: #FFCE1B }
+.color_green { color: #008000 !important }
+.color_red { color: red  !important}
+.color_pink { color: #FF46A2 !important }
+.color_blue { color: #00008B !important }
+.color_light_blue { color: #1E90FF !important }
+.color_blellow { color: #4CAF50 !important }
+.color_blurple { color: #8A2BE2 !important }
+.color_cyan { color: #00FFFF !important }
+.color_the { color: #FFCE1B !important }
+.color_i_eat_toothpaste_for_fun { color: #00FDBF !important }
+.color_gay {
+	background: linear-gradient(
+		to right,
+		rgb(237, 34, 36),
+		rgb(243, 91, 34),
+		rgb(249, 150, 33),
+		rgb(245, 193, 30),
+		rgb(241, 235, 27) 27%,
+		rgb(241, 235, 27),
+		rgb(241, 235, 27) 33%,
+		rgb(99, 199, 32),
+		rgb(12, 155, 73),
+		rgb(33, 135, 141),
+		rgb(57, 84, 165),
+		rgb(97, 55, 155),
+		rgb(147, 40, 142)
+	);
+
+	background-size: 120% 100%;
+	background-position: 0 0;
+
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+
+	display: inline-block;
+
+	animation: prideShift 2s ease-in-out infinite alternate;
+}
+
+.color_yuri {
+	background: linear-gradient(
+		to right,
+		rgb(214, 41, 0),
+		rgb(226, 88, 34),
+		rgb(255, 154, 86),
+		rgb(255, 255, 255) 43%,
+		rgb(255, 255, 255),
+		rgb(255, 255, 255) 57%,
+		rgb(209, 98, 164),
+		rgb(181, 86, 144),
+		rgb(163, 2, 98)
+	);
+
+	background-size: 120% 100%;
+	background-position: 0 0;
+
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+
+	display: inline-block;
+
+	animation: prideShift 2s ease-in-out infinite alternate;
+}
+
+h1.color_yuri, h1.color_gay {
+	line-height: 1.1; /* or 1.2 if needed */
+}
+
+@keyframes prideShift {
+	from {
+		background-position: 0% 0%;
+	}
+	to {
+		background-position: 8% 0%;
+	}
+}
 
 /* Used in the user settings page */
 .radio-group-container.grid-fieldset {

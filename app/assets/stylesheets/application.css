@@ -1597,6 +1597,17 @@ input[type="submit"].link_post.pushover_button {
 	gap: 1rem;
 }
 
+/* used for username colors */
+
+.color_default {}
+.color_green { color: var(--color-fg-affirmative) }
+.color_red { color: red }
+.color_pink { color: pink }
+.color_blellow { color: #4CAF50 }
+.color_blurple { color: #5865F2 }
+.color_cyan { color: #00FFFF }
+.color_the { color: #FFCE1B }
+
 /* Used in the user settings page */
 .radio-group-container.grid-fieldset {
 	margin-bottom: 0.75rem;

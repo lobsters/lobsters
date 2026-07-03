@@ -285,7 +285,8 @@ class SettingsController < ApplicationController
       :email_replies, :email_messages, :email_mentions, :inbox_mentions,
       :pushover_replies, :pushover_messages, :pushover_mentions,
       :mailing_list_mode, :show_email, :show_avatars, :show_story_previews,
-      :show_submitted_story_threads, :prefers_color_scheme, :prefers_contrast
+      :show_submitted_story_threads, :prefers_color_scheme, :prefers_contrast,
+      :custom_color
     )
   end
 end

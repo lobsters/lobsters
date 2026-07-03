@@ -121,6 +121,10 @@ class User < ApplicationRecord
     "color_#{self.custom_color}"
   end
 
+  def has_custom_color?
+    custom_color != "default"
+  end
+
   validates :prefers_color_scheme, inclusion: %w[system light dark]
   validates :prefers_contrast, inclusion: %w[system normal high]
 

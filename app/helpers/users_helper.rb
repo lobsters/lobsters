@@ -51,7 +51,7 @@ module UsersHelper
       html_options[:aria] = {label: "#{user.username} - Inactive user"}
     end
     if user.is_new?
-      html_options[:class].push "new_user"
+      html_options[:class].push "new_user" unless user.has_custom_color?
       html_options[:aria] = {label: "#{user.username} - New user"}
     end
     html_options[:class].push user.custom_color_classname

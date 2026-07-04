@@ -1,8 +1,12 @@
 <%# locals: () -%>
 <% content_for :subnav do %>
-  <%= link_to_different_page 'Inbox', inbox_all_path %>
-  <%= link_to_different_page 'Unread', inbox_unread_path %>
-  <%= link_to_different_page 'Messages', messages_path %>
-  <%= link_to_different_page 'Sent', messages_sent_path %>
-  <%= link_to_different_page 'ModMail', mod_mails_path %>
+  <nav id="subnav" aria-label="Subnavigation">
+    <ul>
+      <li class="push-right"><%= link_to_different_page 'Inbox', inbox_all_path %></li>
+      <li><%= link_to_different_page 'Unread', inbox_unread_path %></li>
+      <li><%= link_to_different_page 'Messages', messages_path %></li>
+      <li><%= link_to_different_page 'Sent', messages_sent_path %></li>
+      <li><%= link_to_different_page 'ModMail', mod_mails_path %></li>
+    </ul>
+  </nav>
 <% end %>

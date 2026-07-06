@@ -192,7 +192,7 @@ class User < ApplicationRecord
   MIN_KARMA_FOR_INVITATION_REQUESTS = MIN_KARMA_TO_FLAG
 
   # proportion of posts authored by user to consider as heavy self promoter
-  HEAVY_SELF_PROMOTER_PROPORTION = 0.49
+  HEAVY_SELF_PROMOTER_PROPORTION = 0.51
 
   # minimum number of submitted stories before checking self promotion
   MIN_STORIES_CHECK_SELF_PROMOTION = 2
@@ -516,13 +516,13 @@ class User < ApplicationRecord
   end
 
   def is_heavy_self_promoter?
-    total_count = stories_submitted_count + comments_posted_count
+    total_count = stories_submitted_count
 
     if total_count < MIN_STORIES_CHECK_SELF_PROMOTION
       false
     else
-      unauthored = stories.where(user_is_author: false).count + comments.on_stories_not_authored_by(self).count
-      unauthored.to_f / total_count <= HEAVY_SELF_PROMOTER_PROPORTION
+      authored = stories.where(user_is_author: true).count
+      authored.to_f / total_count >= HEAVY_SELF_PROMOTER_PROPORTION
     end
   end
 

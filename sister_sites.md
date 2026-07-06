@@ -6,6 +6,7 @@ If you start a site, please PR yourself into the list and join us [on Zulip](htt
 * [Le Journal du Hacker](https://www.journalduhacker.net/) - Hacker News in French (fr)
 * [tilde news](https://tilde.news/) ([repo](https://tildegit.org/tildeverse/tilde.news)) - [tildeverse](https://tildeverse.org) links: unix, small web, decentralization
 * [Commons News](https://commons.news/) - Progressive Politics
+* [Simpul](https://simpul.drepram.com/) - Social studies and humanities articles and discussion for Indonesian readers (id)
 
 
 # Defunct sister sites

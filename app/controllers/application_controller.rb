@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   SESSION_DEFAULT_KEYS = %w[session_id _csrf_token]
   # match this in caddy config for bypassing the file cache
   TAG_FILTER_COOKIE = :tag_filters
-  CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? }
+  CACHE_PAGE = proc { @user.blank? && cookies[TAG_FILTER_COOKIE].blank? && clear_session_cookie? }
 
   # copied from https://github.com/rack/rack/blob/main/lib/rack/utils.rb
   VALID_COOKIE_KEY = /\A[!#$%&'*+\-.\^_`|~0-9a-zA-Z]+\z/
@@ -92,7 +92,7 @@ class ApplicationController < ActionController::Base
   def clear_session_cookie?
     # If the session has been loaded, it will contain some default keys and not
     # be `empty?`
-    !@user && session.keys.all? { |k| SESSION_DEFAULT_KEYS.include?(k.to_s) }
+    !@user && session.keys.all? { |k| SESSION_DEFAULT_KEYS.include?(k.to_s) } && flash.empty?
   end
 
   def find_user_from_rss_token

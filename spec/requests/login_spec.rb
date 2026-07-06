@@ -6,9 +6,9 @@ describe "login", type: :request do
   let!(:inactive_user) { create(:user, :inactive) }
   let(:user) { create(:user, password: "asdf") }
   let(:banned) { create(:user, :banned, password: "asdf") }
-  let(:deleted) { create(:user, :deleted, password: "asdf") }
+  let(:deactivated) { create(:user, :deactivated, password: "asdf") }
   let(:banned_wiped) { create(:user, :banned, :wiped, password: "asdf") }
-  let(:deleted_wiped) { create(:user, :deleted, :wiped, password: "asdf") }
+  let(:deactivated_wiped) { create(:user, :deactivated, :wiped, password: "asdf") }
 
   describe "/login" do
     describe "happy path" do
@@ -54,12 +54,12 @@ describe "login", type: :request do
       expect(flash[:error]).to match(/banned/)
     end
 
-    it "doesn't allow login by deleted users" do
+    it "doesn't allow login by deactivated users" do
       expect {
-        post "/login", params: {email: deleted.email, password: "asdf"}
+        post "/login", params: {email: deactivated.email, password: "asdf"}
       }.to change { ModNote.count }.by(1)
       expect(session[:u]).to be_nil
-      expect(flash[:error]).to match(/deleted/)
+      expect(flash[:error]).to match(/deactivated/)
     end
 
     describe "wiped accounts" do
@@ -69,8 +69,8 @@ describe "login", type: :request do
         expect(flash[:error]).to match(/wiped/)
       end
 
-      it "doesn't allow login by deleted and wiped users" do
-        post "/login", params: {email: deleted_wiped.email, password: "asdf"}
+      it "doesn't allow login by deactivated and wiped users" do
+        post "/login", params: {email: deactivated_wiped.email, password: "asdf"}
         expect(session[:u]).to be_nil
         expect(flash[:error]).to match(/wiped/)
       end
@@ -97,11 +97,11 @@ describe "login", type: :request do
       }.to(change { User.find(user.id).password_reset_token })
     end
 
-    it "starts reset process for deleted users" do
+    it "starts reset process for deactivated users" do
       expect {
-        post "/login/reset_password", params: {email: deleted.email}
+        post "/login/reset_password", params: {email: deactivated.email}
         expect(flash[:success]).to_not be_nil
-      }.to(change { User.find(deleted.id).password_reset_token })
+      }.to(change { User.find(deactivated.id).password_reset_token })
     end
 
     it "doesn't start reset process if user was banned" do
@@ -111,11 +111,11 @@ describe "login", type: :request do
       }.not_to(change { User.find(banned.id).password_reset_token })
     end
 
-    it "doesn't start reset process if user was deleted and wiped" do
+    it "doesn't start reset process if user was deactivated and wiped" do
       expect {
-        post "/login/reset_password", params: {email: deleted_wiped.email}
+        post "/login/reset_password", params: {email: deactivated_wiped.email}
         expect(flash[:success]).to be_nil
-      }.not_to(change { User.find(deleted_wiped.id).password_reset_token })
+      }.not_to(change { User.find(deactivated_wiped.id).password_reset_token })
     end
 
     it "doesn't show forgot password form if user is already logged in" do

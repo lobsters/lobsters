@@ -87,6 +87,15 @@
             <% end %>
             <% if value.to_s != @search.strip_short_terms(value) %>
               <br>Terms must be at least 4 characters long.
+            <% end %>
+          </dd>
+        <% when :shortword %>
+          <dt><span class="searchq"><%= value %></span></dt>
+          <dd>
+            Shortword: <span class="searchq"><%= value %></span>
+              <br>Terms must be at least 3 characters long.
+              If you're searching for a phrase, use quotes, like <span class="searchq">"Files are hard"</span>.
+            <% if value.to_s != @search.strip_short_terms(value) %>
               <% if value.to_s.downcase =~ /\b(d\b|go\b|ml\b|c([+][+]|\b)?)/ %>
                 <% lang = $& %>
                 <br>For the
@@ -99,13 +108,6 @@
                 <br>Use <span class="searchq">tag:ai</span> for artificial intelligence/machine learning
               <% end %>
             <% end %>
-          </dd>
-        <% when :shortword %>
-          <dt><span class="searchq"><%= value %></span></dt>
-          <dd>
-            Shortword: <span class="searchq"><%= value %></span>
-              <br>Terms must be at least 3 characters long.
-              If you're searching for a phrase, use quotes, like <span class="searchq">"Files are hard"</span>.
           </dd>
         <% when :stopword %>
           <dt><span class="searchq"><%= value %></span></dt>

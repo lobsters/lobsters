@@ -24,6 +24,8 @@ RSpec.feature "Filtering" do
         expect(page).to have_checked_field(tag.description)
         expect(page.driver.request.cookies["tag_filters"]).to eq(tag.to_param)
 
+        expect(page).to have_content("Your filters have been updated.")
+
         visit "/"
         expect(page).to_not have_content(story.title)
       end

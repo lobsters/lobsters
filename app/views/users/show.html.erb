@@ -97,7 +97,7 @@
       </div>
     <% end %>
 
-    <% if @user&.is_admin? || @user&.show_email? %>
+    <% if @user&.is_admin? || (@user && @showing_user&.show_email?) %>
       <label>E-Mail</label>
       <span>
         <%= @showing_user.email %>

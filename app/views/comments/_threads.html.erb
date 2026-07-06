@@ -52,11 +52,13 @@
   # is_unread: show (unread) in byline
   # show_folder_control: whether to display the control to hide the comment
 %>
-<input id="comment_folder_<%= comment.short_id %>"
-  class="comment_folder_button" type="checkbox"
-  <%= force_open ||
-      @user.try(:is_moderator?) ||
-      (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
+<% if show_folder_control %>
+  <input id="comment_folder_<%= comment.short_id %>"
+    class="comment_folder_button" type="checkbox"
+    <%= force_open ||
+        @user.try(:is_moderator?) ||
+        (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
+<% end %>
 
       <% can_flag = @user && @user.can_flag?(comment) %>
 <div id="c_<%= comment.short_id %>"

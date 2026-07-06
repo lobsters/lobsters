@@ -16,6 +16,7 @@ But I make an unprincipled exception for :has because it solves so many big prob
 	--color-bg-50: rgb(var(--base-bg) / 50%);
 
 	--color-fg: rgb(var(--base-fg) / var(--opacity-fg)); /* primary text */
+	--color-fg-accent: currentColor;
 	--color-fg-contrast-13: rgb(var(--base-fg) / var(--opacity-fg-contrast-13));
 	--color-fg-contrast-10: rgb(var(--base-fg) / var(--opacity-fg-contrast-10));
 	--color-fg-contrast-7-5: rgb(var(--base-fg) / var(--opacity-fg-contrast-7-5));
@@ -529,7 +530,7 @@ li.story {
 ol.stories li.story div.story_liner {
 	padding-top: 0.25em;
 	padding-bottom: 0.25em;
-	word-break: break-word;
+	overflow-wrap: break-word;
 }
 .comment {
 	clear: both;
@@ -1387,7 +1388,7 @@ label:has(+ *[type="hidden"] + *:required)::after {
 .labelled_grid {
 	display: grid;
 	grid-template-columns: minmax(10rem, min-content) 1fr;
-	word-break: break-word;
+	overflow-wrap: break-word;
 	column-gap: 1rem;
 	row-gap: 12px;
 }

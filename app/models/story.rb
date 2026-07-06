@@ -760,7 +760,7 @@ class Story < ApplicationRecord
   end
 
   def is_gone?
-    is_deleted? || (user.is_banned? && score < 0)
+    is_deleted? || (user.is_banned? && score < 0 && is_moderated = false)
   end
 
   def is_hidden_by_user?(user)
@@ -902,7 +902,7 @@ class Story < ApplicationRecord
     # if enough users voted on the same set of replacement tags, do it
     tag_votes = {}
     tag_quorums = {}
-    
+
     suggested_taggings.group_by(&:user_id).each do |_u, stg|
       stg.each do |s|
         tag_votes[s.tag.tag] ||= 0

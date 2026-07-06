@@ -11,7 +11,8 @@ module ApplicationHelper
       srcset: "#{user.avatar_path(size)} 1x, #{user.avatar_path(size * 2)} 2x",
       class: "avatar",
       size: "#{size}x#{size}",
-      alt: "#{user.username} avatar",
+      # No need for alt since avatars are hidden by aria-hidden.
+      alt: "",
       loading: "lazy",
       decoding: "async"
     )
@@ -71,12 +72,13 @@ module ApplicationHelper
     # if link hast text to the left
     if index != 0
       t = parsed.children.first.text
-      parsed.children.first.replace(t.split.last(words).join(" ") + " ")
+      # use .content not .replace(str), .replace reparses strings so would turn &lt; into < for XSS
+      parsed.children.first.content = t.split.last(words).join(" ") + " "
     end
     # if link has text to the right
     if index != parsed.children.count - 1
       t = parsed.children.last.text
-      parsed.children.last.replace(" " + t.split.last(words).join(" "))
+      parsed.children.last.content = " " + t.split.last(words).join(" ")
     end
 
     parsed.to_html

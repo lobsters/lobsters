@@ -149,6 +149,7 @@ Rails.application.routes.draw do
   get "/~:username/standing" => "users#standing", :as => "user_standing"
   get "/~:user/stories(/page/:page)" => "home#newest_by_user", :as => "newest_by_user"
   get "/~:user/threads" => "comments#user_threads", :as => "user_threads"
+  get "/~:user/comments.rss" => "comments#user_comments", :as => "user_comments", :format => "rss"
 
   post "/~:username/ban" => "users#ban", :as => "user_ban"
   post "/~:username/unban" => "users#unban", :as => "user_unban"

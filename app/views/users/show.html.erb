@@ -8,106 +8,110 @@
 
 <section class="profile">
   <% if @showing_user.is_active? %>
-    <div id="gravatar">
+    <div id="gravatar" aria-hidden="true">
       <%= avatar_img(@showing_user, 100) %>
     </div>
   <% end %>
 
-  <div class="labelled_grid">
-  <label>Status</label>
-  <span>
-    <% if @showing_user.is_banned? %>
-      Banned by a moderator
-    <% elsif !@showing_user.is_active? %>
-      User deactivated own account
-    <% else %>
-      Active
-      <%= @showing_user.is_admin? ? "administrator" :
-        (@showing_user.is_moderator? ? "moderator" : "user") %>
-      <% if !@showing_user.can_invite? %>
-        with invites
-        <% if !@showing_user.can_submit_stories? %>
-          and story submissions
+  <dl class="labelled_grid">
+    <dt>Status</dt>
+    <dd>
+      <% if @showing_user.is_banned? %>
+        Banned by a moderator
+      <% elsif !@showing_user.is_active? %>
+        User deactivated own account
+      <% else %>
+        Active
+        <%= @showing_user.is_admin? ? "administrator" :
+          (@showing_user.is_moderator? ? "moderator" : "user") %>
+        <% if !@showing_user.can_invite? %>
+          with invites
+          <% if !@showing_user.can_submit_stories? %>
+            and story submissions
+          <% end %>
+          disabled
         <% end %>
-        disabled
       <% end %>
-    <% end %>
-  </span>
+    </dd>
 
-    <label>Joined</label>
-    <span>
+    <dt>Joined</dt>
+    <dd>
       <%= how_long_ago_label(@showing_user.created_at) %>
       <% if @showing_user.invited_by_user %>
         by <%= link_to 'invitation', users_tree_path(anchor: @showing_user.username) %> from
         <%= link_to @showing_user.invited_by_user.try(:username), @showing_user.invited_by_user %>
       <% end %>
-    </span>
+    </dd>
 
     <% if @showing_user.is_banned? %>
-      <label>Banned</label>
-      <span>
+      <dt>Banned</dt>
+      <dd>
         <%= how_long_ago_label(@showing_user.banned_at) %>
         <% if @showing_user.banned_by_user %>
           by <%= link_to @showing_user.banned_by_user.try(:username),
             @showing_user.banned_by_user %>:
             <em><%= @showing_user.banned_reason %></em>
         <% end %>
-      </span>
+      </dd>
     <% end %>
 
     <% if @showing_user.deleted_at? %>
-      <label>Deactivated</label>
-      <span>
+      <dt>Deactivated</dt>
+      <dd>
         <%= how_long_ago_label(@showing_user.deleted_at) %>
         <% if @showing_user.deleted_at <= Time.new(2025, 9, 9) && !@showing_user.is_banned? %>
           <br>
           (This user deactivated before deactivations were added to the moderation log.)
         <% end %>
-      </span>
+      </dd>
     <% end %>
 
     <% if !@showing_user.is_admin? %>
-      <label>Karma</label>
-      <span>
+      <dt>Karma</dt>
+      <dd>
         <%= @showing_user.karma %>
-      </span>
+      </dd>
     <% end %>
 
-    <label>Stories Submitted</label>
-    <span>
+    <dt>Stories Submitted</dt>
+    <dd>
       <%= stories_submitted_content(@user, @showing_user) %>
-    </span>
+    </dd>
 
-    <label>Comments Posted</label>
-    <span><%= comments_posted_content(@user, @showing_user) %></span>
+    <dt>Comments Posted</dt>
+    <dd><%= comments_posted_content(@user, @showing_user) %></dd>
 
     <% if @showing_user.hats.any? %>
-      <label>Hats</label>
-      <div>
-      <% @showing_user.hats.each do |hat| %>
-        <%= styled_hat(hat) %>
-        <% if hat.doffed_at? %>
-          doffed <%= how_long_ago_label(hat.doffed_at) %>
-        <% else %>
-          <% if @user && ((hat.user == @user) || @user.is_moderator?) %>
-            <%= link_to 'Doff', doff_hat_path(hat) %>
-          <% end %>
+      <dt>Hats</dt>
+      <dd>
+        <ul class="hats">
+          <% @showing_user.hats.each do |hat| %>
+            <li>
+              <%= styled_hat(hat) %>
+              <% if hat.doffed_at? %>
+                doffed <%= how_long_ago_label(hat.doffed_at) %>
+              <% else %>
+                <% if @user && ((hat.user == @user) || @user.is_moderator?) %>
+                  <%= link_to 'Doff', doff_hat_path(hat) %>
+                <% end %>
+              <% end %>
+            </li>
         <% end %>
-      <% end %>
-      </div>
+        </ul>
+      </dd>
     <% end %>
 
     <% if @user&.is_admin? || (@user && @showing_user&.show_email?) %>
-      <label>E-Mail</label>
-      <span>
+      <dt>E-Mail</dt>
+      <dd>
         <%= @showing_user.email %>
-      </span>
+      </dd>
     <% end %>
 
     <% if @showing_user.homepage.present? %>
-      <label>Homepage</label>
+      <dt>Homepage</dt>
 
-      <span>
+      <dd>
         <a href="<%= h(@showing_user.homepage) %>"
           rel="me ugc"><%= h(@showing_user.homepage) %></a>
         <% if @showing_user.homepage.start_with?('gemini://') %>
@@ -115,42 +119,42 @@
         <% elsif @showing_user.homepage.start_with?('gopher://') %>
           (<a href="https://gopher.floodgap.com/gopher/gw?<% h(@showing_user.homepage[9..-1]) %>">proxy</a>)
         <% end %>
-      </span>
+      </dd>
     <% end %>
 
     <% if @showing_user.github_username.present? %>
-      <label>GitHub</label>
+      <dt>GitHub</dt>
 
-      <span>
+      <dd>
         <a href="https://github.com/<%= h(@showing_user.github_username) %>"
           rel="me ugc">https://github.com/<%= h(@showing_user.github_username)
           %></a>
-      </span>
+      </dd>
     <% end %>
 
     <% if @showing_user.mastodon_username.present? && @showing_user.mastodon_instance.present? %>
-      <label>Mastodon</label>
+      <dt>Mastodon</dt>
 
-      <span>
+      <dd>
         <a href="https://<%= h(@showing_user.mastodon_instance)%>/@<%= h(@showing_user.mastodon_username)%>"
           rel="me ugc">@<%= h(@showing_user.mastodon_username)%>@<%= h(@showing_user.mastodon_instance)%>
           </a>
-      </span>
+      </dd>
     <% end %>
 
     <% if @showing_user.is_active? %>
-      <label>About</label>
+      <dt>About</dt>
 
-      <div class="shorten_first_p">
+      <dd class="shorten_first_p">
         <% if @showing_user.about.present? %>
           <%= raw @showing_user.linkified_about %>
         <% else %>
           <span class="na">A mystery...</span>
         <% end %>
-      </div>
+      </dd>
     <% end %>
 
-  </div>
+  </dl>
 </section>
 
 <% if Rails.env.development? || @user == @showing_user || @user&.is_moderator? %>

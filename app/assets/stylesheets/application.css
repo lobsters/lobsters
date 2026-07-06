@@ -152,7 +152,7 @@ span.na {
 	font-style: italic;
 }
 
-div.shorten_first_p p:first-child {
+.shorten_first_p p:first-child {
 	margin-top: 0;
 }
 
@@ -1323,8 +1323,17 @@ label:has(+ *[type="hidden"] + *:required)::after {
 	vertical-align: middle;
 }
 /* Labels on the (read-only) Profile page get extra contrast */
-.profile label::after {
-	content: ":";
+.profile dt::after {
+	content: ":"/"";
+}
+.profile .hats {
+	padding: 0;
+}
+.profile .hats li {
+	display: inline-block;
+}
+.profile .hats li:not(:last-child)::after {
+	content: ", "/""
 }
 .box img {
 	vertical-align: middle;

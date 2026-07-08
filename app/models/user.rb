@@ -70,6 +70,7 @@ class User < ApplicationRecord
   has_many :suggested_taggings, dependent: :restrict_with_exception
   has_many :suggested_titles, dependent: :restrict_with_exception
   has_many :mod_mail_recipients, dependent: :restrict_with_exception
+  has_many :mod_mails, through: :mod_mail_recipients, dependent: :restrict_with_exception
   has_many :mod_mail_messages, dependent: :restrict_with_exception
 
   include EmailBlocklistValidation
@@ -197,7 +198,6 @@ class User < ApplicationRecord
   # minimum number of submitted stories before checking self promotion
   MIN_STORIES_CHECK_SELF_PROMOTION = 2
 
-  # enum for avatar source
   AVATAR_SOURCES = {
     Gravatar: 0,
     GitHub: 1
@@ -272,7 +272,7 @@ class User < ApplicationRecord
       msg.deleted_by_author = true
       msg.author_user_id = disabler.id
       msg.recipient_user_id = id
-      msg.subject = "Your invite privileges have been revoked"
+      msg.subject = "Your invite and suggestion privileges have been revoked"
       msg.body = "The reason given:\n" \
         "\n" \
         "> *#{reason}*\n" \
@@ -283,7 +283,7 @@ class User < ApplicationRecord
       m = Moderation.new
       m.moderator_user_id = disabler.id
       m.user_id = id
-      m.action = "Disabled invitations"
+      m.action = "Disabled invitations and suggestions"
       m.reason = reason
       m.save!
     end
@@ -319,13 +319,13 @@ class User < ApplicationRecord
     if is_new?
       return false
     elsif obj.is_a?(Story)
-      if obj.is_flaggable?
+      if obj.is_flaggable?(self)
         return true
       elsif obj.current_flagged?
         # user can unvote
         return true
       end
-    elsif obj.is_a?(Comment) && obj.is_flaggable?
+    elsif obj.is_a?(Comment) && obj.is_flaggable?(self)
       return karma >= MIN_KARMA_TO_FLAG
     end
 
@@ -333,7 +333,7 @@ class User < ApplicationRecord
   end
 
   def can_invite?
-    !banned_from_inviting? && can_submit_stories?
+    !is_new? && !banned_from_inviting? && can_submit_stories?
   end
 
   def can_offer_suggestions?
@@ -375,8 +375,17 @@ class User < ApplicationRecord
     Keystore.value_for("user:#{id}:comments_deleted").to_i
   end
 
-  def get_avatar_values
-    AVATAR_SOURCES
+  def expire_avatar!
+    expired = 0
+
+    Dir.entries(CACHE_DIR).select { |f|
+      f.match(/\A#{@user.username}-(\d+)\.png\z/)
+    }.each do |f|
+      # Rails.logger.debug { "Expiring #{f}" }
+      File.unlink("#{CACHE_DIR}/#{f}")
+      expired += 1
+    end
+    expired
   end
 
   def fetched_avatar(size = 100)

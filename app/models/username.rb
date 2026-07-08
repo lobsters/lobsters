@@ -43,4 +43,8 @@ class Username < ApplicationRecord
   def self.username_regex_s
     "/^" + VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, "") + "$/"
   end
+
+  def self.username_regex_html
+    VALID_USERNAME.to_s.gsub(/(\?-mix:|\(|\))/, "").sub("-]", "\\-]")
+  end
 end

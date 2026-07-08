@@ -3,27 +3,22 @@ class Mod::MailsController < Mod::ModController
   before_action :new_mod_mail, only: %i[create]
   before_action :parse_references_and_recipients, only: %i[update create]
 
-  # GET /mod_mails
   def index
     @mod_mails = ModMail.all
   end
 
-  # GET /mod_mails/1
   def show
     @mod_mail_message = ModMailMessage.new(user: @user, mod_mail: @mod_mail)
     @messages = @mod_mail.mod_mail_messages.order(:created_at)
   end
 
-  # GET /mod_mails/new
   def new
     @mod_mail = ModMail.new
   end
 
-  # GET /mod_mails/1/edit
   def edit
   end
 
-  # POST /mod_mails
   def create
     if @mod_mail.save
       redirect_to mod_mod_mail_path(@mod_mail), notice: "Mod mail was successfully created."
@@ -32,7 +27,6 @@ class Mod::MailsController < Mod::ModController
     end
   end
 
-  # PATCH/PUT /mod_mails/1
   def update
     if @mod_mail.update(mod_mail_params)
       redirect_to mod_mod_mail_path(@mod_mail), notice: "Mod mail was successfully updated.", status: :see_other

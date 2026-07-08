@@ -53,7 +53,7 @@ classes = [
       <div class="byline">
         <span><%= ms.user_is_author? ? "authored by" : "via" %></span>
         <%= inline_avatar_for @user, ms.user %>
-        <%= styled_user_link ms.user, ms, class: ['u-author', 'h-card'] %>
+        <%= styled_user_link ms.user, ms, class: ['u-author', 'h-card'] %> <%= you_invited you: @user, user: ms.user %>
 
         <% if ms.previewing %>
           <span>just now</span>
@@ -87,15 +87,17 @@ classes = [
           <% end %>
 
           <%= divider_tag %>
-          <%= form_with :class => "hider", url: ms.is_hidden_by_cur_user ? story_unhide_path(ms.short_id) : story_hide_path(ms.short_id) do |form| %>
-            <%= form.submit ms.is_hidden_by_cur_user ? "unhide" : "hide", :class => "btn-link" %>
+          <%= form_with :class => "hider", url: merged_stories.first.is_hidden_by_cur_user ? story_unhide_path(merged_stories.first.short_id) : story_hide_path(merged_stories.first.short_id) do |form| %>
+            <%= form.submit merged_stories.first.is_hidden_by_cur_user ? "unhide" : "hide", :class => "btn-link" %>
           <% end %>
 
           <% if ms.hider_count > 0 %>
             <span>
-              <% if ms.is_hidden_by_cur_user %>
-                (hidden by you and <%= pluralize(ms.hider_count - 1, "other user") %>)
-              <% else %>
+              <% if ms.is_hidden_by_cur_user && ( ms.hider_count - 1 ) > 0 %>
+                (hidden by <span class="hidden-by-you">you and</span>
+                <%= pluralize(ms.hider_count - 1, "other user") %>)
+              <% end %>
+              <% if !ms.is_hidden_by_cur_user %>
                 (hidden by <%= pluralize(ms.hider_count, "user") %>)
               <% end %>
             </span>
@@ -107,7 +109,7 @@ classes = [
           <% end %>
 
           <%= divider_tag %>
-          <%= form_with :class => "saver", url: merged_stories.first.is_saved_by_cur_user ? story_unsave_path(ms.short_id) : story_save_path(ms.short_id) do |form| %>
+          <%= form_with :class => "saver", url: merged_stories.first.is_saved_by_cur_user ? story_unsave_path(merged_stories.first.short_id) : story_save_path(merged_stories.first.short_id) do |form| %>
             <%= form.submit merged_stories.first.is_saved_by_cur_user ? "unsave" : "save", :class => "btn-link" %>
           <% end %>
 
@@ -118,12 +120,18 @@ classes = [
         <% else %>
           <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?))  %>
             <%= divider_tag %>
-            <label for="caches_<%= ms.short_id %>" class="caches" tabindex="0">caches</label>
-          <% end %>
+            <details class="caches" name="caches">
+              <summary>caches</summary>
+                <ul>
+                  <li><a href="<%= ms.archiveorg_url %>">Archive.org</a></li>
+                  <li><a href="<%= ms.ghost_url %>">Ghostarchive</a></li>
+                </ul>
+            </details>
+        <% end %>
 
           <span class="comments_label">
             <%= divider_tag %>
-            <a role="heading" aria-level="2" href="<%= Routes.title_path(merged_stories.first, anchor: ms.comments_anchor) %>">
+            <a role="heading" aria-level="2" href="<%= merged_stories.count > 1 ? Routes.title_path(merged_stories.first, anchor: ms.comments_anchor) : "#comments-#{merged_stories.first.short_id}" %>">
               <%= ms.comments_count.zero? ? "no" : ms.comments_count %>
               <%= 'comment'.pluralize(ms.comments_count) %>
             </a>
@@ -132,15 +140,7 @@ classes = [
           <% if ((@user&.is_moderator? && ms.flags > 0) || (ms.flags >= 3 || ms.score <= 0)) %>
             <span> <%= divider_tag %><%= ms.vote_summary_for(@user).downcase %> </span>
           <% end %>
-        <% end %>
       </div>
-      <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
-        <input id="caches_<%= ms.short_id %>" class="caches_button" type="checkbox">
-        <div class="caches-dropdown">
-          <a href="<%= ms.archiveorg_url %>">Archive.org</a>
-          <%= divider_tag %>
-          <a href="<%= ms.ghost_url %>">Ghostarchive</a>
-        </div>
       <% end %>
     </div>
   <% end %>

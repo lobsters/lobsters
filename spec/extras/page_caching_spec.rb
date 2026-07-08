@@ -11,20 +11,28 @@ RSpec.describe "page caching monkeypatch" do
     end
   end
 
+  # in actionpack-page_caching extensions include their leading '.'
+
   let(:cache_dir) { @cache_dir }
   # (cache_directory, default_extension)
-  let(:page_cache) { ActionController::Caching::Pages::PageCache.new(cache_dir, "html") }
+  let(:page_cache) { ActionController::Caching::Pages::PageCache.new(cache_dir, ".html") }
 
   describe "#cache_file" do
     context "with a non-html extension" do
       it "returns the file path with html extension" do
-        expect(page_cache.cache_file("youtube.com", "html")).to eq("youtube.com.html")
+        expect(page_cache.cache_file("youtube.com", ".html")).to eq("youtube.com.html")
+      end
+    end
+
+    context "with rss extension" do
+      it "returns the file path with html extension" do
+        expect(page_cache.cache_file("newest.rss", ".html")).to eq("newest.rss")
       end
     end
 
     context "with a html extension" do
       it "returns the file path with html extension" do
-        expect(page_cache.cache_file("youtube.com.html", "html")).to eq("youtube.com.html")
+        expect(page_cache.cache_file("youtube.com.html", ".html")).to eq("youtube.com.html")
       end
     end
   end

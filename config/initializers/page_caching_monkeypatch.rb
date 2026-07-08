@@ -11,7 +11,8 @@
 # actionpack-page_caching is unmaintained, so I'm working around this limitation rather than
 # report or contribute a fix upstream.
 #
-# We only cache HTML pages, so this monkeypatch forces the '.html' extension.
+# We cache HTML, json, and rss, so this monkeypatch recognizes them and leaves them in place, but
+# tags everything else with .html.
 #
 # We also catch an error when caching files if the computed filename on disk is too long, due to the
 # filesystem used in production only supporting 254 character names.
@@ -44,8 +45,8 @@ ActiveSupport.on_load(:action_controller) do
         # original:
         #   if File.extname(name).empty?
         # monkeypatch:
-        if File.extname(name) != ".html"
-          name + "." + (extension || default_extension)
+        if !%w[.html .json .rss].include? File.extname(name)
+          name + (extension || default_extension)
         else
           name
         end

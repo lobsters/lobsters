@@ -29,7 +29,7 @@ describe Notification do
         reader = create(:user)
         Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, nil, reader.id, nil)
         story.reload
-        expect(story.score).to eq(1)
+        expect(story.score).to eq(0)
         expect(story.flags).to eq(1)
         comment = create(:comment, user: reader, story: story)
         notification = create(:notification, user: author, notifiable: comment)

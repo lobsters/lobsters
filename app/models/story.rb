@@ -99,11 +99,12 @@ class Story < ApplicationRecord
       .order(created_at: :desc)
   }
 
-  scope :top, ->(user, length) {
+  scope :top, ->(user, length, exclude_tags = nil) {
     raise ArgumentError, "Invalid interval" unless IntervalHelper::TIME_INTERVALS.value?(length[:intv].capitalize)
 
     top = base(user)
       .where("created_at >= (NOW() - INTERVAL ? #{length[:intv].upcase})", length[:dur])
+      .filter_tags(exclude_tags || [])
     top.order(score: :desc)
   }
 
@@ -204,7 +205,10 @@ class Story < ApplicationRecord
 
   include Token
 
-  validates :title, length: {in: 3..150}, presence: true
+  TITLE_MIN_LENGTH = 3
+  TITLE_MAX_LENGTH = 150
+
+  validates :title, length: {in: TITLE_MIN_LENGTH..TITLE_MAX_LENGTH}, presence: true
   validates :description, length: {maximum: 65_535}
   validates :url, length: {maximum: 250, allow_nil: true}
   validates :short_id, presence: true, length: {maximum: 6}
@@ -235,7 +239,7 @@ class Story < ApplicationRecord
   # days a story is considered recent, for resubmitting
   RECENT_DAYS = 30
 
-  # users needed to make similar suggestions go live
+  # users needed to make story suggestions go live
   SUGGESTION_QUORUM = 2
 
   # let a hot story linger for this many seconds
@@ -278,7 +282,7 @@ class Story < ApplicationRecord
     if title.match(GRAPHICS_RE)
       errors.add(:title, " may not contain emoji, dingbats, or other graphics")
     end
-    if !title.empty? && title.ascii_only? && title == title.upcase
+    if !title.empty? && title.ascii_only? && title == title.upcase && !(title =~ /WWDC .*\d{4}/ && (user&.username == "calvin" || user&.is_moderator?))
       errors.add(:title, " doesn't need to scream, ASCII has supported lowercase since June 17, 1963.")
     end
 
@@ -599,6 +603,7 @@ class Story < ApplicationRecord
       return false
     end
     return false if is_moderated?
+    return false if !user.disabled_invite_at.nil?
 
     tags.each { |t| return false if t.privileged? }
     true
@@ -691,21 +696,23 @@ class Story < ApplicationRecord
     self.flags += flag_delta
     Story.connection.execute <<~SQL
       UPDATE stories SET
-        score = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = 1) -
-        -- subtract number of hidings where hider flagged AND didn't comment (comment voting is ignored)
-        (
-          select count(*) from hidden_stories hiding
-          where
-            story_id = #{id.to_i}
-            and hiding.created_at >= str_to_date('#{(created_at - FLAGGABLE_DAYS.days).utc.iso8601}', '%Y-%m-%dT%H:%i:%sZ')
-            and exists (    -- user flagged
-              select 1 from votes where hiding.user_id = votes.user_id and votes.story_id = stories.id and vote = -1
+        score = (
+          select sum(vote) from votes where story_id = stories.id and comment_id is null and (
+            (vote = 1) or
+            (
+              vote = -1 and
+              not exists ( -- user didn't comment
+                select 1 from comments where votes.user_id = comments.user_id and comments.story_id = stories.id
+              )
             )
-            and not exists ( -- user didn't comment
-              select 1 from comments where hiding.user_id = comments.user_id and comments.story_id = stories.id
-            )
+          )
         ),
-        flags = (select count(*) from votes where story_id = stories.id and comment_id is null and vote = -1),
+        flags = (select count(*) from votes where story_id = stories.id and comment_id is null and
+          vote = -1 and
+          not exists ( -- user didn't comment
+            select 1 from comments where votes.user_id = comments.user_id and comments.story_id = stories.id
+          )
+        ),
         hotness = #{calculated_hotness}
       WHERE id = #{id.to_i}
     SQL
@@ -728,7 +735,8 @@ class Story < ApplicationRecord
     !new_record? && user&.id == user_id && created_at < DELETEABLE_DAYS.days.ago
   end
 
-  def is_flaggable?
+  def is_flaggable?(user)
+    return false if user&.id == user_id
     if created_at && self.score > FLAGGABLE_MIN_SCORE
       Time.current - created_at <= FLAGGABLE_DAYS.days
     else
@@ -752,7 +760,7 @@ class Story < ApplicationRecord
   end
 
   def is_gone?
-    is_deleted? || (user.is_banned? && score < 0)
+    is_deleted? || (user.is_banned? && score < 0 && is_moderated = false)
   end
 
   def is_hidden_by_user?(user)
@@ -893,16 +901,20 @@ class Story < ApplicationRecord
 
     # if enough users voted on the same set of replacement tags, do it
     tag_votes = {}
+    tag_quorums = {}
+
     suggested_taggings.group_by(&:user_id).each do |_u, stg|
       stg.each do |s|
         tag_votes[s.tag.tag] ||= 0
         tag_votes[s.tag.tag] += 1
+
+        tag_quorums[s.tag.tag] = s.tag.quorum
       end
     end
 
     final_tags = []
     tag_votes.each do |k, v|
-      if v >= SUGGESTION_QUORUM
+      if v >= tag_quorums[k]
         final_tags.push k
       end
     end
@@ -955,9 +967,103 @@ class Story < ApplicationRecord
     end
   end
 
+  INVISIBLE_CHARACTERS = Regexp.union(
+    # Sourced from https://regex101.com/r/42jDca/1
+    /\u0000-\u001F/, # control characters
+    /\uFFF0-\uFFF8/, # interlinear annotation
+    /\u007F/, # DELETE
+    # and from https://invisible-characters.com/
+    /\u3164/, # HANGUL FILLER
+    /\uFFA0/, # HALFWIDTH HANGUL FILLER
+    /\uFFFC/, # OBJECT REPLACEMENT CHARACTER
+    /\u00A0/, # NO-BREAK SPACE
+    /\u00AD/, # SOFT HYPHEN
+    /\u034F/, # COMBINING GRAPHEME JOINER
+    /\u061C/, # ARABIC LETTER MARK
+    /\u115F/, # HANGUL CHOSEONG FILLER
+    /\u1160/, # HANGUL JUNGSEONG FILLER
+    /\u1680/, # OGHAM SPACE MARK
+    /\u17B4/, # KHMER VOWEL INHERENT AQ
+    /\u17B5/, # KHMER VOWEL INHERENT AA
+    /\u180B/, # MONGOLIAN FREE VARIATION SELECTOR ONE
+    /\u180C/, # MONGOLIAN FREE VARIATION SELECTOR TWO
+    /\u180D/, # MONGOLIAN FREE VARIATION SELECTOR THREE
+    /\u180E/, # MONGOLIAN VOWEL SEPARATOR
+    /\u2000/, # EN QUAD
+    /\u2001/, # EM QUAD
+    /\u2002/, # EN SPACE
+    /\u2003/, # EM SPACE
+    /\u2004/, # THREE-PER-EM SPACE
+    /\u2005/, # FOUR-PER-EM SPACE
+    /\u2006/, # SIX-PER-EM SPACE
+    /\u2007/, # FIGURE SPACE
+    /\u2008/, # PUNCTUATION SPACE
+    /\u2009/, # THIN SPACE
+    /\u200A/, # HAIR SPACE
+    /\u200B/, # ZERO WIDTH SPACE
+    /\u200C/, # ZERO WIDTH NON-JOINER
+    /\u200D/, # ZERO WIDTH JOINER
+    /\u200E/, # LEFT-TO-RIGHT MARK
+    /\u200F/, # RIGHT-TO-LEFT MARK
+    /\u202A/, # LEFT-TO-RIGHT EMBEDDING
+    /\u202B/, # RIGHT-TO-LEFT EMBEDDING
+    /\u202C/, # POP DIRECTIONAL FORMATTING
+    /\u202D/, # LEFT-TO-RIGHT OVERRIDE
+    /\u202E/, # RIGHT-TO-LEFT OVERRIDE
+    /\u202F/, # NARROW NO-BREAK SPACE
+    /\u205F/, # MEDIUM MATHEMATICAL SPACE
+    /\u2060/, # WORD JOINER
+    /\u2061/, # FUNCTION APPLICATION
+    /\u2062/, # INVISIBLE TIMES
+    /\u2063/, # INVISIBLE SEPARATOR
+    /\u2064/, # INVISIBLE PLUS
+    /\u2065/, # Invisible operators - undefined
+    /\u2066/, # LEFT-TO-RIGHT ISOLATE
+    /\u2067/, # RIGHT-TO-LEFT ISOLATE
+    /\u2068/, # FIRST STRONG ISOLATE
+    /\u2069/, # POP DIRECTIONAL ISOLATE
+    /\u206A/, # INHIBIT SYMMETRIC SWAPPING
+    /\u206B/, # ACTIVATE SYMMETRIC SWAPPING
+    /\u206C/, # INHIBIT ARABIC FORM SHAPING
+    /\u206D/, # ACTIVATE ARABIC FORM SHAPING
+    /\u206E/, # NATIONAL DIGIT SHAPES
+    /\u206F/, # NOMINAL DIGIT SHAPES
+    /\u2800/, # BRAILLE PATTERN BLANK
+    /\u3000/, # IDEOGRAPHIC SPACE
+    /\u3164/, # HANGUL FILLER
+    /\uFEFF/, # ZERO WIDTH NO-BREAK SPACE
+    /\uFFA0/, # HALFWIDTH HANGUL FILLER
+    /\uFFF9/, # INTERLINEAR ANNOTATION ANCHOR
+    /\uFFFA/, # INTERLINEAR ANNOTATION SEPARATOR
+    /\uFFFB/, # INTERLINEAR ANNOTATION TERMINATOR
+    /\uFFFC/, # OBJECT REPLACEMENT CHARACTER
+    /\u133FC/, # EGYPTIAN HIEROGLYPH Z015B
+    /\u1D000/, # GLAGOLITIC CAPITAL LETTER BUKY
+    /\u1D000/, # GLAGOLITIC CAPITAL LETTER BUKY
+    /\u1D0F0/, # GLAGOLITIC SMALL LETTER YERU
+    /\u1D100/, # GLAGOLITIC CAPITAL LETTER AZU
+    /\u1D129/, # GLAGOLITIC SMALL LETTER YUS
+    /\u1D130/, # GLAGOLITIC CAPITAL LETTER IZHITSA
+    /\u1D13F/, # GLAGOLITIC SMALL LETTER YAT
+    /\u1D140/, # GLAGOLITIC CAPITAL LETTER FITA
+    /\u1D145/, # GLAGOLITIC SMALL LETTER FITA
+    /\u1D150/, # MUSICAL SYMBOL BEGIN BEAM
+    /\u1D159/, # MUSICAL SYMBOL NULL NOTEHEAD
+    /\u1D173/, # MUSICAL SYMBOL BEGIN BEAM
+    /\u1D174/, # MUSICAL SYMBOL END BEAM
+    /\u1D175/, # MUSICAL SYMBOL BEGIN TIE
+    /\u1D176/, # MUSICAL SYMBOL END TIE
+    /\u1D177/, # MUSICAL SYMBOL BEGIN SLUR
+    /\u1D178/, # MUSICAL SYMBOL END SLUR
+    /\u1D179/, # MUSICAL SYMBOL BEGIN PHRASE
+    /\u1D17A/, # MUSICAL SYMBOL END PHRASE
+    /\uFE00-\uFE0F/, # Variation Selector
+    /\uE0100-\uE01EF/ # Variation Selectors
+  )
+
   def title=(t)
     # change unicode whitespace characters into real spaces
-    self[:title] = t.to_s.strip.gsub(/[.,;:!]*$/, "")
+    self[:title] = t.to_s.strip.gsub(/[.,;:!]*$/, "").gsub(INVISIBLE_CHARACTERS, "")
   end
 
   def title_as_slug
@@ -1261,12 +1367,6 @@ class Story < ApplicationRecord
     rescue
       @fetched_attributes
     end
-  end
-
-  def self.title_maximum_length
-    validators_on(:title)
-      .find { |v| v.is_a? ActiveRecord::Validations::LengthValidator }
-      .options[:maximum]
   end
 
   private

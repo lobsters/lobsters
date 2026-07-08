@@ -53,6 +53,30 @@ describe ApplicationHelper do
     end
   end
 
+  describe "link_to_different_page" do
+    def stub_current_path(path)
+      allow(helper).to receive(:request).and_return(double(path: path))
+    end
+
+    it "marks link as current when time suffix" do
+      stub_current_path("/top/1w")
+      result = helper.link_to_different_page("Top", "/top")
+      expect(result).to have_css("a[aria-current='page']")
+    end
+
+    it "marks link as current when page suffix" do
+      stub_current_path("/active/page/2")
+      result = helper.link_to_different_page("Active", "/active")
+      expect(result).to have_css("a[aria-current='page']")
+    end
+
+    it "marks link as current when both page and time suffix" do
+      stub_current_path("/top/2m/page/23")
+      result = helper.link_to_different_page("Top", "/top")
+      expect(result).to have_css("a[aria-current='page']")
+    end
+  end
+
   describe "#page_numbers_for_pagination" do
     it "returns the right number of pages" do
       expect(helper.page_numbers_for_pagination(10, 1))

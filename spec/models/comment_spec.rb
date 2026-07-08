@@ -23,6 +23,55 @@ describe Comment do
       comment.valid?
       expect(comment.errors[:hat]).to be_empty
     end
+
+    it "logs hat use on new comment" do
+      hat = create(:hat, modlog_use: true)
+      user = hat.user
+      comment = build(:comment, user: user, hat: hat)
+
+      expect { comment.save! }
+        .to change { Moderation.count }.by(1)
+
+      modlog = Moderation.last
+      expect(modlog.moderator).to eq(user)
+      expect(modlog.comment).to eq(comment)
+      expect(modlog.action).to eq("used #{hat.hat} hat")
+    end
+
+    it "logs hat use on edited comment that adds it" do
+      hat = create(:hat, modlog_use: true)
+      user = hat.user
+      comment = build(:comment, user: user)
+
+      expect { comment.save! }
+        .to_not change { Moderation.count }
+
+      comment.hat = hat
+      expect { comment.save! }
+        .to change { Moderation.count }.by(1)
+
+      modlog = Moderation.last
+      expect(modlog.moderator).to eq(user)
+      expect(modlog.comment).to eq(comment)
+      expect(modlog.action).to eq("used #{hat.hat} hat")
+    end
+
+    it "doesn't relog hat use on edit that doesn't change hat" do
+      hat = create(:hat, modlog_use: true)
+      user = hat.user
+      comment = build(:comment, user: user, hat: hat)
+      expect { comment.save! }
+        .to change { Moderation.count }.by(1)
+
+      modlog = Moderation.last
+      expect(modlog.moderator).to eq(user)
+      expect(modlog.comment).to eq(comment)
+      expect(modlog.action).to eq("used #{hat.hat} hat")
+
+      comment.comment = "edited"
+      expect { comment.save! }
+        .to_not change { Moderation.count }
+    end
   end
 
   it "validates the length of short_id" do

@@ -36,7 +36,7 @@ module UsersHelper
     end
   end
 
-  def styled_user_link user, content = nil, html_options = {}
+  def styled_user_link user, content = nil, parent = nil, html_options = {}
     html_options[:class] ||= []
     if content.is_a?(Story) && content.user_is_author?
       html_options[:class].push "user_is_author"
@@ -44,6 +44,11 @@ module UsersHelper
     if content.is_a?(Comment) && content.story&.user_is_author? && content.story.user_id == user.id
       html_options[:class].push "user_is_author"
       html_options[:aria] = {label: "#{user.username} - Author"}
+    end
+
+    if content.is_a?(Comment) && content.story&.user_id == user.id
+      html_options[:class].push "user_is_submitter"
+      html_options[:aria] = {label: "#{user.username} - Submitter"}
     end
 
     if !user.is_active?
@@ -56,14 +61,15 @@ module UsersHelper
     end
     html_options.delete(:class) if html_options[:class].empty?
 
-    safe_join([
-      link_to(user.username, user_path(user), html_options),
-      if @user && user.recently_invited_by?(@user)
-        tag.span(class: "you_invited") do
-          "(you invited)"
-        end
-      end
-    ].compact, " ")
+    link_to(user.username, user_path(user), html_options)
+  end
+
+  def you_invited you:, user:
+    return unless you && user.recently_invited_by?(you)
+
+    tag.span(class: "you_invited") do
+      "(you invited)"
+    end
   end
 
   def user_karma(user)

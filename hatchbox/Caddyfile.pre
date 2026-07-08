@@ -44,10 +44,14 @@ redir @www_domain https://lobste.rs{uri} 302
 header Strict-Transport-Security max-age=31536000
 
 # full page caching with actionpack-page_caching
-@visitor {
+
+@use_cached_file {
   host lobste.rs
-  not {
+  not { # don't serve cached when user is logged in
     header_regexp Cookie `.*=.*`
+  }
+  not { # don't serve cached when we see a user's ?token=...
+    query token=*
   }
   file {
     root /home/deploy/lobsters/current/public/cache/
@@ -57,12 +61,45 @@ header Strict-Transport-Security max-age=31536000
 # the hatchbox {default} uses a root of public/, serves files that exist with
 # file_server, then passes those that don't exist to Rails. This runs first and
 # rewrites to request from the full-page cache
-rewrite @visitor /cache/{file_match.relative}
-# header @visitor X-Lobsters-Visitor {file_match.relative}
+rewrite @use_cached_file /cache/{file_match.relative}
+#header @use_cached_file X-Lobsters-CFE {file_match.relative}
+# add CSP header when serving from cache; Rails adds when it renders pages
+header @use_cached_file ?Content-Security-Policy "default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'"
+
+# special case for the primary story rss feed, url /rss doesn't have an extension
+# We have to special-case /rss because the cached file is saved as
+# 'rss.rss'. The matcher above shouldn't check for {path}.rss because if the rss
+# cache is filled first that could turn a request for /newest into /newest.rss,
+# giving rss to someone requesting html.
+#
+# There's significant redundancy here! The value for the {file_match.relative}
+# placeholder seems to be filled by executing the matcher and is only present
+# inside that directive (not a variable that is available to later statements),
+# so the two 'file' matchers have to be used by separate 'rewrite' directives.
+#
+# Also, named matchers can't reference another named matcher or be used from
+# CEL, so the cookie logic has to be duplicated between the two.
+# https://github.com/caddyserver/caddy/issues/4112
+
+@use_rss_cached_file {
+  host lobste.rs
+  not { # don't serve cached when user is logged in
+    header_regexp Cookie `.*=.*`
+  }
+  path /rss
+  not { # don't serve cached when we see a user's ?token=...
+    query token=*
+  }
+  file {
+    root /home/deploy/lobsters/current/public/cache/
+    try_files rss.rss
+  }
+}
+rewrite @use_rss_cached_file /cache/{file_match.relative}
+#header @use_rss_cached_file X-Lobsters-RCFE {file_match.relative}
+
 # header X-Lobsters-Hello "World 8"
 
-# add CSP header when serving from cache; Rails adds when it renders pages
-header @visitor ?Content-Security-Policy "default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'"
 
 # There's a spambot attempting GETs to /stories/new?title=...&url=.... with a
 # real article from a news site at a rate averaging 11/s. Even though Rails 302s

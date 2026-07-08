@@ -87,17 +87,6 @@
             <% end %>
             <% if value.to_s != @search.strip_short_terms(value) %>
               <br>Terms must be at least 4 characters long.
-              <% if value.to_s.downcase =~ /\b(d\b|go\b|ml\b|c([+][+]|\b)?)/ %>
-                <% lang = $& %>
-                <br>For the
-                <% if value.to_s.downcase =~ /\bgo\b/ %>
-                  terribly-named
-                <% end %>
-                language, use <span class="searchq">tag:<%= lang %></span>
-              <% end %>
-              <% if value.to_s.downcase =~ /\b(ai|ml)\b/ %>
-                <br>Use <span class="searchq">tag:ai</span> for artificial intelligence/machine learning
-              <% end %>
             <% end %>
           </dd>
         <% when :shortword %>
@@ -106,6 +95,20 @@
             Shortword: <span class="searchq"><%= value %></span>
               <br>Terms must be at least 3 characters long.
               If you're searching for a phrase, use quotes, like <span class="searchq">"Files are hard"</span>.
+            <% if value.to_s != @search.strip_short_terms(value) %>
+              <% if value.to_s.downcase =~ /\b(d\b|go\b|ml\b|c([+][+]|\b)?)/ %>
+                <% lang = $& %>
+                <br>For the
+                <% if value.to_s.downcase =~ /\bgo\b/ %>
+                  terribly-named
+                <% end %>
+                language, use <span class="searchq">tag:<%= lang %></span>
+                <% if value.to_s.downcase == 'c' %> or <span class="searchq">tag:c++</span> <%end%>
+              <% end %>
+              <% if value.to_s.downcase =~ /\b(ai|ml)\b/ %>
+                <br>Use <span class="searchq">tag:ai</span> for artificial intelligence/machine learning
+              <% end %>
+            <% end %>
           </dd>
         <% when :stopword %>
           <dt><span class="searchq"><%= value %></span></dt>
@@ -209,7 +212,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
           <span> via </span>
         <% end %>
 
-        <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %>
+        <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %> <%= you_invited you: @user, user: story.user %>
         <span> just now </span>
       <% else %>
         <% if story.user_is_author? %>
@@ -217,7 +220,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
         <% else %>
           <span> via </span>
         <% end %>
-        <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %>
+        <%= styled_user_link story.user, story, class: ['u-author', 'h-card'] %> <%= you_invited you: @user, user: story.user %>
 
         <%= how_long_ago_label(story.created_at) %>
 
@@ -255,7 +258,13 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
         <% end %>
         <% if story.url.present? && (!story.is_gone? || @user.try(:is_moderator?))  %>
           <%= divider_tag %>
-          <label for="caches_<%= story.short_id %>" class="caches" tabindex="0">caches</label>
+          <details class="caches" name="caches">
+            <summary>caches</summary>
+            <ul>
+              <li><a href="<%= story.archiveorg_url %>">Archive.org</a></li>
+              <li><a href="<%= story.ghost_url %>">Ghostarchive</a></li>
+            </ul>
+          </details>
         <% end %>
         <% if !story.is_gone? || @user.try(:is_moderator?) %>
           <span class="comments_label">
@@ -271,14 +280,6 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
         <% end %>
       <% end %>
     </div>
-    <% if story.url.present? && (!story.is_gone? || @user.try(:is_moderator?)) %>
-      <input id="caches_<%= story.short_id %>" class="caches_button" type="checkbox">
-      <div class="caches-dropdown">
-        <a href="<%= story.archiveorg_url %>">Archive.org</a>
-        <%= divider_tag %>
-        <a href="<%= story.ghost_url %>">Ghostarchive</a>
-      </div>
-    <% end %>
   </div>
 </div>
 <a href="<%= Routes.title_path story %>" class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>" style="display: none;">
@@ -292,8 +293,10 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
   <% elsif @search.what == :comments %>
     <ol class="comments comments1">
       <% @results.each do |res| %>
-        <li><%= render "comments/comment", :comment => res, :show_story => true %></li>
-      <% end %>
+        <li><%= render "comments/comment", :comment => res, :show_story => true %>
+          <ol class="comments"></ol>
+        </li>
+    <% end %>
     </ol>
   <% end %>
 

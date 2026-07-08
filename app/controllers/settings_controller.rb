@@ -29,13 +29,14 @@ class SettingsController < ApplicationController
       action: "deactivated#{", disowning their stories and comments" if disown}"
     )
     reset_session
-    flash[:success] = "You have deleted your account#{" and disowned your stories and comments." if disown}. Bye."
+    flash[:success] = "You have deactivated your account#{" and disowned your stories and comments." if disown}. Bye."
     redirect_to "/"
   end
 
   def update_avatar_source
-    flash[:success] = "Updated avatar preference. Your avatar isn't updated, press the Clear Cache button next to Gravatar."
+    @user.expire_avatar!
     @user.update(user_params)
+    flash[:success] = "Updated avatar preference."
     redirect_to "/settings"
   end
 

@@ -172,30 +172,39 @@
   (look for <tt>utm_</tt> in <a href="https://github.com/lobsters/lobsters/blob/main/app/models/story.rb">story.rb</a>).
   </p>
 
-  <div id="flags">
-    <p>
-    Users can flag stories and comments when there's a serious problem that needs moderator attention; two flags are needed to add the story or comment to the moderation queue.
-    Users must reach <%= User::MIN_KARMA_TO_FLAG %> karma to flag.
-    To guide usage and head off distracting meta conversations ("Why was this flagged!?", etc), flagging requires selecting from a preset list of reasons.
-    </p>
+  <div>
+      <h3 id="flags">Flags</h3>
+      <p>
+          Users can flag stories and comments when there is a problem that needs moderator attention.
+          If a story or comment is flagged at least twice, it is added to the moderation review queue.
+          Note that, at any time users can always <a href="/moderators">contact a moderator</a> about issues they perceive surrounding content on the site.
 
-    <p>
-    For stories, these are:
-    "Off-topic" for stories that are not about computing;
-    "Already Posted" for duplicate submissions and links that elaborate on or responses to a thread that's less than a week old (see <a href="#merging">merging</a>); and
-    "Broken Link" for links that 404, 500, or present a paywall;
-    "Spam" for links that promote a commercial service.
-    </p>
+          To guide usage and head off distracting meta-conversations ("Why was this flagged!?", etc), flagging requires selecting from a preset list of reasons.
+          Users must reach <%= User::MIN_KARMA_TO_FLAG %> karma to flag.
+      </p>
 
-    <p>
-    For comments, these are:
-    "Off-topic" for drifting into meta or topics that aren't related to the story;
-    "Me-too" when a comment doesn't add new information, typically a single sentence of appreciation, agreement, or humor;
-    "Troll" for derailing conversations into classic arguments, well-intentioned or not;
-    "Unkind" when uncharitable, insulting, or dismissive;
-    and
-    "Spam" for promoting commercial services.
-    </p>
+      <p>
+          For stories, these are:
+
+          <ul>
+              <li><b>Off-topic</b> which should be used when stories do not meet the site's definition of <a href="#topicality">topicality</a>.</li>
+              <li><b>Already Posted</b> which should be used when there is a duplicate submission on the same topic or submissions which elaborate on another submission that is less than a week old (see <a href="#merging">merging</a>).</li>
+              <li><b>Broken Link</b> which should be used for links that present a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">client or server error response</a> or present a "paywall" which requires registration or payment to pass.</li>
+              <li><b>Spam</b> which should be used for content that either is designed to promote a commercial service or for content that is created without meaningful human authorship.</li>
+          </ul>
+      </p>
+
+      <p>
+          For comments, these are:
+
+          <ul>
+              <li><b>Off-topic</b> which should be used when a comment is drifting into meta or topics that aren't related to the story.</li>
+              <li><b>Me-too</b> which should be used when a comment doesn't add new information, typically a single sentence of appreciation, agreement, or humor.</li>
+              <li><b>Troll</b> which should be used when a comment is derailing conversations into classic arguments, well-intentioned or not.</li>
+              <li><b>Unkind</b> should be used when a comment is uncharitable, insulting, or dismissive towards an individual or group.</li>
+              <li><b>Spam</b> which should be used for content that either is designed to promote a commercial service or for content that is created without meaningful human authorship.</li>
+          </ul>
+      </p>
   </div>
 
   <p>

@@ -16,6 +16,7 @@ But I make an unprincipled exception for :has because it solves so many big prob
 	--color-bg-50: rgb(var(--base-bg) / 50%);
 
 	--color-fg: rgb(var(--base-fg) / var(--opacity-fg)); /* primary text */
+	--color-fg-accent: currentColor;
 	--color-fg-contrast-13: rgb(var(--base-fg) / var(--opacity-fg-contrast-13));
 	--color-fg-contrast-10: rgb(var(--base-fg) / var(--opacity-fg-contrast-10));
 	--color-fg-contrast-7-5: rgb(var(--base-fg) / var(--opacity-fg-contrast-7-5));
@@ -50,7 +51,6 @@ html {
 	/* avoid automatic resizing of some text elements on phones in landscape */
 	-moz-text-size-adjust: none;
 	-webkit-text-size-adjust: none;
-	text-size-adjust: none;
 }
 
 body, textarea, input, button {
@@ -152,7 +152,7 @@ span.na {
 	font-style: italic;
 }
 
-div.shorten_first_p p:first-child {
+.shorten_first_p p:first-child {
 	margin-top: 0;
 }
 
@@ -186,9 +186,6 @@ textarea:focus {
 	outline: var(--input-outline-width) solid var(--color-box-border-focus);
 	border-color: transparent;
 	color: var(--color-fg);
-}
-textarea {
-	resize: vertical;
 }
 input[type="text"],
 input[type="search"],
@@ -301,8 +298,9 @@ summary {
 input.btn-link:hover,
 input.btn-link {
 	border: 0;
+	margin: 0;
 	padding: 0;
-	background-color: var(--color-bg);
+	background-color: inherit;
 	color: var(--color-fg-contrast-4-5);
 	line-height: 1;
 }
@@ -329,7 +327,7 @@ input.btn-link:focus-visible {
 	padding: 0;
 	margin: -1px;
 	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
+	clip-path: inset(50%);
 	white-space: nowrap;
 	border-width: 0;
 }
@@ -532,10 +530,9 @@ li.story {
 ol.stories li.story div.story_liner {
 	padding-top: 0.25em;
 	padding-bottom: 0.25em;
-	word-break: break-word;
+	overflow-wrap: break-word;
 }
 .comment {
-	clear: both;
 	padding-top: 0.4em;
 	padding-bottom: 0.4em;
 	position: relative;
@@ -543,6 +540,12 @@ ol.stories li.story div.story_liner {
 
 .comment .details a {
 	color: var(--color-fg-contrast-7-5);
+}
+
+.comment .user_is_submitter::after {
+	content: " [OP]"/"";
+	font-size: var(--font-size-tags);
+	vertical-align: top;
 }
 
 ol.stories li:first-child div.story_liner {
@@ -564,17 +567,56 @@ We'd like to write the following selector to express that directly, but can't un
 supports it:  https://caniuse.com/?search=%3Ahas
 .negative_1 *:not(.dropdown_parent, :has(*)) { ... }
 */
-.negative_1 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img, form),
+.negative_1
+*:not(
+	div,
+	.dropdown_parent,
+	.dropdown_parent > div *,
+	.comments_label,
+	.link,
+	.tags,
+	img,
+	form,
+	.caches,
+	.caches ul,
+	.caches ul *
+),
 .negative_1 .score {
 	opacity: 0.7;
 }
 
-.negative_3 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img, form),
+.negative_3
+	*:not(
+		div,
+		.dropdown_parent,
+		.dropdown_parent > div *,
+		.comments_label,
+		.link,
+		.tags,
+		img,
+		form,
+		.caches,
+		.caches ul,
+		.caches ul *
+	),
 .negative_3 .score {
 	opacity: 0.6;
 }
 
-.negative_5 *:not(div, .dropdown_parent, .dropdown_parent > div *, .comments_label, .link, .tags, img, form),
+.negative_5
+	*:not(
+		div,
+		.dropdown_parent,
+		.dropdown_parent > div *,
+		.comments_label,
+		.link,
+		.tags,
+		img,
+		form,
+		.caches,
+		.caches ul,
+		.caches ul *
+	),
 .negative_5 .score {
 	opacity: 0.5;
 }
@@ -586,6 +628,11 @@ supports it:  https://caniuse.com/?search=%3Ahas
 .comment:target, li:target, p:target, div:target, span:target {
 	background-color: var(--color-bg-target);
 	border-radius: 8px;
+}
+
+.comments_subtree:target {
+	background: transparent;
+	border-radius: 0;
 }
 
 .showing-user-comment {
@@ -664,6 +711,7 @@ li .comment_folder_button:checked ~ ol.comments li {
 }
 
 li.comments_subtree {
+	clear: both;
 	position: relative;
 }
 
@@ -707,6 +755,19 @@ li.story .byline {
 	color: var(--color-fg-contrast-4-5);
 	text-decoration: none;
 }
+
+.details input:hover,
+.details input:focus-visible,
+.details summary:hover,
+.details summary:focus-visible,
+.details a:hover:not(details *),
+.details a:focus-visible:not(details *) {
+	position: relative;
+	z-index: 10;
+	background: var(--color-bg);
+	box-shadow: 0 0 0 0.25rem var(--color-bg);
+}
+
 .comment.replied .flagger,
 .comment.flagged .comment_replier {
 	color: var(--color-fg);
@@ -717,19 +778,23 @@ li.story .byline {
 .comment.replied .flagger {
 	color: var(--color-fg-contrast-4-5);
 }
-/* preserve selection made elsewhere when clicking */
+/* preserve user's selection of a quote when clicking 'reply' */
 li .byline a.comment_replier {
+	-webkit-user-select: none;
 	user-select: none;
 }
 span.new_user, a.new_user,
 li .byline a.new_user {
 	color: var(--color-fg-affirmative);
 }
-span.inactive_user, a.inactive_user,
-li .byline a.inactive_user,
+a.inactive_user,
 .inactive_tag {
 	color: var(--color-fg-contrast-5);
 	text-decoration: line-through;
+}
+a.inactive_user:focus-visible,
+a.inactive_user:hover {
+	text-decoration: none;
 }
 span.user_is_author, a.user_is_author,
 li .byline a.user_is_author {
@@ -770,6 +835,24 @@ li.story.saved .saver .btn-link {
 	color: var(--color-fg-affirmative);
 }
 
+li.story .hidden-by-you {
+	display: none;
+}
+
+li.story.hidden .hidden-by-you {
+	display: inline;
+}
+
+#hide-alert .hider {
+	display: inline-block;
+}
+
+#hide-alert .hider .btn-link {
+	color: var(--color-fg-link);
+	text-decoration: underline;
+}
+
+
 li.story.deleted {
 	opacity: var(--opacity-deleted);
 }
@@ -789,14 +872,12 @@ ol.stories.list details.story_content {
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 3;
-	line-clamp: 3;
 	overflow: hidden;
 }
 
-ol.stories.list details.story_content:open {
+ol.stories.list details.story_content[open] {
 	color: var(--color-fg-contrast-10);
 	-webkit-line-clamp: none;
-	line-clamp: none;
 }
 
 nav.morelink {
@@ -846,7 +927,7 @@ div.page_link_buttons span {
 div.story_text {
 	margin-bottom: 1.5em;
 	max-width: 45rem;
-	word-wrap: break-word;
+	overflow-wrap: break-word;
 }
 div.story_text p {
 	margin: 0.75em 0;
@@ -861,13 +942,12 @@ a#story_text_expander {
 
 div.comment_text {
 	max-width: 45rem;
-	word-wrap: break-word;
+	overflow-wrap: break-word;
 	overflow: hidden;
 }
 .controls {
 	display: flex;
-	flex-flow: row;
-	flex-wrap: wrap;
+	flex-flow: row wrap;
 	gap: 0.5rem;
 	justify-content: start;
 	margin-top: 1rem;
@@ -948,22 +1028,43 @@ div.comment_text code {
 	background-color: var(--color-box-bg-shaded);
 }
 
-.caches-dropdown {
-	width: fit-content;
-	margin: 0 auto;
+.caches {
+	display: inline-block;
+	position: relative;
 }
 
-.caches-dropdown a {
-	color: var(--color-fg-contrast-4-5);
+.caches summary {
+	list-style: none;
+}
+
+.caches[open] ul {
+	position: absolute;
+	background: var(--color-bg);
+	border: 1px solid var(--color-box-border);
+	white-space: nowrap;
+	list-style: none;
+	padding: 0;
+	z-index: 1;
+}
+
+.caches li {
+	display: inline-block; /* Netsurf */
+	border-bottom: 1px solid var(--color-box-border);
+}
+
+.caches li:last-child {
+	border-bottom: 0;
+}
+
+.caches a {
+	color: var(--color-fg-contrast-7-5);
 	text-decoration: none;
+	display: block;
+	padding: 3px 7px;
 }
 
-.caches-dropdown a:hover {
+.caches a:hover {
 	text-decoration: underline;
-}
-
-.details:has(> .caches_button:checked) label.caches::before {
-	content: "▾ ";
 }
 
 #flag_dropdown a.cancel-reason {
@@ -981,22 +1082,8 @@ div.comment_text code {
 	z-index: 1;
 }
 
-.caches_button {
-	display: none;
-}
-.caches_button:not(:checked) ~ .caches-dropdown {
-	display: none;
-}
-label.caches {
-	cursor: pointer;
-	white-space: nowrap;
-}
-
 .controls details {
 	margin-left: auto;
-}
-#story_box .markdown_help summary {
-	width: calc(7em + 610px);
 }
 .markdown_help summary {
 	color: var(--color-fg-contrast-4-5);
@@ -1042,8 +1129,10 @@ div#domain_box input[type=text] {
 }
 div#story_box #story_tags {
 	width: 624px;
+	overflow-x: auto;
 }
 div#story_box textarea {
+	height: 2rem;
 	width: 600px;
 }
 
@@ -1250,8 +1339,17 @@ label:has(+ *[type="hidden"] + *:required)::after {
 	vertical-align: middle;
 }
 /* Labels on the (read-only) Profile page get extra contrast */
-.profile label::after {
-	content: ":";
+.profile dt::after {
+	content: ":"/"";
+}
+.profile .hats {
+	padding: 0;
+}
+.profile .hats li {
+	display: inline-block;
+}
+.profile .hats li:not(:last-child)::after {
+	content: ", "/""
 }
 .box img {
 	vertical-align: middle;
@@ -1315,7 +1413,7 @@ label:has(+ *[type="hidden"] + *:required)::after {
 .labelled_grid {
 	display: grid;
 	grid-template-columns: minmax(10rem, min-content) 1fr;
-	word-break: break-word;
+	overflow-wrap: break-word;
 	column-gap: 1rem;
 	row-gap: 12px;
 }
@@ -1329,7 +1427,7 @@ label:has(+ *[type="hidden"] + *:required)::after {
 }
 .labelled_grid input[type="text"],
 .labelled_grid input[type="password"] {
-	height: 1.5rlh;
+	height: 1.8rem;
 }
 
 .labelled_grid input[type="checkbox"] {
@@ -1621,21 +1719,6 @@ input[type="submit"].link_post.pushover_button {
 	margin-top: -0.75rem;
 }
 
-@media only screen and (max-width: 480px) {
-	.radio-group-container legend {
-		float: none;
-		margin-bottom: 0.5rem;
-	}
-
-	.radio-group-container .radio-group {
-		gap: 1rem;
-	}
-
-	.radio-group-container .radio-group	label {
-		display: inline;
-	}
-}
-
 @media screen and (min-width: 481px) {
 	body {
 		max-width: 60rem;
@@ -1694,6 +1777,10 @@ input[type="submit"].link_post.pushover_button {
 	#story_holder .ts-control {
 		display: inline-block;
 		width: 611px;
+	}
+
+	#story_box .markdown_help summary {
+		width: calc(7em + 610px);
 	}
 }
 
@@ -1964,6 +2051,32 @@ input[type="submit"].link_post.pushover_button {
 	}
 	.labelled_grid input[type="checkbox"] + .hint {
 		margin-left: 0;
+	}
+
+	.radio-group-container legend {
+		float: none;
+		margin-bottom: 0.5rem;
+	}
+
+	.radio-group-container .radio-group {
+		gap: 1rem;
+	}
+
+	.radio-group-container .radio-group	label {
+		display: inline;
+	}
+
+	.controls {
+		flex-flow: column;
+	}
+
+	.controls .markdown_help[open] summary,
+	.controls details {
+		margin: 0;
+	}
+
+	.markdown_help summary {
+		text-align: left;
 	}
 }
 @media print {

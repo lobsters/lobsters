@@ -1,5 +1,4 @@
 class Mod::MailMessagesController < Mod::ModController
-  # POST /mod_mail_messages
   def create
     @mod_mail_message = ModMailMessage.new(mod_mail_message_params.merge({user: @user}))
 

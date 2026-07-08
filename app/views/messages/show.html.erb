@@ -3,13 +3,13 @@
 <h2>
   From
   <% if @message.author %>
-    <%= styled_user_link @message.author %>
+    <%= styled_user_link @message.author %> <%= you_invited you: @user, user: @message.author %>
   <% else %>
     <%= @message.author_username %>
   <% end %>
   <%= styled_hat(@message.hat) if @message.hat %>
   to
-  <%= styled_user_link @message.recipient %>
+  <%= styled_user_link @message.recipient %> <%= you_invited you: @user, user: @message.recipient %>
   <%= how_long_ago_label(@message.created_at) %>
 </h2>
 

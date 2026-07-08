@@ -52,7 +52,7 @@ RSpec.feature "User Administration" do
   end
 
   scenario "banning deactivated user doesn't email" do
-    user = create(:user, :deleted)
+    user = create(:user, :deactivated)
     expect(user.is_banned?).to be(false) # don't want to couple by naming all the fields
     visit user_path(user)
     expect(page).to have_content("Deactivated")

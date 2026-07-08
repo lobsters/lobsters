@@ -378,11 +378,11 @@ class User < ApplicationRecord
   def expire_avatar!
     expired = 0
 
-    Dir.entries(CACHE_DIR).select { |f|
-      f.match(/\A#{@user.username}-(\d+)\.png\z/)
+    Dir.entries(AvatarsController::CACHE_DIR).select { |f|
+      f.match(/\A#{username}-(\d+)\.png\z/)
     }.each do |f|
       # Rails.logger.debug { "Expiring #{f}" }
-      File.unlink("#{CACHE_DIR}/#{f}")
+      File.unlink("#{AvatarsController::CACHE_DIR}/#{f}")
       expired += 1
     end
     expired

@@ -199,7 +199,7 @@
 
   <section class="profile">
     <label>Last 20 Mod Activities</label>
-    <%= render partial: "mod/activities/table/#{@showing_user.username}", locals: { mod_activities: @mod_activities } %>
+    <%= render partial: "mod/activities/table", locals: { mod_activities: @mod_activities } %>
 
     <%= form_with model: @mod_note, method: :post do |f| %>
       <%= errors_for @mod_note %>

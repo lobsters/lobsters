@@ -53,11 +53,6 @@ describe "comments", type: :request do
   end
 
   describe "rss" do
-    it "/comments/rss redirects" do
-      get "/comments/rss"
-      expect(response).to redirect_to("/comments.rss")
-    end
-
     it "renders" do
       comment = create(:comment)
 

@@ -33,9 +33,8 @@ Rails.application.routes.draw do
   get "/upvoted", to: redirect("/upvoted/stories")
   get "/upvoted/page/:page", to: redirect("/upvoted/stories/page/%{page}")
 
+  get "/top/rss", to: redirect("/top.rss", status: 301)
   get "/top/:length/rss", to: redirect("/top/%{length}.rss", status: 301)
-  get "/top/:length/page/:page/rss", to: redirect("/top/%{length}/page/%{page}.rss", status: 301)
-  get "/top/rss" => "home#top", :format => "rss"
   get "/top(/:length(/page/:page))" => "home#top", :as => "top"
 
   get "/threads" => "comments#user_threads"

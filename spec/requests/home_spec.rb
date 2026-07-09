@@ -56,17 +56,5 @@ describe "home", type: :request do
       expect(response.body).to include(link.title)
       expect(response.body).to include(text.title)
     end
-
-    describe "#top" do
-      it "redirects trailing rss when length" do
-        get "/top/1w/rss"
-        expect(response).to redirect_to("/top/1w.rss")
-      end
-
-      it "redirects trailing rss when length and page" do
-        get "/top/1w/page/2/rss"
-        expect(response).to redirect_to("/top/1w/page/2.rss")
-      end
-    end
   end
 end

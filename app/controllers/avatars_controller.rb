@@ -8,18 +8,7 @@ class AvatarsController < ApplicationController
   CACHE_DIR = Rails.public_path.join("avatars/").to_s.freeze
 
   def expire
-    expired = 0
-
-    Dir.entries(CACHE_DIR).select { |f|
-      f.match(/\A#{@user.username}-(\d+)\.png\z/)
-    }.each do |f|
-      # Rails.logger.debug { "Expiring #{f}" }
-      File.unlink("#{CACHE_DIR}/#{f}")
-      expired += 1
-    rescue => e
-      # Rails.logger.error "Failed expiring #{f}: #{e}"
-    end
-
+    expired = @user.expire_avatar!
     flash[:success] = "Your avatar cache has been purged of #{"file".pluralize(expired)}"
     redirect_to "/settings"
   end

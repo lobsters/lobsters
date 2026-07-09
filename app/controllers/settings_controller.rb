@@ -29,8 +29,15 @@ class SettingsController < ApplicationController
       action: "deactivated#{", disowning their stories and comments" if disown}"
     )
     reset_session
-    flash[:success] = "You have deleted your account#{" and disowned your stories and comments." if disown}. Bye."
+    flash[:success] = "You have deactivated your account#{" and disowned your stories and comments." if disown}. Bye."
     redirect_to "/"
+  end
+
+  def update_avatar_source
+    @user.expire_avatar!
+    @user.update(user_params)
+    flash[:success] = "Updated avatar preference."
+    redirect_to "/settings"
   end
 
   def update
@@ -281,7 +288,7 @@ class SettingsController < ApplicationController
 
   def user_params
     params.require(:user).permit(
-      :username, :email, :password, :password_confirmation, :homepage, :about,
+      :username, :email, :password, :password_confirmation, :homepage, :about, :avatar_source,
       :email_replies, :email_messages, :email_mentions, :inbox_mentions,
       :pushover_replies, :pushover_messages, :pushover_mentions,
       :mailing_list_mode, :show_email, :show_avatars, :show_story_previews,

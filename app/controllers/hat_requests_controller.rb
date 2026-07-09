@@ -2,7 +2,7 @@
 
 class HatRequestsController < ApplicationController
   before_action :require_logged_in_user
-  before_action :require_logged_in_moderator, only: [:approve, :reject]
+  before_action :require_logged_in_moderator, only: [:index, :approve, :reject]
   before_action :show_title_h1
 
   def new

@@ -12,6 +12,33 @@ describe "users controller" do
       expect(response.body).to include(user.username)
     end
 
+    it "never shows emails to visitors" do
+      user = create(:user, email: "waifu@gmail.com")
+      get "/~#{user.username}"
+      expect(response.body).to_not include("waifu")
+
+      user.show_email = true
+      user.save!
+
+      get "/~#{user.username}"
+      # unchanged
+      expect(response.body).to_not include("waifu")
+    end
+
+    it "allows users to show emails to users" do
+      user = create(:user, email: "waifu@gmail.com")
+
+      sign_in create(:user)
+      get "/~#{user.username}"
+      expect(response.body).to_not include("waifu")
+
+      user.show_email = true
+      user.save!
+
+      get "/~#{user.username}"
+      expect(response.body).to include("waifu")
+    end
+
     context "when moderator viewing" do
       before { sign_in create(:user, :moderator) }
 

@@ -65,4 +65,33 @@ RSpec.describe "search controller", type: :request do
     get "/search", params: {q: "hello", what: "comments", order: "newest"}
     expect(response.body).to include("world")
   end
+
+  it "displays golang language hint" do
+    get "/search", params: {q: "go", what: "comments", order: "newest"}
+
+    expect(response.body).to include("terribly-named")
+    expect(response.body).to include("tag:go")
+  end
+
+  it "displays c++ language hint" do
+    get "/search", params: {q: "c++", what: "comments", order: "newest"}
+
+    expect(response.body).to include("tag:c")
+    expect(response.body).to include("tag:c++")
+  end
+
+  it "displays ai topic hint" do
+    get "/search", params: {q: "ai", what: "comments", order: "newest"}
+
+    expect(response.body).to include("artificial intelligence/machine learning")
+    expect(response.body).to include("tag:ai")
+  end
+
+  it "displays ml language and topic hint" do
+    get "/search", params: {q: "ml", what: "comments", order: "newest"}
+
+    expect(response.body).to include("artificial intelligence/machine learning")
+    expect(response.body).to include("tag:ai")
+    expect(response.body).to include("tag:ml")
+  end
 end

@@ -23,7 +23,7 @@
 
   <div class="boxline">
     <%= f.label :title, "Title" %>
-    <%= f.text_field :title, required: true, minlength: Story.title_minimum_length, maxlength: Story.title_maximum_length %>
+    <%= f.text_field :title, required: true, minlength: Story::TITLE_MIN_LENGTH, maxlength: Story::TITLE_MAX_LENGTH %>
     <p class="actions title-reminder">
       Please remove extraneous components from titles such as the name of the site, blog, section, and author.
       <span class="title-reminder-thanks">
@@ -57,7 +57,7 @@
           (t.filtered_count == 1 ? "" : "s") << " filtering</em>"
       end
 
-      [ "#{t.tag} - #{t.description}", t.tag, { "data-title" => raw(html), "data-tag-css" => t.css_class, "data-vibe" => (t.tag == "vibecoding") ? 'ai' : '' } ]},
+      [ "#{t.tag} - #{t.description}", t.tag, { "data-title" => ERB::Util.html_escape(html), "data-tag-css" => t.css_class, "data-vibe" => (t.tag == "vibecoding") ? 'ai' : '' } ]},
     f.object.tags.map(&:tag)), {}, { multiple: true, required: true } %>
   </div>
 

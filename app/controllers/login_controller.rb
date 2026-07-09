@@ -2,7 +2,7 @@
 
 class LoginBannedError < StandardError; end
 
-class LoginDeletedError < StandardError; end
+class LoginDeactivatedError < StandardError; end
 
 class LoginTOTPFailedError < StandardError; end
 
@@ -66,7 +66,7 @@ class LoginController < ApplicationController
       end
 
       if !user.is_active?
-        raise LoginDeletedError
+        raise LoginDeactivatedError
       end
 
       if !user.password_digest.to_s.match(/^\$2a\$#{BCrypt::Engine::DEFAULT_COST}\$/o)
@@ -106,8 +106,8 @@ class LoginController < ApplicationController
     rescue LoginBannedError
       fail_reason = "Your account has been banned. Log: #{user.banned_reason}"
       ModNote.tattle_on_banned_login(user)
-    rescue LoginDeletedError
-      fail_reason = "You deleted your account."
+    rescue LoginDeactivatedError
+      fail_reason = "You deactivated your account."
       ModNote.tattle_on_deleted_login(user)
     rescue LoginTOTPFailedError
       fail_reason = "Your TOTP code was invalid."

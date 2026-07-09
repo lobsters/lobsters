@@ -9,13 +9,12 @@ class SearchController < ApplicationController
 
     @search = Search.new(search_params, @user)
 
-    if !@user && params[:q].to_s.starts_with?("https://")
+    if !@user && @search.parse_tree.any? { |node| node.key?(:url) }
       flash[:error] = "Sorry, you have to log in to search for a URL. We're getting hammered by a spambot with many thousands of IPs. More info at https://github.com/lobsters/lobsters/issues/1814"
-      @results = []
-    else
-      @results = @search.results
+      @search.invalid("You have to log in to search for a URL.")
     end
 
+    @results = @search.results
     if @user && @search.results
       if params[:what] == "stories"
         votes = Vote.story_votes_by_user_for_story_ids_hash(@user.id, @search.results.map(&:id))

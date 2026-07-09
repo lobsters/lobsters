@@ -16,6 +16,7 @@ But I make an unprincipled exception for :has because it solves so many big prob
 	--color-bg-50: rgb(var(--base-bg) / 50%);
 
 	--color-fg: rgb(var(--base-fg) / var(--opacity-fg)); /* primary text */
+	--color-fg-accent: currentColor;
 	--color-fg-contrast-13: rgb(var(--base-fg) / var(--opacity-fg-contrast-13));
 	--color-fg-contrast-10: rgb(var(--base-fg) / var(--opacity-fg-contrast-10));
 	--color-fg-contrast-7-5: rgb(var(--base-fg) / var(--opacity-fg-contrast-7-5));
@@ -151,7 +152,7 @@ span.na {
 	font-style: italic;
 }
 
-div.shorten_first_p p:first-child {
+.shorten_first_p p:first-child {
 	margin-top: 0;
 }
 
@@ -529,10 +530,9 @@ li.story {
 ol.stories li.story div.story_liner {
 	padding-top: 0.25em;
 	padding-bottom: 0.25em;
-	word-break: break-word;
+	overflow-wrap: break-word;
 }
 .comment {
-	clear: both;
 	padding-top: 0.4em;
 	padding-bottom: 0.4em;
 	position: relative;
@@ -711,6 +711,7 @@ li .comment_folder_button:checked ~ ol.comments li {
 }
 
 li.comments_subtree {
+	clear: both;
 	position: relative;
 }
 
@@ -754,6 +755,19 @@ li.story .byline {
 	color: var(--color-fg-contrast-4-5);
 	text-decoration: none;
 }
+
+.details input:hover,
+.details input:focus-visible,
+.details summary:hover,
+.details summary:focus-visible,
+.details a:hover:not(details *),
+.details a:focus-visible:not(details *) {
+	position: relative;
+	z-index: 10;
+	background: var(--color-bg);
+	box-shadow: 0 0 0 0.25rem var(--color-bg);
+}
+
 .comment.replied .flagger,
 .comment.flagged .comment_replier {
 	color: var(--color-fg);
@@ -773,11 +787,14 @@ span.new_user, a.new_user,
 li .byline a.new_user {
 	color: var(--color-fg-affirmative);
 }
-span.inactive_user, a.inactive_user,
-li .byline a.inactive_user,
+a.inactive_user,
 .inactive_tag {
 	color: var(--color-fg-contrast-5);
 	text-decoration: line-through;
+}
+a.inactive_user:focus-visible,
+a.inactive_user:hover {
+	text-decoration: none;
 }
 span.user_is_author, a.user_is_author,
 li .byline a.user_is_author {
@@ -867,10 +884,12 @@ nav.morelink {
 	float: left;
 }
 
-nav.morelink,
-div.page_link_buttons {
+nav.morelink {
 	margin-top: 1.5em;
 }
+
+#page-link-buttons,
+#page-link-buttons a,
 nav.morelink a {
 	color: var(--color-fg-contrast-7-5);
 	font-weight: bold;
@@ -884,28 +903,27 @@ nav.morelink a[rel="next"]::after {
 	content: " >>"/"";
 }
 
-div.page_link_buttons {
-	font-weight: bold;
-	margin-top: 2em;
-}
-div.page_link_buttons a,
-div.page_link_buttons span {
-	border: 1px solid var(--color-box-border);
-	background-color: var(--color-button-bg);
-	color: var(--color-fg-contrast-7-5);
-	padding: 0.25em 0.5em;
-	font-weight: bold;
-	text-decoration: none;
-	margin-left: 0.5em;
-}
-div.page_link_buttons a.cur,
-div.page_link_buttons span {
-	background-color: transparent;
-	border-color: transparent;
-	margin-left: 0.25em;
-	padding-right: 0.25em;
+#page-link-buttons ul {
+	margin: 2rem 0 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
 }
 
+#page-link-buttons ul > * {
+	margin-bottom: 0.5rem;
+}
+
+#page-link-buttons li > * {
+	padding: 0.25em 0.5em;
+}
+
+#page-link-buttons a:not([aria-current="page"]) {
+	border: 1px solid var(--color-box-border);
+	background-color: var(--color-button-bg);
+}
 
 div.story_text {
 	margin-bottom: 1.5em;
@@ -930,8 +948,7 @@ div.comment_text {
 }
 .controls {
 	display: flex;
-	flex-flow: row;
-	flex-wrap: wrap;
+	flex-flow: row wrap;
 	gap: 0.5rem;
 	justify-content: start;
 	margin-top: 1rem;
@@ -1021,7 +1038,7 @@ div.comment_text code {
 	list-style: none;
 }
 
-.caches ul {
+.caches[open] ul {
 	position: absolute;
 	background: var(--color-bg);
 	border: 1px solid var(--color-box-border);
@@ -1032,6 +1049,7 @@ div.comment_text code {
 }
 
 .caches li {
+	display: inline-block; /* Netsurf */
 	border-bottom: 1px solid var(--color-box-border);
 }
 
@@ -1112,6 +1130,7 @@ div#domain_box input[type=text] {
 }
 div#story_box #story_tags {
 	width: 624px;
+	overflow-x: auto;
 }
 div#story_box textarea {
 	height: 2rem;
@@ -1321,8 +1340,17 @@ label:has(+ *[type="hidden"] + *:required)::after {
 	vertical-align: middle;
 }
 /* Labels on the (read-only) Profile page get extra contrast */
-.profile label::after {
-	content: ":";
+.profile dt::after {
+	content: ":"/"";
+}
+.profile .hats {
+	padding: 0;
+}
+.profile .hats li {
+	display: inline-block;
+}
+.profile .hats li:not(:last-child)::after {
+	content: ", "/""
 }
 .box img {
 	vertical-align: middle;
@@ -1386,7 +1414,7 @@ label:has(+ *[type="hidden"] + *:required)::after {
 .labelled_grid {
 	display: grid;
 	grid-template-columns: minmax(10rem, min-content) 1fr;
-	word-break: break-word;
+	overflow-wrap: break-word;
 	column-gap: 1rem;
 	row-gap: 12px;
 }
@@ -1400,7 +1428,7 @@ label:has(+ *[type="hidden"] + *:required)::after {
 }
 .labelled_grid input[type="text"],
 .labelled_grid input[type="password"] {
-	height: 1.5rlh;
+	height: 1.8rem;
 }
 
 .labelled_grid input[type="checkbox"] {
@@ -1690,21 +1718,6 @@ input[type="submit"].link_post.pushover_button {
 
 .tag-title:first-of-type {
 	margin-top: -0.75rem;
-}
-
-@media only screen and (max-width: 480px) {
-	.radio-group-container legend {
-		float: none;
-		margin-bottom: 0.5rem;
-	}
-
-	.radio-group-container .radio-group {
-		gap: 1rem;
-	}
-
-	.radio-group-container .radio-group	label {
-		display: inline;
-	}
 }
 
 @media screen and (min-width: 481px) {
@@ -2039,6 +2052,32 @@ input[type="submit"].link_post.pushover_button {
 	}
 	.labelled_grid input[type="checkbox"] + .hint {
 		margin-left: 0;
+	}
+
+	.radio-group-container legend {
+		float: none;
+		margin-bottom: 0.5rem;
+	}
+
+	.radio-group-container .radio-group {
+		gap: 1rem;
+	}
+
+	.radio-group-container .radio-group	label {
+		display: inline;
+	}
+
+	.controls {
+		flex-flow: column;
+	}
+
+	.controls .markdown_help[open] summary,
+	.controls details {
+		margin: 0;
+	}
+
+	.markdown_help summary {
+		text-align: left;
 	}
 }
 @media print {

@@ -20,10 +20,14 @@ class Tag < ApplicationRecord
   attr_accessor :edit_user_id, :stories_count
   attr_writer :filtered_count
 
-  validates :tag, length: {maximum: 25}, presence: true,
+  TAG_FORMAT = /\A[A-Za-z0-9_-]+\z/
+  NAME_MAXLENGTH = 25
+  DESCRIPTION_MAXLENGTH = 100
+
+  validates :tag, length: {maximum: NAME_MAXLENGTH}, presence: true,
     uniqueness: {case_sensitive: true},
-    format: {with: /\A[A-Za-z0-9_\-+]+\z/}
-  validates :description, length: {maximum: 100}
+    format: {with: TAG_FORMAT}
+  validates :description, length: {maximum: DESCRIPTION_MAXLENGTH}
   validates :hotness_mod, inclusion: {in: -10..10}
   validates :permit_by_new_users, :privileged, :active, :is_media,
     inclusion: {in: [true, false]}

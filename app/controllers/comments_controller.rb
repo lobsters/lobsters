@@ -395,16 +395,11 @@ class CommentsController < ApplicationController
     if params[:user]
       @showing_user = User.find_by!(username: params[:user])
       @title = "Comments for #{@showing_user.username}"
-    elsif !@user
-      return redirect_to active_path
-    else
-      @showing_user = @user
-      @title = "Your Comments"
     end
 
     @rss_link ||= {
       title: "RSS 2.0 - #{@showing_user.username} Comments",
-      href: user_token_link(user_threads_url(format: :rss))
+      href: user_token_link(user_comments_url(format: :rss))
     }
     @comments = Comment.where(user: @showing_user)
       .merge(Story.not_deleted(@user))

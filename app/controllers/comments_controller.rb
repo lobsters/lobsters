@@ -239,7 +239,11 @@ class CommentsController < ApplicationController
       0, comment.story_id, comment.id, @user.id, nil
     )
 
-    render plain: "ok"
+    if request.xhr?
+      render plain: "ok"
+    else
+      redirect_to(Routes.comment_target_path(comment, true))
+    end
   end
 
   def upvote
@@ -251,7 +255,11 @@ class CommentsController < ApplicationController
       1, comment.story_id, comment.id, @user.id, nil
     )
 
-    render plain: "ok"
+    if request.xhr?
+      render plain: "ok"
+    else
+      redirect_to(Routes.comment_target_path(comment, true))
+    end
   end
 
   def flag

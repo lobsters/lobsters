@@ -498,6 +498,10 @@ div.voters {
 	width: 40px;
 }
 
+.voters button {
+	padding: 0;
+}
+
 .voters .merge {
 	vertical-align: middle;
 }
@@ -506,6 +510,9 @@ div.voters {
 	content: "\25b3";
 	font-size: 1.2rem;
 	font-family: system-ui, monospace, sans-serif;
+}
+button.upvoter:before {
+	margin-bottom: 0.3rem;
 }
 .upvoter:hover:before,
 .upvoted .upvoter:before {

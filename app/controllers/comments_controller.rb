@@ -392,12 +392,32 @@ class CommentsController < ApplicationController
       @showing_user = @user
       @title = "Your Threads"
     end
-
     @threads = Comment.recent_threads(@showing_user)
       .merge(Story.not_deleted(@user))
       .for_presentation
       .joins(:story)
     @threads = CommentVoteHydrator.new(@threads, @user)
+  end
+
+  def user_comments
+    if params[:user]
+      @showing_user = User.find_by!(username: params[:user])
+      @title = "Comments for #{@showing_user.username}"
+    end
+
+    @rss_link ||= {
+      title: "RSS 2.0 - #{@showing_user.username} Comments",
+      href: user_token_link(user_comments_url(format: :rss))
+    }
+    @comments = Comment.where(user: @showing_user)
+      .merge(Story.not_deleted(@user))
+      .for_presentation
+      .joins(:story)
+    @comments = CommentVoteHydrator.new(@comments, @user)
+
+    respond_to do |format|
+      format.rss { render action: "user_comments", layout: false }
+    end
   end
 
   private

@@ -68,12 +68,7 @@ classes = [
 
         <% if @user&.is_moderator? && !ms.previewing %>
           <%= divider_tag %>
-          <% css = ms.has_suggestions? ? "story_has_suggestions" : "" %>
-          <% if ms.previewing %>
-            <span class="<%= css %>">mod edit</span>
-          <% else %>
-            <%= link_to "mod edit", edit_mod_story_path(ms.short_id), class: css %>
-          <% end %>
+          <a href="<%= edit_mod_story_path(ms.short_id) %>" class="<%= ms.has_suggestions? ? "story_has_suggestions" : "" %>">mod edit</a>
         <% end %>
 
         <% if ms.can_have_suggestions_from_user?(@user) %>

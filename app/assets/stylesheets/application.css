@@ -719,8 +719,10 @@ li .comment_folder_button:checked ~ div.comment:not(:target) div.voters .upvoter
 	visibility: hidden;
 	margin-bottom: -15px;
 }
+
 li .comment_folder_button:checked ~ ol.comments ol,
 li .comment_folder_button:checked ~ ol.comments div.comment,
+li .comment_folder_button:checked ~ ol.comments div.reply_form_temporary,
 li .comment_folder_button:checked ~ ol.comments li {
 	display: none;
 }

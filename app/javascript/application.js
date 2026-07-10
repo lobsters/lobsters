@@ -857,6 +857,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const comment = parentSelector(event.target, '.comment');
     const commentId = comment.getAttribute('id');
+    const commentShortId = comment.getAttribute('data-shortid')
+
+    // uncollapse comment
+    var folder = qS("input#comment_folder_" + commentShortId)
+    if (folder && folder.checked) {
+      folder.checked = false;
+
+      const storyId = qS('.story')?.getAttribute('data-shortid');
+      if (storyId) {
+        var collapse = JSON.parse(localStorage.getItem("collapse_" + storyId) || '{}');
+        delete collapse[commentId];
+        localStorage.setItem("collapse_" + storyId, JSON.stringify(collapse));
+      }
+    }
 
     // guard: don't create multiple reply boxes to one comment
     if (qS('#reply_form_' + commentId)) { return false; }
@@ -874,7 +888,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const children = qS(comment.parentElement, '#' + comment.id + '~ .comments')
     children.prepend(div)
 
-    fetchWithCSRF('/comments/' + comment.getAttribute('data-shortid') + '/reply')
+    fetchWithCSRF('/comments/' + commentShortId + '/reply')
       .then(response => {
         response.text().then(text => {
           // guard: don't create multiple reply boxes to one comment

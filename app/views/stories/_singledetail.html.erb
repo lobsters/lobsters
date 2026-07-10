@@ -66,7 +66,7 @@ classes = [
           <a href="<%= edit_story_path(ms.short_id) %>">edit</a>
         <% end %>
 
-        <% if @user&.is_moderator? %>
+        <% if @user&.is_moderator? && !ms.previewing %>
           <%= divider_tag %>
           <% css = ms.has_suggestions? ? "story_has_suggestions" : "" %>
           <% if ms.previewing %>

@@ -862,7 +862,7 @@ class Story < ApplicationRecord
 
     Comment.joins(:story)
       .where(story: {merged_story_id: id})
-      .or(Comment.where(story_id: id))
+      .or(Story.where('"story"."id" = ?', id))
   end
 
   def merge_story_short_id=(sid)

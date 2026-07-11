@@ -396,6 +396,7 @@ class CommentsController < ApplicationController
       .merge(Story.not_deleted(@user))
       .for_presentation
       .joins(:story)
+      .load
     @threads = CommentVoteHydrator.new(@threads, @user)
   end
 

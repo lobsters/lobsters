@@ -118,6 +118,8 @@
       <h1 class="<%= @title_class %>"><%= @title %></h1>
     <% end %>
 
+    <div class="flash-notice">2026-07-11: The site is in read-only mode while we migrate to sqlite. For updates, follow <a href="https://gist.github.com/pushcx/eb7cdf2dc9707dc3ab9e7173d197ddfc">our migration checklist</a> or join <a href="https://lobste.rs/chat">the chat room</a>.</div>
+
     <% [ :error, :success, :notice ].each do |f| %>
       <% if flash[f].present? %>
         <div class="flash-<%= f %>"><%= flash[f] %></div>

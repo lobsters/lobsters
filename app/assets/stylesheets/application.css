@@ -498,6 +498,10 @@ div.voters {
 	width: 40px;
 }
 
+.voters button {
+	padding: 0;
+}
+
 .voters .merge {
 	vertical-align: middle;
 }
@@ -506,6 +510,9 @@ div.voters {
 	content: "\25b3";
 	font-size: 1.2rem;
 	font-family: system-ui, monospace, sans-serif;
+}
+button.upvoter:before {
+	margin-bottom: 0.3rem;
 }
 .upvoter:hover:before,
 .upvoted .upvoter:before {
@@ -520,6 +527,7 @@ div.voters {
 	align-items: center;
 	justify-self: center;
 	text-decoration: none;
+	border: none;
 }
 .upvoter:focus { outline: none; } /* don't outline after upvote click */
 .upvoter:focus-visible { outline: 2px solid var(--color-fg-link); } /* do outline when tabbing */
@@ -663,6 +671,13 @@ li.story a.tag {
 
 li .tags {
 	margin-right: 0.25em;
+	display: inline-block;
+	vertical-align: middle;
+	padding: 0;
+}
+
+li .tags li {
+	display: inline-block;
 }
 
 li .domain {

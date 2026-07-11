@@ -10,10 +10,19 @@ describe "comments", type: :request do
   describe "upvoting" do
     before { sign_in user }
 
-    it "works" do
+    it "works without js" do
       expect(comment.score).to eq(1)
       expect(comment.reload.score).to eq(1)
       post "/comments/#{comment.short_id}/upvote"
+      expect(response).to redirect_to(Routes.comment_target_path(comment, true))
+      expect(comment.reload.score).to eq(2)
+      expect(Vote.where(user: user).count).to eq(1)
+    end
+
+    it "works with js" do
+      expect(comment.score).to eq(1)
+      expect(comment.reload.score).to eq(1)
+      post "/comments/#{comment.short_id}/upvote", xhr: true
       expect(response.status).to eq(200)
       expect(comment.reload.score).to eq(2)
       expect(Vote.where(user: user).count).to eq(1)
@@ -57,6 +66,15 @@ describe "comments", type: :request do
       comment = create(:comment)
 
       get "/comments.rss"
+      expect(response).to be_successful
+      expect(response.body).to include(comment.comment[0..20])
+      expect(response.body).to include(comment.user.username)
+    end
+
+    it "/~user/comments.rss renders" do
+      comment = create(:comment)
+      get user_comments_path(comment.user, format: :rss)
+
       expect(response).to be_successful
       expect(response.body).to include(comment.comment[0..20])
       expect(response.body).to include(comment.user.username)

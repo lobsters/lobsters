@@ -39,11 +39,11 @@ classes = [
         <a class="description_present" title="<%= truncate(ms.description, :length => 500) %>" href="<%= Routes.title_path ms %>">&#x2636;</a>
       <% end %>
 
-      <span class="tags">
+      <ul class="tags" aria-label="Tags">
         <% ms.tags.each do |tag| %>
-          <%= tag_link tag %>
+          <li><%= tag_link tag %></li>
         <% end %>
-      </span>
+      </ul>
       <% if ms.origin.present? %>
         <%= link_to ms.origin.identifier, origin_path(ms.origin), class: 'domain' %>
       <% elsif ms.domain.present? %>
@@ -66,7 +66,7 @@ classes = [
           <a href="<%= edit_story_path(ms.short_id) %>">edit</a>
         <% end %>
 
-        <% if @user&.is_moderator? %>
+        <% if @user&.is_moderator? && !ms.previewing %>
           <%= divider_tag %>
           <a href="<%= edit_mod_story_path(ms.short_id) %>" class="<%= ms.has_suggestions? ? "story_has_suggestions" : "" %>">mod edit</a>
         <% end %>
@@ -88,7 +88,7 @@ classes = [
 
           <%= divider_tag %>
           <%= form_with :class => "hider", url: merged_stories.first.is_hidden_by_cur_user ? story_unhide_path(merged_stories.first.short_id) : story_hide_path(merged_stories.first.short_id) do |form| %>
-            <%= form.submit merged_stories.first.is_hidden_by_cur_user ? "unhide" : "hide", :class => "btn-link" %>
+            <%= form.submit merged_stories.first.is_hidden_by_cur_user ? "unhide" : "hide", :class => "btn-link", disabled: ms.previewing %>
           <% end %>
 
           <% if ms.hider_count > 0 %>
@@ -110,7 +110,7 @@ classes = [
 
           <%= divider_tag %>
           <%= form_with :class => "saver", url: merged_stories.first.is_saved_by_cur_user ? story_unsave_path(merged_stories.first.short_id) : story_save_path(merged_stories.first.short_id) do |form| %>
-            <%= form.submit merged_stories.first.is_saved_by_cur_user ? "unsave" : "save", :class => "btn-link" %>
+            <%= form.submit merged_stories.first.is_saved_by_cur_user ? "unsave" : "save", :class => "btn-link", disabled: ms.previewing %>
           <% end %>
 
         <% end %>
@@ -131,10 +131,12 @@ classes = [
 
           <span class="comments_label">
             <%= divider_tag %>
-            <a role="heading" aria-level="2" href="<%= merged_stories.count > 1 ? Routes.title_path(merged_stories.first, anchor: ms.comments_anchor) : "#comments-#{merged_stories.first.short_id}" %>">
-              <%= ms.comments_count.zero? ? "no" : ms.comments_count %>
-              <%= 'comment'.pluralize(ms.comments_count) %>
-            </a>
+            <% label = ms.comments_count.zero? ? "no comment" : "#{ms.comments_count} #{'comment'.pluralize(ms.comments_count)}" %>
+            <% if ms.previewing %>
+              <span role="heading" aria-level="2"><%= label %></span>
+            <% else %>
+              <%= link_to label, (merged_stories.count > 1 ? Routes.title_path(merged_stories.first, anchor: ms.comments_anchor) : "#comments-#{merged_stories.first.short_id}"), role: "heading", "aria-level": 2 %>
+            <% end %>
           </span>
 
           <% if ((@user&.is_moderator? && ms.flags > 0) || (ms.flags >= 3 || ms.score <= 0)) %>

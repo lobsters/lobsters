@@ -205,6 +205,13 @@ describe Search do
     expect(search.results.first.title).to eq("unique")
   end
 
+  it "does not issue a title search for short words" do
+    search = Search.new({q: "title:t2", what: "stories"}, @alice)
+
+    expect(search.results).to be_empty
+    expect(search.invalid_because).to eq("No search terms recognized")
+  end
+
   it "can search for stories by title with multiple words" do
     search = Search.new({q: 'title:"term1 t2"', what: "stories"}, @alice)
 

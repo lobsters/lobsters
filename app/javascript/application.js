@@ -907,7 +907,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Lobster.removeFlagModal()
   });
 
-  on("click", '.comment a.upvoter', (event) => {
+  on("click", '.comment button.upvoter', (event) => {
     event.preventDefault();
     Lobster.upvoteComment(event.target);
   });

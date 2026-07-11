@@ -67,7 +67,7 @@ class Vote < ApplicationRecord
   def self.comment_vote_summaries(comment_ids)
     Vote
       .joins(:user)
-      .select("comment_id, reason, count(1) as count, group_concat(username separator ', ') as usernames")
+      .select("comment_id, reason, count(1) as count, group_concat(username, ', ') as usernames")
       .where(comment_id: comment_ids)
       .where.not(reason: "")
       .group(:comment_id, :reason)

@@ -28,7 +28,7 @@ APP_ETC=/home/deploy/lobsters/shared/etc
 echo "lobste.rs" > /etc/hostname
 
 # server packages
-apt install iptables-persistent opendkim postfix restic
+apt install iptables-persistent opendkim postfix restic sqlite3
 
 # 2026-01-02 workaround failure to build commonmarker because there aren't
 # precompiled gems for ruby 4.0.0 yet

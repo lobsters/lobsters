@@ -499,6 +499,7 @@ div.voters {
 }
 
 .voters button {
+	background: transparent;
 	padding: 0;
 }
 

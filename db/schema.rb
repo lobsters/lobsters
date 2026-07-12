@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_13_004304) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_12_205915) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -86,7 +86,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_13_004304) do
     t.datetime "last_reply_at"
     t.datetime "last_edited_at", null: false
     t.string "token", null: false
+    t.index "floor(unixepoch(created_at)/900), created_at", name: "index_comments_on_period_and_created_at"
     t.index ["confidence"], name: "confidence_idx"
+    t.index ["created_at"], name: "index_comments_on_created_at"
     t.index ["hat_id"], name: "comments_hat_id_fk"
     t.index ["parent_comment_id"], name: "comments_parent_comment_id_fk"
     t.index ["score"], name: "index_comments_on_score"
@@ -394,6 +396,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_13_004304) do
     t.datetime "updated_at", null: false
     t.datetime "last_edited_at", null: false
     t.string "token", null: false
+    t.index "floor(unixepoch(created_at)/900), created_at", name: "index_stories_on_period_and_created_at"
     t.index ["created_at"], name: "index_stories_on_created_at"
     t.index ["domain_id"], name: "index_stories_on_domain_id"
     t.index ["hotness"], name: "hotness_idx"
@@ -526,8 +529,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_13_004304) do
     t.integer "vote", limit: 1, null: false
     t.string "reason", limit: 1, default: "", null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index "floor(unixepoch(updated_at)/900), updated_at", name: "index_votes_on_period_and_updated_at"
     t.index ["comment_id"], name: "index_votes_on_comment_id"
     t.index ["story_id"], name: "votes_story_id_fk"
+    t.index ["updated_at"], name: "index_votes_on_updated_at"
     t.index ["user_id", "comment_id"], name: "user_id_comment_id"
     t.index ["user_id", "story_id"], name: "user_id_story_id"
   end

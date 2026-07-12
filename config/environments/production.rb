@@ -81,8 +81,7 @@ Rails.application.configure do
     ActiveSupport::Logger.new(Rails.root.join("log/solid_queue.log"))
   )
 
-  # Use a different cache store in production.
-  config.cache_store = :solid_cache_store
+  config.cache_store = :solid_cache_store, {shards: [:cache]}
 
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = {database: {writing: :queue}}

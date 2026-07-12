@@ -1,5 +1,5 @@
 default: &default
-  database: cache
+  databases: [cache, rack_attack]
   store_options:
     max_age: <%= 13.weeks.to_i %>
     max_size: <%= 2.gigabytes %>

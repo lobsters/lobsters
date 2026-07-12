@@ -15,6 +15,10 @@ development:
     <<: *sqlite3
     database: db/development/queue.sqlite3
     migrations_paths: db/development/queue_migrate
+  rack_attack:
+    <<: *sqlite3
+    database: db/development/rack_attack.sqlite3
+    migrations_paths: db/development/rack_attack_migrate
 
 test:
   primary:
@@ -28,6 +32,10 @@ test:
     <<: *sqlite3
     database: db/test/queue.sqlite3
     migrations_paths: db/test/queue_migrate
+  rack_attack:
+    <<: *sqlite3
+    database: db/test/rack_attack.sqlite3
+    migrations_paths: db/test/rack_attack_migrate
 
 production:
   primary:
@@ -41,3 +49,7 @@ production:
     <<: *sqlite3
     database: storage/queue.sqlite3
     migrations_paths: db/queue_migrate
+  rack_attack:
+    <<: *sqlite3
+    database: storage/rack_attack.sqlite3
+    migrations_paths: db/rack_attack_migrate

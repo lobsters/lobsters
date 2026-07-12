@@ -16,6 +16,14 @@
 # Otherwise, check the RateLimit headers you get back. RateLimit-Reset tells you how many seconds to
 # wait if you get a 429.
 
+if SolidCache.configuration.shard_keys.include?(:rack_attack) &&
+    ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, name: "rack_attack").nil?
+  raise <<~SETUP
+    config/database.yml is missing the rack_attack database, copy it from database.yml.sample
+    and run `rails db:prepare`
+  SETUP
+end
+
 Rack::Attack.safelist("localhost") do |req|
   req.ip == "127.0.0.1" || req.ip == "::1"
 end
@@ -65,4 +73,16 @@ Rack::Attack.throttled_responder = lambda do |request|
   }
 
   [429, headers, ["Throttled, sleep(1) between hits; more in config/initializers/rack_attack.rb\n"]]
+end
+
+# Give Rack::Attack its own shard, separate from the default Rails.cache, so that all the churn of
+# rate-limiting bots doesn't evict the rest of the cache.
+unless Rails.cache.is_a?(ActiveSupport::Cache::NullStore) # NullStore is in test env
+  longest_window = Rack::Attack.throttles.values.map(&:period).grep(Numeric).max || 1.week.to_i
+  Rack::Attack.cache.store = SolidCache::Store.new(
+    shards: [:rack_attack],
+    namespace: "rack_attack",
+    max_age: longest_window + 1.day.to_i,
+    max_size: 2.gigabytes
+  )
 end

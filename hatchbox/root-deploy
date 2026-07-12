@@ -87,6 +87,10 @@ cp bash_aliases /root/.bash_aliases
 cp bash_aliases ~deploy/.bash_aliases
 chown deploy:deploy ~deploy/.bash_aliases
 
+cp sqliterc /root/.sqliterc
+cp sqliterc ~deploy/.sqliterc
+chown deploy:deploy ~deploy/.sqliterc
+
 # make iptables record readable for transparency
 netfilter-persistent save
 chmod go+r /etc/iptables/rules.v4 /etc/iptables/rules.v6

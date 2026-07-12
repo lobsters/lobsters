@@ -1,0 +1,6 @@
+--.eqp on
+--.stats on
+.changes on
+.timer on
+.headers on
+.mode column --wrap 50 --wordwrap on

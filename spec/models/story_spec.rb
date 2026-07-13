@@ -66,6 +66,12 @@ describe Story do
     expect(Story.new(url: "http://a.com?linkId=track").url).to eq("http://a.com")
   end
 
+  it "removes ref tracking parameter" do
+    expect(Story.new(url: "http://a.com?ref=z.com").url).to eq("http://a.com")
+    expect(Story.new(url: "http://a.com?ref=z.com&b=c").url).to eq("http://a.com?b=c")
+    expect(Story.new(url: "http://a.com?b=c&ref=z.com&d=e").url).to eq("http://a.com?b=c&d=e")
+  end
+
   it "checks for invalid urls" do
     expect(Story.new(url: "http://example.com").tap(&:valid?).errors[:url]).to be_empty
 

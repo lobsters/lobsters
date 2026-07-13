@@ -1,6 +1,6 @@
 ### Lobsters Rails Project [![build status](https://github.com/lobsters/lobsters/actions/workflows/check.yml/badge.svg)](https://github.com/lobsters/lobsters/actions/workflows/check.yml)
 
-[Lobsters](https://lobste.rs) is a Rails codebase and uses a SQL (MariaDB in production) backend for the database.
+[Lobsters](https://lobste.rs) is a Rails codebase and uses a SQL (SQLite in production) backend for the database.
 The code is open source as part of our [commitment to transparency](https://lobste.rs/about#transparency).
 It's been used to run [sister sites](https://github.com/lobsters/lobsters/blob/main/sister_sites.md), but mostly we want people to be able to understand and improve what's happening on Lobsters itself.
 
@@ -71,8 +71,7 @@ Setup:
     Email spammers constantly try to create servers on every hosting provider.
     The providers ban them, but the IP address gets a bad reputation and may be on blocklists when it's assigned to you.
     Check your server's IP ASAP; it's much easier to delete and recreate than get off the blocklists, especially because outsiders don't have any insight into the internal blocklists of big email providers like Google, Apple, and Microsoft.
-  * You'll need to create a Database.
-    We use MariaDB in prod but are working to [migrate to SQLite](https://github.com/lobsters/lobsters/issues/539).
+  * You'll need to create a database; we use SQLite in production.
   * Create an App. Running through the Settings sections:
     * Processes: Add a `solid_queue` process, command `bundle exec rails solid_queue:start`.
     * Activity: This is logs, nothing to change.

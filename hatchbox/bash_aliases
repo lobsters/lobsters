@@ -15,6 +15,7 @@ alias fd="fdfind"
 alias gerp="grep"
 alias g="git"
 alias log="cd ~deploy/lobsters/shared/log"
+alias s="sqlite3"
 alias vi="vim"
 
 set -o vi

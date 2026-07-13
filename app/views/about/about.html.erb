@@ -353,9 +353,8 @@
 
   <ul>
   <li><p>
-  Lobsters is hosted on three <a href="https://slugs.do-api.dev/">VPSs</a> at DigitalOcean:
-  a <tt>s-4vcpu-8gb</tt> for the web server,
-  a <tt>s-4vcpu-8gb</tt> for the mariadb server, and
+  Lobsters is hosted on two <a href="https://slugs.do-api.dev/">VPSs</a> at DigitalOcean:
+  a <tt>s-4vcpu-8gb</tt> for the web server (which uses [SQLite](https://sqlite.org/) locally),
   a <tt>s-1vcpu-1gb</tt> for the <a href="/chat">IRC bot</a>.
   DNS is hosted at <a href="https://dnsimple.com/">DNSimple</a> and
   we use <a href="https://restic.net/">restic</a> for backups to <a href="https://www.backblaze.com/b2">b2</a>.

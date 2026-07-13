@@ -654,6 +654,26 @@ export class _LobstersFunction {
       method: 'post',
       body: formData });
   }
+
+  /** @param {string} storyId */
+  getCollapsedComments(storyId) {
+    return JSON.parse(localStorage.getItem("collapse_" + storyId) || '{}');
+  }
+
+  /**
+   * @param {string} storyId
+   * @param {string} commentId
+   * @param {boolean} collapsed
+   */
+  setCommentCollapsed(storyId, commentId, collapsed) {
+    const collapse = this.getCollapsedComments(storyId);
+    if (collapsed) {
+      collapse[commentId] = 1; // value unused, just truthy and short to serialize
+    } else {
+      delete collapse[commentId];
+    }
+    localStorage.setItem("collapse_" + storyId, JSON.stringify(collapse));
+  }
 }
 
 const Lobster = new _LobstersFunction();
@@ -841,7 +861,7 @@ document.addEventListener("DOMContentLoaded", () => {
   (function() {
     const storyId  = qS('.story')?.getAttribute('data-shortid');
     if (!storyId) return; // only remember or read these on story pages
-    const collapse = JSON.parse(localStorage.getItem("collapse_" + storyId) || '{}');
+    const collapse = Lobster.getCollapsedComments(storyId)
 
     for (var k in collapse) {
       var folder = qS('input#comment_folder_' + k);
@@ -857,6 +877,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const comment = parentSelector(event.target, '.comment');
     const commentId = comment.getAttribute('id');
+    const commentShortId = comment.getAttribute('data-shortid')
+
+    // uncollapse comment
+    var folder = qS("input#comment_folder_" + commentShortId)
+    if (folder && folder.checked) {
+      folder.checked = false;
+      const storyId = qS('.story')?.getAttribute('data-shortid');
+      if (storyId) Lobster.setCommentCollapsed(storyId, commentId, false);
+    }
 
     // guard: don't create multiple reply boxes to one comment
     if (qS('#reply_form_' + commentId)) { return false; }
@@ -874,7 +903,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const children = qS(comment.parentElement, '#' + comment.id + '~ .comments')
     children.prepend(div)
 
-    fetchWithCSRF('/comments/' + comment.getAttribute('data-shortid') + '/reply')
+    fetchWithCSRF('/comments/' + commentShortId + '/reply')
       .then(response => {
         response.text().then(text => {
           // guard: don't create multiple reply boxes to one comment

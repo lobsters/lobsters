@@ -50,19 +50,6 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
 
 * Setup up your development environment with [docker](/docs/setup_with_docker.md), using a [devcontainer](/docs/SETUP_DEVCONTAINER.md), or locally:
 
-* Install MariaDB:
-  * On Linux use [your package manager](https://mariadb.com/kb/en/distributions-which-include-mariadb/).
-  * On MacOS you can [install with brew](https://mariadb.com/kb/en/installing-mariadb-on-macos-using-homebrew/).
-  * On Windows there's an [installer](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.5.2&os=Linux&cpu=x86_64&pkg=tar_gz&i=systemd&mirror=starburst_stlouis).
-
-* Start the MariaDB server using one of the [methods mentioned in the MariaDB knowledge base](https://mariadb.com/kb/en/starting-and-stopping-mariadb-automatically/).
-
-* Open the console using `mariadb`, and set the `root` user password (type `ctrl-d` to exit afterwards):
-
-  ```sql
-  ALTER USER 'root'@'localhost' IDENTIFIED BY 'localdev';
-  ```
-
 * Install the Ruby version specified in [.ruby-version](https://github.com/lobsters/lobsters/blob/main/.ruby-version).
 
 * Install [libvips](https://www.libvips.org/)

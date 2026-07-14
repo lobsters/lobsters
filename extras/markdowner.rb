@@ -115,8 +115,8 @@ class Markdowner
 
       node.string_content = before
 
-      if Username.where("created_at < ? and (? < renamed_away_at or renamed_away_at is null)", as_of, as_of).exists?(username: user[1..])
-        link = Commonmarker::Node.new(:link, url: Rails.application.root_url + "~#{user[1..]}")
+      if Username.where("created_at < ? and (? < renamed_away_at or renamed_away_at is null)", as_of, as_of).where("LOWER(username) = ?", user[1..].downcase).exists?
+        link = Commonmarker::Node.new(:link, url: Rails.application.root_url + "~#{user[1..].downcase}")
         node.insert_after(link)
 
         link_text = Commonmarker::Node.new(:text)

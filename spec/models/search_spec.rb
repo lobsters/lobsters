@@ -174,6 +174,13 @@ describe Search do
     expect(search.results.map(&:title).sort).to eq(["term1 t2", "unique"])
   end
 
+  it "search for stories by submitter is case-insensitive" do
+    search = Search.new({q: "submitter:Bob", what: "stories"}, nil)
+
+    expect(search.results.length).to eq(2)
+    expect(search.results.map(&:title).sort).to eq(["term1 t2", "unique"])
+  end
+
   it "can search for stories by tag" do
     search = Search.new({q: "term1 tag:tag1", what: "stories"}, @alice)
 
@@ -320,6 +327,18 @@ describe Search do
 
   it "can search for comments by commenter" do
     search = Search.new({q: "commenter:bob", what: "comments"}, nil)
+
+    expect(search.results.length).to eq(3)
+  end
+
+  it "search for comments by story submitter is case-insensitive" do
+    search = Search.new({q: "submitter:BoB", what: "comments"}, nil)
+
+    expect(search.results.length).to eq(2)
+  end
+
+  it "search for comments by commenter is case-insensitive" do
+    search = Search.new({q: "commenter:BoB", what: "comments"}, nil)
 
     expect(search.results.length).to eq(3)
   end

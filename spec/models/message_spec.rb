@@ -14,6 +14,12 @@ describe Message do
     expect(m_valid_short_id).not_to be_valid
   end
 
+  it "recipient username is case insensitive" do
+    recipient = create :user, username: "alice"
+    message = create(:message, recipient_username: "Alice")
+    expect(message.recipient).to eq recipient
+  end
+
   describe "hat" do
     it "can't be worn if user doesn't have that hat" do
       message = build(:message, hat: create(:hat))

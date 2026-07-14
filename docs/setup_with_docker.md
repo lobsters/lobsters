@@ -4,7 +4,6 @@
 * Create a fork of the repo
 * Clone repo `git clone https://github.com/[USER_NAME]/lobsters.git`
 * Run `make docker-serve`
-  * This will pull a mariadb image and start two containers: one for web and another for the database
 * Change the credentials:
   * Create a new terminal tab
   * Run `docker compose run app bash`
@@ -15,7 +14,7 @@
     * You should get a similar image like this:
    ![successful vim](./vim_result.jpg)
 
-* Switch back to the tab running the mariadb image and restart the server by:
+* Switch back to the tab running the Docker container and restart the server by:
   * Holding down `control` and `c`
   * Run `make docker-serve`
   * You should see something like this:
@@ -34,7 +33,7 @@ Solution: Redo step "Change the credentials":
 Solution:
 
 * Run `docker compose run app db:drop`
-* Redo steps starting at "Switch back to the tab running the mariadb image and restart the server by:"
+* Redo steps starting at "Switch back to the tab running the Docker container image and restart the server by:"
 
 # Debugging in Docker
 

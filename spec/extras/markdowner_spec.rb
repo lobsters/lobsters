@@ -29,6 +29,27 @@ describe Markdowner do
     expect(Markdowner.to_html("hi ~flimflam test")).to eq("<p>hi ~flimflam test</p>\n")
   end
 
+  it "turns @UserName into a link if @username exists" do
+    create(:user, username: "blahblah")
+
+    expect(Markdowner.to_html("hi @BlahBlah test"))
+      .to eq("<p>hi <a href=\"https://#{Rails.application.domain}/~blahblah\" rel=\"ugc\">" \
+               "@BlahBlah</a> test</p>\n")
+
+    expect(Markdowner.to_html("hi @FlimFlam test"))
+      .to eq("<p>hi @FlimFlam test</p>\n")
+  end
+
+  it "turns ~UserName into a link if ~username exists" do
+    create(:user, username: "blahblah")
+
+    expect(Markdowner.to_html("hi ~BlahBlah test"))
+      .to eq("<p>hi <a href=\"https://#{Rails.application.domain}/~blahblah\" rel=\"ugc\">" \
+               "~BlahBlah</a> test</p>\n")
+
+    expect(Markdowner.to_html("hi ~FlimFlam test")).to eq("<p>hi ~FlimFlam test</p>\n")
+  end
+
   it "hyperlinks usernames based on when they existed, not now" do
     user = create :user, username: "alice", created_at: 4.weeks.ago
     Username.rename! user:, from: "alice", to: "bob", by: user, at: 1.week.ago

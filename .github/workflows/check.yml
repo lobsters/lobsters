@@ -86,16 +86,6 @@ jobs:
     strategy:
       fail-fast: false
 
-    # DB setup (`services` and `env`) copied from `test` job above
-    services:
-      mariadb:
-        image: mariadb:10.11.11
-        env:
-          MARIADB_ROOT_PASSWORD: root
-          MARIADB_DATABASE: lobsters_dev
-        ports:
-          - 3306:3306
-
     env:
       DATABASE_URL: "sqlite3::///tmp/test.sqlite3"
       RAILS_ENV: test

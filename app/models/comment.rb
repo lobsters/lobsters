@@ -466,26 +466,12 @@ class Comment < ApplicationRecord
     return Comment.none if parent_comment_id.nil?
 
     # starts from parent_comment_id so it works on new records
-    @parents ||= Comment
-      .joins(<<~SQL
-        inner join (
-          with recursive parents as (
-            select
-              id target_id,
-              id,
-              parent_comment_id
-            from comments where id = #{parent_comment_id}
-            union all
-            select
-              parents.target_id,
-              c.id,
-              c.parent_comment_id
-            from comments c join parents on parents.parent_comment_id = c.id
-          ) select id from parents
-        ) as comments_recursive on comments.id = comments_recursive.id
-      SQL
-            )
-      .order(id: :asc)
+    Comment.with_recursive(parents: [
+      Comment.where(id: parent_comment_id),
+      Comment.joins("JOIN parents on comments.id = parents.parent_comment_id")
+    ])
+      # select directly from RCTE; AR would generate a JOIN against 'comments'
+      .select("*").from("parents")
   end
 
   def record_initial_upvote

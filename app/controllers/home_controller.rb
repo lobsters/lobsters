@@ -315,7 +315,7 @@ class HomeController < ApplicationController
 
     @rss_link ||= {
       title: "RSS 2.0 - " + @title,
-      href: "/top/#{length[:param]}/rss"
+      href: "/top/#{length[:param]}.rss"
     }
 
     respond_to do |format|

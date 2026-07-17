@@ -101,6 +101,12 @@ rewrite @use_rss_cached_file /cache/{file_match.relative}
 # header X-Lobsters-Hello "World 8"
 
 
+# Bots ignore our <link> tags and request icons at quite old well-known URLs.
+# https://mathiasbynens.be/notes/touch-icons
+@apple_touch_icon path_regexp ^/apple-touch-icon.*\.png$
+rewrite @apple_touch_icon /touch-icon-192.png
+
+
 # There's a spambot attempting GETs to /stories/new?title=...&url=.... with a
 # real article from a news site at a rate averaging 11/s. Even though Rails 302s
 # these to /login very quickly (average 3ms) the high rate is enough to bog down

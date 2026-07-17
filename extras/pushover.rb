@@ -4,7 +4,7 @@ class Pushover
   # see README.md on setting up credentials
 
   def self.enabled?
-    Rails.application.credentials.pushover.api_token.present?
+    Rails.application.credentials.pushover&.api_token.present?
   end
 
   def self.push(user, params)

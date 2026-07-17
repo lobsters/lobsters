@@ -4,7 +4,7 @@ class Mastodon
   # see README.md on setting up credentials
 
   def self.enabled?
-    Rails.application.credentials.mastodon.token.present?
+    Rails.application.credentials.mastodon&.token.present?
   end
 
   MAX_STATUS_LENGTH = 500 # https://docs.joinmastodon.org/user/posting/#text

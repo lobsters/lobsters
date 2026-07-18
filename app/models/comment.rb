@@ -600,8 +600,7 @@ class Comment < ApplicationRecord
             c.id,
             cast(confidence_order as blob) as confidence_order_path
             from comments c
-            join stories on stories.id = c.story_id
-            where stories.id in (#{story_ids.join(", ")}) and parent_comment_id is null
+            where story_id in (#{story_ids.join(", ")}) and +parent_comment_id is null
           union all
           select
             c.id,

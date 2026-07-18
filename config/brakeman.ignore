@@ -24,6 +24,29 @@
       "note": "cols is not a user specified value"
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "021f1520ef4a37f93bf598470b8d0543dc28143cab155077db7318b78d3c534d",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/comment.rb",
+      "line": 615,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Comment.joins(\"inner join (\\n  with recursive confidence as (\\n    select\\n      c.id,\\n      cast(confidence_order as blob) as confidence_order_path\\n      from comments c\\n      where story_id in (#{([story.id] + Story.where(:merged_story_id => story.id).pluck(:id)).join(\", \")}) and +parent_comment_id is null\\n    union all\\n    select\\n      c.id,\\n      cast(concat(substring(confidence.confidence_order_path, 1, 3 * (depth + 1)), c.confidence_order) as blob)\\n    from comments c join confidence on c.parent_comment_id = confidence.id\\n  )\\n  select * from confidence\\n) confidence\\non comments.id = confidence.id\\n\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Comment",
+        "method": "Comment.story_threads"
+      },
+      "user_input": "Story.where(:merged_story_id => story.id).pluck(:id)",
+      "confidence": "High",
+      "cwe_id": [
+        89
+      ],
+      "note": "working with ids"
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "046e27cd0b77e13d3d1b13dc4b29196574c446cb0657ca39319f9c435d1ff423",
@@ -223,7 +246,7 @@
       "check_name": "FileAccess",
       "message": "Model attribute used in file name",
       "file": "app/controllers/avatars_controller.rb",
-      "line": 55,
+      "line": 44,
       "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
       "code": "File.rename(\"#{Rails.public_path.join(\"avatars/\").to_s}/.#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\", \"#{Rails.public_path.join(\"avatars/\").to_s}/#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\")",
       "render_path": null,
@@ -370,7 +393,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/users/show.html.erb",
-      "line": 146,
+      "line": 150,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "(if (rand((0..100)) == 23) then\n  User.new(:username => params[:username], :created_at => rand((0..9999)).days.ago)\nend or User.find_by(:username => params[:username])).linkified_about",
       "render_path": [
@@ -404,7 +427,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/comments/_comment.html.erb",
-      "line": 147,
+      "line": 155,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Moderation.comment.markeddown_comment",
       "render_path": [
@@ -432,7 +455,7 @@
         {
           "type": "template",
           "name": "mod/activities/_table",
-          "line": 65,
+          "line": 64,
           "file": "app/views/mod/activities/_table.html.erb",
           "rendered": {
             "name": "comments/_comment",
@@ -458,7 +481,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/comments/_comment.html.erb",
-      "line": 150,
+      "line": 158,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Moderation.comment.markeddown_comment",
       "render_path": [
@@ -486,7 +509,7 @@
         {
           "type": "template",
           "name": "mod/activities/_table",
-          "line": 65,
+          "line": 64,
           "file": "app/views/mod/activities/_table.html.erb",
           "rendered": {
             "name": "comments/_comment",
@@ -504,29 +527,6 @@
         79
       ],
       "note": "Rendered markdown."
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "70fb2c23133b3ba2efa0c14ce3844b172a34637faf734620732b11709ee877df",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/comment.rb",
-      "line": 630,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Comment.joins(\"inner join (\\n  with recursive confidence as (\\n    select\\n      c.id,\\n      cast(confidence_order as blob) as confidence_order_path\\n      from comments c\\n      join stories on stories.id = c.story_id\\n      where stories.id in (#{([story.id] + Story.where(:merged_story_id => story.id).pluck(:id)).join(\", \")}) and parent_comment_id is null\\n    union all\\n    select\\n      c.id,\\n      cast(concat(substring(confidence.confidence_order_path, 1, 3 * (depth + 1)), c.confidence_order) as blob)\\n    from comments c join confidence on c.parent_comment_id = confidence.id\\n  )\\n  select * from confidence\\n) confidence\\non comments.id = confidence.id\\n\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Comment",
-        "method": "Comment.story_threads"
-      },
-      "user_input": "Story.where(:merged_story_id => story.id).pluck(:id)",
-      "confidence": "High",
-      "cwe_id": [
-        89
-      ],
-      "note": "Using internal ids which is fine."
     },
     {
       "warning_type": "SQL Injection",
@@ -558,7 +558,7 @@
       "check_name": "FileAccess",
       "message": "Model attribute used in file name",
       "file": "app/controllers/avatars_controller.rb",
-      "line": 51,
+      "line": 40,
       "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
       "code": "File.open(\"#{Rails.public_path.join(\"avatars/\").to_s}/.#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\", \"wb+\")",
       "render_path": null,
@@ -581,7 +581,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/settings_controller.rb",
-      "line": 196,
+      "line": 203,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(MastodonApp.find_or_register(params[:mastodon_instance_name]).oauth_auth_url(SecureRandom.hex), :allow_other_host => true)",
       "render_path": null,
@@ -684,7 +684,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/mod/activities/_table.html.erb",
-      "line": 92,
+      "line": 91,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "ModNote.markeddown_note",
       "render_path": [
@@ -802,5 +802,5 @@
       "note": "period is a prespecified value"
     }
   ],
-  "brakeman_version": "8.0.4"
+  "brakeman_version": "8.0.5"
 }

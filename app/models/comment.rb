@@ -591,28 +591,13 @@ class Comment < ApplicationRecord
   def self.story_threads(story)
     return Comment.none unless story.id # unsaved Stories have no comments
 
-    story_ids = [story.id] + Story.where(merged_story_id: story.id).pluck(:id)
-
-    inner_join = <<~SQL
-      inner join (
-        with recursive confidence as (
-          select
-            c.id,
-            cast(confidence_order as blob) as confidence_order_path
-            from comments c
-            join stories on stories.id = c.story_id
-            where stories.id in (#{story_ids.join(", ")}) and parent_comment_id is null
-          union all
-          select
-            c.id,
-            cast(concat(substring(confidence.confidence_order_path, 1, 3 * (depth + 1)), c.confidence_order) as blob)
-          from comments c join confidence on c.parent_comment_id = confidence.id
-        )
-        select * from confidence
-      ) confidence
-      on comments.id = confidence.id
-    SQL
-
-    Comment.joins(inner_join).where(story_id: story_ids).order("confidence.confidence_order_path")
+    Comment.with_recursive(comment_tree: [
+      Comment.joins(:story).where("(stories.id = #{story.id} or stories.merged_story_id = #{story.id}) and parent_comment_id is null").select("comments.*, comments.depth + comments.confidence AS priority"),
+      # work around Rails bug from https://github.com/rails/rails/pull/51549 that generates invalid
+      # SQLite-style SQL by wrapping parens around the recursive case if it has an 'order' clause.
+      # Comment.joins("JOIN comment_tree ON comment_tree.id = comments.parent_comment_id").order("depth desc", "confidence desc")
+      Arel.sql('SELECT "comments".*, "comments".depth + "comments".confidence AS priority FROM "comments" JOIN comment_tree ON comment_tree.id = comments.parent_comment_id ORDER BY priority desc, comments.id asc')
+    ])
+      .from("comment_tree as comments")
   end
 end

@@ -1565,6 +1565,10 @@ div.user-stats h2 {
 	margin: 0;
 }
 
+.agent {
+	display: none /* notes to LLMs/agents, not for humans */
+}
+
 /* Using #story_holder for precedence over TomSelect's vendored CSS  */
 
 #story_holder .ts-control {

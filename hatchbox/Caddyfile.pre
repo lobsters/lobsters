@@ -135,6 +135,20 @@ respond @submission_spambot 403 {
   close
 }
 
+# Meta's bot is reflecting attempts to post spam ~4k/d. "The
+# Meta-ExternalFetcher crawler may bypass robots.txt because it performs
+# fetches that were requested by the user."
+# https://developers.facebook.com/documentation/sharing/webmasters/web-crawlers
+@meta_bot {
+  header_regexp User-Agent meta-externalagent
+}
+respond @submission_spambot 403 {
+  body `
+  Meta, your bot is reflecting attempts to spam this site.
+  `
+  close
+}
+
 # spambot hitting the search engines with a URL, very much like previous but
 # more plausible user-agents
 @search_spambot `method("GET") && path("/search") && !header_regexp("Cookie", ".*=.*") && (header({"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}) || header({"referer": ""}) || header({"x-vercel-id": "*"}))`

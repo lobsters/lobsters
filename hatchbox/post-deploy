@@ -1,6 +1,11 @@
 #!/bin/bash
 
-find /home/deploy/lobsters/current/public/cache/ -type f -delete
+# The full-page cache uses Tempfile to write to a .(random) filename and rename
+# to the final. At the tail of a deploy, this script could delete the file
+# between those two steps and the rename would throws an exception. Catching
+# that might mask real bugs filling the cache, so we don't delete those
+# tempfiles. Leaving a handful of cached files is OK.
+find /home/deploy/lobsters/current/public/cache/ -type f -not -name '.*' -delete
 
 # see hatchbox/root-deploy
 touch /home/deploy/lobsters/current

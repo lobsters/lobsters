@@ -19,34 +19,26 @@ class DiffBot
 
     db_url = "#{DIFFBOT_API_URL}?token=#{Rails.application.credentials.diffbot.api_key}&url=#{CGI.escape(story.url)}"
 
-    begin
-      s = Sponge.new
-      # we're not doing this interactively, so take a while
-      s.timeout = 45
-      res = s.fetch(db_url).body
-      if res.present?
-        j = JSON.parse(res)
+    s = Sponge.new
+    # we're not doing this interactively, so take a while
+    s.timeout = 45
+    body = s.try_fetch(db_url)&.body
+    if body.present?
+      j = JSON.parse(body)
 
-        # turn newlines into double newlines, so they become paragraphs
-        j["text"] = j["text"].to_s.gsub("\n", "\n\n")
+      # turn newlines into double newlines, so they become paragraphs
+      j["text"] = j["text"].to_s.gsub("\n", "\n\n")
 
-        while j["text"].include?("\n\n\n")
-          j["text"].gsub!("\n\n\n", "\n\n")
-        end
-
-        return j["text"]
+      while j["text"].include?("\n\n\n")
+        j["text"].gsub!("\n\n\n", "\n\n")
       end
-    rescue => e
-      # Rails.logger.error "error fetching #{db_url} #{e.backtrace.first} #{e.message}"
+
+      return j["text"]
     end
 
-    begin
-      s = Sponge.new
-      s.timeout = 45
-      s.fetch(story.archiveorg_url)
-    rescue => e
-      # Rails.logger.error "error archiving #{story.archiveorg_url}: #{e.backtrace.first} #{e.message}"
-    end
+    s = Sponge.new
+    s.timeout = 45
+    s.try_fetch(story.archiveorg_url)
 
     nil
   end

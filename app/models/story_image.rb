@@ -71,9 +71,6 @@ class StoryImage
     end
 
     card_image_url
-  rescue => e
-    # Rails.logger.error "Error finding image URL for story: #{e.message}"
-    nil
   end
 
   def generated_card_image(url)
@@ -85,9 +82,6 @@ class StoryImage
     return nil if res.body.length >= 8.megabytes
 
     add_logo(res.body)
-  rescue => e
-    # Rails.logger.error "Error generating story image: #{e.message}"
-    nil
   end
 
   def add_logo(image_data)
@@ -118,10 +112,10 @@ class StoryImage
 
   def fetch_url(url)
     s = Sponge.new
-    s.timeout = 3
+    s.timeout = 10 # noninteractive
     headers = {
       "Referer" => Routes.story_short_id_url(@short_id)
     }
-    s.fetch(url, :get, nil, nil, headers, 3)
+    s.try_fetch(url, :get, nil, nil, headers, 3)
   end
 end

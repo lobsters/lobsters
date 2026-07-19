@@ -69,12 +69,26 @@ class Sponge
     "255.255.255.255/32"
   ].freeze
 
-  # old api
-  def self.fetch(url, headers = {}, limit = 10)
-    s = Sponge.new
-    s.ssl_verify = false # backward compatibility
-    s.fetch(url, :get, {}, nil, headers, limit)
-  end
+  OTHER_PEOPLES_PROBLEMS = [
+    # ours
+    BadIPsError,
+    DNSError,
+    NoIPsError,
+    TooManyRedirects,
+    # Ruby/Rails/gems
+    EOFError,
+    Errno::ECONNREFUSED,
+    Errno::ECONNRESET,
+    Errno::EHOSTUNREACH,
+    Errno::ENETUNREACH,
+    Errno::EPIPE,
+    Errno::ETIMEDOUT,
+    Net::HTTPBadResponse,
+    OpenSSL::SSL::SSLError,
+    SocketError,
+    URI::InvalidURIError,
+    Zlib::DataError
+  ].freeze
 
   def initialize
     @cookies = {}
@@ -266,6 +280,15 @@ class Sponge
 
       fetch(newuri.to_s, :get, {}, nil, headers, limit - 1)
     end
+  end
+
+  # Almost all of our use of external URLs is in nice-to-have features where we'd rather
+  # drop the activity than try to record, retry, and/or surface an error.
+  def try_fetch(url, *args)
+    fetch(url, *args)
+  rescue *OTHER_PEOPLES_PROBLEMS => e
+    # Rails.logger.debug { "Sponge: #{e.class} fetching #{url}: #{e.message}" }
+    nil
   end
 
   def get(url)

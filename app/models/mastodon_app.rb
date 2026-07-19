@@ -54,6 +54,8 @@ class MastodonApp < ApplicationRecord
     errors.add :base, "#{name} isn't a working SSL server"
   rescue URI::InvalidURIError
     errors.add :base, "#{name} isn't a valid URL"
+  rescue *Sponge::OTHER_PEOPLES_PROBLEMS => e
+    errors.add :base, "#{name} isn't reachable (#{e.class.name})"
   end
 
   def token_and_user_from_code(code)
@@ -99,6 +101,8 @@ class MastodonApp < ApplicationRecord
     errors.add :base, "#{name} isn't a working SSL server when fetching user token"
   rescue JSON::ParserError
     errors.add :base, "#{name} responded with non-parseable JSON for user token"
+  rescue *Sponge::OTHER_PEOPLES_PROBLEMS => e
+    errors.add :base, "#{name} isn't reachable (#{e.class.name})"
   end
 
   # https://docs.joinmastodon.org/methods/oauth/#revoke
@@ -123,6 +127,8 @@ class MastodonApp < ApplicationRecord
     errors.add :base, "#{name} isn't a working SSL server when fetching user token"
   rescue DNSError, NoIPsError
     errors.add :base, "#{name} doesn't resolve to an IP address"
+  rescue *Sponge::OTHER_PEOPLES_PROBLEMS => e
+    errors.add :base, "#{name} isn't reachable (#{e.class.name})"
   end
 
   def self.find_or_register(instance_name)

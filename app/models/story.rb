@@ -1362,9 +1362,11 @@ class Story < ApplicationRecord
           "User-agent" => "#{Rails.application.domain} for #{fetching_ip}",
           "Referer" => Rails.application.domain
         }
-        res = s.fetch(url, :get, nil, nil, headers, 3)
+        res = s.try_fetch(url, :get, nil, nil, headers, 3)
         @fetched_response = res
       end
+
+      return @fetched_attributes if @fetched_response.nil?
 
       case @fetched_response["content-type"]
       when /pdf/
@@ -1388,9 +1390,9 @@ class Story < ApplicationRecord
 
     return false unless new_page
 
-    res = Sponge.new.fetch(url)
+    res = Sponge.new.try_fetch(url)
 
-    res.code.to_s =~ /\A2.*\Z/
+    res && res.code.to_s =~ /\A2.*\Z/
   end
 
   def canonical_target(parsed)

@@ -44,7 +44,7 @@ def fetch_feature_data
   data = if cache_file.exist? && cache_file.mtime.after?(1.week.ago)
     cache_file.read
   else
-    response = Sponge.fetch(DATA_URL)
+    response = Sponge.new.fetch(DATA_URL)
     raise "Failed to download availability data" unless response
     # puts response.inspect
     File.binwrite(cache_file, response.body)

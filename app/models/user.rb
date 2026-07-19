@@ -395,18 +395,9 @@ class User < ApplicationRecord
       url = "https://www.github.com/" << github_username << ".png?size=#{size}"
     end
 
-    begin
-      s = Sponge.new
-      s.timeout = 3
-      res = s.fetch(url).body
-      if res.present?
-        return res
-      end
-    rescue => e
-      # Rails.logger.error "error fetching #{url}: #{e.message}"
-    end
-
-    nil
+    s = Sponge.new
+    s.timeout = 3
+    s.try_fetch(url)&.body.presence
   end
 
   def refresh_counts!

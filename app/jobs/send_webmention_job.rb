@@ -52,7 +52,7 @@ class SendWebmentionJob < ApplicationJob
     # Don't check SSL certificate here for backward compatibility, security risk
     # is minimal.
     sp.ssl_verify = false
-    sp.fetch(endpoint.to_s, :post, {
+    sp.try_fetch(endpoint.to_s, :post, {
       "source" => URI.encode_www_form_component(source),
       "target" => URI.encode_www_form_component(target)
     }, nil, {}, 3)
@@ -68,21 +68,22 @@ class SendWebmentionJob < ApplicationJob
 
     sp = Sponge.new
     sp.timeout = 10
-    begin
-      response = sp.fetch(URI::RFC2396_PARSER.escape(story.url), :get, {}, nil, {
-        "User-agent" => "#{Rails.application.domain} webmention endpoint lookup"
-      }, 3)
-    rescue BadIPsError, NoIPsError, DNSError, Errno::ECONNREFUSED, OpenSSL::SSL::SSLError, TooManyRedirects, Zlib::DataError
-      # other people's DNS/hosting issues (usually transient); just drop the webmention on the floor
-      return
-    end
+    response = sp.try_fetch(URI::RFC2396_PARSER.escape(story.url), :get, {}, nil, {
+      "User-agent" => "#{Rails.application.domain} webmention endpoint lookup"
+    }, 3)
     return unless response
 
     wm_endpoint_raw = endpoint_from_headers(response["link"]) ||
       endpoint_from_body(response.body.to_s)
     return unless wm_endpoint_raw
 
-    wm_endpoint = uri_to_absolute(wm_endpoint_raw, URI.parse(story.url))
+    # Ignore if the URL is invalid
+    begin
+      wm_endpoint = uri_to_absolute(wm_endpoint_raw, URI.parse(story.url))
+    rescue URI::InvalidURIError
+      return
+    end
+
     send_webmention(Routes.story_short_id_url(story), story.url, wm_endpoint)
   end
 end

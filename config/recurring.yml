@@ -2,6 +2,9 @@ production:
   clear_finished_jobs:
     command: SolidQueue::Job.clear_finished_in_batches
     schedule: every day at 3:00am
+  prefill_page_cache:
+    class: PrefillPageCacheJob
+    schedule: every 2 minutes
   expire_old_ribbons:
     command: ReadRibbon.expire_old_ribbons!
     schedule: every day at 4:00am

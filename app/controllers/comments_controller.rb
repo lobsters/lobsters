@@ -3,7 +3,7 @@
 class CommentsController < ApplicationController
   COMMENTS_PER_PAGE = 20
 
-  caches_page :index, :threads, if: CACHE_PAGE
+  caches_page :index, :user_threads, if: CACHE_PAGE
 
   before_action :require_logged_in_user_or_400,
     only: [:create, :reply, :upvote, :flag, :unvote, :update]

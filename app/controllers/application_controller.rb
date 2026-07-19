@@ -159,7 +159,7 @@ class ApplicationController < ActionController::Base
       @traffic_style = style
     end
     if color != :red
-      Rails.logger.info "  Lucky user #{@user.username} saw #{color} logo"
+      Telebugs.message "Lucky user #{@user.username} saw #{color} logo"
     end
   end
 

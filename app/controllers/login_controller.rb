@@ -90,8 +90,7 @@ class LoginController < ApplicationController
           if ru.host == Rails.application.domain
             return redirect_to ru.to_s
           end
-        rescue => e
-          # Rails.logger.error "error parsing referer: #{e}"
+        rescue
         end
       end
 
@@ -198,9 +197,7 @@ class LoginController < ApplicationController
 
   def twofa
     @title = "Login - Two Factor Authentication"
-    if (tmpu = find_twofa_user)
-      # Rails.logger.info "  Authenticated as user #{tmpu.id} (#{tmpu.username}), verifying TOTP"
-    else
+    if !find_twofa_user
       reset_session
       redirect_to "/login"
     end

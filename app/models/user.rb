@@ -381,7 +381,6 @@ class User < ApplicationRecord
     Dir.entries(AvatarsController::CACHE_DIR).select { |f|
       f.match(/\A#{username}-(\d+)\.png\z/)
     }.each do |f|
-      # Rails.logger.debug { "Expiring #{f}" }
       File.unlink("#{AvatarsController::CACHE_DIR}/#{f}")
       expired += 1
     end

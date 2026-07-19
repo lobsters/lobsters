@@ -12,11 +12,7 @@ class NotifyMessageJob < ApplicationJob
     message.recipient.notifications.create(notifiable: message, read_at: read_at)
 
     if message.recipient.email_messages?
-      begin
-        EmailMessageMailer.notify(message, message.recipient).deliver_now
-      rescue => e
-        # Rails.logger.error "error e-mailing #{recipient.email}: #{e}"
-      end
+      EmailMessageMailer.notify(message, message.recipient).deliver_now
     end
 
     return if Rails.env.development?

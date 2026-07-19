@@ -10,8 +10,7 @@ class FetchIanaTldsJob < ApplicationJob
     response = Sponge.new.fetch(LIST_URL)
 
     if response.nil? || response.body.nil?
-      Rails.logger.error "Failed to fetch IANA TLDs from #{LIST_URL}"
-      return
+      raise "Failed to fetch IANA TLDs from #{LIST_URL}, response: #{response.inspect}"
     end
 
     iana_tlds_content = decode_response(response)

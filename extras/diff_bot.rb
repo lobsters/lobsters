@@ -37,7 +37,7 @@ class DiffBot
         return j["text"]
       end
     rescue => e
-      Rails.logger.error "error fetching #{db_url} #{e.backtrace.first} #{e.message}"
+      # Rails.logger.error "error fetching #{db_url} #{e.backtrace.first} #{e.message}"
     end
 
     begin
@@ -45,7 +45,7 @@ class DiffBot
       s.timeout = 45
       s.fetch(story.archiveorg_url)
     rescue => e
-      Rails.logger.error "error caching #{db_url}: #{e.backtrace.first} #{e.message}"
+      # Rails.logger.error "error archiving #{story.archiveorg_url}: #{e.backtrace.first} #{e.message}"
     end
 
     nil

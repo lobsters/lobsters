@@ -11,8 +11,7 @@ class FetchEmailBlocklistJob < ApplicationJob
     response = request_blocklist
 
     if response.nil? || response.body.nil?
-      Rails.logger.error "Failed to fetch email blocklist from #{BLOCKLIST_URL}"
-      return
+      raise "Failed to fetch email blocklist from #{BLOCKLIST_URL}, response: #{response.inspect}"
     end
 
     email_blocklist_content = decode_response(response)

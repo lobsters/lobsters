@@ -967,7 +967,7 @@ class Story < ApplicationRecord
         self.title = kv[0]
         self.tags_was = tags.to_a
         if !save
-          # Rails.logger.error "[s#{id}] failed auto promoting: " << errors.inspect
+          Telebugs.message "[s#{id}] failed auto promoting: #{errors.full_messages.join(", ")}"
         end
 
         break

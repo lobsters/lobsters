@@ -23,7 +23,7 @@ class Pushover
         user: user
       }.merge(params))
     rescue => e
-      Rails.logger.error "error sending to pushover: #{e.inspect}"
+      Telebugs.capture(e)
     end
   end
 

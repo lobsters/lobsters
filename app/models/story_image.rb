@@ -72,7 +72,7 @@ class StoryImage
 
     card_image_url
   rescue => e
-    Rails.logger.error "Error finding image URL for story: #{e.message}"
+    # Rails.logger.error "Error finding image URL for story: #{e.message}"
     nil
   end
 
@@ -86,7 +86,7 @@ class StoryImage
 
     add_logo(res.body)
   rescue => e
-    Rails.logger.error "Error generating story image: #{e.message}"
+    # Rails.logger.error "Error generating story image: #{e.message}"
     nil
   end
 
@@ -112,7 +112,7 @@ class StoryImage
     combined_image = image.insert(lobsters_logo, 0, image.height - lobsters_logo.height)
     combined_image.write_to_buffer(".png")
   rescue Vips::Error => e
-    Rails.logger.error "Vips error while generating image: #{e.message}"
+    # Rails.logger.error "Vips caught invalid image: #{e.message}"
     nil
   end
 

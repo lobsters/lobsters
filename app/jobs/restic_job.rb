@@ -3,10 +3,8 @@ class ResticJob < ApplicationJob
 
   def perform(*args)
     shared = "/home/deploy/lobsters/shared"
-    # Check if the shared directory exists
     unless File.directory?(shared)
-      Rails.logger.warn "ResticJob: Shared path '#{shared}' does not exist. Skipping backup."
-      return
+      raise "ResticJob: shared path '#{shared}' does not exist, can't back up"
     end
     db_path = Rails.root.join("storage/primary.sqlite3")
     system("sqlite3 #{db_path} \".backup '#{shared}/database-backups/primary.sqlite3'\"", exception: true)

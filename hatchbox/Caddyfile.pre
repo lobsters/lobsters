@@ -142,7 +142,7 @@ respond @submission_spambot 403 {
 @meta_bot {
   header_regexp User-Agent meta-externalagent
 }
-respond @submission_spambot 403 {
+respond @meta_bot 403 {
   body `
   Meta, your bot is reflecting attempts to spam this site.
   `

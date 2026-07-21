@@ -165,6 +165,7 @@ respond @search_spambot 403 {
 # grep 'path":"/[0-9a-f]*\.[a-z0-9]*"' ~/lobsters/shared/log/action.log | jq -c '.headers."user-agent" | sort | uniq -c | sort -rn
 @media_scraper {
   header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+  header User-Agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
   method GET
   path_regexp /[^/.]*\.(avi|flac|flv|mka|mkv|mov|mp4|mpeg|mpg|ogg|webm|webp|wmv)
 }

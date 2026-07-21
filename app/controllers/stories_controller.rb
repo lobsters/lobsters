@@ -170,7 +170,7 @@ class StoriesController < ApplicationController
       end
     end
 
-    @comments = Comment.story_threads(@story).for_presentation
+    @comments = Comment.story_threads(@story).for_presentation.load_async
     @read_by_notifications = @user ? Comment.where(story_id: [@story.id] + @story.merged_stories.pluck(:id)).where(id: @user.notifications.read.of_comments) : []
 
     @title = @story.title

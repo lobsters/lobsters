@@ -1,0 +1,22 @@
+---
+# https://fractaledmind.com/2023/09/10/enhancing-rails-sqlite-optimizing-compilation/
+#
+# sqlite3 recommendations https://sqlite.org/compile.html
+# DQS=0                      "disables the double-quoted string literal misfeature"
+# DEFAULT_MEMSTATUS=0        perf
+# LIKE_DOESNT_MATCH_BLOBS    perf
+# MAX_EXPR_DEPTH=0           perf
+# TEMP_STORE=2               perf
+# USE_ALLOCA                 perf
+#
+# sqlite3-ruby https://github.com/sparklemotion/sqlite3-ruby/blob/main/ext/sqlite3/extconf.rb#:~:text=def%20configure_packaged_libraries
+# DEFAULT_WAL_SYNCHRONOUS=1  durable-enough fast WAL commits
+# USE_URI=1                  eg sqlite://path/to/file.sqlite3
+# DBPAGE_VTAB=1              perf?
+# DBSTAT_VTAB=1              introspection https://sqlite.org/dbstat.html
+# ENABLE_FTS5                full-text search
+#
+# Lobsters
+# ENABLE_STAT4               hints query planner with value distributions
+# ENABLE_MATH_FUNCTIONS      floor(), defaults off on Windows
+BUNDLE_BUILD__SQLITE3: "--with-sqlite-cflags='-DSQLITE_DQS=0 -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_LIKE_DOESNT_MATCH_BLOBS -DSQLITE_MAX_EXPR_DEPTH=0 -DSQLITE_TEMP_STORE=2 -DSQLITE_USE_ALLOCA -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1 -DSQLITE_USE_URI=1 -DSQLITE_DBPAGE_VTAB=1 -DSQLITE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_STAT4 -DSQLITE_ENABLE_MATH_FUNCTIONS'"

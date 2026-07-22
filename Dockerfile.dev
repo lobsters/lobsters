@@ -21,6 +21,9 @@ RUN gem install bundler
 # Copy Gemfile and Gemfile.lock
 COPY Gemfile Gemfile.lock .ruby-version ./
 
+# Copy bundler config
+COPY .bundle ./.bundle
+
 # Copy bin/setup
 COPY bin/setup ./bin/
 

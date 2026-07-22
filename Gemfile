@@ -6,7 +6,7 @@ gem "rails"
 
 # database and caching
 gem "solid_cache"
-gem "sqlite3"
+gem "sqlite3", force_ruby_platform: true # compile flags in .bundle/config
 
 # jobs
 gem "solid_queue"

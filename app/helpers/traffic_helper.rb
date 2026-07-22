@@ -6,7 +6,6 @@
 # intensity: what % of the range the current activity is (0-100)
 module TrafficHelper
   PERIOD_LENGTH = 15 # minutes
-  CACHE_FOR = 5 # minutes
 
   def self.traffic_range
     div = PERIOD_LENGTH * 60

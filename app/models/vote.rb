@@ -48,10 +48,6 @@ class Vote < ApplicationRecord
     "Q" => "Low Quality"
   }).freeze
 
-  def on_comment?
-    comment_id.present?
-  end
-
   def on_story?
     comment_id.blank?
   end
@@ -80,18 +76,6 @@ class Vote < ApplicationRecord
     Vote.where(user_id: user, story_id: stories,
       comment_id: nil).find_each do |v|
       votes[v.story_id] = {vote: v.vote, reason: v.reason}
-    end
-
-    votes
-  end
-
-  def self.comment_votes_by_user_for_story_hash(user_id, story_id)
-    votes = {}
-
-    Vote.where(
-      user_id: user_id, story_id: story_id
-    ).where.not(comment_id: nil).find_each do |v|
-      votes[v.comment_id] = {vote: v.vote, reason: v.reason}
     end
 
     votes

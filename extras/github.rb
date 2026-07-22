@@ -9,14 +9,6 @@ class Github
     Rails.application.credentials.github&.client_id.present?
   end
 
-  def self.oauth_consumer
-    OAuth::Consumer.new(
-      Rails.application.credentials.github.client_id,
-      Rails.application.credentials.github.client_secret,
-      site: "https://api.github.com"
-    )
-  end
-
   def self.token_and_user_from_code(code)
     s = Sponge.new
     res = s.fetch(

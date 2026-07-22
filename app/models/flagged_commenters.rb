@@ -67,9 +67,9 @@ class FlaggedCommenters
           sum(flags) as n_flags,
           sum(flags)/count(distinct comments.id) as average_flags,
           (
-            count(distinct if(flags > 0, comments.id, null)) /
+            count(distinct if(flags > 0, comments.id, null)) * 100.0 /
             count(distinct comments.id)
-          ) * 100 as percent_flagged")
+          ) as percent_flagged")
         .having("n_comments > 4 and n_stories > 1 and n_flags >= 10 and percent_flagged > 10")
         .order(sigma: :desc)
         .limit(30)

@@ -36,7 +36,7 @@ module UsersHelper
     end
   end
 
-  def styled_user_link user, content = nil, parent = nil, html_options = {}
+  def styled_user_link user, content = nil, html_options = {}
     html_options[:class] ||= []
     if content.is_a?(Story) && content.user_is_author?
       html_options[:class].push "user_is_author"

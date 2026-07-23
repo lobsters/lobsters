@@ -45,7 +45,7 @@ production:
     class: FetchIanaTldsJob
     schedule: every 1 month
   wal_checkpoint:
-    class WalCheckpoint
+    class WalCheckpointJob
   schedule: every minute
 
 development:

@@ -374,6 +374,58 @@ describe "stories", type: :request do
       }.to change { target.reload.score }.by(0)
       expect(Vote.where(user: user).count).to eq(0)
     end
+
+    it "does nothing to deleted user's comment" do
+      deleted_user = create(:user, :deactivated)
+      story_by_deleted = create(:story, user:deleted_user)
+
+      expect {
+        post "/stories/#{story_by_deleted.short_id}/upvote"
+        expect(response.status).to eq(400)
+      }.to change { story_by_deleted.reload.score }.by(0)
+      expect(Vote.where(user: user).count).to eq(0)
+    end
+  end
+
+  describe "unvoting" do
+    let(:target) { create(:story) }
+
+    before do
+      sign_in user
+      Vote.vote_thusly_on_story_or_comment_for_user_because(1, target.id, nil, user.id, nil)
+    end
+
+    it "works" do
+      expect {
+        post "/stories/#{target.short_id}/unvote"
+        expect(response.status).to eq(200)
+      }.to change { target.reload.score }.by(-1)
+      expect(Vote.where(user: user, story: target).count).to eq(0)
+    end
+
+    it "does nothing to deleted stories" do
+      expect {
+        target.is_deleted = true
+        target.editor = target.user
+        target.save!
+
+        post "/stories/#{target.short_id}/unvote"
+        expect(response.status).to eq(400)
+      }.to change { target.reload.score }.by(0)
+      expect(Vote.where(user: user, story: target).count).to eq(1)
+    end
+
+    it "does nothing to a deleted user's story" do
+      deleted_user = create(:user, :deactivated)
+      story_by_deleted = create(:story, user: deleted_user)
+      Vote.vote_thusly_on_story_or_comment_for_user_because(1, story_by_deleted.id, nil, user.id, nil)
+
+      expect {
+        post "/stories/#{story_by_deleted.short_id}/unvote"
+        expect(response.status).to eq(400)
+      }.to change { story_by_deleted.reload.score }.by(0)
+      expect(Vote.where(user: user, story: story_by_deleted).count).to eq(1)
+    end
   end
 
   describe "disowning" do

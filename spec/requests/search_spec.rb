@@ -10,11 +10,25 @@ RSpec.describe "search controller", type: :request do
     @foo_bar_story = create(:story, title: "foo bar")
     StoryText.fill_cache! @foo_bar_story # normally a bg job
     @hello_world_comment = create(:comment, comment: "hello world", story: @foo_bar_story)
+    @signed_in_user = create(:user)
+    @deleted_user = create(:user, :deactivated)
+    @story_from_deleted_user = create(:story, title: "deleted user story", user: @deleted_user)
+    StoryText.fill_cache! @story_from_deleted_user
+    @banned_user = create(:user, :banned)
+    @story_from_banned_user = create(:story, title: "banned user story", user: @banned_user)
+    StoryText.fill_cache!(@story_from_banned_user)
+    @moderator_user = create(:user, :moderator)
   end
   after(:context) do
     @hello_world_comment.destroy!
     @foo_bar_story.comments.reload
     @foo_bar_story.destroy!
+    @story_from_deleted_user.destroy!
+    @story_from_banned_user.destroy!
+    @signed_in_user.destroy!
+    @deleted_user.destroy!
+    @banned_user.destroy!
+    @moderator_user.destroy!
   end
 
   it "loads the search form" do
@@ -43,6 +57,13 @@ RSpec.describe "search controller", type: :request do
     expect(response.body).to include("bar")
   end
 
+  it "can search stories with multiple terms" do
+    get "/search", params: {q: "foo bar", what: "stories", order: "newest"}
+
+    expect(response).to be_successful
+    expect(response.body).to include("foo bar</a>")
+  end
+
   it "doesn't allow sql injection" do
     # real query that threw a 500 in prod
     get "/search", params: {q: "tag:formalmethods tag:testing') AND EXTRACTVALUE(4050,CONCAT(0x5c,0x7170787171,(SELECT (ELT(4050=4050,1))),0x71627a6b71)) AND ('pDUW'='pDUW", what: "stories", order: "newest"}
@@ -59,8 +80,8 @@ RSpec.describe "search controller", type: :request do
   end
 
   it "works logged in, with vote hydration" do
-    sign_in(user = create(:user))
-    Vote.vote_thusly_on_story_or_comment_for_user_because 1, @hello_world_comment.story.id, @hello_world_comment.id, user.id, nil
+    sign_in(@signed_in_user)
+    Vote.vote_thusly_on_story_or_comment_for_user_because 1, @hello_world_comment.story.id, @hello_world_comment.id, @signed_in_user.id, nil
 
     get "/search", params: {q: "hello", what: "comments", order: "newest"}
     expect(response.body).to include("world")
@@ -94,4 +115,38 @@ RSpec.describe "search controller", type: :request do
     expect(response.body).to include("tag:ai")
     expect(response.body).to include("tag:ml")
   end
-end
+
+  it "does not show stories from deleted users in search results for regular users" do
+    sign_in(@signed_in_user)
+    get "/search", params: {q: @story_from_deleted_user.title, what: "stories", order: "newest"}
+
+    expect(response).to be_successful
+    expect(response.body).not_to include("#{@story_from_deleted_user.title}</a>")
+    expect(response.body).to include("0 results")
+  end
+
+  it "shows stories from deleted users to moderators" do
+    sign_in(@moderator_user)
+    get "/search", params: {q: @story_from_deleted_user.title, what: "stories", order: "newest"}
+
+    expect(response).to be_successful
+    expect(response.body).to include("#{@story_from_deleted_user.title}</a>")
+  end
+
+  it "does not show stories from banned users in search results for regular users" do
+    sign_in(@signed_in_user)
+    get "/search", params: {q: @story_from_banned_user.title, what: "stories", order: "newest"}
+
+    expect(response).to be_successful
+    expect(response.body).not_to include("#{@story_from_banned_user.title}</a>")
+    expect(response.body).to include("0 results")
+  end
+
+  it "shows stories from banned users to moderators" do
+    sign_in(@moderator_user)
+    get "/search", params: {q: @story_from_banned_user.title, what: "stories", order: "newest"}
+    
+    expect(response).to be_successful
+    expect(response.body).to include("#{@story_from_banned_user.title}</a>")
+  end
+ end

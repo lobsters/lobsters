@@ -29,6 +29,10 @@ public/assets
 public/avatars
 public/sitemap*
 public/story_image
+public/cache
+
+## Override .gitkeep
+!public/cache/.gitkeep
 
 # templates to be created per-site
 app/views/about/about.*

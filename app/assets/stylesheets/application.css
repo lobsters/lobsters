@@ -1929,7 +1929,8 @@ input[type="submit"].link_post.pushover_button {
 		min-width: 40px;
 		text-align: center;
 		text-decoration: none;
-		vertical-align: middle;
+		vertical-align: top;
+		padding-top: 2rem;
 	}
 	ol.stories.list li.story .mobile_comments span:before {
 		border-style: solid;

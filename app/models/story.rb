@@ -74,7 +74,15 @@ class Story < ApplicationRecord
   }
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, ->(user) {
-    user.try(:is_moderator?) ? all : where(is_deleted: false).or(where(user_id: user.try(:id).to_i))
+    if user.try(:is_moderator?)
+      all
+    else
+      joins(:user)
+      .where(
+        "(stories.is_deleted = false AND users.deleted_at IS NULL AND users.banned_at IS NULL) OR " \
+        "stories.user_id = ?", user.try(:id).to_i
+      )
+    end
   }
   scope :unmerged, -> { where(merged_story_id: nil) }
   scope :positive_ranked, -> { where("score >= 0") }

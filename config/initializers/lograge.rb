@@ -21,6 +21,11 @@ Rails.application.configure do
     }.tap do |options|
       event.payload.except!(:allocations, :duration, :view_runtime, :db_runtime)
     end
+  rescue => e
+    # If this block raises, the exception would be dumped as a string into action.log, which is
+    # supposed to be jsonl. So kick it to Telebugs and don't log.
+    Telebugs.capture(e)
+    nil
   end
 
   config.lograge.custom_payload do |controller|

@@ -48,8 +48,7 @@ class ApplicationController < ActionController::Base
       status: :bad_request, content_type: "text/plain"
   end
   rescue_from ActionDispatch::RemoteIp::IpSpoofAttackError do
-    render plain: "You have some kind of weird, implausible VPN setup. If you are not doing something naughty, please contact the admin to start debugging.",
-      status: :bad_request, content_type: "text/plain"
+    render plain: RejectSpoofedIps::MESSAGE, status: :bad_request, content_type: "text/plain"
   end
   rescue_from ActiveRecord::ConnectionNotEstablished do
     render plain: "500 The database is not taking our calls.", status: 500, content_type: "text/plain"

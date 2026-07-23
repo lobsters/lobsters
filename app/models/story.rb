@@ -619,6 +619,7 @@ class Story < ApplicationRecord
     end
     return false if is_moderated?
     return false if !user.disabled_invite_at.nil?
+    return false unless self.user.is_active?
 
     tags.each { |t| return false if t.privileged? }
     true

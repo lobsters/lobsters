@@ -113,7 +113,7 @@ class Story < ApplicationRecord
     raise ArgumentError, "Invalid interval" unless IntervalHelper::TIME_INTERVALS.value?(length[:intv].capitalize)
 
     top = base(user)
-      .where("created_at >= datetime('now', '-#{length[:dur]} #{length[:intv].upcase}')")
+      .where("stories.created_at >= datetime('now', '-#{length[:dur]} #{length[:intv].upcase}')")
       .filter_tags(exclude_tags || [])
     top.order(score: :desc)
   }
@@ -135,7 +135,7 @@ class Story < ApplicationRecord
     base(user, unmerged: unmerged).not_hidden_by(user)
       .filter_tags(exclude_tags || [])
       .low_scoring
-      .where("created_at >= ?", 10.days.ago)
+      .where("stories.created_at >= ?", 10.days.ago)
       .where.not(id: front_page.ids)
       .order("stories.created_at DESC")
   }

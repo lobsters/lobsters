@@ -9,6 +9,21 @@ describe "tags", type: :request do
     sign_in user
   end
 
+  context "list" do
+    it "set title html element for single tag" do
+      tag = create :tag
+      get "/t/#{tag.tag}"
+      assert_select("title", "Tag #{tag.tag} | Lobsters")
+    end
+
+    it "set title html element for multiple tags" do
+      tag = create :tag
+      tag2 = create :tag
+      get "/t/#{tag.tag},#{tag2.tag}"
+      assert_select("title", "Tags #{tag.tag}, #{tag2.tag} | Lobsters")
+    end
+  end
+
   context "create" do
     it "creates new tags" do
       post "/mod/tags",

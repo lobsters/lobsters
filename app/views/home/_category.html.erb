@@ -1,10 +1,14 @@
 <%# locals: (categories:) -%>
+<% group_title = categories.length == 1 ? "category" : "categories" %>
+
+<% content_for :title, "#{group_title.capitalize} #{categories.map{ |c| c.category}.join(", ")}" %>
+
 <div class="box">
   Stories with <a href="/tags">tags</a> in the
-  <% categories.each do |c| %>
-    <%= link_to c.category, category_path(c) %>
-  <% end %>
-  <%= "category".pluralize(categories) %>
+  <%= categories.map { |c|
+    link_to c.category, category_path(c)
+  }.join(", ").html_safe %>
+  <%= group_title %>.
 
   <%= render(partial: 'categories/multi_category_tip') if categories.length == 1 %>
 </div>

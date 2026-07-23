@@ -1,1 +1,4 @@
+<% title = "Edit Category #{@category.category}" %>
+<% content_for :title, title %>
+<% content_for :title_h1, title %>
 <%= render partial: 'form', locals: { category: @category } %>

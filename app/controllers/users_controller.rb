@@ -11,7 +11,6 @@ class UsersController < ApplicationController
   caches_page :tree, if: CACHE_PAGE
 
   def show
-    @title = @showing_user.username
     if !@showing_user.is_active?
       @title_class = :inactive_user
     elsif @showing_user.is_new?
@@ -34,14 +33,13 @@ class UsersController < ApplicationController
           {property: "og:description", content: @showing_user.raw_about},
           {property: "og:image", content: @showing_user.avatar_path(100)}
         ]
-        render action: "show"
+        render action: "show", locals: {user_name: @showing_user.username}
       }
       format.json { render json: @showing_user }
     end
   end
 
   def tree
-    @title = "Users"
     @newest_user = User.last.id
 
     # pulling 10k+ users is significant enough memory pressure this is worthwhile
@@ -50,25 +48,18 @@ class UsersController < ApplicationController
 
     if params[:by].to_s == "karma"
       @users = User.select(*attrs).order(karma: :desc, id: :asc).to_a
-      @user_count = @users.length
-      @title << " By Karma"
-      @for = :karma
-      render action: "list"
+      render action: "list", locals: {user_count: @users.length}
     elsif params[:moderators]
       @users = User.select(*attrs)
         .where(is_admin: true)
         .or(User.where(is_moderator: true))
         .order(id: :asc).to_a
-      @user_count = @users.length
-      @title = "Moderators and Administrators"
-      @for = :moderators
-      render action: "list"
+      render action: "list", locals: {user_count: @users.length}
     else
       users = User.select(*attrs).order(id: :desc).to_a
-      @user_count = users.length
       @users_by_parent = users.group_by(&:invited_by_user_id)
       @newest = User.select(*attrs).order(id: :desc).limit(10)
-      render action: "tree"
+      render action: "tree", locals: {user_count: users.length}
     end
   end
 
@@ -178,7 +169,6 @@ class UsersController < ApplicationController
     # case-insensitive search by username
 
     if @showing_user.nil?
-      @title = "User not found"
       render action: :not_found, status: 404
       return false
     end

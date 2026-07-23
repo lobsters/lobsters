@@ -4,6 +4,10 @@
   <%= link_post 'Logout', logout_path, confirm: 'Are you sure you want to logout?' %>
 <% end %>
 
+<% title = "Settings" %>
+<% content_for :title, title %>
+<% content_for :title_h1, title %>
+
 <section>
   <%= form_with model: @edit_user, url: settings_path, method: :post, id: 'edit_user', namespace: 'edit_user' do |f| %>
     <%= errors_for f.object %>

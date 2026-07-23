@@ -1,4 +1,6 @@
 <%# locals: (tags:) -%>
+<% content_for :title, "Tags #{tags.map{ |t| t.tag }.join(", ")}" %>
+
 <div class="box">
   Stories <a href="/tags">tagged</a> as<br>
 

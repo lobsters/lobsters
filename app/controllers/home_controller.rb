@@ -31,6 +31,7 @@ class HomeController < ApplicationController
     }
 
     @title = "Hidden Stories"
+    @title_h1 = true
     @above = {partial: "saved/subnav"}
 
     render action: "index"
@@ -160,6 +161,7 @@ class HomeController < ApplicationController
     }
 
     @title = "Saved Stories"
+    @title_h1 = true
     @above = {partial: "saved/subnav"}
 
     respond_to do |format|
@@ -234,9 +236,6 @@ class HomeController < ApplicationController
       paginate Story.tagged(@user, @tags)
     end
 
-    @title = @tags.map do |tag|
-      [tag.tag, tag.description].compact.join(" - ")
-    end.join(" ")
     @above = {partial: "multi_tag", locals: {tags: @tags}}
 
     @rss_link = {
@@ -330,6 +329,7 @@ class HomeController < ApplicationController
     }
 
     @title = "Upvoted Stories"
+    @title_h1 = true
     @above = "saved/subnav"
 
     @rss_link = {

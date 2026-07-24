@@ -279,9 +279,9 @@ export class _LobstersFunction {
         }
         url_field.value = data.url
         button.textContent = old_text
+        button.removeAttribute("disabled");
+        Lobster.checkStoryTitle();
       });
-    button.removeAttribute("disabled");
-    Lobster.checkStoryTitle();
   }
 
   removeFlagModal() {

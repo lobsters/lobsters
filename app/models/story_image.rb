@@ -59,8 +59,7 @@ class StoryImage
 
     return nil unless content_type == "text/html"
 
-    converted = response.body.force_encoding("utf-8")
-    parsed = Nokogiri::HTML(converted.to_s)
+    parsed = Nokogiri::HTML(String.new(response.body, encoding: "utf-8"))
 
     # Try <meta property="og:image">
     card_image_url = parsed.at_css("meta[property='og:image']")&.attributes&.[]("content")&.text

@@ -377,7 +377,7 @@ describe "stories", type: :request do
 
     it "does nothing to deleted user's comment" do
       deleted_user = create(:user, :deactivated)
-      story_by_deleted = create(:story, user:deleted_user)
+      story_by_deleted = create(:story, user: deleted_user)
 
       expect {
         post "/stories/#{story_by_deleted.short_id}/upvote"

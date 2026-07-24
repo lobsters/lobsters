@@ -757,7 +757,7 @@ describe Story do
       let(:moderator) { create(:user, :moderator) }
       let(:deleted_user) { create(:user, :deactivated) }
       let(:banned_user) { create(:user, :banned) }
-      
+
       let!(:story_from_active_user) { create(:story, user: regular_user) }
       let!(:story_from_deleted_user) { create(:story, user: deleted_user) }
       let!(:story_from_banned_user) { create(:story, user: banned_user) }
@@ -825,7 +825,7 @@ describe Story do
         it "chains with other scopes correctly" do
           # Test that not_deleted works with other common scopes
           result = Story.not_deleted(regular_user).positive_ranked
-          
+
           expect(result).to include(story_from_active_user)
           expect(result).to include(story_from_moderator)
           expect(result).not_to include(story_from_deleted_user)
@@ -835,7 +835,7 @@ describe Story do
         it "works with unmerged scope" do
           merged_story = create(:story, user: regular_user, merged_story_id: story_from_active_user.id)
           result = Story.not_deleted(regular_user).unmerged
-          
+
           expect(result).to include(story_from_active_user)
           expect(result).not_to include(merged_story)
         end

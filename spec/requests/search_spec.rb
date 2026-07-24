@@ -145,8 +145,8 @@ RSpec.describe "search controller", type: :request do
   it "shows stories from banned users to moderators" do
     sign_in(@moderator_user)
     get "/search", params: {q: @story_from_banned_user.title, what: "stories", order: "newest"}
-    
+
     expect(response).to be_successful
     expect(response.body).to include("#{@story_from_banned_user.title}</a>")
   end
- end
+end

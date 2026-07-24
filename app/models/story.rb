@@ -78,10 +78,10 @@ class Story < ApplicationRecord
       all
     else
       joins(:user)
-      .where(
-        "(stories.is_deleted = false AND users.deleted_at IS NULL AND users.banned_at IS NULL) OR " \
-        "stories.user_id = ?", user.try(:id).to_i
-      )
+        .where(
+          "(stories.is_deleted = false AND users.deleted_at IS NULL AND users.banned_at IS NULL) OR " \
+          "stories.user_id = ?", user.try(:id).to_i
+        )
     end
   }
   scope :unmerged, -> { where(merged_story_id: nil) }

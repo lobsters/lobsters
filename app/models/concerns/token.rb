@@ -3,7 +3,7 @@ module Token
 
   included do
     after_initialize do
-      self.token ||= TypeID.new(self.class.to_s.parameterize) if new_record? || attributes.include?(:token)
+      self.token ||= TypeID.new(self.class.to_s.parameterize) if new_record? || has_attribute?(:token)
     end
 
     validates :token,

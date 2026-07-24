@@ -1117,42 +1117,54 @@ div#story_preview {
 	margin-left: 3.5em;
 }
 
-div#story_box input#story_url {
-	width: 512px;
+#story_box .labelled_grid {
+	grid-template-columns: minmax(6rem, min-content) 1fr;
 }
-div#story_box button#story_fetch_title {
-	height: 27px;
-	padding-top: 1px;
-	padding-bottom: 1px;
-	width: 84px;
+#story_box .labelled_grid > .url-updated,
+#story_box .labelled_grid > .title-reminder,
+#story_box .labelled_grid > .self-promo-warning,
+#story_box .labelled_grid > .hint,
+#story_box .labelled_grid > .markdown_help,
+#story_box .labelled_grid > details {
+	grid-column: 1 / -1;
 }
-div#story_box input#story_title,
-div#story_box input#story_moderation_reason,
-div#story_box input#story_merge_story_short_id,
-div#domain_box input[type=text] {
-	width: 600px;
+#story_box .labelled_grid > .markdown_help {
+	margin-bottom: 1em;
+}
+#story_box .labelled_grid details ul {
+	padding-left: 1em;
+}
+#story_box .inline-row {
+	display: flex;
+	gap: 0.5em;
+	align-items: center;
+}
+#story_box .inline-row input {
+	flex: 1;
+	min-width: 0;
+}
+#story_box .inline-row button {
+	line-height: normal;
+	padding: 3px 10px;
+	white-space: nowrap;
 }
 #story_box .url-updated,
 #story_box .title-reminder,
-#story_box .title-reminder-thanks,
-#story_box .self-promo-warning
-{
+#story_box .self-promo-warning {
 	display: none;
 }
-#story_box details ul {
-	padding-left: 1em;
+#story_box .title-reminder-thanks {
+	display: none;
 }
 .slide-down {
 	display: block !important;
 	transition: height .5s ease !important;
 }
-div#story_box #story_tags {
-	width: 624px;
-	overflow-x: auto;
+#story_box .ts-wrapper {
+	max-width: 100%;
 }
-div#story_box textarea {
-	height: 2rem;
-	width: 600px;
+#story_box textarea {
+	min-height: 3rem;
 }
 
 
@@ -1793,18 +1805,11 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 
-	div#story_box .actions {
-		margin-left: 7em;
-		width: 610px;
-	}
 	#story_holder .ts-control {
 		display: inline-block;
 		width: 611px;
 	}
 
-	#story_box .markdown_help summary {
-		width: calc(7em + 610px);
-	}
 }
 
 @media only screen and (max-width: 480px) {
@@ -2017,13 +2022,14 @@ input[type="submit"].link_post.pushover_button {
 	div#story_box input,
 	div#story_box button,
 	div#story_box textarea,
-	div#story_box #story_tagsa,
+	div#story_box .inline-row,
 	div.actions {
 		margin: 0 !important;
 	}
 
-	div#story_box #story_tags {
-		min-width: 305px !important;
+	#story_holder .ts-wrapper {
+		max-width: 100%;
+		box-sizing: border-box;
 	}
 
 	div#gravatar {

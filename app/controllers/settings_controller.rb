@@ -47,10 +47,10 @@ class SettingsController < ApplicationController
         @user.authenticate(params[:current_password].to_s)
       @edit_user.roll_session_token if params[:user][:password]
       if @edit_user.update(user_params)
-        if @edit_user.username_changed?
+        if @edit_user.username_previously_changed?
           Username.rename!(
             user: @edit_user,
-            from: @edit_user.changed_atributes[:username],
+            from: @edit_user.username_previously_was,
             to: @edit_user.username,
             by: @user
           )

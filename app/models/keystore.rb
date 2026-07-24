@@ -40,31 +40,6 @@ class Keystore < ApplicationRecord
     end
   end
 
-  def self.find_or_create_key_for_update(key, init = nil)
-    loop do
-      found = lock(true).find_by(key: key)
-      return found if found
-
-      begin
-        create! do |kv|
-          kv.key = key
-          kv.value = init
-          kv.save!
-        end
-      rescue ActiveRecord::RecordNotUnique
-        nil
-      end
-    end
-  end
-
-  def self.decrement_value_for(key, amount = -1)
-    increment_value_for(key, amount)
-  end
-
-  def self.decremented_value_for(key, amount = -1)
-    incremented_value_for(key, amount)
-  end
-
   # deliberately no lock/transaction as TrafficHelper is on the hot path of every request
   def self.readthrough_cache(key, &blk)
     if (found = value_for(key))

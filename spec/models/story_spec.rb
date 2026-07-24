@@ -468,6 +468,43 @@ describe Story do
     end
   end
 
+  describe "#can_be_seen_by_user?" do
+    let(:regular_user) { create(:user) }
+    let(:moderator) { create(:user, :moderator) }
+    let(:deleted_user) { create(:user, :deactivated) }
+    let(:banned_user) { create(:user, :banned) }
+
+    it "is visible to a regular user when the author is active" do
+      story = create(:story)
+      expect(story.can_be_seen_by_user?(regular_user)).to be true
+    end
+
+    it "is not visible to a regular user when the author is deleted" do
+      story = create(:story, user: deleted_user)
+      expect(story.can_be_seen_by_user?(regular_user)).to be false
+    end
+
+    it "is not visible to a regular user when the author is banned" do
+      story = create(:story, user: banned_user)
+      expect(story.can_be_seen_by_user?(regular_user)).to be false
+    end
+
+    it "is visible to a moderator regardless of author status" do
+      story = create(:story, user: deleted_user)
+      expect(story.can_be_seen_by_user?(moderator)).to be true
+    end
+
+    it "is visible to the story's own author even if their account is later deleted" do
+      story = create(:story, user: deleted_user)
+      expect(story.can_be_seen_by_user?(deleted_user)).to be true
+    end
+
+    it "is not visible to a logged-out user when the author is deleted" do
+      story = create(:story, user: deleted_user)
+      expect(story.can_be_seen_by_user?(nil)).to be false
+    end
+  end
+
   describe "scopes" do
     context "recent" do
       it "returns the newest stories that have not yet reached the front page" do
@@ -712,6 +749,107 @@ describe Story do
 
         expect(stories.count).to eq 1
         expect(stories.first).to eq story
+      end
+    end
+
+    describe ".not_deleted" do
+      let(:regular_user) { create(:user) }
+      let(:moderator) { create(:user, :moderator) }
+      let(:deleted_user) { create(:user, :deactivated) }
+      let(:banned_user) { create(:user, :banned) }
+
+      let!(:story_from_active_user) { create(:story, user: regular_user) }
+      let!(:story_from_deleted_user) { create(:story, user: deleted_user) }
+      let!(:story_from_banned_user) { create(:story, user: banned_user) }
+      let!(:story_from_moderator) { create(:story, user: moderator) }
+
+      context "for regular users" do
+        it "excludes stories from deleted users" do
+          result = Story.not_deleted(regular_user)
+          expect(result).to include(story_from_active_user)
+          expect(result).to include(story_from_moderator)
+          expect(result).not_to include(story_from_deleted_user)
+        end
+
+        it "excludes stories from banned users" do
+          result = Story.not_deleted(regular_user)
+          expect(result).to include(story_from_active_user)
+          expect(result).to include(story_from_moderator)
+          expect(result).not_to include(story_from_banned_user)
+        end
+
+        it "includes stories that are marked as deleted if owned by the user" do
+          deleted_story = create(:story, user: regular_user, is_deleted: true)
+          result = Story.not_deleted(regular_user)
+          expect(result).to include(deleted_story)
+        end
+
+        it "excludes stories that are marked as deleted from other users" do
+          deleted_story = create(:story, user: deleted_user, is_deleted: true)
+          result = Story.not_deleted(regular_user)
+          expect(result).not_to include(deleted_story)
+        end
+      end
+
+      context "for moderators" do
+        it "includes stories from deleted users" do
+          result = Story.not_deleted(moderator)
+          expect(result).to include(story_from_active_user)
+          expect(result).to include(story_from_deleted_user)
+          expect(result).to include(story_from_banned_user)
+          expect(result).to include(story_from_moderator)
+        end
+
+        it "includes stories that are marked as deleted" do
+          deleted_story = create(:story, user: regular_user, is_deleted: true)
+          result = Story.not_deleted(moderator)
+          expect(result).to include(deleted_story)
+        end
+      end
+
+      context "for the story's own user" do
+        it "includes their own stories even if they are deleted" do
+          own_story = create(:story, user: deleted_user)
+          result = Story.not_deleted(deleted_user)
+          expect(result).to include(own_story)
+        end
+
+        it "includes their own stories even if they are banned" do
+          own_story = create(:story, user: banned_user)
+          result = Story.not_deleted(banned_user)
+          expect(result).to include(own_story)
+        end
+      end
+
+      context "with combined filtering" do
+        it "chains with other scopes correctly" do
+          # Test that not_deleted works with other common scopes
+          result = Story.not_deleted(regular_user).positive_ranked
+
+          expect(result).to include(story_from_active_user)
+          expect(result).to include(story_from_moderator)
+          expect(result).not_to include(story_from_deleted_user)
+          expect(result).not_to include(story_from_banned_user)
+        end
+
+        it "works with unmerged scope" do
+          merged_story = create(:story, user: regular_user, merged_story_id: story_from_active_user.id)
+          result = Story.not_deleted(regular_user).unmerged
+
+          expect(result).to include(story_from_active_user)
+          expect(result).not_to include(merged_story)
+        end
+      end
+
+      context "when user is nil" do
+        it "excludes stories from deleted and banned users" do
+          # When no user is logged in (nil), treat as regular user
+          result = Story.not_deleted(nil)
+          expect(result).to include(story_from_active_user)
+          expect(result).to include(story_from_moderator)
+          expect(result).not_to include(story_from_deleted_user)
+          expect(result).not_to include(story_from_banned_user)
+        end
       end
     end
   end

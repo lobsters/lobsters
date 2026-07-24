@@ -278,7 +278,7 @@ class Search
       end
     end
     if terms.any?
-      query = query.search(terms.join(" and "))
+      query = query.search(terms.join(" AND "))
     end
     if tags
       # This searches tags by subquery because otherwise Rails recognizes the join against tags and

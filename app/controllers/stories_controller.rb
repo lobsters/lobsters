@@ -244,6 +244,10 @@ class StoriesController < ApplicationController
       return render plain: "can't find story", status: 400
     end
 
+    if !story.user.is_active?
+      return render plain: "cannot unvote a deleted or banned user's story", status: 400
+    end
+
     Vote.vote_thusly_on_story_or_comment_for_user_because(
       0, story.id, nil, @user.id, nil
     )
@@ -258,6 +262,10 @@ class StoriesController < ApplicationController
 
     if story.merged_into_story
       return render plain: "story has been merged", status: 400
+    end
+
+    if !story.user.is_active?
+      return render plain: "cannot upvote a deleted or banned user's story", status: 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(

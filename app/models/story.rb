@@ -74,7 +74,15 @@ class Story < ApplicationRecord
   }
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, ->(user) {
-    user.try(:is_moderator?) ? all : where(is_deleted: false).or(where(user_id: user.try(:id).to_i))
+    if user.try(:is_moderator?)
+      all
+    else
+      joins(:user)
+        .where(
+          "(stories.is_deleted = false AND users.deleted_at IS NULL AND users.banned_at IS NULL) OR " \
+          "stories.user_id = ?", user.try(:id).to_i
+        )
+    end
   }
   scope :unmerged, -> { where(merged_story_id: nil) }
   scope :positive_ranked, -> { where("score >= 0") }
@@ -105,7 +113,7 @@ class Story < ApplicationRecord
     raise ArgumentError, "Invalid interval" unless IntervalHelper::TIME_INTERVALS.value?(length[:intv].capitalize)
 
     top = base(user)
-      .where("created_at >= datetime('now', '-#{length[:dur]} #{length[:intv].upcase}')")
+      .where("stories.created_at >= datetime('now', ?)", "-#{dur} #{length[:intv].upcase}")
       .filter_tags(exclude_tags || [])
     top.order(score: :desc)
   }
@@ -127,7 +135,7 @@ class Story < ApplicationRecord
     base(user, unmerged: unmerged).not_hidden_by(user)
       .filter_tags(exclude_tags || [])
       .low_scoring
-      .where("created_at >= ?", 10.days.ago)
+      .where("stories.created_at >= ?", 10.days.ago)
       .where.not(id: front_page.ids)
       .order("stories.created_at DESC")
   }
@@ -587,7 +595,7 @@ class Story < ApplicationRecord
   end
 
   def can_be_seen_by_user?(user)
-    !is_gone? || user&.is_moderator? || user&.id == user_id
+    user&.is_moderator? || user&.id == user_id || (!is_gone? && self.user&.is_active?)
   end
 
   def can_have_images?
@@ -611,6 +619,7 @@ class Story < ApplicationRecord
     end
     return false if is_moderated?
     return false if !user.disabled_invite_at.nil?
+    return false unless self.user.is_active?
 
     tags.each { |t| return false if t.privileged? }
     true

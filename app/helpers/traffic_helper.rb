@@ -56,7 +56,7 @@ module TrafficHelper
   end
 
   def self.cached_current_intensity
-    Rails.cache.fetch("traffic:intensity", expires_in: 60) { Keystore.value_for("traffic:intensity") || 0.5 }
+    Keystore.value_for("traffic:intensity") || 0.5
   end
 
   def self.novelty_logo

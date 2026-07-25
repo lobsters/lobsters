@@ -50,4 +50,38 @@ describe UsersHelper do
       expect(helper.you_invited(you: viewing_user, user: old_invited_user)).to eq(nil)
     end
   end
+
+  describe "recently_invited_by" do
+    let(:viewing_user) { create(:user) }
+    let(:new_invited_user) {
+      create(:user, created_at: 1.days.ago,
+        invited_by_user: viewing_user)
+    }
+    let(:old_invited_user) {
+      create(:user, created_at: (User::MENTORSHIP_DAYS + 1).days.ago,
+        invited_by_user: viewing_user)
+    }
+    let(:new_unrelated_user) { create(:user, created_at: 1.days.ago) }
+
+    it "doesn't load the invited_by_user for users you invited" do
+      # refetch the user
+      new_invited_user.reload
+      new_invited_user.recently_invited_by?(viewing_user)
+      expect(new_invited_user.association(:invited_by_user).loaded?).to eq(false)
+    end
+
+    it "doesn't load the invited_by_user for users you didn't invite" do
+      # refetch the user
+      new_unrelated_user.reload
+      new_unrelated_user.recently_invited_by?(viewing_user)
+      expect(new_unrelated_user.association(:invited_by_user).loaded?).to eq(false)
+    end
+
+    it "doesn't load the invited_by_user for users invited a while ago" do
+      # refetch the user
+      old_invited_user.reload
+      old_invited_user.recently_invited_by?(viewing_user)
+      expect(old_invited_user.association(:invited_by_user).loaded?).to eq(false)
+    end
+  end
 end

@@ -1,0 +1,7 @@
+# app/helpers/stories_helper.rb
+
+module StoriesHelper
+  def story_comments_path(story)
+    story_comments_path(story.id)
+  end
+end

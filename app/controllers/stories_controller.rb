@@ -18,6 +18,10 @@ class StoriesController < ApplicationController
   around_action :track_story_reads, only: [:show], if: -> { @user.present? }
   before_action :show_title_h1, only: [:new, :edit]
 
+  after_action only: [:create, :destroy, :disown, :flag, :undelete, :unvote, :update, :upvote] do
+    refill_story_page_cache @story
+  end
+
   def create
     return preview if params[:preview]
 
@@ -240,35 +244,35 @@ class StoriesController < ApplicationController
   end
 
   def unvote
-    if !(story = find_story) || story.is_gone?
+    if !(@story = find_story) || @story.is_gone?
       return render plain: "can't find story", status: 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
-      0, story.id, nil, @user.id, nil
+      0, @story.id, nil, @user.id, nil
     )
 
     render plain: "ok"
   end
 
   def upvote
-    if !(story = find_story) || story.is_gone?
+    if !(@story = find_story) || @story.is_gone?
       return render plain: "can't find story", status: 400
     end
 
-    if story.merged_into_story
+    if @story.merged_into_story
       return render plain: "story has been merged", status: 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
-      1, story.id, nil, @user.id, nil
+      1, @story.id, nil, @user.id, nil
     )
 
     render plain: "ok"
   end
 
   def flag
-    if !(story = find_story) || story.is_gone?
+    if !(@story = find_story) || @story.is_gone?
       return render plain: "can't find story", status: 400
     end
 
@@ -276,12 +280,12 @@ class StoriesController < ApplicationController
       return render plain: "invalid reason", status: 400
     end
 
-    if !@user.can_flag?(story)
+    if !@user.can_flag?(@story)
       return render plain: "not permitted to flag", status: 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
-      -1, story.id, nil, @user.id, params[:reason]
+      -1, @story.id, nil, @user.id, params[:reason]
     )
 
     render plain: "ok"

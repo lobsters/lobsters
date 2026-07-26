@@ -7,6 +7,10 @@
 mkdir -p ../../shared/public/avatars
 ln -s ../../../shared/public/avatars public/avatars
 
+# similarly, we carry the full-page cache for unauthenticated users between deploys
+mkdir -p ../../shared/public/cache
+ln -s ../../../shared/public/cache public/cache
+
 mkdir -p /home/deploy/lobsters/shared/database-backups
 
 # prod keys

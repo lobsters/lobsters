@@ -191,7 +191,8 @@ module ApplicationHelper
   def how_long_ago_label(time)
     ago = how_long_ago(time)
     at = time.strftime("%F %T")
-    content_tag(:time, ago, title: at, datetime: at, "data-at-unix": time.to_i)
+    label = @user ? ago : at
+    content_tag(:time, label, title: at, datetime: at, "data-at-unix": time.to_i)
   end
 
   def how_long_ago_link(url, time)

@@ -72,6 +72,10 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
   lobsters$ bin/setup
   ```
 
+* Use `bin/sqlite3`, not your OS's `sqlite3`, to poke at databases.
+  The app compiles its own SQLite with flags that change query plans (see `.bundle/config`),
+  so the systemwide client will give wrong answers when you run `explain query plan`.
+
 * Run `rails credentials:edit` to create and edit your encrypted credentials file.
   This is where you store API keys for external services and features like linking accounts.
   Copy and paste in the contents of `config/credentials.yml.enc.sample`.

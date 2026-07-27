@@ -552,29 +552,6 @@
       "note": "IntervalHelper#time_interval is a security control"
     },
     {
-      "warning_type": "Command Injection",
-      "warning_code": 14,
-      "fingerprint": "85555e4132120ff9e80a44f79bcb986eea983ef92a58a775783cd03f2061d014",
-      "check_name": "Execute",
-      "message": "Possible command injection",
-      "file": "app/jobs/restic_job.rb",
-      "line": 11,
-      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
-      "code": "system(\"sqlite3 #{Rails.root.join(\"storage/primary.sqlite3\")} \\\".backup '#{\"#{\"/home/deploy\"}/lobsters/shared\"}/database-backups/primary.sqlite3'\\\"\", :exception => true)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ResticJob",
-        "method": "perform"
-      },
-      "user_input": "Rails.root.join(\"storage/primary.sqlite3\")",
-      "confidence": "Medium",
-      "cwe_id": [
-        77
-      ],
-      "note": "interpolating a dir from our own var"
-    },
-    {
       "warning_type": "File Access",
       "warning_code": 16,
       "fingerprint": "a49c5ada804d39509938a1b7737994d697c646342f3ba6745571665724944958",

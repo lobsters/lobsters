@@ -34,8 +34,8 @@
   <% if !@user %>
     <% # javascript_importmap_tags produces an inline script, but the CSP header
        # in Caddyfile.pre can't have a changing nonce, so load the js with an
-       # include tag. %>
-    <%= javascript_include_tag "application", type: "module" %>
+       # include tag. Prod needs a stable URL so cached pages pick up js changes. %>
+    <%= javascript_include_tag Rails.env.production? ? "/application.js" : "application", type: "module" %>
   <% else %>
     <%= javascript_importmap_tags "user" %>
   <% end %>

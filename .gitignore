@@ -24,6 +24,7 @@ vendor/bundle
 # compiled output
 coverage/
 public/assets
+public/application.js
 
 # cache
 public/avatars

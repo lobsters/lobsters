@@ -74,7 +74,13 @@ class Story < ApplicationRecord
   }
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, ->(user) {
-    user.try(:is_moderator?) ? all : where(is_deleted: false).or(where(user_id: user.try(:id).to_i))
+    if !user
+      where(is_deleted: false)
+    elsif user.is_moderator?
+      all
+    else
+      where(is_deleted: false).or(where(user: user))
+    end
   }
   scope :unmerged, -> { where(merged_story_id: nil) }
   scope :positive_ranked, -> { where("score >= 0") }
@@ -1085,15 +1091,15 @@ class Story < ApplicationRecord
       .split("_")
       .reject { |z| TITLE_DROP_WORDS.include?(z) }
       .each do |w|
-      if wl + w.length <= max_len
-        words.push w
-        wl += w.length
-      else
-        if wl == 0
-          words.push w[0, max_len]
+        if wl + w.length <= max_len
+          words.push w
+          wl += w.length
+        else
+          if wl == 0
+            words.push w[0, max_len]
+          end
+          break
         end
-        break
-      end
     end
 
     if words.empty?

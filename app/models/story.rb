@@ -1091,15 +1091,15 @@ class Story < ApplicationRecord
       .split("_")
       .reject { |z| TITLE_DROP_WORDS.include?(z) }
       .each do |w|
-      if wl + w.length <= max_len
-        words.push w
-        wl += w.length
-      else
-        if wl == 0
-          words.push w[0, max_len]
+        if wl + w.length <= max_len
+          words.push w
+          wl += w.length
+        else
+          if wl == 0
+            words.push w[0, max_len]
+          end
+          break
         end
-        break
-      end
     end
 
     if words.empty?
@@ -1270,7 +1270,7 @@ class Story < ApplicationRecord
   end
 
   def fetched_attributes_html
-    converted = @fetched_response.body.force_encoding("utf-8")
+    converted = @fetched_response.body.dup.force_encoding("utf-8")
     parsed = Nokogiri::HTML(converted.to_s)
 
     # parse best title from html tags

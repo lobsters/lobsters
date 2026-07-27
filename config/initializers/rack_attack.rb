@@ -44,11 +44,11 @@ Rack::Attack.throttle("login", limit: 4, period: 60) do |request|
     request.path.start_with?("/login", "/login/set_new_password")
 end
 
-Rack::Attack.throttle("log4j probe", limit: 1, period: 1.week.to_i) do |request|
+Rack::Attack.throttle("log4j probe", limit: 1, period: 1.day.to_i) do |request|
   request.ip if request.user_agent.try(:include?, "${")
 end
 
-Rack::Attack.throttle("SEO/spam tools", limit: 1, period: 1.week.to_i) do |request|
+Rack::Attack.throttle("SEO/spam tools", limit: 1, period: 1.day.to_i) do |request|
   request.ip if request.user_agent.try(:include?, "www.semrush.com/bot") ||
     request.user_agent.try(:include?, "webmeup-crawler.com") ||
     request.user_agent.try(:include?, "ChatGPT-User") ||
@@ -56,7 +56,7 @@ Rack::Attack.throttle("SEO/spam tools", limit: 1, period: 1.week.to_i) do |reque
     request.user_agent.try(:include?, "axios")
 end
 
-Rack::Attack.throttle("a particular bad bot", limit: 1, period: 1.week.to_i) do |request|
+Rack::Attack.throttle("a particular bad bot", limit: 1, period: 1.day.to_i) do |request|
   request.ip if request.path.start_with?("//avatars")
 end
 
@@ -78,11 +78,11 @@ end
 # Give Rack::Attack its own shard, separate from the default Rails.cache, so that all the churn of
 # rate-limiting bots doesn't evict the rest of the cache.
 unless Rails.cache.is_a?(ActiveSupport::Cache::NullStore) # NullStore is in test env
-  longest_window = Rack::Attack.throttles.values.map(&:period).grep(Numeric).max || 1.week.to_i
+  longest_window = Rack::Attack.throttles.values.map(&:period).grep(Numeric).max || 2.days.to_i
   Rack::Attack.cache.store = SolidCache::Store.new(
     shards: [:rack_attack],
     namespace: "rack_attack",
-    max_age: longest_window + 1.day.to_i,
+    max_age: longest_window + 1.hour.to_i,
     max_size: 2.gigabytes
   )
 end

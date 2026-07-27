@@ -18,7 +18,7 @@ export const qSA = (...args) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   // replace absolute <time> with relative
-  const now = parseInt(qS('body').dataset.nowUnix) || Date.now();
+  const now = Math.floor(Date.now() / 1000);
   for (const t of qSA('time[data-at-unix]')) {
     // parallel implementation in lib/time_ago_in_words.rb
     const secs = now - parseInt(t.dataset.atUnix);

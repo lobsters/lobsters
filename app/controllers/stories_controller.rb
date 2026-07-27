@@ -155,11 +155,6 @@ class StoriesController < ApplicationController
       end
     end
 
-    # if asking with a title and it's been edited, 302
-    if params[:title] && params[:title] != @story.title_as_slug
-      return redirect_to(Routes.title_path(@story))
-    end
-
     if @story.is_gone?
       @moderation = Moderation
         .where(story: @story, comment: nil)
@@ -172,6 +167,11 @@ class StoriesController < ApplicationController
         format.html { return render action: "_missing", status: 404, locals: {story: @story, moderation: @moderation} }
         format.json { raise ActiveRecord::RecordNotFound }
       end
+    end
+
+    # canonicalize on title_path for html (json is ok with just short_id)
+    if request.format.html? && params[:title].to_s != @story.title_as_slug
+      return redirect_to(Routes.title_path(@story))
     end
 
     @comments = Comment.story_threads(@story).for_presentation.load_async

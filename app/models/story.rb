@@ -110,7 +110,8 @@ class Story < ApplicationRecord
   }
 
   scope :top, ->(user, length, exclude_tags = nil) {
-    raise ArgumentError, "Invalid interval" unless IntervalHelper::TIME_INTERVALS.value?(length[:intv].capitalize)
+    dur = Integer(length[:dur], exception: false)
+    raise ArgumentError, "Invalid interval" if dur.nil? || !IntervalHelper::TIME_INTERVALS.value?(length[:intv].capitalize)
 
     top = base(user)
       .where("stories.created_at >= datetime('now', ?)", "-#{dur} #{length[:intv].upcase}")

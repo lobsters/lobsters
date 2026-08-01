@@ -851,6 +851,20 @@ describe Story do
           expect(result).not_to include(story_from_banned_user)
         end
       end
+
+      context "for the story's own user" do
+        it "includes their own stories even if they are deleted" do
+          own_story = create(:story, user: deleted_user)
+          result = Story.not_deleted(deleted_user)
+          expect(result).to include(own_story)
+        end
+
+        it "includes their own stories even if they are banned" do
+          own_story = create(:story, user: banned_user)
+          result = Story.not_deleted(banned_user)
+          expect(result).to include(own_story)
+        end
+      end
     end
   end
 

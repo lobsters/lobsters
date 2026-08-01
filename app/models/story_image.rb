@@ -59,7 +59,7 @@ class StoryImage
 
     return nil unless content_type == "text/html"
 
-    converted = response.body.force_encoding("utf-8")
+    converted = response.body.dup.force_encoding("utf-8")
     parsed = Nokogiri::HTML(converted.to_s)
 
     # Try <meta property="og:image">

@@ -28,7 +28,11 @@ APP_ETC=/home/deploy/lobsters/shared/etc
 echo "lobste.rs" > /etc/hostname
 
 # server packages
-apt install iptables-persistent opendkim postfix restic sqlite3
+apt install iptables-persistent opendkim postfix restic
+
+# We build our own sqlite3 (.bundle/config), remove any system copy to avoid
+# infinite confusion when getting different query plans from a different version.
+apt remove -y sqlite3
 
 # 2026-01-02 workaround failure to build commonmarker because there aren't
 # precompiled gems for ruby 4.0.0 yet
@@ -77,7 +81,7 @@ cp sshd_config /etc/ssh/sshd_config
 # configure logrotate
 cp logrotate.conf /etc/logrotate.d/
 # rm hatchbox's config; logrotate precendence is unreliable
-rm /etc/logrotate.d/hatchbox_logrotate.conf
+rm -f /etc/logrotate.d/hatchbox_logrotate.conf
 
 # shell quality of life
 apt install eza fd-find ncdu tmux tree

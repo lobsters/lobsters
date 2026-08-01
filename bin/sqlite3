@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+# We build our own sqlite3 (.bundle/config), this wrapper runs it.
+
+# load the bundle
+ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", __dir__)
+require "bundler/setup"
+require "sqlite3"
+
+# find the gem and the compiled CLI inside it
+gem_dir = Gem.loaded_specs.fetch("sqlite3").full_gem_path
+binary = Dir.glob(File.join(gem_dir, "ports/*/sqlite3/*/bin/sqlite3")).first
+
+# panic?
+abort "No sqlite3 cli binary under #{gem_dir}/ports. Run `bundle pristine sqlite3` and try again?" unless binary
+
+# run it
+exec binary, *ARGV

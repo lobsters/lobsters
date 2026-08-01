@@ -3,6 +3,9 @@ class Mod::StoriesController < Mod::ModController
 
   before_action :find_story!
   before_action :show_title_h1
+  after_action only: [:destroy, :undelete, :update] do
+    refill_story_page_cache @story, is_moderator: true
+  end
 
   def edit
     @title = "Edit Story"

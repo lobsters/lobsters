@@ -74,14 +74,14 @@ class Story < ApplicationRecord
   }
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, ->(user) {
-    if user.try(:is_moderator?)
+    if !user
+      joins(:user).where(is_deleted: false, users: {deleted_at: nil, banned_at: nil})
+    elsif user.is_moderator?
       all
     else
       joins(:user)
-        .where(
-          "(stories.is_deleted = false AND users.deleted_at IS NULL AND users.banned_at IS NULL) OR " \
-          "stories.user_id = ?", user.try(:id).to_i
-        )
+        .where(is_deleted: false, users: {deleted_at: nil, banned_at: nil})
+        .or(where(user: user))
     end
   }
   scope :unmerged, -> { where(merged_story_id: nil) }
@@ -1273,7 +1273,7 @@ class Story < ApplicationRecord
   end
 
   def fetched_attributes_html
-    converted = @fetched_response.body.force_encoding("utf-8")
+    converted = @fetched_response.body.dup.force_encoding("utf-8")
     parsed = Nokogiri::HTML(converted.to_s)
 
     # parse best title from html tags

@@ -130,6 +130,23 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def refill_story_page_cache(story, is_moderator: false)
+    # an unauthed hit to an edit action would fail to load @story, then call this
+    return if !story
+
+    if (story.is_gone? || story.merged_story_id) && story.short_id.present? && page_cache_directory.present?
+      # rm the story's whole directory to catch files with old title slugs
+      FileUtils.rm_rf File.join(page_cache_directory, "s", story.short_id)
+    else
+      CachePageJob
+        .set(
+          queue: (is_moderator || story.created_at&.after?(1.month.ago)) ? :default : :idle,
+          wait: is_moderator ? 0 : 2.minutes
+        )
+        .perform_later(Routes.title_path(story))
+    end
+  end
+
   # https://web.archive.org/web/20180108083712/http://umaine.edu/lobsterinstitute/files/2011/12/LobsterColorsWeb.pdf
   def set_traffic_style
     @traffic_intensity = "?"

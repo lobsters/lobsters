@@ -5,7 +5,8 @@ class PrefillPageCacheJob < ApplicationJob
   limits_concurrency to: 1, key: "prefill_page_cache"
 
   def perform
-    paths.each { |path| prerender path }
+    jobs = paths.map { |path| CachePageJob.new(path).set(queue: :default) }
+    ActiveJob.perform_all_later(jobs)
   end
 
   def paths
@@ -14,16 +15,5 @@ class PrefillPageCacheJob < ApplicationJob
 
     %w[/ /active /recent /comments /newest /users] +
       (hottest + active).uniq.map { |s| Routes.title_path s }
-  end
-
-  def prerender(path)
-    session = ActionDispatch::Integration::Session.new(Rails.application)
-    session.host! Rails.application.config.action_mailer.default_url_options[:host]
-    session.https! # force_ssl would 301
-
-    session.get(path)
-    raise "PrefillPageCacheJob: #{session.response.status} from #{path}" unless session.response.status == 200
-
-    ApplicationController.cache_page(session.response.body, path, nil, false)
   end
 end

@@ -26,11 +26,18 @@
 
   <%= stylesheet_link_tag "application" %>
   <%= stylesheet_link_tag (@user&.prefers_color_scheme || "system") + "-" + (@user&.prefers_contrast || "system") %>
-  <%= stylesheet_link_tag "tom-select", "data-turbo-track": "reload" %>
-  <%= stylesheet_link_tag "TomSelect_remove_button", "data-turbo-track": "reload" %>
-
   <% if @user %>
-    <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag "tom-select", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "TomSelect_remove_button", "data-turbo-track": "reload" %>
+  <% end %>
+
+  <% if !@user %>
+    <% # javascript_importmap_tags produces an inline script, but the CSP header
+       # in Caddyfile.pre can't have a changing nonce, so load the js with an
+       # include tag. Prod needs a stable URL so cached pages pick up js changes. %>
+    <%= javascript_include_tag Rails.env.production? ? "/application.js" : "application", type: "module" %>
+  <% else %>
+    <%= javascript_importmap_tags "user" %>
   <% end %>
 
   <%= csrf_meta_tags %>
@@ -60,7 +67,7 @@
     </script>
   <% end %>
 </head>
-<body data-username='<%= @user.try(:username) %>' data-now-unix='<%= Time.current.to_i  %>'>
+<body data-username='<%= @user.try(:username) %>'>
   <header id="nav">
     <a id="logo" style="<%= @traffic_style %>" href="/" title="<%= Rails.application.name %> (Current traffic: <%= @traffic_intensity.to_i %>%)"></a>
     <%= @traffic_novelty %>

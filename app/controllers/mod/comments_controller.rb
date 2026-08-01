@@ -1,19 +1,23 @@
 class Mod::CommentsController < Mod::ModController
+  after_action only: [:destroy] do
+    refill_story_page_cache @comment.story, is_moderator: true
+  end
+
   def destroy
-    if !comment = find_comment
+    if !@comment = find_comment
       return render plain: "can't find comment", status: 400
     end
 
     reason = params[:reason]
-    comment.delete_by_moderator(@user, reason)
+    @comment.delete_by_moderator(@user, reason)
 
     if request.xhr?
       render partial: "comments/comment",
         layout: false,
         content_type: "text/html",
-        locals: {comment:}
+        locals: {comment: @comment}
     else
-      redirect_to comment_path(comment)
+      redirect_to comment_path(@comment)
     end
   end
 

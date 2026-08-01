@@ -3,10 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "search controller", type: :request do
-  # Create a comment we can search for. Rspec wraps tests in individual transactions, and
-  # mariadb doesn't update fulltext indexes until the end of the transaction. before(:context)
-  # runs before the test transaction, so we can manually create and clean up a comment.
-  before(:context) do
+  before do
     @foo_bar_story = create(:story, title: "foo bar")
     StoryText.fill_cache! @foo_bar_story # normally a bg job
     @hello_world_comment = create(:comment, comment: "hello world", story: @foo_bar_story)

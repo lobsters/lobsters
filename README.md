@@ -72,6 +72,9 @@ Setup:
     The providers ban them, but the IP address gets a bad reputation and may be on blocklists when it's assigned to you.
     Check your server's IP ASAP; it's much easier to delete and recreate than get off the blocklists, especially because outsiders don't have any insight into the internal blocklists of big email providers like Google, Apple, and Microsoft.
   * You'll need to create a database; we use SQLite in production.
+    Use `bin/sqlite3`, not your OS's `sqlite3`, to poke at databases.
+    The app compiles its own SQLite with flags that change query plans (see `.bundle/config`),
+    so the systemwide client will give wrong answers when you run `explain query plan`.
   * Create an App. Running through the Settings sections:
     * Processes: Add a `solid_queue` process, command `bundle exec rails solid_queue:start`.
     * Activity: This is logs, nothing to change.

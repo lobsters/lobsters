@@ -10,6 +10,10 @@ class CommentsController < ApplicationController
   before_action :require_logged_in_user, only: [:upvoted]
   before_action :show_title_h1
 
+  after_action only: [:create, :delete, :disown, :flag, :undelete, :unvote, :update, :upvote] do
+    refill_story_page_cache @comment.story
+  end
+
   # for rss feeds, load the user's tag filters if a token is passed
   before_action :find_user_from_rss_token, only: [:index]
 
@@ -19,47 +23,47 @@ class CommentsController < ApplicationController
       return render plain: "can't find story", status: 400
     end
 
-    comment = story.comments.build
-    comment.comment = params[:comment].to_s
-    comment.user = @user
-    comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
+    @comment = story.comments.build
+    @comment.comment = params[:comment].to_s
+    @comment.user = @user
+    @comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
 
     if params[:parent_comment_short_id].present?
       # includes parent story_id to ensure this comment's story_id matches
-      comment.parent_comment =
+      @comment.parent_comment =
         Comment.find_by(story_id: story.id, short_id: params[:parent_comment_short_id])
-      if !comment.parent_comment
+      if !@comment.parent_comment
         return render json: {error: "invalid parent comment", status: 400}
       end
     end
 
     # sometimes on slow connections people resubmit; silently accept it
-    if (already = Comment.find_by(user: comment.user,
-      story: comment.story,
-      parent_comment_id: comment.parent_comment_id,
-      comment: comment.comment))
+    if (already = Comment.find_by(user: @comment.user,
+      story: @comment.story,
+      parent_comment_id: @comment.parent_comment_id,
+      comment: @comment.comment))
       render_created_comment(already)
       return
     end
 
-    if params[:preview].blank? && comment.breaks_speed_limit?
+    if params[:preview].blank? && @comment.breaks_speed_limit?
       return render partial: "commentbox", layout: false,
-        content_type: "text/html", locals: {comment: comment}
+        content_type: "text/html", locals: {comment: @comment}
     end
 
-    if comment.valid? && params[:preview].blank? && comment.save
-      comment.current_vote = {vote: 1}
-      comment.story.touch(:last_comment_at)
+    if @comment.valid? && params[:preview].blank? && @comment.save
+      @comment.current_vote = {vote: 1}
+      @comment.story.touch(:last_comment_at)
       # not using .touch because the :touch on the parent_comment association will already touch the
       # upated_at columns up the reply chain to the story once
-      comment.parent_comment&.update_column(:last_reply_at, Time.current)
-      NotifyCommentJob.perform_later(comment)
-      render_created_comment(comment)
+      @comment.parent_comment&.update_column(:last_reply_at, Time.current)
+      NotifyCommentJob.perform_later(@comment)
+      render_created_comment(@comment)
     else
-      comment.score = 1
-      comment.current_vote = {vote: 1}
+      @comment.score = 1
+      @comment.current_vote = {vote: 1}
 
-      preview comment
+      preview @comment
     end
   end
 
@@ -108,15 +112,15 @@ class CommentsController < ApplicationController
   end
 
   def edit
-    if !((comment = find_comment) && comment.is_editable_by_user?(@user))
+    if !((@comment = find_comment) && @comment.is_editable_by_user?(@user))
       return render plain: "can't find comment", status: 400
     end
 
     if request.xhr?
       render partial: "commentbox", layout: false,
-        content_type: "text/html", locals: {comment: comment}
+        content_type: "text/html", locals: {comment: @comment}
     else
-      render "_commentbox", locals: {comment: comment, parents: comment.parents, redirect_on_submit: true}
+      render "_commentbox", locals: {comment: @comment, parents: @comment.parents, redirect_on_submit: true}
     end
   end
 
@@ -155,115 +159,115 @@ class CommentsController < ApplicationController
   end
 
   def delete
-    if !((comment = find_comment) && comment.is_deletable_by_user?(@user))
+    if !((@comment = find_comment) && @comment.is_deletable_by_user?(@user))
       return render plain: "can't find comment", status: 400
     end
 
-    comment.delete_for_user(@user, params[:reason])
+    @comment.delete_for_user(@user, params[:reason])
 
     render partial: "comment", layout: false,
-      content_type: "text/html", locals: {comment: comment}
+      content_type: "text/html", locals: {comment: @comment}
   end
 
   def undelete
-    if !((comment = find_comment) && comment.is_undeletable_by_user?(@user))
+    if !((@comment = find_comment) && @comment.is_undeletable_by_user?(@user))
       return render plain: "can't find comment", status: 400
     end
 
-    comment.undelete_for_user(@user)
+    @comment.undelete_for_user(@user)
 
     render partial: "comment", layout: false,
-      content_type: "text/html", locals: {comment: comment}
+      content_type: "text/html", locals: {comment: @comment}
   end
 
   def disown
-    if !((comment = find_comment) && comment.is_disownable_by_user?(@user))
+    if !((@comment = find_comment) && @comment.is_disownable_by_user?(@user))
       return render plain: "can't find comment", status: 400
     end
 
-    InactiveUser.disown! comment
+    InactiveUser.disown! @comment
 
     if request.xhr?
-      comment = find_comment
+      @comment = find_comment
       show_story = ActiveModel::Type::Boolean.new.cast(params[:show_story])
       show_tree_lines = ActiveModel::Type::Boolean.new.cast(params[:show_tree_lines])
 
-      render partial: "comment", locals: {comment: comment, show_story: show_story, show_tree_lines: show_tree_lines}
+      render partial: "comment", locals: {comment: @comment, show_story: show_story, show_tree_lines: show_tree_lines}
     else
       redirect_back_or_to(root_path)
     end
   end
 
   def update
-    if !((comment = find_comment) && comment.is_editable_by_user?(@user))
+    if !((@comment = find_comment) && @comment.is_editable_by_user?(@user))
       return render plain: "can't find comment", status: 400
     end
 
-    comment.comment = params[:comment]
-    comment.last_edited_at = Time.current
-    comment.hat_id = nil
-    comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
+    @comment.comment = params[:comment]
+    @comment.last_edited_at = Time.current
+    @comment.hat_id = nil
+    @comment.hat = @user.wearable_hats.find_by(short_id: params[:hat_id])
 
-    if params[:preview].blank? && comment.save
-      votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, [comment.id])
-      current_user_reply_parents = @user&.ids_replied_to([comment.id]) || Hash.new { false }
-      comment.current_vote = votes[comment.id]
-      comment.vote_summary = Vote.comment_vote_summaries([comment.id])[comment.id]
-      comment.current_reply = current_user_reply_parents.has_key? comment.id
+    if params[:preview].blank? && @comment.save
+      votes = Vote.comment_votes_by_user_for_comment_ids_hash(@user.id, [@comment.id])
+      current_user_reply_parents = @user&.ids_replied_to([@comment.id]) || Hash.new { false }
+      @comment.current_vote = votes[@comment.id]
+      @comment.vote_summary = Vote.comment_vote_summaries([@comment.id])[@comment.id]
+      @comment.current_reply = current_user_reply_parents.has_key? @comment.id
       # not calling comment.touch because the :touch on the parent_comment association will already
       # touch the updated_at columns up the reply chain to the story once
-      comment.parent_comment&.touch(:last_reply_at)
+      @comment.parent_comment&.touch(:last_reply_at)
 
       if !request.xhr?
-        return redirect_to Routes.comment_target_path(comment, true)
+        return redirect_to Routes.comment_target_path(@comment, true)
       end
 
       if params[:redirect_on_submit].present?
-        head :ok, x_location: Routes.comment_target_path(comment, true)
+        head :ok, x_location: Routes.comment_target_path(@comment, true)
       else
-        render_created_comment(comment, params[:show_tree_lines])
+        render_created_comment(@comment, params[:show_tree_lines])
       end
     else
-      comment.current_vote = {vote: 1}
+      @comment.current_vote = {vote: 1}
 
-      preview comment
+      preview @comment
     end
   end
 
   def unvote
-    if !(comment = find_comment) || comment.is_gone?
+    if !(@comment = find_comment) || @comment.is_gone?
       return render plain: "can't find comment", status: 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
-      0, comment.story_id, comment.id, @user.id, nil
+      0, @comment.story_id, @comment.id, @user.id, nil
     )
 
     if request.xhr?
       render plain: "ok"
     else
-      redirect_to(Routes.comment_target_path(comment, true))
+      redirect_to(Routes.comment_target_path(@comment, true))
     end
   end
 
   def upvote
-    if !(comment = find_comment) || comment.is_gone?
+    if !(@comment = find_comment) || @comment.is_gone?
       return render plain: "can't find comment", status: 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
-      1, comment.story_id, comment.id, @user.id, nil
+      1, @comment.story_id, @comment.id, @user.id, nil
     )
 
     if request.xhr?
       render plain: "ok"
     else
-      redirect_to(Routes.comment_target_path(comment, true))
+      redirect_to(Routes.comment_target_path(@comment, true))
     end
   end
 
   def flag
-    if !(comment = find_comment) || comment.is_gone?
+    if !(@comment = find_comment) || @comment.is_gone?
       return render plain: "can't find comment", status: 400
     end
 
@@ -271,12 +275,12 @@ class CommentsController < ApplicationController
       return render plain: "invalid reason", status: 400
     end
 
-    if !@user.can_flag?(comment)
+    if !@user.can_flag?(@comment)
       return render plain: "not permitted to flag", status: 400
     end
 
     Vote.vote_thusly_on_story_or_comment_for_user_because(
-      -1, comment.story_id, comment.id, @user.id, params[:reason]
+      -1, @comment.story_id, @comment.id, @user.id, params[:reason]
     )
 
     render plain: "ok"

@@ -179,10 +179,34 @@ describe "stories", type: :request do
   describe "show" do
     it "displays a story" do
       story = create(:story)
-      get story_path(story)
+      get Routes.title_path(story)
 
       expect(response).to have_http_status(200)
       expect(response.body).to include(story.title)
+    end
+
+    it "redirects /s/short_id to include title slug" do
+      get "/s/#{story.short_id}"
+
+      expect(response).to redirect_to(Routes.title_path(story))
+    end
+
+    it "redirects old/wrong title slugs to current" do
+      get "/s/#{story.short_id}/some_old_title"
+
+      expect(response).to redirect_to(Routes.title_path(story))
+    end
+
+    it "redirects /stories/:id to the canonical URL" do
+      get story_path(story)
+
+      expect(response).to redirect_to(Routes.title_path(story))
+    end
+
+    it "does not redirect json requests missing the title slug" do
+      get "/s/#{story.short_id}.json"
+
+      expect(response).to have_http_status(200)
     end
 
     context "story removed by submitter" do

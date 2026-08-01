@@ -1,0 +1,1016 @@
+// @ts-check
+
+// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
+
+// in console: app await import("user")
+
+"use strict";
+
+import { qS, qSA } from "application"
+
+import "autosize"
+
+import "TomSelect"
+import "TomSelect_remove_button"
+import "TomSelect_caret_position"
+import "TomSelect_input_autogrow"
+
+export const csrfToken = () => {
+  return qS('meta[name="csrf-token"]').getAttribute('content');
+}
+
+export const on = (eventTypes, selector, callback) => {
+  eventTypes.split(/ /).forEach( (eventType) => {
+    document.addEventListener(eventType, event => {
+      if (event.target.matches(selector)) {
+        callback(event);
+      }
+    });
+  });
+}
+
+/** @param {HTMLElement} target @param {string} selector */
+export const parentSelector = (target, selector) => {
+  const parent = target.closest(selector);
+  if (parent == null) {
+    throw new Error(`Did not match a parent of ${target} with the selector ${selector}`);
+  }
+  return parent;
+};
+
+export const replace = (oldElement, newHTMLString) => {
+  const placeHolder = document.createElement('div');
+  placeHolder.insertAdjacentHTML('afterBegin', newHTMLString);
+  const newElements = placeHolder.childNodes.values();
+  oldElement.replaceWith(...newElements);
+  removeExtraInputs();
+}
+
+export const slideDownJS = (element) => {
+  if (element.classList.contains('slide-down'))
+    return;
+
+  element.classList.add('slide-down');
+  const cs = getComputedStyle(element);
+  const paddingHeight = parseInt(cs.paddingTop) + parseInt(cs.paddingBottom);
+  const height = (element.clientHeight - paddingHeight) + 'px';
+  element.style.height = '0px';
+  setTimeout(() => { element.style.height = height; }, 0);
+};
+
+export const fetchWithCSRF = (url, params) => {
+  params = params || {};
+  params['headers'] = params['headers'] || new Headers;
+  params['headers'].append('X-CSRF-Token', csrfToken());
+  params['headers'].append('X-Requested-With', 'XMLHttpRequest'); // request.xhr?
+  return fetch(url, params).then(response => {
+    const x_location = response.headers.get('X-Location');
+    if(x_location !== null) {
+      window.location.replace(x_location);
+    }
+    return response;
+  });
+}
+
+export const removeExtraInputs = () => {
+  // This deletion will resolve a bug that creates an extra hidden input when rendering the comment elements
+  const extraInputs = qSA('.comment_folder_button + .comment_folder_button');
+  for (const i of extraInputs) {
+    i.remove();
+  }
+}
+
+/**
+ * @template T
+ * @param {unknown} obj
+ * @param {Array<keyof T>} props
+ * @returns {obj is T}
+ */
+function hasProperties(obj, props) {
+  return isObject(obj) && props.every((p) => p in obj);
+}
+
+/** @param {unknown} obj */
+function isObject(obj) {
+        return !!obj && typeof obj === "object"
+}
+
+/** @param {string} msg */
+function notify(msg) {
+                const ariaAnnounce = qS("#aria-announce");
+                if (ariaAnnounce) {
+                        ariaAnnounce.textContent = msg;
+                }
+}
+
+/** @param {SubmitEvent} ev */
+export async function asyncFormSubmit(ev) {
+  ev.preventDefault();
+  const form = /** @type {HTMLFormElement} */ (ev.target);
+
+  try {
+    const response = await fetch(form.action, {
+      method: form.method,
+      body: new FormData(form),
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    const textBody = await response.text();
+
+    const body = JSON.parse(textBody);
+
+    if (response.ok && isObject(body)) {
+      return body;
+    }
+
+    // Received valid error from server?
+    if (isObject(body) && "message" in body) {
+      throw new Error(`${body.message}`);
+    }
+
+    // Let's hope server explained what happened.
+    throw new Error(textBody);
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error(JSON.stringify(err));
+    notify(error.message);
+    throw error;
+  }
+}
+
+export class _LobstersFunction {
+  constructor () {
+    this.curUser = null;
+
+    this.storyFlagReasons = JSON.parse(qS('meta[name="story-flags"]').getAttribute('content'));
+
+    this.commentFlagReasons = JSON.parse(qS('meta[name="comment-flags"]').getAttribute('content'));
+  }
+
+  bounceToLogin() {
+    document.location = "/login?return=" + encodeURIComponent(document.location);
+  }
+
+  modalFlaggingDropDown(_flaggedItemType, voterEl, reasons) {
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
+
+    const li = parentSelector(voterEl, '.story, .comment');
+    if (li.classList.contains('flagged')) {
+      /* already upvoted, neutralize */
+      if (li.classList.contains('story')) {
+        Lobster.voteStory(voterEl, -1, null);
+      } else {
+        Lobster.voteComment(voterEl, -1, null);
+      }
+      return
+    }
+
+    if (qS('#flag_dropdown') || qS('#modal_backdrop')) {
+      Lobster.removeFlagModal()
+    }
+
+    const modalDiv = document.createElement("div");
+    modalDiv.setAttribute('id', 'modal_backdrop');
+    document.body.appendChild(modalDiv);
+
+    const flaggingDropDown = document.createElement('div');
+    flaggingDropDown.setAttribute('id', 'flag_dropdown');
+    voterEl.after(flaggingDropDown);
+
+    Object.entries(reasons).forEach(([ key, reason ]) => {
+      const a = document.createElement('a')
+      a.textContent = reason
+      a.dataset[ "key" ] = key;
+      a.setAttribute('href', '#')
+      if (key === '') {
+        a.classList.add('cancel-reason')
+      }
+      flaggingDropDown.append(a);
+    });
+  }
+
+  checkStoryDuplicate(form) {
+    const formData = new FormData(form);
+    const action = '/stories/check_url_dupe';
+    fetchWithCSRF(action, {
+      method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData,
+    }).then (response => {
+      response.text().then(text => {
+        // FIXME on second click of 'fetch title', this doesn't run
+        qS('.form_errors_header').innerHTML = text;
+      });
+    });
+  }
+
+  checkStoryTitle() {
+    const titleLocation = qS('#story_title');
+    if (!titleLocation) return;
+
+    const title = titleLocation.value;
+    if (!title) return;
+
+    // Check for common prefixes like "ask lobsters:", remove it, and add the appropriate tag
+    const m = title.match(/^(show|ask) lobste\.?rs:? (.+)$/i);
+    if (m) {
+      const titleEl = qS('#story_title');
+      Lobster.tom.addItem(m[1].toLowerCase());
+      titleEl.value = m[2];
+    }
+
+    // common separators or (parens) that don't enclose a 4-digit year
+    if (title.match(/: | - | – | — | \| | · | • | by /) ||
+       (title.match(/\([^\)]*\)/g) || []).some(function (p) { return !p.match(/\(\d{4}\)/) })) {
+          slideDownJS(qS('.title-reminder'));
+
+    // else if the title doesn't contain concerns and reminder is visible
+    } else if (qS('.title-reminder').classList.contains('slide-down')) {
+      qS('.title-reminder-thanks').style.display = 'inline';
+    }
+  }
+
+  checkSelfPromo(input) {
+    if (!input) return;
+
+    if (input.checked) {
+      slideDownJS(qS('.self-promo-warning'));
+    } else if (qS('.self-promo-warning').classList.contains('slide-down')) {
+      qS('.self-promo-warning').classList.remove('slide-down');
+    }
+  }
+
+  fetchURLTitle(button) {
+    const url_field = qS('#story_url');
+    const targetUrl = url_field.value;
+    const title_field = qS('#story_title');
+    const formData = new FormData();
+    const old_text = button.textContent;
+
+    if (targetUrl == "")
+      return;
+
+    button.setAttribute("disabled", true);
+    button.textContent = "Fetching...";
+    formData.append('fetch_url', targetUrl);
+
+    fetchWithCSRF('/stories/fetch_url_attributes', {
+      method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData,})
+      .then (response => response.json())
+      .then (data => {
+        title_field.value = data.title
+        if (url_field.value != data.url) {
+          slideDownJS(qS('.url-updated'));
+        }
+        url_field.value = data.url
+        button.textContent = old_text
+      });
+    button.removeAttribute("disabled");
+    Lobster.checkStoryTitle();
+  }
+
+  removeFlagModal() {
+    qS('#flag_dropdown').remove();
+    qS('#modal_backdrop').remove();
+  }
+
+  postComment(form) {
+    const formData = new FormData(form);
+    const action = form.getAttribute('action');
+    formData.append('show_tree_lines', true);
+    fetchWithCSRF (action, {
+      method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData
+    })
+      .then(response => {
+        response.text().then(text => {
+
+          // this powers comment posting and replying on many pages with
+          // different HTML structures to render the comment into
+          //   app/views/comments/_comment.html.erb
+          //   app/views/comments/show.html.erb
+          //   app/views/comments/_threads.html.erb
+          //   app/views/stories/show.html.erb
+
+          const replyForm = form.closest('.reply_form_temporary');
+          if (replyForm) {
+            // user submitted from a temporary reply form, so this is a reply to an existing comment
+            replace(replyForm, text)
+            return;
+          }
+
+          const commentContainer = form.closest('.comment');
+          if (commentContainer) {
+            // User is editing comment.
+            replace(commentContainer, text);
+            return;
+          }
+
+          // Iterating up the comments tree to the nearest parent. If there isn't one, we are creating
+          // a top-level comment, so find the top of the comments tree.
+          const comments = form.closest('.comments') || qS('.comments')
+          parentSelector(form, '.comment_form_container').remove()
+
+          // if comments is .comments1, it is top-level comment: insert it deeper
+          if (comments.classList.contains('comments1')) {
+            comments.querySelector('#story_comments').insertAdjacentHTML("afterbegin", text)
+          } else {
+            comments.insertAdjacentHTML("afterbegin", text)
+          }
+
+        })
+      })
+  }
+
+  previewComment(form) {
+    const formData = new FormData(form);
+    const action = form.getAttribute('action');
+    formData.append('preview', 'true');
+    formData.append('show_tree_lines', 'true');
+    fetchWithCSRF(action, {
+      method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData
+    })
+      .then(response => {
+        response.text().then(text => {
+          replace(qS(form.parentElement, '.preview'), text);
+          autosize(qSA('textarea'));
+        });
+      });
+  }
+
+  previewStory(formElement) {
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
+
+    const formData = new FormData(formElement);
+    const previewElement = qS('#inside');
+    fetchWithCSRF('/stories/preview', {
+      method: 'post',
+      headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+      body: formData
+    }).then(response => {
+      response.text().then(text => {
+        previewElement.innerHTML = text;
+        Lobster.tomSelect();
+      });
+    });
+  }
+
+  /** @param {SubmitEvent} ev */
+  async hideStory(ev) {
+    const submitBtn = /** @type HTMLInputElement */ ( ev.submitter );
+    const story = submitBtn.closest('.story');
+
+    // If no .story, action was triggered by #hide-alert.
+    const submitBtns = ( story ?
+      [...qSA(story, '.hider [type="submit"]'), qS('#hide-alert .hider [type="submit"]')] :
+      [...qSA('.hider [type="submit"]')] ).filter(btn => btn instanceof HTMLInputElement)
+
+    const data = await Lobster._handleStoryAction(ev, submitBtns);
+
+    if (!(data && "hidden" in data)) { return }
+
+    const isHidden = !!data.hidden;
+    const cta = isHidden ? "unhide" : "hide"
+
+    if (!isHidden) {
+      qS("hide-alert")?.setAttribute("hidden", "hidden");
+    } else {
+      qS("hide-alert")?.removeAttribute("hidden");
+    }
+
+
+    for (const submitBtn of submitBtns) {
+      if (!submitBtn.closest("#hide-alert")) {
+        submitBtn.value = cta;
+      }
+    }
+
+    ( story ?? qS('.story') )?.classList.toggle("hidden", isHidden);
+  }
+
+  /** @param {SubmitEvent} ev */
+  async saveStory(ev) {
+    const submitBtn = /** @type HTMLInputElement */ ( ev.submitter );
+    const submitBtns = /** @type NodeListOf<HTMLInputElement> */ ( qSA(parentSelector(submitBtn, ".story"), ".saver [type='submit']") );
+
+    const data = await Lobster._handleStoryAction(ev, submitBtns);
+
+    if (!(data && "saved" in data)) { return }
+
+    const isSaved = !!data.saved;
+    const cta = isSaved ? "unsave" : "save"
+
+    for (const submitBtn of submitBtns) {
+      submitBtn.value = cta;
+    }
+
+    parentSelector(submitBtn, '.story')?.classList.toggle("saved", isSaved)
+  }
+
+  /**
+   * @param {SubmitEvent} ev
+   * @param {HTMLInputElement[] | NodeListOf<HTMLInputElement>} submitBtns
+   */
+  async _handleStoryAction(ev, submitBtns) {
+    for (const btn of submitBtns) {
+      btn.disabled = true;
+    }
+
+    try {
+      const data = await asyncFormSubmit(ev);
+
+      const nextAction = "nextAction" in data && typeof data.nextAction === "string" ? data.nextAction : null;
+
+      if (!nextAction) { throw new Error("Bad response") }
+
+      for (const btn of submitBtns) {
+        const form = btn.closest("form");
+        if (form) {
+          form.action = nextAction;
+        }
+      }
+
+      return data
+
+    } catch (err) {
+      console.error(`${err}`);
+      return;
+    } finally {
+      for (const btn of submitBtns) {
+        btn.disabled = false;
+      }
+    }
+  }
+
+  tomSelect(_item) {
+    if (!qS('#story_tags')) {
+      return
+    }
+
+    TomSelect.define('caret_position', caret_position);
+    TomSelect.define('input_autogrow', input_autogrow);
+    TomSelect.define('remove_button', remove_button);
+    this.tom = new TomSelect('#story_tags', {
+      plugins: ['caret_position', 'input_autogrow', 'remove_button'],
+      maxOptions: 200,
+      maxItems: 10,
+      hideSelected: true,
+      closeAfterSelect: true,
+      selectOnTab: true,
+      searchField: ["value", "title", "vibe"], // sort vibecoding above ai tag for 'ai'
+      sortField: [ {field: "value", direction: "asc"} ],
+      onInitialize: function() {
+        const parent = qS('.ts-control');
+        parent.appendChild(qS('.ts-dropdown'));
+      },
+      render: {
+        option: function(data) {
+          return '<div>' +
+            '<span class="dropDownItem">' + data.title + '</span>' +
+            '</div>';
+        },
+        item: function(data) {
+          return '<a class="data-ts-item ' + data.tagCss + '">' + data.value + '</div>';
+        }
+      }
+    });
+  }
+
+  upvoteComment(voterEl) {
+    Lobster.voteComment(voterEl, 1);
+  }
+
+  upvoteStory(voterEl) {
+    Lobster.voteStory(voterEl, 1);
+  }
+
+  voteStory(voterEl, point, reason) {
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
+
+    const li = parentSelector(voterEl, '.story');
+    const scoreLink = qS(li, '.upvoter');
+    const formData = new FormData();
+    formData.append('reason', reason || '');
+    let showScore = true;
+    let score = parseInt(scoreLink.innerHTML);
+    let action = "";
+
+    if (isNaN(score)) {
+      showScore = false;
+      score = 0;
+    }
+
+    if (li.classList.contains("upvoted") && point > 0) {
+      /* already upvoted, neutralize */
+      li.classList.remove("upvoted");
+      score--;
+      action = "unvote";
+    } else if (li.classList.contains("flagged") && point < 0) {
+      /* already flagged, neutralize */
+      li.classList.remove("flagged");
+      score++;
+      action = "unvote";
+    } else if (point > 0) {
+      if (li.classList.contains("flagged")) {
+        /* Give back the lost flagged point */
+        score++;
+      }
+      li.classList.remove("flagged");
+      li.classList.add("upvoted");
+      score++;
+      action = "upvote";
+    } else if (point < 0) {
+      if (li.classList.contains("upvoted")) {
+        /* Removes the upvote point this user already gave the story*/
+        score--;
+      }
+      li.classList.remove("upvoted");
+      li.classList.add("flagged");
+      if (qS(li.parentElement, '.comment_folder_button')) {
+        qS(li.parentElement, '.comment_folder_button').setAttribute('checked', true);
+      };
+      showScore = false;
+      score--;
+      action = "flag";
+    }
+
+    if (showScore) {
+      scoreLink.innerHTML = score;
+    } else {
+      scoreLink.innerHTML = '~';
+    }
+
+    const flagger = qS(li, '.flagger');
+
+    switch (action) {
+      case "upvote": {
+        const reasonEl = qS(li, '.reason');
+        if (reasonEl) {
+          reasonEl.innerHTML = ''
+        }
+        break;
+      }
+      case "unvote": {
+        if (point < 0 && flagger) {
+          flagger.textContent = 'flag';
+        }
+        break;
+      }
+      case "flag": {
+        if (flagger) {
+          flagger.textContent = `unflag (${Lobster.storyFlagReasons[reason]})`;
+        }
+      }
+    }
+
+    fetchWithCSRF("/stories/" + li.getAttribute("data-shortid") + "/" + action, {
+      method: 'post',
+      body: formData });
+  }
+
+  voteComment(voterEl, point, reason) {
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
+
+    const li = parentSelector(voterEl, ".comment");
+    const scoreLink = qS(li, '.upvoter');
+    const formData = new FormData();
+    formData.append('reason', reason || '');
+    let showScore = true;
+    let score = parseInt(scoreLink.innerHTML);
+    let action = "";
+
+    if (isNaN(score)) {
+      showScore = false;
+      score = 0;
+    }
+
+    if (li.classList.contains("upvoted") && point > 0) {
+      /* already upvoted, neutralize */
+      li.classList.remove("upvoted");
+      score--;
+      action = "unvote";
+    } else if (li.classList.contains("flagged") && point < 0) {
+      /* already flagged, neutralize */
+      li.classList.remove("flagged");
+      score++;
+      action = "unvote";
+    } else if (point > 0) {
+      if (li.classList.contains("flagged")) {
+        /* Give back the lost flagged point */
+        score++;
+      }
+      li.classList.remove("flagged");
+      li.classList.add("upvoted");
+      score++;
+      action = "upvote";
+    } else if (point < 0) {
+      if (li.classList.contains("upvoted")) {
+        /* Removes the upvote point this user already gave the story*/
+        score--;
+      }
+      li.classList.remove("upvoted");
+      li.classList.add("flagged");
+      li.parentElement.querySelector('.comment_folder_button').setAttribute("checked", true);
+      showScore = false;
+      score--;
+      action = "flag";
+    }
+    if (showScore) {
+      scoreLink.innerHTML = score;
+    } else {
+      scoreLink.innerHTML = '~';
+    }
+
+    if (action == "upvote" || action == "unvote") {
+      qS(li, '.reason').innerHTML = '';
+    }
+
+    if (action == "unvote" && point < 0) {
+      qS(li, '.flagger').textContent = 'flag';
+    } else if (action == "flag") {
+      qS(li, '.flagger').textContent = 'unflag';
+      qS(li, '.reason').innerHTML = "| " + Lobster.commentFlagReasons[reason].toLowerCase();
+    }
+
+    fetchWithCSRF("/comments/" + li.getAttribute("data-shortid") + "/" + action, {
+      method: 'post',
+      body: formData });
+  }
+
+  /** @param {string} storyId */
+  getCollapsedComments(storyId) {
+    return JSON.parse(localStorage.getItem("collapse_" + storyId) || '{}');
+  }
+
+  /**
+   * @param {string} storyId
+   * @param {string} commentId
+   * @param {boolean} collapsed
+   */
+  setCommentCollapsed(storyId, commentId, collapsed) {
+    const collapse = this.getCollapsedComments(storyId);
+    if (collapsed) {
+      collapse[commentId] = 1; // value unused, just truthy and short to serialize
+    } else {
+      delete collapse[commentId];
+    }
+    localStorage.setItem("collapse_" + storyId, JSON.stringify(collapse));
+  }
+}
+
+const Lobster = new _LobstersFunction();
+
+document.addEventListener("DOMContentLoaded", () => {
+  Lobster.curUser = document.body.getAttribute('data-username'); // hack
+  autosize(qSA('textarea'));
+
+  // replace csrf token in forms that may be fragment caches with page token
+  for (const i of qSA('form input[name="authenticity_token"]')) {
+    i.value = csrfToken();
+  }
+
+  // Append an element where xhr fetches can publish their results. Used by screen readers.
+  const ariaAnnounce = document.createElement("div");
+  ariaAnnounce.ariaLive = "polite";
+  ariaAnnounce.id = "aria-announce";
+  document.body.appendChild(ariaAnnounce);
+
+  // Global
+
+  on('click', '#modal_backdrop', () => {
+    Lobster.removeFlagModal()
+  });
+
+  on('click', '[data-confirm]', (event) => {
+    if (!confirm(event.target.dataset.confirm)) {
+      event.preventDefault();
+    }
+  });
+
+  // Account Settings
+
+  on('focusout', '#user_homepage', (event) => {
+    const homePage = event.target
+    if (homePage.value.trim() !== '' && !homePage.value.match('^[a-z]+:\/\/'))
+      homePage.value = 'https://' + homePage.value
+  });
+
+  // Inbox
+
+  on('change', '#message_hat_id', (event) => {
+    let selectedOption = event.target.selectedOptions[0];
+    qS('#message_mod_note').checked = (selectedOption.getAttribute('data-modnote') === 'true');
+  });
+
+  // Story
+
+  Lobster.checkStoryTitle();
+  Lobster.checkSelfPromo(qS('#story_user_is_author'));
+
+  Lobster.tomSelect();
+
+  if (qS('#story_url') && qS('#story_preview') && !qS('#story_preview').firstElementChild) {
+    qS('#story_url').focus()
+  }
+  if (qS('#totp_code')) {
+    qS('#totp_code').focus();
+  }
+
+  on('change', '#story_title', Lobster.checkStoryTitle);
+  on('change', '#story_user_is_author', (event) => {
+    Lobster.checkSelfPromo(event.target);
+  });
+
+  on('click', '.story #flag_dropdown a', (/** @type MouseEvent */ event) => {
+    event.preventDefault();
+    if (event.target instanceof HTMLElement && event.target.dataset["key"] !== '') {
+      Lobster.voteStory(parentSelector(event.target, '.story'), -1,  event.target.dataset["key"]);
+    }
+    Lobster.removeFlagModal();
+  });
+
+  on('click', '#story_fetch_title', (event) => {
+    Lobster.fetchURLTitle(event.target);
+  });
+
+  on('click', 'li.story a.upvoter', (event) => {
+    event.preventDefault();
+    Lobster.upvoteStory(event.target);
+  });
+
+  on('click', 'li.story a.flagger', (event) => {
+    event.preventDefault();
+    const reasons = Lobster.storyFlagReasons;
+    Lobster.modalFlaggingDropDown("story", event.target, reasons);
+  });
+
+  on('submit', 'li.story .hider, #hide-alert .hider', Lobster.hideStory);
+
+  on('submit', 'li.story .saver', Lobster.saveStory)
+
+  on('click', 'button.story-preview', (event) => {
+    Lobster.previewStory(parentSelector(event.target, 'form'));
+  });
+
+  on('focusout', '#story_url', () => {
+    let url_tags = {
+      "\.pdf($|\\?|#)": "pdf",
+      "[\/\.](asciinema\.org|(youtube|vimeo)\.com|youtu\.be|twitch\.tv|media\.ccc\.de)\/": "video",
+      "\.(mp4|avi|mkv|webm)($|\\?|#)": "video",
+      "(https:\/\/(github\.com|codeberg\.org)\/[^\/]+\/[^\/]+\/releases)": "release",
+      "[\/\.](slideshare\.net|speakerdeck\.com)\/": "slides",
+      "[\/\.](soundcloud\.com)\/": "audio",
+      "\.(mp3|wav|ogg|flac)($|\\?|#)": "audio",
+    };
+
+    const storyUrlEl = qS('#story_url');
+    for (const [match, tag] of Object.entries(url_tags)) {
+      if (storyUrlEl.value.match(new RegExp(match, "i"))) {
+        Lobster.tom.addItem(tag.toLowerCase());
+      }
+    }
+
+    // check for dupe if there's a URL, but not when editing existing
+    if (storyUrlEl.value !== "" &&
+      (!qS('input[name="_method"]') ||
+      qS('input[name="_method"]').getAttribute('value') === 'put')) {
+        Lobster.checkStoryDuplicate(parentSelector(storyUrlEl, 'form'));
+    }
+  });
+
+  // Disown
+
+  on('submit', 'form.disowner-form', (event) => {
+    event.preventDefault();
+
+    let type = event.target.elements['type'].value;
+
+    if (confirm(`Are you sure you want to disown this ${type}?`)) {
+      let li = parentSelector(event.target, `.${type}`);
+
+      fetchWithCSRF(event.target.action, { method: 'post', body: new FormData(event.target) })
+        .then(response => {
+          response.text().then(text => replace(li, text));
+        });
+    }
+  });
+
+  // Comment
+
+  // Remember story collapses; this is stored in localStorage for every story ID as an object
+  on('change', '.comment_folder_button', (e) => {
+    const commentId = e.target.getAttribute('data-shortid');
+    const storyId = qS('.story')?.getAttribute('data-shortid');
+    if (!storyId) return; // only remember or read these on story pages
+
+    var collapse = JSON.parse(localStorage.getItem("collapse_" + storyId) || '{}');
+    if (e.target.checked) {
+      collapse[commentId] = 1; // value unused, just truthy and short to serialize
+    } else {
+      delete collapse[commentId];
+    }
+    localStorage.setItem("collapse_" + storyId, JSON.stringify(collapse));
+  });
+
+  // Collapse stories on load; the actual hiding is done in CSS; just need to switch the checkbox
+  (function() {
+    const storyId  = qS('.story')?.getAttribute('data-shortid');
+    if (!storyId) return; // only remember or read these on story pages
+    const collapse = Lobster.getCollapsedComments(storyId)
+
+    for (var k in collapse) {
+      var folder = qS('input#comment_folder_' + k);
+      // comment may have been deleted
+      if (folder)
+        folder.checked = true;
+    }
+  })();
+
+  on("click", "a.comment_replier", (event) => {
+    event.preventDefault();
+    if (!Lobster.curUser) return Lobster.bounceToLogin();
+
+    const comment = parentSelector(event.target, '.comment');
+    const commentId = comment.getAttribute('id');
+    const commentShortId = comment.getAttribute('data-shortid')
+
+    // uncollapse comment
+    var folder = qS("input#comment_folder_" + commentShortId)
+    if (folder && folder.checked) {
+      folder.checked = false;
+      const storyId = qS('.story')?.getAttribute('data-shortid');
+      if (storyId) Lobster.setCommentCollapsed(storyId, commentId, false);
+    }
+
+    // guard: don't create multiple reply boxes to one comment
+    if (qS('#reply_form_' + commentId)) { return false; }
+
+    // Inserts "> " on quoted text
+    let sel = document.getSelection().toString();
+    if (sel != "") {
+      sel = sel.split("\n").map(s => "> " + s + '\n\n').join('');
+      sel += "\n";
+    }
+
+    let div = document.createElement('div');
+    div.innerHTML = '';
+    div.classList.add('reply_form_temporary')
+    const children = qS(comment.parentElement, '#' + comment.id + '~ .comments')
+    children.prepend(div)
+
+    fetchWithCSRF('/comments/' + commentShortId + '/reply')
+      .then(response => {
+        response.text().then(text => {
+          // guard: don't create multiple reply boxes to one comment
+          if (qS('#reply_form_' + commentId)) { return false; }
+
+          div.innerHTML = text;
+          div.setAttribute('id', 'reply_form_' + commentId);
+
+          var ta = qS(div, 'textarea');
+          ta.textContent = sel;
+          // place the cursor at the end of the quoted string
+          ta.setSelectionRange(sel.length, sel.length);
+          ta.focus();
+          autosize(ta);
+        })
+      });
+  });
+
+  on('click', '.comment a.flagger', (event) => {
+    event.preventDefault();
+    const reasons = Lobster.commentFlagReasons
+    Lobster.modalFlaggingDropDown("comment", event.target, reasons);
+  });
+
+  on('click', '.comment #flag_dropdown a', (/** @type MouseEvent */ event) => {
+    event.preventDefault();
+    if  (event.target instanceof HTMLElement && event.target.dataset["key"] !== '') {
+      Lobster.voteComment(parentSelector(event.target, '.comment'), -1,  event.target.dataset["key"]);
+    }
+    Lobster.removeFlagModal()
+  });
+
+  on("click", '.comment button.upvoter', (event) => {
+    event.preventDefault();
+    Lobster.upvoteComment(event.target);
+  });
+
+  on('click', 'button.comment-preview', (event) => {
+    Lobster.previewComment(parentSelector(event.target, 'form'));
+  });
+
+  on('submit', '.comment_form_container form', (event) => {
+    event.preventDefault();
+    Lobster.postComment(event.target);
+  });
+
+  on('keydown', 'textarea#comment', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.keyCode == 13) {
+      Lobster.postComment(parentSelector(event.target, 'form'));
+    }
+  });
+
+  on('click', 'button.comment-cancel', (event) => {
+    const comment = (parentSelector(event.target, '.reply_form_temporary'));
+    const commentId = comment.getAttribute('data-shortid');
+    if (commentId !== null && commentId !== '') {
+      fetch('/comments/' + commentId + '?show_tree_lines=true')
+        .then(response => {
+          response.text().then(text => replace(comment, text));
+        });
+    } else {
+      comment.remove();
+    }
+  });
+
+  on('click', 'a.comment_editor', (event) => {
+    event.preventDefault();
+    const comment = parentSelector(event.target, '.comment');
+    const commentText = qS(comment, '.comment_text');
+    const commentId = comment.getAttribute('data-shortid')
+
+    fetchWithCSRF('/comments/' + commentId + '/edit')
+      .then(response => {
+        response.text().then(text => {
+          replace(commentText, text);
+          autosize(qSA('textarea'));
+        });
+      });
+    autosize(qSA('textarea'));
+  });
+
+  on("click", "a.comment_deletor", (event) => {
+    event.preventDefault();
+    if (confirm("Are you sure you want to delete this comment?")) {
+      const comment = parentSelector(event.target, '.comment');
+      const commentId = comment.getAttribute('data-shortid');
+      fetchWithCSRF('/comments/' + commentId + '/delete',{method: 'post'})
+        .then(response => {
+          response.text().then(text => replace(comment, text));
+        });
+    }
+  });
+
+  on('click', 'a.comment_undeletor', (event) => {
+    event.preventDefault();
+    if (confirm("Are you sure you want to undelete this comment?")) {
+      const comment = parentSelector(event.target, '.comment');
+      const commentId = comment.getAttribute('data-shortid');
+      fetchWithCSRF('/comments/' + commentId + '/undelete', {method: 'post'})
+        .then(response => {
+          response.text().then(text => replace(comment, text));
+        });
+    }
+  });
+
+  on('click', 'a.comment_moderator', (event) => {
+    event.preventDefault();
+    const reason = prompt("Moderation reason:");
+    if (reason == null || reason == '')
+      return false;
+
+    const formData = new FormData();
+    formData.append('reason', reason);
+    const comment = parentSelector(event.target, '.comment');
+    const commentId = comment.getAttribute('data-shortid');
+    fetchWithCSRF('/mod/comments/' + commentId, { method: 'delete', body: formData })
+      .then(response => {
+        response.text().then(text => replace(comment, text));
+      });
+  });
+
+  on('click', '.comment_unread', (event) => {
+    const nodes = qSA('.comment_unread')
+    const foundIndex = Array.from(nodes).findIndex(node => node === event.target)
+    const targetIndex = (foundIndex + 1) % nodes.length;
+    const targetY = nodes[targetIndex].getBoundingClientRect().top + window.scrollY
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: targetY, behavior: reducedMotion ? 'instant' : 'smooth' })
+  });
+
+  // Private messages
+
+  // inject js-only UI
+  const select_all = qSA('.with_select_all tr:first-child th:first-child');
+  for (const th of select_all) {
+    const checkbox = document.createElement('input');
+    checkbox.setAttribute('type', 'checkbox');
+    checkbox.classList.add('select_all');
+    th.append(checkbox);
+  }
+
+  on('click', '.select_all', (event) => {
+    const table = parentSelector(event.target, 'table');
+    const checkboxes = qSA(table, 'input[type=checkbox]');
+    for (const checkbox of checkboxes) {
+      checkbox.checked = event.target.checked;
+    }
+  });
+});

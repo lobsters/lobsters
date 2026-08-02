@@ -292,6 +292,7 @@ input.deletion {
 
 summary {
 	cursor: pointer;
+	word-break:	break-word;
 }
 
 /* Remove style from button to so it will look like a link */

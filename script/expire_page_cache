@@ -1,4 +1,4 @@
 #!/bin/sh
 
 # leave the story pages under s to be expired by edits, votes, and comments
-find /home/deploy/lobsters/current/public/cache/ -name s -type d -prune -o -type f -mmin +3 -delete
+find /home/deploy/lobsters/current/public/cache/ -name s -type d -prune -o -type f -mmin +3 -exec rm -f {} +

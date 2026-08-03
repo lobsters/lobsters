@@ -134,7 +134,7 @@ class ApplicationController < ActionController::Base
     # an unauthed hit to an edit action would fail to load @story, then call this
     return if !story
 
-    if (story.is_gone? || story.merged_story_id) && story.short_id.present? && page_cache_directory.present?
+    if (story.is_gone? || story.merged_story_id || story.new_record?) && story.short_id.present? && page_cache_directory.present?
       # rm the story's whole directory to catch files with old title slugs
       FileUtils.rm_rf File.join(page_cache_directory, "s", story.short_id)
     else

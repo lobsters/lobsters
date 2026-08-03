@@ -8,7 +8,7 @@ class CachePageJob < ApplicationJob
     session.https! # force_ssl would 301
 
     session.get(path)
-    raise "CachePageJob: #{session.response.status} from #{path}" unless session.response.status == 200
+    raise "CachePageJob: #{session.response.status} from #{path}" if session.response.status >= 500
 
     ApplicationController.cache_page(session.response.body, path, nil, false)
 

@@ -1,5 +1,7 @@
 <% content_for :subnav do %>
-  <a href="/settings">Back to Settings</a>
+  <li class="push-right">
+    <a href="/settings">Back to Settings</a>
+  </li>
 <% end %>
 
 <%= form_with url: twofa_update_url do |f| %>

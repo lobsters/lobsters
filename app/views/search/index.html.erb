@@ -1,7 +1,7 @@
 <%# locals: () -%>
 <%= form_with url: '/search', method: :get, html: { aria: {label: "Search"} }, class: "search-form" do |f| %>
   <div class="boxline">
-    <%= f.text_field "q", { aria: { label: "Search query" }, value: @search.q, size: 40, autocapitalize: :off, type: "search" }.
+    <%= f.text_field "q", { aria: { label: "Search query" }, value: @search.q, size: 40, autocapitalize: :off, spellcheck: :false, autocorrect: :off, type: "search" }.
       merge(@search.q.present? ? {} : { :autofocus => "autofocus" }) %>
     <input type="submit" value="Search">
   </div>

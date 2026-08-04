@@ -658,6 +658,6 @@ class User < ApplicationRecord
   end
 
   def recently_invited_by?(user)
-    invited_by_user == user && created_at.after?(MENTORSHIP_DAYS.days.ago)
+    created_at.after?(MENTORSHIP_DAYS.days.ago) && invited_by_user_id == user.id
   end
 end

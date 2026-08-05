@@ -16,6 +16,7 @@ class SearchController < ApplicationController
 
     @results = @search.results
     if @user && @search.results
+      @title = "Search results" if params[:what] != nil
       if params[:what] == "stories"
         votes = Vote.story_votes_by_user_for_story_ids_hash(@user.id, @search.results.map(&:id))
         @search.results.each do |r|

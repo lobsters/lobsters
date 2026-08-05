@@ -2,6 +2,8 @@ class Mod::OriginsController < Mod::ModController
   before_action :find_or_initialize_origin, only: [:edit, :update]
 
   def edit
+    @title = "Edit Origin #{params[:identifier]}"
+    @title_h1 = false
   end
 
   def update

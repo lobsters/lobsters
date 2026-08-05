@@ -3,6 +3,8 @@ class Mod::ReparentsController < Mod::ModController
   before_action :load_user
 
   def new
+    @title = "Reparent #{@reparent_user.username}"
+    @title_h1 = false
   end
 
   def create

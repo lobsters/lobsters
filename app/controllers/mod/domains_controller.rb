@@ -15,6 +15,8 @@ class Mod::DomainsController < Mod::ModController
   end
 
   def edit
+    @title = "Edit Domain #{params[:id]}"
+    @title_h1 = false
   end
 
   def update

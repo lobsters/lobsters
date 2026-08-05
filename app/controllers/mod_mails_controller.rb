@@ -2,6 +2,7 @@ class ModMailsController < ApplicationController
   before_action :require_logged_in_user
 
   def index
+    @title = "ModMail"
     @mod_mails = @user.mod_mails.order(updated_at: :desc)
   end
 

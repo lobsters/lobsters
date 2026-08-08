@@ -1,0 +1,17 @@
+<%# locals: (story:, show_hidden_count: false) -%>
+
+<%= form_with :class => "hider", url: story.is_hidden_by_cur_user ? story_unhide_path(story.short_id) : story_hide_path(story.short_id) do |form| %>
+  <%= form.submit story.is_hidden_by_cur_user ? "unhide" : "hide", :class => "btn-link", disabled: story.previewing %>
+<% end %>
+
+<% if story.hider_count > 0 && show_hidden_count %>
+  <span>
+    <% if story.is_hidden_by_cur_user && ( story.hider_count - 1 ) > 0 %>
+      (hidden by <span class="hidden-by-you">you and</span>
+      <%= pluralize(story.hider_count - 1, "other user") %>)
+    <% end %>
+    <% if !story.is_hidden_by_cur_user %>
+      (hidden by <%= pluralize(story.hider_count, "user") %>)
+    <% end %>
+  </span>
+<% end %>

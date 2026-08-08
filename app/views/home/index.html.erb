@@ -58,11 +58,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
         href="<%= Routes.title_path story %>">&#x2636;</a>
     <% end %>
     <% if story.can_be_seen_by_user?(@user) %>
-      <ul class="tags" aria-label="Tags">
-        <% story.tags.each do |tag| %>
-          <li><%= tag_link tag %></li>
-        <% end %>
-      </ul>
+      <%= render partial: "stories/tags", locals: {story: story} %>
       <% if story.origin.present? %>
         <%= link_to story.origin.identifier, origin_path(story.origin), class: 'domain' %>
       <% elsif story.domain.present? %>
@@ -122,24 +118,13 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
             </span>
           <% end %>
           <%= divider_tag %>
-          <%= form_with :class => "hider", url: story.is_hidden_by_cur_user ? story_unhide_path(story.short_id) : story_hide_path(story.short_id) do |form| %>
-            <%= form.submit story.is_hidden_by_cur_user ? "unhide" : "hide", :class => "btn-link" %>
-          <% end %>
+          <%= render partial: "stories/hide", locals: { story: story } %>
           <%= divider_tag %>
-          <%= form_with :class => "saver", url: story.is_saved_by_cur_user ? story_unsave_path(story.short_id) : story_save_path(story.short_id) do |form| %>
-            <%= form.submit story.is_saved_by_cur_user ? "unsave" : "save", :class => "btn-link" %>
-          <% end %>
-
+          <%= render partial: "stories/save", locals: { story: story } %>
         <% end %>
         <% if story.url.present? && (!story.is_gone? || @user.try(:is_moderator?))  %>
           <%= divider_tag %>
-          <details class="caches" name="caches">
-            <summary>caches</summary>
-            <ul>
-              <li><a href="<%= story.archiveorg_url %>">Archive.org</a></li>
-              <li><a href="<%= story.ghost_url %>">Ghostarchive</a></li>
-            </ul>
-          </details>
+          <%= render partial: "stories/caches", locals: { story: story } %>
         <% end %>
         <% if !story.is_gone? || @user.try(:is_moderator?) %>
           <span class="comments_label">

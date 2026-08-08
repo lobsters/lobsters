@@ -38,14 +38,6 @@ export const parentSelector = (target, selector) => {
   return parent;
 };
 
-export const replace = (oldElement, newHTMLString) => {
-  const placeHolder = document.createElement('div');
-  placeHolder.insertAdjacentHTML('afterBegin', newHTMLString);
-  const newElements = placeHolder.childNodes.values();
-  oldElement.replaceWith(...newElements);
-  removeExtraInputs();
-}
-
 export const slideDownJS = (element) => {
   if (element.classList.contains('slide-down'))
     return;
@@ -277,71 +269,64 @@ export class _LobstersFunction {
     qS('#modal_backdrop').remove();
   }
 
-  postComment(form) {
+  async postComment(form) {
     const formData = new FormData(form);
     const action = form.getAttribute('action');
-    formData.append('show_tree_lines', true);
-    fetchWithCSRF (action, {
+    formData.append('show_tree_lines', "true");
+    const text = await (await fetchWithCSRF(action, {
       method: 'post',
       headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
       body: formData
-    })
-      .then(response => {
-        response.text().then(text => {
+    })).text()
 
-          // this powers comment posting and replying on many pages with
-          // different HTML structures to render the comment into
-          //   app/views/comments/_comment.html.erb
-          //   app/views/comments/show.html.erb
-          //   app/views/comments/_threads.html.erb
-          //   app/views/stories/show.html.erb
+    // this powers comment posting and replying on many pages with
+    // different HTML structures to render the comment into
+    //   app/views/comments/_comment.html.erb
+    //   app/views/comments/show.html.erb
+    //   app/views/comments/_threads.html.erb
+    //   app/views/stories/show.html.erb
 
-          const replyForm = form.closest('.reply_form_temporary');
-          if (replyForm) {
-            // user submitted from a temporary reply form, so this is a reply to an existing comment
-            replace(replyForm, text)
-            return;
-          }
+    const replyForm = form.closest('.reply_form_temporary');
+    if (replyForm) {
+      // user submitted from a temporary reply form, so this is a reply to an existing comment
+      replyForm.outerHTML = text
+      removeExtraInputs();
+      return;
+    }
 
-          const commentContainer = form.closest('.comment');
-          if (commentContainer) {
-            // User is editing comment.
-            replace(commentContainer, text);
-            return;
-          }
+    const commentContainer = form.closest('.comment');
+    if (commentContainer) {
+      // User is editing comment.
+      commentContainer.outerHTML = text
+      return;
+    }
 
-          // Iterating up the comments tree to the nearest parent. If there isn't one, we are creating
-          // a top-level comment, so find the top of the comments tree.
-          const comments = form.closest('.comments') || qS('.comments')
-          parentSelector(form, '.comment_form_container').remove()
+    // Iterating up the comments tree to the nearest parent. If there isn't one, we are creating
+    // a top-level comment, so find the top of the comments tree.
+    const comments = form.closest('.comments') || qS('.comments')
+    parentSelector(form, '.comment_form_container').remove()
 
-          // if comments is .comments1, it is top-level comment: insert it deeper
-          if (comments.classList.contains('comments1')) {
-            comments.querySelector('#story_comments').insertAdjacentHTML("afterbegin", text)
-          } else {
-            comments.insertAdjacentHTML("afterbegin", text)
-          }
-
-        })
-      })
+    // if comments is .comments1, it is top-level comment: insert it deeper
+    if (comments.classList.contains('comments1')) {
+      comments.querySelector('#story_comments').insertAdjacentHTML("afterbegin", text)
+    } else {
+      comments.insertAdjacentHTML("afterbegin", text)
+    }
   }
 
-  previewComment(form) {
+  async previewComment(form) {
     const formData = new FormData(form);
     const action = form.getAttribute('action');
     formData.append('preview', 'true');
     formData.append('show_tree_lines', 'true');
-    fetchWithCSRF(action, {
+    const text = await (await fetchWithCSRF(action, {
       method: 'post',
       headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
       body: formData
-    })
-      .then(response => {
-        response.text().then(text => {
-          replace(qS(form.parentElement, '.preview'), text);
-          autosize(qSA('textarea'));
-        });
-      });
+    })).text()
+    const preview = qS(form.parentElement, '.preview')
+    if (preview) { preview.outerHTML = text }
+    autosize(qSA('textarea'));
   }
 
   previewStory(formElement) {
@@ -786,7 +771,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Disown
 
-  on('submit', 'form.disowner-form', (event) => {
+  on('submit', 'form.disowner-form', async (event) => {
     event.preventDefault();
 
     let type = event.target.elements['type'].value;
@@ -794,10 +779,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (confirm(`Are you sure you want to disown this ${type}?`)) {
       let li = parentSelector(event.target, `.${type}`);
 
-      fetchWithCSRF(event.target.action, { method: 'post', body: new FormData(event.target) })
-        .then(response => {
-          response.text().then(text => replace(li, text));
-        });
+      const text = await (await fetchWithCSRF(event.target.action, { method: 'post', body: new FormData(event.target) }) ).text()
+      li.outerHTML = text;
     }
   });
 
@@ -917,60 +900,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  on('click', 'button.comment-cancel', (event) => {
-    const comment = (parentSelector(event.target, '.reply_form_temporary'));
-    const commentId = comment.getAttribute('data-shortid');
-    if (commentId !== null && commentId !== '') {
-      fetch('/comments/' + commentId + '?show_tree_lines=true')
-        .then(response => {
-          response.text().then(text => replace(comment, text));
-        });
+  on('click', 'button.comment-cancel', async (event) => {
+    const comment = parentSelector(event.target, '.reply_form_temporary')
+    const commentId = comment.dataset.shortid
+    if (commentId != null && commentId !== '') {
+      const text = await (await fetch(`/comments/${commentId}?show_tree_lines=true`)).text()
+      comment.outerHTML = text;
     } else {
       comment.remove();
     }
   });
 
-  on('click', 'a.comment_editor', (event) => {
+  on('click', 'a.comment_editor', async (event) => {
     event.preventDefault();
     const comment = parentSelector(event.target, '.comment');
     const commentText = qS(comment, '.comment_text');
-    const commentId = comment.getAttribute('data-shortid')
+    const commentId = comment.dataset.shortid
 
-    fetchWithCSRF('/comments/' + commentId + '/edit')
-      .then(response => {
-        response.text().then(text => {
-          replace(commentText, text);
-          autosize(qSA('textarea'));
-        });
-      });
+    const text = await (await fetchWithCSRF(`/comments/${commentId}/edit`)).text()
+    if (commentText) {
+      commentText.outerHTML = text
+    }
     autosize(qSA('textarea'));
   });
 
-  on("click", "a.comment_deletor", (event) => {
+  on("click", "a.comment_deletor", async (event) => {
     event.preventDefault();
     if (confirm("Are you sure you want to delete this comment?")) {
       const comment = parentSelector(event.target, '.comment');
-      const commentId = comment.getAttribute('data-shortid');
-      fetchWithCSRF('/comments/' + commentId + '/delete',{method: 'post'})
-        .then(response => {
-          response.text().then(text => replace(comment, text));
-        });
+      const commentId = comment.dataset.shortid
+      const text = await (await fetchWithCSRF(`/comments/${commentId}/delete`,{method: 'post'})).text()
+      comment.outerHTML = text;
     }
   });
 
-  on('click', 'a.comment_undeletor', (event) => {
+  on('click', 'a.comment_undeletor', async (event) => {
     event.preventDefault();
     if (confirm("Are you sure you want to undelete this comment?")) {
       const comment = parentSelector(event.target, '.comment');
-      const commentId = comment.getAttribute('data-shortid');
-      fetchWithCSRF('/comments/' + commentId + '/undelete', {method: 'post'})
-        .then(response => {
-          response.text().then(text => replace(comment, text));
-        });
+      const commentId = comment.dataset.shortid
+      const text = await (await fetchWithCSRF(`/comments/${commentId}/undelete`, {method: 'post'})).text()
+      comment.outerHTML = text;
     }
   });
 
-  on('click', 'a.comment_moderator', (event) => {
+  on('click', 'a.comment_moderator', async (event) => {
     event.preventDefault();
     const reason = prompt("Moderation reason:");
     if (reason == null || reason == '')
@@ -979,11 +953,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData();
     formData.append('reason', reason);
     const comment = parentSelector(event.target, '.comment');
-    const commentId = comment.getAttribute('data-shortid');
-    fetchWithCSRF('/mod/comments/' + commentId, { method: 'delete', body: formData })
-      .then(response => {
-        response.text().then(text => replace(comment, text));
-      });
+    const commentId = comment.dataset.shortid
+    const text = await (await fetchWithCSRF(`/mod/comments/${commentId}`, { method: 'delete', body: formData })).text()
+    comment.outerHTML = text;
   });
 
   on('click', '.comment_unread', (event) => {

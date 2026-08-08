@@ -39,12 +39,7 @@ classes = [
         <a class="description_present" aria-label="Story description" href="#story_text">&#x2636;</a>
       <% end %>
 
-      <ul class="tags" aria-label="Tags">
-        <% ms.tags.each do |tag| %>
-          <li><%= tag_link tag %></li>
-        <% end %>
-      </ul>
-
+      <%= render partial: "stories/tags", locals: {story: ms} %>
       <% if ms.origin.present? %>
         <%= link_to ms.origin.identifier, origin_path(ms.origin), class: 'domain' %>
       <% elsif ms.domain.present? %>
@@ -88,22 +83,7 @@ classes = [
           <% end %>
 
           <%= divider_tag %>
-
-          <%= form_with :class => "hider", url: merged_stories.first.is_hidden_by_cur_user ? story_unhide_path(merged_stories.first.short_id) : story_hide_path(merged_stories.first.short_id) do |form| %>
-            <%= form.submit merged_stories.first.is_hidden_by_cur_user ? "unhide" : "hide", :class => "btn-link", disabled: ms.previewing %>
-          <% end %>
-
-          <% if ms.hider_count > 0 %>
-            <span>
-              <% if ms.is_hidden_by_cur_user && ( ms.hider_count - 1 ) > 0 %>
-                (hidden by <span class="hidden-by-you">you and</span>
-                <%= pluralize(ms.hider_count - 1, "other user") %>)
-              <% end %>
-              <% if !ms.is_hidden_by_cur_user %>
-                (hidden by <%= pluralize(ms.hider_count, "user") %>)
-              <% end %>
-            </span>
-          <% end %>
+          <%= render partial: "stories/hide", locals: { story: ms, show_hidden_count: true } %>
 
           <% if ms.disownable_by_user?(@user) %>
             <%= divider_tag %>
@@ -111,10 +91,7 @@ classes = [
           <% end %>
 
           <%= divider_tag %>
-
-          <%= form_with :class => "saver", url: merged_stories.first.is_saved_by_cur_user ? story_unsave_path(merged_stories.first.short_id) : story_save_path(merged_stories.first.short_id) do |form| %>
-            <%= form.submit merged_stories.first.is_saved_by_cur_user ? "unsave" : "save", :class => "btn-link", disabled: ms.previewing %>
-          <% end %>
+          <%= render partial: "stories/save", locals: { story: ms } %>
 
         <% end %>
 
@@ -123,14 +100,8 @@ classes = [
         <% else %>
           <% if ms.url.present? && (!ms.is_gone? || @user.try(:is_moderator?)) %>
             <%= divider_tag %>
-            <details class="caches" name="caches">
-              <summary>caches</summary>
-                <ul>
-                  <li><a href="<%= ms.archiveorg_url %>">Archive.org</a></li>
-                  <li><a href="<%= ms.ghost_url %>">Ghostarchive</a></li>
-                </ul>
-            </details>
-          <% end %>
+            <%= render partial: "stories/caches", locals: { story: ms } %>
+        <% end %>
 
           <span class="comments_label">
             <%= divider_tag %>

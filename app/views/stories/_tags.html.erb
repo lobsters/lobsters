@@ -1,0 +1,8 @@
+<%# locals: (story:) -%>
+
+<ul class="tags" aria-label="Tags">
+  <% story.tags.each do |tag| %>
+    <li><%= tag_link tag %></li>
+  <% end %>
+</ul>
+

@@ -1,0 +1,5 @@
+<%# locals: (story:) -%>
+
+<%= form_with :class => "saver", url: story.is_saved_by_cur_user ? story_unsave_path(story.short_id) : story_save_path(story.short_id) do |form| %>
+  <%= form.submit story.is_saved_by_cur_user ? "unsave" : "save", :class => "btn-link" %>
+<% end %>

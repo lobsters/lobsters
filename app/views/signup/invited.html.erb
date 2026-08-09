@@ -17,7 +17,7 @@
 
     <%= f.label :username, "Username" %>
     <div>
-      <%= f.text_field :username, required: true, autocapitalize: :off %>
+      <%= f.text_field :username, required: true, autocapitalize: :off, autocorrect: :off %>
       <div class="hint">
         <tt><%= Username.username_regex_s %></tt>
       </div>

@@ -13,7 +13,7 @@
       <div class="labelled_grid">
         <%= f.label :username, "Username" %>
         <div>
-          <%= f.text_field :username, required: true, size: 15, autocapitalize: :off, pattern: Username.username_regex_html, aria: {describedby: "usernamehint"} %>
+          <%= f.text_field :username, required: true, size: 15, autocapitalize: :off, pattern: Username.username_regex_html, aria: {describedby: "usernamehint"}, autocorrect: :off %>
           <div class="hint" id="usernamehint">
             Format: <tt><%= Username.username_regex_s %></tt><br>
             Creates a <%= link_to 'modlog', moderations_path %> entry like "changed own username from '<%= @edit_user.username %>' to 'NewUsername'"

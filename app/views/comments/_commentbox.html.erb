@@ -52,10 +52,10 @@
 
       <% if @user && @user.wearable_hats.any? %>
         <div class="hats">
-          Put on hat:
-          <%= f.select "hat_id",
+          <%= f.label :hat_id, "Put on hat:" %>
+          <%= f.select :hat_id,
             options_from_collection_for_select(@user.wearable_hats, "short_id", "hat",
-            comment.hat&.short_id), :include_blank => true %>
+            comment.hat&.short_id), :include_blank => "None" %>
         </div>
       <% end %>
 

@@ -23,6 +23,10 @@
 	--opacity-deleted: 0.6;
 
 	/* backgrounds and foregrounds */
+  --color-fg-negative-1: rgb(112 112 112);
+	--color-fg-negative-3: rgb(132 132 132);
+	--color-fg-negative-5: rgb(153 153 153);
+	
 	--color-bg-accent: rgb(172 19 13);
 	--color-bg-target: rgb(255 252 215);
 

@@ -468,6 +468,56 @@ describe Story do
     end
   end
 
+  describe "#is_gone?" do
+    context "when the story is deleted" do
+      it "returns true" do
+        story = build_stubbed(:story, :deleted)
+
+        result = story.is_gone?
+
+        expect(result).to be true
+      end
+    end
+
+    context "when the story is not deleted" do
+      it "returns false if the user isn't banned" do
+        user = build_stubbed(:user)
+        story = build_stubbed(:story, score: -2, is_deleted: false, user: user)
+
+        result = story.is_gone?
+
+        expect(result).to be false
+      end
+
+      it "returns false if the story has positive score" do
+        user = build_stubbed(:user, :banned)
+        story = build_stubbed(:story, score: 2, is_deleted: false, user: user)
+
+        result = story.is_gone?
+
+        expect(result).to be false
+      end
+
+      it "returns false if the story is moderated" do
+        user = build_stubbed(:user, :banned)
+        story = build_stubbed(:story, score: -2, is_deleted: false, is_moderated: true, user: user)
+
+        result = story.is_gone?
+
+        expect(result).to be false
+      end
+
+      it "returns true when the story was removed by heavy flagging of banned user" do
+        user = build_stubbed(:user, :banned)
+        story = build_stubbed(:story, score: -2, is_deleted: false, user: user)
+
+        result = story.is_gone?
+
+        expect(result).to be true
+      end
+    end
+  end
+
   describe "scopes" do
     context "recent" do
       it "returns the newest stories that have not yet reached the front page" do

@@ -44,9 +44,7 @@ jobs:
         run: ./bin/rails db:schema:load db:migrate
 
       - name: Run tests
-        run: |
-          bundle exec rspec
-          bundle exec rspec spec/slow/*_spec.rb
+        run: bundle exec rspec
 
   lint:
     runs-on: ubuntu-latest

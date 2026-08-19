@@ -94,7 +94,7 @@ class FakeDataGenerator
     stories = []
     @stories_count.times do |i|
       print "."
-      user = users[Random.rand(@users_count - 1)]
+      user = users.sample
       title = Faker::Lorem.sentence(word_count: 3)
       category = categories.sample
       tag_name = title.split(" ").first.downcase
@@ -131,9 +131,9 @@ class FakeDataGenerator
     # The stories are created here and deleted after adding comments and other interactions.
     deleted_stories = []
     (@stories_count / 10).times do |i|
-      user = users[Random.rand(@users_count - 1)]
+      user = users.sample
       title = Faker::Lorem.sentence(word_count: 3)
-      category = categories[Random.rand(@categories_count - 1)]
+      category = categories.sample
       tag_name = title.split(" ").first.downcase
       tag = Tag.find_by tag: tag_name
       tag ||= Tag.create! tag: tag_name, category: category
@@ -154,8 +154,8 @@ class FakeDataGenerator
     print "SavedStories "
     (@stories_count / 10).times do
       print "."
-      user = users[Random.rand(@users_count - 1)]
-      story = stories[Random.rand(@stories_count - 1)]
+      user = users.sample
+      story = stories.sample
       SavedStory.save_story_for_user(story.id, user.id)
     end
     puts
@@ -168,7 +168,7 @@ class FakeDataGenerator
       next unless x.accepting_comments?
       Random.rand(1..15).times do |i|
         create_args = {
-          user: users[Random.rand(@users_count - 1)],
+          user: users.sample,
           comment: markdown_paragraphs,
           story_id: x.id
         }
@@ -205,7 +205,8 @@ class FakeDataGenerator
           c.story_id,
           c.id,
           u.id,
-          Vote::COMMENT_REASONS.keys[Random.rand(Vote::COMMENT_REASONS.keys.length)]
+          Vote::COMMENT_REASONS.keys[Random.rand(Vote::COMMENT_REASONS.keys.length)],
+          false
         )
       end
 
@@ -215,7 +216,8 @@ class FakeDataGenerator
           c.story_id,
           c.id,
           u.id,
-          nil
+          nil,
+          false
         )
       end
     end
@@ -234,7 +236,8 @@ class FakeDataGenerator
           s.id,
           nil,
           u.id,
-          Vote::STORY_REASONS.keys[Random.rand(Vote::STORY_REASONS.keys.length)]
+          Vote::STORY_REASONS.keys[Random.rand(Vote::STORY_REASONS.keys.length)],
+          false
         )
       end
 
@@ -244,11 +247,20 @@ class FakeDataGenerator
           s.id,
           nil,
           u.id,
-          nil
+          nil,
+          false
         )
       end
     end
     puts
+
+    # calculate comment and story scores once at end
+    comments.each do |c|
+      c.update_score_and_recalculate!(0, 0)
+    end
+    stories.each do |s|
+      s.update_score_and_recalculate!(0, 0)
+    end
 
     print "Hats "
     hats = []
@@ -300,7 +312,7 @@ class FakeDataGenerator
     print "Doff hats "
     2.times do
       print "."
-      hat = hats[Random.rand(hats.length - 1)]
+      hat = hats.sample
       hat.doff_by_user_with_reason(User.moderators.sample,
         Faker::Lorem.sentence(word_count: 5))
     end
@@ -320,11 +332,8 @@ class FakeDataGenerator
     print "Merge Stories "
     5.times do
       print "."
-      story = stories[Random.rand(stories.length - 1)]
-      second_story = stories[Random.rand(stories.length - 1)]
-      while second_story == story
-        second_story = stories[Random.rand(stories.length - 1)]
-      end
+      story, second_story = stories.reject(&:merged_story_id).sample(2)
+      break if second_story.nil?
       story.merged_story_id = second_story.id
       story.editing_from_suggestions = true
       story.moderation_reason = Faker::Lorem.sentence(word_count: 5)
@@ -336,7 +345,7 @@ class FakeDataGenerator
     print "Editing Stories "
     5.times do
       print "."
-      story = stories[Random.rand(stories.length - 1)]
+      story = stories.sample
       story.title = Faker::Lorem.sentence(word_count: 4)
       story.editing_from_suggestions = true
       story.moderation_reason = Faker::Lorem.sentence(word_count: 5)
@@ -348,7 +357,7 @@ class FakeDataGenerator
     print "Deleting stories "
     5.times do
       print "."
-      story = stories[Random.rand(stories.length - 1)]
+      story = stories.sample
       story.is_deleted = true
       story.editing_from_suggestions = true
       story.moderation_reason = Faker::Lorem.sentence(word_count: 5)
@@ -369,8 +378,11 @@ task fake_data: :environment do
     fail "Cancelled" if $stdin.gets.chomp != "y"
   end
 
-  # Disable transactions for better performance
-  ActiveRecord::Base.transaction(requires_new: false) do
-    FakeDataGenerator.new.generate
+  BCrypt::Engine.cost = BCrypt::Engine::MIN_COST
+
+  ActiveRecord::Base.logger.silence do
+    ActiveRecord::Base.transaction(requires_new: false) do
+      FakeDataGenerator.new.generate
+    end
   end
 end

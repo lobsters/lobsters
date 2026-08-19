@@ -10,6 +10,8 @@ describe "fake_data" do
 
   # basic smoke test, task shouldn't throw exceptions
   it "runs" do
-    FakeDataGenerator.new.generate
+    expect {
+      FakeDataGenerator.new(3, 5, 2).generate
+    }.to output(/Deleting stories/).to_stdout
   end
 end

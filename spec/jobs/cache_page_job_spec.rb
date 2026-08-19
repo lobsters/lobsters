@@ -55,15 +55,21 @@ RSpec.describe CachePageJob, type: :job do
       expect(File.exist?(File.join(cache_dir, "active.html"))).to be true
     end
 
-    it "raises without writing or sweeping when the page doesn't render" do
+    it "doesn't cache errors" do
       FileUtils.mkdir_p(story_dir)
-      File.write(File.join(story_dir, "#{story.title_as_slug}.html"), "stale")
       story.update_columns(is_deleted: true)
+      CachePageJob.perform_now(Routes.title_path(story))
+      expect(File.exist?(File.join(story_dir, "#{story.title_as_slug}.html"))).to be false
+    end
 
-      expect { CachePageJob.perform_now(Routes.title_path(story)) }
-        .to raise_error(/CachePageJob: 404/)
+    it "doesn't write or sweep when an old title slug redirects" do
+      FileUtils.mkdir_p(story_dir)
+      File.write(File.join(story_dir, "#{story.title_as_slug}.html"), "cached")
 
-      expect(File.read(File.join(story_dir, "#{story.title_as_slug}.html"))).to eq("stale")
+      CachePageJob.perform_now("/s/#{story.short_id}/old-title-slug")
+
+      expect(Dir.children(story_dir)).to eq(["#{story.title_as_slug}.html"])
+      expect(File.read(File.join(story_dir, "#{story.title_as_slug}.html"))).to eq("cached")
     end
   end
 end

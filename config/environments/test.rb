@@ -47,6 +47,9 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+  # Logging every SQL query measurably slows the suite, gate it on an env var
+  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "warn")
+
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
@@ -64,6 +67,8 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
+
+  config.solid_queue.connects_to = {database: {writing: :queue}}
 
   config.active_storage.service = :local
 end

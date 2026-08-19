@@ -9,6 +9,7 @@ class CachePageJob < ApplicationJob
 
     session.get(path)
     raise "CachePageJob: #{session.response.status} from #{path}" if session.response.status >= 500
+    return unless session.response.status == 200 # don't cache error pages, nothing would expire them
 
     ApplicationController.cache_page(session.response.body, path, nil, false)
 

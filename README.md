@@ -108,10 +108,10 @@ Setup:
       We have tweaks of production config files and we want those [tracked in our git repo](https://github.com/lobsters/lobsters/tree/main/hatchbox).
       We have rigged up settings to run an (unfortunately) clever hook to update those on deploy, see below.
 
-      Pre-build script: `hatchbox/pre-build`
+      Pre-build script: `.hatchbox/pre-build`
       Custom build script: blank
       Post-build script: blank
-      Post-deploy script: `hatchbox/post-deploy`
+      Post-deploy script: `.hatchbox/post-deploy`
       Failed deploy script: blank
       Caddyfile: copy the text of the file `hatchbox/Caddyfile` from this repo.
         As it says, you have to manually paste it in on changes and click 'Update Caddy'.

@@ -36,7 +36,7 @@ Solution:
 * Run `rails db:setup`
 
 **Docker container starts, but devcontainer hangs forever and never attaches**
-"Close the remote conection" and then "Reopen in container" - this is an issue where VS Code is trying to attach before the devcontainer is truly ready.
+"Close the remote connection" and then "Reopen in container" - this is an issue where VS Code is trying to attach before the devcontainer is truly ready.
 
 # Setting up Git
 

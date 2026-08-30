@@ -1,6 +1,7 @@
 # PR https://github.com/lobsters/lobsters to be added to the list.
 User-agent: Applebot
 User-agent: BingBot
+User-agent: comentr-curator
 User-agent: DuckDuckBot
 User-agent: GoogleBot
 User-agent: ia_archiver

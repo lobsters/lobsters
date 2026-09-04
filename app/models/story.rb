@@ -778,7 +778,7 @@ class Story < ApplicationRecord
   end
 
   def is_hidden_by_user?(user)
-    !!HiddenStory.find_by(user_id: user.id, story_id: id)
+    HiddenStory.exists?(user_id: user.id, story_id: id)
   end
 
   def is_recent?
@@ -786,7 +786,7 @@ class Story < ApplicationRecord
   end
 
   def is_saved_by_user?(user)
-    !!SavedStory.find_by(user_id: user.id, story_id: id)
+    SavedStory.exists?(user_id: user.id, story_id: id)
   end
 
   def is_unavailable

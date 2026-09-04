@@ -31,7 +31,7 @@
     <li class="comments_subtree">
 
     <%
-      force_open = true
+      force_open = false
       show_tree_lines = true
       # show "on: <title>" for comments from merged stories + on non-story pages
       show_story ||= story.try(:id) != comment.story_id

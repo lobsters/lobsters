@@ -14,6 +14,7 @@ class InboxController < ApplicationController
   end
 
   def all
+    @title = "Inbox"
     notifications_per_page = 25
 
     @notifications = @user
@@ -33,6 +34,8 @@ class InboxController < ApplicationController
   end
 
   def unread
+    @title = "Unread Inbox"
+    notifications_per_page = 25
     @notifications = @user
       .notifications
       .where(read_at: nil)

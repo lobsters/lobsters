@@ -19,6 +19,7 @@ class MessagesController < ApplicationController
         @direction = :in
 
         if params[:to]
+          @title = "Send New Message"
           @new_message.recipient_username = params[:to]
         end
       }
@@ -49,8 +50,6 @@ class MessagesController < ApplicationController
   end
 
   def create
-    @title = "Messages"
-
     @new_message = Message.new(message_params)
     @new_message.author_user_id = @user.id
     @new_message.hat = @user.wearable_hats.find_by(short_id: params[:message][:hat_id])

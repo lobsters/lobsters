@@ -40,5 +40,10 @@ class Routes
     def url_or_comments_url story, *options
       story.url.presence || title_url(story, *options)
     end
+
+    def story_image_or_logo_url story, *options
+      return Rails.application.root_url + "touch-icon-144.png" if story.url.blank?
+      story_image_url(story, *options)
+    end
   end
 end

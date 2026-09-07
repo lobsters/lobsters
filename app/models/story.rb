@@ -680,10 +680,6 @@ class Story < ApplicationRecord
     HtmlEncoder.decode(s.to_s)
   end
 
-  def domain_search_url
-    "/search?order=newest&q=domain:#{domain}"
-  end
-
   def fix_bogus_chars
     # this is needlessly complicated to work around character encoding issues
     # that arise when doing just self.title.to_s.gsub(160.chr, "")
@@ -1111,14 +1107,6 @@ class Story < ApplicationRecord
 
   def to_param
     short_id
-  end
-
-  def update_availability
-    if is_unavailable && !unavailable_at
-      self.unavailable_at = Time.current
-    elsif unavailable_at && !is_unavailable
-      self.unavailable_at = nil
-    end
   end
 
   # this is less evil than it looks because commonmark produces consistent html:

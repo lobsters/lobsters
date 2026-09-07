@@ -431,13 +431,6 @@ class User < ApplicationRecord
     end
   end
 
-  def undelete!
-    User.transaction do
-      self.deleted_at = nil
-      save!
-    end
-  end
-
   def disable_2fa!
     self.totp_secret = nil
     save!
@@ -544,11 +537,6 @@ class User < ApplicationRecord
 
   def raw_about
     Markdowner.to_raw(about)
-  end
-
-  def mastodon_acct
-    raise unless mastodon_username.present? && mastodon_instance.present?
-    "@#{mastodon_username}@#{mastodon_instance}"
   end
 
   def most_common_story_tag

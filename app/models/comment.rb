@@ -64,7 +64,7 @@ class Comment < ApplicationRecord
       .merge(Story.where.not(user: user, user_is_author: true)) # TODO: authorship/beneficial idea
   }
   scope :for_presentation, -> {
-    includes(:user, :hat, moderation: :moderator, story: :user, votes: :user)
+    includes(:user, :hat, moderation: :moderator, story: :user)
   }
   scope :filter_tags, ->(tags) {
     tags.empty? ? all : joins(:story).where(

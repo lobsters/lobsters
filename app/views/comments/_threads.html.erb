@@ -125,29 +125,29 @@
 
       <% if !comment.previewing %>
         <% if comment.is_editable_by_user?(@user) %>
-          |
+          <%= divider_tag %>
           <%= link_to 'edit', edit_comment_path(comment), class: :comment_editor %>
         <% end %>
 
         <% if comment.is_gone? && comment.is_undeletable_by_user?(@user) %>
-          |
+          <%= divider_tag %>
           <a class="comment_undeletor" href="#c_<%= comment.short_id %>">undelete</a>
         <% elsif !comment.is_gone? %>
           <% if comment.is_deletable_by_user?(@user) %>
-            |
+            <%= divider_tag %>
             <a class="comment_deletor" href="#c_<%= comment.short_id %>">delete</a>
           <% elsif comment.is_disownable_by_user?(@user) %>
-            |
+            <%= divider_tag %>
             <%= link_post("disown", disown_comment_path(comment.short_id),
             params: { type: 'comment', show_story: show_story, show_tree_lines: show_tree_lines })
             %>
           <% end %>
           <% if @user&.is_moderator? %>
-            |
+            <%= divider_tag %>
             <a class="comment_moderator" href="#c_<%= comment.short_id %>">mod delete</a>
           <% end %>
         <% elsif !comment.is_gone? && comment.is_disownable_by_user?(@user) %>
-          |
+          <%= divider_tag %>
           <%= link_post("disown", disown_comment_path(comment.short_id),
           params: { type: 'comment', show_story: show_story, show_tree_lines: show_tree_lines })
           %>
@@ -155,21 +155,24 @@
 
         <% if can_flag && !comment.current_flagged? %>
           <span class="dropdown_parent">
-            | <a class="flagger">flag</a>
+            <%= divider_tag %>
+            <a class="flagger">flag</a>
           </span>
         <% elsif comment.current_flagged? %>
-          | <a class="flagger">unflag</a>
+          <%= divider_tag %>
+          <a class="flagger">unflag</a>
         <% else %>
           <span class="flagger flagger_stub"></span>
         <% end %>
 
         <% if @user && !comment.is_gone? && comment.story.accepting_comments? %>
-          |
+          <%= divider_tag %>
           <a class="comment_replier" unselectable="on" href="<%= reply_comment_path(comment) %>">reply</a>
         <% end %>
 
         <% if show_story %>
-          | on:
+          <%= divider_tag %> 
+          on:
           <a href="<%= Routes.title_path comment.story %>"><%= comment.story.title %></a>
         <% end %>
 
@@ -177,12 +180,15 @@
           <% if comment.flags > 0 && comment.show_score_to_user?(@user) %>
             <%# mods shouldn't see usernames for people flagging them %>
             <% if comment.user_id == @user&.id %>
-              | <%= comment.vote_summary_for_user %>
+              <%= divider_tag %>
+              <%= comment.vote_summary_for_user %>
             <% elsif @user&.is_moderator? %>
-              | <%= comment.vote_summary_for_moderator %>
+              <%= divider_tag %>
+              <%= comment.vote_summary_for_moderator %>
             <% end %>
           <% elsif comment.current_flagged? %>
-            | -1
+            <%= divider_tag %>
+            -1
             <%= Vote::ALL_COMMENT_REASONS[comment.current_vote[:reason]].downcase %>
           <% end %>
         </span>

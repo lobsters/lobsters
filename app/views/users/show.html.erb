@@ -212,27 +212,27 @@
     <% end %>
   </section>
 
+  <label>Recent Votes</label>
+  <table class="data zebra clear tall">
+    <% @showing_user.votes_for_others.limit(30).each do |v| %><tr>
+      <td><%= v.vote == 1 ? '+' : v.reason %></td>
+      <% if v.comment_id %>
+        <td><a href="/~<%= v.comment.user.try(:username) %>"><%= v.comment.user.try(:username) %></a></td>
+        <td>
+          <%= v.story.title %>
+          <a href="<%= Routes.comment_target_path(v.comment) %>">comment</a>:<br>
+          <%= v.comment.comment.split[0..10].join(' ') %>
+        </td>
+      <% elsif v.story_id && !v.comment_id %>
+        <td><a href="/~<%= v.story.user.try(:username) %>"><%= v.story.user.try(:username) %></a></td>
+        <td><a href="<%= Routes.title_path v.story %>"><%= v.story.title %></a></td>
+      <% end %>
+    </tr><% end %>
+  </table>
+
   <% if @user.is_admin? %>
     <section class="profile">
       <h3>Admin Information</h3>
-
-      <label>Recent Votes</label>
-      <table class="data zebra clear tall">
-        <% @showing_user.votes_for_others.limit(15).each do |v| %><tr>
-          <td><%= v.vote == 1 ? '+' : v.reason %></td>
-          <% if v.comment_id %>
-            <td><a href="/~<%= v.comment.user.try(:username) %>"><%= v.comment.user.try(:username) %></a></td>
-            <td>
-              <%= v.story.title %>
-              <a href="<%= Routes.comment_target_path(v.comment) %>">comment</a>:<br>
-              <%= v.comment.comment.split[0..10].join(' ') %>
-            </td>
-          <% elsif v.story_id && !v.comment_id %>
-            <td><a href="/~<%= v.story.user.try(:username) %>"><%= v.story.user.try(:username) %></a></td>
-            <td><a href="<%= Routes.title_path v.story %>"><%= v.story.title %></a></td>
-          <% end %>
-        </tr><% end %>
-      </table>
 
       <% if @showing_user.is_banned? || @showing_user.banned_from_inviting? %>
         <%= form_with url: user_unban_path, method: :post do |f| %>

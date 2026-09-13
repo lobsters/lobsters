@@ -48,7 +48,7 @@ RSpec.feature "User Administration" do
     expect(user.banned_reason).to eq("Spammer")
     expect(Moderation.order("id asc").last.reason).to eq("Spammer")
     expect(sent_emails.size).to eq(1)
-    expect(sent_emails[0].subject).to match(/You have been banned/)
+    expect(sent_emails[0].subject).to match(/account #{user.username} banned/)
   end
 
   scenario "banning deactivated user doesn't email" do

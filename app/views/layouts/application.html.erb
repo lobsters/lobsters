@@ -24,20 +24,21 @@
   <title><%= @title.present? ? "#{@title} | " : "" %><%=
     Rails.application.name %></title>
 
-  <%= stylesheet_link_tag "application" %>
-  <%= stylesheet_link_tag (@user&.prefers_color_scheme || "system") + "-" + (@user&.prefers_contrast || "system") %>
+  <%# static URLs for visitors so cached pages have css + js %>
+  <% if Rails.env.production? && !@user %>
+    <%= stylesheet_link_tag "/application.css" %>
+    <%= stylesheet_link_tag "/system-system.css" %>
+    <%# not importmap_tags: https://lobste.rs/c/ir3nou %>
+    <%= javascript_include_tag "/application.js", type: "module" %>
+  <% else %>
+    <%= stylesheet_link_tag "application" %>
+    <%= stylesheet_link_tag (@user&.prefers_color_scheme || "system") + "-" + (@user&.prefers_contrast || "system") %>
+    <%= javascript_include_tag "application", type: "module" %>
+    <%= javascript_importmap_tags "user" %>
+  <% end %>
   <% if @user %>
     <%= stylesheet_link_tag "tom-select", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "TomSelect_remove_button", "data-turbo-track": "reload" %>
-  <% end %>
-
-  <% if !@user %>
-    <% # javascript_importmap_tags produces an inline script, but the CSP header
-       # in Caddyfile.pre can't have a changing nonce, so load the js with an
-       # include tag. Prod needs a stable URL so cached pages pick up js changes. %>
-    <%= javascript_include_tag Rails.env.production? ? "/application.js" : "application", type: "module" %>
-  <% else %>
-    <%= javascript_importmap_tags "user" %>
   <% end %>
 
   <%= csrf_meta_tags %>

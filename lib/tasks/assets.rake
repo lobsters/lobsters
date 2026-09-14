@@ -1,12 +1,16 @@
-# Copy assets/application-(fingerprint).js to /application.js so visitors seeing old cached pages
-# get current js. Caddy sets a 1y cache-control on assets/ (implicitly invalidated by the fingerprint)
-# so we avoid that by dropping it in /.
+# Copy fingerprinted assets to static URLs so visitors seeing old cached pages get current css and
+# js. Caddy sets a 1y cache-control on assets/ (implicitly invalidated by the fingerprint) so we
+# avoid that by dropping them in /.
+assets = ["application.js", "application.css", "system-system.css"]
+
 Rake::Task["assets:precompile"].enhance do
   manifest = JSON.parse(Rails.application.config.assets.manifest_path.read)
-  compiled = Rails.application.config.assets.output_path.join(manifest.fetch("application.js"))
-  FileUtils.cp compiled, Rails.public_path.join("application.js")
+  assets.each do |name|
+    compiled = Rails.application.config.assets.output_path.join(manifest.fetch(name))
+    FileUtils.cp compiled, Rails.public_path.join(name)
+  end
 end
 
 Rake::Task["assets:clobber"].enhance do
-  FileUtils.rm_f Rails.public_path.join("application.js")
+  assets.each { |name| FileUtils.rm_f Rails.public_path.join(name) }
 end

@@ -140,7 +140,7 @@ class ApplicationController < ActionController::Base
     else
       CachePageJob
         .set(
-          queue: (is_moderator || story.created_at&.after?(1.month.ago)) ? :default : :idle,
+          queue: (is_moderator || story.created_at&.after?(1.month.ago)) ? :default : :refill_story_pages,
           wait: is_moderator ? 0 : 2.minutes
         )
         .perform_later(Routes.title_path(story))

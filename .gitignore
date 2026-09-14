@@ -25,6 +25,8 @@ vendor/bundle
 coverage/
 public/assets
 public/application.js
+public/application.css
+public/system-system.css
 
 # cache
 public/avatars

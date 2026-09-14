@@ -75,6 +75,36 @@ describe ApplicationHelper do
       result = helper.link_to_different_page("Top", "/top")
       expect(result).to have_css("a[aria-current='page']")
     end
+
+    it "doesn't delete the /page/n from the link" do
+      stub_current_path("/active")
+      result = helper.link_to_different_page("Active", "/active/page/2")
+      expect(result).to have_css("a[href='/active/page/2']")
+    end
+
+    it "doesn't delete the period from the link" do
+      stub_current_path("/mod/flagged_stories/1d")
+      result = helper.link_to_different_page("2d", "/mod/flagged_stories/2d")
+      expect(result).to have_css("a[href='/mod/flagged_stories/2d']")
+    end
+
+    it "marks link as current when it removes the period" do
+      stub_current_path("/mod/flagged_stories/1d")
+      result = helper.link_to_different_page("flagged", "/mod/flagged_stories")
+      expect(result).to have_css("a[aria-current='page']")
+    end
+
+    it "marks link as current if period matches" do
+      stub_current_path("/mod/flagged_stories/1d")
+      result = helper.link_to_different_page("1d", "/mod/flagged_stories/1d")
+      expect(result).to have_css("a[aria-current='page']")
+    end
+
+    it "doesn't mark link as current with a different period" do
+      stub_current_path("/mod/flagged_stories/1d")
+      result = helper.link_to_different_page("2d", "/mod/flagged_stories/2d")
+      expect(result).to_not have_css("a[aria-current='page']")
+    end
   end
 
   describe "#page_numbers_for_pagination" do

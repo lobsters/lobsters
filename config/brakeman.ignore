@@ -393,7 +393,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/users/show.html.erb",
-      "line": 150,
+      "line": 152,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "(if (rand((0..100)) == 23) then\n  User.new(:username => params[:username], :created_at => rand((0..9999)).days.ago)\nend or User.find_by(:username => params[:username])).linkified_about",
       "render_path": [
@@ -600,6 +600,29 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
+      "fingerprint": "b533cc3019675c46e706c5f41a3c0dfcfaf9f1fb61640219094385914a518c62",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/flagged_commenters.rb",
+      "line": 64,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "User.active.joins(:comments).where(\"comments.created_at >= ?\", period).group(\"comments.user_id\").select(\"\\n          users.id, users.username,\\n          (sum(flags) - #{avg_sum_flags})/#{stddev_sum_flags} as sigma,\\n          count(distinct if(flags > 0, comments.id, null)) as n_comments,\\n          count(distinct if(flags > 0, story_id, null)) as n_stories,\\n          sum(flags) as n_flags,\\n          sum(flags)/count(distinct comments.id) as average_flags,\\n          (\\n            count(distinct if(flags > 0, comments.id, null)) * 100.0 /\\n            count(distinct comments.id)\\n          ) as percent_flagged\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "FlaggedCommenters",
+        "method": "commenters"
+      },
+      "user_input": "avg_sum_flags",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "these are integers returned by other queries in the class"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
       "fingerprint": "b7b38263d53adbf429b0ab4aff64a4739b1b8cd26d81347a0565322561c8a022",
       "check_name": "SQL",
       "message": "Possible SQL injection",
@@ -735,29 +758,6 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "ed6edc863b3d05ed041487a6c42052e07ffefa7daa03efd786b4d1409d64fc16",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/flagged_commenters.rb",
-      "line": 64,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "User.active.joins(:comments).where(\"comments.created_at >= ?\", period).group(\"comments.user_id\").select(\"\\n          users.id, users.username,\\n          (sum(flags) - #{avg_sum_flags})/#{stddev_sum_flags} as sigma,\\n          count(distinct if(flags > 0, comments.id, null)) as n_comments,\\n          count(distinct if(flags > 0, story_id, null)) as n_stories,\\n          sum(flags) as n_flags,\\n          sum(flags)/count(distinct comments.id) as average_flags,\\n          (\\n            count(distinct if(flags > 0, comments.id, null)) /\\n            count(distinct comments.id)\\n          ) * 100 as percent_flagged\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "FlaggedCommenters",
-        "method": "commenters"
-      },
-      "user_input": "avg_sum_flags",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "these are integers returned by other queries in the class"
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
       "fingerprint": "f758ba6d8ba52d8f1063490bb081ab2117d637503e3cc98308a521db1f9b51c6",
       "check_name": "SQL",
       "message": "Possible SQL injection",
@@ -779,5 +779,5 @@
       "note": "period is a prespecified value"
     }
   ],
-  "brakeman_version": "8.0.5"
+  "brakeman_version": "8.0.6"
 }

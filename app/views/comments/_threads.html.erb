@@ -53,11 +53,14 @@
   # show_folder_control: whether to display the control to hide the comment
 %>
 <% if show_folder_control %>
-  <input id="comment_folder_<%= comment.short_id %>"
+  <input
+    id="comment_folder_<%= comment.short_id %>"
     class="comment_folder_button" type="checkbox"
-    <%= force_open ||
-        @user.try(:is_moderator?) ||
-        (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) ? "" : "checked" %>>
+
+    <% unless force_open || @user.try(:is_moderator?) || (comment.score > Comment::COLLAPSE_SCORE && !comment.current_flagged?) %>
+      checked
+    <% end %>
+  >
 <% end %>
 
       <% can_flag = @user && @user.can_flag?(comment) %>

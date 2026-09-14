@@ -2,7 +2,9 @@
 
 <% content_for :subnav do %>
   <% if @user && @showing_user.is_active? && @showing_user != @user %>
-    <%= link_to "Send a Message", messages_path(to: @showing_user.username) %>
+    <li class="push-right">
+      <%= link_to "Send a Message", messages_path(to: @showing_user.username) %>
+    </li>
   <% end %>
 <% end %>
 

@@ -15,7 +15,12 @@ ALLOWED_AT_RULES = Set.new(%w[])
 ALLOWED_PROPERTIES = Set.new(%w[user-select])
 
 # See https://github.com/lobsters/lobsters/pull/2079#issuecomment-4730563102 for reasoning.
-ALLOWED_PROPERTY_VALUES = Set.new([["cursor", "pointer"], ["cursor", "default"], ["user-select", "none"]])
+ALLOWED_PROPERTY_VALUES = Set.new([
+  ["cursor", "pointer"],
+  ["cursor", "default"],
+  ["user-select", "none"],
+  ["overflow-wrap", "break-word"]
+])
 
 ALLOWED_SELECTORS = Set.new(%w[])
 

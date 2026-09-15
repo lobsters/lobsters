@@ -91,6 +91,8 @@ module TrafficHelper
               radial-gradient(circle at 77% 70%, var(--color-fg) 15%, transparent 12.8%),
               linear-gradient(180deg, transparent 0, transparent 100%) !important;
 } }")
+    elsif time.month == 3 && time.day == 31 # Transgender Day of Visibility
+      return h.content_tag :style, "#logo { background: linear-gradient(#5bcffb 0% 20%, #f5abb9 20% 40%, #ffffff 40% 60%, #f5abb9 60% 80%, #5bcffb 80% 100%); }"
     elsif time.month == 6 && time.day == 28 # Stonewall riots
       return h.content_tag :style, "#logo { background: url(#{ActionController::Base.helpers.asset_path("logo-transparent.svg")}) no-repeat center, linear-gradient(180deg, #FE0000 16.66%, #FD8C00 16.66%, 33.32%, #FFE500 33.32%, 49.98%, #119F0B 49.98%, 66.64%, #0644B3 66.64%, 83.3%, #C22EDC 83.3%); }"
     elsif time.month == 12 && time.day == 25 # Christmas

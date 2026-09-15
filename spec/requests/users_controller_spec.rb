@@ -83,6 +83,7 @@ describe "users controller" do
         bad_user.id => bad_user_stats
       })
       allow(fc).to receive(:check_list_for).and_return(bad_user_stats)
+      allow(fc).to receive(:period).and_return(1.month.ago)
       allow(FlaggedCommenters).to receive(:new).and_return(fc)
     end
 
@@ -113,6 +114,24 @@ describe "users controller" do
 
       get "/~#{bad_user.username}/standing"
       expect(response.body).to include("flags")
+    end
+
+    it "lists flagged comments from the interval but not before it" do
+      flagger = create(:user)
+      recent = create(:comment, user: bad_user, comment: "zorkmid recently flagged")
+      old = create(:comment, user: bad_user, comment: "zorkmid flagged long ago",
+        created_at: 2.months.ago)
+      unflagged = create(:comment, user: bad_user, comment: "zorkmid blameless")
+      [recent, old].each do |c|
+        Vote.vote_thusly_on_story_or_comment_for_user_because(-1, c.story_id, c.id, flagger.id, "M")
+      end
+
+      sign_in bad_user
+
+      get "/~#{bad_user.username}/standing"
+      expect(response.body).to include(recent.comment)
+      expect(response.body).to_not include(old.comment)
+      expect(response.body).to_not include(unflagged.comment)
     end
   end
 

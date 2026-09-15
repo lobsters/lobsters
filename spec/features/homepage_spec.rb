@@ -13,6 +13,20 @@ RSpec.feature "Reading Homepage", type: :feature do
 
       expect(page).to have_content(story.title)
     end
+
+    # Anubis guards /search and doesn't strip its cookies before proxying to us.
+    # Clearing them re-challenges the user on every search.
+    scenario "keeps Anubis cookies" do
+      jar = page.driver.browser.rack_mock_session.cookie_jar
+      jar["techaro.lol-anubis-auth"] = "jwt"
+      jar["techaro.lol-anubis-cookie-verification"] = "id"
+      jar["unknown_cookie"] = "value"
+      visit "/"
+
+      expect(jar["techaro.lol-anubis-auth"]).to eq("jwt")
+      expect(jar["techaro.lol-anubis-cookie-verification"]).to eq("id")
+      expect(jar["unknown_cookie"]).to be_blank # should be cleared
+    end
   end
 
   feature "when logged in" do

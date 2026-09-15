@@ -2,6 +2,9 @@
 
 require "etc"
 
+# Specifies the `environment` that Puma will run in.
+environment ENV.fetch("RAILS_ENV") { "development" }
+
 # Puma can serve each request in a thread from an internal thread pool.
 # The `threads` method setting takes two numbers: a minimum and maximum.
 # Any libraries that use thread pools should be configured to match
@@ -21,13 +24,10 @@ threads threads_count, threads_count
 if ENV.fetch("RAILS_ENV") == "development"
   bind "tcp://0.0.0.0:3000"
 end
-# Hatchbox locks PORT to 9000 in prod. We put Anubis in between: hatchbox/lobsters.anubis.env
-if ENV.fetch("RAILS_ENV") == "production" && ENV.fetch("PORT") == "9000"
-  port 9001
-end
 
-# Specifies the `environment` that Puma will run in.
-environment ENV.fetch("RAILS_ENV") { "development" }
+# Hatchbox's socket and app service both lock port to 9000 in prod, overriding this setting, so we
+# override their override in hatchbox/post-deploy
+# port 9001
 
 # Specifies the `pidfile` that Puma will use.
 pidfile ENV.fetch("PIDFILE") {

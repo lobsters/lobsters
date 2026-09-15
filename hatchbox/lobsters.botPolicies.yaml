@@ -1,6 +1,9 @@
 ---
 bots:
   - import: (data)/bots/_deny-pathological.yaml
+  - name: allow-non-search
+    action: ALLOW
+    expression: '!path.startsWith("/search")'
   - import: (data)/bots/aggressive-brazilian-scrapers.yaml
   - import: (data)/meta/ai-block-aggressive.yaml
   - import: (data)/crawlers/_allow-good.yaml
@@ -17,8 +20,10 @@ bots:
 dnsbl: false
 
 impressum:
-  footer: |
-    Hi! If you're trying to understand why you're seeing this, <a href="https://github.com/lobsters/lobsters/issues/1814">see the issue around slowness</a>.
+  page:
+    title: Why am I seeing this?
+    body: |
+      Hi! If you're trying to understand why you're seeing this, <a href="https://github.com/lobsters/lobsters/issues/1814">see the issue around slowness</a>.
 
 openGraph:
   enabled: false
@@ -34,12 +39,7 @@ store:
   parameters: {}
 
 thresholds:
-  - name: allow-non-search
-    action: ALLOW
-    expression:
-      all:
-        - '!path.startsWith("/search")'
-  - name: minimal-suspicion 
+  - name: minimal-suspicion
     expression: weight <= 0 
     action: ALLOW
   - name: mild-suspicion

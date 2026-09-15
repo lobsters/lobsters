@@ -20,6 +20,7 @@ class ApplicationController < ActionController::Base
 
   # copied from https://github.com/rack/rack/blob/main/lib/rack/utils.rb
   VALID_COOKIE_KEY = /\A[!#$%&'*+\-.\^_`|~0-9a-zA-Z]+\z/
+  ANUBIS_COOKIE_PREFIX = "techaro.lol-anubis"
 
   # Rails misdesign: if the /recent route doesn't support .rss, Rails calls it anyways and then
   # raises MissingTemplate when it's not handled, as if the app did something wrong (a prod 500!).
@@ -73,6 +74,7 @@ class ApplicationController < ActionController::Base
       next if key == TAG_FILTER_COOKIE.to_s # don't clear tag filters cookie
       next if key == Rails.application.config.session_options[:key] # don't clear session cookie
       next if key == "__profilin" && (Rails.env.development? || @user&.is_moderator?) # don't clear Rack::MiniProfiler cookie
+      next if key.start_with?(ANUBIS_COOKIE_PREFIX)
       next unless VALID_COOKIE_KEY.match?(key)
       cookies.delete(key)
     end

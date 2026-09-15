@@ -11,5 +11,7 @@ find /home/deploy/lobsters/current/public/cache/ -name s -type d -prune -o -type
 cd /home/deploy/lobsters/current
 bundle exec rails runner "RefillStoryPageCacheJob.perform_later"
 
-# see hatchbox/root-deploy
-touch /home/deploy/lobsters/current
+# override hatchbox services to move caddy to 9001
+cp hatchbox/lobsters-service.service.port.conf ~/.config/systemd/user/
+cp hatchbox/lobsters-service.socket.port.conf ~/.config/systemd/user/
+systemctl --user daemon-reload

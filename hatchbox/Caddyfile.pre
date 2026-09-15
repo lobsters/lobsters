@@ -43,13 +43,21 @@ redir @www_domain https://lobste.rs{uri} 302
 # Site should always be HTTPS https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security
 header Strict-Transport-Security max-age=31536000
 
+map {http.request.header.Cookie} {has_user_cookie} {
+  # if they only have the anubis cookie, that's not a user cookie
+  # \s instead of literal space because 'map' splits on whitespace ow
+  ~^\s*(techaro\.lol-anubis[^;]*;?\s*)*$ 0
+  # assume any other cookie is from the app, see remove_unknown_cookies
+  ~.*=.* 1
+  # and having no cookies means you don't have a user cookie
+  default 0
+}
+
 # full page caching with actionpack-page_caching
 
 @use_cached_file {
   host lobste.rs
-  not { # don't serve cached when user is logged in
-    header_regexp Cookie `.*=.*`
-  }
+  vars {has_user_cookie} 0 # don't serve cached when user is logged in
   not { # don't serve cached when we see a user's ?token=...
     query token=*
   }
@@ -78,14 +86,12 @@ header @use_cached_file ?Content-Security-Policy "default-src 'none'; img-src 's
 # so the two 'file' matchers have to be used by separate 'rewrite' directives.
 #
 # Also, named matchers can't reference another named matcher or be used from
-# CEL, so the cookie logic has to be duplicated between the two.
+# CEL, so the file/rewrite pair has to be duplicated between the two.
 # https://github.com/caddyserver/caddy/issues/4112
 
 @use_rss_cached_file {
   host lobste.rs
-  not { # don't serve cached when user is logged in
-    header_regexp Cookie `.*=.*`
-  }
+  vars {has_user_cookie} 0 # don't serve cached when user is logged in
   path /rss
   not { # don't serve cached when we see a user's ?token=...
     query token=*
@@ -115,9 +121,7 @@ rewrite @apple_touch_icon /touch-icon-192.png
 # cautious here because users who are not currently logged-in do GET
 # /stories/new with a title and url by using the submission bookmarklet.
 @submission_spambot {
-  not {
-    header_regexp Cookie `.*=.*`
-  }
+  vars {has_user_cookie} 0
   # "Different header fields within the same set are AND-ed. Multiple values per field are OR'ed."
   header User-Agent "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"
   header User-Agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
@@ -151,7 +155,7 @@ respond @meta_bot 403 {
 
 # spambot hitting the search engines with a URL, very much like previous but
 # more plausible user-agents
-@search_spambot `method("GET") && path("/search") && !header_regexp("Cookie", ".*=.*") && (header({"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}) || header({"referer": ""}) || header({"x-vercel-id": "*"}))`
+@search_spambot `method("GET") && path("/search") && {has_user_cookie} == "0" && (header({"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}) || header({"referer": ""}) || header({"x-vercel-id": "*"}))`
 header @search_spambot Content-Type text/html
 respond @search_spambot 403 {
   body `

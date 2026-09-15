@@ -77,10 +77,22 @@ systemctl force-reload systemd-journald
 # keep Caddy's per-request access logs out of journald (they're in caddy.log).
 cp caddy-no-access-journal.conf /etc/systemd/system/caddy.service.d/
 
-# pick up changes to opendkim, root-deploy.service, and root-deploy.path
+# Configure Anubis
+cp lobsters.anubis.env /etc/anubis/lobsters.env
+cp lobsters.botPolicies.yaml /etc/anubis/lobsters.botPolicies.yaml
+
+# pick up changes to services, of course there is no "restart iff changed" command
+changed_services=$(systemctl list-units --type=service --state=active --no-legend | awk '{print $1}' | xargs systemctl show -p NeedDaemonReload | grep 'NeedDaemonReload=yes' -B 1 | grep 'Id=' | cut -d= -f)
+
 systemctl daemon-reload
+systemctl enable --now anubis@lobsters.service
 systemctl enable --now opendkim
 systemctl enable --now postfix
+
+for service in ${changed_services}; do
+  systemctl restart "$service"
+done
+
 
 # quiet logins
 cp sshd_config /etc/ssh/sshd_config
@@ -105,11 +117,6 @@ chown deploy:deploy ~deploy/.sqliterc
 # make iptables record readable for transparency
 netfilter-persistent save
 chmod go+r /etc/iptables/rules.v4 /etc/iptables/rules.v6
-
-# Configure Anubis
-cp lobsters.anubis.env /etc/anubis/lobsters.env
-cp lobsters.botPolicies.yaml /etc/anubis/lobsters.botPolicies.yaml
-sudo systemctl enable --now anubis@lobsters.service
 
 # run restic to back up /etc
 export HOME=/root

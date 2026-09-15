@@ -23,6 +23,13 @@ if ENV.fetch("RAILS_ENV") == "development"
   bind "tcp://0.0.0.0:3000"
 end
 
+# Handle our Hatchbox -> Anubis -> Rails chain
+if ENV['ON_HATCHBOX']
+  port 9001
+else
+  port ENV.fetch("PORT") { 3000 }
+end
+
 # Specifies the `environment` that Puma will run in.
 environment ENV.fetch("RAILS_ENV") { "development" }
 

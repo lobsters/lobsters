@@ -17,17 +17,13 @@ threads_count = ENV.fetch("RAILS_MAX_THREADS") {
 }
 threads threads_count, threads_count
 
-# Specifies the `port` that Puma will listen on to receive requests; default is 3000.
-# port        ENV.fetch("PORT") { 3000 }
+# listen to all hosts in dev https://github.com/lobsters/lobsters/pull/2191
 if ENV.fetch("RAILS_ENV") == "development"
   bind "tcp://0.0.0.0:3000"
 end
-
-# Handle our Hatchbox -> Anubis -> Rails chain
-if ENV['ON_HATCHBOX']
+# Hatchbox locks PORT to 9000 in prod. We put Anubis in between: hatchbox/lobsters.anubis.env
+if ENV.fetch("RAILS_ENV") == "production" && ENV.fetch("PORT") == "9000"
   port 9001
-else
-  port ENV.fetch("PORT") { 3000 }
 end
 
 # Specifies the `environment` that Puma will run in.

@@ -94,7 +94,10 @@ Setup:
       SECRET_KEY_BASE     [random generated key]
       ```
 
-      Search the codebase for uses of the `ENV` global for more that can be easily configured.
+      Hatchbox locks `PORT` to `9000` so its Caddyfile can hardcode `9000` to find the app server.
+      In `hatchbox/lobsters.anubis.env` we put [anubis](https://anubis.techaro.lol/) on `9000` and our `config/puma.rb` ignores `PORT` to listen to `9001`
+
+      Search the codebase for uses of the `ENV` global for more config options.
 
     * Databases: We manage this independently of Hatchbox for historic reasons, see `#539`.
     * Cron Jobs:
@@ -105,14 +108,9 @@ Setup:
       ```
 
     * Settings:
-      We have tweaks of production config files and we want those [tracked in our git repo](https://github.com/lobsters/lobsters/tree/main/hatchbox).
-      We have rigged up settings to run an (unfortunately) clever hook to update those on deploy, see below.
+      We have production config files [tracked in our git repo](https://github.com/lobsters/lobsters/tree/main/hatchbox).
+      We have [Hatchbox deploy scripts](https://hatchbox.io/docs/articles/18-build-scripts-and) [in .hatchbox](https://github.com/lobsters/lobsters/tree/main/.hatchbox) to deploy those.
 
-      Pre-build script: `.hatchbox/pre-build`
-      Custom build script: blank
-      Post-build script: blank
-      Post-deploy script: `.hatchbox/post-deploy`
-      Failed deploy script: blank
       Caddyfile: copy the text of the file `hatchbox/Caddyfile` from this repo.
         As it says, you have to manually paste it in on changes and click 'Update Caddy'.
 

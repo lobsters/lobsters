@@ -23,7 +23,9 @@ impressum:
   page:
     title: Why am I seeing this?
     body: |
-      Hi! If you're trying to understand why you're seeing this, <a href="https://github.com/lobsters/lobsters/issues/1814">see the issue around slowness</a>.
+      <a href="https://github.com/lobsters/lobsters/issues/1814">Lots of bad bots, basically</a>.
+  footer: |
+    Drop a line to peter@ this domain if this is broken.
 
 openGraph:
   enabled: false

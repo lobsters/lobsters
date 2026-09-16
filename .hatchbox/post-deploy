@@ -15,3 +15,6 @@ bundle exec rails runner "RefillStoryPageCacheJob.perform_later"
 cp -a hatchbox/lobsters-service.server.port.conf ~/.config/systemd/user/
 cp -a hatchbox/lobsters-service.socket.port.conf ~/.config/systemd/user/
 systemctl --user daemon-reload
+
+# see hatchbox/root-deploy
+touch /home/deploy/lobsters/current

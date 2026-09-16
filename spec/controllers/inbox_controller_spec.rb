@@ -60,5 +60,17 @@ describe InboxController do
       # Already read notification remains unchanged, ie read_at is not updated
       expect(notification.read_at).to eq read_at
     end
+
+    it 'When a comment is viewed in the inbox and the "mark as read" button is clicked, it changes into a upvoter.' do
+      comment = create(:comment, user: author, comment: "@#{author.username}")
+      vote = create(:vote, comment: comment, user: recipient, story: comment.story)
+      notification = recipient.notifications.create(notifiable: comment)
+
+      stub_login_as recipient
+      get :all
+
+      notification = @controller.view_assigns["notifications"].first
+      expect(notification.notifiable).to be_current_upvoted
+    end
   end
 end

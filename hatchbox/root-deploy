@@ -28,10 +28,10 @@ APP_ETC=/home/deploy/lobsters/shared/etc
 echo "lobste.rs" > /etc/hostname
 
 # Install Anubis
-if [ ! -f /tmp/anubis_1.24.0_amd64.deb ]; then
-  curl -Ls https://github.com/TecharoHQ/anubis/releases/download/v1.24.0/anubis_1.24.0_amd64.deb \
-         -o /tmp/anubis_1.24.0_amd64.deb
-  apt install /tmp/anubis_1.24.0_amd64.deb
+if [ ! -f /tmp/anubis_1.27.0_amd64.deb ]; then
+  curl -Ls https://github.com/TecharoHQ/anubis/releases/download/v1.27.0/anubis_1.27.0_amd64.deb \
+         -o /tmp/anubis_1.27.0_amd64.deb
+  apt install /tmp/anubis_1.27.0_amd64.deb
 fi
 
 # server packages

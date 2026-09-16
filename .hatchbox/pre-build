@@ -14,9 +14,9 @@ ln -s ../../../shared/public/cache public/cache
 mkdir -p /home/deploy/lobsters/shared/database-backups
 
 # prod keys
-cp /home/deploy/lobsters/shared/etc/credentials.yml.enc config/credentials.yml.enc
-cp /home/deploy/lobsters/shared/etc/master.key config/master.key
-cp /home/deploy/lobsters/shared/etc/database.yml config/database.yml
+cp -a /home/deploy/lobsters/shared/etc/credentials.yml.enc config/credentials.yml.enc
+cp -a /home/deploy/lobsters/shared/etc/master.key config/master.key
+cp -a /home/deploy/lobsters/shared/etc/database.yml config/database.yml
 
 # confirm unattended upgrades is on and configured
 if cmp -s hatchbox/20auto-upgrades /etc/apt/apt.conf.d/20auto-upgrades; then

@@ -251,6 +251,7 @@ export class _LobstersFunction {
     const url_field = qS('#story_url');
     const targetUrl = url_field.value;
     const title_field = qS('#story_title');
+    const desc_field = qS('#story_description')
     const formData = new FormData();
     const old_text = button.textContent;
 
@@ -268,6 +269,7 @@ export class _LobstersFunction {
       .then (response => response.json())
       .then (data => {
         title_field.value = data.title
+        desc_field.value = data.description
         if (url_field.value != data.url) {
           slideDownJS(qS('.url-updated'));
         }

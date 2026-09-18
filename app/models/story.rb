@@ -265,7 +265,7 @@ class Story < ApplicationRecord
   attr_accessor :current_vote, :editing_from_suggestions, :editor, :fetching_ip,
     :is_hidden_by_cur_user, :latest_comment_id, :is_saved_by_cur_user, :moderation_reason,
     :new_user_acculturation_error, :previewing, :tags_was
-  attr_writer :fetched_response
+  attr_accessor :fetched_response #temporarily add getter
 
   before_validation :assign_initial_attributes, on: :create
   before_save :log_moderation
@@ -1354,11 +1354,14 @@ class Story < ApplicationRecord
           "User-agent" => "#{Rails.application.domain} for #{fetching_ip}",
           "Referer" => Rails.application.domain
         }
-        res = s.try_fetch(url, :get, nil, nil, headers, 3)
+
+        # if arxiv url, fetch spicy atom from their api
+        res = s.try_fetch( is_arxiv?? arxiv_api_url : url, :get, nil, nil, headers, 3)
         @fetched_response = res
       end
 
       return @fetched_attributes if @fetched_response.nil?
+      return fetched_attributes_arxiv if is_arxiv?
 
       case @fetched_response["content-type"]
       when /pdf/
@@ -1369,6 +1372,35 @@ class Story < ApplicationRecord
     rescue
       @fetched_attributes
     end
+  end
+
+  def fetched_attributes_arxiv
+    parsed = Nokogiri::XML(@fetched_response.body)
+    #should I assign the attr to the story here?
+
+    @fetched_attributes = {
+      url: normalize_arxiv_url,
+      title: parsed.at_css('entry title').text.strip,
+      description: parsed.at_css('entry summary').text.strip,
+    }
+  end
+
+  def is_arxiv?
+    # should match any arxiv articles since apr 2007
+    # https://info.arxiv.org/help/arxiv_identifier.html
+    url.match?(%r{^https?://arxiv.org\/(?:html|abs|pdf)\/\d{4}\.\w+$})
+  end
+
+  def normalize_arxiv_url
+    # all arxiv urls default to the pdf url
+    url.sub(/html|abs/, "pdf")
+  end
+
+  def arxiv_api_url
+    return unless is_arxiv?
+
+    arxiv_id = url.split("/").last
+    "https://export.arxiv.org/api/query?id_list=#{arxiv_id}"
   end
 
   private

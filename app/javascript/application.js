@@ -2,6 +2,10 @@
 
 "use strict";
 
+// Suppress Chrome's automatic install prompt
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeinstallprompt_event
+window.addEventListener("beforeinstallprompt", event => event.preventDefault());
+
 /** @type {(...args: ( [ string ] | [ParentNode,string] )) => Element|null} */
 export const qS = (...args) => {
   return args.length === 1 ?

@@ -1368,11 +1368,14 @@ class Story < ApplicationRecord
           "User-agent" => "#{Rails.application.domain} for #{fetching_ip}",
           "Referer" => Rails.application.domain
         }
-        res = s.try_fetch(url, :get, nil, nil, headers, 3)
+
+        # if arxiv url, fetch spicy atom from their api
+        res = s.try_fetch( is_arxiv?? arxiv_api_url : url, :get, nil, nil, headers, 3)
         @fetched_response = res
       end
 
       return @fetched_attributes if @fetched_response.nil?
+      return fetched_attributes_arxiv if is_arxiv?
 
       case @fetched_response["content-type"]
       when /pdf/
@@ -1383,6 +1386,36 @@ class Story < ApplicationRecord
     rescue
       @fetched_attributes
     end
+  end
+
+  def fetched_attributes_arxiv
+    parsed = Nokogiri::XML(@fetched_response.body)
+    # sadly this might come with annoying LaTeX artifacts
+    formatted_desc = <<~DESCRIPTION
+    > #{parsed.at_css('entry summary').text.strip}
+
+    [arXiv](https://#{normalized_url.sub('pdf','abs')})
+    DESCRIPTION
+
+    @fetched_attributes = {
+      url: "https://#{normalized_url}",
+      title: parsed.at_css('entry title').text.strip,
+      description: formatted_desc
+    }
+  end
+
+  def is_arxiv?
+    # should match any arxiv articles since apr 2007
+    # https://info.arxiv.org/help/arxiv_identifier.html
+    # can't I reuse the utils arxiv method here somehow?
+    url.match?(%r{^https?://arxiv.org\/(?:html|abs|pdf)\/\d{4}\.\w+$})
+  end
+
+  def arxiv_api_url
+    return unless is_arxiv?
+
+    arxiv_id = url.split("/").last
+    "https://export.arxiv.org/api/query?id_list=#{arxiv_id}"
   end
 
   private

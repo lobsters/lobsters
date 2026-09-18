@@ -15,6 +15,7 @@ Rails.application.configure do
 
     # Data URL used for Pushover logo in settings
     policy.img_src :self, :data
+    policy.manifest_src :self
     policy.script_src :self
 
     # 18 inline styles to clean up before enabling this

@@ -118,4 +118,42 @@ describe "comments", type: :request do
       }.to change { comment.reload.user }.from(comment.user).to(inactive_user)
     end
   end
+
+  describe "ancestors without js" do
+    let(:story) { create(:story) }
+    let(:root) { create(:comment, story: story) }
+    let(:mid) { create(:comment, story: story, parent_comment: root) }
+    let(:leaf) { create(:comment, story: story, parent_comment: mid, user: author) }
+
+    describe "replying" do
+      before { sign_in user }
+
+      it "renders them root-first with the direct parent above the form" do
+        get "/comments/#{leaf.short_id}/reply"
+        expect(response.status).to eq(200)
+
+        root_at = response.body.index("id=\"c_#{root.short_id}\"")
+        mid_at = response.body.index("id=\"c_#{mid.short_id}\"")
+        leaf_at = response.body.index("id=\"c_#{leaf.short_id}\"")
+        expect(root_at).to be < mid_at
+        expect(mid_at).to be < leaf_at
+
+        parent_field = Nokogiri::HTML(response.body).at_css("input[name=parent_comment_short_id]")
+        expect(parent_field["value"]).to eq(leaf.short_id)
+      end
+    end
+
+    describe "editing" do
+      before { sign_in author }
+
+      it "renders them root-first" do
+        get "/comments/#{leaf.short_id}/edit"
+        expect(response.status).to eq(200)
+
+        root_at = response.body.index("id=\"c_#{root.short_id}\"")
+        mid_at = response.body.index("id=\"c_#{mid.short_id}\"")
+        expect(root_at).to be < mid_at
+      end
+    end
+  end
 end

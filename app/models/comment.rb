@@ -472,6 +472,7 @@ class Comment < ApplicationRecord
     ])
       # select directly from RCTE; AR would generate a JOIN against 'comments'
       .select("*").from("parents")
+      .order(depth: :asc)
   end
 
   def record_initial_upvote

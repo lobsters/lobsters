@@ -254,4 +254,17 @@ describe Comment do
       expect(relationships).to include([a.id, c.id])
     end
   end
+
+  describe "#parents" do
+    it "returns ancestors root-first" do
+      story = create(:story)
+      root = create(:comment, story: story)
+      mid = create(:comment, story: story, parent_comment: root)
+      leaf = create(:comment, story: story, parent_comment: mid)
+
+      expect(root.parents).to be_empty
+      expect(leaf.parents.map(&:id)).to eq([root.id, mid.id])
+      expect(leaf.parents.map(&:depth)).to eq([0, 1])
+    end
+  end
 end

@@ -60,4 +60,17 @@ RSpec.describe EmailReplyMailer, type: :mailer do
     email = EmailReplyMailer.reply(reply, user)
     expect(email.body.encoded).to match("replied to alice")
   end
+
+  it "lists references oldest-first" do
+    user = create(:user)
+    story = create(:story)
+    root = create(:comment, story: story)
+    mid = create(:comment, story: story, parent_comment: root)
+    leaf = create(:comment, story: story, parent_comment: mid)
+
+    email = EmailReplyMailer.reply(leaf, user)
+    refs = email["References"].to_s
+    expect(refs.index(story.mailing_list_message_id)).to be < refs.index(root.mailing_list_message_id)
+    expect(refs.index(root.mailing_list_message_id)).to be < refs.index(mid.mailing_list_message_id)
+  end
 end

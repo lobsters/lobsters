@@ -18,6 +18,14 @@ module ApplicationHelper
     )
   end
 
+  def caption_of_button(record)
+    if record.new_record?
+      "Create and Ban"
+    else
+      record.banned_at ? "Unban" : "Ban"
+    end
+  end
+
   def divider_tag
     content_tag(:span, " | ", aria: {hidden: "true"})
   end

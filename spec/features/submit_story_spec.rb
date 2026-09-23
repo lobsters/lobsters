@@ -176,7 +176,7 @@ RSpec.feature "Submitting Stories", type: :feature do
   end
 
   scenario "submitting a banned domain" do
-    Domain.create!(domain: "example.com", banned_at: DateTime.now)
+    create(:domain, :banned, domain: "example.com")
 
     expect {
       visit "/stories/new"

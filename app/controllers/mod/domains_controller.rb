@@ -45,14 +45,4 @@ class Mod::DomainsController < Mod::ModController
   end
 
   helper_method :path_of_form
-
-  def caption_of_button(domain)
-    if domain.new_record?
-      "Create and Ban"
-    else
-      domain.banned_at ? "Unban" : "Ban"
-    end
-  end
-
-  helper_method :caption_of_button
 end

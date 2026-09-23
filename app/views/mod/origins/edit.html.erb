@@ -1,6 +1,8 @@
 <div class="box wide">
   <h1><%= @origin.identifier %></h1>
 
+  <%= errors_for @origin %>
+
   <% if @origin.banned_at %>
     <label>Status</label>
     <span class="d">
@@ -26,7 +28,7 @@
     </span>
   <% end %>
 
-  <%= form_with model: @origin, url: mod_origin_path(identifier: @origin.identifier) do |f| %>
+  <%= form_with model: @origin, url: @origin.new_record? ? mod_create_and_ban_origin_path(identifier: @origin.identifier) : mod_ban_origin_path(identifier: @origin.identifier) do |f| %>
     <%= hidden_field_tag :new_origin, @origin.new_record? %>
 
     <div class="boxline">

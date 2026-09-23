@@ -18,6 +18,7 @@ class Domain < ApplicationRecord
   validates :stories_count, numericality: {only_integer: true, greater_than_or_equal_to: 0}, presence: true
 
   validate :valid_selector
+  validate :banned_at_and_reason_set_together
 
   after_save :update_origins
 
@@ -115,5 +116,11 @@ class Domain < ApplicationRecord
 
   def to_param
     domain
+  end
+
+  def banned_at_and_reason_set_together
+    if banned_at.present? != banned_reason.present?
+      errors.add(:base, "A reason is required to ban.")
+    end
   end
 end

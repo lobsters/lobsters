@@ -77,5 +77,14 @@ RSpec.feature "Domains" do
       expect(page).to have_text("Domain created and banned")
       expect(Domain.last).to be_banned
     end
+
+    it "does not create and ban when the reason is blank" do
+      visit "/mod/domains/#{domain_name}/edit"
+      fill_in "Create and Ban Reason", with: ""
+      click_on "Create and Ban"
+      expect(page).to have_text("A reason is required to ban")
+      expect(page).to have_button("Create and Ban")
+      expect(Domain.find_by(domain: domain_name)).to be_nil
+    end
   end
 end

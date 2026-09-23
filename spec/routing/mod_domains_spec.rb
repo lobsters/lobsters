@@ -3,6 +3,13 @@
 require "rails_helper"
 
 describe "domains routing", type: :routing do
+  it "#create" do
+    expect(post("/mod/domains")).to route_to(
+      controller: "mod/domains",
+      action: "create"
+    )
+  end
+
   it "#edit" do
     expect(get("/mod/domains/github.com/edit")).to route_to(
       controller: "mod/domains",

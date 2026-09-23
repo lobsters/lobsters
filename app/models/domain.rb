@@ -1,5 +1,9 @@
 # typed: false
 
+# Originally Lobsters only tracked Domains, then later I added Origins to handle Domains with
+# multiple authors (github, medium, etc). I should've moved all the ban data over to Origin and
+# stripped Domain down to just 'identifier', and domains that don't have identifiers don't need
+# records at all. This has caused a fair amount of code duplication and brittle code.
 class Domain < ApplicationRecord
   has_many :stories
   belongs_to :banned_by_user,
@@ -52,9 +56,40 @@ class Domain < ApplicationRecord
 
   def update_origins
     return unless saved_change_to_selector? || saved_change_to_replacement?
+    refresh_origins!
+  end
 
+  def refresh_origins!
+    moved = origins.ids.index_with { [] } # old origin id => new origin ids
     stories.find_each do |story|
-      story.update_column(:origin_id, story.domain.find_or_create_origin(story.url)&.id)
+      was = story.origin_id
+      origin = find_or_create_origin(story.url)
+      next if !origin
+
+      # update_column skips the counter_cache, so the loop below resets stories_count
+      moved[origin.id] ||= []
+      (moved[was] ||= []) << origin.id if was && was != origin.id
+      story.update_column(:origin_id, origin.id)
+    end
+
+    Origin.where(id: moved.keys).find_each do |origin|
+      Origin.reset_counters(origin.id, :stories)
+      origin.reload
+
+      if origin.stories_count > 0
+        origin.update_column(:created_at, origin.stories.minimum(:created_at))
+        next
+      end
+
+      # an emptied Origin is a duplicate of the one its Stories moved to
+      successors = Origin.where(id: moved[origin.id].compact.uniq)
+      if successors.one?
+        origin.merge_into!(successors.first)
+      elsif origin.banned? || origin.moderation.present?
+        next # Stories split up, so no one Origin to hand its ban and modlog to
+      else
+        origin.destroy!
+      end
     end
   end
 
@@ -73,9 +108,14 @@ class Domain < ApplicationRecord
       domain
     end.downcase
 
-    # because of rails associations, `origins` is scoped to current domain object
-    # create_or_find_by returns the new origin record
-    origins.find_or_create_by(identifier: identifier)
+    # Origin#identifier= picks the Domain that owns the host; this is the fallback for a host
+    # no Domain has yet. It has to run before the save, because belongs_to :domain is required.
+    origin = Origin.find_or_create_by(identifier: identifier) { |o| o.domain ||= self }
+
+    # unpersisted means invalid: raced another request, or an unusable identifier like too long
+    origin.persisted? ? origin : Origin.find_by(identifier: identifier)
+  rescue ActiveRecord::RecordNotUnique
+    Origin.find_by(identifier: identifier)
   end
 
   def ban_by_user_for_reason!(banner, reason)

@@ -27,6 +27,15 @@ class Origin < ApplicationRecord
     find_by! identifier:
   end
 
+  # the identifier picks the Domain, so unifying foo.github.io into github.com/foo moves the
+  # Origin to the Domain that owns it now. Domain#find_or_create_origin supplies the fallback
+  # for a host no Domain has yet.
+  def identifier=(s)
+    super
+    found = Domain.find_by(domain: Utils::URL_RE.match("https://#{s}")&.[](:domain))
+    self.domain = found if found
+  end
+
   def ban_by_user_for_reason!(banner, reason)
     self.banned_at = Time.current
     self.banned_by_user_id = banner.id
@@ -59,17 +68,33 @@ class Origin < ApplicationRecord
     banned_at?
   end
 
+  def banned_at_and_reason_set_together
+    if banned_at.present? != banned_reason.present?
+      errors.add(:base, "A reason is required to ban.")
+    end
+  end
+
+  def merge_into!(other)
+    transaction do
+      if banned? && !other.banned?
+        other.assign_attributes banned_at: banned_at,
+          banned_by_user_id: banned_by_user_id,
+          banned_reason: banned_reason
+        other.save! validate: false
+      end
+      Moderation.where(origin_id: id).update_all(origin_id: other.id)
+
+      destroy!
+    end
+
+    banned?
+  end
+
   def n_submitters
     stories.count("distinct user_id")
   end
 
   def to_param
     identifier
-  end
-
-  def banned_at_and_reason_set_together
-    if banned_at.present? != banned_reason.present?
-      errors.add(:base, "A reason is required to ban.")
-    end
   end
 end

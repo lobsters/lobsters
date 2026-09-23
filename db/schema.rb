@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_14_181241) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_03_143000) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "message_checksum", null: false
@@ -86,6 +86,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_14_181241) do
     t.string "token", null: false
     t.datetime "updated_at", precision: nil
     t.bigint "user_id", null: false
+    t.index "parent_comment_id, depth + confidence, id", name: "index_comment_tree"
     t.index ["confidence"], name: "confidence_idx"
     t.index ["hat_id"], name: "comments_hat_id_fk"
     t.index ["parent_comment_id"], name: "comments_parent_comment_id_fk"

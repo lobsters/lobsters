@@ -47,9 +47,9 @@ apt remove -y sqlite3
 apt install libclang-dev
 
 # configure opendkim for postfix
-cp --preserve=mode,timestamps opendkim.m4 /etc/mail/m4/
-cp --preserve=mode,timestamps opendkim.conf /etc/
-cp --preserve=mode,timestamps opendkim.service /etc/systemd/system/
+install -p -m 0644 opendkim.m4 /etc/mail/m4/
+install -p -m 0644 opendkim.conf /etc/
+install -p -m 0644 opendkim.service /etc/systemd/system/
 if [ ! -f /etc/dkimkeys/mail.private ]; then
   opendkim-genkey --verbose --restrict --selector=mail --subdomains --domain=lobste.rs --directory=/etc/dkimkeys/
 fi
@@ -59,27 +59,27 @@ systemctl restart opendkim
 
 # configure postfix
 adduser postfix opendkim
-cp --preserve=mode,timestamps main.cf master.cf virtual_aliases transport /etc/postfix/
+install -p -m 0644 -t /etc/postfix/ main.cf master.cf virtual_aliases transport
 postmap /etc/postfix/virtual_aliases
 postmap /etc/postfix/transport
 postfix reload
 
 # I get bounces daily from journalduhacker.net who left my email in their config.
-cp --preserve=mode,timestamps aliases /etc/
+install -p -m 0644 aliases /etc/
 ADMIN_EMAIL=$(cat $APP_ETC/admin_email)
 sed -i "s/ADMIN_EMAIL/$ADMIN_EMAIL/g" /etc/aliases
 newaliases
 
 # https://github.com/lobsters/lobsters/issues/1739
-cp --preserve=mode,timestamps syslog.conf  /usr/lib/systemd/journald.conf.d/
+install -p -m 0644 syslog.conf /usr/lib/systemd/journald.conf.d/
 systemctl force-reload systemd-journald
 
 # keep Caddy's per-request access logs out of journald (they're in caddy.log).
-cp --preserve=mode,timestamps caddy-no-access-journal.conf /etc/systemd/system/caddy.service.d/
+install -D -p -m 0644 caddy-no-access-journal.conf /etc/systemd/system/caddy.service.d/caddy-no-access-journal.conf
 
 # configure Anubis
-cp --preserve=mode,timestamps lobsters.anubis.env /etc/anubis/lobsters.env
-cp --preserve=mode,timestamps lobsters.botPolicies.yaml /etc/anubis/lobsters.botPolicies.yaml
+install -p -m 0644 lobsters.anubis.env /etc/anubis/lobsters.env
+install -p -m 0644 lobsters.botPolicies.yaml /etc/anubis/lobsters.botPolicies.yaml
 rm -f /etc/anubis/default.env # not used, distraction
 
 # pick up changes to services, of course there is no "restart iff changed" command
@@ -96,10 +96,10 @@ done
 
 
 # quiet logins
-cp --preserve=mode,timestamps sshd_config /etc/ssh/sshd_config
+install -p -m 0644 sshd_config /etc/ssh/sshd_config
 
 # configure logrotate
-cp --preserve=mode,timestamps logrotate.conf /etc/logrotate.d/
+install -p -m 0644 logrotate.conf /etc/logrotate.d/
 # rm hatchbox's config; logrotate precendence is unreliable
 rm -f /etc/logrotate.d/hatchbox_logrotate.conf
 
@@ -107,13 +107,11 @@ rm -f /etc/logrotate.d/hatchbox_logrotate.conf
 apt install eza fd-find ncdu tmux tree
 
 # shell config; the default .bashrc sources this
-cp --preserve=mode,timestamps bash_aliases /root/.bash_aliases
-cp --preserve=mode,timestamps bash_aliases ~deploy/.bash_aliases
-chown deploy:deploy ~deploy/.bash_aliases
+install -p -m 0644 bash_aliases /root/.bash_aliases
+install -p -m 0644 -o deploy -g deploy bash_aliases ~deploy/.bash_aliases
 
-cp --preserve=mode,timestamps sqliterc /root/.sqliterc
-cp --preserve=mode,timestamps sqliterc ~deploy/.sqliterc
-chown deploy:deploy ~deploy/.sqliterc
+install -p -m 0644 sqliterc /root/.sqliterc
+install -p -m 0644 -o deploy -g deploy sqliterc ~deploy/.sqliterc
 
 # make iptables record readable for transparency
 netfilter-persistent save

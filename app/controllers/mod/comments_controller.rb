@@ -24,6 +24,17 @@ class Mod::CommentsController < Mod::ModController
   private
 
   def find_comment
-    Comment.find_by(short_id: params[:id])
+    comment = Comment.find_by(short_id: params[:id])
+    return comment if comment.nil?
+
+    # Load the view state the same way CommentsController#find_comment does.
+    # Without it, rendering the comment partial (the XHR response of this
+    # action) drops the current user's vote, so an upvoted comment comes back
+    # with an empty upvote arrow until the page is reloaded (#2201).
+    comment.current_vote = Vote.where(
+      user_id: @user.id, story_id: comment.story_id, comment_id: comment.id
+    ).first
+    comment.vote_summary = Vote.comment_vote_summaries([comment.id])[comment.id]
+    comment
   end
 end

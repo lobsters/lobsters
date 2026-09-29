@@ -82,18 +82,14 @@ install -p -m 0644 lobsters.anubis.env /etc/anubis/lobsters.env
 install -p -m 0644 lobsters.botPolicies.yaml /etc/anubis/lobsters.botPolicies.yaml
 rm -f /etc/anubis/default.env # not used, distraction
 
-# pick up changes to services, of course there is no "restart iff changed" command
-changed_services=$(systemctl list-units --type=service --state=active --no-legend | awk '{print $1}' | xargs systemctl show -p Id,NeedDaemonReload | grep 'NeedDaemonReload=yes' -B 1 | grep 'Id=' | cut -d= -f 2)
-
+# pick up changes to services
 systemctl daemon-reload
 systemctl enable --now anubis@lobsters.service
 systemctl enable --now opendkim
 systemctl enable --now postfix
-
-for service in ${changed_services}; do
-  systemctl restart "$service"
-done
-
+systemctl restart anubis@lobsters.service # doesn't support reload
+systemctl reload opendkim
+systemctl reload postfix
 
 # quiet logins
 install -p -m 0644 sshd_config /etc/ssh/sshd_config

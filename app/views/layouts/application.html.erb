@@ -19,7 +19,7 @@
     <meta property="<%= tag[:property] %>" content="<%= tag[:content] %>">
   <% end %>
   <link rel="shortcut icon" href="/favicon.ico">
-  <% if controller_name == "stories" && action_name == "show" %>
+  <% if controller_name == "stories" && action_name == "show" && (!@story&.is_gone? || @user) %>
     <%= tag :link, href: Routes.title_url(@story), rev: :canonical, rel: "self alternate shorter shorturl shortlink" %>
   <% end %>
   <title><%= @title.present? ? "#{@title} | " : "" %><%=

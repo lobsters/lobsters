@@ -228,6 +228,13 @@ describe "stories", type: :request do
         expect(response.body).to_not include(story.title)
       end
 
+            it "does not expose the deleted title in the canonical link" do
+        get "/s/#{story.short_id}/unrelated-slug"
+
+        expect(response).to have_http_status(404)
+        expect(response.body).to_not include(Routes.title_url(story))
+      end
+
       it "shows whether a story was removed by a submitter or moderator" do
         # visitor
         get story_path(story)

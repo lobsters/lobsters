@@ -12,6 +12,10 @@ describe Utils do
       "https://e.com:4000/" => true,
       "https://example" => false,
       "https://example/" => false,
+      "https://e.com." => false,
+      "https://e.com./" => false,
+      "https://e.com./index.html" => false,
+      "https://e.com.:4000/" => false,
       "https://e.com/index.html" => true,
       "https://en.wikipedia.org/wiki/Clerks_(film)" => true, # parens ok
       "http://aaonline.fr/search.php?search&criteria[title-contains]=debian" => true, # brackets ok

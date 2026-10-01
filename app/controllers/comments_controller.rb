@@ -217,6 +217,7 @@ class CommentsController < ApplicationController
       # not calling comment.touch because the :touch on the parent_comment association will already
       # touch the updated_at columns up the reply chain to the story once
       @comment.parent_comment&.touch(:last_reply_at)
+      NotifyCommentJob.perform_later(@comment)
 
       if !request.xhr?
         return redirect_to Routes.comment_target_path(@comment, true)

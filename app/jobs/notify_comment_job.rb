@@ -8,27 +8,25 @@ class NotifyCommentJob < ApplicationJob
   end
 
   def deliver_comment_notifications(comment)
-    notified = deliver_reply_notifications(comment)
-    deliver_mention_notifications(comment, notified)
+    deliver_reply_notifications(comment)
+    deliver_mention_notifications(comment)
   end
 
-  def deliver_mention_notifications(comment, notified)
+  def notify_once(user, comment)
+    user.notifications.create(notifiable: comment).persisted?
+  rescue ActiveRecord::RecordNotUnique
+    false
+  end
+
+  def deliver_mention_notifications(comment)
     mentions = comment.comment.scan(/\B[@~]([\w-]+)/).flatten.uniq
-    # Remove username of author and anyone already notified about the reply.
-    # If they have email_replies off, a reply that @mentions them will not generate a
-    # mention email. email_replies trumps email_mentions to minimize unwanted emails.
-    to_notify = mentions - [comment.user.username] - notified
+    mentioned = User.active.where(username: mentions - [comment.user.username]).to_a
 
-    # every user gets a Notification, which may be filtered out from those views so that unhiding a
-    # story reveals the notifications
-    to_notify = User.active.where(username: to_notify)
-    to_notify.find_each do |u|
-      u.notifications.create(notifiable: comment)
-    end
+    hiding_users = HiddenStory.where(story: comment.story).pluck(:user_id)
+    to_notify = mentioned.select { |u| notify_once(u, comment) }
+      .reject { |u| hiding_users.include?(u.id) }
 
-    # but there's no recalling an email or pushover, so sending those has to reflect story hiding
-    not_hiding_users = to_notify.left_outer_joins(:hidings).where(hidden_stories: {id: nil})
-    not_hiding_users.find_each do |u|
+    to_notify.each do |u|
       if u.email_mentions?
         begin
           EmailReplyMailer.mention(comment, u).deliver_now
@@ -66,18 +64,11 @@ class NotifyCommentJob < ApplicationJob
   end
 
   def deliver_reply_notifications(comment)
-    notified = []
-
-    to_notify = users_following_thread(comment)
-    to_notify.each do |u|
-      u.notifications.create(notifiable: comment)
-      notified << u.username
-    end
-
     hiding_users = HiddenStory.where(story: comment.story).pluck(:user_id)
-    to_notify.each do |u|
-      next if hiding_users.include? u.id
+    to_notify = users_following_thread(comment).select { |u| notify_once(u, comment) }
+      .reject { |u| hiding_users.include?(u.id) }
 
+    to_notify.each do |u|
       if u.email_replies?
         begin
           EmailReplyMailer.reply(comment, u).deliver_now
@@ -96,7 +87,5 @@ class NotifyCommentJob < ApplicationJob
         )
       end
     end
-
-    notified
   end
 end

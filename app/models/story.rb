@@ -575,7 +575,7 @@ class Story < ApplicationRecord
 
     # if a story has many comments but few votes, it's probably a bad story, so
     # cap the comment points at the number of upvotes
-    cpoints = [self.score, cpoints].min
+    cpoints = [score, cpoints].min
 
     # don't immediately kill stories at 0 by bumping up score by one
     order = Math.log([(score + 1).abs + cpoints, 1].max, 10)
@@ -745,7 +745,7 @@ class Story < ApplicationRecord
 
   def is_flaggable?(user)
     return false if user&.id == user_id
-    if created_at && self.score > FLAGGABLE_MIN_SCORE
+    if created_at && score > FLAGGABLE_MIN_SCORE
       Time.current - created_at <= FLAGGABLE_DAYS.days
     else
       false

@@ -110,6 +110,8 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
   config.action_controller.page_cache_directory = Rails.public_path.join("cache").to_s
 
+  config.comment_redirect_cache_dir = "/home/deploy/lobsters/shared/comment_redirects/c"
+
   # why help timing attacks?
   config.middleware.delete(Rack::Runtime)
 

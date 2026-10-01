@@ -37,8 +37,7 @@ ActiveSupport.on_load(:action_controller) do
         def write(...)
           super
         rescue Errno::ENAMETOOLONG => e
-          # #1826 - Handle write errors from filenames being longer than 255 bytes
-          Rails.logger.info "Failed to cache page #{e.inspect}"
+          # #1826 discard write errors from filenames being longer than 255 bytes
           nil
         end
       end

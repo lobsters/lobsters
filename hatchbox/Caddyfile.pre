@@ -107,6 +107,30 @@ rewrite @use_rss_cached_file /cache/{file_match.relative}
 # header X-Lobsters-Hello "World 8"
 
 
+# 302 redirect /c/abc123 to /s/xyz456_title#c_abc123, see CommentRedirectCache.
+@comment_redirect {
+  host lobste.rs
+  method GET
+  # can't capture the short_id here to use in try_files because path_regexp and
+  # file matchers run in undefined order
+  path_regexp ^/c/[0-9a-z]{6}$
+  not { # convenience: admin can look up comments by PK from db queries
+    path_regexp ^/c/[0-9]*$
+    vars {has_user_cookie} 1
+  }
+  file {
+    root /home/deploy/lobsters/shared/comment_redirects
+    try_files {path}
+  }
+}
+route @comment_redirect {
+  root * /home/deploy/lobsters/shared/comment_redirects
+  rewrite * /comment-redirect.html
+  templates
+  file_server
+}
+
+
 # Bots ignore our <link> tags and request icons at quite old well-known URLs.
 # https://mathiasbynens.be/notes/touch-icons
 @apple_touch_icon path_regexp ^/apple-touch-icon.*\.png$

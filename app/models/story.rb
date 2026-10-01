@@ -326,12 +326,14 @@ class Story < ApplicationRecord
     end
   end
 
-  # on merge, bust the cache for redirecting /c/abc123 -> /s/def456/title#c_abc123
-  # see CommentsController#redirect_from_short_id
   def bust_comment_redirect_cache
-    return unless merged_story_id_previously_changed?
+    return unless merged_story_id_previously_changed? ||
+      short_id_previously_changed? ||
+      title_previously_changed? ||
+      is_deleted_previously_changed? ||
+      is_moderated_previously_changed?
 
-    Rails.cache.delete_multi comments.pluck(:short_id).map { "c_#{it}" }
+    CommentRedirectCache.delete(merged_comments.pluck(:short_id))
   end
 
   def check_already_posted_recently?

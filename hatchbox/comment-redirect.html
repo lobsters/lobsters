@@ -1,0 +1,13 @@
+{{- /*
+  Basically a script so Caddy 302 redirects /c/abc123 to /s/xyz456_title#c_abc123,
+  pulling the destination url from the comment_redirects/c/abc123 cache.
+
+  https://caddyserver.com/docs/modules/http.handlers.templates#docs
+*/ -}}
+{{- $target := trim (readFile (placeholder "http.request.orig_uri.path")) -}}
+{{- if $target -}}
+  {{- .RespHeader.Set "Location" $target -}}
+  {{- httpError 302 -}}
+{{- else -}}
+  {{- httpError 404 -}}
+{{- end -}}

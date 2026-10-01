@@ -56,6 +56,8 @@ module Lobsters
     config.cache_store = :file_store, "#{config.root}/tmp/cache/"
     config.active_support.cache_format_version = 7.0 # bump to 7.1 after 7.1 deploy fills caches
 
+    config.comment_redirect_cache_dir = nil
+
     config.exceptions_app = routes
 
     config.skip_yarn = true

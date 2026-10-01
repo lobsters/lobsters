@@ -94,20 +94,17 @@ class CommentsController < ApplicationController
 
   def redirect_from_short_id
     if @user&.is_admin? && params[:id] =~ /\A\d+\z/
-      redirect_to Routes.comment_target_path(Comment.find(params[:id]), true)
+      return redirect_to Routes.comment_target_path(Comment.find(params[:id]), true)
     end
 
-    url = Rails.cache.fetch("c_#{params[:id]}", expires_in: nil) do
-      story = Story.joins("join stories as s2 on stories.id = coalesce(s2.merged_story_id, s2.id) join comments on comments.story_id = s2.id")
-        .where(comments: {short_id: params[:id]})
-        .select(:short_id, :title)
-        .first
+    story = Story.joins("join stories as s2 on stories.id = coalesce(s2.merged_story_id, s2.id) join comments on comments.story_id = s2.id")
+      .where(comments: {short_id: params[:id]})
+      .select(:short_id, :title)
+      .first
+    render plain: "can't find comment", status: 400 and return unless story
 
-      render plain: "can't find comment", status: 400 and return unless story
-      Routes.title_path story, anchor: "c_#{params[:id]}"
-    end
-
-    # having looked up the given id as a comment short_id, we know it's safe to interpolate
+    url = Routes.title_path(story, anchor: "c_#{params[:id]}")
+    CommentRedirectCache.write(params[:id], url)
     redirect_to url
   end
 

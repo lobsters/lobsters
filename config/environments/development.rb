@@ -31,6 +31,7 @@ Rails.application.configure do
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
     config.action_controller.page_cache_directory = Rails.public_path.join("cache").to_s
+    config.comment_redirect_cache_dir = Rails.root.join("tmp/comment_redirects/c").to_s
 
     config.cache_store = :solid_cache_store, {shards: [:cache]}
     config.public_file_server.headers = {

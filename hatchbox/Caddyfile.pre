@@ -110,7 +110,7 @@ rewrite @use_rss_cached_file /cache/{file_match.relative}
 # 302 redirect /c/abc123 to /s/xyz456_title#c_abc123, see CommentRedirectCache.
 @comment_redirect {
   host lobste.rs
-  method GET
+  method GET HEAD
   # can't capture the short_id here to use in try_files because path_regexp and
   # file matchers run in undefined order
   path_regexp ^/c/[0-9a-z]{6}$
@@ -125,9 +125,15 @@ rewrite @use_rss_cached_file /cache/{file_match.relative}
 }
 route @comment_redirect {
   root * /home/deploy/lobsters/shared/comment_redirects
-  rewrite * /comment-redirect.html
+  header Content-Type "text/html; charset=utf-8"
   templates
-  file_server
+  # Caddyfiles ALSO use {{%t}} templating so all replacements in this template
+  # must include a space to be ignored.
+  respond `{{- $t := trim (readFile (placeholder "http.request.orig_uri.path")) -}}
+    {{- if $t -}}
+    {{- .RespHeader.Set "Location" $t -}}
+    <!doctype html><title>Redirecting</title><p>You are being redirected to <a href="{{ $t }}">{{ $t }}</a>.
+    {{- else -}}{{- httpError 404 -}}{{- end -}}` 302
 }
 
 

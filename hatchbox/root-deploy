@@ -116,10 +116,6 @@ chmod go+r /etc/iptables/rules.v4 /etc/iptables/rules.v6
 # CommentRedirectCache: Rails runs as deploy and fills c/, Caddy reads it.
 install -d -o deploy -g deploy /home/deploy/lobsters/shared/comment_redirects
 install -d -o deploy -g deploy /home/deploy/lobsters/shared/comment_redirects/c
-# copy template over to the cache dir, serving it straight from hatchbox/ feels like an
-# accident waiting to happen
-install -p -m 0644 /home/deploy/lobsters/current/hatchbox/comment-redirect.html \
-  /home/deploy/lobsters/shared/comment_redirects/
 
 # run restic to back up /etc
 export HOME=/root

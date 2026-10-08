@@ -96,7 +96,7 @@
           <div class="byline">
             Mail
             <%= how_long_ago_label ma.item.created_at %> |
-            <%= link_to ma.item.subject, ma.item %>
+            <%= link_to ma.item.subject, mod_mod_mail_path(ma.item) %>
             (<%= pluralize ma.item.mod_mail_messages.count, 'Message' %>)
             <div>Recipients:
               <% ma.item.recipients.each do |recipient| %>

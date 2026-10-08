@@ -654,7 +654,9 @@ supports it:  https://caniuse.com/?search=%3Ahas
 }
 
 li .link {
-	font-weight: bold;
+	margin: 0;
+	display: inline-block;
+	font-size: 1rem;
 	vertical-align: middle;
 }
 

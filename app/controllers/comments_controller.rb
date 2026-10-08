@@ -145,6 +145,8 @@ class CommentsController < ApplicationController
     if request.xhr?
       render partial: "commentbox", locals: {comment: comment, story: story}
     else
+      @title = "Reply to comment"
+      @title_h1 = false
       parents = comment.parents.for_presentation
       parents = CommentVoteHydrator.new(parents, @user)
       render "_commentbox", locals: {

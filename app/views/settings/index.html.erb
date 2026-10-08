@@ -127,7 +127,7 @@
         <span><%= f.check_box :email_messages %></span>
         <%= f.label :modmail_messages, "Receive E-mail for ModMail", class: "for_checkbox" %>
         <span>
-          <%= f.check_box :email_messages, { disabled: true, checked: true }, aria: {describedby: "notificationmodhint"} %>
+          <%= f.check_box :email_messages, { disabled: true, checked: true, aria: {describedby: "notificationmodhint"}} %>
           <span class="hint" id="notificationmodhint">
             Notifications from Moderators are mandatory
           </span>
@@ -223,8 +223,7 @@
   <h2 name="external">External Accounts</h2>
 
   <div class="labelled_grid">
-    <%= label_tag :gravatar,
-      raw("<a href=\"https://gravatar.com/\">Gravatar</a>") %>
+    <a href="https://gravatar.com/">Gravatar</a>
     <span>
       Your avatar will be cached from the Gravatar icon for your e-mail address above.
       <%= link_post "Expire cache", "/avatars/expire" %>

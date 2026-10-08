@@ -31,12 +31,12 @@ classes = [
 
   <% merged_stories.filter {it.can_be_seen_by_user?(@user)}.each do |ms| %>
     <div class="details" id="<%= ms.header_anchor %>">
-      <span role="heading" aria-level="1" class="link h-cite u-repost-of">
+      <h2 class="link h-cite u-repost-of">
         <a href="<%= Routes.url_or_comments_path(ms) %>" rel="ugc <%= ms.send_referrer? ? '' : 'noreferrer' %>" class="u-url"><%= ms.title %></a>
-      </span>
+      </h2>
 
       <% if ms.markeddown_description.present? %>
-        <a class="description_present" title="<%= truncate(ms.description, :length => 500) %>" href="<%= Routes.title_path ms %>">&#x2636;</a>
+        <a class="description_present" aria-label="Story description" href="#story_text">&#x2636;</a>
       <% end %>
 
       <ul class="tags" aria-label="Tags">

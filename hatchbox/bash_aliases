@@ -4,6 +4,11 @@ export HISTIGNORE=[fb]g
 export HISTSIZE=100000
 export PAGER="less -R"
 
+alias ..="cd ../"
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
 alias be="bundle exec"
 alias c="curl"
 alias cl="clear"

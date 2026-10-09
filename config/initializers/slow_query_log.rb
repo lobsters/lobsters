@@ -10,7 +10,8 @@ if ENV["ENABLE_SLOW_QUERY_LOGS"] == "true"
 
   ActiveSupport::Notifications.subscribe("sql.active_record") do |event|
     if event.duration > threshold
-      logger.warn(duration_ms: event.duration.round(1), sql: event.payload[:sql])
+      request_token = ActiveSupport::ExecutionContext.to_h[:controller]&.request&.request_id
+      logger.warn(request_token:, duration_ms: event.duration.round(1), sql: event.payload[:sql])
     end
   end
 end

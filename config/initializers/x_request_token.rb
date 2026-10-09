@@ -1,7 +1,9 @@
 # typed: false
 
 # Rails and Caddy both log this header as a top-level key .request_token to correlate requests
-# between action.log and caddy.log. Fun corner cases that definitely didn't burn hours of dev time:
+# between logs. Fun corner cases that definitely didn't burn hours of dev time:
+#
+# slow_query.log: if the query came from the console or a job the request_token is an empty string.
 #
 # joining action.log -> caddy.log
 #  - Jobs to render and cache pages will log tokens that won't appear in caddy.log

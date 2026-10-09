@@ -3,5 +3,17 @@ log disk-log {
   output file /home/deploy/lobsters/shared/log/caddy.log {
     roll_disabled
   }
-  format json
+  format filter {
+    wrap json {
+      time_key timestamp
+      time_format iso8601
+    }
+    fields {
+      request>client_ip delete
+    }
+  }
 }
+# rails generates a join key for action.log and caddy.log
+log_append request_token {http.response.header.X-Request-Token}
+# I will never remember this is different from action.log
+log_append remote_ip {client_ip}

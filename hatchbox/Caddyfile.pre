@@ -16,6 +16,14 @@ respond @hatchboxapp_domain 403 {
   close
 }
 
+@spoofer_no_spoofing header X-Request-Token *
+route @spoofer_no_spoofing {
+  respond 400 {
+    body "Spoofer no spoofing."
+    close
+  }
+}
+
 # placeholder for lobsters.dev
 @lobsters_dev_domain {
   host lobsters.dev

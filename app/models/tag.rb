@@ -25,7 +25,7 @@ class Tag < ApplicationRecord
   DESCRIPTION_MAXLENGTH = 100
 
   validates :tag, length: {maximum: NAME_MAXLENGTH}, presence: true,
-    uniqueness: {case_sensitive: true},
+    uniqueness: {case_sensitive: false},
     format: {with: TAG_FORMAT}
   validates :description, length: {maximum: DESCRIPTION_MAXLENGTH}
   validates :hotness_mod, inclusion: {in: -10..10}

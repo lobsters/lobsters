@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_01_193710) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_09_015037) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "message_checksum", null: false
@@ -102,7 +102,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_193710) do
     t.bigint "banned_by_user_id"
     t.string "banned_reason", limit: 200
     t.datetime "created_at", precision: nil, null: false
-    t.string "domain", null: false
+    t.string "domain", null: false, collation: "NOCASE"
     t.string "replacement"
     t.string "selector"
     t.integer "stories_count", default: 0, null: false
@@ -154,7 +154,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_193710) do
   create_table "invitation_requests", force: :cascade do |t|
     t.string "code"
     t.datetime "created_at", precision: nil, null: false
-    t.string "email", null: false
+    t.string "email", null: false, collation: "NOCASE"
     t.string "ip_address"
     t.boolean "is_verified", default: false, null: false
     t.text "memo"
@@ -167,7 +167,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_193710) do
   create_table "invitations", force: :cascade do |t|
     t.string "code"
     t.datetime "created_at", precision: nil, null: false
-    t.string "email"
+    t.string "email", collation: "NOCASE"
     t.text "memo"
     t.bigint "new_user_id"
     t.string "token", null: false
@@ -205,7 +205,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_193710) do
     t.string "client_id", null: false
     t.string "client_secret", null: false
     t.datetime "created_at", null: false
-    t.string "name", null: false
+    t.string "name", null: false, collation: "NOCASE"
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_mastodon_apps_on_name", unique: true
   end
@@ -335,7 +335,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_193710) do
     t.string "banned_reason", limit: 200
     t.datetime "created_at", null: false
     t.bigint "domain_id", null: false
-    t.string "identifier", null: false
+    t.string "identifier", null: false, collation: "NOCASE"
     t.integer "stories_count", default: 0, null: false
     t.string "token", null: false
     t.datetime "updated_at", null: false
@@ -482,7 +482,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_193710) do
     t.datetime "created_at", null: false
     t.datetime "renamed_away_at"
     t.bigint "user_id", null: false
-    t.string "username", null: false
+    t.string "username", null: false, collation: "NOCASE"
     t.index ["user_id"], name: "fk_rails_74bbef8f63"
   end
 
@@ -496,7 +496,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_193710) do
     t.datetime "disabled_invite_at", precision: nil
     t.bigint "disabled_invite_by_user_id"
     t.string "disabled_invite_reason", limit: 200
-    t.string "email", limit: 100
+    t.string "email", limit: 100, collation: "NOCASE"
     t.bigint "invited_by_user_id"
     t.boolean "is_admin", default: false, null: false
     t.boolean "is_moderator", default: false, null: false

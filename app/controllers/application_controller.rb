@@ -122,6 +122,7 @@ class ApplicationController < ActionController::Base
 
     if Rails.application.config.telebugs
       Telebugs.context "request", {
+        request_token: request.request_id,
         requested_path: @requested_path,
         original_fullpath: request.original_fullpath,
         query_parameters: request.query_parameters, # protected by filter_parameters

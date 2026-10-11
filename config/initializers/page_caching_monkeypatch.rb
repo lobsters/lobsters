@@ -23,6 +23,18 @@
 # 4. write() calls File.atomic_write(path), which passes the path to Tempfile.open as a basename,
 #    which prefixes a random 22 characters to it, which worsens problem 2. So this write() also
 #    gives atomic_write a random filename and then renames a second time to the desired path. Which.
+#
+# 5. cache_file() unescapes the request path to name the file and cache_path()'s start_with? check
+#    only prevents escaping the cache dir entirely. Rails matches against the escaped path, so
+#    percent-encoded '../' lets an attacker choose the filename a page is cached under, like:
+#     - arbitrary names that won't be swept, filling the disk
+#     - write a page with a trailing slash, so newest.html becomes newest/index.html
+#     - write a page under the filename for another page, so /a serves the content of /b
+#     - write a page to directory to block caching, eg 'index.html/a.html', so the root path can't
+#       be cached as 'index.html' (this kills the lobster)
+#
+# Real obvious the correct fix for all of these would be to cache into a sqlite db and write a Caddy
+# module to read from it.
 
 require "actionpack/page_caching"
 require "active_support/core_ext/file/atomic"
@@ -44,11 +56,30 @@ ActiveSupport.on_load(:action_controller) do
 
       prepend WritePatch
 
+      class UnsafePath < StandardError; end
+
+      module CachePatch
+        # Override: refuse to cache paths with directory traversal/rewrites
+        def cache(...)
+          super
+        rescue UnsafePath
+          nil
+        end
+      end
+
+      prepend CachePatch
+
       def cache_file(path, extension)
-        name = if path.empty? || path =~ %r{\A/+\z}
-          "/index"
+        if path.empty? || path =~ %r{\A/+\z}
+          name = "/index"
         else
-          URI::DEFAULT_PARSER.unescape(path.chomp("/"))
+          raw = path.chomp("/")
+          name = URI::DEFAULT_PARSER.unescape(raw)
+
+          # #5: refuse encoded '.' or '/', '//', '/./', '/../'
+          if name.count("./") != raw.count("./") || name.match(%r{/\.{0,2}(/|\z)})
+            raise UnsafePath, "unescaping #{path.inspect} added a '.' or '/'"
+          end
         end
 
         # original:

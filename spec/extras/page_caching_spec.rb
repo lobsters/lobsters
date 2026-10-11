@@ -35,6 +35,45 @@ RSpec.describe "page caching monkeypatch" do
         expect(page_cache.cache_file("youtube.com.html", ".html")).to eq("youtube.com.html")
       end
     end
+
+    context "with a trailing slash" do
+      it "returns the same file path" do
+        expect(page_cache.cache_file("/newest", ".html")).to eq("/newest.html")
+        expect(page_cache.cache_file("/newest/", ".html")).to eq("/newest.html")
+      end
+    end
+
+    context "with percent-encoded path traversal" do
+      let(:unsafe) { ActionController::Caching::Pages::PageCache::UnsafePath }
+
+      it "refuses an encoded ../ that would write a sibling of another page's cache file" do
+        expect { page_cache.cache_file("/page/%2E%2E%2Findex%2Ehtml%2Fx", ".html") }.to raise_error(unsafe)
+      end
+
+      it "refuses an encoded ../ that would overwrite another page's cache file" do
+        expect { page_cache.cache_file("/page/%2E%2E%2Fabout%2Ehtml", ".html") }.to raise_error(unsafe)
+      end
+
+      it "refuses an encoded . that would change the extension" do
+        expect { page_cache.cache_file("/page/2%2Ejson", ".html") }.to raise_error(unsafe)
+      end
+
+      it "refuses an encoded / that would add a directory" do
+        expect { page_cache.cache_file("/page/2%2Fx", ".html") }.to raise_error(unsafe)
+      end
+
+      it "refuses literal dot segments" do
+        expect { page_cache.cache_file("/s/../index", ".html") }.to raise_error(unsafe)
+      end
+
+      it "still unescapes other characters" do
+        expect(page_cache.cache_file("/t/c%2B%2B", ".html")).to eq("/t/c++.html")
+      end
+
+      it "still caches the root path as index" do
+        expect(page_cache.cache_file("/", ".html")).to eq("/index.html")
+      end
+    end
   end
 
   describe "#cache" do
@@ -46,6 +85,11 @@ RSpec.describe "page caching monkeypatch" do
       it "does not cache the file" do
         expect(page_cache.cache("something here\n", path, nil, nil)).to be_nil
       end
+    end
+
+    it "doesn't cache path traversal" do
+      expect(page_cache.cache("frontpage\n", "/page/%2E%2E%2Findex%2Ehtml%2Fx", nil, nil)).to be_nil
+      expect(Dir.children(cache_dir)).to be_empty
     end
   end
 end

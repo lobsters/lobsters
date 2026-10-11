@@ -3,6 +3,39 @@
 require "rails_helper"
 
 describe "home", type: :request do
+  describe "page cache path traversal" do
+    around do |example|
+      was_caching = ActionController::Base.perform_caching
+      was_dir = ActionController::Base.page_cache_directory
+      Dir.mktmpdir("rspec-") do |dir|
+        ActionController::Base.perform_caching = true
+        ActionController::Base.page_cache_directory = dir
+        @cache_dir = dir
+        example.run
+      end
+    ensure
+      ActionController::Base.perform_caching = was_caching
+      ActionController::Base.page_cache_directory = was_dir
+    end
+
+    # The HomeConrtoller call of 'caches_page' tests CACHE_PAGE when loaded, not each hit.
+    # Removing this works in isolation but introduces fun order-depended test failures.
+    before { HomeController.caches_page :index, if: ApplicationController::CACHE_PAGE }
+
+    it "caches the frontpage" do
+      get "/"
+
+      expect(response).to have_http_status(200)
+      expect(File.exist?(File.join(@cache_dir, "index.html"))).to be true
+    end
+
+    it "doesn't let path traversal block the frontpage" do
+      get "/page/%2E%2E%2Findex%2Ehtml%2Fx"
+
+      expect(Dir.children(@cache_dir)).to be_empty
+    end
+  end
+
   describe "#category" do
     it "lists stories in the category" do
       story = create(:story)

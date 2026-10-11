@@ -16,7 +16,10 @@ class CachePageJob < ApplicationJob
     # after writing, remove any caches with old title slugs
     if path.start_with?("/s/")
       file = File.join(ActionController::Base.page_cache_directory, "#{path}.html")
-      FileUtils.rm_f(Dir.glob(File.join(File.dirname(file), "*.html")) - [file])
+      story_dir = File.dirname(file)
+      FileUtils.rm_f(Dir.glob(File.join(story_dir, "*.html")) - [file])
+      # and also /s/:short_id.:format because of the rails misdesign explained in #746
+      FileUtils.rm_f(Dir.glob("#{story_dir}.*"))
     end
   end
 end

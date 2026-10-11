@@ -139,7 +139,8 @@ class ApplicationController < ActionController::Base
 
     if (story.is_gone? || story.merged_story_id || story.new_record?) && story.short_id.present? && page_cache_directory.present?
       # rm the story's whole directory to catch files with old title slugs
-      FileUtils.rm_rf File.join(page_cache_directory, "s", story.short_id)
+      story_dir = File.join(page_cache_directory, "s", story.short_id)
+      FileUtils.rm_rf [story_dir, *Dir.glob("#{story_dir}.*")]
     else
       CachePageJob
         .set(

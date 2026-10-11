@@ -170,7 +170,7 @@ class StoriesController < ApplicationController
     end
 
     # canonicalize on title_path for html (json is ok with just short_id)
-    if request.format.html? && params[:title].to_s != @story.title_as_slug
+    if !request.format.json? && params[:title].to_s != @story.title_as_slug
       return redirect_to(Routes.title_path(@story))
     end
 

@@ -119,6 +119,25 @@ describe "stories", type: :request do
         }
       }.to change { user.stories_deleted_count }.by(1)
     end
+
+    it "removes every cached copy of the story page" do
+      sign_in user
+      was_dir = ActionController::Base.page_cache_directory
+      Dir.mktmpdir("rspec-") do |dir|
+        ActionController::Base.page_cache_directory = dir
+        story_dir = File.join(dir, "s", story.short_id)
+        FileUtils.mkdir_p(story_dir)
+        File.write(File.join(story_dir, "#{story.title_as_slug}.html"), "stale")
+        File.write("#{story_dir}.html", "stale")
+        File.write("#{story_dir}.json", "stale")
+
+        patch "/stories/#{story.short_id}/destroy", params: {id: story.short_id, story: {title: story.title}}
+
+        expect(Dir.children(File.join(dir, "s"))).to be_empty
+      ensure
+        ActionController::Base.page_cache_directory = was_dir
+      end
+    end
   end
 
   describe "#undelete" do
@@ -187,6 +206,13 @@ describe "stories", type: :request do
 
     it "redirects /s/short_id to include title slug" do
       get "/s/#{story.short_id}"
+
+      expect(response).to redirect_to(Routes.title_path(story))
+    end
+
+    it "redirects /s/short_id to include title slug when Accept is */*" do
+      # curl's default Accept header isn't .html? so this was rendered and page cached at s/short_id.html
+      get "/s/#{story.short_id}", headers: {"Accept" => "*/*"}
 
       expect(response).to redirect_to(Routes.title_path(story))
     end

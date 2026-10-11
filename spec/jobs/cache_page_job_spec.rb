@@ -37,6 +37,16 @@ RSpec.describe CachePageJob, type: :job do
       expect(Dir.children(story_dir)).to eq(["#{story.title_as_slug}.html"])
     end
 
+    it "sweeps stale copies cached at short_id redirect with format rails shouldn't even be serving" do
+      FileUtils.mkdir_p(File.join(cache_dir, "s"))
+      File.write("#{story_dir}.html", "stale")
+
+      CachePageJob.perform_now(Routes.title_path(story))
+
+      expect(File.exist?("#{story_dir}.html")).to be false
+      expect(File.exist?(File.join(story_dir, "#{story.title_as_slug}.html"))).to be true
+    end
+
     it "leaves dotfiles alone so it can't eat cache_page tempfiles" do
       FileUtils.mkdir_p(story_dir)
       File.write(File.join(story_dir, ".tmpfile"), "in-flight write")

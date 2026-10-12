@@ -7,16 +7,14 @@
   Lobsters <a href="/about#transparency">does not use IP bans to block users</a>; all user bans appear in <a href="/moderations">the moderation log</a>.
   </p>
 
-  <ul>
-    <% @drops.each do |drop| %>
-      <li>
-        <%= drop[0] %>
-        <% if drop[1] %>
-          <%= drop[1].delete_prefix('"').delete_suffix('"') %>
-        <% else %>
-          No comment recorded.
+  <% @groups.each do |comment, ranges| %>
+    <details>
+      <summary><%= comment %>, <%= pluralize(ranges.size, "range") %></summary>
+      <ul>
+        <% ranges.each do |range| %>
+          <li><%= range %></li>
         <% end %>
-      </li>
-    <% end %>
-  </ul>
+      </ul>
+    </details>
+  <% end %>
 </div>

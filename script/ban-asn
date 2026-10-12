@@ -1,0 +1,143 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Ban naughtiness by ASN.
+#
+# Deletes every rule with the given COMMENT, adds rules covering every prefix the ASes currently
+# announce per RIPEstat.
+
+require "ipaddr"
+require "json"
+require "net/http"
+require "optparse"
+
+options = {dir: "/etc/iptables", dry_run: false}
+parser = OptionParser.new do |o|
+  o.banner = "Usage: #{$PROGRAM_NAME} [options] \"COMMENT\" ASN [ASN...]"
+  o.on("--dry-run", "Print changes, don't write files") { options[:dry_run] = true }
+  o.on("--dir DIR", "Directory holding rules.v4 and rules.v6 (default /etc/iptables)") { options[:dir] = it }
+end
+parser.parse!
+comment, *asns = ARGV
+abort parser.help if comment.to_s.empty? || asns.empty?
+
+asns = asns.map { it.downcase.delete_prefix("as") }
+abort "Not an AS number: #{asns.join(" ")}" unless asns.all? { it.match?(/\A\d+\z/) }
+
+Prefix = Data.define(:ip, :first, :last) do
+  def self.parse(cidr)
+    ip = IPAddr.new(cidr)
+    first = ip.to_i
+    new(ip:, first:, last: first + 2**(ip.ipv4? ? 32 - ip.prefix : 128 - ip.prefix) - 1)
+  end
+
+  def to_s = "#{ip}/#{ip.prefix}"
+
+  def v4? = ip.ipv4?
+
+  def within?(other) = other.first <= first && last <= other.last
+end
+
+def announced(asn)
+  uri = URI("https://stat.ripe.net/data/announced-prefixes/data.json?resource=AS#{asn}&sourceapp=lobsters")
+  response = Net::HTTP.get_response(uri)
+  abort "RIPEstat HTTP #{response.code} for AS#{asn}" unless response.is_a?(Net::HTTPSuccess)
+
+  body = JSON.parse(response.body)
+  abort "RIPEstat status #{body["status"]} for AS#{asn}" unless body["status"] == "ok"
+
+  prefixes = body.dig("data", "prefixes").map { Prefix.parse(it["prefix"]) }
+  abort "RIPEstat returned no prefixes for AS#{asn}, refusing to continue" if prefixes.empty?
+
+  warn "AS#{asn}: #{prefixes.size} prefixes announced"
+  prefixes
+end
+
+# join duplicate, overlapping, and adjacent prefixes into [first, last] ranges
+def merged(nets)
+  nets.sort_by(&:first).each_with_object([]) do |net, ranges|
+    if ranges.last && net.first <= ranges.last[1] + 1
+      ranges.last[1] = [ranges.last[1], net.last].max
+    else
+      ranges << [net.first, net.last]
+    end
+  end
+end
+
+# split merged ranges into the fewest CIDR blocks that cover them exactly
+def collapse(nets, v4)
+  bits = v4 ? 32 : 128
+  family = v4 ? Socket::AF_INET : Socket::AF_INET6
+  merged(nets).flat_map do |first, last|
+    blocks = []
+    while first <= last
+      size = first.zero? ? bits : (first & -first).bit_length - 1 # largest block aligned here
+      size -= 1 while first + 2**size - 1 > last
+      blocks << Prefix.parse("#{IPAddr.new(first, family)}/#{bits - size}")
+      first += 2**size
+    end
+    blocks
+  end
+end
+
+# match iptables-save (xtables_save_string) so reruns find the rules it rewrote
+def quote(comment)
+  comment.match?(/\A[A-Za-z0-9_-]+\z/) ? comment : %("#{comment.gsub(/["\\']/) { "\\#{it}" }}")
+end
+
+RULE = /\A-A PREROUTING -s (\S+) -m comment --comment (.+) -j DROP\z/
+quoted = quote(comment)
+rule = ->(net) { "-A PREROUTING -s #{net} -m comment --comment #{quoted} -j DROP" }
+
+announcements = asns.flat_map { announced(it) }
+
+{"rules.v4" => true, "rules.v6" => false}.each do |file, v4|
+  path = File.join(options[:dir], file)
+  lines = File.read(path).split("\n")
+  family = announcements.select { it.v4? == v4 }
+  coverage = merged(family)
+
+  table = nil
+  ours = [] # [index, net]
+  commit = nil
+  lines.each_with_index do |line, i|
+    table = line[1..] if line.start_with?("*")
+    next unless table == "raw"
+    commit ||= i if line == "COMMIT"
+    if (m = RULE.match(line)) && m[2] == quoted
+      ours << [i, Prefix.parse(m[1])]
+    end
+  end
+  abort "#{path}: no *raw table" unless commit
+
+  existing = ours.map(&:last)
+  wanted = collapse(family, v4)
+
+  removed = existing.map(&:to_s).tally
+  added = wanted.map(&:to_s).tally
+  wanted.each { removed[it.to_s] -= 1 if removed[it.to_s] }
+  existing.each { added[it.to_s] -= 1 if added[it.to_s] }
+  removed = removed.select { _2.positive? }
+  added = added.select { _2.positive? }
+
+  removed.each { |net, count| puts "#{file} - #{net}#{" (x#{count})" if count > 1}" }
+  added.each_key { puts "#{file} + #{it}" }
+  warn "#{file}: #{existing.size} rules for #{quoted}, #{removed.values.sum} removed, " \
+    "#{added.size} added, #{wanted.size} after"
+
+  next if options[:dry_run] || (removed.empty? && added.empty?)
+
+  # new rules go where the old group started, so /banned-ips keeps groups together
+  at = ours.first&.first || commit
+  drop = ours.map(&:first).to_set
+  out = lines.each_with_index.flat_map do |line, i|
+    [*(wanted.map(&rule) if i == at), *(line unless drop.include?(i))]
+  end
+
+  backup = "#{path}.#{Time.now.getlocal.strftime("%Y%m%d%H%M%S")}"
+  File.write(backup, File.read(path))
+  File.write(path, out.join("\n") + "\n")
+  warn "#{path}: written, backup at #{backup}"
+end
+
+warn "Apply with: netfilter-persistent reload" unless options[:dry_run]

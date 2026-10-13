@@ -412,6 +412,10 @@ input.btn-link:focus-visible {
 	margin-left: 0.2rem;
 }
 
+#header-top .inbox b {
+	font-weight: bold;
+}
+
 #header-top .inbox [aria-hidden] {
 	display: none;
 }

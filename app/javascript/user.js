@@ -988,11 +988,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   on('click', '.comment_unread', (event) => {
     const nodes = qSA('.comment_unread')
-    const foundIndex = Array.from(nodes).findIndex(node => node === event.target)
+    const foundIndex = Array.from(nodes).indexOf(event.target)
     const targetIndex = (foundIndex + 1) % nodes.length;
-    const targetY = nodes[targetIndex].getBoundingClientRect().top + window.scrollY
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    window.scrollTo({ top: targetY, behavior: reducedMotion ? 'instant' : 'smooth' })
+    nodes[targetIndex].scrollIntoView({
+					behavior: reducedMotion ? "instant" : "smooth",
+				});
   });
 
   // Private messages

@@ -716,6 +716,7 @@ li .comment_folder_button:checked ~ .comment .comment_folder:before {
 	content: "[+]";
 }
 /* folding a comment hides the text and voters, but #c_abc123 anchors override */
+li .comment_folder_button:checked ~ div.comment:not(:target) .voters form,
 li .comment_folder_button:checked ~ div.comment:not(:target) div.comment_text {
 	display: none;
 }

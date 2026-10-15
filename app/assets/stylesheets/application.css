@@ -1152,17 +1152,21 @@ div#story_preview {
 	white-space: nowrap;
 }
 #story_box .url-updated,
-#story_box .title-reminder,
+#story_box .title-reminder-warn,
+#story_box .title-reminder-thanks,
 #story_box .self-promo-warning {
 	display: none;
 }
-#story_box .title-reminder-thanks {
-	display: none;
-}
+
 .slide-down {
 	display: block !important;
 	transition: height .5s ease !important;
 }
+#story_box .title-reminder-warn.slide-down {
+	display: inline-block !important;
+}
+
+
 #story_box .ts-wrapper {
 	max-width: 100%;
 }

@@ -221,13 +221,19 @@ export class _LobstersFunction {
     }
 
     // common separators or (parens) that don't enclose a 4-digit year
-    if (title.match(/: | - | – | — | \| | · | • | by /) ||
-       (title.match(/\([^\)]*\)/g) || []).some(function (p) { return !p.match(/\(\d{4}\)/) })) {
-          slideDownJS(qS('.title-reminder'));
+    if (
+      title.match(/: | - | – | — | \| | · | • | by /) ||
+      (title.match(/\([^\)]*\)/g) || []).some((p) => !p.match(/\(\d{4}\)/))
+    ) {
+      const warn = qS(".title-reminder-warn");
+      warn.ariaHidden = "false"
+      slideDownJS(warn);
+      qS(".title-reminder-thanks").style.display = "none";
 
-    // else if the title doesn't contain concerns and reminder is visible
-    } else if (qS('.title-reminder').classList.contains('slide-down')) {
-      qS('.title-reminder-thanks').style.display = 'inline';
+      // else if the title doesn't contain concerns and reminder is visible
+    } else if (qS(".title-reminder-warn").classList.contains("slide-down")) {
+      qS(".title-reminder-warn").ariaHidden = "true"
+      qS(".title-reminder-thanks").style.display = "inline";
     }
   }
 

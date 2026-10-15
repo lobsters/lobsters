@@ -1,6 +1,6 @@
 // @ts-check
 
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
+// // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 
 // in console: app await import("user")
 
@@ -574,11 +574,12 @@ export class _LobstersFunction {
       body: formData });
   }
 
-  voteComment(voterEl, point, reason) {
+  async voteComment(voterEl, point, reason) {
     if (!Lobster.curUser) return Lobster.bounceToLogin();
 
     const li = parentSelector(voterEl, ".comment");
     const scoreLink = qS(li, '.upvoter');
+    scoreLink.ariaBusy = "true"
     const formData = new FormData();
     formData.append('reason', reason || '');
     let showScore = true;
@@ -638,9 +639,11 @@ export class _LobstersFunction {
       qS(li, '.reason').innerHTML = "| " + Lobster.commentFlagReasons[reason].toLowerCase();
     }
 
-    fetchWithCSRF("/comments/" + li.getAttribute("data-shortid") + "/" + action, {
+    await fetchWithCSRF("/comments/" + li.getAttribute("data-shortid") + "/" + action, {
       method: 'post',
       body: formData });
+
+    scoreLink.ariaBusy = "false"
   }
 
   /** @param {string} storyId */

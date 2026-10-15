@@ -26,10 +26,14 @@ See the guidelines below for more."
 
   <%= f.label :title %>
   <%= f.text_field :title, required: true, minlength: Story::TITLE_MIN_LENGTH, maxlength: Story::TITLE_MAX_LENGTH %>
-  <p class="title-reminder">
-    Please remove extraneous components from titles such as the name of the site, blog, section, and author.
-    <span class="title-reminder-thanks">Thanks!</span>
-  </p>
+  <output class="title-reminder" for="<%= :title %>" role="alert" aria-live="polite">
+    <span class="title-reminder-warn">
+      Please remove extraneous components from titles such as the name of the site, blog, section, and author.
+    </span>
+    <span class="title-reminder-thanks">
+      Thanks!
+    </span>
+  </output>
 
   <% if f.object.id && !suggesting && f.object.suggested_title_times.any? %>
     <p class="hint">

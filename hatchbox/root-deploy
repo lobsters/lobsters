@@ -35,7 +35,7 @@ if [ ! -f /tmp/anubis_1.27.0_amd64.deb ]; then
 fi
 
 # server packages
-apt install -y iptables-persistent opendkim postfix restic
+apt install -y iptables-persistent mailutils opendkim postfix restic
 
 # We build our own sqlite3 (.bundle/config), remove any system copy to avoid
 # infinite confusion when getting different query plans from a different version.

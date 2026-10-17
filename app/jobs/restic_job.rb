@@ -11,6 +11,6 @@ class ResticJob < ApplicationJob
     system(Rails.root.join("bin/sqlite3").to_s, db_path.to_s,
       ".backup '#{shared}/database-backups/primary.sqlite3'", exception: true)
     # must use . instead of source because prod is using sh instead of bash
-    system(". #{shared}/etc/restic-env ; restic backup --no-scan #{shared}/etc #{shared}/log #{shared}/database-backups #{home}/.*_history", exception: true)
+    system(". #{shared}/etc/restic-env ; restic backup --no-scan #{shared}/etc #{shared}/log #{shared}/database-backups #{home}/.*_history #{home}/.local/share/caddy", exception: true)
   end
 end

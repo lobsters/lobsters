@@ -35,7 +35,7 @@ if [ ! -f /tmp/anubis_1.27.0_amd64.deb ]; then
 fi
 
 # server packages
-apt install iptables-persistent opendkim postfix restic
+apt install -y iptables-persistent opendkim postfix restic
 
 # We build our own sqlite3 (.bundle/config), remove any system copy to avoid
 # infinite confusion when getting different query plans from a different version.
@@ -44,7 +44,7 @@ apt remove -y sqlite3
 # 2026-01-02 workaround failure to build commonmarker because there aren't
 # precompiled gems for ruby 4.0.0 yet
 # https://github.com/gjtorikian/commonmarker/issues/427
-apt install libclang-dev
+apt install -y libclang-dev
 
 # configure opendkim for postfix
 install -p -m 0644 opendkim.m4 /etc/mail/m4/

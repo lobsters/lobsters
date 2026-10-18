@@ -77,7 +77,12 @@ systemctl force-reload systemd-journald
 # keep Caddy's per-request access logs out of journald (they're in caddy.log).
 install -D -p -m 0644 caddy-no-access-journal.conf /etc/systemd/system/caddy.service.d/caddy-no-access-journal.conf
 
-# configure Anubis
+# persistent key for Anubis so it doesn't invalidate all cookies by generating a
+# new one on each deploy
+if [ ! -f /etc/anubis/lobsters.key ]; then
+  openssl rand -hex 32 > /etc/anubis/lobsters.key
+  chmod 0644 /etc/anubis/lobsters.key
+fi
 install -p -m 0644 lobsters.anubis.env /etc/anubis/lobsters.env
 install -p -m 0644 lobsters.botPolicies.yaml /etc/anubis/lobsters.botPolicies.yaml
 rm -f /etc/anubis/default.env # not used, distraction

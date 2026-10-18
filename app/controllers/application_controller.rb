@@ -142,12 +142,14 @@ class ApplicationController < ActionController::Base
       story_dir = File.join(page_cache_directory, "s", story.short_id)
       FileUtils.rm_rf [story_dir, *Dir.glob("#{story_dir}.*")]
     else
+      path = Routes.title_path(story)
+      return unless is_moderator || Rails.cache.write("refill_story_page_cache:#{path}", true, unless_exist: true, expires_in: 2.minutes)
+
       CachePageJob
         .set(
-          queue: (is_moderator || story.created_at&.after?(1.month.ago)) ? :default : :refill_story_pages,
-          wait: is_moderator ? 0 : 2.minutes
+          queue: (is_moderator || story.created_at&.after?(1.month.ago)) ? :default : :refill_story_pages
         )
-        .perform_later(Routes.title_path(story))
+        .perform_later(path)
     end
   end
 

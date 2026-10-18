@@ -167,11 +167,15 @@
       unique list address private to prevent others from posting comments as you.
       </p>
 
+      <div class="flash-notice">
+        2026-10-17: <a href="https://gist.github.com/pushcx/e59839c44403ea224f37a33c20232cbe#user-content-email">mailing list mode is temporarily disabled</a>
+      </div>
+
       <div class="labelled_grid">
-        <%= f.label :mailing_list_mode, "Receive List E-mails" %>
+        <s><%= f.label :mailing_list_mode, "Receive List E-mails" %></s>
         <%= f.select :mailing_list_mode, [ [ "No e-mails", 0 ],
           [ "All stories and comments", 1 ], [ "Only stories", 2 ] ],
-          required: true %>
+        { required: true } , { disabled: true} %>
         <label>List Address</label>
         <span>
           <tt><%= Rails.application.shortname %>-<%=

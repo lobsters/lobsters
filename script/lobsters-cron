@@ -17,7 +17,7 @@ then
   exit 0
 fi
 
-bundle exec ruby script/mail_new_activity.rb &
+#bundle exec ruby script/mail_new_activity.rb &
 bundle exec ruby script/mastodon_post.rb &
 
 exit $err

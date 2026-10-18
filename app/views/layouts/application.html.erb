@@ -123,12 +123,6 @@
       <h1 class="<%= @title_class %>"><%= @title %></h1>
     <% end %>
 
-    <div class="flash-notice">2026-10-17:
-      Migrating to a new VPS, gonna be in read-only mode, hopefully only an hour or two.
-      Reload <a href="https://gist.github.com/pushcx/e59839c44403ea224f37a33c20232cbe">this gist for updates</a>,
-      or drop by the <a href="https://web.archive.org/web/20261006004545/https://lobste.rs/chat">chat room</a>.
-    </div>
-
     <% [ :error, :success, :notice ].each do |f| %>
       <% if flash[f].present? %>
         <div class="flash-<%= f %>"><%= flash[f] %></div>

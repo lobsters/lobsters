@@ -41,7 +41,7 @@ class Vote < ApplicationRecord
     "O" => "Off-topic",
     "A" => "Already Posted",
     "B" => "Broken Link",
-    "S" => "Spam",
+    "S" => "Spam/Slop",
     "" => "Cancel"
   }.freeze
   ALL_STORY_REASONS = STORY_REASONS.merge({

@@ -364,34 +364,42 @@ export class _LobstersFunction {
   /** @param {SubmitEvent} ev */
   async hideStory(ev) {
     const submitBtn = /** @type HTMLInputElement */ ( ev.submitter );
-    const story = submitBtn.closest('.story');
+    const story = submitBtn.closest('.story') ?? qS('.story');
 
-    // If no .story, action was triggered by #hide-alert.
-    const submitBtns = ( story ?
-      [...qSA(story, '.hider [type="submit"]'), qS('#hide-alert .hider [type="submit"]')] :
-      [...qSA('.hider [type="submit"]')] ).filter(btn => btn instanceof HTMLInputElement)
-
-    const data = await Lobster._handleStoryAction(ev, submitBtns);
+    const data = await Lobster._handleStoryAction(ev, qSA(story, '.hider [type="submit"]'));
 
     if (!(data && "hidden" in data)) { return }
 
     const isHidden = !!data.hidden;
-    const cta = isHidden ? "unhide" : "hide"
-
+    Lobster.syncStoryHider(story, isHidden);
     if (!isHidden) {
-      qS("hide-alert")?.setAttribute("hidden", "hidden");
-    } else {
-      qS("hide-alert")?.removeAttribute("hidden");
+      Lobster.syncStoryFlagger(story, false);
     }
+  }
 
-
-    for (const submitBtn of submitBtns) {
-      if (!submitBtn.closest("#hide-alert")) {
-        submitBtn.value = cta;
+  syncStoryHider(story, isHidden) {
+    const alert = qS('#hide-alert');
+    if (alert) {
+      alert.hidden = !isHidden;
+    }
+    const action = isHidden ? "unhide" : "hide";
+    const shortId = story.getAttribute("data-shortid");
+    for (const btn of qSA(story, '.hider [type="submit"]')) {
+      btn.value = action;
+      const form = btn.closest("form");
+      if (form) {
+        form.action = `/stories/${shortId}/${action}`;
       }
     }
+    story.classList.toggle("hidden", isHidden);
+  }
 
-    ( story ?? qS('.story') )?.classList.toggle("hidden", isHidden);
+  syncStoryFlagger(story, reason) {
+    story.classList.toggle("flagged", !!reason);
+    const flagger = qS(story, '.flagger');
+    if (flagger) {
+      flagger.textContent = reason ? `unflag (${Lobster.storyFlagReasons[reason]})` : 'flag';
+    }
   }
 
   /** @param {SubmitEvent} ev */
@@ -513,15 +521,15 @@ export class _LobstersFunction {
       action = "unvote";
     } else if (li.classList.contains("flagged") && point < 0) {
       /* already flagged, neutralize */
-      li.classList.remove("flagged");
+      Lobster.syncStoryFlagger(li, null);
       score++;
       action = "unvote";
     } else if (point > 0) {
       if (li.classList.contains("flagged")) {
         /* Give back the lost flagged point */
         score++;
+        Lobster.syncStoryFlagger(li, null);
       }
-      li.classList.remove("flagged");
       li.classList.add("upvoted");
       score++;
       action = "upvote";
@@ -531,7 +539,8 @@ export class _LobstersFunction {
         score--;
       }
       li.classList.remove("upvoted");
-      li.classList.add("flagged");
+      Lobster.syncStoryFlagger(li, reason);
+      Lobster.syncStoryHider(li, true);
       if (qS(li.parentElement, '.comment_folder_button')) {
         qS(li.parentElement, '.comment_folder_button').setAttribute('checked', true);
       };
@@ -546,26 +555,10 @@ export class _LobstersFunction {
       scoreLink.innerHTML = '~';
     }
 
-    const flagger = qS(li, '.flagger');
-
-    switch (action) {
-      case "upvote": {
-        const reasonEl = qS(li, '.reason');
-        if (reasonEl) {
-          reasonEl.innerHTML = ''
-        }
-        break;
-      }
-      case "unvote": {
-        if (point < 0 && flagger) {
-          flagger.textContent = 'flag';
-        }
-        break;
-      }
-      case "flag": {
-        if (flagger) {
-          flagger.textContent = `unflag (${Lobster.storyFlagReasons[reason]})`;
-        }
+    if (action == "upvote") {
+      const reasonEl = qS(li, '.reason');
+      if (reasonEl) {
+        reasonEl.innerHTML = ''
       }
     }
 

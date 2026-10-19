@@ -17,6 +17,7 @@ class HiddenStory < ApplicationRecord
   end
 
   def self.unhide_story_for_user(story, user)
+    Vote.where(story: story, user: user, comment: nil, vote: -1).delete_all
     HiddenStory.where(story: story, user: user).delete_all
     story.update_score_and_recalculate!(0, 0)
     ReadRibbon.unhide_replies_for(story.id, user.id)

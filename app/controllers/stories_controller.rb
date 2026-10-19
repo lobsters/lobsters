@@ -287,6 +287,7 @@ class StoriesController < ApplicationController
     Vote.vote_thusly_on_story_or_comment_for_user_because(
       -1, @story.id, nil, @user.id, params[:reason]
     )
+    HiddenStory.hide_story_for_user(@story, @user)
 
     render plain: "ok"
   end

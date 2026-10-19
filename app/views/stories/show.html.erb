@@ -35,16 +35,18 @@
     <% end %>
   <% end %>
 
-  <% if @story.is_hidden_by_cur_user %>
-    <div id="hide-alert">
-      You have <a href="/about#story-hiding">hidden this</a> story.
+  <% if @user %>
+    <div id="hide-alert" <%= "hidden" unless @story.is_hidden_by_cur_user %>>
+      You have <a href="/about#story-hiding">hidden this</a>
+      story<%= " by flagging it" if @story.current_flagged? %>.
       You won't be notified of replies or @mentions.
       Links to this story and its comments will not be shown elsewhere on the site for you.
       You can
       <%= form_with :class => "hider", url: story_unhide_path(@story.short_id) do |form| %>
         <%= form.submit "unhide", :class => "btn-link" %>
       <% end %>
-      it to make them visible again.
+      it to make them visible
+      again<%= ", which also removes your flag." if @story.current_flagged? %>.
     </div>
   <% end %>
 

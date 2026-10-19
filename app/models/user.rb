@@ -297,7 +297,6 @@ class User < ApplicationRecord
       self.banned_by_user_id = banner.id
       self.banned_reason = reason
 
-      BanNotificationMailer.notify(self, banner, reason).deliver_now unless deleted_at?
       delete!
 
       m = Moderation.new
@@ -307,6 +306,7 @@ class User < ApplicationRecord
       m.reason = reason
       m.save!
     end
+    BanNotificationMailer.notify(self, banner, reason).deliver_now unless deleted_at?
 
     true
   end

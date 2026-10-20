@@ -9,6 +9,7 @@
       Hotness modifier <%= tag.hotness_mod %>
       (<%= tag.hotness_mod > 0 ? 'raises' : 'lowers' %> a story's rank).
     <% end %>
+    It takes <%= tag.quorum %> user suggestions to add or remove this tag.
     <% if tag.privileged %>
       Only mods can use this tag.
     <% elsif !tag.permit_by_new_users %>

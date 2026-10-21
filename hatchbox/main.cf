@@ -26,6 +26,11 @@ smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 
 smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
 
+# used by submission in master.cf
+mua_client_restrictions =
+mua_helo_restrictions =
+mua_sender_restrictions =
+
 # postscreen - pre-SMTP client screening
 # https://www.postfix.org/POSTSCREEN_README.html
 postscreen_access_list = permit_mynetworks
@@ -49,7 +54,7 @@ postscreen_dnsbl_action = enforce
 # consider changing to "drop" after logs inspection
 postscreen_greet_action = enforce
 # consider changing to "drop" after logs inspection
-postscreen_blacklist_action = enforce
+postscreen_denylist_action = enforce
 postscreen_tls_security_level = may
 
 # lobsters config:
@@ -64,6 +69,16 @@ inet_protocols = all
 # don't pass on mail to any remote hosts
 relayhost =
 relay_domains =
+
+# https://app.postshiba.com/docs/send-with-smtp
+sender_dependent_relayhost_maps = inline:{ {@lobste.rs = [smtp.postshiba.com]:587} }
+smtp_tls_policy_maps = inline:{ {[smtp.postshiba.com]:587 = secure match=smtp.postshiba.com protocols=>=TLSv1.2} }
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noplaintext, noanonymous
+smtp_sasl_tls_security_options = noanonymous
+smtp_sasl_mechanism_filter = plain
 
 # handle aliases before rails ingress
 local_recipient_maps = $alias_maps proxy:unix:passwd.byname

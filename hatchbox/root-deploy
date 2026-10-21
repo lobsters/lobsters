@@ -35,7 +35,7 @@ if [ ! -f /tmp/anubis_1.27.0_amd64.deb ]; then
 fi
 
 # server packages
-apt install -y iptables-persistent mailutils opendkim postfix restic
+apt install -y iptables-persistent libsasl2-modules mailutils opendkim postfix restic
 
 # We build our own sqlite3 (.bundle/config), remove any system copy to avoid
 # infinite confusion when getting different query plans from a different version.
@@ -62,6 +62,11 @@ adduser postfix opendkim
 install -p -m 0644 -t /etc/postfix/ main.cf master.cf virtual_aliases transport
 postmap /etc/postfix/virtual_aliases
 postmap /etc/postfix/transport
+# prod $APP_ETC/postshiba_smtp format:
+# [smtp.postshiba.com]:587 smtp_username:password
+install -p -m 0600 -t /etc/postfix/ $APP_ETC/sasl_password
+postmap /etc/postfix/sasl_passwd
+postfix check
 postfix reload
 
 # I get bounces daily from journalduhacker.net who left my email in their config.

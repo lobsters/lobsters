@@ -29,7 +29,7 @@ class HatsController < ApplicationController
     end
 
     @hat.doff_by_user_with_reason(@user, params[:reason])
-    redirect_to @user
+    redirect_to @hat.user
   end
 
   def edit
@@ -82,7 +82,7 @@ class HatsController < ApplicationController
     if @hat.user == @user || @user&.is_moderator?
       true
     else
-      redirect_to @user
+      redirect_to @hat.user
     end
   end
 

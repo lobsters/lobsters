@@ -526,7 +526,7 @@ button.upvoter:before {
 }
 .upvoter {
 	color: var(--color-fg-contrast-4-5);
-	display: flex;
+	display: inline-flex;
 	flex-direction: column;
 	align-items: center;
 	justify-self: center;
@@ -1902,7 +1902,9 @@ input[type="submit"].link_post.pushover_button {
 		padding-left: 25px;
 	}
 
-	ol.comments { margin-left: 10px }
+	ol.comments {
+		margin-left: 0;
+	}
 	ol.stories,
 	div#inside > ol.comments {
 		margin: 0 0 0 -0.5rem;
@@ -1913,8 +1915,6 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	div.voters {
-		margin-left: 0.25em;
-		margin-top: 0px;
 		width: 30px;
 	}
 
@@ -1923,7 +1923,7 @@ input[type="submit"].link_post.pushover_button {
 	}
 
 	div.comment_form_container form {
-		margin-left: 35px;
+		margin-left: 25px;
 	}
 
 	ol.stories.list {

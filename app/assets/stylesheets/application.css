@@ -518,12 +518,35 @@ div.voters {
 button.upvoter:before {
 	margin-bottom: 0.3rem;
 }
-.upvoter:hover:before,
-.upvoted .upvoter:before {
-	content: "\25b2";
+
+.upvoter[aria-busy=true]:before {
+	content: "\29D6";
+}
+
+.upvoter:focus-visible::before,
+.upvoter:hover::before {
 	color: var(--color-fg-accent);
 	-webkit-text-stroke: 1px var(--color-fg-accent);
+	font-weight: bolder;
 }
+.upvoter:focus,
+.upvoter:hover {
+	color: var(--color-fg-contrast-4-5);
+}
+
+.upvoted .upvoter:before {
+	content: "\25b2";
+	-webkit-text-stroke: 1px var(--color-fg-accent);
+	color: var(--color-fg-accent);
+}
+
+.upvoted .upvoter:focus-visible:before,
+.upvoted .upvoter:hover:before {
+	text-decoration: line-through;
+	text-decoration-color: var(--color-fg);
+	text-decoration-thickness: 0.15rem;
+}
+
 .upvoter {
 	color: var(--color-fg-contrast-4-5);
 	display: flex;

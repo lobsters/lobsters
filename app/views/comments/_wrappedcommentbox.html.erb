@@ -1,0 +1,10 @@
+<%# locals: (comment:, parents:, story: nil, show_comment: nil, show_tree_lines: false, redirect_on_submit: false) -%>
+
+<ol class="comments comments1">
+  <li class="comments_subtree">
+    <%= render partial: 'threads', locals: { thread: parents, story: story } %>
+    <div id="reply_form_c_<%= comment.parent_comment.short_id %>">
+      <%= render partial: 'commentbox', locals: { comment: comment, story: story, redirect_on_submit: redirect_on_submit } %>
+    </div>
+  </li>
+</ol>

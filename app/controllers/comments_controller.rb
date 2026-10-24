@@ -147,7 +147,7 @@ class CommentsController < ApplicationController
     else
       parents = comment.parents.for_presentation
       parents = CommentVoteHydrator.new(parents, @user)
-      render "_commentbox", locals: {
+      render "_wrappedcommentbox", locals: {
         comment: comment,
         story: story,
         parents: parents

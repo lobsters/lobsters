@@ -1,11 +1,4 @@
-<%# locals: (comment:, story: nil, show_comment: nil, show_tree_lines: false, redirect_on_submit: false, parents: nil) -%>
-<% if parents %>
-  <ol class="comments comments1">
-    <li class="comments_subtree">
-      <%= render partial: 'threads', locals: { thread: parents, story: story } %>
-    </li>
-  </ol>
-<% end %>
+<%# locals: (comment:, story: nil, show_comment: nil, show_tree_lines: false, redirect_on_submit: false) -%>
 
 <div class="comment_form_container" data-shortid="<%= comment.short_id if comment.persisted? %>">
 <%= form_with url: comment do |f| %>

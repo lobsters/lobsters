@@ -75,4 +75,19 @@ RSpec.feature "Settings" do
       expect(user.comments_posted_count).to_not eq(0)
     end
   end
+
+  feature "change own username" do
+    scenario "to invalid username" do
+      visit "/settings"
+      expect(page).to have_link user.username
+      fill_in "edit_user_user_username", with: "áéíóú"
+      page.first(:button, "Save Account Settings").click
+      within "#header-top" do
+        expect(page).to have_link user.username
+      end
+      expect(page).to have_field("edit_user_user_username", with: "áéíóú")
+      expect(page).to have_content("Username is invalid")
+    end
+  end
+
 end

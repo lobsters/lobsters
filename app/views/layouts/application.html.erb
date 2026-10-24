@@ -68,7 +68,7 @@
     </script>
   <% end %>
 </head>
-<body data-username='<%= @user.try(:username) %>'>
+<body data-username='<%= @og_username.presence ? @og_username : @user.try(:username) %>'>
   <header id="header">
     <div id="header-top">
       <h1 style="<%= @traffic_style %>" id="logo">
@@ -100,7 +100,7 @@
 
             <li><%= link_to_different_page 'Threads', threads_path %></li>
             <li><%= link_to_different_page 'Saved', saved_path %></li>
-            <li><%= link_to_different_page raw("#{@user.username}&nbsp;<span class='karma' aria-label='(karma: #{@user.karma})'>(#{@user.karma})</span>"), settings_path %></li>
+            <li><%= link_to_different_page raw("#{@og_username.presence ? @og_username : @user.username}&nbsp;<span class='karma' aria-label='(karma: #{@user.karma})'>(#{@user.karma})</span>"), settings_path %></li>
           <% else %>
             <li class="push-right"><%= link_to_different_page 'Login', login_path %></li>
           <% end %>

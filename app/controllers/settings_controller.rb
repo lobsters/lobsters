@@ -43,6 +43,7 @@ class SettingsController < ApplicationController
 
   def update
     @edit_user = @user.clone
+    @og_username = @user.username
 
     if params[:user][:password].empty? ||
         @user.authenticate(params[:current_password].to_s)
@@ -57,6 +58,7 @@ class SettingsController < ApplicationController
           )
         end
         session[:u] = @user.session_token if params[:user][:password]
+        @og_username = @user.username
         flash.now[:success] = "Successfully updated settings."
         @user = @edit_user
       end

@@ -73,6 +73,6 @@
 	--color-lobsters-hat-sysop-brim-stroke: #cc8080;
 
 	/* mobile */
-	--color-mobile-story-comments-bubble-fill: #999;
-	--color-mobile-story-comments-bubble-fill-zero: #666;
+	--color-mobile-story-comments-bubble-fill: #ccc;
+	--color-mobile-story-comments-bubble-fill-zero: #999;
 }

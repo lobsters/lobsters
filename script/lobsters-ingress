@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# trap errs to exit with 75 (EX_TEMPFAIL) so postfix will retry
+trap '[ $? -eq 0 ] || exit 75' EXIT
+
 set -e
 
 cd /home/deploy/lobsters/current

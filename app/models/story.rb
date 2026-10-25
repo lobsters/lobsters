@@ -280,6 +280,7 @@ class Story < ApplicationRecord
       check_not_banned_origin
       check_not_new_domain_from_new_user
       check_not_brigading
+      check_not_forge
       check_not_pushcx_stream
       errors.add(:url, "is not valid") unless url.match(Utils::URL_RE)
     elsif description.to_s.strip == ""
@@ -426,6 +427,25 @@ class Story < ApplicationRecord
     return unless url.present? && new_record? &&
       url.start_with?("https://push.cx/stream", "https://twitch.tv/pushcx")
     errors.add(:url, "is too much meta, we don't need it twice every week. Details: https://lobste.rs/c/skuxo9")
+  end
+
+  def check_not_forge
+    return unless url.present? && new_record? && (
+      url.match?(%r{^https?://bitbucket.org/[^/]+/[^/]+}) ||
+      url.match?(%r{^https?://bugs.launchpad.net/[^/]+}) ||
+      url.match?(%r{^https?://chiselapp.com/user/[^/]+/repository}) ||
+      url.match?(%r{^https?://codeberg.org/[^/]+/[^/]+}) ||
+      url.match?(%r{^https?://github.com/[^/]+/[^/]+}) ||
+      url.match?(%r{^https?://gitlab.com/.+}) ||
+      url.match?(%r{^https?://savannah.gnu.org}) ||
+      url.match?(%r{^https?://sourceforge.net/p/[^/]+})
+    )
+
+    errors.add :url, <<~EXPLANATION
+      is to a project repository. These don't start good discussions because few readers will
+      have the expertise to know what's worth talking about here. (And often they're low-effort self-promo.)
+      Instead, submit a blog post that goes into depth about what's interesting about this repo.
+    EXPLANATION
   end
 
   def comments_closing_soon?

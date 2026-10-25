@@ -93,7 +93,7 @@
 
           <% if @user %>
             <li class="push-right inbox">
-              <%= link_to inbox_path do %>
+              <%= link_to inbox_path, {aria: {label: "Inbox"}} do %>
                 <b>Inbox</b> <b aria-hidden="true">✉</b> <% if @user.inbox_count > 0 %>&nbsp;<b class="inbox-unread"><%= @user.inbox_count %></b><% end %>
               <% end %>
             </li>

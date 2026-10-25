@@ -62,7 +62,7 @@ adduser postfix opendkim
 install -p -m 0644 -t /etc/postfix/ main.cf master.cf virtual_aliases transport
 postmap /etc/postfix/virtual_aliases
 postmap /etc/postfix/transport
-# prod $APP_ETC/postshiba_smtp format:
+# prod $APP_ETC/sasl_password format:
 # [smtp.postshiba.com]:587 smtp_username:password
 install -p -m 0600 -t /etc/postfix/ $APP_ETC/sasl_passwd
 postmap /etc/postfix/sasl_passwd

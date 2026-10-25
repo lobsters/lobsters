@@ -80,6 +80,9 @@ smtp_sasl_security_options = noplaintext, noanonymous
 smtp_sasl_tls_security_options = noanonymous
 smtp_sasl_mechanism_filter = plain
 
+# if there isn't a sender, it's probably just backscatter spam attempts
+sender_dependent_default_transport_maps = inline:{ {<> = discard:} }
+
 # handle aliases before rails ingress
 local_recipient_maps = $alias_maps proxy:unix:passwd.byname
 alias_maps = hash:/etc/aliases

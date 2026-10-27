@@ -381,7 +381,7 @@ class Comment < ApplicationRecord
     elsif user.is_banned?
       "Comment from banned user removed"
     else
-      "Comment removed by author"
+      "Comment removed by its author"
     end
   end
 

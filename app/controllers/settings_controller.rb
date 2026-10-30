@@ -42,7 +42,7 @@ class SettingsController < ApplicationController
   end
 
   def update
-    @edit_user = @user.clone
+    @edit_user = User.find(@user.id)
 
     if params[:user][:password].empty? ||
         @user.authenticate(params[:current_password].to_s)

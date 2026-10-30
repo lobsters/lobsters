@@ -81,6 +81,7 @@ systemctl force-reload systemd-journald
 
 # keep Caddy's per-request access logs out of journald (they're in caddy.log).
 install -D -p -m 0644 caddy-no-access-journal.conf /etc/systemd/system/caddy.service.d/caddy-no-access-journal.conf
+install -D -p -m 0644 caddy-no-mptcp.conf /etc/systemd/system/caddy.service.d/caddy-no-mptcp.conf
 
 # persistent key for Anubis so it doesn't invalidate all cookies by generating a
 # new one on each deploy

@@ -117,7 +117,7 @@ class CommentsController < ApplicationController
       render partial: "commentbox", layout: false,
         content_type: "text/html", locals: {comment: @comment}
     else
-      render "_commentbox", locals: {comment: @comment, parents: @comment.parents, redirect_on_submit: true}
+      render "_wrappedcommentbox", locals: {comment: @comment, parents: @comment.parents, redirect_on_submit: true}
     end
   end
 

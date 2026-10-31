@@ -142,7 +142,12 @@ class LoginController < ApplicationController
       render :forgot_password and return
     end
 
-    @found_user.initiate_password_reset_for_ip(request.remote_ip)
+    begin
+      @found_user.initiate_password_reset_for_ip(request.remote_ip)
+    rescue
+      flash.now[:error] = "Our email isn't working, please come ask for help in chat."
+      render :forgot_password and return
+    end
 
     flash.now[:success] = "Password reset instructions have been e-mailed to you."
     render "index"

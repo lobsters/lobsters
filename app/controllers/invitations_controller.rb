@@ -52,10 +52,11 @@ class InvitationsController < ApplicationController
     i.memo = params[:memo]
 
     begin
-      i.save!
-      i.send_email
-      flash[:success] = "Successfully e-mailed invitation to " <<
-        params[:email].to_s << "."
+      Invitation.transaction do
+        i.save!
+        i.send_email
+      end
+      flash[:success] = "Successfully e-mailed invitation to #{params[:email]}"
     rescue => e
       # Rails.logger.error "Error creating invitation for #{params[:email]}: #{e.message}"
       flash[:error] = "Could not send invitation, verify the e-mail " \

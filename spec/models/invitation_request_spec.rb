@@ -8,6 +8,12 @@ describe InvitationRequest do
     expect(invitation_request).to be_valid
   end
 
+  it "emails a confirmation after create" do
+    expect {
+      create(:invitation_request)
+    }.to change { ActionMailer::Base.deliveries.size }.by(1)
+  end
+
   it "has a limit on the email field" do
     invitation_request = build(:invitation_request, email: "a" * 256 + "@b.b")
     invitation_request.valid?

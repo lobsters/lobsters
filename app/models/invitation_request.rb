@@ -18,7 +18,7 @@ class InvitationRequest < ApplicationRecord
   include EmailBlocklistValidation
 
   before_validation :create_code
-  after_create :send_email
+  after_create_commit :send_email
 
   def self.verified_count
     InvitationRequest.where(is_verified: true).count

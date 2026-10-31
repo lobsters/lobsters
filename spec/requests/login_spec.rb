@@ -104,6 +104,14 @@ describe "login", type: :request do
       }.to(change { User.find(deactivated.id).password_reset_token })
     end
 
+    it "shows an error if the email can't be sent" do
+      allow(PasswordResetMailer).to receive(:password_reset_link).and_raise(Errno::ECONNREFUSED)
+      post "/login/reset_password", params: {email: user.email}
+      expect(response.status).to eq(200)
+      expect(flash[:error]).to match(/email/)
+      expect(flash[:success]).to be_nil
+    end
+
     it "doesn't start reset process if user was banned" do
       expect {
         post "/login/reset_password", params: {email: banned.email}

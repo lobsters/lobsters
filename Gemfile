@@ -20,7 +20,7 @@ gem "sentry-rails"
 gem "typeid"
 
 # js
-gem "json"
+gem "json", "< 3" # 3.0 made JSON.parse keyword-only; pin until Rubocop + Rails update
 
 # deployment
 gem "actionpack-page_caching"

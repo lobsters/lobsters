@@ -154,6 +154,12 @@ describe "comments", type: :request do
         mid_at = response.body.index("id=\"c_#{mid.short_id}\"")
         expect(root_at).to be < mid_at
       end
+
+      it "renders a top-level comment without ancestors" do
+        top = create(:comment, story: story, user: author)
+        get "/comments/#{top.short_id}/edit"
+        expect(response.status).to eq(200)
+      end
     end
   end
 end

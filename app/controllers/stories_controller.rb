@@ -443,7 +443,7 @@ class StoriesController < ApplicationController
   end
 
   def disown
-    if !((@story = find_story) && story.disownable_by_user?(@user))
+    if !((@story = find_story) && @story.disownable_by_user?(@user))
       return render plain: "can't find story", status: 400
     end
 

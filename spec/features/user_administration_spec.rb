@@ -47,6 +47,7 @@ RSpec.feature "User Administration" do
     expect(user.is_banned?).to be(true)
     expect(user.banned_reason).to eq("Spammer")
     expect(Moderation.order("id asc").last.reason).to eq("Spammer")
+    perform_enqueued_jobs
     expect(sent_emails.size).to eq(1)
     expect(sent_emails[0].subject).to match(/account #{user.username} banned/)
   end
@@ -61,6 +62,7 @@ RSpec.feature "User Administration" do
     expect(page).to have_content("banned")
     user.reload
     expect(user.is_banned?).to be(true) # not repeating functionality from above
+    perform_enqueued_jobs
     expect(sent_emails.size).to eq(0) # we don't send any emails to deleted users
   end
 

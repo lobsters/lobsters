@@ -292,6 +292,8 @@ class User < ApplicationRecord
   end
 
   def ban_by_user_for_reason!(banner, reason)
+    notify = !deleted_at?
+
     User.transaction do
       self.banned_at = Time.current
       self.banned_by_user_id = banner.id
@@ -306,7 +308,7 @@ class User < ApplicationRecord
       m.reason = reason
       m.save!
     end
-    BanNotificationMailer.notify(self, banner, reason).deliver_now unless deleted_at?
+    BanNotificationMailer.notify(self, banner, reason).deliver_later if notify
 
     true
   end

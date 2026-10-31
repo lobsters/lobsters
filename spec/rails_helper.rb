@@ -71,6 +71,7 @@ RSpec.configure do |config|
   config.include AuthenticationHelper::ControllerHelper, type: :controller
   config.include AuthenticationHelper::FeatureHelper, type: :feature
   config.include AuthenticationHelper::RequestHelper, type: :request
+  config.include ActiveJob::TestHelper, type: :feature
 
   config.filter_rails_from_backtrace!
   config.filter_gems_from_backtrace \

@@ -234,7 +234,7 @@ class Comment < ApplicationRecord
   def calculated_confidence
     return 0 if is_deleted? || is_moderated?
     # matching the reddit implementation by backing out these numbers from how we cache
-    ups = self.score + flags
+    ups = score + flags
     downs = flags
     n = BigDecimal(ups + downs) # the float version can accumulate enough error to go out of range
     return 0 if n == 0
@@ -403,7 +403,7 @@ class Comment < ApplicationRecord
 
   def is_flaggable?(user)
     return false if is_gone? || user&.id == user_id
-    if created_at && self.score > FLAGGABLE_MIN_SCORE
+    if created_at && score > FLAGGABLE_MIN_SCORE
       Time.current - created_at <= FLAGGABLE_DAYS.days
     else
       false
@@ -489,7 +489,7 @@ class Comment < ApplicationRecord
     # also hide if user has flagged the story/comment to make retaliatory flagging less fun
     (
       (created_at && created_at < 36.hours.ago) ||
-      !SCORE_RANGE_TO_HIDE.include?(self.score)
+      !SCORE_RANGE_TO_HIDE.include?(score)
     ) && !current_flagged?
   end
 

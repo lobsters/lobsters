@@ -16,9 +16,7 @@ RSpec.describe "Routing" do
 
       # Have to use const_get to go from the string in the routing table to the constant because
       # Rails lazily autoloads constants in dev/test.
-      # rubocop:disable Sorbet/ConstantsFromStrings
       controller = Object.const_get(controller_name)
-      # rubocop:enable Sorbet/ConstantsFromStrings
       public_methods = controller.public_instance_methods(_include_super = false).map(&:to_s)
       unrouted_actions = public_methods - actions
 

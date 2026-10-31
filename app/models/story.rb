@@ -430,8 +430,8 @@ class Story < ApplicationRecord
   end
 
   def check_not_forge
-    return unless url.present? && new_record? && (
-      url.match?(%r{^https?://bitbucket.org/[^/]+/[^/]+}) ||
+    return unless url.present? && new_record?
+    return unless url.match?(%r{^https?://bitbucket.org/[^/]+/[^/]+}) ||
       url.match?(%r{^https?://bugs.launchpad.net/[^/]+}) ||
       url.match?(%r{^https?://chiselapp.com/user/[^/]+/repository}) ||
       url.match?(%r{^https?://codeberg.org/[^/]+/[^/]+}) ||
@@ -439,7 +439,6 @@ class Story < ApplicationRecord
       url.match?(%r{^https?://gitlab.com/.+}) ||
       url.match?(%r{^https?://savannah.gnu.org}) ||
       url.match?(%r{^https?://sourceforge.net/p/[^/]+})
-    )
 
     errors.add :url, <<~EXPLANATION
       is to a project repository. These don't start good discussions because few readers will

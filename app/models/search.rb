@@ -183,10 +183,10 @@ class Search
     if tags
       query.where!(
         story: Story
-                .joins(:tags)
-                .where(tags: tags)
-                .group("stories.id")
-                .having("count(distinct tags.id) = #{n_tags}")
+          .joins(:tags)
+          .where(tags: tags)
+          .group("stories.id")
+          .having("count(distinct tags.id) = #{n_tags}")
       )
     end
 

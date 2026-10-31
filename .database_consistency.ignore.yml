@@ -250,11 +250,17 @@ Tag:
   index_tags_on_token:
     UniqueIndexChecker:
       enabled: false
+  lower(tag):
+    MissingUniqueIndexChecker:
+      enabled: false
   lower(token):
     MissingUniqueIndexChecker:
       enabled: false
   moderation:
     MissingIndexChecker:
+      enabled: false
+  tag:
+    UniqueIndexChecker:
       enabled: false
 User:
   banned_by_user:

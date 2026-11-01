@@ -1,5 +1,5 @@
 # Use an official Ruby image as a base
-FROM ruby:4.0.0
+FROM ruby:4.0.9
 
 # Install dependencies
 RUN apt-get update -qq && apt-get install -y \

@@ -242,12 +242,11 @@ input[type="reset"],
 input[type="submit"],
 a.button {
 	background-color: var(--color-button-bg);
-	border-bottom-color: var(--color-fg-shape);
 	border: 1px solid var(--color-box-border);
 	color: var(--color-fg);
 	cursor: pointer;
 	display: inline-block;
-	line-height: 18px;
+	line-height: 1.125rem;
 	padding: 2px 10px 2px 10px;
 	text-align: center;
 	text-decoration: none;
@@ -358,6 +357,7 @@ input.btn-link:focus-visible {
 	width: 1rem;
 	height: 1rem;
 	padding: 1px;
+	background-size: contain
 }
 
 @media (prefers-contrast: more) {
@@ -769,12 +769,12 @@ li .byline > img.avatar {
 	margin-bottom: -5px;
 }
 img.avatar {
-	border-radius: 8px;
-	height: 16px;
-	margin-bottom: 2px;
-	margin-right: 2px;
+	border-radius: 50%;
+	height: 1rem;
+	margin-bottom: 0.125rem;
+	margin-right: 0.125rem;
 	vertical-align: middle;
-	width: 16px;
+	width: 1rem;
 }
 li.story .byline {
 	margin-top: 1px;
@@ -1039,7 +1039,7 @@ div.comment_text code {
 #flag_dropdown {
 	position: absolute;
 	left: -0.125rem;
-	width: 100px;
+	width: 6.25rem;
 	border: 1px solid var(--color-box-border);
 	border-bottom: 0;
 	z-index: 15;

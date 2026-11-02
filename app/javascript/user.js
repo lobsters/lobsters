@@ -1,6 +1,6 @@
 // @ts-check
 
-// // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
+// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 
 // in console: app await import("user")
 

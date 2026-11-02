@@ -4,12 +4,12 @@ on:
   # Catch if a mismatched version is pushed to the main branch
   push:
     branches: [main]
-    paths: 
+    paths:
       - .ruby-version
       - Dockerfile.dev
   # Check PRs that modify .ruby-version or Dockerfile.dev
   pull_request:
-    paths: 
+    paths:
       - .ruby-version
       - Dockerfile.dev
 
@@ -19,4 +19,3 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: script/check_dockerfile_ruby_version.sh
-    

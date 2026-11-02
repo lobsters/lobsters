@@ -51,4 +51,7 @@ task build: :environment do
 
   puts "\n◾ Running database consistency checks (DatabaseConsistency)..."
   DatabaseConsistency.run([".database_consistency.ignore.yml"])
+
+  puts "\n◾ Checking Ruby version in app and Dockerfile..."
+  system("script/check_dockerfile_ruby_version.sh")
 end

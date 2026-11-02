@@ -522,11 +522,18 @@ div.voters {
 button.upvoter:before {
 	margin-bottom: 0.3rem;
 }
-.upvoter:hover:before,
 .upvoted .upvoter:before {
 	content: "\25b2";
 	color: var(--color-fg-accent);
 	-webkit-text-stroke: 1px var(--color-fg-accent);
+}
+/* don't highlight on hover on touch screens etc. where `:hover` is often sticky */
+@media (hover: hover) {
+	.upvoter:hover:before {
+		content: "\25b2";
+		color: var(--color-fg-accent);
+		-webkit-text-stroke: 1px var(--color-fg-accent);
+	}
 }
 .upvoter {
 	color: var(--color-fg-contrast-4-5);

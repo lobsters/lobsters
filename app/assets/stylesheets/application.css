@@ -73,7 +73,7 @@ a {
 	cursor: pointer;
 }
 
-li.story div.details span.link a:visited {
+li.story div.details .link a:visited {
 	color: var(--color-fg-link-visited);
 }
 

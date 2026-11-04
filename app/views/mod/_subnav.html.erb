@@ -2,8 +2,16 @@
 <% content_for :subnav do %>
   <style> header#subnav a { margin: 0 0.25rem 0 0; } </style>
   <li class="push-right"><%= link_to_different_page 'Activity', mod_path %></li>
-  F-Stories: <% periods.each do |p| %><%= link_to_different_page(p, mod_flagged_stories_path(period: p)) %> <% end %>
-  F-Comments: <% periods.each do |p| %><%= link_to_different_page(p, mod_flagged_comments_path(period: p)) %> <% end %>
-  Hotspots: <% periods.each do |p| %><%= link_to_different_page(p, mod_hotspots_path(period: p)) %> <% end %>
-  Commenters: <% %w{1m 2m 3m 6m}.each do |p| %><%= link_to_different_page(p, mod_commenters_path(period: p)) %> <% end %>
+  <% [
+    ['F-Stories', 'flagged', 'flagged_stories', periods, '2d', :mod_flagged_stories_path],
+    ['F-Comments', 'flagged', 'flagged_comments', periods, '2d', :mod_flagged_comments_path],
+    ['Hotspots', 'hotspots', 'index', periods, '2d', :mod_hotspots_path],
+    ['Commenters', 'flagged', 'commenters', %w{1m 2m 3m 6m}, '1m', :mod_commenters_path],
+  ].each do |label, controller, action, section_periods, default, path| %>
+    <% if controller_name == controller && action_name == action %>
+      <%= label %>: <% section_periods.each do |p| %><%= link_to_different_page(p, send(path, period: p)) %> <% end %>
+    <% else %>
+      <%= link_to label, send(path, period: default) %>
+    <% end %>
+  <% end %>
 <% end %>

@@ -1,0 +1,18 @@
+<%= render partial: 'mod/subnav', locals: { periods: @periods } %>
+
+<details>
+  <summary>Top terms</summary>
+  <%= safe_join(@terms.map { |term| link_to(term, search_path(q: term, what: "comments", order: "newest")) }, ", ").presence || "none yet" %>
+</details>
+
+<% if @comments.present? %>
+  <ol class="comments comments1">
+    <% @comments.each do |comment| %>
+      <li>
+      <%= render "comments/comment", :comment => comment, :show_story => true, force_open: true, show_hotspot_terms: true %>
+      </li>
+    <% end %>
+  </ol>
+<% else %>
+  <div class="nominal">🦞</div>
+<% end %>

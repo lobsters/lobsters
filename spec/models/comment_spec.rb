@@ -118,6 +118,23 @@ describe Comment do
     expect(c.generated_markeddown_comment).to eq("<p>hello <a href=\"https://lobste.rs/~alice\" rel=\"ugc\">@alice</a> and @bob</p>\n")
   end
 
+  describe ".tokenize" do
+    it "tokenizes using comments_fts" do
+      a = create(:comment, comment: "Café NAÏVE foo-bar, foo isn't 62 the")
+      b = create(:comment, comment: "!! -- ... at")
+
+      a_tokens, b_tokens = Comment.tokenize([a, b])
+
+      expect(a_tokens.comment).to eq(a)
+      expect(a_tokens.tokens.sort).to eq(%w[bar cafe foo foo isn naive the])
+      expect(a_tokens.terms).to eq(%w[bar cafe foo isn naive the])
+      expect(a_tokens.count).to eq(7)
+
+      expect(b_tokens.comment).to eq(b)
+      expect(b_tokens.tokens).to eq([])
+    end
+  end
+
   describe ".accessible_to_user" do
     it "when user is a moderator" do
       moderator = build(:user, :moderator)

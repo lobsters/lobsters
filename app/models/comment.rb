@@ -18,6 +18,7 @@ class Comment < ApplicationRecord
     class_name: "Moderation",
     inverse_of: :comment,
     dependent: :restrict_with_exception
+  has_one :hotspot_doc, dependent: :destroy
   belongs_to :hat,
     optional: true
   has_many :taggings, through: :story
@@ -43,11 +44,22 @@ class Comment < ApplicationRecord
   # queries happen inside the transaction, which seems to be the cause of bug #1238.
   after_commit :mark_submitter, :record_initial_upvote, on: :create
   after_commit :recreate_links, :update_associated_caches
+  after_commit :enqueue_hotspot_index, on: [:create, :update]
 
   scope :deleted, -> { where(is_deleted: true) }
   scope :not_deleted, -> { where(is_deleted: false) }
   scope :not_moderated, -> { where(is_moderated: false) }
   scope :active, -> { not_deleted.not_moderated }
+  # The flagged comments page; Me-Too flags rarely need attention.
+  scope :mod_flagged, -> {
+    where("comments.flags >= 2")
+      .where("(select count(*) from votes where
+                votes.comment_id = comments.id and
+                vote < 0 and
+                votes.reason != 'M') > 2")
+  }
+  # bad and naughty children get put in The Pear Wiggler to atone for their crimes
+  scope :hotspot_bad_and_naughty, -> { where(is_moderated: true).or(Comment.mod_flagged) }
   # Only use accessible_to_user in views that render comments in the flat style. The optimizations
   # in comments/_threads fail if there's a gap in depth. This could be fixed, but the visual display
   # would still be misleading, in A -> B -> C if B is deleted it looks like C is replying directly
@@ -174,6 +186,23 @@ class Comment < ApplicationRecord
     Comment.record_timestamps = true
 
     nil
+  end
+
+  Tokens = Data.define(:comment, :tokens) do
+    def terms = tokens.uniq.sort
+    def count = tokens.size
+  end
+
+  def self.tokenize(comments)
+    db = SQLite3::Database.new(":memory:")
+    db.execute("create virtual table t using fts5(c)")
+    db.execute("create virtual table v using fts5vocab(t, instance)")
+    comments.each { |c| db.execute("insert into t(rowid, c) values (?, ?)", [c.id, c.comment]) }
+    tokens_by_id = db.execute("select doc, term from v where length(term) > 2")
+      .group_by(&:first).transform_values { |rows| rows.map(&:last) }
+    comments.map { |c| Tokens.new(c, tokens_by_id.fetch(c.id, [])) }
+  ensure
+    db&.close
   end
 
   def as_json(_options = {})
@@ -371,6 +400,7 @@ class Comment < ApplicationRecord
     SQL
     Comment.connection.exec_update(update_query, nil, [new_confidence, Comment.confidence_order(new_confidence, id), id])
     story.update_cached_columns
+    HotspotIndexJob.perform_later(self) if flag_delta != 0 # may enter or leave mod_flagged
   end
 
   def gone_text
@@ -513,6 +543,10 @@ class Comment < ApplicationRecord
 
   def recreate_links
     Link.recreate_from_comment!(self) if saved_change_to_attribute? :comment
+  end
+
+  def enqueue_hotspot_index
+    HotspotIndexJob.perform_later(self) if saved_change_to_comment? || saved_change_to_is_moderated?
   end
 
   def update_associated_caches

@@ -249,6 +249,7 @@ Rails.application.routes.draw do
     get "flagged_stories/:period" => "flagged#flagged_stories", :as => "flagged_stories"
     get "flagged_comments/:period" => "flagged#flagged_comments", :as => "flagged_comments"
     get "commenters/:period" => "flagged#commenters", :as => "commenters"
+    get "hotspots/:period" => "hotspots#index", :as => "hotspots"
 
     # tools
     get "notes(/:period)", to: redirect("/mod/")

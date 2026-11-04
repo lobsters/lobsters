@@ -33,6 +33,7 @@
     <%
       force_open = false
       show_tree_lines = true
+      show_hotspot_terms = false
       # show "on: <title>" for comments from merged stories + on non-story pages
       show_story ||= story.try(:id) != comment.story_id
       # show merge icon only on story page when merged
@@ -42,7 +43,7 @@
 
 <%#heinous_inline_partial(comments/_comment.html.erb)%>
 <%# Do not edit, the content before /heinous_inline_partial comes from the named partial %>
-<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false, show_folder_control: true) -%>
+<%# locals: (comment:, force_open: false, show_tree_lines: false, show_story: false, was_merged: false, is_unread: false, show_folder_control: true, show_hotspot_terms: false) -%>
 <%
   # partial inputs:
   # force_open: this comment is allowed to collapse
@@ -191,6 +192,12 @@
         </span>
       <% end %>
     </div>
+    <% if show_hotspot_terms && (hotspot = comment.hotspot_doc) %>
+      <div class="comment_hotspot">
+        hotspot <%= number_with_precision(hotspot.logit, precision: 3) %>:
+        <%= safe_join(hotspot.matched_terms.sort_by { |_, s| -s }.map { |term, s| safe_join([link_to(term, search_path(q: term, what: "comments", order: "newest")), number_with_precision(s, precision: 3)], " ") }, ", ") %>
+      </div>
+    <% end %>
     <div role="heading" aria-level="3" class="comment_text">
       <% if comment.is_gone? %>
         <p>

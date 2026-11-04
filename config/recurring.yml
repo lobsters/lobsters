@@ -47,6 +47,9 @@ production:
   wal_checkpoint:
     class: WalCheckpointJob
     schedule: every minute
+  hotspot_refresh:
+    class: HotspotRefreshJob
+    schedule: every hour
 
 development:
   clear_finished_jobs:
@@ -79,3 +82,6 @@ development:
   fetch_iana_tlds:
     class: FetchIanaTldsJob
     schedule: every 1 month
+  hotspot_refresh:
+    class: HotspotRefreshJob
+    schedule: every hour

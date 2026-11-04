@@ -16,14 +16,10 @@ class Mod::FlaggedController < Mod::ModController
 
   def flagged_comments
     @title = "Flagged Comments"
-    @comments = period(Comment
+    @comments = CommentVoteHydrator.new(period(Comment
       .eager_load(:user, :hat, story: :user, votes: :user)
-      .where("comments.flags >= 2")
-      .where("(select count(*) from votes where
-                votes.comment_id = comments.id and
-                vote < 0 and
-                votes.reason != 'M') > 2") # Me-Too comments rarely need attention
-      .order("comments.id DESC"))
+      .mod_flagged
+      .order("comments.id DESC")).to_a, @user)
   end
 
   def commenters

@@ -112,7 +112,7 @@ install -p -m 0644 sshd_config /etc/ssh/sshd_config
 # configure logrotate
 install -p -m 0644 logrotate.conf /etc/logrotate.d/
 # rm hatchbox's config; logrotate precendence is unreliable
-rm -f /etc/logrotate.d/hatchbox_logrotate.conf
+rm -f /etc/logrotate.d/hatchbox*
 
 # shell quality of life
 apt install eza fd-find ncdu tmux tree

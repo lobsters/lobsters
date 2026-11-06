@@ -11,9 +11,17 @@ class ReadRibbon < ApplicationRecord
   end
 
   # I mostly extracted this method so there's an easy seam for /s/fieikd
-  # For perf the count needs to get pushed up to fetching the list of stories.
-  def unread_count comments
-    @unread_count ||= comments.count { |c| is_unread?(c) }
+  # { story_id => count of unread comments }
+  def unread_counts stories
+    return Hash.new(0) if !user || new_record?
+
+    Comment
+      .where(story_id: stories.map(&:id))
+      .where("comments.created_at > ?", updated_at)
+      .where.not(user_id: user_id)
+      .group(:story_id)
+      .count
+      .tap { it.default = 0 }
   end
 
   # don't add callbacks to this model; for performance the read tracking in

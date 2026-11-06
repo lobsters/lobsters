@@ -185,10 +185,9 @@
         <% if @user && @comments.size > 0 %>
           <div class="thread_summary">
             <%= pluralize(@comments.select { it.story_id == ms.id }.size, "comment") %>,
-            <% unread = @ribbon.unread_count(@comments.select { it.story_id == ms.id }) %>
             <% if @ribbon.new_record? %>
               all unread
-            <% elsif unread > 0 %>
+            <% elsif (unread = @unread_counts[ms.id]) > 0 %>
               <span role='link' class='comment_unread'><%= unread %> unread</span>
             <% else %>
               0 unread

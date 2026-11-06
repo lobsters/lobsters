@@ -189,9 +189,9 @@ class StoriesController < ApplicationController
         ]
         @meta_tags << {property: "article:author", content: "https://#{@story.user.mastodon_instance}/@#{@story.user.mastodon_username}"} if @story.user.mastodon_username.present?
 
+        @merged_stories = [@story, @story.merged_stories.not_deleted(@user).mod_single_preload?(@user).for_presentation.includes(:votes)].flatten
         load_user_votes
 
-        @merged_stories = [@story, @story.merged_stories.not_deleted(@user).mod_single_preload?(@user).for_presentation.includes(:votes)].flatten
         render action: "show"
       }
       format.json {
@@ -496,6 +496,7 @@ class StoriesController < ApplicationController
 
       @story.is_hidden_by_cur_user = @story.is_hidden_by_user?(@user)
       @story.is_saved_by_cur_user = @story.is_saved_by_user?(@user)
+      @unread_counts = @ribbon.unread_counts(@merged_stories)
       @comments = CommentVoteHydrator.new(@comments, @user)
     end
   end

@@ -60,6 +60,24 @@ RSpec.feature "Reading Stories", type: :feature do
       expect(page).to have_content(merged_reply.comment)
       expect(page).to have_selector("span.merge")
     end
+
+    it "shows merged stories' unread counts" do
+      user = create(:user)
+      stub_login_as user
+      ReadRibbon.create!(user:, story:).update_column(:updated_at, 1.hour.ago)
+      merged_comment = create(:comment, story: merged)
+      create(:comment, story: merged, user:)
+      visit Routes.title_path story
+
+      within("#comments-#{story.short_id}") do
+        expect(page).to have_content("1 comment, 1 unread")
+        expect(page).not_to have_content(merged_comment.comment)
+      end
+      within("#comments-#{merged.short_id}") do
+        expect(page).to have_content("2 comments, 1 unread")
+        expect(page).to have_content(merged_comment.comment)
+      end
+    end
   end
 
   feature "reading saved stories" do

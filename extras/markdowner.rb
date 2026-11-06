@@ -49,7 +49,7 @@ class Markdowner
 
     walk_text_nodes(root) { |n| link_username_mentions(n, as_of:) }
 
-    ng = Nokogiri::HTML(root.to_html(
+    ng = Nokogiri::HTML5(root.to_html(
       options: COMMONMARKER_OPTIONS,
       plugins: {syntax_highlighter: nil}
     ))

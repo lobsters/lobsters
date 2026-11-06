@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_05_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_06_033000) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -575,6 +575,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_120000) do
   add_foreign_key "hats", "users", column: "granted_by_user_id"
   add_foreign_key "hidden_stories", "stories"
   add_foreign_key "hidden_stories", "users"
+  add_foreign_key "hotspot_docs", "comments"
   add_foreign_key "invitations", "users"
   add_foreign_key "invitations", "users", column: "new_user_id"
   add_foreign_key "links", "comments", column: "from_comment_id"

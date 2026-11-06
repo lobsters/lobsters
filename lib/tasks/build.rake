@@ -50,6 +50,7 @@ task build: :environment do
   Brakeman::Commandline.start({quiet: true, summary_only: :no_summary})
 
   puts "\n◾ Running database consistency checks (DatabaseConsistency)..."
+  Rails.application.eager_load!
   DatabaseConsistency.run([".database_consistency.ignore.yml"])
 
   puts "\n◾ Checking Ruby version in app and Dockerfile..."

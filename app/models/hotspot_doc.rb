@@ -9,8 +9,8 @@ class HotspotDoc < ApplicationRecord
   after_destroy { HotspotTermCount.remove!(terms) if bad }
 
   validates :comment_id, uniqueness: true
-  validate { errors.add(:terms, :blank) if terms.nil? }
-  validate { errors.add(:matched_terms, :blank) if matched_terms.nil? }
+  # not presence: empty is valid
+  validates :terms, :matched_terms, exclusion: {in: [nil], message: :blank}
   validates :token_count, numericality: {only_integer: true}
   validates :bad, inclusion: {in: [true, false]}
   validates :logit, numericality: true

@@ -237,6 +237,19 @@ export class _LobstersFunction {
     }
   }
 
+  checkStoryDescription(){
+    const descLocation = qS('#story_description');
+    if (!descLocation) return;
+
+    const desc = descLocation.value;
+    if (!desc) return;
+
+    const latex_equations_pattern = /(\${1,2})((?:\\.|.)*)\1/g;
+    if (desc.match(latex_equations_pattern)) {
+      slideDownJS(qS('.description-reminder-warn'));
+    }
+  }
+
   checkSelfPromo(input) {
     if (!input) return;
 
@@ -251,6 +264,7 @@ export class _LobstersFunction {
     const url_field = qS('#story_url');
     const targetUrl = url_field.value;
     const title_field = qS('#story_title');
+    const desc_field = qS('#story_description')
     const formData = new FormData();
     const old_text = button.textContent;
 
@@ -268,14 +282,17 @@ export class _LobstersFunction {
       .then (response => response.json())
       .then (data => {
         title_field.value = data.title
+        desc_field.value = data.description || "";
         if (url_field.value != data.url) {
           slideDownJS(qS('.url-updated'));
         }
         url_field.value = data.url
         button.textContent = old_text
-        button.removeAttribute("disabled");
-        Lobster.checkStoryTitle();
-      });
+      })
+      .then(Lobster.checkStoryTitle)
+      .then(Lobster.checkStoryDescription)
+    
+    button.removeAttribute("disabled");
   }
 
   removeFlagModal() {
@@ -763,6 +780,7 @@ document.addEventListener("DOMContentLoaded", () => {
   on('focusout', '#story_url', () => {
     let url_tags = {
       "\.pdf($|\\?|#)": "pdf",
+      "(https:\/\/arxiv\.org\/(pdf|abs|html))": "pdf",
       "[\/\.](asciinema\.org|(youtube|vimeo)\.com|youtu\.be|twitch\.tv|media\.ccc\.de)\/": "video",
       "\.(mp4|avi|mkv|webm)($|\\?|#)": "video",
       "(https:\/\/(github\.com|codeberg\.org)\/[^\/]+\/[^\/]+\/releases)": "release",

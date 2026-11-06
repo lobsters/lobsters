@@ -5,7 +5,7 @@ require "rails_helper"
 describe "home routing" do
   it "routes a domain" do
     assert_recognizes(
-      {controller: "home", action: "for_domain", id: "example.com"},
+      {controller: "home", action: "for_domain", id: "example.com", format: nil},
       "/domains/example.com"
     )
   end
@@ -17,9 +17,24 @@ describe "home routing" do
     )
   end
 
+  it "doesn't exhibit the rails misdesign from #746 and #1114" do
+    # routes supported formats
+    expect(get("/recent")).to route_to("home#recent", format: "html")
+    expect(get("/recent.html")).to route_to("home#recent", format: "html")
+    expect(get("/newest.rss")).to route_to("home#newest", format: "rss")
+    expect(get("/newest.json")).to route_to("home#newest", format: "json")
+
+    # doesn't route unannounced formats
+    expect(get("/recent.rss")).not_to be_routable
+    expect(get("/top.json")).not_to be_routable
+
+    # definitely doesn't route nonsense formats
+    expect(get("/newest.asdf")).not_to be_routable
+  end
+
   describe "top" do
     it "routes /top" do
-      expect(get("/top")).to route_to("home#top")
+      expect(get("/top")).to route_to("home#top", format: nil)
     end
 
     it "routes /top.rss" do
@@ -27,7 +42,7 @@ describe "home routing" do
     end
 
     it "routes /top/1w" do
-      expect(get("/top/1w")).to route_to("home#top", length: "1w")
+      expect(get("/top/1w")).to route_to("home#top", length: "1w", format: nil)
     end
 
     it "routes /top/1w.rss" do
@@ -35,7 +50,7 @@ describe "home routing" do
     end
 
     it "routes /top/1w/page/2" do
-      expect(get("/top/1w/page/2")).to route_to("home#top", length: "1w", page: "2")
+      expect(get("/top/1w/page/2")).to route_to("home#top", length: "1w", page: "2", format: nil)
     end
 
     it "generates the correct path for paginated top stories" do

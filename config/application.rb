@@ -48,6 +48,7 @@ module Lobsters
 
     # Raise an exception when using mass assignment with unpermitted attributes
     config.action_controller.action_on_unpermitted_parameters = :raise
+    config.action_controller.always_permitted_parameters = %w[controller action format]
 
     # log where queries came from
     config.active_record.query_log_tags_enabled = true

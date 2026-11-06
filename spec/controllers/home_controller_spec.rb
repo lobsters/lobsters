@@ -50,13 +50,6 @@ describe HomeController do
     end
   end
 
-  describe "routing hassle with unsupported formats #746 and #1114" do
-    it "404s for /recent.rss, which is not served" do
-      get :recent, format: :rss
-      expect(response).to have_http_status(:not_found)
-    end
-  end
-
   describe "#hidden" do
     context "when user is not authenticated" do
       it "redirects to the login page" do

@@ -6,32 +6,32 @@ describe "user routing" do
   it "users#tree" do
     assert_routing(
       "/users",
-      controller: "users", action: "tree"
+      controller: "users", action: "tree", format: "html"
     )
   end
 
   it "users#show" do
     assert_routing(
       "/~alice",
-      controller: "users", action: "show", username: "alice"
+      controller: "users", action: "show", username: "alice", format: nil
     )
   end
 
   it "home#stories" do
     assert_routing(
       "/~alice/stories",
-      controller: "home", action: "newest_by_user", user: "alice"
+      controller: "home", action: "newest_by_user", user: "alice", format: nil
     )
     assert_routing(
       "/~alice/stories/page/2",
-      controller: "home", action: "newest_by_user", user: "alice", page: "2"
+      controller: "home", action: "newest_by_user", user: "alice", page: "2", format: nil
     )
   end
 
   it "comments#user_threads" do
     assert_routing(
       "/~alice/threads",
-      controller: "comments", action: "user_threads", user: "alice"
+      controller: "comments", action: "user_threads", user: "alice", format: "html"
     )
   end
 end

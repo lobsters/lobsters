@@ -4,11 +4,11 @@ require "rails_helper"
 
 describe "tag routing" do
   it "routes a single tag" do
-    assert_recognizes({controller: "home", action: "single_tag", tag: "foo"}, "/t/foo")
+    assert_recognizes({controller: "home", action: "single_tag", tag: "foo", format: nil}, "/t/foo")
   end
 
   it "routes a single tag, page 2" do
-    assert_recognizes({controller: "home", action: "single_tag", tag: "foo", page: "2"}, "/t/foo/page/2")
+    assert_recognizes({controller: "home", action: "single_tag", tag: "foo", page: "2", format: nil}, "/t/foo/page/2")
   end
 
   it "routes a single tag rss feed" do
@@ -20,14 +20,14 @@ describe "tag routing" do
 
   it "routes multiple tags" do
     assert_recognizes(
-      {controller: "home", action: "multi_tag", tag: "foo,bar"},
+      {controller: "home", action: "multi_tag", tag: "foo,bar", format: nil},
       "/t/foo,bar"
     )
   end
 
   it "routes multiple tags, page 2" do
     assert_recognizes(
-      {controller: "home", action: "multi_tag", tag: "foo,bar", page: "2"},
+      {controller: "home", action: "multi_tag", tag: "foo,bar", page: "2", format: nil},
       "/t/foo,bar/page/2"
     )
   end
@@ -41,7 +41,7 @@ describe "tag routing" do
 
   # ONE tag has gotta be clever
   it "routes the c++ tag" do
-    assert_recognizes({controller: "home", action: "single_tag", tag: "c++"}, "/t/c++")
+    assert_recognizes({controller: "home", action: "single_tag", tag: "c++", format: nil}, "/t/c++")
     assert_recognizes(
       {controller: "home", action: "single_tag", tag: "c++", format: "rss"},
       "/t/c++.rss"

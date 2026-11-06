@@ -22,16 +22,6 @@ class ApplicationController < ActionController::Base
   VALID_COOKIE_KEY = /\A[!#$%&'*+\-.\^_`|~0-9a-zA-Z]+\z/
   ANUBIS_COOKIE_PREFIX = "techaro.lol-anubis"
 
-  # Rails misdesign: if the /recent route doesn't support .rss, Rails calls it anyways and then
-  # raises MissingTemplate when it's not handled, as if the app did something wrong (a prod 500!).
-  unless Rails.env.development?
-    rescue_from ActionController::UnknownFormat, ActionView::MissingTemplate do
-      request.format = :html # required, despite format.any
-      respond_to do |format|
-        format.any { render "about/404", status: :not_found, content_type: "text/html" }
-      end
-    end
-  end
   rescue_from ActionController::UnpermittedParameters do
     respond_to do |format|
       format.html { render plain: "400 Unpermitted query or form parameter", status: :bad_request }

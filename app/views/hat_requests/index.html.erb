@@ -6,7 +6,7 @@
       <hr>
     <% end %>
 
-    <%= form_with model: hr, method: :post do |f| %>
+    <%= form_with model: hr, url: "", method: :post do |f| %>
       <div class="labelled_grid">
         <%= f.label :user_id, "User" %>
         <span>
@@ -31,7 +31,7 @@
       </div>
     <% end %>
 
-    <%= form_with model: hr, method: :post do |f| %>
+    <%= form_with model: hr, url: "", method: :post do |f| %>
       <div class="labelled_grid">
         <%= f.label :link, "Reason" %>
         <%= f.text_area :reason, required: true %>

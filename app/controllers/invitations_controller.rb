@@ -48,7 +48,7 @@ class InvitationsController < ApplicationController
 
     i = Invitation.new
     i.user_id = @user.id
-    i.email = params[:email].delete_prefix("mailto:").strip
+    i.email = params[:email].to_s.delete_prefix("mailto:").strip
     i.memo = params[:memo]
 
     begin

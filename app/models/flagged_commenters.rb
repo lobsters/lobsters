@@ -35,12 +35,12 @@ class FlaggedCommenters
             count(*) as n_comments
           from comments join users on comments.user_id = users.id
           where
-            (comments.created_at >= '#{period}') and
+            (comments.created_at >= ?) and
             users.banned_at is null and
             users.deleted_at is null
           GROUP BY comments.user_id
         ) sums;
-      ").first.symbolize_keys!
+      ", "aggregates", [period]).first.symbolize_keys!
     }
   end
 

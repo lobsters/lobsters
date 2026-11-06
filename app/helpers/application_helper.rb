@@ -86,7 +86,7 @@ module ApplicationHelper
     # if link has text to the right
     if index != parsed.children.count - 1
       t = parsed.children.last.text
-      parsed.children.last.content = " " + t.split.last(words).join(" ")
+      parsed.children.last.content = " " + t.split.first(words).join(" ")
     end
 
     parsed.to_html

@@ -35,6 +35,7 @@ describe ApplicationHelper do
     it "displays a few words around links in comments" do
       comment = create(:comment, comment: "This reminds me of [a great site](https://example.com) with more info. #{Faker::Lorem.sentences(number: 30).join(" ")}")
       excerpt = helper.excerpt_fragment_around_link(comment.markeddown_comment, "https://example.com")
+      expect(excerpt).to include("with more")
       expect(excerpt.split.length).to be < 20
     end
 

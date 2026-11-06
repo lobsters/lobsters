@@ -622,7 +622,7 @@ class Comment < ApplicationRecord
   end
 
   def self.story_threads(stories)
-    story_ids = stories.filter_map(&:id) # unsaved Stories have no comments
+    story_ids = stories.filter_map(&:id).map(&:to_i) # unsaved Stories have no comments
     return Comment.none if story_ids.empty?
 
     inner_join = <<~SQL

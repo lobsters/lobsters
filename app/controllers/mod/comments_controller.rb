@@ -12,6 +12,8 @@ class Mod::CommentsController < Mod::ModController
     @comment.delete_by_moderator(@user, reason)
 
     if request.xhr?
+      @comment = CommentVoteHydrator.new([@comment], @user).first
+
       render partial: "comments/comment",
         layout: false,
         content_type: "text/html",

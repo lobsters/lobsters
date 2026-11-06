@@ -61,7 +61,7 @@ RSpec.feature "Reading Stories", type: :feature do
       expect(page).to have_selector("span.merge")
     end
 
-    it "shows merged stories' unread counts" do
+    it "shows each merged story's count and comments" do
       user = create(:user)
       stub_login_as user
       ReadRibbon.create!(user:, story:).update_column(:updated_at, 1.hour.ago)

@@ -99,7 +99,8 @@
 <% end %>
 
 <% if !@story.previewing %>
-  <% @merged_stories.select { it.can_be_seen_by_user?(@user) }.each do |ms| %>
+  <% @comments.each_thread(@merged_stories) do |ms, thread| %>
+    <% next unless ms.can_be_seen_by_user?(@user) %>
     <% if @story.stories_count > 0 %>
       <ol class="stories">
         <li class="story">
@@ -184,7 +185,7 @@
       <li class="comments_subtree" id="<%= "comments-#{ms.short_id}" %>">
         <% if @user && @comments.size > 0 %>
           <div class="thread_summary">
-            <%= pluralize(@comments.select { it.story_id == ms.id }.size, "comment") %>,
+            <%= pluralize(thread.size, "comment") %>,
             <% if @ribbon.new_record? %>
               all unread
             <% elsif (unread = @unread_counts[ms.id]) > 0 %>
@@ -196,7 +197,7 @@
         <% end %>
 
         <%= render partial: 'comments/threads', locals: {
-          thread: @comments.select { it.story_id == ms.id },
+          thread:,
           story: ms,
           ribbon: @ribbon,
           read_by_notifications: @read_by_notifications,

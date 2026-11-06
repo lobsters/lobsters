@@ -7,7 +7,7 @@
     <% @notifications.filter { |n| n.should_display? }.each do |notification| %>
       <% case notification.notifiable %>
       <% when Comment %>
-      <% comment = @comments[notification.notifiable] %>
+      <% comment = @comments.hydrate(notification.notifiable) %>
         <li class="comments_subtree">
           <%= render "comments/comment", comment: comment, show_story: true, is_unread: notification.read_at.nil?, show_tree_lines: false, show_folder_control: false %>
           <ol class="comments"></ol>

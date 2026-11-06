@@ -262,7 +262,7 @@ describe Comment do
       a = create(:comment, story: story, parent_comment: nil)
       create(:comment, story: story, parent_comment: nil)
       c = create(:comment, story: story, parent_comment: a)
-      sorted = Comment.story_threads(story)
+      sorted = Comment.story_threads([story])
       # don't care if a or b is first, just care that c is immediately after a
       # this uses each_cons to get each pair of records and ensures [a, c] appears
       relationships = sorted.map(&:id).to_a.each_cons(2).to_a
@@ -280,6 +280,22 @@ describe Comment do
       expect(root.parents).to be_empty
       expect(leaf.parents.map(&:id)).to eq([root.id, mid.id])
       expect(leaf.parents.map(&:depth)).to eq([0, 1])
+    end
+  end
+
+  describe ".story_threads" do
+    it "counts the comments of each story as thread_size" do
+      story = create(:story)
+      merged = create(:story, merged_into_story: story)
+      create(:comment, story:)
+      create_list(:comment, 2, story: merged)
+
+      expect(Comment.story_threads([story, merged]).map(&:thread_size)).to eq([1, 2, 2])
+    end
+
+    it "is empty for no stories or an unsaved story" do
+      expect(Comment.story_threads([])).to be_empty
+      expect(Comment.story_threads([build(:story)])).to be_empty
     end
   end
 end

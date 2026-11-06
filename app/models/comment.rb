@@ -621,10 +621,9 @@ class Comment < ApplicationRecord
     Comment.joins(inner_join).where(thread_id: thread_ids).order("comments.thread_id desc, discussions.confidence_order_path")
   end
 
-  def self.story_threads(story)
-    return Comment.none unless story.id # unsaved Stories have no comments
-
-    story_ids = [story.id] + Story.where(merged_story_id: story.id).pluck(:id)
+  def self.story_threads(stories)
+    story_ids = stories.filter_map(&:id) # unsaved Stories have no comments
+    return Comment.none if story_ids.empty?
 
     inner_join = <<~SQL
       inner join (
@@ -645,6 +644,10 @@ class Comment < ApplicationRecord
       on comments.id = confidence.id
     SQL
 
-    Comment.joins(inner_join).where(story_id: story_ids).order("confidence.confidence_order_path")
+    Comment
+      .select("comments.*, count(*) over (partition by comments.story_id) as thread_size")
+      .joins(inner_join)
+      .in_order_of(:story_id, story_ids)
+      .order("confidence.confidence_order_path")
   end
 end

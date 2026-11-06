@@ -172,7 +172,6 @@ class StoriesController < ApplicationController
       return redirect_to(Routes.title_path(@story))
     end
 
-    @comments = Comment.story_threads(@story).for_presentation.load_async
     @read_by_notifications = @user ? Comment.where(story_id: [@story.id] + @story.merged_stories.pluck(:id)).where(id: @user.notifications.read.of_comments) : []
 
     @title = @story.title
@@ -190,12 +189,13 @@ class StoriesController < ApplicationController
         @meta_tags << {property: "article:author", content: "https://#{@story.user.mastodon_instance}/@#{@story.user.mastodon_username}"} if @story.user.mastodon_username.present?
 
         @merged_stories = [@story, @story.merged_stories.not_deleted(@user).mod_single_preload?(@user).for_presentation.includes(:votes)].flatten
+        @comments = Comment.story_threads(@merged_stories).for_presentation.load_async
         load_user_votes
 
         render action: "show"
       }
       format.json {
-        @comments = @comments.includes(:parent_comment)
+        @comments = Comment.story_threads([@story, *@story.merged_stories]).for_presentation.includes(:parent_comment)
         render json: @story.as_json(with_comments: @comments)
       }
     end
@@ -497,8 +497,9 @@ class StoriesController < ApplicationController
       @story.is_hidden_by_cur_user = @story.is_hidden_by_user?(@user)
       @story.is_saved_by_cur_user = @story.is_saved_by_user?(@user)
       @unread_counts = @ribbon.unread_counts(@merged_stories)
-      @comments = CommentVoteHydrator.new(@comments, @user)
     end
+
+    @comments = CommentVoteHydrator.new(@comments, @user)
   end
 
   def verify_user_can_submit_stories

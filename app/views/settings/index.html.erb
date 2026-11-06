@@ -220,7 +220,7 @@
 </section>
 
 <section>
-  <h2 name="external">External Accounts</h2>
+  <h2 id="external">External Accounts</h2>
 
   <div class="labelled_grid">
     <a href="https://gravatar.com/">Gravatar</a>
@@ -282,7 +282,7 @@
 </section>
 
 <section>
-  <h2 name="invite">Invite a New User</h2>
+  <h2 id="invite">Invite a New User</h2>
 
   <% if @user.can_invite? %>
     <%= render :partial => "users/invitationform" %>

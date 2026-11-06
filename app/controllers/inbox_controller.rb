@@ -63,7 +63,7 @@ class InboxController < ApplicationController
   end
 
   def apply_current_vote
-    comment_notifications = @notifications.filter { |n| n.notifiable_type == "Comment" }.map(&:notifiable)
-    comment_notifications = CommentVoteHydrator.new(comment_notifications, @user)
+    comments = @notifications.filter { |n| n.notifiable_type == "Comment" }.map(&:notifiable)
+    @comments = CommentVoteHydrator.new(comments, @user)
   end
 end

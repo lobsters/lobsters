@@ -622,17 +622,17 @@ class Comment < ApplicationRecord
   end
 
   def self.story_threads(stories)
-    story_ids = stories.filter_map(&:id).map(&:to_i) # unsaved Stories have no comments
+    story_ids = stories.filter_map(&:id) # unsaved Stories have no comments
     return Comment.none if story_ids.empty?
 
-    inner_join = <<~SQL
+    inner_join = Comment.sanitize_sql_array([<<~SQL, story_ids])
       inner join (
         with recursive confidence as (
           select
             c.id,
             cast(confidence_order as blob) as confidence_order_path
             from comments c
-            where story_id in (#{story_ids.join(", ")}) and +parent_comment_id is null
+            where story_id in (?) and +parent_comment_id is null
           union all
           select
             c.id,

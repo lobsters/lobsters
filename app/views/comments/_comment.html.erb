@@ -124,7 +124,7 @@
 
         <% if @user && !comment.is_gone? && comment.story.accepting_comments? %>
           |
-          <a class="comment_replier" unselectable="on" href="<%= reply_comment_path(comment) %>">reply</a>
+          <a class="comment_replier" href="<%= reply_comment_path(comment) %>">reply</a>
         <% end %>
 
         <% if show_story %>

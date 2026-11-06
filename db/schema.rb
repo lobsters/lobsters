@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_19_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_05_120000) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -445,7 +445,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_19_120000) do
     t.string "title", limit: 150, default: "", null: false
     t.text "description"
     t.text "body"
-    t.datetime "created_at", default: -> { "now()" }, null: false
+    t.datetime "created_at", null: false
   end
 
   create_table "suggested_taggings", force: :cascade do |t|

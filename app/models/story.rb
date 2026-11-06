@@ -1277,6 +1277,8 @@ class Story < ApplicationRecord
   end
 
   def fetched_attributes_html
+    return @fetched_attributes if @fetched_response.body.length >= 5.megabytes
+
     converted = @fetched_response.body.dup.force_encoding("utf-8")
     parsed = Nokogiri::HTML(converted.to_s)
 

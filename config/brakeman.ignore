@@ -24,29 +24,6 @@
       "note": "cols is not a user specified value"
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "021f1520ef4a37f93bf598470b8d0543dc28143cab155077db7318b78d3c534d",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/comment.rb",
-      "line": 650,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Comment.joins(\"inner join (\\n  with recursive confidence as (\\n    select\\n      c.id,\\n      cast(confidence_order as blob) as confidence_order_path\\n      from comments c\\n      where story_id in (#{([story.id] + Story.where(:merged_story_id => story.id).pluck(:id)).join(\", \")}) and +parent_comment_id is null\\n    union all\\n    select\\n      c.id,\\n      cast(concat(substring(confidence.confidence_order_path, 1, 3 * (depth + 1)), c.confidence_order) as blob)\\n    from comments c join confidence on c.parent_comment_id = confidence.id\\n  )\\n  select * from confidence\\n) confidence\\non comments.id = confidence.id\\n\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Comment",
-        "method": "Comment.story_threads"
-      },
-      "user_input": "Story.where(:merged_story_id => story.id).pluck(:id)",
-      "confidence": "High",
-      "cwe_id": [
-        89
-      ],
-      "note": "working with ids"
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "046e27cd0b77e13d3d1b13dc4b29196574c446cb0657ca39319f9c435d1ff423",

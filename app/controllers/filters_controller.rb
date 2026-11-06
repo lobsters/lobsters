@@ -1,5 +1,3 @@
-# typed: false
-
 class FiltersController < ApplicationController
   before_action :authenticate_user
   before_action :show_title_h1

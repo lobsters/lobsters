@@ -1,5 +1,3 @@
-# typed: false
-
 class ModerationsController < ApplicationController
   ENTRIES_PER_PAGE = 50
 

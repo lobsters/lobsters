@@ -1,5 +1,3 @@
-# typed: false
-
 class Tag < ApplicationRecord
   belongs_to :category
   has_many :taggings, dependent: :delete_all

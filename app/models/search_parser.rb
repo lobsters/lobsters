@@ -1,5 +1,3 @@
-# typed: false
-
 require "parslet"
 
 # https://mariadb.com/kb/en/full-text-index-stopwords/#innodb-stopwords

@@ -1,5 +1,3 @@
-# typed: false
-
 require_relative "../../script/mail_new_activity"
 
 describe "EmailSender" do

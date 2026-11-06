@@ -1,5 +1,3 @@
-# typed: false
-
 class DiffBot
   # see README.md on setting up credentials
 

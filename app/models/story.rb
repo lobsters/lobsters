@@ -1,5 +1,3 @@
-# typed: false
-
 class Story < ApplicationRecord
   belongs_to :user
   belongs_to :domain, optional: true, counter_cache: true

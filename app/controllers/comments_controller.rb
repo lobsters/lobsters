@@ -1,5 +1,3 @@
-# typed: false
-
 class CommentsController < ApplicationController
   COMMENTS_PER_PAGE = 20
 

@@ -1,5 +1,3 @@
-# typed: false
-
 class HatsController < ApplicationController
   before_action :require_logged_in_user, except: [:index]
   before_action :show_title_h1

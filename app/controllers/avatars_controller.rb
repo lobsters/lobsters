@@ -1,5 +1,3 @@
-# typed: false
-
 class AvatarsController < ApplicationController
   before_action :require_logged_in_user, only: [:expire]
 

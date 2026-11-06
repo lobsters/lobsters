@@ -1,5 +1,3 @@
-# typed: false
-
 module IntervalHelper
   PLACEHOLDER = {param: "1w", dur: 7, intv: "Day", human: "Week", placeholder: true}
   TIME_INTERVALS = {"h" => "Hour",

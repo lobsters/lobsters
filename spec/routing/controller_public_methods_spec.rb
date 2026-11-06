@@ -1,5 +1,3 @@
-# typed: false
-
 require "rails_helper"
 
 # https://gist.github.com/fractaledmind/410e519ccd51445cc10c3408b5f24d77

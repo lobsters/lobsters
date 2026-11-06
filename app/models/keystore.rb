@@ -1,5 +1,3 @@
-# typed: false
-
 class Keystore < ApplicationRecord
   MAX_KEY_LENGTH = 50
 

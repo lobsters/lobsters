@@ -1,5 +1,3 @@
-# typed: false
-
 ActiveRecordDoctor.configure do
   detector :unindexed_foreign_keys,
     ignore_columns: [

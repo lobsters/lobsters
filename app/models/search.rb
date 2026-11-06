@@ -1,5 +1,3 @@
-# typed: false
-
 # results:
 #   not performed
 #   nothing found

@@ -1,5 +1,3 @@
-# typed: false
-
 class SearchController < ApplicationController
   before_action :show_title_h1
   before_action :ignore_searx

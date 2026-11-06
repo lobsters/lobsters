@@ -1,5 +1,3 @@
-# typed: false
-
 # include a comment explaining where each token is used, or 'preventative' if it's obviously
 # sensitive and likely to be used, or used in a popular tool like Devise
 

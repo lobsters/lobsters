@@ -1,5 +1,3 @@
-# typed: false
-
 class StoriesPaginator
   attr_accessor :per_page
 

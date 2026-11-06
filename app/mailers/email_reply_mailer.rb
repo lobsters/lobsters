@@ -1,5 +1,3 @@
-# typed: false
-
 class EmailReplyMailer < ApplicationMailer
   def reply(comment, user)
     @comment = comment

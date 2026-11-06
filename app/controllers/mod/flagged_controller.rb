@@ -1,5 +1,3 @@
-# typed: false
-
 # This controller is going to have a lot of one-off queries. If they do need
 # to be used elsewhere, remember to make them into model scopes.
 

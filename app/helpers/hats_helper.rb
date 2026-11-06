@@ -1,5 +1,3 @@
-# typed: false
-
 module HatsHelper
   def styled_hat(hat)
     hl = hat.link.present? && hat.link.match(/^https?:\/\//)

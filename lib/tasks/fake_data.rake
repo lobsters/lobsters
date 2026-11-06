@@ -1,5 +1,3 @@
-# typed: false
-
 require "faker"
 
 # This script creates real-ish fake data in your development database so it's easier to understand

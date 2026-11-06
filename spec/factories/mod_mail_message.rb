@@ -1,5 +1,3 @@
-# typed: false
-
 FactoryBot.define do
   factory :mod_mail_message do
     association :mod_mail

@@ -1,5 +1,3 @@
-# typed: false
-
 class SignupController < ApplicationController
   before_action :require_logged_in_user, :check_new_users, :check_can_invite, only: :invite
   before_action :check_for_read_only_mode, :show_title_h1

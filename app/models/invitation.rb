@@ -1,5 +1,3 @@
-# typed: false
-
 class Invitation < ApplicationRecord
   belongs_to :user
   belongs_to :new_user, class_name: "User", inverse_of: nil, optional: true

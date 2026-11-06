@@ -1,5 +1,3 @@
-# typed: false
-
 require "commonmarker"
 
 class Markdowner

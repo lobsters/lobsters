@@ -1,5 +1,3 @@
-# typed: false
-
 module TimeAgoInWords
   # parallel implementation in application.js
   def how_long_ago(time)

@@ -1,5 +1,3 @@
-# typed: false
-
 require "fileutils"
 require "active_support/core_ext/integer/time"
 

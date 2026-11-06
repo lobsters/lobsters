@@ -1,5 +1,3 @@
-# typed: false
-
 require "cgi"
 
 module HtmlEncoder

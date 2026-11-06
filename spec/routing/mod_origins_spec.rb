@@ -1,5 +1,3 @@
-# typed: false
-
 require "rails_helper"
 
 describe "mod origin routing", type: :routing do

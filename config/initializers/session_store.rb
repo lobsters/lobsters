@@ -1,5 +1,3 @@
-# typed: false
-
 # Be sure to restart your server when you modify this file.
 
 # match this in caddy config for bypassing the file cache

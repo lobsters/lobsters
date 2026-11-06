@@ -1,5 +1,3 @@
-# typed: false
-
 class EmailMessageMailer < ApplicationMailer
   def notify(message, user)
     @message = message

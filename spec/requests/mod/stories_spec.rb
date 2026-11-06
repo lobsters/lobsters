@@ -1,5 +1,3 @@
-# typed: false
-
 require "rails_helper"
 
 describe "Mod::StoriesController", type: :request do

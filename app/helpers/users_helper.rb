@@ -1,5 +1,3 @@
-# typed: false
-
 module UsersHelper
   def self_or_mod(showing_user, user)
     user == showing_user || user.try(:is_moderator?)

@@ -1,5 +1,3 @@
-# typed: false
-
 require "rails_helper"
 
 RSpec.describe StoryText, type: :model do

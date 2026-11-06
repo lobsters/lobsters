@@ -1,5 +1,3 @@
-# typed: false
-
 class HiddenStory < ApplicationRecord
   belongs_to :user
   belongs_to :story

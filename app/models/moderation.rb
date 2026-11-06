@@ -1,5 +1,3 @@
-# typed: false
-
 class Moderation < ApplicationRecord
   belongs_to :moderator,
     class_name: "User",

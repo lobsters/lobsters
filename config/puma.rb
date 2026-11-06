@@ -1,5 +1,3 @@
-# typed: false
-
 require "etc"
 
 # Specifies the `environment` that Puma will run in.

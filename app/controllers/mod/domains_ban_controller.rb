@@ -1,5 +1,3 @@
-# typed: false
-
 class Mod::DomainsBanController < Mod::ModController
   before_action :find_or_initialize_domain
 

@@ -1,5 +1,3 @@
-# typed: false
-
 # Comment.above_average needs to compare against the average, which is an expensive dependent
 # subquery. CommentStat calculates and stores that once for a fast join.
 class CommentStat < ApplicationRecord

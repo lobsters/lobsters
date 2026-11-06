@@ -1,5 +1,3 @@
-# typed: false
-
 class StoriesController < ApplicationController
   include StoryFinder
 

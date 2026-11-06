@@ -1,5 +1,3 @@
-# typed: false
-
 module AuthenticationHelper
   module ControllerHelper
     def stub_login_as user

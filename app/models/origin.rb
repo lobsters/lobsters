@@ -1,5 +1,3 @@
-# typed: false
-
 # The unique value to identify an Origin is 'identifier', not the tuple (domain, identifier).
 # Origin.domain is set from the identifier to support sharing an Origin between Domains. The URLs
 # foo.github.io and github.com/foo have two different Domains that both produce the Origin with

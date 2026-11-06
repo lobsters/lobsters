@@ -1,5 +1,3 @@
-# typed: false
-
 FactoryBot.define do
   factory :tag do
     association(:category)

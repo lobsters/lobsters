@@ -1,5 +1,3 @@
-# typed: false
-
 class InboxMailbox < ApplicationMailbox
   before_processing :required_info
 

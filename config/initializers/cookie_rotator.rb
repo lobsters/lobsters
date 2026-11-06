@@ -1,5 +1,3 @@
-# typed: false
-
 # https://guides.rubyonrails.org/v7.0/upgrading_ruby_on_rails.html#key-generator-digest-class-changing-to-use-sha256
 # convention over configuration my ass why is this not handled by the framework
 

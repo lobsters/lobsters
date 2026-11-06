@@ -1,5 +1,3 @@
-# typed: false
-
 FactoryBot.define do
   factory :domain do
     sequence(:domain) { |n| Faker::Internet.domain_name }

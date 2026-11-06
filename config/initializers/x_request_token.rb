@@ -1,5 +1,3 @@
-# typed: false
-
 # Rails and Caddy both log this header as a top-level key .request_token to correlate requests
 # between logs. Fun corner cases that definitely didn't burn hours of dev time:
 #

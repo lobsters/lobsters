@@ -1,5 +1,3 @@
-# typed: false
-
 class BanNotificationMailer < ApplicationMailer
   def notify(user, banner, reason)
     @banner = banner

@@ -1,5 +1,3 @@
-# typed: false
-
 class StoryUrlsController < ApplicationController
   def all
     url = params.require(:url)

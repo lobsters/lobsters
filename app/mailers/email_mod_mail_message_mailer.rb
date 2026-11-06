@@ -1,5 +1,3 @@
-# typed: false
-
 class EmailModMailMessageMailer < ApplicationMailer
   def notify(mod_mail_message, user)
     @mod_mail_message = mod_mail_message

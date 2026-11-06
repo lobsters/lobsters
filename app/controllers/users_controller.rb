@@ -1,5 +1,3 @@
-# typed: false
-
 class UsersController < ApplicationController
   before_action :load_showing_user, only: [:show, :standing]
   before_action :require_logged_in_admin,

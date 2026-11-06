@@ -1,5 +1,3 @@
-# typed: false
-
 require "rails_helper"
 
 describe "signup", type: :request do

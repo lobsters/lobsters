@@ -1,5 +1,3 @@
-# typed: false
-
 # https://docs.joinmastodon.org/methods/apps/
 class MastodonApp < ApplicationRecord
   validates :name, :client_id, :client_secret,

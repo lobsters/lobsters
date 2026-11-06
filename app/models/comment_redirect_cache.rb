@@ -1,5 +1,3 @@
-# typed: false
-
 class CommentRedirectCache
   SHORT_ID = /\A[0-9a-z]{6}\z/
 

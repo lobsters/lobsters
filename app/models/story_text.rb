@@ -1,5 +1,3 @@
-# typed: false
-
 class StoryText < ApplicationRecord
   self.primary_key = :id
 

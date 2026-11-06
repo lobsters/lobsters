@@ -1,5 +1,3 @@
-# typed: false
-
 # Originally Lobsters only tracked Domains, then later I added Origins to handle Domains with
 # multiple authors (github, medium, etc). I should've moved all the ban data over to Origin and
 # stripped Domain down to just 'identifier', and domains that don't have identifiers don't need

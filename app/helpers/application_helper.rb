@@ -1,5 +1,3 @@
-# typed: false
-
 module ApplicationHelper
   include TimeAgoInWords
 

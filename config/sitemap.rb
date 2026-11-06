@@ -1,5 +1,3 @@
-# typed: false
-
 SitemapGenerator::Sitemap.default_host = "https://lobste.rs"
 
 # https://developers.google.com/search/blog/2023/06/sitemaps-lastmod-ping

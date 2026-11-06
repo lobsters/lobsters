@@ -1,5 +1,3 @@
-# typed: false
-
 if Rails.env.production?
   ActionMailer::Base.smtp_settings = {
     address: ENV.fetch("SMTP_HOST", "127.0.0.1"),

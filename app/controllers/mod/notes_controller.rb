@@ -1,5 +1,3 @@
-# typed: false
-
 class Mod::NotesController < Mod::ModController
   def create
     @title = "Create Mod Note"

@@ -1,5 +1,3 @@
-# typed: false
-
 module StoriesHelper
   def show_guidelines?(user)
     if !user

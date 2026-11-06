@@ -1,5 +1,3 @@
-# typed: false
-
 class Mastodon
   # see README.md on setting up credentials
 

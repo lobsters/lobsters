@@ -1,5 +1,3 @@
-# typed: false
-
 require "open-uri"
 
 desc "Update banned list of URL shorteners"

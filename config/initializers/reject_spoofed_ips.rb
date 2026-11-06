@@ -1,5 +1,3 @@
-# typed: false
-
 # request.remote_ip can raise IpSpoofAttackError when it's first evaluated, which can be anywhere.
 # ApplicationController tried to eagerly eval, but Lograge got in front of it, so this is earlier.
 class RejectSpoofedIps

@@ -1,5 +1,3 @@
-# typed: false
-
 require "rails_helper"
 
 describe "stories#check_url_dupe XSS via comment excerpt", type: :request do

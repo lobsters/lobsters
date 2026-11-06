@@ -1,5 +1,3 @@
-# typed: false
-
 class Mod::ActivitiesController < Mod::ModController
   def index
     @title = "Mod Activity last 3 months"

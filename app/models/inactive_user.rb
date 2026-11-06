@@ -1,5 +1,3 @@
-# typed: false
-
 module InactiveUser
   def self.inactive_user
     @inactive_user ||= User.find_by!(username: "inactive-user")

@@ -1,5 +1,3 @@
-# typed: false
-
 class StoryImageController < ApplicationController
   def show
     short_id = params[:short_id]

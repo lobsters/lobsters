@@ -1,5 +1,3 @@
-# typed: false
-
 # Enable ruby deprecation warnings in the test suite
 Warning[:deprecated] = true
 

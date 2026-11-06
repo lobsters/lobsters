@@ -1,5 +1,3 @@
-# typed: false
-
 class HatRequestsController < ApplicationController
   before_action :require_logged_in_user
   before_action :require_logged_in_moderator, only: [:index, :approve, :reject]

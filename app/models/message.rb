@@ -1,5 +1,3 @@
-# typed: false
-
 class Message < ApplicationRecord
   belongs_to :recipient,
     class_name: "User",

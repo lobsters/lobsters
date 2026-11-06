@@ -1,5 +1,3 @@
-# typed: false
-
 FactoryBot.define do
   factory :origin do
     association(:domain)

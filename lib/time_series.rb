@@ -1,5 +1,3 @@
-# typed: false
-
 class TimeSeries < SVG::Graph::TimeSeries
   include ActionView::Helpers::NumberHelper
 

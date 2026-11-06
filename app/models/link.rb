@@ -1,5 +1,3 @@
-# typed: false
-
 class Link < ApplicationRecord
   belongs_to :from_story, class_name: "Story", optional: true
   belongs_to :from_comment, class_name: "Comment", optional: true

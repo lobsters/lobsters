@@ -1,5 +1,3 @@
-# typed: false
-
 require "active_support/parameter_filter"
 require "silencer/rails/logger"
 

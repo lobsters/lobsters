@@ -1,5 +1,3 @@
-# typed: false
-
 class TagsController < ApplicationController
   before_action :show_title_h1
 

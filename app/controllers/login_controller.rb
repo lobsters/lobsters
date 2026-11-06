@@ -1,5 +1,3 @@
-# typed: false
-
 class LoginBannedError < StandardError; end
 
 class LoginDeactivatedError < StandardError; end

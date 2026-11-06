@@ -1,5 +1,3 @@
-# typed: false
-
 # Hi, what brings you here?
 
 # RSS reader with many of our feeds? You can combine separate tag feeds like this:

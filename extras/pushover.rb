@@ -1,5 +1,3 @@
-# typed: false
-
 class Pushover
   # see README.md on setting up credentials
 

@@ -1,5 +1,3 @@
-# typed: false
-
 class DeleteCommentRedirectRailsCacheEntries < ActiveRecord::Migration[8.1]
   # Rails.cache lives in the cache database, not primary, and SolidCache::Entry
   # only routes there when called through the store, so connect explicitly.

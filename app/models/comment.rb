@@ -403,7 +403,7 @@ class Comment < ApplicationRecord
 
   def gone_text
     if is_moderated?
-      "Comment removed by moderator " <<
+      +"Comment removed by moderator " <<
         moderation.try(:moderator).try(:username).to_s << ": " <<
         (moderation.try(:reason) || "No reason given")
     elsif user.is_banned?

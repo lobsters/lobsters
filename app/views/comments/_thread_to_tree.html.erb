@@ -1,0 +1,28 @@
+<%# locals: (comment:, comment_counter:, comment_iteration:, collection_thread:, story:, ribbon:, force_open:, show_tree_lines:, show_hotspot_terms:, show_folder_control:) -%>
+<% previous_depth = collection_thread[comment_counter - 1].depth if comment_counter > 0 %>
+
+<% if previous_depth %>
+  <% if comment.depth > previous_depth %>
+    <%# open tree of replies to the previous comment %>
+    <ol class="comments">
+  <% else %>
+    <%# previous comment is the deepest comment in its subtree,
+        so it has no replies, only an empty list of replies %>
+    <ol class="comments"></ol>
+
+    <%# close tree of replies %>
+    <% (previous_depth - comment.depth).times do %>
+        </li>
+      </ol>
+    <% end %>
+
+    <%# close previous subtree %>
+    </li>
+  <% end %>
+<% end %>
+
+<%# open current subtree %>
+<li class="comments_subtree">
+
+  <%= yield %>
+  <%# end of comments/_comment %>

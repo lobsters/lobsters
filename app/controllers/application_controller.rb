@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
   prepend_before_action :prepare_exception_notifier # first in case others raise
-  before_action :heinous_inline_partials, if: -> { Rails.env.development? }
   before_action :mini_profiler
   before_action :set_traffic_style
   before_action :remove_unknown_cookies
@@ -89,10 +88,6 @@ class ApplicationController < ActionController::Base
       @user = User.where(rss_token: params[:token].to_s).first
       Telebugs.user id: @user&.token, username: @user&.username, email: @user&.email, ip_address: request.remote_ip
     end
-  end
-
-  def heinous_inline_partials
-    do_heinous_inline_partial_replacement
   end
 
   def mini_profiler

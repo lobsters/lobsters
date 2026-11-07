@@ -64,6 +64,8 @@ class CommentVoteHydrator
   # Enumerable#first would start a loop
   def first = self[0]
 
+  def last = self[-1]
+
   class StoryThreadWindow
     include Enumerable
 
@@ -94,5 +96,7 @@ class CommentVoteHydrator
     def empty? = @size.zero?
 
     def first = self[0]
+
+    def last = self[-1]
   end
 end

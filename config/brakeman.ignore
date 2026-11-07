@@ -24,29 +24,6 @@
       "note": "cols is not a user specified value"
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "021f1520ef4a37f93bf598470b8d0543dc28143cab155077db7318b78d3c534d",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/comment.rb",
-      "line": 650,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Comment.joins(\"inner join (\\n  with recursive confidence as (\\n    select\\n      c.id,\\n      cast(confidence_order as blob) as confidence_order_path\\n      from comments c\\n      where story_id in (#{([story.id] + Story.where(:merged_story_id => story.id).pluck(:id)).join(\", \")}) and +parent_comment_id is null\\n    union all\\n    select\\n      c.id,\\n      cast(concat(substring(confidence.confidence_order_path, 1, 3 * (depth + 1)), c.confidence_order) as blob)\\n    from comments c join confidence on c.parent_comment_id = confidence.id\\n  )\\n  select * from confidence\\n) confidence\\non comments.id = confidence.id\\n\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Comment",
-        "method": "Comment.story_threads"
-      },
-      "user_input": "Story.where(:merged_story_id => story.id).pluck(:id)",
-      "confidence": "High",
-      "cwe_id": [
-        89
-      ],
-      "note": "working with ids"
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "046e27cd0b77e13d3d1b13dc4b29196574c446cb0657ca39319f9c435d1ff423",
@@ -61,7 +38,7 @@
           "type": "controller",
           "class": "MessagesController",
           "method": "show",
-          "line": 91,
+          "line": 89,
           "file": "app/controllers/messages_controller.rb",
           "rendered": {
             "name": "messages/show",
@@ -95,7 +72,7 @@
           "type": "controller",
           "class": "StatsController",
           "method": "index",
-          "line": 6,
+          "line": 4,
           "file": "app/controllers/stats_controller.rb",
           "rendered": {
             "name": "stats/index",
@@ -129,7 +106,7 @@
           "type": "controller",
           "class": "StoriesController",
           "method": "check_url_dupe",
-          "line": 431,
+          "line": 429,
           "file": "app/controllers/stories_controller.rb",
           "rendered": {
             "name": "stories/_form_errors",
@@ -163,7 +140,7 @@
           "type": "controller",
           "class": "InvitationsController",
           "method": "index",
-          "line": 26,
+          "line": 24,
           "file": "app/controllers/invitations_controller.rb",
           "rendered": {
             "name": "invitations/index",
@@ -197,7 +174,7 @@
           "type": "controller",
           "class": "StatsController",
           "method": "index",
-          "line": 6,
+          "line": 4,
           "file": "app/controllers/stats_controller.rb",
           "rendered": {
             "name": "stats/index",
@@ -223,7 +200,7 @@
       "check_name": "FileAccess",
       "message": "Model attribute used in file name",
       "file": "app/controllers/avatars_controller.rb",
-      "line": 44,
+      "line": 42,
       "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
       "code": "File.rename(\"#{Rails.public_path.join(\"avatars/\").to_s}/.#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\", \"#{Rails.public_path.join(\"avatars/\").to_s}/#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\")",
       "render_path": null,
@@ -246,7 +223,7 @@
       "check_name": "SendFile",
       "message": "Model attribute used in file name",
       "file": "app/controllers/story_image_controller.rb",
-      "line": 11,
+      "line": 9,
       "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
       "code": "send_file(StoryImage.new(Story.where(:short_id => params[:short_id]).first!).path, :type => \"image/png\", :disposition => \"inline\")",
       "render_path": null,
@@ -269,7 +246,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/users_controller.rb",
-      "line": 148,
+      "line": 146,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.exec_query(\"\\n      select\\n        n_flags, count(*) as n_users\\n      from (\\n        select\\n          comments.user_id, sum(flags) as n_flags\\n        from\\n          comments\\n        where\\n          comments.created_at >= datetime('now', '-#{time_interval(\"1m\")[:dur]} #{time_interval(\"1m\")[:intv]}')\\n        group by comments.user_id) count_by_user\\n      group by 1\\n      order by 1 asc;\\n    \")",
       "render_path": null,
@@ -300,7 +277,7 @@
           "type": "controller",
           "class": "StatsController",
           "method": "index",
-          "line": 6,
+          "line": 4,
           "file": "app/controllers/stats_controller.rb",
           "rendered": {
             "name": "stats/index",
@@ -334,7 +311,7 @@
           "type": "controller",
           "class": "StoriesController",
           "method": "create",
-          "line": 55,
+          "line": 53,
           "file": "app/controllers/stories_controller.rb",
           "rendered": {
             "name": "stories/new",
@@ -378,7 +355,7 @@
           "type": "controller",
           "class": "UsersController",
           "method": "show",
-          "line": 37,
+          "line": 35,
           "file": "app/controllers/users_controller.rb",
           "rendered": {
             "name": "users/show",
@@ -404,7 +381,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/comments/_comment.html.erb",
-      "line": 164,
+      "line": 162,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Moderation.comment.markeddown_comment",
       "render_path": [
@@ -412,7 +389,7 @@
           "type": "controller",
           "class": "Mod::ActivitiesController",
           "method": "index",
-          "line": 7,
+          "line": 5,
           "file": "app/controllers/mod/activities_controller.rb",
           "rendered": {
             "name": "mod/activities/index",
@@ -458,7 +435,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/comments/_comment.html.erb",
-      "line": 167,
+      "line": 165,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Moderation.comment.markeddown_comment",
       "render_path": [
@@ -466,7 +443,7 @@
           "type": "controller",
           "class": "Mod::ActivitiesController",
           "method": "index",
-          "line": 7,
+          "line": 5,
           "file": "app/controllers/mod/activities_controller.rb",
           "rendered": {
             "name": "mod/activities/index",
@@ -504,6 +481,29 @@
         79
       ],
       "note": "Rendered markdown."
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "7794c61c273cb2aca98db2fb76e724313517b5548d49b131baeda55cbe866838",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/comment.rb",
+      "line": 649,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Comment.select(\"comments.*, count(*) over (partition by comments.story_id) as thread_size\").joins(\"inner join (\\n  with recursive confidence as (\\n    select\\n      c.id,\\n      cast(confidence_order as blob) as confidence_order_path\\n      from comments c\\n      where story_id in (#{stories.filter_map(&:id).join(\", \")}) and +parent_comment_id is null\\n    union all\\n    select\\n      c.id,\\n      cast(concat(substring(confidence.confidence_order_path, 1, 3 * (depth + 1)), c.confidence_order) as blob)\\n    from comments c join confidence on c.parent_comment_id = confidence.id\\n  )\\n  select * from confidence\\n) confidence\\non comments.id = confidence.id\\n\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Comment",
+        "method": "Comment.story_threads"
+      },
+      "user_input": "stories.filter_map(&:id).join(\", \")",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "working with ids"
     },
     {
       "warning_type": "SQL Injection",
@@ -535,7 +535,7 @@
       "check_name": "FileAccess",
       "message": "Model attribute used in file name",
       "file": "app/controllers/avatars_controller.rb",
-      "line": 40,
+      "line": 38,
       "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
       "code": "File.open(\"#{Rails.public_path.join(\"avatars/\").to_s}/.#{User.where(:username => username).first!.username}-#{:BRAKEMAN_SAFE_LITERAL}.png\", \"wb+\")",
       "render_path": null,
@@ -558,7 +558,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/settings_controller.rb",
-      "line": 204,
+      "line": 202,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(MastodonApp.find_or_register(params[:mastodon_instance_name]).oauth_auth_url(SecureRandom.hex), :allow_other_host => true)",
       "render_path": null,
@@ -581,7 +581,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/flagged_commenters.rb",
-      "line": 64,
+      "line": 62,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "User.active.joins(:comments).where(\"comments.created_at >= ?\", period).group(\"comments.user_id\").select(\"\\n          users.id, users.username,\\n          (sum(flags) - #{avg_sum_flags})/#{stddev_sum_flags} as sigma,\\n          count(distinct if(flags > 0, comments.id, null)) as n_comments,\\n          count(distinct if(flags > 0, story_id, null)) as n_stories,\\n          sum(flags) as n_flags,\\n          sum(flags)/count(distinct comments.id) as average_flags,\\n          (\\n            count(distinct if(flags > 0, comments.id, null)) * 100.0 /\\n            count(distinct comments.id)\\n          ) as percent_flagged\")",
       "render_path": null,
@@ -604,7 +604,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story.rb",
-      "line": 112,
+      "line": 110,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "base(user).where(\"created_at >= datetime('now', '-#{length[:dur]} #{length[:intv].upcase}')\")",
       "render_path": null,
@@ -635,7 +635,7 @@
           "type": "controller",
           "class": "StatsController",
           "method": "index",
-          "line": 6,
+          "line": 4,
           "file": "app/controllers/stats_controller.rb",
           "rendered": {
             "name": "stats/index",
@@ -669,7 +669,7 @@
           "type": "controller",
           "class": "Mod::ActivitiesController",
           "method": "index",
-          "line": 7,
+          "line": 5,
           "file": "app/controllers/mod/activities_controller.rb",
           "rendered": {
             "name": "mod/activities/index",
@@ -713,7 +713,7 @@
           "type": "controller",
           "class": "StatsController",
           "method": "index",
-          "line": 6,
+          "line": 4,
           "file": "app/controllers/stats_controller.rb",
           "rendered": {
             "name": "stats/index",

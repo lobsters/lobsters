@@ -40,7 +40,6 @@ describe CommentVoteHydrator do
     expect(thread.to_a).to eq(%w[b c d])
     expect(thread[0]).to eq("b")
     expect(thread[-1]).to eq("d")
-    expect(thread.last).to eq("d")
     expect(thread[3]).to be_nil
     expect(thread[-4]).to be_nil
   end

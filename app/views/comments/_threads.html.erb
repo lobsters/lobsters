@@ -1,28 +1,12 @@
 <%# locals: (thread:, story: nil, ribbon: nil, read_by_notifications: [], show_folder_control: true) -%>
-<%# open list of threads %>
 <ol class="comments" id="story_comments">
   <%= render partial: "comments/comment", collection: thread, as: :comment, layout: "comments/thread_to_tree", locals: {
-    collection_thread: thread, story:, ribbon:,
-    force_open: false, show_tree_lines: true, show_hotspot_terms: false, show_folder_control:
+    collection_thread: thread,
+    story:,
+    ribbon:,
+    force_open: false,
+    show_tree_lines: true,
+    show_hotspot_terms: false,
+    show_folder_control:
   } %>
-<% top_comment_depth = thread.first&.depth %>
-<% previous_depth = thread.last&.depth %>
-
-<% if top_comment_depth %>
-
-  <%# previous comment is the deepest comment in its subtree,
-      so it has no replies, only an empty list of replies %>
-  <ol class="comments"></ol>
-
-  <%# close tree of replies %>
-  <% (previous_depth - top_comment_depth).times do %>
-      </li>
-    </ol>
-  <% end %>
-
-  <%# close top subtree %>
-  </li>
-<% end %>
-
-<%# close list of threads %>
 </ol>

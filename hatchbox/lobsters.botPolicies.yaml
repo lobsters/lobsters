@@ -4,6 +4,12 @@ bots:
   - name: allow-non-search
     action: ALLOW
     expression: '!path.startsWith("/search")'
+  - name: allow-signed-in
+    action: ALLOW
+    expression:
+      all:
+        - '"caddy-has-user-cookie" in headers'
+        - 'headers["caddy-has-user-cookie"] == "1"'
   - import: (data)/bots/aggressive-brazilian-scrapers.yaml
   - import: (data)/meta/ai-block-aggressive.yaml
   - import: (data)/crawlers/_allow-good.yaml

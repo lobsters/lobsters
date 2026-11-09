@@ -16,7 +16,11 @@ xml.rss version: "2.0", "xmlns:atom": "http://www.w3.org/2005/Atom" do
         xml.author "#{comment.user.username}@#{Rails.application.domain} (#{comment.user.username})"
         xml.pubDate comment.last_edited_at.rfc822
         xml.comments Routes.comment_short_id_url comment
-        xml.description comment.markeddown_comment
+        if comment.is_gone?
+          xml.description ERB::Util.h(comment.gone_text)
+        else
+          xml.description comment.markeddown_comment
+        end
       end
     end
   end

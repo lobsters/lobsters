@@ -28,10 +28,14 @@ class UsersController < ApplicationController
         @meta_tags = [
           {property: "og:type", content: "user"},
           {property: "og:site_name", content: Rails.application.name},
-          {property: "og:title", content: @showing_user.username},
-          {property: "og:description", content: @showing_user.raw_about},
-          {property: "og:image", content: @showing_user.avatar_path(100)}
+          {property: "og:title", content: @showing_user.username}
         ]
+        if @showing_user.is_active?
+          @meta_tags.push(
+            {property: "og:description", content: @showing_user.raw_about},
+            {property: "og:image", content: @showing_user.avatar_path(100)}
+          )
+        end
         render action: "show"
       }
       format.json { render json: @showing_user }

@@ -225,8 +225,10 @@ class User < ApplicationRecord
 
     h = super(only: attrs)
 
-    h[:about] = linkified_about
-    h[:avatar_url] = avatar_url
+    if is_active?
+      h[:about] = linkified_about
+      h[:avatar_url] = avatar_url
+    end
     h[:invited_by_user] = User.where(id: invited_by_user_id).pick(:username)
 
     if github_username.present?

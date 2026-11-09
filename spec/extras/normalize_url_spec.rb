@@ -23,11 +23,12 @@ describe "normalizing urls" do
     "https://www10.example.org" => "example.org", # remove www10.
 
     "https://www.arxiv.org" => "arxiv.org",
-    "https://arxiv.org/abs/1234.12345" => "arxiv.org/abs/1234.12345",
-    "https://arxiv.org/pdf/1234.12345" => "arxiv.org/abs/1234.12345",
-    "https://arxiv.org/abs/1234.12345.pdf" => "arxiv.org/abs/1234.12345",
-    "https://arxiv.org/abs/2311.09394v2" => "arxiv.org/abs/2311.09394v2", # bug #954
-    "https://arxiv.org/pdf/2311.09394v2.pdf" => "arxiv.org/abs/2311.09394v2",
+    "https://arxiv.org/abs/1234.12345" => "arxiv.org/pdf/1234.12345",
+    "https://arxiv.org/pdf/1234.12345" => "arxiv.org/pdf/1234.12345",
+    "https://arxiv.org/abs/1234.12345.pdf" => "arxiv.org/pdf/1234.12345",
+    "https://arxiv.org/abs/2311.09394v2" => "arxiv.org/pdf/2311.09394v2",
+    "https://arxiv.org/pdf/2311.09394v2.pdf" => "arxiv.org/pdf/2311.09394v2",
+    "https://arxiv.org/html/1810.09969v1" => "arxiv.org/pdf/1810.09969v1",
 
     "https://www.rfc-editor.org/rfc/rfc9338.html" => "rfc-editor.org/rfc/9338",
     "https://www.rfc-editor.org/rfc/rfc9338.txt" => "rfc-editor.org/rfc/9338",

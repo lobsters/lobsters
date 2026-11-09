@@ -80,6 +80,12 @@ See the guidelines below for more."
     </p>
     <%= f.label :description, "Text" %>
     <%= f.text_area :description, rows: 8, placeholder: guidelines %>
+    <output class="description-reminder" for="<%= :title %>" role="alert" aria-live="polite">
+      <span class="description-reminder-warn">
+        Please remove extraneous LaTeX components from equations in description such as $, \cdot etc. as we do not support LaTeX,
+        hence they will not be properly rendered.
+      </span>
+    </output>
     <%= render :partial => "global/markdownhelp", :locals => { allow_images: @story.can_have_images? } %>
 
     <%= tag.details open: show_guidelines?(@user) ? true : nil do %>

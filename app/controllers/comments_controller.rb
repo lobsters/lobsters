@@ -312,25 +312,27 @@ class CommentsController < ApplicationController
 
     @has_more = true # don't bother querying for the number of comments here
 
-    @comments = CommentVoteHydrator.new(@comments, @user)
-
-    @last_read_timestamp = if params[:last_read_timestamp]
-      Time.zone.at(params[:last_read_timestamp].to_i)
-    else
-      @user&.last_read_newest_comment
-    end
-
-    @user&.touch(:last_read_newest_comment)
-
-    last_read_marker_shown = @comments.any? { |comment| @last_read_timestamp&.after?(comment.created_at) }
-    unless last_read_marker_shown
-      @next_page_params = {last_read_timestamp: @last_read_timestamp.to_i}
-    end
-
     respond_to do |format|
-      format.html { render action: "index" }
+      format.html {
+        @comments = CommentVoteHydrator.new(@comments, @user)
+
+        @last_read_timestamp = if params[:last_read_timestamp]
+          Time.zone.at(params[:last_read_timestamp].to_i)
+        else
+          @user&.last_read_newest_comment
+        end
+
+        @user&.touch(:last_read_newest_comment)
+
+        last_read_marker_shown = @comments.any? { |comment| @last_read_timestamp&.after?(comment.created_at) }
+        unless last_read_marker_shown
+          @next_page_params = {last_read_timestamp: @last_read_timestamp.to_i}
+        end
+
+        render action: "index"
+      }
       format.rss {
-        if @user && params[:token].present?
+        if @user
           @title = "Private comments feed for #{@user.username}"
           render action: "index", layout: false
         else

@@ -15,6 +15,16 @@ describe Keystore do
     end
   end
 
+  describe "#increment_value_for" do
+    it "adds and subtracts" do
+      Keystore.put(valid_key, 5)
+
+      expect(Keystore.increment_value_for(valid_key)).to eq(6)
+      expect(Keystore.increment_value_for(valid_key, -1)).to eq(5)
+      expect(Keystore.increment_value_for(valid_key, 3)).to eq(8)
+    end
+  end
+
   describe "should raise error when" do
     it "send invalid arguments to service class interfaces #put" do
       expect { Keystore.put(invalid_key, value) }

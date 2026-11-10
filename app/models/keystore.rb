@@ -33,7 +33,7 @@ class Keystore < ApplicationRecord
   def self.incremented_value_for(key, amount = 1)
     validate_input_key(key)
     Keystore.transaction do
-      Keystore.upsert({key: key, value: amount}, on_duplicate: Arel.sql("value = value + 1"))
+      Keystore.upsert({key: key, value: amount}, on_duplicate: Arel.sql("value = value + excluded.value"))
       value_for(key)
     end
   end

@@ -4,7 +4,7 @@ class StoryUrlsController < ApplicationController
 
     respond_to do |format|
       format.json {
-        render json: Story.find_similar_by_url(url).for_presentation
+        render json: Story.find_similar_by_url(url).visible_to(@user).for_presentation
       }
       format.any { render "about/404", status: :not_found, formats: :html }
     end

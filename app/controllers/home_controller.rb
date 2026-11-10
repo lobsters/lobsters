@@ -324,7 +324,7 @@ class HomeController < ApplicationController
 
   def upvoted
     @stories, @show_more = get_from_cache(upvoted: true, user: @user) {
-      paginate @user.upvoted_stories.includes(:tags).order("votes.id DESC")
+      paginate @user.upvoted_stories.visible_to(@user).includes(:tags).order("votes.id DESC")
     }
 
     @title = "Upvoted Stories"

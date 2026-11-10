@@ -57,7 +57,7 @@ class Story < ApplicationRecord
     length: {maximum: 6}
 
   scope :base, ->(user, unmerged: true) {
-    q = includes(:hidings, :story_text, :user).not_deleted(user).mod_preload?(user)
+    q = includes(:hidings, :story_text, :user).visible_to(user).mod_preload?(user)
     q = q.unmerged if unmerged
     q
   }
@@ -78,6 +78,16 @@ class Story < ApplicationRecord
       all
     else
       where(is_deleted: false).or(where(user: user))
+    end
+  }
+  # same as .can_by_seen_by?
+  scope :visible_to, ->(user) {
+    if user&.is_moderator?
+      all
+    else
+      q = where(is_deleted: false)
+        .where.not(score: ...0, is_moderated: false, user_id: User.where.not(banned_at: nil).select(:id))
+      user ? q.or(where(user: user)) : q
     end
   }
   scope :unmerged, -> { where(merged_story_id: nil) }
@@ -202,7 +212,7 @@ class Story < ApplicationRecord
   scope :newest_by_user, ->(user, submitter) {
     where(user: submitter)
       .includes(:tags)
-      .not_deleted(user)
+      .visible_to(user)
       .mod_preload?(user)
       .order(id: :desc)
   }

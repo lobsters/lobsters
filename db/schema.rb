@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_10_163956) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_10_120000) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -388,14 +388,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_10_163956) do
     t.index ["token"], name: "index_saved_stories_on_token", unique: true
     t.index ["user_id", "story_id"], name: "index_saved_stories_on_user_id_and_story_id", unique: true
   end
-
-# Could not dump table "sqlite_stat1" because of following StandardError
-#   Unknown type '' for column 'tbl'
-
-
-# Could not dump table "sqlite_stat4" because of following StandardError
-#   Unknown type '' for column 'tbl'
-
 
   create_table "stories", force: :cascade do |t|
     t.datetime "created_at", precision: nil

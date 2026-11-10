@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_09_210000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_10_163956) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -619,13 +619,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_09_210000) do
   add_foreign_key "tag_filters", "tags"
   add_foreign_key "tag_filters", "users"
   add_foreign_key "taggings", "stories"
-  add_foreign_key "taggings", "tags", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "taggings", "tags"
   add_foreign_key "tags", "categories"
   add_foreign_key "usernames", "users"
   add_foreign_key "users", "users", column: "banned_by_user_id"
   add_foreign_key "users", "users", column: "disabled_invite_by_user_id"
   add_foreign_key "users", "users", column: "invited_by_user_id"
-  add_foreign_key "votes", "comments", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "votes", "comments"
   add_foreign_key "votes", "stories"
   add_foreign_key "votes", "users"
 

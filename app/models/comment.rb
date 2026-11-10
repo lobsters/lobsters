@@ -5,7 +5,7 @@ class Comment < ApplicationRecord
     touch: true
   # has_one :comment_stat, -> { where("date(created_at)",  }
   has_many :votes,
-    dependent: :delete_all
+    dependent: :restrict_with_exception
   belongs_to :parent_comment,
     class_name: "Comment",
     inverse_of: false,

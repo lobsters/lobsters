@@ -1185,7 +1185,7 @@ class Story < ApplicationRecord
   # significant traffic, but do show referrer a few times so authors can find
   # their way back
   def send_referrer?
-    created_at && created_at <= 1.hour && merged_story_id.nil?
+    created_at && created_at > 1.hour.ago && merged_story_id.nil?
   end
 
   def set_domain_and_origin(domain_name)

@@ -61,6 +61,8 @@ map {http.request.header.Cookie} {has_user_cookie} {
   default 0
 }
 
+header_up caddy-has-user-cookie {has_user_cookie}
+
 # full page caching with actionpack-page_caching
 
 @use_cached_file {

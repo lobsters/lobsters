@@ -1296,21 +1296,21 @@ class Story < ApplicationRecord
     title = ""
     begin
       title = parsed.at_css("meta[property='og:title']")
-        .attributes["content"].text
+        .attributes["content"].text.squish
     rescue
     end
 
     # then try <meta name="title">
     if title.to_s == ""
       begin
-        title = parsed.at_css("meta[name='title']").attributes["content"].text
+        title = parsed.at_css("meta[name='title']").attributes["content"].text.squish
       rescue
       end
     end
 
     # then try plain old <title>
     if title.to_s == ""
-      title = parsed.at_css("title").try(:text).to_s
+      title = parsed.at_css("title").try(:text).to_s.squish
     end
 
     # see if the site name is available, so we can strip it out in case it was

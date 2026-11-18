@@ -55,6 +55,7 @@ describe Search do
   end
 
   after(:all) do
+    Vote.destroy_all
     @comments.each(&:destroy!)
     @stories.flat_map(&:votes).each(&:destroy!)
     @stories.each(&:destroy!)

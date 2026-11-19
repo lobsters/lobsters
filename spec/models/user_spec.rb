@@ -28,6 +28,13 @@ describe User do
     expect { create(:user, username: "case-insensITive") }.to raise_error
   end
 
+  it "rejects usernames with regexp syntax before checking _ and - collisions" do
+    user = build(:user, username: "a_(")
+
+    expect(user).to_not be_valid
+    expect(user.errors[:username]).to include("is invalid")
+  end
+
   it "doesn't allow new users to change in < 1 year" do
     user = create(:user, username: "alice", created_at: 6.months.ago)
     user.username = "betty"

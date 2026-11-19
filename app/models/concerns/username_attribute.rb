@@ -21,6 +21,9 @@ module UsernameAttribute
   end
 
   def underscores_and_dashes_in_username
+    # repeat of the format validation, but it strips potential regexp characters
+    return unless /\A#{VALID_USERNAME}\z/o.match?(username.to_s)
+
     username_regex = "^" + username.gsub(/_|-/, "[-_]") + "$"
     return unless username_regex.include?("[-_]")
 

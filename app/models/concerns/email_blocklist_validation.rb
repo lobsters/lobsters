@@ -14,7 +14,10 @@ module EmailBlocklistValidation
   end
 
   def email_on_blocklist?(email)
-    /^#{email[1 + email.index("@")..]}$/.match? File.read(FetchEmailBlocklistJob::STORAGE_PATH)
+    domain = email.split("@").last.to_s.downcase
+    return false if domain.empty?
+
+    File.read(FetchEmailBlocklistJob::STORAGE_PATH).each_line(chomp: true).include?(domain)
   rescue Errno::ENOENT
     false
   end

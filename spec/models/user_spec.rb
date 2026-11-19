@@ -83,6 +83,15 @@ describe User do
     expect(build(:user, email: "user@disposable.com")).to_not be_valid
   end
 
+  it "matches the disposable email blocklist literally, not regexp" do
+    allow(File).to receive(:read).with(FetchEmailBlocklistJob::STORAGE_PATH).and_return("disposable.com\nother.net\n")
+
+    expect(build(:user, email: "user@other.net")).to_not be_valid
+    expect(build(:user, email: "user@d.sposable.com")).to be_valid
+    expect(build(:user, email: "user@d.*")).to be_valid
+    expect(build(:user, email: "user@(a.com")).to be_valid
+  end
+
   it "has a limit on the password reset token field" do
     user = build(:user, password_reset_token: "a" * 100)
     user.valid?

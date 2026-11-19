@@ -1156,6 +1156,7 @@ div#story_preview {
 }
 #story_box .labelled_grid > .url-updated,
 #story_box .labelled_grid > .title-reminder,
+#story_box .labelled_grid > .description-reminder,
 #story_box .labelled_grid > .self-promo-warning,
 #story_box .labelled_grid > .hint,
 #story_box .labelled_grid > .markdown_help,
@@ -1185,6 +1186,7 @@ div#story_preview {
 #story_box .url-updated,
 #story_box .title-reminder-warn,
 #story_box .title-reminder-thanks,
+#story_box .description-reminder-warn,
 #story_box .self-promo-warning {
 	display: none;
 }
@@ -1194,6 +1196,9 @@ div#story_preview {
 	transition: height .5s ease !important;
 }
 #story_box .title-reminder-warn.slide-down {
+	display: inline-block !important;
+}
+#story_box .description-reminder-warn.slide-down {
 	display: inline-block !important;
 }
 

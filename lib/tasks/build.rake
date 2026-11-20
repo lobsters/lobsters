@@ -1,58 +1,28 @@
 # Local development version of the commands run in CI (check.yml).
 
 return unless Rails.env.local?
-require "brakeman/commandline"
-
-# Override to prevent RSpec from exiting this entire task on RSpec's completion.
-module RSpec
-  module Core
-    class RakeTask
-      def run_task(verbose)
-        command = spec_command
-        puts command if verbose
-
-        if with_clean_environment
-          return if system({}, command, unsetenv_others: true)
-        elsif system(command)
-          return
-        end
-
-        puts failure_message if failure_message
-
-        return unless fail_on_error
-        warn "#{command} failed" if verbose
-        # exit $?.exitstatus || 1 # omitted
-      end
-    end
-  end
-end
-
-# Override to prevent Brakeman from exiting this entire task on Brakeman's completion.
-module Brakeman
-  class Commandline
-    def self.quit(_exit_code = 0, message = nil)
-      warn message if message
-      Brakeman.cleanup
-      # `exit exit_code` # omitted
-    end
-  end
-end
 
 desc "Local development version of the commands run in CI (check.yml)"
-task build: :environment do
-  puts "\n◾ Running tests (RSpec)..."
-  Rake::Task["spec"].invoke
+task :build do
+  # endlessly struggling to match the CI env so dev builds fail and pass together
+  ci_test_env = {
+    "CI" => "true",
+    "RAILS_ENV" => "test",
+    "RUBYOPT" => "--yjit --enable-frozen-string-literal --debug-frozen-string-literal"
+  }
+  failed = []
+  step = ->(name, *command) do
+    puts "\n◾ Running #{name}..."
+    failed << name unless system(*command)
+  end
 
-  puts "\n◾ Running linter (Standard)..."
-  Standard::Cli.new(["--fix-unsafely"]).run
+  step.call("tests (RSpec)", ci_test_env, "bundle", "exec", "rspec")
+  step.call("linter (Standard)", "bundle", "exec", "standardrb", "--fix-unsafely")
+  step.call("security check (Brakeman)", "bundle", "exec", "brakeman", "--quiet", "--no-summary", "--ensure-ignore-notes")
+  step.call("database consistency checks (DatabaseConsistency)", ci_test_env,
+    "bundle", "exec", "database_consistency", "--config", ".database_consistency.ignore.yml")
+  step.call("Ruby version check of app and Dockerfile", "script/check_dockerfile_ruby_version.sh")
 
-  puts "\n◾ Running security check (Brakeman)..."
-  Brakeman::Commandline.start({quiet: true, summary_only: :no_summary})
-
-  puts "\n◾ Running database consistency checks (DatabaseConsistency)..."
-  Rails.application.eager_load!
-  DatabaseConsistency.run([".database_consistency.ignore.yml"])
-
-  puts "\n◾ Checking Ruby version in app and Dockerfile..."
-  system("script/check_dockerfile_ruby_version.sh")
+  abort "\n◾ Failed: #{failed.join(", ")}" if failed.any?
+  puts "\n◾ Build passed"
 end

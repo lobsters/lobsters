@@ -76,12 +76,10 @@ or as a [Github issue](https://github.com/lobsters/lobsters/issues) to avoid was
   The app compiles its own SQLite with flags that change query plans (see `.bundle/config`),
   so the systemwide client will give wrong answers when you run `explain query plan`.
 
-* Run `rails credentials:edit` to create and edit your encrypted credentials file.
+* Run `rails credentials:edit` to edit your encrypted credentials file.
   This is where you store API keys for external services and features like linking accounts.
-  Copy and paste in the contents of `config/credentials.yml.enc.sample`.
-  On setup, Rails will give you new random value for `secret_key_base` and you can use `rails secret` any time you need to generate another.
 
-* If you intend to setup a production server, copy `config/initializers/production.rb.sample`
+* If you intend to set up a production server, copy `config/initializers/production.rb.sample`
   to `config/initializers/production.rb` and customize it with your site's
   `domain` and `name`. (You don't need this on your dev machine.)
 

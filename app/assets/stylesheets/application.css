@@ -527,8 +527,7 @@ button.upvoter:before {
 	content: "\29D6";
 }
 
-.upvoter:focus-visible::before,
-.upvoter:hover::before {
+.upvoter:focus-visible::before {
 	color: var(--color-fg-accent);
 	-webkit-text-stroke: 1px var(--color-fg-accent);
 	font-weight: bolder;
@@ -544,11 +543,25 @@ button.upvoter:before {
 	color: var(--color-fg-accent);
 }
 
-.upvoted .upvoter:focus-visible:before,
-.upvoted .upvoter:hover:before {
+.upvoted .upvoter:focus-visible:before {
 	text-decoration: line-through;
 	text-decoration-color: var(--color-fg);
 	text-decoration-thickness: 0.15rem;
+}
+
+/* don't highlight on hover on touch screens etc. where `:hover` is often sticky */
+@media (hover: hover) {
+	.upvoter:hover::before {
+		color: var(--color-fg-accent);
+		-webkit-text-stroke: 1px var(--color-fg-accent);
+		font-weight: bolder;
+	}
+
+	.upvoted .upvoter:not(.clicked):hover:before {
+		text-decoration: line-through;
+		text-decoration-color: var(--color-fg);
+		text-decoration-thickness: 0.15rem;
+	}
 }
 
 .upvoter {

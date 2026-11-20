@@ -741,6 +741,10 @@ document.addEventListener("DOMContentLoaded", () => {
     Lobster.fetchURLTitle(event.target);
   });
 
+  // hide the unvote strikethrough from the click until the pointer leaves
+  on('click', '.upvoter', (event) => event.target.classList.add('clicked'));
+  on('mouseout', '.upvoter', (event) => event.target.classList.remove('clicked'));
+
   on('click', 'li.story a.upvoter', (event) => {
     event.preventDefault();
     Lobster.upvoteStory(event.target);

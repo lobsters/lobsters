@@ -107,7 +107,7 @@ class ModNote < ApplicationRecord
   def self.tattle_on_invited(redeemer, invitation_code)
     invitation = Invitation.find_by(code: invitation_code)
     return unless invitation
-    invitation.update!(used_at: Time.current, new_user: nil)
+    invitation.update!(used_at: Time.current) if invitation.used_at.nil?
 
     sender = invitation.user
     create_without_dupe!(

@@ -15,6 +15,19 @@ class HotspotDoc < ApplicationRecord
   validates :bad, inclusion: {in: [true, false]}
   validates :logit, numericality: true
 
+  # docs scoring above the mods' threshold
+  scope :hits, -> { where(logit: min_logit..).where.not(logit: ..0.0) }
+
+  def self.min_logit
+    Rails.cache.fetch("hotspot_min_logit", expires_in: 1.hour) do
+      logits = where(bad: true).where.not(logit: ..0.0).joins(:comment).where(comments: {is_moderated: true})
+      n = logits.count
+      # show comments down to 25th percentile of mod-deleted comments, with a leeway so mods see
+      # comments that aren't obviously over the line
+      n.zero? ? 0.0 : logits.order(:logit).offset(n * 0.25).pick(:logit) * 0.75
+    end
+  end
+
   # delete docs for old non-bad comments
   def self.expire!
     where(bad: false)
@@ -38,6 +51,7 @@ class HotspotDoc < ApplicationRecord
       insert_all(docs.map(&:row))
       HotspotTermCount.add!(docs.select(&:bad).flat_map(&:terms))
     }
+    ModNotification.notice_hotspots!
   end
 
   # recalculate the logit of docs for new weights
@@ -47,6 +61,7 @@ class HotspotDoc < ApplicationRecord
       docs = batch.each { |doc| doc.recalculate(weights) }
       upsert_all(docs.map(&:row), unique_by: :comment_id, update_only: [:logit, :matched_terms])
     end
+    ModNotification.notice_hotspots!
   end
 
   def self.build_all(comments, bad_ids, weights)

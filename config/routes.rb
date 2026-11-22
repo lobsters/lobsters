@@ -250,10 +250,10 @@ Rails.application.routes.draw do
     namespace :mod do
       # dashboards
       get "/" => "activities#index", :as => "mod_activity"
-      get "flagged_stories/:period" => "flagged#flagged_stories", :as => "flagged_stories"
-      get "flagged_comments/:period" => "flagged#flagged_comments", :as => "flagged_comments"
+      get "inbox" => "mod_inbox#index", :as => "inbox"
+      get "inbox/all(/page/:page)" => "mod_inbox#all", :as => "inbox_all"
+      get "inbox/unread" => "mod_inbox#unread", :as => "inbox_unread"
       get "commenters/:period" => "flagged#commenters", :as => "commenters"
-      get "hotspots/:period" => "hotspots#index", :as => "hotspots"
 
       # tools
       get "notes(/:period)", to: redirect("/mod/")

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_10_163956) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_22_020000) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -312,6 +312,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_10_163956) do
     t.index ["user_id"], name: "mod_notes_user_id_fk"
   end
 
+  create_table "mod_notifications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "notifiable_type", null: false
+    t.bigint "notifiable_id", null: false
+    t.string "reason", null: false
+    t.datetime "read_at"
+    t.string "token", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_mod_notifications_on_created_at"
+    t.index ["notifiable_type", "notifiable_id"], name: "index_mod_notifications_on_notifiable_type_and_notifiable_id"
+    t.index ["token"], name: "index_mod_notifications_on_token", unique: true
+    t.index ["user_id", "notifiable_type", "notifiable_id", "reason"], name: "index_mod_notifications_uniqueness", unique: true
+  end
+
   create_table "moderations", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -584,6 +599,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_10_163956) do
   add_foreign_key "mod_mail_references", "mod_mails"
   add_foreign_key "mod_notes", "users"
   add_foreign_key "mod_notes", "users", column: "moderator_user_id"
+  add_foreign_key "mod_notifications", "users"
   add_foreign_key "moderations", "categories"
   add_foreign_key "moderations", "comments"
   add_foreign_key "moderations", "domains"

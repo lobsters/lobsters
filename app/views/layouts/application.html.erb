@@ -97,6 +97,13 @@
                 <b>Inbox</b> <b aria-hidden="true">✉</b> <% if @user.inbox_count > 0 %>&nbsp;<b class="inbox-unread"><%= @user.inbox_count %></b><% end %>
               <% end %>
             </li>
+            <% if @user.is_moderator? %>
+              <li class="mod-inbox">
+                <%= link_to mod_inbox_path, {aria: {label: "Mod inbox #{@user.mod_inbox_count > 0 ? @user.mod_inbox_count : nil}"}} do %>
+                  Mod<% if @user.mod_inbox_count > 0 %>&nbsp;<b class="mod-inbox-unread"><%= @user.mod_inbox_count %></b><% end %>
+                <% end %>
+              </li>
+            <% end %>
 
             <li><%= link_to_different_page 'Threads', threads_path %></li>
             <li><%= link_to_different_page 'Saved', saved_path %></li>

@@ -5,5 +5,6 @@ class HotspotIndexJob < ApplicationJob
 
   def perform(comment)
     HotspotTerm.refresh! if HotspotDoc.sync!(comment)
+    ModNotification.notice_hotspot(comment)
   end
 end

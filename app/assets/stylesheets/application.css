@@ -420,8 +420,10 @@ input.btn-link:focus-visible {
 	display: none;
 }
 
-#header-top .inbox-unread {
+#header-top .inbox-unread,
+#header-top .mod-inbox-unread {
 	color: var(--color-fg-accent);
+	font-weight: bold;
 }
 
 /* Main */

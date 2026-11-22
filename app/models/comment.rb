@@ -398,6 +398,7 @@ class Comment < ApplicationRecord
     SQL
     Comment.connection.exec_update(update_query, nil, [new_confidence, Comment.confidence_order(new_confidence, id), id])
     story.update_cached_columns
+    ModNotification.notice_comment(self)
     HotspotIndexJob.perform_later(self) if flag_delta != 0 # may enter or leave mod_flagged
   end
 

@@ -753,6 +753,7 @@ class Story < ApplicationRecord
       WHERE id = ?
     SQL
     Story.connection.exec_update(update_query, nil, [calculated_hotness, id])
+    ModNotification.notice_story(self)
   end
 
   def has_suggestions?

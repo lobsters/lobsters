@@ -1,0 +1,64 @@
+<%= render partial: 'mod/subnav' %>
+
+<% labels = {"stories" => "Flagged stories", "comments" => "Flagged comments", "hotspots" => "Hotspots"} %>
+<%= form_with url: url_for(page: nil, show: nil), method: :get, class: "help" do |f| %>
+  <%= hidden_field_tag "show[]", "", id: nil %>
+  <% Mod::ModInboxController::KINDS.each do |kind| %>
+    <label>
+      <%= check_box_tag "show[]", kind, @kinds.include?(kind), id: "show_#{kind}" %>
+      <%= labels[kind] %>
+    </label>
+  <% end %>
+  <%= f.submit "Filter" %>
+<% end %>
+
+<% if @terms %>
+  <details>
+    <summary>Top terms</summary>
+    <%= safe_join(@terms.map { |term| link_to(term, search_path(q: term, what: "comments", order: "newest")) }, ", ").presence || "none yet" %>
+  </details>
+<% end %>
+
+<% notifications = @notifications.filter(&:should_display?) %>
+<% if notifications.present? %>
+  <% seen_unread = false %>
+  <% printed_last_read_line = false %>
+  <% notifications.each do |notification| %>
+    <% if notification.read_at.nil? %>
+      <% seen_unread = true %>
+    <% elsif seen_unread && !printed_last_read_line %>
+      <div class="last_read_newest">Last Read</div>
+      <% printed_last_read_line = true %>
+    <% end %>
+    <% case notification.notifiable %>
+    <% when Story %>
+      <ol class="stories list">
+        <%= render partial: "stories/listdetail", locals: { story: notification.notifiable } %>
+      </ol>
+    <% when Comment %>
+      <ol class="comments comments1">
+        <li>
+          <%= render "comments/comment", comment: @comments.hydrate(notification.notifiable), show_story: true, force_open: true, is_unread: notification.read_at.nil?, show_hotspot_terms: notification.reason == "hotspot" %>
+        </li>
+      </ol>
+    <% end %>
+  <% end %>
+<% else %>
+  <div class="nominal">🦞</div>
+<% end %>
+
+<% show_param = @kinds.presence || [""] %>
+<% if @has_more || (@page && @page > 1) %>
+  <nav class="morelink">
+    <% if @page && @page > 1 %>
+      <%= link_to "Page #{@page - 1}", @page == 2 ? mod_inbox_all_path(show: show_param) : mod_inbox_all_path(page: @page - 1, show: show_param), rel: "prev" %>
+    <% end %>
+
+    <% if @has_more %>
+      <% if @page && @page > 1 %>
+        <%= divider_tag %>
+      <% end %>
+      <%= link_to "Page #{@page + 1}", mod_inbox_all_path(page: @page + 1, show: show_param), rel: "next" %>
+    <% end %>
+  </nav>
+<% end %>

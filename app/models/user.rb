@@ -59,6 +59,7 @@ class User < ApplicationRecord
     inverse_of: :user
   has_many :hat_requests, dependent: :restrict_with_exception
   has_many :notifications, dependent: :restrict_with_exception
+  has_many :mod_notifications, dependent: :restrict_with_exception
   has_many :hidings,
     class_name: "HiddenStory",
     inverse_of: :user,
@@ -627,6 +628,10 @@ class User < ApplicationRecord
 
   def inbox_count
     @inbox_count ||= notifications.where(read_at: nil).count
+  end
+
+  def mod_inbox_count
+    @mod_inbox_count ||= mod_notifications.where(read_at: nil).count
   end
 
   def validate_username_timeouts

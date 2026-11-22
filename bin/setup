@@ -28,9 +28,6 @@ FileUtils.chdir APP_ROOT do
     FileUtils.cp Dir['.github/workflows/check/*'], 'config/'
   end
 
-  puts "\n== Removing old logs and tempfiles =="
-  system! "rails log:clear tmp:clear"
-
   puts "\n== Preparing database =="
   system! "rails db:prepare"
   system! "rails db:reset" if ARGV.include?("--reset")

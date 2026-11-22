@@ -15,6 +15,9 @@ WORKDIR /lobsters
 # Set database hostname
 ENV DATABASE_HOST db
 
+# Use local bundle, not system
+ENV BUNDLE_APP_CONFIG .bundle
+
 # Install Bundler
 RUN gem install bundler
 

@@ -168,6 +168,17 @@ describe Story do
       expect(s.fetched_attributes[:title]).to eq("Taking a Long Look at QUIC")
     end
 
+    it "can fetch arxiv.org titles and descriptions properly" do
+      content = File.read(story_directory + "arxiv.xml")
+      res = fake_response(content, "application/atom+xml")
+      s = build(:story)
+      s.url = "https://arxiv.org/abs/1000.10000"
+      s.fetched_response = res
+
+      expect(s.fetched_attributes[:title]).to include("Grigori Perelman solved one of the Millenium Problems in an article sent to axiv.org")
+      expect(s.fetched_attributes[:description]).to include("has declined requests for interviews since 2006.")
+    end
+
     it "can fetch its title properly" do
       content = File.read(story_directory + "title_ampersand.html")
       res = fake_response(content, "text/html")

@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/KS5ByqxM6VgCdcbco9Xzb+Peksg</id>
+  <title>arXiv Query: search_query=&amp;id_list=1000.10000&amp;start=0&amp;max_results=1</title>
+  <updated>2026-11-19T21:13:10Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=&amp;start=0&amp;max_results=1&amp;id_list=1000.10000" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>1</opensearch:itemsPerPage>
+  <opensearch:totalResults>1</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1000.10000</id>
+    <title>Grigori Perelman solved one of the Millenium Problems in an article sent to axiv.org</title>
+    <updated>2018-10-23T16:27:07Z</updated>
+    <link href="https://arxiv.org/abs/1000.10000" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1000.10000" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Perelman solved one of the Millenium Problems in an article sent to arxiv.org in 2002. He is a Russian mathematician and geometer who is known for his contributions to the fields of geometric analysis, Riemannian geometry, and geometric topology. In 2005, Perelman resigned from his research post in Steklov Institute of Mathematics and in 2006 stated that he had quit professional mathematics, owing to feeling disappointed over the ethical standards in the field. He lives in seclusion in Saint Petersburg and has declined requests for interviews since 2006.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2002-11-23T16:27:07Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Grisha Perelman</name>
+    </author>
+  </entry>
+</feed>

@@ -589,6 +589,20 @@ class Comment < ApplicationRecord
     Comment.record_timestamps = true
   end
 
+  # This is the outer select so ActiveRecord only sees rows from 'comments' and doesn't worry its
+  # pretty little head about order. It's down here because it's not a generally reusable scope, it
+  # only works on the RCTEs in the two queries following. The row_number() protects against the
+  # cross join reordering rows from the existing RCTE order.
+  scope :from_thread_rcte, -> {
+    from(<<~SQL).order("comments.position")
+      (
+        select comments.*, thread.position
+        from (select id, row_number() over () as position from thread) as thread
+        cross join comments on comments.id = thread.id
+      ) as comments
+    SQL
+  }
+
   def self.recent_threads(user)
     return Comment.none unless user.try(:id)
 
@@ -600,55 +614,36 @@ class Comment < ApplicationRecord
       .pluck(:thread_id)
     return Comment.none if thread_ids.empty?
 
-    inner_join = <<~SQL
-      inner join (
-        with recursive discussion as (
-          select
-            c.id,
-            cast(confidence_order as blob) as confidence_order_path
-          from comments c
-          where thread_id in (#{thread_ids.join(", ")}) and parent_comment_id is null
-          union all
-          select
-            c.id,
-            cast(concat(substring(discussion.confidence_order_path, 1, 3 * (depth + 1)), c.confidence_order) as blob)
-          from comments c join discussion on c.parent_comment_id = discussion.id
-        )
-        select * from discussion
-      ) discussions
-      on comments.id = discussions.id
-    SQL
-
-    Comment.joins(inner_join).where(thread_id: thread_ids).order("comments.thread_id desc, discussions.confidence_order_path")
+    roots = Comment
+      .where(thread_id: thread_ids, parent_comment_id: nil)
+      .select(:id, :thread_id, "0 as depth", :confidence)
+    replies = Comment
+      .from("thread")
+      .joins("join comments replies on replies.parent_comment_id = thread.id")
+      .select("replies.id", "thread.thread_id", "thread.depth + 1", "replies.confidence")
+      .order("depth desc, thread_id desc, confidence desc, id")
+    Comment.with_recursive(thread: [roots, replies]).from_thread_rcte
   end
 
   def self.story_threads(stories)
     story_ids = stories.filter_map(&:id) # unsaved Stories have no comments
     return Comment.none if story_ids.empty?
 
-    inner_join = <<~SQL
-      inner join (
-        with recursive confidence as (
-          select
-            c.id,
-            cast(confidence_order as blob) as confidence_order_path
-            from comments c
-            where story_id in (#{story_ids.join(", ")}) and +parent_comment_id is null
-          union all
-          select
-            c.id,
-            cast(concat(substring(confidence.confidence_order_path, 1, 3 * (depth + 1)), c.confidence_order) as blob)
-          from comments c join confidence on c.parent_comment_id = confidence.id
-        )
-        select * from confidence
-      ) confidence
-      on comments.id = confidence.id
-    SQL
-
-    Comment
-      .select("comments.*, count(*) over (partition by comments.story_id) as thread_size")
-      .joins(inner_join)
-      .in_order_of(:story_id, story_ids)
-      .order("confidence.confidence_order_path")
+    positions = story_ids.each_with_index.map { |id, position| "select #{id} as story_id, #{position} as position" }.join(" union all ")
+    roots = Comment
+      .from("story_positions")
+      .joins("join comments on comments.story_id = story_positions.story_id")
+      .where("+comments.parent_comment_id is null") #  https://github.com/lobsters/lobsters/issues/2158
+      .select("comments.id", "story_positions.position as story_position", "0 as depth", "comments.confidence")
+    replies = Comment
+      .from("thread")
+      .joins("join comments replies on replies.parent_comment_id = thread.id")
+      .select("replies.id", "thread.story_position", "thread.depth + 1", "replies.confidence")
+      .order("depth desc, story_position, confidence desc, id")
+    threads = Comment
+      .with_recursive(story_positions: Arel.sql(positions))
+      .with_recursive(thread: [roots, replies])
+      .from_thread_rcte
+    threads.select("comments.*, count(*) over (partition by comments.story_id) as thread_size")
   end
 end

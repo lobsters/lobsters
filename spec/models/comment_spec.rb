@@ -256,20 +256,6 @@ describe Comment do
     end
   end
 
-  describe "confidence_order_path" do
-    it "doesn't sort comments under the wrong parents when they haven't been voted on" do
-      story = create(:story)
-      a = create(:comment, story: story, parent_comment: nil)
-      create(:comment, story: story, parent_comment: nil)
-      c = create(:comment, story: story, parent_comment: a)
-      sorted = Comment.story_threads([story])
-      # don't care if a or b is first, just care that c is immediately after a
-      # this uses each_cons to get each pair of records and ensures [a, c] appears
-      relationships = sorted.map(&:id).to_a.each_cons(2).to_a
-      expect(relationships).to include([a.id, c.id])
-    end
-  end
-
   describe "#parents" do
     it "returns ancestors root-first" do
       story = create(:story)
@@ -283,7 +269,55 @@ describe Comment do
     end
   end
 
+  describe ".recent_threads" do
+    it "shows whole threads the user commented in, newest thread first" do
+      user = create(:user)
+      story = create(:story)
+      old_root = create(:comment, story:)
+      old_reply = create(:comment, story:, parent_comment: old_root, user:)
+      old_popular_reply = create(:comment, story:, parent_comment: old_root, create_votes: 3)
+      create(:comment, story:) # thread without the user
+      new_root = create(:comment, story:, user:)
+      new_reply = create(:comment, story:, parent_comment: new_root)
+
+      expect(Comment.recent_threads(user))
+        .to eq([new_root, new_reply, old_root, old_popular_reply, old_reply])
+    end
+  end
+
   describe ".story_threads" do
+    it "orders by depth, then confidence" do
+      story = create(:story)
+      low = create(:comment, story:, create_votes: 2)
+      high = create(:comment, story:, create_votes: 5)
+      low_low = create(:comment, story:, parent_comment: low)
+      low_high = create(:comment, story:, parent_comment: low, create_votes: 3)
+      low_low_low = create(:comment, story:, parent_comment: low_low)
+      high_low = create(:comment, story:, parent_comment: high)
+
+      expect(Comment.story_threads([story]))
+        .to eq([high, high_low, low, low_high, low_low, low_low_low])
+    end
+
+    it "shows the earlier of tied siblings first" do
+      story = create(:story)
+      earlier = create(:comment, story:)
+      later = create(:comment, story:)
+
+      expect(Comment.story_threads([story])).to eq([earlier, later])
+    end
+
+    it "shows each story's comments together, in the order the stories were given" do
+      story = create(:story)
+      merged = create(:story, merged_into_story: story)
+      on_merged = create(:comment, story: merged, create_votes: 5)
+      on_story = create(:comment, story:)
+      reply_on_merged = create(:comment, story: merged, parent_comment: on_merged)
+
+      expect(Comment.story_threads([story, merged])).to eq([on_story, on_merged, reply_on_merged])
+      expect(Comment.story_threads([merged, story])).to eq([on_merged, reply_on_merged, on_story])
+    end
+
     it "counts the comments of each story as thread_size" do
       story = create(:story)
       merged = create(:story, merged_into_story: story)
@@ -291,6 +325,18 @@ describe Comment do
       create_list(:comment, 2, story: merged)
 
       expect(Comment.story_threads([story, merged]).map(&:thread_size)).to eq([1, 2, 2])
+    end
+
+    it "keeps thread order when joined to other tables" do
+      story = create(:story)
+      low = create(:comment, story:)
+      high = create(:comment, story:, create_votes: 1)
+      reply = create(:comment, story:, parent_comment: high)
+
+      threads = Comment.story_threads([story])
+
+      expect(threads.joins(:story).merge(Story.not_deleted(nil))).to eq([high, reply, low])
+      expect(threads.eager_load(:user, :story)).to eq([high, reply, low])
     end
 
     it "is empty for no stories or an unsaved story" do

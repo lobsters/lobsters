@@ -85,7 +85,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_23_175906) do
     t.datetime "last_reply_at"
     t.datetime "last_edited_at", null: false
     t.string "token", null: false
-    t.binary "confidence_order", limit: 3, default: "\x00\x00\x00", null: false
     t.index ["confidence"], name: "confidence_idx"
     t.index ["hat_id"], name: "comments_hat_id_fk"
     t.index ["parent_comment_id"], name: "comments_parent_comment_id_fk"

@@ -244,7 +244,7 @@ export class _LobstersFunction {
     const desc = descLocation.value;
     if (!desc) return;
 
-    const latex_equations_pattern = /(\${1,2})((?:\\.|.)*)\1/g;
+    const latex_equations_pattern = /\$(.+?)\$/g;
     if (desc.match(latex_equations_pattern)) {
       slideDownJS(qS('.description-reminder-warn'));
     }
@@ -291,7 +291,7 @@ export class _LobstersFunction {
       })
       .then(Lobster.checkStoryTitle)
       .then(Lobster.checkStoryDescription)
-    
+
     button.removeAttribute("disabled");
   }
 

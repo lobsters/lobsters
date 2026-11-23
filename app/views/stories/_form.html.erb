@@ -82,8 +82,7 @@ See the guidelines below for more."
     <%= f.text_area :description, rows: 8, placeholder: guidelines %>
     <output class="description-reminder" for="<%= :title %>" role="alert" aria-live="polite">
       <span class="description-reminder-warn">
-        Please remove extraneous LaTeX components from equations in description such as $, \cdot etc. as we do not support LaTeX,
-        hence they will not be properly rendered.
+        There might be LaTeX equations formatting in the description (between the dollar signs). This will not render correctly if so and should be manually adjusted.
       </span>
     </output>
     <%= render :partial => "global/markdownhelp", :locals => { allow_images: @story.can_have_images? } %>

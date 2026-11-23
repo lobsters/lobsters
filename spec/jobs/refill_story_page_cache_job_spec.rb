@@ -8,7 +8,7 @@ RSpec.describe RefillStoryPageCacheJob, type: :job do
     let!(:story2) { create(:story) }
 
     it "queues jobs to rerender all stories" do
-      assert_enqueued_jobs(0)
+      assert_enqueued_jobs(0, queue: :refill_story_pages)
       RefillStoryPageCacheJob.perform_now
       assert_enqueued_jobs(2, queue: :refill_story_pages)
     end

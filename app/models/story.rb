@@ -279,7 +279,8 @@ class Story < ApplicationRecord
   before_save :log_moderation
   before_save :fix_bogus_chars
   after_create :mark_submitter, :record_initial_upvote
-  after_save :bust_comment_redirect_cache, :recreate_links, :update_cached_columns, :update_story_text
+  after_save :bust_comment_redirect_cache, :recreate_links, :update_cached_columns
+  after_commit :enqueue_sync_story_text, on: [:create, :update]
 
   validate do
     if url.present?
@@ -1175,11 +1176,10 @@ class Story < ApplicationRecord
     update_column :hotness, calculated_hotness
   end
 
-  def update_story_text
-    return unless saved_change_to_attribute?(:title) || saved_change_to_attribute?(:description)
+  def enqueue_sync_story_text
+    return unless previously_new_record? || saved_change_to_title? || saved_change_to_description?
 
-    # story_text created by cron job, so ignore missing story_text
-    story_text.try(:update!, title: title, description: description)
+    SyncStoryTextJob.perform_later(self)
   end
 
   # disincentivize content marketers by not appearing to be a source of

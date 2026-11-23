@@ -70,8 +70,6 @@ if __FILE__ == $PROGRAM_NAME
     .where("id > ? AND is_deleted = ? AND created_at >= ?", last_story_id, false, 3.days.ago)
     .order(:id)
     .each do |s|
-    StoryText.fill_cache!(s)
-
     mailing_list_users.each do |u|
       if (s.tags.map(&:id) & u.tag_filters.map(&:tag_id)).any?
         # story has tags this user has filtered out

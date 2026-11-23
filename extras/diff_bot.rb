@@ -2,6 +2,7 @@ class DiffBot
   # see README.md on setting up credentials
 
   DIFFBOT_API_URL = "http://www.diffbot.com/api/article".freeze
+  TIMEOUT = 45
 
   def self.get_story_text(story)
     if !Rails.application.credentials.diffbot&.api_key || Rails.env.test?
@@ -19,7 +20,7 @@ class DiffBot
 
     s = Sponge.new
     # we're not doing this interactively, so take a while
-    s.timeout = 45
+    s.timeout = TIMEOUT
     body = s.try_fetch(db_url)&.body
     if body.present?
       j = JSON.parse(body)
@@ -35,7 +36,7 @@ class DiffBot
     end
 
     s = Sponge.new
-    s.timeout = 45
+    s.timeout = TIMEOUT
     s.try_fetch(story.archiveorg_url)
 
     nil

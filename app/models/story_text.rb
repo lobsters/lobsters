@@ -13,23 +13,18 @@ class StoryText < ApplicationRecord
     super(s ? s[...(2**24 - 1)] : s)
   end
 
-  def self.fill_cache!(story)
-    return true if StoryText.where(id: story).exists?
-
-    body = DiffBot.get_story_text(story)
-    StoryText.create! id: story.id, title: story.title, description: story.description, body: body
+  def self.sync!(story)
+    st = find_or_initialize_by(id: story.id)
+    st.assign_attributes(title: story.title, description: story.description)
+    st.body = DiffBot.get_story_text(story) if st.body.blank? && story.url.present?
+    st.save!
   end
 
-  def self.cached?(story, &blk)
-    if blk
-      st = StoryText.find_by(id: story)
-      if st.present?
-        yield st.body
-        return true
-      end
-      return false
-    end
+  def self.cached?(story)
+    body = find_by(id: story)&.body
+    return false if body.blank?
 
-    where(id: story).exists?
+    yield body if block_gien?
+    true
   end
 end

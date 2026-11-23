@@ -40,5 +40,5 @@ ActiveSupport.on_load(:active_record) do
     end
   end
 
-  ActiveRecord::ConnectionAdapters::SQLite3Adapter.prepend(sqlite_functions)
+  ActiveSupport.on_load(:active_record_sqlite3adapter) { prepend sqlite_functions }
 end

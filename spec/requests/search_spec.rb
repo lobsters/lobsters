@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "search controller", type: :request do
   before do
     @foo_bar_story = create(:story, title: "foo bar")
-    StoryText.fill_cache! @foo_bar_story # normally a bg job
+    StoryText.sync! @foo_bar_story # normally SyncStoryTextJob
     @hello_world_comment = create(:comment, comment: "hello world", story: @foo_bar_story)
   end
 

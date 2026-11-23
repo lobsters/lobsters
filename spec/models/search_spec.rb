@@ -32,9 +32,7 @@ describe Search do
         user_id: @alice.id,
         tags: Tag.where(tag: ["tag1"]))
     ]
-    @stories.each do |s|
-      StoryText.create id: s.id, title: s.title, description: s.description
-    end
+    @stories.each { |s| StoryText.sync!(s) } # normally SyncStoryTextJob
     @comments = [
       create(:comment, comment: "comment0",
         story_id: @multi_tag.id,
@@ -58,7 +56,8 @@ describe Search do
     Vote.destroy_all
     @comments.each(&:destroy!)
     @stories.flat_map(&:votes).each(&:destroy!)
-    @stories.each(&:destroy!)
+    StoryText.where(id: @stories.map(&:id)).destroy_all
+    @stories.each { |s| s.reload.destroy! }
     @alice&.destroy!
     @bob&.destroy!
   end

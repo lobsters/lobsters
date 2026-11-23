@@ -5,10 +5,7 @@ describe ModNotification do
 
   describe ".notice_comment" do
     it "idempotently notices flagged comments" do
-      comment = create(:comment, comment: "notice me senpai")
-      create_list(:vote, 3, comment: comment, story: comment.story, vote: -1, reason: "T")
-      comment.update_score_and_recalculate!(0, 0)
-      comment.reload
+      comment = create(:comment, comment: "notice me senpai", create_flags: 3)
 
       2.times { ModNotification.notice_comment(comment) }
 

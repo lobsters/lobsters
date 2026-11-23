@@ -199,8 +199,7 @@ describe Comment do
 
     it "limits longer with flags" do
       top = create(:comment, story: story, user: author, created_at: 150.seconds.ago)
-      mid = create(:comment, story: story, parent_comment: top, created_at: 60.seconds.ago)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story, mid, create(:user).id, "T")
+      mid = create(:comment, story: story, parent_comment: top, created_at: 60.seconds.ago, create_flags: 1)
       c = Comment.new(
         user: author,
         story: story,

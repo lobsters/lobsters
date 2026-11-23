@@ -115,14 +115,10 @@ describe "users controller" do
     end
 
     it "lists flagged comments from the interval but not before it" do
-      flagger = create(:user)
-      recent = create(:comment, user: bad_user, comment: "zorkmid recently flagged")
-      old = create(:comment, user: bad_user, comment: "zorkmid flagged long ago",
+      recent = create(:comment, user: bad_user, comment: "zorkmid recently flagged", create_flags: 1)
+      old = create(:comment, user: bad_user, comment: "zorkmid flagged long ago", create_flags: 1,
         created_at: 2.months.ago)
       unflagged = create(:comment, user: bad_user, comment: "zorkmid blameless")
-      [recent, old].each do |c|
-        Vote.vote_thusly_on_story_or_comment_for_user_because(-1, c.story_id, c.id, flagger.id, "M")
-      end
 
       sign_in bad_user
 

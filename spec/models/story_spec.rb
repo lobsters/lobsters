@@ -536,7 +536,7 @@ describe Story do
       let(:user) { create(:user) }
 
       before do
-        create_list(:comment, 2, story: story2, score: 2, flags: 5)
+        create_list(:comment, 2, story: story2, create_votes: 1)
         story1.update!(created_at: Time.zone.at(0))
         story2.update!(created_at: Time.zone.at(0))
 
@@ -633,7 +633,7 @@ describe Story do
       let(:second_story) { create(:story) }
 
       before do
-        create_list(:comment, 2, story: second_story, score: 2)
+        create_list(:comment, 2, story: second_story, create_votes: 1)
         [first_story, second_story].each do |story|
           story.update!(created_at: Time.zone.at(0))
         end

@@ -49,9 +49,8 @@ describe "comments", type: :request do
     end
 
     it "works even if the comment is flagged" do
-      Vote.vote_thusly_on_story_or_comment_for_user_because(
-        -1, comment.story_id, comment.id, user.id, "T"
-      )
+      create(:comment, user: author, create_flags: 1)
+
       expect(comment.is_deletable_by_user?(author)).to be true
       post "/comments/#{comment.short_id}/delete"
       comment.reload

@@ -1,11 +1,11 @@
 require "active_record/connection_adapters/sqlite3_adapter"
 
 ActiveSupport.on_load(:active_record) do
-  ActiveRecord::ConnectionAdapters::SQLite3Adapter.class_eval do
-    alias_method :orig_initialize, :initialize
+  sqlite_functions = Module.new do
+    private
 
-    def initialize(connection, logger = nil, pool = nil)
-      orig_initialize(connection, logger, pool)
+    def configure_connection
+      super
 
       raw_connection.create_function("regexp", 2) do |fn, pattern, expr|
         matcher = Regexp.new(pattern.to_s, Regexp::IGNORECASE)
@@ -39,4 +39,6 @@ ActiveSupport.on_load(:active_record) do
       end
     end
   end
+
+  ActiveRecord::ConnectionAdapters::SQLite3Adapter.prepend(sqlite_functions)
 end

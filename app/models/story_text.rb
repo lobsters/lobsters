@@ -24,7 +24,7 @@ class StoryText < ApplicationRecord
     body = find_by(id: story)&.body
     return false if body.blank?
 
-    yield body if block_gien?
+    yield body if block_given?
     true
   end
 end

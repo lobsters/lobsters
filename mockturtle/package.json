@@ -1,0 +1,16 @@
+{
+  "license": "Apache-2.0",
+  "dependencies": {
+    "got": "^11.8.2",
+    "irc-framework": "^4.10.0",
+    "level": "^7.0.0",
+    "metascraper": "^5.21.9",
+    "metascraper-title": "^5.21.9",
+    "rss-parser": "^3.12.0",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "ospec": "^4.1.1",
+    "standard": "^17.1.0"
+  }
+}

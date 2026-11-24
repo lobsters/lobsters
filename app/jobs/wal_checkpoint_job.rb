@@ -3,8 +3,13 @@ class WalCheckpointJob < ApplicationJob
   queue_as :default
 
   def perform(*args)
+    checkpoint(ActiveRecord::Base.connection)
+    SolidCache::Record.with_shard(:rack_attack) { checkpoint(SolidCache::Record.connection) }
+  end
+
+  def checkpoint(connection)
     # https://www.sqlite.org/pragma.html#pragma_wal_checkpoint
-    stats = ActiveRecord::Base.connection.execute("PRAGMA wal_checkpoint(NOOP)").first
+    stats = connection.execute("PRAGMA wal_checkpoint(NOOP)").first
 
     # https://www.sqlite.org/wal.html#avoiding_excessively_large_wal_files
     # > new content is appended to the WAL file until the WAL file accumulates about 1000 pages
@@ -15,7 +20,8 @@ class WalCheckpointJob < ApplicationJob
     return if stats["log"] < 5_000
 
     # if this actually fires it's probably a DOS attempt
-    Telebugs.message("WalCheckpointJob fired wal_checkpoint(TRUNCATE), stats #{stats}")
-    ActiveRecord::Base.connection.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+    db = connection.pool.db_config.name
+    Telebugs.message("WalCheckpointJob fired wal_checkpoint(TRUNCATE) on #{db}, stats #{stats}")
+    connection.execute("PRAGMA wal_checkpoint(TRUNCATE)")
   end
 end

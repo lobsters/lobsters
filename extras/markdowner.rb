@@ -85,7 +85,7 @@ class Markdowner
           node.type == :emph ||
           node.type == :strong ||
           node.type == :strikethrough
-        node.insert_before(node.first_child)
+        node.insert_before(node.first_child) if node.first_child
         node.delete
       end
     end

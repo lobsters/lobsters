@@ -214,6 +214,11 @@ describe Markdowner do
         .to eq("hello there italics and bold\\!\n")
     end
 
+    it "drops links with no link text" do
+      expect(Markdowner.to_raw("a [](http://example.com) b ![](http://example.com/i.png) c"))
+        .to eq("a  b  c\n")
+    end
+
     it "link to a user" do
       create(:user, username: "blahblah")
 

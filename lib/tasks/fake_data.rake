@@ -198,24 +198,21 @@ class FakeDataGenerator
         u = voting_users[0]
         # can't flag if you've already replied, just skip
         next if replies.has_key? [u.id, c.id]
-        Vote.vote_thusly_on_story_or_comment_for_user_because(
-          -1,
-          c.story_id,
-          c.id,
-          u.id,
-          Vote::COMMENT_REASONS.keys[Random.rand(Vote::COMMENT_REASONS.keys.length)],
-          false
+        Vote.on(
+          comment: c,
+          vote: -1,
+          user: u,
+          reason: Vote::COMMENT_REASONS.keys[Random.rand(Vote::COMMENT_REASONS.keys.length)],
+          update_counters: false
         )
       end
 
       voting_users.slice(1..).each do |u|
-        Vote.vote_thusly_on_story_or_comment_for_user_because(
-          1,
-          c.story_id,
-          c.id,
-          u.id,
-          nil,
-          false
+        Vote.on(
+          comment: c,
+          vote: 1,
+          user: u,
+          update_counters: false
         )
       end
     end
@@ -229,24 +226,21 @@ class FakeDataGenerator
       voting_users = users.sample(upvotes + 1)
       if Random.rand(100) > 95
         u = voting_users[0]
-        Vote.vote_thusly_on_story_or_comment_for_user_because(
-          -1,
-          s.id,
-          nil,
-          u.id,
-          Vote::STORY_REASONS.keys[Random.rand(Vote::STORY_REASONS.keys.length)],
-          false
+        Vote.on(
+          story: s,
+          vote: -1,
+          user: u,
+          reason: Vote::STORY_REASONS.keys[Random.rand(Vote::STORY_REASONS.keys.length)],
+          update_counters: false
         )
       end
 
       voting_users.slice(1..).each do |u|
-        Vote.vote_thusly_on_story_or_comment_for_user_because(
-          1,
-          s.id,
-          nil,
-          u.id,
-          nil,
-          false
+        Vote.on(
+          story: s,
+          vote: 1,
+          user: u,
+          update_counters: false
         )
       end
     end

@@ -50,7 +50,7 @@ RSpec.describe "search controller", type: :request do
 
   it "works logged in, with vote hydration" do
     sign_in(user = create(:user))
-    Vote.vote_thusly_on_story_or_comment_for_user_because 1, @hello_world_comment.story.id, @hello_world_comment.id, user.id, nil
+    Vote.on(comment: @hello_world_comment, vote: 1, user:)
 
     get "/search", params: {q: "hello", what: "comments", order: "newest"}
     expect(response.body).to include("world")

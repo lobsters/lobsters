@@ -17,22 +17,22 @@ describe Vote do
     let(:s) { create(:story) }
 
     it "-1 to 1" do
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
+      Vote.on(story: s, vote: -1, user: u, reason: "S")
       s.reload
       expect(s.score).to eq(0)
       expect(s.flags).to eq(1)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
+      Vote.on(story: s, vote: 1, user: u)
       s.reload
       expect(s.score).to eq(2)
       expect(s.flags).to eq(0)
     end
 
     it "-1 to 0" do
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
+      Vote.on(story: s, vote: -1, user: u, reason: "S")
       s.reload
       expect(s.score).to eq(0)
       expect(s.flags).to eq(1)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id, nil, u.id, nil)
+      Vote.on(story: s, vote: 0, user: u)
       s.reload
       expect(s.score).to eq(1)
       expect(s.flags).to eq(0)
@@ -41,18 +41,18 @@ describe Vote do
     it "0 to 1" do
       expect(s.score).to eq(1)
       expect(s.flags).to eq(0)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
+      Vote.on(story: s, vote: 1, user: u)
       s.reload
       expect(s.score).to eq(2)
       expect(s.flags).to eq(0)
     end
 
     it "1 to 0" do
-      Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
+      Vote.on(story: s, vote: 1, user: u)
       s.reload
       expect(s.score).to eq(2)
       expect(s.flags).to eq(0)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id, nil, u.id, nil)
+      Vote.on(story: s, vote: 0, user: u)
       s.reload
       expect(s.score).to eq(1)
       expect(s.flags).to eq(0)
@@ -61,18 +61,18 @@ describe Vote do
     it "0 to -1" do
       expect(s.score).to eq(1)
       expect(s.flags).to eq(0)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
+      Vote.on(story: s, vote: -1, user: u, reason: "S")
       s.reload
       expect(s.score).to eq(0)
       expect(s.flags).to eq(1)
     end
 
     it "1 to -1" do
-      Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
+      Vote.on(story: s, vote: 1, user: u)
       s.reload
       expect(s.score).to eq(2)
       expect(s.flags).to eq(0)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, s.id, nil, u.id, "S")
+      Vote.on(story: s, vote: -1, user: u, reason: "S")
       s.reload
       expect(s.score).to eq(0)
       expect(s.flags).to eq(1)
@@ -96,7 +96,7 @@ describe Vote do
 
     u = create(:user)
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
+    Vote.on(story: s, vote: 1, user: u)
 
     s.reload
 
@@ -110,7 +110,7 @@ describe Vote do
     u = create(:user)
 
     2.times do
-      Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, nil, u.id, nil)
+      Vote.on(story: s, vote: 1, user: u)
 
       s.reload
 
@@ -125,7 +125,7 @@ describe Vote do
 
     u = create(:user)
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id, nil, u.id, "H")
+    Vote.on(story: s, vote: 0, user: u, reason: "H")
     s.reload
     expect(s.user.karma).to eq(0)
     expect(s.score).to eq(1)
@@ -139,7 +139,7 @@ describe Vote do
 
     u = create(:user)
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, c.id, u.id, nil)
+    Vote.on(comment: c, vote: 1, user: u)
     c.reload
     expect(c.user.karma).to eq(1)
     # initial poster upvote plus new user's vote
@@ -147,9 +147,7 @@ describe Vote do
     expect(c.flags).to eq(0)
 
     # flip vote
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      -1, s.id, c.id, u.id, Vote::COMMENT_REASONS.keys.first
-    )
+    Vote.on(comment: c, vote: -1, user: u, reason: Vote::COMMENT_REASONS.keys.first)
     c.reload
 
     expect(c.user.karma).to eq(0) # doesn't change bc flags don't affect score
@@ -163,13 +161,13 @@ describe Vote do
     u = create(:user)
     expect(c.user.karma).to eq(0)
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, s.id, c.id, u.id, nil)
+    Vote.on(comment: c, vote: 1, user: u)
     c.reload
     expect(c.user.karma).to eq(1)
     expect(c.score).to eq(2)
     expect(c.flags).to eq(0)
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(0, s.id, c.id, u.id, nil)
+    Vote.on(comment: c, vote: 0, user: u)
     c.reload
 
     expect(c.user.karma).to eq(0)

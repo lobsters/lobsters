@@ -145,25 +145,13 @@ task :bulk_create_votes, [:count_for_stories, :count_for_comments] => :environme
 
   users.each do |user|
     stories.sample(story_vote_count_per_user).each do |story|
-      new_vote = 1
-      story_id = story.id
-      comment_id = nil
-      user_id = user.id
-      reason = nil
-
-      Vote.vote_thusly_on_story_or_comment_for_user_because(new_vote, story_id, comment_id, user_id, reason)
+      Vote.on(story:, vote: 1, user:)
     end
   end
 
   users.each do |user|
     comments.sample(comment_vote_count_per_user).each do |comment|
-      new_vote = 1
-      story_id = comment.story_id
-      comment_id = comment.id
-      user_id = user.id
-      reason = nil
-
-      Vote.vote_thusly_on_story_or_comment_for_user_because(new_vote, story_id, comment_id, user_id, reason)
+      Vote.on(comment:, vote: 1, user:)
     end
   end
 end

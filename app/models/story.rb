@@ -905,7 +905,7 @@ class Story < ApplicationRecord
   end
 
   def record_initial_upvote
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, id, nil, user_id, nil, false)
+    Vote.on(story: self, vote: 1, user: user, update_counters: false)
   end
 
   def show_score_to_user?(u)

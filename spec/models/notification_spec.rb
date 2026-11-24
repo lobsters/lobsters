@@ -156,7 +156,7 @@ describe Notification do
         comment3 = create(:comment, user: reader2, story: story)
         notification = create(:notification, user: author, notifiable: comment3)
         expect(notification.should_display?).to eq(true)
-        Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, comment2.id, author.id, nil)
+        Vote.on(comment: comment2, vote: -1, user: author)
         notification.reload
         expect(notification.should_display?).to eq(false)
       end

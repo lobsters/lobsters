@@ -106,11 +106,11 @@ class Vote < ApplicationRecord
     end
   end
 
-  def self.vote_thusly_on_story_or_comment_for_user_because(
-    new_vote, story_id, comment_id, user_id, reason, update_counters = true
-  )
-    v = Vote.where(user_id: user_id, story_id: story_id,
-      comment_id: comment_id).first_or_initialize
+  def self.on(vote:, user:, story: nil, comment: nil, reason: nil, update_counters: true)
+    new_vote = vote
+    story_id = comment ? comment.story_id : story.id
+    v = Vote.where(user_id: user.id, story_id: story_id,
+      comment_id: comment&.id).first_or_initialize
 
     # AR wraps a transaction around INSERTing to votes. I don't know why, but it also SELECTs the
     # associated story even though there isn't a touch: or callback on the association. This can

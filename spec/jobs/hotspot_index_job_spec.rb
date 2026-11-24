@@ -5,7 +5,7 @@ describe HotspotIndexJob do
     c = create(:comment, comment: "monad")
     expect {
       create_list(:user, 3).each do |u|
-        Vote.vote_thusly_on_story_or_comment_for_user_because(-1, c.story_id, c.id, u.id, "T")
+        Vote.on(comment: c, vote: -1, user: u, reason: "T")
       end
     }.to have_enqueued_job(HotspotIndexJob).exactly(3).times # once per flag
 

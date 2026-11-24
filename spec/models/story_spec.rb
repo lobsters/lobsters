@@ -411,7 +411,7 @@ describe Story do
     it "deducts from score when users flag" do
       expect(story.score).to eq(1) # from submitter's upvote
       flagger = create(:user)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, nil, flagger.id, "S")
+      Vote.on(story:, vote: -1, user: flagger, reason: "S")
       expect(story.reload.score).to eq(0)
       expect(story.reload.flags).to eq(1)
     end
@@ -420,7 +420,7 @@ describe Story do
       expect(story.score).to eq(1) # from submitter's upvote
       flagger = create(:user)
       create(:comment, story: story, user: flagger)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, nil, flagger.id, "S")
+      Vote.on(story:, vote: -1, user: flagger, reason: "S")
       expect(story.reload.score).to eq(1)
       expect(story.reload.flags).to eq(0)
     end

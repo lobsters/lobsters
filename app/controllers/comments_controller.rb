@@ -239,9 +239,7 @@ class CommentsController < ApplicationController
       return render plain: "can't find comment", status: 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      0, @comment.story_id, @comment.id, @user.id, nil
-    )
+    Vote.on(comment: @comment, vote: 0, user: @user)
 
     if request.xhr?
       render plain: "ok"
@@ -255,9 +253,7 @@ class CommentsController < ApplicationController
       return render plain: "can't find comment", status: 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      1, @comment.story_id, @comment.id, @user.id, nil
-    )
+    Vote.on(comment: @comment, vote: 1, user: @user)
 
     if request.xhr?
       render plain: "ok"
@@ -279,9 +275,7 @@ class CommentsController < ApplicationController
       return render plain: "not permitted to flag", status: 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      -1, @comment.story_id, @comment.id, @user.id, params[:reason]
-    )
+    Vote.on(comment: @comment, vote: -1, user: @user, reason: params[:reason])
 
     render plain: "ok"
   end

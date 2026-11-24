@@ -153,7 +153,7 @@ describe Comment do
     mod = create(:user, :moderator)
     c = create(:comment, user: author)
     expect {
-      Vote.vote_thusly_on_story_or_comment_for_user_because(1, c.story_id, c.id, voter.id, nil)
+      Vote.on(comment: c, vote: 1, user: voter)
     }.to change { author.reload.karma }.by(1)
     expect {
       c.delete_by_moderator(mod, "Troll")
@@ -212,7 +212,7 @@ describe Comment do
     it "has an extra message if author flagged a parent" do
       top = create(:comment, story: story, user: author, created_at: 200.seconds.ago)
       mid = create(:comment, story: story, parent_comment: top, created_at: 60.seconds.ago)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story, mid, author.id, "T")
+      Vote.on(comment: mid, vote: -1, user: author, reason: "T")
       c = Comment.new(
         user: author,
         story: story,
@@ -226,7 +226,7 @@ describe Comment do
     it "doesn't limit slow responses" do
       top = create(:comment, story: story, user: author, created_at: 20.minutes.ago)
       mid = create(:comment, story: story, parent_comment: top, created_at: 60.seconds.ago)
-      Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story, mid, author.id, "T")
+      Vote.on(comment: mid, vote: -1, user: author, reason: "T")
       c = Comment.new(
         user: author,
         story: story,

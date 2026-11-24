@@ -481,7 +481,7 @@ class Comment < ApplicationRecord
   end
 
   def record_initial_upvote
-    # not calling vote_thusly to save round-trips of validations
+    # not calling Vote.on to save round-trips of validations
     Vote.create! story: story, comment: self, user: user, vote: 1
 
     update_score_and_recalculate! 0, 0 # trigger db calculation

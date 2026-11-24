@@ -8,8 +8,8 @@ describe CommentVoteHydrator do
   let(:hydrator) { CommentVoteHydrator.new(Comment.where(id: [upvoted.id, flagged.id]).order(:id).load, user) }
 
   before do
-    Vote.vote_thusly_on_story_or_comment_for_user_because(1, story.id, upvoted.id, user.id, nil)
-    Vote.vote_thusly_on_story_or_comment_for_user_because(-1, story.id, flagged.id, user.id, "T")
+    Vote.on(comment: upvoted, vote: 1, user:)
+    Vote.on(comment: flagged, vote: -1, user:, reason: "T")
   end
 
   it "hydrates comments when iterating" do

@@ -246,9 +246,7 @@ class StoriesController < ApplicationController
       return render plain: "can't find story", status: 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      0, @story.id, nil, @user.id, nil
-    )
+    Vote.on(story: @story, vote: 0, user: @user)
 
     render plain: "ok"
   end
@@ -262,9 +260,7 @@ class StoriesController < ApplicationController
       return render plain: "story has been merged", status: 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      1, @story.id, nil, @user.id, nil
-    )
+    Vote.on(story: @story, vote: 1, user: @user)
 
     render plain: "ok"
   end
@@ -282,9 +278,7 @@ class StoriesController < ApplicationController
       return render plain: "not permitted to flag", status: 400
     end
 
-    Vote.vote_thusly_on_story_or_comment_for_user_because(
-      -1, @story.id, nil, @user.id, params[:reason]
-    )
+    Vote.on(story: @story, vote: -1, user: @user, reason: params[:reason])
     HiddenStory.hide_story_for_user(@story, @user)
 
     render plain: "ok"

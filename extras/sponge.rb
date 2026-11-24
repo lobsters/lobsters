@@ -64,7 +64,18 @@ class Sponge
     "203.0.113.0/24",
     "224.0.0.0/4", # mentioned in rfc5735 only, multicast addresses
     "240.0.0.0/4",
-    "255.255.255.255/32"
+    "255.255.255.255/32",
+    "::/128",
+    "::1/128",
+    "::ffff:0:0/96", # ipv4-mapped
+    "64:ff9b::/96", # nat64, can embed private ipv4
+    "100::/64",
+    "2001::/23",
+    "2001:db8::/32",
+    "2002::/16", # 6to4, embeds ipv4
+    "fc00::/7",
+    "fe80::/10",
+    "ff00::/8"
   ].freeze
 
   OTHER_PEOPLES_PROBLEMS = [
@@ -143,9 +154,6 @@ class Sponge
         if !ips.any?
           raise NoIPsError
         end
-
-        # reject ipv6 addresses
-        ips.reject! { |address| address.match(/:/) }
 
         # pick a random one
         tip = ips[rand(ips.length)]

@@ -5,8 +5,7 @@ const Parser = require('rss-parser')
 const readGitHubRss = (event) => {
   const fun = async () => {
     const feeds = {
-      lobsters: 'https://github.com/lobsters/lobsters/commits/main.atom',
-      mockturtle: 'https://github.com/lobsters/mockturtle/commits/develop.atom'
+      lobsters: 'https://github.com/lobsters/lobsters/commits/main.atom'
     }
 
     for (const [repo, feed] of Object.entries(feeds)) {

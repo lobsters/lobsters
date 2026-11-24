@@ -6,7 +6,7 @@ task privacy_wipe: :environment do
   # you MUST review how users are banned/deleted before you run this.
   # At the least, check User#delete! and LoginController.
   # User.where.not(deleted_at: nil)
-  #     .update_all("password_digest = '*', email = concat(username, '@lobsters.example')")
+  #     .update_all("state = 'wiped', password_digest = '*', email = concat(username, '@lobsters.example')")
 
   # wipe all moderator notes:
   # ModNote.delete_all

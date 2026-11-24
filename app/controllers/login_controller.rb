@@ -34,9 +34,9 @@ class LoginController < ApplicationController
   def login
     @title = "Login"
     user = if /@/.match?(params[:email].to_s)
-      User.where(email: params[:email]).first
+      User.where(email: params[:email]).where.not(state: "system").first
     else
-      User.where(username: params[:email]).first
+      User.where(username: params[:email]).where.not(state: "system").first
     end
 
     fail_reason = nil
@@ -47,6 +47,7 @@ class LoginController < ApplicationController
       end
 
       if user.is_wiped?
+        user.report_state_mismatch("LoginController#login", "wiped")
         raise LoginWipedError
       end
 
@@ -60,12 +61,16 @@ class LoginController < ApplicationController
       end
 
       if user.is_banned?
+        user.report_state_mismatch("LoginController#login", "banned")
         raise LoginBannedError
       end
 
       if !user.is_active?
+        user.report_state_mismatch("LoginController#login", "deactivated")
         raise LoginDeactivatedError
       end
+
+      user.report_state_mismatch("LoginController#login", user.is_new? ? "new" : "active")
 
       if !user.password_digest.to_s.match(/^\$2a\$#{BCrypt::Engine::DEFAULT_COST}\$/o)
         user.password = user.password_confirmation = params[:password].to_s
@@ -169,6 +174,7 @@ class LoginController < ApplicationController
         reactivated = false
         if !@reset_user.is_active? && !@reset_user.is_banned?
           @reset_user.deleted_at = nil
+          @reset_user.state = @reset_user.is_new? ? "new" : "active"
           reactivated = true
         end
 

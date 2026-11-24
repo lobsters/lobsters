@@ -7,10 +7,12 @@ FactoryBot.define do
     password_confirmation(&:password)
     last_read_newest_story { 1.hour.ago }
     last_read_newest_comment { 1.hour.ago }
+    state { "active" }
     trait(:banned) do
       transient do
         banner { nil }
       end
+      state { "banned" }
       banned_at { Time.current }
       banned_reason { "some reason" }
       banned_by_user_id { banner&.id }
@@ -28,14 +30,17 @@ FactoryBot.define do
       to_create { |user| user.save(validate: false) }
     end
     trait(:deactivated) do
+      state { "deactivated" }
       deleted_at { Time.current }
     end
     trait(:new) do
-      deleted_at { 1.day.ago }
+      state { "new" }
+      created_at { 1.day.ago }
     end
     # users who were banned/deactivated before a server move
     # you must also add banned/deactivated trait with this
     trait(:wiped) do
+      state { "wiped" }
       password_digest { "*" }
     end
     trait(:admin) do

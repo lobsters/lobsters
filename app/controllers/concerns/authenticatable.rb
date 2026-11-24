@@ -14,8 +14,12 @@ module Authenticatable
     end
 
     if session[:u] &&
-        (user = User.find_by(session_token: session[:u].to_s)) &&
-        user.is_active?
+        (user = User.find_by(session_token: session[:u].to_s))
+      user.update_column(:state, "active") if user.state == "new" && !user.is_new?
+      user.report_state_mismatch("authenticate_user", user.implicit_state)
+    end
+
+    if user&.is_active?
       @user = user
       Telebugs.user id: @user.token, username: @user.username, email: @user.email, ip_address: request.remote_ip
     end

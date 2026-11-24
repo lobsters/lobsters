@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_23_175906) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_24_220052) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -543,6 +543,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_23_175906) do
     t.datetime "last_read_newest_story"
     t.datetime "last_read_newest_comment"
     t.string "token", null: false
+    t.string "state", default: "new", null: false
     t.index ["banned_by_user_id"], name: "users_banned_by_user_id_fk"
     t.index ["disabled_invite_by_user_id"], name: "users_disabled_invite_by_user_id_fk"
     t.index ["email"], name: "index_users_on_email", unique: true

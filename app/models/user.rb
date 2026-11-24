@@ -150,6 +150,9 @@ class User < ApplicationRecord
   validates :show_email, :is_admin, :is_moderator, :pushover_mentions,
     inclusion: {in: [true, false]}
 
+  STATES = %w[new active deactivated banned wiped system].freeze
+  validates :state, inclusion: {in: STATES}
+
   validates :karma,
     presence: true
 
@@ -296,6 +299,7 @@ class User < ApplicationRecord
     notify = !deleted_at?
 
     User.transaction do
+      self.state = "banned"
       self.banned_at = Time.current
       self.banned_by_user_id = banner.id
       self.banned_reason = reason
@@ -429,6 +433,7 @@ class User < ApplicationRecord
 
       roll_session_token
 
+      self.state = "deactivated" unless is_banned?
       self.deleted_at = Time.current
       good_riddance?
       save!
@@ -493,6 +498,29 @@ class User < ApplicationRecord
 
   def is_active?
     !(deleted_at? || is_banned?)
+  end
+
+  # state implied by the legacy columns and created_at; `state` is being introduced in #1729
+  def implicit_state
+    if is_wiped?
+      "wiped"
+    elsif is_banned?
+      "banned"
+    elsif deleted_at?
+      "deactivated"
+    elsif is_new?
+      "new"
+    else
+      "active"
+    end
+  end
+
+  # screams if the state column disagrees with what the implicit-state code concluded
+  def report_state_mismatch(where, expected_state)
+    return if state == expected_state && state == implicit_state
+
+    msg = "User #{id} state mismatch in #{where}: state=#{state} expected=#{expected_state} implicit=#{implicit_state}"
+    Telebugs.message msg
   end
 
   def is_banned?
@@ -597,6 +625,7 @@ class User < ApplicationRecord
     self.banned_by_user_id = nil
     self.banned_reason = nil
     self.deleted_at = nil
+    self.state = is_new? ? "new" : "active"
     save!
 
     m = Moderation.new

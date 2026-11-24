@@ -1,6 +1,13 @@
 <div class="box" id="story_box">
   <div id="story_holder">
     <%= form_with model: [:mod, @story] do |f| %>
+      <div class="box">
+        <div class="labelled_grid">
+          <label>Author</label>
+          <div><%= styled_user_link f.object.user, f.object %></div>
+        </div>
+      </div>
+
       <%= render :partial => "stories/form", :locals => { :story => @story, :f => f } %>
 
       <br />

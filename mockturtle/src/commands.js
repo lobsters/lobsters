@@ -25,13 +25,9 @@ const autoInviteInfo = (event) => {
     try {
       lastJoined = Date.parse(await event.database.get(key))
     } catch(e) {
-      if (!e.notFound) {
-        event.logger.error(e)
-        return
-      }
-      /* bot missed a channel join, default to now */
-      lastJoined = Date.now()
-      await event.database.put(key, new Date().toString())
+      // No recorded join (before deploy or bot offline): stay silent rather than risk a spurious invite hint.
+      if (!e.notFound) event.logger.error(e)
+      return
     }
 
     if (Date.now() - lastJoined < 600000) {

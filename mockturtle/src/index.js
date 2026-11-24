@@ -84,6 +84,9 @@ const injectValue = (key, value) => {
   }
 }
 
+// command and scheduled task promises aren't awaited; log their errors instead of crashing
+process.on('unhandledRejection', (reason) => logger.error(reason))
+
 client.use(injectLoggerMiddleware(logger))
 client.use(injectValue('database', storage))
 client.use(injectValue('fetchTitle', fetchTitle))

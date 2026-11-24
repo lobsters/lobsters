@@ -19,30 +19,29 @@ autoTitle.__match__ = /.*(?<url>https?:\/\/\S+).*/g
 
 const autoInviteInfo = (event) => {
   const fun = async () => {
-    try {
-      const lastJoined = await event.database.get(`lastJoined/${event.target}/${event.nick}`);
+    const key = `lastJoined/${event.target}/${event.nick}`
+    let lastJoined
 
-      if (Date.now() - Date.parse(lastJoined) < 600000) {
-        event.reply(`Looking for an invitation ${event.nick}? ` +
-          "https://lobste.rs/about#invitations " +
-          "has an intro, and " +
-          "https://lobste.rs/chat " +
-          "explains some expectations for this channel. " +
-          "(I am the channel bot.)"
-        )
-      }
+    try {
+      lastJoined = Date.parse(await event.database.get(key))
     } catch(e) {
-      if (e.notFound) {
-        /* bot missed a channel join, default to now, then re-trigger */
-        try {
-          await event.database.put(`lastJoined/${event.channel}/${event.nick}`, new Date().toString())
-          autoInviteInfo(event);
-        } catch (e) {
-          event.logger.error(e)
-        }
-      } else {
+      if (!e.notFound) {
         event.logger.error(e)
+        return
       }
+      /* bot missed a channel join, default to now */
+      lastJoined = Date.now()
+      await event.database.put(key, new Date().toString())
+    }
+
+    if (Date.now() - lastJoined < 600000) {
+      event.reply(`Looking for an invitation ${event.nick}? ` +
+        "https://lobste.rs/about#invitations " +
+        "has an intro, and " +
+        "https://lobste.rs/chat " +
+        "explains some expectations for this channel. " +
+        "(I am the channel bot.)"
+      )
     }
   }
 
@@ -68,28 +67,6 @@ const help = (event) => {
   }
 }
 help.__match__ = /^\.help ?(?<query>\S+)?/
-
-const peek = (event) => {
-  const fun = async () => {
-    const { groups: { key } } = peek.__match__.exec(event.message)
-
-    try {
-      const value = await event.database.get(key)
-      event.reply(value)
-    } catch (e) {
-      if (e.notFound) {
-        event.reply('Not Found.')
-      } else {
-        event.logger.error(e)
-      }
-    }
-
-    return true
-  }
-
-  return fun()
-}
-peek.__match__ = /^\.peek (?<key>\S+)/
 
 const salute = (event) => {
   const leaves = ['(V)', '(\\/)', '(\\_/)', 'V', 'v', '(v)']
@@ -181,7 +158,6 @@ module.exports = [
   autoTitle,
   autoInviteInfo,
   help,
-  peek,
   salute,
   seen,
   tell,

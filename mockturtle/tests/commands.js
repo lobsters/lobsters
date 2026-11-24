@@ -55,25 +55,6 @@ o('help - as `.help undefined`', () => {
   o(spy.calls[0].args[0].includes('know anything about')).equals(true)
 })
 
-o('peek - as `.peek key`', async () => {
-  const spy = o.spy(_ => 'VALUE')
-  const command = commands.find(c => c.name === 'peek')
-  o(command).notEquals(null)
-
-  const mockEvent = {
-    target: '#test',
-    message: '.peek key',
-    nick: 'test',
-    database: { get: spy },
-    reply: spy
-  }
-
-  await command(mockEvent)
-
-  o(spy.calls[0].args[0]).equals('key')
-  o(spy.calls[1].args[0].includes('VALUE')).equals(true)
-})
-
 o('salute - as `v.v.v`', () => {
   const spy = o.spy()
   const command = commands.find(c => c.name === 'salute')

@@ -1,5 +1,11 @@
 'use strict'
 
+const normalTime = (raw) => {
+  const date = new Date(raw)
+  if (isNaN(date)) return raw
+  return date.toLocaleString('en-US', { timeZone: 'America/Chicago', timeZoneName: 'short' })
+}
+
 const autoTitle = (event) => {
   const fun = async () => {
     const { groups: { url } } = autoTitle.__match__.exec(event.message)
@@ -82,7 +88,7 @@ const seen = (event) => {
     try {
       const lastSeen = await event.database.get(`seen/${event.target}/${user}`)
 
-      event.reply(`I last saw ${user} in ${event.target} at ${lastSeen}.`)
+      event.reply(`I last saw ${user} in ${event.target} at ${normalTime(lastSeen)}.`)
     } catch (e) {
       if (e.notFound) {
         event.reply(`I haven't seen ${user} in ${event.target}.`)

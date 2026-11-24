@@ -41,6 +41,10 @@ fi
 # server packages
 apt install -y iptables-persistent libsasl2-modules mailutils opendkim postfix restic
 
+# so much hassle to get js off prod, but mockturtle needs it for now
+apt install -y nodejs npm
+npm install -g yarn
+
 # We build our own sqlite3 (.bundle/config), remove any system copy to avoid
 # infinite confusion when getting different query plans from a different version.
 apt remove -y sqlite3

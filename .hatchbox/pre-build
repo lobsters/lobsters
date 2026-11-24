@@ -33,3 +33,7 @@ if ! diff -q <(ls "$current/db/migrate") <(ls db/migrate) >/dev/null; then
     echo "new migration(s), taking a backup"
     (cd "$current" && RAILS_ENV=production bundle exec rails runner "ResticJob.perform_now") || exit 1
 fi
+
+mkdir -p ../../shared/mockturtle/storage.leveldb
+ln -s ../../../shared/mockturtle/storage.leveldb mockturtle/storage.leveldb
+(cd mockturtle && yarn install --frozen-lockfile --production) || exit 1

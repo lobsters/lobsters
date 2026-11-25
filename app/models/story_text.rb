@@ -16,7 +16,7 @@ class StoryText < ApplicationRecord
   def self.sync!(story)
     st = find_or_initialize_by(id: story.id)
     st.assign_attributes(title: story.title, description: story.description)
-    st.body = DiffBot.get_story_text(story.url) if st.body.blank? && story.url.present?
+    st.body = Diffbot.get_story_text(story.url) if st.body.blank? && story.url.present?
     st.save!
   end
 

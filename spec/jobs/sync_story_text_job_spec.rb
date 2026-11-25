@@ -13,7 +13,7 @@ describe SyncStoryTextJob do
 
   it "fetches story texts" do
     story = create(:story, title: "Mxyzptlk")
-    expect(DiffBot).to receive(:get_story_text).once.and_return("Gsptlsnz text")
+    expect(Diffbot).to receive(:get_story_text).once.and_return("Gsptlsnz text")
     2.times { SyncStoryTextJob.perform_now(story) }
     expect(story.reload.story_text.body).to eq "Gsptlsnz text"
     expect(Story.search("Mxyzptlk")).to include(story)

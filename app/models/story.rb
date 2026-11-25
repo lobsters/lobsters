@@ -1166,7 +1166,7 @@ class Story < ApplicationRecord
   end
 
   def recreate_links
-    Link.recreate_from_story!(self) if saved_change_to_attribute?(:url) || saved_change_to_attribute?(:description)
+    Link.recreate_from_story!(self)
   end
 
   def update_cached_columns

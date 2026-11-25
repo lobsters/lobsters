@@ -1,44 +1,41 @@
 class DiffBot
   # see README.md on setting up credentials
 
-  DIFFBOT_API_URL = "http://www.diffbot.com/api/article".freeze
+  DIFFBOT_API_URL = "http://api.diffbot.com/v3/article".freeze
   TIMEOUT = 45
 
-  def self.get_story_text(story)
+  def self.get_story_text(url)
     if !Rails.application.credentials.diffbot&.api_key || Rails.env.test?
       return
     end
 
-    return "" if story.url.nil?
+    return "" if url.nil?
 
-    # XXX: diffbot tries to read pdfs as text, so disable for now
-    if /\.pdf$/i.match?(story.url.to_s)
-      return nil
-    end
+    text = try_fetch_diffbot(url)
+    text = try_fetch_diffbot("https://web.archive.org/web/3/#{CGI.escape(url)}") if text.blank?
 
-    db_url = "#{DIFFBOT_API_URL}?token=#{Rails.application.credentials.diffbot.api_key}&url=#{CGI.escape(story.url)}"
+    text
+  end
 
-    s = Sponge.new
-    # we're not doing this interactively, so take a while
-    s.timeout = TIMEOUT
-    body = s.try_fetch(db_url)&.body
-    if body.present?
-      j = JSON.parse(body)
-
-      # turn newlines into double newlines, so they become paragraphs
-      j["text"] = j["text"].to_s.gsub("\n", "\n\n")
-
-      while j["text"].include?("\n\n\n")
-        j["text"].gsub!("\n\n\n", "\n\n")
-      end
-
-      return j["text"]
-    end
+  def self.try_fetch_diffbot(url)
+    db_url = "#{DIFFBOT_API_URL}?token=#{Rails.application.credentials.diffbot.api_key}&url=#{CGI.escape(url)}"
 
     s = Sponge.new
     s.timeout = TIMEOUT
-    s.try_fetch(story.archiveorg_url)
+    body = s.try_fetch(db_url)&.body&.force_encoding("UTF-8")
+    return if body.blank?
 
-    nil
+    # https://www.diffbot.com/docs/extract/article
+    # > At the moment, only a single object will be returned for Article API requests.
+    text = JSON.parse(body)["objects"][0]["text"]
+
+    # turn newlines into double newlines, so they become paragraphs
+    text = text.to_s.gsub("\n", "\n\n")
+
+    while text.include?("\n\n\n")
+      text.gsub!("\n\n\n", "\n\n")
+    end
+
+    text
   end
 end

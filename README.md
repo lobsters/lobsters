@@ -61,7 +61,6 @@ Setup:
    This should be all the info you need, just in a slightly different order.
 
   * Follow the [Hatchbox Docs](https://hatchbox.relationkit.io/) to create an account and connect a Hosting Provider.
-    We use DigitalOcean because I was already familiar with it.
   * Create a Cluster, ours is called `lobsters`.
     We don't have any Cluster settings customized.
   * In your Cluster, create a Server.

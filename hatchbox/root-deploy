@@ -27,8 +27,6 @@ APP_ETC=/home/deploy/lobsters/shared/etc
 # Go and had MPTCP listeners.
 sysctl -w net.mptcp.enabled=0
 
-# the only way to get a PTR on DO name the VPS with the fqdn, ugh
-# https://docs.digitalocean.com/products/networking/dns/how-to/manage-records/#ptr-rdns-records
 echo "lobste.rs" > /etc/hostname
 
 # Install Anubis

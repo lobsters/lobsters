@@ -106,7 +106,7 @@ class ApplicationController < ActionController::Base
       request.env["exception_notifier.exception_data"] = exception_data
     end
 
-    if Rails.application.config.telebugs
+    if Telebugs::ENABLED
       Telebugs.context "request", {
         request_token: request.request_id,
         requested_path: @requested_path,

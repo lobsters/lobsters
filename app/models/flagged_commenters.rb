@@ -57,9 +57,9 @@ class FlaggedCommenters
       User.active.joins(:comments)
         .where("comments.created_at >= ?", period)
         .group("comments.user_id")
-        .select("
+        .select(ActiveRecord::Base.sanitize_sql_array(["
           users.id, users.username,
-          (sum(flags) - #{avg_sum_flags})/#{stddev_sum_flags} as sigma,
+          (sum(flags) - ?)/? as sigma,
           count(distinct if(flags > 0, comments.id, null)) as n_comments,
           count(distinct if(flags > 0, story_id, null)) as n_stories,
           sum(flags) as n_flags,
@@ -67,7 +67,7 @@ class FlaggedCommenters
           (
             count(distinct if(flags > 0, comments.id, null)) * 100.0 /
             count(distinct comments.id)
-          ) as percent_flagged")
+          ) as percent_flagged", avg_sum_flags, stddev_sum_flags]))
         .having("n_comments > 4 and n_stories > 1 and n_flags >= 10 and percent_flagged > 10")
         .order(sigma: :desc)
         .limit(30)

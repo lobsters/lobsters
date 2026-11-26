@@ -106,7 +106,7 @@
           "type": "controller",
           "class": "StoriesController",
           "method": "check_url_dupe",
-          "line": 429,
+          "line": 423,
           "file": "app/controllers/stories_controller.rb",
           "rendered": {
             "name": "stories/_form_errors",
@@ -246,7 +246,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/users_controller.rb",
-      "line": 146,
+      "line": 150,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.exec_query(\"\\n      select\\n        n_flags, count(*) as n_users\\n      from (\\n        select\\n          comments.user_id, sum(flags) as n_flags\\n        from\\n          comments\\n        where\\n          comments.created_at >= datetime('now', '-#{time_interval(\"1m\")[:dur]} #{time_interval(\"1m\")[:intv]}')\\n        group by comments.user_id) count_by_user\\n      group by 1\\n      order by 1 asc;\\n    \")",
       "render_path": null,
@@ -355,7 +355,7 @@
           "type": "controller",
           "class": "UsersController",
           "method": "show",
-          "line": 35,
+          "line": 39,
           "file": "app/controllers/users_controller.rb",
           "rendered": {
             "name": "users/show",
@@ -381,7 +381,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/comments/_comment.html.erb",
-      "line": 162,
+      "line": 171,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Moderation.comment.markeddown_comment",
       "render_path": [
@@ -435,7 +435,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/comments/_comment.html.erb",
-      "line": 165,
+      "line": 174,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Moderation.comment.markeddown_comment",
       "render_path": [
@@ -554,34 +554,11 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "b533cc3019675c46e706c5f41a3c0dfcfaf9f1fb61640219094385914a518c62",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/flagged_commenters.rb",
-      "line": 62,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "User.active.joins(:comments).where(\"comments.created_at >= ?\", period).group(\"comments.user_id\").select(\"\\n          users.id, users.username,\\n          (sum(flags) - #{avg_sum_flags})/#{stddev_sum_flags} as sigma,\\n          count(distinct if(flags > 0, comments.id, null)) as n_comments,\\n          count(distinct if(flags > 0, story_id, null)) as n_stories,\\n          sum(flags) as n_flags,\\n          sum(flags)/count(distinct comments.id) as average_flags,\\n          (\\n            count(distinct if(flags > 0, comments.id, null)) * 100.0 /\\n            count(distinct comments.id)\\n          ) as percent_flagged\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "FlaggedCommenters",
-        "method": "commenters"
-      },
-      "user_input": "avg_sum_flags",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "these are integers returned by other queries in the class"
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
       "fingerprint": "b7b38263d53adbf429b0ab4aff64a4739b1b8cd26d81347a0565322561c8a022",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/story.rb",
-      "line": 110,
+      "line": 120,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "base(user).where(\"created_at >= datetime('now', '-#{length[:dur]} #{length[:intv].upcase}')\")",
       "render_path": null,
@@ -733,5 +710,5 @@
       "note": "period is a prespecified value"
     }
   ],
-  "brakeman_version": "8.1.0"
+  "brakeman_version": "8.1.1"
 }

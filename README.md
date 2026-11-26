@@ -61,6 +61,7 @@ Setup:
    This should be all the info you need, just in a slightly different order.
 
   * Follow the [Hatchbox Docs](https://hatchbox.relationkit.io/) to create an account and connect a Hosting Provider.
+    We use DigitalOcean because I was already familiar with it.
   * Create a Cluster, ours is called `lobsters`.
     We don't have any Cluster settings customized.
   * In your Cluster, create a Server.
@@ -130,7 +131,7 @@ Setup:
 6. SSH into your server as the `deploy` user
 
    1. Run `rails credentials:edit` to set up credentials there, like you did for development.
-      Use `config/credentials.yml.sample` for a template.
+      Use `config/credentials.yml.enc.sample` for a template.
       On setup, Rails will give you new random value for `secret_key_base` and you can use `rails secret` any time you need to generate another.
       Never `git commit` or share your `config/credentials.yml.enc` or `config/master.key`.
    2. [Test your mail config for spamminess](https://www.mail-tester.com/).

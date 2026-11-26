@@ -1,3 +1,7 @@
+# SimpleCov must start before any app code loads or it records nothing.
+require "simplecov"
+SimpleCov.start "rails"
+
 # Enable ruby deprecation warnings in the test suite
 Warning[:deprecated] = true
 

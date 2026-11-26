@@ -240,29 +240,6 @@
       "note": "Story#short_id is safely created internally, and File.basename ensures no relative paths."
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "459e2f616ea96e7b77520486a352dc2b1c6d251a1d5148b9f18eaf5ad542f76a",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/controllers/users_controller.rb",
-      "line": 150,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "ActiveRecord::Base.connection.exec_query(\"\\n      select\\n        n_flags, count(*) as n_users\\n      from (\\n        select\\n          comments.user_id, sum(flags) as n_flags\\n        from\\n          comments\\n        where\\n          comments.created_at >= datetime('now', '-#{time_interval(\"1m\")[:dur]} #{time_interval(\"1m\")[:intv]}')\\n        group by comments.user_id) count_by_user\\n      group by 1\\n      order by 1 asc;\\n    \")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "UsersController",
-        "method": "standing"
-      },
-      "user_input": "time_interval(\"1m\")[:dur]",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "Using proper interval helper"
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "4a754960fbe7f93c32538141ee24e9007358dba0baa49ec319a1ac5053a1b365",
@@ -552,29 +529,6 @@
       "note": "Normal part of oauth flow"
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "b7b38263d53adbf429b0ab4aff64a4739b1b8cd26d81347a0565322561c8a022",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/story.rb",
-      "line": 120,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "base(user).where(\"created_at >= datetime('now', '-#{length[:dur]} #{length[:intv].upcase}')\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Story",
-        "method": "top"
-      },
-      "user_input": "length[:dur]",
-      "confidence": "Weak",
-      "cwe_id": [
-        89
-      ],
-      "note": "Using proper interval helper"
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "be0c7c6e5fd646ebe1ea5279e2f8ea69d3c837da77e69e9bd4830ff63d1abb09",
@@ -685,29 +639,6 @@
         79
       ],
       "note": "These aren't user-controlled, aren't strings and get passed to the graphing library."
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "f758ba6d8ba52d8f1063490bb081ab2117d637503e3cc98308a521db1f9b51c6",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/controllers/mod/mod_controller.rb",
-      "line": 15,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "query.where(\"#{query.model.table_name}.created_at >= datetime('now', '-#{time_interval((params[:period] or default_periods.first))[:dur]} #{time_interval((params[:period] or default_periods.first))[:intv]}')\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Mod::ModController",
-        "method": "period"
-      },
-      "user_input": "params[:period]",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "period is a prespecified value"
     }
   ],
   "brakeman_version": "8.1.1"

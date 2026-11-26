@@ -10,7 +10,7 @@ class FlaggedCommenters
     @interval = interval
     @cache_time = cache_time
     length = time_interval(interval)
-    @period = length[:dur].send(length[:intv].downcase).ago
+    @period = IntervalHelper.interval_start(length)
   end
 
   def check_list_for(showing_user)

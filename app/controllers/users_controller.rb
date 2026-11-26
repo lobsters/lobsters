@@ -147,11 +147,11 @@ class UsersController < ApplicationController
         from
           comments
         where
-          comments.created_at >= datetime('now', '-#{@interval[:dur]} #{@interval[:intv]}')
+          comments.created_at >= ?
         group by comments.user_id) count_by_user
       group by 1
       order by 1 asc;
-    ").rows
+    ", "flag_counts", [IntervalHelper.interval_start(@interval)]).rows
     users = Array.new(@fc_flagged.last.to_i + 1, 0)
     rows.each { |r| users[r.first] = r.last }
     @lookup = rows.to_h

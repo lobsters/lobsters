@@ -6,6 +6,10 @@ module IntervalHelper
                     "m" => "Month",
                     "y" => "Year"}.freeze
 
+  def self.interval_start(length)
+    length[:dur].public_send(length[:intv].downcase).ago
+  end
+
   # security: must restrict user input to valid values
   def time_interval(param)
     if (m = param.to_s.match(/\A(\d+)([#{TIME_INTERVALS.keys.join}])\z/))

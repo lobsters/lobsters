@@ -184,7 +184,7 @@ class Search
           .joins(:tags)
           .where(tags: tags)
           .group("stories.id")
-          .having("count(distinct tags.id) = #{n_tags}")
+          .having("count(distinct tags.id) = ?", n_tags)
       )
     end
 

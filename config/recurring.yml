@@ -77,7 +77,7 @@ development:
     command: 'Stats.fill_votes_graph_cache'
     schedule: every day at 12:12am
   fetch_email_blocklist:
-    command: FetchEmailBlocklistJob
+    class: FetchEmailBlocklistJob
     schedule: every 7 days
   fetch_iana_tlds:
     class: FetchIanaTldsJob

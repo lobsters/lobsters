@@ -33,8 +33,7 @@ class Link < ApplicationRecord
     self.normalized_url = Utils.normalize(url)
 
     if normalized_url.starts_with? Rails.application.domain
-      path = normalized_url.delete_prefix(Rails.application.domain)
-      r = Rails.application.routes.recognize_path(path, method: :get)
+      r = Routes.recognize(normalized_url.delete_prefix(Rails.application.domain))
 
       if r[:controller] == "comments" && %w[show redirect_from_short_id show_short_id].include?(r[:action])
         self.to_comment = Comment.find_by(short_id: r[:id])
@@ -47,8 +46,6 @@ class Link < ApplicationRecord
         end
       end
     end
-  rescue ActionController::RoutingError
-    # ignore invalid URLs from recognize_path
   end
 
   # acts idempotently, ignoring multiple Links to the same url/story/comment

@@ -41,6 +41,12 @@ class Routes
       story.url.presence || title_url(story, *options)
     end
 
+    def recognize url_or_path
+      Rails.application.routes.recognize_path(URI(url_or_path).path, method: :get)
+    rescue ActionController::RoutingError, URI::InvalidURIError
+      {}
+    end
+
     def story_image_or_logo_url story, *options
       return Rails.application.root_url + "touch-icon-144.png" if story.url.blank?
       story_image_url(story, *options)

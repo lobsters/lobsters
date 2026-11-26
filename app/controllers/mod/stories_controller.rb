@@ -68,6 +68,7 @@ class Mod::StoriesController < Mod::ModController
       :merge_story_short_id, :is_unavailable, :user_is_author, :user_is_following,
       tags: []
     )
+    ps[:merge_story_short_id]&.strip!
     ps[:tags] = Tag.where(tag: ps[:tags] || @story.tags.map(&:tag))
     ps
   end

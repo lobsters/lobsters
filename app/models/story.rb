@@ -896,12 +896,14 @@ class Story < ApplicationRecord
       .or(Story.where('"story"."id" = ?', id))
   end
 
-  def merge_story_short_id=(sid)
-    self.merged_story_id = sid.present? ? Story.where(short_id: sid).pick(:id) : nil
+  def merge_story_short_id
+    merged_into_story&.short_id
   end
 
-  def merge_story_short_id
-    merged_story_id ? merged_into_story.try(:short_id) : nil
+  def merge_story_short_id=(input)
+    route = Routes.recognize(input)
+    short_id = route[:story_id] || (route[:id] if route[:controller] == "stories") || input
+    self.merged_story_id = Story.where(short_id: short_id).pick(:id)
   end
 
   def record_initial_upvote

@@ -434,6 +434,31 @@ describe Story do
     end
   end
 
+  describe "#merge_story_short_id=" do
+    let(:target) { create(:story) }
+    let(:story) { create(:story) }
+
+    [
+      ->(t) { t.short_id },
+      ->(t) { "/s/#{t.short_id}" },
+      ->(t) { "/s/#{t.short_id}/some_title" },
+      ->(t) { "/stories/#{t.short_id}" },
+      ->(t) { "https://example.com/s/#{t.short_id}/some_title#c_abcdef" },
+      ->(t) { "https://example.com/s/#{t.short_id}/some_title/comments/abcdef" }
+    ].each_with_index do |form, i|
+      it "recognizes form #{i}" do
+        story.merge_story_short_id = form.call(target)
+        expect(story.merged_story_id).to eq(target.id)
+      end
+    end
+
+    it "clears on blank or unrecognized input" do
+      story.merged_story_id = target.id
+      story.merge_story_short_id = "https://example.com/about"
+      expect(story.merged_story_id).to be_nil
+    end
+  end
+
   describe "#update_cached_columns" do
     context "with a merged_into_story" do
       let(:merged_into_story) { create(:story) }

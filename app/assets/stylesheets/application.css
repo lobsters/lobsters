@@ -1807,6 +1807,22 @@ input[type="submit"].link_post.pushover_button {
 	margin-top: -0.75rem;
 }
 
+/* odds and ends */
+
+.w130 { width: 130px; }
+.pad-right { padding-right: 1em; }
+.nowrap { white-space: nowrap; }
+.full-width { width: 100%; }
+.color-inherit { color: inherit; }
+.no-margin { margin: 0; }
+label.block { display: block; }
+.error-text { color: red; }
+.affirmative-bold { color: green; font-weight: bold; }
+table.data.center { margin: 0 auto; }
+.debug-render { margin-left: 20px; }
+.mobile_comments { display: none; }
+#emoji { list-style: '🦞'; }
+
 @media screen and (min-width: 481px) {
 	#inside {
 		margin-left: calc(

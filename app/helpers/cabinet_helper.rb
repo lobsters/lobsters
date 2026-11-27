@@ -4,7 +4,7 @@ module CabinetHelper
       concat content_tag(:details,
         content_tag(:summary, "header") +
         content_tag(:pre, word_wrap("render #{args.inspect}")),
-        style: "margin-left: 20px")
+        class: "debug-render")
       concat render(*args)
     end
   end

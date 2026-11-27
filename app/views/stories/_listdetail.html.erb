@@ -127,7 +127,7 @@ class="story <%= story.current_upvoted? ? "upvoted" : "" %>
     </div>
   </div>
 </div>
-<a href="<%= Routes.title_path story %>" class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>" style="display: none;">
+<a href="<%= Routes.title_path story %>" class="mobile_comments <%= story.comments_count == 0 ? "zero" : "" %>">
   <span><%= story.comments_count %></span>
 </a>
 </li>

@@ -24,8 +24,8 @@
       <th>Hide</th>
       <th>Tag</th>
       <th>Description</th>
-      <th style="text-align: right;">Stories</th>
-      <th style="text-align: right; padding-right: 1em;">Filtering</th>
+      <th class="r">Stories</th>
+      <th class="r pad-right">Filtering</th>
     </tr>
     <% @categories.each do |category| %>
       <tr>
@@ -52,8 +52,8 @@
               <% end %>
             <% end %>
           </td>
-          <td style="text-align: right;"><%= number_with_delimiter(@story_counts[tag.id]) %></td>
-          <td style="text-align: right; padding-right: 1em;"><%= number_with_delimiter(@filter_counts[tag.id]) %></td>
+          <td class="r"><%= number_with_delimiter(@story_counts[tag.id]) %></td>
+          <td class="r pad-right"><%= number_with_delimiter(@filter_counts[tag.id]) %></td>
         </tr>
       <% end %>
     <% end %>

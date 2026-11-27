@@ -73,7 +73,7 @@
         <%= f.label :twofa, "Two-Factor Auth" %>
         <span>
         <% if @edit_user.totp_secret.present? %>
-          <span style="color: green; font-weight: bold;">
+          <span class="affirmative-bold">
             Enabled
           </span> (<a href="/settings/2fa">Disable</a>)
         <% else %>

@@ -13,7 +13,7 @@
       <tr class="<%= message.notification&.read_at ? "" : "bold" %>">
         <td><%= check_box_tag "delete_#{message.short_id}" %></td>
         <td>
-          <div style="white-space:nowrap;">
+          <div class="nowrap">
             <% if @direction == :in %>
               <% if message.author %>
                 <%= styled_user_link message.author %> <%= you_invited you: @user, user: message.author %>

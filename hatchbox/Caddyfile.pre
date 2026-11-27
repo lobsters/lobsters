@@ -80,7 +80,7 @@ map {http.request.header.Cookie} {has_user_cookie} {
 rewrite @use_cached_file /cache/{file_match.relative}
 #header @use_cached_file X-Lobsters-CFE {file_match.relative}
 # add CSP header when serving from cache; Rails adds when it renders pages.
-header @use_cached_file ?Content-Security-Policy "default-src 'none'; img-src 'self' data:; script-src 'self' 'inline-speculation-rules'; style-src 'self' 'unsafe-inline'"
+header @use_cached_file ?Content-Security-Policy "default-src 'none'; img-src 'self' data:; script-src 'self' 'inline-speculation-rules'; style-src 'self'"
 
 # special case for the primary story rss feed, url /rss doesn't have an extension
 # We have to special-case /rss because the cached file is saved as

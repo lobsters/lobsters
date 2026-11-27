@@ -15,9 +15,7 @@ Rails.application.configure do
     policy.img_src :self, :data
     policy.manifest_src :self
     policy.script_src :self
-
-    # 18 inline styles to clean up before enabling this
-    policy.style_src :self, :unsafe_inline
+    policy.style_src :self
   end
 
   # Generate session nonces for permitted importmap and inline scripts.

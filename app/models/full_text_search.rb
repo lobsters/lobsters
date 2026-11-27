@@ -7,12 +7,10 @@ module FullTextSearch
 
       included do
         after_create do |record|
-          table_name = "#{record.class.table_name}_fts"
-          column_list = cols.join(", ")
-          value_list = (["?"] * cols.length).join(", ")
-          values = cols.map { |c| record.public_send(c) }
+          fts = Arel::Table.new("#{record.class.table_name}_fts")
+          values = cols.map { |c| [fts[c], record.public_send(c)] }
 
-          ActiveRecord::Base.connection.exec_insert("INSERT INTO #{table_name} (rowid, #{column_list}) values (?, #{value_list})", nil, [record.id] + values)
+          ActiveRecord::Base.connection.insert(Arel::InsertManager.new(fts).insert([[fts[:rowid], record.id]] + values))
         end
 
         after_update do |record|
@@ -22,11 +20,10 @@ module FullTextSearch
             # contentless-delete tables in sqlite require all the columns when updating them, see for more info:
             # https://www.sqlite.org/fts5.html#contentless_delete_tables
 
-            table_name = "#{record.class.table_name}_fts"
-            column_list = cols.map { |c| "#{c} = ?" }.join(", ")
-            values = cols.map { |c| record.public_send(c) }
+            fts = Arel::Table.new("#{record.class.table_name}_fts")
+            values = cols.map { |c| [fts[c], record.public_send(c)] }
 
-            ActiveRecord::Base.connection.exec_update("UPDATE #{table_name} set #{column_list} where rowid = ?", nil, values + [record.id])
+            ActiveRecord::Base.connection.update(Arel::UpdateManager.new(fts).set(values).where(fts[:rowid].eq(record.id)))
           end
         end
 

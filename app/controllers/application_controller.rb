@@ -106,17 +106,15 @@ class ApplicationController < ActionController::Base
       request.env["exception_notifier.exception_data"] = exception_data
     end
 
-    if Telebugs::ENABLED
-      Telebugs.context "request", {
-        request_token: request.request_id,
-        requested_path: @requested_path,
-        original_fullpath: request.original_fullpath,
-        query_parameters: request.query_parameters, # protected by filter_parameters
-        request_parameters: request.request_parameters, # protected by filter_parameters
-        git_head: LOBSTERS_GIT_HEAD
-      }
-      Telebugs.user id: nil, username: nil, email: nil, ip_address: request.remote_ip # authenticate_user overwrites
-    end
+    Telebugs.context "request", {
+      request_token: request.request_id,
+      requested_path: @requested_path,
+      original_fullpath: request.original_fullpath,
+      query_parameters: request.query_parameters, # protected by filter_parameters
+      request_parameters: request.request_parameters, # protected by filter_parameters
+      git_head: LOBSTERS_GIT_HEAD
+    }
+    Telebugs.user id: nil, username: nil, email: nil, ip_address: request.remote_ip # authenticate_user overwrites
   end
 
   def refill_story_page_cache(story, is_moderator: false)
@@ -142,32 +140,28 @@ class ApplicationController < ActionController::Base
   # https://web.archive.org/web/20180108083712/http://umaine.edu/lobsterinstitute/files/2011/12/LobsterColorsWeb.pdf
   def set_traffic_style
     @traffic_intensity = "?"
-    @traffic_style = "background-color: #ac130d;"
+    @traffic_bg_color = "#ac130d"
     return true if Rails.application.read_only? ||
       agent_is_spider? ||
       %w[json rss].include?(params[:format])
-    return if (@traffic_novelty = TrafficHelper.novelty_logo)
+    return if (@traffic_logo = TrafficHelper.novelty_logo)
 
     @traffic_intensity = TrafficHelper.cached_current_intensity
     # map intensity to 80-255 so there's always a little red
     hex = sprintf("%02x", (@traffic_intensity * 1.75 + 80).round)
-    @traffic_style = "background-color: ##{hex}0000;"
+    @traffic_bg_color = "##{hex}0000"
     return true unless @user
 
-    color = :red
     [
-      [2_000_000, :blue, "background-color: #0000#{hex};"],
-      [6, :yellow, "background-color: ##{hex}#{hex}00;"],
-      [3, :calico, "background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAC4jAAAuIwF4pT92AAAABmJLR0QA/wD/AP+gvaeTAAACpElEQVQYGQXBWW8bVRgA0Hu/u814NsdxGsUxztJUzaJSVS1CCCTKE7zxxiP/gH+I+lKKQEVCLUlJ5YTsU8f2eJvxbHfjHLz7sKeU2mhNfvl579vnEPKUEUJxji1YoBaIob4m6+cX8Our/m99TBwmpKGV0hZjz+EO06FHOAKlFNKIcE+p8HYo3rwd/Xk8m+pVEjW4EzIFdjopVVG6Nt1ocpc3ALnIhqMRnF3afz6qd2flcMElAOWu3nm4tr6xMh2cyDpprqwBwdjQ0Uz9fXJ9el0lRTOekVQ13DCKvCXVWO7sdl6+/Gp01cbpv/uHPcqGlUKIr50NZq+Pi7mymrt+GOxvbz9+zKjS5OLi1uV/ZeObAC3un4qgt+c0bL8/v5qJ64WbaocIPC2HzbaDGCOeF0ySJI7vzz9eLuZFpfDq2lZWmd/fx6/e3twkuDIiL3KCysV83D+/xZ/1uhYXjuC6lg0BVk2fHPXcQMWD7L+bvJCettzhEPpgzRIxjbe3u6VMCcXWMEY5E9qisqo1QlRLjDVwxqxSQpBW5CFnSB2PaulyRleCSEtNhDPLltjkdQWYCC+gDVF6pHzU8z8/7IKgVFaVtshSWaQxA2Osz4FiokTQrLRrQCLIXzxr/fT94cFWVFlGmXExNQznnbbzaGcVgb0bJqO8kS5BzmusNAMdYN5mPlsihRh5sL7pRYHXQM+OOj/+8MV3Xx+2mmQ8qQZxkmfKSGXq1Odyt9MShByffKLgcc3JsqrHk3Eyumu6LbkYFHcfsjttSaR5OFP29H755nzw/sq8+yMh/sYKYiRL76dxzOqr9RBsmeisnCWqVlZaMIyxgC5U9eEy7p9awj0ByDiQ7XfgmyfRl0fRwZbb7bLVNmOOXynADDY3Hxzs7+WL5XSY/w/0MGrkMYhXjAAAAABJRU5ErkJggg==) no-repeat center"],
-      [2, :split, "background: linear-gradient(90deg, ##{hex}0000 50%, #0000#{hex} 50%)"],
-      [2, :albino, "filter: invert(100%);"]
-    ].each do |cumulative_odds, name, style|
+      [2_000_000, :blue, "#0000#{hex}"],
+      [6, :yellow, "##{hex}#{hex}00"],
+      [3, :calico, "none"],
+      [2, :split, "##{hex}0000"],
+      [2, :albino, "#000000"]
+    ].each do |cumulative_odds, name, bg_color|
       break unless rand(cumulative_odds) == 0
-      color = name
-      @traffic_style = style
-    end
-    if color != :red
-      Telebugs.message "Lucky user #{@user.username} saw #{color} logo"
+      @traffic_logo = name
+      @traffic_bg_color = bg_color
     end
   end
 

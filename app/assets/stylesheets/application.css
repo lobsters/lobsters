@@ -348,7 +348,18 @@ input.btn-link:focus-visible {
 	margin: 0;
 	flex-shrink: 0;
 	align-self: center;
-	position: relative; /* casimir */
+	position: relative;
+	z-index: 0; /* keeps svg above the header's background */
+}
+
+/* traffic color, see ApplicationController#set_traffic_style */
+#logo svg {
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 }
 
 #logo a {
@@ -377,6 +388,63 @@ input.btn-link:focus-visible {
 			color: var(--color-fg);
 		}
 	}
+}
+
+/* ApplicationController#set_traffic_style and TrafficHelper.novelty_logo */
+
+#logo.calico {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAC4jAAAuIwF4pT92AAAABmJLR0QA/wD/AP+gvaeTAAACpElEQVQYGQXBWW8bVRgA0Hu/u814NsdxGsUxztJUzaJSVS1CCCTKE7zxxiP/gH+I+lKKQEVCLUlJ5YTsU8f2eJvxbHfjHLz7sKeU2mhNfvl579vnEPKUEUJxji1YoBaIob4m6+cX8Our/m99TBwmpKGV0hZjz+EO06FHOAKlFNKIcE+p8HYo3rwd/Xk8m+pVEjW4EzIFdjopVVG6Nt1ocpc3ALnIhqMRnF3afz6qd2flcMElAOWu3nm4tr6xMh2cyDpprqwBwdjQ0Uz9fXJ9el0lRTOekVQ13DCKvCXVWO7sdl6+/Gp01cbpv/uHPcqGlUKIr50NZq+Pi7mymrt+GOxvbz9+zKjS5OLi1uV/ZeObAC3un4qgt+c0bL8/v5qJ64WbaocIPC2HzbaDGCOeF0ySJI7vzz9eLuZFpfDq2lZWmd/fx6/e3twkuDIiL3KCysV83D+/xZ/1uhYXjuC6lg0BVk2fHPXcQMWD7L+bvJCettzhEPpgzRIxjbe3u6VMCcXWMEY5E9qisqo1QlRLjDVwxqxSQpBW5CFnSB2PaulyRleCSEtNhDPLltjkdQWYCC+gDVF6pHzU8z8/7IKgVFaVtshSWaQxA2Osz4FiokTQrLRrQCLIXzxr/fT94cFWVFlGmXExNQznnbbzaGcVgb0bJqO8kS5BzmusNAMdYN5mPlsihRh5sL7pRYHXQM+OOj/+8MV3Xx+2mmQ8qQZxkmfKSGXq1Odyt9MShByffKLgcc3JsqrHk3Eyumu6LbkYFHcfsjttSaR5OFP29H755nzw/sq8+yMh/sYKYiRL76dxzOqr9RBsmeisnCWqVlZaMIyxgC5U9eEy7p9awj0ByDiQ7XfgmyfRl0fRwZbb7bLVNmOOXynADDY3Hxzs7+WL5XSY/w/0MGrkMYhXjAAAAABJRU5ErkJggg==) no-repeat center;
+}
+
+#logo.split {
+	background: #0d13ac;
+}
+#logo.split svg {
+	width: 50%;
+}
+
+#logo.albino {
+	filter: invert(100%);
+}
+
+#logo a.casimir {
+	--mustache-gap: var(--color-bg);
+	position: absolute;
+	width: 17px;
+	height: 32px;
+	padding: 1px;
+	margin-left: -21px;
+	margin-bottom: -16px;
+	top: 1px;
+	left: 1.3rem;
+	background-image:
+		radial-gradient(circle at 18% 63%, var(--mustache-gap) 15%, transparent 12.8%),
+		radial-gradient(circle at 23% 70%, var(--color-fg) 15%, transparent 12.8%),
+		radial-gradient(circle at 82% 63%, var(--mustache-gap) 15%, transparent 12.8%),
+		radial-gradient(circle at 77% 70%, var(--color-fg) 15%, transparent 12.8%),
+		linear-gradient(180deg, transparent 0, transparent 100%);
+}
+@media only screen and (max-width: 480px) {
+	#logo a.casimir {
+		--mustache-gap: var(--color-box-bg-shaded);
+	}
+}
+
+#logo.tdov {
+	background: linear-gradient(#5bcffb 0% 20%, #f5abb9 20% 40%, #ffffff 40% 60%, #f5abb9 60% 80%, #5bcffb 80% 100%);
+}
+
+#logo.stonewall {
+	background: linear-gradient(180deg, #FE0000 16.66%, #FD8C00 16.66%, 33.32%, #FFE500 33.32%, 49.98%, #119F0B 49.98%, 66.64%, #0644B3 66.64%, 83.3%, #C22EDC 83.3%);
+}
+
+#logo.christmas {
+	background: conic-gradient(at 50% 0, #9f3631 157.5deg, #01c94f 0, #01c94f 202.5deg, #9f3631 0);
+}
+
+/* these replace the traffic color */
+#logo:is(.tdov, .stonewall, .christmas) svg {
+	display: none;
 }
 
 #header ul {
@@ -1807,7 +1875,7 @@ input[type="submit"].link_post.pushover_button {
 	margin-top: -0.75rem;
 }
 
-/* /stats  */
+/* stats graphs (lib/time_series.rb) */
 .stats p svg { height: 10px; width: 10px; }
 .stats .axis { stroke: var(--color-fg-contrast-4-5); }
 .stats .svgBackground { fill: var(--color-bg); }

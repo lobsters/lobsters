@@ -71,11 +71,14 @@
 <body data-username='<%= @user.try(:username) %>'>
   <header id="header">
     <div id="header-top">
-      <h1 style="<%= @traffic_style %>" id="logo">
+      <h1 id="logo" class="<%= @traffic_logo %>">
+        <svg aria-hidden="true"><rect width="100%" height="100%" fill="<%= @traffic_bg_color %>"/></svg>
         <a href="/" title="<%= Rails.application.name %> (Current traffic: <%= @traffic_intensity.to_i %>%)">
           <b class="sr-only" aria-hidden="true"><%= Rails.application.name %></b>
         </a>
-        <%= @traffic_novelty %>
+        <% if @traffic_logo == :casimir %>
+          <a class="casimir" href="https://en.wikipedia.org/wiki/Casimir_Pulaski_Day" aria-label="Casimir Pulaski Day"></a>
+        <% end %>
       </h1>
 
       <nav aria-label="Menu">

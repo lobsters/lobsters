@@ -1,6 +1,6 @@
 <% render partial: 'about/subnav' %>
 
-<div class="box wide">
+<div class="box wide stats">
 
 <p>
 In all charts, the current (rightmost) month has two dots:
@@ -15,44 +15,24 @@ Outliers:
 2017-01 is the <a href="https://lobste.rs/s/kmj9w9/invitation_pledge_drive">pledge drive</a>
 (<a href="https://lobste.rs/s/2scxd0/invitation_pledge_drive_results">results</a>)
 </p>
-<%= Stats.get_cached_graph(:users) %>
+<%= raw Stats.get_cached_graph(:users) %>
 
 <h2>Active users by month</h2>
 <p>Users who have submitted a story, posted a comment, or cast a vote</p>
-<%= Stats.get_cached_graph(:active_users) %>
+<%= raw Stats.get_cached_graph(:active_users) %>
 
 <h2>Stories submitted by month</h2>
-<%= Stats.get_cached_graph(:stories) %>
+<%= raw Stats.get_cached_graph(:stories) %>
 
 <h2>Comments posted by month</h2>
-<%= Stats.get_cached_graph(:comments) %>
+<%= raw Stats.get_cached_graph(:comments) %>
 
 <h2>Votes cast by month</h2>
-<%= Stats.get_cached_graph(:votes) %>
+<%= raw Stats.get_cached_graph(:votes) %>
 
 <p>
 Want more info?
 <a href="/about#queries">Write a query</a>.
 </p>
-
-<style type="text/css">
-p svg { height: 10px; width: 10px; }
-.axis { stroke: var(--color-fg-contrast-4-5); }
-.svgBackground { fill: var(--color-bg); }
-.graphBackground { fill: var(--color-bg); }
-.xAxisLabels { fill: var(--color-fg); }
-.yAxisLabels { fill: var(--color-fg); }
-.key1, .dataPoint1 { fill: var(--color-fg-accent); }
-svg.extrapolate circle:nth-last-of-type(2), circle:last-of-type, .outline circle {
-  fill: none;
-  stroke: var(--color-fg-accent);
-  stroke-width: 1;
-}
-svg.extrapolate circle:last-of-type, .dashed circle { stroke-dasharray: 1; }
-.line1 { fill: var(--color-fg-accent); }
-.guideLines { stroke: var(--color-bg); stroke-dasharray: none; }
-.dataPointPopupMask { fill: var(--color-fg); stroke: var(--color-bg); }
-.dataPointPopup { fill: var(--color-fg); }
-</style>
 
 </div>

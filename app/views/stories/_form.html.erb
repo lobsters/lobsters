@@ -80,6 +80,11 @@ See the guidelines below for more."
     </p>
     <%= f.label :description, "Text" %>
     <%= f.text_area :description, rows: 8, placeholder: guidelines %>
+    <output class="description-reminder" for="<%= :title %>" role="alert" aria-live="polite">
+      <span class="description-reminder-warn">
+        There might be LaTeX equations formatting in the description (between the dollar signs). This will not render correctly if so and should be manually adjusted.
+      </span>
+    </output>
     <%= render :partial => "global/markdownhelp", :locals => { allow_images: @story.can_have_images? } %>
 
     <%= tag.details open: show_guidelines?(@user) ? true : nil do %>

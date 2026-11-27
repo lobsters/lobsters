@@ -37,7 +37,7 @@
             <li>
               Comment <%= link_to link.from_comment.short_id, Routes.comment_target_path(link.from_comment) %>
               <%= time_ago_in_words link.from_comment.last_edited_at %>:
-              <%= raw excerpt_fragment_around_link(link.from_comment.markeddown_comment, story.url) %>
+              <%= excerpt_fragment_around_link(link.from_comment.markeddown_comment, story.url) %>
             </li>
           <% end %>
         </ul>

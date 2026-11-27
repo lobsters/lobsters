@@ -39,6 +39,10 @@ class ModNote < ApplicationRecord
     Markdowner.to_html(note, as_of: created_at)
   end
 
+  def markeddown_note
+    super&.html_safe
+  end
+
   def self.create_from_message(message, moderator)
     user = (moderator.id == message.recipient.id && message.author) ?
              message.author : message.recipient

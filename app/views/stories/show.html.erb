@@ -12,7 +12,7 @@
 <div class="story_content">
   <% if @story.markeddown_description.present? && @story.stories_count == 0 %>
     <div class="story_text" id="story_text">
-      <%= raw @story.markeddown_description %>
+      <%= @story.markeddown_description %>
     </div>
   <% end %>
 
@@ -151,7 +151,7 @@
       <div class="story_content">
         <% if ms.markeddown_description.present? %>
           <div class="story_text">
-          <%= raw ms.markeddown_description %>
+          <%= ms.markeddown_description %>
           </div>
         <% end %>
 

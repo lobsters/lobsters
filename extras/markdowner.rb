@@ -38,7 +38,7 @@ class Markdowner
   #        to Time.current for newly created models passing their nil created_at
   def self.to_html(text, allow_images: false, as_of: nil)
     if text.blank?
-      return ""
+      return "".html_safe
     end
 
     as_of ||= Time.current
@@ -66,9 +66,9 @@ class Markdowner
     end
 
     if ng.at_css("body")
-      ng.at_css("body").inner_html
+      ng.at_css("body").inner_html.html_safe
     else
-      ""
+      "".html_safe
     end
   end
 

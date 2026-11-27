@@ -13,7 +13,7 @@
       <span class="message-subject"><a href="<%= mod_mail_path(mod_mail_message.mod_mail) %>">Subject: <%= mod_mail_message.mod_mail.subject %></a></span>
     </div>
     <div class="message-body">
-      <%= raw mod_mail_message.linkified_message %>
+      <%= mod_mail_message.linkified_message %>
     </div>
   </div>
 </div>

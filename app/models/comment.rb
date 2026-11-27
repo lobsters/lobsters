@@ -359,6 +359,10 @@ class Comment < ApplicationRecord
     Markdowner.to_html(comment, as_of: created_at)
   end
 
+  def markeddown_comment
+    super&.html_safe
+  end
+
   # TODO: race condition: if two votes arrive at the same time, the second one
   # won't take the first's score change into effect for calculated_confidence
   def update_score_and_recalculate!(score_delta, flag_delta)

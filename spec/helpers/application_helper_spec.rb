@@ -50,6 +50,19 @@ describe ApplicationHelper do
       expect(excerpt).to_not include("Removed")
       expect(excerpt).to start_with("Hello world")
     end
+
+    it "returns html_safe strings with markup escaped" do
+      comment = create(:comment, comment: "<b>bold</b> [example](https://example.com) <i>after</i>")
+
+      linked = helper.excerpt_fragment_around_link(comment.markeddown_comment, "https://example.com")
+      unlinked = helper.excerpt_fragment_around_link(comment.markeddown_comment, "https://example.org")
+
+      expect(linked).to be_html_safe
+      expect(linked).to include("&lt;b&gt;bold", "&lt;i&gt;after")
+      expect(linked).to include('<a href="https://example.com"')
+      expect(unlinked).to be_html_safe
+      expect(unlinked).to include("&lt;b&gt;bold", "&lt;i&gt;after")
+    end
   end
 
   describe "link_to_different_page" do

@@ -20,7 +20,7 @@ remove their request.  If a request looks suspicious, delete it.
         <br>
         <em><%= ir.email %></em>
       <% end %></td>
-    <td><%= raw ir.markeddown_memo %></td>
+    <td><%= ir.markeddown_memo %></td>
     <td><%= form_with url: send_invitation_for_request_path do |f| %>
       <%= f.hidden_field "code", :value => ir.code %>
       <%= f.submit "Send Invitation" %>

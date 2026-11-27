@@ -15,7 +15,7 @@
         <br>
         <%= raw note.created_at.strftime("%Y-%m-%d&nbsp;%H:%M&nbsp;%z") %>
       </td>
-      <td><%= raw note.markeddown_note %></td>
+      <td><%= note.markeddown_note %></td>
     </tr>
   <% end %>
 </table>

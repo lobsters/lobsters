@@ -117,7 +117,7 @@ class Story < ApplicationRecord
     raise ArgumentError, "Invalid interval" unless IntervalHelper::TIME_INTERVALS.value?(length[:intv].capitalize)
 
     top = base(user)
-      .where(created_at: IntervalHelper.interval_start(length)..)
+      .where("created_at >= datetime('now', ?)", "-#{length[:dur]} #{length[:intv].upcase}")
       .filter_tags(exclude_tags || [])
     top.order(score: :desc)
   }
@@ -724,6 +724,10 @@ class Story < ApplicationRecord
 
   def generated_markeddown_description
     Markdowner.to_html(description, allow_images: can_have_images?, as_of: created_at)
+  end
+
+  def markeddown_description
+    super&.html_safe
   end
 
   # TODO: race condition: if two votes arrive at the same time, the second one

@@ -123,6 +123,12 @@ describe Markdowner do
       .to eq("<p>hi &lt;iframe src=\"javascript:alert('xss');\"&gt;&lt;/iframe&gt; bye</p>\n")
   end
 
+  it "returns html_safe strings" do
+    expect(Markdowner.to_html("hi <script></script> *bye*")).to be_html_safe
+    expect(Markdowner.to_html("")).to be_html_safe
+    expect(Markdowner.to_html(nil)).to be_html_safe
+  end
+
   # issue #1727
   it "doesn't autolink bare triggers" do
     expect(Markdowner.to_html("hi www. bye"))

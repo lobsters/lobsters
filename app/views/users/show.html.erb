@@ -149,7 +149,7 @@
 
       <dd class="shorten_first_p">
         <% if @showing_user.about.present? %>
-          <%= raw @showing_user.linkified_about %>
+          <%= @showing_user.linkified_about %>
         <% else %>
           <span class="na">A mystery...</span>
         <% end %>

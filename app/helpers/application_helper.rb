@@ -67,7 +67,7 @@ module ApplicationHelper
     end
     # link not found, return start of input
     if parsed.search("a").empty?
-      return parsed.to_html.split.first(words * 2).join(" ")
+      return parsed.to_html.split.first(words * 2).join(" ").html_safe
     end
 
     # merge adjacent text nodes by reparsing
@@ -87,7 +87,7 @@ module ApplicationHelper
       parsed.children.last.content = " " + t.split.first(words).join(" ")
     end
 
-    parsed.to_html
+    parsed.to_html.html_safe
   end
 
   def filtered_tags

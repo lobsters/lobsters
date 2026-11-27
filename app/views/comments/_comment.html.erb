@@ -168,10 +168,10 @@
         </span>
         </p>
         <% if @user && @user.is_moderator? %>
-          <%= raw comment.markeddown_comment %>
+          <%= comment.markeddown_comment %>
         <% end %>
       <% else %>
-        <%= raw comment.markeddown_comment %>
+        <%= comment.markeddown_comment %>
       <% end %>
     </div>
   </div>

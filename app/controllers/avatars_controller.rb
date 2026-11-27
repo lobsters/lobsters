@@ -35,17 +35,24 @@ class AvatarsController < ApplicationController
       Dir.mkdir(CACHE_DIR)
     end
 
-    File.open("#{CACHE_DIR}/.#{u.username}-#{size}.png", "wb+") do |f|
-      f.write av
-    end
-
-    File.rename("#{CACHE_DIR}/.#{u.username}-#{size}.png", "#{CACHE_DIR}/#{u.username}-#{size}.png")
+    cache_avatar!(u, size, av)
 
     response.headers["Expires"] = 1.hour.from_now.httpdate
     send_data av, type: content_type_for(av), disposition: "inline"
   end
 
   private
+
+  def cache_avatar!(user, size, image)
+    path = "#{CACHE_DIR}/#{user.username}-#{size}.png"
+    temp_path = "#{CACHE_DIR}/.#{user.username}-#{size}.png"
+
+    File.open(temp_path, "wb+") do |f|
+      f.write image
+    end
+
+    File.rename(temp_path, path)
+  end
 
   def content_type_for(data)
     data.start_with?("\xFF\xD8\xFF".b) ? "image/jpeg" : "image/png"

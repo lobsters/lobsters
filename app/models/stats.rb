@@ -57,7 +57,7 @@ class Stats
   end
 
   def self.get_cached_graph(name)
-    Rails.cache.read(cache_key(name)) || "<i>No data</i>"
+    (Rails.cache.read(cache_key(name)) || "<i>No data</i>").html_safe
   end
 
   DEFAULTS = {
